@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.android.systemui.statusbar.phone.PhoneStatusBarView android:orientation="vertical" android:id="@id/status_bar" android:background="@drawable/system_status_bar_background" android:focusable="false" android:descendantFocusability="afterDescendants" android:layout_width="fill_parent" android:layout_height="@dimen/status_bar_height"
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:systemui="http://schemas.android.com/apk/res/com.android.systemui">
+    <LinearLayout android:gravity="center" android:id="@id/drivemodebg" android:background="@drawable/status_bar_orange_bar_bg" android:visibility="gone" android:layout_width="fill_parent" android:layout_height="fill_parent" />
+    <ImageView android:id="@id/notification_lights_out" android:paddingBottom="2.0dip" android:visibility="gone" android:layout_width="@dimen/status_bar_icon_size" android:layout_height="fill_parent" android:src="@drawable/ic_sysbar_lights_out_dot_small" android:scaleType="center" android:paddingStart="6.0dip" />
+    <LinearLayout android:orientation="horizontal" android:id="@id/phone_status_bar_contents_container" android:paddingTop="@dimen/notch_status_bar_padding_top" android:layout_width="fill_parent" android:layout_height="fill_parent" android:paddingStart="@dimen/statusbar_padding_start" android:paddingEnd="@dimen/statusbar_padding_end" android:layout_marginStart="@dimen/round_cornor_padding" android:layout_marginEnd="@dimen/round_cornor_padding"
+      xmlns:android="http://schemas.android.com/apk/res/android" />
+    <ViewStub android:id="@id/emergency_cryptkeeper_text" android:layout="@layout/emergency_cryptkeeper_text" android:layout_width="wrap_content" android:layout_height="fill_parent" />
+</com.android.systemui.statusbar.phone.PhoneStatusBarView>

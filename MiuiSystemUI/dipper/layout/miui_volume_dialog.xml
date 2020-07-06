@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.android.systemui.miui.volume.MiuiVolumeDialogView android:gravity="end" android:layout_gravity="@integer/miui_volume_dialog_gravity_collapsed" android:orientation="vertical" android:id="@id/volume_dialog" android:clickable="true" android:clipChildren="false" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="@dimen/miui_volume_offset_top_collapsed" android:layout_marginRight="@dimen/miui_volume_offset_end" android:layoutDirection="ltr" app:collapsingTransition="@transition/miui_volume_dialog_collapse" app:expandingTransition="@transition/miui_volume_dialog"
+  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <LinearLayout android:orientation="horizontal" android:id="@id/volume_dialog_container" android:layout_width="wrap_content" android:layout_height="wrap_content">
+        <FrameLayout android:id="@id/volume_dialog_content" android:background="@drawable/miui_volume_dialog_background" android:layout_width="wrap_content" android:layout_height="wrap_content" android:elevation="2.0dip">
+            <LinearLayout android:gravity="center" android:orientation="horizontal" android:id="@id/volume_dialog_columns" android:layout_width="fill_parent" android:layout_height="fill_parent" />
+            <FrameLayout android:gravity="center" android:id="@id/volume_dialog_column_collapsed" android:layout_width="fill_parent" android:layout_height="fill_parent" />
+        </FrameLayout>
+        <FrameLayout android:gravity="center" android:id="@id/volume_dialog_column_temp" android:background="@drawable/miui_volume_dialog_background" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="@dimen/miui_volume_offset_end" android:elevation="2.0dip" />
+    </LinearLayout>
+    <include layout="@layout/miui_volume_dialog_ringer_mode" />
+</com.android.systemui.miui.volume.MiuiVolumeDialogView>

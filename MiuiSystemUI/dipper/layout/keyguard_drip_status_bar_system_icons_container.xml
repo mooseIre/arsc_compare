@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.android.systemui.miui.widget.ClipEdgeLinearLayout android:gravity="end|center" android:orientation="horizontal" android:id="@id/system_icons_padding_container" android:layout_width="wrap_content" android:layout_height="fill_parent" android:layout_marginTop="@dimen/notch_status_bar_padding_top" android:layout_alignWithParentIfMissing="true" android:paddingEnd="@dimen/statusbar_padding_end" android:layout_marginEnd="@dimen/round_cornor_padding" android:layout_alignParentEnd="true" app:clipEdge="true"
+  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <com.android.systemui.statusbar.AnimatedImageView android:id="@id/drip_wifi_ap_on" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="fill_parent" android:src="@drawable/stat_sys_wifi_ap_on" />
+    <com.android.systemui.statusbar.AnimatedImageView android:id="@id/drip_slave_wifi" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="fill_parent" />
+    <FrameLayout android:layout_gravity="center_vertical" android:id="@id/system_icons_container" android:layout_width="wrap_content" android:layout_height="fill_parent">
+        <include layout="@layout/system_icons" />
+    </FrameLayout>
+</com.android.systemui.miui.widget.ClipEdgeLinearLayout>
