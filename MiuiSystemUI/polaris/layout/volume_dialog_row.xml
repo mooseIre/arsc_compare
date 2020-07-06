@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:orientation="vertical" android:paddingBottom="@dimen/volume_row_padding_bottom" android:clipChildren="false" android:clipToPadding="false" android:layout_width="fill_parent" android:layout_height="@dimen/volume_row_height"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <TextView android:textAppearance="@style/TextAppearance.Volume.Header" android:ellipsize="end" android:id="@id/volume_row_header" android:layout_width="wrap_content" android:layout_height="wrap_content" android:maxLines="1" android:paddingStart="@dimen/volume_row_header_padding_start" />
+    <LinearLayout android:orientation="horizontal" android:layout_width="fill_parent" android:layout_height="@dimen/volume_row_slider_height" android:paddingStart="@dimen/volume_row_padding_start">
+        <com.android.keyguard.AlphaOptimizedImageButton android:id="@id/volume_row_icon" android:layout_width="@dimen/volume_button_size" android:layout_height="@dimen/volume_button_size" android:soundEffectsEnabled="false" style="@style/VolumeButtons" />
+        <SeekBar android:id="@id/volume_row_slider" android:focusable="true" android:focusableInTouchMode="true" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_alignWithParentIfMissing="true" android:paddingStart="@dimen/volume_row_slider_padding_start" />
+    </LinearLayout>
+</LinearLayout>

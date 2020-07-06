@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.android.systemui.bubbles.BubbleView android:id="@id/bubble_view" android:layout_width="wrap_content" android:layout_height="wrap_content"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <com.android.systemui.bubbles.BadgedImageView android:id="@id/bubble_image" android:padding="@dimen/bubble_view_padding" android:clipToPadding="false" android:layout_width="@dimen/individual_bubble_size" android:layout_height="@dimen/individual_bubble_size" />
+</com.android.systemui.bubbles.BubbleView>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_alignParentBottom="true" android:paddingStart="@dimen/home_demo_workspace_layout_padding_start" android:paddingEnd="@dimen/home_demo_workspace_layout_padding_start"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout style="@style/home_demo_workspace_layout_row">
+        <ImageView android:src="@drawable/weather_icon" style="@style/home_demo_workspace_layout_item" />
+        <ImageView android:src="@drawable/gallery_icon" style="@style/home_demo_workspace_layout_item" />
+        <ImageView android:src="@drawable/music_icon" style="@style/home_demo_workspace_layout_item" />
+        <ImageView android:src="@drawable/thememanager_icon" style="@style/home_demo_workspace_layout_item" />
+    </LinearLayout>
+    <LinearLayout style="@style/home_demo_workspace_layout_row">
+        <ImageView android:src="@drawable/gamecenter_icon" style="@style/home_demo_workspace_layout_item" />
+        <ImageView android:src="@drawable/video_icon" style="@style/home_demo_workspace_layout_item" />
+        <ImageView android:id="@id/anim_icon" android:visibility="invisible" android:src="@drawable/note_icon" style="@style/home_demo_workspace_layout_item" />
+        <ImageView android:src="@drawable/yidian_icon" style="@style/home_demo_workspace_layout_item" />
+    </LinearLayout>
+    <LinearLayout style="@style/home_demo_workspace_layout_row">
+        <ImageView android:src="@drawable/settings_icon" style="@style/home_demo_workspace_layout_item" />
+        <ImageView android:src="@drawable/supermarket_icon" style="@style/home_demo_workspace_layout_item" />
+        <ImageView android:src="@drawable/securitycenter_icon" style="@style/home_demo_workspace_layout_item" />
+        <ImageView android:src="@drawable/folder_icon" style="@style/home_demo_workspace_layout_item" />
+    </LinearLayout>
+    <LinearLayout android:gravity="center" android:orientation="horizontal" android:layout_width="fill_parent" android:layout_height="@dimen/home_demo_workspace_layout_seekbar_height">
+        <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/seekpoint_highlight" />
+        <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/seekpoint_normal" />
+    </LinearLayout>
+    <LinearLayout style="@style/home_demo_workspace_layout_row">
+        <ImageView android:src="@drawable/phone_icon" style="@style/home_demo_workspace_layout_item" />
+        <ImageView android:src="@drawable/mms_icon" style="@style/home_demo_workspace_layout_item" />
+        <ImageView android:src="@drawable/browser_icon" style="@style/home_demo_workspace_layout_item" />
+        <ImageView android:src="@drawable/camera_icon" style="@style/home_demo_workspace_layout_item" />
+    </LinearLayout>
+</LinearLayout>
