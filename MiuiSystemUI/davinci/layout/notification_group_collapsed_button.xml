@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView android:textSize="12.0sp" android:textStyle="bold" android:textColor="@color/notification_group_collapsed_button_color" android:gravity="center" android:id="@id/collapse_button" android:padding="@dimen/notification_collapsed_button_padding" android:visibility="invisible" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/notification_group_collapse_button_text" android:singleLine="true" android:fontFamily="miui"
+  xmlns:android="http://schemas.android.com/apk/res/android" />
