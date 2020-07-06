@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:orientation="vertical" android:id="@id/memoryAndClearContainer" android:paddingTop="2.0dip" android:paddingBottom="@dimen/recent_task_padding_bottom" android:clipToPadding="false" android:splitMotionEvents="false"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <com.android.systemui.recents.views.CircleAndTickAnimView android:layout_gravity="center_horizontal" android:id="@id/clearAnimView" android:background="@drawable/btn_clear_all" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+</LinearLayout>

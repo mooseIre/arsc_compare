@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.android.systemui.statusbar.NotificationSnooze android:theme="@android:style/Theme.DeviceDefault.Light" android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="wrap_content" android:paddingStart="16.669983dip" android:paddingEnd="16.669983dip"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout android:gravity="center_vertical" android:orientation="horizontal" android:layout_width="fill_parent" android:layout_height="@dimen/snooze_snackbar_min_height">
+        <ImageView android:id="@id/snooze_icon" android:layout_width="17.329987dip" android:layout_height="17.329987dip" android:src="@drawable/ic_snooze_tips" />
+        <LinearLayout android:gravity="center_vertical" android:orientation="horizontal" android:id="@id/notification_snooze" android:layout_width="0.0dip" android:layout_height="wrap_content" android:layout_weight="1.0" android:layout_marginStart="10.669983dip" android:layout_marginEnd="10.669983dip">
+            <TextView android:textColor="@color/notification_snooze_option_default_text_color" android:id="@id/snooze_option_default" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+            <ImageView android:id="@id/expand_button" android:layout_width="wrap_content" android:layout_height="wrap_content" android:tint="@color/notification_snooze_expand_button_text_color" android:layout_marginStart="7.0dip" />
+        </LinearLayout>
+        <TextView android:id="@id/undo" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/snooze_undo" style="@style/TextAppearance.NotificationInfo.Button" />
+    </LinearLayout>
+    <LinearLayout android:orientation="horizontal" android:id="@id/snooze_options" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginStart="28.0dip" />
+</com.android.systemui.statusbar.NotificationSnooze>

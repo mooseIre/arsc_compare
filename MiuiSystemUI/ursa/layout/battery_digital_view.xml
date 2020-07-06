@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout android:layout_width="wrap_content" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <com.android.systemui.miui.statusbar.BatteryMeterIconView android:gravity="center" android:layout_gravity="center" android:id="@id/battery_image" android:layout_width="wrap_content" android:layout_height="fill_parent" />
+    <ImageView android:gravity="center" android:layout_gravity="center" android:id="@id/battery_charge_image" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="fill_parent" android:layout_marginRight="@dimen/battery_meter_progress_center_left_offset" />
+    <TextView android:textAppearance="@style/TextAppearance.StatusBar.BatteryDigit" android:gravity="center" android:layout_gravity="center" android:id="@id/battery_digit" android:focusable="false" android:focusableInTouchMode="false" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="fill_parent" android:layout_marginRight="@dimen/battery_meter_progress_center_left_offset" android:singleLine="true" android:importantForAccessibility="no" />
+</FrameLayout>

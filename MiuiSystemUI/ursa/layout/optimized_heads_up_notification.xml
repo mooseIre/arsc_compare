@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.android.systemui.statusbar.notification.OptimizedHeadsUpNotificationView android:layout_width="fill_parent" android:layout_height="wrap_content"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout android:orientation="horizontal" android:padding="@dimen/optimized_heads_up_notification_padding" android:layout_width="fill_parent" android:layout_height="wrap_content">
+        <LinearLayout android:gravity="center_vertical" android:layout_gravity="center_vertical" android:orientation="horizontal" android:id="@id/content" android:layout_width="0.0dip" android:layout_height="wrap_content" android:layout_weight="1.0">
+            <ImageView android:id="@id/icon" android:layout_width="@dimen/optimized_heads_up_notification_icon_size" android:layout_height="@dimen/optimized_heads_up_notification_icon_size" android:scaleType="fitXY" />
+            <TextView android:textSize="@dimen/optimized_heads_up_notification_text_size" android:textColor="@color/optimized_heads_up_notification_text" android:ellipsize="end" android:gravity="center_vertical" android:id="@id/title" android:layout_width="wrap_content" android:layout_height="wrap_content" android:maxLines="1" android:layout_marginStart="@dimen/optimized_heads_up_notification_content_margin" />
+            <TextView android:textSize="@dimen/optimized_heads_up_notification_text_size" android:textColor="@color/optimized_heads_up_notification_text" android:ellipsize="end" android:layout_gravity="center_vertical" android:id="@id/text" android:layout_width="wrap_content" android:layout_height="wrap_content" android:maxLines="1" android:layout_marginStart="@dimen/optimized_heads_up_notification_content_margin" android:layout_marginEnd="@dimen/optimized_heads_up_notification_content_margin_end" />
+        </LinearLayout>
+        <TextView android:textSize="@dimen/optimized_heads_up_notification_action_text_size" android:textColor="@color/optimized_heads_up_notification_action_text" android:ellipsize="end" android:gravity="center" android:id="@id/action" android:background="@drawable/optimized_heads_up_notification_action_button_bg" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="fill_parent" android:maxWidth="@dimen/optimized_heads_up_notification_action_max_width" android:maxLines="1" />
+    </LinearLayout>
+    <include layout="@layout/heads_up_mini_window_bar" />
+</com.android.systemui.statusbar.notification.OptimizedHeadsUpNotificationView>
