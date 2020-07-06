@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.android.systemui.recents.views.RecentsRecommendView android:orientation="horizontal" android:background="@drawable/recents_recommend_background"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <include android:id="@id/first_item" layout="@layout/recents_recommend_view_item" />
+    <include android:id="@id/second_item" layout="@layout/recents_recommend_view_item" />
+    <include android:id="@id/third_item" layout="@layout/recents_recommend_view_item" />
+    <include android:id="@id/fourth_item" layout="@layout/recents_recommend_view_item" />
+</com.android.systemui.recents.views.RecentsRecommendView>
