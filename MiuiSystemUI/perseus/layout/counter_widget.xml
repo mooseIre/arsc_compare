@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.android.systemui.sliderpanel.widget.CounterWidget android:background="@drawable/counterpanel" android:layout_width="wrap_content" android:layout_height="wrap_content" android:onClick="onWidgetClick" android:contentDescription="@string/counter_description_talkback"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <ImageView android:background="@drawable/counter" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="20.699982dip" android:importantForAccessibility="no" android:layout_marginStart="20.699982dip" />
+    <TextView android:textSize="@dimen/counter_time_text_size" android:textColor="@color/slider_widget_text_color" android:id="@id/counter_time" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="84.69998dip" android:text="@string/counter_time" android:includeFontPadding="false" android:importantForAccessibility="no" android:layout_marginStart="18.5dip" />
+    <TextView android:textSize="@dimen/counter_title_text_size" android:textColor="@color/slider_widget_text_color" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="117.79999dip" android:text="@string/counter_title" android:alpha="0.8" android:importantForAccessibility="no" android:layout_marginStart="20.0dip" />
+</com.android.systemui.sliderpanel.widget.CounterWidget>

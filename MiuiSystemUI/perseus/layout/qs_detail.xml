@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.android.systemui.qs.QSDetail android:orientation="vertical" android:id="@id/qs_detail" android:paddingTop="@dimen/qs_detail_margin_top" android:paddingBottom="@dimen/qs_detail_margin_bottom" android:visibility="invisible" android:clickable="true" android:layout_width="fill_parent" android:layout_height="fill_parent" android:elevation="4.0dip"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout android:orientation="vertical" android:id="@id/qs_detail_container" android:background="@drawable/qs_detail_bg" android:layout_width="fill_parent" android:layout_height="fill_parent">
+        <include android:id="@id/qs_detail_header" layout="@layout/qs_detail_header" />
+        <include android:id="@id/top_divider" layout="@layout/qs_divider" />
+        <FrameLayout android:id="@android:id/content" android:background="@color/qs_detail_content_background_color" android:layout_width="fill_parent" android:layout_height="0.0dip" android:layout_weight="1.0" />
+        <include layout="@layout/qs_divider" />
+        <include layout="@layout/qs_detail_buttons" />
+    </LinearLayout>
+</com.android.systemui.qs.QSDetail>

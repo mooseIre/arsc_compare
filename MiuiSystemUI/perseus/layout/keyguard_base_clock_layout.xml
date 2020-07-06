@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:gravity="start" android:orientation="vertical" android:id="@id/miui_keyguard_base_clock" android:paddingBottom="@dimen/left_top_clock_margin_bottom" android:layout_width="fill_parent" android:layout_height="wrap_content"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <FrameLayout android:id="@id/clock_container1" android:layout_width="fill_parent" android:layout_height="wrap_content" />
+    <include android:layout_gravity="start" android:id="@id/miui_keyguard_clock_extra_info" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="@dimen/miui_left_top_clock_margin_left" layout="@layout/keyguard_clock_extra_info" />
+</LinearLayout>

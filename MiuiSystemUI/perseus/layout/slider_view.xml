@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:slide="http://schemas.android.com/apk/res-auto">
+    <RelativeLayout android:background="@drawable/corners_bg" android:layout_width="860.0px" android:layout_height="953.0px" android:layout_marginTop="465.0px" android:layout_centerHorizontal="true">
+        <TextView android:textSize="@dimen/slider_text_size" android:textColor="@color/slider_color" android:id="@id/slidertext" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="99.0px" android:text="@string/slider_text" android:layout_centerHorizontal="true" />
+        <com.android.systemui.sliderview.slideranimationView.SliderTipView android:id="@id/slidertipview" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_below="@id/slidertext" android:layout_centerHorizontal="true" slide:raw="@raw/slidervideo" />
+    </RelativeLayout>
+</RelativeLayout>

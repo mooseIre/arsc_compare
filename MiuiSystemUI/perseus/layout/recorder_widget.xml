@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.android.systemui.sliderpanel.widget.RecorderWidget android:background="@drawable/recorder" android:layout_width="wrap_content" android:layout_height="wrap_content" android:onClick="onWidgetClick" android:contentDescription="@string/recorder_description_talkback"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <TextView android:textSize="@dimen/recorder_title_text_size" android:textColor="@color/slider_widget_text_color" android:layout_gravity="center_horizontal" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="22.199982dip" android:text="@string/recorder_title" android:importantForAccessibility="no" />
+    <TextView android:textSize="@dimen/recorder_time_text_size" android:textColor="@color/slider_widget_text_color" android:layout_gravity="center_horizontal" android:id="@id/recorder_time" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="45.099976dip" android:text="@string/recorder_time" android:includeFontPadding="false" android:alpha="0.5" android:importantForAccessibility="no" />
+</com.android.systemui.sliderpanel.widget.RecorderWidget>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.android.systemui.sliderpanel.SliderPanel android:id="@id/slider_panel" android:clipChildren="false" android:clipToPadding="false" android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout android:layout_gravity="center" android:orientation="vertical" android:clipChildren="false" android:clipToPadding="false" android:layout_width="wrap_content" android:layout_height="wrap_content">
+        <LinearLayout android:orientation="horizontal" android:id="@id/first_line" android:layout_width="wrap_content" android:layout_height="wrap_content">
+            <include layout="@layout/counter_widget" />
+            <include layout="@layout/weather_widget" />
+        </LinearLayout>
+        <LinearLayout android:orientation="horizontal" android:id="@id/second_line" android:layout_width="wrap_content" android:layout_height="wrap_content">
+            <include layout="@layout/recorder_widget" />
+            <include layout="@layout/calculator_widget" />
+        </LinearLayout>
+        <LinearLayout android:orientation="horizontal" android:id="@id/third_line" android:layout_width="wrap_content" android:layout_height="wrap_content">
+            <include layout="@layout/scanner_widget" />
+            <include layout="@layout/note_widget" />
+            <include layout="@layout/camera_widget" />
+            <include layout="@layout/torch_widget" />
+        </LinearLayout>
+        <LinearLayout android:orientation="horizontal" android:id="@id/fourth_line" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+    </LinearLayout>
+</com.android.systemui.sliderpanel.SliderPanel>
