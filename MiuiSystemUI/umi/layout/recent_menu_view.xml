@@ -7,9 +7,6 @@
     <FrameLayout android:id="@id/menu_item_multi_window_container" style="@style/RecentMenuItemContainer">
         <ImageView android:id="@id/menu_item_multi_window" style="@style/RecentMenuItem" />
     </FrameLayout>
-    <FrameLayout android:id="@id/menu_item_small_window_container" style="@style/RecentMenuItemContainer">
-        <ImageView android:id="@id/menu_item_small_window" style="@style/RecentMenuItem" />
-    </FrameLayout>
     <FrameLayout android:id="@id/menu_item_info_container" style="@style/RecentMenuItemContainer">
         <ImageView android:id="@id/menu_item_info" style="@style/RecentMenuItem" />
     </FrameLayout>

@@ -9,5 +9,5 @@
         </LinearLayout>
         <TextView android:textSize="@dimen/optimized_heads_up_notification_action_text_size" android:textColor="@color/optimized_heads_up_notification_action_text" android:ellipsize="end" android:gravity="center" android:id="@id/action" android:background="@drawable/optimized_heads_up_notification_action_button_bg" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="fill_parent" android:maxWidth="@dimen/optimized_heads_up_notification_action_max_width" android:maxLines="1" />
     </LinearLayout>
-    <include layout="@layout/heads_up_mini_window_bar" />
+    <View android:layout_gravity="bottom|center" android:id="@id/mini_window_bar" android:background="@drawable/mini_window_bar" android:visibility="gone" android:layout_width="@dimen/mini_window_bar_width" android:layout_height="@dimen/mini_window_bar_height" android:layout_marginBottom="@dimen/mini_window_bar_marginBottom" />
 </com.android.systemui.statusbar.notification.OptimizedHeadsUpNotificationView>
