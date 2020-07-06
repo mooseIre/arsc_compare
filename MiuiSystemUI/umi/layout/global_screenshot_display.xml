@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <ImageView android:id="@id/background" android:layout_width="fill_parent" android:layout_height="fill_parent" android:src="?android:windowBackground" android:scaleType="fitXY" />
+    <com.android.systemui.screenshot.ScreenshotScrollView android:id="@id/global_screenshot" android:clickable="true" android:layout_width="fill_parent" android:layout_height="0.0px" android:layout_above="@id/button_container" android:layout_alignParentTop="true" />
+    <FrameLayout android:id="@id/top_titleormsg_layout" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_alignParentTop="true">
+        <RelativeLayout android:id="@id/screenshot_actionbar_layout" android:background="@color/screenshot_ui_bg" android:visibility="invisible" android:layout_width="fill_parent" android:layout_height="@dimen/screenshot_actionbar_back_height">
+            <TextView android:textSize="15.0sp" android:textColor="@color/screenshot_lighttheme_text_color" android:id="@id/screenshot_toalbum" android:paddingLeft="6.0dip" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="10.0dip" android:drawableLeft="@drawable/screenshot_actionbar_back_light" android:layout_alignParentLeft="true" android:layout_alignParentBottom="true" />
+            <Button android:textSize="12.0sp" android:textColor="@color/screenshot_lighttheme_text_color" android:id="@id/screenshot_feedback" android:background="@drawable/screenshot_feedback_light" android:visibility="invisible" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginRight="@dimen/screenshot_feedback_margin_right" android:layout_marginBottom="14.0dip" android:text="@string/screenshot_feedback_txt" android:layout_alignParentRight="true" android:layout_alignParentBottom="true" />
+        </RelativeLayout>
+        <TextView android:textSize="15.0sp" android:textColor="@color/screenshot_lighttheme_text_color" android:gravity="center" android:id="@id/txt_top_msg" android:background="@color/screenshot_top_msg_bg" android:padding="@dimen/screenshot_topmsg_padding" android:visibility="gone" android:layout_width="fill_parent" android:layout_height="wrap_content" />
+    </FrameLayout>
+    <View android:id="@id/top_msg_divider" android:background="@color/screenshot_part_divider_color" android:visibility="gone" android:layout_width="fill_parent" android:layout_height="0.33000004dip" android:layout_below="@id/top_titleormsg_layout" />
+    <View android:id="@id/bottom_container_divider" android:background="@color/screenshot_part_divider_color" android:layout_width="fill_parent" android:layout_height="0.33000004dip" android:layout_above="@id/button_container" />
+    <LinearLayout android:orientation="horizontal" android:id="@id/button_container" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentBottom="true" android:layout_centerHorizontal="true">
+        <View android:layout_width="0.0dip" android:layout_height="@dimen/screenshot_display_button_height" />
+        <Button android:textColor="@color/screenshot_lighttheme_text_color" android:layout_gravity="center" android:id="@id/button_stop_long_screenshot" android:background="@drawable/screenshot_btn_bg" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+    </LinearLayout>
+</RelativeLayout>
