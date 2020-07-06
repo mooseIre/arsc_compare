@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:gravity="center_vertical" android:orientation="horizontal" android:layout_width="fill_parent" android:layout_height="@dimen/qs_detail_buttons_container_height"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <TextView android:id="@android:id/button2" android:background="@drawable/qs_detail_button_left_bg" android:layout_width="0.0dip" android:layout_height="fill_parent" android:layout_weight="1.0" style="@style/TextAppearance.QS.DetailBottomButton" />
+    <include layout="@layout/qs_detail_buttons_divider" />
+    <TextView android:id="@android:id/button1" android:background="@drawable/qs_detail_button_right_bg" android:layout_width="0.0dip" android:layout_height="fill_parent" android:layout_weight="1.0" style="@style/TextAppearance.QS.DetailBottomButton" />
+</LinearLayout>

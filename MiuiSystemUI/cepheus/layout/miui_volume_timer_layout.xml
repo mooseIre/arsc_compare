@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout android:id="@id/miui_volume_timer_layout" android:background="@drawable/miui_volume_timer_layout_bg" android:visibility="gone" android:layout_width="fill_parent" android:layout_height="wrap_content"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <com.android.systemui.miui.volume.MiuiVolumeTimerSeekBar android:layout_gravity="center_horizontal" android:id="@id/miui_volume_timer" android:layout_marginTop="@dimen/miui_volume_timer_margin" android:layout_marginBottom="@dimen/miui_volume_timer_margin" style="@style/Widget.SeekBar.MiuiVolume.Timer" />
+</FrameLayout>
