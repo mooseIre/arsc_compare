@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:gravity="center_vertical" android:orientation="horizontal" android:focusable="true" android:focusableInTouchMode="true" android:layout_width="fill_parent" android:layout_height="@dimen/keyguard_charging_info_charging_middle_list_item_layout_height"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <ImageView android:id="@id/keyguard_charging_info_icon" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginEnd="@dimen/keyguard_charging_info_middle_list_icon_margin_end" />
+    <TextView android:textSize="@dimen/keyguard_charging_info_title_text_size" android:textColor="@color/keyguard_charging_info_text_dark_color" android:id="@id/keyguard_charging_info_des" android:layout_width="0.0dip" android:layout_height="wrap_content" android:layout_weight="1.0" />
+    <TextView android:textSize="@dimen/keyguard_charging_info_content_text_size" android:textColor="@color/keyguard_charging_info_text_middle_color" android:id="@id/keyguard_charging_info_data" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+</LinearLayout>
