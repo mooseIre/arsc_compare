@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:clipChildren="false" android:clipToPadding="false" android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <ImageView android:id="@id/wallpaper_img" android:layout_width="fill_parent" android:layout_height="fill_parent" android:src="@drawable/wallpaper" android:scaleType="fitXY" />
+    <com.android.systemui.fsgesture.ScrollerLayout android:id="@id/card_container" android:clipChildren="false" android:clipToPadding="false" android:layout_width="fill_parent" android:layout_height="fill_parent">
+        <com.android.systemui.fsgesture.RoundCornerImageView android:id="@id/first_card" android:focusable="true" android:clickable="true" android:layout_width="fill_parent" android:layout_height="fill_parent" android:src="@drawable/app_note" android:scaleType="fitXY" />
+        <com.android.systemui.fsgesture.RoundCornerImageView android:id="@id/second_card" android:focusable="true" android:clickable="true" android:layout_width="fill_parent" android:layout_height="fill_parent" android:src="@drawable/fsg_demo_drawer_main" android:scaleType="fitXY" />
+        <com.android.systemui.fsgesture.RoundCornerImageView android:id="@id/third_card" android:focusable="true" android:clickable="true" android:layout_width="fill_parent" android:layout_height="fill_parent" android:src="@drawable/fs_gesture_back_top" android:scaleType="fitXY" />
+    </com.android.systemui.fsgesture.ScrollerLayout>
+    <com.android.systemui.fsgesture.FsGestureDemoTitleView android:id="@id/fsgesture_title_view" android:layout_width="fill_parent" android:layout_height="wrap_content" />
+    <com.android.systemui.fsgesture.FsGestureDemoSwipeView android:id="@id/fsgesture_swipe_view" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+    <View android:id="@id/fsg_nav_view" android:background="@android:color/transparent" android:clickable="true" android:layout_width="fill_parent" android:layout_height="20.0dip" android:layout_alignParentBottom="true" />
+</RelativeLayout>

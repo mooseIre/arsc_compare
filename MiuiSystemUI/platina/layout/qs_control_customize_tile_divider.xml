@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:orientation="vertical" android:background="@drawable/qs_control_customizer_others_bg" android:paddingTop="@dimen/qs_control_customizer_others_padding_top" android:paddingBottom="@dimen/qs_control_customizer_others_padding_bottom" android:layout_width="fill_parent" android:layout_height="wrap_content"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <ImageView android:gravity="center" android:layout_gravity="center_horizontal" android:id="@id/indicator" android:layout_width="fill_parent" android:layout_height="wrap_content" />
+    <TextView android:layout_gravity="start" android:id="@id/others_title" android:layout_width="fill_parent" android:layout_height="@dimen/qs_control_customizer_others_title_height" android:layout_marginTop="@dimen/qs_control_customizer_others_title_margin_top" style="@style/TextAppearance.QSControl.CustomizeOthersTitle" />
+</LinearLayout>

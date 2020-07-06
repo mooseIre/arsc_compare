@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:orientation="horizontal" android:id="@id/mobile_combo" android:layout_width="wrap_content" android:layout_height="wrap_content"
+  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:systemui="http://schemas.android.com/apk/res-auto">
+    <com.android.systemui.statusbar.AnimatedImageView android:layout_gravity="center_vertical" android:id="@id/speech_hd" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="fill_parent" android:src="@drawable/stat_sys_speech_hd" />
+    <ImageView android:id="@id/mobile_roaming" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/stat_sys_data_connected_roam" android:scaleType="fitCenter" android:contentDescription="@string/accessibility_data_connection_roaming" />
+    <com.android.systemui.statusbar.AnimatedImageView android:layout_gravity="center_vertical" android:id="@id/volte" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/stat_sys_signal_hd_big" android:scaleType="fitCenter" />
+    <com.android.systemui.statusbar.AnimatedImageView android:layout_gravity="center_vertical" android:id="@id/volte_no_service" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/stat_sys_volte_no_service" />
+    <FrameLayout android:id="@id/mobile_container_left" android:paddingLeft="@dimen/status_bar_signal_type_margin_left" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="fill_parent">
+        <TextView android:textAppearance="@style/TextAppearance.StatusBar.Signal" android:ellipsize="marquee" android:gravity="center_vertical" android:layout_gravity="end|center|top" android:id="@id/mobile_type" android:layout_width="wrap_content" android:layout_height="wrap_content" android:maxEms="10" android:singleLine="true" android:fontFamily="sans-serif-semibold" />
+        <com.android.systemui.statusbar.AnimatedImageView android:layout_gravity="end|bottom|center" android:id="@id/mobile_inout_bottom" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+    </FrameLayout>
+    <FrameLayout android:layout_width="wrap_content" android:layout_height="wrap_content">
+        <FrameLayout android:layout_gravity="center_vertical" android:layout_width="wrap_content" android:layout_height="wrap_content">
+            <ImageView android:id="@id/notch_volte" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/stat_sys_signal_hd_notch" />
+            <ImageView android:id="@id/small_roam" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/stat_sys_data_connected_roam_small" />
+            <ImageView android:id="@id/card_slot" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+            <com.android.systemui.statusbar.AnimatedImageView android:id="@id/mobile_signal" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+        </FrameLayout>
+    </FrameLayout>
+    <ImageView android:id="@id/mobile_type_image" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginRight="@dimen/status_bar_mobile_inout_margin_left" android:src="@drawable/stat_sys_signal_4g_lte" />
+    <com.android.systemui.statusbar.AnimatedImageView android:layout_gravity="start|bottom|center" android:id="@id/mobile_inout" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+</LinearLayout>

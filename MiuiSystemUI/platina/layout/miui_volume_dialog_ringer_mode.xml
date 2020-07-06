@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.android.systemui.miui.volume.MiuiRingerModeLayout android:orientation="vertical" android:id="@id/miui_volume_ringer_layout" android:background="@drawable/miui_volume_dialog_background" android:clickable="true" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="@dimen/miui_volume_footer_margin_left" android:layout_marginTop="@dimen/miui_volume_footer_margin_top" android:layoutDirection="ltr" android:elevation="2.0dip"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <FrameLayout android:id="@id/miui_ringer_state_layout" android:layout_width="@dimen/miui_volume_silence_button_height" android:layout_height="@dimen/miui_volume_silence_button_height">
+        <LinearLayout android:orientation="@integer/miui_volume_ringer_layout_orientation" android:id="@id/miui_ringer_btn_layout" android:layout_width="fill_parent" android:layout_height="fill_parent" android:baselineAligned="false">
+            <LinearLayout android:gravity="center" android:orientation="@integer/miui_volume_ringer_layout_orientation" android:id="@id/miui_ringer_standard_btn" android:background="@drawable/miui_volume_ringer_btn_first_bg" android:layout_width="@dimen/miui_volume_ringer_btn_width" android:layout_height="@dimen/miui_volume_ringer_btn_height" android:layout_weight="1.0" android:contentDescription="@string/miui_ringer_standard">
+                <ImageView android:src="@drawable/ic_miui_volume_ringer_mute" style="@style/MiuiRingerModeIcon" />
+                <TextView android:id="@android:id/title" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/miui_ringer_standard" style="@style/MiuiRingerModeText" />
+            </LinearLayout>
+            <View android:id="@id/miui_volume_ringer_divider" android:background="@color/miui_volume_divider" android:visibility="gone" android:layout_width="@dimen/miui_volume_ringer_divider_width" android:layout_height="@dimen/miui_volume_ringer_divider_height" />
+            <LinearLayout android:gravity="center" android:orientation="@integer/miui_volume_ringer_layout_orientation" android:id="@id/miui_ringer_dnd_btn" android:background="@drawable/miui_volume_ringer_btn_last_bg" android:layout_width="@dimen/miui_volume_ringer_btn_width" android:layout_height="@dimen/miui_volume_ringer_btn_height" android:layout_weight="1.0" android:contentDescription="@string/miui_ringer_total">
+                <ImageView android:src="@drawable/ic_miui_volume_dnd" style="@style/MiuiRingerModeIcon" />
+                <TextView android:id="@android:id/title" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/miui_ringer_total" style="@style/MiuiRingerModeText" />
+            </LinearLayout>
+        </LinearLayout>
+        <ProgressBar android:layout_gravity="center" android:id="@id/miui_volume_count_down_progress" android:visibility="gone" android:layout_width="@dimen/miui_volume_silence_button_height" android:layout_height="@dimen/miui_volume_silence_button_height" style="@style/MiuiVolumeCountDownProgress" />
+        <TextView android:textSize="@dimen/miui_volume_timer_time_text_size_large" android:textColor="@color/miui_volume_tint_dark" android:gravity="center" android:id="@id/miui_volume_timer_ticking_port" android:visibility="gone" android:layout_width="fill_parent" android:layout_height="fill_parent" />
+    </FrameLayout>
+    <include layout="@layout/miui_volume_timer_layout" />
+    <ImageView android:layout_gravity="center_horizontal" android:id="@id/volume_expand_button" android:layout_width="@dimen/miui_volume_button_size" android:layout_height="@dimen/miui_volume_button_size" android:src="@drawable/ic_miui_volume_more" android:scaleType="center" android:tint="@color/miui_volume_tint_dark" android:soundEffectsEnabled="false" />
+</com.android.systemui.miui.volume.MiuiRingerModeLayout>
