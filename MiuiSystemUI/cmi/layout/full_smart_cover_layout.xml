@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.android.keyguard.smartcover.FullSmartCoverView android:id="@id/smart_cover_layout_id" android:background="@android:color/black" android:focusable="true" android:focusableInTouchMode="true" android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout android:id="@id/clock" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="101.0dip" android:layout_alignParentTop="true" android:layout_centerHorizontal="true" android:layoutDirection="ltr">
+        <com.android.keyguard.smartcover.Clock android:textSize="@dimen/full_smart_cover_time_size" android:textColor="@color/full_smart_cover_time_color" android:id="@id/time_hour" android:layout_width="wrap_content" android:layout_height="wrap_content" android:fontFamily="miui-light" />
+        <TextView android:textSize="@dimen/full_smart_cover_time_colon_size" android:textColor="@color/full_smart_cover_time_color" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/symbol_colon" android:fontFamily="miui-thin" />
+        <com.android.keyguard.smartcover.Clock android:textSize="@dimen/full_smart_cover_time_size" android:textColor="@color/full_smart_cover_time_color" android:id="@id/time_minute" android:layout_width="wrap_content" android:layout_height="wrap_content" android:fontFamily="miui-light" />
+    </LinearLayout>
+    <com.android.keyguard.smartcover.Clock android:textSize="@dimen/full_smart_cover_date_size" android:textColor="@color/full_smart_cover_date_color" android:id="@id/date" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="-5.0dip" android:layout_below="@id/clock" android:layout_centerHorizontal="true" />
+    <FrameLayout android:gravity="center_horizontal" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginTop="98.0dip" android:layout_below="@id/date" android:layout_centerHorizontal="true">
+        <LinearLayout android:gravity="center_horizontal" android:id="@id/info1" android:layout_width="fill_parent" android:layout_height="fill_parent">
+            <ImageView android:id="@id/image" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="10.0dip" />
+            <TextView android:textSize="@dimen/full_smart_cover_num_size" android:textColor="@color/full_smart_cover_num_color" android:id="@id/num" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="-2.0dip" />
+        </LinearLayout>
+        <LinearLayout android:gravity="center_horizontal" android:id="@id/info2" android:layout_width="fill_parent" android:layout_height="fill_parent">
+            <ImageView android:id="@id/image2" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="10.0dip" />
+            <TextView android:textSize="@dimen/full_smart_cover_num_size" android:textColor="@color/full_smart_cover_num_color" android:id="@id/num2" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="-2.0dip" />
+            <ImageView android:id="@id/image1" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="10.0dip" android:layout_marginStart="62.0dip" />
+            <TextView android:textSize="@dimen/full_smart_cover_num_size" android:textColor="@color/full_smart_cover_num_color" android:id="@id/num1" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="-2.0dip" />
+        </LinearLayout>
+    </FrameLayout>
+    <TextView android:textSize="@dimen/full_smart_cover_battery_text_size" android:textColor="@color/full_smart_cover_battery_text_color" android:layout_gravity="bottom|center" android:id="@id/battery_text" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="97.0dip" android:layout_alignParentBottom="true" android:layout_centerHorizontal="true" />
+</com.android.keyguard.smartcover.FullSmartCoverView>

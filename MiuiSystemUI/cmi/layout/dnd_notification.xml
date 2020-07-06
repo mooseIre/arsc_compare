@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout android:paddingTop="@dimen/dnd_notification_padding" android:paddingBottom="@dimen/dnd_notification_padding" android:layout_width="fill_parent" android:layout_height="wrap_content" android:minHeight="@dimen/dnd_notification_min_height"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/dnd_notification_icon" android:layout_marginStart="@dimen/dnd_notification_icon_margin_start" />
+    <TextView android:textAppearance="@android:style/TextAppearance.Material.Notification.Title" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/dnd_notification_warnings_title" android:singleLine="false" android:textAlignment="viewStart" android:layout_marginStart="@dimen/dnd_notification_title_margin_end" />
+</FrameLayout>

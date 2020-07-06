@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView android:textSize="11.0sp" android:textStyle="bold" android:gravity="end" android:id="@id/notification_text" android:background="@drawable/notification_group_overflow_number_bg" android:layout_width="wrap_content" android:layout_height="wrap_content" android:singleLine="true" android:fontFamily="miui" android:paddingStart="@dimen/notification_group_overflow_padding_horizontal" android:paddingEnd="@dimen/notification_group_overflow_padding_horizontal"
+  xmlns:android="http://schemas.android.com/apk/res/android" />

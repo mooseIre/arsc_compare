@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:gravity="center_vertical" android:orientation="horizontal" android:id="@id/ss" android:background="@drawable/miui_keygiaurd_left_view_list" android:layout_width="fill_parent" android:layout_height="@dimen/keyguard_move_left_item_layout_height"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <ImageView android:id="@id/keyguard_left_list_item_img" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="@dimen/keyguard_move_left_litem_image_margin_start" />
+    <TextView android:textSize="@dimen/keyguard_move_left_litem_textview_name_size" android:textColor="@color/keyguard_left_view_item_name_color" android:ellipsize="end" android:id="@id/keyguard_left_list_item_name" android:layout_width="0.0dip" android:layout_height="wrap_content" android:layout_marginLeft="@dimen/keyguard_move_left_litem_image_margin_end" android:layout_weight="1.0" />
+    <TextView android:textSize="@dimen/keyguard_move_left_litem_textview_num_size" android:textColor="@color/keyguard_left_view_item_number_color" android:id="@id/keyguard_left_list_item_number" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginEnd="@dimen/keyguard_move_left_litem_textview_margin_end" />
+</LinearLayout>
