@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.android.systemui.statusbar.phone.KeyguardStatusBarView android:gravity="center_vertical" android:id="@id/keyguard_header" android:layout_width="fill_parent" android:layout_height="@dimen/status_bar_height" android:baselineAligned="false" android:layout_marginStart="@dimen/panel_content_margin_nagative" android:layout_marginEnd="@dimen/panel_content_margin_nagative"
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:systemui="http://schemas.android.com/apk/res/com.android.systemui">
+    <FrameLayout android:id="@id/left_part_super_container" android:paddingTop="@dimen/notch_status_bar_padding_top" android:layout_width="wrap_content" android:layout_height="fill_parent" android:layout_centerVertical="true" android:layout_marginStart="@dimen/round_cornor_padding" android:layout_marginEnd="@dimen/round_cornor_padding" android:layout_alignParentStart="true">
+        <FrameLayout android:id="@id/keyguard_carrier_super_container" android:layout_width="@dimen/statusbar_carrier_max_width" android:layout_height="fill_parent" android:layout_marginStart="@dimen/statusbar_padding_start">
+            <LinearLayout android:layout_gravity="start|center" android:orientation="horizontal" android:id="@id/keyguard_carrier_container" android:layout_width="wrap_content" android:layout_height="fill_parent">
+                <include layout="@layout/miui_status_bar_prompt" />
+                <com.android.keyguard.CarrierText android:textAppearance="@style/TextAppearance.StatusBar.Clock" android:textColor="@android:color/white" android:ellipsize="marquee" android:gravity="center" android:layout_gravity="start|center" android:id="@id/keyguard_carrier_text" android:layout_width="wrap_content" android:layout_height="fill_parent" android:singleLine="true" android:marqueeRepeatLimit="1" android:paddingStart="@dimen/status_bar_clock_starting_padding" android:paddingEnd="@dimen/status_bar_clock_end_padding" />
+                <com.android.systemui.miui.widget.ClipEdgeLinearLayout android:gravity="center_vertical" android:orientation="horizontal" android:id="@id/keyguard_leftear_icons" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="fill_parent" app:clipEdge="true" app:clipEnd="true" xmlns:app="http://schemas.android.com/apk/res-auto" />
+            </LinearLayout>
+        </FrameLayout>
+    </FrameLayout>
+    <RelativeLayout android:id="@id/system_icons_super_container" android:layout_width="wrap_content" android:layout_height="fill_parent" android:layout_alignWithParentIfMissing="true" android:layout_toEndOf="@id/left_part_super_container" android:layout_alignParentEnd="true" />
+</com.android.systemui.statusbar.phone.KeyguardStatusBarView>

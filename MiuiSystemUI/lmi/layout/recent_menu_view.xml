@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.android.systemui.recents.views.RecentMenuView android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <FrameLayout android:id="@id/menu_item_lock_container" style="@style/RecentMenuItemContainer">
+        <ImageView android:id="@id/menu_item_lock" style="@style/RecentMenuItem" />
+    </FrameLayout>
+    <FrameLayout android:id="@id/menu_item_multi_window_container" style="@style/RecentMenuItemContainer">
+        <ImageView android:id="@id/menu_item_multi_window" style="@style/RecentMenuItem" />
+    </FrameLayout>
+    <FrameLayout android:id="@id/menu_item_small_window_container" style="@style/RecentMenuItemContainer">
+        <ImageView android:id="@id/menu_item_small_window" style="@style/RecentMenuItem" />
+    </FrameLayout>
+    <FrameLayout android:id="@id/menu_item_info_container" style="@style/RecentMenuItemContainer">
+        <ImageView android:id="@id/menu_item_info" style="@style/RecentMenuItem" />
+    </FrameLayout>
+</com.android.systemui.recents.views.RecentMenuView>
