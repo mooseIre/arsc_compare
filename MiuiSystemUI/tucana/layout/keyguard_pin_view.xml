@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.android.keyguard.KeyguardPINView android:layout_gravity="center" android:orientation="vertical" android:id="@id/keyguard_pin_view" android:clipChildren="false" android:clipToPadding="false" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layoutDirection="ltr"
+  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:androidprv="http://schemas.android.com/apk/res-auto">
+    <include layout="@layout/miui_keyguard_face_unlock_view" />
+    <include android:id="@id/keyguard_security_bouncer_message" layout="@layout/keyguard_security_bouncer_message_view" />
+    <Space android:layout_width="fill_parent" android:layout_height="0.0dip" android:layout_weight="1.0" />
+    <LinearLayout android:layout_gravity="center_horizontal" android:orientation="vertical" android:id="@id/container" android:clipChildren="false" android:clipToPadding="false" android:layout_width="@dimen/miui_keyguard_pin_view_rows_layout_width" android:layout_height="@dimen/miui_keyguard_pin_view_rows_layout_height">
+        <com.android.keyguard.AlphaOptimizedRelativeLayout android:id="@id/row0" android:paddingBottom="16.0dip" android:clipChildren="false" android:clipToPadding="false" android:layout_width="fill_parent" android:layout_height="0.0dip" android:layout_marginBottom="@dimen/miui_keyguard_pin_view_row0_margin_bottom" android:layout_weight="1.0">
+            <com.android.keyguard.PasswordTextViewForPIN android:gravity="center" android:id="@id/pinEntry" android:layout_width="@dimen/keyguard_security_pin_entry_width" android:layout_height="fill_parent" android:hint="@string/input_password_hint_text" android:layout_centerHorizontal="true" android:contentDescription="@string/keyguard_accessibility_pin_area" androidprv:scaledTextSize="28" />
+        </com.android.keyguard.AlphaOptimizedRelativeLayout>
+        <LinearLayout android:orientation="horizontal" android:id="@id/row1" android:clipChildren="false" android:clipToPadding="false" android:layout_width="fill_parent" android:layout_height="0.0dip" android:layout_marginBottom="@dimen/miui_keyguard_pin_view_row1_row2_row3_margin_bottom" android:layout_weight="1.0">
+            <com.android.keyguard.NumPadKey android:id="@id/key1" android:layout_width="0.0px" android:layout_height="fill_parent" android:layout_weight="1.0" androidprv:digit="1" androidprv:textView="@id/pinEntry" />
+            <com.android.keyguard.NumPadKey android:id="@id/key2" android:layout_width="0.0px" android:layout_height="fill_parent" android:layout_weight="1.0" androidprv:digit="2" androidprv:textView="@id/pinEntry" />
+            <com.android.keyguard.NumPadKey android:id="@id/key3" android:layout_width="0.0px" android:layout_height="fill_parent" android:layout_weight="1.0" androidprv:digit="3" androidprv:textView="@id/pinEntry" />
+        </LinearLayout>
+        <LinearLayout android:orientation="horizontal" android:id="@id/row2" android:clipChildren="false" android:clipToPadding="false" android:layout_width="fill_parent" android:layout_height="0.0dip" android:layout_marginBottom="@dimen/miui_keyguard_pin_view_row1_row2_row3_margin_bottom" android:layout_weight="1.0">
+            <com.android.keyguard.NumPadKey android:id="@id/key4" android:layout_width="0.0px" android:layout_height="fill_parent" android:layout_weight="1.0" androidprv:digit="4" androidprv:textView="@id/pinEntry" />
+            <com.android.keyguard.NumPadKey android:id="@id/key5" android:layout_width="0.0px" android:layout_height="fill_parent" android:layout_weight="1.0" androidprv:digit="5" androidprv:textView="@id/pinEntry" />
+            <com.android.keyguard.NumPadKey android:id="@id/key6" android:layout_width="0.0px" android:layout_height="fill_parent" android:layout_weight="1.0" androidprv:digit="6" androidprv:textView="@id/pinEntry" />
+        </LinearLayout>
+        <LinearLayout android:orientation="horizontal" android:id="@id/row3" android:clipChildren="false" android:clipToPadding="false" android:layout_width="fill_parent" android:layout_height="0.0dip" android:layout_marginBottom="@dimen/miui_keyguard_pin_view_row1_row2_row3_margin_bottom" android:layout_weight="1.0">
+            <com.android.keyguard.NumPadKey android:id="@id/key7" android:layout_width="0.0px" android:layout_height="fill_parent" android:layout_weight="1.0" androidprv:digit="7" androidprv:textView="@id/pinEntry" />
+            <com.android.keyguard.NumPadKey android:id="@id/key8" android:layout_width="0.0px" android:layout_height="fill_parent" android:layout_weight="1.0" androidprv:digit="8" androidprv:textView="@id/pinEntry" />
+            <com.android.keyguard.NumPadKey android:id="@id/key9" android:layout_width="0.0px" android:layout_height="fill_parent" android:layout_weight="1.0" androidprv:digit="9" androidprv:textView="@id/pinEntry" />
+        </LinearLayout>
+        <LinearLayout android:orientation="horizontal" android:id="@id/row4" android:clipChildren="false" android:clipToPadding="false" android:layout_width="fill_parent" android:layout_height="0.0dip" android:layout_marginBottom="@dimen/miui_keyguard_pin_view_row4_margin_bottom" android:layout_weight="1.0">
+            <Space android:layout_width="0.0px" android:layout_height="fill_parent" android:layout_weight="1.0" />
+            <com.android.keyguard.NumPadKey android:id="@id/key0" android:layout_width="0.0px" android:layout_height="fill_parent" android:layout_weight="1.0" androidprv:digit="0" androidprv:textView="@id/pinEntry" />
+            <Space android:layout_width="0.0px" android:layout_height="fill_parent" android:layout_weight="1.0" />
+        </LinearLayout>
+        <include android:id="@id/keyguard_selector_fade_container" android:layout_width="fill_parent" android:layout_height="0.0dip" android:layout_marginBottom="@dimen/miui_keyguard_pin_view_row5_margin_bottom" android:layout_weight="1.0" layout="@layout/keyguard_eca" />
+    </LinearLayout>
+</com.android.keyguard.KeyguardPINView>
