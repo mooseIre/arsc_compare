@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout android:background="@drawable/qs_control_customizer_others_bg" android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <LinearLayout android:orientation="vertical" android:id="@id/content" android:paddingTop="@dimen/qs_control_customizer_others_padding_top" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_marginStart="@dimen/qs_control_panel_margin_horizontal" android:layout_marginEnd="@dimen/qs_control_panel_margin_horizontal">
+        <LinearLayout android:orientation="vertical" android:id="@id/header" android:layout_width="fill_parent" android:layout_height="wrap_content">
+            <ImageView android:gravity="center" android:layout_gravity="center_horizontal" android:id="@id/indicator" android:layout_width="fill_parent" android:layout_height="wrap_content" android:src="@drawable/qs_control_tiles_indicator" />
+            <TextView android:layout_gravity="start" android:id="@id/others_title" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginTop="@dimen/qs_control_customizer_others_title_margin_top" android:layout_marginBottom="@dimen/qs_control_customizer_others_padding_bottom" android:text="@string/qs_control_customize_other_tiles_title" style="@style/TextAppearance.QSControl.CustomizeOthersTitle" />
+        </LinearLayout>
+        <miuix.springback.view.SpringBackLayout android:clipChildren="false" android:clipToPadding="false" android:layout_width="fill_parent" android:layout_height="0.0dip" android:layout_weight="1.0" app:scrollOrientation="vertical" app:scrollableView="@id/list_others">
+            <miuix.recyclerview.widget.RecyclerView android:id="@id/list_others" android:scrollbars="none" android:clipChildren="false" android:clipToPadding="false" android:layout_width="fill_parent" android:layout_height="fill_parent" android:importantForAccessibility="no" android:scrollIndicators="none" />
+        </miuix.springback.view.SpringBackLayout>
+    </LinearLayout>
+</FrameLayout>

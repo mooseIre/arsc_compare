@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout android:layout_gravity="@integer/notification_panel_layout_gravity" android:id="@id/brightness_mirror" android:background="@drawable/qs_control_brightness_toggle_bg" android:visibility="invisible" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="@dimen/panel_content_margin_horizontal" android:layout_marginEnd="@dimen/panel_content_margin_horizontal" android:elevation="@dimen/qs_brightness_mirror_elevation" android:outlineProvider="background"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <FrameLayout android:id="@id/mirror_content" android:layout_width="@dimen/qs_control_brightness_width" android:layout_height="@dimen/qs_control_brightness_dialog_height">
+        <com.android.systemui.miui.controlcenter.QCToggleSliderView android:layout_gravity="center_vertical" android:id="@id/brightness_slider" android:layout_width="fill_parent" android:layout_height="fill_parent" android:contentDescription="@string/accessibility_brightness" />
+    </FrameLayout>
+</FrameLayout>
