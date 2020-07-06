@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout android:clipChildren="false" android:clipToPadding="false" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_alignParentBottom="true"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <SeekBar android:id="@id/media_notification_progress_bar" android:clickable="true" android:layout_width="fill_parent" android:layout_height="wrap_content" android:maxHeight="@dimen/media_notification_seekbar_height" android:layout_marginStart="@dimen/media_notification_seekbar_margin_start" android:layout_marginEnd="@dimen/media_notification_seekbar_margin_end" android:splitTrack="false" style="@style/MediaNotificationSeekBar" />
+    <FrameLayout android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginTop="@dimen/media_notification_seekbar_text_margin_top">
+        <TextView android:textSize="@dimen/media_notification_progress_text_size" android:textColor="@color/media_notification_time_color" android:gravity="start" android:id="@id/media_notification_elapsed_time" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_alignParentLeft="true" android:layout_marginStart="@dimen/media_notification_content_margin_start" />
+        <TextView android:textSize="@dimen/media_notification_progress_text_size" android:textColor="@color/media_notification_time_color" android:gravity="end" android:id="@id/media_notification_total_time" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_alignParentRight="true" android:layout_marginEnd="@dimen/media_notification_content_margin_start" />
+    </FrameLayout>
+</FrameLayout>
