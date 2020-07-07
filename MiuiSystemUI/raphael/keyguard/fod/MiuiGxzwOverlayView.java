@@ -114,9 +114,7 @@ class MiuiGxzwOverlayView extends GxzwWindowFrameLayout implements MiuiGxzwIconV
                 this.mScreenEffectNone = true;
             }
             this.mWaitDisableReadingMode = true;
-            if (this.mGoingToSleep) {
-                this.mHandler.postDelayed(this.mDisableReadingModeAction, 300);
-            } else {
+            if (!this.mGoingToSleep) {
                 this.mDisableReadingModeAction.run();
             }
         }
@@ -179,6 +177,8 @@ class MiuiGxzwOverlayView extends GxzwWindowFrameLayout implements MiuiGxzwIconV
     }
 
     public void onFinishedGoingToSleep() {
+        Log.d("MiuiGxzwOverlayView", "onFinishedGoingToSleep");
+        this.mDisableReadingModeAction.run();
         this.mGoingToSleep = false;
     }
 

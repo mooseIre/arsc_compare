@@ -378,7 +378,7 @@ class MiuiGxzwAnimView {
     }
 
     private static class MiuiGxzwAnimViewInternal extends GxzwNoRotateFrameLayout implements DisplayManager.DisplayListener, TextureView.SurfaceTextureListener {
-        private float mAlpha = 1.0f;
+        private float mAlpha;
         /* access modifiers changed from: private */
         public ValueAnimator mAlphaAnimator;
         /* access modifiers changed from: private */
@@ -392,144 +392,17 @@ class MiuiGxzwAnimView {
         private boolean mDozing = false;
         private boolean mDozingIconAnimDone = false;
         private boolean mGxzwTransparent = true;
-        private final KeyguardUpdateMonitorCallback mKeyguardUpdateMonitorCallback = new KeyguardUpdateMonitorCallback() {
-            public void onKeyguardBouncerChanged(boolean z) {
-                MiuiGxzwAnimViewInternal.this.mMainHandler.post(
-                /*  JADX ERROR: Method code generation error
-                    jadx.core.utils.exceptions.CodegenException: Error generate insn: 0x0019: INVOKE  
-                      (wrap: android.os.Handler : 0x0010: INVOKE  (r1v1 android.os.Handler) = 
-                      (wrap: com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal : 0x000e: IGET  (r1v0 com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal) = 
-                      (r3v0 'this' com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$1 A[THIS])
-                     com.android.keyguard.fod.MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.1.this$0 com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal)
-                     com.android.keyguard.fod.MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.access$000(com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal):android.os.Handler type: STATIC)
-                      (wrap: com.android.keyguard.fod.-$$Lambda$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$1$i4db7Cf5H8H4M7ryC89z0IUwbhE : 0x0016: CONSTRUCTOR  (r2v0 com.android.keyguard.fod.-$$Lambda$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$1$i4db7Cf5H8H4M7ryC89z0IUwbhE) = 
-                      (r3v0 'this' com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$1 A[THIS])
-                      (r4v0 'z' boolean)
-                      (wrap: boolean : 0x000a: INVOKE  (r0v3 boolean) = 
-                      (wrap: com.android.keyguard.KeyguardUpdateMonitor : 0x0006: INVOKE  (r0v2 com.android.keyguard.KeyguardUpdateMonitor) = 
-                      (wrap: android.content.Context : 0x0002: INVOKE  (r0v1 android.content.Context) = 
-                      (wrap: com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal : 0x0000: IGET  (r0v0 com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal) = 
-                      (r3v0 'this' com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$1 A[THIS])
-                     com.android.keyguard.fod.MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.1.this$0 com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal)
-                     android.widget.FrameLayout.getContext():android.content.Context type: VIRTUAL)
-                     com.android.keyguard.KeyguardUpdateMonitor.getInstance(android.content.Context):com.android.keyguard.KeyguardUpdateMonitor type: STATIC)
-                     com.android.keyguard.KeyguardUpdateMonitor.isDeviceInteractive():boolean type: VIRTUAL)
-                     call: com.android.keyguard.fod.-$$Lambda$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$1$i4db7Cf5H8H4M7ryC89z0IUwbhE.<init>(com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$1, boolean, boolean):void type: CONSTRUCTOR)
-                     android.os.Handler.post(java.lang.Runnable):boolean type: VIRTUAL in method: com.android.keyguard.fod.MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.1.onKeyguardBouncerChanged(boolean):void, dex: classes.dex
-                    	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:256)
-                    	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:221)
-                    	at jadx.core.codegen.RegionGen.makeSimpleBlock(RegionGen.java:109)
-                    	at jadx.core.codegen.RegionGen.makeRegion(RegionGen.java:55)
-                    	at jadx.core.codegen.RegionGen.makeSimpleRegion(RegionGen.java:92)
-                    	at jadx.core.codegen.RegionGen.makeRegion(RegionGen.java:58)
-                    	at jadx.core.codegen.MethodGen.addRegionInsns(MethodGen.java:211)
-                    	at jadx.core.codegen.MethodGen.addInstructions(MethodGen.java:204)
-                    	at jadx.core.codegen.ClassGen.addMethodCode(ClassGen.java:318)
-                    	at jadx.core.codegen.ClassGen.addMethod(ClassGen.java:271)
-                    	at jadx.core.codegen.ClassGen.lambda$addInnerClsAndMethods$2(ClassGen.java:240)
-                    	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:183)
-                    	at java.base/java.util.ArrayList.forEach(ArrayList.java:1540)
-                    	at java.base/java.util.stream.SortedOps$RefSortingSink.end(SortedOps.java:395)
-                    	at java.base/java.util.stream.Sink$ChainedReference.end(Sink.java:258)
-                    	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:485)
-                    	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:474)
-                    	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:150)
-                    	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:173)
-                    	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
-                    	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:497)
-                    	at jadx.core.codegen.ClassGen.addInnerClsAndMethods(ClassGen.java:236)
-                    	at jadx.core.codegen.ClassGen.addClassBody(ClassGen.java:227)
-                    	at jadx.core.codegen.InsnGen.inlineAnonymousConstructor(InsnGen.java:676)
-                    	at jadx.core.codegen.InsnGen.makeConstructor(InsnGen.java:607)
-                    	at jadx.core.codegen.InsnGen.makeInsnBody(InsnGen.java:364)
-                    	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:231)
-                    	at jadx.core.codegen.InsnGen.addWrappedArg(InsnGen.java:123)
-                    	at jadx.core.codegen.InsnGen.addArg(InsnGen.java:107)
-                    	at jadx.core.codegen.InsnGen.addArg(InsnGen.java:98)
-                    	at jadx.core.codegen.InsnGen.makeInsnBody(InsnGen.java:480)
-                    	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:231)
-                    	at jadx.core.codegen.ClassGen.addInsnBody(ClassGen.java:437)
-                    	at jadx.core.codegen.ClassGen.addField(ClassGen.java:378)
-                    	at jadx.core.codegen.ClassGen.addFields(ClassGen.java:348)
-                    	at jadx.core.codegen.ClassGen.addClassBody(ClassGen.java:226)
-                    	at jadx.core.codegen.ClassGen.addClassCode(ClassGen.java:112)
-                    	at jadx.core.codegen.ClassGen.addInnerClass(ClassGen.java:249)
-                    	at jadx.core.codegen.ClassGen.lambda$addInnerClsAndMethods$2(ClassGen.java:238)
-                    	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:183)
-                    	at java.base/java.util.ArrayList.forEach(ArrayList.java:1540)
-                    	at java.base/java.util.stream.SortedOps$RefSortingSink.end(SortedOps.java:395)
-                    	at java.base/java.util.stream.Sink$ChainedReference.end(Sink.java:258)
-                    	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:485)
-                    	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:474)
-                    	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:150)
-                    	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:173)
-                    	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
-                    	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:497)
-                    	at jadx.core.codegen.ClassGen.addInnerClsAndMethods(ClassGen.java:236)
-                    	at jadx.core.codegen.ClassGen.addClassBody(ClassGen.java:227)
-                    	at jadx.core.codegen.ClassGen.addClassCode(ClassGen.java:112)
-                    	at jadx.core.codegen.ClassGen.makeClass(ClassGen.java:78)
-                    	at jadx.core.codegen.CodeGen.wrapCodeGen(CodeGen.java:44)
-                    	at jadx.core.codegen.CodeGen.generateJavaCode(CodeGen.java:33)
-                    	at jadx.core.codegen.CodeGen.generate(CodeGen.java:21)
-                    	at jadx.core.ProcessClass.generateCode(ProcessClass.java:61)
-                    	at jadx.core.dex.nodes.ClassNode.decompile(ClassNode.java:273)
-                    Caused by: jadx.core.utils.exceptions.CodegenException: Error generate insn: 0x0016: CONSTRUCTOR  (r2v0 com.android.keyguard.fod.-$$Lambda$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$1$i4db7Cf5H8H4M7ryC89z0IUwbhE) = 
-                      (r3v0 'this' com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$1 A[THIS])
-                      (r4v0 'z' boolean)
-                      (wrap: boolean : 0x000a: INVOKE  (r0v3 boolean) = 
-                      (wrap: com.android.keyguard.KeyguardUpdateMonitor : 0x0006: INVOKE  (r0v2 com.android.keyguard.KeyguardUpdateMonitor) = 
-                      (wrap: android.content.Context : 0x0002: INVOKE  (r0v1 android.content.Context) = 
-                      (wrap: com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal : 0x0000: IGET  (r0v0 com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal) = 
-                      (r3v0 'this' com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$1 A[THIS])
-                     com.android.keyguard.fod.MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.1.this$0 com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal)
-                     android.widget.FrameLayout.getContext():android.content.Context type: VIRTUAL)
-                     com.android.keyguard.KeyguardUpdateMonitor.getInstance(android.content.Context):com.android.keyguard.KeyguardUpdateMonitor type: STATIC)
-                     com.android.keyguard.KeyguardUpdateMonitor.isDeviceInteractive():boolean type: VIRTUAL)
-                     call: com.android.keyguard.fod.-$$Lambda$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$1$i4db7Cf5H8H4M7ryC89z0IUwbhE.<init>(com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$1, boolean, boolean):void type: CONSTRUCTOR in method: com.android.keyguard.fod.MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.1.onKeyguardBouncerChanged(boolean):void, dex: classes.dex
-                    	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:256)
-                    	at jadx.core.codegen.InsnGen.addWrappedArg(InsnGen.java:123)
-                    	at jadx.core.codegen.InsnGen.addArg(InsnGen.java:107)
-                    	at jadx.core.codegen.InsnGen.generateMethodArguments(InsnGen.java:787)
-                    	at jadx.core.codegen.InsnGen.makeInvoke(InsnGen.java:728)
-                    	at jadx.core.codegen.InsnGen.makeInsnBody(InsnGen.java:368)
-                    	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:250)
-                    	... 57 more
-                    Caused by: jadx.core.utils.exceptions.JadxRuntimeException: Expected class to be processed at this point, class: com.android.keyguard.fod.-$$Lambda$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$1$i4db7Cf5H8H4M7ryC89z0IUwbhE, state: NOT_LOADED
-                    	at jadx.core.dex.nodes.ClassNode.ensureProcessed(ClassNode.java:260)
-                    	at jadx.core.codegen.InsnGen.makeConstructor(InsnGen.java:606)
-                    	at jadx.core.codegen.InsnGen.makeInsnBody(InsnGen.java:364)
-                    	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:231)
-                    	... 63 more
-                    */
-                /*
-                    this = this;
-                    com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal r0 = com.android.keyguard.fod.MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.this
-                    android.content.Context r0 = r0.getContext()
-                    com.android.keyguard.KeyguardUpdateMonitor r0 = com.android.keyguard.KeyguardUpdateMonitor.getInstance(r0)
-                    boolean r0 = r0.isDeviceInteractive()
-                    com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal r1 = com.android.keyguard.fod.MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.this
-                    android.os.Handler r1 = r1.mMainHandler
-                    com.android.keyguard.fod.-$$Lambda$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$1$i4db7Cf5H8H4M7ryC89z0IUwbhE r2 = new com.android.keyguard.fod.-$$Lambda$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$1$i4db7Cf5H8H4M7ryC89z0IUwbhE
-                    r2.<init>(r3, r4, r0)
-                    r1.post(r2)
-                    return
-                */
-                throw new UnsupportedOperationException("Method not decompiled: com.android.keyguard.fod.MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.AnonymousClass1.onKeyguardBouncerChanged(boolean):void");
-            }
-
-            public /* synthetic */ void lambda$onKeyguardBouncerChanged$0$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$1(boolean z, boolean z2) {
-                MiuiGxzwAnimViewInternal.this.onKeyguardBouncerChanged(z, z2);
-            }
-        };
+        private final KeyguardUpdateMonitorCallback mKeyguardUpdateMonitorCallback;
         private WindowManager.LayoutParams mLayoutParams;
         private boolean mLightIcon = false;
         private boolean mLightWallpaperGxzw;
         /* access modifiers changed from: private */
-        public final Handler mMainHandler = new Handler();
+        public final Handler mMainHandler;
         private MiuiGxzwAnimManager mMiuiGxzwAnimManager;
         private MiuiGxzwFrameAnimation mMiuiGxzwFrameAnimation;
         private MiuiGxzwTipView mMiuiGxzwTipView;
+        /* access modifiers changed from: private */
+        public Runnable mReleaseDrawWackLockRunnable;
         private Runnable mRemoveRunnable = new Runnable() {
             public final void run() {
                 MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.this.removeViewFromWindow();
@@ -539,133 +412,7 @@ class MiuiGxzwAnimView {
         private boolean mSurfaceCreate = false;
         private final Handler mSystemUIHandler;
         private TextureView mTextureView;
-        private final KeyguardUpdateMonitor.WallpaperChangeCallback mWallpaperChangeCallback = new KeyguardUpdateMonitor.WallpaperChangeCallback() {
-            public void onWallpaperChange(boolean z) {
-                KeyguardUpdateMonitor.getInstance(MiuiGxzwAnimViewInternal.this.getContext());
-                MiuiGxzwAnimViewInternal.this.mMainHandler.post(
-                /*  JADX ERROR: Method code generation error
-                    jadx.core.utils.exceptions.CodegenException: Error generate insn: 0x001e: INVOKE  
-                      (wrap: android.os.Handler : 0x0015: INVOKE  (r0v1 android.os.Handler) = 
-                      (wrap: com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal : 0x0013: IGET  (r0v0 com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal) = 
-                      (r2v0 'this' com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$2 A[THIS])
-                     com.android.keyguard.fod.MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.2.this$0 com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal)
-                     com.android.keyguard.fod.MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.access$000(com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal):android.os.Handler type: STATIC)
-                      (wrap: com.android.keyguard.fod.-$$Lambda$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$2$rSJ0ssoNyg2LzR8PzqB-LE_kQpc : 0x001b: CONSTRUCTOR  (r1v0 com.android.keyguard.fod.-$$Lambda$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$2$rSJ0ssoNyg2LzR8PzqB-LE_kQpc) = 
-                      (r2v0 'this' com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$2 A[THIS])
-                      (wrap: boolean : 0x000f: INVOKE  (r3v5 boolean) = 
-                      (wrap: android.content.Context : 0x000b: INVOKE  (r3v4 android.content.Context) = 
-                      (wrap: com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal : 0x0009: IGET  (r3v3 com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal) = 
-                      (r2v0 'this' com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$2 A[THIS])
-                     com.android.keyguard.fod.MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.2.this$0 com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal)
-                     android.widget.FrameLayout.getContext():android.content.Context type: VIRTUAL)
-                     com.android.keyguard.KeyguardUpdateMonitor.isWallpaperColorLight(android.content.Context):boolean type: STATIC)
-                     call: com.android.keyguard.fod.-$$Lambda$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$2$rSJ0ssoNyg2LzR8PzqB-LE_kQpc.<init>(com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$2, boolean):void type: CONSTRUCTOR)
-                     android.os.Handler.post(java.lang.Runnable):boolean type: VIRTUAL in method: com.android.keyguard.fod.MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.2.onWallpaperChange(boolean):void, dex: classes.dex
-                    	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:256)
-                    	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:221)
-                    	at jadx.core.codegen.RegionGen.makeSimpleBlock(RegionGen.java:109)
-                    	at jadx.core.codegen.RegionGen.makeRegion(RegionGen.java:55)
-                    	at jadx.core.codegen.RegionGen.makeSimpleRegion(RegionGen.java:92)
-                    	at jadx.core.codegen.RegionGen.makeRegion(RegionGen.java:58)
-                    	at jadx.core.codegen.MethodGen.addRegionInsns(MethodGen.java:211)
-                    	at jadx.core.codegen.MethodGen.addInstructions(MethodGen.java:204)
-                    	at jadx.core.codegen.ClassGen.addMethodCode(ClassGen.java:318)
-                    	at jadx.core.codegen.ClassGen.addMethod(ClassGen.java:271)
-                    	at jadx.core.codegen.ClassGen.lambda$addInnerClsAndMethods$2(ClassGen.java:240)
-                    	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:183)
-                    	at java.base/java.util.ArrayList.forEach(ArrayList.java:1540)
-                    	at java.base/java.util.stream.SortedOps$RefSortingSink.end(SortedOps.java:395)
-                    	at java.base/java.util.stream.Sink$ChainedReference.end(Sink.java:258)
-                    	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:485)
-                    	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:474)
-                    	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:150)
-                    	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:173)
-                    	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
-                    	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:497)
-                    	at jadx.core.codegen.ClassGen.addInnerClsAndMethods(ClassGen.java:236)
-                    	at jadx.core.codegen.ClassGen.addClassBody(ClassGen.java:227)
-                    	at jadx.core.codegen.InsnGen.inlineAnonymousConstructor(InsnGen.java:676)
-                    	at jadx.core.codegen.InsnGen.makeConstructor(InsnGen.java:607)
-                    	at jadx.core.codegen.InsnGen.makeInsnBody(InsnGen.java:364)
-                    	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:231)
-                    	at jadx.core.codegen.InsnGen.addWrappedArg(InsnGen.java:123)
-                    	at jadx.core.codegen.InsnGen.addArg(InsnGen.java:107)
-                    	at jadx.core.codegen.InsnGen.addArg(InsnGen.java:98)
-                    	at jadx.core.codegen.InsnGen.makeInsnBody(InsnGen.java:480)
-                    	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:231)
-                    	at jadx.core.codegen.ClassGen.addInsnBody(ClassGen.java:437)
-                    	at jadx.core.codegen.ClassGen.addField(ClassGen.java:378)
-                    	at jadx.core.codegen.ClassGen.addFields(ClassGen.java:348)
-                    	at jadx.core.codegen.ClassGen.addClassBody(ClassGen.java:226)
-                    	at jadx.core.codegen.ClassGen.addClassCode(ClassGen.java:112)
-                    	at jadx.core.codegen.ClassGen.addInnerClass(ClassGen.java:249)
-                    	at jadx.core.codegen.ClassGen.lambda$addInnerClsAndMethods$2(ClassGen.java:238)
-                    	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:183)
-                    	at java.base/java.util.ArrayList.forEach(ArrayList.java:1540)
-                    	at java.base/java.util.stream.SortedOps$RefSortingSink.end(SortedOps.java:395)
-                    	at java.base/java.util.stream.Sink$ChainedReference.end(Sink.java:258)
-                    	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:485)
-                    	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:474)
-                    	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:150)
-                    	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:173)
-                    	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
-                    	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:497)
-                    	at jadx.core.codegen.ClassGen.addInnerClsAndMethods(ClassGen.java:236)
-                    	at jadx.core.codegen.ClassGen.addClassBody(ClassGen.java:227)
-                    	at jadx.core.codegen.ClassGen.addClassCode(ClassGen.java:112)
-                    	at jadx.core.codegen.ClassGen.makeClass(ClassGen.java:78)
-                    	at jadx.core.codegen.CodeGen.wrapCodeGen(CodeGen.java:44)
-                    	at jadx.core.codegen.CodeGen.generateJavaCode(CodeGen.java:33)
-                    	at jadx.core.codegen.CodeGen.generate(CodeGen.java:21)
-                    	at jadx.core.ProcessClass.generateCode(ProcessClass.java:61)
-                    	at jadx.core.dex.nodes.ClassNode.decompile(ClassNode.java:273)
-                    Caused by: jadx.core.utils.exceptions.CodegenException: Error generate insn: 0x001b: CONSTRUCTOR  (r1v0 com.android.keyguard.fod.-$$Lambda$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$2$rSJ0ssoNyg2LzR8PzqB-LE_kQpc) = 
-                      (r2v0 'this' com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$2 A[THIS])
-                      (wrap: boolean : 0x000f: INVOKE  (r3v5 boolean) = 
-                      (wrap: android.content.Context : 0x000b: INVOKE  (r3v4 android.content.Context) = 
-                      (wrap: com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal : 0x0009: IGET  (r3v3 com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal) = 
-                      (r2v0 'this' com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$2 A[THIS])
-                     com.android.keyguard.fod.MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.2.this$0 com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal)
-                     android.widget.FrameLayout.getContext():android.content.Context type: VIRTUAL)
-                     com.android.keyguard.KeyguardUpdateMonitor.isWallpaperColorLight(android.content.Context):boolean type: STATIC)
-                     call: com.android.keyguard.fod.-$$Lambda$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$2$rSJ0ssoNyg2LzR8PzqB-LE_kQpc.<init>(com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$2, boolean):void type: CONSTRUCTOR in method: com.android.keyguard.fod.MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.2.onWallpaperChange(boolean):void, dex: classes.dex
-                    	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:256)
-                    	at jadx.core.codegen.InsnGen.addWrappedArg(InsnGen.java:123)
-                    	at jadx.core.codegen.InsnGen.addArg(InsnGen.java:107)
-                    	at jadx.core.codegen.InsnGen.generateMethodArguments(InsnGen.java:787)
-                    	at jadx.core.codegen.InsnGen.makeInvoke(InsnGen.java:728)
-                    	at jadx.core.codegen.InsnGen.makeInsnBody(InsnGen.java:368)
-                    	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:250)
-                    	... 57 more
-                    Caused by: jadx.core.utils.exceptions.JadxRuntimeException: Expected class to be processed at this point, class: com.android.keyguard.fod.-$$Lambda$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$2$rSJ0ssoNyg2LzR8PzqB-LE_kQpc, state: NOT_LOADED
-                    	at jadx.core.dex.nodes.ClassNode.ensureProcessed(ClassNode.java:260)
-                    	at jadx.core.codegen.InsnGen.makeConstructor(InsnGen.java:606)
-                    	at jadx.core.codegen.InsnGen.makeInsnBody(InsnGen.java:364)
-                    	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:231)
-                    	... 63 more
-                    */
-                /*
-                    this = this;
-                    com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal r3 = com.android.keyguard.fod.MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.this
-                    android.content.Context r3 = r3.getContext()
-                    com.android.keyguard.KeyguardUpdateMonitor.getInstance(r3)
-                    com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal r3 = com.android.keyguard.fod.MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.this
-                    android.content.Context r3 = r3.getContext()
-                    boolean r3 = com.android.keyguard.KeyguardUpdateMonitor.isWallpaperColorLight(r3)
-                    com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal r0 = com.android.keyguard.fod.MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.this
-                    android.os.Handler r0 = r0.mMainHandler
-                    com.android.keyguard.fod.-$$Lambda$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$2$rSJ0ssoNyg2LzR8PzqB-LE_kQpc r1 = new com.android.keyguard.fod.-$$Lambda$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$2$rSJ0ssoNyg2LzR8PzqB-LE_kQpc
-                    r1.<init>(r2, r3)
-                    r0.post(r1)
-                    return
-                */
-                throw new UnsupportedOperationException("Method not decompiled: com.android.keyguard.fod.MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.AnonymousClass2.onWallpaperChange(boolean):void");
-            }
-
-            public /* synthetic */ void lambda$onWallpaperChange$0$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$2(boolean z) {
-                MiuiGxzwAnimViewInternal.this.onWallpaperChange(z);
-            }
-        };
+        private final KeyguardUpdateMonitor.WallpaperChangeCallback mWallpaperChangeCallback;
 
         public void onDisplayAdded(int i) {
         }
@@ -681,6 +428,306 @@ class MiuiGxzwAnimView {
 
         public MiuiGxzwAnimViewInternal(Context context, Handler handler) {
             super(context);
+            MiuiGxzwManager instance = MiuiGxzwManager.getInstance();
+            Objects.requireNonNull(instance);
+            this.mReleaseDrawWackLockRunnable = new Runnable() {
+                public final void run() {
+                    MiuiGxzwManager.this.releaseDrawWackLock();
+                }
+            };
+            this.mAlpha = 1.0f;
+            this.mKeyguardUpdateMonitorCallback = new KeyguardUpdateMonitorCallback() {
+                public void onKeyguardBouncerChanged(boolean z) {
+                    MiuiGxzwAnimViewInternal.this.mMainHandler.post(
+                    /*  JADX ERROR: Method code generation error
+                        jadx.core.utils.exceptions.CodegenException: Error generate insn: 0x0019: INVOKE  
+                          (wrap: android.os.Handler : 0x0010: INVOKE  (r1v1 android.os.Handler) = 
+                          (wrap: com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal : 0x000e: IGET  (r1v0 com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal) = 
+                          (r3v0 'this' com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$1 A[THIS])
+                         com.android.keyguard.fod.MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.1.this$0 com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal)
+                         com.android.keyguard.fod.MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.access$000(com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal):android.os.Handler type: STATIC)
+                          (wrap: com.android.keyguard.fod.-$$Lambda$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$1$i4db7Cf5H8H4M7ryC89z0IUwbhE : 0x0016: CONSTRUCTOR  (r2v0 com.android.keyguard.fod.-$$Lambda$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$1$i4db7Cf5H8H4M7ryC89z0IUwbhE) = 
+                          (r3v0 'this' com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$1 A[THIS])
+                          (r4v0 'z' boolean)
+                          (wrap: boolean : 0x000a: INVOKE  (r0v3 boolean) = 
+                          (wrap: com.android.keyguard.KeyguardUpdateMonitor : 0x0006: INVOKE  (r0v2 com.android.keyguard.KeyguardUpdateMonitor) = 
+                          (wrap: android.content.Context : 0x0002: INVOKE  (r0v1 android.content.Context) = 
+                          (wrap: com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal : 0x0000: IGET  (r0v0 com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal) = 
+                          (r3v0 'this' com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$1 A[THIS])
+                         com.android.keyguard.fod.MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.1.this$0 com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal)
+                         android.widget.FrameLayout.getContext():android.content.Context type: VIRTUAL)
+                         com.android.keyguard.KeyguardUpdateMonitor.getInstance(android.content.Context):com.android.keyguard.KeyguardUpdateMonitor type: STATIC)
+                         com.android.keyguard.KeyguardUpdateMonitor.isDeviceInteractive():boolean type: VIRTUAL)
+                         call: com.android.keyguard.fod.-$$Lambda$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$1$i4db7Cf5H8H4M7ryC89z0IUwbhE.<init>(com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$1, boolean, boolean):void type: CONSTRUCTOR)
+                         android.os.Handler.post(java.lang.Runnable):boolean type: VIRTUAL in method: com.android.keyguard.fod.MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.1.onKeyguardBouncerChanged(boolean):void, dex: classes.dex
+                        	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:256)
+                        	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:221)
+                        	at jadx.core.codegen.RegionGen.makeSimpleBlock(RegionGen.java:109)
+                        	at jadx.core.codegen.RegionGen.makeRegion(RegionGen.java:55)
+                        	at jadx.core.codegen.RegionGen.makeSimpleRegion(RegionGen.java:92)
+                        	at jadx.core.codegen.RegionGen.makeRegion(RegionGen.java:58)
+                        	at jadx.core.codegen.MethodGen.addRegionInsns(MethodGen.java:211)
+                        	at jadx.core.codegen.MethodGen.addInstructions(MethodGen.java:204)
+                        	at jadx.core.codegen.ClassGen.addMethodCode(ClassGen.java:318)
+                        	at jadx.core.codegen.ClassGen.addMethod(ClassGen.java:271)
+                        	at jadx.core.codegen.ClassGen.lambda$addInnerClsAndMethods$2(ClassGen.java:240)
+                        	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:183)
+                        	at java.base/java.util.ArrayList.forEach(ArrayList.java:1540)
+                        	at java.base/java.util.stream.SortedOps$RefSortingSink.end(SortedOps.java:395)
+                        	at java.base/java.util.stream.Sink$ChainedReference.end(Sink.java:258)
+                        	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:485)
+                        	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:474)
+                        	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:150)
+                        	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:173)
+                        	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
+                        	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:497)
+                        	at jadx.core.codegen.ClassGen.addInnerClsAndMethods(ClassGen.java:236)
+                        	at jadx.core.codegen.ClassGen.addClassBody(ClassGen.java:227)
+                        	at jadx.core.codegen.InsnGen.inlineAnonymousConstructor(InsnGen.java:676)
+                        	at jadx.core.codegen.InsnGen.makeConstructor(InsnGen.java:607)
+                        	at jadx.core.codegen.InsnGen.makeInsnBody(InsnGen.java:364)
+                        	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:231)
+                        	at jadx.core.codegen.InsnGen.addWrappedArg(InsnGen.java:123)
+                        	at jadx.core.codegen.InsnGen.addArg(InsnGen.java:107)
+                        	at jadx.core.codegen.InsnGen.makeInsnBody(InsnGen.java:429)
+                        	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:250)
+                        	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:221)
+                        	at jadx.core.codegen.RegionGen.makeSimpleBlock(RegionGen.java:109)
+                        	at jadx.core.codegen.RegionGen.makeRegion(RegionGen.java:55)
+                        	at jadx.core.codegen.RegionGen.makeSimpleRegion(RegionGen.java:92)
+                        	at jadx.core.codegen.RegionGen.makeRegion(RegionGen.java:58)
+                        	at jadx.core.codegen.MethodGen.addRegionInsns(MethodGen.java:211)
+                        	at jadx.core.codegen.MethodGen.addInstructions(MethodGen.java:204)
+                        	at jadx.core.codegen.ClassGen.addMethodCode(ClassGen.java:318)
+                        	at jadx.core.codegen.ClassGen.addMethod(ClassGen.java:271)
+                        	at jadx.core.codegen.ClassGen.lambda$addInnerClsAndMethods$2(ClassGen.java:240)
+                        	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:183)
+                        	at java.base/java.util.ArrayList.forEach(ArrayList.java:1540)
+                        	at java.base/java.util.stream.SortedOps$RefSortingSink.end(SortedOps.java:395)
+                        	at java.base/java.util.stream.Sink$ChainedReference.end(Sink.java:258)
+                        	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:485)
+                        	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:474)
+                        	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:150)
+                        	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:173)
+                        	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
+                        	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:497)
+                        	at jadx.core.codegen.ClassGen.addInnerClsAndMethods(ClassGen.java:236)
+                        	at jadx.core.codegen.ClassGen.addClassBody(ClassGen.java:227)
+                        	at jadx.core.codegen.ClassGen.addClassCode(ClassGen.java:112)
+                        	at jadx.core.codegen.ClassGen.addInnerClass(ClassGen.java:249)
+                        	at jadx.core.codegen.ClassGen.lambda$addInnerClsAndMethods$2(ClassGen.java:238)
+                        	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:183)
+                        	at java.base/java.util.ArrayList.forEach(ArrayList.java:1540)
+                        	at java.base/java.util.stream.SortedOps$RefSortingSink.end(SortedOps.java:395)
+                        	at java.base/java.util.stream.Sink$ChainedReference.end(Sink.java:258)
+                        	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:485)
+                        	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:474)
+                        	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:150)
+                        	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:173)
+                        	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
+                        	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:497)
+                        	at jadx.core.codegen.ClassGen.addInnerClsAndMethods(ClassGen.java:236)
+                        	at jadx.core.codegen.ClassGen.addClassBody(ClassGen.java:227)
+                        	at jadx.core.codegen.ClassGen.addClassCode(ClassGen.java:112)
+                        	at jadx.core.codegen.ClassGen.makeClass(ClassGen.java:78)
+                        	at jadx.core.codegen.CodeGen.wrapCodeGen(CodeGen.java:44)
+                        	at jadx.core.codegen.CodeGen.generateJavaCode(CodeGen.java:33)
+                        	at jadx.core.codegen.CodeGen.generate(CodeGen.java:21)
+                        	at jadx.core.ProcessClass.generateCode(ProcessClass.java:61)
+                        	at jadx.core.dex.nodes.ClassNode.decompile(ClassNode.java:273)
+                        Caused by: jadx.core.utils.exceptions.CodegenException: Error generate insn: 0x0016: CONSTRUCTOR  (r2v0 com.android.keyguard.fod.-$$Lambda$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$1$i4db7Cf5H8H4M7ryC89z0IUwbhE) = 
+                          (r3v0 'this' com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$1 A[THIS])
+                          (r4v0 'z' boolean)
+                          (wrap: boolean : 0x000a: INVOKE  (r0v3 boolean) = 
+                          (wrap: com.android.keyguard.KeyguardUpdateMonitor : 0x0006: INVOKE  (r0v2 com.android.keyguard.KeyguardUpdateMonitor) = 
+                          (wrap: android.content.Context : 0x0002: INVOKE  (r0v1 android.content.Context) = 
+                          (wrap: com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal : 0x0000: IGET  (r0v0 com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal) = 
+                          (r3v0 'this' com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$1 A[THIS])
+                         com.android.keyguard.fod.MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.1.this$0 com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal)
+                         android.widget.FrameLayout.getContext():android.content.Context type: VIRTUAL)
+                         com.android.keyguard.KeyguardUpdateMonitor.getInstance(android.content.Context):com.android.keyguard.KeyguardUpdateMonitor type: STATIC)
+                         com.android.keyguard.KeyguardUpdateMonitor.isDeviceInteractive():boolean type: VIRTUAL)
+                         call: com.android.keyguard.fod.-$$Lambda$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$1$i4db7Cf5H8H4M7ryC89z0IUwbhE.<init>(com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$1, boolean, boolean):void type: CONSTRUCTOR in method: com.android.keyguard.fod.MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.1.onKeyguardBouncerChanged(boolean):void, dex: classes.dex
+                        	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:256)
+                        	at jadx.core.codegen.InsnGen.addWrappedArg(InsnGen.java:123)
+                        	at jadx.core.codegen.InsnGen.addArg(InsnGen.java:107)
+                        	at jadx.core.codegen.InsnGen.generateMethodArguments(InsnGen.java:787)
+                        	at jadx.core.codegen.InsnGen.makeInvoke(InsnGen.java:728)
+                        	at jadx.core.codegen.InsnGen.makeInsnBody(InsnGen.java:368)
+                        	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:250)
+                        	... 74 more
+                        Caused by: jadx.core.utils.exceptions.JadxRuntimeException: Expected class to be processed at this point, class: com.android.keyguard.fod.-$$Lambda$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$1$i4db7Cf5H8H4M7ryC89z0IUwbhE, state: NOT_LOADED
+                        	at jadx.core.dex.nodes.ClassNode.ensureProcessed(ClassNode.java:260)
+                        	at jadx.core.codegen.InsnGen.makeConstructor(InsnGen.java:606)
+                        	at jadx.core.codegen.InsnGen.makeInsnBody(InsnGen.java:364)
+                        	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:231)
+                        	... 80 more
+                        */
+                    /*
+                        this = this;
+                        com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal r0 = com.android.keyguard.fod.MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.this
+                        android.content.Context r0 = r0.getContext()
+                        com.android.keyguard.KeyguardUpdateMonitor r0 = com.android.keyguard.KeyguardUpdateMonitor.getInstance(r0)
+                        boolean r0 = r0.isDeviceInteractive()
+                        com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal r1 = com.android.keyguard.fod.MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.this
+                        android.os.Handler r1 = r1.mMainHandler
+                        com.android.keyguard.fod.-$$Lambda$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$1$i4db7Cf5H8H4M7ryC89z0IUwbhE r2 = new com.android.keyguard.fod.-$$Lambda$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$1$i4db7Cf5H8H4M7ryC89z0IUwbhE
+                        r2.<init>(r3, r4, r0)
+                        r1.post(r2)
+                        return
+                    */
+                    throw new UnsupportedOperationException("Method not decompiled: com.android.keyguard.fod.MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.AnonymousClass1.onKeyguardBouncerChanged(boolean):void");
+                }
+
+                public /* synthetic */ void lambda$onKeyguardBouncerChanged$0$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$1(boolean z, boolean z2) {
+                    MiuiGxzwAnimViewInternal.this.onKeyguardBouncerChanged(z, z2);
+                }
+            };
+            this.mWallpaperChangeCallback = new KeyguardUpdateMonitor.WallpaperChangeCallback() {
+                public void onWallpaperChange(boolean z) {
+                    KeyguardUpdateMonitor.getInstance(MiuiGxzwAnimViewInternal.this.getContext());
+                    MiuiGxzwAnimViewInternal.this.mMainHandler.post(
+                    /*  JADX ERROR: Method code generation error
+                        jadx.core.utils.exceptions.CodegenException: Error generate insn: 0x001e: INVOKE  
+                          (wrap: android.os.Handler : 0x0015: INVOKE  (r0v1 android.os.Handler) = 
+                          (wrap: com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal : 0x0013: IGET  (r0v0 com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal) = 
+                          (r2v0 'this' com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$2 A[THIS])
+                         com.android.keyguard.fod.MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.2.this$0 com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal)
+                         com.android.keyguard.fod.MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.access$000(com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal):android.os.Handler type: STATIC)
+                          (wrap: com.android.keyguard.fod.-$$Lambda$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$2$rSJ0ssoNyg2LzR8PzqB-LE_kQpc : 0x001b: CONSTRUCTOR  (r1v0 com.android.keyguard.fod.-$$Lambda$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$2$rSJ0ssoNyg2LzR8PzqB-LE_kQpc) = 
+                          (r2v0 'this' com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$2 A[THIS])
+                          (wrap: boolean : 0x000f: INVOKE  (r3v5 boolean) = 
+                          (wrap: android.content.Context : 0x000b: INVOKE  (r3v4 android.content.Context) = 
+                          (wrap: com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal : 0x0009: IGET  (r3v3 com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal) = 
+                          (r2v0 'this' com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$2 A[THIS])
+                         com.android.keyguard.fod.MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.2.this$0 com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal)
+                         android.widget.FrameLayout.getContext():android.content.Context type: VIRTUAL)
+                         com.android.keyguard.KeyguardUpdateMonitor.isWallpaperColorLight(android.content.Context):boolean type: STATIC)
+                         call: com.android.keyguard.fod.-$$Lambda$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$2$rSJ0ssoNyg2LzR8PzqB-LE_kQpc.<init>(com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$2, boolean):void type: CONSTRUCTOR)
+                         android.os.Handler.post(java.lang.Runnable):boolean type: VIRTUAL in method: com.android.keyguard.fod.MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.2.onWallpaperChange(boolean):void, dex: classes.dex
+                        	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:256)
+                        	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:221)
+                        	at jadx.core.codegen.RegionGen.makeSimpleBlock(RegionGen.java:109)
+                        	at jadx.core.codegen.RegionGen.makeRegion(RegionGen.java:55)
+                        	at jadx.core.codegen.RegionGen.makeSimpleRegion(RegionGen.java:92)
+                        	at jadx.core.codegen.RegionGen.makeRegion(RegionGen.java:58)
+                        	at jadx.core.codegen.MethodGen.addRegionInsns(MethodGen.java:211)
+                        	at jadx.core.codegen.MethodGen.addInstructions(MethodGen.java:204)
+                        	at jadx.core.codegen.ClassGen.addMethodCode(ClassGen.java:318)
+                        	at jadx.core.codegen.ClassGen.addMethod(ClassGen.java:271)
+                        	at jadx.core.codegen.ClassGen.lambda$addInnerClsAndMethods$2(ClassGen.java:240)
+                        	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:183)
+                        	at java.base/java.util.ArrayList.forEach(ArrayList.java:1540)
+                        	at java.base/java.util.stream.SortedOps$RefSortingSink.end(SortedOps.java:395)
+                        	at java.base/java.util.stream.Sink$ChainedReference.end(Sink.java:258)
+                        	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:485)
+                        	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:474)
+                        	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:150)
+                        	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:173)
+                        	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
+                        	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:497)
+                        	at jadx.core.codegen.ClassGen.addInnerClsAndMethods(ClassGen.java:236)
+                        	at jadx.core.codegen.ClassGen.addClassBody(ClassGen.java:227)
+                        	at jadx.core.codegen.InsnGen.inlineAnonymousConstructor(InsnGen.java:676)
+                        	at jadx.core.codegen.InsnGen.makeConstructor(InsnGen.java:607)
+                        	at jadx.core.codegen.InsnGen.makeInsnBody(InsnGen.java:364)
+                        	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:231)
+                        	at jadx.core.codegen.InsnGen.addWrappedArg(InsnGen.java:123)
+                        	at jadx.core.codegen.InsnGen.addArg(InsnGen.java:107)
+                        	at jadx.core.codegen.InsnGen.makeInsnBody(InsnGen.java:429)
+                        	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:250)
+                        	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:221)
+                        	at jadx.core.codegen.RegionGen.makeSimpleBlock(RegionGen.java:109)
+                        	at jadx.core.codegen.RegionGen.makeRegion(RegionGen.java:55)
+                        	at jadx.core.codegen.RegionGen.makeSimpleRegion(RegionGen.java:92)
+                        	at jadx.core.codegen.RegionGen.makeRegion(RegionGen.java:58)
+                        	at jadx.core.codegen.MethodGen.addRegionInsns(MethodGen.java:211)
+                        	at jadx.core.codegen.MethodGen.addInstructions(MethodGen.java:204)
+                        	at jadx.core.codegen.ClassGen.addMethodCode(ClassGen.java:318)
+                        	at jadx.core.codegen.ClassGen.addMethod(ClassGen.java:271)
+                        	at jadx.core.codegen.ClassGen.lambda$addInnerClsAndMethods$2(ClassGen.java:240)
+                        	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:183)
+                        	at java.base/java.util.ArrayList.forEach(ArrayList.java:1540)
+                        	at java.base/java.util.stream.SortedOps$RefSortingSink.end(SortedOps.java:395)
+                        	at java.base/java.util.stream.Sink$ChainedReference.end(Sink.java:258)
+                        	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:485)
+                        	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:474)
+                        	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:150)
+                        	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:173)
+                        	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
+                        	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:497)
+                        	at jadx.core.codegen.ClassGen.addInnerClsAndMethods(ClassGen.java:236)
+                        	at jadx.core.codegen.ClassGen.addClassBody(ClassGen.java:227)
+                        	at jadx.core.codegen.ClassGen.addClassCode(ClassGen.java:112)
+                        	at jadx.core.codegen.ClassGen.addInnerClass(ClassGen.java:249)
+                        	at jadx.core.codegen.ClassGen.lambda$addInnerClsAndMethods$2(ClassGen.java:238)
+                        	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:183)
+                        	at java.base/java.util.ArrayList.forEach(ArrayList.java:1540)
+                        	at java.base/java.util.stream.SortedOps$RefSortingSink.end(SortedOps.java:395)
+                        	at java.base/java.util.stream.Sink$ChainedReference.end(Sink.java:258)
+                        	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:485)
+                        	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:474)
+                        	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:150)
+                        	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:173)
+                        	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
+                        	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:497)
+                        	at jadx.core.codegen.ClassGen.addInnerClsAndMethods(ClassGen.java:236)
+                        	at jadx.core.codegen.ClassGen.addClassBody(ClassGen.java:227)
+                        	at jadx.core.codegen.ClassGen.addClassCode(ClassGen.java:112)
+                        	at jadx.core.codegen.ClassGen.makeClass(ClassGen.java:78)
+                        	at jadx.core.codegen.CodeGen.wrapCodeGen(CodeGen.java:44)
+                        	at jadx.core.codegen.CodeGen.generateJavaCode(CodeGen.java:33)
+                        	at jadx.core.codegen.CodeGen.generate(CodeGen.java:21)
+                        	at jadx.core.ProcessClass.generateCode(ProcessClass.java:61)
+                        	at jadx.core.dex.nodes.ClassNode.decompile(ClassNode.java:273)
+                        Caused by: jadx.core.utils.exceptions.CodegenException: Error generate insn: 0x001b: CONSTRUCTOR  (r1v0 com.android.keyguard.fod.-$$Lambda$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$2$rSJ0ssoNyg2LzR8PzqB-LE_kQpc) = 
+                          (r2v0 'this' com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$2 A[THIS])
+                          (wrap: boolean : 0x000f: INVOKE  (r3v5 boolean) = 
+                          (wrap: android.content.Context : 0x000b: INVOKE  (r3v4 android.content.Context) = 
+                          (wrap: com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal : 0x0009: IGET  (r3v3 com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal) = 
+                          (r2v0 'this' com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$2 A[THIS])
+                         com.android.keyguard.fod.MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.2.this$0 com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal)
+                         android.widget.FrameLayout.getContext():android.content.Context type: VIRTUAL)
+                         com.android.keyguard.KeyguardUpdateMonitor.isWallpaperColorLight(android.content.Context):boolean type: STATIC)
+                         call: com.android.keyguard.fod.-$$Lambda$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$2$rSJ0ssoNyg2LzR8PzqB-LE_kQpc.<init>(com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$2, boolean):void type: CONSTRUCTOR in method: com.android.keyguard.fod.MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.2.onWallpaperChange(boolean):void, dex: classes.dex
+                        	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:256)
+                        	at jadx.core.codegen.InsnGen.addWrappedArg(InsnGen.java:123)
+                        	at jadx.core.codegen.InsnGen.addArg(InsnGen.java:107)
+                        	at jadx.core.codegen.InsnGen.generateMethodArguments(InsnGen.java:787)
+                        	at jadx.core.codegen.InsnGen.makeInvoke(InsnGen.java:728)
+                        	at jadx.core.codegen.InsnGen.makeInsnBody(InsnGen.java:368)
+                        	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:250)
+                        	... 74 more
+                        Caused by: jadx.core.utils.exceptions.JadxRuntimeException: Expected class to be processed at this point, class: com.android.keyguard.fod.-$$Lambda$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$2$rSJ0ssoNyg2LzR8PzqB-LE_kQpc, state: NOT_LOADED
+                        	at jadx.core.dex.nodes.ClassNode.ensureProcessed(ClassNode.java:260)
+                        	at jadx.core.codegen.InsnGen.makeConstructor(InsnGen.java:606)
+                        	at jadx.core.codegen.InsnGen.makeInsnBody(InsnGen.java:364)
+                        	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:231)
+                        	... 80 more
+                        */
+                    /*
+                        this = this;
+                        com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal r3 = com.android.keyguard.fod.MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.this
+                        android.content.Context r3 = r3.getContext()
+                        com.android.keyguard.KeyguardUpdateMonitor.getInstance(r3)
+                        com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal r3 = com.android.keyguard.fod.MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.this
+                        android.content.Context r3 = r3.getContext()
+                        boolean r3 = com.android.keyguard.KeyguardUpdateMonitor.isWallpaperColorLight(r3)
+                        com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal r0 = com.android.keyguard.fod.MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.this
+                        android.os.Handler r0 = r0.mMainHandler
+                        com.android.keyguard.fod.-$$Lambda$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$2$rSJ0ssoNyg2LzR8PzqB-LE_kQpc r1 = new com.android.keyguard.fod.-$$Lambda$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$2$rSJ0ssoNyg2LzR8PzqB-LE_kQpc
+                        r1.<init>(r2, r3)
+                        r0.post(r1)
+                        return
+                    */
+                    throw new UnsupportedOperationException("Method not decompiled: com.android.keyguard.fod.MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.AnonymousClass2.onWallpaperChange(boolean):void");
+                }
+
+                public /* synthetic */ void lambda$onWallpaperChange$0$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$2(boolean z) {
+                    MiuiGxzwAnimViewInternal.this.onWallpaperChange(z);
+                }
+            };
+            this.mMainHandler = new Handler();
             this.mSystemUIHandler = handler;
             initView();
         }
@@ -1278,8 +1325,11 @@ class MiuiGxzwAnimView {
             }
 
             public void onStart() {
+                Log.i("MiuiGxzwAnimView", "onStart");
                 if (this.mArgs.aod) {
                     MiuiGxzwManager.getInstance().requestDrawWackLock();
+                    MiuiGxzwAnimViewInternal.this.mMainHandler.removeCallbacks(MiuiGxzwAnimViewInternal.this.mReleaseDrawWackLockRunnable);
+                    MiuiGxzwAnimViewInternal.this.mMainHandler.postDelayed(MiuiGxzwAnimViewInternal.this.mReleaseDrawWackLockRunnable, 300000);
                 }
                 if (this.mArgs.feedback) {
                     MiuiGxzwAnimViewInternal.this.performAnimFeedback();
@@ -1287,256 +1337,40 @@ class MiuiGxzwAnimView {
             }
 
             public void onInterrupt() {
+                Log.i("MiuiGxzwAnimView", "onInterrupt");
                 if (this.mArgs.aod) {
-                    Handler access$000 = MiuiGxzwAnimViewInternal.this.mMainHandler;
-                    MiuiGxzwManager instance = MiuiGxzwManager.getInstance();
-                    Objects.requireNonNull(instance);
-                    access$000.postDelayed(
-                    /*  JADX ERROR: Method code generation error
-                        jadx.core.utils.exceptions.CodegenException: Error generate insn: 0x001a: INVOKE  
-                          (r0v5 'access$000' android.os.Handler)
-                          (wrap: com.android.keyguard.fod.-$$Lambda$6DEIs9lWsN0lnJmBY718KrIV_Jw : 0x0015: CONSTRUCTOR  (r2v0 com.android.keyguard.fod.-$$Lambda$6DEIs9lWsN0lnJmBY718KrIV_Jw) = (r1v0 'instance' com.android.keyguard.fod.MiuiGxzwManager) call: com.android.keyguard.fod.-$$Lambda$6DEIs9lWsN0lnJmBY718KrIV_Jw.<init>(com.android.keyguard.fod.MiuiGxzwManager):void type: CONSTRUCTOR)
-                          (300 long)
-                         android.os.Handler.postDelayed(java.lang.Runnable, long):boolean type: VIRTUAL in method: com.android.keyguard.fod.MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.AnimationListener.onInterrupt():void, dex: classes.dex
-                        	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:256)
-                        	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:221)
-                        	at jadx.core.codegen.RegionGen.makeSimpleBlock(RegionGen.java:109)
-                        	at jadx.core.codegen.RegionGen.makeRegion(RegionGen.java:55)
-                        	at jadx.core.codegen.RegionGen.makeSimpleRegion(RegionGen.java:92)
-                        	at jadx.core.codegen.RegionGen.makeRegion(RegionGen.java:58)
-                        	at jadx.core.codegen.RegionGen.makeRegionIndent(RegionGen.java:98)
-                        	at jadx.core.codegen.RegionGen.makeIf(RegionGen.java:142)
-                        	at jadx.core.codegen.RegionGen.makeRegion(RegionGen.java:62)
-                        	at jadx.core.codegen.RegionGen.makeSimpleRegion(RegionGen.java:92)
-                        	at jadx.core.codegen.RegionGen.makeRegion(RegionGen.java:58)
-                        	at jadx.core.codegen.MethodGen.addRegionInsns(MethodGen.java:211)
-                        	at jadx.core.codegen.MethodGen.addInstructions(MethodGen.java:204)
-                        	at jadx.core.codegen.ClassGen.addMethodCode(ClassGen.java:318)
-                        	at jadx.core.codegen.ClassGen.addMethod(ClassGen.java:271)
-                        	at jadx.core.codegen.ClassGen.lambda$addInnerClsAndMethods$2(ClassGen.java:240)
-                        	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:183)
-                        	at java.base/java.util.ArrayList.forEach(ArrayList.java:1540)
-                        	at java.base/java.util.stream.SortedOps$RefSortingSink.end(SortedOps.java:395)
-                        	at java.base/java.util.stream.Sink$ChainedReference.end(Sink.java:258)
-                        	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:485)
-                        	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:474)
-                        	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:150)
-                        	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:173)
-                        	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
-                        	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:497)
-                        	at jadx.core.codegen.ClassGen.addInnerClsAndMethods(ClassGen.java:236)
-                        	at jadx.core.codegen.ClassGen.addClassBody(ClassGen.java:227)
-                        	at jadx.core.codegen.ClassGen.addClassCode(ClassGen.java:112)
-                        	at jadx.core.codegen.ClassGen.addInnerClass(ClassGen.java:249)
-                        	at jadx.core.codegen.ClassGen.lambda$addInnerClsAndMethods$2(ClassGen.java:238)
-                        	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:183)
-                        	at java.base/java.util.ArrayList.forEach(ArrayList.java:1540)
-                        	at java.base/java.util.stream.SortedOps$RefSortingSink.end(SortedOps.java:395)
-                        	at java.base/java.util.stream.Sink$ChainedReference.end(Sink.java:258)
-                        	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:485)
-                        	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:474)
-                        	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:150)
-                        	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:173)
-                        	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
-                        	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:497)
-                        	at jadx.core.codegen.ClassGen.addInnerClsAndMethods(ClassGen.java:236)
-                        	at jadx.core.codegen.ClassGen.addClassBody(ClassGen.java:227)
-                        	at jadx.core.codegen.ClassGen.addClassCode(ClassGen.java:112)
-                        	at jadx.core.codegen.ClassGen.addInnerClass(ClassGen.java:249)
-                        	at jadx.core.codegen.ClassGen.lambda$addInnerClsAndMethods$2(ClassGen.java:238)
-                        	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:183)
-                        	at java.base/java.util.ArrayList.forEach(ArrayList.java:1540)
-                        	at java.base/java.util.stream.SortedOps$RefSortingSink.end(SortedOps.java:395)
-                        	at java.base/java.util.stream.Sink$ChainedReference.end(Sink.java:258)
-                        	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:485)
-                        	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:474)
-                        	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:150)
-                        	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:173)
-                        	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
-                        	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:497)
-                        	at jadx.core.codegen.ClassGen.addInnerClsAndMethods(ClassGen.java:236)
-                        	at jadx.core.codegen.ClassGen.addClassBody(ClassGen.java:227)
-                        	at jadx.core.codegen.ClassGen.addClassCode(ClassGen.java:112)
-                        	at jadx.core.codegen.ClassGen.makeClass(ClassGen.java:78)
-                        	at jadx.core.codegen.CodeGen.wrapCodeGen(CodeGen.java:44)
-                        	at jadx.core.codegen.CodeGen.generateJavaCode(CodeGen.java:33)
-                        	at jadx.core.codegen.CodeGen.generate(CodeGen.java:21)
-                        	at jadx.core.ProcessClass.generateCode(ProcessClass.java:61)
-                        	at jadx.core.dex.nodes.ClassNode.decompile(ClassNode.java:273)
-                        Caused by: jadx.core.utils.exceptions.CodegenException: Error generate insn: 0x0015: CONSTRUCTOR  (r2v0 com.android.keyguard.fod.-$$Lambda$6DEIs9lWsN0lnJmBY718KrIV_Jw) = (r1v0 'instance' com.android.keyguard.fod.MiuiGxzwManager) call: com.android.keyguard.fod.-$$Lambda$6DEIs9lWsN0lnJmBY718KrIV_Jw.<init>(com.android.keyguard.fod.MiuiGxzwManager):void type: CONSTRUCTOR in method: com.android.keyguard.fod.MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.AnimationListener.onInterrupt():void, dex: classes.dex
-                        	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:256)
-                        	at jadx.core.codegen.InsnGen.addWrappedArg(InsnGen.java:123)
-                        	at jadx.core.codegen.InsnGen.addArg(InsnGen.java:107)
-                        	at jadx.core.codegen.InsnGen.generateMethodArguments(InsnGen.java:787)
-                        	at jadx.core.codegen.InsnGen.makeInvoke(InsnGen.java:728)
-                        	at jadx.core.codegen.InsnGen.makeInsnBody(InsnGen.java:368)
-                        	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:250)
-                        	... 64 more
-                        Caused by: jadx.core.utils.exceptions.JadxRuntimeException: Expected class to be processed at this point, class: com.android.keyguard.fod.-$$Lambda$6DEIs9lWsN0lnJmBY718KrIV_Jw, state: NOT_LOADED
-                        	at jadx.core.dex.nodes.ClassNode.ensureProcessed(ClassNode.java:260)
-                        	at jadx.core.codegen.InsnGen.makeConstructor(InsnGen.java:606)
-                        	at jadx.core.codegen.InsnGen.makeInsnBody(InsnGen.java:364)
-                        	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:231)
-                        	... 70 more
-                        */
-                    /*
-                        this = this;
-                        com.android.keyguard.fod.MiuiGxzwAnimManager$MiuiGxzwAnimArgs r0 = r5.mArgs
-                        boolean r0 = r0.aod
-                        if (r0 == 0) goto L_0x001d
-                        com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal r0 = com.android.keyguard.fod.MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.this
-                        android.os.Handler r0 = r0.mMainHandler
-                        com.android.keyguard.fod.MiuiGxzwManager r1 = com.android.keyguard.fod.MiuiGxzwManager.getInstance()
-                        java.util.Objects.requireNonNull(r1)
-                        com.android.keyguard.fod.-$$Lambda$6DEIs9lWsN0lnJmBY718KrIV_Jw r2 = new com.android.keyguard.fod.-$$Lambda$6DEIs9lWsN0lnJmBY718KrIV_Jw
-                        r2.<init>(r1)
-                        r3 = 300(0x12c, double:1.48E-321)
-                        r0.postDelayed(r2, r3)
-                    L_0x001d:
-                        com.android.keyguard.fod.MiuiGxzwAnimManager$MiuiGxzwAnimArgs r0 = r5.mArgs
-                        boolean r0 = r0.feedback
-                        if (r0 == 0) goto L_0x0028
-                        com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal r5 = com.android.keyguard.fod.MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.this
-                        r5.cancelAnimFeedback()
-                    L_0x0028:
-                        return
-                    */
-                    throw new UnsupportedOperationException("Method not decompiled: com.android.keyguard.fod.MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.AnimationListener.onInterrupt():void");
+                    MiuiGxzwAnimViewInternal.this.mMainHandler.postDelayed(MiuiGxzwAnimViewInternal.this.mReleaseDrawWackLockRunnable, 300);
                 }
-
-                public void onFinish() {
-                    if (this.mArgs.aod) {
-                        Handler access$000 = MiuiGxzwAnimViewInternal.this.mMainHandler;
-                        MiuiGxzwManager instance = MiuiGxzwManager.getInstance();
-                        Objects.requireNonNull(instance);
-                        access$000.postDelayed(
-                        /*  JADX ERROR: Method code generation error
-                            jadx.core.utils.exceptions.CodegenException: Error generate insn: 0x001a: INVOKE  
-                              (r0v5 'access$000' android.os.Handler)
-                              (wrap: com.android.keyguard.fod.-$$Lambda$6DEIs9lWsN0lnJmBY718KrIV_Jw : 0x0015: CONSTRUCTOR  (r2v0 com.android.keyguard.fod.-$$Lambda$6DEIs9lWsN0lnJmBY718KrIV_Jw) = (r1v0 'instance' com.android.keyguard.fod.MiuiGxzwManager) call: com.android.keyguard.fod.-$$Lambda$6DEIs9lWsN0lnJmBY718KrIV_Jw.<init>(com.android.keyguard.fod.MiuiGxzwManager):void type: CONSTRUCTOR)
-                              (300 long)
-                             android.os.Handler.postDelayed(java.lang.Runnable, long):boolean type: VIRTUAL in method: com.android.keyguard.fod.MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.AnimationListener.onFinish():void, dex: classes.dex
-                            	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:256)
-                            	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:221)
-                            	at jadx.core.codegen.RegionGen.makeSimpleBlock(RegionGen.java:109)
-                            	at jadx.core.codegen.RegionGen.makeRegion(RegionGen.java:55)
-                            	at jadx.core.codegen.RegionGen.makeSimpleRegion(RegionGen.java:92)
-                            	at jadx.core.codegen.RegionGen.makeRegion(RegionGen.java:58)
-                            	at jadx.core.codegen.RegionGen.makeRegionIndent(RegionGen.java:98)
-                            	at jadx.core.codegen.RegionGen.makeIf(RegionGen.java:142)
-                            	at jadx.core.codegen.RegionGen.makeRegion(RegionGen.java:62)
-                            	at jadx.core.codegen.RegionGen.makeSimpleRegion(RegionGen.java:92)
-                            	at jadx.core.codegen.RegionGen.makeRegion(RegionGen.java:58)
-                            	at jadx.core.codegen.MethodGen.addRegionInsns(MethodGen.java:211)
-                            	at jadx.core.codegen.MethodGen.addInstructions(MethodGen.java:204)
-                            	at jadx.core.codegen.ClassGen.addMethodCode(ClassGen.java:318)
-                            	at jadx.core.codegen.ClassGen.addMethod(ClassGen.java:271)
-                            	at jadx.core.codegen.ClassGen.lambda$addInnerClsAndMethods$2(ClassGen.java:240)
-                            	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:183)
-                            	at java.base/java.util.ArrayList.forEach(ArrayList.java:1540)
-                            	at java.base/java.util.stream.SortedOps$RefSortingSink.end(SortedOps.java:395)
-                            	at java.base/java.util.stream.Sink$ChainedReference.end(Sink.java:258)
-                            	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:485)
-                            	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:474)
-                            	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:150)
-                            	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:173)
-                            	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
-                            	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:497)
-                            	at jadx.core.codegen.ClassGen.addInnerClsAndMethods(ClassGen.java:236)
-                            	at jadx.core.codegen.ClassGen.addClassBody(ClassGen.java:227)
-                            	at jadx.core.codegen.ClassGen.addClassCode(ClassGen.java:112)
-                            	at jadx.core.codegen.ClassGen.addInnerClass(ClassGen.java:249)
-                            	at jadx.core.codegen.ClassGen.lambda$addInnerClsAndMethods$2(ClassGen.java:238)
-                            	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:183)
-                            	at java.base/java.util.ArrayList.forEach(ArrayList.java:1540)
-                            	at java.base/java.util.stream.SortedOps$RefSortingSink.end(SortedOps.java:395)
-                            	at java.base/java.util.stream.Sink$ChainedReference.end(Sink.java:258)
-                            	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:485)
-                            	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:474)
-                            	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:150)
-                            	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:173)
-                            	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
-                            	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:497)
-                            	at jadx.core.codegen.ClassGen.addInnerClsAndMethods(ClassGen.java:236)
-                            	at jadx.core.codegen.ClassGen.addClassBody(ClassGen.java:227)
-                            	at jadx.core.codegen.ClassGen.addClassCode(ClassGen.java:112)
-                            	at jadx.core.codegen.ClassGen.addInnerClass(ClassGen.java:249)
-                            	at jadx.core.codegen.ClassGen.lambda$addInnerClsAndMethods$2(ClassGen.java:238)
-                            	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:183)
-                            	at java.base/java.util.ArrayList.forEach(ArrayList.java:1540)
-                            	at java.base/java.util.stream.SortedOps$RefSortingSink.end(SortedOps.java:395)
-                            	at java.base/java.util.stream.Sink$ChainedReference.end(Sink.java:258)
-                            	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:485)
-                            	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:474)
-                            	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:150)
-                            	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:173)
-                            	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
-                            	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:497)
-                            	at jadx.core.codegen.ClassGen.addInnerClsAndMethods(ClassGen.java:236)
-                            	at jadx.core.codegen.ClassGen.addClassBody(ClassGen.java:227)
-                            	at jadx.core.codegen.ClassGen.addClassCode(ClassGen.java:112)
-                            	at jadx.core.codegen.ClassGen.makeClass(ClassGen.java:78)
-                            	at jadx.core.codegen.CodeGen.wrapCodeGen(CodeGen.java:44)
-                            	at jadx.core.codegen.CodeGen.generateJavaCode(CodeGen.java:33)
-                            	at jadx.core.codegen.CodeGen.generate(CodeGen.java:21)
-                            	at jadx.core.ProcessClass.generateCode(ProcessClass.java:61)
-                            	at jadx.core.dex.nodes.ClassNode.decompile(ClassNode.java:273)
-                            Caused by: jadx.core.utils.exceptions.CodegenException: Error generate insn: 0x0015: CONSTRUCTOR  (r2v0 com.android.keyguard.fod.-$$Lambda$6DEIs9lWsN0lnJmBY718KrIV_Jw) = (r1v0 'instance' com.android.keyguard.fod.MiuiGxzwManager) call: com.android.keyguard.fod.-$$Lambda$6DEIs9lWsN0lnJmBY718KrIV_Jw.<init>(com.android.keyguard.fod.MiuiGxzwManager):void type: CONSTRUCTOR in method: com.android.keyguard.fod.MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.AnimationListener.onFinish():void, dex: classes.dex
-                            	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:256)
-                            	at jadx.core.codegen.InsnGen.addWrappedArg(InsnGen.java:123)
-                            	at jadx.core.codegen.InsnGen.addArg(InsnGen.java:107)
-                            	at jadx.core.codegen.InsnGen.generateMethodArguments(InsnGen.java:787)
-                            	at jadx.core.codegen.InsnGen.makeInvoke(InsnGen.java:728)
-                            	at jadx.core.codegen.InsnGen.makeInsnBody(InsnGen.java:368)
-                            	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:250)
-                            	... 64 more
-                            Caused by: jadx.core.utils.exceptions.JadxRuntimeException: Expected class to be processed at this point, class: com.android.keyguard.fod.-$$Lambda$6DEIs9lWsN0lnJmBY718KrIV_Jw, state: NOT_LOADED
-                            	at jadx.core.dex.nodes.ClassNode.ensureProcessed(ClassNode.java:260)
-                            	at jadx.core.codegen.InsnGen.makeConstructor(InsnGen.java:606)
-                            	at jadx.core.codegen.InsnGen.makeInsnBody(InsnGen.java:364)
-                            	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:231)
-                            	... 70 more
-                            */
-                        /*
-                            this = this;
-                            com.android.keyguard.fod.MiuiGxzwAnimManager$MiuiGxzwAnimArgs r0 = r5.mArgs
-                            boolean r0 = r0.aod
-                            if (r0 == 0) goto L_0x001d
-                            com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal r0 = com.android.keyguard.fod.MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.this
-                            android.os.Handler r0 = r0.mMainHandler
-                            com.android.keyguard.fod.MiuiGxzwManager r1 = com.android.keyguard.fod.MiuiGxzwManager.getInstance()
-                            java.util.Objects.requireNonNull(r1)
-                            com.android.keyguard.fod.-$$Lambda$6DEIs9lWsN0lnJmBY718KrIV_Jw r2 = new com.android.keyguard.fod.-$$Lambda$6DEIs9lWsN0lnJmBY718KrIV_Jw
-                            r2.<init>(r1)
-                            r3 = 300(0x12c, double:1.48E-321)
-                            r0.postDelayed(r2, r3)
-                        L_0x001d:
-                            com.android.keyguard.fod.MiuiGxzwAnimManager$MiuiGxzwAnimArgs r0 = r5.mArgs
-                            boolean r0 = r0.feedback
-                            if (r0 == 0) goto L_0x0028
-                            com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal r5 = com.android.keyguard.fod.MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.this
-                            r5.cancelAnimFeedback()
-                        L_0x0028:
-                            return
-                        */
-                        throw new UnsupportedOperationException("Method not decompiled: com.android.keyguard.fod.MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.AnimationListener.onFinish():void");
-                    }
-
-                    public void onRepeat() {
-                        if (this.mArgs.feedback && MiuiGxzwAnimViewInternal.this.mAnimFeedback) {
-                            MiuiGxzwAnimViewInternal.this.performAnimFeedback();
-                        }
-                    }
+                if (this.mArgs.feedback) {
+                    MiuiGxzwAnimViewInternal.this.cancelAnimFeedback();
                 }
+            }
 
-                private void startTipAnim(boolean z, String str, float f) {
-                    if (!isDisableAnimAndTip()) {
-                        this.mMiuiGxzwTipView.startTipAnim(z, str, f);
-                    }
+            public void onFinish() {
+                Log.i("MiuiGxzwAnimView", "onFinish");
+                if (this.mArgs.aod) {
+                    MiuiGxzwAnimViewInternal.this.mMainHandler.postDelayed(MiuiGxzwAnimViewInternal.this.mReleaseDrawWackLockRunnable, 300);
                 }
+                if (this.mArgs.feedback) {
+                    MiuiGxzwAnimViewInternal.this.cancelAnimFeedback();
+                }
+            }
 
-                private boolean isDisableAnimAndTip() {
-                    return this.mDisableLockScreenFodAnim && !this.mDozing && this.mKeyguardAuthen && !this.mBouncer;
+            public void onRepeat() {
+                if (this.mArgs.feedback && MiuiGxzwAnimViewInternal.this.mAnimFeedback) {
+                    MiuiGxzwAnimViewInternal.this.performAnimFeedback();
                 }
             }
         }
+
+        private void startTipAnim(boolean z, String str, float f) {
+            if (!isDisableAnimAndTip()) {
+                this.mMiuiGxzwTipView.startTipAnim(z, str, f);
+            }
+        }
+
+        private boolean isDisableAnimAndTip() {
+            return this.mDisableLockScreenFodAnim && !this.mDozing && this.mKeyguardAuthen && !this.mBouncer;
+        }
+    }
+}
