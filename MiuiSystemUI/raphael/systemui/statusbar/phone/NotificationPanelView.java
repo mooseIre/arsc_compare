@@ -813,7 +813,7 @@ public class NotificationPanelView extends PanelView implements ExpandableView.O
     }
 
     public void animateToFullShade(long j) {
-        onPanelDisplayChanged(true);
+        onPanelDisplayChanged(true, false);
         ((NotificationStat) Dependency.get(NotificationStat.class)).onPanelExpanded(false, true, this.mNotificationStackScroller.getNotGoneNotifications());
         ValueAnimator valueAnimator = this.mQsTopPaddingAnimator;
         if (valueAnimator != null) {
@@ -2248,22 +2248,22 @@ public class NotificationPanelView extends PanelView implements ExpandableView.O
     }
 
     /* access modifiers changed from: protected */
-    public void onPanelDisplayChanged(boolean z) {
-        boolean z2 = this.mPanelAppeared != z;
+    public void onPanelDisplayChanged(boolean z, boolean z2) {
+        boolean z3 = this.mPanelAppeared != z;
         this.mPanelAppeared = z;
-        if (z2) {
+        QS qs = this.mQs;
+        if (qs != null) {
+            qs.onPanelDisplayChanged(z, z2);
+        }
+        if (z3) {
             if (DEBUG) {
                 String str = TAG;
                 Log.d(str, "pv onPanelDisplayChanged " + z);
             }
-            QS qs = this.mQs;
-            if (qs != null) {
-                qs.onPanelDisplayChanged(z, false);
-            }
             this.mNotificationStackScroller.onPanelDisplayChanged(z);
             updateEmptyShadeView();
         }
-        if (z2 && !z) {
+        if (z3 && !z) {
             cancelFlingSpring();
         }
     }

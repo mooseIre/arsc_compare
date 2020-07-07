@@ -179,7 +179,7 @@ public abstract class PanelView extends FrameLayout {
     public abstract boolean onMiddleClicked();
 
     /* access modifiers changed from: protected */
-    public abstract void onPanelDisplayChanged(boolean z);
+    public abstract void onPanelDisplayChanged(boolean z, boolean z2);
 
     /* access modifiers changed from: protected */
     public abstract void onSpringLengthUpdated(float f);
@@ -397,7 +397,7 @@ public abstract class PanelView extends FrameLayout {
     private void startOpening() {
         Log.d(TAG, "pv startOpening");
         this.mOpening = true;
-        onPanelDisplayChanged(false);
+        onPanelDisplayChanged(false, true);
         notifyBarPanelExpansionChanged();
     }
 
@@ -982,7 +982,7 @@ public abstract class PanelView extends FrameLayout {
         if (this.mOpening && f > ((float) this.mTouchSlop)) {
             flingToPanelHeight(true);
         }
-        onPanelDisplayChanged(!this.mOpening ? f > -80.0f : f > 80.0f);
+        onPanelDisplayChanged(!this.mOpening ? f > -80.0f : f > 80.0f, false);
         this.mStretchLength = this.mOpening ? Math.max(0.0f, f) : f;
         if ((!this.mOpening || f <= 80.0f) && (this.mOpening || f <= 0.0f)) {
             z = false;
@@ -1002,7 +1002,7 @@ public abstract class PanelView extends FrameLayout {
             Log.d(str, "resetStretchLength " + z);
         }
         this.mStretchLength = 0.0f;
-        onPanelDisplayChanged(z);
+        onPanelDisplayChanged(z, false);
     }
 
     /* access modifiers changed from: protected */

@@ -85,7 +85,10 @@ public class ControlPanelWindowManager {
             layoutParams2.height = 0;
             layoutParams2.flags = 8 | layoutParams2.flags;
             layoutParams2.flags &= -131073;
-            Utils.updateFsgState(this.mContext, "typefrom_status_bar_expansion", false);
+            StatusBar statusBar = (StatusBar) ((Application) this.mContext.getApplicationContext()).getSystemUIApplication().getComponent(StatusBar.class);
+            if (statusBar == null || statusBar.isQSFullyCollapsed()) {
+                Utils.updateFsgState(this.mContext, "typefrom_status_bar_expansion", false);
+            }
             setEnableForceLightNavigationHandle(false);
         }
         apply();

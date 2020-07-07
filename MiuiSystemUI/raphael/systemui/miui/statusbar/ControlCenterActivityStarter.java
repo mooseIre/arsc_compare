@@ -13,6 +13,17 @@ public class ControlCenterActivityStarter {
         this.mControlCenter = controlCenter;
     }
 
+    public void startActivity(Intent intent) {
+        startActivityDismissKeyguard(intent);
+    }
+
+    public void startActivityDismissKeyguard(Intent intent) {
+        ControlCenter controlCenter = this.mControlCenter;
+        if (controlCenter != null) {
+            controlCenter.startActivityDismissingKeyguard(intent);
+        }
+    }
+
     public void postStartActivityDismissingKeyguard(Intent intent) {
         ControlCenter controlCenter = this.mControlCenter;
         if (controlCenter != null) {

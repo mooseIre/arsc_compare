@@ -69,72 +69,77 @@ public class CustomTile extends QSTileImpl<QSTile.State> implements TileLifecycl
         return (((long) this.mHost.indexOf(getTileSpec())) * 60000) + 3600000;
     }
 
-    /* JADX WARNING: Removed duplicated region for block: B:17:0x003f A[Catch:{ Exception -> 0x0068 }] */
-    /* JADX WARNING: Removed duplicated region for block: B:18:0x004a A[Catch:{ Exception -> 0x0068 }] */
-    /* JADX WARNING: Removed duplicated region for block: B:21:0x004f A[Catch:{ Exception -> 0x0068 }] */
-    /* JADX WARNING: Removed duplicated region for block: B:24:0x005e A[Catch:{ Exception -> 0x0068 }] */
-    /* JADX WARNING: Removed duplicated region for block: B:28:? A[RETURN, SYNTHETIC] */
+    /* JADX WARNING: Removed duplicated region for block: B:19:0x004d A[Catch:{ Exception -> 0x0076 }] */
+    /* JADX WARNING: Removed duplicated region for block: B:20:0x0058 A[Catch:{ Exception -> 0x0076 }] */
+    /* JADX WARNING: Removed duplicated region for block: B:23:0x005d A[Catch:{ Exception -> 0x0076 }] */
+    /* JADX WARNING: Removed duplicated region for block: B:26:0x006c A[Catch:{ Exception -> 0x0076 }] */
+    /* JADX WARNING: Removed duplicated region for block: B:30:? A[RETURN, SYNTHETIC] */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     private void setTileIcon() {
         /*
             r6 = this;
             r0 = 0
-            android.content.Context r1 = r6.mContext     // Catch:{ Exception -> 0x0068 }
-            android.content.pm.PackageManager r1 = r1.getPackageManager()     // Catch:{ Exception -> 0x0068 }
+            android.content.Context r1 = r6.mContext     // Catch:{ Exception -> 0x0076 }
+            android.content.pm.PackageManager r1 = r1.getPackageManager()     // Catch:{ Exception -> 0x0076 }
             r2 = 786432(0xc0000, float:1.102026E-39)
-            boolean r3 = r6.isSystemApp(r1)     // Catch:{ Exception -> 0x0068 }
-            if (r3 == 0) goto L_0x0012
+            boolean r3 = r6.isSystemApp(r1)     // Catch:{ Exception -> 0x0076 }
+            if (r3 == 0) goto L_0x0020
+            android.content.ComponentName r3 = r6.mComponent     // Catch:{ Exception -> 0x0076 }
+            java.lang.String r3 = r3.flattenToShortString()     // Catch:{ Exception -> 0x0076 }
+            java.lang.String r4 = "com.google.android.gms/.nearby.sharing.SharingTileService"
+            boolean r3 = r3.equals(r4)     // Catch:{ Exception -> 0x0076 }
+            if (r3 != 0) goto L_0x0020
             r2 = 786944(0xc0200, float:1.102743E-39)
-        L_0x0012:
-            android.content.ComponentName r3 = r6.mComponent     // Catch:{ Exception -> 0x0068 }
-            android.content.pm.ServiceInfo r2 = r1.getServiceInfo(r3, r2)     // Catch:{ Exception -> 0x0068 }
-            int r3 = r2.icon     // Catch:{ Exception -> 0x0068 }
-            if (r3 == 0) goto L_0x001f
-            int r3 = r2.icon     // Catch:{ Exception -> 0x0068 }
-            goto L_0x0023
-        L_0x001f:
-            android.content.pm.ApplicationInfo r3 = r2.applicationInfo     // Catch:{ Exception -> 0x0068 }
-            int r3 = r3.icon     // Catch:{ Exception -> 0x0068 }
-        L_0x0023:
-            android.service.quicksettings.Tile r4 = r6.mTile     // Catch:{ Exception -> 0x0068 }
-            android.graphics.drawable.Icon r4 = r4.getIcon()     // Catch:{ Exception -> 0x0068 }
-            if (r4 == 0) goto L_0x003c
-            android.service.quicksettings.Tile r4 = r6.mTile     // Catch:{ Exception -> 0x0068 }
-            android.graphics.drawable.Icon r4 = r4.getIcon()     // Catch:{ Exception -> 0x0068 }
-            android.graphics.drawable.Icon r5 = r6.mDefaultIcon     // Catch:{ Exception -> 0x0068 }
-            boolean r4 = r6.iconEquals(r4, r5)     // Catch:{ Exception -> 0x0068 }
-            if (r4 == 0) goto L_0x003a
-            goto L_0x003c
-        L_0x003a:
+        L_0x0020:
+            android.content.ComponentName r3 = r6.mComponent     // Catch:{ Exception -> 0x0076 }
+            android.content.pm.ServiceInfo r2 = r1.getServiceInfo(r3, r2)     // Catch:{ Exception -> 0x0076 }
+            int r3 = r2.icon     // Catch:{ Exception -> 0x0076 }
+            if (r3 == 0) goto L_0x002d
+            int r3 = r2.icon     // Catch:{ Exception -> 0x0076 }
+            goto L_0x0031
+        L_0x002d:
+            android.content.pm.ApplicationInfo r3 = r2.applicationInfo     // Catch:{ Exception -> 0x0076 }
+            int r3 = r3.icon     // Catch:{ Exception -> 0x0076 }
+        L_0x0031:
+            android.service.quicksettings.Tile r4 = r6.mTile     // Catch:{ Exception -> 0x0076 }
+            android.graphics.drawable.Icon r4 = r4.getIcon()     // Catch:{ Exception -> 0x0076 }
+            if (r4 == 0) goto L_0x004a
+            android.service.quicksettings.Tile r4 = r6.mTile     // Catch:{ Exception -> 0x0076 }
+            android.graphics.drawable.Icon r4 = r4.getIcon()     // Catch:{ Exception -> 0x0076 }
+            android.graphics.drawable.Icon r5 = r6.mDefaultIcon     // Catch:{ Exception -> 0x0076 }
+            boolean r4 = r6.iconEquals(r4, r5)     // Catch:{ Exception -> 0x0076 }
+            if (r4 == 0) goto L_0x0048
+            goto L_0x004a
+        L_0x0048:
             r4 = 0
-            goto L_0x003d
-        L_0x003c:
-            r4 = 1
-        L_0x003d:
-            if (r3 == 0) goto L_0x004a
-            android.content.ComponentName r5 = r6.mComponent     // Catch:{ Exception -> 0x0068 }
-            java.lang.String r5 = r5.getPackageName()     // Catch:{ Exception -> 0x0068 }
-            android.graphics.drawable.Icon r3 = android.graphics.drawable.Icon.createWithResource(r5, r3)     // Catch:{ Exception -> 0x0068 }
             goto L_0x004b
         L_0x004a:
-            r3 = r0
+            r4 = 1
         L_0x004b:
-            r6.mDefaultIcon = r3     // Catch:{ Exception -> 0x0068 }
-            if (r4 == 0) goto L_0x0056
-            android.service.quicksettings.Tile r3 = r6.mTile     // Catch:{ Exception -> 0x0068 }
-            android.graphics.drawable.Icon r4 = r6.mDefaultIcon     // Catch:{ Exception -> 0x0068 }
-            r3.setIcon(r4)     // Catch:{ Exception -> 0x0068 }
-        L_0x0056:
-            android.service.quicksettings.Tile r3 = r6.mTile     // Catch:{ Exception -> 0x0068 }
-            java.lang.CharSequence r3 = r3.getLabel()     // Catch:{ Exception -> 0x0068 }
-            if (r3 != 0) goto L_0x006a
-            android.service.quicksettings.Tile r3 = r6.mTile     // Catch:{ Exception -> 0x0068 }
-            java.lang.CharSequence r1 = r2.loadLabel(r1)     // Catch:{ Exception -> 0x0068 }
-            r3.setLabel(r1)     // Catch:{ Exception -> 0x0068 }
-            goto L_0x006a
-        L_0x0068:
+            if (r3 == 0) goto L_0x0058
+            android.content.ComponentName r5 = r6.mComponent     // Catch:{ Exception -> 0x0076 }
+            java.lang.String r5 = r5.getPackageName()     // Catch:{ Exception -> 0x0076 }
+            android.graphics.drawable.Icon r3 = android.graphics.drawable.Icon.createWithResource(r5, r3)     // Catch:{ Exception -> 0x0076 }
+            goto L_0x0059
+        L_0x0058:
+            r3 = r0
+        L_0x0059:
+            r6.mDefaultIcon = r3     // Catch:{ Exception -> 0x0076 }
+            if (r4 == 0) goto L_0x0064
+            android.service.quicksettings.Tile r3 = r6.mTile     // Catch:{ Exception -> 0x0076 }
+            android.graphics.drawable.Icon r4 = r6.mDefaultIcon     // Catch:{ Exception -> 0x0076 }
+            r3.setIcon(r4)     // Catch:{ Exception -> 0x0076 }
+        L_0x0064:
+            android.service.quicksettings.Tile r3 = r6.mTile     // Catch:{ Exception -> 0x0076 }
+            java.lang.CharSequence r3 = r3.getLabel()     // Catch:{ Exception -> 0x0076 }
+            if (r3 != 0) goto L_0x0078
+            android.service.quicksettings.Tile r3 = r6.mTile     // Catch:{ Exception -> 0x0076 }
+            java.lang.CharSequence r1 = r2.loadLabel(r1)     // Catch:{ Exception -> 0x0076 }
+            r3.setLabel(r1)     // Catch:{ Exception -> 0x0076 }
+            goto L_0x0078
+        L_0x0076:
             r6.mDefaultIcon = r0
-        L_0x006a:
+        L_0x0078:
             return
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.qs.external.CustomTile.setTileIcon():void");

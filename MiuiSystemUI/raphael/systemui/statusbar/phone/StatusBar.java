@@ -35,6 +35,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.IntentSender;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.content.pm.IPackageManager;
 import android.content.pm.PackageManager;
 import android.content.pm.UserInfo;
@@ -420,8 +421,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
     private Divider.DockedStackExistsChangedListener mDockedStackExistsChangedListener;
     protected DozeScrimController mDozeScrimController;
     private DozeServiceHost mDozeServiceHost;
-    /* access modifiers changed from: private */
-    public boolean mDozing;
+    private boolean mDozing;
     Runnable mDozingChanged;
     /* access modifiers changed from: private */
     public boolean mDozingRequested;
@@ -543,6 +543,8 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
     private ContentObserver mMiuiOptimizationObserver;
     /* access modifiers changed from: private */
     public MiuiStatusBarPromptController mMiuiStatusBarPrompt;
+    /* access modifiers changed from: private */
+    public SharedPreferences mMiuiUpdateVersionSharedPreferences;
     int mNaturalBarHeight = -1;
     /* access modifiers changed from: private */
     public boolean mNavigationBarLoaded;
@@ -1252,6 +1254,16 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
             public void onDeviceProvisionedChanged() {
                 StatusBar.this.updateNotifications();
                 StatusBar.this.updateNotificationsOnDensityOrFontScaleChanged();
+                if (StatusBar.this.isDeviceProvisioned() && !StatusBar.this.mMiuiUpdateVersionSharedPreferences.getBoolean("deviceProvisionUpdateTiles", false)) {
+                    if (((ControlPanelController) Dependency.get(ControlPanelController.class)).isUseControlCenter()) {
+                        ((ControlPanelController) Dependency.get(ControlPanelController.class)).resetTiles();
+                    } else if (StatusBar.this.mQSTileHost != null) {
+                        StatusBar.this.mQSTileHost.resetTiles();
+                    }
+                    SharedPreferences.Editor edit = StatusBar.this.mMiuiUpdateVersionSharedPreferences.edit();
+                    edit.putBoolean("deviceProvisionUpdateTiles", true);
+                    edit.apply();
+                }
             }
 
             public void onUserSwitched() {
@@ -1802,6 +1814,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
         this.mBubbleController = (BubbleController) Dependency.get(BubbleController.class);
         this.mBubbleController.setStatusBar(this);
         this.mBubbleController.setExpandListener(this.mBubbleExpandListener);
+        this.mMiuiUpdateVersionSharedPreferences = this.mContext.getSharedPreferences("deviceProvisionUpdateTiles", 0);
         this.mNoIconsSetGone = this.mContext.getResources().getBoolean(R.bool.hide_notification_icons_if_empty);
         this.mHideAmPmForNotification = this.mContext.getResources().getBoolean(R.bool.hide_am_pm_if_show_notification_icons);
         this.mKeptOnKeyguard = this.mContext.getResources().getBoolean(R.bool.kept_notifications_on_keyguard);
@@ -1992,12 +2005,9 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
                                 statusBar3.mHandler.removeCallbacks(statusBar3.mUpdateStausBarPaddingRunnable);
                                 StatusBar statusBar4 = StatusBar.this;
                                 statusBar4.mHandler.post(statusBar4.mUpdateStausBarPaddingRunnable);
-                                return;
                             }
-                            return;
                         }
-                        return;
-                    } else if (!(StatusBar.this.mNotchRotation == i2 && StatusBar.this.mLogicalWidth == i4 && StatusBar.this.mLogicalHeight == i3)) {
+                    } else if (StatusBar.this.mNotchRotation != i2 || StatusBar.this.mLogicalWidth != i4 || StatusBar.this.mLogicalHeight != i3) {
                         int unused4 = StatusBar.this.mNotchRotation = i2;
                         int unused5 = StatusBar.this.mLogicalWidth = i4;
                         int unused6 = StatusBar.this.mLogicalHeight = i3;
@@ -2006,9 +2016,6 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
                         StatusBar statusBar6 = StatusBar.this;
                         statusBar6.mHandler.post(statusBar6.mUpdateStausBarPaddingRunnable);
                     }
-                }
-                if (!StatusBar.this.mDozing && StatusBar.this.getCallState() != 0 && i == 0 && StatusBar.this.mInfo.state == 1 && StatusBar.this.panelsEnabled() && !StatusBar.this.isPanelFullyCollapsed()) {
-                    StatusBar.this.postAnimateForceCollapsePanels();
                 }
             }
 
@@ -4233,6 +4240,10 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
         return this.mHeadsUpManager.isHeadsUp(str);
     }
 
+    public boolean isHeadsUp() {
+        return this.mHeadsUpManager.isHeadsUp();
+    }
+
     public boolean isSnoozedPackage(StatusBarNotification statusBarNotification) {
         return this.mHeadsUpManager.isSnoozed(statusBarNotification.getPackageName());
     }
@@ -6217,9 +6228,9 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
         if (this.mPendingWorkRemoteInputView != null && !isAnyProfilePublicMode()) {
             final AnonymousClass63 r0 = new Runnable() {
                 public void run() {
-                    View access$6400 = StatusBar.this.mPendingWorkRemoteInputView;
-                    if (access$6400 != null) {
-                        ViewParent parent = access$6400.getParent();
+                    View access$6300 = StatusBar.this.mPendingWorkRemoteInputView;
+                    if (access$6300 != null) {
+                        ViewParent parent = access$6300.getParent();
                         while (!(parent instanceof ExpandableNotificationRow)) {
                             if (parent != null) {
                                 parent = parent.getParent();

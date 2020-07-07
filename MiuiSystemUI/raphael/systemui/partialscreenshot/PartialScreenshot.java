@@ -711,6 +711,7 @@ public class PartialScreenshot implements Thread.UncaughtExceptionHandler {
                     intent.addFlags(268468224);
                     intent.putExtra("StartActivityWhenLocked", true);
                     intent.putExtra("skip_interception", true);
+                    intent.putExtra("from_partial_screenshot", true);
                     intent.putExtra("ThumbnailRect", new int[]{PartialScreenshot.this.trimmingFramerect.left, PartialScreenshot.this.trimmingFramerect.top, PartialScreenshot.this.trimmingFramerect.width(), PartialScreenshot.this.trimmingFramerect.height()});
                     if (TextUtils.equals(str, "send")) {
                         intent.setAction(PartialScreenshot.this.checkShareAction(partialNotifyMediaStoreData.outUri));

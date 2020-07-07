@@ -110,11 +110,9 @@ public class Icons {
             sMapping.put(R.drawable.stat_sys_slave_wifi_signal_3, Integer.valueOf(R.drawable.stat_sys_slave_wifi_signal_3_darkmode));
             sMapping.put(R.drawable.stat_sys_slave_wifi_signal_4, Integer.valueOf(R.drawable.stat_sys_slave_wifi_signal_4_darkmode));
         }
-        if (z) {
-            num = sMapping.get(num.intValue());
-        }
-        if (num == null) {
-            return 0;
+        Integer num2 = z ? sMapping.get(num.intValue()) : num;
+        if (num2 != null) {
+            num = num2;
         }
         return num.intValue();
     }
@@ -131,10 +129,10 @@ public class Icons {
             sSignalHalfMapping.put(R.drawable.stat_sys_signal_null, Integer.valueOf(R.drawable.stat_sys_signal_null_half));
         }
         Integer num2 = sSignalHalfMapping.get(num.intValue());
-        if (num2 == null) {
-            return 0;
+        if (num2 != null) {
+            num = num2;
         }
-        return num2.intValue();
+        return num.intValue();
     }
 
     public static int getQSIcons(Integer num, boolean z) {

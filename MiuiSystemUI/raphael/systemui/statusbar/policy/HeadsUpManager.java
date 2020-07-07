@@ -320,6 +320,10 @@ public class HeadsUpManager implements ViewTreeObserver.OnComputeInternalInsetsL
         return this.mHeadsUpEntries.containsKey(str);
     }
 
+    public boolean isHeadsUp() {
+        return this.mHeadsUpEntries.size() > 0;
+    }
+
     public void releaseAllImmediately() {
         if (DEBUG) {
             Log.v("HeadsUpManager", "releaseAllImmediately");

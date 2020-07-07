@@ -684,7 +684,7 @@ public class QSControlCenterPanel extends FrameLayout implements ConfigurationCo
 
     private int getFootPanelMarginTop() {
         TextView textView = new TextView(getContext());
-        textView.setTextAppearance(R.style.TextAppearance_QSControl_TilesTitle);
+        textView.setTextAppearance(R.style.TextAppearance_QSControl_Clock);
         Paint.FontMetrics fontMetrics = textView.getPaint().getFontMetrics();
         return this.mContext.getResources().getDimensionPixelSize(R.dimen.qs_control_foot_panel_margin_top) + ((int) (fontMetrics.descent - fontMetrics.ascent));
     }
@@ -975,7 +975,8 @@ public class QSControlCenterPanel extends FrameLayout implements ConfigurationCo
         if (!this.mPanelController.isSuperPowerMode()) {
             addAnimateView(findViewById(R.id.notification_shade_shortcut), 1);
         }
-        addAnimateView(findViewById(R.id.control_title), 1);
+        addAnimateView(findViewById(R.id.date_time), 1);
+        addAnimateView(findViewById(R.id.big_time), 1);
         addAnimateView(this.mTileView0, 2);
         addAnimateView(this.mBigTile1, 2);
         addAnimateView(this.mBigTile2, 3);

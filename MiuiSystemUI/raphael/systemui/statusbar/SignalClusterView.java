@@ -502,9 +502,12 @@ public class SignalClusterView extends LinearLayout implements NetworkController
     }
 
     public void setVowifi(int i, boolean z) {
-        ImageView[] imageViewArr = this.mVowifi;
-        if (i < imageViewArr.length) {
-            imageViewArr[i].setVisibility(((!this.mNotchEar || this.mVoWifiEnableInEar) && z) ? 0 : 8);
+        if (i < this.mVowifi.length) {
+            int i2 = ((!this.mNotchEar || this.mVoWifiEnableInEar) && z) ? 0 : 8;
+            if (Constants.IS_INTERNATIONAL && i2 == 0) {
+                updateIcon(this.mVowifi[i], R.drawable.stat_sys_vowifi, false);
+            }
+            this.mVowifi[i].setVisibility(i2);
         }
     }
 
@@ -735,6 +738,8 @@ public class SignalClusterView extends LinearLayout implements NetworkController
                 this.mDemoMobileSignal.setImageResource(R.drawable.stat_sys_signal_5);
                 return;
             }
+            updateIcon(this.mVowifi[0], R.drawable.stat_sys_vowifi, false);
+            updateIcon(this.mVowifi[1], R.drawable.stat_sys_vowifi, false);
             int i4 = 0;
             while (true) {
                 LinearLayout[] linearLayoutArr = this.mMobileSignalGroup;
@@ -965,11 +970,11 @@ public class SignalClusterView extends LinearLayout implements NetworkController
 
     /* access modifiers changed from: protected */
     public void updateIcon(ImageView imageView, int i, boolean z) {
-        if (imageView != null) {
+        if (imageView != null && i != 0) {
             imageView.setImageTintMode(PorterDuff.Mode.SRC_IN);
             if (Util.showCtsSpecifiedColor()) {
                 boolean inDarkMode = DarkIconDispatcherHelper.inDarkMode(this.mTintArea, imageView, this.mDarkIntensity);
-                imageView.setImageResource(Icons.get(Integer.valueOf(i), inDarkMode));
+                imageView.setImageDrawable(this.mContext.getResources().getDrawable(Icons.get(Integer.valueOf(i), inDarkMode)));
                 if (this.mFilterColor == 0) {
                     this.mFilterColor = this.mContext.getResources().getColor(R.color.status_bar_icon_text_color_dark_mode_cts);
                 }
@@ -979,10 +984,10 @@ public class SignalClusterView extends LinearLayout implements NetworkController
                     imageView.setImageTintList((ColorStateList) null);
                 }
             } else if (this.mDarkIconDispatcher.useTint()) {
-                imageView.setImageResource(i);
+                imageView.setImageDrawable(this.mContext.getResources().getDrawable(i));
                 imageView.setImageTintList(ColorStateList.valueOf(DarkIconDispatcherHelper.getTint(this.mTintArea, imageView, this.mIconTint)));
             } else {
-                imageView.setImageResource(Icons.get(Integer.valueOf(i), DarkIconDispatcherHelper.inDarkMode(this.mTintArea, imageView, this.mDarkIntensity)));
+                imageView.setImageDrawable(this.mContext.getResources().getDrawable(Icons.get(Integer.valueOf(i), DarkIconDispatcherHelper.inDarkMode(this.mTintArea, imageView, this.mDarkIntensity))));
             }
         }
     }
@@ -1323,19 +1328,21 @@ public class SignalClusterView extends LinearLayout implements NetworkController
             int i = 0;
             boolean z2 = !SignalClusterView.this.mHideVolte && !SignalClusterView.this.mNetworkController.hideVolteForOperation(this.mSlot) && z && !this.mRoaming;
             if (Constants.IS_INTERNATIONAL) {
-                ImageView imageView = this.mVolte;
                 if (!z2 || (SignalClusterView.this.mNotchEar && (!SignalClusterView.this.mIsDripType || SignalClusterView.this.mWifiVisible))) {
                     i = 8;
                 }
-                imageView.setVisibility(i);
+                if (i == 0 && !SignalClusterView.this.mShowHDIcon) {
+                    SignalClusterView.this.updateIcon(this.mVolte, R.drawable.stat_sys_signal_volte, true);
+                }
+                this.mVolte.setVisibility(i);
                 return;
             }
             this.mNotchVolte.setVisibility((!this.mIsSmallMode || !z2) ? 8 : 0);
-            ImageView imageView2 = this.mVolte;
+            ImageView imageView = this.mVolte;
             if (this.mIsSmallMode || !z2) {
                 i = 8;
             }
-            imageView2.setVisibility(i);
+            imageView.setVisibility(i);
         }
 
         private boolean isHideMobile(boolean z) {

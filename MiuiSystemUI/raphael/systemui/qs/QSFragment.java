@@ -53,6 +53,7 @@ public class QSFragment extends Fragment implements QS, CommandQueue.Callbacks, 
     private Handler mBgHandler = new Handler((Looper) Dependency.get(Dependency.BG_LOOPER));
     /* access modifiers changed from: private */
     public QSContainerImpl mContainer;
+    private boolean mContainerAppear = true;
     protected QSContent mContent;
     private int mContentMargin;
     protected View mContentWithoutHeader;
@@ -459,7 +460,7 @@ public class QSFragment extends Fragment implements QS, CommandQueue.Callbacks, 
         }
         this.mKeyguardShowing = z;
         if (this.mKeyguardShowing) {
-            onPanelDisplayChanged(false, true);
+            onPanelDisplayChanged(true, true);
         }
         QSAnimator qSAnimator = this.mQSAnimator;
         if (qSAnimator != null) {
@@ -641,17 +642,32 @@ public class QSFragment extends Fragment implements QS, CommandQueue.Callbacks, 
     }
 
     public void onPanelDisplayChanged(boolean z, boolean z2) {
-        if (!z2) {
+        if (z2) {
+            Folme.useValue("QSFragmentAppear").cancel();
+            Folme.useValue("QSFragmentDisappear").cancel();
+            if (this.mKeyguardShowing || z) {
+                this.mContainerAppear = true;
+                this.mContainer.setAlpha(1.0f);
+                this.mContainer.setScaleX(1.0f);
+                this.mContainer.setScaleY(1.0f);
+                return;
+            }
+            this.mContainerAppear = false;
+            this.mContainer.setAlpha(0.0f);
+            this.mContainer.setScaleX(0.8f);
+            this.mContainer.setScaleY(0.8f);
+        } else if (this.mContainerAppear != z) {
+            this.mContainerAppear = z;
             animateVisibility(z);
-            return;
         }
-        this.mContainer.setAlpha(1.0f);
-        this.mContainer.setScaleX(1.0f);
-        this.mContainer.setScaleY(1.0f);
     }
 
     private void animateVisibility(boolean z) {
-        final String str = z ? "QSFragmentAppear" : "QSFragmentDisappear";
+        String str = "QSFragmentAppear";
+        String str2 = z ? str : "QSFragmentDisappear";
+        if (z) {
+            str = "QSFragmentDisappear";
+        }
         float f = 0.0f;
         float f2 = 1.0f;
         float f3 = z ? 0.0f : 1.0f;
@@ -662,16 +678,22 @@ public class QSFragment extends Fragment implements QS, CommandQueue.Callbacks, 
         if (!z) {
             f2 = 0.8f;
         }
-        Folme.getValueTarget(str).setMinVisibleChange(0.01f, "alpha", "scale");
-        IStateStyle useValue = Folme.useValue(str);
+        Folme.getValueTarget(str2).setMinVisibleChange(0.01f, "alpha", "scale");
+        Folme.useValue(str).cancel();
+        IStateStyle useValue = Folme.useValue(str2);
         useValue.setTo("alpha", Float.valueOf(f3), "scale", Float.valueOf(f4));
-        useValue.addListener(new AutoCleanFloatTransitionListener(str) {
+        useValue.addListener(new AutoCleanFloatTransitionListener(str2) {
             public void onUpdate(Map<String, Float> map) {
-                float floatValue = map.get("alpha").floatValue();
-                float floatValue2 = map.get("scale").floatValue();
-                QSFragment.this.mContainer.setAlpha(floatValue);
-                QSFragment.this.mContainer.setScaleX(floatValue2);
-                QSFragment.this.mContainer.setScaleY(floatValue2);
+                Float f = map.get("alpha");
+                if (f != null) {
+                    QSFragment.this.mContainer.setAlpha(f.floatValue());
+                }
+                Float f2 = map.get("scale");
+                if (f2 != null) {
+                    float floatValue = f2.floatValue();
+                    QSFragment.this.mContainer.setScaleX(floatValue);
+                    QSFragment.this.mContainer.setScaleY(floatValue);
+                }
             }
         });
         useValue.to("alpha", Float.valueOf(f));

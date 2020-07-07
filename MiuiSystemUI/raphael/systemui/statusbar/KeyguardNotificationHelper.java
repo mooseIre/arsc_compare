@@ -182,42 +182,58 @@ public class KeyguardNotificationHelper {
     /* access modifiers changed from: private */
     public void handleInsertDB(ContentValues contentValues) {
         String asString = contentValues.getAsString("pkg");
-        ContentResolver contentResolver = this.mContext.getContentResolver();
-        contentResolver.insert(KeyguardNotification.URI, contentValues);
-        contentResolver.notifyChange(KeyguardNotification.URI, (ContentObserver) null);
-        ((KeyguardNotificationController) Dependency.get(KeyguardNotificationController.class)).add(asString);
+        try {
+            ContentResolver contentResolver = this.mContext.getContentResolver();
+            contentResolver.insert(KeyguardNotification.URI, contentValues);
+            contentResolver.notifyChange(KeyguardNotification.URI, (ContentObserver) null);
+            ((KeyguardNotificationController) Dependency.get(KeyguardNotificationController.class)).add(asString);
+        } catch (Exception e) {
+            Log.e("KeyguardNotifHelper", "handleInsertDB", e);
+        }
     }
 
     /* access modifiers changed from: private */
     public void handleUpdateDB(ContentValues contentValues) {
         int intValue = contentValues.getAsInteger("key").intValue();
         String asString = contentValues.getAsString("pkg");
-        ContentResolver contentResolver = this.mContext.getContentResolver();
-        if (contentResolver.update(KeyguardNotification.URI, contentValues, "key" + "=" + intValue, (String[]) null) > 0) {
-            contentResolver.notifyChange(KeyguardNotification.URI, (ContentObserver) null);
-            ((KeyguardNotificationController) Dependency.get(KeyguardNotificationController.class)).update(asString);
-            return;
+        try {
+            ContentResolver contentResolver = this.mContext.getContentResolver();
+            if (contentResolver.update(KeyguardNotification.URI, contentValues, "key" + "=" + intValue, (String[]) null) > 0) {
+                contentResolver.notifyChange(KeyguardNotification.URI, (ContentObserver) null);
+                ((KeyguardNotificationController) Dependency.get(KeyguardNotificationController.class)).update(asString);
+                return;
+            }
+            handleInsertDB(contentValues);
+        } catch (Exception e) {
+            Log.e("KeyguardNotifHelper", "handleUpdateDB", e);
         }
-        handleInsertDB(contentValues);
     }
 
     /* access modifiers changed from: private */
     public void handleDeleteDB(int i, String str) {
-        ContentResolver contentResolver = this.mContext.getContentResolver();
-        if (contentResolver.delete(KeyguardNotification.URI, "key" + "=" + i, (String[]) null) > 0) {
-            contentResolver.notifyChange(KeyguardNotification.URI, (ContentObserver) null);
-            if (!TextUtils.isEmpty(str)) {
-                ((KeyguardNotificationController) Dependency.get(KeyguardNotificationController.class)).delete(str);
+        try {
+            ContentResolver contentResolver = this.mContext.getContentResolver();
+            if (contentResolver.delete(KeyguardNotification.URI, "key" + "=" + i, (String[]) null) > 0) {
+                contentResolver.notifyChange(KeyguardNotification.URI, (ContentObserver) null);
+                if (!TextUtils.isEmpty(str)) {
+                    ((KeyguardNotificationController) Dependency.get(KeyguardNotificationController.class)).delete(str);
+                }
             }
+        } catch (Exception e) {
+            Log.e("KeyguardNotifHelper", "handleDeleteDB", e);
         }
     }
 
     /* access modifiers changed from: private */
     public void handleClearDB() {
-        ContentResolver contentResolver = this.mContext.getContentResolver();
-        contentResolver.delete(KeyguardNotification.URI, (String) null, (String[]) null);
-        contentResolver.notifyChange(KeyguardNotification.URI, (ContentObserver) null);
-        ((KeyguardNotificationController) Dependency.get(KeyguardNotificationController.class)).clearAll();
+        try {
+            ContentResolver contentResolver = this.mContext.getContentResolver();
+            contentResolver.delete(KeyguardNotification.URI, (String) null, (String[]) null);
+            contentResolver.notifyChange(KeyguardNotification.URI, (ContentObserver) null);
+            ((KeyguardNotificationController) Dependency.get(KeyguardNotificationController.class)).clearAll();
+        } catch (Exception e) {
+            Log.e("KeyguardNotifHelper", "handleClearDB", e);
+        }
     }
 
     private ContentValues buildValues(NotificationData.Entry entry) {

@@ -258,7 +258,7 @@ public class StatusBarWindowView extends RenderAwareFrameLayout {
             } else if (this.mService.getBarState() == 0 && (phoneStatusBarView = this.mStatusBarView) != null && phoneStatusBarView.getVisibility() == 0) {
                 view = this.mStatusBarView;
             }
-            if (view != null && view.pointInView(motionEvent.getX(), motionEvent.getY(), 0.0f) && motionEvent.getX() >= ((float) view.getWidth()) / 2.0f && this.mControllerPanel.dispatchTouchEvent(motionEvent)) {
+            if (view != null && view.pointInView(motionEvent.getX(), motionEvent.getY(), 0.0f) && motionEvent.getX() >= ((float) view.getWidth()) / 2.0f && !this.mService.isHeadsUp() && this.mControllerPanel.dispatchTouchEvent(motionEvent)) {
                 this.mPassingToControllerPanel = true;
                 this.mStatusBarView.processMiuiPromptClick(motionEvent);
                 return true;

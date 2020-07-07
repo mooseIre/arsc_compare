@@ -443,7 +443,7 @@ public class SystemServicesProxy {
             Bitmap bitmap = null;
             try {
                 taskSnapshot = ActivityManager.getService().getTaskSnapshot(taskKey.id, false);
-            } catch (RemoteException e) {
+            } catch (Exception e) {
                 Log.w("SystemServicesProxy", "Failed to retrieve task snapshot", e);
                 taskSnapshot = null;
             }
@@ -457,7 +457,7 @@ public class SystemServicesProxy {
     }
 
     private ActivityManager$TaskThumbnailInfo getTaskThumbnailInfo(ActivityManager.TaskSnapshot taskSnapshot) {
-        if (taskSnapshot == null) {
+        if (taskSnapshot == null || taskSnapshot.getSnapshot() == null) {
             return null;
         }
         ActivityManager$TaskThumbnailInfo activityManager$TaskThumbnailInfo = new ActivityManager$TaskThumbnailInfo();

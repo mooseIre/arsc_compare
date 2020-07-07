@@ -3,6 +3,9 @@ package com.android.systemui.util;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
+import com.android.keyguard.KeyguardUpdateMonitor;
+import com.android.systemui.Constants;
+import com.android.systemui.Util;
 import com.android.systemui.plugins.R;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -62,5 +65,18 @@ public class Utils {
         T[] copyOf = Arrays.copyOf(tArr, tArr.length + tArr2.length);
         System.arraycopy(tArr2, 0, copyOf, tArr.length, tArr2.length);
         return copyOf;
+    }
+
+    public static String getCalendarPkg(Context context) {
+        if (!Constants.IS_INTERNATIONAL) {
+            return "com.android.calendar";
+        }
+        if (Util.isAppInstalledForUser(context, "com.xiaomi.calendar", KeyguardUpdateMonitor.getCurrentUser())) {
+            return "com.xiaomi.calendar";
+        }
+        if (Util.isAppInstalledForUser(context, "com.android.calendar", KeyguardUpdateMonitor.getCurrentUser())) {
+            return "com.android.calendar";
+        }
+        return "com.google.android.calendar";
     }
 }

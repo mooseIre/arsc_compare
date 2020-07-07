@@ -292,6 +292,11 @@ public class ControlCenter extends SystemUI implements ControlPanelController.Us
         }
     }
 
+    public void startActivityDismissingKeyguard(Intent intent) {
+        collapse(true);
+        this.mStatusBarActivityStarter.startActivity(intent, true);
+    }
+
     public void postStartActivityDismissingKeyguard(Intent intent) {
         this.mHandler.post(new Runnable() {
             public void run() {
@@ -325,6 +330,13 @@ public class ControlCenter extends SystemUI implements ControlPanelController.Us
             this.mPanelController.setSuperPowerMode(z);
             this.mExpandInfoController.setSuperPowerMode(z);
             reCreateWindow();
+        }
+    }
+
+    public void resetTiles() {
+        QSControlTileHost qSControlTileHost;
+        if (this.mUseControlCenter && (qSControlTileHost = this.mQSControlTileHost) != null) {
+            qSControlTileHost.resetTiles();
         }
     }
 
