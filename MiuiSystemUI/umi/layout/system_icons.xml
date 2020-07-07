@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.android.systemui.miui.widget.ClipEdgeLinearLayout android:gravity="end|center" android:layout_gravity="end|center" android:id="@id/system_icons" android:focusable="true" android:focusableInTouchMode="true" android:layout_width="wrap_content" android:layout_height="@dimen/status_bar_system_icons_height" app:clipEdge="@bool/config_system_icons_clip_child"
+  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <com.android.systemui.statusbar.StatusBarIconView android:id="@id/moreIcon" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="fill_parent" android:src="@drawable/stat_notify_more" />
+    <com.android.systemui.statusbar.NetworkSpeedView android:textAppearance="@style/TextAppearance.StatusBar.Carrier" android:gravity="end|center" android:id="@id/network_speed_view" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="fill_parent" android:singleLine="true" />
+    <com.android.keyguard.AlphaOptimizedLinearLayout android:gravity="center_vertical" android:orientation="horizontal" android:id="@id/statusIcons" android:layout_width="wrap_content" android:layout_height="fill_parent" />
+    <com.android.systemui.statusbar.AlphaOptimizedImageView android:layout_gravity="center_vertical" android:id="@id/gps_drivemode" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/stat_sys_gps_on" />
+    <com.android.systemui.miui.statusbar.DarkReceiverLinearLayout android:id="@id/signal_cluster_view" android:layout_width="wrap_content" android:layout_height="wrap_content">
+        <include android:layout_width="wrap_content" android:layout_height="fill_parent" android:layout_marginStart="@dimen/signal_cluster_margin_start" layout="@layout/signal_cluster_view" />
+    </com.android.systemui.miui.statusbar.DarkReceiverLinearLayout>
+    <com.android.systemui.BatteryMeterView android:id="@id/battery" android:focusable="true" android:focusableInTouchMode="true" android:layout_width="wrap_content" android:layout_height="fill_parent" />
+</com.android.systemui.miui.widget.ClipEdgeLinearLayout>

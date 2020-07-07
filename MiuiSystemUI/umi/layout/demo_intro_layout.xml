@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:id="@id/intro_container" android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <TextView android:textSize="@dimen/fsgesture_demoinro_titletextsize" android:textColor="@color/fsgesture_demo_intro_font_color" android:id="@id/intro_title" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="@dimen/fsg_demo_paddinglr" android:layout_marginTop="@dimen/fsgesture_demoinro_titlemargintop" android:layout_marginRight="@dimen/fsg_demo_paddinglr" android:layout_marginBottom="@dimen/fsgesture_demoinro_titlemarginbottom" android:text="@string/how_to_use_fsg" android:fontFamily="mipro-light" />
+    <LinearLayout android:gravity="center_vertical" android:id="@id/to_home_intro" android:layout_width="wrap_content" android:layout_height="@dimen/fsgesture_demoinro_lineheight" android:layout_marginLeft="@dimen/fsg_demo_paddinglr" android:layout_marginRight="@dimen/fsg_demo_paddinglr" android:layout_below="@id/intro_title">
+        <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/icon_home" />
+        <TextView android:textSize="@dimen/fsgesture_demoinro_normal_textsize" android:textColor="@color/fsgesture_demointro_font_color" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/how_to_back_home" android:fontFamily="mipro-medium" android:layout_marginStart="@dimen/fsgesture_demoinro_linemargin" />
+    </LinearLayout>
+    <LinearLayout android:gravity="center_vertical" android:id="@id/to_task_intro" android:layout_width="wrap_content" android:layout_height="@dimen/fsgesture_demoinro_lineheight" android:layout_marginLeft="@dimen/fsg_demo_paddinglr" android:layout_marginRight="@dimen/fsg_demo_paddinglr" android:layout_below="@id/to_home_intro">
+        <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/icon_task" />
+        <TextView android:textSize="@dimen/fsgesture_demoinro_normal_textsize" android:textColor="@color/fsgesture_demointro_font_color" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/how_to_switch_recents" android:fontFamily="mipro-medium" android:layout_marginStart="@dimen/fsgesture_demoinro_linemargin" />
+    </LinearLayout>
+    <LinearLayout android:gravity="center_vertical" android:id="@id/to_back_intro" android:layout_width="wrap_content" android:layout_height="@dimen/fsgesture_demoinro_lineheight" android:layout_marginLeft="@dimen/fsg_demo_paddinglr" android:layout_marginRight="@dimen/fsg_demo_paddinglr" android:layout_below="@id/to_task_intro">
+        <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/icon_back" />
+        <TextView android:textSize="@dimen/fsgesture_demoinro_normal_textsize" android:textColor="@color/fsgesture_demointro_font_color" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/fs_gesture_back_ready_title" android:fontFamily="mipro-medium" android:layout_marginStart="@dimen/fsgesture_demoinro_linemargin" />
+    </LinearLayout>
+    <TextView android:textColor="@drawable/btn_text_color_normal" android:id="@id/btn_back" android:text="@string/fsg_demo_back" android:layout_alignParentBottom="true" android:layout_alignParentStart="true" style="@style/FsgDemoStepTextStyle" />
+    <TextView android:textColor="@drawable/btn_text_color_next" android:id="@id/btn_next" android:text="@string/fsg_demo_go_on" android:layout_alignParentBottom="true" android:layout_alignParentEnd="true" style="@style/FsgDemoStepTextStyle" />
+</RelativeLayout>

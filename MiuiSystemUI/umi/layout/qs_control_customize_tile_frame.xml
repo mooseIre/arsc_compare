@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout android:gravity="center|top" android:clipChildren="false" android:clipToPadding="false" android:layout_width="@dimen/qs_control_customizer_tile_width" android:layout_height="@dimen/qs_control_customizer_tile_height"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <ImageView android:layout_gravity="end|center|top" android:id="@id/marker" android:layout_width="@dimen/qs_control_customizer_marker_width" android:layout_height="@dimen/qs_control_customizer_marker_height" />
+</FrameLayout>
