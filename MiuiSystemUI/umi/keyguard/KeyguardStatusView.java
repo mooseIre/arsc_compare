@@ -1,5 +1,6 @@
 package com.android.keyguard;
 
+import android.app.ActivityManager;
 import android.app.AlarmManager;
 import android.content.Context;
 import android.content.res.Configuration;
@@ -98,12 +99,14 @@ public class KeyguardStatusView extends GridLayout {
         this.mClockContainer = (ViewGroup) findViewById(R.id.keyguard_clock_container);
         this.mAlarmStatusView = (TextView) findViewById(R.id.alarm_status);
         this.mDateView = (DateView) findViewById(R.id.date_view);
-        this.mClockView = (TextClock) findViewById(R.id.clock_view);
-        this.mClockView.setShowCurrentUserTime(true);
+        TextClock textClock = (TextClock) findViewById(R.id.clock_view);
+        this.mClockView = textClock;
+        textClock.setShowCurrentUserTime(true);
         this.mClockView.setAccessibilityDelegate(new KeyguardClockAccessibilityDelegate(this.mContext));
         this.mOwnerInfo = (TextView) findViewById(R.id.owner_info);
-        this.mBatteryDoze = (ChargingView) findViewById(R.id.battery_doze);
-        this.mVisibleInDoze = new View[]{this.mBatteryDoze, this.mClockView};
+        ChargingView chargingView = (ChargingView) findViewById(R.id.battery_doze);
+        this.mBatteryDoze = chargingView;
+        this.mVisibleInDoze = new View[]{chargingView, this.mClockView};
         setEnableMarquee(KeyguardUpdateMonitor.getInstance(this.mContext).isDeviceInteractive());
         refresh();
         updateOwnerInfo();
@@ -154,7 +157,7 @@ public class KeyguardStatusView extends GridLayout {
         if (alarmClockInfo == null) {
             return "";
         }
-        return DateFormat.format(DateFormat.getBestDateTimePattern(Locale.getDefault(), DateFormat.is24HourFormat(context, KeyguardUpdateMonitor.getCurrentUser()) ? "EHm" : "Ehma"), alarmClockInfo.getTriggerTime()).toString();
+        return DateFormat.format(DateFormat.getBestDateTimePattern(Locale.getDefault(), DateFormat.is24HourFormat(context, ActivityManager.getCurrentUser()) ? "EHm" : "Ehma"), alarmClockInfo.getTriggerTime()).toString();
     }
 
     /* access modifiers changed from: private */
@@ -207,8 +210,9 @@ public class KeyguardStatusView extends GridLayout {
                 if (!context.getResources().getBoolean(R.bool.config_showAmpm) && !string.contains("a")) {
                     clockView12 = clockView12.replaceAll("a", "").trim();
                 }
-                clockView24 = DateFormat.getBestDateTimePattern(locale, string2);
-                clockView24 = clockView24.replace(':', 60929);
+                String bestDateTimePattern = DateFormat.getBestDateTimePattern(locale, string2);
+                clockView24 = bestDateTimePattern;
+                clockView24 = bestDateTimePattern.replace(':', 60929);
                 clockView12 = clockView12.replace(':', 60929);
                 cacheKey = str;
             }

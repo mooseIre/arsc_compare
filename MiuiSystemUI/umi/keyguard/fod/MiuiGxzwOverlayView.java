@@ -60,6 +60,8 @@ class MiuiGxzwOverlayView extends GxzwWindowFrameLayout implements MiuiGxzwIconV
     public void onDisplayRemoved(int i) {
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$new$0 */
     public /* synthetic */ void lambda$new$0$MiuiGxzwOverlayView() {
         this.mExecutor.execute(new Runnable() {
             public final void run() {
@@ -79,8 +81,8 @@ class MiuiGxzwOverlayView extends GxzwWindowFrameLayout implements MiuiGxzwIconV
         LayoutInflater.from(getContext()).inflate(R.layout.miui_keyguard_gxzw_overlay, this);
         this.mHbmOverlay = findViewById(R.id.hbm_overlay);
         setSystemUiVisibility(4864);
-        this.mLayoutParams = new WindowManager.LayoutParams(-1, -1, 2021, 83957016, -2);
-        WindowManager.LayoutParams layoutParams = this.mLayoutParams;
+        WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(-1, -1, 2021, 83957016, -2);
+        this.mLayoutParams = layoutParams;
         layoutParams.extraFlags |= 8388608;
         layoutParams.privateFlags |= MiuiGxzwUtils.PRIVATE_FLAG_IS_HBM_OVERLAY;
         layoutParams.alpha = 0.0f;
@@ -122,6 +124,8 @@ class MiuiGxzwOverlayView extends GxzwWindowFrameLayout implements MiuiGxzwIconV
         }
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$show$1 */
     public /* synthetic */ void lambda$show$1$MiuiGxzwOverlayView() {
         notifySurfaceFlinger(1);
         DisplayFeatureManager.getInstance().setScreenEffect(17, 1, 1);
@@ -141,7 +145,7 @@ class MiuiGxzwOverlayView extends GxzwWindowFrameLayout implements MiuiGxzwIconV
         Log.d("MiuiGxzwOverlayView", "startDozing");
         this.mDozing = true;
         this.mOverlayAlpha = 0.657f;
-        updateAlpha(this.mOverlayAlpha);
+        updateAlpha(0.657f);
         addOverlayView();
     }
 
@@ -151,7 +155,7 @@ class MiuiGxzwOverlayView extends GxzwWindowFrameLayout implements MiuiGxzwIconV
         if (!this.mCollecting && !this.mOverlayAlwaysOn) {
             removeOverlayView();
         }
-        if (this.mOverlayAlwaysOn && !MiuiGxzwManager.getInstance().isUnlockByGxzw()) {
+        if (this.mOverlayAlwaysOn) {
             updateAlpha(this.mOverlayAlpha);
         }
         updateBrightnessFileWatchState();
@@ -193,7 +197,7 @@ class MiuiGxzwOverlayView extends GxzwWindowFrameLayout implements MiuiGxzwIconV
     public void restoreScreenEffect() {
         if (this.mScreenEffectNone) {
             this.mExecutor.execute(new Runnable(isAttachedToWindow()) {
-                private final /* synthetic */ boolean f$1;
+                public final /* synthetic */ boolean f$1;
 
                 {
                     this.f$1 = r2;
@@ -209,6 +213,8 @@ class MiuiGxzwOverlayView extends GxzwWindowFrameLayout implements MiuiGxzwIconV
         this.mHandler.removeCallbacks(this.mDisableReadingModeAction);
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$restoreScreenEffect$2 */
     public /* synthetic */ void lambda$restoreScreenEffect$2$MiuiGxzwOverlayView(boolean z) {
         int i = z ? 0 : 2;
         notifySurfaceFlinger(i);
@@ -400,21 +406,21 @@ class MiuiGxzwOverlayView extends GxzwWindowFrameLayout implements MiuiGxzwIconV
         return readIntFromFile(file.getParentFile().getAbsolutePath() + "/max_brightness");
     }
 
-    /* JADX WARNING: Removed duplicated region for block: B:23:0x0032 A[SYNTHETIC, Splitter:B:23:0x0032] */
-    /* JADX WARNING: Removed duplicated region for block: B:28:0x003e A[SYNTHETIC, Splitter:B:28:0x003e] */
+    /* JADX WARNING: Removed duplicated region for block: B:22:0x0030 A[SYNTHETIC, Splitter:B:22:0x0030] */
+    /* JADX WARNING: Removed duplicated region for block: B:28:0x003d A[SYNTHETIC, Splitter:B:28:0x003d] */
     /* JADX WARNING: Removed duplicated region for block: B:34:? A[RETURN, SYNTHETIC] */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     private int readIntFromFile(java.lang.String r3) {
         /*
             r2 = this;
             r2 = 0
-            java.io.BufferedReader r0 = new java.io.BufferedReader     // Catch:{ Exception -> 0x002c }
-            java.io.FileReader r1 = new java.io.FileReader     // Catch:{ Exception -> 0x002c }
-            r1.<init>(r3)     // Catch:{ Exception -> 0x002c }
-            r0.<init>(r1)     // Catch:{ Exception -> 0x002c }
-            java.lang.String r2 = r0.readLine()     // Catch:{ Exception -> 0x0026, all -> 0x0022 }
+            java.io.BufferedReader r0 = new java.io.BufferedReader     // Catch:{ Exception -> 0x0028, all -> 0x0024 }
+            java.io.FileReader r1 = new java.io.FileReader     // Catch:{ Exception -> 0x0028, all -> 0x0024 }
+            r1.<init>(r3)     // Catch:{ Exception -> 0x0028, all -> 0x0024 }
+            r0.<init>(r1)     // Catch:{ Exception -> 0x0028, all -> 0x0024 }
+            java.lang.String r2 = r0.readLine()     // Catch:{ Exception -> 0x0022 }
             if (r2 == 0) goto L_0x001e
-            int r2 = java.lang.Integer.parseInt(r2)     // Catch:{ Exception -> 0x0026, all -> 0x0022 }
+            int r2 = java.lang.Integer.parseInt(r2)     // Catch:{ Exception -> 0x0022 }
             r0.close()     // Catch:{ IOException -> 0x0019 }
             goto L_0x001d
         L_0x0019:
@@ -423,43 +429,42 @@ class MiuiGxzwOverlayView extends GxzwWindowFrameLayout implements MiuiGxzwIconV
         L_0x001d:
             return r2
         L_0x001e:
-            r0.close()     // Catch:{ IOException -> 0x0036 }
-            goto L_0x003a
+            r0.close()     // Catch:{ IOException -> 0x0034 }
+            goto L_0x0038
         L_0x0022:
             r2 = move-exception
-            r3 = r2
-            r2 = r0
-            goto L_0x003c
-        L_0x0026:
-            r2 = move-exception
-            r3 = r2
-            r2 = r0
-            goto L_0x002d
-        L_0x002a:
+            goto L_0x002b
+        L_0x0024:
             r3 = move-exception
-            goto L_0x003c
-        L_0x002c:
+            r0 = r2
+            r2 = r3
+            goto L_0x003b
+        L_0x0028:
             r3 = move-exception
-        L_0x002d:
-            r3.printStackTrace()     // Catch:{ all -> 0x002a }
-            if (r2 == 0) goto L_0x003a
-            r2.close()     // Catch:{ IOException -> 0x0036 }
-            goto L_0x003a
-        L_0x0036:
+            r0 = r2
+            r2 = r3
+        L_0x002b:
+            r2.printStackTrace()     // Catch:{ all -> 0x003a }
+            if (r0 == 0) goto L_0x0038
+            r0.close()     // Catch:{ IOException -> 0x0034 }
+            goto L_0x0038
+        L_0x0034:
             r2 = move-exception
             r2.printStackTrace()
-        L_0x003a:
+        L_0x0038:
             r2 = -1
             return r2
-        L_0x003c:
-            if (r2 == 0) goto L_0x0046
-            r2.close()     // Catch:{ IOException -> 0x0042 }
-            goto L_0x0046
-        L_0x0042:
+        L_0x003a:
             r2 = move-exception
-            r2.printStackTrace()
-        L_0x0046:
-            throw r3
+        L_0x003b:
+            if (r0 == 0) goto L_0x0045
+            r0.close()     // Catch:{ IOException -> 0x0041 }
+            goto L_0x0045
+        L_0x0041:
+            r3 = move-exception
+            r3.printStackTrace()
+        L_0x0045:
+            throw r2
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.keyguard.fod.MiuiGxzwOverlayView.readIntFromFile(java.lang.String):int");
     }

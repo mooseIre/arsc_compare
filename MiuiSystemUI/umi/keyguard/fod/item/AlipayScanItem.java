@@ -19,8 +19,9 @@ public class AlipayScanItem extends IQuickOpenItem {
 
     public AlipayScanItem(RectF rectF, Region region, Context context) {
         super(rectF, region, context);
-        this.mView = new ImageView(context);
-        this.mView.setImageResource(R.drawable.gxzw_quick_open_alipay_scan);
+        ImageView imageView = new ImageView(context);
+        this.mView = imageView;
+        imageView.setImageResource(R.drawable.gxzw_quick_open_alipay_scan);
         this.mView.setScaleType(ImageView.ScaleType.FIT_XY);
     }
 

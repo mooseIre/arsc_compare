@@ -13,7 +13,6 @@ import java.util.Iterator;
 import miui.telephony.TelephonyManager;
 
 public class PhoneSignalController {
-    private Context mContext;
     private int mPhoneCount;
     private boolean[] mPhoneSignalAvailable;
     private int[] mPhoneSignalLevel;
@@ -26,7 +25,6 @@ public class PhoneSignalController {
     }
 
     public PhoneSignalController(Context context) {
-        this.mContext = context;
     }
 
     private PhoneStateListener getPhoneStateListener(final int i) {
@@ -86,15 +84,15 @@ public class PhoneSignalController {
     }
 
     private void addPhoneStateListener() {
-        this.mPhoneCount = PhoneUtils.getPhoneCount();
-        int i = this.mPhoneCount;
-        this.mPhoneSignalAvailable = new boolean[i];
-        this.mPhoneSignalLevel = new int[i];
-        this.mPhoneStateListeners = new ArrayList<>(i);
-        for (int i2 = 0; i2 < this.mPhoneCount; i2++) {
-            this.mPhoneSignalAvailable[i2] = false;
-            this.mPhoneSignalLevel[i2] = 0;
-            TelephonyManager.getDefault().listenForSlot(i2, getPhoneStateListener(i2), 257);
+        int phoneCount = PhoneUtils.getPhoneCount();
+        this.mPhoneCount = phoneCount;
+        this.mPhoneSignalAvailable = new boolean[phoneCount];
+        this.mPhoneSignalLevel = new int[phoneCount];
+        this.mPhoneStateListeners = new ArrayList<>(this.mPhoneCount);
+        for (int i = 0; i < this.mPhoneCount; i++) {
+            this.mPhoneSignalAvailable[i] = false;
+            this.mPhoneSignalLevel[i] = 0;
+            TelephonyManager.getDefault().listenForSlot(i, getPhoneStateListener(i), 257);
         }
     }
 

@@ -87,8 +87,9 @@ public class LockScreenMagazinePreView extends RelativeLayout {
 
     public LockScreenMagazinePreView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-        this.mMonitor = KeyguardUpdateMonitor.getInstance(context);
-        this.mLockScreenMagazineWallpaperInfo = this.mMonitor.getLockScreenMagazineWallpaperInfo();
+        KeyguardUpdateMonitor instance = KeyguardUpdateMonitor.getInstance(context);
+        this.mMonitor = instance;
+        this.mLockScreenMagazineWallpaperInfo = instance.getLockScreenMagazineWallpaperInfo();
         this.mResources = context.getResources();
     }
 
@@ -425,8 +426,8 @@ public class LockScreenMagazinePreView extends RelativeLayout {
     }
 
     public void refreshWallpaperInfo(RemoteViews remoteViews, RemoteViews remoteViews2) {
-        this.mLockScreenMagazineWallpaperInfo = this.mMonitor.getLockScreenMagazineWallpaperInfo();
-        LockScreenMagazineWallpaperInfo lockScreenMagazineWallpaperInfo = this.mLockScreenMagazineWallpaperInfo;
+        LockScreenMagazineWallpaperInfo lockScreenMagazineWallpaperInfo = this.mMonitor.getLockScreenMagazineWallpaperInfo();
+        this.mLockScreenMagazineWallpaperInfo = lockScreenMagazineWallpaperInfo;
         if (lockScreenMagazineWallpaperInfo != null) {
             if (!Build.IS_INTERNATIONAL_BUILD && !TextUtils.isEmpty(lockScreenMagazineWallpaperInfo.content)) {
                 LockScreenMagazineWallpaperInfo lockScreenMagazineWallpaperInfo2 = this.mLockScreenMagazineWallpaperInfo;
@@ -505,8 +506,9 @@ public class LockScreenMagazinePreView extends RelativeLayout {
 
     private void applyMainRemoteView() {
         this.mRemoteMainLayout.removeView(this.mRemoteMainView);
-        this.mRemoteMainView = this.mMainRemoteView.apply(getContext(), this.mRemoteMainLayout);
-        updateRemoteTextView(this.mRemoteMainView, true);
+        View apply = this.mMainRemoteView.apply(getContext(), this.mRemoteMainLayout);
+        this.mRemoteMainView = apply;
+        updateRemoteTextView(apply, true);
         this.mRemoteMainLayout.addView(this.mRemoteMainView);
     }
 
@@ -526,8 +528,9 @@ public class LockScreenMagazinePreView extends RelativeLayout {
 
     private void applyFullScreenRemoteView() {
         this.mRemoteFullScreenLayout.removeView(this.mRemoteFullScreenView);
-        this.mRemoteFullScreenView = this.mFullScreenRemoteView.apply(getContext(), this.mRemoteFullScreenLayout);
-        updateRemoteTextView(this.mRemoteFullScreenView, false);
+        View apply = this.mFullScreenRemoteView.apply(getContext(), this.mRemoteFullScreenLayout);
+        this.mRemoteFullScreenView = apply;
+        updateRemoteTextView(apply, false);
         this.mRemoteFullScreenLayout.addView(this.mRemoteFullScreenView);
     }
 

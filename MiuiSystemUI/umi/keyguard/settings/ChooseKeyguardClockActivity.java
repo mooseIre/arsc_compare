@@ -129,8 +129,9 @@ public class ChooseKeyguardClockActivity extends Activity {
     }
 
     public void initView() {
-        this.mBackImage = (ImageView) findViewById(R.id.back_image);
-        this.mBackImage.setOnClickListener(new View.OnClickListener() {
+        ImageView imageView = (ImageView) findViewById(R.id.back_image);
+        this.mBackImage = imageView;
+        imageView.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 ChooseKeyguardClockActivity.this.finish();
             }
@@ -148,12 +149,15 @@ public class ChooseKeyguardClockActivity extends Activity {
             this.mWallPaper.setVisibility(8);
             this.mLiveLockWallpaperView.setVisibility(8);
         }
-        this.mClockView = (MiuiClockView) findViewById(R.id.main_clock_view);
-        this.mClockView.setClockStyle(this.mSelectedClockPosition);
+        MiuiClockView miuiClockView = (MiuiClockView) findViewById(R.id.main_clock_view);
+        this.mClockView = miuiClockView;
+        miuiClockView.setClockStyle(this.mSelectedClockPosition);
         this.mClockView.setOwnerInfo(getOwnerInfo());
-        this.mPanelView = (LinearLayout) findViewById(R.id.choose_clock_scroll_view);
-        this.mBottomSheetBehavior = BottomSheetBehavior.from(this.mPanelView);
-        this.mBottomSheetBehavior.setState(3);
+        LinearLayout linearLayout = (LinearLayout) findViewById(R.id.choose_clock_scroll_view);
+        this.mPanelView = linearLayout;
+        BottomSheetBehavior from = BottomSheetBehavior.from(linearLayout);
+        this.mBottomSheetBehavior = from;
+        from.setState(3);
         if (MiuiKeyguardUtils.isDefaultLockScreenTheme()) {
             ((FrameLayout) findViewById(R.id.third_theme_hint_layout)).setVisibility(8);
         } else {
@@ -188,17 +192,18 @@ public class ChooseKeyguardClockActivity extends Activity {
         });
         this.mLunarBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton compoundButton, boolean z) {
-                boolean z2 = true;
-                if (Settings.System.getIntForUser(ChooseKeyguardClockActivity.this.getContentResolver(), "show_lunar_calendar", 0, ChooseKeyguardClockActivity.this.mUserId) != 1) {
-                    z2 = false;
+                boolean z2 = false;
+                if (Settings.System.getIntForUser(ChooseKeyguardClockActivity.this.getContentResolver(), "show_lunar_calendar", 0, ChooseKeyguardClockActivity.this.mUserId) == 1) {
+                    z2 = true;
                 }
                 if (z != z2) {
                     ChooseKeyguardClockActivity.this.onLunarCalendarCheckedChanged(z);
                 }
             }
         });
-        this.mOwnerInfoLayout = (FrameLayout) findViewById(R.id.owner_info_layout);
-        this.mOwnerInfoLayout.setOnClickListener(new View.OnClickListener() {
+        FrameLayout frameLayout = (FrameLayout) findViewById(R.id.owner_info_layout);
+        this.mOwnerInfoLayout = frameLayout;
+        frameLayout.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 if (ChooseKeyguardClockActivity.this.mOwnerAdmin != null) {
                     ChooseKeyguardClockActivity chooseKeyguardClockActivity = ChooseKeyguardClockActivity.this;
@@ -210,11 +215,11 @@ public class ChooseKeyguardClockActivity extends Activity {
             }
         });
         this.mOwnerInfoTitle = (TextView) findViewById(R.id.owner_info_title);
-        ImageView imageView = (ImageView) findViewById(R.id.owner_info_restricted_icon);
-        ImageView imageView2 = (ImageView) findViewById(R.id.owner_info_arrow_right);
+        ImageView imageView2 = (ImageView) findViewById(R.id.owner_info_restricted_icon);
+        ImageView imageView3 = (ImageView) findViewById(R.id.owner_info_arrow_right);
         if (this.mOwnerAdmin != null) {
-            imageView.setVisibility(0);
-            imageView2.setVisibility(8);
+            imageView2.setVisibility(0);
+            imageView3.setVisibility(8);
         }
     }
 
@@ -323,9 +328,9 @@ public class ChooseKeyguardClockActivity extends Activity {
                 Drawable lockWallpaperPreview = KeyguardWallpaperUtils.getLockWallpaperPreview(ChooseKeyguardClockActivity.this);
                 try {
                     Bitmap bitmap = ((BitmapDrawable) lockWallpaperPreview).getBitmap();
+                    boolean z = true;
                     Bitmap createScaledBitmap = Bitmap.createScaledBitmap(bitmap, 1080, (bitmap.getHeight() * 1080) / bitmap.getWidth(), true);
                     Bitmap createBitmap = Bitmap.createBitmap(createScaledBitmap, 80, 125, R.styleable.AppCompatTheme_toolbarNavigationButtonStyle, R.styleable.AppCompatTheme_toolbarNavigationButtonStyle);
-                    boolean z = false;
                     if (createBitmap != null) {
                         boolean unused = ChooseKeyguardClockActivity.this.mBackImageLight = MiuiKeyguardUtils.getBitmapColorMode(createBitmap) != 0;
                         createBitmap.recycle();
@@ -338,8 +343,8 @@ public class ChooseKeyguardClockActivity extends Activity {
                     Bitmap createBitmap3 = Bitmap.createBitmap(createScaledBitmap, 56, 150, 500, 500);
                     if (createBitmap3 != null) {
                         ChooseKeyguardClockActivity chooseKeyguardClockActivity = ChooseKeyguardClockActivity.this;
-                        if (MiuiKeyguardUtils.getBitmapColorMode(createBitmap3) == 0) {
-                            z = true;
+                        if (MiuiKeyguardUtils.getBitmapColorMode(createBitmap3) != 0) {
+                            z = false;
                         }
                         boolean unused3 = chooseKeyguardClockActivity.mCenterClockViewLight = z;
                         createBitmap3.recycle();
@@ -448,7 +453,7 @@ public class ChooseKeyguardClockActivity extends Activity {
         public MyViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
             View inflate = LayoutInflater.from(this.context).inflate(R.layout.choose_keyguard_clock_item, viewGroup, false);
             Folme.useAt(inflate).touch().handleTouchOf(inflate, new AnimConfig[0]);
-            return new MyViewHolder(inflate);
+            return new MyViewHolder(this, inflate);
         }
 
         public void onBindViewHolder(MyViewHolder myViewHolder, final int i) {
@@ -473,10 +478,11 @@ public class ChooseKeyguardClockActivity extends Activity {
             MiuiClockView clockView;
             FrameLayout itemRootView;
 
-            public MyViewHolder(View view) {
+            public MyViewHolder(ClockAdapter clockAdapter, View view) {
                 super(view);
-                this.clockView = (MiuiClockView) view.findViewById(R.id.clock_item);
-                this.clockView.setScaleRatio(0.26f);
+                MiuiClockView miuiClockView = (MiuiClockView) view.findViewById(R.id.clock_item);
+                this.clockView = miuiClockView;
+                miuiClockView.setScaleRatio(0.26f);
                 this.clockView.setTextColorDark(!ChooseKeyguardClockActivity.this.mIsNightMode);
                 this.clockView.setHasTopMargin(false);
                 this.clockView.setShowLunarCalendar(0);

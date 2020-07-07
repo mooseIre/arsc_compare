@@ -22,12 +22,12 @@ import java.util.Objects;
 
 public class MiuiKeyguardLiveWallpaper extends BaseKeyguardWallpaperService {
     public WallpaperService.Engine onCreateEngine() {
-        return new LiveLockEngine();
+        return new LiveLockEngine(this);
     }
 
     private class LiveLockEngine extends BaseKeyguardWallpaperService.BaseEngine implements StatusBarStateController.StateListener {
         private ChargeHelper mChargeHelper;
-        private StatusBarStateController mController = ((StatusBarStateController) Dependency.get(StatusBarStateController.class));
+        private StatusBarStateController mController;
         private boolean mIsDozing;
         private boolean mIsInteractive;
         private String mLastLiveLockPath = null;
@@ -35,9 +35,10 @@ public class MiuiKeyguardLiveWallpaper extends BaseKeyguardWallpaperService {
         private boolean mLiveReady = false;
         private float mWindowAlpha;
 
-        public LiveLockEngine() {
+        public LiveLockEngine(MiuiKeyguardLiveWallpaper miuiKeyguardLiveWallpaper) {
             super(MiuiKeyguardWallpaperController.KeyguardWallpaperType.LIVE_LOCK);
-            StatusBarStateController statusBarStateController = this.mController;
+            StatusBarStateController statusBarStateController = (StatusBarStateController) Dependency.get(StatusBarStateController.class);
+            this.mController = statusBarStateController;
             if (statusBarStateController != null) {
                 statusBarStateController.addCallback(this);
             }
@@ -85,8 +86,9 @@ public class MiuiKeyguardLiveWallpaper extends BaseKeyguardWallpaperService {
 
         public void onDozingChanged(boolean z) {
             this.mIsDozing = z;
-            this.mWindowAlpha = this.mIsDozing ? 0.0f : 1.0f;
-            updateSurfaceAttrs(this.mWindowAlpha);
+            float f = z ? 0.0f : 1.0f;
+            this.mWindowAlpha = f;
+            updateSurfaceAttrs(f);
         }
 
         public void onKeyguardWallpaperUpdated(MiuiKeyguardWallpaperController.KeyguardWallpaperType keyguardWallpaperType, boolean z, File file, Drawable drawable) {
@@ -118,7 +120,7 @@ public class MiuiKeyguardLiveWallpaper extends BaseKeyguardWallpaperService {
                 this.mLiveLockWallpaperPlayer = null;
                 Objects.requireNonNull(mediaPlayer);
                 AsyncTask.execute(new Runnable(mediaPlayer) {
-                    private final /* synthetic */ MediaPlayer f$0;
+                    public final /* synthetic */ MediaPlayer f$0;
 
                     {
                         this.f$0 = r1;
@@ -136,11 +138,11 @@ public class MiuiKeyguardLiveWallpaper extends BaseKeyguardWallpaperService {
 
         private void showMiLiveLockWallpaper(File file) {
             releaseLiveWallpaper(false);
-            this.mLiveLockWallpaperPlayer = MediaPlayer.create(this.mContext, Uri.fromFile(file));
+            MediaPlayer create = MediaPlayer.create(this.mContext, Uri.fromFile(file));
+            this.mLiveLockWallpaperPlayer = create;
             this.mLiveReady = false;
-            MediaPlayer mediaPlayer = this.mLiveLockWallpaperPlayer;
-            if (mediaPlayer != null) {
-                mediaPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+            if (create != null) {
+                create.setOnErrorListener(new MediaPlayer.OnErrorListener() {
                     public final boolean onError(MediaPlayer mediaPlayer, int i, int i2) {
                         return MiuiKeyguardLiveWallpaper.LiveLockEngine.this.lambda$showMiLiveLockWallpaper$1$MiuiKeyguardLiveWallpaper$LiveLockEngine(mediaPlayer, i, i2);
                     }
@@ -159,6 +161,8 @@ public class MiuiKeyguardLiveWallpaper extends BaseKeyguardWallpaperService {
             Log.e("MiuiKeyguardWallpaper", "live lock wallpaper is null");
         }
 
+        /* access modifiers changed from: private */
+        /* renamed from: lambda$showMiLiveLockWallpaper$1 */
         public /* synthetic */ boolean lambda$showMiLiveLockWallpaper$1$MiuiKeyguardLiveWallpaper$LiveLockEngine(MediaPlayer mediaPlayer, int i, int i2) {
             Log.e("MiuiKeyguardWallpaper", "restart: error happened " + i);
             this.mHandler.post(new Runnable() {
@@ -169,12 +173,16 @@ public class MiuiKeyguardLiveWallpaper extends BaseKeyguardWallpaperService {
             return false;
         }
 
+        /* access modifiers changed from: private */
+        /* renamed from: lambda$showMiLiveLockWallpaper$0 */
         public /* synthetic */ void lambda$showMiLiveLockWallpaper$0$MiuiKeyguardLiveWallpaper$LiveLockEngine() {
             if (!TextUtils.isEmpty(this.mLastLiveLockPath)) {
                 showMiLiveLockWallpaper(new File(this.mLastLiveLockPath));
             }
         }
 
+        /* access modifiers changed from: private */
+        /* renamed from: lambda$showMiLiveLockWallpaper$2 */
         public /* synthetic */ void lambda$showMiLiveLockWallpaper$2$MiuiKeyguardLiveWallpaper$LiveLockEngine(MediaPlayer mediaPlayer) {
             if (this.mLiveReady) {
                 mediaPlayer.pause();
@@ -226,6 +234,7 @@ public class MiuiKeyguardLiveWallpaper extends BaseKeyguardWallpaperService {
         }
 
         private void updateSurfaceAttrs(float f) {
+            Boolean bool = Boolean.TRUE;
             WindowManager.LayoutParams layoutParams = this.mLayoutParams;
             if (layoutParams != null && BaseKeyguardWallpaperService.ENGINE_UPDATE_SURFACE != null) {
                 boolean z = layoutParams.alpha != f;
@@ -237,7 +246,7 @@ public class MiuiKeyguardLiveWallpaper extends BaseKeyguardWallpaperService {
                 layoutParams2.alpha = f;
                 if (z) {
                     try {
-                        BaseKeyguardWallpaperService.ENGINE_UPDATE_SURFACE.invoke(this, new Object[]{true, false, true});
+                        BaseKeyguardWallpaperService.ENGINE_UPDATE_SURFACE.invoke(this, new Object[]{bool, Boolean.FALSE, bool});
                     } catch (Exception e) {
                         Log.e("MiuiKeyguardWallpaper", "error in updateSurfaceAttrs", e);
                     }

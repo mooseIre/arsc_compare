@@ -138,8 +138,9 @@ public class MiuiBleUnlockHelper {
             } catch (Exception e) {
                 Log.e("MiuiBleUnlockHelper", e.getMessage(), e);
             }
-            this.mUnlockProfile = new MiBleUnlockProfile(this.mContext, this.mLockPatternUtils.getBluetoothAddressToUnlock(), this.mStateChangeCallback);
-            this.mUnlockProfile.connect();
+            MiBleUnlockProfile miBleUnlockProfile = new MiBleUnlockProfile(this.mContext, this.mLockPatternUtils.getBluetoothAddressToUnlock(), this.mStateChangeCallback);
+            this.mUnlockProfile = miBleUnlockProfile;
+            miBleUnlockProfile.connect();
         }
     }
 

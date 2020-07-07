@@ -36,7 +36,11 @@ public class BatteryLevelImageView extends ImageView {
     public void onDraw(Canvas canvas) {
         int saveCount = canvas.getSaveCount();
         canvas.save();
-        canvas.clipRect(this.mPaddingLeft, this.mPadding + ((int) ((((double) (((this.mBottom - this.mTop) - (this.mPadding * 2)) * (100 - this.mLevel))) * 1.0d) / 100.0d)), (this.mRight - this.mLeft) - this.mPaddingRight, (this.mBottom - this.mTop) - this.mPaddingBottom);
+        int i = this.mPaddingLeft;
+        int i2 = this.mPadding;
+        int i3 = this.mBottom;
+        int i4 = this.mTop;
+        canvas.clipRect(i, i2 + ((int) ((((double) (((i3 - i4) - (i2 * 2)) * (100 - this.mLevel))) * 1.0d) / 100.0d)), (this.mRight - this.mLeft) - this.mPaddingRight, (i3 - i4) - this.mPaddingBottom);
         canvas.translate((float) this.mPaddingLeft, (float) this.mPaddingTop);
         getDrawable().draw(canvas);
         canvas.restoreToCount(saveCount);

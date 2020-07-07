@@ -9,6 +9,7 @@ import android.content.Context;
 import android.graphics.Point;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.Property;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
@@ -73,8 +74,9 @@ public class VideoRapidChargeView extends RapidChargeView {
         ofInt.setDuration(800);
         ofInt.addListener(this);
         ofInt.addUpdateListener(this);
-        this.mEnterAnimatorSet = new AnimatorSet();
-        this.mEnterAnimatorSet.play(ofInt);
+        AnimatorSet animatorSet = new AnimatorSet();
+        this.mEnterAnimatorSet = animatorSet;
+        animatorSet.play(ofInt);
     }
 
     public void onAnimationUpdate(ValueAnimator valueAnimator) {
@@ -121,9 +123,10 @@ public class VideoRapidChargeView extends RapidChargeView {
     }
 
     public void startDismiss(String str) {
+        Property property = FrameLayout.ALPHA;
         super.startDismiss(str);
-        ObjectAnimator duration = ObjectAnimator.ofPropertyValuesHolder(this, new PropertyValuesHolder[]{PropertyValuesHolder.ofFloat(FrameLayout.ALPHA, new float[]{getAlpha(), 0.0f})}).setDuration(600);
-        PropertyValuesHolder ofFloat = PropertyValuesHolder.ofFloat(FrameLayout.ALPHA, new float[]{this.mContentContainer.getAlpha(), 0.0f});
+        ObjectAnimator duration = ObjectAnimator.ofPropertyValuesHolder(this, new PropertyValuesHolder[]{PropertyValuesHolder.ofFloat(property, new float[]{getAlpha(), 0.0f})}).setDuration(600);
+        PropertyValuesHolder ofFloat = PropertyValuesHolder.ofFloat(property, new float[]{this.mContentContainer.getAlpha(), 0.0f});
         ObjectAnimator duration2 = ObjectAnimator.ofPropertyValuesHolder(this.mContentContainer, new PropertyValuesHolder[]{ofFloat}).setDuration(600);
         this.mDismissAnimatorSet.setInterpolator(this.mQuartOutInterpolator);
         this.mDismissAnimatorSet.playTogether(new Animator[]{duration2});

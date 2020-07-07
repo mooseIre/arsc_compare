@@ -9,6 +9,6 @@ public class AbstractStrongAuthTracker extends LockPatternUtils.StrongAuthTracke
     }
 
     public boolean isFingerprintAllowedForUser(int i) {
-        return isBiometricAllowedForUser(i);
+        return isBiometricAllowedForUser(false, i);
     }
 }

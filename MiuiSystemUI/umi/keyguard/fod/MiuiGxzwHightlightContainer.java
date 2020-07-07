@@ -91,8 +91,8 @@ class MiuiGxzwHightlightContainer extends GxzwNoRotateFrameLayout {
         LayoutInflater.from(getContext()).inflate(R.layout.miui_keyguard_gxzw_icon_view, this);
         this.mMiuiGxzwHighlightView = (MiuiGxzwHighlightView) findViewById(R.id.gxzw_highlight);
         setSystemUiVisibility(4864);
-        this.mLayoutParams = new WindowManager.LayoutParams(this.mRegion.width(), this.mRegion.height(), 2018, 16778776, -2);
-        WindowManager.LayoutParams layoutParams = this.mLayoutParams;
+        WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(this.mRegion.width(), this.mRegion.height(), 2018, 16778776, -2);
+        this.mLayoutParams = layoutParams;
         layoutParams.layoutInDisplayCutoutMode = 1;
         layoutParams.privateFlags |= MiuiGxzwUtils.PRIVATE_FLAG_IS_HBM_OVERLAY;
         layoutParams.gravity = 51;

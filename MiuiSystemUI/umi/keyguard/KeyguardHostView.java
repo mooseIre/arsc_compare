@@ -70,8 +70,9 @@ public class KeyguardHostView extends FrameLayout implements KeyguardSecurityCon
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         this.mSecurityContainer = (KeyguardSecurityContainer) findViewById(R.id.keyguard_security_container);
-        this.mLockPatternUtils = new LockPatternUtils(this.mContext);
-        this.mSecurityContainer.setLockPatternUtils(this.mLockPatternUtils);
+        LockPatternUtils lockPatternUtils = new LockPatternUtils(this.mContext);
+        this.mLockPatternUtils = lockPatternUtils;
+        this.mSecurityContainer.setLockPatternUtils(lockPatternUtils);
         this.mSecurityContainer.setSecurityCallback(this);
         this.mSecurityContainer.showPrimarySecurityScreen(false);
     }
@@ -202,34 +203,31 @@ public class KeyguardHostView extends FrameLayout implements KeyguardSecurityCon
     public boolean interceptMediaKey(KeyEvent keyEvent) {
         int keyCode = keyEvent.getKeyCode();
         if (keyEvent.getAction() == 0) {
-            if (!(keyCode == 24 || keyCode == 25)) {
-                if (!(keyCode == 79 || keyCode == 130)) {
-                    if (keyCode != 164) {
-                        if (keyCode != 222) {
-                            if (!(keyCode == 126 || keyCode == 127)) {
-                                switch (keyCode) {
-                                    case R.styleable.AppCompatTheme_panelMenuListTheme /*85*/:
-                                        break;
-                                    case R.styleable.AppCompatTheme_panelMenuListWidth /*86*/:
-                                    case R.styleable.AppCompatTheme_popupMenuStyle /*87*/:
-                                    case R.styleable.AppCompatTheme_popupWindowStyle /*88*/:
-                                    case R.styleable.AppCompatTheme_radioButtonStyle /*89*/:
-                                    case R.styleable.AppCompatTheme_ratingBarStyle /*90*/:
-                                    case R.styleable.AppCompatTheme_ratingBarStyleIndicator /*91*/:
-                                        break;
-                                }
-                            }
-                            if (PhoneUtils.isInCall(this.mContext)) {
-                                return true;
-                            }
-                        }
+            if (!(keyCode == 79 || keyCode == 130 || keyCode == 222)) {
+                if (!(keyCode == 126 || keyCode == 127)) {
+                    switch (keyCode) {
+                        case R.styleable.AppCompatTheme_panelMenuListTheme /*85*/:
+                            break;
+                        case R.styleable.AppCompatTheme_panelMenuListWidth /*86*/:
+                        case R.styleable.AppCompatTheme_popupMenuStyle /*87*/:
+                        case R.styleable.AppCompatTheme_popupWindowStyle /*88*/:
+                        case R.styleable.AppCompatTheme_radioButtonStyle /*89*/:
+                        case R.styleable.AppCompatTheme_ratingBarStyle /*90*/:
+                        case R.styleable.AppCompatTheme_ratingBarStyleIndicator /*91*/:
+                            break;
+                        default:
+                            return false;
                     }
                 }
-                handleMediaKeyEvent(keyEvent);
-                return true;
+                if (PhoneUtils.isInCall(this.mContext)) {
+                    return true;
+                }
             }
+            handleMediaKeyEvent(keyEvent);
+            return true;
+        } else if (keyEvent.getAction() != 1) {
             return false;
-        } else if (keyEvent.getAction() == 1) {
+        } else {
             if (!(keyCode == 79 || keyCode == 130 || keyCode == 222 || keyCode == 126 || keyCode == 127)) {
                 switch (keyCode) {
                     case R.styleable.AppCompatTheme_panelMenuListTheme /*85*/:
@@ -240,12 +238,13 @@ public class KeyguardHostView extends FrameLayout implements KeyguardSecurityCon
                     case R.styleable.AppCompatTheme_ratingBarStyle /*90*/:
                     case R.styleable.AppCompatTheme_ratingBarStyleIndicator /*91*/:
                         break;
+                    default:
+                        return false;
                 }
             }
             handleMediaKeyEvent(keyEvent);
             return true;
         }
-        return false;
     }
 
     private void handleMediaKeyEvent(KeyEvent keyEvent) {
@@ -270,7 +269,7 @@ public class KeyguardHostView extends FrameLayout implements KeyguardSecurityCon
 
     public void setViewMediatorCallback(ViewMediatorCallback viewMediatorCallback) {
         this.mViewMediatorCallback = viewMediatorCallback;
-        this.mViewMediatorCallback.setNeedsInput(this.mSecurityContainer.needsInput());
+        viewMediatorCallback.setNeedsInput(this.mSecurityContainer.needsInput());
     }
 
     public void setLockPatternUtils(LockPatternUtils lockPatternUtils) {

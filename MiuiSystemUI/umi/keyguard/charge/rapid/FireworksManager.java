@@ -33,8 +33,9 @@ class FireworksManager {
             ListIterator<PointF> listIterator = this.mFireList.listIterator();
             while (listIterator.hasNext()) {
                 PointF next = listIterator.next();
-                next.y -= f;
-                if (next.y <= 0.0f) {
+                float f2 = next.y - f;
+                next.y = f2;
+                if (f2 <= 0.0f) {
                     listIterator.remove();
                 }
             }

@@ -36,7 +36,6 @@ public class PasswordTextView extends View {
     public int mDotSize;
     /* access modifiers changed from: private */
     public final Paint mDrawPaint;
-    private Interpolator mFastOutSlowInInterpolator;
     private final int mGravity;
     boolean mShowPassword;
     private String mText;
@@ -94,7 +93,7 @@ public class PasswordTextView extends View {
             this.mShowPassword = Settings.System.getInt(this.mContext.getContentResolver(), "show_password", 1) != 1 ? false : z;
             this.mAppearInterpolator = AnimationUtils.loadInterpolator(this.mContext, 17563662);
             this.mDisappearInterpolator = AnimationUtils.loadInterpolator(this.mContext, 17563663);
-            this.mFastOutSlowInInterpolator = AnimationUtils.loadInterpolator(this.mContext, 17563661);
+            AnimationUtils.loadInterpolator(this.mContext, 17563661);
         } catch (Throwable th) {
             obtainStyledAttributes.recycle();
             throw th;
@@ -161,8 +160,9 @@ public class PasswordTextView extends View {
         CharState charState;
         int size = this.mTextChars.size();
         String str = this.mText;
-        this.mText += c;
-        int length = this.mText.length();
+        String str2 = this.mText + c;
+        this.mText = str2;
+        int length = str2.length();
         TextChangeListener textChangeListener = this.mTextChangeListener;
         if (textChangeListener != null) {
             textChangeListener.onTextChanged(length);
@@ -469,8 +469,9 @@ public class PasswordTextView extends View {
 
         private void startWidthDisappearAnimation(long j) {
             cancelAnimator(this.widthAnimator);
-            this.widthAnimator = ValueAnimator.ofFloat(new float[]{this.currentWidthFactor, 0.0f});
-            this.widthAnimator.addUpdateListener(this.widthUpdater);
+            ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{this.currentWidthFactor, 0.0f});
+            this.widthAnimator = ofFloat;
+            ofFloat.addUpdateListener(this.widthUpdater);
             this.widthAnimator.addListener(this.widthFinishListener);
             this.widthAnimator.addListener(this.removeEndListener);
             this.widthAnimator.setDuration((long) (this.currentWidthFactor * 160.0f));
@@ -481,8 +482,9 @@ public class PasswordTextView extends View {
 
         private void startTextDisappearAnimation(long j) {
             cancelAnimator(this.textAnimator);
-            this.textAnimator = ValueAnimator.ofFloat(new float[]{this.currentTextSizeFactor, 0.0f});
-            this.textAnimator.addUpdateListener(this.textSizeUpdater);
+            ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{this.currentTextSizeFactor, 0.0f});
+            this.textAnimator = ofFloat;
+            ofFloat.addUpdateListener(this.textSizeUpdater);
             this.textAnimator.addListener(this.textFinishListener);
             this.textAnimator.setInterpolator(PasswordTextView.this.mDisappearInterpolator);
             this.textAnimator.setDuration((long) (this.currentTextSizeFactor * 160.0f));
@@ -506,8 +508,9 @@ public class PasswordTextView extends View {
 
         private void startWidthAppearAnimation() {
             cancelAnimator(this.widthAnimator);
-            this.widthAnimator = ValueAnimator.ofFloat(new float[]{this.currentWidthFactor, 1.0f});
-            this.widthAnimator.addUpdateListener(this.widthUpdater);
+            ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{this.currentWidthFactor, 1.0f});
+            this.widthAnimator = ofFloat;
+            ofFloat.addUpdateListener(this.widthUpdater);
             this.widthAnimator.addListener(this.widthFinishListener);
             this.widthAnimator.setDuration((long) ((1.0f - this.currentWidthFactor) * 160.0f));
             this.widthAnimator.start();
@@ -516,16 +519,18 @@ public class PasswordTextView extends View {
 
         private void startTextAppearAnimation() {
             cancelAnimator(this.textAnimator);
-            this.textAnimator = ValueAnimator.ofFloat(new float[]{this.currentTextSizeFactor, 1.0f});
-            this.textAnimator.addUpdateListener(this.textSizeUpdater);
+            ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{this.currentTextSizeFactor, 1.0f});
+            this.textAnimator = ofFloat;
+            ofFloat.addUpdateListener(this.textSizeUpdater);
             this.textAnimator.addListener(this.textFinishListener);
             this.textAnimator.setInterpolator(PasswordTextView.this.mAppearInterpolator);
             this.textAnimator.setDuration((long) ((1.0f - this.currentTextSizeFactor) * 160.0f));
             this.textAnimator.start();
             this.textAnimationIsGrowing = true;
             if (this.textTranslateAnimator == null) {
-                this.textTranslateAnimator = ValueAnimator.ofFloat(new float[]{1.0f, 0.0f});
-                this.textTranslateAnimator.addUpdateListener(this.textTranslationUpdater);
+                ValueAnimator ofFloat2 = ValueAnimator.ofFloat(new float[]{1.0f, 0.0f});
+                this.textTranslateAnimator = ofFloat2;
+                ofFloat2.addUpdateListener(this.textTranslationUpdater);
                 this.textTranslateAnimator.addListener(this.textTranslateFinishListener);
                 this.textTranslateAnimator.setInterpolator(PasswordTextView.this.mAppearInterpolator);
                 this.textTranslateAnimator.setDuration(160);

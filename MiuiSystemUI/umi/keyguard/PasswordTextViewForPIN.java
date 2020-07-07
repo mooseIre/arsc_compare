@@ -38,14 +38,12 @@ public class PasswordTextViewForPIN extends PasswordTextView {
     public int mDotSize;
     /* access modifiers changed from: private */
     public final Paint mDrawPaint;
-    private Interpolator mFastOutSlowInInterpolator;
     private final int mGravity;
     private Handler mHandler;
     /* access modifiers changed from: private */
     public boolean mIsResetAnimating;
     private int mPasswordLength;
     Runnable mResetAnimRunnable;
-    boolean mShowPassword;
     private float mStrokeWidth;
     private String mText;
     /* access modifiers changed from: private */
@@ -81,7 +79,6 @@ public class PasswordTextViewForPIN extends PasswordTextView {
                 }
             }
         };
-        boolean z = true;
         setFocusableInTouchMode(true);
         setFocusable(true);
         TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, R$styleable.PasswordTextView);
@@ -97,17 +94,17 @@ public class PasswordTextViewForPIN extends PasswordTextView {
             this.mDrawPaint.setColor(-1);
             this.mDrawPaint.setStrokeWidth(this.mStrokeWidth);
             this.mDrawPaint.setTypeface(Typeface.create("sans-serif-light", 0));
-            this.mShowPassword = Settings.System.getInt(this.mContext.getContentResolver(), "show_password", 1) != 1 ? false : z;
+            int i3 = Settings.System.getInt(this.mContext.getContentResolver(), "show_password", 1);
             this.mAppearInterpolator = AnimationUtils.loadInterpolator(this.mContext, 17563662);
             this.mDisappearInterpolator = AnimationUtils.loadInterpolator(this.mContext, 17563663);
-            this.mFastOutSlowInInterpolator = AnimationUtils.loadInterpolator(this.mContext, 17563661);
-            this.mShowPassword = false;
-            this.mPasswordLength = (int) new MiuiLockPatternUtils(context).getLockPasswordLength(KeyguardUpdateMonitor.getCurrentUser());
-            if (this.mPasswordLength < 4) {
+            AnimationUtils.loadInterpolator(this.mContext, 17563661);
+            int lockPasswordLength = (int) new MiuiLockPatternUtils(context).getLockPasswordLength(KeyguardUpdateMonitor.getCurrentUser());
+            this.mPasswordLength = lockPasswordLength;
+            if (lockPasswordLength < 4) {
                 this.mPasswordLength = 4;
                 Log.e("PasswordTextViewForPIN", "get password length = " + this.mPasswordLength);
             }
-            for (int i3 = 0; i3 < this.mPasswordLength; i3++) {
+            for (int i4 = 0; i4 < this.mPasswordLength; i4++) {
                 this.mTextChars.add(new CharState());
             }
             this.mWidth = getResources().getDimensionPixelSize(R.dimen.keyguard_security_pin_entry_width);
@@ -278,8 +275,9 @@ public class PasswordTextViewForPIN extends PasswordTextView {
 
     public void append(char c) {
         String str = this.mText;
-        this.mText += c;
-        int length = this.mText.length();
+        String str2 = this.mText + c;
+        this.mText = str2;
+        int length = str2.length();
         if (length <= this.mPasswordLength) {
             if (this.mIsResetAnimating) {
                 this.mHandler.removeCallbacks(this.mResetAnimRunnable);

@@ -56,8 +56,9 @@ public class PercentCountView extends LinearLayout {
         this.mCurrentProgress = 0;
         setOrientation(0);
         setGravity(81);
-        this.mIntegerTv = new NumberDrawView(context);
-        this.mIntegerTv.setSize(this.mLargeTextSizePx, this.mSmallTextSizePx, this.mPercentTextSizePx);
+        NumberDrawView numberDrawView = new NumberDrawView(context);
+        this.mIntegerTv = numberDrawView;
+        numberDrawView.setSize(this.mLargeTextSizePx, this.mSmallTextSizePx, this.mPercentTextSizePx);
         this.mIntegerTv.setTextColor(Color.parseColor("#FFFFFF"));
         if (createFromAsset != null) {
             this.mIntegerTv.setTypeface(createFromAsset);
@@ -80,7 +81,7 @@ public class PercentCountView extends LinearLayout {
                     valueAnimator.cancel();
                 }
                 this.mCurrentProgress = i;
-                this.mIntegerTv.setLevelText(String.valueOf(this.mCurrentProgress));
+                this.mIntegerTv.setLevelText(String.valueOf(i));
             }
         }
     }
@@ -91,8 +92,9 @@ public class PercentCountView extends LinearLayout {
             if (valueAnimator == null || !valueAnimator.isRunning()) {
                 this.mCurrentProgress = (int) f;
                 this.mIntegerTv.setLevelText(String.format("%1.2f", new Object[]{Float.valueOf(f)}));
-                this.mValueAnimator = ValueAnimator.ofFloat(new float[]{f, Math.min(f + f2, 99.99f)});
-                this.mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{f, Math.min(f + f2, 99.99f)});
+                this.mValueAnimator = ofFloat;
+                ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                     public void onAnimationUpdate(ValueAnimator valueAnimator) {
                         int floatValue = (int) ((Float) valueAnimator.getAnimatedValue()).floatValue();
                         if (floatValue != PercentCountView.this.mCurrentProgress) {

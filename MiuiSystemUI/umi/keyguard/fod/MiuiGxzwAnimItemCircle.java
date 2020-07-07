@@ -1,7 +1,5 @@
 package com.android.keyguard.fod;
 
-import android.content.Context;
-
 public class MiuiGxzwAnimItemCircle extends MiuiGxzwAnimItem {
     public boolean isDismissRecognizingWhenFalse() {
         return false;
@@ -9,14 +7,6 @@ public class MiuiGxzwAnimItemCircle extends MiuiGxzwAnimItem {
 
     public boolean isShowIconWhenRecognizingStart() {
         return false;
-    }
-
-    public /* bridge */ /* synthetic */ int getFalseTipTranslationY(Context context) {
-        return super.getFalseTipTranslationY(context);
-    }
-
-    public /* bridge */ /* synthetic */ int getFodMotionRtpId() {
-        return super.getFodMotionRtpId();
     }
 
     /* access modifiers changed from: protected */

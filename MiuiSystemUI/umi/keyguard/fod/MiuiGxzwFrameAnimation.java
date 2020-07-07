@@ -56,8 +56,9 @@ class MiuiGxzwFrameAnimation {
         this.mView = textureView;
         textureView.setOpaque(false);
         this.mContext = textureView.getContext();
-        this.mDrawThread = new HandlerThread("FrameAnimation Draw Thread");
-        this.mDrawThread.start();
+        HandlerThread handlerThread = new HandlerThread("FrameAnimation Draw Thread");
+        this.mDrawThread = handlerThread;
+        handlerThread.start();
         this.mDrawHandler = new Handler(this.mDrawThread.getLooper());
     }
 
@@ -80,8 +81,9 @@ class MiuiGxzwFrameAnimation {
     public void startAnimation(int[] iArr, int i, int i2, int i3, FrameAnimationListener frameAnimationListener, CustomerDrawBitmap customerDrawBitmap, int i4, int i5) {
         this.mLastDrawAnim = false;
         stopAnimation();
-        this.mDrawRunnable = new DrawRunnable(iArr, i, i2, i3, frameAnimationListener, customerDrawBitmap, i4, i5);
-        this.mDrawHandler.post(this.mDrawRunnable);
+        DrawRunnable drawRunnable = new DrawRunnable(iArr, i, i2, i3, frameAnimationListener, customerDrawBitmap, i4, i5);
+        this.mDrawRunnable = drawRunnable;
+        this.mDrawHandler.post(drawRunnable);
     }
 
     public void stopAnimation() {

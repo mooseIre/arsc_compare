@@ -65,8 +65,9 @@ public class KeyguardHorizontalMoveRightViewContainer extends KeyguardHorizontal
     public KeyguardHorizontalMoveRightViewContainer(Context context, KeyguardHorizontalMoveView.CallBack callBack) {
         super(context, callBack);
         this.mKeyguardCameraView = new KeyguardCameraView(context, this.mKeyguardCameraViewCallBack);
-        this.mKeyguardUpdateMonitor = KeyguardUpdateMonitor.getInstance(context);
-        this.mKeyguardUpdateMonitor.registerCallback(this.mKeyguardUpdateMonitorCallback);
+        KeyguardUpdateMonitor instance = KeyguardUpdateMonitor.getInstance(context);
+        this.mKeyguardUpdateMonitor = instance;
+        instance.registerCallback(this.mKeyguardUpdateMonitorCallback);
     }
 
     public void onTouchDown(float f, float f2, boolean z) {
@@ -75,7 +76,7 @@ public class KeyguardHorizontalMoveRightViewContainer extends KeyguardHorizontal
             return;
         }
         this.mIsOnIconTouchDown = z;
-        this.mKeyguardCameraView.onTouchDown(f, f2, this.mIsOnIconTouchDown);
+        this.mKeyguardCameraView.onTouchDown(f, f2, z);
         if (this.mIsOnIconTouchDown) {
             this.mCallBack.getMoveIconLayout(true).setVisibility(8);
         }

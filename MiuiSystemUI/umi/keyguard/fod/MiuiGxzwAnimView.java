@@ -9,7 +9,6 @@ import android.graphics.SurfaceTexture;
 import android.hardware.display.DisplayManager;
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.os.Vibrator;
 import android.util.Log;
 import android.view.TextureView;
 import android.view.View;
@@ -18,12 +17,11 @@ import android.widget.FrameLayout;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.KeyguardUpdateMonitorCallback;
 import com.android.keyguard.MiuiFastUnlockController;
-import com.android.keyguard.MiuiKeyguardUtils;
 import com.android.keyguard.fod.MiuiGxzwAnimManager;
 import com.android.keyguard.fod.MiuiGxzwAnimView;
 import com.android.keyguard.fod.MiuiGxzwFrameAnimation;
+import com.android.keyguard.wallpaper.MiuiKeyguardWallpaperController;
 import com.android.systemui.Dependency;
-import com.android.systemui.HapticFeedBackImpl;
 import com.android.systemui.plugins.R;
 import java.util.Objects;
 import miui.animation.Folme;
@@ -36,14 +34,18 @@ class MiuiGxzwAnimView {
     private final Handler mMainHandler;
     private MiuiGxzwAnimViewInternal mMiuiGxzwAnimView;
 
+    public void cancelAnimFeedback(Context context) {
+    }
+
     public MiuiGxzwAnimView(Context context) {
         Handler handler = new Handler();
         HandlerThread handlerThread = new HandlerThread("MiuiGxzwAnimView");
         handlerThread.start();
-        this.mMainHandler = new Handler(handlerThread.getLooper());
-        this.mMainHandler.post(new Runnable(context, handler) {
-            private final /* synthetic */ Context f$1;
-            private final /* synthetic */ Handler f$2;
+        Handler handler2 = new Handler(handlerThread.getLooper());
+        this.mMainHandler = handler2;
+        handler2.post(new Runnable(context, handler) {
+            public final /* synthetic */ Context f$1;
+            public final /* synthetic */ Handler f$2;
 
             {
                 this.f$1 = r2;
@@ -56,17 +58,21 @@ class MiuiGxzwAnimView {
         });
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$new$0 */
     public /* synthetic */ void lambda$new$0$MiuiGxzwAnimView(Context context, Handler handler) {
         this.mMiuiGxzwAnimView = new MiuiGxzwAnimViewInternal(context, handler);
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$show$1 */
     public /* synthetic */ void lambda$show$1$MiuiGxzwAnimView(boolean z) {
         this.mMiuiGxzwAnimView.show(z);
     }
 
     public void show(boolean z) {
         this.mMainHandler.post(new Runnable(z) {
-            private final /* synthetic */ boolean f$1;
+            public final /* synthetic */ boolean f$1;
 
             {
                 this.f$1 = r2;
@@ -78,9 +84,15 @@ class MiuiGxzwAnimView {
         });
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$dismiss$2 */
+    public /* synthetic */ void lambda$dismiss$2$MiuiGxzwAnimView(boolean z) {
+        this.mMiuiGxzwAnimView.dismiss(z);
+    }
+
     public void dismiss(boolean z) {
         this.mMainHandler.post(new Runnable(z) {
-            private final /* synthetic */ boolean f$1;
+            public final /* synthetic */ boolean f$1;
 
             {
                 this.f$1 = r2;
@@ -90,10 +102,6 @@ class MiuiGxzwAnimView {
                 MiuiGxzwAnimView.this.lambda$dismiss$2$MiuiGxzwAnimView(this.f$1);
             }
         });
-    }
-
-    public /* synthetic */ void lambda$dismiss$2$MiuiGxzwAnimView(boolean z) {
-        this.mMiuiGxzwAnimView.dismiss(z);
     }
 
     public void startDozing() {
@@ -118,13 +126,15 @@ class MiuiGxzwAnimView {
         });
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$setEnrolling$5 */
     public /* synthetic */ void lambda$setEnrolling$5$MiuiGxzwAnimView(boolean z) {
         this.mMiuiGxzwAnimView.setEnrolling(z);
     }
 
     public void setEnrolling(boolean z) {
         this.mMainHandler.post(new Runnable(z) {
-            private final /* synthetic */ boolean f$1;
+            public final /* synthetic */ boolean f$1;
 
             {
                 this.f$1 = r2;
@@ -202,9 +212,15 @@ class MiuiGxzwAnimView {
         });
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$drawFingerprintIcon$12 */
+    public /* synthetic */ void lambda$drawFingerprintIcon$12$MiuiGxzwAnimView(boolean z) {
+        this.mMiuiGxzwAnimView.drawFingerprintIcon(z);
+    }
+
     public void drawFingerprintIcon(boolean z) {
         this.mMainHandler.post(new Runnable(z) {
-            private final /* synthetic */ boolean f$1;
+            public final /* synthetic */ boolean f$1;
 
             {
                 this.f$1 = r2;
@@ -216,18 +232,16 @@ class MiuiGxzwAnimView {
         });
     }
 
-    public /* synthetic */ void lambda$drawFingerprintIcon$12$MiuiGxzwAnimView(boolean z) {
-        this.mMiuiGxzwAnimView.drawFingerprintIcon(z);
-    }
-
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$setTranslate$13 */
     public /* synthetic */ void lambda$setTranslate$13$MiuiGxzwAnimView(int i, int i2) {
         this.mMiuiGxzwAnimView.setTranslate(i, i2);
     }
 
     public void setTranslate(int i, int i2) {
         this.mMainHandler.post(new Runnable(i, i2) {
-            private final /* synthetic */ int f$1;
-            private final /* synthetic */ int f$2;
+            public final /* synthetic */ int f$1;
+            public final /* synthetic */ int f$2;
 
             {
                 this.f$1 = r2;
@@ -240,13 +254,15 @@ class MiuiGxzwAnimView {
         });
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$setCollecting$14 */
     public /* synthetic */ void lambda$setCollecting$14$MiuiGxzwAnimView(boolean z) {
         this.mMiuiGxzwAnimView.setCollecting(z);
     }
 
     public void setCollecting(boolean z) {
         this.mMainHandler.post(new Runnable(z) {
-            private final /* synthetic */ boolean f$1;
+            public final /* synthetic */ boolean f$1;
 
             {
                 this.f$1 = r2;
@@ -258,13 +274,15 @@ class MiuiGxzwAnimView {
         });
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$setGxzwTransparent$15 */
     public /* synthetic */ void lambda$setGxzwTransparent$15$MiuiGxzwAnimView(boolean z) {
         this.mMiuiGxzwAnimView.setGxzwTransparent(z);
     }
 
     public void setGxzwTransparent(boolean z) {
         this.mMainHandler.post(new Runnable(z) {
-            private final /* synthetic */ boolean f$1;
+            public final /* synthetic */ boolean f$1;
 
             {
                 this.f$1 = r2;
@@ -287,27 +305,15 @@ class MiuiGxzwAnimView {
         });
     }
 
-    public void cancelAnimFeedback(Context context) {
-        if (MiuiKeyguardUtils.SUPPORT_LINEAR_MOTOR_VIBRATE) {
-            Vibrator vibrator = (Vibrator) context.getSystemService("vibrator");
-            if (vibrator != null) {
-                vibrator.cancel();
-            }
-            this.mMainHandler.post(new Runnable() {
-                public final void run() {
-                    MiuiGxzwAnimView.this.lambda$cancelAnimFeedback$17$MiuiGxzwAnimView();
-                }
-            });
-        }
-    }
-
-    public /* synthetic */ void lambda$cancelAnimFeedback$17$MiuiGxzwAnimView() {
-        boolean unused = this.mMiuiGxzwAnimView.mAnimFeedback = false;
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$disableLockScreenFodAnim$18 */
+    public /* synthetic */ void lambda$disableLockScreenFodAnim$18$MiuiGxzwAnimView(boolean z) {
+        this.mMiuiGxzwAnimView.disableLockScreenFodAnim(z);
     }
 
     public void disableLockScreenFodAnim(boolean z) {
         this.mMainHandler.post(new Runnable(z) {
-            private final /* synthetic */ boolean f$1;
+            public final /* synthetic */ boolean f$1;
 
             {
                 this.f$1 = r2;
@@ -319,17 +325,15 @@ class MiuiGxzwAnimView {
         });
     }
 
-    public /* synthetic */ void lambda$disableLockScreenFodAnim$18$MiuiGxzwAnimView(boolean z) {
-        this.mMiuiGxzwAnimView.disableLockScreenFodAnim(z);
-    }
-
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$setVisibility$19 */
     public /* synthetic */ void lambda$setVisibility$19$MiuiGxzwAnimView(int i) {
         this.mMiuiGxzwAnimView.setVisibility(i);
     }
 
     public void setVisibility(int i) {
         this.mMainHandler.post(new Runnable(i) {
-            private final /* synthetic */ int f$1;
+            public final /* synthetic */ int f$1;
 
             {
                 this.f$1 = r2;
@@ -341,13 +345,15 @@ class MiuiGxzwAnimView {
         });
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$setVisibilityAnim$20 */
     public /* synthetic */ void lambda$setVisibilityAnim$20$MiuiGxzwAnimView(int i) {
         this.mMiuiGxzwAnimView.setVisibilityAnim(i);
     }
 
     public void setVisibilityAnim(int i) {
         this.mMainHandler.post(new Runnable(i) {
-            private final /* synthetic */ int f$1;
+            public final /* synthetic */ int f$1;
 
             {
                 this.f$1 = r2;
@@ -359,13 +365,15 @@ class MiuiGxzwAnimView {
         });
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$onKeyguardAuthen$22 */
     public /* synthetic */ void lambda$onKeyguardAuthen$22$MiuiGxzwAnimView(boolean z) {
         this.mMiuiGxzwAnimView.onKeyguardAuthen(z);
     }
 
     public void onKeyguardAuthen(boolean z) {
         this.mMainHandler.post(new Runnable(z) {
-            private final /* synthetic */ boolean f$1;
+            public final /* synthetic */ boolean f$1;
 
             {
                 this.f$1 = r2;
@@ -518,6 +526,8 @@ class MiuiGxzwAnimView {
                 throw new UnsupportedOperationException("Method not decompiled: com.android.keyguard.fod.MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.AnonymousClass1.onKeyguardBouncerChanged(boolean):void");
             }
 
+            /* access modifiers changed from: private */
+            /* renamed from: lambda$onKeyguardBouncerChanged$0 */
             public /* synthetic */ void lambda$onKeyguardBouncerChanged$0$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$1(boolean z, boolean z2) {
                 MiuiGxzwAnimViewInternal.this.onKeyguardBouncerChanged(z, z2);
             }
@@ -662,10 +672,24 @@ class MiuiGxzwAnimView {
                 throw new UnsupportedOperationException("Method not decompiled: com.android.keyguard.fod.MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.AnonymousClass2.onWallpaperChange(boolean):void");
             }
 
+            /* access modifiers changed from: private */
+            /* renamed from: lambda$onWallpaperChange$0 */
             public /* synthetic */ void lambda$onWallpaperChange$0$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$2(boolean z) {
                 MiuiGxzwAnimViewInternal.this.onWallpaperChange(z);
             }
         };
+
+        /* access modifiers changed from: private */
+        public void cancelAnimFeedback() {
+        }
+
+        /* access modifiers changed from: private */
+        public void performAnimFeedback() {
+        }
+
+        /* access modifiers changed from: private */
+        public void performSuccessFeedback() {
+        }
 
         public void onDisplayAdded(int i) {
         }
@@ -688,22 +712,25 @@ class MiuiGxzwAnimView {
         private void initView() {
             this.mRegion = caculateRegion();
             FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(-1, -1);
-            this.mTextureView = new TextureView(getContext());
-            this.mTextureView.setSurfaceTextureListener(this);
+            TextureView textureView = new TextureView(getContext());
+            this.mTextureView = textureView;
+            textureView.setSurfaceTextureListener(this);
             this.mMiuiGxzwFrameAnimation = new MiuiGxzwFrameAnimation(this.mTextureView);
             addView(this.mTextureView, layoutParams);
             this.mMiuiGxzwTipView = new MiuiGxzwTipView(getContext());
             addView(this.mMiuiGxzwTipView, new FrameLayout.LayoutParams(-1, -1));
             setSystemUiVisibility(4868);
             this.mMiuiGxzwFrameAnimation.setMode(1);
-            this.mDisplayManager = (DisplayManager) getContext().getSystemService("display");
-            this.mDisplayManager.registerDisplayListener(this, this.mMainHandler);
+            DisplayManager displayManager = (DisplayManager) getContext().getSystemService("display");
+            this.mDisplayManager = displayManager;
+            displayManager.registerDisplayListener(this, this.mMainHandler);
             this.mMiuiGxzwAnimManager = new MiuiGxzwAnimManager(getContext(), this.mMiuiGxzwFrameAnimation);
-            this.mLayoutParams = new WindowManager.LayoutParams(this.mRegion.width(), this.mRegion.height(), 2015, 16778776, -2);
-            WindowManager.LayoutParams layoutParams2 = this.mLayoutParams;
+            WindowManager.LayoutParams layoutParams2 = new WindowManager.LayoutParams(this.mRegion.width(), this.mRegion.height(), 2015, 16778776, -2);
+            this.mLayoutParams = layoutParams2;
             layoutParams2.layoutInDisplayCutoutMode = 1;
-            layoutParams2.privateFlags |= 16;
-            layoutParams2.privateFlags |= MiuiGxzwUtils.PRIVATE_FLAG_IS_HBM_OVERLAY;
+            int i = layoutParams2.privateFlags | 16;
+            layoutParams2.privateFlags = i;
+            layoutParams2.privateFlags = i | MiuiGxzwUtils.PRIVATE_FLAG_IS_HBM_OVERLAY;
             layoutParams2.gravity = 51;
             Rect rect = this.mRegion;
             layoutParams2.x = rect.left;
@@ -793,7 +820,7 @@ class MiuiGxzwAnimView {
                     this.mAlphaAnimator.cancel();
                 }
                 this.mLightIcon = z;
-                this.mMiuiGxzwAnimManager.setLightIcon(this.mLightIcon);
+                this.mMiuiGxzwAnimManager.setLightIcon(z);
                 registerCallback();
                 if (this.mGxzwTransparent) {
                     setAlpha(0.0f);
@@ -813,6 +840,8 @@ class MiuiGxzwAnimView {
             });
         }
 
+        /* access modifiers changed from: private */
+        /* renamed from: lambda$registerCallback$0 */
         public /* synthetic */ void lambda$registerCallback$0$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal() {
             KeyguardUpdateMonitor instance = KeyguardUpdateMonitor.getInstance(getContext());
             instance.registerWallpaperChangeCallback(this.mWallpaperChangeCallback);
@@ -842,6 +871,8 @@ class MiuiGxzwAnimView {
             });
         }
 
+        /* access modifiers changed from: private */
+        /* renamed from: lambda$unregisterCallback$1 */
         public /* synthetic */ void lambda$unregisterCallback$1$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal() {
             KeyguardUpdateMonitor instance = KeyguardUpdateMonitor.getInstance(getContext());
             instance.unregisterWallpaperChangeCallback(this.mWallpaperChangeCallback);
@@ -874,7 +905,7 @@ class MiuiGxzwAnimView {
         public void startDozing() {
             this.mDozing = true;
             stopAnim();
-            if (KeyguardUpdateMonitor.getInstance(getContext()).isAodUsingSuperWallpaper()) {
+            if (((MiuiKeyguardWallpaperController) Dependency.get(MiuiKeyguardWallpaperController.class)).isWallpaperSupportsAmbientMode()) {
                 this.mDozingIconAnimDone = true;
             }
             drawFingerprintIcon(this.mDozing);
@@ -1014,7 +1045,7 @@ class MiuiGxzwAnimView {
         public void onWallpaperChange(boolean z) {
             boolean z2 = this.mLightWallpaperGxzw;
             this.mLightWallpaperGxzw = z;
-            this.mMiuiGxzwAnimManager.setLightWallpaperGxzw(this.mLightWallpaperGxzw);
+            this.mMiuiGxzwAnimManager.setLightWallpaperGxzw(z);
             if (z2 != z && !this.mDozing && this.mShowing) {
                 this.mShouldShowBackAnim = false;
                 this.mMiuiGxzwTipView.stopTipAnim();
@@ -1025,50 +1056,9 @@ class MiuiGxzwAnimView {
         /* access modifiers changed from: private */
         public void onKeyguardBouncerChanged(boolean z, boolean z2) {
             this.mBouncer = z;
-            this.mMiuiGxzwAnimManager.setBouncer(this.mBouncer);
+            this.mMiuiGxzwAnimManager.setBouncer(z);
             if (z2) {
                 drawFingerprintIcon(this.mDozing);
-            }
-        }
-
-        /* access modifiers changed from: private */
-        public void performSuccessFeedback() {
-            if (MiuiKeyguardUtils.SUPPORT_LINEAR_MOTOR_VIBRATE) {
-                Vibrator vibrator = (Vibrator) getContext().getSystemService("vibrator");
-                if (this.mAnimFeedback && vibrator != null) {
-                    vibrator.cancel();
-                }
-                this.mSystemUIHandler.post($$Lambda$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$UaxnELxzuDnXdfJaaePdm_842UE.INSTANCE);
-                this.mAnimFeedback = false;
-            }
-        }
-
-        /* access modifiers changed from: private */
-        public void cancelAnimFeedback() {
-            if (MiuiKeyguardUtils.SUPPORT_LINEAR_MOTOR_VIBRATE && this.mAnimFeedback) {
-                Vibrator vibrator = (Vibrator) getContext().getSystemService("vibrator");
-                if (vibrator != null) {
-                    vibrator.cancel();
-                }
-                this.mAnimFeedback = false;
-            }
-        }
-
-        /* access modifiers changed from: private */
-        public void performAnimFeedback() {
-            if (MiuiKeyguardUtils.SUPPORT_LINEAR_MOTOR_VIBRATE) {
-                this.mSystemUIHandler.post(new Runnable(this.mMiuiGxzwAnimManager.getFodMotionRtpId()) {
-                    private final /* synthetic */ int f$0;
-
-                    {
-                        this.f$0 = r1;
-                    }
-
-                    public final void run() {
-                        ((HapticFeedBackImpl) Dependency.get(HapticFeedBackImpl.class)).extHapticFeedback(this.f$0);
-                    }
-                });
-                this.mAnimFeedback = true;
             }
         }
 
@@ -1230,6 +1220,8 @@ class MiuiGxzwAnimView {
                     throw new UnsupportedOperationException("Method not decompiled: com.android.keyguard.fod.MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.AnonymousClass3.onComplete(java.lang.Object):void");
                 }
 
+                /* access modifiers changed from: private */
+                /* renamed from: lambda$onComplete$0 */
                 public /* synthetic */ void lambda$onComplete$0$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$3(int i) {
                     MiuiGxzwAnimViewInternal.this.setVisibility(i);
                 }
@@ -1243,8 +1235,9 @@ class MiuiGxzwAnimView {
                 this.mAlphaAnimator.cancel();
             }
             new ObjectAnimator();
-            this.mAlphaAnimator = ObjectAnimator.ofFloat(this, View.ALPHA, new float[]{1.0f, 0.0f});
-            this.mAlphaAnimator.setDuration(300);
+            ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this, View.ALPHA, new float[]{1.0f, 0.0f});
+            this.mAlphaAnimator = ofFloat;
+            ofFloat.setDuration(300);
             this.mAlphaAnimator.setInterpolator(new QuarticEaseOutInterpolator());
             this.mAlphaAnimator.addListener(new Animator.AnimatorListener() {
                 private boolean cancel = false;

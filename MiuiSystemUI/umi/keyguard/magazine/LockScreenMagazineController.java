@@ -58,7 +58,6 @@ import org.json.JSONObject;
 
 public class LockScreenMagazineController {
     private static volatile LockScreenMagazineController sInstance;
-    private final String TAG = "LockScreenMagazineController";
     private final BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
@@ -309,8 +308,9 @@ public class LockScreenMagazineController {
 
     private LockScreenMagazineController(Context context) {
         this.mContext = context;
-        this.mUpdateMonitor = KeyguardUpdateMonitor.getInstance(context);
-        this.mUpdateMonitor.registerWallpaperChangeCallback(this.mWallpaperChangeCallback);
+        KeyguardUpdateMonitor instance = KeyguardUpdateMonitor.getInstance(context);
+        this.mUpdateMonitor = instance;
+        instance.registerWallpaperChangeCallback(this.mWallpaperChangeCallback);
         this.mKeyguardSecurityModel = new KeyguardSecurityModel(context);
         this.mContext.getContentResolver().registerContentObserver(Settings.Secure.getUriFor(LockScreenMagazineUtils.SYSTEM_SETTINGS_KEY_LOCKSCREEN_MAGAZINE_STATUS), false, this.mLockScreenMagazineStatusObserver, -1);
         this.mUpdateMonitor.registerCallback(this.mKeyguardUpdateMonitorCallback);
@@ -333,8 +333,9 @@ public class LockScreenMagazineController {
 
     public void setNotificationPanelView(NotificationPanelView notificationPanelView) {
         this.mNotificationPanelView = notificationPanelView;
-        this.mLockScreenMagazinePre = (LockScreenMagazinePreView) this.mNotificationPanelView.findViewById(R.id.wallpaper_des);
-        this.mLockScreenMagazinePre.setButtonClickListener(this.mPreViewClickListener);
+        LockScreenMagazinePreView lockScreenMagazinePreView = (LockScreenMagazinePreView) notificationPanelView.findViewById(R.id.wallpaper_des);
+        this.mLockScreenMagazinePre = lockScreenMagazinePreView;
+        lockScreenMagazinePreView.setButtonClickListener(this.mPreViewClickListener);
         this.mKeyguardClockView = (KeyguardClockContainer) this.mNotificationPanelView.findViewById(R.id.keyguard_clock_view);
         this.mKeyguardBottomAreaView = (KeyguardBottomAreaView) this.mNotificationPanelView.findViewById(R.id.keyguard_bottom_area);
         this.mSwitchSystemUser = (TextView) this.mNotificationPanelView.findViewById(R.id.switch_to_system_user);
@@ -439,8 +440,9 @@ public class LockScreenMagazineController {
         float f = 0.0f;
         fArr[0] = z ? 0.0f : 1.0f;
         fArr[1] = z ? 1.0f : 0.0f;
-        this.mFullScreenAnimator = ValueAnimator.ofFloat(fArr);
-        this.mFullScreenAnimator.setInterpolator(z ? Ease$Cubic.easeInOut : Ease$Quint.easeOut);
+        ValueAnimator ofFloat = ValueAnimator.ofFloat(fArr);
+        this.mFullScreenAnimator = ofFloat;
+        ofFloat.setInterpolator(z ? Ease$Cubic.easeInOut : Ease$Quint.easeOut);
         this.mFullScreenAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 LockScreenMagazineController.this.mLockScreenMagazinePre.setFullScreenLayoutAlpha(((Float) valueAnimator.getAnimatedValue()).floatValue());
@@ -452,8 +454,9 @@ public class LockScreenMagazineController {
             f = 1.0f;
         }
         fArr2[1] = f;
-        this.mNonFullScreenAnimator = ValueAnimator.ofFloat(fArr2);
-        this.mNonFullScreenAnimator.setInterpolator(z ? Ease$Quint.easeOut : Ease$Cubic.easeInOut);
+        ValueAnimator ofFloat2 = ValueAnimator.ofFloat(fArr2);
+        this.mNonFullScreenAnimator = ofFloat2;
+        ofFloat2.setInterpolator(z ? Ease$Quint.easeOut : Ease$Cubic.easeInOut);
         this.mNonFullScreenAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 LockScreenMagazineController.this.setViewsAlpha(((Float) valueAnimator.getAnimatedValue()).floatValue());
@@ -712,8 +715,9 @@ public class LockScreenMagazineController {
 
     /* access modifiers changed from: private */
     public void initLockScreenMagazinePkgExist() {
-        this.mIsLockScreenMagazinePkgExist = PackageUtils.isAppInstalledForUser(this.mContext, LockScreenMagazineUtils.LOCK_SCREEN_MAGAZINE_PACKAGE_NAME, KeyguardUpdateMonitor.getCurrentUser());
-        this.mUpdateMonitor.setLockScreenMagazinePkgExist(this.mIsLockScreenMagazinePkgExist);
+        boolean isAppInstalledForUser = PackageUtils.isAppInstalledForUser(this.mContext, LockScreenMagazineUtils.LOCK_SCREEN_MAGAZINE_PACKAGE_NAME, KeyguardUpdateMonitor.getCurrentUser());
+        this.mIsLockScreenMagazinePkgExist = isAppInstalledForUser;
+        this.mUpdateMonitor.setLockScreenMagazinePkgExist(isAppInstalledForUser);
     }
 
     /* access modifiers changed from: private */

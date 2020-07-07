@@ -30,7 +30,7 @@ public class AnalyticsHelper {
     }
 
     private final class WorkHandler extends Handler {
-        public WorkHandler(Looper looper) {
+        public WorkHandler(AnalyticsHelper analyticsHelper, Looper looper) {
             super(looper);
         }
 
@@ -50,7 +50,7 @@ public class AnalyticsHelper {
         this.mContext = context;
         HandlerThread handlerThread = new HandlerThread("keyguard_analytics", 10);
         handlerThread.start();
-        this.mHandler = new WorkHandler(handlerThread.getLooper());
+        this.mHandler = new WorkHandler(this, handlerThread.getLooper());
         initTrackPageEvents();
     }
 
@@ -84,13 +84,20 @@ public class AnalyticsHelper {
     public void recordScreenOn(boolean z, boolean z2, boolean z3, boolean z4, boolean z5, boolean z6, String str, boolean z7) {
         MiStatParams miStatParams = new MiStatParams();
         miStatParams.putString("way_screen_on", this.mWakeupWay);
+        booleanToInt(z);
         miStatParams.putInt("is_fingerprint_locked", z ? 1 : 0);
+        booleanToInt(z2);
         miStatParams.putInt("is_password_locked", z2 ? 1 : 0);
+        booleanToInt(z3);
         miStatParams.putInt("is_screen_on_delayed", z3 ? 1 : 0);
+        booleanToInt(z4);
         miStatParams.putInt("is_unlocked_by_fingerprint", z4 ? 1 : 0);
+        booleanToInt(z5);
         miStatParams.putInt("is_keyguard_showing", z5 ? 1 : 0);
+        booleanToInt(z6);
         miStatParams.putInt("is_occluded", z6 ? 1 : 0);
         miStatParams.putString("charging", str);
+        booleanToInt(z7);
         miStatParams.putInt("is_lockscreen_wallpaper_open", z7 ? 1 : 0);
         miStatParams.putBoolean("is_global_lockscreen_wallpaper_pre_show", this.mIsLockScreenMagazineMainPreShowing);
         track("keyguard_screen_on", miStatParams);
@@ -123,6 +130,7 @@ public class AnalyticsHelper {
         }
         MiStatParams miStatParams = new MiStatParams();
         miStatParams.putString("unlock_way", str);
+        booleanToInt(z);
         miStatParams.putInt("unlock_result", z ? 1 : 0);
         track("keyguard_unlock_way", miStatParams);
     }
@@ -135,6 +143,7 @@ public class AnalyticsHelper {
 
     public void recordFaceUnlockEvent(boolean z, int i) {
         MiStatParams miStatParams = new MiStatParams();
+        booleanToInt(z);
         miStatParams.putInt("unlock_result", z ? 1 : 0);
         if (!z) {
             miStatParams.putInt("face_unlock_fail_reason", i);
@@ -144,6 +153,7 @@ public class AnalyticsHelper {
 
     public void recordFodQuickOpenExpandResultAction(boolean z) {
         MiStatParams miStatParams = new MiStatParams();
+        booleanToInt(z);
         miStatParams.putInt("fod_quick_open_expand_result", z ? 1 : 0);
         track("fod_quick_open_action", miStatParams);
     }
@@ -156,6 +166,7 @@ public class AnalyticsHelper {
 
     public void recordKeyguardProximitySensor(boolean z) {
         MiStatParams miStatParams = new MiStatParams();
+        booleanToInt(z);
         miStatParams.putInt("proximity_sensor_too_close", z ? 1 : 0);
         track("keyguard_proximity_sensor_change", miStatParams);
     }

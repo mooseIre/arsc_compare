@@ -9,6 +9,7 @@ import android.content.res.Configuration;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.util.Property;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Interpolator;
@@ -59,22 +60,25 @@ public class GTChargeAniView extends RelativeLayout {
         this.mScreenSize = new Point();
         this.mWindowManager.getDefaultDisplay().getRealSize(this.mScreenSize);
         updateSizeForScreenSizeChange();
-        this.mChargeIcon = new ImageView(context);
-        this.mChargeIcon.setImageDrawable(this.mChargeIconDrawable);
+        ImageView imageView = new ImageView(context);
+        this.mChargeIcon = imageView;
+        imageView.setImageDrawable(this.mChargeIconDrawable);
         this.mChargeIcon.setScaleType(ImageView.ScaleType.FIT_CENTER);
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(this.mChargeIconWidth, this.mChargeIconHeight);
         layoutParams.addRule(9);
         addView(this.mChargeIcon, layoutParams);
-        this.mTailIcon = new ImageView(context);
-        this.mTailIcon.setId(View.generateViewId());
+        ImageView imageView2 = new ImageView(context);
+        this.mTailIcon = imageView2;
+        imageView2.setId(View.generateViewId());
         this.mTailIcon.setImageDrawable(this.mTurboTailIconDrawable);
         this.mTailIcon.setPivotX((float) this.mTailIconWidth);
         this.mTailIcon.setScaleType(ImageView.ScaleType.FIT_CENTER);
         RelativeLayout.LayoutParams layoutParams2 = new RelativeLayout.LayoutParams(this.mTailIconWidth, this.mTailIconHeight);
         layoutParams2.addRule(9);
         addView(this.mTailIcon, layoutParams2);
-        this.mTurboIcon = new ImageView(context);
-        this.mTurboIcon.setImageDrawable(this.mTurboIconDrawable);
+        ImageView imageView3 = new ImageView(context);
+        this.mTurboIcon = imageView3;
+        imageView3.setImageDrawable(this.mTurboIconDrawable);
         this.mTurboIcon.setScaleType(ImageView.ScaleType.FIT_CENTER);
         RelativeLayout.LayoutParams layoutParams3 = new RelativeLayout.LayoutParams(this.mTurboIconWidth, this.mTurboIconHeight);
         layoutParams3.addRule(1, this.mTailIcon.getId());
@@ -93,13 +97,14 @@ public class GTChargeAniView extends RelativeLayout {
     }
 
     public void animationToShow() {
+        Property property = RelativeLayout.ALPHA;
         AnimatorSet animatorSet2 = this.animatorSet;
         if (animatorSet2 != null) {
             animatorSet2.cancel();
         }
         setViewInitState();
-        PropertyValuesHolder ofFloat = PropertyValuesHolder.ofFloat(RelativeLayout.ALPHA, new float[]{0.0f, 1.0f});
-        PropertyValuesHolder ofFloat2 = PropertyValuesHolder.ofFloat(RelativeLayout.ALPHA, new float[]{1.0f, 0.0f});
+        PropertyValuesHolder ofFloat = PropertyValuesHolder.ofFloat(property, new float[]{0.0f, 1.0f});
+        PropertyValuesHolder ofFloat2 = PropertyValuesHolder.ofFloat(property, new float[]{1.0f, 0.0f});
         PropertyValuesHolder ofFloat3 = PropertyValuesHolder.ofFloat(RelativeLayout.SCALE_X, new float[]{1.0f, 0.0f});
         ObjectAnimator duration = ObjectAnimator.ofPropertyValuesHolder(this.mChargeIcon, new PropertyValuesHolder[]{ofFloat}).setDuration(300);
         duration.setInterpolator(this.cubicEaseOutInterpolator);
@@ -110,8 +115,9 @@ public class GTChargeAniView extends RelativeLayout {
         duration3.setInterpolator(this.cubicEaseOutInterpolator);
         ObjectAnimator duration4 = ObjectAnimator.ofPropertyValuesHolder(this.mTailIcon, new PropertyValuesHolder[]{ofFloat2, ofFloat3}).setDuration(100);
         duration4.setInterpolator(this.cubicEaseOutInterpolator);
-        this.animatorSet = new AnimatorSet();
-        this.animatorSet.playTogether(new Animator[]{duration, duration2, duration3});
+        AnimatorSet animatorSet3 = new AnimatorSet();
+        this.animatorSet = animatorSet3;
+        animatorSet3.playTogether(new Animator[]{duration, duration2, duration3});
         this.animatorSet.play(duration4).after(duration3);
         this.animatorSet.start();
     }

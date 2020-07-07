@@ -17,7 +17,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import com.android.internal.widget.LockPatternUtils;
 import com.android.systemui.plugins.R;
-import miui.view.MiuiHapticFeedbackConstants;
 
 public class NumPadKey extends ViewGroup {
     static String[] sKlondike;
@@ -95,15 +94,17 @@ public class NumPadKey extends ViewGroup {
             setOnHoverListener(new LiftToActivateListener(context));
             this.mEnableHaptics = new LockPatternUtils(context).isTactileFeedbackEnabled();
             ((LayoutInflater) getContext().getSystemService("layout_inflater")).inflate(i2, this, true);
-            this.mDigitText = (TextView) findViewById(R.id.digit_text);
-            this.mDigitText.setText(Integer.toString(this.mDigit));
+            TextView textView = (TextView) findViewById(R.id.digit_text);
+            this.mDigitText = textView;
+            textView.setText(Integer.toString(this.mDigit));
             this.mDigitText.setTextSize(0, getResources().getDimension(R.dimen.lock_screen_numeric_keyboard_number_text_size));
             this.mDigitText.setTextColor(getResources().getColor(R.color.lock_screen_numeric_keyboard_number_text_color));
             this.mDigitText.setTypeface(Typeface.create("miui-light", 0));
             this.mDigitText.setLineSpacing(0.0f, 1.0f);
             this.mDigitText.setIncludeFontPadding(false);
-            this.mKlondikeText = (TextView) findViewById(R.id.klondike_text);
-            this.mKlondikeText.setTextSize(0, getResources().getDimension(R.dimen.lock_screen_numeric_keyboard_alphabet_text_size));
+            TextView textView2 = (TextView) findViewById(R.id.klondike_text);
+            this.mKlondikeText = textView2;
+            textView2.setTextSize(0, getResources().getDimension(R.dimen.lock_screen_numeric_keyboard_alphabet_text_size));
             this.mKlondikeText.setTextColor(getResources().getColor(R.color.lock_screen_numeric_keyboard_alphabet_text_color));
             this.mKlondikeText.setTypeface(Typeface.create("miui-regular", 0));
             this.mKlondikeText.setLineSpacing(0.0f, 1.0f);
@@ -123,8 +124,9 @@ public class NumPadKey extends ViewGroup {
                 }
             }
             setContentDescription(this.mDigitText.getText().toString());
-            this.mBackgroundCirclePaint = new Paint();
-            this.mBackgroundCirclePaint.setColor(this.mContext.getResources().getColor(R.color.miui_keyguard_pin_num_pad_key_bg_color));
+            Paint paint = new Paint();
+            this.mBackgroundCirclePaint = paint;
+            paint.setColor(this.mContext.getResources().getColor(R.color.miui_keyguard_pin_num_pad_key_bg_color));
             this.mBackgroundCirclePaint.setAntiAlias(true);
             this.mBackgroundCircleOriginalRadius = this.mContext.getResources().getDimensionPixelOffset(R.dimen.miui_keyguard_pin_view_num_pad_width) / 2;
         } catch (Throwable th) {
@@ -183,14 +185,14 @@ public class NumPadKey extends ViewGroup {
 
     public void doHapticKeyClick() {
         if (this.mEnableHaptics) {
-            performHapticFeedback(MiuiKeyguardUtils.SUPPORT_LINEAR_MOTOR_VIBRATE ? MiuiHapticFeedbackConstants.FLAG_MIUI_HAPTIC_TAP_LIGHT : 1, 3);
+            performHapticFeedback(1, 3);
         }
     }
 
     private void startAppearBackgroundAnimate() {
         this.mPendingBackgroundDisappearAnimate = false;
         cancelBackgroundAnimatorSet();
-        this.mBackgroundAnimatorSet = createBackgroundAnimatorSet(true, 200, new AnimatorListenerAdapter() {
+        AnimatorSet createBackgroundAnimatorSet = createBackgroundAnimatorSet(true, 200, new AnimatorListenerAdapter() {
             public void onAnimationStart(Animator animator) {
                 boolean unused = NumPadKey.this.mBackgroundAppearAnimatorRunning = true;
             }
@@ -203,7 +205,8 @@ public class NumPadKey extends ViewGroup {
                 }
             }
         });
-        this.mBackgroundAnimatorSet.start();
+        this.mBackgroundAnimatorSet = createBackgroundAnimatorSet;
+        createBackgroundAnimatorSet.start();
     }
 
     /* access modifiers changed from: private */
@@ -213,12 +216,13 @@ public class NumPadKey extends ViewGroup {
             return;
         }
         cancelBackgroundAnimatorSet();
-        this.mBackgroundAnimatorSet = createBackgroundAnimatorSet(false, 300, new AnimatorListenerAdapter() {
+        AnimatorSet createBackgroundAnimatorSet = createBackgroundAnimatorSet(false, 300, new AnimatorListenerAdapter() {
             public void onAnimationEnd(Animator animator) {
                 int unused = NumPadKey.this.mBackgroundCircleRadius = 0;
             }
         });
-        this.mBackgroundAnimatorSet.start();
+        this.mBackgroundAnimatorSet = createBackgroundAnimatorSet;
+        createBackgroundAnimatorSet.start();
     }
 
     private AnimatorSet createBackgroundAnimatorSet(boolean z, long j, AnimatorListenerAdapter animatorListenerAdapter) {

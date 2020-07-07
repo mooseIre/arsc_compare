@@ -28,8 +28,9 @@ public class MiuiKeyguardDualClock extends MiuiKeyguardBaseClock {
             }
         };
         try {
-            this.mMiuiDualClock = this.mLayoutInflater.inflate(R.layout.miui_dual_clock, (ViewGroup) null, false);
-            this.mMiuiDualClock.setOnLocalCityChangeListener(this.mLocalCityChangeListener);
+            MiuiDualClock inflate = this.mLayoutInflater.inflate(R.layout.miui_dual_clock, (ViewGroup) null, false);
+            this.mMiuiDualClock = inflate;
+            inflate.setOnLocalCityChangeListener(this.mLocalCityChangeListener);
         } catch (Exception e) {
             Log.e("MiuiKeyguardDualClock", "init clock exception", e);
         }

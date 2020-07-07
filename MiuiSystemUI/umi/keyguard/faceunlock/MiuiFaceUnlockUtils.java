@@ -8,7 +8,6 @@ import android.os.UserHandle;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
-import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.systemui.Util;
 import com.android.systemui.plugins.R;
 import java.util.ArrayList;
@@ -24,18 +23,21 @@ public class MiuiFaceUnlockUtils {
     private static List<String> sSCSlideNotOpenCameraList = new ArrayList();
 
     public static boolean isSupportFaceUnlock(Context context) {
-        mFaceManager = MiuiFaceFactory.getFaceManager(context, 0);
-        return mFaceManager.isFaceFeatureSupport();
+        IMiuiFaceManager faceManager = MiuiFaceFactory.getFaceManager(context, 0);
+        mFaceManager = faceManager;
+        return faceManager.isFaceFeatureSupport();
     }
 
     public static boolean isFaceFeatureEnabled(Context context) {
-        mFaceManager = MiuiFaceFactory.getFaceManager(context, 0);
-        return mFaceManager.isFaceFeatureEnabled();
+        IMiuiFaceManager faceManager = MiuiFaceFactory.getFaceManager(context, 0);
+        mFaceManager = faceManager;
+        return faceManager.isFaceFeatureEnabled();
     }
 
     public static boolean hasEnrolledFaces(Context context) {
-        mFaceManager = MiuiFaceFactory.getFaceManager(context, 0);
-        if (mFaceManager.hasEnrolledFaces() > 0) {
+        IMiuiFaceManager faceManager = MiuiFaceFactory.getFaceManager(context, 0);
+        mFaceManager = faceManager;
+        if (faceManager.hasEnrolledFaces() > 0) {
             return true;
         }
         return false;
@@ -68,20 +70,17 @@ public class MiuiFaceUnlockUtils {
             sDeviceSupportSlideCamera = Arrays.asList(context.getResources().getStringArray(R.array.device_support_slide_camera));
         }
         if (!sDeviceSupportSlideCamera.contains(Build.DEVICE) || !mFaceManager.isSupportScreenOnDelayed()) {
-            if (!mFaceManager.isSupportScreenOnDelayed() || KeyguardUpdateMonitor.getInstance(context).isAodUsingSuperWallpaper()) {
-                return false;
-            }
-            return true;
-        } else if (Settings.System.getIntForUser(context.getContentResolver(), "sc_status", 0, KeyguardUpdateMonitor.getCurrentUser()) == 0) {
-            return true;
-        } else {
-            return false;
+            return mFaceManager.isSupportScreenOnDelayed();
         }
+        if (Settings.System.getIntForUser(context.getContentResolver(), "sc_status", 0, -2) == 0) {
+            return true;
+        }
+        return false;
     }
 
     public static void setScreenTurnOnDelayed(boolean z) {
         sIsScreenTurnOnDelayed = z;
-        Shell.setRuntimeSharedValue("KEYGUARD_TURN_ON_DELAYED", sIsScreenTurnOnDelayed ? 1 : 0);
+        Shell.setRuntimeSharedValue("KEYGUARD_TURN_ON_DELAYED", z ? 1 : 0);
     }
 
     public static boolean isScreenTurnOnDelayed() {
@@ -97,7 +96,7 @@ public class MiuiFaceUnlockUtils {
     }
 
     public static boolean isSlideCoverOpened(Context context) {
-        return !isSupportSlideCamera(context) || Settings.System.getIntForUser(context.getContentResolver(), "sc_status", 0, KeyguardUpdateMonitor.getCurrentUser()) == 0;
+        return !isSupportSlideCamera(context) || Settings.System.getIntForUser(context.getContentResolver(), "sc_status", 0, -2) == 0;
     }
 
     public static void resetFaceUnlockSettingValues(Context context) {

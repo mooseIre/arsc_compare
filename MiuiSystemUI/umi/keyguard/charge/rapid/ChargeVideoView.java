@@ -9,6 +9,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.Property;
 import android.view.Surface;
 import android.view.TextureView;
 import android.widget.ImageView;
@@ -124,8 +125,9 @@ public class ChargeVideoView extends RelativeLayout {
                 return false;
             }
         };
-        this.mBackImage = new ImageView(this.mContext);
-        this.mBackImage.setBackgroundResource(R.drawable.wired_charge_video_bg_img);
+        ImageView imageView = new ImageView(this.mContext);
+        this.mBackImage = imageView;
+        imageView.setBackgroundResource(R.drawable.wired_charge_video_bg_img);
         addView(this.mBackImage, getVideoLayoutParams());
     }
 
@@ -150,12 +152,13 @@ public class ChargeVideoView extends RelativeLayout {
 
     /* access modifiers changed from: protected */
     public void switchToRapidChargeAnim() {
+        Property property = RelativeLayout.ALPHA;
         if (this.mChargeView != null && !this.mToRapidAnimatorSet.isRunning()) {
             if (this.mRapidChargeView == null) {
                 addRapidChargeView();
             }
-            ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this.mChargeView, RelativeLayout.ALPHA, new float[]{1.0f, 0.0f});
-            this.mToRapidAnimatorSet.play(ofFloat).with(ObjectAnimator.ofFloat(this.mRapidChargeView, RelativeLayout.ALPHA, new float[]{0.0f, 1.0f}));
+            ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this.mChargeView, property, new float[]{1.0f, 0.0f});
+            this.mToRapidAnimatorSet.play(ofFloat).with(ObjectAnimator.ofFloat(this.mRapidChargeView, property, new float[]{0.0f, 1.0f}));
             this.mToRapidAnimatorSet.addListener(new Animator.AnimatorListener() {
                 public void onAnimationCancel(Animator animator) {
                 }
@@ -183,12 +186,13 @@ public class ChargeVideoView extends RelativeLayout {
 
     /* access modifiers changed from: protected */
     public void switchToNormalChargeAnim() {
+        Property property = RelativeLayout.ALPHA;
         if (this.mRapidChargeView != null && !this.mToNormalAnimatorSet.isRunning()) {
             if (this.mChargeView == null) {
                 addChargeView();
             }
-            ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this.mRapidChargeView, RelativeLayout.ALPHA, new float[]{1.0f, 0.0f});
-            this.mToNormalAnimatorSet.play(ofFloat).with(ObjectAnimator.ofFloat(this.mChargeView, RelativeLayout.ALPHA, new float[]{0.0f, 1.0f}));
+            ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this.mRapidChargeView, property, new float[]{1.0f, 0.0f});
+            this.mToNormalAnimatorSet.play(ofFloat).with(ObjectAnimator.ofFloat(this.mChargeView, property, new float[]{0.0f, 1.0f}));
             this.mToNormalAnimatorSet.addListener(new Animator.AnimatorListener() {
                 public void onAnimationCancel(Animator animator) {
                 }
@@ -228,8 +232,9 @@ public class ChargeVideoView extends RelativeLayout {
     /* access modifiers changed from: protected */
     public void addChargeView() {
         this.mChargeView = new TextureView(this.mContext);
-        this.mMediaPlayer = new MediaPlayer();
-        this.mMediaPlayer.setOnPreparedListener(this.mOnPreparedListener);
+        MediaPlayer mediaPlayer = new MediaPlayer();
+        this.mMediaPlayer = mediaPlayer;
+        mediaPlayer.setOnPreparedListener(this.mOnPreparedListener);
         this.mMediaPlayer.setOnCompletionListener(this.mOnCompletionListener);
         addView(this.mChargeView, -1, getVideoLayoutParams());
         this.mChargeView.setSurfaceTextureListener(this.mChargeSurfaceTextureListener);
@@ -247,8 +252,9 @@ public class ChargeVideoView extends RelativeLayout {
     /* access modifiers changed from: protected */
     public void addRapidChargeView() {
         this.mRapidChargeView = new TextureView(this.mContext);
-        this.mRapidMediaPlayer = new MediaPlayer();
-        this.mRapidMediaPlayer.setOnPreparedListener(this.mOnPreparedListener);
+        MediaPlayer mediaPlayer = new MediaPlayer();
+        this.mRapidMediaPlayer = mediaPlayer;
+        mediaPlayer.setOnPreparedListener(this.mOnPreparedListener);
         this.mRapidMediaPlayer.setOnCompletionListener(this.mOnCompletionListener);
         addView(this.mRapidChargeView, -1, getVideoLayoutParams());
         this.mRapidChargeView.setSurfaceTextureListener(this.mRapidChargeSurfaceTextureListener);

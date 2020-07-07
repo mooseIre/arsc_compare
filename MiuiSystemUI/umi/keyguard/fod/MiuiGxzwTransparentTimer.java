@@ -7,7 +7,6 @@ import android.os.SystemClock;
 
 class MiuiGxzwTransparentTimer implements AlarmManager.OnAlarmListener {
     private final AlarmManager mAlarmManager;
-    private final Context mContext;
     private Handler mHandler = new Handler();
     private boolean mSetAlarm = false;
     private Runnable mTimeout = new Runnable() {
@@ -28,7 +27,6 @@ class MiuiGxzwTransparentTimer implements AlarmManager.OnAlarmListener {
     }
 
     MiuiGxzwTransparentTimer(Context context) {
-        this.mContext = context;
         this.mAlarmManager = (AlarmManager) context.getSystemService("alarm");
     }
 
@@ -49,6 +47,8 @@ class MiuiGxzwTransparentTimer implements AlarmManager.OnAlarmListener {
         this.mSetAlarm = false;
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$new$0 */
     public /* synthetic */ void lambda$new$0$MiuiGxzwTransparentTimer() {
         TransparentTimerListener transparentTimerListener = this.mTransparentTimerListener;
         if (transparentTimerListener != null) {

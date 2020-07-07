@@ -34,15 +34,12 @@ import miui.view.animation.SineEaseInOutInterpolator;
 public class KeyguardPasswordView extends KeyguardAbsKeyInputView implements KeyguardSecurityView {
     /* access modifiers changed from: private */
     public boolean mAppearAnimating;
-    private final AppearAnimationUtils mAppearAnimationUtils;
     /* access modifiers changed from: private */
     public boolean mDisappearAnimatePending;
-    private final DisappearAnimationUtils mDisappearAnimationUtils;
     /* access modifiers changed from: private */
     public Runnable mDisappearFinishRunnable;
     private final int mDisappearYTranslation;
     private Space mEmptySpace;
-    private Interpolator mFastOutLinearInInterpolator;
     private MiuiKeyBoardView mKeyboardView;
     private ViewGroup mKeyboardViewLayout;
     private Interpolator mLinearOutSlowInInterpolator;
@@ -66,11 +63,11 @@ public class KeyguardPasswordView extends KeyguardAbsKeyInputView implements Key
 
     public KeyguardPasswordView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-        this.mAppearAnimationUtils = new AppearAnimationUtils(context);
-        this.mDisappearAnimationUtils = new DisappearAnimationUtils(context, 125, 0.6f, 0.45f, AnimationUtils.loadInterpolator(this.mContext, 17563663));
+        new AppearAnimationUtils(context);
+        new DisappearAnimationUtils(context, 125, 0.6f, 0.45f, AnimationUtils.loadInterpolator(this.mContext, 17563663));
         this.mDisappearYTranslation = getResources().getDimensionPixelSize(R.dimen.miui_disappear_y_translation);
         this.mLinearOutSlowInInterpolator = AnimationUtils.loadInterpolator(context, 17563662);
-        this.mFastOutLinearInInterpolator = AnimationUtils.loadInterpolator(context, 17563663);
+        AnimationUtils.loadInterpolator(context, 17563663);
         this.mScreenHeight = context.getResources().getConfiguration().screenHeightDp;
     }
 
@@ -117,8 +114,9 @@ public class KeyguardPasswordView extends KeyguardAbsKeyInputView implements Key
         });
         this.mPasswordEntry.setSelected(true);
         this.mPasswordEntry.requestFocus();
-        this.mKeyboardView = (MiuiKeyBoardView) findViewById(R.id.mixed_password_keyboard_view);
-        this.mKeyboardView.addKeyboardListener(new MiuiKeyBoardView.OnKeyboardActionListener() {
+        MiuiKeyBoardView miuiKeyBoardView = (MiuiKeyBoardView) findViewById(R.id.mixed_password_keyboard_view);
+        this.mKeyboardView = miuiKeyBoardView;
+        miuiKeyBoardView.addKeyboardListener(new MiuiKeyBoardView.OnKeyboardActionListener() {
             public void onText(CharSequence charSequence) {
                 if (TextUtils.isEmpty(KeyguardPasswordView.this.mPasswordEntry.getText().toString())) {
                     KeyguardPasswordView.this.mPasswordEntry.setHint(R.string.input_password_hint_text);
@@ -140,8 +138,9 @@ public class KeyguardPasswordView extends KeyguardAbsKeyInputView implements Key
                 KeyguardPasswordView.this.verifyPasswordAndUnlock();
             }
         });
-        this.mEmptySpace = (Space) findViewById(R.id.empty_space);
-        this.mEmptySpace.setVisibility(8);
+        Space space = (Space) findViewById(R.id.empty_space);
+        this.mEmptySpace = space;
+        space.setVisibility(8);
         this.mKeyboardViewLayout = (ViewGroup) findViewById(R.id.mixed_password_keyboard_view_layout);
         setPositionForFod();
     }

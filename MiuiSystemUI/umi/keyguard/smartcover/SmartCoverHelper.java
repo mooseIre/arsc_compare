@@ -21,7 +21,6 @@ import com.android.systemui.plugins.R;
 import com.xiaomi.stat.MiStat;
 
 public class SmartCoverHelper {
-    private ActivityManager mActivityManager;
     private final BroadcastReceiver mBatteryBroadcastReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             if ("android.intent.action.BATTERY_CHANGED".equals(intent.getAction())) {
@@ -105,8 +104,8 @@ public class SmartCoverHelper {
     public SmartCoverHelper(Context context, KeyguardViewMediator keyguardViewMediator) {
         this.mContext = context;
         this.mViewMediator = keyguardViewMediator;
-        this.mPowerManager = (PowerManager) this.mContext.getSystemService("power");
-        this.mActivityManager = (ActivityManager) this.mContext.getSystemService("activity");
+        this.mPowerManager = (PowerManager) context.getSystemService("power");
+        ActivityManager activityManager = (ActivityManager) this.mContext.getSystemService("activity");
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("miui.intent.action.SMART_COVER");
         this.mContext.registerReceiverAsUser(this.mSmartCoverReceiver, UserHandle.ALL, intentFilter, "android.permission.DEVICE_POWER", (Handler) null);
@@ -138,8 +137,9 @@ public class SmartCoverHelper {
     public void showSmartCover(boolean z) {
         WindowManager windowManager = (WindowManager) this.mContext.getSystemService("window");
         if (this.mSmartCoverView == null) {
-            this.mSmartCoverView = (SmartCoverView) View.inflate(this.mContext, this.mIsSmartCoverFullMode ? R.layout.full_smart_cover_layout : R.layout.smart_cover_layout, (ViewGroup) null);
-            this.mSmartCoverView.setSystemUiVisibility(4864);
+            SmartCoverView smartCoverView = (SmartCoverView) View.inflate(this.mContext, this.mIsSmartCoverFullMode ? R.layout.full_smart_cover_layout : R.layout.smart_cover_layout, (ViewGroup) null);
+            this.mSmartCoverView = smartCoverView;
+            smartCoverView.setSystemUiVisibility(4864);
         }
         if (z) {
             WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(-1, -1, 2009, 84083968, 1);

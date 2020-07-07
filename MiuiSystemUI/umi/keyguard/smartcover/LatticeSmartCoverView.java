@@ -29,10 +29,12 @@ public class LatticeSmartCoverView extends SmartCoverView {
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mInfo1 = findViewById(R.id.info1);
-        this.mInfo1TextView = (TextView) this.mInfo1.findViewById(R.id.num);
-        this.mInfo2 = findViewById(R.id.info2);
-        this.mInfo2TextView1 = (TextView) this.mInfo2.findViewById(R.id.num1);
+        View findViewById = findViewById(R.id.info1);
+        this.mInfo1 = findViewById;
+        this.mInfo1TextView = (TextView) findViewById.findViewById(R.id.num);
+        View findViewById2 = findViewById(R.id.info2);
+        this.mInfo2 = findViewById2;
+        this.mInfo2TextView1 = (TextView) findViewById2.findViewById(R.id.num1);
         this.mInfo2TextView2 = (TextView) this.mInfo2.findViewById(R.id.num2);
         this.mBatteryInfo = findViewById(R.id.battery);
         this.mBatteryLevelImage = (BatteryLevelImageView) findViewById(R.id.battery_level);

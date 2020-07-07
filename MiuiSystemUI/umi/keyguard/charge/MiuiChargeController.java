@@ -108,7 +108,7 @@ public class MiuiChargeController implements IRapidAnimationListener {
     public MiuiChargeController(Context context) {
         Log.i("MiuiChargeController", "MiuiChargeController: ");
         this.mContext = context;
-        this.mWindowManager = (WindowManager) this.mContext.getSystemService("window");
+        this.mWindowManager = (WindowManager) context.getSystemService("window");
         this.mUpdateMonitor = KeyguardUpdateMonitor.getInstance(context);
         this.mBatteryStatus = new BatteryStatus(1, 0, 0, 0, 0, -1);
         IntentFilter intentFilter = new IntentFilter();
@@ -146,9 +146,11 @@ public class MiuiChargeController implements IRapidAnimationListener {
                 }
             }
         }, intentFilter);
-        this.mPowerManager = (PowerManager) this.mContext.getSystemService("power");
-        this.mScreenOnWakeLock = this.mPowerManager.newWakeLock(10, "wireless_charge");
-        this.mScreenOnWakeLock.setReferenceCounted(false);
+        PowerManager powerManager = (PowerManager) this.mContext.getSystemService("power");
+        this.mPowerManager = powerManager;
+        PowerManager.WakeLock newWakeLock = powerManager.newWakeLock(10, "wireless_charge");
+        this.mScreenOnWakeLock = newWakeLock;
+        newWakeLock.setReferenceCounted(false);
         RecentsEventBus.getDefault().register(this);
         this.mUpdateMonitor.registerCallback(this.mKeyguardUpdateMonitorCallback);
         this.mWirelessChargeState = -1;
@@ -423,8 +425,9 @@ public class MiuiChargeController implements IRapidAnimationListener {
     private void prepareWirelessRapidChargeView() {
         if (shouldShowChargeAnim()) {
             if (this.mWirelessRapidChargeView == null) {
-                this.mWirelessRapidChargeView = new WirelessRapidChargeView(this.mContext);
-                this.mWirelessRapidChargeView.setScreenOn(this.mScreenOn);
+                WirelessRapidChargeView wirelessRapidChargeView = new WirelessRapidChargeView(this.mContext);
+                this.mWirelessRapidChargeView = wirelessRapidChargeView;
+                wirelessRapidChargeView.setScreenOn(this.mScreenOn);
                 this.mWirelessRapidChargeView.setRapidAnimationListener(this);
                 this.mWirelessRapidChargeView.setOnTouchListener(new View.OnTouchListener() {
                     public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -463,62 +466,61 @@ public class MiuiChargeController implements IRapidAnimationListener {
     private void checkWirelessChargeEfficiency() {
         new AsyncTask<Void, Void, Integer>() {
             /* access modifiers changed from: protected */
-            /* JADX WARNING: Removed duplicated region for block: B:18:0x0027 A[SYNTHETIC, Splitter:B:18:0x0027] */
-            /* JADX WARNING: Removed duplicated region for block: B:26:0x0037 A[SYNTHETIC, Splitter:B:26:0x0037] */
+            /* JADX WARNING: Removed duplicated region for block: B:17:0x0025 A[SYNTHETIC, Splitter:B:17:0x0025] */
+            /* JADX WARNING: Removed duplicated region for block: B:26:0x0036 A[SYNTHETIC, Splitter:B:26:0x0036] */
             /* Code decompiled incorrectly, please refer to instructions dump. */
             public java.lang.Integer doInBackground(java.lang.Void... r3) {
                 /*
                     r2 = this;
                     r2 = 0
-                    java.io.FileReader r3 = new java.io.FileReader     // Catch:{ Exception -> 0x0021 }
+                    java.io.FileReader r3 = new java.io.FileReader     // Catch:{ Exception -> 0x001c, all -> 0x0017 }
                     java.lang.String r0 = "/sys/class/power_supply/wireless/signal_strength"
-                    r3.<init>(r0)     // Catch:{ Exception -> 0x0021 }
-                    int r2 = r3.read()     // Catch:{ Exception -> 0x001a, all -> 0x0015 }
+                    r3.<init>(r0)     // Catch:{ Exception -> 0x001c, all -> 0x0017 }
+                    int r2 = r3.read()     // Catch:{ Exception -> 0x0015 }
                     r3.close()     // Catch:{ IOException -> 0x0010 }
-                    goto L_0x0030
+                    goto L_0x002e
                 L_0x0010:
                     r3 = move-exception
                     r3.printStackTrace()
-                    goto L_0x0030
+                    goto L_0x002e
                 L_0x0015:
                     r2 = move-exception
+                    goto L_0x0020
+                L_0x0017:
+                    r3 = move-exception
                     r1 = r3
                     r3 = r2
                     r2 = r1
-                    goto L_0x0035
-                L_0x001a:
-                    r2 = move-exception
+                    goto L_0x0034
+                L_0x001c:
+                    r3 = move-exception
                     r1 = r3
                     r3 = r2
                     r2 = r1
-                    goto L_0x0022
-                L_0x001f:
-                    r3 = move-exception
-                    goto L_0x0035
-                L_0x0021:
-                    r3 = move-exception
-                L_0x0022:
-                    r3.printStackTrace()     // Catch:{ all -> 0x001f }
-                    if (r2 == 0) goto L_0x002f
-                    r2.close()     // Catch:{ IOException -> 0x002b }
-                    goto L_0x002f
-                L_0x002b:
+                L_0x0020:
+                    r2.printStackTrace()     // Catch:{ all -> 0x0033 }
+                    if (r3 == 0) goto L_0x002d
+                    r3.close()     // Catch:{ IOException -> 0x0029 }
+                    goto L_0x002d
+                L_0x0029:
                     r2 = move-exception
                     r2.printStackTrace()
-                L_0x002f:
+                L_0x002d:
                     r2 = -1
-                L_0x0030:
+                L_0x002e:
                     java.lang.Integer r2 = java.lang.Integer.valueOf(r2)
                     return r2
-                L_0x0035:
-                    if (r2 == 0) goto L_0x003f
-                    r2.close()     // Catch:{ IOException -> 0x003b }
-                    goto L_0x003f
-                L_0x003b:
+                L_0x0033:
                     r2 = move-exception
-                    r2.printStackTrace()
-                L_0x003f:
-                    throw r3
+                L_0x0034:
+                    if (r3 == 0) goto L_0x003e
+                    r3.close()     // Catch:{ IOException -> 0x003a }
+                    goto L_0x003e
+                L_0x003a:
+                    r3 = move-exception
+                    r3.printStackTrace()
+                L_0x003e:
+                    throw r2
                 */
                 throw new UnsupportedOperationException("Method not decompiled: com.android.keyguard.charge.MiuiChargeController.AnonymousClass6.doInBackground(java.lang.Void[]):java.lang.Integer");
             }

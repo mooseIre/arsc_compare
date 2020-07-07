@@ -81,7 +81,6 @@ class MiuiGxzwAnimManager {
     }
 
     public MiuiGxzwAnimArgs getFalseAnimArgs(boolean z) {
-        int[] iArr;
         MiuiGxzwAnimItem miuiGxzwAnimItem = this.mAnimItemMap.get(Integer.valueOf(this.mGxzwAnimType));
         if (miuiGxzwAnimItem == null) {
             return new MiuiGxzwAnimArgs.Builder((int[]) null).build();
@@ -93,16 +92,16 @@ class MiuiGxzwAnimManager {
         if (miuiGxzwAnimItem.isDismissRecognizingWhenFalse()) {
             int currentPosition = (this.mMiuiGxzwFrameAnimation.getCurrentPosition() + 1) % animRes.length;
             int length = animRes.length - currentPosition;
-            iArr = new int[(length + 1)];
+            int[] iArr = new int[(length + 1)];
             for (int i = 0; i < length; i++) {
                 iArr[i] = animRes[(currentPosition + i) % animRes.length];
             }
             iArr[length] = getFingerIconResource(z);
+            animRes = iArr;
         } else {
             z2 = z3;
-            iArr = animRes;
         }
-        MiuiGxzwAnimArgs.Builder builder = new MiuiGxzwAnimArgs.Builder(iArr);
+        MiuiGxzwAnimArgs.Builder builder = new MiuiGxzwAnimArgs.Builder(animRes);
         MiuiGxzwAnimArgs.Builder unused = builder.setRepeat(z2);
         MiuiGxzwAnimArgs.Builder unused2 = builder.setFrameInterval(falseAnimRes.mFrameInterval);
         MiuiGxzwAnimArgs.Builder unused3 = builder.setAod(z);
@@ -121,10 +120,6 @@ class MiuiGxzwAnimManager {
         MiuiGxzwAnimArgs.Builder unused2 = builder.setFrameInterval(backAnimRes.mFrameInterval);
         MiuiGxzwAnimArgs.Builder unused3 = builder.setAod(z);
         return builder.build();
-    }
-
-    public int getFodMotionRtpId() {
-        return this.mAnimItemMap.get(Integer.valueOf(this.mGxzwAnimType)).getFodMotionRtpId();
     }
 
     public int getFingerIconResource(boolean z) {

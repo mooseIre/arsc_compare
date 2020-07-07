@@ -61,8 +61,9 @@ class MiuiGxzwQuickLoadingView extends View {
 
     private void initView() {
         updatePixelSize();
-        this.mPaint = new Paint();
-        this.mPaint.setAntiAlias(true);
+        Paint paint = new Paint();
+        this.mPaint = paint;
+        paint.setAntiAlias(true);
         this.mPaint.setStyle(Paint.Style.FILL);
         this.mPaint.setStrokeWidth(1.0f);
     }

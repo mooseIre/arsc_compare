@@ -45,8 +45,6 @@ public class AwesomeLockScreen extends FrameLayout implements LockScreenRoot.Loc
     private boolean mIsFocus;
     private boolean mIsInteractive;
     private boolean mIsPaused;
-    /* access modifiers changed from: private */
-    public boolean mKeyguardBouncerShowing;
     private LockPatternUtils mLockPatternUtils;
     private AwesomeLockScreenView mLockscreenView;
     private MiuiGxzwCallback mMiuiGxzwCallback;
@@ -78,7 +76,6 @@ public class AwesomeLockScreen extends FrameLayout implements LockScreenRoot.Loc
         int i = 0;
         this.mIsPaused = false;
         this.mIsFocus = true;
-        this.mKeyguardBouncerShowing = false;
         this.mUpdateMonitorCallback = new KeyguardUpdateMonitorCallback() {
             public void onRefreshBatteryInfo(BatteryStatus batteryStatus) {
                 super.onRefreshBatteryInfo(batteryStatus);
@@ -86,11 +83,6 @@ public class AwesomeLockScreen extends FrameLayout implements LockScreenRoot.Loc
                 if (AwesomeLockScreen.this.mInitSuccessful) {
                     AwesomeLockScreen.mRootHolder.getRoot().onRefreshBatteryInfo(batteryStatus);
                 }
-            }
-
-            public void onKeyguardBouncerChanged(boolean z) {
-                boolean unused = AwesomeLockScreen.this.mKeyguardBouncerShowing = z;
-                AwesomeLockScreen.this.updatePauseResumeStatus();
             }
         };
         this.mFaceUnlockCallback = new FaceUnlockCallback() {
@@ -195,8 +187,9 @@ public class AwesomeLockScreen extends FrameLayout implements LockScreenRoot.Loc
         this.mPasswordMode = getPasswordMode();
         mRootHolder.getContext().mVariables.put("__password_mode", (double) this.mPasswordMode);
         mRootHolder.getRoot().setLockscreenCallback(this);
-        this.mLockscreenView = mRootHolder.createView(this.mContext);
-        if (this.mLockscreenView != null) {
+        AwesomeLockScreenView createView = mRootHolder.createView(this.mContext);
+        this.mLockscreenView = createView;
+        if (createView != null) {
             heiHeiGestureView.addView(this.mLockscreenView, new FrameLayout.LayoutParams(-1, -1));
             this.mInitSuccessful = true;
         }
@@ -256,7 +249,7 @@ public class AwesomeLockScreen extends FrameLayout implements LockScreenRoot.Loc
 
     public void updatePauseResumeStatus() {
         if (this.mInitSuccessful) {
-            if (!this.mIsFocus || !this.mIsInteractive || (!(this.mStatusBar.getBarState() == 1 || this.mStatusBar.getBarState() == 2) || this.mKeyguardBouncerShowing)) {
+            if (!this.mIsFocus || !this.mIsInteractive || !(this.mStatusBar.getBarState() == 1 || this.mStatusBar.getBarState() == 2)) {
                 onPause();
             } else {
                 onResume(false);

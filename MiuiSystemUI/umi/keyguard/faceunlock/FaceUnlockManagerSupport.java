@@ -12,6 +12,7 @@ import android.os.Message;
 import android.os.Process;
 import android.util.Log;
 import android.util.Slog;
+import com.android.keyguard.BoostFrameworkHelper;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.xiaomi.stat.c.b;
 
@@ -41,8 +42,9 @@ public class FaceUnlockManagerSupport extends BaseFaceUnlockManager {
                 }
                 if (i == 14) {
                     FaceUnlockManagerSupport faceUnlockManagerSupport2 = FaceUnlockManagerSupport.this;
-                    faceUnlockManagerSupport2.mLiveAttackValue++;
-                    if (faceUnlockManagerSupport2.mLiveAttackValue >= 3) {
+                    int i2 = faceUnlockManagerSupport2.mLiveAttackValue + 1;
+                    faceUnlockManagerSupport2.mLiveAttackValue = i2;
+                    if (i2 >= 3) {
                         faceUnlockManagerSupport2.mLiveAttack = true;
                     }
                 } else {
@@ -50,8 +52,9 @@ public class FaceUnlockManagerSupport extends BaseFaceUnlockManager {
                 }
                 if (MiuiFaceUnlockUtils.isScreenTurnOnDelayed()) {
                     FaceUnlockManagerSupport faceUnlockManagerSupport3 = FaceUnlockManagerSupport.this;
-                    faceUnlockManagerSupport3.mNoFaceDetectedValue++;
-                    if (faceUnlockManagerSupport3.mNoFaceDetectedValue >= 3) {
+                    int i3 = faceUnlockManagerSupport3.mNoFaceDetectedValue + 1;
+                    faceUnlockManagerSupport3.mNoFaceDetectedValue = i3;
+                    if (i3 >= 3) {
                         faceUnlockManagerSupport3.mFaceUnlockCallback.unblockScreenOn();
                         MiuiFaceUnlockUtils.setScreenTurnOnDelayed(false);
                         return;
@@ -151,9 +154,10 @@ public class FaceUnlockManagerSupport extends BaseFaceUnlockManager {
 
     public FaceUnlockManagerSupport(Context context, int i) {
         this.mContext = context;
-        this.mFaceManager = MiuiFaceFactory.getFaceManager(this.mContext, i);
+        this.mFaceManager = MiuiFaceFactory.getFaceManager(context, i);
         this.mHandlerThread.start();
         this.mWorkerHandler = new Handler(this.mHandlerThread.getLooper());
+        BoostFrameworkHelper.initBoostFramework();
     }
 
     public void runOnFaceUnlockWorkerThread(Runnable runnable) {
@@ -168,13 +172,15 @@ public class FaceUnlockManagerSupport extends BaseFaceUnlockManager {
     }
 
     public void initAll() {
-        this.mFaceManager = MiuiFaceFactory.getFaceManager(this.mContext, this.mFaceUnlockType);
-        this.mFaceManager.preInitAuthen();
+        IMiuiFaceManager faceManager = MiuiFaceFactory.getFaceManager(this.mContext, this.mFaceUnlockType);
+        this.mFaceManager = faceManager;
+        faceManager.preInitAuthen();
     }
 
     public boolean isFaceUnlockInited() {
-        this.mFaceManager = MiuiFaceFactory.getFaceManager(this.mContext, this.mFaceUnlockType);
-        return this.mFaceManager.isFaceUnlockInited();
+        IMiuiFaceManager faceManager = MiuiFaceFactory.getFaceManager(this.mContext, this.mFaceUnlockType);
+        this.mFaceManager = faceManager;
+        return faceManager.isFaceUnlockInited();
     }
 
     public void startFaceUnlock(FaceUnlockCallback faceUnlockCallback) {
@@ -193,9 +199,11 @@ public class FaceUnlockManagerSupport extends BaseFaceUnlockManager {
         this.mStartFaceUnlockSuccess = true;
         this.mFaceManager = MiuiFaceFactory.getFaceManager(this.mContext, this.mFaceUnlockType);
         Slog.i("miui_face", "start verify time=" + (System.currentTimeMillis() - KeyguardUpdateMonitor.sScreenTurnedOnTime));
-        this.mAuhtenCancelSignal = new CancellationSignal();
-        this.mFaceManager.authenticate(this.mAuhtenCancelSignal, 0, this.mAuthenCallback, this.mWorkerHandler, 5000);
+        CancellationSignal cancellationSignal = new CancellationSignal();
+        this.mAuhtenCancelSignal = cancellationSignal;
+        this.mFaceManager.authenticate(cancellationSignal, 0, this.mAuthenCallback, this.mWorkerHandler, 5000);
         this.mStageInFaceUnlockTime = System.currentTimeMillis();
+        BoostFrameworkHelper.setBoost(3);
         this.mMainHandler.sendEmptyMessage(b.a);
     }
 

@@ -27,7 +27,6 @@ import android.view.Display;
 import android.view.WindowManager;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.common.Utilities;
-import com.android.keyguard.fod.MiuiGxzwManager;
 import com.android.keyguard.magazine.LockScreenMagazineController;
 import com.android.keyguard.magazine.utils.HomeUtils;
 import com.android.keyguard.utils.MiuiSettingsUtils;
@@ -181,48 +180,48 @@ public class KeyguardWallpaperUtils {
         return new File("/data/system/theme_magic/video/video_wallpaper_thumbnail.jpg").exists();
     }
 
-    /* JADX WARNING: Removed duplicated region for block: B:17:0x0025  */
-    /* JADX WARNING: Removed duplicated region for block: B:19:0x002f A[RETURN] */
+    /* JADX WARNING: Removed duplicated region for block: B:16:0x0024  */
+    /* JADX WARNING: Removed duplicated region for block: B:18:0x002e A[RETURN] */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     private static android.graphics.drawable.Drawable loadAssetsDrawable(android.content.Context r2, java.lang.String r3) {
         /*
             r0 = 0
-            android.content.res.AssetManager r1 = r2.getAssets()     // Catch:{ IOException -> 0x001a, all -> 0x0017 }
-            java.io.InputStream r3 = r1.open(r3)     // Catch:{ IOException -> 0x001a, all -> 0x0017 }
+            android.content.res.AssetManager r1 = r2.getAssets()     // Catch:{ IOException -> 0x0019, all -> 0x0017 }
+            java.io.InputStream r3 = r1.open(r3)     // Catch:{ IOException -> 0x0019, all -> 0x0017 }
             if (r3 == 0) goto L_0x0012
             android.graphics.Bitmap r1 = android.graphics.BitmapFactory.decodeStream(r3)     // Catch:{ IOException -> 0x0010 }
             goto L_0x0013
         L_0x0010:
             r1 = move-exception
-            goto L_0x001c
+            goto L_0x001b
         L_0x0012:
             r1 = r0
         L_0x0013:
             miui.util.IOUtils.closeQuietly((java.io.InputStream) r3)
-            goto L_0x0023
+            goto L_0x0022
         L_0x0017:
             r2 = move-exception
-            r3 = r0
             goto L_0x0031
-        L_0x001a:
+        L_0x0019:
             r1 = move-exception
             r3 = r0
-        L_0x001c:
-            r1.printStackTrace()     // Catch:{ all -> 0x0030 }
+        L_0x001b:
+            r1.printStackTrace()     // Catch:{ all -> 0x002f }
             miui.util.IOUtils.closeQuietly((java.io.InputStream) r3)
             r1 = r0
-        L_0x0023:
-            if (r1 == 0) goto L_0x002f
+        L_0x0022:
+            if (r1 == 0) goto L_0x002e
             android.graphics.drawable.BitmapDrawable r3 = new android.graphics.drawable.BitmapDrawable
             android.content.res.Resources r2 = r2.getResources()
             r3.<init>(r2, r1)
             return r3
-        L_0x002f:
+        L_0x002e:
             return r0
-        L_0x0030:
+        L_0x002f:
             r2 = move-exception
+            r0 = r3
         L_0x0031:
-            miui.util.IOUtils.closeQuietly((java.io.InputStream) r3)
+            miui.util.IOUtils.closeQuietly((java.io.InputStream) r0)
             throw r2
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.keyguard.wallpaper.KeyguardWallpaperUtils.loadAssetsDrawable(android.content.Context, java.lang.String):android.graphics.drawable.Drawable");
@@ -265,46 +264,45 @@ public class KeyguardWallpaperUtils {
 
     private static boolean setLockWallpaperWithoutCrop(Context context, Uri uri, boolean z) {
         FileOutputStream fileOutputStream;
-        InputStream inputStream;
         if (uri == null || !Utilities.isUriFileExists(context, uri)) {
             return false;
         }
-        InputStream inputStream2 = null;
+        InputStream inputStream = null;
         try {
-            inputStream = context.getContentResolver().openInputStream(uri);
+            InputStream openInputStream = context.getContentResolver().openInputStream(uri);
             try {
                 File tmpLockScreenFile = getTmpLockScreenFile();
                 fileOutputStream = new FileOutputStream(tmpLockScreenFile);
                 try {
                     byte[] bArr = new byte[1024];
                     while (true) {
-                        int read = inputStream.read(bArr);
+                        int read = openInputStream.read(bArr);
                         if (read != -1) {
                             fileOutputStream.write(bArr, 0, read);
                         } else {
                             boolean lockWallpaperWithoutCrop = setLockWallpaperWithoutCrop(context, tmpLockScreenFile.getPath(), uri.toString(), z);
-                            IOUtils.closeQuietly(inputStream);
+                            IOUtils.closeQuietly(openInputStream);
                             IOUtils.closeQuietly((OutputStream) fileOutputStream);
                             return lockWallpaperWithoutCrop;
                         }
                     }
                 } catch (Exception e) {
                     e = e;
-                    inputStream2 = inputStream;
+                    inputStream = openInputStream;
                     try {
                         Log.e("KeyguardWallpaperUtils", "setLockWallpaperWithoutCrop", e);
-                        IOUtils.closeQuietly(inputStream2);
+                        IOUtils.closeQuietly(inputStream);
                         IOUtils.closeQuietly((OutputStream) fileOutputStream);
                         return false;
                     } catch (Throwable th) {
                         th = th;
-                        inputStream = inputStream2;
                         IOUtils.closeQuietly(inputStream);
                         IOUtils.closeQuietly((OutputStream) fileOutputStream);
                         throw th;
                     }
                 } catch (Throwable th2) {
                     th = th2;
+                    inputStream = openInputStream;
                     IOUtils.closeQuietly(inputStream);
                     IOUtils.closeQuietly((OutputStream) fileOutputStream);
                     throw th;
@@ -312,14 +310,15 @@ public class KeyguardWallpaperUtils {
             } catch (Exception e2) {
                 e = e2;
                 fileOutputStream = null;
-                inputStream2 = inputStream;
+                inputStream = openInputStream;
                 Log.e("KeyguardWallpaperUtils", "setLockWallpaperWithoutCrop", e);
-                IOUtils.closeQuietly(inputStream2);
+                IOUtils.closeQuietly(inputStream);
                 IOUtils.closeQuietly((OutputStream) fileOutputStream);
                 return false;
             } catch (Throwable th3) {
                 th = th3;
                 fileOutputStream = null;
+                inputStream = openInputStream;
                 IOUtils.closeQuietly(inputStream);
                 IOUtils.closeQuietly((OutputStream) fileOutputStream);
                 throw th;
@@ -328,12 +327,11 @@ public class KeyguardWallpaperUtils {
             e = e3;
             fileOutputStream = null;
             Log.e("KeyguardWallpaperUtils", "setLockWallpaperWithoutCrop", e);
-            IOUtils.closeQuietly(inputStream2);
+            IOUtils.closeQuietly(inputStream);
             IOUtils.closeQuietly((OutputStream) fileOutputStream);
             return false;
         } catch (Throwable th4) {
             th = th4;
-            inputStream = null;
             fileOutputStream = null;
             IOUtils.closeQuietly(inputStream);
             IOUtils.closeQuietly((OutputStream) fileOutputStream);
@@ -457,8 +455,9 @@ public class KeyguardWallpaperUtils {
             int width = (int) ((((float) bitmap.getWidth()) - (((float) point.x) * min)) / 2.0f);
             int height = (int) ((((float) bitmap.getHeight()) - (((float) point.y) * min)) / 2.0f);
             BitmapFactory.CropOption cropOption = new BitmapFactory.CropOption();
-            cropOption.srcBmpDrawingArea = new Rect(width, height, bitmap.getWidth() - width, bitmap.getHeight() - height);
-            bitmap2 = Utilities.createBitmapSafely(cropOption.srcBmpDrawingArea.width(), cropOption.srcBmpDrawingArea.height(), bitmap.getConfig());
+            Rect rect = new Rect(width, height, bitmap.getWidth() - width, bitmap.getHeight() - height);
+            cropOption.srcBmpDrawingArea = rect;
+            bitmap2 = Utilities.createBitmapSafely(rect.width(), cropOption.srcBmpDrawingArea.height(), bitmap.getConfig());
             BitmapFactory.cropBitmap(bitmap, bitmap2, cropOption);
         } catch (OutOfMemoryError e) {
             Log.e("KeyguardWallpaperUtils", "autoCropWallpaper", e);
@@ -672,9 +671,5 @@ public class KeyguardWallpaperUtils {
 
     public static boolean isSupportWallpaperBlur() {
         return sIsSupportWallpaperBlur;
-    }
-
-    public static boolean isWallpaperShouldBlur(Context context) {
-        return !MiuiGxzwManager.isGxzwSensor() || !KeyguardUpdateMonitor.getInstance(context).isUnlockWithFingerprintPossible(KeyguardUpdateMonitor.getCurrentUser());
     }
 }

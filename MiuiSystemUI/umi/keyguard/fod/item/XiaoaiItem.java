@@ -23,8 +23,9 @@ public class XiaoaiItem extends IQuickOpenItem {
 
     public XiaoaiItem(RectF rectF, Region region, Context context) {
         super(rectF, region, context);
-        this.mView = new ImageView(context);
-        this.mView.setImageResource(R.drawable.gxzw_quick_open_xiaoai);
+        ImageView imageView = new ImageView(context);
+        this.mView = imageView;
+        imageView.setImageResource(R.drawable.gxzw_quick_open_xiaoai);
         this.mView.setScaleType(ImageView.ScaleType.FIT_XY);
     }
 
@@ -51,9 +52,9 @@ public class XiaoaiItem extends IQuickOpenItem {
     private static int getStringRes() {
         int i = sTitleCount;
         int[] iArr = TITLE_RES;
-        sTitleCount = i % iArr.length;
-        int i2 = sTitleCount;
-        sTitleCount = i2 + 1;
-        return iArr[i2];
+        int length = i % iArr.length;
+        sTitleCount = length;
+        sTitleCount = length + 1;
+        return iArr[length];
     }
 }

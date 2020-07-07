@@ -107,6 +107,8 @@ public class MiuiKeyguardFaceUnlockView extends LinearLayout {
                 }, 200);
             }
 
+            /* access modifiers changed from: private */
+            /* renamed from: lambda$onStartedWakingUp$0 */
             public /* synthetic */ void lambda$onStartedWakingUp$0$MiuiKeyguardFaceUnlockView$2() {
                 boolean unused = MiuiKeyguardFaceUnlockView.this.mWaitWakeupAimation = false;
             }
@@ -158,11 +160,13 @@ public class MiuiKeyguardFaceUnlockView extends LinearLayout {
             }
         };
         this.mContext = context;
-        this.mUpdateMonitor = KeyguardUpdateMonitor.getInstance(context);
-        this.mUpdateMonitor.registerCallback(this.mKeyguardUpdateMonitorCallback);
+        KeyguardUpdateMonitor instance = KeyguardUpdateMonitor.getInstance(context);
+        this.mUpdateMonitor = instance;
+        instance.registerCallback(this.mKeyguardUpdateMonitorCallback);
         this.mUpdateMonitor.registerWallpaperChangeCallback(this.mWallpaperChangeCallback);
-        this.mFaceUnlockManager = FaceUnlockManager.getInstance();
-        this.mFaceUnlockManager.registerFaceUnlockCallback(this.mFaceUnlockCallback);
+        FaceUnlockManager instance2 = FaceUnlockManager.getInstance();
+        this.mFaceUnlockManager = instance2;
+        instance2.registerFaceUnlockCallback(this.mFaceUnlockCallback);
         this.mFaceUnlockManager.addFaceUnlockView(this);
     }
 

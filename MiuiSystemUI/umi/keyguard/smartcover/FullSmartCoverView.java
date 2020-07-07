@@ -29,16 +29,21 @@ public class FullSmartCoverView extends SmartCoverView {
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mHour = (Clock) findViewById(R.id.time_hour);
-        this.mHour.setShowHour(true);
-        this.mMinute = (Clock) findViewById(R.id.time_minute);
-        this.mMinute.setShowMinute(true);
-        this.mDate = (Clock) findViewById(R.id.date);
-        this.mDate.setShowDate(true);
-        this.mInfo1 = findViewById(R.id.info1);
-        this.mInfo1TextView = (TextView) this.mInfo1.findViewById(R.id.num);
-        this.mInfo2 = findViewById(R.id.info2);
-        this.mInfo2TextView1 = (TextView) this.mInfo2.findViewById(R.id.num1);
+        Clock clock = (Clock) findViewById(R.id.time_hour);
+        this.mHour = clock;
+        clock.setShowHour(true);
+        Clock clock2 = (Clock) findViewById(R.id.time_minute);
+        this.mMinute = clock2;
+        clock2.setShowMinute(true);
+        Clock clock3 = (Clock) findViewById(R.id.date);
+        this.mDate = clock3;
+        clock3.setShowDate(true);
+        View findViewById = findViewById(R.id.info1);
+        this.mInfo1 = findViewById;
+        this.mInfo1TextView = (TextView) findViewById.findViewById(R.id.num);
+        View findViewById2 = findViewById(R.id.info2);
+        this.mInfo2 = findViewById2;
+        this.mInfo2TextView1 = (TextView) findViewById2.findViewById(R.id.num1);
         this.mInfo2TextView2 = (TextView) this.mInfo2.findViewById(R.id.num2);
         this.mBatteryLevelText = (TextView) findViewById(R.id.battery_text);
     }

@@ -18,8 +18,9 @@ public class QrCodeItem extends IQuickOpenItem {
 
     public QrCodeItem(RectF rectF, Region region, Context context) {
         super(rectF, region, context);
-        this.mView = new ImageView(context);
-        this.mView.setImageResource(R.drawable.gxzw_quick_open_qr_code);
+        ImageView imageView = new ImageView(context);
+        this.mView = imageView;
+        imageView.setImageResource(R.drawable.gxzw_quick_open_qr_code);
         this.mView.setScaleType(ImageView.ScaleType.FIT_XY);
     }
 

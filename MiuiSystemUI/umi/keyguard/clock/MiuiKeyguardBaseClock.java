@@ -2,7 +2,6 @@ package com.android.keyguard.clock;
 
 import android.content.Context;
 import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.util.AttributeSet;
@@ -18,7 +17,6 @@ public class MiuiKeyguardBaseClock extends FrameLayout {
     protected boolean mDarkMode = false;
     protected int mDensityDpi;
     protected float mFontScale;
-    protected boolean mFontScaleChanged;
     private KeyguardUpdateMonitorCallback mInfoCallback = new KeyguardUpdateMonitorCallback() {
         public void onKeyguardVisibilityChanged(boolean z) {
             if (z) {
@@ -47,7 +45,6 @@ public class MiuiKeyguardBaseClock extends FrameLayout {
     };
     protected String mLanguage;
     protected LayoutInflater mLayoutInflater;
-    protected Resources mResources = null;
     protected int mSelectedClockPosition = 0;
     protected int mUserId;
 
@@ -106,8 +103,8 @@ public class MiuiKeyguardBaseClock extends FrameLayout {
     public MiuiKeyguardBaseClock(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
         this.mContext = context;
-        this.mLayoutInflater = LayoutInflater.from(this.mContext);
-        this.mResources = this.mContext.getResources();
+        this.mLayoutInflater = LayoutInflater.from(context);
+        this.mContext.getResources();
         this.mUserId = KeyguardUpdateMonitor.getCurrentUser();
         this.mLanguage = Locale.getDefault().getLanguage();
         updateHourFormat();
@@ -154,13 +151,11 @@ public class MiuiKeyguardBaseClock extends FrameLayout {
         super.onConfigurationChanged(configuration);
         float f = configuration.fontScale;
         if (this.mFontScale != f) {
-            this.mFontScaleChanged = true;
             updateViewsTextSize();
             this.mFontScale = f;
         }
         int i = configuration.densityDpi;
         if (this.mDensityDpi != i) {
-            this.mFontScaleChanged = true;
             updateViewsTextSize();
             updateViewsLayoutParams();
             updateDrawableResources();

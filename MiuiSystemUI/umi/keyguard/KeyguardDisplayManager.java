@@ -78,9 +78,10 @@ public class KeyguardDisplayManager {
 
     public KeyguardDisplayManager(Context context) {
         this.mContext = context;
-        this.mMediaRouter = (MediaRouter) this.mContext.getSystemService("media_router");
-        this.mDisplayService = (DisplayManager) this.mContext.getSystemService(DisplayManager.class);
-        this.mDisplayService.registerDisplayListener(this.mDisplayListener, (Handler) null);
+        this.mMediaRouter = (MediaRouter) context.getSystemService("media_router");
+        DisplayManager displayManager = (DisplayManager) this.mContext.getSystemService(DisplayManager.class);
+        this.mDisplayService = displayManager;
+        displayManager.registerDisplayListener(this.mDisplayListener, (Handler) null);
     }
 
     private boolean isKeyguardShowable(Display display) {
@@ -118,7 +119,7 @@ public class KeyguardDisplayManager {
         if (this.mPresentations.get(displayId) == null) {
             KeyguardPresentation keyguardPresentation = new KeyguardPresentation(this.mContext, display, R.style.keyguard_presentation_theme);
             keyguardPresentation.setOnDismissListener(new DialogInterface.OnDismissListener(displayId) {
-                private final /* synthetic */ int f$1;
+                public final /* synthetic */ int f$1;
 
                 {
                     this.f$1 = r2;
@@ -142,6 +143,8 @@ public class KeyguardDisplayManager {
         return false;
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$showPresentation$0 */
     public /* synthetic */ void lambda$showPresentation$0$KeyguardDisplayManager(int i, DialogInterface dialogInterface) {
         if (this.mPresentations.get(i) != null) {
             this.mPresentations.remove(i);
@@ -179,22 +182,56 @@ public class KeyguardDisplayManager {
         this.mShowing = false;
     }
 
+    /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v0, resolved type: int} */
+    /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v1, resolved type: int} */
+    /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r2v0, resolved type: boolean} */
+    /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v2, resolved type: int} */
+    /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v3, resolved type: int} */
     /* access modifiers changed from: protected */
-    public boolean updateDisplays(boolean z) {
-        boolean z2;
-        if (z) {
-            z2 = false;
-            for (Display showPresentation : this.mDisplayService.getDisplays()) {
-                z2 |= showPresentation(showPresentation);
-            }
-        } else {
-            z2 = this.mPresentations.size() > 0;
-            for (int size = this.mPresentations.size() - 1; size >= 0; size--) {
-                this.mPresentations.valueAt(size).dismiss();
-            }
-            this.mPresentations.clear();
-        }
-        return z2;
+    /* JADX WARNING: Multi-variable type inference failed */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public boolean updateDisplays(boolean r5) {
+        /*
+            r4 = this;
+            r0 = 0
+            if (r5 == 0) goto L_0x0017
+            android.hardware.display.DisplayManager r5 = r4.mDisplayService
+            android.view.Display[] r5 = r5.getDisplays()
+            int r1 = r5.length
+            r2 = r0
+        L_0x000b:
+            if (r0 >= r1) goto L_0x003e
+            r3 = r5[r0]
+            boolean r3 = r4.showPresentation(r3)
+            r2 = r2 | r3
+            int r0 = r0 + 1
+            goto L_0x000b
+        L_0x0017:
+            android.util.SparseArray<android.app.Presentation> r5 = r4.mPresentations
+            int r5 = r5.size()
+            r1 = 1
+            if (r5 <= 0) goto L_0x0021
+            r0 = r1
+        L_0x0021:
+            android.util.SparseArray<android.app.Presentation> r5 = r4.mPresentations
+            int r5 = r5.size()
+            int r5 = r5 - r1
+        L_0x0028:
+            if (r5 < 0) goto L_0x0038
+            android.util.SparseArray<android.app.Presentation> r1 = r4.mPresentations
+            java.lang.Object r1 = r1.valueAt(r5)
+            android.app.Presentation r1 = (android.app.Presentation) r1
+            r1.dismiss()
+            int r5 = r5 + -1
+            goto L_0x0028
+        L_0x0038:
+            android.util.SparseArray<android.app.Presentation> r4 = r4.mPresentations
+            r4.clear()
+            r2 = r0
+        L_0x003e:
+            return r2
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.keyguard.KeyguardDisplayManager.updateDisplays(boolean):boolean");
     }
 
     private static final class KeyguardPresentation extends Presentation {
@@ -241,8 +278,9 @@ public class KeyguardDisplayManager {
             this.mMarginTop = (i2 * 20) / 200;
             setContentView(R.layout.keyguard_presentation);
             getWindow().getDecorView().setSystemUiVisibility(1792);
-            this.mClock = findViewById(R.id.clock);
-            this.mClock.post(this.mMoveTextRunnable);
+            View findViewById = findViewById(R.id.clock);
+            this.mClock = findViewById;
+            findViewById.post(this.mMoveTextRunnable);
         }
     }
 }

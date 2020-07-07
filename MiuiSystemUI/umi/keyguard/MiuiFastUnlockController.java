@@ -27,7 +27,7 @@ public class MiuiFastUnlockController {
 
     public MiuiFastUnlockController(@Inject Context context) {
         this.mContext = context;
-        this.mPowerManager = (PowerManager) this.mContext.getSystemService("power");
+        this.mPowerManager = (PowerManager) context.getSystemService("power");
     }
 
     public boolean fastUnlock() {

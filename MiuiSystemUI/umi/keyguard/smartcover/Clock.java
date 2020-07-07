@@ -9,7 +9,6 @@ import android.os.UserHandle;
 import android.text.format.DateFormat;
 import android.util.AttributeSet;
 import android.widget.TextView;
-import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.systemui.Dependency;
 import com.android.systemui.plugins.R;
 import java.util.ArrayList;
@@ -83,16 +82,19 @@ public class Clock extends TextView {
     /* access modifiers changed from: package-private */
     public final void updateClock() {
         sCalendar.setTimeInMillis(System.currentTimeMillis());
-        boolean is24HourFormat = DateFormat.is24HourFormat(this.mContext, KeyguardUpdateMonitor.getCurrentUser());
+        boolean is24HourFormat = DateFormat.is24HourFormat(this.mContext, -2);
         if (this.mShowDate) {
             setText(DateFormat.format(this.mContext.getString(is24HourFormat ? R.string.lock_screen_date : R.string.lock_screen_date_12), sCalendar));
-        } else if (this.mShowHour) {
-            int i = sCalendar.get(11);
-            if (!is24HourFormat && i > 12) {
-                i -= 12;
+            return;
+        }
+        int i = 12;
+        if (this.mShowHour) {
+            int i2 = sCalendar.get(11);
+            if (!is24HourFormat && i2 > 12) {
+                i2 -= 12;
             }
-            if (!is24HourFormat && i == 0) {
-                i = 12;
+            if (is24HourFormat || i2 != 0) {
+                i = i2;
             }
             setText(String.valueOf(i));
         } else if (this.mShowMinute) {

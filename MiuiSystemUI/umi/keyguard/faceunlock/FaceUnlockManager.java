@@ -182,7 +182,6 @@ public class FaceUnlockManager {
     private MiuiKeyguardFaceUnlockView mFaceUnlockView;
     private final ArrayList<WeakReference<MiuiKeyguardFaceUnlockView>> mFaceViewList = new ArrayList<>();
     private long mScreenOnDelay;
-    private volatile float mScrollProgress;
     /* access modifiers changed from: private */
     public KeyguardUpdateMonitor mUpdateMonitor;
     private boolean mWakeupByNotification;
@@ -192,10 +191,11 @@ public class FaceUnlockManager {
     }
 
     public static FaceUnlockManager getInstance(int i) {
+        Class cls = FaceUnlockManager.class;
         if (sInstance == null) {
-            synchronized (FaceUnlockManager.class) {
+            synchronized (cls) {
                 if (sInstance == null) {
-                    sInstance = (FaceUnlockManager) Dependency.get(FaceUnlockManager.class);
+                    sInstance = (FaceUnlockManager) Dependency.get(cls);
                 }
             }
         }
@@ -261,7 +261,7 @@ public class FaceUnlockManager {
             KeyguardUpdateMonitor.sScreenTurnedOnTime = System.currentTimeMillis();
             this.mFaceAuthStarted = true;
             sFaceUnlockManagerImpl.runOnFaceUnlockWorkerThread(new Runnable(i) {
-                private final /* synthetic */ int f$1;
+                public final /* synthetic */ int f$1;
 
                 {
                     this.f$1 = r2;
@@ -274,6 +274,8 @@ public class FaceUnlockManager {
         }
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$startFaceUnlock$1 */
     public /* synthetic */ void lambda$startFaceUnlock$1$FaceUnlockManager(int i) {
         if (shouldStartFaceUnlock()) {
             sFaceUnlockManagerImpl.startFaceUnlock(this.mFaceUnlockCallback);
@@ -409,13 +411,10 @@ public class FaceUnlockManager {
 
     public boolean shouldStartFaceDetectForCamera(int i) {
         boolean isSupportLiftingCamera = MiuiFaceUnlockUtils.isSupportLiftingCamera(sContext);
-        if (i == 0 && !isSupportLiftingCamera) {
-            return true;
+        if (i != 0 || isSupportLiftingCamera) {
+            return (i == 1 && isSupportLiftingCamera) || i == 2;
         }
-        if ((i == 1 && isSupportLiftingCamera && this.mScrollProgress == 0.0f) || i == 2) {
-            return true;
-        }
-        return false;
+        return true;
     }
 
     public void regionChanged() {
@@ -437,7 +436,7 @@ public class FaceUnlockManager {
         Log.d("miui_face", "onKeyguardOccludedChanged occluded=" + z);
         if (z) {
             stopFaceUnlock();
-        } else if (this.mScrollProgress == 0.0f) {
+        } else {
             startFaceUnlock();
         }
     }
@@ -523,10 +522,6 @@ public class FaceUnlockManager {
 
     private void sendFaceUnlockUpdates(FaceUnlockCallback faceUnlockCallback) {
         faceUnlockCallback.onFaceEnableChange(shouldListenForFaceUnlock(), isStayScreenWhenFaceUnlockSuccess());
-    }
-
-    public void updateHorizontalMoveLeftProgress(float f) {
-        this.mScrollProgress = f;
     }
 
     public void registerFaceUnlockCallback(FaceUnlockCallback faceUnlockCallback) {

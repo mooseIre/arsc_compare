@@ -90,13 +90,15 @@ public class WaveView extends View {
         double d = 1.0d - (((double) this.mProgress) / 100.0d);
         int i = this.mWaveViewHeight;
         int i2 = this.mMinMargin;
-        this.mWaveY = ((int) (d * ((double) (i - (i2 * 2))))) + i2;
-        this.mBubbleMaxHeight = Math.max(1380, this.mWaveY);
+        int i3 = ((int) (d * ((double) (i - (i2 * 2))))) + i2;
+        this.mWaveY = i3;
+        this.mBubbleMaxHeight = Math.max(1380, i3);
     }
 
     private void initBubble() {
-        this.mBubblePaint = new Paint();
-        this.mBubblePaint.setColor(-1);
+        Paint paint = new Paint();
+        this.mBubblePaint = paint;
+        paint.setColor(-1);
     }
 
     /* access modifiers changed from: protected */
@@ -261,8 +263,9 @@ public class WaveView extends View {
             bubble.x = (this.mWaveViewWidth / 2) + 299;
             bubble.y = this.mWaveViewHeight;
             bubble.scale = (this.mRandom.nextFloat() * 0.4f) + 0.4f;
-            bubble.initAlpha = (this.mRandom.nextFloat() * 0.7f) + 0.3f;
-            bubble.alpha = bubble.initAlpha;
+            float nextFloat = (this.mRandom.nextFloat() * 0.7f) + 0.3f;
+            bubble.initAlpha = nextFloat;
+            bubble.alpha = nextFloat;
             bubble.angle = ((float) Math.random()) * 360.0f;
             bubble.sinRandom = (float) ((Math.random() * 2.0d) + 3.0d);
             this.mBubbles.add(bubble);
@@ -282,13 +285,15 @@ public class WaveView extends View {
                 int i2 = this.mWaveViewHeight;
                 float f = next.scale;
                 next.x = (int) (((float) next.x) + next.Vx + ((float) ((int) (((sin * ((double) ((i - 300) - i2))) / 150.0d) * ((double) f)))));
-                next.y = (int) (((float) i) + next.Vy + (((float) this.mWaterSpeed) * (f + 1.0f)));
-                next.scale = Math.min(f + (((float) (i2 - next.y)) / 1000.0f), 1.0f);
+                int i3 = (int) (((float) i) + next.Vy + (((float) this.mWaterSpeed) * (f + 1.0f)));
+                next.y = i3;
+                float min = Math.min(f + (((float) (i2 - i3)) / 1000.0f), 1.0f);
+                next.scale = min;
                 float f2 = next.Vx;
                 float f3 = this.mDamp;
                 next.Vx = f2 * f3;
                 next.Vy *= f3;
-                next.alpha = Math.min((((float) (next.y - this.mBubbleMaxHeight)) - 20.0f) / 200.0f, next.scale) * next.initAlpha;
+                next.alpha = Math.min((((float) (next.y - this.mBubbleMaxHeight)) - 20.0f) / 200.0f, min) * next.initAlpha;
                 this.mBubbles.set(indexOf, next);
             }
         }

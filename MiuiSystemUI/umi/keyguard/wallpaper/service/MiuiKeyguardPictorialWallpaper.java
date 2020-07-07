@@ -39,8 +39,9 @@ public class MiuiKeyguardPictorialWallpaper extends BaseKeyguardWallpaperService
 
     public void onCreate() {
         super.onCreate();
-        this.mWorker = new HandlerThread("MiuiKeyguardPictorialWallpaper");
-        this.mWorker.start();
+        HandlerThread handlerThread = new HandlerThread("MiuiKeyguardPictorialWallpaper");
+        this.mWorker = handlerThread;
+        handlerThread.start();
     }
 
     public WallpaperService.Engine onCreateEngine() {
@@ -55,7 +56,7 @@ public class MiuiKeyguardPictorialWallpaper extends BaseKeyguardWallpaperService
     private class PictorialEngine extends BaseKeyguardWallpaperService.BaseEngine implements GLWallpaperRenderer.SurfaceProxy, StatusBarStateController.StateListener {
         private ValueAnimator mAnimator;
         private BatteryController mBatteryController;
-        private StatusBarStateController mController = ((StatusBarStateController) Dependency.get(StatusBarStateController.class));
+        private StatusBarStateController mController;
         private ContentObserver mDarkModeObserver = new ContentObserver(MiuiKeyguardPictorialWallpaper.this.mWorker.getThreadHandler()) {
             public void onChange(boolean z) {
                 boolean access$200 = PictorialEngine.this.mDarkModeUpdated;
@@ -107,7 +108,8 @@ public class MiuiKeyguardPictorialWallpaper extends BaseKeyguardWallpaperService
 
         public PictorialEngine() {
             super(MiuiKeyguardWallpaperController.KeyguardWallpaperType.PICTORIAL);
-            StatusBarStateController statusBarStateController = this.mController;
+            StatusBarStateController statusBarStateController = (StatusBarStateController) Dependency.get(StatusBarStateController.class);
+            this.mController = statusBarStateController;
             if (statusBarStateController != null) {
                 statusBarStateController.addCallback(this);
             }
@@ -148,6 +150,8 @@ public class MiuiKeyguardPictorialWallpaper extends BaseKeyguardWallpaperService
             });
         }
 
+        /* access modifiers changed from: private */
+        /* renamed from: lambda$onDestroy$0 */
         public /* synthetic */ void lambda$onDestroy$0$MiuiKeyguardPictorialWallpaper$PictorialEngine() {
             this.mRenderer.finish();
             this.mRenderer = null;
@@ -170,7 +174,7 @@ public class MiuiKeyguardPictorialWallpaper extends BaseKeyguardWallpaperService
                     if (this.mWakingUp) {
                         long j = (!this.mKeyguardShowing || !this.mNeedTransition) ? 0 : 300;
                         MiuiKeyguardPictorialWallpaper.this.mWorker.getThreadHandler().post(new Runnable(j) {
-                            private final /* synthetic */ long f$1;
+                            public final /* synthetic */ long f$1;
 
                             {
                                 this.f$1 = r2;
@@ -181,7 +185,7 @@ public class MiuiKeyguardPictorialWallpaper extends BaseKeyguardWallpaperService
                             }
                         });
                         MiuiKeyguardPictorialWallpaper.this.mWorker.getThreadHandler().postDelayed(new Runnable(j) {
-                            private final /* synthetic */ long f$1;
+                            public final /* synthetic */ long f$1;
 
                             {
                                 this.f$1 = r2;
@@ -198,11 +202,15 @@ public class MiuiKeyguardPictorialWallpaper extends BaseKeyguardWallpaperService
             }
         }
 
+        /* access modifiers changed from: private */
+        /* renamed from: lambda$onKeyguardWallpaperUpdated$1 */
         public /* synthetic */ void lambda$onKeyguardWallpaperUpdated$1$MiuiKeyguardPictorialWallpaper$PictorialEngine(long j) {
             this.mRenderer.updateAmbientMode(true, j);
             this.mKeyguardWallpaperUpdated = true;
         }
 
+        /* access modifiers changed from: private */
+        /* renamed from: lambda$onKeyguardWallpaperUpdated$2 */
         public /* synthetic */ void lambda$onKeyguardWallpaperUpdated$2$MiuiKeyguardPictorialWallpaper$PictorialEngine(long j) {
             this.mRenderer.updateAmbientMode(false, j);
         }
@@ -222,14 +230,16 @@ public class MiuiKeyguardPictorialWallpaper extends BaseKeyguardWallpaperService
             }
         }
 
+        /* access modifiers changed from: private */
+        /* renamed from: lambda$onOffsetsChanged$3 */
         public /* synthetic */ void lambda$onOffsetsChanged$3$MiuiKeyguardPictorialWallpaper$PictorialEngine(float f, float f2) {
             this.mRenderer.updateOffsets(f, f2);
         }
 
         public void onOffsetsChanged(float f, float f2, float f3, float f4, int i, int i2) {
             MiuiKeyguardPictorialWallpaper.this.mWorker.getThreadHandler().post(new Runnable(f, f2) {
-                private final /* synthetic */ float f$1;
-                private final /* synthetic */ float f$2;
+                public final /* synthetic */ float f$1;
+                public final /* synthetic */ float f$2;
 
                 {
                     this.f$1 = r2;
@@ -297,18 +307,17 @@ public class MiuiKeyguardPictorialWallpaper extends BaseKeyguardWallpaperService
         public void scheduleUpdateSurface() {
             float f;
             float f2;
-            float f3;
-            float f4 = this.mWallpaperAnimValue;
-            if (f4 > 0.0f) {
-                f3 = (float) (1.0d - ((double) Math.min(1.0f, f4 / 0.6f)));
-                f = (float) (1.0d - Math.pow((double) this.mWallpaperAnimValue, 2.0d));
-                f2 = (float) Math.pow((double) (1.0f - Math.abs(Math.max(0.0f, Math.abs(this.mWallpaperAnimValue) - 0.6f) / 0.4f)), 2.0d);
+            float f3 = this.mWallpaperAnimValue;
+            float f4 = 1.0f;
+            if (f3 > 0.0f) {
+                f2 = (float) (1.0d - ((double) Math.min(1.0f, f3 / 0.6f)));
+                f = (float) Math.pow((double) (1.0f - Math.abs(Math.max(0.0f, Math.abs(this.mWallpaperAnimValue) - 0.6f) / 0.4f)), 2.0d);
+                f4 = (float) (1.0d - Math.pow((double) this.mWallpaperAnimValue, 2.0d));
             } else {
-                f2 = (float) (1.0d - Math.pow((double) (-f4), 3.0d));
-                f3 = 1.0f;
-                f = 1.0f;
+                f = (float) (1.0d - Math.pow((double) (-f3), 3.0d));
+                f2 = 1.0f;
             }
-            rendererWallpaper(f, f3, f2);
+            rendererWallpaper(f4, f2, f);
         }
 
         /* access modifiers changed from: protected */
@@ -340,8 +349,9 @@ public class MiuiKeyguardPictorialWallpaper extends BaseKeyguardWallpaperService
                 updateSurfaceAttrs(0.0f);
                 return;
             }
-            this.mAnimator = ValueAnimator.ofFloat(new float[]{this.mWallpaperAnimValue, 1.0f});
-            this.mAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{this.mWallpaperAnimValue, 1.0f});
+            this.mAnimator = ofFloat;
+            ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 public void onAnimationUpdate(ValueAnimator valueAnimator) {
                     PictorialEngine.this.mWallpaperAnimValue = ((Float) valueAnimator.getAnimatedValue()).floatValue();
                     PictorialEngine.this.scheduleUpdateSurface();
@@ -361,7 +371,7 @@ public class MiuiKeyguardPictorialWallpaper extends BaseKeyguardWallpaperService
             this.mBlurRatio = f3;
             updateSurfaceAttrs(f);
             MiuiKeyguardPictorialWallpaper.this.mWorker.getThreadHandler().post(new Runnable(f2) {
-                private final /* synthetic */ float f$1;
+                public final /* synthetic */ float f$1;
 
                 {
                     this.f$1 = r2;
@@ -373,6 +383,8 @@ public class MiuiKeyguardPictorialWallpaper extends BaseKeyguardWallpaperService
             });
         }
 
+        /* access modifiers changed from: private */
+        /* renamed from: lambda$rendererWallpaper$4 */
         public /* synthetic */ void lambda$rendererWallpaper$4$MiuiKeyguardPictorialWallpaper$PictorialEngine(float f) {
             preRender();
             this.mRenderer.updateWallpaperAlpha(f);
@@ -382,19 +394,22 @@ public class MiuiKeyguardPictorialWallpaper extends BaseKeyguardWallpaperService
 
         /* access modifiers changed from: private */
         public void updateSurfaceAttrs(float f) {
+            Boolean bool = Boolean.TRUE;
             WindowManager.LayoutParams layoutParams = this.mLayoutParams;
             if (layoutParams != null && BaseKeyguardWallpaperService.ENGINE_UPDATE_SURFACE != null) {
                 boolean z = (layoutParams.alpha == f && layoutParams.blurRatio == this.mBlurRatio && layoutParams.windowAnimations == 0) ? false : true;
                 updateBlurCurrent(this.mBlurRatio);
                 this.mWindowAlpha = f;
-                float f2 = this.mIsDozing ? 0.0f : this.mWindowAlpha;
-                boolean z2 = this.mWindowAlpha != f2;
+                if (this.mIsDozing) {
+                    f = 0.0f;
+                }
+                boolean z2 = this.mWindowAlpha != f;
                 WindowManager.LayoutParams layoutParams2 = this.mLayoutParams;
-                layoutParams2.alpha = f2;
+                layoutParams2.alpha = f;
                 layoutParams2.windowAnimations = 0;
                 if (z || z2) {
                     try {
-                        BaseKeyguardWallpaperService.ENGINE_UPDATE_SURFACE.invoke(this, new Object[]{true, false, true});
+                        BaseKeyguardWallpaperService.ENGINE_UPDATE_SURFACE.invoke(this, new Object[]{bool, Boolean.FALSE, bool});
                     } catch (Exception e) {
                         Log.e("MiuiKeyguardPictorialWallpaper", "error in updateSurfaceAttrs", e);
                     }
@@ -411,8 +426,8 @@ public class MiuiKeyguardPictorialWallpaper extends BaseKeyguardWallpaperService
         public void animateWallpaper(boolean z, boolean z2) {
             long j = z2 ? 800 : 0;
             MiuiKeyguardPictorialWallpaper.this.mWorker.getThreadHandler().post(new Runnable(z, j) {
-                private final /* synthetic */ boolean f$1;
-                private final /* synthetic */ long f$2;
+                public final /* synthetic */ boolean f$1;
+                public final /* synthetic */ long f$2;
 
                 {
                     this.f$1 = r2;
@@ -428,6 +443,8 @@ public class MiuiKeyguardPictorialWallpaper extends BaseKeyguardWallpaperService
             }
         }
 
+        /* access modifiers changed from: private */
+        /* renamed from: lambda$animateWallpaper$5 */
         public /* synthetic */ void lambda$animateWallpaper$5$MiuiKeyguardPictorialWallpaper$PictorialEngine(boolean z, long j) {
             this.mRenderer.updateAmbientMode(z, j);
             this.mRenderer.updateWallpaperAlpha(1.0f);
@@ -436,7 +453,7 @@ public class MiuiKeyguardPictorialWallpaper extends BaseKeyguardWallpaperService
         public void onSurfaceCreated(SurfaceHolder surfaceHolder) {
             super.onSurfaceCreated(surfaceHolder);
             MiuiKeyguardPictorialWallpaper.this.mWorker.getThreadHandler().post(new Runnable(surfaceHolder) {
-                private final /* synthetic */ SurfaceHolder f$1;
+                public final /* synthetic */ SurfaceHolder f$1;
 
                 {
                     this.f$1 = r2;
@@ -448,6 +465,8 @@ public class MiuiKeyguardPictorialWallpaper extends BaseKeyguardWallpaperService
             });
         }
 
+        /* access modifiers changed from: private */
+        /* renamed from: lambda$onSurfaceCreated$6 */
         public /* synthetic */ void lambda$onSurfaceCreated$6$MiuiKeyguardPictorialWallpaper$PictorialEngine(SurfaceHolder surfaceHolder) {
             this.mEglHelper.init(surfaceHolder);
             this.mRenderer.onSurfaceCreated();
@@ -456,8 +475,8 @@ public class MiuiKeyguardPictorialWallpaper extends BaseKeyguardWallpaperService
         public void onSurfaceChanged(SurfaceHolder surfaceHolder, int i, int i2, int i3) {
             super.onSurfaceChanged(surfaceHolder, i, i2, i3);
             MiuiKeyguardPictorialWallpaper.this.mWorker.getThreadHandler().post(new Runnable(i2, i3) {
-                private final /* synthetic */ int f$1;
-                private final /* synthetic */ int f$2;
+                public final /* synthetic */ int f$1;
+                public final /* synthetic */ int f$2;
 
                 {
                     this.f$1 = r2;
@@ -470,6 +489,8 @@ public class MiuiKeyguardPictorialWallpaper extends BaseKeyguardWallpaperService
             });
         }
 
+        /* access modifiers changed from: private */
+        /* renamed from: lambda$onSurfaceChanged$7 */
         public /* synthetic */ void lambda$onSurfaceChanged$7$MiuiKeyguardPictorialWallpaper$PictorialEngine(int i, int i2) {
             this.mRenderer.onSurfaceChanged(i, i2);
             this.mNeedRedraw = true;
@@ -484,6 +505,8 @@ public class MiuiKeyguardPictorialWallpaper extends BaseKeyguardWallpaperService
             });
         }
 
+        /* access modifiers changed from: private */
+        /* renamed from: lambda$onSurfaceRedrawNeeded$8 */
         public /* synthetic */ void lambda$onSurfaceRedrawNeeded$8$MiuiKeyguardPictorialWallpaper$PictorialEngine() {
             if (this.mNeedRedraw) {
                 preRender();

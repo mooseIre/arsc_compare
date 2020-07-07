@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FingerprintHelper {
-    private static List<Object> sFingerprintIdentifyCallbackList = new ArrayList();
     private Context mContext;
     private FingerprintManager mFingerprintMgr = null;
 
@@ -41,5 +40,9 @@ public class FingerprintHelper {
             }
         }
         return arrayList;
+    }
+
+    static {
+        new ArrayList();
     }
 }

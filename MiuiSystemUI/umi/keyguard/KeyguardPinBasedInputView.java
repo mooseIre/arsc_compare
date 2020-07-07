@@ -138,18 +138,19 @@ public abstract class KeyguardPinBasedInputView extends KeyguardAbsKeyInputView 
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mPasswordEntry = (PasswordTextView) findViewById(getPasswordTextViewId());
-        this.mPasswordEntry.setOnKeyListener(this);
+        PasswordTextView passwordTextView = (PasswordTextView) findViewById(getPasswordTextViewId());
+        this.mPasswordEntry = passwordTextView;
+        passwordTextView.setOnKeyListener(this);
         this.mPasswordEntry.setSelected(true);
         this.mPasswordEntry.setUserActivityListener(new PasswordTextView.UserActivityListener() {
             public void onUserActivity() {
                 KeyguardPinBasedInputView.this.onUserInput();
             }
         });
-        this.mOkButton = findViewById(R.id.key_enter);
-        View view = this.mOkButton;
-        if (view != null) {
-            view.setOnTouchListener(this);
+        View findViewById = findViewById(R.id.key_enter);
+        this.mOkButton = findViewById;
+        if (findViewById != null) {
+            findViewById.setOnTouchListener(this);
             this.mOkButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View view) {
                     if (KeyguardPinBasedInputView.this.mPasswordEntry.isEnabled()) {

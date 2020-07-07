@@ -28,19 +28,18 @@ public class KeyguardSecurityViewFlipper extends ViewAnimator implements Keyguar
     public boolean onTouchEvent(MotionEvent motionEvent) {
         boolean onTouchEvent = super.onTouchEvent(motionEvent);
         this.mTempRect.set(0, 0, 0, 0);
-        boolean z = onTouchEvent;
         for (int i = 0; i < getChildCount(); i++) {
             View childAt = getChildAt(i);
             if (childAt.getVisibility() == 0) {
                 offsetRectIntoDescendantCoords(childAt, this.mTempRect);
                 Rect rect = this.mTempRect;
                 motionEvent.offsetLocation((float) rect.left, (float) rect.top);
-                z = childAt.dispatchTouchEvent(motionEvent) || z;
+                onTouchEvent = childAt.dispatchTouchEvent(motionEvent) || onTouchEvent;
                 Rect rect2 = this.mTempRect;
                 motionEvent.offsetLocation((float) (-rect2.left), (float) (-rect2.top));
             }
         }
-        return z;
+        return onTouchEvent;
     }
 
     /* access modifiers changed from: package-private */

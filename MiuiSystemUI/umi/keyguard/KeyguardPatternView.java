@@ -101,8 +101,9 @@ public class KeyguardPatternView extends MiuiKeyguardPasswordView implements Key
             lockPatternUtils = new LockPatternUtils(this.mContext);
         }
         this.mLockPatternUtils = lockPatternUtils;
-        this.mLockPatternView = (MiuiLockPatternView) findViewById(R.id.lockPatternView);
-        this.mLockPatternView.setSaveEnabled(false);
+        MiuiLockPatternView miuiLockPatternView = (MiuiLockPatternView) findViewById(R.id.lockPatternView);
+        this.mLockPatternView = miuiLockPatternView;
+        miuiLockPatternView.setSaveEnabled(false);
         this.mLockPatternView.setOnPatternListener(new UnlockPatternListener());
         this.mLockPatternView.setTactileFeedbackEnabled(this.mLockPatternUtils.isTactileFeedbackEnabled());
         setPositionForFod();
@@ -226,11 +227,7 @@ public class KeyguardPatternView extends MiuiKeyguardPasswordView implements Key
                         KeyguardPatternView.this.handleAttemptLockout(KeyguardPatternView.this.mLockPatternUtils.setLockoutAttemptDeadline(i, i2));
                     }
                 }
-                if (MiuiKeyguardUtils.SUPPORT_LINEAR_MOTOR_VIBRATE) {
-                    KeyguardPatternView.this.mHapticFeedbackUtil.performExtHapticFeedback(76);
-                } else {
-                    KeyguardPatternView.this.mVibrator.vibrate(150);
-                }
+                KeyguardPatternView.this.mVibrator.vibrate(150);
                 if (i2 == 0) {
                     KeyguardPatternView.this.mLockPatternView.postDelayed(KeyguardPatternView.this.mCancelPatternRunnable, 1500);
                 }

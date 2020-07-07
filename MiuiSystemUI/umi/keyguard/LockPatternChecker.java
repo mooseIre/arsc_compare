@@ -2,10 +2,12 @@ package com.android.keyguard;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.text.TextUtils;
 import android.util.Log;
 import android.util.Slog;
 import com.android.internal.widget.LockPatternUtils;
 import com.android.internal.widget.LockPatternView;
+import com.android.internal.widget.LockscreenCredential;
 import com.android.keyguard.analytics.AnalyticsHelper;
 import com.android.systemui.util.QcomBoostFramework;
 import java.util.List;
@@ -17,6 +19,7 @@ public final class LockPatternChecker {
     private static final QcomBoostFramework sQcomBoostFramework = new QcomBoostFramework();
 
     public static AsyncTask<?, ?, ?> checkPatternForUsers(LockPatternUtils lockPatternUtils, List<LockPatternView.Cell> list, int i, int i2, Context context, OnCheckForUsersCallback onCheckForUsersCallback, OnCheckForUsersCallback onCheckForUsersCallback2) {
+        BoostFrameworkHelper.setBoost(3);
         sQcomBoostFramework.perfHint(4241, (String) null);
         final Context context2 = context;
         final int i3 = i;
@@ -30,87 +33,83 @@ public final class LockPatternChecker {
             private int mUserIdMatched = -10000;
 
             /* access modifiers changed from: protected */
-            /* JADX WARNING: Removed duplicated region for block: B:17:0x0057  */
-            /* JADX WARNING: Removed duplicated region for block: B:19:0x005c A[SYNTHETIC, Splitter:B:19:0x005c] */
+            /* JADX WARNING: Removed duplicated region for block: B:16:0x0055 A[RETURN] */
+            /* JADX WARNING: Removed duplicated region for block: B:17:0x0056 A[SYNTHETIC, Splitter:B:17:0x0056] */
             /* Code decompiled incorrectly, please refer to instructions dump. */
-            public java.lang.Boolean doInBackground(java.lang.Void... r6) {
+            public java.lang.Boolean doInBackground(java.lang.Void... r7) {
                 /*
-                    r5 = this;
-                    java.lang.String r6 = "miui_keyguard"
-                    java.lang.String r0 = "keyguard_check_password_failed"
-                    android.content.Context r1 = r4
-                    com.android.keyguard.analytics.AnalyticsHelper r1 = com.android.keyguard.analytics.AnalyticsHelper.getInstance(r1)
-                    java.lang.String r2 = "pw_verify_time"
-                    r1.trackPageStart(r2)
-                    int r1 = r5
-                    r5.mUserIdMatched = r1
-                    r1 = 1
-                    java.util.List r2 = r6     // Catch:{ RequestThrottledException -> 0x0049, Exception -> 0x0035 }
-                    if (r2 == 0) goto L_0x002f
-                    java.util.List r2 = r6     // Catch:{ RequestThrottledException -> 0x0049, Exception -> 0x0035 }
-                    boolean r2 = r2.isEmpty()     // Catch:{ RequestThrottledException -> 0x0049, Exception -> 0x0035 }
-                    if (r2 != 0) goto L_0x002f
-                    int r2 = r5     // Catch:{ RequestThrottledException -> 0x0049, Exception -> 0x0035 }
-                    com.android.keyguard.OnCheckForUsersCallback r3 = r7     // Catch:{ RequestThrottledException -> 0x0049, Exception -> 0x0035 }
-                    boolean r2 = r5.checkPattern(r2, r3)     // Catch:{ RequestThrottledException -> 0x0049, Exception -> 0x0035 }
-                    if (r2 == 0) goto L_0x0050
-                    java.lang.Boolean r5 = java.lang.Boolean.valueOf(r1)     // Catch:{ RequestThrottledException -> 0x0049, Exception -> 0x0035 }
-                    return r5
-                L_0x002f:
-                    java.lang.String r2 = "pattern is null when check pattern for currentUserId"
-                    android.util.Log.e(r6, r2)     // Catch:{ RequestThrottledException -> 0x0049, Exception -> 0x0035 }
-                    goto L_0x0050
-                L_0x0035:
-                    r2 = move-exception
-                    java.lang.String r3 = com.android.keyguard.LockPatternChecker.TAG
-                    java.lang.String r4 = "checkPatternForUsers failed"
-                    android.util.Slog.e(r3, r4, r2)
-                    android.content.Context r2 = r4
-                    com.android.keyguard.analytics.AnalyticsHelper r2 = com.android.keyguard.analytics.AnalyticsHelper.getInstance(r2)
-                    r2.record(r0)
-                    goto L_0x0050
-                L_0x0049:
-                    r2 = move-exception
-                    int r2 = r2.getTimeoutMs()
-                    r5.mThrottleTimeout = r2
-                L_0x0050:
-                    int r2 = r8
+                    r6 = this;
+                    java.lang.Boolean r7 = java.lang.Boolean.TRUE
+                    java.lang.Boolean r0 = java.lang.Boolean.FALSE
+                    java.lang.String r1 = "miui_keyguard"
+                    java.lang.String r2 = "keyguard_check_password_failed"
+                    android.content.Context r3 = r4
+                    com.android.keyguard.analytics.AnalyticsHelper r3 = com.android.keyguard.analytics.AnalyticsHelper.getInstance(r3)
+                    java.lang.String r4 = "pw_verify_time"
+                    r3.trackPageStart(r4)
                     int r3 = r5
-                    r4 = 0
-                    if (r2 != r3) goto L_0x005c
-                    java.lang.Boolean r5 = java.lang.Boolean.valueOf(r4)
-                    return r5
-                L_0x005c:
-                    java.util.List r2 = r6     // Catch:{ RequestThrottledException -> 0x009a, Exception -> 0x0087 }
-                    if (r2 == 0) goto L_0x0081
-                    java.util.List r2 = r6     // Catch:{ RequestThrottledException -> 0x009a, Exception -> 0x0087 }
-                    boolean r2 = r2.isEmpty()     // Catch:{ RequestThrottledException -> 0x009a, Exception -> 0x0087 }
-                    if (r2 != 0) goto L_0x0081
-                    com.android.internal.widget.LockPatternUtils r6 = r9     // Catch:{ RequestThrottledException -> 0x009a, Exception -> 0x0087 }
-                    int r2 = r8     // Catch:{ RequestThrottledException -> 0x009a, Exception -> 0x0087 }
-                    boolean r6 = com.android.keyguard.LockPatternChecker.isPatternPasswordEnable(r6, r2)     // Catch:{ RequestThrottledException -> 0x009a, Exception -> 0x0087 }
-                    if (r6 == 0) goto L_0x009a
-                    int r6 = r8     // Catch:{ RequestThrottledException -> 0x009a, Exception -> 0x0087 }
-                    com.android.keyguard.OnCheckForUsersCallback r2 = r10     // Catch:{ RequestThrottledException -> 0x009a, Exception -> 0x0087 }
-                    boolean r6 = r5.checkPattern(r6, r2)     // Catch:{ RequestThrottledException -> 0x009a, Exception -> 0x0087 }
-                    if (r6 == 0) goto L_0x009a
-                    java.lang.Boolean r5 = java.lang.Boolean.valueOf(r1)     // Catch:{ RequestThrottledException -> 0x009a, Exception -> 0x0087 }
-                    return r5
-                L_0x0081:
-                    java.lang.String r1 = "pattern is null when check pattern foe other user"
-                    android.util.Log.e(r6, r1)     // Catch:{ RequestThrottledException -> 0x009a, Exception -> 0x0087 }
-                    goto L_0x009a
-                L_0x0087:
-                    r6 = move-exception
+                    r6.mUserIdMatched = r3
+                    java.util.List r3 = r6     // Catch:{ RequestThrottledException -> 0x0048, Exception -> 0x0034 }
+                    if (r3 == 0) goto L_0x002e
+                    java.util.List r3 = r6     // Catch:{ RequestThrottledException -> 0x0048, Exception -> 0x0034 }
+                    boolean r3 = r3.isEmpty()     // Catch:{ RequestThrottledException -> 0x0048, Exception -> 0x0034 }
+                    if (r3 != 0) goto L_0x002e
+                    int r3 = r5     // Catch:{ RequestThrottledException -> 0x0048, Exception -> 0x0034 }
+                    com.android.keyguard.OnCheckForUsersCallback r4 = r7     // Catch:{ RequestThrottledException -> 0x0048, Exception -> 0x0034 }
+                    boolean r3 = r6.checkPattern(r3, r4)     // Catch:{ RequestThrottledException -> 0x0048, Exception -> 0x0034 }
+                    if (r3 == 0) goto L_0x004f
+                    return r7
+                L_0x002e:
+                    java.lang.String r3 = "pattern is null when check pattern for currentUserId"
+                    android.util.Log.e(r1, r3)     // Catch:{ RequestThrottledException -> 0x0048, Exception -> 0x0034 }
+                    goto L_0x004f
+                L_0x0034:
+                    r3 = move-exception
+                    java.lang.String r4 = com.android.keyguard.LockPatternChecker.TAG
+                    java.lang.String r5 = "checkPatternForUsers failed"
+                    android.util.Slog.e(r4, r5, r3)
+                    android.content.Context r3 = r4
+                    com.android.keyguard.analytics.AnalyticsHelper r3 = com.android.keyguard.analytics.AnalyticsHelper.getInstance(r3)
+                    r3.record(r2)
+                    goto L_0x004f
+                L_0x0048:
+                    r3 = move-exception
+                    int r3 = r3.getTimeoutMs()
+                    r6.mThrottleTimeout = r3
+                L_0x004f:
+                    int r3 = r8
+                    int r4 = r5
+                    if (r3 != r4) goto L_0x0056
+                    return r0
+                L_0x0056:
+                    java.util.List r3 = r6     // Catch:{ RequestThrottledException -> 0x0090, Exception -> 0x007d }
+                    if (r3 == 0) goto L_0x0077
+                    java.util.List r3 = r6     // Catch:{ RequestThrottledException -> 0x0090, Exception -> 0x007d }
+                    boolean r3 = r3.isEmpty()     // Catch:{ RequestThrottledException -> 0x0090, Exception -> 0x007d }
+                    if (r3 != 0) goto L_0x0077
+                    com.android.internal.widget.LockPatternUtils r1 = r9     // Catch:{ RequestThrottledException -> 0x0090, Exception -> 0x007d }
+                    int r3 = r8     // Catch:{ RequestThrottledException -> 0x0090, Exception -> 0x007d }
+                    boolean r1 = com.android.keyguard.LockPatternChecker.isPatternPasswordEnable(r1, r3)     // Catch:{ RequestThrottledException -> 0x0090, Exception -> 0x007d }
+                    if (r1 == 0) goto L_0x0090
+                    int r1 = r8     // Catch:{ RequestThrottledException -> 0x0090, Exception -> 0x007d }
+                    com.android.keyguard.OnCheckForUsersCallback r3 = r10     // Catch:{ RequestThrottledException -> 0x0090, Exception -> 0x007d }
+                    boolean r6 = r6.checkPattern(r1, r3)     // Catch:{ RequestThrottledException -> 0x0090, Exception -> 0x007d }
+                    if (r6 == 0) goto L_0x0090
+                    return r7
+                L_0x0077:
+                    java.lang.String r7 = "pattern is null when check pattern foe other user"
+                    android.util.Log.e(r1, r7)     // Catch:{ RequestThrottledException -> 0x0090, Exception -> 0x007d }
+                    goto L_0x0090
+                L_0x007d:
+                    r7 = move-exception
                     java.lang.String r1 = com.android.keyguard.LockPatternChecker.TAG
-                    java.lang.String r2 = "checkPatternForUsers other users failed"
-                    android.util.Slog.e(r1, r2, r6)
-                    android.content.Context r5 = r4
-                    com.android.keyguard.analytics.AnalyticsHelper r5 = com.android.keyguard.analytics.AnalyticsHelper.getInstance(r5)
-                    r5.record(r0)
-                L_0x009a:
-                    java.lang.Boolean r5 = java.lang.Boolean.valueOf(r4)
-                    return r5
+                    java.lang.String r3 = "checkPatternForUsers other users failed"
+                    android.util.Slog.e(r1, r3, r7)
+                    android.content.Context r6 = r4
+                    com.android.keyguard.analytics.AnalyticsHelper r6 = com.android.keyguard.analytics.AnalyticsHelper.getInstance(r6)
+                    r6.record(r2)
+                L_0x0090:
+                    return r0
                 */
                 throw new UnsupportedOperationException("Method not decompiled: com.android.keyguard.LockPatternChecker.AnonymousClass1.doInBackground(java.lang.Void[]):java.lang.Boolean");
             }
@@ -122,9 +121,9 @@ public final class LockPatternChecker {
 
             private boolean checkPattern(int i, OnCheckForUsersCallback onCheckForUsersCallback) throws LockPatternUtils.RequestThrottledException {
                 LockPatternUtils lockPatternUtils = lockPatternUtils2;
-                List list = list2;
+                LockscreenCredential createPattern = LockscreenCredential.createPattern(list2);
                 Objects.requireNonNull(onCheckForUsersCallback);
-                if (!lockPatternUtils.checkPattern(list, i, new LockPatternUtils.CheckCredentialProgressCallback() {
+                if (!lockPatternUtils.checkCredential(createPattern, i, new LockPatternUtils.CheckCredentialProgressCallback() {
                     public final void onEarlyMatched() {
                         OnCheckForUsersCallback.this.onEarlyMatched();
                     }
@@ -140,6 +139,7 @@ public final class LockPatternChecker {
     }
 
     public static AsyncTask<?, ?, ?> checkPasswordForUsers(LockPatternUtils lockPatternUtils, String str, int i, int i2, Context context, OnCheckForUsersCallback onCheckForUsersCallback, OnCheckForUsersCallback onCheckForUsersCallback2) {
+        BoostFrameworkHelper.setBoost(3);
         sQcomBoostFramework.perfHint(4241, (String) null);
         final Context context2 = context;
         final int i3 = i;
@@ -154,12 +154,14 @@ public final class LockPatternChecker {
 
             /* access modifiers changed from: protected */
             public Boolean doInBackground(Void... voidArr) {
+                Boolean bool = Boolean.TRUE;
+                Boolean bool2 = Boolean.FALSE;
                 AnalyticsHelper.getInstance(context2).trackPageStart("pw_verify_time");
                 int i = i3;
                 this.mUserIdMatched = i;
                 try {
                     if (checkPassword(i, onCheckForUsersCallback3)) {
-                        return true;
+                        return bool;
                     }
                 } catch (LockPatternUtils.RequestThrottledException e) {
                     this.mThrottleTimeout = e.getTimeoutMs();
@@ -169,18 +171,18 @@ public final class LockPatternChecker {
                 }
                 int i2 = i4;
                 if (i2 == i3) {
-                    return false;
+                    return bool2;
                 }
                 try {
-                    if (LockPatternChecker.isPasswordEnable(lockPatternUtils2, i2) && checkPassword(i4, onCheckForUsersCallback4)) {
-                        return true;
+                    if (!LockPatternChecker.isPasswordEnable(lockPatternUtils2, i2) || !checkPassword(i4, onCheckForUsersCallback4)) {
+                        return bool2;
                     }
+                    return bool;
                 } catch (LockPatternUtils.RequestThrottledException unused) {
                 } catch (Exception e3) {
                     Slog.e(LockPatternChecker.TAG, "checkPasswordForUsers other users failed", e3);
                     AnalyticsHelper.getInstance(context2).record("keyguard_check_password_failed");
                 }
-                return false;
             }
 
             /* access modifiers changed from: protected */
@@ -190,9 +192,9 @@ public final class LockPatternChecker {
 
             private boolean checkPassword(int i, OnCheckForUsersCallback onCheckForUsersCallback) throws LockPatternUtils.RequestThrottledException {
                 LockPatternUtils lockPatternUtils = lockPatternUtils2;
-                String str = str2;
+                LockscreenCredential access$300 = LockPatternChecker.getCredential(lockPatternUtils, str2, i);
                 Objects.requireNonNull(onCheckForUsersCallback);
-                if (!lockPatternUtils.checkPassword(str, i, new LockPatternUtils.CheckCredentialProgressCallback() {
+                if (!lockPatternUtils.checkCredential(access$300, i, new LockPatternUtils.CheckCredentialProgressCallback() {
                     public final void onEarlyMatched() {
                         OnCheckForUsersCallback.this.onEarlyMatched();
                     }
@@ -230,5 +232,19 @@ public final class LockPatternChecker {
         sb.append(z ? "   enable" : "   disable");
         Log.d(str, sb.toString());
         return z;
+    }
+
+    /* access modifiers changed from: private */
+    public static LockscreenCredential getCredential(LockPatternUtils lockPatternUtils, String str, int i) {
+        if (TextUtils.isEmpty(str)) {
+            return LockscreenCredential.createNone();
+        }
+        if (!lockPatternUtils.isLockPasswordEnabled(i)) {
+            return LockscreenCredential.createPassword(str);
+        }
+        if (LockPatternUtils.isQualityAlphabeticPassword(lockPatternUtils.getKeyguardStoredPasswordQuality(i))) {
+            return LockscreenCredential.createPassword(str);
+        }
+        return LockscreenCredential.createPin(str);
     }
 }

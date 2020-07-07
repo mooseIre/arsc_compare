@@ -104,8 +104,8 @@ class MiuiGxzwTouchHelper {
         Rect region = this.mMiuiGxzwIconView.getRegion();
         float width = ((float) region.width()) / 2.0f;
         float height = ((float) region.height()) / 2.0f;
-        int pointerCount = motionEvent.getPointerCount();
         float f = Float.MAX_VALUE;
+        int pointerCount = motionEvent.getPointerCount();
         int i = 0;
         for (int i2 = 0; i2 < pointerCount; i2++) {
             float x = motionEvent.getX(i2) - width;

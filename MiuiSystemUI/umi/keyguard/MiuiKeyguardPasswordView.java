@@ -109,14 +109,17 @@ public abstract class MiuiKeyguardPasswordView extends LinearLayout implements E
     public void onFinishInflate() {
         super.onFinishInflate();
         this.mEmergencyCarrierArea = (EmergencyCarrierArea) findViewById(R.id.keyguard_selector_fade_container);
-        this.mEmergencyButton = (EmergencyButton) findViewById(R.id.emergency_call_button);
-        this.mEmergencyButton.setCallback(this);
-        this.mBackButton = (BackButton) findViewById(R.id.back_button);
-        this.mBackButton.setCallback(this);
+        EmergencyButton emergencyButton = (EmergencyButton) findViewById(R.id.emergency_call_button);
+        this.mEmergencyButton = emergencyButton;
+        emergencyButton.setCallback(this);
+        BackButton backButton = (BackButton) findViewById(R.id.back_button);
+        this.mBackButton = backButton;
+        backButton.setCallback(this);
         this.mDeleteButton = (TextView) findViewById(R.id.delete_button);
         this.mKeyguardBouncerMessageView = (KeyguardBouncerMessageView) findViewById(R.id.keyguard_security_bouncer_message);
-        this.mFaceUnlockView = (MiuiKeyguardFaceUnlockView) findViewById(R.id.miui_keyguard_face_unlock_view);
-        this.mFaceUnlockView.setKeyguardFaceUnlockView(false);
+        MiuiKeyguardFaceUnlockView miuiKeyguardFaceUnlockView = (MiuiKeyguardFaceUnlockView) findViewById(R.id.miui_keyguard_face_unlock_view);
+        this.mFaceUnlockView = miuiKeyguardFaceUnlockView;
+        miuiKeyguardFaceUnlockView.setKeyguardFaceUnlockView(false);
     }
 
     /* access modifiers changed from: protected */
@@ -219,8 +222,9 @@ public abstract class MiuiKeyguardPasswordView extends LinearLayout implements E
     private void initUsePassword() {
         View rootView;
         if (MiuiKeyguardUtils.isGxzwSensor() && !MiuiGxzwManager.getInstance().isShowFodWithPassword() && (rootView = getRootView()) != null) {
-            this.mUsePassword = (TextView) rootView.findViewById(R.id.gxzw_password_button);
-            if (this.mUsePassword != null) {
+            TextView textView = (TextView) rootView.findViewById(R.id.gxzw_password_button);
+            this.mUsePassword = textView;
+            if (textView != null) {
                 updateFodPosition();
                 updateFodTextSize();
                 this.mUsePassword.setOnClickListener(new View.OnClickListener() {

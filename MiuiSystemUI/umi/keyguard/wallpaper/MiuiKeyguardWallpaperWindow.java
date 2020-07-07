@@ -61,8 +61,9 @@ public class MiuiKeyguardWallpaperWindow {
     }
 
     private void createAndAdd() {
-        this.mWallpaperConnection = new WallpaperConnection();
-        this.mWallpaperConnection.setBindIntent(getBindIntent());
+        WallpaperConnection wallpaperConnection = new WallpaperConnection();
+        this.mWallpaperConnection = wallpaperConnection;
+        wallpaperConnection.setBindIntent(getBindIntent());
         this.mWallpaperConnection.connect();
         addWindowToken();
     }
@@ -113,7 +114,7 @@ public class MiuiKeyguardWallpaperWindow {
         IWallpaperEngine mEngine;
         Intent mIntent;
         IWallpaperService mService;
-        final Binder mToken = new Binder();
+        final Binder mToken;
 
         public void engineShown(IWallpaperEngine iWallpaperEngine) throws RemoteException {
         }
@@ -123,7 +124,9 @@ public class MiuiKeyguardWallpaperWindow {
         }
 
         WallpaperConnection() {
-            this.mToken.attachInterface((IInterface) null, "miui.systemui.keyguard.Wallpaper");
+            Binder binder = new Binder();
+            this.mToken = binder;
+            binder.attachInterface((IInterface) null, "miui.systemui.keyguard.Wallpaper");
         }
 
         public void setBindIntent(Intent intent) {
@@ -175,9 +178,10 @@ public class MiuiKeyguardWallpaperWindow {
 
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
             if (MiuiKeyguardWallpaperWindow.this.mWallpaperConnection == this) {
-                this.mService = IWallpaperService.Stub.asInterface(iBinder);
+                IWallpaperService asInterface = IWallpaperService.Stub.asInterface(iBinder);
+                this.mService = asInterface;
                 try {
-                    IWallpaperServiceCompat.attach(this.mService, this, this.mToken, 2013, false, MiuiKeyguardWallpaperWindow.this.mDesiredWidth, MiuiKeyguardWallpaperWindow.this.mDesiredHeight, new Rect(0, 0, 0, 0), 0);
+                    IWallpaperServiceCompat.attach(asInterface, this, this.mToken, 2013, false, MiuiKeyguardWallpaperWindow.this.mDesiredWidth, MiuiKeyguardWallpaperWindow.this.mDesiredHeight, new Rect(0, 0, 0, 0), 0);
                 } catch (RemoteException unused) {
                 }
             }

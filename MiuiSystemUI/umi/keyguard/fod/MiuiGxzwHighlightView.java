@@ -85,8 +85,9 @@ class MiuiGxzwHighlightView extends ImageView {
         this.mCircleColor = getContext().getResources().getColor(R.color.gxzw_circle_color);
         this.mGradualGreenCircle = getContext().getResources().getBoolean(R.bool.config_enableGradualGreenCircle);
         this.mSupportHalo = MiuiGxzwUtils.supportHalo(getContext());
-        this.mPaint = new Paint();
-        this.mPaint.setColor(this.mCircleColor);
+        Paint paint = new Paint();
+        this.mPaint = paint;
+        paint.setColor(this.mCircleColor);
         this.mPaint.setAntiAlias(true);
         if (this.mGradualGreenCircle) {
             setImageResource(R.drawable.gxzw_green_light);

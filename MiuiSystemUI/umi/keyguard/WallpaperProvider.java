@@ -105,7 +105,7 @@ public class WallpaperProvider extends ContentProvider {
                     StatusBar statusBar = (StatusBar) ((Application) getContext().getApplicationContext()).getSystemUIApplication().getComponent(StatusBar.class);
                     if (statusBar != null) {
                         this.mHandler.post(new Runnable(intent) {
-                            private final /* synthetic */ Intent f$1;
+                            public final /* synthetic */ Intent f$1;
 
                             {
                                 this.f$1 = r2;

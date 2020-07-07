@@ -64,7 +64,6 @@ public class WirelessRapidChargeView extends FrameLayout implements ValueAnimato
     private int mIconPaddingTop;
     private boolean mInitScreenOn;
     private boolean mIsCarMode;
-    private boolean mIsScreenOn;
     /* access modifiers changed from: private */
     public boolean mIsSuperRapidCharge;
     private ImageView mNormalIcon;
@@ -95,6 +94,9 @@ public class WirelessRapidChargeView extends FrameLayout implements ValueAnimato
     }
 
     public void onAnimationRepeat(Animator animator) {
+    }
+
+    public void setScreenOn(boolean z) {
     }
 
     public WirelessRapidChargeView(Context context) {
@@ -170,32 +172,36 @@ public class WirelessRapidChargeView extends FrameLayout implements ValueAnimato
         this.mContentContainer.addView(this.mCenterAnchorView, layoutParams);
         RelativeLayout.LayoutParams layoutParams2 = new RelativeLayout.LayoutParams(-2, -2);
         layoutParams2.addRule(13);
-        this.mPercentCountView = new PercentCountView(context);
-        this.mContentContainer.addView(this.mPercentCountView, layoutParams2);
+        PercentCountView percentCountView = new PercentCountView(context);
+        this.mPercentCountView = percentCountView;
+        this.mContentContainer.addView(percentCountView, layoutParams2);
         this.mGtChargeAniView = new GTChargeAniView(context);
         RelativeLayout.LayoutParams layoutParams3 = new RelativeLayout.LayoutParams(-2, -2);
         layoutParams3.addRule(14);
         layoutParams3.addRule(3, this.mCenterAnchorView.getId());
         layoutParams3.topMargin = this.mTipTopMargin;
         this.mContentContainer.addView(this.mGtChargeAniView, layoutParams3);
-        this.mNormalIcon = new ImageView(context);
-        this.mNormalIcon.setScaleType(ImageView.ScaleType.FIT_XY);
+        ImageView imageView = new ImageView(context);
+        this.mNormalIcon = imageView;
+        imageView.setScaleType(ImageView.ScaleType.FIT_XY);
         this.mNormalIcon.setImageDrawable(this.mNormalIconDrawable);
         RelativeLayout.LayoutParams layoutParams4 = new RelativeLayout.LayoutParams(this.mNormalIconWidth, this.mNormalIconHeight + this.mIconPaddingTop);
         layoutParams4.addRule(13);
         this.mNormalIcon.setPadding(0, this.mIconPaddingTop, 0, 0);
         this.mNormalIcon.setPivotX((float) this.mPivotX);
         this.mContentContainer.addView(this.mNormalIcon, layoutParams4);
-        this.mSuperRapidIcon = new ImageView(context);
-        this.mSuperRapidIcon.setScaleType(ImageView.ScaleType.FIT_XY);
+        ImageView imageView2 = new ImageView(context);
+        this.mSuperRapidIcon = imageView2;
+        imageView2.setScaleType(ImageView.ScaleType.FIT_XY);
         this.mSuperRapidIcon.setImageDrawable(this.mSuperRapidIconDrawable);
         RelativeLayout.LayoutParams layoutParams5 = new RelativeLayout.LayoutParams(this.mSuperRapidIconWidth, this.mSuperRapidIconHeight + this.mIconPaddingTop);
         layoutParams5.addRule(13);
         this.mSuperRapidIcon.setPivotX((float) this.mPivotX);
         this.mSuperRapidIcon.setPadding(0, this.mIconPaddingTop, 0, 0);
         this.mContentContainer.addView(this.mSuperRapidIcon, layoutParams5);
-        this.mCarModeIcon = new ImageView(context);
-        this.mCarModeIcon.setScaleType(ImageView.ScaleType.FIT_XY);
+        ImageView imageView3 = new ImageView(context);
+        this.mCarModeIcon = imageView3;
+        imageView3.setScaleType(ImageView.ScaleType.FIT_XY);
         this.mCarModeIcon.setImageDrawable(this.mCarIconDrawable);
         RelativeLayout.LayoutParams layoutParams6 = new RelativeLayout.LayoutParams(this.mCarIconWidth, this.mCarIconHeight + this.mIconPaddingTop);
         layoutParams6.addRule(13);
@@ -261,19 +267,22 @@ public class WirelessRapidChargeView extends FrameLayout implements ValueAnimato
     }
 
     private void animateToShowCarIcon() {
+        Property property = FrameLayout.TRANSLATION_Y;
+        Property property2 = FrameLayout.ALPHA;
+        Property property3 = FrameLayout.SCALE_Y;
+        Property property4 = FrameLayout.SCALE_X;
         Log.i("WirelessRapidChargeView", "animateToShowCarIcon: ");
         AnimatorSet animatorSet = this.mContentSwitchAnimator;
         if (animatorSet != null) {
             animatorSet.cancel();
         }
-        ObjectAnimator duration = ObjectAnimator.ofPropertyValuesHolder(this.mPercentCountView, new PropertyValuesHolder[]{PropertyValuesHolder.ofFloat(FrameLayout.SCALE_X, new float[]{this.mPercentCountView.getScaleX(), 0.85f}), PropertyValuesHolder.ofFloat(FrameLayout.SCALE_Y, new float[]{this.mPercentCountView.getScaleY(), 0.85f}), PropertyValuesHolder.ofFloat(FrameLayout.TRANSLATION_Y, new float[]{this.mPercentCountView.getTranslationY(), (float) this.mChargeNumberTranslateSmall})}).setDuration(500);
+        ObjectAnimator duration = ObjectAnimator.ofPropertyValuesHolder(this.mPercentCountView, new PropertyValuesHolder[]{PropertyValuesHolder.ofFloat(property4, new float[]{this.mPercentCountView.getScaleX(), 0.85f}), PropertyValuesHolder.ofFloat(property3, new float[]{this.mPercentCountView.getScaleY(), 0.85f}), PropertyValuesHolder.ofFloat(property, new float[]{this.mPercentCountView.getTranslationY(), (float) this.mChargeNumberTranslateSmall})}).setDuration(500);
         duration.setInterpolator(this.mCubicInterpolator);
-        PropertyValuesHolder ofFloat = PropertyValuesHolder.ofFloat(FrameLayout.TRANSLATION_Y, new float[]{this.mGtChargeAniView.getTranslationY(), (float) this.mChargeTipTranslateSmall});
-        Property property = FrameLayout.ALPHA;
+        PropertyValuesHolder ofFloat = PropertyValuesHolder.ofFloat(property, new float[]{this.mGtChargeAniView.getTranslationY(), (float) this.mChargeTipTranslateSmall});
         float[] fArr = new float[2];
         fArr[0] = this.mGtChargeAniView.getAlpha();
         fArr[1] = this.mIsSuperRapidCharge ? 1.0f : 0.0f;
-        ObjectAnimator duration2 = ObjectAnimator.ofPropertyValuesHolder(this.mGtChargeAniView, new PropertyValuesHolder[]{PropertyValuesHolder.ofFloat(property, fArr), ofFloat}).setDuration(250);
+        ObjectAnimator duration2 = ObjectAnimator.ofPropertyValuesHolder(this.mGtChargeAniView, new PropertyValuesHolder[]{PropertyValuesHolder.ofFloat(property2, fArr), ofFloat}).setDuration(250);
         duration2.setInterpolator(this.mCubicInterpolator);
         duration2.addListener(new Animator.AnimatorListener() {
             public void onAnimationRepeat(Animator animator) {
@@ -295,29 +304,34 @@ public class WirelessRapidChargeView extends FrameLayout implements ValueAnimato
                 WirelessRapidChargeView.this.mGtChargeAniView.setVisibility(8);
             }
         });
-        ObjectAnimator duration3 = ObjectAnimator.ofPropertyValuesHolder(this.mSuperRapidIcon, new PropertyValuesHolder[]{PropertyValuesHolder.ofFloat(FrameLayout.SCALE_X, new float[]{this.mSuperRapidIcon.getScaleX(), 0.0f}), PropertyValuesHolder.ofFloat(FrameLayout.SCALE_Y, new float[]{this.mSuperRapidIcon.getScaleY(), 0.0f}), PropertyValuesHolder.ofFloat(FrameLayout.ALPHA, new float[]{this.mSuperRapidIcon.getAlpha(), -4.0f})}).setDuration(500);
+        ObjectAnimator duration3 = ObjectAnimator.ofPropertyValuesHolder(this.mSuperRapidIcon, new PropertyValuesHolder[]{PropertyValuesHolder.ofFloat(property4, new float[]{this.mSuperRapidIcon.getScaleX(), 0.0f}), PropertyValuesHolder.ofFloat(property3, new float[]{this.mSuperRapidIcon.getScaleY(), 0.0f}), PropertyValuesHolder.ofFloat(property2, new float[]{this.mSuperRapidIcon.getAlpha(), -4.0f})}).setDuration(500);
         duration3.setInterpolator(this.mCubicInterpolator);
-        ObjectAnimator duration4 = ObjectAnimator.ofPropertyValuesHolder(this.mNormalIcon, new PropertyValuesHolder[]{PropertyValuesHolder.ofFloat(FrameLayout.SCALE_X, new float[]{this.mNormalIcon.getScaleX(), 0.0f}), PropertyValuesHolder.ofFloat(FrameLayout.SCALE_Y, new float[]{this.mNormalIcon.getScaleY(), 0.0f}), PropertyValuesHolder.ofFloat(FrameLayout.ALPHA, new float[]{this.mNormalIcon.getAlpha(), -4.0f})}).setDuration(500);
-        ObjectAnimator duration5 = ObjectAnimator.ofPropertyValuesHolder(this.mCarModeIcon, new PropertyValuesHolder[]{PropertyValuesHolder.ofFloat(FrameLayout.SCALE_X, new float[]{this.mCarModeIcon.getScaleX(), 1.0f}), PropertyValuesHolder.ofFloat(FrameLayout.SCALE_Y, new float[]{this.mCarModeIcon.getScaleY(), 1.0f}), PropertyValuesHolder.ofFloat(FrameLayout.ALPHA, new float[]{this.mCarModeIcon.getAlpha(), 1.0f})}).setDuration(500);
+        ObjectAnimator duration4 = ObjectAnimator.ofPropertyValuesHolder(this.mNormalIcon, new PropertyValuesHolder[]{PropertyValuesHolder.ofFloat(property4, new float[]{this.mNormalIcon.getScaleX(), 0.0f}), PropertyValuesHolder.ofFloat(property3, new float[]{this.mNormalIcon.getScaleY(), 0.0f}), PropertyValuesHolder.ofFloat(property2, new float[]{this.mNormalIcon.getAlpha(), -4.0f})}).setDuration(500);
+        ObjectAnimator duration5 = ObjectAnimator.ofPropertyValuesHolder(this.mCarModeIcon, new PropertyValuesHolder[]{PropertyValuesHolder.ofFloat(property4, new float[]{this.mCarModeIcon.getScaleX(), 1.0f}), PropertyValuesHolder.ofFloat(property3, new float[]{this.mCarModeIcon.getScaleY(), 1.0f}), PropertyValuesHolder.ofFloat(property2, new float[]{this.mCarModeIcon.getAlpha(), 1.0f})}).setDuration(500);
         duration5.setInterpolator(this.mCubicInterpolator);
-        this.mContentSwitchAnimator = new AnimatorSet();
-        this.mContentSwitchAnimator.playTogether(new Animator[]{duration, duration5, duration3, duration4, duration2});
+        AnimatorSet animatorSet2 = new AnimatorSet();
+        this.mContentSwitchAnimator = animatorSet2;
+        animatorSet2.playTogether(new Animator[]{duration, duration5, duration3, duration4, duration2});
         this.mContentSwitchAnimator.start();
     }
 
     private void animateToShowSuperRapidIcon() {
+        Property property = FrameLayout.TRANSLATION_Y;
+        Property property2 = FrameLayout.ALPHA;
+        Property property3 = FrameLayout.SCALE_Y;
+        Property property4 = FrameLayout.SCALE_X;
         Log.i("WirelessRapidChargeView", "animateToShowSuperRapidIcon: ");
         AnimatorSet animatorSet = this.mContentSwitchAnimator;
         if (animatorSet != null) {
             animatorSet.cancel();
         }
-        PropertyValuesHolder ofFloat = PropertyValuesHolder.ofFloat(FrameLayout.SCALE_X, new float[]{this.mPercentCountView.getScaleX(), 0.85f});
-        PropertyValuesHolder ofFloat2 = PropertyValuesHolder.ofFloat(FrameLayout.SCALE_Y, new float[]{this.mPercentCountView.getScaleY(), 0.85f});
-        PropertyValuesHolder ofFloat3 = PropertyValuesHolder.ofFloat(FrameLayout.TRANSLATION_Y, new float[]{this.mPercentCountView.getTranslationY(), (float) this.mChargeNumberTranslateSmall});
+        PropertyValuesHolder ofFloat = PropertyValuesHolder.ofFloat(property4, new float[]{this.mPercentCountView.getScaleX(), 0.85f});
+        PropertyValuesHolder ofFloat2 = PropertyValuesHolder.ofFloat(property3, new float[]{this.mPercentCountView.getScaleY(), 0.85f});
+        PropertyValuesHolder ofFloat3 = PropertyValuesHolder.ofFloat(property, new float[]{this.mPercentCountView.getTranslationY(), (float) this.mChargeNumberTranslateSmall});
         ObjectAnimator duration = ObjectAnimator.ofPropertyValuesHolder(this.mPercentCountView, new PropertyValuesHolder[]{ofFloat, ofFloat2, ofFloat3}).setDuration(500);
         duration.setInterpolator(this.mCubicInterpolator);
-        PropertyValuesHolder ofFloat4 = PropertyValuesHolder.ofFloat(FrameLayout.TRANSLATION_Y, new float[]{this.mGtChargeAniView.getTranslationY(), (float) this.mChargeTipTranslateSmall});
-        PropertyValuesHolder ofFloat5 = PropertyValuesHolder.ofFloat(FrameLayout.ALPHA, new float[]{this.mGtChargeAniView.getAlpha(), 1.0f});
+        PropertyValuesHolder ofFloat4 = PropertyValuesHolder.ofFloat(property, new float[]{this.mGtChargeAniView.getTranslationY(), (float) this.mChargeTipTranslateSmall});
+        PropertyValuesHolder ofFloat5 = PropertyValuesHolder.ofFloat(property2, new float[]{this.mGtChargeAniView.getAlpha(), 1.0f});
         ObjectAnimator duration2 = ObjectAnimator.ofPropertyValuesHolder(this.mGtChargeAniView, new PropertyValuesHolder[]{ofFloat5, ofFloat4}).setDuration(250);
         duration2.setInterpolator(this.mCubicInterpolator);
         duration2.addListener(new Animator.AnimatorListener() {
@@ -338,59 +352,61 @@ public class WirelessRapidChargeView extends FrameLayout implements ValueAnimato
                 WirelessRapidChargeView.this.mGtChargeAniView.setVisibility(8);
             }
         });
-        PropertyValuesHolder ofFloat6 = PropertyValuesHolder.ofFloat(FrameLayout.SCALE_X, new float[]{this.mSuperRapidIcon.getScaleX(), 1.0f});
-        PropertyValuesHolder ofFloat7 = PropertyValuesHolder.ofFloat(FrameLayout.SCALE_Y, new float[]{this.mSuperRapidIcon.getScaleY(), 1.0f});
-        PropertyValuesHolder ofFloat8 = PropertyValuesHolder.ofFloat(FrameLayout.ALPHA, new float[]{this.mSuperRapidIcon.getAlpha(), 1.0f});
+        PropertyValuesHolder ofFloat6 = PropertyValuesHolder.ofFloat(property4, new float[]{this.mSuperRapidIcon.getScaleX(), 1.0f});
+        PropertyValuesHolder ofFloat7 = PropertyValuesHolder.ofFloat(property3, new float[]{this.mSuperRapidIcon.getScaleY(), 1.0f});
+        PropertyValuesHolder ofFloat8 = PropertyValuesHolder.ofFloat(property2, new float[]{this.mSuperRapidIcon.getAlpha(), 1.0f});
         ObjectAnimator duration3 = ObjectAnimator.ofPropertyValuesHolder(this.mSuperRapidIcon, new PropertyValuesHolder[]{ofFloat6, ofFloat7, ofFloat8}).setDuration(500);
         duration3.setInterpolator(this.mCubicInterpolator);
         duration3.setInterpolator(new OvershootInterpolator(3.0f));
-        PropertyValuesHolder ofFloat9 = PropertyValuesHolder.ofFloat(FrameLayout.SCALE_X, new float[]{this.mNormalIcon.getScaleX(), 0.0f});
-        PropertyValuesHolder ofFloat10 = PropertyValuesHolder.ofFloat(FrameLayout.SCALE_Y, new float[]{this.mNormalIcon.getScaleY(), 0.0f});
-        PropertyValuesHolder ofFloat11 = PropertyValuesHolder.ofFloat(FrameLayout.ALPHA, new float[]{this.mNormalIcon.getAlpha(), -4.0f});
+        PropertyValuesHolder ofFloat9 = PropertyValuesHolder.ofFloat(property4, new float[]{this.mNormalIcon.getScaleX(), 0.0f});
+        PropertyValuesHolder ofFloat10 = PropertyValuesHolder.ofFloat(property3, new float[]{this.mNormalIcon.getScaleY(), 0.0f});
+        PropertyValuesHolder ofFloat11 = PropertyValuesHolder.ofFloat(property2, new float[]{this.mNormalIcon.getAlpha(), -4.0f});
         ObjectAnimator duration4 = ObjectAnimator.ofPropertyValuesHolder(this.mNormalIcon, new PropertyValuesHolder[]{ofFloat9, ofFloat10, ofFloat11}).setDuration(500);
-        PropertyValuesHolder ofFloat12 = PropertyValuesHolder.ofFloat(FrameLayout.SCALE_X, new float[]{this.mCarModeIcon.getScaleX(), 0.0f});
-        PropertyValuesHolder ofFloat13 = PropertyValuesHolder.ofFloat(FrameLayout.SCALE_Y, new float[]{this.mCarModeIcon.getScaleY(), 0.0f});
-        PropertyValuesHolder ofFloat14 = PropertyValuesHolder.ofFloat(FrameLayout.ALPHA, new float[]{this.mCarModeIcon.getAlpha(), -4.0f});
+        PropertyValuesHolder ofFloat12 = PropertyValuesHolder.ofFloat(property4, new float[]{this.mCarModeIcon.getScaleX(), 0.0f});
+        PropertyValuesHolder ofFloat13 = PropertyValuesHolder.ofFloat(property3, new float[]{this.mCarModeIcon.getScaleY(), 0.0f});
+        PropertyValuesHolder ofFloat14 = PropertyValuesHolder.ofFloat(property2, new float[]{this.mCarModeIcon.getAlpha(), -4.0f});
         ObjectAnimator duration5 = ObjectAnimator.ofPropertyValuesHolder(this.mCarModeIcon, new PropertyValuesHolder[]{ofFloat12, ofFloat13, ofFloat14}).setDuration(500);
         duration5.setInterpolator(this.mCubicInterpolator);
-        this.mContentSwitchAnimator = new AnimatorSet();
-        this.mContentSwitchAnimator.playTogether(new Animator[]{duration, duration5, duration3, duration4, duration2});
+        AnimatorSet animatorSet2 = new AnimatorSet();
+        this.mContentSwitchAnimator = animatorSet2;
+        animatorSet2.playTogether(new Animator[]{duration, duration5, duration3, duration4, duration2});
         this.mContentSwitchAnimator.start();
     }
 
     private void animateToHideIcon() {
+        Property property = FrameLayout.TRANSLATION_Y;
+        Property property2 = FrameLayout.ALPHA;
+        Property property3 = FrameLayout.SCALE_Y;
+        Property property4 = FrameLayout.SCALE_X;
         Log.i("WirelessRapidChargeView", "animateToHideIcon: mIsCarMode " + this.mIsCarMode + " mIsSuperRapidCharge " + this.mIsSuperRapidCharge);
         AnimatorSet animatorSet = this.mContentSwitchAnimator;
         if (animatorSet != null) {
             animatorSet.cancel();
         }
-        PropertyValuesHolder ofFloat = PropertyValuesHolder.ofFloat(FrameLayout.SCALE_X, new float[]{this.mPercentCountView.getScaleX(), 1.0f});
-        PropertyValuesHolder ofFloat2 = PropertyValuesHolder.ofFloat(FrameLayout.SCALE_Y, new float[]{this.mPercentCountView.getScaleY(), 1.0f});
-        PropertyValuesHolder ofFloat3 = PropertyValuesHolder.ofFloat(FrameLayout.TRANSLATION_Y, new float[]{this.mPercentCountView.getTranslationY(), (float) this.mChargeNumberTranslateInit});
+        PropertyValuesHolder ofFloat = PropertyValuesHolder.ofFloat(property4, new float[]{this.mPercentCountView.getScaleX(), 1.0f});
+        PropertyValuesHolder ofFloat2 = PropertyValuesHolder.ofFloat(property3, new float[]{this.mPercentCountView.getScaleY(), 1.0f});
+        PropertyValuesHolder ofFloat3 = PropertyValuesHolder.ofFloat(property, new float[]{this.mPercentCountView.getTranslationY(), (float) this.mChargeNumberTranslateInit});
         ObjectAnimator duration = ObjectAnimator.ofPropertyValuesHolder(this.mPercentCountView, new PropertyValuesHolder[]{ofFloat, ofFloat2, ofFloat3}).setDuration(500);
-        PropertyValuesHolder ofFloat4 = PropertyValuesHolder.ofFloat(FrameLayout.TRANSLATION_Y, new float[]{this.mGtChargeAniView.getTranslationY(), 0.0f});
-        PropertyValuesHolder ofFloat5 = PropertyValuesHolder.ofFloat(FrameLayout.ALPHA, new float[]{this.mGtChargeAniView.getAlpha(), 0.0f});
+        PropertyValuesHolder ofFloat4 = PropertyValuesHolder.ofFloat(property, new float[]{this.mGtChargeAniView.getTranslationY(), 0.0f});
+        PropertyValuesHolder ofFloat5 = PropertyValuesHolder.ofFloat(property2, new float[]{this.mGtChargeAniView.getAlpha(), 0.0f});
         ObjectAnimator duration2 = ObjectAnimator.ofPropertyValuesHolder(this.mGtChargeAniView, new PropertyValuesHolder[]{ofFloat5, ofFloat4}).setDuration(500);
-        PropertyValuesHolder ofFloat6 = PropertyValuesHolder.ofFloat(FrameLayout.SCALE_X, new float[]{this.mCarModeIcon.getScaleX(), 0.0f});
-        PropertyValuesHolder ofFloat7 = PropertyValuesHolder.ofFloat(FrameLayout.SCALE_Y, new float[]{this.mCarModeIcon.getScaleY(), 0.0f});
-        PropertyValuesHolder ofFloat8 = PropertyValuesHolder.ofFloat(FrameLayout.ALPHA, new float[]{this.mCarModeIcon.getAlpha(), -4.0f});
+        PropertyValuesHolder ofFloat6 = PropertyValuesHolder.ofFloat(property4, new float[]{this.mCarModeIcon.getScaleX(), 0.0f});
+        PropertyValuesHolder ofFloat7 = PropertyValuesHolder.ofFloat(property3, new float[]{this.mCarModeIcon.getScaleY(), 0.0f});
+        PropertyValuesHolder ofFloat8 = PropertyValuesHolder.ofFloat(property2, new float[]{this.mCarModeIcon.getAlpha(), -4.0f});
         ObjectAnimator duration3 = ObjectAnimator.ofPropertyValuesHolder(this.mCarModeIcon, new PropertyValuesHolder[]{ofFloat6, ofFloat7, ofFloat8}).setDuration(500);
-        PropertyValuesHolder ofFloat9 = PropertyValuesHolder.ofFloat(FrameLayout.SCALE_X, new float[]{this.mSuperRapidIcon.getScaleX(), 0.0f});
-        PropertyValuesHolder ofFloat10 = PropertyValuesHolder.ofFloat(FrameLayout.SCALE_Y, new float[]{this.mSuperRapidIcon.getScaleY(), 0.0f});
-        PropertyValuesHolder ofFloat11 = PropertyValuesHolder.ofFloat(FrameLayout.ALPHA, new float[]{this.mSuperRapidIcon.getAlpha(), -4.0f});
+        PropertyValuesHolder ofFloat9 = PropertyValuesHolder.ofFloat(property4, new float[]{this.mSuperRapidIcon.getScaleX(), 0.0f});
+        PropertyValuesHolder ofFloat10 = PropertyValuesHolder.ofFloat(property3, new float[]{this.mSuperRapidIcon.getScaleY(), 0.0f});
+        PropertyValuesHolder ofFloat11 = PropertyValuesHolder.ofFloat(property2, new float[]{this.mSuperRapidIcon.getAlpha(), -4.0f});
         ObjectAnimator duration4 = ObjectAnimator.ofPropertyValuesHolder(this.mSuperRapidIcon, new PropertyValuesHolder[]{ofFloat9, ofFloat10, ofFloat11}).setDuration(500);
-        PropertyValuesHolder ofFloat12 = PropertyValuesHolder.ofFloat(FrameLayout.SCALE_X, new float[]{this.mNormalIcon.getScaleX(), 1.0f});
-        PropertyValuesHolder ofFloat13 = PropertyValuesHolder.ofFloat(FrameLayout.SCALE_Y, new float[]{this.mNormalIcon.getScaleY(), 1.0f});
-        PropertyValuesHolder ofFloat14 = PropertyValuesHolder.ofFloat(FrameLayout.ALPHA, new float[]{this.mNormalIcon.getAlpha(), 1.0f});
+        PropertyValuesHolder ofFloat12 = PropertyValuesHolder.ofFloat(property4, new float[]{this.mNormalIcon.getScaleX(), 1.0f});
+        PropertyValuesHolder ofFloat13 = PropertyValuesHolder.ofFloat(property3, new float[]{this.mNormalIcon.getScaleY(), 1.0f});
+        PropertyValuesHolder ofFloat14 = PropertyValuesHolder.ofFloat(property2, new float[]{this.mNormalIcon.getAlpha(), 1.0f});
         ObjectAnimator duration5 = ObjectAnimator.ofPropertyValuesHolder(this.mNormalIcon, new PropertyValuesHolder[]{ofFloat12, ofFloat13, ofFloat14}).setDuration(500);
-        this.mContentSwitchAnimator = new AnimatorSet();
-        this.mContentSwitchAnimator.setInterpolator(this.mCubicInterpolator);
+        AnimatorSet animatorSet2 = new AnimatorSet();
+        this.mContentSwitchAnimator = animatorSet2;
+        animatorSet2.setInterpolator(this.mCubicInterpolator);
         this.mContentSwitchAnimator.playTogether(new Animator[]{duration, duration3, duration4, duration5, duration2});
         this.mContentSwitchAnimator.start();
-    }
-
-    public void setScreenOn(boolean z) {
-        this.mIsScreenOn = z;
     }
 
     public void setProgress(int i) {
@@ -398,8 +414,9 @@ public class WirelessRapidChargeView extends FrameLayout implements ValueAnimato
     }
 
     private void initAnimator() {
-        this.mZoomAnimator = ValueAnimator.ofInt(new int[]{0, 1});
-        this.mZoomAnimator.setInterpolator(this.mQuartOutInterpolator);
+        ValueAnimator ofInt = ValueAnimator.ofInt(new int[]{0, 1});
+        this.mZoomAnimator = ofInt;
+        ofInt.setInterpolator(this.mQuartOutInterpolator);
         this.mZoomAnimator.setDuration(800);
         this.mZoomAnimator.addListener(this);
         this.mZoomAnimator.addUpdateListener(this);
@@ -570,9 +587,10 @@ public class WirelessRapidChargeView extends FrameLayout implements ValueAnimato
 
     public void startDismiss(String str) {
         String str2 = str;
-        if (str2 != "dismiss_for_timeout") {
-            KeyguardUpdateMonitor.getInstance(this.mContext).setShowingChargeAnimationWindow(false);
-        }
+        Property property = FrameLayout.SCALE_Y;
+        Property property2 = FrameLayout.SCALE_X;
+        Property property3 = FrameLayout.ALPHA;
+        KeyguardUpdateMonitor.getInstance(getContext()).setShowingChargeAnimationWindow(false);
         if (!this.mStartingDismissWirelessAlphaAnim) {
             ValueAnimator valueAnimator = this.mZoomAnimator;
             if (valueAnimator != null) {
@@ -582,17 +600,18 @@ public class WirelessRapidChargeView extends FrameLayout implements ValueAnimato
             this.mDismissReason = str2;
             this.mHandler.removeCallbacks(this.timeoutDismissJob);
             this.mHandler.removeCallbacks(this.mDismissRunnable);
-            ObjectAnimator duration = ObjectAnimator.ofPropertyValuesHolder(this, new PropertyValuesHolder[]{PropertyValuesHolder.ofFloat(FrameLayout.ALPHA, new float[]{getAlpha(), 0.0f})}).setDuration(600);
-            PropertyValuesHolder ofFloat = PropertyValuesHolder.ofFloat(FrameLayout.ALPHA, new float[]{this.mContentContainer.getAlpha(), 0.0f});
-            PropertyValuesHolder ofFloat2 = PropertyValuesHolder.ofFloat(FrameLayout.SCALE_X, new float[]{this.mContentContainer.getScaleX(), 0.0f});
-            PropertyValuesHolder ofFloat3 = PropertyValuesHolder.ofFloat(FrameLayout.SCALE_Y, new float[]{this.mContentContainer.getScaleY(), 0.0f});
+            ObjectAnimator duration = ObjectAnimator.ofPropertyValuesHolder(this, new PropertyValuesHolder[]{PropertyValuesHolder.ofFloat(property3, new float[]{getAlpha(), 0.0f})}).setDuration(600);
+            PropertyValuesHolder ofFloat = PropertyValuesHolder.ofFloat(property3, new float[]{this.mContentContainer.getAlpha(), 0.0f});
+            PropertyValuesHolder ofFloat2 = PropertyValuesHolder.ofFloat(property2, new float[]{this.mContentContainer.getScaleX(), 0.0f});
+            PropertyValuesHolder ofFloat3 = PropertyValuesHolder.ofFloat(property, new float[]{this.mContentContainer.getScaleY(), 0.0f});
             ObjectAnimator duration2 = ObjectAnimator.ofPropertyValuesHolder(this.mContentContainer, new PropertyValuesHolder[]{ofFloat, ofFloat2, ofFloat3}).setDuration(600);
-            PropertyValuesHolder ofFloat4 = PropertyValuesHolder.ofFloat(FrameLayout.ALPHA, new float[]{this.mVideoView.getAlpha(), 0.0f});
-            PropertyValuesHolder ofFloat5 = PropertyValuesHolder.ofFloat(FrameLayout.SCALE_X, new float[]{this.mVideoView.getScaleX(), 0.0f});
-            PropertyValuesHolder ofFloat6 = PropertyValuesHolder.ofFloat(FrameLayout.SCALE_Y, new float[]{this.mVideoView.getScaleY(), 0.0f});
+            PropertyValuesHolder ofFloat4 = PropertyValuesHolder.ofFloat(property3, new float[]{this.mVideoView.getAlpha(), 0.0f});
+            PropertyValuesHolder ofFloat5 = PropertyValuesHolder.ofFloat(property2, new float[]{this.mVideoView.getScaleX(), 0.0f});
+            PropertyValuesHolder ofFloat6 = PropertyValuesHolder.ofFloat(property, new float[]{this.mVideoView.getScaleY(), 0.0f});
             ObjectAnimator duration3 = ObjectAnimator.ofPropertyValuesHolder(this.mVideoView, new PropertyValuesHolder[]{ofFloat4, ofFloat5, ofFloat6}).setDuration(600);
-            this.mDismissAnimatorSet = new AnimatorSet();
-            this.mDismissAnimatorSet.setInterpolator(this.mQuartOutInterpolator);
+            AnimatorSet animatorSet = new AnimatorSet();
+            this.mDismissAnimatorSet = animatorSet;
+            animatorSet.setInterpolator(this.mQuartOutInterpolator);
             this.mDismissAnimatorSet.playTogether(new Animator[]{duration2, duration3});
             this.mDismissAnimatorSet.play(duration2);
             if (!"dismiss_for_timeout".equals(str2)) {

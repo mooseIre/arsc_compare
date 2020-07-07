@@ -32,7 +32,6 @@ public class KeyguardHorizontalMoveLeftViewContainer extends KeyguardHorizontalM
     private KeyguardClientCallback mKeyguardClientCallback = new KeyguardClientCallback() {
         public void onOverlayScrollChanged(float f) {
             KeyguardHorizontalMoveLeftViewContainer.this.mCallBack.updateCanShowGxzw(f == 0.0f);
-            KeyguardHorizontalMoveLeftViewContainer.this.mFaceUnlockManager.updateHorizontalMoveLeftProgress(f);
             if (KeyguardHorizontalMoveLeftViewContainer.this.mScrollProgress != f) {
                 float unused = KeyguardHorizontalMoveLeftViewContainer.this.mScrollProgress = f;
                 if (KeyguardHorizontalMoveLeftViewContainer.this.mScrollProgress == 0.0f || KeyguardHorizontalMoveLeftViewContainer.this.mScrollProgress == 1.0f) {
@@ -102,7 +101,7 @@ public class KeyguardHorizontalMoveLeftViewContainer extends KeyguardHorizontalM
     public KeyguardHorizontalMoveLeftViewContainer(Context context, KeyguardHorizontalMoveView.CallBack callBack) {
         super(context, callBack);
         this.mContext = context;
-        this.mKeyguardUpdateMonitor = KeyguardUpdateMonitor.getInstance(this.mContext);
+        this.mKeyguardUpdateMonitor = KeyguardUpdateMonitor.getInstance(context);
         this.mFaceUnlockManager = FaceUnlockManager.getInstance();
         this.mLockScreenMagazineClient = new LockScreenMagazineClient(context, this.mKeyguardClientCallback);
         this.mKeyguardUpdateMonitor.registerCallback(this.mKeyguardUpdateMonitorCallback);
@@ -113,9 +112,7 @@ public class KeyguardHorizontalMoveLeftViewContainer extends KeyguardHorizontalM
         if (this.mCallBack.isMoveInCenterScreen() && this.mCallBack.isRightMove() && this.mKeyguardUpdateMonitor.isLockScreenLeftOverlayAvailable()) {
             this.mInitialTouchX = f;
             this.mLockScreenMagazineClient.startMove();
-            if (this.mScrollProgress != 0.0f) {
-                this.mCallBack.updateCanShowGxzw(false);
-            }
+            this.mCallBack.updateCanShowGxzw(false);
             this.mTouchDownInitial = true;
         }
     }
@@ -130,9 +127,6 @@ public class KeyguardHorizontalMoveLeftViewContainer extends KeyguardHorizontalM
             f3 = -f3;
         }
         lockScreenMagazineClient.updateMove(f3);
-        if (this.mScrollProgress == 0.0f) {
-            return true;
-        }
         this.mCallBack.updateCanShowGxzw(false);
         return true;
     }

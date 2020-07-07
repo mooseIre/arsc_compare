@@ -36,8 +36,9 @@ public class MiuiKeyguardBatteryInfoView extends TextView {
         Bitmap bitmap = ((BitmapDrawable) this.mContext.getResources().getDrawable(R.drawable.keyguard_battery_charging_progress)).getBitmap();
         Shader.TileMode tileMode = Shader.TileMode.CLAMP;
         BitmapShader bitmapShader = new BitmapShader(bitmap, tileMode, tileMode);
-        this.mChargingProgressPaint = new Paint(1);
-        this.mChargingProgressPaint.setShader(bitmapShader);
+        Paint paint = new Paint(1);
+        this.mChargingProgressPaint = paint;
+        paint.setShader(bitmapShader);
         setTypeface(Typeface.create("miuiex", 0));
     }
 

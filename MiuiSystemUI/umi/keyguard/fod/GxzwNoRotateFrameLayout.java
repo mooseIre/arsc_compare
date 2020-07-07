@@ -101,11 +101,11 @@ abstract class GxzwNoRotateFrameLayout extends GxzwWindowFrameLayout {
         int rotation = display.getRotation();
         if (!this.mKeyguardAuthen && (rotation == 2 || rotation == 3)) {
             int i7 = this.mPortraitOrientation ? i5 : i6;
-            if (!this.mPortraitOrientation) {
-                i6 = i5;
+            if (this.mPortraitOrientation) {
+                i5 = i6;
             }
             i3 = (i7 - i3) - i4;
-            i2 = (i6 - i2) - i;
+            i2 = (i5 - i2) - i;
         }
         generateLayoutParams.width = i4;
         generateLayoutParams.height = i;

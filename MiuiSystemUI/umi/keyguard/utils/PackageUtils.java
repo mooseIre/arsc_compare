@@ -16,10 +16,16 @@ import miui.os.Build;
 import miui.view.MiuiHapticFeedbackConstants;
 
 public class PackageUtils {
-    public static final String CLASS_NAME_CAMERA = (IS_VELA_CAMERA ? "com.mtlab.camera.CameraActivity" : "com.android.camera.Camera");
-    public static final boolean IS_VELA_CAMERA = "vela".equals(Build.DEVICE);
+    public static final String CLASS_NAME_CAMERA;
+    public static final boolean IS_VELA_CAMERA;
     public static final String PACKAGE_NAME_CAMERA = ("vela".equals(Build.DEVICE) ? "com.mlab.cam" : "com.android.camera");
     public static final String PACKAGE_NAME_LOCK_SCREEN_MAGAZINE = LockScreenMagazineUtils.LOCK_SCREEN_MAGAZINE_PACKAGE_NAME;
+
+    static {
+        boolean equals = "vela".equals(Build.DEVICE);
+        IS_VELA_CAMERA = equals;
+        CLASS_NAME_CAMERA = equals ? "com.mtlab.camera.CameraActivity" : "com.android.camera.Camera";
+    }
 
     public static boolean isAppInstalledForUser(Context context, String str, int i) {
         try {

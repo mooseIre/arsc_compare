@@ -10,7 +10,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 public class HeiHeiGestureView extends FrameLayout {
-    private static final float DENSITY = Resources.getSystem().getDisplayMetrics().density;
+    private static final float DENSITY;
     private static final float MOVE_DOWN_DISTANCE_THREDHOLD;
     private static final float MOVE_UP_DISTANCE_THREDHOLD;
     private static final float TWO_POINTS_DISTANCE_X_THREDHOLD;
@@ -45,7 +45,8 @@ public class HeiHeiGestureView extends FrameLayout {
     }
 
     static {
-        float f = DENSITY;
+        float f = Resources.getSystem().getDisplayMetrics().density;
+        DENSITY = f;
         TWO_POINTS_DISTANCE_X_THREDHOLD = 150.0f * f;
         TWO_POINTS_DISTANCE_Y_THREDHOLD = 300.0f * f;
         TWO_POINTS_DISTANCE_Y_THREDHOLD_MIN = 50.0f * f;
@@ -106,8 +107,9 @@ public class HeiHeiGestureView extends FrameLayout {
         str = "/system/media/audio/ui/HeiHei.mp3";
         try {
             if (this.mPlayer == null) {
-                this.mPlayer = new MediaPlayer();
-                this.mPlayer.setAudioStreamType(1);
+                MediaPlayer mediaPlayer = new MediaPlayer();
+                this.mPlayer = mediaPlayer;
+                mediaPlayer.setAudioStreamType(1);
             }
             if (!TextUtils.equals(this.mCurrentSound, str)) {
                 this.mPlayer.reset();

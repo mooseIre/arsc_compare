@@ -15,7 +15,6 @@ import miui.view.animation.SineEaseInOutInterpolator;
 import miui.view.animation.SineEaseOutInterpolator;
 
 public class KeyguardBouncerMessageView extends RelativeLayout {
-    private final int MAX_SHAKE_TIMES;
     private TextView mContent;
     private Resources mResources;
     private int mShakeDistance;
@@ -31,7 +30,6 @@ public class KeyguardBouncerMessageView extends RelativeLayout {
     public KeyguardBouncerMessageView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
         this.mShakeDuration = 25;
-        this.MAX_SHAKE_TIMES = 2;
         this.mResources = getResources();
     }
 

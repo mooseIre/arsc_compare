@@ -19,8 +19,9 @@ public class AlipayPayItem extends IQuickOpenItem {
 
     public AlipayPayItem(RectF rectF, Region region, Context context) {
         super(rectF, region, context);
-        this.mView = new ImageView(context);
-        this.mView.setImageResource(R.drawable.gxzw_quick_open_alipay_pay);
+        ImageView imageView = new ImageView(context);
+        this.mView = imageView;
+        imageView.setImageResource(R.drawable.gxzw_quick_open_alipay_pay);
         this.mView.setScaleType(ImageView.ScaleType.FIT_XY);
     }
 

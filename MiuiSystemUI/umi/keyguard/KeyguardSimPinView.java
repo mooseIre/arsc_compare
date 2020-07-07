@@ -206,7 +206,7 @@ public class KeyguardSimPinView extends KeyguardPinBasedInputView {
             resetPasswordText(true, true);
             this.mCallback.userActivity();
         } else if (this.mCheckSimPinThread == null) {
-            this.mCheckSimPinThread = new CheckSimPin(this.mPasswordEntry.getText(), this.mSubId) {
+            AnonymousClass2 r0 = new CheckSimPin(this.mPasswordEntry.getText(), this.mSubId) {
                 /* access modifiers changed from: package-private */
                 public void onSimCheckResponse(final int i, final int i2) {
                     KeyguardSimPinView.this.post(new Runnable() {
@@ -241,7 +241,8 @@ public class KeyguardSimPinView extends KeyguardPinBasedInputView {
                     });
                 }
             };
-            this.mCheckSimPinThread.start();
+            this.mCheckSimPinThread = r0;
+            r0.start();
         }
     }
 

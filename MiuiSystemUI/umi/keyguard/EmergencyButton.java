@@ -31,7 +31,6 @@ public class EmergencyButton extends Button {
     private final boolean mEnableEmergencyCallWhileSimLocked;
     KeyguardUpdateMonitorCallback mInfoCallback;
     private final boolean mIsVoiceCapable;
-    private LockPatternUtils mLockPatternUtils;
     /* access modifiers changed from: private */
     public boolean mLongPressWasDragged;
     /* access modifiers changed from: private */
@@ -65,8 +64,8 @@ public class EmergencyButton extends Button {
                 EmergencyButton.this.updateEmergencyCallButton();
             }
         };
-        this.mIsVoiceCapable = context.getResources().getBoolean(17891576);
-        this.mEnableEmergencyCallWhileSimLocked = this.mContext.getResources().getBoolean(17891453);
+        this.mIsVoiceCapable = context.getResources().getBoolean(17891589);
+        this.mEnableEmergencyCallWhileSimLocked = this.mContext.getResources().getBoolean(17891457);
         this.mEmergencyAffordanceManager = new EmergencyAffordanceManager(context);
     }
 
@@ -85,7 +84,7 @@ public class EmergencyButton extends Button {
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mLockPatternUtils = new LockPatternUtils(this.mContext);
+        new LockPatternUtils(this.mContext);
         setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 EmergencyButton.this.takeEmergencyCallAction();
@@ -230,10 +229,10 @@ public class EmergencyButton extends Button {
             android.content.Context r0 = r5.mContext
             boolean r0 = com.android.keyguard.utils.PhoneUtils.isInCall(r0)
             if (r0 == 0) goto L_0x0083
-            r0 = 17040340(0x10403d4, float:2.4247318E-38)
+            r0 = 17040483(0x1040463, float:2.4247718E-38)
             goto L_0x0086
         L_0x0083:
-            r0 = 2131821196(0x7f11028c, float:1.9275128E38)
+            r0 = 2131821246(0x7f1102be, float:1.927523E38)
         L_0x0086:
             r5.setText(r0)
             goto L_0x008e

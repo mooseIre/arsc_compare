@@ -19,8 +19,9 @@ public class MiuiKeyguardCenterVerticalClock extends MiuiKeyguardSingleClock {
         try {
             this.mMiuiBaseClock = this.mLayoutInflater.inflate(R.layout.miui_vertical_clock, (ViewGroup) null, false);
             updateLunarCalendarInfo();
-            this.mMiuiCenterHorizontalClock = this.mLayoutInflater.inflate(R.layout.miui_center_horizontal_clock, (ViewGroup) null, false);
-            this.mMiuiCenterHorizontalClock.setShowLunarCalendar(false);
+            MiuiCenterHorizontalClock inflate = this.mLayoutInflater.inflate(R.layout.miui_center_horizontal_clock, (ViewGroup) null, false);
+            this.mMiuiCenterHorizontalClock = inflate;
+            inflate.setShowLunarCalendar(false);
             this.mMiuiCenterHorizontalClock.setAlpha(0.0f);
             this.mMiuiCenterHorizontalClock.setVisibility(8);
         } catch (Exception e) {

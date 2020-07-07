@@ -17,6 +17,7 @@ import android.graphics.drawable.Drawable;
 import android.hardware.display.DisplayManager;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.UserHandle;
@@ -220,16 +221,19 @@ public class KeyguardCameraView extends FrameLayout {
         super(context);
         this.mCallBack = callBack;
         initViews();
-        this.mKeyguardUpdateMonitor = KeyguardUpdateMonitor.getInstance(this.mContext);
-        this.mKeyguardUpdateMonitor.registerCallback(this.mKeyguardUpdateMonitorCallback);
+        KeyguardUpdateMonitor instance = KeyguardUpdateMonitor.getInstance(this.mContext);
+        this.mKeyguardUpdateMonitor = instance;
+        instance.registerCallback(this.mKeyguardUpdateMonitorCallback);
         this.mUserAuthenticatedSinceBoot = this.mKeyguardUpdateMonitor.getStrongAuthTracker().hasUserAuthenticatedSinceBoot();
         this.mVibrator = (Vibrator) this.mContext.getSystemService("vibrator");
-        this.mIconCirclePaint = new Paint();
-        this.mIconCirclePaint.setColor(0);
+        Paint paint = new Paint();
+        this.mIconCirclePaint = paint;
+        paint.setColor(0);
         this.mIconCirclePaint.setStyle(Paint.Style.FILL);
         this.mIconCirclePaint.setAntiAlias(true);
-        this.mIconCircleStrokePaint = new Paint();
-        this.mIconCircleStrokePaint.setColor(16777215);
+        Paint paint2 = new Paint();
+        this.mIconCircleStrokePaint = paint2;
+        paint2.setColor(16777215);
         this.mIconCircleStrokePaint.setAlpha(51);
         this.mIconCircleStrokePaint.setStyle(Paint.Style.STROKE);
         this.mIconCircleStrokePaint.setStrokeWidth(2.0f);
@@ -250,18 +254,22 @@ public class KeyguardCameraView extends FrameLayout {
         display.getRealSize(point);
         this.mScreenHeight = Math.max(point.y, point.x);
         this.mScreenWidth = Math.min(point.y, point.x);
-        this.mBackgroundView = new View(getContext());
-        this.mBackgroundView.setBackgroundColor(-16777216);
+        View view = new View(getContext());
+        this.mBackgroundView = view;
+        view.setBackgroundColor(-16777216);
         this.mBackgroundView.setAlpha(0.0f);
         addView(this.mBackgroundView, new FrameLayout.LayoutParams(-1, -1, 17));
-        this.mPreViewContainer = new LinearLayout(getContext());
-        this.mPreViewContainer.setOutlineProvider(this.mPreViewOutlineProvider);
+        LinearLayout linearLayout = new LinearLayout(getContext());
+        this.mPreViewContainer = linearLayout;
+        linearLayout.setOutlineProvider(this.mPreViewOutlineProvider);
         this.mPreViewContainer.setClipToOutline(true);
         this.mPreViewContainer.setBackgroundColor(-16777216);
-        this.mPreViewContainerLayoutParams = new FrameLayout.LayoutParams(0, 0, 17);
-        addView(this.mPreViewContainer, this.mPreViewContainerLayoutParams);
-        this.mPreView = new ImageView(getContext());
-        this.mPreViewContainer.addView(this.mPreView, new FrameLayout.LayoutParams(-1, -1, 17));
+        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(0, 0, 17);
+        this.mPreViewContainerLayoutParams = layoutParams;
+        addView(this.mPreViewContainer, layoutParams);
+        ImageView imageView = new ImageView(getContext());
+        this.mPreView = imageView;
+        this.mPreViewContainer.addView(imageView, new FrameLayout.LayoutParams(-1, -1, 17));
         this.mIconView = new ImageView(getContext());
         this.mIconWidth = this.mContext.getResources().getDimensionPixelOffset(R.dimen.keyguard_affordance_width);
         this.mIconHeight = this.mContext.getResources().getDimensionPixelOffset(R.dimen.keyguard_affordance_height);
@@ -275,13 +283,14 @@ public class KeyguardCameraView extends FrameLayout {
         this.mIconActiveCenterX = ((float) i) * 0.55f;
         this.mIconActiveCenterY = ((float) i2) * 0.8f;
         this.mIconActiveWidth = ((float) i) * 0.74f;
-        this.mLayoutParams = new WindowManager.LayoutParams(-1, -1, 2014, 218171160, -2);
-        WindowManager.LayoutParams layoutParams = this.mLayoutParams;
-        layoutParams.x = 0;
-        layoutParams.y = 0;
-        layoutParams.setTitle("keyguard_camera");
-        this.mLpChanged = new WindowManager.LayoutParams();
-        this.mLpChanged.copyFrom(this.mLayoutParams);
+        WindowManager.LayoutParams layoutParams2 = new WindowManager.LayoutParams(-1, -1, Build.VERSION.SDK_INT > 29 ? 2017 : 2014, 218171160, -2);
+        this.mLayoutParams = layoutParams2;
+        layoutParams2.x = 0;
+        layoutParams2.y = 0;
+        layoutParams2.setTitle("keyguard_camera");
+        WindowManager.LayoutParams layoutParams3 = new WindowManager.LayoutParams();
+        this.mLpChanged = layoutParams3;
+        layoutParams3.copyFrom(this.mLayoutParams);
         setVisibility(8);
     }
 
@@ -355,15 +364,14 @@ public class KeyguardCameraView extends FrameLayout {
         if (this.mTouchDownInitial) {
             this.mTouchX = f;
             this.mTouchY = f2;
-            float f3 = this.mTouchX;
-            float f4 = this.mInitialTouchX;
-            if (f3 > f4) {
-                this.mTouchX = f4;
+            float f3 = this.mInitialTouchX;
+            if (f > f3) {
+                this.mTouchX = f3;
             }
-            float f5 = this.mTouchY;
-            float f6 = this.mInitialTouchY;
-            if (f5 > f6) {
-                this.mTouchY = f6;
+            float f4 = this.mTouchY;
+            float f5 = this.mInitialTouchY;
+            if (f4 > f5) {
+                this.mTouchY = f5;
             }
             if (this.mIsCorrectOperation) {
                 this.mMoveDistance = (float) Math.sqrt(Math.pow((double) (this.mInitialTouchX - this.mTouchX), 2.0d) + Math.pow((double) (this.mInitialTouchY - this.mTouchY), 2.0d));
@@ -404,7 +412,7 @@ public class KeyguardCameraView extends FrameLayout {
     public void setDarkMode(boolean z) {
         if (this.mDarkMode != z) {
             this.mDarkMode = z;
-            this.mIconView.setImageDrawable(this.mContext.getDrawable(this.mDarkMode ? R.drawable.keyguard_bottom_camera_img_dark : R.drawable.keyguard_bottom_camera_img));
+            this.mIconView.setImageDrawable(this.mContext.getDrawable(z ? R.drawable.keyguard_bottom_camera_img_dark : R.drawable.keyguard_bottom_camera_img));
         }
     }
 
@@ -448,30 +456,32 @@ public class KeyguardCameraView extends FrameLayout {
     }
 
     private void updateViews() {
-        this.mMovePer = (float) (((double) this.mMovePer) + (((double) this.mActiveAnimPer) * 0.4d));
-        float f = this.mMovePer;
+        float f = (float) (((double) this.mMovePer) + (((double) this.mActiveAnimPer) * 0.4d));
+        this.mMovePer = f;
         if (f < 0.0f) {
             f = 0.0f;
         }
         this.mMovePer = f;
+        if (f > 1.0f) {
+            f = ((f - 1.0f) / 20.0f) + 1.0f;
+        }
         float f2 = this.mMovePer;
         if (f2 > 1.0f) {
-            f2 = ((f2 - 1.0f) / 20.0f) + 1.0f;
-        }
-        float f3 = this.mMovePer;
-        if (f3 > 1.0f) {
-            f3 = ((f3 - 1.0f) / 15.0f) + 1.0f;
+            f2 = ((f2 - 1.0f) / 15.0f) + 1.0f;
         }
         float min = Math.min(0.0f, this.mTouchY - this.mInitialTouchY);
         int i = this.mScreenHeight;
-        this.mMoveYPer = min / ((float) i);
-        this.mIconActiveCenterY = ((float) i) * Math.max(0.8f, (this.mMoveYPer * 0.1f) + 0.85f);
-        this.mVirX = valFromPer(f3, this.mIconInitCenterX, this.mIconActiveCenterX);
-        this.mVirY = valFromPer((float) Math.pow((double) f3, 3.0d), this.mIconInitCenterY, this.mIconActiveCenterY) + (this.mMoveYPer * 100.0f);
-        this.mVirWidth = valFromPer(f2, 0.0f, this.mIconActiveWidth);
-        this.mVirHeight = this.mVirWidth * (((this.mActiveAnimPer * Math.min(((float) this.mScreenHeight) / ((float) this.mScreenWidth), 2.0f)) / 2.0f) + 1.0f);
+        float f3 = min / ((float) i);
+        this.mMoveYPer = f3;
+        this.mIconActiveCenterY = ((float) i) * Math.max(0.8f, (f3 * 0.1f) + 0.85f);
+        this.mVirX = valFromPer(f2, this.mIconInitCenterX, this.mIconActiveCenterX);
+        this.mVirY = valFromPer((float) Math.pow((double) f2, 3.0d), this.mIconInitCenterY, this.mIconActiveCenterY) + (this.mMoveYPer * 100.0f);
+        float valFromPer = valFromPer(f, 0.0f, this.mIconActiveWidth);
+        this.mVirWidth = valFromPer;
+        float min2 = valFromPer * (((this.mActiveAnimPer * Math.min(((float) this.mScreenHeight) / ((float) this.mScreenWidth), 2.0f)) / 2.0f) + 1.0f);
+        this.mVirHeight = min2;
         this.mIconCenterX = this.mVirX;
-        this.mIconCenterY = (this.mVirY + (this.mVirHeight * 0.15f)) - (this.mVirWidth / 2.0f);
+        this.mIconCenterY = (this.mVirY + (min2 * 0.15f)) - (this.mVirWidth / 2.0f);
         this.mIconAlpha = valFromPer(this.mMovePer, 1.0f, 0.0f);
         this.mIconScale = valFromPer(this.mMovePer / this.mMoveActivePer, 1.0f, 1.5f);
         this.mIconCircleCenterX = this.mVirX;
@@ -559,13 +569,15 @@ public class KeyguardCameraView extends FrameLayout {
         this.mAnimatorSet.start();
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$startActiveAnim$0 */
     public /* synthetic */ void lambda$startActiveAnim$0$KeyguardCameraView(ValueAnimator valueAnimator) {
-        this.mActiveAnimPer = ((Float) valueAnimator.getAnimatedValue()).floatValue();
-        float f = this.mActiveAnimPer;
-        if (f < 0.0f) {
-            f = 0.0f;
+        float floatValue = ((Float) valueAnimator.getAnimatedValue()).floatValue();
+        this.mActiveAnimPer = floatValue;
+        if (floatValue < 0.0f) {
+            floatValue = 0.0f;
         }
-        this.mActiveAnimPer = f;
+        this.mActiveAnimPer = floatValue;
         handleMoveDistanceChanged();
     }
 
@@ -578,7 +590,7 @@ public class KeyguardCameraView extends FrameLayout {
         int i2 = this.mScreenHeight;
         AnimatorSet fullScreenAnim = getFullScreenAnim(f, (float) i, f2, (float) i2, this.mPreViewCenterX, (float) (i / 2), this.mPreViewCenterY, (float) (i2 / 2), this.mPreViewRadius, this.mPreViewInitRadius, this.mPreViewAlpha, 1.0f, this.mIconAlpha, 0.0f, this.mIconScale, 1.5f);
         this.mAnimatorSet = fullScreenAnim;
-        this.mAnimatorSet.setInterpolator(new PhysicBasedInterpolator(0.9f, 0.85f));
+        fullScreenAnim.setInterpolator(new PhysicBasedInterpolator(0.9f, 0.85f));
         this.mAnimatorSet.setDuration(350);
         this.mAnimatorSet.addListener(new AnimatorListenerAdapter() {
             private boolean mCancelled;
@@ -588,6 +600,7 @@ public class KeyguardCameraView extends FrameLayout {
             }
 
             public void onAnimationEnd(Animator animator) {
+                Class cls = ActivityObserver.class;
                 super.onAnimationEnd(animator);
                 if (KeyguardCameraView.this.mCallBack != null) {
                     KeyguardCameraView.this.mCallBack.onCompletedAnimationEnd();
@@ -597,8 +610,8 @@ public class KeyguardCameraView extends FrameLayout {
                     ValueAnimator unused = KeyguardCameraView.this.mBackgroundAnimator = null;
                 }
                 if (!this.mCancelled) {
-                    ((ActivityObserver) Dependency.get(ActivityObserver.class)).removeCallback(KeyguardCameraView.this.mActivityStateObserver);
-                    ((ActivityObserver) Dependency.get(ActivityObserver.class)).addCallback(KeyguardCameraView.this.mActivityStateObserver);
+                    ((ActivityObserver) Dependency.get(cls)).removeCallback(KeyguardCameraView.this.mActivityStateObserver);
+                    ((ActivityObserver) Dependency.get(cls)).addCallback(KeyguardCameraView.this.mActivityStateObserver);
                     AnalyticsHelper.getInstance(KeyguardCameraView.this.mContext).recordKeyguardAction("action_enter_camera_view");
                     AnalyticsHelper.getInstance(KeyguardCameraView.this.mContext).trackPageStart("action_enter_camera_view");
                     KeyguardCameraView.this.mContext.startActivityAsUser(PackageUtils.getCameraIntent(), UserHandle.CURRENT);
@@ -606,8 +619,9 @@ public class KeyguardCameraView extends FrameLayout {
             }
         });
         this.mAnimatorSet.start();
-        this.mBackgroundAnimator = ValueAnimator.ofFloat(new float[]{0.0f, 1.0f});
-        this.mBackgroundAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+        ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{0.0f, 1.0f});
+        this.mBackgroundAnimator = ofFloat;
+        ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             public final void onAnimationUpdate(ValueAnimator valueAnimator) {
                 KeyguardCameraView.this.lambda$startFullScreenAnim$1$KeyguardCameraView(valueAnimator);
             }
@@ -617,6 +631,8 @@ public class KeyguardCameraView extends FrameLayout {
         this.mBackgroundAnimator.start();
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$startFullScreenAnim$1 */
     public /* synthetic */ void lambda$startFullScreenAnim$1$KeyguardCameraView(ValueAnimator valueAnimator) {
         this.mBackgroundView.setAlpha(((Float) valueAnimator.getAnimatedValue()).floatValue());
     }
@@ -675,40 +691,60 @@ public class KeyguardCameraView extends FrameLayout {
         return animatorSet;
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$getFullScreenAnim$2 */
     public /* synthetic */ void lambda$getFullScreenAnim$2$KeyguardCameraView(ValueAnimator valueAnimator) {
-        this.mPreViewWidth = ((Float) valueAnimator.getAnimatedValue()).floatValue();
-        this.mIconCircleWidth = this.mPreViewWidth;
+        float floatValue = ((Float) valueAnimator.getAnimatedValue()).floatValue();
+        this.mPreViewWidth = floatValue;
+        this.mIconCircleWidth = floatValue;
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$getFullScreenAnim$3 */
     public /* synthetic */ void lambda$getFullScreenAnim$3$KeyguardCameraView(ValueAnimator valueAnimator) {
-        this.mPreViewHeight = ((Float) valueAnimator.getAnimatedValue()).floatValue();
-        this.mIconCircleHeight = this.mPreViewHeight;
+        float floatValue = ((Float) valueAnimator.getAnimatedValue()).floatValue();
+        this.mPreViewHeight = floatValue;
+        this.mIconCircleHeight = floatValue;
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$getFullScreenAnim$4 */
     public /* synthetic */ void lambda$getFullScreenAnim$4$KeyguardCameraView(ValueAnimator valueAnimator) {
-        this.mPreViewCenterX = ((Float) valueAnimator.getAnimatedValue()).floatValue();
-        this.mIconCircleCenterX = this.mPreViewCenterX;
-        this.mIconCenterX = this.mIconCircleCenterX;
+        float floatValue = ((Float) valueAnimator.getAnimatedValue()).floatValue();
+        this.mPreViewCenterX = floatValue;
+        this.mIconCircleCenterX = floatValue;
+        this.mIconCenterX = floatValue;
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$getFullScreenAnim$5 */
     public /* synthetic */ void lambda$getFullScreenAnim$5$KeyguardCameraView(ValueAnimator valueAnimator) {
-        this.mPreViewCenterY = ((Float) valueAnimator.getAnimatedValue()).floatValue();
-        this.mIconCircleCenterY = this.mPreViewCenterY;
-        this.mIconCenterY = (this.mIconCircleCenterY + (this.mIconCircleHeight / 2.0f)) - (this.mIconCircleWidth / 2.0f);
+        float floatValue = ((Float) valueAnimator.getAnimatedValue()).floatValue();
+        this.mPreViewCenterY = floatValue;
+        this.mIconCircleCenterY = floatValue;
+        this.mIconCenterY = (floatValue + (this.mIconCircleHeight / 2.0f)) - (this.mIconCircleWidth / 2.0f);
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$getFullScreenAnim$6 */
     public /* synthetic */ void lambda$getFullScreenAnim$6$KeyguardCameraView(ValueAnimator valueAnimator) {
         this.mPreViewAlpha = ((Float) valueAnimator.getAnimatedValue()).floatValue();
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$getFullScreenAnim$7 */
     public /* synthetic */ void lambda$getFullScreenAnim$7$KeyguardCameraView(ValueAnimator valueAnimator) {
         this.mPreViewRadius = ((Float) valueAnimator.getAnimatedValue()).floatValue();
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$getFullScreenAnim$8 */
     public /* synthetic */ void lambda$getFullScreenAnim$8$KeyguardCameraView(ValueAnimator valueAnimator) {
         this.mIconAlpha = ((Float) valueAnimator.getAnimatedValue()).floatValue();
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$getFullScreenAnim$9 */
     public /* synthetic */ void lambda$getFullScreenAnim$9$KeyguardCameraView(ValueAnimator valueAnimator) {
         this.mIconScale = ((Float) valueAnimator.getAnimatedValue()).floatValue();
         invalidate();
@@ -755,19 +791,25 @@ public class KeyguardCameraView extends FrameLayout {
         this.mAnimatorSet.start();
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$startCancelAnim$10 */
     public /* synthetic */ void lambda$startCancelAnim$10$KeyguardCameraView(ValueAnimator valueAnimator) {
-        this.mActiveAnimPer = ((Float) valueAnimator.getAnimatedValue()).floatValue();
-        float f = this.mActiveAnimPer;
-        if (f < 0.0f) {
-            f = 0.0f;
+        float floatValue = ((Float) valueAnimator.getAnimatedValue()).floatValue();
+        this.mActiveAnimPer = floatValue;
+        if (floatValue < 0.0f) {
+            floatValue = 0.0f;
         }
-        this.mActiveAnimPer = f;
+        this.mActiveAnimPer = floatValue;
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$startCancelAnim$11 */
     public /* synthetic */ void lambda$startCancelAnim$11$KeyguardCameraView(ValueAnimator valueAnimator) {
         this.mMoveYPer = ((Float) valueAnimator.getAnimatedValue()).floatValue();
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$startCancelAnim$12 */
     public /* synthetic */ void lambda$startCancelAnim$12$KeyguardCameraView(ValueAnimator valueAnimator) {
         this.mMoveDistance = ((Float) valueAnimator.getAnimatedValue()).floatValue();
         handleMoveDistanceChanged();
@@ -778,8 +820,9 @@ public class KeyguardCameraView extends FrameLayout {
         this.mIsBackAnimRunning = true;
         cancelAnim();
         int i = this.mScreenWidth;
-        this.mAnimatorSet = getBackIconAnim((float) i, 0.0f, (float) (i / 2), this.mIconInitCenterX, (float) (this.mScreenHeight / 2), this.mIconInitCenterY, 1.5f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f);
-        this.mAnimatorSet.setInterpolator(new PhysicBasedInterpolator(0.8f, 0.71f));
+        AnimatorSet backIconAnim = getBackIconAnim((float) i, 0.0f, (float) (i / 2), this.mIconInitCenterX, (float) (this.mScreenHeight / 2), this.mIconInitCenterY, 1.5f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f);
+        this.mAnimatorSet = backIconAnim;
+        backIconAnim.setInterpolator(new PhysicBasedInterpolator(0.8f, 0.71f));
         this.mAnimatorSet.setDuration(700);
         this.mAnimatorSet.addListener(new AnimatorListenerAdapter() {
             public void onAnimationStart(Animator animator) {
@@ -798,6 +841,8 @@ public class KeyguardCameraView extends FrameLayout {
                 KeyguardCameraView.this.setAlpha(1.0f);
             }
 
+            /* access modifiers changed from: private */
+            /* renamed from: lambda$onAnimationStart$0 */
             public /* synthetic */ void lambda$onAnimationStart$0$KeyguardCameraView$7(ValueAnimator valueAnimator) {
                 float unused = KeyguardCameraView.this.mBackAnimAspectRatio = ((Float) valueAnimator.getAnimatedValue()).floatValue();
             }
@@ -861,36 +906,54 @@ public class KeyguardCameraView extends FrameLayout {
         return animatorSet;
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$getBackIconAnim$13 */
     public /* synthetic */ void lambda$getBackIconAnim$13$KeyguardCameraView(ValueAnimator valueAnimator) {
-        this.mIconCircleWidth = ((Float) valueAnimator.getAnimatedValue()).floatValue();
-        this.mIconCircleHeight = this.mIconCircleWidth * this.mBackAnimAspectRatio;
+        float floatValue = ((Float) valueAnimator.getAnimatedValue()).floatValue();
+        this.mIconCircleWidth = floatValue;
+        this.mIconCircleHeight = floatValue * this.mBackAnimAspectRatio;
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$getBackIconAnim$14 */
     public /* synthetic */ void lambda$getBackIconAnim$14$KeyguardCameraView(ValueAnimator valueAnimator) {
-        this.mIconCircleCenterX = ((Float) valueAnimator.getAnimatedValue()).floatValue();
-        this.mIconCenterX = this.mIconCircleCenterX;
+        float floatValue = ((Float) valueAnimator.getAnimatedValue()).floatValue();
+        this.mIconCircleCenterX = floatValue;
+        this.mIconCenterX = floatValue;
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$getBackIconAnim$15 */
     public /* synthetic */ void lambda$getBackIconAnim$15$KeyguardCameraView(ValueAnimator valueAnimator) {
-        this.mIconCircleCenterY = ((Float) valueAnimator.getAnimatedValue()).floatValue();
-        this.mIconCenterY = (this.mIconCircleCenterY + (this.mIconCircleHeight * 0.8f)) - (this.mIconCircleWidth / 2.0f);
+        float floatValue = ((Float) valueAnimator.getAnimatedValue()).floatValue();
+        this.mIconCircleCenterY = floatValue;
+        this.mIconCenterY = (floatValue + (this.mIconCircleHeight * 0.8f)) - (this.mIconCircleWidth / 2.0f);
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$getBackIconAnim$16 */
     public /* synthetic */ void lambda$getBackIconAnim$16$KeyguardCameraView(ValueAnimator valueAnimator) {
-        this.mIconCircleAlpha = ((Float) valueAnimator.getAnimatedValue()).floatValue();
-        if (this.mIconCircleAlpha < 0.0f) {
+        float floatValue = ((Float) valueAnimator.getAnimatedValue()).floatValue();
+        this.mIconCircleAlpha = floatValue;
+        if (floatValue < 0.0f) {
             this.mIconCircleAlpha = 0.0f;
         }
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$getBackIconAnim$17 */
     public /* synthetic */ void lambda$getBackIconAnim$17$KeyguardCameraView(ValueAnimator valueAnimator) {
         this.mIconAlpha = ((Float) valueAnimator.getAnimatedValue()).floatValue();
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$getBackIconAnim$18 */
     public /* synthetic */ void lambda$getBackIconAnim$18$KeyguardCameraView(ValueAnimator valueAnimator) {
         this.mIconScale = ((Float) valueAnimator.getAnimatedValue()).floatValue();
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$getBackIconAnim$19 */
     public /* synthetic */ void lambda$getBackIconAnim$19$KeyguardCameraView(ValueAnimator valueAnimator) {
         this.mBackgroundView.setAlpha(((Float) valueAnimator.getAnimatedValue()).floatValue());
         int i = this.mScreenHeight;
@@ -1027,7 +1090,7 @@ public class KeyguardCameraView extends FrameLayout {
 
     public class PhysicBasedInterpolator implements Interpolator {
         private float c;
-        private float c1 = this.mInitial;
+        private float c1 = -1.0f;
         private float c2;
         private float k;
         private float m = 1.0f;
@@ -1039,14 +1102,16 @@ public class KeyguardCameraView extends FrameLayout {
             double d = (double) f2;
             double pow = Math.pow(6.283185307179586d / d, 2.0d);
             float f3 = this.m;
-            this.k = (float) (pow * ((double) f3));
-            this.c = (float) (((((double) f) * 12.566370614359172d) * ((double) f3)) / d);
-            float f4 = f3 * 4.0f * this.k;
-            float f5 = this.c;
+            float f4 = (float) (pow * ((double) f3));
+            this.k = f4;
+            float f5 = (float) (((((double) f) * 12.566370614359172d) * ((double) f3)) / d);
+            this.c = f5;
             float f6 = this.m;
-            this.w = ((float) Math.sqrt((double) (f4 - (f5 * f5)))) / (f6 * 2.0f);
-            this.r = -((this.c / 2.0f) * f6);
-            this.c2 = (0.0f - (this.r * this.mInitial)) / this.w;
+            float sqrt = ((float) Math.sqrt((double) (((f3 * 4.0f) * f4) - (f5 * f5)))) / (f6 * 2.0f);
+            this.w = sqrt;
+            float f7 = -((this.c / 2.0f) * f6);
+            this.r = f7;
+            this.c2 = (0.0f - (f7 * this.mInitial)) / sqrt;
         }
 
         public float getInterpolation(float f) {

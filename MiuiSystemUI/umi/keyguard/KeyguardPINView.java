@@ -65,8 +65,9 @@ public class KeyguardPINView extends KeyguardPinBasedInputView implements Passwo
         this.mDisappearYTranslation = getResources().getDimensionPixelSize(R.dimen.miui_disappear_y_translation);
         this.mKeyguardUpdateMonitor = KeyguardUpdateMonitor.getInstance(context);
         this.mScreenHeight = context.getResources().getConfiguration().screenHeightDp;
-        this.mPasswordLength = (int) new MiuiLockPatternUtils(context).getLockPasswordLength(KeyguardUpdateMonitor.getCurrentUser());
-        if (this.mPasswordLength < 4) {
+        int lockPasswordLength = (int) new MiuiLockPatternUtils(context).getLockPasswordLength(KeyguardUpdateMonitor.getCurrentUser());
+        this.mPasswordLength = lockPasswordLength;
+        if (lockPasswordLength < 4) {
             this.mPasswordLength = 4;
             Log.e("KeyguardPINView", "get password length = " + this.mPasswordLength);
         }

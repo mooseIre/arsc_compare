@@ -69,10 +69,11 @@ class KeyguardMessageArea extends TextView implements SecurityMessageDisplay {
     }
 
     private void securityMessageChanged(CharSequence charSequence) {
+        Object obj = ANNOUNCE_TOKEN;
         this.mMessage = charSequence;
         update();
-        this.mHandler.removeCallbacksAndMessages(ANNOUNCE_TOKEN);
-        this.mHandler.postAtTime(new AnnounceRunnable(this, getText()), ANNOUNCE_TOKEN, SystemClock.uptimeMillis() + 250);
+        this.mHandler.removeCallbacksAndMessages(obj);
+        this.mHandler.postAtTime(new AnnounceRunnable(this, getText()), obj, SystemClock.uptimeMillis() + 250);
     }
 
     private void clearMessage() {

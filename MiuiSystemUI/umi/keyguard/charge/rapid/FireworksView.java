@@ -86,8 +86,9 @@ public class FireworksView extends View {
         this.mScreenSize = new Point();
         this.mWindowManager.getDefaultDisplay().getRealSize(this.mScreenSize);
         updateSizeForScreenSizeChange();
-        this.mTrackPaint = new Paint(1);
-        this.mTrackPaint.setStyle(Paint.Style.STROKE);
+        Paint paint = new Paint(1);
+        this.mTrackPaint = paint;
+        paint.setStyle(Paint.Style.STROKE);
         this.mTrackPaint.setStrokeWidth((float) this.mTrackStokeWidth);
         this.mTrackPaint.setShader(new LinearGradient(0.0f, 0.0f, 0.0f, (float) this.mViewHeight, new int[]{OUTER_TRACK_START_COLOR, OUTER_TRACK_MIDDLE_COLOR, OUTER_TRACK_END_COLOR}, new float[]{0.0f, 0.12f, 1.0f}, Shader.TileMode.CLAMP));
         this.mFireworksManager = new FireworksManager(this.mViewHeight, this.mSpeedMove);

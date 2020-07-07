@@ -53,7 +53,7 @@ public class KeyguardWallpaperHelper {
                                 if (intent.getBooleanExtra("apply", false)) {
                                     bool = Boolean.valueOf(KeyguardWallpaperUtils.setLockWallpaper(context, uriArr[0], true));
                                 } else {
-                                    bool = true;
+                                    bool = Boolean.TRUE;
                                 }
                                 if (bool.booleanValue()) {
                                     KeyguardWallpaperUtils.updateCurrentWallpaperInfo(context, stringExtra);
@@ -154,8 +154,9 @@ public class KeyguardWallpaperHelper {
 
     public KeyguardWallpaperHelper(Context context) {
         this.mContext = context;
-        this.mKeyguardUpdateMonitor = KeyguardUpdateMonitor.getInstance(context);
-        this.mKeyguardUpdateMonitor.registerCallback(this.mKeyguardUpdateMonitorCallback);
+        KeyguardUpdateMonitor instance = KeyguardUpdateMonitor.getInstance(context);
+        this.mKeyguardUpdateMonitor = instance;
+        instance.registerCallback(this.mKeyguardUpdateMonitorCallback);
         this.mWallpaperAuthority = WallpaperAuthorityUtils.getWallpaperAuthority(context);
         registerContentObserver();
         registerBroadcastReceivers();
@@ -384,7 +385,7 @@ public class KeyguardWallpaperHelper {
     }
 
     /* access modifiers changed from: private */
-    /* JADX WARNING: Removed duplicated region for block: B:21:0x00bf  */
+    /* JADX WARNING: Removed duplicated region for block: B:22:0x00c0  */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     public android.os.Bundle getPreviewActivityExtras(long r8) {
         /*
@@ -412,45 +413,49 @@ public class KeyguardWallpaperHelper {
         L_0x0031:
             android.content.Context r2 = r7.mContext
             java.lang.String r2 = com.android.keyguard.wallpaper.KeyguardWallpaperUtils.getCurrentWallpaperInfo(r2)
-            com.android.keyguard.wallpaper.mode.RequestInfo r3 = new com.android.keyguard.wallpaper.mode.RequestInfo     // Catch:{ Exception -> 0x0083 }
-            r3.<init>()     // Catch:{ Exception -> 0x0083 }
+            com.android.keyguard.wallpaper.mode.RequestInfo r3 = new com.android.keyguard.wallpaper.mode.RequestInfo     // Catch:{ Exception -> 0x0086 }
+            r3.<init>()     // Catch:{ Exception -> 0x0086 }
             r5 = 2
-            r3.mode = r5     // Catch:{ Exception -> 0x0083 }
-            com.google.gson.Gson r5 = r7.mGson     // Catch:{ Exception -> 0x0083 }
+            r3.mode = r5     // Catch:{ Exception -> 0x0086 }
+            com.google.gson.Gson r5 = r7.mGson     // Catch:{ Exception -> 0x0086 }
             java.lang.Class<com.android.keyguard.wallpaper.mode.WallpaperInfo> r6 = com.android.keyguard.wallpaper.mode.WallpaperInfo.class
-            java.lang.Object r5 = r5.fromJson(r2, r6)     // Catch:{ Exception -> 0x0083 }
-            com.android.keyguard.wallpaper.mode.WallpaperInfo r5 = (com.android.keyguard.wallpaper.mode.WallpaperInfo) r5     // Catch:{ Exception -> 0x0083 }
-            r3.currentWallpaperInfo = r5     // Catch:{ Exception -> 0x0083 }
-            com.google.gson.Gson r5 = r7.mGson     // Catch:{ Exception -> 0x0083 }
-            java.lang.String r3 = r5.toJson(r3)     // Catch:{ Exception -> 0x0083 }
-            java.lang.StringBuilder r5 = new java.lang.StringBuilder     // Catch:{ Exception -> 0x0083 }
-            r5.<init>()     // Catch:{ Exception -> 0x0083 }
-            r5.append(r4)     // Catch:{ Exception -> 0x0083 }
-            r5.append(r1)     // Catch:{ Exception -> 0x0083 }
-            java.lang.String r1 = r5.toString()     // Catch:{ Exception -> 0x0083 }
-            java.lang.String r1 = r7.getLockWallpaperListFromProvider(r1, r3)     // Catch:{ Exception -> 0x0083 }
-            com.google.gson.Gson r3 = r7.mGson     // Catch:{ Exception -> 0x0083 }
+            java.lang.Object r5 = r5.fromJson(r2, r6)     // Catch:{ Exception -> 0x0086 }
+            com.android.keyguard.wallpaper.mode.WallpaperInfo r5 = (com.android.keyguard.wallpaper.mode.WallpaperInfo) r5     // Catch:{ Exception -> 0x0086 }
+            r3.currentWallpaperInfo = r5     // Catch:{ Exception -> 0x0086 }
+            com.google.gson.Gson r5 = r7.mGson     // Catch:{ Exception -> 0x0086 }
+            java.lang.String r3 = r5.toJson(r3)     // Catch:{ Exception -> 0x0086 }
+            java.lang.StringBuilder r5 = new java.lang.StringBuilder     // Catch:{ Exception -> 0x0086 }
+            r5.<init>()     // Catch:{ Exception -> 0x0086 }
+            r5.append(r4)     // Catch:{ Exception -> 0x0086 }
+            r5.append(r1)     // Catch:{ Exception -> 0x0086 }
+            java.lang.String r1 = r5.toString()     // Catch:{ Exception -> 0x0086 }
+            java.lang.String r1 = r7.getLockWallpaperListFromProvider(r1, r3)     // Catch:{ Exception -> 0x0086 }
+            com.google.gson.Gson r3 = r7.mGson     // Catch:{ Exception -> 0x0086 }
             java.lang.Class<com.android.keyguard.wallpaper.mode.ResultInfo> r4 = com.android.keyguard.wallpaper.mode.ResultInfo.class
-            java.lang.Object r1 = r3.fromJson(r1, r4)     // Catch:{ Exception -> 0x0083 }
-            com.android.keyguard.wallpaper.mode.ResultInfo r1 = (com.android.keyguard.wallpaper.mode.ResultInfo) r1     // Catch:{ Exception -> 0x0083 }
-            if (r1 == 0) goto L_0x0081
-            java.lang.String r3 = r1.previewComponent     // Catch:{ Exception -> 0x0083 }
-            r7.mPreviewComponent = r3     // Catch:{ Exception -> 0x0083 }
-            java.lang.String r3 = r1.dialogComponent     // Catch:{ Exception -> 0x0083 }
-            com.google.gson.Gson r7 = r7.mGson     // Catch:{ Exception -> 0x007f }
-            java.util.List<com.android.keyguard.wallpaper.mode.WallpaperInfo> r1 = r1.wallpaperInfos     // Catch:{ Exception -> 0x007f }
-            java.lang.String r7 = r7.toJson(r1)     // Catch:{ Exception -> 0x007f }
-            goto L_0x00a0
-        L_0x007f:
+            java.lang.Object r1 = r3.fromJson(r1, r4)     // Catch:{ Exception -> 0x0086 }
+            com.android.keyguard.wallpaper.mode.ResultInfo r1 = (com.android.keyguard.wallpaper.mode.ResultInfo) r1     // Catch:{ Exception -> 0x0086 }
+            if (r1 == 0) goto L_0x0082
+            java.lang.String r3 = r1.previewComponent     // Catch:{ Exception -> 0x0086 }
+            r7.mPreviewComponent = r3     // Catch:{ Exception -> 0x0086 }
+            java.lang.String r3 = r1.dialogComponent     // Catch:{ Exception -> 0x0086 }
+            com.google.gson.Gson r7 = r7.mGson     // Catch:{ Exception -> 0x0080 }
+            java.util.List<com.android.keyguard.wallpaper.mode.WallpaperInfo> r1 = r1.wallpaperInfos     // Catch:{ Exception -> 0x0080 }
+            java.lang.String r7 = r7.toJson(r1)     // Catch:{ Exception -> 0x0080 }
+            r0 = r3
+            goto L_0x0083
+        L_0x0080:
             r7 = move-exception
-            goto L_0x0085
-        L_0x0081:
+            goto L_0x0088
+        L_0x0082:
             r7 = r0
-            goto L_0x00a1
         L_0x0083:
+            r3 = r0
+            r0 = r7
+            goto L_0x00a2
+        L_0x0086:
             r7 = move-exception
             r3 = r0
-        L_0x0085:
+        L_0x0088:
             java.lang.StringBuilder r1 = new java.lang.StringBuilder
             r1.<init>()
             java.lang.String r4 = "getPreviewActivityExtras"
@@ -460,27 +465,24 @@ public class KeyguardWallpaperHelper {
             java.lang.String r7 = r1.toString()
             java.lang.String r1 = "KeyguardWallpaperHelper"
             android.util.Log.e(r1, r7)
-            r7 = r0
-        L_0x00a0:
-            r0 = r3
-        L_0x00a1:
-            android.os.Bundle r1 = new android.os.Bundle
-            r1.<init>()
-            java.lang.String r3 = "showtime"
-            r1.putLong(r3, r8)
+        L_0x00a2:
+            android.os.Bundle r7 = new android.os.Bundle
+            r7.<init>()
+            java.lang.String r1 = "showtime"
+            r7.putLong(r1, r8)
             java.lang.String r8 = "currentWallpaperInfo"
-            r1.putString(r8, r2)
+            r7.putString(r8, r2)
             java.lang.String r8 = "wallpaperInfos"
-            r1.putString(r8, r7)
-            java.lang.String r7 = "dialogComponent"
-            r1.putString(r7, r0)
-            boolean r7 = miui.os.Build.IS_INTERNATIONAL_BUILD
-            if (r7 == 0) goto L_0x00c6
-            java.lang.String r7 = "entry_source"
-            java.lang.String r8 = "cta"
-            r1.putString(r7, r8)
-        L_0x00c6:
-            return r1
+            r7.putString(r8, r0)
+            java.lang.String r8 = "dialogComponent"
+            r7.putString(r8, r3)
+            boolean r8 = miui.os.Build.IS_INTERNATIONAL_BUILD
+            if (r8 == 0) goto L_0x00c7
+            java.lang.String r8 = "entry_source"
+            java.lang.String r9 = "cta"
+            r7.putString(r8, r9)
+        L_0x00c7:
+            return r7
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.keyguard.wallpaper.KeyguardWallpaperHelper.getPreviewActivityExtras(long):android.os.Bundle");
     }

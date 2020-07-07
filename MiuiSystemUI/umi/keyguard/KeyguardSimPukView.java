@@ -94,17 +94,9 @@ public class KeyguardSimPukView extends KeyguardPinBasedInputView {
     }
 
     private class StateMachine {
-        final int CONFIRM_PIN;
-        final int DONE;
-        final int ENTER_PIN;
-        final int ENTER_PUK;
         private int state;
 
         private StateMachine() {
-            this.ENTER_PUK = 0;
-            this.ENTER_PIN = 1;
-            this.CONFIRM_PIN = 2;
-            this.DONE = 3;
             this.state = 0;
         }
 
@@ -254,8 +246,9 @@ public class KeyguardSimPukView extends KeyguardPinBasedInputView {
 
     private Dialog getSimUnlockProgressDialog() {
         if (this.mSimUnlockProgressDialog == null) {
-            this.mSimUnlockProgressDialog = new ProgressDialog(this.mContext);
-            this.mSimUnlockProgressDialog.setMessage(this.mContext.getString(R.string.kg_sim_unlock_progress_dialog_message));
+            ProgressDialog progressDialog = new ProgressDialog(this.mContext);
+            this.mSimUnlockProgressDialog = progressDialog;
+            progressDialog.setMessage(this.mContext.getString(R.string.kg_sim_unlock_progress_dialog_message));
             this.mSimUnlockProgressDialog.setIndeterminate(true);
             this.mSimUnlockProgressDialog.setCancelable(false);
             if (!(this.mContext instanceof Activity)) {
@@ -274,8 +267,9 @@ public class KeyguardSimPukView extends KeyguardPinBasedInputView {
             builder.setMessage(pukPasswordErrorMessage);
             builder.setCancelable(false);
             builder.setNeutralButton(R.string.ok, (DialogInterface.OnClickListener) null);
-            this.mRemainingAttemptsDialog = builder.create();
-            this.mRemainingAttemptsDialog.getWindow().setType(2009);
+            AlertDialog create = builder.create();
+            this.mRemainingAttemptsDialog = create;
+            create.getWindow().setType(2009);
         } else {
             alertDialog.setMessage(pukPasswordErrorMessage);
         }
@@ -309,7 +303,7 @@ public class KeyguardSimPukView extends KeyguardPinBasedInputView {
     public void updateSim() {
         getSimUnlockProgressDialog().show();
         if (this.mCheckSimPukThread == null) {
-            this.mCheckSimPukThread = new CheckSimPuk(this.mPukText, this.mPinText, this.mSubId) {
+            AnonymousClass2 r0 = new CheckSimPuk(this.mPukText, this.mPinText, this.mSubId) {
                 /* access modifiers changed from: package-private */
                 public void onSimLockChangedResponse(final int i, final int i2) {
                     KeyguardSimPukView.this.post(new Runnable() {
@@ -350,7 +344,8 @@ public class KeyguardSimPukView extends KeyguardPinBasedInputView {
                     });
                 }
             };
-            this.mCheckSimPukThread.start();
+            this.mCheckSimPukThread = r0;
+            r0.start();
         }
     }
 
@@ -380,10 +375,11 @@ public class KeyguardSimPukView extends KeyguardPinBasedInputView {
             } else {
                 charSequence = "";
             }
-            str = resources.getString(R.string.kg_puk_enter_puk_hint_multi, new Object[]{charSequence});
+            String string = resources.getString(R.string.kg_puk_enter_puk_hint_multi, new Object[]{charSequence});
             if (subscriptionInfoForSubId != null) {
                 i2 = subscriptionInfoForSubId.getIconTint();
             }
+            str = string;
         }
         this.mSecurityMessageDisplay.setMessage((CharSequence) str);
         this.mSimImageView.setImageTintList(ColorStateList.valueOf(i2));

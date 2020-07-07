@@ -8,7 +8,7 @@ import com.android.internal.widget.LockPatternUtils;
 
 public class KeyguardSecurityModel {
     private final Context mContext;
-    private final boolean mIsPukScreenAvailable = this.mContext.getResources().getBoolean(17891454);
+    private final boolean mIsPukScreenAvailable = this.mContext.getResources().getBoolean(17891458);
     private LockPatternUtils mLockPatternUtils;
 
     public enum SecurityMode {

@@ -90,8 +90,9 @@ public class ContentProviderBinder {
             return;
         }
         if (!this.mSystemBootCompleted) {
-            this.mSystemBootCompleted = "1".equals(SystemProperties.get("sys.boot_completed"));
-            if (!this.mSystemBootCompleted) {
+            boolean equals = "1".equals(SystemProperties.get("sys.boot_completed"));
+            this.mSystemBootCompleted = equals;
+            if (!equals) {
                 return;
             }
         }
@@ -104,8 +105,8 @@ public class ContentProviderBinder {
     private final class QueryHandler extends AsyncQueryHandler {
 
         protected class CatchingWorkerHandler extends AsyncQueryHandler.WorkerHandler {
-            public CatchingWorkerHandler(Looper looper) {
-                super(QueryHandler.this, looper);
+            public CatchingWorkerHandler(QueryHandler queryHandler, Looper looper) {
+                super(queryHandler, looper);
             }
 
             public void handleMessage(Message message) {
@@ -124,7 +125,7 @@ public class ContentProviderBinder {
         /* JADX WARNING: type inference failed for: r0v0, types: [com.android.keyguard.smartcover.ContentProviderBinder$QueryHandler$CatchingWorkerHandler, android.os.Handler] */
         /* access modifiers changed from: protected */
         public Handler createHandler(Looper looper) {
-            return new CatchingWorkerHandler(looper);
+            return new CatchingWorkerHandler(this, looper);
         }
 
         public QueryHandler(Context context) {

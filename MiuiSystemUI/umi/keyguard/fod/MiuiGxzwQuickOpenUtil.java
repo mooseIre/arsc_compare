@@ -70,7 +70,7 @@ class MiuiGxzwQuickOpenUtil {
                     final int i = sharedPreferences.getInt("sp_fod_show_quick_open_press_count", 0);
                     final long j = sharedPreferences.getLong("sp_fod_show_quick_open_slide_time", 0);
                     final int i2 = sharedPreferences.getInt("sp_fod_show_quick_open_teach", 1);
-                    handler.post(new Runnable() {
+                    handler.post(new Runnable(this) {
                         public void run() {
                             int unused = MiuiGxzwQuickOpenUtil.sShowQuickOpenPressCount = i;
                             long unused2 = MiuiGxzwQuickOpenUtil.sShowQuickOpenSlideTime = j;
@@ -100,15 +100,16 @@ class MiuiGxzwQuickOpenUtil {
             if (sShowQuickOpenPressCount == -1) {
                 sShowQuickOpenPressCount = context.getSharedPreferences("quick_open", 0).getInt("sp_fod_show_quick_open_press_count", 0);
             }
-            sShowQuickOpenPressCount++;
-            if (sShowQuickOpenPressCount > 5) {
+            int i = sShowQuickOpenPressCount + 1;
+            sShowQuickOpenPressCount = i;
+            if (i > 5) {
                 sShowQuickOpenPressCount = 5;
             }
-            final int i = sShowQuickOpenPressCount;
+            final int i2 = sShowQuickOpenPressCount;
             AsyncTask.THREAD_POOL_EXECUTOR.execute(new Runnable() {
                 public void run() {
                     SharedPreferences.Editor edit = context.getSharedPreferences("quick_open", 0).edit();
-                    edit.putInt("sp_fod_show_quick_open_press_count", i);
+                    edit.putInt("sp_fod_show_quick_open_press_count", i2);
                     edit.commit();
                 }
             });

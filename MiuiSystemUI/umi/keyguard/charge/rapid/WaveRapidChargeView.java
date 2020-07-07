@@ -9,6 +9,7 @@ import android.content.Context;
 import android.graphics.Point;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.Property;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -40,8 +41,9 @@ public class WaveRapidChargeView extends RapidChargeView {
 
     /* access modifiers changed from: protected */
     public void addChildView() {
-        this.mWaveView = new WaveView(this.mContext);
-        this.mWaveView.setWaveViewWidth(2088);
+        WaveView waveView = new WaveView(this.mContext);
+        this.mWaveView = waveView;
+        waveView.setWaveViewWidth(2088);
         this.mWaveView.setWaveViewHeight(2250);
         ViewGroup viewGroup = this.mContentContainer;
         if (viewGroup != null) {
@@ -94,8 +96,9 @@ public class WaveRapidChargeView extends RapidChargeView {
     public void zoomLargeOnChildView() {
         this.mWaveView.startAnim();
         this.mPercentCountView.setTextSize(265, R.styleable.AppCompatTheme_textAppearanceListItemSecondary, R.styleable.AppCompatTheme_textAppearanceListItemSecondary);
-        this.mPercentViewAnimator = ValueAnimator.ofFloat(new float[]{0.0f, 1.0f});
-        this.mPercentViewAnimator.setInterpolator(this.mQuartOutInterpolator);
+        ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{0.0f, 1.0f});
+        this.mPercentViewAnimator = ofFloat;
+        ofFloat.setInterpolator(this.mQuartOutInterpolator);
         this.mPercentViewAnimator.setDuration(800);
         this.mPercentViewAnimator.setStartDelay(1000);
         this.mPercentViewAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -138,8 +141,9 @@ public class WaveRapidChargeView extends RapidChargeView {
         ofInt.setDuration(800);
         ofInt.addListener(this);
         ofInt.addUpdateListener(this);
-        this.mEnterAnimatorSet = new AnimatorSet();
-        this.mEnterAnimatorSet.play(ofInt);
+        AnimatorSet animatorSet = new AnimatorSet();
+        this.mEnterAnimatorSet = animatorSet;
+        animatorSet.play(ofInt);
     }
 
     /* access modifiers changed from: protected */
@@ -208,11 +212,12 @@ public class WaveRapidChargeView extends RapidChargeView {
     }
 
     public void startDismiss(String str) {
+        Property property = FrameLayout.ALPHA;
         super.startDismiss(str);
         this.mPercentCountView.setAlpha(0.0f);
         this.mIsPercentViewShown = false;
-        ObjectAnimator duration = ObjectAnimator.ofPropertyValuesHolder(this, new PropertyValuesHolder[]{PropertyValuesHolder.ofFloat(FrameLayout.ALPHA, new float[]{getAlpha(), 0.0f})}).setDuration(600);
-        PropertyValuesHolder ofFloat = PropertyValuesHolder.ofFloat(FrameLayout.ALPHA, new float[]{this.mContentContainer.getAlpha(), 0.0f});
+        ObjectAnimator duration = ObjectAnimator.ofPropertyValuesHolder(this, new PropertyValuesHolder[]{PropertyValuesHolder.ofFloat(property, new float[]{getAlpha(), 0.0f})}).setDuration(600);
+        PropertyValuesHolder ofFloat = PropertyValuesHolder.ofFloat(property, new float[]{this.mContentContainer.getAlpha(), 0.0f});
         ObjectAnimator duration2 = ObjectAnimator.ofPropertyValuesHolder(this.mContentContainer, new PropertyValuesHolder[]{ofFloat}).setDuration(600);
         this.mDismissAnimatorSet.setInterpolator(this.mQuartOutInterpolator);
         this.mDismissAnimatorSet.playTogether(new Animator[]{duration2});

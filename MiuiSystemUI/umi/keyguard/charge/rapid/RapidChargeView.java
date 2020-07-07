@@ -14,6 +14,7 @@ import android.hardware.input.InputManager;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.Property;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -198,12 +199,14 @@ public class RapidChargeView extends FrameLayout implements ValueAnimator.Animat
         addChildView();
         RelativeLayout.LayoutParams layoutParams2 = new RelativeLayout.LayoutParams(-2, -2);
         layoutParams2.addRule(13);
-        this.mPercentCountView = new PercentCountView(context);
-        this.mPercentCountView.setTranslationY((float) this.mChargeNumberTranslateInit);
+        PercentCountView percentCountView = new PercentCountView(context);
+        this.mPercentCountView = percentCountView;
+        percentCountView.setTranslationY((float) this.mChargeNumberTranslateInit);
         this.mPercentCountView.setChargeLevelAnimationListener(this.mChargeLevelAnimationListener);
         this.mContentContainer.addView(this.mPercentCountView, layoutParams2);
-        this.mStateTip = new AccessibilityDisableTextView(context);
-        this.mStateTip.setTextSize(0, (float) this.mSpeedTipTextSizePx);
+        AccessibilityDisableTextView accessibilityDisableTextView = new AccessibilityDisableTextView(context);
+        this.mStateTip = accessibilityDisableTextView;
+        accessibilityDisableTextView.setTextSize(0, (float) this.mSpeedTipTextSizePx);
         this.mStateTip.setIncludeFontPadding(false);
         this.mStateTip.setTextColor(Color.parseColor("#8CFFFFFF"));
         this.mStateTip.setGravity(17);
@@ -221,16 +224,18 @@ public class RapidChargeView extends FrameLayout implements ValueAnimator.Animat
         this.mGtChargeAniView.setVisibility(8);
         this.mGtChargeAniView.setViewInitState();
         this.mContentContainer.addView(this.mGtChargeAniView, layoutParams4);
-        this.mRapidIcon = new ImageView(context);
-        this.mRapidIcon.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        ImageView imageView = new ImageView(context);
+        this.mRapidIcon = imageView;
+        imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
         this.mRapidIcon.setImageDrawable(this.mRapidIconDrawable);
         RelativeLayout.LayoutParams layoutParams5 = new RelativeLayout.LayoutParams(this.mRapidIconWidth, this.mRapidIconHeight + this.mIconPaddingTop);
         layoutParams5.addRule(13);
         this.mRapidIcon.setPadding(0, this.mIconPaddingTop, 0, 0);
         this.mRapidIcon.setPivotX((float) this.mPivotX);
         this.mContentContainer.addView(this.mRapidIcon, layoutParams5);
-        this.mSuperRapidIcon = new ImageView(context);
-        this.mSuperRapidIcon.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        ImageView imageView2 = new ImageView(context);
+        this.mSuperRapidIcon = imageView2;
+        imageView2.setScaleType(ImageView.ScaleType.FIT_CENTER);
         this.mSuperRapidIcon.setImageDrawable(this.mSuperRapidIconDrawable);
         RelativeLayout.LayoutParams layoutParams6 = new RelativeLayout.LayoutParams(this.mSuperRapidIconWidth, this.mSuperRapidIconHeight + this.mIconPaddingTop);
         layoutParams6.addRule(13);
@@ -291,92 +296,106 @@ public class RapidChargeView extends FrameLayout implements ValueAnimator.Animat
     }
 
     private void animateToHideIcon() {
+        Property property = FrameLayout.TRANSLATION_Y;
+        Property property2 = FrameLayout.SCALE_Y;
+        Property property3 = FrameLayout.SCALE_X;
+        Property property4 = FrameLayout.ALPHA;
         Log.i("RapidChargeView", "animateToHideIcon: ");
         AnimatorSet animatorSet = this.mContentSwitchAnimator;
         if (animatorSet != null) {
             animatorSet.cancel();
         }
-        PropertyValuesHolder ofFloat = PropertyValuesHolder.ofFloat(FrameLayout.SCALE_X, new float[]{this.mPercentCountView.getScaleX(), 1.0f});
-        PropertyValuesHolder ofFloat2 = PropertyValuesHolder.ofFloat(FrameLayout.SCALE_Y, new float[]{this.mPercentCountView.getScaleY(), 1.0f});
-        PropertyValuesHolder ofFloat3 = PropertyValuesHolder.ofFloat(FrameLayout.TRANSLATION_Y, new float[]{this.mPercentCountView.getTranslationY(), (float) this.mChargeNumberTranslateInit});
+        PropertyValuesHolder ofFloat = PropertyValuesHolder.ofFloat(property3, new float[]{this.mPercentCountView.getScaleX(), 1.0f});
+        PropertyValuesHolder ofFloat2 = PropertyValuesHolder.ofFloat(property2, new float[]{this.mPercentCountView.getScaleY(), 1.0f});
+        PropertyValuesHolder ofFloat3 = PropertyValuesHolder.ofFloat(property, new float[]{this.mPercentCountView.getTranslationY(), (float) this.mChargeNumberTranslateInit});
         ObjectAnimator duration = ObjectAnimator.ofPropertyValuesHolder(this.mPercentCountView, new PropertyValuesHolder[]{ofFloat, ofFloat2, ofFloat3}).setDuration(500);
-        PropertyValuesHolder ofFloat4 = PropertyValuesHolder.ofFloat(FrameLayout.TRANSLATION_Y, new float[]{this.mStateTip.getTranslationY(), 0.0f});
-        PropertyValuesHolder ofFloat5 = PropertyValuesHolder.ofFloat(FrameLayout.ALPHA, new float[]{this.mStateTip.getAlpha(), 0.0f});
+        PropertyValuesHolder ofFloat4 = PropertyValuesHolder.ofFloat(property, new float[]{this.mStateTip.getTranslationY(), 0.0f});
+        PropertyValuesHolder ofFloat5 = PropertyValuesHolder.ofFloat(property4, new float[]{this.mStateTip.getAlpha(), 0.0f});
         ObjectAnimator duration2 = ObjectAnimator.ofPropertyValuesHolder(this.mStateTip, new PropertyValuesHolder[]{ofFloat5, ofFloat4}).setDuration(500);
-        PropertyValuesHolder ofFloat6 = PropertyValuesHolder.ofFloat(FrameLayout.TRANSLATION_Y, new float[]{this.mGtChargeAniView.getTranslationY(), 0.0f});
-        PropertyValuesHolder ofFloat7 = PropertyValuesHolder.ofFloat(FrameLayout.ALPHA, new float[]{this.mGtChargeAniView.getAlpha(), 0.0f});
+        PropertyValuesHolder ofFloat6 = PropertyValuesHolder.ofFloat(property, new float[]{this.mGtChargeAniView.getTranslationY(), 0.0f});
+        PropertyValuesHolder ofFloat7 = PropertyValuesHolder.ofFloat(property4, new float[]{this.mGtChargeAniView.getAlpha(), 0.0f});
         ObjectAnimator duration3 = ObjectAnimator.ofPropertyValuesHolder(this.mGtChargeAniView, new PropertyValuesHolder[]{ofFloat7, ofFloat6}).setDuration(500);
-        PropertyValuesHolder ofFloat8 = PropertyValuesHolder.ofFloat(FrameLayout.SCALE_X, new float[]{this.mRapidIcon.getScaleX(), 0.0f});
-        PropertyValuesHolder ofFloat9 = PropertyValuesHolder.ofFloat(FrameLayout.SCALE_Y, new float[]{this.mRapidIcon.getScaleY(), 0.0f});
-        PropertyValuesHolder ofFloat10 = PropertyValuesHolder.ofFloat(FrameLayout.ALPHA, new float[]{this.mRapidIcon.getAlpha(), 0.0f});
+        PropertyValuesHolder ofFloat8 = PropertyValuesHolder.ofFloat(property3, new float[]{this.mRapidIcon.getScaleX(), 0.0f});
+        PropertyValuesHolder ofFloat9 = PropertyValuesHolder.ofFloat(property2, new float[]{this.mRapidIcon.getScaleY(), 0.0f});
+        PropertyValuesHolder ofFloat10 = PropertyValuesHolder.ofFloat(property4, new float[]{this.mRapidIcon.getAlpha(), 0.0f});
         ObjectAnimator duration4 = ObjectAnimator.ofPropertyValuesHolder(this.mRapidIcon, new PropertyValuesHolder[]{ofFloat8, ofFloat9, ofFloat10}).setDuration(500);
-        PropertyValuesHolder ofFloat11 = PropertyValuesHolder.ofFloat(FrameLayout.SCALE_X, new float[]{this.mSuperRapidIcon.getScaleX(), 0.0f});
-        PropertyValuesHolder ofFloat12 = PropertyValuesHolder.ofFloat(FrameLayout.SCALE_Y, new float[]{this.mSuperRapidIcon.getScaleY(), 0.0f});
-        PropertyValuesHolder ofFloat13 = PropertyValuesHolder.ofFloat(FrameLayout.ALPHA, new float[]{this.mSuperRapidIcon.getAlpha(), 0.0f});
+        PropertyValuesHolder ofFloat11 = PropertyValuesHolder.ofFloat(property3, new float[]{this.mSuperRapidIcon.getScaleX(), 0.0f});
+        PropertyValuesHolder ofFloat12 = PropertyValuesHolder.ofFloat(property2, new float[]{this.mSuperRapidIcon.getScaleY(), 0.0f});
+        PropertyValuesHolder ofFloat13 = PropertyValuesHolder.ofFloat(property4, new float[]{this.mSuperRapidIcon.getAlpha(), 0.0f});
         ObjectAnimator duration5 = ObjectAnimator.ofPropertyValuesHolder(this.mSuperRapidIcon, new PropertyValuesHolder[]{ofFloat11, ofFloat12, ofFloat13}).setDuration(500);
-        this.mContentSwitchAnimator = new AnimatorSet();
-        this.mContentSwitchAnimator.setInterpolator(this.mCubicInterpolator);
+        AnimatorSet animatorSet2 = new AnimatorSet();
+        this.mContentSwitchAnimator = animatorSet2;
+        animatorSet2.setInterpolator(this.mCubicInterpolator);
         this.mContentSwitchAnimator.playTogether(new Animator[]{duration, duration2, duration3, duration4, duration5});
         this.mContentSwitchAnimator.start();
     }
 
     /* access modifiers changed from: protected */
     public void animateToShowRapidIcon() {
+        Property property = FrameLayout.TRANSLATION_Y;
+        Property property2 = FrameLayout.SCALE_Y;
+        Property property3 = FrameLayout.SCALE_X;
+        Property property4 = FrameLayout.ALPHA;
         if (isPercentViewShown()) {
             Log.i("RapidChargeView", "animateToShowRapidIcon: ");
             AnimatorSet animatorSet = this.mContentSwitchAnimator;
             if (animatorSet != null) {
                 animatorSet.cancel();
             }
-            PropertyValuesHolder ofFloat = PropertyValuesHolder.ofFloat(FrameLayout.SCALE_X, new float[]{this.mPercentCountView.getScaleX(), 0.85f});
-            PropertyValuesHolder ofFloat2 = PropertyValuesHolder.ofFloat(FrameLayout.SCALE_Y, new float[]{this.mPercentCountView.getScaleY(), 0.85f});
-            PropertyValuesHolder ofFloat3 = PropertyValuesHolder.ofFloat(FrameLayout.TRANSLATION_Y, new float[]{this.mPercentCountView.getTranslationY(), (float) this.mChargeNumberTranslateSmall});
+            PropertyValuesHolder ofFloat = PropertyValuesHolder.ofFloat(property3, new float[]{this.mPercentCountView.getScaleX(), 0.85f});
+            PropertyValuesHolder ofFloat2 = PropertyValuesHolder.ofFloat(property2, new float[]{this.mPercentCountView.getScaleY(), 0.85f});
+            PropertyValuesHolder ofFloat3 = PropertyValuesHolder.ofFloat(property, new float[]{this.mPercentCountView.getTranslationY(), (float) this.mChargeNumberTranslateSmall});
             ObjectAnimator duration = ObjectAnimator.ofPropertyValuesHolder(this.mPercentCountView, new PropertyValuesHolder[]{ofFloat, ofFloat2, ofFloat3}).setDuration(500);
             duration.setInterpolator(this.mCubicInterpolator);
-            PropertyValuesHolder ofFloat4 = PropertyValuesHolder.ofFloat(FrameLayout.TRANSLATION_Y, new float[]{this.mStateTip.getTranslationY(), (float) this.mChargeTipTranslateSmall});
-            PropertyValuesHolder ofFloat5 = PropertyValuesHolder.ofFloat(FrameLayout.ALPHA, new float[]{this.mStateTip.getAlpha(), 1.0f});
+            PropertyValuesHolder ofFloat4 = PropertyValuesHolder.ofFloat(property, new float[]{this.mStateTip.getTranslationY(), (float) this.mChargeTipTranslateSmall});
+            PropertyValuesHolder ofFloat5 = PropertyValuesHolder.ofFloat(property4, new float[]{this.mStateTip.getAlpha(), 1.0f});
             ObjectAnimator duration2 = ObjectAnimator.ofPropertyValuesHolder(this.mStateTip, new PropertyValuesHolder[]{ofFloat5, ofFloat4}).setDuration(500);
             duration2.setInterpolator(this.mCubicInterpolator);
-            PropertyValuesHolder ofFloat6 = PropertyValuesHolder.ofFloat(FrameLayout.TRANSLATION_Y, new float[]{this.mGtChargeAniView.getTranslationY(), (float) this.mChargeTipTranslateSmall});
-            PropertyValuesHolder ofFloat7 = PropertyValuesHolder.ofFloat(FrameLayout.ALPHA, new float[]{this.mGtChargeAniView.getAlpha(), 0.0f});
+            PropertyValuesHolder ofFloat6 = PropertyValuesHolder.ofFloat(property, new float[]{this.mGtChargeAniView.getTranslationY(), (float) this.mChargeTipTranslateSmall});
+            PropertyValuesHolder ofFloat7 = PropertyValuesHolder.ofFloat(property4, new float[]{this.mGtChargeAniView.getAlpha(), 0.0f});
             ObjectAnimator duration3 = ObjectAnimator.ofPropertyValuesHolder(this.mGtChargeAniView, new PropertyValuesHolder[]{ofFloat7, ofFloat6}).setDuration(250);
             duration3.setInterpolator(this.mCubicInterpolator);
-            PropertyValuesHolder ofFloat8 = PropertyValuesHolder.ofFloat(FrameLayout.SCALE_X, new float[]{this.mRapidIcon.getScaleX(), 1.0f});
-            PropertyValuesHolder ofFloat9 = PropertyValuesHolder.ofFloat(FrameLayout.SCALE_Y, new float[]{this.mRapidIcon.getScaleY(), 1.0f});
-            PropertyValuesHolder ofFloat10 = PropertyValuesHolder.ofFloat(FrameLayout.ALPHA, new float[]{this.mRapidIcon.getAlpha(), 1.0f});
+            PropertyValuesHolder ofFloat8 = PropertyValuesHolder.ofFloat(property3, new float[]{this.mRapidIcon.getScaleX(), 1.0f});
+            PropertyValuesHolder ofFloat9 = PropertyValuesHolder.ofFloat(property2, new float[]{this.mRapidIcon.getScaleY(), 1.0f});
+            PropertyValuesHolder ofFloat10 = PropertyValuesHolder.ofFloat(property4, new float[]{this.mRapidIcon.getAlpha(), 1.0f});
             ObjectAnimator duration4 = ObjectAnimator.ofPropertyValuesHolder(this.mRapidIcon, new PropertyValuesHolder[]{ofFloat8, ofFloat9, ofFloat10}).setDuration(500);
             duration4.setInterpolator(this.mCubicInterpolator);
-            PropertyValuesHolder ofFloat11 = PropertyValuesHolder.ofFloat(FrameLayout.SCALE_X, new float[]{this.mSuperRapidIcon.getScaleX(), 0.0f});
-            PropertyValuesHolder ofFloat12 = PropertyValuesHolder.ofFloat(FrameLayout.SCALE_Y, new float[]{this.mSuperRapidIcon.getScaleY(), 0.0f});
-            PropertyValuesHolder ofFloat13 = PropertyValuesHolder.ofFloat(FrameLayout.ALPHA, new float[]{this.mSuperRapidIcon.getAlpha(), 0.0f});
+            PropertyValuesHolder ofFloat11 = PropertyValuesHolder.ofFloat(property3, new float[]{this.mSuperRapidIcon.getScaleX(), 0.0f});
+            PropertyValuesHolder ofFloat12 = PropertyValuesHolder.ofFloat(property2, new float[]{this.mSuperRapidIcon.getScaleY(), 0.0f});
+            PropertyValuesHolder ofFloat13 = PropertyValuesHolder.ofFloat(property4, new float[]{this.mSuperRapidIcon.getAlpha(), 0.0f});
             ObjectAnimator duration5 = ObjectAnimator.ofPropertyValuesHolder(this.mSuperRapidIcon, new PropertyValuesHolder[]{ofFloat11, ofFloat12, ofFloat13}).setDuration(500);
             duration5.setInterpolator(this.mCubicInterpolator);
             duration4.setInterpolator(new OvershootInterpolator(3.0f));
-            this.mContentSwitchAnimator = new AnimatorSet();
-            this.mContentSwitchAnimator.playTogether(new Animator[]{duration, duration2, duration3, duration4, duration5});
+            AnimatorSet animatorSet2 = new AnimatorSet();
+            this.mContentSwitchAnimator = animatorSet2;
+            animatorSet2.playTogether(new Animator[]{duration, duration2, duration3, duration4, duration5});
             this.mContentSwitchAnimator.start();
         }
     }
 
     /* access modifiers changed from: protected */
     public void animateToShowSuperRapidIcon() {
+        Property property = FrameLayout.TRANSLATION_Y;
+        Property property2 = FrameLayout.SCALE_Y;
+        Property property3 = FrameLayout.SCALE_X;
+        Property property4 = FrameLayout.ALPHA;
         if (isPercentViewShown()) {
             Log.i("RapidChargeView", "animateToShowSuperRapidIcon: ");
             AnimatorSet animatorSet = this.mContentSwitchAnimator;
             if (animatorSet != null) {
                 animatorSet.cancel();
             }
-            PropertyValuesHolder ofFloat = PropertyValuesHolder.ofFloat(FrameLayout.SCALE_X, new float[]{this.mPercentCountView.getScaleX(), 0.85f});
-            PropertyValuesHolder ofFloat2 = PropertyValuesHolder.ofFloat(FrameLayout.SCALE_Y, new float[]{this.mPercentCountView.getScaleY(), 0.85f});
-            PropertyValuesHolder ofFloat3 = PropertyValuesHolder.ofFloat(FrameLayout.TRANSLATION_Y, new float[]{this.mPercentCountView.getTranslationY(), (float) this.mChargeNumberTranslateSmall});
+            PropertyValuesHolder ofFloat = PropertyValuesHolder.ofFloat(property3, new float[]{this.mPercentCountView.getScaleX(), 0.85f});
+            PropertyValuesHolder ofFloat2 = PropertyValuesHolder.ofFloat(property2, new float[]{this.mPercentCountView.getScaleY(), 0.85f});
+            PropertyValuesHolder ofFloat3 = PropertyValuesHolder.ofFloat(property, new float[]{this.mPercentCountView.getTranslationY(), (float) this.mChargeNumberTranslateSmall});
             ObjectAnimator duration = ObjectAnimator.ofPropertyValuesHolder(this.mPercentCountView, new PropertyValuesHolder[]{ofFloat, ofFloat2, ofFloat3}).setDuration(500);
             duration.setInterpolator(this.mCubicInterpolator);
-            PropertyValuesHolder ofFloat4 = PropertyValuesHolder.ofFloat(FrameLayout.TRANSLATION_Y, new float[]{this.mStateTip.getTranslationY(), (float) this.mChargeTipTranslateSmall});
-            PropertyValuesHolder ofFloat5 = PropertyValuesHolder.ofFloat(FrameLayout.ALPHA, new float[]{this.mStateTip.getAlpha(), 0.0f});
+            PropertyValuesHolder ofFloat4 = PropertyValuesHolder.ofFloat(property, new float[]{this.mStateTip.getTranslationY(), (float) this.mChargeTipTranslateSmall});
+            PropertyValuesHolder ofFloat5 = PropertyValuesHolder.ofFloat(property4, new float[]{this.mStateTip.getAlpha(), 0.0f});
             ObjectAnimator duration2 = ObjectAnimator.ofPropertyValuesHolder(this.mStateTip, new PropertyValuesHolder[]{ofFloat5, ofFloat4}).setDuration(500);
             duration2.setInterpolator(this.mCubicInterpolator);
-            PropertyValuesHolder ofFloat6 = PropertyValuesHolder.ofFloat(FrameLayout.TRANSLATION_Y, new float[]{this.mGtChargeAniView.getTranslationY(), (float) this.mChargeTipTranslateSmall});
-            PropertyValuesHolder ofFloat7 = PropertyValuesHolder.ofFloat(FrameLayout.ALPHA, new float[]{this.mGtChargeAniView.getAlpha(), 1.0f});
+            PropertyValuesHolder ofFloat6 = PropertyValuesHolder.ofFloat(property, new float[]{this.mGtChargeAniView.getTranslationY(), (float) this.mChargeTipTranslateSmall});
+            PropertyValuesHolder ofFloat7 = PropertyValuesHolder.ofFloat(property4, new float[]{this.mGtChargeAniView.getAlpha(), 1.0f});
             ObjectAnimator duration3 = ObjectAnimator.ofPropertyValuesHolder(this.mGtChargeAniView, new PropertyValuesHolder[]{ofFloat7, ofFloat6}).setDuration(250);
             duration3.setInterpolator(this.mCubicInterpolator);
             duration3.addListener(new Animator.AnimatorListener() {
@@ -397,19 +416,20 @@ public class RapidChargeView extends FrameLayout implements ValueAnimator.Animat
                     RapidChargeView.this.mGtChargeAniView.setVisibility(8);
                 }
             });
-            PropertyValuesHolder ofFloat8 = PropertyValuesHolder.ofFloat(FrameLayout.SCALE_X, new float[]{this.mRapidIcon.getScaleX(), 0.0f});
-            PropertyValuesHolder ofFloat9 = PropertyValuesHolder.ofFloat(FrameLayout.SCALE_Y, new float[]{this.mRapidIcon.getScaleY(), 0.0f});
-            PropertyValuesHolder ofFloat10 = PropertyValuesHolder.ofFloat(FrameLayout.ALPHA, new float[]{this.mRapidIcon.getAlpha(), 0.0f});
+            PropertyValuesHolder ofFloat8 = PropertyValuesHolder.ofFloat(property3, new float[]{this.mRapidIcon.getScaleX(), 0.0f});
+            PropertyValuesHolder ofFloat9 = PropertyValuesHolder.ofFloat(property2, new float[]{this.mRapidIcon.getScaleY(), 0.0f});
+            PropertyValuesHolder ofFloat10 = PropertyValuesHolder.ofFloat(property4, new float[]{this.mRapidIcon.getAlpha(), 0.0f});
             ObjectAnimator duration4 = ObjectAnimator.ofPropertyValuesHolder(this.mRapidIcon, new PropertyValuesHolder[]{ofFloat8, ofFloat9, ofFloat10}).setDuration(500);
             duration4.setInterpolator(this.mCubicInterpolator);
-            PropertyValuesHolder ofFloat11 = PropertyValuesHolder.ofFloat(FrameLayout.SCALE_X, new float[]{this.mSuperRapidIcon.getScaleX(), 1.0f});
-            PropertyValuesHolder ofFloat12 = PropertyValuesHolder.ofFloat(FrameLayout.SCALE_Y, new float[]{this.mSuperRapidIcon.getScaleY(), 1.0f});
-            PropertyValuesHolder ofFloat13 = PropertyValuesHolder.ofFloat(FrameLayout.ALPHA, new float[]{this.mSuperRapidIcon.getAlpha(), 1.0f});
+            PropertyValuesHolder ofFloat11 = PropertyValuesHolder.ofFloat(property3, new float[]{this.mSuperRapidIcon.getScaleX(), 1.0f});
+            PropertyValuesHolder ofFloat12 = PropertyValuesHolder.ofFloat(property2, new float[]{this.mSuperRapidIcon.getScaleY(), 1.0f});
+            PropertyValuesHolder ofFloat13 = PropertyValuesHolder.ofFloat(property4, new float[]{this.mSuperRapidIcon.getAlpha(), 1.0f});
             ObjectAnimator duration5 = ObjectAnimator.ofPropertyValuesHolder(this.mSuperRapidIcon, new PropertyValuesHolder[]{ofFloat11, ofFloat12, ofFloat13}).setDuration(500);
             duration5.setInterpolator(this.mCubicInterpolator);
             duration5.setInterpolator(new OvershootInterpolator(3.0f));
-            this.mContentSwitchAnimator = new AnimatorSet();
-            this.mContentSwitchAnimator.playTogether(new Animator[]{duration, duration2, duration3, duration4, duration5});
+            AnimatorSet animatorSet2 = new AnimatorSet();
+            this.mContentSwitchAnimator = animatorSet2;
+            animatorSet2.playTogether(new Animator[]{duration, duration2, duration3, duration4, duration5});
             this.mContentSwitchAnimator.start();
         }
     }
@@ -557,9 +577,7 @@ public class RapidChargeView extends FrameLayout implements ValueAnimator.Animat
 
     public void startDismiss(String str) {
         disableTouch(true);
-        if (str != "dismiss_for_timeout") {
-            KeyguardUpdateMonitor.getInstance(this.mContext).setShowingChargeAnimationWindow(false);
-        }
+        KeyguardUpdateMonitor.getInstance(this.mContext).setShowingChargeAnimationWindow(false);
         if (!this.mStartingDismissWirelessAlphaAnim) {
             AnimatorSet animatorSet = this.mEnterAnimatorSet;
             if (animatorSet != null) {

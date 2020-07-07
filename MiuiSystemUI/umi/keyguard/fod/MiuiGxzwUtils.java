@@ -164,8 +164,9 @@ class MiuiGxzwUtils {
 
     public static void saveShowTouchesState(Context context) {
         sPreShowTouchesUser = KeyguardUpdateMonitor.getCurrentUser();
-        sPreShowTouches = Settings.System.getIntForUser(context.getContentResolver(), "show_touches", 0, sPreShowTouchesUser);
-        if (sPreShowTouches != 0) {
+        int intForUser = Settings.System.getIntForUser(context.getContentResolver(), "show_touches", 0, sPreShowTouchesUser);
+        sPreShowTouches = intForUser;
+        if (intForUser != 0) {
             Settings.System.putIntForUser(context.getContentResolver(), "show_touches", 0, sPreShowTouchesUser);
         }
     }

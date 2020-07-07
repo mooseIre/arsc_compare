@@ -57,14 +57,12 @@ public class KeyguardClockContainer extends FrameLayout {
 
     public KeyguardClockContainer(Context context, AttributeSet attributeSet, int i, int i2) {
         super(context, attributeSet, i, i2);
-        String str;
         this.mCurrentTimezone = TimeZone.getDefault().getID();
         boolean z = false;
         this.mDualClockOpen = false;
         this.mShowDualClock = false;
         this.mSelectedClockPosition = 0;
         this.mLastSelectedClockPosition = 0;
-        this.mShowVerticalClock = false;
         this.mHandler = new Handler();
         this.mUpdateTimeRunnable = new Runnable() {
             public void run() {
@@ -127,12 +125,13 @@ public class KeyguardClockContainer extends FrameLayout {
         this.mUpdateMonitor = KeyguardUpdateMonitor.getInstance(context);
         this.mSelectedClockPosition = Settings.System.getIntForUser(this.mContext.getContentResolver(), "selected_keyguard_clock_position", MiuiKeyguardUtils.getDefaultKeyguardClockPosition(this.mContext), KeyguardUpdateMonitor.getCurrentUser());
         this.mDualClockOpen = Settings.System.getIntForUser(this.mContext.getContentResolver(), "auto_dual_clock", 0, KeyguardUpdateMonitor.getCurrentUser()) != 0;
-        this.mResidentTimezone = Settings.System.getStringForUser(this.mContext.getContentResolver(), "resident_timezone", KeyguardUpdateMonitor.getCurrentUser());
-        if (this.mDualClockOpen && (str = this.mResidentTimezone) != null && !str.equals(this.mCurrentTimezone)) {
+        String stringForUser = Settings.System.getStringForUser(this.mContext.getContentResolver(), "resident_timezone", KeyguardUpdateMonitor.getCurrentUser());
+        this.mResidentTimezone = stringForUser;
+        if (this.mDualClockOpen && stringForUser != null && !stringForUser.equals(this.mCurrentTimezone)) {
             z = true;
         }
         this.mShowDualClock = z;
-        this.mShowVerticalClock = MiuiKeyguardUtils.isSupportVerticalClock(this.mSelectedClockPosition, this.mContext);
+        MiuiKeyguardUtils.isSupportVerticalClock(this.mSelectedClockPosition, this.mContext);
     }
 
     /* access modifiers changed from: protected */

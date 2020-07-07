@@ -22,8 +22,9 @@ public class WechatScanItem extends IQuickOpenItem {
 
     public WechatScanItem(RectF rectF, Region region, Context context) {
         super(rectF, region, context);
-        this.mView = new ImageView(context);
-        this.mView.setImageResource(R.drawable.gxzw_quick_open_wechat_scan);
+        ImageView imageView = new ImageView(context);
+        this.mView = imageView;
+        imageView.setImageResource(R.drawable.gxzw_quick_open_wechat_scan);
         this.mView.setScaleType(ImageView.ScaleType.FIT_XY);
     }
 

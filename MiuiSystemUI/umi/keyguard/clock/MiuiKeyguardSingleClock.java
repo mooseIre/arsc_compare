@@ -52,9 +52,9 @@ public class MiuiKeyguardSingleClock extends MiuiKeyguardBaseClock {
         public void onChange(boolean z) {
             super.onChange(z);
             MiuiKeyguardSingleClock miuiKeyguardSingleClock = MiuiKeyguardSingleClock.this;
-            boolean z2 = true;
-            if (Settings.System.getIntForUser(miuiKeyguardSingleClock.mContext.getContentResolver(), "show_lunar_calendar", 0, MiuiKeyguardSingleClock.this.mUserId) != 1) {
-                z2 = false;
+            boolean z2 = false;
+            if (Settings.System.getIntForUser(miuiKeyguardSingleClock.mContext.getContentResolver(), "show_lunar_calendar", 0, MiuiKeyguardSingleClock.this.mUserId) == 1) {
+                z2 = true;
             }
             miuiKeyguardSingleClock.mShowLunarCalendar = z2;
             MiuiKeyguardSingleClock.this.updateLunarCalendarInfo();
@@ -100,8 +100,8 @@ public class MiuiKeyguardSingleClock extends MiuiKeyguardBaseClock {
     public MiuiKeyguardSingleClock(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
         this.mContext = context;
-        this.mLayoutInflater = LayoutInflater.from(this.mContext);
-        this.mResources = this.mContext.getResources();
+        this.mLayoutInflater = LayoutInflater.from(context);
+        this.mContext.getResources();
         this.mUserId = KeyguardUpdateMonitor.getCurrentUser();
         this.mLockPatternUtils = new MiuiLockPatternUtils(this.mContext);
         this.mSelectedClockPosition = Settings.System.getIntForUser(this.mContext.getContentResolver(), "selected_keyguard_clock_position", MiuiKeyguardUtils.getDefaultKeyguardClockPosition(this.mContext), this.mUserId);

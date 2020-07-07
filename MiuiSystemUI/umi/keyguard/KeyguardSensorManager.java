@@ -23,7 +23,6 @@ public class KeyguardSensorManager {
             KeyguardSensorManager.this.unregisterProximitySensor();
         }
     };
-    private SensorManager mSensorManager = null;
     private Runnable mUnregisterProximitySensorRunnable = new Runnable() {
         public void run() {
             KeyguardSensorManager.this.unregisterProximitySensor();
@@ -39,7 +38,7 @@ public class KeyguardSensorManager {
 
     private KeyguardSensorManager(Context context) {
         this.mContext = context;
-        this.mSensorManager = (SensorManager) context.getSystemService("sensor");
+        SensorManager sensorManager = (SensorManager) context.getSystemService("sensor");
     }
 
     public static KeyguardSensorManager getInstance(Context context) {
@@ -55,8 +54,9 @@ public class KeyguardSensorManager {
 
     public void registerProximitySensor(ProximitySensorChangeCallback proximitySensorChangeCallback) {
         if (this.mProximitySensorWrapper == null) {
-            this.mProximitySensorWrapper = new ProximitySensorWrapper(this.mContext);
-            this.mProximitySensorWrapper.registerListener(this.mSensorListener);
+            ProximitySensorWrapper proximitySensorWrapper = new ProximitySensorWrapper(this.mContext);
+            this.mProximitySensorWrapper = proximitySensorWrapper;
+            proximitySensorWrapper.registerListener(this.mSensorListener);
             this.mProximitySensorChangeCallback = proximitySensorChangeCallback;
             this.mHandler.postDelayed(this.mUnregisterProximitySensorRunnable, 2000);
         }

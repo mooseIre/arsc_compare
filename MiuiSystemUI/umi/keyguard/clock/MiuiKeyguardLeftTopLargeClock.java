@@ -23,8 +23,9 @@ public class MiuiKeyguardLeftTopLargeClock extends MiuiKeyguardSingleClock {
         try {
             this.mMiuiBaseClock = this.mLayoutInflater.inflate(R.layout.miui_left_top_large_clock, (ViewGroup) null, false);
             updateLunarCalendarInfo();
-            this.mLeftTopClock = this.mLayoutInflater.inflate(R.layout.miui_left_top_clock, (ViewGroup) null, false);
-            this.mLeftTopClock.setShowLunarCalendar(false);
+            MiuiLeftTopClock inflate = this.mLayoutInflater.inflate(R.layout.miui_left_top_clock, (ViewGroup) null, false);
+            this.mLeftTopClock = inflate;
+            inflate.setShowLunarCalendar(false);
             this.mLeftTopClock.setAlpha(0.0f);
             this.mLeftTopClock.setVisibility(8);
         } catch (Exception e) {

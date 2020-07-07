@@ -65,7 +65,7 @@ public abstract class KeyguardAbsKeyInputView extends MiuiKeyguardPasswordView i
 
     public void setLockPatternUtils(LockPatternUtils lockPatternUtils) {
         this.mLockPatternUtils = lockPatternUtils;
-        this.mEnableHaptics = this.mLockPatternUtils.isTactileFeedbackEnabled();
+        this.mEnableHaptics = lockPatternUtils.isTactileFeedbackEnabled();
     }
 
     public void reset() {
@@ -164,11 +164,7 @@ public abstract class KeyguardAbsKeyInputView extends MiuiKeyguardPasswordView i
                 }
             }
             handleWrongPassword();
-            if (MiuiKeyguardUtils.SUPPORT_LINEAR_MOTOR_VIBRATE) {
-                this.mHapticFeedbackUtil.performExtHapticFeedback(76);
-            } else {
-                this.mVibrator.vibrate(150);
-            }
+            this.mVibrator.vibrate(150);
             AnalyticsHelper.getInstance(this.mContext).recordUnlockWay("pw", false);
         } else if (!allowUnlock(i)) {
             resetPasswordText(true, false);

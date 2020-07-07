@@ -35,8 +35,9 @@ public class MiuiWirelessChargeSlowlyView {
 
         public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int i, int i2) {
             MiuiWirelessChargeSlowlyView.this.mImageView.setVisibility(0);
-            this.mMediaPlayer = new MediaPlayer();
-            this.mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            MediaPlayer mediaPlayer = new MediaPlayer();
+            this.mMediaPlayer = mediaPlayer;
+            mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 public void onPrepared(MediaPlayer mediaPlayer) {
                     MiuiWirelessChargeSlowlyView.this.mHandler.postDelayed(new Runnable() {
                         public void run() {
@@ -129,16 +130,17 @@ public class MiuiWirelessChargeSlowlyView {
     }
 
     private void initView() {
-        AnonymousClass1 r1 = null;
+        AnonymousClass1 r2 = null;
         View inflate = View.inflate(this.mContext, R.layout.miui_keyguard_wireless_charge_slowly, (ViewGroup) null);
         this.mImageView = (ImageView) inflate.findViewById(R.id.wireless_charge_picture);
-        this.mTextureView = (TextureView) inflate.findViewById(R.id.wireless_charge_slowly_video);
-        this.mTextureView.setSurfaceTextureListener(this.mSurfaceTextureListener);
+        TextureView textureView = (TextureView) inflate.findViewById(R.id.wireless_charge_slowly_video);
+        this.mTextureView = textureView;
+        textureView.setSurfaceTextureListener(this.mSurfaceTextureListener);
         AlertDialog.Builder builder = new AlertDialog.Builder(this.mContext, R.style.wireless_charge_slowly_dialog);
         builder.setCancelable(false);
         builder.setView(inflate);
         if (this.mTipOnlyOnce) {
-            r1 = new DialogInterface.OnClickListener() {
+            r2 = new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialogInterface, int i) {
                     SharedPreferences.Editor edit = MiuiWirelessChargeSlowlyView.this.mContext.getSharedPreferences("wireless_charge", 0).edit();
                     edit.putBoolean("show_dialog", false);
@@ -146,9 +148,10 @@ public class MiuiWirelessChargeSlowlyView {
                 }
             };
         }
-        builder.setNegativeButton(R.string.wireless_charge_dialog_cancel, r1);
-        this.mDialog = builder.create();
-        this.mDialog.getWindow().setType(2010);
+        builder.setNegativeButton(R.string.wireless_charge_dialog_cancel, r2);
+        AlertDialog create = builder.create();
+        this.mDialog = create;
+        create.getWindow().setType(2010);
         this.mDialog.getWindow().requestFeature(1);
         this.mDialog.getWindow().setBackgroundDrawableResource(R.drawable.dialog_bg_light);
     }

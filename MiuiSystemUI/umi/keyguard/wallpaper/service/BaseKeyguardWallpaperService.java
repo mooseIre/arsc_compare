@@ -32,9 +32,10 @@ public abstract class BaseKeyguardWallpaperService extends WallpaperService {
         Field field2;
         Field field3;
         Method method;
+        Class cls = Boolean.TYPE;
         Method method2 = null;
         try {
-            method = WallpaperService.Engine.class.getDeclaredMethod("updateSurface", new Class[]{Boolean.TYPE, Boolean.TYPE, Boolean.TYPE});
+            method = WallpaperService.Engine.class.getDeclaredMethod("updateSurface", new Class[]{cls, cls, cls});
             try {
                 method.setAccessible(true);
                 field3 = WallpaperService.Engine.class.getDeclaredField("mLayout");
@@ -226,7 +227,7 @@ public abstract class BaseKeyguardWallpaperService extends WallpaperService {
         public void onWallpaperBlurUpdated(float f) {
             if (this.mBlurRatio != f) {
                 this.mBlurRatio = f;
-                updateBlurCurrent(this.mBlurRatio);
+                updateBlurCurrent(f);
                 updateSurface();
             }
         }
@@ -251,22 +252,21 @@ public abstract class BaseKeyguardWallpaperService extends WallpaperService {
         /* access modifiers changed from: private */
         public void updateSurfaceAttrs() {
             float f;
-            float f2;
             if (getSurfaceHolder().getSurface().isValid()) {
-                float f3 = this.mWallpaperAnimValue;
-                if (f3 > 0.0f) {
-                    f2 = (float) (1.0d - Math.pow((double) f3, 2.0d));
+                float f2 = this.mWallpaperAnimValue;
+                float f3 = 1.0f;
+                if (f2 > 0.0f) {
                     f = (float) Math.pow((double) (1.0f - Math.abs(Math.max(0.0f, Math.abs(this.mWallpaperAnimValue) - 0.6f) / 0.4f)), 2.0d);
+                    f3 = (float) (1.0d - Math.pow((double) f2, 2.0d));
                 } else {
-                    f = (float) (1.0d - Math.pow((double) (-f3), 3.0d));
-                    f2 = 1.0f;
+                    f = (float) (1.0d - Math.pow((double) (-f2), 3.0d));
                 }
                 WindowManager.LayoutParams layoutParams = this.mLayoutParams;
                 if (layoutParams != null && BaseKeyguardWallpaperService.ENGINE_UPDATE_SURFACE != null) {
-                    boolean z = (layoutParams.alpha == f2 && layoutParams.blurRatio == f && layoutParams.windowAnimations == 0) ? false : true;
+                    boolean z = (layoutParams.alpha == f3 && layoutParams.blurRatio == f && layoutParams.windowAnimations == 0) ? false : true;
                     updateBlurCurrent(f);
                     WindowManager.LayoutParams layoutParams2 = this.mLayoutParams;
-                    layoutParams2.alpha = f2;
+                    layoutParams2.alpha = f3;
                     layoutParams2.windowAnimations = 0;
                     if (z) {
                         updateSurface();
@@ -276,8 +276,9 @@ public abstract class BaseKeyguardWallpaperService extends WallpaperService {
         }
 
         private void updateSurface() {
+            Boolean bool = Boolean.TRUE;
             try {
-                BaseKeyguardWallpaperService.ENGINE_UPDATE_SURFACE.invoke(this, new Object[]{true, false, true});
+                BaseKeyguardWallpaperService.ENGINE_UPDATE_SURFACE.invoke(this, new Object[]{bool, Boolean.FALSE, bool});
             } catch (Exception e) {
                 Log.e("MiuiKeyguardWallpaper", "error in updateSurfaceAttrs", e);
             }

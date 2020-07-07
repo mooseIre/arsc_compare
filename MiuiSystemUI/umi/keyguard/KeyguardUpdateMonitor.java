@@ -105,74 +105,8 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener {
     /* access modifiers changed from: private */
     public static String sVideo24WallpaperThumnailName;
     private static boolean sWallpaperColorLight = false;
-    private ContentObserver mAODObserver = new ContentObserver(this.mHandler) {
-        public void onChange(boolean z) {
-            KeyguardUpdateMonitor keyguardUpdateMonitor = KeyguardUpdateMonitor.this;
-            boolean unused = keyguardUpdateMonitor.mAodEnable = MiuiKeyguardUtils.isAodEnable(keyguardUpdateMonitor.mContext);
-            KeyguardUpdateMonitor keyguardUpdateMonitor2 = KeyguardUpdateMonitor.this;
-            boolean unused2 = keyguardUpdateMonitor2.mAodUsingSuperWallpaperStyle = MiuiKeyguardUtils.isAodUsingSuperWallpaperStyle(keyguardUpdateMonitor2.mContext);
-        }
-    };
-    private ActivityObserver.ActivityObserverCallback mActivityStateObserver = new ActivityObserver.ActivityObserverCallback() {
-        public void activityResumed(Intent intent) {
-            if (intent != null && intent.getComponent() != null) {
-                KeyguardUpdateMonitor.this.updateFingerprintListeningState();
-            }
-        }
-    };
-    private AlarmManager mAlarmManager;
-    /* access modifiers changed from: private */
-    public boolean mAodEnable;
-    /* access modifiers changed from: private */
-    public boolean mAodUsingSuperWallpaperStyle;
-    private FingerprintManager.AuthenticationCallback mAuthenticationCallback = new FingerprintManager.AuthenticationCallback() {
-        public void onAuthenticationFailed() {
-            Slog.w("miui_keyguard_fingerprint", "onAuthenticationFailed");
-            KeyguardUpdateMonitor.this.handleFingerprintAuthFailed();
-        }
-
-        public void onAuthenticationSucceeded(FingerprintManager.AuthenticationResult authenticationResult) {
-            int authUserId = MiuiKeyguardUtils.getAuthUserId(KeyguardUpdateMonitor.this.mContext, FingerprintCompat.getFingerIdForFingerprint(authenticationResult.getFingerprint()));
-            KeyguardUpdateMonitor.this.handlePreFingerprintAuthenticated(authUserId);
-            if (((MiuiFastUnlockController) Dependency.get(MiuiFastUnlockController.class)).isFastUnlock()) {
-                DejankUtils.postAfterTraversal(new Runnable(authUserId) {
-                    private final /* synthetic */ int f$1;
-
-                    {
-                        this.f$1 = r2;
-                    }
-
-                    public final void run() {
-                        KeyguardUpdateMonitor.AnonymousClass16.this.lambda$onAuthenticationSucceeded$0$KeyguardUpdateMonitor$16(this.f$1);
-                    }
-                });
-            } else {
-                lambda$onAuthenticationSucceeded$0$KeyguardUpdateMonitor$16(authUserId);
-            }
-        }
-
-        /* access modifiers changed from: private */
-        /* renamed from: doOnAuthenticationSucceeded */
-        public void lambda$onAuthenticationSucceeded$0$KeyguardUpdateMonitor$16(int i) {
-            Trace.beginSection("KeyguardUpdateMonitor#onAuthenticationSucceeded");
-            Slog.i("miui_keyguard_fingerprint", "onAuthenticationSucceeded: authUserId = " + i);
-            KeyguardUpdateMonitor.this.handleFingerprintAuthenticated(i);
-            Trace.endSection();
-        }
-
-        public void onAuthenticationHelp(int i, CharSequence charSequence) {
-            KeyguardUpdateMonitor.this.handleFingerprintHelp(i, charSequence.toString());
-        }
-
-        public void onAuthenticationError(int i, CharSequence charSequence) {
-            Slog.i("miui_keyguard_fingerprint", "onAuthenticationError: errMsgId = " + i + ", errString = " + charSequence);
-            KeyguardUpdateMonitor.this.handleFingerprintError(i, TextUtils.isEmpty(charSequence) ? "" : charSequence.toString());
-        }
-
-        public void onAuthenticationAcquired(int i) {
-            KeyguardUpdateMonitor.this.handleFingerprintAcquired(i);
-        }
-    };
+    private ActivityObserver.ActivityObserverCallback mActivityStateObserver;
+    private FingerprintManager.AuthenticationCallback mAuthenticationCallback;
     private MiuiBleUnlockHelper.BLEUnlockState mBLEUnlockState;
     private BatteryStatus mBatteryStatus;
     private boolean mBootCompleted;
@@ -266,13 +200,12 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener {
     /* access modifiers changed from: private */
     public boolean mDeviceProvisioned;
     private ContentObserver mDeviceProvisionedObserver;
-    private DisplayClientState mDisplayClientState = new DisplayClientState();
     private Map<Integer, Boolean> mDpmFingerprintDisable = new HashMap();
     private int mFaceUnlockMode = 0;
     private SparseIntArray mFailedAttempts = new SparseIntArray();
     private CancellationSignal mFingerprintCancelSignal;
     private int mFingerprintMode = 0;
-    private Map<Integer, Boolean> mFingerprintPossibleMap = new HashMap();
+    private Map<Integer, Boolean> mFingerprintPossibleMap;
     private int mFingerprintRunningState = 0;
     private FingerprintManager mFpm;
     private boolean mGoingToSleep;
@@ -420,23 +353,9 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener {
     public LockPatternUtils mLockPatternUtils;
     private boolean mLockScreenLeftOverlayAvailable;
     private LockScreenMagazineWallpaperInfo mLockScreenMagazineWallpaperInfo = new LockScreenMagazineWallpaperInfo();
-    private final FingerprintManager.LockoutResetCallback mLockoutResetCallback = new FingerprintManager.LockoutResetCallback() {
-        public void onLockoutReset() {
-            KeyguardUpdateMonitor.this.handleFingerprintLockoutReset();
-            KeyguardUpdateMonitor.this.resetAllFingerprintLockout();
-        }
-    };
+    private final FingerprintManager.LockoutResetCallback mLockoutResetCallback;
     private boolean mNeedsSlowUnlockTransition;
-    PhoneSignalController.PhoneSignalChangeCallback mPhoneSignalChangeCallback = new PhoneSignalController.PhoneSignalChangeCallback() {
-        public void onSignalChange(boolean z) {
-            for (int i = 0; i < KeyguardUpdateMonitor.this.mCallbacks.size(); i++) {
-                KeyguardUpdateMonitorCallback keyguardUpdateMonitorCallback = (KeyguardUpdateMonitorCallback) ((WeakReference) KeyguardUpdateMonitor.this.mCallbacks.get(i)).get();
-                if (keyguardUpdateMonitorCallback != null) {
-                    keyguardUpdateMonitorCallback.onPhoneSignalChanged(z);
-                }
-            }
-        }
-    };
+    PhoneSignalController.PhoneSignalChangeCallback mPhoneSignalChangeCallback;
     private PhoneSignalController mPhoneSignalController;
     private int mPhoneState;
     private Runnable mRetryFingerprintAuthentication = new Runnable() {
@@ -457,16 +376,6 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener {
     HashMap<Integer, ServiceState> mServiceStates = new HashMap<>();
     HashMap<Integer, SimData> mSimDatas = new HashMap<>();
     HashMap<Integer, Boolean> mSimStateEarlyReadyStatus = new HashMap<>();
-    private int mStatusBarHeight;
-    private final BroadcastReceiver mStrongAuthTimeoutReceiver = new BroadcastReceiver() {
-        public void onReceive(Context context, Intent intent) {
-            if ("com.android.systemui.ACTION_STRONG_AUTH_TIMEOUT".equals(intent.getAction())) {
-                int intExtra = intent.getIntExtra("com.android.systemui.USER_ID", -1);
-                KeyguardUpdateMonitor.this.mLockPatternUtils.requireStrongAuth(16, intExtra);
-                KeyguardUpdateMonitor.this.notifyStrongAuthStateChanged(intExtra);
-            }
-        }
-    };
     private final StrongAuthTracker mStrongAuthTracker;
     private List<SubscriptionInfo> mSubscriptionInfo;
     private SubscriptionManager.OnSubscriptionsChangedListener mSubscriptionListener = new SubscriptionManager.OnSubscriptionsChangedListener() {
@@ -496,7 +405,7 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener {
     private SparseBooleanArray mUserHasTrust = new SparseBooleanArray();
     private UserManager mUserManager;
     private SparseBooleanArray mUserTrustIsManaged = new SparseBooleanArray();
-    private int mWallpaperBlurColor = -1;
+    private int mWallpaperBlurColor;
     /* access modifiers changed from: private */
     public ArrayList<WallpaperChangeCallback> mWallpaperChangeCallbacks = Lists.newArrayList();
 
@@ -619,11 +528,11 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener {
         this.mKeyguardShowingAndOccluded = z && z2;
         if (z2 != this.mKeyguardOccluded) {
             this.mKeyguardOccluded = z2;
-            handleKeyguardOccludedChanged(this.mKeyguardOccluded);
+            handleKeyguardOccludedChanged(z2);
         }
         if (this.mKeyguardShowing != z) {
             this.mKeyguardShowing = z;
-            handleKeyguardShowingChanged(this.mKeyguardShowing);
+            handleKeyguardShowingChanged(z);
             this.mFingerprintPossibleMap.clear();
         }
         updateFingerprintListeningState();
@@ -987,11 +896,6 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener {
         return this.mScreenOn;
     }
 
-    static class DisplayClientState {
-        DisplayClientState() {
-        }
-    }
-
     public boolean shouldListenForFingerprintWhenUnlocked() {
         return FaceUnlockManager.getInstance().isFaceUnlockSuccessAndStayScreen() || isBleUnlockSuccess();
     }
@@ -1226,9 +1130,91 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener {
     }
 
     private KeyguardUpdateMonitor(Context context) {
+        new BroadcastReceiver() {
+            public void onReceive(Context context, Intent intent) {
+                if ("com.android.systemui.ACTION_STRONG_AUTH_TIMEOUT".equals(intent.getAction())) {
+                    int intExtra = intent.getIntExtra("com.android.systemui.USER_ID", -1);
+                    KeyguardUpdateMonitor.this.mLockPatternUtils.requireStrongAuth(16, intExtra);
+                    KeyguardUpdateMonitor.this.notifyStrongAuthStateChanged(intExtra);
+                }
+            }
+        };
+        this.mLockoutResetCallback = new FingerprintManager.LockoutResetCallback() {
+            public void onLockoutReset() {
+                KeyguardUpdateMonitor.this.handleFingerprintLockoutReset();
+                KeyguardUpdateMonitor.this.resetAllFingerprintLockout();
+            }
+        };
+        this.mAuthenticationCallback = new FingerprintManager.AuthenticationCallback() {
+            public void onAuthenticationFailed() {
+                Slog.w("miui_keyguard_fingerprint", "onAuthenticationFailed");
+                KeyguardUpdateMonitor.this.handleFingerprintAuthFailed();
+            }
+
+            public void onAuthenticationSucceeded(FingerprintManager.AuthenticationResult authenticationResult) {
+                int authUserId = MiuiKeyguardUtils.getAuthUserId(KeyguardUpdateMonitor.this.mContext, FingerprintCompat.getFingerIdForFingerprint(authenticationResult.getFingerprint()));
+                KeyguardUpdateMonitor.this.handlePreFingerprintAuthenticated(authUserId);
+                if (((MiuiFastUnlockController) Dependency.get(MiuiFastUnlockController.class)).isFastUnlock()) {
+                    DejankUtils.postAfterTraversal(new Runnable(authUserId) {
+                        public final /* synthetic */ int f$1;
+
+                        {
+                            this.f$1 = r2;
+                        }
+
+                        public final void run() {
+                            KeyguardUpdateMonitor.AnonymousClass16.this.lambda$onAuthenticationSucceeded$0$KeyguardUpdateMonitor$16(this.f$1);
+                        }
+                    });
+                } else {
+                    lambda$onAuthenticationSucceeded$0(authUserId);
+                }
+            }
+
+            /* access modifiers changed from: private */
+            /* renamed from: doOnAuthenticationSucceeded */
+            public void lambda$onAuthenticationSucceeded$0(int i) {
+                Trace.beginSection("KeyguardUpdateMonitor#onAuthenticationSucceeded");
+                Slog.i("miui_keyguard_fingerprint", "onAuthenticationSucceeded: authUserId = " + i);
+                KeyguardUpdateMonitor.this.handleFingerprintAuthenticated(i);
+                Trace.endSection();
+            }
+
+            public void onAuthenticationHelp(int i, CharSequence charSequence) {
+                KeyguardUpdateMonitor.this.handleFingerprintHelp(i, charSequence.toString());
+            }
+
+            public void onAuthenticationError(int i, CharSequence charSequence) {
+                Slog.i("miui_keyguard_fingerprint", "onAuthenticationError: errMsgId = " + i + ", errString = " + charSequence);
+                KeyguardUpdateMonitor.this.handleFingerprintError(i, TextUtils.isEmpty(charSequence) ? "" : charSequence.toString());
+            }
+
+            public void onAuthenticationAcquired(int i) {
+                KeyguardUpdateMonitor.this.handleFingerprintAcquired(i);
+            }
+        };
+        this.mFingerprintPossibleMap = new HashMap();
+        this.mActivityStateObserver = new ActivityObserver.ActivityObserverCallback() {
+            public void activityResumed(Intent intent) {
+                if (intent != null && intent.getComponent() != null) {
+                    KeyguardUpdateMonitor.this.updateFingerprintListeningState();
+                }
+            }
+        };
+        this.mPhoneSignalChangeCallback = new PhoneSignalController.PhoneSignalChangeCallback() {
+            public void onSignalChange(boolean z) {
+                for (int i = 0; i < KeyguardUpdateMonitor.this.mCallbacks.size(); i++) {
+                    KeyguardUpdateMonitorCallback keyguardUpdateMonitorCallback = (KeyguardUpdateMonitorCallback) ((WeakReference) KeyguardUpdateMonitor.this.mCallbacks.get(i)).get();
+                    if (keyguardUpdateMonitorCallback != null) {
+                        keyguardUpdateMonitorCallback.onPhoneSignalChanged(z);
+                    }
+                }
+            }
+        };
+        this.mWallpaperBlurColor = -1;
         this.mContext = context;
         this.mSubscriptionManager = SubscriptionManager.from(context);
-        this.mAlarmManager = (AlarmManager) context.getSystemService(AlarmManager.class);
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(AlarmManager.class);
         this.mDeviceProvisioned = MiuiKeyguardUtils.isDeviceProvisionedInSettingsDb(this.mContext);
         this.mStrongAuthTracker = new StrongAuthTracker(context);
         if (!this.mDeviceProvisioned) {
@@ -1278,11 +1264,13 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener {
         } catch (RemoteException e) {
             e.rethrowAsRuntimeException();
         }
-        this.mTrustManager = (TrustManager) context.getSystemService("trust");
-        this.mTrustManager.registerTrustListener(this);
-        this.mLockPatternUtils = new LockPatternUtils(context);
-        this.mLockPatternUtils.registerStrongAuthTracker(this.mStrongAuthTracker);
-        this.mStatusBarHeight = this.mContext.getResources().getDimensionPixelOffset(R.dimen.status_bar_height);
+        TrustManager trustManager = (TrustManager) context.getSystemService("trust");
+        this.mTrustManager = trustManager;
+        trustManager.registerTrustListener(this);
+        LockPatternUtils lockPatternUtils = new LockPatternUtils(context);
+        this.mLockPatternUtils = lockPatternUtils;
+        lockPatternUtils.registerStrongAuthTracker(this.mStrongAuthTracker);
+        this.mContext.getResources().getDimensionPixelOffset(R.dimen.status_bar_height);
         this.mFpm = (FingerprintManager) context.getSystemService("fingerprint");
         updateFingerprintListeningState();
         FingerprintManager fingerprintManager = this.mFpm;
@@ -1320,9 +1308,6 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener {
         if (MiuiKeyguardUtils.IS_OPERATOR_CUSTOMIZATION_TEST) {
             this.mPhoneSignalController = new PhoneSignalController(this.mContext);
         }
-        this.mContext.getContentResolver().registerContentObserver(Settings.Secure.getUriFor(MiuiKeyguardUtils.AOD_MODE), false, this.mAODObserver, -1);
-        this.mContext.getContentResolver().registerContentObserver(Settings.Secure.getUriFor("aod_using_super_wallpaper"), false, this.mAODObserver, -1);
-        this.mAODObserver.onChange(false);
         if (!MiuiKeyguardUtils.isSystemProcess()) {
             Slog.w("KeyguardUpdateMonitor", "second space should not init KeyguardUpdateMonitor:" + new Throwable());
         }
@@ -1428,7 +1413,6 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener {
                 Canvas canvas = new Canvas(bitmap);
                 screenElementRoot.tick(SystemClock.elapsedRealtime());
                 screenElementRoot.render(canvas);
-                screenElementRoot.setKeepResource(true);
                 screenElementRoot.finish();
                 return bitmap;
             } catch (Exception e) {
@@ -1499,8 +1483,9 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener {
                 if (cancellationSignal != null) {
                     cancellationSignal.cancel();
                 }
-                this.mFingerprintCancelSignal = new CancellationSignal();
-                this.mFpm.authenticate((FingerprintManager.CryptoObject) null, this.mFingerprintCancelSignal, 0, this.mAuthenticationCallback, (Handler) null, currentUser);
+                CancellationSignal cancellationSignal2 = new CancellationSignal();
+                this.mFingerprintCancelSignal = cancellationSignal2;
+                this.mFpm.authenticate((FingerprintManager.CryptoObject) null, cancellationSignal2, 0, this.mAuthenticationCallback, (Handler) null, currentUser);
                 setFingerprintRunningState(1);
             }
         }
@@ -1559,7 +1544,7 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener {
         boolean isDeviceProvisionedInSettingsDb = MiuiKeyguardUtils.isDeviceProvisionedInSettingsDb(this.mContext);
         if (isDeviceProvisionedInSettingsDb != this.mDeviceProvisioned) {
             this.mDeviceProvisioned = isDeviceProvisionedInSettingsDb;
-            if (this.mDeviceProvisioned) {
+            if (isDeviceProvisionedInSettingsDb) {
                 this.mHandler.sendEmptyMessage(308);
             }
         }
@@ -2346,10 +2331,6 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener {
                 keyguardUpdateMonitorCallback.onKeyguardShowingChanged(z);
             }
         }
-    }
-
-    public boolean isAodUsingSuperWallpaper() {
-        return this.mAodEnable && this.mAodUsingSuperWallpaperStyle;
     }
 
     public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {

@@ -163,20 +163,23 @@ class MiuiGxzwIconView extends GxzwNoRotateFrameLayout implements View.OnTouchLi
     private void initView() {
         this.mHighlightView = new MiuiGxzwHightlightContainer(getContext());
         this.mMiuiGxzwAnimView = new MiuiGxzwAnimView(getContext());
-        this.mMiuiGxzwQuickOpenView = new MiuiGxzwQuickOpenView(getContext());
-        this.mMiuiGxzwQuickOpenView.setQuickViewListener(this);
+        MiuiGxzwQuickOpenView miuiGxzwQuickOpenView = new MiuiGxzwQuickOpenView(getContext());
+        this.mMiuiGxzwQuickOpenView = miuiGxzwQuickOpenView;
+        miuiGxzwQuickOpenView.setQuickViewListener(this);
         setOnTouchListener(this);
         this.mMiuiGxzwSensor = new MiuiGxzwSensor(getContext());
-        this.mPowerManager = (PowerManager) getContext().getSystemService("power");
-        this.mWakeLock = this.mPowerManager.newWakeLock(1, "gxzw_icon");
+        PowerManager powerManager = (PowerManager) getContext().getSystemService("power");
+        this.mPowerManager = powerManager;
+        this.mWakeLock = powerManager.newWakeLock(1, "gxzw_icon");
         setSystemUiVisibility(4864);
-        this.mKeyguardUpdateMonitor = KeyguardUpdateMonitor.getInstance(getContext());
-        this.mKeyguardUpdateMonitor.registerCallback(this.mKeyguardUpdateMonitorCallback);
+        KeyguardUpdateMonitor instance = KeyguardUpdateMonitor.getInstance(getContext());
+        this.mKeyguardUpdateMonitor = instance;
+        instance.registerCallback(this.mKeyguardUpdateMonitorCallback);
         this.mDisplayManager = (DisplayManager) getContext().getSystemService("display");
         this.mMiuiGxzwTransparentTimer = new MiuiGxzwTransparentTimer(getContext());
         this.mMiuiGxzwTouchHelper = new MiuiGxzwTouchHelper(this, this.mMiuiGxzwQuickOpenView);
-        this.mLayoutParams = new WindowManager.LayoutParams(this.mRegion.width(), this.mRegion.height(), 2018, 25167368, -2);
-        WindowManager.LayoutParams layoutParams = this.mLayoutParams;
+        WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(this.mRegion.width(), this.mRegion.height(), 2018, 25167368, -2);
+        this.mLayoutParams = layoutParams;
         layoutParams.layoutInDisplayCutoutMode = 1;
         layoutParams.privateFlags |= MiuiGxzwUtils.PRIVATE_FLAG_IS_HBM_OVERLAY;
         layoutParams.gravity = 51;
@@ -319,10 +322,11 @@ class MiuiGxzwIconView extends GxzwNoRotateFrameLayout implements View.OnTouchLi
         if (AccessibilityManager.getInstance(getContext()).isTouchExplorationEnabled() || MiuiGxzwUtils.isLargeFod()) {
             i = 0;
         } else {
-            i = (int) (((float) MiuiGxzwUtils.GXZW_ICON_WIDTH) * 0.2f);
-            i2 = (int) (((float) MiuiGxzwUtils.GXZW_ICON_HEIGHT) * 0.2f);
+            int i3 = (int) (((float) MiuiGxzwUtils.GXZW_ICON_HEIGHT) * 0.2f);
+            i2 = (int) (((float) MiuiGxzwUtils.GXZW_ICON_WIDTH) * 0.2f);
+            i = i3;
         }
-        return new Rect(MiuiGxzwUtils.GXZW_ICON_X - i, MiuiGxzwUtils.GXZW_ICON_Y - i2, MiuiGxzwUtils.GXZW_ICON_X + MiuiGxzwUtils.GXZW_ICON_WIDTH + i, MiuiGxzwUtils.GXZW_ICON_Y + MiuiGxzwUtils.GXZW_ICON_HEIGHT + i2);
+        return new Rect(MiuiGxzwUtils.GXZW_ICON_X - i2, MiuiGxzwUtils.GXZW_ICON_Y - i, MiuiGxzwUtils.GXZW_ICON_X + MiuiGxzwUtils.GXZW_ICON_WIDTH + i2, MiuiGxzwUtils.GXZW_ICON_Y + MiuiGxzwUtils.GXZW_ICON_HEIGHT + i);
     }
 
     /* access modifiers changed from: protected */
@@ -695,7 +699,7 @@ class MiuiGxzwIconView extends GxzwNoRotateFrameLayout implements View.OnTouchLi
         if (this.mCurrentNonUIMode != i) {
             this.mCurrentNonUIMode = i;
             AsyncTask.THREAD_POOL_EXECUTOR.execute(new Runnable(i) {
-                private final /* synthetic */ int f$0;
+                public final /* synthetic */ int f$0;
 
                 {
                     this.f$0 = r1;

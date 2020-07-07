@@ -33,7 +33,6 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 public class MiuiKeyguardWallpaperControllerImpl implements MiuiKeyguardWallpaperController, KeyguardUpdateMonitor.WallpaperChangeCallback, BatteryController.BatteryStateChangeCallback, Dumpable {
-    private static final boolean DEBUG = Constants.DEBUG;
     private ValueAnimator mAlphaAnimator;
     private final List<MiuiKeyguardWallpaperController.KeyguardWallpaperCallback> mCallbacks = new ArrayList();
     private final Context mContext;
@@ -131,6 +130,10 @@ public class MiuiKeyguardWallpaperControllerImpl implements MiuiKeyguardWallpape
     /* access modifiers changed from: private */
     public View mWallpaperScrim;
 
+    static {
+        boolean z = Constants.DEBUG;
+    }
+
     public MiuiKeyguardWallpaperControllerImpl(@Inject Context context) {
         this.mContext = context;
         this.mHasKeyguardWallpaperEffects = context.getResources().getBoolean(R.bool.miui_config_hasKeyguardWallpaperEffects);
@@ -189,8 +192,9 @@ public class MiuiKeyguardWallpaperControllerImpl implements MiuiKeyguardWallpape
             float[] fArr = new float[2];
             fArr[0] = view.getAlpha();
             fArr[1] = z2 ? 1.0f : 0.0f;
-            this.mAlphaAnimator = ObjectAnimator.ofFloat(view, property, fArr);
-            this.mAlphaAnimator.addListener(new AnimatorListenerAdapter() {
+            ObjectAnimator ofFloat = ObjectAnimator.ofFloat(view, property, fArr);
+            this.mAlphaAnimator = ofFloat;
+            ofFloat.addListener(new AnimatorListenerAdapter() {
                 public void onAnimationCancel(Animator animator) {
                 }
 
@@ -296,8 +300,9 @@ public class MiuiKeyguardWallpaperControllerImpl implements MiuiKeyguardWallpape
                 dispatchKeyguardSwipeUpdated(f);
                 return;
             }
-            this.mKeyguardRatioAnimator = ObjectAnimator.ofFloat(new float[]{this.mKeyguardRatio, f});
-            this.mKeyguardRatioAnimator.setInterpolator(Interpolators.DECELERATE);
+            ValueAnimator ofFloat = ObjectAnimator.ofFloat(new float[]{this.mKeyguardRatio, f});
+            this.mKeyguardRatioAnimator = ofFloat;
+            ofFloat.setInterpolator(Interpolators.DECELERATE);
             this.mKeyguardRatioAnimator.setDuration(j);
             this.mKeyguardRatioAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 public final void onAnimationUpdate(ValueAnimator valueAnimator) {
@@ -308,6 +313,8 @@ public class MiuiKeyguardWallpaperControllerImpl implements MiuiKeyguardWallpape
         }
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$updateKeyguardRatio$0 */
     public /* synthetic */ void lambda$updateKeyguardRatio$0$MiuiKeyguardWallpaperControllerImpl(ValueAnimator valueAnimator) {
         dispatchKeyguardSwipeUpdated(((Float) valueAnimator.getAnimatedValue()).floatValue());
     }
@@ -383,7 +390,7 @@ public class MiuiKeyguardWallpaperControllerImpl implements MiuiKeyguardWallpape
     private void dispatchWallpaperAnimationUpdated(boolean z) {
         synchronized (this.mCallbacks) {
             this.mCallbacks.forEach(new Consumer(z) {
-                private final /* synthetic */ boolean f$0;
+                public final /* synthetic */ boolean f$0;
 
                 {
                     this.f$0 = r1;
@@ -403,7 +410,7 @@ public class MiuiKeyguardWallpaperControllerImpl implements MiuiKeyguardWallpape
     private void dispatchKeyguardSwipeUpdated(float f, MiuiKeyguardWallpaperController.KeyguardWallpaperCallback keyguardWallpaperCallback) {
         this.mKeyguardRatio = f;
         if (keyguardWallpaperCallback != null) {
-            keyguardWallpaperCallback.onKeyguardAnimationUpdated(this.mKeyguardRatio);
+            keyguardWallpaperCallback.onKeyguardAnimationUpdated(f);
             return;
         }
         synchronized (this.mCallbacks) {
@@ -416,7 +423,7 @@ public class MiuiKeyguardWallpaperControllerImpl implements MiuiKeyguardWallpape
     private void dispatchWallpaperBlurUpdated(float f) {
         synchronized (this.mCallbacks) {
             this.mCallbacks.forEach(new Consumer(f) {
-                private final /* synthetic */ float f$0;
+                public final /* synthetic */ float f$0;
 
                 {
                     this.f$0 = r1;
@@ -454,7 +461,7 @@ public class MiuiKeyguardWallpaperControllerImpl implements MiuiKeyguardWallpape
         printWriter.println("  wallpaperType=" + this.mKeyguardWallpaperType.name());
         printWriter.println("  blurRatio=" + this.mWallpaperBlurRatio);
         this.mRequestedBlurs.forEach(new BiConsumer(printWriter) {
-            private final /* synthetic */ PrintWriter f$0;
+            public final /* synthetic */ PrintWriter f$0;
 
             {
                 this.f$0 = r1;

@@ -20,8 +20,9 @@ public class AddEventItem extends IQuickOpenItem {
 
     public AddEventItem(RectF rectF, Region region, Context context) {
         super(rectF, region, context);
-        this.mView = new ImageView(context);
-        this.mView.setImageResource(R.drawable.gxzw_quick_open_add_event);
+        ImageView imageView = new ImageView(context);
+        this.mView = imageView;
+        imageView.setImageResource(R.drawable.gxzw_quick_open_add_event);
         this.mView.setScaleType(ImageView.ScaleType.FIT_XY);
     }
 

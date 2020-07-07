@@ -30,15 +30,15 @@ public class RootHolder {
             this.mResourceMgr = new LifecycleResourceManager(new LockScreenResourceLoader().setLocal(context.getResources().getConfiguration().locale), r.a, 3600000);
             this.mResourceMgr.setCacheSize(((int) Runtime.getRuntime().maxMemory()) / 2);
             this.mContext = new ScreenContext(context, this.mResourceMgr, new LockScreenElementFactory());
-            this.mRoot = new LockScreenRoot(this.mContext);
-            this.mRoot.setConfig("/data/system/theme/config.config");
+            LockScreenRoot lockScreenRoot = new LockScreenRoot(this.mContext);
+            this.mRoot = lockScreenRoot;
+            lockScreenRoot.setConfig("/data/system/theme/config.config");
             this.mRoot.setCacheDir(this.mTempCachePath);
             if (!this.mRoot.load()) {
                 Slog.e("RootHolder", "fail to load element root");
                 this.mRoot = null;
                 return false;
             }
-            this.mRoot.setAutoDarkenWallpaper(true);
             Log.d("RootHolder", "create root");
         } else {
             this.mResourceMgr.setLocal(context.getResources().getConfiguration().locale);
@@ -56,9 +56,8 @@ public class RootHolder {
             lifecycleResourceManager.finish(false);
             this.mResourceMgr = null;
         }
-        String str = this.mTempCachePath;
-        if (str != null) {
-            new File(str).delete();
+        if (this.mTempCachePath != null) {
+            new File(this.mTempCachePath).delete();
         }
     }
 
@@ -71,11 +70,10 @@ public class RootHolder {
     }
 
     public AwesomeLockScreenView createView(Context context) {
-        LockScreenRoot lockScreenRoot = this.mRoot;
-        if (lockScreenRoot == null) {
+        if (this.mRoot == null) {
             return null;
         }
-        AwesomeLockScreenView awesomeLockScreenView = new AwesomeLockScreenView(context, lockScreenRoot);
+        AwesomeLockScreenView awesomeLockScreenView = new AwesomeLockScreenView(context, this.mRoot);
         Log.d("RootHolder", "createView");
         return awesomeLockScreenView;
     }

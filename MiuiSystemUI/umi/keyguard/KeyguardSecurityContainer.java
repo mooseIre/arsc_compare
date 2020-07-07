@@ -215,8 +215,9 @@ public class KeyguardSecurityContainer extends FrameLayout implements KeyguardSe
 
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
-        this.mSecurityViewFlipper = (KeyguardSecurityViewFlipper) findViewById(R.id.view_flipper);
-        this.mSecurityViewFlipper.setLockPatternUtils(this.mLockPatternUtils);
+        KeyguardSecurityViewFlipper keyguardSecurityViewFlipper = (KeyguardSecurityViewFlipper) findViewById(R.id.view_flipper);
+        this.mSecurityViewFlipper = keyguardSecurityViewFlipper;
+        keyguardSecurityViewFlipper.setLockPatternUtils(this.mLockPatternUtils);
     }
 
     public void setLockPatternUtils(LockPatternUtils lockPatternUtils) {
@@ -235,65 +236,64 @@ public class KeyguardSecurityContainer extends FrameLayout implements KeyguardSe
 
     /* renamed from: com.android.keyguard.KeyguardSecurityContainer$10  reason: invalid class name */
     static /* synthetic */ class AnonymousClass10 {
-        static final /* synthetic */ int[] $SwitchMap$com$android$keyguard$KeyguardSecurityModel$SecurityMode = new int[KeyguardSecurityModel.SecurityMode.values().length];
+        static final /* synthetic */ int[] $SwitchMap$com$android$keyguard$KeyguardSecurityModel$SecurityMode;
 
         /* JADX WARNING: Can't wrap try/catch for region: R(14:0|1|2|3|4|5|6|7|8|9|10|11|12|(3:13|14|16)) */
         /* JADX WARNING: Can't wrap try/catch for region: R(16:0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|16) */
         /* JADX WARNING: Failed to process nested try/catch */
-        /* JADX WARNING: Missing exception handler attribute for start block: B:11:0x0040 */
-        /* JADX WARNING: Missing exception handler attribute for start block: B:13:0x004b */
-        /* JADX WARNING: Missing exception handler attribute for start block: B:3:0x0014 */
-        /* JADX WARNING: Missing exception handler attribute for start block: B:5:0x001f */
-        /* JADX WARNING: Missing exception handler attribute for start block: B:7:0x002a */
-        /* JADX WARNING: Missing exception handler attribute for start block: B:9:0x0035 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:11:0x003e */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:13:0x0049 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:3:0x0012 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:5:0x001d */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:7:0x0028 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:9:0x0033 */
         static {
             /*
                 com.android.keyguard.KeyguardSecurityModel$SecurityMode[] r0 = com.android.keyguard.KeyguardSecurityModel.SecurityMode.values()
                 int r0 = r0.length
                 int[] r0 = new int[r0]
                 $SwitchMap$com$android$keyguard$KeyguardSecurityModel$SecurityMode = r0
-                int[] r0 = $SwitchMap$com$android$keyguard$KeyguardSecurityModel$SecurityMode     // Catch:{ NoSuchFieldError -> 0x0014 }
-                com.android.keyguard.KeyguardSecurityModel$SecurityMode r1 = com.android.keyguard.KeyguardSecurityModel.SecurityMode.Pattern     // Catch:{ NoSuchFieldError -> 0x0014 }
-                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0014 }
+                com.android.keyguard.KeyguardSecurityModel$SecurityMode r1 = com.android.keyguard.KeyguardSecurityModel.SecurityMode.Pattern     // Catch:{ NoSuchFieldError -> 0x0012 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0012 }
                 r2 = 1
-                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0014 }
-            L_0x0014:
-                int[] r0 = $SwitchMap$com$android$keyguard$KeyguardSecurityModel$SecurityMode     // Catch:{ NoSuchFieldError -> 0x001f }
-                com.android.keyguard.KeyguardSecurityModel$SecurityMode r1 = com.android.keyguard.KeyguardSecurityModel.SecurityMode.PIN     // Catch:{ NoSuchFieldError -> 0x001f }
-                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x001f }
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0012 }
+            L_0x0012:
+                int[] r0 = $SwitchMap$com$android$keyguard$KeyguardSecurityModel$SecurityMode     // Catch:{ NoSuchFieldError -> 0x001d }
+                com.android.keyguard.KeyguardSecurityModel$SecurityMode r1 = com.android.keyguard.KeyguardSecurityModel.SecurityMode.PIN     // Catch:{ NoSuchFieldError -> 0x001d }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x001d }
                 r2 = 2
-                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x001f }
-            L_0x001f:
-                int[] r0 = $SwitchMap$com$android$keyguard$KeyguardSecurityModel$SecurityMode     // Catch:{ NoSuchFieldError -> 0x002a }
-                com.android.keyguard.KeyguardSecurityModel$SecurityMode r1 = com.android.keyguard.KeyguardSecurityModel.SecurityMode.Password     // Catch:{ NoSuchFieldError -> 0x002a }
-                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x002a }
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x001d }
+            L_0x001d:
+                int[] r0 = $SwitchMap$com$android$keyguard$KeyguardSecurityModel$SecurityMode     // Catch:{ NoSuchFieldError -> 0x0028 }
+                com.android.keyguard.KeyguardSecurityModel$SecurityMode r1 = com.android.keyguard.KeyguardSecurityModel.SecurityMode.Password     // Catch:{ NoSuchFieldError -> 0x0028 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0028 }
                 r2 = 3
-                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x002a }
-            L_0x002a:
-                int[] r0 = $SwitchMap$com$android$keyguard$KeyguardSecurityModel$SecurityMode     // Catch:{ NoSuchFieldError -> 0x0035 }
-                com.android.keyguard.KeyguardSecurityModel$SecurityMode r1 = com.android.keyguard.KeyguardSecurityModel.SecurityMode.Invalid     // Catch:{ NoSuchFieldError -> 0x0035 }
-                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0035 }
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0028 }
+            L_0x0028:
+                int[] r0 = $SwitchMap$com$android$keyguard$KeyguardSecurityModel$SecurityMode     // Catch:{ NoSuchFieldError -> 0x0033 }
+                com.android.keyguard.KeyguardSecurityModel$SecurityMode r1 = com.android.keyguard.KeyguardSecurityModel.SecurityMode.Invalid     // Catch:{ NoSuchFieldError -> 0x0033 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0033 }
                 r2 = 4
-                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0035 }
-            L_0x0035:
-                int[] r0 = $SwitchMap$com$android$keyguard$KeyguardSecurityModel$SecurityMode     // Catch:{ NoSuchFieldError -> 0x0040 }
-                com.android.keyguard.KeyguardSecurityModel$SecurityMode r1 = com.android.keyguard.KeyguardSecurityModel.SecurityMode.None     // Catch:{ NoSuchFieldError -> 0x0040 }
-                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0040 }
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0033 }
+            L_0x0033:
+                int[] r0 = $SwitchMap$com$android$keyguard$KeyguardSecurityModel$SecurityMode     // Catch:{ NoSuchFieldError -> 0x003e }
+                com.android.keyguard.KeyguardSecurityModel$SecurityMode r1 = com.android.keyguard.KeyguardSecurityModel.SecurityMode.None     // Catch:{ NoSuchFieldError -> 0x003e }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x003e }
                 r2 = 5
-                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0040 }
-            L_0x0040:
-                int[] r0 = $SwitchMap$com$android$keyguard$KeyguardSecurityModel$SecurityMode     // Catch:{ NoSuchFieldError -> 0x004b }
-                com.android.keyguard.KeyguardSecurityModel$SecurityMode r1 = com.android.keyguard.KeyguardSecurityModel.SecurityMode.SimPin     // Catch:{ NoSuchFieldError -> 0x004b }
-                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x004b }
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x003e }
+            L_0x003e:
+                int[] r0 = $SwitchMap$com$android$keyguard$KeyguardSecurityModel$SecurityMode     // Catch:{ NoSuchFieldError -> 0x0049 }
+                com.android.keyguard.KeyguardSecurityModel$SecurityMode r1 = com.android.keyguard.KeyguardSecurityModel.SecurityMode.SimPin     // Catch:{ NoSuchFieldError -> 0x0049 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0049 }
                 r2 = 6
-                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x004b }
-            L_0x004b:
-                int[] r0 = $SwitchMap$com$android$keyguard$KeyguardSecurityModel$SecurityMode     // Catch:{ NoSuchFieldError -> 0x0056 }
-                com.android.keyguard.KeyguardSecurityModel$SecurityMode r1 = com.android.keyguard.KeyguardSecurityModel.SecurityMode.SimPuk     // Catch:{ NoSuchFieldError -> 0x0056 }
-                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0056 }
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0049 }
+            L_0x0049:
+                int[] r0 = $SwitchMap$com$android$keyguard$KeyguardSecurityModel$SecurityMode     // Catch:{ NoSuchFieldError -> 0x0054 }
+                com.android.keyguard.KeyguardSecurityModel$SecurityMode r1 = com.android.keyguard.KeyguardSecurityModel.SecurityMode.SimPuk     // Catch:{ NoSuchFieldError -> 0x0054 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0054 }
                 r2 = 7
-                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0056 }
-            L_0x0056:
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0054 }
+            L_0x0054:
                 return
             */
             throw new UnsupportedOperationException("Method not decompiled: com.android.keyguard.KeyguardSecurityContainer.AnonymousClass10.<clinit>():void");
@@ -475,8 +475,9 @@ public class KeyguardSecurityContainer extends FrameLayout implements KeyguardSe
     private void loadLockoutView() {
         View inflate = View.inflate(getContext(), R.layout.miui_unlockscreen_lockout, (ViewGroup) null);
         ((ViewGroup) getParent()).addView(inflate);
-        this.mLockoutView = inflate.findViewById(R.id.unlockscreen_lockout_id);
-        Button button = (Button) this.mLockoutView.findViewById(R.id.foget_password);
+        View findViewById = inflate.findViewById(R.id.unlockscreen_lockout_id);
+        this.mLockoutView = findViewById;
+        Button button = (Button) findViewById.findViewById(R.id.foget_password);
         this.mFogetPasswordMethod = this.mLockoutView.findViewById(R.id.forget_password_hint_container);
         this.mFogetPasswordSuggestion = this.mLockoutView.findViewById(R.id.forget_password_suggesstion);
         this.mForgetPasswordMethodBack = (TextView) this.mFogetPasswordMethod.findViewById(R.id.forget_password_method_back);
@@ -549,38 +550,95 @@ public class KeyguardSecurityContainer extends FrameLayout implements KeyguardSe
     }
 
     /* access modifiers changed from: package-private */
-    public boolean showNextSecurityScreenOrFinish(boolean z, int i) {
-        Log.d("KeyguardSecurityView", "showNextSecurityScreenOrFinish(" + z + ")");
-        boolean z2 = false;
-        boolean z3 = true;
-        if (!this.mUpdateMonitor.getUserCanSkipBouncer(i)) {
-            KeyguardSecurityModel.SecurityMode securityMode = KeyguardSecurityModel.SecurityMode.None;
-            KeyguardSecurityModel.SecurityMode securityMode2 = this.mCurrentSecuritySelection;
-            if (securityMode == securityMode2) {
-                KeyguardSecurityModel.SecurityMode securityMode3 = this.mSecurityModel.getSecurityMode(i);
-                if (KeyguardSecurityModel.SecurityMode.None != securityMode3) {
-                    showSecurityScreen(securityMode3);
-                }
-            } else if (z) {
-                int i2 = AnonymousClass10.$SwitchMap$com$android$keyguard$KeyguardSecurityModel$SecurityMode[securityMode2.ordinal()];
-                if (i2 == 1 || i2 == 2 || i2 == 3) {
-                    z2 = true;
-                } else if (i2 == 6 || i2 == 7) {
-                    KeyguardSecurityModel.SecurityMode securityMode4 = this.mSecurityModel.getSecurityMode(i);
-                    if (securityMode4 != KeyguardSecurityModel.SecurityMode.None || !this.mLockPatternUtils.isLockScreenDisabled(KeyguardUpdateMonitor.getCurrentUser())) {
-                        showSecurityScreen(securityMode4);
-                    }
-                } else {
-                    Log.v("KeyguardSecurityView", "Bad security screen " + this.mCurrentSecuritySelection + ", fail safe");
-                    showPrimarySecurityScreen(false);
-                }
-            }
-            z3 = false;
-        }
-        if (z3) {
-            this.mSecurityCallback.finish(z2, i);
-        }
-        return z3;
+    /* JADX WARNING: Removed duplicated region for block: B:28:0x0096  */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public boolean showNextSecurityScreenOrFinish(boolean r7, int r8) {
+        /*
+            r6 = this;
+            java.lang.StringBuilder r0 = new java.lang.StringBuilder
+            r0.<init>()
+            java.lang.String r1 = "showNextSecurityScreenOrFinish("
+            r0.append(r1)
+            r0.append(r7)
+            java.lang.String r1 = ")"
+            r0.append(r1)
+            java.lang.String r0 = r0.toString()
+            java.lang.String r1 = "KeyguardSecurityView"
+            android.util.Log.d(r1, r0)
+            com.android.keyguard.KeyguardUpdateMonitor r0 = r6.mUpdateMonitor
+            boolean r0 = r0.getUserCanSkipBouncer(r8)
+            r2 = 0
+            r3 = 1
+            if (r0 == 0) goto L_0x002a
+        L_0x0025:
+            r5 = r3
+            r3 = r2
+            r2 = r5
+            goto L_0x0094
+        L_0x002a:
+            com.android.keyguard.KeyguardSecurityModel$SecurityMode r0 = com.android.keyguard.KeyguardSecurityModel.SecurityMode.None
+            com.android.keyguard.KeyguardSecurityModel$SecurityMode r4 = r6.mCurrentSecuritySelection
+            if (r0 != r4) goto L_0x0040
+            com.android.keyguard.KeyguardSecurityModel r7 = r6.mSecurityModel
+            com.android.keyguard.KeyguardSecurityModel$SecurityMode r7 = r7.getSecurityMode(r8)
+            com.android.keyguard.KeyguardSecurityModel$SecurityMode r0 = com.android.keyguard.KeyguardSecurityModel.SecurityMode.None
+            if (r0 != r7) goto L_0x003b
+            goto L_0x0025
+        L_0x003b:
+            r6.showSecurityScreen(r7)
+            r3 = r2
+            goto L_0x0025
+        L_0x0040:
+            if (r7 == 0) goto L_0x0093
+            int[] r7 = com.android.keyguard.KeyguardSecurityContainer.AnonymousClass10.$SwitchMap$com$android$keyguard$KeyguardSecurityModel$SecurityMode
+            int r0 = r4.ordinal()
+            r7 = r7[r0]
+            if (r7 == r3) goto L_0x0091
+            r0 = 2
+            if (r7 == r0) goto L_0x0091
+            r0 = 3
+            if (r7 == r0) goto L_0x0091
+            r0 = 6
+            if (r7 == r0) goto L_0x0077
+            r0 = 7
+            if (r7 == r0) goto L_0x0077
+            java.lang.StringBuilder r7 = new java.lang.StringBuilder
+            r7.<init>()
+            java.lang.String r0 = "Bad security screen "
+            r7.append(r0)
+            com.android.keyguard.KeyguardSecurityModel$SecurityMode r0 = r6.mCurrentSecuritySelection
+            r7.append(r0)
+            java.lang.String r0 = ", fail safe"
+            r7.append(r0)
+            java.lang.String r7 = r7.toString()
+            android.util.Log.v(r1, r7)
+            r6.showPrimarySecurityScreen(r2)
+            goto L_0x0093
+        L_0x0077:
+            com.android.keyguard.KeyguardSecurityModel r7 = r6.mSecurityModel
+            com.android.keyguard.KeyguardSecurityModel$SecurityMode r7 = r7.getSecurityMode(r8)
+            com.android.keyguard.KeyguardSecurityModel$SecurityMode r0 = com.android.keyguard.KeyguardSecurityModel.SecurityMode.None
+            if (r7 != r0) goto L_0x008d
+            com.android.internal.widget.LockPatternUtils r0 = r6.mLockPatternUtils
+            int r1 = com.android.keyguard.KeyguardUpdateMonitor.getCurrentUser()
+            boolean r0 = r0.isLockScreenDisabled(r1)
+            if (r0 != 0) goto L_0x0025
+        L_0x008d:
+            r6.showSecurityScreen(r7)
+            goto L_0x0093
+        L_0x0091:
+            r2 = r3
+            goto L_0x0094
+        L_0x0093:
+            r3 = r2
+        L_0x0094:
+            if (r2 == 0) goto L_0x009b
+            com.android.keyguard.KeyguardSecurityContainer$SecurityCallback r6 = r6.mSecurityCallback
+            r6.finish(r3, r8)
+        L_0x009b:
+            return r2
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.keyguard.KeyguardSecurityContainer.showNextSecurityScreenOrFinish(boolean, int):boolean");
     }
 
     private void showSecurityScreen(KeyguardSecurityModel.SecurityMode securityMode) {
