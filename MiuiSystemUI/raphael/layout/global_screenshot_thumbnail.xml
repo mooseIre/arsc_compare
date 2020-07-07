@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:gravity="center_horizontal" android:orientation="vertical" android:background="@drawable/screenshot_thumnail_bg" android:layout_width="wrap_content" android:layout_height="wrap_content"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <ImageView android:id="@id/imageView" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+    <RelativeLayout android:id="@id/btnLongShotViewGroup" android:visibility="invisible" android:layout_width="fill_parent" android:layout_height="@dimen/screenshot_thumnail_btn_height" android:layout_marginTop="@dimen/screenshot_thumnail_btn_margintop">
+        <com.android.systemui.screenshot.MarqueeTextView android:textSize="@dimen/screenshot_thumnail_txtsize" android:textColor="@color/screenshot_thumnail_btn_txtcolor" android:gravity="center" android:id="@id/btnLongShot" android:background="@drawable/screenshot_thumnail_btn_bg" android:layout_width="fill_parent" android:layout_height="@dimen/screenshot_thumnail_btn_height" android:text="@string/screenshot_long_screenshot" android:singleLine="true" />
+        <ImageView android:background="@drawable/screenshot_thumnail_btn_maskleft" android:layout_width="wrap_content" android:layout_height="fill_parent" android:layout_alignParentLeft="true" />
+        <ImageView android:background="@drawable/screenshot_thumnail_btn_maskright" android:layout_width="wrap_content" android:layout_height="fill_parent" android:layout_alignParentRight="true" />
+    </RelativeLayout>
+    <TextView android:textSize="@dimen/screenshot_thumnail_txtsize" android:textColor="@color/screenshot_thumnail_btn_txtcolor" android:gravity="center" android:id="@id/btnShare" android:background="@drawable/screenshot_thumnail_btn_bg" android:visibility="invisible" android:layout_width="fill_parent" android:layout_height="@dimen/screenshot_thumnail_btn_height" android:layout_marginTop="@dimen/screenshot_thumnail_btn_margintop" android:text="@string/screenshot_send" android:singleLine="true" />
+</LinearLayout>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <com.android.systemui.settings.ToggleSeekBar android:id="@id/slider" android:layout_width="0.0dip" android:layout_height="wrap_content" android:maxHeight="@dimen/qs_control_brightness_dialog_height" android:progressDrawable="@drawable/qs_control_brightness_toggle_progress" android:thumb="@drawable/brightness_toggle_thumb" android:layout_centerVertical="true" android:layout_alignParentStart="true" android:layout_alignParentEnd="true" android:mirrorForRtl="true" android:splitTrack="false" />
+    <ImageView android:id="@id/low" android:layout_width="@dimen/qs_control_brightness_icon_size" android:layout_height="@dimen/qs_control_brightness_icon_size" android:src="@drawable/qs_control_low_brightness" android:scaleType="fitXY" android:layout_centerVertical="true" android:layout_marginStart="@dimen/qs_control_brightness_icon_margin" android:layout_alignParentStart="true" />
+</merge>

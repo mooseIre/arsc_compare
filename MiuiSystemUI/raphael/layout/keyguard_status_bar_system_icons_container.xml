@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:orientation="horizontal" android:id="@id/system_icons_padding_container" android:layout_width="wrap_content" android:layout_height="fill_parent" android:layout_marginTop="@dimen/notch_status_bar_padding_top" android:layout_alignWithParentIfMissing="true" android:paddingStart="@dimen/statusbar_padding_start" android:paddingEnd="@dimen/statusbar_padding_end" android:layout_marginStart="@dimen/round_cornor_padding" android:layout_marginEnd="@dimen/round_cornor_padding" android:layout_alignParentEnd="true"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <FrameLayout android:layout_gravity="center_vertical" android:id="@id/system_icons_container" android:layout_width="wrap_content" android:layout_height="fill_parent">
+        <include layout="@layout/system_icons" />
+    </FrameLayout>
+</LinearLayout>
