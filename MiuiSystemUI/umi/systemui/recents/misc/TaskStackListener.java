@@ -16,7 +16,16 @@ public abstract class TaskStackListener extends ITaskStackListener.Stub {
     public void onActivityRequestedOrientationChanged(int i, int i2) throws RemoteException {
     }
 
+    public void onActivityRestartAttempt(ActivityManager.RunningTaskInfo runningTaskInfo, boolean z, boolean z2, boolean z3) throws RemoteException {
+    }
+
     public void onBackPressedOnTaskRoot(ActivityManager.RunningTaskInfo runningTaskInfo) throws RemoteException {
+    }
+
+    public void onRecentTaskListFrozenChanged(boolean z) throws RemoteException {
+    }
+
+    public void onRecentTaskListUpdated() throws RemoteException {
     }
 
     public void onSingleTaskDisplayDrawn(int i) throws RemoteException {
@@ -37,6 +46,9 @@ public abstract class TaskStackListener extends ITaskStackListener.Stub {
     public void onTaskDisplayChanged(int i, int i2) throws RemoteException {
     }
 
+    public void onTaskFocusChanged(int i, boolean z) throws RemoteException {
+    }
+
     public void onTaskMovedToFront(ActivityManager.RunningTaskInfo runningTaskInfo) throws RemoteException {
     }
 
@@ -44,5 +56,8 @@ public abstract class TaskStackListener extends ITaskStackListener.Stub {
     }
 
     public void onTaskRemoved(int i) throws RemoteException {
+    }
+
+    public void onTaskRequestedOrientationChanged(int i, int i2) throws RemoteException {
     }
 }

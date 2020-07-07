@@ -38,6 +38,7 @@ public class AutoReinflateContainer extends FrameLayout {
         boolean z;
         super.onConfigurationChanged(configuration);
         int i = configuration.densityDpi;
+        boolean z2 = true;
         if (i != this.mDensity) {
             this.mDensity = i;
             z = true;
@@ -47,9 +48,10 @@ public class AutoReinflateContainer extends FrameLayout {
         Object locales = SystemUICompat.getLocales(configuration);
         if (locales != this.mLocaleList) {
             this.mLocaleList = locales;
-            z = true;
+        } else {
+            z2 = z;
         }
-        if (z) {
+        if (z2) {
             inflateLayout();
         }
     }

@@ -99,22 +99,20 @@ public class DrawShapeUtil {
         return Math.abs(i - i3) <= 350 && Math.abs(i2 - i4) <= 350;
     }
 
-    public static double distance(float f, float f2, float f3, float f4) {
-        return Math.sqrt(Math.pow((double) (f - f2), 2.0d) + Math.pow((double) (f3 - f4), 2.0d));
-    }
-
     private static void initPaint() {
         if (mPaintLine == null) {
-            mPaintLine = new Paint();
-            mPaintLine.setColor(-1);
+            Paint paint = new Paint();
+            mPaintLine = paint;
+            paint.setColor(-1);
             mPaintLine.setStyle(Paint.Style.STROKE);
             mPaintLine.setAntiAlias(true);
             mPaintLine.setStrokeWidth(6.0f);
             mPaintLine.setStrokeCap(Paint.Cap.ROUND);
         }
         if (mPaintStroke == null) {
-            mPaintStroke = new Paint();
-            mPaintStroke.setColor(-1);
+            Paint paint2 = new Paint();
+            mPaintStroke = paint2;
+            paint2.setColor(-1);
             mPaintStroke.setFlags(1);
             mPaintStroke.setAlpha(160);
             mPaintStroke.setAntiAlias(true);

@@ -221,7 +221,7 @@ public class Clock extends TextView implements DemoMode, DarkIconDispatcher.Dark
                 int size = this.mAttachedViews.size();
                 for (int i = 0; i < size; i++) {
                     final Clock clock = this.mAttachedViews.get(i);
-                    clock.post(new Runnable() {
+                    clock.post(new Runnable(this) {
                         public void run() {
                             clock.updateClock();
                         }

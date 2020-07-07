@@ -15,10 +15,6 @@ public final class Logger {
         Log.w(str, str2);
     }
 
-    public static void e(String str) {
-        e("SystemUI_LOG", str);
-    }
-
     public static void e(String str, String str2) {
         Log.e(str, str2);
     }

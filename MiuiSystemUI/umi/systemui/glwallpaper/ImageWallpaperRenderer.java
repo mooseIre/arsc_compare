@@ -37,28 +37,21 @@ public class ImageWallpaperRenderer implements GLWallpaperRenderer, ImageRevealH
     private float mYOffset;
 
     /* access modifiers changed from: protected */
-    public boolean enableScissorMode() {
-        throw null;
-    }
+    public abstract boolean enableScissorMode();
 
     /* access modifiers changed from: protected */
-    public Bitmap getBitmap() {
-        throw null;
-    }
+    public abstract Bitmap getBitmap();
 
     /* access modifiers changed from: protected */
-    public int getFragmentResId() {
-        throw null;
-    }
+    public abstract int getFragmentResId();
 
     /* access modifiers changed from: protected */
-    public int getVertexResId() {
-        throw null;
-    }
+    public abstract int getVertexResId();
 
     public ImageWallpaperRenderer(Context context, GLWallpaperRenderer.SurfaceProxy surfaceProxy) {
-        this.mWallpaperManager = (WallpaperManager) context.getSystemService(WallpaperManager.class);
-        if (this.mWallpaperManager == null) {
+        WallpaperManager wallpaperManager = (WallpaperManager) context.getSystemService(WallpaperManager.class);
+        this.mWallpaperManager = wallpaperManager;
+        if (wallpaperManager == null) {
             Log.w(TAG, "WallpaperManager not available");
         }
         this.mDisplayInfo = new DisplayInfo();
@@ -90,15 +83,16 @@ public class ImageWallpaperRenderer implements GLWallpaperRenderer, ImageRevealH
 
     private boolean loadBitmap() {
         if (this.mBitmap == null) {
-            this.mBitmap = getBitmap();
+            Bitmap bitmap = getBitmap();
+            this.mBitmap = bitmap;
             WallpaperManager wallpaperManager = this.mWallpaperManager;
-            if (wallpaperManager != null && this.mBitmap == null) {
+            if (wallpaperManager != null && bitmap == null) {
                 this.mBitmap = wallpaperManager.getBitmap();
                 this.mWallpaperManager.forgetLoadedWallpaper();
             }
-            Bitmap bitmap = this.mBitmap;
-            if (bitmap != null) {
-                this.mSurfaceSize.set(0, 0, Math.max(this.mDisplayInfo.logicalWidth, bitmap.getWidth()), Math.max(this.mDisplayInfo.logicalHeight, this.mBitmap.getHeight()));
+            Bitmap bitmap2 = this.mBitmap;
+            if (bitmap2 != null) {
+                this.mSurfaceSize.set(0, 0, Math.max(this.mDisplayInfo.logicalWidth, bitmap2.getWidth()), Math.max(this.mDisplayInfo.logicalHeight, this.mBitmap.getHeight()));
             }
         }
         if (this.mBitmap != null) {
@@ -138,9 +132,7 @@ public class ImageWallpaperRenderer implements GLWallpaperRenderer, ImageRevealH
     }
 
     public void startUnlockAnim(boolean z, long j) {
-        if (this.mSurfaceSize.width() == this.mScissor.width() && this.mSurfaceSize.height() == this.mScissor.height()) {
-            this.mImageRevealHelper.startUnlockAnim(z, j);
-        }
+        this.mImageRevealHelper.startUnlockAnim(z, j);
     }
 
     public void updateOffsets(float f, float f2) {

@@ -10,7 +10,6 @@ import com.android.systemui.miui.widget.TimerSeekBar;
 
 public class MiuiVolumeTimerSeekBar extends TimerSeekBar {
     private int mBoundsStart;
-    private int mCurrentSegment;
     protected BoundsSeekBarInjector mInjector;
     private TimerSeekBarMotions mMotions;
     private int mTimeRemain;
@@ -44,8 +43,9 @@ public class MiuiVolumeTimerSeekBar extends TimerSeekBar {
         boolean z = obtainStyledAttributes.getBoolean(R$styleable.MiuiVolumeTimerSeekBar_drawTickingTime, true);
         obtainStyledAttributes.recycle();
         this.mMotions = new MiuiVolumeTimerDrawableHelper(this, z);
-        this.mInjector = new BoundsSeekBarInjector(this, false);
-        this.mInjector.setBounds((float) this.mBoundsStart, (float) getMax());
+        BoundsSeekBarInjector boundsSeekBarInjector = new BoundsSeekBarInjector(this, false);
+        this.mInjector = boundsSeekBarInjector;
+        boundsSeekBarInjector.setBounds((float) this.mBoundsStart, (float) getMax());
     }
 
     /* access modifiers changed from: protected */
@@ -76,7 +76,6 @@ public class MiuiVolumeTimerSeekBar extends TimerSeekBar {
 
     public void onSegmentChange(int i, int i2) {
         super.onSegmentChange(i, i2);
-        this.mCurrentSegment = i;
         this.mMotions.onSegmentChange(i, i2);
     }
 

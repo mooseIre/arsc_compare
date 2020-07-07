@@ -41,8 +41,9 @@ public class CCQSIconViewImpl extends QSIconView {
         this.mCustomTileSize = (int) getResources().getDimension(R.dimen.qs_control_custom_tile_icon_inner_size);
         this.mTileSize = (int) getResources().getDimension(R.dimen.qs_control_center_tile_width);
         this.mState = new QSTile.State();
-        this.mIcon = createIcon();
-        addView(this.mIcon);
+        View createIcon = createIcon();
+        this.mIcon = createIcon;
+        addView(createIcon);
         updateResources();
     }
 
@@ -165,8 +166,9 @@ public class CCQSIconViewImpl extends QSIconView {
             this.mAnimator.removeAllUpdateListeners();
             this.mAnimator = null;
         }
-        this.mAnimator = ObjectAnimator.ofInt(drawable, "alpha", new int[]{255 - i, i}).setDuration(300);
-        this.mAnimator.setInterpolator(Interpolators.CUBIC_EASE_OUT);
+        ObjectAnimator duration = ObjectAnimator.ofInt(drawable, "alpha", new int[]{255 - i, i}).setDuration(300);
+        this.mAnimator = duration;
+        duration.setInterpolator(Interpolators.CUBIC_EASE_OUT);
         this.mAnimator.start();
     }
 

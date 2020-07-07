@@ -27,14 +27,16 @@ public class DarkIconDispatcherImpl implements DarkIconDispatcher {
     public DarkIconDispatcherImpl(@Inject Context context) {
         this.mUseTint = context.getResources().getBoolean(R.bool.use_status_bar_tint);
         this.mDarkModeIconColorSingleTone = context.getColor(R.color.dark_mode_icon_color_single_tone);
-        this.mLightModeIconColorSingleTone = context.getColor(R.color.light_mode_icon_color_single_tone);
-        this.mIconTint = this.mLightModeIconColorSingleTone;
-        this.mTransitionsController = new LightBarTransitionsController(context, new LightBarTransitionsController.DarkIntensityApplier() {
+        int color = context.getColor(R.color.light_mode_icon_color_single_tone);
+        this.mLightModeIconColorSingleTone = color;
+        this.mIconTint = color;
+        LightBarTransitionsController lightBarTransitionsController = new LightBarTransitionsController(context, new LightBarTransitionsController.DarkIntensityApplier() {
             public void applyDarkIntensity(float f) {
                 DarkIconDispatcherImpl.this.setIconTintInternal(f);
             }
         });
-        this.mTransitionsController.setUseTint(this.mUseTint);
+        this.mTransitionsController = lightBarTransitionsController;
+        lightBarTransitionsController.setUseTint(this.mUseTint);
     }
 
     public LightBarTransitionsController getTransitionsController() {
@@ -74,8 +76,9 @@ public class DarkIconDispatcherImpl implements DarkIconDispatcher {
     public void updateResource(Context context) {
         this.mDarkModeIconColorSingleTone = context.getColor(R.color.dark_mode_icon_color_single_tone);
         this.mLightModeIconColorSingleTone = context.getColor(R.color.light_mode_icon_color_single_tone);
-        this.mUseTint = context.getResources().getBoolean(R.bool.use_status_bar_tint);
-        this.mTransitionsController.setUseTint(this.mUseTint);
+        boolean z = context.getResources().getBoolean(R.bool.use_status_bar_tint);
+        this.mUseTint = z;
+        this.mTransitionsController.setUseTint(z);
         setIconTintInternal(this.mDarkIntensity);
     }
 

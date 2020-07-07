@@ -9,6 +9,7 @@ import android.media.MediaMetadata;
 import android.media.session.MediaController;
 import android.media.session.MediaSession;
 import android.media.session.MediaSessionManager;
+import android.media.session.MediaSessionManagerCompat;
 import android.media.session.PlaybackState;
 import android.os.Bundle;
 import android.os.Handler;
@@ -85,6 +86,7 @@ public class MediaSessions {
         this.mMgr.addOnActiveSessionsChangedListener(this.mSessionsListener, (ComponentName) null, this.mHandler);
         this.mInit = true;
         postUpdateSessions();
+        MediaSessionManagerCompat.setRemoteVolumeController(this.mMgr, this.mRvc);
     }
 
     /* access modifiers changed from: protected */

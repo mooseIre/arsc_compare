@@ -7,11 +7,12 @@ import com.android.internal.hardware.AmbientDisplayConfigurationCompat;
 import com.android.systemui.plugins.R;
 
 public class DozeParameters {
-    private final AmbientDisplayConfigurationCompat mAmbientDisplayConfigurationCompat = new AmbientDisplayConfigurationCompat(this.mContext);
+    private final AmbientDisplayConfigurationCompat mAmbientDisplayConfigurationCompat;
     private final Context mContext;
 
     public DozeParameters(Context context) {
         this.mContext = context;
+        this.mAmbientDisplayConfigurationCompat = new AmbientDisplayConfigurationCompat(context);
     }
 
     public int getPulseInDuration(boolean z) {

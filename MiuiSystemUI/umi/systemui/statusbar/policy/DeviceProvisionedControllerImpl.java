@@ -16,7 +16,6 @@ import java.util.Iterator;
 
 public class DeviceProvisionedControllerImpl extends CurrentUserTracker implements DeviceProvisionedController {
     private final ContentResolver mContentResolver;
-    private final Context mContext;
     private final Uri mDeviceProvisionedUri;
     private final ArrayList<DeviceProvisionedController.DeviceProvisionedListener> mListeners = new ArrayList<>();
     protected final ContentObserver mSettingsObserver = new ContentObserver((Handler) Dependency.get(Dependency.MAIN_HANDLER)) {
@@ -33,7 +32,6 @@ public class DeviceProvisionedControllerImpl extends CurrentUserTracker implemen
 
     public DeviceProvisionedControllerImpl(@Inject Context context) {
         super(context);
-        this.mContext = context;
         this.mContentResolver = context.getContentResolver();
         this.mDeviceProvisionedUri = Settings.Global.getUriFor("device_provisioned");
         this.mUserSetupUri = Settings.Secure.getUriFor("user_setup_complete");
@@ -64,10 +62,22 @@ public class DeviceProvisionedControllerImpl extends CurrentUserTracker implemen
         deviceProvisionedListener.onDeviceProvisionedChanged();
     }
 
+    public void removeCallback(DeviceProvisionedController.DeviceProvisionedListener deviceProvisionedListener) {
+        this.mListeners.remove(deviceProvisionedListener);
+        if (this.mListeners.size() == 0) {
+            stopListening();
+        }
+    }
+
     private void startListening(int i) {
         this.mContentResolver.registerContentObserver(this.mDeviceProvisionedUri, true, this.mSettingsObserver, 0);
         this.mContentResolver.registerContentObserver(this.mUserSetupUri, true, this.mSettingsObserver, i);
         startTracking();
+    }
+
+    private void stopListening() {
+        stopTracking();
+        this.mContentResolver.unregisterContentObserver(this.mSettingsObserver);
     }
 
     public void onUserSwitched(int i) {

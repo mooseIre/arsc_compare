@@ -56,7 +56,6 @@ public class MiuiNotificationActivityStarter implements NotificationActivityStar
     };
     /* access modifiers changed from: private */
     public final AssistManager mAssistManager;
-    private final Handler mBackgroundHandler;
     /* access modifiers changed from: private */
     public final IStatusBarService mBarService;
     /* access modifiers changed from: private */
@@ -95,7 +94,6 @@ public class MiuiNotificationActivityStarter implements NotificationActivityStar
         this.mGroupManager = notificationGroupManager;
         this.mShadeController = shadeController;
         this.mMainThreadHandler = handler;
-        this.mBackgroundHandler = handler2;
         this.mActivityStarter = activityStarter;
         this.mBarService = iStatusBarService;
         this.mBubbleController = bubbleController;
@@ -428,6 +426,8 @@ public class MiuiNotificationActivityStarter implements NotificationActivityStar
                                 throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.phone.MiuiNotificationActivityStarter.AnonymousClass2.AnonymousClass1.run():void");
                             }
 
+                            /* access modifiers changed from: private */
+                            /* renamed from: lambda$run$0 */
                             public /* synthetic */ void lambda$run$0$MiuiNotificationActivityStarter$2$1(String str) {
                                 MiuiNotificationActivityStarter.this.mBubbleController.expandStackAndSelectBubble(str);
                             }

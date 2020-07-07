@@ -37,9 +37,10 @@ public class MediaProjectionPermissionActivity extends Activity implements Dialo
         PackageManager packageManager = getPackageManager();
         try {
             ApplicationInfo applicationInfo = packageManager.getApplicationInfo(this.mPackageName, 0);
-            this.mUid = applicationInfo.uid;
+            int i = applicationInfo.uid;
+            this.mUid = i;
             try {
-                if (this.mService.hasProjectionPermission(this.mUid, this.mPackageName)) {
+                if (this.mService.hasProjectionPermission(i, this.mPackageName)) {
                     setResult(-1, getMediaProjectionIntent(this.mUid, this.mPackageName, false));
                     finish();
                     return;
@@ -48,20 +49,20 @@ public class MediaProjectionPermissionActivity extends Activity implements Dialo
                 textPaint.setTextSize(42.0f);
                 String charSequence = applicationInfo.loadLabel(packageManager).toString();
                 int length = charSequence.length();
-                int i = 0;
+                int i2 = 0;
                 while (true) {
-                    if (i >= length) {
+                    if (i2 >= length) {
                         break;
                     }
-                    int codePointAt = charSequence.codePointAt(i);
+                    int codePointAt = charSequence.codePointAt(i2);
                     int type = Character.getType(codePointAt);
                     if (type == 13 || type == 15 || type == 14) {
-                        charSequence = charSequence.substring(0, i) + "…";
+                        charSequence = charSequence.substring(0, i2) + "…";
                     } else {
-                        i += Character.charCount(codePointAt);
+                        i2 += Character.charCount(codePointAt);
                     }
                 }
-                charSequence = charSequence.substring(0, i) + "…";
+                charSequence = charSequence.substring(0, i2) + "…";
                 if (charSequence.isEmpty()) {
                     charSequence = this.mPackageName;
                 }
@@ -79,8 +80,9 @@ public class MediaProjectionPermissionActivity extends Activity implements Dialo
                 builder.setPositiveButton((int) R.string.media_projection_action_text, (DialogInterface.OnClickListener) this);
                 builder.setNegativeButton(17039360, (DialogInterface.OnClickListener) this);
                 builder.setOnCancelListener(this);
-                this.mDialog = builder.create();
-                this.mDialog.create();
+                AlertDialog create = builder.create();
+                this.mDialog = create;
+                create.create();
                 this.mDialog.getButton(-1).setFilterTouchesWhenObscured(true);
                 Window window = this.mDialog.getWindow();
                 window.setType(2003);

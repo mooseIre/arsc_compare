@@ -9,10 +9,9 @@ import com.android.systemui.plugins.R;
 import java.text.DecimalFormat;
 
 public class DataUsageDetailView extends LinearLayout {
-    private final DecimalFormat FORMAT = new DecimalFormat("#.##");
-
     public DataUsageDetailView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
+        new DecimalFormat("#.##");
     }
 
     /* access modifiers changed from: protected */

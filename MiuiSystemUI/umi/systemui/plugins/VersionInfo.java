@@ -76,7 +76,7 @@ public class VersionInfo {
                 }
             }
         });
-        arrayMap.forEach(new BiConsumer<Class<?>, Version>() {
+        arrayMap.forEach(new BiConsumer<Class<?>, Version>(this) {
             public void accept(Class<?> cls, Version version) {
                 if (version.mRequired) {
                     throw new InvalidVersionException("Missing required dependency " + cls.getSimpleName(), false);

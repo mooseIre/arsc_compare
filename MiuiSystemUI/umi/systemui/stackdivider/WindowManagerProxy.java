@@ -11,43 +11,20 @@ import java.util.concurrent.Executors;
 
 public class WindowManagerProxy {
     private static final WindowManagerProxy sInstance = new WindowManagerProxy();
-    /* access modifiers changed from: private */
-    public float mDimLayerAlpha;
-    private final Runnable mDimLayerRunnable = new Runnable() {
+    private final Runnable mDimLayerRunnable = new Runnable(this) {
         public void run() {
-            try {
-                WindowManagerGlobal.getWindowManagerService().setResizeDimLayer(WindowManagerProxy.this.mDimLayerVisible, WindowManagerProxy.this.mDimLayerTargetWindowingMode, WindowManagerProxy.this.mDimLayerAlpha);
-            } catch (RemoteException e) {
-                Log.w("WindowManagerProxy", "Failed to resize stack: " + e);
-            }
         }
     };
-    /* access modifiers changed from: private */
-    public int mDimLayerTargetWindowingMode;
-    /* access modifiers changed from: private */
-    public boolean mDimLayerVisible;
-    private final Runnable mDismissRunnable = new Runnable() {
+    private final Runnable mDismissRunnable = new Runnable(this) {
         public void run() {
-            try {
-                ActivityTaskManager.getService().dismissSplitScreenMode(false);
-                Log.i("WindowManagerProxy", "exit splitScreen mode ---- dismiss.");
-            } catch (RemoteException e) {
-                Log.w("WindowManagerProxy", "Failed to remove stack: " + e);
-            }
         }
     };
     /* access modifiers changed from: private */
     @GuardedBy({"mDockedRect"})
     public final Rect mDockedRect = new Rect();
     private final ExecutorService mExecutor = Executors.newSingleThreadExecutor();
-    private final Runnable mMaximizeRunnable = new Runnable() {
+    private final Runnable mMaximizeRunnable = new Runnable(this) {
         public void run() {
-            try {
-                ActivityTaskManager.getService().dismissSplitScreenMode(true);
-                Log.i("WindowManagerProxy", "exit splitScreen mode ---- maximize.");
-            } catch (RemoteException e) {
-                Log.w("WindowManagerProxy", "Failed to resize stack: " + e);
-            }
         }
     };
     private final Runnable mResizeRunnable = new Runnable() {
@@ -78,7 +55,7 @@ public class WindowManagerProxy {
             }
         }
     };
-    private final Runnable mSwapRunnable = new Runnable() {
+    private final Runnable mSwapRunnable = new Runnable(this) {
         public void run() {
         }
     };
@@ -149,7 +126,7 @@ public class WindowManagerProxy {
     }
 
     public void setResizing(final boolean z) {
-        this.mExecutor.execute(new Runnable() {
+        this.mExecutor.execute(new Runnable(this) {
             public void run() {
                 try {
                     ActivityTaskManager.getService().setSplitScreenResizing(z);
@@ -170,9 +147,6 @@ public class WindowManagerProxy {
     }
 
     public void setResizeDimLayer(boolean z, int i, int i2, float f) {
-        this.mDimLayerVisible = z;
-        this.mDimLayerTargetWindowingMode = i2;
-        this.mDimLayerAlpha = f;
         this.mExecutor.execute(this.mDimLayerRunnable);
     }
 

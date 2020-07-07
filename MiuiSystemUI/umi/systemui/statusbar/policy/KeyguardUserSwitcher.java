@@ -48,7 +48,6 @@ public class KeyguardUserSwitcher {
         UserSwitcherController userSwitcherController = (UserSwitcherController) Dependency.get(UserSwitcherController.class);
         if (userSwitcherController == null || !z) {
             this.mUserSwitcherContainer = null;
-            this.mStatusBarView = null;
             this.mAdapter = null;
             this.mAppearAnimationUtils = null;
             this.mBackground = null;
@@ -59,8 +58,9 @@ public class KeyguardUserSwitcher {
         reinflateViews();
         this.mStatusBarView = keyguardStatusBarView;
         notificationPanelView.setKeyguardUserSwitcher(this);
-        this.mAdapter = new Adapter(context, userSwitcherController, this);
-        this.mAdapter.registerDataSetObserver(this.mDataSetObserver);
+        Adapter adapter = new Adapter(context, userSwitcherController, this);
+        this.mAdapter = adapter;
+        adapter.registerDataSetObserver(this.mDataSetObserver);
         this.mUserSwitcherController = userSwitcherController;
         this.mAppearAnimationUtils = new AppearAnimationUtils(context, 400, -0.5f, 0.5f, Interpolators.FAST_OUT_SLOW_IN);
         this.mUserSwitcherContainer.setKeyguardUserSwitcher(this);
@@ -74,8 +74,9 @@ public class KeyguardUserSwitcher {
         }
         this.mUserSwitcherContainer.removeAllViews();
         LayoutInflater.from(this.mUserSwitcherContainer.getContext()).inflate(R.layout.keyguard_user_switcher_inner, this.mUserSwitcherContainer);
-        this.mUserSwitcher = (ViewGroup) this.mUserSwitcherContainer.findViewById(R.id.keyguard_user_switcher_inner);
-        this.mUserSwitcher.addOnLayoutChangeListener(this.mBackground);
+        ViewGroup viewGroup2 = (ViewGroup) this.mUserSwitcherContainer.findViewById(R.id.keyguard_user_switcher_inner);
+        this.mUserSwitcher = viewGroup2;
+        viewGroup2.addOnLayoutChangeListener(this.mBackground);
         this.mUserSwitcher.setBackground(this.mBackground);
     }
 
@@ -147,8 +148,9 @@ public class KeyguardUserSwitcher {
             }
         });
         this.mAnimating = true;
-        this.mBgAnimator = ObjectAnimator.ofInt(this.mBackground, "alpha", new int[]{0, 255});
-        this.mBgAnimator.setDuration(400);
+        ObjectAnimator ofInt = ObjectAnimator.ofInt(this.mBackground, "alpha", new int[]{0, 255});
+        this.mBgAnimator = ofInt;
+        ofInt.setDuration(400);
         this.mBgAnimator.setInterpolator(Interpolators.ALPHA_IN);
         this.mBgAnimator.addListener(new AnimatorListenerAdapter() {
             public void onAnimationEnd(Animator animator) {

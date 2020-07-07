@@ -24,7 +24,7 @@ import com.android.systemui.statusbar.FlingAnimationUtils;
 import java.util.HashMap;
 import java.util.List;
 
-public class SwipeHelper implements Gefingerpoken {
+public class SwipeHelper {
     /* access modifiers changed from: private */
     public Callback mCallback;
     private boolean mCanCurrViewBeDimissed;
@@ -96,9 +96,7 @@ public class SwipeHelper implements Gefingerpoken {
     }
 
     /* access modifiers changed from: protected */
-    public float getTranslation(View view) {
-        throw null;
-    }
+    public abstract float getTranslation(View view);
 
     /* access modifiers changed from: protected */
     public float getUnscaledEscapeVelocity() {
@@ -106,18 +104,12 @@ public class SwipeHelper implements Gefingerpoken {
     }
 
     /* access modifiers changed from: protected */
-    public boolean handleUpEvent(MotionEvent motionEvent, View view, float f, float f2) {
-        throw null;
-    }
+    public abstract boolean handleUpEvent(MotionEvent motionEvent, View view, float f, float f2);
 
-    public void onDownUpdate(View view, MotionEvent motionEvent) {
-        throw null;
-    }
+    public abstract void onDownUpdate(View view, MotionEvent motionEvent);
 
     /* access modifiers changed from: protected */
-    public void onMoveUpdate(View view, MotionEvent motionEvent, float f, float f2) {
-        throw null;
-    }
+    public abstract void onMoveUpdate(View view, MotionEvent motionEvent, float f, float f2);
 
     /* access modifiers changed from: protected */
     public void prepareDismissAnimation(View view, Animator animator) {
@@ -131,9 +123,7 @@ public class SwipeHelper implements Gefingerpoken {
     }
 
     /* access modifiers changed from: protected */
-    public void setTranslation(View view, float f) {
-        throw null;
-    }
+    public abstract void setTranslation(View view, float f);
 
     public SwipeHelper(int i, Callback callback, Context context) {
         this.mContext = context;
@@ -154,8 +144,9 @@ public class SwipeHelper implements Gefingerpoken {
     }
 
     private void initDismissAllAnimation() {
-        this.mDismissAllAnimatorSet = new AnimatorSet();
-        this.mDismissAllAnimatorSet.setDuration(160);
+        AnimatorSet animatorSet = new AnimatorSet();
+        this.mDismissAllAnimatorSet = animatorSet;
+        animatorSet.setDuration(160);
     }
 
     public void setLongPressListener(LongPressListener longPressListener) {
@@ -261,7 +252,7 @@ public class SwipeHelper implements Gefingerpoken {
     }
 
     /* JADX WARNING: Code restructure failed: missing block: B:6:0x000f, code lost:
-        if (r0 != 3) goto L_0x0103;
+        if (r0 != 3) goto L_0x0101;
      */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     public boolean onInterceptTouchEvent(final android.view.MotionEvent r7) {
@@ -277,12 +268,12 @@ public class SwipeHelper implements Gefingerpoken {
             if (r0 == r4) goto L_0x0013
             r7 = 3
             if (r0 == r7) goto L_0x0060
-            goto L_0x0103
+            goto L_0x0101
         L_0x0013:
             android.view.View r0 = r6.mCurrView
-            if (r0 == 0) goto L_0x0103
+            if (r0 == 0) goto L_0x0101
             boolean r0 = r6.mLongPressSent
-            if (r0 != 0) goto L_0x0103
+            if (r0 != 0) goto L_0x0101
             android.view.VelocityTracker r0 = r6.mVelocityTracker
             r0.addMovement(r7)
             float r0 = r6.getPos(r7)
@@ -294,11 +285,11 @@ public class SwipeHelper implements Gefingerpoken {
             float r4 = java.lang.Math.abs(r0)
             float r5 = r6.mPagingTouchSlop
             int r4 = (r4 > r5 ? 1 : (r4 == r5 ? 0 : -1))
-            if (r4 <= 0) goto L_0x0103
+            if (r4 <= 0) goto L_0x0101
             float r0 = java.lang.Math.abs(r0)
             float r1 = java.lang.Math.abs(r1)
             int r0 = (r0 > r1 ? 1 : (r0 == r1 ? 0 : -1))
-            if (r0 <= 0) goto L_0x0103
+            if (r0 <= 0) goto L_0x0101
             com.android.systemui.SwipeHelper$Callback r0 = r6.mCallback
             android.view.View r1 = r6.mCurrView
             r0.onBeginDrag(r1)
@@ -309,7 +300,7 @@ public class SwipeHelper implements Gefingerpoken {
             float r7 = r6.getTranslation(r7)
             r6.mTranslation = r7
             r6.removeLongPressCallback()
-            goto L_0x0103
+            goto L_0x0101
         L_0x0060:
             boolean r7 = r6.mDragging
             if (r7 != 0) goto L_0x006b
@@ -326,7 +317,7 @@ public class SwipeHelper implements Gefingerpoken {
             r6.mCurrView = r1
             r6.mLongPressSent = r3
             r6.removeLongPressCallback()
-            if (r7 == 0) goto L_0x0103
+            if (r7 == 0) goto L_0x0101
             return r2
         L_0x0078:
             r6.mTouchAboveFalsingThreshold = r3
@@ -338,30 +329,29 @@ public class SwipeHelper implements Gefingerpoken {
             com.android.systemui.SwipeHelper$Callback r0 = r6.mCallback
             android.view.View r0 = r0.getChildAtPosition(r7)
             r6.mCurrView = r0
-            android.view.View r0 = r6.mCurrView
             boolean r4 = r0 instanceof com.android.systemui.statusbar.ExpandableNotificationRow
-            if (r4 == 0) goto L_0x00c1
+            if (r4 == 0) goto L_0x00bf
             com.android.systemui.statusbar.ExpandableNotificationRow r0 = (com.android.systemui.statusbar.ExpandableNotificationRow) r0
             com.android.systemui.statusbar.NotificationData$Entry r4 = r0.getEntry()
             com.android.systemui.miui.statusbar.ExpandedNotification r4 = r4.notification
             boolean r4 = r4.isPersistent()
             java.lang.String r5 = "com.android.systemui.SwipeHelper"
-            if (r4 == 0) goto L_0x00aa
+            if (r4 == 0) goto L_0x00a8
             r6.mCurrView = r1
             java.lang.String r4 = "ignoring persistent notifications"
             android.util.Log.v(r5, r4)
-        L_0x00aa:
+        L_0x00a8:
             com.android.systemui.statusbar.NotificationGuts r4 = r0.getGuts()
-            if (r4 == 0) goto L_0x00c1
+            if (r4 == 0) goto L_0x00bf
             com.android.systemui.statusbar.NotificationGuts r0 = r0.getGuts()
             boolean r0 = r0.isExposed()
-            if (r0 == 0) goto L_0x00c1
+            if (r0 == 0) goto L_0x00bf
             r6.mCurrView = r1
             java.lang.String r0 = "ignoring guts exposed"
             android.util.Log.v(r5, r0)
-        L_0x00c1:
+        L_0x00bf:
             android.view.View r0 = r6.mCurrView
-            if (r0 == 0) goto L_0x0103
+            if (r0 == 0) goto L_0x0101
             r6.onDownUpdate(r0, r7)
             com.android.systemui.SwipeHelper$Callback r0 = r6.mCallback
             android.view.View r1 = r6.mCurrView
@@ -377,26 +367,26 @@ public class SwipeHelper implements Gefingerpoken {
             float r0 = r6.getTranslation(r0)
             r6.mTranslation = r0
             com.android.systemui.SwipeHelper$LongPressListener r0 = r6.mLongPressListener
-            if (r0 == 0) goto L_0x0103
+            if (r0 == 0) goto L_0x0101
             java.lang.Runnable r0 = r6.mWatchLongPress
-            if (r0 != 0) goto L_0x00fa
+            if (r0 != 0) goto L_0x00f8
             com.android.systemui.SwipeHelper$1 r0 = new com.android.systemui.SwipeHelper$1
             r0.<init>(r7)
             r6.mWatchLongPress = r0
-        L_0x00fa:
+        L_0x00f8:
             android.os.Handler r7 = r6.mHandler
             java.lang.Runnable r0 = r6.mWatchLongPress
             long r4 = r6.mLongPressTimeout
             r7.postDelayed(r0, r4)
-        L_0x0103:
+        L_0x0101:
             boolean r7 = r6.mDragging
-            if (r7 != 0) goto L_0x010d
+            if (r7 != 0) goto L_0x010b
             boolean r6 = r6.mLongPressSent
-            if (r6 == 0) goto L_0x010c
-            goto L_0x010d
-        L_0x010c:
+            if (r6 == 0) goto L_0x010a
+            goto L_0x010b
+        L_0x010a:
             r2 = r3
-        L_0x010d:
+        L_0x010b:
             return r2
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.SwipeHelper.onInterceptTouchEvent(android.view.MotionEvent):boolean");
@@ -557,24 +547,50 @@ public class SwipeHelper implements Gefingerpoken {
         updateSwipeProgressFromOffset(view, canChildBeDismissed);
     }
 
-    public void snapChildIfNeeded(View view, boolean z, float f) {
-        if ((!this.mDragging || this.mCurrView != view) && !this.mSnappingChild) {
-            Animator animator = this.mDismissPendingMap.get(view);
-            boolean z2 = true;
-            if (animator != null) {
-                animator.cancel();
-            } else if (getTranslation(view) == 0.0f) {
-                z2 = false;
-            }
-            if (!z2) {
-                return;
-            }
-            if (z) {
-                snapChild(view, f, 0.0f);
-            } else {
-                snapChildInstantly(view);
-            }
-        }
+    /* JADX WARNING: Code restructure failed: missing block: B:11:0x0025, code lost:
+        if (getTranslation(r5) != 0.0f) goto L_0x001d;
+     */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public void snapChildIfNeeded(android.view.View r5, boolean r6, float r7) {
+        /*
+            r4 = this;
+            boolean r0 = r4.mDragging
+            if (r0 == 0) goto L_0x0008
+            android.view.View r0 = r4.mCurrView
+            if (r0 == r5) goto L_0x000c
+        L_0x0008:
+            boolean r0 = r4.mSnappingChild
+            if (r0 == 0) goto L_0x000d
+        L_0x000c:
+            return
+        L_0x000d:
+            r0 = 0
+            java.util.HashMap<android.view.View, android.animation.Animator> r1 = r4.mDismissPendingMap
+            java.lang.Object r1 = r1.get(r5)
+            android.animation.Animator r1 = (android.animation.Animator) r1
+            r2 = 1
+            r3 = 0
+            if (r1 == 0) goto L_0x001f
+            r1.cancel()
+        L_0x001d:
+            r0 = r2
+            goto L_0x0028
+        L_0x001f:
+            float r1 = r4.getTranslation(r5)
+            int r1 = (r1 > r3 ? 1 : (r1 == r3 ? 0 : -1))
+            if (r1 == 0) goto L_0x0028
+            goto L_0x001d
+        L_0x0028:
+            if (r0 == 0) goto L_0x0033
+            if (r6 == 0) goto L_0x0030
+            r4.snapChild(r5, r7, r3)
+            goto L_0x0033
+        L_0x0030:
+            r4.snapChildInstantly(r5)
+        L_0x0033:
+            return
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.SwipeHelper.snapChildIfNeeded(android.view.View, boolean, float):void");
     }
 
     /* JADX WARNING: Code restructure failed: missing block: B:18:0x002e, code lost:

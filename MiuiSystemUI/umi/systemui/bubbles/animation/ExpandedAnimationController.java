@@ -23,9 +23,7 @@ public class ExpandedAnimationController extends PhysicsAnimationLayout.PhysicsA
     private float mBubbleSizePx;
     private PointF mCollapsePoint;
     private Point mDisplaySize;
-    private int mExpandedViewPadding;
     private boolean mIndividualBubbleWithinDismissTarget = false;
-    private float mPipDismissHeight;
     private boolean mSpringingBubbleToTouch = false;
     private float mStackOffsetPx;
     private float mStatusBarHeight;
@@ -42,7 +40,6 @@ public class ExpandedAnimationController extends PhysicsAnimationLayout.PhysicsA
 
     public ExpandedAnimationController(Point point, int i) {
         this.mDisplaySize = point;
-        this.mExpandedViewPadding = i;
     }
 
     public void expandFromStack(Runnable runnable) {
@@ -72,10 +69,14 @@ public class ExpandedAnimationController extends PhysicsAnimationLayout.PhysicsA
         });
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$startOrUpdateExpandAnimation$0 */
     public /* synthetic */ void lambda$startOrUpdateExpandAnimation$0$ExpandedAnimationController(int i, PhysicsAnimationLayout.PhysicsPropertyAnimator physicsPropertyAnimator) {
         physicsPropertyAnimator.position(getBubbleLeft(i), getExpandedY(), new Runnable[0]);
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$startOrUpdateExpandAnimation$1 */
     public /* synthetic */ void lambda$startOrUpdateExpandAnimation$1$ExpandedAnimationController() {
         this.mAnimatingExpand = false;
         Runnable runnable = this.mAfterExpand;
@@ -87,7 +88,7 @@ public class ExpandedAnimationController extends PhysicsAnimationLayout.PhysicsA
 
     private void startOrUpdateCollapseAnimation() {
         animationsForChildrenFromIndex(0, new PhysicsAnimationLayout.PhysicsAnimationController.ChildAnimationConfigurator(this.mLayout.isFirstChildXLeftOfCenter(this.mCollapsePoint.x) ? -1.0f : 1.0f) {
-            private final /* synthetic */ float f$1;
+            public final /* synthetic */ float f$1;
 
             {
                 this.f$1 = r2;
@@ -103,11 +104,15 @@ public class ExpandedAnimationController extends PhysicsAnimationLayout.PhysicsA
         });
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$startOrUpdateCollapseAnimation$2 */
     public /* synthetic */ void lambda$startOrUpdateCollapseAnimation$2$ExpandedAnimationController(float f, int i, PhysicsAnimationLayout.PhysicsPropertyAnimator physicsPropertyAnimator) {
         PointF pointF = this.mCollapsePoint;
         physicsPropertyAnimator.position(pointF.x + (f * ((float) i) * this.mStackOffsetPx), pointF.y, new Runnable[0]);
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$startOrUpdateCollapseAnimation$3 */
     public /* synthetic */ void lambda$startOrUpdateCollapseAnimation$3$ExpandedAnimationController() {
         this.mAnimatingCollapse = false;
         Runnable runnable = this.mAfterCollapse;
@@ -120,7 +125,7 @@ public class ExpandedAnimationController extends PhysicsAnimationLayout.PhysicsA
     public void prepareForBubbleDrag(View view) {
         this.mLayout.cancelAnimationsOnView(view);
         this.mBubbleDraggingOut = view;
-        this.mBubbleDraggingOut.setTranslationZ(32767.0f);
+        view.setTranslationZ(32767.0f);
     }
 
     public void dragBubbleOut(View view, float f, float f2) {
@@ -193,7 +198,7 @@ public class ExpandedAnimationController extends PhysicsAnimationLayout.PhysicsA
         animationForChildAtIndex.position(getBubbleLeft(indexOfChild), getExpandedY(), new Runnable[0]);
         animationForChildAtIndex.withPositionStartVelocities(f, f2);
         animationForChildAtIndex.start(new Runnable(view) {
-            private final /* synthetic */ View f$0;
+            public final /* synthetic */ View f$0;
 
             {
                 this.f$0 = r1;
@@ -221,6 +226,8 @@ public class ExpandedAnimationController extends PhysicsAnimationLayout.PhysicsA
         }
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$updateYPosition$5 */
     public /* synthetic */ void lambda$updateYPosition$5$ExpandedAnimationController(int i, PhysicsAnimationLayout.PhysicsPropertyAnimator physicsPropertyAnimator) {
         physicsPropertyAnimator.translationY(getExpandedY(), new Runnable[0]);
     }
@@ -246,8 +253,8 @@ public class ExpandedAnimationController extends PhysicsAnimationLayout.PhysicsA
         this.mStackOffsetPx = (float) resources.getDimensionPixelSize(R.dimen.bubble_stack_offset);
         this.mBubblePaddingPx = (float) resources.getDimensionPixelSize(R.dimen.bubble_padding);
         this.mBubbleSizePx = (float) resources.getDimensionPixelSize(R.dimen.individual_bubble_size);
-        this.mStatusBarHeight = (float) resources.getDimensionPixelSize(17105478);
-        this.mPipDismissHeight = (float) resources.getDimensionPixelSize(R.dimen.pip_dismiss_gradient_height);
+        this.mStatusBarHeight = (float) resources.getDimensionPixelSize(17105519);
+        resources.getDimensionPixelSize(R.dimen.pip_dismiss_gradient_height);
         this.mLayout.setVisibility(0);
         animationsForChildrenFromIndex(0, $$Lambda$ExpandedAnimationController$2WcTtI3gu7zcaAxtSsEqApMIf2s.INSTANCE).startAll(new Runnable[0]);
     }

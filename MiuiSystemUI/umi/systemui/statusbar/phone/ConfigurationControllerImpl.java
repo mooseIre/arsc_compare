@@ -20,15 +20,16 @@ public class ConfigurationControllerImpl implements ConfigurationController, Con
         Configuration configuration = context.getResources().getConfiguration();
         this.mFontScale = configuration.fontScale;
         this.mDensity = configuration.densityDpi;
-        this.mPreviousConfig = new Configuration();
-        this.mPreviousConfig.updateFrom(configuration);
+        Configuration configuration2 = new Configuration();
+        this.mPreviousConfig = configuration2;
+        configuration2.updateFrom(configuration);
         this.mIsNightMode = isNightMode(configuration);
     }
 
     public void onConfigurationChanged(Configuration configuration) {
         ArrayList arrayList = new ArrayList(this.mListeners);
         arrayList.forEach(new Consumer(configuration) {
-            private final /* synthetic */ Configuration f$1;
+            public final /* synthetic */ Configuration f$1;
 
             {
                 this.f$1 = r2;
@@ -57,12 +58,16 @@ public class ConfigurationControllerImpl implements ConfigurationController, Con
         }
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$onConfigurationChanged$0 */
     public /* synthetic */ void lambda$onConfigurationChanged$0$ConfigurationControllerImpl(Configuration configuration, ConfigurationController.ConfigurationListener configurationListener) {
         if (this.mListeners.contains(configurationListener)) {
             configurationListener.onConfigChanged(configuration);
         }
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$onConfigurationChanged$1 */
     public /* synthetic */ void lambda$onConfigurationChanged$1$ConfigurationControllerImpl(ConfigurationController.ConfigurationListener configurationListener) {
         if (this.mListeners.contains(configurationListener)) {
             configurationListener.onDensityOrFontScaleChanged();

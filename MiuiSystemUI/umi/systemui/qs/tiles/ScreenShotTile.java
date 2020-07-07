@@ -103,7 +103,7 @@ public class ScreenShotTile extends QSTileImpl<QSTile.BooleanState> {
         if (!file.exists() || !file.isDirectory()) {
             str = null;
         } else {
-            File[] listFiles = file.listFiles(new FilenameFilter() {
+            File[] listFiles = file.listFiles(new FilenameFilter(this) {
                 public boolean accept(File file, String str) {
                     String lowerCase = str.toLowerCase();
                     return lowerCase.endsWith("png") || lowerCase.endsWith("jpg") || lowerCase.endsWith("jpeg");

@@ -25,13 +25,11 @@ public class UnAddedTilesLayout extends FrameLayout {
     private IStateStyle mAnim;
     private View mContent;
     private Context mContext;
-    private float mDownX;
     private float mDownY;
     private View mHeader;
     private boolean mInTop;
     private ImageView mIndicator;
     private float mMarginDelta;
-    private int mMarginThreshold;
     private float mMarginTopStart;
     private float mMaxMarginTop;
     private float mMinMarginTop;
@@ -44,14 +42,12 @@ public class UnAddedTilesLayout extends FrameLayout {
 
     public UnAddedTilesLayout(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-        this.mDownX = -1.0f;
         this.mDownY = -1.0f;
         this.mContext = context;
         setClickable(true);
         setFocusable(true);
         setFocusableInTouchMode(true);
         LayoutInflater.from(this.mContext).inflate(R.layout.qs_control_customize_unadded_tiles_layout, this);
-        this.mMarginThreshold = 20;
     }
 
     /* access modifiers changed from: protected */
@@ -71,8 +67,7 @@ public class UnAddedTilesLayout extends FrameLayout {
                 UnAddedTilesLayout.this.setMarginTop((int) f);
             }
         });
-        useValue.setConfig(animConfig, new FloatProperty[0]);
-        this.mAnim = useValue;
+        this.mAnim = useValue.setConfig(animConfig, new FloatProperty[0]);
     }
 
     /* access modifiers changed from: protected */
@@ -110,9 +105,14 @@ public class UnAddedTilesLayout extends FrameLayout {
     }
 
     public void setMarginTop(int i, int i2) {
-        this.mMinMarginTop = (float) i;
-        this.mMaxMarginTop = (float) i2;
-        this.mMarginTopStart = this.mInTop ? this.mMinMarginTop : this.mMaxMarginTop;
+        float f = (float) i;
+        this.mMinMarginTop = f;
+        float f2 = (float) i2;
+        this.mMaxMarginTop = f2;
+        if (!this.mInTop) {
+            f = f2;
+        }
+        this.mMarginTopStart = f;
         updateMarginTop(0.0f);
     }
 
@@ -133,7 +133,7 @@ public class UnAddedTilesLayout extends FrameLayout {
     }
 
     /* JADX WARNING: Code restructure failed: missing block: B:10:0x002d, code lost:
-        if (r0 != 3) goto L_0x00fb;
+        if (r0 != 3) goto L_0x00f4;
      */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     public boolean onTouchEvent(android.view.MotionEvent r7) {
@@ -153,46 +153,45 @@ public class UnAddedTilesLayout extends FrameLayout {
         L_0x001e:
             int r0 = r7.getActionMasked()
             r1 = 1
-            if (r0 == 0) goto L_0x00c3
+            if (r0 == 0) goto L_0x00c1
             r2 = 0
             r3 = 0
-            if (r0 == r1) goto L_0x0081
+            if (r0 == r1) goto L_0x007f
             r4 = 2
             if (r0 == r4) goto L_0x0031
             r7 = 3
-            if (r0 == r7) goto L_0x0081
-            goto L_0x00fb
+            if (r0 == r7) goto L_0x007f
+            goto L_0x00f4
         L_0x0031:
             float r0 = r6.mDownY
             int r0 = (r0 > r2 ? 1 : (r0 == r2 ? 0 : -1))
-            if (r0 <= 0) goto L_0x00fb
+            if (r0 <= 0) goto L_0x00f4
             float r7 = r7.getRawY()
             float r0 = r6.mDownY
             float r7 = r7 - r0
             r6.mMarginDelta = r7
-            float r7 = r6.mMarginTopStart
-            float r0 = r6.mMarginDelta
-            float r7 = r7 + r0
-            float r0 = r6.mMaxMarginTop
-            int r5 = (r7 > r0 ? 1 : (r7 == r0 ? 0 : -1))
-            if (r5 <= 0) goto L_0x0054
-            float r7 = r7 - r0
+            float r0 = r6.mMarginTopStart
+            float r0 = r0 + r7
+            float r7 = r6.mMaxMarginTop
+            int r5 = (r0 > r7 ? 1 : (r0 == r7 ? 0 : -1))
+            if (r5 <= 0) goto L_0x0052
+            float r0 = r0 - r7
             float r5 = r6.mMinMarginTop
-            float r7 = com.android.systemui.miui.controlcenter.Utils.afterFriction(r7, r5)
-            float r7 = r7 + r0
-            goto L_0x0062
-        L_0x0054:
-            float r0 = r6.mMinMarginTop
-            int r5 = (r7 > r0 ? 1 : (r7 == r0 ? 0 : -1))
-            if (r5 >= 0) goto L_0x0062
-            float r7 = r0 - r7
-            float r7 = com.android.systemui.miui.controlcenter.Utils.afterFriction(r7, r0)
-            float r7 = r0 - r7
-        L_0x0062:
-            miuix.animation.IStateStyle r0 = r6.mAnim
-            java.lang.Float r5 = java.lang.Float.valueOf(r7)
-            r0.setTo((java.lang.Object) r5)
-            int r7 = (int) r7
+            float r0 = com.android.systemui.miui.controlcenter.Utils.afterFriction(r0, r5)
+            float r0 = r0 + r7
+            goto L_0x0060
+        L_0x0052:
+            float r7 = r6.mMinMarginTop
+            int r5 = (r0 > r7 ? 1 : (r0 == r7 ? 0 : -1))
+            if (r5 >= 0) goto L_0x0060
+            float r0 = r7 - r0
+            float r0 = com.android.systemui.miui.controlcenter.Utils.afterFriction(r0, r7)
+            float r0 = r7 - r0
+        L_0x0060:
+            miuix.animation.IStateStyle r7 = r6.mAnim
+            java.lang.Float r5 = java.lang.Float.valueOf(r0)
+            r7.setTo((java.lang.Object) r5)
+            int r7 = (int) r0
             r6.setMarginTop(r7)
             miuix.animation.utils.VelocityMonitor r7 = r6.mVelocityMonitor
             float[] r0 = new float[r4]
@@ -202,22 +201,22 @@ public class UnAddedTilesLayout extends FrameLayout {
             float r2 = r2 + r6
             r0[r1] = r2
             r7.update((float[]) r0)
-            goto L_0x00fb
-        L_0x0081:
+            goto L_0x00f4
+        L_0x007f:
             miuix.animation.utils.VelocityMonitor r7 = r6.mVelocityMonitor
             float r7 = r7.getVelocity(r1)
             r0 = 1148846080(0x447a0000, float:1000.0)
             int r4 = (r7 > r0 ? 1 : (r7 == r0 ? 0 : -1))
-            if (r4 <= 0) goto L_0x0090
+            if (r4 <= 0) goto L_0x008e
             r6.mInTop = r3
-            goto L_0x00ae
-        L_0x0090:
+            goto L_0x00ac
+        L_0x008e:
             float r7 = r7 + r0
             int r7 = (r7 > r2 ? 1 : (r7 == r2 ? 0 : -1))
-            if (r7 >= 0) goto L_0x0098
+            if (r7 >= 0) goto L_0x0096
             r6.mInTop = r1
-            goto L_0x00ae
-        L_0x0098:
+            goto L_0x00ac
+        L_0x0096:
             int r7 = r6.getMarginTop()
             float r7 = (float) r7
             float r0 = r6.mMinMarginTop
@@ -226,29 +225,28 @@ public class UnAddedTilesLayout extends FrameLayout {
             r2 = 1073741824(0x40000000, float:2.0)
             float r0 = r0 / r2
             int r7 = (r7 > r0 ? 1 : (r7 == r0 ? 0 : -1))
-            if (r7 > 0) goto L_0x00ab
+            if (r7 > 0) goto L_0x00a9
             r7 = r1
-            goto L_0x00ac
-        L_0x00ab:
+            goto L_0x00aa
+        L_0x00a9:
             r7 = r3
-        L_0x00ac:
+        L_0x00aa:
             r6.mInTop = r7
-        L_0x00ae:
+        L_0x00ac:
             boolean r7 = r6.mInTop
-            if (r7 == 0) goto L_0x00b5
+            if (r7 == 0) goto L_0x00b3
             float r7 = r6.mMinMarginTop
-            goto L_0x00b7
-        L_0x00b5:
+            goto L_0x00b5
+        L_0x00b3:
             float r7 = r6.mMaxMarginTop
-        L_0x00b7:
+        L_0x00b5:
             miuix.animation.IStateStyle r6 = r6.mAnim
             java.lang.Float r7 = java.lang.Float.valueOf(r7)
             miuix.animation.base.AnimConfig[] r0 = new miuix.animation.base.AnimConfig[r3]
             r6.to(r7, r0)
-            goto L_0x00fb
-        L_0x00c3:
+            goto L_0x00f4
+        L_0x00c1:
             r0 = -1082130432(0xffffffffbf800000, float:-1.0)
-            r6.mDownX = r0
             r6.mDownY = r0
             android.graphics.Rect r0 = new android.graphics.Rect
             r0.<init>()
@@ -261,15 +259,14 @@ public class UnAddedTilesLayout extends FrameLayout {
             float r3 = r7.getRawY()
             int r3 = (int) r3
             boolean r0 = r0.contains(r2, r3)
-            if (r0 == 0) goto L_0x00fb
-            float r0 = r7.getRawX()
-            r6.mDownX = r0
+            if (r0 == 0) goto L_0x00f4
+            r7.getRawX()
             float r7 = r7.getRawY()
             r6.mDownY = r7
             int r7 = r6.getMarginTop()
             float r7 = (float) r7
             r6.mMarginTopStart = r7
-        L_0x00fb:
+        L_0x00f4:
             return r1
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.miui.controlcenter.customize.UnAddedTilesLayout.onTouchEvent(android.view.MotionEvent):boolean");

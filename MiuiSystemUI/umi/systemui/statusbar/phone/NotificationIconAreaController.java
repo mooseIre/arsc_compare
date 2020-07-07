@@ -7,7 +7,6 @@ import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.drawable.IconCompat;
 import android.util.ArrayMap;
-import android.util.ArraySet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,8 +70,9 @@ public class NotificationIconAreaController implements DarkIconDispatcher.DarkRe
     /* access modifiers changed from: protected */
     public void initializeNotificationAreaViews(Context context) {
         reloadDimens(context);
-        this.mNotificationIconArea = inflateIconArea(LayoutInflater.from(context));
-        this.mNotificationIcons = (NotificationIconContainer) this.mNotificationIconArea.findViewById(R.id.notificationIcons);
+        View inflateIconArea = inflateIconArea(LayoutInflater.from(context));
+        this.mNotificationIconArea = inflateIconArea;
+        this.mNotificationIcons = (NotificationIconContainer) inflateIconArea.findViewById(R.id.notificationIcons);
         this.mNotificationScrollLayout = this.mStatusBar.getNotificationScrollLayout();
     }
 
@@ -124,7 +124,7 @@ public class NotificationIconAreaController implements DarkIconDispatcher.DarkRe
         }
         this.mIconTint = i;
         this.mDarkIntensity = f;
-        applyIconsTint(this.mNotificationIcons, this.mIconTint);
+        applyIconsTint(this.mNotificationIcons, i);
         refreshMoreIcon();
     }
 
@@ -204,15 +204,12 @@ public class NotificationIconAreaController implements DarkIconDispatcher.DarkRe
 
     private ArrayList<StatusBarIconView> getDisplayStatusBarIcons(NotificationData notificationData, Function<NotificationData.Entry, StatusBarIconView> function, boolean z) {
         ArrayList<StatusBarIconView> arrayList = new ArrayList<>(this.mNotificationScrollLayout.getChildCount());
-        ArraySet arraySet = new ArraySet(arrayList.size());
         for (int i = 0; i < this.mNotificationScrollLayout.getChildCount(); i++) {
             View childAt = this.mNotificationScrollLayout.getChildAt(i);
             if (childAt instanceof ExpandableNotificationRow) {
                 NotificationData.Entry entry = ((ExpandableNotificationRow) childAt).getEntry();
-                String targetPackageName = entry.notification.getTargetPackageName();
-                if (shouldShowNotificationIcon(entry, notificationData, z) && !arraySet.contains(targetPackageName)) {
+                if (shouldShowNotificationIcon(entry, notificationData, z)) {
                     arrayList.add(function.apply(entry));
-                    arraySet.add(targetPackageName);
                 }
             }
         }

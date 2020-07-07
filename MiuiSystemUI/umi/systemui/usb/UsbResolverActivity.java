@@ -18,6 +18,7 @@ import android.util.Log;
 import android.widget.CheckBox;
 import com.android.internal.app.IntentForwarderActivity;
 import com.android.internal.app.ResolverActivity;
+import com.android.internal.app.chooser.TargetInfo;
 import com.android.systemui.plugins.R;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -44,7 +45,7 @@ public class UsbResolverActivity extends ResolverActivity {
         ArrayList arrayList2 = new ArrayList(arrayList.size());
         Iterator it = arrayList.iterator();
         while (it.hasNext()) {
-            arrayList2.add((ResolveInfo) it.next());
+            arrayList2.add((ResolveInfo) ((Parcelable) it.next()));
         }
         ArrayList arrayList3 = new ArrayList();
         this.mForwardResolveInfo = null;
@@ -58,27 +59,29 @@ public class UsbResolverActivity extends ResolverActivity {
                 arrayList3.add(resolveInfo);
             }
         }
-        this.mDevice = (UsbDevice) intent2.getParcelableExtra("device");
-        UsbDevice usbDevice = this.mDevice;
+        UsbDevice usbDevice = (UsbDevice) intent2.getParcelableExtra("device");
+        this.mDevice = usbDevice;
         if (usbDevice != null) {
-            this.mDisconnectedReceiver = new UsbDisconnectedReceiver((Activity) this, usbDevice);
+            this.mDisconnectedReceiver = new UsbDisconnectedReceiver((Activity) this, this.mDevice);
         } else {
-            this.mAccessory = (UsbAccessory) intent2.getParcelableExtra("accessory");
-            UsbAccessory usbAccessory = this.mAccessory;
+            UsbAccessory usbAccessory = (UsbAccessory) intent2.getParcelableExtra("accessory");
+            this.mAccessory = usbAccessory;
             if (usbAccessory == null) {
                 Log.e("UsbResolverActivity", "no device or accessory");
                 finish();
                 return;
             }
-            this.mDisconnectedReceiver = new UsbDisconnectedReceiver((Activity) this, usbAccessory);
+            this.mDisconnectedReceiver = new UsbDisconnectedReceiver((Activity) this, this.mAccessory);
         }
         if (this.mForwardResolveInfo != null) {
             if (arrayList3.size() > 1) {
-                this.mOtherProfileIntent = new Intent(intent);
-                this.mOtherProfileIntent.putParcelableArrayListExtra("rlist", arrayList3);
+                Intent intent3 = new Intent(intent);
+                this.mOtherProfileIntent = intent3;
+                intent3.putParcelableArrayListExtra("rlist", arrayList3);
             } else {
-                this.mOtherProfileIntent = new Intent(this, UsbConfirmActivity.class);
-                this.mOtherProfileIntent.putExtra("rinfo", (Parcelable) arrayList3.get(0));
+                Intent intent4 = new Intent(this, UsbConfirmActivity.class);
+                this.mOtherProfileIntent = intent4;
+                intent4.putExtra("rinfo", (Parcelable) arrayList3.get(0));
                 UsbDevice usbDevice2 = this.mDevice;
                 if (usbDevice2 != null) {
                     this.mOtherProfileIntent.putExtra("device", usbDevice2);
@@ -89,8 +92,8 @@ public class UsbResolverActivity extends ResolverActivity {
                 }
             }
         }
-        UsbResolverActivity.super.onCreate(bundle, intent2, getResources().getText(17039676), (Intent[]) null, arrayList2, true);
-        CheckBox checkBox = (CheckBox) findViewById(16908724);
+        UsbResolverActivity.super.onCreate(bundle, intent2, getResources().getText(17039811), (Intent[]) null, arrayList2, true);
+        CheckBox checkBox = (CheckBox) findViewById(16908752);
         if (checkBox == null) {
             return;
         }
@@ -112,7 +115,7 @@ public class UsbResolverActivity extends ResolverActivity {
 
     /* JADX WARNING: type inference failed for: r8v0, types: [com.android.internal.app.ResolverActivity, com.android.systemui.usb.UsbResolverActivity, android.app.Activity] */
     /* access modifiers changed from: protected */
-    public boolean onTargetSelected(ResolverActivity.TargetInfo targetInfo, boolean z) {
+    public boolean onTargetSelected(TargetInfo targetInfo, boolean z) {
         ResolveInfo resolveInfo = targetInfo.getResolveInfo();
         ResolveInfo resolveInfo2 = this.mForwardResolveInfo;
         if (resolveInfo == resolveInfo2) {

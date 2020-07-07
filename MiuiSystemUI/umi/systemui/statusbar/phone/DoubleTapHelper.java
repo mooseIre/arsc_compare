@@ -66,9 +66,10 @@ public class DoubleTapHelper {
         int actionMasked = motionEvent.getActionMasked();
         if (actionMasked == 0) {
             this.mDownX = motionEvent.getX();
-            this.mDownY = motionEvent.getY();
+            float y = motionEvent.getY();
+            this.mDownY = y;
             this.mTrackTouch = true;
-            if (this.mDownY > ((float) i)) {
+            if (y > ((float) i)) {
                 this.mTrackTouch = false;
             }
         } else if (actionMasked != 1) {

@@ -28,14 +28,15 @@ import java.io.PrintWriter;
 
 public class ImageWallpaper extends WallpaperService {
     /* access modifiers changed from: private */
-    public static final String TAG = "ImageWallpaper";
+    public static final String TAG = ImageWallpaper.class.getSimpleName();
     /* access modifiers changed from: private */
     public HandlerThread mWorker;
 
     public void onCreate() {
         super.onCreate();
-        this.mWorker = new HandlerThread(TAG);
-        this.mWorker.start();
+        HandlerThread handlerThread = new HandlerThread(TAG);
+        this.mWorker = handlerThread;
+        handlerThread.start();
     }
 
     public WallpaperService.Engine onCreateEngine() {
@@ -104,8 +105,8 @@ public class ImageWallpaper extends WallpaperService {
             super(ImageWallpaper.this);
             this.mContext = context;
             registerContentObserver();
-            this.mController = (StatusBarStateController) Dependency.get(StatusBarStateController.class);
-            StatusBarStateController statusBarStateController = this.mController;
+            StatusBarStateController statusBarStateController = (StatusBarStateController) Dependency.get(StatusBarStateController.class);
+            this.mController = statusBarStateController;
             if (statusBarStateController != null) {
                 statusBarStateController.addCallback(this);
             }
@@ -261,6 +262,8 @@ public class ImageWallpaper extends WallpaperService {
                         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.ImageWallpaper.GLEngine.AnonymousClass1.onKeyguardGoingAway():void");
                     }
 
+                    /* access modifiers changed from: private */
+                    /* renamed from: lambda$onKeyguardGoingAway$0 */
                     public /* synthetic */ void lambda$onKeyguardGoingAway$0$ImageWallpaper$GLEngine$1() {
                         GLEngine.this.preRender();
                         GLEngine.this.mRenderer.startUnlockAnim(false, 800);
@@ -306,14 +309,16 @@ public class ImageWallpaper extends WallpaperService {
                 surfaceHolder.setFixedSize(Math.max(64, reportSurfaceSize.getWidth()), Math.max(64, reportSurfaceSize.getHeight()));
             }
 
+            /* access modifiers changed from: private */
+            /* renamed from: lambda$onOffsetsChanged$0 */
             public /* synthetic */ void lambda$onOffsetsChanged$0$ImageWallpaper$GLEngine(float f, float f2) {
                 this.mRenderer.updateOffsets(f, f2);
             }
 
             public void onOffsetsChanged(float f, float f2, float f3, float f4, int i, int i2) {
                 ImageWallpaper.this.mWorker.getThreadHandler().post(new Runnable(f, f2) {
-                    private final /* synthetic */ float f$1;
-                    private final /* synthetic */ float f$2;
+                    public final /* synthetic */ float f$1;
+                    public final /* synthetic */ float f$2;
 
                     {
                         this.f$1 = r2;
@@ -329,8 +334,8 @@ public class ImageWallpaper extends WallpaperService {
             public void onAmbientModeChanged(boolean z, long j) {
                 if (this.mNeedTransition) {
                     ImageWallpaper.this.mWorker.getThreadHandler().post(new Runnable(z, j) {
-                        private final /* synthetic */ boolean f$1;
-                        private final /* synthetic */ long f$2;
+                        public final /* synthetic */ boolean f$1;
+                        public final /* synthetic */ long f$2;
 
                         {
                             this.f$1 = r2;
@@ -347,6 +352,8 @@ public class ImageWallpaper extends WallpaperService {
                 }
             }
 
+            /* access modifiers changed from: private */
+            /* renamed from: lambda$onAmbientModeChanged$2 */
             public /* synthetic */ void lambda$onAmbientModeChanged$2$ImageWallpaper$GLEngine(boolean z, long j) {
                 this.mRenderer.updateAmbientMode(z, j);
             }
@@ -414,6 +421,8 @@ public class ImageWallpaper extends WallpaperService {
                 });
             }
 
+            /* access modifiers changed from: private */
+            /* renamed from: lambda$onDestroy$3 */
             public /* synthetic */ void lambda$onDestroy$3$ImageWallpaper$GLEngine() {
                 this.mRenderer.finish();
                 this.mRenderer = null;
@@ -424,7 +433,7 @@ public class ImageWallpaper extends WallpaperService {
 
             public void onSurfaceCreated(SurfaceHolder surfaceHolder) {
                 ImageWallpaper.this.mWorker.getThreadHandler().post(new Runnable(surfaceHolder) {
-                    private final /* synthetic */ SurfaceHolder f$1;
+                    public final /* synthetic */ SurfaceHolder f$1;
 
                     {
                         this.f$1 = r2;
@@ -436,6 +445,8 @@ public class ImageWallpaper extends WallpaperService {
                 });
             }
 
+            /* access modifiers changed from: private */
+            /* renamed from: lambda$onSurfaceCreated$4 */
             public /* synthetic */ void lambda$onSurfaceCreated$4$ImageWallpaper$GLEngine(SurfaceHolder surfaceHolder) {
                 this.mEglHelper.init(surfaceHolder);
                 this.mRenderer.onSurfaceCreated();
@@ -443,8 +454,8 @@ public class ImageWallpaper extends WallpaperService {
 
             public void onSurfaceChanged(SurfaceHolder surfaceHolder, int i, int i2, int i3) {
                 ImageWallpaper.this.mWorker.getThreadHandler().post(new Runnable(i2, i3) {
-                    private final /* synthetic */ int f$1;
-                    private final /* synthetic */ int f$2;
+                    public final /* synthetic */ int f$1;
+                    public final /* synthetic */ int f$2;
 
                     {
                         this.f$1 = r2;
@@ -457,6 +468,8 @@ public class ImageWallpaper extends WallpaperService {
                 });
             }
 
+            /* access modifiers changed from: private */
+            /* renamed from: lambda$onSurfaceChanged$5 */
             public /* synthetic */ void lambda$onSurfaceChanged$5$ImageWallpaper$GLEngine(int i, int i2) {
                 this.mRenderer.onSurfaceChanged(i, i2);
                 this.mNeedRedraw = true;
@@ -470,6 +483,8 @@ public class ImageWallpaper extends WallpaperService {
                 });
             }
 
+            /* access modifiers changed from: private */
+            /* renamed from: lambda$onSurfaceRedrawNeeded$6 */
             public /* synthetic */ void lambda$onSurfaceRedrawNeeded$6$ImageWallpaper$GLEngine() {
                 if (this.mNeedRedraw) {
                     preRender();

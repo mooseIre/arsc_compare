@@ -6,7 +6,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.Settings;
 import android.util.Log;
-import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.systemui.settings.CurrentUserTracker;
 import com.android.systemui.statusbar.policy.CallbackController;
 import java.util.ArrayList;
@@ -39,7 +38,7 @@ public class OldModeController implements CallbackController<OldModeChangeListen
             public void onChange(boolean z) {
                 OldModeController oldModeController = OldModeController.this;
                 boolean z2 = false;
-                if (Settings.System.getIntForUser(oldModeController.mContext.getContentResolver(), "elderly_mode", 0, KeyguardUpdateMonitor.getCurrentUser()) != 0) {
+                if (Settings.System.getIntForUser(oldModeController.mContext.getContentResolver(), "elderly_mode", 0, -2) != 0) {
                     z2 = true;
                 }
                 boolean unused = oldModeController.mOldModeOn = z2;

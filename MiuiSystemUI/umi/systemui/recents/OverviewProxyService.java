@@ -172,7 +172,7 @@ public class OverviewProxyService implements CallbackController<OverviewProxyLis
             if (verifyCaller("stopScreenPinning")) {
                 long clearCallingIdentity = Binder.clearCallingIdentity();
                 try {
-                    OverviewProxyService.this.mHandler.post(new Runnable() {
+                    OverviewProxyService.this.mHandler.post(new Runnable(this) {
                         public void run() {
                             try {
                                 ActivityManagerCompat.stopSystemLockTaskMode();
@@ -461,7 +461,7 @@ public class OverviewProxyService implements CallbackController<OverviewProxyLis
         int i3 = z ? i | i2 : (~i) & i2;
         if (this.mSysUiStateFlags != i3) {
             this.mSysUiStateFlags = i3;
-            notifySystemUiStateFlags(this.mSysUiStateFlags);
+            notifySystemUiStateFlags(i3);
         }
     }
 
@@ -549,6 +549,10 @@ public class OverviewProxyService implements CallbackController<OverviewProxyLis
         this.mConnectionCallbacks.add(overviewProxyListener);
         overviewProxyListener.onConnectionChanged(this.mOverviewProxy != null);
         overviewProxyListener.onBackButtonAlphaChanged(this.mBackButtonAlpha, false);
+    }
+
+    public void removeCallback(OverviewProxyListener overviewProxyListener) {
+        this.mConnectionCallbacks.remove(overviewProxyListener);
     }
 
     public boolean isEnabled() {

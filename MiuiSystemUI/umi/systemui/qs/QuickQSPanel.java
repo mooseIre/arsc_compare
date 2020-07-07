@@ -36,8 +36,9 @@ public class QuickQSPanel extends QSPanel {
             }
             removeView((View) this.mTileLayout);
         }
-        this.mTileLayout = new HeaderTileLayout(context);
-        addView((View) this.mTileLayout, 0);
+        HeaderTileLayout headerTileLayout = new HeaderTileLayout(context);
+        this.mTileLayout = headerTileLayout;
+        addView(headerTileLayout, 0);
     }
 
     /* access modifiers changed from: protected */
@@ -83,9 +84,8 @@ public class QuickQSPanel extends QSPanel {
 
     public void setQsAnimator(QSAnimator qSAnimator) {
         this.mQsAnimator = qSAnimator;
-        QSAnimator qSAnimator2 = this.mQsAnimator;
-        if (qSAnimator2 != null) {
-            qSAnimator2.setNumQuickTiles(this.mMaxTiles);
+        if (qSAnimator != null) {
+            qSAnimator.setNumQuickTiles(this.mMaxTiles);
         }
     }
 
@@ -203,9 +203,10 @@ public class QuickQSPanel extends QSPanel {
             Resources resources = getResources();
             this.mContentPaddingHorizontal = resources.getDimensionPixelSize(R.dimen.qs_quick_panel_content_padding_horizontal);
             this.mContentPaddingTop = resources.getDimensionPixelSize(R.dimen.qs_quick_panel_content_padding_top);
-            this.mContentPaddingBottom = resources.getDimensionPixelSize(R.dimen.qs_quick_panel_content_padding_bottom);
+            int dimensionPixelSize = resources.getDimensionPixelSize(R.dimen.qs_quick_panel_content_padding_bottom);
+            this.mContentPaddingBottom = dimensionPixelSize;
             int i = this.mContentPaddingHorizontal;
-            setPadding(i, this.mContentPaddingTop, i, this.mContentPaddingBottom);
+            setPadding(i, this.mContentPaddingTop, i, dimensionPixelSize);
             return true;
         }
 

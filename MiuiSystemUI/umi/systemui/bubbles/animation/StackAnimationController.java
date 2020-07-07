@@ -107,9 +107,12 @@ public class StackAnimationController extends PhysicsAnimationLayout.PhysicsAnim
         return f7;
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$flingStackThenSpringToEdge$0 */
     public /* synthetic */ void lambda$flingStackThenSpringToEdge$0$StackAnimationController() {
-        this.mRestingStackPosition = new PointF();
-        this.mRestingStackPosition.set(this.mStackPosition);
+        PointF pointF = new PointF();
+        this.mRestingStackPosition = pointF;
+        pointF.set(this.mStackPosition);
         this.mLayout.removeEndActionForProperty(DynamicAnimation.TRANSLATION_X);
         this.mLayout.removeEndActionForProperty(DynamicAnimation.TRANSLATION_Y);
     }
@@ -156,11 +159,11 @@ public class StackAnimationController extends PhysicsAnimationLayout.PhysicsAnim
         flingAnimation.setMinValue(Math.min(value, f6));
         flingAnimation.setMaxValue(Math.max(value, f7));
         flingAnimation.addEndListener(new DynamicAnimation.OnAnimationEndListener(viewProperty, springForce, f3, f6, f7) {
-            private final /* synthetic */ DynamicAnimation.ViewProperty f$1;
-            private final /* synthetic */ SpringForce f$2;
-            private final /* synthetic */ Float f$3;
-            private final /* synthetic */ float f$4;
-            private final /* synthetic */ float f$5;
+            public final /* synthetic */ DynamicAnimation.ViewProperty f$1;
+            public final /* synthetic */ SpringForce f$2;
+            public final /* synthetic */ Float f$3;
+            public final /* synthetic */ float f$4;
+            public final /* synthetic */ float f$5;
 
             {
                 this.f$1 = r2;
@@ -179,6 +182,8 @@ public class StackAnimationController extends PhysicsAnimationLayout.PhysicsAnim
         flingAnimation.start();
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$flingThenSpringFirstBubbleWithStackFollowing$1 */
     public /* synthetic */ void lambda$flingThenSpringFirstBubbleWithStackFollowing$1$StackAnimationController(DynamicAnimation.ViewProperty viewProperty, SpringForce springForce, Float f, float f2, float f3, DynamicAnimation dynamicAnimation, boolean z, float f4, float f5) {
         float f6;
         if (!z) {
@@ -322,7 +327,7 @@ public class StackAnimationController extends PhysicsAnimationLayout.PhysicsAnim
         animationForChildAtIndex.withDampingRatio(1.0f);
         animationForChildAtIndex.withStiffness(10000.0f);
         animationForChildAtIndex.start(new Runnable(runnable) {
-            private final /* synthetic */ Runnable f$1;
+            public final /* synthetic */ Runnable f$1;
 
             {
                 this.f$1 = r2;
@@ -334,6 +339,8 @@ public class StackAnimationController extends PhysicsAnimationLayout.PhysicsAnim
         });
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$implodeStack$2 */
     public /* synthetic */ void lambda$implodeStack$2$StackAnimationController(Runnable runnable) {
         runnable.run();
         this.mWithinDismissTarget = false;
@@ -420,7 +427,7 @@ public class StackAnimationController extends PhysicsAnimationLayout.PhysicsAnim
         this.mBubblePadding = resources.getDimensionPixelSize(R.dimen.bubble_padding);
         this.mBubbleOffscreen = resources.getDimensionPixelSize(R.dimen.bubble_stack_offscreen);
         this.mStackStartingVerticalOffset = resources.getDimensionPixelSize(R.dimen.bubble_stack_starting_offset_y);
-        this.mStatusBarHeight = (float) resources.getDimensionPixelSize(17105478);
+        this.mStatusBarHeight = (float) resources.getDimensionPixelSize(17105519);
     }
 
     private void moveStackToStartPosition() {
@@ -432,6 +439,8 @@ public class StackAnimationController extends PhysicsAnimationLayout.PhysicsAnim
         });
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$moveStackToStartPosition$3 */
     public /* synthetic */ void lambda$moveStackToStartPosition$3$StackAnimationController() {
         PointF pointF = this.mRestingStackPosition;
         if (pointF == null) {

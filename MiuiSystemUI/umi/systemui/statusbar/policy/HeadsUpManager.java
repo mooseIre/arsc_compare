@@ -110,11 +110,12 @@ public class HeadsUpManager implements ViewTreeObserver.OnComputeInternalInsetsL
 
     public HeadsUpManager(final Context context, View view, NotificationGroupManager notificationGroupManager, StatusBar statusBar) {
         this.mContext = context;
-        Resources resources = this.mContext.getResources();
+        Resources resources = context.getResources();
         this.mTouchAcceptanceDelay = resources.getInteger(R.integer.touch_acceptance_delay);
         this.mSnoozedPackages = new ArrayMap<>();
-        this.mDefaultSnoozeLengthMs = resources.getInteger(R.integer.heads_up_default_snooze_length_ms);
-        this.mSnoozeLengthMs = this.mDefaultSnoozeLengthMs;
+        int integer = resources.getInteger(R.integer.heads_up_default_snooze_length_ms);
+        this.mDefaultSnoozeLengthMs = integer;
+        this.mSnoozeLengthMs = integer;
         this.mMinimumDisplayTime = resources.getInteger(R.integer.heads_up_notification_minimum_time);
         this.mHeadsUpNotificationDecay = resources.getInteger(R.integer.heads_up_notification_decay);
         this.mClock = new Clock();
@@ -143,6 +144,8 @@ public class HeadsUpManager implements ViewTreeObserver.OnComputeInternalInsetsL
         });
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$new$0 */
     public /* synthetic */ void lambda$new$0$HeadsUpManager(boolean z) {
         updateTouchableRegionListener();
     }
@@ -267,7 +270,7 @@ public class HeadsUpManager implements ViewTreeObserver.OnComputeInternalInsetsL
                 DisplayFeatureManager.getInstance().setScreenEffect(24, 255, 256);
             }
             this.mHasPinnedNotification = hasPinnedNotificationInternal;
-            if (this.mHasPinnedNotification) {
+            if (hasPinnedNotificationInternal) {
                 MetricsLogger.count(this.mContext, "note_peek", 1);
             }
             updateTouchableRegionListener();
@@ -392,7 +395,7 @@ public class HeadsUpManager implements ViewTreeObserver.OnComputeInternalInsetsL
 
     private void initResources() {
         Resources resources = this.mContext.getResources();
-        this.mStatusBarHeight = resources.getDimensionPixelSize(17105478);
+        this.mStatusBarHeight = resources.getDimensionPixelSize(17105519);
         this.mDisplayCutoutTouchableRegionSize = resources.getDimensionPixelSize(R.dimen.display_cutout_touchable_region_size);
     }
 
@@ -549,14 +552,14 @@ public class HeadsUpManager implements ViewTreeObserver.OnComputeInternalInsetsL
 
     public int getTopHeadsUpPinnedHeight() {
         NotificationData.Entry entry;
-        ExpandableNotificationRow expandableNotificationRow;
+        ExpandableNotificationRow groupSummary;
         HeadsUpEntry topEntry = getTopEntry();
         if (topEntry == null || (entry = topEntry.entry) == null) {
             return 0;
         }
-        ExpandableNotificationRow expandableNotificationRow2 = entry.row;
-        if (!expandableNotificationRow2.isChildInGroup() || (expandableNotificationRow = this.mGroupManager.getGroupSummary((StatusBarNotification) expandableNotificationRow2.getStatusBarNotification())) == null) {
-            expandableNotificationRow = expandableNotificationRow2;
+        ExpandableNotificationRow expandableNotificationRow = entry.row;
+        if (expandableNotificationRow.isChildInGroup() && (groupSummary = this.mGroupManager.getGroupSummary((StatusBarNotification) expandableNotificationRow.getStatusBarNotification())) != null) {
+            expandableNotificationRow = groupSummary;
         }
         return expandableNotificationRow.getPinnedHeadsUpHeight();
     }
@@ -598,7 +601,7 @@ public class HeadsUpManager implements ViewTreeObserver.OnComputeInternalInsetsL
     }
 
     public static void setIsClickedNotification(View view, boolean z) {
-        view.setTag(R.id.is_clicked_heads_up_tag, z ? true : null);
+        view.setTag(R.id.is_clicked_heads_up_tag, z ? Boolean.TRUE : null);
     }
 
     public static boolean isClickedHeadsUpNotification(View view) {

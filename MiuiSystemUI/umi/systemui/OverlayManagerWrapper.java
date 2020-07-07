@@ -45,11 +45,10 @@ public class OverlayManagerWrapper {
 
     public static class OverlayInfo {
         private final boolean mEnabled;
-        public final String packageName;
 
         public OverlayInfo(android.content.om.OverlayInfo overlayInfo) {
             this.mEnabled = overlayInfo.isEnabled();
-            this.packageName = overlayInfo.packageName;
+            String str = overlayInfo.packageName;
         }
 
         public boolean isEnabled() {

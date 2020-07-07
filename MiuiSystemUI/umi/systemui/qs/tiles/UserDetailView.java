@@ -24,8 +24,9 @@ public class UserDetailView extends PseudoGridView {
     }
 
     public void createAndSetAdapter(UserSwitcherController userSwitcherController) {
-        this.mAdapter = new Adapter(this.mContext, userSwitcherController);
-        PseudoGridView.ViewGroupAdapterBridge.link(this, this.mAdapter);
+        Adapter adapter = new Adapter(this.mContext, userSwitcherController);
+        this.mAdapter = adapter;
+        PseudoGridView.ViewGroupAdapterBridge.link(this, adapter);
     }
 
     public void refreshAdapter() {

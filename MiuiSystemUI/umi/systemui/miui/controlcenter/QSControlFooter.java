@@ -27,7 +27,6 @@ import com.android.systemui.statusbar.policy.SecurityController;
 import miui.app.AlertDialog;
 
 public class QSControlFooter extends LinearLayout implements View.OnClickListener, DialogInterface.OnClickListener {
-    protected static final boolean DEBUG = Log.isLoggable("QSControlFooter", 3);
     /* access modifiers changed from: private */
     public ActivityStarter mActivityStarter;
     private final Callback mCallback;
@@ -53,6 +52,10 @@ public class QSControlFooter extends LinearLayout implements View.OnClickListene
     private SecurityController mSecurityController;
     private final Runnable mUpdateDisplayState;
     private final Runnable mUpdateIcon;
+
+    static {
+        Log.isLoggable("QSControlFooter", 3);
+    }
 
     public QSControlFooter(Context context) {
         this(context, (AttributeSet) null, 0);
@@ -249,8 +252,9 @@ public class QSControlFooter extends LinearLayout implements View.OnClickListene
         boolean isNetworkLoggingEnabled = this.mSecurityController.isNetworkLoggingEnabled();
         String primaryVpnName = this.mSecurityController.getPrimaryVpnName();
         String workProfileVpnName = this.mSecurityController.getWorkProfileVpnName();
-        this.mDialog = new SystemUIDialog(this.mContext);
-        this.mDialog.requestWindowFeature(1);
+        SystemUIDialog systemUIDialog = new SystemUIDialog(this.mContext);
+        this.mDialog = systemUIDialog;
+        systemUIDialog.requestWindowFeature(1);
         View inflate = LayoutInflater.from(this.mContext).inflate(R.layout.quick_settings_footer_dialog, (ViewGroup) null, false);
         this.mDialog.setView(inflate);
         this.mDialog.setButton(-1, getPositiveButton(), this);

@@ -134,11 +134,11 @@ public class NotificationPlayer implements MediaPlayer.OnCompletionListener, Med
                 android.util.Log.d(r0, r1)
             L_0x0032:
                 monitor-enter(r7)
-                com.android.systemui.media.NotificationPlayer$Command r0 = r7.mCmd     // Catch:{ all -> 0x01bd }
-                android.content.Context r0 = r0.context     // Catch:{ all -> 0x01bd }
+                com.android.systemui.media.NotificationPlayer$Command r0 = r7.mCmd     // Catch:{ all -> 0x01bf }
+                android.content.Context r0 = r0.context     // Catch:{ all -> 0x01bf }
                 java.lang.String r1 = "audio"
-                java.lang.Object r0 = r0.getSystemService(r1)     // Catch:{ all -> 0x01bd }
-                android.media.AudioManager r0 = (android.media.AudioManager) r0     // Catch:{ all -> 0x01bd }
+                java.lang.Object r0 = r0.getSystemService(r1)     // Catch:{ all -> 0x01bf }
+                android.media.AudioManager r0 = (android.media.AudioManager) r0     // Catch:{ all -> 0x01bf }
                 r1 = 0
                 android.media.MediaPlayer r2 = new android.media.MediaPlayer     // Catch:{ Exception -> 0x015e }
                 r2.<init>()     // Catch:{ Exception -> 0x015e }
@@ -261,12 +261,12 @@ public class NotificationPlayer implements MediaPlayer.OnCompletionListener, Med
             L_0x0147:
                 r2.start()     // Catch:{ Exception -> 0x015c }
                 boolean r0 = com.android.systemui.media.NotificationPlayer.DEBUG     // Catch:{ Exception -> 0x015c }
-                if (r0 == 0) goto L_0x0189
+                if (r0 == 0) goto L_0x018b
                 com.android.systemui.media.NotificationPlayer r0 = com.android.systemui.media.NotificationPlayer.this     // Catch:{ Exception -> 0x015c }
                 java.lang.String r0 = r0.mTag     // Catch:{ Exception -> 0x015c }
                 java.lang.String r3 = "player.start"
                 android.util.Log.d(r0, r3)     // Catch:{ Exception -> 0x015c }
-                goto L_0x0189
+                goto L_0x018b
             L_0x015c:
                 r0 = move-exception
                 goto L_0x0160
@@ -275,52 +275,55 @@ public class NotificationPlayer implements MediaPlayer.OnCompletionListener, Med
                 r2 = r1
             L_0x0160:
                 if (r2 == 0) goto L_0x0166
-                r2.release()     // Catch:{ all -> 0x01bd }
-                r2 = r1
+                r2.release()     // Catch:{ all -> 0x01bf }
+                goto L_0x0167
             L_0x0166:
-                com.android.systemui.media.NotificationPlayer r1 = com.android.systemui.media.NotificationPlayer.this     // Catch:{ all -> 0x01bd }
-                java.lang.String r1 = r1.mTag     // Catch:{ all -> 0x01bd }
-                java.lang.StringBuilder r3 = new java.lang.StringBuilder     // Catch:{ all -> 0x01bd }
-                r3.<init>()     // Catch:{ all -> 0x01bd }
+                r1 = r2
+            L_0x0167:
+                com.android.systemui.media.NotificationPlayer r2 = com.android.systemui.media.NotificationPlayer.this     // Catch:{ all -> 0x01bf }
+                java.lang.String r2 = r2.mTag     // Catch:{ all -> 0x01bf }
+                java.lang.StringBuilder r3 = new java.lang.StringBuilder     // Catch:{ all -> 0x01bf }
+                r3.<init>()     // Catch:{ all -> 0x01bf }
                 java.lang.String r4 = "error loading sound for "
-                r3.append(r4)     // Catch:{ all -> 0x01bd }
-                com.android.systemui.media.NotificationPlayer$Command r4 = r7.mCmd     // Catch:{ all -> 0x01bd }
-                android.net.Uri r4 = r4.uri     // Catch:{ all -> 0x01bd }
-                r3.append(r4)     // Catch:{ all -> 0x01bd }
-                java.lang.String r3 = r3.toString()     // Catch:{ all -> 0x01bd }
-                android.util.Log.w(r1, r3, r0)     // Catch:{ all -> 0x01bd }
-                com.android.systemui.media.NotificationPlayer r0 = com.android.systemui.media.NotificationPlayer.this     // Catch:{ all -> 0x01bd }
-                r0.abandonAudioFocusAfterError()     // Catch:{ all -> 0x01bd }
-            L_0x0189:
-                com.android.systemui.media.NotificationPlayer r0 = com.android.systemui.media.NotificationPlayer.this     // Catch:{ all -> 0x01bd }
-                java.lang.Object r0 = r0.mPlayerLock     // Catch:{ all -> 0x01bd }
-                monitor-enter(r0)     // Catch:{ all -> 0x01bd }
-                com.android.systemui.media.NotificationPlayer r1 = com.android.systemui.media.NotificationPlayer.this     // Catch:{ all -> 0x01ba }
-                android.media.MediaPlayer r1 = r1.mPlayer     // Catch:{ all -> 0x01ba }
-                com.android.systemui.media.NotificationPlayer r3 = com.android.systemui.media.NotificationPlayer.this     // Catch:{ all -> 0x01ba }
-                android.media.MediaPlayer unused = r3.mPlayer = r2     // Catch:{ all -> 0x01ba }
-                monitor-exit(r0)     // Catch:{ all -> 0x01ba }
-                if (r1 == 0) goto L_0x01b2
-                boolean r0 = com.android.systemui.media.NotificationPlayer.DEBUG     // Catch:{ all -> 0x01bd }
-                if (r0 == 0) goto L_0x01af
-                com.android.systemui.media.NotificationPlayer r0 = com.android.systemui.media.NotificationPlayer.this     // Catch:{ all -> 0x01bd }
-                java.lang.String r0 = r0.mTag     // Catch:{ all -> 0x01bd }
+                r3.append(r4)     // Catch:{ all -> 0x01bf }
+                com.android.systemui.media.NotificationPlayer$Command r4 = r7.mCmd     // Catch:{ all -> 0x01bf }
+                android.net.Uri r4 = r4.uri     // Catch:{ all -> 0x01bf }
+                r3.append(r4)     // Catch:{ all -> 0x01bf }
+                java.lang.String r3 = r3.toString()     // Catch:{ all -> 0x01bf }
+                android.util.Log.w(r2, r3, r0)     // Catch:{ all -> 0x01bf }
+                com.android.systemui.media.NotificationPlayer r0 = com.android.systemui.media.NotificationPlayer.this     // Catch:{ all -> 0x01bf }
+                r0.abandonAudioFocusAfterError()     // Catch:{ all -> 0x01bf }
+                r2 = r1
+            L_0x018b:
+                com.android.systemui.media.NotificationPlayer r0 = com.android.systemui.media.NotificationPlayer.this     // Catch:{ all -> 0x01bf }
+                java.lang.Object r0 = r0.mPlayerLock     // Catch:{ all -> 0x01bf }
+                monitor-enter(r0)     // Catch:{ all -> 0x01bf }
+                com.android.systemui.media.NotificationPlayer r1 = com.android.systemui.media.NotificationPlayer.this     // Catch:{ all -> 0x01bc }
+                android.media.MediaPlayer r1 = r1.mPlayer     // Catch:{ all -> 0x01bc }
+                com.android.systemui.media.NotificationPlayer r3 = com.android.systemui.media.NotificationPlayer.this     // Catch:{ all -> 0x01bc }
+                android.media.MediaPlayer unused = r3.mPlayer = r2     // Catch:{ all -> 0x01bc }
+                monitor-exit(r0)     // Catch:{ all -> 0x01bc }
+                if (r1 == 0) goto L_0x01b4
+                boolean r0 = com.android.systemui.media.NotificationPlayer.DEBUG     // Catch:{ all -> 0x01bf }
+                if (r0 == 0) goto L_0x01b1
+                com.android.systemui.media.NotificationPlayer r0 = com.android.systemui.media.NotificationPlayer.this     // Catch:{ all -> 0x01bf }
+                java.lang.String r0 = r0.mTag     // Catch:{ all -> 0x01bf }
                 java.lang.String r2 = "mPlayer.release"
-                android.util.Log.d(r0, r2)     // Catch:{ all -> 0x01bd }
-            L_0x01af:
-                r1.release()     // Catch:{ all -> 0x01bd }
-            L_0x01b2:
-                r7.notify()     // Catch:{ all -> 0x01bd }
-                monitor-exit(r7)     // Catch:{ all -> 0x01bd }
+                android.util.Log.d(r0, r2)     // Catch:{ all -> 0x01bf }
+            L_0x01b1:
+                r1.release()     // Catch:{ all -> 0x01bf }
+            L_0x01b4:
+                r7.notify()     // Catch:{ all -> 0x01bf }
+                monitor-exit(r7)     // Catch:{ all -> 0x01bf }
                 android.os.Looper.loop()
                 return
-            L_0x01ba:
+            L_0x01bc:
                 r1 = move-exception
-                monitor-exit(r0)     // Catch:{ all -> 0x01ba }
-                throw r1     // Catch:{ all -> 0x01bd }
-            L_0x01bd:
+                monitor-exit(r0)     // Catch:{ all -> 0x01bc }
+                throw r1     // Catch:{ all -> 0x01bf }
+            L_0x01bf:
                 r0 = move-exception
-                monitor-exit(r7)     // Catch:{ all -> 0x01bd }
+                monitor-exit(r7)     // Catch:{ all -> 0x01bf }
                 throw r0
             */
             throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.media.NotificationPlayer.CreationAndCompletionThread.run():void");
@@ -354,8 +357,9 @@ public class NotificationPlayer implements MediaPlayer.OnCompletionListener, Med
                     }
                     this.mLooper.quit();
                 }
-                this.mCompletionThread = new CreationAndCompletionThread(command);
-                synchronized (this.mCompletionThread) {
+                CreationAndCompletionThread creationAndCompletionThread = new CreationAndCompletionThread(command);
+                this.mCompletionThread = creationAndCompletionThread;
+                synchronized (creationAndCompletionThread) {
                     this.mCompletionThread.start();
                     this.mCompletionThread.wait();
                 }
@@ -539,8 +543,9 @@ public class NotificationPlayer implements MediaPlayer.OnCompletionListener, Med
         this.mCmdQueue.add(command);
         if (this.mThread == null) {
             acquireWakeLock();
-            this.mThread = new CmdThread();
-            this.mThread.start();
+            CmdThread cmdThread = new CmdThread();
+            this.mThread = cmdThread;
+            cmdThread.start();
         }
     }
 

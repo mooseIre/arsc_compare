@@ -56,7 +56,7 @@ public class TileLifecycleManager extends BroadcastReceiver implements IQSTileSe
         this.mContext = context;
         this.mHandler = handler;
         this.mIntent = intent;
-        this.mIntent.putExtra("service", iQSService.asBinder());
+        intent.putExtra("service", iQSService.asBinder());
         this.mIntent.putExtra("token", this.mToken);
         this.mUser = userHandle;
         this.mPackageManagerAdapter = packageManagerAdapter;

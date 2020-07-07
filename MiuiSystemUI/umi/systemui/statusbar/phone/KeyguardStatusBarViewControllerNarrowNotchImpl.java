@@ -34,7 +34,7 @@ public class KeyguardStatusBarViewControllerNarrowNotchImpl extends KeyguardStat
         super.init(keyguardStatusBarView);
         this.mSystemIconArea = this.mStatusBarView.findViewById(R.id.system_icons);
         this.mCarrierSuperContainer = this.mStatusBarView.findViewById(R.id.keyguard_carrier_super_container);
-        this.mConfigurationListener = new ConfigurationController.ConfigurationListener() {
+        AnonymousClass1 r2 = new ConfigurationController.ConfigurationListener() {
             public void onConfigChanged(Configuration configuration) {
             }
 
@@ -43,7 +43,8 @@ public class KeyguardStatusBarViewControllerNarrowNotchImpl extends KeyguardStat
                 DripStatusBarUtils.updateContainerWidth(KeyguardStatusBarViewControllerNarrowNotchImpl.this.mSystemIconArea, false, false, KeyguardStatusBarViewControllerNarrowNotchImpl.this.mExtraSpace);
             }
         };
-        this.mConfigurationListener.onDensityOrFontScaleChanged();
+        this.mConfigurationListener = r2;
+        r2.onDensityOrFontScaleChanged();
         this.mSystemIconContainer = (ViewGroup) this.mStatusBarView.findViewById(R.id.system_icons_container);
         ((BatteryMeterView) this.mSystemIconArea.findViewById(R.id.battery)).setBatteryMeterViewDelegate(new BatteryMeterView.BatteryMeterViewDelegate() {
             public void onNumberToIconChanged(boolean z) {
@@ -56,8 +57,9 @@ public class KeyguardStatusBarViewControllerNarrowNotchImpl extends KeyguardStat
     }
 
     public void showStatusIcons() {
-        this.mDarkIconManager = new StatusBarIconController.DarkIconManager(this.mStatusBarView.mStatusIcons, true);
-        this.mDarkIconManager.mWhiteList = new ArraySet<>();
+        StatusBarIconController.DarkIconManager darkIconManager = new StatusBarIconController.DarkIconManager(this.mStatusBarView.mStatusIcons, true);
+        this.mDarkIconManager = darkIconManager;
+        darkIconManager.mWhiteList = new ArraySet<>();
         this.mDarkIconManager.mWhiteList.add("volume");
         this.mDarkIconManager.mWhiteList.add("quiet");
         this.mDarkIconManager.mWhiteList.add("alarm_clock");

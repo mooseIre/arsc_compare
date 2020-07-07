@@ -31,13 +31,12 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Recents extends SystemUI implements RecentsComponent, CommandQueue.Callbacks {
-    public static final Set<String> RECENTS_ACTIVITIES = new HashSet();
+    public static final Set<String> RECENTS_ACTIVITIES;
     private static RecentsConfiguration sConfiguration;
     private static RecentsDebugFlags sDebugFlags;
     /* access modifiers changed from: private */
     public static SystemServicesProxy sSystemServicesProxy;
     private static RecentsTaskLoader sTaskLoader;
-    private boolean mIsLowMemoryDevice;
     /* access modifiers changed from: private */
     public boolean mIsRecentsWithinLauncher;
     private LauncherPackageMonitor mPackageMonitor;
@@ -157,7 +156,9 @@ public class Recents extends SystemUI implements RecentsComponent, CommandQueue.
     }
 
     static {
-        RECENTS_ACTIVITIES.add("com.android.systemui.recents.RecentsActivity");
+        HashSet hashSet = new HashSet();
+        RECENTS_ACTIVITIES = hashSet;
+        hashSet.add("com.android.systemui.recents.RecentsActivity");
     }
 
     public IBinder getSystemUserCallbacks() {
@@ -199,17 +200,17 @@ public class Recents extends SystemUI implements RecentsComponent, CommandQueue.
         sConfiguration = new RecentsConfiguration(this.mContext);
         this.mUseMiuiHomeAsDefaultHome = sSystemServicesProxy.useMiuiHomeAsDefaultHome(this.mContext);
         this.mIsRecentsWithinLauncher = sSystemServicesProxy.isRecentsWithinLauncher(this.mContext);
-        this.mIsLowMemoryDevice = sSystemServicesProxy.isLowMemoryDevice();
-        this.mUseFsGestureVersionThree = useFsGestureVersionThree();
-        if (this.mUseFsGestureVersionThree) {
+        boolean useFsGestureVersionThree = useFsGestureVersionThree();
+        this.mUseFsGestureVersionThree = useFsGestureVersionThree;
+        if (useFsGestureVersionThree) {
             this.mRecentsImplementation = new OverviewProxyRecentsImpl();
         } else {
             this.mRecentsImplementation = new LegacyRecentsImpl(this.mContext);
         }
         this.mRecentsImplementation.onStart(this.mContext, this);
         if (Utilities.isAndroidQorNewer()) {
-            this.mPackageMonitor = new LauncherPackageMonitor();
-            LauncherPackageMonitor launcherPackageMonitor = this.mPackageMonitor;
+            LauncherPackageMonitor launcherPackageMonitor = new LauncherPackageMonitor();
+            this.mPackageMonitor = launcherPackageMonitor;
             Context context = this.mContext;
             launcherPackageMonitor.register(context, context.getMainLooper(), UserHandle.ALL, true);
             this.mContext.registerReceiver(this.mUserPreferenceChangeReceiver, new IntentFilter("android.intent.action.ACTION_PREFERRED_ACTIVITY_CHANGED"));
@@ -224,7 +225,7 @@ public class Recents extends SystemUI implements RecentsComponent, CommandQueue.
     }
 
     public boolean useFsGestureVersionThree() {
-        return Utilities.isAndroidQorNewer() && this.mUseMiuiHomeAsDefaultHome && this.mIsRecentsWithinLauncher && !this.mIsLowMemoryDevice;
+        return Utilities.isAndroidQorNewer() && this.mUseMiuiHomeAsDefaultHome && this.mIsRecentsWithinLauncher;
     }
 
     /* access modifiers changed from: private */

@@ -13,7 +13,6 @@ public class AutoBrightnessView extends FrameLayout {
     private AutoBrightnessTile mAutoBrightnessTile;
     /* access modifiers changed from: private */
     public QSTileView mAutoBrightnessView;
-    private Context mContext;
     private QSControlTileHost mHost;
     private boolean mListening;
 
@@ -23,7 +22,6 @@ public class AutoBrightnessView extends FrameLayout {
 
     public AutoBrightnessView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-        this.mContext = context;
     }
 
     public void onUserSwitched(int i) {
@@ -35,10 +33,12 @@ public class AutoBrightnessView extends FrameLayout {
 
     public void setHost(QSControlTileHost qSControlTileHost) {
         this.mHost = qSControlTileHost;
-        this.mAutoBrightnessTile = (AutoBrightnessTile) this.mHost.createTile("autobrightness");
-        this.mAutoBrightnessTile.userSwitch(KeyguardUpdateMonitor.getCurrentUser());
-        this.mAutoBrightnessView = this.mHost.createControlCenterTileView(this.mAutoBrightnessTile, true);
-        addView(this.mAutoBrightnessView);
+        AutoBrightnessTile autoBrightnessTile = (AutoBrightnessTile) qSControlTileHost.createTile("autobrightness");
+        this.mAutoBrightnessTile = autoBrightnessTile;
+        autoBrightnessTile.userSwitch(KeyguardUpdateMonitor.getCurrentUser());
+        QSTileView createControlCenterTileView = this.mHost.createControlCenterTileView(this.mAutoBrightnessTile, true);
+        this.mAutoBrightnessView = createControlCenterTileView;
+        addView(createControlCenterTileView);
         this.mAutoBrightnessTile.addCallback(new QSTile.Callback() {
             public void onAnnouncementRequested(CharSequence charSequence) {
             }

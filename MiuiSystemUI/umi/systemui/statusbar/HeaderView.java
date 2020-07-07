@@ -47,12 +47,15 @@ public abstract class HeaderView extends RelativeLayout implements View.OnClickL
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mDateView = (Clock) findViewById(R.id.date_time);
-        this.mDateView.setOnClickListener(this);
-        this.mClock = (Clock) findViewById(R.id.big_time);
-        this.mClock.setOnClickListener(this);
-        this.mShortcut = (ImageView) findViewById(R.id.notification_shade_shortcut);
-        this.mShortcut.setOnClickListener(this);
+        Clock clock = (Clock) findViewById(R.id.date_time);
+        this.mDateView = clock;
+        clock.setOnClickListener(this);
+        Clock clock2 = (Clock) findViewById(R.id.big_time);
+        this.mClock = clock2;
+        clock2.setOnClickListener(this);
+        ImageView imageView = (ImageView) findViewById(R.id.notification_shade_shortcut);
+        this.mShortcut = imageView;
+        imageView.setOnClickListener(this);
         ((ControlPanelController) Dependency.get(ControlPanelController.class)).useControlPanel();
         this.mShortcutDestination = 1;
         this.mShortcut.setImageResource(R.drawable.notch_settings);

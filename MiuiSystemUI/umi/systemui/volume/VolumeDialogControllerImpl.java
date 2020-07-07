@@ -43,7 +43,7 @@ import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpable {
-    private static final ArrayMap<Integer, Integer> STREAMS = new ArrayMap<>();
+    private static final ArrayMap<Integer, Integer> STREAMS;
     /* access modifiers changed from: private */
     public static final String TAG = Util.logTag(VolumeDialogControllerImpl.class);
     private AudioManager mAudio;
@@ -89,7 +89,9 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
     }
 
     static {
-        STREAMS.put(4, Integer.valueOf(R.string.stream_alarm));
+        ArrayMap<Integer, Integer> arrayMap = new ArrayMap<>();
+        STREAMS = arrayMap;
+        arrayMap.put(4, Integer.valueOf(R.string.stream_alarm));
         STREAMS.put(6, Integer.valueOf(R.string.stream_bluetooth_sco));
         STREAMS.put(8, Integer.valueOf(R.string.stream_dtmf));
         STREAMS.put(3, Integer.valueOf(R.string.stream_music));
@@ -109,19 +111,22 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
         this.mShowDndTile = true;
         this.mVoiceAssistStreamType = -2;
         this.mVolumeController = new VC();
-        this.mContext = context.getApplicationContext();
-        Events.writeEvent(this.mContext, 5, new Object[0]);
-        this.mWorkerThread = new HandlerThread(VolumeDialogControllerImpl.class.getSimpleName());
-        this.mWorkerThread.start();
+        Context applicationContext = context.getApplicationContext();
+        this.mContext = applicationContext;
+        Events.writeEvent(applicationContext, 5, new Object[0]);
+        HandlerThread handlerThread = new HandlerThread(VolumeDialogControllerImpl.class.getSimpleName());
+        this.mWorkerThread = handlerThread;
+        handlerThread.start();
         this.mWorker = new W(this.mWorkerThread.getLooper());
         this.mMediaSessions = createMediaSessions(this.mContext, this.mWorkerThread.getLooper(), this.mMediaSessionsCallbacksW);
         this.mAudio = (AudioManager) this.mContext.getSystemService("audio");
         this.mNoMan = (NotificationManager) this.mContext.getSystemService("notification");
-        this.mObserver = new SettingObserver(this.mWorker);
-        this.mObserver.init();
+        SettingObserver settingObserver = new SettingObserver(this.mWorker);
+        this.mObserver = settingObserver;
+        settingObserver.init();
         this.mReceiver.init();
-        this.mVibrator = (Vibrator) this.mContext.getSystemService("vibrator");
-        Vibrator vibrator = this.mVibrator;
+        Vibrator vibrator = (Vibrator) this.mContext.getSystemService("vibrator");
+        this.mVibrator = vibrator;
         this.mHasVibrator = (vibrator == null || !vibrator.hasVibrator()) ? false : z;
         if (getVoiceAssistStreamType() > 0) {
             STREAMS.put(Integer.valueOf(getVoiceAssistStreamType()), Integer.valueOf(R.string.stream_voice_assist));
@@ -185,10 +190,9 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
 
     public void setVolumePolicy(VolumePolicy volumePolicy) {
         this.mVolumePolicy = volumePolicy;
-        VolumePolicy volumePolicy2 = this.mVolumePolicy;
-        if (volumePolicy2 != null) {
+        if (volumePolicy != null) {
             try {
-                this.mAudio.setVolumePolicy(volumePolicy2);
+                this.mAudio.setVolumePolicy(volumePolicy);
             } catch (NoSuchMethodError unused) {
                 Log.w(TAG, "No volume policy api");
             }
@@ -473,7 +477,7 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
         }
         VolumeDialogController.State state = this.mState;
         state.effectsSuppressor = componentName;
-        state.effectsSuppressorName = getApplicationName(this.mContext, state.effectsSuppressor);
+        state.effectsSuppressorName = getApplicationName(this.mContext, componentName);
         Context context = this.mContext;
         VolumeDialogController.State state2 = this.mState;
         Events.writeEvent(context, 14, state2.effectsSuppressor, state2.effectsSuppressorName);
@@ -753,7 +757,7 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
                 final int i3 = i;
                 final boolean z2 = z;
                 final int i4 = i2;
-                ((Handler) next.getValue()).post(new Runnable() {
+                ((Handler) next.getValue()).post(new Runnable(this) {
                     public void run() {
                         ((VolumeDialogController.Callbacks) next.getKey()).onShowRequested(i3, z2, i4);
                     }
@@ -763,7 +767,7 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
 
         public void onDismissRequested(final int i) {
             for (final Map.Entry next : this.mCallbackMap.entrySet()) {
-                ((Handler) next.getValue()).post(new Runnable() {
+                ((Handler) next.getValue()).post(new Runnable(this) {
                     public void run() {
                         ((VolumeDialogController.Callbacks) next.getKey()).onDismissRequested(i);
                     }
@@ -775,7 +779,7 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
             long currentTimeMillis = System.currentTimeMillis();
             final VolumeDialogController.State copy = state.copy();
             for (final Map.Entry next : this.mCallbackMap.entrySet()) {
-                ((Handler) next.getValue()).post(new Runnable() {
+                ((Handler) next.getValue()).post(new Runnable(this) {
                     public void run() {
                         ((VolumeDialogController.Callbacks) next.getKey()).onStateChanged(copy);
                     }
@@ -786,7 +790,7 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
 
         public void onLayoutDirectionChanged(final int i) {
             for (final Map.Entry next : this.mCallbackMap.entrySet()) {
-                ((Handler) next.getValue()).post(new Runnable() {
+                ((Handler) next.getValue()).post(new Runnable(this) {
                     public void run() {
                         ((VolumeDialogController.Callbacks) next.getKey()).onLayoutDirectionChanged(i);
                     }
@@ -797,7 +801,7 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
         public void onConfigurationChanged() {
             VolumeDialogControllerImpl.this.mState.activeStream = -1;
             for (final Map.Entry next : this.mCallbackMap.entrySet()) {
-                ((Handler) next.getValue()).post(new Runnable() {
+                ((Handler) next.getValue()).post(new Runnable(this) {
                     public void run() {
                         ((VolumeDialogController.Callbacks) next.getKey()).onConfigurationChanged();
                     }
@@ -807,7 +811,7 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
 
         public void onShowVibrateHint() {
             for (final Map.Entry next : this.mCallbackMap.entrySet()) {
-                ((Handler) next.getValue()).post(new Runnable() {
+                ((Handler) next.getValue()).post(new Runnable(this) {
                     public void run() {
                         ((VolumeDialogController.Callbacks) next.getKey()).onShowVibrateHint();
                     }
@@ -817,7 +821,7 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
 
         public void onShowSilentHint() {
             for (final Map.Entry next : this.mCallbackMap.entrySet()) {
-                ((Handler) next.getValue()).post(new Runnable() {
+                ((Handler) next.getValue()).post(new Runnable(this) {
                     public void run() {
                         ((VolumeDialogController.Callbacks) next.getKey()).onShowSilentHint();
                     }
@@ -827,7 +831,7 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
 
         public void onScreenOff() {
             for (final Map.Entry next : this.mCallbackMap.entrySet()) {
-                ((Handler) next.getValue()).post(new Runnable() {
+                ((Handler) next.getValue()).post(new Runnable(this) {
                     public void run() {
                         ((VolumeDialogController.Callbacks) next.getKey()).onScreenOff();
                     }
@@ -837,7 +841,7 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
 
         public void onShowSafetyWarning(final int i) {
             for (final Map.Entry next : this.mCallbackMap.entrySet()) {
-                ((Handler) next.getValue()).post(new Runnable() {
+                ((Handler) next.getValue()).post(new Runnable(this) {
                     public void run() {
                         ((VolumeDialogController.Callbacks) next.getKey()).onShowSafetyWarning(i);
                     }
@@ -848,7 +852,7 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
         public void onAccessibilityModeChanged(Boolean bool) {
             final boolean booleanValue = bool == null ? false : bool.booleanValue();
             for (final Map.Entry next : this.mCallbackMap.entrySet()) {
-                ((Handler) next.getValue()).post(new Runnable() {
+                ((Handler) next.getValue()).post(new Runnable(this) {
                     public void run() {
                         ((VolumeDialogController.Callbacks) next.getKey()).onAccessibilityModeChanged(Boolean.valueOf(booleanValue));
                     }
@@ -858,7 +862,7 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
 
         public void onVolumeChanged(final int i, final boolean z) {
             for (final Map.Entry next : this.mCallbackMap.entrySet()) {
-                ((Handler) next.getValue()).post(new Runnable() {
+                ((Handler) next.getValue()).post(new Runnable(this) {
                     public void run() {
                         ((VolumeDialogController.Callbacks) next.getKey()).onVolumeChanged(i, z);
                     }
@@ -988,6 +992,7 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
         }
 
         public void onRemoteUpdate(MediaSession.Token token, String str, MediaController.PlaybackInfo playbackInfo) {
+            boolean z = true;
             if (!this.mRemoteStreams.containsKey(token)) {
                 this.mRemoteStreams.put(token, Integer.valueOf(this.mNextStream));
                 if (D.BUG) {
@@ -996,7 +1001,7 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
                 this.mNextStream++;
             }
             int intValue = this.mRemoteStreams.get(token).intValue();
-            boolean z = VolumeDialogControllerImpl.this.mState.states.indexOfKey(intValue) < 0;
+            boolean z2 = VolumeDialogControllerImpl.this.mState.states.indexOfKey(intValue) < 0;
             VolumeDialogController.StreamState access$3300 = VolumeDialogControllerImpl.this.streamStateW(intValue);
             access$3300.dynamic = true;
             access$3300.levelMin = 0;
@@ -1004,12 +1009,13 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
             if (access$3300.level != playbackInfo.getCurrentVolume()) {
                 access$3300.lastLevel = access$3300.level;
                 access$3300.level = playbackInfo.getCurrentVolume();
-                z = true;
+                z2 = true;
             }
             if (!Objects.equals(access$3300.remoteLabel, str)) {
                 access$3300.nameRes = -1;
                 access$3300.remoteLabel = str;
-                z = true;
+            } else {
+                z = z2;
             }
             if (D.BUG) {
                 Log.d(VolumeDialogControllerImpl.TAG, "onRemoteUpdate: " + str + " level: " + access$3300.level + " of levelMax:" + access$3300.levelMax);

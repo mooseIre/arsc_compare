@@ -33,11 +33,11 @@ import miui.telephony.TelephonyManager;
 
 public class CellularTile extends QSTileImpl<QSTile.BooleanState> {
     private static final boolean DETAIL_ADAPTER_ENABLED = (!Constants.IS_CUST_SINGLE_SIM);
-    private final NetworkController mController = ((NetworkController) Dependency.get(NetworkController.class));
+    private final NetworkController mController;
     /* access modifiers changed from: private */
-    public final DataUsageController mDataController = this.mController.getMobileDataController();
+    public final DataUsageController mDataController;
     /* access modifiers changed from: private */
-    public final CellularDetailAdapter mDetailAdapter = createDetailAdapter();
+    public final CellularDetailAdapter mDetailAdapter;
     /* access modifiers changed from: private */
     public boolean mOpening;
     private final CellSignalCallback mSignalCallback = new CellSignalCallback();
@@ -50,6 +50,10 @@ public class CellularTile extends QSTileImpl<QSTile.BooleanState> {
 
     public CellularTile(QSHost qSHost) {
         super(qSHost);
+        NetworkController networkController = (NetworkController) Dependency.get(NetworkController.class);
+        this.mController = networkController;
+        this.mDataController = networkController.getMobileDataController();
+        this.mDetailAdapter = createDetailAdapter();
     }
 
     public QSTile.SignalState newTileState() {
@@ -146,7 +150,7 @@ public class CellularTile extends QSTileImpl<QSTile.BooleanState> {
         L_0x000a:
             android.content.Context r0 = r6.mContext
             android.content.res.Resources r0 = r0.getResources()
-            r1 = 2131821671(0x7f110467, float:1.9276092E38)
+            r1 = 2131821732(0x7f1104a4, float:1.9276215E38)
             java.lang.String r1 = r0.getString(r1)
             r7.label = r1
             com.android.systemui.statusbar.policy.NetworkController r1 = r6.mController
@@ -154,8 +158,8 @@ public class CellularTile extends QSTileImpl<QSTile.BooleanState> {
             boolean r1 = r1.isMobileDataSupported(r2)
             r2 = 0
             if (r1 == 0) goto L_0x0098
-            boolean r3 = r8.airplaneModeEnabled
-            if (r3 == 0) goto L_0x002a
+            boolean r1 = r8.airplaneModeEnabled
+            if (r1 == 0) goto L_0x002a
             goto L_0x0098
         L_0x002a:
             com.android.settingslib.net.DataUsageController r1 = r6.mDataController
@@ -216,20 +220,23 @@ public class CellularTile extends QSTileImpl<QSTile.BooleanState> {
             int r1 = com.android.systemui.statusbar.Icons.getQSIcons(r1, r2)
             com.android.systemui.plugins.qs.QSTile$Icon r1 = com.android.systemui.qs.tileimpl.QSTileImpl.ResourceIcon.get(r1)
             r7.icon = r1
-            goto L_0x00d3
+            goto L_0x00db
         L_0x0098:
-            java.lang.String r3 = r6.TAG
-            java.lang.StringBuilder r4 = new java.lang.StringBuilder
-            r4.<init>()
-            java.lang.String r5 = "handleUpdateState: airplaneModeEnabled: "
-            r4.append(r5)
-            boolean r5 = r8.airplaneModeEnabled
-            r4.append(r5)
-            java.lang.String r5 = ", isMobileDataSupported: "
-            r4.append(r5)
-            r4.append(r1)
-            java.lang.String r1 = r4.toString()
-            android.util.Log.d(r3, r1)
+            java.lang.String r1 = r6.TAG
+            java.lang.StringBuilder r3 = new java.lang.StringBuilder
+            r3.<init>()
+            java.lang.String r4 = "handleUpdateState: airplaneModeEnabled: "
+            r3.append(r4)
+            boolean r4 = r8.airplaneModeEnabled
+            r3.append(r4)
+            java.lang.String r4 = ", isMobileDataSupported: "
+            r3.append(r4)
+            com.android.systemui.statusbar.policy.NetworkController r4 = r6.mController
+            int r5 = r8.defaultDataSlot
+            boolean r4 = r4.isMobileDataSupported(r5)
+            r3.append(r4)
+            java.lang.String r3 = r3.toString()
+            android.util.Log.d(r1, r3)
             r7.dualTarget = r2
             r7.value = r2
             r7.state = r2
@@ -240,15 +247,15 @@ public class CellularTile extends QSTileImpl<QSTile.BooleanState> {
             int r1 = com.android.systemui.statusbar.Icons.getQSIcons(r1, r2)
             com.android.systemui.plugins.qs.QSTile$Icon r1 = com.android.systemui.qs.tileimpl.QSTileImpl.ResourceIcon.get(r1)
             r7.icon = r1
-        L_0x00d3:
+        L_0x00db:
             boolean r1 = r7.dualTarget
-            if (r1 == 0) goto L_0x0108
+            if (r1 == 0) goto L_0x0110
             java.util.List<miui.telephony.SubscriptionInfo> r1 = r6.mSimInfoRecordList
-            if (r1 == 0) goto L_0x0108
+            if (r1 == 0) goto L_0x0110
             int r2 = r8.defaultDataSlot
-            if (r2 < 0) goto L_0x0108
+            if (r2 < 0) goto L_0x0110
             int r1 = r1.size()
-            if (r2 >= r1) goto L_0x0108
+            if (r2 >= r1) goto L_0x0110
             java.util.List<miui.telephony.SubscriptionInfo> r1 = r6.mSimInfoRecordList
             int r2 = r8.defaultDataSlot
             java.lang.Object r1 = r1.get(r2)
@@ -256,30 +263,30 @@ public class CellularTile extends QSTileImpl<QSTile.BooleanState> {
             android.content.Context r2 = r6.mContext
             int r3 = r1.getSlotId()
             boolean r2 = com.android.systemui.VirtualSimUtils.isVirtualSim(r2, r3)
-            if (r2 == 0) goto L_0x0102
+            if (r2 == 0) goto L_0x010a
             android.content.Context r1 = r6.mContext
             java.lang.String r1 = com.android.systemui.VirtualSimUtils.getVirtualSimCarrierName(r1)
-            goto L_0x0106
-        L_0x0102:
+            goto L_0x010e
+        L_0x010a:
             java.lang.CharSequence r1 = r1.getDisplayName()
-        L_0x0106:
+        L_0x010e:
             r7.label = r1
-        L_0x0108:
+        L_0x0110:
             boolean r1 = r8.enabled
-            if (r1 == 0) goto L_0x0113
+            if (r1 == 0) goto L_0x011b
             int r1 = r8.mobileSignalIconId
-            if (r1 <= 0) goto L_0x0113
+            if (r1 <= 0) goto L_0x011b
             java.lang.String r0 = r8.signalContentDescription
-            goto L_0x011a
-        L_0x0113:
+            goto L_0x0122
+        L_0x011b:
             r1 = 2131820686(0x7f11008e, float:1.9274094E38)
             java.lang.String r0 = r0.getString(r1)
-        L_0x011a:
+        L_0x0122:
             boolean r8 = r8.noSim
-            r1 = 2131822315(0x7f1106eb, float:1.9277398E38)
-            r2 = 2131822314(0x7f1106ea, float:1.9277396E38)
+            r1 = 2131822388(0x7f110734, float:1.9277546E38)
+            r2 = 2131822387(0x7f110733, float:1.9277544E38)
             java.lang.String r3 = ","
-            if (r8 == 0) goto L_0x0149
+            if (r8 == 0) goto L_0x0151
             java.lang.StringBuilder r8 = new java.lang.StringBuilder
             r8.<init>()
             java.lang.CharSequence r0 = r7.label
@@ -287,17 +294,17 @@ public class CellularTile extends QSTileImpl<QSTile.BooleanState> {
             r8.append(r3)
             android.content.Context r6 = r6.mContext
             boolean r0 = r7.value
-            if (r0 == 0) goto L_0x013a
-            goto L_0x013b
-        L_0x013a:
+            if (r0 == 0) goto L_0x0142
+            goto L_0x0143
+        L_0x0142:
             r1 = r2
-        L_0x013b:
+        L_0x0143:
             java.lang.String r6 = r6.getString(r1)
             r8.append(r6)
             java.lang.String r6 = r8.toString()
             r7.contentDescription = r6
-            goto L_0x0171
-        L_0x0149:
+            goto L_0x0179
+        L_0x0151:
             java.lang.StringBuilder r8 = new java.lang.StringBuilder
             r8.<init>()
             java.lang.CharSequence r4 = r7.label
@@ -305,18 +312,18 @@ public class CellularTile extends QSTileImpl<QSTile.BooleanState> {
             r8.append(r3)
             android.content.Context r6 = r6.mContext
             boolean r4 = r7.value
-            if (r4 == 0) goto L_0x015d
-            goto L_0x015e
-        L_0x015d:
+            if (r4 == 0) goto L_0x0165
+            goto L_0x0166
+        L_0x0165:
             r1 = r2
-        L_0x015e:
+        L_0x0166:
             java.lang.String r6 = r6.getString(r1)
             r8.append(r6)
             r8.append(r3)
             r8.append(r0)
             java.lang.String r6 = r8.toString()
             r7.contentDescription = r6
-        L_0x0171:
+        L_0x0179:
             java.lang.Class<android.widget.Switch> r6 = android.widget.Switch.class
             java.lang.String r6 = r6.getName()
             r7.expandedAccessibilityClassName = r6
@@ -335,7 +342,7 @@ public class CellularTile extends QSTileImpl<QSTile.BooleanState> {
         builder.setCancelable(false);
         builder.setTitle(this.mContext.getResources().getString(R.string.quick_settings_cellular_detail_title));
         builder.setMessage(z ? R.string.quick_settings_cellular_detail_dialog_message_turnoff : R.string.quick_settings_cellular_detail_dialog_message_turnon);
-        builder.setNegativeButton((int) R.string.quick_settings_cellular_detail_dialog_negative_button_cancel, (DialogInterface.OnClickListener) new DialogInterface.OnClickListener() {
+        builder.setNegativeButton((int) R.string.quick_settings_cellular_detail_dialog_negative_button_cancel, (DialogInterface.OnClickListener) new DialogInterface.OnClickListener(this) {
             public void onClick(DialogInterface dialogInterface, int i) {
             }
         });
@@ -436,7 +443,7 @@ public class CellularTile extends QSTileImpl<QSTile.BooleanState> {
         public void setNoSims(boolean z) {
             CallbackInfo callbackInfo = this.mInfo;
             callbackInfo.noSim = z;
-            if (callbackInfo.noSim) {
+            if (z) {
                 callbackInfo.mobileSignalIconId = 0;
                 callbackInfo.dataTypeIconId = 0;
                 callbackInfo.enabled = true;
@@ -524,8 +531,9 @@ public class CellularTile extends QSTileImpl<QSTile.BooleanState> {
         }
 
         public View createDetailView(Context context, View view, ViewGroup viewGroup) {
-            this.mItems = QSDetailItems.convertOrInflate(context, view, viewGroup);
-            this.mItems.setTagSuffix("Cellular");
+            QSDetailItems convertOrInflate = QSDetailItems.convertOrInflate(context, view, viewGroup);
+            this.mItems = convertOrInflate;
+            convertOrInflate.setTagSuffix("Cellular");
             this.mItems.setCallback(this);
             if (CellularTile.this.isShowingDetail()) {
                 updateItems();
@@ -582,7 +590,7 @@ public class CellularTile extends QSTileImpl<QSTile.BooleanState> {
                 z = false;
             }
             acquireItem.selected = z;
-            acquireItem.icon2 = acquireItem.selected ? R.drawable.ic_qs_detail_item_selected : -1;
+            acquireItem.icon2 = z ? R.drawable.ic_qs_detail_item_selected : -1;
             acquireItem.line2 = subscriptionInfo.getDisplayNumber();
             acquireItem.tag = Integer.valueOf(i);
             return acquireItem;

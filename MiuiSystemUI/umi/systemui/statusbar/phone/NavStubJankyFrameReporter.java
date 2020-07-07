@@ -23,8 +23,9 @@ public class NavStubJankyFrameReporter {
     static void caculateAnimationFrameInterval(String str) {
         if ("whyred".equals(Build.DEVICE)) {
             long j = sCurrentTime;
-            sCurrentTime = System.currentTimeMillis();
-            if (j > 0 && sCurrentTime - j > 100) {
+            long currentTimeMillis = System.currentTimeMillis();
+            sCurrentTime = currentTimeMillis;
+            if (j > 0 && currentTimeMillis - j > 100) {
                 sJankyFrameCount++;
             }
         }

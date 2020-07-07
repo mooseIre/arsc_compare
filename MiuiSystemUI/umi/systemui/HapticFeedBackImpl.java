@@ -17,13 +17,19 @@ public class HapticFeedBackImpl {
 
     public void clearNotification() {
         if (Constants.IS_SUPPORT_LINEAR_MOTOR_VIBRATE) {
-            this.mHapticFeedbackUtil.performExtHapticFeedback(92);
+            try {
+                this.mHapticFeedbackUtil.performExtHapticFeedback(92);
+            } catch (Exception unused) {
+            }
         }
     }
 
     public void clearAllNotifications() {
         if (Constants.IS_SUPPORT_LINEAR_MOTOR_VIBRATE) {
-            this.mHapticFeedbackUtil.performExtHapticFeedback(93);
+            try {
+                this.mHapticFeedbackUtil.performExtHapticFeedback(93);
+            } catch (Exception unused) {
+            }
         }
     }
 
@@ -38,12 +44,6 @@ public class HapticFeedBackImpl {
     public void hapticFeedback(String str, boolean z) {
         if (Constants.IS_SUPPORT_LINEAR_MOTOR_VIBRATE) {
             this.mHapticFeedbackUtil.performHapticFeedback(str, z);
-        }
-    }
-
-    public void extHapticFeedback(int i) {
-        if (Constants.IS_SUPPORT_LINEAR_MOTOR_VIBRATE) {
-            this.mHapticFeedbackUtil.performExtHapticFeedback(i);
         }
     }
 }

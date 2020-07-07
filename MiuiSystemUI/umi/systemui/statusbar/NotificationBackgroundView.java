@@ -9,16 +9,14 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.RippleDrawable;
 import android.util.AttributeSet;
 import android.view.View;
+import com.miui.systemui.renderlayer.MiRenderInfo;
 import com.miui.systemui.renderlayer.RenderLayerManager;
-import com.miui.systemui.renderlayer.ViewMiRenderInfo;
 
-public class NotificationBackgroundView extends View implements ViewMiRenderInfo {
+public class NotificationBackgroundView extends View implements MiRenderInfo {
     private int mActualHeight;
     private Drawable mBackground;
-    private Drawable mBackgroundCloned;
     private int mClipBottomAmount;
     private int mClipTopAmount;
-    private boolean mIsNightMode = false;
     private boolean mIsShowHeadsUpBackground = false;
     private boolean mRenderRegistered = false;
     private int mTintColor;
@@ -75,11 +73,11 @@ public class NotificationBackgroundView extends View implements ViewMiRenderInfo
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mIsNightMode = (getResources().getConfiguration().uiMode & 48) == 32;
+        int i = getResources().getConfiguration().uiMode & 48;
     }
 
     public void onConfigurationChanged(Configuration configuration) {
-        this.mIsNightMode = (configuration.uiMode & 48) == 32;
+        int i = configuration.uiMode & 48;
     }
 
     public void setCustomBackground(Drawable drawable) {
@@ -90,16 +88,15 @@ public class NotificationBackgroundView extends View implements ViewMiRenderInfo
                 unscheduleDrawable(this.mBackground);
             }
             this.mBackground = drawable;
-            Drawable drawable3 = this.mBackground;
-            if (drawable3 != null) {
-                drawable3.mutate();
+            if (drawable != null) {
+                drawable.mutate();
                 this.mBackground.setCallback(this);
                 setTint(this.mTintColor);
-                this.mBackgroundCloned = this.mBackground.getConstantState().newDrawable().mutate();
+                this.mBackground.getConstantState().newDrawable().mutate();
             }
-            Drawable drawable4 = this.mBackground;
-            if (drawable4 instanceof RippleDrawable) {
-                ((RippleDrawable) drawable4).setForceSoftware(true);
+            Drawable drawable3 = this.mBackground;
+            if (drawable3 instanceof RippleDrawable) {
+                ((RippleDrawable) drawable3).setForceSoftware(true);
             }
             invalidate();
         }

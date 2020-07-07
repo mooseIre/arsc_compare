@@ -101,12 +101,14 @@ public class QSDetailItems extends FrameLayout {
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mItemList = (RecyclerView) findViewById(16908298);
-        this.mItemList.setVisibility(8);
+        RecyclerView recyclerView = (RecyclerView) findViewById(16908298);
+        this.mItemList = recyclerView;
+        recyclerView.setVisibility(8);
         this.mItemList.setLayoutManager(new LinearLayoutManager(getContext()));
         this.mItemList.setAdapter(this.mAdapter);
-        this.mEmpty = findViewById(16908292);
-        this.mEmpty.setVisibility(8);
+        View findViewById = findViewById(16908292);
+        this.mEmpty = findViewById;
+        findViewById.setVisibility(8);
         this.mEmptyText = (TextView) this.mEmpty.findViewById(16908310);
         this.mEmptyIcon = (ImageView) this.mEmpty.findViewById(16908294);
     }

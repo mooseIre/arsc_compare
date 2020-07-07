@@ -11,7 +11,7 @@ class EventHandlerMethod {
 
     EventHandlerMethod(Method method, Class<? extends RecentsEventBus.Event> cls) {
         this.mMethod = method;
-        this.mMethod.setAccessible(true);
+        method.setAccessible(true);
         this.eventType = cls;
     }
 

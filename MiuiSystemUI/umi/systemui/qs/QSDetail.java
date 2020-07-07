@@ -31,8 +31,8 @@ import java.util.List;
 import miui.widget.SlidingButton;
 
 public class QSDetail extends LinearLayout {
-    private Animator.AnimatorListener mAnimInListener = this.mHideGridContentWhenDone;
-    private Animator.AnimatorListener mAnimOutListener = this.mTeardownDetailWhenDone;
+    private Animator.AnimatorListener mAnimInListener;
+    private Animator.AnimatorListener mAnimOutListener;
     /* access modifiers changed from: private */
     public boolean mAnimatingOpen;
     private QSDetailClipper mClipper;
@@ -61,9 +61,6 @@ public class QSDetail extends LinearLayout {
             QSDetail.this.checkPendingAnimations();
         }
     };
-    protected QSTileHost mHost;
-    private int mOpenX;
-    private int mOpenY;
     private QS mQs;
     protected View mQsDetailHeader;
     protected SlidingButton mQsDetailHeaderSwitch;
@@ -102,13 +99,7 @@ public class QSDetail extends LinearLayout {
     /* access modifiers changed from: private */
     public boolean mSwitchClicked;
     private boolean mSwitchState;
-    private final AnimatorListenerAdapter mTeardownDetailWhenDone = new AnimatorListenerAdapter() {
-        public void onAnimationEnd(Animator animator) {
-            QSDetail.this.mDetailContent.removeAllViews();
-            QSDetail.this.setVisibility(4);
-            boolean unused = QSDetail.this.mClosingDetail = false;
-        }
-    };
+    private final AnimatorListenerAdapter mTeardownDetailWhenDone;
     protected View mTopDivider;
     private boolean mTriggeredExpand;
 
@@ -120,8 +111,21 @@ public class QSDetail extends LinearLayout {
         void onToggleStateChanged(boolean z);
     }
 
+    public void setHost(QSTileHost qSTileHost) {
+    }
+
     public QSDetail(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
+        AnonymousClass6 r1 = new AnimatorListenerAdapter() {
+            public void onAnimationEnd(Animator animator) {
+                QSDetail.this.mDetailContent.removeAllViews();
+                QSDetail.this.setVisibility(4);
+                boolean unused = QSDetail.this.mClosingDetail = false;
+            }
+        };
+        this.mTeardownDetailWhenDone = r1;
+        this.mAnimInListener = this.mHideGridContentWhenDone;
+        this.mAnimOutListener = r1;
     }
 
     /* access modifiers changed from: protected */
@@ -139,8 +143,9 @@ public class QSDetail extends LinearLayout {
         this.mDetailDoneButton = (TextView) findViewById(16908313);
         this.mDetailContainer = findViewById(R.id.qs_detail_container);
         this.mTopDivider = findViewById(R.id.top_divider);
-        this.mQsDetailHeader = findViewById(R.id.qs_detail_header);
-        this.mQsDetailHeaderTitle = (TextView) this.mQsDetailHeader.findViewById(16908310);
+        View findViewById = findViewById(R.id.qs_detail_header);
+        this.mQsDetailHeader = findViewById;
+        this.mQsDetailHeaderTitle = (TextView) findViewById.findViewById(16908310);
         this.mQsDetailHeaderSwitch = (SlidingButton) this.mQsDetailHeader.findViewById(16908311);
         updateDetailText();
         this.mClipper = new QSDetailClipper(this);
@@ -165,10 +170,6 @@ public class QSDetail extends LinearLayout {
     public void setQsPanel(QSPanel qSPanel) {
         this.mQsPanel = qSPanel;
         qSPanel.setQSDetailCallback(this.mQsPanelCallback);
-    }
-
-    public void setHost(QSTileHost qSTileHost) {
-        this.mHost = qSTileHost;
     }
 
     public boolean isShowingDetail() {
@@ -212,8 +213,6 @@ public class QSDetail extends LinearLayout {
                 this.mTriggeredExpand = true;
                 ((CommandQueue) SystemUI.getComponent(this.mContext, CommandQueue.class)).animateExpandSettingsPanel((String) null);
             }
-            this.mOpenX = i;
-            this.mOpenY = i2;
         } else if (z && this.mTriggeredExpand) {
             ((CommandQueue) SystemUI.getComponent(this.mContext, CommandQueue.class)).animateCollapsePanels();
             this.mTriggeredExpand = false;
@@ -264,17 +263,16 @@ public class QSDetail extends LinearLayout {
                     MetricsLogger.hidden(this.mContext, this.mDetailAdapter.getMetricsCategory());
                     resetDataTrackStates();
                 }
-                this.mClosingDetail = true;
                 this.mDetailAdapter = null;
                 animatorListener = this.mAnimOutListener;
                 this.mQsPanelCallback.onScanStateChanged(false);
             }
             sendAccessibilityEvent(32);
             $$Lambda$QSDetail$Bz3GXMHJw3LIFP8claBtzVh6I r4 = new Runnable(i, i2, z4, animatorListener) {
-                private final /* synthetic */ int f$1;
-                private final /* synthetic */ int f$2;
-                private final /* synthetic */ boolean f$3;
-                private final /* synthetic */ Animator.AnimatorListener f$4;
+                public final /* synthetic */ int f$1;
+                public final /* synthetic */ int f$2;
+                public final /* synthetic */ boolean f$3;
+                public final /* synthetic */ Animator.AnimatorListener f$4;
 
                 {
                     this.f$1 = r2;
@@ -294,6 +292,8 @@ public class QSDetail extends LinearLayout {
         }
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$handleShowingDetail$0 */
     public /* synthetic */ void lambda$handleShowingDetail$0$QSDetail(int i, int i2, boolean z, Animator.AnimatorListener animatorListener) {
         animateDetailVisibleDiff(i, i2, z, animatorListener);
         this.mQs.notifyCustomizeChanged();
@@ -309,8 +309,9 @@ public class QSDetail extends LinearLayout {
     public void animateDetailVisibleDiff(int i, int i2, boolean z, Animator.AnimatorListener animatorListener) {
         if (z) {
             boolean z2 = true;
-            this.mAnimatingOpen = this.mDetailAdapter != null;
-            if (!this.mFullyExpanded && !this.mAnimatingOpen) {
+            boolean z3 = this.mDetailAdapter != null;
+            this.mAnimatingOpen = z3;
+            if (!this.mFullyExpanded && !z3) {
                 z2 = false;
             }
             if (z2) {

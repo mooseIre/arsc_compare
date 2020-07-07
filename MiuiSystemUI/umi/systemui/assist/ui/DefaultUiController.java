@@ -25,16 +25,20 @@ public class DefaultUiController implements AssistManager.UiController {
     protected final FrameLayout mRoot;
     private final WindowManager mWindowManager;
 
+    protected static void logInvocationProgressMetrics(int i, float f, boolean z) {
+    }
+
     public DefaultUiController(Context context) {
         this.mRoot = new FrameLayout(context);
         this.mWindowManager = (WindowManager) context.getSystemService("window");
-        this.mLayoutParams = new WindowManager.LayoutParams(-1, -2, 0, 0, 2024, 808, -3);
-        WindowManager.LayoutParams layoutParams = this.mLayoutParams;
+        WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(-1, -2, 0, 0, 2024, 808, -3);
+        this.mLayoutParams = layoutParams;
         layoutParams.privateFlags = 64;
         layoutParams.gravity = 80;
         layoutParams.setTitle("Assist");
-        this.mInvocationLightsView = (InvocationLightsView) LayoutInflater.from(context).inflate(R.layout.invocation_lights, this.mRoot, false);
-        this.mInvocationLightsView.setColors(-16776961, -65536, -256, -16711936);
+        InvocationLightsView invocationLightsView = (InvocationLightsView) LayoutInflater.from(context).inflate(R.layout.invocation_lights, this.mRoot, false);
+        this.mInvocationLightsView = invocationLightsView;
+        invocationLightsView.setColors(-16776961, -65536, -256, -16711936);
         this.mRoot.addView(this.mInvocationLightsView);
     }
 
@@ -52,6 +56,7 @@ public class DefaultUiController implements AssistManager.UiController {
             setProgressInternal(i, f);
         }
         this.mLastInvocationProgress = f;
+        logInvocationProgressMetrics(i, f, z);
     }
 
     public void onGestureCompletion(float f) {
@@ -88,8 +93,9 @@ public class DefaultUiController implements AssistManager.UiController {
     }
 
     private void animateInvocationCompletion(final int i, float f) {
-        this.mInvocationAnimator = ValueAnimator.ofFloat(new float[]{this.mLastInvocationProgress, 1.0f});
-        this.mInvocationAnimator.setStartDelay(1);
+        ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{this.mLastInvocationProgress, 1.0f});
+        this.mInvocationAnimator = ofFloat;
+        ofFloat.setStartDelay(1);
         this.mInvocationAnimator.setDuration(200);
         this.mInvocationAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             public void onAnimationUpdate(ValueAnimator valueAnimator) {

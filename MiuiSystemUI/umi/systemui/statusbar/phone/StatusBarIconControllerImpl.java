@@ -30,7 +30,6 @@ import java.util.Iterator;
 
 public class StatusBarIconControllerImpl extends StatusBarIconList implements TunerService.Tunable, ConfigurationController.ConfigurationListener, Dumpable, CommandQueue.Callbacks, StatusBarIconController {
     private Context mContext;
-    private final DarkIconDispatcher mDarkIconDispatcher;
     private boolean mDemoMode;
     private final ArraySet<String> mIconBlacklist = new ArraySet<>();
     private final ArrayList<StatusBarIconController.IconManager> mIconGroups = new ArrayList<>();
@@ -147,9 +146,9 @@ public class StatusBarIconControllerImpl extends StatusBarIconList implements Tu
     }
 
     public StatusBarIconControllerImpl(@Inject Context context) {
-        super(context.getResources().getStringArray(17236078));
+        super(context.getResources().getStringArray(17236083));
         ((ConfigurationController) Dependency.get(ConfigurationController.class)).addCallback(this);
-        this.mDarkIconDispatcher = (DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class);
+        DarkIconDispatcher darkIconDispatcher = (DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class);
         this.mContext = context;
         loadDimens();
         ((CommandQueue) SystemUI.getComponent(context, CommandQueue.class)).addCallbacks(this);

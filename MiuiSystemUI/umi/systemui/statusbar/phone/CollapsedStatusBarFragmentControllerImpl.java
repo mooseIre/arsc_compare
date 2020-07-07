@@ -56,24 +56,27 @@ public class CollapsedStatusBarFragmentControllerImpl implements CollapsedStatus
     }
 
     public void start(View view) {
+        Class cls = StatusBarIconController.class;
         ArraySet arraySet = new ArraySet();
         arraySet.add("call_record");
         arraySet.add("mute");
         arraySet.add("speakerphone");
-        this.mInCallIconManager = new StatusBarIconController.IconManager((LinearLayout) view.findViewById(R.id.call_icons));
-        this.mInCallIconManager.mWhiteList = new ArraySet<>();
+        StatusBarIconController.IconManager iconManager = new StatusBarIconController.IconManager((LinearLayout) view.findViewById(R.id.call_icons));
+        this.mInCallIconManager = iconManager;
+        iconManager.mWhiteList = new ArraySet<>();
         this.mInCallIconManager.mWhiteList.addAll(arraySet);
         this.mDarkIconManager = new StatusBarIconController.DarkIconManager(this.mFragment.mStatusIcons);
-        ((StatusBarIconController) Dependency.get(StatusBarIconController.class)).addIconGroup(this.mDarkIconManager);
-        ((StatusBarIconController) Dependency.get(StatusBarIconController.class)).addIconGroup(this.mInCallIconManager);
+        ((StatusBarIconController) Dependency.get(cls)).addIconGroup(this.mDarkIconManager);
+        ((StatusBarIconController) Dependency.get(cls)).addIconGroup(this.mInCallIconManager);
     }
 
     public void stop() {
+        Class cls = StatusBarIconController.class;
         if (this.mDarkIconManager != null) {
-            ((StatusBarIconController) Dependency.get(StatusBarIconController.class)).removeIconGroup(this.mDarkIconManager);
+            ((StatusBarIconController) Dependency.get(cls)).removeIconGroup(this.mDarkIconManager);
         }
         if (this.mInCallIconManager != null) {
-            ((StatusBarIconController) Dependency.get(StatusBarIconController.class)).removeIconGroup(this.mInCallIconManager);
+            ((StatusBarIconController) Dependency.get(cls)).removeIconGroup(this.mInCallIconManager);
         }
     }
 

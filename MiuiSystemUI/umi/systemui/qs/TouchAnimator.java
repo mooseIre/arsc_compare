@@ -51,7 +51,7 @@ public class TouchAnimator {
         this.mKeyframeSets = keyframeSetArr;
         this.mStartDelay = f;
         this.mEndDelay = f2;
-        this.mSpan = (1.0f - this.mEndDelay) - this.mStartDelay;
+        this.mSpan = (1.0f - f2) - f;
         this.mInterpolator = interpolator;
         this.mListener = listener;
     }

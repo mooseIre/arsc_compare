@@ -34,7 +34,6 @@ import android.view.WindowManagerGlobal;
 import android.widget.ImageView;
 import com.android.internal.os.SomeArgs;
 import com.android.internal.statusbar.StatusBarIcon;
-import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.systemui.OverlayManagerWrapper;
 import com.android.systemui.plugins.R;
 import com.android.systemui.qs.SecureSetting;
@@ -59,7 +58,7 @@ public class RoundedCorners extends SystemUI implements CommandQueue.Callbacks, 
     /* access modifiers changed from: private */
     public boolean mForceBlack = false;
     private ContentObserver mForceBlackObserver;
-    RoundCornerData[] mForceBlackTopCorner = {new RoundCornerData(48, -1, -2, R.drawable.force_black_top_corner), new RoundCornerData(3, -2, -1, R.drawable.force_black_top_corner_rot90), new RoundCornerData(80, -1, -2, R.drawable.force_black_top_corner_rot180), new RoundCornerData(5, -2, -1, R.drawable.force_black_top_corner_rot270)};
+    RoundCornerData[] mForceBlackTopCorner = {new RoundCornerData(48, -1, -2, R.drawable.screen_round_corner_bottom_rot180), new RoundCornerData(3, -2, -1, R.drawable.screen_round_corner_bottom_rot270), new RoundCornerData(80, -1, -2, R.drawable.screen_round_corner_bottom), new RoundCornerData(5, -2, -1, R.drawable.screen_round_corner_bottom_rot90)};
     /* access modifiers changed from: private */
     public boolean mForceBlackV2 = false;
     /* access modifiers changed from: private */
@@ -223,6 +222,9 @@ public class RoundedCorners extends SystemUI implements CommandQueue.Callbacks, 
     public void topAppWindowChanged(boolean z) {
     }
 
+    public RoundedCorners() {
+    }
+
     static {
         boolean z = true;
         if (!SystemProperties.getBoolean("sys.miui.show_round_corner", true) || !FeatureParser.getBoolean("support_round_corner", false)) {
@@ -244,8 +246,9 @@ public class RoundedCorners extends SystemUI implements CommandQueue.Callbacks, 
     }
 
     public void start() {
-        this.mHandler = startHandlerThread();
-        this.mHandler.post(new Runnable() {
+        Handler startHandlerThread = startHandlerThread();
+        this.mHandler = startHandlerThread;
+        startHandlerThread.post(new Runnable() {
             public void run() {
                 RoundedCorners.this.startOnScreenDecorationsThread();
             }
@@ -261,7 +264,7 @@ public class RoundedCorners extends SystemUI implements CommandQueue.Callbacks, 
 
     /* access modifiers changed from: private */
     public void startOnScreenDecorationsThread() {
-        this.mCurrentUserId = KeyguardUpdateMonitor.getCurrentUser();
+        this.mCurrentUserId = ActivityManager.getCurrentUser();
         this.mDisplay = ((WindowManager) this.mContext.getSystemService("window")).getDefaultDisplay();
         this.mInitialSize = new Point();
         try {
@@ -269,8 +272,9 @@ public class RoundedCorners extends SystemUI implements CommandQueue.Callbacks, 
         } catch (RemoteException e) {
             Log.w("RoundedCorners", "Unable to get the display size:" + e);
         }
-        this.mCurrentSize = new Point();
-        this.mDisplay.getRealSize(this.mCurrentSize);
+        Point point = new Point();
+        this.mCurrentSize = point;
+        this.mDisplay.getRealSize(point);
         initRoundCornerWindows();
         if (CustomizeUtil.HAS_NOTCH) {
             ((CommandQueue) SystemUI.getComponent(this.mContext, CommandQueue.class)).addCallbacks(this);
@@ -320,9 +324,9 @@ public class RoundedCorners extends SystemUI implements CommandQueue.Callbacks, 
             this.mDriveModeObserver = new ContentObserver(this.mHandler) {
                 public void onChange(boolean z) {
                     RoundedCorners roundedCorners = RoundedCorners.this;
-                    boolean z2 = true;
-                    if (Settings.System.getIntForUser(roundedCorners.mContext.getContentResolver(), "drive_mode_drive_mode", 0, KeyguardUpdateMonitor.getCurrentUser()) != 1) {
-                        z2 = false;
+                    boolean z2 = false;
+                    if (Settings.System.getIntForUser(roundedCorners.mContext.getContentResolver(), "drive_mode_drive_mode", 0, -2) == 1) {
+                        z2 = true;
                     }
                     boolean unused = roundedCorners.mDriveMode = z2;
                     RoundedCorners.this.updateNotchRoundCornerVisibility();
@@ -431,13 +435,14 @@ public class RoundedCorners extends SystemUI implements CommandQueue.Callbacks, 
                     }
                 }, this.mHandler);
             }
-            this.mSettings = new SecureSetting(this.mContext, this.mHandler, "accessibility_display_inversion_enabled") {
+            AnonymousClass7 r0 = new SecureSetting(this.mContext, this.mHandler, "accessibility_display_inversion_enabled") {
                 /* access modifiers changed from: protected */
                 public void handleValueChanged(int i, boolean z) {
                     RoundedCorners.this.handleStateChange(i);
                 }
             };
-            this.mSettings.setListening(true);
+            this.mSettings = r0;
+            r0.setListening(true);
             this.mSettings.onChange(false);
             IntentFilter intentFilter = new IntentFilter();
             intentFilter.addAction("android.intent.action.USER_SWITCHED");
@@ -445,6 +450,7 @@ public class RoundedCorners extends SystemUI implements CommandQueue.Callbacks, 
             this.mContext.registerReceiver(new BroadcastReceiver() {
                 public void onReceive(Context context, Intent intent) {
                     String action = intent.getAction();
+                    int i = 0;
                     if ("android.intent.action.USER_SWITCHED".equals(action)) {
                         RoundedCorners.this.mCurrentUserId = intent.getIntExtra("android.intent.extra.user_handle", -1);
                         RoundedCorners.this.mSettings.setUserId(ActivityManager.getCurrentUser());
@@ -458,14 +464,13 @@ public class RoundedCorners extends SystemUI implements CommandQueue.Callbacks, 
                         }
                     } else if ("miui.action.handymode_change".equals(action)) {
                         boolean unused = RoundedCorners.this.mHandyMode = intent.getIntExtra("handymode", 0) != 0;
-                        int i = 8;
                         if (RoundedCorners.this.mRoundCornerViewTop != null) {
                             RoundedCorners.this.mRoundCornerViewTop.setVisibility(RoundedCorners.this.mHandyMode ? 8 : 0);
                         }
                         if (RoundedCorners.this.mRoundCornerViewBottom != null) {
                             ImageView access$1500 = RoundedCorners.this.mRoundCornerViewBottom;
-                            if (!RoundedCorners.this.mHandyMode) {
-                                i = 0;
+                            if (RoundedCorners.this.mHandyMode) {
+                                i = 8;
                             }
                             access$1500.setVisibility(i);
                         }
@@ -532,7 +537,7 @@ public class RoundedCorners extends SystemUI implements CommandQueue.Callbacks, 
         setBackgroundResource(imageView, i2, z);
         WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(-1, -2, z ? 2017 : 2015, 1304, -3);
         layoutParams.privateFlags = 16;
-        layoutParams.privateFlags |= 64;
+        layoutParams.privateFlags = 16 | 64;
         if (!z || Build.VERSION.SDK_INT < 28) {
             layoutParams.privateFlags |= 1048576;
         } else {
@@ -541,6 +546,7 @@ public class RoundedCorners extends SystemUI implements CommandQueue.Callbacks, 
         layoutParams.gravity = i;
         layoutParams.setTitle("RoundCorner");
         WindowManagerCompat.setLayoutInDisplayCutoutMode(layoutParams, 1);
+        WindowManagerCompat.setFitInsetsTypes(layoutParams);
         windowManager.addView(imageView, layoutParams);
         return imageView;
     }

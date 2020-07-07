@@ -9,57 +9,26 @@ import com.android.systemui.statusbar.ExpandableNotificationRow;
 public class NotificationBigTextTemplateViewWrapper extends NotificationTemplateViewWrapper {
     private ImageFloatingTextView mBigText;
 
+    /* access modifiers changed from: protected */
+    public boolean showExpandButton() {
+        return true;
+    }
+
     protected NotificationBigTextTemplateViewWrapper(Context context, View view, ExpandableNotificationRow expandableNotificationRow) {
         super(context, view, expandableNotificationRow);
     }
 
     /* access modifiers changed from: protected */
     public void resolveViews() {
-        this.mBigText = this.mView.findViewById(16908767);
-        clearColorSpans(this.mBigText);
-        this.mBigText.post(new Runnable() {
-            public final void run() {
-                NotificationBigTextTemplateViewWrapper.this.lambda$resolveViews$0$NotificationBigTextTemplateViewWrapper();
-            }
-        });
-    }
-
-    public /* synthetic */ void lambda$resolveViews$0$NotificationBigTextTemplateViewWrapper() {
-        if (showOneLine()) {
-            handleTemplateViews();
-        }
-    }
-
-    private int getTextLineCount() {
-        ImageFloatingTextView imageFloatingTextView = this.mBigText;
-        if (imageFloatingTextView != null) {
-            return imageFloatingTextView.getLineCount();
-        }
-        return 0;
-    }
-
-    private boolean showOneLine() {
-        return getTextLineCount() == 1;
+        ImageFloatingTextView findViewById = this.mView.findViewById(16908796);
+        this.mBigText = findViewById;
+        clearColorSpans(findViewById);
     }
 
     /* access modifiers changed from: protected */
     public boolean showTimeChronometer() {
-        if (showRightIcon() && showOneLine()) {
-            return false;
-        }
         Notification notification = this.mRow.getEntry().notification.getNotification();
-        if (notification.showsTime() || notification.showsChronometer()) {
-            return true;
-        }
-        return false;
-    }
-
-    /* access modifiers changed from: protected */
-    public boolean showExpandButton() {
-        if (!showRightIcon() && !showOneLine()) {
-            return true;
-        }
-        return false;
+        return notification.showsTime() || notification.showsChronometer();
     }
 
     public void onContentUpdated(ExpandableNotificationRow expandableNotificationRow) {

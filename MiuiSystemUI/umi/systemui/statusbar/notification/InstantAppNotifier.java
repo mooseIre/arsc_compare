@@ -53,6 +53,8 @@ public class InstantAppNotifier extends SystemUI implements CommandQueue.Callbac
             });
         }
 
+        /* access modifiers changed from: private */
+        /* renamed from: lambda$onUserSwitchComplete$0 */
         public /* synthetic */ void lambda$onUserSwitchComplete$0$InstantAppNotifier$1() {
             InstantAppNotifier.this.updateForegroundInstantApps();
         }
@@ -79,6 +81,8 @@ public class InstantAppNotifier extends SystemUI implements CommandQueue.Callbac
         }
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$start$0 */
     public /* synthetic */ void lambda$start$0$InstantAppNotifier(Boolean bool) {
         this.mDockedStackExists = bool.booleanValue();
         updateForegroundInstantApps();
@@ -99,8 +103,8 @@ public class InstantAppNotifier extends SystemUI implements CommandQueue.Callbac
     /* access modifiers changed from: private */
     public void updateForegroundInstantApps() {
         this.mUiOffloadThread.submit(new Runnable((NotificationManager) this.mContext.getSystemService(NotificationManager.class), AppGlobals.getPackageManager()) {
-            private final /* synthetic */ NotificationManager f$1;
-            private final /* synthetic */ IPackageManager f$2;
+            public final /* synthetic */ NotificationManager f$1;
+            public final /* synthetic */ IPackageManager f$2;
 
             {
                 this.f$1 = r2;
@@ -113,6 +117,8 @@ public class InstantAppNotifier extends SystemUI implements CommandQueue.Callbac
         });
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$updateForegroundInstantApps$2 */
     public /* synthetic */ void lambda$updateForegroundInstantApps$2$InstantAppNotifier(NotificationManager notificationManager, IPackageManager iPackageManager) {
         int windowingMode;
         ArraySet arraySet = new ArraySet(this.mCurrentNotifs);
@@ -128,7 +134,7 @@ public class InstantAppNotifier extends SystemUI implements CommandQueue.Callbac
             e.rethrowFromSystemServer();
         }
         arraySet.forEach(new Consumer(notificationManager) {
-            private final /* synthetic */ NotificationManager f$1;
+            public final /* synthetic */ NotificationManager f$1;
 
             {
                 this.f$1 = r2;
@@ -140,6 +146,8 @@ public class InstantAppNotifier extends SystemUI implements CommandQueue.Callbac
         });
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$updateForegroundInstantApps$1 */
     public /* synthetic */ void lambda$updateForegroundInstantApps$1$InstantAppNotifier(NotificationManager notificationManager, Pair pair) {
         this.mCurrentNotifs.remove(pair);
         notificationManager.cancelAsUser((String) pair.first, 7, new UserHandle(((Integer) pair.second).intValue()));

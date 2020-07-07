@@ -41,9 +41,6 @@ public class QSControlCustomizer extends FrameLayout implements TileQueryHelper.
     /* access modifiers changed from: private */
     public boolean isShown;
     private IStateStyle mAnim;
-    private Animator.AnimatorListener mAnimInListener = this.mExpandAnimationListener;
-    private Animator.AnimatorListener mAnimOutListener = this.mCollapseAnimationListener;
-    private final QSDetailClipper mClipper = new QSDetailClipper(this);
     private final Animator.AnimatorListener mCollapseAnimationListener = new AnimatorListenerAdapter() {
         public void onAnimationEnd(Animator animator) {
             if (!QSControlCustomizer.this.isShown) {
@@ -61,9 +58,7 @@ public class QSControlCustomizer extends FrameLayout implements TileQueryHelper.
             QSControlCustomizer.this.setCustomizerAnimating(false);
         }
     };
-    private int mCount;
     private boolean mCustomizerAnimating;
-    private boolean mCustomizing;
     protected TextView mDoneButton;
     /* access modifiers changed from: private */
     public boolean mDonedClicked;
@@ -163,6 +158,10 @@ public class QSControlCustomizer extends FrameLayout implements TileQueryHelper.
         void show();
     }
 
+    /* access modifiers changed from: private */
+    public void setCustomizing(boolean z) {
+    }
+
     public void onAnnouncementRequested(CharSequence charSequence) {
     }
 
@@ -180,29 +179,34 @@ public class QSControlCustomizer extends FrameLayout implements TileQueryHelper.
 
     public QSControlCustomizer(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
+        new QSDetailClipper(this);
         setClickable(true);
         this.mSpanCount = this.mContext.getResources().getInteger(R.dimen.qs_control_tiles_columns);
         this.mTileVerticalIntervel = this.mContext.getResources().getDimensionPixelSize(R.dimen.qs_control_customizer_tiles_margin_bottom);
         LayoutInflater.from(getContext()).inflate(R.layout.qs_control_customize_panel_content, this);
         this.mRecyclerView = (RecyclerView) findViewById(R.id.list_added);
-        this.mTileAdapter = new CCTileAdapter(getContext(), this.mSpanCount, this.mRecyclerView, true);
-        this.mTileAdapter.setQsControlCustomizer(this);
+        CCTileAdapter cCTileAdapter = new CCTileAdapter(getContext(), this.mSpanCount, this.mRecyclerView, true);
+        this.mTileAdapter = cCTileAdapter;
+        cCTileAdapter.setQsControlCustomizer(this);
         this.mTileQueryHelper = new CCTileQueryHelper(context, this);
         this.mRecyclerView.setAdapter(this.mTileAdapter);
         this.mTileAdapter.getItemTouchHelper().attachToRecyclerView(this.mRecyclerView);
         this.mOthersRecyclerView = (RecyclerView) findViewById(R.id.list_others);
-        this.mOtherTilesAdapter = new CCTileAdapter(getContext(), this.mSpanCount, this.mOthersRecyclerView, false);
-        this.mOtherTilesAdapter.setQsControlCustomizer(this);
+        CCTileAdapter cCTileAdapter2 = new CCTileAdapter(getContext(), this.mSpanCount, this.mOthersRecyclerView, false);
+        this.mOtherTilesAdapter = cCTileAdapter2;
+        cCTileAdapter2.setQsControlCustomizer(this);
         this.mOthersRecyclerView.setAdapter(this.mOtherTilesAdapter);
         updateLayout();
         this.mRecyclerView.addItemDecoration(this.mTileAdapter.getItemDecoration());
         this.mOthersRecyclerView.addItemDecoration(this.mTileAdapter.getItemDecoration());
         this.mRecyclerView.setItemAnimator(new MiuiDefaultItemAnimator());
         this.mOthersRecyclerView.setItemAnimator(new MiuiDefaultItemAnimator());
-        this.mUnAddedTilesLayout = (UnAddedTilesLayout) findViewById(R.id.unAdded_tiles);
-        this.mUnAddedTilesLayout.setAddedLayout(this.mRecyclerView);
-        this.mDoneButton = (TextView) findViewById(R.id.save);
-        Utils.createButtonFolmeTouchStyle(this.mDoneButton);
+        UnAddedTilesLayout unAddedTilesLayout = (UnAddedTilesLayout) findViewById(R.id.unAdded_tiles);
+        this.mUnAddedTilesLayout = unAddedTilesLayout;
+        unAddedTilesLayout.setAddedLayout(this.mRecyclerView);
+        TextView textView = (TextView) findViewById(R.id.save);
+        this.mDoneButton = textView;
+        Utils.createButtonFolmeTouchStyle(textView);
         this.mDoneButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 boolean unused = QSControlCustomizer.this.mDonedClicked = true;
@@ -266,7 +270,7 @@ public class QSControlCustomizer extends FrameLayout implements TileQueryHelper.
         super.onConfigurationChanged(configuration);
         this.mTitle.setText(R.string.qs_control_customize_title);
         this.mSubTitle.setText(R.string.qs_control_customize_sub_title);
-        this.mDoneButton.setText(R.string.qs_control_customize_save_text);
+        this.mDoneButton.setText(R.string.quick_settings_done);
         Resources resources = this.mContext.getResources();
         int max = Math.max(1, resources.getInteger(R.integer.quick_settings_num_columns));
         if (this.mSpanCount != max) {
@@ -276,7 +280,7 @@ public class QSControlCustomizer extends FrameLayout implements TileQueryHelper.
                 this.mHeader.setVisibility(8);
             }
             this.mSpanCount = max;
-            this.mTileAdapter.setSpanCount(this.mSpanCount);
+            this.mTileAdapter.setSpanCount(max);
             this.mOtherTilesAdapter.setSpanCount(this.mSpanCount);
             updateLayout();
         }
@@ -370,21 +374,12 @@ public class QSControlCustomizer extends FrameLayout implements TileQueryHelper.
     }
 
     /* access modifiers changed from: private */
-    public void setCustomizing(boolean z) {
-        this.mCustomizing = z;
-    }
-
-    /* access modifiers changed from: private */
     public void setTileSpecs() {
-        int i;
         ArrayList arrayList = new ArrayList();
         Collection<QSTile> tiles = this.mHost.getTiles();
-        if (tiles == null) {
-            i = 0;
-        } else {
-            i = tiles.size();
+        if (tiles != null) {
+            tiles.size();
         }
-        this.mCount = i;
         for (QSTile next : tiles) {
             if (!"edit".equals(next.getTileSpec())) {
                 arrayList.add(next.getTileSpec());
@@ -445,7 +440,7 @@ public class QSControlCustomizer extends FrameLayout implements TileQueryHelper.
 
     public void onShowEdit(boolean z) {
         post(new Runnable(z) {
-            private final /* synthetic */ boolean f$1;
+            public final /* synthetic */ boolean f$1;
 
             {
                 this.f$1 = r2;
@@ -457,6 +452,8 @@ public class QSControlCustomizer extends FrameLayout implements TileQueryHelper.
         });
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$onShowEdit$0 */
     public /* synthetic */ void lambda$onShowEdit$0$QSControlCustomizer(boolean z) {
         if (z) {
             this.mQsPanelCallback.show();

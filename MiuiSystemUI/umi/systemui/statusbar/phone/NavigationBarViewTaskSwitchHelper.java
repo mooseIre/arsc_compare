@@ -13,7 +13,6 @@ import com.android.systemui.statusbar.policy.KeyButtonRipple;
 public class NavigationBarViewTaskSwitchHelper extends GestureDetector.SimpleOnGestureListener {
     private StatusBar mBar;
     private Context mContext;
-    private boolean mIsRTL;
     private boolean mIsVertical;
     private final int mMinFlingVelocity;
     private final int mScrollTouchSlop;
@@ -35,7 +34,6 @@ public class NavigationBarViewTaskSwitchHelper extends GestureDetector.SimpleOnG
 
     public void setBarState(boolean z, boolean z2) {
         this.mIsVertical = z;
-        this.mIsRTL = z2;
     }
 
     public boolean onInterceptTouchEvent(MotionEvent motionEvent) {

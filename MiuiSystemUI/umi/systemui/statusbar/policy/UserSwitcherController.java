@@ -36,7 +36,6 @@ import android.widget.BaseAdapter;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.util.UserIcons;
 import com.android.internal.util.UserIconsCompat;
-import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.settingslib.RestrictedLockUtils;
 import com.android.settingslib.RestrictedLockUtilsHelper;
 import com.android.systemui.Dependency;
@@ -92,7 +91,7 @@ public class UserSwitcherController {
         public void onCallStateChanged(int i, String str) {
             if (this.mCallState != i) {
                 this.mCallState = i;
-                int currentUser = KeyguardUpdateMonitor.getCurrentUser();
+                int currentUser = ActivityManager.getCurrentUser();
                 UserInfo userInfo = UserSwitcherController.this.mUserManager.getUserInfo(currentUser);
                 if (userInfo != null && userInfo.isGuest()) {
                     UserSwitcherController.this.showGuestNotification(currentUser);
@@ -102,72 +101,182 @@ public class UserSwitcherController {
         }
     };
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
-        public void onReceive(Context context, Intent intent) {
-            if ("com.android.systemui.REMOVE_GUEST".equals(intent.getAction())) {
-                int currentUser = ActivityManager.getCurrentUser();
-                UserInfo userInfo = UserSwitcherController.this.mUserManager.getUserInfo(currentUser);
-                if (userInfo != null && userInfo.isGuest()) {
-                    UserSwitcherController.this.showExitGuestDialog(currentUser);
-                    return;
-                }
-                return;
-            }
-            boolean z = false;
-            int i = -10000;
-            if ("com.android.systemui.LOGOUT_USER".equals(intent.getAction())) {
-                UserSwitcherController.this.logoutCurrentUser();
-            } else if ("android.intent.action.USER_SWITCHED".equals(intent.getAction())) {
-                if (UserSwitcherController.this.mExitGuestDialog != null && UserSwitcherController.this.mExitGuestDialog.isShowing()) {
-                    UserSwitcherController.this.mExitGuestDialog.cancel();
-                    Dialog unused = UserSwitcherController.this.mExitGuestDialog = null;
-                }
-                int intExtra = intent.getIntExtra("android.intent.extra.user_handle", -1);
-                UserInfo userInfo2 = UserSwitcherController.this.mUserManager.getUserInfo(intExtra);
-                int size = UserSwitcherController.this.mUsers.size();
-                int i2 = 0;
-                while (i2 < size) {
-                    UserRecord userRecord = (UserRecord) UserSwitcherController.this.mUsers.get(i2);
-                    UserInfo userInfo3 = userRecord.info;
-                    if (userInfo3 != null) {
-                        boolean z2 = userInfo3.id == intExtra;
-                        if (userRecord.isCurrent != z2) {
-                            UserSwitcherController.this.mUsers.set(i2, userRecord.copyWithIsCurrent(z2));
-                        }
-                        if (z2 && !userRecord.isGuest) {
-                            int unused2 = UserSwitcherController.this.mLastNonGuestUser = userRecord.info.id;
-                        }
-                        if ((userInfo2 == null || !userInfo2.isAdmin()) && userRecord.isRestricted) {
-                            UserSwitcherController.this.mUsers.remove(i2);
-                            i2--;
-                        }
-                    }
-                    i2++;
-                }
-                UserSwitcherController.this.notifyAdapters();
-                if (UserSwitcherController.this.mSecondaryUser != -10000) {
-                    context.stopServiceAsUser(UserSwitcherController.this.mSecondaryUserServiceIntent, UserHandleCompat.of(UserSwitcherController.this.mSecondaryUser));
-                    int unused3 = UserSwitcherController.this.mSecondaryUser = -10000;
-                }
-                if (!(userInfo2 == null || userInfo2.id == 0)) {
-                    context.startServiceAsUser(UserSwitcherController.this.mSecondaryUserServiceIntent, UserHandleCompat.of(userInfo2.id));
-                    int unused4 = UserSwitcherController.this.mSecondaryUser = userInfo2.id;
-                }
-                if (UserManagerCompat.isSplitSystemUser() && userInfo2 != null && !userInfo2.isGuest() && userInfo2.id != 0) {
-                    showLogoutNotification(intExtra);
-                }
-                if (userInfo2 != null && userInfo2.isGuest()) {
-                    UserSwitcherController.this.showGuestNotification(intExtra);
-                }
-                z = true;
-            } else if ("android.intent.action.USER_INFO_CHANGED".equals(intent.getAction())) {
-                i = intent.getIntExtra("android.intent.extra.user_handle", -10000);
-            } else if ("android.intent.action.USER_UNLOCKED".equals(intent.getAction()) && intent.getIntExtra("android.intent.extra.user_handle", -10000) != 0) {
-                return;
-            }
-            UserSwitcherController.this.refreshUsers(i);
-            if (z) {
-                UserSwitcherController.this.mUnpauseRefreshUsers.run();
-            }
+        /* JADX WARNING: Removed duplicated region for block: B:69:0x0169  */
+        /* JADX WARNING: Removed duplicated region for block: B:79:? A[RETURN, SYNTHETIC] */
+        /* Code decompiled incorrectly, please refer to instructions dump. */
+        public void onReceive(android.content.Context r11, android.content.Intent r12) {
+            /*
+                r10 = this;
+                java.lang.String r0 = r12.getAction()
+                java.lang.String r1 = "com.android.systemui.REMOVE_GUEST"
+                boolean r0 = r1.equals(r0)
+                if (r0 == 0) goto L_0x0026
+                int r11 = android.app.ActivityManager.getCurrentUser()
+                com.android.systemui.statusbar.policy.UserSwitcherController r12 = com.android.systemui.statusbar.policy.UserSwitcherController.this
+                android.os.UserManager r12 = r12.mUserManager
+                android.content.pm.UserInfo r12 = r12.getUserInfo(r11)
+                if (r12 == 0) goto L_0x0025
+                boolean r12 = r12.isGuest()
+                if (r12 == 0) goto L_0x0025
+                com.android.systemui.statusbar.policy.UserSwitcherController r10 = com.android.systemui.statusbar.policy.UserSwitcherController.this
+                r10.showExitGuestDialog(r11)
+            L_0x0025:
+                return
+            L_0x0026:
+                java.lang.String r0 = r12.getAction()
+                java.lang.String r1 = "com.android.systemui.LOGOUT_USER"
+                boolean r0 = r1.equals(r0)
+                r1 = 1
+                r2 = 0
+                r3 = -10000(0xffffffffffffd8f0, float:NaN)
+                if (r0 == 0) goto L_0x003d
+                com.android.systemui.statusbar.policy.UserSwitcherController r11 = com.android.systemui.statusbar.policy.UserSwitcherController.this
+                r11.logoutCurrentUser()
+                goto L_0x0161
+            L_0x003d:
+                java.lang.String r0 = r12.getAction()
+                java.lang.String r4 = "android.intent.action.USER_SWITCHED"
+                boolean r0 = r4.equals(r0)
+                java.lang.String r4 = "android.intent.extra.user_handle"
+                if (r0 == 0) goto L_0x013d
+                com.android.systemui.statusbar.policy.UserSwitcherController r0 = com.android.systemui.statusbar.policy.UserSwitcherController.this
+                android.app.Dialog r0 = r0.mExitGuestDialog
+                if (r0 == 0) goto L_0x006e
+                com.android.systemui.statusbar.policy.UserSwitcherController r0 = com.android.systemui.statusbar.policy.UserSwitcherController.this
+                android.app.Dialog r0 = r0.mExitGuestDialog
+                boolean r0 = r0.isShowing()
+                if (r0 == 0) goto L_0x006e
+                com.android.systemui.statusbar.policy.UserSwitcherController r0 = com.android.systemui.statusbar.policy.UserSwitcherController.this
+                android.app.Dialog r0 = r0.mExitGuestDialog
+                r0.cancel()
+                com.android.systemui.statusbar.policy.UserSwitcherController r0 = com.android.systemui.statusbar.policy.UserSwitcherController.this
+                r5 = 0
+                android.app.Dialog unused = r0.mExitGuestDialog = r5
+            L_0x006e:
+                r0 = -1
+                int r12 = r12.getIntExtra(r4, r0)
+                com.android.systemui.statusbar.policy.UserSwitcherController r0 = com.android.systemui.statusbar.policy.UserSwitcherController.this
+                android.os.UserManager r0 = r0.mUserManager
+                android.content.pm.UserInfo r0 = r0.getUserInfo(r12)
+                com.android.systemui.statusbar.policy.UserSwitcherController r4 = com.android.systemui.statusbar.policy.UserSwitcherController.this
+                java.util.ArrayList r4 = r4.mUsers
+                int r4 = r4.size()
+                r5 = r2
+            L_0x0086:
+                if (r5 >= r4) goto L_0x00d9
+                com.android.systemui.statusbar.policy.UserSwitcherController r6 = com.android.systemui.statusbar.policy.UserSwitcherController.this
+                java.util.ArrayList r6 = r6.mUsers
+                java.lang.Object r6 = r6.get(r5)
+                com.android.systemui.statusbar.policy.UserSwitcherController$UserRecord r6 = (com.android.systemui.statusbar.policy.UserSwitcherController.UserRecord) r6
+                android.content.pm.UserInfo r7 = r6.info
+                if (r7 != 0) goto L_0x0099
+                goto L_0x00d7
+            L_0x0099:
+                int r7 = r7.id
+                if (r7 != r12) goto L_0x009f
+                r7 = r1
+                goto L_0x00a0
+            L_0x009f:
+                r7 = r2
+            L_0x00a0:
+                boolean r8 = r6.isCurrent
+                if (r8 == r7) goto L_0x00b1
+                com.android.systemui.statusbar.policy.UserSwitcherController r8 = com.android.systemui.statusbar.policy.UserSwitcherController.this
+                java.util.ArrayList r8 = r8.mUsers
+                com.android.systemui.statusbar.policy.UserSwitcherController$UserRecord r9 = r6.copyWithIsCurrent(r7)
+                r8.set(r5, r9)
+            L_0x00b1:
+                if (r7 == 0) goto L_0x00c0
+                boolean r7 = r6.isGuest
+                if (r7 != 0) goto L_0x00c0
+                com.android.systemui.statusbar.policy.UserSwitcherController r7 = com.android.systemui.statusbar.policy.UserSwitcherController.this
+                android.content.pm.UserInfo r8 = r6.info
+                int r8 = r8.id
+                int unused = r7.mLastNonGuestUser = r8
+            L_0x00c0:
+                if (r0 == 0) goto L_0x00c8
+                boolean r7 = r0.isAdmin()
+                if (r7 != 0) goto L_0x00d7
+            L_0x00c8:
+                boolean r6 = r6.isRestricted
+                if (r6 == 0) goto L_0x00d7
+                com.android.systemui.statusbar.policy.UserSwitcherController r6 = com.android.systemui.statusbar.policy.UserSwitcherController.this
+                java.util.ArrayList r6 = r6.mUsers
+                r6.remove(r5)
+                int r5 = r5 + -1
+            L_0x00d7:
+                int r5 = r5 + r1
+                goto L_0x0086
+            L_0x00d9:
+                com.android.systemui.statusbar.policy.UserSwitcherController r2 = com.android.systemui.statusbar.policy.UserSwitcherController.this
+                r2.notifyAdapters()
+                com.android.systemui.statusbar.policy.UserSwitcherController r2 = com.android.systemui.statusbar.policy.UserSwitcherController.this
+                int r2 = r2.mSecondaryUser
+                if (r2 == r3) goto L_0x00fe
+                com.android.systemui.statusbar.policy.UserSwitcherController r2 = com.android.systemui.statusbar.policy.UserSwitcherController.this
+                android.content.Intent r2 = r2.mSecondaryUserServiceIntent
+                com.android.systemui.statusbar.policy.UserSwitcherController r4 = com.android.systemui.statusbar.policy.UserSwitcherController.this
+                int r4 = r4.mSecondaryUser
+                android.os.UserHandle r4 = android.os.UserHandleCompat.of(r4)
+                r11.stopServiceAsUser(r2, r4)
+                com.android.systemui.statusbar.policy.UserSwitcherController r2 = com.android.systemui.statusbar.policy.UserSwitcherController.this
+                int unused = r2.mSecondaryUser = r3
+            L_0x00fe:
+                if (r0 == 0) goto L_0x011a
+                int r2 = r0.id
+                if (r2 == 0) goto L_0x011a
+                com.android.systemui.statusbar.policy.UserSwitcherController r2 = com.android.systemui.statusbar.policy.UserSwitcherController.this
+                android.content.Intent r2 = r2.mSecondaryUserServiceIntent
+                int r4 = r0.id
+                android.os.UserHandle r4 = android.os.UserHandleCompat.of(r4)
+                r11.startServiceAsUser(r2, r4)
+                com.android.systemui.statusbar.policy.UserSwitcherController r11 = com.android.systemui.statusbar.policy.UserSwitcherController.this
+                int r2 = r0.id
+                int unused = r11.mSecondaryUser = r2
+            L_0x011a:
+                boolean r11 = android.os.UserManagerCompat.isSplitSystemUser()
+                if (r11 == 0) goto L_0x012f
+                if (r0 == 0) goto L_0x012f
+                boolean r11 = r0.isGuest()
+                if (r11 != 0) goto L_0x012f
+                int r11 = r0.id
+                if (r11 == 0) goto L_0x012f
+                r10.showLogoutNotification(r12)
+            L_0x012f:
+                if (r0 == 0) goto L_0x0162
+                boolean r11 = r0.isGuest()
+                if (r11 == 0) goto L_0x0162
+                com.android.systemui.statusbar.policy.UserSwitcherController r11 = com.android.systemui.statusbar.policy.UserSwitcherController.this
+                r11.showGuestNotification(r12)
+                goto L_0x0162
+            L_0x013d:
+                java.lang.String r11 = r12.getAction()
+                java.lang.String r0 = "android.intent.action.USER_INFO_CHANGED"
+                boolean r11 = r0.equals(r11)
+                if (r11 == 0) goto L_0x014e
+                int r3 = r12.getIntExtra(r4, r3)
+                goto L_0x0161
+            L_0x014e:
+                java.lang.String r11 = r12.getAction()
+                java.lang.String r0 = "android.intent.action.USER_UNLOCKED"
+                boolean r11 = r0.equals(r11)
+                if (r11 == 0) goto L_0x0161
+                int r11 = r12.getIntExtra(r4, r3)
+                if (r11 == 0) goto L_0x0161
+                return
+            L_0x0161:
+                r1 = r2
+            L_0x0162:
+                com.android.systemui.statusbar.policy.UserSwitcherController r11 = com.android.systemui.statusbar.policy.UserSwitcherController.this
+                r11.refreshUsers(r3)
+                if (r1 == 0) goto L_0x0172
+                com.android.systemui.statusbar.policy.UserSwitcherController r10 = com.android.systemui.statusbar.policy.UserSwitcherController.this
+                java.lang.Runnable r10 = r10.mUnpauseRefreshUsers
+                r10.run()
+            L_0x0172:
+                return
+            */
+            throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.policy.UserSwitcherController.AnonymousClass3.onReceive(android.content.Context, android.content.Intent):void");
         }
 
         private void showLogoutNotification(int i) {
@@ -384,7 +493,7 @@ public class UserSwitcherController {
                         com.android.systemui.statusbar.policy.UserSwitcherController r11 = com.android.systemui.statusbar.policy.UserSwitcherController.this
                         android.content.Context r11 = r11.mContext
                         android.content.res.Resources r11 = r11.getResources()
-                        r13 = 2131165898(0x7f0702ca, float:1.7946026E38)
+                        r13 = 2131165899(0x7f0702cb, float:1.7946028E38)
                         int r11 = r11.getDimensionPixelSize(r13)
                         android.graphics.Bitmap r10 = android.graphics.Bitmap.createScaledBitmap(r10, r11, r11, r4)
                     L_0x009c:
@@ -630,8 +739,9 @@ public class UserSwitcherController {
         if (dialog != null && dialog.isShowing()) {
             this.mExitGuestDialog.cancel();
         }
-        this.mExitGuestDialog = new ExitGuestDialog(this.mContext, i, i2);
-        this.mExitGuestDialog.show();
+        ExitGuestDialog exitGuestDialog = new ExitGuestDialog(this.mContext, i, i2);
+        this.mExitGuestDialog = exitGuestDialog;
+        exitGuestDialog.show();
     }
 
     public void showAddUserDialog() {
@@ -639,8 +749,9 @@ public class UserSwitcherController {
         if (dialog != null && dialog.isShowing()) {
             this.mAddUserDialog.cancel();
         }
-        this.mAddUserDialog = new AddUserDialog(this.mContext);
-        this.mAddUserDialog.show();
+        AddUserDialog addUserDialog = new AddUserDialog(this.mContext);
+        this.mAddUserDialog = addUserDialog;
+        addUserDialog.show();
     }
 
     /* access modifiers changed from: protected */
@@ -770,8 +881,8 @@ public class UserSwitcherController {
 
     /* access modifiers changed from: private */
     public void checkIfAddUserDisallowedByAdminOnly(UserRecord userRecord) {
-        RestrictedLockUtils.EnforcedAdmin checkIfRestrictionEnforced = RestrictedLockUtilsHelper.checkIfRestrictionEnforced(this.mContext, "no_add_user", KeyguardUpdateMonitor.getCurrentUser());
-        if (checkIfRestrictionEnforced == null || RestrictedLockUtilsHelper.hasBaseUserRestriction(this.mContext, "no_add_user", KeyguardUpdateMonitor.getCurrentUser())) {
+        RestrictedLockUtils.EnforcedAdmin checkIfRestrictionEnforced = RestrictedLockUtilsHelper.checkIfRestrictionEnforced(this.mContext, "no_add_user", ActivityManager.getCurrentUser());
+        if (checkIfRestrictionEnforced == null || RestrictedLockUtilsHelper.hasBaseUserRestriction(this.mContext, "no_add_user", ActivityManager.getCurrentUser())) {
             userRecord.isDisabledByAdmin = false;
             userRecord.enforcedAdmin = null;
             return;

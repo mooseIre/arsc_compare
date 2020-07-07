@@ -116,7 +116,7 @@ public class ExpandableViewState extends ViewState {
             ValueAnimator valueAnimator = (ValueAnimator) ViewState.getChildTag(expandableView, R.id.height_animator_tag);
             if (animationProperties.getAnimationFilter().animateHeight) {
                 ValueAnimator ofInt = ValueAnimator.ofInt(new int[]{expandableView.getActualHeight(), i});
-                ofInt.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                ofInt.addUpdateListener(new ValueAnimator.AnimatorUpdateListener(this) {
                     public void onAnimationUpdate(ValueAnimator valueAnimator) {
                         expandableView.setActualHeight(((Integer) valueAnimator.getAnimatedValue()).intValue(), false);
                     }
@@ -130,7 +130,7 @@ public class ExpandableViewState extends ViewState {
                 if (animationFinishListener != null) {
                     ofInt.addListener(animationFinishListener);
                 }
-                ofInt.addListener(new AnimatorListenerAdapter() {
+                ofInt.addListener(new AnimatorListenerAdapter(this) {
                     boolean mWasCancelled;
 
                     public void onAnimationEnd(Animator animator) {
@@ -181,7 +181,7 @@ public class ExpandableViewState extends ViewState {
             ValueAnimator valueAnimator = (ValueAnimator) ViewState.getChildTag(expandableView, R.id.shadow_alpha_animator_tag);
             if (animationProperties.getAnimationFilter().animateShadowAlpha) {
                 ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{expandableView.getShadowAlpha(), f3});
-                ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener(this) {
                     public void onAnimationUpdate(ValueAnimator valueAnimator) {
                         expandableView.setShadowAlpha(((Float) valueAnimator.getAnimatedValue()).floatValue());
                     }
@@ -195,7 +195,7 @@ public class ExpandableViewState extends ViewState {
                 if (animationFinishListener != null) {
                     ofFloat.addListener(animationFinishListener);
                 }
-                ofFloat.addListener(new AnimatorListenerAdapter() {
+                ofFloat.addListener(new AnimatorListenerAdapter(this) {
                     public void onAnimationEnd(Animator animator) {
                         expandableView.setTag(R.id.shadow_alpha_animator_tag, (Object) null);
                         expandableView.setTag(R.id.shadow_alpha_animator_start_value_tag, (Object) null);
@@ -227,7 +227,7 @@ public class ExpandableViewState extends ViewState {
             ValueAnimator valueAnimator = (ValueAnimator) ViewState.getChildTag(expandableView, R.id.top_inset_animator_tag);
             if (animationProperties.getAnimationFilter().animateTopInset) {
                 ValueAnimator ofInt = ValueAnimator.ofInt(new int[]{expandableView.getClipTopAmount(), i});
-                ofInt.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                ofInt.addUpdateListener(new ValueAnimator.AnimatorUpdateListener(this) {
                     public void onAnimationUpdate(ValueAnimator valueAnimator) {
                         expandableView.setClipTopAmount(((Integer) valueAnimator.getAnimatedValue()).intValue());
                     }
@@ -241,7 +241,7 @@ public class ExpandableViewState extends ViewState {
                 if (animationFinishListener != null) {
                     ofInt.addListener(animationFinishListener);
                 }
-                ofInt.addListener(new AnimatorListenerAdapter() {
+                ofInt.addListener(new AnimatorListenerAdapter(this) {
                     public void onAnimationEnd(Animator animator) {
                         expandableView.setTag(R.id.top_inset_animator_tag, (Object) null);
                         expandableView.setTag(R.id.top_inset_animator_start_value_tag, (Object) null);

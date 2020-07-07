@@ -9,7 +9,6 @@ import miui.view.animation.CubicEaseOutInterpolator;
 
 public class ImageRevealHelper {
     private static final Interpolator CUBIC_EASE_OUT = new CubicEaseOutInterpolator();
-    private static final Interpolator FAST_OUT_SLOW_IN = new PathInterpolator(0.4f, 0.0f, 0.2f, 1.0f);
     private final ValueAnimator mAnimator;
     private boolean mAwake = false;
     private float mReveal = 0.0f;
@@ -24,10 +23,15 @@ public class ImageRevealHelper {
         void onRevealStateChanged();
     }
 
+    static {
+        new PathInterpolator(0.4f, 0.0f, 0.2f, 1.0f);
+    }
+
     public ImageRevealHelper(RevealStateListener revealStateListener) {
         this.mRevealListener = revealStateListener;
-        this.mAnimator = ValueAnimator.ofFloat(new float[0]);
-        this.mAnimator.setInterpolator(CUBIC_EASE_OUT);
+        ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[0]);
+        this.mAnimator = ofFloat;
+        ofFloat.setInterpolator(CUBIC_EASE_OUT);
         this.mAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             public final void onAnimationUpdate(ValueAnimator valueAnimator) {
                 ImageRevealHelper.this.lambda$new$0$ImageRevealHelper(valueAnimator);
@@ -55,6 +59,8 @@ public class ImageRevealHelper {
         });
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$new$0 */
     public /* synthetic */ void lambda$new$0$ImageRevealHelper(ValueAnimator valueAnimator) {
         this.mReveal = ((Float) valueAnimator.getAnimatedValue()).floatValue();
         RevealStateListener revealStateListener = this.mRevealListener;

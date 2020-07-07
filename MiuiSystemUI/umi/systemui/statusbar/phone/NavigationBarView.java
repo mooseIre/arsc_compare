@@ -40,6 +40,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewRootImpl;
+import android.view.ViewRootImplCompat;
 import android.view.WindowManager;
 import android.view.accessibility.AccessibilityManager;
 import android.view.inputmethod.InputMethodManager;
@@ -69,7 +70,7 @@ import java.util.LinkedList;
 
 public class NavigationBarView extends LinearLayout {
     private static int sFilterColor = 0;
-    private static HashMap<Integer, Integer> sKeyIdMap = new HashMap<>();
+    private static HashMap<Integer, Integer> sKeyIdMap;
     private final View.OnClickListener mAccessibilityClickListener = new View.OnClickListener() {
         public void onClick(View view) {
             SettingsAccessibilityMenuHelper.notifySettingsA11yMenuMonitor(NavigationBarView.this.mContext, NavigationBarView.this.mAccessibilityManager);
@@ -101,7 +102,6 @@ public class NavigationBarView extends LinearLayout {
     private Drawable mBackIcon;
     private Drawable mBackLandIcon;
     private StatusBar mBar;
-    int mBarSize;
     private final NavigationBarTransitions mBarTransitions;
     private Handler mBgHandler = new Handler((Looper) Dependency.get(Dependency.BG_LOOPER));
     private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
@@ -412,7 +412,7 @@ public class NavigationBarView extends LinearLayout {
         }
         this.mDisplay = ((WindowManager) context.getSystemService("window")).getDefaultDisplay();
         Resources resources = getContext().getResources();
-        this.mBarSize = resources.getDimensionPixelSize(R.dimen.navigation_bar_size);
+        resources.getDimensionPixelSize(R.dimen.navigation_bar_size);
         this.mVertical = false;
         this.mShowMenu = false;
         this.mShowAccessibilityButton = false;
@@ -431,8 +431,9 @@ public class NavigationBarView extends LinearLayout {
             }
         };
         this.mDisplayManager = (DisplayManager) this.mContext.getSystemService("display");
-        this.mConfiguration = new Configuration();
-        this.mConfiguration.updateFrom(getResources().getConfiguration());
+        Configuration configuration = new Configuration();
+        this.mConfiguration = configuration;
+        configuration.updateFrom(getResources().getConfiguration());
         this.mTintController = new NavBarTintController(this, getLightTransitionsController());
         this.mOverviewProxyService = (OverviewProxyService) Dependency.get(OverviewProxyService.class);
         updateSystemUiStateFlags();
@@ -445,6 +446,9 @@ public class NavigationBarView extends LinearLayout {
         super.onAttachedToWindow();
         this.mDisplayManager.registerDisplayListener(this.mDisplayListener, this.mHandler);
         ViewRootImpl viewRootImpl = getViewRootImpl();
+        if (viewRootImpl != null) {
+            ViewRootImplCompat.setDrawDuringWindowsAnimating(viewRootImpl);
+        }
         if (!MiuiSettings.Global.getBoolean(this.mContext.getContentResolver(), "force_fsg_nav_bar") || (statusBar = this.mBar) == null || statusBar.isHideGestureLine()) {
             stopCompositionSampling();
         } else {
@@ -509,7 +513,9 @@ public class NavigationBarView extends LinearLayout {
     }
 
     static {
-        sKeyIdMap.put(0, Integer.valueOf(R.id.menu));
+        HashMap<Integer, Integer> hashMap = new HashMap<>();
+        sKeyIdMap = hashMap;
+        hashMap.put(0, Integer.valueOf(R.id.menu));
         sKeyIdMap.put(1, Integer.valueOf(R.id.home));
         sKeyIdMap.put(2, Integer.valueOf(R.id.recent_apps));
         sKeyIdMap.put(3, Integer.valueOf(R.id.back));
@@ -679,13 +685,16 @@ public class NavigationBarView extends LinearLayout {
 
     /* access modifiers changed from: private */
     public void getIcons(Resources resources) {
-        this.mBackIcon = resources.getDrawable(R.drawable.ic_sysbar_back);
-        this.mBackIcon.setAutoMirrored(true);
+        Drawable drawable = resources.getDrawable(R.drawable.ic_sysbar_back);
+        this.mBackIcon = drawable;
+        drawable.setAutoMirrored(true);
         this.mBackLandIcon = this.mBackIcon;
-        this.mBackAltIcon = resources.getDrawable(R.drawable.ic_sysbar_back_ime);
-        this.mBackAltLandIcon = this.mBackAltIcon;
-        this.mRecentIcon = resources.getDrawable(R.drawable.ic_sysbar_recent);
-        this.mRecentLandIcon = this.mRecentIcon;
+        Drawable drawable2 = resources.getDrawable(R.drawable.ic_sysbar_back_ime);
+        this.mBackAltIcon = drawable2;
+        this.mBackAltLandIcon = drawable2;
+        Drawable drawable3 = resources.getDrawable(R.drawable.ic_sysbar_recent);
+        this.mRecentIcon = drawable3;
+        this.mRecentLandIcon = drawable3;
         this.mHomeIcon = resources.getDrawable(R.drawable.ic_sysbar_home);
         DrawableSuit.Builder builder = new DrawableSuit.Builder(this.mContext);
         builder.setHelp(R.drawable.ic_sysbar_help_darkmode);
@@ -794,7 +803,7 @@ public class NavigationBarView extends LinearLayout {
         Drawable drawable2 = drawableSuit.mBack;
         this.mBackLandIcon = drawable2;
         this.mBackIcon = drawable2;
-        this.mBackIcon.setAutoMirrored(true);
+        drawable2.setAutoMirrored(true);
         Drawable drawable3 = drawableSuit.mBackAlt;
         this.mBackAltLandIcon = drawable3;
         this.mBackAltIcon = drawable3;
@@ -842,8 +851,9 @@ public class NavigationBarView extends LinearLayout {
             return this.mIsScreenPinningActive;
         }
         try {
-            this.mIsScreenPinningActive = ActivityManagerNative.getDefault().isInLockTaskMode();
-            return this.mIsScreenPinningActive;
+            boolean isInLockTaskMode = ActivityManagerNative.getDefault().isInLockTaskMode();
+            this.mIsScreenPinningActive = isInLockTaskMode;
+            return isInLockTaskMode;
         } catch (RemoteException unused) {
             return false;
         }
@@ -854,8 +864,9 @@ public class NavigationBarView extends LinearLayout {
             return this.mIsScreenPinningActive;
         }
         try {
-            this.mIsScreenPinningActive = ActivityManagerNative.getDefault().getLockTaskModeState() == 2;
-            return this.mIsScreenPinningActive;
+            boolean z = ActivityManagerNative.getDefault().getLockTaskModeState() == 2;
+            this.mIsScreenPinningActive = z;
+            return z;
         } catch (RemoteException unused) {
             return false;
         }
@@ -959,7 +970,7 @@ public class NavigationBarView extends LinearLayout {
     public void setMenuVisibility(boolean z, boolean z2) {
         if (z2 || this.mShowMenu != z) {
             this.mShowMenu = z;
-            if (this.mShowMenu) {
+            if (z) {
                 int i = this.mNavigationIconHints & 2;
             }
             getMenuButton().setVisibility(4);
@@ -999,7 +1010,7 @@ public class NavigationBarView extends LinearLayout {
         if (z2 || this.mShowAspect != z) {
             this.mShowAspect = z;
             int i = 0;
-            boolean z3 = this.mShowAspect && !this.mShowAccessibilityButton;
+            boolean z3 = z && !this.mShowAccessibilityButton;
             View aspectButton = getAspectButton();
             if (!z3) {
                 i = 4;
@@ -1033,8 +1044,9 @@ public class NavigationBarView extends LinearLayout {
             for (int i = 0; i < 4; i++) {
                 this.mRotatedViews[i].setVisibility(8);
             }
-            this.mCurrentView = this.mRotatedViews[rotation];
-            this.mCurrentView.setVisibility(0);
+            View view = this.mRotatedViews[rotation];
+            this.mCurrentView = view;
+            view.setVisibility(0);
             updateLayoutTransitionsEnabled();
             getImeSwitchButton().setOnClickListener(this.mImeSwitcherClickListener);
             getAspectButton().setOnClickListener(this.mAspectClickListener);

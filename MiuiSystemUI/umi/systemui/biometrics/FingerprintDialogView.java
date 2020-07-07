@@ -7,7 +7,7 @@ import com.android.systemui.plugins.R;
 public class FingerprintDialogView extends BiometricDialogView {
     /* access modifiers changed from: protected */
     public int getAuthenticatedAccessibilityResourceId() {
-        return 17040068;
+        return 17040214;
     }
 
     /* access modifiers changed from: protected */

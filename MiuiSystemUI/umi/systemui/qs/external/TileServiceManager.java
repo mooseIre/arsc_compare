@@ -131,7 +131,7 @@ public class TileServiceManager {
     public void setBindRequested(boolean z) {
         if (this.mBindRequested != z) {
             this.mBindRequested = z;
-            if (!this.mBindAllowed || !this.mBindRequested || this.mBound) {
+            if (!this.mBindAllowed || !z || this.mBound) {
                 this.mServices.recalculateBindAllowance();
             } else {
                 this.mHandler.removeCallbacks(this.mUnbind);
@@ -161,7 +161,7 @@ public class TileServiceManager {
     public void setBindAllowed(boolean z) {
         if (this.mBindAllowed != z) {
             this.mBindAllowed = z;
-            if (!this.mBindAllowed && this.mBound) {
+            if (!z && this.mBound) {
                 unbindService();
             } else if (this.mBindAllowed && this.mBindRequested && !this.mBound) {
                 bindService();

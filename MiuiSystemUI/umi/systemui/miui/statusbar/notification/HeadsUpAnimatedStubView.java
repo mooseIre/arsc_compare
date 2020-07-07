@@ -18,11 +18,11 @@ import com.android.systemui.statusbar.ExpandableNotificationRow;
 import com.android.systemui.statusbar.notification.OptimizedHeadsUpNotificationView;
 import com.android.systemui.statusbar.policy.HeadsUpManager;
 import com.android.systemui.statusbar.policy.OnHeadsUpChangedListener;
+import com.miui.systemui.renderlayer.MiRenderInfo;
 import com.miui.systemui.renderlayer.RenderLayerManager;
-import com.miui.systemui.renderlayer.ViewMiRenderInfo;
 import java.lang.ref.WeakReference;
 
-public class HeadsUpAnimatedStubView extends View implements OnHeadsUpChangedListener, ViewMiRenderInfo {
+public class HeadsUpAnimatedStubView extends View implements OnHeadsUpChangedListener, MiRenderInfo {
     private Drawable mBar;
     private int mBarMarginBottom;
     private final Rect mBounds;
@@ -36,7 +36,6 @@ public class HeadsUpAnimatedStubView extends View implements OnHeadsUpChangedLis
     private int mIconAlpha;
     private int mIconSize;
     private Drawable mIndicatorBg;
-    private boolean mIsNightMode;
     private OnHeadsUpHiddenListener mListener;
     private final Handler mMainHandler;
     private final Runnable mRecycleRunnable;
@@ -76,7 +75,6 @@ public class HeadsUpAnimatedStubView extends View implements OnHeadsUpChangedLis
         this.mShowMiniBar = false;
         this.mContentAlpha = 255;
         this.mIconAlpha = 0;
-        this.mIsNightMode = false;
         this.mRenderInfoRegistered = false;
     }
 
@@ -89,7 +87,7 @@ public class HeadsUpAnimatedStubView extends View implements OnHeadsUpChangedLis
         super.onFinishInflate();
         this.mIconSize = getResources().getDimensionPixelSize(R.dimen.heads_up_animated_stub_icon_size);
         this.mBarMarginBottom = getResources().getDimensionPixelSize(R.dimen.mini_window_bar_marginBottom);
-        this.mIsNightMode = (getResources().getConfiguration().uiMode & 48) == 32;
+        int i = getResources().getConfiguration().uiMode & 48;
     }
 
     /* access modifiers changed from: protected */
@@ -209,7 +207,6 @@ public class HeadsUpAnimatedStubView extends View implements OnHeadsUpChangedLis
                 if (view != null) {
                     Bitmap unused = HeadsUpAnimatedStubView.this.mHeadsUpStub = BitmapUtils.view2Bitmap(view, view.getMeasuredWidth(), expandableNotificationRow.getPinnedHeadsUpHeight());
                     Drawable unused2 = HeadsUpAnimatedStubView.this.mHeadsUpIcon = expandableNotificationRow.getStatusBarNotification().getAppIcon();
-                    expandableNotificationRow.updateMiniBarAlpha(1.0f);
                 }
             }
         });
@@ -267,6 +264,6 @@ public class HeadsUpAnimatedStubView extends View implements OnHeadsUpChangedLis
     }
 
     public void onConfigurationChanged(Configuration configuration) {
-        this.mIsNightMode = (configuration.uiMode & 48) == 32;
+        int i = configuration.uiMode & 48;
     }
 }

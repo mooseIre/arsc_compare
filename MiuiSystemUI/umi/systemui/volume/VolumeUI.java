@@ -11,12 +11,16 @@ import java.io.PrintWriter;
 public class VolumeUI extends SystemUI {
     private static boolean LOGD = Log.isLoggable("VolumeUI", 3);
     private boolean mEnabled;
-    private final Handler mHandler = new Handler();
     private VolumeDialogComponent mVolumeComponent;
 
+    public VolumeUI() {
+        new Handler();
+    }
+
     public void start() {
-        this.mEnabled = this.mContext.getResources().getBoolean(R.bool.enable_volume_ui);
-        if (this.mEnabled) {
+        boolean z = this.mContext.getResources().getBoolean(R.bool.enable_volume_ui);
+        this.mEnabled = z;
+        if (z) {
             this.mVolumeComponent = new VolumeDialogComponent(this, this.mContext, (Handler) null);
             putComponent(VolumeComponent.class, getVolumeComponent());
             setDefaultVolumeController();

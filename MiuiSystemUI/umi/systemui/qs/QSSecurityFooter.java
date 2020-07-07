@@ -25,7 +25,6 @@ import com.android.systemui.statusbar.policy.SecurityController;
 import miui.app.AlertDialog;
 
 public class QSSecurityFooter implements View.OnClickListener, DialogInterface.OnClickListener {
-    protected static final boolean DEBUG = Log.isLoggable("QSSecurityFooter", 3);
     /* access modifiers changed from: private */
     public final ActivityStarter mActivityStarter;
     private final Callback mCallback = new Callback();
@@ -63,9 +62,14 @@ public class QSSecurityFooter implements View.OnClickListener, DialogInterface.O
         }
     };
 
+    static {
+        Log.isLoggable("QSSecurityFooter", 3);
+    }
+
     public QSSecurityFooter(QSPanel qSPanel, Context context) {
-        this.mRootView = LayoutInflater.from(context).inflate(R.layout.quick_settings_footer, qSPanel, false);
-        this.mRootView.setOnClickListener(this);
+        View inflate = LayoutInflater.from(context).inflate(R.layout.quick_settings_footer, qSPanel, false);
+        this.mRootView = inflate;
+        inflate.setOnClickListener(this);
         this.mFooterText = (TextView) this.mRootView.findViewById(R.id.footer_text);
         this.mFooterIcon = (ImageView) this.mRootView.findViewById(R.id.footer_icon);
         this.mFooterIconId = R.drawable.ic_info_outline;
@@ -214,8 +218,9 @@ public class QSSecurityFooter implements View.OnClickListener, DialogInterface.O
         boolean isNetworkLoggingEnabled = this.mSecurityController.isNetworkLoggingEnabled();
         String primaryVpnName = this.mSecurityController.getPrimaryVpnName();
         String workProfileVpnName = this.mSecurityController.getWorkProfileVpnName();
-        this.mDialog = new SystemUIDialog(this.mContext);
-        this.mDialog.requestWindowFeature(1);
+        SystemUIDialog systemUIDialog = new SystemUIDialog(this.mContext);
+        this.mDialog = systemUIDialog;
+        systemUIDialog.requestWindowFeature(1);
         View inflate = LayoutInflater.from(this.mContext).inflate(R.layout.quick_settings_footer_dialog, (ViewGroup) null, false);
         this.mDialog.setView(inflate);
         this.mDialog.setButton(-1, getPositiveButton(), this);

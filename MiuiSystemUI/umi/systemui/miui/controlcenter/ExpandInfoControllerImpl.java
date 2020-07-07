@@ -20,41 +20,37 @@ import miui.view.MiuiHapticFeedbackConstants;
 
 public class ExpandInfoControllerImpl implements ExpandInfoController {
     private ControlCenterActivityStarter mActivityStarter = ((ControlCenterActivityStarter) Dependency.get(ControlCenterActivityStarter.class));
-    private HashMap<Integer, BaseInfo> mBaseInfos = new HashMap<>();
     private ArrayList<ExpandInfoController.Callback> mCallbacks = new ArrayList<>();
     private ControlPanelContentView mContentView;
     private Context mContext;
     private DataBillInfo mDataBillInfo;
     private DataUsageInfo mDataUsageInfo;
     private HealthDataInfo mHealthDataInfo;
-    private HashMap<Integer, ExpandInfoController.Info> mInfosMap = new HashMap<>();
+    private HashMap<Integer, ExpandInfoController.Info> mInfosMap;
     private HashMap<Integer, ExpandInfoController.Info> mInfosMapOld = new HashMap<>();
     private ScreenTimeInfo mScreenTimeInfo;
     private int mSelectedType;
     private SuperPowerInfo mSuperPowerInfo;
     private boolean mSuperPowerMode;
-    private int mUnAvailableCnt;
     private UserHandle mUserHandler = new UserHandle(KeyguardUpdateMonitor.getCurrentUser());
 
     public ExpandInfoControllerImpl(@Inject Context context) {
         this.mContext = context;
+        HashMap<Integer, ExpandInfoController.Info> hashMap = new HashMap<>();
+        this.mInfosMap = hashMap;
         if (!Constants.IS_INTERNATIONAL) {
-            this.mInfosMap.put(0, new ExpandInfoController.Info());
+            hashMap.put(0, new ExpandInfoController.Info());
             this.mInfosMap.put(1, new ExpandInfoController.Info());
             this.mInfosMap.put(2, new ExpandInfoController.Info());
             this.mInfosMap.put(3, new ExpandInfoController.Info());
             this.mDataUsageInfo = new DataUsageInfo(this.mContext, 0, this);
-            this.mBaseInfos.put(0, this.mDataUsageInfo);
             this.mDataBillInfo = new DataBillInfo(this.mContext, 1, this);
-            this.mBaseInfos.put(1, this.mDataBillInfo);
             this.mHealthDataInfo = new HealthDataInfo(this.mContext, 2, this);
-            this.mBaseInfos.put(2, this.mHealthDataInfo);
             this.mScreenTimeInfo = new ScreenTimeInfo(this.mContext, 3, this);
-            this.mBaseInfos.put(3, this.mScreenTimeInfo);
             this.mSuperPowerInfo = new SuperPowerInfo(this.mContext, 16, this);
-            this.mBaseInfos.put(16, this.mSuperPowerInfo);
-            this.mSelectedType = Settings.System.getIntForUser(this.mContext.getContentResolver(), "control_center_expand_info_type", 0, KeyguardUpdateMonitor.getCurrentUser());
-            setSelectedType(this.mSelectedType);
+            int intForUser = Settings.System.getIntForUser(this.mContext.getContentResolver(), "control_center_expand_info_type", 0, KeyguardUpdateMonitor.getCurrentUser());
+            this.mSelectedType = intForUser;
+            setSelectedType(intForUser);
         }
     }
 
@@ -63,12 +59,9 @@ public class ExpandInfoControllerImpl implements ExpandInfoController {
         requestData();
         int intForUser = Settings.System.getIntForUser(this.mContext.getContentResolver(), "control_center_expand_info_type", 0, KeyguardUpdateMonitor.getCurrentUser());
         if (intForUser != this.mSelectedType) {
+            this.mSelectedType = intForUser;
             setSelectedType(intForUser);
         }
-    }
-
-    public UserHandle getUserHandle() {
-        return this.mUserHandler;
     }
 
     public void setContentView(ControlPanelContentView controlPanelContentView) {
@@ -100,27 +93,13 @@ public class ExpandInfoControllerImpl implements ExpandInfoController {
             while (it.hasNext()) {
                 it.next().updateInfo(i, info);
             }
-            int i2 = this.mSelectedType;
-            if (i != i2) {
-                return;
-            }
-            if (info.available) {
-                this.mUnAvailableCnt = 0;
-                return;
-            }
-            this.mUnAvailableCnt++;
-            if (this.mUnAvailableCnt >= 3) {
+            if (i == this.mSelectedType && !info.available) {
                 setSelectedType(0);
-            } else {
-                requestData(this.mBaseInfos.get(Integer.valueOf(i2)));
             }
         }
     }
 
     public void setSelectedType(int i) {
-        if (this.mSelectedType != i) {
-            this.mUnAvailableCnt = 0;
-        }
         this.mSelectedType = i;
         if (this.mSuperPowerMode) {
             i = 16;
@@ -164,12 +143,6 @@ public class ExpandInfoControllerImpl implements ExpandInfoController {
             this.mDataBillInfo.requestData(this.mUserHandler);
             this.mHealthDataInfo.requestData(this.mUserHandler);
             this.mScreenTimeInfo.requestData(this.mUserHandler);
-        }
-    }
-
-    private void requestData(BaseInfo baseInfo) {
-        if (baseInfo != null) {
-            baseInfo.requestData(this.mUserHandler);
         }
     }
 

@@ -45,13 +45,13 @@ public class QuickStatusBarHeader extends RelativeLayout implements ControlPanel
     /* access modifiers changed from: protected */
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
-        ((ControlPanelController) Dependency.get(ControlPanelController.class)).addCallback(this);
+        ((ControlPanelController) Dependency.get(ControlPanelController.class)).addCallback((ControlPanelController.UseControlPanelChangeListener) this);
     }
 
     /* access modifiers changed from: protected */
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        ((ControlPanelController) Dependency.get(ControlPanelController.class)).removeCallback(this);
+        ((ControlPanelController) Dependency.get(ControlPanelController.class)).removeCallback((ControlPanelController.UseControlPanelChangeListener) this);
     }
 
     public void setExpanded(boolean z) {
@@ -73,8 +73,9 @@ public class QuickStatusBarHeader extends RelativeLayout implements ControlPanel
         removeAllViews();
         ViewGroup.LayoutParams layoutParams = getLayoutParams();
         if (!this.mUseControlPanel || this.mOrientation != 1) {
-            this.mHeaderView = (HeaderView) LayoutInflater.from(this.mContext).inflate(R.layout.status_bar_panel_header_view, this, false);
-            ClipEdgeLinearLayout clipEdgeLinearLayout = (ClipEdgeLinearLayout) this.mHeaderView.findViewById(R.id.system_icons);
+            HeaderView headerView = (HeaderView) LayoutInflater.from(this.mContext).inflate(R.layout.status_bar_panel_header_view, this, false);
+            this.mHeaderView = headerView;
+            ClipEdgeLinearLayout clipEdgeLinearLayout = (ClipEdgeLinearLayout) headerView.findViewById(R.id.system_icons);
             clipEdgeLinearLayout.setClipEdge(true);
             ((SignalClusterView) clipEdgeLinearLayout.findViewById(R.id.signal_cluster)).setForceNormalType();
             layoutParams.height = CustomizedUtils.getNotchExpandedHeaderViewHeight(getContext(), getResources().getDimensionPixelSize(R.dimen.notch_expanded_header_height));

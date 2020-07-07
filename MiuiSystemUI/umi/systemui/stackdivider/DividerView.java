@@ -47,7 +47,6 @@ public class DividerView extends FrameLayout implements View.OnTouchListener, Vi
     private static final PathInterpolator DIM_INTERPOLATOR = new PathInterpolator(0.23f, 0.87f, 0.52f, -0.11f);
     private static final Interpolator IME_ADJUST_INTERPOLATOR = new PathInterpolator(0.2f, 0.0f, 0.1f, 1.0f);
     private static final PathInterpolator SLOWDOWN_INTERPOLATOR = new PathInterpolator(0.5f, 1.0f, 0.5f, 1.0f);
-    private boolean mAdjustedForIme;
     private View mBackground;
     private boolean mBackgroundLifted;
     /* access modifiers changed from: private */
@@ -224,8 +223,9 @@ public class DividerView extends FrameLayout implements View.OnTouchListener, Vi
         this.mMinimizedShadow = (MinimizedDockShadow) findViewById(R.id.minimized_dock_shadow);
         this.mHandle.setOnTouchListener(this);
         this.mDividerWindowWidth = getResources().getDimensionPixelSize(R.dimen.docked_stack_divider_thickness);
-        this.mDividerInsets = getResources().getDimensionPixelSize(R.dimen.docked_stack_divider_insets);
-        this.mDividerSize = this.mDividerWindowWidth - (this.mDividerInsets * 2);
+        int dimensionPixelSize = getResources().getDimensionPixelSize(R.dimen.docked_stack_divider_insets);
+        this.mDividerInsets = dimensionPixelSize;
+        this.mDividerSize = this.mDividerWindowWidth - (dimensionPixelSize * 2);
         this.mTouchElevation = getResources().getDimensionPixelSize(R.dimen.docked_stack_divider_lift_elevation);
         this.mLongPressEntraceAnimDuration = getResources().getInteger(R.integer.long_press_dock_anim_duration);
         this.mGrowRecents = getResources().getBoolean(R.bool.recents_grow_in_multiwindow);
@@ -276,19 +276,25 @@ public class DividerView extends FrameLayout implements View.OnTouchListener, Vi
     /* access modifiers changed from: protected */
     public void onLayout(boolean z, int i, int i2, int i3, int i4) {
         int i5;
+        int right;
         super.onLayout(z, i, i2, i3, i4);
         int i6 = this.mDockSide;
         int i7 = 0;
         if (i6 == 2) {
-            i7 = this.mBackground.getTop();
-            i5 = 0;
-        } else if (i6 == 1) {
-            i5 = this.mBackground.getLeft();
+            i5 = this.mBackground.getTop();
         } else {
-            i5 = i6 == 3 ? this.mBackground.getRight() - this.mMinimizedShadow.getWidth() : 0;
+            if (i6 == 1) {
+                right = this.mBackground.getLeft();
+            } else if (i6 == 3) {
+                right = this.mBackground.getRight() - this.mMinimizedShadow.getWidth();
+            } else {
+                i5 = 0;
+            }
+            i7 = right;
+            i5 = 0;
         }
         MinimizedDockShadow minimizedDockShadow = this.mMinimizedShadow;
-        minimizedDockShadow.layout(i5, i7, minimizedDockShadow.getMeasuredWidth() + i5, this.mMinimizedShadow.getMeasuredHeight() + i7);
+        minimizedDockShadow.layout(i7, i5, minimizedDockShadow.getMeasuredWidth() + i7, this.mMinimizedShadow.getMeasuredHeight() + i5);
         if (z) {
             this.mWindowManagerProxy.setTouchRegion(new Rect(this.mHandle.getLeft(), this.mHandle.getTop(), this.mHandle.getRight(), this.mHandle.getBottom()));
         }
@@ -390,8 +396,9 @@ public class DividerView extends FrameLayout implements View.OnTouchListener, Vi
 
     /* access modifiers changed from: private */
     public void updateDockSide() {
-        this.mDockSide = this.mWindowManagerProxy.getDockSide();
-        this.mMinimizedShadow.setDockSide(this.mDockSide);
+        int dockSide = this.mWindowManagerProxy.getDockSide();
+        this.mDockSide = dockSide;
+        this.mMinimizedShadow.setDockSide(dockSide);
     }
 
     private void initializeSnapAlgorithm() {
@@ -401,9 +408,10 @@ public class DividerView extends FrameLayout implements View.OnTouchListener, Vi
             e.printStackTrace();
         }
         if (this.mSnapAlgorithm == null) {
-            this.mSnapAlgorithm = new DividerSnapAlgorithm(getContext().getResources(), this.mDisplayWidth, this.mDisplayHeight, this.mDividerSize, isHorizontalDivision(), this.mStableInsets);
+            DividerSnapAlgorithm dividerSnapAlgorithm = new DividerSnapAlgorithm(getContext().getResources(), this.mDisplayWidth, this.mDisplayHeight, this.mDividerSize, isHorizontalDivision(), this.mStableInsets);
+            this.mSnapAlgorithm = dividerSnapAlgorithm;
             if (this.mSnapTargetBeforeMinimized != null) {
-                this.mSnapTargetBeforeMinimized = this.mSnapAlgorithm.getMiddleTarget();
+                this.mSnapTargetBeforeMinimized = dividerSnapAlgorithm.getMiddleTarget();
             }
         }
         if (this.mMinimizedSnapAlgorithm == null) {
@@ -433,8 +441,8 @@ public class DividerView extends FrameLayout implements View.OnTouchListener, Vi
         return i + i2;
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:6:0x001c, code lost:
-        if (r6 != 3) goto L_0x00b6;
+    /* JADX WARNING: Code restructure failed: missing block: B:6:0x001a, code lost:
+        if (r6 != 3) goto L_0x00b4;
      */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     public boolean onTouch(android.view.View r6, android.view.MotionEvent r7) {
@@ -446,17 +454,16 @@ public class DividerView extends FrameLayout implements View.OnTouchListener, Vi
             int r6 = r7.getAction()
             r6 = r6 & 255(0xff, float:3.57E-43)
             r5.mCurrentTouchAction = r6
-            int r6 = r5.mCurrentTouchAction
             r0 = 0
             r1 = 1
-            if (r6 == 0) goto L_0x00b7
-            if (r6 == r1) goto L_0x0084
+            if (r6 == 0) goto L_0x00b5
+            if (r6 == r1) goto L_0x0082
             r2 = 2
-            if (r6 == r2) goto L_0x0020
+            if (r6 == r2) goto L_0x001e
             r2 = 3
-            if (r6 == r2) goto L_0x0084
-            goto L_0x00b6
-        L_0x0020:
+            if (r6 == r2) goto L_0x0082
+            goto L_0x00b4
+        L_0x001e:
             android.view.VelocityTracker r6 = r5.mVelocityTracker
             r6.addMovement(r7)
             float r6 = r7.getX()
@@ -464,38 +471,38 @@ public class DividerView extends FrameLayout implements View.OnTouchListener, Vi
             float r7 = r7.getY()
             int r7 = (int) r7
             boolean r2 = r5.isHorizontalDivision()
-            if (r2 == 0) goto L_0x0041
+            if (r2 == 0) goto L_0x003f
             int r2 = r5.mStartY
             int r2 = r7 - r2
             int r2 = java.lang.Math.abs(r2)
             int r3 = r5.mTouchSlop
-            if (r2 > r3) goto L_0x0053
-        L_0x0041:
+            if (r2 > r3) goto L_0x0051
+        L_0x003f:
             boolean r2 = r5.isHorizontalDivision()
-            if (r2 != 0) goto L_0x0055
+            if (r2 != 0) goto L_0x0053
             int r2 = r5.mStartX
             int r2 = r6 - r2
             int r2 = java.lang.Math.abs(r2)
             int r3 = r5.mTouchSlop
-            if (r2 <= r3) goto L_0x0055
-        L_0x0053:
+            if (r2 <= r3) goto L_0x0053
+        L_0x0051:
             r2 = r1
-            goto L_0x0056
-        L_0x0055:
+            goto L_0x0054
+        L_0x0053:
             r2 = r0
-        L_0x0056:
+        L_0x0054:
             boolean r3 = r5.mMoving
-            if (r3 != 0) goto L_0x0062
-            if (r2 == 0) goto L_0x0062
+            if (r3 != 0) goto L_0x0060
+            if (r2 == 0) goto L_0x0060
             r5.mStartX = r6
             r5.mStartY = r7
             r5.mMoving = r1
-        L_0x0062:
+        L_0x0060:
             boolean r2 = r5.mMoving
-            if (r2 == 0) goto L_0x00b6
+            if (r2 == 0) goto L_0x00b4
             int r2 = r5.mDockSide
             r3 = -1
-            if (r2 == r3) goto L_0x00b6
+            if (r2 == r3) goto L_0x00b4
             com.android.systemui.stackdivider.DividerSnapAlgorithm r2 = r5.getSnapAlgorithm()
             int r3 = r5.mStartPosition
             r4 = 0
@@ -504,8 +511,8 @@ public class DividerView extends FrameLayout implements View.OnTouchListener, Vi
             int r7 = r5.mStartPosition
             boolean r2 = com.android.systemui.recents.misc.Utilities.isAndroidNorNewer()
             r5.resizeStack(r6, r7, r0, r2)
-            goto L_0x00b6
-        L_0x0084:
+            goto L_0x00b4
+        L_0x0082:
             android.view.VelocityTracker r6 = r5.mVelocityTracker
             r6.addMovement(r7)
             float r6 = r7.getRawX()
@@ -517,22 +524,21 @@ public class DividerView extends FrameLayout implements View.OnTouchListener, Vi
             r2.computeCurrentVelocity(r3)
             int r6 = r5.calculatePosition(r6, r7)
             boolean r7 = r5.isHorizontalDivision()
-            if (r7 == 0) goto L_0x00ab
+            if (r7 == 0) goto L_0x00a9
             android.view.VelocityTracker r7 = r5.mVelocityTracker
             float r7 = r7.getYVelocity()
-            goto L_0x00b1
-        L_0x00ab:
+            goto L_0x00af
+        L_0x00a9:
             android.view.VelocityTracker r7 = r5.mVelocityTracker
             float r7 = r7.getXVelocity()
-        L_0x00b1:
+        L_0x00af:
             r5.stopDragging((int) r6, (float) r7, (boolean) r0, (boolean) r1)
             r5.mMoving = r0
-        L_0x00b6:
+        L_0x00b4:
             return r1
-        L_0x00b7:
+        L_0x00b5:
             android.view.VelocityTracker r6 = android.view.VelocityTracker.obtain()
             r5.mVelocityTracker = r6
-            android.view.VelocityTracker r6 = r5.mVelocityTracker
             r6.addMovement(r7)
             float r6 = r7.getX()
             int r6 = (int) r6
@@ -541,9 +547,9 @@ public class DividerView extends FrameLayout implements View.OnTouchListener, Vi
             int r6 = (int) r6
             r5.mStartY = r6
             boolean r6 = r5.startDragging(r1, r1)
-            if (r6 != 0) goto L_0x00d9
+            if (r6 != 0) goto L_0x00d5
             r5.stopDragging()
-        L_0x00d9:
+        L_0x00d5:
             int r7 = r5.getCurrentPosition()
             r5.mStartPosition = r7
             r5.mMoving = r0
@@ -878,7 +884,6 @@ public class DividerView extends FrameLayout implements View.OnTouchListener, Vi
             this.mBackground.setPivotY(0.0f);
             this.mBackground.setScaleY(0.5f);
         }
-        this.mAdjustedForIme = z;
     }
 
     public void setAdjustedForIme(boolean z, long j) {
@@ -897,7 +902,6 @@ public class DividerView extends FrameLayout implements View.OnTouchListener, Vi
             this.mBackground.animate().withEndAction(this.mResetBackgroundRunnable);
         }
         this.mBackground.animate().setInterpolator(IME_ADJUST_INTERPOLATOR).setDuration(j).start();
-        this.mAdjustedForIme = z;
     }
 
     /* access modifiers changed from: private */
@@ -926,7 +930,7 @@ public class DividerView extends FrameLayout implements View.OnTouchListener, Vi
     public void notifyDockSideChanged(int i) {
         int i2 = this.mDockSide;
         this.mDockSide = i;
-        this.mMinimizedShadow.setDockSide(this.mDockSide);
+        this.mMinimizedShadow.setDockSide(i);
         requestLayout();
         try {
             SystemUICompat.getStableInsets(this.mStableInsets);
@@ -1142,23 +1146,22 @@ public class DividerView extends FrameLayout implements View.OnTouchListener, Vi
 
     private void applyDismissingParallax(Rect rect, int i, DividerSnapAlgorithm.SnapTarget snapTarget, int i2, int i3) {
         DividerSnapAlgorithm.SnapTarget snapTarget2;
-        int i4;
         float min = Math.min(1.0f, Math.max(0.0f, this.mSnapAlgorithm.calculateDismissingFraction(i2)));
         DividerSnapAlgorithm.SnapTarget snapTarget3 = null;
         if (i2 <= this.mSnapAlgorithm.getLastSplitTarget().position && dockSideTopLeft(i)) {
             snapTarget3 = this.mSnapAlgorithm.getDismissStartTarget();
-            i4 = i3;
             snapTarget2 = this.mSnapAlgorithm.getFirstSplitTarget();
         } else if (i2 < this.mSnapAlgorithm.getLastSplitTarget().position || !dockSideBottomRight(i)) {
-            i4 = 0;
+            i3 = 0;
             snapTarget2 = null;
         } else {
             snapTarget3 = this.mSnapAlgorithm.getDismissEndTarget();
-            snapTarget2 = this.mSnapAlgorithm.getLastSplitTarget();
-            i4 = snapTarget2.position;
+            DividerSnapAlgorithm.SnapTarget lastSplitTarget = this.mSnapAlgorithm.getLastSplitTarget();
+            snapTarget2 = lastSplitTarget;
+            i3 = lastSplitTarget.position;
         }
         if (snapTarget3 != null && min > 0.0f && isDismissing(snapTarget2, i2, i)) {
-            int calculateParallaxDismissingFraction = (int) (((float) i4) + (calculateParallaxDismissingFraction(min, i) * ((float) (snapTarget3.position - snapTarget2.position))));
+            int calculateParallaxDismissingFraction = (int) (((float) i3) + (calculateParallaxDismissingFraction(min, i) * ((float) (snapTarget3.position - snapTarget2.position))));
             int width = rect.width();
             int height = rect.height();
             if (i == 1) {
@@ -1168,13 +1171,13 @@ public class DividerView extends FrameLayout implements View.OnTouchListener, Vi
                 rect.top = calculateParallaxDismissingFraction - height;
                 rect.bottom = calculateParallaxDismissingFraction;
             } else if (i == 3) {
-                int i5 = this.mDividerSize;
-                rect.left = calculateParallaxDismissingFraction + i5;
-                rect.right = calculateParallaxDismissingFraction + width + i5;
+                int i4 = this.mDividerSize;
+                rect.left = calculateParallaxDismissingFraction + i4;
+                rect.right = calculateParallaxDismissingFraction + width + i4;
             } else if (i == 4) {
-                int i6 = this.mDividerSize;
-                rect.top = calculateParallaxDismissingFraction + i6;
-                rect.bottom = calculateParallaxDismissingFraction + height + i6;
+                int i5 = this.mDividerSize;
+                rect.top = calculateParallaxDismissingFraction + i5;
+                rect.bottom = calculateParallaxDismissingFraction + height + i5;
             }
         }
     }

@@ -146,8 +146,9 @@ public class ScrimView extends View {
         if (valueAnimator != null) {
             valueAnimator.cancel();
         }
-        this.mAlphaAnimator = ValueAnimator.ofFloat(new float[]{this.mViewAlpha, f});
-        this.mAlphaAnimator.addUpdateListener(this.mAlphaUpdateListener);
+        ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{this.mViewAlpha, f});
+        this.mAlphaAnimator = ofFloat;
+        ofFloat.addUpdateListener(this.mAlphaUpdateListener);
         this.mAlphaAnimator.addListener(this.mClearAnimatorListener);
         this.mAlphaAnimator.setInterpolator(interpolator);
         this.mAlphaAnimator.setDuration(j);

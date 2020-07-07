@@ -16,8 +16,8 @@ public class SyncRtSurfaceTransactionApplier {
 
     public SyncRtSurfaceTransactionApplier(View view) {
         Surface surface = null;
-        this.mTargetViewRootImpl = view != null ? view.getViewRootImpl() : null;
-        ViewRootImpl viewRootImpl = this.mTargetViewRootImpl;
+        ViewRootImpl viewRootImpl = view != null ? view.getViewRootImpl() : null;
+        this.mTargetViewRootImpl = viewRootImpl;
         this.mTargetSurface = viewRootImpl != null ? viewRootImpl.mSurface : surface;
     }
 
@@ -25,7 +25,7 @@ public class SyncRtSurfaceTransactionApplier {
         ViewRootImpl viewRootImpl = this.mTargetViewRootImpl;
         if (viewRootImpl != null) {
             viewRootImpl.registerRtFrameCallback(new HardwareRenderer.FrameDrawingCallback(surfaceParamsArr) {
-                private final /* synthetic */ SyncRtSurfaceTransactionApplier.SurfaceParams[] f$1;
+                public final /* synthetic */ SyncRtSurfaceTransactionApplier.SurfaceParams[] f$1;
 
                 {
                     this.f$1 = r2;
@@ -39,6 +39,8 @@ public class SyncRtSurfaceTransactionApplier {
         }
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$scheduleApply$0 */
     public /* synthetic */ void lambda$scheduleApply$0$SyncRtSurfaceTransactionApplier(SurfaceParams[] surfaceParamsArr, long j) {
         Surface surface = this.mTargetSurface;
         if (surface != null && surface.isValid()) {

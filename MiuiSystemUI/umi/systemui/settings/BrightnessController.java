@@ -18,7 +18,6 @@ import android.service.vr.IVrManager;
 import android.service.vr.IVrStateCallbacks;
 import android.util.Log;
 import com.android.internal.logging.MetricsLogger;
-import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.settingslib.display.BrightnessUtils;
 import com.android.systemui.Dependency;
 import com.android.systemui.Dumpable;
@@ -132,11 +131,12 @@ public class BrightnessController implements ToggleSlider.Listener, Dumpable {
             int i;
             boolean access$1000 = BrightnessController.this.mIsVrModeEnabled;
             if (access$1000) {
-                i = Settings.System.getIntForUser(BrightnessController.this.mContext.getContentResolver(), "screen_brightness_for_vr", BrightnessController.this.mDefaultBacklightForVr, KeyguardUpdateMonitor.getCurrentUser());
+                i = Settings.System.getIntForUser(BrightnessController.this.mContext.getContentResolver(), "screen_brightness_for_vr", BrightnessController.this.mDefaultBacklightForVr, -2);
             } else {
-                i = Settings.System.getIntForUser(BrightnessController.this.mContext.getContentResolver(), "screen_brightness", BrightnessController.this.mDefaultBacklight, KeyguardUpdateMonitor.getCurrentUser());
+                int intForUser = Settings.System.getIntForUser(BrightnessController.this.mContext.getContentResolver(), "screen_brightness", BrightnessController.this.mDefaultBacklight, -2);
                 BrightnessController brightnessController = BrightnessController.this;
-                int unused = brightnessController.mSliderAnimationDuration = Settings.System.getIntForUser(brightnessController.mContext.getContentResolver(), "slider_animation_duration", 3000, KeyguardUpdateMonitor.getCurrentUser());
+                int unused = brightnessController.mSliderAnimationDuration = Settings.System.getIntForUser(brightnessController.mContext.getContentResolver(), "slider_animation_duration", 3000, -2);
+                i = intForUser;
             }
             Log.d("BrightnessController", "UpdateSliderRunnable: value: " + i);
             BrightnessController.this.mHandler.obtainMessage(0, i, access$1000 ? 1 : 0).sendToTarget();
@@ -218,7 +218,7 @@ public class BrightnessController implements ToggleSlider.Listener, Dumpable {
     public BrightnessController(Context context, ToggleSlider toggleSlider) {
         this.mContext = context;
         this.mControl = toggleSlider;
-        this.mControl.setMax(BrightnessUtils.GAMMA_SPACE_MAX);
+        toggleSlider.setMax(BrightnessUtils.GAMMA_SPACE_MAX);
         this.mBackgroundHandler = new Handler((Looper) Dependency.get(Dependency.BG_LOOPER));
         this.mUserTracker = new CurrentUserTracker(this.mContext) {
             public void onUserSwitched(int i) {
@@ -234,7 +234,7 @@ public class BrightnessController implements ToggleSlider.Listener, Dumpable {
         this.mMinimumBacklightForVr = powerManager.getMinimumScreenBrightnessForVrSetting();
         this.mMaximumBacklightForVr = powerManager.getMaximumScreenBrightnessForVrSetting();
         this.mDefaultBacklightForVr = powerManager.getDefaultScreenBrightnessForVrSetting();
-        this.mAutomaticAvailable = context.getResources().getBoolean(17891367);
+        this.mAutomaticAvailable = context.getResources().getBoolean(17891369);
         this.mDisplayManager = (DisplayManager) context.getSystemService(DisplayManager.class);
         this.mVrManager = IVrManager.Stub.asInterface(ServiceManager.getService("vrmanager"));
     }
@@ -328,7 +328,7 @@ public class BrightnessController implements ToggleSlider.Listener, Dumpable {
 
     /* access modifiers changed from: private */
     public void setBrightness(int i) {
-        this.mDisplayManager.setTemporaryBrightness(i);
+        this.mDisplayManager.setTemporaryBrightness((float) i);
     }
 
     /* access modifiers changed from: private */
@@ -366,8 +366,9 @@ public class BrightnessController implements ToggleSlider.Listener, Dumpable {
         if (valueAnimator != null && valueAnimator.isStarted()) {
             this.mSliderAnimator.cancel();
         }
-        this.mSliderAnimator = ValueAnimator.ofInt(new int[]{this.mControl.getValue(), i});
-        this.mSliderAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+        ValueAnimator ofInt = ValueAnimator.ofInt(new int[]{this.mControl.getValue(), i});
+        this.mSliderAnimator = ofInt;
+        ofInt.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             public final void onAnimationUpdate(ValueAnimator valueAnimator) {
                 BrightnessController.this.lambda$animateSliderTo$0$BrightnessController(valueAnimator);
             }
@@ -378,6 +379,8 @@ public class BrightnessController implements ToggleSlider.Listener, Dumpable {
         this.mSliderAnimator.start();
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$animateSliderTo$0 */
     public /* synthetic */ void lambda$animateSliderTo$0$BrightnessController(ValueAnimator valueAnimator) {
         this.mExternalChange = true;
         this.mControl.setValue(((Integer) valueAnimator.getAnimatedValue()).intValue());

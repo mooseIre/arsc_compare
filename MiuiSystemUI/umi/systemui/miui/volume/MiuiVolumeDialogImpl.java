@@ -192,7 +192,7 @@ public class MiuiVolumeDialogImpl implements VolumeDialog, TunerService.Tunable,
         private int mRingerMode = -1;
 
         /* JADX WARNING: Code restructure failed: missing block: B:2:0x000c, code lost:
-            r5 = r5.getIntExtra("android.media.EXTRA_RINGER_MODE", -1);
+            r4 = r5.getIntExtra("android.media.EXTRA_RINGER_MODE", -1);
          */
         /* Code decompiled incorrectly, please refer to instructions dump. */
         public void onReceive(android.content.Context r4, android.content.Intent r5) {
@@ -202,24 +202,24 @@ public class MiuiVolumeDialogImpl implements VolumeDialog, TunerService.Tunable,
                 java.lang.String r0 = "android.media.RINGER_MODE_CHANGED"
                 boolean r4 = r0.equals(r4)
                 if (r4 == 0) goto L_0x0035
-                r4 = -1
-                java.lang.String r0 = "android.media.EXTRA_RINGER_MODE"
-                int r5 = r5.getIntExtra(r0, r4)
-                int r0 = r3.mRingerMode
-                if (r0 == r5) goto L_0x0035
-                if (r0 == r4) goto L_0x0033
-                r4 = 1
-                if (r5 != r4) goto L_0x0033
-                com.android.systemui.miui.volume.MiuiVolumeDialogImpl r4 = com.android.systemui.miui.volume.MiuiVolumeDialogImpl.this
-                com.android.systemui.miui.volume.MiuiVolumeDialogImpl$H r4 = r4.mHandler
+                java.lang.String r4 = "android.media.EXTRA_RINGER_MODE"
+                r0 = -1
+                int r4 = r5.getIntExtra(r4, r0)
+                int r5 = r3.mRingerMode
+                if (r5 == r4) goto L_0x0035
+                if (r5 == r0) goto L_0x0033
+                r5 = 1
+                if (r4 != r5) goto L_0x0033
+                com.android.systemui.miui.volume.MiuiVolumeDialogImpl r5 = com.android.systemui.miui.volume.MiuiVolumeDialogImpl.this
+                com.android.systemui.miui.volume.MiuiVolumeDialogImpl$H r5 = r5.mHandler
                 com.android.systemui.miui.volume.MiuiVolumeDialogImpl r0 = com.android.systemui.miui.volume.MiuiVolumeDialogImpl.this
                 com.android.systemui.miui.volume.MiuiVolumeDialogImpl$H r0 = r0.mHandler
                 r1 = 8
                 android.os.Message r0 = r0.obtainMessage(r1)
                 r1 = 300(0x12c, double:1.48E-321)
-                r4.sendMessageDelayed(r0, r1)
+                r5.sendMessageDelayed(r0, r1)
             L_0x0033:
-                r3.mRingerMode = r5
+                r3.mRingerMode = r4
             L_0x0035:
                 return
             */
@@ -299,9 +299,11 @@ public class MiuiVolumeDialogImpl implements VolumeDialog, TunerService.Tunable,
         if (customDialog != null && customDialog.isShowing()) {
             this.mDialog.dismiss();
         }
-        this.mDialog = new CustomDialog(this.mContext);
-        this.mWindow = this.mDialog.getWindow();
-        this.mWindow.requestFeature(1);
+        CustomDialog customDialog2 = new CustomDialog(this.mContext);
+        this.mDialog = customDialog2;
+        Window window = customDialog2.getWindow();
+        this.mWindow = window;
+        window.requestFeature(1);
         this.mConfigurableTexts = new ConfigurableTexts(this.mContext);
         this.mHovering = false;
         this.mShowing = false;
@@ -310,8 +312,9 @@ public class MiuiVolumeDialogImpl implements VolumeDialog, TunerService.Tunable,
         this.mDialog.setContentView(R$layout.miui_volume_dialog);
         setupWindowAttributes();
         ((ViewGroup) this.mDialog.findViewById(16908290)).setClipChildren(false);
-        this.mDialogView = (MiuiVolumeDialogView) this.mDialog.findViewById(R$id.volume_dialog);
-        this.mDialogView.setOnHoverListener(new View.OnHoverListener() {
+        MiuiVolumeDialogView miuiVolumeDialogView = (MiuiVolumeDialogView) this.mDialog.findViewById(R$id.volume_dialog);
+        this.mDialogView = miuiVolumeDialogView;
+        miuiVolumeDialogView.setOnHoverListener(new View.OnHoverListener() {
             public boolean onHover(View view, MotionEvent motionEvent) {
                 int actionMasked = motionEvent.getActionMasked();
                 boolean unused = MiuiVolumeDialogImpl.this.mHovering = actionMasked == 9 || actionMasked == 7;
@@ -319,12 +322,14 @@ public class MiuiVolumeDialogImpl implements VolumeDialog, TunerService.Tunable,
                 return true;
             }
         });
-        this.mDialogContentView = (ViewGroup) this.mDialogView.findViewById(R$id.volume_dialog_content);
-        this.mDialogColumns = new VolumeColumns((ViewGroup) this.mDialogContentView.findViewById(R$id.volume_dialog_column_collapsed), (ViewGroup) this.mDialogContentView.findViewById(R$id.volume_dialog_columns));
+        ViewGroup viewGroup = (ViewGroup) this.mDialogView.findViewById(R$id.volume_dialog_content);
+        this.mDialogContentView = viewGroup;
+        this.mDialogColumns = new VolumeColumns((ViewGroup) viewGroup.findViewById(R$id.volume_dialog_column_collapsed), (ViewGroup) this.mDialogContentView.findViewById(R$id.volume_dialog_columns));
         this.mTempColumnContainer = (FrameLayout) this.mDialogView.findViewById(R$id.volume_dialog_column_temp);
         this.mExpanded = false;
-        this.mExpandButton = (ImageView) this.mDialogView.findViewById(R$id.volume_expand_button);
-        this.mExpandButton.setOnClickListener(this.mClickExpand);
+        ImageView imageView = (ImageView) this.mDialogView.findViewById(R$id.volume_expand_button);
+        this.mExpandButton = imageView;
+        imageView.setOnClickListener(this.mClickExpand);
         this.mDialogView.setMotionCallback(new MiuiVolumeDialogMotion.Callback() {
             public void onAnimatingChanged(boolean z) {
                 if (!z) {
@@ -515,7 +520,7 @@ public class MiuiVolumeDialogImpl implements VolumeDialog, TunerService.Tunable,
         SeekBar unused6 = volumeColumn.slider = (SeekBar) volumeColumn.view.findViewById(R$id.volume_column_slider);
         volumeColumn.slider.setOnSeekBarChangeListener(new VolumeSeekBarChangeListener(volumeColumn));
         ObjectAnimator unused7 = volumeColumn.anim = null;
-        volumeColumn.view.setOnTouchListener(new View.OnTouchListener() {
+        volumeColumn.view.setOnTouchListener(new View.OnTouchListener(this) {
             private boolean mDragging;
             private final Rect mSliderHitRect = new Rect();
 
@@ -902,12 +907,12 @@ public class MiuiVolumeDialogImpl implements VolumeDialog, TunerService.Tunable,
             Log.d(TAG, "onStateChangedH animating=" + isAnimating + " activeStream:" + state.activeStream);
         }
         this.mState = state;
+        boolean z = true;
         if (isAnimating) {
             this.mPendingStateChanged = true;
             return;
         }
         this.mDynamic.clear();
-        boolean z = false;
         for (int i = 0; i < state.states.size(); i++) {
             int keyAt = state.states.keyAt(i);
             if (state.states.valueAt(i).dynamic) {
@@ -928,8 +933,8 @@ public class MiuiVolumeDialogImpl implements VolumeDialog, TunerService.Tunable,
             rescheduleTimeoutH();
             MiuiVolumeDialogView miuiVolumeDialogView = this.mDialogView;
             int i4 = this.mActiveStream;
-            if (!(i4 == 0 || i4 == 6)) {
-                z = true;
+            if (i4 == 0 || i4 == 6) {
+                z = false;
             }
             miuiVolumeDialogView.updateFooterVisibility(z);
         }
@@ -1105,7 +1110,7 @@ public class MiuiVolumeDialogImpl implements VolumeDialog, TunerService.Tunable,
     public void showSafetyWarningH(int i) {
         synchronized (this.mSafetyWarningLock) {
             if (this.mSafetyWarning == null) {
-                this.mSafetyWarning = new SafetyWarningDialog(this.mContext, this.mController.getAudioManager()) {
+                AnonymousClass6 r0 = new SafetyWarningDialog(this.mContext, this.mController.getAudioManager()) {
                     /* access modifiers changed from: protected */
                     public void cleanUp() {
                         synchronized (MiuiVolumeDialogImpl.this.mSafetyWarningLock) {
@@ -1114,7 +1119,8 @@ public class MiuiVolumeDialogImpl implements VolumeDialog, TunerService.Tunable,
                         MiuiVolumeDialogImpl.this.reCheckAllH();
                     }
                 };
-                this.mSafetyWarning.show();
+                this.mSafetyWarning = r0;
+                r0.show();
                 reCheckAllH();
                 rescheduleTimeoutH();
             }
@@ -1479,7 +1485,6 @@ public class MiuiVolumeDialogImpl implements VolumeDialog, TunerService.Tunable,
 
         private VolumeColumn() {
             this.requestedLevel = -1;
-            this.lastAudibleLevel = 1;
         }
     }
 
@@ -1495,7 +1500,7 @@ public class MiuiVolumeDialogImpl implements VolumeDialog, TunerService.Tunable,
 
         public void updateExpandedH(boolean z) {
             this.mExpanded = z;
-            Util.reparentChildren(this.mExpanded ? this.mColumnsCollapsed : this.mColumnsExpanded, this.mExpanded ? this.mColumnsExpanded : this.mColumnsCollapsed);
+            Util.reparentChildren(z ? this.mColumnsCollapsed : this.mColumnsExpanded, this.mExpanded ? this.mColumnsExpanded : this.mColumnsCollapsed);
         }
 
         public ViewGroup getCurrentParent() {
@@ -1582,12 +1587,12 @@ public class MiuiVolumeDialogImpl implements VolumeDialog, TunerService.Tunable,
         private void showGuideDialog() {
             AlertDialog.Builder builder = new AlertDialog.Builder(MiuiVolumeDialogImpl.this.mContext, R$style.Theme_MiuiVolumeDialog_Alert);
             builder.setMessage((CharSequence) MiuiVolumeDialogImpl.this.mContext.getResources().getString(R$string.miui_guide_dialog_message));
-            builder.setPositiveButton((CharSequence) MiuiVolumeDialogImpl.this.mContext.getResources().getString(R$string.miui_guide_dialog_button_positive_text), (DialogInterface.OnClickListener) new DialogInterface.OnClickListener() {
+            builder.setPositiveButton((CharSequence) MiuiVolumeDialogImpl.this.mContext.getResources().getString(R$string.miui_guide_dialog_button_positive_text), (DialogInterface.OnClickListener) new DialogInterface.OnClickListener(this) {
                 public void onClick(DialogInterface dialogInterface, int i) {
                     dialogInterface.dismiss();
                 }
             });
-            builder.setNegativeButton((CharSequence) MiuiVolumeDialogImpl.this.mContext.getResources().getString(R$string.miui_guide_dialog_button_negative_text), (DialogInterface.OnClickListener) new DialogInterface.OnClickListener() {
+            builder.setNegativeButton((CharSequence) MiuiVolumeDialogImpl.this.mContext.getResources().getString(R$string.miui_guide_dialog_button_negative_text), (DialogInterface.OnClickListener) new DialogInterface.OnClickListener(this) {
                 public void onClick(DialogInterface dialogInterface, int i) {
                     Log.d(MiuiVolumeDialogImpl.TAG, "showGuideDialog go to set.");
                     ComponentName unflattenFromString = ComponentName.unflattenFromString("com.android.settings/com.android.settings.Settings$MiuiSilentModeAcivity");

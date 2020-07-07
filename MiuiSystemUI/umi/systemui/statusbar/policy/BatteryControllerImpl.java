@@ -17,7 +17,6 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 
 public class BatteryControllerImpl extends BroadcastReceiver implements BatteryController {
-    private static final boolean DEBUG = Log.isLoggable("BatteryController", 3);
     ContentObserver mBatteryExtremeSaveModeChangeObserver = new ContentObserver(new Handler()) {
         public void onChange(boolean z) {
             BatteryControllerImpl batteryControllerImpl = BatteryControllerImpl.this;
@@ -68,14 +67,17 @@ public class BatteryControllerImpl extends BroadcastReceiver implements BatteryC
     protected boolean mIsPowerSaveMode;
     protected int mLevel;
     protected boolean mPluggedIn;
-    private final PowerManager mPowerManager;
     /* access modifiers changed from: private */
     public boolean mTestmode = false;
+
+    static {
+        Log.isLoggable("BatteryController", 3);
+    }
 
     public BatteryControllerImpl(Context context) {
         this.mContext = context;
         this.mHandler = new Handler();
-        this.mPowerManager = (PowerManager) context.getSystemService("power");
+        PowerManager powerManager = (PowerManager) context.getSystemService("power");
         registerReceiver();
         this.mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor("battery_indicator_style"), false, this.mBatteryStyleChangeObserver, -1);
         this.mBatteryStyleChangeObserver.onChange(false);
@@ -136,8 +138,9 @@ public class BatteryControllerImpl extends BroadcastReceiver implements BatteryC
                 this.mLevel = intent.getIntExtra(MiStat.Param.LEVEL, 0);
                 this.mPluggedIn = intent.getIntExtra("plugged", 0) != 0;
                 int intExtra = intent.getIntExtra(MiStat.Param.STATUS, 1);
-                this.mCharged = intExtra == 5;
-                if ((!this.mCharged && intExtra != 2) || !this.mPluggedIn) {
+                boolean z2 = intExtra == 5;
+                this.mCharged = z2;
+                if ((!z2 && intExtra != 2) || !this.mPluggedIn) {
                     z = false;
                 }
                 this.mCharging = z;
@@ -184,8 +187,9 @@ public class BatteryControllerImpl extends BroadcastReceiver implements BatteryC
                     if (BatteryControllerImpl.this.mTestmode) {
                         int i3 = this.curLevel;
                         int i4 = this.incr;
-                        this.curLevel = i3 + i4;
-                        if (this.curLevel == 100) {
+                        int i5 = i3 + i4;
+                        this.curLevel = i5;
+                        if (i5 == 100) {
                             this.incr = i4 * -1;
                         }
                         BatteryControllerImpl.this.mHandler.postDelayed(this, 200);

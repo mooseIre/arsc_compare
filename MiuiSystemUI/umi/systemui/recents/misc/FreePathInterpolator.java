@@ -21,12 +21,12 @@ public class FreePathInterpolator extends BaseInterpolator {
         int length = approximate.length / 3;
         this.mX = new float[length];
         this.mY = new float[length];
-        this.mArcLength = 0.0f;
-        int i = 0;
         float f = 0.0f;
+        this.mArcLength = 0.0f;
         float f2 = 0.0f;
-        float f3 = 0.0f;
+        int i = 0;
         int i2 = 0;
+        float f3 = 0.0f;
         while (i < length) {
             int i3 = i2 + 1;
             float f4 = approximate[i2];
@@ -34,16 +34,16 @@ public class FreePathInterpolator extends BaseInterpolator {
             float f5 = approximate[i3];
             int i5 = i4 + 1;
             float f6 = approximate[i4];
-            if (f4 == f && f5 != f2) {
+            if (f4 == f && f5 != f3) {
                 throw new IllegalArgumentException("The Path cannot have discontinuity in the X axis.");
-            } else if (f5 >= f2) {
+            } else if (f5 >= f3) {
                 this.mX[i] = f5;
                 this.mY[i] = f6;
-                this.mArcLength = (float) (((double) this.mArcLength) + Math.hypot((double) (f5 - f2), (double) (f6 - f3)));
+                this.mArcLength = (float) (((double) this.mArcLength) + Math.hypot((double) (f5 - f3), (double) (f6 - f2)));
                 i++;
                 f = f4;
-                f2 = f5;
-                f3 = f6;
+                f3 = f5;
+                f2 = f6;
                 i2 = i5;
             } else {
                 throw new IllegalArgumentException("The Path cannot loop back on itself.");

@@ -51,8 +51,9 @@ public class FingerprintUnlockController extends KeyguardUpdateMonitorCallback {
     public FingerprintUnlockController(Context context, DozeScrimController dozeScrimController, KeyguardViewMediator keyguardViewMediator, ScrimController scrimController, StatusBar statusBar, UnlockMethodCache unlockMethodCache) {
         this.mContext = context;
         this.mPowerManager = (PowerManager) context.getSystemService(PowerManager.class);
-        this.mUpdateMonitor = KeyguardUpdateMonitor.getInstance(context);
-        this.mUpdateMonitor.registerCallback(this);
+        KeyguardUpdateMonitor instance = KeyguardUpdateMonitor.getInstance(context);
+        this.mUpdateMonitor = instance;
+        instance.registerCallback(this);
         this.mStatusBarWindowManager = (StatusBarWindowManager) Dependency.get(StatusBarWindowManager.class);
         this.mDozeScrimController = dozeScrimController;
         this.mKeyguardViewMediator = keyguardViewMediator;
@@ -337,7 +338,7 @@ public class FingerprintUnlockController extends KeyguardUpdateMonitorCallback {
 
     public void resetMode() {
         this.mMode = 0;
-        this.mUpdateMonitor.setFingerprintMode(this.mMode);
+        this.mUpdateMonitor.setFingerprintMode(0);
         if (MiuiKeyguardUtils.isGxzwSensor()) {
             MiuiGxzwManager.getInstance().resetGxzwUnlockMode();
         }

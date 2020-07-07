@@ -5,9 +5,8 @@ import android.content.Context;
 import android.database.ContentObserver;
 import android.os.Handler;
 import android.provider.Settings;
-import com.android.systemui.statusbar.policy.Listenable;
 
-public abstract class SecureSetting extends ContentObserver implements Listenable {
+public abstract class SecureSetting extends ContentObserver {
     private final Context mContext;
     private boolean mListening;
     private int mObservedValue = 0;

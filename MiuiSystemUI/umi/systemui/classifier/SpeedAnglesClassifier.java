@@ -38,9 +38,6 @@ public class SpeedAnglesClassifier extends StrokeClassifier {
     }
 
     private static class Data {
-        private final float ANGLE_DEVIATION = 0.31415927f;
-        private final float DURATION_SCALE = 1.0E8f;
-        private final float LENGTH_SCALE = 1.0f;
         private float mAcceleratingAngles = 0.0f;
         private float mAnglesCount = 0.0f;
         private float mCount = 1.0f;

@@ -45,21 +45,24 @@ public class CollapsedStatusBarFragmentControllerNarrowNotchImpl extends Collaps
     }
 
     public void start(View view) {
+        Class cls = StatusBarIconController.class;
         ArraySet<String> arraySet = this.mFragment.mNotchleftearIconsList;
         arraySet.add("bluetooth");
         arraySet.add(MiStat.Param.LOCATION);
         CollapsedStatusBarFragment collapsedStatusBarFragment = this.mFragment;
         Objects.requireNonNull(collapsedStatusBarFragment);
-        this.mNotchLeftEarIconManager = new CollapsedStatusBarFragment.LeftEarIconManager(this.mFragment.mNotchLeftEarIcons);
-        this.mNotchLeftEarIconManager.mWhiteList = new ArraySet<>();
+        CollapsedStatusBarFragment.LeftEarIconManager leftEarIconManager = new CollapsedStatusBarFragment.LeftEarIconManager(this.mFragment.mNotchLeftEarIcons);
+        this.mNotchLeftEarIconManager = leftEarIconManager;
+        leftEarIconManager.mWhiteList = new ArraySet<>();
         this.mNotchLeftEarIconManager.mWhiteList.addAll(arraySet);
-        this.mDarkIconManager = new StatusBarIconController.DarkIconManager(this.mFragment.mStatusIcons);
-        this.mDarkIconManager.mWhiteList = new ArraySet<>();
+        StatusBarIconController.DarkIconManager darkIconManager = new StatusBarIconController.DarkIconManager(this.mFragment.mStatusIcons);
+        this.mDarkIconManager = darkIconManager;
+        darkIconManager.mWhiteList = new ArraySet<>();
         this.mDarkIconManager.mWhiteList.add("volume");
         this.mDarkIconManager.mWhiteList.add("quiet");
         this.mDarkIconManager.mWhiteList.add("alarm_clock");
         this.mSystemIconArea = view.findViewById(R.id.system_icons);
-        this.mConfigurationListener = new ConfigurationController.ConfigurationListener() {
+        AnonymousClass1 r1 = new ConfigurationController.ConfigurationListener() {
             public void onConfigChanged(Configuration configuration) {
             }
 
@@ -68,7 +71,8 @@ public class CollapsedStatusBarFragmentControllerNarrowNotchImpl extends Collaps
                 DripStatusBarUtils.updateContainerWidth(CollapsedStatusBarFragmentControllerNarrowNotchImpl.this.mSystemIconArea, false, false, CollapsedStatusBarFragmentControllerNarrowNotchImpl.this.mExtraSpace);
             }
         };
-        this.mConfigurationListener.onDensityOrFontScaleChanged();
+        this.mConfigurationListener = r1;
+        r1.onDensityOrFontScaleChanged();
         this.mPhoneStatusBarContainer = (ViewGroup) view.findViewById(R.id.phone_status_bar_contents_container);
         ((BatteryMeterView) this.mSystemIconArea.findViewById(R.id.battery)).setBatteryMeterViewDelegate(new BatteryMeterView.BatteryMeterViewDelegate() {
             public void onNumberToIconChanged(boolean z) {
@@ -78,16 +82,17 @@ public class CollapsedStatusBarFragmentControllerNarrowNotchImpl extends Collaps
                 CollapsedStatusBarFragmentControllerNarrowNotchImpl.this.mConfigurationListener.onDensityOrFontScaleChanged();
             }
         });
-        ((StatusBarIconController) Dependency.get(StatusBarIconController.class)).addIconGroup(this.mDarkIconManager);
-        ((StatusBarIconController) Dependency.get(StatusBarIconController.class)).addIconGroup(this.mNotchLeftEarIconManager);
+        ((StatusBarIconController) Dependency.get(cls)).addIconGroup(this.mDarkIconManager);
+        ((StatusBarIconController) Dependency.get(cls)).addIconGroup(this.mNotchLeftEarIconManager);
     }
 
     public void stop() {
+        Class cls = StatusBarIconController.class;
         if (this.mNotchLeftEarIconManager != null) {
-            ((StatusBarIconController) Dependency.get(StatusBarIconController.class)).removeIconGroup(this.mNotchLeftEarIconManager);
+            ((StatusBarIconController) Dependency.get(cls)).removeIconGroup(this.mNotchLeftEarIconManager);
         }
         if (this.mDarkIconManager != null) {
-            ((StatusBarIconController) Dependency.get(StatusBarIconController.class)).removeIconGroup(this.mDarkIconManager);
+            ((StatusBarIconController) Dependency.get(cls)).removeIconGroup(this.mDarkIconManager);
         }
         if (this.mConfigurationListener != null) {
             ((ConfigurationController) Dependency.get(ConfigurationController.class)).removeCallback(this.mConfigurationListener);

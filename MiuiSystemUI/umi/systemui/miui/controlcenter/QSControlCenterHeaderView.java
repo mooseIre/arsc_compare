@@ -27,9 +27,7 @@ public class QSControlCenterHeaderView extends LinearLayout {
     public ControlCenterActivityStarter mActStarter;
     private LinearLayout mCarrierLayout;
     private CarrierText mCarrierText;
-    private int mDarkModeIconColorSingleTone;
     private StatusBarIconController.DarkIconManager mIconManager;
-    private int mLightModeIconColorSingleTone;
     View.OnClickListener mOnClickListener = new View.OnClickListener() {
         public void onClick(View view) {
             ((SystemUIStat) Dependency.get(SystemUIStat.class)).handleClickShortcutEvent("settings");
@@ -60,27 +58,30 @@ public class QSControlCenterHeaderView extends LinearLayout {
         ((SignalClusterView) clipEdgeLinearLayout.findViewById(R.id.signal_cluster)).setForceNormalType();
         this.mTilesHeader = (ViewGroup) findViewById(R.id.tiles_header);
         this.mCarrierLayout = (LinearLayout) findViewById(R.id.carrier_layout);
-        this.mCarrierText = (CarrierText) findViewById(R.id.carrier_text);
-        this.mCarrierText.setShowStyle(1);
+        CarrierText carrierText = (CarrierText) findViewById(R.id.carrier_text);
+        this.mCarrierText = carrierText;
+        carrierText.setShowStyle(1);
         this.mOrientation = getOrientation();
-        this.mDarkModeIconColorSingleTone = this.mContext.getColor(R.color.dark_mode_icon_color_single_tone);
-        this.mLightModeIconColorSingleTone = this.mContext.getColor(R.color.light_mode_icon_color_single_tone);
+        this.mContext.getColor(R.color.dark_mode_icon_color_single_tone);
+        this.mContext.getColor(R.color.light_mode_icon_color_single_tone);
         this.mStatusIcons = (LinearLayout) findViewById(R.id.statusIcons);
         this.mTitle = (TextView) findViewById(R.id.control_title);
-        this.mTilesEdit = (ImageView) findViewById(R.id.tiles_edit);
-        this.mTilesEdit.setContentDescription(this.mContext.getResources().getString(R.string.accessibility_desc_quick_settings_edit));
+        ImageView imageView = (ImageView) findViewById(R.id.tiles_edit);
+        this.mTilesEdit = imageView;
+        imageView.setContentDescription(this.mContext.getResources().getString(R.string.accessibility_desc_quick_settings_edit));
         Utils.createIconFolmeTouchStyle(this.mTilesEdit);
         this.mTilesEdit.setVisibility((this.mOrientation != 1 || this.mPanelController.isSuperPowerMode()) ? 8 : 0);
-        this.mShortcut = (ImageView) findViewById(R.id.notification_shade_shortcut);
-        Utils.createIconFolmeTouchStyle(this.mShortcut);
+        ImageView imageView2 = (ImageView) findViewById(R.id.notification_shade_shortcut);
+        this.mShortcut = imageView2;
+        Utils.createIconFolmeTouchStyle(imageView2);
         this.mShortcut.setImageResource(R.drawable.qs_control_settings);
         this.mShortcut.setContentDescription(getResources().getString(R.string.accessibility_settings));
         this.mShortcut.setOnClickListener(this.mOnClickListener);
-        ImageView imageView = this.mShortcut;
+        ImageView imageView3 = this.mShortcut;
         if (this.mPanelController.isSuperPowerMode()) {
             i = 8;
         }
-        imageView.setVisibility(i);
+        imageView3.setVisibility(i);
         this.mActStarter = (ControlCenterActivityStarter) Dependency.get(ControlCenterActivityStarter.class);
     }
 

@@ -58,7 +58,7 @@ public class StatusBarWindowManager implements RemoteInputController.Callback, D
         this.mContext = context;
         this.mWindowManager = (WindowManager) context.getSystemService("window");
         this.mKeyguardScreenRotation = shouldEnableKeyguardScreenRotation();
-        this.mScreenBrightnessDoze = ((float) this.mContext.getResources().getInteger(17694886)) / 255.0f;
+        this.mScreenBrightnessDoze = ((float) this.mContext.getResources().getInteger(17694889)) / 255.0f;
     }
 
     private boolean shouldEnableKeyguardScreenRotation() {
@@ -70,20 +70,22 @@ public class StatusBarWindowManager implements RemoteInputController.Callback, D
     }
 
     public void add(ViewGroup viewGroup, int i) {
-        this.mLp = new WindowManager.LayoutParams(-1, i, 2000, -2138832824, -3);
-        this.mLp.token = new Binder();
-        WindowManager.LayoutParams layoutParams = this.mLp;
-        layoutParams.flags |= 16777216;
-        layoutParams.gravity = 48;
-        layoutParams.softInputMode = 16;
-        layoutParams.setTitle("StatusBar");
+        WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(-1, i, 2000, -2138832824, -3);
+        this.mLp = layoutParams;
+        layoutParams.token = new Binder();
+        WindowManager.LayoutParams layoutParams2 = this.mLp;
+        layoutParams2.flags |= 16777216;
+        layoutParams2.gravity = 48;
+        layoutParams2.softInputMode = 16;
+        layoutParams2.setTitle("StatusBar");
         this.mLp.packageName = this.mContext.getPackageName();
         WindowManagerCompat.setLayoutInDisplayCutoutMode(this.mLp, 1);
         this.mStatusBarView = viewGroup;
         this.mBarHeight = i;
-        this.mWindowManager.addView(this.mStatusBarView, this.mLp);
-        this.mLpChanged = new WindowManager.LayoutParams();
-        this.mLpChanged.copyFrom(this.mLp);
+        this.mWindowManager.addView(viewGroup, this.mLp);
+        WindowManager.LayoutParams layoutParams3 = new WindowManager.LayoutParams();
+        this.mLpChanged = layoutParams3;
+        layoutParams3.copyFrom(this.mLp);
     }
 
     public ViewGroup getStatusBarView() {
@@ -91,13 +93,14 @@ public class StatusBarWindowManager implements RemoteInputController.Callback, D
     }
 
     private void applyKeyguardFlags(State state) {
+        Class cls = MiuiKeyguardWallpaperController.class;
         if (state.keyguardShowing) {
             this.mLpChanged.privateFlags |= 1024;
         } else {
             this.mLpChanged.privateFlags &= -1025;
         }
-        boolean isLegacyKeyguardWallpaper = ((MiuiKeyguardWallpaperController) Dependency.get(MiuiKeyguardWallpaperController.class)).isLegacyKeyguardWallpaper();
-        boolean isWallpaperSupportsAmbientMode = ((MiuiKeyguardWallpaperController) Dependency.get(MiuiKeyguardWallpaperController.class)).isWallpaperSupportsAmbientMode();
+        boolean isLegacyKeyguardWallpaper = ((MiuiKeyguardWallpaperController) Dependency.get(cls)).isLegacyKeyguardWallpaper();
+        boolean isWallpaperSupportsAmbientMode = ((MiuiKeyguardWallpaperController) Dependency.get(cls)).isWallpaperSupportsAmbientMode();
         if (!state.keyguardShowing || ((state.dozing || isLegacyKeyguardWallpaper) && !isWallpaperSupportsAmbientMode)) {
             this.mLpChanged.flags &= -1048577;
         } else {
@@ -105,9 +108,10 @@ public class StatusBarWindowManager implements RemoteInputController.Callback, D
         }
         if ((state.isKeyguardShowingAndNotOccluded() || state.keyguardFadingAway) && state.keygaurdTransparent) {
             WindowManager.LayoutParams layoutParams = this.mLpChanged;
-            layoutParams.flags &= -1048577;
+            int i = layoutParams.flags & -1048577;
+            layoutParams.flags = i;
             layoutParams.alpha = 0.0f;
-            layoutParams.flags |= 16;
+            layoutParams.flags = i | 16;
             if (MiuiKeyguardUtils.isGxzwSensor()) {
                 MiuiGxzwManager.getInstance().nofifySurfaceFlinger(false);
             }
@@ -141,16 +145,19 @@ public class StatusBarWindowManager implements RemoteInputController.Callback, D
         boolean z = state.statusBarFocusable && state.panelExpanded;
         if ((state.bouncerShowing && (state.keyguardOccluded || state.keyguardNeedsInput)) || ((StatusBar.ENABLE_REMOTE_INPUT && state.remoteInputActive) || state.bubbleExpanded)) {
             WindowManager.LayoutParams layoutParams = this.mLpChanged;
-            layoutParams.flags &= -9;
-            layoutParams.flags &= -131073;
+            int i = layoutParams.flags & -9;
+            layoutParams.flags = i;
+            layoutParams.flags = i & -131073;
         } else if (state.isKeyguardShowingAndNotOccluded() || z) {
             WindowManager.LayoutParams layoutParams2 = this.mLpChanged;
-            layoutParams2.flags &= -9;
-            layoutParams2.flags |= 131072;
+            int i2 = layoutParams2.flags & -9;
+            layoutParams2.flags = i2;
+            layoutParams2.flags = i2 | 131072;
         } else {
             WindowManager.LayoutParams layoutParams3 = this.mLpChanged;
-            layoutParams3.flags |= 8;
-            layoutParams3.flags &= -131073;
+            int i3 = layoutParams3.flags | 8;
+            layoutParams3.flags = i3;
+            layoutParams3.flags = i3 & -131073;
         }
         this.mLpChanged.softInputMode = 16;
     }

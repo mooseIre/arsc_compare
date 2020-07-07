@@ -23,7 +23,5 @@ public interface ZenModeController extends CallbackController<Callback> {
 
     ZenModeConfig getConfig();
 
-    int getCurrentUser();
-
     int getZen();
 }

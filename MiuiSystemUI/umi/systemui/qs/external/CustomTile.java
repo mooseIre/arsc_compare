@@ -4,6 +4,7 @@ import android.app.ActivityManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.drawable.Drawable;
@@ -21,7 +22,6 @@ import android.view.IWindowManager;
 import android.view.IWindowManagerCompat;
 import android.view.WindowManagerGlobal;
 import android.widget.Switch;
-import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.systemui.Dependency;
 import com.android.systemui.miui.controlcenter.tileImpl.CCQSIconViewImpl;
 import com.android.systemui.miui.statusbar.policy.ControlPanelController;
@@ -54,12 +54,15 @@ public class CustomTile extends QSTileImpl<QSTile.State> implements TileLifecycl
 
     private CustomTile(QSTileHost qSTileHost, String str) {
         super(qSTileHost);
-        this.mComponent = ComponentName.unflattenFromString(str);
-        this.mTile = TileCompat.newTile(this.mComponent);
-        this.mTile.setState(1);
+        ComponentName unflattenFromString = ComponentName.unflattenFromString(str);
+        this.mComponent = unflattenFromString;
+        Tile newTile = TileCompat.newTile(unflattenFromString);
+        this.mTile = newTile;
+        newTile.setState(1);
         setTileIcon();
-        this.mServiceManager = qSTileHost.getTileServices().getTileWrapper(this);
-        this.mService = this.mServiceManager.getTileService();
+        TileServiceManager tileWrapper = qSTileHost.getTileServices().getTileWrapper(this);
+        this.mServiceManager = tileWrapper;
+        this.mService = tileWrapper.getTileService();
         this.mServiceManager.setTileChangeListener(this);
         this.mUser = ActivityManager.getCurrentUser();
     }
@@ -69,40 +72,40 @@ public class CustomTile extends QSTileImpl<QSTile.State> implements TileLifecycl
         return (((long) this.mHost.indexOf(getTileSpec())) * 60000) + 3600000;
     }
 
-    /* JADX WARNING: Removed duplicated region for block: B:17:0x003f A[Catch:{ Exception -> 0x0068 }] */
-    /* JADX WARNING: Removed duplicated region for block: B:18:0x004a A[Catch:{ Exception -> 0x0068 }] */
-    /* JADX WARNING: Removed duplicated region for block: B:21:0x004f A[Catch:{ Exception -> 0x0068 }] */
-    /* JADX WARNING: Removed duplicated region for block: B:24:0x005e A[Catch:{ Exception -> 0x0068 }] */
+    /* JADX WARNING: Removed duplicated region for block: B:17:0x003f A[Catch:{ Exception -> 0x0066 }] */
+    /* JADX WARNING: Removed duplicated region for block: B:18:0x004a A[Catch:{ Exception -> 0x0066 }] */
+    /* JADX WARNING: Removed duplicated region for block: B:21:0x004f A[Catch:{ Exception -> 0x0066 }] */
+    /* JADX WARNING: Removed duplicated region for block: B:24:0x005c A[Catch:{ Exception -> 0x0066 }] */
     /* JADX WARNING: Removed duplicated region for block: B:28:? A[RETURN, SYNTHETIC] */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     private void setTileIcon() {
         /*
             r6 = this;
             r0 = 0
-            android.content.Context r1 = r6.mContext     // Catch:{ Exception -> 0x0068 }
-            android.content.pm.PackageManager r1 = r1.getPackageManager()     // Catch:{ Exception -> 0x0068 }
+            android.content.Context r1 = r6.mContext     // Catch:{ Exception -> 0x0066 }
+            android.content.pm.PackageManager r1 = r1.getPackageManager()     // Catch:{ Exception -> 0x0066 }
             r2 = 786432(0xc0000, float:1.102026E-39)
-            boolean r3 = r6.isSystemApp(r1)     // Catch:{ Exception -> 0x0068 }
+            boolean r3 = r6.isSystemApp(r1)     // Catch:{ Exception -> 0x0066 }
             if (r3 == 0) goto L_0x0012
             r2 = 786944(0xc0200, float:1.102743E-39)
         L_0x0012:
-            android.content.ComponentName r3 = r6.mComponent     // Catch:{ Exception -> 0x0068 }
-            android.content.pm.ServiceInfo r2 = r1.getServiceInfo(r3, r2)     // Catch:{ Exception -> 0x0068 }
-            int r3 = r2.icon     // Catch:{ Exception -> 0x0068 }
+            android.content.ComponentName r3 = r6.mComponent     // Catch:{ Exception -> 0x0066 }
+            android.content.pm.ServiceInfo r2 = r1.getServiceInfo(r3, r2)     // Catch:{ Exception -> 0x0066 }
+            int r3 = r2.icon     // Catch:{ Exception -> 0x0066 }
             if (r3 == 0) goto L_0x001f
-            int r3 = r2.icon     // Catch:{ Exception -> 0x0068 }
+            int r3 = r2.icon     // Catch:{ Exception -> 0x0066 }
             goto L_0x0023
         L_0x001f:
-            android.content.pm.ApplicationInfo r3 = r2.applicationInfo     // Catch:{ Exception -> 0x0068 }
-            int r3 = r3.icon     // Catch:{ Exception -> 0x0068 }
+            android.content.pm.ApplicationInfo r3 = r2.applicationInfo     // Catch:{ Exception -> 0x0066 }
+            int r3 = r3.icon     // Catch:{ Exception -> 0x0066 }
         L_0x0023:
-            android.service.quicksettings.Tile r4 = r6.mTile     // Catch:{ Exception -> 0x0068 }
-            android.graphics.drawable.Icon r4 = r4.getIcon()     // Catch:{ Exception -> 0x0068 }
+            android.service.quicksettings.Tile r4 = r6.mTile     // Catch:{ Exception -> 0x0066 }
+            android.graphics.drawable.Icon r4 = r4.getIcon()     // Catch:{ Exception -> 0x0066 }
             if (r4 == 0) goto L_0x003c
-            android.service.quicksettings.Tile r4 = r6.mTile     // Catch:{ Exception -> 0x0068 }
-            android.graphics.drawable.Icon r4 = r4.getIcon()     // Catch:{ Exception -> 0x0068 }
-            android.graphics.drawable.Icon r5 = r6.mDefaultIcon     // Catch:{ Exception -> 0x0068 }
-            boolean r4 = r6.iconEquals(r4, r5)     // Catch:{ Exception -> 0x0068 }
+            android.service.quicksettings.Tile r4 = r6.mTile     // Catch:{ Exception -> 0x0066 }
+            android.graphics.drawable.Icon r4 = r4.getIcon()     // Catch:{ Exception -> 0x0066 }
+            android.graphics.drawable.Icon r5 = r6.mDefaultIcon     // Catch:{ Exception -> 0x0066 }
+            boolean r4 = r6.iconEquals(r4, r5)     // Catch:{ Exception -> 0x0066 }
             if (r4 == 0) goto L_0x003a
             goto L_0x003c
         L_0x003a:
@@ -112,29 +115,28 @@ public class CustomTile extends QSTileImpl<QSTile.State> implements TileLifecycl
             r4 = 1
         L_0x003d:
             if (r3 == 0) goto L_0x004a
-            android.content.ComponentName r5 = r6.mComponent     // Catch:{ Exception -> 0x0068 }
-            java.lang.String r5 = r5.getPackageName()     // Catch:{ Exception -> 0x0068 }
-            android.graphics.drawable.Icon r3 = android.graphics.drawable.Icon.createWithResource(r5, r3)     // Catch:{ Exception -> 0x0068 }
+            android.content.ComponentName r5 = r6.mComponent     // Catch:{ Exception -> 0x0066 }
+            java.lang.String r5 = r5.getPackageName()     // Catch:{ Exception -> 0x0066 }
+            android.graphics.drawable.Icon r3 = android.graphics.drawable.Icon.createWithResource(r5, r3)     // Catch:{ Exception -> 0x0066 }
             goto L_0x004b
         L_0x004a:
             r3 = r0
         L_0x004b:
-            r6.mDefaultIcon = r3     // Catch:{ Exception -> 0x0068 }
-            if (r4 == 0) goto L_0x0056
-            android.service.quicksettings.Tile r3 = r6.mTile     // Catch:{ Exception -> 0x0068 }
-            android.graphics.drawable.Icon r4 = r6.mDefaultIcon     // Catch:{ Exception -> 0x0068 }
-            r3.setIcon(r4)     // Catch:{ Exception -> 0x0068 }
-        L_0x0056:
-            android.service.quicksettings.Tile r3 = r6.mTile     // Catch:{ Exception -> 0x0068 }
-            java.lang.CharSequence r3 = r3.getLabel()     // Catch:{ Exception -> 0x0068 }
-            if (r3 != 0) goto L_0x006a
-            android.service.quicksettings.Tile r3 = r6.mTile     // Catch:{ Exception -> 0x0068 }
-            java.lang.CharSequence r1 = r2.loadLabel(r1)     // Catch:{ Exception -> 0x0068 }
-            r3.setLabel(r1)     // Catch:{ Exception -> 0x0068 }
-            goto L_0x006a
-        L_0x0068:
+            r6.mDefaultIcon = r3     // Catch:{ Exception -> 0x0066 }
+            if (r4 == 0) goto L_0x0054
+            android.service.quicksettings.Tile r4 = r6.mTile     // Catch:{ Exception -> 0x0066 }
+            r4.setIcon(r3)     // Catch:{ Exception -> 0x0066 }
+        L_0x0054:
+            android.service.quicksettings.Tile r3 = r6.mTile     // Catch:{ Exception -> 0x0066 }
+            java.lang.CharSequence r3 = r3.getLabel()     // Catch:{ Exception -> 0x0066 }
+            if (r3 != 0) goto L_0x0068
+            android.service.quicksettings.Tile r3 = r6.mTile     // Catch:{ Exception -> 0x0066 }
+            java.lang.CharSequence r1 = r2.loadLabel(r1)     // Catch:{ Exception -> 0x0066 }
+            r3.setLabel(r1)     // Catch:{ Exception -> 0x0066 }
+            goto L_0x0068
+        L_0x0066:
             r6.mDefaultIcon = r0
-        L_0x006a:
+        L_0x0068:
             return
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.qs.external.CustomTile.setTileIcon():void");
@@ -269,11 +271,13 @@ public class CustomTile extends QSTileImpl<QSTile.State> implements TileLifecycl
     }
 
     private Intent resolveIntent(Intent intent) {
-        ResolveInfo resolveActivityAsUser = this.mContext.getPackageManager().resolveActivityAsUser(intent, 0, KeyguardUpdateMonitor.getCurrentUser());
-        if (resolveActivityAsUser != null) {
-            return new Intent("android.service.quicksettings.action.QS_TILE_PREFERENCES").setClassName(resolveActivityAsUser.activityInfo.packageName, resolveActivityAsUser.activityInfo.name);
+        ResolveInfo resolveActivityAsUser = this.mContext.getPackageManager().resolveActivityAsUser(intent, 0, ActivityManager.getCurrentUser());
+        if (resolveActivityAsUser == null) {
+            return null;
         }
-        return null;
+        Intent intent2 = new Intent("android.service.quicksettings.action.QS_TILE_PREFERENCES");
+        ActivityInfo activityInfo = resolveActivityAsUser.activityInfo;
+        return intent2.setClassName(activityInfo.packageName, activityInfo.name);
     }
 
     /* access modifiers changed from: protected */

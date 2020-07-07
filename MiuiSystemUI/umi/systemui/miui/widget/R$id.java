@@ -14,8 +14,8 @@ public final class R$id {
     public static final int btn_symbol_lock = 2131361988;
     public static final int btn_symbol_ok = 2131361989;
     public static final int btn_symbol_space = 2131361990;
-    public static final int keyboard_letter = 2131362295;
-    public static final int keyboard_number = 2131362296;
-    public static final int keyboard_symbol = 2131362302;
-    public static final int preview_text = 2131362648;
+    public static final int keyboard_letter = 2131362300;
+    public static final int keyboard_number = 2131362301;
+    public static final int keyboard_symbol = 2131362307;
+    public static final int preview_text = 2131362652;
 }

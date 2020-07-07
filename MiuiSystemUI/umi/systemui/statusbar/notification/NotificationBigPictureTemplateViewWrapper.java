@@ -16,7 +16,7 @@ public class NotificationBigPictureTemplateViewWrapper extends NotificationTempl
 
     /* access modifiers changed from: protected */
     public boolean showExpandButton() {
-        return false;
+        return true;
     }
 
     /* access modifiers changed from: protected */
@@ -39,8 +39,9 @@ public class NotificationBigPictureTemplateViewWrapper extends NotificationTempl
     }
 
     private void resolveViews() {
-        this.mBigPictureView = (ImageView) this.mView.findViewById(16908764);
-        Util.setViewRoundCorner(this.mBigPictureView, (float) this.mBigPictureCornerRadius);
+        ImageView imageView = (ImageView) this.mView.findViewById(16908793);
+        this.mBigPictureView = imageView;
+        Util.setViewRoundCorner(imageView, (float) this.mBigPictureCornerRadius);
     }
 
     /* access modifiers changed from: protected */

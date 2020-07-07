@@ -33,7 +33,9 @@ import java.util.List;
 public class Util {
     private static boolean sMiuiOptimizationDisabled;
     private static final ArrayMap<String, Boolean> sSystemApps = new ArrayMap<>();
-    private static boolean sUserExperienceEnable;
+
+    public static void setUserExperienceProgramEnabled(boolean z) {
+    }
 
     public static PackageManager getPackageManagerForUser(Context context, int i) {
         if (i >= 0) {
@@ -73,10 +75,6 @@ public class Util {
             return null;
         }
         return runningTasks.get(0).topActivity;
-    }
-
-    public static void setUserExperienceProgramEnabled(boolean z) {
-        sUserExperienceEnable = z;
     }
 
     public static void setMiuiOptimizationDisabled(boolean z) {
@@ -180,7 +178,9 @@ public class Util {
     private static Toast makeSystemOverlayToast(Context context, String str, int i) {
         Toast makeText = Toast.makeText(context, str, i);
         makeText.setType(2006);
-        makeText.getWindowParams().privateFlags |= 16;
+        if (makeText.getWindowParams() != null) {
+            makeText.getWindowParams().privateFlags |= 16;
+        }
         return makeText;
     }
 

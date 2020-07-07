@@ -5,11 +5,9 @@ import com.android.systemui.recents.events.RecentsEventBus;
 import com.android.systemui.recents.model.Task;
 
 public class FsGestureLaunchTargetTaskViewRectEvent extends RecentsEventBus.Event {
-    public final Task mLaunchTargetTask;
     public final RectF mRectF;
 
     public FsGestureLaunchTargetTaskViewRectEvent(RectF rectF, Task task) {
         this.mRectF = rectF;
-        this.mLaunchTargetTask = task;
     }
 }

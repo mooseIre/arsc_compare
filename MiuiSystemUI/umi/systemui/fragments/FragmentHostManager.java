@@ -33,7 +33,6 @@ public class FragmentHostManager {
     public final Handler mHandler = new Handler(Looper.getMainLooper());
     private FragmentManager.FragmentLifecycleCallbacks mLifecycleCallbacks;
     private final HashMap<String, ArrayList<FragmentListener>> mListeners = new HashMap<>();
-    private final FragmentService mManager;
     /* access modifiers changed from: private */
     public final PluginFragmentManager mPlugins = new PluginFragmentManager();
     private final View mRootView;
@@ -50,7 +49,6 @@ public class FragmentHostManager {
 
     FragmentHostManager(Context context, FragmentService fragmentService, View view) {
         this.mContext = context;
-        this.mManager = fragmentService;
         this.mRootView = view;
         this.mConfigChanges.applyNewConfig(context.getResources());
         createFragmentHost((Parcelable) null);
@@ -58,8 +56,9 @@ public class FragmentHostManager {
 
     /* access modifiers changed from: private */
     public void createFragmentHost(Parcelable parcelable) {
-        this.mFragments = FragmentController.createController(new HostCallbacks());
-        this.mFragments.attachHost((Fragment) null);
+        FragmentController createController = FragmentController.createController(new HostCallbacks());
+        this.mFragments = createController;
+        createController.attachHost((Fragment) null);
         this.mLifecycleCallbacks = new FragmentManager.FragmentLifecycleCallbacks() {
             public void onFragmentViewCreated(FragmentManager fragmentManager, Fragment fragment, View view, Bundle bundle) {
                 FragmentHostManager.this.onFragmentViewCreated(fragment);

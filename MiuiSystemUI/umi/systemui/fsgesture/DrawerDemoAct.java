@@ -13,7 +13,7 @@ import miui.os.Build;
 public class DrawerDemoAct extends FsGestureDemoBaseActiivy {
     /* access modifiers changed from: private */
     public static final boolean IS_DEBUG = Build.IS_ALPHA_BUILD;
-    public static final String TAG = "DrawerDemoAct";
+    public static final String TAG = DrawerDemoAct.class.getSimpleName();
     /* access modifiers changed from: private */
     public ImageView drawerImg;
     /* access modifiers changed from: private */
@@ -35,8 +35,9 @@ public class DrawerDemoAct extends FsGestureDemoBaseActiivy {
         setContentView(R.layout.drawer_demo_layout);
         Util.hideSystemBars(getWindow().getDecorView());
         this.drawerImg = (ImageView) findViewById(R.id.drawer_img);
-        this.shelterView = findViewById(R.id.shelter_view);
-        this.shelterView.setOnTouchListener(new View.OnTouchListener() {
+        View findViewById = findViewById(R.id.shelter_view);
+        this.shelterView = findViewById;
+        findViewById.setOnTouchListener(new View.OnTouchListener() {
             /* JADX WARNING: Code restructure failed: missing block: B:5:0x0011, code lost:
                 if (r6 != 3) goto L_0x00ed;
              */
@@ -82,7 +83,7 @@ public class DrawerDemoAct extends FsGestureDemoBaseActiivy {
                     android.view.ViewGroup$LayoutParams r6 = r6.getLayoutParams()
                     com.android.systemui.fsgesture.DrawerDemoAct r3 = com.android.systemui.fsgesture.DrawerDemoAct.this
                     android.content.res.Resources r3 = r3.getResources()
-                    r4 = 2131165639(0x7f0701c7, float:1.79455E38)
+                    r4 = 2131165640(0x7f0701c8, float:1.7945503E38)
                     int r3 = r3.getDimensionPixelSize(r4)
                     r6.width = r3
                     com.android.systemui.fsgesture.DrawerDemoAct r3 = com.android.systemui.fsgesture.DrawerDemoAct.this
@@ -158,8 +159,9 @@ public class DrawerDemoAct extends FsGestureDemoBaseActiivy {
                 DrawerDemoAct.this.drawerImg.setTranslationX((float) DrawerDemoAct.this.initTranslateWidht);
             }
         });
-        this.fsGestureDemoTitleView = (FsGestureDemoTitleView) findViewById(R.id.fsgesture_title_view);
-        this.fsGestureDemoTitleView.prepareTitleView(4);
+        FsGestureDemoTitleView fsGestureDemoTitleView2 = (FsGestureDemoTitleView) findViewById(R.id.fsgesture_title_view);
+        this.fsGestureDemoTitleView = fsGestureDemoTitleView2;
+        fsGestureDemoTitleView2.prepareTitleView(4);
         this.fsGestureDemoTitleView.registerSkipEvent(new View.OnClickListener() {
             public void onClick(View view) {
                 DrawerDemoAct.this.finish();

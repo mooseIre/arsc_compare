@@ -13,17 +13,9 @@ import com.android.systemui.statusbar.Icons;
 
 public class AirplaneModeTile extends QSTileImpl<QSTile.BooleanState> {
     private boolean mListening;
-    private final GlobalSetting mSetting = new GlobalSetting(this.mContext, this.mHandler, "airplane_mode_on") {
-        /* access modifiers changed from: protected */
-        public void handleValueChanged(int i) {
-            String access$000 = AirplaneModeTile.this.TAG;
-            Log.d(access$000, "handleValueChanged: value = " + i);
-            int unused = AirplaneModeTile.this.mTargetValue = i;
-            AirplaneModeTile.this.handleRefreshState(Integer.valueOf(i));
-        }
-    };
+    private final GlobalSetting mSetting;
     /* access modifiers changed from: private */
-    public int mTargetValue = this.mSetting.getValue();
+    public int mTargetValue;
 
     public int getMetricsCategory() {
         return R.styleable.AppCompatTheme_tooltipForegroundColor;
@@ -31,6 +23,17 @@ public class AirplaneModeTile extends QSTileImpl<QSTile.BooleanState> {
 
     public AirplaneModeTile(QSHost qSHost) {
         super(qSHost);
+        AnonymousClass1 r4 = new GlobalSetting(this.mContext, this.mHandler, "airplane_mode_on") {
+            /* access modifiers changed from: protected */
+            public void handleValueChanged(int i) {
+                String access$000 = AirplaneModeTile.this.TAG;
+                Log.d(access$000, "handleValueChanged: value = " + i);
+                int unused = AirplaneModeTile.this.mTargetValue = i;
+                AirplaneModeTile.this.handleRefreshState(Integer.valueOf(i));
+            }
+        };
+        this.mSetting = r4;
+        this.mTargetValue = r4.getValue();
     }
 
     public QSTile.BooleanState newTileState() {

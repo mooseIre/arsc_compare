@@ -61,9 +61,8 @@ public class InputConsumerController {
 
     public void setRegistrationListener(RegistrationListener registrationListener) {
         this.mRegistrationListener = registrationListener;
-        RegistrationListener registrationListener2 = this.mRegistrationListener;
-        if (registrationListener2 != null) {
-            registrationListener2.onRegistrationChanged(this.mInputEventReceiver != null);
+        if (registrationListener != null) {
+            registrationListener.onRegistrationChanged(this.mInputEventReceiver != null);
         }
     }
 

@@ -7,7 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 
 public class CenterTextDrawable extends Drawable {
-    private Paint mPaint = new Paint(1);
+    private Paint mPaint;
     private String mText = "";
 
     public int getOpacity() {
@@ -15,7 +15,9 @@ public class CenterTextDrawable extends Drawable {
     }
 
     public CenterTextDrawable() {
-        this.mPaint.setTextAlign(Paint.Align.CENTER);
+        Paint paint = new Paint(1);
+        this.mPaint = paint;
+        paint.setTextAlign(Paint.Align.CENTER);
         this.mPaint.setFakeBoldText(false);
     }
 

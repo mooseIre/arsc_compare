@@ -297,7 +297,7 @@ public class ViewState {
             }
             ofFloat.setInterpolator(customInterpolator);
             view.setLayerType(2, (Paint) null);
-            ofFloat.addListener(new AnimatorListenerAdapter() {
+            ofFloat.addListener(new AnimatorListenerAdapter(this) {
                 public boolean mWasCancelled;
 
                 public void onAnimationEnd(Animator animator) {
@@ -369,7 +369,7 @@ public class ViewState {
             if (animationFinishListener != null) {
                 ofFloat.addListener(animationFinishListener);
             }
-            ofFloat.addListener(new AnimatorListenerAdapter() {
+            ofFloat.addListener(new AnimatorListenerAdapter(this) {
                 public void onAnimationEnd(Animator animator) {
                     view.setTag(R.id.translation_z_animator_tag, (Object) null);
                     view.setTag(R.id.translation_z_animator_start_value_tag, (Object) null);
@@ -408,7 +408,7 @@ public class ViewState {
                 if (animationFinishListener != null) {
                     ofFloat.addListener(animationFinishListener);
                 }
-                ofFloat.addListener(new AnimatorListenerAdapter() {
+                ofFloat.addListener(new AnimatorListenerAdapter(this) {
                     public void onAnimationEnd(Animator animator) {
                         view.setTag(R.id.translation_x_animator_tag, (Object) null);
                         view.setTag(R.id.translation_x_animator_start_value_tag, (Object) null);
@@ -443,7 +443,7 @@ public class ViewState {
         if (num2 == null || num2.intValue() != i) {
             ValueAnimator valueAnimator = (ValueAnimator) getChildTag(view, R.id.padding_top_animator_tag);
             ValueAnimator ofInt = ValueAnimator.ofInt(new int[]{view.getPaddingTop(), i});
-            ofInt.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            ofInt.addUpdateListener(new ValueAnimator.AnimatorUpdateListener(this) {
                 public void onAnimationUpdate(ValueAnimator valueAnimator) {
                     View view = view;
                     view.setPadding(view.getPaddingLeft(), ((Integer) valueAnimator.getAnimatedValue()).intValue(), view.getPaddingRight(), view.getPaddingBottom());
@@ -458,7 +458,7 @@ public class ViewState {
             if (animationFinishListener != null) {
                 ofInt.addListener(animationFinishListener);
             }
-            ofInt.addListener(new AnimatorListenerAdapter() {
+            ofInt.addListener(new AnimatorListenerAdapter(this) {
                 public void onAnimationEnd(Animator animator) {
                     view.setTag(R.id.padding_top_animator_tag, (Object) null);
                     view.setTag(R.id.padding_top_animator_start_value_tag, (Object) null);
@@ -479,7 +479,7 @@ public class ViewState {
         if (num2 == null || num2.intValue() != i) {
             ValueAnimator valueAnimator = (ValueAnimator) getChildTag(view, R.id.padding_bottom_animator_tag);
             ValueAnimator ofInt = ValueAnimator.ofInt(new int[]{view.getPaddingBottom(), i});
-            ofInt.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            ofInt.addUpdateListener(new ValueAnimator.AnimatorUpdateListener(this) {
                 public void onAnimationUpdate(ValueAnimator valueAnimator) {
                     View view = view;
                     view.setPadding(view.getPaddingLeft(), view.getPaddingTop(), view.getPaddingRight(), ((Integer) valueAnimator.getAnimatedValue()).intValue());
@@ -494,7 +494,7 @@ public class ViewState {
             if (animationFinishListener != null) {
                 ofInt.addListener(animationFinishListener);
             }
-            ofInt.addListener(new AnimatorListenerAdapter() {
+            ofInt.addListener(new AnimatorListenerAdapter(this) {
                 public void onAnimationEnd(Animator animator) {
                     view.setTag(R.id.padding_bottom_animator_tag, (Object) null);
                     view.setTag(R.id.padding_bottom_animator_start_value_tag, (Object) null);

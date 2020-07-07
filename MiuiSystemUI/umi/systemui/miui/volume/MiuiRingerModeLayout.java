@@ -79,8 +79,9 @@ public class MiuiRingerModeLayout extends LinearLayout implements TimerSeekBar.O
     private void initialize() {
         this.mRingerBtnLayout = findViewById(R$id.miui_ringer_btn_layout);
         this.mTimerLayout = findViewById(R$id.miui_volume_timer_layout);
-        this.mTimer = (MiuiVolumeTimerSeekBar) findViewById(R$id.miui_volume_timer);
-        this.mTimer.setOnTimeUpdateListener(this);
+        MiuiVolumeTimerSeekBar miuiVolumeTimerSeekBar = (MiuiVolumeTimerSeekBar) findViewById(R$id.miui_volume_timer);
+        this.mTimer = miuiVolumeTimerSeekBar;
+        miuiVolumeTimerSeekBar.setOnTimeUpdateListener(this);
         this.mCountDownProgress = (ProgressBar) findViewById(R$id.miui_volume_count_down_progress);
         View findViewById = findViewById(R$id.miui_ringer_standard_btn);
         View findViewById2 = findViewById(R$id.miui_ringer_dnd_btn);

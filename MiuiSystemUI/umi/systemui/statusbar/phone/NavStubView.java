@@ -94,16 +94,15 @@ import miui.util.ScreenshotUtils;
 public class NavStubView extends FrameLayout {
     /* access modifiers changed from: private */
     public static final boolean DEBUG = Log.isLoggable(TAG, 3);
-    public static final int DEFAULT_ANIM_TIME = (IS_E10 ? 144 : 300);
-    private static HashMap<String, Float> DEVICE_BOTTOM_EDGE_HEIGHTS = new HashMap<>();
-    public static final boolean IS_E10 = "beryllium".equals(Build.PRODUCT);
-    public static final String TAG = "NavStubView";
+    public static final int DEFAULT_ANIM_TIME;
+    private static HashMap<String, Float> DEVICE_BOTTOM_EDGE_HEIGHTS;
+    public static final boolean IS_E10;
+    public static final String TAG = NavStubView.class.getSimpleName();
     public final int RADIUS_SIZE;
     /* access modifiers changed from: private */
     public AntiMistakeTouchView antiMistakeTouchView;
     ExecutorService jobExecutor;
     private ActivityManager mAm;
-    private Bitmap mAppIcon;
     private float mAssistDistantThreshold;
     private float mAssistLastProgress;
     /* access modifiers changed from: private */
@@ -115,13 +114,13 @@ public class NavStubView extends FrameLayout {
     private Intent mCloseScreenshotIntent;
     private Interpolator mCubicEaseOutInterpolator;
     /* access modifiers changed from: private */
-    public float mCurAlpha = 1.0f;
+    public float mCurAlpha;
     /* access modifiers changed from: private */
     public float mCurScale;
     /* access modifiers changed from: private */
     public ActivityManager.RecentTaskInfo mCurTask;
     /* access modifiers changed from: private */
-    public int mCurrAction = -1;
+    public int mCurrAction;
     /* access modifiers changed from: private */
     public float mCurrX;
     /* access modifiers changed from: private */
@@ -130,18 +129,18 @@ public class NavStubView extends FrameLayout {
     /* access modifiers changed from: private */
     public float mCurrentY;
     private float mDelta;
-    private Rect mDest = new Rect();
+    private Rect mDest;
     /* access modifiers changed from: private */
     public RectF mDestRectF;
     /* access modifiers changed from: private */
-    public float mDestRectHeightScale = 1.0f;
+    public float mDestRectHeightScale;
     /* access modifiers changed from: private */
     public float mDestTopOffset;
     private boolean mDisableTouch;
     private final int mDividerSize;
     /* access modifiers changed from: private */
     public MotionEvent mDownEvent;
-    private int mDownNo = 0;
+    private int mDownNo;
     private long mDownTime;
     private float mDownX;
     private float mDownY;
@@ -157,15 +156,7 @@ public class NavStubView extends FrameLayout {
     /* access modifiers changed from: private */
     public H mHandler;
     /* access modifiers changed from: private */
-    public Runnable mHapticFeedbackRunnable = new Runnable() {
-        public void run() {
-            if (Constants.IS_SUPPORT_LINEAR_MOTOR_VIBRATE) {
-                ((HapticFeedBackImpl) Dependency.get(HapticFeedBackImpl.class)).getHapticFeedbackUtil().performHapticFeedback("hold", false);
-            } else {
-                NavStubView.this.performHapticFeedback(1);
-            }
-        }
-    };
+    public Runnable mHapticFeedbackRunnable;
     /* access modifiers changed from: private */
     public IFsGestureCallback mHomeCallback;
     /* access modifiers changed from: private */
@@ -186,7 +177,7 @@ public class NavStubView extends FrameLayout {
     /* access modifiers changed from: private */
     public boolean mIsBgIconVisible;
     /* access modifiers changed from: private */
-    public boolean mIsEnterRecents = false;
+    public boolean mIsEnterRecents;
     private boolean mIsFsgVersionTwo;
     /* access modifiers changed from: private */
     public boolean mIsFullScreenMode;
@@ -198,21 +189,20 @@ public class NavStubView extends FrameLayout {
     /* access modifiers changed from: private */
     public boolean mIsMultiWindow;
     /* access modifiers changed from: private */
-    public boolean mIsSkipResetLauncherAlpha = false;
+    public boolean mIsSkipResetLauncherAlpha;
     private boolean mIsSuperPowerMode;
     private boolean mIsWriteSettingMove;
     private boolean mKeepHidden;
-    private Configuration mLastConfiguration = new Configuration();
-    private int mLastDownNo = 0;
+    private Configuration mLastConfiguration;
+    private int mLastDownNo;
     private long mLastTouchTime;
     private boolean mLaunchedAssistant;
-    private int[] mLocation = new int[2];
-    private Xfermode mModeOverlay = new PorterDuffXfermode(PorterDuff.Mode.OVERLAY);
+    private int[] mLocation;
     private Xfermode mModeSrcIn = new PorterDuffXfermode(PorterDuff.Mode.SRC_IN);
     /* access modifiers changed from: private */
     public int mMultiDelta;
     private boolean mNeedRender;
-    boolean mOrientationChangedAfterDown = false;
+    boolean mOrientationChangedAfterDown;
     private Paint mPaint;
     /* access modifiers changed from: private */
     public boolean mPendingResetStatus;
@@ -238,8 +228,8 @@ public class NavStubView extends FrameLayout {
     public int mScreenHeight;
     /* access modifiers changed from: private */
     public int mScreenWidth;
-    private Rect mShowRect = new Rect();
-    private Rect mSrc = new Rect();
+    private Rect mShowRect;
+    private Rect mSrc;
     /* access modifiers changed from: private */
     public int mStateMode;
     private StatusBar mStatusBar;
@@ -249,81 +239,7 @@ public class NavStubView extends FrameLayout {
     public int mStatusBarHeight;
     private final StatusBarManager mStatusBarManager;
     private boolean mSupportAntiMistake;
-    private Runnable mTailCatcherTask = new Runnable() {
-        public void run() {
-            NavStubView navStubView = NavStubView.this;
-            NavStubView.access$016(navStubView, (((float) navStubView.mPivotLocX) - NavStubView.this.mFollowTailX) / 4.0f);
-            NavStubView navStubView2 = NavStubView.this;
-            NavStubView.access$216(navStubView2, (((float) navStubView2.mPivotLocY) - NavStubView.this.mFollowTailY) / 4.0f);
-            float abs = Math.abs(((float) NavStubView.this.mPivotLocX) - NavStubView.this.mFollowTailX);
-            float abs2 = Math.abs(((float) NavStubView.this.mPivotLocY) - NavStubView.this.mFollowTailY);
-            double sqrt = Math.sqrt((double) ((abs * abs) + (abs2 * abs2)));
-            if (NavStubView.this.mWindowMode == 4) {
-                NavStubView.this.mFrameHandler.postDelayed(this, 16);
-                return;
-            }
-            switch (NavStubView.this.mStateMode) {
-                case 65538:
-                    if (NavStubView.this.mCurrentY < ((float) (NavStubView.this.mScreenHeight - 160)) && sqrt < 80.0d && !NavStubView.this.mIsEnterRecents && (NavStubView.this.mWindowMode == 2 || NavStubView.this.mWindowMode == 1)) {
-                        boolean unused = NavStubView.this.mIsEnterRecents = true;
-                        RecentsEventBus.getDefault().post(new FsGesturePreloadRecentsEvent());
-                        RecentsEventBus.getDefault().send(new FsGestureEnterRecentsEvent());
-                    }
-                    if (NavStubView.this.mCurrentY < ((float) (NavStubView.this.mScreenHeight - 320)) && sqrt < 40.0d) {
-                        NavStubView navStubView3 = NavStubView.this;
-                        navStubView3.removeCallbacks(navStubView3.mHapticFeedbackRunnable);
-                        NavStubView navStubView4 = NavStubView.this;
-                        navStubView4.postDelayed(navStubView4.mHapticFeedbackRunnable, 100);
-                        int access$400 = NavStubView.this.mWindowMode;
-                        if (access$400 != 1) {
-                            if (access$400 != 2) {
-                                if (access$400 == 3) {
-                                    NavStubView.this.updateStateMode(65540);
-                                    Recents.getSystemServices().changeAlphaScaleForFsGesture(Constants.HOME_LAUCNHER_PACKAGE_NAME, 0.0f, 0.8f);
-                                    boolean unused2 = NavStubView.this.mIsSkipResetLauncherAlpha = true;
-                                    NavStubView.this.mRecentsModeHomeFadeInAnim.setFloatValues(new float[]{0.8f, 0.95f});
-                                    NavStubView.this.mRecentsModeHomeFadeInAnim.start();
-                                    RecentsEventBus.getDefault().send(new FsGestureRecentsModeSlideOutEvent());
-                                    break;
-                                }
-                            } else {
-                                NavStubView.this.updateStateMode(65539);
-                                RecentsEventBus.getDefault().send(new FsGestureSlideInEvent(NavStubView.this.mCurrX, NavStubView.this.mCurrY));
-                                break;
-                            }
-                        } else {
-                            NavStubView.this.updateStateMode(65539);
-                            RecentsEventBus.getDefault().send(new FsGestureSlideInEvent(NavStubView.this.mCurrX, NavStubView.this.mCurrY));
-                            NavStubView.this.mHomeFadeOutAnim.setFloatValues(new float[]{NavStubView.this.mCurScale, 0.8f});
-                            NavStubView.this.mHomeFadeOutAnim.start();
-                            break;
-                        }
-                    }
-                    break;
-                case 65539:
-                    if (NavStubView.this.mCurrentY > ((float) (NavStubView.this.mScreenHeight - 240))) {
-                        NavStubView.this.updateStateMode(65538);
-                        RecentsEventBus.getDefault().send(new FsGestureSlideOutEvent());
-                        if (NavStubView.this.mWindowMode == 1) {
-                            NavStubView.this.mHomeFadeInAnim.start();
-                            break;
-                        }
-                    }
-                    break;
-                case 65540:
-                    if (NavStubView.this.mCurrentY > ((float) (NavStubView.this.mScreenHeight - 240))) {
-                        NavStubView.this.updateStateMode(65538);
-                        RecentsEventBus.getDefault().post(new FsGesturePreloadRecentsEvent());
-                        RecentsEventBus.getDefault().send(new FsGestureEnterRecentsEvent());
-                        NavStubView.this.mRecentsModeRecentsSlideInAnim.start();
-                        RecentsEventBus.getDefault().send(new FsGestureRecentsModeSlideInEvent());
-                        break;
-                    }
-                    break;
-            }
-            NavStubView.this.mFrameHandler.postDelayed(this, 16);
-        }
-    };
+    private Runnable mTailCatcherTask;
     private float mTouchDownY;
     private int mTouchSlop;
     private Runnable mUpdateViewLayoutRunnable;
@@ -368,7 +284,12 @@ public class NavStubView extends FrameLayout {
     }
 
     static {
-        DEVICE_BOTTOM_EDGE_HEIGHTS.put("perseus", Float.valueOf(4.5f));
+        boolean equals = "beryllium".equals(Build.PRODUCT);
+        IS_E10 = equals;
+        DEFAULT_ANIM_TIME = equals ? 144 : 300;
+        HashMap<String, Float> hashMap = new HashMap<>();
+        DEVICE_BOTTOM_EDGE_HEIGHTS = hashMap;
+        hashMap.put("perseus", Float.valueOf(4.5f));
         DEVICE_BOTTOM_EDGE_HEIGHTS.put("cepheus", Float.valueOf(3.6f));
         DEVICE_BOTTOM_EDGE_HEIGHTS.put("dipper", Float.valueOf(6.4f));
         DEVICE_BOTTOM_EDGE_HEIGHTS.put("grus", Float.valueOf(3.6f));
@@ -383,6 +304,104 @@ public class NavStubView extends FrameLayout {
 
     public NavStubView(Context context) {
         super(context);
+        new PorterDuffXfermode(PorterDuff.Mode.OVERLAY);
+        this.mLastConfiguration = new Configuration();
+        this.mOrientationChangedAfterDown = false;
+        this.mCurrAction = -1;
+        this.mLocation = new int[2];
+        this.mIsEnterRecents = false;
+        this.mIsSkipResetLauncherAlpha = false;
+        this.mHapticFeedbackRunnable = new Runnable() {
+            public void run() {
+                if (Constants.IS_SUPPORT_LINEAR_MOTOR_VIBRATE) {
+                    ((HapticFeedBackImpl) Dependency.get(HapticFeedBackImpl.class)).getHapticFeedbackUtil().performHapticFeedback("hold", false);
+                } else {
+                    NavStubView.this.performHapticFeedback(1);
+                }
+            }
+        };
+        this.mTailCatcherTask = new Runnable() {
+            public void run() {
+                NavStubView navStubView = NavStubView.this;
+                NavStubView.access$016(navStubView, (((float) navStubView.mPivotLocX) - NavStubView.this.mFollowTailX) / 4.0f);
+                NavStubView navStubView2 = NavStubView.this;
+                NavStubView.access$216(navStubView2, (((float) navStubView2.mPivotLocY) - NavStubView.this.mFollowTailY) / 4.0f);
+                float abs = Math.abs(((float) NavStubView.this.mPivotLocX) - NavStubView.this.mFollowTailX);
+                float abs2 = Math.abs(((float) NavStubView.this.mPivotLocY) - NavStubView.this.mFollowTailY);
+                double sqrt = Math.sqrt((double) ((abs * abs) + (abs2 * abs2)));
+                if (NavStubView.this.mWindowMode == 4) {
+                    NavStubView.this.mFrameHandler.postDelayed(this, 16);
+                    return;
+                }
+                switch (NavStubView.this.mStateMode) {
+                    case 65538:
+                        if (NavStubView.this.mCurrentY < ((float) (NavStubView.this.mScreenHeight - 160)) && sqrt < 80.0d && !NavStubView.this.mIsEnterRecents && (NavStubView.this.mWindowMode == 2 || NavStubView.this.mWindowMode == 1)) {
+                            boolean unused = NavStubView.this.mIsEnterRecents = true;
+                            RecentsEventBus.getDefault().post(new FsGesturePreloadRecentsEvent());
+                            RecentsEventBus.getDefault().send(new FsGestureEnterRecentsEvent());
+                        }
+                        if (NavStubView.this.mCurrentY < ((float) (NavStubView.this.mScreenHeight - 320)) && sqrt < 40.0d) {
+                            NavStubView navStubView3 = NavStubView.this;
+                            navStubView3.removeCallbacks(navStubView3.mHapticFeedbackRunnable);
+                            NavStubView navStubView4 = NavStubView.this;
+                            navStubView4.postDelayed(navStubView4.mHapticFeedbackRunnable, 100);
+                            int access$400 = NavStubView.this.mWindowMode;
+                            if (access$400 != 1) {
+                                if (access$400 != 2) {
+                                    if (access$400 == 3) {
+                                        NavStubView.this.updateStateMode(65540);
+                                        Recents.getSystemServices().changeAlphaScaleForFsGesture(Constants.HOME_LAUCNHER_PACKAGE_NAME, 0.0f, 0.8f);
+                                        boolean unused2 = NavStubView.this.mIsSkipResetLauncherAlpha = true;
+                                        NavStubView.this.mRecentsModeHomeFadeInAnim.setFloatValues(new float[]{0.8f, 0.95f});
+                                        NavStubView.this.mRecentsModeHomeFadeInAnim.start();
+                                        RecentsEventBus.getDefault().send(new FsGestureRecentsModeSlideOutEvent());
+                                        break;
+                                    }
+                                } else {
+                                    NavStubView.this.updateStateMode(65539);
+                                    RecentsEventBus.getDefault().send(new FsGestureSlideInEvent(NavStubView.this.mCurrX, NavStubView.this.mCurrY));
+                                    break;
+                                }
+                            } else {
+                                NavStubView.this.updateStateMode(65539);
+                                RecentsEventBus.getDefault().send(new FsGestureSlideInEvent(NavStubView.this.mCurrX, NavStubView.this.mCurrY));
+                                NavStubView.this.mHomeFadeOutAnim.setFloatValues(new float[]{NavStubView.this.mCurScale, 0.8f});
+                                NavStubView.this.mHomeFadeOutAnim.start();
+                                break;
+                            }
+                        }
+                        break;
+                    case 65539:
+                        if (NavStubView.this.mCurrentY > ((float) (NavStubView.this.mScreenHeight - 240))) {
+                            NavStubView.this.updateStateMode(65538);
+                            RecentsEventBus.getDefault().send(new FsGestureSlideOutEvent());
+                            if (NavStubView.this.mWindowMode == 1) {
+                                NavStubView.this.mHomeFadeInAnim.start();
+                                break;
+                            }
+                        }
+                        break;
+                    case 65540:
+                        if (NavStubView.this.mCurrentY > ((float) (NavStubView.this.mScreenHeight - 240))) {
+                            NavStubView.this.updateStateMode(65538);
+                            RecentsEventBus.getDefault().post(new FsGesturePreloadRecentsEvent());
+                            RecentsEventBus.getDefault().send(new FsGestureEnterRecentsEvent());
+                            NavStubView.this.mRecentsModeRecentsSlideInAnim.start();
+                            RecentsEventBus.getDefault().send(new FsGestureRecentsModeSlideInEvent());
+                            break;
+                        }
+                        break;
+                }
+                NavStubView.this.mFrameHandler.postDelayed(this, 16);
+            }
+        };
+        this.mDestRectHeightScale = 1.0f;
+        this.mCurAlpha = 1.0f;
+        this.mShowRect = new Rect();
+        this.mSrc = new Rect();
+        this.mDest = new Rect();
+        this.mLastDownNo = 0;
+        this.mDownNo = 0;
         boolean z = true;
         this.jobExecutor = Executors.newFixedThreadPool(1);
         this.mFullScreenModeChangeReceiver = new BroadcastReceiver() {
@@ -418,13 +437,16 @@ public class NavStubView extends FrameLayout {
         this.mWindowManager.getDefaultDisplay().getRealMetrics(displayMetrics);
         this.mScreenWidth = displayMetrics.widthPixels;
         this.mScreenHeight = displayMetrics.heightPixels;
-        this.mPaint = new Paint();
-        this.mPaint.setAntiAlias(true);
-        this.mHomeIntent = new Intent("android.intent.action.MAIN", (Uri) null);
-        this.mHomeIntent.addCategory("android.intent.category.HOME");
+        Paint paint = new Paint();
+        this.mPaint = paint;
+        paint.setAntiAlias(true);
+        Intent intent = new Intent("android.intent.action.MAIN", (Uri) null);
+        this.mHomeIntent = intent;
+        intent.addCategory("android.intent.category.HOME");
         this.mHomeIntent.addFlags(270532608);
-        this.mRecentsModeHomeIntent = new Intent(this.mHomeIntent);
-        this.mRecentsModeHomeIntent.putExtra("skip_reset_gesture_view_state", true);
+        Intent intent2 = new Intent(this.mHomeIntent);
+        this.mRecentsModeHomeIntent = intent2;
+        intent2.putExtra("skip_reset_gesture_view_state", true);
         this.mIam = ActivityManagerNative.getDefault();
         this.mAm = (ActivityManager) context.getSystemService("activity");
         this.mDividerSize = getResources().getDimensionPixelSize(R.dimen.docked_stack_divider_thickness) - (getResources().getDimensionPixelSize(R.dimen.docked_stack_divider_insets) * 2);
@@ -432,8 +454,9 @@ public class NavStubView extends FrameLayout {
         if (identifier > 0) {
             this.mStatusBarHeight = getResources().getDimensionPixelSize(identifier);
         }
-        this.mCloseScreenshotIntent = new Intent("android.intent.action.CLOSE_SYSTEM_DIALOGS");
-        this.mCloseScreenshotIntent.putExtra("reason", "fs_gesture");
+        Intent intent3 = new Intent("android.intent.action.CLOSE_SYSTEM_DIALOGS");
+        this.mCloseScreenshotIntent = intent3;
+        intent3.putExtra("reason", "fs_gesture");
         this.mGestureStubListenerWrapper = new GestureStubListenerWrapper();
         this.mHandler = new H();
         this.mTouchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
@@ -443,10 +466,10 @@ public class NavStubView extends FrameLayout {
             z = false;
         }
         this.mIsFsgVersionTwo = z;
-        this.mSupportAntiMistake = this.mIsFsgVersionTwo;
-        if (this.mSupportAntiMistake) {
-            this.antiMistakeTouchView = new AntiMistakeTouchView(context);
-            AntiMistakeTouchView antiMistakeTouchView2 = this.antiMistakeTouchView;
+        this.mSupportAntiMistake = z;
+        if (z) {
+            AntiMistakeTouchView antiMistakeTouchView2 = new AntiMistakeTouchView(context);
+            this.antiMistakeTouchView = antiMistakeTouchView2;
             addView(antiMistakeTouchView2, antiMistakeTouchView2.getFrameLayoutParams());
         }
         this.mRecentVisible = false;
@@ -454,8 +477,9 @@ public class NavStubView extends FrameLayout {
     }
 
     private void initValueAnimator() {
-        this.mHomeFadeOutAnim = new ValueAnimator();
-        this.mHomeFadeOutAnim.setInterpolator(Interpolators.CUBIC_EASE_OUT);
+        ValueAnimator valueAnimator = new ValueAnimator();
+        this.mHomeFadeOutAnim = valueAnimator;
+        valueAnimator.setInterpolator(Interpolators.CUBIC_EASE_OUT);
         this.mHomeFadeOutAnim.setDuration(200);
         this.mHomeFadeOutAnim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
@@ -463,8 +487,9 @@ public class NavStubView extends FrameLayout {
                 Recents.getSystemServices().changeAlphaScaleForFsGesture(Constants.HOME_LAUCNHER_PACKAGE_NAME, 1.0f - valueAnimator.getAnimatedFraction(), floatValue);
             }
         });
-        this.mHomeFadeInAnim = new ValueAnimator();
-        this.mHomeFadeInAnim.setFloatValues(new float[]{0.0f, 1.0f});
+        ValueAnimator valueAnimator2 = new ValueAnimator();
+        this.mHomeFadeInAnim = valueAnimator2;
+        valueAnimator2.setFloatValues(new float[]{0.0f, 1.0f});
         this.mHomeFadeInAnim.setInterpolator(Interpolators.CUBIC_EASE_OUT);
         this.mHomeFadeInAnim.setDuration(150);
         this.mHomeFadeInAnim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -473,8 +498,9 @@ public class NavStubView extends FrameLayout {
                 Recents.getSystemServices().changeAlphaScaleForFsGesture(Constants.HOME_LAUCNHER_PACKAGE_NAME, animatedFraction, ((NavStubView.this.mCurScale - 0.8f) * animatedFraction) + 0.8f);
             }
         });
-        this.mRecentsModeHomeFadeInAnim = new ValueAnimator();
-        this.mRecentsModeHomeFadeInAnim.setInterpolator(Interpolators.CUBIC_EASE_OUT);
+        ValueAnimator valueAnimator3 = new ValueAnimator();
+        this.mRecentsModeHomeFadeInAnim = valueAnimator3;
+        valueAnimator3.setInterpolator(Interpolators.CUBIC_EASE_OUT);
         this.mRecentsModeHomeFadeInAnim.setDuration(200);
         this.mRecentsModeHomeFadeInAnim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
@@ -482,8 +508,9 @@ public class NavStubView extends FrameLayout {
                 Recents.getSystemServices().changeAlphaScaleForFsGesture(Constants.HOME_LAUCNHER_PACKAGE_NAME, Math.min((floatValue - 0.8f) * 6.6666665f, 1.0f), floatValue);
             }
         });
-        this.mRecentsModeRecentsSlideInAnim = new ValueAnimator();
-        this.mRecentsModeRecentsSlideInAnim.setFloatValues(new float[]{0.0f, 1.0f});
+        ValueAnimator valueAnimator4 = new ValueAnimator();
+        this.mRecentsModeRecentsSlideInAnim = valueAnimator4;
+        valueAnimator4.setFloatValues(new float[]{0.0f, 1.0f});
         this.mRecentsModeRecentsSlideInAnim.setInterpolator(Interpolators.CUBIC_EASE_OUT);
         this.mRecentsModeRecentsSlideInAnim.setDuration(200);
         this.mRecentsModeRecentsSlideInAnim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -528,8 +555,8 @@ public class NavStubView extends FrameLayout {
     }
 
     public final void onBusEvent(FsGestureLaunchTargetTaskViewRectEvent fsGestureLaunchTargetTaskViewRectEvent) {
-        this.mDestRectF = fsGestureLaunchTargetTaskViewRectEvent.mRectF;
-        RectF rectF = this.mDestRectF;
+        RectF rectF = fsGestureLaunchTargetTaskViewRectEvent.mRectF;
+        this.mDestRectF = rectF;
         if (rectF != null) {
             this.mDestRectHeightScale = (((float) this.mScreenBmpWidth) * rectF.height()) / (this.mDestRectF.width() * ((float) this.mScreenBmpHeight));
         }
@@ -749,8 +776,9 @@ public class NavStubView extends FrameLayout {
     }
 
     public void setVisibility(int i) {
-        this.mKeepHidden = i != 0;
-        if (this.mKeepHidden) {
+        boolean z = i != 0;
+        this.mKeepHidden = z;
+        if (z) {
             super.setVisibility(8);
             MotionEvent motionEvent = this.mDownEvent;
             if (motionEvent != null) {
@@ -785,227 +813,221 @@ public class NavStubView extends FrameLayout {
         }
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:12:0x004d, code lost:
-        if (r0 != 3) goto L_0x01be;
+    /* JADX WARNING: Code restructure failed: missing block: B:12:0x004b, code lost:
+        if (r1 != 3) goto L_0x01b2;
      */
     /* Code decompiled incorrectly, please refer to instructions dump. */
-    public boolean onTouchEvent(android.view.MotionEvent r13) {
+    public boolean onTouchEvent(android.view.MotionEvent r14) {
         /*
-            r12 = this;
-            boolean r0 = DEBUG
-            if (r0 == 0) goto L_0x0030
+            r13 = this;
             java.lang.String r0 = TAG
+            boolean r1 = DEBUG
+            if (r1 == 0) goto L_0x0030
             java.lang.StringBuilder r1 = new java.lang.StringBuilder
             r1.<init>()
             java.lang.String r2 = "onTouchEvent:"
             r1.append(r2)
-            float r2 = r13.getRawX()
+            float r2 = r14.getRawX()
             r1.append(r2)
             java.lang.String r2 = " "
             r1.append(r2)
-            float r3 = r13.getRawY()
+            float r3 = r14.getRawY()
             r1.append(r3)
             r1.append(r2)
-            r1.append(r13)
+            r1.append(r14)
             java.lang.String r1 = r1.toString()
             android.util.Log.d(r0, r1)
         L_0x0030:
-            boolean r0 = r12.mDisableTouch
-            r1 = 0
-            if (r0 == 0) goto L_0x0036
-            return r1
+            boolean r1 = r13.mDisableTouch
+            r2 = 0
+            if (r1 == 0) goto L_0x0036
+            return r2
         L_0x0036:
-            int r0 = r13.getAction()
-            r12.mCurrAction = r0
-            int r0 = r12.mCurrAction
-            r2 = 258(0x102, float:3.62E-43)
-            r3 = 300(0x12c, double:1.48E-321)
-            r5 = 3
-            r6 = 1
-            if (r0 == 0) goto L_0x017b
-            r7 = 255(0xff, float:3.57E-43)
-            if (r0 == r6) goto L_0x00e8
-            r8 = 2
-            if (r0 == r8) goto L_0x0051
-            if (r0 == r5) goto L_0x00e8
-            goto L_0x01be
-        L_0x0051:
-            float r0 = r13.getRawX()
-            r12.mCurrX = r0
-            float r0 = r13.getRawY()
-            r12.mCurrY = r0
-            r0 = 1073741824(0x40000000, float:2.0)
-            float r3 = r12.mCurrY
-            float r4 = r12.mInitY
-            float r3 = r3 - r4
-            float r3 = java.lang.Math.abs(r3)
-            float r3 = r3 * r0
-            float r0 = r12.mCurrX
-            float r4 = r12.mInitX
-            float r0 = r0 - r4
-            float r0 = java.lang.Math.abs(r0)
-            int r0 = (r3 > r0 ? 1 : (r3 == r0 ? 0 : -1))
-            if (r0 >= 0) goto L_0x00a4
-            float r0 = r12.mCurrX
-            float r3 = r12.mInitX
-            float r0 = r0 - r3
-            float r0 = java.lang.Math.abs(r0)
-            int r3 = r12.mTouchSlop
-            float r3 = (float) r3
-            int r0 = (r0 > r3 ? 1 : (r0 == r3 ? 0 : -1))
-            if (r0 <= 0) goto L_0x00a4
-            boolean r0 = r12.mIsGestureStarted
-            if (r0 != 0) goto L_0x00a4
-            boolean r0 = r12.mPendingResetStatus
-            if (r0 != 0) goto L_0x00a4
-            com.android.systemui.statusbar.phone.NavStubView$H r0 = r12.mHandler
-            android.os.Message r3 = r0.obtainMessage(r7)
-            r0.sendMessage(r3)
-            boolean r0 = DEBUG
-            if (r0 == 0) goto L_0x01be
-            java.lang.String r0 = TAG
-            java.lang.String r3 = "h-slide detected, sendMessage MSG_SET_GESTURE_STUB_UNTOUCHABLE"
-            android.util.Log.d(r0, r3)
-            goto L_0x01be
-        L_0x00a4:
-            boolean r0 = r12.mPendingResetStatus
-            if (r0 != 0) goto L_0x01be
-            float r0 = r12.mInitY
-            float r3 = r12.mCurrY
-            float r0 = r0 - r3
-            int r3 = r12.mTouchSlop
-            float r3 = (float) r3
-            int r0 = (r0 > r3 ? 1 : (r0 == r3 ? 0 : -1))
-            if (r0 <= 0) goto L_0x01be
-            boolean r0 = r12.mIsGestureStarted
-            if (r0 != 0) goto L_0x01be
-            r12.mIsGestureStarted = r6
-            r12.exitFreeFormWindowIfNeeded()
-            r12.clearMessages()
-            android.view.MotionEvent r0 = r12.mDownEvent
-            if (r0 == 0) goto L_0x00e3
-            android.content.res.Resources r0 = r12.getResources()
+            int r1 = r14.getAction()
+            r13.mCurrAction = r1
+            r3 = 258(0x102, float:3.62E-43)
+            r4 = 300(0x12c, double:1.48E-321)
+            r6 = 3
+            r7 = 1
+            if (r1 == 0) goto L_0x0171
+            r8 = 255(0xff, float:3.57E-43)
+            if (r1 == r7) goto L_0x00e2
+            r9 = 2
+            if (r1 == r9) goto L_0x004f
+            if (r1 == r6) goto L_0x00e2
+            goto L_0x01b2
+        L_0x004f:
+            float r1 = r14.getRawX()
+            r13.mCurrX = r1
+            float r1 = r14.getRawY()
+            r13.mCurrY = r1
+            r4 = 1073741824(0x40000000, float:2.0)
+            float r5 = r13.mInitY
+            float r1 = r1 - r5
+            float r1 = java.lang.Math.abs(r1)
+            float r1 = r1 * r4
+            float r4 = r13.mCurrX
+            float r5 = r13.mInitX
+            float r4 = r4 - r5
+            float r4 = java.lang.Math.abs(r4)
+            int r1 = (r1 > r4 ? 1 : (r1 == r4 ? 0 : -1))
+            if (r1 >= 0) goto L_0x009e
+            float r1 = r13.mCurrX
+            float r4 = r13.mInitX
+            float r1 = r1 - r4
+            float r1 = java.lang.Math.abs(r1)
+            int r4 = r13.mTouchSlop
+            float r4 = (float) r4
+            int r1 = (r1 > r4 ? 1 : (r1 == r4 ? 0 : -1))
+            if (r1 <= 0) goto L_0x009e
+            boolean r1 = r13.mIsGestureStarted
+            if (r1 != 0) goto L_0x009e
+            boolean r1 = r13.mPendingResetStatus
+            if (r1 != 0) goto L_0x009e
+            com.android.systemui.statusbar.phone.NavStubView$H r1 = r13.mHandler
+            android.os.Message r4 = r1.obtainMessage(r8)
+            r1.sendMessage(r4)
+            boolean r1 = DEBUG
+            if (r1 == 0) goto L_0x01b2
+            java.lang.String r1 = "h-slide detected, sendMessage MSG_SET_GESTURE_STUB_UNTOUCHABLE"
+            android.util.Log.d(r0, r1)
+            goto L_0x01b2
+        L_0x009e:
+            boolean r0 = r13.mPendingResetStatus
+            if (r0 != 0) goto L_0x01b2
+            float r0 = r13.mInitY
+            float r1 = r13.mCurrY
+            float r0 = r0 - r1
+            int r1 = r13.mTouchSlop
+            float r1 = (float) r1
+            int r0 = (r0 > r1 ? 1 : (r0 == r1 ? 0 : -1))
+            if (r0 <= 0) goto L_0x01b2
+            boolean r0 = r13.mIsGestureStarted
+            if (r0 != 0) goto L_0x01b2
+            r13.mIsGestureStarted = r7
+            r13.exitFreeFormWindowIfNeeded()
+            r13.clearMessages()
+            android.view.MotionEvent r0 = r13.mDownEvent
+            if (r0 == 0) goto L_0x00dd
+            android.content.res.Resources r0 = r13.getResources()
             android.content.res.Configuration r0 = r0.getConfiguration()
             int r0 = r0.orientation
-            if (r0 != r6) goto L_0x00e3
-            android.view.MotionEvent r0 = r12.mDownEvent
+            if (r0 != r7) goto L_0x00dd
+            android.view.MotionEvent r0 = r13.mDownEvent
             android.view.MotionEvent r0 = r0.copy()
-            com.android.systemui.statusbar.phone.NavStubView$H r3 = r12.mHandler
-            android.os.Message r0 = r3.obtainMessage(r2, r0)
-            com.android.systemui.statusbar.phone.NavStubView$H r3 = r12.mHandler
-            r3.sendMessage(r0)
-            goto L_0x01be
-        L_0x00e3:
-            r13.setAction(r1)
-            goto L_0x01be
-        L_0x00e8:
-            android.view.MotionEvent r0 = r12.mDownEvent
-            if (r0 != 0) goto L_0x00ed
-            return r6
-        L_0x00ed:
-            float r8 = r13.getRawX()
-            r12.mCurrX = r8
-            float r8 = r13.getRawY()
-            r12.mCurrY = r8
-            long r8 = r13.getEventTime()
-            long r10 = r0.getEventTime()
-            long r8 = r8 - r10
-            int r3 = (r8 > r3 ? 1 : (r8 == r3 ? 0 : -1))
-            if (r3 >= 0) goto L_0x015c
-            boolean r3 = r12.mIsGestureStarted
-            if (r3 != 0) goto L_0x015c
-            r12.clearMessages()
-            float r3 = r12.mCurrX
-            float r4 = r0.getRawX()
-            float r3 = r3 - r4
-            float r4 = r12.mCurrY
-            float r0 = r0.getRawY()
-            float r4 = r4 - r0
-            boolean r0 = r12.mIsGestureStarted
-            if (r0 != 0) goto L_0x015c
-            float r0 = java.lang.Math.abs(r3)
-            r8 = 1106247680(0x41f00000, float:30.0)
-            int r0 = (r0 > r8 ? 1 : (r0 == r8 ? 0 : -1))
-            if (r0 > 0) goto L_0x015c
-            float r0 = java.lang.Math.abs(r4)
-            int r0 = (r0 > r8 ? 1 : (r0 == r8 ? 0 : -1))
-            if (r0 > 0) goto L_0x015c
-            com.android.systemui.statusbar.phone.NavStubView$H r0 = r12.mHandler
-            android.os.Message r7 = r0.obtainMessage(r7)
-            r0.sendMessage(r7)
-            boolean r0 = DEBUG
-            if (r0 == 0) goto L_0x015c
-            java.lang.String r0 = TAG
-            java.lang.StringBuilder r7 = new java.lang.StringBuilder
-            r7.<init>()
+            com.android.systemui.statusbar.phone.NavStubView$H r1 = r13.mHandler
+            android.os.Message r0 = r1.obtainMessage(r3, r0)
+            com.android.systemui.statusbar.phone.NavStubView$H r1 = r13.mHandler
+            r1.sendMessage(r0)
+            goto L_0x01b2
+        L_0x00dd:
+            r14.setAction(r2)
+            goto L_0x01b2
+        L_0x00e2:
+            android.view.MotionEvent r1 = r13.mDownEvent
+            if (r1 != 0) goto L_0x00e7
+            return r7
+        L_0x00e7:
+            float r9 = r14.getRawX()
+            r13.mCurrX = r9
+            float r9 = r14.getRawY()
+            r13.mCurrY = r9
+            long r9 = r14.getEventTime()
+            long r11 = r1.getEventTime()
+            long r9 = r9 - r11
+            int r4 = (r9 > r4 ? 1 : (r9 == r4 ? 0 : -1))
+            if (r4 >= 0) goto L_0x0154
+            boolean r4 = r13.mIsGestureStarted
+            if (r4 != 0) goto L_0x0154
+            r13.clearMessages()
+            float r4 = r13.mCurrX
+            float r5 = r1.getRawX()
+            float r4 = r4 - r5
+            float r5 = r13.mCurrY
+            float r1 = r1.getRawY()
+            float r5 = r5 - r1
+            boolean r1 = r13.mIsGestureStarted
+            if (r1 != 0) goto L_0x0154
+            float r1 = java.lang.Math.abs(r4)
+            r9 = 1106247680(0x41f00000, float:30.0)
+            int r1 = (r1 > r9 ? 1 : (r1 == r9 ? 0 : -1))
+            if (r1 > 0) goto L_0x0154
+            float r1 = java.lang.Math.abs(r5)
+            int r1 = (r1 > r9 ? 1 : (r1 == r9 ? 0 : -1))
+            if (r1 > 0) goto L_0x0154
+            com.android.systemui.statusbar.phone.NavStubView$H r1 = r13.mHandler
+            android.os.Message r8 = r1.obtainMessage(r8)
+            r1.sendMessage(r8)
+            boolean r1 = DEBUG
+            if (r1 == 0) goto L_0x0154
+            java.lang.StringBuilder r1 = new java.lang.StringBuilder
+            r1.<init>()
             java.lang.String r8 = "currTime - mDownTime < MSG_CHECK_GESTURE_STUB_TOUCHABLE_TIMEOUT updateViewLayout UnTouchable, diffX:"
-            r7.append(r8)
-            r7.append(r3)
-            java.lang.String r3 = " diffY:"
-            r7.append(r3)
-            r7.append(r4)
-            java.lang.String r3 = r7.toString()
-            android.util.Log.d(r0, r3)
-        L_0x015c:
-            boolean r0 = DEBUG
-            if (r0 == 0) goto L_0x0178
-            java.lang.String r0 = TAG
-            java.lang.StringBuilder r3 = new java.lang.StringBuilder
-            r3.<init>()
+            r1.append(r8)
+            r1.append(r4)
+            java.lang.String r4 = " diffY:"
+            r1.append(r4)
+            r1.append(r5)
+            java.lang.String r1 = r1.toString()
+            android.util.Log.d(r0, r1)
+        L_0x0154:
+            boolean r1 = DEBUG
+            if (r1 == 0) goto L_0x016e
+            java.lang.StringBuilder r1 = new java.lang.StringBuilder
+            r1.<init>()
             java.lang.String r4 = "ACTION_UP: mIsGestureStarted: "
-            r3.append(r4)
-            boolean r4 = r12.mIsGestureStarted
-            r3.append(r4)
-            java.lang.String r3 = r3.toString()
-            android.util.Log.d(r0, r3)
-        L_0x0178:
-            r12.mIsGestureStarted = r1
-            goto L_0x01be
-        L_0x017b:
-            float r0 = r13.getRawX()
-            r12.mInitX = r0
-            float r0 = r13.getRawY()
-            r12.mInitY = r0
-            float r0 = r13.getRawX()
-            r12.mCurrX = r0
-            float r0 = r13.getRawY()
-            r12.mCurrY = r0
-            android.view.MotionEvent r0 = r12.mDownEvent
-            if (r0 == 0) goto L_0x019d
-            r0.recycle()
-            r0 = 0
-            r12.mDownEvent = r0
-        L_0x019d:
-            android.view.MotionEvent r0 = r13.copy()
-            r12.mDownEvent = r0
-            com.android.systemui.statusbar.phone.NavStubView$H r0 = r12.mHandler
-            r7 = 256(0x100, float:3.59E-43)
-            r0.removeMessages(r7)
-            com.android.systemui.statusbar.phone.NavStubView$H r0 = r12.mHandler
-            android.os.Message r7 = r0.obtainMessage(r7)
-            r0.sendMessageDelayed(r7, r3)
-            boolean r0 = DEBUG
-            if (r0 == 0) goto L_0x01be
-            java.lang.String r0 = TAG
-            java.lang.String r3 = "onTouch ACTION_DOWN sendMessageDelayed MSG_CHECK_GESTURE_STUB_TOUCHABLE"
-            android.util.Log.d(r0, r3)
-        L_0x01be:
-            boolean r0 = r12.mPendingResetStatus
-            if (r0 != 0) goto L_0x01dc
-            boolean r0 = r12.mIsGestureStarted
-            if (r0 != 0) goto L_0x01cc
-            int r0 = r12.mCurrAction
-            if (r0 == r6) goto L_0x01cc
-            if (r0 != r5) goto L_0x01dc
-        L_0x01cc:
-            android.view.MotionEvent r13 = r13.copy()
-            com.android.systemui.statusbar.phone.NavStubView$H r0 = r12.mHandler
-            android.os.Message r13 = r0.obtainMessage(r2, r13)
-            com.android.systemui.statusbar.phone.NavStubView$H r12 = r12.mHandler
-            r12.sendMessage(r13)
-            return r6
-        L_0x01dc:
-            return r1
+            r1.append(r4)
+            boolean r4 = r13.mIsGestureStarted
+            r1.append(r4)
+            java.lang.String r1 = r1.toString()
+            android.util.Log.d(r0, r1)
+        L_0x016e:
+            r13.mIsGestureStarted = r2
+            goto L_0x01b2
+        L_0x0171:
+            float r1 = r14.getRawX()
+            r13.mInitX = r1
+            float r1 = r14.getRawY()
+            r13.mInitY = r1
+            float r1 = r14.getRawX()
+            r13.mCurrX = r1
+            float r1 = r14.getRawY()
+            r13.mCurrY = r1
+            android.view.MotionEvent r1 = r13.mDownEvent
+            if (r1 == 0) goto L_0x0193
+            r1.recycle()
+            r1 = 0
+            r13.mDownEvent = r1
+        L_0x0193:
+            android.view.MotionEvent r1 = r14.copy()
+            r13.mDownEvent = r1
+            com.android.systemui.statusbar.phone.NavStubView$H r1 = r13.mHandler
+            r8 = 256(0x100, float:3.59E-43)
+            r1.removeMessages(r8)
+            com.android.systemui.statusbar.phone.NavStubView$H r1 = r13.mHandler
+            android.os.Message r8 = r1.obtainMessage(r8)
+            r1.sendMessageDelayed(r8, r4)
+            boolean r1 = DEBUG
+            if (r1 == 0) goto L_0x01b2
+            java.lang.String r1 = "onTouch ACTION_DOWN sendMessageDelayed MSG_CHECK_GESTURE_STUB_TOUCHABLE"
+            android.util.Log.d(r0, r1)
+        L_0x01b2:
+            boolean r0 = r13.mPendingResetStatus
+            if (r0 != 0) goto L_0x01d0
+            boolean r0 = r13.mIsGestureStarted
+            if (r0 != 0) goto L_0x01c0
+            int r0 = r13.mCurrAction
+            if (r0 == r7) goto L_0x01c0
+            if (r0 != r6) goto L_0x01d0
+        L_0x01c0:
+            android.view.MotionEvent r14 = r14.copy()
+            com.android.systemui.statusbar.phone.NavStubView$H r0 = r13.mHandler
+            android.os.Message r14 = r0.obtainMessage(r3, r14)
+            com.android.systemui.statusbar.phone.NavStubView$H r13 = r13.mHandler
+            r13.sendMessage(r14)
+            return r7
+        L_0x01d0:
+            return r2
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.phone.NavStubView.onTouchEvent(android.view.MotionEvent):boolean");
     }
@@ -1019,8 +1041,9 @@ public class NavStubView extends FrameLayout {
     public boolean onPointerEvent(MotionEvent motionEvent) {
         AntiMistakeTouchView antiMistakeTouchView2;
         AntiMistakeTouchView antiMistakeTouchView3;
+        String str = TAG;
         if (DEBUG) {
-            Log.d(TAG, "onPointEvent:" + motionEvent.getRawX() + " " + motionEvent.getRawY() + " " + motionEvent);
+            Log.d(str, "onPointEvent:" + motionEvent.getRawX() + " " + motionEvent.getRawY() + " " + motionEvent);
         }
         if (this.mIsInFsMode) {
             return false;
@@ -1029,7 +1052,9 @@ public class NavStubView extends FrameLayout {
             if (!this.mSupportAntiMistake || ((antiMistakeTouchView2 = this.antiMistakeTouchView) != null && antiMistakeTouchView2.containsLocation(motionEvent.getRawX()))) {
                 if (SystemClock.uptimeMillis() - this.mLastTouchTime > 2000) {
                     Toast makeText = Toast.makeText(this.mContext, getResources().getString(R.string.please_slide_agian), 0);
-                    makeText.getWindowParams().privateFlags |= 16;
+                    if (makeText.getWindowParams() != null) {
+                        makeText.getWindowParams().privateFlags |= 16;
+                    }
                     makeText.show();
                     AntiMistakeTouchView antiMistakeTouchView4 = this.antiMistakeTouchView;
                     if (antiMistakeTouchView4 != null) {
@@ -1090,7 +1115,7 @@ public class NavStubView extends FrameLayout {
                 statusBar2.animateCollapsePanels(0);
             }
         }
-        Log.d(TAG, "current window mode:" + this.mWindowMode + " (1:home, 2:app, 3:recent-task, 4:keyguard)");
+        Log.d(str, "current window mode:" + this.mWindowMode + " (1:home, 2:app, 3:recent-task, 4:keyguard)");
         if (1 == motionEvent.getAction()) {
             this.mIsInFsMode = true;
         }
@@ -1150,15 +1175,16 @@ public class NavStubView extends FrameLayout {
         int i;
         int i2;
         Bitmap bitmap;
+        String str = TAG;
         this.mCurrentY = motionEvent.getRawY();
         int action = motionEvent.getAction();
         if (action == 0) {
-            Log.d(TAG, "======>>>>down: " + SystemClock.uptimeMillis());
+            Log.d(str, "======>>>>down: " + SystemClock.uptimeMillis());
             initValue(motionEvent);
             try {
                 this.mCurTask = ActivityManagerCompat.getRecentTasksForUser(this.mAm, 1, 127, -2).get(0);
             } catch (Exception e) {
-                Log.e(TAG, "Failed to get recent tasks", e);
+                Log.e(str, "Failed to get recent tasks", e);
             }
             this.jobExecutor.execute(new Runnable() {
                 public void run() {
@@ -1166,18 +1192,19 @@ public class NavStubView extends FrameLayout {
                 }
             });
             try {
-                this.mScreenBitmap = ScreenshotUtils.getScreenshot(this.mContext.getApplicationContext(), 1.0f, 0, MiuiWindowManager.getLayer(this.mContext, b.m) - 1, true);
-                if (this.mScreenBitmap != null) {
-                    Bitmap bitmap2 = this.mScreenBitmap;
-                    this.mScreenBitmap = bitmap2.copy(Bitmap.Config.ARGB_8888, false);
-                    bitmap2.recycle();
+                Bitmap screenshot = ScreenshotUtils.getScreenshot(this.mContext.getApplicationContext(), 1.0f, 0, MiuiWindowManager.getLayer(this.mContext, b.m) - 1, true);
+                this.mScreenBitmap = screenshot;
+                if (screenshot != null) {
+                    this.mScreenBitmap = screenshot.copy(Bitmap.Config.ARGB_8888, false);
+                    screenshot.recycle();
                 }
             } catch (Exception e2) {
                 e2.printStackTrace();
             }
             if (this.mScreenBitmap == null) {
-                this.mScreenBitmap = Bitmap.createBitmap(this.mScreenWidth, this.mScreenHeight, Bitmap.Config.ARGB_8888);
-                this.mScreenBitmap.eraseColor(Color.parseColor("#00000000"));
+                Bitmap createBitmap = Bitmap.createBitmap(this.mScreenWidth, this.mScreenHeight, Bitmap.Config.ARGB_8888);
+                this.mScreenBitmap = createBitmap;
+                createBitmap.eraseColor(Color.parseColor("#00000000"));
             }
             if (this.mIsMultiWindow) {
                 try {
@@ -1188,8 +1215,9 @@ public class NavStubView extends FrameLayout {
                         bitmap = Bitmap.createBitmap(this.mScreenBitmap, stackInfo.bounds.right + this.mDividerSize, 0, (this.mScreenWidth - stackInfo.bounds.right) - this.mDividerSize, this.mScreenHeight);
                     }
                     if (this.mScreenHeight < this.mScreenWidth) {
-                        this.mMultiDelta = (stackInfo.bounds.right + this.mDividerSize) / 2;
-                        this.mDelta += (float) this.mMultiDelta;
+                        int i3 = (stackInfo.bounds.right + this.mDividerSize) / 2;
+                        this.mMultiDelta = i3;
+                        this.mDelta += (float) i3;
                     }
                     this.mScreenBitmap.recycle();
                     this.mScreenBitmap = bitmap;
@@ -1201,16 +1229,17 @@ public class NavStubView extends FrameLayout {
             boolean z = MiuiSettings.Global.getBoolean(getContext().getContentResolver(), "force_black");
             if (!this.mIsMultiWindow && Constants.IS_NOTCH && z && (i = this.mScreenHeight) > (i2 = this.mScreenWidth)) {
                 try {
-                    Bitmap createBitmap = Bitmap.createBitmap(this.mScreenBitmap, 0, this.mStatusBarHeight, i2, i - this.mStatusBarHeight);
+                    Bitmap createBitmap2 = Bitmap.createBitmap(this.mScreenBitmap, 0, this.mStatusBarHeight, i2, i - this.mStatusBarHeight);
                     this.mScreenBitmap.recycle();
-                    this.mScreenBitmap = createBitmap;
+                    this.mScreenBitmap = createBitmap2;
                     this.mIsAlreadyCropStatusBar = true;
                 } catch (Exception e4) {
                     e4.printStackTrace();
                 }
             }
-            this.mScreenBitmap = createRoundCornerBmp(this.mScreenBitmap);
-            this.mScreenBmpWidth = this.mScreenBitmap.getWidth();
+            Bitmap createRoundCornerBmp = createRoundCornerBmp(this.mScreenBitmap);
+            this.mScreenBitmap = createRoundCornerBmp;
+            this.mScreenBmpWidth = createRoundCornerBmp.getWidth();
             this.mScreenBmpHeight = this.mScreenBitmap.getHeight();
             this.mScreenBitmap.setHasAlpha(false);
             this.mScreenBitmap.prepareToDraw();
@@ -1220,7 +1249,7 @@ public class NavStubView extends FrameLayout {
             actionMoveResolution(motionEvent);
             this.mCurScale = 1.0f - (linearToCubic(this.mCurrentY, (float) this.mScreenHeight, 0.0f, 3.0f) * 0.385f);
             invalidate();
-            Log.d(TAG, "=======>>>>>move: " + SystemClock.uptimeMillis());
+            Log.d(str, "=======>>>>>move: " + SystemClock.uptimeMillis());
         } else if (action == 3) {
             this.mGestureStubListenerWrapper.onGestureFinish(false);
             if (this.mOrientationChangedAfterDown) {
@@ -1265,8 +1294,9 @@ public class NavStubView extends FrameLayout {
     private void updateAssistantProgress() {
         if (!this.mLaunchedAssistant) {
             float hypot = (((float) Math.hypot((double) (this.mDownY - this.mCurrentY), (double) (this.mDownX - this.mCurrentX))) * 1.0f) / this.mAssistDistantThreshold;
-            this.mAssistLastProgress = Math.min(Math.max(0.0f, hypot), 1.0f);
-            if (this.mAssistLastProgress == 1.0f) {
+            float min = Math.min(Math.max(0.0f, hypot), 1.0f);
+            this.mAssistLastProgress = min;
+            if (min == 1.0f) {
                 this.mAssistManager.onAssistantGestureCompletion();
                 Bundle bundle = new Bundle();
                 bundle.putInt("triggered_by", 83);
@@ -1382,7 +1412,8 @@ public class NavStubView extends FrameLayout {
                     startRecentsResetAnim();
                 } else {
                     writeSettingUp(4);
-                    this.mContext.startActivityAsUser(this.mRecentsModeHomeIntent, ActivityOptions.makeCustomAnimation(this.mContext, 0, 0).toBundle(), UserHandle.CURRENT);
+                    Context context = this.mContext;
+                    context.startActivityAsUser(this.mRecentsModeHomeIntent, ActivityOptions.makeCustomAnimation(context, 0, 0).toBundle(), UserHandle.CURRENT);
                     startHomeFadeInAnim();
                 }
             }
@@ -1691,23 +1722,23 @@ public class NavStubView extends FrameLayout {
         if (i2 == 2) {
             if (Constants.IS_TABLET || getResources().getConfiguration().orientation == 1) {
                 this.mIsAppToHome = false;
-                this.mHomeCallback = Recents.getSystemServices().mIFsGestureCallbackMap.get(Constants.HOME_LAUCNHER_PACKAGE_NAME);
+                IFsGestureCallback iFsGestureCallback = Recents.getSystemServices().mIFsGestureCallbackMap.get(Constants.HOME_LAUCNHER_PACKAGE_NAME);
+                this.mHomeCallback = iFsGestureCallback;
                 TransitionAnimationSpec transitionAnimationSpec = null;
-                try {
-                    if (this.mHomeCallback != null) {
-                        IFsGestureCallback iFsGestureCallback = this.mHomeCallback;
+                if (iFsGestureCallback != null) {
+                    try {
                         transitionAnimationSpec = iFsGestureCallback.getSpec(this.mCurTask.baseIntent.getComponent().getPackageName() + "/", this.mCurTask.userId);
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                    this.mIsAppToHome = (transitionAnimationSpec == null || transitionAnimationSpec.mRect == null || transitionAnimationSpec.mRect.top == 0 || transitionAnimationSpec.mRect.right == 0 || transitionAnimationSpec.mBitmap == null) ? false : true;
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
+                this.mIsAppToHome = (transitionAnimationSpec == null || transitionAnimationSpec.mRect == null || transitionAnimationSpec.mRect.top == 0 || transitionAnimationSpec.mRect.right == 0 || transitionAnimationSpec.mBitmap == null) ? false : true;
                 if (this.mIsAppToHome) {
                     this.mGestureStubListenerWrapper.skipAppTransition();
                     Rect rect = transitionAnimationSpec.mRect;
                     final int i3 = (rect.bottom + rect.top) / 2;
                     final int i4 = (rect.right + rect.left) / 2;
-                    this.mAppIcon = transitionAnimationSpec.mBitmap;
+                    Bitmap bitmap = transitionAnimationSpec.mBitmap;
                     float f = this.mCurScale;
                     int i5 = this.mPivotLocX;
                     int i6 = (int) (((float) this.mPivotLocY) - ((((float) this.mScreenBmpHeight) * f) / 2.0f));
@@ -1784,7 +1815,8 @@ public class NavStubView extends FrameLayout {
                 }
             } else {
                 this.mGestureStubListenerWrapper.skipAppTransition();
-                this.mContext.startActivityAsUser(this.mHomeIntent, ActivityOptions.makeCustomAnimation(this.mContext, 0, 0).toBundle(), UserHandle.CURRENT);
+                Context context = this.mContext;
+                context.startActivityAsUser(this.mHomeIntent, ActivityOptions.makeCustomAnimation(context, 0, 0).toBundle(), UserHandle.CURRENT);
                 finalization(false, true, true, "startAppAnimation-2");
                 return;
             }
@@ -1806,9 +1838,8 @@ public class NavStubView extends FrameLayout {
         } else {
             return;
         }
-        ValueAnimator valueAnimator2 = valueAnimator;
         final String str2 = str;
-        valueAnimator2.setInterpolator(new DecelerateInterpolator());
+        valueAnimator.setInterpolator(new DecelerateInterpolator());
         final int i7 = this.mPivotLocX;
         final int i8 = this.mPivotLocY;
         final float f3 = this.mCurScale;
@@ -1873,8 +1904,8 @@ public class NavStubView extends FrameLayout {
                 NavStubView.this.invalidate();
             }
         };
-        valueAnimator2.addUpdateListener(r14);
-        valueAnimator2.addListener(new AnimatorListenerAdapter() {
+        valueAnimator.addUpdateListener(r14);
+        valueAnimator.addListener(new AnimatorListenerAdapter() {
             public void onAnimationStart(Animator animator) {
                 if (i2 == 2) {
                     NavStubView.this.mGestureStubListenerWrapper.skipAppTransition();
@@ -1924,10 +1955,10 @@ public class NavStubView extends FrameLayout {
                     Recents.getSystemServices().changeAlphaScaleForFsGesture(Constants.HOME_LAUCNHER_PACKAGE_NAME, ((Float) valueAnimator.getAnimatedValue("homeAlpha")).floatValue(), NavStubView.IS_E10 ? 1.0f : ((Float) valueAnimator.getAnimatedValue("homeScale")).floatValue());
                 }
             });
-            animatorSet2.playTogether(new Animator[]{valueAnimator2, ofPropertyValuesHolder2});
+            animatorSet2.playTogether(new Animator[]{valueAnimator, ofPropertyValuesHolder2});
             animatorSet2.setDuration(200).start();
         } else {
-            valueAnimator2.setDuration((long) DEFAULT_ANIM_TIME).start();
+            valueAnimator.setDuration((long) DEFAULT_ANIM_TIME).start();
         }
         if (i2 == 3) {
             RecentsEventBus.getDefault().send(new FsGestureEnterRecentsZoomEvent(0, new Runnable() {
@@ -2014,15 +2045,14 @@ public class NavStubView extends FrameLayout {
     }
 
     private float linearToCubic(float f, float f2, float f3, float f4) {
+        String str = TAG;
         if (f3 == f2) {
-            String str = TAG;
             Log.e(str, "linearToCubic error:end=" + f3 + "   orignal=" + f2);
             return 1.0f;
         }
         float pow = f4 != 0.0f ? (float) (1.0d - Math.pow((double) (1.0f - ((f - f2) / (f3 - f2))), (double) f4)) : 0.0f;
         if (pow > 1.0f || pow < 0.0f) {
-            String str2 = TAG;
-            Log.e(str2, "linearToCubic error:now=" + f + "   orignal=" + f2 + "   end=" + f3 + "   pow=" + f4);
+            Log.e(str, "linearToCubic error:now=" + f + "   orignal=" + f2 + "   end=" + f3 + "   pow=" + f4);
         }
         return Math.max(0.0f, Math.min(pow, 1.0f));
     }

@@ -82,13 +82,13 @@ public class AssistManager implements ConfigurationChangedReceiver {
     public AssistManager(@Inject DeviceProvisionedController deviceProvisionedController, @Inject Context context) {
         this.mContext = context;
         this.mDeviceProvisionedController = deviceProvisionedController;
-        this.mWindowManager = (WindowManager) this.mContext.getSystemService("window");
+        this.mWindowManager = (WindowManager) context.getSystemService("window");
         this.mAssistUtils = new AssistUtils(context);
         this.mAssistDisclosure = new AssistDisclosure(context, new Handler());
         this.mInterestingConfigChanges = new InterestingConfigChanges(-2147482748);
         onConfigurationChanged(context.getResources().getConfiguration());
         this.mUiController = new DefaultUiController(this.mContext);
-        ((OverviewProxyService) Dependency.get(OverviewProxyService.class)).addCallback(new OverviewProxyService.OverviewProxyListener() {
+        ((OverviewProxyService) Dependency.get(OverviewProxyService.class)).addCallback((OverviewProxyService.OverviewProxyListener) new OverviewProxyService.OverviewProxyListener() {
             public void onBackButtonAlphaChanged(float f, boolean z) {
             }
 
@@ -136,8 +136,9 @@ public class AssistManager implements ConfigurationChangedReceiver {
         } else {
             z = false;
         }
-        this.mView = (AssistOrbContainer) LayoutInflater.from(this.mContext).inflate(R.layout.assist_orb, (ViewGroup) null);
-        this.mView.setVisibility(8);
+        AssistOrbContainer assistOrbContainer2 = (AssistOrbContainer) LayoutInflater.from(this.mContext).inflate(R.layout.assist_orb, (ViewGroup) null);
+        this.mView = assistOrbContainer2;
+        assistOrbContainer2.setVisibility(8);
         this.mView.setSystemUiVisibility(1792);
         this.mWindowManager.addView(this.mView, getLayoutParams());
         if (z) {
@@ -202,7 +203,7 @@ public class AssistManager implements ConfigurationChangedReceiver {
         if (this.mDeviceProvisionedController.isDeviceProvisioned()) {
             ((CommandQueue) SystemUI.getComponent(this.mContext, CommandQueue.class)).animateCollapsePanels(3);
             boolean z = true;
-            if (Settings.Secure.getIntForUser(this.mContext.getContentResolver(), "assist_structure_enabled", 1, KeyguardUpdateMonitor.getCurrentUser()) == 0) {
+            if (Settings.Secure.getIntForUser(this.mContext.getContentResolver(), "assist_structure_enabled", 1, -2) == 0) {
                 z = false;
             }
             final Intent assistIntent = ((SearchManager) this.mContext.getSystemService(MiStat.Event.SEARCH)).getAssistIntent(z);

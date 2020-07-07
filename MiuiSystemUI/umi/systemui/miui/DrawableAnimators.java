@@ -29,8 +29,9 @@ public class DrawableAnimators {
 
     public static Animator updateCornerRadii(Context context, Drawable drawable, int i) {
         TypedArray obtainTypedArray = context.getResources().obtainTypedArray(i);
-        float[] fArr = new float[obtainTypedArray.length()];
-        for (int i2 = 0; i2 < fArr.length; i2++) {
+        int length = obtainTypedArray.length();
+        float[] fArr = new float[length];
+        for (int i2 = 0; i2 < length; i2++) {
             fArr[i2] = obtainTypedArray.getDimension(i2, 0.0f);
         }
         obtainTypedArray.recycle();
@@ -57,8 +58,9 @@ public class DrawableAnimators {
         CornerRadiiTypeEvaluator(Drawable drawable) {
             if (drawable instanceof GradientDrawable) {
                 if (Build.VERSION.SDK_INT < 24) {
-                    this.mFallbackStartValue = GradientDrawableCompat.getCornerRadii((GradientDrawable) drawable);
-                    if (this.mFallbackStartValue != null) {
+                    float[] cornerRadii = GradientDrawableCompat.getCornerRadii((GradientDrawable) drawable);
+                    this.mFallbackStartValue = cornerRadii;
+                    if (cornerRadii != null) {
                         return;
                     }
                 }

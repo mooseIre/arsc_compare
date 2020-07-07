@@ -45,6 +45,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.android.internal.logging.MetricsLogger;
 import com.android.internal.os.BackgroundThread;
+import com.android.keyguard.BoostFrameworkHelper;
 import com.android.systemui.Application;
 import com.android.systemui.Constants;
 import com.android.systemui.Dependency;
@@ -84,7 +85,6 @@ import com.android.systemui.recents.events.activity.RotationChangedEvent;
 import com.android.systemui.recents.events.activity.ScrollerFlingFinishEvent;
 import com.android.systemui.recents.events.activity.ShowMemoryAndDockEvent;
 import com.android.systemui.recents.events.activity.StackScrollChangedEvent;
-import com.android.systemui.recents.events.activity.StartSmallWindowEvent;
 import com.android.systemui.recents.events.activity.ToggleRecentsEvent;
 import com.android.systemui.recents.events.activity.UndockingTaskEvent;
 import com.android.systemui.recents.events.component.ChangeTaskLockStateEvent;
@@ -157,7 +157,6 @@ public class RecentsActivity extends Activity implements ViewTreeObserver.OnPreD
     private View mBackGround;
     private ValueAnimator mBlurAnim;
     private CircleAndTickAnimView mClearAnimView;
-    public final DecelerateInterpolator mDecelerateInterpolator = new DecelerateInterpolator();
     /* access modifiers changed from: private */
     public ReferenceCountedTrigger mDismissAllTaskViewEventTrigger;
     private DisplayManager.DisplayListener mDisplayListener = new DisplayManager.DisplayListener() {
@@ -290,6 +289,10 @@ public class RecentsActivity extends Activity implements ViewTreeObserver.OnPreD
         return false;
     }
 
+    public RecentsActivity() {
+        new DecelerateInterpolator();
+    }
+
     class LaunchHomeRunnable implements Runnable {
         Intent mLaunchIntent;
         ActivityOptions mOpts;
@@ -389,8 +392,8 @@ public class RecentsActivity extends Activity implements ViewTreeObserver.OnPreD
 
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
+        boolean z = true;
         getWindow().requestFeature(1);
-        boolean z = false;
         this.mFinishedOnStartup = false;
         if (Recents.getSystemServices() == null) {
             this.mFinishedOnStartup = true;
@@ -398,8 +401,10 @@ public class RecentsActivity extends Activity implements ViewTreeObserver.OnPreD
             return;
         }
         RecentsEventBus.getDefault().register(this, 2);
-        this.mPackageMonitor = new RecentsPackageMonitor();
-        this.mPackageMonitor.register(this);
+        RecentsPackageMonitor recentsPackageMonitor = new RecentsPackageMonitor();
+        this.mPackageMonitor = recentsPackageMonitor;
+        recentsPackageMonitor.register(this);
+        BoostFrameworkHelper.initBoostFramework();
         setContentView(R.layout.recents);
         takeKeyEvents(true);
         this.mRecentsContainer = (FrameLayout) findViewById(R.id.recents_container);
@@ -419,15 +424,17 @@ public class RecentsActivity extends Activity implements ViewTreeObserver.OnPreD
         Configuration appConfiguration = Utilities.getAppConfiguration(this);
         this.mLastDeviceOrientation = appConfiguration.orientation;
         this.mLastDisplayDensity = appConfiguration.densityDpi;
-        this.mFocusTimerDuration = getResources().getInteger(R.integer.recents_auto_advance_duration);
-        this.mIterateTrigger = new DozeTrigger(this.mFocusTimerDuration, new Runnable() {
+        int integer = getResources().getInteger(R.integer.recents_auto_advance_duration);
+        this.mFocusTimerDuration = integer;
+        this.mIterateTrigger = new DozeTrigger(integer, new Runnable() {
             public void run() {
                 RecentsActivity.this.dismissRecentsToTargetTask(288);
             }
         });
         this.mBackGround.setBackgroundDrawable(this.mRecentsView.getBackgroundScrim());
-        this.mHomeIntent = new Intent("android.intent.action.MAIN", (Uri) null);
-        this.mHomeIntent.addCategory("android.intent.category.HOME");
+        Intent intent = new Intent("android.intent.action.MAIN", (Uri) null);
+        this.mHomeIntent = intent;
+        intent.addCategory("android.intent.category.HOME");
         this.mHomeIntent.addFlags(270532608);
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("android.intent.action.SCREEN_OFF");
@@ -466,8 +473,8 @@ public class RecentsActivity extends Activity implements ViewTreeObserver.OnPreD
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
         }
-        if (Recents.getConfiguration().getLaunchState().launchedViaFsGesture && Recents.getConfiguration().getLaunchState().launchedFromHome) {
-            z = true;
+        if (!Recents.getConfiguration().getLaunchState().launchedViaFsGesture || !Recents.getConfiguration().getLaunchState().launchedFromHome) {
+            z = false;
         }
         RecentsEventBus.getDefault().send(new ActivitySetDummyTranslucentEvent(z));
         registerContentObservers();
@@ -512,6 +519,7 @@ public class RecentsActivity extends Activity implements ViewTreeObserver.OnPreD
 
     /* access modifiers changed from: private */
     public void cleanInRecents() {
+        BoostFrameworkHelper.setBoost(7);
         long freeMemory = getFreeMemory();
         this.mFreeAtFirst = freeMemory;
         mFreeBeforeClean = freeMemory;
@@ -627,8 +635,9 @@ public class RecentsActivity extends Activity implements ViewTreeObserver.OnPreD
         float blurRatio = this.mRecentsView.getBlurRatio();
         ValueAnimator valueAnimator = this.mBlurAnim;
         if (valueAnimator == null) {
-            this.mBlurAnim = new ValueAnimator();
-            this.mBlurAnim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            ValueAnimator valueAnimator2 = new ValueAnimator();
+            this.mBlurAnim = valueAnimator2;
+            valueAnimator2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 public void onAnimationUpdate(ValueAnimator valueAnimator) {
                     RecentsActivity.this.mRecentsView.updateBlurRatio(((Float) valueAnimator.getAnimatedValue()).floatValue());
                 }
@@ -757,8 +766,9 @@ public class RecentsActivity extends Activity implements ViewTreeObserver.OnPreD
         if (Utilities.supportsMultiWindow()) {
             if (z) {
                 if (this.mExitMultiModeBtn == null) {
-                    this.mExitMultiModeBtn = (Button) LayoutInflater.from(getApplicationContext()).inflate(R.layout.exit_multi_window_btn, (ViewGroup) null);
-                    this.mExitMultiModeBtn.setOnClickListener(new View.OnClickListener() {
+                    Button button = (Button) LayoutInflater.from(getApplicationContext()).inflate(R.layout.exit_multi_window_btn, (ViewGroup) null);
+                    this.mExitMultiModeBtn = button;
+                    button.setOnClickListener(new View.OnClickListener() {
                         public void onClick(View view) {
                             RecentsEventBus.getDefault().send(new UndockingTaskEvent());
                             Log.i("RecentsActivity", "exit splitScreen mode ---- click exit button.");
@@ -770,9 +780,9 @@ public class RecentsActivity extends Activity implements ViewTreeObserver.OnPreD
                 this.mExitMultiModeBtn.setVisibility(0);
                 return;
             }
-            Button button = this.mExitMultiModeBtn;
-            if (button != null && this.mIsAddExitMultiModeBtn) {
-                button.setVisibility(8);
+            Button button2 = this.mExitMultiModeBtn;
+            if (button2 != null && this.mIsAddExitMultiModeBtn) {
+                button2.setVisibility(8);
             }
         }
     }
@@ -1089,8 +1099,9 @@ public class RecentsActivity extends Activity implements ViewTreeObserver.OnPreD
             Slog.d("Enterprise", "Package " + packageName + " is protected");
             return;
         }
-        task.isLocked = changeTaskLockStateEvent.isLocked;
-        ProcessManagerHelper.updateApplicationLockedState(packageName, task.key.userId, task.isLocked);
+        boolean z = changeTaskLockStateEvent.isLocked;
+        task.isLocked = z;
+        ProcessManagerHelper.updateApplicationLockedState(packageName, task.key.userId, z);
     }
 
     public final void onBusEvent(EnterRecentsWindowAnimationCompletedEvent enterRecentsWindowAnimationCompletedEvent) {
@@ -1191,10 +1202,6 @@ public class RecentsActivity extends Activity implements ViewTreeObserver.OnPreD
                 e2.printStackTrace();
             }
         }
-    }
-
-    public final void onBusEvent(StartSmallWindowEvent startSmallWindowEvent) {
-        dismissRecentsToHome(true);
     }
 
     public final void onBusEvent(HideMemoryAndDockEvent hideMemoryAndDockEvent) {
@@ -1343,14 +1350,16 @@ public class RecentsActivity extends Activity implements ViewTreeObserver.OnPreD
                 long freeMemory = RecentsActivity.this.getFreeMemory();
                 RecentsPushEventHelper.sendOneKeyCleanEvent(RecentsActivity.this.mFreeAtFirst, freeMemory, RecentsActivity.this.mTotalMemory);
                 Toast makeText = Toast.makeText(RecentsActivity.this.getApplicationContext(), RecentsActivity.getToastMsg(RecentsActivity.this.getApplicationContext(), RecentsActivity.this.mFreeAtFirst, freeMemory), 0);
-                makeText.getWindowParams().privateFlags |= 16;
+                if (makeText.getWindowParams() != null) {
+                    makeText.getWindowParams().privateFlags |= 16;
+                }
                 makeText.show();
             }
         }, 300);
     }
 
     private void updateDockBtnVisible() {
-        this.mDockBtn.setVisibility((RecentsConfiguration.sCanMultiWindow || this.mRecentsView.getStack().getStackTaskCount() <= 0 || isInMultiWindowMode() || !Utilities.supportsMultiWindow() || Utilities.isInSmallWindowMode(this) || this.mRecentsView.getMenuView().isShowing() || Recents.getSystemServices().isLowMemoryDevice()) ? 4 : 0);
+        this.mDockBtn.setVisibility((RecentsConfiguration.sCanMultiWindow || this.mRecentsView.getStack().getStackTaskCount() <= 0 || isInMultiWindowMode() || !Utilities.supportsMultiWindow() || this.mRecentsView.getMenuView().isShowing()) ? 4 : 0);
     }
 
     private boolean isMemInfoShow() {
@@ -1365,7 +1374,7 @@ public class RecentsActivity extends Activity implements ViewTreeObserver.OnPreD
                 if (RecentsActivity.this.mDismissAllTaskViewEventTrigger != null) {
                     RecentsActivity.this.mDismissAllTaskViewEventTrigger.decrement();
                     final ReferenceCountedTrigger access$1100 = RecentsActivity.this.mDismissAllTaskViewEventTrigger;
-                    RecentsActivity.this.mHandler.postDelayed(new Runnable() {
+                    RecentsActivity.this.mHandler.postDelayed(new Runnable(this) {
                         public void run() {
                             access$1100.flushLastDecrementRunnables();
                         }
@@ -1378,14 +1387,11 @@ public class RecentsActivity extends Activity implements ViewTreeObserver.OnPreD
     }
 
     private void setupVisible() {
-        boolean z = true;
         int i = 0;
         updateExitMultiModeBtnVisible(this.mIsVisible && isInMultiWindowMode());
         updateDockBtnVisible();
         updateRecentsRecommendViewVisible();
-        if (isInMultiWindowMode()) {
-            z = false;
-        }
+        boolean z = !isInMultiWindowMode();
         int stackTaskCount = this.mRecentsView.getStack().getStackTaskCount();
         this.mMemoryAndClearContainer.setVisibility((!z || stackTaskCount <= 0) ? 4 : 0);
         this.mTxtMemoryContainer.setVisibility((!z || !isMemInfoShow()) ? 4 : 0);
@@ -1406,7 +1412,7 @@ public class RecentsActivity extends Activity implements ViewTreeObserver.OnPreD
             }
             this.mIsRecommendVisible = z;
             RecentsRecommendView recentsRecommendView = this.mRecentsRecommendView;
-            if (!this.mIsRecommendVisible) {
+            if (!z) {
                 i = 4;
             }
             recentsRecommendView.setVisibility(i);
@@ -1444,7 +1450,7 @@ public class RecentsActivity extends Activity implements ViewTreeObserver.OnPreD
     public static String getToastMsg(Context context, long j, long j2) {
         long max = Math.max(j2 - j, 0);
         if (max <= 10240) {
-            return context.getResources().getString(286130371);
+            return context.getResources().getString(286130362);
         }
         long j3 = max / 1024;
         if (j3 < 1024) {

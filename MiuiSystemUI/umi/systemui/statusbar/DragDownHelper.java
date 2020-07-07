@@ -9,12 +9,11 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import com.android.systemui.ExpandHelper;
-import com.android.systemui.Gefingerpoken;
 import com.android.systemui.Interpolators;
 import com.android.systemui.classifier.FalsingManager;
 import com.android.systemui.plugins.R;
 
-public class DragDownHelper implements Gefingerpoken {
+public class DragDownHelper {
     /* access modifiers changed from: private */
     public ExpandHelper.Callback mCallback;
     /* access modifiers changed from: private */
@@ -131,25 +130,24 @@ public class DragDownHelper implements Gefingerpoken {
 
     private void captureStartingChild(float f, float f2) {
         if (this.mStartingChild == null) {
-            this.mStartingChild = findView(f, f2);
-            ExpandableView expandableView = this.mStartingChild;
-            if (expandableView != null) {
-                this.mCallback.setUserLockedChild(expandableView, true);
+            ExpandableView findView = findView(f, f2);
+            this.mStartingChild = findView;
+            if (findView != null) {
+                this.mCallback.setUserLockedChild(findView, true);
             }
         }
     }
 
     private void handleExpansion(float f, ExpandableView expandableView) {
-        float f2 = 0.0f;
-        if (f >= 0.0f) {
-            f2 = f;
+        if (f < 0.0f) {
+            f = 0.0f;
         }
         boolean isContentExpandable = expandableView.isContentExpandable();
-        float f3 = f2 * (isContentExpandable ? 0.5f : 0.15f);
-        if (isContentExpandable && ((float) expandableView.getCollapsedHeight()) + f3 > ((float) expandableView.getMaxContentHeight())) {
-            f3 -= ((((float) expandableView.getCollapsedHeight()) + f3) - ((float) expandableView.getMaxContentHeight())) * 0.85f;
+        float f2 = f * (isContentExpandable ? 0.5f : 0.15f);
+        if (isContentExpandable && ((float) expandableView.getCollapsedHeight()) + f2 > ((float) expandableView.getMaxContentHeight())) {
+            f2 -= ((((float) expandableView.getCollapsedHeight()) + f2) - ((float) expandableView.getMaxContentHeight())) * 0.85f;
         }
-        expandableView.setActualHeight((int) (((float) expandableView.getCollapsedHeight()) + f3));
+        expandableView.setActualHeight((int) (((float) expandableView.getCollapsedHeight()) + f2));
     }
 
     private void cancelExpansion(final ExpandableView expandableView) {

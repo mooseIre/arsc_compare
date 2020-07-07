@@ -2,41 +2,34 @@ package com.android.systemui.util;
 
 import android.os.SystemProperties;
 import android.util.Log;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import miui.util.FeatureParser;
 
 public class QcomBoostFramework {
     private static boolean isQcom = "qcom".equals(FeatureParser.getString("vendor"));
-    private static Method mAcquireFunc = null;
-    private static Constructor<Class> mConstructor = null;
-    private static Method mIOPStart = null;
-    private static Method mIOPStop = null;
     private static int mIopv2 = SystemProperties.getInt("iop.enable_uxe", 0);
     private static boolean mIsLoaded = false;
     private static Class<?> mPerfClass = null;
     private static Method mPerfHintFunc = null;
     private static Method mReleaseFunc = null;
-    private static Method mReleaseHandlerFunc = null;
-    private static Method mUXEngine_events = null;
-    private static Method mUXEngine_trigger = null;
     private Object mPerf = null;
 
     public QcomBoostFramework() {
+        Class<String> cls = String.class;
         if (isQcom) {
             synchronized (QcomBoostFramework.class) {
                 if (!mIsLoaded) {
                     try {
                         mPerfClass = Class.forName("com.qualcomm.qti.Performance");
-                        mAcquireFunc = mPerfClass.getMethod("perfLockAcquire", new Class[]{Integer.TYPE, int[].class});
-                        mPerfHintFunc = mPerfClass.getMethod("perfHint", new Class[]{Integer.TYPE, String.class, Integer.TYPE, Integer.TYPE});
+                        mPerfClass.getMethod("perfLockAcquire", new Class[]{Integer.TYPE, int[].class});
+                        mPerfHintFunc = mPerfClass.getMethod("perfHint", new Class[]{Integer.TYPE, cls, Integer.TYPE, Integer.TYPE});
                         mReleaseFunc = mPerfClass.getMethod("perfLockRelease", new Class[0]);
-                        mReleaseHandlerFunc = mPerfClass.getDeclaredMethod("perfLockReleaseHandler", new Class[]{Integer.TYPE});
-                        mIOPStart = mPerfClass.getDeclaredMethod("perfIOPrefetchStart", new Class[]{Integer.TYPE, String.class, String.class});
-                        mIOPStop = mPerfClass.getDeclaredMethod("perfIOPrefetchStop", new Class[0]);
+                        mPerfClass.getDeclaredMethod("perfLockReleaseHandler", new Class[]{Integer.TYPE});
+                        mPerfClass.getDeclaredMethod("perfIOPrefetchStart", new Class[]{Integer.TYPE, cls, cls});
+                        mPerfClass.getDeclaredMethod("perfIOPrefetchStop", new Class[0]);
                         if (mIopv2 == 1) {
-                            mUXEngine_events = mPerfClass.getDeclaredMethod("perfUXEngine_events", new Class[]{Integer.TYPE, Integer.TYPE, String.class, Integer.TYPE});
-                            mUXEngine_trigger = mPerfClass.getDeclaredMethod("perfUXEngine_trigger", new Class[]{Integer.TYPE});
+                            mPerfClass.getDeclaredMethod("perfUXEngine_events", new Class[]{Integer.TYPE, Integer.TYPE, cls, Integer.TYPE});
+                            mPerfClass.getDeclaredMethod("perfUXEngine_trigger", new Class[]{Integer.TYPE});
                         }
                         mIsLoaded = true;
                     } catch (Exception e) {

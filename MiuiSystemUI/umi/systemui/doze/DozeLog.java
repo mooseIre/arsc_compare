@@ -3,7 +3,6 @@ package com.android.systemui.doze;
 import android.os.Build;
 import android.util.Log;
 import android.util.TimeUtils;
-import com.android.keyguard.KeyguardUpdateMonitorCallback;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -14,47 +13,20 @@ public class DozeLog {
     private static final int SIZE = (Build.IS_DEBUGGABLE ? 400 : 50);
     private static int sCount;
     private static SummaryStats sEmergencyCallStats;
-    private static final KeyguardUpdateMonitorCallback sKeyguardCallback = new KeyguardUpdateMonitorCallback() {
-        public void onEmergencyCallAction() {
-            DozeLog.traceEmergencyCall();
-            throw null;
-        }
-
-        public void onKeyguardBouncerChanged(boolean z) {
-            DozeLog.traceKeyguardBouncerChanged(z);
-        }
-
-        public void onStartedWakingUp() {
-            DozeLog.traceScreenOn();
-            throw null;
-        }
-
-        public void onFinishedGoingToSleep(int i) {
-            DozeLog.traceScreenOff(i);
-        }
-
-        public void onKeyguardVisibilityChanged(boolean z) {
-            DozeLog.traceKeyguard(z);
-        }
-    };
     private static String[] sMessages;
+    private static SummaryStats sNotificationPulseStats;
     private static SummaryStats sPickupPulseNearVibrationStats;
+    private static SummaryStats sPickupPulseNotNearVibrationStats;
     private static int sPosition;
+    private static SummaryStats[][] sProxStats;
     private static boolean sPulsing;
-    private static boolean sRegisterKeyguardCallback = true;
     private static SummaryStats sScreenOnNotPulsingStats;
     private static SummaryStats sScreenOnPulsingStats;
     private static long sSince;
     private static long[] sTimes;
 
     private static class SummaryStats {
-        public void append() {
-            throw null;
-        }
-
-        public void dump(PrintWriter printWriter, String str) {
-            throw null;
-        }
+        public abstract void dump(PrintWriter printWriter, String str);
     }
 
     public static void tracePulseStart(int i) {
@@ -69,33 +41,6 @@ public class DozeLog {
 
     public static void traceFling(boolean z, boolean z2, boolean z3, boolean z4) {
         log("fling expand=" + z + " aboveThreshold=" + z2 + " thresholdNeeded=" + z3 + " screenOnFromTouch=" + z4);
-    }
-
-    public static void traceEmergencyCall() {
-        log("emergencyCall");
-        sEmergencyCallStats.append();
-        throw null;
-    }
-
-    public static void traceKeyguardBouncerChanged(boolean z) {
-        log("bouncer " + z);
-    }
-
-    public static void traceScreenOn() {
-        log("screenOn pulsing=" + sPulsing);
-        (sPulsing ? sScreenOnPulsingStats : sScreenOnNotPulsingStats).append();
-        throw null;
-    }
-
-    public static void traceScreenOff(int i) {
-        log("screenOff why=" + i);
-    }
-
-    public static void traceKeyguard(boolean z) {
-        log("keyguard " + z);
-        if (!z) {
-            sPulsing = false;
-        }
     }
 
     public static String pulseReasonToString(int i) {
@@ -133,7 +78,16 @@ public class DozeLog {
                 TimeUtils.formatDuration(System.currentTimeMillis() - sSince, printWriter);
                 printWriter.println("):");
                 sPickupPulseNearVibrationStats.dump(printWriter, "Pickup pulse (near vibration)");
-                throw null;
+                sPickupPulseNotNearVibrationStats.dump(printWriter, "Pickup pulse (not near vibration)");
+                sNotificationPulseStats.dump(printWriter, "Notification pulse");
+                sScreenOnPulsingStats.dump(printWriter, "Screen on (pulsing)");
+                sScreenOnNotPulsingStats.dump(printWriter, "Screen on (not pulsing)");
+                sEmergencyCallStats.dump(printWriter, "Emergency call");
+                for (int i4 = 0; i4 < 5; i4++) {
+                    String pulseReasonToString = pulseReasonToString(i4);
+                    sProxStats[i4][0].dump(printWriter, "Proximity near (" + pulseReasonToString + ")");
+                    sProxStats[i4][1].dump(printWriter, "Proximity far (" + pulseReasonToString + ")");
+                }
             }
         }
     }

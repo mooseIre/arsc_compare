@@ -26,7 +26,7 @@ public class GestureLineUtils {
     public static NavigationHandle createAndaddNavigationHandle(RelativeLayout relativeLayout) {
         NavigationHandle navigationHandle = new NavigationHandle(relativeLayout.getContext());
         navigationHandle.setColor(!((relativeLayout.getContext().getResources().getConfiguration().uiMode & 32) == 32));
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(-1, relativeLayout.getContext().getResources().getDimensionPixelSize(17105307));
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(-1, relativeLayout.getContext().getResources().getDimensionPixelSize(17105341));
         layoutParams.addRule(12);
         layoutParams.addRule(14);
         relativeLayout.addView(navigationHandle, layoutParams);

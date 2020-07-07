@@ -24,7 +24,10 @@ public class Analytics$PhoneStatusEvent extends Analytics$Event {
                 i++;
             }
         }
-        return i > 1 ? 1 : 0;
+        if (i > 1) {
+            return 1;
+        }
+        return 0;
     }
 
     public static int getIsAlarmSetValue() {

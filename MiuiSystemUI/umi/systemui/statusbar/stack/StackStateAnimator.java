@@ -22,7 +22,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Stack;
 import miuix.animation.Folme;
-import miuix.animation.IStateStyle;
 import miuix.animation.base.AnimConfig;
 import miuix.animation.property.FloatProperty;
 
@@ -197,10 +196,9 @@ public class StackStateAnimator {
         long j = 0;
         if (f > f2) {
             j = 0 + ((long) (((double) (((float) Math.pow((double) (f - f2), 0.699999988079071d)) * 48.0f)) * 0.25d));
-        } else {
-            f2 = f;
+            f = f2;
         }
-        return j + ((long) (((float) Math.pow((double) f2, 0.699999988079071d)) * 48.0f));
+        return j + ((long) (((float) Math.pow((double) f, 0.699999988079071d)) * 48.0f));
     }
 
     /* access modifiers changed from: private */
@@ -277,7 +275,7 @@ public class StackStateAnimator {
                     } else {
                         f = -1.0f;
                     }
-                    expandableView.performRemoveAnimation(464, f, this.mAnimationProperties.getAnimationFinishListener(), new Runnable() {
+                    expandableView.performRemoveAnimation(464, f, this.mAnimationProperties.getAnimationFinishListener(), new Runnable(this) {
                         public void run() {
                             StackStateAnimator.removeFromOverlay(expandableView);
                         }
@@ -334,11 +332,8 @@ public class StackStateAnimator {
             final String str = "RowSpringReset-" + intValue;
             expandableView.setTag(R.id.folme_spring_reset, str);
             Folme.getValueTarget(str).setMinVisibleChange(1.0f, "offset");
-            IStateStyle useValue = Folme.useValue(str);
-            useValue.setTo("offset", Float.valueOf(f));
             float f2 = (float) intValue;
-            useValue.setConfig(newSpringEase((0.04f * f2) + 0.7f, (f2 * 0.02f) + 0.5f), new FloatProperty[0]);
-            useValue.addListener(new AutoCleanFloatTransitionListener(str) {
+            Folme.useValue(str).setTo("offset", Float.valueOf(f)).setConfig(newSpringEase((0.04f * f2) + 0.7f, (f2 * 0.02f) + 0.5f), new FloatProperty[0]).addListener(new AutoCleanFloatTransitionListener(str) {
                 public void onUpdate(Map<String, Float> map) {
                     float floatValue = map.get("offset").floatValue();
                     StackStateAnimator.this.mHostLayout.onChildrenSpringAnimationUpdate();
@@ -356,8 +351,7 @@ public class StackStateAnimator {
                     expandableView.setTag(R.id.folme_spring_reset, (Object) null);
                     StackStateAnimator.this.onFolmeAnimationEnd();
                 }
-            });
-            useValue.to("offset", 0);
+            }).to("offset", 0);
         }
     }
 

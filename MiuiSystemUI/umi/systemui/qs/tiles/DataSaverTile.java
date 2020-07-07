@@ -82,9 +82,10 @@ public class DataSaverTile extends QSTileImpl<QSTile.BooleanState> implements Da
             z = this.mDataSaverController.isDataSaverEnabled();
         }
         booleanState.value = z;
-        booleanState.state = booleanState.value ? 2 : 1;
-        booleanState.label = this.mContext.getString(R.string.data_saver);
-        booleanState.contentDescription = booleanState.label;
+        booleanState.state = z ? 2 : 1;
+        String string = this.mContext.getString(R.string.data_saver);
+        booleanState.label = string;
+        booleanState.contentDescription = string;
         booleanState.icon = QSTileImpl.ResourceIcon.get(booleanState.value ? R.drawable.ic_data_saver : R.drawable.ic_data_saver_off);
         booleanState.expandedAccessibilityClassName = Switch.class.getName();
     }

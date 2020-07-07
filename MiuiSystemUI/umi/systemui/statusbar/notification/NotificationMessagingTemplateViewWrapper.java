@@ -9,7 +9,7 @@ import com.android.systemui.statusbar.ExpandableNotificationRow;
 
 public class NotificationMessagingTemplateViewWrapper extends NotificationTemplateViewWrapper {
     private MessagingLayout mMessagingLayout;
-    private MessagingLinearLayout mMessagingLinearLayout = this.mMessagingLayout.getMessagingLinearLayout();
+    private MessagingLinearLayout mMessagingLinearLayout;
 
     /* access modifiers changed from: protected */
     public boolean showExpandButton() {
@@ -33,7 +33,9 @@ public class NotificationMessagingTemplateViewWrapper extends NotificationTempla
 
     protected NotificationMessagingTemplateViewWrapper(Context context, View view, ExpandableNotificationRow expandableNotificationRow) {
         super(context, view, expandableNotificationRow);
-        this.mMessagingLayout = (MessagingLayout) view;
+        MessagingLayout messagingLayout = (MessagingLayout) view;
+        this.mMessagingLayout = messagingLayout;
+        this.mMessagingLinearLayout = messagingLayout.getMessagingLinearLayout();
     }
 
     /* access modifiers changed from: protected */

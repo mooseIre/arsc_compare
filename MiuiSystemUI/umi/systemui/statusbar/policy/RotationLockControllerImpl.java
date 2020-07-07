@@ -9,7 +9,6 @@ import android.provider.Settings;
 import android.view.IWindowManager;
 import android.view.WindowManagerGlobal;
 import com.android.internal.view.RotationPolicy;
-import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.systemui.Util;
 import com.android.systemui.plugins.R;
 import com.android.systemui.statusbar.policy.RotationLockController;
@@ -77,7 +76,7 @@ public final class RotationLockControllerImpl implements RotationLockController 
     }
 
     public void setRotationLock(Context context, boolean z) {
-        Settings.System.putIntForUser(context.getContentResolver(), "hide_rotation_lock_toggle_for_accessibility", 0, KeyguardUpdateMonitor.getCurrentUser());
+        Settings.System.putIntForUser(context.getContentResolver(), "hide_rotation_lock_toggle_for_accessibility", 0, -2);
         setRotationLock(z, -1);
     }
 
@@ -109,10 +108,11 @@ public final class RotationLockControllerImpl implements RotationLockController 
     /* access modifiers changed from: private */
     public int getRotation(IWindowManager iWindowManager) {
         ObjectReference objectReference;
+        Class<Integer> cls = Integer.class;
         if (Build.VERSION.SDK_INT < 26) {
-            objectReference = ReflectionUtils.tryCallMethod(iWindowManager, "getRotation", Integer.class, new Object[0]);
+            objectReference = ReflectionUtils.tryCallMethod(iWindowManager, "getRotation", cls, new Object[0]);
         } else {
-            objectReference = ReflectionUtils.tryCallMethod(iWindowManager, "getDefaultDisplayRotation", Integer.class, new Object[0]);
+            objectReference = ReflectionUtils.tryCallMethod(iWindowManager, "getDefaultDisplayRotation", cls, new Object[0]);
         }
         return ((Integer) objectReference.get()).intValue();
     }

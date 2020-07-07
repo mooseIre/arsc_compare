@@ -158,14 +158,16 @@ public class BatteryMeterView extends LinearLayout implements BatteryController.
         setOrientation(0);
         setGravity(8388627);
         addOnAttachStateChangeListener(new DisableStateTracker(0, 2));
-        this.mBatteryDigitalView = (FrameLayout) LayoutInflater.from(context).inflate(R.layout.battery_digital_view, (ViewGroup) null);
-        this.mBatteryIconView = (BatteryMeterIconView) this.mBatteryDigitalView.findViewById(R.id.battery_image);
+        FrameLayout frameLayout = (FrameLayout) LayoutInflater.from(context).inflate(R.layout.battery_digital_view, (ViewGroup) null);
+        this.mBatteryDigitalView = frameLayout;
+        this.mBatteryIconView = (BatteryMeterIconView) frameLayout.findViewById(R.id.battery_image);
         this.mBatteryChargingInView = (ImageView) this.mBatteryDigitalView.findViewById(R.id.battery_charge_image);
         ViewGroup.LayoutParams layoutParams = this.mBatteryIconView.getLayoutParams();
         layoutParams.width = -2;
         this.mBatteryIconView.setLayoutParams(layoutParams);
-        this.mBatteryTextDigitView = (TextView) this.mBatteryDigitalView.findViewById(R.id.battery_digit);
-        this.mBatteryTextDigitView.setTypeface(this.mDigitTypeface);
+        TextView textView = (TextView) this.mBatteryDigitalView.findViewById(R.id.battery_digit);
+        this.mBatteryTextDigitView = textView;
+        textView.setTypeface(this.mDigitTypeface);
         addView(this.mBatteryDigitalView);
         this.mBatteryChargingView = new ImageView(context);
         addView(this.mBatteryChargingView, new LinearLayout.LayoutParams(-2, -1));
@@ -183,8 +185,9 @@ public class BatteryMeterView extends LinearLayout implements BatteryController.
         this.mBatteryTextColors[4] = resources.getColor(R.color.status_bar_battery_power_save_digit_textColor);
         this.mBatteryTextColors[5] = resources.getColor(R.color.status_bar_battery_power_save_digit_textColor_darkmode);
         this.mBatteryTextColors[6] = resources.getColor(R.color.status_bar_icon_text_color_dark_mode_cts);
-        this.mUseLegacyDrawable = resources.getBoolean(R.bool.battery_meter_use_legacy_drawable);
-        this.mBatteryIconView.setUseLegacyDrawable(this.mUseLegacyDrawable);
+        boolean z = resources.getBoolean(R.bool.battery_meter_use_legacy_drawable);
+        this.mUseLegacyDrawable = z;
+        this.mBatteryIconView.setUseLegacyDrawable(z);
         this.mBatteryIconView.setup();
         this.mShowBatteryDigitFull = resources.getBoolean(R.bool.show_battery_digit_full);
         TextView textView = this.mBatteryTextDigitView;
@@ -200,8 +203,9 @@ public class BatteryMeterView extends LinearLayout implements BatteryController.
 
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
-        this.mBatteryController = (BatteryController) Dependency.get(BatteryController.class);
-        this.mBatteryController.addCallback(this);
+        BatteryController batteryController = (BatteryController) Dependency.get(BatteryController.class);
+        this.mBatteryController = batteryController;
+        batteryController.addCallback(this);
         this.mUpdateMonitor.registerCallback(this.mKeyguardUpdateMonitorCallback);
         ((StatusBarTypeController) Dependency.get(StatusBarTypeController.class)).addCallback(this);
         updateViews();
@@ -296,8 +300,9 @@ public class BatteryMeterView extends LinearLayout implements BatteryController.
                 if (batteryMeterViewDelegate != null) {
                     batteryMeterViewDelegate.onNumberToIconChanged(true);
                 }
-                this.mBatteryPercentMarkView = loadPercentMarkView();
-                this.mBatteryPercentMarkView.setText(this.mContext.getResources().getString(R.string.battery_meter_percent_sign));
+                TextView loadPercentMarkView = loadPercentMarkView();
+                this.mBatteryPercentMarkView = loadPercentMarkView;
+                loadPercentMarkView.setText(this.mContext.getResources().getString(R.string.battery_meter_percent_sign));
                 addView(this.mBatteryPercentMarkView, -1, new LinearLayout.LayoutParams(this.mContext.getResources().getDimensionPixelSize(R.dimen.battery_percent_mark_view_width), -1));
                 this.mBatteryPercentMarkView.setTypeface(this.mMarkTypeface);
                 this.mBatteryPercentMarkView.setImportantForAccessibility(2);

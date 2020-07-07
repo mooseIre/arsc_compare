@@ -10,7 +10,6 @@ import java.io.PrintWriter;
 import java.util.BitSet;
 
 public abstract class SignalController<T extends State, I extends IconGroup> {
-    protected static final boolean CHATTY = NetworkControllerImpl.CHATTY;
     protected static final boolean DEBUG = NetworkControllerImpl.DEBUG;
     private final CallbackHandler mCallbackHandler;
     protected final Context mContext;
@@ -26,6 +25,10 @@ public abstract class SignalController<T extends State, I extends IconGroup> {
     public abstract T cleanState();
 
     public abstract void notifyListeners(NetworkController.SignalCallback signalCallback);
+
+    static {
+        boolean z = NetworkControllerImpl.CHATTY;
+    }
 
     public SignalController(String str, Context context, int i, CallbackHandler callbackHandler, NetworkControllerImpl networkControllerImpl) {
         this.mTag = "NetworkController." + str;

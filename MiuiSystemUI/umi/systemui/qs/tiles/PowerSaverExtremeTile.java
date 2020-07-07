@@ -57,10 +57,9 @@ public class PowerSaverExtremeTile extends QSTileImpl<QSTile.BooleanState> {
         if (Settings.Secure.getIntForUser(this.mResolver, "EXTREME_POWER_MODE_ENABLE", 0, -2) != 0) {
             z = true;
         }
-        boolean z2 = !z;
         Bundle bundle = new Bundle();
         bundle.putString("SOURCE", "systemui");
-        bundle.putBoolean("EXTREME_POWER_SAVE_MODE_OPEN", z2);
+        bundle.putBoolean("EXTREME_POWER_SAVE_MODE_OPEN", !z);
         this.mResolver.call(maybeAddUserId(Uri.parse("content://com.miui.powerkeeper.configure"), ActivityManager.getCurrentUser()), "changeExtremePowerMode", (String) null, bundle);
     }
 

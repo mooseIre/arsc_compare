@@ -23,7 +23,7 @@ public class QSControlExpandDetail implements ExpandInfoController.Callback {
     private ExpandDetailAdapter mDetailAdapter = new ExpandDetailAdapter();
     private View mExpandIndicatorView;
     /* access modifiers changed from: private */
-    public ExpandInfoController mExpandInfoController = ((ExpandInfoController) Dependency.get(ExpandInfoController.class));
+    public ExpandInfoController mExpandInfoController;
     private QSPanel.Record mRecord;
     private View mTileView;
 
@@ -32,11 +32,13 @@ public class QSControlExpandDetail implements ExpandInfoController.Callback {
 
     public QSControlExpandDetail(Context context, View view, View view2) {
         this.mContext = context;
-        this.mExpandInfoController.addCallback(this);
+        ExpandInfoController expandInfoController = (ExpandInfoController) Dependency.get(ExpandInfoController.class);
+        this.mExpandInfoController = expandInfoController;
+        expandInfoController.addCallback(this);
         this.mTileView = view;
         this.mExpandIndicatorView = view2;
-        this.mRecord = new QSPanel.Record();
-        QSPanel.Record record = this.mRecord;
+        QSPanel.Record record = new QSPanel.Record();
+        this.mRecord = record;
         record.detailAdapter = this.mDetailAdapter;
         record.wholeView = this.mTileView;
         record.translateView = this.mExpandIndicatorView;
@@ -100,8 +102,9 @@ public class QSControlExpandDetail implements ExpandInfoController.Callback {
         }
 
         public View createDetailView(Context context, View view, ViewGroup viewGroup) {
-            this.mItems = ExpandDetailItems.convertOrInflate(context, view, viewGroup);
-            this.mItems.setTagSuffix("expand");
+            ExpandDetailItems convertOrInflate = ExpandDetailItems.convertOrInflate(context, view, viewGroup);
+            this.mItems = convertOrInflate;
+            convertOrInflate.setTagSuffix("expand");
             this.mItems.setCallback(this);
             setItemsVisible(true);
             updateItems();

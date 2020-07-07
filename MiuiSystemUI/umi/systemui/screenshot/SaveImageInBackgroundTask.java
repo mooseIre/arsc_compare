@@ -24,43 +24,52 @@ class SaveImageInBackgroundTask extends AsyncTask<SaveImageInBackgroundData, Voi
     private NotificationManager mNotificationManager;
     public NotifyMediaStoreData mNotifyMediaStoreData;
     OutputStream mOutputStream;
-    private File mScreenshotDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), "Screenshots");
+    private File mScreenshotDir;
 
     SaveImageInBackgroundTask(Context context, SaveImageInBackgroundData saveImageInBackgroundData, NotificationManager notificationManager) {
+        boolean z;
+        Exception e;
         context.getResources();
-        if (!this.mScreenshotDir.exists()) {
+        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), "Screenshots");
+        this.mScreenshotDir = file;
+        if (!file.exists()) {
             this.mScreenshotDir.mkdirs();
         }
         long currentTimeMillis = System.currentTimeMillis();
         this.mImageTime = currentTimeMillis;
-        boolean z = false;
-        while (!z && this.mImageTime - currentTimeMillis < 200) {
+        boolean z2 = false;
+        while (!z2 && this.mImageTime - currentTimeMillis < 200) {
             try {
                 this.mImageTime = System.currentTimeMillis();
-                this.mImageFileName = String.format("Screenshot_%s_%s.jpg", new Object[]{new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-SSS").format(new Date(this.mImageTime)), Util.getTopActivityPkg(context, true)});
-                this.mImageFilePath = String.format("%s/%s", new Object[]{this.mScreenshotDir, this.mImageFileName});
+                String format = String.format("Screenshot_%s_%s.jpg", new Object[]{new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-SSS").format(new Date(this.mImageTime)), Util.getTopActivityPkg(context, true)});
+                this.mImageFileName = format;
+                this.mImageFilePath = String.format("%s/%s", new Object[]{this.mScreenshotDir, format});
                 this.mOutputStream = new FileOutputStream(this.mImageFilePath);
                 try {
                     Log.e("GlobalScreenshot", "Create outputStream success, mImageFilePath = " + this.mImageFilePath);
-                    z = true;
-                } catch (Exception e) {
-                    e = e;
+                    z2 = true;
+                } catch (Exception e2) {
+                    e = e2;
                     z = true;
                     Log.e("GlobalScreenshot", "Create outputStream success, mImageFilePath = " + this.mImageFilePath);
                     e.printStackTrace();
+                    z2 = z;
                 }
-            } catch (Exception e2) {
-                e = e2;
+            } catch (Exception e3) {
+                Exception exc = e3;
+                z = z2;
+                e = exc;
                 Log.e("GlobalScreenshot", "Create outputStream success, mImageFilePath = " + this.mImageFilePath);
                 e.printStackTrace();
+                z2 = z;
             }
         }
         this.mImageWidth = saveImageInBackgroundData.image.getWidth();
         this.mImageHeight = saveImageInBackgroundData.image.getHeight();
         mTickerAddSpace = !mTickerAddSpace;
         this.mNotificationManager = notificationManager;
-        this.mNotifyMediaStoreData = new NotifyMediaStoreData();
-        NotifyMediaStoreData notifyMediaStoreData = this.mNotifyMediaStoreData;
+        NotifyMediaStoreData notifyMediaStoreData = new NotifyMediaStoreData();
+        this.mNotifyMediaStoreData = notifyMediaStoreData;
         notifyMediaStoreData.imageFilePath = this.mImageFilePath;
         notifyMediaStoreData.imageFileName = this.mImageFileName;
         notifyMediaStoreData.width = this.mImageWidth;

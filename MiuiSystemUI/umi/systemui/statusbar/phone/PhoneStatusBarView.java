@@ -14,9 +14,8 @@ import com.android.systemui.miui.statusbar.phone.MiuiStatusBarPromptController;
 import com.android.systemui.plugins.R;
 
 public class PhoneStatusBarView extends PanelBar implements MiuiStatusBarPromptController.OnPromptStateChangedListener {
-    private static final boolean DEBUG = StatusBar.DEBUG;
     StatusBar mBar;
-    private final PhoneStatusBarTransitions mBarTransitions = new PhoneStatusBarTransitions(this);
+    private final PhoneStatusBarTransitions mBarTransitions;
     private boolean mBlockClickActionToStatusBar;
     private long mDownTime;
     private float mDownX;
@@ -30,16 +29,23 @@ public class PhoneStatusBarView extends PanelBar implements MiuiStatusBarPromptC
     };
     boolean mIsFullyOpenedPanel = false;
     private float mMinFraction;
-    private MiuiStatusBarPromptController mMiuiStatusBarPromptController = ((MiuiStatusBarPromptController) Dependency.get(MiuiStatusBarPromptController.class));
+    private MiuiStatusBarPromptController mMiuiStatusBarPromptController;
     private boolean mPanelClosedOnDown;
     private float mPanelFraction;
-    private int mScaledTouchSlop = ViewConfiguration.get(getContext()).getScaledTouchSlop();
     private ScrimController mScrimController;
     private String mTag;
-    private PhoneStatusBarTintController mTintController = new PhoneStatusBarTintController(this);
+    private PhoneStatusBarTintController mTintController;
+
+    static {
+        boolean z = StatusBar.DEBUG;
+    }
 
     public PhoneStatusBarView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
+        ViewConfiguration.get(getContext()).getScaledTouchSlop();
+        this.mMiuiStatusBarPromptController = (MiuiStatusBarPromptController) Dependency.get(MiuiStatusBarPromptController.class);
+        this.mBarTransitions = new PhoneStatusBarTransitions(this);
+        this.mTintController = new PhoneStatusBarTintController(this);
     }
 
     public BarTransitions getBarTransitions() {
@@ -51,8 +57,9 @@ public class PhoneStatusBarView extends PanelBar implements MiuiStatusBarPromptC
     }
 
     public void setPrompt(String str) {
-        this.mTag = "PhoneStatusBarView" + str;
-        this.mMiuiStatusBarPromptController.addStatusBarPrompt(this.mTag, this.mBar, this, 0, this);
+        String str2 = "PhoneStatusBarView" + str;
+        this.mTag = str2;
+        this.mMiuiStatusBarPromptController.addStatusBarPrompt(str2, this.mBar, this, 0, this);
     }
 
     public void clearPrompt() {

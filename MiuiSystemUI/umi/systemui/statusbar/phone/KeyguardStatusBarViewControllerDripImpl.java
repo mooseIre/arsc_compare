@@ -54,10 +54,10 @@ public class KeyguardStatusBarViewControllerDripImpl implements KeyguardStatusBa
 
     public void init(KeyguardStatusBarView keyguardStatusBarView) {
         this.mStatusBarView = keyguardStatusBarView;
-        this.mKeyguardDripLeftearIcons = (ClipEdgeLinearLayout) this.mStatusBarView.findViewById(R.id.keyguard_leftear_icons);
+        this.mKeyguardDripLeftearIcons = (ClipEdgeLinearLayout) keyguardStatusBarView.findViewById(R.id.keyguard_leftear_icons);
         this.mCarrierSuperContainer = this.mStatusBarView.findViewById(R.id.keyguard_carrier_super_container);
         this.mPaddingContaienr = (ViewGroup) this.mStatusBarView.findViewById(R.id.system_icons_padding_container);
-        this.mConfigurationListener = new ConfigurationController.ConfigurationListener() {
+        AnonymousClass1 r2 = new ConfigurationController.ConfigurationListener() {
             public void onConfigChanged(Configuration configuration) {
             }
 
@@ -66,7 +66,8 @@ public class KeyguardStatusBarViewControllerDripImpl implements KeyguardStatusBa
                 DripStatusBarUtils.updateContainerWidth(KeyguardStatusBarViewControllerDripImpl.this.mPaddingContaienr, false, true, KeyguardStatusBarViewControllerDripImpl.this.mExtraSpace);
             }
         };
-        this.mConfigurationListener.onDensityOrFontScaleChanged();
+        this.mConfigurationListener = r2;
+        r2.onDensityOrFontScaleChanged();
         ((BatteryMeterView) this.mStatusBarView.findViewById(R.id.battery)).setBatteryMeterViewDelegate(new BatteryMeterView.BatteryMeterViewDelegate() {
             public void onNumberToIconChanged(boolean z) {
                 KeyguardStatusBarViewControllerDripImpl keyguardStatusBarViewControllerDripImpl = KeyguardStatusBarViewControllerDripImpl.this;
@@ -87,12 +88,13 @@ public class KeyguardStatusBarViewControllerDripImpl implements KeyguardStatusBa
     }
 
     public void showStatusIcons() {
+        Class cls = StatusBarIconController.class;
         ((HotspotController) Dependency.get(HotspotController.class)).addCallback(this);
         this.mOrderedIconManager = new StatusBarIconController.OrderedIconManager(this.mKeyguardDripLeftearIcons, new ArrayList(Arrays.asList(new String[]{"quiet", "volume", "alarm_clock", "headset", "micphone", "ble_unlock_mode"})), true);
-        ((StatusBarIconController) Dependency.get(StatusBarIconController.class)).addIconGroup(this.mOrderedIconManager);
+        ((StatusBarIconController) Dependency.get(cls)).addIconGroup(this.mOrderedIconManager);
         this.mKeyguardDripWifiApOn = (AnimatedImageView) this.mStatusBarView.findViewById(R.id.drip_wifi_ap_on);
         this.mRightOrderedIconManager = new StatusBarIconController.OrderedIconManager(this.mStatusBarView.mStatusIcons, new ArrayList(Arrays.asList(new String[]{MiStat.Param.LOCATION, "bluetooth"})), true);
-        ((StatusBarIconController) Dependency.get(StatusBarIconController.class)).addIconGroup(this.mRightOrderedIconManager);
+        ((StatusBarIconController) Dependency.get(cls)).addIconGroup(this.mRightOrderedIconManager);
         this.mKeyguardSlaveWifi = (AnimatedImageView) this.mStatusBarView.findViewById(R.id.drip_slave_wifi);
         ((NetworkController) Dependency.get(NetworkController.class)).addCallback(this);
         ((ConfigurationController) Dependency.get(ConfigurationController.class)).addCallback(this.mConfigurationListener);
@@ -100,12 +102,13 @@ public class KeyguardStatusBarViewControllerDripImpl implements KeyguardStatusBa
     }
 
     public void hideStatusIcons() {
+        Class cls = StatusBarIconController.class;
         ((HotspotController) Dependency.get(HotspotController.class)).removeCallback(this);
         if (this.mOrderedIconManager != null) {
-            ((StatusBarIconController) Dependency.get(StatusBarIconController.class)).removeIconGroup(this.mOrderedIconManager);
+            ((StatusBarIconController) Dependency.get(cls)).removeIconGroup(this.mOrderedIconManager);
         }
         if (this.mRightOrderedIconManager != null) {
-            ((StatusBarIconController) Dependency.get(StatusBarIconController.class)).removeIconGroup(this.mRightOrderedIconManager);
+            ((StatusBarIconController) Dependency.get(cls)).removeIconGroup(this.mRightOrderedIconManager);
         }
         if (this.mConfigurationListener != null) {
             ((ConfigurationController) Dependency.get(ConfigurationController.class)).removeCallback(this.mConfigurationListener);

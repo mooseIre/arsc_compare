@@ -76,7 +76,6 @@ public class UnlockMethodCache {
     private final LockPatternUtils mLockPatternUtils;
     private boolean mSecure;
     private boolean mTrustManaged;
-    private boolean mTrusted;
     /* access modifiers changed from: private */
     public final Runnable mUpdateSecureRunnable = new Runnable() {
         public void run() {
@@ -90,8 +89,9 @@ public class UnlockMethodCache {
 
     private UnlockMethodCache(Context context) {
         this.mLockPatternUtils = new LockPatternUtils(context);
-        this.mKeyguardUpdateMonitor = KeyguardUpdateMonitor.getInstance(context);
-        this.mKeyguardUpdateMonitor.registerCallback(this.mCallback);
+        KeyguardUpdateMonitor instance = KeyguardUpdateMonitor.getInstance(context);
+        this.mKeyguardUpdateMonitor = instance;
+        instance.registerCallback(this.mCallback);
         FaceUnlockManager.getInstance().registerFaceUnlockCallback(this.mFaceUnlockCallback);
         update(true);
         updateSecure();
@@ -130,14 +130,13 @@ public class UnlockMethodCache {
         boolean z2 = false;
         boolean z3 = !this.mSecure || this.mKeyguardUpdateMonitor.getUserCanSkipBouncer(currentUser);
         boolean userTrustIsManaged = this.mKeyguardUpdateMonitor.getUserTrustIsManaged(currentUser);
-        boolean userHasTrust = this.mKeyguardUpdateMonitor.getUserHasTrust(currentUser);
+        this.mKeyguardUpdateMonitor.getUserHasTrust(currentUser);
         boolean z4 = this.mKeyguardUpdateMonitor.isFaceUnlockRunning(currentUser) && userTrustIsManaged;
         if (!(z3 == this.mCanSkipBouncer && userTrustIsManaged == this.mTrustManaged && z4 == this.mFaceUnlockRunning)) {
             z2 = true;
         }
         if (z2 || z) {
             this.mCanSkipBouncer = z3;
-            this.mTrusted = userHasTrust;
             this.mTrustManaged = userTrustIsManaged;
             this.mFaceUnlockRunning = z4;
             notifyListeners();

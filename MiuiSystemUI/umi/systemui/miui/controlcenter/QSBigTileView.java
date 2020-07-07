@@ -2,7 +2,6 @@ package com.android.systemui.miui.controlcenter;
 
 import android.animation.ObjectAnimator;
 import android.content.Context;
-import android.content.res.Configuration;
 import android.graphics.Outline;
 import android.graphics.Rect;
 import android.os.Handler;
@@ -33,14 +32,12 @@ import com.android.systemui.qs.tiles.BluetoothTile;
 import com.android.systemui.qs.tiles.WifiTile;
 import miuix.animation.Folme;
 import miuix.animation.IStateStyle;
-import miuix.animation.ITouchStyle;
 import miuix.animation.base.AnimConfig;
 import miuix.animation.controller.AnimState;
 import miuix.animation.property.ViewProperty;
 import miuix.animation.utils.EaseManager;
 
 public class QSBigTileView extends QSTileView {
-    private String mAccessibilityClass;
     private String mActiveString;
     /* access modifiers changed from: private */
     public BigQSTileAnimationController mAnimatorController;
@@ -55,10 +52,7 @@ public class QSBigTileView extends QSTileView {
     public ImageView mExpandIndicator;
     private final H mHandler;
     private QSControlTileHost mHost;
-    private int mIconColorDisabled;
-    private int mIconColorUnavailable;
     private String mInActiveString;
-    private int mLayoutDirection;
     private String mOpeningString;
     private ControlPanelController mPanelController;
     /* access modifiers changed from: private */
@@ -107,16 +101,17 @@ public class QSBigTileView extends QSTileView {
         this.mUnavailableString = "";
         this.mContext = context;
         this.mPanelController = (ControlPanelController) Dependency.get(ControlPanelController.class);
-        this.mIconColorDisabled = context.getResources().getColor(R.color.qs_control_tile_icon_disabled_color);
-        this.mIconColorUnavailable = context.getResources().getColor(R.color.qs_control_tile_icon_unavailable_color);
+        context.getResources().getColor(R.color.qs_control_tile_icon_disabled_color);
+        context.getResources().getColor(R.color.qs_control_tile_icon_unavailable_color);
         this.mConnectedString = this.mContext.getString(R.string.qs_control_big_tile_state_connected);
         this.mActiveString = this.mContext.getString(R.string.qs_control_big_tile_state_opened);
         this.mInActiveString = this.mContext.getString(R.string.qs_control_big_tile_state_closed);
         this.mUnavailableString = this.mContext.getString(R.string.qs_control_big_tile_state_unavailable);
         this.mOpeningString = this.mContext.getString(R.string.qs_control_big_tile_state_opening);
         this.mClosingString = this.mContext.getString(R.string.qs_control_big_tile_state_closing);
-        this.mBreathAnimator = ObjectAnimator.ofFloat(this.mStatusIconView, "alpha", new float[]{0.5f});
-        this.mBreathAnimator.setDuration(400);
+        ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this.mStatusIconView, "alpha", new float[]{0.5f});
+        this.mBreathAnimator = ofFloat;
+        ofFloat.setDuration(400);
         this.mBreathAnimator.setInterpolator(Interpolators.FAST_OUT_SLOW_IN);
         this.mBreathAnimator.setRepeatMode(2);
         this.mBreathAnimator.setRepeatCount(-1);
@@ -133,27 +128,15 @@ public class QSBigTileView extends QSTileView {
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mTitleView = (TextView) findViewById(R.id.title);
-        this.mTitleView.setImportantForAccessibility(2);
+        TextView textView = (TextView) findViewById(R.id.title);
+        this.mTitleView = textView;
+        textView.setImportantForAccessibility(2);
         this.mStatusView = (TextView) findViewById(R.id.status);
         this.mStatusIconView = (QSIconView) findViewById(R.id.status_icon);
         Utils.createCardFolmeTouchStyle(this);
-        this.mExpandIndicator = (ImageView) findViewById(R.id.indicator);
-        this.mExpandIndicator.setContentDescription(this.mContext.getResources().getString(R.string.accessibility_expand_button));
-        updateIndicatorTouch();
-    }
-
-    /* access modifiers changed from: protected */
-    public void onConfigurationChanged(Configuration configuration) {
-        super.onConfigurationChanged(configuration);
-        int layoutDirection = getLayoutDirection();
-        if (this.mLayoutDirection != layoutDirection) {
-            this.mLayoutDirection = layoutDirection;
-            updateIndicatorTouch();
-        }
-    }
-
-    private void updateIndicatorTouch() {
+        ImageView imageView = (ImageView) findViewById(R.id.indicator);
+        this.mExpandIndicator = imageView;
+        imageView.setContentDescription(this.mContext.getResources().getString(R.string.accessibility_expand_button));
         this.mExpandIndicator.post(new Runnable() {
             public void run() {
                 int dimensionPixelSize = QSBigTileView.this.mContext.getResources().getDimensionPixelSize(R.dimen.qs_control_big_tile_indicator_touch_h);
@@ -240,8 +223,9 @@ public class QSBigTileView extends QSTileView {
     public void setHost(QSControlTileHost qSControlTileHost) {
         this.mHost = qSControlTileHost;
         this.mTileRecord = new QSPanel.TileRecord();
-        this.mQSTile = this.mHost.createTile(this.mTag);
-        this.mQSTile.userSwitch(KeyguardUpdateMonitor.getCurrentUser());
+        QSTile createTile = this.mHost.createTile(this.mTag);
+        this.mQSTile = createTile;
+        createTile.userSwitch(KeyguardUpdateMonitor.getCurrentUser());
         this.mTileRecord.callback = new QSTile.Callback() {
             public void onAnnouncementRequested(CharSequence charSequence) {
             }
@@ -380,7 +364,7 @@ public class QSBigTileView extends QSTileView {
         imageView.setVisibility(i3);
         this.mStatusIconView.setIcon(state);
         this.mStatusIconView.setContentDescription(state.contentDescription);
-        this.mAccessibilityClass = state.expandedAccessibilityClassName;
+        String str = state.expandedAccessibilityClassName;
         if ((state instanceof QSTile.BooleanState) && this.mTileState != (z = ((QSTile.BooleanState) state).value)) {
             this.mTileState = z;
         }
@@ -494,13 +478,6 @@ public class QSBigTileView extends QSTileView {
 
     public boolean isClicked() {
         return this.mClicked;
-    }
-
-    public boolean onTouchEvent(MotionEvent motionEvent) {
-        ITouchStyle iTouchStyle = Folme.useAt(this).touch();
-        iTouchStyle.setTint(0.0f, 0.0f, 0.0f, 0.0f);
-        iTouchStyle.onMotionEventEx(this, motionEvent, new AnimConfig[0]);
-        return super.onTouchEvent(motionEvent);
     }
 
     public boolean dispatchTouchEvent(MotionEvent motionEvent) {

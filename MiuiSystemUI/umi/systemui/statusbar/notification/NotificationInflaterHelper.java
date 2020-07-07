@@ -18,7 +18,9 @@ import com.android.systemui.util.Assert;
 import java.util.HashMap;
 
 public class NotificationInflaterHelper {
-    private static final NotificationInflater.InflationExecutor EXECUTOR = new NotificationInflater.InflationExecutor();
+    static {
+        new NotificationInflater.InflationExecutor();
+    }
 
     private static void onViewApplied(View view, NotificationInflater.InflationProgress inflationProgress, int i, int i2, ExpandableNotificationRow expandableNotificationRow, boolean z, boolean z2, NotificationInflater.InflationCallback inflationCallback, NotificationViewWrapper notificationViewWrapper, HashMap<Integer, CancellationSignal> hashMap, NotificationInflater.ApplyCallback applyCallback, InCallNotificationView.InCallCallback inCallCallback) {
         if (z2) {
@@ -107,10 +109,11 @@ public class NotificationInflaterHelper {
         return createMiuiPublicView(expandableNotificationRow);
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:6:0x0033, code lost:
-        return (android.widget.RemoteViews) r6.getClass().getDeclaredMethod("makePublicContentView", new java.lang.Class[]{java.lang.Boolean.TYPE}).invoke(r6, new java.lang.Object[]{false});
+    /* JADX WARNING: Can't wrap try/catch for region: R(3:4|5|6) */
+    /* JADX WARNING: Code restructure failed: missing block: B:6:0x0031, code lost:
+        return (android.widget.RemoteViews) r6.getClass().getDeclaredMethod("makePublicContentView", new java.lang.Class[]{java.lang.Boolean.TYPE}).invoke(r6, new java.lang.Object[]{java.lang.Boolean.FALSE});
      */
-    /* JADX WARNING: Code restructure failed: missing block: B:7:0x0034, code lost:
+    /* JADX WARNING: Code restructure failed: missing block: B:7:0x0032, code lost:
         return null;
      */
     /* JADX WARNING: Failed to process nested try/catch */
@@ -128,19 +131,19 @@ public class NotificationInflaterHelper {
             android.widget.RemoteViews r2 = (android.widget.RemoteViews) r2     // Catch:{ Exception -> 0x0016 }
             return r2
         L_0x0016:
-            java.lang.Class r2 = r6.getClass()     // Catch:{ Exception -> 0x0034 }
+            java.lang.Class r2 = r6.getClass()     // Catch:{ Exception -> 0x0032 }
             r3 = 1
-            java.lang.Class[] r4 = new java.lang.Class[r3]     // Catch:{ Exception -> 0x0034 }
-            java.lang.Class r5 = java.lang.Boolean.TYPE     // Catch:{ Exception -> 0x0034 }
-            r4[r1] = r5     // Catch:{ Exception -> 0x0034 }
-            java.lang.reflect.Method r0 = r2.getDeclaredMethod(r0, r4)     // Catch:{ Exception -> 0x0034 }
-            java.lang.Object[] r2 = new java.lang.Object[r3]     // Catch:{ Exception -> 0x0034 }
-            java.lang.Boolean r3 = java.lang.Boolean.valueOf(r1)     // Catch:{ Exception -> 0x0034 }
-            r2[r1] = r3     // Catch:{ Exception -> 0x0034 }
-            java.lang.Object r6 = r0.invoke(r6, r2)     // Catch:{ Exception -> 0x0034 }
-            android.widget.RemoteViews r6 = (android.widget.RemoteViews) r6     // Catch:{ Exception -> 0x0034 }
+            java.lang.Class[] r4 = new java.lang.Class[r3]     // Catch:{ Exception -> 0x0032 }
+            java.lang.Class r5 = java.lang.Boolean.TYPE     // Catch:{ Exception -> 0x0032 }
+            r4[r1] = r5     // Catch:{ Exception -> 0x0032 }
+            java.lang.reflect.Method r0 = r2.getDeclaredMethod(r0, r4)     // Catch:{ Exception -> 0x0032 }
+            java.lang.Object[] r2 = new java.lang.Object[r3]     // Catch:{ Exception -> 0x0032 }
+            java.lang.Boolean r3 = java.lang.Boolean.FALSE     // Catch:{ Exception -> 0x0032 }
+            r2[r1] = r3     // Catch:{ Exception -> 0x0032 }
+            java.lang.Object r6 = r0.invoke(r6, r2)     // Catch:{ Exception -> 0x0032 }
+            android.widget.RemoteViews r6 = (android.widget.RemoteViews) r6     // Catch:{ Exception -> 0x0032 }
             return r6
-        L_0x0034:
+        L_0x0032:
             r6 = 0
             return r6
         */
@@ -157,10 +160,10 @@ public class NotificationInflaterHelper {
             Notification.Action action = actionArr[0];
             PendingIntent pendingIntent = action.actionIntent;
             if (pendingIntent != null) {
-                remoteViews.setOnClickPendingIntent(16909137, pendingIntent);
+                remoteViews.setOnClickPendingIntent(16908698, pendingIntent);
             }
             if (action.getRemoteInputs() != null) {
-                remoteViews.setRemoteInputs(16909137, action.getRemoteInputs());
+                remoteViews.setRemoteInputs(16908698, action.getRemoteInputs());
             }
         }
     }
@@ -168,8 +171,6 @@ public class NotificationInflaterHelper {
     private static RemoteViews createMiuiPublicView(ExpandableNotificationRow expandableNotificationRow) {
         Notification notification = expandableNotificationRow.getEntry().notification.getNotification();
         int notificationChildCount = expandableNotificationRow.getChildrenContainer() != null ? expandableNotificationRow.getChildrenContainer().getNotificationChildCount() : 1;
-        Notification.Builder contentText = new Notification.Builder(expandableNotificationRow.getContext()).setWhen(notification.when).setShowWhen(true).setSmallIcon(notification.getSmallIcon()).setContentTitle(expandableNotificationRow.getAppName()).setContentText(expandableNotificationRow.getContext().getResources().getQuantityString(R.plurals.new_notifications_msg, notificationChildCount, new Object[]{Integer.valueOf(notificationChildCount)}));
-        contentText.build().extras.putString("android.substName", expandableNotificationRow.getAppName());
-        return contentText.createContentView();
+        return new Notification.Builder(expandableNotificationRow.getContext()).setWhen(notification.when).setShowWhen(true).setSmallIcon(notification.getSmallIcon()).setContentTitle(expandableNotificationRow.getAppName()).setContentText(expandableNotificationRow.getContext().getResources().getQuantityString(R.plurals.new_notifications_msg, notificationChildCount, new Object[]{Integer.valueOf(notificationChildCount)})).createContentView();
     }
 }

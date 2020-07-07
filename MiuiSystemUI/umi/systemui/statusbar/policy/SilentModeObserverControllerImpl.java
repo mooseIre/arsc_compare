@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import miui.provider.ExtraTelephony;
 
 public class SilentModeObserverControllerImpl implements SilentModeObserverController {
-    private static final boolean DEBUG = Log.isLoggable("SilentModeController", 3);
     /* access modifiers changed from: private */
     public final Context mContext;
     /* access modifiers changed from: private */
@@ -21,17 +20,22 @@ public class SilentModeObserverControllerImpl implements SilentModeObserverContr
     private ExtraTelephony.QuietModeEnableListener mQuietModeObserver;
     private CurrentUserTracker mUserTracker;
 
+    static {
+        Log.isLoggable("SilentModeController", 3);
+    }
+
     public SilentModeObserverControllerImpl(Context context) {
         this.mContext = context;
-        this.mQuietModeObserver = new ExtraTelephony.QuietModeEnableListener() {
+        AnonymousClass1 r3 = new ExtraTelephony.QuietModeEnableListener() {
             public void onQuietModeEnableChange(boolean z) {
                 boolean unused = SilentModeObserverControllerImpl.this.mEnabled = z;
                 SilentModeObserverControllerImpl.this.dispatchListeners(z);
             }
         };
-        ExtraTelephony.registerQuietModeEnableListener(this.mContext, this.mQuietModeObserver);
+        this.mQuietModeObserver = r3;
+        ExtraTelephony.registerQuietModeEnableListener(this.mContext, r3);
         this.mEnabled = MiuiSettings.SilenceMode.isSilenceModeEnable(this.mContext);
-        this.mUserTracker = new CurrentUserTracker(this.mContext) {
+        AnonymousClass2 r32 = new CurrentUserTracker(this.mContext) {
             public void onUserSwitched(int i) {
                 SilentModeObserverControllerImpl silentModeObserverControllerImpl = SilentModeObserverControllerImpl.this;
                 boolean unused = silentModeObserverControllerImpl.mEnabled = MiuiSettings.SilenceMode.isSilenceModeEnable(silentModeObserverControllerImpl.mContext);
@@ -39,7 +43,8 @@ public class SilentModeObserverControllerImpl implements SilentModeObserverContr
                 silentModeObserverControllerImpl2.dispatchListeners(silentModeObserverControllerImpl2.mEnabled);
             }
         };
-        this.mUserTracker.startTracking();
+        this.mUserTracker = r32;
+        r32.startTracking();
     }
 
     public void addCallback(SilentModeObserverController.SilentModeListener silentModeListener) {

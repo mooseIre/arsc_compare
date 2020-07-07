@@ -20,7 +20,6 @@ import com.android.systemui.miui.PackageEventReceiver;
 import com.android.systemui.miui.controlcenter.ExpandInfoController;
 import com.android.systemui.miui.controlcenter.ExpandInfoControllerImpl;
 import com.android.systemui.miui.statusbar.ControlCenterActivityStarter;
-import com.android.systemui.miui.statusbar.analytics.NotificationStat;
 import com.android.systemui.miui.statusbar.analytics.SystemUIStat;
 import com.android.systemui.miui.statusbar.phone.ControlPanelWindowManager;
 import com.android.systemui.miui.statusbar.policy.ControlPanelController;
@@ -98,7 +97,7 @@ public class DependencyUI extends SystemUI {
 
     public void start() {
         sDependency = this;
-        Dependency.setDependencyResolver(new Dependency.DependencyResolver() {
+        Dependency.setDependencyResolver(new Dependency.DependencyResolver(this) {
             public <T> T get(Class<T> cls) {
                 return DependencyUI.sDependency.getDependency(cls);
             }
@@ -107,37 +106,37 @@ public class DependencyUI extends SystemUI {
                 return DependencyUI.sDependency.getDependency(dependencyKey);
             }
         });
-        this.mProviders.put(Dependency.TIME_TICK_HANDLER, new Dependency.DependencyProvider() {
+        this.mProviders.put(Dependency.TIME_TICK_HANDLER, new Dependency.DependencyProvider(this) {
             public Object createDependency() {
                 return Dependencies.getInstance().get(Handler.class, "TimeTick");
             }
         });
-        this.mProviders.put(Dependency.SCREEN_OFF_HANDLER, new Dependency.DependencyProvider() {
+        this.mProviders.put(Dependency.SCREEN_OFF_HANDLER, new Dependency.DependencyProvider(this) {
             public Object createDependency() {
                 return Dependencies.getInstance().get(Handler.class, "ScreenOff");
             }
         });
-        this.mProviders.put(Dependency.BG_LOOPER, new Dependency.DependencyProvider() {
+        this.mProviders.put(Dependency.BG_LOOPER, new Dependency.DependencyProvider(this) {
             public Object createDependency() {
                 return Dependencies.getInstance().get(Looper.class, "SysUiBg");
             }
         });
-        this.mProviders.put(Dependency.NET_BG_LOOPER, new Dependency.DependencyProvider() {
+        this.mProviders.put(Dependency.NET_BG_LOOPER, new Dependency.DependencyProvider(this) {
             public Object createDependency() {
                 return Dependencies.getInstance().get(Looper.class, "SysUiNetBg");
             }
         });
-        this.mProviders.put(Dependency.BT_BG_LOOPER, new Dependency.DependencyProvider() {
+        this.mProviders.put(Dependency.BT_BG_LOOPER, new Dependency.DependencyProvider(this) {
             public Object createDependency() {
                 return Dependencies.getInstance().get(Looper.class, "SysUiBtBg");
             }
         });
-        this.mProviders.put(Dependency.MAIN_HANDLER, new Dependency.DependencyProvider() {
+        this.mProviders.put(Dependency.MAIN_HANDLER, new Dependency.DependencyProvider(this) {
             public Object createDependency() {
                 return Dependencies.getInstance().get(Handler.class, "main_handler");
             }
         });
-        this.mProviders.put(ActivityStarter.class, new Dependency.DependencyProvider() {
+        this.mProviders.put(ActivityStarter.class, new Dependency.DependencyProvider(this) {
             public Object createDependency() {
                 return new ActivityStarterDelegate();
             }
@@ -242,12 +241,12 @@ public class DependencyUI extends SystemUI {
                 return new SecurityControllerImpl(DependencyUI.this.mContext);
             }
         });
-        this.mProviders.put(LeakDetector.class, new Dependency.DependencyProvider() {
+        this.mProviders.put(LeakDetector.class, new Dependency.DependencyProvider(this) {
             public Object createDependency() {
                 return LeakDetector.create();
             }
         });
-        this.mProviders.put(Dependency.LEAK_REPORT_EMAIL, new Dependency.DependencyProvider() {
+        this.mProviders.put(Dependency.LEAK_REPORT_EMAIL, new Dependency.DependencyProvider(this) {
             public Object createDependency() {
                 return null;
             }
@@ -278,12 +277,12 @@ public class DependencyUI extends SystemUI {
                 return new ConfigurationControllerImpl(DependencyUI.this.mContext);
             }
         });
-        this.mProviders.put(ScreenLifecycle.class, new Dependency.DependencyProvider() {
+        this.mProviders.put(ScreenLifecycle.class, new Dependency.DependencyProvider(this) {
             public Object createDependency() {
                 return new ScreenLifecycle();
             }
         });
-        this.mProviders.put(WakefulnessLifecycle.class, new Dependency.DependencyProvider() {
+        this.mProviders.put(WakefulnessLifecycle.class, new Dependency.DependencyProvider(this) {
             public Object createDependency() {
                 return new WakefulnessLifecycle();
             }
@@ -293,12 +292,12 @@ public class DependencyUI extends SystemUI {
                 return new FragmentService(DependencyUI.this.mContext);
             }
         });
-        this.mProviders.put(ExtensionController.class, new Dependency.DependencyProvider() {
+        this.mProviders.put(ExtensionController.class, new Dependency.DependencyProvider(this) {
             public Object createDependency() {
                 return new ExtensionControllerImpl();
             }
         });
-        this.mProviders.put(PluginDependencyProvider.class, new Dependency.DependencyProvider() {
+        this.mProviders.put(PluginDependencyProvider.class, new Dependency.DependencyProvider(this) {
             public Object createDependency() {
                 return new PluginDependencyProvider((PluginManager) Dependency.get(PluginManager.class));
             }
@@ -313,7 +312,7 @@ public class DependencyUI extends SystemUI {
                 return new VolumeDialogControllerImpl(DependencyUI.this.mContext);
             }
         });
-        this.mProviders.put(MetricsLogger.class, new Dependency.DependencyProvider() {
+        this.mProviders.put(MetricsLogger.class, new Dependency.DependencyProvider(this) {
             public Object createDependency() {
                 return new MetricsLogger();
             }
@@ -323,7 +322,7 @@ public class DependencyUI extends SystemUI {
                 return new ForegroundServiceControllerImpl(DependencyUI.this.mContext);
             }
         });
-        this.mProviders.put(UiOffloadThread.class, new Dependency.DependencyProvider() {
+        this.mProviders.put(UiOffloadThread.class, new Dependency.DependencyProvider(this) {
             public Object createDependency() {
                 return new UiOffloadThread();
             }
@@ -338,12 +337,12 @@ public class DependencyUI extends SystemUI {
                 return new SilentModeObserverControllerImpl(DependencyUI.this.mContext);
             }
         });
-        this.mProviders.put(KeyguardNotificationController.class, new Dependency.DependencyProvider() {
+        this.mProviders.put(KeyguardNotificationController.class, new Dependency.DependencyProvider(this) {
             public Object createDependency() {
                 return new KeyguardNotificationControllerImpl();
             }
         });
-        this.mProviders.put(CallStateController.class, new Dependency.DependencyProvider() {
+        this.mProviders.put(CallStateController.class, new Dependency.DependencyProvider(this) {
             public Object createDependency() {
                 return new CallStateControllerImpl();
             }
@@ -353,17 +352,12 @@ public class DependencyUI extends SystemUI {
                 return new SystemUIStat(DependencyUI.this.mContext);
             }
         });
-        this.mProviders.put(NotificationStat.class, new Dependency.DependencyProvider() {
-            public Object createDependency() {
-                return new NotificationStat(DependencyUI.this.mContext);
-            }
-        });
         this.mProviders.put(BubbleController.class, new Dependency.DependencyProvider() {
             public Object createDependency() {
                 return new BubbleController(DependencyUI.this.mContext);
             }
         });
-        this.mProviders.put(StatusBarStateController.class, new Dependency.DependencyProvider() {
+        this.mProviders.put(StatusBarStateController.class, new Dependency.DependencyProvider(this) {
             public Object createDependency() {
                 return new StatusBarStateControllerImpl();
             }

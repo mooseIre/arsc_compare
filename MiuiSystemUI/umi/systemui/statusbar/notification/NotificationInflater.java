@@ -374,22 +374,25 @@ public class NotificationInflater {
         }
         ImageView imageView = (ImageView) view.findViewById(16908294);
         TextView textView = (TextView) view.findViewById(16908310);
-        TextView textView2 = (TextView) view.findViewById(16909468);
-        CharSequence text = textView != null ? textView.getText() : null;
-        CharSequence text2 = textView2 != null ? textView2.getText() : null;
-        if (imageView == null || (TextUtils.isEmpty(text) && TextUtils.isEmpty(text2))) {
+        TextView textView2 = (TextView) view.findViewById(16909540);
+        TextView textView3 = (TextView) view.findViewById(16909568);
+        if (imageView == null || (textView == null && textView2 == null && textView3 == null)) {
             Log.d("NotificationInflater", "inflateOptimizedHeadsUpNotification() invalid content");
             return null;
         }
         OptimizedHeadsUpNotificationView optimizedHeadsUpNotificationView = (OptimizedHeadsUpNotificationView) ((LayoutInflater) context.getSystemService("layout_inflater")).inflate(R.layout.optimized_heads_up_notification, (ViewGroup) null);
         optimizedHeadsUpNotificationView.wrapIconView(imageView);
         optimizedHeadsUpNotificationView.wrapTitleView(textView, z);
-        optimizedHeadsUpNotificationView.wrapTextView(textView2, z);
         optimizedHeadsUpNotificationView.wrapMiniWindowBar(entry.row, z);
+        if (textView2 != null) {
+            optimizedHeadsUpNotificationView.wrapTextView(textView2, z);
+        } else {
+            optimizedHeadsUpNotificationView.wrapTextView(textView3, z);
+        }
         View findViewById = view.findViewById(R.id.content);
         if (findViewById != null && findViewById.hasOnClickListeners()) {
             optimizedHeadsUpNotificationView.setOnClickListener(new View.OnClickListener(findViewById) {
-                private final /* synthetic */ View f$0;
+                public final /* synthetic */ View f$0;
 
                 {
                     this.f$0 = r1;
@@ -401,9 +404,9 @@ public class NotificationInflater {
             });
         }
         if (MiuiNotificationCompat.isShowMiuiAction(entry.notification.getNotification()) && entry.getPrivateContentView() != null) {
-            TextView textView3 = (TextView) entry.getPrivateContentView().findViewById(16909137);
+            TextView textView4 = (TextView) entry.getPrivateContentView().findViewById(16908698);
             TextView actionView = optimizedHeadsUpNotificationView.getActionView();
-            if (!(textView3 == null || actionView == null)) {
+            if (!(textView4 == null || actionView == null)) {
                 actionView.setVisibility(0);
                 actionView.setText(entry.notification.getMiuiActionTitle());
                 if (z) {
@@ -411,8 +414,8 @@ public class NotificationInflater {
                 } else {
                     actionView.setTextColor(context.getColor(R.color.optimized_heads_up_notification_action_text));
                 }
-                actionView.setOnClickListener(new View.OnClickListener(textView3) {
-                    private final /* synthetic */ TextView f$0;
+                actionView.setOnClickListener(new View.OnClickListener(textView4) {
+                    public final /* synthetic */ TextView f$0;
 
                     {
                         this.f$0 = r1;
@@ -480,7 +483,7 @@ public class NotificationInflater {
             this.mRow = expandableNotificationRow;
             this.mSbn = expandedNotification;
             this.mReInflateFlags = i;
-            this.mContext = this.mRow.getContext();
+            this.mContext = expandableNotificationRow.getContext();
             this.mIsLowPriority = z;
             this.mIsChildInGroup = z2;
             this.mUsesIncreasedHeight = z3;
@@ -618,8 +621,8 @@ public class NotificationInflater {
     }
 
     public static class InflationExecutor implements Executor {
-        private static final int CORE_POOL_SIZE = Math.max(2, Math.min(CPU_COUNT - 1, 4));
-        private static final int CPU_COUNT = Runtime.getRuntime().availableProcessors();
+        private static final int CORE_POOL_SIZE;
+        private static final int CPU_COUNT;
         private static final int MAXIMUM_POOL_SIZE = ((CPU_COUNT * 2) + 1);
         private static final ThreadFactory sThreadFactory = new ThreadFactory() {
             private final AtomicInteger mCount = new AtomicInteger(1);
@@ -628,10 +631,18 @@ public class NotificationInflater {
                 return new Thread(runnable, "InflaterThread #" + this.mCount.getAndIncrement());
             }
         };
-        private final ThreadPoolExecutor mExecutor = new ThreadPoolExecutor(CORE_POOL_SIZE, MAXIMUM_POOL_SIZE, 30, TimeUnit.SECONDS, new LinkedBlockingQueue(), sThreadFactory);
+        private final ThreadPoolExecutor mExecutor;
+
+        static {
+            int availableProcessors = Runtime.getRuntime().availableProcessors();
+            CPU_COUNT = availableProcessors;
+            CORE_POOL_SIZE = Math.max(2, Math.min(availableProcessors - 1, 4));
+        }
 
         public InflationExecutor() {
-            this.mExecutor.allowCoreThreadTimeOut(true);
+            ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(CORE_POOL_SIZE, MAXIMUM_POOL_SIZE, 30, TimeUnit.SECONDS, new LinkedBlockingQueue(), sThreadFactory);
+            this.mExecutor = threadPoolExecutor;
+            threadPoolExecutor.allowCoreThreadTimeOut(true);
         }
 
         public void execute(Runnable runnable) {

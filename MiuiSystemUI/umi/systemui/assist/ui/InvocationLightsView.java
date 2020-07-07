@@ -20,7 +20,6 @@ public class InvocationLightsView extends View {
     protected final PerimeterPathGuide mGuide;
     private final Paint mPaint;
     private final Path mPath;
-    private boolean mRegistered;
     private int[] mScreenLocation;
     private final int mStrokeWidth;
     private boolean mUseNavBarColor;
@@ -44,10 +43,10 @@ public class InvocationLightsView extends View {
         this.mPaint = new Paint();
         this.mPath = new Path();
         this.mScreenLocation = new int[2];
-        this.mRegistered = false;
         this.mUseNavBarColor = true;
-        this.mStrokeWidth = DisplayUtils.convertDpToPx(3.0f, context);
-        this.mPaint.setStrokeWidth((float) this.mStrokeWidth);
+        int convertDpToPx = DisplayUtils.convertDpToPx(3.0f, context);
+        this.mStrokeWidth = convertDpToPx;
+        this.mPaint.setStrokeWidth((float) convertDpToPx);
         this.mPaint.setStyle(Paint.Style.STROKE);
         this.mPaint.setStrokeJoin(Paint.Join.MITER);
         this.mPaint.setAntiAlias(true);

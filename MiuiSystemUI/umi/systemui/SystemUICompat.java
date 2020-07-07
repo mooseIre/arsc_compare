@@ -23,9 +23,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.os.ServiceManager;
-import android.text.TextUtils;
 import android.util.Log;
-import android.util.MiuiMultiWindowUtils;
 import android.view.InputMonitor;
 import android.view.View;
 import android.view.WindowManagerGlobal;
@@ -34,17 +32,14 @@ import com.android.internal.statusbar.IStatusBar;
 import com.android.internal.statusbar.IStatusBarService;
 import com.android.internal.statusbar.RegisterStatusBarResult;
 import com.android.internal.statusbar.StatusBarIcon;
-import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.settingslib.bluetooth.CachedBluetoothDevice;
 import com.android.systemui.recents.Recents;
-import com.android.systemui.recents.misc.SystemServicesProxy;
 import com.android.systemui.recents.model.MutableBoolean;
 import com.android.systemui.recents.model.Task;
 import java.util.List;
 import miui.securityspace.XSpaceUserHandle;
 
 public class SystemUICompat {
-    private static INotificationManager sINM = INotificationManager.Stub.asInterface(ServiceManager.getService("notification"));
     private static IActivityTaskManager sITM = ActivityTaskManager.getService();
 
     public static void cancelTaskThumbnailTransition(IActivityManager iActivityManager, int i) throws RemoteException {
@@ -58,6 +53,10 @@ public class SystemUICompat {
         return false;
     }
 
+    static {
+        INotificationManager.Stub.asInterface(ServiceManager.getService("notification"));
+    }
+
     public static void registerStatusBar(IStatusBarService iStatusBarService, IStatusBar iStatusBar, List<String> list, List<StatusBarIcon> list2, int[] iArr, List<IBinder> list3, Rect rect, Rect rect2) throws RemoteException {
         RegisterStatusBarResult registerStatusBar = iStatusBarService.registerStatusBar(iStatusBar);
         for (String str : registerStatusBar.mIcons.keySet()) {
@@ -65,17 +64,11 @@ public class SystemUICompat {
             list2.add((StatusBarIcon) registerStatusBar.mIcons.get(str));
         }
         iArr[0] = registerStatusBar.mDisabledFlags1;
-        iArr[1] = registerStatusBar.mSystemUiVisibility;
-        iArr[2] = registerStatusBar.mMenuVisible;
         iArr[3] = registerStatusBar.mImeWindowVis;
         iArr[4] = registerStatusBar.mImeBackDisposition;
         iArr[5] = registerStatusBar.mShowImeSwitcher;
         iArr[6] = registerStatusBar.mDisabledFlags2;
-        iArr[7] = registerStatusBar.mFullscreenStackSysUiVisibility;
-        iArr[8] = registerStatusBar.mDockedStackSysUiVisibility;
         list3.add(registerStatusBar.mImeToken);
-        rect.set(registerStatusBar.mFullscreenStackBounds);
-        rect2.set(registerStatusBar.mDockedStackBounds);
     }
 
     public static Object getLocales(Configuration configuration) {
@@ -210,7 +203,7 @@ public class SystemUICompat {
         if (iActivityManager == null || (splitScreenPrimaryStack = getSplitScreenPrimaryStack(iActivityManager)) == null) {
             return false;
         }
-        int currentUser = KeyguardUpdateMonitor.getCurrentUser();
+        int currentUser = ActivityManager.getCurrentUser();
         boolean z = false;
         for (int length = splitScreenPrimaryStack.taskUserIds.length - 1; length >= 0 && !z; length--) {
             int[] iArr = splitScreenPrimaryStack.taskUserIds;
@@ -290,31 +283,5 @@ public class SystemUICompat {
         Bundle bundle = new Bundle();
         bundle.putParcelable(str, monitorGestureInput);
         return bundle;
-    }
-
-    public static boolean startFreeformActivity(Context context, Task task, String str) {
-        if (!(task == null || task.key == null || TextUtils.isEmpty(str))) {
-            try {
-                ActivityOptions makeFreeformActivityOptions = makeFreeformActivityOptions(context, str);
-                if (makeFreeformActivityOptions != null) {
-                    SystemServicesProxy.getInstance(context).startActivityFromRecents(context, task.key, task.title, makeFreeformActivityOptions);
-                    return true;
-                }
-            } catch (Exception e) {
-                Log.e("SystemUICompat", "Failed to startFreeformActivity", e);
-            }
-        }
-        return false;
-    }
-
-    public static ActivityOptions makeFreeformActivityOptions(Context context, String str) {
-        ActivityOptions activityOptions = MiuiMultiWindowUtils.getActivityOptions(context, str, true, false);
-        if (activityOptions != null) {
-            return activityOptions;
-        }
-        ActivityOptions makeBasic = ActivityOptions.makeBasic();
-        makeBasic.setLaunchWindowingMode(5);
-        makeBasic.setLaunchBounds(MiuiMultiWindowUtils.getFreeformRect(context));
-        return makeBasic;
     }
 }

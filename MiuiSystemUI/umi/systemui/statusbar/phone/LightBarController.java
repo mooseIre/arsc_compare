@@ -93,8 +93,9 @@ public class LightBarController implements BatteryController.BatteryStateChangeC
     public LightBarController(Context context) {
         this.mContext = context;
         this.mStatusBarIconController = (DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class);
-        this.mBatteryController = (BatteryController) Dependency.get(BatteryController.class);
-        this.mBatteryController.addCallback(this);
+        BatteryController batteryController = (BatteryController) Dependency.get(BatteryController.class);
+        this.mBatteryController = batteryController;
+        batteryController.addCallback(this);
         registerDarkModeObserver();
         this.mStatuBarSamplingListener = new CompositionSamplingListenerCompat(this.mContext.getApplicationContext().getMainExecutor()) {
             public void onSampleCollected(float f) {
@@ -146,8 +147,9 @@ public class LightBarController implements BatteryController.BatteryStateChangeC
         int i4 = this.mSystemUiVisibility;
         int i5 = (i2 & i) | ((~i2) & i4);
         if (((i4 ^ i5) & 16) != 0 || z) {
-            this.mHasLightNavigationBar = isLight(i, i3, 16);
-            this.mNavigationLight = this.mHasLightNavigationBar && this.mScrimAlphaBelowThreshold;
+            boolean isLight = isLight(i, i3, 16);
+            this.mHasLightNavigationBar = isLight;
+            this.mNavigationLight = isLight && this.mScrimAlphaBelowThreshold;
         }
         this.mSystemUiVisibility = i5;
         this.mLastNavigationBarMode = i3;
@@ -161,8 +163,9 @@ public class LightBarController implements BatteryController.BatteryStateChangeC
     public void setScrimAlpha(float f) {
         this.mScrimAlpha = f;
         boolean z = this.mScrimAlphaBelowThreshold;
-        this.mScrimAlphaBelowThreshold = this.mScrimAlpha < 0.1f;
-        if (this.mHasLightNavigationBar && z != this.mScrimAlphaBelowThreshold) {
+        boolean z2 = f < 0.1f;
+        this.mScrimAlphaBelowThreshold = z2;
+        if (this.mHasLightNavigationBar && z != z2) {
             reevaluate();
         }
     }

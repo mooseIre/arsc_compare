@@ -62,7 +62,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import miuix.animation.Folme;
-import miuix.animation.IStateStyle;
 
 public class ExpandableNotificationRow extends ActivatableNotificationView implements PluginListener<NotificationMenuRowPlugin> {
     private static final Property<ExpandableNotificationRow, Float> TRANSLATE_CONTENT = new FloatProperty<ExpandableNotificationRow>("translate") {
@@ -137,8 +136,6 @@ public class ExpandableNotificationRow extends ActivatableNotificationView imple
     private int mIconTransformContentShiftNoIcon;
     private boolean mIconsVisible = true;
     private int mIncreasedPaddingBetweenElements;
-    private boolean mIsColorized;
-    private boolean mIsFirstRow;
     private boolean mIsHeadsUp;
     private boolean mIsLastChild;
     /* access modifiers changed from: private */
@@ -147,7 +144,6 @@ public class ExpandableNotificationRow extends ActivatableNotificationView imple
     private boolean mIsPinned;
     private boolean mIsShowHeadsUpBackground;
     private boolean mIsSummaryWithChildren;
-    private boolean mIsSystemChildExpanded;
     private boolean mIsSystemExpanded;
     private boolean mJustClicked;
     private boolean mKeepInParent;
@@ -164,6 +160,7 @@ public class ExpandableNotificationRow extends ActivatableNotificationView imple
     private int mMaxHeadsUpHeightIncreased;
     /* access modifiers changed from: private */
     public NotificationMenuRowPlugin mMenuRow;
+    private View mMiniWindowBar;
     private int mNotificationAmbientHeight;
     private int mNotificationHeadsUpBgRadius;
     private final NotificationInflater mNotificationInflater;
@@ -229,6 +226,9 @@ public class ExpandableNotificationRow extends ActivatableNotificationView imple
 
     public boolean hasOverlappingRendering() {
         return false;
+    }
+
+    public void setSystemChildExpanded(boolean z) {
     }
 
     public boolean isGroupExpansionChanging() {
@@ -300,7 +300,7 @@ public class ExpandableNotificationRow extends ActivatableNotificationView imple
     private void setIconAnimationRunningForChild(boolean z, View view) {
         if (view != null) {
             setIconRunning((ImageView) view.findViewById(16908294), z);
-            setIconRunning((ImageView) view.findViewById(16909333), z);
+            setIconRunning((ImageView) view.findViewById(16909404), z);
         }
     }
 
@@ -340,7 +340,7 @@ public class ExpandableNotificationRow extends ActivatableNotificationView imple
             onNotificationUpdated.onNotificationUpdated(this.mEntry);
         }
         this.mReInflateFlags = i;
-        this.mIsColorized = NotificationCompat.isColorized(this.mStatusBarNotification.getNotification());
+        NotificationCompat.isColorized(this.mStatusBarNotification.getNotification());
         if (!((i & 8) == 0 && (i & 1) == 0)) {
             this.mShowingPublicInitialized = false;
         }
@@ -387,7 +387,7 @@ public class ExpandableNotificationRow extends ActivatableNotificationView imple
         int i;
         int i2;
         boolean z = true;
-        boolean z2 = (notificationContentView.getContractedChild() == null || notificationContentView.getContractedChild().getId() == 16909445) ? false : true;
+        boolean z2 = (notificationContentView.getContractedChild() == null || notificationContentView.getContractedChild().getId() == 16909516) ? false : true;
         boolean z3 = this.mEntry.targetSdk < 24;
         boolean z4 = this.mEntry.targetSdk < 28;
         if (isMediaNotification()) {
@@ -399,7 +399,7 @@ public class ExpandableNotificationRow extends ActivatableNotificationView imple
         } else {
             i = this.mNotificationMinHeightLarge;
         }
-        if (notificationContentView.getHeadsUpChild() == null || notificationContentView.getHeadsUpChild().getId() == 16909445) {
+        if (notificationContentView.getHeadsUpChild() == null || notificationContentView.getHeadsUpChild().getId() == 16909516) {
             z = false;
         }
         if (!z || !z4) {
@@ -536,6 +536,8 @@ public class ExpandableNotificationRow extends ActivatableNotificationView imple
         return z;
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$onTouchEvent$0 */
     public /* synthetic */ void lambda$onTouchEvent$0$ExpandableNotificationRow() {
         animateTouchScale(1.0f);
     }
@@ -571,9 +573,7 @@ public class ExpandableNotificationRow extends ActivatableNotificationView imple
         String str = getEntry().key;
         Folme.useValue(str).cancel();
         Folme.getValueTarget(str).setMinVisibleChange(0.01f, "scale");
-        IStateStyle useValue = Folme.useValue(str);
-        useValue.setTo("scale", Float.valueOf(getScaleX()));
-        useValue.addListener(new AutoCleanFloatTransitionListener(str) {
+        Folme.useValue(str).setTo("scale", Float.valueOf(getScaleX())).addListener(new AutoCleanFloatTransitionListener(str) {
             public void onStart() {
                 if (f != 1.0f) {
                     boolean unused = ExpandableNotificationRow.this.mTouchingScale = true;
@@ -595,8 +595,7 @@ public class ExpandableNotificationRow extends ActivatableNotificationView imple
                 }
                 ExpandableNotificationRow.this.updateBackground();
             }
-        });
-        useValue.to("scale", Float.valueOf(f));
+        }).to("scale", Float.valueOf(f));
     }
 
     public boolean isTouchingScale() {
@@ -771,7 +770,7 @@ public class ExpandableNotificationRow extends ActivatableNotificationView imple
 
     private void setChronometerRunningForChild(boolean z, View view) {
         if (view != null) {
-            View findViewById = view.findViewById(16908819);
+            View findViewById = view.findViewById(16908850);
             if (findViewById instanceof Chronometer) {
                 ((Chronometer) findViewById).setStarted(z);
             }
@@ -845,7 +844,7 @@ public class ExpandableNotificationRow extends ActivatableNotificationView imple
             removeView(this.mMenuRow.getMenuView());
         }
         this.mMenuRow = notificationMenuRowPlugin;
-        if (this.mMenuRow.useDefaultMenuItems()) {
+        if (notificationMenuRowPlugin.useDefaultMenuItems()) {
             ArrayList arrayList = new ArrayList();
             arrayList.add(NotificationMenuRow.createInfoItem(this.mContext));
             if (Constants.IS_INTERNATIONAL) {
@@ -890,10 +889,10 @@ public class ExpandableNotificationRow extends ActivatableNotificationView imple
         NotificationGuts notificationGuts = this.mGuts;
         if (notificationGuts != null) {
             int indexOfChild = indexOfChild(notificationGuts);
-            notificationGuts.removeAllViews();
             removeView(notificationGuts);
-            this.mGuts = (NotificationGuts) LayoutInflater.from(this.mContext).inflate(R.layout.notification_guts, this, false);
-            this.mGuts.setVisibility(notificationGuts.getVisibility());
+            NotificationGuts notificationGuts2 = (NotificationGuts) LayoutInflater.from(this.mContext).inflate(R.layout.notification_guts, this, false);
+            this.mGuts = notificationGuts2;
+            notificationGuts2.setVisibility(notificationGuts.getVisibility());
             addView(this.mGuts, indexOfChild);
         }
         View menuView = this.mMenuRow.getMenuView();
@@ -1110,41 +1109,43 @@ public class ExpandableNotificationRow extends ActivatableNotificationView imple
         }
     }
 
-    /* JADX WARNING: Removed duplicated region for block: B:10:0x001d A[LOOP:0: B:9:0x001b->B:10:0x001d, LOOP_END] */
-    /* JADX WARNING: Removed duplicated region for block: B:13:0x0029  */
-    /* JADX WARNING: Removed duplicated region for block: B:16:? A[RETURN, SYNTHETIC] */
+    /* JADX WARNING: Removed duplicated region for block: B:12:0x0023 A[LOOP:0: B:11:0x0021->B:12:0x0023, LOOP_END] */
+    /* JADX WARNING: Removed duplicated region for block: B:15:0x002f  */
+    /* JADX WARNING: Removed duplicated region for block: B:18:? A[RETURN, SYNTHETIC] */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     private void updateIconVisibilities() {
         /*
             r5 = this;
             boolean r0 = r5.isChildInGroup()
             r1 = 0
-            if (r0 != 0) goto L_0x0017
+            if (r0 != 0) goto L_0x001d
             r5.isBelowSpeedBump()
             boolean r0 = r5.mIconsVisible
-            if (r0 != 0) goto L_0x0017
+            if (r0 != 0) goto L_0x001d
             boolean r0 = com.android.systemui.miui.statusbar.notification.NotificationUtil.showMiuiStyle()
-            if (r0 == 0) goto L_0x0015
-            goto L_0x0017
-        L_0x0015:
+            if (r0 == 0) goto L_0x001b
+            boolean r0 = r5.isSummaryWithChildren()
+            if (r0 == 0) goto L_0x001b
+            goto L_0x001d
+        L_0x001b:
             r0 = r1
-            goto L_0x0018
-        L_0x0017:
+            goto L_0x001e
+        L_0x001d:
             r0 = 1
-        L_0x0018:
+        L_0x001e:
             com.android.systemui.statusbar.NotificationContentView[] r2 = r5.mLayouts
             int r3 = r2.length
-        L_0x001b:
-            if (r1 >= r3) goto L_0x0025
+        L_0x0021:
+            if (r1 >= r3) goto L_0x002b
             r4 = r2[r1]
             r4.setIconsVisible(r0)
             int r1 = r1 + 1
-            goto L_0x001b
-        L_0x0025:
+            goto L_0x0021
+        L_0x002b:
             com.android.systemui.statusbar.stack.NotificationChildrenContainer r5 = r5.mChildrenContainer
-            if (r5 == 0) goto L_0x002c
+            if (r5 == 0) goto L_0x0032
             r5.setIconsVisible(r0)
-        L_0x002c:
+        L_0x0032:
             return
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.ExpandableNotificationRow.updateIconVisibilities():void");
@@ -1257,14 +1258,17 @@ public class ExpandableNotificationRow extends ActivatableNotificationView imple
     public void onFinishInflate() {
         super.onFinishInflate();
         this.mPublicLayout = (NotificationContentView) findViewById(R.id.expandedPublic);
-        this.mPrivateLayout = (NotificationContentView) findViewById(R.id.expanded);
-        this.mLayouts = new NotificationContentView[]{this.mPrivateLayout, this.mPublicLayout};
-        for (NotificationContentView notificationContentView : this.mLayouts) {
-            notificationContentView.setExpandClickListener(this.mExpandClickListener);
-            notificationContentView.setContainingNotification(this);
+        NotificationContentView notificationContentView = (NotificationContentView) findViewById(R.id.expanded);
+        this.mPrivateLayout = notificationContentView;
+        NotificationContentView[] notificationContentViewArr = {notificationContentView, this.mPublicLayout};
+        this.mLayouts = notificationContentViewArr;
+        for (NotificationContentView notificationContentView2 : notificationContentViewArr) {
+            notificationContentView2.setExpandClickListener(this.mExpandClickListener);
+            notificationContentView2.setContainingNotification(this);
         }
-        this.mGutsStub = (ViewStub) findViewById(R.id.notification_guts_stub);
-        this.mGutsStub.setOnInflateListener(new ViewStub.OnInflateListener() {
+        ViewStub viewStub = (ViewStub) findViewById(R.id.notification_guts_stub);
+        this.mGutsStub = viewStub;
+        viewStub.setOnInflateListener(new ViewStub.OnInflateListener() {
             public void onInflate(ViewStub viewStub, View view) {
                 NotificationGuts unused = ExpandableNotificationRow.this.mGuts = (NotificationGuts) view;
                 ExpandableNotificationRow.this.mGuts.setClipTopAmount(ExpandableNotificationRow.this.getClipTopAmount());
@@ -1272,8 +1276,9 @@ public class ExpandableNotificationRow extends ActivatableNotificationView imple
                 ViewStub unused2 = ExpandableNotificationRow.this.mGutsStub = null;
             }
         });
-        this.mChildrenContainerStub = (ViewStub) findViewById(R.id.child_container_stub);
-        this.mChildrenContainerStub.setOnInflateListener(new ViewStub.OnInflateListener() {
+        ViewStub viewStub2 = (ViewStub) findViewById(R.id.child_container_stub);
+        this.mChildrenContainerStub = viewStub2;
+        viewStub2.setOnInflateListener(new ViewStub.OnInflateListener() {
             public void onInflate(ViewStub viewStub, View view) {
                 NotificationChildrenContainer unused = ExpandableNotificationRow.this.mChildrenContainer = (NotificationChildrenContainer) view;
                 ExpandableNotificationRow.this.mChildrenContainer.setIsLowPriority(ExpandableNotificationRow.this.mIsLowPriority);
@@ -1288,6 +1293,7 @@ public class ExpandableNotificationRow extends ActivatableNotificationView imple
         }
         this.mTranslateableViews.remove(this.mChildrenContainerStub);
         this.mTranslateableViews.remove(this.mGutsStub);
+        this.mMiniWindowBar = findViewById(R.id.mini_window_bar);
     }
 
     public void resetTranslation() {
@@ -1309,10 +1315,10 @@ public class ExpandableNotificationRow extends ActivatableNotificationView imple
         if (animator != null) {
             animator.cancel();
         }
-        this.mTranslateAnim = getTranslateViewAnimator(f, (ValueAnimator.AnimatorUpdateListener) null);
-        Animator animator2 = this.mTranslateAnim;
-        if (animator2 != null) {
-            animator2.start();
+        Animator translateViewAnimator = getTranslateViewAnimator(f, (ValueAnimator.AnimatorUpdateListener) null);
+        this.mTranslateAnim = translateViewAnimator;
+        if (translateViewAnimator != null) {
+            translateViewAnimator.start();
         }
     }
 
@@ -1633,15 +1639,14 @@ public class ExpandableNotificationRow extends ActivatableNotificationView imple
             r0 = r2
         L_0x0013:
             r5.mIsSummaryWithChildren = r0
-            boolean r0 = r5.mIsSummaryWithChildren
-            if (r0 == 0) goto L_0x0028
+            if (r0 == 0) goto L_0x0026
             com.android.systemui.statusbar.stack.NotificationChildrenContainer r0 = r5.mChildrenContainer
             android.view.NotificationHeaderView r0 = r0.getHeaderView()
-            if (r0 != 0) goto L_0x0028
+            if (r0 != 0) goto L_0x0026
             com.android.systemui.statusbar.stack.NotificationChildrenContainer r0 = r5.mChildrenContainer
             android.view.View$OnClickListener r3 = r5.mExpandClickListener
             r0.recreateNotificationHeader(r3)
-        L_0x0028:
+        L_0x0026:
             com.android.systemui.statusbar.NotificationContentView r0 = r5.getShowingLayout()
             r0.updateBackgroundColor(r2)
             com.android.systemui.statusbar.NotificationContentView r0 = r5.mPrivateLayout
@@ -1650,25 +1655,25 @@ public class ExpandableNotificationRow extends ActivatableNotificationView imple
             r5.updateChildrenHeaderAppearance()
             r5.updateChildrenVisibility()
             boolean r0 = r5.mIsSummaryWithChildren
-            if (r0 == 0) goto L_0x0068
+            if (r0 == 0) goto L_0x0066
             com.android.systemui.miui.statusbar.ExpandedNotification r0 = r5.mStatusBarNotification
-            if (r0 == 0) goto L_0x0068
+            if (r0 == 0) goto L_0x0066
             r0.setHasShownAfterUnlock(r2)
             com.android.systemui.statusbar.stack.NotificationChildrenContainer r0 = r5.mChildrenContainer
             java.util.List r0 = r0.getNotificationChildren()
             r3 = r2
-        L_0x0050:
+        L_0x004e:
             int r4 = r0.size()
-            if (r3 >= r4) goto L_0x0068
+            if (r3 >= r4) goto L_0x0066
             java.lang.Object r4 = r0.get(r3)
             com.android.systemui.statusbar.ExpandableNotificationRow r4 = (com.android.systemui.statusbar.ExpandableNotificationRow) r4
             com.android.systemui.miui.statusbar.ExpandedNotification r4 = r4.getStatusBarNotification()
-            if (r4 == 0) goto L_0x0065
+            if (r4 == 0) goto L_0x0063
             r4.setHasShownAfterUnlock(r2)
-        L_0x0065:
+        L_0x0063:
             int r3 = r3 + 1
-            goto L_0x0050
-        L_0x0068:
+            goto L_0x004e
+        L_0x0066:
             int r0 = r5.getNumberOfNotificationChildren()
             int r0 = java.lang.Math.max(r1, r0)
             r5.updateMiuiPublicView(r0)
@@ -1695,10 +1700,6 @@ public class ExpandableNotificationRow extends ActivatableNotificationView imple
 
     public boolean isExpanded(boolean z) {
         return (!this.mOnKeyguard || z) && ((!hasUserChangedExpansion() && (isSystemExpanded() || isSystemChildExpanded())) || isUserExpanded()) && !isShowingPublic();
-    }
-
-    public void setSystemChildExpanded(boolean z) {
-        this.mIsSystemChildExpanded = z;
     }
 
     public void setLayoutListener(LayoutListener layoutListener) {
@@ -1775,8 +1776,9 @@ public class ExpandableNotificationRow extends ActivatableNotificationView imple
 
     public void setHideSensitive(boolean z, boolean z2, long j, long j2) {
         boolean z3 = this.mShowingPublic;
-        this.mShowingPublic = (this.mSensitive && z && !isMediaNotification()) || this.mEntry.hideSensitiveByAppLock;
-        if (this.mShowingPublic && !z3) {
+        boolean z4 = (this.mSensitive && z && !isMediaNotification()) || this.mEntry.hideSensitiveByAppLock;
+        this.mShowingPublic = z4;
+        if (z4 && !z3) {
             Log.d("ExpandableNotificationRow", "show public, hideSensitive=" + z + ",mSensitive=" + this.mSensitive);
         }
         if ((!this.mShowingPublicInitialized || this.mShowingPublic != z3) && this.mPublicLayout.getChildCount() != 0) {
@@ -2082,7 +2084,7 @@ public class ExpandableNotificationRow extends ActivatableNotificationView imple
     }
 
     public void showHeadsUpBackground() {
-        setMiniBarVisible(this.mEntry.mIsShowMiniWindowBar);
+        this.mMiniWindowBar.setVisibility(this.mEntry.mIsShowMiniWindowBar ? 0 : 8);
         this.mIsShowHeadsUpBackground = true;
         updateBackground();
         this.mBackgroundNormal.setShowHeadsUp(true);
@@ -2097,7 +2099,7 @@ public class ExpandableNotificationRow extends ActivatableNotificationView imple
                 hideHeadsUpBackground.hideHeadsUpBackground();
             }
         }
-        setMiniBarVisible(false);
+        this.mMiniWindowBar.setVisibility(8);
         View headsUpChild = getShowingLayout().getHeadsUpChild();
         if (headsUpChild instanceof OptimizedHeadsUpNotificationView) {
             ((OptimizedHeadsUpNotificationView) headsUpChild).hideMiniWindowBar();
@@ -2105,16 +2107,11 @@ public class ExpandableNotificationRow extends ActivatableNotificationView imple
         this.mBackgroundNormal.setShowHeadsUp(false);
     }
 
-    public void updateMiniBarAlpha(float f) {
-        View findViewById;
-        View viewForVisibleType = getShowingLayout().getViewForVisibleType(getShowingLayout().getVisibleType());
-        if (viewForVisibleType != null && (findViewById = viewForVisibleType.findViewById(R.id.mini_window_bar)) != null) {
-            findViewById.setAlpha(f);
+    public int getMiniBarHeight() {
+        if (this.mEntry.mIsShowMiniWindowBar) {
+            return this.mContext.getResources().getDimensionPixelSize(R.dimen.mini_window_bar_height);
         }
-    }
-
-    public void setMiniBarVisible(boolean z) {
-        getShowingLayout().setMiniBarVisible(z);
+        return 0;
     }
 
     public int getPositionOfChild(ExpandableNotificationRow expandableNotificationRow) {
@@ -2285,7 +2282,13 @@ public class ExpandableNotificationRow extends ActivatableNotificationView imple
 
     /* access modifiers changed from: protected */
     public boolean needsOutline() {
-        if (!isOnKeyguard() && !isHeadsUp() && !isHeadsUpAnimatingAway()) {
+        if (isOnKeyguard()) {
+            return true;
+        }
+        if (isHeadsUp() || isHeadsUpAnimatingAway()) {
+            return !StatusBar.sGameMode;
+        }
+        if (!isSummaryWithChildren() || !isGroupExpanded()) {
             return false;
         }
         return true;
@@ -2315,7 +2318,6 @@ public class ExpandableNotificationRow extends ActivatableNotificationView imple
                 isFirstRow.setIsFirstRow(false);
             }
         }
-        this.mIsFirstRow = z;
     }
 
     public int getExtraPadding() {
@@ -2355,5 +2357,9 @@ public class ExpandableNotificationRow extends ActivatableNotificationView imple
 
     public boolean isOptimizedGameHeadsUpBg() {
         return this.mIsOptimizedGameHeadsUpBg;
+    }
+
+    public View getMiniWindowBar() {
+        return this.mMiniWindowBar;
     }
 }

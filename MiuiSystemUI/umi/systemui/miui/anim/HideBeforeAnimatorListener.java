@@ -12,10 +12,12 @@ public class HideBeforeAnimatorListener extends AnimatorListenerAdapter {
     private int mAlphaDuration = 300;
     private Interpolator mAlphaInterpolator;
     private boolean mAnimateAlpha;
-    protected final List<View> mViews = new ArrayList();
+    protected final List<View> mViews;
 
     public HideBeforeAnimatorListener(View... viewArr) {
-        Collections.addAll(this.mViews, viewArr);
+        ArrayList arrayList = new ArrayList();
+        this.mViews = arrayList;
+        Collections.addAll(arrayList, viewArr);
     }
 
     public void onAnimationStart(Animator animator) {

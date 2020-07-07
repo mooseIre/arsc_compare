@@ -32,7 +32,8 @@ public abstract class StackScrollerDecorView extends ExpandableView {
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mContent = findContentView();
+        findContentView();
+        this.mContent = this;
         setInvisible();
     }
 
@@ -55,7 +56,6 @@ public abstract class StackScrollerDecorView extends ExpandableView {
             } else {
                 interpolator = Interpolators.ALPHA_OUT;
             }
-            this.mAnimating = true;
             this.mContent.animate().alpha(f).setInterpolator(interpolator).setDuration(260).withEndAction(new Runnable() {
                 public void run() {
                     boolean unused = StackScrollerDecorView.this.mAnimating = false;

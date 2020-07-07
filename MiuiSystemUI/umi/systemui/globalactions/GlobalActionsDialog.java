@@ -159,7 +159,7 @@ class GlobalActionsDialog implements DialogInterface.OnDismissListener, DialogIn
         boolean z = false;
         this.mContext = context;
         this.mWindowManagerFuncs = globalActionsManager;
-        this.mAudioManager = (AudioManager) this.mContext.getSystemService("audio");
+        this.mAudioManager = (AudioManager) context.getSystemService("audio");
         this.mDreamManager = IDreamManager.Stub.asInterface(ServiceManager.getService("dreams"));
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("android.intent.action.CLOSE_SYSTEM_DIALOGS");
@@ -174,7 +174,7 @@ class GlobalActionsDialog implements DialogInterface.OnDismissListener, DialogIn
             z = true;
         }
         this.mHasVibrator = z;
-        this.mShowSilentToggle = !this.mContext.getResources().getBoolean(17891563);
+        this.mShowSilentToggle = !this.mContext.getResources().getBoolean(17891575);
         this.mEmergencyAffordanceManager = new EmergencyAffordanceManager(context);
     }
 
@@ -231,7 +231,7 @@ class GlobalActionsDialog implements DialogInterface.OnDismissListener, DialogIn
         } else {
             this.mSilentModeAction = new SilentModeTriStateAction(this.mContext, this.mAudioManager, this.mHandler);
         }
-        this.mAirplaneModeOn = new ToggleAction(17302461, 17302463, 17040122, 17040121, 17040120) {
+        this.mAirplaneModeOn = new ToggleAction(17302474, 17302476, 17040269, 17040268, 17040267) {
             public boolean showBeforeProvisioning() {
                 return false;
             }
@@ -247,7 +247,7 @@ class GlobalActionsDialog implements DialogInterface.OnDismissListener, DialogIn
                     return;
                 }
                 boolean unused = GlobalActionsDialog.this.mIsWaitingForEcmExit = true;
-                Intent intent = new Intent("com.android.internal.intent.action.ACTION_SHOW_NOTICE_ECM_BLOCK_OTHERS", (Uri) null);
+                Intent intent = new Intent("android.telephony.action.SHOW_NOTICE_ECM_BLOCK_OTHERS", (Uri) null);
                 intent.addFlags(MiuiHapticFeedbackConstants.FLAG_MIUI_HAPTIC_TAP_NORMAL);
                 GlobalActionsDialog.this.mContext.startActivity(intent);
             }
@@ -255,14 +255,15 @@ class GlobalActionsDialog implements DialogInterface.OnDismissListener, DialogIn
             /* access modifiers changed from: protected */
             public void changeStateFromPress(boolean z) {
                 if (GlobalActionsDialog.this.mHasTelephony && !Boolean.parseBoolean(SystemProperties.get("ril.cdma.inecmmode"))) {
-                    this.mState = z ? ToggleAction.State.TurningOn : ToggleAction.State.TurningOff;
-                    ToggleAction.State unused = GlobalActionsDialog.this.mAirplaneState = this.mState;
+                    ToggleAction.State state = z ? ToggleAction.State.TurningOn : ToggleAction.State.TurningOff;
+                    this.mState = state;
+                    ToggleAction.State unused = GlobalActionsDialog.this.mAirplaneState = state;
                 }
             }
         };
         onAirplaneModeChanged();
         this.mItems = new ArrayList<>();
-        String[] stringArray = this.mContext.getResources().getStringArray(17236039);
+        String[] stringArray = this.mContext.getResources().getStringArray(17236041);
         ArraySet arraySet = new ArraySet();
         for (String str : stringArray) {
             if (!arraySet.contains(str)) {
@@ -334,7 +335,7 @@ class GlobalActionsDialog implements DialogInterface.OnDismissListener, DialogIn
         }
 
         private PowerAction() {
-            super(17301552, 17040110);
+            super(17301552, 17040257);
         }
 
         public boolean onLongPress() {
@@ -360,7 +361,7 @@ class GlobalActionsDialog implements DialogInterface.OnDismissListener, DialogIn
         }
 
         private RestartAction() {
-            super(17302806, 17040112);
+            super(17302821, 17040259);
         }
 
         public boolean onLongPress() {
@@ -386,7 +387,7 @@ class GlobalActionsDialog implements DialogInterface.OnDismissListener, DialogIn
         }
 
         public BugReportAction() {
-            super(17302465, 17039642);
+            super(17302478, 17039780);
         }
 
         public void onPress() {
@@ -395,7 +396,7 @@ class GlobalActionsDialog implements DialogInterface.OnDismissListener, DialogIn
                     public void run() {
                         try {
                             MetricsLogger.action(GlobalActionsDialog.this.mContext, 292);
-                            ActivityManagerCompat.getService().requestBugReport(1);
+                            ActivityManagerCompat.requestInteractiveBugReport();
                         } catch (RemoteException unused) {
                         }
                     }
@@ -409,19 +410,19 @@ class GlobalActionsDialog implements DialogInterface.OnDismissListener, DialogIn
             }
             try {
                 MetricsLogger.action(GlobalActionsDialog.this.mContext, 293);
-                ActivityManagerCompat.getService().requestBugReport(0);
+                ActivityManagerCompat.requestFullBugReport();
             } catch (RemoteException unused) {
             }
             return false;
         }
 
         public String getStatus() {
-            return GlobalActionsDialog.this.mContext.getString(17039641, new Object[]{Build.VERSION.RELEASE, Build.ID});
+            return GlobalActionsDialog.this.mContext.getString(17039779, new Object[]{Build.VERSION.RELEASE, Build.ID});
         }
     }
 
     private Action getSettingsAction() {
-        return new SinglePressAction(17302814, 17040114) {
+        return new SinglePressAction(17302829, 17040261) {
             public boolean showBeforeProvisioning() {
                 return true;
             }
@@ -439,7 +440,7 @@ class GlobalActionsDialog implements DialogInterface.OnDismissListener, DialogIn
     }
 
     private Action getEmergencyAction() {
-        return new SinglePressAction(17302206, 17040106) {
+        return new SinglePressAction(17302217, 17040253) {
             public boolean showBeforeProvisioning() {
                 return true;
             }
@@ -455,7 +456,7 @@ class GlobalActionsDialog implements DialogInterface.OnDismissListener, DialogIn
     }
 
     private Action getAssistAction() {
-        return new SinglePressAction(17302291, 17040104) {
+        return new SinglePressAction(17302304, 17040251) {
             public boolean showBeforeProvisioning() {
                 return true;
             }
@@ -473,7 +474,7 @@ class GlobalActionsDialog implements DialogInterface.OnDismissListener, DialogIn
     }
 
     private Action getVoiceAssistAction() {
-        return new SinglePressAction(17302854, 17040118) {
+        return new SinglePressAction(17302871, 17040265) {
             public boolean showBeforeProvisioning() {
                 return true;
             }
@@ -491,7 +492,7 @@ class GlobalActionsDialog implements DialogInterface.OnDismissListener, DialogIn
     }
 
     private Action getLockdownAction() {
-        return new SinglePressAction(17301551, 17040108) {
+        return new SinglePressAction(17301551, 17040255) {
             public boolean showBeforeProvisioning() {
                 return false;
             }
@@ -544,7 +545,7 @@ class GlobalActionsDialog implements DialogInterface.OnDismissListener, DialogIn
                     }
                     sb.append(str2);
                     sb.append(z ? " ✔" : "");
-                    arrayList.add(new SinglePressAction(17302687, createFromPath, sb.toString()) {
+                    arrayList.add(new SinglePressAction(this, 17302700, createFromPath, sb.toString()) {
                         public boolean showBeforeProvisioning() {
                             return false;
                         }
@@ -686,10 +687,10 @@ class GlobalActionsDialog implements DialogInterface.OnDismissListener, DialogIn
         }
 
         public View create(Context context, View view, ViewGroup viewGroup, LayoutInflater layoutInflater) {
-            View inflate = layoutInflater.inflate(17367160, viewGroup, false);
+            View inflate = layoutInflater.inflate(17367163, viewGroup, false);
             ImageView imageView = (ImageView) inflate.findViewById(16908294);
             TextView textView = (TextView) inflate.findViewById(16908299);
-            TextView textView2 = (TextView) inflate.findViewById(16909444);
+            TextView textView2 = (TextView) inflate.findViewById(16909515);
             String status = getStatus();
             if (!TextUtils.isEmpty(status)) {
                 textView2.setText(status);
@@ -762,10 +763,10 @@ class GlobalActionsDialog implements DialogInterface.OnDismissListener, DialogIn
 
         public View create(Context context, View view, ViewGroup viewGroup, LayoutInflater layoutInflater) {
             willCreate();
-            View inflate = layoutInflater.inflate(17367160, viewGroup, false);
+            View inflate = layoutInflater.inflate(17367163, viewGroup, false);
             ImageView imageView = (ImageView) inflate.findViewById(16908294);
             TextView textView = (TextView) inflate.findViewById(16908299);
-            TextView textView2 = (TextView) inflate.findViewById(16909444);
+            TextView textView2 = (TextView) inflate.findViewById(16909515);
             boolean isEnabled = isEnabled();
             if (textView != null) {
                 textView.setText(this.mMessageResId);
@@ -820,7 +821,7 @@ class GlobalActionsDialog implements DialogInterface.OnDismissListener, DialogIn
         }
 
         public SilentModeToggleAction() {
-            super(17302312, 17302311, 17040117, 17040116, 17040115);
+            super(17302325, 17302324, 17040264, 17040263, 17040262);
         }
 
         /* access modifiers changed from: package-private */
@@ -834,9 +835,8 @@ class GlobalActionsDialog implements DialogInterface.OnDismissListener, DialogIn
     }
 
     private static class SilentModeTriStateAction implements Action, View.OnClickListener {
-        private final int[] ITEM_IDS = {16909225, 16909226, 16909227};
+        private final int[] ITEM_IDS = {16909284, 16909285, 16909286};
         private final AudioManager mAudioManager;
-        private final Context mContext;
         private final Handler mHandler;
 
         private int indexToRingerMode(int i) {
@@ -869,11 +869,10 @@ class GlobalActionsDialog implements DialogInterface.OnDismissListener, DialogIn
         SilentModeTriStateAction(Context context, AudioManager audioManager, Handler handler) {
             this.mAudioManager = audioManager;
             this.mHandler = handler;
-            this.mContext = context;
         }
 
         public View create(Context context, View view, ViewGroup viewGroup, LayoutInflater layoutInflater) {
-            View inflate = layoutInflater.inflate(17367161, viewGroup, false);
+            View inflate = layoutInflater.inflate(17367164, viewGroup, false);
             int ringerMode = this.mAudioManager.getRingerMode();
             ringerModeToIndex(ringerMode);
             int i = 0;
@@ -905,8 +904,9 @@ class GlobalActionsDialog implements DialogInterface.OnDismissListener, DialogIn
             if (Settings.Global.getInt(this.mContext.getContentResolver(), "airplane_mode_on", 0) == 1) {
                 z = true;
             }
-            this.mAirplaneState = z ? ToggleAction.State.On : ToggleAction.State.Off;
-            this.mAirplaneModeOn.updateState(this.mAirplaneState);
+            ToggleAction.State state = z ? ToggleAction.State.On : ToggleAction.State.Off;
+            this.mAirplaneState = state;
+            this.mAirplaneModeOn.updateState(state);
         }
     }
 
@@ -924,13 +924,17 @@ class GlobalActionsDialog implements DialogInterface.OnDismissListener, DialogIn
 
     private static final class ActionsDialog extends Dialog implements DialogInterface {
         private final MyAdapter mAdapter;
-        private final AlertController mAlert = AlertController.create(this.mContext, this, getWindow());
-        private final Context mContext = getContext();
+        private final AlertController mAlert;
+        private final Context mContext;
 
         public ActionsDialog(Context context, AlertController.AlertParams alertParams) {
             super(context, getDialogTheme(context));
+            Context context2 = getContext();
+            this.mContext = context2;
+            AlertController create = AlertController.create(context2, this, getWindow());
+            this.mAlert = create;
             this.mAdapter = (MyAdapter) alertParams.mAdapter;
-            alertParams.apply(this.mAlert);
+            alertParams.apply(create);
         }
 
         private static int getDialogTheme(Context context) {

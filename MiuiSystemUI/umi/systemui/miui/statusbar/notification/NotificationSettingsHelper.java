@@ -76,7 +76,7 @@ public class NotificationSettingsHelper {
     }
 
     public static boolean isFoldable(Context context, String str) {
-        String[] stringArray = context.getResources().getStringArray(17236051);
+        String[] stringArray = context.getResources().getStringArray(17236055);
         if (stringArray == null || stringArray.length <= 0) {
             return true;
         }
@@ -89,7 +89,7 @@ public class NotificationSettingsHelper {
     }
 
     public static boolean isNonBlockable(Context context, String str, String str2) {
-        String[] stringArray = context.getResources().getStringArray(17236051);
+        String[] stringArray = context.getResources().getStringArray(17236055);
         if (stringArray != null) {
             int length = stringArray.length;
             for (int i = 0; i < length; i++) {

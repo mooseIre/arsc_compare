@@ -57,7 +57,6 @@ public class StatusBarIconView extends AnimatedImageView {
             return Float.valueOf(statusBarIconView.getIconAppearAmount());
         }
     };
-    private final int ANIMATION_DURATION_FAST;
     private boolean mAlwaysScaleIcon;
     /* access modifiers changed from: private */
     public int mAnimationStartColor;
@@ -112,7 +111,6 @@ public class StatusBarIconView extends AnimatedImageView {
 
     public StatusBarIconView(Context context, String str, ExpandedNotification expandedNotification, boolean z) {
         super(context);
-        this.ANIMATION_DURATION_FAST = 100;
         this.mStatusBarIconDrawingSizeDark = 1;
         this.mStatusBarIconDrawingSize = 1;
         this.mStatusBarIconSize = 1;
@@ -130,8 +128,9 @@ public class StatusBarIconView extends AnimatedImageView {
         this.mDozer = new NotificationIconDozeHelper(context);
         this.mBlocked = z;
         this.mSlot = str;
-        this.mNumberPain = new Paint();
-        this.mNumberPain.setTextAlign(Paint.Align.CENTER);
+        Paint paint = new Paint();
+        this.mNumberPain = paint;
+        paint.setTextAlign(Paint.Align.CENTER);
         this.mNumberPain.setColor(context.getColor(R.drawable.notification_number_text_color));
         this.mNumberPain.setAntiAlias(true);
         setNotification(expandedNotification);
@@ -184,9 +183,10 @@ public class StatusBarIconView extends AnimatedImageView {
 
     private void reloadDimens() {
         boolean z = this.mDotRadius == ((float) this.mStaticDotRadius);
-        this.mStaticDotRadius = getResources().getDimensionPixelSize(R.dimen.overflow_dot_radius);
+        int dimensionPixelSize = getResources().getDimensionPixelSize(R.dimen.overflow_dot_radius);
+        this.mStaticDotRadius = dimensionPixelSize;
         if (z) {
-            this.mDotRadius = (float) this.mStaticDotRadius;
+            this.mDotRadius = (float) dimensionPixelSize;
         }
     }
 
@@ -199,7 +199,6 @@ public class StatusBarIconView extends AnimatedImageView {
 
     public StatusBarIconView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-        this.ANIMATION_DURATION_FAST = 100;
         this.mStatusBarIconDrawingSizeDark = 1;
         this.mStatusBarIconDrawingSize = 1;
         this.mStatusBarIconSize = 1;
@@ -451,33 +450,30 @@ public class StatusBarIconView extends AnimatedImageView {
     }
 
     public static CharSequence contentDescForNotification(Context context, Notification notification) {
-        String str;
+        CharSequence charSequence;
+        CharSequence charSequence2 = "";
         if (Build.VERSION.SDK_INT == 23 && notification != null) {
             return notification.tickerText;
         }
         try {
-            str = NotificationCompat.loadHeaderAppName(NotificationCompat.recoverBuilder(context, notification));
+            charSequence = NotificationCompat.loadHeaderAppName(NotificationCompat.recoverBuilder(context, notification));
         } catch (RuntimeException e) {
             Log.e("StatusBarIconView", "Unable to recover builder", e);
             Parcelable parcelable = notification.extras.getParcelable("android.appInfo");
-            if (parcelable instanceof ApplicationInfo) {
-                str = String.valueOf(((ApplicationInfo) parcelable).loadLabel(context.getPackageManager()));
-            } else {
-                str = "";
-            }
+            charSequence = parcelable instanceof ApplicationInfo ? String.valueOf(((ApplicationInfo) parcelable).loadLabel(context.getPackageManager())) : charSequence2;
         }
-        CharSequence charSequence = notification.extras.getCharSequence("android.title");
-        CharSequence charSequence2 = notification.extras.getCharSequence("android.text");
-        CharSequence charSequence3 = notification.tickerText;
-        if (TextUtils.equals(charSequence, str)) {
-            charSequence = charSequence2;
+        CharSequence charSequence3 = notification.extras.getCharSequence("android.title");
+        CharSequence charSequence4 = notification.extras.getCharSequence("android.text");
+        CharSequence charSequence5 = notification.tickerText;
+        if (TextUtils.equals(charSequence3, charSequence)) {
+            charSequence3 = charSequence4;
         }
-        if (!TextUtils.isEmpty(charSequence)) {
-            charSequence3 = charSequence;
-        } else if (TextUtils.isEmpty(charSequence3)) {
-            charSequence3 = "";
+        if (!TextUtils.isEmpty(charSequence3)) {
+            charSequence2 = charSequence3;
+        } else if (!TextUtils.isEmpty(charSequence5)) {
+            charSequence2 = charSequence5;
         }
-        return context.getString(R.string.accessibility_desc_notification_icon, new Object[]{str, charSequence3});
+        return context.getString(R.string.accessibility_desc_notification_icon, new Object[]{charSequence, charSequence2});
     }
 
     public void setDecorColor(int i) {
@@ -532,8 +528,9 @@ public class StatusBarIconView extends AnimatedImageView {
                     return;
                 }
                 this.mAnimationStartColor = i2;
-                this.mColorAnimator = ValueAnimator.ofFloat(new float[]{0.0f, 1.0f});
-                this.mColorAnimator.setInterpolator(Interpolators.FAST_OUT_SLOW_IN);
+                ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{0.0f, 1.0f});
+                this.mColorAnimator = ofFloat;
+                ofFloat.setInterpolator(Interpolators.FAST_OUT_SLOW_IN);
                 this.mColorAnimator.setDuration(100);
                 this.mColorAnimator.addUpdateListener(this.mColorUpdater);
                 this.mColorAnimator.addListener(new AnimatorListenerAdapter() {
@@ -557,7 +554,6 @@ public class StatusBarIconView extends AnimatedImageView {
 
     public void setVisibleState(int i, boolean z, final Runnable runnable) {
         float f;
-        Interpolator interpolator;
         boolean z2;
         boolean z3 = false;
         if (i != this.mVisibleState) {
@@ -571,19 +567,20 @@ public class StatusBarIconView extends AnimatedImageView {
                 objectAnimator2.cancel();
             }
             float f2 = 2.0f;
+            float f3 = 1.0f;
             if (z) {
-                Interpolator interpolator2 = Interpolators.FAST_OUT_LINEAR_IN;
+                Interpolator interpolator = Interpolators.FAST_OUT_LINEAR_IN;
                 if (i == 0) {
                     interpolator = Interpolators.LINEAR_OUT_SLOW_IN;
                     f = 1.0f;
                 } else {
-                    interpolator = interpolator2;
                     f = 0.0f;
                 }
                 float iconAppearAmount = getIconAppearAmount();
                 if (f != iconAppearAmount) {
-                    this.mIconAppearAnimator = ObjectAnimator.ofFloat(this, ICON_APPEAR_AMOUNT, new float[]{iconAppearAmount, f});
-                    this.mIconAppearAnimator.setInterpolator(interpolator);
+                    ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this, ICON_APPEAR_AMOUNT, new float[]{iconAppearAmount, f});
+                    this.mIconAppearAnimator = ofFloat;
+                    ofFloat.setInterpolator(interpolator);
                     this.mIconAppearAnimator.setDuration(100);
                     this.mIconAppearAnimator.addListener(new AnimatorListenerAdapter() {
                         public void onAnimationEnd(Animator animator) {
@@ -599,15 +596,17 @@ public class StatusBarIconView extends AnimatedImageView {
                 if (i != 0) {
                     f2 = 0.0f;
                 }
-                Interpolator interpolator3 = Interpolators.FAST_OUT_LINEAR_IN;
+                Interpolator interpolator2 = Interpolators.FAST_OUT_LINEAR_IN;
                 if (i == 1) {
-                    interpolator3 = Interpolators.LINEAR_OUT_SLOW_IN;
-                    f2 = 1.0f;
+                    interpolator2 = Interpolators.LINEAR_OUT_SLOW_IN;
+                } else {
+                    f3 = f2;
                 }
                 float dotAppearAmount = getDotAppearAmount();
-                if (f2 != dotAppearAmount) {
-                    this.mDotAnimator = ObjectAnimator.ofFloat(this, DOT_APPEAR_AMOUNT, new float[]{dotAppearAmount, f2});
-                    this.mDotAnimator.setInterpolator(interpolator3);
+                if (f3 != dotAppearAmount) {
+                    ObjectAnimator ofFloat2 = ObjectAnimator.ofFloat(this, DOT_APPEAR_AMOUNT, new float[]{dotAppearAmount, f3});
+                    this.mDotAnimator = ofFloat2;
+                    ofFloat2.setInterpolator(interpolator2);
                     this.mDotAnimator.setDuration(100);
                     final boolean z4 = !z2;
                     this.mDotAnimator.addListener(new AnimatorListenerAdapter() {
@@ -691,6 +690,8 @@ public class StatusBarIconView extends AnimatedImageView {
         }, z, z2, j);
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$setDark$0 */
     public /* synthetic */ void lambda$setDark$0$StatusBarIconView(Float f) {
         this.mDarkAmount = f.floatValue();
         updateIconScale();

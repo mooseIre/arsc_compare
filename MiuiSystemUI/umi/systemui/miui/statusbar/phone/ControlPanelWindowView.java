@@ -92,15 +92,14 @@ public class ControlPanelWindowView extends FrameLayout {
     public void onFinishInflate() {
         super.onFinishInflate();
         this.mContent = (ControlPanelContentView) findViewById(R.id.control_panel_content);
-        this.mControlCenterPanel = (QSControlCenterPanel) findViewById(R.id.qs_control_center_panel);
-        this.mControlCenterPanel.setControlPanelWindowView(this);
+        QSControlCenterPanel qSControlCenterPanel = (QSControlCenterPanel) findViewById(R.id.qs_control_center_panel);
+        this.mControlCenterPanel = qSControlCenterPanel;
+        qSControlCenterPanel.setControlPanelWindowView(this);
         this.mQSControlScrollView = (QSControlScrollView) findViewById(R.id.scroll_container);
         this.mControlCenterTileLayout = (QSControlCenterTileLayout) findViewById(R.id.quick_tile_layout);
         this.mBottomArea = findViewById(R.id.control_center_bottom_area);
         Folme.getValueTarget("ControlPanelViewBlur").setMinVisibleChange(0.01f, "blurRatio");
-        IStateStyle useValue = Folme.useValue("ControlPanelViewBlur");
-        useValue.addListener(this.mBlurRatioListener);
-        this.mBlurAmin = useValue;
+        this.mBlurAmin = Folme.useValue("ControlPanelViewBlur").addListener(this.mBlurRatioListener);
     }
 
     /* access modifiers changed from: protected */
@@ -244,13 +243,11 @@ public class ControlPanelWindowView extends FrameLayout {
 
     /* access modifiers changed from: private */
     public void updateExpandHeight(float f) {
-        if ((this.mControlCenter.isExpandable() || f == 0.0f) && this.mExpandHeight != f) {
+        if (this.mExpandHeight != f) {
             float max = Math.max(Math.min(1.0f, f / 80.0f), 0.0f);
             float f2 = this.mBlurRatio;
             if (f2 != max) {
-                IStateStyle iStateStyle = this.mBlurAmin;
-                iStateStyle.setTo("blurRatio", Float.valueOf(f2));
-                iStateStyle.to("blurRatio", Float.valueOf(max));
+                this.mBlurAmin.setTo("blurRatio", Float.valueOf(f2)).to("blurRatio", Float.valueOf(max));
             } else {
                 this.mControlPanelWindowManager.setBlurRatio(max);
             }
@@ -282,7 +279,7 @@ public class ControlPanelWindowView extends FrameLayout {
 
     public void setControlPanelWindowManager(ControlPanelWindowManager controlPanelWindowManager) {
         this.mControlPanelWindowManager = controlPanelWindowManager;
-        this.mContent.setControlPanelWindowManager(this.mControlPanelWindowManager);
+        this.mContent.setControlPanelWindowManager(controlPanelWindowManager);
     }
 
     public boolean isCollapsed() {
@@ -337,8 +334,9 @@ public class ControlPanelWindowView extends FrameLayout {
     }
 
     private void createHeightChangeAnimator(int i, AnimatorListenerAdapter animatorListenerAdapter) {
-        this.mHeightChangeAnimator = ValueAnimator.ofFloat(new float[]{this.mExpandHeight, (float) i});
-        this.mHeightChangeAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+        ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{this.mExpandHeight, (float) i});
+        this.mHeightChangeAnimator = ofFloat;
+        ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 ControlPanelWindowView.this.updateExpandHeight(((Float) valueAnimator.getAnimatedValue()).floatValue());
             }

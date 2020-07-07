@@ -108,8 +108,8 @@ public class PhysicsAnimationLayout extends FrameLayout {
                 i++;
             }
             return new MultiAnimationStarter(hashSet, arrayList) {
-                private final /* synthetic */ Set f$1;
-                private final /* synthetic */ List f$2;
+                public final /* synthetic */ Set f$1;
+                public final /* synthetic */ List f$2;
 
                 {
                     this.f$1 = r2;
@@ -122,9 +122,11 @@ public class PhysicsAnimationLayout extends FrameLayout {
             };
         }
 
+        /* access modifiers changed from: private */
+        /* renamed from: lambda$animationsForChildrenFromIndex$1 */
         public /* synthetic */ void lambda$animationsForChildrenFromIndex$1$PhysicsAnimationLayout$PhysicsAnimationController(Set set, List list, Runnable[] runnableArr) {
             $$Lambda$PhysicsAnimationLayout$PhysicsAnimationController$Q2IEgFtVQbcjE9VQhU6hzQCTEA r0 = new Runnable(runnableArr) {
-                private final /* synthetic */ Runnable[] f$0;
+                public final /* synthetic */ Runnable[] f$0;
 
                 {
                     this.f$0 = r1;
@@ -162,7 +164,7 @@ public class PhysicsAnimationLayout extends FrameLayout {
         cancelAllAnimations();
         this.mEndActionForProperty.clear();
         this.mController = physicsAnimationController;
-        this.mController.setLayout(this);
+        physicsAnimationController.setLayout(this);
         for (DynamicAnimation.ViewProperty upAnimationsForProperty : this.mController.getAnimatedProperties()) {
             setUpAnimationsForProperty(upAnimationsForProperty);
         }
@@ -174,8 +176,8 @@ public class PhysicsAnimationLayout extends FrameLayout {
 
     public void setEndActionForMultipleProperties(Runnable runnable, DynamicAnimation.ViewProperty... viewPropertyArr) {
         $$Lambda$PhysicsAnimationLayout$6ge2pmTTnwvHqQK7y5u9mvtjqgk r0 = new Runnable(viewPropertyArr, runnable) {
-            private final /* synthetic */ DynamicAnimation.ViewProperty[] f$1;
-            private final /* synthetic */ Runnable f$2;
+            public final /* synthetic */ DynamicAnimation.ViewProperty[] f$1;
+            public final /* synthetic */ Runnable f$2;
 
             {
                 this.f$1 = r2;
@@ -191,6 +193,8 @@ public class PhysicsAnimationLayout extends FrameLayout {
         }
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$setEndActionForMultipleProperties$0 */
     public /* synthetic */ void lambda$setEndActionForMultipleProperties$0$PhysicsAnimationLayout(DynamicAnimation.ViewProperty[] viewPropertyArr, Runnable runnable) {
         if (!arePropertiesAnimating(viewPropertyArr)) {
             runnable.run();
@@ -214,7 +218,7 @@ public class PhysicsAnimationLayout extends FrameLayout {
             super.removeView(view);
             addTransientView(view, indexOfChild);
             this.mController.onChildRemoved(view, indexOfChild, new Runnable(view) {
-                private final /* synthetic */ View f$1;
+                public final /* synthetic */ View f$1;
 
                 {
                     this.f$1 = r2;
@@ -229,6 +233,8 @@ public class PhysicsAnimationLayout extends FrameLayout {
         super.removeView(view);
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$removeView$1 */
     public /* synthetic */ void lambda$removeView$1$PhysicsAnimationLayout(View view) {
         cancelAnimationsOnView(view);
         removeTransientView(view);
@@ -344,8 +350,8 @@ public class PhysicsAnimationLayout extends FrameLayout {
     private void setUpAnimationForChild(DynamicAnimation.ViewProperty viewProperty, View view, int i) {
         SpringAnimation springAnimation = new SpringAnimation(view, viewProperty);
         springAnimation.addUpdateListener(new DynamicAnimation.OnAnimationUpdateListener(view, viewProperty) {
-            private final /* synthetic */ View f$1;
-            private final /* synthetic */ DynamicAnimation.ViewProperty f$2;
+            public final /* synthetic */ View f$1;
+            public final /* synthetic */ DynamicAnimation.ViewProperty f$2;
 
             {
                 this.f$1 = r2;
@@ -361,6 +367,8 @@ public class PhysicsAnimationLayout extends FrameLayout {
         view.setTag(getTagIdForProperty(viewProperty), springAnimation);
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$setUpAnimationForChild$2 */
     public /* synthetic */ void lambda$setUpAnimationForChild$2$PhysicsAnimationLayout(View view, DynamicAnimation.ViewProperty viewProperty, DynamicAnimation dynamicAnimation, float f, float f2) {
         int indexOfChild = indexOfChild(view);
         int nextAnimationInChain = this.mController.getNextAnimationInChain(viewProperty, indexOfChild);
@@ -516,7 +524,7 @@ public class PhysicsAnimationLayout extends FrameLayout {
             Set<DynamicAnimation.ViewProperty> animatedProperties = getAnimatedProperties();
             if (runnableArr != null && runnableArr.length > 0) {
                 PhysicsAnimationLayout.this.setEndActionForMultipleProperties(new Runnable(runnableArr) {
-                    private final /* synthetic */ Runnable[] f$0;
+                    public final /* synthetic */ Runnable[] f$0;
 
                     {
                         this.f$0 = r1;
@@ -529,8 +537,8 @@ public class PhysicsAnimationLayout extends FrameLayout {
             }
             if (this.mPositionEndActions != null) {
                 $$Lambda$PhysicsAnimationLayout$PhysicsPropertyAnimator$3DhSPSmkLIWL6PRkLpBmJ3MVps r3 = new Runnable(PhysicsAnimationLayout.this.getAnimationFromView(DynamicAnimation.TRANSLATION_X, this.mView), PhysicsAnimationLayout.this.getAnimationFromView(DynamicAnimation.TRANSLATION_Y, this.mView)) {
-                    private final /* synthetic */ SpringAnimation f$1;
-                    private final /* synthetic */ SpringAnimation f$2;
+                    public final /* synthetic */ SpringAnimation f$1;
+                    public final /* synthetic */ SpringAnimation f$2;
 
                     {
                         this.f$1 = r2;
@@ -570,6 +578,8 @@ public class PhysicsAnimationLayout extends FrameLayout {
             }
         }
 
+        /* access modifiers changed from: private */
+        /* renamed from: lambda$start$1 */
         public /* synthetic */ void lambda$start$1$PhysicsAnimationLayout$PhysicsPropertyAnimator(SpringAnimation springAnimation, SpringAnimation springAnimation2) {
             if (!springAnimation.isRunning() && !springAnimation2.isRunning()) {
                 Runnable[] runnableArr = this.mPositionEndActions;
@@ -595,7 +605,7 @@ public class PhysicsAnimationLayout extends FrameLayout {
                 DynamicAnimation.ViewProperty viewProperty2 = viewProperty;
                 SpringAnimation springAnimation = (SpringAnimation) view.getTag(PhysicsAnimationLayout.this.getTagIdForProperty(viewProperty));
                 if (runnableArr2 != null) {
-                    springAnimation.addEndListener(new OneTimeEndListener() {
+                    springAnimation.addEndListener(new OneTimeEndListener(this) {
                         public void onAnimationEnd(DynamicAnimation dynamicAnimation, boolean z, float f, float f2) {
                             super.onAnimationEnd(dynamicAnimation, z, f, f2);
                             for (Runnable run : runnableArr2) {
@@ -607,11 +617,11 @@ public class PhysicsAnimationLayout extends FrameLayout {
                 SpringForce spring = springAnimation.getSpring();
                 if (spring != null) {
                     $$Lambda$PhysicsAnimationLayout$PhysicsPropertyAnimator$YrUNYDpshnd98P1tIxCkdc37pTc r4 = new Runnable(f3, f4, f2, springAnimation, f) {
-                        private final /* synthetic */ float f$1;
-                        private final /* synthetic */ float f$2;
-                        private final /* synthetic */ float f$3;
-                        private final /* synthetic */ SpringAnimation f$4;
-                        private final /* synthetic */ float f$5;
+                        public final /* synthetic */ float f$1;
+                        public final /* synthetic */ float f$2;
+                        public final /* synthetic */ float f$3;
+                        public final /* synthetic */ SpringAnimation f$4;
+                        public final /* synthetic */ float f$5;
 
                         {
                             this.f$1 = r2;

@@ -10,7 +10,7 @@ import android.util.Log;
 import java.util.List;
 
 public class RecentsProvider extends ContentProvider {
-    private static final UriMatcher sURIMatcher = new UriMatcher(-1);
+    private static final UriMatcher sURIMatcher;
     private MatrixCursor mForceMultiWindowPkgCursor;
     private MatrixCursor mForceNotMultiWindowPkgCursor;
 
@@ -35,7 +35,9 @@ public class RecentsProvider extends ContentProvider {
     }
 
     static {
-        sURIMatcher.addURI("com.miui.systemui.recents", "MULTI_WINDOW_FORCE_RESIZE_PKGS", 1);
+        UriMatcher uriMatcher = new UriMatcher(-1);
+        sURIMatcher = uriMatcher;
+        uriMatcher.addURI("com.miui.systemui.recents", "MULTI_WINDOW_FORCE_RESIZE_PKGS", 1);
         sURIMatcher.addURI("com.miui.systemui.recents", "MULTI_WINDOW_FORCE_NOT_RESIZE_PKGS", 2);
     }
 

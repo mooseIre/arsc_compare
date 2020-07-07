@@ -1,6 +1,7 @@
 package com.android.systemui.miui.statusbar.phone;
 
 import android.content.Context;
+import android.os.Build;
 import android.util.Log;
 import android.view.SurfaceControlCompat;
 import android.view.WindowManager;
@@ -31,18 +32,22 @@ public class ControlPanelWindowManager {
 
     public void addControlPanel(ControlPanelWindowView controlPanelWindowView) {
         if (!hasAdded()) {
-            this.mLp = new WindowManager.LayoutParams(-1, 0, 0, 0, 2014, -2121989848, -3);
-            WindowManager.LayoutParams layoutParams = this.mLp;
+            WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(-1, 0, 0, 0, Build.VERSION.SDK_INT > 29 ? 2017 : 2014, -2121989848, -3);
+            this.mLp = layoutParams;
             layoutParams.privateFlags |= 64;
             layoutParams.setTitle("control_center");
             WindowManager.LayoutParams layoutParams2 = this.mLp;
             layoutParams2.systemUiVisibility = 1792;
             layoutParams2.extraFlags |= 32768;
-            this.mWindowManager.addView(controlPanelWindowView, layoutParams2);
-            this.mLpChanged = new WindowManager.LayoutParams();
-            this.mLpChanged.copyFrom(this.mLp);
+            try {
+                this.mWindowManager.addView(controlPanelWindowView, layoutParams2);
+            } catch (Exception unused) {
+            }
+            WindowManager.LayoutParams layoutParams3 = new WindowManager.LayoutParams();
+            this.mLpChanged = layoutParams3;
+            layoutParams3.copyFrom(this.mLp);
             this.mControlPanel = controlPanelWindowView;
-            this.mControlPanel.setControlPanelWindowManager(this);
+            controlPanelWindowView.setControlPanelWindowManager(this);
             this.added = true;
         }
     }
@@ -75,16 +80,18 @@ public class ControlPanelWindowManager {
             this.mControlPanel.setVisibility(0);
             WindowManager.LayoutParams layoutParams = this.mLpChanged;
             layoutParams.height = -1;
-            layoutParams.flags &= -9;
-            layoutParams.flags |= 131072;
+            int i = layoutParams.flags & -9;
+            layoutParams.flags = i;
+            layoutParams.flags = i | 131072;
             Utils.updateFsgState(this.mContext, "typefrom_status_bar_expansion", true);
             setEnableForceLightNavigationHandle(true);
         } else {
             this.mControlPanel.setVisibility(8);
             WindowManager.LayoutParams layoutParams2 = this.mLpChanged;
             layoutParams2.height = 0;
-            layoutParams2.flags = 8 | layoutParams2.flags;
-            layoutParams2.flags &= -131073;
+            int i2 = 8 | layoutParams2.flags;
+            layoutParams2.flags = i2;
+            layoutParams2.flags = i2 & -131073;
             Utils.updateFsgState(this.mContext, "typefrom_status_bar_expansion", false);
             setEnableForceLightNavigationHandle(false);
         }

@@ -18,7 +18,6 @@ import android.graphics.drawable.ShapeDrawable;
 import android.os.ServiceManager;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.util.StatsLog;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowInsets;
@@ -29,6 +28,7 @@ import com.android.systemui.R$styleable;
 import com.android.systemui.bubbles.BubbleExpandedView;
 import com.android.systemui.miui.statusbar.ExpandedNotification;
 import com.android.systemui.plugins.R;
+import com.android.systemui.shared.system.SysUiStatsLog;
 import com.android.systemui.statusbar.ExpandableNotificationRow;
 import com.android.systemui.statusbar.NotificationData;
 import com.android.systemui.statusbar.stack.ExpandableViewState;
@@ -43,7 +43,6 @@ public class BubbleExpandedView extends LinearLayout implements View.OnClickList
     private String mAppName;
     /* access modifiers changed from: private */
     public BubbleController mBubbleController;
-    private int mBubbleHeight;
     /* access modifiers changed from: private */
     public PendingIntent mBubbleIntent;
     /* access modifiers changed from: private */
@@ -52,8 +51,6 @@ public class BubbleExpandedView extends LinearLayout implements View.OnClickList
     private int mMinHeight;
     private boolean mNeedsNewHeight;
     private ExpandableNotificationRow mNotifRow;
-    private INotificationManager mNotificationManagerService;
-    private OnBubbleBlockedListener mOnBubbleBlockedListener;
     private PackageManager mPm;
     private ShapeDrawable mPointerDrawable;
     private int mPointerHeight;
@@ -66,6 +63,9 @@ public class BubbleExpandedView extends LinearLayout implements View.OnClickList
     private ActivityView.StateCallback mStateCallback;
 
     public interface OnBubbleBlockedListener {
+    }
+
+    public void setOnBlockedListener(OnBubbleBlockedListener onBubbleBlockedListener) {
     }
 
     public BubbleExpandedView(Context context) {
@@ -88,22 +88,19 @@ public class BubbleExpandedView extends LinearLayout implements View.OnClickList
             public void onActivityViewReady(ActivityView activityView) {
                 if (!BubbleExpandedView.this.mActivityViewReady) {
                     boolean unused = BubbleExpandedView.this.mActivityViewReady = true;
-                    BubbleExpandedView.this.post(new Runnable(ActivityOptions.makeCustomAnimation(BubbleExpandedView.this.getContext(), 0, 0)) {
-                        private final /* synthetic */ ActivityOptions f$1;
-
-                        {
-                            this.f$1 = r2;
-                        }
-
+                    ActivityOptions.makeCustomAnimation(BubbleExpandedView.this.getContext(), 0, 0);
+                    BubbleExpandedView.this.post(new Runnable() {
                         public final void run() {
-                            BubbleExpandedView.AnonymousClass1.this.lambda$onActivityViewReady$0$BubbleExpandedView$1(this.f$1);
+                            BubbleExpandedView.AnonymousClass1.this.lambda$onActivityViewReady$0$BubbleExpandedView$1();
                         }
                     });
                 }
             }
 
-            public /* synthetic */ void lambda$onActivityViewReady$0$BubbleExpandedView$1(ActivityOptions activityOptions) {
-                BubbleExpandedView.this.mActivityView.startActivity(BubbleExpandedView.this.mBubbleIntent, activityOptions);
+            /* access modifiers changed from: private */
+            /* renamed from: lambda$onActivityViewReady$0 */
+            public /* synthetic */ void lambda$onActivityViewReady$0$BubbleExpandedView$1() {
+                BubbleExpandedView.this.mActivityView.startActivity(BubbleExpandedView.this.mBubbleIntent);
             }
 
             public void onActivityViewDestroyed(ActivityView activityView) {
@@ -120,6 +117,8 @@ public class BubbleExpandedView extends LinearLayout implements View.OnClickList
                 }
             }
 
+            /* access modifiers changed from: private */
+            /* renamed from: lambda$onTaskRemovalStarted$1 */
             public /* synthetic */ void lambda$onTaskRemovalStarted$1$BubbleExpandedView$1() {
                 BubbleExpandedView.this.mBubbleController.removeBubble(BubbleExpandedView.this.mEntry.key, 3);
             }
@@ -128,7 +127,7 @@ public class BubbleExpandedView extends LinearLayout implements View.OnClickList
         this.mMinHeight = getResources().getDimensionPixelSize(R.dimen.bubble_expanded_default_height);
         this.mPointerMargin = getResources().getDimensionPixelSize(R.dimen.bubble_pointer_margin);
         try {
-            this.mNotificationManagerService = INotificationManager.Stub.asInterface(ServiceManager.getServiceOrThrow("notification"));
+            INotificationManager.Stub.asInterface(ServiceManager.getServiceOrThrow("notification"));
         } catch (ServiceManager.ServiceNotFoundException e) {
             Log.w("BubbleExpandedView", e);
         }
@@ -141,14 +140,17 @@ public class BubbleExpandedView extends LinearLayout implements View.OnClickList
         this.mPointerView = findViewById(R.id.pointer_view);
         this.mPointerWidth = resources.getDimensionPixelSize(R.dimen.bubble_pointer_width);
         this.mPointerHeight = resources.getDimensionPixelSize(R.dimen.bubble_pointer_height);
-        this.mPointerDrawable = new ShapeDrawable(TriangleShape.create((float) this.mPointerWidth, (float) this.mPointerHeight, true));
-        this.mPointerView.setBackground(this.mPointerDrawable);
+        ShapeDrawable shapeDrawable = new ShapeDrawable(TriangleShape.create((float) this.mPointerWidth, (float) this.mPointerHeight, true));
+        this.mPointerDrawable = shapeDrawable;
+        this.mPointerView.setBackground(shapeDrawable);
         this.mPointerView.setVisibility(8);
         this.mSettingsIconHeight = getContext().getResources().getDimensionPixelSize(R.dimen.bubble_expanded_header_height);
-        this.mSettingsIcon = (AlphaOptimizedButton) findViewById(R.id.settings_button);
-        this.mSettingsIcon.setOnClickListener(this);
-        this.mActivityView = new ActivityView(this.mContext, (AttributeSet) null, 0, true);
-        addView(this.mActivityView);
+        AlphaOptimizedButton alphaOptimizedButton = (AlphaOptimizedButton) findViewById(R.id.settings_button);
+        this.mSettingsIcon = alphaOptimizedButton;
+        alphaOptimizedButton.setOnClickListener(this);
+        ActivityView activityView = new ActivityView(this.mContext, (AttributeSet) null, 0, true);
+        this.mActivityView = activityView;
+        addView(activityView);
         bringChildToFront(this.mActivityView);
         bringChildToFront(this.mSettingsIcon);
         applyThemeAttrs();
@@ -159,9 +161,12 @@ public class BubbleExpandedView extends LinearLayout implements View.OnClickList
         });
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$onFinishInflate$0 */
     public /* synthetic */ WindowInsets lambda$onFinishInflate$0$BubbleExpandedView(View view, WindowInsets windowInsets) {
-        this.mKeyboardVisible = windowInsets.getSystemWindowInsetBottom() - windowInsets.getStableInsetBottom() != 0;
-        if (!this.mKeyboardVisible && this.mNeedsNewHeight) {
+        boolean z = windowInsets.getSystemWindowInsetBottom() - windowInsets.getStableInsetBottom() != 0;
+        this.mKeyboardVisible = z;
+        if (!z && this.mNeedsNewHeight) {
             updateHeight();
         }
         return view.onApplyWindowInsets(windowInsets);
@@ -197,10 +202,6 @@ public class BubbleExpandedView extends LinearLayout implements View.OnClickList
             this.mActivityView.getContext().getDisplay().getSize(point);
             this.mActivityView.setForwardedInsets(Insets.of(0, 0, 0, Math.max(0, ((this.mActivityView.getLocationOnScreen()[1] + this.mActivityView.getHeight()) + (windowInsets.getSystemWindowInsetBottom() - windowInsets.getStableInsetBottom())) - point.y)));
         }
-    }
-
-    public void setOnBlockedListener(OnBubbleBlockedListener onBubbleBlockedListener) {
-        this.mOnBubbleBlockedListener = onBubbleBlockedListener;
     }
 
     public void setEntry(NotificationData.Entry entry, BubbleStackView bubbleStackView, String str) {
@@ -247,8 +248,9 @@ public class BubbleExpandedView extends LinearLayout implements View.OnClickList
     }
 
     private void updateExpandedView() {
-        this.mBubbleIntent = getBubbleIntent(this.mEntry);
-        if (this.mBubbleIntent != null) {
+        PendingIntent bubbleIntent = getBubbleIntent(this.mEntry);
+        this.mBubbleIntent = bubbleIntent;
+        if (bubbleIntent != null) {
             ExpandableNotificationRow expandableNotificationRow = this.mNotifRow;
             if (expandableNotificationRow != null) {
                 removeView(expandableNotificationRow);
@@ -271,13 +273,13 @@ public class BubbleExpandedView extends LinearLayout implements View.OnClickList
     /* access modifiers changed from: package-private */
     /* JADX WARNING: Removed duplicated region for block: B:18:0x008f  */
     /* JADX WARNING: Removed duplicated region for block: B:21:0x0096  */
-    /* JADX WARNING: Removed duplicated region for block: B:28:? A[RETURN, SYNTHETIC] */
+    /* JADX WARNING: Removed duplicated region for block: B:26:? A[RETURN, SYNTHETIC] */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     public void updateHeight() {
         /*
             r5 = this;
             boolean r0 = r5.usingActivityView()
-            if (r0 == 0) goto L_0x00a3
+            if (r0 == 0) goto L_0x00a1
             com.android.systemui.statusbar.NotificationData$Entry r0 = r5.mEntry
             com.android.systemui.miui.statusbar.ExpandedNotification r0 = r0.notification
             android.app.Notification r0 = r0.getNotification()
@@ -353,24 +355,18 @@ public class BubbleExpandedView extends LinearLayout implements View.OnClickList
         L_0x0090:
             r5.mNeedsNewHeight = r1
             boolean r1 = r5.mKeyboardVisible
-            if (r1 != 0) goto L_0x00b0
+            if (r1 != 0) goto L_0x00a8
             int r0 = (int) r0
             r3.height = r0
-            r5.mBubbleHeight = r0
             android.app.ActivityView r0 = r5.mActivityView
             r0.setLayoutParams(r3)
             r5.mNeedsNewHeight = r2
-            goto L_0x00b0
-        L_0x00a3:
-            com.android.systemui.statusbar.ExpandableNotificationRow r0 = r5.mNotifRow
-            if (r0 == 0) goto L_0x00ac
-            int r0 = r0.getIntrinsicHeight()
-            goto L_0x00ae
-        L_0x00ac:
-            int r0 = r5.mMinHeight
-        L_0x00ae:
-            r5.mBubbleHeight = r0
-        L_0x00b0:
+            goto L_0x00a8
+        L_0x00a1:
+            com.android.systemui.statusbar.ExpandableNotificationRow r5 = r5.mNotifRow
+            if (r5 == 0) goto L_0x00a8
+            r5.getIntrinsicHeight()
+        L_0x00a8:
             return
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.bubbles.BubbleExpandedView.updateHeight():void");
@@ -382,7 +378,7 @@ public class BubbleExpandedView extends LinearLayout implements View.OnClickList
             entry.notification.getNotification();
             if (view.getId() == R.id.settings_button) {
                 this.mStackView.collapseStack(new Runnable(getSettingsIntent(this.mEntry.notification.getPackageName(), this.mEntry.notification.getUid())) {
-                    private final /* synthetic */ Intent f$1;
+                    public final /* synthetic */ Intent f$1;
 
                     {
                         this.f$1 = r2;
@@ -396,6 +392,8 @@ public class BubbleExpandedView extends LinearLayout implements View.OnClickList
         }
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$onClick$1 */
     public /* synthetic */ void lambda$onClick$1$BubbleExpandedView(Intent intent) {
         this.mContext.startActivityAsUser(intent, this.mEntry.notification.getUser());
         logBubbleClickEvent(this.mEntry, 9);
@@ -504,7 +502,7 @@ public class BubbleExpandedView extends LinearLayout implements View.OnClickList
         String channelId = expandedNotification.getNotification().getChannelId();
         int id = expandedNotification.getId();
         BubbleStackView bubbleStackView = this.mStackView;
-        StatsLog.write(149, packageName, channelId, id, bubbleStackView.getBubbleIndex(bubbleStackView.getExpandedBubble()), this.mStackView.getBubbleCount(), i, this.mStackView.getNormalizedXPosition(), this.mStackView.getNormalizedYPosition(), entry.showInShadeWhenBubble(), entry.isForegroundService(), BubbleController.isForegroundApp(this.mContext, expandedNotification.getPackageName()));
+        SysUiStatsLog.write(149, packageName, channelId, id, bubbleStackView.getBubbleIndex(bubbleStackView.getExpandedBubble()), this.mStackView.getBubbleCount(), i, this.mStackView.getNormalizedXPosition(), this.mStackView.getNormalizedYPosition(), entry.showInShadeWhenBubble(), entry.isForegroundService(), BubbleController.isForegroundApp(this.mContext, expandedNotification.getPackageName()));
     }
 
     private int getDimenForPackageUser(int i, String str, int i2) {

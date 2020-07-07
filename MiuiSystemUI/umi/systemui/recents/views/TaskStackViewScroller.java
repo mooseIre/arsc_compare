@@ -29,7 +29,6 @@ public class TaskStackViewScroller {
             return Float.valueOf(taskStackViewScroller.getStackScroll());
         }
     };
-    private final long VIBRATOR_DURATION = 10;
     TaskStackViewScrollerCallbacks mCb;
     Context mContext;
     float mExitRecentOverscrollThreshold = 1.0f;
@@ -44,7 +43,6 @@ public class TaskStackViewScroller {
     OverScroller mScroller;
     @ViewDebug.ExportedProperty(category = "recents")
     float mStackScrollP;
-    private Vibrator mVibrator;
 
     public interface TaskStackViewScrollerCallbacks {
         void onStackScrollChanged(float f, float f2, AnimationProps animationProps);
@@ -57,7 +55,7 @@ public class TaskStackViewScroller {
         this.mLayoutAlgorithm = taskStackLayoutAlgorithm;
         this.mExitRecentOverscrollThreshold = this.mContext.getResources().getFloat(R.dimen.exit_recent_overscroll_threshold);
         this.mExitRecentVelocityThreshold = (int) (((float) this.mExitRecentVelocityThreshold) * this.mContext.getResources().getDisplayMetrics().density);
-        this.mVibrator = (Vibrator) this.mContext.getSystemService("vibrator");
+        Vibrator vibrator = (Vibrator) this.mContext.getSystemService("vibrator");
     }
 
     /* access modifiers changed from: package-private */
@@ -92,7 +90,7 @@ public class TaskStackViewScroller {
         this.mStackScrollP = f;
         TaskStackViewScrollerCallbacks taskStackViewScrollerCallbacks = this.mCb;
         if (taskStackViewScrollerCallbacks != null) {
-            taskStackViewScrollerCallbacks.onStackScrollChanged(f2, this.mStackScrollP, animationProps);
+            taskStackViewScrollerCallbacks.onStackScrollChanged(f2, f, animationProps);
         }
     }
 
@@ -106,7 +104,7 @@ public class TaskStackViewScroller {
         this.mFlingDownScrollP = f;
         this.mFlingDownY = i;
         this.mScroller.fling(0, i2, 0, i3, 0, 0, i4, i5, 0, i6);
-        new Handler().postDelayed(new Runnable() {
+        new Handler().postDelayed(new Runnable(this) {
             public void run() {
                 RecentsEventBus.getDefault().send(new ScrollerFlingFinishEvent());
             }
@@ -180,8 +178,9 @@ public class TaskStackViewScroller {
         stopBoundScrollAnimation();
         if (Float.compare(this.mStackScrollP, f) != 0) {
             this.mFinalAnimatedScroll = f;
-            this.mScrollAnimator = ObjectAnimator.ofFloat(this, STACK_SCROLL, new float[]{getStackScroll(), f});
-            this.mScrollAnimator.setDuration((long) i);
+            ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this, STACK_SCROLL, new float[]{getStackScroll(), f});
+            this.mScrollAnimator = ofFloat;
+            ofFloat.setDuration((long) i);
             this.mScrollAnimator.setInterpolator(Interpolators.LINEAR_OUT_SLOW_IN);
             this.mScrollAnimator.addListener(new AnimatorListenerAdapter() {
                 public void onAnimationEnd(Animator animator) {

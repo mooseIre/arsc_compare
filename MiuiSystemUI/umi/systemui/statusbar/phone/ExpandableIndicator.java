@@ -25,7 +25,7 @@ public class ExpandableIndicator extends ImageView {
     public void setExpanded(boolean z) {
         if (z != this.mExpanded) {
             this.mExpanded = z;
-            AnimatedVectorDrawable animatedVectorDrawable = (AnimatedVectorDrawable) getContext().getDrawable(getDrawableResourceId(!this.mExpanded)).getConstantState().newDrawable();
+            AnimatedVectorDrawable animatedVectorDrawable = (AnimatedVectorDrawable) getContext().getDrawable(getDrawableResourceId(!z)).getConstantState().newDrawable();
             setImageDrawable(animatedVectorDrawable);
             AnimatedVectorDrawableCompat.forceAnimationOnUI(animatedVectorDrawable);
             animatedVectorDrawable.start();

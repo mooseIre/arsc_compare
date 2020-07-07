@@ -73,14 +73,9 @@ public class HotspotTile extends QSTileImpl<QSTile.AirplaneBooleanState> {
             sb.append("handleClick: from: mState.value: ");
             sb.append(((QSTile.AirplaneBooleanState) this.mState).value);
             sb.append(", to: ");
-            boolean z2 = true;
             sb.append(!((QSTile.AirplaneBooleanState) this.mState).value);
             Log.d(str, sb.toString());
-            HotspotController hotspotController = this.mController;
-            if (z) {
-                z2 = false;
-            }
-            hotspotController.setHotspotEnabled(z2);
+            this.mController.setHotspotEnabled(!z);
         }
     }
 

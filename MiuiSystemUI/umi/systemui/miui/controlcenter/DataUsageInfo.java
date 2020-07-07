@@ -10,12 +10,14 @@ public class DataUsageInfo extends BaseInfo implements NetworkController.SignalC
     private static final Uri URI = Uri.parse("content://com.miui.networkassistant.provider/datausage_status_detailed");
     private static final Uri URI_ACTION = Uri.parse("content://vsimcore.setting");
     private int mDataSlot;
-    private NetworkController mNetworkController = ((NetworkController) Dependency.get(NetworkController.class));
+    private NetworkController mNetworkController;
     private boolean mNoSims;
 
     public DataUsageInfo(Context context, int i, ExpandInfoController expandInfoController) {
         super(context, i, expandInfoController);
-        this.mNetworkController.addCallback(this);
+        NetworkController networkController = (NetworkController) Dependency.get(NetworkController.class);
+        this.mNetworkController = networkController;
+        networkController.addCallback(this);
         requestData(this.mUserHandle);
     }
 
@@ -66,18 +68,21 @@ public class DataUsageInfo extends BaseInfo implements NetworkController.SignalC
     /* JADX WARNING: Code restructure failed: missing block: B:34:0x00dd, code lost:
         r10 = th;
      */
-    /* JADX WARNING: Code restructure failed: missing block: B:35:0x00df, code lost:
-        r10 = e;
+    /* JADX WARNING: Code restructure failed: missing block: B:35:0x00de, code lost:
+        r1 = r2;
      */
     /* JADX WARNING: Code restructure failed: missing block: B:36:0x00e0, code lost:
+        r10 = e;
+     */
+    /* JADX WARNING: Code restructure failed: missing block: B:37:0x00e1, code lost:
         r1 = r2;
      */
     /* JADX WARNING: Code restructure failed: missing block: B:48:0x00f7, code lost:
-        r2.close();
+        r1.close();
      */
     /* JADX WARNING: Failed to process nested try/catch */
     /* JADX WARNING: Removed duplicated region for block: B:34:0x00dd A[ExcHandler: all (th java.lang.Throwable), Splitter:B:4:0x001b] */
-    /* JADX WARNING: Removed duplicated region for block: B:38:0x00e4  */
+    /* JADX WARNING: Removed duplicated region for block: B:39:0x00e5  */
     /* JADX WARNING: Removed duplicated region for block: B:45:0x00f1  */
     /* JADX WARNING: Removed duplicated region for block: B:48:0x00f7  */
     /* Code decompiled incorrectly, please refer to instructions dump. */
@@ -96,45 +101,45 @@ public class DataUsageInfo extends BaseInfo implements NetworkController.SignalC
             r8 = 0
             r9 = 0
             android.database.Cursor r2 = r4.query(r5, r6, r7, r8, r9)     // Catch:{ Exception -> 0x00eb }
-            if (r2 == 0) goto L_0x00e2
-            boolean r3 = r2.moveToFirst()     // Catch:{ Exception -> 0x00df, all -> 0x00dd }
-            if (r3 == 0) goto L_0x00e2
+            if (r2 == 0) goto L_0x00e3
+            boolean r3 = r2.moveToFirst()     // Catch:{ Exception -> 0x00e0, all -> 0x00dd }
+            if (r3 == 0) goto L_0x00e3
             r3 = 0
             r4 = r3
         L_0x0023:
-            int r5 = r2.getColumnCount()     // Catch:{ Exception -> 0x00df, all -> 0x00dd }
+            int r5 = r2.getColumnCount()     // Catch:{ Exception -> 0x00e0, all -> 0x00dd }
             if (r4 >= r5) goto L_0x00d3
-            r2.move(r4)     // Catch:{ Exception -> 0x00df, all -> 0x00dd }
+            r2.move(r4)     // Catch:{ Exception -> 0x00e0, all -> 0x00dd }
             java.lang.String r5 = "sim_slot"
-            int r5 = r2.getColumnIndex(r5)     // Catch:{ Exception -> 0x00df, all -> 0x00dd }
-            int r5 = r2.getInt(r5)     // Catch:{ Exception -> 0x00df, all -> 0x00dd }
-            int r6 = r10.mDataSlot     // Catch:{ Exception -> 0x00df, all -> 0x00dd }
+            int r5 = r2.getColumnIndex(r5)     // Catch:{ Exception -> 0x00e0, all -> 0x00dd }
+            int r5 = r2.getInt(r5)     // Catch:{ Exception -> 0x00e0, all -> 0x00dd }
+            int r6 = r10.mDataSlot     // Catch:{ Exception -> 0x00e0, all -> 0x00dd }
             if (r5 != r6) goto L_0x00cf
             java.lang.String r4 = "traffic_name"
-            int r4 = r2.getColumnIndex(r4)     // Catch:{ Exception -> 0x00df, all -> 0x00dd }
-            java.lang.String r4 = r2.getString(r4)     // Catch:{ Exception -> 0x00df, all -> 0x00dd }
-            r0.title = r4     // Catch:{ Exception -> 0x00df, all -> 0x00dd }
+            int r4 = r2.getColumnIndex(r4)     // Catch:{ Exception -> 0x00e0, all -> 0x00dd }
+            java.lang.String r4 = r2.getString(r4)     // Catch:{ Exception -> 0x00e0, all -> 0x00dd }
+            r0.title = r4     // Catch:{ Exception -> 0x00e0, all -> 0x00dd }
             java.lang.String r4 = "traffic_value"
-            int r4 = r2.getColumnIndex(r4)     // Catch:{ Exception -> 0x00df, all -> 0x00dd }
-            java.lang.String r4 = r2.getString(r4)     // Catch:{ Exception -> 0x00df, all -> 0x00dd }
-            r0.status = r4     // Catch:{ Exception -> 0x00df, all -> 0x00dd }
+            int r4 = r2.getColumnIndex(r4)     // Catch:{ Exception -> 0x00e0, all -> 0x00dd }
+            java.lang.String r4 = r2.getString(r4)     // Catch:{ Exception -> 0x00e0, all -> 0x00dd }
+            r0.status = r4     // Catch:{ Exception -> 0x00e0, all -> 0x00dd }
             java.lang.String r4 = "traffic_unit"
-            int r4 = r2.getColumnIndex(r4)     // Catch:{ Exception -> 0x00df, all -> 0x00dd }
-            java.lang.String r4 = r2.getString(r4)     // Catch:{ Exception -> 0x00df, all -> 0x00dd }
-            r0.unit = r4     // Catch:{ Exception -> 0x00df, all -> 0x00dd }
+            int r4 = r2.getColumnIndex(r4)     // Catch:{ Exception -> 0x00e0, all -> 0x00dd }
+            java.lang.String r4 = r2.getString(r4)     // Catch:{ Exception -> 0x00e0, all -> 0x00dd }
+            r0.unit = r4     // Catch:{ Exception -> 0x00e0, all -> 0x00dd }
             java.lang.String r4 = "package_type"
-            int r4 = r2.getColumnIndex(r4)     // Catch:{ Exception -> 0x00df, all -> 0x00dd }
-            int r4 = r2.getInt(r4)     // Catch:{ Exception -> 0x00df, all -> 0x00dd }
+            int r4 = r2.getColumnIndex(r4)     // Catch:{ Exception -> 0x00e0, all -> 0x00dd }
+            int r4 = r2.getInt(r4)     // Catch:{ Exception -> 0x00e0, all -> 0x00dd }
             r5 = -1
             r6 = 1
             if (r4 == r5) goto L_0x0070
             r3 = r6
         L_0x0070:
-            r0.initialized = r3     // Catch:{ Exception -> 0x00df, all -> 0x00dd }
-            r0.available = r6     // Catch:{ Exception -> 0x00df, all -> 0x00dd }
+            r0.initialized = r3     // Catch:{ Exception -> 0x00e0, all -> 0x00dd }
+            r0.available = r6     // Catch:{ Exception -> 0x00e0, all -> 0x00dd }
             java.lang.String r3 = "traffic_icon"
-            int r3 = r2.getColumnIndex(r3)     // Catch:{ Exception -> 0x00df, all -> 0x00dd }
-            java.lang.String r3 = r2.getString(r3)     // Catch:{ Exception -> 0x00df, all -> 0x00dd }
+            int r3 = r2.getColumnIndex(r3)     // Catch:{ Exception -> 0x00e0, all -> 0x00dd }
+            java.lang.String r3 = r2.getString(r3)     // Catch:{ Exception -> 0x00e0, all -> 0x00dd }
             android.content.Context r4 = r10.mContext     // Catch:{ Exception -> 0x0092, all -> 0x00dd }
             android.os.UserHandle r5 = r10.mUserHandle     // Catch:{ Exception -> 0x0092, all -> 0x00dd }
             android.content.ContentResolver r4 = r4.getContentResolverForUser(r5)     // Catch:{ Exception -> 0x0092, all -> 0x00dd }
@@ -144,16 +149,16 @@ public class DataUsageInfo extends BaseInfo implements NetworkController.SignalC
             goto L_0x0096
         L_0x0092:
             r3 = move-exception
-            r3.printStackTrace()     // Catch:{ Exception -> 0x00df, all -> 0x00dd }
+            r3.printStackTrace()     // Catch:{ Exception -> 0x00e0, all -> 0x00dd }
         L_0x0096:
-            android.graphics.Bitmap r3 = r0.icon     // Catch:{ Exception -> 0x00df, all -> 0x00dd }
+            android.graphics.Bitmap r3 = r0.icon     // Catch:{ Exception -> 0x00e0, all -> 0x00dd }
             if (r3 != 0) goto L_0x009f
-            android.graphics.Bitmap r3 = r10.mBpBitmap     // Catch:{ Exception -> 0x00df, all -> 0x00dd }
-            r0.icon = r3     // Catch:{ Exception -> 0x00df, all -> 0x00dd }
+            android.graphics.Bitmap r3 = r10.mBpBitmap     // Catch:{ Exception -> 0x00e0, all -> 0x00dd }
+            r0.icon = r3     // Catch:{ Exception -> 0x00e0, all -> 0x00dd }
             goto L_0x00a3
         L_0x009f:
-            android.graphics.Bitmap r3 = r0.icon     // Catch:{ Exception -> 0x00df, all -> 0x00dd }
-            r10.mBpBitmap = r3     // Catch:{ Exception -> 0x00df, all -> 0x00dd }
+            android.graphics.Bitmap r3 = r0.icon     // Catch:{ Exception -> 0x00e0, all -> 0x00dd }
+            r10.mBpBitmap = r3     // Catch:{ Exception -> 0x00e0, all -> 0x00dd }
         L_0x00a3:
             android.os.Bundle r3 = new android.os.Bundle     // Catch:{ Exception -> 0x00ca, all -> 0x00dd }
             r3.<init>()     // Catch:{ Exception -> 0x00ca, all -> 0x00dd }
@@ -173,42 +178,42 @@ public class DataUsageInfo extends BaseInfo implements NetworkController.SignalC
             goto L_0x00d3
         L_0x00ca:
             r10 = move-exception
-            r10.printStackTrace()     // Catch:{ Exception -> 0x00df, all -> 0x00dd }
+            r10.printStackTrace()     // Catch:{ Exception -> 0x00e0, all -> 0x00dd }
             goto L_0x00d3
         L_0x00cf:
             int r4 = r4 + 1
             goto L_0x0023
         L_0x00d3:
             java.lang.String r10 = "DataUsageProvider"
-            java.lang.String r1 = r0.toString()     // Catch:{ Exception -> 0x00df, all -> 0x00dd }
-            android.util.Log.d(r10, r1)     // Catch:{ Exception -> 0x00df, all -> 0x00dd }
-            goto L_0x00e2
+            java.lang.String r1 = r0.toString()     // Catch:{ Exception -> 0x00e0, all -> 0x00dd }
+            android.util.Log.d(r10, r1)     // Catch:{ Exception -> 0x00e0, all -> 0x00dd }
+            goto L_0x00e3
         L_0x00dd:
             r10 = move-exception
+            r1 = r2
             goto L_0x00f5
-        L_0x00df:
+        L_0x00e0:
             r10 = move-exception
             r1 = r2
             goto L_0x00ec
-        L_0x00e2:
+        L_0x00e3:
             if (r2 == 0) goto L_0x00f4
             r2.close()
             goto L_0x00f4
-        L_0x00e8:
+        L_0x00e9:
             r10 = move-exception
-            r2 = r1
             goto L_0x00f5
         L_0x00eb:
             r10 = move-exception
         L_0x00ec:
-            r10.printStackTrace()     // Catch:{ all -> 0x00e8 }
+            r10.printStackTrace()     // Catch:{ all -> 0x00e9 }
             if (r1 == 0) goto L_0x00f4
             r1.close()
         L_0x00f4:
             return r0
         L_0x00f5:
-            if (r2 == 0) goto L_0x00fa
-            r2.close()
+            if (r1 == 0) goto L_0x00fa
+            r1.close()
         L_0x00fa:
             throw r10
         */

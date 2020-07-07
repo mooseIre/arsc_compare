@@ -37,7 +37,6 @@ public class InCallNotificationView extends LinearLayout {
     /* access modifiers changed from: private */
     public InCallCallback mInCallCallback;
     private boolean mIsVideoCall;
-    private String mPhoneNumber;
     private int mSubId;
     private TelephonyManager mTelephonyManager = TelephonyManager.getDefault();
 
@@ -65,7 +64,7 @@ public class InCallNotificationView extends LinearLayout {
     public void updateInfo(View view, Bundle bundle) {
         if (view != null) {
             TextView textView = (TextView) view.findViewById(16908310);
-            TextView textView2 = (TextView) view.findViewById(16909468);
+            TextView textView2 = (TextView) view.findViewById(16909540);
             String str = "";
             this.mCallerName.setText(textView == null ? str : textView.getText().toString());
             TextView textView3 = this.mCallerInfo;
@@ -76,11 +75,12 @@ public class InCallNotificationView extends LinearLayout {
         }
         int i = -1;
         if (bundle != null) {
-            this.mPhoneNumber = bundle.getString("phoneNumber");
+            bundle.getString("phoneNumber");
             this.mSubId = bundle.getInt("subId", -1);
             this.mIsVideoCall = bundle.getBoolean("isVideoCall", false);
-            this.mCanBubbleAnswer = bundle.getBoolean("bubble_answer", false);
-            if (this.mCanBubbleAnswer) {
+            boolean z = bundle.getBoolean("bubble_answer", false);
+            this.mCanBubbleAnswer = z;
+            if (z) {
                 this.mBubbleAnswerClickIntent = (PendingIntent) bundle.getParcelable("bubble_answer_intent");
             }
             this.mBubbleAnswerIcon.setVisibility((!this.mCanBubbleAnswer || !(getResources().getConfiguration().orientation == 2)) ? 8 : 0);
@@ -170,8 +170,9 @@ public class InCallNotificationView extends LinearLayout {
     }
 
     private void initAutoDisconnChronometer() {
-        this.mAutoDisconnTip = (Chronometer) findViewById(R.id.auto_disconnect_tip);
-        this.mAutoDisconnTip.setCountDown(true);
+        Chronometer chronometer = (Chronometer) findViewById(R.id.auto_disconnect_tip);
+        this.mAutoDisconnTip = chronometer;
+        chronometer.setCountDown(true);
         this.mAutoDisconnTip.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener() {
             public void onChronometerTick(Chronometer chronometer) {
                 int max = (int) (Math.max(chronometer.getBase() - SystemClock.elapsedRealtime(), 0) / 1000);

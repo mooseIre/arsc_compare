@@ -16,6 +16,7 @@ import android.os.ServiceManager;
 import android.os.UserHandle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -35,15 +36,16 @@ public class UsbPermissionActivity extends AlertActivity implements DialogInterf
     private boolean mPermissionGranted;
     private int mUid;
 
-    /* JADX WARNING: type inference failed for: r6v0, types: [android.content.DialogInterface$OnClickListener, com.android.internal.app.AlertActivity, com.android.systemui.usb.UsbPermissionActivity, android.widget.CompoundButton$OnCheckedChangeListener, android.app.Activity] */
+    /* JADX WARNING: type inference failed for: r7v0, types: [android.content.DialogInterface$OnClickListener, com.android.internal.app.AlertActivity, com.android.systemui.usb.UsbPermissionActivity, android.widget.CompoundButton$OnCheckedChangeListener, android.app.Activity] */
     public void onCreate(Bundle bundle) {
+        int i = Build.VERSION.SDK_INT;
         UsbPermissionActivity.super.onCreate(bundle);
         Intent intent = getIntent();
         this.mDevice = (UsbDevice) intent.getParcelableExtra("device");
         this.mAccessory = (UsbAccessory) intent.getParcelableExtra("accessory");
         this.mPendingIntent = (PendingIntent) intent.getParcelableExtra("android.intent.extra.INTENT");
         this.mUid = intent.getIntExtra("android.intent.extra.UID", -1);
-        this.mPackageName = intent.getStringExtra(Build.VERSION.SDK_INT < 29 ? "package" : "android.hardware.usb.extra.PACKAGE");
+        this.mPackageName = intent.getStringExtra(i < 29 ? "package" : "android.hardware.usb.extra.PACKAGE");
         boolean booleanExtra = intent.getBooleanExtra("android.hardware.usb.extra.CAN_BE_DEFAULT", false);
         PackageManager packageManager = getPackageManager();
         try {
@@ -63,17 +65,20 @@ public class UsbPermissionActivity extends AlertActivity implements DialogInterf
             alertParams.mNegativeButtonText = getString(17039360);
             alertParams.mPositiveButtonListener = this;
             alertParams.mNegativeButtonListener = this;
-            if (Build.VERSION.SDK_INT < 29 || (booleanExtra && !(this.mDevice == null && this.mAccessory == null))) {
-                alertParams.mView = ((LayoutInflater) getSystemService("layout_inflater")).inflate(17367090, (ViewGroup) null);
-                this.mAlwaysUse = (CheckBox) alertParams.mView.findViewById(16908724);
+            if (i < 29 || (booleanExtra && !(this.mDevice == null && this.mAccessory == null))) {
+                View inflate = ((LayoutInflater) getSystemService("layout_inflater")).inflate(17367092, (ViewGroup) null);
+                alertParams.mView = inflate;
+                CheckBox checkBox = (CheckBox) inflate.findViewById(16908752);
+                this.mAlwaysUse = checkBox;
                 if (this.mDevice == null) {
-                    this.mAlwaysUse.setText(R.string.always_use_accessory);
+                    checkBox.setText(R.string.always_use_accessory);
                 } else {
-                    this.mAlwaysUse.setText(R.string.always_use_device);
+                    checkBox.setText(R.string.always_use_device);
                 }
                 this.mAlwaysUse.setOnCheckedChangeListener(this);
-                this.mClearDefaultHint = (TextView) alertParams.mView.findViewById(16908821);
-                this.mClearDefaultHint.setVisibility(8);
+                TextView textView = (TextView) alertParams.mView.findViewById(16908852);
+                this.mClearDefaultHint = textView;
+                textView.setVisibility(8);
             }
             setupAlert();
         } catch (PackageManager.NameNotFoundException e) {

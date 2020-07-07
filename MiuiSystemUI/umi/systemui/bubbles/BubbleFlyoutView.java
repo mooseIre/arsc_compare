@@ -60,8 +60,9 @@ public class BubbleFlyoutView extends FrameLayout {
     public BubbleFlyoutView(Context context) {
         super(context);
         LayoutInflater.from(context).inflate(R.layout.bubble_flyout, this, true);
-        this.mFlyoutTextContainer = (ViewGroup) findViewById(R.id.bubble_flyout_text_container);
-        this.mFlyoutText = (TextView) this.mFlyoutTextContainer.findViewById(R.id.bubble_flyout_text);
+        ViewGroup viewGroup = (ViewGroup) findViewById(R.id.bubble_flyout_text_container);
+        this.mFlyoutTextContainer = viewGroup;
+        this.mFlyoutText = (TextView) viewGroup.findViewById(R.id.bubble_flyout_text);
         Resources resources = getResources();
         this.mFlyoutPadding = resources.getDimensionPixelSize(R.dimen.bubble_flyout_padding_x);
         this.mFlyoutSpaceFromBubble = resources.getDimensionPixelSize(R.dimen.bubble_flyout_space_from_bubble);
@@ -69,13 +70,16 @@ public class BubbleFlyoutView extends FrameLayout {
         this.mBubbleSize = resources.getDimensionPixelSize(R.dimen.individual_bubble_size);
         this.mBubbleElevation = resources.getDimensionPixelSize(R.dimen.bubble_elevation);
         this.mFlyoutElevation = resources.getDimensionPixelSize(R.dimen.bubble_flyout_elevation);
-        this.mNewDotOffsetFromBubbleBounds = BadgeRenderer.getDotCenterOffset(context);
-        this.mNewDotRadius = BadgeRenderer.getDotRadius(this.mNewDotOffsetFromBubbleBounds);
-        this.mNewDotSize = this.mNewDotRadius * 2.0f;
+        float dotCenterOffset = BadgeRenderer.getDotCenterOffset(context);
+        this.mNewDotOffsetFromBubbleBounds = dotCenterOffset;
+        float dotRadius = BadgeRenderer.getDotRadius(dotCenterOffset);
+        this.mNewDotRadius = dotRadius;
+        this.mNewDotSize = dotRadius * 2.0f;
         TypedArray obtainStyledAttributes = this.mContext.obtainStyledAttributes(new int[]{16844002, 16844145});
         this.mFloatingBackgroundColor = obtainStyledAttributes.getColor(0, -1);
-        this.mCornerRadius = (float) obtainStyledAttributes.getDimensionPixelSize(1, 0);
-        this.mFlyoutToDotCornerRadiusDelta = this.mNewDotRadius - this.mCornerRadius;
+        float dimensionPixelSize = (float) obtainStyledAttributes.getDimensionPixelSize(1, 0);
+        this.mCornerRadius = dimensionPixelSize;
+        this.mFlyoutToDotCornerRadiusDelta = this.mNewDotRadius - dimensionPixelSize;
         obtainStyledAttributes.recycle();
         int i = this.mPointerSize;
         setPadding(i, 0, i, 0);
@@ -89,14 +93,14 @@ public class BubbleFlyoutView extends FrameLayout {
         });
         this.mBgPaint.setColor(this.mFloatingBackgroundColor);
         int i2 = this.mPointerSize;
-        this.mLeftTriangleShape = new ShapeDrawable(TriangleShape.createHorizontal((float) i2, (float) i2, true));
-        ShapeDrawable shapeDrawable = this.mLeftTriangleShape;
+        ShapeDrawable shapeDrawable = new ShapeDrawable(TriangleShape.createHorizontal((float) i2, (float) i2, true));
+        this.mLeftTriangleShape = shapeDrawable;
         int i3 = this.mPointerSize;
         shapeDrawable.setBounds(0, 0, i3, i3);
         this.mLeftTriangleShape.getPaint().setColor(this.mFloatingBackgroundColor);
         int i4 = this.mPointerSize;
-        this.mRightTriangleShape = new ShapeDrawable(TriangleShape.createHorizontal((float) i4, (float) i4, false));
-        ShapeDrawable shapeDrawable2 = this.mRightTriangleShape;
+        ShapeDrawable shapeDrawable2 = new ShapeDrawable(TriangleShape.createHorizontal((float) i4, (float) i4, false));
+        this.mRightTriangleShape = shapeDrawable2;
         int i5 = this.mPointerSize;
         shapeDrawable2.setBounds(0, 0, i5, i5);
         this.mRightTriangleShape.getPaint().setColor(this.mFloatingBackgroundColor);
@@ -120,8 +124,8 @@ public class BubbleFlyoutView extends FrameLayout {
         this.mFlyoutText.setMaxWidth(((int) (f * 0.6f)) - (this.mFlyoutPadding * 2));
         this.mFlyoutText.setText(charSequence);
         post(new Runnable(pointF, z) {
-            private final /* synthetic */ PointF f$1;
-            private final /* synthetic */ boolean f$2;
+            public final /* synthetic */ PointF f$1;
+            public final /* synthetic */ boolean f$2;
 
             {
                 this.f$1 = r2;
@@ -134,6 +138,8 @@ public class BubbleFlyoutView extends FrameLayout {
         });
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$showFlyout$0 */
     public /* synthetic */ void lambda$showFlyout$0$BubbleFlyoutView(PointF pointF, boolean z) {
         float f;
         if (this.mFlyoutText.getLineCount() > 1) {
@@ -147,7 +153,7 @@ public class BubbleFlyoutView extends FrameLayout {
             f = (pointF.x - ((float) getWidth())) - ((float) this.mFlyoutSpaceFromBubble);
         }
         this.mRestingTranslationX = f;
-        setTranslationX(this.mRestingTranslationX + ((float) (z ? -this.mBubbleSize : this.mBubbleSize)));
+        setTranslationX(f + ((float) (z ? -this.mBubbleSize : this.mBubbleSize)));
         animate().alpha(1.0f);
         this.mFlyoutSpring.animateToFinalPosition(this.mRestingTranslationX);
         this.mFlyoutToDotWidthDelta = ((float) getWidth()) - this.mNewDotSize;
@@ -173,8 +179,9 @@ public class BubbleFlyoutView extends FrameLayout {
 
     /* access modifiers changed from: package-private */
     public void setCollapsePercent(float f) {
-        this.mPercentTransitionedToDot = Math.max(0.0f, Math.min(f, 1.0f));
-        this.mPercentStillFlyout = 1.0f - this.mPercentTransitionedToDot;
+        float max = Math.max(0.0f, Math.min(f, 1.0f));
+        this.mPercentTransitionedToDot = max;
+        this.mPercentStillFlyout = 1.0f - max;
         this.mFlyoutText.setTranslationX(((float) (this.mArrowPointingLeft ? -getWidth() : getWidth())) * this.mPercentTransitionedToDot);
         this.mFlyoutText.setAlpha(clampPercentage((this.mPercentStillFlyout - 0.75f) / 0.25f));
         int i = this.mFlyoutElevation;

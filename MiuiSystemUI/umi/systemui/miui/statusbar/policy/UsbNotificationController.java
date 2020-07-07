@@ -24,13 +24,13 @@ public class UsbNotificationController {
     private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
+            boolean z = false;
             if ("android.intent.action.BATTERY_CHANGED".equals(action)) {
                 int access$400 = UsbNotificationController.this.mPlugType;
                 int unused = UsbNotificationController.this.mPlugType = intent.getIntExtra("plugged", 0);
-                boolean z = true;
                 boolean z2 = UsbNotificationController.this.mPlugType == 2;
-                if (access$400 != 2) {
-                    z = false;
+                if (access$400 == 2) {
+                    z = true;
                 }
                 if (z2 != z) {
                     UsbNotificationController.this.refreshWhenUsbConnectChanged(z2);
@@ -90,8 +90,9 @@ public class UsbNotificationController {
         this.mMtpNotificationId = ResourceMapper.resolveReference(this.mContext.getResources(), 286130221);
         this.mCdInstallNotificationId = ResourceMapper.resolveReference(this.mContext.getResources(), 286130220);
         this.mEnableUsbModeSelection = this.mContext.getResources().getBoolean(285474845);
-        this.mChargingNotificationId = this.mContext.getResources().getIdentifier("usb_charging_notification_title", "string", "com.mediatek");
-        if (this.mChargingNotificationId == 0) {
+        int identifier = this.mContext.getResources().getIdentifier("usb_charging_notification_title", "string", "com.mediatek");
+        this.mChargingNotificationId = identifier;
+        if (identifier == 0) {
             this.mChargingNotificationId = this.mContext.getResources().getIdentifier("usb_charging_notification_title", "string", "android");
         }
         this.mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor("disable_usb_by_sim"), false, this.mDisableUsbObserver);
@@ -112,8 +113,9 @@ public class UsbNotificationController {
             builder.setMessage(R.string.activate_usb_message);
             builder.setIconAttribute(16843605);
             builder.setPositiveButton(17039370, (DialogInterface.OnClickListener) null);
-            this.mUsbAlert = builder.create();
-            this.mUsbAlert.getWindow().setType(2003);
+            AlertDialog create = builder.create();
+            this.mUsbAlert = create;
+            create.getWindow().setType(2003);
             this.mUsbAlert.setOnDismissListener(new DialogInterface.OnDismissListener() {
                 public void onDismiss(DialogInterface dialogInterface) {
                     boolean unused = UsbNotificationController.this.mIsDialogShowing = false;

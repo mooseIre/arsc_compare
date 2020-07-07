@@ -133,13 +133,12 @@ public class ActivityObserverImpl implements ActivityObserver, Dumpable, DeviceP
     }
 
     public ComponentName getTopActivity() {
-        ArrayList<ComponentName> arrayList = new ArrayList<>(this.mResumedActivities);
-        for (ComponentName componentName : arrayList) {
-            if (!taskIsLauncher(componentName, this.mLauncherComponent)) {
-                return componentName;
+        for (ComponentName next : this.mResumedActivities) {
+            if (!taskIsLauncher(next, this.mLauncherComponent)) {
+                return next;
             }
         }
-        return arrayList.isEmpty() ? this.mLastResumedActivity : (ComponentName) arrayList.get(0);
+        return this.mResumedActivities.isEmpty() ? this.mLastResumedActivity : this.mResumedActivities.get(0);
     }
 
     public boolean isTopActivityLauncher() {
@@ -160,12 +159,12 @@ public class ActivityObserverImpl implements ActivityObserver, Dumpable, DeviceP
 
     /* access modifiers changed from: private */
     public void checkLauncherInfo() {
-        ActivityInfo activityInfo;
         ResolveInfo currentLauncherInfo = getCurrentLauncherInfo(this.mContext);
-        if (currentLauncherInfo == null || (activityInfo = currentLauncherInfo.activityInfo) == null) {
+        if (currentLauncherInfo == null || currentLauncherInfo.activityInfo == null) {
             this.mLauncherComponent = null;
         } else {
-            this.mLauncherComponent = new ComponentName(activityInfo.packageName, currentLauncherInfo.activityInfo.name);
+            ActivityInfo activityInfo = currentLauncherInfo.activityInfo;
+            this.mLauncherComponent = new ComponentName(activityInfo.packageName, activityInfo.name);
         }
         if (Constants.DEBUG) {
             Log.i("ActivityObserver", "Launcher is: " + this.mLauncherComponent);

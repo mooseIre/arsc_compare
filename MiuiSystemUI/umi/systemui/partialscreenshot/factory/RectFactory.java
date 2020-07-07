@@ -5,15 +5,10 @@ import android.graphics.Rect;
 import android.view.MotionEvent;
 import android.view.View;
 import com.android.systemui.partialscreenshot.PartialScreenshotView;
-import com.android.systemui.partialscreenshot.shape.DrawShapeUtil;
 import com.android.systemui.partialscreenshot.shape.RectScreenshot;
 
 public class RectFactory extends ShapeFactory {
-    private float mLastX;
-    private float mLastY;
     private int mState = 1;
-    private float mX;
-    private float mY;
     private RectScreenshot rect;
 
     public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -33,31 +28,27 @@ public class RectFactory extends ShapeFactory {
 
     private boolean onActionDown(PartialScreenshotView partialScreenshotView, MotionEvent motionEvent, View view) {
         if (this.mState == 1) {
-            this.rect = new RectScreenshot(view);
-            this.rect.startSelection((int) motionEvent.getX(), (int) motionEvent.getY());
+            RectScreenshot rectScreenshot = new RectScreenshot(view);
+            this.rect = rectScreenshot;
+            rectScreenshot.startSelection((int) motionEvent.getX(), (int) motionEvent.getY());
             partialScreenshotView.setProduct(this.rect);
         } else if (this.rect.getSelectionRect() != null) {
             this.rect.onActionDown(motionEvent);
         } else {
             this.mState = 1;
         }
-        this.mLastX = motionEvent.getX();
-        this.mLastY = motionEvent.getY();
         return true;
     }
 
     private boolean onActionMove(PartialScreenshotView partialScreenshotView, MotionEvent motionEvent) {
-        this.mX = motionEvent.getX();
-        this.mY = motionEvent.getY();
-        if (this.rect != null && DrawShapeUtil.distance(this.mX, this.mLastX, this.mY, this.mLastY) > 2.0d) {
+        RectScreenshot rectScreenshot = this.rect;
+        if (rectScreenshot != null) {
             if (this.mState == 1) {
-                this.rect.updateSelection((int) motionEvent.getX(), (int) motionEvent.getY());
+                rectScreenshot.updateSelection((int) motionEvent.getX(), (int) motionEvent.getY());
             } else {
-                this.rect.onActionMove(motionEvent);
+                rectScreenshot.onActionMove(motionEvent);
             }
             partialScreenshotView.setProduct(this.rect);
-            this.mLastX = this.mX;
-            this.mLastY = this.mY;
         }
         return true;
     }
@@ -84,8 +75,9 @@ public class RectFactory extends ShapeFactory {
     }
 
     public void notifyShapeChanged(Rect rect2, PartialScreenshotView partialScreenshotView) {
-        this.rect = new RectScreenshot(partialScreenshotView);
-        this.rect.startSelection(rect2.left, rect2.top);
+        RectScreenshot rectScreenshot = new RectScreenshot(partialScreenshotView);
+        this.rect = rectScreenshot;
+        rectScreenshot.startSelection(rect2.left, rect2.top);
         this.rect.updateSelection(rect2.right, rect2.bottom);
         partialScreenshotView.setProduct(this.rect);
         this.mState = 2;

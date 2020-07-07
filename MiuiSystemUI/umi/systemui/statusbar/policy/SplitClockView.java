@@ -1,5 +1,6 @@
 package com.android.systemui.statusbar.policy;
 
+import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -10,7 +11,6 @@ import android.text.format.DateFormat;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
 import android.widget.TextClock;
-import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.systemui.plugins.R;
 
 public class SplitClockView extends LinearLayout {
@@ -61,7 +61,7 @@ public class SplitClockView extends LinearLayout {
     public void updatePatterns() {
         String str;
         String str2;
-        String timeFormatString = DateFormat.getTimeFormatString(getContext(), KeyguardUpdateMonitor.getCurrentUser());
+        String timeFormatString = DateFormat.getTimeFormatString(getContext(), ActivityManager.getCurrentUser());
         int amPmPartEndIndex = getAmPmPartEndIndex(timeFormatString);
         if (amPmPartEndIndex == -1) {
             str2 = "";

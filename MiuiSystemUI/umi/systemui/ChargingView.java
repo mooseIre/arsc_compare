@@ -39,8 +39,9 @@ public class ChargingView extends ImageView implements BatteryController.Battery
 
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
-        this.mBatteryController = (BatteryController) Dependency.get(BatteryController.class);
-        this.mBatteryController.addCallback(this);
+        BatteryController batteryController = (BatteryController) Dependency.get(BatteryController.class);
+        this.mBatteryController = batteryController;
+        batteryController.addCallback(this);
         ((ConfigurationController) Dependency.get(ConfigurationController.class)).addCallback(this);
     }
 

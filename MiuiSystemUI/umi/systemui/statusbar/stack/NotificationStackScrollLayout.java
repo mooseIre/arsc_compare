@@ -42,7 +42,7 @@ import com.android.systemui.ExpandHelper;
 import com.android.systemui.Interpolators;
 import com.android.systemui.SwipeHelper;
 import com.android.systemui.classifier.FalsingManager;
-import com.android.systemui.miui.statusbar.analytics.NotificationStat;
+import com.android.systemui.miui.statusbar.analytics.SystemUIStat;
 import com.android.systemui.miui.statusbar.notification.HeadsUpAnimatedStubView;
 import com.android.systemui.miui.statusbar.policy.ControlPanelController;
 import com.android.systemui.plugins.R;
@@ -113,7 +113,6 @@ public class NotificationStackScrollLayout extends ViewGroup implements SwipeHel
     private boolean mChangePositionInProgress;
     boolean mCheckForLeavebehind;
     private boolean mChildRemoveAnimationRunning;
-    private boolean mChildRemoveBySwipeAnimationRunning;
     private boolean mChildTransferInProgress;
     private ArrayList<View> mChildrenAppear;
     private ArrayList<View> mChildrenChangingPositions;
@@ -153,7 +152,6 @@ public class NotificationStackScrollLayout extends ViewGroup implements SwipeHel
     public boolean mDontReportNextOverScroll;
     private int mDownX;
     private ArrayList<View> mDragAnimPendingChildren;
-    private boolean mDrawBackgroundAsSrc;
     protected EmptyShadeView mEmptyShadeView;
     /* access modifiers changed from: private */
     public Rect mEndAnimationRect;
@@ -218,7 +216,6 @@ public class NotificationStackScrollLayout extends ViewGroup implements SwipeHel
     private boolean mNavBarDarkMode;
     private boolean mNeedViewResizeAnimation;
     private boolean mNeedsAnimation;
-    private boolean mNoAmbient;
     private OnEmptySpaceClickListener mOnEmptySpaceClickListener;
     private ExpandableView.OnHeightChangedListener mOnHeightChangedListener;
     private OnTopPaddingUpdateListener mOnTopPaddingUpdateListener;
@@ -256,7 +253,6 @@ public class NotificationStackScrollLayout extends ViewGroup implements SwipeHel
     private boolean mSpringAnimationRunning;
     private int mSpringIncrement;
     private int mSpringLength;
-    private PorterDuffXfermode mSrcMode;
     protected final StackScrollAlgorithm mStackScrollAlgorithm;
     private float mStackTranslation;
     /* access modifiers changed from: private */
@@ -285,9 +281,6 @@ public class NotificationStackScrollLayout extends ViewGroup implements SwipeHel
     public View mTranslatingParentView;
     private VelocityTracker mVelocityTracker;
     private Comparator<ExpandableView> mViewPositionComparator;
-
-    public interface OnChildLocationsChangedListener {
-    }
 
     public interface OnEmptySpaceClickListener {
         void onEmptySpaceClicked(float f, float f2);
@@ -402,7 +395,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements SwipeHel
                 return translationY > translationY2 ? 1 : 0;
             }
         };
-        this.mSrcMode = new PorterDuffXfermode(PorterDuff.Mode.SRC);
+        new PorterDuffXfermode(PorterDuff.Mode.SRC);
         this.mBackgroundFadeAmount = 1.0f;
         this.mMaxDisplayedNotifications = -1;
         this.mClipRect = new Rect();
@@ -422,22 +415,26 @@ public class NotificationStackScrollLayout extends ViewGroup implements SwipeHel
             }
         };
         Resources resources = getResources();
-        this.mAmbientState = new AmbientState(context);
-        this.mCurrentStackScrollState.setAmbientState(this.mAmbientState);
+        AmbientState ambientState = new AmbientState(context);
+        this.mAmbientState = ambientState;
+        this.mCurrentStackScrollState.setAmbientState(ambientState);
         this.mBgColor = context.getColor(R.color.notification_shade_background_color);
-        this.mExpandHelper = new ExpandHelper(getContext(), this, resources.getDimensionPixelSize(R.dimen.notification_min_height), resources.getDimensionPixelSize(R.dimen.notification_max_height));
-        this.mExpandHelper.setEventSource(this);
+        ExpandHelper expandHelper = new ExpandHelper(getContext(), this, resources.getDimensionPixelSize(R.dimen.notification_min_height), resources.getDimensionPixelSize(R.dimen.notification_max_height));
+        this.mExpandHelper = expandHelper;
+        expandHelper.setEventSource(this);
         this.mExpandHelper.setScrollAdapter(this);
-        this.mSwipeHelper = new NotificationSwipeHelper(0, this, getContext());
-        this.mSwipeHelper.setLongPressListener(this.mLongPressListener);
+        NotificationSwipeHelper notificationSwipeHelper = new NotificationSwipeHelper(0, this, getContext());
+        this.mSwipeHelper = notificationSwipeHelper;
+        notificationSwipeHelper.setLongPressListener(this.mLongPressListener);
         this.mStackScrollAlgorithm = createStackScrollAlgorithm(context);
         initView(context);
         this.mFalsingManager = FalsingManager.getInstance(context);
         this.mShouldDrawNotificationBackground = resources.getBoolean(R.bool.config_drawNotificationBackground);
         updateWillNotDraw();
         if (DEBUG) {
-            this.mDebugPaint = new Paint();
-            this.mDebugPaint.setColor(-65536);
+            Paint paint = new Paint();
+            this.mDebugPaint = paint;
+            paint.setColor(-65536);
             this.mDebugPaint.setStrokeWidth(2.0f);
             this.mDebugPaint.setStyle(Paint.Style.STROKE);
         }
@@ -515,7 +512,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements SwipeHel
         if (view instanceof ExpandableNotificationRow) {
             ExpandableNotificationRow expandableNotificationRow = (ExpandableNotificationRow) view;
             MetricsLogger.action(this.mContext, 332, expandableNotificationRow.getStatusBarNotification().getPackageName());
-            ((NotificationStat) Dependency.get(NotificationStat.class)).handleNotiOpenMenuEvent(expandableNotificationRow.getStatusBarNotification(), getNotGoneNotifications().indexOf(expandableNotificationRow.getEntry()));
+            ((SystemUIStat) Dependency.get(SystemUIStat.class)).handleNotiOpenMenuEvent(expandableNotificationRow.getStatusBarNotification(), getNotGoneNotifications().indexOf(expandableNotificationRow.getEntry()));
         }
         this.mSwipeHelper.onMenuShown(view);
     }
@@ -574,7 +571,6 @@ public class NotificationStackScrollLayout extends ViewGroup implements SwipeHel
     }
 
     public void setDrawBackgroundAsSrc(boolean z) {
-        this.mDrawBackgroundAsSrc = z;
         updateSrcDrawing();
     }
 
@@ -620,8 +616,9 @@ public class NotificationStackScrollLayout extends ViewGroup implements SwipeHel
         int i2 = this.mTopPadding;
         QS qs = this.mQs;
         int qsMinExpansionHeight = i >= 0 ? qs.getQsMinExpansionHeight() : qs.getQsHeaderHeight();
-        this.mQsBeingCoveredAnimator = ValueAnimator.ofInt(new int[]{i2, qsMinExpansionHeight});
-        this.mFlingAnimationUtils.apply((Animator) this.mQsBeingCoveredAnimator, (float) i2, (float) qsMinExpansionHeight, (float) i);
+        ValueAnimator ofInt = ValueAnimator.ofInt(new int[]{i2, qsMinExpansionHeight});
+        this.mQsBeingCoveredAnimator = ofInt;
+        this.mFlingAnimationUtils.apply((Animator) ofInt, (float) i2, (float) qsMinExpansionHeight, (float) i);
         this.mQsBeingCoveredAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 NotificationStackScrollLayout.this.notifyTopPaddingUpdateListener(((Integer) valueAnimator.getAnimatedValue()).intValue());
@@ -703,7 +700,6 @@ public class NotificationStackScrollLayout extends ViewGroup implements SwipeHel
 
     public void updateSpeedBumpIndex(int i, boolean z) {
         this.mAmbientState.setSpeedBumpIndex(i);
-        this.mNoAmbient = z;
     }
 
     public void setChildLocationsChangedListener(NotificationLogger.OnChildLocationsChangedListener onChildLocationsChangedListener) {
@@ -1404,6 +1400,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements SwipeHel
     }
 
     public boolean onGenericMotionEvent(MotionEvent motionEvent) {
+        int i = 0;
         if (!isScrollingEnabled() || !this.mIsExpanded || this.mSwipingInProgress || this.mExpandingNotification || this.mDisallowScrollingInThisMotion) {
             return false;
         }
@@ -1411,15 +1408,13 @@ public class NotificationStackScrollLayout extends ViewGroup implements SwipeHel
             float axisValue = motionEvent.getAxisValue(9);
             if (axisValue != 0.0f) {
                 int scrollRange = getScrollRange();
-                int i = this.mOwnScrollY;
-                int verticalScrollFactor = i - ((int) (axisValue * getVerticalScrollFactor()));
-                if (verticalScrollFactor < 0) {
-                    verticalScrollFactor = 0;
-                } else if (verticalScrollFactor > scrollRange) {
-                    verticalScrollFactor = scrollRange;
+                int i2 = this.mOwnScrollY;
+                int verticalScrollFactor = i2 - ((int) (axisValue * getVerticalScrollFactor()));
+                if (verticalScrollFactor >= 0) {
+                    i = verticalScrollFactor > scrollRange ? scrollRange : verticalScrollFactor;
                 }
-                if (verticalScrollFactor != i) {
-                    setOwnScrollY(verticalScrollFactor);
+                if (i != i2) {
+                    setOwnScrollY(i);
                     return true;
                 }
             }
@@ -1580,7 +1575,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements SwipeHel
             setOverScrolledPixels((getCurrentOverScrolledPixels(false) + f3) - f4, false, false);
         }
         setOwnScrollY(i2);
-        ((NotificationStat) Dependency.get(NotificationStat.class)).onScrollMore();
+        ((SystemUIStat) Dependency.get(SystemUIStat.class)).onScrollMore();
         return 0.0f;
     }
 
@@ -1674,15 +1669,16 @@ public class NotificationStackScrollLayout extends ViewGroup implements SwipeHel
     private boolean customOverScrollBy(int i, int i2, int i3, int i4) {
         int i5 = i2 + i;
         int i6 = -i4;
-        int i7 = i3 + i4;
+        int i7 = i4 + i3;
         boolean z = true;
         if (i5 > i7) {
-            i6 = i7;
-        } else if (i5 >= i6) {
+            i5 = i7;
+        } else if (i5 < i6) {
+            i5 = i6;
+        } else {
             z = false;
-            i6 = i5;
         }
-        onCustomOverScrolled(i6, z);
+        onCustomOverScrolled(i5, z);
         return z;
     }
 
@@ -1872,19 +1868,18 @@ public class NotificationStackScrollLayout extends ViewGroup implements SwipeHel
 
     private void updateContentHeight() {
         int i;
-        int interpolate;
-        float interpolate2;
-        float f = (float) this.mPaddingBetweenElements;
+        float f;
+        float f2;
+        float f3 = (float) this.mPaddingBetweenElements;
         if (this.mAmbientState.isDark()) {
             i = hasPulsingNotifications() ? 1 : 0;
         } else {
             i = this.mMaxDisplayedNotifications;
         }
-        float f2 = f;
         int i2 = 0;
         int i3 = 0;
         boolean z = false;
-        float f3 = 0.0f;
+        float f4 = 0.0f;
         for (int i4 = 0; i4 < getChildCount(); i4++) {
             ExpandableView expandableView = (ExpandableView) getChildAt(i4);
             if (expandableView.getVisibility() != 8 && !expandableView.hasNoContentHeight()) {
@@ -1896,22 +1891,24 @@ public class NotificationStackScrollLayout extends ViewGroup implements SwipeHel
                 }
                 float increasedPaddingAmount = expandableView.getIncreasedPaddingAmount();
                 if (increasedPaddingAmount >= 0.0f) {
-                    interpolate2 = (float) ((int) NotificationUtils.interpolate(f2, (float) this.mIncreasedPaddingBetweenElements, increasedPaddingAmount));
-                    interpolate = (int) NotificationUtils.interpolate((float) this.mPaddingBetweenElements, (float) this.mIncreasedPaddingBetweenElements, increasedPaddingAmount);
+                    f2 = (float) ((int) NotificationUtils.interpolate(f3, (float) this.mIncreasedPaddingBetweenElements, increasedPaddingAmount));
+                    f = (float) ((int) NotificationUtils.interpolate((float) this.mPaddingBetweenElements, (float) this.mIncreasedPaddingBetweenElements, increasedPaddingAmount));
                 } else {
-                    interpolate = (int) NotificationUtils.interpolate(0.0f, (float) this.mPaddingBetweenElements, 1.0f + increasedPaddingAmount);
-                    interpolate2 = f3 > 0.0f ? (float) ((int) NotificationUtils.interpolate((float) interpolate, (float) this.mIncreasedPaddingBetweenElements, f3)) : (float) interpolate;
+                    int interpolate = (int) NotificationUtils.interpolate(0.0f, (float) this.mPaddingBetweenElements, 1.0f + increasedPaddingAmount);
+                    float interpolate2 = f4 > 0.0f ? (float) ((int) NotificationUtils.interpolate((float) interpolate, (float) this.mIncreasedPaddingBetweenElements, f4)) : (float) interpolate;
+                    f = (float) interpolate;
+                    f2 = interpolate2;
                 }
-                f2 = (float) interpolate;
                 if (i3 != 0) {
-                    i3 = (int) (((float) i3) + interpolate2);
+                    i3 = (int) (((float) i3) + f2);
                 }
                 i3 += expandableView.getIntrinsicHeight();
                 i2++;
                 if (z) {
                     break;
                 }
-                f3 = increasedPaddingAmount;
+                f3 = f;
+                f4 = increasedPaddingAmount;
             }
         }
         this.mContentHeight = i3 + this.mTopPadding + this.mSpringIncrement;
@@ -2118,8 +2115,10 @@ public class NotificationStackScrollLayout extends ViewGroup implements SwipeHel
         }
         ExpandableView expandableView2 = this.mFirstVisibleBackgroundChild;
         if (expandableView2 != null) {
-            int ceil = (int) Math.ceil((double) ViewState.getFinalTranslationY(expandableView2));
-            i = (this.mAnimateNextBackgroundTop || (this.mTopAnimator == null && this.mCurrentBounds.top == ceil) || (this.mTopAnimator != null && this.mEndAnimationRect.top == ceil)) ? ceil : (int) Math.ceil((double) expandableView2.getTranslationY());
+            i = (int) Math.ceil((double) ViewState.getFinalTranslationY(expandableView2));
+            if (!this.mAnimateNextBackgroundTop && (!(this.mTopAnimator == null && this.mCurrentBounds.top == i) && (this.mTopAnimator == null || this.mEndAnimationRect.top != i))) {
+                i = (int) Math.ceil((double) expandableView2.getTranslationY());
+            }
         } else {
             i = 0;
         }
@@ -2611,110 +2610,113 @@ public class NotificationStackScrollLayout extends ViewGroup implements SwipeHel
         return view.getHeight();
     }
 
-    /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r14v1, resolved type: android.view.View} */
+    /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r15v1, resolved type: android.view.View} */
     /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v1, resolved type: com.android.systemui.statusbar.ExpandableNotificationRow} */
     /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v2, resolved type: com.android.systemui.statusbar.ExpandableNotificationRow} */
-    /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r14v2, resolved type: android.view.View} */
+    /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r15v2, resolved type: android.view.View} */
     /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v3, resolved type: com.android.systemui.statusbar.ExpandableNotificationRow} */
     /* JADX WARNING: Multi-variable type inference failed */
     /* Code decompiled incorrectly, please refer to instructions dump. */
-    private int getPositionInLinearLayout(android.view.View r14) {
+    private int getPositionInLinearLayout(android.view.View r15) {
         /*
-            r13 = this;
-            boolean r0 = r13.isChildInGroup(r14)
+            r14 = this;
+            boolean r0 = r14.isChildInGroup(r15)
             r1 = 0
             if (r0 == 0) goto L_0x0010
-            r1 = r14
+            r1 = r15
             com.android.systemui.statusbar.ExpandableNotificationRow r1 = (com.android.systemui.statusbar.ExpandableNotificationRow) r1
-            com.android.systemui.statusbar.ExpandableNotificationRow r14 = r1.getNotificationParent()
-            r0 = r14
+            com.android.systemui.statusbar.ExpandableNotificationRow r15 = r1.getNotificationParent()
+            r0 = r15
             goto L_0x0011
         L_0x0010:
             r0 = r1
         L_0x0011:
-            int r2 = r13.mPaddingBetweenElements
+            int r2 = r14.mPaddingBetweenElements
             float r2 = (float) r2
             r3 = 0
             r4 = 0
-            r6 = r2
-            r5 = r3
-            r2 = r4
-            r7 = r2
-        L_0x001a:
-            int r8 = r13.getChildCount()
-            if (r2 >= r8) goto L_0x008e
-            android.view.View r8 = r13.getChildAt(r2)
+            r6 = r3
+            r5 = r4
+            r7 = r5
+        L_0x0019:
+            int r8 = r14.getChildCount()
+            if (r5 >= r8) goto L_0x0091
+            android.view.View r8 = r14.getChildAt(r5)
             com.android.systemui.statusbar.ExpandableView r8 = (com.android.systemui.statusbar.ExpandableView) r8
             int r9 = r8.getVisibility()
             r10 = 8
-            if (r9 == r10) goto L_0x0030
+            if (r9 == r10) goto L_0x002f
             r9 = 1
-            goto L_0x0031
-        L_0x0030:
+            goto L_0x0030
+        L_0x002f:
             r9 = r4
-        L_0x0031:
-            if (r9 == 0) goto L_0x007a
+        L_0x0030:
+            if (r9 == 0) goto L_0x007d
             boolean r10 = r8.hasNoContentHeight()
-            if (r10 != 0) goto L_0x007a
+            if (r10 != 0) goto L_0x007d
             float r10 = r8.getIncreasedPaddingAmount()
             int r11 = (r10 > r3 ? 1 : (r10 == r3 ? 0 : -1))
-            if (r11 < 0) goto L_0x0057
-            int r5 = r13.mIncreasedPaddingBetweenElements
-            float r5 = (float) r5
-            float r5 = com.android.systemui.statusbar.notification.NotificationUtils.interpolate(r6, r5, r10)
-            int r5 = (int) r5
-            float r5 = (float) r5
-            int r6 = r13.mPaddingBetweenElements
+            if (r11 < 0) goto L_0x0056
+            int r6 = r14.mIncreasedPaddingBetweenElements
             float r6 = (float) r6
-            int r11 = r13.mIncreasedPaddingBetweenElements
+            float r2 = com.android.systemui.statusbar.notification.NotificationUtils.interpolate(r2, r6, r10)
+            int r2 = (int) r2
+            float r2 = (float) r2
+            int r6 = r14.mPaddingBetweenElements
+            float r6 = (float) r6
+            int r11 = r14.mIncreasedPaddingBetweenElements
             float r11 = (float) r11
             float r6 = com.android.systemui.statusbar.notification.NotificationUtils.interpolate(r6, r11, r10)
             int r6 = (int) r6
-        L_0x0055:
             float r6 = (float) r6
-            goto L_0x0073
-        L_0x0057:
-            int r6 = r13.mPaddingBetweenElements
-            float r6 = (float) r6
+            goto L_0x0075
+        L_0x0056:
+            int r2 = r14.mPaddingBetweenElements
+            float r2 = (float) r2
             r11 = 1065353216(0x3f800000, float:1.0)
             float r11 = r11 + r10
-            float r6 = com.android.systemui.statusbar.notification.NotificationUtils.interpolate(r3, r6, r11)
-            int r6 = (int) r6
-            int r11 = (r5 > r3 ? 1 : (r5 == r3 ? 0 : -1))
-            if (r11 <= 0) goto L_0x0071
-            float r11 = (float) r6
-            int r12 = r13.mIncreasedPaddingBetweenElements
+            float r2 = com.android.systemui.statusbar.notification.NotificationUtils.interpolate(r3, r2, r11)
+            int r2 = (int) r2
+            int r11 = (r6 > r3 ? 1 : (r6 == r3 ? 0 : -1))
+            if (r11 <= 0) goto L_0x0070
+            float r11 = (float) r2
+            int r12 = r14.mIncreasedPaddingBetweenElements
             float r12 = (float) r12
-            float r5 = com.android.systemui.statusbar.notification.NotificationUtils.interpolate(r11, r12, r5)
-            int r5 = (int) r5
-            float r5 = (float) r5
-            goto L_0x0055
+            float r6 = com.android.systemui.statusbar.notification.NotificationUtils.interpolate(r11, r12, r6)
+            int r6 = (int) r6
+            float r6 = (float) r6
+            goto L_0x0071
+        L_0x0070:
+            float r6 = (float) r2
         L_0x0071:
-            float r5 = (float) r6
-            goto L_0x0055
-        L_0x0073:
-            if (r7 == 0) goto L_0x0079
+            float r2 = (float) r2
+            r13 = r6
+            r6 = r2
+            r2 = r13
+        L_0x0075:
+            if (r7 == 0) goto L_0x007b
             float r7 = (float) r7
-            float r7 = r7 + r5
-            int r5 = (int) r7
-            r7 = r5
-        L_0x0079:
-            r5 = r10
-        L_0x007a:
-            if (r8 != r14) goto L_0x0084
-            if (r0 == 0) goto L_0x0083
-            int r13 = r0.getPositionOfChild(r1)
-            int r7 = r7 + r13
-        L_0x0083:
+            float r7 = r7 + r2
+            int r2 = (int) r7
+            r7 = r2
+        L_0x007b:
+            r2 = r6
+            r6 = r10
+        L_0x007d:
+            if (r8 != r15) goto L_0x0087
+            if (r0 == 0) goto L_0x0086
+            int r14 = r0.getPositionOfChild(r1)
+            int r7 = r7 + r14
+        L_0x0086:
             return r7
-        L_0x0084:
-            if (r9 == 0) goto L_0x008b
-            int r8 = r13.getIntrinsicHeight(r8)
+        L_0x0087:
+            if (r9 == 0) goto L_0x008e
+            int r8 = r14.getIntrinsicHeight(r8)
             int r7 = r7 + r8
-        L_0x008b:
-            int r2 = r2 + 1
-            goto L_0x001a
         L_0x008e:
+            int r5 = r5 + 1
+            goto L_0x0019
+        L_0x0091:
             return r4
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.stack.NotificationStackScrollLayout.getPositionInLinearLayout(android.view.View):int");
@@ -2775,11 +2777,10 @@ public class NotificationStackScrollLayout extends ViewGroup implements SwipeHel
         boolean z = this.mAnimationsEnabled || hasPulsingNotifications();
         this.mShelf.setAnimationsEnabled(z);
         int childCount = getChildCount();
-        boolean z2 = z;
         for (int i = 0; i < childCount; i++) {
             View childAt = getChildAt(i);
-            z2 &= this.mIsExpanded || isPinnedHeadsUp(childAt);
-            updateAnimationState(z2, childAt);
+            z &= this.mIsExpanded || isPinnedHeadsUp(childAt);
+            updateAnimationState(z, childAt);
         }
     }
 
@@ -2925,9 +2926,8 @@ public class NotificationStackScrollLayout extends ViewGroup implements SwipeHel
     }
 
     private void generateGroupExpansionEvent() {
-        View view = this.mExpandedGroupView;
-        if (view != null) {
-            this.mAnimationEvents.add(new AnimationEvent(view, 13));
+        if (this.mExpandedGroupView != null) {
+            this.mAnimationEvents.add(new AnimationEvent(this.mExpandedGroupView, 13));
             this.mExpandedGroupView = null;
         }
     }
@@ -2955,61 +2955,31 @@ public class NotificationStackScrollLayout extends ViewGroup implements SwipeHel
         this.mDragAnimPendingChildren.clear();
     }
 
-    /* JADX WARNING: Removed duplicated region for block: B:17:0x0055  */
-    /* JADX WARNING: Removed duplicated region for block: B:22:0x0006 A[SYNTHETIC] */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
     private void generateChildRemovalEvents() {
-        /*
-            r8 = this;
-            java.util.ArrayList<android.view.View> r0 = r8.mChildrenToRemoveAnimated
-            java.util.Iterator r0 = r0.iterator()
-        L_0x0006:
-            boolean r1 = r0.hasNext()
-            if (r1 == 0) goto L_0x0058
-            java.lang.Object r1 = r0.next()
-            android.view.View r1 = (android.view.View) r1
-            java.util.ArrayList<android.view.View> r2 = r8.mSwipedOutViews
-            boolean r2 = r2.contains(r1)
-            r3 = 1
-            if (r2 == 0) goto L_0x001d
-            r4 = 2
-            goto L_0x001e
-        L_0x001d:
-            r4 = r3
-        L_0x001e:
-            com.android.systemui.statusbar.stack.NotificationStackScrollLayout$AnimationEvent r5 = new com.android.systemui.statusbar.stack.NotificationStackScrollLayout$AnimationEvent
-            r5.<init>(r1, r4)
-            float r4 = r1.getTranslationY()
-            boolean r6 = r1 instanceof com.android.systemui.statusbar.ExpandableNotificationRow
-            if (r6 == 0) goto L_0x0040
-            r6 = r1
-            com.android.systemui.statusbar.ExpandableNotificationRow r6 = (com.android.systemui.statusbar.ExpandableNotificationRow) r6
-            boolean r7 = r6.isRemoved()
-            if (r7 == 0) goto L_0x0040
-            boolean r7 = r6.wasChildInGroupWhenRemoved()
-            if (r7 == 0) goto L_0x0040
-            float r4 = r6.getTranslationWhenRemoved()
-            r6 = 0
-            goto L_0x0041
-        L_0x0040:
-            r6 = r3
-        L_0x0041:
-            android.view.View r4 = r8.getFirstChildBelowTranlsationY(r4, r6)
-            r5.viewAfterChangingView = r4
-            java.util.ArrayList<com.android.systemui.statusbar.stack.NotificationStackScrollLayout$AnimationEvent> r4 = r8.mAnimationEvents
-            r4.add(r5)
-            java.util.ArrayList<android.view.View> r4 = r8.mSwipedOutViews
-            r4.remove(r1)
-            r8.mChildRemoveAnimationRunning = r3
-            if (r2 == 0) goto L_0x0006
-            r8.mChildRemoveBySwipeAnimationRunning = r3
-            goto L_0x0006
-        L_0x0058:
-            java.util.ArrayList<android.view.View> r8 = r8.mChildrenToRemoveAnimated
-            r8.clear()
-            return
-        */
-        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.stack.NotificationStackScrollLayout.generateChildRemovalEvents():void");
+        boolean z;
+        Iterator<View> it = this.mChildrenToRemoveAnimated.iterator();
+        while (it.hasNext()) {
+            View next = it.next();
+            AnimationEvent animationEvent = new AnimationEvent(next, this.mSwipedOutViews.contains(next) ? 2 : 1);
+            float translationY = next.getTranslationY();
+            if (next instanceof ExpandableNotificationRow) {
+                ExpandableNotificationRow expandableNotificationRow = (ExpandableNotificationRow) next;
+                if (expandableNotificationRow.isRemoved() && expandableNotificationRow.wasChildInGroupWhenRemoved()) {
+                    translationY = expandableNotificationRow.getTranslationWhenRemoved();
+                    z = false;
+                    animationEvent.viewAfterChangingView = getFirstChildBelowTranlsationY(translationY, z);
+                    this.mAnimationEvents.add(animationEvent);
+                    this.mSwipedOutViews.remove(next);
+                    this.mChildRemoveAnimationRunning = true;
+                }
+            }
+            z = true;
+            animationEvent.viewAfterChangingView = getFirstChildBelowTranlsationY(translationY, z);
+            this.mAnimationEvents.add(animationEvent);
+            this.mSwipedOutViews.remove(next);
+            this.mChildRemoveAnimationRunning = true;
+        }
+        this.mChildrenToRemoveAnimated.clear();
     }
 
     private void generatePositionChangeEvents() {
@@ -3078,9 +3048,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements SwipeHel
             AnimationFilter animationFilter = new AnimationFilter();
             animationFilter.animateDark();
             animationFilter.animateY(this.mShelf);
-            AnimationEvent animationEvent = new AnimationEvent((View) null, 9, animationFilter);
-            animationEvent.darkAnimationOriginIndex = this.mDarkAnimationOriginIndex;
-            this.mAnimationEvents.add(animationEvent);
+            this.mAnimationEvents.add(new AnimationEvent((View) null, 9, animationFilter));
             startBackgroundFadeIn();
         }
         this.mDarkNeedsAnimation = false;
@@ -3220,7 +3188,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements SwipeHel
     public void resetIsQsCovered(boolean z) {
         QS qs;
         this.mIsQsCovered = z;
-        if (!this.mIsQsCovered && (qs = this.mQs) != null && qs.getQsContent() != null) {
+        if (!z && (qs = this.mQs) != null && qs.getQsContent() != null) {
             this.mQs.getQsContent().setScaleY(1.0f);
             this.mQs.getQsContent().setScaleX(1.0f);
             this.mQs.getQsContent().setAlpha(1.0f);
@@ -3308,7 +3276,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements SwipeHel
     private void setIsExpanded(boolean z) {
         boolean z2 = z != this.mIsExpanded;
         this.mIsExpanded = z;
-        if (!this.mIsExpanded) {
+        if (!z) {
             resetIsQsCovered(false);
         }
         this.mStackScrollAlgorithm.setIsExpanded(z);
@@ -3472,8 +3440,9 @@ public class NotificationStackScrollLayout extends ViewGroup implements SwipeHel
         float f = z ? 1.0f : 0.0f;
         float f2 = this.mDimAmount;
         if (f != f2) {
-            this.mDimAnimator = TimeAnimator.ofFloat(new float[]{f2, f});
-            this.mDimAnimator.setDuration(220);
+            ValueAnimator ofFloat = TimeAnimator.ofFloat(new float[]{f2, f});
+            this.mDimAnimator = ofFloat;
+            ofFloat.setDuration(220);
             this.mDimAnimator.setInterpolator(Interpolators.FAST_OUT_SLOW_IN);
             this.mDimAnimator.addListener(this.mDimEndListener);
             this.mDimAnimator.addUpdateListener(this.mDimUpdateListener);
@@ -3659,7 +3628,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements SwipeHel
     public void setEmptyShadeView(EmptyShadeView emptyShadeView) {
         int removeTargetView = removeTargetView(this.mEmptyShadeView);
         this.mEmptyShadeView = emptyShadeView;
-        addView(this.mEmptyShadeView, removeTargetView);
+        addView(emptyShadeView, removeTargetView);
     }
 
     private int removeTargetView(View view) {
@@ -3808,7 +3777,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements SwipeHel
     }
 
     /* JADX WARNING: Code restructure failed: missing block: B:13:0x0021, code lost:
-        if (r5 != 16908346) goto L_0x005b;
+        if (r5 != 16908346) goto L_0x0059;
      */
     /* JADX WARNING: Removed duplicated region for block: B:17:0x004d  */
     /* Code decompiled incorrectly, please refer to instructions dump. */
@@ -3834,7 +3803,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements SwipeHel
             if (r5 == r2) goto L_0x0025
             r6 = 16908346(0x102003a, float:2.3877392E-38)
             if (r5 == r6) goto L_0x0024
-            goto L_0x005b
+            goto L_0x0059
         L_0x0024:
             r6 = r0
         L_0x0025:
@@ -3855,15 +3824,14 @@ public class NotificationStackScrollLayout extends ViewGroup implements SwipeHel
             int r5 = java.lang.Math.min(r2, r5)
             int r5 = java.lang.Math.max(r1, r5)
             int r6 = r4.mOwnScrollY
-            if (r5 == r6) goto L_0x005b
-            android.widget.OverScroller r6 = r4.mScroller
-            int r2 = r4.mScrollX
-            int r3 = r4.mOwnScrollY
-            int r5 = r5 - r3
-            r6.startScroll(r2, r3, r1, r5)
+            if (r5 == r6) goto L_0x0059
+            android.widget.OverScroller r2 = r4.mScroller
+            int r3 = r4.mScrollX
+            int r5 = r5 - r6
+            r2.startScroll(r3, r6, r1, r5)
             r4.animateScroll()
             return r0
-        L_0x005b:
+        L_0x0059:
             return r1
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.stack.NotificationStackScrollLayout.performAccessibilityActionInternal(int, android.os.Bundle):boolean");
@@ -3908,8 +3876,9 @@ public class NotificationStackScrollLayout extends ViewGroup implements SwipeHel
     }
 
     private void updateHeadsUpState() {
-        this.mHeadsUpPinned = this.mHeadsUpManager.hasPinnedHeadsUp();
-        this.mStackScrollAlgorithm.setExpandedBecauseOfHeadsUp(this.mHeadsUpPinned || this.mHeadsUpAnimatingAway);
+        boolean hasPinnedHeadsUp = this.mHeadsUpManager.hasPinnedHeadsUp();
+        this.mHeadsUpPinned = hasPinnedHeadsUp;
+        this.mStackScrollAlgorithm.setExpandedBecauseOfHeadsUp(hasPinnedHeadsUp || this.mHeadsUpAnimatingAway);
     }
 
     private void generateHeadsUpAnimation(ExpandableNotificationRow expandableNotificationRow, boolean z) {
@@ -3945,7 +3914,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements SwipeHel
 
     public void setScrimController(ScrimController scrimController) {
         this.mScrimController = scrimController;
-        this.mScrimController.setScrimBehindChangeRunnable(new Runnable() {
+        scrimController.setScrimBehindChangeRunnable(new Runnable() {
             public void run() {
                 NotificationStackScrollLayout.this.updateBackgroundDimming();
             }
@@ -3972,7 +3941,6 @@ public class NotificationStackScrollLayout extends ViewGroup implements SwipeHel
         }
         if (!z) {
             this.mChildRemoveAnimationRunning = false;
-            this.mChildRemoveBySwipeAnimationRunning = false;
         }
     }
 
@@ -4010,8 +3978,10 @@ public class NotificationStackScrollLayout extends ViewGroup implements SwipeHel
     }
 
     public void setOwnScrollY(int i) {
-        if (i != this.mOwnScrollY) {
-            onScrollChanged(this.mScrollX, i, this.mScrollX, this.mOwnScrollY);
+        int i2 = this.mOwnScrollY;
+        if (i != i2) {
+            int i3 = this.mScrollX;
+            onScrollChanged(i3, i, i3, i2);
             this.mOwnScrollY = i;
             updateForwardAndBackwardScrollability();
             requestChildrenUpdate();
@@ -4028,7 +3998,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements SwipeHel
             i = -1;
         }
         this.mShelf = notificationShelf;
-        addView(this.mShelf, i);
+        addView(notificationShelf, i);
         this.mAmbientState.setShelf(notificationShelf);
         this.mStateAnimator.setShelf(notificationShelf);
         notificationShelf.bind(this.mAmbientState, this);
@@ -4366,8 +4336,6 @@ public class NotificationStackScrollLayout extends ViewGroup implements SwipeHel
         static int[] LENGTHS = {464, 464, 360, 360, 360, 360, 220, 220, 360, 200, 448, 360, 360, 360, 500, 150, 150, 360, 450, 450, 360, 360};
         final int animationType;
         final View changingView;
-        int darkAnimationOriginIndex;
-        final long eventStartTime;
         final AnimationFilter filter;
         boolean headsUpFromBottom;
         final long length;
@@ -4500,7 +4468,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements SwipeHel
         }
 
         AnimationEvent(View view, int i, long j, AnimationFilter animationFilter) {
-            this.eventStartTime = AnimationUtils.currentAnimationTimeMillis();
+            AnimationUtils.currentAnimationTimeMillis();
             this.changingView = view;
             this.animationType = i;
             this.length = j;

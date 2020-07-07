@@ -20,7 +20,6 @@ public class CastControllerImpl implements CastController {
     public static final boolean DEBUG = Log.isLoggable("CastController", 3);
     private boolean mCallbackRegistered;
     private final ArrayList<CastController.Callback> mCallbacks = new ArrayList<>();
-    private final Context mContext;
     private boolean mDiscovering;
     private final Object mDiscoveringLock = new Object();
     private final MediaRouter.SimpleCallback mMediaCallback = new MediaRouter.SimpleCallback() {
@@ -75,10 +74,10 @@ public class CastControllerImpl implements CastController {
     private final ArrayMap<String, MediaRouter.RouteInfo> mRoutes = new ArrayMap<>();
 
     public CastControllerImpl(Context context) {
-        this.mContext = context;
         this.mMediaRouter = (MediaRouter) context.getSystemService("media_router");
-        this.mProjectionManager = (MediaProjectionManager) context.getSystemService("media_projection");
-        this.mProjection = this.mProjectionManager.getActiveProjectionInfo();
+        MediaProjectionManager mediaProjectionManager = (MediaProjectionManager) context.getSystemService("media_projection");
+        this.mProjectionManager = mediaProjectionManager;
+        this.mProjection = mediaProjectionManager.getActiveProjectionInfo();
         this.mProjectionManager.addCallback(this.mProjectionCallback, new Handler());
         if (DEBUG) {
             Log.d("CastController", "new CastController()");
@@ -101,6 +100,35 @@ public class CastControllerImpl implements CastController {
         }
         printWriter.print("  mProjection=");
         printWriter.println(this.mProjection);
+    }
+
+    public void addCallback(CastController.Callback callback) {
+        this.mCallbacks.add(callback);
+        fireOnCastDevicesChanged(callback);
+        synchronized (this.mDiscoveringLock) {
+            handleDiscoveryChangeLocked();
+        }
+    }
+
+    public void removeCallback(CastController.Callback callback) {
+        this.mCallbacks.remove(callback);
+        synchronized (this.mDiscoveringLock) {
+            handleDiscoveryChangeLocked();
+        }
+    }
+
+    private void handleDiscoveryChangeLocked() {
+        if (this.mCallbackRegistered) {
+            this.mMediaRouter.removeCallback(this.mMediaCallback);
+            this.mCallbackRegistered = false;
+        }
+        if (this.mDiscovering) {
+            this.mMediaRouter.addCallback(4, this.mMediaCallback, 4);
+            this.mCallbackRegistered = true;
+        } else if (this.mCallbacks.size() != 0) {
+            this.mMediaRouter.addCallback(4, this.mMediaCallback, 8);
+            this.mCallbackRegistered = true;
+        }
     }
 
     /* access modifiers changed from: private */

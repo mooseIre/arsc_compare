@@ -50,8 +50,9 @@ class MiuiVolumeTimerDrawableHelper implements MiuiVolumeTimerSeekBar.TimerSeekB
         this.mContext = seekBar.getContext();
         this.mTimeDrawableHint = seekBar.getResources().getString(R$string.miui_ringer_count_down);
         this.mTimeSegmentTitle = seekBar.getResources().getStringArray(R$array.miui_volume_timer_segments_title);
-        this.mDrawable = seekBar.getProgressDrawable();
-        if (this.mDrawable != null) {
+        Drawable progressDrawable = seekBar.getProgressDrawable();
+        this.mDrawable = progressDrawable;
+        if (progressDrawable != null) {
             setupDrawables(seekBar.getContext(), z);
             setOutlineProvider(seekBar);
             seekBar.setProgressDrawable(this.mDrawable);
@@ -60,10 +61,12 @@ class MiuiVolumeTimerDrawableHelper implements MiuiVolumeTimerSeekBar.TimerSeekB
     }
 
     private void setupDrawables(Context context, boolean z) {
-        this.mBackground = DrawableUtils.findDrawableById(this.mDrawable, 16908288);
-        this.mBackgroundSegments = DrawableUtils.findDrawableById(this.mBackground, R$id.miui_volume_timer_background_segments);
-        this.mProgress = DrawableUtils.findDrawableById(this.mDrawable, 16908301);
-        this.mProgressNormalRect = DrawableUtils.findDrawableById(this.mProgress, R$id.miui_volume_timer_progress_normal);
+        Drawable findDrawableById = DrawableUtils.findDrawableById(this.mDrawable, 16908288);
+        this.mBackground = findDrawableById;
+        this.mBackgroundSegments = DrawableUtils.findDrawableById(findDrawableById, R$id.miui_volume_timer_background_segments);
+        Drawable findDrawableById2 = DrawableUtils.findDrawableById(this.mDrawable, 16908301);
+        this.mProgress = findDrawableById2;
+        this.mProgressNormalRect = DrawableUtils.findDrawableById(findDrawableById2, R$id.miui_volume_timer_progress_normal);
         this.mProgressDraggingRect = DrawableUtils.findDrawableById(this.mProgress, R$id.miui_volume_timer_progress_dragging_rect);
         this.mProgressDraggingRectIdle = DrawableUtils.findDrawableById(this.mProgress, R$id.miui_volume_timer_progress_dragging_rect_idle);
         this.mProgressDraggingIcon = DrawableUtils.findDrawableById(this.mProgress, R$id.miui_volume_timer_progress_dragging_icon);
@@ -80,12 +83,14 @@ class MiuiVolumeTimerDrawableHelper implements MiuiVolumeTimerSeekBar.TimerSeekB
         }
         LayerDrawable layerDrawable = (LayerDrawable) drawable;
         float dimension = context.getResources().getDimension(R$dimen.miui_volume_timer_time_text_size);
-        this.mTimeDrawableBg = new CenterTextDrawable();
-        this.mTimeDrawableBg.setTextSize(dimension);
+        CenterTextDrawable centerTextDrawable = new CenterTextDrawable();
+        this.mTimeDrawableBg = centerTextDrawable;
+        centerTextDrawable.setTextSize(dimension);
         this.mTimeDrawableBg.setTextColor(context.getResources().getColor(R$color.miui_volume_tint_dark));
         layerDrawable.setDrawableByLayerId(16908288, new LayerDrawable(new Drawable[]{this.mBackground, this.mTimeDrawableBg}));
-        this.mTimeDrawableFg = new CenterTextDrawable();
-        this.mTimeDrawableFg.setTextSize(dimension);
+        CenterTextDrawable centerTextDrawable2 = new CenterTextDrawable();
+        this.mTimeDrawableFg = centerTextDrawable2;
+        centerTextDrawable2.setTextSize(dimension);
         this.mTimeDrawableFg.setTextColor(context.getResources().getColor(R$color.miui_volume_tint_light));
         layerDrawable.setDrawableByLayerId(16908301, new LayerDrawable(new Drawable[]{this.mProgress, new ScaleDrawable(this.mTimeDrawableFg, 8388611, 1.0f, 0.0f)}));
         this.mTickingTimes.add(this.mTimeDrawableFg);
@@ -93,7 +98,7 @@ class MiuiVolumeTimerDrawableHelper implements MiuiVolumeTimerSeekBar.TimerSeekB
     }
 
     private void setOutlineProvider(View view) {
-        view.setOutlineProvider(new ViewOutlineProvider() {
+        view.setOutlineProvider(new ViewOutlineProvider(this) {
             public void getOutline(View view, Outline outline) {
                 Outline outline2 = outline;
                 outline2.setRoundRect(0, 0, view.getWidth(), view.getHeight(), (float) (Math.min(view.getWidth(), view.getHeight()) / 2));

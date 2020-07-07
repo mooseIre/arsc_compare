@@ -95,8 +95,9 @@ public class KeyButtonRipple extends Drawable {
 
     private Paint getRipplePaint() {
         if (this.mRipplePaint == null) {
-            this.mRipplePaint = new Paint();
-            this.mRipplePaint.setAntiAlias(true);
+            Paint paint = new Paint();
+            this.mRipplePaint = paint;
+            paint.setAntiAlias(true);
             this.mRipplePaint.setColor(-3355444);
         }
         return this.mRipplePaint;
@@ -111,19 +112,20 @@ public class KeyButtonRipple extends Drawable {
             boolean z = width > height;
             float rippleSize = ((float) getRippleSize()) * this.mGlowScale * 0.5f;
             float f = width * 0.5f;
-            float f2 = 0.5f * height;
+            float f2 = height * 0.5f;
             float f3 = z ? rippleSize : f;
             if (z) {
                 rippleSize = f2;
             }
             float f4 = z ? f2 : f;
-            canvas.drawRoundRect(f - f3, f2 - rippleSize, f + f3, f2 + rippleSize, f4, f4, ripplePaint);
+            canvas.drawRoundRect(f - f3, f2 - rippleSize, f3 + f, f2 + rippleSize, f4, f4, ripplePaint);
         }
     }
 
     public void draw(Canvas canvas) {
-        this.mSupportHardware = canvas.isHardwareAccelerated();
-        if (this.mSupportHardware) {
+        boolean isHardwareAccelerated = canvas.isHardwareAccelerated();
+        this.mSupportHardware = isHardwareAccelerated;
+        if (isHardwareAccelerated) {
             drawHardware((DisplayListCanvas) canvas);
         } else {
             drawSoftware(canvas);
@@ -301,8 +303,9 @@ public class KeyButtonRipple extends Drawable {
         }
         this.mGlowScale = 1.35f;
         this.mGlowAlpha = 0.25f;
-        this.mRipplePaint = getRipplePaint();
-        this.mRipplePaint.setAlpha((int) (this.mGlowAlpha * 255.0f));
+        Paint ripplePaint = getRipplePaint();
+        this.mRipplePaint = ripplePaint;
+        ripplePaint.setAlpha((int) (this.mGlowAlpha * 255.0f));
         this.mPaintProp = CanvasProperty.createPaint(this.mRipplePaint);
         renderNodeAnimator.start();
         renderNodeAnimator2.start();
@@ -344,8 +347,8 @@ public class KeyButtonRipple extends Drawable {
     public void gestureSlideEffect(Rect rect, Rect rect2) {
         this.mStartRect = rect;
         this.mEndRect = rect2;
-        int i = this.mStartRect.left;
-        int i2 = this.mEndRect.left;
+        int i = rect.left;
+        int i2 = rect2.left;
         if (i < i2) {
             this.mSlideToRight = true;
             this.mFirstLeftStart = 0.0f;
@@ -404,8 +407,9 @@ public class KeyButtonRipple extends Drawable {
             this.mRyProp = CanvasProperty.createFloat((float) (getBounds().width() / 2));
         }
         this.mGlowScale = 1.35f;
-        this.mRipplePaint = getRipplePaint();
-        this.mRipplePaint.setAlpha((int) (this.mGlowAlpha * 255.0f));
+        Paint ripplePaint = getRipplePaint();
+        this.mRipplePaint = ripplePaint;
+        ripplePaint.setAlpha((int) (this.mGlowAlpha * 255.0f));
         this.mPaintProp = CanvasProperty.createPaint(this.mRipplePaint);
         renderNodeAnimator.start();
         renderNodeAnimator2.start();
@@ -442,8 +446,9 @@ public class KeyButtonRipple extends Drawable {
             this.mRyProp = CanvasProperty.createFloat((float) (getBounds().width() / 2));
         }
         this.mGlowScale = 1.35f;
-        this.mRipplePaint = getRipplePaint();
-        this.mRipplePaint.setAlpha((int) (this.mGlowAlpha * 255.0f));
+        Paint ripplePaint = getRipplePaint();
+        this.mRipplePaint = ripplePaint;
+        ripplePaint.setAlpha((int) (this.mGlowAlpha * 255.0f));
         this.mPaintProp = CanvasProperty.createPaint(this.mRipplePaint);
         renderNodeAnimator.start();
         renderNodeAnimator2.start();

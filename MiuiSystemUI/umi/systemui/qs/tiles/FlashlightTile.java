@@ -110,7 +110,7 @@ public class FlashlightTile extends QSTileImpl<QSTile.BooleanState> implements F
     }
 
     public void onFlashlightError() {
-        refreshState(false);
+        refreshState(Boolean.FALSE);
     }
 
     public void onFlashlightAvailabilityChanged(boolean z) {

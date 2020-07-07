@@ -21,6 +21,7 @@ import android.text.TextUtils;
 import android.util.Pair;
 import android.widget.Toast;
 import com.android.settingslib.bluetooth.BluetoothCallback;
+import com.android.settingslib.bluetooth.BluetoothUtils;
 import com.android.settingslib.bluetooth.BluetoothUtilsHelper;
 import com.android.settingslib.bluetooth.CachedBluetoothDevice;
 import com.android.settingslib.bluetooth.CachedBluetoothDeviceManager;
@@ -93,8 +94,9 @@ public class KeyboardUI extends SystemUI implements InputManager.OnTabletModeCha
     public void init() {
         LocalBluetoothManager instance;
         Context context = this.mContext;
-        this.mKeyboardName = context.getString(17039790);
-        if (!TextUtils.isEmpty(this.mKeyboardName) && (instance = LocalBluetoothManager.getInstance(context, (LocalBluetoothManager.BluetoothManagerCallback) null)) != null) {
+        String string = context.getString(17039936);
+        this.mKeyboardName = string;
+        if (!TextUtils.isEmpty(string) && (instance = LocalBluetoothManager.getInstance(context, (LocalBluetoothManager.BluetoothManagerCallback) null)) != null) {
             this.mEnabled = true;
             this.mCachedDeviceManager = instance.getCachedDeviceManager();
             this.mLocalBluetoothAdapter = instance.getBluetoothAdapter();
@@ -308,8 +310,7 @@ public class KeyboardUI extends SystemUI implements InputManager.OnTabletModeCha
             } else if (KeyboardUI.this.mDialog == null) {
                 BluetoothDialogClickListener bluetoothDialogClickListener = new BluetoothDialogClickListener();
                 BluetoothDialogDismissListener bluetoothDialogDismissListener = new BluetoothDialogDismissListener();
-                KeyboardUI keyboardUI = KeyboardUI.this;
-                BluetoothDialog unused = keyboardUI.mDialog = new BluetoothDialog(keyboardUI.mContext);
+                BluetoothDialog unused = KeyboardUI.this.mDialog = new BluetoothDialog(KeyboardUI.this.mContext);
                 KeyboardUI.this.mDialog.setTitle(R.string.enable_bluetooth_title);
                 KeyboardUI.this.mDialog.setMessage(R.string.enable_bluetooth_message);
                 KeyboardUI.this.mDialog.setPositiveButton(R.string.enable_bluetooth_confirmation_ok, bluetoothDialogClickListener);
@@ -457,7 +458,7 @@ public class KeyboardUI extends SystemUI implements InputManager.OnTabletModeCha
         }
     }
 
-    private final class BluetoothErrorListener implements BluetoothUtilsHelper.IErrorListener {
+    private final class BluetoothErrorListener implements BluetoothUtils.ErrorListener {
         private BluetoothErrorListener() {
         }
 

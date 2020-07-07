@@ -129,9 +129,10 @@ public class GlobalActionsComponent extends SystemUI implements CommandQueue.Cal
     }
 
     public void start() {
+        Class<GlobalActions> cls = GlobalActions.class;
         this.mBarService = IStatusBarService.Stub.asInterface(ServiceManager.getService("statusbar"));
-        ExtensionController.ExtensionBuilder<GlobalActions> newExtension = ((ExtensionController) Dependency.get(ExtensionController.class)).newExtension(GlobalActions.class);
-        newExtension.withPlugin(GlobalActions.class);
+        ExtensionController.ExtensionBuilder<GlobalActions> newExtension = ((ExtensionController) Dependency.get(ExtensionController.class)).newExtension(cls);
+        newExtension.withPlugin(cls);
         newExtension.withDefault(new Supplier() {
             public final Object get() {
                 return GlobalActionsComponent.this.lambda$start$0$GlobalActionsComponent();
@@ -141,6 +142,8 @@ public class GlobalActionsComponent extends SystemUI implements CommandQueue.Cal
         ((CommandQueue) SystemUI.getComponent(this.mContext, CommandQueue.class)).addCallbacks(this);
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$start$0 */
     public /* synthetic */ GlobalActions lambda$start$0$GlobalActionsComponent() {
         return new GlobalActionsImpl(this.mContext);
     }

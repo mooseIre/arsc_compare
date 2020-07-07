@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Outline;
-import android.graphics.Paint;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -52,8 +51,7 @@ public class QSControlDetail extends FrameLayout {
     public Context mContext;
     /* access modifiers changed from: private */
     public DetailAdapter mDetailAdapter;
-    /* access modifiers changed from: private */
-    public View mDetailContainer;
+    private View mDetailContainer;
     private ViewGroup mDetailContent;
     protected TextView mDetailSettingsButton;
     private final SparseArray<View> mDetailViews = new SparseArray<>();
@@ -97,8 +95,7 @@ public class QSControlDetail extends FrameLayout {
     /* access modifiers changed from: private */
     public boolean mSwitchClicked;
     private boolean mSwitchEnabled;
-    /* access modifiers changed from: private */
-    public boolean mSwitchState;
+    private boolean mSwitchState;
     protected View mToView;
     protected int[] mToViewFrame = new int[4];
     protected int[] mToViewLocation = new int[4];
@@ -141,18 +138,22 @@ public class QSControlDetail extends FrameLayout {
         super.onFinishInflate();
         setClickable(false);
         this.mDetailContent = (ViewGroup) findViewById(16908290);
-        this.mDetailSettingsButton = (TextView) findViewById(R.id.more_button);
-        Utils.createButtonFolmeTouchStyle(this.mDetailSettingsButton);
-        this.mDetailContainer = findViewById(R.id.qs_detail_container);
-        this.mDetailContainer.setClickable(true);
-        this.mQsDetailHeader = findViewById(R.id.qs_control_detail_header);
-        this.mQsDetailHeaderTitle = (TextView) this.mQsDetailHeader.findViewById(16908310);
-        this.mQsDetailHeaderSwitch = (SlidingButton) this.mQsDetailHeader.findViewById(16908311);
-        this.mQsDetailHeaderSwitch.setFocusable(true);
+        TextView textView = (TextView) findViewById(R.id.more_button);
+        this.mDetailSettingsButton = textView;
+        Utils.createButtonFolmeTouchStyle(textView);
+        View findViewById = findViewById(R.id.qs_detail_container);
+        this.mDetailContainer = findViewById;
+        findViewById.setClickable(true);
+        View findViewById2 = findViewById(R.id.qs_control_detail_header);
+        this.mQsDetailHeader = findViewById2;
+        this.mQsDetailHeaderTitle = (TextView) findViewById2.findViewById(16908310);
+        SlidingButton slidingButton = (SlidingButton) this.mQsDetailHeader.findViewById(16908311);
+        this.mQsDetailHeaderSwitch = slidingButton;
+        slidingButton.setFocusable(true);
         this.mQsDetailHeaderSwitch.setFocusableInTouchMode(true);
         this.mQsDetailHeaderSwitch.setImportantForAccessibility(1);
         this.mQsDetailHeaderSwitch.setContentDescription(this.mContext.getResources().getString(R.string.accessibility_detail_switch));
-        this.detailCornerRadius = this.mContext.getResources().getDimension(R.dimen.qs_control_corner_general_radius);
+        this.detailCornerRadius = this.mContext.getResources().getDimension(R.dimen.notification_stack_scroller_bg_radius);
         this.mDetailContainer.setClipToOutline(true);
         this.mDetailContainer.setOutlineProvider(new ViewOutlineProvider() {
             public void getOutline(View view, Outline outline) {
@@ -228,13 +229,13 @@ public class QSControlDetail extends FrameLayout {
         if (z2 || z3) {
             if (z2) {
                 this.mDetailAdapter = detailAdapter;
-                setupDetailHeader(this.mDetailAdapter);
+                setupDetailHeader(detailAdapter);
                 setupDetailFooter(this.mDetailAdapter);
+                this.mDetailContainer.getLayoutParams().height = this.mDetailAdapter.getContainerHeight();
+                this.mDetailContainer.requestLayout();
                 int metricsCategory = this.mDetailAdapter.getMetricsCategory();
                 View createDetailView = this.mDetailAdapter.createDetailView(this.mContext, this.mDetailViews.get(metricsCategory), this.mDetailContent);
-                if (createDetailView == null || !(createDetailView instanceof QSDetailItems)) {
-                    this.mDetailContainer.getLayoutParams().height = this.mDetailAdapter.getContainerHeight();
-                } else {
+                if (createDetailView != null && (createDetailView instanceof QSDetailItems)) {
                     updateContainerHeight(((QSDetailItems) createDetailView).getSuffix());
                 }
                 if (createDetailView != null) {
@@ -306,7 +307,7 @@ public class QSControlDetail extends FrameLayout {
             this.mFromView = view;
             this.mToView = this.mDetailContainer;
             this.mTranslateView = view2;
-            animateDetailAlphaWithRotation(true, this.mFromView);
+            animateDetailAlphaWithRotation(true, view);
             post(this.mAnimateShowRunnable);
         }
     }
@@ -337,7 +338,6 @@ public class QSControlDetail extends FrameLayout {
         this.mQsDetailHeaderSwitch.setOnPerformCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton compoundButton, boolean z) {
                 boolean unused = QSControlDetail.this.mSwitchClicked = true;
-                boolean unused2 = QSControlDetail.this.mSwitchState = z;
                 detailAdapter.setToggleState(z);
             }
         });
@@ -346,9 +346,6 @@ public class QSControlDetail extends FrameLayout {
     /* access modifiers changed from: private */
     public void handleToggleStateChanged(boolean z, boolean z2) {
         String str;
-        if (this.mDetailAdapter == null) {
-            return;
-        }
         if (this.mSwitchState != z || this.mSwitchEnabled != z2) {
             this.mSwitchState = z;
             this.mSwitchEnabled = z2;
@@ -403,8 +400,7 @@ public class QSControlDetail extends FrameLayout {
         this.mToViewFrame[2] = this.mToView.getRight();
         this.mToViewFrame[3] = this.mToView.getBottom();
         this.mAnim.cancel();
-        IStateStyle iStateStyle = this.mAnim;
-        iStateStyle.setTo("fromLeft", Integer.valueOf(this.mFromViewFrame[0]), "fromTop", Integer.valueOf(this.mFromViewFrame[1]), "fromRight", Integer.valueOf(this.mFromViewFrame[2]), "fromBottom", Integer.valueOf(this.mFromViewFrame[3]), "toLeft", Integer.valueOf((this.mToViewFrame[0] + this.mFromViewLocation[0]) - this.mToViewLocation[0]), "toTop", Integer.valueOf((this.mToViewFrame[1] + this.mFromViewLocation[1]) - this.mToViewLocation[1]), "toRight", Integer.valueOf((this.mToViewFrame[2] + this.mFromViewLocation[2]) - this.mToViewLocation[2]), "toBottom", Integer.valueOf((this.mToViewFrame[3] + this.mFromViewLocation[3]) - this.mToViewLocation[3]));
+        IStateStyle to = this.mAnim.setTo("fromLeft", Integer.valueOf(this.mFromViewFrame[0]), "fromTop", Integer.valueOf(this.mFromViewFrame[1]), "fromRight", Integer.valueOf(this.mFromViewFrame[2]), "fromBottom", Integer.valueOf(this.mFromViewFrame[3]), "toLeft", Integer.valueOf((this.mToViewFrame[0] + this.mFromViewLocation[0]) - this.mToViewLocation[0]), "toTop", Integer.valueOf((this.mToViewFrame[1] + this.mFromViewLocation[1]) - this.mToViewLocation[1]), "toRight", Integer.valueOf((this.mToViewFrame[2] + this.mFromViewLocation[2]) - this.mToViewLocation[2]), "toBottom", Integer.valueOf((this.mToViewFrame[3] + this.mFromViewLocation[3]) - this.mToViewLocation[3]));
         AnimConfig animConfig = new AnimConfig();
         animConfig.setEase(-2, 0.8f, 0.3f);
         animConfig.addListeners(new TransitionListener() {
@@ -489,7 +485,7 @@ public class QSControlDetail extends FrameLayout {
                 ((ViewGroup) QSControlDetail.this.mToView.getParent()).suppressLayout(false);
             }
         });
-        iStateStyle.to("fromLeft", Integer.valueOf((this.mFromViewFrame[0] + this.mToViewLocation[0]) - this.mFromViewLocation[0]), "fromTop", Integer.valueOf((this.mFromViewFrame[1] + this.mToViewLocation[1]) - this.mFromViewLocation[1]), "fromRight", Integer.valueOf((this.mFromViewFrame[2] + this.mToViewLocation[2]) - this.mFromViewLocation[2]), "fromBottom", Integer.valueOf((this.mFromViewFrame[3] + this.mToViewLocation[3]) - this.mFromViewLocation[3]), "toLeft", Integer.valueOf(this.mToViewFrame[0]), "toTop", Integer.valueOf(this.mToViewFrame[1]), "toRight", Integer.valueOf(this.mToViewFrame[2]), "toBottom", Integer.valueOf(this.mToViewFrame[3]), animConfig);
+        to.to("fromLeft", Integer.valueOf((this.mFromViewFrame[0] + this.mToViewLocation[0]) - this.mFromViewLocation[0]), "fromTop", Integer.valueOf((this.mFromViewFrame[1] + this.mToViewLocation[1]) - this.mFromViewLocation[1]), "fromRight", Integer.valueOf((this.mFromViewFrame[2] + this.mToViewLocation[2]) - this.mFromViewLocation[2]), "fromBottom", Integer.valueOf((this.mFromViewFrame[3] + this.mToViewLocation[3]) - this.mFromViewLocation[3]), "toLeft", Integer.valueOf(this.mToViewFrame[0]), "toTop", Integer.valueOf(this.mToViewFrame[1]), "toRight", Integer.valueOf(this.mToViewFrame[2]), "toBottom", Integer.valueOf(this.mToViewFrame[3]), animConfig);
     }
 
     /* access modifiers changed from: protected */
@@ -601,17 +597,6 @@ public class QSControlDetail extends FrameLayout {
             animState.add(ViewProperty.TRANSLATION_Z, 0, new long[0]);
             AnimConfig animConfig = new AnimConfig();
             animConfig.setEase(0, 300.0f, 0.8f, 0.6666f);
-            animConfig.addListeners(new TransitionListener() {
-                public void onBegin(Object obj) {
-                    super.onBegin(obj);
-                    QSControlDetail.this.mDetailContainer.setLayerType(2, (Paint) null);
-                }
-
-                public void onComplete(Object obj) {
-                    super.onComplete(obj);
-                    QSControlDetail.this.mDetailContainer.setLayerType(0, (Paint) null);
-                }
-            });
             state.to(animState, animConfig);
             return;
         }
@@ -624,17 +609,6 @@ public class QSControlDetail extends FrameLayout {
         animState2.add(ViewProperty.TRANSLATION_Z, 0, new long[0]);
         AnimConfig animConfig2 = new AnimConfig();
         animConfig2.setEase(0, 300.0f, 0.8f, 0.6666f);
-        animConfig2.addListeners(new TransitionListener() {
-            public void onBegin(Object obj) {
-                super.onBegin(obj);
-                QSControlDetail.this.mDetailContainer.setLayerType(2, (Paint) null);
-            }
-
-            public void onComplete(Object obj) {
-                super.onComplete(obj);
-                QSControlDetail.this.mDetailContainer.setLayerType(0, (Paint) null);
-            }
-        });
         state2.to(animState2, animConfig2);
     }
 

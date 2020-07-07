@@ -25,7 +25,6 @@ import com.android.systemui.HapticFeedBackImpl;
 import com.android.systemui.plugins.R;
 
 public class GestureBackArrowView extends View {
-    private static final Interpolator ACCELERATE_DECELERATE_INTERPOLATOR = new AccelerateDecelerateInterpolator();
     private static final Interpolator CUBIC_EASE_OUT_INTERPOLATOR = new DecelerateInterpolator(1.5f);
     private static final Interpolator QUAD_EASE_OUT_INTERPOLATOR = new DecelerateInterpolator();
     private Bitmap mArrow;
@@ -78,6 +77,10 @@ public class GestureBackArrowView extends View {
         READY_STATE_RECENT
     }
 
+    static {
+        new AccelerateDecelerateInterpolator();
+    }
+
     public GestureBackArrowView(Context context, int i) {
         this(context, (AttributeSet) null, i);
     }
@@ -95,16 +98,19 @@ public class GestureBackArrowView extends View {
         this.mScale = 0.0f;
         this.mIconScale = 1.0f;
         this.mReadyState = ReadyState.READY_STATE_NONE;
-        this.mLastConfiguration = new Configuration();
-        this.mLastConfiguration.updateFrom(getResources().getConfiguration());
+        Configuration configuration = new Configuration();
+        this.mLastConfiguration = configuration;
+        configuration.updateFrom(getResources().getConfiguration());
         this.mKeyguardManager = (KeyguardManager) context.getSystemService("keyguard");
         this.mContentResolver = context.getContentResolver();
         this.mPosition = i3;
-        this.mBgPaint = new Paint(1);
-        this.mBgPaint.setFilterBitmap(true);
+        Paint paint = new Paint(1);
+        this.mBgPaint = paint;
+        paint.setFilterBitmap(true);
         this.mBgPaint.setDither(true);
-        this.mArrowPaint = new Paint(1);
-        this.mArrowPaint.setFilterBitmap(true);
+        Paint paint2 = new Paint(1);
+        this.mArrowPaint = paint2;
+        paint2.setFilterBitmap(true);
         this.mArrowPaint.setDither(true);
         this.mArrowPaint.setAlpha(0);
         loadResources();
@@ -128,11 +134,13 @@ public class GestureBackArrowView extends View {
         matrix.postRotate(180.0f);
         Bitmap bitmap = this.mLeftBackground;
         this.mRightBackground = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), this.mLeftBackground.getHeight(), matrix, true);
-        this.mNoneTaskIcon = getContext().getDrawable(R.drawable.ic_quick_switch_empty);
-        this.mIconWidth = this.mNoneTaskIcon.getIntrinsicWidth();
+        Drawable drawable = getContext().getDrawable(R.drawable.ic_quick_switch_empty);
+        this.mNoneTaskIcon = drawable;
+        this.mIconWidth = drawable.getIntrinsicWidth();
         this.mIconHeight = this.mNoneTaskIcon.getIntrinsicHeight();
-        this.mArrow = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.gesture_back_arrow);
-        this.mArrowHeight = this.mArrow.getHeight();
+        Bitmap decodeResource = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.gesture_back_arrow);
+        this.mArrow = decodeResource;
+        this.mArrowHeight = decodeResource.getHeight();
         this.mArrowWidth = this.mArrow.getWidth();
     }
 
@@ -152,7 +160,6 @@ public class GestureBackArrowView extends View {
         int i4;
         int i5;
         int i6;
-        Canvas canvas2 = canvas;
         super.onDraw(canvas);
         Bitmap bitmap = this.mLeftBackground;
         int i7 = this.mBackWidth;
@@ -165,17 +172,17 @@ public class GestureBackArrowView extends View {
             i3 = (int) (f2 + f3);
             int i10 = this.mArrowWidth;
             float f4 = this.mIconScale;
-            i = (int) (((f2 - (((float) i10) * f4)) / 2.0f) + f3);
-            i2 = (int) ((((((float) i10) * f4) + f2) / 2.0f) + f3);
-            int i11 = this.mIconWidth;
-            if (f2 >= ((float) i11) * f4) {
-                f2 = (f2 + (((float) i11) * f4)) / 2.0f;
+            int i11 = (int) (((f2 - (((float) i10) * f4)) / 2.0f) + f3);
+            int i12 = (int) ((((((float) i10) * f4) + f2) / 2.0f) + f3);
+            int i13 = this.mIconWidth;
+            if (f2 >= ((float) i13) * f4) {
+                f2 = (f2 + (((float) i13) * f4)) / 2.0f;
             }
-            int i12 = (int) (f3 + f2);
-            i5 = (int) (((float) i12) - (((float) this.mIconWidth) * this.mIconScale));
-            int i13 = i9;
-            i4 = i12;
-            i6 = i13;
+            i5 = (int) (f3 + f2);
+            i = i11;
+            i2 = i12;
+            i4 = (int) (((float) i5) - (((float) this.mIconWidth) * this.mIconScale));
+            i6 = i9;
         } else if (i8 != 1) {
             i6 = 0;
             i5 = 0;
@@ -189,26 +196,23 @@ public class GestureBackArrowView extends View {
             float f5 = ((float) i7) * f;
             float f6 = this.mStartX;
             i6 = i14 - ((int) (f5 + f6));
-            int i15 = i14 - ((int) f6);
-            int i16 = this.mArrowWidth;
+            i3 = i14 - ((int) f6);
+            int i15 = this.mArrowWidth;
             float f7 = this.mIconScale;
-            int i17 = i14 - ((int) ((((((float) i16) * f7) + f2) / 2.0f) + f6));
-            int i18 = i14 - ((int) (((f2 - (((float) i16) * f7)) / 2.0f) + f6));
-            int i19 = this.mIconWidth;
-            if (f2 >= ((float) i19) * f7) {
-                f2 = (f2 + (((float) i19) * f7)) / 2.0f;
+            i = i14 - ((int) ((((((float) i15) * f7) + f2) / 2.0f) + f6));
+            i2 = i14 - ((int) (((f2 - (((float) i15) * f7)) / 2.0f) + f6));
+            int i16 = this.mIconWidth;
+            if (f2 >= ((float) i16) * f7) {
+                f2 = (f2 + (((float) i16) * f7)) / 2.0f;
             }
-            i5 = i14 - ((int) (f6 + f2));
-            i4 = (int) (((float) i5) + (((float) this.mIconWidth) * this.mIconScale));
-            i3 = i15;
-            i2 = i18;
-            i = i17;
+            i4 = i14 - ((int) (f6 + f2));
+            i5 = (int) (((float) i4) + (((float) this.mIconWidth) * this.mIconScale));
         }
         Rect rect = this.mBackDstRect;
         float f8 = this.mCurrentY;
         float f9 = this.mExpectBackHeight;
         rect.set(i6, (int) (f8 - (f9 / 2.0f)), i3, (int) (f8 + (f9 / 2.0f)));
-        canvas2.drawBitmap(bitmap, (Rect) null, this.mBackDstRect, this.mBgPaint);
+        canvas.drawBitmap(bitmap, (Rect) null, this.mBackDstRect, this.mBgPaint);
         ReadyState readyState = this.mReadyState;
         if (readyState == ReadyState.READY_STATE_BACK || readyState == ReadyState.READY_STATE_RECENT) {
             if (!this.mArrowShown) {
@@ -228,19 +232,19 @@ public class GestureBackArrowView extends View {
             if (this.mReadyState == ReadyState.READY_STATE_BACK) {
                 Rect rect2 = this.mArrowDstRect;
                 float f11 = this.mCurrentY;
-                int i20 = this.mArrowHeight;
+                int i17 = this.mArrowHeight;
                 float f12 = this.mIconScale;
-                rect2.set(i, (int) (f11 - ((((float) i20) * f12) / 2.0f)), i2, (int) (f11 + ((((float) i20) * f12) / 2.0f)));
-                canvas2.drawBitmap(this.mArrow, (Rect) null, this.mArrowDstRect, this.mArrowPaint);
+                rect2.set(i, (int) (f11 - ((((float) i17) * f12) / 2.0f)), i2, (int) (f11 + ((((float) i17) * f12) / 2.0f)));
+                canvas.drawBitmap(this.mArrow, (Rect) null, this.mArrowDstRect, this.mArrowPaint);
                 return;
             }
             Drawable drawable = this.mRecentTaskIcon;
             if (drawable != null && f10 != 0.0f) {
                 float f13 = this.mCurrentY;
-                int i21 = this.mIconHeight;
+                int i18 = this.mIconHeight;
                 float f14 = this.mIconScale;
-                drawable.setBounds(i5, (int) (f13 - ((((float) i21) * f14) / 2.0f)), i4, (int) (f13 + ((((float) i21) * f14) / 2.0f)));
-                this.mRecentTaskIcon.draw(canvas2);
+                drawable.setBounds(i4, (int) (f13 - ((((float) i18) * f14) / 2.0f)), i5, (int) (f13 + ((((float) i18) * f14) / 2.0f)));
+                this.mRecentTaskIcon.draw(canvas);
             }
         }
     }
@@ -257,8 +261,9 @@ public class GestureBackArrowView extends View {
             i2 = 255;
         }
         iArr[1] = i2;
-        this.mArrowAnimator = ValueAnimator.ofInt(iArr);
-        this.mArrowAnimator.setDuration((long) i);
+        ValueAnimator ofInt = ValueAnimator.ofInt(iArr);
+        this.mArrowAnimator = ofInt;
+        ofInt.setDuration((long) i);
         this.mArrowAnimator.setInterpolator(CUBIC_EASE_OUT_INTERPOLATOR);
         this.mArrowAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
@@ -310,8 +315,9 @@ public class GestureBackArrowView extends View {
         if (valueAnimator != null) {
             valueAnimator.cancel();
         }
-        this.mWaveChangeAnimator = ValueAnimator.ofFloat(new float[]{f, f2});
-        this.mWaveChangeAnimator.setDuration((long) i);
+        ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{f, f2});
+        this.mWaveChangeAnimator = ofFloat;
+        ofFloat.setDuration((long) i);
         this.mWaveChangeAnimator.setInterpolator(CUBIC_EASE_OUT_INTERPOLATOR);
         this.mWaveChangeAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
@@ -329,8 +335,9 @@ public class GestureBackArrowView extends View {
         if (valueAnimator2 != null) {
             valueAnimator2.cancel();
         }
-        this.mLastIconAnimator = ValueAnimator.ofFloat(new float[]{0.0f, 1.0f});
-        this.mLastIconAnimator.setDuration(100);
+        ValueAnimator ofFloat2 = ValueAnimator.ofFloat(new float[]{0.0f, 1.0f});
+        this.mLastIconAnimator = ofFloat2;
+        ofFloat2.setDuration(100);
         this.mLastIconAnimator.setInterpolator(QUAD_EASE_OUT_INTERPOLATOR);
         this.mLastIconAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
@@ -443,8 +450,9 @@ public class GestureBackArrowView extends View {
             valueAnimator3.cancel();
         }
         this.mIconScale = 1.0f;
-        this.mScale = f / 20.0f;
-        ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{this.mScale, 0.0f});
+        float f2 = f / 20.0f;
+        this.mScale = f2;
+        ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{f2, 0.0f});
         ofFloat.setDuration(100);
         ofFloat.setInterpolator(QUAD_EASE_OUT_INTERPOLATOR);
         ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {

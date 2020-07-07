@@ -40,6 +40,7 @@ public class ImageTransformState extends TransformState {
 
     public void appear(float f, TransformableView transformableView) {
         if (transformableView instanceof HybridNotificationView) {
+            float f2 = 0.0f;
             if (f == 0.0f) {
                 this.mTransformedView.setPivotY(0.0f);
                 View view = this.mTransformedView;
@@ -49,11 +50,11 @@ public class ImageTransformState extends TransformState {
             float mapToDuration = mapToDuration(f);
             CrossFadeHelper.fadeIn(this.mTransformedView, mapToDuration, false);
             float interpolation = Interpolators.LINEAR_OUT_SLOW_IN.getInterpolation(mapToDuration);
-            if (!Float.isFinite(interpolation)) {
-                interpolation = 0.0f;
+            if (Float.isFinite(interpolation)) {
+                f2 = interpolation;
             }
-            this.mTransformedView.setScaleX(interpolation);
-            this.mTransformedView.setScaleY(interpolation);
+            this.mTransformedView.setScaleX(f2);
+            this.mTransformedView.setScaleY(f2);
             return;
         }
         super.appear(f, transformableView);
@@ -61,6 +62,7 @@ public class ImageTransformState extends TransformState {
 
     public void disappear(float f, TransformableView transformableView) {
         if (transformableView instanceof HybridNotificationView) {
+            float f2 = 0.0f;
             if (f == 0.0f) {
                 this.mTransformedView.setPivotY(0.0f);
                 View view = this.mTransformedView;
@@ -69,11 +71,11 @@ public class ImageTransformState extends TransformState {
             float mapToDuration = mapToDuration(1.0f - f);
             CrossFadeHelper.fadeOut(this.mTransformedView, 1.0f - mapToDuration, false);
             float interpolation = Interpolators.LINEAR_OUT_SLOW_IN.getInterpolation(mapToDuration);
-            if (!Float.isFinite(interpolation)) {
-                interpolation = 0.0f;
+            if (Float.isFinite(interpolation)) {
+                f2 = interpolation;
             }
-            this.mTransformedView.setScaleX(interpolation);
-            this.mTransformedView.setScaleY(interpolation);
+            this.mTransformedView.setScaleX(f2);
+            this.mTransformedView.setScaleY(f2);
             return;
         }
         super.disappear(f, transformableView);

@@ -22,12 +22,9 @@ import com.android.systemui.recents.model.TaskStack;
 import java.util.ArrayList;
 import java.util.List;
 import miui.view.animation.CubicEaseOutInterpolator;
-import miui.view.animation.QuinticEaseOutInterpolator;
 
 public class TaskStackAnimationHelper {
     private static final Interpolator DISMISS_ALL_TRANSLATION_INTERPOLATOR = Interpolators.EASE_IN_OUT;
-    private static final Interpolator ENTER_FROM_HOME_ALPHA_INTERPOLATOR = Interpolators.LINEAR;
-    private static final Interpolator ENTER_FROM_HOME_TRANSLATION_INTERPOLATOR = new QuinticEaseOutInterpolator();
     private static final Interpolator ENTER_WHILE_DOCKING_INTERPOLATOR;
     private static final Interpolator EXIT_TO_HOME_TRANSLATION_INTERPOLATOR = new CubicEaseOutInterpolator();
     /* access modifiers changed from: private */
@@ -40,13 +37,11 @@ public class TaskStackAnimationHelper {
     private ArrayList<TaskViewTransform> mTmpFinalTaskTransforms = new ArrayList<>();
     private TaskViewTransform mTmpTransform = new TaskViewTransform();
 
-    public interface Callbacks {
-    }
-
     static {
-        Interpolator interpolator = Interpolators.LINEAR_OUT_SLOW_IN;
-        FOCUS_BEHIND_NEXT_TASK_INTERPOLATOR = interpolator;
-        ENTER_WHILE_DOCKING_INTERPOLATOR = interpolator;
+        Interpolator interpolator = Interpolators.LINEAR;
+        Interpolator interpolator2 = Interpolators.LINEAR_OUT_SLOW_IN;
+        FOCUS_BEHIND_NEXT_TASK_INTERPOLATOR = interpolator2;
+        ENTER_WHILE_DOCKING_INTERPOLATOR = interpolator2;
     }
 
     public TaskStackAnimationHelper(Context context, TaskStackView taskStackView) {
@@ -117,7 +112,7 @@ public class TaskStackAnimationHelper {
                 if (!launchState.launchedFromApp || launchState.launchedViaDockGesture) {
                     if (launchState.launchedFromHome) {
                         referenceCountedTrigger.increment();
-                        SpringAnimationUtils.getInstance().startHomeToRecentsAnim(taskView, new Runnable() {
+                        SpringAnimationUtils.getInstance().startHomeToRecentsAnim(taskView, new Runnable(this) {
                             public void run() {
                                 referenceCountedTrigger.decrement();
                             }
@@ -182,7 +177,7 @@ public class TaskStackAnimationHelper {
             taskView2.getTask();
             if (taskView2 == taskView) {
                 taskView2.setClipViewInStack(false);
-                referenceCountedTrigger.addLastDecrementRunnable(new Runnable() {
+                referenceCountedTrigger.addLastDecrementRunnable(new Runnable(this) {
                     public void run() {
                         taskView2.setClipViewInStack(true);
                     }
@@ -196,7 +191,7 @@ public class TaskStackAnimationHelper {
         final TaskStackViewTouchHandler touchHandler = this.mStackView.getTouchHandler();
         touchHandler.onBeginManualDrag(taskView);
         referenceCountedTrigger.increment();
-        referenceCountedTrigger.addLastDecrementRunnable(new Runnable() {
+        referenceCountedTrigger.addLastDecrementRunnable(new Runnable(this) {
             public void run() {
                 touchHandler.onChildDismissed(taskView);
             }
@@ -204,14 +199,14 @@ public class TaskStackAnimationHelper {
         final float scaledDismissSize = touchHandler.getScaledDismissSize();
         ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{0.0f, 1.0f});
         ofFloat.setDuration(400);
-        ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+        ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener(this) {
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 float floatValue = ((Float) valueAnimator.getAnimatedValue()).floatValue();
                 taskView.setTranslationX(scaledDismissSize * floatValue);
                 touchHandler.updateSwipeProgress(taskView, true, floatValue);
             }
         });
-        ofFloat.addListener(new AnimatorListenerAdapter() {
+        ofFloat.addListener(new AnimatorListenerAdapter(this) {
             public void onAnimationEnd(Animator animator) {
                 referenceCountedTrigger.decrement();
             }
@@ -228,7 +223,7 @@ public class TaskStackAnimationHelper {
             int i = size * 50;
             taskView.setClipViewInStack(false);
             if (!taskView.getTask().isProtected()) {
-                AnimationProps animationProps = new AnimationProps(i, 150, DISMISS_ALL_TRANSLATION_INTERPOLATOR, new AnimatorListenerAdapter() {
+                AnimationProps animationProps = new AnimationProps(i, 150, DISMISS_ALL_TRANSLATION_INTERPOLATOR, new AnimatorListenerAdapter(this) {
                     public void onAnimationEnd(Animator animator) {
                         referenceCountedTrigger.decrement();
                         taskView.setClipViewInStack(true);

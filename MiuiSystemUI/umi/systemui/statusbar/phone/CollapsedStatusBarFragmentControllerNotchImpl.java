@@ -41,8 +41,9 @@ public class CollapsedStatusBarFragmentControllerNotchImpl extends CollapsedStat
         arraySet.add("bluetooth");
         CollapsedStatusBarFragment collapsedStatusBarFragment = this.mFragment;
         Objects.requireNonNull(collapsedStatusBarFragment);
-        this.mNotchLeftEarIconManager = new CollapsedStatusBarFragment.LeftEarIconManager(this.mFragment.mNotchLeftEarIcons);
-        this.mNotchLeftEarIconManager.mWhiteList = new ArraySet<>();
+        CollapsedStatusBarFragment.LeftEarIconManager leftEarIconManager = new CollapsedStatusBarFragment.LeftEarIconManager(this.mFragment.mNotchLeftEarIcons);
+        this.mNotchLeftEarIconManager = leftEarIconManager;
+        leftEarIconManager.mWhiteList = new ArraySet<>();
         this.mNotchLeftEarIconManager.mWhiteList.addAll(arraySet);
     }
 

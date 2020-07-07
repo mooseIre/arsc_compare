@@ -12,7 +12,10 @@ import java.util.Objects;
 class Util {
     private static int[] AUDIO_MANAGER_FLAGS = {1, 16, 4, 2, 8, 2048, 128, 4096, 1024};
     private static String[] AUDIO_MANAGER_FLAG_NAMES = {"SHOW_UI", "VIBRATE", "PLAY_SOUND", "ALLOW_RINGER_MODES", "REMOVE_SOUND_AND_VIBRATE", "SHOW_VIBRATE_HINT", "SHOW_SILENT_HINT", "FROM_KEY", "SHOW_UI_WARNINGS"};
-    private static final SimpleDateFormat HMMAA = new SimpleDateFormat("h:mm aa", Locale.US);
+
+    static {
+        new SimpleDateFormat("h:mm aa", Locale.US);
+    }
 
     public static String logTag(Class<?> cls) {
         String str = "vol." + cls.getSimpleName();

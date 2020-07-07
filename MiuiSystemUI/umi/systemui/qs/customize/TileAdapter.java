@@ -109,7 +109,6 @@ public class TileAdapter extends RecyclerView.Adapter<Holder> implements TileQue
     private RecyclerView.ItemDecoration mDecoration;
     /* access modifiers changed from: private */
     public int mEditIndex;
-    private final Handler mHandler = new Handler();
     /* access modifiers changed from: private */
     public QSTileHost mHost;
     private final ItemTouchHelper mItemTouchHelper;
@@ -137,6 +136,7 @@ public class TileAdapter extends RecyclerView.Adapter<Holder> implements TileQue
     private int mTopDividerPadding;
 
     public TileAdapter(Context context, int i, RecyclerView recyclerView) {
+        new Handler();
         this.mContext = context;
         this.mSpanCount = i;
         this.mAccessibilityManager = (AccessibilityManager) context.getSystemService(AccessibilityManager.class);
@@ -214,9 +214,8 @@ public class TileAdapter extends RecyclerView.Adapter<Holder> implements TileQue
     }
 
     private void recalcSpecs() {
-        List<TileQueryHelper.TileInfo> list;
-        if (this.mCurrentSpecs != null && (list = this.mAllTiles) != null) {
-            this.mOtherTiles = new ArrayList(list);
+        if (this.mCurrentSpecs != null && this.mAllTiles != null) {
+            this.mOtherTiles = new ArrayList(this.mAllTiles);
             this.mTiles.clear();
             int i = 0;
             for (int i2 = 0; i2 < this.mCurrentSpecs.size(); i2++) {
@@ -277,11 +276,11 @@ public class TileAdapter extends RecyclerView.Adapter<Holder> implements TileQue
                 int i3 = this.mTopDividerPadding;
                 inflate.setPadding(i3, 0, i3, 0);
             }
-            return new Holder(inflate);
+            return new Holder(this, inflate);
         }
         FrameLayout frameLayout = (FrameLayout) from.inflate(R.layout.qs_customize_tile_frame, viewGroup, false);
         frameLayout.addView(new CustomizeTileView(context, new QSIconViewImpl(context)));
-        return new Holder(frameLayout);
+        return new Holder(this, frameLayout);
     }
 
     public int getItemCount() {
@@ -317,7 +316,7 @@ public class TileAdapter extends RecyclerView.Adapter<Holder> implements TileQue
                 });
                 if (this.mNeedsFocus) {
                     holder.mTileView.requestLayout();
-                    holder.mTileView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+                    holder.mTileView.addOnLayoutChangeListener(new View.OnLayoutChangeListener(this) {
                         public void onLayoutChange(View view, int i, int i2, int i3, int i4, int i5, int i6, int i7, int i8) {
                             holder.mTileView.removeOnLayoutChangeListener(this);
                             holder.mTileView.requestFocus();
@@ -530,11 +529,12 @@ public class TileAdapter extends RecyclerView.Adapter<Holder> implements TileQue
         /* access modifiers changed from: private */
         public CustomizeTileView mTileView;
 
-        public Holder(View view) {
+        public Holder(TileAdapter tileAdapter, View view) {
             super(view);
             if (view instanceof FrameLayout) {
-                this.mTileView = (CustomizeTileView) ((FrameLayout) view).getChildAt(0);
-                this.mTileView.setBackground((Drawable) null);
+                CustomizeTileView customizeTileView = (CustomizeTileView) ((FrameLayout) view).getChildAt(0);
+                this.mTileView = customizeTileView;
+                customizeTileView.setBackground((Drawable) null);
                 this.mTileView.getIcon().setAnimationEnabled(false);
             }
         }

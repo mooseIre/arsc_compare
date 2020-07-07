@@ -4,7 +4,6 @@ import android.app.WindowConfiguration;
 import android.graphics.Matrix;
 import android.graphics.Point;
 import android.graphics.Rect;
-import android.os.Build;
 import android.os.RemoteException;
 import android.view.IRemoteAnimationFinishedCallback;
 import android.view.IRemoteAnimationRunner;
@@ -34,7 +33,6 @@ import miuix.animation.listener.TransitionListener;
 import miuix.animation.listener.UpdateInfo;
 
 public class MiuiActivityLaunchAnimator {
-    private static final boolean ENABLED = (Build.VERSION.SDK_INT > 28);
     /* access modifiers changed from: private */
     public static final Pools.Pool<Matrix> MATRIX_POOL = Pools.createSimplePool(new Pools.Manager<Matrix>() {
         public Matrix createInstance() {
@@ -79,6 +77,8 @@ public class MiuiActivityLaunchAnimator {
         void onLaunchAnimationCancelled();
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$new$0 */
     public /* synthetic */ void lambda$new$0$MiuiActivityLaunchAnimator() {
         setAnimationPending(false);
         this.mCallback.onExpandAnimationTimedOut();
@@ -93,10 +93,10 @@ public class MiuiActivityLaunchAnimator {
     }
 
     public RemoteAnimationAdapter getLaunchAnimation(View view, boolean z) {
-        if (ENABLED && (view instanceof ExpandableNotificationRow) && this.mCallback.areLaunchAnimationsEnabled() && !z) {
-            return new RemoteAnimationAdapter(new AnimationRunner((ExpandableNotificationRow) view), 300, 200);
+        if (!(view instanceof ExpandableNotificationRow) || !this.mCallback.areLaunchAnimationsEnabled() || z) {
+            return null;
         }
-        return null;
+        return new RemoteAnimationAdapter(new AnimationRunner((ExpandableNotificationRow) view), 300, 200);
     }
 
     public boolean isAnimationPending() {
@@ -154,8 +154,8 @@ public class MiuiActivityLaunchAnimator {
 
         public void onAnimationStart(RemoteAnimationTarget[] remoteAnimationTargetArr, IRemoteAnimationFinishedCallback iRemoteAnimationFinishedCallback) throws RemoteException {
             this.mSourceNotification.post(new Runnable(remoteAnimationTargetArr, iRemoteAnimationFinishedCallback) {
-                private final /* synthetic */ RemoteAnimationTarget[] f$1;
-                private final /* synthetic */ IRemoteAnimationFinishedCallback f$2;
+                public final /* synthetic */ RemoteAnimationTarget[] f$1;
+                public final /* synthetic */ IRemoteAnimationFinishedCallback f$2;
 
                 {
                     this.f$1 = r2;
@@ -168,8 +168,10 @@ public class MiuiActivityLaunchAnimator {
             });
         }
 
-        /* JADX WARNING: Removed duplicated region for block: B:15:0x0039  */
-        /* JADX WARNING: Removed duplicated region for block: B:21:0x007d  */
+        /* access modifiers changed from: private */
+        /* JADX WARNING: Removed duplicated region for block: B:15:0x0037  */
+        /* JADX WARNING: Removed duplicated region for block: B:21:0x007b  */
+        /* renamed from: lambda$onAnimationStart$0 */
         /* Code decompiled incorrectly, please refer to instructions dump. */
         public /* synthetic */ void lambda$onAnimationStart$0$MiuiActivityLaunchAnimator$AnimationRunner(android.view.RemoteAnimationTarget[] r20, android.view.IRemoteAnimationFinishedCallback r21) {
             /*
@@ -179,7 +181,7 @@ public class MiuiActivityLaunchAnimator {
                 android.view.RemoteAnimationTarget r9 = r19.getClosingRemoteAnimationTarget(r20)
                 r10 = 1
                 r11 = 0
-                if (r8 == 0) goto L_0x0036
+                if (r8 == 0) goto L_0x0034
                 android.graphics.Point r0 = r8.position
                 int r0 = r0.y
                 if (r0 != 0) goto L_0x0028
@@ -195,18 +197,17 @@ public class MiuiActivityLaunchAnimator {
                 r0 = r11
             L_0x0029:
                 r7.mIsFullScreenLaunch = r0
-                boolean r0 = r7.mIsFullScreenLaunch
-                if (r0 == 0) goto L_0x0036
-                boolean r0 = r8.isTranslucent
                 if (r0 == 0) goto L_0x0034
-                goto L_0x0036
-            L_0x0034:
+                boolean r0 = r8.isTranslucent
+                if (r0 == 0) goto L_0x0032
+                goto L_0x0034
+            L_0x0032:
                 r0 = r11
-                goto L_0x0037
-            L_0x0036:
+                goto L_0x0035
+            L_0x0034:
                 r0 = r10
-            L_0x0037:
-                if (r0 == 0) goto L_0x007d
+            L_0x0035:
+                if (r0 == 0) goto L_0x007b
                 java.lang.StringBuilder r0 = new java.lang.StringBuilder
                 r0.<init>()
                 java.lang.String r1 = "bail, target="
@@ -218,12 +219,12 @@ public class MiuiActivityLaunchAnimator {
                 r0.append(r1)
                 java.lang.String r1 = ", isTranslucent="
                 r0.append(r1)
-                if (r8 == 0) goto L_0x005a
+                if (r8 == 0) goto L_0x0058
                 boolean r1 = r8.isTranslucent
-                goto L_0x005b
-            L_0x005a:
+                goto L_0x0059
+            L_0x0058:
                 r1 = r11
-            L_0x005b:
+            L_0x0059:
                 r0.append(r1)
                 java.lang.String r0 = r0.toString()
                 java.lang.String r1 = "MiuiActivityLaunchAnimator"
@@ -237,17 +238,17 @@ public class MiuiActivityLaunchAnimator {
                 r1 = 1065353216(0x3f800000, float:1.0)
                 r0.collapse(r11, r1)
                 return
-            L_0x007d:
+            L_0x007b:
                 r12 = r21
                 r19.setupDimLayer()
                 com.android.systemui.statusbar.notification.MiuiActivityLaunchAnimator r0 = com.android.systemui.statusbar.notification.MiuiActivityLaunchAnimator.this
-                if (r9 != 0) goto L_0x0088
+                if (r9 != 0) goto L_0x0086
                 r1 = r11
-                goto L_0x008e
-            L_0x0088:
+                goto L_0x008c
+            L_0x0086:
                 android.app.WindowConfiguration r1 = r9.windowConfiguration
                 int r1 = r1.getActivityType()
-            L_0x008e:
+            L_0x008c:
                 int unused = r0.mClosingActivityType = r1
                 com.android.systemui.statusbar.notification.MiuiActivityLaunchAnimator$ExpandAnimationParameters r0 = r7.mParams
                 com.android.systemui.statusbar.ExpandableNotificationRow r1 = r7.mSourceNotification
@@ -264,25 +265,25 @@ public class MiuiActivityLaunchAnimator {
                 com.android.systemui.statusbar.ExpandableNotificationRow r0 = r7.mSourceNotification
                 boolean r0 = r0.isChildInGroup()
                 r13 = 0
-                if (r0 == 0) goto L_0x00de
+                if (r0 == 0) goto L_0x00dc
                 com.android.systemui.statusbar.ExpandableNotificationRow r0 = r7.mSourceNotification
                 com.android.systemui.statusbar.ExpandableNotificationRow r0 = r0.getNotificationParent()
                 int r0 = r0.getClipTopAmount()
                 com.android.systemui.statusbar.notification.MiuiActivityLaunchAnimator$ExpandAnimationParameters r1 = r7.mParams
                 r1.parentStartClipTopAmount = r0
-                if (r0 == 0) goto L_0x00de
+                if (r0 == 0) goto L_0x00dc
                 float r0 = (float) r0
                 com.android.systemui.statusbar.ExpandableNotificationRow r1 = r7.mSourceNotification
                 float r1 = r1.getTranslationY()
                 float r0 = r0 - r1
                 int r1 = (r0 > r13 ? 1 : (r0 == r13 ? 0 : -1))
-                if (r1 <= 0) goto L_0x00de
+                if (r1 <= 0) goto L_0x00dc
                 com.android.systemui.statusbar.notification.MiuiActivityLaunchAnimator$ExpandAnimationParameters r1 = r7.mParams
                 double r2 = (double) r0
                 double r2 = java.lang.Math.ceil(r2)
                 int r0 = (int) r2
                 r1.startClipTopAmount = r0
-            L_0x00de:
+            L_0x00dc:
                 android.graphics.Rect r0 = r8.sourceContainerBounds
                 int r14 = r0.width()
                 android.graphics.Rect r0 = r8.sourceContainerBounds
@@ -313,12 +314,12 @@ public class MiuiActivityLaunchAnimator {
                 com.android.systemui.statusbar.notification.MiuiActivityLaunchAnimator r0 = com.android.systemui.statusbar.notification.MiuiActivityLaunchAnimator.this
                 int r0 = r0.mClosingActivityType
                 r6 = 2
-                if (r0 != r6) goto L_0x0127
+                if (r0 != r6) goto L_0x0125
                 r17 = r10
-                goto L_0x0129
-            L_0x0127:
+                goto L_0x0127
+            L_0x0125:
                 r17 = r11
-            L_0x0129:
+            L_0x0127:
                 r7.setExpandAnimationRunning(r10)
                 r0 = r19
                 r1 = r14
@@ -335,94 +336,94 @@ public class MiuiActivityLaunchAnimator {
                 r8 = r5
                 r5 = r21
                 r0.<init>(r2, r3, r4, r5)
-                r6.addListener(r8)
-                r0 = 3
-                java.lang.Object[] r1 = new java.lang.Object[r0]
-                java.lang.String r2 = "y"
-                r1[r11] = r2
-                java.lang.Integer r2 = java.lang.Integer.valueOf(r16)
-                r1[r10] = r2
-                r2 = 1050253722(0x3e99999a, float:0.3)
+                miuix.animation.IStateStyle r0 = r6.addListener(r8)
+                r1 = 3
+                java.lang.Object[] r2 = new java.lang.Object[r1]
+                java.lang.String r3 = "y"
+                r2[r11] = r3
+                java.lang.Integer r3 = java.lang.Integer.valueOf(r16)
+                r2[r10] = r3
                 r3 = 1065185444(0x3f7d70a4, float:0.99)
-                miuix.animation.base.AnimConfig r4 = com.android.systemui.statusbar.notification.MiuiActivityLaunchAnimator.springEase(r3, r2)
-                r1[r18] = r4
-                r6.to(r1)
-                java.lang.Object[] r1 = new java.lang.Object[r0]
-                java.lang.String r4 = "alpha"
-                r1[r11] = r4
-                java.lang.Float r4 = java.lang.Float.valueOf(r13)
-                r1[r10] = r4
-                r4 = 1041865114(0x3e19999a, float:0.15)
-                miuix.animation.base.AnimConfig r4 = com.android.systemui.statusbar.notification.MiuiActivityLaunchAnimator.springEase(r3, r4)
-                r1[r18] = r4
-                r6.to(r1)
-                java.lang.Object[] r1 = new java.lang.Object[r0]
-                java.lang.String r4 = "width"
-                r1[r11] = r4
-                java.lang.Integer r4 = java.lang.Integer.valueOf(r14)
-                r1[r10] = r4
-                r4 = 1053609165(0x3ecccccd, float:0.4)
+                r4 = 1050253722(0x3e99999a, float:0.3)
                 miuix.animation.base.AnimConfig r5 = com.android.systemui.statusbar.notification.MiuiActivityLaunchAnimator.springEase(r3, r4)
-                r1[r18] = r5
-                r6.to(r1)
-                java.lang.Object[] r1 = new java.lang.Object[r0]
-                java.lang.String r5 = "height"
-                r1[r11] = r5
-                java.lang.Integer r5 = java.lang.Integer.valueOf(r15)
-                r1[r10] = r5
-                r5 = 1051931443(0x3eb33333, float:0.35)
+                r2[r18] = r5
+                miuix.animation.IStateStyle r0 = r0.to(r2)
+                java.lang.Object[] r2 = new java.lang.Object[r1]
+                java.lang.String r5 = "alpha"
+                r2[r11] = r5
+                java.lang.Float r5 = java.lang.Float.valueOf(r13)
+                r2[r10] = r5
+                r5 = 1041865114(0x3e19999a, float:0.15)
                 miuix.animation.base.AnimConfig r5 = com.android.systemui.statusbar.notification.MiuiActivityLaunchAnimator.springEase(r3, r5)
-                r1[r18] = r5
-                r6.to(r1)
-                java.lang.Object[] r1 = new java.lang.Object[r0]
-                java.lang.String r5 = "corner"
-                r1[r11] = r5
-                com.android.systemui.statusbar.notification.MiuiActivityLaunchAnimator r5 = com.android.systemui.statusbar.notification.MiuiActivityLaunchAnimator.this
-                float r5 = r5.mWindowCornerRadius
-                java.lang.Float r5 = java.lang.Float.valueOf(r5)
-                r1[r10] = r5
-                miuix.animation.base.AnimConfig r5 = com.android.systemui.statusbar.notification.MiuiActivityLaunchAnimator.springEase(r3, r2)
-                r1[r18] = r5
-                r6.to(r1)
-                java.lang.Object[] r1 = new java.lang.Object[r0]
-                java.lang.String r5 = "dimBehind"
-                r1[r11] = r5
-                r5 = 1061997773(0x3f4ccccd, float:0.8)
-                java.lang.Float r5 = java.lang.Float.valueOf(r5)
-                r1[r10] = r5
-                miuix.animation.base.AnimConfig r5 = com.android.systemui.statusbar.notification.MiuiActivityLaunchAnimator.springEase(r3, r2)
-                r1[r18] = r5
-                r6.to(r1)
-                java.lang.Object[] r1 = new java.lang.Object[r0]
-                java.lang.String r5 = "closingX"
-                r1[r11] = r5
-                if (r9 != 0) goto L_0x01eb
-                r5 = r11
-                goto L_0x01f2
-            L_0x01eb:
-                android.graphics.Rect r5 = r9.sourceContainerBounds
-                int r5 = r5.width()
-                int r5 = -r5
-            L_0x01f2:
-                java.lang.Integer r5 = java.lang.Integer.valueOf(r5)
-                r1[r10] = r5
-                miuix.animation.base.AnimConfig r5 = com.android.systemui.statusbar.notification.MiuiActivityLaunchAnimator.springEase(r3, r4)
-                r1[r18] = r5
-                r6.to(r1)
-                java.lang.Object[] r0 = new java.lang.Object[r0]
-                java.lang.String r1 = "closingScale"
-                r0[r11] = r1
-                r1 = 1063675494(0x3f666666, float:0.9)
-                java.lang.Float r1 = java.lang.Float.valueOf(r1)
-                r0[r10] = r1
-                if (r17 == 0) goto L_0x0213
-                goto L_0x0214
-            L_0x0213:
-                r2 = r4
-            L_0x0214:
-                miuix.animation.base.AnimConfig r1 = com.android.systemui.statusbar.notification.MiuiActivityLaunchAnimator.springEase(r3, r2)
-                r0[r18] = r1
-                r6.to(r0)
+                r2[r18] = r5
+                miuix.animation.IStateStyle r0 = r0.to(r2)
+                java.lang.Object[] r2 = new java.lang.Object[r1]
+                java.lang.String r5 = "width"
+                r2[r11] = r5
+                java.lang.Integer r5 = java.lang.Integer.valueOf(r14)
+                r2[r10] = r5
+                r5 = 1053609165(0x3ecccccd, float:0.4)
+                miuix.animation.base.AnimConfig r6 = com.android.systemui.statusbar.notification.MiuiActivityLaunchAnimator.springEase(r3, r5)
+                r2[r18] = r6
+                miuix.animation.IStateStyle r0 = r0.to(r2)
+                java.lang.Object[] r2 = new java.lang.Object[r1]
+                java.lang.String r6 = "height"
+                r2[r11] = r6
+                java.lang.Integer r6 = java.lang.Integer.valueOf(r15)
+                r2[r10] = r6
+                r6 = 1051931443(0x3eb33333, float:0.35)
+                miuix.animation.base.AnimConfig r6 = com.android.systemui.statusbar.notification.MiuiActivityLaunchAnimator.springEase(r3, r6)
+                r2[r18] = r6
+                miuix.animation.IStateStyle r0 = r0.to(r2)
+                java.lang.Object[] r2 = new java.lang.Object[r1]
+                java.lang.String r6 = "corner"
+                r2[r11] = r6
+                com.android.systemui.statusbar.notification.MiuiActivityLaunchAnimator r6 = com.android.systemui.statusbar.notification.MiuiActivityLaunchAnimator.this
+                float r6 = r6.mWindowCornerRadius
+                java.lang.Float r6 = java.lang.Float.valueOf(r6)
+                r2[r10] = r6
+                miuix.animation.base.AnimConfig r6 = com.android.systemui.statusbar.notification.MiuiActivityLaunchAnimator.springEase(r3, r4)
+                r2[r18] = r6
+                miuix.animation.IStateStyle r0 = r0.to(r2)
+                java.lang.Object[] r2 = new java.lang.Object[r1]
+                java.lang.String r6 = "dimBehind"
+                r2[r11] = r6
+                r6 = 1061997773(0x3f4ccccd, float:0.8)
+                java.lang.Float r6 = java.lang.Float.valueOf(r6)
+                r2[r10] = r6
+                miuix.animation.base.AnimConfig r6 = com.android.systemui.statusbar.notification.MiuiActivityLaunchAnimator.springEase(r3, r4)
+                r2[r18] = r6
+                miuix.animation.IStateStyle r0 = r0.to(r2)
+                java.lang.Object[] r2 = new java.lang.Object[r1]
+                java.lang.String r6 = "closingX"
+                r2[r11] = r6
+                if (r9 != 0) goto L_0x01f0
+                r6 = r11
+                goto L_0x01f7
+            L_0x01f0:
+                android.graphics.Rect r6 = r9.sourceContainerBounds
+                int r6 = r6.width()
+                int r6 = -r6
+            L_0x01f7:
+                java.lang.Integer r6 = java.lang.Integer.valueOf(r6)
+                r2[r10] = r6
+                miuix.animation.base.AnimConfig r6 = com.android.systemui.statusbar.notification.MiuiActivityLaunchAnimator.springEase(r3, r5)
+                r2[r18] = r6
+                miuix.animation.IStateStyle r0 = r0.to(r2)
+                java.lang.Object[] r1 = new java.lang.Object[r1]
+                java.lang.String r2 = "closingScale"
+                r1[r11] = r2
+                r2 = 1063675494(0x3f666666, float:0.9)
+                java.lang.Float r2 = java.lang.Float.valueOf(r2)
+                r1[r10] = r2
+                if (r17 == 0) goto L_0x0219
+                goto L_0x021a
+            L_0x0219:
+                r4 = r5
+            L_0x021a:
+                miuix.animation.base.AnimConfig r2 = com.android.systemui.statusbar.notification.MiuiActivityLaunchAnimator.springEase(r3, r4)
+                r1[r18] = r2
+                r0.to(r1)
                 com.android.systemui.statusbar.notification.MiuiActivityLaunchAnimator r0 = com.android.systemui.statusbar.notification.MiuiActivityLaunchAnimator.this
                 r0.setAnimationPending(r11)
                 return
@@ -430,13 +431,16 @@ public class MiuiActivityLaunchAnimator {
             throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.notification.MiuiActivityLaunchAnimator.AnimationRunner.lambda$onAnimationStart$0$MiuiActivityLaunchAnimator$AnimationRunner(android.view.RemoteAnimationTarget[], android.view.IRemoteAnimationFinishedCallback):void");
         }
 
+        public void onAnimationStart(RemoteAnimationTarget[] remoteAnimationTargetArr, RemoteAnimationTarget[] remoteAnimationTargetArr2, IRemoteAnimationFinishedCallback iRemoteAnimationFinishedCallback) throws RemoteException {
+            onAnimationStart(remoteAnimationTargetArr, iRemoteAnimationFinishedCallback);
+        }
+
         private IStateStyle setupExpandAnimation(int i, int i2, int i3, int i4, RemoteAnimationTarget remoteAnimationTarget, RemoteAnimationTarget remoteAnimationTarget2) {
             float f = this.mNotificationCornerRadius;
             updateAndApplyParams(i, i2, i3, i4, f, 0.0f, 1.0f, 0, 1.0f, remoteAnimationTarget, remoteAnimationTarget2);
             IStateStyle useValue = Folme.useValue(new Object[0]);
             Float valueOf = Float.valueOf(1.0f);
-            useValue.setTo("y", Integer.valueOf(i2), "alpha", valueOf, "width", Integer.valueOf(i3), "height", Integer.valueOf(i4), "dimBehind", Float.valueOf(0.0f), "corner", Float.valueOf(f), "closingX", 0, "closingScale", valueOf);
-            return useValue;
+            return useValue.setTo("y", Integer.valueOf(i2), "alpha", valueOf, "width", Integer.valueOf(i3), "height", Integer.valueOf(i4), "dimBehind", Float.valueOf(0.0f), "corner", Float.valueOf(f), "closingX", 0, "closingScale", valueOf);
         }
 
         /* access modifiers changed from: private */
@@ -555,6 +559,8 @@ public class MiuiActivityLaunchAnimator {
             });
         }
 
+        /* access modifiers changed from: private */
+        /* renamed from: lambda$onAnimationCancelled$1 */
         public /* synthetic */ void lambda$onAnimationCancelled$1$MiuiActivityLaunchAnimator$AnimationRunner() {
             MiuiActivityLaunchAnimator.this.setAnimationPending(false);
             MiuiActivityLaunchAnimator.this.mCallback.onLaunchAnimationCancelled();
@@ -610,6 +616,8 @@ public class MiuiActivityLaunchAnimator {
             onUpdate(this.mCurrentInfo);
         }
 
+        /* access modifiers changed from: private */
+        /* renamed from: lambda$onUpdate$0 */
         public /* synthetic */ void lambda$onUpdate$0$MiuiActivityLaunchAnimator$MultiFloatTransitionListener(UpdateInfo updateInfo) {
             this.mCurrentInfo.put(updateInfo.property.getName(), Float.valueOf(updateInfo.getFloatValue()));
         }

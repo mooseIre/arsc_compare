@@ -165,10 +165,12 @@ public class BatteryMeterIconView extends ImageView {
             setImageDrawable((Drawable) null);
             return;
         }
-        this.mLayerDrawable = (LayerDrawable) getContext().getResources().getDrawable(R.drawable.battery_meter);
-        this.mLayerDrawable.mutate();
-        this.mBgDrawable = this.mLayerDrawable.findDrawableByLayerId(R.id.background);
-        this.mBgDrawable.mutate();
+        LayerDrawable layerDrawable = (LayerDrawable) getContext().getResources().getDrawable(R.drawable.battery_meter);
+        this.mLayerDrawable = layerDrawable;
+        layerDrawable.mutate();
+        Drawable findDrawableByLayerId = this.mLayerDrawable.findDrawableByLayerId(R.id.background);
+        this.mBgDrawable = findDrawableByLayerId;
+        findDrawableByLayerId.mutate();
         if (this.mProgressOrientationPortrait) {
             i = 80;
         } else {
@@ -176,24 +178,25 @@ public class BatteryMeterIconView extends ImageView {
         }
         Drawable drawable = getResources().getDrawable(R.drawable.battery_meter_progress_normal);
         drawable.mutate();
-        this.mProgressClipDrawable = new ClipDrawable(drawable, i, this.mProgressOrientationPortrait ? 2 : 1);
-        this.mProgressClipDrawable.mutate();
+        ClipDrawable clipDrawable = new ClipDrawable(drawable, i, this.mProgressOrientationPortrait ? 2 : 1);
+        this.mProgressClipDrawable = clipDrawable;
+        clipDrawable.mutate();
         this.mLayerDrawable.setDrawableByLayerId(R.id.progress, this.mProgressClipDrawable);
-        LayerDrawable layerDrawable = this.mLayerDrawable;
-        layerDrawable.setLayerGravity(layerDrawable.findIndexByLayerId(R.id.progress), 17);
         LayerDrawable layerDrawable2 = this.mLayerDrawable;
-        layerDrawable2.setLayerInset(layerDrawable2.findIndexByLayerId(R.id.progress), 0, 0, (int) (this.mProgressCenterLeftOffset * 2.0f), 0);
+        layerDrawable2.setLayerGravity(layerDrawable2.findIndexByLayerId(R.id.progress), 17);
+        LayerDrawable layerDrawable3 = this.mLayerDrawable;
+        layerDrawable3.setLayerInset(layerDrawable3.findIndexByLayerId(R.id.progress), 0, 0, (int) (this.mProgressCenterLeftOffset * 2.0f), 0);
         int intrinsicWidth = this.mLayerDrawable.getIntrinsicWidth();
         int intrinsicHeight = this.mLayerDrawable.getIntrinsicHeight();
         this.mProgressWidth = this.mProgressClipDrawable.getIntrinsicWidth();
-        this.mProgressHeight = this.mProgressClipDrawable.getIntrinsicHeight();
+        int intrinsicHeight2 = this.mProgressClipDrawable.getIntrinsicHeight();
+        this.mProgressHeight = intrinsicHeight2;
         Rect rect = this.mProgressRect;
         int i2 = this.mProgressWidth;
         rect.left = (intrinsicWidth - i2) / 2;
         rect.right = intrinsicWidth - ((intrinsicWidth - i2) / 2);
-        int i3 = this.mProgressHeight;
-        rect.top = (intrinsicHeight - i3) / 2;
-        rect.bottom = intrinsicHeight - ((intrinsicHeight - i3) / 2);
+        rect.top = (intrinsicHeight - intrinsicHeight2) / 2;
+        rect.bottom = intrinsicHeight - ((intrinsicHeight - intrinsicHeight2) / 2);
         setImageDrawable(this.mLayerDrawable);
     }
 
@@ -345,81 +348,77 @@ public class BatteryMeterIconView extends ImageView {
 
     /* renamed from: com.android.systemui.miui.statusbar.BatteryMeterIconView$1  reason: invalid class name */
     static /* synthetic */ class AnonymousClass1 {
-        static final /* synthetic */ int[] $SwitchMap$com$android$systemui$miui$statusbar$BatteryMeterIconView$BatteryStatus = new int[BatteryStatus.values().length];
+        static final /* synthetic */ int[] $SwitchMap$com$android$systemui$miui$statusbar$BatteryMeterIconView$BatteryStatus;
 
-        /* JADX WARNING: Can't wrap try/catch for region: R(20:0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|20) */
-        /* JADX WARNING: Code restructure failed: missing block: B:21:?, code lost:
-            return;
-         */
+        /* JADX WARNING: Can't wrap try/catch for region: R(18:0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|(3:17|18|20)) */
         /* JADX WARNING: Failed to process nested try/catch */
-        /* JADX WARNING: Missing exception handler attribute for start block: B:11:0x0040 */
-        /* JADX WARNING: Missing exception handler attribute for start block: B:13:0x004b */
-        /* JADX WARNING: Missing exception handler attribute for start block: B:15:0x0056 */
-        /* JADX WARNING: Missing exception handler attribute for start block: B:17:0x0062 */
-        /* JADX WARNING: Missing exception handler attribute for start block: B:3:0x0014 */
-        /* JADX WARNING: Missing exception handler attribute for start block: B:5:0x001f */
-        /* JADX WARNING: Missing exception handler attribute for start block: B:7:0x002a */
-        /* JADX WARNING: Missing exception handler attribute for start block: B:9:0x0035 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:11:0x003e */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:13:0x0049 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:15:0x0054 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:17:0x0060 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:3:0x0012 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:5:0x001d */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:7:0x0028 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:9:0x0033 */
         static {
             /*
                 com.android.systemui.miui.statusbar.BatteryMeterIconView$BatteryStatus[] r0 = com.android.systemui.miui.statusbar.BatteryMeterIconView.BatteryStatus.values()
                 int r0 = r0.length
                 int[] r0 = new int[r0]
                 $SwitchMap$com$android$systemui$miui$statusbar$BatteryMeterIconView$BatteryStatus = r0
-                int[] r0 = $SwitchMap$com$android$systemui$miui$statusbar$BatteryMeterIconView$BatteryStatus     // Catch:{ NoSuchFieldError -> 0x0014 }
-                com.android.systemui.miui.statusbar.BatteryMeterIconView$BatteryStatus r1 = com.android.systemui.miui.statusbar.BatteryMeterIconView.BatteryStatus.LOW     // Catch:{ NoSuchFieldError -> 0x0014 }
-                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0014 }
+                com.android.systemui.miui.statusbar.BatteryMeterIconView$BatteryStatus r1 = com.android.systemui.miui.statusbar.BatteryMeterIconView.BatteryStatus.LOW     // Catch:{ NoSuchFieldError -> 0x0012 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0012 }
                 r2 = 1
-                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0014 }
-            L_0x0014:
-                int[] r0 = $SwitchMap$com$android$systemui$miui$statusbar$BatteryMeterIconView$BatteryStatus     // Catch:{ NoSuchFieldError -> 0x001f }
-                com.android.systemui.miui.statusbar.BatteryMeterIconView$BatteryStatus r1 = com.android.systemui.miui.statusbar.BatteryMeterIconView.BatteryStatus.LOW_DIGIT     // Catch:{ NoSuchFieldError -> 0x001f }
-                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x001f }
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0012 }
+            L_0x0012:
+                int[] r0 = $SwitchMap$com$android$systemui$miui$statusbar$BatteryMeterIconView$BatteryStatus     // Catch:{ NoSuchFieldError -> 0x001d }
+                com.android.systemui.miui.statusbar.BatteryMeterIconView$BatteryStatus r1 = com.android.systemui.miui.statusbar.BatteryMeterIconView.BatteryStatus.LOW_DIGIT     // Catch:{ NoSuchFieldError -> 0x001d }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x001d }
                 r2 = 2
-                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x001f }
-            L_0x001f:
-                int[] r0 = $SwitchMap$com$android$systemui$miui$statusbar$BatteryMeterIconView$BatteryStatus     // Catch:{ NoSuchFieldError -> 0x002a }
-                com.android.systemui.miui.statusbar.BatteryMeterIconView$BatteryStatus r1 = com.android.systemui.miui.statusbar.BatteryMeterIconView.BatteryStatus.NORMAL_DIGIT     // Catch:{ NoSuchFieldError -> 0x002a }
-                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x002a }
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x001d }
+            L_0x001d:
+                int[] r0 = $SwitchMap$com$android$systemui$miui$statusbar$BatteryMeterIconView$BatteryStatus     // Catch:{ NoSuchFieldError -> 0x0028 }
+                com.android.systemui.miui.statusbar.BatteryMeterIconView$BatteryStatus r1 = com.android.systemui.miui.statusbar.BatteryMeterIconView.BatteryStatus.NORMAL_DIGIT     // Catch:{ NoSuchFieldError -> 0x0028 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0028 }
                 r2 = 3
-                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x002a }
-            L_0x002a:
-                int[] r0 = $SwitchMap$com$android$systemui$miui$statusbar$BatteryMeterIconView$BatteryStatus     // Catch:{ NoSuchFieldError -> 0x0035 }
-                com.android.systemui.miui.statusbar.BatteryMeterIconView$BatteryStatus r1 = com.android.systemui.miui.statusbar.BatteryMeterIconView.BatteryStatus.POWER_SAVE     // Catch:{ NoSuchFieldError -> 0x0035 }
-                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0035 }
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0028 }
+            L_0x0028:
+                int[] r0 = $SwitchMap$com$android$systemui$miui$statusbar$BatteryMeterIconView$BatteryStatus     // Catch:{ NoSuchFieldError -> 0x0033 }
+                com.android.systemui.miui.statusbar.BatteryMeterIconView$BatteryStatus r1 = com.android.systemui.miui.statusbar.BatteryMeterIconView.BatteryStatus.POWER_SAVE     // Catch:{ NoSuchFieldError -> 0x0033 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0033 }
                 r2 = 4
-                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0035 }
-            L_0x0035:
-                int[] r0 = $SwitchMap$com$android$systemui$miui$statusbar$BatteryMeterIconView$BatteryStatus     // Catch:{ NoSuchFieldError -> 0x0040 }
-                com.android.systemui.miui.statusbar.BatteryMeterIconView$BatteryStatus r1 = com.android.systemui.miui.statusbar.BatteryMeterIconView.BatteryStatus.POWER_SAVE_DIGIT     // Catch:{ NoSuchFieldError -> 0x0040 }
-                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0040 }
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0033 }
+            L_0x0033:
+                int[] r0 = $SwitchMap$com$android$systemui$miui$statusbar$BatteryMeterIconView$BatteryStatus     // Catch:{ NoSuchFieldError -> 0x003e }
+                com.android.systemui.miui.statusbar.BatteryMeterIconView$BatteryStatus r1 = com.android.systemui.miui.statusbar.BatteryMeterIconView.BatteryStatus.POWER_SAVE_DIGIT     // Catch:{ NoSuchFieldError -> 0x003e }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x003e }
                 r2 = 5
-                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0040 }
-            L_0x0040:
-                int[] r0 = $SwitchMap$com$android$systemui$miui$statusbar$BatteryMeterIconView$BatteryStatus     // Catch:{ NoSuchFieldError -> 0x004b }
-                com.android.systemui.miui.statusbar.BatteryMeterIconView$BatteryStatus r1 = com.android.systemui.miui.statusbar.BatteryMeterIconView.BatteryStatus.CHARGING     // Catch:{ NoSuchFieldError -> 0x004b }
-                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x004b }
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x003e }
+            L_0x003e:
+                int[] r0 = $SwitchMap$com$android$systemui$miui$statusbar$BatteryMeterIconView$BatteryStatus     // Catch:{ NoSuchFieldError -> 0x0049 }
+                com.android.systemui.miui.statusbar.BatteryMeterIconView$BatteryStatus r1 = com.android.systemui.miui.statusbar.BatteryMeterIconView.BatteryStatus.CHARGING     // Catch:{ NoSuchFieldError -> 0x0049 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0049 }
                 r2 = 6
-                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x004b }
-            L_0x004b:
-                int[] r0 = $SwitchMap$com$android$systemui$miui$statusbar$BatteryMeterIconView$BatteryStatus     // Catch:{ NoSuchFieldError -> 0x0056 }
-                com.android.systemui.miui.statusbar.BatteryMeterIconView$BatteryStatus r1 = com.android.systemui.miui.statusbar.BatteryMeterIconView.BatteryStatus.CHARGING_DIGIT     // Catch:{ NoSuchFieldError -> 0x0056 }
-                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0056 }
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0049 }
+            L_0x0049:
+                int[] r0 = $SwitchMap$com$android$systemui$miui$statusbar$BatteryMeterIconView$BatteryStatus     // Catch:{ NoSuchFieldError -> 0x0054 }
+                com.android.systemui.miui.statusbar.BatteryMeterIconView$BatteryStatus r1 = com.android.systemui.miui.statusbar.BatteryMeterIconView.BatteryStatus.CHARGING_DIGIT     // Catch:{ NoSuchFieldError -> 0x0054 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0054 }
                 r2 = 7
-                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0056 }
-            L_0x0056:
-                int[] r0 = $SwitchMap$com$android$systemui$miui$statusbar$BatteryMeterIconView$BatteryStatus     // Catch:{ NoSuchFieldError -> 0x0062 }
-                com.android.systemui.miui.statusbar.BatteryMeterIconView$BatteryStatus r1 = com.android.systemui.miui.statusbar.BatteryMeterIconView.BatteryStatus.NORMAL     // Catch:{ NoSuchFieldError -> 0x0062 }
-                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0062 }
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0054 }
+            L_0x0054:
+                int[] r0 = $SwitchMap$com$android$systemui$miui$statusbar$BatteryMeterIconView$BatteryStatus     // Catch:{ NoSuchFieldError -> 0x0060 }
+                com.android.systemui.miui.statusbar.BatteryMeterIconView$BatteryStatus r1 = com.android.systemui.miui.statusbar.BatteryMeterIconView.BatteryStatus.NORMAL     // Catch:{ NoSuchFieldError -> 0x0060 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0060 }
                 r2 = 8
-                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0062 }
-            L_0x0062:
-                int[] r0 = $SwitchMap$com$android$systemui$miui$statusbar$BatteryMeterIconView$BatteryStatus     // Catch:{ NoSuchFieldError -> 0x006e }
-                com.android.systemui.miui.statusbar.BatteryMeterIconView$BatteryStatus r1 = com.android.systemui.miui.statusbar.BatteryMeterIconView.BatteryStatus.UNKNOWN     // Catch:{ NoSuchFieldError -> 0x006e }
-                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x006e }
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0060 }
+            L_0x0060:
+                int[] r0 = $SwitchMap$com$android$systemui$miui$statusbar$BatteryMeterIconView$BatteryStatus     // Catch:{ NoSuchFieldError -> 0x006c }
+                com.android.systemui.miui.statusbar.BatteryMeterIconView$BatteryStatus r1 = com.android.systemui.miui.statusbar.BatteryMeterIconView.BatteryStatus.UNKNOWN     // Catch:{ NoSuchFieldError -> 0x006c }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x006c }
                 r2 = 9
-                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x006e }
-            L_0x006e:
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x006c }
+            L_0x006c:
                 return
             */
             throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.miui.statusbar.BatteryMeterIconView.AnonymousClass1.<clinit>():void");

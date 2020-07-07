@@ -42,9 +42,7 @@ public class StatusBarKeyguardViewManager implements RemoteInputController.Callb
     protected final Context mContext;
     private boolean mDeferScrimFadeOut;
     private boolean mDeviceInteractive = false;
-    private boolean mDeviceWillWakeUp;
     private boolean mDozing;
-    private FaceUnlockController mFaceUnlockController;
     /* access modifiers changed from: private */
     public FingerprintUnlockController mFingerprintUnlockController;
     protected boolean mFirstUpdate = true;
@@ -81,6 +79,9 @@ public class StatusBarKeyguardViewManager implements RemoteInputController.Callb
     };
     protected ViewMediatorCallback mViewMediatorCallback;
 
+    public void notifyDeviceWakeUpRequested() {
+    }
+
     public void onRemoteInputSent(NotificationData.Entry entry) {
     }
 
@@ -98,7 +99,6 @@ public class StatusBarKeyguardViewManager implements RemoteInputController.Callb
         this.mContainer = viewGroup;
         this.mScrimController = scrimController;
         this.mFingerprintUnlockController = fingerprintUnlockController;
-        this.mFaceUnlockController = faceUnlockController;
         this.mBouncer = SystemUIFactory.getInstance().createKeyguardBouncer(this.mContext, this.mViewMediatorCallback, this.mLockPatternUtils, viewGroup, dismissCallbackRegistry);
     }
 
@@ -180,7 +180,6 @@ public class StatusBarKeyguardViewManager implements RemoteInputController.Callb
     public void onStartedWakingUp() {
         Trace.beginSection("StatusBarKeyguardViewManager#onStartedWakingUp");
         this.mDeviceInteractive = true;
-        this.mDeviceWillWakeUp = false;
         this.mStatusBar.onStartedWakingUp();
         Trace.endSection();
     }
@@ -220,10 +219,6 @@ public class StatusBarKeyguardViewManager implements RemoteInputController.Callb
     public void onScreenTurnedOff() {
         this.mScreenTurnedOn = false;
         this.mStatusBar.onScreenTurnedOff();
-    }
-
-    public void notifyDeviceWakeUpRequested() {
-        this.mDeviceWillWakeUp = !this.mDeviceInteractive;
     }
 
     public void setNeedsInput(boolean z) {
@@ -271,6 +266,7 @@ public class StatusBarKeyguardViewManager implements RemoteInputController.Callb
 
     public void hide(long j, long j2) {
         long j3;
+        long j4;
         this.mShowing = false;
         long max = Math.max(0, (j - 48) - SystemClock.uptimeMillis());
         this.mStatusBar.onKeyguardDone();
@@ -301,54 +297,54 @@ public class StatusBarKeyguardViewManager implements RemoteInputController.Callb
         boolean isTopActivityLauncher = ((ActivityObserver) Dependency.get(ActivityObserver.class)).isTopActivityLauncher();
         if (z) {
             j3 = 240;
-            max = 0;
+            j4 = 0;
         } else {
             j3 = j2;
+            j4 = max;
         }
-        this.mStatusBar.setKeyguardFadingAway(j, max, j3);
+        long j5 = j3;
+        this.mStatusBar.setKeyguardFadingAway(j, j4, j3);
         this.mFingerprintUnlockController.startKeyguardFadingAway();
         this.mBouncer.hide(true);
         if (z) {
             this.mStatusBarWindowManager.setKeyguardFadingAway(true);
             this.mStatusBar.fadeKeyguardWhilePulsing();
-            animateScrimControllerKeyguardFadingOut(max, j3, new Runnable() {
+            animateScrimControllerKeyguardFadingOut(j4, j5, new Runnable() {
                 public void run() {
                     StatusBarKeyguardViewManager.this.mStatusBar.hideKeyguard();
                 }
             }, false);
-        } else {
-            long j4 = j3;
-            if (!z2 || this.mOccluded || ((MiuiFastUnlockController) Dependency.get(MiuiFastUnlockController.class)).isFastUnlock() || isLegacyKeyguardWallpaper || !isTopActivityLauncher) {
-                this.mFingerprintUnlockController.startKeyguardFadingAway();
-                long j5 = j4;
-                this.mStatusBar.setKeyguardFadingAway(j, max, j4);
-                if (!this.mStatusBar.hideKeyguard()) {
-                    this.mStatusBarWindowManager.setKeyguardFadingAway(true);
-                    if (this.mFingerprintUnlockController.getMode() == 1) {
-                        animateScrimControllerKeyguardFadingOut(0, 0, true);
-                    } else {
-                        animateScrimControllerKeyguardFadingOut(max, j5, false);
-                    }
+        } else if (!z2 || this.mOccluded || ((MiuiFastUnlockController) Dependency.get(MiuiFastUnlockController.class)).isFastUnlock() || isLegacyKeyguardWallpaper || !isTopActivityLauncher) {
+            this.mFingerprintUnlockController.startKeyguardFadingAway();
+            this.mStatusBar.setKeyguardFadingAway(j, j4, j5);
+            if (!this.mStatusBar.hideKeyguard()) {
+                this.mStatusBarWindowManager.setKeyguardFadingAway(true);
+                if (this.mFingerprintUnlockController.getMode() == 1) {
+                    animateScrimControllerKeyguardFadingOut(0, 0, true);
                 } else {
-                    this.mScrimController.animateGoingToFullShade(max, j5);
-                    this.mStatusBar.finishKeyguardFadingAway();
-                    this.mFingerprintUnlockController.finishKeyguardFadingAway();
+                    animateScrimControllerKeyguardFadingOut(j4, j5, false);
                 }
             } else {
-                this.mStatusBarWindowManager.setKeyguardFadingAway(true);
-                this.mStatusBar.setKeyguardFadingAway(j, 350, 0);
-                this.mStatusBar.fadeKeyguardWhenUnlockByFingerprint(new Runnable() {
-                    public final void run() {
-                        StatusBarKeyguardViewManager.this.lambda$hide$0$StatusBarKeyguardViewManager();
-                    }
-                });
+                this.mScrimController.animateGoingToFullShade(j4, j5);
+                this.mStatusBar.finishKeyguardFadingAway();
+                this.mFingerprintUnlockController.finishKeyguardFadingAway();
             }
+        } else {
+            this.mStatusBarWindowManager.setKeyguardFadingAway(true);
+            this.mStatusBar.setKeyguardFadingAway(j, 350, 0);
+            this.mStatusBar.fadeKeyguardWhenUnlockByFingerprint(new Runnable() {
+                public final void run() {
+                    StatusBarKeyguardViewManager.this.lambda$hide$0$StatusBarKeyguardViewManager();
+                }
+            });
         }
         updateStates();
         this.mStatusBarWindowManager.setKeyguardShowing(false);
         this.mViewMediatorCallback.keyguardGone();
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$hide$0 */
     public /* synthetic */ void lambda$hide$0$StatusBarKeyguardViewManager() {
         this.mStatusBar.hideKeyguard();
         animateScrimControllerKeyguardFadingOut(0, 0, false);
@@ -563,7 +559,7 @@ public class StatusBarKeyguardViewManager implements RemoteInputController.Callb
     private void setBackWithVolumeUp(boolean z) {
         if (this.mBackWithVolumeUp != z) {
             this.mBackWithVolumeUp = z;
-            this.mKeyguardMonitor.notifySkipVolumeDialog(this.mBackWithVolumeUp);
+            this.mKeyguardMonitor.notifySkipVolumeDialog(z);
         }
     }
 
@@ -572,12 +568,16 @@ public class StatusBarKeyguardViewManager implements RemoteInputController.Callb
     }
 
     public boolean isSecure(int i) {
-        boolean z = this.mBouncer.isSecure() || UnlockMethodCache.getInstance(this.mContext).isMethodSecure(i);
+        boolean z = false;
+        boolean z2 = this.mBouncer.isSecure() || UnlockMethodCache.getInstance(this.mContext).isMethodSecure(i);
         KeyguardUpdateMonitor instance = KeyguardUpdateMonitor.getInstance(this.mContext);
         if (i != 0 || !FaceUnlockManager.getInstance().isShowMessageWhenFaceUnlockSuccess()) {
-            return z;
+            return z2;
         }
-        return z && !instance.isFaceUnlock();
+        if (z2 && !instance.isFaceUnlock()) {
+            z = true;
+        }
+        return z;
     }
 
     public void keyguardGoingAway() {

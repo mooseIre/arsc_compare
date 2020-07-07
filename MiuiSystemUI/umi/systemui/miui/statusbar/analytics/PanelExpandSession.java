@@ -12,12 +12,11 @@ public class PanelExpandSession {
     public Analytics$CollapseEvent collapseEvent;
     public Analytics$ExpandEvent expandEvent;
     public boolean mChangeBrightness = false;
-    public long mCreateTimeMillis = System.currentTimeMillis();
+    public long mCreateTimeMillis;
     public Analytics$CollapseEvent.ACTION mFistNotiAction = Analytics$CollapseEvent.ACTION.NONE;
     public long mFistNotiActionDuration;
-    public long mFullyExpandedTimeMillis = this.mCreateTimeMillis;
+    public long mFullyExpandedTimeMillis;
     public boolean mIsBackPressed = false;
-    public boolean mIsBlock = false;
     public boolean mIsClick = false;
     public boolean mIsClickQS = false;
     public boolean mIsHomePressed = false;
@@ -25,13 +24,21 @@ public class PanelExpandSession {
     public boolean mIsRemoveAll = false;
     public boolean mOpenQSPanel = false;
     public boolean mScrollMore = false;
-    public boolean mSetImportance = false;
     public Set<String> mVisibleKeys = new HashSet();
+
+    public void markBlock() {
+    }
+
+    public PanelExpandSession() {
+        long currentTimeMillis = System.currentTimeMillis();
+        this.mCreateTimeMillis = currentTimeMillis;
+        this.mFullyExpandedTimeMillis = currentTimeMillis;
+    }
 
     public void start(String str, boolean z, int i) {
         if (this.expandEvent == null) {
-            this.expandEvent = new Analytics$ExpandEvent();
-            Analytics$ExpandEvent analytics$ExpandEvent = this.expandEvent;
+            Analytics$ExpandEvent analytics$ExpandEvent = new Analytics$ExpandEvent();
+            this.expandEvent = analytics$ExpandEvent;
             analytics$ExpandEvent.currentPage = str;
             analytics$ExpandEvent.expandMode = z ? Analytics$ExpandEvent.MODE.MANUAL : Analytics$ExpandEvent.MODE.COMMAND;
             this.expandEvent.notificationsCount = i;
@@ -40,30 +47,32 @@ public class PanelExpandSession {
 
     public void end(boolean z, int i) {
         if (this.collapseEvent == null) {
-            this.collapseEvent = new Analytics$CollapseEvent();
-            this.collapseEvent.collapseMode = getCollapseMode(z);
-            Analytics$CollapseEvent analytics$CollapseEvent = this.collapseEvent;
-            analytics$CollapseEvent.notificationsCount = i;
-            analytics$CollapseEvent.isQsExpanded = this.mOpenQSPanel ? 1 : 0;
-            analytics$CollapseEvent.isClickQsToggle = this.mIsClickQS ? 1 : 0;
-            analytics$CollapseEvent.isSlideBrightnessBar = this.mChangeBrightness ? 1 : 0;
-            analytics$CollapseEvent.isSlideNotificationBar = this.mScrollMore ? 1 : 0;
-            analytics$CollapseEvent.isDeleteNotification = this.mIsRemove ? 1 : 0;
-            analytics$CollapseEvent.residenceTime = System.currentTimeMillis() - this.mCreateTimeMillis;
+            Analytics$CollapseEvent analytics$CollapseEvent = new Analytics$CollapseEvent();
+            this.collapseEvent = analytics$CollapseEvent;
+            analytics$CollapseEvent.collapseMode = getCollapseMode(z);
             Analytics$CollapseEvent analytics$CollapseEvent2 = this.collapseEvent;
-            analytics$CollapseEvent2.fistNotificationAction = this.mFistNotiAction;
-            analytics$CollapseEvent2.fistNotificationActionDuration = this.mFistNotiActionDuration;
-            analytics$CollapseEvent2.notificationVisibleCount = this.mVisibleKeys.size();
+            analytics$CollapseEvent2.notificationsCount = i;
+            analytics$CollapseEvent2.isQsExpanded = this.mOpenQSPanel ? 1 : 0;
+            analytics$CollapseEvent2.isClickQsToggle = this.mIsClickQS ? 1 : 0;
+            analytics$CollapseEvent2.isSlideBrightnessBar = this.mChangeBrightness ? 1 : 0;
+            analytics$CollapseEvent2.isSlideNotificationBar = this.mScrollMore ? 1 : 0;
+            analytics$CollapseEvent2.isDeleteNotification = this.mIsRemove ? 1 : 0;
+            analytics$CollapseEvent2.residenceTime = System.currentTimeMillis() - this.mCreateTimeMillis;
+            Analytics$CollapseEvent analytics$CollapseEvent3 = this.collapseEvent;
+            analytics$CollapseEvent3.fistNotificationAction = this.mFistNotiAction;
+            analytics$CollapseEvent3.fistNotificationActionDuration = this.mFistNotiActionDuration;
+            analytics$CollapseEvent3.notificationVisibleCount = this.mVisibleKeys.size();
         }
     }
 
     public void removeAllNotifications(boolean z, int i, boolean z2) {
         if (this.cancelAllNotiEvent == null) {
-            this.cancelAllNotiEvent = new Analytics$CancelAllNotiEvent();
-            this.cancelAllNotiEvent.clearAllMode = z ? Analytics$CancelAllNotiEvent.MODE.CLEAR_FOLDED : Analytics$CancelAllNotiEvent.MODE.CLEAR_ALL;
-            Analytics$CancelAllNotiEvent analytics$CancelAllNotiEvent = this.cancelAllNotiEvent;
-            analytics$CancelAllNotiEvent.notificationsCount = i;
-            analytics$CancelAllNotiEvent.isSlideNotificationBar = z2 ? 1 : 0;
+            Analytics$CancelAllNotiEvent analytics$CancelAllNotiEvent = new Analytics$CancelAllNotiEvent();
+            this.cancelAllNotiEvent = analytics$CancelAllNotiEvent;
+            analytics$CancelAllNotiEvent.clearAllMode = z ? Analytics$CancelAllNotiEvent.MODE.CLEAR_FOLDED : Analytics$CancelAllNotiEvent.MODE.CLEAR_ALL;
+            Analytics$CancelAllNotiEvent analytics$CancelAllNotiEvent2 = this.cancelAllNotiEvent;
+            analytics$CancelAllNotiEvent2.notificationsCount = i;
+            analytics$CancelAllNotiEvent2.isSlideNotificationBar = z2 ? 1 : 0;
         }
     }
 
@@ -91,10 +100,6 @@ public class PanelExpandSession {
 
     public void markClickQS() {
         this.mIsClickQS = true;
-    }
-
-    public void markBlock() {
-        this.mIsBlock = true;
     }
 
     public void scrollMore() {

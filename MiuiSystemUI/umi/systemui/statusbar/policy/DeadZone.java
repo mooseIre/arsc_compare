@@ -40,13 +40,13 @@ public class DeadZone extends View {
                 ObjectAnimator.ofFloat(DeadZone.this, "flash", new float[]{1.0f, 0.0f}).setDuration(150).start();
             }
         };
+        boolean z = false;
         TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, R$styleable.DeadZone, i, 0);
-        boolean z = true;
         this.mHold = obtainStyledAttributes.getInteger(1, 0);
         this.mDecay = obtainStyledAttributes.getInteger(0, 0);
         this.mSizeMin = obtainStyledAttributes.getDimensionPixelSize(3, 0);
         this.mSizeMax = obtainStyledAttributes.getDimensionPixelSize(2, 0);
-        this.mVertical = obtainStyledAttributes.getInt(4, -1) != 1 ? false : z;
+        this.mVertical = obtainStyledAttributes.getInt(4, -1) == 1 ? true : z;
         setFlashOnTouchCapture(context.getResources().getBoolean(R.bool.config_dead_zone_flash));
     }
 

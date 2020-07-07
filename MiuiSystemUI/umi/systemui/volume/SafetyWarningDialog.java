@@ -15,7 +15,6 @@ public abstract class SafetyWarningDialog extends SystemUIDialog implements Dial
     public static final String TAG = Util.logTag(SafetyWarningDialog.class);
     private final AudioManager mAudioManager;
     private final Context mContext;
-    private boolean mNewVolumeUp;
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             if ("android.intent.action.CLOSE_SYSTEM_DIALOGS".equals(intent.getAction())) {
@@ -27,7 +26,6 @@ public abstract class SafetyWarningDialog extends SystemUIDialog implements Dial
             }
         }
     };
-    private long mShowTime;
 
     /* access modifiers changed from: protected */
     public abstract void cleanUp();
@@ -38,7 +36,7 @@ public abstract class SafetyWarningDialog extends SystemUIDialog implements Dial
         this.mAudioManager = audioManager;
         getWindow().setType(2010);
         setShowForAllUsers(true);
-        setMessage(this.mContext.getString(17041056));
+        setMessage(this.mContext.getString(17041196));
         setButton(-1, this.mContext.getString(17039379), this);
         setButton(-2, this.mContext.getString(17039369), (DialogInterface.OnClickListener) null);
         setOnDismissListener(this);
@@ -46,8 +44,8 @@ public abstract class SafetyWarningDialog extends SystemUIDialog implements Dial
     }
 
     public boolean onKeyDown(int i, KeyEvent keyEvent) {
-        if (i == 24 && keyEvent.getRepeatCount() == 0) {
-            this.mNewVolumeUp = true;
+        if (i == 24) {
+            int repeatCount = keyEvent.getRepeatCount();
         }
         return super.onKeyDown(i, keyEvent);
     }
@@ -59,7 +57,7 @@ public abstract class SafetyWarningDialog extends SystemUIDialog implements Dial
     /* access modifiers changed from: protected */
     public void onStart() {
         super.onStart();
-        this.mShowTime = System.currentTimeMillis();
+        System.currentTimeMillis();
     }
 
     public void onDismiss(DialogInterface dialogInterface) {

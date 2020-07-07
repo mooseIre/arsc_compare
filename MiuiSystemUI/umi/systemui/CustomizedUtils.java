@@ -12,10 +12,12 @@ public class CustomizedUtils {
     private static boolean isCustomized = (Build.IS_CT_CUSTOMIZATION_TEST || Build.IS_CU_CUSTOMIZATION_TEST || Build.IS_CM_CUSTOMIZATION_TEST);
     private static String sLastRegion;
     private static boolean sShowCarrierInHeader;
-    private static final List<String> sShowCarrierRegions = new ArrayList();
+    private static final List<String> sShowCarrierRegions;
 
     static {
-        sShowCarrierRegions.add("TW");
+        ArrayList arrayList = new ArrayList();
+        sShowCarrierRegions = arrayList;
+        arrayList.add("TW");
     }
 
     public static boolean isCarrierInHeaderViewShown() {

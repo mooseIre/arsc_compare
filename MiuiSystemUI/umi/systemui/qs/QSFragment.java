@@ -38,7 +38,6 @@ import com.android.systemui.statusbar.policy.BrightnessMirrorController;
 import com.android.systemui.util.AutoCleanFloatTransitionListener;
 import java.util.Map;
 import miuix.animation.Folme;
-import miuix.animation.IStateStyle;
 
 public class QSFragment extends Fragment implements QS, CommandQueue.Callbacks, SuperSaveModeController.SuperSaveModeChangeListener, OldModeController.OldModeChangeListener {
     private static final boolean DEBUG = Constants.DEBUG;
@@ -230,22 +229,25 @@ public class QSFragment extends Fragment implements QS, CommandQueue.Callbacks, 
         Resources resources = getResources();
         this.mContainer = (QSContainerImpl) view.findViewById(R.id.quick_settings_container);
         this.mContentWithoutHeader = view.findViewById(R.id.qs_container);
-        this.mContent = (QSContent) view.findViewById(R.id.qs_content);
-        this.mContent.setQs(this);
+        QSContent qSContent = (QSContent) view.findViewById(R.id.qs_content);
+        this.mContent = qSContent;
+        qSContent.setQs(this);
         this.mBackground = view.findViewById(R.id.qs_background);
         this.mQuickQSPanel = (QuickQSPanel) view.findViewById(R.id.quick_qs_panel);
         this.mQSPanel = (QSPanel) view.findViewById(R.id.quick_settings_panel);
-        this.mQSDetail = (QSDetail) view.findViewById(R.id.qs_detail);
-        this.mQSDetail.setQsPanel(this.mQSPanel);
+        QSDetail qSDetail = (QSDetail) view.findViewById(R.id.qs_detail);
+        this.mQSDetail = qSDetail;
+        qSDetail.setQsPanel(this.mQSPanel);
         this.mQSDetail.setQs(this);
-        this.mQSCustomizer = (QSCustomizer) view.findViewById(R.id.qs_customize);
-        this.mQSCustomizer.setQsPanel(this.mQSPanel);
+        QSCustomizer qSCustomizer = (QSCustomizer) view.findViewById(R.id.qs_customize);
+        this.mQSCustomizer = qSCustomizer;
+        qSCustomizer.setQsPanel(this.mQSPanel);
         this.mQSCustomizer.setQs(this);
         this.mHeader = (QuickStatusBarHeader) view.findViewById(R.id.header);
         this.mQSFooterBundle = view.findViewById(R.id.qs_footer_bundle);
         this.mGutterHeight = resources.getDimensionPixelSize(R.dimen.qs_gutter_height);
         this.mContentMargin = resources.getDimensionPixelSize(R.dimen.panel_content_margin);
-        this.mStatusBarMinHeight = resources.getDimensionPixelSize(17105478);
+        this.mStatusBarMinHeight = resources.getDimensionPixelSize(17105519);
         if (resources.getBoolean(R.bool.config_showQuickSettingsRow)) {
             this.mQSAnimator = new QSAnimator(this, this.mQuickQSPanel, this.mQSPanel);
         }
@@ -275,14 +277,14 @@ public class QSFragment extends Fragment implements QS, CommandQueue.Callbacks, 
         this.mResolver.registerContentObserver(Settings.System.getUriFor("status_bar_show_network_assistant"), false, this.mShowDataUsageObserver, -1);
         this.mShowDataUsageObserver.onChange(false);
         ((CommandQueue) SystemUI.getComponent(getContext(), CommandQueue.class)).addCallbacks(this);
-        ((SuperSaveModeController) Dependency.get(SuperSaveModeController.class)).addCallback(this);
-        ((OldModeController) Dependency.get(OldModeController.class)).addCallback(this);
+        ((SuperSaveModeController) Dependency.get(SuperSaveModeController.class)).addCallback((SuperSaveModeController.SuperSaveModeChangeListener) this);
+        ((OldModeController) Dependency.get(OldModeController.class)).addCallback((OldModeController.OldModeChangeListener) this);
         ((ControlPanelController) Dependency.get(ControlPanelController.class)).addCallback(this.mUseControlPanelListener);
     }
 
     public void onDestroyView() {
-        ((OldModeController) Dependency.get(OldModeController.class)).removeCallback(this);
-        ((SuperSaveModeController) Dependency.get(SuperSaveModeController.class)).removeCallback(this);
+        ((OldModeController) Dependency.get(OldModeController.class)).removeCallback((OldModeController.OldModeChangeListener) this);
+        ((SuperSaveModeController) Dependency.get(SuperSaveModeController.class)).removeCallback((SuperSaveModeController.SuperSaveModeChangeListener) this);
         ((ControlPanelController) Dependency.get(ControlPanelController.class)).removeCallback(this.mUseControlPanelListener);
         ((CommandQueue) SystemUI.getComponent(getContext(), CommandQueue.class)).removeCallbacks(this);
         this.mResolver.unregisterContentObserver(this.mShowDataUsageObserver);
@@ -458,7 +460,7 @@ public class QSFragment extends Fragment implements QS, CommandQueue.Callbacks, 
             Log.d("QSFragment", "setKeyguardShowing " + z);
         }
         this.mKeyguardShowing = z;
-        if (this.mKeyguardShowing) {
+        if (z) {
             onPanelDisplayChanged(false, true);
         }
         QSAnimator qSAnimator = this.mQSAnimator;
@@ -534,7 +536,7 @@ public class QSFragment extends Fragment implements QS, CommandQueue.Callbacks, 
             float fraction2 = getFraction(0.1f, 1.0f, f3);
             View qsContent = getQsContent();
             qsContent.setTransitionAlpha(fraction2);
-            float f5 = 0.88f + (0.12f * f3);
+            float f5 = (0.12f * f3) + 0.88f;
             if (!Float.isFinite(f5)) {
                 f5 = 1.0f;
             }
@@ -651,7 +653,7 @@ public class QSFragment extends Fragment implements QS, CommandQueue.Callbacks, 
     }
 
     private void animateVisibility(boolean z) {
-        final String str = z ? "QSFragmentAppear" : "QSFragmentDisappear";
+        String str = z ? "QSFragmentAppear" : "QSFragmentDisappear";
         float f = 0.0f;
         float f2 = 1.0f;
         float f3 = z ? 0.0f : 1.0f;
@@ -663,9 +665,7 @@ public class QSFragment extends Fragment implements QS, CommandQueue.Callbacks, 
             f2 = 0.8f;
         }
         Folme.getValueTarget(str).setMinVisibleChange(0.01f, "alpha", "scale");
-        IStateStyle useValue = Folme.useValue(str);
-        useValue.setTo("alpha", Float.valueOf(f3), "scale", Float.valueOf(f4));
-        useValue.addListener(new AutoCleanFloatTransitionListener(str) {
+        Folme.useValue(str).setTo("alpha", Float.valueOf(f3), "scale", Float.valueOf(f4)).addListener(new AutoCleanFloatTransitionListener(str, str) {
             public void onUpdate(Map<String, Float> map) {
                 float floatValue = map.get("alpha").floatValue();
                 float floatValue2 = map.get("scale").floatValue();
@@ -673,9 +673,7 @@ public class QSFragment extends Fragment implements QS, CommandQueue.Callbacks, 
                 QSFragment.this.mContainer.setScaleX(floatValue2);
                 QSFragment.this.mContainer.setScaleY(floatValue2);
             }
-        });
-        useValue.to("alpha", Float.valueOf(f));
-        useValue.to("scale", Float.valueOf(f2));
+        }).to("alpha", Float.valueOf(f)).to("scale", Float.valueOf(f2));
     }
 
     public void updateTopPadding(float f) {

@@ -88,22 +88,22 @@ public class SystemUIFactory {
     }
 
     public void injectDependencies(ArrayMap<Object, Dependency.DependencyProvider> arrayMap, final Context context) {
-        arrayMap.put(ToastOverlayManager.class, new Dependency.DependencyProvider() {
+        arrayMap.put(ToastOverlayManager.class, new Dependency.DependencyProvider(this) {
             public Object createDependency() {
                 return new ToastOverlayManager();
             }
         });
-        arrayMap.put(AppIconsManager.class, new Dependency.DependencyProvider() {
+        arrayMap.put(AppIconsManager.class, new Dependency.DependencyProvider(this) {
             public Object createDependency() {
                 return new AppIconsManager();
             }
         });
-        arrayMap.put(NotificationsMonitor.class, new Dependency.DependencyProvider() {
+        arrayMap.put(NotificationsMonitor.class, new Dependency.DependencyProvider(this) {
             public Object createDependency() {
                 return new NotificationsMonitorImpl();
             }
         });
-        arrayMap.put(ActivityObserver.class, new Dependency.DependencyProvider() {
+        arrayMap.put(ActivityObserver.class, new Dependency.DependencyProvider(this) {
             public Object createDependency() {
                 return new ActivityObserverImpl(context);
             }

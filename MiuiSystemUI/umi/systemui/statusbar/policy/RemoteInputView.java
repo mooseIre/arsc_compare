@@ -79,10 +79,12 @@ public class RemoteInputView extends LinearLayout implements View.OnClickListene
     public void onFinishInflate() {
         super.onFinishInflate();
         this.mProgressBar = (ProgressBar) findViewById(R.id.remote_input_progress);
-        this.mSendButton = (ImageButton) findViewById(R.id.remote_input_send);
-        this.mSendButton.setOnClickListener(this);
-        this.mEditText = (RemoteEditText) getChildAt(0);
-        this.mEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        ImageButton imageButton = (ImageButton) findViewById(R.id.remote_input_send);
+        this.mSendButton = imageButton;
+        imageButton.setOnClickListener(this);
+        RemoteEditText remoteEditText = (RemoteEditText) getChildAt(0);
+        this.mEditText = remoteEditText;
+        remoteEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
                 boolean z = keyEvent == null && (i == 6 || i == 5 || i == 4);
                 boolean z2 = keyEvent != null && KeyEvent.isConfirmKey(keyEvent.getKeyCode()) && keyEvent.getAction() == 0;
@@ -198,7 +200,7 @@ public class RemoteInputView extends LinearLayout implements View.OnClickListene
     public void setRemoteInput(RemoteInput[] remoteInputArr, RemoteInput remoteInput) {
         this.mRemoteInputs = remoteInputArr;
         this.mRemoteInput = remoteInput;
-        this.mEditText.setHint(this.mRemoteInput.getLabel());
+        this.mEditText.setHint(remoteInput.getLabel());
     }
 
     public void focusAnimated() {
@@ -427,8 +429,9 @@ public class RemoteInputView extends LinearLayout implements View.OnClickListene
 
         public void getFocusedRect(Rect rect) {
             super.getFocusedRect(rect);
-            rect.top = this.mScrollY;
-            rect.bottom = this.mScrollY + (this.mBottom - this.mTop);
+            int i = this.mScrollY;
+            rect.top = i;
+            rect.bottom = i + (this.mBottom - this.mTop);
         }
 
         public boolean requestRectangleOnScreen(Rect rect) {

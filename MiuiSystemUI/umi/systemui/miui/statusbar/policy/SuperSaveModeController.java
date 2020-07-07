@@ -1,12 +1,12 @@
 package com.android.systemui.miui.statusbar.policy;
 
+import android.app.ActivityManager;
 import android.content.Context;
 import android.database.ContentObserver;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.Settings;
 import android.util.Log;
-import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.systemui.statusbar.policy.CallbackController;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,12 +27,12 @@ public class SuperSaveModeController implements CallbackController<SuperSaveMode
     public SuperSaveModeController(Context context) {
         this.mContext = context;
         this.mListeners = new ArrayList();
-        Settings.Secure.putIntForUser(this.mContext.getContentResolver(), "shield_super_save_bar", 1, KeyguardUpdateMonitor.getCurrentUser());
+        Settings.Secure.putIntForUser(this.mContext.getContentResolver(), "shield_super_save_bar", 1, ActivityManager.getCurrentUser());
         this.mSuperSaveModeObserver = new ContentObserver(this.mHandler) {
             public void onChange(boolean z) {
                 SuperSaveModeController superSaveModeController = SuperSaveModeController.this;
                 boolean z2 = false;
-                if (Settings.System.getIntForUser(superSaveModeController.mContext.getContentResolver(), "power_supersave_mode_open", 0, KeyguardUpdateMonitor.getCurrentUser()) != 0) {
+                if (Settings.System.getIntForUser(superSaveModeController.mContext.getContentResolver(), "power_supersave_mode_open", 0, ActivityManager.getCurrentUser()) != 0) {
                     z2 = true;
                 }
                 boolean unused = superSaveModeController.mSuperSaveModeOn = z2;

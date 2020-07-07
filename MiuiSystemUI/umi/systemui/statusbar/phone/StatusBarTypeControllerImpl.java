@@ -29,14 +29,14 @@ public class StatusBarTypeControllerImpl implements StatusBarTypeController {
     public DisplayCutout mLastCutout;
     /* access modifiers changed from: private */
     public int mLastRotation;
-    private StatusBarTypeController.CutoutType mPreType;
     private int mScreenWidth;
 
     public StatusBarTypeControllerImpl(@Inject Context context) {
         this.mContext = context;
         DisplayMetrics displayMetrics = new DisplayMetrics();
-        this.mDisplay = ((WindowManager) this.mContext.getSystemService("window")).getDefaultDisplay();
-        this.mDisplay.getRealMetrics(displayMetrics);
+        Display defaultDisplay = ((WindowManager) this.mContext.getSystemService("window")).getDefaultDisplay();
+        this.mDisplay = defaultDisplay;
+        defaultDisplay.getRealMetrics(displayMetrics);
         this.mScreenWidth = displayMetrics.widthPixels;
         this.mDisplay.getDisplayInfo(this.mInfo);
         updateLastRotationAndCutout();
@@ -112,7 +112,6 @@ public class StatusBarTypeControllerImpl implements StatusBarTypeController {
             }
             sb.append(str);
             Log.d(simpleName, sb.toString());
-            this.mPreType = this.mCurrentType;
             this.mCurrentType = cutoutType;
             Iterator<StatusBarTypeController.StatusBarTypeChangeListener> it = this.mChangeListeners.iterator();
             while (it.hasNext()) {

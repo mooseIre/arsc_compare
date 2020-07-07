@@ -33,7 +33,6 @@ import java.util.List;
 import java.util.Map;
 
 public class BluetoothControllerImpl implements BluetoothController, BluetoothCallback, CachedBluetoothDevice.Callback, LocalBluetoothProfileManager.ServiceListener {
-    private static final boolean DEBUG = Log.isLoggable("BluetoothController", 3);
     private final Handler mBgHandler;
     /* access modifiers changed from: private */
     public BluetoothDevice mBluetoothDevice;
@@ -96,6 +95,10 @@ public class BluetoothControllerImpl implements BluetoothController, BluetoothCa
     public void onServiceDisconnected() {
     }
 
+    static {
+        Log.isLoggable("BluetoothController", 3);
+    }
+
     public BluetoothControllerImpl(Context context, Looper looper) {
         this.mContext = context;
         this.mCachedDevices = new ArraySet();
@@ -104,7 +107,7 @@ public class BluetoothControllerImpl implements BluetoothController, BluetoothCa
         this.mBgHandler = new BH(looper);
         LocalBluetoothManager localBluetoothManager = this.mLocalBluetoothManager;
         if (localBluetoothManager != null) {
-            localBluetoothManager.getEventManager();
+            BluetoothControllerHelper.setReceiverHandler(localBluetoothManager.getEventManager(), this.mBgHandler);
             this.mLocalBluetoothManager.getEventManager().registerCallback(this);
             BluetoothControllerHelper.addServiceListener(this.mLocalBluetoothManager.getProfileManager(), this);
             this.mBgHandler.post(new Runnable() {
@@ -210,10 +213,10 @@ public class BluetoothControllerImpl implements BluetoothController, BluetoothCa
 
     public boolean getProfileConnectionState() {
         BluetoothDevice bluetoothDevice = this.mBluetoothDevice;
-        if (bluetoothDevice == null || !bluetoothDevice.isTwsPlusDevice() || this.mBluetoothDevice.getTwsPlusPeerAddress() == null) {
+        if (bluetoothDevice == null || !bluetoothDevice.isTwsPlusDevice() || this.mBluetoothDevice.getTwsPlusPeerAddress() == null || BluetoothAdapter.getDefaultAdapter().getProfileConnectionState(1) != 2) {
             return false;
         }
-        return BluetoothAdapter.getDefaultAdapter().getProfileConnectionState(1) == 2;
+        return true;
     }
 
     public boolean isBluetoothEnabled() {

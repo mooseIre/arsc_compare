@@ -42,8 +42,9 @@ public class EmergencyCryptkeeperText extends TextView {
     /* access modifiers changed from: protected */
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
-        this.mKeyguardUpdateMonitor = KeyguardUpdateMonitor.getInstance(this.mContext);
-        this.mKeyguardUpdateMonitor.registerCallback(this.mCallback);
+        KeyguardUpdateMonitor instance = KeyguardUpdateMonitor.getInstance(this.mContext);
+        this.mKeyguardUpdateMonitor = instance;
+        instance.registerCallback(this.mCallback);
         getContext().registerReceiver(this.mReceiver, new IntentFilter("android.intent.action.AIRPLANE_MODE"));
         update();
     }
@@ -61,29 +62,29 @@ public class EmergencyCryptkeeperText extends TextView {
     public void update() {
         int i = 0;
         boolean isNetworkSupported = ConnectivityManager.from(this.mContext).isNetworkSupported(0);
-        boolean z = Settings.Global.getInt(this.mContext.getContentResolver(), "airplane_mode_on", 0) == 1;
-        if (!isNetworkSupported || z) {
+        boolean z = true;
+        boolean z2 = Settings.Global.getInt(this.mContext.getContentResolver(), "airplane_mode_on", 0) == 1;
+        if (!isNetworkSupported || z2) {
             setText((CharSequence) null);
             setVisibility(8);
             return;
         }
         List<SubscriptionInfo> subscriptionInfo = this.mKeyguardUpdateMonitor.getSubscriptionInfo(false);
         int size = subscriptionInfo.size();
-        boolean z2 = true;
         CharSequence charSequence = null;
         for (int i2 = 0; i2 < size; i2++) {
             IccCardConstants.State simState = this.mKeyguardUpdateMonitor.getSimState(subscriptionInfo.get(i2).getSimSlotIndex());
             CharSequence carrierName = subscriptionInfo.get(i2).getCarrierName();
             if (simState.iccCardExist() && !TextUtils.isEmpty(carrierName)) {
-                z2 = false;
+                z = false;
                 charSequence = carrierName;
             }
         }
-        if (z2) {
+        if (z) {
             if (size != 0) {
                 charSequence = subscriptionInfo.get(0).getCarrierName();
             } else {
-                charSequence = getContext().getText(17039949);
+                charSequence = getContext().getText(17040096);
                 Intent registerReceiver = getContext().registerReceiver((BroadcastReceiver) null, new IntentFilter("android.provider.Telephony.SPN_STRINGS_UPDATED"));
                 if (registerReceiver != null) {
                     charSequence = registerReceiver.getStringExtra("plmn");

@@ -21,8 +21,6 @@ public class KeyguardVerticalMoveHelper {
     private ValueAnimator mAnimator;
     private final Context mContext;
     private MiuiKeyguardFaceUnlockView mFaceUnlockView;
-    private long mInitialDownTime;
-    private float mInitialTouchX;
     private float mInitialTouchY;
     /* access modifiers changed from: private */
     public boolean mIsLockScreenMagazinePreViewVisible;
@@ -33,19 +31,18 @@ public class KeyguardVerticalMoveHelper {
             boolean unused = KeyguardVerticalMoveHelper.this.mIsLockScreenMagazinePreViewVisible = z;
         }
     };
-    private int mKeyguardVerticalGestureSlop;
     private LockScreenMagazinePreView mLockScreenMagazinePreView;
     private View mNotificationStackScroller;
     private NotificationPanelView mPanelView;
-    private int mTouchSlop;
     private boolean mTracking;
     private float mTranslationPer;
     private VelocityTracker mVelocityTracker;
 
     KeyguardVerticalMoveHelper(Context context, NotificationPanelView notificationPanelView, View view, View view2, MiuiKeyguardFaceUnlockView miuiKeyguardFaceUnlockView, LockScreenMagazinePreView lockScreenMagazinePreView) {
         this.mContext = context;
-        this.mKeyguardUpdateMonitor = KeyguardUpdateMonitor.getInstance(this.mContext);
-        this.mKeyguardUpdateMonitor.registerCallback(this.mKeyguardUpdateMonitorCallback);
+        KeyguardUpdateMonitor instance = KeyguardUpdateMonitor.getInstance(context);
+        this.mKeyguardUpdateMonitor = instance;
+        instance.registerCallback(this.mKeyguardUpdateMonitorCallback);
         this.mKeyguardClockView = view;
         this.mNotificationStackScroller = view2;
         this.mPanelView = notificationPanelView;
@@ -55,8 +52,8 @@ public class KeyguardVerticalMoveHelper {
     }
 
     private void initDimens() {
-        this.mTouchSlop = ViewConfiguration.get(this.mContext).getScaledPagingTouchSlop();
-        this.mKeyguardVerticalGestureSlop = this.mContext.getResources().getDimensionPixelSize(R.dimen.keyguard_vertical_gesture_slop);
+        ViewConfiguration.get(this.mContext).getScaledPagingTouchSlop();
+        this.mContext.getResources().getDimensionPixelSize(R.dimen.keyguard_vertical_gesture_slop);
     }
 
     public boolean onTouchEvent(MotionEvent motionEvent) {
@@ -78,9 +75,7 @@ public class KeyguardVerticalMoveHelper {
                         float min = Math.min(f / ((float) (this.mPanelView.getHeight() / 2)), 1.0f);
                         this.mTranslationPer = min;
                         doPanelViewAnimation();
-                        if (KeyguardWallpaperUtils.isWallpaperShouldBlur(this.mContext)) {
-                            ((MiuiKeyguardWallpaperController) Dependency.get(MiuiKeyguardWallpaperController.class)).updateKeyguardRatio(min - 4.0f, 0);
-                        }
+                        ((MiuiKeyguardWallpaperController) Dependency.get(MiuiKeyguardWallpaperController.class)).updateKeyguardRatio(min - 4.0f, 0);
                     }
                 } else if (actionMasked != 3) {
                     if (actionMasked == 5) {
@@ -93,10 +88,9 @@ public class KeyguardVerticalMoveHelper {
             this.mTracking = false;
             endMotionEvent(motionEvent, x, y, false);
         } else {
-            this.mInitialTouchX = x;
             this.mInitialTouchY = y;
             this.mTracking = true;
-            this.mInitialDownTime = SystemClock.uptimeMillis();
+            SystemClock.uptimeMillis();
             initVelocityTracker();
             trackMovement(motionEvent);
         }
@@ -139,8 +133,9 @@ public class KeyguardVerticalMoveHelper {
     }
 
     private void showOrHideKeyguard(boolean z) {
-        this.mAnimator = ValueAnimator.ofFloat(new float[]{this.mTranslationPer, z ? 0.0f : 1.0f});
-        this.mAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+        ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{this.mTranslationPer, z ? 0.0f : 1.0f});
+        this.mAnimator = ofFloat;
+        ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             public final void onAnimationUpdate(ValueAnimator valueAnimator) {
                 KeyguardVerticalMoveHelper.this.lambda$showOrHideKeyguard$0$KeyguardVerticalMoveHelper(valueAnimator);
             }
@@ -150,6 +145,8 @@ public class KeyguardVerticalMoveHelper {
         this.mAnimator.start();
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$showOrHideKeyguard$0 */
     public /* synthetic */ void lambda$showOrHideKeyguard$0$KeyguardVerticalMoveHelper(ValueAnimator valueAnimator) {
         this.mTranslationPer = ((Float) valueAnimator.getAnimatedValue()).floatValue();
         doPanelViewAnimation();
@@ -158,11 +155,9 @@ public class KeyguardVerticalMoveHelper {
     private void doPanelViewAnimation() {
         float f = this.mTranslationPer;
         float f2 = 1.0f - ((1.0f - f) * (1.0f - f));
-        if (!this.mPanelView.isForceBlack()) {
-            float f3 = 1.0f - (0.1f * f2);
-            this.mPanelView.setScaleX(f3);
-            this.mPanelView.setScaleY(f3);
-        }
+        float f3 = 1.0f - (0.1f * f2);
+        this.mPanelView.setScaleX(f3);
+        this.mPanelView.setScaleY(f3);
         this.mPanelView.setTransitionAlpha(1.0f - f2);
     }
 

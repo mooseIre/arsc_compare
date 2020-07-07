@@ -226,12 +226,12 @@ public class FsGestureBackDemoActivity extends FsGestureDemoBaseActiivy {
         this.mDisplayWidth = displayMetrics.widthPixels;
         this.mDisplayHeight = displayMetrics.heightPixels;
         Intent intent = getIntent();
-        this.demoType = intent.getStringExtra("DEMO_TYPE");
-        String str = this.demoType;
-        if (str == null) {
-            str = "DEMO_FULLY_SHOW";
+        String stringExtra = intent.getStringExtra("DEMO_TYPE");
+        this.demoType = stringExtra;
+        if (stringExtra == null) {
+            stringExtra = "DEMO_FULLY_SHOW";
         }
-        this.demoType = str;
+        this.demoType = stringExtra;
         this.mStatus = intent.getIntExtra("DEMO_STEP", 1);
         this.isFromPro = intent.getBooleanExtra("IS_FROM_PROVISION", false);
         initView();
@@ -241,8 +241,9 @@ public class FsGestureBackDemoActivity extends FsGestureDemoBaseActiivy {
     private void initView() {
         RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.root_view);
         this.mBgView = findViewById(R.id.bg_view);
-        this.mDemoActivityView = findViewById(R.id.demo_activity);
-        this.mDemoActivityView.setOnTouchListener(this.mDemoActivityTouchListener);
+        View findViewById = findViewById(R.id.demo_activity);
+        this.mDemoActivityView = findViewById;
+        findViewById.setOnTouchListener(this.mDemoActivityTouchListener);
         this.mFsGestureDemoTitleView = (FsGestureDemoTitleView) findViewById(R.id.fsgesture_title_view);
         if (TextUtils.getLayoutDirectionFromLocale(Locale.getDefault()) == 1) {
             this.mFsGestureDemoTitleView.setRTLParams();
@@ -268,8 +269,9 @@ public class FsGestureBackDemoActivity extends FsGestureDemoBaseActiivy {
         if (this.mStatus != 1) {
             i = 1;
         }
-        this.mBackArrowView = new GestureBackArrowView(this, i);
-        this.mBackArrowView.setDisplayWidth(this.mDisplayWidth);
+        GestureBackArrowView gestureBackArrowView = new GestureBackArrowView(this, i);
+        this.mBackArrowView = gestureBackArrowView;
+        gestureBackArrowView.setDisplayWidth(this.mDisplayWidth);
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(this.mDisplayWidth, this.mDisplayHeight);
         layoutParams.addRule(12);
         layoutParams.addRule(this.mStatus == 1 ? 9 : 11);

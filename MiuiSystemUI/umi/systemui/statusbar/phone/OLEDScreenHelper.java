@@ -93,7 +93,7 @@ public class OLEDScreenHelper {
     public void setStatusBarView(View view) {
         if (Constants.IS_OLED_SCREEN) {
             this.mStatusBarView = view;
-            this.mStatusBarView.post(new Runnable() {
+            view.post(new Runnable() {
                 public final void run() {
                     OLEDScreenHelper.this.lambda$setStatusBarView$0$OLEDScreenHelper();
                 }
@@ -101,6 +101,8 @@ public class OLEDScreenHelper {
         }
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$setStatusBarView$0 */
     public /* synthetic */ void lambda$setStatusBarView$0$OLEDScreenHelper() {
         ((View) this.mStatusBarView.getParent()).setTouchDelegate(new FullTouchDelegate(this.mStatusBarView));
     }

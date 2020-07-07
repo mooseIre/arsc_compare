@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PipControlsView extends LinearLayout {
-    private static final String TAG = "PipControlsView";
+    private static final String TAG = PipControlsView.class.getSimpleName();
     private PipControlButtonView mCloseButtonView;
     private List<RemoteAction> mCustomActions;
     private ArrayList<PipControlButtonView> mCustomButtonViews;
@@ -79,8 +79,9 @@ public class PipControlsView extends LinearLayout {
                 }
             }
         };
-        this.mLayoutInflater = (LayoutInflater) getContext().getSystemService("layout_inflater");
-        this.mLayoutInflater.inflate(R.layout.tv_pip_controls, this);
+        LayoutInflater layoutInflater = (LayoutInflater) getContext().getSystemService("layout_inflater");
+        this.mLayoutInflater = layoutInflater;
+        layoutInflater.inflate(R.layout.tv_pip_controls, this);
         this.mHandler = new Handler();
         setOrientation(0);
         setGravity(49);
@@ -88,15 +89,17 @@ public class PipControlsView extends LinearLayout {
 
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mFullButtonView = (PipControlButtonView) findViewById(R.id.full_button);
-        this.mFullButtonView.setOnFocusChangeListener(this.mFocusChangeListener);
+        PipControlButtonView pipControlButtonView = (PipControlButtonView) findViewById(R.id.full_button);
+        this.mFullButtonView = pipControlButtonView;
+        pipControlButtonView.setOnFocusChangeListener(this.mFocusChangeListener);
         this.mFullButtonView.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 PipControlsView.this.mPipManager.movePipToFullscreen();
             }
         });
-        this.mCloseButtonView = (PipControlButtonView) findViewById(R.id.close_button);
-        this.mCloseButtonView.setOnFocusChangeListener(this.mFocusChangeListener);
+        PipControlButtonView pipControlButtonView2 = (PipControlButtonView) findViewById(R.id.close_button);
+        this.mCloseButtonView = pipControlButtonView2;
+        pipControlButtonView2.setOnFocusChangeListener(this.mFocusChangeListener);
         this.mCloseButtonView.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 PipControlsView.this.mPipManager.closePip();
@@ -105,8 +108,9 @@ public class PipControlsView extends LinearLayout {
                 }
             }
         });
-        this.mPlayPauseButtonView = (PipControlButtonView) findViewById(R.id.play_pause_button);
-        this.mPlayPauseButtonView.setOnFocusChangeListener(this.mFocusChangeListener);
+        PipControlButtonView pipControlButtonView3 = (PipControlButtonView) findViewById(R.id.play_pause_button);
+        this.mPlayPauseButtonView = pipControlButtonView3;
+        pipControlButtonView3.setOnFocusChangeListener(this.mFocusChangeListener);
         this.mPlayPauseButtonView.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 if (PipControlsView.this.mMediaController != null && PipControlsView.this.mMediaController.getPlaybackState() != null) {
@@ -146,9 +150,8 @@ public class PipControlsView extends LinearLayout {
                 mediaController2.unregisterCallback(this.mMediaControllerCallback);
             }
             this.mMediaController = mediaController;
-            MediaController mediaController3 = this.mMediaController;
-            if (mediaController3 != null) {
-                mediaController3.registerCallback(this.mMediaControllerCallback);
+            if (mediaController != null) {
+                mediaController.registerCallback(this.mMediaControllerCallback);
             }
             updateUserActions();
         }
@@ -179,7 +182,7 @@ public class PipControlsView extends LinearLayout {
                 pipControlButtonView2.setText(remoteAction.getContentDescription());
                 if (remoteAction.isEnabled()) {
                     pipControlButtonView2.setOnClickListener(new View.OnClickListener(remoteAction) {
-                        private final /* synthetic */ RemoteAction f$0;
+                        public final /* synthetic */ RemoteAction f$0;
 
                         {
                             this.f$0 = r1;

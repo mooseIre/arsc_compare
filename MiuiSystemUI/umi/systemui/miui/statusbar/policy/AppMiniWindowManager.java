@@ -33,7 +33,6 @@ import android.view.VelocityTracker;
 import android.view.ViewConfiguration;
 import android.view.WindowManager;
 import com.android.systemui.Dependency;
-import com.android.systemui.Gefingerpoken;
 import com.android.systemui.Interpolators;
 import com.android.systemui.Logger;
 import com.android.systemui.SystemUICompat;
@@ -63,11 +62,10 @@ import miui.process.IForegroundWindowListener;
 import miui.process.ProcessManager;
 import miui.view.MiuiHapticFeedbackConstants;
 import miuix.animation.Folme;
-import miuix.animation.IStateStyle;
 import miuix.animation.listener.TransitionListener;
 import miuix.animation.listener.UpdateInfo;
 
-public class AppMiniWindowManager implements Gefingerpoken, ConfigurationController.ConfigurationListener, OnHeadsUpChangedListener {
+public class AppMiniWindowManager implements ConfigurationController.ConfigurationListener, OnHeadsUpChangedListener {
     private static final int SCREEN_HEIGHT = Resources.getSystem().getDisplayMetrics().heightPixels;
     private boolean mAnimationStart;
     /* access modifiers changed from: private */
@@ -168,7 +166,7 @@ public class AppMiniWindowManager implements Gefingerpoken, ConfigurationControl
 
     public void setHeadsUpManager(HeadsUpManager headsUpManager) {
         this.mHeadsUpManager = headsUpManager;
-        this.mHeadsUpManager.addListener(this);
+        headsUpManager.addListener(this);
     }
 
     public boolean isStartingActivity() {
@@ -208,7 +206,7 @@ public class AppMiniWindowManager implements Gefingerpoken, ConfigurationControl
             this.mInitialTouchY = y;
             updatePinnedNotificationBounds();
             this.mTouchingIndicator = this.mPinnedNotificationBounds.contains((int) x, (int) y);
-        } else if (actionMasked != 1 && actionMasked == 2) {
+        } else if (actionMasked == 2) {
             float f = x - this.mInitialTouchX;
             float f2 = y - this.mInitialTouchY;
             boolean isSlideAvailable = isSlideAvailable();
@@ -224,7 +222,7 @@ public class AppMiniWindowManager implements Gefingerpoken, ConfigurationControl
     }
 
     /* JADX WARNING: Code restructure failed: missing block: B:8:0x0046, code lost:
-        if (r9 != 3) goto L_0x00e8;
+        if (r9 != 3) goto L_0x00d2;
      */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     public boolean onTouchEvent(android.view.MotionEvent r9) {
@@ -255,21 +253,21 @@ public class AppMiniWindowManager implements Gefingerpoken, ConfigurationControl
             java.lang.String r5 = "AppMiniWindowManager"
             android.util.Log.d(r5, r4)
             int r9 = r9.getActionMasked()
-            if (r9 == 0) goto L_0x00e4
+            if (r9 == 0) goto L_0x00ce
             r4 = 3000(0xbb8, double:1.482E-320)
             r0 = 0
-            if (r9 == r6) goto L_0x0093
+            if (r9 == r6) goto L_0x0088
             if (r9 == r7) goto L_0x004a
-            if (r9 == r3) goto L_0x0093
-            goto L_0x00e8
+            if (r9 == r3) goto L_0x0088
+            goto L_0x00d2
         L_0x004a:
             float r9 = r8.mInterceptedY
             float r2 = r2 - r9
             float r9 = java.lang.Math.max(r0, r2)
             boolean r0 = r8.mTracking
-            if (r0 == 0) goto L_0x00e8
+            if (r0 == 0) goto L_0x00d2
             boolean r0 = r8.mAnimationStart
-            if (r0 != 0) goto L_0x00e8
+            if (r0 != 0) goto L_0x00d2
             android.graphics.Rect r0 = r8.mPinnedNotificationBounds
             int r0 = r0.height()
             int r2 = SCREEN_HEIGHT
@@ -283,26 +281,22 @@ public class AppMiniWindowManager implements Gefingerpoken, ConfigurationControl
             boolean r0 = r8.mIsPortrait
             if (r0 == 0) goto L_0x0078
             int r0 = r8.mTriggerHeightPortrait
-            if (r9 <= r0) goto L_0x00e8
+            if (r9 <= r0) goto L_0x00d2
             goto L_0x007c
         L_0x0078:
             int r0 = r8.mTriggerHeightHorizontal
-            if (r9 <= r0) goto L_0x00e8
+            if (r9 <= r0) goto L_0x00d2
         L_0x007c:
             r8.startEnterAnimation()
             r8.startFreeFormActivity()
-            java.lang.Class<com.android.systemui.miui.statusbar.analytics.SystemUIStat> r9 = com.android.systemui.miui.statusbar.analytics.SystemUIStat.class
-            java.lang.Object r9 = com.android.systemui.Dependency.get(r9)
-            com.android.systemui.miui.statusbar.analytics.SystemUIStat r9 = (com.android.systemui.miui.statusbar.analytics.SystemUIStat) r9
-            r9.handleFreeformEventDistance()
             android.os.Handler r9 = r8.mHandler
             r9.sendEmptyMessageDelayed(r6, r4)
-            goto L_0x00e8
-        L_0x0093:
+            goto L_0x00d2
+        L_0x0088:
             boolean r9 = r8.mTracking
-            if (r9 == 0) goto L_0x00d6
+            if (r9 == 0) goto L_0x00c0
             boolean r9 = r8.mAnimationStart
-            if (r9 != 0) goto L_0x00d6
+            if (r9 != 0) goto L_0x00c0
             float r9 = r8.mInterceptedY
             float r2 = r2 - r9
             float r9 = java.lang.Math.max(r0, r2)
@@ -316,30 +310,26 @@ public class AppMiniWindowManager implements Gefingerpoken, ConfigurationControl
             float r0 = r0.getYVelocity(r1)
             r2 = 1148846080(0x447a0000, float:1000.0)
             int r0 = (r0 > r2 ? 1 : (r0 == r2 ? 0 : -1))
-            if (r0 <= 0) goto L_0x00d6
+            if (r0 <= 0) goto L_0x00c0
             int r0 = r8.mTriggerHeightMin
-            if (r9 <= r0) goto L_0x00d6
+            if (r9 <= r0) goto L_0x00c0
             r8.startEnterAnimation()
             r8.startFreeFormActivity()
-            java.lang.Class<com.android.systemui.miui.statusbar.analytics.SystemUIStat> r9 = com.android.systemui.miui.statusbar.analytics.SystemUIStat.class
-            java.lang.Object r9 = com.android.systemui.Dependency.get(r9)
-            com.android.systemui.miui.statusbar.analytics.SystemUIStat r9 = (com.android.systemui.miui.statusbar.analytics.SystemUIStat) r9
-            r9.handleFreeformEventSpeed()
             android.os.Handler r9 = r8.mHandler
             r9.sendEmptyMessageDelayed(r6, r4)
-        L_0x00d6:
+        L_0x00c0:
             boolean r9 = r8.mAnimationStart
-            if (r9 != 0) goto L_0x00dd
+            if (r9 != 0) goto L_0x00c7
             r8.startExitAnimation()
-        L_0x00dd:
+        L_0x00c7:
             boolean r9 = r8.mInterceptTouch
-            if (r9 == 0) goto L_0x00e8
+            if (r9 == 0) goto L_0x00d2
             r8.mInterceptTouch = r1
             return r6
-        L_0x00e4:
+        L_0x00ce:
             r8.mInitialTouchX = r0
             r8.mInitialTouchY = r2
-        L_0x00e8:
+        L_0x00d2:
             boolean r8 = r8.mInterceptTouch
             return r8
         */
@@ -347,12 +337,14 @@ public class AppMiniWindowManager implements Gefingerpoken, ConfigurationControl
     }
 
     private void startFreeFormActivity() {
+        Boolean bool = Boolean.FALSE;
+        Class cls = Boolean.TYPE;
         try {
-            ActivityOptions activityOptions = (ActivityOptions) callStaticObjectMethod(Class.forName("android.util.MiuiMultiWindowUtils"), ActivityOptions.class, "getActivityOptions", new Class[]{Context.class, String.class, Boolean.TYPE, Boolean.TYPE}, this.mContext, this.mIntent.getCreatorPackage(), true, false);
+            ActivityOptions activityOptions = (ActivityOptions) callStaticObjectMethod(Class.forName("android.util.MiuiMultiWindowUtils"), ActivityOptions.class, "getActivityOptions", new Class[]{Context.class, String.class, cls, cls}, this.mContext, this.mIntent.getCreatorPackage(), Boolean.TRUE, bool);
             if (activityOptions != null) {
                 Method isMethodExist = isMethodExist(activityOptions, "getActivityOptionsInjector", (Object[]) null);
                 if (isMethodExist != null) {
-                    invoke(isMethodExist.invoke(activityOptions, new Object[0]), "setFreeformAnimation", false);
+                    invoke(isMethodExist.invoke(activityOptions, new Object[0]), "setFreeformAnimation", bool);
                 }
                 Intent intent = new Intent();
                 if (!"com.tencent.tim".equals(this.mIntent.getCreatorPackage())) {
@@ -405,12 +397,13 @@ public class AppMiniWindowManager implements Gefingerpoken, ConfigurationControl
         float f = (float) (i3 + i2);
         float f2 = (float) i;
         float f3 = (f - f2) / f;
+        float f4 = 1.0f;
         if (f3 > 1.0f) {
             f3 = 1.0f;
         }
-        float f4 = (f2 - f) / f;
-        if (f4 > 1.0f) {
-            f4 = 1.0f;
+        float f5 = (f2 - f) / f;
+        if (f5 <= 1.0f) {
+            f4 = f5;
         }
         this.mContainer.applyAlpha(f3, f4);
     }
@@ -430,18 +423,16 @@ public class AppMiniWindowManager implements Gefingerpoken, ConfigurationControl
         }
         if (z && (expandableNotificationRow = this.mHeadsUp) != null) {
             this.mScaleX = expandableNotificationRow.getScaleX();
-            this.mScaleY = this.mHeadsUp.getScaleY();
-            if (this.mScaleX < 1.0f || this.mScaleY < 1.0f) {
-                IStateStyle useValue = Folme.useValue(new Object[0]);
-                useValue.setTo("scaleX", Float.valueOf(this.mScaleX), "scaleY", Float.valueOf(this.mScaleY));
-                useValue.addListener(new MultiFloatTransitionListener() {
+            float scaleY = this.mHeadsUp.getScaleY();
+            this.mScaleY = scaleY;
+            if (this.mScaleX < 1.0f || scaleY < 1.0f) {
+                Folme.useValue(new Object[0]).setTo("scaleX", Float.valueOf(this.mScaleX), "scaleY", Float.valueOf(this.mScaleY)).addListener(new MultiFloatTransitionListener() {
                     /* access modifiers changed from: package-private */
                     public void onUpdate(Map<String, Float> map) {
                         float unused = AppMiniWindowManager.this.mScaleX = map.get("scaleX").floatValue();
                         float unused2 = AppMiniWindowManager.this.mScaleY = map.get("scaleY").floatValue();
                     }
-                });
-                useValue.to("scaleX", 1, "scaleY", 1);
+                }).to("scaleX", 1, "scaleY", 1);
             }
         }
     }
@@ -455,8 +446,8 @@ public class AppMiniWindowManager implements Gefingerpoken, ConfigurationControl
         ofFloat.setDuration(300);
         ofFloat.setInterpolator(Interpolators.DECELERATE_CUBIC);
         ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener(rect, freeformRect) {
-            private final /* synthetic */ Rect f$1;
-            private final /* synthetic */ Rect f$2;
+            public final /* synthetic */ Rect f$1;
+            public final /* synthetic */ Rect f$2;
 
             {
                 this.f$1 = r2;
@@ -471,6 +462,8 @@ public class AppMiniWindowManager implements Gefingerpoken, ConfigurationControl
         ofFloat.start();
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$startEnterAnimation$0 */
     public /* synthetic */ void lambda$startEnterAnimation$0$AppMiniWindowManager(Rect rect, Rect rect2, ValueAnimator valueAnimator) {
         float floatValue = ((Float) valueAnimator.getAnimatedValue()).floatValue();
         Rect rect3 = this.mStubBounds;
@@ -515,6 +508,8 @@ public class AppMiniWindowManager implements Gefingerpoken, ConfigurationControl
         ofInt.start();
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$startExitAnimation$1 */
     public /* synthetic */ void lambda$startExitAnimation$1$AppMiniWindowManager(ValueAnimator valueAnimator) {
         setHeightInternal(((Integer) valueAnimator.getAnimatedValue()).intValue());
     }
@@ -552,6 +547,8 @@ public class AppMiniWindowManager implements Gefingerpoken, ConfigurationControl
         ofFloat.start();
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$hideNotification$2 */
     public /* synthetic */ void lambda$hideNotification$2$AppMiniWindowManager(ValueAnimator valueAnimator) {
         this.mContainer.setAlpha(1.0f - ((Float) valueAnimator.getAnimatedValue()).floatValue());
     }
@@ -571,7 +568,7 @@ public class AppMiniWindowManager implements Gefingerpoken, ConfigurationControl
         ExpandableNotificationRow expandableNotificationRow2 = this.mHeadsUp;
         if (expandableNotificationRow2 == null || !expandableNotificationRow2.isHiddenForAnimation()) {
             this.mHeadsUp = expandableNotificationRow;
-            if (this.mHeadsUp == this.mPendingHeadsUp) {
+            if (expandableNotificationRow == this.mPendingHeadsUp) {
                 this.mPendingHeadsUp = null;
             } else {
                 ProcessManager.registerForegroundWindowListener(this.mWindowListener);
@@ -606,14 +603,18 @@ public class AppMiniWindowManager implements Gefingerpoken, ConfigurationControl
     /* access modifiers changed from: private */
     public void updateMiniWindowBar(boolean z) {
         ExpandableNotificationRow expandableNotificationRow = this.mHeadsUp;
-        if (expandableNotificationRow != null) {
-            expandableNotificationRow.setMiniBarVisible(z);
+        if (expandableNotificationRow != null && expandableNotificationRow.getMiniWindowBar() != null) {
+            if (z) {
+                this.mHeadsUp.getMiniWindowBar().setVisibility(0);
+            } else {
+                this.mHeadsUp.getMiniWindowBar().setVisibility(8);
+            }
         }
     }
 
     public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
         printWriter.println("AppMiniWindowManager state:");
-        printWriter.println("  mTracking=" + this.mTracking + " mHasFreeformFeature=" + this.mHasFreeformFeature);
+        printWriter.println("  mTracking=" + this.mTracking);
     }
 
     public boolean canNotificationSlide(Context context, ExpandableNotificationRow expandableNotificationRow) {
@@ -767,6 +768,8 @@ public class AppMiniWindowManager implements Gefingerpoken, ConfigurationControl
             onUpdate(this.mCurrentInfo);
         }
 
+        /* access modifiers changed from: private */
+        /* renamed from: lambda$onUpdate$0 */
         public /* synthetic */ void lambda$onUpdate$0$AppMiniWindowManager$MultiFloatTransitionListener(UpdateInfo updateInfo) {
             this.mCurrentInfo.put(updateInfo.property.getName(), Float.valueOf(updateInfo.getFloatValue()));
         }

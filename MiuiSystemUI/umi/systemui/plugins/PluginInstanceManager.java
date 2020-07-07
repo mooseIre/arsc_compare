@@ -6,6 +6,7 @@ import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.content.pm.ServiceInfo;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -230,8 +231,9 @@ public class PluginInstanceManager<T extends Plugin> {
             }
             List<ResolveInfo> queryIntentServices = PluginInstanceManager.this.mPm.queryIntentServices(intent, 0);
             if (queryIntentServices.size() <= 1 || PluginInstanceManager.this.mAllowMultiple) {
-                for (ResolveInfo next : queryIntentServices) {
-                    PluginInfo handleLoadPlugin = handleLoadPlugin(new ComponentName(next.serviceInfo.packageName, next.serviceInfo.name));
+                for (ResolveInfo resolveInfo : queryIntentServices) {
+                    ServiceInfo serviceInfo = resolveInfo.serviceInfo;
+                    PluginInfo handleLoadPlugin = handleLoadPlugin(new ComponentName(serviceInfo.packageName, serviceInfo.name));
                     if (handleLoadPlugin != null) {
                         this.mPlugins.add(handleLoadPlugin);
                         PluginInstanceManager.this.mMainHandler.obtainMessage(1, handleLoadPlugin).sendToTarget();

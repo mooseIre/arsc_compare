@@ -39,7 +39,6 @@ import com.android.systemui.statusbar.phone.StatusBarTypeController;
 import com.android.systemui.statusbar.policy.DarkIconDispatcher;
 import com.android.systemui.statusbar.policy.DarkIconDispatcherHelper;
 import com.android.systemui.statusbar.policy.DemoModeController;
-import com.android.systemui.statusbar.policy.FiveGController;
 import com.android.systemui.statusbar.policy.HotspotController;
 import com.android.systemui.statusbar.policy.NetworkController;
 import com.android.systemui.statusbar.policy.SecurityController;
@@ -73,16 +72,12 @@ public class SignalClusterView extends LinearLayout implements NetworkController
     ImageView mDemoMobileSignal;
     private boolean mDemoMode;
     String[] mDualSignalDescription;
-    private final int mEndPadding;
-    private final int mEndPaddingNothingVisible;
     ImageView mEthernet;
     private boolean mEthernetAble;
     private String mEthernetDescription;
     private int mEthernetIconId;
     private boolean mEthernetVisible;
     private int mFilterColor;
-    /* access modifiers changed from: private */
-    public FiveGController mFiveGController;
     private boolean mForceBlockWifi;
     /* access modifiers changed from: private */
     public boolean mHideVolte;
@@ -98,9 +93,7 @@ public class SignalClusterView extends LinearLayout implements NetworkController
     private int mLastWifiActivityId;
     private int mLastWifiBadgeId;
     private int mLastWifiStrengthId;
-    private final int mMobileDataIconStartPadding;
     LinearLayout[] mMobileSignalGroup;
-    private final int mMobileSignalGroupEndPadding;
     /* access modifiers changed from: private */
     public final NetworkController mNetworkController;
     ImageView mNoSims;
@@ -113,8 +106,6 @@ public class SignalClusterView extends LinearLayout implements NetworkController
     private boolean mNotchEarDualEnable;
     /* access modifiers changed from: private */
     public ArrayList<PhoneState> mPhoneStates;
-    private boolean mReadIconsFromXML;
-    private final int mSecondaryTelephonyPadding;
     private final SecurityController mSecurityController;
     /* access modifiers changed from: private */
     public boolean mShowHDIcon;
@@ -137,10 +128,8 @@ public class SignalClusterView extends LinearLayout implements NetworkController
     private boolean mVpnEnableInEar;
     /* access modifiers changed from: private */
     public boolean mVpnVisible;
-    private final int mWideTypeIconStartPadding;
     ImageView mWifi;
     ImageView mWifiActivity;
-    private boolean mWifiActivityEnabled;
     ImageView mWifiAp;
     ImageView mWifiApConnectMark;
     private int mWifiBadgeId;
@@ -212,26 +201,26 @@ public class SignalClusterView extends LinearLayout implements NetworkController
         Resources resources = getResources();
         this.mHideVolte = resources.getBoolean(R.bool.status_bar_hide_volte);
         this.mShowHDIcon = resources.getBoolean(R.bool.status_bar_show_hd_icon);
-        this.mMobileSignalGroupEndPadding = resources.getDimensionPixelSize(R.dimen.mobile_signal_group_end_padding);
-        this.mMobileDataIconStartPadding = resources.getDimensionPixelSize(R.dimen.mobile_data_icon_start_padding);
-        this.mWideTypeIconStartPadding = resources.getDimensionPixelSize(R.dimen.wide_type_icon_start_padding);
-        this.mSecondaryTelephonyPadding = resources.getDimensionPixelSize(R.dimen.secondary_telephony_padding);
-        this.mEndPadding = resources.getDimensionPixelSize(R.dimen.signal_cluster_battery_padding);
-        this.mEndPaddingNothingVisible = resources.getDimensionPixelSize(R.dimen.no_signal_cluster_battery_padding);
+        resources.getDimensionPixelSize(R.dimen.mobile_signal_group_end_padding);
+        resources.getDimensionPixelSize(R.dimen.mobile_data_icon_start_padding);
+        resources.getDimensionPixelSize(R.dimen.wide_type_icon_start_padding);
+        resources.getDimensionPixelSize(R.dimen.secondary_telephony_padding);
+        resources.getDimensionPixelSize(R.dimen.signal_cluster_battery_padding);
+        resources.getDimensionPixelSize(R.dimen.no_signal_cluster_battery_padding);
         TypedValue typedValue = new TypedValue();
         resources.getValue(R.dimen.status_bar_icon_scale_factor, typedValue, true);
         this.mIconScaleFactor = typedValue.getFloat();
         this.mNetworkController = (NetworkController) Dependency.get(NetworkController.class);
         this.mSecurityController = (SecurityController) Dependency.get(SecurityController.class);
-        this.mFiveGController = (FiveGController) Dependency.get(FiveGController.class);
         addOnAttachStateChangeListener(new DisableStateTracker(0, 2));
         updateActivityEnabled();
-        this.mReadIconsFromXML = resources.getBoolean(R.bool.config_read_icons_from_xml);
+        resources.getBoolean(R.bool.config_read_icons_from_xml);
         this.mHotspot = (HotspotController) Dependency.get(HotspotController.class);
         this.mController = StatusBarFactory.getInstance().getSignalClusterViewController(getContext());
         updateSwitches();
-        this.mDarkIconDispatcher = (DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class);
-        this.mDarkIconDispatcher.applyDark(this);
+        DarkIconDispatcher darkIconDispatcher = (DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class);
+        this.mDarkIconDispatcher = darkIconDispatcher;
+        darkIconDispatcher.applyDark(this);
     }
 
     public void onTuningChanged(String str, String str2) {
@@ -273,8 +262,9 @@ public class SignalClusterView extends LinearLayout implements NetworkController
         this.mMobileSignalGroup[0] = (LinearLayout) findViewById(R.id.mobile_signal_group_0);
         this.mMobileSignalGroup[1] = (LinearLayout) findViewById(R.id.mobile_signal_group_1);
         this.mWifiApConnectMark = (ImageView) findViewById(R.id.wifi_ap_connect_mark);
-        this.mSignalDualNotchGroup = (ViewGroup) findViewById(R.id.mobile_signal_group_dual_notch);
-        this.mSignalDualNotchMobile = (ImageView) this.mSignalDualNotchGroup.findViewById(R.id.notch_mobile_signal);
+        ViewGroup viewGroup = (ViewGroup) findViewById(R.id.mobile_signal_group_dual_notch);
+        this.mSignalDualNotchGroup = viewGroup;
+        this.mSignalDualNotchMobile = (ImageView) viewGroup.findViewById(R.id.notch_mobile_signal);
         this.mSignalDualNotchMobile2 = (ImageView) this.mSignalDualNotchGroup.findViewById(R.id.notch_mobile_signal2);
         this.mSignalDualNotchMobileVoice = (TextView) this.mSignalDualNotchGroup.findViewById(R.id.carrier);
         this.mSignalDualNotchMobileType = (TextView) this.mSignalDualNotchGroup.findViewById(R.id.mobile_type);
@@ -292,10 +282,8 @@ public class SignalClusterView extends LinearLayout implements NetworkController
 
     private void maybeScaleVpnAndNoSimsIcons() {
         if (this.mIconScaleFactor != 1.0f) {
-            ImageView imageView = this.mVpn;
-            imageView.setImageDrawable(new ScalingDrawableWrapper(imageView.getDrawable(), this.mIconScaleFactor));
-            ImageView imageView2 = this.mNoSims;
-            imageView2.setImageDrawable(new ScalingDrawableWrapper(imageView2.getDrawable(), this.mIconScaleFactor));
+            this.mVpn.setImageDrawable(new ScalingDrawableWrapper(this.mVpn.getDrawable(), this.mIconScaleFactor));
+            this.mNoSims.setImageDrawable(new ScalingDrawableWrapper(this.mNoSims.getDrawable(), this.mIconScaleFactor));
         }
     }
 
@@ -368,7 +356,7 @@ public class SignalClusterView extends LinearLayout implements NetworkController
 
     private void updateActivityEnabled() {
         this.mActivityEnabled = this.mContext.getResources().getBoolean(R.bool.config_showActivity);
-        this.mWifiActivityEnabled = this.mContext.getResources().getBoolean(R.bool.config_showWifiActivity);
+        this.mContext.getResources().getBoolean(R.bool.config_showWifiActivity);
     }
 
     public void updateWifiGeneration(boolean z, int i) {
@@ -399,9 +387,10 @@ public class SignalClusterView extends LinearLayout implements NetworkController
             this.mSlaveWifiVisible = false;
             this.mSlaveWifiStrengthId = 0;
         } else if (this.mSlaveWifiVisible != iconState.visible || this.mSlaveWifiStrengthId != iconState.icon) {
-            this.mSlaveWifiVisible = iconState.visible;
+            boolean z2 = iconState.visible;
+            this.mSlaveWifiVisible = z2;
             this.mSlaveWifiStrengthId = iconState.icon;
-            if (!this.mSlaveWifiVisible || this.mNotchEar) {
+            if (!z2 || this.mNotchEar) {
                 this.mSlaveWifi.setVisibility(8);
                 return;
             }
@@ -593,10 +582,11 @@ public class SignalClusterView extends LinearLayout implements NetworkController
             }
             this.mSimCnt = size;
             if (this.mNotchEar) {
-                this.mNotchEarDual = this.mSimCnt == 2 && notchEarDualEnable();
+                boolean z = size == 2 && notchEarDualEnable();
+                this.mNotchEarDual = z;
                 ViewGroup viewGroup = this.mSignalDualNotchGroup;
                 if (viewGroup != null) {
-                    if (!this.mNotchEarDual) {
+                    if (!z) {
                         i = 8;
                     }
                     viewGroup.setVisibility(i);
@@ -888,11 +878,10 @@ public class SignalClusterView extends LinearLayout implements NetworkController
     }
 
     private void setScaledIcon(ImageView imageView, Drawable drawable) {
-        float f = this.mIconScaleFactor;
-        if (f == 1.0f) {
+        if (this.mIconScaleFactor == 1.0f) {
             imageView.setImageDrawable(drawable);
         } else {
-            imageView.setImageDrawable(new ScalingDrawableWrapper(drawable, f));
+            imageView.setImageDrawable(new ScalingDrawableWrapper(drawable, this.mIconScaleFactor));
         }
     }
 
@@ -1118,9 +1107,9 @@ public class SignalClusterView extends LinearLayout implements NetworkController
         private ImageView mSmallRoam;
         private ImageView mSpeechHd;
         /* access modifiers changed from: private */
-        public int mStackedDataId = 0;
+        public int mStackedDataId;
         /* access modifiers changed from: private */
-        public int mStackedVoiceId = 0;
+        public int mStackedVoiceId;
         private ImageView mVolte;
         private ImageView mVolteNoService;
         private ImageView mWcdmaCardSlot;
@@ -1145,7 +1134,6 @@ public class SignalClusterView extends LinearLayout implements NetworkController
             this.mMobileInOut = (ImageView) viewGroup.findViewById(R.id.mobile_inout);
             this.mMobileInOutBottom = (ImageView) viewGroup.findViewById(R.id.mobile_inout_bottom);
             this.mWcdmaCardSlot = (ImageView) viewGroup.findViewById(R.id.card_slot);
-            this.mMobileType.setTypeface(Typeface.create("sans-serif-semibold", 1));
             if (!Constants.IS_INTERNATIONAL || SignalClusterView.this.mShowHDIcon) {
                 SignalClusterView.this.updateIcon(this.mVolte, R.drawable.stat_sys_signal_hd_big, true);
             } else {
@@ -1174,9 +1162,10 @@ public class SignalClusterView extends LinearLayout implements NetworkController
                 this.mMobileGroup.setVisibility(8);
             } else {
                 String networkTypeName = TelephonyIcons.getNetworkTypeName(this.mMobileTypeId, this.mSlot);
-                this.mDataConnected = this.mDataActivityId != 0;
+                boolean z2 = this.mDataActivityId != 0;
+                this.mDataConnected = z2;
                 SignalClusterView signalClusterView2 = SignalClusterView.this;
-                signalClusterView2.mDataConnectedStatus[this.mSlot] = this.mDataConnected;
+                signalClusterView2.mDataConnectedStatus[this.mSlot] = z2;
                 if (!signalClusterView2.mNotchEarDual) {
                     int i2 = this.mLastMobileStrengthId;
                     int i3 = this.mMobileStrengthId;
@@ -1184,16 +1173,14 @@ public class SignalClusterView extends LinearLayout implements NetworkController
                         SignalClusterView.this.updateIcon(this.mMobileSignal, i3, true);
                         this.mLastMobileStrengthId = this.mMobileStrengthId;
                     }
-                    boolean z2 = ((SignalClusterView.this.mWifiVisible && !SignalClusterView.this.mWifiNoNetwork && !SignalClusterView.this.mNetworkController.isMobileTypeShownWhenWifiOn(this.mSlot)) || isHideMobile(this.mDataConnected)) && !SignalClusterView.this.isBuildTest();
+                    boolean z3 = ((SignalClusterView.this.mWifiVisible && !SignalClusterView.this.mWifiNoNetwork && !SignalClusterView.this.mNetworkController.isMobileTypeShownWhenWifiOn(this.mSlot)) || isHideMobile(this.mDataConnected)) && !SignalClusterView.this.isBuildTest();
                     boolean is4GLTE = is4GLTE(networkTypeName);
-                    boolean z3 = getFiveGDrawable() > 0;
                     boolean z4 = this.mMobileTypeId == 0;
-                    updateMobileTypeImage();
-                    if (z2) {
+                    if (z3) {
                         this.mMobileContainerLeft.setVisibility(8);
                         this.mMobileInOut.setVisibility(8);
                         this.mMobileTypeImage.setVisibility(8);
-                    } else if (is4GLTE || z3) {
+                    } else if (is4GLTE) {
                         this.mMobileInOut.setVisibility(0);
                         this.mMobileTypeImage.setVisibility(0);
                         this.mMobileContainerLeft.setVisibility(8);
@@ -1220,11 +1207,12 @@ public class SignalClusterView extends LinearLayout implements NetworkController
                     } else {
                         this.mMobileInOutId = R.drawable.stat_sys_signal_in_left;
                     }
-                    ImageView imageView = (is4GLTE || z3) ? this.mMobileInOut : this.mMobileInOutBottom;
+                    ImageView imageView = is4GLTE ? this.mMobileInOut : this.mMobileInOutBottom;
                     SignalClusterView.this.updateIcon(imageView, this.mMobileInOutId, true);
                     imageView.setVisibility(((!SignalClusterView.this.mWifiVisible || SignalClusterView.this.mWifiNoNetwork) && this.mDataConnected) ? 0 : 8);
-                    this.mIsSmallMode = z2 || is4GLTE || z3;
-                    this.mSmallRoam.setVisibility((!this.mIsSmallMode || !this.mRoaming) ? 8 : 0);
+                    boolean z5 = z3 || is4GLTE;
+                    this.mIsSmallMode = z5;
+                    this.mSmallRoam.setVisibility((!z5 || !this.mRoaming) ? 8 : 0);
                     ImageView imageView2 = this.mMobileRoaming;
                     if (!this.mIsSmallMode && this.mRoaming) {
                         i = 0;
@@ -1310,15 +1298,6 @@ public class SignalClusterView extends LinearLayout implements NetworkController
             return this.mMobileVisible;
         }
 
-        private void updateMobileTypeImage() {
-            Log.d("SignalClusterView", "updateMobileTypeImage  " + getFiveGDrawable());
-            if (getFiveGDrawable() > 0) {
-                SignalClusterView.this.updateIcon(this.mMobileTypeImage, getFiveGDrawable(), false);
-            } else {
-                SignalClusterView.this.updateIcon(this.mMobileTypeImage, R.drawable.stat_sys_signal_4g_lte, false);
-            }
-        }
-
         public void setIsImsRegisted(boolean z) {
             int i = 0;
             boolean z2 = !SignalClusterView.this.mHideVolte && !SignalClusterView.this.mNetworkController.hideVolteForOperation(this.mSlot) && z && !this.mRoaming;
@@ -1381,7 +1360,7 @@ public class SignalClusterView extends LinearLayout implements NetworkController
                 }
                 SignalClusterView.this.updateIcon(this.mSpeechHd, R.drawable.stat_sys_speech_hd, false);
                 SignalClusterView.this.updateIcon(this.mVolteNoService, R.drawable.stat_sys_volte_no_service, false);
-                updateMobileTypeImage();
+                SignalClusterView.this.updateIcon(this.mMobileTypeImage, R.drawable.stat_sys_signal_4g_lte, false);
                 return;
             }
             int i2 = this.mSlot;
@@ -1401,6 +1380,7 @@ public class SignalClusterView extends LinearLayout implements NetworkController
         }
 
         public void setTextColor() {
+            this.mMobileType.setTypeface(Typeface.create("sans-serif-semibold", 1));
             if (!SignalClusterView.this.mNotchEarDual) {
                 SignalClusterView.this.setTextColor(this.mMobileType);
                 return;
@@ -1462,10 +1442,6 @@ public class SignalClusterView extends LinearLayout implements NetworkController
 
         private boolean is4GLTE(String str) {
             return "4G LTE".equals(str);
-        }
-
-        private int getFiveGDrawable() {
-            return SignalClusterView.this.mFiveGController.getFiveGDrawable(this.mSlot);
         }
 
         private void updateMobileTypeLayout(String str) {

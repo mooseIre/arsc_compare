@@ -18,8 +18,9 @@ public class BadgeRenderer {
     }
 
     public BadgeRenderer(Context context) {
-        this.mDotCenterOffset = getDotCenterOffset(context);
-        this.mCircleRadius = getDotRadius(this.mDotCenterOffset);
+        float dotCenterOffset = getDotCenterOffset(context);
+        this.mDotCenterOffset = dotCenterOffset;
+        this.mCircleRadius = getDotRadius(dotCenterOffset);
     }
 
     static float getDotCenterOffset(Context context) {

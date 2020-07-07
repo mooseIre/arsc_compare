@@ -22,8 +22,9 @@ public class VendorServices extends SystemUI {
         }
         if (z) {
             new OrientationPolicy(this.mContext);
-            this.mFsGesturePolicy = new FsGesturePolicy(this.mContext);
-            this.mFsGesturePolicy.start();
+            FsGesturePolicy fsGesturePolicy = new FsGesturePolicy(this.mContext);
+            this.mFsGesturePolicy = fsGesturePolicy;
+            fsGesturePolicy.start();
         }
     }
 }

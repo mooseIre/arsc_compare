@@ -14,7 +14,6 @@ public class AmbientState {
     private float mCurrentScrollVelocity;
     private boolean mDark;
     private boolean mDimmed;
-    private boolean mDismissAllInProgress;
     private ArrayList<View> mDraggedViews = new ArrayList<>();
     private float mExpandingVelocity;
     private boolean mExpansionChanging;
@@ -40,6 +39,9 @@ public class AmbientState {
     private int mTopPadding;
     private boolean mUnlockHintRunning;
     private int mZDistanceBetweenElements;
+
+    public void setDismissAllInProgress(boolean z) {
+    }
 
     public AmbientState(Context context) {
         reload(context);
@@ -168,10 +170,6 @@ public class AmbientState {
 
     public float getMaxHeadsUpTranslation() {
         return this.mMaxHeadsUpTranslation;
-    }
-
-    public void setDismissAllInProgress(boolean z) {
-        this.mDismissAllInProgress = z;
     }
 
     public void setLayoutMinHeight(int i) {

@@ -15,7 +15,6 @@ import android.util.Log;
 import android.view.AppTransitionAnimationSpec;
 import android.view.IAppTransitionAnimationSpecsFuture;
 import android.view.View;
-import com.android.internal.annotations.GuardedBy;
 import com.android.systemui.SystemUICompat;
 import com.android.systemui.recents.BaseRecentsImpl;
 import com.android.systemui.recents.Recents;
@@ -35,8 +34,6 @@ import java.util.List;
 
 public class RecentsTransitionHelper {
     private static final List<AppTransitionAnimationSpec> SPECS_WAITING = new ArrayList();
-    @GuardedBy({"this"})
-    private List<AppTransitionAnimationSpec> mAppTransitionAnimationSpecs = SPECS_WAITING;
     /* access modifiers changed from: private */
     public Context mContext;
     /* access modifiers changed from: private */
@@ -96,7 +93,7 @@ public class RecentsTransitionHelper {
                 }
             };
         } else {
-            onAnimationStartedListener = new ActivityOptions.OnAnimationStartedListener() {
+            onAnimationStartedListener = new ActivityOptions.OnAnimationStartedListener(this) {
                 public void onAnimationStarted() {
                     RecentsEventBus.getDefault().send(new CancelEnterRecentsWindowAnimationEvent(task));
                     RecentsEventBus.getDefault().send(new ExitRecentsWindowFirstAnimationFrameEvent(task));
@@ -152,7 +149,7 @@ public class RecentsTransitionHelper {
         if (animationSpecComposer == null || handler == null) {
             return null;
         }
-        return new AppTransitionAnimationSpecsFuture(handler) {
+        return new AppTransitionAnimationSpecsFuture(this, handler) {
             public List<AppTransitionAnimationSpec> composeSpecs() {
                 return animationSpecComposer.composeSpecs();
             }

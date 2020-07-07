@@ -1,8 +1,8 @@
 package com.android.systemui.shared.system;
 
 import android.os.RemoteException;
-import android.view.IPinnedStackListener;
 import android.view.WindowManagerGlobal;
+import com.android.systemui.shared.system.PinnedStackListenerForwarder;
 
 public class WindowManagerWrapper {
     private static final WindowManagerWrapper sInstance = new WindowManagerWrapper();
@@ -12,8 +12,8 @@ public class WindowManagerWrapper {
         return sInstance;
     }
 
-    public void addPinnedStackListener(IPinnedStackListener iPinnedStackListener) throws RemoteException {
-        this.mPinnedStackListenerForwarder.addListener(iPinnedStackListener);
+    public void addPinnedStackListener(PinnedStackListenerForwarder.PinnedStackListener pinnedStackListener) throws RemoteException {
+        this.mPinnedStackListenerForwarder.addListener(pinnedStackListener);
         WindowManagerGlobal.getWindowManagerService().registerPinnedStackListener(0, this.mPinnedStackListenerForwarder);
     }
 }

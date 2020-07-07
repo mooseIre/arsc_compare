@@ -37,7 +37,7 @@ public class PerimeterPathGuide {
         public float normalizedLength;
         public Path path;
 
-        private RegionAttributes() {
+        private RegionAttributes(PerimeterPathGuide perimeterPathGuide) {
         }
     }
 

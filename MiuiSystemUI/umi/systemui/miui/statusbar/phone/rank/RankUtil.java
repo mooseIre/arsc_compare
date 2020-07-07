@@ -8,7 +8,10 @@ import java.util.HashMap;
 
 public class RankUtil {
     private static HashMap<String, Boolean> sHighPriorityMap = new HashMap<>();
-    private static long sLastSortTime = System.currentTimeMillis();
+
+    static {
+        System.currentTimeMillis();
+    }
 
     public static int compareHeadsUp(NotificationData.Entry entry, NotificationData.Entry entry2, HeadsUpManager headsUpManager) {
         boolean isHeadsUp = entry.row.isHeadsUp();
@@ -40,7 +43,8 @@ public class RankUtil {
 
     public static void updateHighPriorityMap(String str, int i) {
         try {
-            sHighPriorityMap.put(str, Boolean.valueOf(SystemUICompat.isHighPriority(str, i)));
+            SystemUICompat.isHighPriority(str, i);
+            sHighPriorityMap.put(str, Boolean.FALSE);
         } catch (Exception unused) {
             sHighPriorityMap.remove(str);
         }

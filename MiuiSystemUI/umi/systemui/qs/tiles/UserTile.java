@@ -61,7 +61,7 @@ public class UserTile extends QSTileImpl<QSTile.State> implements UserInfoContro
             Object obj2 = pair.first;
             state.label = (CharSequence) obj2;
             state.contentDescription = (CharSequence) obj2;
-            state.icon = new QSTile.Icon() {
+            state.icon = new QSTile.Icon(this) {
                 public Drawable getDrawable(Context context) {
                     return (Drawable) pair.second;
                 }
@@ -70,7 +70,8 @@ public class UserTile extends QSTileImpl<QSTile.State> implements UserInfoContro
     }
 
     public void onUserInfoChanged(String str, Drawable drawable, String str2) {
-        this.mLastUpdate = new Pair<>(str, drawable);
-        refreshState(this.mLastUpdate);
+        Pair<String, Drawable> pair = new Pair<>(str, drawable);
+        this.mLastUpdate = pair;
+        refreshState(pair);
     }
 }

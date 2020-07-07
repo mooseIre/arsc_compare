@@ -29,18 +29,17 @@ public class UsbAccessoryUriActivity extends AlertActivity implements DialogInte
             uri = Uri.parse(stringExtra);
         }
         this.mUri = uri;
-        Uri uri2 = this.mUri;
-        if (uri2 == null) {
+        if (uri == null) {
             Log.e("UsbAccessoryUriActivity", "could not parse Uri " + stringExtra);
             finish();
             return;
         }
-        String scheme = uri2.getScheme();
+        String scheme = uri.getScheme();
         if ("http".equals(scheme) || "https".equals(scheme)) {
             AlertController.AlertParams alertParams = this.mAlertParams;
-            alertParams.mTitle = this.mAccessory.getDescription();
-            CharSequence charSequence = alertParams.mTitle;
-            if (charSequence == null || charSequence.length() == 0) {
+            String description = this.mAccessory.getDescription();
+            alertParams.mTitle = description;
+            if (description == null || description.length() == 0) {
                 alertParams.mTitle = getString(R.string.title_usb_accessory);
             }
             alertParams.mMessage = getString(R.string.usb_accessory_uri_prompt, new Object[]{this.mUri});

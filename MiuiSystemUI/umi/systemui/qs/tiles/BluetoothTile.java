@@ -26,7 +26,6 @@ import java.util.Collection;
 public class BluetoothTile extends QSTileImpl<QSTile.BooleanState> {
     /* access modifiers changed from: private */
     public static final Intent BLUETOOTH_SETTINGS = new Intent("android.settings.BLUETOOTH_SETTINGS");
-    private final ActivityStarter mActivityStarter = ((ActivityStarter) Dependency.get(ActivityStarter.class));
     private final BluetoothController.Callback mCallback = new BluetoothController.Callback() {
         public void onBluetoothInoutStateChange(String str) {
         }
@@ -55,7 +54,7 @@ public class BluetoothTile extends QSTileImpl<QSTile.BooleanState> {
     /* access modifiers changed from: private */
     public final BluetoothController mController = ((BluetoothController) Dependency.get(BluetoothController.class));
     /* access modifiers changed from: private */
-    public final BluetoothDetailAdapter mDetailAdapter = ((BluetoothDetailAdapter) createDetailAdapter());
+    public final BluetoothDetailAdapter mDetailAdapter;
     /* access modifiers changed from: private */
     public boolean mTargetEnable;
 
@@ -65,6 +64,8 @@ public class BluetoothTile extends QSTileImpl<QSTile.BooleanState> {
 
     public BluetoothTile(QSHost qSHost) {
         super(qSHost);
+        ActivityStarter activityStarter = (ActivityStarter) Dependency.get(ActivityStarter.class);
+        this.mDetailAdapter = (BluetoothDetailAdapter) createDetailAdapter();
         this.mHandler.post(new Runnable() {
             public void run() {
                 BluetoothTile bluetoothTile = BluetoothTile.this;
@@ -99,8 +100,9 @@ public class BluetoothTile extends QSTileImpl<QSTile.BooleanState> {
         sb.append(!this.mTargetEnable);
         Log.d(str, sb.toString());
         if (!this.mTargetEnable ? this.mController.getBluetoothState() == 10 : this.mController.getBluetoothState() == 12) {
-            this.mTargetEnable = !this.mTargetEnable;
-            this.mController.setBluetoothEnabled(this.mTargetEnable);
+            boolean z = !this.mTargetEnable;
+            this.mTargetEnable = z;
+            this.mController.setBluetoothEnabled(z);
             refreshState();
             return;
         }
@@ -242,8 +244,9 @@ public class BluetoothTile extends QSTileImpl<QSTile.BooleanState> {
         }
 
         public View createDetailView(Context context, View view, ViewGroup viewGroup) {
-            this.mItems = QSDetailItems.convertOrInflate(context, view, viewGroup);
-            this.mItems.setTagSuffix("Bluetooth");
+            QSDetailItems convertOrInflate = QSDetailItems.convertOrInflate(context, view, viewGroup);
+            this.mItems = convertOrInflate;
+            convertOrInflate.setTagSuffix("Bluetooth");
             this.mItems.setCallback(this);
             if (BluetoothTile.this.isShowingDetail()) {
                 updateItems();

@@ -81,9 +81,10 @@ public class ControlCenter extends SystemUI implements ControlPanelController.Us
     }
 
     public void start() {
-        ((ControlPanelController) Dependency.get(ControlPanelController.class)).addCallback(this);
+        Class cls = ControlPanelController.class;
+        ((ControlPanelController) Dependency.get(cls)).addCallback((ControlPanelController.UseControlPanelChangeListener) this);
         this.mExpandInfoController = (ExpandInfoController) Dependency.get(ExpandInfoController.class);
-        this.mPanelController = (ControlPanelController) Dependency.get(ControlPanelController.class);
+        this.mPanelController = (ControlPanelController) Dependency.get(cls);
         this.mCommandQueue = (CommandQueue) getComponent(CommandQueue.class);
         this.mControlPanelWindowManager = (ControlPanelWindowManager) Dependency.get(ControlPanelWindowManager.class);
         this.mStatusBarActivityStarter = (ActivityStarter) Dependency.get(ActivityStarter.class);
@@ -181,10 +182,11 @@ public class ControlCenter extends SystemUI implements ControlPanelController.Us
     public void addControlPanelWindow() {
         ((ControlCenterActivityStarter) Dependency.get(ControlCenterActivityStarter.class)).setControlCenter(this);
         ((ControlPanelController) Dependency.get(ControlPanelController.class)).setControlCenter(this);
-        ((SuperSaveModeController) Dependency.get(SuperSaveModeController.class)).addCallback(this);
+        ((SuperSaveModeController) Dependency.get(SuperSaveModeController.class)).addCallback((SuperSaveModeController.SuperSaveModeChangeListener) this);
         this.mCommandQueue.addCallbacks(this);
-        this.mControlPanelWindowView = (ControlPanelWindowView) View.inflate(this.mContext, R.layout.control_panel, (ViewGroup) null);
-        this.mControlPanelWindowView.setControlCenter(this);
+        ControlPanelWindowView controlPanelWindowView = (ControlPanelWindowView) View.inflate(this.mContext, R.layout.control_panel, (ViewGroup) null);
+        this.mControlPanelWindowView = controlPanelWindowView;
+        controlPanelWindowView.setControlCenter(this);
         this.mControlPanelWindowManager.addControlPanel(this.mControlPanelWindowView);
         StatusBar statusBar = (StatusBar) ((Application) this.mContext.getApplicationContext()).getSystemUIApplication().getComponent(StatusBar.class);
         if (statusBar != null) {
@@ -192,10 +194,12 @@ public class ControlCenter extends SystemUI implements ControlPanelController.Us
         }
         register();
         ((ToastOverlayManager) Dependency.get(ToastOverlayManager.class)).setup(this.mContext, this.mControlPanelWindowView);
-        this.mControlPanelContentView = (ControlPanelContentView) this.mControlPanelWindowView.findViewById(R.id.control_panel_content);
-        if (this.mControlPanelContentView != null) {
-            this.mQSControlTileHost = SystemUIFactory.getInstance().createQSControlTileHost(this.mContext, statusBar, this.mIconController);
-            this.mQSControlTileHost.init();
+        ControlPanelContentView controlPanelContentView = (ControlPanelContentView) this.mControlPanelWindowView.findViewById(R.id.control_panel_content);
+        this.mControlPanelContentView = controlPanelContentView;
+        if (controlPanelContentView != null) {
+            QSControlTileHost createQSControlTileHost = SystemUIFactory.getInstance().createQSControlTileHost(this.mContext, statusBar, this.mIconController);
+            this.mQSControlTileHost = createQSControlTileHost;
+            createQSControlTileHost.init();
             this.mControlPanelContentView.setHost(this.mQSControlTileHost);
         }
         RecentsEventBus.getDefault().register(this);
@@ -207,7 +211,7 @@ public class ControlCenter extends SystemUI implements ControlPanelController.Us
             ((ControlCenterActivityStarter) Dependency.get(ControlCenterActivityStarter.class)).setControlCenter((ControlCenter) null);
             ((ControlPanelController) Dependency.get(ControlPanelController.class)).setControlCenter((ControlCenter) null);
             this.mCommandQueue.removeCallbacks(this);
-            ((SuperSaveModeController) Dependency.get(SuperSaveModeController.class)).removeCallback(this);
+            ((SuperSaveModeController) Dependency.get(SuperSaveModeController.class)).removeCallback((SuperSaveModeController.SuperSaveModeChangeListener) this);
             QSControlTileHost qSControlTileHost = this.mQSControlTileHost;
             if (qSControlTileHost != null) {
                 qSControlTileHost.destroy();
@@ -240,19 +244,11 @@ public class ControlCenter extends SystemUI implements ControlPanelController.Us
         this.mContext.unregisterReceiver(this.mBroadcastReceiver);
     }
 
-    public boolean isExpandable() {
-        return this.mPanelController.isExpandable();
-    }
-
     public void collapse(boolean z) {
         StatusBar statusBar = this.mStatusBar;
         if (statusBar != null && !statusBar.isQSFullyCollapsed()) {
             this.mStatusBar.collapsePanels();
         }
-        collapseControlCenter(z);
-    }
-
-    public void collapseControlCenter(boolean z) {
         this.mHandler.removeMessages(1);
         Message obtainMessage = this.mHandler.obtainMessage();
         obtainMessage.what = 1;
@@ -269,12 +265,10 @@ public class ControlCenter extends SystemUI implements ControlPanelController.Us
     }
 
     public void openPanel() {
-        if (this.mPanelController.isExpandable()) {
-            this.mHandler.removeMessages(2);
-            Message obtainMessage = this.mHandler.obtainMessage();
-            obtainMessage.what = 2;
-            this.mHandler.sendMessage(obtainMessage);
-        }
+        this.mHandler.removeMessages(2);
+        Message obtainMessage = this.mHandler.obtainMessage();
+        obtainMessage.what = 2;
+        this.mHandler.sendMessage(obtainMessage);
     }
 
     /* access modifiers changed from: private */

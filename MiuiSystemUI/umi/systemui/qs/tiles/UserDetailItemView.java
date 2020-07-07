@@ -19,7 +19,7 @@ import com.android.systemui.plugins.R;
 import com.android.systemui.statusbar.phone.UserAvatarView;
 
 public class UserDetailItemView extends LinearLayout {
-    protected static int layoutResId = 2131558743;
+    protected static int layoutResId = 2131558744;
     private Typeface mActivatedTypeface;
     private UserAvatarView mAvatar;
     private TextView mName;
@@ -92,9 +92,10 @@ public class UserDetailItemView extends LinearLayout {
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         this.mAvatar = (UserAvatarView) findViewById(R.id.user_picture);
-        this.mName = (TextView) findViewById(R.id.user_name);
+        TextView textView = (TextView) findViewById(R.id.user_name);
+        this.mName = textView;
         if (this.mRegularTypeface == null) {
-            this.mRegularTypeface = this.mName.getTypeface();
+            this.mRegularTypeface = textView.getTypeface();
         }
         if (this.mActivatedTypeface == null) {
             this.mActivatedTypeface = this.mName.getTypeface();

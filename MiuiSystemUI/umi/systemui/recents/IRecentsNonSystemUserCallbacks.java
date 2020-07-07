@@ -234,6 +234,36 @@ public interface IRecentsNonSystemUserCallbacks extends IInterface {
                     obtain.recycle();
                 }
             }
+
+            public void onDraggingInRecents(float f) throws RemoteException {
+                Parcel obtain = Parcel.obtain();
+                try {
+                    obtain.writeInterfaceToken("com.android.systemui.recents.IRecentsNonSystemUserCallbacks");
+                    obtain.writeFloat(f);
+                    if (this.mRemote.transact(8, obtain, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
+                        obtain.recycle();
+                    } else {
+                        Stub.getDefaultImpl().onDraggingInRecents(f);
+                    }
+                } finally {
+                    obtain.recycle();
+                }
+            }
+
+            public void onDraggingInRecentsEnded(float f) throws RemoteException {
+                Parcel obtain = Parcel.obtain();
+                try {
+                    obtain.writeInterfaceToken("com.android.systemui.recents.IRecentsNonSystemUserCallbacks");
+                    obtain.writeFloat(f);
+                    if (this.mRemote.transact(9, obtain, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
+                        obtain.recycle();
+                    } else {
+                        Stub.getDefaultImpl().onDraggingInRecentsEnded(f);
+                    }
+                } finally {
+                    obtain.recycle();
+                }
+            }
         }
 
         public static IRecentsNonSystemUserCallbacks getDefaultImpl() {

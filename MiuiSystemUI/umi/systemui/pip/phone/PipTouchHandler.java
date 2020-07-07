@@ -11,15 +11,14 @@ import android.graphics.Rect;
 import android.os.Handler;
 import android.os.RemoteException;
 import android.util.Log;
-import android.util.Size;
 import android.view.IPinnedStackController;
 import android.view.MotionEvent;
 import android.view.ViewConfiguration;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityManager;
 import com.android.internal.logging.MetricsLogger;
-import com.android.internal.policy.PipSnapAlgorithm;
 import com.android.systemui.pip.PipCompat;
+import com.android.systemui.pip.PipSnapAlgorithm;
 import com.android.systemui.pip.phone.InputConsumerController;
 import com.android.systemui.pip.phone.PipAccessibilityInteractionConnection;
 import com.android.systemui.pip.phone.PipMenuActivityController;
@@ -164,7 +163,6 @@ public class PipTouchHandler {
     private int mDisplayRotation;
     private Rect mExpandedBounds = new Rect();
     private Rect mExpandedMovementBounds = new Rect();
-    private int mExpandedShortestEdgeSize;
     /* access modifiers changed from: private */
     public final FlingAnimationUtils mFlingAnimationUtils;
     private final PipTouchGesture[] mGestures;
@@ -212,8 +210,7 @@ public class PipTouchHandler {
     };
     private final ViewConfiguration mViewConfig;
 
-    /* access modifiers changed from: package-private */
-    public void setMinimizedState(boolean z, boolean z2) {
+    private void updateMovementBounds(int i) {
     }
 
     /* access modifiers changed from: package-private */
@@ -255,14 +252,14 @@ public class PipTouchHandler {
         this.mAccessibilityManager = (AccessibilityManager) context.getSystemService(AccessibilityManager.class);
         this.mViewConfig = ViewConfiguration.get(context);
         this.mMenuController = pipMenuActivityController;
-        this.mMenuController.addListener(this.mMenuListener);
+        pipMenuActivityController.addListener(this.mMenuListener);
         this.mDismissViewController = new PipDismissViewController(context);
         this.mSnapAlgorithm = new PipSnapAlgorithm(this.mContext);
         this.mTouchState = new PipTouchState(this.mViewConfig);
         this.mFlingAnimationUtils = new FlingAnimationUtils(context, 2.0f);
         this.mGestures = new PipTouchGesture[]{this.mDefaultMovementGesture};
         this.mMotionHelper = new PipMotionHelper(this.mContext, this.mActivityManager, this.mMenuController, this.mSnapAlgorithm, this.mFlingAnimationUtils);
-        this.mExpandedShortestEdgeSize = context.getResources().getDimensionPixelSize(R.dimen.pip_expanded_shortest_edge_size);
+        context.getResources().getDimensionPixelSize(R.dimen.pip_expanded_shortest_edge_size);
         inputConsumerController.setTouchListener(new InputConsumerController.TouchListener() {
             public final boolean onTouchEvent(MotionEvent motionEvent) {
                 return PipTouchHandler.this.handleTouchEvent(motionEvent);
@@ -311,43 +308,6 @@ public class PipTouchHandler {
     public void onImeVisibilityChanged(boolean z, int i) {
         this.mIsImeShowing = z;
         this.mImeHeight = i;
-    }
-
-    public void onMovementBoundsChanged(Rect rect, Rect rect2, Rect rect3, boolean z, int i) {
-        this.mNormalBounds = rect2;
-        Rect rect4 = new Rect();
-        this.mSnapAlgorithm.getMovementBounds(this.mNormalBounds, rect, rect4, this.mIsImeShowing ? this.mImeHeight : 0);
-        float width = ((float) rect2.width()) / ((float) rect2.height());
-        Point point = new Point();
-        this.mContext.getDisplay().getRealSize(point);
-        Size sizeForAspectRatio = this.mSnapAlgorithm.getSizeForAspectRatio(width, (float) this.mExpandedShortestEdgeSize, point.x, point.y);
-        this.mExpandedBounds.set(0, 0, sizeForAspectRatio.getWidth(), sizeForAspectRatio.getHeight());
-        Rect rect5 = new Rect();
-        this.mSnapAlgorithm.getMovementBounds(this.mExpandedBounds, rect, rect5, this.mIsImeShowing ? this.mImeHeight : 0);
-        if (z && !this.mTouchState.isUserInteracting()) {
-            Rect rect6 = new Rect(rect3);
-            Rect rect7 = this.mMenuState == 2 ? rect5 : rect4;
-            if (this.mIsImeShowing) {
-                int i2 = rect6.top;
-                if (i2 == this.mMovementBounds.bottom) {
-                    rect6.offsetTo(rect6.left, rect7.bottom);
-                } else {
-                    rect6.offset(0, Math.min(0, rect7.bottom - i2));
-                }
-            } else if (rect6.top == this.mMovementBounds.bottom) {
-                rect6.offsetTo(rect6.left, rect7.bottom);
-            }
-            this.mMotionHelper.animateToIMEOffset(rect6);
-        }
-        this.mNormalMovementBounds = rect4;
-        this.mExpandedMovementBounds = rect5;
-        this.mDisplayRotation = i;
-        updateMovementBounds(this.mMenuState);
-        if (this.mDeferResizeToNormalBoundsUntilRotation == i) {
-            this.mMotionHelper.animateToUnexpandedState(rect2, this.mSavedSnapFraction, this.mNormalMovementBounds, this.mMovementBounds, this.mIsMinimized, true);
-            this.mSavedSnapFraction = -1.0f;
-            this.mDeferResizeToNormalBoundsUntilRotation = -1;
-        }
     }
 
     /* access modifiers changed from: private */
@@ -439,6 +399,7 @@ public class PipTouchHandler {
 
     /* access modifiers changed from: package-private */
     public void setMenuState(int i, boolean z) {
+        boolean z2 = false;
         if (i == 2) {
             Rect rect = new Rect(this.mExpandedBounds);
             if (z) {
@@ -467,11 +428,10 @@ public class PipTouchHandler {
         }
         this.mMenuState = i;
         updateMovementBounds(i);
-        boolean z2 = true;
         if (i != 1) {
             Context context = this.mContext;
-            if (i != 2) {
-                z2 = false;
+            if (i == 2) {
+                z2 = true;
             }
             MetricsLogger.visibility(context, 823, z2);
         }
@@ -479,27 +439,6 @@ public class PipTouchHandler {
 
     public PipMotionHelper getMotionHelper() {
         return this.mMotionHelper;
-    }
-
-    private void updateMovementBounds(int i) {
-        Rect rect;
-        int i2 = 0;
-        boolean z = i == 2;
-        if (z) {
-            rect = this.mExpandedMovementBounds;
-        } else {
-            rect = this.mNormalMovementBounds;
-        }
-        this.mMovementBounds = rect;
-        try {
-            IPinnedStackController iPinnedStackController = this.mPinnedStackController;
-            if (z) {
-                i2 = this.mExpandedShortestEdgeSize;
-            }
-            iPinnedStackController.setMinEdgeSize(i2);
-        } catch (RemoteException e) {
-            Log.e("PipTouchHandler", "Could not set minimized state", e);
-        }
     }
 
     /* access modifiers changed from: private */

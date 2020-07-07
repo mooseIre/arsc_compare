@@ -33,7 +33,6 @@ public abstract class BaseInfo {
     public BaseInfo(Context context, int i, ExpandInfoController expandInfoController) {
         this.mContext = context;
         this.mType = i;
-        this.mUserHandle = expandInfoController.getUserHandle();
         this.mExpandInfoController = expandInfoController;
         this.mHandler = new Handler(context.getMainLooper());
     }
@@ -87,7 +86,7 @@ public abstract class BaseInfo {
             if (!BaseInfo.this.mInfo.equal(info)) {
                 BaseInfo baseInfo = BaseInfo.this;
                 baseInfo.mInfo = info;
-                baseInfo.mExpandInfoController.updateInfo(baseInfo.mType, baseInfo.mInfo);
+                baseInfo.mExpandInfoController.updateInfo(baseInfo.mType, info);
             }
         }
     }

@@ -64,6 +64,8 @@ public class BubbleDismissView extends FrameLayout {
         });
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$new$0 */
     public /* synthetic */ void lambda$new$0$BubbleDismissView(DynamicAnimation dynamicAnimation, boolean z, float f, float f2) {
         if (f < 0.5f) {
             setVisibility(8);
@@ -100,6 +102,8 @@ public class BubbleDismissView extends FrameLayout {
         this.mDismissCircle.animate().alpha(0.0f).scaleX(1.2f).scaleY(1.2f);
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$springOut$1 */
     public /* synthetic */ void lambda$springOut$1$BubbleDismissView() {
         this.mDismissGradient.setVisibility(8);
     }

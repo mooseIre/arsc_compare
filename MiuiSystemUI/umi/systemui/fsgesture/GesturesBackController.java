@@ -2,8 +2,9 @@ package com.android.systemui.fsgesture;
 
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.WindowManagerPolicyConstants;
 
-public class GesturesBackController implements IPointerEventListener {
+public class GesturesBackController implements WindowManagerPolicyConstants.PointerEventListener {
     private GesturesBackCallback mCallback;
     private long mContinuousBackFinishTime;
     private float mDownX;

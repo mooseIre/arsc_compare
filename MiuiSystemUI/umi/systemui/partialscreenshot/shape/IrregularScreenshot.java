@@ -25,7 +25,6 @@ public class IrregularScreenshot extends PartialScreenshotShape {
     private float crossoverPreY;
     private float endX;
     private float endY;
-    private final float eps = 1.0E-6f;
     private boolean isBegin = false;
     private int isState = -1;
     private boolean isUp;
@@ -49,16 +48,19 @@ public class IrregularScreenshot extends PartialScreenshotShape {
 
     public IrregularScreenshot(View view2) {
         this.view = view2;
-        this.mPaintBackground = new Paint();
-        this.mPaintBackground.setColor(-16777216);
-        this.mPaintBackground.setAlpha(165);
-        this.mPaintSelection = new Paint(0);
-        this.mPaintSelection.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+        Paint paint = new Paint();
+        this.mPaintBackground = paint;
+        paint.setColor(-16777216);
+        this.mPaintBackground.setAlpha(204);
+        Paint paint2 = new Paint(0);
+        this.mPaintSelection = paint2;
+        paint2.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
         this.mPaintSelection.setFlags(1);
         this.mPaintSelection.setStrokeJoin(Paint.Join.ROUND);
         this.mPaintSelection.setStrokeCap(Paint.Cap.ROUND);
-        this.mPloyLine = new Paint();
-        this.mPloyLine.setPathEffect(new DashPathEffect(new float[]{10.0f, 10.0f, 10.0f, 10.0f}, 2.0f));
+        Paint paint3 = new Paint();
+        this.mPloyLine = paint3;
+        paint3.setPathEffect(new DashPathEffect(new float[]{10.0f, 10.0f, 10.0f, 10.0f}, 2.0f));
         this.mPloyLine.setColor(-1);
         this.mPloyLine.setFlags(1);
         this.mPloyLine.setStrokeCap(Paint.Cap.ROUND);
@@ -279,8 +281,9 @@ public class IrregularScreenshot extends PartialScreenshotShape {
         this.preY = this.pathY.get(0).floatValue() - getTop();
         for (int i = 1; i < size(); i++) {
             this.endX = ((this.preX + this.pathX.get(i).floatValue()) - getLeft()) / 2.0f;
-            this.endY = ((this.preY + this.pathY.get(i).floatValue()) - getTop()) / 2.0f;
-            path.quadTo(this.preX, this.preY, this.endX, this.endY);
+            float floatValue = ((this.preY + this.pathY.get(i).floatValue()) - getTop()) / 2.0f;
+            this.endY = floatValue;
+            path.quadTo(this.preX, this.preY, this.endX, floatValue);
             this.preX = this.pathX.get(i).floatValue() - getLeft();
             this.preY = this.pathY.get(i).floatValue() - getTop();
         }
@@ -332,8 +335,9 @@ public class IrregularScreenshot extends PartialScreenshotShape {
                     float f11 = ((f9 - f6) * (f4 - f3)) - ((f8 - f3) * (f2 - f6));
                     float f12 = ((f9 - f6) * (f5 - f3)) - ((f8 - f3) * (f - f6));
                     if (f7 * f10 <= 1.0E-6f && f11 * f12 <= 1.0E-6f) {
-                        this.crossoverPointCount++;
-                        if (this.crossoverPointCount == 1) {
+                        int i4 = this.crossoverPointCount + 1;
+                        this.crossoverPointCount = i4;
+                        if (i4 == 1) {
                             this.crossoverPreX = f;
                             this.crossoverPreY = f5;
                             this.crossoverBehindX = f6;
@@ -363,10 +367,11 @@ public class IrregularScreenshot extends PartialScreenshotShape {
                     i3 = i4;
                 }
             }
-            if (i2 > 0 && i3 > 0 && i3 - i2 > 5) {
+            if (i2 > 0 && i3 > 0) {
                 this.pathY = this.pathY.subList(i2, i3);
-                this.pathX = this.pathX.subList(i2, i3);
-                this.pathX.add(Float.valueOf(this.crossoverBehindX));
+                List<Float> subList = this.pathX.subList(i2, i3);
+                this.pathX = subList;
+                subList.add(Float.valueOf(this.crossoverBehindX));
                 this.pathY.add(Float.valueOf(this.crossoverBehindY));
                 this.pathX.add(Float.valueOf(this.crossoverPreX));
                 this.pathY.add(Float.valueOf(this.crossoverPreY));
@@ -377,8 +382,8 @@ public class IrregularScreenshot extends PartialScreenshotShape {
             float floatValue2 = this.pathY.get(0).floatValue();
             float floatValue3 = this.pathX.get(size() - 1).floatValue();
             float floatValue4 = this.pathY.get(size() - 1).floatValue();
-            int i5 = -1;
             float f = Float.MAX_VALUE;
+            int i5 = -1;
             for (int i6 = 1; i6 < size() / 2; i6++) {
                 if (Math.pow((double) (floatValue3 - this.pathX.get(i6).floatValue()), 2.0d) + Math.pow((double) (floatValue4 - this.pathY.get(i6).floatValue()), 2.0d) < ((double) f)) {
                     i = 1;
@@ -399,22 +404,23 @@ public class IrregularScreenshot extends PartialScreenshotShape {
             if (i5 <= 0) {
                 return;
             }
-            if (this.isBegin && i5 + 7 < size()) {
+            if (this.isBegin) {
                 int i7 = i5 + 2;
                 this.pathX = this.pathX.subList(i7, size());
                 this.pathY = this.pathY.subList(i7, size());
-            } else if (!this.isBegin && i5 > 8) {
-                int i8 = i5 - 3;
-                this.pathX = this.pathX.subList(0, i8);
-                this.pathY = this.pathY.subList(0, i8);
+                return;
             }
+            int i8 = i5 - 3;
+            this.pathX = this.pathX.subList(0, i8);
+            this.pathY = this.pathY.subList(0, i8);
         }
     }
 
     public void onActionDown(MotionEvent motionEvent) {
         this.mLastX = (int) motionEvent.getX();
-        this.mLastY = (int) motionEvent.getY();
-        handleTouchArea(this.mLastX, this.mLastY);
+        int y = (int) motionEvent.getY();
+        this.mLastY = y;
+        handleTouchArea(this.mLastX, y);
     }
 
     public void onActionMove(MotionEvent motionEvent) {
@@ -464,86 +470,85 @@ public class IrregularScreenshot extends PartialScreenshotShape {
 
     /* renamed from: com.android.systemui.partialscreenshot.shape.IrregularScreenshot$1  reason: invalid class name */
     static /* synthetic */ class AnonymousClass1 {
-        static final /* synthetic */ int[] $SwitchMap$com$android$systemui$partialscreenshot$shape$TouchAreaEnum = new int[TouchAreaEnum.values().length];
+        static final /* synthetic */ int[] $SwitchMap$com$android$systemui$partialscreenshot$shape$TouchAreaEnum;
 
         /* JADX WARNING: Can't wrap try/catch for region: R(20:0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|(3:19|20|22)) */
         /* JADX WARNING: Can't wrap try/catch for region: R(22:0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|22) */
         /* JADX WARNING: Failed to process nested try/catch */
-        /* JADX WARNING: Missing exception handler attribute for start block: B:11:0x0040 */
-        /* JADX WARNING: Missing exception handler attribute for start block: B:13:0x004b */
-        /* JADX WARNING: Missing exception handler attribute for start block: B:15:0x0056 */
-        /* JADX WARNING: Missing exception handler attribute for start block: B:17:0x0062 */
-        /* JADX WARNING: Missing exception handler attribute for start block: B:19:0x006e */
-        /* JADX WARNING: Missing exception handler attribute for start block: B:3:0x0014 */
-        /* JADX WARNING: Missing exception handler attribute for start block: B:5:0x001f */
-        /* JADX WARNING: Missing exception handler attribute for start block: B:7:0x002a */
-        /* JADX WARNING: Missing exception handler attribute for start block: B:9:0x0035 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:11:0x003e */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:13:0x0049 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:15:0x0054 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:17:0x0060 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:19:0x006c */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:3:0x0012 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:5:0x001d */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:7:0x0028 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:9:0x0033 */
         static {
             /*
                 com.android.systemui.partialscreenshot.shape.TouchAreaEnum[] r0 = com.android.systemui.partialscreenshot.shape.TouchAreaEnum.values()
                 int r0 = r0.length
                 int[] r0 = new int[r0]
                 $SwitchMap$com$android$systemui$partialscreenshot$shape$TouchAreaEnum = r0
-                int[] r0 = $SwitchMap$com$android$systemui$partialscreenshot$shape$TouchAreaEnum     // Catch:{ NoSuchFieldError -> 0x0014 }
-                com.android.systemui.partialscreenshot.shape.TouchAreaEnum r1 = com.android.systemui.partialscreenshot.shape.TouchAreaEnum.CENTER     // Catch:{ NoSuchFieldError -> 0x0014 }
-                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0014 }
+                com.android.systemui.partialscreenshot.shape.TouchAreaEnum r1 = com.android.systemui.partialscreenshot.shape.TouchAreaEnum.CENTER     // Catch:{ NoSuchFieldError -> 0x0012 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0012 }
                 r2 = 1
-                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0014 }
-            L_0x0014:
-                int[] r0 = $SwitchMap$com$android$systemui$partialscreenshot$shape$TouchAreaEnum     // Catch:{ NoSuchFieldError -> 0x001f }
-                com.android.systemui.partialscreenshot.shape.TouchAreaEnum r1 = com.android.systemui.partialscreenshot.shape.TouchAreaEnum.LEFT_TOP     // Catch:{ NoSuchFieldError -> 0x001f }
-                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x001f }
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0012 }
+            L_0x0012:
+                int[] r0 = $SwitchMap$com$android$systemui$partialscreenshot$shape$TouchAreaEnum     // Catch:{ NoSuchFieldError -> 0x001d }
+                com.android.systemui.partialscreenshot.shape.TouchAreaEnum r1 = com.android.systemui.partialscreenshot.shape.TouchAreaEnum.LEFT_TOP     // Catch:{ NoSuchFieldError -> 0x001d }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x001d }
                 r2 = 2
-                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x001f }
-            L_0x001f:
-                int[] r0 = $SwitchMap$com$android$systemui$partialscreenshot$shape$TouchAreaEnum     // Catch:{ NoSuchFieldError -> 0x002a }
-                com.android.systemui.partialscreenshot.shape.TouchAreaEnum r1 = com.android.systemui.partialscreenshot.shape.TouchAreaEnum.RIGHT_TOP     // Catch:{ NoSuchFieldError -> 0x002a }
-                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x002a }
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x001d }
+            L_0x001d:
+                int[] r0 = $SwitchMap$com$android$systemui$partialscreenshot$shape$TouchAreaEnum     // Catch:{ NoSuchFieldError -> 0x0028 }
+                com.android.systemui.partialscreenshot.shape.TouchAreaEnum r1 = com.android.systemui.partialscreenshot.shape.TouchAreaEnum.RIGHT_TOP     // Catch:{ NoSuchFieldError -> 0x0028 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0028 }
                 r2 = 3
-                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x002a }
-            L_0x002a:
-                int[] r0 = $SwitchMap$com$android$systemui$partialscreenshot$shape$TouchAreaEnum     // Catch:{ NoSuchFieldError -> 0x0035 }
-                com.android.systemui.partialscreenshot.shape.TouchAreaEnum r1 = com.android.systemui.partialscreenshot.shape.TouchAreaEnum.LEFT_BOTTOM     // Catch:{ NoSuchFieldError -> 0x0035 }
-                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0035 }
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0028 }
+            L_0x0028:
+                int[] r0 = $SwitchMap$com$android$systemui$partialscreenshot$shape$TouchAreaEnum     // Catch:{ NoSuchFieldError -> 0x0033 }
+                com.android.systemui.partialscreenshot.shape.TouchAreaEnum r1 = com.android.systemui.partialscreenshot.shape.TouchAreaEnum.LEFT_BOTTOM     // Catch:{ NoSuchFieldError -> 0x0033 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0033 }
                 r2 = 4
-                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0035 }
-            L_0x0035:
-                int[] r0 = $SwitchMap$com$android$systemui$partialscreenshot$shape$TouchAreaEnum     // Catch:{ NoSuchFieldError -> 0x0040 }
-                com.android.systemui.partialscreenshot.shape.TouchAreaEnum r1 = com.android.systemui.partialscreenshot.shape.TouchAreaEnum.RIGHT_BOTTOM     // Catch:{ NoSuchFieldError -> 0x0040 }
-                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0040 }
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0033 }
+            L_0x0033:
+                int[] r0 = $SwitchMap$com$android$systemui$partialscreenshot$shape$TouchAreaEnum     // Catch:{ NoSuchFieldError -> 0x003e }
+                com.android.systemui.partialscreenshot.shape.TouchAreaEnum r1 = com.android.systemui.partialscreenshot.shape.TouchAreaEnum.RIGHT_BOTTOM     // Catch:{ NoSuchFieldError -> 0x003e }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x003e }
                 r2 = 5
-                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0040 }
-            L_0x0040:
-                int[] r0 = $SwitchMap$com$android$systemui$partialscreenshot$shape$TouchAreaEnum     // Catch:{ NoSuchFieldError -> 0x004b }
-                com.android.systemui.partialscreenshot.shape.TouchAreaEnum r1 = com.android.systemui.partialscreenshot.shape.TouchAreaEnum.CENTER_LEFT     // Catch:{ NoSuchFieldError -> 0x004b }
-                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x004b }
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x003e }
+            L_0x003e:
+                int[] r0 = $SwitchMap$com$android$systemui$partialscreenshot$shape$TouchAreaEnum     // Catch:{ NoSuchFieldError -> 0x0049 }
+                com.android.systemui.partialscreenshot.shape.TouchAreaEnum r1 = com.android.systemui.partialscreenshot.shape.TouchAreaEnum.CENTER_LEFT     // Catch:{ NoSuchFieldError -> 0x0049 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0049 }
                 r2 = 6
-                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x004b }
-            L_0x004b:
-                int[] r0 = $SwitchMap$com$android$systemui$partialscreenshot$shape$TouchAreaEnum     // Catch:{ NoSuchFieldError -> 0x0056 }
-                com.android.systemui.partialscreenshot.shape.TouchAreaEnum r1 = com.android.systemui.partialscreenshot.shape.TouchAreaEnum.CENTER_TOP     // Catch:{ NoSuchFieldError -> 0x0056 }
-                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0056 }
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0049 }
+            L_0x0049:
+                int[] r0 = $SwitchMap$com$android$systemui$partialscreenshot$shape$TouchAreaEnum     // Catch:{ NoSuchFieldError -> 0x0054 }
+                com.android.systemui.partialscreenshot.shape.TouchAreaEnum r1 = com.android.systemui.partialscreenshot.shape.TouchAreaEnum.CENTER_TOP     // Catch:{ NoSuchFieldError -> 0x0054 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0054 }
                 r2 = 7
-                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0056 }
-            L_0x0056:
-                int[] r0 = $SwitchMap$com$android$systemui$partialscreenshot$shape$TouchAreaEnum     // Catch:{ NoSuchFieldError -> 0x0062 }
-                com.android.systemui.partialscreenshot.shape.TouchAreaEnum r1 = com.android.systemui.partialscreenshot.shape.TouchAreaEnum.CENTER_RIGHT     // Catch:{ NoSuchFieldError -> 0x0062 }
-                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0062 }
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0054 }
+            L_0x0054:
+                int[] r0 = $SwitchMap$com$android$systemui$partialscreenshot$shape$TouchAreaEnum     // Catch:{ NoSuchFieldError -> 0x0060 }
+                com.android.systemui.partialscreenshot.shape.TouchAreaEnum r1 = com.android.systemui.partialscreenshot.shape.TouchAreaEnum.CENTER_RIGHT     // Catch:{ NoSuchFieldError -> 0x0060 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0060 }
                 r2 = 8
-                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0062 }
-            L_0x0062:
-                int[] r0 = $SwitchMap$com$android$systemui$partialscreenshot$shape$TouchAreaEnum     // Catch:{ NoSuchFieldError -> 0x006e }
-                com.android.systemui.partialscreenshot.shape.TouchAreaEnum r1 = com.android.systemui.partialscreenshot.shape.TouchAreaEnum.CENTER_BOTTOM     // Catch:{ NoSuchFieldError -> 0x006e }
-                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x006e }
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0060 }
+            L_0x0060:
+                int[] r0 = $SwitchMap$com$android$systemui$partialscreenshot$shape$TouchAreaEnum     // Catch:{ NoSuchFieldError -> 0x006c }
+                com.android.systemui.partialscreenshot.shape.TouchAreaEnum r1 = com.android.systemui.partialscreenshot.shape.TouchAreaEnum.CENTER_BOTTOM     // Catch:{ NoSuchFieldError -> 0x006c }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x006c }
                 r2 = 9
-                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x006e }
-            L_0x006e:
-                int[] r0 = $SwitchMap$com$android$systemui$partialscreenshot$shape$TouchAreaEnum     // Catch:{ NoSuchFieldError -> 0x007a }
-                com.android.systemui.partialscreenshot.shape.TouchAreaEnum r1 = com.android.systemui.partialscreenshot.shape.TouchAreaEnum.OUT_OF_BOUNDS     // Catch:{ NoSuchFieldError -> 0x007a }
-                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x007a }
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x006c }
+            L_0x006c:
+                int[] r0 = $SwitchMap$com$android$systemui$partialscreenshot$shape$TouchAreaEnum     // Catch:{ NoSuchFieldError -> 0x0078 }
+                com.android.systemui.partialscreenshot.shape.TouchAreaEnum r1 = com.android.systemui.partialscreenshot.shape.TouchAreaEnum.OUT_OF_BOUNDS     // Catch:{ NoSuchFieldError -> 0x0078 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0078 }
                 r2 = 10
-                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x007a }
-            L_0x007a:
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0078 }
+            L_0x0078:
                 return
             */
             throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.partialscreenshot.shape.IrregularScreenshot.AnonymousClass1.<clinit>():void");

@@ -96,6 +96,8 @@ public class OverviewProxyRecentsImpl implements RecentsImplementation {
         }
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$toggleRecentApps$0 */
     public /* synthetic */ void lambda$toggleRecentApps$0$OverviewProxyRecentsImpl() {
         try {
             if (this.mOverviewProxyService.getProxy() != null) {

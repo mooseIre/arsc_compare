@@ -34,8 +34,9 @@ public class ToggleSeekBar extends SeekBar {
     }
 
     public boolean onTouchEvent(MotionEvent motionEvent) {
-        if (this.mEnforcedAdmin != null) {
-            ((ActivityStarter) Dependency.get(ActivityStarter.class)).postStartActivityDismissingKeyguard(RestrictedLockUtils.getShowAdminSupportDetailsIntent(this.mContext, this.mEnforcedAdmin), 0);
+        RestrictedLockUtils.EnforcedAdmin enforcedAdmin = this.mEnforcedAdmin;
+        if (enforcedAdmin != null) {
+            ((ActivityStarter) Dependency.get(ActivityStarter.class)).postStartActivityDismissingKeyguard(RestrictedLockUtils.getShowAdminSupportDetailsIntent(this.mContext, enforcedAdmin), 0);
             return true;
         }
         if (!isEnabled()) {

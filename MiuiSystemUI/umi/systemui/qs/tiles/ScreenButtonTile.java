@@ -102,7 +102,7 @@ public class ScreenButtonTile extends QSTileImpl<QSTile.BooleanState> {
                 z = true;
             }
             booleanState.value = z;
-            if (booleanState.value) {
+            if (z) {
                 booleanState.state = 2;
                 booleanState.icon = QSTileImpl.ResourceIcon.get(R.drawable.ic_qs_screen_button_enabled);
             } else {
@@ -130,7 +130,7 @@ public class ScreenButtonTile extends QSTileImpl<QSTile.BooleanState> {
 
         public void run() {
             if (this.value == 0) {
-                AlertDialog create = new AlertDialog.Builder(ScreenButtonTile.this.mContext, R.style.Theme_Dialog_Alert).setMessage(286130245).setPositiveButton(17039370, (DialogInterface.OnClickListener) null).create();
+                AlertDialog create = new AlertDialog.Builder(ScreenButtonTile.this.mContext, R.style.Theme_Dialog_Alert).setMessage(286130244).setPositiveButton(17039370, (DialogInterface.OnClickListener) null).create();
                 create.getWindow().setType(2010);
                 create.getWindow().addPrivateFlags(16);
                 create.show();

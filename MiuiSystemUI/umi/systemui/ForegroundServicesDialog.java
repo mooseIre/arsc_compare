@@ -55,14 +55,15 @@ public final class ForegroundServicesDialog extends AlertActivity implements Ada
         DependencyUI.initDependencies(getApplicationContext());
         this.mMetricsLogger = (MetricsLogger) Dependency.get(MetricsLogger.class);
         this.mInflater = LayoutInflater.from(this);
-        this.mAdapter = new PackageItemAdapter(this);
+        PackageItemAdapter packageItemAdapter = new PackageItemAdapter(this);
+        this.mAdapter = packageItemAdapter;
         AlertController.AlertParams alertParams = this.mAlertParams;
-        alertParams.mAdapter = this.mAdapter;
+        alertParams.mAdapter = packageItemAdapter;
         alertParams.mOnClickListener = this.mAppClickListener;
         alertParams.mCustomTitleView = this.mInflater.inflate(R.layout.foreground_service_title, (ViewGroup) null);
         alertParams.mIsSingleChoice = true;
         alertParams.mOnItemSelectedListener = this;
-        alertParams.mPositiveButtonText = getString(17039913);
+        alertParams.mPositiveButtonText = getString(17040073);
         alertParams.mPositiveButtonListener = this;
         alertParams.mOnPrepareListViewListener = this;
         updateApps(getIntent());
@@ -102,10 +103,10 @@ public final class ForegroundServicesDialog extends AlertActivity implements Ada
 
     /* access modifiers changed from: package-private */
     public void updateApps(Intent intent) {
-        this.mPackages = intent.getStringArrayExtra("packages");
-        String[] strArr = this.mPackages;
-        if (strArr != null) {
-            this.mAdapter.setPackages(strArr);
+        String[] stringArrayExtra = intent.getStringArrayExtra("packages");
+        this.mPackages = stringArrayExtra;
+        if (stringArrayExtra != null) {
+            this.mAdapter.setPackages(stringArrayExtra);
         }
     }
 

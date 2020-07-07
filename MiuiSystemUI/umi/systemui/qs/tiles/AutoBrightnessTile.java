@@ -132,9 +132,9 @@ public class AutoBrightnessTile extends QSTileImpl<QSTile.BooleanState> {
     }
 
     private void queryAutoBrightnessStatus() {
-        boolean z = false;
-        if (this.mAutoBrightnessAvailable && 1 == Settings.System.getIntForUser(this.mResolver, "screen_brightness_mode", 0, this.mCurrentUserId)) {
-            z = true;
+        boolean z = true;
+        if (!this.mAutoBrightnessAvailable || 1 != Settings.System.getIntForUser(this.mResolver, "screen_brightness_mode", 0, this.mCurrentUserId)) {
+            z = false;
         }
         this.mAutoBrightnessMode = z;
     }

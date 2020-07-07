@@ -75,8 +75,9 @@ public class WirelessChargingConfirmActivity extends Activity {
             builder.setCancelable(false);
             builder.setPositiveButton((CharSequence) getString(R.string.wireless_charging_ok), this.onFirstClickListener);
             builder.setOnDismissListener(this.OnFirstDismissListener);
-            this.mCheckBoxDialog = builder.create();
-            this.mCheckBoxDialog.show();
+            AlertDialog create = builder.create();
+            this.mCheckBoxDialog = create;
+            create.show();
         } else if (isSaveModeOn()) {
             showSecondConfirmDiaglog();
         } else {

@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TaskStackChangeListeners extends TaskStackListener {
-    private static final String TAG = "TaskStackChangeListeners";
+    private static final String TAG = TaskStackChangeListeners.class.getSimpleName();
     private final Handler mHandler;
     private boolean mRegistered;
     /* access modifiers changed from: private */
@@ -58,21 +58,6 @@ public class TaskStackChangeListeners extends TaskStackListener {
     public void onActivityUnpinned() throws RemoteException {
         this.mHandler.removeMessages(10);
         this.mHandler.sendEmptyMessage(10);
-    }
-
-    public void onPinnedActivityRestartAttempt(boolean z) throws RemoteException {
-        this.mHandler.removeMessages(4);
-        this.mHandler.obtainMessage(4, z ? 1 : 0, 0).sendToTarget();
-    }
-
-    public void onPinnedStackAnimationStarted() throws RemoteException {
-        this.mHandler.removeMessages(9);
-        this.mHandler.sendEmptyMessage(9);
-    }
-
-    public void onPinnedStackAnimationEnded() throws RemoteException {
-        this.mHandler.removeMessages(5);
-        this.mHandler.sendEmptyMessage(5);
     }
 
     public void onActivityForcedResizable(String str, int i, int i2) throws RemoteException {
@@ -155,16 +140,7 @@ public class TaskStackChangeListeners extends TaskStackListener {
     }
 
     private static class PinnedActivityInfo {
-        final String mPackageName;
-        final int mStackId;
-        final int mTaskId;
-        final int mUserId;
-
         PinnedActivityInfo(String str, int i, int i2, int i3) {
-            this.mPackageName = str;
-            this.mUserId = i;
-            this.mTaskId = i2;
-            this.mStackId = i3;
         }
     }
 }

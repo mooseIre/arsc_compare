@@ -11,7 +11,12 @@ import com.android.systemui.Constants;
 import com.android.systemui.statusbar.ExpandableNotificationRow;
 
 public class NotificationInboxTemplateViewWrapper extends NotificationTemplateViewWrapper {
-    protected int mInboxItemTopPadding = this.mContext.getResources().getDimensionPixelSize(17105362);
+    protected int mInboxItemTopPadding = this.mContext.getResources().getDimensionPixelSize(17105396);
+
+    /* access modifiers changed from: protected */
+    public boolean showExpandButton() {
+        return true;
+    }
 
     /* access modifiers changed from: protected */
     public boolean showSingleLine() {
@@ -23,39 +28,10 @@ public class NotificationInboxTemplateViewWrapper extends NotificationTemplateVi
         handleInboxTemplateViews();
     }
 
-    private int getTextLineCount() {
-        int[] iArr = {16909021, 16909022, 16909023, 16909024, 16909025, 16909026, 16909027};
-        int i = 0;
-        int i2 = 0;
-        while (i < iArr.length && this.mMainColumnContainer.findViewById(iArr[i]).getVisibility() == 0) {
-            i2++;
-            i++;
-        }
-        return i2;
-    }
-
-    private boolean showOneLine() {
-        return getTextLineCount() == 1;
-    }
-
     /* access modifiers changed from: protected */
     public boolean showTimeChronometer() {
-        if (showRightIcon() && showOneLine()) {
-            return false;
-        }
         Notification notification = this.mRow.getEntry().notification.getNotification();
-        if (notification.showsTime() || notification.showsChronometer()) {
-            return true;
-        }
-        return false;
-    }
-
-    /* access modifiers changed from: protected */
-    public boolean showExpandButton() {
-        if (!showRightIcon() && !showOneLine()) {
-            return true;
-        }
-        return false;
+        return notification.showsTime() || notification.showsChronometer();
     }
 
     public void onContentUpdated(ExpandableNotificationRow expandableNotificationRow) {
@@ -71,7 +47,7 @@ public class NotificationInboxTemplateViewWrapper extends NotificationTemplateVi
     private void handleLine1() {
         if (showMiuiStyle()) {
             ViewGroup.MarginLayoutParams marginLayoutParams = (ViewGroup.MarginLayoutParams) this.mLine1Container.getLayoutParams();
-            marginLayoutParams.setMarginStart(0);
+            marginLayoutParams.leftMargin = 0;
             this.mLine1Container.setLayoutParams(marginLayoutParams);
         }
     }

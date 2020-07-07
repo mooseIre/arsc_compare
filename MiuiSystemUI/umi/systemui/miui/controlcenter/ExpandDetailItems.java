@@ -15,7 +15,6 @@ import com.android.systemui.plugins.R;
 import com.android.systemui.qs.QSDetailItems;
 
 public class ExpandDetailItems extends QSDetailItems {
-    private static int mItemSeclectedColor;
     /* access modifiers changed from: private */
     public Context mContext;
     private int mOrientation;
@@ -27,7 +26,7 @@ public class ExpandDetailItems extends QSDetailItems {
     }
 
     public static ExpandDetailItems convertOrInflate(Context context, View view, ViewGroup viewGroup) {
-        mItemSeclectedColor = context.getColor(R.color.qs_control_expand_item_selected_color);
+        context.getColor(R.color.qs_control_expand_item_selected_color);
         if (view instanceof QSDetailItems) {
             return (ExpandDetailItems) view;
         }

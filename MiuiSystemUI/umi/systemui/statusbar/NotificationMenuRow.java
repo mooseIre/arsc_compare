@@ -13,7 +13,7 @@ import com.android.systemui.Constants;
 import com.android.systemui.Dependency;
 import com.android.systemui.HapticFeedBackImpl;
 import com.android.systemui.miui.statusbar.ExpandedNotification;
-import com.android.systemui.miui.statusbar.analytics.NotificationStat;
+import com.android.systemui.miui.statusbar.analytics.SystemUIStat;
 import com.android.systemui.plugins.R;
 import com.android.systemui.plugins.statusbar.NotificationMenuRowPlugin;
 import com.android.systemui.plugins.statusbar.NotificationSwipeActionHelper;
@@ -27,7 +27,6 @@ import java.util.ArrayList;
 import java.util.function.Consumer;
 
 public class NotificationMenuRow implements NotificationMenuRowPlugin, View.OnClickListener, ExpandableNotificationRow.LayoutListener {
-    private float mAlpha = 0.0f;
     private CheckForDrag mCheckForDrag;
     private Context mContext;
     private boolean mDismissing;
@@ -126,8 +125,9 @@ public class NotificationMenuRow implements NotificationMenuRowPlugin, View.OnCl
 
     private void createMenuViews(boolean z) {
         this.mMenuItems.clear();
-        this.mInfoItem = createInfoItem(this.mContext);
-        this.mMenuItems.add(this.mInfoItem);
+        NotificationMenuRowPlugin.MenuItem createInfoItem = createInfoItem(this.mContext);
+        this.mInfoItem = createInfoItem;
+        this.mMenuItems.add(createInfoItem);
         ExpandableNotificationRow expandableNotificationRow = this.mParent;
         ExpandedNotification statusBarNotification = expandableNotificationRow != null ? expandableNotificationRow.getStatusBarNotification() : null;
         if (Constants.IS_INTERNATIONAL) {
@@ -189,8 +189,9 @@ public class NotificationMenuRow implements NotificationMenuRowPlugin, View.OnCl
                 motionEvent.getRawX();
                 this.mPrevX = motionEvent.getRawX();
                 if (this.mShouldShowMenu && this.mTranslation < 0.0f && !NotificationStackScrollLayout.isPinnedHeadsUp(view) && !this.mParent.isOnKeyguard() && !this.mParent.areGutsExposed() && !this.mParent.isDark() && ((checkForDrag = this.mCheckForDrag) == null || !this.mHandler.hasCallbacks(checkForDrag))) {
-                    this.mCheckForDrag = new CheckForDrag();
-                    this.mHandler.postDelayed(this.mCheckForDrag, 60);
+                    CheckForDrag checkForDrag2 = new CheckForDrag();
+                    this.mCheckForDrag = checkForDrag2;
+                    this.mHandler.postDelayed(checkForDrag2, 60);
                 }
             }
         }
@@ -250,7 +251,7 @@ public class NotificationMenuRow implements NotificationMenuRowPlugin, View.OnCl
         this.mMenuSnappedTo = true;
         this.mMenuListener.onMenuShown(view);
         this.mSwipeHelper.snap(view, f, f2);
-        ((NotificationStat) Dependency.get(NotificationStat.class)).logNotificationSwipeLeft(this.mParent.getEntry().key);
+        ((SystemUIStat) Dependency.get(SystemUIStat.class)).logNotificationSwipeLeft(this.mParent.getEntry().key);
     }
 
     private void snapBack(View view, float f) {
@@ -268,7 +269,7 @@ public class NotificationMenuRow implements NotificationMenuRowPlugin, View.OnCl
         this.mMenuSnappedTo = false;
         this.mDismissing = true;
         this.mSwipeHelper.dismiss(view, f);
-        ((NotificationStat) Dependency.get(NotificationStat.class)).logNotificationSwipeRight(this.mParent.getEntry().key);
+        ((SystemUIStat) Dependency.get(SystemUIStat.class)).logNotificationSwipeRight(this.mParent.getEntry().key);
     }
 
     private boolean swipedEnoughToShowMenu() {
@@ -281,7 +282,7 @@ public class NotificationMenuRow implements NotificationMenuRowPlugin, View.OnCl
 
     public void setAppName(String str) {
         this.mMenuItems.forEach(new Consumer(str) {
-            private final /* synthetic */ String f$0;
+            public final /* synthetic */ String f$0;
 
             {
                 this.f$0 = r1;
@@ -400,8 +401,9 @@ public class NotificationMenuRow implements NotificationMenuRowPlugin, View.OnCl
 
         public void setIcon(Context context, int i) {
             if (this.mMenuView == null) {
-                this.mMenuView = new AlphaOptimizedImageView(context);
-                this.mMenuView.setScaleType(ImageView.ScaleType.CENTER);
+                AlphaOptimizedImageView alphaOptimizedImageView = new AlphaOptimizedImageView(context);
+                this.mMenuView = alphaOptimizedImageView;
+                alphaOptimizedImageView.setScaleType(ImageView.ScaleType.CENTER);
                 this.mMenuView.setAlpha(1.0f);
             }
             this.mMenuView.setImageResource(i);

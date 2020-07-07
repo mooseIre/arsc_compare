@@ -24,15 +24,18 @@ public class ExpandedNotification extends StatusBarNotification {
     private boolean mIsSystemApp;
     private boolean mPeek;
     private String mPkgName;
-    private Drawable mRowIcon;
     private int mTargetSdk;
+
+    public void setRowIcon(Drawable drawable) {
+    }
 
     public ExpandedNotification(Context context, StatusBarNotification statusBarNotification) {
         super(statusBarNotification.getPackageName(), statusBarNotification.getOpPkg(), statusBarNotification.getId(), statusBarNotification.getTag(), statusBarNotification.getUid(), statusBarNotification.getInitialPid(), statusBarNotification.getNotification(), statusBarNotification.getUser(), statusBarNotification.getOverrideGroupKey(), statusBarNotification.getPostTime());
         NotificationSettingsManager notificationSettingsManager = (NotificationSettingsManager) Dependency.get(NotificationSettingsManager.class);
         CharSequence targetPkg = MiuiNotificationCompat.getTargetPkg(getNotification());
-        this.mPkgName = (!notificationSettingsManager.canSendSubstituteNotification(statusBarNotification.getPackageName()) || TextUtils.isEmpty(targetPkg)) ? statusBarNotification.getPackageName() : targetPkg.toString();
-        this.mIsSystemApp = Util.isSystemApp(context, this.mPkgName);
+        String packageName = (!notificationSettingsManager.canSendSubstituteNotification(statusBarNotification.getPackageName()) || TextUtils.isEmpty(targetPkg)) ? statusBarNotification.getPackageName() : targetPkg.toString();
+        this.mPkgName = packageName;
+        this.mIsSystemApp = Util.isSystemApp(context, packageName);
         this.mIsPrioritizedApp = notificationSettingsManager.isPrioritizedApp(this.mPkgName);
         this.mCanFloat = NotificationSettingsHelper.checkFloat(context, this.mPkgName);
         this.mCanShowOnKeyguard = NotificationSettingsHelper.checkKeyguard(context, this.mPkgName);
@@ -80,10 +83,6 @@ public class ExpandedNotification extends StatusBarNotification {
 
     public Drawable getAppIcon() {
         return this.mAppIcon;
-    }
-
-    public void setRowIcon(Drawable drawable) {
-        this.mRowIcon = drawable;
     }
 
     public void setAppUid(int i) {

@@ -61,8 +61,9 @@ public class ViewTransformationHelper implements TransformableView {
         if (valueAnimator != null) {
             valueAnimator.cancel();
         }
-        this.mViewTransformationAnimation = ValueAnimator.ofFloat(new float[]{0.0f, 1.0f});
-        this.mViewTransformationAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+        ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{0.0f, 1.0f});
+        this.mViewTransformationAnimation = ofFloat;
+        ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 ViewTransformationHelper.this.transformTo(transformableView, valueAnimator.getAnimatedFraction());
             }
@@ -117,8 +118,9 @@ public class ViewTransformationHelper implements TransformableView {
         if (valueAnimator != null) {
             valueAnimator.cancel();
         }
-        this.mViewTransformationAnimation = ValueAnimator.ofFloat(new float[]{0.0f, 1.0f});
-        this.mViewTransformationAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+        ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{0.0f, 1.0f});
+        this.mViewTransformationAnimation = ofFloat;
+        ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 ViewTransformationHelper.this.transformFrom(transformableView, valueAnimator.getAnimatedFraction());
             }
@@ -199,7 +201,7 @@ public class ViewTransformationHelper implements TransformableView {
                 if (view2 == view.getParent()) {
                     break;
                 }
-                view2.setTag(R.id.contains_transformed_view, true);
+                view2.setTag(R.id.contains_transformed_view, Boolean.TRUE);
                 valueAt = view2.getParent();
             }
         }

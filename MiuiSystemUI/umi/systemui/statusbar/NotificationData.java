@@ -62,8 +62,10 @@ public class NotificationData {
     public HeadsUpManager mHeadsUpManager;
     private long mLastRankingMapUpdatedTime;
     private final Comparator<Entry> mRankingComparator = new Comparator<Entry>() {
-        private final NotificationListenerService.Ranking mRankingA = new NotificationListenerService.Ranking();
-        private final NotificationListenerService.Ranking mRankingB = new NotificationListenerService.Ranking();
+        {
+            new NotificationListenerService.Ranking();
+            new NotificationListenerService.Ranking();
+        }
 
         public int compare(Entry entry, Entry entry2) {
             ExpandedNotification expandedNotification = entry.notification;
@@ -134,8 +136,6 @@ public class NotificationData {
         public boolean isGameModeWhenHeadsUp;
         public String key;
         private long lastFullScreenIntentLaunchTime = -2000;
-        private int mCachedContrastColor = 1;
-        private int mCachedContrastColorIsFor = 1;
         public boolean mIsShowMiniWindowBar;
         private InflationTask mRunningTask = null;
         private boolean mShowInShadeWhenBubble;
@@ -253,12 +253,15 @@ public class NotificationData {
             Notification notification2 = expandedNotification.getNotification();
             Icon smallIcon = NotificationUtil.getSmallIcon(context, expandedNotification);
             if (smallIcon != null) {
-                this.icon = new StatusBarIconView(context, expandedNotification.getPackageName() + "/0x" + Integer.toHexString(expandedNotification.getId()), expandedNotification);
-                this.icon.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-                this.expandedIcon = new StatusBarIconView(context, expandedNotification.getPackageName() + "/0x" + Integer.toHexString(expandedNotification.getId()), expandedNotification);
-                this.expandedIcon.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-                this.foldFooterIcon = new StatusBarIconView(context, expandedNotification.getPackageName() + "/0x" + Integer.toHexString(expandedNotification.getId()), expandedNotification);
-                this.foldFooterIcon.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+                StatusBarIconView statusBarIconView = new StatusBarIconView(context, expandedNotification.getPackageName() + "/0x" + Integer.toHexString(expandedNotification.getId()), expandedNotification);
+                this.icon = statusBarIconView;
+                statusBarIconView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+                StatusBarIconView statusBarIconView2 = new StatusBarIconView(context, expandedNotification.getPackageName() + "/0x" + Integer.toHexString(expandedNotification.getId()), expandedNotification);
+                this.expandedIcon = statusBarIconView2;
+                statusBarIconView2.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+                StatusBarIconView statusBarIconView3 = new StatusBarIconView(context, expandedNotification.getPackageName() + "/0x" + Integer.toHexString(expandedNotification.getId()), expandedNotification);
+                this.foldFooterIcon = statusBarIconView3;
+                statusBarIconView3.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
                 StatusBarIcon statusBarIcon = new StatusBarIcon(expandedNotification.getUser(), expandedNotification.getPackageName(), smallIcon, notification2.iconLevel, notification2.number, StatusBarIconView.contentDescForNotification(context, notification2));
                 if (!this.icon.set(statusBarIcon) || !this.expandedIcon.set(statusBarIcon) || !this.foldFooterIcon.set(statusBarIcon)) {
                     this.icon = null;
@@ -302,12 +305,11 @@ public class NotificationData {
         }
 
         public void setInflationTask(InflationTask inflationTask) {
-            InflationTask inflationTask2;
-            InflationTask inflationTask3 = this.mRunningTask;
+            InflationTask inflationTask2 = this.mRunningTask;
             abortTask();
             this.mRunningTask = inflationTask;
-            if (inflationTask3 != null && (inflationTask2 = this.mRunningTask) != null) {
-                inflationTask2.supersedeTask(inflationTask3);
+            if (inflationTask2 != null && inflationTask != null) {
+                inflationTask.supersedeTask(inflationTask2);
             }
         }
 
@@ -374,7 +376,7 @@ public class NotificationData {
 
     public List<Entry> getPkgNotifications(String str) {
         return (List) new ArrayList(this.mSortedAndFiltered).stream().filter(new Predicate(str) {
-            private final /* synthetic */ String f$0;
+            public final /* synthetic */ String f$0;
 
             {
                 this.f$0 = r1;
@@ -641,7 +643,7 @@ public class NotificationData {
     private void dumpEntry(PrintWriter printWriter, String str, int i, Entry entry) {
         this.mRankingMap.getRanking(entry.key, this.mTmpRanking);
         printWriter.print(str);
-        printWriter.println("  [" + i + "] " + entry.notification + " showMiniBar=" + entry.mIsShowMiniWindowBar);
+        printWriter.println("  [" + i + "] " + entry.notification);
     }
 
     private void checkNotificationLimit(String str) {

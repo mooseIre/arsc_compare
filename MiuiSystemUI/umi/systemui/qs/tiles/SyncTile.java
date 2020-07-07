@@ -1,5 +1,6 @@
 package com.android.systemui.qs.tiles;
 
+import android.app.ActivityManager;
 import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Intent;
@@ -7,7 +8,6 @@ import android.content.SyncStatusObserver;
 import android.os.UserHandle;
 import android.util.Log;
 import android.widget.Switch;
-import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.systemui.plugins.R;
 import com.android.systemui.plugins.qs.QSTile;
 import com.android.systemui.qs.QSHost;
@@ -28,13 +28,9 @@ public class SyncTile extends QSTileImpl<QSTile.BooleanState> {
         return -1;
     }
 
-    public boolean isAvailable() {
-        return false;
-    }
-
     public SyncTile(QSHost qSHost) {
         super(qSHost);
-        this.mCurrentUserId = "com.android.systemui".equals(this.mContext.getApplicationInfo().packageName) ? KeyguardUpdateMonitor.getCurrentUser() : UserHandle.myUserId();
+        this.mCurrentUserId = "com.android.systemui".equals(this.mContext.getApplicationInfo().packageName) ? ActivityManager.getCurrentUser() : UserHandle.myUserId();
     }
 
     /* access modifiers changed from: protected */

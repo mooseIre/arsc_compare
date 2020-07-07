@@ -38,10 +38,6 @@ public class TaskViewHeader extends FrameLayout implements View.OnClickListener,
     TextView mAppTitleView;
     private HighlightColorDrawable mBackground;
     int mCornerRadius;
-    Drawable mDarkDismissDrawable;
-    Drawable mDarkFreeformIcon;
-    Drawable mDarkFullscreenIcon;
-    Drawable mDarkInfoIcon;
     @ViewDebug.ExportedProperty(category = "recents")
     float mDimAlpha;
     private Paint mDimLayerPaint;
@@ -53,17 +49,10 @@ public class TaskViewHeader extends FrameLayout implements View.OnClickListener,
     int mHeaderButtonPadding;
     int mHighlightHeight;
     ImageView mIconView;
-    Drawable mLightDismissDrawable;
-    Drawable mLightFreeformIcon;
-    Drawable mLightFullscreenIcon;
-    Drawable mLightInfoIcon;
     ImageView mLockedView;
-    int mMoveTaskTargetStackId;
     private HighlightColorDrawable mOverlayBackground;
     public SpringAnimationImpl mSpringAnimationImpl;
     Task mTask;
-    int mTaskBarViewDarkTextColor;
-    int mTaskBarViewLightTextColor;
     @ViewDebug.ExportedProperty(category = "recents")
     Rect mTaskViewRect;
     TextView mTitleView;
@@ -88,7 +77,7 @@ public class TaskViewHeader extends FrameLayout implements View.OnClickListener,
     }
 
     private class HighlightColorDrawable extends Drawable {
-        private Paint mBackgroundPaint = new Paint();
+        private Paint mBackgroundPaint;
         private int mColor;
         private float mDimAlpha;
         private Paint mHighlightPaint = new Paint();
@@ -104,7 +93,9 @@ public class TaskViewHeader extends FrameLayout implements View.OnClickListener,
         }
 
         public HighlightColorDrawable() {
-            this.mBackgroundPaint.setColor(Color.argb(255, 0, 0, 0));
+            Paint paint = new Paint();
+            this.mBackgroundPaint = paint;
+            paint.setColor(Color.argb(255, 0, 0, 0));
             this.mBackgroundPaint.setAntiAlias(true);
             this.mHighlightPaint.setColor(Color.argb(255, 255, 255, 255));
             this.mHighlightPaint.setAntiAlias(true);
@@ -156,26 +147,26 @@ public class TaskViewHeader extends FrameLayout implements View.OnClickListener,
     public TaskViewHeader(Context context, AttributeSet attributeSet, int i, int i2) {
         super(context, attributeSet, i, i2);
         this.mTaskViewRect = new Rect();
-        this.mMoveTaskTargetStackId = -1;
         this.mTmpHSL = new float[3];
         this.mDimLayerPaint = new Paint();
         setWillNotDraw(false);
         Resources resources = context.getResources();
-        this.mLightDismissDrawable = context.getDrawable(R.drawable.recents_dismiss_light);
-        this.mDarkDismissDrawable = context.getDrawable(R.drawable.recents_dismiss_dark);
+        context.getDrawable(R.drawable.recents_dismiss_light);
+        context.getDrawable(R.drawable.recents_dismiss_dark);
         this.mCornerRadius = resources.getDimensionPixelSize(R.dimen.recents_task_view_rounded_corners_radius);
         this.mHighlightHeight = resources.getDimensionPixelSize(R.dimen.recents_task_view_highlight);
-        this.mTaskBarViewLightTextColor = context.getColor(R.color.recents_task_bar_light_text_color);
-        this.mTaskBarViewDarkTextColor = context.getColor(R.color.recents_task_bar_dark_text_color);
-        this.mLightFreeformIcon = context.getDrawable(R.drawable.recents_move_task_freeform_light);
-        this.mDarkFreeformIcon = context.getDrawable(R.drawable.recents_move_task_freeform_dark);
-        this.mLightFullscreenIcon = context.getDrawable(R.drawable.recents_move_task_fullscreen_light);
-        this.mDarkFullscreenIcon = context.getDrawable(R.drawable.recents_move_task_fullscreen_dark);
-        this.mLightInfoIcon = context.getDrawable(R.drawable.recents_info_light);
-        this.mDarkInfoIcon = context.getDrawable(R.drawable.recents_info_dark);
+        context.getColor(R.color.recents_task_bar_light_text_color);
+        context.getColor(R.color.recents_task_bar_dark_text_color);
+        context.getDrawable(R.drawable.recents_move_task_freeform_light);
+        context.getDrawable(R.drawable.recents_move_task_freeform_dark);
+        context.getDrawable(R.drawable.recents_move_task_fullscreen_light);
+        context.getDrawable(R.drawable.recents_move_task_fullscreen_dark);
+        context.getDrawable(R.drawable.recents_info_light);
+        context.getDrawable(R.drawable.recents_info_dark);
         this.mDisabledTaskBarBackgroundColor = context.getColor(R.color.recents_task_bar_disabled_background_color);
-        this.mBackground = new HighlightColorDrawable();
-        this.mBackground.setColorAndDim(Color.argb(255, 0, 0, 0), 0.0f);
+        HighlightColorDrawable highlightColorDrawable = new HighlightColorDrawable();
+        this.mBackground = highlightColorDrawable;
+        highlightColorDrawable.setColorAndDim(Color.argb(255, 0, 0, 0), 0.0f);
         this.mOverlayBackground = new HighlightColorDrawable();
         this.mDimLayerPaint.setColor(Color.argb(255, 0, 0, 0));
         this.mDimLayerPaint.setAntiAlias(true);
@@ -194,8 +185,9 @@ public class TaskViewHeader extends FrameLayout implements View.OnClickListener,
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         Recents.getSystemServices();
-        this.mIconView = (ImageView) findViewById(R.id.icon);
-        this.mIconView.setOnLongClickListener(this);
+        ImageView imageView = (ImageView) findViewById(R.id.icon);
+        this.mIconView = imageView;
+        imageView.setOnLongClickListener(this);
         this.mTitleView = (TextView) findViewById(R.id.title);
         this.mLockedView = (ImageView) findViewById(R.id.locked_flag);
         this.mDismissView = (TextView) findViewById(R.id.dismiss_task);

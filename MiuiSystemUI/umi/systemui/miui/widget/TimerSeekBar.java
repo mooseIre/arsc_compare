@@ -87,7 +87,7 @@ public class TimerSeekBar extends SeekBar implements SeekBar.OnSeekBarChangeList
         if (i != this.mCurrentSegmentPoint || i2 != this.mDeterminedSegmentPoint) {
             this.mCurrentSegmentPoint = i;
             this.mDeterminedSegmentPoint = i2;
-            onSegmentChange(this.mCurrentSegmentPoint, this.mDeterminedSegmentPoint);
+            onSegmentChange(i, i2);
         }
     }
 

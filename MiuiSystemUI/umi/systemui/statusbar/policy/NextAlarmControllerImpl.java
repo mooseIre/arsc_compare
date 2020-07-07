@@ -13,13 +13,12 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 
 public class NextAlarmControllerImpl extends BroadcastReceiver implements NextAlarmController {
-    private AlarmManager mAlarmManager;
     private final ArrayList<NextAlarmController.NextAlarmChangeCallback> mChangeCallbacks = new ArrayList<>();
     private boolean mHasSystemAlarm;
     private boolean mHasThirdPartyAlarm;
 
     public NextAlarmControllerImpl(Context context) {
-        this.mAlarmManager = (AlarmManager) context.getSystemService("alarm");
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService("alarm");
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("android.intent.action.ALARM_CHANGED");
         context.registerReceiverAsUser(this, UserHandle.ALL, intentFilter, (String) null, (Handler) null);
@@ -35,6 +34,10 @@ public class NextAlarmControllerImpl extends BroadcastReceiver implements NextAl
     public void addCallback(NextAlarmController.NextAlarmChangeCallback nextAlarmChangeCallback) {
         this.mChangeCallbacks.add(nextAlarmChangeCallback);
         nextAlarmChangeCallback.onNextAlarmChanged(this.mHasSystemAlarm || this.mHasThirdPartyAlarm);
+    }
+
+    public void removeCallback(NextAlarmController.NextAlarmChangeCallback nextAlarmChangeCallback) {
+        this.mChangeCallbacks.remove(nextAlarmChangeCallback);
     }
 
     public void onReceive(Context context, Intent intent) {

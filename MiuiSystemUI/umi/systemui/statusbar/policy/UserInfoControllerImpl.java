@@ -100,7 +100,7 @@ public class UserInfoControllerImpl implements UserInfoController {
             final String str = currentUser.name;
             Resources resources = this.mContext.getResources();
             final int max = Math.max(resources.getDimensionPixelSize(R.dimen.multi_user_avatar_expanded_size), resources.getDimensionPixelSize(R.dimen.multi_user_avatar_keyguard_size));
-            this.mUserInfoTask = new AsyncTask<Void, Void, UserInfoQueryResult>() {
+            AnonymousClass3 r6 = new AsyncTask<Void, Void, UserInfoQueryResult>() {
                 /* access modifiers changed from: protected */
                 public UserInfoQueryResult doInBackground(Void... voidArr) {
                     UserIconDrawable userIconDrawable;
@@ -129,7 +129,8 @@ public class UserInfoControllerImpl implements UserInfoController {
                     UserInfoControllerImpl.this.notifyChanged();
                 }
             };
-            this.mUserInfoTask.execute(new Void[0]);
+            this.mUserInfoTask = r6;
+            r6.execute(new Void[0]);
         } catch (PackageManager.NameNotFoundException e) {
             Log.e("UserInfoController", "Couldn't create user context", e);
             throw new RuntimeException(e);

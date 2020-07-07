@@ -49,7 +49,6 @@ public class LegacyRecentsImpl implements RecentsImplementation {
     public static SystemServicesProxy sSystemServicesProxy;
     /* access modifiers changed from: private */
     public Context mContext;
-    private int mDraggingInRecentsCurrentUser;
     /* access modifiers changed from: private */
     public Handler mHandler;
     /* access modifiers changed from: private */
@@ -339,8 +338,9 @@ public class LegacyRecentsImpl implements RecentsImplementation {
                 if (i3 != -1) {
                     MetricsLogger.action(this.mContext, i3, runningTask.topActivity.flattenToShortString());
                 }
-                if (runningTask.topActivity != null) {
-                    RecentsPushEventHelper.sendEnterMultiWindowEvent("outOfRecents", runningTask.topActivity.getPackageName());
+                ComponentName componentName = runningTask.topActivity;
+                if (componentName != null) {
+                    RecentsPushEventHelper.sendEnterMultiWindowEvent("outOfRecents", componentName.getPackageName());
                 }
                 if (sSystemServicesProxy.isSystemUser(currentUser)) {
                     RecentsImpl recentsImpl = this.mImpl;
@@ -362,7 +362,6 @@ public class LegacyRecentsImpl implements RecentsImplementation {
                         }
                     }
                 }
-                this.mDraggingInRecentsCurrentUser = currentUser;
                 return true;
             }
             Toast.makeText(this.mContext, R.string.recents_incompatible_app_message, 0).show();

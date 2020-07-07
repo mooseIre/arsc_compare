@@ -132,15 +132,17 @@ public class RecentsView extends FrameLayout {
         this.mTouchHandler = new RecentsViewTouchHandler(this);
         this.mFlingAnimationUtils = new FlingAnimationUtils(context, 0.3f);
         LayoutInflater from = LayoutInflater.from(context);
-        this.mEmptyView = (TextView) from.inflate(R.layout.recents_empty, this, false);
-        this.mEmptyView.setOnClickListener(new View.OnClickListener() {
+        TextView textView = (TextView) from.inflate(R.layout.recents_empty, this, false);
+        this.mEmptyView = textView;
+        textView.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 RecentsEventBus.getDefault().send(new HideRecentsEvent(false, true, false));
             }
         });
         addView(this.mEmptyView);
-        this.mRecentMenuView = (RecentMenuView) from.inflate(R.layout.recent_menu_view, this, false);
-        addView(this.mRecentMenuView, -1, -1);
+        RecentMenuView recentMenuView = (RecentMenuView) from.inflate(R.layout.recent_menu_view, this, false);
+        this.mRecentMenuView = recentMenuView;
+        addView(recentMenuView, -1, -1);
         this.mDefaultScrimAlpha = context.getResources().getFloat(R.dimen.recent_background_scrim_alpha);
         this.mBackgroundScrim = new ColorDrawable(Color.argb((int) (this.mDefaultScrimAlpha * 255.0f), 0, 0, 0)).mutate();
         this.mRecentBackground = context.getResources().getDrawable(R.drawable.recent_task_bg, context.getTheme());
@@ -150,8 +152,9 @@ public class RecentsView extends FrameLayout {
     public void onReload(boolean z, boolean z2) {
         RecentsActivityLaunchState launchState = Recents.getConfiguration().getLaunchState();
         if (this.mTaskStackView == null) {
-            this.mTaskStackView = new TaskStackView(getContext());
-            this.mTaskStackView.setSystemInsets(this.mSystemInsets);
+            TaskStackView taskStackView = new TaskStackView(getContext());
+            this.mTaskStackView = taskStackView;
+            taskStackView.setSystemInsets(this.mSystemInsets);
             addView(this.mTaskStackView);
             this.mRecentMenuView.setTaskStackView(this.mTaskStackView);
             RecentsEventBus.getDefault().register(this.mTaskStackView, 3);
@@ -517,8 +520,9 @@ public class RecentsView extends FrameLayout {
         Utilities.cancelAnimationWithoutCallbacks(this.mBackgroundScrimAnimator);
         int alpha = (int) ((((float) this.mBackgroundScrim.getAlpha()) / (this.mDefaultScrimAlpha * 255.0f)) * 255.0f);
         int i2 = (int) (f * 255.0f);
-        this.mBackgroundScrimAnimator = ObjectAnimator.ofInt(this.mBackgroundScrim, Utilities.DRAWABLE_ALPHA, new int[]{alpha, i2});
-        this.mBackgroundScrimAnimator.setDuration((long) i);
+        ObjectAnimator ofInt = ObjectAnimator.ofInt(this.mBackgroundScrim, Utilities.DRAWABLE_ALPHA, new int[]{alpha, i2});
+        this.mBackgroundScrimAnimator = ofInt;
+        ofInt.setDuration((long) i);
         Animator animator = this.mBackgroundScrimAnimator;
         if (i2 > alpha) {
             interpolator = Interpolators.MIUI_ALPHA_IN;

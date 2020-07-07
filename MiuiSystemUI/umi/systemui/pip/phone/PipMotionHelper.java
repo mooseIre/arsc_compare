@@ -20,8 +20,8 @@ import android.util.Log;
 import android.view.animation.Interpolator;
 import com.android.internal.graphics.SfVsyncFrameCallbackProvider;
 import com.android.internal.os.SomeArgs;
-import com.android.internal.policy.PipSnapAlgorithm;
 import com.android.systemui.Interpolators;
+import com.android.systemui.pip.PipSnapAlgorithm;
 import com.android.systemui.recents.misc.ForegroundThread;
 import com.android.systemui.recents.misc.SystemServicesProxy;
 import com.android.systemui.statusbar.FlingAnimationUtils;
@@ -29,7 +29,6 @@ import java.io.PrintWriter;
 
 public class PipMotionHelper implements Handler.Callback {
     private static final RectEvaluator RECT_EVALUATOR = new RectEvaluator(new Rect());
-    private IActivityManager mActivityManager;
     /* access modifiers changed from: private */
     public IActivityTaskManager mActivityTaskManager;
     /* access modifiers changed from: private */
@@ -48,13 +47,13 @@ public class PipMotionHelper implements Handler.Callback {
     public PipMotionHelper(Context context, IActivityManager iActivityManager, PipMenuActivityController pipMenuActivityController, PipSnapAlgorithm pipSnapAlgorithm, FlingAnimationUtils flingAnimationUtils) {
         this.mContext = context;
         this.mHandler = new Handler(ForegroundThread.get().getLooper(), this);
-        this.mActivityManager = iActivityManager;
         this.mActivityTaskManager = ActivityTaskManager.getService();
         this.mMenuController = pipMenuActivityController;
         this.mSnapAlgorithm = pipSnapAlgorithm;
         this.mFlingAnimationUtils = flingAnimationUtils;
-        this.mAnimationHandler = new AnimationHandler();
-        this.mAnimationHandler.setProvider(new SfVsyncFrameCallbackProvider());
+        AnimationHandler animationHandler = new AnimationHandler();
+        this.mAnimationHandler = animationHandler;
+        animationHandler.setProvider(new SfVsyncFrameCallbackProvider());
         onConfigurationChanged();
     }
 
@@ -102,25 +101,6 @@ public class PipMotionHelper implements Handler.Callback {
     public void expandPip(boolean z) {
         cancelAnimations();
         this.mMenuController.hideMenuWithoutResize();
-        this.mHandler.post(new Runnable(z) {
-            private final /* synthetic */ boolean f$1;
-
-            {
-                this.f$1 = r2;
-            }
-
-            public final void run() {
-                PipMotionHelper.this.lambda$expandPip$0$PipMotionHelper(this.f$1);
-            }
-        });
-    }
-
-    public /* synthetic */ void lambda$expandPip$0$PipMotionHelper(boolean z) {
-        try {
-            this.mActivityTaskManager.dismissPip(!z, 300);
-        } catch (RemoteException e) {
-            Log.e("PipMotionHelper", "Error expanding PiP activity", e);
-        }
     }
 
     /* access modifiers changed from: package-private */
@@ -129,12 +109,14 @@ public class PipMotionHelper implements Handler.Callback {
         this.mMenuController.hideMenuWithoutResize();
         this.mHandler.post(new Runnable() {
             public final void run() {
-                PipMotionHelper.this.lambda$dismissPip$1$PipMotionHelper();
+                PipMotionHelper.this.lambda$dismissPip$0$PipMotionHelper();
             }
         });
     }
 
-    public /* synthetic */ void lambda$dismissPip$1$PipMotionHelper() {
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$dismissPip$0 */
+    public /* synthetic */ void lambda$dismissPip$0$PipMotionHelper() {
         try {
             this.mActivityTaskManager.removeStacksInWindowingModes(new int[]{2});
         } catch (RemoteException e) {
@@ -149,11 +131,7 @@ public class PipMotionHelper implements Handler.Callback {
 
     /* access modifiers changed from: package-private */
     public Rect getClosestMinimizedBounds(Rect rect, Rect rect2) {
-        Point point = new Point();
-        this.mContext.getDisplay().getRealSize(point);
-        Rect findClosestSnapBounds = this.mSnapAlgorithm.findClosestSnapBounds(rect2, rect);
-        this.mSnapAlgorithm.applyMinimizedOffset(findClosestSnapBounds, rect2, point, this.mStableInsets);
-        return findClosestSnapBounds;
+        return new Rect();
     }
 
     /* access modifiers changed from: package-private */
@@ -174,9 +152,10 @@ public class PipMotionHelper implements Handler.Callback {
         cancelAnimations();
         Rect closestMinimizedBounds = getClosestMinimizedBounds(this.mBounds, rect);
         if (!this.mBounds.equals(closestMinimizedBounds)) {
-            this.mBoundsAnimator = createAnimationToBounds(this.mBounds, closestMinimizedBounds, 200, Interpolators.LINEAR_OUT_SLOW_IN);
+            ValueAnimator createAnimationToBounds = createAnimationToBounds(this.mBounds, closestMinimizedBounds, 200, Interpolators.LINEAR_OUT_SLOW_IN);
+            this.mBoundsAnimator = createAnimationToBounds;
             if (animatorUpdateListener != null) {
-                this.mBoundsAnimator.addUpdateListener(animatorUpdateListener);
+                createAnimationToBounds.addUpdateListener(animatorUpdateListener);
             }
             this.mBoundsAnimator.start();
         }
@@ -185,37 +164,12 @@ public class PipMotionHelper implements Handler.Callback {
 
     /* access modifiers changed from: package-private */
     public Rect flingToSnapTarget(float f, float f2, float f3, Rect rect, ValueAnimator.AnimatorUpdateListener animatorUpdateListener, Animator.AnimatorListener animatorListener) {
-        cancelAnimations();
-        Rect findClosestSnapBounds = this.mSnapAlgorithm.findClosestSnapBounds(rect, this.mBounds);
-        if (!this.mBounds.equals(findClosestSnapBounds)) {
-            this.mBoundsAnimator = createAnimationToBounds(this.mBounds, findClosestSnapBounds, 0, Interpolators.FAST_OUT_SLOW_IN);
-            this.mFlingAnimationUtils.apply((Animator) this.mBoundsAnimator, 0.0f, distanceBetweenRectOffsets(this.mBounds, findClosestSnapBounds), f);
-            if (animatorUpdateListener != null) {
-                this.mBoundsAnimator.addUpdateListener(animatorUpdateListener);
-            }
-            if (animatorListener != null) {
-                this.mBoundsAnimator.addListener(animatorListener);
-            }
-            this.mBoundsAnimator.start();
-        }
-        return findClosestSnapBounds;
+        return new Rect();
     }
 
     /* access modifiers changed from: package-private */
     public Rect animateToClosestSnapTarget(Rect rect, ValueAnimator.AnimatorUpdateListener animatorUpdateListener, Animator.AnimatorListener animatorListener) {
-        cancelAnimations();
-        Rect findClosestSnapBounds = this.mSnapAlgorithm.findClosestSnapBounds(rect, this.mBounds);
-        if (!this.mBounds.equals(findClosestSnapBounds)) {
-            this.mBoundsAnimator = createAnimationToBounds(this.mBounds, findClosestSnapBounds, 225, Interpolators.FAST_OUT_SLOW_IN);
-            if (animatorUpdateListener != null) {
-                this.mBoundsAnimator.addUpdateListener(animatorUpdateListener);
-            }
-            if (animatorListener != null) {
-                this.mBoundsAnimator.addListener(animatorListener);
-            }
-            this.mBoundsAnimator.start();
-        }
-        return findClosestSnapBounds;
+        return new Rect();
     }
 
     /* access modifiers changed from: package-private */
@@ -243,12 +197,6 @@ public class PipMotionHelper implements Handler.Callback {
     }
 
     /* access modifiers changed from: package-private */
-    public void animateToIMEOffset(Rect rect) {
-        cancelAnimations();
-        resizeAndAnimatePipUnchecked(rect, 300);
-    }
-
-    /* access modifiers changed from: package-private */
     public Rect animateDismiss(Rect rect, float f, float f2, ValueAnimator.AnimatorUpdateListener animatorUpdateListener) {
         cancelAnimations();
         float length = PointF.length(f, f2);
@@ -256,8 +204,9 @@ public class PipMotionHelper implements Handler.Callback {
         Point dismissEndPoint = getDismissEndPoint(rect, f, f2, z);
         Rect rect2 = new Rect(rect);
         rect2.offsetTo(dismissEndPoint.x, dismissEndPoint.y);
-        this.mBoundsAnimator = createAnimationToBounds(this.mBounds, rect2, 175, Interpolators.FAST_OUT_LINEAR_IN);
-        this.mBoundsAnimator.addListener(new AnimatorListenerAdapter() {
+        ValueAnimator createAnimationToBounds = createAnimationToBounds(this.mBounds, rect2, 175, Interpolators.FAST_OUT_LINEAR_IN);
+        this.mBoundsAnimator = createAnimationToBounds;
+        createAnimationToBounds.addListener(new AnimatorListenerAdapter() {
             public void onAnimationEnd(Animator animator) {
                 PipMotionHelper.this.dismissPip();
             }
@@ -293,13 +242,15 @@ public class PipMotionHelper implements Handler.Callback {
         r0.setInterpolator(interpolator);
         r0.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-                PipMotionHelper.this.lambda$createAnimationToBounds$2$PipMotionHelper(valueAnimator);
+                PipMotionHelper.this.lambda$createAnimationToBounds$1$PipMotionHelper(valueAnimator);
             }
         });
         return r0;
     }
 
-    public /* synthetic */ void lambda$createAnimationToBounds$2$PipMotionHelper(ValueAnimator valueAnimator) {
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$createAnimationToBounds$1 */
+    public /* synthetic */ void lambda$createAnimationToBounds$1$PipMotionHelper(ValueAnimator valueAnimator) {
         resizePipUnchecked((Rect) valueAnimator.getAnimatedValue());
     }
 
@@ -339,33 +290,7 @@ public class PipMotionHelper implements Handler.Callback {
 
     public boolean handleMessage(Message message) {
         int i = message.what;
-        if (i == 1) {
-            Rect rect = (Rect) ((SomeArgs) message.obj).arg1;
-            try {
-                this.mActivityTaskManager.resizePinnedStack(rect, (Rect) null);
-                this.mBounds.set(rect);
-            } catch (RemoteException e) {
-                Log.e("PipMotionHelper", "Could not resize pinned stack to bounds: " + rect, e);
-            }
-            return true;
-        } else if (i != 2) {
-            return false;
-        } else {
-            SomeArgs someArgs = (SomeArgs) message.obj;
-            Rect rect2 = (Rect) someArgs.arg1;
-            int i2 = someArgs.argi1;
-            try {
-                ActivityManager.StackInfo stackInfo = this.mActivityTaskManager.getStackInfo(2, 0);
-                if (stackInfo == null) {
-                    return true;
-                }
-                this.mActivityManager.resizeStack(stackInfo.stackId, rect2, false, true, true, i2);
-                this.mBounds.set(rect2);
-                return true;
-            } catch (Exception e2) {
-                Log.e("PipMotionHelper", "Could not animate resize pinned stack to bounds: " + rect2, e2);
-            }
-        }
+        return i == 1 || i == 2;
     }
 
     public void dump(PrintWriter printWriter, String str) {

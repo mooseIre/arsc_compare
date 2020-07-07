@@ -19,9 +19,7 @@ public class AutoCleanFloatTransitionListener extends TransitionListener {
     public void onStart() {
     }
 
-    public void onUpdate(Map<String, Float> map) {
-        throw null;
-    }
+    public abstract void onUpdate(Map<String, Float> map);
 
     public AutoCleanFloatTransitionListener(Object obj) {
         this.mTarget = obj;
@@ -44,6 +42,8 @@ public class AutoCleanFloatTransitionListener extends TransitionListener {
         onUpdate(this.mInfos);
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$onUpdate$0 */
     public /* synthetic */ void lambda$onUpdate$0$AutoCleanFloatTransitionListener(UpdateInfo updateInfo) {
         this.mInfos.put(updateInfo.property.getName(), Float.valueOf(updateInfo.getFloatValue()));
     }

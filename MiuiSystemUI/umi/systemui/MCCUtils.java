@@ -9,18 +9,13 @@ import com.android.systemui.plugins.R;
 import java.util.Arrays;
 
 public class MCCUtils {
-    public static boolean sIsIROperation;
-    public static boolean sIsMXOperation;
-    public static boolean sIsNPOperation;
-    public static boolean sIsUSAOperation;
-
     public static void checkOperation(Context context, String str) {
         if (!TextUtils.isEmpty(str)) {
             String substring = str.substring(0, 3);
-            sIsUSAOperation = Arrays.asList(context.getResources().getStringArray(R.array.usa_mcc)).contains(substring);
-            sIsMXOperation = context.getResources().getString(R.string.mx_mcc).equals(substring);
-            sIsIROperation = context.getResources().getString(R.string.ir_mcc).equals(substring);
-            sIsNPOperation = context.getResources().getString(R.string.np_mcc).equals(substring);
+            Arrays.asList(context.getResources().getStringArray(R.array.usa_mcc)).contains(substring);
+            context.getResources().getString(R.string.mx_mcc).equals(substring);
+            context.getResources().getString(R.string.ir_mcc).equals(substring);
+            context.getResources().getString(R.string.np_mcc).equals(substring);
         }
     }
 
@@ -36,6 +31,13 @@ public class MCCUtils {
             return false;
         }
         return getResourcesForOperation(context, str, true).getBoolean(R.bool.status_bar_hide_volte);
+    }
+
+    public static boolean isShowSpnWhenAirplaneOn(Context context, String str) {
+        if (TextUtils.isEmpty(str)) {
+            return false;
+        }
+        return getResourcesForOperation(context, str, true).getBoolean(R.bool.status_bar_show_spn_when_airplane);
     }
 
     public static boolean isMobileTypeShownWhenWifiOn(Context context, String str) {
@@ -66,7 +68,7 @@ public class MCCUtils {
         }
         configuration2.mcc = intValue;
         configuration2.mnc = i;
-        if (configuration2.mnc == 0) {
+        if (i == 0) {
             configuration2.mnc = 65535;
         }
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();

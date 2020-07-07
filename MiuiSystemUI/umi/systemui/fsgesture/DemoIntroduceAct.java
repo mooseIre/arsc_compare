@@ -23,14 +23,16 @@ public class DemoIntroduceAct extends FsGestureDemoBaseActiivy {
         setContentView(R.layout.demo_intro_layout);
         Util.hideSystemBars(getWindow().getDecorView());
         final boolean booleanExtra = getIntent().getBooleanExtra("IS_FROM_PROVISION", false);
-        this.backBtn = (TextView) findViewById(R.id.btn_back);
-        this.backBtn.setOnClickListener(new View.OnClickListener() {
+        TextView textView = (TextView) findViewById(R.id.btn_back);
+        this.backBtn = textView;
+        textView.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 DemoIntroduceAct.this.finish();
             }
         });
-        this.nextBtn = (TextView) findViewById(R.id.btn_next);
-        this.nextBtn.setOnClickListener(new View.OnClickListener() {
+        TextView textView2 = (TextView) findViewById(R.id.btn_next);
+        this.nextBtn = textView2;
+        textView2.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 Intent intent = new Intent();
                 intent.setClass(DemoIntroduceAct.this, HomeDemoAct.class);
@@ -44,7 +46,8 @@ public class DemoIntroduceAct extends FsGestureDemoBaseActiivy {
         HashMap hashMap = new HashMap();
         hashMap.put("source", booleanExtra ? "oobe" : "settings");
         ((SystemUIStat) Dependency.get(SystemUIStat.class)).reportFullScreenEventAnonymous("show_gestures_learning_page", hashMap);
-        this.mIntroContainer = (RelativeLayout) findViewById(R.id.intro_container);
-        this.mNavigationHandle = GestureLineUtils.createAndaddNavigationHandle(this.mIntroContainer);
+        RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.intro_container);
+        this.mIntroContainer = relativeLayout;
+        this.mNavigationHandle = GestureLineUtils.createAndaddNavigationHandle(relativeLayout);
     }
 }

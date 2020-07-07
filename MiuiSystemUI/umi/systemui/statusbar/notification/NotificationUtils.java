@@ -43,8 +43,10 @@ public class NotificationUtils {
     }
 
     public static float getRelativeYOffset(View view, View view2) {
-        view2.getLocationOnScreen(sLocationBase);
-        view.getLocationOnScreen(sLocationOffset);
-        return (float) (sLocationOffset[1] - sLocationBase[1]);
+        int[] iArr = sLocationOffset;
+        int[] iArr2 = sLocationBase;
+        view2.getLocationOnScreen(iArr2);
+        view.getLocationOnScreen(iArr);
+        return (float) (iArr[1] - iArr2[1]);
     }
 }

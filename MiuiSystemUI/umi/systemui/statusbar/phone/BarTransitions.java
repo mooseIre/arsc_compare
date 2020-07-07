@@ -32,9 +32,10 @@ public class BarTransitions {
     public BarTransitions(View view, int i, int i2) {
         this.mTag = "BarTransitions." + view.getClass().getSimpleName();
         this.mView = view;
-        this.mBarBackground = new BarBackgroundDrawable(this.mView.getContext(), i, i2);
+        BarBackgroundDrawable barBackgroundDrawable = new BarBackgroundDrawable(this.mView.getContext(), i, i2);
+        this.mBarBackground = barBackgroundDrawable;
         if (HIGH_END) {
-            this.mView.setBackground(this.mBarBackground);
+            this.mView.setBackground(barBackgroundDrawable);
         }
     }
 

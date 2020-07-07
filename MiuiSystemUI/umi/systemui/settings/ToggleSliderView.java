@@ -85,16 +85,16 @@ public class ToggleSliderView extends RelativeLayout implements ToggleSlider {
             }
         };
         View.inflate(context, R.layout.status_bar_toggle_slider, this);
-        this.mSlider = (ToggleSeekBar) findViewById(R.id.slider);
-        this.mSlider.setOnSeekBarChangeListener(this.mSeekListener);
+        ToggleSeekBar toggleSeekBar = (ToggleSeekBar) findViewById(R.id.slider);
+        this.mSlider = toggleSeekBar;
+        toggleSeekBar.setOnSeekBarChangeListener(this.mSeekListener);
         this.mSlider.setAccessibilityLabel(getContentDescription().toString());
     }
 
     public void setMirror(ToggleSliderView toggleSliderView) {
         this.mMirror = toggleSliderView;
-        ToggleSliderView toggleSliderView2 = this.mMirror;
-        if (toggleSliderView2 != null) {
-            toggleSliderView2.setMax(this.mSlider.getMax());
+        if (toggleSliderView != null) {
+            toggleSliderView.setMax(this.mSlider.getMax());
             this.mMirror.setValue(this.mSlider.getProgress());
         }
     }

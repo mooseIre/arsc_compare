@@ -27,7 +27,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 public class PluginManagerImpl extends BroadcastReceiver implements PluginManager {
-    private static final String TAG = "PluginManagerImpl";
+    private static final String TAG = PluginManagerImpl.class.getSimpleName();
     private final Map<String, ClassLoader> mClassLoaders = new ArrayMap();
     private final Context mContext;
     private final PluginInstanceManagerFactory mFactory;
@@ -47,7 +47,7 @@ public class PluginManagerImpl extends BroadcastReceiver implements PluginManage
         this.mWhitelistedPlugins.addAll(Arrays.asList(pluginInitializer.getWhitelistedPlugins(this.mContext)));
         this.mPluginPrefs = new PluginPrefs(this.mContext);
         this.mPluginEnabler = pluginInitializer.getPluginEnabler(this.mContext);
-        new Handler(this.mLooper).post(new Runnable() {
+        new Handler(this.mLooper).post(new Runnable(this) {
             public void run() {
                 pluginInitializer.onPluginManagerInit();
             }
@@ -115,6 +115,7 @@ public class PluginManagerImpl extends BroadcastReceiver implements PluginManage
 
     public void onReceive(Context context, Intent intent) {
         int disableReason;
+        String str = TAG;
         if ("android.intent.action.USER_UNLOCKED".equals(intent.getAction())) {
             for (PluginInstanceManager loadAll : this.mPluginMap.values()) {
                 loadAll.loadAll();
@@ -128,12 +129,10 @@ public class PluginManagerImpl extends BroadcastReceiver implements PluginManage
             String encodedSchemeSpecificPart = intent.getData().getEncodedSchemeSpecificPart();
             ComponentName unflattenFromString2 = ComponentName.unflattenFromString(encodedSchemeSpecificPart);
             if (clearClassLoader(encodedSchemeSpecificPart)) {
-                String str = TAG;
                 Log.v(str, "Reloading " + encodedSchemeSpecificPart);
             }
             if ("android.intent.action.PACKAGE_REPLACED".equals(intent.getAction()) && unflattenFromString2 != null && ((disableReason = getPluginEnabler().getDisableReason(unflattenFromString2)) == 2 || disableReason == 3 || disableReason == 1)) {
-                String str2 = TAG;
-                Log.i(str2, "Re-enabling previously disabled plugin that has been updated: " + unflattenFromString2.flattenToShortString());
+                Log.i(str, "Re-enabling previously disabled plugin that has been updated: " + unflattenFromString2.flattenToShortString());
                 getPluginEnabler().setEnabled(unflattenFromString2);
             }
             if (!"android.intent.action.PACKAGE_REMOVED".equals(intent.getAction())) {

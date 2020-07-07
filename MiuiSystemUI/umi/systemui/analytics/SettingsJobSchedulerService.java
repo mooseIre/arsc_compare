@@ -8,7 +8,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.util.Log;
 import com.android.systemui.Dependency;
-import com.android.systemui.miui.statusbar.analytics.NotificationStat;
 import com.android.systemui.miui.statusbar.analytics.SystemUIStat;
 import com.xiaomi.stat.d.r;
 import java.util.List;
@@ -53,11 +52,11 @@ public class SettingsJobSchedulerService extends JobService {
     }
 
     private void trackSettings() {
-        ((SystemUIStat) Dependency.get(SystemUIStat.class)).handleNotchEvent();
-        ((SystemUIStat) Dependency.get(SystemUIStat.class)).handleSettingsStatusEvent();
-        ((NotificationStat) Dependency.get(NotificationStat.class)).handleSettingsStatusEvent();
-        ((SystemUIStat) Dependency.get(SystemUIStat.class)).handlePhoneStatusEvent();
-        ((SystemUIStat) Dependency.get(SystemUIStat.class)).handleQSTileStateEvent();
-        ((SystemUIStat) Dependency.get(SystemUIStat.class)).handleToggleFullscreenSettingStateEvent();
+        Class cls = SystemUIStat.class;
+        ((SystemUIStat) Dependency.get(cls)).handleNotchEvent();
+        ((SystemUIStat) Dependency.get(cls)).handleSettingsStatusEvent();
+        ((SystemUIStat) Dependency.get(cls)).handlePhoneStatusEvent();
+        ((SystemUIStat) Dependency.get(cls)).handleQSTileStateEvent();
+        ((SystemUIStat) Dependency.get(cls)).handleToggleFullscreenSettingStateEvent();
     }
 }

@@ -130,8 +130,9 @@ public class PipUI extends SystemUI implements CommandQueue.Callbacks {
     public void start() {
         BasePipManager basePipManager;
         PackageManager packageManager = this.mContext.getPackageManager();
-        this.mSupportsPip = packageManager.hasSystemFeature("android.software.picture_in_picture");
-        if (this.mSupportsPip) {
+        boolean hasSystemFeature = packageManager.hasSystemFeature("android.software.picture_in_picture");
+        this.mSupportsPip = hasSystemFeature;
+        if (hasSystemFeature) {
             if (SystemServicesProxy.getInstance(this.mContext).isSystemUser(SystemServicesProxy.getInstance(this.mContext).getProcessUser())) {
                 if (packageManager.hasSystemFeature("android.software.leanback_only")) {
                     basePipManager = PipManager.getInstance();
@@ -139,7 +140,7 @@ public class PipUI extends SystemUI implements CommandQueue.Callbacks {
                     basePipManager = com.android.systemui.pip.phone.PipManager.getInstance();
                 }
                 this.mPipManager = basePipManager;
-                this.mPipManager.initialize(this.mContext);
+                basePipManager.initialize(this.mContext);
                 ((CommandQueue) getComponent(CommandQueue.class)).addCallbacks(this);
                 return;
             }

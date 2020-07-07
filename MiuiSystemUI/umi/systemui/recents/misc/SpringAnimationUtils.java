@@ -23,7 +23,7 @@ public class SpringAnimationUtils {
     private final ViewState THUMBNAIL_NORMAL;
     private final ViewState THUMBNAIL_SCALE_DOWN;
     private final ViewState THUMBNAIL_SCALE_UP;
-    private final ViewState THUMBNAIL_SCALE_UP_PLUS = new ViewState(1.0f, 1.1f, 1.1f, 0.0f, 0.0f);
+    private final ViewState THUMBNAIL_SCALE_UP_PLUS = new ViewState(this, 1.0f, 1.1f, 1.1f, 0.0f, 0.0f);
     private boolean mIsCanUpdateSpringAnim;
 
     private class ViewState {
@@ -33,7 +33,7 @@ public class SpringAnimationUtils {
         float translationX;
         float translationY;
 
-        public ViewState(float f, float f2, float f3, float f4, float f5) {
+        public ViewState(SpringAnimationUtils springAnimationUtils, float f, float f2, float f3, float f4, float f5) {
             this.alpha = f;
             this.scaleX = f2;
             this.scaleY = f3;
@@ -43,17 +43,17 @@ public class SpringAnimationUtils {
     }
 
     private SpringAnimationUtils() {
-        this.THUMBNAIL_SCALE_UP = new ViewState(1.0f, 1.05f, 1.05f, 0.0f, 0.0f);
-        this.THUMBNAIL_NORMAL = new ViewState(1.0f, 1.0f, 1.0f, 0.0f, 0.0f);
-        this.THUMBNAIL_SCALE_DOWN = new ViewState(1.0f, 0.9f, 0.9f, 0.0f, 0.0f);
-        this.HEADER_SCALE_DOWN = new ViewState(0.0f, 0.95f, 0.95f, 0.0f, 0.0f);
-        this.HEADER_NORMAL = new ViewState(1.0f, 1.0f, 1.0f, 0.0f, 0.0f);
-        this.HEADER_HIDE = new ViewState(0.0f, 1.0f, 1.0f, 0.0f, 0.0f);
-        this.TASK_VIEW_HIDE = new ViewState(0.0f, 0.95f, 0.95f, 0.0f, 0.0f);
-        this.TASK_VIEW_NORMAL = new ViewState(1.0f, 1.0f, 1.0f, 0.0f, 0.0f);
-        this.RECENTS_VIEW_SCALE_DOWN = new ViewState(0.8f, 0.92f, 0.92f, 0.0f, 0.0f);
-        this.RECENTS_VIEW_NORMAL = new ViewState(1.0f, 1.0f, 1.0f, 0.0f, 0.0f);
-        this.RECENTS_VIEW_HIDE = new ViewState(0.0f, 1.0f, 1.0f, 0.0f, 0.0f);
+        this.THUMBNAIL_SCALE_UP = new ViewState(this, 1.0f, 1.05f, 1.05f, 0.0f, 0.0f);
+        this.THUMBNAIL_NORMAL = new ViewState(this, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f);
+        this.THUMBNAIL_SCALE_DOWN = new ViewState(this, 1.0f, 0.9f, 0.9f, 0.0f, 0.0f);
+        this.HEADER_SCALE_DOWN = new ViewState(this, 0.0f, 0.95f, 0.95f, 0.0f, 0.0f);
+        this.HEADER_NORMAL = new ViewState(this, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f);
+        this.HEADER_HIDE = new ViewState(this, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f);
+        this.TASK_VIEW_HIDE = new ViewState(this, 0.0f, 0.95f, 0.95f, 0.0f, 0.0f);
+        this.TASK_VIEW_NORMAL = new ViewState(this, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f);
+        this.RECENTS_VIEW_SCALE_DOWN = new ViewState(this, 0.8f, 0.92f, 0.92f, 0.0f, 0.0f);
+        this.RECENTS_VIEW_NORMAL = new ViewState(this, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f);
+        this.RECENTS_VIEW_HIDE = new ViewState(this, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f);
         this.mIsCanUpdateSpringAnim = false;
     }
 
@@ -195,7 +195,7 @@ public class SpringAnimationUtils {
 
     public void addEndListener(final SpringAnimation springAnimation, final Runnable runnable) {
         if (springAnimation.isRunning()) {
-            springAnimation.addEndListener(new DynamicAnimation.OnAnimationEndListener() {
+            springAnimation.addEndListener(new DynamicAnimation.OnAnimationEndListener(this) {
                 public void onAnimationEnd(DynamicAnimation dynamicAnimation, boolean z, float f, float f2) {
                     Runnable runnable = runnable;
                     if (runnable != null) {
@@ -217,7 +217,7 @@ public class SpringAnimationUtils {
             cancelAllSpringAnimation(taskView.getSpringAnimationImpl());
             taskView.setTranslationY(height);
             getSpringAnimation(taskView.getSpringAnimationImpl(), "translationY").setStartVelocity(10000.0f);
-            updateSpringAnimation(taskView.getSpringAnimationImpl(), 0.86f, (((float) i) * 0.08f) + 0.32f, new ViewState(1.0f, 1.0f, 1.0f, ((f - (((float) recentsView.getWidth()) / 2.0f)) / (((float) recentsView.getWidth()) / 2.0f)) * ((float) recentsView.getWidth()) * 0.08f, ((f2 - (((float) recentsView.getHeight()) / 2.0f)) / (((float) recentsView.getHeight()) / 2.0f)) * ((float) recentsView.getWidth()) * 0.08f));
+            updateSpringAnimation(taskView.getSpringAnimationImpl(), 0.86f, (((float) i) * 0.08f) + 0.32f, new ViewState(this, 1.0f, 1.0f, 1.0f, ((f - (((float) recentsView.getWidth()) / 2.0f)) / (((float) recentsView.getWidth()) / 2.0f)) * ((float) recentsView.getWidth()) * 0.08f, ((f2 - (((float) recentsView.getHeight()) / 2.0f)) / (((float) recentsView.getHeight()) / 2.0f)) * ((float) recentsView.getWidth()) * 0.08f));
         }
         updateSpringAnimation(recentsView.getSpringAnimationImpl(), 0.86f, 0.32f, this.RECENTS_VIEW_SCALE_DOWN);
     }
@@ -232,7 +232,7 @@ public class SpringAnimationUtils {
     public void startSlideOutSpringAnim(RecentsView recentsView) {
         this.mIsCanUpdateSpringAnim = false;
         for (int i = 0; i < recentsView.getTaskViews().size(); i++) {
-            updateSpringAnimation(recentsView.getTaskViews().get(i).getSpringAnimationImpl(), 0.86f, 0.32f, new ViewState(1.0f, 1.0f, 1.0f, 0.0f, (float) (recentsView.getHeight() - recentsView.getTaskViewPaddingView())));
+            updateSpringAnimation(recentsView.getTaskViews().get(i).getSpringAnimationImpl(), 0.86f, 0.32f, new ViewState(this, 1.0f, 1.0f, 1.0f, 0.0f, (float) (recentsView.getHeight() - recentsView.getTaskViewPaddingView())));
         }
         updateSpringAnimation(recentsView.getSpringAnimationImpl(), 0.86f, 0.32f, this.RECENTS_VIEW_HIDE);
     }
@@ -242,7 +242,7 @@ public class SpringAnimationUtils {
             float width = ((f - (((float) recentsView.getWidth()) / 2.0f)) / (((float) recentsView.getWidth()) / 2.0f)) * ((float) recentsView.getWidth()) * 0.08f;
             float height = ((f2 - (((float) recentsView.getHeight()) / 2.0f)) / (((float) recentsView.getHeight()) / 2.0f)) * ((float) recentsView.getWidth()) * 0.08f;
             for (int i = 0; i < recentsView.getTaskViews().size(); i++) {
-                updateSpringAnimation(recentsView.getTaskViews().get(i).getSpringAnimationImpl(), 0.86f, (((float) i) * 0.08f) + 0.32f, new ViewState(1.0f, 1.0f, 1.0f, width, height));
+                updateSpringAnimation(recentsView.getTaskViews().get(i).getSpringAnimationImpl(), 0.86f, (((float) i) * 0.08f) + 0.32f, new ViewState(this, 1.0f, 1.0f, 1.0f, width, height));
             }
         }
     }
@@ -266,7 +266,7 @@ public class SpringAnimationUtils {
 
     public void startFsGestureRecentsModeSlideOutAnim(RecentsView recentsView) {
         for (int i = 0; i < recentsView.getTaskViews().size(); i++) {
-            updateSpringAnimation(recentsView.getTaskViews().get(i).getSpringAnimationImpl(), 0.86f, 0.32f, new ViewState(0.0f, 1.0f, 1.0f, 0.0f, (float) (recentsView.getHeight() - recentsView.getTaskViewPaddingView())));
+            updateSpringAnimation(recentsView.getTaskViews().get(i).getSpringAnimationImpl(), 0.86f, 0.32f, new ViewState(this, 0.0f, 1.0f, 1.0f, 0.0f, (float) (recentsView.getHeight() - recentsView.getTaskViewPaddingView())));
         }
     }
 
@@ -429,7 +429,7 @@ public class SpringAnimationUtils {
             TaskView taskView = recentsView.getTaskViews().get(i);
             cancelAllSpringAnimation(taskView.getSpringAnimationImpl());
             if (taskView.getTask() == null || task2 == null || taskView.getTask().key.id != task2.key.id) {
-                updateSpringAnimation(taskView.getSpringAnimationImpl(), 0.86f, 0.32f, new ViewState(0.0f, 1.0f, 1.0f, 0.0f, taskView.getTranslationY() + (height / 6.0f)));
+                updateSpringAnimation(taskView.getSpringAnimationImpl(), 0.86f, 0.32f, new ViewState(this, 0.0f, 1.0f, 1.0f, 0.0f, taskView.getTranslationY() + (height / 6.0f)));
             }
         }
     }

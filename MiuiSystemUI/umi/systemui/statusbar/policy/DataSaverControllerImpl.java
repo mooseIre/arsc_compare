@@ -6,6 +6,7 @@ import android.net.NetworkPolicyManager;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.RemoteException;
+import android.telephony.SubscriptionPlan;
 import com.android.systemui.statusbar.policy.DataSaverController;
 import java.util.ArrayList;
 
@@ -18,6 +19,9 @@ public class DataSaverControllerImpl implements DataSaverController {
         }
 
         public void onSubscriptionOverride(int i, int i2, int i3) {
+        }
+
+        public void onSubscriptionPlansChanged(int i, SubscriptionPlan[] subscriptionPlanArr) {
         }
 
         public void onUidPoliciesChanged(int i, int i2) throws RemoteException {

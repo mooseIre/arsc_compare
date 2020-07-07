@@ -120,8 +120,8 @@ public class NotificationGuts extends FrameLayout {
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mBackground = this.mContext.getDrawable(com.android.systemui.plugins.R.drawable.notification_guts_bg);
-        Drawable drawable = this.mBackground;
+        Drawable drawable = this.mContext.getDrawable(com.android.systemui.plugins.R.drawable.notification_guts_bg);
+        this.mBackground = drawable;
         if (drawable != null) {
             drawable.setCallback(this);
         }
@@ -225,14 +225,11 @@ public class NotificationGuts extends FrameLayout {
         }
         String folmeTarget = getFolmeTarget(z ? "RowOpen" : "RowClose");
         Folme.getValueTarget(folmeTarget).setMinVisibleChange(1.0f, "x");
-        IStateStyle useValue = Folme.useValue(folmeTarget);
-        useValue.setTo("x", Float.valueOf(translation));
-        useValue.addListener(new AutoCleanFloatTransitionListener(folmeTarget) {
+        Folme.useValue(folmeTarget).setTo("x", Float.valueOf(translation)).addListener(new AutoCleanFloatTransitionListener(folmeTarget) {
             public void onUpdate(Map<String, Float> map) {
                 expandableNotificationRow.setTranslation(map.get("x").floatValue());
             }
-        });
-        useValue.to("x", Float.valueOf(f));
+        }).to("x", Float.valueOf(f));
     }
 
     private void animateGuts(NotificationMenuRowPlugin.MenuItem menuItem, boolean z) {
@@ -263,10 +260,7 @@ public class NotificationGuts extends FrameLayout {
         int i = menuIconSize3;
         int i2 = width;
         Folme.getValueTarget(folmeTarget).setMinVisibleChange(0.01f, "alpha", "scale");
-        IStateStyle useValue = Folme.useValue(folmeTarget);
-        useValue.setTo("width", Integer.valueOf(menuIconSize), "height", Integer.valueOf(menuIconSize2), "alpha", Float.valueOf(f2), "scale", Float.valueOf(f5), "x", Float.valueOf(translationX));
-        useValue.setConfig(newSpringEase(0.85f, 0.4f), new FloatProperty[0]);
-        useValue.addListener(new AutoCleanFloatTransitionListener(folmeTarget) {
+        IStateStyle addListener = Folme.useValue(folmeTarget).setTo("width", Integer.valueOf(menuIconSize), "height", Integer.valueOf(menuIconSize2), "alpha", Float.valueOf(f2), "scale", Float.valueOf(f5), "x", Float.valueOf(translationX)).setConfig(newSpringEase(0.85f, 0.4f), new FloatProperty[0]).addListener(new AutoCleanFloatTransitionListener(folmeTarget) {
             public void onBegin(Object obj) {
                 boolean unused = NotificationGuts.this.mIsAnimating = true;
             }
@@ -307,23 +301,22 @@ public class NotificationGuts extends FrameLayout {
         objArr[0] = "width";
         objArr[1] = Integer.valueOf(i2);
         objArr[2] = z2 ? newSpringEase() : newSpringEase(0.99f, 0.15f);
-        useValue.to(objArr);
+        IStateStyle iStateStyle = addListener.to(objArr);
         Object[] objArr2 = new Object[3];
         objArr2[0] = "height";
         objArr2[1] = Integer.valueOf(i);
         objArr2[2] = z2 ? newSpringEase() : newSpringEase(0.9f, 0.4f);
-        useValue.to(objArr2);
+        IStateStyle iStateStyle2 = iStateStyle.to(objArr2);
         Object[] objArr3 = new Object[3];
         objArr3[0] = "alpha";
         objArr3[1] = Float.valueOf(f8);
         objArr3[2] = z2 ? newSpringEase(0.99f, 0.6f) : newSpringEase(0.99f, 0.15f);
-        useValue.to(objArr3);
-        useValue.to("scale", Float.valueOf(f7));
+        IStateStyle iStateStyle3 = iStateStyle2.to(objArr3).to("scale", Float.valueOf(f7));
         Object[] objArr4 = new Object[3];
         objArr4[0] = "x";
         objArr4[1] = Float.valueOf(f6);
         objArr4[2] = z2 ? newSpringEase(0.99f, 0.6f) : newSpringEase(0.99f, 0.15f);
-        useValue.to(objArr4);
+        iStateStyle3.to(objArr4);
     }
 
     private void animateContent(boolean z) {
@@ -338,9 +331,7 @@ public class NotificationGuts extends FrameLayout {
         animConfig.setDelay(60);
         String folmeTarget = getFolmeTarget(z ? "ContentOpen" : "ContentClose");
         Folme.getValueTarget(folmeTarget).setMinVisibleChange(0.01f, "alpha");
-        IStateStyle useValue = Folme.useValue(folmeTarget);
-        useValue.setTo("alpha", Float.valueOf(f2));
-        useValue.addListener(new AutoCleanFloatTransitionListener(folmeTarget) {
+        IStateStyle addListener = Folme.useValue(folmeTarget).setTo("alpha", Float.valueOf(f2)).addListener(new AutoCleanFloatTransitionListener(folmeTarget) {
             public void onUpdate(Map<String, Float> map) {
                 contentView.setAlpha(map.get("alpha").floatValue());
             }
@@ -352,7 +343,7 @@ public class NotificationGuts extends FrameLayout {
             animConfig = newSpringEase();
         }
         objArr[2] = animConfig;
-        useValue.to(objArr);
+        addListener.to(objArr);
     }
 
     private void animateMenuIcon(boolean z) {
@@ -364,14 +355,11 @@ public class NotificationGuts extends FrameLayout {
         }
         String folmeTarget = getFolmeTarget(z ? "MenuIconOpen" : "MenuIconClose");
         Folme.getValueTarget(folmeTarget).setMinVisibleChange(0.01f, "alpha");
-        IStateStyle useValue = Folme.useValue(folmeTarget);
-        useValue.setTo("alpha", Float.valueOf(f2));
-        useValue.addListener(new AutoCleanFloatTransitionListener(folmeTarget) {
+        Folme.useValue(folmeTarget).setTo("alpha", Float.valueOf(f2)).addListener(new AutoCleanFloatTransitionListener(folmeTarget) {
             public void onUpdate(Map<String, Float> map) {
                 menuView.setAlpha(map.get("alpha").floatValue());
             }
-        });
-        useValue.to("alpha", Float.valueOf(f));
+        }).to("alpha", Float.valueOf(f));
     }
 
     public void setActualHeight(int i) {
@@ -422,7 +410,7 @@ public class NotificationGuts extends FrameLayout {
         boolean z3 = this.mExposed;
         this.mExposed = z;
         this.mNeedsFalsingProtection = z2;
-        if (!this.mExposed || !this.mNeedsFalsingProtection) {
+        if (!z || !z2) {
             this.mHandler.removeCallbacks(this.mFalsingCheck);
         } else {
             resetFalsingCheck();

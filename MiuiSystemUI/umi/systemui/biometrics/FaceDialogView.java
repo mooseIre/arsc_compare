@@ -159,19 +159,27 @@ public class FaceDialogView extends BiometricDialogView {
         }
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$updateSize$0 */
     public /* synthetic */ void lambda$updateSize$0$FaceDialogView(ValueAnimator valueAnimator) {
         this.mOutlineProvider.setOutlineY(((Float) valueAnimator.getAnimatedValue()).floatValue());
         this.mDialog.invalidateOutline();
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$updateSize$1 */
     public /* synthetic */ void lambda$updateSize$1$FaceDialogView(ValueAnimator valueAnimator) {
         this.mBiometricIcon.setY(((Float) valueAnimator.getAnimatedValue()).floatValue());
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$updateSize$2 */
     public /* synthetic */ void lambda$updateSize$2$FaceDialogView(ValueAnimator valueAnimator) {
         this.mErrorText.setTranslationY(((Float) valueAnimator.getAnimatedValue()).floatValue());
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$updateSize$3 */
     public /* synthetic */ void lambda$updateSize$3$FaceDialogView(ValueAnimator valueAnimator) {
         float floatValue = ((Float) valueAnimator.getAnimatedValue()).floatValue();
         this.mTitleText.setAlpha(floatValue);
@@ -245,7 +253,7 @@ public class FaceDialogView extends BiometricDialogView {
 
     /* access modifiers changed from: protected */
     public int getAuthenticatedAccessibilityResourceId() {
-        return this.mRequireConfirmation ? 17040029 : 17040030;
+        return this.mRequireConfirmation ? 17040174 : 17040175;
     }
 
     /* access modifiers changed from: protected */

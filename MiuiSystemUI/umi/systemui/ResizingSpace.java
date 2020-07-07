@@ -33,17 +33,19 @@ public class ResizingSpace extends View {
         int dimensionPixelOffset2;
         super.onConfigurationChanged(configuration);
         ViewGroup.LayoutParams layoutParams = getLayoutParams();
+        boolean z2 = true;
         if (this.mWidth <= 0 || (dimensionPixelOffset2 = getContext().getResources().getDimensionPixelOffset(this.mWidth)) == layoutParams.width) {
             z = false;
         } else {
             layoutParams.width = dimensionPixelOffset2;
             z = true;
         }
-        if (this.mHeight > 0 && (dimensionPixelOffset = getContext().getResources().getDimensionPixelOffset(this.mHeight)) != layoutParams.height) {
+        if (this.mHeight <= 0 || (dimensionPixelOffset = getContext().getResources().getDimensionPixelOffset(this.mHeight)) == layoutParams.height) {
+            z2 = z;
+        } else {
             layoutParams.height = dimensionPixelOffset;
-            z = true;
         }
-        if (z) {
+        if (z2) {
             setLayoutParams(layoutParams);
         }
     }
@@ -54,7 +56,7 @@ public class ResizingSpace extends View {
         if (mode == Integer.MIN_VALUE) {
             return Math.min(i, size);
         }
-        if (mode == 0 || mode != 1073741824) {
+        if (mode != 1073741824) {
             return i;
         }
         return size;

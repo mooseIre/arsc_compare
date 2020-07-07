@@ -5,16 +5,11 @@ import android.graphics.Rect;
 import android.view.MotionEvent;
 import android.view.View;
 import com.android.systemui.partialscreenshot.PartialScreenshotView;
-import com.android.systemui.partialscreenshot.shape.DrawShapeUtil;
 import com.android.systemui.partialscreenshot.shape.IrregularScreenshot;
 
 public class IrregularFactory extends ShapeFactory {
     private IrregularScreenshot Irregular;
-    private float mLastX;
-    private float mLastY;
     private int mState = 1;
-    private float mX;
-    private float mY;
 
     public void notifyShapeChanged(Rect rect, PartialScreenshotView partialScreenshotView) {
     }
@@ -36,8 +31,9 @@ public class IrregularFactory extends ShapeFactory {
 
     private boolean onActionDown(PartialScreenshotView partialScreenshotView, MotionEvent motionEvent, View view) {
         if (this.mState == 1) {
-            this.Irregular = new IrregularScreenshot(view);
-            this.Irregular.clear();
+            IrregularScreenshot irregularScreenshot = new IrregularScreenshot(view);
+            this.Irregular = irregularScreenshot;
+            irregularScreenshot.clear();
             this.Irregular.addPath((float) ((int) motionEvent.getX()), (float) ((int) motionEvent.getY()));
             partialScreenshotView.setProduct(this.Irregular);
         } else if (this.Irregular.getmSelectionRect() != null) {
@@ -45,23 +41,18 @@ public class IrregularFactory extends ShapeFactory {
         } else {
             this.mState = 1;
         }
-        this.mLastX = motionEvent.getX();
-        this.mLastY = motionEvent.getY();
         return true;
     }
 
     private boolean onActionMove(PartialScreenshotView partialScreenshotView, MotionEvent motionEvent) {
-        this.mX = motionEvent.getX();
-        this.mY = motionEvent.getY();
-        if (this.Irregular != null && DrawShapeUtil.distance(this.mX, this.mLastX, this.mY, this.mLastY) > 2.0d) {
+        IrregularScreenshot irregularScreenshot = this.Irregular;
+        if (irregularScreenshot != null) {
             if (this.mState == 1) {
-                this.Irregular.addPath((float) ((int) motionEvent.getX()), (float) ((int) motionEvent.getY()));
+                irregularScreenshot.addPath((float) ((int) motionEvent.getX()), (float) ((int) motionEvent.getY()));
             } else {
-                this.Irregular.onActionMove(motionEvent);
+                irregularScreenshot.onActionMove(motionEvent);
             }
             partialScreenshotView.setProduct(this.Irregular);
-            this.mLastX = this.mX;
-            this.mLastY = this.mY;
         }
         return true;
     }

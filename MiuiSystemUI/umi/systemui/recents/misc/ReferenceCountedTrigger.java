@@ -6,10 +6,8 @@ import java.util.ArrayList;
 
 public class ReferenceCountedTrigger {
     int mCount;
-    Runnable mDecrementRunnable;
     Runnable mErrorRunnable;
     ArrayList<Runnable> mFirstIncRunnables;
-    Runnable mIncrementRunnable;
     ArrayList<Runnable> mLastDecRunnables;
 
     public ReferenceCountedTrigger() {
@@ -19,16 +17,6 @@ public class ReferenceCountedTrigger {
     public ReferenceCountedTrigger(Runnable runnable, Runnable runnable2, Runnable runnable3) {
         this.mFirstIncRunnables = new ArrayList<>();
         this.mLastDecRunnables = new ArrayList<>();
-        this.mIncrementRunnable = new Runnable() {
-            public void run() {
-                ReferenceCountedTrigger.this.increment();
-            }
-        };
-        this.mDecrementRunnable = new Runnable() {
-            public void run() {
-                ReferenceCountedTrigger.this.decrement();
-            }
-        };
         if (runnable != null) {
             this.mFirstIncRunnables.add(runnable);
         }
@@ -53,8 +41,8 @@ public class ReferenceCountedTrigger {
     }
 
     public void decrement() {
-        this.mCount--;
-        int i = this.mCount;
+        int i = this.mCount - 1;
+        this.mCount = i;
         if (i == 0) {
             flushLastDecrementRunnables();
         } else if (i < 0) {

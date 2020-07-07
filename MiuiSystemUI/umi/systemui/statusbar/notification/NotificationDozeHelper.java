@@ -40,7 +40,7 @@ public class NotificationDozeHelper {
 
     public void setIntensityDark(final Consumer<Float> consumer, boolean z, boolean z2, long j) {
         if (z2) {
-            startIntensityAnimation(new ValueAnimator.AnimatorUpdateListener() {
+            startIntensityAnimation(new ValueAnimator.AnimatorUpdateListener(this) {
                 public void onAnimationUpdate(ValueAnimator valueAnimator) {
                     consumer.accept((Float) valueAnimator.getAnimatedValue());
                 }

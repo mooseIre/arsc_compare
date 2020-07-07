@@ -13,30 +13,19 @@ import android.os.SystemProperties;
 import android.os.UserHandleCompat;
 import android.util.ArraySet;
 import android.util.Log;
-import com.android.systemui.keyguard.KeyguardViewMediator;
-import com.android.systemui.media.RingtonePlayer;
 import com.android.systemui.miui.Dependencies;
 import com.android.systemui.miui.PackageEventController;
 import com.android.systemui.miui.PackageEventReceiver;
+import com.android.systemui.miui.analytics.AnalyticsWrapper;
 import com.android.systemui.miui.statusbar.DependenciesSetup;
-import com.android.systemui.miui.statusbar.analytics.StatManager;
 import com.android.systemui.plugins.OverlayPlugin;
 import com.android.systemui.plugins.PluginListener;
 import com.android.systemui.plugins.PluginManager;
 import com.android.systemui.plugins.R;
-import com.android.systemui.power.PowerUI;
-import com.android.systemui.recents.Recents;
-import com.android.systemui.stackdivider.Divider;
-import com.android.systemui.statusbar.CommandQueue;
-import com.android.systemui.statusbar.notification.NotificationCenter;
 import com.android.systemui.statusbar.phone.StatusBar;
 import com.android.systemui.statusbar.phone.StatusBarWindowManager;
 import com.android.systemui.statusbar.policy.EncryptionHelper;
-import com.android.systemui.usb.StorageNotification;
 import com.android.systemui.util.NotificationChannels;
-import com.android.systemui.util.Utils;
-import com.android.systemui.util.leak.GarbageMonitor;
-import com.android.systemui.volume.VolumeUI;
 import com.miui.systemui.gen.SystemUIDependencies;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -44,16 +33,100 @@ import java.util.Map;
 import miui.external.ApplicationDelegate;
 
 public class SystemUIApplication extends ApplicationDelegate implements SysUiServiceProvider, PackageEventReceiver {
-    private final Class<?>[] BASE_SERVICES = {DependencyUI.class, NotificationChannels.class, CommandQueue.CommandQueueStart.class, KeyguardViewMediator.class, Recents.class, VolumeUI.class, Divider.class, SystemBars.class, StorageNotification.class, PowerUI.class, RingtonePlayer.class, VendorServices.class, GarbageMonitor.Service.class, LatencyTester.class, RoundedCorners.class, NotificationCenter.class};
-    private final Class<?>[] SERVICES = ((Class[]) Utils.arrayConcat(this.BASE_SERVICES, (Class[]) Dependencies.getInstance().getAllClassesFor(SystemUI.class).toArray(new Class[0])));
-    private final Class<?>[] SERVICES_PER_USER = {DependencyUI.class, NotificationChannels.class, Recents.class};
+    private final Class<?>[] BASE_SERVICES;
+    private final Class<?>[] SERVICES;
+    private final Class<?>[] SERVICES_PER_USER;
     /* access modifiers changed from: private */
     public boolean mBootCompleted;
     private final Map<Class<?>, Object> mComponents = new HashMap();
     /* access modifiers changed from: private */
-    public SystemUI[] mServices = new SystemUI[this.SERVICES.length];
+    public SystemUI[] mServices;
     /* access modifiers changed from: private */
     public boolean mServicesStarted;
+
+    /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v1, resolved type: java.lang.Class<?>[]} */
+    /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r6v18, resolved type: java.lang.Class<?>[]} */
+    /* JADX WARNING: Multi-variable type inference failed */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public SystemUIApplication() {
+        /*
+            r10 = this;
+            java.lang.Class<com.android.systemui.recents.Recents> r0 = com.android.systemui.recents.Recents.class
+            java.lang.Class<com.android.systemui.util.NotificationChannels> r1 = com.android.systemui.util.NotificationChannels.class
+            java.lang.Class<com.android.systemui.DependencyUI> r2 = com.android.systemui.DependencyUI.class
+            r10.<init>()
+            r3 = 16
+            java.lang.Class[] r3 = new java.lang.Class[r3]
+            r4 = 0
+            r3[r4] = r2
+            r5 = 1
+            r3[r5] = r1
+            java.lang.Class<com.android.systemui.statusbar.CommandQueue$CommandQueueStart> r6 = com.android.systemui.statusbar.CommandQueue.CommandQueueStart.class
+            r7 = 2
+            r3[r7] = r6
+            java.lang.Class<com.android.systemui.keyguard.KeyguardViewMediator> r6 = com.android.systemui.keyguard.KeyguardViewMediator.class
+            r8 = 3
+            r3[r8] = r6
+            r6 = 4
+            r3[r6] = r0
+            r6 = 5
+            java.lang.Class<com.android.systemui.volume.VolumeUI> r9 = com.android.systemui.volume.VolumeUI.class
+            r3[r6] = r9
+            r6 = 6
+            java.lang.Class<com.android.systemui.stackdivider.Divider> r9 = com.android.systemui.stackdivider.Divider.class
+            r3[r6] = r9
+            r6 = 7
+            java.lang.Class<com.android.systemui.SystemBars> r9 = com.android.systemui.SystemBars.class
+            r3[r6] = r9
+            r6 = 8
+            java.lang.Class<com.android.systemui.usb.StorageNotification> r9 = com.android.systemui.usb.StorageNotification.class
+            r3[r6] = r9
+            r6 = 9
+            java.lang.Class<com.android.systemui.power.PowerUI> r9 = com.android.systemui.power.PowerUI.class
+            r3[r6] = r9
+            r6 = 10
+            java.lang.Class<com.android.systemui.media.RingtonePlayer> r9 = com.android.systemui.media.RingtonePlayer.class
+            r3[r6] = r9
+            r6 = 11
+            java.lang.Class<com.android.systemui.VendorServices> r9 = com.android.systemui.VendorServices.class
+            r3[r6] = r9
+            r6 = 12
+            java.lang.Class<com.android.systemui.util.leak.GarbageMonitor$Service> r9 = com.android.systemui.util.leak.GarbageMonitor.Service.class
+            r3[r6] = r9
+            r6 = 13
+            java.lang.Class<com.android.systemui.LatencyTester> r9 = com.android.systemui.LatencyTester.class
+            r3[r6] = r9
+            r6 = 14
+            java.lang.Class<com.android.systemui.RoundedCorners> r9 = com.android.systemui.RoundedCorners.class
+            r3[r6] = r9
+            r6 = 15
+            java.lang.Class<com.android.systemui.statusbar.notification.NotificationCenter> r9 = com.android.systemui.statusbar.notification.NotificationCenter.class
+            r3[r6] = r9
+            r10.BASE_SERVICES = r3
+            com.android.systemui.miui.Dependencies r6 = com.android.systemui.miui.Dependencies.getInstance()
+            java.lang.Class<com.android.systemui.SystemUI> r9 = com.android.systemui.SystemUI.class
+            java.util.Set r6 = r6.getAllClassesFor(r9)
+            java.lang.Class[] r9 = new java.lang.Class[r4]
+            java.lang.Object[] r6 = r6.toArray(r9)
+            java.lang.Class[] r6 = (java.lang.Class[]) r6
+            java.lang.Object[] r3 = com.android.systemui.util.Utils.arrayConcat(r3, r6)
+            java.lang.Class[] r3 = (java.lang.Class[]) r3
+            r10.SERVICES = r3
+            java.lang.Class[] r6 = new java.lang.Class[r8]
+            r6[r4] = r2
+            r6[r5] = r1
+            r6[r7] = r0
+            r10.SERVICES_PER_USER = r6
+            int r0 = r3.length
+            com.android.systemui.SystemUI[] r0 = new com.android.systemui.SystemUI[r0]
+            r10.mServices = r0
+            java.util.HashMap r0 = new java.util.HashMap
+            r0.<init>()
+            r10.mComponents = r0
+            return
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.SystemUIApplication.<init>():void");
+    }
 
     static {
         Dependencies.initialize(new SystemUIDependencies());
@@ -64,7 +137,7 @@ public class SystemUIApplication extends ApplicationDelegate implements SysUiSer
         setTheme(R.style.Theme);
         ((DependenciesSetup) Dependencies.getInstance().get(DependenciesSetup.class, "")).setContext(this);
         SystemUIFactory.createFromConfig(this);
-        StatManager.init(this);
+        AnalyticsWrapper.init(this);
         if (Process.myUserHandle().equals(UserHandleCompat.SYSTEM)) {
             IntentFilter intentFilter = new IntentFilter("android.intent.action.BOOT_COMPLETED");
             intentFilter.setPriority(1000);
@@ -152,6 +225,7 @@ public class SystemUIApplication extends ApplicationDelegate implements SysUiSer
                 public ArraySet<OverlayPlugin> mOverlays;
 
                 public void onPluginConnected(OverlayPlugin overlayPlugin, Context context) {
+                    Class cls = StatusBarWindowManager.class;
                     StatusBar statusBar = (StatusBar) SystemUIApplication.this.getComponent(StatusBar.class);
                     if (statusBar != null) {
                         overlayPlugin.setup(statusBar.getStatusBarWindow(), statusBar.getNavigationBarView());
@@ -161,7 +235,7 @@ public class SystemUIApplication extends ApplicationDelegate implements SysUiSer
                     }
                     if (overlayPlugin.holdStatusBarOpen()) {
                         this.mOverlays.add(overlayPlugin);
-                        ((StatusBarWindowManager) Dependency.get(StatusBarWindowManager.class)).setStateListener(new StatusBarWindowManager.OtherwisedCollapsedListener() {
+                        ((StatusBarWindowManager) Dependency.get(cls)).setStateListener(new StatusBarWindowManager.OtherwisedCollapsedListener() {
                             public void setWouldOtherwiseCollapse(boolean z) {
                                 Iterator it = AnonymousClass3.this.mOverlays.iterator();
                                 while (it.hasNext()) {
@@ -169,7 +243,7 @@ public class SystemUIApplication extends ApplicationDelegate implements SysUiSer
                                 }
                             }
                         });
-                        ((StatusBarWindowManager) Dependency.get(StatusBarWindowManager.class)).setForcePluginOpen(this.mOverlays.size() != 0);
+                        ((StatusBarWindowManager) Dependency.get(cls)).setForcePluginOpen(this.mOverlays.size() != 0);
                     }
                 }
 

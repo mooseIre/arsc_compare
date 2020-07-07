@@ -3,6 +3,7 @@ package com.android.systemui.miui.statusbar.analytics;
 import android.app.MiuiStatusBarManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.ResolveInfo;
 import android.provider.MiuiSettings;
 import android.provider.Settings;
@@ -24,9 +25,10 @@ public class Analytics$SettingsStatusEvent extends Analytics$Event {
         if (queryIntentActivities == null) {
             return 0;
         }
-        for (ResolveInfo next : queryIntentActivities) {
-            String str = next.activityInfo.packageName;
-            String str2 = next.activityInfo.name;
+        for (ResolveInfo resolveInfo : queryIntentActivities) {
+            ActivityInfo activityInfo = resolveInfo.activityInfo;
+            String str = activityInfo.packageName;
+            String str2 = activityInfo.name;
             if (!TextUtils.isEmpty(str) && !TextUtils.isEmpty(str2) && z == NotificationSettingsHelper.isNotificationsBanned(context, str)) {
                 i++;
             }
@@ -96,6 +98,10 @@ public class Analytics$SettingsStatusEvent extends Analytics$Event {
 
     public static String getNotificationStyle(Context context) {
         return NotificationUtil.showMiuiStyle() ? "miui" : "google";
+    }
+
+    public static int getUseControlPanel(Context context) {
+        return Settings.System.getInt(context.getContentResolver(), "use_control_panel", 1);
     }
 
     public static int getExpandSelectedInfo(Context context) {

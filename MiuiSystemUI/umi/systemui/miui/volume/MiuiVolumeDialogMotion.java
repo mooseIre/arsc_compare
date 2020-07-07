@@ -59,13 +59,14 @@ public class MiuiVolumeDialogMotion {
     }
 
     public MiuiVolumeDialogMotion(View view, ViewGroup viewGroup, FrameLayout frameLayout, View view2, View view3) {
-        this.mContext = view.getContext();
+        Context context = view.getContext();
+        this.mContext = context;
         this.mDialogView = view;
         this.mDialogContentView = viewGroup;
         this.mTempColumnContainer = frameLayout;
         this.mExpandButton = view2;
         this.mRingerModeLayout = view3;
-        this.mCornerRadiusExpanded = (float) this.mContext.getResources().getDimensionPixelSize(R$dimen.miui_volume_bg_radius_expanded);
+        this.mCornerRadiusExpanded = (float) context.getResources().getDimensionPixelSize(R$dimen.miui_volume_bg_radius_expanded);
         this.mCornerRadiusCollapsed = (float) this.mContext.getResources().getDimensionPixelSize(R$dimen.miui_volume_bg_radius);
         this.mElevationCollapsed = this.mContext.getResources().getDimension(R$dimen.miui_volume_elevation_collapsed);
         setupAnimationInfo();
@@ -103,8 +104,9 @@ public class MiuiVolumeDialogMotion {
             this.mCollapseAnimator = AnimatorInflater.loadAnimator(this.mContext, R$animator.miui_volume_bg_collapse);
         }
         if (this.mShowAnimator == null) {
-            this.mShowAnimator = createAnimator(true);
-            this.mShowAnimator.addListener(new AnimatorListenerAdapter() {
+            ObjectAnimator createAnimator = createAnimator(true);
+            this.mShowAnimator = createAnimator;
+            createAnimator.addListener(new AnimatorListenerAdapter() {
                 public void onAnimationStart(Animator animator) {
                     MiuiVolumeDialogMotion.this.mCallback.onAnimatingChanged(true);
                 }
@@ -130,7 +132,7 @@ public class MiuiVolumeDialogMotion {
         ObjectAnimator ofFloat = ObjectAnimator.ofFloat(view, "translationX", fArr);
         ofFloat.setDuration(300).setInterpolator(z ? Interpolators.DECELERATE_QUART : Interpolators.ACCELERATE_DECELERATE);
         ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener(z) {
-            private final /* synthetic */ boolean f$1;
+            public final /* synthetic */ boolean f$1;
 
             {
                 this.f$1 = r2;
@@ -143,6 +145,8 @@ public class MiuiVolumeDialogMotion {
         return ofFloat;
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$createAnimator$0 */
     public /* synthetic */ void lambda$createAnimator$0$MiuiVolumeDialogMotion(boolean z, ValueAnimator valueAnimator) {
         setViewsAlpha(z ? valueAnimator.getAnimatedFraction() : 1.0f - valueAnimator.getAnimatedFraction());
     }
@@ -180,15 +184,15 @@ public class MiuiVolumeDialogMotion {
         builder.addStateWithIntDimen(this.mRingerModeLayout.getId(), 9, R$dimen.miui_volume_bg_padding);
         this.mCollapsedStates = builder.build();
         if (this.mContext.getResources().getBoolean(R$bool.miui_volume_expand_freeland)) {
-            i = (int) resources.getDimension(R$dimen.miui_volume_offset_top_collapsed);
+            i2 = (int) resources.getDimension(R$dimen.miui_volume_offset_top_collapsed);
         } else if (z) {
-            i2 = ((int) (((((float) resources.getDisplayMetrics().widthPixels) - resources.getDimension(R$dimen.miui_volume_content_width_expanded)) - resources.getDimension(R$dimen.miui_volume_ringer_btn_layout_width)) - resources.getDimension(R$dimen.miui_volume_footer_margin_left_expanded))) / 2;
-            i = 0;
+            i = ((int) (((((float) resources.getDisplayMetrics().widthPixels) - resources.getDimension(R$dimen.miui_volume_content_width_expanded)) - resources.getDimension(R$dimen.miui_volume_ringer_btn_layout_width)) - resources.getDimension(R$dimen.miui_volume_footer_margin_left_expanded))) / 2;
+            i2 = 0;
             ViewStateGroup.Builder builder2 = new ViewStateGroup.Builder(this.mContext);
             builder2.addStateWithIntRes(this.mDialogView.getId(), 1, R$integer.miui_volume_dialog_gravity_expanded);
             builder2.addStateWithIntRes(this.mDialogView.getId(), 11, R$integer.miui_volume_layout_orientation_expanded);
-            builder2.addState(this.mDialogView.getId(), 6, i);
-            builder2.addState(this.mDialogView.getId(), 5, i2);
+            builder2.addState(this.mDialogView.getId(), 6, i2);
+            builder2.addState(this.mDialogView.getId(), 5, i);
             builder2.addStateWithIntDimen(this.mDialogView.getId(), 7, R$dimen.miui_volume_offset_end_expanded);
             builder2.addState(this.mDialogView.getId(), 12, 1);
             builder2.addStateWithIntDimen(this.mDialogContentView.getId(), 2, R$dimen.miui_volume_content_width_expanded);
@@ -206,14 +210,14 @@ public class MiuiVolumeDialogMotion {
             builder2.addState(this.mRingerModeLayout.getId(), 9, 0);
             this.mExpandedStates = builder2.build();
         } else {
-            i = ((int) (((((float) resources.getDisplayMetrics().heightPixels) - resources.getDimension(R$dimen.miui_volume_content_height_expanded)) - resources.getDimension(R$dimen.miui_volume_ringer_btn_layout_height)) - resources.getDimension(R$dimen.miui_volume_footer_margin_top_expanded))) / 2;
+            i2 = ((int) (((((float) resources.getDisplayMetrics().heightPixels) - resources.getDimension(R$dimen.miui_volume_content_height_expanded)) - resources.getDimension(R$dimen.miui_volume_ringer_btn_layout_height)) - resources.getDimension(R$dimen.miui_volume_footer_margin_top_expanded))) / 2;
         }
-        i2 = 0;
+        i = 0;
         ViewStateGroup.Builder builder22 = new ViewStateGroup.Builder(this.mContext);
         builder22.addStateWithIntRes(this.mDialogView.getId(), 1, R$integer.miui_volume_dialog_gravity_expanded);
         builder22.addStateWithIntRes(this.mDialogView.getId(), 11, R$integer.miui_volume_layout_orientation_expanded);
-        builder22.addState(this.mDialogView.getId(), 6, i);
-        builder22.addState(this.mDialogView.getId(), 5, i2);
+        builder22.addState(this.mDialogView.getId(), 6, i2);
+        builder22.addState(this.mDialogView.getId(), 5, i);
         builder22.addStateWithIntDimen(this.mDialogView.getId(), 7, R$dimen.miui_volume_offset_end_expanded);
         builder22.addState(this.mDialogView.getId(), 12, 1);
         builder22.addStateWithIntDimen(this.mDialogContentView.getId(), 2, R$dimen.miui_volume_content_width_expanded);

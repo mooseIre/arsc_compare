@@ -28,7 +28,7 @@ public class RecentsImpl extends BaseRecentsImpl {
         GraphicBuffer drawThumbnailTransitionBitmap = drawThumbnailTransitionBitmap(task, thumbnailTransitionTransform);
         RectF rectF = thumbnailTransitionTransform.rect;
         rectF.top += (float) BaseRecentsImpl.mTaskBarHeight;
-        return ActivityOptions.makeThumbnailAspectScaleDownAnimation(this.mDummyStackView, SystemUICompat.createHardwareBitmapFromGraphicBuffer(drawThumbnailTransitionBitmap), (int) rectF.left, (int) rectF.top, (int) rectF.width(), (int) rectF.height(), this.mHandler, new ActivityOptions.OnAnimationStartedListener() {
+        return ActivityOptions.makeThumbnailAspectScaleDownAnimation(this.mDummyStackView, SystemUICompat.createHardwareBitmapFromGraphicBuffer(drawThumbnailTransitionBitmap), (int) rectF.left, (int) rectF.top, (int) rectF.width(), (int) rectF.height(), this.mHandler, new ActivityOptions.OnAnimationStartedListener(this) {
             public void onAnimationStarted() {
                 RecentsEventBus.getDefault().post(new EnterRecentsWindowFirstAnimationFrameEvent());
             }

@@ -62,8 +62,9 @@ public class MiuiWirelessPowerTile extends QSTileImpl<QSTile.BooleanState> {
     /* access modifiers changed from: protected */
     public void handleUpdateState(QSTile.BooleanState booleanState, Object obj) {
         booleanState.label = this.mContext.getString(R.string.quick_settings_wireless_label);
-        booleanState.value = this.mController.isWirelessChargingEnabled();
-        booleanState.state = booleanState.value ? 2 : 1;
+        boolean isWirelessChargingEnabled = this.mController.isWirelessChargingEnabled();
+        booleanState.value = isWirelessChargingEnabled;
+        booleanState.state = isWirelessChargingEnabled ? 2 : 1;
         booleanState.icon = QSTileImpl.ResourceIcon.get(booleanState.value ? R.drawable.ic_qs_wireless_chg_enabled : R.drawable.ic_qs_wireless_chg_disabled);
         booleanState.contentDescription = this.mContext.getString(R.string.quick_settings_wireless_label);
         booleanState.expandedAccessibilityClassName = Switch.class.getName();

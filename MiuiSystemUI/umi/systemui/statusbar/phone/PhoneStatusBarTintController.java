@@ -9,7 +9,6 @@ import android.view.View;
 import com.android.systemui.Dependency;
 
 public class PhoneStatusBarTintController implements View.OnAttachStateChangeListener, View.OnLayoutChangeListener {
-    private final String TAG = "PhoneStatusBarTintController";
     private DarkModeCallback mDarkModeCallback = new DarkModeCallback() {
         public void onDarkModeChanged(boolean z) {
             boolean unused = PhoneStatusBarTintController.this.mSmartDark = z;
@@ -17,9 +16,9 @@ public class PhoneStatusBarTintController implements View.OnAttachStateChangeLis
         }
     };
     private final Handler mHandler = new Handler();
-    private LightBarController mLightBarController = ((LightBarController) Dependency.get(LightBarController.class));
+    private LightBarController mLightBarController;
     private final Rect mSamplingBounds = new Rect();
-    private CompositionSamplingListenerCompat mSamplingListener = this.mLightBarController.getCompositionSamplingListener();
+    private CompositionSamplingListenerCompat mSamplingListener;
     private boolean mSamplingListenerRegistered = false;
     /* access modifiers changed from: private */
     public boolean mSmartDark;
@@ -32,8 +31,11 @@ public class PhoneStatusBarTintController implements View.OnAttachStateChangeLis
     };
 
     public PhoneStatusBarTintController(PhoneStatusBarView phoneStatusBarView) {
+        LightBarController lightBarController = (LightBarController) Dependency.get(LightBarController.class);
+        this.mLightBarController = lightBarController;
+        this.mSamplingListener = lightBarController.getCompositionSamplingListener();
         this.mStatusBarView = phoneStatusBarView;
-        this.mStatusBarView.addOnAttachStateChangeListener(this);
+        phoneStatusBarView.addOnAttachStateChangeListener(this);
         this.mStatusBarView.addOnLayoutChangeListener(this);
     }
 

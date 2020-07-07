@@ -124,7 +124,7 @@ public interface StatusBarIconController {
             this.mIconHPadding = this.mContext.getResources().getDimensionPixelSize(R.dimen.status_bar_icon_padding);
             this.mDarkIconDispatcher = (DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class);
             if (!z) {
-                this.mDarkReceiver = new DarkIconDispatcher.DarkReceiver() {
+                AnonymousClass1 r2 = new DarkIconDispatcher.DarkReceiver() {
                     public void onDarkChanged(Rect rect, float f, int i) {
                         float unused = DarkIconManager.this.mDarkIntensity = f;
                         int unused2 = DarkIconManager.this.mTintColor = i;
@@ -156,7 +156,8 @@ public interface StatusBarIconController {
                         }
                     }
                 };
-                this.mDarkIconDispatcher.addDarkReceiver(this.mDarkReceiver);
+                this.mDarkReceiver = r2;
+                this.mDarkIconDispatcher.addDarkReceiver((DarkIconDispatcher.DarkReceiver) r2);
             }
         }
 
@@ -212,12 +213,14 @@ public interface StatusBarIconController {
     public static class IconManager {
         protected final Context mContext;
         protected final ViewGroup mGroup;
-        protected final int mIconSize = this.mContext.getResources().getDimensionPixelSize(17105481);
+        protected final int mIconSize;
         public ArraySet<String> mWhiteList;
 
         public IconManager(ViewGroup viewGroup) {
             this.mGroup = viewGroup;
-            this.mContext = viewGroup.getContext();
+            Context context = viewGroup.getContext();
+            this.mContext = context;
+            this.mIconSize = context.getResources().getDimensionPixelSize(17105522);
             if (this.mGroup.getTag(R.id.tag_disable_state_tracker) == null) {
                 DisableStateTracker disableStateTracker = new DisableStateTracker(0, 2);
                 this.mGroup.addOnAttachStateChangeListener(disableStateTracker);

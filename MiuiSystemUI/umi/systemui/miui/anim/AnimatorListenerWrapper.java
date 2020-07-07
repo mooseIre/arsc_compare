@@ -7,10 +7,12 @@ import java.util.Collections;
 import java.util.List;
 
 public class AnimatorListenerWrapper implements Animator.AnimatorListener {
-    private List<Animator.AnimatorListener> mListeners = new ArrayList();
+    private List<Animator.AnimatorListener> mListeners;
 
     private AnimatorListenerWrapper(Animator.AnimatorListener... animatorListenerArr) {
-        Collections.addAll(this.mListeners, animatorListenerArr);
+        ArrayList arrayList = new ArrayList();
+        this.mListeners = arrayList;
+        Collections.addAll(arrayList, animatorListenerArr);
     }
 
     public void onAnimationStart(Animator animator, boolean z) {

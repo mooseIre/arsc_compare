@@ -1,6 +1,6 @@
 package com.android.systemui.statusbar.policy;
 
-public interface RotationLockController extends Listenable, CallbackController<RotationLockControllerCallback> {
+public interface RotationLockController extends Object {
 
     public interface RotationLockControllerCallback {
         void onRotationLockStateChanged(boolean z, boolean z2);

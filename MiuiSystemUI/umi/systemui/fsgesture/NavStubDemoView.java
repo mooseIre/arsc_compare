@@ -32,7 +32,7 @@ import com.android.systemui.plugins.R;
 import miui.util.CustomizeUtil;
 
 public class NavStubDemoView extends View {
-    public static final String TAG = "NavStubDemoView";
+    public static final String TAG = NavStubDemoView.class.getSimpleName();
     /* access modifiers changed from: private */
     public Activity curActivity;
     /* access modifiers changed from: private */
@@ -228,10 +228,12 @@ public class NavStubDemoView extends View {
         this.mShowWidth = displayMetrics.widthPixels;
         this.mShowHeight = displayMetrics.heightPixels;
         this.mStateMode = 65537;
-        this.mPaint = new Paint();
-        this.mPaint.setAntiAlias(true);
-        this.mRecentsAnimator = ValueAnimator.ofPropertyValuesHolder(new PropertyValuesHolder[]{PropertyValuesHolder.ofFloat("scale", new float[]{1.1f, 1.05f}), PropertyValuesHolder.ofInt("alpha", new int[]{0, 255})});
-        this.mRecentsAnimator.setInterpolator(new DecelerateInterpolator(1.5f));
+        Paint paint = new Paint();
+        this.mPaint = paint;
+        paint.setAntiAlias(true);
+        ValueAnimator ofPropertyValuesHolder = ValueAnimator.ofPropertyValuesHolder(new PropertyValuesHolder[]{PropertyValuesHolder.ofFloat("scale", new float[]{1.1f, 1.05f}), PropertyValuesHolder.ofInt("alpha", new int[]{0, 255})});
+        this.mRecentsAnimator = ofPropertyValuesHolder;
+        ofPropertyValuesHolder.setInterpolator(new DecelerateInterpolator(1.5f));
         this.mRecentsAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 float floatValue = ((Float) valueAnimator.getAnimatedValue("scale")).floatValue();
@@ -242,14 +244,17 @@ public class NavStubDemoView extends View {
             }
         });
         this.mRecentsAnimator.setDuration(300);
-        this.mFakeBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.app_note);
-        int min = Math.min(this.mFakeBitmap.getHeight(), (int) (((float) this.mFakeBitmap.getWidth()) * ((((float) this.mShowHeight) * 1.0f) / ((float) this.mShowWidth))));
+        Bitmap decodeResource = BitmapFactory.decodeResource(getResources(), R.drawable.app_note);
+        this.mFakeBitmap = decodeResource;
+        int min = Math.min(decodeResource.getHeight(), (int) (((float) this.mFakeBitmap.getWidth()) * ((((float) this.mShowHeight) * 1.0f) / ((float) this.mShowWidth))));
         Bitmap bitmap = this.mFakeBitmap;
-        this.mFakeBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), min);
-        this.mFakeBitmap.setHasAlpha(false);
+        Bitmap createBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), min);
+        this.mFakeBitmap = createBitmap;
+        createBitmap.setHasAlpha(false);
         this.mFakeBitmap.prepareToDraw();
-        this.mDragBitmap = createRoundCornerBmp(this.mFakeBitmap);
-        this.mDragBitmap.setHasAlpha(false);
+        Bitmap createRoundCornerBmp = createRoundCornerBmp(this.mFakeBitmap);
+        this.mDragBitmap = createRoundCornerBmp;
+        createRoundCornerBmp.setHasAlpha(false);
         this.mDragBitmap.prepareToDraw();
         this.mAppIcon = BitmapFactory.decodeResource(getResources(), R.drawable.note_icon);
     }
@@ -279,16 +284,17 @@ public class NavStubDemoView extends View {
             Rect rect = this.mShowRect;
             int i = this.mPivotLocX;
             int i2 = this.mShowWidth;
-            rect.left = i - (i2 / 2);
-            int i3 = this.mPivotLocY;
-            int i4 = this.mShowHeight;
-            rect.top = i3 - i4;
-            rect.right = rect.left + i2;
-            int i5 = rect.top;
-            rect.bottom = i5 + i4;
-            int i6 = (int) (((float) i5) + (((float) i4) * this.mCurScale));
+            int i3 = i - (i2 / 2);
+            rect.left = i3;
+            int i4 = this.mPivotLocY;
+            int i5 = this.mShowHeight;
+            int i6 = i4 - i5;
+            rect.top = i6;
+            rect.right = i3 + i2;
+            rect.bottom = i6 + i5;
+            int i7 = (int) (((float) i6) + (((float) i5) * this.mCurScale));
             if (this.mIsAppToRecents) {
-                i6 = this.mBottomDec + i5;
+                i7 = this.mBottomDec + i6;
             }
             this.mPaint.setAlpha(255);
             this.mPaint.setXfermode((Xfermode) null);
@@ -296,7 +302,7 @@ public class NavStubDemoView extends View {
             Rect rect2 = this.mShowRect;
             float f2 = (float) rect2.right;
             float f3 = f2;
-            float f4 = (float) i6;
+            float f4 = (float) i7;
             int saveLayer = canvas.saveLayer((float) rect2.left, (float) rect2.top, f3, f4, (Paint) null);
             Rect rect3 = this.mShowRect;
             float f5 = (float) rect3.right;
@@ -313,14 +319,16 @@ public class NavStubDemoView extends View {
         canvas.scale(this.mXScale, this.mYScale);
         canvas.translate((float) (-this.mPivotLocX), (float) (-this.mPivotLocY));
         Rect rect4 = this.mShowRect;
-        int i7 = this.mPivotLocX;
-        int i8 = this.mShowWidth;
-        rect4.left = i7 - (i8 / 2);
-        int i9 = this.mPivotLocY;
-        int i10 = this.mShowHeight;
-        rect4.top = i9 - (i10 / 2);
-        rect4.right = rect4.left + i8;
-        rect4.bottom = rect4.top + i10;
+        int i8 = this.mPivotLocX;
+        int i9 = this.mShowWidth;
+        int i10 = i8 - (i9 / 2);
+        rect4.left = i10;
+        int i11 = this.mPivotLocY;
+        int i12 = this.mShowHeight;
+        int i13 = i11 - (i12 / 2);
+        rect4.top = i13;
+        rect4.right = i10 + i9;
+        rect4.bottom = i13 + i12;
         this.mPaint.setAlpha((int) ((1.0f - this.mCurAlpha) * 255.0f));
         canvas.drawBitmap(this.mAppIcon, (Rect) null, this.mShowRect, this.mPaint);
         this.mPaint.setAlpha((int) (this.mCurAlpha * 255.0f));
@@ -346,9 +354,10 @@ public class NavStubDemoView extends View {
         int action = motionEvent.getAction();
         if (action == 0) {
             this.swipeView.cancelAnimation();
-            this.mDownX = motionEvent.getRawX();
+            float rawX = motionEvent.getRawX();
+            this.mDownX = rawX;
             int i = this.mShowWidth;
-            this.mDelta = ((float) (i / 2)) - this.mDownX;
+            this.mDelta = ((float) (i / 2)) - rawX;
             int i2 = i / 2;
             this.mPivotLocX = i2;
             this.mFollowTailX = (float) i2;

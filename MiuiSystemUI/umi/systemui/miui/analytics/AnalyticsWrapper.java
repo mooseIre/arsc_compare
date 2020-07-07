@@ -11,7 +11,7 @@ import miui.os.Build;
 public class AnalyticsWrapper {
     public static boolean sSupprotAggregate = false;
 
-    static String resolveChannelName() {
+    private static String resolveChannelName() {
         String str;
         if (Build.IS_ALPHA_BUILD) {
             str = "MIUI10-alpha";

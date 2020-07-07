@@ -92,11 +92,11 @@ public class RecentsRecommendView extends LinearLayout implements View.OnClickLi
         boolean isPackageEnabled2;
         if (GLOBAL_MARKET_PACKAGE_NAME.equals(packagesChangedEvent.packageName) && this.mIsMarketEnabled != (isPackageEnabled2 = Utilities.isPackageEnabled(this.mContext, GLOBAL_MARKET_PACKAGE_NAME))) {
             this.mIsMarketEnabled = isPackageEnabled2;
-            this.mThirdItem = initItem(R.id.third_item, this.mIsMarketEnabled ? R.drawable.recents_icon_market : R.drawable.recents_icon_garbage_deepclean, this.mIsMarketEnabled ? R.string.recents_title_market : R.string.recents_title_garbage_deepclean);
+            this.mThirdItem = initItem(R.id.third_item, isPackageEnabled2 ? R.drawable.recents_icon_market : R.drawable.recents_icon_garbage_deepclean, this.mIsMarketEnabled ? R.string.recents_title_market : R.string.recents_title_garbage_deepclean);
         }
         if (GLOBAL_GAME_PACKAGE_NAME.equals(packagesChangedEvent.packageName) && this.mIsGamesEnable != (isPackageEnabled = Utilities.isPackageEnabled(this.mContext, GLOBAL_GAME_PACKAGE_NAME))) {
             this.mIsGamesEnable = isPackageEnabled;
-            this.mFourthItem = initItem(R.id.fourth_item, this.mIsGamesEnable ? R.drawable.recents_icon_game : R.drawable.recents_icon_app_manager, this.mIsGamesEnable ? R.string.recents_title_game : R.string.recents_title_app_manager);
+            this.mFourthItem = initItem(R.id.fourth_item, isPackageEnabled ? R.drawable.recents_icon_game : R.drawable.recents_icon_app_manager, this.mIsGamesEnable ? R.string.recents_title_game : R.string.recents_title_app_manager);
         }
     }
 

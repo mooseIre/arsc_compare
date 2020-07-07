@@ -27,11 +27,16 @@ public class HumanInteractionClassifier extends Classifier {
     };
     private final StrokeClassifier[] mStrokeClassifiers;
 
+    public String getTag() {
+        return "HIC";
+    }
+
     private HumanInteractionClassifier(Context context) {
         this.mContext = context;
-        DisplayMetrics displayMetrics = this.mContext.getResources().getDisplayMetrics();
-        this.mDpi = (displayMetrics.xdpi + displayMetrics.ydpi) / 2.0f;
-        this.mClassifierData = new ClassifierData(this.mDpi);
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        float f = (displayMetrics.xdpi + displayMetrics.ydpi) / 2.0f;
+        this.mDpi = f;
+        this.mClassifierData = new ClassifierData(f);
         this.mHistoryEvaluator = new HistoryEvaluator();
         this.mStrokeClassifiers = new StrokeClassifier[]{new AnglesClassifier(this.mClassifierData), new SpeedClassifier(this.mClassifierData), new DurationCountClassifier(this.mClassifierData), new EndPointRatioClassifier(this.mClassifierData), new EndPointLengthClassifier(this.mClassifierData), new AccelerationClassifier(this.mClassifierData), new SpeedAnglesClassifier(this.mClassifierData), new LengthCountClassifier(this.mClassifierData), new DirectionClassifier(this.mClassifierData)};
         this.mGestureClassifiers = new GestureClassifier[]{new PointerCountClassifier(this.mClassifierData), new ProximityClassifier(this.mClassifierData)};
@@ -83,6 +88,7 @@ public class HumanInteractionClassifier extends Classifier {
     private void addTouchEvent(MotionEvent motionEvent) {
         StringBuilder sb;
         float f;
+        int i;
         MotionEvent motionEvent2 = motionEvent;
         this.mClassifierData.update(motionEvent2);
         for (StrokeClassifier onTouchEvent : this.mStrokeClassifiers) {
@@ -92,37 +98,47 @@ public class HumanInteractionClassifier extends Classifier {
             onTouchEvent2.onTouchEvent(motionEvent2);
         }
         int size = this.mClassifierData.getEndingStrokes().size();
-        int i = 0;
+        int i2 = 0;
         while (true) {
             sb = null;
             f = 0.0f;
-            if (i >= size) {
+            if (i2 >= size) {
                 break;
             }
-            Stroke stroke = this.mClassifierData.getEndingStrokes().get(i);
+            Stroke stroke = this.mClassifierData.getEndingStrokes().get(i2);
             if (FalsingLog.ENABLED) {
                 sb = new StringBuilder("stroke");
             }
-            float f2 = 0.0f;
-            for (StrokeClassifier strokeClassifier : this.mStrokeClassifiers) {
+            StrokeClassifier[] strokeClassifierArr = this.mStrokeClassifiers;
+            int length = strokeClassifierArr.length;
+            int i3 = 0;
+            while (i3 < length) {
+                StrokeClassifier strokeClassifier = strokeClassifierArr[i3];
                 float falseTouchEvaluation = strokeClassifier.getFalseTouchEvaluation(this.mCurrentType, stroke);
                 if (FalsingLog.ENABLED) {
                     String tag = strokeClassifier.getTag();
-                    sb.append(" ");
+                    i = size;
+                    StringBuilder append = sb.append(" ");
                     if (falseTouchEvaluation < 1.0f) {
                         tag = tag.toLowerCase();
                     }
-                    sb.append(tag);
-                    sb.append("=");
-                    sb.append(falseTouchEvaluation);
+                    append.append(tag);
+                    append.append("=");
+                    append.append(falseTouchEvaluation);
+                } else {
+                    i = size;
                 }
-                f2 += falseTouchEvaluation;
+                f += falseTouchEvaluation;
+                i3++;
+                size = i;
             }
+            int i4 = size;
             if (FalsingLog.ENABLED) {
                 FalsingLog.i(" addTouchEvent", sb.toString());
             }
-            this.mHistoryEvaluator.addStroke(f2);
-            i++;
+            this.mHistoryEvaluator.addStroke(f);
+            i2++;
+            size = i4;
         }
         int actionMasked = motionEvent.getActionMasked();
         if (actionMasked == 1 || actionMasked == 3) {
@@ -133,13 +149,13 @@ public class HumanInteractionClassifier extends Classifier {
                 float falseTouchEvaluation2 = gestureClassifier.getFalseTouchEvaluation(this.mCurrentType);
                 if (FalsingLog.ENABLED) {
                     String tag2 = gestureClassifier.getTag();
-                    sb.append(" ");
+                    StringBuilder append2 = sb.append(" ");
                     if (falseTouchEvaluation2 < 1.0f) {
                         tag2 = tag2.toLowerCase();
                     }
-                    sb.append(tag2);
-                    sb.append("=");
-                    sb.append(falseTouchEvaluation2);
+                    append2.append(tag2);
+                    append2.append("=");
+                    append2.append(falseTouchEvaluation2);
                 }
                 f += falseTouchEvaluation2;
             }

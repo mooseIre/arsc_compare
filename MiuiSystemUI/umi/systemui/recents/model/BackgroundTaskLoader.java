@@ -17,7 +17,7 @@ class BackgroundTaskLoader implements Runnable {
     Bitmap mDefaultThumbnail;
     TaskKeyLruCache<Drawable> mIconCache;
     TaskResourceLoadQueue mLoadQueue;
-    HandlerThread mLoadThread = new HandlerThread("Recents-TaskResourceLoader", 10);
+    HandlerThread mLoadThread;
     Handler mLoadThreadHandler;
     Handler mMainThreadHandler = new Handler();
     TaskKeyLruCache<ThumbnailData> mSnapshotCache;
@@ -31,9 +31,12 @@ class BackgroundTaskLoader implements Runnable {
         this.mSnapshotCache = taskKeyLruCache3;
         this.mDefaultThumbnail = bitmap;
         this.mDefaultIcon = bitmapDrawable;
-        this.mLoadThread.start();
-        this.mLoadThreadHandler = new Handler(this.mLoadThread.getLooper());
-        this.mLoadThreadHandler.post(this);
+        HandlerThread handlerThread = new HandlerThread("Recents-TaskResourceLoader", 10);
+        this.mLoadThread = handlerThread;
+        handlerThread.start();
+        Handler handler = new Handler(this.mLoadThread.getLooper());
+        this.mLoadThreadHandler = handler;
+        handler.post(this);
     }
 
     /* access modifiers changed from: package-private */
@@ -204,7 +207,7 @@ class BackgroundTaskLoader implements Runnable {
             if (r0 != 0) goto L_0x0134
             android.os.Handler r0 = r10.mMainThreadHandler
             com.android.systemui.recents.model.BackgroundTaskLoader$1 r1 = new com.android.systemui.recents.model.BackgroundTaskLoader$1
-            r1.<init>(r4, r6, r5)
+            r1.<init>(r10, r4, r6, r5)
             r0.post(r1)
         L_0x0134:
             com.android.systemui.recents.model.TaskResourceLoadQueue r0 = r10.mLoadQueue

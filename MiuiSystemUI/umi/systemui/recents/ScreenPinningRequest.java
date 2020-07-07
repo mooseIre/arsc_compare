@@ -27,7 +27,7 @@ import java.util.ArrayList;
 
 public class ScreenPinningRequest implements View.OnClickListener {
     /* access modifiers changed from: private */
-    public final AccessibilityManager mAccessibilityService = ((AccessibilityManager) this.mContext.getSystemService("accessibility"));
+    public final AccessibilityManager mAccessibilityService;
     private final Context mContext;
     private RequestWindowView mRequestWindow;
     /* access modifiers changed from: private */
@@ -36,6 +36,7 @@ public class ScreenPinningRequest implements View.OnClickListener {
 
     public ScreenPinningRequest(Context context) {
         this.mContext = context;
+        this.mAccessibilityService = (AccessibilityManager) context.getSystemService("accessibility");
     }
 
     public void clearPrompt() {
@@ -52,8 +53,9 @@ public class ScreenPinningRequest implements View.OnClickListener {
         } catch (IllegalArgumentException unused) {
         }
         this.taskId = i;
-        this.mRequestWindow = new RequestWindowView(this.mContext, z);
-        this.mRequestWindow.setSystemUiVisibility(256);
+        RequestWindowView requestWindowView = new RequestWindowView(this.mContext, z);
+        this.mRequestWindow = requestWindowView;
+        requestWindowView.setSystemUiVisibility(256);
         this.mWindowManager.addView(this.mRequestWindow, getWindowLayoutParams());
     }
 
@@ -137,8 +139,9 @@ public class ScreenPinningRequest implements View.OnClickListener {
                     this.mLayout.setTranslationY(f * 96.0f);
                 }
                 this.mLayout.animate().alpha(1.0f).translationX(0.0f).translationY(0.0f).setDuration(300).setInterpolator(new DecelerateInterpolator()).start();
-                this.mColorAnim = ValueAnimator.ofObject(new ArgbEvaluator(), new Object[]{0, Integer.valueOf(color)});
-                this.mColorAnim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                ValueAnimator ofObject = ValueAnimator.ofObject(new ArgbEvaluator(), new Object[]{0, Integer.valueOf(color)});
+                this.mColorAnim = ofObject;
+                ofObject.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                     public void onAnimationUpdate(ValueAnimator valueAnimator) {
                         RequestWindowView.this.mColor.setColor(((Integer) valueAnimator.getAnimatedValue()).intValue());
                     }
@@ -161,8 +164,9 @@ public class ScreenPinningRequest implements View.OnClickListener {
         }
 
         private void inflateView(boolean z) {
-            this.mLayout = (ViewGroup) View.inflate(getContext(), z ? R.layout.screen_pinning_request_land_phone : R.layout.screen_pinning_request, (ViewGroup) null);
-            this.mLayout.setClickable(true);
+            ViewGroup viewGroup = (ViewGroup) View.inflate(getContext(), z ? R.layout.screen_pinning_request_land_phone : R.layout.screen_pinning_request, (ViewGroup) null);
+            this.mLayout = viewGroup;
+            viewGroup.setClickable(true);
             int i = 0;
             this.mLayout.setLayoutDirection(0);
             this.mLayout.findViewById(R.id.screen_pinning_text_area).setLayoutDirection(3);

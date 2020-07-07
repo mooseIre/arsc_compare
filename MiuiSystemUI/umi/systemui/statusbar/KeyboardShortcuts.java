@@ -7,6 +7,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.IPackageManager;
 import android.content.pm.PackageInfo;
 import android.content.pm.ResolveInfo;
@@ -48,7 +49,7 @@ public final class KeyboardShortcuts {
     private static final String TAG = "KeyboardShortcuts";
     private static KeyboardShortcuts sInstance;
     private static final Object sLock = new Object();
-    private final Comparator<KeyboardShortcutInfo> mApplicationItemsComparator = new Comparator<KeyboardShortcutInfo>() {
+    private final Comparator<KeyboardShortcutInfo> mApplicationItemsComparator = new Comparator<KeyboardShortcutInfo>(this) {
         public int compare(KeyboardShortcutInfo keyboardShortcutInfo, KeyboardShortcutInfo keyboardShortcutInfo2) {
             boolean z = keyboardShortcutInfo.getLabel() == null || keyboardShortcutInfo.getLabel().toString().isEmpty();
             boolean z2 = keyboardShortcutInfo2.getLabel() == null || keyboardShortcutInfo2.getLabel().toString().isEmpty();
@@ -313,7 +314,8 @@ public final class KeyboardShortcuts {
                 packageInfo = null;
             }
             if (packageInfo != null) {
-                arrayList.add(new KeyboardShortcutInfo(this.mContext.getString(R.string.keyboard_shortcut_group_applications_assist), Icon.createWithResource(packageInfo.applicationInfo.packageName, packageInfo.applicationInfo.icon), 0, 65536));
+                ApplicationInfo applicationInfo = packageInfo.applicationInfo;
+                arrayList.add(new KeyboardShortcutInfo(this.mContext.getString(R.string.keyboard_shortcut_group_applications_assist), Icon.createWithResource(applicationInfo.packageName, applicationInfo.icon), 0, 65536));
             }
         }
         Icon iconForIntentCategory = getIconForIntentCategory("android.intent.category.APP_BROWSER", userId);
@@ -347,14 +349,30 @@ public final class KeyboardShortcuts {
         return new KeyboardShortcutGroup(this.mContext.getString(R.string.keyboard_shortcut_group_applications), arrayList, true);
     }
 
-    private Icon getIconForIntentCategory(String str, int i) {
-        Intent intent = new Intent("android.intent.action.MAIN");
-        intent.addCategory(str);
-        PackageInfo packageInfoForIntent = getPackageInfoForIntent(intent, i);
-        if (packageInfoForIntent == null || packageInfoForIntent.applicationInfo.icon == 0) {
-            return null;
-        }
-        return Icon.createWithResource(packageInfoForIntent.applicationInfo.packageName, packageInfoForIntent.applicationInfo.icon);
+    /* JADX WARNING: Code restructure failed: missing block: B:2:0x0010, code lost:
+        r2 = r2.applicationInfo;
+     */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    private android.graphics.drawable.Icon getIconForIntentCategory(java.lang.String r3, int r4) {
+        /*
+            r2 = this;
+            android.content.Intent r0 = new android.content.Intent
+            java.lang.String r1 = "android.intent.action.MAIN"
+            r0.<init>(r1)
+            r0.addCategory(r3)
+            android.content.pm.PackageInfo r2 = r2.getPackageInfoForIntent(r0, r4)
+            if (r2 == 0) goto L_0x001d
+            android.content.pm.ApplicationInfo r2 = r2.applicationInfo
+            int r3 = r2.icon
+            if (r3 == 0) goto L_0x001d
+            java.lang.String r2 = r2.packageName
+            android.graphics.drawable.Icon r2 = android.graphics.drawable.Icon.createWithResource(r2, r3)
+            return r2
+        L_0x001d:
+            r2 = 0
+            return r2
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.KeyboardShortcuts.getIconForIntentCategory(java.lang.String, int):android.graphics.drawable.Icon");
     }
 
     private PackageInfo getPackageInfoForIntent(Intent intent, int i) {
@@ -388,8 +406,9 @@ public final class KeyboardShortcuts {
         populateKeyboardShortcuts((LinearLayout) inflate.findViewById(R.id.keyboard_shortcuts_container), list);
         builder.setView(inflate);
         builder.setPositiveButton(R.string.quick_settings_done, this.mDialogCloseListener);
-        this.mKeyboardShortcutsDialog = builder.create();
-        this.mKeyboardShortcutsDialog.setCanceledOnTouchOutside(true);
+        AlertDialog create = builder.create();
+        this.mKeyboardShortcutsDialog = create;
+        create.setCanceledOnTouchOutside(true);
         this.mKeyboardShortcutsDialog.getWindow().setType(2008);
         synchronized (sLock) {
             if (sInstance != null) {
@@ -481,7 +500,7 @@ public final class KeyboardShortcuts {
                             stringDrawableContainer.mDrawable.draw(canvas);
                             imageView2.setImageBitmap(createBitmap);
                             imageView2.setImportantForAccessibility(1);
-                            imageView2.setAccessibilityDelegate(new ShortcutKeyAccessibilityDelegate(stringDrawableContainer.mString));
+                            imageView2.setAccessibilityDelegate(new ShortcutKeyAccessibilityDelegate(this, stringDrawableContainer.mString));
                             viewGroup.addView(imageView2);
                         } else {
                             i6 = size;
@@ -493,7 +512,7 @@ public final class KeyboardShortcuts {
                                 TextView textView4 = (TextView) from.inflate(R.layout.keyboard_shortcuts_key_view, viewGroup, false);
                                 textView4.setMinimumWidth(measuredHeight);
                                 textView4.setText(stringDrawableContainer.mString);
-                                textView4.setAccessibilityDelegate(new ShortcutKeyAccessibilityDelegate(stringDrawableContainer.mString));
+                                textView4.setAccessibilityDelegate(new ShortcutKeyAccessibilityDelegate(this, stringDrawableContainer.mString));
                                 viewGroup.addView(textView4);
                                 i12++;
                                 LinearLayout linearLayout4 = linearLayout;
@@ -621,7 +640,7 @@ public final class KeyboardShortcuts {
     private final class ShortcutKeyAccessibilityDelegate extends View.AccessibilityDelegate {
         private String mContentDescription;
 
-        ShortcutKeyAccessibilityDelegate(String str) {
+        ShortcutKeyAccessibilityDelegate(KeyboardShortcuts keyboardShortcuts, String str) {
             this.mContentDescription = str;
         }
 

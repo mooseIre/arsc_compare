@@ -80,8 +80,9 @@ public class KeyguardStatusBarView extends RelativeLayout implements MiuiStatusB
         if (DisplayCutoutCompat.isCutoutLeftTop(displayInfo, displayMetrics.widthPixels)) {
             this.mCarrierLabel.setShowStyle(-1);
         }
-        this.mStatusBarPrompt = (MiuiStatusBarPromptController) Dependency.get(MiuiStatusBarPromptController.class);
-        this.mStatusBarPrompt.addStatusBarPrompt("KeyguardStatusBarView", (StatusBar) null, this, 7, this);
+        MiuiStatusBarPromptController miuiStatusBarPromptController = (MiuiStatusBarPromptController) Dependency.get(MiuiStatusBarPromptController.class);
+        this.mStatusBarPrompt = miuiStatusBarPromptController;
+        miuiStatusBarPromptController.addStatusBarPrompt("KeyguardStatusBarView", (StatusBar) null, this, 7, this);
         this.mStatusBarPrompt.setPromptSosTypeImage("KeyguardStatusBarView");
         updateCarrierSuperContainer();
         refreshViews();
@@ -149,8 +150,9 @@ public class KeyguardStatusBarView extends RelativeLayout implements MiuiStatusB
     public boolean onTouchEvent(MotionEvent motionEvent) {
         int actionMasked = motionEvent.getActionMasked();
         if (actionMasked == 0) {
-            this.mBlockClickActionToStatusBar = this.mStatusBarPrompt.blockClickAction();
-            if (this.mBlockClickActionToStatusBar) {
+            boolean blockClickAction = this.mStatusBarPrompt.blockClickAction();
+            this.mBlockClickActionToStatusBar = blockClickAction;
+            if (blockClickAction) {
                 return true;
             }
         } else if (actionMasked == 1 && this.mBlockClickActionToStatusBar && this.mStatusBarPrompt.getTouchRegion().contains((int) motionEvent.getX(), (int) motionEvent.getY())) {
@@ -193,12 +195,13 @@ public class KeyguardStatusBarView extends RelativeLayout implements MiuiStatusB
         this.mLightModeIconColorSingleTone = this.mContext.getColor(R.color.light_mode_icon_color_single_tone);
         this.mArea = new Rect(0, 0, 0, 0);
         this.mDarkIntensity = ((this.mStatusBarExpanded || !this.mDark) && (!this.mStatusBarExpanded || !this.mIconsDarkInExpanded)) ? 0.0f : 1.0f;
-        this.mTint = ((this.mStatusBarExpanded || !this.mDark) && (!this.mStatusBarExpanded || !this.mIconsDarkInExpanded)) ? this.mLightModeIconColorSingleTone : this.mDarkModeIconColorSingleTone;
+        int i = ((this.mStatusBarExpanded || !this.mDark) && (!this.mStatusBarExpanded || !this.mIconsDarkInExpanded)) ? this.mLightModeIconColorSingleTone : this.mDarkModeIconColorSingleTone;
+        this.mTint = i;
         CarrierText carrierText = this.mCarrierLabel;
-        carrierText.setTextColor(DarkIconDispatcherHelper.getTint(this.mArea, carrierText, this.mTint));
+        carrierText.setTextColor(DarkIconDispatcherHelper.getTint(this.mArea, carrierText, i));
         this.mStatusBarPrompt.updateSosImageDark(this.mDark, this.mArea, this.mDarkIntensity);
-        for (int i = 0; i < this.mSystemIcons.getChildCount(); i++) {
-            View childAt = this.mSystemIcons.getChildAt(i);
+        for (int i2 = 0; i2 < this.mSystemIcons.getChildCount(); i2++) {
+            View childAt = this.mSystemIcons.getChildAt(i2);
             if (childAt instanceof DarkIconDispatcher.DarkReceiver) {
                 ((DarkIconDispatcher.DarkReceiver) childAt).onDarkChanged(this.mArea, this.mDarkIntensity, this.mTint);
             }

@@ -20,6 +20,7 @@ import android.os.RemoteException;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Pair;
+import android.view.DisplayInfo;
 import android.view.IPinnedStackController;
 import android.view.IPinnedStackListener;
 import android.view.IWindowManager;
@@ -217,19 +218,25 @@ public class PipManager implements BasePipManager {
     }
 
     private class PinnedStackListener extends IPinnedStackListener.Stub {
+        public void onActivityHidden(ComponentName componentName) {
+        }
+
+        public void onAspectRatioChanged(float f) {
+        }
+
+        public void onConfigurationChanged() {
+        }
+
+        public void onDisplayInfoChanged(DisplayInfo displayInfo) {
+        }
+
         public void onImeVisibilityChanged(boolean z, int i) {
         }
 
         public void onListenerRegistered(IPinnedStackController iPinnedStackController) {
         }
 
-        public void onMinimizedStateChanged(boolean z) {
-        }
-
-        public void onMovementBoundsChanged(Rect rect, Rect rect2, Rect rect3, boolean z, boolean z2, int i) {
-        }
-
-        public void onShelfVisibilityChanged(boolean z, int i) {
+        public void onMovementBoundsChanged(boolean z) {
         }
 
         private PinnedStackListener() {
@@ -244,6 +251,8 @@ public class PipManager implements BasePipManager {
             });
         }
 
+        /* access modifiers changed from: private */
+        /* renamed from: lambda$onActionsChanged$1 */
         public /* synthetic */ void lambda$onActionsChanged$1$PipManager$PinnedStackListener() {
             for (int size = PipManager.this.mListeners.size() - 1; size >= 0; size--) {
                 ((Listener) PipManager.this.mListeners.get(size)).onPipMenuActionsChanged(PipManager.this.mCustomActions);
@@ -392,23 +401,7 @@ public class PipManager implements BasePipManager {
             return;
         }
         this.mState = i;
-        int i2 = this.mState;
-        if (i2 == 0) {
-            this.mCurrentPipBounds = null;
-            if (z) {
-                return;
-            }
-        } else if (i2 == 1) {
-            this.mCurrentPipBounds = this.mPipBounds;
-        } else if (i2 != 2) {
-            this.mCurrentPipBounds = this.mPipBounds;
-        } else {
-            this.mCurrentPipBounds = this.mMenuModePipBounds;
-        }
-        try {
-            this.mActivityManager.resizeStack(4, this.mCurrentPipBounds, true, true, true, -1);
-        } catch (RemoteException e) {
-            Log.e("PipManager", "resizeStack failed", e);
+        if (i == 0 && z) {
         }
     }
 

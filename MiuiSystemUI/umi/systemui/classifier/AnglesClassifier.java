@@ -35,7 +35,6 @@ public class AnglesClassifier extends StrokeClassifier {
     }
 
     private static class Data {
-        private final float ANGLE_DEVIATION = 0.15707964f;
         private float mAnglesCount = 0.0f;
         private float mBiggestAngle = 0.0f;
         private float mCount = 1.0f;

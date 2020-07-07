@@ -79,16 +79,18 @@ public class QSContainerImpl extends FrameLayout implements TunerService.Tunable
         this.mContent = findViewById(R.id.qs_content);
         this.mQSContainer = findViewById(R.id.qs_container);
         this.mBackground = findViewById(R.id.qs_background);
-        this.mQuickQsPanel = (QuickQSPanel) findViewById(R.id.quick_qs_panel);
-        this.mQuickQsPanel.setVisibility(resources.getBoolean(R.bool.config_showQuickSettingsRow) ? 0 : 8);
+        QuickQSPanel quickQSPanel = (QuickQSPanel) findViewById(R.id.quick_qs_panel);
+        this.mQuickQsPanel = quickQSPanel;
+        quickQSPanel.setVisibility(resources.getBoolean(R.bool.config_showQuickSettingsRow) ? 0 : 8);
         this.mQSPanel = (QSPanel) findViewById(R.id.quick_settings_panel);
         this.mQSFooterContainer = (LinearLayout) findViewById(R.id.qs_footer_container);
         this.mQSFooterBundle = findViewById(R.id.qs_footer_bundle);
         this.mBrightnessView = (ToggleSliderView) findViewById(R.id.qs_brightness);
         this.mBrightnessController = new BrightnessController(getContext(), this.mBrightnessView);
         this.mExpandIndicator = (ImageView) findViewById(R.id.qs_expand_indicator);
-        this.mCaretDrawable = new CaretDrawable(getContext());
-        this.mExpandIndicator.setImageDrawable(this.mCaretDrawable);
+        CaretDrawable caretDrawable = new CaretDrawable(getContext());
+        this.mCaretDrawable = caretDrawable;
+        this.mExpandIndicator.setImageDrawable(caretDrawable);
         this.mCaretInterpolator = AnimationUtils.loadInterpolator(getContext(), 17563661);
         this.mQSDetail = (QSDetail) findViewById(R.id.qs_detail);
         this.mQSCustomizer = (QSCustomizer) findViewById(R.id.qs_customize);
@@ -122,8 +124,9 @@ public class QSContainerImpl extends FrameLayout implements TunerService.Tunable
     public void updateQSDataUsage(boolean z) {
         if (z) {
             if (this.mDataUsageBar == null) {
-                this.mDataUsageBar = (QSFooterDataUsage) LayoutInflater.from(getContext()).inflate(R.layout.qs_footer_data_usage, this.mQSFooterContainer, false);
-                this.mQSFooterContainer.addView(this.mDataUsageBar);
+                QSFooterDataUsage qSFooterDataUsage = (QSFooterDataUsage) LayoutInflater.from(getContext()).inflate(R.layout.qs_footer_data_usage, this.mQSFooterContainer, false);
+                this.mDataUsageBar = qSFooterDataUsage;
+                this.mQSFooterContainer.addView(qSFooterDataUsage);
                 this.mDataUsageBar.setQSContainer(this);
             }
         } else if (this.mDataUsageBar != null) {
@@ -228,8 +231,9 @@ public class QSContainerImpl extends FrameLayout implements TunerService.Tunable
                 this.mCaretAnimator.cancel();
                 this.mCaretDrawable.setCaretProgress(0.0f);
             }
-            this.mCaretAnimator = ValueAnimator.ofFloat(new float[]{0.0f, f});
-            this.mCaretAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{0.0f, f});
+            this.mCaretAnimator = ofFloat;
+            ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 public void onAnimationUpdate(ValueAnimator valueAnimator) {
                     QSContainerImpl.this.mCaretDrawable.setCaretProgress(((Float) valueAnimator.getAnimatedValue()).floatValue());
                 }

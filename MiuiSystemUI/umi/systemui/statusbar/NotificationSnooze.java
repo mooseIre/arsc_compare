@@ -57,11 +57,13 @@ public class NotificationSnooze extends LinearLayout implements NotificationGuts
         this.mExpandedHeight = getResources().getDimensionPixelSize(R.dimen.snooze_snackbar_max_height);
         findViewById(R.id.notification_snooze).setOnClickListener(this);
         this.mSelectedOptionText = (TextView) findViewById(R.id.snooze_option_default);
-        this.mUndoButton = (TextView) findViewById(R.id.undo);
-        this.mUndoButton.setOnClickListener(this);
+        TextView textView = (TextView) findViewById(R.id.undo);
+        this.mUndoButton = textView;
+        textView.setOnClickListener(this);
         this.mExpandButton = (ImageView) findViewById(R.id.expand_button);
-        this.mSnoozeOptionContainer = (ViewGroup) findViewById(R.id.snooze_options);
-        this.mSnoozeOptionContainer.setAlpha(0.0f);
+        ViewGroup viewGroup = (ViewGroup) findViewById(R.id.snooze_options);
+        this.mSnoozeOptionContainer = viewGroup;
+        viewGroup.setAlpha(0.0f);
         this.mSnoozeOptions = getDefaultSnoozeOptions();
         createOptionViews();
         setSelected(this.mDefaultOption);
@@ -96,8 +98,9 @@ public class NotificationSnooze extends LinearLayout implements NotificationGuts
         ArrayList<NotificationSwipeActionHelper.SnoozeOption> arrayList = new ArrayList<>();
         arrayList.add(createOption(R.string.snooze_option_15_min, 15));
         arrayList.add(createOption(R.string.snooze_option_30_min, 30));
-        this.mDefaultOption = createOption(R.string.snooze_option_1_hour, 60);
-        arrayList.add(this.mDefaultOption);
+        NotificationSwipeActionHelper.SnoozeOption createOption = createOption(R.string.snooze_option_1_hour, 60);
+        this.mDefaultOption = createOption;
+        arrayList.add(createOption);
         arrayList.add(createOption(R.string.snooze_option_2_hour, 120));
         return arrayList;
     }
@@ -155,8 +158,9 @@ public class NotificationSnooze extends LinearLayout implements NotificationGuts
         fArr[0] = viewGroup.getAlpha();
         fArr[1] = z ? 1.0f : 0.0f;
         ObjectAnimator ofFloat = ObjectAnimator.ofFloat(viewGroup, property, fArr);
-        this.mExpandAnimation = new AnimatorSet();
-        this.mExpandAnimation.playTogether(new Animator[]{ofFloat});
+        AnimatorSet animatorSet2 = new AnimatorSet();
+        this.mExpandAnimation = animatorSet2;
+        animatorSet2.playTogether(new Animator[]{ofFloat});
         this.mExpandAnimation.setDuration(150);
         this.mExpandAnimation.setInterpolator(z ? Interpolators.ALPHA_IN : Interpolators.ALPHA_OUT);
         this.mExpandAnimation.start();

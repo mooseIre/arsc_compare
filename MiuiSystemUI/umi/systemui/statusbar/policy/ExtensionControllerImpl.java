@@ -59,7 +59,7 @@ public class ExtensionControllerImpl implements ExtensionController {
         }
 
         public ExtensionController.Extension build() {
-            Collections.sort(this.mExtension.mProducers, new Comparator<Producer<T>>() {
+            Collections.sort(this.mExtension.mProducers, new Comparator<Producer<T>>(this) {
                 public int compare(Producer<T> producer, Producer<T> producer2) {
                     if (!(producer instanceof ExtensionImpl.PluginItem) || (producer2 instanceof ExtensionImpl.PluginItem)) {
                         return 0;
@@ -79,7 +79,7 @@ public class ExtensionControllerImpl implements ExtensionController {
         /* access modifiers changed from: private */
         public final ArrayList<Producer<T>> mProducers;
 
-        private ExtensionImpl() {
+        private ExtensionImpl(ExtensionControllerImpl extensionControllerImpl) {
             this.mProducers = new ArrayList<>();
             this.mCallbacks = new ArrayList<>();
         }
@@ -114,7 +114,7 @@ public class ExtensionControllerImpl implements ExtensionController {
         }
 
         public void addDefault(Supplier<T> supplier) {
-            this.mProducers.add(new Default(supplier));
+            this.mProducers.add(new Default(this, supplier));
         }
 
         public <P> void addPlugin(String str, Class<P> cls, ExtensionController.PluginConverter<T, P> pluginConverter) {
@@ -171,7 +171,7 @@ public class ExtensionControllerImpl implements ExtensionController {
             public void destroy() {
             }
 
-            public Default(Supplier<T> supplier) {
+            public Default(ExtensionImpl extensionImpl, Supplier<T> supplier) {
                 this.mSupplier = supplier;
             }
 

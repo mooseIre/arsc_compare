@@ -284,11 +284,13 @@ public class AspectUI extends SystemUI implements ConfigurationController.Config
         if (z && !Build.IS_TABLET && !"lithium".equals(android.os.Build.DEVICE)) {
             updateResource();
             this.mWindowManager = (WindowManager) this.mContext.getSystemService("window");
-            this.mDisplay = ((WindowManager) this.mContext.getSystemService("window")).getDefaultDisplay();
-            this.mDisplay.getDisplayInfo(this.mInfo);
+            Display defaultDisplay = ((WindowManager) this.mContext.getSystemService("window")).getDefaultDisplay();
+            this.mDisplay = defaultDisplay;
+            defaultDisplay.getDisplayInfo(this.mInfo);
             this.mRotation = this.mDisplay.getRotation();
-            this.mCurrentSize = new Point();
-            this.mDisplay.getRealSize(this.mCurrentSize);
+            Point point = new Point();
+            this.mCurrentSize = point;
+            this.mDisplay.getRealSize(point);
             addAspectWindow();
             ((ActivityObserver) Dependency.get(ActivityObserver.class)).addCallback(this.mActivityStateObserver);
             RecentsEventBus.getDefault().register(this);
@@ -322,8 +324,9 @@ public class AspectUI extends SystemUI implements ConfigurationController.Config
                     }
                 }
             }, this.mHandler);
-            this.mLastConfiguration = new Configuration();
-            this.mLastConfiguration.updateFrom(this.mContext.getResources().getConfiguration());
+            Configuration configuration = new Configuration();
+            this.mLastConfiguration = configuration;
+            configuration.updateFrom(this.mContext.getResources().getConfiguration());
             ((ConfigurationController) Dependency.get(ConfigurationController.class)).addCallback(this);
             ((CommandQueue) SystemUI.getComponent(this.mContext, CommandQueue.class)).addCallbacks(this);
         }

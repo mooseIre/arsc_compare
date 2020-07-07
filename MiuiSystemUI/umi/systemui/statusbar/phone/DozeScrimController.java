@@ -16,7 +16,6 @@ public class DozeScrimController {
     public static final boolean DEBUG = Log.isLoggable("DozeScrimController", 3);
     private Animator mBehindAnimator;
     private float mBehindTarget;
-    private final Context mContext;
     /* access modifiers changed from: private */
     public final DozeParameters mDozeParameters;
     /* access modifiers changed from: private */
@@ -92,7 +91,6 @@ public class DozeScrimController {
     private boolean mWakeAndUnlocking;
 
     public DozeScrimController(ScrimController scrimController, Context context) {
-        this.mContext = context;
         this.mScrimController = scrimController;
         this.mDozeParameters = new DozeParameters(context);
     }
@@ -101,14 +99,14 @@ public class DozeScrimController {
         if (this.mDozing != z) {
             this.mDozing = z;
             this.mWakeAndUnlocking = false;
-            if (this.mDozing) {
+            float f = 0.0f;
+            if (z) {
                 this.mDozingAborted = false;
                 abortAnimations();
-                float f = 1.0f;
                 this.mScrimController.setDozeBehindAlpha(1.0f);
                 ScrimController scrimController = this.mScrimController;
-                if (this.mDozeParameters.getAlwaysOn()) {
-                    f = 0.0f;
+                if (!this.mDozeParameters.getAlwaysOn()) {
+                    f = 1.0f;
                 }
                 scrimController.setDozeInFrontAlpha(f);
                 return;

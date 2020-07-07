@@ -11,7 +11,7 @@ import com.android.internal.statusbar.NotificationVisibility;
 import com.android.internal.statusbar.NotificationVisibilityCompat;
 import com.android.systemui.Dependency;
 import com.android.systemui.UiOffloadThread;
-import com.android.systemui.miui.statusbar.analytics.NotificationStat;
+import com.android.systemui.miui.statusbar.analytics.SystemUIStat;
 import com.android.systemui.statusbar.NotificationData;
 import com.android.systemui.statusbar.phone.StatusBar;
 import com.android.systemui.statusbar.stack.NotificationStackScrollLayout;
@@ -25,9 +25,7 @@ public class NotificationLogger {
     protected IStatusBarService mBarService = IStatusBarService.Stub.asInterface(ServiceManager.getService("statusbar"));
     /* access modifiers changed from: private */
     public final ArraySet<NotificationVisibility> mCurrentlyVisibleNotifications = new ArraySet<>();
-    private boolean mFloating = false;
     protected Handler mHandler = new Handler();
-    private boolean mKeyguard = false;
     /* access modifiers changed from: private */
     public long mLastVisibilityReportUptimeMs;
     protected NotificationData mNotificationData;
@@ -103,8 +101,6 @@ public class NotificationLogger {
     }
 
     public void startNotificationLogging() {
-        this.mKeyguard = this.mStatusBar.isKeyguardShowing();
-        this.mFloating = this.mStatusBar.isHeadsUpPinned();
         this.mStackScroller.setChildLocationsChangedListener(this.mNotificationLocationsChangedListener);
         this.mNotificationLocationsChangedListener.onChildLocationsChanged();
     }
@@ -114,7 +110,7 @@ public class NotificationLogger {
         if (!collection.isEmpty() || !collection2.isEmpty()) {
             final NotificationVisibility[] cloneVisibilitiesAsArr = cloneVisibilitiesAsArr(collection);
             final NotificationVisibility[] cloneVisibilitiesAsArr2 = cloneVisibilitiesAsArr(collection2);
-            ((NotificationStat) Dependency.get(NotificationStat.class)).logNotificationVisibilityChanges(cloneVisibilitiesAsKeyList(collection), cloneVisibilitiesAsKeyList(collection2), this.mFloating, this.mKeyguard);
+            ((SystemUIStat) Dependency.get(SystemUIStat.class)).logNotificationVisibilityChanges(cloneVisibilitiesAsKeyList(collection), cloneVisibilitiesAsKeyList(collection2));
             this.mUiOffloadThread.submit(new Runnable() {
                 public void run() {
                     try {

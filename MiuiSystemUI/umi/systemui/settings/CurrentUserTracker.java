@@ -1,11 +1,11 @@
 package com.android.systemui.settings;
 
+import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import com.android.internal.annotations.VisibleForTesting;
-import com.android.keyguard.KeyguardUpdateMonitor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -70,7 +70,7 @@ public abstract class CurrentUserTracker {
                 this.mCallbacks.add(consumer);
             }
             if (!this.mReceiverRegistered) {
-                this.mCurrentUserId = KeyguardUpdateMonitor.getCurrentUser();
+                this.mCurrentUserId = ActivityManager.getCurrentUser();
                 this.mAppContext.registerReceiver(this, new IntentFilter("android.intent.action.USER_SWITCHED"));
                 this.mReceiverRegistered = true;
             }

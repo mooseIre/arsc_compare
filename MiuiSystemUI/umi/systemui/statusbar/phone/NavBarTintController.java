@@ -41,11 +41,11 @@ public class NavBarTintController implements View.OnAttachStateChangeListener, V
             }
         };
         this.mNavigationBarView = navigationBarView;
-        this.mNavigationBarView.addOnAttachStateChangeListener(this);
+        navigationBarView.addOnAttachStateChangeListener(this);
         this.mNavigationBarView.addOnLayoutChangeListener(this);
         this.mLightBarController = lightBarTransitionsController;
         Resources resources = navigationBarView.getResources();
-        this.mNavBarHeight = resources.getDimensionPixelSize(17105307);
+        this.mNavBarHeight = resources.getDimensionPixelSize(17105341);
         this.mNavColorSampleMargin = resources.getDimensionPixelSize(R.dimen.navigation_handle_sample_horizontal_margin);
         this.mLuminanceThreshold = resources.getFloat(R.dimen.navigation_luminance_threshold);
         this.mLuminanceChangeThreshold = resources.getFloat(R.dimen.navigation_luminance_change_threshold);
@@ -129,7 +129,7 @@ public class NavBarTintController implements View.OnAttachStateChangeListener, V
     /* access modifiers changed from: private */
     public void updateTint(float f) {
         this.mLastMedianLuma = f;
-        if (Math.abs(this.mCurrentMedianLuma - this.mLastMedianLuma) > this.mLuminanceChangeThreshold) {
+        if (Math.abs(this.mCurrentMedianLuma - f) > this.mLuminanceChangeThreshold) {
             if (f > this.mLuminanceThreshold) {
                 Log.d("NavBarTintController", " updateTint Black");
                 this.mLightBarController.setIconsDark(true, true);

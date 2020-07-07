@@ -110,7 +110,7 @@ public class KeyguardNotificationHelper {
         updateSortedKeys(3003, (String) null);
         this.mBgHandler.obtainMessage(3003).sendToTarget();
         ((StatusBar) SystemUI.getComponent(this.mContext, StatusBar.class)).getNotificationData().getActiveNotifications().forEach(new Consumer(arrayList) {
-            private final /* synthetic */ ArrayList f$1;
+            public final /* synthetic */ ArrayList f$1;
 
             {
                 this.f$1 = r2;
@@ -122,6 +122,8 @@ public class KeyguardNotificationHelper {
         });
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$clear$0 */
     public /* synthetic */ void lambda$clear$0$KeyguardNotificationHelper(ArrayList arrayList, NotificationData.Entry entry) {
         if (needReadd(entry) && arrayList.contains(entry.key)) {
             add(entry);
@@ -157,7 +159,7 @@ public class KeyguardNotificationHelper {
         this.mSortedKeys.clear();
         if (!hashSet.isEmpty()) {
             ((StatusBar) SystemUI.getComponent(this.mContext, StatusBar.class)).getNotificationData().getActiveNotifications().forEach(new Consumer(hashSet) {
-                private final /* synthetic */ Set f$1;
+                public final /* synthetic */ Set f$1;
 
                 {
                     this.f$1 = r2;
@@ -173,6 +175,8 @@ public class KeyguardNotificationHelper {
         }
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$updateSortedKeys$1 */
     public /* synthetic */ void lambda$updateSortedKeys$1$KeyguardNotificationHelper(Set set, NotificationData.Entry entry) {
         if (set.contains(entry.key)) {
             this.mSortedKeys.add(entry.key);
@@ -259,7 +263,7 @@ public class KeyguardNotificationHelper {
         /*
             r3 = this;
             boolean r0 = r4.hideSensitive
-            r1 = 16909333(0x1020415, float:2.3880158E-38)
+            r1 = 16909404(0x102045c, float:2.3880357E-38)
             r2 = 0
             if (r0 != 0) goto L_0x0024
             boolean r0 = r4.hideSensitiveByAppLock

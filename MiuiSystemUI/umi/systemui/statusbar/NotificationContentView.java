@@ -125,7 +125,7 @@ public class NotificationContentView extends AbstractFrameLayout {
 
     private void initDimens() {
         this.mMinContractedHeight = getResources().getDimensionPixelSize(R.dimen.min_notification_layout_height);
-        this.mNotificationContentMarginEnd = getResources().getDimensionPixelSize(17105333);
+        this.mNotificationContentMarginEnd = getResources().getDimensionPixelSize(17105367);
         this.mLowPriorityNotificationHeight = getResources().getDimensionPixelSize(R.dimen.low_priority_notification_layout_height);
         this.mNotificationBgRadius = NotificationUtil.getOutlineRadius(this.mContext);
         this.mNotificationCustomViewMargin = NotificationUtil.getCustomViewMargin(this.mContext);
@@ -147,81 +147,79 @@ public class NotificationContentView extends AbstractFrameLayout {
         int i3;
         boolean z;
         boolean z2;
-        int i4;
         boolean z3;
+        int i4;
         int i5;
-        int i6;
         boolean z4;
         int mode = View.MeasureSpec.getMode(i2);
         boolean z5 = true;
-        int i7 = 1073741824;
+        int i6 = 1073741824;
         boolean z6 = mode == 1073741824;
         boolean z7 = mode == Integer.MIN_VALUE;
-        int i8 = 1073741823;
+        int i7 = 1073741823;
         int size = View.MeasureSpec.getSize(i);
         if ((z6 || z7) && !this.mIsHeadsUp) {
-            i8 = View.MeasureSpec.getSize(i2);
+            i7 = View.MeasureSpec.getSize(i2);
         }
         View view = this.mExpandedChild;
         if (view != null) {
-            int i9 = this.mNotificationMaxHeight;
+            int i8 = this.mNotificationMaxHeight;
             ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
-            int i10 = layoutParams.height;
-            if (i10 >= 0) {
-                i9 = Math.min(i9, i10);
+            int i9 = layoutParams.height;
+            if (i9 >= 0) {
+                i8 = Math.min(i8, i9);
                 z4 = true;
             } else {
                 z4 = false;
             }
-            this.mExpandedChild.measure(getChildWidthSpec(i, (ViewGroup.MarginLayoutParams) layoutParams), View.MeasureSpec.makeMeasureSpec(i9, z4 ? 1073741824 : Integer.MIN_VALUE));
+            this.mExpandedChild.measure(getChildWidthSpec(i, (ViewGroup.MarginLayoutParams) layoutParams), View.MeasureSpec.makeMeasureSpec(i8, z4 ? 1073741824 : Integer.MIN_VALUE));
             i3 = Math.max(0, this.mExpandedChild.getMeasuredHeight());
         } else {
             i3 = 0;
         }
         View view2 = this.mContractedChild;
         if (view2 != null) {
-            int i11 = this.mSmallHeight;
+            int i10 = this.mSmallHeight;
             ViewGroup.LayoutParams layoutParams2 = view2.getLayoutParams();
-            int i12 = layoutParams2.height;
-            if (i12 >= 0) {
-                i4 = Math.min(i11, i12);
+            int i11 = layoutParams2.height;
+            if (i11 >= 0) {
+                i10 = Math.min(i10, i11);
                 z3 = true;
             } else {
-                i4 = i11;
                 z3 = false;
             }
             boolean isCustomViewNotification = isCustomViewNotification(this.mStatusBarNotification);
             if ((isCustomViewNotification && this.mStatusBarNotification.isCustomHeight()) || isMediaNotification(this.mStatusBarNotification)) {
-                i5 = View.MeasureSpec.makeMeasureSpec(Integer.MAX_VALUE, Integer.MIN_VALUE);
+                i4 = View.MeasureSpec.makeMeasureSpec(Integer.MAX_VALUE, Integer.MIN_VALUE);
             } else if (shouldContractedBeFixedSize() || z3) {
-                i5 = View.MeasureSpec.makeMeasureSpec(i4, 1073741824);
+                i4 = View.MeasureSpec.makeMeasureSpec(i10, 1073741824);
             } else {
-                i5 = View.MeasureSpec.makeMeasureSpec(i4, Integer.MIN_VALUE);
+                i4 = View.MeasureSpec.makeMeasureSpec(i10, Integer.MIN_VALUE);
             }
             int childWidthSpec = getChildWidthSpec(i, (ViewGroup.MarginLayoutParams) layoutParams2);
-            this.mContractedChild.measure(childWidthSpec, i5);
+            this.mContractedChild.measure(childWidthSpec, i4);
             int measuredHeight = this.mContractedChild.getMeasuredHeight();
-            if (!isCustomViewNotification && measuredHeight < (i6 = this.mMinContractedHeight)) {
+            if (!isCustomViewNotification && measuredHeight < (i5 = this.mMinContractedHeight)) {
                 if (this.mIsLowPriority) {
-                    i6 = this.mLowPriorityNotificationHeight;
+                    i5 = this.mLowPriorityNotificationHeight;
                 }
-                i5 = View.MeasureSpec.makeMeasureSpec(i6, 1073741824);
-                this.mContractedChild.measure(childWidthSpec, i5);
+                i4 = View.MeasureSpec.makeMeasureSpec(i5, 1073741824);
+                this.mContractedChild.measure(childWidthSpec, i4);
             }
             i3 = Math.max(i3, measuredHeight);
             if (updateContractedHeaderWidth()) {
-                this.mContractedChild.measure(childWidthSpec, i5);
+                this.mContractedChild.measure(childWidthSpec, i4);
             }
             if (this.mExpandedChild != null && this.mContractedChild.getMeasuredHeight() > this.mExpandedChild.getMeasuredHeight()) {
                 this.mExpandedChild.measure(childWidthSpec, View.MeasureSpec.makeMeasureSpec(this.mContractedChild.getMeasuredHeight(), 1073741824));
             }
         }
         if (this.mHeadsUpChild != null) {
-            int min = Math.min(i8, this.mHeadsUpHeight);
+            int min = Math.min(i7, this.mHeadsUpHeight);
             ViewGroup.LayoutParams layoutParams3 = this.mHeadsUpChild.getLayoutParams();
-            int i13 = layoutParams3.height;
-            if (i13 >= 0) {
-                min = Math.min(min, i13);
+            int i12 = layoutParams3.height;
+            if (i12 >= 0) {
+                min = Math.min(min, i12);
                 z2 = true;
             } else {
                 z2 = false;
@@ -230,15 +228,15 @@ public class NotificationContentView extends AbstractFrameLayout {
             i3 = Math.max(i3, this.mHeadsUpChild.getMeasuredHeight());
         }
         if (this.mSingleLineView != null) {
-            this.mSingleLineView.measure((this.mSingleLineWidthIndention == 0 || View.MeasureSpec.getMode(i) == 0) ? i : View.MeasureSpec.makeMeasureSpec((size - this.mSingleLineWidthIndention) + this.mSingleLineView.getPaddingEnd(), 1073741824), View.MeasureSpec.makeMeasureSpec(i8, Integer.MIN_VALUE));
+            this.mSingleLineView.measure((this.mSingleLineWidthIndention == 0 || View.MeasureSpec.getMode(i) == 0) ? i : View.MeasureSpec.makeMeasureSpec((size - this.mSingleLineWidthIndention) + this.mSingleLineView.getPaddingEnd(), 1073741824), View.MeasureSpec.makeMeasureSpec(i7, Integer.MIN_VALUE));
             i3 = Math.max(i3, this.mSingleLineView.getMeasuredHeight());
         }
         if (this.mAmbientChild != null) {
-            int min2 = Math.min(i8, this.mNotificationAmbientHeight);
+            int min2 = Math.min(i7, this.mNotificationAmbientHeight);
             ViewGroup.LayoutParams layoutParams4 = this.mAmbientChild.getLayoutParams();
-            int i14 = layoutParams4.height;
-            if (i14 >= 0) {
-                min2 = Math.min(min2, i14);
+            int i13 = layoutParams4.height;
+            if (i13 >= 0) {
+                min2 = Math.min(min2, i13);
                 z = true;
             } else {
                 z = false;
@@ -247,10 +245,10 @@ public class NotificationContentView extends AbstractFrameLayout {
             i3 = Math.max(i3, this.mAmbientChild.getMeasuredHeight());
         }
         if (this.mAmbientSingleLineChild != null) {
-            int min3 = Math.min(i8, this.mNotificationAmbientHeight);
-            int i15 = this.mAmbientSingleLineChild.getLayoutParams().height;
-            if (i15 >= 0) {
-                min3 = Math.min(min3, i15);
+            int min3 = Math.min(i7, this.mNotificationAmbientHeight);
+            int i14 = this.mAmbientSingleLineChild.getLayoutParams().height;
+            if (i14 >= 0) {
+                min3 = Math.min(min3, i14);
             } else {
                 z5 = false;
             }
@@ -259,12 +257,12 @@ public class NotificationContentView extends AbstractFrameLayout {
             }
             HybridNotificationView hybridNotificationView = this.mAmbientSingleLineChild;
             if (!z5) {
-                i7 = Integer.MIN_VALUE;
+                i6 = Integer.MIN_VALUE;
             }
-            hybridNotificationView.measure(i, View.MeasureSpec.makeMeasureSpec(min3, i7));
+            hybridNotificationView.measure(i, View.MeasureSpec.makeMeasureSpec(min3, i6));
             i3 = Math.max(i3, this.mAmbientSingleLineChild.getMeasuredHeight());
         }
-        int min4 = Math.min(i3, i8);
+        int min4 = Math.min(i3, i7);
         if (isCustomViewNotification(this.mStatusBarNotification)) {
             min4 += this.mNotificationCustomViewMargin * 2;
         } else if (NotificationUtil.showSingleLine(this.mStatusBarNotification.getNotification())) {
@@ -372,8 +370,9 @@ public class NotificationContentView extends AbstractFrameLayout {
         }
         addView(view);
         this.mContractedChild = view;
-        this.mContractedWrapper = NotificationViewWrapper.wrap(getContext(), view, this.mContainingNotification, NotificationViewWrapper.TYPE_SHOWING.TYPE_CONTRACTED);
-        this.mContractedWrapper.setDark(this.mDark, false, 0);
+        NotificationViewWrapper wrap = NotificationViewWrapper.wrap(getContext(), view, this.mContainingNotification, NotificationViewWrapper.TYPE_SHOWING.TYPE_CONTRACTED);
+        this.mContractedWrapper = wrap;
+        wrap.setDark(this.mDark, false, 0);
     }
 
     private NotificationViewWrapper getWrapperForView(View view) {
@@ -531,7 +530,7 @@ public class NotificationContentView extends AbstractFrameLayout {
         int i;
         int i2;
         if (this.mIsChildInGroup && isVisibleOrTransitioning(3)) {
-            return this.mContext.getResources().getDimensionPixelSize(17105317);
+            return this.mContext.getResources().getDimensionPixelSize(17105351);
         }
         if (!(this.mHeadsUpChild == null || this.mExpandedChild == null)) {
             boolean z = isTransitioningFromTo(2, 1) || isTransitioningFromTo(1, 2);
@@ -552,7 +551,7 @@ public class NotificationContentView extends AbstractFrameLayout {
         } else if (this.mExpandedChild != null) {
             i = getViewHeight(1);
         } else {
-            i = getViewHeight(0) + this.mContext.getResources().getDimensionPixelSize(17105317);
+            i = getViewHeight(0) + this.mContext.getResources().getDimensionPixelSize(17105351);
         }
         return (this.mExpandedChild == null || !isVisibleOrTransitioning(1)) ? i : Math.min(i, getViewHeight(1));
     }
@@ -642,9 +641,12 @@ public class NotificationContentView extends AbstractFrameLayout {
         int height = viewForVisibleType != null ? viewForVisibleType.getHeight() : 0;
         NotificationViewWrapper wrapperForView = getWrapperForView(viewForVisibleType);
         if (wrapperForView != null) {
-            height = height + wrapperForView.getHeaderTranslation() + wrapperForView.getMiniBarHeight();
+            height += wrapperForView.getHeaderTranslation();
         }
-        return isCustomViewNotification(this.mStatusBarNotification) ? height + (this.mNotificationCustomViewMargin * 2) : height;
+        if (isCustomViewNotification(this.mStatusBarNotification)) {
+            height += this.mNotificationCustomViewMargin * 2;
+        }
+        return i == 2 ? height + this.mContainingNotification.getMiniBarHeight() : height;
     }
 
     public int getMinHeight() {
@@ -701,7 +703,7 @@ public class NotificationContentView extends AbstractFrameLayout {
 
     public void setClipToActualHeight(boolean z) {
         this.mClipToActualHeight = z;
-        setClipToOutline(this.mClipToActualHeight);
+        setClipToOutline(z);
         updateClipping();
     }
 
@@ -772,10 +774,6 @@ public class NotificationContentView extends AbstractFrameLayout {
         int backgroundColor = getBackgroundColor(this.mVisibleType);
         this.mContainingNotification.resetBackgroundAlpha();
         this.mContainingNotification.setContentBackground(backgroundColor, z, this);
-    }
-
-    public int getVisibleType() {
-        return this.mVisibleType;
     }
 
     public int getBackgroundColor(int i) {
@@ -900,8 +898,8 @@ public class NotificationContentView extends AbstractFrameLayout {
     }
 
     private boolean isForceShowHeadUpChild() {
-        if ((StatusBar.sGameMode || isLandscape(this.mContext)) && ((this.mIsHeadsUp || this.mHeadsUpAnimatingAway) && this.mHeadsUpChild != null && !this.mContainingNotification.isExpanded(false) && !this.mContainingNotification.isOnKeyguard())) {
-            return true;
+        if (StatusBar.sGameMode || isLandscape(this.mContext)) {
+            return (this.mIsHeadsUp || this.mHeadsUpAnimatingAway) && this.mHeadsUpChild != null && !this.mContainingNotification.isOnKeyguard();
         }
         return false;
     }
@@ -995,7 +993,7 @@ public class NotificationContentView extends AbstractFrameLayout {
         this.mIsHeadsUp = z;
         View view = this.mHeadsUpChild;
         if (view != null && (view instanceof InCallNotificationView)) {
-            if (this.mIsHeadsUp) {
+            if (z) {
                 ((InCallNotificationView) view).show();
             } else {
                 ((InCallNotificationView) view).hide();
@@ -1025,7 +1023,7 @@ public class NotificationContentView extends AbstractFrameLayout {
     public void setIsChildInGroup(boolean z) {
         this.mIsChildInGroup = z;
         if (this.mContractedChild != null) {
-            this.mContractedWrapper.setIsChildInGroup(this.mIsChildInGroup);
+            this.mContractedWrapper.setIsChildInGroup(z);
         }
         if (this.mExpandedChild != null) {
             this.mExpandedWrapper.setIsChildInGroup(this.mIsChildInGroup);
@@ -1145,7 +1143,18 @@ public class NotificationContentView extends AbstractFrameLayout {
     }
 
     private RemoteInputView applyRemoteInput(View view, NotificationData.Entry entry, boolean z, PendingIntent pendingIntent, RemoteInputView remoteInputView, NotificationViewWrapper notificationViewWrapper) {
-        View findViewById = view.findViewById(16908697);
+        View findViewById = view.findViewById(16908724);
+        View findViewById2 = view.findViewById(16908723);
+        if (findViewById2 != null) {
+            findViewById2.setBackgroundResource(0);
+            if (z) {
+                ViewGroup viewGroup = (ViewGroup) findViewById2;
+                int childCount = viewGroup.getChildCount();
+                for (int i = 0; i < childCount; i++) {
+                    viewGroup.getChildAt(i).setBackground(this.mContext.getDrawable(17303094));
+                }
+            }
+        }
         if (!(findViewById instanceof FrameLayout)) {
             return null;
         }
@@ -1211,20 +1220,19 @@ public class NotificationContentView extends AbstractFrameLayout {
 
     public void updateExpandButtons(boolean z) {
         this.mExpandable = z;
-        boolean z2 = false;
-        if (this.mExpandedChild == null || getViewHeight(1) == 0 || ((this.mIsHeadsUp || this.mHeadsUpAnimatingAway) && this.mHeadsUpChild != null && !this.mContainingNotification.isOnKeyguard() ? getViewHeight(1) > getViewHeight(2) : getViewHeight(1) > getViewHeight(0))) {
-            z2 = z;
+        if (!(this.mExpandedChild == null || getViewHeight(1) == 0 || ((this.mIsHeadsUp || this.mHeadsUpAnimatingAway) && this.mHeadsUpChild != null && !this.mContainingNotification.isOnKeyguard() ? getViewHeight(1) > getViewHeight(2) : getViewHeight(1) > getViewHeight(0)))) {
+            z = false;
         }
         if (this.mExpandedChild != null) {
-            this.mExpandedWrapper.updateExpandability(z2, this.mExpandClickListener);
+            this.mExpandedWrapper.updateExpandability(z, this.mExpandClickListener);
         }
         if (this.mContractedChild != null) {
-            this.mContractedWrapper.updateExpandability(z2, this.mExpandClickListener);
+            this.mContractedWrapper.updateExpandability(z, this.mExpandClickListener);
         }
         if (this.mHeadsUpChild != null) {
-            this.mHeadsUpWrapper.updateExpandability(z2, this.mExpandClickListener);
+            this.mHeadsUpWrapper.updateExpandability(z, this.mExpandClickListener);
         }
-        this.mIsContentExpandable = z2;
+        this.mIsContentExpandable = z;
     }
 
     public void showPublic() {
@@ -1282,8 +1290,9 @@ public class NotificationContentView extends AbstractFrameLayout {
             return;
         }
         this.mTransformationStartVisibleType = -1;
-        this.mVisibleType = calculateVisibleType();
-        updateViewVisibilities(this.mVisibleType);
+        int calculateVisibleType = calculateVisibleType();
+        this.mVisibleType = calculateVisibleType;
+        updateViewVisibilities(calculateVisibleType);
         updateBackgroundColor(false);
     }
 
@@ -1351,21 +1360,6 @@ public class NotificationContentView extends AbstractFrameLayout {
         NotificationViewWrapper notificationViewWrapper3 = this.mExpandedWrapper;
         if (notificationViewWrapper3 != null && (notificationHeader = notificationViewWrapper3.getNotificationHeader()) != null) {
             notificationHeader.getIcon().setForceHidden(!this.mIconsVisible);
-        }
-    }
-
-    public void setMiniBarVisible(boolean z) {
-        NotificationViewWrapper notificationViewWrapper = this.mContractedWrapper;
-        if (notificationViewWrapper != null) {
-            notificationViewWrapper.setMiniBarVisible(z);
-        }
-        NotificationViewWrapper notificationViewWrapper2 = this.mHeadsUpWrapper;
-        if (notificationViewWrapper2 != null) {
-            notificationViewWrapper2.setMiniBarVisible(z);
-        }
-        NotificationViewWrapper notificationViewWrapper3 = this.mExpandedWrapper;
-        if (notificationViewWrapper3 != null) {
-            notificationViewWrapper3.setMiniBarVisible(z);
         }
     }
 

@@ -45,7 +45,6 @@ import android.widget.Toast;
 import androidx.preference.PreferenceManager;
 import com.android.internal.os.BackgroundThread;
 import com.android.internal.policy.DockedDividerUtils;
-import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.systemui.Application;
 import com.android.systemui.Constants;
 import com.android.systemui.Dependency;
@@ -130,7 +129,6 @@ public abstract class BaseRecentsImpl {
     public static int mTaskBarHeight = 0;
     protected static RecentsTaskLoadPlan sInstanceLoadPlan = null;
     public static boolean sOneKeyCleaning = false;
-    private boolean isShowing = false;
     private ActivityObserver.ActivityObserverCallback mActivityStateObserver = new ActivityObserver.ActivityObserverCallback() {
         public void activityResumed(Intent intent) {
             if (intent != null && intent.getComponent() != null) {
@@ -269,8 +267,6 @@ public abstract class BaseRecentsImpl {
     protected long mLastToggleTime;
     boolean mLaunchedWhileDocking;
     private String[] mLocalCtrlActs = {"com.android.systemui.fsgesture.HomeDemoAct", "com.android.systemui.fsgesture.DemoFinishAct", "com.android.systemui.fsgesture.DrawerDemoAct", "com.android.systemui.fsgesture.FsGestureBackDemoActivity", "com.android.provision.activities.CongratulationActivity"};
-    int mNavBarHeight;
-    int mNavBarWidth;
     /* access modifiers changed from: private */
     public NavStubView mNavStubView;
     /* access modifiers changed from: private */
@@ -361,7 +357,6 @@ public abstract class BaseRecentsImpl {
     public int mScreenWidth;
     /* access modifiers changed from: private */
     public String mScreeningPkg;
-    int mStatusBarHeight;
     private ContentObserver mSuperSavePowerObserver = new ContentObserver(this.mHandler) {
         public void onChange(boolean z) {
             BaseRecentsImpl baseRecentsImpl = BaseRecentsImpl.this;
@@ -397,8 +392,9 @@ public abstract class BaseRecentsImpl {
         this.mKM = (KeyguardManager) context.getSystemService("keyguard");
         ForegroundThread.get();
         SystemServicesProxy systemServices = Recents.getSystemServices();
-        this.mTaskStackListener = systemServices.getTaskStackListener();
-        systemServices.registerTaskStackListener(this.mTaskStackListener);
+        SystemServicesProxy.TaskStackListener taskStackListener = systemServices.getTaskStackListener();
+        this.mTaskStackListener = taskStackListener;
+        systemServices.registerTaskStackListener(taskStackListener);
         LayoutInflater from = LayoutInflater.from(this.mContext);
         this.mDummyStackView = new TaskStackView(this.mContext);
         this.mHeaderBar = (TaskViewHeader) from.inflate(R.layout.recents_task_view_header, (ViewGroup) null, false);
@@ -490,7 +486,7 @@ public abstract class BaseRecentsImpl {
         if (this.mThumbnailBlurObserver == null) {
             this.mThumbnailBlurObserver = new ContentObserver(this.mHandler) {
                 public void onChange(boolean z) {
-                    HashSet<String> convertStringToSet = Utilities.convertStringToSet(MiuiSettings.System.getStringForUser(BaseRecentsImpl.this.mContext.getContentResolver(), "miui_recents_privacy_thumbnail_blur", KeyguardUpdateMonitor.getCurrentUser()));
+                    HashSet<String> convertStringToSet = Utilities.convertStringToSet(MiuiSettings.System.getStringForUser(BaseRecentsImpl.this.mContext.getContentResolver(), "miui_recents_privacy_thumbnail_blur", -2));
                     RecentsEventBus.getDefault().send(new ThumbnailBlurPkgsChangedEvent(convertStringToSet));
                     Iterator<String> it = convertStringToSet.iterator();
                     while (it.hasNext()) {
@@ -524,11 +520,11 @@ public abstract class BaseRecentsImpl {
                         if (i == 1) {
                             String unused = BaseRecentsImpl.this.mScreeningPkg = Settings.Secure.getString(BaseRecentsImpl.this.mContext.getContentResolver(), "cast_mode_package");
                             if (!ProcessManager.isLockedApplication(BaseRecentsImpl.this.mScreeningPkg, UserHandle.getUserId(Process.myUid()))) {
-                                Boolean unused2 = BaseRecentsImpl.this.mIsChangedScreeningPkgLockState = true;
+                                Boolean unused2 = BaseRecentsImpl.this.mIsChangedScreeningPkgLockState = Boolean.TRUE;
                                 ProcessManagerHelper.updateApplicationLockedState(BaseRecentsImpl.this.mScreeningPkg, UserHandle.getUserId(Process.myUid()), true);
                                 return;
                             }
-                            Boolean unused3 = BaseRecentsImpl.this.mIsChangedScreeningPkgLockState = false;
+                            Boolean unused3 = BaseRecentsImpl.this.mIsChangedScreeningPkgLockState = Boolean.FALSE;
                         } else if (i == 0) {
                             if (BaseRecentsImpl.this.mIsChangedScreeningPkgLockState.booleanValue()) {
                                 ProcessManagerHelper.updateApplicationLockedState(BaseRecentsImpl.this.mScreeningPkg, UserHandle.getUserId(Process.myUid()), false);
@@ -682,7 +678,7 @@ public abstract class BaseRecentsImpl {
                 z = false;
             }
             this.mIsInAnotherPro = z;
-            if (z2 && !this.mDisabledByDriveMode && !this.mIsInAnotherPro) {
+            if (z2 && !this.mDisabledByDriveMode && !z) {
                 Log.d("RecentsImpl", "navstubview will be added: addFsgGestureWindow");
                 createAndAddNavStubView();
             }
@@ -776,7 +772,6 @@ public abstract class BaseRecentsImpl {
             if (z) {
                 this.mGestureStubLeft.showGestureStub();
                 this.mGestureStubRight.showGestureStub();
-                this.isShowing = true;
                 registerInputMethodVisibleHeightReceiver();
                 return;
             }
@@ -785,10 +780,12 @@ public abstract class BaseRecentsImpl {
     }
 
     private void initGestureStub(int i) {
-        this.mGestureStubLeft = new GestureStubView(this.mContext);
-        setDefaultProperty(this.mGestureStubLeft, 0);
-        this.mGestureStubRight = new GestureStubView(this.mContext);
-        setDefaultProperty(this.mGestureStubRight, 1);
+        GestureStubView gestureStubView = new GestureStubView(this.mContext);
+        this.mGestureStubLeft = gestureStubView;
+        setDefaultProperty(gestureStubView, 0);
+        GestureStubView gestureStubView2 = new GestureStubView(this.mContext);
+        this.mGestureStubRight = gestureStubView2;
+        setDefaultProperty(gestureStubView2, 1);
         adaptToTopActivity();
     }
 
@@ -841,7 +838,6 @@ public abstract class BaseRecentsImpl {
         if (gestureStubView2 != null) {
             gestureStubView2.hideGestureStubDelay();
         }
-        this.isShowing = false;
         unRegisterInputMethodVisibleHeightReceiver();
     }
 
@@ -859,7 +855,6 @@ public abstract class BaseRecentsImpl {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        this.isShowing = false;
         unRegisterInputMethodVisibleHeightReceiver();
     }
 
@@ -894,10 +889,9 @@ public abstract class BaseRecentsImpl {
 
     /* access modifiers changed from: private */
     public void createAndAddNavStubView() {
-        this.mNavStubView = new NavStubView(this.mContext);
-        WindowManager windowManager = this.mWindowManager;
-        NavStubView navStubView = this.mNavStubView;
-        windowManager.addView(navStubView, navStubView.getWindowParam(navStubView.getHotSpaceHeight()));
+        NavStubView navStubView = new NavStubView(this.mContext);
+        this.mNavStubView = navStubView;
+        this.mWindowManager.addView(navStubView, navStubView.getWindowParam(navStubView.getHotSpaceHeight()));
         if (UserHandle.myUserId() == 0) {
             this.mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor("power_supersave_mode_open"), false, this.mSuperSavePowerObserver, UserHandle.myUserId());
             this.mSuperSavePowerObserver.onChange(false);
@@ -912,7 +906,6 @@ public abstract class BaseRecentsImpl {
         }
         this.mGestureStubLeft.showGestureStub();
         this.mGestureStubRight.showGestureStub();
-        this.isShowing = true;
     }
 
     public void onBootCompleted() {
@@ -990,7 +983,7 @@ public abstract class BaseRecentsImpl {
             r10.<init>(r8)     // Catch:{ ActivityNotFoundException -> 0x006a }
             boolean r2 = sOneKeyCleaning     // Catch:{ ActivityNotFoundException -> 0x006a }
             if (r2 == 0) goto L_0x004b
-            r7 = 2131822086(0x7f110606, float:1.9276933E38)
+            r7 = 2131822151(0x7f110647, float:1.9277065E38)
             r6.showToast(r7)     // Catch:{ ActivityNotFoundException -> 0x006a }
             return
         L_0x004b:
@@ -1093,8 +1086,9 @@ public abstract class BaseRecentsImpl {
             ActivityManager.RunningTaskInfo runningTask = systemServices.getRunningTask();
             int i = runningTask != null ? runningTask.id : 0;
             RecentsTaskLoader taskLoader = Recents.getTaskLoader();
-            sInstanceLoadPlan = taskLoader.createLoadPlan(this.mContext);
-            sInstanceLoadPlan.preloadRawTasks(!mutableBoolean.value);
+            RecentsTaskLoadPlan createLoadPlan = taskLoader.createLoadPlan(this.mContext);
+            sInstanceLoadPlan = createLoadPlan;
+            createLoadPlan.preloadRawTasks(!mutableBoolean.value);
             taskLoader.preloadTasks(sInstanceLoadPlan, i, !mutableBoolean.value);
             TaskStack taskStack = sInstanceLoadPlan.getTaskStack();
             if (taskStack.getTaskCount() > 0) {
@@ -1193,9 +1187,9 @@ public abstract class BaseRecentsImpl {
 
     private void reloadResources() {
         Resources resources = this.mContext.getResources();
-        this.mStatusBarHeight = resources.getDimensionPixelSize(17105478);
-        this.mNavBarHeight = resources.getDimensionPixelSize(17105307);
-        this.mNavBarWidth = resources.getDimensionPixelSize(17105312);
+        resources.getDimensionPixelSize(17105519);
+        resources.getDimensionPixelSize(17105341);
+        resources.getDimensionPixelSize(17105346);
         mTaskBarHeight = TaskStackLayoutAlgorithm.getDimensionForDevice(this.mContext, R.dimen.recents_task_view_header_height, R.dimen.recents_task_view_header_height, R.dimen.recents_task_view_header_height, R.dimen.recents_task_view_header_height_tablet_land, R.dimen.recents_task_view_header_height, R.dimen.recents_task_view_header_height_tablet_land);
     }
 
@@ -1210,18 +1204,19 @@ public abstract class BaseRecentsImpl {
         } else {
             rect2 = systemServices.getWindowRect();
         }
+        Rect rect4 = rect2;
         if (systemServices.hasDockedTask()) {
-            rect2.bottom -= rect3.bottom;
+            rect4.bottom -= rect3.bottom;
             rect3.bottom = 0;
         }
-        calculateWindowStableInsets(rect3, rect2);
-        rect2.offsetTo(0, 0);
+        calculateWindowStableInsets(rect3, rect4);
+        rect4.offsetTo(0, 0);
         TaskStackLayoutAlgorithm stackAlgorithm = this.mDummyStackView.getStackAlgorithm();
         stackAlgorithm.setSystemInsets(rect3);
         if (taskStack != null) {
-            stackAlgorithm.getTaskStackBounds(displayRect, rect2, rect3.top, rect3.left, rect3.right, this.mTaskStackBounds);
+            stackAlgorithm.getTaskStackBounds(displayRect, rect4, rect3.top, rect3.left, rect3.right, this.mTaskStackBounds);
             stackAlgorithm.reset();
-            stackAlgorithm.initialize(displayRect, rect2, this.mTaskStackBounds, TaskStackLayoutAlgorithm.StackState.getStackStateForStack(taskStack));
+            stackAlgorithm.initialize(displayRect, rect4, this.mTaskStackBounds, TaskStackLayoutAlgorithm.StackState.getStackStateForStack(taskStack));
             this.mDummyStackView.setTasks(taskStack, false);
             Rect untransformedTaskViewBounds = stackAlgorithm.getUntransformedTaskViewBounds();
             if (!untransformedTaskViewBounds.isEmpty()) {
@@ -1284,7 +1279,7 @@ public abstract class BaseRecentsImpl {
         }
         RectF rectF = thumbnailTransitionTransform.rect;
         rectF.top += (float) mTaskBarHeight;
-        return ActivityOptions.makeThumbnailAspectScaleDownAnimation(this.mDummyStackView, this.mThumbTransitionBitmapCache, (int) rectF.left, (int) rectF.top, (int) rectF.width(), (int) rectF.height(), this.mHandler, new ActivityOptions.OnAnimationStartedListener() {
+        return ActivityOptions.makeThumbnailAspectScaleDownAnimation(this.mDummyStackView, this.mThumbTransitionBitmapCache, (int) rectF.left, (int) rectF.top, (int) rectF.width(), (int) rectF.height(), this.mHandler, new ActivityOptions.OnAnimationStartedListener(this) {
             public void onAnimationStarted() {
                 RecentsEventBus.getDefault().post(new EnterRecentsWindowFirstAnimationFrameEvent());
             }
@@ -1751,7 +1746,7 @@ public abstract class BaseRecentsImpl {
         }
 
         private void doClear(final List<String> list, final int i, final List<ActivityManager.RecentTaskInfo> list2) {
-            BackgroundThread.getHandler().post(new Runnable() {
+            BackgroundThread.getHandler().post(new Runnable(this) {
                 public void run() {
                     ProcessConfig processConfig;
                     if (i == 0) {
@@ -1799,7 +1794,9 @@ public abstract class BaseRecentsImpl {
                                     AnonymousClass2 r62 = AnonymousClass2.this;
                                     Toast makeText = Toast.makeText(BaseRecentsImpl.this.mContext, RecentsActivity.getToastMsg(BaseRecentsImpl.this.mContext, j2, freeMemory), 1);
                                     makeText.setType(2006);
-                                    makeText.getWindowParams().privateFlags |= 16;
+                                    if (makeText.getWindowParams() != null) {
+                                        makeText.getWindowParams().privateFlags |= 16;
+                                    }
                                     makeText.show();
                                 }
                             });

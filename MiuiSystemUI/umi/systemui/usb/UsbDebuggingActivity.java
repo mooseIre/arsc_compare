@@ -32,8 +32,9 @@ public class UsbDebuggingActivity extends Activity {
         }
         Intent intent = getIntent();
         String stringExtra = intent.getStringExtra("fingerprints");
-        this.mKey = intent.getStringExtra("key");
-        if (stringExtra == null || this.mKey == null) {
+        String stringExtra2 = intent.getStringExtra("key");
+        this.mKey = stringExtra2;
+        if (stringExtra == null || stringExtra2 == null) {
             finish();
             return;
         }
@@ -69,8 +70,9 @@ public class UsbDebuggingActivity extends Activity {
         builder.setPositiveButton((CharSequence) getString(17039370), this.onClickListener);
         builder.setNegativeButton((CharSequence) getString(17039360), this.onClickListener);
         builder.setOnDismissListener(this.onDismissListener);
-        this.mCheckBoxDialog = builder.create();
-        this.mCheckBoxDialog.show();
+        AlertDialog create = builder.create();
+        this.mCheckBoxDialog = create;
+        create.show();
     }
 
     private class UsbDisconnectedReceiver extends BroadcastReceiver {

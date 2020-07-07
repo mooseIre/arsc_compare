@@ -159,15 +159,15 @@ public class TaskViewThumbnail extends View {
     public void setThumbnail(Bitmap bitmap, ActivityManager$TaskThumbnailInfo activityManager$TaskThumbnailInfo) {
         if (bitmap != null) {
             Shader.TileMode tileMode = Shader.TileMode.CLAMP;
-            this.mBitmapShader = new BitmapShader(bitmap, tileMode, tileMode);
-            this.mDrawPaint.setShader(this.mBitmapShader);
+            BitmapShader bitmapShader = new BitmapShader(bitmap, tileMode, tileMode);
+            this.mBitmapShader = bitmapShader;
+            this.mDrawPaint.setShader(bitmapShader);
             this.mThumbnailInfo = activityManager$TaskThumbnailInfo;
-            ActivityManager$TaskThumbnailInfo activityManager$TaskThumbnailInfo2 = this.mThumbnailInfo;
-            if (activityManager$TaskThumbnailInfo2 != null) {
-                this.mFullscreenThumbnailScale = activityManager$TaskThumbnailInfo2.scale;
+            if (activityManager$TaskThumbnailInfo != null) {
+                this.mFullscreenThumbnailScale = activityManager$TaskThumbnailInfo.scale;
             }
-            ActivityManager$TaskThumbnailInfo activityManager$TaskThumbnailInfo3 = this.mThumbnailInfo;
-            if (activityManager$TaskThumbnailInfo3 == null || activityManager$TaskThumbnailInfo3.insets == null) {
+            ActivityManager$TaskThumbnailInfo activityManager$TaskThumbnailInfo2 = this.mThumbnailInfo;
+            if (activityManager$TaskThumbnailInfo2 == null || activityManager$TaskThumbnailInfo2.insets == null) {
                 this.mThumbnailRect.set(0, 0, bitmap.getWidth(), bitmap.getHeight());
             } else {
                 Rect rect = this.mThumbnailRect;

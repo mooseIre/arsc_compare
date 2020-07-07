@@ -42,7 +42,7 @@ public class DataCollector implements SensorEventListener {
 
     private DataCollector(Context context) {
         this.mContext = context;
-        this.mContext.getContentResolver().registerContentObserver(Settings.Secure.getUriFor("data_collector_enable"), false, this.mSettingsObserver, -1);
+        context.getContentResolver().registerContentObserver(Settings.Secure.getUriFor("data_collector_enable"), false, this.mSettingsObserver, -1);
         this.mContext.getContentResolver().registerContentObserver(Settings.Secure.getUriFor("data_collector_collect_bad_touches"), false, this.mSettingsObserver, -1);
         this.mContext.getContentResolver().registerContentObserver(Settings.Secure.getUriFor("data_collector_allow_rejected_touch_reports"), false, this.mSettingsObserver, -1);
         updateConfiguration();
@@ -58,8 +58,9 @@ public class DataCollector implements SensorEventListener {
     /* access modifiers changed from: private */
     public void updateConfiguration() {
         boolean z = true;
-        this.mEnableCollector = Build.IS_DEBUGGABLE && Settings.Secure.getInt(this.mContext.getContentResolver(), "data_collector_enable", 0) != 0;
-        this.mCollectBadTouches = this.mEnableCollector && Settings.Secure.getInt(this.mContext.getContentResolver(), "data_collector_collect_bad_touches", 0) != 0;
+        boolean z2 = Build.IS_DEBUGGABLE && Settings.Secure.getInt(this.mContext.getContentResolver(), "data_collector_enable", 0) != 0;
+        this.mEnableCollector = z2;
+        this.mCollectBadTouches = z2 && Settings.Secure.getInt(this.mContext.getContentResolver(), "data_collector_collect_bad_touches", 0) != 0;
         if (!Build.IS_DEBUGGABLE || Settings.Secure.getInt(this.mContext.getContentResolver(), "data_collector_allow_rejected_touch_reports", 0) == 0) {
             z = false;
         }

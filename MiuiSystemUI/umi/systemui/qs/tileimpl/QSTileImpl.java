@@ -1,5 +1,6 @@
 package com.android.systemui.qs.tileimpl;
 
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -13,7 +14,6 @@ import android.util.SparseArray;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.logging.MetricsLogger;
 import com.android.internal.logging.MetricsLoggerCompat;
-import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.settingslib.RestrictedLockUtils;
 import com.android.settingslib.RestrictedLockUtilsHelper;
 import com.android.systemui.Dependency;
@@ -35,7 +35,6 @@ import java.util.Iterator;
 import miui.view.MiuiHapticFeedbackConstants;
 
 public abstract class QSTileImpl<TState extends QSTile.State> implements QSTile {
-    protected static final Object ARG_SHOW_TRANSIENT_DISABLING = new Object();
     protected static final Object ARG_SHOW_TRANSIENT_ENABLING = new Object();
     /* access modifiers changed from: protected */
     public static final boolean DEBUG = Log.isLoggable("Tile", 3);
@@ -237,6 +236,10 @@ public abstract class QSTileImpl<TState extends QSTile.State> implements QSTile 
         this.mHandler.obtainMessage(8, z ? 1 : 0, 0).sendToTarget();
     }
 
+    public void fireScanStateChanged(boolean z) {
+        this.mHandler.obtainMessage(9, z ? 1 : 0, 0).sendToTarget();
+    }
+
     public void destroy() {
         this.mHandler.sendEmptyMessage(10);
     }
@@ -398,8 +401,8 @@ public abstract class QSTileImpl<TState extends QSTile.State> implements QSTile 
 
     /* access modifiers changed from: protected */
     public void checkIfRestrictionEnforcedByAdminOnly(QSTile.State state, String str) {
-        RestrictedLockUtils.EnforcedAdmin checkIfRestrictionEnforced = RestrictedLockUtilsHelper.checkIfRestrictionEnforced(this.mContext, str, KeyguardUpdateMonitor.getCurrentUser());
-        if (checkIfRestrictionEnforced == null || RestrictedLockUtilsHelper.hasBaseUserRestriction(this.mContext, str, KeyguardUpdateMonitor.getCurrentUser())) {
+        RestrictedLockUtils.EnforcedAdmin checkIfRestrictionEnforced = RestrictedLockUtilsHelper.checkIfRestrictionEnforced(this.mContext, str, ActivityManager.getCurrentUser());
+        if (checkIfRestrictionEnforced == null || RestrictedLockUtilsHelper.hasBaseUserRestriction(this.mContext, str, ActivityManager.getCurrentUser())) {
             state.disabledByPolicy = false;
             this.mEnforcedAdmin = null;
             return;

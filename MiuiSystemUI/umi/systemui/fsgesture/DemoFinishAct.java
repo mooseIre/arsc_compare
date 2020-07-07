@@ -24,8 +24,9 @@ public class DemoFinishAct extends FsGestureDemoBaseActiivy {
         Intent intent = getIntent();
         final String stringExtra = intent.getStringExtra("DEMO_TYPE");
         this.isFromPro = intent.getBooleanExtra("IS_FROM_PROVISION", false);
-        this.replayView = (TextView) findViewById(R.id.fs_gesture_final_restart);
-        this.replayView.setOnClickListener(new View.OnClickListener() {
+        TextView textView = (TextView) findViewById(R.id.fs_gesture_final_restart);
+        this.replayView = textView;
+        textView.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 Intent intent = new Intent();
                 if ("DEMO_TO_HOME".equals(stringExtra) || "DEMO_TO_RECENTTASK".equals(stringExtra)) {
@@ -45,8 +46,9 @@ public class DemoFinishAct extends FsGestureDemoBaseActiivy {
                 DemoFinishAct.this.finish();
             }
         });
-        this.finishView = (TextView) findViewById(R.id.fs_gesture_final_over);
-        this.finishView.setOnClickListener(new View.OnClickListener() {
+        TextView textView2 = (TextView) findViewById(R.id.fs_gesture_final_over);
+        this.finishView = textView2;
+        textView2.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 if (DemoFinishAct.this.isFromPro) {
                     Intent intent = new Intent();

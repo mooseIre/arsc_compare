@@ -21,7 +21,6 @@ public class BubbleView extends FrameLayout {
     private Context mContext;
     private NotificationData.Entry mEntry;
     private int mIconInset;
-    private int mPadding;
     private boolean mSuppressDot;
 
     public BubbleView(Context context) {
@@ -40,7 +39,7 @@ public class BubbleView extends FrameLayout {
         super(context, attributeSet, i, i2);
         this.mSuppressDot = false;
         this.mContext = context;
-        this.mPadding = getResources().getDimensionPixelSize(R.dimen.bubble_view_padding);
+        getResources().getDimensionPixelSize(R.dimen.bubble_view_padding);
         this.mIconInset = getResources().getDimensionPixelSize(R.dimen.bubble_icon_inset);
     }
 
@@ -94,7 +93,7 @@ public class BubbleView extends FrameLayout {
             this.mBadgedImageView.setDotPosition(z);
         } else {
             animateDot(false, new Runnable(z) {
-                private final /* synthetic */ boolean f$1;
+                public final /* synthetic */ boolean f$1;
 
                 {
                     this.f$1 = r2;
@@ -107,6 +106,8 @@ public class BubbleView extends FrameLayout {
         }
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$setDotPosition$0 */
     public /* synthetic */ void lambda$setDotPosition$0$BubbleView(boolean z) {
         this.mBadgedImageView.setDotPosition(z);
         animateDot(true, (Runnable) null);
@@ -133,7 +134,7 @@ public class BubbleView extends FrameLayout {
             }
             this.mBadgedImageView.clearAnimation();
             this.mBadgedImageView.animate().setDuration(200).setInterpolator(Interpolators.FAST_OUT_SLOW_IN).setUpdateListener(new ValueAnimator.AnimatorUpdateListener(z) {
-                private final /* synthetic */ boolean f$1;
+                public final /* synthetic */ boolean f$1;
 
                 {
                     this.f$1 = r2;
@@ -143,8 +144,8 @@ public class BubbleView extends FrameLayout {
                     BubbleView.this.lambda$animateDot$1$BubbleView(this.f$1, valueAnimator);
                 }
             }).withEndAction(new Runnable(z, runnable) {
-                private final /* synthetic */ boolean f$1;
-                private final /* synthetic */ Runnable f$2;
+                public final /* synthetic */ boolean f$1;
+                public final /* synthetic */ Runnable f$2;
 
                 {
                     this.f$1 = r2;
@@ -158,6 +159,8 @@ public class BubbleView extends FrameLayout {
         }
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$animateDot$1 */
     public /* synthetic */ void lambda$animateDot$1$BubbleView(boolean z, ValueAnimator valueAnimator) {
         float animatedFraction = valueAnimator.getAnimatedFraction();
         if (!z) {
@@ -166,6 +169,8 @@ public class BubbleView extends FrameLayout {
         this.mBadgedImageView.setDotScale(animatedFraction);
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$animateDot$2 */
     public /* synthetic */ void lambda$animateDot$2$BubbleView(boolean z, Runnable runnable) {
         if (!z) {
             this.mBadgedImageView.setShowDot(false);

@@ -43,8 +43,8 @@ public class ScreenTimeInfo extends BaseInfo {
             info.status = bundle.getString(info.initialized ? b.j : "summary");
             info.unit = bundle.getString("unit");
             info.action = bundle.getString("action");
-            info.icon = (Bitmap) bundle.getParcelable("bitmap");
-            Bitmap bitmap = info.icon;
+            Bitmap bitmap = (Bitmap) bundle.getParcelable("bitmap");
+            info.icon = bitmap;
             if (bitmap == null) {
                 info.icon = this.mBpBitmap;
             } else {
@@ -89,7 +89,7 @@ public class ScreenTimeInfo extends BaseInfo {
             if (!ScreenTimeInfo.this.mInfo.equal(info)) {
                 ScreenTimeInfo screenTimeInfo = ScreenTimeInfo.this;
                 screenTimeInfo.mInfo = info;
-                screenTimeInfo.mExpandInfoController.updateInfo(screenTimeInfo.mType, screenTimeInfo.mInfo);
+                screenTimeInfo.mExpandInfoController.updateInfo(screenTimeInfo.mType, info);
             }
         }
     }

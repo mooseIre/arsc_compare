@@ -20,7 +20,6 @@ public class ControlPanelContentView extends FrameLayout {
     private ControlPanelWindowManager mControlPanelWindowManager;
     private QSControlCustomizer.QSControlPanelCallback mCustomizerCallback = null;
     private QSControlDetail mDetail;
-    private int mExpandHeight = 0;
     private ExpandInfoController mExpandInfoController;
     private int mOrientation;
     private QSControlCustomizer mQSCustomizer;
@@ -38,15 +37,19 @@ public class ControlPanelContentView extends FrameLayout {
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mExpandInfoController = (ExpandInfoController) Dependency.get(ExpandInfoController.class);
-        this.mExpandInfoController.setContentView(this);
+        ExpandInfoController expandInfoController = (ExpandInfoController) Dependency.get(ExpandInfoController.class);
+        this.mExpandInfoController = expandInfoController;
+        expandInfoController.setContentView(this);
         this.mDetail = (QSControlDetail) findViewById(R.id.qs_detail);
-        this.mQsControlCenterPanel = (QSControlCenterPanel) findViewById(R.id.qs_control_center_panel);
-        this.mQsControlCenterPanel.setControlPanelContentView(this);
-        this.mQSCustomizer = (QSControlCustomizer) findViewById(R.id.qs_customize);
-        this.mQSCustomizer.setQSControlCenterPanel(this);
-        this.mTilesEdit = (ImageView) findViewById(R.id.tiles_edit);
-        this.mTilesEdit.setOnClickListener(new View.OnClickListener() {
+        QSControlCenterPanel qSControlCenterPanel = (QSControlCenterPanel) findViewById(R.id.qs_control_center_panel);
+        this.mQsControlCenterPanel = qSControlCenterPanel;
+        qSControlCenterPanel.setControlPanelContentView(this);
+        QSControlCustomizer qSControlCustomizer = (QSControlCustomizer) findViewById(R.id.qs_customize);
+        this.mQSCustomizer = qSControlCustomizer;
+        qSControlCustomizer.setQSControlCenterPanel(this);
+        ImageView imageView = (ImageView) findViewById(R.id.tiles_edit);
+        this.mTilesEdit = imageView;
+        imageView.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 ((SystemUIStat) Dependency.get(SystemUIStat.class)).handleControlCenterEvent("event_quick_tiles_edit");
                 ControlPanelContentView.this.showEdit();

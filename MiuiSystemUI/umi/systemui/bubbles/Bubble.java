@@ -40,9 +40,10 @@ class Bubble {
         this.mLastUpdated = entry2.notification.getPostTime();
         this.mGroupId = groupId(entry2);
         this.mListener = onBubbleBlockedListener;
-        this.mPm = context.getPackageManager();
+        PackageManager packageManager = context.getPackageManager();
+        this.mPm = packageManager;
         try {
-            ApplicationInfo applicationInfo = this.mPm.getApplicationInfo(this.entry.notification.getPackageName(), 795136);
+            ApplicationInfo applicationInfo = packageManager.getApplicationInfo(this.entry.notification.getPackageName(), 795136);
             if (applicationInfo != null) {
                 this.mAppName = String.valueOf(this.mPm.getApplicationLabel(applicationInfo));
             }
@@ -73,10 +74,12 @@ class Bubble {
     /* access modifiers changed from: package-private */
     public void inflate(LayoutInflater layoutInflater, BubbleStackView bubbleStackView) {
         if (!this.mInflated) {
-            this.iconView = (BubbleView) layoutInflater.inflate(R.layout.bubble_view, bubbleStackView, false);
-            this.iconView.setNotif(this.entry);
-            this.expandedView = (BubbleExpandedView) layoutInflater.inflate(R.layout.bubble_expanded_view, bubbleStackView, false);
-            this.expandedView.setEntry(this.entry, bubbleStackView, this.mAppName);
+            BubbleView bubbleView = (BubbleView) layoutInflater.inflate(R.layout.bubble_view, bubbleStackView, false);
+            this.iconView = bubbleView;
+            bubbleView.setNotif(this.entry);
+            BubbleExpandedView bubbleExpandedView = (BubbleExpandedView) layoutInflater.inflate(R.layout.bubble_expanded_view, bubbleStackView, false);
+            this.expandedView = bubbleExpandedView;
+            bubbleExpandedView.setEntry(this.entry, bubbleStackView, this.mAppName);
             this.expandedView.setOnBlockedListener(this.mListener);
             this.mInflated = true;
         }

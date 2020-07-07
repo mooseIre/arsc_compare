@@ -85,8 +85,9 @@ public class MiuiStatusBarPromptController implements IMiuiStatusBarPrompt, Stat
         }
         addPromptStateChangedListener(str, onPromptStateChangedListener);
         if (this.mStatusBarTypeHelper == null) {
-            this.mStatusBarTypeHelper = (StatusBarTypeController) Dependency.get(StatusBarTypeController.class);
-            this.mStatusBarTypeHelper.addCallback(this);
+            StatusBarTypeController statusBarTypeController = (StatusBarTypeController) Dependency.get(StatusBarTypeController.class);
+            this.mStatusBarTypeHelper = statusBarTypeController;
+            statusBarTypeController.addCallback(this);
         }
     }
 
@@ -390,8 +391,8 @@ public class MiuiStatusBarPromptController implements IMiuiStatusBarPrompt, Stat
                     clearState(str.replace("action_set_status_bar_state.", ""));
                     return;
                 }
-                State state = new State();
-                state.standardState = (RemoteViews) bundle.getParcelable("key_status_bar_standard_state");
+                RemoteViews remoteViews = (RemoteViews) bundle.getParcelable("key_status_bar_standard_state");
+                State state = new State(this);
                 state.miniState = (RemoteViews) bundle.getParcelable("key_status_bar_mini_state");
                 setState(formatStateTag(bundle), state, bundle.getInt("key_status_bar_priority"));
             } else if ("action_clear_status_bar_state".equals(str)) {
@@ -404,8 +405,9 @@ public class MiuiStatusBarPromptController implements IMiuiStatusBarPrompt, Stat
                         hideReturnToRecorderView();
                     } else if (i == 1) {
                         long j = bundle.getLong("com.miui.app.ExtraStatusBarManager.extra_recorder_duration", 0);
-                        this.mRecordingPausedTime = SystemClock.elapsedRealtime();
-                        this.mRecordingStartTime = this.mRecordingPausedTime - j;
+                        long elapsedRealtime = SystemClock.elapsedRealtime();
+                        this.mRecordingPausedTime = elapsedRealtime;
+                        this.mRecordingStartTime = elapsedRealtime - j;
                         String string = bundle.getString("com.miui.app.ExtraStatusBarManager.extra_recorder_title");
                         boolean z = bundle.getBoolean("com.miui.app.ExtraStatusBarManager.extra_recorder_timer_on_off", false);
                         if (z) {
@@ -579,9 +581,8 @@ public class MiuiStatusBarPromptController implements IMiuiStatusBarPrompt, Stat
 
     public class State {
         RemoteViews miniState;
-        RemoteViews standardState;
 
-        public State() {
+        public State(MiuiStatusBarPromptController miuiStatusBarPromptController) {
         }
     }
 }

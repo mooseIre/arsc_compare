@@ -24,7 +24,6 @@ public class DividerSnapAlgorithm {
     private final float mMinFlingVelocityPxPerSecond;
     private final int mMinimalSizeResizableTask;
     private final int mSnapMode;
-    private final SnapTarget mSnapTarget;
     private final ArrayList<SnapTarget> mTargets;
     private final int mTaskHeightInMinimizedMode;
 
@@ -67,7 +66,6 @@ public class DividerSnapAlgorithm {
         this.mDismissEndTarget = arrayList2.get(arrayList2.size() - 1);
         ArrayList<SnapTarget> arrayList3 = this.mTargets;
         this.mMiddleTarget = arrayList3.get(arrayList3.size() / 2);
-        this.mSnapTarget = new SnapTarget(0, 0, 0);
     }
 
     public boolean isSplitScreenFeasible() {

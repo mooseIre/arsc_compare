@@ -1,6 +1,5 @@
 package com.android.systemui.statusbar.policy;
 
-import android.app.ActivityManager;
 import android.app.AlarmManager;
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
@@ -31,56 +30,55 @@ import java.util.function.Consumer;
 public class ZenModeControllerImpl extends CurrentUserTracker implements ZenModeController {
     /* access modifiers changed from: private */
     public static final boolean DEBUG = Log.isLoggable("ZenModeController", 3);
-    private final AlarmManager mAlarmManager;
     private final ArrayList<ZenModeController.Callback> mCallbacks = new ArrayList<>();
     private final LinkedHashMap<Uri, Condition> mConditions = new LinkedHashMap<>();
     private ZenModeConfig mConfig;
     private final GlobalSetting mConfigSetting;
     /* access modifiers changed from: private */
     public final Context mContext;
-    private final IConditionListener mListener = new IConditionListener.Stub() {
-        public void onConditionsReceived(Condition[] conditionArr) {
-            int i;
-            if (ZenModeControllerImpl.DEBUG) {
-                StringBuilder sb = new StringBuilder();
-                sb.append("onConditionsReceived ");
-                if (conditionArr == null) {
-                    i = 0;
-                } else {
-                    i = conditionArr.length;
-                }
-                sb.append(i);
-                sb.append(" mRequesting=");
-                sb.append(ZenModeControllerImpl.this.mRequesting);
-                Slog.d("ZenModeController", sb.toString());
-            }
-            if (ZenModeControllerImpl.this.mRequesting) {
-                ZenModeControllerImpl.this.updateConditions(conditionArr);
-            }
-        }
-    };
     private final GlobalSetting mModeSetting;
     private final NotificationManager mNoMan;
-    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
-        public void onReceive(Context context, Intent intent) {
-            if ("android.app.action.NEXT_ALARM_CLOCK_CHANGED".equals(intent.getAction())) {
-                ZenModeControllerImpl.this.fireNextAlarmChanged();
-            }
-            if ("android.os.action.ACTION_EFFECTS_SUPPRESSOR_CHANGED".equals(intent.getAction())) {
-                ZenModeControllerImpl.this.fireEffectsSuppressorChanged();
-            }
-        }
-    };
+    private final BroadcastReceiver mReceiver;
     private boolean mRegistered;
     /* access modifiers changed from: private */
     public boolean mRequesting;
     private final SetupObserver mSetupObserver;
     /* access modifiers changed from: private */
     public int mUserId;
-    private final UserManager mUserManager;
 
     public ZenModeControllerImpl(Context context, Handler handler) {
         super(context);
+        new IConditionListener.Stub() {
+            public void onConditionsReceived(Condition[] conditionArr) {
+                int i;
+                if (ZenModeControllerImpl.DEBUG) {
+                    StringBuilder sb = new StringBuilder();
+                    sb.append("onConditionsReceived ");
+                    if (conditionArr == null) {
+                        i = 0;
+                    } else {
+                        i = conditionArr.length;
+                    }
+                    sb.append(i);
+                    sb.append(" mRequesting=");
+                    sb.append(ZenModeControllerImpl.this.mRequesting);
+                    Slog.d("ZenModeController", sb.toString());
+                }
+                if (ZenModeControllerImpl.this.mRequesting) {
+                    ZenModeControllerImpl.this.updateConditions(conditionArr);
+                }
+            }
+        };
+        this.mReceiver = new BroadcastReceiver() {
+            public void onReceive(Context context, Intent intent) {
+                if ("android.app.action.NEXT_ALARM_CLOCK_CHANGED".equals(intent.getAction())) {
+                    ZenModeControllerImpl.this.fireNextAlarmChanged();
+                }
+                if ("android.os.action.ACTION_EFFECTS_SUPPRESSOR_CHANGED".equals(intent.getAction())) {
+                    ZenModeControllerImpl.this.fireEffectsSuppressorChanged();
+                }
+            }
+        };
         this.mContext = context;
         this.mModeSetting = new GlobalSetting(this.mContext, handler, "zen_mode") {
             /* access modifiers changed from: protected */
@@ -94,19 +92,25 @@ public class ZenModeControllerImpl extends CurrentUserTracker implements ZenMode
                 ZenModeControllerImpl.this.updateZenModeConfig();
             }
         };
-        this.mNoMan = (NotificationManager) context.getSystemService("notification");
-        this.mConfig = this.mNoMan.getZenModeConfig();
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService("notification");
+        this.mNoMan = notificationManager;
+        this.mConfig = notificationManager.getZenModeConfig();
         this.mModeSetting.setListening(true);
         this.mConfigSetting.setListening(true);
-        this.mAlarmManager = (AlarmManager) context.getSystemService("alarm");
-        this.mSetupObserver = new SetupObserver(handler);
-        this.mSetupObserver.register();
-        this.mUserManager = (UserManager) context.getSystemService(UserManager.class);
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService("alarm");
+        SetupObserver setupObserver = new SetupObserver(handler);
+        this.mSetupObserver = setupObserver;
+        setupObserver.register();
+        UserManager userManager = (UserManager) context.getSystemService(UserManager.class);
         startTracking();
     }
 
     public void addCallback(ZenModeController.Callback callback) {
         this.mCallbacks.add(callback);
+    }
+
+    public void removeCallback(ZenModeController.Callback callback) {
+        this.mCallbacks.remove(callback);
     }
 
     public int getZen() {
@@ -133,10 +137,6 @@ public class ZenModeControllerImpl extends CurrentUserTracker implements ZenMode
         this.mSetupObserver.register();
     }
 
-    public int getCurrentUser() {
-        return ActivityManager.getCurrentUser();
-    }
-
     /* access modifiers changed from: private */
     public void fireNextAlarmChanged() {
         Utils.safeForeach(this.mCallbacks, $$Lambda$ZenModeControllerImpl$6_S_aAoRd9fsiJr9D0TIwCJGb6M.INSTANCE);
@@ -150,7 +150,7 @@ public class ZenModeControllerImpl extends CurrentUserTracker implements ZenMode
     /* access modifiers changed from: private */
     public void fireZenChanged(int i) {
         Utils.safeForeach(this.mCallbacks, new Consumer(i) {
-            private final /* synthetic */ int f$0;
+            public final /* synthetic */ int f$0;
 
             {
                 this.f$0 = r1;
@@ -165,7 +165,7 @@ public class ZenModeControllerImpl extends CurrentUserTracker implements ZenMode
     /* access modifiers changed from: private */
     public void fireZenAvailableChanged(boolean z) {
         Utils.safeForeach(this.mCallbacks, new Consumer(z) {
-            private final /* synthetic */ boolean f$0;
+            public final /* synthetic */ boolean f$0;
 
             {
                 this.f$0 = r1;
@@ -179,7 +179,7 @@ public class ZenModeControllerImpl extends CurrentUserTracker implements ZenMode
 
     private void fireConditionsChanged(Condition[] conditionArr) {
         Utils.safeForeach(this.mCallbacks, new Consumer(conditionArr) {
-            private final /* synthetic */ Condition[] f$0;
+            public final /* synthetic */ Condition[] f$0;
 
             {
                 this.f$0 = r1;
@@ -193,7 +193,7 @@ public class ZenModeControllerImpl extends CurrentUserTracker implements ZenMode
 
     private void fireManualRuleChanged(ZenModeConfig.ZenRule zenRule) {
         Utils.safeForeach(this.mCallbacks, new Consumer(zenRule) {
-            private final /* synthetic */ ZenModeConfig.ZenRule f$0;
+            public final /* synthetic */ ZenModeConfig.ZenRule f$0;
 
             {
                 this.f$0 = r1;
@@ -208,7 +208,7 @@ public class ZenModeControllerImpl extends CurrentUserTracker implements ZenMode
     /* access modifiers changed from: protected */
     public void fireConfigChanged(ZenModeConfig zenModeConfig) {
         Utils.safeForeach(this.mCallbacks, new Consumer(zenModeConfig) {
-            private final /* synthetic */ ZenModeConfig f$0;
+            public final /* synthetic */ ZenModeConfig f$0;
 
             {
                 this.f$0 = r1;

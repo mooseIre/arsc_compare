@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class PaperModeControllerImpl extends CurrentUserTracker implements PaperModeController {
-    private static final boolean DEBUG = Log.isLoggable("PaperModeController", 3);
     private Handler mBgHandler;
     /* access modifiers changed from: private */
     public final ContentObserver mGameModeObserver;
@@ -28,6 +27,10 @@ public class PaperModeControllerImpl extends CurrentUserTracker implements Paper
     public final ContentObserver mPaperModeObserver;
     /* access modifiers changed from: private */
     public ContentResolver mResolver;
+
+    static {
+        Log.isLoggable("PaperModeController", 3);
+    }
 
     public PaperModeControllerImpl(Context context, Looper looper) {
         super(context);

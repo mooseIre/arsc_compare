@@ -130,10 +130,10 @@ public class NotificationGroupManager implements OnHeadsUpChangedListener {
     private void updateSuppression(NotificationGroup notificationGroup) {
         if (notificationGroup != null) {
             boolean z = notificationGroup.suppressed;
-            notificationGroup.suppressed = shouldSuppressed(notificationGroup);
-            boolean z2 = notificationGroup.suppressed;
-            if (z != z2) {
-                if (z2) {
+            boolean shouldSuppressed = shouldSuppressed(notificationGroup);
+            notificationGroup.suppressed = shouldSuppressed;
+            if (z != shouldSuppressed) {
+                if (shouldSuppressed) {
                     handleSuppressedSummaryHeadsUpped(notificationGroup.summary);
                 }
                 if (!this.mIsUpdatingUnchangedGroup) {
@@ -170,7 +170,7 @@ public class NotificationGroupManager implements OnHeadsUpChangedListener {
 
     private int getNumberOfIsolatedChildren(String str) {
         return (int) this.mIsolatedEntries.values().stream().filter(new Predicate(str) {
-            private final /* synthetic */ String f$1;
+            public final /* synthetic */ String f$1;
 
             {
                 this.f$1 = r2;
@@ -182,6 +182,8 @@ public class NotificationGroupManager implements OnHeadsUpChangedListener {
         }).count();
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$getNumberOfIsolatedChildren$1 */
     public /* synthetic */ boolean lambda$getNumberOfIsolatedChildren$1$NotificationGroupManager(String str, StatusBarNotification statusBarNotification) {
         return statusBarNotification.getGroupKey().equals(str) && isIsolated(statusBarNotification);
     }
@@ -259,7 +261,7 @@ public class NotificationGroupManager implements OnHeadsUpChangedListener {
     public void setStatusBarState(int i) {
         if (this.mBarState != i) {
             this.mBarState = i;
-            if (this.mBarState == 1) {
+            if (i == 1) {
                 collapseAllGroups();
             }
         }

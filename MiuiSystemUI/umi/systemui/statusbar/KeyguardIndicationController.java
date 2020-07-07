@@ -58,7 +58,6 @@ import miui.util.FeatureParser;
 
 public class KeyguardIndicationController {
     private static final Intent INTENT_EMERGENCY_DIAL = new Intent().setAction("com.android.phone.EmergencyDialer.DIAL").setPackage("com.android.phone").setFlags(343932928);
-    private final IBatteryStats mBatteryInfo;
     /* access modifiers changed from: private */
     public int mBatteryLevel;
     private ObjectAnimator mBottomButtonClickAnimator;
@@ -74,7 +73,6 @@ public class KeyguardIndicationController {
     /* access modifiers changed from: private */
     public boolean mDozing;
     private final FaceUnlockCallback mFaceUnlockCallback;
-    private final int mFastThreshold;
     /* access modifiers changed from: private */
     public final Handler mHandler;
     private final ViewGroup mIndicationArea;
@@ -93,10 +91,8 @@ public class KeyguardIndicationController {
     private String mRestingIndication;
     /* access modifiers changed from: private */
     public boolean mSignalAvailable;
-    private final int mSlowThreshold;
     /* access modifiers changed from: private */
     public StatusBarKeyguardViewManager mStatusBarKeyguardViewManager;
-    private KeyguardUpdateMonitor.StrongAuthTracker mStrongAuthTracker;
     /* access modifiers changed from: private */
     public final KeyguardIndicationTextView mTextView;
     private View.OnClickListener mTextViewOnClickListener;
@@ -113,7 +109,6 @@ public class KeyguardIndicationController {
     /* access modifiers changed from: private */
     public KeyguardUpdateMonitor mUpdateMonitor;
     private KeyguardUpdateMonitorCallback mUpdateMonitorCallback;
-    private final UserManager mUserManager;
     private ViewConfiguration mViewConfiguration;
     /* access modifiers changed from: private */
     public boolean mVisible;
@@ -187,22 +182,25 @@ public class KeyguardIndicationController {
             }
         };
         this.mContext = context;
-        this.mResources = this.mContext.getResources();
+        this.mResources = context.getResources();
         this.mWakeLock = new SettableWakeLock(wakeLock);
         this.mNotificationPanelView = notificationPanelView;
-        this.mKeyguardBottomAreaView = (KeyguardBottomAreaView) notificationPanelView.findViewById(R.id.keyguard_bottom_area);
-        this.mIndicationArea = (LinearLayout) this.mKeyguardBottomAreaView.findViewById(R.id.keyguard_indication_area);
-        this.mTextView = (KeyguardIndicationTextView) this.mKeyguardBottomAreaView.findViewById(R.id.keyguard_indication_text);
-        this.mTextView.setOnClickListener(this.mTextViewOnClickListener);
+        KeyguardBottomAreaView keyguardBottomAreaView = (KeyguardBottomAreaView) notificationPanelView.findViewById(R.id.keyguard_bottom_area);
+        this.mKeyguardBottomAreaView = keyguardBottomAreaView;
+        this.mIndicationArea = (LinearLayout) keyguardBottomAreaView.findViewById(R.id.keyguard_indication_area);
+        KeyguardIndicationTextView keyguardIndicationTextView = (KeyguardIndicationTextView) this.mKeyguardBottomAreaView.findViewById(R.id.keyguard_indication_text);
+        this.mTextView = keyguardIndicationTextView;
+        keyguardIndicationTextView.setOnClickListener(this.mTextViewOnClickListener);
         this.mDisclosure = (KeyguardIndicationTextView) this.mKeyguardBottomAreaView.findViewById(R.id.keyguard_indication_enterprise_disclosure);
         this.mUpArrow = (ImageView) this.mKeyguardBottomAreaView.findViewById(R.id.keyguard_up_arrow);
-        this.mSlowThreshold = this.mResources.getInteger(R.integer.config_chargingSlowlyThreshold);
-        this.mFastThreshold = this.mResources.getInteger(R.integer.config_chargingFastThreshold);
-        this.mUserManager = (UserManager) context.getSystemService(UserManager.class);
-        this.mBatteryInfo = IBatteryStats.Stub.asInterface(ServiceManager.getService("batterystats"));
+        this.mResources.getInteger(R.integer.config_chargingSlowlyThreshold);
+        this.mResources.getInteger(R.integer.config_chargingFastThreshold);
+        UserManager userManager = (UserManager) context.getSystemService(UserManager.class);
+        IBatteryStats.Stub.asInterface(ServiceManager.getService("batterystats"));
         this.mDevicePolicyManager = (DevicePolicyManager) context.getSystemService("device_policy");
-        this.mUpdateMonitor = KeyguardUpdateMonitor.getInstance(context);
-        this.mStrongAuthTracker = this.mUpdateMonitor.getStrongAuthTracker();
+        KeyguardUpdateMonitor instance = KeyguardUpdateMonitor.getInstance(context);
+        this.mUpdateMonitor = instance;
+        instance.getStrongAuthTracker();
         this.mViewConfiguration = ViewConfiguration.get(context);
         updateDisclosure();
     }
@@ -473,7 +471,6 @@ public class KeyguardIndicationController {
     }
 
     protected class BaseKeyguardCallback extends KeyguardUpdateMonitorCallback {
-        private final int FINGERPRINT_ERROR_LOCKOUT_PERMANENT_FOR_O = 9;
         private int mFingerprintAuthUserId;
         private int mFingerprintErrorMsgId;
         private MiuiKeyguardFingerprintUtils$FingerprintIdentificationState mFpiState;
@@ -722,8 +719,9 @@ public class KeyguardIndicationController {
             }
         }
         if (z) {
-            this.mBottomButtonClickAnimator = ObjectAnimator.ofFloat(this.mTextView, View.ALPHA, new float[]{1.0f, 0.0f});
-            this.mBottomButtonClickAnimator.setInterpolator(Ease$Quint.easeOut);
+            ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this.mTextView, View.ALPHA, new float[]{1.0f, 0.0f});
+            this.mBottomButtonClickAnimator = ofFloat;
+            ofFloat.setInterpolator(Ease$Quint.easeOut);
             this.mBottomButtonClickAnimator.addListener(new AnimatorListenerAdapter() {
                 public void onAnimationEnd(Animator animator) {
                     KeyguardIndicationController.this.mTextView.setVisibility(8);
@@ -731,8 +729,9 @@ public class KeyguardIndicationController {
             });
             this.mBottomButtonClickAnimator.setDuration(0);
         } else {
-            this.mBottomButtonClickAnimator = ObjectAnimator.ofFloat(this.mTextView, View.ALPHA, new float[]{0.0f, 1.0f});
-            this.mBottomButtonClickAnimator.setInterpolator(Ease$Cubic.easeInOut);
+            ObjectAnimator ofFloat2 = ObjectAnimator.ofFloat(this.mTextView, View.ALPHA, new float[]{0.0f, 1.0f});
+            this.mBottomButtonClickAnimator = ofFloat2;
+            ofFloat2.setInterpolator(Ease$Cubic.easeInOut);
             this.mBottomButtonClickAnimator.addListener(new AnimatorListenerAdapter() {
                 public void onAnimationStart(Animator animator) {
                     KeyguardIndicationController.this.mTextView.setVisibility(0);

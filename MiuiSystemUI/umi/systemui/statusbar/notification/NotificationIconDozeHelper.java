@@ -6,16 +6,11 @@ import android.graphics.PorterDuffColorFilter;
 import com.android.systemui.plugins.R;
 
 public class NotificationIconDozeHelper extends NotificationDozeHelper {
-    private int mColor = -16777216;
-    private PorterDuffColorFilter mImageColorFilter = new PorterDuffColorFilter(0, PorterDuff.Mode.SRC_ATOP);
-    private final int mImageDarkAlpha;
-    private final int mImageDarkColor = -1;
-
-    public NotificationIconDozeHelper(Context context) {
-        this.mImageDarkAlpha = context.getResources().getInteger(R.integer.doze_small_icon_alpha);
+    public void setColor(int i) {
     }
 
-    public void setColor(int i) {
-        this.mColor = i;
+    public NotificationIconDozeHelper(Context context) {
+        new PorterDuffColorFilter(0, PorterDuff.Mode.SRC_ATOP);
+        context.getResources().getInteger(R.integer.doze_small_icon_alpha);
     }
 }

@@ -68,7 +68,7 @@ public class NotificationSettingsManager implements Dumpable, PackageEventReceiv
         this.mAllowKeyguardPackages = Arrays.asList(resources.getStringArray(R.array.config_allowKeyguardPackages));
         this.mBlockFloatPackages = Arrays.asList(resources.getStringArray(R.array.config_blockFloatPackages));
         this.mBlockKeyguardPackages = Arrays.asList(resources.getStringArray(R.array.config_blockKeyguardPackages));
-        this.mForcedEnabledPackages = Arrays.asList(resources.getStringArray(17236051));
+        this.mForcedEnabledPackages = Arrays.asList(resources.getStringArray(17236055));
         this.mAllowNotificationSlide = Arrays.asList(resources.getStringArray(R.array.config_allowNotificationSlide));
         this.mBgHandler.post(new Runnable() {
             public void run() {
@@ -116,10 +116,6 @@ public class NotificationSettingsManager implements Dumpable, PackageEventReceiv
         List<String> badgeWhitelist = CloudDataHelper.getBadgeWhitelist(this.mContext);
         if (badgeWhitelist != null && !badgeWhitelist.isEmpty()) {
             this.mCanShowBadgePackages = badgeWhitelist;
-        }
-        List<String> slideWhiteList = CloudDataHelper.getSlideWhiteList(this.mContext);
-        if (slideWhiteList != null && !slideWhiteList.isEmpty()) {
-            this.mAllowNotificationSlide = slideWhiteList;
         }
     }
 

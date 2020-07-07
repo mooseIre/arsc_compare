@@ -327,12 +327,15 @@ public class QSControlScrollView extends ScrollView {
 
     static {
         try {
-            OVERFLING_DISTANCE = ScrollView.class.getDeclaredField("mOverflingDistance");
-            OVERFLING_DISTANCE.setAccessible(true);
-            EDGE_GLOW_TOP = ScrollView.class.getDeclaredField("mEdgeGlowTop");
-            EDGE_GLOW_TOP.setAccessible(true);
-            EDGE_GLOW_BOTTOM = ScrollView.class.getDeclaredField("mEdgeGlowBottom");
-            EDGE_GLOW_BOTTOM.setAccessible(true);
+            Field declaredField = ScrollView.class.getDeclaredField("mOverflingDistance");
+            OVERFLING_DISTANCE = declaredField;
+            declaredField.setAccessible(true);
+            Field declaredField2 = ScrollView.class.getDeclaredField("mEdgeGlowTop");
+            EDGE_GLOW_TOP = declaredField2;
+            declaredField2.setAccessible(true);
+            Field declaredField3 = ScrollView.class.getDeclaredField("mEdgeGlowBottom");
+            EDGE_GLOW_BOTTOM = declaredField3;
+            declaredField3.setAccessible(true);
         } catch (NoSuchFieldException e) {
             throw new RuntimeException(e);
         }

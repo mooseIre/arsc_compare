@@ -31,13 +31,14 @@ public class RotationLockTile extends QSTileImpl<QSTile.BooleanState> {
         return new QSTile.BooleanState();
     }
 
+    /* JADX WARNING: type inference failed for: r0v0, types: [com.android.systemui.statusbar.policy.CallbackController, com.android.systemui.statusbar.policy.RotationLockController] */
     public void handleSetListening(boolean z) {
-        RotationLockController rotationLockController = this.mController;
-        if (rotationLockController != null) {
+        ? r0 = this.mController;
+        if (r0 != 0) {
             if (z) {
-                rotationLockController.addCallback(this.mCallback);
+                r0.addCallback(this.mCallback);
             } else {
-                rotationLockController.removeCallback(this.mCallback);
+                r0.removeCallback(this.mCallback);
             }
         }
     }
@@ -66,7 +67,7 @@ public class RotationLockTile extends QSTileImpl<QSTile.BooleanState> {
         if (rotationLockController != null) {
             boolean isRotationLocked = rotationLockController.isRotationLocked();
             booleanState.value = isRotationLocked;
-            booleanState.label = this.mContext.getString(286130519);
+            booleanState.label = this.mContext.getString(286130510);
             booleanState.icon = QSTileImpl.ResourceIcon.get(Icons.getQSIcons(Integer.valueOf(!isRotationLocked ? R.drawable.ic_qs_auto_rotate_enabled : R.drawable.ic_qs_auto_rotate_disabled), this.mInControlCenter));
             booleanState.contentDescription = getAccessibilityString(isRotationLocked);
             booleanState.expandedAccessibilityClassName = Switch.class.getName();

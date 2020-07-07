@@ -91,7 +91,7 @@ public class TaskStackView extends FrameLayout implements TaskStack.TaskStackCal
     private ArrayList<TaskViewTransform> mCurrentTaskTransforms = new ArrayList<>();
     private AnimationProps mDeferredTaskViewLayoutAnimation = null;
     /* access modifiers changed from: private */
-    public boolean mDeleteAllTasksAnimating = false;
+    public boolean mDeleteAllTasksAnimating;
     private Runnable mDeleteAllTasksAnimationRunnable;
     @ViewDebug.ExportedProperty(category = "recents")
     private int mDisplayOrientation = 0;
@@ -105,36 +105,22 @@ public class TaskStackView extends FrameLayout implements TaskStack.TaskStackCal
     public Task mFocusedTask;
     private GradientDrawable mFreeformWorkspaceBackground;
     private ObjectAnimator mFreeformWorkspaceBackgroundAnimator;
-    private DropTarget mFreeformWorkspaceDropTarget = new DropTarget() {
-        public boolean acceptsDrop(int i, int i2, int i3, int i4, boolean z) {
-            if (!z) {
-                return TaskStackView.this.mLayoutAlgorithm.mFreeformRect.contains(i, i2);
-            }
-            return false;
-        }
-    };
+    private DropTarget mFreeformWorkspaceDropTarget;
     private ArraySet<Task.TaskKey> mIgnoreTasks = new ArraySet<>();
     @ViewDebug.ExportedProperty(category = "recents")
     private boolean mInMeasureLayout = false;
     private LayoutInflater mInflater;
     @ViewDebug.ExportedProperty(category = "recents")
     private int mInitialState = 1;
-    public boolean mIsMultiStateChanging = false;
-    private boolean mIsShowingMenu = false;
-    private boolean mKeepAlphaWhenRelayout = false;
+    public boolean mIsMultiStateChanging;
+    private boolean mIsShowingMenu;
+    private boolean mKeepAlphaWhenRelayout;
     private int mLastHeight;
     private int mLastWidth;
     @ViewDebug.ExportedProperty(deepExport = true, prefix = "layout_")
     TaskStackLayoutAlgorithm mLayoutAlgorithm;
     private FrameLayout mMaskWithMenu;
-    private ValueAnimator.AnimatorUpdateListener mRequestUpdateClippingListener = new ValueAnimator.AnimatorUpdateListener() {
-        public void onAnimationUpdate(ValueAnimator valueAnimator) {
-            if (!TaskStackView.this.mTaskViewsClipDirty) {
-                boolean unused = TaskStackView.this.mTaskViewsClipDirty = true;
-                TaskStackView.this.invalidate();
-            }
-        }
-    };
+    private ValueAnimator.AnimatorUpdateListener mRequestUpdateClippingListener;
     private boolean mResetToInitialStateWhenResized;
     @ViewDebug.ExportedProperty(category = "recents")
     boolean mScreenPinningEnabled;
@@ -147,31 +133,22 @@ public class TaskStackView extends FrameLayout implements TaskStack.TaskStackCal
     public TaskStack mStack = new TaskStack();
     @ViewDebug.ExportedProperty(category = "recents")
     private Rect mStackBounds = new Rect();
-    private DropTarget mStackDropTarget = new DropTarget() {
-        public boolean acceptsDrop(int i, int i2, int i3, int i4, boolean z) {
-            if (!z) {
-                return TaskStackView.this.mLayoutAlgorithm.mStackRect.contains(i, i2);
-            }
-            return false;
-        }
-    };
+    private DropTarget mStackDropTarget;
     @ViewDebug.ExportedProperty(category = "recents")
     private boolean mStackReloaded = false;
     @ViewDebug.ExportedProperty(deepExport = true, prefix = "scroller_")
     private TaskStackViewScroller mStackScroller;
     private int mStartTimerIndicatorDuration;
-    private int mTaskCornerRadiusPx;
     /* access modifiers changed from: private */
-    public boolean mTaskEnterAnimationComplete = false;
+    public boolean mTaskEnterAnimationComplete;
     private ArrayList<TaskView> mTaskViews = new ArrayList<>();
     /* access modifiers changed from: private */
     @ViewDebug.ExportedProperty(category = "recents")
     public boolean mTaskViewsClipDirty = true;
-    private int[] mTmpIntPair = new int[2];
+    private int[] mTmpIntPair;
     private Rect mTmpRect = new Rect();
     private ArrayMap<Task.TaskKey, TaskView> mTmpTaskViewMap = new ArrayMap<>();
     private List<TaskView> mTmpTaskViews = new ArrayList();
-    private TaskViewTransform mTmpTransform = new TaskViewTransform();
     @ViewDebug.ExportedProperty(category = "recents")
     boolean mTouchExplorationEnabled;
     @ViewDebug.ExportedProperty(deepExport = true, prefix = "touch_")
@@ -192,6 +169,37 @@ public class TaskStackView extends FrameLayout implements TaskStack.TaskStackCal
 
     public TaskStackView(Context context) {
         super(context);
+        new TaskViewTransform();
+        this.mTmpIntPair = new int[2];
+        this.mIsMultiStateChanging = false;
+        this.mKeepAlphaWhenRelayout = false;
+        this.mTaskEnterAnimationComplete = false;
+        this.mDeleteAllTasksAnimating = false;
+        this.mRequestUpdateClippingListener = new ValueAnimator.AnimatorUpdateListener() {
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                if (!TaskStackView.this.mTaskViewsClipDirty) {
+                    boolean unused = TaskStackView.this.mTaskViewsClipDirty = true;
+                    TaskStackView.this.invalidate();
+                }
+            }
+        };
+        this.mFreeformWorkspaceDropTarget = new DropTarget() {
+            public boolean acceptsDrop(int i, int i2, int i3, int i4, boolean z) {
+                if (!z) {
+                    return TaskStackView.this.mLayoutAlgorithm.mFreeformRect.contains(i, i2);
+                }
+                return false;
+            }
+        };
+        this.mStackDropTarget = new DropTarget() {
+            public boolean acceptsDrop(int i, int i2, int i3, int i4, boolean z) {
+                if (!z) {
+                    return TaskStackView.this.mLayoutAlgorithm.mStackRect.contains(i, i2);
+                }
+                return false;
+            }
+        };
+        this.mIsShowingMenu = false;
         SystemServicesProxy systemServices = Recents.getSystemServices();
         Resources resources = context.getResources();
         this.mStack.setCallbacks(this);
@@ -202,7 +210,7 @@ public class TaskStackView extends FrameLayout implements TaskStack.TaskStackCal
         this.mStackScroller = new TaskStackViewScroller(context, this, this.mLayoutAlgorithm);
         this.mTouchHandler = new TaskStackViewTouchHandler(context, this, this.mStackScroller);
         this.mAnimationHelper = new TaskStackAnimationHelper(context, this);
-        this.mTaskCornerRadiusPx = resources.getDimensionPixelSize(R.dimen.recents_task_view_rounded_corners_radius);
+        resources.getDimensionPixelSize(R.dimen.recents_task_view_rounded_corners_radius);
         this.mDividerSize = systemServices.getDockedDividerSize(context);
         this.mDisplayOrientation = Utilities.getAppConfiguration(this.mContext).orientation;
         this.mDisplayRect = systemServices.getDisplayRect();
@@ -216,13 +224,15 @@ public class TaskStackView extends FrameLayout implements TaskStack.TaskStackCal
             }
         });
         setImportantForAccessibility(1);
-        this.mFreeformWorkspaceBackground = (GradientDrawable) getContext().getDrawable(R.drawable.recents_freeform_workspace_bg);
-        this.mFreeformWorkspaceBackground.setCallback(this);
+        GradientDrawable gradientDrawable = (GradientDrawable) getContext().getDrawable(R.drawable.recents_freeform_workspace_bg);
+        this.mFreeformWorkspaceBackground = gradientDrawable;
+        gradientDrawable.setCallback(this);
         if (systemServices.hasFreeformWorkspaceSupport()) {
             this.mFreeformWorkspaceBackground.setColor(getContext().getColor(R.color.recents_freeform_workspace_bg_color));
         }
-        this.mMaskWithMenu = new FrameLayout(context);
-        addView(this.mMaskWithMenu, -1, -1);
+        FrameLayout frameLayout = new FrameLayout(context);
+        this.mMaskWithMenu = frameLayout;
+        addView(frameLayout, -1, -1);
         setClipChildren(false);
     }
 
@@ -608,7 +618,7 @@ public class TaskStackView extends FrameLayout implements TaskStack.TaskStackCal
             return false;
         }
         if (i2 > 0) {
-            TaskView childViewForTask2 = getChildViewForTask(this.mFocusedTask);
+            TaskView childViewForTask2 = getChildViewForTask(task);
             if (childViewForTask2 != null) {
                 childViewForTask2.getHeaderView().startFocusTimerIndicator(i2);
             } else {
@@ -1286,7 +1296,7 @@ public class TaskStackView extends FrameLayout implements TaskStack.TaskStackCal
             }
         }
         Slog.d("TaskStackView", "removeAllTask, cleanByRecents=true");
-        this.mDeleteAllTasksAnimationRunnable = new Runnable() {
+        AnonymousClass6 r0 = new Runnable() {
             int count = 0;
 
             public void run() {
@@ -1309,7 +1319,8 @@ public class TaskStackView extends FrameLayout implements TaskStack.TaskStackCal
                 TaskStackView.this.postDelayed(this, 15);
             }
         };
-        post(this.mDeleteAllTasksAnimationRunnable);
+        this.mDeleteAllTasksAnimationRunnable = r0;
+        post(r0);
     }
 
     public final void onBusEvent(TaskViewDismissedEvent taskViewDismissedEvent) {
@@ -1554,8 +1565,9 @@ public class TaskStackView extends FrameLayout implements TaskStack.TaskStackCal
         if (this.mFreeformWorkspaceBackground.getAlpha() != i) {
             Utilities.cancelAnimationWithoutCallbacks(this.mFreeformWorkspaceBackgroundAnimator);
             GradientDrawable gradientDrawable = this.mFreeformWorkspaceBackground;
-            this.mFreeformWorkspaceBackgroundAnimator = ObjectAnimator.ofInt(gradientDrawable, Utilities.DRAWABLE_ALPHA, new int[]{gradientDrawable.getAlpha(), i});
-            this.mFreeformWorkspaceBackgroundAnimator.setStartDelay(animationProps.getDuration(4));
+            ObjectAnimator ofInt = ObjectAnimator.ofInt(gradientDrawable, Utilities.DRAWABLE_ALPHA, new int[]{gradientDrawable.getAlpha(), i});
+            this.mFreeformWorkspaceBackgroundAnimator = ofInt;
+            ofInt.setStartDelay(animationProps.getDuration(4));
             this.mFreeformWorkspaceBackgroundAnimator.setDuration(animationProps.getDuration(4));
             this.mFreeformWorkspaceBackgroundAnimator.setInterpolator(animationProps.getInterpolator(4));
             this.mFreeformWorkspaceBackgroundAnimator.start();

@@ -141,8 +141,9 @@ public class AssistOrbView extends FrameLayout {
             if (valueAnimator != null) {
                 valueAnimator.cancel();
             }
-            this.mCircleAnimator = ValueAnimator.ofFloat(new float[]{this.mCircleSize, f});
-            this.mCircleAnimator.addUpdateListener(this.mCircleUpdateListener);
+            ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{this.mCircleSize, f});
+            this.mCircleAnimator = ofFloat;
+            ofFloat.addUpdateListener(this.mCircleUpdateListener);
             this.mCircleAnimator.addListener(this.mClearAnimatorListener);
             this.mCircleAnimator.setInterpolator(interpolator);
             this.mCircleAnimator.setDuration(j);
@@ -171,8 +172,9 @@ public class AssistOrbView extends FrameLayout {
             valueAnimator.removeAllListeners();
             this.mOffsetAnimator.cancel();
         }
-        this.mOffsetAnimator = ValueAnimator.ofFloat(new float[]{this.mOffset, f});
-        this.mOffsetAnimator.addUpdateListener(this.mOffsetUpdateListener);
+        ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{this.mOffset, f});
+        this.mOffsetAnimator = ofFloat;
+        ofFloat.addUpdateListener(this.mOffsetUpdateListener);
         this.mOffsetAnimator.addListener(new AnimatorListenerAdapter() {
             public void onAnimationEnd(Animator animator) {
                 ValueAnimator unused = AssistOrbView.this.mOffsetAnimator = null;

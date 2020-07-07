@@ -48,8 +48,9 @@ public class HybridNotificationView extends AlphaOptimizedLinearLayout implement
         this.mTitleView = (TextView) findViewById(R.id.notification_title);
         this.mTextView = (TextView) findViewById(R.id.notification_text);
         this.mInvertHelper = new ViewInvertHelper((View) this, 700);
-        this.mTransformationHelper = new ViewTransformationHelper();
-        this.mTransformationHelper.setCustomTransformation(new ViewTransformationHelper.CustomTransformation() {
+        ViewTransformationHelper viewTransformationHelper = new ViewTransformationHelper();
+        this.mTransformationHelper = viewTransformationHelper;
+        viewTransformationHelper.setCustomTransformation(new ViewTransformationHelper.CustomTransformation() {
             public boolean transformTo(TransformState transformState, TransformableView transformableView, float f) {
                 TransformState currentState = transformableView.getCurrentState(1);
                 CrossFadeHelper.fadeOut((View) HybridNotificationView.this.mTextView, f);

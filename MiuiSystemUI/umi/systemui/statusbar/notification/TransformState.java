@@ -72,6 +72,7 @@ public class TransformState {
         boolean z = (i & 1) != 0;
         boolean z2 = (i & 16) != 0;
         boolean transformScale = transformScale();
+        float f2 = 0.0f;
         int i2 = (f > 0.0f ? 1 : (f == 0.0f ? 0 : -1));
         if (i2 == 0 || ((z && getTransformationStartX() == -1.0f) || ((z2 && getTransformationStartY() == -1.0f) || ((transformScale && getTransformationStartScaleX() == -1.0f) || (transformScale && getTransformationStartScaleY() == -1.0f))))) {
             if (i2 != 0) {
@@ -132,10 +133,10 @@ public class TransformState {
             float transformationStartScaleY = getTransformationStartScaleY();
             if (transformationStartScaleY != -1.0f) {
                 float interpolate2 = NotificationUtils.interpolate(transformationStartScaleY, 1.0f, interpolation);
-                if (!Float.isFinite(interpolate2)) {
-                    interpolate2 = 0.0f;
+                if (Float.isFinite(interpolate2)) {
+                    f2 = interpolate2;
                 }
-                view.setScaleY(interpolate2);
+                view.setScaleY(f2);
             }
         }
     }
@@ -257,10 +258,7 @@ public class TransformState {
             float transformationStartScaleY = getTransformationStartScaleY();
             if (transformationStartScaleY != -1.0f) {
                 float interpolate2 = NotificationUtils.interpolate(transformationStartScaleY, ((float) transformedView2.getHeight()) / ((float) view.getHeight()), interpolation);
-                if (!Float.isFinite(interpolate2)) {
-                    interpolate2 = 0.0f;
-                }
-                view.setScaleY(interpolate2);
+                view.setScaleY(!Float.isFinite(interpolate2) ? 0.0f : interpolate2);
             }
         }
     }
@@ -348,7 +346,7 @@ public class TransformState {
             TextViewTransformState obtain = TextViewTransformState.obtain();
             obtain.initFrom(view);
             return obtain;
-        } else if (view.getId() == 16908697) {
+        } else if (view.getId() == 16908724) {
             ActionListTransformState obtain2 = ActionListTransformState.obtain();
             obtain2.initFrom(view);
             return obtain2;

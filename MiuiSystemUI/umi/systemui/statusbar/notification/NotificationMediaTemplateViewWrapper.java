@@ -179,11 +179,11 @@ public class NotificationMediaTemplateViewWrapper extends NotificationHeaderView
     }
 
     private void resolveMediaViews() {
-        this.mPicture = (ImageView) this.mView.findViewById(16909333);
-        this.mMainColumnContainer = (ViewGroup) this.mView.findViewById(16909189);
-        this.mMediaActions = (ViewGroup) this.mView.findViewById(16909112);
+        this.mPicture = (ImageView) this.mView.findViewById(16909404);
+        this.mMainColumnContainer = (ViewGroup) this.mView.findViewById(16909248);
+        this.mMediaActions = (ViewGroup) this.mView.findViewById(16909168);
         this.mMediaTitle = (TextView) this.mView.findViewById(16908310);
-        this.mMediaText = (TextView) this.mView.findViewById(16909468);
+        this.mMediaText = (TextView) this.mView.findViewById(16909540);
     }
 
     private void handleMediaViews() {
@@ -220,10 +220,10 @@ public class NotificationMediaTemplateViewWrapper extends NotificationHeaderView
         } else {
             z = false;
         }
-        this.mMediaMetadata = this.mMediaController.getMetadata();
-        MediaMetadata mediaMetadata = this.mMediaMetadata;
-        if (mediaMetadata != null) {
-            if (mediaMetadata.getLong("android.media.metadata.DURATION") <= 0) {
+        MediaMetadata metadata = this.mMediaController.getMetadata();
+        this.mMediaMetadata = metadata;
+        if (metadata != null) {
+            if (metadata.getLong("android.media.metadata.DURATION") <= 0) {
                 View view2 = this.mSeekBarView;
                 if (view2 != null && view2.getVisibility() != 8) {
                     this.mSeekBarView.setVisibility(8);
@@ -246,14 +246,15 @@ public class NotificationMediaTemplateViewWrapper extends NotificationHeaderView
                 }
             }
         }
-        ViewStub viewStub = (ViewStub) this.mView.findViewById(16909201);
+        ViewStub viewStub = (ViewStub) this.mView.findViewById(16909260);
         if (viewStub instanceof ViewStub) {
             viewStub.setLayoutInflater(LayoutInflater.from(this.mContext));
             viewStub.setLayoutResource(R.layout.notification_material_media_seekbar);
             this.mSeekBarView = viewStub.inflate();
             this.mMetricsLogger.write(newLog(1));
-            this.mSeekBar = (SeekBar) this.mSeekBarView.findViewById(R.id.media_notification_progress_bar);
-            this.mSeekBar.setOnSeekBarChangeListener(this.mSeekListener);
+            SeekBar seekBar = (SeekBar) this.mSeekBarView.findViewById(R.id.media_notification_progress_bar);
+            this.mSeekBar = seekBar;
+            seekBar.setOnSeekBarChangeListener(this.mSeekListener);
             this.mSeekBarElapsedTime = (TextView) this.mSeekBarView.findViewById(R.id.media_notification_elapsed_time);
             this.mSeekBarTotalTime = (TextView) this.mSeekBarView.findViewById(R.id.media_notification_total_time);
             if (this.mSeekBarTimer == null) {
@@ -325,7 +326,7 @@ public class NotificationMediaTemplateViewWrapper extends NotificationHeaderView
             long j = mediaMetadata.getLong("android.media.metadata.DURATION");
             if (this.mDuration != j) {
                 this.mDuration = j;
-                this.mSeekBar.setMax((int) this.mDuration);
+                this.mSeekBar.setMax((int) j);
                 this.mSeekBarTotalTime.setText(millisecondsToTimeString(j));
             }
         }
@@ -390,7 +391,7 @@ public class NotificationMediaTemplateViewWrapper extends NotificationHeaderView
 
     /* access modifiers changed from: private */
     public boolean isNormalMedia() {
-        return this.mView.getId() == 16909445 && "media".equals(this.mView.getTag());
+        return this.mView.getId() == 16909516 && "media".equals(this.mView.getTag());
     }
 
     private class MediaStyleProcessor {
@@ -459,6 +460,8 @@ public class NotificationMediaTemplateViewWrapper extends NotificationHeaderView
             });
         }
 
+        /* access modifiers changed from: private */
+        /* renamed from: lambda$handleRightIcon$0 */
         public /* synthetic */ void lambda$handleRightIcon$0$NotificationMediaTemplateViewWrapper$MediaStyleProcessor() {
             ViewGroup.LayoutParams layoutParams = NotificationMediaTemplateViewWrapper.this.mPicture.getLayoutParams();
             layoutParams.width = NotificationMediaTemplateViewWrapper.this.mView.getMeasuredHeight();

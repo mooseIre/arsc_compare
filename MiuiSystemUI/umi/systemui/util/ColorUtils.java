@@ -60,18 +60,18 @@ public final class ColorUtils {
         float f6 = max - min;
         float f7 = (max + min) / 2.0f;
         if (max == min) {
-            f2 = 0.0f;
             f = 0.0f;
+            f2 = 0.0f;
         } else {
-            f2 = max == f3 ? ((f4 - f5) / f6) % 6.0f : max == f4 ? ((f5 - f3) / f6) + 2.0f : ((f3 - f4) / f6) + 4.0f;
-            f = f6 / (1.0f - Math.abs((2.0f * f7) - 1.0f));
+            f = max == f3 ? ((f4 - f5) / f6) % 6.0f : max == f4 ? ((f5 - f3) / f6) + 2.0f : 4.0f + ((f3 - f4) / f6);
+            f2 = f6 / (1.0f - Math.abs((2.0f * f7) - 1.0f));
         }
-        float f8 = (f2 * 60.0f) % 360.0f;
+        float f8 = (f * 60.0f) % 360.0f;
         if (f8 < 0.0f) {
             f8 += 360.0f;
         }
         fArr[0] = constrain(f8, 0.0f, 360.0f);
-        fArr[1] = constrain(f, 0.0f, 1.0f);
+        fArr[1] = constrain(f2, 0.0f, 1.0f);
         fArr[2] = constrain(f7, 0.0f, 1.0f);
     }
 
@@ -153,23 +153,21 @@ public final class ColorUtils {
             } else {
                 d = Math.pow((d4 + 0.055d) / 1.055d, 2.4d);
             }
-            double d5 = d;
-            double d6 = ((double) i2) / 255.0d;
+            double d5 = ((double) i2) / 255.0d;
+            if (d5 < 0.04045d) {
+                d2 = d5 / 12.92d;
+            } else {
+                d2 = Math.pow((d5 + 0.055d) / 1.055d, 2.4d);
+            }
+            double d6 = ((double) i3) / 255.0d;
             if (d6 < 0.04045d) {
-                d2 = d6 / 12.92d;
+                d3 = d6 / 12.92d;
             } else {
-                d2 = Math.pow((d6 + 0.055d) / 1.055d, 2.4d);
+                d3 = Math.pow((d6 + 0.055d) / 1.055d, 2.4d);
             }
-            double d7 = d2;
-            double d8 = ((double) i3) / 255.0d;
-            if (d8 < 0.04045d) {
-                d3 = d8 / 12.92d;
-            } else {
-                d3 = Math.pow((d8 + 0.055d) / 1.055d, 2.4d);
-            }
-            dArr2[0] = ((0.4124d * d5) + (0.3576d * d7) + (0.1805d * d3)) * 100.0d;
-            dArr2[1] = ((0.2126d * d5) + (0.7152d * d7) + (0.0722d * d3)) * 100.0d;
-            dArr2[2] = ((d5 * 0.0193d) + (d7 * 0.1192d) + (d3 * 0.9505d)) * 100.0d;
+            dArr2[0] = ((0.4124d * d) + (0.3576d * d2) + (0.1805d * d3)) * 100.0d;
+            dArr2[1] = ((0.2126d * d) + (0.7152d * d2) + (0.0722d * d3)) * 100.0d;
+            dArr2[2] = ((d * 0.0193d) + (d2 * 0.1192d) + (d3 * 0.9505d)) * 100.0d;
             return;
         }
         throw new IllegalArgumentException("outXyz must have a length of 3.");

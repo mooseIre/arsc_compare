@@ -13,7 +13,6 @@ import com.android.systemui.plugins.R;
 import com.android.systemui.util.AutoCleanFloatTransitionListener;
 import java.util.Map;
 import miuix.animation.Folme;
-import miuix.animation.IStateStyle;
 import miuix.animation.base.AnimConfig;
 
 public class NotificationMenuRowContainer extends FrameLayout {
@@ -23,10 +22,7 @@ public class NotificationMenuRowContainer extends FrameLayout {
     private int mMenuIconMargin;
     private int mMenuIconSize;
     private int mMenuIconSpace;
-    private AnimConfig mResetConfig;
-    private boolean mResetMenu;
     private float mTranslation;
-    private AnimConfig mTranslationConfig;
 
     public NotificationMenuRowContainer(Context context) {
         this(context, (AttributeSet) null);
@@ -38,14 +34,9 @@ public class NotificationMenuRowContainer extends FrameLayout {
         this.mMenuIconSpace = -1;
         this.mMenuIconMargin = -1;
         this.mClipBounds = new Rect();
-        AnimConfig animConfig = new AnimConfig();
-        animConfig.setEase(-2, 0.9f, 0.2f);
-        this.mTranslationConfig = animConfig;
-        AnimConfig animConfig2 = new AnimConfig();
-        animConfig2.setEase(-2, 0.6f, 0.3f);
-        this.mResetConfig = animConfig2;
+        new AnimConfig().setEase(-2, 0.9f, 0.2f);
+        new AnimConfig().setEase(-2, 0.6f, 0.3f);
         init(context);
-        setLayoutDirection(0);
     }
 
     private void init(Context context) {
@@ -68,7 +59,6 @@ public class NotificationMenuRowContainer extends FrameLayout {
         if (DEBUG) {
             Log.d("MenuRowContainer", "resetState");
         }
-        this.mResetMenu = true;
         resetMenuLocation();
         setMenuAlpha(0.0f);
     }
@@ -91,18 +81,16 @@ public class NotificationMenuRowContainer extends FrameLayout {
         if (DEBUG) {
             Log.d("MenuRowContainer", "onTranslationUpdate translation=" + f);
         }
-        if (this.mResetMenu || f == this.mTranslation) {
-            this.mResetMenu = false;
-            return;
+        if (f != this.mTranslation) {
+            this.mTranslation = f;
+            updateClipBounds();
+            float f2 = 0.0f;
+            if (f < 0.0f) {
+                f2 = 1.0f;
+            }
+            setMenuAlpha(f2);
+            animateIconTranslation();
         }
-        this.mTranslation = f;
-        updateClipBounds();
-        float f2 = 0.0f;
-        if (f < 0.0f) {
-            f2 = 1.0f;
-        }
-        setMenuAlpha(f2);
-        animateIconTranslation();
     }
 
     private void animateIconTranslation() {
@@ -152,7 +140,6 @@ public class NotificationMenuRowContainer extends FrameLayout {
         if (DEBUG) {
             Log.d("MenuRowContainer", "handleShowMenu");
         }
-        this.mResetMenu = false;
         int childCount = getChildCount();
         for (int i = 0; i < childCount; i++) {
             animateIconReset(i, getChildAt(i));
@@ -167,10 +154,8 @@ public class NotificationMenuRowContainer extends FrameLayout {
         final String str = "IconReset-" + i;
         Folme.getValueTarget(str).setMinVisibleChange(0.01f, "scale", "alpha");
         Folme.getValueTarget(str).setMinVisibleChange(1.0f, "x");
-        IStateStyle useValue = Folme.useValue(str);
-        useValue.setTo("scale", Float.valueOf(view.getScaleX()), "alpha", Float.valueOf(view.getAlpha()), "x", Float.valueOf(view.getTranslationX()));
         final View view2 = view;
-        useValue.addListener(new AutoCleanFloatTransitionListener(str) {
+        Folme.useValue(str).setTo("scale", Float.valueOf(view.getScaleX()), "alpha", Float.valueOf(view.getAlpha()), "x", Float.valueOf(view.getTranslationX())).addListener(new AutoCleanFloatTransitionListener(str) {
             public void onStart() {
                 view2.setTag(R.id.folme_animating_tag, str);
             }
@@ -188,10 +173,7 @@ public class NotificationMenuRowContainer extends FrameLayout {
             public void onEnd() {
                 view2.setTag(R.id.folme_animating_tag, (Object) null);
             }
-        });
-        useValue.to("scale", Float.valueOf(1.0f));
-        useValue.to("alpha", Float.valueOf(1.0f));
-        useValue.to("x", Float.valueOf(childTranslationX));
+        }).to("scale", Float.valueOf(1.0f)).to("alpha", Float.valueOf(1.0f)).to("x", Float.valueOf(childTranslationX));
     }
 
     private float getOffsetX(int i) {

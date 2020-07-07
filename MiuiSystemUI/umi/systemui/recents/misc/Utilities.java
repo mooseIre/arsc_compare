@@ -15,7 +15,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Process;
 import android.os.UserHandleCompat;
-import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.ArraySet;
 import android.util.IntProperty;
@@ -31,7 +30,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 public class Utilities {
     public static final Property<Drawable, Integer> DRAWABLE_ALPHA = new IntProperty<Drawable>("drawableAlpha") {
@@ -52,8 +50,6 @@ public class Utilities {
             return drawable.getBounds();
         }
     };
-    public static final Rect EMPTY_RECT = new Rect();
-    public static Set<String> LOW_MEMORY_DEVICES = new ArraySet();
     public static final RectFEvaluator RECTF_EVALUATOR = new RectFEvaluator();
     public static final RectEvaluator RECT_EVALUATOR = new RectEvaluator(new Rect());
 
@@ -62,10 +58,7 @@ public class Utilities {
     }
 
     static {
-        LOW_MEMORY_DEVICES.add("dandelion");
-        LOW_MEMORY_DEVICES.add("angelica");
-        LOW_MEMORY_DEVICES.add("angelicain");
-        LOW_MEMORY_DEVICES.add("cattail");
+        new Rect();
     }
 
     public static <T> ArraySet<T> arrayToSet(T[] tArr, ArraySet<T> arraySet) {
@@ -246,10 +239,6 @@ public class Utilities {
         return Process.myUserHandle().equals(UserHandleCompat.SYSTEM);
     }
 
-    public static boolean isInSmallWindowMode(Context context) {
-        return Settings.Secure.getInt(context.getContentResolver(), "freeform_window_state", -1) != -1;
-    }
-
     public static boolean isSlideCoverDevice() {
         return "perseus".equals(miui.os.Build.DEVICE);
     }
@@ -297,9 +286,5 @@ public class Utilities {
             }
         }
         return hashSet;
-    }
-
-    public static boolean isLowMemoryDevices() {
-        return LOW_MEMORY_DEVICES.contains(miui.os.Build.DEVICE);
     }
 }

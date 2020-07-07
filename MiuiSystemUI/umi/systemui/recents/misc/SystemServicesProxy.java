@@ -15,7 +15,6 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.IPackageManager;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -32,7 +31,6 @@ import android.os.Handler;
 import android.os.IRemoteCallback;
 import android.os.Looper;
 import android.os.Message;
-import android.os.Process;
 import android.os.RemoteException;
 import android.os.ServiceManager;
 import android.os.Trace;
@@ -79,33 +77,28 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import miui.maml.util.AppIconsHelper;
-import miui.os.SystemProperties;
 import miui.security.SecurityManager;
 import miui.securityspace.XSpaceUserHandle;
 import org.json.JSONObject;
 
 public class SystemServicesProxy {
     public static boolean DEBUG = false;
-    static final BitmapFactory.Options sBitmapOptions = new BitmapFactory.Options();
+    static final BitmapFactory.Options sBitmapOptions;
     private static final List<String> sMultiWindowForceNotResizePkgList = new ArrayList();
     private static final List<String> sMultiWindowForceResizePkgList = new ArrayList();
-    static final List<String> sRecentsBlacklist = new ArrayList();
+    static final List<String> sRecentsBlacklist;
     private static SystemServicesProxy sSystemServicesProxy;
     private int mAccessControlLockMode;
     private SoftReference<Bitmap> mAccessLockedFakeScreenshotLand;
     private SoftReference<Bitmap> mAccessLockedFakeScreenshotPort;
     AccessibilityManager mAccm;
     ActivityManager mAm;
-    ComponentName mAssistComponent;
     AssistUtils mAssistUtils;
-    Canvas mBgProtectionCanvas;
     Paint mBgProtectionPaint;
     Context mContext;
     Display mDisplay;
     /* access modifiers changed from: private */
     public final IDreamManager mDreamManager;
-    int mDummyThumbnailHeight;
-    int mDummyThumbnailWidth;
     /* access modifiers changed from: private */
     public final Handler mHandler = new H();
     boolean mHasFreeformWorkspaceSupport;
@@ -116,8 +109,6 @@ public class SystemServicesProxy {
     boolean mIsSafeMode;
     IWindowManager mIwm;
     PackageManager mPm;
-    String mRecentsPackage;
-    int mStatusBarHeight;
     private TaskStackListener mTaskStackListener = new TaskStackListener() {
         private final List<TaskStackListener> mTmpListeners = new ArrayList();
 
@@ -141,21 +132,6 @@ public class SystemServicesProxy {
             SystemServicesProxy.this.mHandler.sendEmptyMessage(10);
         }
 
-        public void onPinnedActivityRestartAttempt(boolean z) throws RemoteException {
-            SystemServicesProxy.this.mHandler.removeMessages(4);
-            SystemServicesProxy.this.mHandler.obtainMessage(4, z ? 1 : 0, 0).sendToTarget();
-        }
-
-        public void onPinnedStackAnimationStarted() throws RemoteException {
-            SystemServicesProxy.this.mHandler.removeMessages(9);
-            SystemServicesProxy.this.mHandler.sendEmptyMessage(9);
-        }
-
-        public void onPinnedStackAnimationEnded() throws RemoteException {
-            SystemServicesProxy.this.mHandler.removeMessages(5);
-            SystemServicesProxy.this.mHandler.sendEmptyMessage(5);
-        }
-
         public void onActivityForcedResizable(String str, int i, int i2) throws RemoteException {
             SystemServicesProxy.this.mHandler.obtainMessage(6, i, i2, str).sendToTarget();
         }
@@ -175,21 +151,26 @@ public class SystemServicesProxy {
     };
     /* access modifiers changed from: private */
     public List<TaskStackListener> mTaskStackListeners = new ArrayList();
-    TtsEngines mTtsEngines;
     UserManager mUm;
     WebAppDAO mWebAppDAO;
     public WindowManager mWm;
-    WallpaperManager mWpm;
 
     public static boolean isFreeformStack(int i) {
         return i == 2;
     }
 
+    public ActivityManager.RunningTaskInfo getRunningTask() {
+        return null;
+    }
+
     static {
-        BitmapFactory.Options options = sBitmapOptions;
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        sBitmapOptions = options;
         options.inMutable = true;
         options.inPreferredConfig = Bitmap.Config.RGB_565;
-        sRecentsBlacklist.add("com.android.systemui.tv.pip.PipOnboardingActivity");
+        ArrayList arrayList = new ArrayList();
+        sRecentsBlacklist = arrayList;
+        arrayList.add("com.android.systemui.tv.pip.PipOnboardingActivity");
         sRecentsBlacklist.add("com.android.systemui.tv.pip.PipMenuActivity");
         sRecentsBlacklist.add("com.android.systemui.recents.RecentsActivity");
     }
@@ -258,23 +239,25 @@ public class SystemServicesProxy {
         this.mUm = UserManager.get(context);
         this.mDreamManager = IDreamManager.Stub.asInterface(ServiceManager.checkService("dreams"));
         this.mDisplay = this.mWm.getDefaultDisplay();
-        this.mWpm = WallpaperManager.getInstance(context);
-        this.mRecentsPackage = context.getPackageName();
+        WallpaperManager.getInstance(context);
+        context.getPackageName();
         this.mHasFreeformWorkspaceSupport = false;
         this.mIsSafeMode = this.mPm.isSafeMode();
         Resources resources = context.getResources();
-        this.mDummyThumbnailWidth = resources.getDimensionPixelSize(17104898);
-        this.mDummyThumbnailHeight = resources.getDimensionPixelSize(17104897);
-        this.mStatusBarHeight = resources.getDimensionPixelSize(17105478);
-        this.mBgProtectionPaint = new Paint();
-        this.mBgProtectionPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_ATOP));
+        resources.getDimensionPixelSize(17104898);
+        resources.getDimensionPixelSize(17104897);
+        resources.getDimensionPixelSize(17105519);
+        Paint paint = new Paint();
+        this.mBgProtectionPaint = paint;
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_ATOP));
         this.mBgProtectionPaint.setColor(-1);
-        this.mBgProtectionCanvas = new Canvas();
-        this.mAssistComponent = this.mAssistUtils.getAssistComponentForUser(UserHandle.myUserId());
+        new Canvas();
+        this.mAssistUtils.getAssistComponentForUser(UserHandle.myUserId());
         this.mWebAppDAO = WebAppDAO.getInstance(context);
-        this.mTtsEngines = new TtsEngines(this.mContext);
-        this.mContext = context.getApplicationContext();
-        this.mAccessControlLockMode = Settings.Secure.getIntForUser(this.mContext.getContentResolver(), "access_control_lock_mode", 1, -2);
+        new TtsEngines(this.mContext);
+        Context applicationContext = context.getApplicationContext();
+        this.mContext = applicationContext;
+        this.mAccessControlLockMode = Settings.Secure.getIntForUser(applicationContext.getContentResolver(), "access_control_lock_mode", 1, -2);
     }
 
     public static SystemServicesProxy getInstance(Context context) {
@@ -288,6 +271,7 @@ public class SystemServicesProxy {
     }
 
     public List<ActivityManager.RecentTaskInfo> getRecentTasks(int i, int i2, boolean z, ArraySet<Integer> arraySet) {
+        ComponentName componentName;
         List list = null;
         if (this.mAm == null) {
             return null;
@@ -309,7 +293,7 @@ public class SystemServicesProxy {
         boolean z2 = true;
         while (it.hasNext()) {
             ActivityManager.RecentTaskInfo recentTaskInfo = (ActivityManager.RecentTaskInfo) it.next();
-            if (recentTaskInfo == null || recentTaskInfo.topActivity == null || (!sRecentsBlacklist.contains(recentTaskInfo.topActivity.getClassName()) && !sRecentsBlacklist.contains(recentTaskInfo.topActivity.getPackageName()))) {
+            if (recentTaskInfo == null || (componentName = recentTaskInfo.topActivity) == null || (!sRecentsBlacklist.contains(componentName.getClassName()) && !sRecentsBlacklist.contains(recentTaskInfo.topActivity.getPackageName()))) {
                 if ((arraySet.contains(Integer.valueOf(recentTaskInfo.userId)) || ((recentTaskInfo.baseIntent.getFlags() & 8388608) == 8388608)) && (!z2 || !z)) {
                     it.remove();
                 }
@@ -319,19 +303,6 @@ public class SystemServicesProxy {
             }
         }
         return list.subList(0, Math.min(list.size(), i));
-    }
-
-    public ActivityManager.RunningTaskInfo getRunningTask() {
-        try {
-            List filteredTasks = ActivityManager.getService().getFilteredTasks(1, 3, 2);
-            if (filteredTasks != null) {
-                if (!filteredTasks.isEmpty()) {
-                    return (ActivityManager.RunningTaskInfo) filteredTasks.get(0);
-                }
-            }
-        } catch (RemoteException unused) {
-        }
-        return null;
     }
 
     public boolean isRecentsActivityVisible() {
@@ -467,7 +438,6 @@ public class SystemServicesProxy {
         activityManager$TaskThumbnailInfo.taskHeight = taskSnapshot.getSnapshot().getHeight();
         activityManager$TaskThumbnailInfo.screenOrientation = taskSnapshot.getOrientation();
         activityManager$TaskThumbnailInfo.insets = taskSnapshot.getContentInsets();
-        activityManager$TaskThumbnailInfo.scale = taskSnapshot.getScale();
         return activityManager$TaskThumbnailInfo;
     }
 
@@ -486,7 +456,7 @@ public class SystemServicesProxy {
 
     public void removeTask(final int i, boolean z) {
         if (this.mAm != null) {
-            BackgroundThread.getHandler().post(new Runnable() {
+            BackgroundThread.getHandler().post(new Runnable(this) {
                 public void run() {
                     try {
                         ActivityManager.getService().removeTask(i);
@@ -499,7 +469,7 @@ public class SystemServicesProxy {
     }
 
     public void killProcess(final Task task) {
-        BackgroundThread.getHandler().post(new Runnable() {
+        BackgroundThread.getHandler().post(new Runnable(this) {
             public void run() {
                 String packageName = task.key.getComponent().getPackageName();
                 Task.TaskKey taskKey = task.key;
@@ -742,12 +712,7 @@ public class SystemServicesProxy {
     }
 
     public void registerDockedStackListener(IDockedStackListener iDockedStackListener) {
-        if (this.mWm != null) {
-            try {
-                WindowManagerGlobal.getWindowManagerService().registerDockedStackListener(iDockedStackListener);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        if (this.mWm == null) {
         }
     }
 
@@ -891,17 +856,8 @@ public class SystemServicesProxy {
     }
 
     public boolean useMiuiHomeAsDefaultHome(Context context) {
-        ActivityInfo activityInfo;
-        String str;
-        ResolveInfo resolveActivity = context.getPackageManager().resolveActivity(new Intent("android.intent.action.MAIN").addCategory("android.intent.category.HOME"), 786432);
-        if (resolveActivity == null || (activityInfo = resolveActivity.activityInfo) == null || (str = activityInfo.packageName) == null || "com.miui.home".equals(str)) {
-            return true;
-        }
-        return false;
-    }
-
-    public boolean isLowMemoryDevice() {
-        return Process.getTotalMemory() < ((Long.parseLong(SystemProperties.get("ro.config.low_ram.threshold_gb", "3")) * 1024) * 1024) * 1024;
+        String str = context.getPackageManager().resolveActivity(new Intent("android.intent.action.MAIN").addCategory("android.intent.category.HOME"), 786432).activityInfo.packageName;
+        return str == null || "com.miui.home".equals(str);
     }
 
     public static List<String> getMultiWindowForceResizeList(Context context) {
@@ -1125,7 +1081,6 @@ public class SystemServicesProxy {
                     activityManager$TaskThumbnailInfo.taskHeight = taskSnapshot.getSnapshot().getHeight();
                     activityManager$TaskThumbnailInfo.screenOrientation = taskSnapshot.getOrientation();
                     activityManager$TaskThumbnailInfo.insets = taskSnapshot.getContentInsets();
-                    activityManager$TaskThumbnailInfo.scale = taskSnapshot.getScale();
                     RecentsEventBus.getDefault().send(new TaskSnapshotChangedEvent(i, SystemUICompat.createHardwareBitmapFromSnapShot(taskSnapshot), activityManager$TaskThumbnailInfo, false));
                 }
             }

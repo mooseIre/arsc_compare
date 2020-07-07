@@ -156,11 +156,12 @@ public class GlobalScreenshotDisplay implements ScreenshotScrollView.AnimatingCa
 
     public GlobalScreenshotDisplay(Context context) {
         this.mContext = context;
-        this.mContext.setTheme(R$style.Theme_DayNight);
+        context.setTheme(R$style.Theme_DayNight);
         this.mWindowManager = (WindowManager) context.getSystemService("window");
         try {
-            this.mHasNavigationBar = IWindowManagerCompat.hasNavigationBar(IWindowManager.Stub.asInterface(ServiceManager.getService("window")), ContextCompat.getDisplayId(context));
-            if (this.mHasNavigationBar && MiuiSettings.Global.getBoolean(this.mContext.getContentResolver(), "force_fsg_nav_bar")) {
+            boolean hasNavigationBar = IWindowManagerCompat.hasNavigationBar(IWindowManager.Stub.asInterface(ServiceManager.getService("window")), ContextCompat.getDisplayId(context));
+            this.mHasNavigationBar = hasNavigationBar;
+            if (hasNavigationBar && MiuiSettings.Global.getBoolean(this.mContext.getContentResolver(), "force_fsg_nav_bar")) {
                 this.mHasNavigationBar = false;
             }
             if (this.mHasNavigationBar) {
@@ -168,8 +169,9 @@ public class GlobalScreenshotDisplay implements ScreenshotScrollView.AnimatingCa
             }
         } catch (RemoteException unused) {
         }
-        this.mRootView = ((LayoutInflater) this.mContext.getSystemService("layout_inflater")).inflate(R.layout.global_screenshot_display, (ViewGroup) null);
-        this.mRootView.setSystemUiVisibility(512);
+        View inflate = ((LayoutInflater) this.mContext.getSystemService("layout_inflater")).inflate(R.layout.global_screenshot_display, (ViewGroup) null);
+        this.mRootView = inflate;
+        inflate.setSystemUiVisibility(512);
         this.mScreenshotView = (ScreenshotScrollView) this.mRootView.findViewById(R.id.global_screenshot);
         this.mButtonContainer = (ViewGroup) this.mRootView.findViewById(R.id.button_container);
         this.mTopMsgLayout = (ViewGroup) this.mRootView.findViewById(R.id.top_titleormsg_layout);
@@ -184,8 +186,9 @@ public class GlobalScreenshotDisplay implements ScreenshotScrollView.AnimatingCa
                 GlobalScreenshotDisplay.this.clickActionBtn("feedback");
             }
         });
-        this.mActionBarBack = (TextView) this.mRootView.findViewById(R.id.screenshot_toalbum);
-        this.mActionBarBack.setOnClickListener(new View.OnClickListener() {
+        TextView textView = (TextView) this.mRootView.findViewById(R.id.screenshot_toalbum);
+        this.mActionBarBack = textView;
+        textView.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 boolean unused = GlobalScreenshotDisplay.this.back();
             }
@@ -253,16 +256,17 @@ public class GlobalScreenshotDisplay implements ScreenshotScrollView.AnimatingCa
                 StatHelper.recordNewScreenshotEvent(GlobalScreenshotDisplay.this.mContext, "new_finish_long_screenshot", hashMap);
             }
         });
-        this.mWindowLayoutParams = new WindowManager.LayoutParams(-1, -1, 0, 0, 2014, 17368320, -3);
-        WindowManager.LayoutParams layoutParams2 = this.mWindowLayoutParams;
+        WindowManager.LayoutParams layoutParams2 = new WindowManager.LayoutParams(-1, -1, 0, 0, 2014, 17368320, -3);
+        this.mWindowLayoutParams = layoutParams2;
         layoutParams2.screenOrientation = 14;
         if (Build.VERSION.SDK_INT >= 28) {
             layoutParams2.extraFlags |= 8388608;
         }
         WindowManagerCompat.setLayoutInDisplayCutoutMode(this.mWindowLayoutParams, 1);
         this.mWindowLayoutParams.setTitle("GlobalScreenshotShow");
-        this.mToastOverlayManager = new ToastOverlayManager();
-        this.mToastOverlayManager.setup(this.mContext, (ViewGroup) this.mRootView);
+        ToastOverlayManager toastOverlayManager = new ToastOverlayManager();
+        this.mToastOverlayManager = toastOverlayManager;
+        toastOverlayManager.setup(this.mContext, (ViewGroup) this.mRootView);
     }
 
     private boolean isShowFeedback() {
@@ -281,7 +285,7 @@ public class GlobalScreenshotDisplay implements ScreenshotScrollView.AnimatingCa
         this.mIsShowingLongScreenshot = false;
         this.mIsScreenshotSaved = false;
         this.mPendingSavedRunnable = null;
-        this.mScreenshotView.setSingleBitmap(this.mScreenshot);
+        this.mScreenshotView.setSingleBitmap(bitmap);
         this.mWindowManager.addView(this.mRootView, this.mWindowLayoutParams);
         this.mContext.sendBroadcast(new Intent("android.intent.action.CLOSE_SYSTEM_DIALOGS"));
         IntentFilter intentFilter = new IntentFilter();

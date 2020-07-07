@@ -25,21 +25,22 @@ public class EglHelper {
             Log.w(TAG, "init cancel because egl is initialized");
             return false;
         }
-        this.mEglDisplay = EGL14.eglGetDisplay(0);
-        EGLDisplay eGLDisplay = this.mEglDisplay;
-        if (eGLDisplay == EGL14.EGL_NO_DISPLAY) {
+        EGLDisplay eglGetDisplay = EGL14.eglGetDisplay(0);
+        this.mEglDisplay = eglGetDisplay;
+        if (eglGetDisplay == EGL14.EGL_NO_DISPLAY) {
             String str = TAG;
             Log.w(str, "eglGetDisplay failed: " + GLUtils.getEGLErrorString(EGL14.eglGetError()));
             return false;
         }
         int[] iArr = this.mEglVersion;
-        if (!EGL14.eglInitialize(eGLDisplay, iArr, 0, iArr, 1)) {
+        if (!EGL14.eglInitialize(eglGetDisplay, iArr, 0, iArr, 1)) {
             String str2 = TAG;
             Log.w(str2, "eglInitialize failed: " + GLUtils.getEGLErrorString(EGL14.eglGetError()));
             return false;
         }
-        this.mEglConfig = chooseEglConfig();
-        if (this.mEglConfig == null) {
+        EGLConfig chooseEglConfig = chooseEglConfig();
+        this.mEglConfig = chooseEglConfig;
+        if (chooseEglConfig == null) {
             Log.w(TAG, "eglConfig not initialized!");
             return false;
         } else if (!forceCreateEglContext()) {
@@ -83,13 +84,13 @@ public class EglHelper {
     }
 
     private boolean forceCreateEglSurface(SurfaceHolder surfaceHolder) {
-        this.mEglSurface = EGL14.eglCreateWindowSurface(this.mEglDisplay, this.mEglConfig, surfaceHolder, (int[]) null, 0);
-        EGLSurface eGLSurface = this.mEglSurface;
-        if (eGLSurface == null || eGLSurface == EGL14.EGL_NO_SURFACE) {
+        EGLSurface eglCreateWindowSurface = EGL14.eglCreateWindowSurface(this.mEglDisplay, this.mEglConfig, surfaceHolder, (int[]) null, 0);
+        this.mEglSurface = eglCreateWindowSurface;
+        if (eglCreateWindowSurface == null || eglCreateWindowSurface == EGL14.EGL_NO_SURFACE) {
             String str = TAG;
             Log.w(str, "createWindowSurface failed: " + GLUtils.getEGLErrorString(EGL14.eglGetError()));
             return false;
-        } else if (EGL14.eglMakeCurrent(this.mEglDisplay, eGLSurface, eGLSurface, this.mEglContext)) {
+        } else if (EGL14.eglMakeCurrent(this.mEglDisplay, eglCreateWindowSurface, eglCreateWindowSurface, this.mEglContext)) {
             return true;
         } else {
             String str2 = TAG;
@@ -122,8 +123,9 @@ public class EglHelper {
     }
 
     private boolean forceCreateEglContext() {
-        this.mEglContext = EGL14.eglCreateContext(this.mEglDisplay, this.mEglConfig, EGL14.EGL_NO_CONTEXT, new int[]{12440, 2, 12544, 12547, 12344}, 0);
-        if (this.mEglContext != EGL14.EGL_NO_CONTEXT) {
+        EGLContext eglCreateContext = EGL14.eglCreateContext(this.mEglDisplay, this.mEglConfig, EGL14.EGL_NO_CONTEXT, new int[]{12440, 2, 12544, 12547, 12344}, 0);
+        this.mEglContext = eglCreateContext;
+        if (eglCreateContext != EGL14.EGL_NO_CONTEXT) {
             return true;
         }
         String str = TAG;

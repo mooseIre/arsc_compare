@@ -18,8 +18,9 @@ public class OrientationPolicy {
 
     public OrientationPolicy(Context context) {
         DisplayMetrics displayMetrics = new DisplayMetrics();
-        this.mDisplay = ((WindowManager) context.getSystemService("window")).getDefaultDisplay();
-        this.mDisplay.getRealMetrics(displayMetrics);
+        Display defaultDisplay = ((WindowManager) context.getSystemService("window")).getDefaultDisplay();
+        this.mDisplay = defaultDisplay;
+        defaultDisplay.getRealMetrics(displayMetrics);
         this.mOrientationDetector = new CustomDisplayListener();
         this.mDisplayManager = (DisplayManager) context.getSystemService("display");
         writeRotationForBsp();
@@ -46,7 +47,7 @@ public class OrientationPolicy {
         int rotation = this.mDisplay.getRotation();
         final int i = rotation != 0 ? rotation != 1 ? rotation != 2 ? rotation != 3 ? -1 : 270 : 180 : 90 : 0;
         if (this.mLastRotation != i) {
-            AsyncTask.THREAD_POOL_EXECUTOR.execute(new Runnable() {
+            AsyncTask.THREAD_POOL_EXECUTOR.execute(new Runnable(this) {
                 public void run() {
                     try {
                         SystemProperties.set("sys.tp.grip_enable", Integer.toString(i));

@@ -28,11 +28,9 @@ import com.android.internal.view.FloatingActionMode;
 import com.android.internal.view.FloatingActionModeCompat;
 import com.android.internal.widget.FloatingToolbar;
 import com.android.internal.widget.FloatingToolbarCompat;
-import com.android.systemui.Dependency;
 import com.android.systemui.R$styleable;
 import com.android.systemui.classifier.FalsingManager;
 import com.android.systemui.miui.statusbar.phone.ControlPanelWindowView;
-import com.android.systemui.miui.statusbar.policy.ControlPanelController;
 import com.android.systemui.plugins.R;
 import com.android.systemui.statusbar.DragDownHelper;
 import com.android.systemui.statusbar.phone.DoubleTapHelper;
@@ -67,7 +65,6 @@ public class StatusBarWindowView extends RenderAwareFrameLayout {
     /* access modifiers changed from: private */
     public StatusBar mService;
     private NotificationStackScrollLayout mStackScrollLayout;
-    private FrameLayout mStatusBarContainer;
     private PhoneStatusBarView mStatusBarView;
     private boolean mTouchActive;
     private boolean mTouchCancelled;
@@ -154,7 +151,6 @@ public class StatusBarWindowView extends RenderAwareFrameLayout {
         super.onFinishInflate();
         this.mStackScrollLayout = (NotificationStackScrollLayout) findViewById(R.id.notification_stack_scroller);
         this.mNotificationPanel = (NotificationPanelView) findViewById(R.id.notification_panel);
-        this.mStatusBarContainer = (FrameLayout) findViewById(R.id.status_bar_container);
         this.mBrightnessMirror = findViewById(R.id.brightness_mirror);
     }
 
@@ -373,23 +369,6 @@ public class StatusBarWindowView extends RenderAwareFrameLayout {
         }
     }
 
-    /* access modifiers changed from: protected */
-    public boolean drawChild(Canvas canvas, View view, long j) {
-        boolean useControlPanel = ((ControlPanelController) Dependency.get(ControlPanelController.class)).useControlPanel();
-        boolean z = !this.mNotificationPanel.isFullyCollapsed();
-        boolean isThemeBgVisible = this.mNotificationPanel.isThemeBgVisible();
-        if (useControlPanel && z && isThemeBgVisible) {
-            FrameLayout frameLayout = this.mStatusBarContainer;
-            if (view == frameLayout) {
-                return super.drawChild(canvas, this.mNotificationPanel, j);
-            }
-            if (view == this.mNotificationPanel) {
-                return super.drawChild(canvas, frameLayout, j);
-            }
-        }
-        return super.drawChild(canvas, view, j);
-    }
-
     public void cancelExpandHelper() {
         NotificationStackScrollLayout notificationStackScrollLayout = this.mStackScrollLayout;
         if (notificationStackScrollLayout != null) {
@@ -444,8 +423,9 @@ public class StatusBarWindowView extends RenderAwareFrameLayout {
             actionMode.finish();
         }
         cleanupFloatingActionModeViews();
-        this.mFloatingToolbar = FloatingToolbarCompat.newFloatingToolbar(this.mContext, this.mFakeWindow);
-        final FloatingActionMode newFloatingActionMode = FloatingActionModeCompat.newFloatingActionMode(this.mContext, callback2, view, this.mFloatingToolbar);
+        FloatingToolbar newFloatingToolbar = FloatingToolbarCompat.newFloatingToolbar(this.mContext, this.mFakeWindow);
+        this.mFloatingToolbar = newFloatingToolbar;
+        final FloatingActionMode newFloatingActionMode = FloatingActionModeCompat.newFloatingActionMode(this.mContext, callback2, view, newFloatingToolbar);
         this.mFloatingActionModeOriginatingView = view;
         this.mFloatingToolbarPreDrawListener = new ViewTreeObserver.OnPreDrawListener() {
             public boolean onPreDraw() {
@@ -458,7 +438,7 @@ public class StatusBarWindowView extends RenderAwareFrameLayout {
 
     private void setHandledFloatingActionMode(ActionMode actionMode) {
         this.mFloatingActionMode = actionMode;
-        this.mFloatingActionMode.invalidate();
+        actionMode.invalidate();
         this.mFloatingActionModeOriginatingView.getViewTreeObserver().addOnPreDrawListener(this.mFloatingToolbarPreDrawListener);
     }
 

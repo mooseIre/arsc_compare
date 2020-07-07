@@ -17,8 +17,8 @@ public class DockedDividerUtils {
     }
 
     public static void calculateBoundsForPosition(int i, int i2, Rect rect, int i3, int i4, int i5) {
+        boolean z = false;
         rect.set(0, 0, i3, i4);
-        boolean z = true;
         if (i2 == 1) {
             rect.right = i;
         } else if (i2 == 2) {
@@ -28,8 +28,8 @@ public class DockedDividerUtils {
         } else if (i2 == 4) {
             rect.top = i + i5;
         }
-        if (!(i2 == 1 || i2 == 2)) {
-            z = false;
+        if (i2 == 1 || i2 == 2) {
+            z = true;
         }
         sanitizeStackBounds(rect, z);
     }

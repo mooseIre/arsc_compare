@@ -26,7 +26,6 @@ import android.view.MotionEvent;
 import android.view.WindowManager;
 import android.view.WindowManagerCompat;
 import android.widget.FrameLayout;
-import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.systemui.Application;
 import com.android.systemui.Constants;
 import com.android.systemui.Dependency;
@@ -212,7 +211,7 @@ public class GestureStubView extends FrameLayout {
     private static boolean isUserSetUp(ContentResolver contentResolver) {
         if (!isUserSetUp) {
             boolean z = false;
-            if (!(Settings.Global.getInt(contentResolver, "device_provisioned", 0) == 0 || Settings.Secure.getIntForUser(contentResolver, "user_setup_complete", 0, KeyguardUpdateMonitor.getCurrentUser()) == 0)) {
+            if (!(Settings.Global.getInt(contentResolver, "device_provisioned", 0) == 0 || Settings.Secure.getIntForUser(contentResolver, "user_setup_complete", 0, -2) == 0)) {
                 z = true;
             }
             isUserSetUp = z;
@@ -315,9 +314,10 @@ public class GestureStubView extends FrameLayout {
                 GestureStubView.this.injectKeyEvent(4);
             }
         };
-        this.mLastConfiguration = new Configuration();
+        Configuration configuration = new Configuration();
+        this.mLastConfiguration = configuration;
         this.mContext = context;
-        this.mLastConfiguration.updateFrom(getResources().getConfiguration());
+        configuration.updateFrom(getResources().getConfiguration());
         this.mIsGestureStarted = false;
         this.mGestureStubPos = 2;
         this.mHandler = new H();
@@ -328,8 +328,9 @@ public class GestureStubView extends FrameLayout {
         this.mDisplayManager = (DisplayManager) context.getSystemService("display");
         this.mKeyguardManager = (KeyguardManager) context.getSystemService("keyguard");
         this.mSettingsObserver = new MiuiSettingsObserver(this.mHandler);
-        this.mContentResolver = context.getContentResolver();
-        isUserSetUp = isUserSetUp(this.mContentResolver);
+        ContentResolver contentResolver = context.getContentResolver();
+        this.mContentResolver = contentResolver;
+        isUserSetUp = isUserSetUp(contentResolver);
         this.mVibrator = (Vibrator) this.mContext.getSystemService("vibrator");
         setVisibility(8);
     }
@@ -387,50 +388,48 @@ public class GestureStubView extends FrameLayout {
 
     /* renamed from: com.android.systemui.fsgesture.GestureStubView$3  reason: invalid class name */
     static /* synthetic */ class AnonymousClass3 {
-        static final /* synthetic */ int[] $SwitchMap$com$android$systemui$fsgesture$GestureBackArrowView$ReadyState = new int[GestureBackArrowView.ReadyState.values().length];
-        static final /* synthetic */ int[] $SwitchMap$com$android$systemui$fsgesture$GestureStubView$EventPosition = new int[EventPosition.values().length];
+        static final /* synthetic */ int[] $SwitchMap$com$android$systemui$fsgesture$GestureBackArrowView$ReadyState;
+        static final /* synthetic */ int[] $SwitchMap$com$android$systemui$fsgesture$GestureStubView$EventPosition;
 
         /* JADX WARNING: Failed to process nested try/catch */
-        /* JADX WARNING: Missing exception handler attribute for start block: B:13:0x003d */
-        /* JADX WARNING: Missing exception handler attribute for start block: B:7:0x001f */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:13:0x0039 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:7:0x001d */
         static {
             /*
                 com.android.systemui.fsgesture.GestureStubView$EventPosition[] r0 = com.android.systemui.fsgesture.GestureStubView.EventPosition.values()
                 int r0 = r0.length
                 int[] r0 = new int[r0]
                 $SwitchMap$com$android$systemui$fsgesture$GestureStubView$EventPosition = r0
-                r0 = 1
-                int[] r1 = $SwitchMap$com$android$systemui$fsgesture$GestureStubView$EventPosition     // Catch:{ NoSuchFieldError -> 0x0014 }
-                com.android.systemui.fsgesture.GestureStubView$EventPosition r2 = com.android.systemui.fsgesture.GestureStubView.EventPosition.UPON_NOTCH     // Catch:{ NoSuchFieldError -> 0x0014 }
-                int r2 = r2.ordinal()     // Catch:{ NoSuchFieldError -> 0x0014 }
-                r1[r2] = r0     // Catch:{ NoSuchFieldError -> 0x0014 }
-            L_0x0014:
-                r1 = 2
-                int[] r2 = $SwitchMap$com$android$systemui$fsgesture$GestureStubView$EventPosition     // Catch:{ NoSuchFieldError -> 0x001f }
-                com.android.systemui.fsgesture.GestureStubView$EventPosition r3 = com.android.systemui.fsgesture.GestureStubView.EventPosition.ALIGN_NOTCH     // Catch:{ NoSuchFieldError -> 0x001f }
-                int r3 = r3.ordinal()     // Catch:{ NoSuchFieldError -> 0x001f }
-                r2[r3] = r1     // Catch:{ NoSuchFieldError -> 0x001f }
-            L_0x001f:
-                int[] r2 = $SwitchMap$com$android$systemui$fsgesture$GestureStubView$EventPosition     // Catch:{ NoSuchFieldError -> 0x002a }
-                com.android.systemui.fsgesture.GestureStubView$EventPosition r3 = com.android.systemui.fsgesture.GestureStubView.EventPosition.BELOW_NOTCH     // Catch:{ NoSuchFieldError -> 0x002a }
-                int r3 = r3.ordinal()     // Catch:{ NoSuchFieldError -> 0x002a }
+                r1 = 1
+                com.android.systemui.fsgesture.GestureStubView$EventPosition r2 = com.android.systemui.fsgesture.GestureStubView.EventPosition.UPON_NOTCH     // Catch:{ NoSuchFieldError -> 0x0012 }
+                int r2 = r2.ordinal()     // Catch:{ NoSuchFieldError -> 0x0012 }
+                r0[r2] = r1     // Catch:{ NoSuchFieldError -> 0x0012 }
+            L_0x0012:
+                r0 = 2
+                int[] r2 = $SwitchMap$com$android$systemui$fsgesture$GestureStubView$EventPosition     // Catch:{ NoSuchFieldError -> 0x001d }
+                com.android.systemui.fsgesture.GestureStubView$EventPosition r3 = com.android.systemui.fsgesture.GestureStubView.EventPosition.ALIGN_NOTCH     // Catch:{ NoSuchFieldError -> 0x001d }
+                int r3 = r3.ordinal()     // Catch:{ NoSuchFieldError -> 0x001d }
+                r2[r3] = r0     // Catch:{ NoSuchFieldError -> 0x001d }
+            L_0x001d:
+                int[] r2 = $SwitchMap$com$android$systemui$fsgesture$GestureStubView$EventPosition     // Catch:{ NoSuchFieldError -> 0x0028 }
+                com.android.systemui.fsgesture.GestureStubView$EventPosition r3 = com.android.systemui.fsgesture.GestureStubView.EventPosition.BELOW_NOTCH     // Catch:{ NoSuchFieldError -> 0x0028 }
+                int r3 = r3.ordinal()     // Catch:{ NoSuchFieldError -> 0x0028 }
                 r4 = 3
-                r2[r3] = r4     // Catch:{ NoSuchFieldError -> 0x002a }
-            L_0x002a:
+                r2[r3] = r4     // Catch:{ NoSuchFieldError -> 0x0028 }
+            L_0x0028:
                 com.android.systemui.fsgesture.GestureBackArrowView$ReadyState[] r2 = com.android.systemui.fsgesture.GestureBackArrowView.ReadyState.values()
                 int r2 = r2.length
                 int[] r2 = new int[r2]
                 $SwitchMap$com$android$systemui$fsgesture$GestureBackArrowView$ReadyState = r2
-                int[] r2 = $SwitchMap$com$android$systemui$fsgesture$GestureBackArrowView$ReadyState     // Catch:{ NoSuchFieldError -> 0x003d }
-                com.android.systemui.fsgesture.GestureBackArrowView$ReadyState r3 = com.android.systemui.fsgesture.GestureBackArrowView.ReadyState.READY_STATE_BACK     // Catch:{ NoSuchFieldError -> 0x003d }
-                int r3 = r3.ordinal()     // Catch:{ NoSuchFieldError -> 0x003d }
-                r2[r3] = r0     // Catch:{ NoSuchFieldError -> 0x003d }
-            L_0x003d:
-                int[] r0 = $SwitchMap$com$android$systemui$fsgesture$GestureBackArrowView$ReadyState     // Catch:{ NoSuchFieldError -> 0x0047 }
-                com.android.systemui.fsgesture.GestureBackArrowView$ReadyState r2 = com.android.systemui.fsgesture.GestureBackArrowView.ReadyState.READY_STATE_RECENT     // Catch:{ NoSuchFieldError -> 0x0047 }
-                int r2 = r2.ordinal()     // Catch:{ NoSuchFieldError -> 0x0047 }
-                r0[r2] = r1     // Catch:{ NoSuchFieldError -> 0x0047 }
-            L_0x0047:
+                com.android.systemui.fsgesture.GestureBackArrowView$ReadyState r3 = com.android.systemui.fsgesture.GestureBackArrowView.ReadyState.READY_STATE_BACK     // Catch:{ NoSuchFieldError -> 0x0039 }
+                int r3 = r3.ordinal()     // Catch:{ NoSuchFieldError -> 0x0039 }
+                r2[r3] = r1     // Catch:{ NoSuchFieldError -> 0x0039 }
+            L_0x0039:
+                int[] r1 = $SwitchMap$com$android$systemui$fsgesture$GestureBackArrowView$ReadyState     // Catch:{ NoSuchFieldError -> 0x0043 }
+                com.android.systemui.fsgesture.GestureBackArrowView$ReadyState r2 = com.android.systemui.fsgesture.GestureBackArrowView.ReadyState.READY_STATE_RECENT     // Catch:{ NoSuchFieldError -> 0x0043 }
+                int r2 = r2.ordinal()     // Catch:{ NoSuchFieldError -> 0x0043 }
+                r1[r2] = r0     // Catch:{ NoSuchFieldError -> 0x0043 }
+            L_0x0043:
                 return
             */
             throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.fsgesture.GestureStubView.AnonymousClass3.<clinit>():void");
@@ -529,10 +528,11 @@ public class GestureStubView extends FrameLayout {
         initScreenSizeAndDensity(i);
         if (SystemProperties.getInt("ro.miui.notch", 0) == 1) {
             this.mNotchHeight = this.mContext.getResources().getDimensionPixelSize(R.dimen.notch_height);
-            this.mNotchWidth = this.mContext.getResources().getDimensionPixelSize(R.dimen.notch_width);
+            int dimensionPixelSize = this.mContext.getResources().getDimensionPixelSize(R.dimen.notch_width);
+            this.mNotchWidth = dimensionPixelSize;
             int i2 = this.mScreenHeight;
             int i3 = this.mScreenWidth;
-            this.mEarWidth = (i2 < i3 ? i2 - this.mNotchWidth : i3 - this.mNotchWidth) / 2;
+            this.mEarWidth = (i2 < i3 ? i2 - dimensionPixelSize : i3 - dimensionPixelSize) / 2;
         }
         int[] initGestureEdgeSize = initGestureEdgeSize();
         this.mGesturesBackController = new GesturesBackController(this.mGesturesBackCallback, initGestureEdgeSize[0], initGestureEdgeSize[1]);
@@ -540,29 +540,30 @@ public class GestureStubView extends FrameLayout {
 
     private int[] initGestureEdgeSize() {
         int[] iArr = new int[2];
-        this.mRotation = this.mDisplay.getRotation();
-        int i = this.mRotation;
-        if (i == 1) {
-            int i2 = this.mNotchHeight;
+        int rotation = this.mDisplay.getRotation();
+        this.mRotation = rotation;
+        if (rotation == 1) {
+            int i = this.mNotchHeight;
+            int i2 = this.mGestureStubDefaultSize;
+            iArr[0] = i + i2;
+            iArr[1] = this.mScreenWidth - i2;
+        } else if (rotation == 3) {
             int i3 = this.mGestureStubDefaultSize;
-            iArr[0] = i2 + i3;
-            iArr[1] = this.mScreenWidth - i3;
-        } else if (i == 3) {
+            iArr[0] = i3;
+            iArr[1] = (this.mScreenWidth - i3) - this.mNotchHeight;
+        } else {
             int i4 = this.mGestureStubDefaultSize;
             iArr[0] = i4;
-            iArr[1] = (this.mScreenWidth - i4) - this.mNotchHeight;
-        } else {
-            int i5 = this.mGestureStubDefaultSize;
-            iArr[0] = i5;
-            iArr[1] = this.mScreenWidth - i5;
+            iArr[1] = this.mScreenWidth - i4;
         }
         return iArr;
     }
 
     private void initScreenSizeAndDensity(int i) {
         Point point = new Point();
-        this.mDisplay = this.mWindowManager.getDefaultDisplay();
-        this.mDisplay.getRealSize(point);
+        Display defaultDisplay = this.mWindowManager.getDefaultDisplay();
+        this.mDisplay = defaultDisplay;
+        defaultDisplay.getRealSize(point);
         int i2 = point.y;
         int i3 = point.x;
         if (i2 > i3) {
@@ -710,8 +711,9 @@ public class GestureStubView extends FrameLayout {
         WindowManager.LayoutParams layoutParams = this.mGestureStubParams;
         boolean z = false;
         if (layoutParams == null) {
-            this.mGestureStubParams = new WindowManager.LayoutParams(i6, i5, 2027, 296, 1);
-            WindowManagerCompat.setLayoutInDisplayCutoutMode(this.mGestureStubParams, 1);
+            WindowManager.LayoutParams layoutParams2 = new WindowManager.LayoutParams(i6, i5, 2027, 296, 1);
+            this.mGestureStubParams = layoutParams2;
+            WindowManagerCompat.setLayoutInDisplayCutoutMode(layoutParams2, 1);
             setBackgroundColor(0);
             this.mGestureStubParams.alpha = 1.0f;
         } else {
@@ -721,9 +723,9 @@ public class GestureStubView extends FrameLayout {
         int i7 = this.mGestureStubPos;
         int i8 = 80;
         if (i7 == 2) {
-            WindowManager.LayoutParams layoutParams2 = this.mGestureStubParams;
-            layoutParams2.gravity = 80;
-            layoutParams2.setTitle("GestureStubBottom");
+            WindowManager.LayoutParams layoutParams3 = this.mGestureStubParams;
+            layoutParams3.gravity = 80;
+            layoutParams3.setTitle("GestureStubBottom");
             return this.mGestureStubParams;
         }
         if (i7 == 0) {
@@ -737,9 +739,9 @@ public class GestureStubView extends FrameLayout {
             i8 = 16;
             this.mGestureStubParams.verticalMargin = 0.0f;
         }
-        WindowManager.LayoutParams layoutParams3 = this.mGestureStubParams;
-        layoutParams3.gravity = i9 | i8;
-        layoutParams3.setTitle(z ? "GestureStubLeft" : "GestureStubRight");
+        WindowManager.LayoutParams layoutParams4 = this.mGestureStubParams;
+        layoutParams4.gravity = i9 | i8;
+        layoutParams4.setTitle(z ? "GestureStubLeft" : "GestureStubRight");
         return this.mGestureStubParams;
     }
 
@@ -750,8 +752,8 @@ public class GestureStubView extends FrameLayout {
         return layoutParams;
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:6:0x0018, code lost:
-        if (r0 != 3) goto L_0x0132;
+    /* JADX WARNING: Code restructure failed: missing block: B:6:0x0016, code lost:
+        if (r0 != 3) goto L_0x012e;
      */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     public boolean onTouchEvent(android.view.MotionEvent r13) {
@@ -759,25 +761,23 @@ public class GestureStubView extends FrameLayout {
             r12 = this;
             int r0 = r13.getAction()
             r12.mCurrAction = r0
-            int r0 = r12.mCurrAction
             r1 = 150(0x96, double:7.4E-322)
             r3 = 0
             r4 = 2
             r5 = 1
             java.lang.String r6 = "GestureStubView"
-            if (r0 == 0) goto L_0x00fc
+            if (r0 == 0) goto L_0x00f8
             r7 = 255(0xff, float:3.57E-43)
-            if (r0 == r5) goto L_0x0056
-            if (r0 == r4) goto L_0x001c
+            if (r0 == r5) goto L_0x0052
+            if (r0 == r4) goto L_0x001a
             r8 = 3
-            if (r0 == r8) goto L_0x0056
-            goto L_0x0132
-        L_0x001c:
+            if (r0 == r8) goto L_0x0052
+            goto L_0x012e
+        L_0x001a:
             float r0 = r13.getRawX()
             r12.mCurrX = r0
             float r0 = r13.getRawY()
             r12.mCurrY = r0
-            float r0 = r12.mCurrY
             float r1 = r12.mDownY
             float r0 = r0 - r1
             float r0 = java.lang.Math.abs(r0)
@@ -788,20 +788,20 @@ public class GestureStubView extends FrameLayout {
             float r2 = java.lang.Math.abs(r2)
             float r2 = r2 * r1
             int r0 = (r0 > r2 ? 1 : (r0 == r2 ? 0 : -1))
-            if (r0 <= 0) goto L_0x0132
+            if (r0 <= 0) goto L_0x012e
             boolean r0 = r12.mIsGestureStarted
-            if (r0 != 0) goto L_0x0132
+            if (r0 != 0) goto L_0x012e
             com.android.systemui.fsgesture.GestureStubView$H r0 = r12.mHandler
             android.os.Message r1 = r0.obtainMessage(r7)
             r0.sendMessage(r1)
             java.lang.String r0 = "up-slide detected, sendMessage MSG_SET_GESTURE_STUB_UNTOUCHABLE"
             android.util.Log.d(r6, r0)
-            goto L_0x0132
-        L_0x0056:
+            goto L_0x012e
+        L_0x0052:
             android.view.MotionEvent r0 = r12.mDownEvent
-            if (r0 != 0) goto L_0x005b
+            if (r0 != 0) goto L_0x0057
             return r5
-        L_0x005b:
+        L_0x0057:
             float r8 = r13.getRawX()
             r12.mCurrX = r8
             float r8 = r13.getRawY()
@@ -810,9 +810,9 @@ public class GestureStubView extends FrameLayout {
             long r10 = r0.getEventTime()
             long r8 = r8 - r10
             int r1 = (r8 > r1 ? 1 : (r8 == r1 ? 0 : -1))
-            if (r1 >= 0) goto L_0x00c4
+            if (r1 >= 0) goto L_0x00c0
             boolean r1 = r12.mIsGestureStarted
-            if (r1 != 0) goto L_0x00c4
+            if (r1 != 0) goto L_0x00c0
             r12.clearMessages()
             float r1 = r12.mCurrX
             float r2 = r0.getRawX()
@@ -821,14 +821,14 @@ public class GestureStubView extends FrameLayout {
             float r0 = r0.getRawY()
             float r2 = r2 - r0
             boolean r0 = r12.mIsGestureStarted
-            if (r0 != 0) goto L_0x00c4
+            if (r0 != 0) goto L_0x00c0
             float r0 = java.lang.Math.abs(r1)
             r8 = 1106247680(0x41f00000, float:30.0)
             int r0 = (r0 > r8 ? 1 : (r0 == r8 ? 0 : -1))
-            if (r0 > 0) goto L_0x00c4
+            if (r0 > 0) goto L_0x00c0
             float r0 = java.lang.Math.abs(r2)
             int r0 = (r0 > r8 ? 1 : (r0 == r8 ? 0 : -1))
-            if (r0 > 0) goto L_0x00c4
+            if (r0 > 0) goto L_0x00c0
             com.android.systemui.fsgesture.GestureStubView$H r0 = r12.mHandler
             android.os.Message r7 = r0.obtainMessage(r7)
             r0.sendMessage(r7)
@@ -842,7 +842,7 @@ public class GestureStubView extends FrameLayout {
             r0.append(r2)
             java.lang.String r0 = r0.toString()
             android.util.Log.d(r6, r0)
-        L_0x00c4:
+        L_0x00c0:
             java.lang.StringBuilder r0 = new java.lang.StringBuilder
             r0.<init>()
             java.lang.String r1 = "ACTION_UP: mIsGestureStarted: "
@@ -856,18 +856,18 @@ public class GestureStubView extends FrameLayout {
             java.lang.String r0 = r0.toString()
             android.util.Log.d(r6, r0)
             boolean r0 = r12.mIsGestureStarted
-            if (r0 == 0) goto L_0x00f9
+            if (r0 == 0) goto L_0x00f5
             boolean r0 = r12.mIsGestureAnimationEnabled
-            if (r0 == 0) goto L_0x00f9
+            if (r0 == 0) goto L_0x00f5
             com.android.systemui.fsgesture.GestureStubView$H r0 = r12.mHandler
             r1 = 258(0x102, float:3.62E-43)
             android.os.Message r1 = r0.obtainMessage(r1)
             r6 = 500(0x1f4, double:2.47E-321)
             r0.sendMessageDelayed(r1, r6)
-        L_0x00f9:
+        L_0x00f5:
             r12.mIsGestureStarted = r3
-            goto L_0x0132
-        L_0x00fc:
+            goto L_0x012e
+        L_0x00f8:
             float r0 = r13.getRawX()
             r12.mAssistX2 = r0
             r12.mAssistX1 = r0
@@ -877,9 +877,9 @@ public class GestureStubView extends FrameLayout {
             r12.mDownY = r0
             r12.mCurrY = r0
             android.view.MotionEvent r0 = r12.mDownEvent
-            if (r0 == 0) goto L_0x0117
+            if (r0 == 0) goto L_0x0113
             r0.recycle()
-        L_0x0117:
+        L_0x0113:
             android.view.MotionEvent r0 = r13.copy()
             r12.mDownEvent = r0
             com.android.systemui.fsgesture.GestureStubView$H r0 = r12.mHandler
@@ -890,16 +890,16 @@ public class GestureStubView extends FrameLayout {
             r0.sendMessageDelayed(r7, r1)
             java.lang.String r0 = "onTouch ACTION_DOWN sendMessageDelayed MSG_CHECK_GESTURE_STUB_TOUCHABLE"
             android.util.Log.d(r6, r0)
-        L_0x0132:
+        L_0x012e:
             com.android.systemui.fsgesture.GesturesBackController r0 = r12.mGesturesBackController
-            if (r0 == 0) goto L_0x0142
+            if (r0 == 0) goto L_0x013e
             int r1 = r12.mGestureStubPos
-            if (r1 == r4) goto L_0x0142
+            if (r1 == r4) goto L_0x013e
             boolean r12 = r12.mPendingResetStatus
-            if (r12 != 0) goto L_0x0142
+            if (r12 != 0) goto L_0x013e
             r0.onPointerEvent(r13)
             return r5
-        L_0x0142:
+        L_0x013e:
             return r3
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.fsgesture.GestureStubView.onTouchEvent(android.view.MotionEvent):boolean");
@@ -917,11 +917,13 @@ public class GestureStubView extends FrameLayout {
 
     public void setGestureStubPosition(int i) {
         this.mGestureStubPos = i;
-        this.mGestureBackArrowView = new GestureBackArrowView(this.mContext, this.mGestureStubPos);
-        addView(this.mGestureBackArrowView);
+        GestureBackArrowView gestureBackArrowView = new GestureBackArrowView(this.mContext, this.mGestureStubPos);
+        this.mGestureBackArrowView = gestureBackArrowView;
+        addView(gestureBackArrowView);
         Point point = new Point();
-        this.mDisplay = this.mWindowManager.getDefaultDisplay();
-        this.mDisplay.getRealSize(point);
+        Display defaultDisplay = this.mWindowManager.getDefaultDisplay();
+        this.mDisplay = defaultDisplay;
+        defaultDisplay.getRealSize(point);
         this.mGestureBackArrowView.setDisplayWidth(point.x);
     }
 
@@ -1087,8 +1089,9 @@ public class GestureStubView extends FrameLayout {
         setSize(this.mGestureStubDefaultSize);
         if (this.mGestureBackArrowView != null) {
             Point point = new Point();
-            this.mDisplay = this.mWindowManager.getDefaultDisplay();
-            this.mDisplay.getRealSize(point);
+            Display defaultDisplay = this.mWindowManager.getDefaultDisplay();
+            this.mDisplay = defaultDisplay;
+            defaultDisplay.getRealSize(point);
             this.mGestureBackArrowView.setDisplayWidth(point.x);
         }
     }

@@ -16,26 +16,8 @@ import com.android.systemui.Interpolators;
 import com.android.systemui.plugins.R;
 
 public class DividerHandleView extends View {
-    private static final Property<DividerHandleView, Integer> HEIGHT_PROPERTY = new Property<DividerHandleView, Integer>(Integer.class, "height") {
-        public Integer get(DividerHandleView dividerHandleView) {
-            return Integer.valueOf(dividerHandleView.mCurrentHeight);
-        }
-
-        public void set(DividerHandleView dividerHandleView, Integer num) {
-            int unused = dividerHandleView.mCurrentHeight = num.intValue();
-            dividerHandleView.invalidate();
-        }
-    };
-    private static final Property<DividerHandleView, Integer> WIDTH_PROPERTY = new Property<DividerHandleView, Integer>(Integer.class, "width") {
-        public Integer get(DividerHandleView dividerHandleView) {
-            return Integer.valueOf(dividerHandleView.mCurrentWidth);
-        }
-
-        public void set(DividerHandleView dividerHandleView, Integer num) {
-            int unused = dividerHandleView.mCurrentWidth = num.intValue();
-            dividerHandleView.invalidate();
-        }
-    };
+    private static final Property<DividerHandleView, Integer> HEIGHT_PROPERTY;
+    private static final Property<DividerHandleView, Integer> WIDTH_PROPERTY;
     /* access modifiers changed from: private */
     public AnimatorSet mAnimator;
     private final int mCircleDiameter;
@@ -44,25 +26,50 @@ public class DividerHandleView extends View {
     /* access modifiers changed from: private */
     public int mCurrentWidth;
     private final int mHeight;
-    private final Paint mPaint = new Paint();
+    private final Paint mPaint;
     private boolean mTouching;
-    private final int mWidth;
+    private final int mWidth = getResources().getDimensionPixelSize(R.dimen.docked_divider_handle_width);
 
     public boolean hasOverlappingRendering() {
         return false;
     }
 
+    static {
+        Class<Integer> cls = Integer.class;
+        WIDTH_PROPERTY = new Property<DividerHandleView, Integer>(cls, "width") {
+            public Integer get(DividerHandleView dividerHandleView) {
+                return Integer.valueOf(dividerHandleView.mCurrentWidth);
+            }
+
+            public void set(DividerHandleView dividerHandleView, Integer num) {
+                int unused = dividerHandleView.mCurrentWidth = num.intValue();
+                dividerHandleView.invalidate();
+            }
+        };
+        HEIGHT_PROPERTY = new Property<DividerHandleView, Integer>(cls, "height") {
+            public Integer get(DividerHandleView dividerHandleView) {
+                return Integer.valueOf(dividerHandleView.mCurrentHeight);
+            }
+
+            public void set(DividerHandleView dividerHandleView, Integer num) {
+                int unused = dividerHandleView.mCurrentHeight = num.intValue();
+                dividerHandleView.invalidate();
+            }
+        };
+    }
+
     public DividerHandleView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-        this.mPaint.setColor(getResources().getColor(R.color.docked_divider_handle, (Resources.Theme) null));
+        Paint paint = new Paint();
+        this.mPaint = paint;
+        paint.setColor(getResources().getColor(R.color.docked_divider_handle, (Resources.Theme) null));
         this.mPaint.setAntiAlias(true);
-        this.mWidth = getResources().getDimensionPixelSize(R.dimen.docked_divider_handle_width);
-        this.mHeight = getResources().getDimensionPixelSize(R.dimen.docked_divider_handle_height);
+        int dimensionPixelSize = getResources().getDimensionPixelSize(R.dimen.docked_divider_handle_height);
+        this.mHeight = dimensionPixelSize;
         int i = this.mWidth;
         this.mCurrentWidth = i;
-        int i2 = this.mHeight;
-        this.mCurrentHeight = i2;
-        this.mCircleDiameter = (i + i2) / 3;
+        this.mCurrentHeight = dimensionPixelSize;
+        this.mCircleDiameter = (i + dimensionPixelSize) / 3;
     }
 
     public void setTouching(boolean z, boolean z2) {
@@ -93,16 +100,17 @@ public class DividerHandleView extends View {
         Interpolator interpolator;
         ObjectAnimator ofInt = ObjectAnimator.ofInt(this, WIDTH_PROPERTY, new int[]{this.mCurrentWidth, i});
         ObjectAnimator ofInt2 = ObjectAnimator.ofInt(this, HEIGHT_PROPERTY, new int[]{this.mCurrentHeight, i2});
-        this.mAnimator = new AnimatorSet();
-        this.mAnimator.playTogether(new Animator[]{ofInt, ofInt2});
+        AnimatorSet animatorSet = new AnimatorSet();
+        this.mAnimator = animatorSet;
+        animatorSet.playTogether(new Animator[]{ofInt, ofInt2});
         this.mAnimator.setDuration(z ? 150 : 200);
-        AnimatorSet animatorSet = this.mAnimator;
+        AnimatorSet animatorSet2 = this.mAnimator;
         if (z) {
             interpolator = Interpolators.TOUCH_RESPONSE;
         } else {
             interpolator = Interpolators.FAST_OUT_SLOW_IN;
         }
-        animatorSet.setInterpolator(interpolator);
+        animatorSet2.setInterpolator(interpolator);
         this.mAnimator.addListener(new AnimatorListenerAdapter() {
             public void onAnimationEnd(Animator animator) {
                 AnimatorSet unused = DividerHandleView.this.mAnimator = null;

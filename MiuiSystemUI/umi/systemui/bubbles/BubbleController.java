@@ -5,7 +5,6 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
-import android.content.pm.ParceledListSlice;
 import android.content.res.Configuration;
 import android.graphics.Rect;
 import android.os.RemoteException;
@@ -16,12 +15,11 @@ import android.service.notification.NotificationListenerService;
 import android.service.notification.ZenModeConfig;
 import android.util.Log;
 import android.util.Pair;
-import android.view.IPinnedStackController;
-import android.view.IPinnedStackListener;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.statusbar.IStatusBarService;
+import com.android.internal.statusbar.StatusBarServiceCompat;
 import com.android.systemui.Dependency;
 import com.android.systemui.bubbles.BubbleController;
 import com.android.systemui.bubbles.BubbleData;
@@ -29,6 +27,7 @@ import com.android.systemui.bubbles.BubbleStackView;
 import com.android.systemui.miui.statusbar.ExpandedNotification;
 import com.android.systemui.plugins.R;
 import com.android.systemui.shared.system.ActivityManagerWrapper;
+import com.android.systemui.shared.system.PinnedStackListenerForwarder;
 import com.android.systemui.shared.system.TaskStackChangeListener;
 import com.android.systemui.shared.system.WindowManagerWrapper;
 import com.android.systemui.statusbar.NotificationData;
@@ -103,7 +102,7 @@ public class BubbleController implements ConfigurationController.ConfigurationLi
                 BubbleController.this.updateStackViewForZenConfig();
             }
         };
-        this.mBubbleDataListener = new BubbleData.Listener() {
+        AnonymousClass2 r0 = new BubbleData.Listener() {
             public void applyUpdate(BubbleData.Update update) {
                 if (BubbleController.this.mStackView == null && update.addedBubble != null) {
                     BubbleController.this.ensureStackViewCreated();
@@ -122,7 +121,7 @@ public class BubbleController implements ConfigurationController.ConfigurationLi
                         if (BubbleController.this.mBubbleData.hasBubbleWithKey(bubble.getKey()) || bubble.entry.showInShadeWhenBubble()) {
                             bubble.entry.notification.getNotification().flags &= -4097;
                             try {
-                                BubbleController.this.mBarService.onNotificationBubbleChanged(bubble.getKey(), false);
+                                StatusBarServiceCompat.onNotificationBubbleChanged(BubbleController.this.mBarService, bubble.getKey(), false, 2);
                             } catch (RemoteException unused) {
                             }
                         } else {
@@ -146,9 +145,10 @@ public class BubbleController implements ConfigurationController.ConfigurationLi
                 }
             }
         };
+        this.mBubbleDataListener = r0;
         this.mContext = context;
         this.mBubbleData = bubbleData;
-        this.mBubbleData.setListener(this.mBubbleDataListener);
+        bubbleData.setListener(r0);
         ((ZenModeController) Dependency.get(ZenModeController.class)).addCallback(this.mZenCallback);
         ((ConfigurationController) Dependency.get(ConfigurationController.class)).addCallback(this);
         this.mStatusBarWindowManager = (StatusBarWindowManager) Dependency.get(StatusBarWindowManager.class);
@@ -169,7 +169,7 @@ public class BubbleController implements ConfigurationController.ConfigurationLi
 
     public void setStatusBarState(int i) {
         this.mStatusBarState = i;
-        if (this.mStatusBarState != 0) {
+        if (i != 0) {
             collapseStack();
         }
         updateStack();
@@ -209,8 +209,8 @@ public class BubbleController implements ConfigurationController.ConfigurationLi
     }
 
     public void setExpandListener(BubbleExpandListener bubbleExpandListener) {
-        this.mExpandListener = new BubbleExpandListener(bubbleExpandListener) {
-            private final /* synthetic */ BubbleController.BubbleExpandListener f$1;
+        $$Lambda$BubbleController$B9Rf8Lqgsvsjhuncdnt9rJlYfA r0 = new BubbleExpandListener(bubbleExpandListener) {
+            public final /* synthetic */ BubbleController.BubbleExpandListener f$1;
 
             {
                 this.f$1 = r2;
@@ -220,12 +220,15 @@ public class BubbleController implements ConfigurationController.ConfigurationLi
                 BubbleController.this.lambda$setExpandListener$0$BubbleController(this.f$1, z, str);
             }
         };
+        this.mExpandListener = r0;
         BubbleStackView bubbleStackView = this.mStackView;
         if (bubbleStackView != null) {
-            bubbleStackView.setExpandListener(this.mExpandListener);
+            bubbleStackView.setExpandListener(r0);
         }
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$setExpandListener$0 */
     public /* synthetic */ void lambda$setExpandListener$0$BubbleController(BubbleExpandListener bubbleExpandListener, boolean z, String str) {
         if (bubbleExpandListener != null) {
             bubbleExpandListener.onBubbleExpandChanged(z, str);
@@ -367,14 +370,15 @@ public class BubbleController implements ConfigurationController.ConfigurationLi
 
     /* access modifiers changed from: private */
     public void updateStackViewForZenConfig() {
-        ZenModeConfig config = ((ZenModeController) Dependency.get(ZenModeController.class)).getConfig();
+        Class cls = ZenModeController.class;
+        ZenModeConfig config = ((ZenModeController) Dependency.get(cls)).getConfig();
         if (config != null && this.mStackView != null) {
             int i = config.suppressedVisualEffects;
             boolean z = true;
             boolean z2 = (i & 64) != 0;
             boolean z3 = (i & 16) != 0;
             boolean z4 = (i & 256) != 0;
-            boolean z5 = ((ZenModeController) Dependency.get(ZenModeController.class)).getZen() != 0;
+            boolean z5 = ((ZenModeController) Dependency.get(cls)).getZen() != 0;
             this.mStackView.setSuppressNewDot(z5 && z2);
             BubbleStackView bubbleStackView = this.mStackView;
             if (!z5 || (!z3 && !z4)) {
@@ -627,30 +631,15 @@ public class BubbleController implements ConfigurationController.ConfigurationLi
         }
     }
 
-    private class BubblesImeListener extends IPinnedStackListener.Stub {
-        public void onActionsChanged(ParceledListSlice parceledListSlice) throws RemoteException {
-        }
-
-        public void onListenerRegistered(IPinnedStackController iPinnedStackController) throws RemoteException {
-        }
-
-        public void onMinimizedStateChanged(boolean z) throws RemoteException {
-        }
-
-        public void onMovementBoundsChanged(Rect rect, Rect rect2, Rect rect3, boolean z, boolean z2, int i) throws RemoteException {
-        }
-
-        public void onShelfVisibilityChanged(boolean z, int i) throws RemoteException {
-        }
-
+    private class BubblesImeListener extends PinnedStackListenerForwarder.PinnedStackListener {
         private BubblesImeListener() {
         }
 
         public void onImeVisibilityChanged(boolean z, int i) {
             if (BubbleController.this.mStackView != null && BubbleController.this.mStackView.getBubbleCount() > 0) {
                 BubbleController.this.mStackView.post(new Runnable(z, i) {
-                    private final /* synthetic */ boolean f$1;
-                    private final /* synthetic */ int f$2;
+                    public final /* synthetic */ boolean f$1;
+                    public final /* synthetic */ int f$2;
 
                     {
                         this.f$1 = r2;
@@ -664,6 +653,8 @@ public class BubbleController implements ConfigurationController.ConfigurationLi
             }
         }
 
+        /* access modifiers changed from: private */
+        /* renamed from: lambda$onImeVisibilityChanged$0 */
         public /* synthetic */ void lambda$onImeVisibilityChanged$0$BubbleController$BubblesImeListener(boolean z, int i) {
             BubbleController.this.mStackView.onImeVisibilityChanged(z, i);
         }

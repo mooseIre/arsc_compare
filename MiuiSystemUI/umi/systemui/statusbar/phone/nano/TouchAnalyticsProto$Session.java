@@ -440,7 +440,7 @@ public final class TouchAnalyticsProto$Session extends MessageNano {
             this.bitField0_ |= 4;
             return this;
         }
-        throw new NullPointerException();
+        throw null;
     }
 
     public TouchAnalyticsProto$Session setResult(int i) {
@@ -575,37 +575,33 @@ public final class TouchAnalyticsProto$Session extends MessageNano {
         TouchEvent[] touchEventArr = this.touchEvents;
         int i = 0;
         if (touchEventArr != null && touchEventArr.length > 0) {
-            int i2 = computeSerializedSize;
-            int i3 = 0;
+            int i2 = 0;
             while (true) {
                 TouchEvent[] touchEventArr2 = this.touchEvents;
-                if (i3 >= touchEventArr2.length) {
+                if (i2 >= touchEventArr2.length) {
                     break;
                 }
-                TouchEvent touchEvent = touchEventArr2[i3];
+                TouchEvent touchEvent = touchEventArr2[i2];
                 if (touchEvent != null) {
-                    i2 += CodedOutputByteBufferNano.computeMessageSize(5, touchEvent);
+                    computeSerializedSize += CodedOutputByteBufferNano.computeMessageSize(5, touchEvent);
                 }
-                i3++;
+                i2++;
             }
-            computeSerializedSize = i2;
         }
         SensorEvent[] sensorEventArr = this.sensorEvents;
         if (sensorEventArr != null && sensorEventArr.length > 0) {
-            int i4 = computeSerializedSize;
-            int i5 = 0;
+            int i3 = 0;
             while (true) {
                 SensorEvent[] sensorEventArr2 = this.sensorEvents;
-                if (i5 >= sensorEventArr2.length) {
+                if (i3 >= sensorEventArr2.length) {
                     break;
                 }
-                SensorEvent sensorEvent = sensorEventArr2[i5];
+                SensorEvent sensorEvent = sensorEventArr2[i3];
                 if (sensorEvent != null) {
-                    i4 += CodedOutputByteBufferNano.computeMessageSize(6, sensorEvent);
+                    computeSerializedSize += CodedOutputByteBufferNano.computeMessageSize(6, sensorEvent);
                 }
-                i5++;
+                i3++;
             }
-            computeSerializedSize = i4;
         }
         if ((this.bitField0_ & 16) != 0) {
             computeSerializedSize += CodedOutputByteBufferNano.computeInt32Size(9, this.touchAreaWidth_);

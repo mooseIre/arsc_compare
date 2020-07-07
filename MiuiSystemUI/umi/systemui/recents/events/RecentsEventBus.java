@@ -246,7 +246,7 @@ public class RecentsEventBus extends BroadcastReceiver {
         sb.append("Registered class types:");
         sb.append("\n");
         ArrayList arrayList = new ArrayList(this.mSubscriberTypeMap.keySet());
-        Collections.sort(arrayList, new Comparator<Class<?>>() {
+        Collections.sort(arrayList, new Comparator<Class<?>>(this) {
             public int compare(Class<?> cls, Class<?> cls2) {
                 return cls.getSimpleName().compareTo(cls2.getSimpleName());
             }
@@ -260,7 +260,7 @@ public class RecentsEventBus extends BroadcastReceiver {
         sb.append("Event map:");
         sb.append("\n");
         ArrayList arrayList2 = new ArrayList(this.mEventTypeMap.keySet());
-        Collections.sort(arrayList2, new Comparator<Class<?>>() {
+        Collections.sort(arrayList2, new Comparator<Class<?>>(this) {
             public int compare(Class<?> cls, Class<?> cls2) {
                 return cls.getSimpleName().compareTo(cls2.getSimpleName());
             }
@@ -416,7 +416,7 @@ public class RecentsEventBus extends BroadcastReceiver {
                 }
             }
             if (z) {
-                this.mHandler.post(new Runnable() {
+                this.mHandler.post(new Runnable(this) {
                     public void run() {
                         event.onPostDispatch();
                     }

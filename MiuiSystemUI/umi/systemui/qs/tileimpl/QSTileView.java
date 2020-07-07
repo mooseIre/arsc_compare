@@ -54,11 +54,13 @@ public class QSTileView extends QSTileBaseView {
 
     /* access modifiers changed from: protected */
     public void createLabel() {
-        this.mLabelContainer = (ViewGroup) LayoutInflater.from(getContext()).inflate(R.layout.qs_tile_label, this, false);
-        this.mLabelContainer.setClipChildren(false);
+        ViewGroup viewGroup = (ViewGroup) LayoutInflater.from(getContext()).inflate(R.layout.qs_tile_label, this, false);
+        this.mLabelContainer = viewGroup;
+        viewGroup.setClipChildren(false);
         this.mLabelContainer.setClipToPadding(false);
-        this.mLabel = (TextView) this.mLabelContainer.findViewById(R.id.tile_label);
-        this.mLabel.setSelected(true);
+        TextView textView = (TextView) this.mLabelContainer.findViewById(R.id.tile_label);
+        this.mLabel = textView;
+        textView.setSelected(true);
         this.mPadLock = (ImageView) this.mLabelContainer.findViewById(R.id.restricted_padlock);
         this.mDivider = this.mLabelContainer.findViewById(R.id.underline);
         this.mExpandIndicator = this.mLabelContainer.findViewById(R.id.expand_indicator);

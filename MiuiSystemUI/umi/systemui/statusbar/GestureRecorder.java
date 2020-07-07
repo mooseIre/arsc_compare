@@ -39,18 +39,18 @@ public class GestureRecorder {
 
             public abstract String toJson();
 
-            public Record() {
+            public Record(Gesture gesture) {
             }
         }
 
-        public Gesture() {
+        public Gesture(GestureRecorder gestureRecorder) {
         }
 
         public class MotionEventRecord extends Record {
             public MotionEvent event;
 
-            public MotionEventRecord(long j, MotionEvent motionEvent) {
-                super();
+            public MotionEventRecord(Gesture gesture, long j, MotionEvent motionEvent) {
+                super(gesture);
                 this.time = j;
                 this.event = MotionEvent.obtain(motionEvent);
             }
@@ -78,8 +78,8 @@ public class GestureRecorder {
             public String info;
             public String tag;
 
-            public TagRecord(long j, String str, String str2) {
-                super();
+            public TagRecord(Gesture gesture, long j, String str, String str2) {
+                super(gesture);
                 this.time = j;
                 this.tag = str;
                 this.info = str2;
@@ -91,7 +91,7 @@ public class GestureRecorder {
         }
 
         public void add(MotionEvent motionEvent) {
-            this.mRecords.add(new MotionEventRecord(motionEvent.getEventTime(), motionEvent));
+            this.mRecords.add(new MotionEventRecord(this, motionEvent.getEventTime(), motionEvent));
             long j = this.mDownTime;
             if (j < 0) {
                 this.mDownTime = motionEvent.getDownTime();
@@ -106,7 +106,7 @@ public class GestureRecorder {
         }
 
         public void tag(long j, String str, String str2) {
-            this.mRecords.add(new TagRecord(j, str, str2));
+            this.mRecords.add(new TagRecord(this, j, str, str2));
             this.mTags.add(str);
         }
 
@@ -141,8 +141,9 @@ public class GestureRecorder {
     public void add(MotionEvent motionEvent) {
         synchronized (this.mGestures) {
             if (this.mCurrentGesture == null || this.mCurrentGesture.isComplete()) {
-                this.mCurrentGesture = new Gesture();
-                this.mGestures.add(this.mCurrentGesture);
+                Gesture gesture = new Gesture(this);
+                this.mCurrentGesture = gesture;
+                this.mGestures.add(gesture);
             }
             this.mCurrentGesture.add(motionEvent);
         }
@@ -152,8 +153,9 @@ public class GestureRecorder {
     public void tag(long j, String str, String str2) {
         synchronized (this.mGestures) {
             if (this.mCurrentGesture == null) {
-                this.mCurrentGesture = new Gesture();
-                this.mGestures.add(this.mCurrentGesture);
+                Gesture gesture = new Gesture(this);
+                this.mCurrentGesture = gesture;
+                this.mGestures.add(gesture);
             }
             this.mCurrentGesture.tag(j, str, str2);
         }

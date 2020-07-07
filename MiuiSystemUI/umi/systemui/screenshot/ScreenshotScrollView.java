@@ -91,8 +91,9 @@ public class ScreenshotScrollView extends View {
         };
         this.mScroller = new Scroller(context);
         this.mAnimatorStep = (int) ((getResources().getDisplayMetrics().density * 2.0f) + 0.5f);
-        this.mShowBigAnimator = ValueAnimator.ofFloat(new float[]{0.0f, 1.0f});
-        this.mShowBigAnimator.setDuration(200);
+        ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{0.0f, 1.0f});
+        this.mShowBigAnimator = ofFloat;
+        ofFloat.setDuration(200);
         this.mShowBigAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 float unused = ScreenshotScrollView.this.mShowBig = ((Float) valueAnimator.getAnimatedValue()).floatValue();
@@ -549,8 +550,9 @@ public class ScreenshotScrollView extends View {
         removeCallbacks(this.mAnimatingStepRunnable);
         if (z) {
             this.mIsBuildingLongScreenshot = true;
-            this.mMinOffsetY = (float) (getHeight() - this.mTotalHeight);
-            this.mOffsetY = this.mMinOffsetY;
+            float height = (float) (getHeight() - this.mTotalHeight);
+            this.mMinOffsetY = height;
+            this.mOffsetY = height;
         }
     }
 
@@ -604,23 +606,25 @@ public class ScreenshotScrollView extends View {
 
     /* access modifiers changed from: private */
     public void doAnimatingStep(int i) {
-        this.mTotalHeight += i;
-        this.mTotalHeight = Math.min(this.mTotalHeight, getMaxTotalHeight());
-        this.mTotalHeight = Math.max(this.mTotalHeight, this.mMinTotalHeight);
-        int i2 = 0;
+        int i2 = this.mTotalHeight + i;
+        this.mTotalHeight = i2;
+        int min = Math.min(i2, getMaxTotalHeight());
+        this.mTotalHeight = min;
+        this.mTotalHeight = Math.max(min, this.mMinTotalHeight);
         int i3 = 0;
+        int i4 = 0;
         for (Bitmap height : this.mLongBitmapDrawable.getBitmaps()) {
-            i2 += height.getHeight();
-            if (i2 > this.mTotalHeight) {
+            i3 += height.getHeight();
+            if (i3 > this.mTotalHeight) {
                 break;
             }
-            i3++;
+            i4++;
         }
-        if (i3 != this.mShowedPageCount) {
-            this.mShowedPageCount = i3;
+        if (i4 != this.mShowedPageCount) {
+            this.mShowedPageCount = i4;
             AnimatingCallback animatingCallback = this.mAnimatingCallback;
             if (animatingCallback != null) {
-                animatingCallback.onShowedPageCountChanged(this.mShowedPageCount);
+                animatingCallback.onShowedPageCountChanged(i4);
             }
         }
         invalidate();

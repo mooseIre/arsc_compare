@@ -5,18 +5,9 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import com.android.internal.widget.LockPatternUtils;
 import java.util.List;
 
 public class PreviewInflater {
-    private Context mContext;
-    private LockPatternUtils mLockPatternUtils;
-
-    public PreviewInflater(Context context, LockPatternUtils lockPatternUtils) {
-        this.mContext = context;
-        this.mLockPatternUtils = lockPatternUtils;
-    }
-
     public static boolean wouldLaunchResolverActivity(Context context, Intent intent, int i) {
         return getTargetActivityInfo(context, intent, i, false) == null;
     }

@@ -3,7 +3,6 @@ package com.android.systemui.classifier;
 import java.util.ArrayList;
 
 public class Stroke {
-    private final float NANOS_TO_SECONDS = 1.0E9f;
     private final float mDpi;
     private long mEndTimeNano;
     private float mLength;

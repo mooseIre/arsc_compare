@@ -14,7 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.android.systemui.Dependency;
 import com.android.systemui.miui.statusbar.ExpandedNotification;
-import com.android.systemui.miui.statusbar.analytics.NotificationStat;
+import com.android.systemui.miui.statusbar.analytics.SystemUIStat;
 import com.android.systemui.miui.statusbar.notification.NotificationSettingsHelper;
 import com.android.systemui.miui.statusbar.notification.NotificationUtil;
 import com.android.systemui.plugins.R;
@@ -75,14 +75,15 @@ public class NotificationInfo extends LinearLayout implements NotificationGuts.G
     }
 
     private void initSlidingButton() {
-        this.mChannelEnabledSwitch = (SlidingButton) findViewById(R.id.channel_enabled_switch);
+        SlidingButton slidingButton = (SlidingButton) findViewById(R.id.channel_enabled_switch);
+        this.mChannelEnabledSwitch = slidingButton;
         int i = 0;
-        this.mChannelEnabledSwitch.setChecked(this.mStartingUserImportance != 0);
-        SlidingButton slidingButton = this.mChannelEnabledSwitch;
+        slidingButton.setChecked(this.mStartingUserImportance != 0);
+        SlidingButton slidingButton2 = this.mChannelEnabledSwitch;
         if (!isBlockable()) {
             i = 8;
         }
-        slidingButton.setVisibility(i);
+        slidingButton2.setVisibility(i);
         this.mChannelEnabledSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public final void onCheckedChanged(CompoundButton compoundButton, boolean z) {
                 NotificationInfo.this.lambda$initSlidingButton$1$NotificationInfo(compoundButton, z);
@@ -90,6 +91,8 @@ public class NotificationInfo extends LinearLayout implements NotificationGuts.G
         });
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$initSlidingButton$1 */
     public /* synthetic */ void lambda$initSlidingButton$1$NotificationInfo(CompoundButton compoundButton, boolean z) {
         initTitle();
         NotificationGuts notificationGuts = this.mGutsContainer;
@@ -112,6 +115,8 @@ public class NotificationInfo extends LinearLayout implements NotificationGuts.G
         textView.setVisibility(8);
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$initSettingsButton$2 */
     public /* synthetic */ void lambda$initSettingsButton$2$NotificationInfo(View view) {
         this.mClickListener.onClickSettings(view);
     }
@@ -123,7 +128,7 @@ public class NotificationInfo extends LinearLayout implements NotificationGuts.G
 
     /* access modifiers changed from: private */
     /* renamed from: saveImportance */
-    public void lambda$handleCloseControls$3$NotificationInfo() {
+    public void lambda$handleCloseControls$3() {
         String packageName = this.mSbn.getPackageName();
         NotificationSettingsHelper.setNotificationsEnabledForPackage(this.mContext, packageName, this.mChannelEnabledSwitch.isChecked());
         if (!this.mChannelEnabledSwitch.isChecked()) {
@@ -136,7 +141,7 @@ public class NotificationInfo extends LinearLayout implements NotificationGuts.G
                 intent.putExtra("messageId", messageId);
             }
             this.mContext.sendBroadcast(intent);
-            ((NotificationStat) Dependency.get(NotificationStat.class)).onBlock(this.mSbn, (NotificationChannelCompat) null, this.mIndex);
+            ((SystemUIStat) Dependency.get(SystemUIStat.class)).onBlock(this.mSbn, (NotificationChannelCompat) null, this.mIndex);
         }
     }
 
@@ -176,7 +181,7 @@ public class NotificationInfo extends LinearLayout implements NotificationGuts.G
             });
             return false;
         }
-        lambda$handleCloseControls$3$NotificationInfo();
+        lambda$handleCloseControls$3();
         return false;
     }
 

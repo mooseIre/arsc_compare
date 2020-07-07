@@ -33,8 +33,9 @@ public class PipDismissViewController {
             this.mWindowManager.getDefaultDisplay().getRealSize(point);
             int dimensionPixelSize = this.mContext.getResources().getDimensionPixelSize(R.dimen.pip_dismiss_gradient_height);
             int dimensionPixelSize2 = this.mContext.getResources().getDimensionPixelSize(R.dimen.pip_dismiss_text_bottom_margin);
-            this.mDismissView = LayoutInflater.from(this.mContext).inflate(R.layout.pip_dismiss_view, (ViewGroup) null);
-            this.mDismissView.setSystemUiVisibility(256);
+            View inflate = LayoutInflater.from(this.mContext).inflate(R.layout.pip_dismiss_view, (ViewGroup) null);
+            this.mDismissView = inflate;
+            inflate.setSystemUiVisibility(256);
             this.mDismissView.forceHasOverlappingRendering(false);
             Drawable drawable = this.mContext.getResources().getDrawable(R.drawable.pip_dismiss_scrim);
             drawable.setAlpha(216);

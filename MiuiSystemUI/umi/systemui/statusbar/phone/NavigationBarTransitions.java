@@ -90,7 +90,7 @@ public final class NavigationBarTransitions extends BarTransitions implements Li
             if (z) {
                 r8 = null;
             } else {
-                r8 = new AnimatorListenerAdapter() {
+                r8 = new AnimatorListenerAdapter(this) {
                     public void onAnimationEnd(Animator animator) {
                         findViewById2.setVisibility(8);
                     }

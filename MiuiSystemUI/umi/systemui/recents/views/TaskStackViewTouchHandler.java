@@ -37,14 +37,12 @@ class TaskStackViewTouchHandler implements SwipeHelperForRecents.Callback {
     int mActivePointerId = -1;
     TaskView mActiveTaskView = null;
     private boolean mAllowHideRecentsFromBackgroundTap = true;
-    Context mContext;
     private ArrayList<TaskViewTransform> mCurrentTaskTransforms = new ArrayList<>();
     private ArrayList<Task> mCurrentTasks = new ArrayList<>();
     float mDownScrollP;
     int mDownX;
     int mDownY;
     private ArrayList<TaskViewTransform> mFinalTaskTransforms = new ArrayList<>();
-    FlingAnimationUtils mFlingAnimUtils;
     boolean mInterceptedBySwipeHelper;
     private boolean mIsCancelAnimations = false;
     @ViewDebug.ExportedProperty(category = "recents")
@@ -52,10 +50,8 @@ class TaskStackViewTouchHandler implements SwipeHelperForRecents.Callback {
     float mLastScrollP;
     int mLastY;
     int mMaximumVelocity;
-    int mMinimumVelocity;
     private float mOldStackScroll;
     int mOverscrollSize;
-    int mRecentsTaskLockDistance;
     /* access modifiers changed from: private */
     public TaskView mSameTopPositionTaskView;
     ValueAnimator mScrollFlingAnimator;
@@ -70,7 +66,6 @@ class TaskStackViewTouchHandler implements SwipeHelperForRecents.Callback {
     public float mTargetStackScroll;
     private TaskViewTransform mTmpTransform = new TaskViewTransform();
     VelocityTracker mVelocityTracker;
-    final int mWindowTouchSlop;
 
     public float getFalsingThresholdFactor() {
         return 0.0f;
@@ -90,19 +85,18 @@ class TaskStackViewTouchHandler implements SwipeHelperForRecents.Callback {
     public TaskStackViewTouchHandler(Context context, TaskStackView taskStackView, TaskStackViewScroller taskStackViewScroller) {
         Resources resources = context.getResources();
         ViewConfiguration viewConfiguration = ViewConfiguration.get(context);
-        this.mContext = context;
         this.mSv = taskStackView;
         this.mScroller = taskStackViewScroller;
-        this.mMinimumVelocity = viewConfiguration.getScaledMinimumFlingVelocity();
+        viewConfiguration.getScaledMinimumFlingVelocity();
         this.mMaximumVelocity = viewConfiguration.getScaledMaximumFlingVelocity();
         this.mScrollTouchSlop = resources.getDimensionPixelSize(R.dimen.recents_view_configuration_touch_slop);
-        this.mWindowTouchSlop = viewConfiguration.getScaledWindowTouchSlop();
-        this.mFlingAnimUtils = new FlingAnimationUtils(context, 0.2f);
+        viewConfiguration.getScaledWindowTouchSlop();
+        new FlingAnimationUtils(context, 0.2f);
         this.mOverscrollSize = resources.getDimensionPixelSize(R.dimen.recents_fling_overscroll_distance);
-        this.mRecentsTaskLockDistance = resources.getDimensionPixelSize(R.dimen.recents_task_lock_distance);
+        resources.getDimensionPixelSize(R.dimen.recents_task_lock_distance);
         resources.getDimensionPixelSize(R.dimen.recents_lock_view_swipe_top_margin);
         resources.getDimensionPixelSize(R.dimen.recents_lock_view_swipe_height);
-        this.mSwipeHelper = new SwipeHelperForRecents(0, this, context) {
+        AnonymousClass1 r6 = new SwipeHelperForRecents(0, this, context) {
             /* access modifiers changed from: protected */
             public float getUnscaledEscapeVelocity() {
                 return 800.0f;
@@ -134,7 +128,8 @@ class TaskStackViewTouchHandler implements SwipeHelperForRecents.Callback {
                 }
             }
         };
-        this.mSwipeHelper.setDisableHardwareLayers(true);
+        this.mSwipeHelper = r6;
+        r6.setDisableHardwareLayers(true);
     }
 
     /* access modifiers changed from: package-private */
@@ -166,8 +161,9 @@ class TaskStackViewTouchHandler implements SwipeHelperForRecents.Callback {
         if (this.mSv.isShowingMenu()) {
             return true;
         }
-        this.mInterceptedBySwipeHelper = this.mSwipeHelper.onInterceptTouchEvent(motionEvent);
-        if (this.mInterceptedBySwipeHelper) {
+        boolean onInterceptTouchEvent = this.mSwipeHelper.onInterceptTouchEvent(motionEvent);
+        this.mInterceptedBySwipeHelper = onInterceptTouchEvent;
+        if (onInterceptTouchEvent) {
             return true;
         }
         return handleTouchEvent(motionEvent);
@@ -220,8 +216,9 @@ class TaskStackViewTouchHandler implements SwipeHelperForRecents.Callback {
             }
             this.mSv.cancelDeferredTaskViewLayoutAnimation();
             this.mDownX = (int) motionEvent.getX();
-            this.mDownY = (int) motionEvent.getY();
-            this.mLastY = this.mDownY;
+            int y = (int) motionEvent.getY();
+            this.mDownY = y;
+            this.mLastY = y;
             this.mDownScrollP = this.mScroller.getStackScroll();
             this.mActivePointerId = motionEvent.getPointerId(0);
             this.mActiveTaskView = findViewAtPoint(this.mDownX, this.mDownY);
@@ -236,13 +233,13 @@ class TaskStackViewTouchHandler implements SwipeHelperForRecents.Callback {
                 this.mActivePointerId = motionEvent.getPointerId(0);
                 findPointerIndex = 0;
             }
-            int y = (int) motionEvent.getY(findPointerIndex);
+            int y2 = (int) motionEvent.getY(findPointerIndex);
             int yVelocity = (int) this.mVelocityTracker.getYVelocity(this.mActivePointerId);
             if (this.mIsScrolling) {
                 if (this.mScroller.isScrollOutOfBounds()) {
                     this.mScroller.animateBoundScroll(yVelocity);
                 } else {
-                    this.mScroller.fling(this.mDownScrollP, this.mDownY, y, yVelocity, (int) ((float) (this.mDownY + taskStackLayoutAlgorithm.getXForDeltaP(this.mDownScrollP, taskStackLayoutAlgorithm.mMaxScrollP))), (int) ((float) (this.mDownY + taskStackLayoutAlgorithm.getXForDeltaP(this.mDownScrollP, taskStackLayoutAlgorithm.mMinScrollP))), this.mOverscrollSize);
+                    this.mScroller.fling(this.mDownScrollP, this.mDownY, y2, yVelocity, (int) ((float) (this.mDownY + taskStackLayoutAlgorithm.getXForDeltaP(this.mDownScrollP, taskStackLayoutAlgorithm.mMaxScrollP))), (int) ((float) (this.mDownY + taskStackLayoutAlgorithm.getXForDeltaP(this.mDownScrollP, taskStackLayoutAlgorithm.mMinScrollP))), this.mOverscrollSize);
                     this.mSv.invalidate();
                 }
                 TaskStackView taskStackView = this.mSv;
@@ -268,12 +265,12 @@ class TaskStackViewTouchHandler implements SwipeHelperForRecents.Callback {
                 this.mActivePointerId = motionEvent.getPointerId(0);
                 findPointerIndex2 = 0;
             }
-            int y2 = (int) motionEvent.getY(findPointerIndex2);
+            int y3 = (int) motionEvent.getY(findPointerIndex2);
             int x = (int) motionEvent.getX(findPointerIndex2);
             if (!this.mIsScrolling) {
-                int abs = Math.abs(y2 - this.mDownY);
+                int abs = Math.abs(y3 - this.mDownY);
                 int abs2 = Math.abs(x - this.mDownX);
-                if (Math.abs(y2 - this.mDownY) > this.mScrollTouchSlop && abs > abs2) {
+                if (Math.abs(y3 - this.mDownY) > this.mScrollTouchSlop && abs > abs2) {
                     this.mIsScrolling = true;
                     float stackScroll = this.mScroller.getStackScroll();
                     List<TaskView> taskViews = this.mSv.getTaskViews();
@@ -294,7 +291,7 @@ class TaskStackViewTouchHandler implements SwipeHelperForRecents.Callback {
                 }
             }
             if (this.mIsScrolling) {
-                float deltaPForX = taskStackLayoutAlgorithm.getDeltaPForX(this.mDownY, y2);
+                float deltaPForX = taskStackLayoutAlgorithm.getDeltaPForX(this.mDownY, y3);
                 float f = taskStackLayoutAlgorithm.mMinScrollP;
                 float f2 = taskStackLayoutAlgorithm.mMaxScrollP;
                 float f3 = this.mDownScrollP + deltaPForX;
@@ -304,20 +301,20 @@ class TaskStackViewTouchHandler implements SwipeHelperForRecents.Callback {
                     f3 = (Math.signum(f4) * OVERSCROLL_INTERP.getInterpolation(Math.abs(f4) / 2.3333333f) * 2.3333333f) + clamp;
                 }
                 float f5 = -this.mScroller.mExitRecentOverscrollThreshold;
-                if (this.mLastScrollP > f5 && f3 < f5 && y2 - this.mLastY > 0) {
+                if (this.mLastScrollP > f5 && f3 < f5 && y3 - this.mLastY > 0) {
                     this.mSv.performHapticFeedback(1);
                     SpringAnimationUtils.getInstance().startDragExitRecentsAnim(this.mSv);
                 }
-                if (this.mLastScrollP < f5 && f3 > f5 && y2 - this.mLastY < 0) {
+                if (this.mLastScrollP < f5 && f3 > f5 && y3 - this.mLastY < 0) {
                     SpringAnimationUtils.getInstance().startCancelDragExitRecentsAnim(this.mSv);
                 }
                 float f6 = this.mDownScrollP;
                 this.mDownScrollP = f6 + this.mScroller.setDeltaStackScroll(f6, f3 - f6);
-                this.mStackViewScrolledEvent.updateY(y2 - this.mLastY);
+                this.mStackViewScrolledEvent.updateY(y3 - this.mLastY);
                 RecentsEventBus.getDefault().send(this.mStackViewScrolledEvent);
                 this.mLastScrollP = f3;
             }
-            this.mLastY = y2;
+            this.mLastY = y3;
             this.mVelocityTracker.addMovement(motionEvent);
         } else if (action == 3) {
             this.mIsCancelAnimations = false;
@@ -329,8 +326,9 @@ class TaskStackViewTouchHandler implements SwipeHelperForRecents.Callback {
             int actionIndex = motionEvent.getActionIndex();
             this.mActivePointerId = motionEvent.getPointerId(actionIndex);
             this.mDownX = (int) motionEvent.getX(actionIndex);
-            this.mDownY = (int) motionEvent.getY(actionIndex);
-            this.mLastY = this.mDownY;
+            int y4 = (int) motionEvent.getY(actionIndex);
+            this.mDownY = y4;
+            this.mLastY = y4;
             this.mDownScrollP = this.mScroller.getStackScroll();
             this.mScroller.resetDeltaScroll();
             this.mVelocityTracker.addMovement(motionEvent);
@@ -342,8 +340,9 @@ class TaskStackViewTouchHandler implements SwipeHelperForRecents.Callback {
                 }
                 this.mActivePointerId = motionEvent.getPointerId(i);
                 this.mDownX = (int) motionEvent.getX(actionIndex2);
-                this.mDownY = (int) motionEvent.getY(actionIndex2);
-                this.mLastY = this.mDownY;
+                int y5 = (int) motionEvent.getY(actionIndex2);
+                this.mDownY = y5;
+                this.mLastY = y5;
                 this.mDownScrollP = this.mScroller.getStackScroll();
             }
             this.mVelocityTracker.addMovement(motionEvent);
@@ -435,8 +434,9 @@ class TaskStackViewTouchHandler implements SwipeHelperForRecents.Callback {
             TaskStackViewScroller scroller = this.mSv.getScroller();
             this.mSv.getCurrentTaskTransforms(this.mCurrentTasks, this.mCurrentTaskTransforms);
             this.mSv.updateLayoutAlgorithm(false);
-            this.mOldStackScroll = scroller.getStackScroll();
-            this.mSv.bindVisibleTaskViews(this.mOldStackScroll, true);
+            float stackScroll = scroller.getStackScroll();
+            this.mOldStackScroll = stackScroll;
+            this.mSv.bindVisibleTaskViews(stackScroll, true);
             this.mSv.getLayoutTaskTransforms(this.mOldStackScroll, 0, this.mCurrentTasks, true, this.mFinalTaskTransforms);
             this.mTargetStackScroll = Math.min(this.mOldStackScroll, this.mSv.getStackAlgorithm().mMaxScrollP);
         }

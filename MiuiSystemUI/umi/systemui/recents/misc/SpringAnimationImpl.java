@@ -35,16 +35,18 @@ public class SpringAnimationImpl {
 
     public SpringAnimation getScaleXSpringAnim() {
         if (this.mScaleXSpringAnim == null) {
-            this.mScaleXSpringAnim = SpringAnimationUtils.getInstance().createDefaultSpringAnim(this.mTargetView, DynamicAnimation.SCALE_X, 1.0f);
-            this.mScaleXSpringAnim.setMinimumVisibleChange(0.002f);
+            SpringAnimation createDefaultSpringAnim = SpringAnimationUtils.getInstance().createDefaultSpringAnim(this.mTargetView, DynamicAnimation.SCALE_X, 1.0f);
+            this.mScaleXSpringAnim = createDefaultSpringAnim;
+            createDefaultSpringAnim.setMinimumVisibleChange(0.002f);
         }
         return this.mScaleXSpringAnim;
     }
 
     public SpringAnimation getScaleYSpringAnim() {
         if (this.mScaleYSpringAnim == null) {
-            this.mScaleYSpringAnim = SpringAnimationUtils.getInstance().createDefaultSpringAnim(this.mTargetView, DynamicAnimation.SCALE_Y, 1.0f);
-            this.mScaleYSpringAnim.setMinimumVisibleChange(0.002f);
+            SpringAnimation createDefaultSpringAnim = SpringAnimationUtils.getInstance().createDefaultSpringAnim(this.mTargetView, DynamicAnimation.SCALE_Y, 1.0f);
+            this.mScaleYSpringAnim = createDefaultSpringAnim;
+            createDefaultSpringAnim.setMinimumVisibleChange(0.002f);
         }
         return this.mScaleYSpringAnim;
     }
@@ -59,8 +61,9 @@ public class SpringAnimationImpl {
     public List<SpringAnimation> getAllSpringAnim() {
         List<SpringAnimation> list = this.mAllSpringAnim;
         if (list == null || list.isEmpty()) {
-            this.mAllSpringAnim = new ArrayList();
-            this.mAllSpringAnim.add(getTranslationXSpringAnim());
+            ArrayList arrayList = new ArrayList();
+            this.mAllSpringAnim = arrayList;
+            arrayList.add(getTranslationXSpringAnim());
             this.mAllSpringAnim.add(getTranslationYSpringAnim());
             this.mAllSpringAnim.add(getScaleXSpringAnim());
             this.mAllSpringAnim.add(getScaleYSpringAnim());

@@ -68,8 +68,9 @@ public class NotificationPeekingIconAreaController extends NotificationIconAreaC
     /* access modifiers changed from: protected */
     public View inflateIconArea(LayoutInflater layoutInflater) {
         View inflateIconArea = super.inflateIconArea(layoutInflater);
-        this.mNotificationIcons = (ViewGroup) inflateIconArea.findViewById(R.id.notificationIcons);
-        this.mNotificationIcons.setOnHierarchyChangeListener(new ViewGroup.OnHierarchyChangeListener() {
+        ViewGroup viewGroup = (ViewGroup) inflateIconArea.findViewById(R.id.notificationIcons);
+        this.mNotificationIcons = viewGroup;
+        viewGroup.setOnHierarchyChangeListener(new ViewGroup.OnHierarchyChangeListener() {
             public void onChildViewAdded(View view, View view2) {
                 NotificationPeekingIconAreaController.this.onIconsChanged();
                 NotificationPeekingIconAreaController.this.firePendingPeeking();
@@ -168,8 +169,9 @@ public class NotificationPeekingIconAreaController extends NotificationIconAreaC
     }
 
     public void onPromptStateChanged(boolean z, String str) {
-        this.mShowingMiuiPrompts = !z;
-        if (this.mShowingMiuiPrompts) {
+        boolean z2 = !z;
+        this.mShowingMiuiPrompts = z2;
+        if (z2) {
             this.mHandler.removeMessages(100);
             if (this.mPeeking) {
                 this.mHandler.removeMessages(R.styleable.AppCompatTheme_textAppearanceListItem);

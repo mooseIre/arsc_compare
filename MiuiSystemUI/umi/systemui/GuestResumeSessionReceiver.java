@@ -40,8 +40,9 @@ public class GuestResumeSessionReceiver extends BroadcastReceiver {
                 if (ActivityManagerCompat.getService().getCurrentUser().isGuest()) {
                     ContentResolver contentResolver = context.getContentResolver();
                     if (Settings.System.getIntForUser(contentResolver, "systemui.guest_has_logged_in", 0, intExtra) != 0) {
-                        this.mNewSessionDialog = new ResetSessionDialog(context, intExtra);
-                        this.mNewSessionDialog.show();
+                        ResetSessionDialog resetSessionDialog = new ResetSessionDialog(context, intExtra);
+                        this.mNewSessionDialog = resetSessionDialog;
+                        resetSessionDialog.show();
                         return;
                     }
                     Settings.System.putIntForUser(contentResolver, "systemui.guest_has_logged_in", 1, intExtra);

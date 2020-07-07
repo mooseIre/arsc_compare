@@ -12,10 +12,12 @@ import com.android.systemui.plugins.qs.QSTile;
 import java.util.Objects;
 
 public class BigQSIconViewImpl extends QSIconView {
-    protected boolean mAnimationEnabled;
     protected ImageView mIcon;
     protected int mIconColor;
     protected int mIconColorOff;
+
+    public void setAnimationEnabled(boolean z) {
+    }
 
     public void setIsCustomTile(boolean z) {
     }
@@ -26,11 +28,11 @@ public class BigQSIconViewImpl extends QSIconView {
 
     public BigQSIconViewImpl(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-        this.mAnimationEnabled = true;
         this.mIconColor = context.getResources().getColor(R.color.cc_qs_tile_icon_color);
         this.mIconColorOff = getResources().getColor(R.color.cc_qs_tile_icon_color_off);
-        this.mIcon = createIcon();
-        addView(this.mIcon);
+        ImageView createIcon = createIcon();
+        this.mIcon = createIcon;
+        addView(createIcon);
     }
 
     /* access modifiers changed from: protected */
@@ -67,10 +69,6 @@ public class BigQSIconViewImpl extends QSIconView {
                 this.mIcon.setTag(R.id.qs_icon_tag, state.icon);
             }
         }
-    }
-
-    public void setAnimationEnabled(boolean z) {
-        this.mAnimationEnabled = z;
     }
 
     public View getIconView() {

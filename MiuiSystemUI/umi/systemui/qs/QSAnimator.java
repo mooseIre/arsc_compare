@@ -20,7 +20,6 @@ public class QSAnimator implements QSHost.Callback, PagedTileLayout.PageListener
     private boolean mAllowFancy;
     private TouchAnimator mFirstPageAnimator;
     private TouchAnimator mFirstPageDelayedAnimator;
-    private boolean mFullRows;
     private QSTileHost mHost;
     /* access modifiers changed from: private */
     public float mLastPosition;
@@ -57,15 +56,16 @@ public class QSAnimator implements QSHost.Callback, PagedTileLayout.PageListener
         this.mQs = qs;
         this.mQuickQsPanel = quickQSPanel;
         this.mQsPanel = qSPanel;
-        this.mQsPanel.addOnAttachStateChangeListener(this);
+        qSPanel.addOnAttachStateChangeListener(this);
         qs.getView().addOnLayoutChangeListener(this);
         if (this.mQsPanel.isAttachedToWindow()) {
             onViewAttachedToWindow((View) null);
         }
         QSPanel.QSTileLayout tileLayout = this.mQsPanel.getTileLayout();
         if (tileLayout instanceof PagedTileLayout) {
-            this.mPagedLayout = (PagedTileLayout) tileLayout;
-            this.mPagedLayout.setPageListener(this);
+            PagedTileLayout pagedTileLayout = (PagedTileLayout) tileLayout;
+            this.mPagedLayout = pagedTileLayout;
+            pagedTileLayout.setPageListener(this);
             return;
         }
         Log.w("QSAnimator", "QS Not using page layout");
@@ -77,7 +77,7 @@ public class QSAnimator implements QSHost.Callback, PagedTileLayout.PageListener
 
     public void setOnKeyguard(boolean z) {
         this.mOnKeyguard = z;
-        this.mQuickQsPanel.setVisibility(this.mOnKeyguard ? 4 : 0);
+        this.mQuickQsPanel.setVisibility(z ? 4 : 0);
         if (this.mOnKeyguard) {
             clearAnimationState();
         }
@@ -104,20 +104,14 @@ public class QSAnimator implements QSHost.Callback, PagedTileLayout.PageListener
     }
 
     public void onTuningChanged(String str, String str2) {
-        boolean z = false;
         if ("sysui_qs_fancy_anim".equals(str)) {
-            if (str2 == null || Integer.parseInt(str2) != 0) {
-                z = true;
-            }
+            boolean z = str2 == null || Integer.parseInt(str2) != 0;
             this.mAllowFancy = z;
-            if (!this.mAllowFancy) {
+            if (!z) {
                 clearAnimationState();
             }
-        } else if ("sysui_qs_move_whole_rows".equals(str)) {
-            if (str2 == null || Integer.parseInt(str2) != 0) {
-                z = true;
-            }
-            this.mFullRows = z;
+        } else if ("sysui_qs_move_whole_rows".equals(str) && str2 != null) {
+            int parseInt = Integer.parseInt(str2);
         }
         updateAnimators();
     }
@@ -145,7 +139,6 @@ public class QSAnimator implements QSHost.Callback, PagedTileLayout.PageListener
         float f2;
         Iterator<QSTile> it;
         int[] iArr;
-        int i;
         TouchAnimator.Builder builder = new TouchAnimator.Builder();
         TouchAnimator.Builder builder2 = new TouchAnimator.Builder();
         TouchAnimator.Builder builder3 = new TouchAnimator.Builder();
@@ -161,8 +154,8 @@ public class QSAnimator implements QSHost.Callback, PagedTileLayout.PageListener
             float measuredHeight = (float) (((this.mQs.getView() != null ? this.mQs.getView().getMeasuredHeight() : 0) - this.mQs.getHeader().getBottom()) + this.mQs.getHeader().getPaddingBottom());
             builder.addFloat(tileLayout, "translationY", measuredHeight, 0.0f);
             Iterator<QSTile> it2 = tiles.iterator();
+            int i = 0;
             int i2 = 0;
-            int i3 = 0;
             while (it2.hasNext()) {
                 QSTile next = it2.next();
                 QSTileView tileView = this.mQsPanel.getTileView(next);
@@ -175,37 +168,35 @@ public class QSAnimator implements QSHost.Callback, PagedTileLayout.PageListener
                     it = it2;
                     View view = this.mQs.getView();
                     f2 = measuredHeight;
-                    if (i2 >= this.mNumQuickTiles || !this.mAllowFancy) {
+                    if (i >= this.mNumQuickTiles || !this.mAllowFancy) {
                         iArr = iArr2;
-                        i = i3;
+                        i2 = i2;
                     } else {
                         QSTileView tileView2 = this.mQuickQsPanel.getTileView(next);
                         if (tileView2 != null) {
-                            int i4 = iArr2[0];
+                            int i3 = iArr2[0];
                             getRelativePosition(iArr2, tileView2.getIcon().getIconView(), view);
                             getRelativePosition(iArr3, iconView, view);
-                            int i5 = iArr3[0] - iArr2[0];
-                            int i6 = iArr3[1] - iArr2[1];
+                            int i4 = iArr3[0] - iArr2[0];
+                            int i5 = iArr3[1] - iArr2[1];
                             iArr = iArr2;
-                            if (i2 < this.mPagedLayout.getColumnCount()) {
-                                builder2.addFloat(tileView2, "translationX", 0.0f, (float) i5);
-                                builder3.addFloat(tileView2, "translationY", 0.0f, (float) i6);
-                                builder2.addFloat(tileView, "translationX", (float) (-i5), 0.0f);
+                            if (i < this.mPagedLayout.getColumnCount()) {
+                                builder2.addFloat(tileView2, "translationX", 0.0f, (float) i4);
+                                builder3.addFloat(tileView2, "translationY", 0.0f, (float) i5);
+                                builder2.addFloat(tileView, "translationX", (float) (-i4), 0.0f);
                                 this.mTopFiveQs.add(tileView.getIcon());
-                                i = i6;
+                                i2 = i5;
                             } else {
                                 builder2.addFloat(tileView2, "translationX", 0.0f, ((float) this.mQsPanel.getWidth()) - tileView2.getX());
-                                i = i3;
-                                builder3.addFloat(tileView2, "translationY", 0.0f, (float) i);
+                                builder3.addFloat(tileView2, "translationY", 0.0f, (float) i2);
                                 builder.addFloat(tileView2, "alpha", 1.0f, 0.0f, 0.0f);
                             }
                             this.mAllViews.add(tileView.getIcon());
                             this.mAllViews.add(tileView2);
                         }
                     }
-                    i3 = i;
                     this.mAllViews.add(tileView);
-                    i2++;
+                    i++;
                     it2 = it;
                     measuredHeight = f2;
                     iArr2 = iArr;

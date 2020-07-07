@@ -44,7 +44,7 @@ public class NfcTile extends QSTileImpl<QSTile.BooleanState> {
 
     public void handleSetListening(boolean z) {
         this.mListening = z;
-        if (this.mListening) {
+        if (z) {
             this.mContext.registerReceiverAsUser(this.mNfcReceiver, UserHandle.ALL, new IntentFilter("android.nfc.action.ADAPTER_STATE_CHANGED"), (String) null, (Handler) null);
         } else {
             this.mContext.unregisterReceiver(this.mNfcReceiver);
@@ -94,10 +94,10 @@ public class NfcTile extends QSTileImpl<QSTile.BooleanState> {
 
     /* access modifiers changed from: protected */
     public void handleUpdateState(QSTile.BooleanState booleanState, Object obj) {
+        int i = 1;
         boolean z = false;
         this.mTransientEnabling = obj == QSTileImpl.ARG_SHOW_TRANSIENT_ENABLING;
         NfcAdapter adapter = getAdapter();
-        int i = 2;
         if (adapter != null) {
             boolean z2 = adapter.getAdapterState() == 2;
             if (this.mTransientEnabling || z2 || adapter.isEnabled()) {
@@ -107,8 +107,8 @@ public class NfcTile extends QSTileImpl<QSTile.BooleanState> {
         } else {
             booleanState.value = false;
         }
-        if (!booleanState.value) {
-            i = 1;
+        if (booleanState.value) {
+            i = 2;
         }
         booleanState.state = i;
         booleanState.label = this.mContext.getString(R.string.quick_settings_nfc_label);

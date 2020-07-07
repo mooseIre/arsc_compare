@@ -5,16 +5,11 @@ import android.graphics.Rect;
 import android.view.MotionEvent;
 import android.view.View;
 import com.android.systemui.partialscreenshot.PartialScreenshotView;
-import com.android.systemui.partialscreenshot.shape.DrawShapeUtil;
 import com.android.systemui.partialscreenshot.shape.EllipseScreenshot;
 
 public class EllipseFactory extends ShapeFactory {
     private EllipseScreenshot ellipse;
-    private float mLastX;
-    private float mLastY;
     private int mState = 1;
-    private float mX;
-    private float mY;
 
     public boolean onTouch(View view, MotionEvent motionEvent) {
         PartialScreenshotView partialScreenshotView = (PartialScreenshotView) view;
@@ -33,31 +28,27 @@ public class EllipseFactory extends ShapeFactory {
 
     private boolean onActionDown(PartialScreenshotView partialScreenshotView, MotionEvent motionEvent, View view) {
         if (this.mState == 1) {
-            this.ellipse = new EllipseScreenshot(view);
-            this.ellipse.startSelection((int) motionEvent.getX(), (int) motionEvent.getY());
+            EllipseScreenshot ellipseScreenshot = new EllipseScreenshot(view);
+            this.ellipse = ellipseScreenshot;
+            ellipseScreenshot.startSelection((int) motionEvent.getX(), (int) motionEvent.getY());
             partialScreenshotView.setProduct(this.ellipse);
         } else if (this.ellipse.getSelectionRect() != null) {
             this.ellipse.onActionDown(motionEvent);
         } else {
             this.mState = 1;
         }
-        this.mLastX = motionEvent.getX();
-        this.mLastY = motionEvent.getY();
         return true;
     }
 
     private boolean onActionMove(PartialScreenshotView partialScreenshotView, MotionEvent motionEvent) {
-        this.mX = motionEvent.getX();
-        this.mY = motionEvent.getY();
-        if (this.ellipse != null && DrawShapeUtil.distance(this.mX, this.mLastX, this.mY, this.mLastY) > 2.0d) {
+        EllipseScreenshot ellipseScreenshot = this.ellipse;
+        if (ellipseScreenshot != null) {
             if (this.mState == 1) {
-                this.ellipse.updateSelection((int) motionEvent.getX(), (int) motionEvent.getY());
+                ellipseScreenshot.updateSelection((int) motionEvent.getX(), (int) motionEvent.getY());
             } else {
-                this.ellipse.onActionMove(motionEvent);
+                ellipseScreenshot.onActionMove(motionEvent);
             }
             partialScreenshotView.setProduct(this.ellipse);
-            this.mLastX = this.mX;
-            this.mLastY = this.mY;
         }
         return true;
     }
@@ -80,8 +71,9 @@ public class EllipseFactory extends ShapeFactory {
     }
 
     public void notifyShapeChanged(Rect rect, PartialScreenshotView partialScreenshotView) {
-        this.ellipse = new EllipseScreenshot(partialScreenshotView);
-        this.ellipse.startSelection(rect.left, rect.top);
+        EllipseScreenshot ellipseScreenshot = new EllipseScreenshot(partialScreenshotView);
+        this.ellipse = ellipseScreenshot;
+        ellipseScreenshot.startSelection(rect.left, rect.top);
         this.ellipse.updateSelection(rect.right, rect.bottom);
         partialScreenshotView.setProduct(this.ellipse);
         this.mState = 2;

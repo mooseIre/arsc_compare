@@ -27,8 +27,8 @@ public class SystemBars extends SystemUI {
         }
         try {
             try {
-                this.mStatusBar = (SystemUI) this.mContext.getClassLoader().loadClass(string).newInstance();
-                SystemUI systemUI = this.mStatusBar;
+                SystemUI systemUI = (SystemUI) this.mContext.getClassLoader().loadClass(string).newInstance();
+                this.mStatusBar = systemUI;
                 systemUI.mContext = this.mContext;
                 systemUI.mComponents = this.mComponents;
                 systemUI.start();

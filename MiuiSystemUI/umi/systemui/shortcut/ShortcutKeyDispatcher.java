@@ -2,7 +2,6 @@ package com.android.systemui.shortcut;
 
 import android.app.ActivityManager;
 import android.app.ActivityManagerCompat;
-import android.app.IActivityManager;
 import android.os.RemoteException;
 import android.util.ArraySet;
 import android.util.Log;
@@ -18,15 +17,12 @@ import com.android.systemui.stackdivider.DividerView;
 import java.util.List;
 
 public class ShortcutKeyDispatcher extends SystemUI implements ShortcutKeyServiceProxy.Callbacks {
-    protected final long ALT_MASK = 8589934592L;
-    protected final long CTRL_MASK = 17592186044416L;
-    protected final long META_MASK = 281474976710656L;
-    protected final long SC_DOCK_LEFT = 281474976710727L;
-    protected final long SC_DOCK_RIGHT = 281474976710728L;
-    protected final long SHIFT_MASK = 4294967296L;
-    private IActivityManager mActivityManager = ActivityManagerCompat.getService();
     private ShortcutKeyServiceProxy mShortcutKeyServiceProxy = new ShortcutKeyServiceProxy(this);
     private IWindowManager mWindowManagerService = WindowManagerGlobal.getWindowManagerService();
+
+    public ShortcutKeyDispatcher() {
+        ActivityManagerCompat.getService();
+    }
 
     public void registerShortcutKey(long j) {
         try {

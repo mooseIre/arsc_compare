@@ -32,10 +32,12 @@ public class BrightnessMirrorController {
     public BrightnessMirrorController(StatusBarWindowView statusBarWindowView) {
         this.mStatusBarWindow = statusBarWindowView;
         this.mScrimBehind = (ScrimView) statusBarWindowView.findViewById(R.id.scrim_behind);
-        this.mBrightnessMirror = statusBarWindowView.findViewById(R.id.brightness_mirror);
-        this.mMirrorContent = (FrameLayout) this.mBrightnessMirror.findViewById(R.id.mirror_content);
-        this.mNotificationPanel = statusBarWindowView.findViewById(R.id.notification_panel);
-        this.mNotificationsQuickSettingsContainer = this.mNotificationPanel.findViewById(R.id.notification_container_parent);
+        View findViewById = statusBarWindowView.findViewById(R.id.brightness_mirror);
+        this.mBrightnessMirror = findViewById;
+        this.mMirrorContent = (FrameLayout) findViewById.findViewById(R.id.mirror_content);
+        View findViewById2 = statusBarWindowView.findViewById(R.id.notification_panel);
+        this.mNotificationPanel = findViewById2;
+        this.mNotificationsQuickSettingsContainer = findViewById2.findViewById(R.id.notification_container_parent);
         this.mStackScroller = (NotificationStackScrollLayout) statusBarWindowView.findViewById(R.id.notification_stack_scroller);
     }
 
@@ -47,7 +49,7 @@ public class BrightnessMirrorController {
         this.mBrightnessMirror.setVisibility(0);
         this.mStackScroller.setFadingOut(true);
         this.mScrimBehind.animateViewAlpha(0.0f, this.TRANSITION_DURATION_OUT, Interpolators.ALPHA_OUT);
-        outAnimation(this.mNotificationsQuickSettingsContainer.animate()).withLayer().withEndAction(new Runnable() {
+        outAnimation(this.mNotificationsQuickSettingsContainer.animate()).withLayer().withEndAction(new Runnable(this) {
             public void run() {
                 ((StatusBarWindowManager) Dependency.get(StatusBarWindowManager.class)).toggleBlurBackgroundByBrightnessMirror(false);
             }
@@ -110,8 +112,9 @@ public class BrightnessMirrorController {
     public void onDensityOrFontScaleChanged() {
         int indexOfChild = this.mStatusBarWindow.indexOfChild(this.mBrightnessMirror);
         this.mStatusBarWindow.removeView(this.mBrightnessMirror);
-        this.mBrightnessMirror = LayoutInflater.from(this.mBrightnessMirror.getContext()).inflate(R.layout.brightness_mirror, this.mStatusBarWindow, false);
-        this.mStatusBarWindow.addView(this.mBrightnessMirror, indexOfChild);
+        View inflate = LayoutInflater.from(this.mBrightnessMirror.getContext()).inflate(R.layout.brightness_mirror, this.mStatusBarWindow, false);
+        this.mBrightnessMirror = inflate;
+        this.mStatusBarWindow.addView(inflate, indexOfChild);
         this.mMirrorContent = (FrameLayout) this.mBrightnessMirror.findViewById(R.id.mirror_content);
     }
 }

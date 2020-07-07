@@ -47,7 +47,7 @@ public class FalsingManager implements SensorEventListener {
 
     private FalsingManager(Context context) {
         this.mContext = context;
-        this.mSensorManager = (SensorManager) this.mContext.getSystemService(SensorManager.class);
+        this.mSensorManager = (SensorManager) context.getSystemService(SensorManager.class);
         this.mAccessibilityManager = (AccessibilityManager) context.getSystemService(AccessibilityManager.class);
         this.mDataCollector = DataCollector.getInstance(this.mContext);
         this.mHumanInteractionClassifier = HumanInteractionClassifier.getInstance(this.mContext);
@@ -66,7 +66,7 @@ public class FalsingManager implements SensorEventListener {
 
     /* access modifiers changed from: private */
     public void updateConfiguration() {
-        this.mStatusBarHeight = this.mContext.getResources().getDimensionPixelSize(17105478);
+        this.mStatusBarHeight = this.mContext.getResources().getDimensionPixelSize(17105519);
         boolean z = false;
         if (Settings.Secure.getInt(this.mContext.getContentResolver(), "falsing_manager_enforce_bouncer", 0) != 0) {
             z = true;

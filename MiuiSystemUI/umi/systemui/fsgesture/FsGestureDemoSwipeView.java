@@ -96,11 +96,12 @@ public class FsGestureDemoSwipeView extends FrameLayout {
 
     private void createFinalAnimSet(final int i) {
         if (this.finalAnimatorSet == null) {
-            this.finalAnimatorSet = new AnimatorSet();
+            AnimatorSet animatorSet = new AnimatorSet();
+            this.finalAnimatorSet = animatorSet;
             if (i != 4) {
-                this.finalAnimatorSet.playSequentially(new Animator[]{this.showingAnimator, this.movingAnimator, this.hidingAnimator});
+                animatorSet.playSequentially(new Animator[]{this.showingAnimator, this.movingAnimator, this.hidingAnimator});
             } else {
-                this.finalAnimatorSet.playSequentially(new Animator[]{this.showingAnimator, this.movingAnimator, this.scaleAnimator, this.hidingAnimator});
+                animatorSet.playSequentially(new Animator[]{this.showingAnimator, this.movingAnimator, this.scaleAnimator, this.hidingAnimator});
             }
             this.finalAnimatorSet.addListener(new AnimatorListenerAdapter() {
                 public void onAnimationEnd(Animator animator) {
@@ -132,15 +133,17 @@ public class FsGestureDemoSwipeView extends FrameLayout {
 
     private void createScaleAnimator(int i) {
         if (this.scaleAnimator == null) {
-            this.scaleAnimator = ObjectAnimator.ofPropertyValuesHolder(this, new PropertyValuesHolder[]{PropertyValuesHolder.ofFloat("scaleX", new float[]{1.0f, 1.2f}), PropertyValuesHolder.ofFloat("scaleY", new float[]{1.0f, 1.2f})});
-            this.scaleAnimator.setDuration(1000);
+            ObjectAnimator ofPropertyValuesHolder = ObjectAnimator.ofPropertyValuesHolder(this, new PropertyValuesHolder[]{PropertyValuesHolder.ofFloat("scaleX", new float[]{1.0f, 1.2f}), PropertyValuesHolder.ofFloat("scaleY", new float[]{1.0f, 1.2f})});
+            this.scaleAnimator = ofPropertyValuesHolder;
+            ofPropertyValuesHolder.setDuration(1000);
         }
     }
 
     private void createShowingAnimator(int i) {
         if (this.showingAnimator == null) {
-            this.showingAnimator = ObjectAnimator.ofPropertyValuesHolder(this, new PropertyValuesHolder[]{PropertyValuesHolder.ofFloat("scaleX", new float[]{1.2f, 1.0f}), PropertyValuesHolder.ofFloat("scaleY", new float[]{1.2f, 1.0f}), PropertyValuesHolder.ofFloat("alpha", new float[]{0.0f, 1.0f})});
-            this.showingAnimator.setDuration(200);
+            ObjectAnimator ofPropertyValuesHolder = ObjectAnimator.ofPropertyValuesHolder(this, new PropertyValuesHolder[]{PropertyValuesHolder.ofFloat("scaleX", new float[]{1.2f, 1.0f}), PropertyValuesHolder.ofFloat("scaleY", new float[]{1.2f, 1.0f}), PropertyValuesHolder.ofFloat("alpha", new float[]{0.0f, 1.0f})});
+            this.showingAnimator = ofPropertyValuesHolder;
+            ofPropertyValuesHolder.setDuration(200);
             this.showingAnimator.setStartDelay(300);
         }
     }
@@ -148,12 +151,14 @@ public class FsGestureDemoSwipeView extends FrameLayout {
     private void createHidingAnimator(int i) {
         if (this.hidingAnimator == null) {
             if (i != 4) {
-                this.hidingAnimator = ObjectAnimator.ofFloat(this, "alpha", new float[]{1.0f, 0.0f});
-                this.hidingAnimator.setDuration(300);
+                ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this, "alpha", new float[]{1.0f, 0.0f});
+                this.hidingAnimator = ofFloat;
+                ofFloat.setDuration(300);
                 return;
             }
-            this.hidingAnimator = ObjectAnimator.ofPropertyValuesHolder(this, new PropertyValuesHolder[]{PropertyValuesHolder.ofFloat("scaleX", new float[]{1.2f, 1.5f}), PropertyValuesHolder.ofFloat("scaleY", new float[]{1.2f, 1.5f}), PropertyValuesHolder.ofFloat("alpha", new float[]{1.0f, 0.0f})});
-            this.hidingAnimator.setDuration(100);
+            ObjectAnimator ofPropertyValuesHolder = ObjectAnimator.ofPropertyValuesHolder(this, new PropertyValuesHolder[]{PropertyValuesHolder.ofFloat("scaleX", new float[]{1.2f, 1.5f}), PropertyValuesHolder.ofFloat("scaleY", new float[]{1.2f, 1.5f}), PropertyValuesHolder.ofFloat("alpha", new float[]{1.0f, 0.0f})});
+            this.hidingAnimator = ofPropertyValuesHolder;
+            ofPropertyValuesHolder.setDuration(100);
         }
     }
 

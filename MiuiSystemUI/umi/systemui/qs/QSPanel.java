@@ -111,15 +111,17 @@ public class QSPanel extends LinearLayout implements QSHost.Callback {
 
     /* access modifiers changed from: protected */
     public void setupTileLayout() {
-        this.mTileLayout = (QSTileLayout) LayoutInflater.from(this.mContext).inflate(R.layout.qs_paged_tile_layout, this, false);
-        this.mTileLayout.setListening(this.mListening);
+        QSTileLayout qSTileLayout = (QSTileLayout) LayoutInflater.from(this.mContext).inflate(R.layout.qs_paged_tile_layout, this, false);
+        this.mTileLayout = qSTileLayout;
+        qSTileLayout.setListening(this.mListening);
         addView((View) this.mTileLayout);
     }
 
     /* access modifiers changed from: protected */
     public void setupPageIndicator() {
-        this.mPageIndicator = LayoutInflater.from(this.mContext).inflate(R.layout.qs_page_indicator, this, false);
-        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) this.mPageIndicator.getLayoutParams();
+        View inflate = LayoutInflater.from(this.mContext).inflate(R.layout.qs_page_indicator, this, false);
+        this.mPageIndicator = inflate;
+        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) inflate.getLayoutParams();
         layoutParams.bottomMargin = this.mContext.getResources().getDimensionPixelSize(R.dimen.qs_page_indicator_dot_bottom_margin);
         addView(this.mPageIndicator, layoutParams);
         QSTileLayout qSTileLayout = this.mTileLayout;
@@ -130,8 +132,9 @@ public class QSPanel extends LinearLayout implements QSHost.Callback {
 
     /* access modifiers changed from: protected */
     public void setupFooter() {
-        this.mFooter = new QSSecurityFooter(this, this.mContext);
-        addView(this.mFooter.getView());
+        QSSecurityFooter qSSecurityFooter = new QSSecurityFooter(this, this.mContext);
+        this.mFooter = qSSecurityFooter;
+        addView(qSSecurityFooter.getView());
     }
 
     /* access modifiers changed from: protected */
@@ -183,7 +186,7 @@ public class QSPanel extends LinearLayout implements QSHost.Callback {
 
     public void setHost(QSTileHost qSTileHost) {
         this.mHost = qSTileHost;
-        this.mHost.addCallback(this);
+        qSTileHost.addCallback(this);
         setTiles(this.mHost.getTiles());
         this.mFooter.setHostEnvironment(qSTileHost);
     }
@@ -213,7 +216,7 @@ public class QSPanel extends LinearLayout implements QSHost.Callback {
     public void setExpanded(boolean z) {
         if (this.mExpanded != z) {
             this.mExpanded = z;
-            if (!this.mExpanded) {
+            if (!z) {
                 QSTileLayout qSTileLayout = this.mTileLayout;
                 if (qSTileLayout instanceof PagedTileLayout) {
                     ((PagedTileLayout) qSTileLayout).setCurrentItem(0, false);
@@ -429,8 +432,9 @@ public class QSPanel extends LinearLayout implements QSHost.Callback {
     private void handleShowDetailTile(TileRecord tileRecord, boolean z) {
         if ((this.mDetailRecord != null) != z || this.mDetailRecord != tileRecord) {
             if (z) {
-                tileRecord.detailAdapter = tileRecord.tile.getDetailAdapter();
-                if (tileRecord.detailAdapter == null) {
+                DetailAdapter detailAdapter = tileRecord.tile.getDetailAdapter();
+                tileRecord.detailAdapter = detailAdapter;
+                if (detailAdapter == null) {
                     return;
                 }
             }
@@ -458,8 +462,7 @@ public class QSPanel extends LinearLayout implements QSHost.Callback {
     public void setDetailRecord(Record record) {
         if (record != this.mDetailRecord) {
             this.mDetailRecord = record;
-            Record record2 = this.mDetailRecord;
-            fireScanStateChanged((record2 instanceof TileRecord) && ((TileRecord) record2).scanState);
+            fireScanStateChanged((record instanceof TileRecord) && ((TileRecord) record).scanState);
         }
     }
 

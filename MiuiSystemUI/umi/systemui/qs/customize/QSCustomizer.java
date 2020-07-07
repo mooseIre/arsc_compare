@@ -37,28 +37,12 @@ import java.util.Map;
 public class QSCustomizer extends LinearLayout implements TileQueryHelper.TileStateListener, QSTile.Callback {
     /* access modifiers changed from: private */
     public boolean isShown;
-    private Animator.AnimatorListener mAnimInListener = this.mExpandAnimationListener;
+    private Animator.AnimatorListener mAnimInListener;
     /* access modifiers changed from: private */
-    public Animator.AnimatorListener mAnimOutListener = this.mCollapseAnimationListener;
+    public Animator.AnimatorListener mAnimOutListener;
     /* access modifiers changed from: private */
-    public final QSDetailClipper mClipper = new QSDetailClipper(this);
-    private final Animator.AnimatorListener mCollapseAnimationListener = new AnimatorListenerAdapter() {
-        public void onAnimationEnd(Animator animator) {
-            if (!QSCustomizer.this.isShown) {
-                QSCustomizer.this.setVisibility(8);
-            }
-            QSCustomizer.this.setCustomizerAnimating(false);
-            QSCustomizer.this.mRecyclerView.setAdapter(QSCustomizer.this.mTileAdapter);
-        }
-
-        public void onAnimationCancel(Animator animator) {
-            if (!QSCustomizer.this.isShown) {
-                QSCustomizer.this.setVisibility(8);
-            }
-            QSCustomizer.this.setCustomizerAnimating(false);
-        }
-    };
-    private int mCount;
+    public final QSDetailClipper mClipper;
+    private final Animator.AnimatorListener mCollapseAnimationListener;
     private boolean mCustomizerAnimating;
     private boolean mCustomizing;
     protected TextView mDoneButton;
@@ -183,6 +167,26 @@ public class QSCustomizer extends LinearLayout implements TileQueryHelper.TileSt
 
     public QSCustomizer(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
+        AnonymousClass8 r5 = new AnimatorListenerAdapter() {
+            public void onAnimationEnd(Animator animator) {
+                if (!QSCustomizer.this.isShown) {
+                    QSCustomizer.this.setVisibility(8);
+                }
+                QSCustomizer.this.setCustomizerAnimating(false);
+                QSCustomizer.this.mRecyclerView.setAdapter(QSCustomizer.this.mTileAdapter);
+            }
+
+            public void onAnimationCancel(Animator animator) {
+                if (!QSCustomizer.this.isShown) {
+                    QSCustomizer.this.setVisibility(8);
+                }
+                QSCustomizer.this.setCustomizerAnimating(false);
+            }
+        };
+        this.mCollapseAnimationListener = r5;
+        this.mAnimInListener = this.mExpandAnimationListener;
+        this.mAnimOutListener = r5;
+        this.mClipper = new QSDetailClipper(this);
         setClickable(true);
         this.mSpanCount = Math.max(1, this.mContext.getResources().getInteger(R.integer.quick_settings_num_columns));
         LayoutInflater.from(getContext()).inflate(R.layout.qs_customize_panel_content, this);
@@ -196,8 +200,9 @@ public class QSCustomizer extends LinearLayout implements TileQueryHelper.TileSt
         DefaultItemAnimator defaultItemAnimator = new DefaultItemAnimator();
         defaultItemAnimator.setMoveDuration(150);
         this.mRecyclerView.setItemAnimator(defaultItemAnimator);
-        this.mResetButton = (TextView) findViewById(16908314);
-        this.mResetButton.setText(R.string.reset);
+        TextView textView = (TextView) findViewById(16908314);
+        this.mResetButton = textView;
+        textView.setText(R.string.reset);
         this.mResetButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 boolean unused = QSCustomizer.this.mResetClicked = true;
@@ -205,8 +210,9 @@ public class QSCustomizer extends LinearLayout implements TileQueryHelper.TileSt
                 QSCustomizer.this.reset();
             }
         });
-        this.mDoneButton = (TextView) findViewById(16908313);
-        this.mDoneButton.setText(R.string.quick_settings_done);
+        TextView textView2 = (TextView) findViewById(16908313);
+        this.mDoneButton = textView2;
+        textView2.setText(R.string.quick_settings_done);
         this.mDoneButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 boolean unused = QSCustomizer.this.mDonedClicked = true;
@@ -226,7 +232,7 @@ public class QSCustomizer extends LinearLayout implements TileQueryHelper.TileSt
         super.onConfigurationChanged(configuration);
         this.mTitle.setText(R.string.qs_customize_title);
         this.mSubTitle.setText(R.string.drag_to_add_tiles);
-        this.mResetButton.setText(17041020);
+        this.mResetButton.setText(17041144);
         this.mDoneButton.setText(R.string.quick_settings_done);
         Resources resources = this.mContext.getResources();
         int max = Math.max(1, resources.getInteger(R.integer.quick_settings_num_columns));
@@ -240,7 +246,7 @@ public class QSCustomizer extends LinearLayout implements TileQueryHelper.TileSt
                 this.mHeader.setVisibility(8);
             }
             this.mSpanCount = max;
-            this.mTileAdapter.setSpanCount(this.mSpanCount);
+            this.mTileAdapter.setSpanCount(max);
             updateLayout();
         }
     }
@@ -374,15 +380,11 @@ public class QSCustomizer extends LinearLayout implements TileQueryHelper.TileSt
 
     /* access modifiers changed from: private */
     public void setTileSpecs() {
-        int i;
         ArrayList arrayList = new ArrayList();
         Collection<QSTile> tiles = this.mHost.getTiles();
-        if (tiles == null) {
-            i = 0;
-        } else {
-            i = tiles.size();
+        if (tiles != null) {
+            tiles.size();
         }
-        this.mCount = i;
         for (QSTile next : tiles) {
             if (!"edit".equals(next.getTileSpec())) {
                 arrayList.add(next.getTileSpec());
@@ -417,7 +419,7 @@ public class QSCustomizer extends LinearLayout implements TileQueryHelper.TileSt
 
     public void onShowEdit(boolean z) {
         post(new Runnable(z) {
-            private final /* synthetic */ boolean f$1;
+            public final /* synthetic */ boolean f$1;
 
             {
                 this.f$1 = r2;
@@ -429,6 +431,8 @@ public class QSCustomizer extends LinearLayout implements TileQueryHelper.TileSt
         });
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$onShowEdit$0 */
     public /* synthetic */ void lambda$onShowEdit$0$QSCustomizer(boolean z) {
         if (z) {
             this.mQsPanelCallback.show(this.mX, this.mY);

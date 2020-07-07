@@ -19,7 +19,6 @@ import java.util.ArrayList;
 
 public class BatteryIcon {
     private static BatteryIcon sBatteryIcon;
-    private final int BATTERY_RANGE_LOAD = 10;
     private int mBatteryColumns;
     private int mChargeDarkLevel = -1;
     private int mChargeDigitDarkLevel = -1;
@@ -57,7 +56,7 @@ public class BatteryIcon {
 
     private BatteryIcon(Context context) {
         this.mContext = context;
-        this.mBatteryColumns = this.mContext.getResources().getInteger(R.integer.battery_columns);
+        this.mBatteryColumns = context.getResources().getInteger(R.integer.battery_columns);
     }
 
     public LevelListDrawable getGraphicIcon(int i) {

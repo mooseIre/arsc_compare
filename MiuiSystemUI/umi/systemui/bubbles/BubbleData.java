@@ -69,8 +69,9 @@ public class BubbleData {
 
     public BubbleData(Context context) {
         this.mContext = context;
-        this.mBubbles = new ArrayList();
-        this.mStateChange = new Update(this.mBubbles);
+        ArrayList arrayList = new ArrayList();
+        this.mBubbles = arrayList;
+        this.mStateChange = new Update(arrayList);
     }
 
     public boolean hasBubbles() {
@@ -164,10 +165,14 @@ public class BubbleData {
         }
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$trim$0 */
     public /* synthetic */ boolean lambda$trim$0$BubbleData(Bubble bubble) {
         return !bubble.equals(this.mSelectedBubble);
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$trim$1 */
     public /* synthetic */ void lambda$trim$1$BubbleData(Bubble bubble) {
         doRemove(bubble.getKey(), 2);
     }
@@ -306,7 +311,7 @@ public class BubbleData {
 
     private boolean hasBubbleWithGroupId(String str) {
         return this.mBubbles.stream().anyMatch(new Predicate(str) {
-            private final /* synthetic */ String f$0;
+            public final /* synthetic */ String f$0;
 
             {
                 this.f$0 = r1;
@@ -358,7 +363,7 @@ public class BubbleData {
         ArrayList arrayList = new ArrayList(this.mBubbles.size());
         for (String r3 : (List) hashMap.entrySet().stream().sorted(GROUPS_BY_MAX_SORT_KEY_DESCENDING).map($$Lambda$CSz_ibwXhtkKNl72Q8tR5oBgkWk.INSTANCE).collect(Collectors.toList())) {
             this.mBubbles.stream().filter(new Predicate(r3) {
-                private final /* synthetic */ String f$0;
+                public final /* synthetic */ String f$0;
 
                 {
                     this.f$0 = r1;
@@ -368,7 +373,7 @@ public class BubbleData {
                     return ((Bubble) obj).getGroupId().equals(this.f$0);
                 }
             }).sorted(BUBBLES_BY_SORT_KEY_DESCENDING).forEachOrdered(new Consumer(arrayList) {
-                private final /* synthetic */ List f$0;
+                public final /* synthetic */ List f$0;
 
                 {
                     this.f$0 = r1;

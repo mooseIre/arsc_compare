@@ -71,6 +71,8 @@ public class PipAccessibilityInteractionConnection extends IAccessibilityInterac
         }
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$performAccessibilityAction$0 */
     public /* synthetic */ void lambda$performAccessibilityAction$0$PipAccessibilityInteractionConnection() {
         this.mCallbacks.onAccessibilityShowMenu();
     }

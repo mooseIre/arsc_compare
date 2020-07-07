@@ -273,8 +273,9 @@ public class CollapsedStatusBarFragment extends Fragment implements LocationCont
             }
         }
         initCutoutType(bundle);
-        this.mController = StatusBarFactory.getInstance().getCollapsedStatusBarFragmentController(this.mCutoutType);
-        this.mController.init(this);
+        CollapsedStatusBarFragmentController collapsedStatusBarFragmentController = StatusBarFactory.getInstance().getCollapsedStatusBarFragmentController(this.mCutoutType);
+        this.mController = collapsedStatusBarFragmentController;
+        collapsedStatusBarFragmentController.init(this);
         ViewGroup viewGroup = (ViewGroup) this.mStatusBar.findViewById(R.id.phone_status_bar_contents_container);
         LayoutInflater.from(viewGroup.getContext()).inflate(this.mController.getLayoutId(), viewGroup, true);
         this.mStatusBar.initBarTransitions();
@@ -285,8 +286,9 @@ public class CollapsedStatusBarFragment extends Fragment implements LocationCont
         this.mSystemIconArea = (LinearLayout) this.mStatusBar.findViewById(R.id.system_icon_area);
         this.mSignalClusterView = (SignalClusterView) this.mStatusBar.findViewById(R.id.signal_cluster);
         this.mNetworkSpeedView = (NetworkSpeedView) this.mSystemIconArea.findViewById(R.id.network_speed_view);
-        this.mStatusClock = (Clock) this.mStatusBar.findViewById(R.id.clock);
-        this.mStatusClock.setVisibility(this.mClockVisible ? 0 : 8);
+        Clock clock = (Clock) this.mStatusBar.findViewById(R.id.clock);
+        this.mStatusClock = clock;
+        clock.setVisibility(this.mClockVisible ? 0 : 8);
         this.mGpsDriveMode = (ImageView) this.mStatusBar.findViewById(R.id.gps_drivemode);
         this.mMiuiStatusBarPromptLayout = (FrameLayout) this.mStatusBar.findViewById(R.id.notchLeftEar);
         updateViewsNotch();
@@ -348,17 +350,19 @@ public class CollapsedStatusBarFragment extends Fragment implements LocationCont
     }
 
     private void addDarkReceivers() {
-        ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).addDarkReceiver((DarkIconDispatcher.DarkReceiver) this.mSignalClusterView);
-        ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).addDarkReceiver((DarkIconDispatcher.DarkReceiver) this.mNetworkSpeedView);
-        ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).addDarkReceiver((DarkIconDispatcher.DarkReceiver) this.mStatusClock);
-        ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).addDarkReceiver(this.mBattery);
+        Class cls = DarkIconDispatcher.class;
+        ((DarkIconDispatcher) Dependency.get(cls)).addDarkReceiver((DarkIconDispatcher.DarkReceiver) this.mSignalClusterView);
+        ((DarkIconDispatcher) Dependency.get(cls)).addDarkReceiver((DarkIconDispatcher.DarkReceiver) this.mNetworkSpeedView);
+        ((DarkIconDispatcher) Dependency.get(cls)).addDarkReceiver((DarkIconDispatcher.DarkReceiver) this.mStatusClock);
+        ((DarkIconDispatcher) Dependency.get(cls)).addDarkReceiver(this.mBattery);
     }
 
     private void removeDarkReceivers() {
-        ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).removeDarkReceiver((DarkIconDispatcher.DarkReceiver) this.mSignalClusterView);
-        ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).removeDarkReceiver((DarkIconDispatcher.DarkReceiver) this.mNetworkSpeedView);
-        ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).removeDarkReceiver((DarkIconDispatcher.DarkReceiver) this.mStatusClock);
-        ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).removeDarkReceiver(this.mBattery);
+        Class cls = DarkIconDispatcher.class;
+        ((DarkIconDispatcher) Dependency.get(cls)).removeDarkReceiver((DarkIconDispatcher.DarkReceiver) this.mSignalClusterView);
+        ((DarkIconDispatcher) Dependency.get(cls)).removeDarkReceiver((DarkIconDispatcher.DarkReceiver) this.mNetworkSpeedView);
+        ((DarkIconDispatcher) Dependency.get(cls)).removeDarkReceiver((DarkIconDispatcher.DarkReceiver) this.mStatusClock);
+        ((DarkIconDispatcher) Dependency.get(cls)).removeDarkReceiver(this.mBattery);
     }
 
     private void registerListeners() {
@@ -390,9 +394,10 @@ public class CollapsedStatusBarFragment extends Fragment implements LocationCont
 
     public void initNotificationIconArea(NotificationIconAreaController notificationIconAreaController) {
         ViewGroup viewGroup = (ViewGroup) this.mStatusBar.findViewById(R.id.notification_icon_area);
-        this.mNotificationIconAreaInner = notificationIconAreaController.getNotificationInnerAreaView();
+        View notificationInnerAreaView = notificationIconAreaController.getNotificationInnerAreaView();
+        this.mNotificationIconAreaInner = notificationInnerAreaView;
         this.mNotificationIconAreaController = notificationIconAreaController;
-        if (this.mNotificationIconAreaInner.getParent() != null) {
+        if (notificationInnerAreaView.getParent() != null) {
             ((ViewGroup) this.mNotificationIconAreaInner.getParent()).removeView(this.mNotificationIconAreaInner);
         }
         viewGroup.addView(this.mNotificationIconAreaInner);
@@ -506,7 +511,7 @@ public class CollapsedStatusBarFragment extends Fragment implements LocationCont
                 view.setVisibility(i);
                 return;
             }
-            view.animate().alpha(0.0f).setDuration(160).setStartDelay(0).setInterpolator(Interpolators.ALPHA_OUT).withEndAction(new Runnable() {
+            view.animate().alpha(0.0f).setDuration(160).setStartDelay(0).setInterpolator(Interpolators.ALPHA_OUT).withEndAction(new Runnable(this) {
                 public void run() {
                     view.setVisibility(i);
                     HideAnimateCallback hideAnimateCallback = hideAnimateCallback;
@@ -593,7 +598,7 @@ public class CollapsedStatusBarFragment extends Fragment implements LocationCont
         if (this.mClockVisible != z6 || z4) {
             this.mClockVisible = z6;
             CollapsedStatusBarFragmentController collapsedStatusBarFragmentController = this.mController;
-            if (this.mClockVisible && !this.mNetworkController.hasEmergencyCryptKeeperText()) {
+            if (z6 && !this.mNetworkController.hasEmergencyCryptKeeperText()) {
                 z5 = true;
             }
             collapsedStatusBarFragmentController.updateLeftPartVisibility(z5, z3, true, z4);
@@ -652,8 +657,9 @@ public class CollapsedStatusBarFragment extends Fragment implements LocationCont
             }
             return;
         }
-        clock.mForceHideAmPm = i & -3;
-        if (i > 0 && clock.mForceHideAmPm == 0) {
+        int i2 = i & -3;
+        clock.mForceHideAmPm = i2;
+        if (i > 0 && i2 == 0) {
             clock.update();
         }
     }
@@ -760,11 +766,11 @@ public class CollapsedStatusBarFragment extends Fragment implements LocationCont
                 com.android.systemui.statusbar.phone.CollapsedStatusBarFragmentController r7 = r7.mController
                 boolean r7 = r7.isNarrowNotch()
                 if (r7 != 0) goto L_0x005f
-                r7 = 2131233327(0x7f080a2f, float:1.8082788E38)
+                r7 = 2131233324(0x7f080a2c, float:1.8082782E38)
                 if (r1 == r7) goto L_0x0050
-                r7 = 2131233331(0x7f080a33, float:1.8082796E38)
+                r7 = 2131233328(0x7f080a30, float:1.808279E38)
                 if (r1 == r7) goto L_0x0050
-                r7 = 2131233329(0x7f080a31, float:1.8082792E38)
+                r7 = 2131233326(0x7f080a2e, float:1.8082786E38)
                 if (r1 != r7) goto L_0x004e
                 goto L_0x0050
             L_0x004e:

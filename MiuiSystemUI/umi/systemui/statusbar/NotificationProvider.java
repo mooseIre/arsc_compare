@@ -21,7 +21,7 @@ import miui.util.Log;
 
 public class NotificationProvider extends ContentProvider {
     public static final Uri URI_FOLD_IMPORTANCE = Uri.parse("content://statusbar.notification/foldImportance");
-    private static final UriMatcher sMatcher = new UriMatcher(-1);
+    private static final UriMatcher sMatcher;
 
     public String getType(Uri uri) {
         return null;
@@ -32,7 +32,9 @@ public class NotificationProvider extends ContentProvider {
     }
 
     static {
-        sMatcher.addURI("keyguard.notification", "notifications", 1);
+        UriMatcher uriMatcher = new UriMatcher(-1);
+        sMatcher = uriMatcher;
+        uriMatcher.addURI("keyguard.notification", "notifications", 1);
         sMatcher.addURI("keyguard.notification", "notifications/#", 2);
         sMatcher.addURI("keyguard.notification", "app_corner", 3);
     }
@@ -100,6 +102,7 @@ public class NotificationProvider extends ContentProvider {
     }
 
     public Bundle call(String str, String str2, Bundle bundle) {
+        Class cls = NotificationSettingsManager.class;
         if ("getKeyguardNotificationSortedKeys".equals(str)) {
             Bundle bundle2 = new Bundle();
             bundle2.putStringArrayList("sortedKeys", (ArrayList) ((KeyguardNotificationHelper) Dependency.get(KeyguardNotificationHelper.class)).getSortedKeys());
@@ -112,34 +115,34 @@ public class NotificationProvider extends ContentProvider {
         }
         Bundle bundle3 = new Bundle();
         if ("getFoldImportance".equals(str)) {
-            bundle3.putInt("foldImportance", ((NotificationSettingsManager) Dependency.get(NotificationSettingsManager.class)).getFoldImportance(getContext(), string));
+            bundle3.putInt("foldImportance", ((NotificationSettingsManager) Dependency.get(cls)).getFoldImportance(getContext(), string));
         } else if ("canShowBadge".equals(str)) {
-            bundle3.putBoolean("canShowBadge", ((NotificationSettingsManager) Dependency.get(NotificationSettingsManager.class)).canShowBadge(getContext(), string));
+            bundle3.putBoolean("canShowBadge", ((NotificationSettingsManager) Dependency.get(cls)).canShowBadge(getContext(), string));
         } else if ("canFloat".equals(str)) {
-            bundle3.putBoolean("canShowFloat", ((NotificationSettingsManager) Dependency.get(NotificationSettingsManager.class)).canFloat(getContext(), string, string2));
+            bundle3.putBoolean("canShowFloat", ((NotificationSettingsManager) Dependency.get(cls)).canFloat(getContext(), string, string2));
         } else if ("canShowOnKeyguard".equals(str)) {
-            bundle3.putBoolean("canShowOnKeyguard", ((NotificationSettingsManager) Dependency.get(NotificationSettingsManager.class)).canShowOnKeyguard(getContext(), string, string2));
+            bundle3.putBoolean("canShowOnKeyguard", ((NotificationSettingsManager) Dependency.get(cls)).canShowOnKeyguard(getContext(), string, string2));
         } else if ("canSound".equals(str)) {
-            bundle3.putBoolean("canSound", ((NotificationSettingsManager) Dependency.get(NotificationSettingsManager.class)).canSound(getContext(), string));
+            bundle3.putBoolean("canSound", ((NotificationSettingsManager) Dependency.get(cls)).canSound(getContext(), string));
         } else if ("canVibrate".equals(str)) {
-            bundle3.putBoolean("canVibrate", ((NotificationSettingsManager) Dependency.get(NotificationSettingsManager.class)).canVibrate(getContext(), string));
+            bundle3.putBoolean("canVibrate", ((NotificationSettingsManager) Dependency.get(cls)).canVibrate(getContext(), string));
         } else if ("canLights".equals(str)) {
-            bundle3.putBoolean("canLights", ((NotificationSettingsManager) Dependency.get(NotificationSettingsManager.class)).canLights(getContext(), string));
+            bundle3.putBoolean("canLights", ((NotificationSettingsManager) Dependency.get(cls)).canLights(getContext(), string));
         } else if (NotificationSettingsHelper.isUidSystem(Binder.getCallingUid())) {
             if ("setFoldImportance".equals(str)) {
-                ((NotificationSettingsManager) Dependency.get(NotificationSettingsManager.class)).setFoldImportance(getContext(), string, bundle.getInt("foldImportance", 0));
+                ((NotificationSettingsManager) Dependency.get(cls)).setFoldImportance(getContext(), string, bundle.getInt("foldImportance", 0));
             } else if ("setShowBadge".equals(str)) {
-                ((NotificationSettingsManager) Dependency.get(NotificationSettingsManager.class)).setShowBadge(getContext(), string, bundle.getBoolean("canShowBadge", false));
+                ((NotificationSettingsManager) Dependency.get(cls)).setShowBadge(getContext(), string, bundle.getBoolean("canShowBadge", false));
             } else if ("setFloat".equals(str)) {
-                ((NotificationSettingsManager) Dependency.get(NotificationSettingsManager.class)).setFloat(getContext(), string, string2, bundle.getBoolean("canShowFloat", false));
+                ((NotificationSettingsManager) Dependency.get(cls)).setFloat(getContext(), string, string2, bundle.getBoolean("canShowFloat", false));
             } else if ("setShowOnKeyguard".equals(str)) {
-                ((NotificationSettingsManager) Dependency.get(NotificationSettingsManager.class)).setShowOnKeyguard(getContext(), string, string2, bundle.getBoolean("canShowOnKeyguard", false));
+                ((NotificationSettingsManager) Dependency.get(cls)).setShowOnKeyguard(getContext(), string, string2, bundle.getBoolean("canShowOnKeyguard", false));
             } else if ("setSound".equals(str)) {
-                ((NotificationSettingsManager) Dependency.get(NotificationSettingsManager.class)).setSound(getContext(), string, bundle.getBoolean("canSound", false));
+                ((NotificationSettingsManager) Dependency.get(cls)).setSound(getContext(), string, bundle.getBoolean("canSound", false));
             } else if ("setVibrate".equals(str)) {
-                ((NotificationSettingsManager) Dependency.get(NotificationSettingsManager.class)).setVibrate(getContext(), string, bundle.getBoolean("canVibrate", false));
+                ((NotificationSettingsManager) Dependency.get(cls)).setVibrate(getContext(), string, bundle.getBoolean("canVibrate", false));
             } else if ("setLights".equals(str)) {
-                ((NotificationSettingsManager) Dependency.get(NotificationSettingsManager.class)).setLights(getContext(), string, bundle.getBoolean("canLights", false));
+                ((NotificationSettingsManager) Dependency.get(cls)).setLights(getContext(), string, bundle.getBoolean("canLights", false));
             }
         }
         return bundle3;

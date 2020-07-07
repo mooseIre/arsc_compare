@@ -82,7 +82,7 @@ public class CollapsedStatusBarFragmentControllerDripImpl implements CollapsedSt
         this.mSystemIconArea = view.findViewById(R.id.system_icon_area);
         this.mDripWifiApOn = (AnimatedImageView) view.findViewById(R.id.drip_wifi_ap_on);
         this.mSlaveWifi = (AnimatedImageView) view.findViewById(R.id.drip_slave_wifi);
-        this.mConfigurationListener = new ConfigurationController.ConfigurationListener() {
+        AnonymousClass1 r0 = new ConfigurationController.ConfigurationListener() {
             public void onConfigChanged(Configuration configuration) {
             }
 
@@ -91,7 +91,8 @@ public class CollapsedStatusBarFragmentControllerDripImpl implements CollapsedSt
                 DripStatusBarUtils.updateContainerWidth(CollapsedStatusBarFragmentControllerDripImpl.this.mSystemIconArea, false, false, CollapsedStatusBarFragmentControllerDripImpl.this.mExtraSpace);
             }
         };
-        this.mConfigurationListener.onDensityOrFontScaleChanged();
+        this.mConfigurationListener = r0;
+        r0.onDensityOrFontScaleChanged();
         this.mPhoneStatusBarContainer = (ViewGroup) view.findViewById(R.id.phone_status_bar_contents_container);
         ((BatteryMeterView) this.mSystemIconArea.findViewById(R.id.battery)).setBatteryMeterViewDelegate(new BatteryMeterView.BatteryMeterViewDelegate() {
             public void onNumberToIconChanged(boolean z) {
@@ -105,6 +106,8 @@ public class CollapsedStatusBarFragmentControllerDripImpl implements CollapsedSt
 
     public void start(View view) {
         NetworkSpeedSplitter networkSpeedSplitter;
+        Class cls = StatusBarIconController.class;
+        Class cls2 = DarkIconDispatcher.class;
         Clock clock = this.mClock;
         if (!(clock == null || this.mDripNetwokSpeedView == null || (networkSpeedSplitter = this.mSplitter) == null)) {
             boolean z = true;
@@ -117,35 +120,37 @@ public class CollapsedStatusBarFragmentControllerDripImpl implements CollapsedSt
             this.mClock.addVisibilityListener(this.mSplitter);
             this.mDripNetwokSpeedView.addVisibilityListener(this.mSplitter);
         }
-        ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).addDarkReceiver((DarkIconDispatcher.DarkReceiver) this.mDripNetwokSpeedView);
-        ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).addDarkReceiver((DarkIconDispatcher.DarkReceiver) this.mSplitter);
+        ((DarkIconDispatcher) Dependency.get(cls2)).addDarkReceiver((DarkIconDispatcher.DarkReceiver) this.mDripNetwokSpeedView);
+        ((DarkIconDispatcher) Dependency.get(cls2)).addDarkReceiver((DarkIconDispatcher.DarkReceiver) this.mSplitter);
         this.mOrderedIconManager = new StatusBarIconController.OrderedIconManager(this.mFragment.mNotchLeftEarIcons, new ArrayList(Arrays.asList(new String[]{"quiet", "volume", "alarm_clock", "headset", "micphone", "ble_unlock_mode"})));
-        ((StatusBarIconController) Dependency.get(StatusBarIconController.class)).addIconGroup(this.mOrderedIconManager);
-        ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).addDarkReceiver((ImageView) this.mDripWifiApOn);
+        ((StatusBarIconController) Dependency.get(cls)).addIconGroup(this.mOrderedIconManager);
+        ((DarkIconDispatcher) Dependency.get(cls2)).addDarkReceiver((ImageView) this.mDripWifiApOn);
         this.mHotspot.addCallback(this);
         this.mOrderedRightIconManager = new StatusBarIconController.OrderedIconManager(this.mFragment.mStatusIcons, new ArrayList(Arrays.asList(new String[]{"managed_profile", MiStat.Param.LOCATION, "bluetooth"})));
-        ((StatusBarIconController) Dependency.get(StatusBarIconController.class)).addIconGroup(this.mOrderedRightIconManager);
+        ((StatusBarIconController) Dependency.get(cls)).addIconGroup(this.mOrderedRightIconManager);
         ((ConfigurationController) Dependency.get(ConfigurationController.class)).addCallback(this.mConfigurationListener);
         this.mNetworkController.addCallback(this);
-        ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).addDarkReceiver((ImageView) this.mSlaveWifi);
+        ((DarkIconDispatcher) Dependency.get(cls2)).addDarkReceiver((ImageView) this.mSlaveWifi);
     }
 
     public void stop() {
         NetworkSpeedSplitter networkSpeedSplitter;
+        Class cls = StatusBarIconController.class;
+        Class cls2 = DarkIconDispatcher.class;
         if (this.mOrderedIconManager != null) {
-            ((StatusBarIconController) Dependency.get(StatusBarIconController.class)).removeIconGroup(this.mOrderedIconManager);
+            ((StatusBarIconController) Dependency.get(cls)).removeIconGroup(this.mOrderedIconManager);
         }
         if (this.mOrderedRightIconManager != null) {
-            ((StatusBarIconController) Dependency.get(StatusBarIconController.class)).removeIconGroup(this.mOrderedRightIconManager);
+            ((StatusBarIconController) Dependency.get(cls)).removeIconGroup(this.mOrderedRightIconManager);
         }
         if (this.mDripNetwokSpeedView != null) {
-            ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).removeDarkReceiver((DarkIconDispatcher.DarkReceiver) this.mDripNetwokSpeedView);
+            ((DarkIconDispatcher) Dependency.get(cls2)).removeDarkReceiver((DarkIconDispatcher.DarkReceiver) this.mDripNetwokSpeedView);
         }
         if (this.mSplitter != null) {
-            ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).removeDarkReceiver((DarkIconDispatcher.DarkReceiver) this.mSplitter);
+            ((DarkIconDispatcher) Dependency.get(cls2)).removeDarkReceiver((DarkIconDispatcher.DarkReceiver) this.mSplitter);
         }
         if (this.mDripWifiApOn != null) {
-            ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).removeDarkReceiver((ImageView) this.mDripWifiApOn);
+            ((DarkIconDispatcher) Dependency.get(cls2)).removeDarkReceiver((ImageView) this.mDripWifiApOn);
         }
         HotspotController hotspotController = this.mHotspot;
         if (hotspotController != null) {
@@ -160,7 +165,7 @@ public class CollapsedStatusBarFragmentControllerDripImpl implements CollapsedSt
             this.mDripNetwokSpeedView.removeVisibilityListener(this.mSplitter);
         }
         if (this.mSlaveWifi != null) {
-            ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).removeDarkReceiver((ImageView) this.mSlaveWifi);
+            ((DarkIconDispatcher) Dependency.get(cls2)).removeDarkReceiver((ImageView) this.mSlaveWifi);
         }
         NetworkController networkController = this.mNetworkController;
         if (networkController != null) {

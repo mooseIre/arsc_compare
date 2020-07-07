@@ -16,8 +16,9 @@ public class DividerWindowManager {
     }
 
     public void add(DividerView dividerView, int i, int i2) {
-        this.mLp = new WindowManager.LayoutParams(i, i2, 2034, 545521704, -3);
-        this.mLp.setTitle("DockedStackDivider");
+        WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(i, i2, 2034, 545521704, -3);
+        this.mLp = layoutParams;
+        layoutParams.setTitle("DockedStackDivider");
         this.mLp.privateFlags |= 64;
         dividerView.setSystemUiVisibility(1792);
         this.mView = dividerView;

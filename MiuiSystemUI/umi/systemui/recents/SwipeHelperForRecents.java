@@ -13,21 +13,17 @@ import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewConfiguration;
 import androidx.dynamicanimation.animation.SpringAnimation;
-import com.android.systemui.Gefingerpoken;
 import com.android.systemui.Interpolators;
 import com.android.systemui.plugins.R;
 import com.android.systemui.recents.misc.SpringAnimationUtils;
 import com.android.systemui.recents.views.TaskView;
 import java.util.HashMap;
 
-public class SwipeHelperForRecents implements Gefingerpoken {
+public class SwipeHelperForRecents {
     private int DEFAULT_ESCAPE_ANIMATION_DURATION = 300;
     private int MAX_DISMISS_VELOCITY = 4000;
-    private int MAX_ESCAPE_ANIMATION_DURATION = 300;
-    private float SWIPE_ESCAPE_VELOCITY = 100.0f;
     /* access modifiers changed from: private */
     public Callback mCallback;
-    private boolean mCanCurrViewBeDimissed;
     /* access modifiers changed from: private */
     public View mCurrView;
     /* access modifiers changed from: private */
@@ -90,14 +86,10 @@ public class SwipeHelperForRecents implements Gefingerpoken {
     }
 
     /* access modifiers changed from: protected */
-    public float getSize(View view) {
-        throw null;
-    }
+    public abstract float getSize(View view);
 
     /* access modifiers changed from: protected */
-    public float getUnscaledEscapeVelocity() {
-        throw null;
-    }
+    public abstract float getUnscaledEscapeVelocity();
 
     /* access modifiers changed from: protected */
     public boolean handleUpEvent(MotionEvent motionEvent, View view, float f, float f2) {
@@ -108,19 +100,13 @@ public class SwipeHelperForRecents implements Gefingerpoken {
     }
 
     /* access modifiers changed from: protected */
-    public void onMoveUpdate(View view, float f, float f2) {
-        throw null;
-    }
+    public abstract void onMoveUpdate(View view, float f, float f2);
 
     /* access modifiers changed from: protected */
-    public void prepareDismissAnimation(View view, Object obj) {
-        throw null;
-    }
+    public abstract void prepareDismissAnimation(View view, Object obj);
 
     /* access modifiers changed from: protected */
-    public void prepareSnapBackAnimation(View view, Object obj) {
-        throw null;
-    }
+    public abstract void prepareSnapBackAnimation(View view, Object obj);
 
     public SwipeHelperForRecents(int i, Callback callback, Context context) {
         this.mCallback = callback;
@@ -241,7 +227,7 @@ public class SwipeHelperForRecents implements Gefingerpoken {
     }
 
     /* JADX WARNING: Code restructure failed: missing block: B:6:0x000e, code lost:
-        if (r0 != 3) goto L_0x00e2;
+        if (r0 != 3) goto L_0x00dd;
      */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     public boolean onInterceptTouchEvent(final android.view.MotionEvent r7) {
@@ -256,12 +242,12 @@ public class SwipeHelperForRecents implements Gefingerpoken {
             if (r0 == r3) goto L_0x0012
             r7 = 3
             if (r0 == r7) goto L_0x0069
-            goto L_0x00e2
+            goto L_0x00dd
         L_0x0012:
             android.view.View r0 = r6.mCurrView
-            if (r0 == 0) goto L_0x00e2
+            if (r0 == 0) goto L_0x00dd
             boolean r0 = r6.mLongPressSent
-            if (r0 != 0) goto L_0x00e2
+            if (r0 != 0) goto L_0x00dd
             android.view.VelocityTracker r0 = r6.mVelocityTracker
             r0.addMovement(r7)
             float r0 = r6.getPos(r7)
@@ -273,15 +259,15 @@ public class SwipeHelperForRecents implements Gefingerpoken {
             float r4 = java.lang.Math.abs(r0)
             float r5 = r6.mPagingTouchSlop
             int r4 = (r4 > r5 ? 1 : (r4 == r5 ? 0 : -1))
-            if (r4 <= 0) goto L_0x00e2
+            if (r4 <= 0) goto L_0x00dd
             float r0 = java.lang.Math.abs(r0)
             float r3 = java.lang.Math.abs(r3)
             int r0 = (r0 > r3 ? 1 : (r0 == r3 ? 0 : -1))
-            if (r0 <= 0) goto L_0x00e2
+            if (r0 <= 0) goto L_0x00dd
             com.android.systemui.recents.SwipeHelperForRecents$Callback r0 = r6.mCallback
             android.view.View r3 = r6.mCurrView
             boolean r0 = r0.checkToBeginDrag(r3)
-            if (r0 == 0) goto L_0x00e2
+            if (r0 == 0) goto L_0x00dd
             com.android.systemui.recents.SwipeHelperForRecents$Callback r0 = r6.mCallback
             android.view.View r3 = r6.mCurrView
             r0.onBeginDrag(r3)
@@ -292,7 +278,7 @@ public class SwipeHelperForRecents implements Gefingerpoken {
             float r7 = r6.getTranslation(r7)
             r6.mTranslation = r7
             r6.removeLongPressCallback()
-            goto L_0x00e2
+            goto L_0x00dd
         L_0x0069:
             boolean r7 = r6.mDragging
             if (r7 != 0) goto L_0x0074
@@ -310,7 +296,7 @@ public class SwipeHelperForRecents implements Gefingerpoken {
             r6.mCurrView = r0
             r6.mLongPressSent = r2
             r6.removeLongPressCallback()
-            if (r7 == 0) goto L_0x00e2
+            if (r7 == 0) goto L_0x00dd
             return r1
         L_0x0082:
             r6.mTouchAboveFalsingThreshold = r2
@@ -327,13 +313,11 @@ public class SwipeHelperForRecents implements Gefingerpoken {
             com.android.systemui.recents.SwipeHelperForRecents$Callback r0 = r6.mCallback
             android.view.View r0 = r0.getChildAtPosition(r7)
             r6.mCurrView = r0
-            android.view.View r0 = r6.mCurrView
-            if (r0 == 0) goto L_0x00e2
+            if (r0 == 0) goto L_0x00dd
             r6.onDownUpdate(r0)
             com.android.systemui.recents.SwipeHelperForRecents$Callback r0 = r6.mCallback
             android.view.View r3 = r6.mCurrView
-            boolean r0 = r0.canChildBeDismissed(r3)
-            r6.mCanCurrViewBeDimissed = r0
+            r0.canChildBeDismissed(r3)
             android.view.VelocityTracker r0 = r6.mVelocityTracker
             r0.addMovement(r7)
             float r0 = r6.getPos(r7)
@@ -344,26 +328,26 @@ public class SwipeHelperForRecents implements Gefingerpoken {
             float r0 = r6.getTranslation(r0)
             r6.mTranslation = r0
             com.android.systemui.recents.SwipeHelperForRecents$LongPressListener r0 = r6.mLongPressListener
-            if (r0 == 0) goto L_0x00e2
+            if (r0 == 0) goto L_0x00dd
             java.lang.Runnable r0 = r6.mWatchLongPress
-            if (r0 != 0) goto L_0x00d9
+            if (r0 != 0) goto L_0x00d4
             com.android.systemui.recents.SwipeHelperForRecents$2 r0 = new com.android.systemui.recents.SwipeHelperForRecents$2
             r0.<init>(r7)
             r6.mWatchLongPress = r0
-        L_0x00d9:
+        L_0x00d4:
             android.os.Handler r7 = r6.mHandler
             java.lang.Runnable r0 = r6.mWatchLongPress
             long r3 = r6.mLongPressTimeout
             r7.postDelayed(r0, r3)
-        L_0x00e2:
+        L_0x00dd:
             boolean r7 = r6.mDragging
-            if (r7 != 0) goto L_0x00ec
+            if (r7 != 0) goto L_0x00e7
             boolean r6 = r6.mLongPressSent
-            if (r6 == 0) goto L_0x00eb
-            goto L_0x00ec
-        L_0x00eb:
+            if (r6 == 0) goto L_0x00e6
+            goto L_0x00e7
+        L_0x00e6:
             r1 = r2
-        L_0x00ec:
+        L_0x00e7:
             return r1
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.recents.SwipeHelperForRecents.onInterceptTouchEvent(android.view.MotionEvent):boolean");

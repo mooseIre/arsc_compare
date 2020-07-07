@@ -14,12 +14,8 @@ import com.android.systemui.statusbar.policy.MobileSignalController;
 public class TelephonyIcons {
     static final MobileSignalController.MobileIconGroup CARRIER_NETWORK_CHANGE;
     static final MobileSignalController.MobileIconGroup DATA_DISABLED;
-    static final int[][] DATA_SIGNAL_STRENGTH = TELEPHONY_SIGNAL_STRENGTH;
     static final MobileSignalController.MobileIconGroup E;
-    static final MobileSignalController.MobileIconGroup FIVE_G;
     static final MobileSignalController.MobileIconGroup FIVE_G_BASIC;
-    static final MobileSignalController.MobileIconGroup FIVE_G_KR_OFF;
-    static final MobileSignalController.MobileIconGroup FIVE_G_KR_ON;
     static final MobileSignalController.MobileIconGroup FIVE_G_SA;
     static final MobileSignalController.MobileIconGroup FIVE_G_UWB;
     static final MobileSignalController.MobileIconGroup FOUR_G;
@@ -30,7 +26,6 @@ public class TelephonyIcons {
     static final MobileSignalController.MobileIconGroup LTE_PLUS;
     static final MobileSignalController.MobileIconGroup ONE_X;
     public static final int[][] TELEPHONY_SIGNAL_STRENGTH = {new int[]{R.drawable.stat_sys_signal_0, R.drawable.stat_sys_signal_1, R.drawable.stat_sys_signal_2, R.drawable.stat_sys_signal_3, R.drawable.stat_sys_signal_4, R.drawable.stat_sys_signal_5}};
-    public static final int[][] TELEPHONY_SIGNAL_STRENGTH_ROAMING = {new int[]{R.drawable.stat_sys_signal_0, R.drawable.stat_sys_signal_1, R.drawable.stat_sys_signal_2, R.drawable.stat_sys_signal_3, R.drawable.stat_sys_signal_4, R.drawable.stat_sys_signal_5}};
     static final int[][] TELEPHONY_SIGNAL_STRENGTH_ROAMING_R = {new int[]{R.drawable.stat_sys_signal_0_default_roam, R.drawable.stat_sys_signal_1_default_roam, R.drawable.stat_sys_signal_2_default_roam, R.drawable.stat_sys_signal_3_default_roam, R.drawable.stat_sys_signal_4_default_roam}, new int[]{R.drawable.stat_sys_signal_0_default_fully_roam, R.drawable.stat_sys_signal_1_default_fully_roam, R.drawable.stat_sys_signal_2_default_fully_roam, R.drawable.stat_sys_signal_3_default_fully_roam, R.drawable.stat_sys_signal_4_default_fully_roam}};
     static final MobileSignalController.MobileIconGroup THREE_G;
     static final MobileSignalController.MobileIconGroup UNKNOWN;
@@ -55,7 +50,6 @@ public class TelephonyIcons {
     static String[] mSignalNullArray;
     static String[] mSignalStrengthArray;
     static String[] mSignalStrengthDesc;
-    static String[] mSignalStrengthRoamingArray;
     static SparseArray<Integer> mStacked2SingleIconLookup;
 
     static int getStackedVoiceIcon(int i) {
@@ -106,20 +100,15 @@ public class TelephonyIcons {
         LTE = new MobileSignalController.MobileIconGroup("LTE", (int[][]) null, (int[][]) null, iArr11, 0, 0, 0, 0, iArr11[0], R.string.accessibility_data_connection_lte, R.drawable.stat_sys_data_fully_connected_lte, true, R.drawable.ic_qs_signal_lte);
         int[] iArr12 = AccessibilityContentDescriptions.PHONE_SIGNAL_STRENGTH;
         LTE_PLUS = new MobileSignalController.MobileIconGroup("LTE+", (int[][]) null, (int[][]) null, iArr12, 0, 0, 0, 0, iArr12[0], R.string.accessibility_data_connection_lte_plus, R.drawable.stat_sys_data_fully_connected_lte_plus, true, R.drawable.ic_qs_signal_lte_plus);
+        int i = AccessibilityContentDescriptions.PHONE_SIGNAL_STRENGTH[0];
         int[] iArr13 = AccessibilityContentDescriptions.PHONE_SIGNAL_STRENGTH;
-        FIVE_G = new MobileSignalController.MobileIconGroup("5G", (int[][]) null, (int[][]) null, iArr13, 0, 0, 0, 0, iArr13[0], R.string.data_connection_5g, R.drawable.ic_5g_mobiledata, false, R.drawable.ic_5g_mobiledata);
+        FIVE_G_BASIC = new MobileSignalController.MobileIconGroup("5GBasic", (int[][]) null, (int[][]) null, iArr13, 0, 0, 0, 0, iArr13[0], R.string.data_connection_5g_basic, R.drawable.ic_5g_mobiledata, false, R.drawable.ic_5g_mobiledata);
         int[] iArr14 = AccessibilityContentDescriptions.PHONE_SIGNAL_STRENGTH;
-        FIVE_G_BASIC = new MobileSignalController.MobileIconGroup("5GBasic", (int[][]) null, (int[][]) null, iArr14, 0, 0, 0, 0, iArr14[0], R.string.data_connection_5g_basic, R.drawable.ic_5g_mobiledata, false, R.drawable.ic_5g_mobiledata);
+        FIVE_G_UWB = new MobileSignalController.MobileIconGroup("5GUWB", (int[][]) null, (int[][]) null, iArr14, 0, 0, 0, 0, iArr14[0], R.string.data_connection_5g_uwb, R.drawable.ic_5g_uwb_mobiledata, false, R.drawable.ic_5g_uwb_mobiledata);
         int[] iArr15 = AccessibilityContentDescriptions.PHONE_SIGNAL_STRENGTH;
-        FIVE_G_UWB = new MobileSignalController.MobileIconGroup("5GUWB", (int[][]) null, (int[][]) null, iArr15, 0, 0, 0, 0, iArr15[0], R.string.data_connection_5g_uwb, R.drawable.ic_5g_uwb_mobiledata, false, R.drawable.ic_5g_uwb_mobiledata);
+        FIVE_G_SA = new MobileSignalController.MobileIconGroup("5GSA", (int[][]) null, (int[][]) null, iArr15, 0, 0, 0, 0, iArr15[0], R.string.data_connection_5g_sa, R.drawable.ic_5g_mobiledata, false, R.drawable.ic_5g_mobiledata);
         int[] iArr16 = AccessibilityContentDescriptions.PHONE_SIGNAL_STRENGTH;
-        FIVE_G_SA = new MobileSignalController.MobileIconGroup("5GSA", (int[][]) null, (int[][]) null, iArr16, 0, 0, 0, 0, iArr16[0], R.string.data_connection_5g_sa, R.drawable.ic_5g_mobiledata, false, R.drawable.ic_5g_mobiledata);
-        int[] iArr17 = AccessibilityContentDescriptions.PHONE_SIGNAL_STRENGTH;
-        FIVE_G_KR_ON = new MobileSignalController.MobileIconGroup("5GKrOn", (int[][]) null, (int[][]) null, iArr17, 0, 0, 0, 0, iArr17[0], R.string.data_connection_5g_sa, R.drawable.ic_5g_mobiledata, false, R.drawable.ic_5g_mobiledata);
-        int[] iArr18 = AccessibilityContentDescriptions.PHONE_SIGNAL_STRENGTH;
-        FIVE_G_KR_OFF = new MobileSignalController.MobileIconGroup("5GKrOff", (int[][]) null, (int[][]) null, iArr18, 0, 0, 0, 0, iArr18[0], R.string.data_connection_5g_sa, R.drawable.ic_5g_mobiledata, false, R.drawable.ic_5g_mobiledata);
-        int[] iArr19 = AccessibilityContentDescriptions.PHONE_SIGNAL_STRENGTH;
-        DATA_DISABLED = new MobileSignalController.MobileIconGroup("DataDisabled", (int[][]) null, (int[][]) null, iArr19, 0, 0, 0, 0, iArr19[0], R.string.accessibility_cell_data_off, R.drawable.stat_sys_data_disabled, false, R.drawable.ic_data_disabled);
+        DATA_DISABLED = new MobileSignalController.MobileIconGroup("DataDisabled", (int[][]) null, (int[][]) null, iArr16, 0, 0, 0, 0, iArr16[0], R.string.accessibility_cell_data_off, R.drawable.stat_sys_data_disabled, false, R.drawable.ic_data_disabled);
     }
 
     public static void initDataTypeName(Context context) {
@@ -257,15 +246,16 @@ public class TelephonyIcons {
             log("TelephonyIcons", "readIconsFromXml, already read!");
             return;
         }
-        mRes = context.getResources();
+        Resources resources = context.getResources();
+        mRes = resources;
         try {
-            mDataTypeArray = mRes.getStringArray(R.array.multi_data_type);
+            mDataTypeArray = resources.getStringArray(R.array.multi_data_type);
             mDataTypeDescriptionArray = mRes.getStringArray(R.array.telephony_data_type_description);
             mDataTypeGenerationArray = mRes.getStringArray(R.array.telephony_data_type_generation);
             mDataTypeGenerationDescArray = mRes.getStringArray(R.array.telephony_data_type_generation_description);
             mDataActivityArray = mRes.getStringArray(R.array.multi_data_activity);
             mSignalStrengthArray = mRes.getStringArray(R.array.multi_signal_strength);
-            mSignalStrengthRoamingArray = mRes.getStringArray(R.array.multi_signal_strength_roaming);
+            mRes.getStringArray(R.array.multi_signal_strength_roaming);
             mSignalNullArray = mRes.getStringArray(R.array.multi_signal_null);
             mSignalStrengthDesc = mRes.getStringArray(R.array.signal_strength_description);
             initStacked2SingleIconLookup();

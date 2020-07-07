@@ -8,7 +8,6 @@ import android.content.IntentFilter;
 import android.database.ContentObserver;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Handler;
@@ -65,7 +64,7 @@ public class KeyguardBouncer {
     /* access modifiers changed from: private */
     public boolean mFaceAuthTimeOut;
     /* access modifiers changed from: private */
-    public final Runnable mFaceShakeRunnable = new Runnable() {
+    public final Runnable mFaceShakeRunnable = new Runnable(this) {
         public void run() {
             ((HapticFeedBackImpl) Dependency.get(HapticFeedBackImpl.class)).getHapticFeedbackUtil().performExtHapticFeedback(82);
         }
@@ -80,12 +79,11 @@ public class KeyguardBouncer {
     public boolean mForceBlack = false;
     private ContentObserver mForceBlackObserver;
     /* access modifiers changed from: private */
-    public Drawable mForegroundDrawable;
-    /* access modifiers changed from: private */
     public final Handler mHandler;
     /* access modifiers changed from: private */
     public boolean mHasUnlockByBle = false;
-    private boolean mIsLegacyKeyguardWallpaper;
+    /* access modifiers changed from: private */
+    public boolean mIsLegacyKeyguardWallpaper;
     protected KeyguardHostView mKeyguardView;
     protected final LockPatternUtils mLockPatternUtils;
     /* access modifiers changed from: private */
@@ -146,6 +144,18 @@ public class KeyguardBouncer {
             }
         }
 
+        public void onKeyguardOccludedChanged(boolean z) {
+            if (!KeyguardBouncer.this.mIsLegacyKeyguardWallpaper && KeyguardBouncer.this.mBgImageView != null) {
+                if (z) {
+                    KeyguardBouncer.this.mBgImageView.setVisibility(0);
+                    KeyguardBouncer.this.mBgImageView.setImageDrawable((Drawable) null);
+                    KeyguardBouncer.this.mBgImageView.setBackgroundColor(KeyguardBouncer.this.mContext.getResources().getColor(R.color.blur_background_mask));
+                    return;
+                }
+                KeyguardBouncer.this.mBgImageView.setVisibility(8);
+            }
+        }
+
         public void onStartedWakingUp() {
             KeyguardHostView keyguardHostView = KeyguardBouncer.this.mKeyguardView;
             if (keyguardHostView != null && keyguardHostView.getAlpha() != 1.0f) {
@@ -175,14 +185,14 @@ public class KeyguardBouncer {
         this.mCallback = viewMediatorCallback;
         this.mLockPatternUtils = lockPatternUtils;
         this.mContainer = viewGroup;
-        this.mUpdateMonitor = KeyguardUpdateMonitor.getInstance(this.mContext);
-        this.mUpdateMonitor.registerCallback(this.mUpdateMonitorCallback);
+        KeyguardUpdateMonitor instance = KeyguardUpdateMonitor.getInstance(context);
+        this.mUpdateMonitor = instance;
+        instance.registerCallback(this.mUpdateMonitorCallback);
         this.mUpdateMonitor.registerWallpaperChangeCallback(this.mWallpaperChangeCallback);
         FaceUnlockManager.getInstance().registerFaceUnlockCallback(this.mFaceUnlockCallBack);
         this.mFalsingManager = FalsingManager.getInstance(this.mContext);
         this.mDismissCallbackRegistry = dismissCallbackRegistry;
         this.mHandler = new Handler();
-        this.mForegroundDrawable = new ColorDrawable(this.mContext.getResources().getColor(R.color.blur_background_mask));
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("miui_keyguard_ble_unlock_succeed");
         this.mContext.registerReceiverAsUser(this.mBroadcastReceiver, UserHandle.CURRENT, intentFilter, (String) null, (Handler) null);
@@ -258,10 +268,7 @@ public class KeyguardBouncer {
 
     /* access modifiers changed from: private */
     public void updateWallpaper() {
-        if (this.mBgImageView == null) {
-            return;
-        }
-        if (this.mIsLegacyKeyguardWallpaper || !KeyguardWallpaperUtils.isWallpaperShouldBlur(this.mContext)) {
+        if (this.mBgImageView != null && this.mIsLegacyKeyguardWallpaper) {
             new AsyncTask<Void, Void, Drawable>() {
                 /* access modifiers changed from: protected */
                 public Drawable doInBackground(Void... voidArr) {
@@ -273,39 +280,32 @@ public class KeyguardBouncer {
                     Bitmap bitmap;
                     int i;
                     int i2;
-                    if (KeyguardBouncer.this.mBgImageView == null) {
-                        return;
+                    if (KeyguardBouncer.this.mBgImageView != null) {
+                        if (drawable == null) {
+                            bitmap = null;
+                        } else {
+                            bitmap = ((BitmapDrawable) drawable).getBitmap();
+                        }
+                        if (bitmap == null) {
+                            i = 0;
+                        } else {
+                            i = (int) (((float) bitmap.getWidth()) * 0.33333334f);
+                        }
+                        if (bitmap == null) {
+                            i2 = 0;
+                        } else {
+                            i2 = (int) (((float) bitmap.getHeight()) * 0.33333334f);
+                        }
+                        if (i <= 0 || i2 <= 0) {
+                            KeyguardBouncer.this.mBgImageView.setImageDrawable((Drawable) null);
+                            KeyguardBouncer.this.mBgImageView.setBackgroundColor(KeyguardBouncer.this.mContext.getResources().getColor(R.color.blur_background_mask));
+                            return;
+                        }
+                        Bitmap createScaledBitmap = Bitmap.createScaledBitmap(bitmap, i, i2, true);
+                        KeyguardBouncer.this.mBgImageView.setBackgroundColor(0);
+                        KeyguardBouncer.this.mBgImageView.setImageDrawable(new BitmapDrawable(KeyguardBouncer.this.mContext.getResources(), ScreenshotUtils.getBlurBackground(createScaledBitmap, (Bitmap) null)));
+                        createScaledBitmap.recycle();
                     }
-                    if (!KeyguardWallpaperUtils.isWallpaperShouldBlur(KeyguardBouncer.this.mContext)) {
-                        KeyguardBouncer.this.mBgImageView.setForeground(KeyguardBouncer.this.mForegroundDrawable);
-                        KeyguardBouncer.this.mBgImageView.setImageDrawable(drawable);
-                        return;
-                    }
-                    KeyguardBouncer.this.mBgImageView.setForeground((Drawable) null);
-                    if (drawable == null) {
-                        bitmap = null;
-                    } else {
-                        bitmap = ((BitmapDrawable) drawable).getBitmap();
-                    }
-                    if (bitmap == null) {
-                        i = 0;
-                    } else {
-                        i = (int) (((float) bitmap.getWidth()) * 0.33333334f);
-                    }
-                    if (bitmap == null) {
-                        i2 = 0;
-                    } else {
-                        i2 = (int) (((float) bitmap.getHeight()) * 0.33333334f);
-                    }
-                    if (i <= 0 || i2 <= 0) {
-                        KeyguardBouncer.this.mBgImageView.setImageDrawable((Drawable) null);
-                        KeyguardBouncer.this.mBgImageView.setBackgroundColor(KeyguardBouncer.this.mContext.getResources().getColor(R.color.blur_background_mask));
-                        return;
-                    }
-                    Bitmap createScaledBitmap = Bitmap.createScaledBitmap(bitmap, i, i2, true);
-                    KeyguardBouncer.this.mBgImageView.setBackgroundColor(0);
-                    KeyguardBouncer.this.mBgImageView.setImageDrawable(new BitmapDrawable(KeyguardBouncer.this.mContext.getResources(), ScreenshotUtils.getBlurBackground(createScaledBitmap, (Bitmap) null)));
-                    createScaledBitmap.recycle();
                 }
             }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new Void[0]);
         }
@@ -469,21 +469,25 @@ public class KeyguardBouncer {
     public void inflateView() {
         removeView();
         this.mHandler.removeCallbacks(this.mRemoveViewRunnable);
-        this.mRoot = (ViewGroup) LayoutInflater.from(this.mContext).inflate(com.android.systemui.plugins.R.layout.keyguard_bouncer, (ViewGroup) null);
-        this.mBgImageView = (ImageView) this.mRoot.findViewById(com.android.systemui.plugins.R.id.keyguard_bouncer_bg);
-        this.mNotchCorner = this.mRoot.findViewById(com.android.systemui.plugins.R.id.notch_corner_security);
+        ViewGroup viewGroup = (ViewGroup) LayoutInflater.from(this.mContext).inflate(com.android.systemui.plugins.R.layout.keyguard_bouncer, (ViewGroup) null);
+        this.mRoot = viewGroup;
+        this.mBgImageView = (ImageView) viewGroup.findViewById(com.android.systemui.plugins.R.id.keyguard_bouncer_bg);
+        View findViewById = this.mRoot.findViewById(com.android.systemui.plugins.R.id.notch_corner_security);
+        this.mNotchCorner = findViewById;
         int i = 8;
-        this.mNotchCorner.setVisibility(this.mForceBlack ? 0 : 8);
-        this.mKeyguardView = (KeyguardHostView) this.mRoot.findViewById(com.android.systemui.plugins.R.id.keyguard_host_view);
-        this.mKeyguardView.setLockPatternUtils(this.mLockPatternUtils);
+        findViewById.setVisibility(this.mForceBlack ? 0 : 8);
+        KeyguardHostView keyguardHostView = (KeyguardHostView) this.mRoot.findViewById(com.android.systemui.plugins.R.id.keyguard_host_view);
+        this.mKeyguardView = keyguardHostView;
+        keyguardHostView.setLockPatternUtils(this.mLockPatternUtils);
         this.mKeyguardView.setViewMediatorCallback(this.mCallback);
-        ViewGroup viewGroup = this.mContainer;
-        viewGroup.addView(this.mRoot, viewGroup.getChildCount());
+        ViewGroup viewGroup2 = this.mContainer;
+        viewGroup2.addView(this.mRoot, viewGroup2.getChildCount());
         this.mRoot.setVisibility(4);
         this.mHasUnlockByBle = false;
-        this.mIsLegacyKeyguardWallpaper = ((MiuiKeyguardWallpaperController) Dependency.get(MiuiKeyguardWallpaperController.class)).isLegacyKeyguardWallpaper();
+        boolean isLegacyKeyguardWallpaper = ((MiuiKeyguardWallpaperController) Dependency.get(MiuiKeyguardWallpaperController.class)).isLegacyKeyguardWallpaper();
+        this.mIsLegacyKeyguardWallpaper = isLegacyKeyguardWallpaper;
         ImageView imageView = this.mBgImageView;
-        if (this.mIsLegacyKeyguardWallpaper || !KeyguardWallpaperUtils.isWallpaperShouldBlur(this.mContext)) {
+        if (isLegacyKeyguardWallpaper) {
             i = 0;
         }
         imageView.setVisibility(i);

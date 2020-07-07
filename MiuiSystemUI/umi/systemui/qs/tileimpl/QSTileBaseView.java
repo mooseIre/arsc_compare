@@ -29,7 +29,6 @@ public class QSTileBaseView extends QSTileView {
     private String mAccessibilityClass;
     private ObjectAnimator mBreathAnimator;
     private boolean mClicked;
-    private boolean mCollapsedView;
     private final H mHandler = new H();
     protected QSIconView mIcon;
     /* access modifiers changed from: private */
@@ -44,22 +43,23 @@ public class QSTileBaseView extends QSTileView {
 
     public QSTileBaseView(Context context, QSIconView qSIconView, boolean z) {
         super(context);
-        this.mIconFrame = new FrameLayout(context);
-        this.mIconFrame.setForegroundGravity(17);
+        FrameLayout frameLayout = new FrameLayout(context);
+        this.mIconFrame = frameLayout;
+        frameLayout.setForegroundGravity(17);
         int dimensionPixelSize = context.getResources().getDimensionPixelSize(R.dimen.qs_tile_icon_bg_size);
         addView(this.mIconFrame, new LinearLayout.LayoutParams(dimensionPixelSize, dimensionPixelSize));
         this.mIcon = qSIconView;
-        this.mIconFrame.addView(this.mIcon);
+        this.mIconFrame.addView(qSIconView);
         setImportantForAccessibility(2);
-        this.mBreathAnimator = ObjectAnimator.ofFloat(this.mIcon.getIconView(), "alpha", new float[]{0.5f});
-        this.mBreathAnimator.setDuration(400);
+        ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this.mIcon.getIconView(), "alpha", new float[]{0.5f});
+        this.mBreathAnimator = ofFloat;
+        ofFloat.setDuration(400);
         this.mBreathAnimator.setInterpolator(Interpolators.FAST_OUT_SLOW_IN);
         this.mBreathAnimator.setRepeatMode(2);
         this.mBreathAnimator.setRepeatCount(-1);
         setPadding(0, 0, 0, 0);
         setClipChildren(false);
         setClipToPadding(false);
-        this.mCollapsedView = z;
         setFocusable(true);
     }
 
@@ -85,6 +85,7 @@ public class QSTileBaseView extends QSTileView {
         this.mIconFrame.setOnLongClickListener(onLongClickListener);
         this.mIconFrame.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View view, MotionEvent motionEvent) {
+                Class cls = HapticFeedBackImpl.class;
                 if (QSTileBaseView.this.mIconMouseAnim == null) {
                     ITouchStyle unused = QSTileBaseView.this.mIconMouseAnim = ViewAnimUtils.createMouseAnim(view);
                 }
@@ -97,11 +98,11 @@ public class QSTileBaseView extends QSTileView {
                             z = false;
                         }
                         if (z) {
-                            ((HapticFeedBackImpl) Dependency.get(HapticFeedBackImpl.class)).flick();
+                            ((HapticFeedBackImpl) Dependency.get(cls)).flick();
                         }
                     }
                 } else {
-                    ((HapticFeedBackImpl) Dependency.get(HapticFeedBackImpl.class)).flick();
+                    ((HapticFeedBackImpl) Dependency.get(cls)).flick();
                 }
                 return false;
             }

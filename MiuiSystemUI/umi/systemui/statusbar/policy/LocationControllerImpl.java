@@ -1,5 +1,6 @@
 package com.android.systemui.statusbar.policy;
 
+import android.app.ActivityManager;
 import android.app.AppOpsManager;
 import android.app.NotificationManager;
 import android.app.StatusBarManager;
@@ -13,7 +14,6 @@ import android.os.Message;
 import android.os.UserHandle;
 import android.os.UserHandleCompat;
 import android.os.UserManager;
-import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.systemui.qs.tiles.TilesHelper;
 import com.android.systemui.statusbar.policy.LocationController;
 import com.android.systemui.statusbar.policy.LocationControllerImpl;
@@ -32,7 +32,6 @@ public class LocationControllerImpl extends BroadcastReceiver implements Locatio
     private NotificationManager mNotificationManager;
     /* access modifiers changed from: private */
     public ArrayList<LocationController.LocationChangeCallback> mSettingsChangeCallbacks = new ArrayList<>();
-    private StatusBarManager mStatusBarManager;
 
     public LocationControllerImpl(Context context, Looper looper) {
         this.mContext = context;
@@ -43,9 +42,10 @@ public class LocationControllerImpl extends BroadcastReceiver implements Locatio
         intentFilter.addAction("android.location.MODE_CHANGED");
         context.registerReceiverAsUser(this, UserHandle.ALL, intentFilter, (String) null, new Handler(looper));
         this.mAppOpsManager = (AppOpsManager) context.getSystemService("appops");
-        this.mStatusBarManager = (StatusBarManager) context.getSystemService("statusbar");
-        this.mNotificationManager = (NotificationManager) context.getSystemService("notification");
-        this.mNotificationManager.cancelAsUser((String) null, 252119, UserHandle.CURRENT);
+        StatusBarManager statusBarManager = (StatusBarManager) context.getSystemService("statusbar");
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService("notification");
+        this.mNotificationManager = notificationManager;
+        notificationManager.cancelAsUser((String) null, 252119, UserHandle.CURRENT);
         updateActiveLocationRequests();
     }
 
@@ -59,7 +59,7 @@ public class LocationControllerImpl extends BroadcastReceiver implements Locatio
     }
 
     public boolean setLocationEnabled(boolean z) {
-        int currentUser = KeyguardUpdateMonitor.getCurrentUser();
+        int currentUser = ActivityManager.getCurrentUser();
         if (isUserLocationRestricted(currentUser)) {
             return false;
         }
@@ -67,7 +67,7 @@ public class LocationControllerImpl extends BroadcastReceiver implements Locatio
     }
 
     public boolean isLocationEnabled() {
-        return TilesHelper.isLocationEnabled(this.mContext, KeyguardUpdateMonitor.getCurrentUser());
+        return TilesHelper.isLocationEnabled(this.mContext, ActivityManager.getCurrentUser());
     }
 
     public boolean isLocationActive() {
@@ -102,8 +102,9 @@ public class LocationControllerImpl extends BroadcastReceiver implements Locatio
 
     private void updateActiveLocationRequests() {
         boolean z = this.mAreActiveLocationRequests;
-        this.mAreActiveLocationRequests = areActiveHighPowerLocationRequests();
-        if (this.mAreActiveLocationRequests != z) {
+        boolean areActiveHighPowerLocationRequests = areActiveHighPowerLocationRequests();
+        this.mAreActiveLocationRequests = areActiveHighPowerLocationRequests;
+        if (areActiveHighPowerLocationRequests != z) {
             this.mHandler.sendEmptyMessage(2);
         }
     }
@@ -127,78 +128,74 @@ public class LocationControllerImpl extends BroadcastReceiver implements Locatio
         }
     }
 
-    /* JADX WARNING: Removed duplicated region for block: B:32:0x00b5  */
-    /* JADX WARNING: Removed duplicated region for block: B:33:0x00b9  */
-    /* JADX WARNING: Removed duplicated region for block: B:36:0x00c6  */
-    /* JADX WARNING: Removed duplicated region for block: B:37:0x00ca  */
+    /* JADX WARNING: Removed duplicated region for block: B:32:0x00b1  */
+    /* JADX WARNING: Removed duplicated region for block: B:33:0x00b5  */
+    /* JADX WARNING: Removed duplicated region for block: B:36:0x00c2  */
+    /* JADX WARNING: Removed duplicated region for block: B:37:0x00c6  */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     private void updateGpsNotification(android.content.Intent r15) {
         /*
             r14 = this;
             java.lang.String r0 = r15.getAction()
-            r1 = 0
-            java.lang.String r2 = "enabled"
-            boolean r2 = r15.getBooleanExtra(r2, r1)
+            java.lang.String r1 = "enabled"
+            r2 = 0
+            boolean r1 = r15.getBooleanExtra(r1, r2)
             java.lang.String r3 = "android.location.GPS_FIX_CHANGE"
             boolean r3 = r0.equals(r3)
             r4 = 1
-            if (r3 == 0) goto L_0x0020
-            if (r2 == 0) goto L_0x0020
-            r0 = 285671445(0x11070015, float:1.0649647E-28)
-            r2 = 2131821294(0x7f1102ee, float:1.9275327E38)
+            if (r3 == 0) goto L_0x001e
+            if (r1 == 0) goto L_0x001e
+            r0 = 285671441(0x11070011, float:1.0649643E-28)
+            r1 = 2131821350(0x7f110326, float:1.927544E38)
             r3 = r2
-            r2 = r0
-            r0 = r1
-            goto L_0x0040
-        L_0x0020:
+            goto L_0x003c
+        L_0x001e:
             java.lang.String r3 = "android.location.GPS_ENABLED_CHANGE"
             boolean r0 = r0.equals(r3)
-            if (r0 == 0) goto L_0x002f
-            if (r2 != 0) goto L_0x002f
-            r0 = r1
-            r2 = r0
-            r3 = r2
+            if (r0 == 0) goto L_0x002d
+            if (r1 != 0) goto L_0x002d
+            r0 = r2
+            r1 = r0
+            r3 = r1
             r4 = r3
-            goto L_0x0040
-        L_0x002f:
+            goto L_0x003c
+        L_0x002d:
             boolean r0 = com.android.systemui.Constants.SUPPORT_DUAL_GPS
-            if (r0 == 0) goto L_0x0037
-            r0 = 2131233386(0x7f080a6a, float:1.8082908E38)
-            goto L_0x003a
-        L_0x0037:
-            r0 = 2131233394(0x7f080a72, float:1.8082924E38)
-        L_0x003a:
-            r2 = 2131821295(0x7f1102ef, float:1.927533E38)
-            r3 = r2
-            r2 = r0
-            r0 = r4
-        L_0x0040:
+            if (r0 == 0) goto L_0x0035
+            r0 = 2131233383(0x7f080a67, float:1.8082902E38)
+            goto L_0x0038
+        L_0x0035:
+            r0 = 2131233391(0x7f080a6f, float:1.8082918E38)
+        L_0x0038:
+            r1 = 2131821351(0x7f110327, float:1.9275443E38)
+            r3 = r4
+        L_0x003c:
             r5 = 252119(0x3d8d7, float:3.53294E-40)
             r6 = 0
-            if (r4 == 0) goto L_0x00f4
+            if (r4 == 0) goto L_0x00f0
             java.lang.String r4 = "android.intent.extra.PACKAGES"
             java.lang.String r15 = r15.getStringExtra(r4)
             boolean r4 = android.text.TextUtils.isEmpty(r15)
-            if (r4 == 0) goto L_0x0053
+            if (r4 == 0) goto L_0x004f
             return
-        L_0x0053:
+        L_0x004f:
             android.content.Context r4 = r14.mContext
             android.content.pm.PackageManager r4 = r4.getPackageManager()
-            android.content.pm.ApplicationInfo r7 = r4.getApplicationInfo(r15, r1)     // Catch:{ NameNotFoundException -> 0x0076 }
-            java.lang.CharSequence r4 = r7.loadLabel(r4)     // Catch:{ NameNotFoundException -> 0x0076 }
+            android.content.pm.ApplicationInfo r7 = r4.getApplicationInfo(r15, r2)     // Catch:{ NameNotFoundException -> 0x0072 }
+            java.lang.CharSequence r4 = r7.loadLabel(r4)     // Catch:{ NameNotFoundException -> 0x0072 }
             java.lang.Class<com.android.systemui.miui.AppIconsManager> r7 = com.android.systemui.miui.AppIconsManager.class
-            java.lang.Object r7 = com.android.systemui.Dependency.get(r7)     // Catch:{ NameNotFoundException -> 0x0077 }
-            com.android.systemui.miui.AppIconsManager r7 = (com.android.systemui.miui.AppIconsManager) r7     // Catch:{ NameNotFoundException -> 0x0077 }
-            android.content.Context r8 = r14.mContext     // Catch:{ NameNotFoundException -> 0x0077 }
-            android.graphics.Bitmap r7 = r7.getAppIconBitmap(r8, r15)     // Catch:{ NameNotFoundException -> 0x0077 }
-            if (r7 == 0) goto L_0x0077
-            android.graphics.drawable.Icon r7 = android.graphics.drawable.Icon.createWithBitmap(r7)     // Catch:{ NameNotFoundException -> 0x0077 }
-            goto L_0x0078
-        L_0x0076:
+            java.lang.Object r7 = com.android.systemui.Dependency.get(r7)     // Catch:{ NameNotFoundException -> 0x0073 }
+            com.android.systemui.miui.AppIconsManager r7 = (com.android.systemui.miui.AppIconsManager) r7     // Catch:{ NameNotFoundException -> 0x0073 }
+            android.content.Context r8 = r14.mContext     // Catch:{ NameNotFoundException -> 0x0073 }
+            android.graphics.Bitmap r7 = r7.getAppIconBitmap(r8, r15)     // Catch:{ NameNotFoundException -> 0x0073 }
+            if (r7 == 0) goto L_0x0073
+            android.graphics.drawable.Icon r7 = android.graphics.drawable.Icon.createWithBitmap(r7)     // Catch:{ NameNotFoundException -> 0x0073 }
+            goto L_0x0074
+        L_0x0072:
             r4 = r6
-        L_0x0077:
+        L_0x0073:
             r7 = r6
-        L_0x0078:
+        L_0x0074:
             android.content.Intent r10 = new android.content.Intent
             java.lang.String r8 = "package"
             android.net.Uri r8 = android.net.Uri.fromParts(r8, r15, r6)
@@ -216,48 +213,48 @@ public class LocationControllerImpl extends BroadcastReceiver implements Locatio
             java.lang.String r10 = com.android.systemui.util.NotificationChannels.LOCATION
             android.app.Notification$Builder r9 = android.app.NotificationCompat.newBuilder(r9, r10)
             android.content.Context r10 = r14.mContext
-            java.lang.CharSequence r3 = r10.getText(r3)
-            android.app.Notification$Builder r3 = r9.setContentTitle(r3)
-            android.app.Notification$Builder r3 = r3.setContentText(r4)
-            android.app.Notification$Builder r0 = r3.setOngoing(r0)
-            android.app.Notification$Builder r0 = r0.setContentIntent(r8)
-            if (r7 != 0) goto L_0x00b9
-            r0.setSmallIcon(r2)
-            goto L_0x00bc
-        L_0x00b9:
-            r0.setSmallIcon(r7)
-        L_0x00bc:
-            android.app.Notification r2 = r0.build()
+            java.lang.CharSequence r1 = r10.getText(r1)
+            android.app.Notification$Builder r1 = r9.setContentTitle(r1)
+            android.app.Notification$Builder r1 = r1.setContentText(r4)
+            android.app.Notification$Builder r1 = r1.setOngoing(r3)
+            android.app.Notification$Builder r1 = r1.setContentIntent(r8)
+            if (r7 != 0) goto L_0x00b5
+            r1.setSmallIcon(r0)
+            goto L_0x00b8
+        L_0x00b5:
+            r1.setSmallIcon(r7)
+        L_0x00b8:
+            android.app.Notification r0 = r1.build()
             boolean r3 = android.text.TextUtils.isEmpty(r15)
-            if (r3 != 0) goto L_0x00ca
-            com.android.systemui.statusbar.notification.MiuiNotificationCompat.setTargetPkg(r2, r15)
-            goto L_0x00e2
-        L_0x00ca:
+            if (r3 != 0) goto L_0x00c6
+            com.android.systemui.statusbar.notification.MiuiNotificationCompat.setTargetPkg(r0, r15)
+            goto L_0x00de
+        L_0x00c6:
             android.content.Context r15 = r14.mContext
             android.content.res.Resources r15 = r15.getResources()
             boolean r3 = com.android.systemui.Constants.SUPPORT_DUAL_GPS
-            if (r3 == 0) goto L_0x00d8
-            r3 = 2131233040(0x7f080910, float:1.8082206E38)
-            goto L_0x00db
-        L_0x00d8:
-            r3 = 2131233042(0x7f080912, float:1.808221E38)
-        L_0x00db:
+            if (r3 == 0) goto L_0x00d4
+            r3 = 2131233041(0x7f080911, float:1.8082208E38)
+            goto L_0x00d7
+        L_0x00d4:
+            r3 = 2131233043(0x7f080913, float:1.8082212E38)
+        L_0x00d7:
             android.graphics.Bitmap r15 = android.graphics.BitmapFactory.decodeResource(r15, r3)
-            r0.setLargeIcon(r15)
-        L_0x00e2:
-            com.android.systemui.statusbar.notification.MiuiNotificationCompat.setEnableFloat(r2, r1)
-            com.android.systemui.statusbar.notification.MiuiNotificationCompat.setEnableKeyguard(r2, r1)
-            r2.tickerView = r6
-            r2.tickerText = r6
+            r1.setLargeIcon(r15)
+        L_0x00de:
+            com.android.systemui.statusbar.notification.MiuiNotificationCompat.setEnableFloat(r0, r2)
+            com.android.systemui.statusbar.notification.MiuiNotificationCompat.setEnableKeyguard(r0, r2)
+            r0.tickerView = r6
+            r0.tickerText = r6
             android.app.NotificationManager r14 = r14.mNotificationManager
             android.os.UserHandle r15 = android.os.UserHandle.CURRENT
-            r14.notifyAsUser(r6, r5, r2, r15)
-            goto L_0x00fb
-        L_0x00f4:
+            r14.notifyAsUser(r6, r5, r0, r15)
+            goto L_0x00f7
+        L_0x00f0:
             android.app.NotificationManager r14 = r14.mNotificationManager
             android.os.UserHandle r15 = android.os.UserHandle.CURRENT
             r14.cancelAsUser(r6, r5, r15)
-        L_0x00fb:
+        L_0x00f7:
             return
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.policy.LocationControllerImpl.updateGpsNotification(android.content.Intent):void");
@@ -278,6 +275,12 @@ public class LocationControllerImpl extends BroadcastReceiver implements Locatio
             }
         }
 
+        /* access modifiers changed from: private */
+        /* renamed from: lambda$locationActiveChanged$0 */
+        public /* synthetic */ void lambda$locationActiveChanged$0$LocationControllerImpl$H(LocationController.LocationChangeCallback locationChangeCallback) {
+            locationChangeCallback.onLocationActiveChanged(LocationControllerImpl.this.mAreActiveLocationRequests);
+        }
+
         private void locationActiveChanged() {
             Utils.safeForeach(LocationControllerImpl.this.mSettingsChangeCallbacks, new Consumer() {
                 public final void accept(Object obj) {
@@ -286,13 +289,9 @@ public class LocationControllerImpl extends BroadcastReceiver implements Locatio
             });
         }
 
-        public /* synthetic */ void lambda$locationActiveChanged$0$LocationControllerImpl$H(LocationController.LocationChangeCallback locationChangeCallback) {
-            locationChangeCallback.onLocationActiveChanged(LocationControllerImpl.this.mAreActiveLocationRequests);
-        }
-
         private void locationSettingsChanged() {
             Utils.safeForeach(LocationControllerImpl.this.mSettingsChangeCallbacks, new Consumer(LocationControllerImpl.this.isLocationEnabled()) {
-                private final /* synthetic */ boolean f$0;
+                public final /* synthetic */ boolean f$0;
 
                 {
                     this.f$0 = r1;
@@ -306,7 +305,7 @@ public class LocationControllerImpl extends BroadcastReceiver implements Locatio
 
         private void locationStatusChanged(Intent intent) {
             Utils.safeForeach(LocationControllerImpl.this.mSettingsChangeCallbacks, new Consumer(intent) {
-                private final /* synthetic */ Intent f$0;
+                public final /* synthetic */ Intent f$0;
 
                 {
                     this.f$0 = r1;

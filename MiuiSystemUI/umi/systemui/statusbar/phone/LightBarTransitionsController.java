@@ -230,8 +230,9 @@ public class LightBarTransitionsController implements Dumpable, CommandQueue.Cal
                 valueAnimator.cancel();
             }
             this.mNextDarkIntensity = f;
-            this.mTintAnimator = ValueAnimator.ofFloat(new float[]{this.mDarkIntensity, f});
-            this.mTintAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{this.mDarkIntensity, f});
+            this.mTintAnimator = ofFloat;
+            ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 public void onAnimationUpdate(ValueAnimator valueAnimator) {
                     LightBarTransitionsController.this.setIconTintInternal(((Float) valueAnimator.getAnimatedValue()).floatValue());
                 }

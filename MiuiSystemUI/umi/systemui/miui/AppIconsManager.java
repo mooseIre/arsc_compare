@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.WeakHashMap;
 import java.util.concurrent.ConcurrentHashMap;
 import miui.content.res.IconCustomizer;
+import miui.maml.FancyDrawable;
 import miui.maml.util.AppIconsHelper;
 
 public class AppIconsManager implements Dumpable, ConfigurationController.ConfigurationListener, PackageEventReceiver {
@@ -65,74 +66,38 @@ public class AppIconsManager implements Dumpable, ConfigurationController.Config
         return getAppIconBitmap(context, str, UserHandle.myUserId());
     }
 
-    /* JADX WARNING: Removed duplicated region for block: B:13:0x0028  */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public android.graphics.Bitmap getAppIconBitmap(android.content.Context r5, java.lang.String r6, int r7) {
-        /*
-            r4 = this;
-            r0 = 1
-            android.graphics.Bitmap r1 = r4.getAppIconBitmapCache(r6, r7, r0)
-            if (r1 != 0) goto L_0x007e
-            android.graphics.drawable.Drawable r1 = r4.loadAppIcon(r5, r6, r7)
-            boolean r2 = r1 instanceof miui.maml.FancyDrawable
-            r3 = 0
-            if (r2 == 0) goto L_0x002a
-            r2 = r1
-            miui.maml.FancyDrawable r2 = (miui.maml.FancyDrawable) r2
-            android.graphics.drawable.Drawable r2 = r2.getQuietDrawable()
-            if (r2 == 0) goto L_0x001a
-            r3 = r0
-        L_0x001a:
-            if (r3 != 0) goto L_0x0025
-            android.content.pm.PackageManager r5 = r5.getPackageManager()     // Catch:{ NameNotFoundException -> 0x0025 }
-            android.graphics.drawable.Drawable r5 = r5.getApplicationIcon(r6)     // Catch:{ NameNotFoundException -> 0x0025 }
-            goto L_0x0026
-        L_0x0025:
-            r5 = r2
-        L_0x0026:
-            if (r5 == 0) goto L_0x002b
-            r1 = r5
-            goto L_0x002b
-        L_0x002a:
-            r0 = r3
-        L_0x002b:
-            android.graphics.Bitmap r1 = com.android.systemui.miui.DrawableUtils.drawable2Bitmap(r1)
-            if (r0 == 0) goto L_0x003f
-            if (r3 == 0) goto L_0x004a
-            android.util.SparseArray<java.util.concurrent.ConcurrentHashMap<java.lang.String, java.lang.ref.WeakReference<android.graphics.Bitmap>>> r4 = r4.mQuietFancyIconsCache
-            java.lang.Object r4 = r4.get(r7)
-            java.util.Map r4 = (java.util.Map) r4
-            cacheWeakRef(r4, r6, r1)
-            goto L_0x004a
-        L_0x003f:
-            android.util.SparseArray<java.util.concurrent.ConcurrentHashMap<java.lang.String, java.lang.ref.WeakReference<android.graphics.Bitmap>>> r4 = r4.mIconsCache
-            java.lang.Object r4 = r4.get(r7)
-            java.util.Map r4 = (java.util.Map) r4
-            cacheWeakRef(r4, r6, r1)
-        L_0x004a:
-            java.lang.StringBuilder r4 = new java.lang.StringBuilder
-            r4.<init>()
-            java.lang.String r5 = "bitmap cache missed for "
-            r4.append(r5)
-            r4.append(r6)
-            java.lang.String r5 = ", load and put cache "
-            r4.append(r5)
-            r4.append(r1)
-            java.lang.String r5 = ", userId: "
-            r4.append(r5)
-            r4.append(r7)
-            java.lang.String r5 = ", isFancyDrawable: "
-            r4.append(r5)
-            r4.append(r0)
-            java.lang.String r5 = ", isQuietDrawable: "
-            r4.append(r5)
-            r4.append(r3)
-            java.lang.String r4 = r4.toString()
-            log(r4)
-        L_0x007e:
-            return r1
-        */
-        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.miui.AppIconsManager.getAppIconBitmap(android.content.Context, java.lang.String, int):android.graphics.Bitmap");
+    public Bitmap getAppIconBitmap(Context context, String str, int i) {
+        boolean z = true;
+        Bitmap appIconBitmapCache = getAppIconBitmapCache(str, i, true);
+        if (appIconBitmapCache == null) {
+            FancyDrawable loadAppIcon = loadAppIcon(context, str, i);
+            boolean z2 = false;
+            if (loadAppIcon instanceof FancyDrawable) {
+                Drawable quietDrawable = loadAppIcon.getQuietDrawable();
+                if (quietDrawable != null) {
+                    z2 = true;
+                }
+                if (!z2) {
+                    try {
+                        quietDrawable = context.getPackageManager().getApplicationIcon(str);
+                    } catch (PackageManager.NameNotFoundException unused) {
+                    }
+                }
+                if (quietDrawable != null) {
+                    loadAppIcon = quietDrawable;
+                }
+            } else {
+                z = false;
+            }
+            appIconBitmapCache = DrawableUtils.drawable2Bitmap(loadAppIcon);
+            if (!z) {
+                cacheWeakRef(this.mIconsCache.get(i), str, appIconBitmapCache);
+            } else if (z2) {
+                cacheWeakRef(this.mQuietFancyIconsCache.get(i), str, appIconBitmapCache);
+            }
+            log("bitmap cache missed for " + str + ", load and put cache " + appIconBitmapCache + ", userId: " + i + ", isFancyDrawable: " + z + ", isQuietDrawable: " + z2);
+        }
+        return appIconBitmapCache;
     }
 
     private Bitmap getAppIconBitmapCache(String str, int i, boolean z) {

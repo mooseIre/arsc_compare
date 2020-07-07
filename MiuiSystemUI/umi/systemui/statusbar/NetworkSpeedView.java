@@ -54,7 +54,7 @@ public class NetworkSpeedView extends TextView implements DemoMode, DarkIconDisp
         int ceil = TextUtils.isEmpty(charSequence) ? 0 : (int) Math.ceil((double) getPaint().measureText(charSequence.toString()));
         if (this.mMaxLength != ceil) {
             this.mMaxLength = ceil;
-            setWidth(this.mMaxLength);
+            setWidth(ceil);
         }
     }
 
@@ -103,7 +103,7 @@ public class NetworkSpeedView extends TextView implements DemoMode, DarkIconDisp
 
     public void setDriveMode(boolean z) {
         this.mIsDriveMode = z;
-        if (this.mIsDriveMode) {
+        if (z) {
             setVisibility(8);
         } else {
             this.mNetworkSpeedController.postUpdateNetworkSpeed();

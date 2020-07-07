@@ -14,7 +14,6 @@ import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.ArrayMap;
 import android.util.ArraySet;
-import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.systemui.Dependency;
 import com.android.systemui.settings.CurrentUserTracker;
 import com.android.systemui.statusbar.phone.StatusBarIconControllerHelper;
@@ -38,7 +37,7 @@ public class TunerServiceImpl extends TunerService {
     public TunerServiceImpl(Context context) {
         this.mTunables = LeakDetector.ENABLED ? new HashSet<>() : null;
         this.mContext = context;
-        this.mContentResolver = this.mContext.getContentResolver();
+        this.mContentResolver = context.getContentResolver();
         for (UserInfo userHandle : UserManager.get(this.mContext).getUsers()) {
             this.mCurrentUser = userHandle.getUserHandle().getIdentifier();
             if (getValue("sysui_tuner_version", 0) != 1) {
@@ -46,14 +45,15 @@ public class TunerServiceImpl extends TunerService {
             }
         }
         this.mCurrentUser = ActivityManager.getCurrentUser();
-        this.mUserTracker = new CurrentUserTracker(this.mContext) {
+        AnonymousClass1 r5 = new CurrentUserTracker(this.mContext) {
             public void onUserSwitched(int i) {
                 int unused = TunerServiceImpl.this.mCurrentUser = i;
                 TunerServiceImpl.this.reloadAll();
                 TunerServiceImpl.this.reregisterAll();
             }
         };
-        this.mUserTracker.startTracking();
+        this.mUserTracker = r5;
+        r5.startTracking();
     }
 
     private void upgradeTuner(int i, int i2) {
@@ -159,7 +159,7 @@ public class TunerServiceImpl extends TunerService {
         }
 
         public void onChange(boolean z, Uri uri, int i) {
-            if (i == KeyguardUpdateMonitor.getCurrentUser()) {
+            if (i == ActivityManager.getCurrentUser()) {
                 TunerServiceImpl.this.reloadSetting(uri);
             }
         }

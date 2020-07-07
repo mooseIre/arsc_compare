@@ -135,8 +135,7 @@ class GlobalScreenshot {
     private boolean mIsConfigurationReceiver;
     /* access modifiers changed from: private */
     public boolean mIsInOutAnimating;
-    /* access modifiers changed from: private */
-    public boolean mIsQuited;
+    private boolean mIsQuited;
     /* access modifiers changed from: private */
     public boolean mIsSaved;
     /* access modifiers changed from: private */
@@ -278,8 +277,9 @@ class GlobalScreenshot {
         } else {
             this.mScreenShotUri = Uri.fromFile(Constants.SOUND_SCREENSHOT);
         }
-        this.mRingtone = RingtoneManager.getRingtone(this.mContext, this.mScreenShotUri);
-        if (this.mRingtone == null) {
+        Ringtone ringtone = RingtoneManager.getRingtone(this.mContext, this.mScreenShotUri);
+        this.mRingtone = ringtone;
+        if (ringtone == null) {
             return;
         }
         if (Build.checkRegion(Locale.KOREA.getCountry())) {
@@ -300,8 +300,9 @@ class GlobalScreenshot {
         this.mThumbnailRight = this.mContext.getResources().getDimensionPixelSize(R.dimen.screenshot_thumbnail_padding_right);
         int i = 0;
         this.mOrientationLandscape = this.mContext.getResources().getConfiguration().orientation == 2;
-        this.mScreenshotLayout = layoutInflater.inflate(R.layout.global_screenshot, (ViewGroup) null);
-        this.mScreenshotView = (ImageView) this.mScreenshotLayout.findViewById(R.id.global_screenshot);
+        View inflate = layoutInflater.inflate(R.layout.global_screenshot, (ViewGroup) null);
+        this.mScreenshotLayout = inflate;
+        this.mScreenshotView = (ImageView) inflate.findViewById(R.id.global_screenshot);
         this.mScreenWhiteBg = this.mScreenshotLayout.findViewById(R.id.screen_white_bg);
         this.mScreenshotShadow = this.mScreenshotLayout.findViewById(R.id.screenshot_shadow);
         this.mScreenLongShotViewGroup = this.mScreenshotLayout.findViewById(R.id.btnLongShotViewGroup);
@@ -347,27 +348,30 @@ class GlobalScreenshot {
                 globalScreenshot.jumpProcess(globalScreenshot.mContext, GlobalScreenshot.this.mNotifyMediaStoreData, "send");
             }
         });
-        this.mWindowLayoutParams = new WindowManager.LayoutParams(-1, -1, 0, 0, 2024, 17565480, -3);
-        WindowManagerCompat.setLayoutInDisplayCutoutMode(this.mWindowLayoutParams, 1);
+        WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(-1, -1, 0, 0, 2024, 17565480, -3);
+        this.mWindowLayoutParams = layoutParams;
+        WindowManagerCompat.setLayoutInDisplayCutoutMode(layoutParams, 1);
         this.mWindowLayoutParams.setTitle("ScreenshotAnimation");
         this.mWindowManager = (WindowManager) context.getSystemService("window");
         this.mNotificationManager = (NotificationManager) context.getSystemService("notification");
         this.mDisplay = this.mWindowManager.getDefaultDisplay();
-        this.mDisplayMetrics = new DisplayMetrics();
-        this.mDisplay.getRealMetrics(this.mDisplayMetrics);
-        DisplayMetrics displayMetrics = this.mDisplayMetrics;
-        this.mScreenHeight = displayMetrics.heightPixels;
-        this.mScreenWidth = displayMetrics.widthPixels;
-        this.mShareParams = (RelativeLayout.LayoutParams) this.mScreenShareView.getLayoutParams();
-        RelativeLayout.LayoutParams layoutParams = this.mShareParams;
-        layoutParams.width = this.mScreenWidth;
-        this.mScreenShareView.setLayoutParams(layoutParams);
-        this.mLongShotParams = (RelativeLayout.LayoutParams) this.mScreenLongShotViewGroup.getLayoutParams();
-        RelativeLayout.LayoutParams layoutParams2 = this.mLongShotParams;
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        this.mDisplayMetrics = displayMetrics;
+        this.mDisplay.getRealMetrics(displayMetrics);
+        DisplayMetrics displayMetrics2 = this.mDisplayMetrics;
+        this.mScreenHeight = displayMetrics2.heightPixels;
+        this.mScreenWidth = displayMetrics2.widthPixels;
+        RelativeLayout.LayoutParams layoutParams2 = (RelativeLayout.LayoutParams) this.mScreenShareView.getLayoutParams();
+        this.mShareParams = layoutParams2;
         layoutParams2.width = this.mScreenWidth;
-        this.mScreenLongShotViewGroup.setLayoutParams(layoutParams2);
-        this.mPhoneTopRadius = (float) CornerRadiusUtils.getPhoneRadius(this.mContext);
-        setWhiteBgCornerRadius(this.mPhoneTopRadius);
+        this.mScreenShareView.setLayoutParams(layoutParams2);
+        RelativeLayout.LayoutParams layoutParams3 = (RelativeLayout.LayoutParams) this.mScreenLongShotViewGroup.getLayoutParams();
+        this.mLongShotParams = layoutParams3;
+        layoutParams3.width = this.mScreenWidth;
+        this.mScreenLongShotViewGroup.setLayoutParams(layoutParams3);
+        float phoneRadius = (float) CornerRadiusUtils.getPhoneRadius(this.mContext);
+        this.mPhoneTopRadius = phoneRadius;
+        setWhiteBgCornerRadius(phoneRadius);
         if (!Build.IS_TABLET) {
             try {
                 this.mHasNavBar = IWindowManagerCompat.hasNavigationBar(IWindowManager.Stub.asInterface(ServiceManager.getService("window")), ContextCompat.getDisplayId(context));
@@ -377,11 +381,12 @@ class GlobalScreenshot {
         if (!Build.IS_TABLET && this.mHasNavBar && this.mOrientationLandscape && this.mDisplay.getRotation() == 3 && SystemProperties.getInt("ro.miui.notch", 0) == 1 && !MiuiSettings.Global.getBoolean(this.mContext.getContentResolver(), "force_black_v2")) {
             i = 0 + this.mContext.getResources().getDimensionPixelSize(R.dimen.notch_height);
         }
-        RelativeLayout.LayoutParams layoutParams3 = (RelativeLayout.LayoutParams) this.mScreenshotShadow.getLayoutParams();
-        layoutParams3.setMarginEnd(i);
-        this.mScreenshotShadow.setLayoutParams(layoutParams3);
-        this.mThumbnailShakeAnimator = ValueAnimator.ofInt(new int[]{0, 20});
-        this.mThumbnailShakeAnimator.setDuration(1600);
+        RelativeLayout.LayoutParams layoutParams4 = (RelativeLayout.LayoutParams) this.mScreenshotShadow.getLayoutParams();
+        layoutParams4.setMarginEnd(i);
+        this.mScreenshotShadow.setLayoutParams(layoutParams4);
+        ValueAnimator ofInt = ValueAnimator.ofInt(new int[]{0, 20});
+        this.mThumbnailShakeAnimator = ofInt;
+        ofInt.setDuration(1600);
         this.mThumbnailShakeAnimator.setInterpolator(new SineEaseInOutInterpolator());
         this.mThumbnailShakeAnimator.setRepeatCount(-1);
         this.mThumbnailShakeAnimator.setRepeatMode(2);
@@ -431,8 +436,9 @@ class GlobalScreenshot {
 
     private void setWhiteBgCornerRadius(float f) {
         if (this.mWhiteBgDrawable == null) {
-            this.mWhiteBgDrawable = new GradientDrawable();
-            this.mWhiteBgDrawable.setColor(Color.parseColor("#ffffff"));
+            GradientDrawable gradientDrawable = new GradientDrawable();
+            this.mWhiteBgDrawable = gradientDrawable;
+            gradientDrawable.setColor(Color.parseColor("#ffffff"));
         }
         this.mWhiteBgDrawable.setCornerRadius(f);
         this.mScreenWhiteBg.setBackgroundDrawable(this.mWhiteBgDrawable);
@@ -770,16 +776,15 @@ class GlobalScreenshot {
         SaveImageInBackgroundData saveImageInBackgroundData = new SaveImageInBackgroundData();
         saveImageInBackgroundData.screenshotDisplay = this.mScreenshotDisplay;
         saveImageInBackgroundData.screenLongShotView = this.mScreenLongShotView;
-        Context context = this.mContext;
-        saveImageInBackgroundData.context = context;
+        saveImageInBackgroundData.context = this.mContext;
         saveImageInBackgroundData.image = this.mScreenBitmap;
-        saveImageInBackgroundData.iconSize = this.mNotificationIconSize;
         saveImageInBackgroundData.finisher = runnable;
         saveImageInBackgroundData.orientationLandscape = this.mOrientationLandscape;
-        SaveImageInBackgroundTask saveImageInBackgroundTask = new SaveImageInBackgroundTask(context, saveImageInBackgroundData, this.mNotificationManager);
+        SaveImageInBackgroundTask saveImageInBackgroundTask = new SaveImageInBackgroundTask(this.mContext, saveImageInBackgroundData, this.mNotificationManager);
         saveImageInBackgroundTask.execute(new SaveImageInBackgroundData[]{saveImageInBackgroundData});
-        this.mNotifyMediaStoreData = saveImageInBackgroundTask.mNotifyMediaStoreData;
-        this.mNotifyMediaStoreData.finisher = runnable2;
+        NotifyMediaStoreData notifyMediaStoreData = saveImageInBackgroundTask.mNotifyMediaStoreData;
+        this.mNotifyMediaStoreData = notifyMediaStoreData;
+        notifyMediaStoreData.finisher = runnable2;
     }
 
     /* access modifiers changed from: package-private */
@@ -863,8 +868,9 @@ class GlobalScreenshot {
             showLongScreenshotGuideOverlayIfNeeded();
         }
         this.mWindowManager.addView(this.mScreenshotLayout, this.mWindowLayoutParams);
-        this.mScreenshotAnimation = createScreenshotAlphaAnimation();
-        this.mScreenshotAnimation.addListener(new AnimatorListenerAdapter() {
+        ObjectAnimator createScreenshotAlphaAnimation = createScreenshotAlphaAnimation();
+        this.mScreenshotAnimation = createScreenshotAlphaAnimation;
+        createScreenshotAlphaAnimation.addListener(new AnimatorListenerAdapter() {
             public void onAnimationEnd(Animator animator) {
                 if (GlobalScreenshot.this.isShowThumbnail()) {
                     GlobalScreenshot.this.startGotoThumbnailAnimation(runnable);
@@ -911,9 +917,7 @@ class GlobalScreenshot {
                 super.onAnimationEnd(animator);
                 runnable.run();
                 boolean unused = GlobalScreenshot.this.mIsInOutAnimating = false;
-                if (!GlobalScreenshot.this.mIsQuited) {
-                    GlobalScreenshot.this.mThumbnailShakeAnimator.start();
-                }
+                GlobalScreenshot.this.mThumbnailShakeAnimator.start();
             }
         });
         animatorSet.start();
@@ -949,7 +953,7 @@ class GlobalScreenshot {
 
     /* access modifiers changed from: private */
     public void setRadius(View view, final float f) {
-        view.setOutlineProvider(new ViewOutlineProvider() {
+        view.setOutlineProvider(new ViewOutlineProvider(this) {
             public void getOutline(View view, Outline outline) {
                 outline.setRoundRect(0, 0, view.getWidth(), view.getHeight(), f);
             }
@@ -995,9 +999,9 @@ class GlobalScreenshot {
                 float floatValue = ((Float) valueAnimator.getAnimatedValue()).floatValue();
                 GlobalScreenshot.this.mScreenshotView.setTranslationY(floatValue);
                 GlobalScreenshot.this.mScreenWhiteBg.setTranslationY(floatValue);
-                float access$5100 = (((floatValue + ((((float) GlobalScreenshot.this.mScreenHeight) * GlobalScreenshot.this.mScaleValue) / 2.0f)) + 0.5f) - (((float) GlobalScreenshot.this.mScreenHeight) / 2.0f)) + 0.5f;
-                GlobalScreenshot.this.mScreenShareView.setTranslationY(access$5100);
-                GlobalScreenshot.this.mScreenLongShotViewGroup.setTranslationY(access$5100);
+                float access$5000 = (((floatValue + ((((float) GlobalScreenshot.this.mScreenHeight) * GlobalScreenshot.this.mScaleValue) / 2.0f)) + 0.5f) - (((float) GlobalScreenshot.this.mScreenHeight) / 2.0f)) + 0.5f;
+                GlobalScreenshot.this.mScreenShareView.setTranslationY(access$5000);
+                GlobalScreenshot.this.mScreenLongShotViewGroup.setTranslationY(access$5000);
             }
         });
         ofFloat.addListener(new AnimatorListenerAdapter() {
@@ -1020,9 +1024,9 @@ class GlobalScreenshot {
                 float floatValue = ((Float) valueAnimator.getAnimatedValue()).floatValue();
                 GlobalScreenshot.this.mScreenshotView.setTranslationX(floatValue);
                 GlobalScreenshot.this.mScreenWhiteBg.setTranslationX(floatValue);
-                float access$5400 = ((((((float) GlobalScreenshot.this.mScreenWidth) / 2.0f) + 0.5f) + floatValue) - ((((float) GlobalScreenshot.this.mScreenWidth) * GlobalScreenshot.this.mScaleValue) / 2.0f)) + 0.5f;
-                GlobalScreenshot.this.mScreenShareView.setTranslationX(access$5400);
-                GlobalScreenshot.this.mScreenLongShotViewGroup.setTranslationX(access$5400);
+                float access$5300 = ((((((float) GlobalScreenshot.this.mScreenWidth) / 2.0f) + 0.5f) + floatValue) - ((((float) GlobalScreenshot.this.mScreenWidth) * GlobalScreenshot.this.mScaleValue) / 2.0f)) + 0.5f;
+                GlobalScreenshot.this.mScreenShareView.setTranslationX(access$5300);
+                GlobalScreenshot.this.mScreenLongShotViewGroup.setTranslationX(access$5300);
             }
         });
         ofFloat.addListener(new AnimatorListenerAdapter() {
@@ -1117,8 +1121,9 @@ class GlobalScreenshot {
         layoutParams.width = this.mThumbnailTotalWidth + this.mShadowMargin;
         layoutParams.height = this.mThumbnailTotalHeight;
         this.mScreenshotShadow.setLayoutParams(layoutParams);
-        this.mShadowScale = 1.0f / this.mThumnailScale;
-        this.mScreenshotShadow.setScaleX(this.mShadowScale);
+        float f = 1.0f / this.mThumnailScale;
+        this.mShadowScale = f;
+        this.mScreenshotShadow.setScaleX(f);
         this.mScreenshotShadow.setScaleY(this.mShadowScale);
         this.mScreenshotShadow.setPivotX((float) this.mThumbnailWidth);
         this.mScreenshotShadow.setPivotY(0.0f);

@@ -1,16 +1,13 @@
 package com.android.systemui.statusbar.policy;
 
 import android.content.BroadcastReceiver;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.ConnectivityManagerCompat;
 import android.net.wifi.WifiManager;
-import android.os.Build;
 import android.os.UserManager;
-import android.provider.Settings;
 import android.util.Log;
 import com.android.systemui.statusbar.policy.HotspotController;
 import java.io.FileDescriptor;
@@ -30,7 +27,6 @@ public class HotspotControllerImpl implements HotspotController {
     private final Receiver mReceiver = new Receiver();
     /* access modifiers changed from: private */
     public boolean mWaitingForCallback;
-    private final WifiManager mWifiManager;
 
     private static String stateToString(int i) {
         switch (i) {
@@ -51,7 +47,7 @@ public class HotspotControllerImpl implements HotspotController {
 
     public HotspotControllerImpl(Context context) {
         this.mContext = context;
-        this.mWifiManager = (WifiManager) context.getSystemService("wifi");
+        WifiManager wifiManager = (WifiManager) context.getSystemService("wifi");
         this.mConnectivityManager = (ConnectivityManager) context.getSystemService("connectivity");
     }
 
@@ -144,11 +140,7 @@ public class HotspotControllerImpl implements HotspotController {
     }
 
     public void setHotspotEnabled(boolean z) {
-        if (Build.VERSION.SDK_INT < 24) {
-            setHotspotEnabledWithWifiManager(z);
-        } else {
-            setHotspotEnabledWithConnectivityManager(z);
-        }
+        setHotspotEnabledWithConnectivityManager(z);
     }
 
     private void setHotspotEnabledWithConnectivityManager(boolean z) {
@@ -164,20 +156,6 @@ public class HotspotControllerImpl implements HotspotController {
             return;
         }
         ConnectivityManagerCompat.stopTethering(this.mConnectivityManager, 0);
-    }
-
-    private void setHotspotEnabledWithWifiManager(boolean z) {
-        ContentResolver contentResolver = this.mContext.getContentResolver();
-        int wifiState = this.mWifiManager.getWifiState();
-        if (Build.VERSION.SDK_INT < 23 && z && (wifiState == 2 || wifiState == 3)) {
-            this.mWifiManager.setWifiEnabled(false);
-            Settings.Global.putInt(contentResolver, "wifi_saved_state", 1);
-        }
-        fireCallback(isHotspotEnabled());
-        if (Build.VERSION.SDK_INT < 23 && !z && Settings.Global.getInt(contentResolver, "wifi_saved_state", 0) == 1) {
-            this.mWifiManager.setWifiEnabled(true);
-            Settings.Global.putInt(contentResolver, "wifi_saved_state", 0);
-        }
     }
 
     /* access modifiers changed from: private */
@@ -237,7 +215,7 @@ public class HotspotControllerImpl implements HotspotController {
 
         public void onReceive(Context context, Intent intent) {
             boolean z = true;
-            if (intent.getIntExtra("wifi_ap_mode", -1) == 1) {
+            if (intent.getIntExtra("android.net.wifi.extra.WIFI_AP_MODE", -1) == 1) {
                 int intExtra = intent.getIntExtra("wifi_state", 14);
                 if (HotspotControllerImpl.DEBUG) {
                     Log.d("HotspotController", "onReceive " + intExtra);

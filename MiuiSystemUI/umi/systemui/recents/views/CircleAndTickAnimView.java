@@ -62,16 +62,18 @@ public class CircleAndTickAnimView extends View {
     }
 
     private void initAnimator() {
-        this.mCircleAnimator = ValueAnimator.ofFloat(new float[]{0.0f, -90.0f});
-        this.mCircleAnimator.setDuration(200);
+        ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{0.0f, -90.0f});
+        this.mCircleAnimator = ofFloat;
+        ofFloat.setDuration(200);
         this.mCircleAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 float unused = CircleAndTickAnimView.this.mCircleRotateDegrees = ((Float) valueAnimator.getAnimatedValue()).floatValue();
                 CircleAndTickAnimView.this.invalidate();
             }
         });
-        this.mTickStartPointAnimator = ValueAnimator.ofFloat(new float[]{0.0f, 0.31f});
-        this.mTickStartPointAnimator.setInterpolator(new CubicEaseOutInterpolator());
+        ValueAnimator ofFloat2 = ValueAnimator.ofFloat(new float[]{0.0f, 0.31f});
+        this.mTickStartPointAnimator = ofFloat2;
+        ofFloat2.setInterpolator(new CubicEaseOutInterpolator());
         this.mTickStartPointAnimator.setStartDelay(50);
         this.mTickStartPointAnimator.setDuration(250);
         this.mTickStartPointAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -80,8 +82,9 @@ public class CircleAndTickAnimView extends View {
                 CircleAndTickAnimView.this.invalidate();
             }
         });
-        this.mTickEndPointAnimator = ValueAnimator.ofFloat(new float[]{0.0f, 1.0f});
-        this.mTickEndPointAnimator.setInterpolator(new CubicEaseOutInterpolator());
+        ValueAnimator ofFloat3 = ValueAnimator.ofFloat(new float[]{0.0f, 1.0f});
+        this.mTickEndPointAnimator = ofFloat3;
+        ofFloat3.setInterpolator(new CubicEaseOutInterpolator());
         this.mTickEndPointAnimator.setDuration(300);
         this.mTickEndPointAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
@@ -149,10 +152,9 @@ public class CircleAndTickAnimView extends View {
     public void setDrawables(int i, int i2) {
         setNormalDrawable(i);
         setBackDrawable(i2);
-        this.mDiameter = Math.min(getIntrinsicWidth(), getIntrinsicHeight());
-        Rect rect = this.mViewRect;
-        int i3 = this.mDiameter;
-        rect.set(0, 0, i3, i3);
+        int min = Math.min(getIntrinsicWidth(), getIntrinsicHeight());
+        this.mDiameter = min;
+        this.mViewRect.set(0, 0, min, min);
         initRightMarkPath();
     }
 

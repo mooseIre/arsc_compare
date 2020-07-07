@@ -31,6 +31,10 @@ public class HomeDemoAct extends FsGestureDemoBaseActiivy {
     private View recentsBgView;
     private ImageView wallPaperImg;
 
+    static {
+        Class<HomeDemoAct> cls = HomeDemoAct.class;
+    }
+
     /* access modifiers changed from: protected */
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
@@ -43,8 +47,9 @@ public class HomeDemoAct extends FsGestureDemoBaseActiivy {
         boolean booleanExtra = intent.getBooleanExtra("IS_FROM_PROVISION", false);
         this.wallPaperImg = (ImageView) findViewById(R.id.wallpaper_img);
         this.homeIconImg = (LinearLayout) findViewById(R.id.home_icon_img);
-        this.mAnimIcon = (ImageView) findViewById(R.id.anim_icon);
-        this.mAnimIcon.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+        ImageView imageView = (ImageView) findViewById(R.id.anim_icon);
+        this.mAnimIcon = imageView;
+        imageView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             public void onGlobalLayout() {
                 HomeDemoAct.this.mAnimIcon.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 int[] locationOnScreen = HomeDemoAct.this.mAnimIcon.getLocationOnScreen();
@@ -88,8 +93,9 @@ public class HomeDemoAct extends FsGestureDemoBaseActiivy {
             startSwipeViewAnimation(2);
         }
         this.mNavigationHandle = GestureLineUtils.createAndaddNavigationHandle((RelativeLayout) this.fsGestureDemoTitleView.getParent());
-        this.fsgNavView = (NavStubDemoView) findViewById(R.id.fsg_nav_view);
-        this.fsgNavView.setCurActivity(this);
+        NavStubDemoView navStubDemoView = (NavStubDemoView) findViewById(R.id.fsg_nav_view);
+        this.fsgNavView = navStubDemoView;
+        navStubDemoView.setCurActivity(this);
         this.fsgNavView.setDemoType(stringExtra);
         this.fsgNavView.setFullyShowStep(intExtra);
         this.fsgNavView.setIsFromPro(booleanExtra);

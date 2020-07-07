@@ -119,9 +119,10 @@ public class NotificationCenter extends SystemUI {
     public void initSupportAggregate() {
         Intent intent = new Intent();
         intent.setClassName("com.miui.notification", "miui.notification.aggregation.NotificationListActivity");
-        sSupportAggregate = this.mContext.getPackageManager().resolveActivity(intent, 0) != null;
+        boolean z = this.mContext.getPackageManager().resolveActivity(intent, 0) != null;
+        sSupportAggregate = z;
         this.mBindTimes = 0;
-        if (!sSupportAggregate) {
+        if (!z) {
             return;
         }
         if (!this.mHasBind || this.mNcService == null) {

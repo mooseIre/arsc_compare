@@ -13,8 +13,9 @@ public final class ForegroundThread extends HandlerThread {
 
     private static void ensureThreadLocked() {
         if (sInstance == null) {
-            sInstance = new ForegroundThread();
-            sInstance.start();
+            ForegroundThread foregroundThread = new ForegroundThread();
+            sInstance = foregroundThread;
+            foregroundThread.start();
             sHandler = new Handler(sInstance.getLooper());
         }
     }

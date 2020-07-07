@@ -11,9 +11,7 @@ public class AnimationProperties {
     public long duration;
     private ArrayMap<Property, Interpolator> mInterpolatorMap;
 
-    public AnimationFilter getAnimationFilter() {
-        throw null;
-    }
+    public abstract AnimationFilter getAnimationFilter();
 
     public AnimatorListenerAdapter getAnimationFinishListener() {
         return null;

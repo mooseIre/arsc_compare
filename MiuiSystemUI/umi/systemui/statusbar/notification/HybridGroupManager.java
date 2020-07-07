@@ -100,7 +100,7 @@ public class HybridGroupManager {
 
     public void setOverflowNumberDark(TextView textView, boolean z, boolean z2, long j) {
         this.mDozer.setIntensityDark(new Consumer(textView) {
-            private final /* synthetic */ TextView f$1;
+            public final /* synthetic */ TextView f$1;
 
             {
                 this.f$1 = r2;
@@ -112,6 +112,8 @@ public class HybridGroupManager {
         }, z, z2, j);
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$setOverflowNumberDark$0 */
     public /* synthetic */ void lambda$setOverflowNumberDark$0$HybridGroupManager(TextView textView, Float f) {
         this.mDarkAmount = f.floatValue();
         updateOverFlowNumberColor(textView);

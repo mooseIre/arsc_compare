@@ -45,10 +45,11 @@ public class IconMerger extends LinearLayout {
             i3 = measuredWidth - (measuredWidth % this.mIconWidth);
         }
         this.mWidth = i3;
+        int i4 = 0;
         this.mEnoughSpace = measuredWidth >= 0;
-        int i4 = this.mWidth;
-        if (i4 < 0) {
-            i4 = 0;
+        int i5 = this.mWidth;
+        if (i5 >= 0) {
+            i4 = i5;
         }
         setMeasuredDimension(i4, getMeasuredHeight());
     }

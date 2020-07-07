@@ -16,13 +16,13 @@ import android.util.Log;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.util.AsyncChannel;
 import com.android.settingslib.wifi.WifiStatusTracker;
+import com.android.systemui.SettingsLibCompat;
 import com.android.systemui.plugins.R;
 import com.android.systemui.statusbar.policy.NetworkController;
 import com.android.systemui.statusbar.policy.SignalController;
 import java.util.Objects;
 
 public class WifiSignalController extends SignalController<WifiState, SignalController.IconGroup> {
-    private final boolean mHasMobileData;
     private boolean mShowWifiGeneraion;
     /* access modifiers changed from: private */
     public final AsyncChannel mWifiChannel;
@@ -35,13 +35,13 @@ public class WifiSignalController extends SignalController<WifiState, SignalCont
 
     public WifiSignalController(Context context, boolean z, CallbackHandler callbackHandler, NetworkControllerImpl networkControllerImpl, WifiManager wifiManager) {
         super("WifiSignalController", context, 1, callbackHandler, networkControllerImpl);
-        this.mWifiTracker = new WifiStatusTracker(this.mContext, wifiManager, (NetworkScoreManager) context.getSystemService(NetworkScoreManager.class), (ConnectivityManager) context.getSystemService(ConnectivityManager.class), new Runnable() {
+        WifiStatusTracker wifiStatusTracker = new WifiStatusTracker(this.mContext, wifiManager, (NetworkScoreManager) context.getSystemService(NetworkScoreManager.class), (ConnectivityManager) context.getSystemService(ConnectivityManager.class), new Runnable() {
             public final void run() {
                 WifiSignalController.this.handleStatusUpdated();
             }
         });
-        this.mWifiTracker.setListening(true);
-        this.mHasMobileData = z;
+        this.mWifiTracker = wifiStatusTracker;
+        wifiStatusTracker.setListening(true);
         WifiHandler wifiHandler = new WifiHandler(Looper.getMainLooper());
         this.mWifiChannel = new AsyncChannel();
         Messenger wifiServiceMessenger = WifiManagerCompat.getWifiServiceMessenger(wifiManager);
@@ -49,7 +49,7 @@ public class WifiSignalController extends SignalController<WifiState, SignalCont
             this.mWifiChannel.connect(context, wifiHandler, wifiServiceMessenger);
         }
         if (wifiManager != null) {
-            WifiManagerCompat.registerTrafficStateCallback(wifiManager, new WifiTrafficStateCallback(), (Handler) null);
+            WifiManagerCompat.registerTrafficStateCallback(context, wifiManager, new WifiTrafficStateCallback(), (Handler) null);
         }
         SignalController.IconGroup iconGroup = new SignalController.IconGroup("Wi-Fi Icons", WifiIcons.WIFI_SIGNAL_STRENGTH, WifiIcons.QS_WIFI_SIGNAL_STRENGTH, AccessibilityContentDescriptions.WIFI_CONNECTION_STRENGTH, R.drawable.stat_sys_wifi_signal_null, R.drawable.ic_qs_wifi_no_network, R.drawable.stat_sys_wifi_signal_null, R.drawable.ic_qs_wifi_no_network, R.string.accessibility_no_wifi);
         ((WifiState) this.mLastState).iconGroup = iconGroup;
@@ -93,9 +93,10 @@ public class WifiSignalController extends SignalController<WifiState, SignalCont
         ((WifiState) t).ssid = wifiStatusTracker.ssid;
         ((WifiState) t).rssi = wifiStatusTracker.rssi;
         ((WifiState) t).level = wifiStatusTracker.level;
-        this.mWifiGeneration = wifiStatusTracker.wifiGeneration;
+        int wifiStandard = SettingsLibCompat.getWifiStandard(wifiStatusTracker);
+        this.mWifiGeneration = wifiStandard;
         boolean z = true;
-        this.mShowWifiGeneraion = this.mWifiGeneration == 6;
+        this.mShowWifiGeneraion = wifiStandard == 6;
         T t2 = this.mCurrentState;
         WifiStatusTracker wifiStatusTracker2 = this.mWifiTracker;
         ((WifiState) t2).statusLabel = wifiStatusTracker2.statusLabel;

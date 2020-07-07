@@ -64,14 +64,18 @@ public class PipControlButtonView extends RelativeLayout {
     public void onFinishInflate() {
         super.onFinishInflate();
         this.mButtonImageView.setOnFocusChangeListener(this.mInternalFocusChangeListener);
-        this.mTextFocusGainAnimator = AnimatorInflater.loadAnimator(getContext(), R.anim.tv_pip_controls_focus_gain_animation);
-        this.mTextFocusGainAnimator.setTarget(this.mDescriptionTextView);
-        this.mButtonFocusGainAnimator = AnimatorInflater.loadAnimator(getContext(), R.anim.tv_pip_controls_focus_gain_animation);
-        this.mButtonFocusGainAnimator.setTarget(this.mButtonImageView);
-        this.mTextFocusLossAnimator = AnimatorInflater.loadAnimator(getContext(), R.anim.tv_pip_controls_focus_loss_animation);
-        this.mTextFocusLossAnimator.setTarget(this.mDescriptionTextView);
-        this.mButtonFocusLossAnimator = AnimatorInflater.loadAnimator(getContext(), R.anim.tv_pip_controls_focus_loss_animation);
-        this.mButtonFocusLossAnimator.setTarget(this.mButtonImageView);
+        Animator loadAnimator = AnimatorInflater.loadAnimator(getContext(), R.anim.tv_pip_controls_focus_gain_animation);
+        this.mTextFocusGainAnimator = loadAnimator;
+        loadAnimator.setTarget(this.mDescriptionTextView);
+        Animator loadAnimator2 = AnimatorInflater.loadAnimator(getContext(), R.anim.tv_pip_controls_focus_gain_animation);
+        this.mButtonFocusGainAnimator = loadAnimator2;
+        loadAnimator2.setTarget(this.mButtonImageView);
+        Animator loadAnimator3 = AnimatorInflater.loadAnimator(getContext(), R.anim.tv_pip_controls_focus_loss_animation);
+        this.mTextFocusLossAnimator = loadAnimator3;
+        loadAnimator3.setTarget(this.mDescriptionTextView);
+        Animator loadAnimator4 = AnimatorInflater.loadAnimator(getContext(), R.anim.tv_pip_controls_focus_loss_animation);
+        this.mButtonFocusLossAnimator = loadAnimator4;
+        loadAnimator4.setTarget(this.mButtonImageView);
     }
 
     public void setOnClickListener(View.OnClickListener onClickListener) {

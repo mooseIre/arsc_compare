@@ -17,7 +17,6 @@ import android.os.Bundle;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.util.Log;
-import android.util.StatsLog;
 import android.view.Choreographer;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -42,6 +41,7 @@ import com.android.systemui.bubbles.animation.PhysicsAnimationLayout;
 import com.android.systemui.bubbles.animation.StackAnimationController;
 import com.android.systemui.miui.statusbar.ExpandedNotification;
 import com.android.systemui.plugins.R;
+import com.android.systemui.shared.system.SysUiStatsLog;
 import com.android.systemui.statusbar.NotificationData;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -51,7 +51,7 @@ import java.util.List;
 public class BubbleStackView extends FrameLayout {
     private static final SurfaceSynchronizer DEFAULT_SURFACE_SYNCHRONIZER = new SurfaceSynchronizer() {
         public void syncSurfaceAndRun(final Runnable runnable) {
-            Choreographer.getInstance().postFrameCallback(new Choreographer.FrameCallback() {
+            Choreographer.getInstance().postFrameCallback(new Choreographer.FrameCallback(this) {
                 private int mFrameWait = 2;
 
                 public void doFrame(long j) {
@@ -124,7 +124,6 @@ public class BubbleStackView extends FrameLayout {
         }
     };
     private int mImeOffset;
-    private boolean mImeVisible;
     private LayoutInflater mInflater;
     /* access modifiers changed from: private */
     public boolean mIsExpanded;
@@ -168,10 +167,14 @@ public class BubbleStackView extends FrameLayout {
         void syncSurfaceAndRun(Runnable runnable);
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$new$0 */
     public /* synthetic */ void lambda$new$0$BubbleStackView() {
         animateFlyoutCollapsed(true, 0.0f);
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$new$1 */
     public /* synthetic */ void lambda$new$1$BubbleStackView(DynamicAnimation dynamicAnimation, boolean z, float f, float f2) {
         if (this.mFlyoutDragDeltaX == 0.0f) {
             this.mFlyout.postDelayed(this.mHideFlyout, 5000);
@@ -184,8 +187,9 @@ public class BubbleStackView extends FrameLayout {
         super(context);
         this.mBubbleData = bubbleData;
         this.mInflater = LayoutInflater.from(context);
-        this.mTouchHandler = new BubbleTouchHandler(this, bubbleData, context);
-        setOnTouchListener(this.mTouchHandler);
+        BubbleTouchHandler bubbleTouchHandler = new BubbleTouchHandler(this, bubbleData, context);
+        this.mTouchHandler = bubbleTouchHandler;
+        setOnTouchListener(bubbleTouchHandler);
         this.mInflater = LayoutInflater.from(context);
         Resources resources = getResources();
         this.mBubbleSize = resources.getDimensionPixelSize(R.dimen.individual_bubble_size);
@@ -193,7 +197,7 @@ public class BubbleStackView extends FrameLayout {
         this.mExpandedAnimateXDistance = resources.getDimensionPixelSize(R.dimen.bubble_expanded_animate_x_distance);
         this.mExpandedAnimateYDistance = resources.getDimensionPixelSize(R.dimen.bubble_expanded_animate_y_distance);
         this.mPointerHeight = resources.getDimensionPixelSize(R.dimen.bubble_pointer_height);
-        this.mStatusBarHeight = resources.getDimensionPixelSize(17105478);
+        this.mStatusBarHeight = resources.getDimensionPixelSize(17105519);
         this.mPipDismissHeight = this.mContext.getResources().getDimensionPixelSize(R.dimen.pip_dismiss_gradient_height);
         this.mImeOffset = resources.getDimensionPixelSize(R.dimen.pip_ime_offset);
         this.mDisplaySize = new Point();
@@ -204,21 +208,24 @@ public class BubbleStackView extends FrameLayout {
         this.mStackAnimationController = new StackAnimationController();
         this.mExpandedAnimationController = new ExpandedAnimationController(this.mDisplaySize, this.mExpandedViewPadding);
         this.mSurfaceSynchronizer = surfaceSynchronizer == null ? DEFAULT_SURFACE_SYNCHRONIZER : surfaceSynchronizer;
-        this.mBubbleContainer = new PhysicsAnimationLayout(context);
-        this.mBubbleContainer.setActiveController(this.mStackAnimationController);
+        PhysicsAnimationLayout physicsAnimationLayout = new PhysicsAnimationLayout(context);
+        this.mBubbleContainer = physicsAnimationLayout;
+        physicsAnimationLayout.setActiveController(this.mStackAnimationController);
         float f = (float) dimensionPixelSize;
         this.mBubbleContainer.setElevation(f);
         this.mBubbleContainer.setClipChildren(false);
         addView(this.mBubbleContainer, new FrameLayout.LayoutParams(-1, -1));
-        this.mExpandedViewContainer = new FrameLayout(context);
-        this.mExpandedViewContainer.setElevation(f);
-        FrameLayout frameLayout = this.mExpandedViewContainer;
+        FrameLayout frameLayout = new FrameLayout(context);
+        this.mExpandedViewContainer = frameLayout;
+        frameLayout.setElevation(f);
+        FrameLayout frameLayout2 = this.mExpandedViewContainer;
         int i = this.mExpandedViewPadding;
-        frameLayout.setPadding(i, i, i, i);
+        frameLayout2.setPadding(i, i, i, i);
         this.mExpandedViewContainer.setClipChildren(false);
         addView(this.mExpandedViewContainer);
-        this.mFlyout = new BubbleFlyoutView(context);
-        this.mFlyout.setVisibility(8);
+        BubbleFlyoutView bubbleFlyoutView = new BubbleFlyoutView(context);
+        this.mFlyout = bubbleFlyoutView;
+        bubbleFlyoutView.setVisibility(8);
         this.mFlyout.animate().setDuration(100).setInterpolator(new AccelerateDecelerateInterpolator());
         addView(this.mFlyout, new FrameLayout.LayoutParams(-2, -2));
         SpringAnimation springAnimation = this.mFlyoutTransitionSpring;
@@ -227,20 +234,22 @@ public class BubbleStackView extends FrameLayout {
         springForce.setDampingRatio(0.75f);
         springAnimation.setSpring(springForce);
         this.mFlyoutTransitionSpring.addEndListener(this.mAfterFlyoutTransitionSpring);
-        this.mDismissContainer = new BubbleDismissView(this.mContext);
-        this.mDismissContainer.setLayoutParams(new FrameLayout.LayoutParams(-1, getResources().getDimensionPixelSize(R.dimen.pip_dismiss_gradient_height), 80));
+        BubbleDismissView bubbleDismissView = new BubbleDismissView(this.mContext);
+        this.mDismissContainer = bubbleDismissView;
+        bubbleDismissView.setLayoutParams(new FrameLayout.LayoutParams(-1, getResources().getDimensionPixelSize(R.dimen.pip_dismiss_gradient_height), 80));
         addView(this.mDismissContainer);
-        this.mDismissContainer = new BubbleDismissView(this.mContext);
-        this.mDismissContainer.setLayoutParams(new FrameLayout.LayoutParams(-1, getResources().getDimensionPixelSize(R.dimen.pip_dismiss_gradient_height), 80));
+        BubbleDismissView bubbleDismissView2 = new BubbleDismissView(this.mContext);
+        this.mDismissContainer = bubbleDismissView2;
+        bubbleDismissView2.setLayoutParams(new FrameLayout.LayoutParams(-1, getResources().getDimensionPixelSize(R.dimen.pip_dismiss_gradient_height), 80));
         addView(this.mDismissContainer);
-        this.mExpandedViewXAnim = new SpringAnimation(this.mExpandedViewContainer, DynamicAnimation.TRANSLATION_X);
-        SpringAnimation springAnimation2 = this.mExpandedViewXAnim;
+        SpringAnimation springAnimation2 = new SpringAnimation(this.mExpandedViewContainer, DynamicAnimation.TRANSLATION_X);
+        this.mExpandedViewXAnim = springAnimation2;
         SpringForce springForce2 = new SpringForce();
         springForce2.setStiffness(200.0f);
         springForce2.setDampingRatio(0.75f);
         springAnimation2.setSpring(springForce2);
-        this.mExpandedViewYAnim = new SpringAnimation(this.mExpandedViewContainer, DynamicAnimation.TRANSLATION_Y);
-        SpringAnimation springAnimation3 = this.mExpandedViewYAnim;
+        SpringAnimation springAnimation3 = new SpringAnimation(this.mExpandedViewContainer, DynamicAnimation.TRANSLATION_Y);
+        this.mExpandedViewYAnim = springAnimation3;
         SpringForce springForce3 = new SpringForce();
         springForce3.setStiffness(200.0f);
         springForce3.setDampingRatio(0.75f);
@@ -266,10 +275,11 @@ public class BubbleStackView extends FrameLayout {
         getViewTreeObserver().addOnDrawListener(this.mSystemGestureExcludeUpdater);
         ColorMatrix colorMatrix = new ColorMatrix();
         ColorMatrix colorMatrix2 = new ColorMatrix();
-        this.mDesaturateAndDarkenAnimator = ValueAnimator.ofFloat(new float[]{1.0f, 0.0f});
-        this.mDesaturateAndDarkenAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener(colorMatrix, colorMatrix2) {
-            private final /* synthetic */ ColorMatrix f$1;
-            private final /* synthetic */ ColorMatrix f$2;
+        ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{1.0f, 0.0f});
+        this.mDesaturateAndDarkenAnimator = ofFloat;
+        ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener(colorMatrix, colorMatrix2) {
+            public final /* synthetic */ ColorMatrix f$1;
+            public final /* synthetic */ ColorMatrix f$2;
 
             {
                 this.f$1 = r2;
@@ -282,6 +292,8 @@ public class BubbleStackView extends FrameLayout {
         });
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$new$2 */
     public /* synthetic */ void lambda$new$2$BubbleStackView(DynamicAnimation dynamicAnimation, boolean z, float f, float f2) {
         Bubble bubble;
         if (this.mIsExpanded && (bubble = this.mExpandedBubble) != null) {
@@ -289,15 +301,16 @@ public class BubbleStackView extends FrameLayout {
         }
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$new$4 */
     public /* synthetic */ WindowInsets lambda$new$4$BubbleStackView(View view, WindowInsets windowInsets) {
         int systemWindowInsetBottom = windowInsets.getSystemWindowInsetBottom() - windowInsets.getStableInsetBottom();
         if (!this.mIsExpanded || this.mIsExpansionAnimating) {
             return view.onApplyWindowInsets(windowInsets);
         }
-        this.mImeVisible = systemWindowInsetBottom != 0;
         this.mExpandedViewYAnim.animateToFinalPosition(getYPositionForExpandedView());
         this.mExpandedAnimationController.updateYPosition(new Runnable(windowInsets) {
-            private final /* synthetic */ WindowInsets f$1;
+            public final /* synthetic */ WindowInsets f$1;
 
             {
                 this.f$1 = r2;
@@ -310,10 +323,14 @@ public class BubbleStackView extends FrameLayout {
         return view.onApplyWindowInsets(windowInsets);
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$new$3 */
     public /* synthetic */ void lambda$new$3$BubbleStackView(WindowInsets windowInsets) {
         this.mExpandedBubble.expandedView.updateInsets(windowInsets);
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$new$5 */
     public /* synthetic */ void lambda$new$5$BubbleStackView(View view, int i, int i2, int i3, int i4, int i5, int i6, int i7, int i8) {
         float f = this.mVerticalPosPercentBeforeRotation;
         if (f >= 0.0f) {
@@ -322,6 +339,8 @@ public class BubbleStackView extends FrameLayout {
         removeOnLayoutChangeListener(this.mMoveStackToValidPositionOnLayoutListener);
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$new$6 */
     public /* synthetic */ void lambda$new$6$BubbleStackView(ColorMatrix colorMatrix, ColorMatrix colorMatrix2, ValueAnimator valueAnimator) {
         float floatValue = ((Float) valueAnimator.getAnimatedValue()).floatValue();
         colorMatrix.setSaturation(floatValue);
@@ -547,8 +566,8 @@ public class BubbleStackView extends FrameLayout {
             if (this.mIsExpanded) {
                 this.mExpandedViewContainer.setAlpha(0.0f);
                 this.mSurfaceSynchronizer.syncSurfaceAndRun(new Runnable(bubble3, bubble) {
-                    private final /* synthetic */ Bubble f$1;
-                    private final /* synthetic */ Bubble f$2;
+                    public final /* synthetic */ Bubble f$1;
+                    public final /* synthetic */ Bubble f$2;
 
                     {
                         this.f$1 = r2;
@@ -563,6 +582,8 @@ public class BubbleStackView extends FrameLayout {
         }
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$setSelectedBubble$7 */
     public /* synthetic */ void lambda$setSelectedBubble$7$BubbleStackView(Bubble bubble, Bubble bubble2) {
         NotificationData.Entry entry;
         updateExpandedBubble();
@@ -649,7 +670,7 @@ public class BubbleStackView extends FrameLayout {
             if (z) {
                 this.mBubbleContainer.setActiveController(this.mExpandedAnimationController);
                 this.mExpandedAnimationController.expandFromStack(new Runnable(r0) {
-                    private final /* synthetic */ Runnable f$1;
+                    public final /* synthetic */ Runnable f$1;
 
                     {
                         this.f$1 = r2;
@@ -662,7 +683,7 @@ public class BubbleStackView extends FrameLayout {
             } else {
                 this.mBubbleContainer.cancelAllAnimations();
                 this.mExpandedAnimationController.collapseBackToStack(this.mStackAnimationController.getStackPositionAlongNearestHorizontalEdge(), new Runnable(r0) {
-                    private final /* synthetic */ Runnable f$1;
+                    public final /* synthetic */ Runnable f$1;
 
                     {
                         this.f$1 = r2;
@@ -705,17 +726,23 @@ public class BubbleStackView extends FrameLayout {
         }
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$animateExpansion$8 */
     public /* synthetic */ void lambda$animateExpansion$8$BubbleStackView() {
         applyCurrentState();
         this.mIsExpansionAnimating = false;
         requestUpdate();
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$animateExpansion$9 */
     public /* synthetic */ void lambda$animateExpansion$9$BubbleStackView(Runnable runnable) {
         updatePointerPosition();
         runnable.run();
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$animateExpansion$10 */
     public /* synthetic */ void lambda$animateExpansion$10$BubbleStackView(Runnable runnable) {
         this.mBubbleContainer.setActiveController(this.mStackAnimationController);
         runnable.run();
@@ -847,7 +874,7 @@ public class BubbleStackView extends FrameLayout {
     private void animateDesaturateAndDarken(View view, boolean z) {
         this.mDesaturateAndDarkenTargetView = view;
         if (z) {
-            this.mDesaturateAndDarkenTargetView.setLayerType(2, this.mDesaturateAndDarkenPaint);
+            view.setLayerType(2, this.mDesaturateAndDarkenPaint);
             this.mDesaturateAndDarkenAnimator.removeAllListeners();
             this.mDesaturateAndDarkenAnimator.start();
             return;
@@ -907,6 +934,8 @@ public class BubbleStackView extends FrameLayout {
         vibrator.vibrate(VibrationEffect.get(i));
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$animateMagnetToDismissTarget$11 */
     public /* synthetic */ void lambda$animateMagnetToDismissTarget$11$BubbleStackView() {
         this.mAnimatingMagnet = false;
         Runnable runnable = this.mAfterMagnet;
@@ -918,9 +947,9 @@ public class BubbleStackView extends FrameLayout {
     /* access modifiers changed from: package-private */
     public void magnetToStackIfNeededThenAnimateDismissal(View view, float f, float f2, Runnable runnable) {
         $$Lambda$BubbleStackView$wNBb9TcVorXyGaagZMMDs0nXEJw r1 = new Runnable(view, runnable, this.mExpandedAnimationController.getDraggedOutBubble()) {
-            private final /* synthetic */ View f$1;
-            private final /* synthetic */ Runnable f$2;
-            private final /* synthetic */ View f$3;
+            public final /* synthetic */ View f$1;
+            public final /* synthetic */ Runnable f$2;
+            public final /* synthetic */ View f$3;
 
             {
                 this.f$1 = r2;
@@ -942,13 +971,15 @@ public class BubbleStackView extends FrameLayout {
         }
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$magnetToStackIfNeededThenAnimateDismissal$14 */
     public /* synthetic */ void lambda$magnetToStackIfNeededThenAnimateDismissal$14$BubbleStackView(View view, Runnable runnable, View view2) {
         this.mAfterMagnet = null;
         this.mVibrator.vibrate(VibrationEffect.get(0));
         this.mDismissContainer.animateEncirclingCircleDisappearance();
         if (view == this) {
             this.mStackAnimationController.implodeStack(new Runnable(runnable) {
-                private final /* synthetic */ Runnable f$1;
+                public final /* synthetic */ Runnable f$1;
 
                 {
                     this.f$1 = r2;
@@ -960,7 +991,7 @@ public class BubbleStackView extends FrameLayout {
             });
         } else {
             this.mExpandedAnimationController.dismissDraggedOutBubble(view2, new Runnable(runnable) {
-                private final /* synthetic */ Runnable f$1;
+                public final /* synthetic */ Runnable f$1;
 
                 {
                     this.f$1 = r2;
@@ -973,6 +1004,8 @@ public class BubbleStackView extends FrameLayout {
         }
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$magnetToStackIfNeededThenAnimateDismissal$12 */
     public /* synthetic */ void lambda$magnetToStackIfNeededThenAnimateDismissal$12$BubbleStackView(Runnable runnable) {
         this.mAnimatingMagnet = false;
         this.mShowingDismiss = false;
@@ -981,6 +1014,8 @@ public class BubbleStackView extends FrameLayout {
         resetDesaturationAndDarken();
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$magnetToStackIfNeededThenAnimateDismissal$13 */
     public /* synthetic */ void lambda$magnetToStackIfNeededThenAnimateDismissal$13$BubbleStackView(Runnable runnable) {
         this.mAnimatingMagnet = false;
         this.mShowingDismiss = false;
@@ -1068,7 +1103,7 @@ public class BubbleStackView extends FrameLayout {
                     runnable.run();
                 }
                 this.mAfterFlyoutHides = new Runnable(bubble) {
-                    private final /* synthetic */ Bubble f$1;
+                    public final /* synthetic */ Bubble f$1;
 
                     {
                         this.f$1 = r2;
@@ -1079,8 +1114,8 @@ public class BubbleStackView extends FrameLayout {
                     }
                 };
                 post(new Runnable(updateMessage, bubble) {
-                    private final /* synthetic */ CharSequence f$1;
-                    private final /* synthetic */ Bubble f$2;
+                    public final /* synthetic */ CharSequence f$1;
+                    public final /* synthetic */ Bubble f$2;
 
                     {
                         this.f$1 = r2;
@@ -1098,6 +1133,8 @@ public class BubbleStackView extends FrameLayout {
         }
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$animateInFlyoutForBubble$15 */
     public /* synthetic */ void lambda$animateInFlyoutForBubble$15$BubbleStackView(Bubble bubble) {
         BubbleView bubbleView = bubble.iconView;
         if (bubbleView != null) {
@@ -1110,6 +1147,8 @@ public class BubbleStackView extends FrameLayout {
         }
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$animateInFlyoutForBubble$16 */
     public /* synthetic */ void lambda$animateInFlyoutForBubble$16$BubbleStackView(CharSequence charSequence, Bubble bubble) {
         if (!isExpanded()) {
             this.mFlyout.showFlyout(charSequence, this.mStackAnimationController.getStackPosition(), (float) getWidth(), this.mStackAnimationController.isStackOnLeftSide(), bubble.iconView.getBadgeColor(), this.mAfterFlyoutHides);
@@ -1159,10 +1198,9 @@ public class BubbleStackView extends FrameLayout {
     }
 
     private boolean isIntersecting(View view, float f, float f2) {
-        this.mTempLoc = view.getLocationOnScreen();
-        RectF rectF = this.mTempRect;
-        int[] iArr = this.mTempLoc;
-        rectF.set((float) iArr[0], (float) iArr[1], (float) (iArr[0] + view.getWidth()), (float) (this.mTempLoc[1] + view.getHeight()));
+        int[] locationOnScreen = view.getLocationOnScreen();
+        this.mTempLoc = locationOnScreen;
+        this.mTempRect.set((float) locationOnScreen[0], (float) locationOnScreen[1], (float) (locationOnScreen[0] + view.getWidth()), (float) (this.mTempLoc[1] + view.getHeight()));
         return this.mTempRect.contains(f, f2);
     }
 
@@ -1262,10 +1300,10 @@ public class BubbleStackView extends FrameLayout {
         ExpandedNotification expandedNotification;
         Bubble bubble2 = bubble;
         if (bubble2 == null || (entry = bubble2.entry) == null || (expandedNotification = entry.notification) == null) {
-            StatsLog.write(149, (String) null, (String) null, 0, 0, getBubbleCount(), i, getNormalizedXPosition(), getNormalizedYPosition(), false, false, false);
+            SysUiStatsLog.write(149, (String) null, (String) null, 0, 0, getBubbleCount(), i, getNormalizedXPosition(), getNormalizedYPosition(), false, false, false);
             return;
         }
-        StatsLog.write(149, expandedNotification.getPackageName(), expandedNotification.getNotification().getChannelId(), expandedNotification.getId(), getBubbleIndex(bubble), getBubbleCount(), i, getNormalizedXPosition(), getNormalizedYPosition(), bubble2.entry.showInShadeWhenBubble(), bubble2.entry.isForegroundService(), BubbleController.isForegroundApp(this.mContext, expandedNotification.getPackageName()));
+        SysUiStatsLog.write(149, expandedNotification.getPackageName(), expandedNotification.getNotification().getChannelId(), expandedNotification.getId(), getBubbleIndex(bubble), getBubbleCount(), i, getNormalizedXPosition(), getNormalizedYPosition(), bubble2.entry.showInShadeWhenBubble(), bubble2.entry.isForegroundService(), BubbleController.isForegroundApp(this.mContext, expandedNotification.getPackageName()));
     }
 
     /* access modifiers changed from: package-private */

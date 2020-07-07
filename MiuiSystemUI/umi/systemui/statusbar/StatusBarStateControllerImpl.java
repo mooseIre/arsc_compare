@@ -17,15 +17,6 @@ import java.util.Iterator;
 import java.util.function.Predicate;
 
 public class StatusBarStateControllerImpl implements SysuiStatusBarStateController, CallbackController<StatusBarStateController.StateListener>, Dumpable {
-    private static final FloatProperty<StatusBarStateControllerImpl> SET_DARK_AMOUNT_PROPERTY = new FloatProperty<StatusBarStateControllerImpl>("mDozeAmount") {
-        public void setValue(StatusBarStateControllerImpl statusBarStateControllerImpl, float f) {
-            statusBarStateControllerImpl.setDozeAmountInternal(f);
-        }
-
-        public Float get(StatusBarStateControllerImpl statusBarStateControllerImpl) {
-            return Float.valueOf(statusBarStateControllerImpl.mDozeAmount);
-        }
-    };
     private static final Comparator<SysuiStatusBarStateController.RankedListener> sComparator = Comparator.comparingInt($$Lambda$StatusBarStateControllerImpl$7y8VOe44iFeEd9HPscwVVB7kUfw.INSTANCE);
     /* access modifiers changed from: private */
     public float mDozeAmount;
@@ -38,6 +29,18 @@ public class StatusBarStateControllerImpl implements SysuiStatusBarStateControll
     private boolean mLeaveOpenOnKeyguardHide;
     private final ArrayList<SysuiStatusBarStateController.RankedListener> mListeners = new ArrayList<>();
     private int mState;
+
+    static {
+        new FloatProperty<StatusBarStateControllerImpl>("mDozeAmount") {
+            public void setValue(StatusBarStateControllerImpl statusBarStateControllerImpl, float f) {
+                statusBarStateControllerImpl.setDozeAmountInternal(f);
+            }
+
+            public Float get(StatusBarStateControllerImpl statusBarStateControllerImpl) {
+                return Float.valueOf(statusBarStateControllerImpl.mDozeAmount);
+            }
+        };
+    }
 
     public StatusBarStateControllerImpl() {
         this.mHistoryIndex = 0;
@@ -169,8 +172,9 @@ public class StatusBarStateControllerImpl implements SysuiStatusBarStateControll
     }
 
     private void recordHistoricalState(int i, int i2) {
-        this.mHistoryIndex = (this.mHistoryIndex + 1) % 32;
-        HistoricalState historicalState = this.mHistoricalRecords[this.mHistoryIndex];
+        int i3 = (this.mHistoryIndex + 1) % 32;
+        this.mHistoryIndex = i3;
+        HistoricalState historicalState = this.mHistoricalRecords[i3];
         historicalState.mState = i;
         historicalState.mLastState = i2;
         historicalState.mTimestamp = System.currentTimeMillis();

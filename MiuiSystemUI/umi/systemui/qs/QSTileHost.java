@@ -1,5 +1,6 @@
 package com.android.systemui.qs;
 
+import android.app.ActivityManager;
 import android.app.MiuiStatusBarManager;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -19,7 +20,6 @@ import android.service.quicksettings.TileCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Slog;
-import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.systemui.Constants;
 import com.android.systemui.Dependency;
 import com.android.systemui.Util;
@@ -149,7 +149,7 @@ public class QSTileHost implements QSHost, TunerService.Tunable, PluginListener<
         this.mUpdateVersionReceiver = new BroadcastReceiver() {
             public void onReceive(Context context, Intent intent) {
                 if (QSTileHost.this.needUpdateSharedPreferences() && QSTileHost.this.mUpdateTiles != null && QSTileHost.this.mUpdateTiles.size() != 0) {
-                    String stringForUser = Settings.Secure.getStringForUser(QSTileHost.this.mContext.getContentResolver(), "sysui_qs_tiles", KeyguardUpdateMonitor.getCurrentUser());
+                    String stringForUser = Settings.Secure.getStringForUser(QSTileHost.this.mContext.getContentResolver(), "sysui_qs_tiles", ActivityManager.getCurrentUser());
                     QSTileHost qSTileHost = QSTileHost.this;
                     List<String> loadTileSpecs = qSTileHost.loadTileSpecs(qSTileHost.mContext, stringForUser);
                     SharedPreferences.Editor edit = QSTileHost.this.mMiuiQSTilesSharedPreferences.edit();
@@ -164,7 +164,7 @@ public class QSTileHost implements QSHost, TunerService.Tunable, PluginListener<
                     }
                     edit.apply();
                     QSTileHost.this.addIndependentTiles("sysui_qs_tiles", loadTileSpecs);
-                    Settings.Secure.putStringForUser(QSTileHost.this.mContext.getContentResolver(), "sysui_qs_tiles", TextUtils.join(",", loadTileSpecs), KeyguardUpdateMonitor.getCurrentUser());
+                    Settings.Secure.putStringForUser(QSTileHost.this.mContext.getContentResolver(), "sysui_qs_tiles", TextUtils.join(",", loadTileSpecs), ActivityManager.getCurrentUser());
                 }
             }
         };
@@ -207,10 +207,13 @@ public class QSTileHost implements QSHost, TunerService.Tunable, PluginListener<
     }
 
     public void init() {
+        Class cls = OldModeController.class;
+        Class cls2 = SuperSaveModeController.class;
+        Class cls3 = TunerService.class;
         if (this.mControlTileHost) {
             this.NORMAL_MIN_SIZE_ONE_SCREEN = 8;
             this.SUPER_SAVE_MIN_TILE_ONE_SCREEN = 4;
-            this.mMinTilesInOneScreen = this.NORMAL_MIN_SIZE_ONE_SCREEN;
+            this.mMinTilesInOneScreen = 8;
         }
         if (Constants.IS_INTERNATIONAL) {
             this.mControlIndependentTiles.addAll(Arrays.asList(this.mContext.getResources().getStringArray(R.array.qs_control_independent_tiles_global)));
@@ -222,16 +225,17 @@ public class QSTileHost implements QSHost, TunerService.Tunable, PluginListener<
         this.mServices = new TileServices(this, (Looper) Dependency.get(Dependency.BG_LOOPER));
         this.mEdited = this.mMiuiQSTilesSharedPreferences.getBoolean(this.MIUI_QS_TILES_EDITED, false);
         this.mQsFactories.add(new QSFactoryImpl(this));
-        this.mSuperSaveModeOn = ((SuperSaveModeController) Dependency.get(SuperSaveModeController.class)).isActive();
-        this.mOldModeOn = ((OldModeController) Dependency.get(OldModeController.class)).isActive();
+        this.mSuperSaveModeOn = ((SuperSaveModeController) Dependency.get(cls2)).isActive();
+        this.mOldModeOn = ((OldModeController) Dependency.get(cls)).isActive();
         changeTileListKey();
         initQSTiles(this.mContext);
-        this.mQsFactoryImpl = new QSFactoryImpl(this);
-        this.mQsFactories.add(this.mQsFactoryImpl);
+        QSFactoryImpl qSFactoryImpl = new QSFactoryImpl(this);
+        this.mQsFactoryImpl = qSFactoryImpl;
+        this.mQsFactories.add(qSFactoryImpl);
         addPluginListeners();
-        ((TunerService) Dependency.get(TunerService.class)).addTunable(this, "sysui_qs_tiles");
-        ((TunerService) Dependency.get(TunerService.class)).addTunable(this, this.TILES_SUPER_SAVE);
-        ((TunerService) Dependency.get(TunerService.class)).addTunable(this, this.TILES_OLD_MODE);
+        ((TunerService) Dependency.get(cls3)).addTunable(this, "sysui_qs_tiles");
+        ((TunerService) Dependency.get(cls3)).addTunable(this, this.TILES_SUPER_SAVE);
+        ((TunerService) Dependency.get(cls3)).addTunable(this, this.TILES_OLD_MODE);
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("android.intent.action.PACKAGE_ADDED");
         intentFilter.addAction("android.intent.action.PACKAGE_REMOVED");
@@ -260,8 +264,8 @@ public class QSTileHost implements QSHost, TunerService.Tunable, PluginListener<
         this.mHandler = new Handler();
         this.mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor("status_bar_collapse_after_clicked"), false, this.mContentObserver, -1);
         this.mContentObserver.onChange(false);
-        ((SuperSaveModeController) Dependency.get(SuperSaveModeController.class)).addCallback(this);
-        ((OldModeController) Dependency.get(OldModeController.class)).addCallback(this);
+        ((SuperSaveModeController) Dependency.get(cls2)).addCallback((SuperSaveModeController.SuperSaveModeChangeListener) this);
+        ((OldModeController) Dependency.get(cls)).addCallback((OldModeController.OldModeChangeListener) this);
     }
 
     public boolean isDriveModeInstalled() {
@@ -282,8 +286,8 @@ public class QSTileHost implements QSHost, TunerService.Tunable, PluginListener<
         this.mServices.destroy();
         this.mServices = null;
         removePluginListeners();
-        ((SuperSaveModeController) Dependency.get(SuperSaveModeController.class)).removeCallback(this);
-        ((OldModeController) Dependency.get(OldModeController.class)).removeCallback(this);
+        ((SuperSaveModeController) Dependency.get(SuperSaveModeController.class)).removeCallback((SuperSaveModeController.SuperSaveModeChangeListener) this);
+        ((OldModeController) Dependency.get(OldModeController.class)).removeCallback((OldModeController.OldModeChangeListener) this);
         this.mContext.getContentResolver().unregisterContentObserver(this.mContentObserver);
         this.mContext.unregisterReceiver(this.mPackageChangeReceiver);
         this.mContext.unregisterReceiver(this.mUpdateVersionReceiver);
@@ -477,19 +481,20 @@ public class QSTileHost implements QSHost, TunerService.Tunable, PluginListener<
     }
 
     private String getTileListValue() {
+        Class cls = TunerService.class;
         if (this.mTileListKey.equals(this.TILES_SUPER_SAVE)) {
             if (this.mControlTileHost) {
                 return this.mContext.getResources().getString(R.string.control_quick_settings_tiles_super_save);
             }
             return this.mContext.getResources().getString(R.string.quick_settings_tiles_super_save);
         } else if (this.mTileListKey.equals(this.TILES_OLD_MODE) && !this.mControlTileHost) {
-            String value = ((TunerService) Dependency.get(TunerService.class)).getValue(this.TILES_OLD_MODE);
+            String value = ((TunerService) Dependency.get(cls)).getValue(this.TILES_OLD_MODE);
             return TextUtils.isEmpty(value) ? this.mContext.getResources().getString(R.string.quick_settings_tiles_old_mode) : value;
         } else if (!this.mTileListKey.equals("sysui_qs_tiles")) {
             return this.mQsDefaultTiles;
         } else {
             if (this.mEdited) {
-                return ((TunerService) Dependency.get(TunerService.class)).getValue("sysui_qs_tiles");
+                return ((TunerService) Dependency.get(cls)).getValue("sysui_qs_tiles");
             }
             return this.mQsDefaultTiles;
         }
@@ -514,14 +519,16 @@ public class QSTileHost implements QSHost, TunerService.Tunable, PluginListener<
 
     /* access modifiers changed from: protected */
     public void addPluginListeners() {
-        ((PluginManager) Dependency.get(PluginManager.class)).addPluginListener(this, (Class<?>) QSFactory.class, true);
-        ((PluginManager) Dependency.get(PluginManager.class)).addPluginListener(this.mQsTilePluginListener, (Class<?>) MiuiQSTilePlugin.class, true);
+        Class cls = PluginManager.class;
+        ((PluginManager) Dependency.get(cls)).addPluginListener(this, (Class<?>) QSFactory.class, true);
+        ((PluginManager) Dependency.get(cls)).addPluginListener(this.mQsTilePluginListener, (Class<?>) MiuiQSTilePlugin.class, true);
     }
 
     /* access modifiers changed from: protected */
     public void removePluginListeners() {
-        ((PluginManager) Dependency.get(PluginManager.class)).removePluginListener(this);
-        ((PluginManager) Dependency.get(PluginManager.class)).removePluginListener(this.mQsTilePluginListener);
+        Class cls = PluginManager.class;
+        ((PluginManager) Dependency.get(cls)).removePluginListener(this);
+        ((PluginManager) Dependency.get(cls)).removePluginListener(this.mQsTilePluginListener);
     }
 
     /* access modifiers changed from: private */
@@ -545,7 +552,7 @@ public class QSTileHost implements QSHost, TunerService.Tunable, PluginListener<
             String str4 = this.TAG;
             Slog.d(str4, "onTuningChanged: recreating tiles: newValue: " + str2 + ", tileSpecs: " + loadTileSpecs);
         }
-        int currentUser = KeyguardUpdateMonitor.getCurrentUser();
+        int currentUser = ActivityManager.getCurrentUser();
         if (!loadTileSpecs.equals(this.mTileSpecs) || currentUser != this.mCurrentUser) {
             for (Map.Entry next : this.mTiles.entrySet()) {
                 if (!loadTileSpecs.contains(next.getKey())) {
@@ -644,7 +651,7 @@ public class QSTileHost implements QSHost, TunerService.Tunable, PluginListener<
         ArrayList arrayList = new ArrayList(this.mTileSpecs);
         arrayList.remove(str);
         addIndependentTiles(this.mTileListKey, arrayList);
-        Settings.Secure.putStringForUser(this.mContext.getContentResolver(), this.mTileListKey, TextUtils.join(",", arrayList), KeyguardUpdateMonitor.getCurrentUser());
+        Settings.Secure.putStringForUser(this.mContext.getContentResolver(), this.mTileListKey, TextUtils.join(",", arrayList), ActivityManager.getCurrentUser());
     }
 
     public int getMinTiles() {
@@ -669,7 +676,7 @@ public class QSTileHost implements QSHost, TunerService.Tunable, PluginListener<
             String str = list.get(i);
             if (str.startsWith("custom(") && !list2.contains(str)) {
                 ComponentName componentFromSpec = CustomTile.getComponentFromSpec(str);
-                TileLifecycleManager tileLifecycleManager = new TileLifecycleManager(new Handler(), this.mContext, this.mServices, TileCompat.newTile(componentFromSpec), new Intent().setComponent(componentFromSpec), new UserHandle(KeyguardUpdateMonitor.getCurrentUser()));
+                TileLifecycleManager tileLifecycleManager = new TileLifecycleManager(new Handler(), this.mContext, this.mServices, TileCompat.newTile(componentFromSpec), new Intent().setComponent(componentFromSpec), new UserHandle(ActivityManager.getCurrentUser()));
                 tileLifecycleManager.onStopListening();
                 tileLifecycleManager.onTileRemoved();
                 TileLifecycleManager.setTileAdded(this.mContext, componentFromSpec, false);
@@ -680,14 +687,14 @@ public class QSTileHost implements QSHost, TunerService.Tunable, PluginListener<
             Log.d(this.TAG, "saveCurrentTiles " + list2);
         }
         addIndependentTiles(this.mTileListKey, list2);
-        Settings.Secure.putStringForUser(getContext().getContentResolver(), this.mTileListKey, TextUtils.join(",", list2), KeyguardUpdateMonitor.getCurrentUser());
+        Settings.Secure.putStringForUser(getContext().getContentResolver(), this.mTileListKey, TextUtils.join(",", list2), ActivityManager.getCurrentUser());
     }
 
     public QSTile createTile(String str) {
-        if (str.equals("custom(com.miui.securitycenter/com.miui.superpower.notification.SuperPowerTileService)") && (KeyguardUpdateMonitor.getCurrentUser() != 0 || (Constants.IS_INTERNATIONAL && Constants.SUPPORT_EXTREME_BATTERY_SAVER && !Constants.IS_TABLET))) {
+        if (str.equals("custom(com.miui.securitycenter/com.miui.superpower.notification.SuperPowerTileService)") && (ActivityManager.getCurrentUser() != 0 || (Constants.IS_INTERNATIONAL && Constants.SUPPORT_EXTREME_BATTERY_SAVER && !Constants.IS_TABLET))) {
             return null;
         }
-        if (str.equals("custom(com.miui.screenrecorder/.service.QuickService)") && KeyguardUpdateMonitor.getCurrentUser() != 0) {
+        if (str.equals("custom(com.miui.screenrecorder/.service.QuickService)") && ActivityManager.getCurrentUser() != 0) {
             return null;
         }
         for (int i = 0; i < this.mQsFactories.size(); i++) {

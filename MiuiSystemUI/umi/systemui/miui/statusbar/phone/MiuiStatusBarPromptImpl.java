@@ -40,7 +40,6 @@ class MiuiStatusBarPromptImpl implements IMiuiStatusBarPrompt {
     private Context mContext;
     private int mDisableFlags = 0;
     private View mDriveModeBg;
-    private boolean mDriveModeMask;
     private TextView mDriveModeTextView;
     private boolean mIsSosTypeImage;
     private LimitedSizeStyleSavedView mMiniStateViews;
@@ -70,36 +69,42 @@ class MiuiStatusBarPromptImpl implements IMiuiStatusBarPrompt {
         this.mBar = statusBar;
         this.mDisableFlags = i;
         this.mParentView = view;
-        this.mContext = this.mParentView.getContext();
+        this.mContext = view.getContext();
         this.mMiuiStatusBarPrompt = (MiuiStatusBarPromptController) Dependency.get(MiuiStatusBarPromptController.class);
         updateViewWidth(Integer.MAX_VALUE);
     }
 
     /* access modifiers changed from: package-private */
     public void updateViewWidth(int i) {
-        this.mMiniStateViews = (LimitedSizeStyleSavedView) findViewById(R.id.miniStateViews);
-        this.mMiniStateViews.setMaxWidth(i);
+        LimitedSizeStyleSavedView limitedSizeStyleSavedView = (LimitedSizeStyleSavedView) findViewById(R.id.miniStateViews);
+        this.mMiniStateViews = limitedSizeStyleSavedView;
+        limitedSizeStyleSavedView.setMaxWidth(i);
         this.mStandardStateViews = (ViewGroup) findViewById(R.id.standardStateViews);
-        this.mReturnToInCallScreenButton = (LimitedSizeStyleSavedView) findViewById(R.id.notch_call);
-        this.mReturnToInCallScreenButton.setMaxWidth(i);
+        LimitedSizeStyleSavedView limitedSizeStyleSavedView2 = (LimitedSizeStyleSavedView) findViewById(R.id.notch_call);
+        this.mReturnToInCallScreenButton = limitedSizeStyleSavedView2;
+        limitedSizeStyleSavedView2.setMaxWidth(i);
         this.mCallStateIcon = (ImageView) this.mReturnToInCallScreenButton.findViewById(R.id.image);
         this.mCallTimer = (Chronometer) this.mReturnToInCallScreenButton.findViewById(R.id.timer);
-        this.mReturnToDriveModeView = (LimitedSizeStyleSavedView) findViewById(R.id.notch_drivemode);
-        this.mReturnToDriveModeView.setMaxWidth(i);
+        LimitedSizeStyleSavedView limitedSizeStyleSavedView3 = (LimitedSizeStyleSavedView) findViewById(R.id.notch_drivemode);
+        this.mReturnToDriveModeView = limitedSizeStyleSavedView3;
+        limitedSizeStyleSavedView3.setMaxWidth(i);
         this.mDriveModeTextView = (TextView) findViewById(R.id.driveModeTipText_notch);
         this.mReturnToMultiModeView = (TextView) findViewById(R.id.notch_multi);
         this.mDriveModeBg = findViewById(R.id.drivemodebg);
-        this.mReturnToRecorderView = (LimitedSizeStyleSavedView) findViewById(R.id.notch_recorder);
-        this.mReturnToRecorderView.setMaxWidth(i);
+        LimitedSizeStyleSavedView limitedSizeStyleSavedView4 = (LimitedSizeStyleSavedView) findViewById(R.id.notch_recorder);
+        this.mReturnToRecorderView = limitedSizeStyleSavedView4;
+        limitedSizeStyleSavedView4.setMaxWidth(i);
         this.mNotchRecorderImage = (ImageView) this.mReturnToRecorderView.findViewById(R.id.image);
         this.mRecordTimer = (Chronometer) this.mReturnToRecorderView.findViewById(R.id.timer);
         if (!isSafePayDisabled()) {
-            this.mSafepayStatusBar = (LimitedSizeStyleSavedView) findViewById(R.id.notch_safe);
-            this.mSafepayStatusBar.setMaxWidth(i);
+            LimitedSizeStyleSavedView limitedSizeStyleSavedView5 = (LimitedSizeStyleSavedView) findViewById(R.id.notch_safe);
+            this.mSafepayStatusBar = limitedSizeStyleSavedView5;
+            limitedSizeStyleSavedView5.setMaxWidth(i);
             this.mSafepayStatusBarText = (TextView) this.mSafepayStatusBar.findViewById(R.id.title);
         }
-        this.mSosStatusBar = (LimitedSizeStyleSavedView) findViewById(R.id.notch_sos);
-        ((LimitedSizeStyleSavedView) this.mSosStatusBar).setMaxWidth(i);
+        LimitedSizeStyleSavedView limitedSizeStyleSavedView6 = (LimitedSizeStyleSavedView) findViewById(R.id.notch_sos);
+        this.mSosStatusBar = limitedSizeStyleSavedView6;
+        limitedSizeStyleSavedView6.setMaxWidth(i);
     }
 
     public void cancelState() {
@@ -140,7 +145,7 @@ class MiuiStatusBarPromptImpl implements IMiuiStatusBarPrompt {
                 final View apply = remoteViews.apply(this.mContext, limitedSizeStyleSavedView);
                 limitedSizeStyleSavedView.removeAllViews();
                 limitedSizeStyleSavedView.addView(apply);
-                limitedSizeStyleSavedView.post(new Runnable() {
+                limitedSizeStyleSavedView.post(new Runnable(this) {
                     public void run() {
                         ViewGroup.LayoutParams layoutParams = apply.getLayoutParams();
                         layoutParams.width = limitedSizeStyleSavedView.getWidth();
@@ -230,7 +235,6 @@ class MiuiStatusBarPromptImpl implements IMiuiStatusBarPrompt {
 
     public void showReturnToDriveModeView(boolean z, boolean z2) {
         if (!isDriveModeDisabled()) {
-            this.mDriveModeMask = z2;
             if (z2) {
                 this.mDriveModeTextView.setText(R.string.drive_mode_tip_idle_notch);
             } else {
@@ -424,7 +428,7 @@ class MiuiStatusBarPromptImpl implements IMiuiStatusBarPrompt {
         if (i != 8) {
             view.setVisibility(0);
         }
-        view.animate().alpha(i == 0 ? 1.0f : 0.0f).setDuration(z ? 320 : 0).setInterpolator(i == 0 ? Interpolators.ALPHA_IN : Interpolators.ALPHA_OUT).withEndAction(new Runnable() {
+        view.animate().alpha(i == 0 ? 1.0f : 0.0f).setDuration(z ? 320 : 0).setInterpolator(i == 0 ? Interpolators.ALPHA_IN : Interpolators.ALPHA_OUT).withEndAction(new Runnable(this) {
             public void run() {
                 if (i == 8) {
                     view.setVisibility(8);

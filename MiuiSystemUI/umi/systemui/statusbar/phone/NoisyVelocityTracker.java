@@ -7,7 +7,6 @@ import java.util.Iterator;
 
 public class NoisyVelocityTracker implements VelocityTrackerInterface {
     private static final Pools.SynchronizedPool<NoisyVelocityTracker> sNoisyPool = new Pools.SynchronizedPool<>(2);
-    private final int MAX_EVENTS = 8;
     private ArrayDeque<MotionEventCopy> mEventBuf = new ArrayDeque<>(8);
     private float mVX;
     private float mVY = 0.0f;
@@ -43,8 +42,8 @@ public class NoisyVelocityTracker implements VelocityTrackerInterface {
         this.mVY = 0.0f;
         this.mVX = 0.0f;
         Iterator<MotionEventCopy> it = this.mEventBuf.iterator();
-        float f = 10.0f;
         MotionEventCopy motionEventCopy = null;
+        float f = 10.0f;
         float f2 = 0.0f;
         while (it.hasNext()) {
             MotionEventCopy next = it.next();

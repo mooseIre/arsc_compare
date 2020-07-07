@@ -85,8 +85,9 @@ public class AppQuickSwitchActivity extends FsGestureDemoBaseActiivy {
         float max = 1.0f - (Math.max(0.0f, Math.min((this.mYDown - this.mYCur) / ((float) this.mScreenHeight), 1.0f)) * 0.7f);
         this.mCardContainer.setScaleX(max);
         this.mCardContainer.setScaleY(max);
-        this.mTranslationX = (int) (this.mXCur - this.mXDown);
-        this.mCardContainer.setTranslationX((float) this.mTranslationX);
+        int i = (int) (this.mXCur - this.mXDown);
+        this.mTranslationX = i;
+        this.mCardContainer.setTranslationX((float) i);
         this.mCardContainer.setTranslationY((float) ((int) ((this.mYCur - this.mYDown) * 0.18f)));
     }
 
@@ -97,21 +98,21 @@ public class AppQuickSwitchActivity extends FsGestureDemoBaseActiivy {
     }
 
     /* access modifiers changed from: private */
-    /* JADX WARNING: Removed duplicated region for block: B:41:0x00ee  */
+    /* JADX WARNING: Removed duplicated region for block: B:41:0x00ec  */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     public void onNavigationHandle(android.view.MotionEvent r7) {
         /*
             r6 = this;
             r6.obtainVelocityTracker(r7)
             int r0 = r7.getAction()
-            if (r0 == 0) goto L_0x00fa
+            if (r0 == 0) goto L_0x00f8
             r1 = 1
-            if (r0 == r1) goto L_0x006b
+            if (r0 == r1) goto L_0x0069
             r2 = 2
             if (r0 == r2) goto L_0x0014
             r7 = 3
-            if (r0 == r7) goto L_0x006b
-            goto L_0x0116
+            if (r0 == r7) goto L_0x0069
+            goto L_0x0112
         L_0x0014:
             boolean r0 = r6.mIsStartGesture
             if (r0 == 0) goto L_0x001b
@@ -121,22 +122,21 @@ public class AppQuickSwitchActivity extends FsGestureDemoBaseActiivy {
             r6.mXCur = r0
             float r7 = r7.getRawY()
             r6.mYCur = r7
-            boolean r7 = r6.mIsShowNavigationHandle
-            if (r7 != 0) goto L_0x0062
-            boolean r7 = r6.mFinishGestureDetection
-            if (r7 != 0) goto L_0x0062
-            float r7 = r6.mXCur
-            float r0 = r6.mXDown
-            float r7 = r7 - r0
-            double r2 = (double) r7
-            float r7 = r6.mYCur
+            boolean r0 = r6.mIsShowNavigationHandle
+            if (r0 != 0) goto L_0x0060
+            boolean r0 = r6.mFinishGestureDetection
+            if (r0 != 0) goto L_0x0060
+            float r0 = r6.mXCur
+            float r2 = r6.mXDown
+            float r0 = r0 - r2
+            double r2 = (double) r0
             float r0 = r6.mYDown
             float r7 = r7 - r0
             double r4 = (double) r7
             double r2 = java.lang.Math.hypot(r2, r4)
             r4 = 4622945017495814144(0x4028000000000000, double:12.0)
             int r7 = (r2 > r4 ? 1 : (r2 == r4 ? 0 : -1))
-            if (r7 <= 0) goto L_0x0062
+            if (r7 <= 0) goto L_0x0060
             r6.mFinishGestureDetection = r1
             float r7 = r6.mYCur
             float r0 = r6.mYDown
@@ -149,16 +149,16 @@ public class AppQuickSwitchActivity extends FsGestureDemoBaseActiivy {
             float r2 = java.lang.Math.abs(r2)
             float r2 = r2 * r0
             int r7 = (r7 > r2 ? 1 : (r7 == r2 ? 0 : -1))
-            if (r7 <= 0) goto L_0x0062
+            if (r7 <= 0) goto L_0x0060
             r6.mIsStartGesture = r1
-        L_0x0062:
+        L_0x0060:
             boolean r7 = r6.mIsStartGesture
-            if (r7 == 0) goto L_0x0116
+            if (r7 == 0) goto L_0x0112
             r6.updatePosition()
-            goto L_0x0116
-        L_0x006b:
+            goto L_0x0112
+        L_0x0069:
             boolean r7 = r6.mIsStartGesture
-            if (r7 == 0) goto L_0x00f6
+            if (r7 == 0) goto L_0x00f4
             android.view.VelocityTracker r7 = r6.mVelocityTracker
             r0 = 1000(0x3e8, float:1.401E-42)
             android.view.ViewConfiguration r1 = android.view.ViewConfiguration.get(r6)
@@ -176,44 +176,44 @@ public class AppQuickSwitchActivity extends FsGestureDemoBaseActiivy {
             float r2 = r2 / r3
             int r1 = (r1 > r2 ? 1 : (r1 == r2 ? 0 : -1))
             r2 = 0
-            if (r1 < 0) goto L_0x00be
-            if (r0 >= 0) goto L_0x009e
+            if (r1 < 0) goto L_0x00bc
+            if (r0 >= 0) goto L_0x009c
             float r0 = r6.mVelocityThreshold
             float r0 = -r0
             int r0 = (r7 > r0 ? 1 : (r7 == r0 ? 0 : -1))
-            if (r0 >= 0) goto L_0x009e
-            goto L_0x00be
-        L_0x009e:
+            if (r0 >= 0) goto L_0x009c
+            goto L_0x00bc
+        L_0x009c:
             int r0 = r6.mTranslationX
             float r1 = (float) r0
             int r4 = r6.mScreenWidth
             float r4 = (float) r4
             float r4 = r4 / r3
             int r1 = (r1 > r4 ? 1 : (r1 == r4 ? 0 : -1))
-            if (r1 > 0) goto L_0x00b4
-            if (r0 <= 0) goto L_0x00b2
+            if (r1 > 0) goto L_0x00b2
+            if (r0 <= 0) goto L_0x00b0
             float r0 = r6.mVelocityThreshold
             int r7 = (r7 > r0 ? 1 : (r7 == r0 ? 0 : -1))
-            if (r7 <= 0) goto L_0x00b2
-            goto L_0x00b4
-        L_0x00b2:
+            if (r7 <= 0) goto L_0x00b0
+            goto L_0x00b2
+        L_0x00b0:
             r7 = r2
-            goto L_0x00c9
-        L_0x00b4:
+            goto L_0x00c7
+        L_0x00b2:
             int r7 = r6.mScreenWidth
             com.android.systemui.fsgesture.ScrollerLayout r0 = r6.mCardContainer
             int r0 = r0.getHorizontalGap()
             int r7 = r7 + r0
-            goto L_0x00c8
-        L_0x00be:
+            goto L_0x00c6
+        L_0x00bc:
             int r7 = r6.mScreenWidth
             com.android.systemui.fsgesture.ScrollerLayout r0 = r6.mCardContainer
             int r0 = r0.getHorizontalGap()
             int r7 = r7 + r0
             int r7 = -r7
-        L_0x00c8:
+        L_0x00c6:
             float r7 = (float) r7
-        L_0x00c9:
+        L_0x00c7:
             com.android.systemui.fsgesture.ScrollerLayout r0 = r6.mCardContainer
             android.view.ViewPropertyAnimator r0 = r0.animate()
             android.view.ViewPropertyAnimator r0 = r0.translationX(r7)
@@ -225,26 +225,25 @@ public class AppQuickSwitchActivity extends FsGestureDemoBaseActiivy {
             android.view.ViewPropertyAnimator r0 = r0.setDuration(r3)
             r0.start()
             int r7 = (r7 > r2 ? 1 : (r7 == r2 ? 0 : -1))
-            if (r7 == 0) goto L_0x00f6
+            if (r7 == 0) goto L_0x00f4
             com.android.systemui.fsgesture.FsGestureDemoTitleView r7 = r6.fsGestureDemoTitleView
             r7.notifyFinish()
             r6.postFinishDelay()
-        L_0x00f6:
+        L_0x00f4:
             r6.releaseVelocityTracker()
-            goto L_0x0116
-        L_0x00fa:
+            goto L_0x0112
+        L_0x00f8:
             float r0 = r7.getRawX()
             r6.mXDown = r0
             float r7 = r7.getRawY()
             r6.mYDown = r7
             boolean r7 = com.android.systemui.fsgesture.GestureLineUtils.isShowNavigationHandle(r6)
             r6.mIsShowNavigationHandle = r7
-            r7 = 0
-            r6.mFinishGestureDetection = r7
-            boolean r7 = r6.mIsShowNavigationHandle
+            r0 = 0
+            r6.mFinishGestureDetection = r0
             r6.mIsStartGesture = r7
             r6.initPosition()
-        L_0x0116:
+        L_0x0112:
             return
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.fsgesture.AppQuickSwitchActivity.onNavigationHandle(android.view.MotionEvent):void");

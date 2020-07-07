@@ -22,17 +22,20 @@ public class SavePartialImageInBackgroundTask extends AsyncTask<SavePartialImage
     private NotificationManager mNotificationManager;
     public PartialNotifyMediaStoreData mNotifyMediaStoreData;
     private OutputStream mOutputStream;
-    private File mScreenshotDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), "Screenshots");
+    private File mScreenshotDir;
 
     SavePartialImageInBackgroundTask(Context context, SavePartialImageInBackgroundData savePartialImageInBackgroundData, NotificationManager notificationManager) {
         context.getResources();
-        if (!this.mScreenshotDir.exists()) {
+        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), "Screenshots");
+        this.mScreenshotDir = file;
+        if (!file.exists()) {
             this.mScreenshotDir.mkdirs();
         }
         try {
             this.mImageTime = System.currentTimeMillis();
-            this.mImageFileName = String.format("Screenshot_%s_%s.png", new Object[]{new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-SSS").format(new Date(this.mImageTime)), Util.getTopActivityPkg(context, true)});
-            this.mImageFilePath = String.format("%s/%s", new Object[]{this.mScreenshotDir, this.mImageFileName});
+            String format = String.format("Screenshot_%s_%s.png", new Object[]{new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-SSS").format(new Date(this.mImageTime)), Util.getTopActivityPkg(context, true)});
+            this.mImageFileName = format;
+            this.mImageFilePath = String.format("%s/%s", new Object[]{this.mScreenshotDir, format});
             this.mOutputStream = new FileOutputStream(this.mImageFilePath);
             Log.d("PartialScreenshot", "Create outputStream success,, mImageFilePath = " + this.mImageFilePath);
         } catch (Exception e) {
@@ -43,8 +46,8 @@ public class SavePartialImageInBackgroundTask extends AsyncTask<SavePartialImage
         this.mImageWidth = savePartialImageInBackgroundData.image.getWidth();
         this.mImageHeight = savePartialImageInBackgroundData.image.getHeight();
         this.mNotificationManager = notificationManager;
-        this.mNotifyMediaStoreData = new PartialNotifyMediaStoreData();
-        PartialNotifyMediaStoreData partialNotifyMediaStoreData = this.mNotifyMediaStoreData;
+        PartialNotifyMediaStoreData partialNotifyMediaStoreData = new PartialNotifyMediaStoreData();
+        this.mNotifyMediaStoreData = partialNotifyMediaStoreData;
         partialNotifyMediaStoreData.imageFilePath = this.mImageFilePath;
         partialNotifyMediaStoreData.imageFileName = this.mImageFileName;
         partialNotifyMediaStoreData.width = this.mImageWidth;

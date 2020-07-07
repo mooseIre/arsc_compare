@@ -90,8 +90,9 @@ public class SettingsButton extends AlphaOptimizedImageButton {
     /* access modifiers changed from: protected */
     public void startAccelSpin() {
         cancelAnimation();
-        this.mAnimator = ObjectAnimator.ofFloat(this, View.ROTATION, new float[]{0.0f, 360.0f});
-        this.mAnimator.setInterpolator(AnimationUtils.loadInterpolator(this.mContext, 17563648));
+        ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this, View.ROTATION, new float[]{0.0f, 360.0f});
+        this.mAnimator = ofFloat;
+        ofFloat.setInterpolator(AnimationUtils.loadInterpolator(this.mContext, 17563648));
         this.mAnimator.setDuration(750);
         this.mAnimator.addListener(new Animator.AnimatorListener() {
             public void onAnimationCancel(Animator animator) {
@@ -115,8 +116,9 @@ public class SettingsButton extends AlphaOptimizedImageButton {
         cancelAnimation();
         performHapticFeedback(0);
         this.mUpToSpeed = true;
-        this.mAnimator = ObjectAnimator.ofFloat(this, View.ROTATION, new float[]{0.0f, 360.0f});
-        this.mAnimator.setInterpolator(Interpolators.LINEAR);
+        ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this, View.ROTATION, new float[]{0.0f, 360.0f});
+        this.mAnimator = ofFloat;
+        ofFloat.setInterpolator(Interpolators.LINEAR);
         this.mAnimator.setDuration(375);
         this.mAnimator.setRepeatCount(-1);
         this.mAnimator.start();

@@ -20,11 +20,15 @@ public class StackScrollAlgorithm {
     private int mHeadsUpMarginTop;
     private float mHeadsUpShadowAlpha;
     private int mIncreasedPaddingBetweenElements;
-    private boolean mIsExpanded;
-    private boolean mIsExpandedBecauseOfHeadsUp;
     /* access modifiers changed from: private */
     public int mPaddingBetweenElements;
     private StackScrollAlgorithmState mTempAlgorithmState = new StackScrollAlgorithmState();
+
+    public void setExpandedBecauseOfHeadsUp(boolean z) {
+    }
+
+    public void setIsExpanded(boolean z) {
+    }
 
     public StackScrollAlgorithm(Context context) {
         initView(context);
@@ -113,9 +117,9 @@ public class StackScrollAlgorithm {
     }
 
     private void updateClipping(StackScrollState stackScrollState, StackScrollAlgorithmState stackScrollAlgorithmState, AmbientState ambientState) {
+        float f = 0.0f;
         float topPadding = !ambientState.isOnKeyguard() ? ambientState.getTopPadding() + ambientState.getStackTranslation() : 0.0f;
         int size = stackScrollAlgorithmState.visibleChildren.size();
-        float f = 0.0f;
         float f2 = 0.0f;
         for (int i = 0; i < size; i++) {
             ExpandableView expandableView = stackScrollAlgorithmState.visibleChildren.get(i);
@@ -307,8 +311,9 @@ public class StackScrollAlgorithm {
         if (viewStateForView.location == 0) {
             Log.wtf("StackScrollAlgorithm", "Failed to assign location for child " + i);
         }
-        viewStateForView.yTranslation += ambientState.getTopPadding() + ambientState.getStackTranslation();
-        viewStateForView.yTranslation += (float) viewStateForView.springYOffset;
+        float topPadding = viewStateForView.yTranslation + ambientState.getTopPadding() + ambientState.getStackTranslation();
+        viewStateForView.yTranslation = topPadding;
+        viewStateForView.yTranslation = topPadding + ((float) viewStateForView.springYOffset);
         return f2;
     }
 
@@ -359,8 +364,9 @@ public class StackScrollAlgorithm {
 
     private void clampPositionToShelf(ExpandableViewState expandableViewState, AmbientState ambientState) {
         float innerHeight = (float) ((int) (((float) ambientState.getInnerHeight()) + ambientState.getTopPadding()));
-        expandableViewState.yTranslation = Math.min(expandableViewState.yTranslation, innerHeight);
-        if (expandableViewState.yTranslation >= innerHeight) {
+        float min = Math.min(expandableViewState.yTranslation, innerHeight);
+        expandableViewState.yTranslation = min;
+        if (min >= innerHeight) {
             expandableViewState.hidden = true;
             expandableViewState.inShelf = true;
         }
@@ -414,14 +420,6 @@ public class StackScrollAlgorithm {
             }
         }
         return f;
-    }
-
-    public void setIsExpanded(boolean z) {
-        this.mIsExpanded = z;
-    }
-
-    public void setExpandedBecauseOfHeadsUp(boolean z) {
-        this.mIsExpandedBecauseOfHeadsUp = z;
     }
 
     public class StackScrollAlgorithmState {

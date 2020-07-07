@@ -8,7 +8,6 @@ import android.graphics.RectF;
 import android.util.ArraySet;
 import android.util.SparseArray;
 import android.util.SparseIntArray;
-import android.view.Display;
 import android.view.ViewDebug;
 import android.view.WindowManager;
 import android.view.animation.AccelerateInterpolator;
@@ -28,30 +27,24 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 
 public class TaskStackLayoutAlgorithm {
-    private AccelerateInterpolator mAccelerateInterpolator = new AccelerateInterpolator();
-    TaskViewTransform mBackOfStackTransform = new TaskViewTransform();
+    private AccelerateInterpolator mAccelerateInterpolator;
+    TaskViewTransform mBackOfStackTransform;
     @ViewDebug.ExportedProperty(category = "recents")
     private int mBaseBottomMargin;
-    private int mBaseInitialBottomOffset;
-    private int mBaseInitialTopOffset;
     @ViewDebug.ExportedProperty(category = "recents")
     private int mBaseSideMargin;
     @ViewDebug.ExportedProperty(category = "recents")
     private int mBaseTopMargin;
     private TaskStackLayoutAlgorithmCallbacks mCb;
     Context mContext;
-    private Display mDisplay;
-    public boolean mDropToDockState = false;
+    public boolean mDropToDockState;
     @ViewDebug.ExportedProperty(category = "recents")
-    public Rect mFirstTaskRect = new Rect();
+    public Rect mFirstTaskRect;
     @ViewDebug.ExportedProperty(category = "recents")
     private int mFocusState;
-    @ViewDebug.ExportedProperty(category = "recents")
-    private int mFocusedBottomPeekHeight;
     private Path mFocusedCurve = linearCurve();
     private FreePathInterpolator mFocusedCurveInterpolator = new FreePathInterpolator(this.mFocusedCurve);
     private Path mFocusedDimCurve = linearCurve();
-    private FreePathInterpolator mFocusedDimCurveInterpolator = new FreePathInterpolator(this.mFocusedDimCurve);
     private Range mFocusedRange;
     @ViewDebug.ExportedProperty(category = "recents")
     private int mFocusedTopPeekHeight;
@@ -60,9 +53,7 @@ public class TaskStackLayoutAlgorithm {
     public Rect mFreeformRect = new Rect();
     @ViewDebug.ExportedProperty(category = "recents")
     private int mFreeformStackGap;
-    @ViewDebug.ExportedProperty(category = "recents")
-    float mFrontMostTaskP;
-    TaskViewTransform mFrontOfStackTransform = new TaskViewTransform();
+    TaskViewTransform mFrontOfStackTransform;
     int mHorizontalGap;
     @ViewDebug.ExportedProperty(category = "recents")
     private int mInitialBottomOffset;
@@ -71,7 +62,6 @@ public class TaskStackLayoutAlgorithm {
     @ViewDebug.ExportedProperty(category = "recents")
     private int mInitialTopOffset;
     private boolean mIsRtlLayout;
-    private final boolean mIsSmallFirstTask = false;
     @ViewDebug.ExportedProperty(category = "recents")
     float mMaxScrollP;
     @ViewDebug.ExportedProperty(category = "recents")
@@ -80,14 +70,12 @@ public class TaskStackLayoutAlgorithm {
     @ViewDebug.ExportedProperty(category = "recents")
     float mMinScrollP;
     @ViewDebug.ExportedProperty(category = "recents")
-    int mMinTranslationZ;
-    @ViewDebug.ExportedProperty(category = "recents")
     int mNumFreeformTasks;
     @ViewDebug.ExportedProperty(category = "recents")
     int mNumStackTasks;
     int mPaddingBottom;
-    int mPaddingLeft = 0;
-    int mPaddingRight = 0;
+    int mPaddingLeft;
+    int mPaddingRight;
     int mPaddingTop;
     @ViewDebug.ExportedProperty(category = "recents")
     public Rect mStackActionButtonRect = new Rect();
@@ -99,15 +87,14 @@ public class TaskStackLayoutAlgorithm {
     private int mStatusbarHeight;
     @ViewDebug.ExportedProperty(category = "recents")
     public Rect mSystemInsets = new Rect();
-    private SparseIntArray mTaskIndexMap = new SparseIntArray();
-    private SparseArray<Float> mTaskIndexOverrideMap = new SparseArray<>();
+    private SparseIntArray mTaskIndexMap;
+    private SparseArray<Float> mTaskIndexOverrideMap;
     @ViewDebug.ExportedProperty(category = "recents")
     public Rect mTaskRect = new Rect();
     private int mTaskViewTop;
     private Path mUnfocusedCurve = linearCurve();
     private FreePathInterpolator mUnfocusedCurveInterpolator = new FreePathInterpolator(this.mUnfocusedCurve);
     private Path mUnfocusedDimCurve = linearCurve();
-    private FreePathInterpolator mUnfocusedDimCurveInterpolator = new FreePathInterpolator(this.mUnfocusedDimCurve);
     private Range mUnfocusedRange;
     int mVerticalGap;
     @ViewDebug.ExportedProperty(category = "recents")
@@ -161,13 +148,24 @@ public class TaskStackLayoutAlgorithm {
         public int numVisibleTasks;
         public int numVisibleThumbnails;
 
-        VisibilityReport(int i, int i2) {
+        VisibilityReport(TaskStackLayoutAlgorithm taskStackLayoutAlgorithm, int i, int i2) {
             this.numVisibleTasks = i;
             this.numVisibleThumbnails = i2;
         }
     }
 
     public TaskStackLayoutAlgorithm(Context context, TaskStackLayoutAlgorithmCallbacks taskStackLayoutAlgorithmCallbacks) {
+        new FreePathInterpolator(this.mUnfocusedDimCurve);
+        new FreePathInterpolator(this.mFocusedDimCurve);
+        this.mTaskIndexMap = new SparseIntArray();
+        this.mTaskIndexOverrideMap = new SparseArray<>();
+        this.mBackOfStackTransform = new TaskViewTransform();
+        this.mFrontOfStackTransform = new TaskViewTransform();
+        this.mFirstTaskRect = new Rect();
+        this.mAccelerateInterpolator = new AccelerateInterpolator();
+        this.mPaddingLeft = 0;
+        this.mPaddingRight = 0;
+        this.mDropToDockState = false;
         Resources resources = context.getResources();
         this.mContext = context;
         this.mCb = taskStackLayoutAlgorithmCallbacks;
@@ -177,7 +175,7 @@ public class TaskStackLayoutAlgorithm {
         this.mBaseSideMargin = getDimensionForDevice(context, R.dimen.recents_layout_side_margin_phone, R.dimen.recents_layout_side_margin_tablet, R.dimen.recents_layout_side_margin_tablet_xlarge);
         this.mBaseBottomMargin = resources.getDimensionPixelSize(R.dimen.recents_layout_bottom_margin);
         this.mFreeformStackGap = resources.getDimensionPixelSize(R.dimen.recents_freeform_layout_bottom_margin);
-        this.mDisplay = ((WindowManager) this.mContext.getSystemService("window")).getDefaultDisplay();
+        ((WindowManager) this.mContext.getSystemService("window")).getDefaultDisplay();
         reloadOnConfigurationChange(context);
     }
 
@@ -187,17 +185,15 @@ public class TaskStackLayoutAlgorithm {
         this.mUnfocusedRange = new Range(resources.getFloat(R.integer.recents_layout_unfocused_range_min), resources.getFloat(R.integer.recents_layout_unfocused_range_max));
         this.mFocusState = getInitialFocusState();
         this.mFocusedTopPeekHeight = resources.getDimensionPixelSize(R.dimen.recents_layout_top_peek_size);
-        this.mFocusedBottomPeekHeight = resources.getDimensionPixelSize(R.dimen.recents_layout_bottom_peek_size);
-        this.mMinTranslationZ = resources.getDimensionPixelSize(R.dimen.recents_layout_z_min);
+        resources.getDimensionPixelSize(R.dimen.recents_layout_bottom_peek_size);
+        resources.getDimensionPixelSize(R.dimen.recents_layout_z_min);
         this.mMaxTranslationZ = resources.getDimensionPixelSize(R.dimen.recents_layout_z_max);
-        Context context2 = context;
-        this.mBaseInitialTopOffset = getDimensionForDevice(context2, R.dimen.recents_layout_initial_top_offset_phone_port, R.dimen.recents_layout_initial_top_offset_phone_land, R.dimen.recents_layout_initial_top_offset_tablet, R.dimen.recents_layout_initial_top_offset_tablet, R.dimen.recents_layout_initial_top_offset_tablet, R.dimen.recents_layout_initial_top_offset_tablet);
-        this.mBaseInitialBottomOffset = getDimensionForDevice(context2, R.dimen.recents_layout_initial_bottom_offset_phone_port, R.dimen.recents_layout_initial_bottom_offset_phone_land, R.dimen.recents_layout_initial_bottom_offset_tablet, R.dimen.recents_layout_initial_bottom_offset_tablet, R.dimen.recents_layout_initial_bottom_offset_tablet, R.dimen.recents_layout_initial_bottom_offset_tablet);
-        this.mTaskViewTop = getDimensionForDevice(context2, R.dimen.recents_task_view_top_port, R.dimen.recents_task_view_top_land, R.dimen.recents_task_view_top_tablet_port, R.dimen.recents_task_view_top_tablet_land, R.dimen.recents_task_view_top_tablet_port, R.dimen.recents_task_view_top_tablet_land);
+        getDimensionForDevice(context, R.dimen.recents_layout_initial_top_offset_phone_port, R.dimen.recents_layout_initial_top_offset_phone_land, R.dimen.recents_layout_initial_top_offset_tablet, R.dimen.recents_layout_initial_top_offset_tablet, R.dimen.recents_layout_initial_top_offset_tablet, R.dimen.recents_layout_initial_top_offset_tablet);
+        getDimensionForDevice(context, R.dimen.recents_layout_initial_bottom_offset_phone_port, R.dimen.recents_layout_initial_bottom_offset_phone_land, R.dimen.recents_layout_initial_bottom_offset_tablet, R.dimen.recents_layout_initial_bottom_offset_tablet, R.dimen.recents_layout_initial_bottom_offset_tablet, R.dimen.recents_layout_initial_bottom_offset_tablet);
+        this.mTaskViewTop = getDimensionForDevice(context, R.dimen.recents_task_view_top_port, R.dimen.recents_task_view_top_land, R.dimen.recents_task_view_top_tablet_port, R.dimen.recents_task_view_top_tablet_land, R.dimen.recents_task_view_top_tablet_port, R.dimen.recents_task_view_top_tablet_land);
         this.mFreeformLayoutAlgorithm.reloadOnConfigurationChange(context);
-        int layoutDirection = resources.getConfiguration().getLayoutDirection();
         boolean z = true;
-        if (layoutDirection != 1) {
+        if (resources.getConfiguration().getLayoutDirection() != 1) {
             z = false;
         }
         this.mIsRtlLayout = z;
@@ -241,13 +237,14 @@ public class TaskStackLayoutAlgorithm {
         this.mInitialTopOffset = 0;
         this.mInitialBottomOffset = 0;
         this.mState = stackState;
-        this.mStackBottomOffset = this.mSystemInsets.bottom + scaleForExtent2;
-        stackState.computeRects(this.mFreeformRect, this.mStackRect, rect3, scaleForExtent, this.mFreeformStackGap, this.mStackBottomOffset);
+        int i = this.mSystemInsets.bottom + scaleForExtent2;
+        this.mStackBottomOffset = i;
+        stackState.computeRects(this.mFreeformRect, this.mStackRect, rect3, scaleForExtent, this.mFreeformStackGap, i);
         Rect rect8 = this.mStackActionButtonRect;
         Rect rect9 = this.mStackRect;
-        int i = rect9.left;
-        int i2 = rect9.top;
-        rect8.set(i, i2 - scaleForExtent, rect9.right, i2 + this.mFocusedTopPeekHeight);
+        int i2 = rect9.left;
+        int i3 = rect9.top;
+        rect8.set(i2, i3 - scaleForExtent, rect9.right, i3 + this.mFocusedTopPeekHeight);
         computeTaskRect(rect3, rect4, rect);
         if (!rect5.equals(this.mStackRect)) {
             updateFrontBackTransforms();
@@ -308,7 +305,6 @@ public class TaskStackLayoutAlgorithm {
         this.mTaskIndexMap.clear();
         ArrayList<Task> stackTasks = taskStack.getStackTasks();
         if (stackTasks.isEmpty()) {
-            this.mFrontMostTaskP = 0.0f;
             this.mInitialScrollP = 0.0f;
             this.mMaxScrollP = 0.0f;
             this.mMinScrollP = 0.0f;
@@ -431,13 +427,14 @@ public class TaskStackLayoutAlgorithm {
 
     public VisibilityReport computeStackVisibilityReport(ArrayList<Task> arrayList) {
         int i;
+        int i2;
         ArrayList<Task> arrayList2 = arrayList;
-        int i2 = 1;
+        int i3 = 1;
         if (arrayList.size() <= 1) {
-            return new VisibilityReport(1, 1);
+            return new VisibilityReport(this, 1, 1);
         }
         if (this.mNumStackTasks == 0) {
-            return new VisibilityReport(Math.max(this.mNumFreeformTasks, 1), Math.max(this.mNumFreeformTasks, 1));
+            return new VisibilityReport(this, Math.max(this.mNumFreeformTasks, 1), Math.max(this.mNumFreeformTasks, 1));
         }
         TaskViewTransform taskViewTransform = new TaskViewTransform();
         Range range = ((float) getInitialFocusState()) > 0.0f ? this.mFocusedRange : this.mUnfocusedRange;
@@ -445,18 +442,17 @@ public class TaskStackLayoutAlgorithm {
         int max = Math.max(this.mNumFreeformTasks, 1);
         int max2 = Math.max(this.mNumFreeformTasks, 1);
         float f = 2.14748365E9f;
-        int i3 = 0;
+        int i4 = 0;
         while (true) {
-            if (i3 > arrayList.size() - i2) {
+            if (i4 > arrayList.size() - i3) {
                 i = max2;
                 break;
             }
-            Task task = arrayList2.get(i3);
+            Task task = arrayList2.get(i4);
             if (!task.isFreeformTask()) {
                 float stackScrollForTask = getStackScrollForTask(task);
-                if (!range.isInRange(stackScrollForTask)) {
-                    continue;
-                } else {
+                if (range.isInRange(stackScrollForTask)) {
+                    i2 = i4;
                     i = max2;
                     getStackTransform(stackScrollForTask, stackScrollForTask, this.mInitialScrollP, this.mFocusState, taskViewTransform, (TaskViewTransform) null, false, false);
                     float f2 = taskViewTransform.rect.left;
@@ -464,19 +460,21 @@ public class TaskStackLayoutAlgorithm {
                         max2 = i + 1;
                         max++;
                         f = f2;
+                        i4 = i2 + 1;
+                        i3 = 1;
                     } else {
-                        while (i3 >= 0) {
+                        for (int i5 = i2; i5 >= 0; i5--) {
                             max++;
-                            range.isInRange(getStackScrollForTask(arrayList2.get(i3)));
-                            i3--;
+                            range.isInRange(getStackScrollForTask(arrayList2.get(i5)));
                         }
                     }
                 }
             }
-            i3++;
-            i2 = 1;
+            i2 = i4;
+            i4 = i2 + 1;
+            i3 = 1;
         }
-        return new VisibilityReport(max, i);
+        return new VisibilityReport(this, max, i);
     }
 
     public TaskViewTransform getStackTransform(Task task, float f, TaskViewTransform taskViewTransform, TaskViewTransform taskViewTransform2) {
@@ -585,33 +583,32 @@ public class TaskStackLayoutAlgorithm {
         }
         int i14 = i4 - i2;
         int i15 = i9;
-        int i16 = i15;
-        for (int i17 = 0; i17 < i; i17++) {
-            if (i17 == 0) {
+        for (int i16 = 0; i16 < i; i16++) {
+            if (i16 == 0) {
                 if (!this.mIsRtlLayout) {
-                    i6 = i15 + this.mVerticalGap;
+                    i6 = i9 + this.mVerticalGap;
                     i5 = this.mFirstTaskRect.height();
-                    i15 = i6 + i5;
+                    i9 = i6 + i5;
                 } else {
-                    i8 = i16 + this.mVerticalGap;
+                    i8 = i15 + this.mVerticalGap;
                     i7 = this.mFirstTaskRect.height();
                 }
-            } else if (i15 > i16) {
-                i8 = i16 + this.mVerticalGap;
+            } else if (i9 > i15) {
+                i8 = i15 + this.mVerticalGap;
                 i7 = rect.height();
             } else {
-                i6 = i15 + this.mVerticalGap;
+                i6 = i9 + this.mVerticalGap;
                 i5 = rect.height();
-                i15 = i6 + i5;
+                i9 = i6 + i5;
             }
-            i16 = i8 + i7;
+            i15 = i8 + i7;
         }
-        if (i15 > i16 || (this.mIsRtlLayout && i == 0)) {
+        if (i9 > i15 || (this.mIsRtlLayout && i == 0)) {
             iArr[0] = i14;
-            iArr[1] = ((i16 + this.mVerticalGap) + this.mWindowRect.top) - rect.top;
+            iArr[1] = ((i15 + this.mVerticalGap) + this.mWindowRect.top) - rect.top;
         } else {
             iArr[0] = i3;
-            iArr[1] = ((i15 + this.mVerticalGap) + this.mWindowRect.top) - rect.top;
+            iArr[1] = ((i9 + this.mVerticalGap) + this.mWindowRect.top) - rect.top;
         }
         return iArr;
     }

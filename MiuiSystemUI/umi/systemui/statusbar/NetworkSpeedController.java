@@ -82,7 +82,7 @@ public class NetworkSpeedController {
 
     public NetworkSpeedController(@Inject Context context) {
         this.mContext = context;
-        this.mConnectivityManager = (ConnectivityManager) this.mContext.getSystemService("connectivity");
+        this.mConnectivityManager = (ConnectivityManager) context.getSystemService("connectivity");
         initNetworkAssistantProviderUri();
         this.mBgHandler = new WorkHandler((Looper) Dependency.get(Dependency.NET_BG_LOOPER));
         IntentFilter intentFilter = new IntentFilter();

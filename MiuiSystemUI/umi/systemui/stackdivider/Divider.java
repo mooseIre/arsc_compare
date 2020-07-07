@@ -69,8 +69,9 @@ public class Divider extends SystemUI {
     }
 
     private void addDivider(Configuration configuration) {
-        this.mView = (DividerView) LayoutInflater.from(this.mContext).inflate(R.layout.docked_stack_divider, (ViewGroup) null);
-        this.mView.injectDependencies(this.mWindowManager, this.mDividerState);
+        DividerView dividerView = (DividerView) LayoutInflater.from(this.mContext).inflate(R.layout.docked_stack_divider, (ViewGroup) null);
+        this.mView = dividerView;
+        dividerView.injectDependencies(this.mWindowManager, this.mDividerState);
         boolean z = false;
         this.mView.setVisibility(this.mVisible ? 0 : 4);
         this.mView.setMinimizedDockStack(this.mMinimized, this.mHomeStackResizable);
@@ -78,12 +79,11 @@ public class Divider extends SystemUI {
         if (configuration.orientation == 2) {
             z = true;
         }
-        int i = -1;
-        int i2 = z ? dimensionPixelSize : -1;
-        if (!z) {
-            i = dimensionPixelSize;
+        int i = z ? dimensionPixelSize : -1;
+        if (z) {
+            dimensionPixelSize = -1;
         }
-        this.mWindowManager.add(this.mView, i2, i);
+        this.mWindowManager.add(this.mView, i, dimensionPixelSize);
     }
 
     private void removeDivider() {

@@ -81,8 +81,9 @@ public class GpsTile extends QSTileImpl<QSTile.BooleanState> {
     /* access modifiers changed from: protected */
     public void handleUpdateState(QSTile.BooleanState booleanState, Object obj) {
         int i;
-        booleanState.value = TilesHelper.isLocationProviderEnabledForUser(this.mContext, "gps", this.mCurrentUserId);
-        if (booleanState.value) {
+        boolean isLocationProviderEnabledForUser = TilesHelper.isLocationProviderEnabledForUser(this.mContext, "gps", this.mCurrentUserId);
+        booleanState.value = isLocationProviderEnabledForUser;
+        if (isLocationProviderEnabledForUser) {
             booleanState.contentDescription = this.mContext.getString(R.string.accessibility_quick_settings_location_on);
         } else {
             booleanState.contentDescription = this.mContext.getString(R.string.accessibility_quick_settings_location_off);

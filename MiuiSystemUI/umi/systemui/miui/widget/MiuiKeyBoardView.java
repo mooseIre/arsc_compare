@@ -10,7 +10,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
-import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -54,8 +53,6 @@ public class MiuiKeyBoardView extends FrameLayout implements View.OnClickListene
     private final Runnable mSendDeleteActionRunnable;
     private ValueAnimator mShowPreviewAnimator;
     private long mShowPreviewLastTime;
-    private Animation mShrinkToBottonAnimation;
-    private Animation mStretchFromBottonAnimation;
     private FrameLayout mSymbolBoard;
 
     public interface OnKeyboardActionListener {
@@ -82,8 +79,6 @@ public class MiuiKeyBoardView extends FrameLayout implements View.OnClickListene
         this.mIsShowingPreview = false;
         this.mShowPreviewLastTime = 0;
         this.mShowPreviewAnimator = new ValueAnimator();
-        this.mStretchFromBottonAnimation = null;
-        this.mShrinkToBottonAnimation = null;
         this.mSendDeleteActionRunnable = new Runnable() {
             public void run() {
                 MiuiKeyBoardView.this.onKeyBoardDelete();
@@ -96,7 +91,7 @@ public class MiuiKeyBoardView extends FrameLayout implements View.OnClickListene
             }
         };
         this.mContext = context;
-        View.inflate(this.mContext, R$layout.keyboard_letter_board, this);
+        View.inflate(context, R$layout.keyboard_letter_board, this);
         View.inflate(this.mContext, R$layout.keyboard_symbol_board, this);
         View.inflate(this.mContext, R$layout.keyboard_number_board, this);
         View.inflate(this.mContext, R$layout.keyboard_key_preview_text, this);
@@ -116,29 +111,32 @@ public class MiuiKeyBoardView extends FrameLayout implements View.OnClickListene
         Resources resources = this.mContext.getResources();
         this.mPaddingTop = resources.getDimensionPixelSize(R$dimen.keyboard_padding_top);
         this.mPaddingLeft = resources.getDimensionPixelSize(R$dimen.keyboard_padding_left);
-        this.mStretchFromBottonAnimation = AnimationUtils.loadAnimation(getContext(), R$anim.stretch_from_bottom);
-        this.mShrinkToBottonAnimation = AnimationUtils.loadAnimation(getContext(), R$anim.shrink_to_bottom);
+        AnimationUtils.loadAnimation(getContext(), R$anim.stretch_from_bottom);
+        AnimationUtils.loadAnimation(getContext(), R$anim.shrink_to_bottom);
         this.mKeyboardListeners = new ArrayList<>();
         setClipChildren(false);
         setClipToPadding(false);
         this.mPreviewText = (TextView) findViewById(R$id.preview_text);
-        this.mLetterBoard = (FrameLayout) findViewById(R$id.keyboard_letter);
-        this.mLetterBoard.setVisibility(0);
+        FrameLayout frameLayout = (FrameLayout) findViewById(R$id.keyboard_letter);
+        this.mLetterBoard = frameLayout;
+        frameLayout.setVisibility(0);
         this.mBtnCapsLock = findViewById(R$id.btn_caps_lock);
         this.mBtnLetterDelete = findViewById(R$id.btn_letter_delete);
         this.mBtnToSymbolBoard = findViewById(R$id.btn_shift2symbol);
         this.mBtnToNumberBoard = findViewById(R$id.btn_shift2number);
         this.mBtnLetterSpace = findViewById(R$id.btn_letter_space);
         this.mBtnLetterOK = findViewById(R$id.btn_letter_ok);
-        this.mSymbolBoard = (FrameLayout) findViewById(R$id.keyboard_symbol);
-        this.mSymbolBoard.setVisibility(4);
+        FrameLayout frameLayout2 = (FrameLayout) findViewById(R$id.keyboard_symbol);
+        this.mSymbolBoard = frameLayout2;
+        frameLayout2.setVisibility(4);
         this.mBtnSymbolDelete = findViewById(R$id.btn_symbol_delete);
         this.mBtnSymbolLock = findViewById(R$id.btn_symbol_lock);
         this.mBtnToLetterBoard = findViewById(R$id.btn_shift2letter);
         this.mBtnSymbolSpace = findViewById(R$id.btn_symbol_space);
         this.mBtnSymbolOK = findViewById(R$id.btn_symbol_ok);
-        this.mNumberBoard = (FrameLayout) findViewById(R$id.keyboard_number);
-        this.mNumberBoard.setVisibility(4);
+        FrameLayout frameLayout3 = (FrameLayout) findViewById(R$id.keyboard_number);
+        this.mNumberBoard = frameLayout3;
+        frameLayout3.setVisibility(4);
         this.mBtnNumberDelete = findViewById(R$id.btn_number_delete);
         this.mBtnBack = findViewById(R$id.btn_back);
         setOnTouchAndClickListenerForKey(this.mLetterBoard);
@@ -356,24 +354,22 @@ public class MiuiKeyBoardView extends FrameLayout implements View.OnClickListene
                 f += f2 * ((float) i6);
             }
             int length2 = (int) ((((float) i) - (f + ((float) ((fArr3.length - 1) * i7)))) / 2.0f);
-            int i11 = i10;
-            int i12 = 0;
-            while (i12 < fArr3.length) {
-                KeyButton keyButton = (KeyButton) viewGroup.getChildAt(i11);
-                int i13 = "!".equals(keyButton.getText()) ? (int) (((float) length2) + (((float) i6) * (fArr3[i12] - 1.0f))) : length2;
+            int i11 = 0;
+            while (i11 < fArr3.length) {
+                KeyButton keyButton = (KeyButton) viewGroup.getChildAt(i10);
+                int i12 = "!".equals(keyButton.getText()) ? (int) (((float) length2) + (((float) i6) * (fArr3[i11] - 1.0f))) : length2;
                 float f3 = (float) length2;
                 float f4 = (float) i6;
-                keyButton.layout(i13, i8, (int) (f3 + (fArr3[i12] * f4)), i8 + i4);
-                length2 = (int) (f3 + (f4 * fArr3[i12]) + ((float) i7));
+                keyButton.layout(i12, i8, (int) (f3 + (fArr3[i11] * f4)), i8 + i4);
+                length2 = (int) (f3 + (f4 * fArr3[i11]) + ((float) i7));
+                i10++;
                 i11++;
-                i12++;
                 i6 = i2;
             }
             ViewGroup viewGroup2 = viewGroup;
             i8 += i5 + i4;
             i9++;
             i6 = i2;
-            i10 = i11;
         }
     }
 
@@ -390,8 +386,8 @@ public class MiuiKeyBoardView extends FrameLayout implements View.OnClickListene
             float f = fArr[0];
             int width = view.getWidth();
             int i = this.mPopupViewWidth;
-            this.mPopupViewX = (int) (f + ((float) ((width - i) / 2)));
-            int i2 = this.mPopupViewX;
+            int i2 = (int) (f + ((float) ((width - i) / 2)));
+            this.mPopupViewX = i2;
             if (i2 < 0) {
                 this.mPopupViewX = 4;
             } else if (i2 + i > this.mLetterBoard.getWidth()) {
@@ -448,8 +444,9 @@ public class MiuiKeyBoardView extends FrameLayout implements View.OnClickListene
     }
 
     private void shiftSymbolLock() {
-        this.mIsSymbolLock = !this.mIsSymbolLock;
-        if (this.mIsSymbolLock) {
+        boolean z = !this.mIsSymbolLock;
+        this.mIsSymbolLock = z;
+        if (z) {
             this.mBtnSymbolLock.setBackgroundResource(R$drawable.keyboard_lock_pressed_list);
         } else {
             this.mBtnSymbolLock.setBackgroundResource(R$drawable.keyboard_lock_list);
@@ -467,8 +464,9 @@ public class MiuiKeyBoardView extends FrameLayout implements View.OnClickListene
                 }
             }
         }
-        this.mIsUpperMode = !this.mIsUpperMode;
-        if (this.mIsUpperMode) {
+        boolean z = !this.mIsUpperMode;
+        this.mIsUpperMode = z;
+        if (z) {
             this.mBtnCapsLock.setBackgroundResource(R$drawable.keyboard_caps_lock_pressed_list);
         } else {
             this.mBtnCapsLock.setBackgroundResource(R$drawable.keyboard_caps_lock_list);

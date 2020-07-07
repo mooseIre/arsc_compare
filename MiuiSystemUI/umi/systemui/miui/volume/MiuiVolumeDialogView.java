@@ -112,8 +112,9 @@ public class MiuiVolumeDialogView extends ExpandCollapseLinearLayout implements 
     /* access modifiers changed from: protected */
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
-        this.mDisplay = getDisplay();
-        this.mMotion.setDisplay(this.mDisplay);
+        Display display = getDisplay();
+        this.mDisplay = display;
+        this.mMotion.setDisplay(display);
         this.mLastRotation = this.mDisplay.getRotation();
         ((DisplayManager) getContext().getSystemService("display")).registerDisplayListener(this, (Handler) null);
         this.mAttached = true;

@@ -36,7 +36,7 @@ public class TakeScreenshotService extends Service {
                 TakeScreenshotService takeScreenshotService = TakeScreenshotService.this;
                 GlobalScreenshot globalScreenshot = new GlobalScreenshot(takeScreenshotService, takeScreenshotService.mGalleryHandler);
                 final Messenger messenger = message.replyTo;
-                AnonymousClass1 r3 = new Runnable() {
+                AnonymousClass1 r3 = new Runnable(this) {
                     public void run() {
                         try {
                             messenger.send(Message.obtain((Handler) null, 1));
@@ -64,22 +64,14 @@ public class TakeScreenshotService extends Service {
                     public void run() {
                         try {
                             messenger2.send(Message.obtain((Handler) null, 1));
+                            TakeScreenshotService.this.stopSelf();
                         } catch (RemoteException e) {
                             Log.d("TakeScreenshotService", e.getMessage());
                         }
                     }
                 };
-                TakeScreenshotService.access$008();
-                AnonymousClass4 r6 = new Runnable() {
-                    public void run() {
-                        TakeScreenshotService.access$010();
-                        if (TakeScreenshotService.sRunningCount <= 0) {
-                            TakeScreenshotService.this.stopSelf();
-                        }
-                    }
-                };
+                partialScreenshot.takePartialScreenshot();
                 r12.run();
-                partialScreenshot.takePartialScreenshot(r6);
             }
         }
     };
@@ -115,6 +107,5 @@ public class TakeScreenshotService extends Service {
     public void onDestroy() {
         super.onDestroy();
         this.mHandlerThread.quitSafely();
-        Log.d("TakeScreenshotService", "Screenshot Service onDestroy");
     }
 }

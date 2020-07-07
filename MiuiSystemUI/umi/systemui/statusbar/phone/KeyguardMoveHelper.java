@@ -41,21 +41,18 @@ public class KeyguardMoveHelper {
     /* access modifiers changed from: private */
     public final Callback mCallback;
     private boolean mCanShowGxzw = true;
-    private int mCenterScreenTipsTranslation;
     private float mCenterScreenTouchSlopTranslation;
     /* access modifiers changed from: private */
     public final Context mContext;
     /* access modifiers changed from: private */
     public int mCurrentScreen = 1;
     private FalsingManager mFalsingManager;
-    private FlingAnimationUtils mFlingAnimationUtils;
     private AnimatorListenerAdapter mFlingEndListener = new AnimatorListenerAdapter() {
         public void onAnimationEnd(Animator animator) {
             Animator unused = KeyguardMoveHelper.this.mSwipeAnimator = null;
             boolean unused2 = KeyguardMoveHelper.this.mSwipingInProgress = false;
         }
     };
-    private int mHintGrowAmount;
     private float mInitialTouchX;
     private float mInitialTouchY;
     /* access modifiers changed from: private */
@@ -76,9 +73,7 @@ public class KeyguardMoveHelper {
     };
     private KeyguardAffordanceView mLeftIcon;
     private KeyguardHorizontalMoveLeftViewContainer mLeftMoveView;
-    private int mMinBackgroundRadius;
     private int mMinFlingVelocity;
-    private int mMinTranslationAmount;
     private boolean mMotionCancelled;
     private KeyguardHorizontalMoveView.CallBack mMoveViewCallBack = new KeyguardHorizontalMoveView.CallBack() {
         public void onCompletedAnimationEnd(boolean z) {
@@ -147,10 +142,8 @@ public class KeyguardMoveHelper {
     /* access modifiers changed from: private */
     public boolean mSwipingInProgress;
     private int mTouchSlop;
-    private int mTouchTargetSize;
     /* access modifiers changed from: private */
     public float mTranslation;
-    private float mTranslationOnDown;
     private VelocityTracker mVelocityTracker;
 
     public interface Callback {
@@ -192,8 +185,9 @@ public class KeyguardMoveHelper {
     KeyguardMoveHelper(Callback callback, Context context) {
         this.mContext = context;
         this.mCallback = callback;
-        this.mKeyguardUpdateMonitor = KeyguardUpdateMonitor.getInstance(this.mContext);
-        this.mKeyguardUpdateMonitor.registerCallback(this.mKeyguardUpdateMonitorCallback);
+        KeyguardUpdateMonitor instance = KeyguardUpdateMonitor.getInstance(context);
+        this.mKeyguardUpdateMonitor = instance;
+        instance.registerCallback(this.mKeyguardUpdateMonitorCallback);
         this.mKeyguardHorizontalGestureSlop = context.getResources().getDimensionPixelSize(R.dimen.keyguard_horizontal_gesture_slop);
         initIcons();
         KeyguardAffordanceView keyguardAffordanceView = this.mLeftIcon;
@@ -209,13 +203,13 @@ public class KeyguardMoveHelper {
         ViewConfiguration viewConfiguration = ViewConfiguration.get(this.mContext);
         this.mTouchSlop = viewConfiguration.getScaledPagingTouchSlop();
         this.mMinFlingVelocity = viewConfiguration.getScaledMinimumFlingVelocity();
-        this.mMinTranslationAmount = this.mContext.getResources().getDimensionPixelSize(R.dimen.keyguard_min_swipe_amount);
-        this.mMinBackgroundRadius = this.mContext.getResources().getDimensionPixelSize(R.dimen.keyguard_affordance_min_background_radius);
-        this.mTouchTargetSize = this.mContext.getResources().getDimensionPixelSize(R.dimen.keyguard_affordance_touch_target_size);
-        this.mHintGrowAmount = this.mContext.getResources().getDimensionPixelSize(R.dimen.hint_grow_amount_sideways);
-        this.mFlingAnimationUtils = new FlingAnimationUtils(this.mContext, 0.4f);
+        this.mContext.getResources().getDimensionPixelSize(R.dimen.keyguard_min_swipe_amount);
+        this.mContext.getResources().getDimensionPixelSize(R.dimen.keyguard_affordance_min_background_radius);
+        this.mContext.getResources().getDimensionPixelSize(R.dimen.keyguard_affordance_touch_target_size);
+        this.mContext.getResources().getDimensionPixelSize(R.dimen.hint_grow_amount_sideways);
+        new FlingAnimationUtils(this.mContext, 0.4f);
         this.mFalsingManager = FalsingManager.getInstance(this.mContext);
-        this.mCenterScreenTipsTranslation = this.mContext.getResources().getDimensionPixelSize(R.dimen.keyguard_horizontal_move_mis_operation_translation);
+        this.mContext.getResources().getDimensionPixelSize(R.dimen.keyguard_horizontal_move_mis_operation_translation);
         this.mCenterScreenTouchSlopTranslation = (float) (this.mTouchSlop * 2);
     }
 
@@ -288,7 +282,6 @@ public class KeyguardMoveHelper {
         } else {
             this.mInitialTouchX = x;
             this.mInitialTouchY = y;
-            this.mTranslationOnDown = this.mTranslation;
             initVelocityTracker();
             trackMovement(motionEvent);
             this.mMotionCancelled = false;

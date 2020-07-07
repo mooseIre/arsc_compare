@@ -14,28 +14,7 @@ import com.android.systemui.qs.QSPanel;
 import java.util.ArrayList;
 
 public class PagedTileLayout extends ViewPager implements QSPanel.QSTileLayout {
-    private final PagerAdapter mAdapter = new PagerAdapter() {
-        public boolean isViewFromObject(View view, Object obj) {
-            return view == obj;
-        }
-
-        public void destroyItem(ViewGroup viewGroup, int i, Object obj) {
-            viewGroup.removeView((View) obj);
-        }
-
-        public Object instantiateItem(ViewGroup viewGroup, int i) {
-            if (PagedTileLayout.this.isLayoutRtl()) {
-                i = (PagedTileLayout.this.mPages.size() - 1) - i;
-            }
-            ViewGroup viewGroup2 = (ViewGroup) PagedTileLayout.this.mPages.get(i);
-            viewGroup.addView(viewGroup2);
-            return viewGroup2;
-        }
-
-        public int getCount() {
-            return PagedTileLayout.this.mNumPages;
-        }
-    };
+    private final PagerAdapter mAdapter;
     private final Runnable mDistribute = new Runnable() {
         public void run() {
             PagedTileLayout.this.distributeTiles();
@@ -67,7 +46,30 @@ public class PagedTileLayout extends ViewPager implements QSPanel.QSTileLayout {
 
     public PagedTileLayout(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-        setAdapter(this.mAdapter);
+        AnonymousClass3 r2 = new PagerAdapter() {
+            public boolean isViewFromObject(View view, Object obj) {
+                return view == obj;
+            }
+
+            public void destroyItem(ViewGroup viewGroup, int i, Object obj) {
+                viewGroup.removeView((View) obj);
+            }
+
+            public Object instantiateItem(ViewGroup viewGroup, int i) {
+                if (PagedTileLayout.this.isLayoutRtl()) {
+                    i = (PagedTileLayout.this.mPages.size() - 1) - i;
+                }
+                ViewGroup viewGroup2 = (ViewGroup) PagedTileLayout.this.mPages.get(i);
+                viewGroup.addView(viewGroup2);
+                return viewGroup2;
+            }
+
+            public int getCount() {
+                return PagedTileLayout.this.mNumPages;
+            }
+        };
+        this.mAdapter = r2;
+        setAdapter(r2);
         setOverScrollMode(2);
         setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             public void onPageScrollStateChanged(int i) {
@@ -131,7 +133,7 @@ public class PagedTileLayout extends ViewPager implements QSPanel.QSTileLayout {
     public void setListening(boolean z) {
         if (this.mListening != z) {
             this.mListening = z;
-            if (this.mListening) {
+            if (z) {
                 setPageListening(this.mPosition, true);
                 if (this.mOffPage) {
                     setPageListening(this.mPosition + 1, true);
@@ -234,7 +236,7 @@ public class PagedTileLayout extends ViewPager implements QSPanel.QSTileLayout {
         }
         addTilePage();
         this.mNumPages = 1;
-        this.mPageIndicator.setNumPages(this.mNumPages);
+        this.mPageIndicator.setNumPages(1);
         this.mPageIndicator.setVisibility(8);
         setAdapter(this.mAdapter);
         this.mAdapter.notifyDataSetChanged();

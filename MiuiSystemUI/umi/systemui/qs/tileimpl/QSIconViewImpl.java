@@ -24,7 +24,6 @@ public class QSIconViewImpl extends QSIconView {
     protected int mIconColorEnabled;
     protected final int mIconSizePx;
     private boolean mIsCustomTile = false;
-    protected final int mTilePaddingBelowIconPx;
 
     /* access modifiers changed from: protected */
     public int getIconMeasureMode() {
@@ -36,11 +35,12 @@ public class QSIconViewImpl extends QSIconView {
         Resources resources = context.getResources();
         this.mIconSizePx = resources.getDimensionPixelSize(R.dimen.qs_tile_icon_size);
         this.mIconBgSizePx = resources.getDimensionPixelSize(R.dimen.qs_tile_icon_bg_size);
-        this.mTilePaddingBelowIconPx = resources.getDimensionPixelSize(R.dimen.qs_tile_padding_below_icon);
+        resources.getDimensionPixelSize(R.dimen.qs_tile_padding_below_icon);
         this.mIconColorEnabled = resources.getColor(R.color.qs_tile_icon_enabled_color);
         this.mIconColorDisabled = resources.getColor(R.color.qs_tile_icon_disabled_color);
-        this.mIcon = createIcon();
-        addView(this.mIcon);
+        View createIcon = createIcon();
+        this.mIcon = createIcon;
+        addView(createIcon);
     }
 
     public void setAnimationEnabled(boolean z) {
@@ -141,8 +141,9 @@ public class QSIconViewImpl extends QSIconView {
             this.mAnimator.removeAllUpdateListeners();
             this.mAnimator = null;
         }
-        this.mAnimator = ObjectAnimator.ofInt(drawable, "alpha", new int[]{255 - i, i}).setDuration(300);
-        this.mAnimator.setInterpolator(Interpolators.CUBIC_EASE_OUT);
+        ObjectAnimator duration = ObjectAnimator.ofInt(drawable, "alpha", new int[]{255 - i, i}).setDuration(300);
+        this.mAnimator = duration;
+        duration.setInterpolator(Interpolators.CUBIC_EASE_OUT);
         this.mAnimator.start();
     }
 

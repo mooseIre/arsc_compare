@@ -17,14 +17,13 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.IBinder;
-import android.os.Messenger;
 import android.os.PowerManager;
 import android.os.UserHandle;
 import android.os.UserManager;
 import android.os.UserManagerCompat;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Property;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityNodeInfo;
@@ -50,7 +49,6 @@ import com.android.systemui.statusbar.phone.UnlockMethodCache;
 import com.android.systemui.statusbar.policy.AccessibilityController;
 import com.android.systemui.statusbar.policy.ExtensionController;
 import com.android.systemui.statusbar.policy.FlashlightController;
-import com.android.systemui.statusbar.policy.PreviewInflater;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import miui.maml.animation.interpolater.SineEaseInOutInterpolater;
@@ -59,12 +57,8 @@ import miui.util.FeatureParser;
 
 public class KeyguardBottomAreaView extends FrameLayout implements View.OnClickListener, UnlockMethodCache.OnUnlockMethodChangedListener, AccessibilityController.AccessibilityStateChangedCallback, View.OnLongClickListener {
     public static final Intent INSECURE_CAMERA_INTENT = new Intent("android.media.action.STILL_IMAGE_CAMERA");
-    private static final Intent PHONE_INTENT = new Intent("android.intent.action.DIAL");
-    private static final Intent SECURE_CAMERA_INTENT = new Intent("android.media.action.STILL_IMAGE_CAMERA_SECURE").addFlags(8388608);
     private AccessibilityController mAccessibilityController;
     private View.AccessibilityDelegate mAccessibilityDelegate;
-    private ActivityStarter mActivityStarter;
-    private AssistManager mAssistManager;
     /* access modifiers changed from: private */
     public boolean mDarkMode;
     private int mDensityDpi;
@@ -72,7 +66,6 @@ public class KeyguardBottomAreaView extends FrameLayout implements View.OnClickL
     private boolean mDozing;
     private EmergencyButton mEmergencyButton;
     private TextView mEnterpriseDisclosure;
-    private FlashlightController mFlashlightController;
     private float mFontScale;
     private ViewGroup mIndicationArea;
     private KeyguardIndicationController mIndicationController;
@@ -90,7 +83,6 @@ public class KeyguardBottomAreaView extends FrameLayout implements View.OnClickL
     private ExtensionController.Extension<IntentButtonProvider.IntentButton> mLeftExtension;
     /* access modifiers changed from: private */
     public boolean mLeftIntentAvailable;
-    private boolean mLeftIsVoiceAssist;
     private LockPatternUtils mLockPatternUtils;
     /* access modifiers changed from: private */
     public LockScreenMagazineController mLockScreenMagazineController;
@@ -98,11 +90,6 @@ public class KeyguardBottomAreaView extends FrameLayout implements View.OnClickL
     /* access modifiers changed from: private */
     public NotificationPanelView mNotificationPanelView;
     private int mOrientation;
-    private PowerManager mPowerManager;
-    private PreviewInflater mPreviewInflater;
-    private final ServiceConnection mPrewarmConnection;
-    /* access modifiers changed from: private */
-    public Messenger mPrewarmMessenger;
     /* access modifiers changed from: private */
     public KeyguardAffordanceView mRightAffordanceView;
     private LinearLayout mRightAffordanceViewLayout;
@@ -120,11 +107,20 @@ public class KeyguardBottomAreaView extends FrameLayout implements View.OnClickL
     /* access modifiers changed from: private */
     public boolean mUserUnlocked;
 
+    /* renamed from: com.android.systemui.statusbar.phone.KeyguardBottomAreaView$1  reason: invalid class name */
+    class AnonymousClass1 implements ServiceConnection {
+    }
+
     public boolean hasOverlappingRendering() {
         return false;
     }
 
     public void onStateChanged(boolean z, boolean z2) {
+    }
+
+    static {
+        new Intent("android.media.action.STILL_IMAGE_CAMERA_SECURE").addFlags(8388608);
+        new Intent("android.intent.action.DIAL");
     }
 
     public KeyguardBottomAreaView(Context context) {
@@ -141,17 +137,8 @@ public class KeyguardBottomAreaView extends FrameLayout implements View.OnClickL
 
     public KeyguardBottomAreaView(Context context, AttributeSet attributeSet, int i, int i2) {
         super(context, attributeSet, i, i2);
-        this.mPrewarmConnection = new ServiceConnection() {
-            public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-                Messenger unused = KeyguardBottomAreaView.this.mPrewarmMessenger = new Messenger(iBinder);
-            }
-
-            public void onServiceDisconnected(ComponentName componentName) {
-                Messenger unused = KeyguardBottomAreaView.this.mPrewarmMessenger = null;
-            }
-        };
-        this.mRightButton = new DefaultRightButton();
-        this.mLeftButton = new DefaultLeftButton();
+        this.mRightButton = new DefaultRightButton(this, (AnonymousClass1) null);
+        this.mLeftButton = new DefaultLeftButton(this, (AnonymousClass1) null);
         this.mLockscreenGestureLogger = new LockscreenGestureLogger();
         this.mAccessibilityDelegate = new View.AccessibilityDelegate() {
             public void onInitializeAccessibilityNodeInfo(View view, AccessibilityNodeInfo accessibilityNodeInfo) {
@@ -239,37 +226,41 @@ public class KeyguardBottomAreaView extends FrameLayout implements View.OnClickL
         this.mEnterpriseDisclosure = (TextView) findViewById(R.id.keyguard_indication_enterprise_disclosure);
         watchForCameraPolicyChanges();
         updateCameraVisibility();
-        this.mUnlockMethodCache = UnlockMethodCache.getInstance(getContext());
-        this.mUnlockMethodCache.addListener(this);
+        UnlockMethodCache instance = UnlockMethodCache.getInstance(getContext());
+        this.mUnlockMethodCache = instance;
+        instance.addListener(this);
         updateEmergencyButton();
         setClipChildren(false);
         setClipToPadding(false);
-        this.mPreviewInflater = new PreviewInflater(this.mContext, new LockPatternUtils(this.mContext));
+        new LockPatternUtils(this.mContext);
         this.mRightAffordanceView.setOnClickListener(this);
         this.mLeftAffordanceView.setOnClickListener(this);
         initAccessibility();
-        this.mActivityStarter = (ActivityStarter) Dependency.get(ActivityStarter.class);
-        this.mFlashlightController = (FlashlightController) Dependency.get(FlashlightController.class);
+        ActivityStarter activityStarter = (ActivityStarter) Dependency.get(ActivityStarter.class);
+        FlashlightController flashlightController = (FlashlightController) Dependency.get(FlashlightController.class);
         this.mAccessibilityController = (AccessibilityController) Dependency.get(AccessibilityController.class);
-        this.mAssistManager = (AssistManager) Dependency.get(AssistManager.class);
+        AssistManager assistManager = (AssistManager) Dependency.get(AssistManager.class);
         updateLeftAffordance();
-        this.mPowerManager = (PowerManager) this.mContext.getSystemService("power");
+        PowerManager powerManager = (PowerManager) this.mContext.getSystemService("power");
         this.mKeyguardUpdateMonitor.registerCallback(this.mUpdateMonitorCallback);
     }
 
     /* access modifiers changed from: protected */
     public void onAttachedToWindow() {
+        Class<IntentButtonProvider> cls = IntentButtonProvider.class;
+        Class<IntentButtonProvider.IntentButton> cls2 = IntentButtonProvider.IntentButton.class;
+        Class cls3 = ExtensionController.class;
         super.onAttachedToWindow();
         this.mAccessibilityController.addStateChangedCallback(this);
-        ExtensionController.ExtensionBuilder<IntentButtonProvider.IntentButton> newExtension = ((ExtensionController) Dependency.get(ExtensionController.class)).newExtension(IntentButtonProvider.IntentButton.class);
-        newExtension.withPlugin(IntentButtonProvider.class, "com.android.systemui.action.PLUGIN_LOCKSCREEN_RIGHT_BUTTON", new ExtensionController.PluginConverter<IntentButtonProvider.IntentButton, IntentButtonProvider>() {
+        ExtensionController.ExtensionBuilder<IntentButtonProvider.IntentButton> newExtension = ((ExtensionController) Dependency.get(cls3)).newExtension(cls2);
+        newExtension.withPlugin(cls, "com.android.systemui.action.PLUGIN_LOCKSCREEN_RIGHT_BUTTON", new ExtensionController.PluginConverter<IntentButtonProvider.IntentButton, IntentButtonProvider>() {
             public IntentButtonProvider.IntentButton getInterfaceFromPlugin(IntentButtonProvider intentButtonProvider) {
                 return intentButtonProvider.getIntentButton();
             }
         });
         newExtension.withDefault(new Supplier<IntentButtonProvider.IntentButton>() {
             public IntentButtonProvider.IntentButton get() {
-                return new DefaultRightButton();
+                return new DefaultRightButton(KeyguardBottomAreaView.this, (AnonymousClass1) null);
             }
         });
         newExtension.withCallback(new Consumer<IntentButtonProvider.IntentButton>() {
@@ -278,15 +269,15 @@ public class KeyguardBottomAreaView extends FrameLayout implements View.OnClickL
             }
         });
         this.mRightExtension = newExtension.build();
-        ExtensionController.ExtensionBuilder<IntentButtonProvider.IntentButton> newExtension2 = ((ExtensionController) Dependency.get(ExtensionController.class)).newExtension(IntentButtonProvider.IntentButton.class);
-        newExtension2.withPlugin(IntentButtonProvider.class, "com.android.systemui.action.PLUGIN_LOCKSCREEN_LEFT_BUTTON", new ExtensionController.PluginConverter<IntentButtonProvider.IntentButton, IntentButtonProvider>() {
+        ExtensionController.ExtensionBuilder<IntentButtonProvider.IntentButton> newExtension2 = ((ExtensionController) Dependency.get(cls3)).newExtension(cls2);
+        newExtension2.withPlugin(cls, "com.android.systemui.action.PLUGIN_LOCKSCREEN_LEFT_BUTTON", new ExtensionController.PluginConverter<IntentButtonProvider.IntentButton, IntentButtonProvider>() {
             public IntentButtonProvider.IntentButton getInterfaceFromPlugin(IntentButtonProvider intentButtonProvider) {
                 return intentButtonProvider.getIntentButton();
             }
         });
         newExtension2.withDefault(new Supplier<IntentButtonProvider.IntentButton>() {
             public IntentButtonProvider.IntentButton get() {
-                return new DefaultLeftButton();
+                return new DefaultLeftButton(KeyguardBottomAreaView.this, (AnonymousClass1) null);
             }
         });
         newExtension2.withCallback(new Consumer<IntentButtonProvider.IntentButton>() {
@@ -486,21 +477,22 @@ public class KeyguardBottomAreaView extends FrameLayout implements View.OnClickL
     private AnimatorSet getButtonLayoutAnimate(View view, TextView textView, boolean z) {
         View view2 = view;
         final TextView textView2 = textView;
+        Property property = FrameLayout.TRANSLATION_X;
         AnimatorSet animatorSet = new AnimatorSet();
         float f = z ? -1.0f : 1.0f;
         float f2 = -50.0f * f;
-        ObjectAnimator ofFloat = ObjectAnimator.ofFloat(view2, FrameLayout.TRANSLATION_X, new float[]{0.0f, f2});
+        ObjectAnimator ofFloat = ObjectAnimator.ofFloat(view2, property, new float[]{0.0f, f2});
         ofFloat.setDuration(150);
         float f3 = 10.0f * f;
-        ObjectAnimator ofFloat2 = ObjectAnimator.ofFloat(view2, FrameLayout.TRANSLATION_X, new float[]{f2, f3});
+        ObjectAnimator ofFloat2 = ObjectAnimator.ofFloat(view2, property, new float[]{f2, f3});
         ofFloat2.setDuration(150);
         float f4 = -8.0f * f;
-        ObjectAnimator ofFloat3 = ObjectAnimator.ofFloat(view2, FrameLayout.TRANSLATION_X, new float[]{f3, f4});
+        ObjectAnimator ofFloat3 = ObjectAnimator.ofFloat(view2, property, new float[]{f3, f4});
         ofFloat3.setDuration(100);
         float f5 = f * 5.0f;
-        ObjectAnimator ofFloat4 = ObjectAnimator.ofFloat(view2, FrameLayout.TRANSLATION_X, new float[]{f4, f5});
+        ObjectAnimator ofFloat4 = ObjectAnimator.ofFloat(view2, property, new float[]{f4, f5});
         ofFloat4.setDuration(100);
-        ObjectAnimator ofFloat5 = ObjectAnimator.ofFloat(view2, FrameLayout.TRANSLATION_X, new float[]{f5, 0.0f});
+        ObjectAnimator ofFloat5 = ObjectAnimator.ofFloat(view2, property, new float[]{f5, 0.0f});
         ofFloat5.setDuration(100);
         ObjectAnimator ofFloat6 = ObjectAnimator.ofFloat(textView2, FrameLayout.ALPHA, new float[]{1.0f, 0.0f});
         ofFloat6.setDuration(500);
@@ -633,7 +625,7 @@ public class KeyguardBottomAreaView extends FrameLayout implements View.OnClickL
 
     public void setKeyguardIndicationController(KeyguardIndicationController keyguardIndicationController) {
         this.mIndicationController = keyguardIndicationController;
-        this.mIndicationController.setDarkMode(this.mDarkMode);
+        keyguardIndicationController.setDarkMode(this.mDarkMode);
     }
 
     public void setNotificationPanelView(NotificationPanelView notificationPanelView) {
@@ -680,9 +672,7 @@ public class KeyguardBottomAreaView extends FrameLayout implements View.OnClickL
     /* access modifiers changed from: private */
     public void setLeftButton(IntentButtonProvider.IntentButton intentButton) {
         this.mLeftButton = intentButton;
-        if (!(this.mLeftButton instanceof DefaultLeftButton)) {
-            this.mLeftIsVoiceAssist = false;
-        }
+        boolean z = intentButton instanceof DefaultLeftButton;
         updateLeftAffordance();
     }
 
@@ -713,6 +703,10 @@ public class KeyguardBottomAreaView extends FrameLayout implements View.OnClickL
 
         private DefaultLeftButton() {
             this.mIconState = new IntentButtonProvider.IntentButton.IconState();
+        }
+
+        /* synthetic */ DefaultLeftButton(KeyguardBottomAreaView keyguardBottomAreaView, AnonymousClass1 r2) {
+            this();
         }
 
         public IntentButtonProvider.IntentButton.IconState getIcon() {
@@ -764,6 +758,10 @@ public class KeyguardBottomAreaView extends FrameLayout implements View.OnClickL
 
         private DefaultRightButton() {
             this.mIconState = new IntentButtonProvider.IntentButton.IconState();
+        }
+
+        /* synthetic */ DefaultRightButton(KeyguardBottomAreaView keyguardBottomAreaView, AnonymousClass1 r2) {
+            this();
         }
 
         public IntentButtonProvider.IntentButton.IconState getIcon() {

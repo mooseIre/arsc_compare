@@ -64,8 +64,9 @@ public class PipMediaController {
         intentFilter.addAction("com.android.systemui.pip.phone.PREV");
         this.mContext.registerReceiver(this.mPlayPauseActionReceiver, intentFilter);
         createMediaActions();
-        this.mMediaSessionManager = (MediaSessionManager) context.getSystemService("media_session");
-        this.mMediaSessionManager.addOnActiveSessionsChangedListener(new MediaSessionManager.OnActiveSessionsChangedListener() {
+        MediaSessionManager mediaSessionManager = (MediaSessionManager) context.getSystemService("media_session");
+        this.mMediaSessionManager = mediaSessionManager;
+        mediaSessionManager.addOnActiveSessionsChangedListener(new MediaSessionManager.OnActiveSessionsChangedListener() {
             public final void onActiveSessionsChanged(List list) {
                 PipMediaController.this.lambda$new$0$PipMediaController(list);
             }
@@ -73,7 +74,7 @@ public class PipMediaController {
     }
 
     public void onActivityPinned() {
-        lambda$new$0$PipMediaController(this.mMediaSessionManager.getActiveSessions((ComponentName) null));
+        lambda$new$0(this.mMediaSessionManager.getActiveSessions((ComponentName) null));
     }
 
     public void addListener(ActionListener actionListener) {
@@ -126,7 +127,7 @@ public class PipMediaController {
 
     /* access modifiers changed from: private */
     /* renamed from: resolveActiveMediaController */
-    public void lambda$new$0$PipMediaController(List<MediaController> list) {
+    public void lambda$new$0(List<MediaController> list) {
         ComponentName topPinnedActivity;
         if (!(list == null || (topPinnedActivity = PipUtils.getTopPinnedActivity(this.mContext, this.mActivityManager)) == null)) {
             for (int i = 0; i < list.size(); i++) {

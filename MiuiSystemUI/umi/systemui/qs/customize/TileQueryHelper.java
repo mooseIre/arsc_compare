@@ -1,10 +1,12 @@
 package com.android.systemui.qs.customize;
 
+import android.app.ActivityManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.content.pm.ServiceInfo;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.Icon;
 import android.os.Build;
@@ -14,7 +16,6 @@ import android.text.TextUtils;
 import android.util.ArraySet;
 import android.util.Log;
 import android.widget.Button;
-import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.systemui.Dependency;
 import com.android.systemui.plugins.R;
 import com.android.systemui.plugins.qs.QSTile;
@@ -68,7 +69,6 @@ public class TileQueryHelper {
     public void queryTiles(QSTileHost qSTileHost) {
         this.mTiles.clear();
         this.mSpecs.clear();
-        this.mFinished = false;
         addStockTiles(qSTileHost);
         addPackageTiles(qSTileHost);
     }
@@ -117,14 +117,13 @@ public class TileQueryHelper {
     private void addPackageTiles(final QSTileHost qSTileHost) {
         this.mBgHandler.post(new Runnable() {
             public void run() {
-                int i;
                 if (Build.VERSION.SDK_INT == 23) {
                     TileQueryHelper.this.notifyTilesChanged(true);
                     return;
                 }
                 Collection<QSTile> tiles = qSTileHost.getTiles();
                 PackageManager packageManager = TileQueryHelper.this.mContext.getPackageManager();
-                List<ResolveInfo> queryIntentServicesAsUser = packageManager.queryIntentServicesAsUser(new Intent("android.service.quicksettings.action.QS_TILE"), 0, KeyguardUpdateMonitor.getCurrentUser());
+                List<ResolveInfo> queryIntentServicesAsUser = packageManager.queryIntentServicesAsUser(new Intent("android.service.quicksettings.action.QS_TILE"), 0, ActivityManager.getCurrentUser());
                 String qsStockTiles = qSTileHost.getQsStockTiles();
                 for (ResolveInfo resolveInfo : queryIntentServicesAsUser) {
                     String str = resolveInfo.serviceInfo.packageName;
@@ -135,25 +134,28 @@ public class TileQueryHelper {
                         QSTile.State access$300 = TileQueryHelper.this.getState(tiles, spec);
                         if (access$300 != null) {
                             TileQueryHelper.this.addTile(spec, loadLabel, access$300, false);
-                        } else if (resolveInfo.serviceInfo.icon != 0 || resolveInfo.serviceInfo.applicationInfo.icon != 0) {
-                            if (resolveInfo.serviceInfo.icon != 0) {
-                                i = resolveInfo.serviceInfo.icon;
-                            } else {
-                                i = resolveInfo.serviceInfo.applicationInfo.icon;
-                            }
-                            Drawable drawable = null;
-                            Icon createWithResource = i != 0 ? Icon.createWithResource(str, i) : null;
-                            if (createWithResource != null) {
-                                try {
-                                    drawable = createWithResource.loadDrawable(TileQueryHelper.this.mContext);
-                                } catch (Exception unused) {
-                                    Log.w("TileQueryHelper", "Invalid icon");
+                        } else {
+                            ServiceInfo serviceInfo = resolveInfo.serviceInfo;
+                            if (serviceInfo.icon != 0 || serviceInfo.applicationInfo.icon != 0) {
+                                ServiceInfo serviceInfo2 = resolveInfo.serviceInfo;
+                                int i = serviceInfo2.icon;
+                                if (i == 0) {
+                                    i = serviceInfo2.applicationInfo.icon;
                                 }
-                            }
-                            if ("android.permission.BIND_QUICK_SETTINGS_TILE".equals(resolveInfo.serviceInfo.permission) && drawable != null) {
-                                drawable.mutate();
-                                CharSequence loadLabel2 = resolveInfo.serviceInfo.loadLabel(packageManager);
-                                TileQueryHelper.this.addTile(spec, drawable, (CharSequence) loadLabel2 != null ? loadLabel2.toString() : "null", loadLabel);
+                                Drawable drawable = null;
+                                Icon createWithResource = i != 0 ? Icon.createWithResource(str, i) : null;
+                                if (createWithResource != null) {
+                                    try {
+                                        drawable = createWithResource.loadDrawable(TileQueryHelper.this.mContext);
+                                    } catch (Exception unused) {
+                                        Log.w("TileQueryHelper", "Invalid icon");
+                                    }
+                                }
+                                if ("android.permission.BIND_QUICK_SETTINGS_TILE".equals(resolveInfo.serviceInfo.permission) && drawable != null) {
+                                    drawable.mutate();
+                                    CharSequence loadLabel2 = resolveInfo.serviceInfo.loadLabel(packageManager);
+                                    TileQueryHelper.this.addTile(spec, drawable, (CharSequence) loadLabel2 != null ? loadLabel2.toString() : "null", loadLabel);
+                                }
                             }
                         }
                     }
@@ -195,7 +197,7 @@ public class TileQueryHelper {
         if (!this.mSpecs.contains(str) && !"edit".equals(str)) {
             TileInfo tileInfo = new TileInfo();
             tileInfo.state = state;
-            updateStateForCustomizer(tileInfo.state);
+            updateStateForCustomizer(state);
             tileInfo.spec = str;
             QSTile.State state2 = tileInfo.state;
             if (z || TextUtils.equals(state.label, charSequence)) {

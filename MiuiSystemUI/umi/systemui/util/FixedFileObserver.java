@@ -27,7 +27,7 @@ public abstract class FixedFileObserver {
                 sObserverLists.put(this.mRootPath, new HashSet());
             }
             final Set set = sObserverLists.get(this.mRootPath);
-            this.mObserver = set.size() > 0 ? ((FixedFileObserver) set.iterator().next()).mObserver : new FileObserver(this.mRootPath.getPath()) {
+            FileObserver r2 = set.size() > 0 ? ((FixedFileObserver) set.iterator().next()).mObserver : new FileObserver(this.mRootPath.getPath()) {
                 public void onEvent(int i, String str) {
                     synchronized (FixedFileObserver.sObserverLists) {
                         for (FixedFileObserver fixedFileObserver : set) {
@@ -38,7 +38,8 @@ public abstract class FixedFileObserver {
                     }
                 }
             };
-            this.mObserver.startWatching();
+            this.mObserver = r2;
+            r2.startWatching();
             set.add(this);
         }
     }

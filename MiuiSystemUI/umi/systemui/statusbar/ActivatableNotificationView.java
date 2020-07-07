@@ -25,8 +25,6 @@ import com.android.systemui.statusbar.notification.NotificationUtils;
 import com.android.systemui.statusbar.phone.DoubleTapHelper;
 
 public abstract class ActivatableNotificationView extends ExpandableOutlineView {
-    private static final Interpolator ACTIVATE_INVERSE_ALPHA_INTERPOLATOR = new PathInterpolator(0.0f, 0.0f, 0.5f, 1.0f);
-    private static final Interpolator ACTIVATE_INVERSE_INTERPOLATOR = new PathInterpolator(0.6f, 0.0f, 0.5f, 1.0f);
     private final AccessibilityManager mAccessibilityManager;
     protected boolean mActivated;
     private float mAnimationTranslationY;
@@ -139,12 +137,18 @@ public abstract class ActivatableNotificationView extends ExpandableOutlineView 
     public void onBelowSpeedBumpChanged() {
     }
 
+    static {
+        new PathInterpolator(0.6f, 0.0f, 0.5f, 1.0f);
+        new PathInterpolator(0.0f, 0.0f, 0.5f, 1.0f);
+    }
+
     public ActivatableNotificationView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
         setClipChildren(false);
         setClipToPadding(false);
-        this.mNormalColor = context.getColor(R.color.notification_material_background_color);
-        this.mLowPriorityColor = this.mNormalColor;
+        int color = context.getColor(R.color.notification_material_background_color);
+        this.mNormalColor = color;
+        this.mLowPriorityColor = color;
         this.mTintedRippleColor = context.getColor(R.color.notification_ripple_tinted_color);
         this.mLowPriorityRippleColor = context.getColor(R.color.notification_ripple_color_low_priority);
         this.mNormalRippleColor = context.getColor(R.color.notification_ripple_untinted_color);
@@ -177,8 +181,9 @@ public abstract class ActivatableNotificationView extends ExpandableOutlineView 
     public void onFinishInflate() {
         super.onFinishInflate();
         this.mBackgroundNormal = (NotificationBackgroundView) findViewById(R.id.backgroundNormal);
-        this.mFakeShadow = (FakeShadowView) findViewById(R.id.fake_shadow);
-        this.mShadowHidden = this.mFakeShadow.getVisibility() != 0;
+        FakeShadowView fakeShadowView = (FakeShadowView) findViewById(R.id.fake_shadow);
+        this.mFakeShadow = fakeShadowView;
+        this.mShadowHidden = fakeShadowView.getVisibility() != 0;
         this.mBackgroundDimmed = (NotificationBackgroundView) findViewById(R.id.backgroundDimmed);
         this.mBackgroundNormal.setCustomBackground((int) R.drawable.notification_material_bg);
         this.mBackgroundDimmed.setCustomBackground((int) R.drawable.notification_material_bg_dim);
@@ -422,8 +427,9 @@ public abstract class ActivatableNotificationView extends ExpandableOutlineView 
         if (calculateBgColor != i) {
             this.mStartTint = i;
             this.mTargetTint = calculateBgColor;
-            this.mBackgroundColorAnimator = ValueAnimator.ofFloat(new float[]{0.0f, 1.0f});
-            this.mBackgroundColorAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{0.0f, 1.0f});
+            this.mBackgroundColorAnimator = ofFloat;
+            ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 public void onAnimationUpdate(ValueAnimator valueAnimator) {
                     ActivatableNotificationView.this.setBackgroundTintColor(NotificationUtils.interpolateColors(ActivatableNotificationView.this.mStartTint, ActivatableNotificationView.this.mTargetTint, valueAnimator.getAnimatedFraction()));
                 }
@@ -460,8 +466,9 @@ public abstract class ActivatableNotificationView extends ExpandableOutlineView 
                 notificationBackgroundView.setAlpha(1.0f);
             }
         }).setUpdateListener(this.mBackgroundVisibilityUpdater).start();
-        this.mFadeInFromDarkAnimator = TimeAnimator.ofFloat(new float[]{0.0f, 1.0f});
-        this.mFadeInFromDarkAnimator.setDuration(200);
+        ValueAnimator ofFloat = TimeAnimator.ofFloat(new float[]{0.0f, 1.0f});
+        this.mFadeInFromDarkAnimator = ofFloat;
+        ofFloat.setDuration(200);
         this.mFadeInFromDarkAnimator.setStartDelay(j);
         this.mFadeInFromDarkAnimator.setInterpolator(Interpolators.LINEAR_OUT_SLOW_IN);
         this.mFadeInFromDarkAnimator.addListener(this.mFadeInEndListener);
@@ -492,7 +499,7 @@ public abstract class ActivatableNotificationView extends ExpandableOutlineView 
         this.mBgAlpha = f;
         float f2 = this.mDimmedBackgroundFadeInAmount;
         if (f2 != -1.0f) {
-            this.mBgAlpha *= f2;
+            this.mBgAlpha = f * f2;
         }
         this.mBackgroundDimmed.setAlpha(this.mBgAlpha);
     }
@@ -589,12 +596,13 @@ public abstract class ActivatableNotificationView extends ExpandableOutlineView 
 
     private void startAppearAnimation(final boolean z, float f, long j, long j2, AnimatorListenerAdapter animatorListenerAdapter, final Runnable runnable) {
         cancelAppearAnimation();
-        this.mAnimationTranslationY = f * ((float) getActualHeight());
+        float actualHeight = f * ((float) getActualHeight());
+        this.mAnimationTranslationY = actualHeight;
         float f2 = 1.0f;
         if (this.mAppearAnimationFraction == -1.0f) {
             if (z) {
                 this.mAppearAnimationFraction = 0.0f;
-                this.mAppearAnimationTranslation = this.mAnimationTranslationY;
+                this.mAppearAnimationTranslation = actualHeight;
             } else {
                 this.mAppearAnimationFraction = 1.0f;
                 this.mAppearAnimationTranslation = 0.0f;
@@ -608,8 +616,9 @@ public abstract class ActivatableNotificationView extends ExpandableOutlineView 
             this.mCurrentAlphaInterpolator = this.mSlowOutLinearInInterpolator;
             f2 = 0.0f;
         }
-        this.mAppearAnimator = ValueAnimator.ofFloat(new float[]{this.mAppearAnimationFraction, f2});
-        this.mAppearAnimator.setInterpolator(Interpolators.LINEAR);
+        ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{this.mAppearAnimationFraction, f2});
+        this.mAppearAnimator = ofFloat;
+        ofFloat.setInterpolator(Interpolators.LINEAR);
         this.mAppearAnimator.setDuration((long) (((float) j2) * Math.abs(this.mAppearAnimationFraction - f2)));
         this.mAppearAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
@@ -778,8 +787,9 @@ public abstract class ActivatableNotificationView extends ExpandableOutlineView 
 
     public void setFakeShadowIntensity(float f, float f2, int i, int i2) {
         boolean z = this.mShadowHidden;
-        this.mShadowHidden = f == 0.0f;
-        if (!this.mShadowHidden || !z) {
+        boolean z2 = f == 0.0f;
+        this.mShadowHidden = z2;
+        if (!z2 || !z) {
             this.mFakeShadow.setFakeShadowTranslationZ(f * (getTranslationZ() + 0.1f), f2, i, i2);
         }
     }

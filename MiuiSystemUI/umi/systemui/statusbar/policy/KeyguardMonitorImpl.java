@@ -31,7 +31,7 @@ public class KeyguardMonitorImpl extends KeyguardUpdateMonitorCallback implement
 
     public KeyguardMonitorImpl(Context context) {
         this.mContext = context;
-        this.mKeyguardUpdateMonitor = KeyguardUpdateMonitor.getInstance(this.mContext);
+        this.mKeyguardUpdateMonitor = KeyguardUpdateMonitor.getInstance(context);
         this.mUserTracker = new CurrentUserTracker(this.mContext) {
             public void onUserSwitched(int i) {
                 int unused = KeyguardMonitorImpl.this.mCurrentUser = i;

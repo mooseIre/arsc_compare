@@ -60,8 +60,9 @@ public class NotificationsQuickSettingsContainer extends FrameLayout implements 
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
         FragmentHostManager.get(this).addTagListener(QS.TAG, this);
-        this.mHeadsUpManager = ((StatusBar) SystemUI.getComponent(getContext(), StatusBar.class)).mHeadsUpManager;
-        this.mHeadsUpManager.addListener(this);
+        HeadsUpManager headsUpManager = ((StatusBar) SystemUI.getComponent(getContext(), StatusBar.class)).mHeadsUpManager;
+        this.mHeadsUpManager = headsUpManager;
+        headsUpManager.addListener(this);
     }
 
     /* access modifiers changed from: protected */
@@ -98,10 +99,10 @@ public class NotificationsQuickSettingsContainer extends FrameLayout implements 
             }
             return super.drawChild(canvas, view2, j);
         } else if (view == this.mUserSwitcher) {
-            if (!z2 || !z) {
-                view3 = view2;
+            if (z2 && z) {
+                view2 = view3;
             }
-            return super.drawChild(canvas, view3, j);
+            return super.drawChild(canvas, view2, j);
         } else if (view == this.mKeyguardStatusBar) {
             return super.drawChild(canvas, view2, j);
         } else {
@@ -127,8 +128,9 @@ public class NotificationsQuickSettingsContainer extends FrameLayout implements 
     }
 
     public void onFragmentViewCreated(String str, Fragment fragment) {
-        this.mQS = (QS) fragment;
-        this.mQS.setContainer(this);
+        QS qs = (QS) fragment;
+        this.mQS = qs;
+        qs.setContainer(this);
         this.mQS.setDetailAnimatedViews(this.mStackScroller);
     }
 

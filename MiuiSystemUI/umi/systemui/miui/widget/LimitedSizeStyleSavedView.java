@@ -8,7 +8,6 @@ import android.view.View;
 public class LimitedSizeStyleSavedView extends StyleSavedView {
     private int mMaxHeight = 0;
     private int mMaxWidth = 0;
-    private int mMinHeight = 0;
     private int mMinWidth = 0;
 
     public LimitedSizeStyleSavedView(Context context) {
@@ -29,7 +28,7 @@ public class LimitedSizeStyleSavedView extends StyleSavedView {
         if (attributeSet != null) {
             TypedArray obtainStyledAttributes = getContext().obtainStyledAttributes(attributeSet, R$styleable.LimitedSizeStyleSavedView);
             this.mMinWidth = getMinimumWidth();
-            this.mMinHeight = getMinimumHeight();
+            getMinimumHeight();
             this.mMaxWidth = obtainStyledAttributes.getDimensionPixelSize(R$styleable.LimitedSizeStyleSavedView_maximumWidth, Integer.MAX_VALUE);
             this.mMaxHeight = obtainStyledAttributes.getDimensionPixelSize(R$styleable.LimitedSizeStyleSavedView_maximumHeight, Integer.MAX_VALUE);
             obtainStyledAttributes.recycle();
@@ -53,10 +52,9 @@ public class LimitedSizeStyleSavedView extends StyleSavedView {
 
     public void setMaxWidth(int i) {
         this.mMaxWidth = i;
-        int i2 = this.mMaxWidth;
-        int i3 = this.mMinWidth;
-        if (i2 < i3) {
-            this.mMaxWidth = i3;
+        int i2 = this.mMinWidth;
+        if (i < i2) {
+            this.mMaxWidth = i2;
         }
     }
 }

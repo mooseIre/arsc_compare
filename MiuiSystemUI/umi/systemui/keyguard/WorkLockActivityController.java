@@ -27,15 +27,16 @@ public class WorkLockActivityController {
 
     @VisibleForTesting
     WorkLockActivityController(Context context, SystemServicesProxy systemServicesProxy, IActivityManager iActivityManager) {
-        this.mLockListener = new SystemServicesProxy.TaskStackListener() {
+        AnonymousClass1 r0 = new SystemServicesProxy.TaskStackListener() {
             public void onTaskProfileLocked(int i, int i2) {
                 WorkLockActivityController.this.startWorkChallengeInTask(i, i2);
             }
         };
+        this.mLockListener = r0;
         this.mContext = context;
         this.mSsp = systemServicesProxy;
         this.mIam = iActivityManager;
-        this.mSsp.registerTaskStackListener(this.mLockListener);
+        systemServicesProxy.registerTaskStackListener(r0);
     }
 
     /* access modifiers changed from: private */

@@ -14,12 +14,10 @@ import com.android.systemui.plugins.qs.QSTile;
 import com.android.systemui.qs.QSHost;
 import com.android.systemui.qs.tileimpl.QSTileImpl;
 import com.android.systemui.statusbar.Icons;
-import miui.os.Build;
 import miui.securityspace.CrossUserUtils;
 import miui.view.MiuiHapticFeedbackConstants;
 
 public class DriveModeTile extends QSTileImpl<QSTile.BooleanState> {
-    public static final boolean IS_MIUI_LITE_VERSION = Build.IS_MIUI_LITE_VERSION;
     private ContentObserver mDriveModeObserver = new ContentObserver(this.mHandler) {
         public void onChange(boolean z) {
             Log.d("SystemUI.DriveMode", "drive mode change detected");
@@ -27,7 +25,7 @@ public class DriveModeTile extends QSTileImpl<QSTile.BooleanState> {
         }
     };
     private boolean mMiuiLabDriveModeOn;
-    private final ContentResolver mResolver = this.mContext.getContentResolver();
+    private final ContentResolver mResolver;
 
     public int getMetricsCategory() {
         return -1;
@@ -35,7 +33,9 @@ public class DriveModeTile extends QSTileImpl<QSTile.BooleanState> {
 
     public DriveModeTile(QSHost qSHost) {
         super(qSHost);
-        this.mMiuiLabDriveModeOn = -1 != Settings.System.getIntForUser(this.mResolver, "drive_mode_drive_mode", -1, -2);
+        ContentResolver contentResolver = this.mContext.getContentResolver();
+        this.mResolver = contentResolver;
+        this.mMiuiLabDriveModeOn = -1 != Settings.System.getIntForUser(contentResolver, "drive_mode_drive_mode", -1, -2);
     }
 
     /* access modifiers changed from: protected */
@@ -48,7 +48,7 @@ public class DriveModeTile extends QSTileImpl<QSTile.BooleanState> {
     }
 
     public boolean isAvailable() {
-        return !IS_MIUI_LITE_VERSION && !Constants.IS_INTERNATIONAL && !Constants.IS_TABLET && CrossUserUtils.getCurrentUserId() == 0;
+        return !Constants.IS_INTERNATIONAL && !Constants.IS_TABLET && CrossUserUtils.getCurrentUserId() == 0;
     }
 
     public void handleSetListening(boolean z) {
@@ -64,8 +64,9 @@ public class DriveModeTile extends QSTileImpl<QSTile.BooleanState> {
             return getMiuiLabSettingsIntent();
         }
         if (!this.mMiuiLabDriveModeOn) {
-            this.mMiuiLabDriveModeOn = -1 != Settings.System.getIntForUser(this.mResolver, "drive_mode_drive_mode", -1, -2);
-            if (!this.mMiuiLabDriveModeOn) {
+            boolean z = -1 != Settings.System.getIntForUser(this.mResolver, "drive_mode_drive_mode", -1, -2);
+            this.mMiuiLabDriveModeOn = z;
+            if (!z) {
                 return getMiuiLabSettingsIntent();
             }
         }

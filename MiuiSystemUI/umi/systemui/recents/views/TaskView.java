@@ -30,7 +30,6 @@ import com.android.systemui.recents.events.activity.MultiWindowStateChangedEvent
 import com.android.systemui.recents.events.activity.ShowTaskMenuEvent;
 import com.android.systemui.recents.events.component.UpdateLockStateEvent;
 import com.android.systemui.recents.events.ui.DismissTaskViewEvent;
-import com.android.systemui.recents.events.ui.ShowApplicationInfoEvent;
 import com.android.systemui.recents.events.ui.dragndrop.DragEndCancelledEvent;
 import com.android.systemui.recents.events.ui.dragndrop.DragEndEvent;
 import com.android.systemui.recents.events.ui.dragndrop.DragStartEvent;
@@ -41,10 +40,9 @@ import com.android.systemui.recents.misc.SystemServicesProxy;
 import com.android.systemui.recents.misc.Utilities;
 import com.android.systemui.recents.model.Task;
 import com.android.systemui.recents.model.TaskStack;
-import com.android.systemui.recents.views.TaskStackAnimationHelper;
 import java.util.ArrayList;
 
-public class TaskView extends FixedSizeFrameLayout implements Task.TaskCallbacks, TaskStackAnimationHelper.Callbacks, View.OnClickListener, View.OnLongClickListener {
+public class TaskView extends FixedSizeFrameLayout implements Task.TaskCallbacks, View.OnClickListener, View.OnLongClickListener {
     public static final Property<TaskView, Float> DIM_ALPHA = new FloatProperty<TaskView>("dimAlpha") {
         public void setValue(TaskView taskView, float f) {
             taskView.setDimAlpha(f);
@@ -135,8 +133,9 @@ public class TaskView extends FixedSizeFrameLayout implements Task.TaskCallbacks
         this.mDownTouchPos = new Point();
         this.mIsScollAnimating = false;
         Recents.getConfiguration();
-        this.mViewBounds = new AnimateableViewBounds(this, context.getResources().getDimensionPixelSize(R.dimen.recents_task_view_shadow_rounded_corners_radius));
-        setOutlineProvider(this.mViewBounds);
+        AnimateableViewBounds animateableViewBounds = new AnimateableViewBounds(this, context.getResources().getDimensionPixelSize(R.dimen.recents_task_view_shadow_rounded_corners_radius));
+        this.mViewBounds = animateableViewBounds;
+        setOutlineProvider(animateableViewBounds);
         setOnLongClickListener(this);
         this.mSpringAnimationImpl = new SpringAnimationImpl(this);
     }
@@ -170,8 +169,9 @@ public class TaskView extends FixedSizeFrameLayout implements Task.TaskCallbacks
         this.mAccessLockView = findViewById(R.id.task_view_access_lock);
         this.mScreeningView = findViewById(R.id.task_view_screening);
         this.mThumbnailView.updateClipToTaskBar(this.mHeaderView);
-        this.mActionButtonView = findViewById(R.id.lock_to_app_fab);
-        this.mActionButtonView.setOutlineProvider(new ViewOutlineProvider() {
+        View findViewById = findViewById(R.id.lock_to_app_fab);
+        this.mActionButtonView = findViewById;
+        findViewById.setOutlineProvider(new ViewOutlineProvider() {
             public void getOutline(View view, Outline outline) {
                 outline.setOval(0, 0, TaskView.this.mActionButtonView.getWidth(), TaskView.this.mActionButtonView.getHeight());
                 outline.setAlpha(0.35f);
@@ -233,18 +233,18 @@ public class TaskView extends FixedSizeFrameLayout implements Task.TaskCallbacks
             return;
         }
         if (Float.compare(getDimAlpha(), taskViewTransform.dimAlpha) != 0) {
-            this.mDimAnimator = ObjectAnimator.ofFloat(this, DIM_ALPHA, new float[]{getDimAlpha(), taskViewTransform.dimAlpha});
+            ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this, DIM_ALPHA, new float[]{getDimAlpha(), taskViewTransform.dimAlpha});
+            this.mDimAnimator = ofFloat;
             ArrayList<Animator> arrayList = this.mTmpAnimators;
-            ObjectAnimator objectAnimator = this.mDimAnimator;
-            animationProps.apply(6, objectAnimator);
-            arrayList.add(objectAnimator);
+            animationProps.apply(6, ofFloat);
+            arrayList.add(ofFloat);
         }
         if (Float.compare(this.mViewBounds.getAlpha(), taskViewTransform.viewOutlineAlpha) != 0) {
-            this.mOutlineAnimator = ObjectAnimator.ofFloat(this, VIEW_OUTLINE_ALPHA, new float[]{this.mViewBounds.getAlpha(), taskViewTransform.viewOutlineAlpha});
+            ObjectAnimator ofFloat2 = ObjectAnimator.ofFloat(this, VIEW_OUTLINE_ALPHA, new float[]{this.mViewBounds.getAlpha(), taskViewTransform.viewOutlineAlpha});
+            this.mOutlineAnimator = ofFloat2;
             ArrayList<Animator> arrayList2 = this.mTmpAnimators;
-            ObjectAnimator objectAnimator2 = this.mOutlineAnimator;
-            animationProps.apply(6, objectAnimator2);
-            arrayList2.add(objectAnimator2);
+            animationProps.apply(6, ofFloat2);
+            arrayList2.add(ofFloat2);
         }
         if (animatorUpdateListener != null) {
             ValueAnimator ofInt = ValueAnimator.ofInt(new int[]{0, 1});
@@ -253,8 +253,9 @@ public class TaskView extends FixedSizeFrameLayout implements Task.TaskCallbacks
             animationProps.apply(6, ofInt);
             arrayList3.add(ofInt);
         }
-        this.mTransformAnimation = animationProps.createAnimator(this.mTmpAnimators);
-        this.mTransformAnimation.start();
+        AnimatorSet createAnimator = animationProps.createAnimator(this.mTmpAnimators);
+        this.mTransformAnimation = createAnimator;
+        createAnimator.start();
         this.mTargetAnimationTransform.copyFrom(taskViewTransform);
     }
 
@@ -429,8 +430,9 @@ public class TaskView extends FixedSizeFrameLayout implements Task.TaskCallbacks
         AnimationProps animationProps = new AnimationProps(i, Interpolators.ALPHA_OUT);
         ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this, DIM_ALPHA_WITHOUT_HEADER, new float[]{getDimAlpha(), taskViewTransform.dimAlpha});
         animationProps.apply(7, ofFloat);
-        this.mDimAnimator = ofFloat;
-        this.mDimAnimator.addListener(referenceCountedTrigger.decrementOnAnimationEnd());
+        ObjectAnimator objectAnimator = ofFloat;
+        this.mDimAnimator = objectAnimator;
+        objectAnimator.addListener(referenceCountedTrigger.decrementOnAnimationEnd());
         this.mDimAnimator.start();
         if (z) {
             showActionButton(true, i);
@@ -454,7 +456,7 @@ public class TaskView extends FixedSizeFrameLayout implements Task.TaskCallbacks
         ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this, DIM_ALPHA, new float[]{getDimAlpha(), 0.0f});
         animationProps.apply(7, ofFloat);
         this.mDimAnimator = ofFloat;
-        this.mDimAnimator.start();
+        ofFloat.start();
         referenceCountedTrigger.increment();
         hideActionButton(true, i, !z, referenceCountedTrigger.decrementOnAnimationEnd());
     }
@@ -469,9 +471,11 @@ public class TaskView extends FixedSizeFrameLayout implements Task.TaskCallbacks
         SystemServicesProxy systemServices = Recents.getSystemServices();
         this.mTouchExplorationEnabled = z;
         this.mTask = task;
-        this.mTask.addCallback(this);
-        this.mIsDisabledInSafeMode = !this.mTask.isSystemApp && systemServices.isInSafeMode();
-        this.mThumbnailView.bindToTask(this.mTask, this.mIsDisabledInSafeMode, i, rect);
+        task.addCallback(this);
+        int i2 = 0;
+        boolean z2 = !this.mTask.isSystemApp && systemServices.isInSafeMode();
+        this.mIsDisabledInSafeMode = z2;
+        this.mThumbnailView.bindToTask(this.mTask, z2, i, rect);
         this.mHeaderView.bindToTask(this.mTask, this.mTouchExplorationEnabled, this.mIsDisabledInSafeMode);
         if (task.isDockable || !systemServices.hasDockedTask()) {
             View view = this.mIncompatibleAppToastView;
@@ -485,11 +489,10 @@ public class TaskView extends FixedSizeFrameLayout implements Task.TaskCallbacks
             }
             this.mIncompatibleAppToastView.setVisibility(0);
         }
-        int i2 = 8;
         this.mAccessLockView.setVisibility(task.isAccessLocked ? 0 : 8);
         View view2 = this.mScreeningView;
-        if (task.key.isScreening) {
-            i2 = 0;
+        if (!task.key.isScreening) {
+            i2 = 8;
         }
         view2.setVisibility(i2);
         updateLockedFlagVisible(this.mTask.isLocked);
@@ -520,8 +523,9 @@ public class TaskView extends FixedSizeFrameLayout implements Task.TaskCallbacks
             if (toast != null) {
                 toast.cancel();
             }
-            this.mDisabledAppToast = Toast.makeText(context, string, 0);
-            this.mDisabledAppToast.show();
+            Toast makeText = Toast.makeText(context, string, 0);
+            this.mDisabledAppToast = makeText;
+            makeText.show();
             return;
         }
         View view2 = this.mActionButtonView;
@@ -539,10 +543,6 @@ public class TaskView extends FixedSizeFrameLayout implements Task.TaskCallbacks
     public boolean onLongClick(View view) {
         if (RecentsConfiguration.sCanMultiWindow) {
             return startDrag();
-        }
-        if (Utilities.isLowMemoryDevices()) {
-            RecentsEventBus.getDefault().send(new ShowApplicationInfoEvent(this.mTask));
-            return true;
         }
         RecentsEventBus.getDefault().send(new ShowTaskMenuEvent(this));
         return true;

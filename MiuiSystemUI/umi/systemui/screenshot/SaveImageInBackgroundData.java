@@ -9,7 +9,6 @@ class SaveImageInBackgroundData {
     boolean canLongScreenshot;
     Context context;
     Runnable finisher;
-    int iconSize;
     Bitmap image;
     boolean orientationLandscape;
     int result;

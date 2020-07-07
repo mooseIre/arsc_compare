@@ -22,7 +22,7 @@ public class PackageEventController extends BroadcastReceiver {
         this.mContext = context;
         this.mScheduler = handler;
         this.mPackageChangedReceiver = packageEventReceiver;
-        if (this.mScheduler == null) {
+        if (handler == null) {
             this.mScheduler = new Handler(Looper.getMainLooper());
         }
     }

@@ -138,7 +138,7 @@ public class Task {
         this.appInfoDescription = str4;
         this.colorPrimary = i;
         this.colorBackground = i2;
-        this.useLightOnPrimaryColor = Utilities.computeContrastBetweenColors(this.colorPrimary, -1) > 3.0f;
+        this.useLightOnPrimaryColor = Utilities.computeContrastBetweenColors(i, -1) > 3.0f;
         this.bounds = rect;
         this.taskDescription = taskDescription2;
         this.isLaunchTarget = z;

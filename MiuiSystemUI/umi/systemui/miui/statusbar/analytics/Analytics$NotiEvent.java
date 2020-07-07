@@ -5,8 +5,7 @@ import android.app.NotificationChannelCompat;
 import android.text.TextUtils;
 import com.android.systemui.miui.statusbar.ExpandedNotification;
 import com.android.systemui.miui.statusbar.notification.NotificationUtil;
-import java.util.HashMap;
-import java.util.Map;
+import com.xiaomi.stat.MiStatParams;
 
 public class Analytics$NotiEvent extends Analytics$Event {
     public static String getSource(boolean z, boolean z2) {
@@ -30,13 +29,13 @@ public class Analytics$NotiEvent extends Analytics$Event {
         return (notificationChannelCompat == null || "miscellaneous".equals(notificationChannelCompat.getId())) ? "" : notificationChannelCompat.getId();
     }
 
-    public static Map<String, Object> getStatParam(ExpandedNotification expandedNotification) {
-        HashMap hashMap = new HashMap();
-        hashMap.put("pkg", NotificationUtil.resoveSendPkg(expandedNotification));
-        hashMap.put("target_pkg", expandedNotification.getPackageName());
-        hashMap.put("ts_id", Long.valueOf(expandedNotification.getPostTime()));
-        hashMap.put("style", getNotiStyle(expandedNotification.getNotification()));
-        hashMap.put("clearable", Boolean.valueOf(getIsClearableValue(expandedNotification)));
-        return hashMap;
+    public static MiStatParams getMiStatParam(ExpandedNotification expandedNotification) {
+        MiStatParams miStatParams = new MiStatParams();
+        miStatParams.putString("pkg", NotificationUtil.resoveSendPkg(expandedNotification));
+        miStatParams.putString("target_pkg", expandedNotification.getPackageName());
+        miStatParams.putLong("ts_id", expandedNotification.getPostTime());
+        miStatParams.putString("style", getNotiStyle(expandedNotification.getNotification()));
+        miStatParams.putBoolean("clearable", getIsClearableValue(expandedNotification));
+        return miStatParams;
     }
 }

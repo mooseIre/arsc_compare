@@ -10,7 +10,7 @@ public final class PhoneStatusBarTransitions extends BarTransitions {
     private View mBattery;
     private View mClock;
     private Animator mCurrentAnimation;
-    private final float mIconAlphaWhenOpaque = this.mView.getContext().getResources().getFraction(R.dimen.status_bar_icon_drawing_alpha, 1, 1);
+    private final float mIconAlphaWhenOpaque;
     private View mLeftSide;
     private View mSignalCluster;
     private View mStatusIcons;
@@ -23,6 +23,7 @@ public final class PhoneStatusBarTransitions extends BarTransitions {
     public PhoneStatusBarTransitions(PhoneStatusBarView phoneStatusBarView) {
         super(phoneStatusBarView, R.drawable.status_background, R.color.system_status_bar_background_opaque);
         this.mView = phoneStatusBarView;
+        this.mIconAlphaWhenOpaque = phoneStatusBarView.getContext().getResources().getFraction(R.dimen.status_bar_icon_drawing_alpha, 1, 1);
     }
 
     public void init() {

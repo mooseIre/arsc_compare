@@ -63,6 +63,7 @@ import com.android.internal.policy.IKeyguardStateCallbackCompat;
 import com.android.internal.statusbar.IStatusBarService;
 import com.android.internal.telephony.IccCardConstants;
 import com.android.internal.widget.LockPatternUtils;
+import com.android.keyguard.BoostFrameworkHelper;
 import com.android.keyguard.KeyguardDisplayManager;
 import com.android.keyguard.KeyguardSensorManager;
 import com.android.keyguard.KeyguardUpdateMonitor;
@@ -109,9 +110,6 @@ import miui.view.MiuiHapticFeedbackConstants;
 public class KeyguardViewMediator extends SystemUI {
     /* access modifiers changed from: private */
     public static final Intent USER_PRESENT_INTENT = new Intent("android.intent.action.USER_PRESENT").addFlags(606076928);
-    public final int OFF_BECAUSE_OF_ADMIN = 1;
-    public final int OFF_BECAUSE_OF_TIMEOUT = 3;
-    public final int OFF_BECAUSE_OF_USER = 2;
     private AlarmManager mAlarmManager;
     private boolean mAodShowing;
     /* access modifiers changed from: private */
@@ -156,27 +154,6 @@ public class KeyguardViewMediator extends SystemUI {
     /* access modifiers changed from: private */
     public Display mDisplay;
     private IKeyguardDrawnCallback mDrawnCallback;
-    /* access modifiers changed from: private */
-    public Sensor mEllipticSensor = null;
-    /* access modifiers changed from: private */
-    public SensorEventListener mEllipticSensorListener = new SensorEventListener() {
-        public void onAccuracyChanged(Sensor sensor, int i) {
-        }
-
-        public void onSensorChanged(SensorEvent sensorEvent) {
-            if (sensorEvent.values != null) {
-                Slog.i("KeyguardViewMediator", "event.values[0]=" + sensorEvent.values[0]);
-            } else {
-                Slog.e("KeyguardViewMediator", "elliptic sensor values null");
-            }
-            float[] fArr = sensorEvent.values;
-            if (fArr != null && ((double) fArr[0]) < 1.0d && !KeyguardViewMediator.this.mHiding && KeyguardViewMediator.this.mShowing && !KeyguardViewMediator.this.mUpdateMonitor.isFingerprintUnlock()) {
-                Slog.i("KeyguardViewMediator", "keyguard_screen_off_reason:elliptic sensor too close");
-                KeyguardViewMediator.this.mPM.goToSleep(SystemClock.uptimeMillis());
-            }
-            KeyguardViewMediator.this.unregisterEllipticSensor();
-        }
-    };
     private IKeyguardExitCallback mExitSecureCallback;
     /* access modifiers changed from: private */
     public boolean mExternallyEnabled = true;
@@ -303,7 +280,6 @@ public class KeyguardViewMediator extends SystemUI {
     /* access modifiers changed from: private */
     public volatile boolean mHiding;
     private boolean mInputRestricted;
-    private boolean mIsDeviceSupportEllipticSensor = false;
     private boolean mIsDeviceSupportLargeAreaTouch = false;
     /* access modifiers changed from: private */
     public KeyguardDisplayManager mKeyguardDisplayManager;
@@ -486,7 +462,7 @@ public class KeyguardViewMediator extends SystemUI {
                 z = true;
                 KeyguardViewMediator.this.mLastSimStates.append(i2, state);
             }
-            switch (AnonymousClass26.$SwitchMap$com$android$internal$telephony$IccCardConstants$State[state.ordinal()]) {
+            switch (AnonymousClass23.$SwitchMap$com$android$internal$telephony$IccCardConstants$State[state.ordinal()]) {
                 case 1:
                 case 2:
                     synchronized (KeyguardViewMediator.this) {
@@ -558,8 +534,9 @@ public class KeyguardViewMediator extends SystemUI {
         }
 
         public void onFingerprintAuthFailed() {
-            if (UnlockMethodCache.getInstance(KeyguardViewMediator.this.mContext).isMethodSecure(KeyguardUpdateMonitor.getCurrentUser())) {
-                KeyguardViewMediator.this.mLockPatternUtils.getDevicePolicyManager();
+            int currentUser = KeyguardUpdateMonitor.getCurrentUser();
+            if (UnlockMethodCache.getInstance(KeyguardViewMediator.this.mContext).isMethodSecure(currentUser)) {
+                DevicePolicyManagerCompat.reportFailedFingerprintAttempt(KeyguardViewMediator.this.mLockPatternUtils.getDevicePolicyManager(), currentUser);
             }
             if (KeyguardViewMediator.this.mUpdateMonitor.shouldListenForFingerprintWhenUnlocked()) {
                 KeyguardViewMediator.this.mStatusBar.showBouncerIfKeyguard();
@@ -568,7 +545,7 @@ public class KeyguardViewMediator extends SystemUI {
 
         public void onFingerprintAuthenticated(int i) {
             if (UnlockMethodCache.getInstance(KeyguardViewMediator.this.mContext).isMethodSecure(i)) {
-                KeyguardViewMediator.this.mLockPatternUtils.getDevicePolicyManager();
+                DevicePolicyManagerCompat.reportSuccessfulFingerprintAttempt(KeyguardViewMediator.this.mLockPatternUtils.getDevicePolicyManager(), i);
                 boolean unused = KeyguardViewMediator.this.mUnlockByFingerPrint = true;
             }
         }
@@ -688,68 +665,65 @@ public class KeyguardViewMediator extends SystemUI {
     };
     /* access modifiers changed from: private */
     public boolean mWakeupByPickUp = false;
-    private KeyguardWallpaperHelper mWallpaperHelper;
-    private WorkLockActivityController mWorkLockController;
 
     public void onShortPowerPressedGoHome() {
     }
 
-    /* renamed from: com.android.systemui.keyguard.KeyguardViewMediator$26  reason: invalid class name */
-    static /* synthetic */ class AnonymousClass26 {
-        static final /* synthetic */ int[] $SwitchMap$com$android$internal$telephony$IccCardConstants$State = new int[IccCardConstants.State.values().length];
+    /* renamed from: com.android.systemui.keyguard.KeyguardViewMediator$23  reason: invalid class name */
+    static /* synthetic */ class AnonymousClass23 {
+        static final /* synthetic */ int[] $SwitchMap$com$android$internal$telephony$IccCardConstants$State;
 
-        /* JADX WARNING: Can't wrap try/catch for region: R(12:0|1|2|3|4|5|6|7|8|9|10|(3:11|12|14)) */
+        /* JADX WARNING: Can't wrap try/catch for region: R(14:0|1|2|3|4|5|6|7|8|9|10|11|12|14) */
         /* JADX WARNING: Failed to process nested try/catch */
-        /* JADX WARNING: Missing exception handler attribute for start block: B:11:0x0040 */
-        /* JADX WARNING: Missing exception handler attribute for start block: B:3:0x0014 */
-        /* JADX WARNING: Missing exception handler attribute for start block: B:5:0x001f */
-        /* JADX WARNING: Missing exception handler attribute for start block: B:7:0x002a */
-        /* JADX WARNING: Missing exception handler attribute for start block: B:9:0x0035 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:11:0x003e */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:3:0x0012 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:5:0x001d */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:7:0x0028 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:9:0x0033 */
         static {
             /*
                 com.android.internal.telephony.IccCardConstants$State[] r0 = com.android.internal.telephony.IccCardConstants.State.values()
                 int r0 = r0.length
                 int[] r0 = new int[r0]
                 $SwitchMap$com$android$internal$telephony$IccCardConstants$State = r0
-                int[] r0 = $SwitchMap$com$android$internal$telephony$IccCardConstants$State     // Catch:{ NoSuchFieldError -> 0x0014 }
-                com.android.internal.telephony.IccCardConstants$State r1 = com.android.internal.telephony.IccCardConstants.State.NOT_READY     // Catch:{ NoSuchFieldError -> 0x0014 }
-                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0014 }
+                com.android.internal.telephony.IccCardConstants$State r1 = com.android.internal.telephony.IccCardConstants.State.NOT_READY     // Catch:{ NoSuchFieldError -> 0x0012 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0012 }
                 r2 = 1
-                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0014 }
-            L_0x0014:
-                int[] r0 = $SwitchMap$com$android$internal$telephony$IccCardConstants$State     // Catch:{ NoSuchFieldError -> 0x001f }
-                com.android.internal.telephony.IccCardConstants$State r1 = com.android.internal.telephony.IccCardConstants.State.ABSENT     // Catch:{ NoSuchFieldError -> 0x001f }
-                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x001f }
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0012 }
+            L_0x0012:
+                int[] r0 = $SwitchMap$com$android$internal$telephony$IccCardConstants$State     // Catch:{ NoSuchFieldError -> 0x001d }
+                com.android.internal.telephony.IccCardConstants$State r1 = com.android.internal.telephony.IccCardConstants.State.ABSENT     // Catch:{ NoSuchFieldError -> 0x001d }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x001d }
                 r2 = 2
-                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x001f }
-            L_0x001f:
-                int[] r0 = $SwitchMap$com$android$internal$telephony$IccCardConstants$State     // Catch:{ NoSuchFieldError -> 0x002a }
-                com.android.internal.telephony.IccCardConstants$State r1 = com.android.internal.telephony.IccCardConstants.State.PIN_REQUIRED     // Catch:{ NoSuchFieldError -> 0x002a }
-                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x002a }
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x001d }
+            L_0x001d:
+                int[] r0 = $SwitchMap$com$android$internal$telephony$IccCardConstants$State     // Catch:{ NoSuchFieldError -> 0x0028 }
+                com.android.internal.telephony.IccCardConstants$State r1 = com.android.internal.telephony.IccCardConstants.State.PIN_REQUIRED     // Catch:{ NoSuchFieldError -> 0x0028 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0028 }
                 r2 = 3
-                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x002a }
-            L_0x002a:
-                int[] r0 = $SwitchMap$com$android$internal$telephony$IccCardConstants$State     // Catch:{ NoSuchFieldError -> 0x0035 }
-                com.android.internal.telephony.IccCardConstants$State r1 = com.android.internal.telephony.IccCardConstants.State.PUK_REQUIRED     // Catch:{ NoSuchFieldError -> 0x0035 }
-                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0035 }
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0028 }
+            L_0x0028:
+                int[] r0 = $SwitchMap$com$android$internal$telephony$IccCardConstants$State     // Catch:{ NoSuchFieldError -> 0x0033 }
+                com.android.internal.telephony.IccCardConstants$State r1 = com.android.internal.telephony.IccCardConstants.State.PUK_REQUIRED     // Catch:{ NoSuchFieldError -> 0x0033 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0033 }
                 r2 = 4
-                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0035 }
-            L_0x0035:
-                int[] r0 = $SwitchMap$com$android$internal$telephony$IccCardConstants$State     // Catch:{ NoSuchFieldError -> 0x0040 }
-                com.android.internal.telephony.IccCardConstants$State r1 = com.android.internal.telephony.IccCardConstants.State.PERM_DISABLED     // Catch:{ NoSuchFieldError -> 0x0040 }
-                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0040 }
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0033 }
+            L_0x0033:
+                int[] r0 = $SwitchMap$com$android$internal$telephony$IccCardConstants$State     // Catch:{ NoSuchFieldError -> 0x003e }
+                com.android.internal.telephony.IccCardConstants$State r1 = com.android.internal.telephony.IccCardConstants.State.PERM_DISABLED     // Catch:{ NoSuchFieldError -> 0x003e }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x003e }
                 r2 = 5
-                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0040 }
-            L_0x0040:
-                int[] r0 = $SwitchMap$com$android$internal$telephony$IccCardConstants$State     // Catch:{ NoSuchFieldError -> 0x004b }
-                com.android.internal.telephony.IccCardConstants$State r1 = com.android.internal.telephony.IccCardConstants.State.READY     // Catch:{ NoSuchFieldError -> 0x004b }
-                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x004b }
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x003e }
+            L_0x003e:
+                int[] r0 = $SwitchMap$com$android$internal$telephony$IccCardConstants$State     // Catch:{ NoSuchFieldError -> 0x0049 }
+                com.android.internal.telephony.IccCardConstants$State r1 = com.android.internal.telephony.IccCardConstants.State.READY     // Catch:{ NoSuchFieldError -> 0x0049 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0049 }
                 r2 = 6
-                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x004b }
-            L_0x004b:
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0049 }
+            L_0x0049:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.keyguard.KeyguardViewMediator.AnonymousClass26.<clinit>():void");
+            throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.keyguard.KeyguardViewMediator.AnonymousClass23.<clinit>():void");
         }
     }
 
@@ -811,11 +785,12 @@ public class KeyguardViewMediator extends SystemUI {
         this.mTrustManager = (TrustManager) this.mContext.getSystemService("trust");
         this.mSensorManager = (SensorManager) this.mContext.getSystemService("sensor");
         this.mDisplay = ((WindowManager) this.mContext.getSystemService("window")).getDefaultDisplay();
-        this.mShowKeyguardWakeLock = this.mPM.newWakeLock(1, "show keyguard");
-        this.mShowKeyguardWakeLock.setReferenceCounted(false);
+        PowerManager.WakeLock newWakeLock = this.mPM.newWakeLock(1, "show keyguard");
+        this.mShowKeyguardWakeLock = newWakeLock;
+        newWakeLock.setReferenceCounted(false);
         this.mBleUnlockHelper = new MiuiBleUnlockHelper(this.mContext, this);
         this.mSmartCoverHelper = new SmartCoverHelper(this.mContext, this);
-        this.mWallpaperHelper = new KeyguardWallpaperHelper(this.mContext);
+        new KeyguardWallpaperHelper(this.mContext);
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("com.android.internal.policy.impl.PhoneWindowManager.DELAYED_KEYGUARD");
         intentFilter.addAction("com.android.internal.policy.impl.PhoneWindowManager.DELAYED_LOCK");
@@ -824,8 +799,9 @@ public class KeyguardViewMediator extends SystemUI {
         this.mContext.registerReceiverAsUser(this.mShowUnlockScreenReceiver, UserHandle.ALL, new IntentFilter("xiaomi.intent.action.SHOW_SECURE_KEYGUARD"), (String) null, (Handler) null);
         this.mKeyguardDisplayManager = new KeyguardDisplayManager(this.mContext);
         this.mAlarmManager = (AlarmManager) this.mContext.getSystemService("alarm");
-        this.mUpdateMonitor = KeyguardUpdateMonitor.getInstance(this.mContext);
-        this.mUpdateMonitor.setKeyguardViewMediator(this);
+        KeyguardUpdateMonitor instance = KeyguardUpdateMonitor.getInstance(this.mContext);
+        this.mUpdateMonitor = instance;
+        instance.setKeyguardViewMediator(this);
         this.mLockPatternUtils = new LockPatternUtils(this.mContext);
         KeyguardUpdateMonitor.setCurrentUser(ActivityManager.getCurrentUser());
         if (this.mContext.getResources().getBoolean(R.bool.config_enableKeyguardService)) {
@@ -856,13 +832,13 @@ public class KeyguardViewMediator extends SystemUI {
         if (string3 == null || this.mTrustedSoundId == 0) {
             Log.w("KeyguardViewMediator", "failed to load trusted sound from " + string3);
         }
-        this.mLockSoundVolume = (float) Math.pow(10.0d, (double) (((float) this.mContext.getResources().getInteger(17694822)) / 20.0f));
-        this.mHideAnimation = AnimationUtils.loadAnimation(this.mContext, 17432680);
-        this.mWorkLockController = new WorkLockActivityController(this.mContext);
+        this.mLockSoundVolume = (float) Math.pow(10.0d, (double) (((float) this.mContext.getResources().getInteger(17694823)) / 20.0f));
+        this.mHideAnimation = AnimationUtils.loadAnimation(this.mContext, 17432683);
+        new WorkLockActivityController(this.mContext);
+        BoostFrameworkHelper.initBoostFramework();
         this.mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor("pick_up_gesture_wakeup_mode"), false, this.mPickupGestureWakeupObserver, -1);
         this.mPickupGestureWakeupObserver.onChange(false);
         this.mIsDeviceSupportLargeAreaTouch = isDeviceSupportLargeAreaTouch();
-        this.mIsDeviceSupportEllipticSensor = isDeviceSupportEllipticSensor();
     }
 
     public void start() {
@@ -1377,7 +1353,7 @@ public class KeyguardViewMediator extends SystemUI {
         Log.i("KeyguardViewMediator", "setAodShowing: " + z);
         if (z != this.mAodShowing) {
             this.mAodShowing = z;
-            if (this.mAodShowing) {
+            if (z) {
                 notifyAodOccludChanged(this.mOccluded);
             }
             updateActivityLockScreenState(this.mShowing);
@@ -1399,7 +1375,7 @@ public class KeyguardViewMediator extends SystemUI {
             }
             if (this.mOccluded != z) {
                 this.mOccluded = z;
-                this.mUpdateMonitor.setKeyguardShowingAndOccluded(this.mShowing, this.mOccluded);
+                this.mUpdateMonitor.setKeyguardShowingAndOccluded(this.mShowing, z);
                 this.mSmartCoverHelper.refreshSmartCover();
                 if (z) {
                     AnalyticsHelper.getInstance(this.mContext).trackPageEnd("keyguard_view_main_lock_screen", "occluded");
@@ -1461,12 +1437,13 @@ public class KeyguardViewMediator extends SystemUI {
             Slog.w("KeyguardViewMediator", "doKeyguard: not showing because externally disabled");
         } else if (!this.mStatusBarKeyguardViewManager.isShowing() || ((MiuiFastUnlockController) Dependency.get(MiuiFastUnlockController.class)).isFastUnlock()) {
             if (!mustNotUnlockCurrentUser() || !this.mUpdateMonitor.isDeviceProvisioned()) {
-                this.mSimLockedOrMissing = this.mUpdateMonitor.isSimPinSecure() || ((SubscriptionManager.isValidSubscriptionId(this.mUpdateMonitor.getNextSubIdForState(IccCardConstants.State.ABSENT)) || SubscriptionManager.isValidSubscriptionId(this.mUpdateMonitor.getNextSubIdForState(IccCardConstants.State.PERM_DISABLED))) && (SystemProperties.getBoolean("keyguard.no_require_sim", false) ^ true));
-                if (this.mSimLockedOrMissing || !shouldWaitForProvisioning()) {
+                boolean z = this.mUpdateMonitor.isSimPinSecure() || ((SubscriptionManager.isValidSubscriptionId(this.mUpdateMonitor.getNextSubIdForState(IccCardConstants.State.ABSENT)) || SubscriptionManager.isValidSubscriptionId(this.mUpdateMonitor.getNextSubIdForState(IccCardConstants.State.PERM_DISABLED))) && (SystemProperties.getBoolean("keyguard.no_require_sim", false) ^ true));
+                this.mSimLockedOrMissing = z;
+                if (z || !shouldWaitForProvisioning()) {
                     UnlockMethodCache.getInstance(this.mContext).updateSecure();
-                    boolean z = this.mLockPatternUtils.isLockScreenDisabled(KeyguardUpdateMonitor.getCurrentUser()) || (!isSecure() && MiuiKeyguardUtils.showMXTelcelLockScreen(this.mContext));
-                    boolean z2 = bundle != null && bundle.getBoolean("force_show", false);
-                    if (z && !this.mSimLockedOrMissing && !z2) {
+                    boolean z2 = this.mLockPatternUtils.isLockScreenDisabled(KeyguardUpdateMonitor.getCurrentUser()) || (!isSecure() && MiuiKeyguardUtils.showMXTelcelLockScreen(this.mContext));
+                    boolean z3 = bundle != null && bundle.getBoolean("force_show", false);
+                    if (z2 && !this.mSimLockedOrMissing && !z3) {
                         Slog.w("KeyguardViewMediator", "doKeyguard: not showing because lockscreen is off");
                         return;
                     } else if (this.mLockPatternUtils.checkVoldPassword(KeyguardUpdateMonitor.getCurrentUser())) {
@@ -1728,8 +1705,8 @@ public class KeyguardViewMediator extends SystemUI {
         if (i != 0 && Settings.System.getIntForUser(this.mContext.getContentResolver(), "lockscreen_sounds_enabled", 1, KeyguardUpdateMonitor.getCurrentUser()) == 1) {
             this.mLockSounds.stop(this.mLockSoundStreamId);
             if (this.mAudioManager == null) {
-                this.mAudioManager = (AudioManager) this.mContext.getSystemService("audio");
-                AudioManager audioManager = this.mAudioManager;
+                AudioManager audioManager = (AudioManager) this.mContext.getSystemService("audio");
+                this.mAudioManager = audioManager;
                 if (audioManager != null) {
                     this.mUiSoundsStreamType = audioManager.getUiSoundsStreamType();
                 } else {
@@ -1804,10 +1781,10 @@ public class KeyguardViewMediator extends SystemUI {
             });
         }
         if (((MiuiFastUnlockController) Dependency.get(MiuiFastUnlockController.class)).isFastUnlock()) {
-            lambda$keyguardGoingAway$2$KeyguardViewMediator(i);
+            lambda$keyguardGoingAway$2(i);
         } else {
             this.mUiOffloadThread.submit(new Runnable(i) {
-                private final /* synthetic */ int f$1;
+                public final /* synthetic */ int f$1;
 
                 {
                     this.f$1 = r2;
@@ -1820,13 +1797,15 @@ public class KeyguardViewMediator extends SystemUI {
         }
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$keyguardGoingAway$1 */
     public /* synthetic */ void lambda$keyguardGoingAway$1$KeyguardViewMediator() {
-        MiuiSettings.System.putBooleanForUser(this.mContext.getContentResolver(), "is_fingerprint_unlock", true, KeyguardUpdateMonitor.getCurrentUser());
+        MiuiSettings.System.putBooleanForUser(this.mContext.getContentResolver(), "is_fingerprint_unlock", true, -2);
     }
 
     /* access modifiers changed from: private */
     /* renamed from: doKeyguardGoingAway */
-    public void lambda$keyguardGoingAway$2$KeyguardViewMediator(int i) {
+    public void lambda$keyguardGoingAway$2(int i) {
         try {
             ActivityManagerCompat.keyguardGoingAway(i);
             Slog.i("KeyguardViewMediator", "call fw keyguardGoingAway: flags = " + i);
@@ -1893,7 +1872,7 @@ public class KeyguardViewMediator extends SystemUI {
             adjustStatusBarLocked();
             sendUserPresentBroadcast();
             this.mUpdateMonitor.setKeyguardGoingAway(false);
-            this.mUiOffloadThread.submit(new Runnable() {
+            this.mUiOffloadThread.submit(new Runnable(this) {
                 public void run() {
                     MiuiKeyguardUtils.setUserAuthenticatedSinceBoot();
                 }
@@ -1909,7 +1888,6 @@ public class KeyguardViewMediator extends SystemUI {
                 }
             }
             unregisterLargeAreaTouchSensor();
-            unregisterEllipticSensor();
             FaceUnlockManager.getInstance().printFaceUnlockTime();
             recordKeyguardExitEvent();
             printFingerprintUnlockInfo(false);
@@ -1919,7 +1897,7 @@ public class KeyguardViewMediator extends SystemUI {
 
     /* access modifiers changed from: private */
     public void sendKeyEvent() {
-        this.mUiOffloadThread.submit(new Runnable() {
+        this.mUiOffloadThread.submit(new Runnable(this) {
             public void run() {
                 try {
                     long uptimeMillis = SystemClock.uptimeMillis();
@@ -2001,7 +1979,6 @@ public class KeyguardViewMediator extends SystemUI {
             Log.d("KeyguardViewMediator", "handleNotifyFinishedGoingToSleep");
             this.mStatusBarKeyguardViewManager.onFinishedGoingToSleep();
             unregisterLargeAreaTouchSensor();
-            unregisterEllipticSensor();
             KeyguardSensorManager.getInstance(this.mContext).unregisterProximitySensor();
         }
     }
@@ -2013,7 +1990,6 @@ public class KeyguardViewMediator extends SystemUI {
             Log.d("KeyguardViewMediator", "handleNotifyWakingUp");
             this.mStatusBarKeyguardViewManager.onStartedWakingUp();
             registerLargeAreaTouchSensor();
-            registerEllipticSensor();
             trackPageStart();
             recordScreenOn();
             sendKeyguardScreenOnBroadcast();
@@ -2244,7 +2220,7 @@ public class KeyguardViewMediator extends SystemUI {
     private void setShowingLocked(boolean z, boolean z2) {
         if (z != this.mShowing || z2) {
             this.mShowing = z;
-            this.mUpdateMonitor.setKeyguardShowingAndOccluded(this.mShowing, this.mOccluded);
+            this.mUpdateMonitor.setKeyguardShowingAndOccluded(z, this.mOccluded);
             this.mUpdateMonitor.updateShowingState(this.mShowing);
             updateActivityLockScreenState(z);
             for (int size = this.mKeyguardStateCallbacks.size() - 1; size >= 0; size--) {
@@ -2332,16 +2308,17 @@ public class KeyguardViewMediator extends SystemUI {
         if (sensorManager == null || !this.mPickupGestureWakeupOpened) {
             return false;
         }
-        this.mWakeupAndSleepSensor = sensorManager.getDefaultSensor(33171036, true);
-        Sensor sensor = this.mWakeupAndSleepSensor;
-        if (sensor != null && ("oem7 Pick Up Gesture".equalsIgnoreCase(sensor.getName()) || "pickup  Wakeup".equalsIgnoreCase(this.mWakeupAndSleepSensor.getName()))) {
+        Sensor defaultSensor = sensorManager.getDefaultSensor(33171036, true);
+        this.mWakeupAndSleepSensor = defaultSensor;
+        if (defaultSensor != null && ("oem7 Pick Up Gesture".equalsIgnoreCase(defaultSensor.getName()) || "pickup  Wakeup".equalsIgnoreCase(this.mWakeupAndSleepSensor.getName()))) {
             return true;
         }
         if (!MiuiKeyguardUtils.isSupportPickupByMTK(this.mContext)) {
             return false;
         }
-        this.mWakeupAndSleepSensor = this.mSensorManager.getDefaultSensor(22, true);
-        if (this.mWakeupAndSleepSensor != null) {
+        Sensor defaultSensor2 = this.mSensorManager.getDefaultSensor(22, true);
+        this.mWakeupAndSleepSensor = defaultSensor2;
+        if (defaultSensor2 != null) {
             return true;
         }
         return false;
@@ -2429,47 +2406,6 @@ public class KeyguardViewMediator extends SystemUI {
             return r1
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.keyguard.KeyguardViewMediator.isDeviceSupportLargeAreaTouch():boolean");
-    }
-
-    /* access modifiers changed from: private */
-    public boolean shouldRegisterEllipticSensor() {
-        return this.mIsDeviceSupportEllipticSensor && this.mSensorManager != null && this.mEllipticSensor == null && !this.mHiding && this.mShowing;
-    }
-
-    private void registerEllipticSensor() {
-        if (shouldRegisterEllipticSensor()) {
-            this.mUiOffloadThread.submit(new Runnable() {
-                public void run() {
-                    if (KeyguardViewMediator.this.shouldRegisterEllipticSensor()) {
-                        KeyguardViewMediator keyguardViewMediator = KeyguardViewMediator.this;
-                        Sensor unused = keyguardViewMediator.mEllipticSensor = keyguardViewMediator.mSensorManager.getDefaultSensor(65555);
-                        KeyguardViewMediator.this.mSensorManager.registerListener(KeyguardViewMediator.this.mEllipticSensorListener, KeyguardViewMediator.this.mEllipticSensor, 0);
-                    }
-                }
-            });
-        }
-    }
-
-    /* access modifiers changed from: private */
-    public void unregisterEllipticSensor() {
-        if (this.mIsDeviceSupportEllipticSensor) {
-            this.mUiOffloadThread.submit(new Runnable() {
-                public void run() {
-                    if (KeyguardViewMediator.this.mSensorManager != null && KeyguardViewMediator.this.mEllipticSensor != null) {
-                        Sensor unused = KeyguardViewMediator.this.mEllipticSensor = null;
-                        KeyguardViewMediator.this.mSensorManager.unregisterListener(KeyguardViewMediator.this.mEllipticSensorListener);
-                    }
-                }
-            });
-        }
-    }
-
-    private boolean isDeviceSupportEllipticSensor() {
-        SensorManager sensorManager;
-        if (!SystemProperties.getBoolean("ro.vendor.audio.us.cd", false) || (sensorManager = this.mSensorManager) == null || sensorManager.getDefaultSensor(65555) == null) {
-            return false;
-        }
-        return true;
     }
 
     private void trackPageStart() {

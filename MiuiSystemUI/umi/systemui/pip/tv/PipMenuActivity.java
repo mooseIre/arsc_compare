@@ -30,10 +30,12 @@ public class PipMenuActivity extends Activity implements PipManager.Listener {
         this.mPipManager.addListener(this);
         this.mRestorePipSizeWhenClose = true;
         this.mPipControlsView = (PipControlsView) findViewById(R.id.pip_controls);
-        this.mFadeInAnimation = AnimatorInflater.loadAnimator(this, R.anim.tv_pip_menu_fade_in_animation);
-        this.mFadeInAnimation.setTarget(this.mPipControlsView);
-        this.mFadeOutAnimation = AnimatorInflater.loadAnimator(this, R.anim.tv_pip_menu_fade_out_animation);
-        this.mFadeOutAnimation.setTarget(this.mPipControlsView);
+        Animator loadAnimator = AnimatorInflater.loadAnimator(this, R.anim.tv_pip_menu_fade_in_animation);
+        this.mFadeInAnimation = loadAnimator;
+        loadAnimator.setTarget(this.mPipControlsView);
+        Animator loadAnimator2 = AnimatorInflater.loadAnimator(this, R.anim.tv_pip_menu_fade_out_animation);
+        this.mFadeOutAnimation = loadAnimator2;
+        loadAnimator2.setTarget(this.mPipControlsView);
         onPipMenuActionsChanged(getIntent().getParcelableExtra("custom_actions"));
     }
 

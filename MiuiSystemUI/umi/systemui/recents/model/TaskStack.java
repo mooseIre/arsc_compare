@@ -36,7 +36,7 @@ import java.util.Comparator;
 import java.util.List;
 
 public class TaskStack {
-    private Comparator<Task> FREEFORM_COMPARATOR = new Comparator<Task>() {
+    private Comparator<Task> FREEFORM_COMPARATOR = new Comparator<Task>(this) {
         public int compare(Task task, Task task2) {
             if (task.isFreeformTask() && !task2.isFreeformTask()) {
                 return 1;
@@ -49,7 +49,7 @@ public class TaskStack {
     };
     TaskStackCallbacks mCb;
     ArrayList<Task> mRawTaskList = new ArrayList<>();
-    FilteredTaskList mStackTaskList = new FilteredTaskList();
+    FilteredTaskList mStackTaskList;
 
     public interface TaskStackCallbacks {
         void onStackTaskAdded(TaskStack taskStack, Task task);
@@ -62,10 +62,8 @@ public class TaskStack {
     }
 
     public static class DockState implements DropTarget {
-        public static final DockState BOTTOM = new DockState(4, 1, 80, 0, 0, new RectF(0.0f, 0.875f, 1.0f, 1.0f), new RectF(0.0f, 0.875f, 1.0f, 1.0f), new RectF(0.0f, 0.5f, 1.0f, 1.0f));
         public static final DockState LEFT = new DockState(1, 0, 80, 0, 1, new RectF(0.0f, 0.0f, 0.125f, 1.0f), new RectF(0.0f, 0.0f, 0.125f, 1.0f), new RectF(0.0f, 0.0f, 0.5f, 1.0f));
         public static final DockState NONE = new DockState(-1, -1, 80, 255, 0, (RectF) null, (RectF) null, (RectF) null);
-        public static final DockState RIGHT = new DockState(3, 1, 80, 0, 1, new RectF(0.875f, 0.0f, 1.0f, 1.0f), new RectF(0.875f, 0.0f, 1.0f, 1.0f), new RectF(0.5f, 0.0f, 1.0f, 1.0f));
         public static final DockState TOP = new DockState(2, 0, 80, 0, 0, new RectF(0.0f, 0.0f, 1.0f, 0.125f), new RectF(0.0f, 0.0f, 1.0f, 0.125f), new RectF(0.0f, 0.0f, 1.0f, 0.5f));
         public static final DockState TOP_FORCE_BLACK = new DockState(2, 0, 80, 0, 0, new RectF(0.0f, 0.0f, 1.0f, 0.16f), new RectF(0.0f, 0.0f, 1.0f, 0.16f), new RectF(0.0f, 0.0f, 1.0f, 0.5f));
         public final int createMode;
@@ -74,6 +72,11 @@ public class TaskStack {
         private final RectF expandedTouchDockArea;
         private final RectF touchArea;
         public final ViewState viewState;
+
+        static {
+            new DockState(3, 1, 80, 0, 1, new RectF(0.875f, 0.0f, 1.0f, 1.0f), new RectF(0.875f, 0.0f, 1.0f, 1.0f), new RectF(0.5f, 0.0f, 1.0f, 1.0f));
+            new DockState(4, 1, 80, 0, 0, new RectF(0.0f, 0.875f, 1.0f, 1.0f), new RectF(0.0f, 0.875f, 1.0f, 1.0f), new RectF(0.0f, 0.5f, 1.0f, 1.0f));
+        }
 
         public boolean acceptsDrop(int i, int i2, int i3, int i4, boolean z) {
             if (z) {
@@ -111,13 +114,15 @@ public class TaskStack {
                 this.mHintTextAlpha = 0;
                 this.mTmpRect = new Rect();
                 this.dockAreaAlpha = i;
-                this.dockAreaOverlay = new ColorDrawable(-1);
-                this.dockAreaOverlay.setAlpha(0);
+                ColorDrawable colorDrawable = new ColorDrawable(-1);
+                this.dockAreaOverlay = colorDrawable;
+                colorDrawable.setAlpha(0);
                 this.hintTextAlpha = i2;
                 this.hintTextOrientation = i3;
                 this.mHintTextResId = i4;
-                this.mHintTextPaint = new TextPaint(1);
-                this.mHintTextPaint.setColor(-1);
+                TextPaint textPaint = new TextPaint(1);
+                this.mHintTextPaint = textPaint;
+                textPaint.setColor(-1);
                 this.mHintTextPaint.setShadowLayer(3.0f, 2.0f, 2.0f, -16777216);
             }
 
@@ -207,8 +212,9 @@ public class TaskStack {
                     }
                 }
                 if (!arrayList.isEmpty()) {
-                    this.mDockAreaOverlayAnimator = new AnimatorSet();
-                    this.mDockAreaOverlayAnimator.playTogether(arrayList);
+                    AnimatorSet animatorSet2 = new AnimatorSet();
+                    this.mDockAreaOverlayAnimator = animatorSet2;
+                    animatorSet2.playTogether(arrayList);
                     this.mDockAreaOverlayAnimator.start();
                 }
             }
@@ -253,16 +259,15 @@ public class TaskStack {
 
         public Rect getDockedTaskStackBounds(Rect rect, int i, int i2, int i3, Rect rect2, TaskStackLayoutAlgorithm taskStackLayoutAlgorithm, Resources resources, Rect rect3) {
             int i4;
-            boolean z;
             int i5;
             int i6;
             Rect rect4 = rect2;
             int i7 = 0;
+            boolean z = true;
             if (resources.getConfiguration().orientation == 1) {
                 i6 = i;
-                i4 = i3;
-                z = true;
                 i5 = i2;
+                i4 = i3;
             } else {
                 i6 = i;
                 i5 = i2;
@@ -280,7 +285,9 @@ public class TaskStack {
     }
 
     public TaskStack() {
-        this.mStackTaskList.setFilter(new TaskFilter() {
+        FilteredTaskList filteredTaskList = new FilteredTaskList();
+        this.mStackTaskList = filteredTaskList;
+        filteredTaskList.setFilter(new TaskFilter(this) {
             public boolean acceptTask(SparseArray<Task> sparseArray, Task task, int i) {
                 return task.isStackTask;
             }

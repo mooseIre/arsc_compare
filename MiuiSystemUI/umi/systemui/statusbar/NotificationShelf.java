@@ -33,7 +33,6 @@ public class NotificationShelf extends ActivatableNotificationView implements Vi
     private int mIconAppearTopPadding;
     private boolean mInteractive;
     private int mMaxLayoutHeight;
-    private float mMaxShelfEnd;
     private boolean mNoAnimationsInThisFrame;
     private int mNotGoneIndex;
     private float mOpenedAmount;
@@ -44,10 +43,8 @@ public class NotificationShelf extends ActivatableNotificationView implements Vi
     public NotificationIconContainer mShelfIcons;
     private ShelfState mShelfState;
     private int mStatusBarHeight;
-    private int mStatusBarPaddingStart;
     private int mStatusBarState;
     private int[] mTmp = new int[2];
-    private ViewInvertHelper mViewInvertHelper;
 
     public boolean hasNoContentHeight() {
         return true;
@@ -57,6 +54,9 @@ public class NotificationShelf extends ActivatableNotificationView implements Vi
         return false;
     }
 
+    public void setMaxShelfEnd(float f) {
+    }
+
     public NotificationShelf(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
     }
@@ -64,14 +64,15 @@ public class NotificationShelf extends ActivatableNotificationView implements Vi
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mShelfIcons = (NotificationIconContainer) findViewById(R.id.content);
-        this.mShelfIcons.setClipChildren(false);
+        NotificationIconContainer notificationIconContainer = (NotificationIconContainer) findViewById(R.id.content);
+        this.mShelfIcons = notificationIconContainer;
+        notificationIconContainer.setClipChildren(false);
         this.mShelfIcons.setClipToPadding(false);
         setClipToActualHeight(false);
         setClipChildren(false);
         setClipToPadding(false);
         this.mShelfIcons.setShowAllIcons(false);
-        this.mViewInvertHelper = new ViewInvertHelper((View) this.mShelfIcons, 700);
+        new ViewInvertHelper((View) this.mShelfIcons, 700);
         initDimens();
         this.mShelfState = (ShelfState) getViewState();
     }
@@ -84,7 +85,7 @@ public class NotificationShelf extends ActivatableNotificationView implements Vi
     private void initDimens() {
         this.mIconAppearTopPadding = getResources().getDimensionPixelSize(R.dimen.notification_icon_appear_padding);
         this.mStatusBarHeight = getResources().getDimensionPixelOffset(R.dimen.status_bar_height);
-        this.mStatusBarPaddingStart = getResources().getDimensionPixelOffset(R.dimen.status_bar_padding_start);
+        getResources().getDimensionPixelOffset(R.dimen.status_bar_padding_start);
         this.mPaddingBetweenElements = getResources().getDimensionPixelSize(R.dimen.notification_divider_height);
         ViewGroup.LayoutParams layoutParams = getLayoutParams();
         layoutParams.height = getResources().getDimensionPixelOffset(R.dimen.notification_shelf_height);
@@ -405,16 +406,20 @@ public class NotificationShelf extends ActivatableNotificationView implements Vi
         L_0x01a2:
             r0 = r1
         L_0x01a3:
-            if (r0 != 0) goto L_0x01a7
+            if (r0 != 0) goto L_0x01aa
             if (r16 == 0) goto L_0x01a8
-        L_0x01a7:
-            r1 = 1
+            goto L_0x01aa
         L_0x01a8:
-            r7.setHideBackground(r1)
+            r14 = r1
+            goto L_0x01ab
+        L_0x01aa:
+            r14 = 1
+        L_0x01ab:
+            r7.setHideBackground(r14)
             int r0 = r7.mNotGoneIndex
-            if (r0 != r10) goto L_0x01b1
+            if (r0 != r10) goto L_0x01b4
             r7.mNotGoneIndex = r5
-        L_0x01b1:
+        L_0x01b4:
             return
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.NotificationShelf.updateAppearance():void");
@@ -466,8 +471,9 @@ public class NotificationShelf extends ActivatableNotificationView implements Vi
         if (iconState != null) {
             float f5 = f > 0.5f ? 1.0f : 0.0f;
             if (f5 == f2) {
-                iconState.noAnimations = z2 || z3;
-                iconState.useFullTransitionAmount = iconState.noAnimations || (!ICON_ANMATIONS_WHILE_SCROLLING && f2 == 0.0f && z);
+                boolean z5 = z2 || z3;
+                iconState.noAnimations = z5;
+                iconState.useFullTransitionAmount = z5 || (!ICON_ANMATIONS_WHILE_SCROLLING && f2 == 0.0f && z);
                 iconState.useLinearTransitionAmount = !ICON_ANMATIONS_WHILE_SCROLLING && f2 == 0.0f && !this.mAmbientState.isExpansionChanging();
                 iconState.translateContent = (((float) this.mMaxLayoutHeight) - getTranslationY()) - ((float) getIntrinsicHeight()) > 0.0f;
             }
@@ -485,7 +491,7 @@ public class NotificationShelf extends ActivatableNotificationView implements Vi
             iconState.iconAppearAmount = (!USE_ANIMATIONS_WHEN_OPENING || iconState.useFullTransitionAmount) ? f2 : f4;
             iconState.clampedAppearAmount = f5;
             if (!expandableNotificationRow.isAboveShelf() && !z4) {
-                boolean z5 = iconState.translateContent;
+                boolean z6 = iconState.translateContent;
             }
             ExpandableNotificationRow expandableNotificationRow2 = expandableNotificationRow;
             expandableNotificationRow.setContentTransformationAmount(0.0f, false);
@@ -514,7 +520,7 @@ public class NotificationShelf extends ActivatableNotificationView implements Vi
         }
         if (iconState != null) {
             iconState.scaleX = 1.0f;
-            iconState.scaleY = iconState.scaleX;
+            iconState.scaleY = 1.0f;
             iconState.hidden = true;
             iconState.alpha = f;
             iconState.yTranslation = interpolate;
@@ -621,7 +627,7 @@ public class NotificationShelf extends ActivatableNotificationView implements Vi
 
     public void setCollapsedIcons(NotificationIconContainer notificationIconContainer) {
         this.mCollapsedIcons = notificationIconContainer;
-        this.mCollapsedIcons.addOnLayoutChangeListener(this);
+        notificationIconContainer.addOnLayoutChangeListener(this);
     }
 
     public void setStatusBarState(int i) {
@@ -633,8 +639,9 @@ public class NotificationShelf extends ActivatableNotificationView implements Vi
 
     private void updateInteractiveness() {
         int i = 1;
-        this.mInteractive = this.mStatusBarState == 1 && this.mHasItemsInStableShelf && !this.mDark;
-        setClickable(this.mInteractive);
+        boolean z = this.mStatusBarState == 1 && this.mHasItemsInStableShelf && !this.mDark;
+        this.mInteractive = z;
+        setClickable(z);
         setFocusable(this.mInteractive);
         if (!this.mInteractive) {
             i = 4;
@@ -645,10 +652,6 @@ public class NotificationShelf extends ActivatableNotificationView implements Vi
     /* access modifiers changed from: protected */
     public boolean isInteractive() {
         return this.mInteractive;
-    }
-
-    public void setMaxShelfEnd(float f) {
-        this.mMaxShelfEnd = f;
     }
 
     public void setAnimationsEnabled(boolean z) {

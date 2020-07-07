@@ -59,10 +59,9 @@ public class AntiMistakeTouchView extends View implements ValueAnimator.Animator
         if (DEBUG) {
             Log.i("AntiMistakeTouchView", "AntiMistakeTouchView: " + this.mDrawableWidth + " " + this.mDrawableHeight);
         }
-        int i2 = this.mDrawableHeight;
-        this.mTopMargin = i2;
-        int i3 = this.mTopMargin;
-        this.mRect = new Rect(0, i3, this.mDrawableWidth, i2 + i3);
+        this.mTopMargin = this.mDrawableHeight;
+        int i2 = this.mTopMargin;
+        this.mRect = new Rect(0, i2, this.mDrawableWidth, this.mDrawableHeight + i2);
         setVisibility(8);
         setEnabled(false);
         setClickable(false);
@@ -82,8 +81,9 @@ public class AntiMistakeTouchView extends View implements ValueAnimator.Animator
     }
 
     private void initAnimator() {
-        this.mSlideAnimator = new ValueAnimator();
-        this.mSlideAnimator.setDuration(200);
+        ValueAnimator valueAnimator = new ValueAnimator();
+        this.mSlideAnimator = valueAnimator;
+        valueAnimator.setDuration(200);
         this.mSlideAnimator.addUpdateListener(this);
     }
 

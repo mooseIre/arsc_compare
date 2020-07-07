@@ -27,7 +27,6 @@ import java.util.Iterator;
 import java.util.List;
 
 public class PipMenuActivityController {
-    private IActivityManager mActivityManager;
     private ParceledListSlice mAppActions;
     private Context mContext;
     /* access modifiers changed from: private */
@@ -119,7 +118,6 @@ public class PipMenuActivityController {
 
     public PipMenuActivityController(Context context, IActivityManager iActivityManager, PipMediaController pipMediaController, InputConsumerController inputConsumerController) {
         this.mContext = context;
-        this.mActivityManager = iActivityManager;
         this.mMediaController = pipMediaController;
         this.mInputConsumerController = inputConsumerController;
         RecentsEventBus.getDefault().register(this);
@@ -308,8 +306,9 @@ public class PipMenuActivityController {
 
     public final void onBusEvent(HidePipMenuEvent hidePipMenuEvent) {
         if (this.mStartActivityRequested) {
-            this.mOnAttachDecrementTrigger = hidePipMenuEvent.getAnimationTrigger();
-            this.mOnAttachDecrementTrigger.increment();
+            ReferenceCountedTrigger animationTrigger = hidePipMenuEvent.getAnimationTrigger();
+            this.mOnAttachDecrementTrigger = animationTrigger;
+            animationTrigger.increment();
         }
     }
 

@@ -31,31 +31,31 @@ public class RecentsPushEventHelper {
 
     public static void sendTaskStackChangedEvent() {
         BackgroundThread.getHandler().post(new Runnable() {
-            /* JADX WARNING: Removed duplicated region for block: B:39:0x007e  */
-            /* JADX WARNING: Removed duplicated region for block: B:42:0x0098  */
-            /* JADX WARNING: Removed duplicated region for block: B:45:? A[RETURN, SYNTHETIC] */
+            /* JADX WARNING: Removed duplicated region for block: B:40:0x0083  */
+            /* JADX WARNING: Removed duplicated region for block: B:43:0x009d  */
+            /* JADX WARNING: Removed duplicated region for block: B:46:? A[RETURN, SYNTHETIC] */
             /* Code decompiled incorrectly, please refer to instructions dump. */
             public void run() {
                 /*
-                    r5 = this;
-                    com.android.systemui.recents.misc.SystemServicesProxy r5 = com.android.systemui.recents.Recents.getSystemServices()
-                    boolean r5 = r5.hasDockedTask()
-                    if (r5 == 0) goto L_0x00b1
-                    r5 = -1
+                    r6 = this;
+                    com.android.systemui.recents.misc.SystemServicesProxy r6 = com.android.systemui.recents.Recents.getSystemServices()
+                    boolean r6 = r6.hasDockedTask()
+                    if (r6 == 0) goto L_0x00b6
+                    r6 = -1
                     r0 = 3
                     r1 = 0
                     r2 = 0
-                    android.app.ActivityManager$StackInfo r0 = android.app.ActivityManagerCompat.getStackInfo(r0, r0, r1)     // Catch:{ Exception -> 0x0068 }
+                    android.app.ActivityManager$StackInfo r0 = android.app.ActivityManagerCompat.getStackInfo(r0, r0, r1)     // Catch:{ Exception -> 0x006c }
                     if (r0 == 0) goto L_0x0017
-                    android.content.ComponentName r3 = r0.topActivity     // Catch:{ Exception -> 0x0068 }
+                    android.content.ComponentName r3 = r0.topActivity     // Catch:{ Exception -> 0x006c }
                     goto L_0x0018
                 L_0x0017:
                     r3 = r2
                 L_0x0018:
                     if (r3 == 0) goto L_0x0023
-                    boolean r0 = r0.visible     // Catch:{ Exception -> 0x0068 }
+                    boolean r0 = r0.visible     // Catch:{ Exception -> 0x006c }
                     if (r0 == 0) goto L_0x0023
-                    java.lang.String r0 = r3.getPackageName()     // Catch:{ Exception -> 0x0068 }
+                    java.lang.String r0 = r3.getPackageName()     // Catch:{ Exception -> 0x006c }
                     goto L_0x0024
                 L_0x0023:
                     r0 = r2
@@ -74,9 +74,9 @@ public class RecentsPushEventHelper {
                     java.lang.String r2 = r4.getPackageName()     // Catch:{ Exception -> 0x0066 }
                     com.android.systemui.recents.misc.SystemServicesProxy r1 = com.android.systemui.recents.Recents.getSystemServices()     // Catch:{ Exception -> 0x0066 }
                     android.content.pm.ActivityInfo r1 = r1.getActivityInfo(r4)     // Catch:{ Exception -> 0x0066 }
-                    if (r1 == 0) goto L_0x0072
-                    int r5 = r1.resizeMode     // Catch:{ Exception -> 0x0066 }
-                    goto L_0x0072
+                    if (r1 == 0) goto L_0x0077
+                    int r6 = r1.resizeMode     // Catch:{ Exception -> 0x0066 }
+                    goto L_0x0077
                 L_0x0046:
                     r3 = 2
                     android.app.ActivityManager$StackInfo r1 = android.app.ActivityManagerCompat.getStackInfo(r1, r1, r3)     // Catch:{ Exception -> 0x0066 }
@@ -86,50 +86,55 @@ public class RecentsPushEventHelper {
                 L_0x0050:
                     r3 = r2
                 L_0x0051:
-                    if (r3 == 0) goto L_0x0072
+                    if (r3 == 0) goto L_0x0077
                     boolean r1 = r1.visible     // Catch:{ Exception -> 0x0066 }
-                    if (r1 == 0) goto L_0x0072
+                    if (r1 == 0) goto L_0x0077
                     java.lang.String r2 = r3.getPackageName()     // Catch:{ Exception -> 0x0066 }
                     com.android.systemui.recents.misc.SystemServicesProxy r1 = com.android.systemui.recents.Recents.getSystemServices()     // Catch:{ Exception -> 0x0066 }
                     android.content.pm.ActivityInfo r1 = r1.getActivityInfo(r3)     // Catch:{ Exception -> 0x0066 }
-                    int r5 = r1.resizeMode     // Catch:{ Exception -> 0x0066 }
-                    goto L_0x0072
+                    int r6 = r1.resizeMode     // Catch:{ Exception -> 0x0066 }
+                    goto L_0x0077
                 L_0x0066:
                     r1 = move-exception
-                    goto L_0x006b
-                L_0x0068:
+                    r5 = r2
+                    r2 = r0
+                    r0 = r1
+                    r1 = r5
+                    goto L_0x006e
+                L_0x006c:
                     r0 = move-exception
-                    r1 = r0
-                    r0 = r2
-                L_0x006b:
+                    r1 = r2
+                L_0x006e:
                     java.lang.String r3 = "RecentsPushEventHelper"
                     java.lang.String r4 = "sendTaskStackChangedEvent error"
-                    android.util.Log.e(r3, r4, r1)
-                L_0x0072:
+                    android.util.Log.e(r3, r4, r0)
+                    r0 = r2
+                    r2 = r1
+                L_0x0077:
                     java.lang.String r1 = com.android.systemui.recents.misc.RecentsPushEventHelper.mLastTopStackPkg
                     boolean r1 = android.text.TextUtils.equals(r1, r0)
                     java.lang.String r3 = "multi_window_packageName"
-                    if (r1 != 0) goto L_0x008e
+                    if (r1 != 0) goto L_0x0093
                     java.lang.String unused = com.android.systemui.recents.misc.RecentsPushEventHelper.mLastTopStackPkg = r0
                     com.xiaomi.stat.MiStatParams r1 = new com.xiaomi.stat.MiStatParams
                     r1.<init>()
                     r1.putString(r3, r0)
                     java.lang.String r0 = "multi_window_topTaskChanged"
                     com.android.systemui.recents.misc.RecentsPushEventHelper.sendEvent(r0, r1)
-                L_0x008e:
+                L_0x0093:
                     java.lang.String r0 = com.android.systemui.recents.misc.RecentsPushEventHelper.mLastBottomStackPkg
                     boolean r0 = android.text.TextUtils.equals(r0, r2)
-                    if (r0 != 0) goto L_0x00b1
+                    if (r0 != 0) goto L_0x00b6
                     java.lang.String unused = com.android.systemui.recents.misc.RecentsPushEventHelper.mLastBottomStackPkg = r2
                     com.xiaomi.stat.MiStatParams r0 = new com.xiaomi.stat.MiStatParams
                     r0.<init>()
                     r0.putString(r3, r2)
-                    java.lang.String r5 = android.content.pm.ActivityInfo.resizeModeToString(r5)
+                    java.lang.String r6 = android.content.pm.ActivityInfo.resizeModeToString(r6)
                     java.lang.String r1 = "multi_window_resizeMode"
-                    r0.putString(r1, r5)
-                    java.lang.String r5 = "multi_window_bottomTaskChanged"
-                    com.android.systemui.recents.misc.RecentsPushEventHelper.sendEvent(r5, r0)
-                L_0x00b1:
+                    r0.putString(r1, r6)
+                    java.lang.String r6 = "multi_window_bottomTaskChanged"
+                    com.android.systemui.recents.misc.RecentsPushEventHelper.sendEvent(r6, r0)
+                L_0x00b6:
                     return
                 */
                 throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.recents.misc.RecentsPushEventHelper.AnonymousClass2.run():void");

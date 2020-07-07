@@ -9,10 +9,12 @@ import java.util.Map;
 
 public class ScenarioTrackUtil {
     private static final String TAG = "ScenarioTrackUtil";
-    private static E2EScenarioSettings sScenarioSettings = new E2EScenarioSettings();
+    private static E2EScenarioSettings sScenarioSettings;
 
     static {
-        sScenarioSettings.setStatisticsMode(7);
+        E2EScenarioSettings e2EScenarioSettings = new E2EScenarioSettings();
+        sScenarioSettings = e2EScenarioSettings;
+        e2EScenarioSettings.setStatisticsMode(7);
         sScenarioSettings.setHistoryLimitPerDay(200);
     }
 

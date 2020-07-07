@@ -22,7 +22,6 @@ import miui.view.MiuiHapticFeedbackConstants;
 public class PipNotificationController {
     private static final String NOTIFICATION_TAG = "com.android.systemui.pip.phone.PipNotificationController";
     private static final String TAG = "PipNotificationController";
-    private IActivityManager mActivityManager;
     private AppOpsManager.OnOpChangedListener mAppOpsChangedListener = new AppOpsManager.OnOpChangedListener() {
         public void onOpChanged(String str, String str2) {
             try {
@@ -45,7 +44,6 @@ public class PipNotificationController {
 
     public PipNotificationController(Context context, IActivityManager iActivityManager, PipMotionHelper pipMotionHelper) {
         this.mContext = context;
-        this.mActivityManager = iActivityManager;
         this.mAppOpsManager = (AppOpsManager) context.getSystemService("appops");
         this.mNotificationManager = NotificationManager.from(context);
         this.mMotionHelper = pipMotionHelper;
@@ -99,8 +97,9 @@ public class PipNotificationController {
             String string = this.mContext.getString(R.string.pip_notification_message, new Object[]{charSequence});
             Intent intent = new Intent("android.settings.PICTURE_IN_PICTURE_SETTINGS", Uri.fromParts("package", str, (String) null));
             intent.setFlags(268468224);
-            if (applicationInfo.icon != 0) {
-                icon = Icon.createWithResource(str, applicationInfo.icon);
+            int i = applicationInfo.icon;
+            if (i != 0) {
+                icon = Icon.createWithResource(str, i);
             } else {
                 icon = Icon.createWithResource(Resources.getSystem(), 17301651);
             }

@@ -30,7 +30,7 @@ public class AssistDisclosure {
     public AssistDisclosure(Context context, Handler handler) {
         this.mContext = context;
         this.mHandler = handler;
-        this.mWm = (WindowManager) this.mContext.getSystemService(WindowManager.class);
+        this.mWm = (WindowManager) context.getSystemService(WindowManager.class);
     }
 
     public void postShow() {
@@ -61,7 +61,7 @@ public class AssistDisclosure {
 
     private class AssistDisclosureView extends View implements ValueAnimator.AnimatorUpdateListener {
         private int mAlpha = 0;
-        private final ValueAnimator mAlphaInAnimator = ValueAnimator.ofInt(new int[]{0, 222}).setDuration(400);
+        private final ValueAnimator mAlphaInAnimator;
         private final ValueAnimator mAlphaOutAnimator;
         private final AnimatorSet mAnimator;
         private final Paint mPaint = new Paint();
@@ -71,13 +71,17 @@ public class AssistDisclosure {
 
         public AssistDisclosureView(Context context) {
             super(context);
-            this.mAlphaInAnimator.addUpdateListener(this);
+            ValueAnimator duration = ValueAnimator.ofInt(new int[]{0, 222}).setDuration(400);
+            this.mAlphaInAnimator = duration;
+            duration.addUpdateListener(this);
             this.mAlphaInAnimator.setInterpolator(Interpolators.CUSTOM_40_40);
-            this.mAlphaOutAnimator = ValueAnimator.ofInt(new int[]{222, 0}).setDuration(300);
-            this.mAlphaOutAnimator.addUpdateListener(this);
+            ValueAnimator duration2 = ValueAnimator.ofInt(new int[]{222, 0}).setDuration(300);
+            this.mAlphaOutAnimator = duration2;
+            duration2.addUpdateListener(this);
             this.mAlphaOutAnimator.setInterpolator(Interpolators.CUSTOM_40_40);
-            this.mAnimator = new AnimatorSet();
-            this.mAnimator.play(this.mAlphaInAnimator).before(this.mAlphaOutAnimator);
+            AnimatorSet animatorSet = new AnimatorSet();
+            this.mAnimator = animatorSet;
+            animatorSet.play(this.mAlphaInAnimator).before(this.mAlphaOutAnimator);
             this.mAnimator.addListener(new AnimatorListenerAdapter(AssistDisclosure.this) {
                 boolean mCancelled;
 

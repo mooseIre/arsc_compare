@@ -120,6 +120,7 @@ public abstract class BiometricDialogView extends LinearLayout {
         this.mDevicePolicyManager = (DevicePolicyManager) this.mContext.getSystemService(DevicePolicyManager.class);
         this.mAnimationTranslationOffset = getResources().getDimension(R.dimen.biometric_dialog_animation_translation_offset);
         TypedArray obtainStyledAttributes = getContext().obtainStyledAttributes(new int[]{16844099, 16842808});
+        int i = 0;
         this.mErrorColor = obtainStyledAttributes.getColor(0, 0);
         this.mTextColor = obtainStyledAttributes.getColor(1, 0);
         obtainStyledAttributes.recycle();
@@ -127,8 +128,9 @@ public abstract class BiometricDialogView extends LinearLayout {
         this.mWindowManager.getDefaultDisplay().getMetrics(displayMetrics);
         this.mDialogWidth = (float) Math.min(displayMetrics.widthPixels, displayMetrics.heightPixels);
         this.mDialogHeight = (float) displayMetrics.heightPixels;
-        this.mLayout = (ViewGroup) LayoutInflater.from(getContext()).inflate(R.layout.biometric_dialog, this, false);
-        addView(this.mLayout);
+        ViewGroup viewGroup = (ViewGroup) LayoutInflater.from(getContext()).inflate(R.layout.biometric_dialog, this, false);
+        this.mLayout = viewGroup;
+        addView(viewGroup);
         this.mLayout.setOnKeyListener(new View.OnKeyListener() {
             boolean downPressed = false;
 
@@ -164,7 +166,7 @@ public abstract class BiometricDialogView extends LinearLayout {
         if (MiuiKeyguardUtils.isGxzwSensor()) {
             Rect fodPosition = MiuiGxzwManager.getFodPosition(getContext());
             int height = ((((int) this.mDialogHeight) - fodPosition.top) + (fodPosition.height() / 2)) - getResources().getDimensionPixelOffset(R.dimen.fingerprint_dialog_button_container_height);
-            layoutParams.height = height <= 0 ? 0 : height;
+            layoutParams.height = height > 0 ? height : i;
             this.mBiometricIcon.setVisibility(8);
         } else {
             layoutParams.height = 0;
@@ -194,10 +196,14 @@ public abstract class BiometricDialogView extends LinearLayout {
         this.mLayout.requestFocus();
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$new$0 */
     public /* synthetic */ void lambda$new$0$BiometricDialogView(View view) {
         this.mCallback.onNegativePressed();
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$new$2 */
     public /* synthetic */ void lambda$new$2$BiometricDialogView(View view) {
         updateState(4);
         this.mHandler.postDelayed(new Runnable() {
@@ -207,10 +213,14 @@ public abstract class BiometricDialogView extends LinearLayout {
         }, (long) getDelayAfterAuthenticatedDurationMs());
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$new$1 */
     public /* synthetic */ void lambda$new$1$BiometricDialogView() {
         this.mCallback.onPositivePressed();
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$new$3 */
     public /* synthetic */ void lambda$new$3$BiometricDialogView(View view) {
         showTryAgainButton(false);
         handleClearMessage(false);
@@ -299,6 +309,8 @@ public abstract class BiometricDialogView extends LinearLayout {
         });
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$setDismissesDialog$4 */
     public /* synthetic */ boolean lambda$setDismissesDialog$4$BiometricDialogView(View view, MotionEvent motionEvent) {
         if (this.mLastState == 4 || !shouldGrayAreaDismissDialog()) {
             return true;
@@ -308,7 +320,6 @@ public abstract class BiometricDialogView extends LinearLayout {
     }
 
     public void startDismiss() {
-        this.mAnimatingAway = true;
         final AnonymousClass4 r0 = new Runnable() {
             public void run() {
                 BiometricDialogView.this.mWindowManager.removeView(BiometricDialogView.this);
@@ -330,7 +341,6 @@ public abstract class BiometricDialogView extends LinearLayout {
         this.mLayout.animate().cancel();
         this.mDialog.animate().cancel();
         this.mWindowManager.removeView(this);
-        this.mAnimatingAway = false;
         this.mWasForceRemoved = true;
     }
 
@@ -375,7 +385,7 @@ public abstract class BiometricDialogView extends LinearLayout {
 
     public void clearTemporaryMessage() {
         this.mHandler.removeMessages(1);
-        this.mHandler.obtainMessage(1, false).sendToTarget();
+        this.mHandler.obtainMessage(1, Boolean.FALSE).sendToTarget();
     }
 
     public void showHelpMessage(String str, boolean z) {

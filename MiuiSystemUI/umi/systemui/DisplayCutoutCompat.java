@@ -41,11 +41,13 @@ public class DisplayCutoutCompat {
             min = Math.min(min, safeInsetLeft);
         }
         int safeInsetRight = displayCutout.getSafeInsetRight();
-        int min2 = safeInsetRight > 0 ? Math.min(min, safeInsetRight) : min;
-        if (min2 == Integer.MAX_VALUE) {
+        if (safeInsetRight > 0) {
+            min = Math.min(min, safeInsetRight);
+        }
+        if (min == Integer.MAX_VALUE) {
             return 0;
         }
-        return min2;
+        return min;
     }
 
     public static void boundsFromDirection(View view, int i, Rect rect) {

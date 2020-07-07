@@ -10,8 +10,9 @@ public class Icons {
 
     public static int get(Integer num, boolean z) {
         if (sMapping == null) {
-            sMapping = new SparseArray<>();
-            sMapping.put(R.drawable.stat_sys_alarm, Integer.valueOf(R.drawable.stat_sys_alarm_darkmode));
+            SparseArray<Integer> sparseArray = new SparseArray<>();
+            sMapping = sparseArray;
+            sparseArray.put(R.drawable.stat_sys_alarm, Integer.valueOf(R.drawable.stat_sys_alarm_darkmode));
             sMapping.put(R.drawable.stat_sys_data_bluetooth, Integer.valueOf(R.drawable.stat_sys_data_bluetooth_darkmode));
             sMapping.put(R.drawable.stat_sys_data_bluetooth_connected, Integer.valueOf(R.drawable.stat_sys_data_bluetooth_connected_darkmode));
             sMapping.put(R.drawable.stat_sys_data_bluetooth_in, Integer.valueOf(R.drawable.stat_sys_data_bluetooth_in_darkmode));
@@ -83,8 +84,6 @@ public class Icons {
             sMapping.put(R.drawable.stat_sys_battery_charging, Integer.valueOf(R.drawable.stat_sys_battery_charging_darkmode));
             sMapping.put(R.drawable.stat_sys_quick_charging, Integer.valueOf(R.drawable.stat_sys_quick_charging_darkmode));
             sMapping.put(R.drawable.stat_sys_signal_4g_lte, Integer.valueOf(R.drawable.stat_sys_signal_4g_lte_darkmode));
-            sMapping.put(R.drawable.signal_5g_off, Integer.valueOf(R.drawable.signal_5g_off_darkmode));
-            sMapping.put(R.drawable.signal_5g_on, Integer.valueOf(R.drawable.signal_5g_on_darkmode));
             sMapping.put(R.drawable.battery_meter_charging, Integer.valueOf(R.drawable.battery_meter_charging_dark));
             sMapping.put(R.drawable.battery_meter_quick_charging, Integer.valueOf(R.drawable.battery_meter_quick_charging_dark));
             sMapping.put(R.drawable.stat_sys_sos, Integer.valueOf(R.drawable.stat_sys_sos_darkmode));
@@ -121,8 +120,9 @@ public class Icons {
 
     public static int getSignalHalfId(Integer num) {
         if (sSignalHalfMapping == null) {
-            sSignalHalfMapping = new SparseArray<>();
-            sSignalHalfMapping.put(R.drawable.stat_sys_signal_0, Integer.valueOf(R.drawable.stat_sys_signal_0_half));
+            SparseArray<Integer> sparseArray = new SparseArray<>();
+            sSignalHalfMapping = sparseArray;
+            sparseArray.put(R.drawable.stat_sys_signal_0, Integer.valueOf(R.drawable.stat_sys_signal_0_half));
             sSignalHalfMapping.put(R.drawable.stat_sys_signal_1, Integer.valueOf(R.drawable.stat_sys_signal_1_half));
             sSignalHalfMapping.put(R.drawable.stat_sys_signal_2, Integer.valueOf(R.drawable.stat_sys_signal_2_half));
             sSignalHalfMapping.put(R.drawable.stat_sys_signal_3, Integer.valueOf(R.drawable.stat_sys_signal_3_half));
@@ -142,8 +142,9 @@ public class Icons {
             return num.intValue();
         }
         if (sQSIconMapping == null) {
-            sQSIconMapping = new SparseArray<>();
-            sQSIconMapping.put(R.drawable.ic_signal_airplane_enable, Integer.valueOf(R.drawable.ic_cc_qs_airplane_on));
+            SparseArray<Integer> sparseArray = new SparseArray<>();
+            sQSIconMapping = sparseArray;
+            sparseArray.put(R.drawable.ic_signal_airplane_enable, Integer.valueOf(R.drawable.ic_cc_qs_airplane_on));
             sQSIconMapping.put(R.drawable.ic_signal_airplane_disable, Integer.valueOf(R.drawable.ic_cc_qs_airplane_off));
             sQSIconMapping.put(R.drawable.ic_qs_brightness_auto, Integer.valueOf(R.drawable.ic_cc_qs_auto_brightness_on));
             sQSIconMapping.put(R.drawable.ic_qs_brightness_manual, Integer.valueOf(R.drawable.ic_cc_qs_auto_brightness_off));

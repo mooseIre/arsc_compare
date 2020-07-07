@@ -17,6 +17,8 @@ public class MediaNotificationProcessor {
     private float[] mFilteredBackgroundHsl;
     private final Context mPackageContext;
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$new$0 */
     public /* synthetic */ boolean lambda$new$0$MediaNotificationProcessor(int i, float[] fArr) {
         return !isWhiteOrBlack(fArr);
     }
@@ -81,6 +83,8 @@ public class MediaNotificationProcessor {
         }
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$processNotification$1 */
     public /* synthetic */ boolean lambda$processNotification$1$MediaNotificationProcessor(int i, float[] fArr) {
         float abs = Math.abs(fArr[0] - this.mFilteredBackgroundHsl[0]);
         return abs > 10.0f && abs < 350.0f;

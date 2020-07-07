@@ -31,7 +31,6 @@ public class ScrimController implements ViewTreeObserver.OnPreDrawListener, OnHe
     public boolean mAodWaitUnlocking;
     protected boolean mBouncerIsKeyguard = false;
     protected boolean mBouncerShowing;
-    private final Context mContext;
     private float mCurrentBehindAlpha = -1.0f;
     private float mCurrentHeadsUpAlpha = -1.0f;
     private float mCurrentInFrontAlpha = -1.0f;
@@ -90,11 +89,11 @@ public class ScrimController implements ViewTreeObserver.OnPreDrawListener, OnHe
         this.mScrimBehind = scrimView;
         this.mScrimInFront = scrimView2;
         this.mHeadsUpScrim = view;
-        this.mContext = scrimView.getContext();
-        this.mUnlockMethodCache = UnlockMethodCache.getInstance(this.mContext);
-        this.mKeyguardUpdateMonitor = KeyguardUpdateMonitor.getInstance(this.mContext);
+        Context context = scrimView.getContext();
+        this.mUnlockMethodCache = UnlockMethodCache.getInstance(context);
+        this.mKeyguardUpdateMonitor = KeyguardUpdateMonitor.getInstance(context);
         this.mLightBarController = lightBarController;
-        this.mScrimBehindAlpha = this.mContext.getResources().getFloat(R.dimen.scrim_behind_alpha);
+        this.mScrimBehindAlpha = context.getResources().getFloat(R.dimen.scrim_behind_alpha);
         updateHeadsUpScrim(false);
         updateScrims();
     }
@@ -302,7 +301,7 @@ public class ScrimController implements ViewTreeObserver.OnPreDrawListener, OnHe
 
     /* access modifiers changed from: protected */
     public float getCurrentScrimAlpha(View view) {
-        if (this.mSupportAmbientMode && this.mAodWaitUnlocking) {
+        if (this.mSupportAmbientMode) {
             return 0.0f;
         }
         if (view == this.mScrimBehind) {
@@ -318,7 +317,7 @@ public class ScrimController implements ViewTreeObserver.OnPreDrawListener, OnHe
     public void setCurrentScrimAlpha(View view, float f) {
         if (view == this.mScrimBehind) {
             this.mCurrentBehindAlpha = f;
-            this.mLightBarController.setScrimAlpha(this.mCurrentBehindAlpha);
+            this.mLightBarController.setScrimAlpha(f);
         } else if (view == this.mScrimInFront) {
             this.mCurrentInFrontAlpha = f;
         } else {

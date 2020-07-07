@@ -77,8 +77,9 @@ public class GarbageMonitor {
 
         public void start() {
             if (ENABLED) {
-                this.mGarbageMonitor = (GarbageMonitor) Dependency.get(GarbageMonitor.class);
-                this.mGarbageMonitor.start();
+                GarbageMonitor garbageMonitor = (GarbageMonitor) Dependency.get(GarbageMonitor.class);
+                this.mGarbageMonitor = garbageMonitor;
+                garbageMonitor.start();
             }
         }
     }

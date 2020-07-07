@@ -16,7 +16,7 @@ public class DismissCallbackRegistry {
     public void notifyDismissCancelled() {
         for (int size = this.mDismissCallbacks.size() - 1; size >= 0; size--) {
             final DismissCallbackWrapper dismissCallbackWrapper = this.mDismissCallbacks.get(size);
-            this.mUiOffloadThread.submit(new Runnable() {
+            this.mUiOffloadThread.submit(new Runnable(this) {
                 public void run() {
                     dismissCallbackWrapper.notifyDismissCancelled();
                 }
@@ -28,7 +28,7 @@ public class DismissCallbackRegistry {
     public void notifyDismissSucceeded() {
         for (int size = this.mDismissCallbacks.size() - 1; size >= 0; size--) {
             final DismissCallbackWrapper dismissCallbackWrapper = this.mDismissCallbacks.get(size);
-            this.mUiOffloadThread.submit(new Runnable() {
+            this.mUiOffloadThread.submit(new Runnable(this) {
                 public void run() {
                     dismissCallbackWrapper.notifyDismissSucceeded();
                 }

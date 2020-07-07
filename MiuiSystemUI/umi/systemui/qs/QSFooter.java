@@ -50,7 +50,6 @@ public class QSFooter extends FrameLayout implements View.OnClickListener, UserI
     private ImageView mMultiUserAvatar;
     protected MultiUserSwitch mMultiUserSwitch;
     private AlarmManager.AlarmClockInfo mNextAlarm;
-    private NextAlarmController mNextAlarmController;
     /* access modifiers changed from: private */
     public QSPanel mQsPanel;
     protected TouchAnimator mSettingsAlpha;
@@ -114,9 +113,10 @@ public class QSFooter extends FrameLayout implements View.OnClickListener, UserI
         super.onFinishInflate();
         Resources resources = getResources();
         this.mShowEditIcon = resources.getBoolean(R.bool.config_showQuickSettingsEditingIcon);
-        this.mEdit = findViewById(16908291);
+        View findViewById = findViewById(16908291);
+        this.mEdit = findViewById;
         int i = 0;
-        this.mEdit.setVisibility(this.mShowEditIcon ? 0 : 8);
+        findViewById.setVisibility(this.mShowEditIcon ? 0 : 8);
         if (this.mShowEditIcon) {
             findViewById(16908291).setOnClickListener(new View.OnClickListener() {
                 public void onClick(final View view) {
@@ -130,8 +130,8 @@ public class QSFooter extends FrameLayout implements View.OnClickListener, UserI
         }
         this.mDateTimeGroup = findViewById(R.id.date_time_alarm_group);
         this.mDate = findViewById(R.id.date);
-        this.mExpandIndicator = (ExpandableIndicator) findViewById(R.id.expand_indicator);
-        ExpandableIndicator expandableIndicator = this.mExpandIndicator;
+        ExpandableIndicator expandableIndicator = (ExpandableIndicator) findViewById(R.id.expand_indicator);
+        this.mExpandIndicator = expandableIndicator;
         if (!resources.getBoolean(R.bool.config_showQuickSettingsExpandIndicator)) {
             i = 8;
         }
@@ -142,13 +142,14 @@ public class QSFooter extends FrameLayout implements View.OnClickListener, UserI
         this.mAlarmStatusCollapsed = findViewById(R.id.alarm_status_collapsed);
         this.mAlarmStatus = (TextView) findViewById(R.id.alarm_status);
         this.mDateTimeGroup.setOnClickListener(this);
-        this.mMultiUserSwitch = (MultiUserSwitch) findViewById(R.id.multi_user_switch);
-        this.mMultiUserAvatar = (ImageView) this.mMultiUserSwitch.findViewById(R.id.multi_user_avatar);
+        MultiUserSwitch multiUserSwitch = (MultiUserSwitch) findViewById(R.id.multi_user_switch);
+        this.mMultiUserSwitch = multiUserSwitch;
+        this.mMultiUserAvatar = (ImageView) multiUserSwitch.findViewById(R.id.multi_user_avatar);
         this.mAlwaysShowMultiUserSwitch = resources.getBoolean(R.bool.config_alwaysShowMultiUserSwitcher);
         ((RippleDrawable) this.mSettingsButton.getBackground()).setForceSoftware(true);
         ((RippleDrawable) this.mExpandIndicator.getBackground()).setForceSoftware(true);
         updateResources();
-        this.mNextAlarmController = (NextAlarmController) Dependency.get(NextAlarmController.class);
+        NextAlarmController nextAlarmController = (NextAlarmController) Dependency.get(NextAlarmController.class);
         this.mUserInfoController = (UserInfoController) Dependency.get(UserInfoController.class);
         this.mActivityStarter = (ActivityStarter) Dependency.get(ActivityStarter.class);
         addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
@@ -315,23 +316,24 @@ public class QSFooter extends FrameLayout implements View.OnClickListener, UserI
     }
 
     private void updateListeners() {
+        Class cls = NetworkController.class;
         if (this.mListening) {
             this.mUserInfoController.addCallback(this);
-            if (((NetworkController) Dependency.get(NetworkController.class)).hasVoiceCallingFeature()) {
-                ((NetworkController) Dependency.get(NetworkController.class)).addEmergencyListener(this);
-                ((NetworkController) Dependency.get(NetworkController.class)).addCallback(this);
+            if (((NetworkController) Dependency.get(cls)).hasVoiceCallingFeature()) {
+                ((NetworkController) Dependency.get(cls)).addEmergencyListener(this);
+                ((NetworkController) Dependency.get(cls)).addCallback(this);
                 return;
             }
             return;
         }
         this.mUserInfoController.removeCallback(this);
-        ((NetworkController) Dependency.get(NetworkController.class)).removeEmergencyListener(this);
-        ((NetworkController) Dependency.get(NetworkController.class)).removeCallback(this);
+        ((NetworkController) Dependency.get(cls)).removeEmergencyListener(this);
+        ((NetworkController) Dependency.get(cls)).removeCallback(this);
     }
 
     public void setQSPanel(QSPanel qSPanel) {
         this.mQsPanel = qSPanel;
-        if (this.mQsPanel != null) {
+        if (qSPanel != null) {
             this.mMultiUserSwitch.setQsPanel(qSPanel);
         }
     }

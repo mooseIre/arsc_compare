@@ -35,7 +35,6 @@ import android.util.Log;
 import android.util.Pair;
 import com.android.internal.os.SomeArgs;
 import com.android.internal.statusbar.StatusBarIcon;
-import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.systemui.Constants;
 import com.android.systemui.Dependency;
 import com.android.systemui.DockedStackExistsListener;
@@ -62,12 +61,9 @@ import miui.securityspace.XSpaceUserHandle;
 import miui.util.AudioManagerHelper;
 
 public class PhoneStatusBarPolicy implements BluetoothController.Callback, CommandQueue.Callbacks, RotationLockController.RotationLockControllerCallback, DataSaverController.Listener, LocationController.LocationChangeCallback, ZenModeController.Callback, DeviceProvisionedController.DeviceProvisionedListener, KeyguardMonitor.Callback {
-    /* access modifiers changed from: private */
-    public static final boolean DEBUG = Log.isLoggable("PhoneStatusBarPolicy", 3);
+    private static final boolean DEBUG = Log.isLoggable("PhoneStatusBarPolicy", 3);
     public static final int LOCATION_STATUS_ACQUIRING_ICON_ID = (Constants.SUPPORT_DUAL_GPS ? R.drawable.stat_sys_dual_gps_acquiring : R.drawable.stat_sys_gps_acquiring);
     public static final int LOCATION_STATUS_ON_ICON_ID = ((Build.VERSION.SDK_INT > 28 || !Constants.SUPPORT_DUAL_GPS) ? R.drawable.stat_sys_gps_on : R.drawable.stat_sys_dual_gps_on);
-    private final String ACTION_MICPHONE_PLUG = "android.media.extra.AUDIO_MIC_PLUG_STATE";
-    private final AlarmManager mAlarmManager;
     private BluetoothController mBluetooth;
     private byte mBluetoothFlowState;
     /* access modifiers changed from: private */
@@ -96,7 +92,6 @@ public class PhoneStatusBarPolicy implements BluetoothController.Callback, Comma
     private final NextAlarmController mNextAlarm;
     private final NextAlarmController.NextAlarmChangeCallback mNextAlarmCallback;
     private final DeviceProvisionedController mProvisionedController;
-    private Runnable mRemoveCastIconRunnable;
     private final RotationLockController mRotationLockController;
     private final ContentObserver mSecondSpaceStatusIconObsever;
     /* access modifiers changed from: private */
@@ -106,8 +101,7 @@ public class PhoneStatusBarPolicy implements BluetoothController.Callback, Comma
     private final String mSlotBluetooth;
     private final String mSlotBluetoothBattery;
     private final String mSlotCallrecord;
-    /* access modifiers changed from: private */
-    public final String mSlotCast;
+    private final String mSlotCast;
     private final String mSlotDataSaver;
     private final String mSlotHeadset;
     private final String mSlotLocation;
@@ -121,7 +115,6 @@ public class PhoneStatusBarPolicy implements BluetoothController.Callback, Comma
     private final String mSlotSyncActive;
     private final String mSlotTty;
     private final String mSlotVolume;
-    private final String mSlotZen;
     private final SystemServicesProxy.TaskStackListener mTaskListener;
     private final UiOffloadThread mUiOffloadThread = ((UiOffloadThread) Dependency.get(UiOffloadThread.class));
     /* access modifiers changed from: private */
@@ -269,6 +262,7 @@ public class PhoneStatusBarPolicy implements BluetoothController.Callback, Comma
     public void topAppWindowChanged(boolean z) {
     }
 
+    /* JADX WARNING: type inference failed for: r8v14, types: [com.android.systemui.statusbar.policy.CallbackController, com.android.systemui.statusbar.policy.RotationLockController] */
     public PhoneStatusBarPolicy(Context context, StatusBarIconController statusBarIconController) {
         this.mManagedProfileIconVisible = false;
         this.mManagedProfileInQuietMode = false;
@@ -337,21 +331,13 @@ public class PhoneStatusBarPolicy implements BluetoothController.Callback, Comma
                 }
             }
         };
-        this.mRemoveCastIconRunnable = new Runnable() {
-            public void run() {
-                if (PhoneStatusBarPolicy.DEBUG) {
-                    Log.v("PhoneStatusBarPolicy", "updateCast: hiding icon NOW");
-                }
-                PhoneStatusBarPolicy.this.mIconController.setIconVisibility(PhoneStatusBarPolicy.this.mSlotCast, false);
-            }
-        };
         this.mContext = context;
         this.mCurrentUserId = ActivityManager.getCurrentUser();
         this.mIconController = statusBarIconController;
         this.mService = (StatusBarManager) context.getSystemService("statusbar");
         this.mBluetooth = (BluetoothController) Dependency.get(BluetoothController.class);
         this.mNextAlarm = (NextAlarmController) Dependency.get(NextAlarmController.class);
-        this.mAlarmManager = (AlarmManager) context.getSystemService("alarm");
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService("alarm");
         this.mUserInfoController = (UserInfoController) Dependency.get(UserInfoController.class);
         this.mUserManager = (UserManager) this.mContext.getSystemService("user");
         this.mRotationLockController = (RotationLockController) Dependency.get(RotationLockController.class);
@@ -363,7 +349,6 @@ public class PhoneStatusBarPolicy implements BluetoothController.Callback, Comma
         this.mSlotCast = "cast";
         this.mSlotBluetooth = "bluetooth";
         this.mSlotTty = "tty";
-        this.mSlotZen = "zen";
         this.mSlotVolume = "volume";
         this.mSlotAlarmClock = "alarm_clock";
         this.mSlotManagedProfile = "managed_profile";
@@ -448,6 +433,8 @@ public class PhoneStatusBarPolicy implements BluetoothController.Callback, Comma
         });
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$new$0 */
     public /* synthetic */ void lambda$new$0$PhoneStatusBarPolicy(Boolean bool) {
         this.mDockedStackExists = bool.booleanValue();
         updateForegroundInstantApps();
@@ -564,16 +551,16 @@ public class PhoneStatusBarPolicy implements BluetoothController.Callback, Comma
     }
 
     private final void updateBluetooth(String str) {
-        boolean z;
         String string = this.mContext.getString(R.string.accessibility_quick_settings_bluetooth_on);
         BluetoothController bluetoothController = this.mBluetooth;
+        boolean z = false;
         int i = R.drawable.stat_sys_data_bluetooth;
         if (bluetoothController != null) {
-            z = bluetoothController.isBluetoothEnabled();
+            boolean isBluetoothEnabled = bluetoothController.isBluetoothEnabled();
             boolean isBluetoothConnected = this.mBluetooth.isBluetoothConnected();
-            if (!z) {
+            if (!isBluetoothEnabled) {
                 this.mIconController.setIconVisibility(this.mSlotBluetoothBattery, false);
-                Log.d("PhoneStatusBarPolicy", "updateBluetooth bluetoothEnabled = " + z + " bluetoothBattery visible=false");
+                Log.d("PhoneStatusBarPolicy", "updateBluetooth bluetoothEnabled = " + isBluetoothEnabled + " bluetoothBattery visible=false");
             }
             if (isBluetoothConnected) {
                 i = R.drawable.stat_sys_data_bluetooth_connected;
@@ -596,8 +583,7 @@ public class PhoneStatusBarPolicy implements BluetoothController.Callback, Comma
             } else if (b == 3) {
                 i = R.drawable.stat_sys_data_bluetooth_inout;
             }
-        } else {
-            z = false;
+            z = isBluetoothEnabled;
         }
         this.mIconController.setIcon(this.mSlotBluetooth, i, string);
         this.mIconController.setIconVisibility(this.mSlotBluetooth, z);
@@ -605,7 +591,7 @@ public class PhoneStatusBarPolicy implements BluetoothController.Callback, Comma
 
     /* access modifiers changed from: private */
     public final void updateTTY(Intent intent) {
-        boolean z = intent.getIntExtra("android.telecom.intent.extra.CURRENT_TTY_MODE", 0) != 0;
+        boolean z = intent.getIntExtra("android.telecom.extra.CURRENT_TTY_MODE", 0) != 0;
         if (DEBUG) {
             Log.v("PhoneStatusBarPolicy", "updateTTY: enabled: " + z);
         }
@@ -626,7 +612,7 @@ public class PhoneStatusBarPolicy implements BluetoothController.Callback, Comma
     /* access modifiers changed from: private */
     public void updateQuietState() {
         this.mManagedProfileInQuietMode = false;
-        for (UserInfo userInfo : this.mUserManager.getEnabledProfiles(KeyguardUpdateMonitor.getCurrentUser())) {
+        for (UserInfo userInfo : this.mUserManager.getEnabledProfiles(ActivityManager.getCurrentUser())) {
             if (userInfo.isManagedProfile() && UserInfoCompat.isQuietModeEnabled(userInfo)) {
                 this.mManagedProfileInQuietMode = true;
                 return;

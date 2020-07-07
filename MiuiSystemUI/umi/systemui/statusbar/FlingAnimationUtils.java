@@ -36,7 +36,7 @@ public class FlingAnimationUtils {
         this.mMaxLengthSeconds = f;
         this.mSpeedUpFactor = f2;
         if (f3 < 0.0f) {
-            this.mLinearOutSlowInX2 = NotificationUtils.interpolate(0.35f, 0.68f, this.mSpeedUpFactor);
+            this.mLinearOutSlowInX2 = NotificationUtils.interpolate(0.35f, 0.68f, f2);
         } else {
             this.mLinearOutSlowInX2 = f3;
         }

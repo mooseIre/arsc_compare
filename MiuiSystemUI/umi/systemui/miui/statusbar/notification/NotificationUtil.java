@@ -29,7 +29,7 @@ import miui.securityspace.CrossUserUtils;
 import miui.securityspace.XSpaceUserHandle;
 
 public class NotificationUtil {
-    private static int sNotificationStyle = (Constants.IS_INTERNATIONAL ? 1 : 0);
+    private static int sNotificationStyle = (Constants.SHOW_NOTIFICATION_HEADER ? 1 : 0);
 
     public static boolean isHybrid(ExpandedNotification expandedNotification) {
         return expandedNotification != null && "com.miui.hybrid".equals(expandedNotification.getBasePkg());
@@ -99,19 +99,20 @@ public class NotificationUtil {
     }
 
     public static Drawable getRowIcon(Context context, ExpandedNotification expandedNotification) {
+        Class cls = AppIconsManager.class;
         if (isPhoneNotification(expandedNotification)) {
             return IconCustomizer.getCustomizedIcon(context, "com.android.contacts.activities.TwelveKeyDialer.png");
         }
         if (((UsbNotificationController) Dependency.get(UsbNotificationController.class)).isUsbNotification(expandedNotification)) {
             Drawable drawable = context.getResources().getDrawable(R.drawable.notification_usb);
             if (drawable != null) {
-                return ((AppIconsManager) Dependency.get(AppIconsManager.class)).getIconStyleDrawable(drawable, true);
+                return ((AppIconsManager) Dependency.get(cls)).getIconStyleDrawable(drawable, true);
             }
             return null;
         } else if (isImeNotification(expandedNotification)) {
             Drawable drawable2 = context.getResources().getDrawable(R.drawable.notification_ime);
             if (drawable2 != null) {
-                return ((AppIconsManager) Dependency.get(AppIconsManager.class)).getIconStyleDrawable(drawable2, true);
+                return ((AppIconsManager) Dependency.get(cls)).getIconStyleDrawable(drawable2, true);
             }
             return null;
         } else if (!expandedNotification.isSubstituteNotification()) {
@@ -121,7 +122,7 @@ public class NotificationUtil {
             if (identifier < 0) {
                 identifier = CrossUserUtils.getCurrentUserId();
             }
-            return ((AppIconsManager) Dependency.get(AppIconsManager.class)).getAppIcon(context, expandedNotification.getPackageName(), identifier);
+            return ((AppIconsManager) Dependency.get(cls)).getAppIcon(context, expandedNotification.getPackageName(), identifier);
         }
     }
 
@@ -141,7 +142,7 @@ public class NotificationUtil {
 
     private static boolean isImeNotification(ExpandedNotification expandedNotification) {
         int id = expandedNotification.getId();
-        return "android".equals(expandedNotification.getPackageName()) && (id == 17041080 || id == 8);
+        return "android".equals(expandedNotification.getPackageName()) && (id == 17041220 || id == 8);
     }
 
     public static boolean isMissedCallNotification(ExpandedNotification expandedNotification) {
@@ -233,7 +234,7 @@ public class NotificationUtil {
     }
 
     public static boolean isExpandingEnabled(boolean z) {
-        return Constants.IS_INTERNATIONAL && !z;
+        return Constants.SHOW_NOTIFICATION_HEADER && !z;
     }
 
     public static boolean showMiuiStyle() {
@@ -275,24 +276,8 @@ public class NotificationUtil {
         return charSequence != null ? charSequence : "";
     }
 
-    public static boolean isInboxStyle(Notification notification) {
-        return Notification.InboxStyle.class.equals(notification.getNotificationStyle());
-    }
-
-    public static boolean isMessagingStyle(Notification notification) {
-        return Notification.MessagingStyle.class.equals(notification.getNotificationStyle());
-    }
-
     public static boolean showSingleLine(Notification notification) {
-        if (isInboxStyle(notification) || isMessagingStyle(notification)) {
-            return false;
-        }
-        CharSequence resolveTitle = resolveTitle(notification);
-        CharSequence resolveText = resolveText(notification);
-        if (TextUtils.isEmpty(resolveTitle) || !TextUtils.isEmpty(resolveText)) {
-            return false;
-        }
-        return true;
+        return !TextUtils.isEmpty(resolveTitle(notification)) && TextUtils.isEmpty(resolveText(notification));
     }
 
     public static boolean hideNotificationsForFaceUnlock(Context context) {

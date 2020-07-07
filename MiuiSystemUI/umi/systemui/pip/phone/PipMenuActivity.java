@@ -111,19 +111,23 @@ public class PipMenuActivity extends Activity {
         getWindow().addFlags(537133056);
         super.onCreate(bundle);
         setContentView(R.layout.pip_menu_activity);
-        this.mBackgroundDrawable = new ColorDrawable(-16777216);
-        this.mBackgroundDrawable.setAlpha(0);
-        this.mViewRoot = findViewById(R.id.background);
-        this.mViewRoot.setBackground(this.mBackgroundDrawable);
-        this.mMenuContainer = findViewById(R.id.menu_container);
-        this.mMenuContainer.setAlpha(0.0f);
+        ColorDrawable colorDrawable = new ColorDrawable(-16777216);
+        this.mBackgroundDrawable = colorDrawable;
+        colorDrawable.setAlpha(0);
+        View findViewById = findViewById(R.id.background);
+        this.mViewRoot = findViewById;
+        findViewById.setBackground(this.mBackgroundDrawable);
+        View findViewById2 = findViewById(R.id.menu_container);
+        this.mMenuContainer = findViewById2;
+        findViewById2.setAlpha(0.0f);
         this.mMenuContainer.setOnClickListener(new View.OnClickListener() {
             public final void onClick(View view) {
                 PipMenuActivity.this.lambda$onCreate$0$PipMenuActivity(view);
             }
         });
-        this.mDismissButton = findViewById(R.id.dismiss);
-        this.mDismissButton.setAlpha(0.0f);
+        View findViewById3 = findViewById(R.id.dismiss);
+        this.mDismissButton = findViewById3;
+        findViewById3.setAlpha(0.0f);
         this.mDismissButton.setOnClickListener(new View.OnClickListener() {
             public final void onClick(View view) {
                 PipMenuActivity.this.lambda$onCreate$1$PipMenuActivity(view);
@@ -131,8 +135,9 @@ public class PipMenuActivity extends Activity {
         });
         this.mActionsGroup = (LinearLayout) findViewById(R.id.actions_group);
         this.mBetweenActionPaddingLand = getResources().getDimensionPixelSize(R.dimen.pip_between_action_padding_land);
-        this.mExpandButton = (ImageView) findViewById(R.id.expand_button);
-        this.mExpandButton.setOnClickListener(new View.OnClickListener() {
+        ImageView imageView = (ImageView) findViewById(R.id.expand_button);
+        this.mExpandButton = imageView;
+        imageView.setOnClickListener(new View.OnClickListener() {
             public final void onClick(View view) {
                 PipMenuActivity.this.lambda$onCreate$2$PipMenuActivity(view);
             }
@@ -142,6 +147,8 @@ public class PipMenuActivity extends Activity {
         setDisablePreviewScreenshots(true);
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$onCreate$0 */
     public /* synthetic */ void lambda$onCreate$0$PipMenuActivity(View view) {
         if (this.mMenuState == 1) {
             showPipMenu();
@@ -150,10 +157,14 @@ public class PipMenuActivity extends Activity {
         }
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$onCreate$1 */
     public /* synthetic */ void lambda$onCreate$1$PipMenuActivity(View view) {
         dismissPip();
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$onCreate$2 */
     public /* synthetic */ void lambda$onCreate$2$PipMenuActivity(View view) {
         if (this.mMenuState == 1) {
             showPipMenu();
@@ -229,7 +240,7 @@ public class PipMenuActivity extends Activity {
         if (this.mMenuState != 0) {
             hidePipMenuEvent.getAnimationTrigger().increment();
             hideMenu(new Runnable(hidePipMenuEvent) {
-                private final /* synthetic */ HidePipMenuEvent f$1;
+                public final /* synthetic */ HidePipMenuEvent f$1;
 
                 {
                     this.f$1 = r2;
@@ -242,6 +253,8 @@ public class PipMenuActivity extends Activity {
         }
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$onBusEvent$4 */
     public /* synthetic */ void lambda$onBusEvent$4$PipMenuActivity(HidePipMenuEvent hidePipMenuEvent) {
         this.mHandler.post(new Runnable() {
             public final void run() {
@@ -375,7 +388,7 @@ public class PipMenuActivity extends Activity {
                         RemoteAction remoteAction = this.mActions.get(i2);
                         ImageView imageView = (ImageView) this.mActionsGroup.getChildAt(i2);
                         remoteAction.getIcon().loadDrawableAsync(this, new Icon.OnDrawableLoadedListener(imageView) {
-                            private final /* synthetic */ ImageView f$0;
+                            public final /* synthetic */ ImageView f$0;
 
                             {
                                 this.f$0 = r1;
@@ -388,7 +401,7 @@ public class PipMenuActivity extends Activity {
                         imageView.setContentDescription(remoteAction.getContentDescription());
                         if (remoteAction.isEnabled()) {
                             imageView.setOnClickListener(new View.OnClickListener(remoteAction) {
-                                private final /* synthetic */ RemoteAction f$0;
+                                public final /* synthetic */ RemoteAction f$0;
 
                                 {
                                     this.f$0 = r1;
@@ -474,6 +487,8 @@ public class PipMenuActivity extends Activity {
         }, false);
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$expandPip$8 */
     public /* synthetic */ void lambda$expandPip$8$PipMenuActivity() {
         sendEmptyMessage(R.styleable.AppCompatTheme_textAppearanceListItem, "Could not notify controller to expand PIP");
     }
@@ -486,6 +501,8 @@ public class PipMenuActivity extends Activity {
         }, false);
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$dismissPip$9 */
     public /* synthetic */ void lambda$dismissPip$9$PipMenuActivity() {
         sendEmptyMessage(R.styleable.AppCompatTheme_textAppearanceListItemSmall, "Could not notify controller to dismiss PIP");
     }

@@ -14,6 +14,7 @@ import android.os.ServiceManager;
 import android.os.UserHandle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -54,16 +55,19 @@ public class UsbConfirmActivity extends AlertActivity implements DialogInterface
         alertParams.mNegativeButtonText = getString(17039360);
         alertParams.mPositiveButtonListener = this;
         alertParams.mNegativeButtonListener = this;
-        alertParams.mView = ((LayoutInflater) getSystemService("layout_inflater")).inflate(17367090, (ViewGroup) null);
-        this.mAlwaysUse = (CheckBox) alertParams.mView.findViewById(16908724);
+        View inflate = ((LayoutInflater) getSystemService("layout_inflater")).inflate(17367092, (ViewGroup) null);
+        alertParams.mView = inflate;
+        CheckBox checkBox = (CheckBox) inflate.findViewById(16908752);
+        this.mAlwaysUse = checkBox;
         if (this.mDevice == null) {
-            this.mAlwaysUse.setText(R.string.always_use_accessory);
+            checkBox.setText(R.string.always_use_accessory);
         } else {
-            this.mAlwaysUse.setText(R.string.always_use_device);
+            checkBox.setText(R.string.always_use_device);
         }
         this.mAlwaysUse.setOnCheckedChangeListener(this);
-        this.mClearDefaultHint = (TextView) alertParams.mView.findViewById(16908821);
-        this.mClearDefaultHint.setVisibility(8);
+        TextView textView = (TextView) alertParams.mView.findViewById(16908852);
+        this.mClearDefaultHint = textView;
+        textView.setVisibility(8);
         setupAlert();
     }
 
@@ -84,6 +88,7 @@ public class UsbConfirmActivity extends AlertActivity implements DialogInterface
                 int i2 = this.mResolveInfo.activityInfo.applicationInfo.uid;
                 int myUserId = UserHandle.myUserId();
                 boolean isChecked = this.mAlwaysUse.isChecked();
+                Intent intent2 = null;
                 if (this.mDevice != null) {
                     intent = new Intent("android.hardware.usb.action.USB_DEVICE_ATTACHED");
                     intent.putExtra("device", this.mDevice);
@@ -93,21 +98,25 @@ public class UsbConfirmActivity extends AlertActivity implements DialogInterface
                     } else {
                         asInterface.setDevicePackage(this.mDevice, (String) null, myUserId);
                     }
-                } else if (this.mAccessory != null) {
-                    intent = new Intent("android.hardware.usb.action.USB_ACCESSORY_ATTACHED");
-                    intent.putExtra("accessory", this.mAccessory);
-                    asInterface.grantAccessoryPermission(this.mAccessory, i2);
-                    if (isChecked) {
-                        asInterface.setAccessoryPackage(this.mAccessory, this.mResolveInfo.activityInfo.packageName, myUserId);
-                    } else {
-                        asInterface.setAccessoryPackage(this.mAccessory, (String) null, myUserId);
-                    }
                 } else {
-                    intent = null;
+                    if (this.mAccessory != null) {
+                        intent = new Intent("android.hardware.usb.action.USB_ACCESSORY_ATTACHED");
+                        intent.putExtra("accessory", this.mAccessory);
+                        asInterface.grantAccessoryPermission(this.mAccessory, i2);
+                        if (isChecked) {
+                            asInterface.setAccessoryPackage(this.mAccessory, this.mResolveInfo.activityInfo.packageName, myUserId);
+                        } else {
+                            asInterface.setAccessoryPackage(this.mAccessory, (String) null, myUserId);
+                        }
+                    }
+                    intent2.addFlags(MiuiHapticFeedbackConstants.FLAG_MIUI_HAPTIC_TAP_NORMAL);
+                    intent2.setComponent(new ComponentName(this.mResolveInfo.activityInfo.packageName, this.mResolveInfo.activityInfo.name));
+                    startActivityAsUser(intent2, new UserHandle(myUserId));
                 }
-                intent.addFlags(MiuiHapticFeedbackConstants.FLAG_MIUI_HAPTIC_TAP_NORMAL);
-                intent.setComponent(new ComponentName(this.mResolveInfo.activityInfo.packageName, this.mResolveInfo.activityInfo.name));
-                startActivityAsUser(intent, new UserHandle(myUserId));
+                intent2 = intent;
+                intent2.addFlags(MiuiHapticFeedbackConstants.FLAG_MIUI_HAPTIC_TAP_NORMAL);
+                intent2.setComponent(new ComponentName(this.mResolveInfo.activityInfo.packageName, this.mResolveInfo.activityInfo.name));
+                startActivityAsUser(intent2, new UserHandle(myUserId));
             } catch (Exception e) {
                 Log.e("UsbConfirmActivity", "Unable to start activity", e);
             }

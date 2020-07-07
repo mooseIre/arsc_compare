@@ -29,14 +29,11 @@ public class KeyguardAffordanceView extends ImageView {
     /* access modifiers changed from: private */
     public ValueAnimator mCircleAnimator;
     private int mCircleColor;
-    private AnimatorListenerAdapter mCircleEndListener;
     private final Paint mCirclePaint;
     private float mCircleRadius;
     private float mCircleStartRadius;
-    private AnimatorListenerAdapter mClipEndListener;
     private final ArgbEvaluator mColorInterpolator;
     private boolean mFinishing;
-    private final FlingAnimationUtils mFlingAnimationUtils;
     private CanvasProperty<Float> mHwCenterX;
     private CanvasProperty<Float> mHwCenterY;
     private CanvasProperty<Paint> mHwCirclePaint;
@@ -77,12 +74,12 @@ public class KeyguardAffordanceView extends ImageView {
         this.mImageScale = 1.0f;
         this.mRestingAlpha = 1.0f;
         this.mShouldTint = true;
-        this.mClipEndListener = new AnimatorListenerAdapter() {
+        new AnimatorListenerAdapter() {
             public void onAnimationEnd(Animator animator) {
                 Animator unused = KeyguardAffordanceView.this.mPreviewClipper = null;
             }
         };
-        this.mCircleEndListener = new AnimatorListenerAdapter() {
+        new AnimatorListenerAdapter() {
             public void onAnimationEnd(Animator animator) {
                 ValueAnimator unused = KeyguardAffordanceView.this.mCircleAnimator = null;
             }
@@ -97,15 +94,16 @@ public class KeyguardAffordanceView extends ImageView {
                 ValueAnimator unused = KeyguardAffordanceView.this.mAlphaAnimator = null;
             }
         };
-        this.mCirclePaint = new Paint();
-        this.mCirclePaint.setAntiAlias(true);
+        Paint paint = new Paint();
+        this.mCirclePaint = paint;
+        paint.setAntiAlias(true);
         this.mCircleColor = -1;
-        this.mCirclePaint.setColor(this.mCircleColor);
+        this.mCirclePaint.setColor(-1);
         this.mNormalColor = -1;
         this.mInverseColor = -16777216;
         this.mMinBackgroundRadius = this.mContext.getResources().getDimensionPixelSize(R.dimen.keyguard_affordance_min_background_radius);
         this.mColorInterpolator = new ArgbEvaluator();
-        this.mFlingAnimationUtils = new FlingAnimationUtils(this.mContext, 0.3f);
+        new FlingAnimationUtils(this.mContext, 0.3f);
     }
 
     public void setImageDrawable(Drawable drawable, boolean z) {

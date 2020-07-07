@@ -19,7 +19,6 @@ import com.android.systemui.qs.QSHost;
 import com.android.systemui.qs.tileimpl.QSTileImpl;
 import com.android.systemui.statusbar.Icons;
 import com.android.systemui.statusbar.policy.NetworkController;
-import java.util.ArrayList;
 import java.util.List;
 import miui.telephony.SubscriptionInfo;
 
@@ -27,9 +26,9 @@ public class WifiTile extends QSTileImpl<QSTile.BooleanState> {
     /* access modifiers changed from: private */
     public static final Intent WIFI_SETTINGS = new Intent("android.settings.WIFI_SETTINGS");
     private boolean mConnected;
-    protected final NetworkController mController = ((NetworkController) Dependency.get(NetworkController.class));
+    protected final NetworkController mController;
     /* access modifiers changed from: private */
-    public final WifiDetailAdapter mDetailAdapter = ((WifiDetailAdapter) createDetailAdapter());
+    public final WifiDetailAdapter mDetailAdapter;
     protected final WifiSignalCallback mSignalCallback = new WifiSignalCallback();
     private final QSTile.SignalState mStateBeforeClick = newTileState();
     /* access modifiers changed from: private */
@@ -37,7 +36,7 @@ public class WifiTile extends QSTileImpl<QSTile.BooleanState> {
     /* access modifiers changed from: private */
     public Boolean mTargetStatus;
     /* access modifiers changed from: private */
-    public final NetworkController.AccessPointController mWifiController = this.mController.getAccessPointController();
+    public final NetworkController.AccessPointController mWifiController;
 
     public int getMetricsCategory() {
         return 126;
@@ -45,6 +44,10 @@ public class WifiTile extends QSTileImpl<QSTile.BooleanState> {
 
     public WifiTile(QSHost qSHost) {
         super(qSHost);
+        NetworkController networkController = (NetworkController) Dependency.get(NetworkController.class);
+        this.mController = networkController;
+        this.mWifiController = networkController.getAccessPointController();
+        this.mDetailAdapter = (WifiDetailAdapter) createDetailAdapter();
     }
 
     public QSTile.SignalState newTileState() {
@@ -89,10 +92,10 @@ public class WifiTile extends QSTileImpl<QSTile.BooleanState> {
             return;
         }
         ((QSTile.BooleanState) tstate).copyTo(this.mStateBeforeClick);
-        this.mTargetEnable = !this.mTargetEnable;
-        this.mTargetStatus = Boolean.valueOf(this.mTargetEnable);
-        String str = this.TAG;
-        Log.d(str, "handleClick: to " + this.mTargetEnable);
+        boolean z2 = !this.mTargetEnable;
+        this.mTargetEnable = z2;
+        this.mTargetStatus = Boolean.valueOf(z2);
+        Log.d(this.TAG, "handleClick: to " + this.mTargetEnable);
         this.mController.setWifiEnabled(this.mTargetEnable);
         refreshState();
     }
@@ -104,7 +107,7 @@ public class WifiTile extends QSTileImpl<QSTile.BooleanState> {
         }
         if (!this.mTargetEnable) {
             this.mTargetEnable = true;
-            this.mTargetStatus = true;
+            this.mTargetStatus = Boolean.TRUE;
             this.mController.setWifiEnabled(true);
         }
         refreshState();
@@ -119,9 +122,10 @@ public class WifiTile extends QSTileImpl<QSTile.BooleanState> {
     /* access modifiers changed from: protected */
     public void handleUpdateState(QSTile.BooleanState booleanState, Object obj) {
         CallbackInfo callbackInfo = this.mSignalCallback.mInfo;
-        booleanState.value = (this.mTargetEnable && callbackInfo.enabled && !callbackInfo.isTransient) || (!this.mTargetEnable && (callbackInfo.enabled || callbackInfo.isTransient));
+        boolean z = (this.mTargetEnable && callbackInfo.enabled && !callbackInfo.isTransient) || (!this.mTargetEnable && (callbackInfo.enabled || callbackInfo.isTransient));
+        booleanState.value = z;
         Boolean bool = this.mTargetStatus;
-        if (bool != null && booleanState.value == bool.booleanValue()) {
+        if (bool != null && z == bool.booleanValue()) {
             this.mTargetStatus = null;
         }
         booleanState.state = booleanState.value ? 2 : 1;
@@ -192,7 +196,6 @@ public class WifiTile extends QSTileImpl<QSTile.BooleanState> {
     }
 
     protected static final class CallbackInfo {
-        protected final String TAG = "WifiTile";
         boolean activityIn;
         boolean activityOut;
         boolean connected;
@@ -388,8 +391,9 @@ public class WifiTile extends QSTileImpl<QSTile.BooleanState> {
                 Log.d(access$1400, sb.toString());
             }
             this.mAccessPoints = null;
-            this.mItems = QSDetailItems.convertOrInflate(context, view, viewGroup);
-            this.mItems.setTagSuffix("Wifi");
+            QSDetailItems convertOrInflate = QSDetailItems.convertOrInflate(context, view, viewGroup);
+            this.mItems = convertOrInflate;
+            convertOrInflate.setTagSuffix("Wifi");
             this.mItems.setCallback(this);
             WifiTile.this.mWifiController.updateVerboseLoggingLevel();
             WifiTile.this.mWifiController.scanForAccessPoints();
@@ -398,8 +402,9 @@ public class WifiTile extends QSTileImpl<QSTile.BooleanState> {
         }
 
         public void onAccessPointsChanged(List<AccessPoint> list) {
-            this.mAccessPoints = (AccessPoint[]) list.toArray(new AccessPoint[list.size()]);
-            this.mAccessPoints = WifiTileHelper.filterUnreachableAPs(this.mAccessPoints);
+            AccessPoint[] accessPointArr = (AccessPoint[]) list.toArray(new AccessPoint[list.size()]);
+            this.mAccessPoints = accessPointArr;
+            this.mAccessPoints = WifiTileHelper.filterUnreachableAPs(accessPointArr);
             if (WifiTile.this.isShowingDetail()) {
                 updateItems();
             }
@@ -432,33 +437,86 @@ public class WifiTile extends QSTileImpl<QSTile.BooleanState> {
         }
 
         /* access modifiers changed from: private */
+        /* JADX WARNING: Removed duplicated region for block: B:13:0x002f  */
+        /* JADX WARNING: Removed duplicated region for block: B:23:0x0073  */
+        /* Code decompiled incorrectly, please refer to instructions dump. */
         public void updateItems() {
-            QSDetailItems qSDetailItems = this.mItems;
-            if (qSDetailItems != null) {
-                if (WifiTile.this.mSignalCallback.mInfo.enabled) {
-                    AccessPoint[] accessPointArr = this.mAccessPoints;
-                    if (accessPointArr == null || accessPointArr.length <= 0) {
-                        this.mItems.setEmptyState(R.drawable.ic_qs_wifi_detail_empty, R.string.quick_settings_wifi_detail_empty_text);
-                        this.mItems.setItems((QSDetailItems.Item[]) null);
-                        return;
-                    }
-                    ArrayList arrayList = new ArrayList();
-                    int i = 0;
-                    while (true) {
-                        AccessPoint[] accessPointArr2 = this.mAccessPoints;
-                        if (i < accessPointArr2.length) {
-                            SlaveWifiHelper.updateItem(WifiTile.this.mContext, WifiTile.this.mWifiController, this.mItems, arrayList, accessPointArr2[i]);
-                            i++;
-                        } else {
-                            this.mItems.setItems((QSDetailItems.Item[]) arrayList.toArray(new QSDetailItems.Item[0]));
-                            return;
-                        }
-                    }
-                } else {
-                    qSDetailItems.setEmptyState(R.drawable.ic_qs_wifi_detail_empty, R.string.wifi_is_off);
-                    this.mItems.setItems((QSDetailItems.Item[]) null);
-                }
-            }
+            /*
+                r7 = this;
+                com.android.systemui.qs.QSDetailItems r0 = r7.mItems
+                if (r0 != 0) goto L_0x0005
+                return
+            L_0x0005:
+                com.android.settingslib.wifi.AccessPoint[] r0 = r7.mAccessPoints
+                r1 = 0
+                if (r0 == 0) goto L_0x000d
+                int r0 = r0.length
+                if (r0 > 0) goto L_0x0017
+            L_0x000d:
+                com.android.systemui.qs.tiles.WifiTile r0 = com.android.systemui.qs.tiles.WifiTile.this
+                com.android.systemui.qs.tiles.WifiTile$WifiSignalCallback r2 = r0.mSignalCallback
+                com.android.systemui.qs.tiles.WifiTile$CallbackInfo r2 = r2.mInfo
+                boolean r2 = r2.enabled
+                if (r2 != 0) goto L_0x001d
+            L_0x0017:
+                com.android.systemui.qs.tiles.WifiTile r0 = com.android.systemui.qs.tiles.WifiTile.this
+                r0.fireScanStateChanged(r1)
+                goto L_0x0021
+            L_0x001d:
+                r2 = 1
+                r0.fireScanStateChanged(r2)
+            L_0x0021:
+                com.android.systemui.qs.tiles.WifiTile r0 = com.android.systemui.qs.tiles.WifiTile.this
+                com.android.systemui.qs.tiles.WifiTile$WifiSignalCallback r0 = r0.mSignalCallback
+                com.android.systemui.qs.tiles.WifiTile$CallbackInfo r0 = r0.mInfo
+                boolean r0 = r0.enabled
+                r2 = 0
+                r3 = 2131232599(0x7f080757, float:1.8081312E38)
+                if (r0 == 0) goto L_0x0073
+                com.android.settingslib.wifi.AccessPoint[] r0 = r7.mAccessPoints
+                if (r0 == 0) goto L_0x0065
+                int r0 = r0.length
+                if (r0 <= 0) goto L_0x0065
+                java.util.ArrayList r0 = new java.util.ArrayList
+                r0.<init>()
+                r2 = r1
+            L_0x003c:
+                com.android.settingslib.wifi.AccessPoint[] r3 = r7.mAccessPoints
+                int r4 = r3.length
+                if (r2 >= r4) goto L_0x0057
+                r3 = r3[r2]
+                com.android.systemui.qs.tiles.WifiTile r4 = com.android.systemui.qs.tiles.WifiTile.this
+                android.content.Context r4 = r4.mContext
+                com.android.systemui.qs.tiles.WifiTile r5 = com.android.systemui.qs.tiles.WifiTile.this
+                com.android.systemui.statusbar.policy.NetworkController$AccessPointController r5 = r5.mWifiController
+                com.android.systemui.qs.QSDetailItems r6 = r7.mItems
+                com.android.systemui.qs.tiles.SlaveWifiHelper.updateItem(r4, r5, r6, r0, r3)
+                int r2 = r2 + 1
+                goto L_0x003c
+            L_0x0057:
+                com.android.systemui.qs.QSDetailItems r7 = r7.mItems
+                com.android.systemui.qs.QSDetailItems$Item[] r1 = new com.android.systemui.qs.QSDetailItems.Item[r1]
+                java.lang.Object[] r0 = r0.toArray(r1)
+                com.android.systemui.qs.QSDetailItems$Item[] r0 = (com.android.systemui.qs.QSDetailItems.Item[]) r0
+                r7.setItems(r0)
+                goto L_0x0080
+            L_0x0065:
+                com.android.systemui.qs.QSDetailItems r0 = r7.mItems
+                r1 = 2131822134(0x7f110636, float:1.927703E38)
+                r0.setEmptyState(r3, r1)
+                com.android.systemui.qs.QSDetailItems r7 = r7.mItems
+                r7.setItems(r2)
+                goto L_0x0080
+            L_0x0073:
+                com.android.systemui.qs.QSDetailItems r0 = r7.mItems
+                r1 = 2131822633(0x7f110829, float:1.9278043E38)
+                r0.setEmptyState(r3, r1)
+                com.android.systemui.qs.QSDetailItems r7 = r7.mItems
+                r7.setItems(r2)
+            L_0x0080:
+                return
+            */
+            throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.qs.tiles.WifiTile.WifiDetailAdapter.updateItems():void");
         }
     }
 }

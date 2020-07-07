@@ -30,8 +30,9 @@ public class FakeShadowView extends AlphaOptimizedFrameLayout {
 
     public FakeShadowView(Context context, AttributeSet attributeSet, int i, int i2) {
         super(context, attributeSet, i, i2);
-        this.mFakeShadow = new View(context);
-        this.mFakeShadow.setVisibility(4);
+        View view = new View(context);
+        this.mFakeShadow = view;
+        view.setVisibility(4);
         this.mFakeShadow.setLayoutParams(new LinearLayout.LayoutParams(-1, (int) (getResources().getDisplayMetrics().density * 48.0f)));
         this.mFakeShadow.setOutlineProvider(new ViewOutlineProvider() {
             public void getOutline(View view, Outline outline) {

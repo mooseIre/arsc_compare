@@ -25,9 +25,8 @@ public class VolumeDialogComponent implements VolumeComponent, TunerService.Tuna
     private final Context mContext;
     private final VolumeDialogControllerImpl mController;
     private VolumeDialog mDialog;
-    private final ExtensionController.Extension mExtension;
     private final SystemUI mSysui;
-    private final VolumeDialog.Callback mVolumeDialogCallback = new VolumeDialog.Callback() {
+    private final VolumeDialog.Callback mVolumeDialogCallback = new VolumeDialog.Callback(this) {
         public void onZenPrioritySettingsClicked() {
         }
 
@@ -43,13 +42,16 @@ public class VolumeDialogComponent implements VolumeComponent, TunerService.Tuna
     }
 
     public VolumeDialogComponent(SystemUI systemUI, Context context, Handler handler) {
+        Class<VolumeDialog> cls = VolumeDialog.class;
+        Class cls2 = VolumeDialogController.class;
         this.mSysui = systemUI;
         this.mContext = context;
-        this.mController = (VolumeDialogControllerImpl) Dependency.get(VolumeDialogController.class);
-        this.mController.setUserActivityListener(this);
-        ((PluginDependencyProvider) Dependency.get(PluginDependencyProvider.class)).allowPluginDependency(VolumeDialogController.class);
-        ExtensionController.ExtensionBuilder<VolumeDialog> newExtension = ((ExtensionController) Dependency.get(ExtensionController.class)).newExtension(VolumeDialog.class);
-        newExtension.withPlugin(VolumeDialog.class);
+        VolumeDialogControllerImpl volumeDialogControllerImpl = (VolumeDialogControllerImpl) Dependency.get(cls2);
+        this.mController = volumeDialogControllerImpl;
+        volumeDialogControllerImpl.setUserActivityListener(this);
+        ((PluginDependencyProvider) Dependency.get(PluginDependencyProvider.class)).allowPluginDependency(cls2);
+        ExtensionController.ExtensionBuilder<VolumeDialog> newExtension = ((ExtensionController) Dependency.get(ExtensionController.class)).newExtension(cls);
+        newExtension.withPlugin(cls);
         newExtension.withDefault(new Supplier() {
             public final Object get() {
                 return VolumeDialogComponent.this.lambda$new$0$VolumeDialogComponent();
@@ -60,23 +62,25 @@ public class VolumeDialogComponent implements VolumeComponent, TunerService.Tuna
                 VolumeDialogComponent.this.lambda$new$1$VolumeDialogComponent((VolumeDialog) obj);
             }
         });
-        this.mExtension = newExtension.build();
+        newExtension.build();
         applyConfiguration();
         ((TunerService) Dependency.get(TunerService.class)).addTunable(this, "sysui_volume_down_silent", "sysui_volume_up_silent", "sysui_do_not_disturb");
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$new$1 */
     public /* synthetic */ void lambda$new$1$VolumeDialogComponent(VolumeDialog volumeDialog) {
         VolumeDialog volumeDialog2 = this.mDialog;
         if (volumeDialog2 != null) {
             volumeDialog2.destroy();
         }
         this.mDialog = volumeDialog;
-        this.mDialog.init(2020, this.mVolumeDialogCallback);
+        volumeDialog.init(2020, this.mVolumeDialogCallback);
     }
 
     /* access modifiers changed from: private */
     /* renamed from: createDefault */
-    public VolumeDialog lambda$new$0$VolumeDialogComponent() {
+    public VolumeDialog lambda$new$0() {
         MiuiVolumeDialogImpl miuiVolumeDialogImpl = new MiuiVolumeDialogImpl(this.mContext);
         miuiVolumeDialogImpl.setStreamImportant(4, true);
         miuiVolumeDialogImpl.setStreamImportant(1, false);
@@ -86,22 +90,22 @@ public class VolumeDialogComponent implements VolumeComponent, TunerService.Tuna
     }
 
     public void onTuningChanged(String str, String str2) {
-        boolean z = true;
+        boolean z = false;
         if ("sysui_volume_down_silent".equals(str)) {
-            if (str2 != null && Integer.parseInt(str2) == 0) {
-                z = false;
+            if (str2 == null || Integer.parseInt(str2) != 0) {
+                z = true;
             }
             VolumePolicy volumePolicy = this.mVolumePolicy;
             setVolumePolicy(z, volumePolicy.volumeUpToExitSilent, volumePolicy.doNotDisturbWhenSilent, volumePolicy.vibrateToSilentDebounce);
         } else if ("sysui_volume_up_silent".equals(str)) {
-            if (str2 != null && Integer.parseInt(str2) == 0) {
-                z = false;
+            if (str2 == null || Integer.parseInt(str2) != 0) {
+                z = true;
             }
             VolumePolicy volumePolicy2 = this.mVolumePolicy;
             setVolumePolicy(volumePolicy2.volumeDownToEnterSilent, z, volumePolicy2.doNotDisturbWhenSilent, volumePolicy2.vibrateToSilentDebounce);
         } else if ("sysui_do_not_disturb".equals(str)) {
-            if (str2 != null && Integer.parseInt(str2) == 0) {
-                z = false;
+            if (str2 == null || Integer.parseInt(str2) != 0) {
+                z = true;
             }
             VolumePolicy volumePolicy3 = this.mVolumePolicy;
             setVolumePolicy(volumePolicy3.volumeDownToEnterSilent, volumePolicy3.volumeUpToExitSilent, z, volumePolicy3.vibrateToSilentDebounce);
@@ -109,8 +113,9 @@ public class VolumeDialogComponent implements VolumeComponent, TunerService.Tuna
     }
 
     private void setVolumePolicy(boolean z, boolean z2, boolean z3, int i) {
-        this.mVolumePolicy = new VolumePolicy(z, z2, z3, i);
-        this.mController.setVolumePolicy(this.mVolumePolicy);
+        VolumePolicy volumePolicy = new VolumePolicy(z, z2, z3, i);
+        this.mVolumePolicy = volumePolicy;
+        this.mController.setVolumePolicy(volumePolicy);
     }
 
     public void onUserActivity() {

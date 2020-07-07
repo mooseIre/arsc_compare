@@ -22,7 +22,6 @@ public abstract class ExpandableView extends FrameLayout {
     private boolean mDark;
     private boolean mInShelf;
     private ArrayList<View> mMatchParentViews = new ArrayList<>();
-    private int mMinClipTopAmount = 0;
     protected OnHeightChangedListener mOnHeightChangedListener;
     private boolean mTransformingInShelf;
     private ViewGroup mTransientContainer;
@@ -124,6 +123,9 @@ public abstract class ExpandableView extends FrameLayout {
     }
 
     public void setHideSensitiveForIntrinsicHeight(boolean z) {
+    }
+
+    public void setMinClipTopAmount(int i) {
     }
 
     public void setShadowAlpha(float f) {
@@ -324,10 +326,6 @@ public abstract class ExpandableView extends FrameLayout {
 
     public boolean willBeGone() {
         return this.mWillBeGone;
-    }
-
-    public void setMinClipTopAmount(int i) {
-        this.mMinClipTopAmount = i;
     }
 
     public void setLayerType(int i, Paint paint) {

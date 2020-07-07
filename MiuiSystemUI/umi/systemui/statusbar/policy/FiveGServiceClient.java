@@ -23,7 +23,6 @@ import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 import miui.os.Build;
-import miui.os.SystemProperties;
 import miui.telephony.SubscriptionManager;
 import miui.telephony.TelephonyManager;
 import org.codeaurora.internal.BearerAllocationStatus;
@@ -201,7 +200,6 @@ public class FiveGServiceClient {
             Client unused3 = FiveGServiceClient.this.mClient = null;
         }
     };
-    private final int[] mSnrThresholds;
     @VisibleForTesting
     final SparseArray<IFiveGStateListener> mStatesListeners = new SparseArray<>();
 
@@ -237,10 +235,6 @@ public class FiveGServiceClient {
 
         public boolean isConnectedOnNsaMode() {
             return this.mNrConfigType == 0 && this.mIconGroup != TelephonyIcons.UNKNOWN;
-        }
-
-        public MobileSignalController.MobileIconGroup getIconGroup() {
-            return this.mIconGroup;
         }
 
         @VisibleForTesting
@@ -328,9 +322,9 @@ public class FiveGServiceClient {
 
     public FiveGServiceClient(Context context) {
         this.mContext = context;
-        this.mPackageName = this.mContext.getPackageName();
+        this.mPackageName = context.getPackageName();
         this.mRsrpThresholds = this.mContext.getResources().getIntArray(R.array.config_5g_signal_rsrp_thresholds);
-        this.mSnrThresholds = this.mContext.getResources().getIntArray(R.array.config_5g_signal_snr_thresholds);
+        this.mContext.getResources().getIntArray(R.array.config_5g_signal_snr_thresholds);
         try {
             this.mIsCustForKrOps = ((Boolean) TelephonyManager.class.getMethod("isCustForKrOps", (Class[]) null).invoke((Object) null, new Object[0])).booleanValue();
         } catch (Exception e) {
@@ -399,24 +393,24 @@ public class FiveGServiceClient {
     }
 
     private static int getLevel(int i, int[] iArr) {
-        int i2;
+        int i2 = 1;
         int i3 = 0;
-        if (iArr[iArr.length - 1] >= i && i >= iArr[0]) {
+        if (iArr[iArr.length - 1] < i || i < iArr[0]) {
+            i2 = 0;
+        } else {
             while (true) {
                 if (i3 >= iArr.length - 1) {
-                    i2 = 1;
                     break;
                 }
                 if (iArr[i3] < i) {
-                    i2 = i3 + 1;
-                    if (i <= iArr[i2]) {
+                    int i4 = i3 + 1;
+                    if (i <= iArr[i4]) {
+                        i2 = i4;
                         break;
                     }
                 }
                 i3++;
             }
-        } else {
-            i2 = 0;
         }
         if (DEBUG) {
             Log.d("FiveGServiceClient", "value=" + i + " level=" + i2);
@@ -542,19 +536,8 @@ public class FiveGServiceClient {
             this.mHandler.removeMessages(1026, Integer.valueOf(i));
         }
         this.mLastBearerAllocationStatus[i] = fiveGServiceState.mBearerAllocationStatus;
-        setLguIndicatorProperties(mobileIconGroup);
         Log.d("FiveGServiceClient", "getCustKrNrIcon krNrIcon = " + mobileIconGroup + "; phoneId=" + i);
         return mobileIconGroup;
-    }
-
-    private void setLguIndicatorProperties(MobileSignalController.MobileIconGroup mobileIconGroup) {
-        if (mobileIconGroup == TelephonyIcons.FIVE_G_KR_ON) {
-            SystemProperties.set("persist.sys.lgu.5g.indicator", 0);
-        } else if (mobileIconGroup == TelephonyIcons.FIVE_G_KR_OFF) {
-            SystemProperties.set("persist.sys.lgu.5g.indicator", 1);
-        } else {
-            SystemProperties.set("persist.sys.lgu.5g.indicator", 2);
-        }
     }
 
     private MobileSignalController.MobileIconGroup getKrFiveGIcon(FiveGServiceState fiveGServiceState, int i) {
@@ -566,7 +549,7 @@ public class FiveGServiceClient {
                 Log.d("FiveGServiceClient", "5G connected removed DELAY_UPDATE_5GICON ");
                 this.mHandler.removeMessages(1026, Integer.valueOf(i));
             }
-            mobileIconGroup = TelephonyIcons.FIVE_G_KR_ON;
+            mobileIconGroup = TelephonyIcons.FIVE_G_BASIC;
         } else {
             if (this.mLastBearerAllocationStatus[i] > 0 && !this.mHandler.hasMessages(1026, Integer.valueOf(i))) {
                 this.mIsDelayUpdate5GIcon[i] = true;
@@ -576,9 +559,9 @@ public class FiveGServiceClient {
             }
             if (this.mIsDelayUpdate5GIcon[i]) {
                 Log.d("FiveGServiceClient", "isDelayUpdate5GIcon show 5G reverse icon");
-                mobileIconGroup = TelephonyIcons.FIVE_G_KR_ON;
+                mobileIconGroup = TelephonyIcons.FIVE_G_BASIC;
             } else if (i2 == 1 && fiveGServiceState.mUpperLayerInd == 1 && fiveGServiceState.mPlmn == 1) {
-                mobileIconGroup = TelephonyIcons.FIVE_G_KR_OFF;
+                mobileIconGroup = TelephonyIcons.FIVE_G_BASIC;
             }
         }
         Log.d("FiveGServiceClient", "getKrFiveGIcon isAvailNetworkDisplay = " + i2);

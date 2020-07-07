@@ -26,12 +26,11 @@ import java.util.Set;
 public class DessertCaseView extends FrameLayout {
     private static final float[] ALPHA_MASK = {0.0f, 0.0f, 0.0f, 0.0f, 255.0f, 0.0f, 0.0f, 0.0f, 0.0f, 255.0f, 0.0f, 0.0f, 0.0f, 0.0f, 255.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f};
     private static final float[] MASK = {0.0f, 0.0f, 0.0f, 0.0f, 255.0f, 0.0f, 0.0f, 0.0f, 0.0f, 255.0f, 0.0f, 0.0f, 0.0f, 0.0f, 255.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f};
-    private static final int NUM_PASTRIES = (((PASTRIES.length + RARE_PASTRIES.length) + XRARE_PASTRIES.length) + XXRARE_PASTRIES.length);
-    private static final int[] PASTRIES = {R.drawable.dessert_kitkat, R.drawable.dessert_android};
-    private static final int[] RARE_PASTRIES = {R.drawable.dessert_cupcake, R.drawable.dessert_donut, R.drawable.dessert_eclair, R.drawable.dessert_froyo, R.drawable.dessert_gingerbread, R.drawable.dessert_honeycomb, R.drawable.dessert_ics, R.drawable.dessert_jellybean};
-    private static final float[] WHITE_MASK = {0.0f, 0.0f, 0.0f, 0.0f, 255.0f, 0.0f, 0.0f, 0.0f, 0.0f, 255.0f, 0.0f, 0.0f, 0.0f, 0.0f, 255.0f, -1.0f, 0.0f, 0.0f, 0.0f, 255.0f};
-    private static final int[] XRARE_PASTRIES = {R.drawable.dessert_petitfour, R.drawable.dessert_donutburger, R.drawable.dessert_flan, R.drawable.dessert_keylimepie};
-    private static final int[] XXRARE_PASTRIES = {R.drawable.dessert_zombiegingerbread, R.drawable.dessert_dandroid, R.drawable.dessert_jandycane};
+    private static final int NUM_PASTRIES;
+    private static final int[] PASTRIES;
+    private static final int[] RARE_PASTRIES;
+    private static final int[] XRARE_PASTRIES;
+    private static final int[] XXRARE_PASTRIES;
     float[] hsv;
     private int mCellSize;
     private View[] mCells;
@@ -48,6 +47,19 @@ public class DessertCaseView extends FrameLayout {
     public boolean mStarted;
     private int mWidth;
     private final HashSet<View> tmpSet;
+
+    static {
+        Class<DessertCaseView> cls = DessertCaseView.class;
+        int[] iArr = {R.drawable.dessert_kitkat, R.drawable.dessert_android};
+        PASTRIES = iArr;
+        int[] iArr2 = {R.drawable.dessert_cupcake, R.drawable.dessert_donut, R.drawable.dessert_eclair, R.drawable.dessert_froyo, R.drawable.dessert_gingerbread, R.drawable.dessert_honeycomb, R.drawable.dessert_ics, R.drawable.dessert_jellybean};
+        RARE_PASTRIES = iArr2;
+        int[] iArr3 = {R.drawable.dessert_petitfour, R.drawable.dessert_donutburger, R.drawable.dessert_flan, R.drawable.dessert_keylimepie};
+        XRARE_PASTRIES = iArr3;
+        int[] iArr4 = {R.drawable.dessert_zombiegingerbread, R.drawable.dessert_dandroid, R.drawable.dessert_jandycane};
+        XXRARE_PASTRIES = iArr4;
+        NUM_PASTRIES = iArr.length + iArr2.length + iArr3.length + iArr4.length;
+    }
 
     public DessertCaseView(Context context) {
         this(context, (AttributeSet) null);
@@ -86,21 +98,16 @@ public class DessertCaseView extends FrameLayout {
         options.inMutable = true;
         Bitmap bitmap = null;
         int[][] iArr = {PASTRIES, RARE_PASTRIES, XRARE_PASTRIES, XXRARE_PASTRIES};
-        int length = iArr.length;
-        int i2 = 0;
-        while (i2 < length) {
-            Bitmap bitmap2 = bitmap;
+        for (int i2 = 0; i2 < 4; i2++) {
             for (int i3 : iArr[i2]) {
-                options.inBitmap = bitmap2;
-                bitmap2 = BitmapFactory.decodeResource(resources, i3, options);
-                BitmapDrawable bitmapDrawable = new BitmapDrawable(resources, convertToAlphaMask(bitmap2));
+                options.inBitmap = bitmap;
+                bitmap = BitmapFactory.decodeResource(resources, i3, options);
+                BitmapDrawable bitmapDrawable = new BitmapDrawable(resources, convertToAlphaMask(bitmap));
                 bitmapDrawable.setColorFilter(new ColorMatrixColorFilter(ALPHA_MASK));
                 int i4 = this.mCellSize;
                 bitmapDrawable.setBounds(0, 0, i4, i4);
                 this.mDrawables.append(i3, bitmapDrawable);
             }
-            i2++;
-            bitmap = bitmap2;
         }
     }
 
@@ -138,7 +145,7 @@ public class DessertCaseView extends FrameLayout {
     }
 
     /* access modifiers changed from: protected */
-    /* JADX WARNING: Code restructure failed: missing block: B:23:0x0082, code lost:
+    /* JADX WARNING: Code restructure failed: missing block: B:23:0x007e, code lost:
         return;
      */
     /* Code decompiled incorrectly, please refer to instructions dump. */
@@ -146,85 +153,83 @@ public class DessertCaseView extends FrameLayout {
         /*
             r2 = this;
             monitor-enter(r2)
-            super.onSizeChanged(r3, r4, r5, r6)     // Catch:{ all -> 0x0083 }
-            int r5 = r2.mWidth     // Catch:{ all -> 0x0083 }
+            super.onSizeChanged(r3, r4, r5, r6)     // Catch:{ all -> 0x007f }
+            int r5 = r2.mWidth     // Catch:{ all -> 0x007f }
             if (r5 != r3) goto L_0x000e
-            int r5 = r2.mHeight     // Catch:{ all -> 0x0083 }
+            int r5 = r2.mHeight     // Catch:{ all -> 0x007f }
             if (r5 != r4) goto L_0x000e
             monitor-exit(r2)
             return
         L_0x000e:
-            boolean r5 = r2.mStarted     // Catch:{ all -> 0x0083 }
+            boolean r5 = r2.mStarted     // Catch:{ all -> 0x007f }
             if (r5 == 0) goto L_0x0015
-            r2.stop()     // Catch:{ all -> 0x0083 }
+            r2.stop()     // Catch:{ all -> 0x007f }
         L_0x0015:
-            r2.mWidth = r3     // Catch:{ all -> 0x0083 }
-            r2.mHeight = r4     // Catch:{ all -> 0x0083 }
+            r2.mWidth = r3     // Catch:{ all -> 0x007f }
+            r2.mHeight = r4     // Catch:{ all -> 0x007f }
             r3 = 0
-            r2.mCells = r3     // Catch:{ all -> 0x0083 }
-            r2.removeAllViewsInLayout()     // Catch:{ all -> 0x0083 }
-            java.util.Set<android.graphics.Point> r3 = r2.mFreeList     // Catch:{ all -> 0x0083 }
-            r3.clear()     // Catch:{ all -> 0x0083 }
-            int r3 = r2.mHeight     // Catch:{ all -> 0x0083 }
-            int r4 = r2.mCellSize     // Catch:{ all -> 0x0083 }
+            r2.mCells = r3     // Catch:{ all -> 0x007f }
+            r2.removeAllViewsInLayout()     // Catch:{ all -> 0x007f }
+            java.util.Set<android.graphics.Point> r3 = r2.mFreeList     // Catch:{ all -> 0x007f }
+            r3.clear()     // Catch:{ all -> 0x007f }
+            int r3 = r2.mHeight     // Catch:{ all -> 0x007f }
+            int r4 = r2.mCellSize     // Catch:{ all -> 0x007f }
             int r3 = r3 / r4
-            r2.mRows = r3     // Catch:{ all -> 0x0083 }
-            int r3 = r2.mWidth     // Catch:{ all -> 0x0083 }
-            int r4 = r2.mCellSize     // Catch:{ all -> 0x0083 }
-            int r3 = r3 / r4
-            r2.mColumns = r3     // Catch:{ all -> 0x0083 }
-            int r3 = r2.mRows     // Catch:{ all -> 0x0083 }
-            int r4 = r2.mColumns     // Catch:{ all -> 0x0083 }
+            r2.mRows = r3     // Catch:{ all -> 0x007f }
+            int r4 = r2.mWidth     // Catch:{ all -> 0x007f }
+            int r6 = r2.mCellSize     // Catch:{ all -> 0x007f }
+            int r4 = r4 / r6
+            r2.mColumns = r4     // Catch:{ all -> 0x007f }
             int r3 = r3 * r4
-            android.view.View[] r3 = new android.view.View[r3]     // Catch:{ all -> 0x0083 }
-            r2.mCells = r3     // Catch:{ all -> 0x0083 }
+            android.view.View[] r3 = new android.view.View[r3]     // Catch:{ all -> 0x007f }
+            r2.mCells = r3     // Catch:{ all -> 0x007f }
             r3 = 1048576000(0x3e800000, float:0.25)
-            r2.setScaleX(r3)     // Catch:{ all -> 0x0083 }
-            r2.setScaleY(r3)     // Catch:{ all -> 0x0083 }
-            int r4 = r2.mWidth     // Catch:{ all -> 0x0083 }
-            int r6 = r2.mCellSize     // Catch:{ all -> 0x0083 }
-            int r0 = r2.mColumns     // Catch:{ all -> 0x0083 }
+            r2.setScaleX(r3)     // Catch:{ all -> 0x007f }
+            r2.setScaleY(r3)     // Catch:{ all -> 0x007f }
+            int r4 = r2.mWidth     // Catch:{ all -> 0x007f }
+            int r6 = r2.mCellSize     // Catch:{ all -> 0x007f }
+            int r0 = r2.mColumns     // Catch:{ all -> 0x007f }
             int r6 = r6 * r0
             int r4 = r4 - r6
-            float r4 = (float) r4     // Catch:{ all -> 0x0083 }
+            float r4 = (float) r4     // Catch:{ all -> 0x007f }
             r6 = 1056964608(0x3f000000, float:0.5)
             float r4 = r4 * r6
             float r4 = r4 * r3
-            r2.setTranslationX(r4)     // Catch:{ all -> 0x0083 }
-            int r4 = r2.mHeight     // Catch:{ all -> 0x0083 }
-            int r0 = r2.mCellSize     // Catch:{ all -> 0x0083 }
-            int r1 = r2.mRows     // Catch:{ all -> 0x0083 }
+            r2.setTranslationX(r4)     // Catch:{ all -> 0x007f }
+            int r4 = r2.mHeight     // Catch:{ all -> 0x007f }
+            int r0 = r2.mCellSize     // Catch:{ all -> 0x007f }
+            int r1 = r2.mRows     // Catch:{ all -> 0x007f }
             int r0 = r0 * r1
             int r4 = r4 - r0
-            float r4 = (float) r4     // Catch:{ all -> 0x0083 }
+            float r4 = (float) r4     // Catch:{ all -> 0x007f }
             float r4 = r4 * r6
             float r4 = r4 * r3
-            r2.setTranslationY(r4)     // Catch:{ all -> 0x0083 }
+            r2.setTranslationY(r4)     // Catch:{ all -> 0x007f }
             r3 = 0
             r4 = r3
-        L_0x0063:
-            int r6 = r2.mRows     // Catch:{ all -> 0x0083 }
-            if (r4 >= r6) goto L_0x007c
+        L_0x005f:
+            int r6 = r2.mRows     // Catch:{ all -> 0x007f }
+            if (r4 >= r6) goto L_0x0078
             r6 = r3
-        L_0x0068:
-            int r0 = r2.mColumns     // Catch:{ all -> 0x0083 }
-            if (r6 >= r0) goto L_0x0079
-            java.util.Set<android.graphics.Point> r0 = r2.mFreeList     // Catch:{ all -> 0x0083 }
-            android.graphics.Point r1 = new android.graphics.Point     // Catch:{ all -> 0x0083 }
-            r1.<init>(r6, r4)     // Catch:{ all -> 0x0083 }
-            r0.add(r1)     // Catch:{ all -> 0x0083 }
+        L_0x0064:
+            int r0 = r2.mColumns     // Catch:{ all -> 0x007f }
+            if (r6 >= r0) goto L_0x0075
+            java.util.Set<android.graphics.Point> r0 = r2.mFreeList     // Catch:{ all -> 0x007f }
+            android.graphics.Point r1 = new android.graphics.Point     // Catch:{ all -> 0x007f }
+            r1.<init>(r6, r4)     // Catch:{ all -> 0x007f }
+            r0.add(r1)     // Catch:{ all -> 0x007f }
             int r6 = r6 + 1
-            goto L_0x0068
-        L_0x0079:
+            goto L_0x0064
+        L_0x0075:
             int r4 = r4 + 1
-            goto L_0x0063
-        L_0x007c:
-            if (r5 == 0) goto L_0x0081
-            r2.start()     // Catch:{ all -> 0x0083 }
-        L_0x0081:
+            goto L_0x005f
+        L_0x0078:
+            if (r5 == 0) goto L_0x007d
+            r2.start()     // Catch:{ all -> 0x007f }
+        L_0x007d:
             monitor-exit(r2)
             return
-        L_0x0083:
+        L_0x007f:
             r3 = move-exception
             monitor-exit(r2)
             throw r3
@@ -610,17 +615,13 @@ public class DessertCaseView extends FrameLayout {
         }
         Point[] pointArr = new Point[(intValue * intValue)];
         int i = 0;
-        int i2 = 0;
-        while (i < intValue) {
-            int i3 = i2;
-            int i4 = 0;
-            while (i4 < intValue) {
-                pointArr[i3] = new Point(point.x + i, point.y + i4);
-                i4++;
+        for (int i2 = 0; i2 < intValue; i2++) {
+            int i3 = 0;
+            while (i3 < intValue) {
+                pointArr[i] = new Point(point.x + i2, point.y + i3);
                 i3++;
+                i++;
             }
-            i++;
-            i2 = i3;
         }
         return pointArr;
     }

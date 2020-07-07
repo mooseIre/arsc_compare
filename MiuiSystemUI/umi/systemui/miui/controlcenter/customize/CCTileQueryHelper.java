@@ -9,14 +9,16 @@ import java.util.Arrays;
 import java.util.List;
 
 public class CCTileQueryHelper extends TileQueryHelper {
-    protected List<String> mControlIndependentTiles = new ArrayList();
+    protected List<String> mControlIndependentTiles;
 
     public CCTileQueryHelper(Context context, TileQueryHelper.TileStateListener tileStateListener) {
         super(context, tileStateListener);
+        ArrayList arrayList = new ArrayList();
+        this.mControlIndependentTiles = arrayList;
         if (Constants.IS_INTERNATIONAL) {
-            this.mControlIndependentTiles.addAll(Arrays.asList(context.getResources().getStringArray(R.array.qs_control_independent_tiles_global)));
+            arrayList.addAll(Arrays.asList(context.getResources().getStringArray(R.array.qs_control_independent_tiles_global)));
         } else {
-            this.mControlIndependentTiles.addAll(Arrays.asList(context.getResources().getStringArray(R.array.qs_control_independent_tiles)));
+            arrayList.addAll(Arrays.asList(context.getResources().getStringArray(R.array.qs_control_independent_tiles)));
         }
         for (String str : this.mControlIndependentTiles) {
             String str2 = this.mTilesStock;

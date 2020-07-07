@@ -23,8 +23,9 @@ public class QCBrightnessMirrorController {
 
     public QCBrightnessMirrorController(ControlPanelContentView controlPanelContentView) {
         this.mControlPanelContentView = controlPanelContentView;
-        this.mBrightnessMirror = this.mControlPanelContentView.findViewById(R.id.brightness_mirror);
-        this.mMirrorContent = (FrameLayout) this.mBrightnessMirror.findViewById(R.id.mirror_content);
+        View findViewById = controlPanelContentView.findViewById(R.id.brightness_mirror);
+        this.mBrightnessMirror = findViewById;
+        this.mMirrorContent = (FrameLayout) findViewById.findViewById(R.id.mirror_content);
         this.mContent = this.mControlPanelContentView.findViewById(R.id.qs_control_center_panel);
     }
 

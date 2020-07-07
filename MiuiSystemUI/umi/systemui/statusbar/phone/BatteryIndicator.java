@@ -137,10 +137,12 @@ public class BatteryIndicator extends ImageView implements DemoMode, BatteryCont
     /* access modifiers changed from: protected */
     public void updateCanvas(Canvas canvas) {
         if (getLayoutDirection() == 0) {
-            canvas.clipRect(this.mLeft, this.mTop, this.mLeft + this.mClipWidth, this.mBottom);
-        } else {
-            canvas.clipRect(this.mRight - this.mClipWidth, this.mTop, this.mRight, this.mBottom);
+            int i = this.mLeft;
+            canvas.clipRect(i, this.mTop, this.mClipWidth + i, this.mBottom);
+            return;
         }
+        int i2 = this.mRight;
+        canvas.clipRect(i2 - this.mClipWidth, this.mTop, i2, this.mBottom);
     }
 
     /* access modifiers changed from: protected */

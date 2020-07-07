@@ -29,14 +29,19 @@ public class ImageGLWallpaper {
     private int mUniTexture;
     private int mUniWallpaperAlpha;
     private int mUniWindowAlpha;
-    private final FloatBuffer mVertexBuffer = ByteBuffer.allocateDirect(VERTICES.length * 4).order(ByteOrder.nativeOrder()).asFloatBuffer();
+    private final FloatBuffer mVertexBuffer;
 
     public ImageGLWallpaper(ImageGLProgram imageGLProgram) {
+        float[] fArr = TEXTURES;
+        float[] fArr2 = VERTICES;
         this.mProgram = imageGLProgram;
-        this.mVertexBuffer.put(VERTICES);
+        FloatBuffer asFloatBuffer = ByteBuffer.allocateDirect(fArr2.length * 4).order(ByteOrder.nativeOrder()).asFloatBuffer();
+        this.mVertexBuffer = asFloatBuffer;
+        asFloatBuffer.put(fArr2);
         this.mVertexBuffer.position(0);
-        this.mTextureBuffer = ByteBuffer.allocateDirect(TEXTURES.length * 4).order(ByteOrder.nativeOrder()).asFloatBuffer();
-        this.mTextureBuffer.put(TEXTURES);
+        FloatBuffer asFloatBuffer2 = ByteBuffer.allocateDirect(fArr.length * 4).order(ByteOrder.nativeOrder()).asFloatBuffer();
+        this.mTextureBuffer = asFloatBuffer2;
+        asFloatBuffer2.put(fArr);
         this.mTextureBuffer.position(0);
     }
 

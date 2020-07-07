@@ -18,7 +18,7 @@ public class SlaveWifiSignalController extends SignalController<SlaveWifiState, 
     public SlaveWifiSignalController(Context context, boolean z, CallbackHandler callbackHandler, NetworkControllerImpl networkControllerImpl) {
         super("SlaveWifiSignalController", context, 1, callbackHandler, networkControllerImpl);
         this.mSupportSlaveWifi = z;
-        if (this.mSupportSlaveWifi) {
+        if (z) {
             SignalController.IconGroup iconGroup = new SignalController.IconGroup("Slave WiFi Icons", WifiIcons.SB_SLAVE_WIFI_SIGNAL_STRENGTH, WifiIcons.QS_SLAVE_WIFI_SIGNAL_STRENGTH, AccessibilityContentDescriptions.SLAVE_WIFI_CONNECTION_STRENGTH, R.drawable.stat_sys_wifi_signal_null, R.drawable.ic_qs_wifi_no_network, R.drawable.stat_sys_wifi_signal_null, R.drawable.ic_qs_wifi_no_network, R.string.accessibility_status_bar_no_slave_wifi);
             ((SlaveWifiState) this.mLastState).iconGroup = iconGroup;
             ((SlaveWifiState) this.mCurrentState).iconGroup = iconGroup;

@@ -12,7 +12,6 @@ import com.android.systemui.Dependency;
 class BubbleTouchHandler implements View.OnTouchListener {
     private final BubbleData mBubbleData;
     private BubbleController mController = ((BubbleController) Dependency.get(BubbleController.class));
-    private Handler mHandler = new Handler();
     private boolean mInDismissTarget;
     private boolean mMovedEnough;
     private final BubbleStackView mStack;
@@ -23,6 +22,7 @@ class BubbleTouchHandler implements View.OnTouchListener {
     private final PointF mViewPositionOnTouchDown = new PointF();
 
     BubbleTouchHandler(BubbleStackView bubbleStackView, BubbleData bubbleData, Context context) {
+        new Handler();
         int scaledTouchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
         this.mTouchSlopSquared = scaledTouchSlop * scaledTouchSlop;
         this.mBubbleData = bubbleData;
@@ -78,8 +78,8 @@ class BubbleTouchHandler implements View.OnTouchListener {
                     str = ((BubbleView) this.mTouchedView).getKey();
                 }
                 this.mStack.magnetToStackIfNeededThenAnimateDismissal(this.mTouchedView, xVelocity, yVelocity, new Runnable(equals, str) {
-                    private final /* synthetic */ boolean f$1;
-                    private final /* synthetic */ String f$2;
+                    public final /* synthetic */ boolean f$1;
+                    public final /* synthetic */ String f$2;
 
                     {
                         this.f$1 = r2;
@@ -144,6 +144,8 @@ class BubbleTouchHandler implements View.OnTouchListener {
         return true;
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$onTouch$0 */
     public /* synthetic */ void lambda$onTouch$0$BubbleTouchHandler(boolean z, String str) {
         if (z) {
             this.mController.dismissStack(1);

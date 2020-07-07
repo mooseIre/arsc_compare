@@ -16,7 +16,7 @@ import com.android.systemui.statusbar.ExpandableView;
 import com.android.systemui.statusbar.FlingAnimationUtils;
 import com.android.systemui.statusbar.policy.ScrollAdapter;
 
-public class ExpandHelper implements Gefingerpoken {
+public class ExpandHelper {
     /* access modifiers changed from: private */
     public Callback mCallback;
     private Context mContext;
@@ -34,11 +34,9 @@ public class ExpandHelper implements Gefingerpoken {
     private float mInitialTouchSpan;
     private float mInitialTouchX;
     private float mInitialTouchY;
-    private int mLargeSize;
     private float mLastFocusY;
     private float mLastMotionY;
     private float mLastSpanY;
-    private float mMaximumStretch;
     private float mNaturalHeight;
     private float mOldHeight;
     /* access modifiers changed from: private */
@@ -123,13 +121,12 @@ public class ExpandHelper implements Gefingerpoken {
 
     public ExpandHelper(Context context, Callback callback, int i, int i2) {
         this.mSmallSize = i;
-        this.mMaximumStretch = ((float) this.mSmallSize) * 2.0f;
-        this.mLargeSize = i2;
         this.mContext = context;
         this.mCallback = callback;
-        this.mScaler = new ViewScaler();
+        ViewScaler viewScaler = new ViewScaler();
+        this.mScaler = viewScaler;
         this.mGravity = 48;
-        this.mScaleAnimation = ObjectAnimator.ofFloat(this.mScaler, "height", new float[]{0.0f});
+        this.mScaleAnimation = ObjectAnimator.ofFloat(viewScaler, "height", new float[]{0.0f});
         this.mPullGestureMinXSpan = this.mContext.getResources().getDimension(R.dimen.pull_span_min);
         this.mTouchSlop = ViewConfiguration.get(this.mContext).getScaledTouchSlop();
         this.mSGD = new ScaleGestureDetector(context, this.mScaleGestureListener);
@@ -198,8 +195,8 @@ public class ExpandHelper implements Gefingerpoken {
         this.mScrollAdapter = scrollAdapter;
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:17:0x0056, code lost:
-        if (r0 != 3) goto L_0x0110;
+    /* JADX WARNING: Code restructure failed: missing block: B:17:0x0054, code lost:
+        if (r0 != 3) goto L_0x010c;
      */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     public boolean onInterceptTouchEvent(android.view.MotionEvent r8) {
@@ -225,50 +222,49 @@ public class ExpandHelper implements Gefingerpoken {
             android.view.ScaleGestureDetector r4 = r7.mSGD
             float r4 = r4.getCurrentSpan()
             r7.mInitialTouchSpan = r4
-            float r4 = r7.mInitialTouchFocusY
-            r7.mLastFocusY = r4
-            float r4 = r7.mInitialTouchSpan
+            float r5 = r7.mInitialTouchFocusY
+            r7.mLastFocusY = r5
             r7.mLastSpanY = r4
             boolean r4 = r7.mExpanding
             r5 = 1
-            if (r4 == 0) goto L_0x0044
+            if (r4 == 0) goto L_0x0042
             float r0 = r8.getRawY()
             r7.mLastMotionY = r0
             r7.maybeRecycleVelocityTracker(r8)
             return r5
-        L_0x0044:
+        L_0x0042:
             r4 = 2
-            if (r0 != r4) goto L_0x004d
+            if (r0 != r4) goto L_0x004b
             int r6 = r7.mExpansionStyle
             r6 = r6 & r5
-            if (r6 == 0) goto L_0x004d
+            if (r6 == 0) goto L_0x004b
             return r5
-        L_0x004d:
+        L_0x004b:
             r0 = r0 & 255(0xff, float:3.57E-43)
-            if (r0 == 0) goto L_0x00d1
+            if (r0 == 0) goto L_0x00cf
             r2 = 3
-            if (r0 == r5) goto L_0x00bf
-            if (r0 == r4) goto L_0x005a
-            if (r0 == r2) goto L_0x00bf
-            goto L_0x0110
-        L_0x005a:
+            if (r0 == r5) goto L_0x00bd
+            if (r0 == r4) goto L_0x0058
+            if (r0 == r2) goto L_0x00bd
+            goto L_0x010c
+        L_0x0058:
             android.view.ScaleGestureDetector r0 = r7.mSGD
             float r0 = r0.getCurrentSpanX()
             float r2 = r7.mPullGestureMinXSpan
             int r2 = (r0 > r2 ? 1 : (r0 == r2 ? 0 : -1))
-            if (r2 <= 0) goto L_0x007b
+            if (r2 <= 0) goto L_0x0079
             android.view.ScaleGestureDetector r2 = r7.mSGD
             float r2 = r2.getCurrentSpanY()
             int r0 = (r0 > r2 ? 1 : (r0 == r2 ? 0 : -1))
-            if (r0 <= 0) goto L_0x007b
+            if (r0 <= 0) goto L_0x0079
             boolean r0 = r7.mExpanding
-            if (r0 != 0) goto L_0x007b
+            if (r0 != 0) goto L_0x0079
             com.android.systemui.statusbar.ExpandableView r0 = r7.mResizedView
             r7.startExpanding(r0, r4)
             r7.mWatchingForPull = r1
-        L_0x007b:
+        L_0x0079:
             boolean r0 = r7.mWatchingForPull
-            if (r0 == 0) goto L_0x0110
+            if (r0 == 0) goto L_0x010c
             float r0 = r8.getRawY()
             float r2 = r7.mInitialTouchY
             float r0 = r0 - r2
@@ -278,65 +274,64 @@ public class ExpandHelper implements Gefingerpoken {
             int r3 = r7.mTouchSlop
             float r3 = (float) r3
             int r3 = (r0 > r3 ? 1 : (r0 == r3 ? 0 : -1))
-            if (r3 <= 0) goto L_0x0110
+            if (r3 <= 0) goto L_0x010c
             float r2 = java.lang.Math.abs(r2)
             int r0 = (r0 > r2 ? 1 : (r0 == r2 ? 0 : -1))
-            if (r0 <= 0) goto L_0x0110
+            if (r0 <= 0) goto L_0x010c
             r7.mWatchingForPull = r1
             com.android.systemui.statusbar.ExpandableView r0 = r7.mResizedView
-            if (r0 == 0) goto L_0x0110
+            if (r0 == 0) goto L_0x010c
             boolean r0 = r7.isFullyExpanded(r0)
-            if (r0 != 0) goto L_0x0110
+            if (r0 != 0) goto L_0x010c
             com.android.systemui.statusbar.ExpandableView r0 = r7.mResizedView
             boolean r0 = r7.startExpanding(r0, r5)
-            if (r0 == 0) goto L_0x0110
+            if (r0 == 0) goto L_0x010c
             float r0 = r8.getRawY()
             r7.mLastMotionY = r0
             float r0 = r8.getRawY()
             r7.mInitialTouchY = r0
             r7.mHasPopped = r1
-            goto L_0x0110
-        L_0x00bf:
+            goto L_0x010c
+        L_0x00bd:
             int r0 = r8.getActionMasked()
-            if (r0 != r2) goto L_0x00c6
+            if (r0 != r2) goto L_0x00c4
             r1 = r5
-        L_0x00c6:
+        L_0x00c4:
             float r0 = r7.getCurrentVelocity()
             r7.finishExpanding(r1, r0)
             r7.clearView()
-            goto L_0x0110
-        L_0x00d1:
+            goto L_0x010c
+        L_0x00cf:
             com.android.systemui.statusbar.policy.ScrollAdapter r0 = r7.mScrollAdapter
-            if (r0 == 0) goto L_0x00e9
+            if (r0 == 0) goto L_0x00e7
             android.view.View r0 = r0.getHostView()
             float r4 = (float) r2
             boolean r0 = r7.isInside(r0, r4, r3)
-            if (r0 == 0) goto L_0x00e9
+            if (r0 == 0) goto L_0x00e7
             com.android.systemui.statusbar.policy.ScrollAdapter r0 = r7.mScrollAdapter
             boolean r0 = r0.isScrolledToTop()
-            if (r0 == 0) goto L_0x00e9
-            goto L_0x00ea
-        L_0x00e9:
+            if (r0 == 0) goto L_0x00e7
+            goto L_0x00e8
+        L_0x00e7:
             r5 = r1
-        L_0x00ea:
+        L_0x00e8:
             r7.mWatchingForPull = r5
             float r0 = (float) r2
             com.android.systemui.statusbar.ExpandableView r0 = r7.findView(r0, r3)
             r7.mResizedView = r0
-            com.android.systemui.statusbar.ExpandableView r0 = r7.mResizedView
-            if (r0 == 0) goto L_0x0104
+            if (r0 == 0) goto L_0x0100
             com.android.systemui.ExpandHelper$Callback r2 = r7.mCallback
             boolean r0 = r2.canChildBeExpanded(r0)
-            if (r0 != 0) goto L_0x0104
+            if (r0 != 0) goto L_0x0100
             r0 = 0
             r7.mResizedView = r0
             r7.mWatchingForPull = r1
-        L_0x0104:
+        L_0x0100:
             float r0 = r8.getRawY()
             r7.mInitialTouchY = r0
             float r0 = r8.getRawX()
             r7.mInitialTouchX = r0
-        L_0x0110:
+        L_0x010c:
             float r0 = r8.getRawY()
             r7.mLastMotionY = r0
             r7.maybeRecycleVelocityTracker(r8)
@@ -489,8 +484,9 @@ public class ExpandHelper implements Gefingerpoken {
         this.mCallback.expansionStateChanged(true);
         this.mCallback.setUserLockedChild(expandableView, true);
         this.mScaler.setView(expandableView);
-        this.mOldHeight = this.mScaler.getHeight();
-        this.mCurrentHeight = this.mOldHeight;
+        float height = this.mScaler.getHeight();
+        this.mOldHeight = height;
+        this.mCurrentHeight = height;
         if (this.mCallback.canChildBeExpanded(expandableView)) {
             this.mNaturalHeight = (float) this.mScaler.getNaturalHeight();
             this.mSmallSize = expandableView.getCollapsedHeight();

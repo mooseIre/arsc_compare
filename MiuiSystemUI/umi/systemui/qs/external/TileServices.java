@@ -51,8 +51,9 @@ public class TileServices extends IQSService.Stub {
 
     public TileServices(QSTileHost qSTileHost, Looper looper) {
         this.mHost = qSTileHost;
-        this.mContext = this.mHost.getContext();
-        this.mContext.registerReceiver(this.mRequestListeningReceiver, new IntentFilter("android.service.quicksettings.action.REQUEST_LISTENING"));
+        Context context = qSTileHost.getContext();
+        this.mContext = context;
+        context.registerReceiver(this.mRequestListeningReceiver, new IntentFilter("android.service.quicksettings.action.REQUEST_LISTENING"));
         this.mHandler = new Handler(looper);
         this.mMainHandler = new Handler(Looper.getMainLooper());
     }
@@ -90,7 +91,7 @@ public class TileServices extends IQSService.Stub {
             this.mTokenMap.remove(tileServiceManager.getToken());
             this.mTiles.remove(customTile.getComponent());
             this.mMainHandler.post(new Runnable(customTile.getComponent().getClassName()) {
-                private final /* synthetic */ String f$1;
+                public final /* synthetic */ String f$1;
 
                 {
                     this.f$1 = r2;
@@ -103,6 +104,8 @@ public class TileServices extends IQSService.Stub {
         }
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$freeService$0 */
     public /* synthetic */ void lambda$freeService$0$TileServices(String str) {
         this.mHost.getIconController().removeIcon(str);
     }
