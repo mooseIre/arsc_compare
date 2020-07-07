@@ -337,7 +337,10 @@ public class MiuiKeyguardUtils {
     }
 
     public static boolean showMXTelcelLockScreen(Context context) {
-        return "mx_telcel".equals(CUSTOMIZED_REGION) && isAppRunning(context, "com.celltick.lockscreen");
+        if (!"mx_telcel".equals(CUSTOMIZED_REGION) || !isAppRunning(context, "com.celltick.lockscreen") || Settings.Secure.getIntForUser(context.getContentResolver(), "start_disabled", 1, KeyguardUpdateMonitor.getCurrentUser()) != 1) {
+            return false;
+        }
+        return true;
     }
 
     public static boolean isAppRunning(Context context, String str) {

@@ -78,7 +78,7 @@ public class GTChargeAniView extends RelativeLayout {
         this.mTurboIcon.setScaleType(ImageView.ScaleType.FIT_CENTER);
         RelativeLayout.LayoutParams layoutParams3 = new RelativeLayout.LayoutParams(this.mTurboIconWidth, this.mTurboIconHeight);
         layoutParams3.addRule(1, this.mTailIcon.getId());
-        layoutParams3.leftMargin = (-this.mTurboIconWidth) / 15;
+        layoutParams3.leftMargin = 10;
         addView(this.mTurboIcon, layoutParams3);
         this.mTranslation = this.mTailIconWidth;
     }

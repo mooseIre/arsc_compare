@@ -172,6 +172,7 @@ public class KeyguardWallpaperHelper {
                     String miuiVersionName = MiuiKeyguardUtils.getMiuiVersionName();
                     int intValue = Integer.valueOf(miuiVersionName.substring(1)).intValue();
                     int i = PreferenceUtils.getInt(KeyguardWallpaperHelper.this.mContext, "pref_key_current_miui_version_code", 0);
+                    boolean z = PreferenceUtils.getInt(KeyguardWallpaperHelper.this.mContext, "pref_key_init_control_center_switch", 0) == 1;
                     Slog.i("KeyguardWallpaperHelper", "notifyThemeSetSuperWallpaper, isDeviceProvisioned = " + isDeviceProvisioned + "miuiVersionName = " + miuiVersionName + "miuiVersionCode = " + intValue + "oldMiuiVersionCode " + i);
                     if (isDeviceProvisioned && intValue == 12 && i < 12) {
                         boolean isUserUnlocked = KeyguardUpdateMonitor.getInstance(KeyguardWallpaperHelper.this.mContext).isUserUnlocked();
@@ -181,6 +182,12 @@ public class KeyguardWallpaperHelper {
                         } else {
                             boolean unused = KeyguardWallpaperHelper.this.mPendingTellThemeSetSuperWallpaper = true;
                         }
+                    }
+                    if (!z) {
+                        if (i == 12) {
+                            Settings.System.putIntForUser(KeyguardWallpaperHelper.this.mContext.getContentResolver(), "use_control_panel", Settings.System.getIntForUser(KeyguardWallpaperHelper.this.mContext.getContentResolver(), "use_control_panel", 1, 0), 0);
+                        }
+                        PreferenceUtils.putInt(KeyguardWallpaperHelper.this.mContext, "pref_key_init_control_center_switch", 1);
                     }
                     PreferenceUtils.putInt(KeyguardWallpaperHelper.this.mContext, "pref_key_current_miui_version_code", intValue);
                     return null;
