@@ -9,4 +9,5 @@
     <ViewStub android:id="@id/child_container_stub" android:layout="@layout/notification_children_container" android:inflatedId="@id/notification_children_container" android:layout_width="fill_parent" android:layout_height="wrap_content" />
     <ViewStub android:id="@id/notification_guts_stub" android:layout="@layout/notification_guts" android:inflatedId="@id/notification_guts" android:layout_width="fill_parent" android:layout_height="wrap_content" />
     <com.android.systemui.statusbar.notification.FakeShadowView android:id="@id/fake_shadow" android:layout_width="fill_parent" android:layout_height="fill_parent" />
+    <View android:layout_gravity="bottom|center" android:id="@id/mini_window_bar" android:background="@drawable/mini_window_bar" android:visibility="gone" android:layout_width="@dimen/mini_window_bar_width" android:layout_height="@dimen/mini_window_bar_height" android:layout_marginBottom="@dimen/mini_window_bar_marginBottom" />
 </com.android.systemui.statusbar.ExpandableNotificationRow>
