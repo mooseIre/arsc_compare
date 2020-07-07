@@ -4,14 +4,12 @@ import android.content.res.Configuration;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import com.android.keyguard.CarrierText;
 import com.android.systemui.BatteryMeterView;
 import com.android.systemui.Dependency;
 import com.android.systemui.plugins.R;
 import com.android.systemui.statusbar.AnimatedImageView;
 import com.android.systemui.statusbar.NetworkSpeedSplitter;
 import com.android.systemui.statusbar.NetworkSpeedView;
-import com.android.systemui.statusbar.RegionController;
 import com.android.systemui.statusbar.phone.CollapsedStatusBarFragment;
 import com.android.systemui.statusbar.phone.StatusBarIconController;
 import com.android.systemui.statusbar.policy.Clock;
@@ -23,8 +21,7 @@ import com.xiaomi.stat.MiStat;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class CollapsedStatusBarFragmentControllerDripImpl implements CollapsedStatusBarFragmentController, HotspotController.Callback, NetworkController.SignalCallback, RegionController.Callback {
-    private CarrierText mCarrierText;
+public class CollapsedStatusBarFragmentControllerDripImpl implements CollapsedStatusBarFragmentController, HotspotController.Callback, NetworkController.SignalCallback {
     private Clock mClock;
     /* access modifiers changed from: private */
     public ConfigurationController.ConfigurationListener mConfigurationListener;
@@ -42,8 +39,6 @@ public class CollapsedStatusBarFragmentControllerDripImpl implements CollapsedSt
     private StatusBarIconController.OrderedIconManager mOrderedRightIconManager;
     /* access modifiers changed from: private */
     public ViewGroup mPhoneStatusBarContainer;
-    private boolean mShowCarrierText;
-    private boolean mShowCarrierTextForRegion;
     private AnimatedImageView mSlaveWifi;
     private NetworkSpeedSplitter mSplitter;
     /* access modifiers changed from: private */
@@ -85,9 +80,6 @@ public class CollapsedStatusBarFragmentControllerDripImpl implements CollapsedSt
         this.mClock = (Clock) view.findViewById(R.id.clock);
         this.mSplitter = (NetworkSpeedSplitter) view.findViewById(R.id.network_speed_splitter);
         this.mSystemIconArea = view.findViewById(R.id.system_icon_area);
-        this.mCarrierText = (CarrierText) view.findViewById(R.id.carrier);
-        this.mShowCarrierText = view.getContext().getResources().getBoolean(R.bool.status_bar_show_carrier);
-        updateCarrierStyle();
         this.mDripWifiApOn = (AnimatedImageView) view.findViewById(R.id.drip_wifi_ap_on);
         this.mSlaveWifi = (AnimatedImageView) view.findViewById(R.id.drip_slave_wifi);
         this.mConfigurationListener = new ConfigurationController.ConfigurationListener() {
@@ -125,7 +117,6 @@ public class CollapsedStatusBarFragmentControllerDripImpl implements CollapsedSt
             this.mClock.addVisibilityListener(this.mSplitter);
             this.mDripNetwokSpeedView.addVisibilityListener(this.mSplitter);
         }
-        ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).addDarkReceiver((DarkIconDispatcher.DarkReceiver) this.mCarrierText);
         ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).addDarkReceiver((DarkIconDispatcher.DarkReceiver) this.mDripNetwokSpeedView);
         ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).addDarkReceiver((DarkIconDispatcher.DarkReceiver) this.mSplitter);
         this.mOrderedIconManager = new StatusBarIconController.OrderedIconManager(this.mFragment.mNotchLeftEarIcons, new ArrayList(Arrays.asList(new String[]{"quiet", "volume", "alarm_clock", "headset", "micphone", "ble_unlock_mode"})));
@@ -137,7 +128,6 @@ public class CollapsedStatusBarFragmentControllerDripImpl implements CollapsedSt
         ((ConfigurationController) Dependency.get(ConfigurationController.class)).addCallback(this.mConfigurationListener);
         this.mNetworkController.addCallback(this);
         ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).addDarkReceiver((ImageView) this.mSlaveWifi);
-        ((RegionController) Dependency.get(RegionController.class)).addCallback(this);
     }
 
     public void stop() {
@@ -156,9 +146,6 @@ public class CollapsedStatusBarFragmentControllerDripImpl implements CollapsedSt
         }
         if (this.mDripWifiApOn != null) {
             ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).removeDarkReceiver((ImageView) this.mDripWifiApOn);
-        }
-        if (this.mCarrierText != null) {
-            ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).removeDarkReceiver((DarkIconDispatcher.DarkReceiver) this.mCarrierText);
         }
         HotspotController hotspotController = this.mHotspot;
         if (hotspotController != null) {
@@ -179,34 +166,21 @@ public class CollapsedStatusBarFragmentControllerDripImpl implements CollapsedSt
         if (networkController != null) {
             networkController.removeCallback(this);
         }
-        ((RegionController) Dependency.get(RegionController.class)).removeCallback(this);
     }
 
     public void hideSystemIconArea(boolean z, boolean z2) {
+        View view;
         CollapsedStatusBarFragment collapsedStatusBarFragment = this.mFragment;
-        if (collapsedStatusBarFragment != null) {
-            View view = this.mDripLeftEarSuperContainer;
-            if (view != null) {
-                collapsedStatusBarFragment.animateHide(view, z, z2);
-            }
-            CarrierText carrierText = this.mCarrierText;
-            if (carrierText != null) {
-                carrierText.forceHide(true);
-            }
+        if (collapsedStatusBarFragment != null && (view = this.mDripLeftEarSuperContainer) != null) {
+            collapsedStatusBarFragment.animateHide(view, z, z2);
         }
     }
 
     public void showSystemIconArea(boolean z) {
+        View view;
         CollapsedStatusBarFragment collapsedStatusBarFragment = this.mFragment;
-        if (collapsedStatusBarFragment != null) {
-            View view = this.mDripLeftEarSuperContainer;
-            if (view != null) {
-                collapsedStatusBarFragment.animateShow(view, z);
-            }
-            CarrierText carrierText = this.mCarrierText;
-            if (carrierText != null) {
-                carrierText.forceHide(false);
-            }
+        if (collapsedStatusBarFragment != null && (view = this.mDripLeftEarSuperContainer) != null) {
+            collapsedStatusBarFragment.animateShow(view, z);
         }
     }
 
@@ -247,19 +221,6 @@ public class CollapsedStatusBarFragmentControllerDripImpl implements CollapsedSt
                 return;
             }
             animatedImageView.setVisibility(8);
-        }
-    }
-
-    public void onRegionChanged(String str) {
-        this.mShowCarrierTextForRegion = str.equals("SA");
-        updateCarrierStyle();
-    }
-
-    private void updateCarrierStyle() {
-        if (this.mShowCarrierText || this.mShowCarrierTextForRegion) {
-            this.mCarrierText.setShowStyle(1);
-        } else {
-            this.mCarrierText.setShowStyle(-1);
         }
     }
 }

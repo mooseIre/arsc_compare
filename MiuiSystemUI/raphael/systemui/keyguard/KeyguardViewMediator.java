@@ -1030,9 +1030,6 @@ public class KeyguardViewMediator extends SystemUI {
 
     public void onFinishedGoingToSleep(int i, boolean z) {
         Log.d("KeyguardViewMediator", "onFinishedGoingToSleep(" + i + ")");
-        if (MiuiKeyguardUtils.isGxzwSensor()) {
-            MiuiGxzwManager.getInstance().disableReadingMode();
-        }
         synchronized (this) {
             this.mDeviceInteractive = false;
             this.mGoingToSleep = false;
