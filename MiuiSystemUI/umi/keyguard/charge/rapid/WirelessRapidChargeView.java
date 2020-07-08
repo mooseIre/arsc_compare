@@ -30,10 +30,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.charge.ChargeUtils;
+import com.android.systemui.Dependency;
+import com.android.systemui.HapticFeedBackImpl;
 import com.android.systemui.plugins.R;
 import miui.maml.animation.interpolater.CubicEaseOutInterpolater;
 import miui.maml.animation.interpolater.QuartEaseOutInterpolater;
-import miui.util.HapticFeedbackUtil;
 
 public class WirelessRapidChargeView extends FrameLayout implements ValueAnimator.AnimatorUpdateListener, Animator.AnimatorListener {
     /* access modifiers changed from: private */
@@ -60,7 +61,6 @@ public class WirelessRapidChargeView extends FrameLayout implements ValueAnimato
     public GTChargeAniView mGtChargeAniView;
     /* access modifiers changed from: private */
     public Handler mHandler;
-    private HapticFeedbackUtil mHapticFeedbackUtil;
     private int mIconPaddingTop;
     private boolean mInitScreenOn;
     private boolean mIsCarMode;
@@ -148,7 +148,6 @@ public class WirelessRapidChargeView extends FrameLayout implements ValueAnimato
         this.mNormalIconDrawable = context.getDrawable(R.drawable.charge_animation_normal_charge_icon);
         this.mSuperRapidIconDrawable = context.getDrawable(R.drawable.charge_animation_super_rapid_icon);
         this.mCarIconDrawable = context.getDrawable(R.drawable.charge_animation_car_mode_icon);
-        this.mHapticFeedbackUtil = new HapticFeedbackUtil(context, false);
         this.mWindowManager = (WindowManager) context.getSystemService("window");
         this.mScreenSize = new Point();
         this.mWindowManager.getDefaultDisplay().getRealSize(this.mScreenSize);
@@ -449,7 +448,7 @@ public class WirelessRapidChargeView extends FrameLayout implements ValueAnimato
         } else {
             this.mVideoView.addChargeView();
         }
-        this.mHapticFeedbackUtil.performExtHapticFeedback(75);
+        ((HapticFeedBackImpl) Dependency.get(HapticFeedBackImpl.class)).extHapticFeedback(75, false, 0);
     }
 
     private void setViewState() {
@@ -547,7 +546,6 @@ public class WirelessRapidChargeView extends FrameLayout implements ValueAnimato
             addToWindow("mWindowShouldAdd");
         }
         this.mHandler.removeCallbacksAndMessages((Object) null);
-        this.mHapticFeedbackUtil.release();
         disableOrientationSensor();
     }
 
