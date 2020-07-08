@@ -139,11 +139,6 @@ public class QSControlCenterTileLayout extends ViewGroup implements QSPanel.QSTi
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
         ((ControlPanelWindowManager) Dependency.get(ControlPanelWindowManager.class)).addExpandChangeListener(this);
-        post(new Runnable() {
-            public void run() {
-                QSControlCenterTileLayout.this.updateWidth();
-            }
-        });
     }
 
     /* access modifiers changed from: protected */
@@ -161,6 +156,13 @@ public class QSControlCenterTileLayout extends ViewGroup implements QSPanel.QSTi
     }
 
     /* access modifiers changed from: protected */
+    public void onFinishInflate() {
+        super.onFinishInflate();
+        this.mOrientation = this.mContext.getResources().getConfiguration().orientation;
+        updateWidth();
+    }
+
+    /* access modifiers changed from: protected */
     public void onConfigurationChanged(Configuration configuration) {
         Log.d("QSControlCenterTileLayout", "onConfigurationChanged orientation=" + this.mOrientation + "  newConfig.orientation=" + configuration.orientation);
         super.onConfigurationChanged(configuration);
@@ -172,8 +174,7 @@ public class QSControlCenterTileLayout extends ViewGroup implements QSPanel.QSTi
         }
     }
 
-    /* access modifiers changed from: private */
-    public void updateWidth() {
+    private void updateWidth() {
         Log.d("QSControlCenterTileLayout", "updateWidth orientation=" + this.mOrientation);
         if (this.mOrientation == 2) {
             this.mRowMarginStart = ((int) ((this.mPanelLandWidth - (this.mPanelPaddingHorizontal * 2.0f)) - ((float) (this.mCellWidth * 4)))) / 3;
@@ -598,7 +599,7 @@ public class QSControlCenterTileLayout extends ViewGroup implements QSPanel.QSTi
         final QSPanel.TileRecord tileRecord = new QSPanel.TileRecord();
         tileRecord.tile = qSTile;
         tileRecord.tileView = createTileView(qSTile, !this.mExpanded && this.mRecords.size() <= this.mMinShowRows * this.mColumns);
-        AnonymousClass2 r4 = new QSTile.Callback() {
+        AnonymousClass1 r4 = new QSTile.Callback() {
             public void onScanStateChanged(boolean z) {
             }
 

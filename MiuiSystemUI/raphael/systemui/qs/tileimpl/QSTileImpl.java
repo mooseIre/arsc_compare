@@ -17,7 +17,6 @@ import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.settingslib.RestrictedLockUtils;
 import com.android.settingslib.RestrictedLockUtilsHelper;
 import com.android.systemui.Dependency;
-import com.android.systemui.HapticFeedBackImpl;
 import com.android.systemui.Util;
 import com.android.systemui.miui.controlcenter.tileImpl.CCQSIconViewImpl;
 import com.android.systemui.miui.statusbar.ControlCenterActivityStarter;
@@ -32,7 +31,6 @@ import com.android.systemui.qs.QSHost;
 import com.android.systemui.qs.external.CustomTile;
 import java.util.ArrayList;
 import java.util.Iterator;
-import miui.view.MiuiHapticFeedbackConstants;
 
 public abstract class QSTileImpl<TState extends QSTile.State> implements QSTile {
     protected static final Object ARG_SHOW_TRANSIENT_DISABLING = new Object();
@@ -430,7 +428,6 @@ public abstract class QSTileImpl<TState extends QSTile.State> implements QSTile 
                     if (QSTileImpl.this.mState.disabledByPolicy) {
                         QSTileImpl.this.postStartActivityDismissingKeyguard(RestrictedLockUtils.getShowAdminSupportDetailsIntent(QSTileImpl.this.mContext, QSTileImpl.this.mEnforcedAdmin), 0);
                     } else if (QSTileImpl.this.getState().state != 0 || Util.isMiuiOptimizationDisabled()) {
-                        ((HapticFeedBackImpl) Dependency.get(HapticFeedBackImpl.class)).getHapticFeedbackUtil().performHapticFeedback(MiuiHapticFeedbackConstants.FLAG_MIUI_HAPTIC_FLICK, false);
                         QSTileImpl.this.handleClick();
                         if (!z && QSTileImpl.this.mHost.collapseAfterClick() && !"edit".equals(QSTileImpl.this.getTileSpec()) && !"autobrightness".equals(QSTileImpl.this.getTileSpec())) {
                             QSTileImpl.this.mHost.collapsePanels();

@@ -17,6 +17,7 @@ import com.android.systemui.plugins.R;
 import com.android.systemui.qs.QSPanel;
 
 public class ControlPanelContentView extends FrameLayout {
+    private Context mContext;
     private ControlPanelWindowManager mControlPanelWindowManager;
     private QSControlCustomizer.QSControlPanelCallback mCustomizerCallback = null;
     private QSControlDetail mDetail;
@@ -28,11 +29,12 @@ public class ControlPanelContentView extends FrameLayout {
     private ImageView mTilesEdit;
 
     public ControlPanelContentView(Context context) {
-        super(context);
+        super(context, (AttributeSet) null);
     }
 
     public ControlPanelContentView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
+        this.mContext = context;
     }
 
     /* access modifiers changed from: protected */
@@ -53,25 +55,32 @@ public class ControlPanelContentView extends FrameLayout {
             }
         });
         setVisibility(4);
+        this.mOrientation = this.mContext.getResources().getConfiguration().orientation;
+        updateLayout();
     }
 
     /* access modifiers changed from: protected */
     public void onConfigurationChanged(Configuration configuration) {
         super.onConfigurationChanged(configuration);
-        if (configuration.orientation != this.mOrientation) {
-            if (this.mQSCustomizer.isShown() && configuration.orientation == 2) {
-                hideEdit();
-            }
-            this.mOrientation = configuration.orientation;
-            FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) this.mQsControlCenterPanel.getLayoutParams();
-            if (this.mOrientation == 1) {
-                layoutParams.width = -1;
-            } else {
-                layoutParams.width = this.mContext.getResources().getDimensionPixelSize(R.dimen.qs_control_width_land);
-            }
-            this.mQsControlCenterPanel.setLayoutParams(layoutParams);
-            this.mQsControlCenterPanel.onOrientationChanged(this.mOrientation, false);
+        int i = configuration.orientation;
+        if (i != this.mOrientation) {
+            this.mOrientation = i;
+            updateLayout();
         }
+    }
+
+    private void updateLayout() {
+        if (this.mQSCustomizer.isShown() && this.mOrientation == 2) {
+            hideEdit();
+        }
+        FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) this.mQsControlCenterPanel.getLayoutParams();
+        if (this.mOrientation == 1) {
+            layoutParams.width = -1;
+        } else {
+            layoutParams.width = this.mContext.getResources().getDimensionPixelSize(R.dimen.qs_control_width_land);
+        }
+        this.mQsControlCenterPanel.setLayoutParams(layoutParams);
+        this.mQsControlCenterPanel.onOrientationChanged(this.mOrientation, false);
     }
 
     public void updateResources() {

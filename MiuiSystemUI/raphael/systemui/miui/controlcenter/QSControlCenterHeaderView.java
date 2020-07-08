@@ -31,6 +31,8 @@ public class QSControlCenterHeaderView extends LinearLayout {
     public Clock mBigTime;
     private LinearLayout mCarrierLayout;
     private CarrierText mCarrierText;
+    /* access modifiers changed from: private */
+    public Context mContext;
     private int mDarkModeIconColorSingleTone;
     /* access modifiers changed from: private */
     public Clock mDateView;
@@ -64,7 +66,7 @@ public class QSControlCenterHeaderView extends LinearLayout {
         }
     };
     private int mOrientation;
-    private ControlPanelController mPanelController = ((ControlPanelController) Dependency.get(ControlPanelController.class));
+    private ControlPanelController mPanelController;
     /* access modifiers changed from: private */
     public ImageView mShortcut;
     private LinearLayout mStatusIcons;
@@ -73,6 +75,8 @@ public class QSControlCenterHeaderView extends LinearLayout {
 
     public QSControlCenterHeaderView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
+        this.mContext = context;
+        this.mPanelController = (ControlPanelController) Dependency.get(ControlPanelController.class);
     }
 
     /* access modifiers changed from: protected */
@@ -113,6 +117,8 @@ public class QSControlCenterHeaderView extends LinearLayout {
         }
         imageView.setVisibility(i);
         this.mActStarter = (ControlCenterActivityStarter) Dependency.get(ControlCenterActivityStarter.class);
+        this.mOrientation = this.mContext.getResources().getConfiguration().orientation;
+        updateLayout();
     }
 
     /* access modifiers changed from: protected */
@@ -136,20 +142,24 @@ public class QSControlCenterHeaderView extends LinearLayout {
         int i2 = configuration.orientation;
         if (i != i2) {
             this.mOrientation = i2;
-            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) this.mShortcut.getLayoutParams();
-            LinearLayout.LayoutParams layoutParams2 = (LinearLayout.LayoutParams) this.mTilesHeader.getLayoutParams();
-            if (this.mOrientation != 1 || this.mPanelController.isSuperPowerMode()) {
-                layoutParams2.topMargin = 0;
-                this.mTilesEdit.setVisibility(8);
-                layoutParams.setMarginEnd(0);
-            } else {
-                layoutParams2.topMargin = this.mContext.getResources().getDimensionPixelSize(R.dimen.qs_control_header_tiles_margin_top);
-                this.mTilesEdit.setVisibility(0);
-                layoutParams.setMarginEnd(this.mContext.getResources().getDimensionPixelSize(R.dimen.qs_control_button_margin_end));
-            }
-            this.mTilesHeader.setLayoutParams(layoutParams2);
-            this.mShortcut.setLayoutParams(layoutParams);
+            updateLayout();
         }
+    }
+
+    private void updateLayout() {
+        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) this.mShortcut.getLayoutParams();
+        LinearLayout.LayoutParams layoutParams2 = (LinearLayout.LayoutParams) this.mTilesHeader.getLayoutParams();
+        if (this.mOrientation != 1 || this.mPanelController.isSuperPowerMode()) {
+            layoutParams2.topMargin = 0;
+            this.mTilesEdit.setVisibility(8);
+            layoutParams.setMarginEnd(0);
+        } else {
+            layoutParams2.topMargin = this.mContext.getResources().getDimensionPixelSize(R.dimen.qs_control_header_tiles_margin_top);
+            this.mTilesEdit.setVisibility(0);
+            layoutParams.setMarginEnd(this.mContext.getResources().getDimensionPixelSize(R.dimen.qs_control_button_margin_end));
+        }
+        this.mTilesHeader.setLayoutParams(layoutParams2);
+        this.mShortcut.setLayoutParams(layoutParams);
     }
 
     public void updateResources() {
