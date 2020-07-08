@@ -66,7 +66,7 @@ public class KeyguardBouncer {
     /* access modifiers changed from: private */
     public final Runnable mFaceShakeRunnable = new Runnable(this) {
         public void run() {
-            ((HapticFeedBackImpl) Dependency.get(HapticFeedBackImpl.class)).getHapticFeedbackUtil().performExtHapticFeedback(82);
+            ((HapticFeedBackImpl) Dependency.get(HapticFeedBackImpl.class)).extHapticFeedback(82, false, 0);
         }
     };
     private FaceUnlockCallback mFaceUnlockCallBack = new FaceUnlockCallback() {

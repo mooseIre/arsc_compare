@@ -145,7 +145,7 @@ public class LocationControllerImpl extends BroadcastReceiver implements Locatio
             r4 = 1
             if (r3 == 0) goto L_0x001e
             if (r1 == 0) goto L_0x001e
-            r0 = 285671441(0x11070011, float:1.0649643E-28)
+            r0 = 285671445(0x11070015, float:1.0649647E-28)
             r1 = 2131821350(0x7f110326, float:1.927544E38)
             r3 = r2
             goto L_0x003c

@@ -346,6 +346,9 @@ public class QSControlDetail extends FrameLayout {
     /* access modifiers changed from: private */
     public void handleToggleStateChanged(boolean z, boolean z2) {
         String str;
+        if (this.mDetailAdapter == null) {
+            return;
+        }
         if (this.mSwitchState != z || this.mSwitchEnabled != z2) {
             this.mSwitchState = z;
             this.mSwitchEnabled = z2;

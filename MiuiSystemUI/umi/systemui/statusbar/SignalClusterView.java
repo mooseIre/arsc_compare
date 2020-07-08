@@ -235,8 +235,8 @@ public class SignalClusterView extends LinearLayout implements NetworkController
                 this.mBlockMobile = contains2;
                 this.mBlockEthernet = contains4;
                 this.mBlockWifi = contains3 || this.mForceBlockWifi;
-                this.mNetworkController.removeCallback(this);
-                this.mNetworkController.addCallback(this);
+                this.mNetworkController.removeCallback((NetworkController.SignalCallback) this);
+                this.mNetworkController.addCallback((NetworkController.SignalCallback) this);
             }
         }
     }
@@ -301,7 +301,7 @@ public class SignalClusterView extends LinearLayout implements NetworkController
         ((TunerService) Dependency.get(TunerService.class)).addTunable(this, "icon_blacklist");
         apply();
         applyIconTint();
-        this.mNetworkController.addCallback(this);
+        this.mNetworkController.addCallback((NetworkController.SignalCallback) this);
         this.mSecurityController.addCallback(this);
         this.mHotspot.addCallback(this);
         ((DemoModeController) Dependency.get(DemoModeController.class)).addCallback(this.mDemoCallback);
@@ -319,7 +319,7 @@ public class SignalClusterView extends LinearLayout implements NetworkController
             } else {
                 ((TunerService) Dependency.get(TunerService.class)).removeTunable(this);
                 this.mSecurityController.removeCallback(this);
-                this.mNetworkController.removeCallback(this);
+                this.mNetworkController.removeCallback((NetworkController.SignalCallback) this);
                 this.mHotspot.removeCallback(this);
                 ((DemoModeController) Dependency.get(DemoModeController.class)).removeCallback(this.mDemoCallback);
                 ((StatusBarTypeController) Dependency.get(StatusBarTypeController.class)).removeCallback(this);

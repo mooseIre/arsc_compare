@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.FrameLayout;
-import android.widget.TextView;
 import com.android.systemui.Dependency;
 import com.android.systemui.miui.controlcenter.tileImpl.CCQSTileView;
 import com.android.systemui.miui.statusbar.phone.ControlPanelWindowManager;
@@ -367,18 +366,18 @@ public class QSControlCenterTileLayout extends ViewGroup implements QSPanel.QSTi
             if (((Integer) next.tileView.getTag(R.id.tag_tile_layout)).intValue() < this.mMinShowRows) {
                 next.tileView.setAlpha(1.0f);
                 next.tileView.getIcon().setAlpha(1.0f);
-                TextView label = ((CCQSTileView) next.tileView).getLabel();
-                if (this.mExpanded) {
-                    f = 1.0f;
-                }
-                label.setAlpha(f);
-            } else {
-                next.tileView.setAlpha(1.0f);
                 CCQSTileView cCQSTileView = (CCQSTileView) next.tileView;
                 if (this.mExpanded) {
                     f = 1.0f;
                 }
-                cCQSTileView.setChildsAlpha(f);
+                cCQSTileView.setLabelAlpha(f);
+            } else {
+                next.tileView.setAlpha(1.0f);
+                CCQSTileView cCQSTileView2 = (CCQSTileView) next.tileView;
+                if (this.mExpanded) {
+                    f = 1.0f;
+                }
+                cCQSTileView2.setChildsAlpha(f);
             }
         }
     }
@@ -473,14 +472,14 @@ public class QSControlCenterTileLayout extends ViewGroup implements QSPanel.QSTi
             int intValue = ((Integer) next.tileView.getTag(R.id.tag_tile_layout)).intValue();
             CCQSTileView cCQSTileView = (CCQSTileView) next.tileView;
             QSIconView icon = cCQSTileView.getIcon();
-            TextView label = cCQSTileView.getLabel();
+            cCQSTileView.getLabel();
             if (intValue < this.mMinShowRows) {
-                cCQSTileView.getLabel().setAlpha(Math.min(1.0f, f));
+                cCQSTileView.setLabelAlpha(Math.min(1.0f, f));
             } else {
                 cCQSTileView.setVisibility(0);
                 double d = (double) f;
                 icon.setAlpha(Math.min(1.0f, (float) Math.pow(d, (double) ((((intValue - this.mMinShowRows) * 2) + 1) * 2))));
-                label.setAlpha(Math.min(1.0f, (float) Math.pow(d, (double) ((((intValue - this.mMinShowRows) * 2) + 2) * 2))));
+                cCQSTileView.setLabelAlpha(Math.min(1.0f, (float) Math.pow(d, (double) ((((intValue - this.mMinShowRows) * 2) + 2) * 2))));
             }
         }
         FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) getLayoutParams();

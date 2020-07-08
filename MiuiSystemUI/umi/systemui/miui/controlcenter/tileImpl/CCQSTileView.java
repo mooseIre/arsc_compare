@@ -21,11 +21,11 @@ import android.widget.TextView;
 import com.android.systemui.Dependency;
 import com.android.systemui.HapticFeedBackImpl;
 import com.android.systemui.Interpolators;
+import com.android.systemui.miui.controlcenter.VisibleFocusedTextView;
 import com.android.systemui.plugins.R;
 import com.android.systemui.plugins.qs.QSIconView;
 import com.android.systemui.plugins.qs.QSTile;
 import com.android.systemui.plugins.qs.QSTileView;
-import com.android.systemui.qs.FocusedTextView;
 import java.util.Objects;
 import miuix.animation.Folme;
 import miuix.animation.ITouchStyle;
@@ -110,18 +110,18 @@ public class CCQSTileView extends QSTileView {
         return (int) (fontMetrics.descent - fontMetrics.ascent);
     }
 
-    private static FocusedTextView createQSStyleLabel(Context context) {
-        FocusedTextView focusedTextView = new FocusedTextView(context);
-        focusedTextView.setTextAppearance(R.style.TextAppearance_QSControl_CCTileLabel);
+    private static VisibleFocusedTextView createQSStyleLabel(Context context) {
+        VisibleFocusedTextView visibleFocusedTextView = new VisibleFocusedTextView(context);
+        visibleFocusedTextView.setTextAppearance(R.style.TextAppearance_QSControl_CCTileLabel);
         new LinearLayout.LayoutParams(-1, -2).gravity = 17;
-        focusedTextView.setPadding(0, context.getResources().getDimensionPixelSize(R.dimen.qs_control_tile_label_padding_top), 0, 0);
-        focusedTextView.setGravity(17);
-        focusedTextView.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-        focusedTextView.setMarqueeRepeatLimit(-1);
-        focusedTextView.setSelected(true);
-        focusedTextView.setFocusableInTouchMode(true);
-        focusedTextView.setSingleLine(true);
-        return focusedTextView;
+        visibleFocusedTextView.setPadding(0, context.getResources().getDimensionPixelSize(R.dimen.qs_control_tile_label_padding_top), 0, 0);
+        visibleFocusedTextView.setGravity(17);
+        visibleFocusedTextView.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+        visibleFocusedTextView.setMarqueeRepeatLimit(2);
+        visibleFocusedTextView.setFocusable(true);
+        visibleFocusedTextView.setFocusableInTouchMode(true);
+        visibleFocusedTextView.setSingleLine(true);
+        return visibleFocusedTextView;
     }
 
     public void init(View.OnClickListener onClickListener, View.OnClickListener onClickListener2, View.OnLongClickListener onLongClickListener) {
@@ -207,10 +207,24 @@ public class CCQSTileView extends QSTileView {
         return this.mLabel;
     }
 
+    public void setLabelAlpha(float f) {
+        this.mLabel.setAlpha(f);
+        labelRequestFocus();
+    }
+
     public void setChildsAlpha(float f) {
         this.mIcon.setAlpha(f);
         this.mLabel.setAlpha(f);
         setVisibility(f == 0.0f ? 4 : 0);
+        labelRequestFocus();
+    }
+
+    private void labelRequestFocus() {
+        if (this.mLabel.getAlpha() == 1.0f && !this.mLabel.isSelected()) {
+            this.mLabel.setSelected(true);
+        } else if (this.mLabel.getAlpha() < 1.0f && this.mLabel.isSelected()) {
+            this.mLabel.setSelected(false);
+        }
     }
 
     public View getIconWithBackground() {

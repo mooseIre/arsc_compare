@@ -71,7 +71,7 @@ public class NotificationInfo extends LinearLayout implements NotificationGuts.G
         boolean z = !this.mChannelEnabledSwitch.isChecked();
         TextView textView = (TextView) findViewById(R.id.title);
         textView.setText(this.mContext.getString(z ? R.string.notification_info_disabled_text : R.string.notification_info_enabled_text, new Object[]{this.mSbn.getAppName()}));
-        textView.setTextColor(this.mContext.getColor(z ? R.color.notification_info_warning_color : 17170903));
+        textView.setTextColor(this.mContext.getColor(z ? R.color.notification_info_warning_color : 17170904));
     }
 
     private void initSlidingButton() {
