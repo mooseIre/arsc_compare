@@ -13,7 +13,6 @@ import com.android.systemui.recents.Recents;
 import com.android.systemui.recents.misc.SystemServicesProxy;
 import com.android.systemui.shortcut.ShortcutKeyServiceProxy;
 import com.android.systemui.stackdivider.Divider;
-import com.android.systemui.stackdivider.DividerSnapAlgorithm;
 import com.android.systemui.stackdivider.DividerView;
 import java.util.List;
 
@@ -48,7 +47,6 @@ public class ShortcutKeyDispatcher extends SystemUI implements ShortcutKeyServic
     }
 
     private void handleDockKey(long j) {
-        DividerSnapAlgorithm.SnapTarget snapTarget;
         try {
             if (this.mWindowManagerService.getDockedStackSide() == -1) {
                 Recents recents = (Recents) getComponent(Recents.class);
@@ -62,15 +60,9 @@ public class ShortcutKeyDispatcher extends SystemUI implements ShortcutKeyServic
                 return;
             }
             DividerView view = ((Divider) getComponent(Divider.class)).getView();
-            DividerSnapAlgorithm snapAlgorithm = view.getSnapAlgorithm();
-            DividerSnapAlgorithm.SnapTarget calculateNonDismissingSnapTarget = snapAlgorithm.calculateNonDismissingSnapTarget(view.getCurrentPosition());
-            if (j == 281474976710727L) {
-                snapTarget = snapAlgorithm.getPreviousTarget(calculateNonDismissingSnapTarget);
-            } else {
-                snapTarget = snapAlgorithm.getNextTarget(calculateNonDismissingSnapTarget);
-            }
+            int positionWhenHandleDockKey = view.getPositionWhenHandleDockKey(j == 281474976710727L);
             view.startDragging(true, false);
-            view.stopDragging(snapTarget.position, 0.0f, false, true);
+            view.stopDragging(positionWhenHandleDockKey, 0.0f, false, true);
         } catch (RemoteException unused) {
             Log.e("ShortcutKeyDispatcher", "handleDockKey() failed.");
         }

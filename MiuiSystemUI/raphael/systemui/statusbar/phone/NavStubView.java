@@ -1030,7 +1030,9 @@ public class NavStubView extends FrameLayout {
             if (!this.mSupportAntiMistake || ((antiMistakeTouchView2 = this.antiMistakeTouchView) != null && antiMistakeTouchView2.containsLocation(motionEvent.getRawX()))) {
                 if (SystemClock.uptimeMillis() - this.mLastTouchTime > 2000) {
                     Toast makeText = Toast.makeText(this.mContext, getResources().getString(R.string.please_slide_agian), 0);
-                    makeText.getWindowParams().privateFlags |= 16;
+                    if (makeText.getWindowParams() != null) {
+                        makeText.getWindowParams().privateFlags |= 16;
+                    }
                     makeText.show();
                     AntiMistakeTouchView antiMistakeTouchView4 = this.antiMistakeTouchView;
                     if (antiMistakeTouchView4 != null) {

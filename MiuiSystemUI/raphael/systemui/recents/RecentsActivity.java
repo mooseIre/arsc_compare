@@ -1343,7 +1343,9 @@ public class RecentsActivity extends Activity implements ViewTreeObserver.OnPreD
                 long freeMemory = RecentsActivity.this.getFreeMemory();
                 RecentsPushEventHelper.sendOneKeyCleanEvent(RecentsActivity.this.mFreeAtFirst, freeMemory, RecentsActivity.this.mTotalMemory);
                 Toast makeText = Toast.makeText(RecentsActivity.this.getApplicationContext(), RecentsActivity.getToastMsg(RecentsActivity.this.getApplicationContext(), RecentsActivity.this.mFreeAtFirst, freeMemory), 0);
-                makeText.getWindowParams().privateFlags |= 16;
+                if (makeText.getWindowParams() != null) {
+                    makeText.getWindowParams().privateFlags |= 16;
+                }
                 makeText.show();
             }
         }, 300);

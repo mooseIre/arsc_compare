@@ -212,13 +212,6 @@ public class BiometricDialogImpl extends SystemUI implements CommandQueue.Callba
             Log.w("BiometricDialogImpl", "Dialog already dismissed, userCanceled: " + z);
             return;
         }
-        if (z) {
-            try {
-                this.mReceiver.onDialogDismissed(3);
-            } catch (RemoteException e) {
-                Log.e("BiometricDialogImpl", "RemoteException when hiding dialog", e);
-            }
-        }
         this.mReceiver = null;
         this.mDialogShowing = false;
         this.mCurrentDialog.startDismiss();
@@ -226,32 +219,20 @@ public class BiometricDialogImpl extends SystemUI implements CommandQueue.Callba
 
     /* access modifiers changed from: private */
     public void handleButtonNegative() {
-        IBiometricServiceReceiverInternal iBiometricServiceReceiverInternal = this.mReceiver;
-        if (iBiometricServiceReceiverInternal == null) {
+        if (this.mReceiver == null) {
             Log.e("BiometricDialogImpl", "Receiver is null");
-            return;
+        } else {
+            handleHideDialog(false);
         }
-        try {
-            iBiometricServiceReceiverInternal.onDialogDismissed(2);
-        } catch (RemoteException e) {
-            Log.e("BiometricDialogImpl", "Remote exception when handling negative button", e);
-        }
-        handleHideDialog(false);
     }
 
     /* access modifiers changed from: private */
     public void handleButtonPositive() {
-        IBiometricServiceReceiverInternal iBiometricServiceReceiverInternal = this.mReceiver;
-        if (iBiometricServiceReceiverInternal == null) {
+        if (this.mReceiver == null) {
             Log.e("BiometricDialogImpl", "Receiver is null");
-            return;
+        } else {
+            handleHideDialog(false);
         }
-        try {
-            iBiometricServiceReceiverInternal.onDialogDismissed(1);
-        } catch (RemoteException e) {
-            Log.e("BiometricDialogImpl", "Remote exception when handling positive button", e);
-        }
-        handleHideDialog(false);
     }
 
     /* access modifiers changed from: private */

@@ -220,7 +220,6 @@ import com.android.systemui.recents.events.activity.RecentsWithinLauncherChanged
 import com.android.systemui.recents.misc.SystemServicesProxy;
 import com.android.systemui.recents.misc.Utilities;
 import com.android.systemui.stackdivider.Divider;
-import com.android.systemui.stackdivider.WindowManagerProxy;
 import com.android.systemui.statistic.ScenarioConstants;
 import com.android.systemui.statistic.ScenarioTrackUtil;
 import com.android.systemui.statusbar.ActivatableNotificationView;
@@ -1331,7 +1330,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
         this.mFoldImportanceObserver = new ContentObserver(this.mHandler) {
             public void onChange(boolean z, Uri uri) {
                 try {
-                    NotificationSettingsHelper.setFoldImportance(StatusBar.this.mContext, uri.getQueryParameter("package"), Integer.parseInt(uri.getQueryParameter("foldImportance")));
+                    NotificationSettingsHelper.setFoldImportance(StatusBar.this.mContextForUser, uri.getQueryParameter("package"), Integer.parseInt(uri.getQueryParameter("foldImportance")));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -1584,9 +1583,11 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
                         UserInfo userInfo = StatusBar.this.mUserManager.getUserInfo(list.get(0).userId);
                         if (userInfo != null && userInfo.isManagedProfile()) {
                             Toast makeText = Toast.makeText(StatusBar.this.mContext, R.string.managed_profile_foreground_toast, 0);
-                            TextView textView = (TextView) makeText.getView().findViewById(16908299);
-                            textView.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.stat_sys_managed_profile_status, 0, 0, 0);
-                            textView.setCompoundDrawablePadding(StatusBar.this.mContext.getResources().getDimensionPixelSize(R.dimen.managed_profile_toast_padding));
+                            if (makeText.getView() != null) {
+                                TextView textView = (TextView) makeText.getView().findViewById(16908299);
+                                textView.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.stat_sys_managed_profile_status, 0, 0, 0);
+                                textView.setCompoundDrawablePadding(StatusBar.this.mContext.getResources().getDimensionPixelSize(R.dimen.managed_profile_toast_padding));
+                            }
                             makeText.show();
                         }
                         if (userInfo != null) {
@@ -3035,10 +3036,10 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
         if (this.mRecents == null) {
             return false;
         }
-        if (WindowManagerProxy.getInstance().getDockSide() == -1) {
+        Divider divider = (Divider) getComponent(Divider.class);
+        if (divider == null || !divider.inSplitMode()) {
             return this.mRecents.dockTopTask(-1, 0, (Rect) null, i);
         }
-        Divider divider = (Divider) getComponent(Divider.class);
         if (divider != null && divider.isMinimized() && !divider.isHomeStackResizable()) {
             return false;
         }
@@ -7117,8 +7118,8 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
     /* access modifiers changed from: private */
     public void saveFiler(ExpandedNotification expandedNotification) {
         String targetPackageName = expandedNotification.getTargetPackageName();
-        NotificationSettingsHelper.setFoldImportance(this.mContext, targetPackageName, -1);
-        this.mContext.getContentResolver().notifyChange(NotificationProvider.URI_FOLD_IMPORTANCE.buildUpon().appendQueryParameter("package", targetPackageName).appendQueryParameter("foldImportance", "-1").build(), this.mFoldImportanceObserver);
+        NotificationSettingsHelper.setFoldImportance(this.mContextForUser, targetPackageName, -1);
+        this.mContext.getContentResolver().notifyChange(NotificationProvider.URI_FOLD_IMPORTANCE.buildUpon().appendQueryParameter("package", targetPackageName).appendQueryParameter("foldImportance", "-1").build(), this.mFoldImportanceObserver, true, this.mCurrentUserId);
     }
 
     /* access modifiers changed from: private */

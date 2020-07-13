@@ -1796,7 +1796,9 @@ public abstract class BaseRecentsImpl {
                                     AnonymousClass2 r62 = AnonymousClass2.this;
                                     Toast makeText = Toast.makeText(BaseRecentsImpl.this.mContext, RecentsActivity.getToastMsg(BaseRecentsImpl.this.mContext, j2, freeMemory), 1);
                                     makeText.setType(2006);
-                                    makeText.getWindowParams().privateFlags |= 16;
+                                    if (makeText.getWindowParams() != null) {
+                                        makeText.getWindowParams().privateFlags |= 16;
+                                    }
                                     makeText.show();
                                 }
                             });

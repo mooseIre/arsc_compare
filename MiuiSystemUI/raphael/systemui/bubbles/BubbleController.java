@@ -5,7 +5,6 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
-import android.content.pm.ParceledListSlice;
 import android.content.res.Configuration;
 import android.graphics.Rect;
 import android.os.RemoteException;
@@ -16,12 +15,11 @@ import android.service.notification.NotificationListenerService;
 import android.service.notification.ZenModeConfig;
 import android.util.Log;
 import android.util.Pair;
-import android.view.IPinnedStackController;
-import android.view.IPinnedStackListener;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.statusbar.IStatusBarService;
+import com.android.internal.statusbar.StatusBarServiceCompat;
 import com.android.systemui.Dependency;
 import com.android.systemui.bubbles.BubbleController;
 import com.android.systemui.bubbles.BubbleData;
@@ -29,6 +27,7 @@ import com.android.systemui.bubbles.BubbleStackView;
 import com.android.systemui.miui.statusbar.ExpandedNotification;
 import com.android.systemui.plugins.R;
 import com.android.systemui.shared.system.ActivityManagerWrapper;
+import com.android.systemui.shared.system.PinnedStackListenerForwarder;
 import com.android.systemui.shared.system.TaskStackChangeListener;
 import com.android.systemui.shared.system.WindowManagerWrapper;
 import com.android.systemui.statusbar.NotificationData;
@@ -122,7 +121,7 @@ public class BubbleController implements ConfigurationController.ConfigurationLi
                         if (BubbleController.this.mBubbleData.hasBubbleWithKey(bubble.getKey()) || bubble.entry.showInShadeWhenBubble()) {
                             bubble.entry.notification.getNotification().flags &= -4097;
                             try {
-                                BubbleController.this.mBarService.onNotificationBubbleChanged(bubble.getKey(), false);
+                                StatusBarServiceCompat.onNotificationBubbleChanged(BubbleController.this.mBarService, bubble.getKey(), false, 2);
                             } catch (RemoteException unused) {
                             }
                         } else {
@@ -627,22 +626,7 @@ public class BubbleController implements ConfigurationController.ConfigurationLi
         }
     }
 
-    private class BubblesImeListener extends IPinnedStackListener.Stub {
-        public void onActionsChanged(ParceledListSlice parceledListSlice) throws RemoteException {
-        }
-
-        public void onListenerRegistered(IPinnedStackController iPinnedStackController) throws RemoteException {
-        }
-
-        public void onMinimizedStateChanged(boolean z) throws RemoteException {
-        }
-
-        public void onMovementBoundsChanged(Rect rect, Rect rect2, Rect rect3, boolean z, boolean z2, int i) throws RemoteException {
-        }
-
-        public void onShelfVisibilityChanged(boolean z, int i) throws RemoteException {
-        }
-
+    private class BubblesImeListener extends PinnedStackListenerForwarder.PinnedStackListener {
         private BubblesImeListener() {
         }
 

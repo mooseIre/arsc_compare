@@ -9,6 +9,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.net.wifi.WifiManagerCompat;
 import android.os.Looper;
 import android.os.UserHandle;
 import android.os.UserManager;
@@ -17,6 +18,8 @@ import androidx.preference.PreferenceManager;
 import com.android.settingslib.wifi.AccessPoint;
 import com.android.settingslib.wifi.SlaveWifiUtils;
 import com.android.settingslib.wifi.WifiTracker;
+import com.android.settingslib.wifi.WifiUtilsHelper;
+import com.android.systemui.SettingsLibCompat;
 import com.android.systemui.plugins.R;
 import com.android.systemui.statusbar.policy.NetworkController;
 import java.io.PrintWriter;
@@ -110,7 +113,7 @@ public class AccessPointControllerImpl implements NetworkController.AccessPointC
 
     public int getIcon(AccessPoint accessPoint) {
         int level = accessPoint.getLevel();
-        if (accessPoint.getWifiGeneration() == 6) {
+        if (SettingsLibCompat.getWifiStandard(accessPoint) == 6) {
             int[] iArr = WIFI_SIX_GENERATION_ICONS;
             if (level < 0 || level >= LEGACY_ICONS.length) {
                 level = 0;
@@ -218,7 +221,7 @@ public class AccessPointControllerImpl implements NetworkController.AccessPointC
         if (wifiSlaveConnectionInfo == null || networkInfo == null || !networkInfo.isConnected()) {
             return false;
         }
-        if (wifiSlaveConnectionInfo.is24GHz()) {
+        if (WifiUtilsHelper.is24GHz(wifiSlaveConnectionInfo)) {
             if (!accessPoint.isOnly5Ghz()) {
                 return true;
             }
@@ -243,7 +246,7 @@ public class AccessPointControllerImpl implements NetworkController.AccessPointC
     public void updateVerboseLoggingLevel() {
         WifiManager manager = this.mWifiTracker.getManager();
         if (manager != null) {
-            WifiTracker.sVerboseLogging = manager.getVerboseLoggingLevel() > 0;
+            WifiTracker.sVerboseLogging = WifiManagerCompat.isVerboseLoggingEnabled(manager);
         }
     }
 }

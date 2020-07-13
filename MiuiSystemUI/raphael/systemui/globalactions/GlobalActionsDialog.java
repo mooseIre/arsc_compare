@@ -395,7 +395,7 @@ class GlobalActionsDialog implements DialogInterface.OnDismissListener, DialogIn
                     public void run() {
                         try {
                             MetricsLogger.action(GlobalActionsDialog.this.mContext, 292);
-                            ActivityManagerCompat.getService().requestBugReport(1);
+                            ActivityManagerCompat.requestInteractiveBugReport();
                         } catch (RemoteException unused) {
                         }
                     }
@@ -409,7 +409,7 @@ class GlobalActionsDialog implements DialogInterface.OnDismissListener, DialogIn
             }
             try {
                 MetricsLogger.action(GlobalActionsDialog.this.mContext, 293);
-                ActivityManagerCompat.getService().requestBugReport(0);
+                ActivityManagerCompat.requestFullBugReport();
             } catch (RemoteException unused) {
             }
             return false;

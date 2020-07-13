@@ -16,6 +16,7 @@ import android.util.Log;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.util.AsyncChannel;
 import com.android.settingslib.wifi.WifiStatusTracker;
+import com.android.systemui.SettingsLibCompat;
 import com.android.systemui.plugins.R;
 import com.android.systemui.statusbar.policy.NetworkController;
 import com.android.systemui.statusbar.policy.SignalController;
@@ -49,7 +50,7 @@ public class WifiSignalController extends SignalController<WifiState, SignalCont
             this.mWifiChannel.connect(context, wifiHandler, wifiServiceMessenger);
         }
         if (wifiManager != null) {
-            WifiManagerCompat.registerTrafficStateCallback(wifiManager, new WifiTrafficStateCallback(), (Handler) null);
+            WifiManagerCompat.registerTrafficStateCallback(context, wifiManager, new WifiTrafficStateCallback(), (Handler) null);
         }
         SignalController.IconGroup iconGroup = new SignalController.IconGroup("Wi-Fi Icons", WifiIcons.WIFI_SIGNAL_STRENGTH, WifiIcons.QS_WIFI_SIGNAL_STRENGTH, AccessibilityContentDescriptions.WIFI_CONNECTION_STRENGTH, R.drawable.stat_sys_wifi_signal_null, R.drawable.ic_qs_wifi_no_network, R.drawable.stat_sys_wifi_signal_null, R.drawable.ic_qs_wifi_no_network, R.string.accessibility_no_wifi);
         ((WifiState) this.mLastState).iconGroup = iconGroup;
@@ -93,7 +94,7 @@ public class WifiSignalController extends SignalController<WifiState, SignalCont
         ((WifiState) t).ssid = wifiStatusTracker.ssid;
         ((WifiState) t).rssi = wifiStatusTracker.rssi;
         ((WifiState) t).level = wifiStatusTracker.level;
-        this.mWifiGeneration = wifiStatusTracker.wifiGeneration;
+        this.mWifiGeneration = SettingsLibCompat.getWifiStandard(wifiStatusTracker);
         boolean z = true;
         this.mShowWifiGeneraion = this.mWifiGeneration == 6;
         T t2 = this.mCurrentState;

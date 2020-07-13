@@ -68,6 +68,10 @@ public class Divider extends SystemUI {
         return this.mHomeStackResizable;
     }
 
+    public boolean inSplitMode() {
+        return WindowManagerProxy.getInstance().getDockSide() == -1;
+    }
+
     private void addDivider(Configuration configuration) {
         this.mView = (DividerView) LayoutInflater.from(this.mContext).inflate(R.layout.docked_stack_divider, (ViewGroup) null);
         this.mView.injectDependencies(this.mWindowManager, this.mDividerState);

@@ -180,7 +180,9 @@ public class Util {
     private static Toast makeSystemOverlayToast(Context context, String str, int i) {
         Toast makeText = Toast.makeText(context, str, i);
         makeText.setType(2006);
-        makeText.getWindowParams().privateFlags |= 16;
+        if (makeText.getWindowParams() != null) {
+            makeText.getWindowParams().privateFlags |= 16;
+        }
         return makeText;
     }
 

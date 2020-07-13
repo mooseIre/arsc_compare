@@ -396,7 +396,6 @@ public class PipManager implements BasePipManager {
         if (i2 == 0) {
             this.mCurrentPipBounds = null;
             if (z) {
-                return;
             }
         } else if (i2 == 1) {
             this.mCurrentPipBounds = this.mPipBounds;
@@ -404,11 +403,6 @@ public class PipManager implements BasePipManager {
             this.mCurrentPipBounds = this.mPipBounds;
         } else {
             this.mCurrentPipBounds = this.mMenuModePipBounds;
-        }
-        try {
-            this.mActivityManager.resizeStack(4, this.mCurrentPipBounds, true, true, true, -1);
-        } catch (RemoteException e) {
-            Log.e("PipManager", "resizeStack failed", e);
         }
     }
 

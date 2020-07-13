@@ -18,7 +18,7 @@ import android.graphics.drawable.ShapeDrawable;
 import android.os.ServiceManager;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.util.StatsLog;
+import android.util.StatsLogInternal;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowInsets;
@@ -88,22 +88,17 @@ public class BubbleExpandedView extends LinearLayout implements View.OnClickList
             public void onActivityViewReady(ActivityView activityView) {
                 if (!BubbleExpandedView.this.mActivityViewReady) {
                     boolean unused = BubbleExpandedView.this.mActivityViewReady = true;
-                    BubbleExpandedView.this.post(new Runnable(ActivityOptions.makeCustomAnimation(BubbleExpandedView.this.getContext(), 0, 0)) {
-                        private final /* synthetic */ ActivityOptions f$1;
-
-                        {
-                            this.f$1 = r2;
-                        }
-
+                    ActivityOptions.makeCustomAnimation(BubbleExpandedView.this.getContext(), 0, 0);
+                    BubbleExpandedView.this.post(new Runnable() {
                         public final void run() {
-                            BubbleExpandedView.AnonymousClass1.this.lambda$onActivityViewReady$0$BubbleExpandedView$1(this.f$1);
+                            BubbleExpandedView.AnonymousClass1.this.lambda$onActivityViewReady$0$BubbleExpandedView$1();
                         }
                     });
                 }
             }
 
-            public /* synthetic */ void lambda$onActivityViewReady$0$BubbleExpandedView$1(ActivityOptions activityOptions) {
-                BubbleExpandedView.this.mActivityView.startActivity(BubbleExpandedView.this.mBubbleIntent, activityOptions);
+            public /* synthetic */ void lambda$onActivityViewReady$0$BubbleExpandedView$1() {
+                BubbleExpandedView.this.mActivityView.startActivity(BubbleExpandedView.this.mBubbleIntent);
             }
 
             public void onActivityViewDestroyed(ActivityView activityView) {
@@ -504,7 +499,7 @@ public class BubbleExpandedView extends LinearLayout implements View.OnClickList
         String channelId = expandedNotification.getNotification().getChannelId();
         int id = expandedNotification.getId();
         BubbleStackView bubbleStackView = this.mStackView;
-        StatsLog.write(149, packageName, channelId, id, bubbleStackView.getBubbleIndex(bubbleStackView.getExpandedBubble()), this.mStackView.getBubbleCount(), i, this.mStackView.getNormalizedXPosition(), this.mStackView.getNormalizedYPosition(), entry.showInShadeWhenBubble(), entry.isForegroundService(), BubbleController.isForegroundApp(this.mContext, expandedNotification.getPackageName()));
+        StatsLogInternal.write(149, packageName, channelId, id, bubbleStackView.getBubbleIndex(bubbleStackView.getExpandedBubble()), this.mStackView.getBubbleCount(), i, this.mStackView.getNormalizedXPosition(), this.mStackView.getNormalizedYPosition(), entry.showInShadeWhenBubble(), entry.isForegroundService(), BubbleController.isForegroundApp(this.mContext, expandedNotification.getPackageName()));
     }
 
     private int getDimenForPackageUser(int i, String str, int i2) {

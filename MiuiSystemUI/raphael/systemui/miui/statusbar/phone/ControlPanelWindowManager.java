@@ -1,6 +1,7 @@
 package com.android.systemui.miui.statusbar.phone;
 
 import android.content.Context;
+import android.os.Build;
 import android.util.Log;
 import android.view.SurfaceControlCompat;
 import android.view.WindowManager;
@@ -31,14 +32,17 @@ public class ControlPanelWindowManager {
 
     public void addControlPanel(ControlPanelWindowView controlPanelWindowView) {
         if (!hasAdded()) {
-            this.mLp = new WindowManager.LayoutParams(-1, 0, 0, 0, 2014, -2121989848, -3);
+            this.mLp = new WindowManager.LayoutParams(-1, 0, 0, 0, Build.VERSION.SDK_INT > 29 ? 2017 : 2014, -2121989848, -3);
             WindowManager.LayoutParams layoutParams = this.mLp;
             layoutParams.privateFlags |= 64;
             layoutParams.setTitle("control_center");
             WindowManager.LayoutParams layoutParams2 = this.mLp;
             layoutParams2.systemUiVisibility = 1792;
             layoutParams2.extraFlags |= 32768;
-            this.mWindowManager.addView(controlPanelWindowView, layoutParams2);
+            try {
+                this.mWindowManager.addView(controlPanelWindowView, layoutParams2);
+            } catch (Exception unused) {
+            }
             this.mLpChanged = new WindowManager.LayoutParams();
             this.mLpChanged.copyFrom(this.mLp);
             this.mControlPanel = controlPanelWindowView;

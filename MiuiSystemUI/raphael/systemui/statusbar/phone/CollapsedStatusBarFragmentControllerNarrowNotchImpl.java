@@ -7,9 +7,11 @@ import android.view.ViewGroup;
 import com.android.systemui.BatteryMeterView;
 import com.android.systemui.Dependency;
 import com.android.systemui.plugins.R;
+import com.android.systemui.statusbar.RegionController;
 import com.android.systemui.statusbar.phone.CollapsedStatusBarFragment;
 import com.android.systemui.statusbar.phone.StatusBarIconController;
 import com.android.systemui.statusbar.policy.ConfigurationController;
+import com.android.systemui.statusbar.policy.DarkIconDispatcher;
 import com.xiaomi.stat.MiStat;
 import java.util.Objects;
 
@@ -80,6 +82,8 @@ public class CollapsedStatusBarFragmentControllerNarrowNotchImpl extends Collaps
         });
         ((StatusBarIconController) Dependency.get(StatusBarIconController.class)).addIconGroup(this.mDarkIconManager);
         ((StatusBarIconController) Dependency.get(StatusBarIconController.class)).addIconGroup(this.mNotchLeftEarIconManager);
+        ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).addDarkReceiver((DarkIconDispatcher.DarkReceiver) this.mCarrierText);
+        ((RegionController) Dependency.get(RegionController.class)).addCallback(this);
     }
 
     public void stop() {
@@ -92,6 +96,10 @@ public class CollapsedStatusBarFragmentControllerNarrowNotchImpl extends Collaps
         if (this.mConfigurationListener != null) {
             ((ConfigurationController) Dependency.get(ConfigurationController.class)).removeCallback(this.mConfigurationListener);
         }
+        if (this.mCarrierText != null) {
+            ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).removeDarkReceiver((DarkIconDispatcher.DarkReceiver) this.mCarrierText);
+        }
+        ((RegionController) Dependency.get(RegionController.class)).removeCallback(this);
     }
 
     public int getLayoutId() {

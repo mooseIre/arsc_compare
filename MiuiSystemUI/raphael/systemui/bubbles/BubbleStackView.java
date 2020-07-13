@@ -17,7 +17,7 @@ import android.os.Bundle;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.util.Log;
-import android.util.StatsLog;
+import android.util.StatsLogInternal;
 import android.view.Choreographer;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -1262,10 +1262,10 @@ public class BubbleStackView extends FrameLayout {
         ExpandedNotification expandedNotification;
         Bubble bubble2 = bubble;
         if (bubble2 == null || (entry = bubble2.entry) == null || (expandedNotification = entry.notification) == null) {
-            StatsLog.write(149, (String) null, (String) null, 0, 0, getBubbleCount(), i, getNormalizedXPosition(), getNormalizedYPosition(), false, false, false);
+            StatsLogInternal.write(149, (String) null, (String) null, 0, 0, getBubbleCount(), i, getNormalizedXPosition(), getNormalizedYPosition(), false, false, false);
             return;
         }
-        StatsLog.write(149, expandedNotification.getPackageName(), expandedNotification.getNotification().getChannelId(), expandedNotification.getId(), getBubbleIndex(bubble), getBubbleCount(), i, getNormalizedXPosition(), getNormalizedYPosition(), bubble2.entry.showInShadeWhenBubble(), bubble2.entry.isForegroundService(), BubbleController.isForegroundApp(this.mContext, expandedNotification.getPackageName()));
+        StatsLogInternal.write(149, expandedNotification.getPackageName(), expandedNotification.getNotification().getChannelId(), expandedNotification.getId(), getBubbleIndex(bubble), getBubbleCount(), i, getNormalizedXPosition(), getNormalizedYPosition(), bubble2.entry.showInShadeWhenBubble(), bubble2.entry.isForegroundService(), BubbleController.isForegroundApp(this.mContext, expandedNotification.getPackageName()));
     }
 
     /* access modifiers changed from: package-private */

@@ -33,15 +33,20 @@ public class StatusBarStateControllerImpl implements SysuiStatusBarStateControll
     private HistoricalState[] mHistoricalRecords;
     private int mHistoryIndex;
     private boolean mIsDozing;
+    private boolean mIsFullscreen;
+    private boolean mIsImmersive;
     private boolean mKeyguardRequested;
     private int mLastState;
     private boolean mLeaveOpenOnKeyguardHide;
     private final ArrayList<SysuiStatusBarStateController.RankedListener> mListeners = new ArrayList<>();
+    private boolean mPulsing;
     private int mState;
 
     public StatusBarStateControllerImpl() {
         this.mHistoryIndex = 0;
         this.mHistoricalRecords = new HistoricalState[32];
+        this.mIsFullscreen = false;
+        this.mIsImmersive = false;
         this.mDozeInterpolator = Interpolators.FAST_OUT_SLOW_IN;
         for (int i = 0; i < 32; i++) {
             this.mHistoricalRecords[i] = new HistoricalState();
@@ -82,6 +87,10 @@ public class StatusBarStateControllerImpl implements SysuiStatusBarStateControll
 
     public boolean isDozing() {
         return this.mIsDozing;
+    }
+
+    public boolean isPulsing() {
+        return this.mPulsing;
     }
 
     public float getDozeAmount() {

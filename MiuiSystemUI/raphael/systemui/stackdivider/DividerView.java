@@ -1314,4 +1314,16 @@ public class DividerView extends FrameLayout implements View.OnTouchListener, Vi
             resizeStack(this.mSnapAlgorithm.getMiddleTarget().position, Integer.MAX_VALUE, this.mSnapAlgorithm.getMiddleTarget());
         }
     }
+
+    public int getPositionWhenHandleDockKey(boolean z) {
+        DividerSnapAlgorithm.SnapTarget snapTarget;
+        DividerSnapAlgorithm snapAlgorithm = getSnapAlgorithm();
+        DividerSnapAlgorithm.SnapTarget calculateNonDismissingSnapTarget = snapAlgorithm.calculateNonDismissingSnapTarget(getCurrentPosition());
+        if (z) {
+            snapTarget = snapAlgorithm.getPreviousTarget(calculateNonDismissingSnapTarget);
+        } else {
+            snapTarget = snapAlgorithm.getNextTarget(calculateNonDismissingSnapTarget);
+        }
+        return snapTarget.position;
+    }
 }
