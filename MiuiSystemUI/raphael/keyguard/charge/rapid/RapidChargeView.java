@@ -29,10 +29,10 @@ import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.charge.MiuiChargeManager;
 import com.android.keyguard.charge.rapid.PercentCountView;
 import com.android.systemui.Dependency;
+import com.android.systemui.HapticFeedBackImpl;
 import com.android.systemui.plugins.R;
 import miui.maml.animation.interpolater.CubicEaseOutInterpolater;
 import miui.maml.animation.interpolater.QuartEaseOutInterpolater;
-import miui.util.HapticFeedbackUtil;
 
 public class RapidChargeView extends FrameLayout implements ValueAnimator.AnimatorUpdateListener, Animator.AnimatorListener {
     /* access modifiers changed from: private */
@@ -55,7 +55,6 @@ public class RapidChargeView extends FrameLayout implements ValueAnimator.Animat
     protected GTChargeAniView mGtChargeAniView;
     /* access modifiers changed from: private */
     public Handler mHandler;
-    private HapticFeedbackUtil mHapticFeedbackUtil;
     protected int mIconPaddingTop;
     private boolean mInitScreenOn;
     protected boolean mIsScreenOn;
@@ -181,7 +180,6 @@ public class RapidChargeView extends FrameLayout implements ValueAnimator.Animat
     public void init(Context context) {
         this.mRapidIconDrawable = context.getDrawable(R.drawable.charge_animation_rapid_charge_icon);
         this.mSuperRapidIconDrawable = context.getDrawable(R.drawable.charge_animation_super_rapid_icon);
-        this.mHapticFeedbackUtil = new HapticFeedbackUtil(context, false);
         this.mWindowManager = (WindowManager) context.getSystemService("window");
         this.mScreenSize = new Point();
         this.mWindowManager.getDefaultDisplay().getRealSize(this.mScreenSize);
@@ -446,7 +444,6 @@ public class RapidChargeView extends FrameLayout implements ValueAnimator.Animat
             addToWindow("mWindowShouldAdd");
         }
         this.mHandler.removeCallbacksAndMessages((Object) null);
-        this.mHapticFeedbackUtil.release();
     }
 
     public void zoomLarge(boolean z) {
@@ -473,7 +470,7 @@ public class RapidChargeView extends FrameLayout implements ValueAnimator.Animat
         }
         this.mEnterAnimatorSet.start();
         zoomLargeOnChildView();
-        this.mHapticFeedbackUtil.performExtHapticFeedback(74);
+        ((HapticFeedBackImpl) Dependency.get(HapticFeedBackImpl.class)).extHapticFeedback(74, false, 0);
         post(new Runnable() {
             public void run() {
                 RapidChargeView.this.disableTouch(false);

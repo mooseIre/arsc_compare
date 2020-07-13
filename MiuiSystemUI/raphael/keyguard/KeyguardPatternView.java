@@ -27,6 +27,8 @@ import com.android.keyguard.fod.MiuiGxzwManager;
 import com.android.settingslib.animation.AppearAnimationCreator;
 import com.android.settingslib.animation.AppearAnimationUtils;
 import com.android.settingslib.animation.DisappearAnimationUtils;
+import com.android.systemui.Dependency;
+import com.android.systemui.HapticFeedBackImpl;
 import com.android.systemui.miui.anim.PhysicBasedInterpolator;
 import com.android.systemui.plugins.R;
 import java.util.List;
@@ -226,11 +228,7 @@ public class KeyguardPatternView extends MiuiKeyguardPasswordView implements Key
                         KeyguardPatternView.this.handleAttemptLockout(KeyguardPatternView.this.mLockPatternUtils.setLockoutAttemptDeadline(i, i2));
                     }
                 }
-                if (MiuiKeyguardUtils.SUPPORT_LINEAR_MOTOR_VIBRATE) {
-                    KeyguardPatternView.this.mHapticFeedbackUtil.performExtHapticFeedback(76);
-                } else {
-                    KeyguardPatternView.this.mVibrator.vibrate(150);
-                }
+                ((HapticFeedBackImpl) Dependency.get(HapticFeedBackImpl.class)).extHapticFeedback(76, true, 150);
                 if (i2 == 0) {
                     KeyguardPatternView.this.mLockPatternView.postDelayed(KeyguardPatternView.this.mCancelPatternRunnable, 1500);
                 }

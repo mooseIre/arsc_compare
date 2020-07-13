@@ -17,6 +17,7 @@ import android.graphics.drawable.Drawable;
 import android.hardware.display.DisplayManager;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.UserHandle;
@@ -275,7 +276,7 @@ public class KeyguardCameraView extends FrameLayout {
         this.mIconActiveCenterX = ((float) i) * 0.55f;
         this.mIconActiveCenterY = ((float) i2) * 0.8f;
         this.mIconActiveWidth = ((float) i) * 0.74f;
-        this.mLayoutParams = new WindowManager.LayoutParams(-1, -1, 2014, 218171160, -2);
+        this.mLayoutParams = new WindowManager.LayoutParams(-1, -1, Build.VERSION.SDK_INT > 29 ? 2017 : 2014, 218171160, -2);
         WindowManager.LayoutParams layoutParams = this.mLayoutParams;
         layoutParams.x = 0;
         layoutParams.y = 0;

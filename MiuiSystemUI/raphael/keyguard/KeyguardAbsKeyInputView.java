@@ -13,6 +13,8 @@ import com.android.internal.widget.LockPatternUtils;
 import com.android.keyguard.EmergencyButton;
 import com.android.keyguard.analytics.AnalyticsHelper;
 import com.android.keyguard.faceunlock.FaceUnlockManager;
+import com.android.systemui.Dependency;
+import com.android.systemui.HapticFeedBackImpl;
 import com.android.systemui.plugins.R;
 import java.util.concurrent.TimeUnit;
 
@@ -164,11 +166,7 @@ public abstract class KeyguardAbsKeyInputView extends MiuiKeyguardPasswordView i
                 }
             }
             handleWrongPassword();
-            if (MiuiKeyguardUtils.SUPPORT_LINEAR_MOTOR_VIBRATE) {
-                this.mHapticFeedbackUtil.performExtHapticFeedback(76);
-            } else {
-                this.mVibrator.vibrate(150);
-            }
+            ((HapticFeedBackImpl) Dependency.get(HapticFeedBackImpl.class)).extHapticFeedback(76, true, 150);
             AnalyticsHelper.getInstance(this.mContext).recordUnlockWay("pw", false);
         } else if (!allowUnlock(i)) {
             resetPasswordText(true, false);

@@ -26,7 +26,6 @@ import com.android.keyguard.EmergencyButton;
 import com.android.keyguard.fod.MiuiGxzwManager;
 import com.android.keyguard.utils.PhoneUtils;
 import com.android.systemui.plugins.R;
-import miui.util.HapticFeedbackUtil;
 
 public abstract class MiuiKeyguardPasswordView extends LinearLayout implements EmergencyButton.EmergencyButtonCallback, BackButton.BackButtonCallback {
     protected BackButton mBackButton;
@@ -37,7 +36,6 @@ public abstract class MiuiKeyguardPasswordView extends LinearLayout implements E
     protected EmergencyCarrierArea mEmergencyCarrierArea;
     protected MiuiKeyguardFaceUnlockView mFaceUnlockView;
     private float mFontScale;
-    protected HapticFeedbackUtil mHapticFeedbackUtil;
     protected KeyguardBouncerMessageView mKeyguardBouncerMessageView;
     protected KeyguardUpdateMonitor mKeyguardUpdateMonitor;
     private KeyguardUpdateMonitorCallback mKeyguardUpdateMonitorCallback;
@@ -88,7 +86,6 @@ public abstract class MiuiKeyguardPasswordView extends LinearLayout implements E
             }
         };
         this.mVibrator = (Vibrator) this.mContext.getSystemService("vibrator");
-        this.mHapticFeedbackUtil = new HapticFeedbackUtil(context, false);
         this.mUm = (UserManager) this.mContext.getSystemService("user");
         this.mKeyguardUpdateMonitor = KeyguardUpdateMonitor.getInstance(this.mContext);
     }
@@ -97,12 +94,6 @@ public abstract class MiuiKeyguardPasswordView extends LinearLayout implements E
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
         initUsePassword();
-    }
-
-    /* access modifiers changed from: protected */
-    public void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-        this.mHapticFeedbackUtil.release();
     }
 
     /* access modifiers changed from: protected */

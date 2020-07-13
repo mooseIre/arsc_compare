@@ -7,6 +7,7 @@ import android.util.Slog;
 import com.android.internal.widget.LockPatternUtils;
 import com.android.internal.widget.LockPatternView;
 import com.android.keyguard.analytics.AnalyticsHelper;
+import com.android.settings.LockPatternUtilsCompat;
 import com.android.systemui.util.QcomBoostFramework;
 import java.util.List;
 import java.util.Objects;
@@ -124,7 +125,7 @@ public final class LockPatternChecker {
                 LockPatternUtils lockPatternUtils = lockPatternUtils2;
                 List list = list2;
                 Objects.requireNonNull(onCheckForUsersCallback);
-                if (!lockPatternUtils.checkPattern(list, i, new LockPatternUtils.CheckCredentialProgressCallback() {
+                if (!LockPatternUtilsCompat.checkPattern(lockPatternUtils, list, i, new LockPatternUtils.CheckCredentialProgressCallback() {
                     public final void onEarlyMatched() {
                         OnCheckForUsersCallback.this.onEarlyMatched();
                     }
@@ -192,7 +193,7 @@ public final class LockPatternChecker {
                 LockPatternUtils lockPatternUtils = lockPatternUtils2;
                 String str = str2;
                 Objects.requireNonNull(onCheckForUsersCallback);
-                if (!lockPatternUtils.checkPassword(str, i, new LockPatternUtils.CheckCredentialProgressCallback() {
+                if (!LockPatternUtilsCompat.checkPassword(lockPatternUtils, str, i, new LockPatternUtils.CheckCredentialProgressCallback() {
                     public final void onEarlyMatched() {
                         OnCheckForUsersCallback.this.onEarlyMatched();
                     }

@@ -1112,7 +1112,7 @@ class MiuiGxzwAnimView {
                     }
 
                     public final void run() {
-                        ((HapticFeedBackImpl) Dependency.get(HapticFeedBackImpl.class)).extHapticFeedback(this.f$0);
+                        ((HapticFeedBackImpl) Dependency.get(HapticFeedBackImpl.class)).extHapticFeedback(this.f$0, false, 0);
                     }
                 });
                 this.mAnimFeedback = true;
