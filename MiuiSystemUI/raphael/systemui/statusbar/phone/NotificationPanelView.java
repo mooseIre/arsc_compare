@@ -1628,8 +1628,10 @@ public class NotificationPanelView extends PanelView implements ExpandableView.O
             z = false;
         }
         this.mKeyguardLeftView.setVisibility(z ? 0 : 4);
+        int maintenanceModeId = KeyguardUpdateMonitor.getMaintenanceModeId();
+        int currentUser = KeyguardUpdateMonitor.getCurrentUser();
         View view = this.mSwitchSystemUser;
-        if (!z || !shouldShowSwitchSystemUser()) {
+        if (!z || !shouldShowSwitchSystemUser() || currentUser == maintenanceModeId) {
             i = 8;
         }
         view.setVisibility(i);

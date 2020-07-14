@@ -646,7 +646,7 @@ public class PhoneStatusBarPolicy implements BluetoothController.Callback, Comma
                 try {
                     final boolean isManagedProfile = UserManagerCompat.isManagedProfile(PhoneStatusBarPolicy.this.mUserManager, ActivityManagerCompat.getLastResumedActivityUserId(PhoneStatusBarPolicy.this.mUserIdLegacy));
                     final boolean z = true;
-                    final boolean z2 = PhoneStatusBarPolicy.this.mCurrentUserId != 0 && PhoneStatusBarPolicy.this.mSecondSpaceStatusIconVisible;
+                    final boolean z2 = (PhoneStatusBarPolicy.this.mCurrentUserId == 0 || PhoneStatusBarPolicy.this.mCurrentUserId == KeyguardUpdateMonitor.getMaintenanceModeId() || !PhoneStatusBarPolicy.this.mSecondSpaceStatusIconVisible) ? false : true;
                     if (PhoneStatusBarPolicy.this.mCurrentUserId != 0 || !XSpaceUserHandle.isXSpaceUserId(PhoneStatusBarPolicy.this.mCurrentProfileId)) {
                         z = false;
                     }
