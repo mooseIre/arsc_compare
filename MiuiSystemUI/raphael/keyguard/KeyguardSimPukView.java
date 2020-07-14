@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.os.ServiceManager;
+import android.os.SystemProperties;
 import android.telephony.SubscriptionInfo;
 import android.telephony.SubscriptionManagerCompat;
 import android.telephony.TelephonyManager;
@@ -19,14 +20,16 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import com.android.internal.telephony.ITelephony;
 import com.android.internal.telephony.IccCardConstants;
+import com.android.keyguard.PasswordTextView;
 import com.android.keyguard.utils.PhoneUtils;
 import com.android.systemui.plugins.R;
 import miui.telephony.SubscriptionManager;
 
-public class KeyguardSimPukView extends KeyguardPinBasedInputView {
+public class KeyguardSimPukView extends KeyguardPinBasedInputView implements PasswordTextView.TextChangeListener {
     /* access modifiers changed from: private */
     public CheckSimPuk mCheckSimPukThread;
     private ViewGroup mContainer;
+    private String mKrCustomized;
     /* access modifiers changed from: private */
     public String mPinText;
     /* access modifiers changed from: private */
@@ -74,6 +77,7 @@ public class KeyguardSimPukView extends KeyguardPinBasedInputView {
         this.mRemainingAttempts = -1;
         this.mStateMachine = new StateMachine();
         this.mSubId = SubscriptionManager.INVALID_SUBSCRIPTION_ID;
+        this.mKrCustomized = SystemProperties.get("ro.miui.customized.region");
         this.mUpdateMonitorCallback = new KeyguardUpdateMonitorCallback() {
             public void onSimStateChanged(int i, int i2, IccCardConstants.State state) {
                 Log.v("KeyguardSimPukView", "onSimStateChanged(subId=" + i + ",state=" + state + ")");
@@ -186,6 +190,7 @@ public class KeyguardSimPukView extends KeyguardPinBasedInputView {
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
+        this.mPasswordEntry.addTextChangedListener(this);
         this.mSimImageView = (ImageView) findViewById(R.id.keyguard_sim);
         this.mContainer = (ViewGroup) findViewById(R.id.container);
         this.mDeleteButton.setVisibility(0);
@@ -414,5 +419,16 @@ public class KeyguardSimPukView extends KeyguardPinBasedInputView {
         layoutParams.width = resources.getDimensionPixelOffset(R.dimen.miui_keyguard_sim_pin_view_layout_width);
         layoutParams.height = resources.getDimensionPixelOffset(R.dimen.miui_keyguard_sim_pin_view_layout_height);
         this.mContainer.setLayoutParams(layoutParams);
+    }
+
+    public void onTextChanged(int i) {
+        if (!"kr_kt".equals(this.mKrCustomized) && !"kr_skt".equals(this.mKrCustomized) && !"kr_lgu".equals(this.mKrCustomized)) {
+            return;
+        }
+        if (i >= 8) {
+            this.mPasswordEntry.setEnabled(false);
+        } else {
+            this.mPasswordEntry.setEnabled(true);
+        }
     }
 }

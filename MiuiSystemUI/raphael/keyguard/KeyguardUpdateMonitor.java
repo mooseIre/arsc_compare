@@ -585,6 +585,20 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener {
         return this.mIsLockScreenMagazinePkgExist;
     }
 
+    public static synchronized int getMaintenanceModeId() {
+        int i;
+        synchronized (KeyguardUpdateMonitor.class) {
+            try {
+                Class<?> cls = Class.forName("android.os.UserHandle");
+                i = cls.getField("MAINTENANCE_MODE_ID").getInt(cls);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return -10000;
+            }
+        }
+        return i;
+    }
+
     public static synchronized void setCurrentUser(int i) {
         synchronized (KeyguardUpdateMonitor.class) {
             sCurrentUser = i;
