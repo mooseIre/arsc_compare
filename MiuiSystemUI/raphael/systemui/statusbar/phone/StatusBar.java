@@ -1736,7 +1736,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
             }
 
             public void onNotificationRemoved(StatusBarNotification statusBarNotification, final NotificationListenerService.RankingMap rankingMap, final int i) {
-                Log.d("StatusBar", "onNotificationRemoved key=" + statusBarNotification.getKey() + " reason=" + i);
+                Slog.i("StatusBar", "onNotificationRemoved key=" + statusBarNotification.getKey() + " reason=" + i);
                 if (statusBarNotification != null) {
                     final String key = statusBarNotification.getKey();
                     StatusBar.this.mHandler.post(new Runnable() {
@@ -3269,9 +3269,11 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
     }
 
     public void removeNotification(String str, NotificationListenerService.RankingMap rankingMap, int i) {
-        if (!this.mAppMiniWindowManager.isStartingActivity()) {
-            removeNotification(str, rankingMap, true, i);
+        if (this.mAppMiniWindowManager.isStartingActivity()) {
+            Slog.i("StatusBar", "cannot removeNotification key=" + str);
+            return;
         }
+        removeNotification(str, rankingMap, true, i);
     }
 
     public void removeNotification(String str, NotificationListenerService.RankingMap rankingMap, boolean z, int i) {

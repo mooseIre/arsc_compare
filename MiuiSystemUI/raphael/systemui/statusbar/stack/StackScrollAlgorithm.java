@@ -68,10 +68,8 @@ public class StackScrollAlgorithm {
             if (!z || !z3) {
                 boolean z4 = z2 && ((ExpandableNotificationRow) expandableView).isPinned();
                 boolean z5 = z2 && ((ExpandableNotificationRow) expandableView).isHeadsUpAnimatingAway();
-                if (z2) {
-                    boolean isChildInGroup = ((ExpandableNotificationRow) expandableView).isChildInGroup();
-                }
-                if (!z4 && !z5) {
+                boolean z6 = z2 && ((ExpandableNotificationRow) expandableView).getTranslation() > 0.0f;
+                if (!z4 && !z5 && !z6) {
                     float f = 1.0f;
                     float f2 = z ? 1.0f : 0.8f;
                     if (!z) {

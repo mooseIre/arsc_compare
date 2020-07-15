@@ -349,6 +349,8 @@ public class KeyguardViewMediator extends SystemUI {
         }
     };
     /* access modifiers changed from: private */
+    public long mLastSensorChangeTime = 0;
+    /* access modifiers changed from: private */
     public final SparseArray<IccCardConstants.State> mLastSimStates = new SparseArray<>();
     private boolean mLockLater;
     /* access modifiers changed from: private */
@@ -662,13 +664,22 @@ public class KeyguardViewMediator extends SystemUI {
         }
 
         public void onSensorChanged(SensorEvent sensorEvent) {
-            float[] fArr = sensorEvent.values;
-            if (fArr == null || fArr[0] != 1.0f) {
-                float[] fArr2 = sensorEvent.values;
-                if (fArr2 == null) {
+            if (System.currentTimeMillis() - KeyguardViewMediator.this.mLastSensorChangeTime <= 1200) {
+                StringBuilder sb = new StringBuilder();
+                sb.append("sensor change: time interval is too short, values ");
+                float[] fArr = sensorEvent.values;
+                sb.append(fArr != null ? fArr[0] : -1.0f);
+                Log.e("KeyguardViewMediator", sb.toString());
+                return;
+            }
+            long unused = KeyguardViewMediator.this.mLastSensorChangeTime = System.currentTimeMillis();
+            float[] fArr2 = sensorEvent.values;
+            if (fArr2 == null || fArr2[0] != 1.0f) {
+                float[] fArr3 = sensorEvent.values;
+                if (fArr3 == null) {
                     return;
                 }
-                if ((fArr2[0] == 2.0f || fArr2[0] == 0.0f) && KeyguardViewMediator.this.mWakeupByPickUp && KeyguardViewMediator.this.isShowingAndNotOccluded()) {
+                if ((fArr3[0] == 2.0f || fArr3[0] == 0.0f) && KeyguardViewMediator.this.mWakeupByPickUp && KeyguardViewMediator.this.isShowingAndNotOccluded()) {
                     Slog.i("KeyguardViewMediator", "keyguard_screen_off_reason:put down");
                     KeyguardViewMediator.this.mPM.goToSleep(SystemClock.uptimeMillis());
                     if (KeyguardViewMediator.this.mDisplay.getState() == 2) {
@@ -681,7 +692,7 @@ public class KeyguardViewMediator extends SystemUI {
             }
             if (KeyguardViewMediator.this.mDisplay.getState() != 2) {
                 AnalyticsHelper.getInstance(KeyguardViewMediator.this.mContext).setWakeupWay("screen_on_by_pick_up");
-                boolean unused = KeyguardViewMediator.this.mWakeupByPickUp = true;
+                boolean unused2 = KeyguardViewMediator.this.mWakeupByPickUp = true;
             }
             KeyguardViewMediator.this.mPM.wakeUp(SystemClock.uptimeMillis(), "com.android.systemui:PICK_UP");
         }
