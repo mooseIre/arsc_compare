@@ -324,7 +324,7 @@ class MiuiGxzwOverlayView extends GxzwWindowFrameLayout implements MiuiGxzwIconV
     }
 
     private String getBrightnessFile() {
-        String[] stringArray = getResources().getStringArray(285343772);
+        String[] stringArray = getResources().getStringArray(285343774);
         for (int i = 0; i < stringArray.length; i++) {
             if (new File(stringArray[i]).exists()) {
                 return stringArray[i];
