@@ -251,10 +251,6 @@ public class CallbackHandler extends Handler implements NetworkController.Emerge
         obtainMessage(6, z ? 1 : 0, 0, emergencyListener).sendToTarget();
     }
 
-    public void setListening(NetworkController.CarrierNameListener carrierNameListener, boolean z) {
-        obtainMessage(13, z ? 1 : 0, 0, carrierNameListener).sendToTarget();
-    }
-
     public void setListening(NetworkController.MobileTypeListener mobileTypeListener, boolean z) {
         obtainMessage(16, z ? 1 : 0, 0, mobileTypeListener).sendToTarget();
     }

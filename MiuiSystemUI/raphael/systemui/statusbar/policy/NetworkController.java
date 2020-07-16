@@ -100,8 +100,6 @@ public interface NetworkController extends CallbackController<SignalCallback>, D
 
     void addCallback(SignalCallback signalCallback);
 
-    void addCarrierNameListener(CarrierNameListener carrierNameListener);
-
     void addEmergencyListener(EmergencyListener emergencyListener);
 
     void addMobileTypeListener(MobileTypeListener mobileTypeListener);
@@ -129,8 +127,6 @@ public interface NetworkController extends CallbackController<SignalCallback>, D
     boolean isRadioOn();
 
     void removeCallback(SignalCallback signalCallback);
-
-    void removeCarrierNameListener(CarrierNameListener carrierNameListener);
 
     void removeEmergencyListener(EmergencyListener emergencyListener);
 
