@@ -11,6 +11,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.provider.MiuiSettings;
 import android.provider.Settings;
+import android.telephony.SubscriptionInfo;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -23,10 +24,10 @@ import com.android.systemui.plugins.R;
 import com.android.systemui.statusbar.policy.DarkIconDispatcher;
 import com.android.systemui.statusbar.policy.DarkIconDispatcherHelper;
 import com.android.systemui.statusbar.policy.NetworkController;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import miui.os.Build;
-import miui.telephony.SubscriptionInfo;
 import miui.telephony.SubscriptionManager;
 
 public class CarrierText extends TextView implements NetworkController.CarrierNameListener, NetworkController.EmergencyListener, NetworkController.MobileTypeListener, DarkIconDispatcher.DarkReceiver, NetworkController.SignalCallback {
@@ -78,7 +79,6 @@ public class CarrierText extends TextView implements NetworkController.CarrierNa
             IntentFilter intentFilter = new IntentFilter();
             intentFilter.addAction("android.intent.action.USER_SWITCHED");
             this.mContext.registerReceiver(this.mBroadcastReceiver, intentFilter);
-            ((NetworkController) Dependency.get(NetworkController.class)).addCarrierNameListener(this);
             ((NetworkController) Dependency.get(NetworkController.class)).addEmergencyListener(this);
             if (isCustomizationTest()) {
                 ((NetworkController) Dependency.get(NetworkController.class)).addMobileTypeListener(this);
@@ -168,7 +168,6 @@ public class CarrierText extends TextView implements NetworkController.CarrierNa
                 keyguardUpdateMonitor.removeCallback(this.mCallback);
             }
             unregisterObservers();
-            ((NetworkController) Dependency.get(NetworkController.class)).removeCarrierNameListener(this);
             ((NetworkController) Dependency.get(NetworkController.class)).removeEmergencyListener(this);
             if (isCustomizationTest()) {
                 ((NetworkController) Dependency.get(NetworkController.class)).removeMobileTypeListener(this);
@@ -189,6 +188,16 @@ public class CarrierText extends TextView implements NetworkController.CarrierNa
         this.mVowifiArray = new SparseBooleanArray();
         this.mCallback = new KeyguardUpdateMonitorCallback() {
             public void onRefreshCarrierInfo() {
+                List<SubscriptionInfo> subscriptionInfo = CarrierText.this.mKeyguardUpdateMonitor.getSubscriptionInfo(false);
+                Arrays.fill(CarrierText.this.mSimCarrier, (Object) null);
+                if (subscriptionInfo != null) {
+                    for (SubscriptionInfo next : subscriptionInfo) {
+                        int simSlotIndex = next.getSimSlotIndex();
+                        if (simSlotIndex >= 0 && simSlotIndex < CarrierText.this.mSimCarrier.length) {
+                            CarrierText.this.mSimCarrier[simSlotIndex] = next.getCarrierName().toString();
+                        }
+                    }
+                }
                 CarrierText.this.updateCarrier();
             }
 
@@ -281,21 +290,20 @@ public class CarrierText extends TextView implements NetworkController.CarrierNa
             post(new Runnable() {
                 public void run() {
                     String[] strArr = new String[CarrierText.this.mPhoneCount];
-                    CarrierText.this.mKeyguardUpdateMonitor.getSubscriptionInfo(false);
-                    for (int i = 0; i < CarrierText.this.mPhoneCount; i++) {
-                        if (!TelephonyManager.getDefault().hasIccCard(i) || CarrierText.this.mSimErrorState[i]) {
-                            strArr[i] = "";
-                        } else if (!TextUtils.isEmpty(CarrierText.this.mCustomCarrier[i])) {
-                            strArr[i] = CarrierText.this.mCustomCarrier[i];
+                    int i = 0;
+                    for (int i2 = 0; i2 < CarrierText.this.mPhoneCount; i2++) {
+                        if (!TelephonyManager.getDefault().hasIccCard(i2) || CarrierText.this.mSimErrorState[i2]) {
+                            strArr[i2] = "";
+                        } else if (!TextUtils.isEmpty(CarrierText.this.mCustomCarrier[i2])) {
+                            strArr[i2] = CarrierText.this.mCustomCarrier[i2];
                         } else {
-                            strArr[i] = CarrierText.this.mSimCarrier[i];
+                            strArr[i2] = CarrierText.this.mSimCarrier[i2];
                         }
                     }
                     String access$1300 = CarrierText.this.getCarrierName(strArr);
                     if (!access$1300.equals(CarrierText.this.getText())) {
                         CarrierText.this.setText(access$1300);
                     }
-                    int i2 = 8;
                     if (CarrierText.this.mForceHide) {
                         CarrierText.this.setVisibility(8);
                     } else if (CarrierText.this.mShowStyle == -1) {
@@ -304,10 +312,10 @@ public class CarrierText extends TextView implements NetworkController.CarrierNa
                         CarrierText.this.setVisibility(0);
                     } else if (CarrierText.this.mShowStyle == 0) {
                         CarrierText carrierText = CarrierText.this;
-                        if (carrierText.mShowCarrier) {
-                            i2 = 0;
+                        if (!carrierText.mShowCarrier) {
+                            i = 8;
                         }
-                        carrierText.setVisibility(i2);
+                        carrierText.setVisibility(i);
                     }
                 }
             });
@@ -328,7 +336,7 @@ public class CarrierText extends TextView implements NetworkController.CarrierNa
             if (!it.hasNext()) {
                 break;
             }
-            int slotId = ((SubscriptionInfo) it.next()).getSlotId();
+            int slotId = ((miui.telephony.SubscriptionInfo) it.next()).getSlotId();
             if (this.mVowifiArray.get(slotId) && this.mShowSpnWhenAirplaneOn) {
                 if (slotId >= 0 && slotId < this.mPhoneCount) {
                     zArr[slotId] = true;
