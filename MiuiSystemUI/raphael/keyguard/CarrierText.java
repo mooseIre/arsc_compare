@@ -194,7 +194,11 @@ public class CarrierText extends TextView implements NetworkController.CarrierNa
                     for (SubscriptionInfo next : subscriptionInfo) {
                         int simSlotIndex = next.getSimSlotIndex();
                         if (simSlotIndex >= 0 && simSlotIndex < CarrierText.this.mSimCarrier.length) {
-                            CarrierText.this.mSimCarrier[simSlotIndex] = next.getCarrierName().toString();
+                            if (next.getCarrierName() != null) {
+                                CarrierText.this.mSimCarrier[simSlotIndex] = next.getCarrierName().toString();
+                            } else {
+                                CarrierText.this.mSimCarrier[simSlotIndex] = "";
+                            }
                         }
                     }
                 }

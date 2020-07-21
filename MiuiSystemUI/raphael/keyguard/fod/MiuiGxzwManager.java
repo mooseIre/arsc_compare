@@ -17,6 +17,7 @@ import android.os.ServiceManager;
 import android.provider.Settings;
 import android.util.Log;
 import android.util.Slog;
+import com.android.internal.util.DumpUtils;
 import com.android.keyguard.KeyguardSecurityModel;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.KeyguardUpdateMonitorCallback;
@@ -799,8 +800,10 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
     }
 
     public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
-        printWriter.println("MiuiGxzwManager state:");
-        printWriter.println("mDrawWakeLockStatus=" + this.mDrawWakeLockStatus);
-        printWriter.println("mKeyguardAuthen=" + getKeyguardAuthen());
+        if (DumpUtils.checkDumpPermission(this.mContext, "MiuiGxzwManager", printWriter)) {
+            printWriter.println("MiuiGxzwManager state:");
+            printWriter.println("mDrawWakeLockStatus=" + this.mDrawWakeLockStatus);
+            printWriter.println("mKeyguardAuthen=" + getKeyguardAuthen());
+        }
     }
 }

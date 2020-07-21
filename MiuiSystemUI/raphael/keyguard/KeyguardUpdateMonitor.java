@@ -1492,6 +1492,9 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener {
 
     public boolean shouldListenForFingerprint() {
         boolean z = (this.mKeyguardIsVisible || !this.mDeviceInteractive || ((this.mBouncer && !this.mKeyguardGoingAway) || this.mGoingToSleep || this.mKeyguardShowingAndOccluded)) && !this.mSwitchingUser && !isFingerprintDisabled(getCurrentUser()) && (!isKeyguardHide() || this.mGoingToSleep) && !isFingerprintUnlock() && MiuiKeyguardUtils.isSystemProcess() && (!isFaceUnlock() || !MiuiKeyguardUtils.isBroadSideFingerprint());
+        if (MiuiKeyguardUtils.isGxzwSensor() && MiuiKeyguardUtils.isInvertColorsEnable(this.mContext)) {
+            z = z && this.mDeviceInteractive;
+        }
         if (!z || !this.mKeyguardOccluded || (this.mBouncer && !this.mKeyguardGoingAway)) {
             return z;
         }

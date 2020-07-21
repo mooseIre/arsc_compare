@@ -17,6 +17,7 @@ import android.view.WindowManager;
 import android.view.accessibility.AccessibilityManager;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.KeyguardUpdateMonitorCallback;
+import com.android.keyguard.MiuiKeyguardUtils;
 import com.android.keyguard.fod.MiuiGxzwQuickOpenView;
 import com.android.keyguard.fod.MiuiGxzwSensor;
 import com.android.keyguard.fod.MiuiGxzwTransparentTimer;
@@ -661,11 +662,13 @@ class MiuiGxzwIconView extends GxzwNoRotateFrameLayout implements View.OnTouchLi
 
     /* access modifiers changed from: private */
     public void updateDozeScreenState() {
-        boolean z = this.mGxzwIconTransparent;
-        if (z) {
-            turnOffScreenIfInAod();
-        } else if (!z) {
-            turnOnAodIfScreenOff();
+        if (!MiuiKeyguardUtils.isInvertColorsEnable(this.mContext)) {
+            boolean z = this.mGxzwIconTransparent;
+            if (z) {
+                turnOffScreenIfInAod();
+            } else if (!z) {
+                turnOnAodIfScreenOff();
+            }
         }
     }
 
