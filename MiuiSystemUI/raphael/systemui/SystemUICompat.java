@@ -51,7 +51,7 @@ public class SystemUICompat {
     }
 
     public static int getNotificationDefaultColor() {
-        return 17170893;
+        return 17170892;
     }
 
     public static boolean isHighPriority(String str, int i) throws RemoteException {

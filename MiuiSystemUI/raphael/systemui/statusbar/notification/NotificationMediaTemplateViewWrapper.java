@@ -179,11 +179,11 @@ public class NotificationMediaTemplateViewWrapper extends NotificationHeaderView
     }
 
     private void resolveMediaViews() {
-        this.mPicture = (ImageView) this.mView.findViewById(16909329);
-        this.mMainColumnContainer = (ViewGroup) this.mView.findViewById(16909189);
-        this.mMediaActions = (ViewGroup) this.mView.findViewById(16909112);
+        this.mPicture = (ImageView) this.mView.findViewById(16909309);
+        this.mMainColumnContainer = (ViewGroup) this.mView.findViewById(16909175);
+        this.mMediaActions = (ViewGroup) this.mView.findViewById(16909101);
         this.mMediaTitle = (TextView) this.mView.findViewById(16908310);
-        this.mMediaText = (TextView) this.mView.findViewById(16909464);
+        this.mMediaText = (TextView) this.mView.findViewById(16909444);
     }
 
     private void handleMediaViews() {
@@ -246,7 +246,7 @@ public class NotificationMediaTemplateViewWrapper extends NotificationHeaderView
                 }
             }
         }
-        ViewStub viewStub = (ViewStub) this.mView.findViewById(16909201);
+        ViewStub viewStub = (ViewStub) this.mView.findViewById(16909187);
         if (viewStub instanceof ViewStub) {
             viewStub.setLayoutInflater(LayoutInflater.from(this.mContext));
             viewStub.setLayoutResource(R.layout.notification_material_media_seekbar);
@@ -390,7 +390,7 @@ public class NotificationMediaTemplateViewWrapper extends NotificationHeaderView
 
     /* access modifiers changed from: private */
     public boolean isNormalMedia() {
-        return this.mView.getId() == 16909441 && "media".equals(this.mView.getTag());
+        return this.mView.getId() == 16909421 && "media".equals(this.mView.getTag());
     }
 
     private class MediaStyleProcessor {
@@ -446,6 +446,7 @@ public class NotificationMediaTemplateViewWrapper extends NotificationHeaderView
             ViewGroup.MarginLayoutParams marginLayoutParams = (ViewGroup.MarginLayoutParams) NotificationMediaTemplateViewWrapper.this.mMediaActions.getLayoutParams();
             marginLayoutParams.leftMargin = NotificationMediaTemplateViewWrapper.this.mMediaActionsMargin;
             marginLayoutParams.topMargin = NotificationMediaTemplateViewWrapper.this.mMediaActionsMargin;
+            marginLayoutParams.rightMargin = NotificationMediaTemplateViewWrapper.this.mMediaActionsMargin;
             marginLayoutParams.bottomMargin = NotificationMediaTemplateViewWrapper.this.isNormalMedia() ? 0 : NotificationMediaTemplateViewWrapper.this.mMediaActionsMargin;
             NotificationMediaTemplateViewWrapper.this.mMediaActions.setLayoutParams(marginLayoutParams);
         }

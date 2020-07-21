@@ -120,7 +120,7 @@ public interface NetworkController extends CallbackController<SignalCallback>, D
 
     boolean hideVolteForOperation(int i);
 
-    boolean isMobileDataSupported(int i);
+    boolean isMobileDataSupported();
 
     boolean isMobileTypeShownWhenWifiOn(int i);
 

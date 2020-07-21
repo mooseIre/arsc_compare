@@ -12,6 +12,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowInsets;
 import android.widget.FrameLayout;
+import com.android.systemui.Dependency;
+import com.android.systemui.DynamicStatusController;
 import com.android.systemui.miui.controlcenter.QSControlCenterPanel;
 import com.android.systemui.miui.controlcenter.QSControlCenterTileLayout;
 import com.android.systemui.miui.controlcenter.QSControlScrollView;
@@ -370,6 +372,13 @@ public class ControlPanelWindowView extends FrameLayout {
         windowInsets.consumeDisplayCutout();
         Log.d("ControllerPanelWindowView", "onApplyWindowInsets: ");
         return windowInsets.consumeDisplayCutout();
+    }
+
+    public void onDescendantInvalidated(View view, View view2) {
+        super.onDescendantInvalidated(view, view2);
+        if (((DynamicStatusController) Dependency.get(DynamicStatusController.class)).isDebug()) {
+            Log.d("ControllerPanelWindowView", "onDescendantInvalidated  child=" + view + ";target=" + view2);
+        }
     }
 
     private boolean isBottomAreaTouchDown(float f) {

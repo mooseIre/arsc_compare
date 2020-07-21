@@ -21,6 +21,13 @@ public class ActivityStarterDelegate implements ActivityStarter {
         }
     }
 
+    public void startActivity(Intent intent, boolean z, boolean z2, int i) {
+        ActivityStarter activityStarter = this.mActualStarter;
+        if (activityStarter != null) {
+            activityStarter.startActivity(intent, z, z2, i);
+        }
+    }
+
     public void startActivity(Intent intent, boolean z, boolean z2) {
         ActivityStarter activityStarter = this.mActualStarter;
         if (activityStarter != null) {

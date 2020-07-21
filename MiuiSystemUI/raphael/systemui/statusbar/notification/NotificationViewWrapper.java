@@ -87,7 +87,7 @@ public abstract class NotificationViewWrapper implements TransformableView {
     }
 
     public static NotificationViewWrapper wrap(Context context, View view, ExpandableNotificationRow expandableNotificationRow) {
-        if (view.getId() == 16909441) {
+        if (view.getId() == 16909421) {
             if ("bigPicture".equals(view.getTag())) {
                 return new NotificationBigPictureTemplateViewWrapper(context, view, expandableNotificationRow);
             }

@@ -253,7 +253,7 @@ public class GlobalScreenshotDisplay implements ScreenshotScrollView.AnimatingCa
                 StatHelper.recordNewScreenshotEvent(GlobalScreenshotDisplay.this.mContext, "new_finish_long_screenshot", hashMap);
             }
         });
-        this.mWindowLayoutParams = new WindowManager.LayoutParams(-1, -1, 0, 0, 2014, 17368320, -3);
+        this.mWindowLayoutParams = new WindowManager.LayoutParams(-1, -1, 0, 0, 2024, 17368320, -3);
         WindowManager.LayoutParams layoutParams2 = this.mWindowLayoutParams;
         layoutParams2.screenOrientation = 14;
         if (Build.VERSION.SDK_INT >= 28) {
@@ -740,7 +740,7 @@ public class GlobalScreenshotDisplay implements ScreenshotScrollView.AnimatingCa
                                 int lastIndexOf = GlobalScreenshotDisplay.this.mNotifyMediaStoreData.imageFilePath.lastIndexOf("jpg");
                                 if (lastIndexOf >= 0) {
                                     new File(GlobalScreenshotDisplay.this.mNotifyMediaStoreData.imageFilePath).delete();
-                                    String str = GlobalScreenshotDisplay.this.mNotifyMediaStoreData.imageFilePath.substring(0, lastIndexOf) + "png";
+                                    String str = GlobalScreenshotDisplay.this.mNotifyMediaStoreData.imageFilePath.substring(0, lastIndexOf) + "jpg";
                                     GlobalScreenshotDisplay.this.mNotifyMediaStoreData.imageFilePath = str;
                                     GlobalScreenshotDisplay.this.mNotifyMediaStoreData.imageFileName = new File(str).getName();
                                 }

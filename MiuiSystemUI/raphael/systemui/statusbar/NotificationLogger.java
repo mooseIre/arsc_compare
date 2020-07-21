@@ -110,7 +110,7 @@ public class NotificationLogger {
     }
 
     /* access modifiers changed from: private */
-    public void logNotificationVisibilityChanges(final Collection<NotificationVisibility> collection, Collection<NotificationVisibility> collection2) {
+    public void logNotificationVisibilityChanges(Collection<NotificationVisibility> collection, Collection<NotificationVisibility> collection2) {
         if (!collection.isEmpty() || !collection2.isEmpty()) {
             final NotificationVisibility[] cloneVisibilitiesAsArr = cloneVisibilitiesAsArr(collection);
             final NotificationVisibility[] cloneVisibilitiesAsArr2 = cloneVisibilitiesAsArr(collection2);
@@ -121,10 +121,10 @@ public class NotificationLogger {
                         NotificationLogger.this.mBarService.onNotificationVisibilityChanged(cloneVisibilitiesAsArr, cloneVisibilitiesAsArr2);
                     } catch (RemoteException unused) {
                     }
-                    int size = collection.size();
-                    if (size > 0) {
-                        String[] strArr = new String[size];
-                        for (int i = 0; i < size; i++) {
+                    int length = cloneVisibilitiesAsArr.length;
+                    if (length > 0) {
+                        String[] strArr = new String[length];
+                        for (int i = 0; i < length; i++) {
                             strArr[i] = cloneVisibilitiesAsArr[i].key;
                         }
                         try {

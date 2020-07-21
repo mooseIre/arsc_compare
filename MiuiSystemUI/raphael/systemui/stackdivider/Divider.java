@@ -69,7 +69,7 @@ public class Divider extends SystemUI {
     }
 
     public boolean inSplitMode() {
-        return WindowManagerProxy.getInstance().getDockSide() == -1;
+        return WindowManagerProxy.getInstance().getDockSide() != -1;
     }
 
     private void addDivider(Configuration configuration) {

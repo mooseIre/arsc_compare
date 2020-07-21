@@ -20,7 +20,7 @@ public class NotificationHeaderUtil {
         public void apply(View view, boolean z) {
             NotificationHeaderView notificationHeaderView = (NotificationHeaderView) view;
             applyToChild((ImageView) view.findViewById(16908294), z, notificationHeaderView.getOriginalIconColor());
-            applyToChild((ImageView) view.findViewById(16908908), z, notificationHeaderView.getOriginalNotificationColor());
+            applyToChild((ImageView) view.findViewById(16908902), z, notificationHeaderView.getOriginalNotificationColor());
         }
 
         private void applyToChild(View view, boolean z, int i) {
@@ -75,8 +75,8 @@ public class NotificationHeaderUtil {
     public NotificationHeaderUtil(ExpandableNotificationRow expandableNotificationRow) {
         this.mRow = expandableNotificationRow;
         this.mComparators.add(new HeaderProcessor(this.mRow, 16908294, sIconExtractor, sIconVisibilityComparator, sVisibilityApplicator));
-        this.mComparators.add(new HeaderProcessor(this.mRow, 16909188, sIconExtractor, sGreyComparator, mGreyApplicator));
-        this.mComparators.add(new HeaderProcessor(this.mRow, 16909288, (DataExtractor) null, new ViewComparator() {
+        this.mComparators.add(new HeaderProcessor(this.mRow, 16909174, sIconExtractor, sGreyComparator, mGreyApplicator));
+        this.mComparators.add(new HeaderProcessor(this.mRow, 16909272, (DataExtractor) null, new ViewComparator() {
             public boolean compare(View view, View view2, Object obj, Object obj2) {
                 return view.getVisibility() != 8;
             }
@@ -89,9 +89,9 @@ public class NotificationHeaderUtil {
             }
         }, sVisibilityApplicator));
         this.mComparators.add(HeaderProcessor.forTextView(this.mRow, 16908733));
-        this.mComparators.add(HeaderProcessor.forTextView(this.mRow, 16908987));
-        this.mDividers.add(16908988);
-        this.mDividers.add(16909500);
+        this.mComparators.add(HeaderProcessor.forTextView(this.mRow, 16908981));
+        this.mDividers.add(16908982);
+        this.mDividers.add(16909479);
     }
 
     public void updateChildrenHeaderAppearance() {
@@ -129,7 +129,7 @@ public class NotificationHeaderUtil {
 
     private void sanitizeChild(View view) {
         if (view != null) {
-            sanitizeHeader(view.findViewById(16909188));
+            sanitizeHeader(view.findViewById(16909174));
         }
     }
 
@@ -139,7 +139,7 @@ public class NotificationHeaderUtil {
         boolean z2;
         if (notificationHeaderView != null) {
             int childCount = notificationHeaderView.getChildCount();
-            View findViewById = notificationHeaderView.findViewById(16909496);
+            View findViewById = notificationHeaderView.findViewById(16909475);
             if (findViewById != null) {
                 int i = 1;
                 while (true) {

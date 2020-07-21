@@ -65,7 +65,7 @@ public class InCallNotificationView extends LinearLayout {
     public void updateInfo(View view, Bundle bundle) {
         if (view != null) {
             TextView textView = (TextView) view.findViewById(16908310);
-            TextView textView2 = (TextView) view.findViewById(16909464);
+            TextView textView2 = (TextView) view.findViewById(16909444);
             String str = "";
             this.mCallerName.setText(textView == null ? str : textView.getText().toString());
             TextView textView3 = this.mCallerInfo;

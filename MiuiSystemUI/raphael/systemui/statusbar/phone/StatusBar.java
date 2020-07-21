@@ -1468,7 +1468,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
 
             private boolean handleRemoteInput(View view, PendingIntent pendingIntent, Intent intent) {
                 RemoteInputView remoteInputView;
-                Object tag = view.getTag(16909312);
+                Object tag = view.getTag(16909293);
                 ExpandableNotificationRow expandableNotificationRow = null;
                 RemoteInput[] remoteInputArr = tag instanceof RemoteInput[] ? (RemoteInput[]) tag : null;
                 if (remoteInputArr == null) {
@@ -3017,7 +3017,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
 
     public int getStatusBarHeight() {
         if (this.mNaturalBarHeight < 0) {
-            this.mNaturalBarHeight = this.mContext.getResources().getDimensionPixelSize(17105467);
+            this.mNaturalBarHeight = this.mContext.getResources().getDimensionPixelSize(17105436);
         }
         return this.mNaturalBarHeight;
     }
@@ -4101,6 +4101,10 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
         return new W(this.mBgThread.getLooper());
     }
 
+    public void startActivity(Intent intent, boolean z, boolean z2, int i) {
+        startActivityDismissingKeyguard(intent, z, z2, i);
+    }
+
     public void startActivity(Intent intent, boolean z) {
         startActivityDismissingKeyguard(intent, false, z);
     }
@@ -4110,7 +4114,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
     }
 
     public void startActivity(Intent intent, boolean z, ActivityStarter.Callback callback) {
-        startActivityDismissingKeyguard(intent, false, z, callback);
+        startActivityDismissingKeyguard(intent, false, z, callback, 0);
     }
 
     public void setQsExpanded(boolean z) {
@@ -5049,17 +5053,22 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
         return this.mDisplayMetrics.density;
     }
 
-    public void startActivityDismissingKeyguard(Intent intent, boolean z, boolean z2) {
-        startActivityDismissingKeyguard(intent, z, z2, (ActivityStarter.Callback) null);
+    public void startActivityDismissingKeyguard(Intent intent, boolean z, boolean z2, int i) {
+        startActivityDismissingKeyguard(intent, z, z2, (ActivityStarter.Callback) null, i);
     }
 
-    public void startActivityDismissingKeyguard(final Intent intent, boolean z, boolean z2, final ActivityStarter.Callback callback) {
+    public void startActivityDismissingKeyguard(Intent intent, boolean z, boolean z2) {
+        startActivityDismissingKeyguard(intent, z, z2, (ActivityStarter.Callback) null, 0);
+    }
+
+    public void startActivityDismissingKeyguard(final Intent intent, boolean z, boolean z2, final ActivityStarter.Callback callback, final int i) {
         if (!z || isDeviceProvisioned()) {
             executeRunnableDismissingKeyguard(new Runnable() {
                 public void run() {
                     int i;
                     StatusBar.this.mAssistManager.hideAssist();
                     intent.setFlags(335544320);
+                    intent.addFlags(i);
                     ActivityOptions activityOptions = new ActivityOptions(StatusBar.getActivityOptions());
                     if (intent == KeyguardBottomAreaView.INSECURE_CAMERA_INTENT) {
                         ActivityOptionsCompat.setRotationAnimationHint(activityOptions, 3);
@@ -6688,7 +6697,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
             notificationManager.cancelAsUser((String) null, R.drawable.screen_button_notification_icon, new UserHandle(this.mCurrentUserId));
             return;
         }
-        Notification build = NotificationCompat.newBuilder(this.mContext, NotificationChannels.SCREENBUTTON).setWhen(System.currentTimeMillis()).setShowWhen(true).setOngoing(true).setSmallIcon(R.drawable.screen_button_notification_icon).setContentTitle(this.mContext.getString(R.string.screen_button_notification_title)).setContentText(this.mContext.getString(286130245)).setContentIntent(PendingIntent.getBroadcast(this.mContext, 0, new Intent("com.miui.app.ExtraStatusBarManager.TRIGGER_TOGGLE_SCREEN_BUTTONS"), 0)).build();
+        Notification build = NotificationCompat.newBuilder(this.mContext, NotificationChannels.SCREENBUTTON).setWhen(System.currentTimeMillis()).setShowWhen(true).setOngoing(true).setSmallIcon(R.drawable.screen_button_notification_icon).setContentTitle(this.mContext.getString(R.string.screen_button_notification_title)).setContentText(this.mContext.getString(286130250)).setContentIntent(PendingIntent.getBroadcast(this.mContext, 0, new Intent("com.miui.app.ExtraStatusBarManager.TRIGGER_TOGGLE_SCREEN_BUTTONS"), 0)).build();
         MiuiNotificationCompat.setTargetPkg(build, "android");
         notificationManager.notifyAsUser((String) null, R.drawable.screen_button_notification_icon, build, new UserHandle(this.mCurrentUserId));
     }

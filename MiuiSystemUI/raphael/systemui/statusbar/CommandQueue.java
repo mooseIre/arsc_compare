@@ -81,7 +81,7 @@ public class CommandQueue extends CompatibilityCommandQueue {
         void onBiometricAuthenticated(boolean z) {
         }
 
-        void onBiometricError(String str) {
+        void onBiometricError(SomeArgs someArgs) {
         }
 
         void onBiometricHelp(String str) {
@@ -526,9 +526,9 @@ public class CommandQueue extends CompatibilityCommandQueue {
         }
     }
 
-    public void onBiometricError(String str) {
+    public void onBiometricError(SomeArgs someArgs) {
         synchronized (this.mLock) {
-            this.mHandler.obtainMessage(13369344, str).sendToTarget();
+            this.mHandler.obtainMessage(13369344, someArgs).sendToTarget();
         }
     }
 
@@ -543,113 +543,97 @@ public class CommandQueue extends CompatibilityCommandQueue {
             super(looper);
         }
 
-        /* JADX WARNING: Code restructure failed: missing block: B:106:0x0432, code lost:
-            if (r1 >= com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).size()) goto L_0x068d;
+        /* JADX WARNING: Code restructure failed: missing block: B:108:0x0433, code lost:
+            if (r1 >= com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).size()) goto L_0x068e;
          */
-        /* JADX WARNING: Code restructure failed: missing block: B:107:0x0434, code lost:
+        /* JADX WARNING: Code restructure failed: missing block: B:109:0x0435, code lost:
             ((com.android.systemui.statusbar.CommandQueue.Callbacks) com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).get(r1)).showScreenPinningRequest(r12.arg1);
             r1 = r1 + 1;
          */
         /* JADX WARNING: Code restructure failed: missing block: B:11:0x005a, code lost:
-            if (r1 >= com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).size()) goto L_0x068d;
+            if (r1 >= com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).size()) goto L_0x068e;
          */
         /* JADX WARNING: Code restructure failed: missing block: B:12:0x005c, code lost:
             ((com.android.systemui.statusbar.CommandQueue.Callbacks) com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).get(r1)).hideBiometricDialog();
             r1 = r1 + 1;
          */
-        /* JADX WARNING: Code restructure failed: missing block: B:133:0x04ac, code lost:
-            if (r1 >= com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).size()) goto L_0x068d;
+        /* JADX WARNING: Code restructure failed: missing block: B:135:0x04ad, code lost:
+            if (r1 >= com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).size()) goto L_0x068e;
          */
-        /* JADX WARNING: Code restructure failed: missing block: B:134:0x04ae, code lost:
+        /* JADX WARNING: Code restructure failed: missing block: B:136:0x04af, code lost:
             ((com.android.systemui.statusbar.CommandQueue.Callbacks) com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).get(r1)).setWindowState(r12.arg1, r12.arg2);
             r1 = r1 + 1;
          */
-        /* JADX WARNING: Code restructure failed: missing block: B:136:0x04ce, code lost:
-            if (r1 >= com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).size()) goto L_0x068d;
+        /* JADX WARNING: Code restructure failed: missing block: B:138:0x04cf, code lost:
+            if (r1 >= com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).size()) goto L_0x068e;
          */
-        /* JADX WARNING: Code restructure failed: missing block: B:137:0x04d0, code lost:
+        /* JADX WARNING: Code restructure failed: missing block: B:139:0x04d1, code lost:
             ((com.android.systemui.statusbar.CommandQueue.Callbacks) com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).get(r1)).cancelPreloadRecentApps();
             r1 = r1 + 1;
          */
-        /* JADX WARNING: Code restructure failed: missing block: B:139:0x04ec, code lost:
-            if (r1 >= com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).size()) goto L_0x068d;
+        /* JADX WARNING: Code restructure failed: missing block: B:141:0x04ed, code lost:
+            if (r1 >= com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).size()) goto L_0x068e;
          */
-        /* JADX WARNING: Code restructure failed: missing block: B:140:0x04ee, code lost:
+        /* JADX WARNING: Code restructure failed: missing block: B:142:0x04ef, code lost:
             ((com.android.systemui.statusbar.CommandQueue.Callbacks) com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).get(r1)).preloadRecentApps();
             r1 = r1 + 1;
          */
-        /* JADX WARNING: Code restructure failed: missing block: B:142:0x050a, code lost:
-            if (r1 >= com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).size()) goto L_0x068d;
+        /* JADX WARNING: Code restructure failed: missing block: B:144:0x050b, code lost:
+            if (r1 >= com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).size()) goto L_0x068e;
          */
-        /* JADX WARNING: Code restructure failed: missing block: B:143:0x050c, code lost:
+        /* JADX WARNING: Code restructure failed: missing block: B:145:0x050d, code lost:
             ((com.android.systemui.statusbar.CommandQueue.Callbacks) com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).get(r1)).toggleRecentApps();
             r1 = r1 + 1;
          */
-        /* JADX WARNING: Code restructure failed: missing block: B:14:0x0078, code lost:
-            if (r1 >= com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).size()) goto L_0x068d;
+        /* JADX WARNING: Code restructure failed: missing block: B:164:0x05ba, code lost:
+            if (r1 >= com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).size()) goto L_0x068e;
          */
-        /* JADX WARNING: Code restructure failed: missing block: B:15:0x007a, code lost:
-            ((com.android.systemui.statusbar.CommandQueue.Callbacks) com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).get(r1)).onBiometricError((java.lang.String) r12.obj);
-            r1 = r1 + 1;
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:162:0x05b9, code lost:
-            if (r1 >= com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).size()) goto L_0x068d;
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:163:0x05bb, code lost:
+        /* JADX WARNING: Code restructure failed: missing block: B:165:0x05bc, code lost:
             ((com.android.systemui.statusbar.CommandQueue.Callbacks) com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).get(r1)).animateExpandSettingsPanel((java.lang.String) r12.obj);
             r1 = r1 + 1;
          */
-        /* JADX WARNING: Code restructure failed: missing block: B:165:0x05db, code lost:
-            if (r1 >= com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).size()) goto L_0x068d;
+        /* JADX WARNING: Code restructure failed: missing block: B:167:0x05dc, code lost:
+            if (r1 >= com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).size()) goto L_0x068e;
          */
-        /* JADX WARNING: Code restructure failed: missing block: B:166:0x05dd, code lost:
+        /* JADX WARNING: Code restructure failed: missing block: B:168:0x05de, code lost:
             ((com.android.systemui.statusbar.CommandQueue.Callbacks) com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).get(r1)).animateCollapsePanels(r12.arg1);
             r1 = r1 + 1;
          */
-        /* JADX WARNING: Code restructure failed: missing block: B:168:0x05fb, code lost:
-            if (r1 >= com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).size()) goto L_0x068d;
+        /* JADX WARNING: Code restructure failed: missing block: B:170:0x05fc, code lost:
+            if (r1 >= com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).size()) goto L_0x068e;
          */
-        /* JADX WARNING: Code restructure failed: missing block: B:169:0x05fd, code lost:
+        /* JADX WARNING: Code restructure failed: missing block: B:171:0x05fe, code lost:
             ((com.android.systemui.statusbar.CommandQueue.Callbacks) com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).get(r1)).animateExpandNotificationsPanel();
             r1 = r1 + 1;
          */
-        /* JADX WARNING: Code restructure failed: missing block: B:171:0x0619, code lost:
-            if (r1 >= com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).size()) goto L_0x068d;
+        /* JADX WARNING: Code restructure failed: missing block: B:173:0x061a, code lost:
+            if (r1 >= com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).size()) goto L_0x068e;
          */
-        /* JADX WARNING: Code restructure failed: missing block: B:172:0x061b, code lost:
+        /* JADX WARNING: Code restructure failed: missing block: B:174:0x061c, code lost:
             ((com.android.systemui.statusbar.CommandQueue.Callbacks) com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).get(r1)).disable(r12.arg1, r12.arg2, ((java.lang.Boolean) r12.obj).booleanValue());
             r1 = r1 + 1;
          */
-        /* JADX WARNING: Code restructure failed: missing block: B:17:0x009a, code lost:
-            if (r1 >= com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).size()) goto L_0x068d;
+        /* JADX WARNING: Code restructure failed: missing block: B:19:0x009f, code lost:
+            if (r1 >= com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).size()) goto L_0x068e;
          */
-        /* JADX WARNING: Code restructure failed: missing block: B:18:0x009c, code lost:
+        /* JADX WARNING: Code restructure failed: missing block: B:20:0x00a1, code lost:
             ((com.android.systemui.statusbar.CommandQueue.Callbacks) com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).get(r1)).onBiometricHelp((java.lang.String) r12.obj);
             r1 = r1 + 1;
          */
-        /* JADX WARNING: Code restructure failed: missing block: B:20:0x00bc, code lost:
-            if (r1 >= com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).size()) goto L_0x068d;
+        /* JADX WARNING: Code restructure failed: missing block: B:22:0x00c1, code lost:
+            if (r1 >= com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).size()) goto L_0x068e;
          */
-        /* JADX WARNING: Code restructure failed: missing block: B:21:0x00be, code lost:
+        /* JADX WARNING: Code restructure failed: missing block: B:23:0x00c3, code lost:
             ((com.android.systemui.statusbar.CommandQueue.Callbacks) com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).get(r1)).onBiometricAuthenticated(((java.lang.Boolean) r12.obj).booleanValue());
             r1 = r1 + 1;
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:245:?, code lost:
-            return;
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:246:?, code lost:
-            return;
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:247:?, code lost:
-            return;
          */
         /* JADX WARNING: Code restructure failed: missing block: B:248:?, code lost:
             return;
          */
-        /* JADX WARNING: Code restructure failed: missing block: B:250:?, code lost:
+        /* JADX WARNING: Code restructure failed: missing block: B:249:?, code lost:
             return;
          */
-        /* JADX WARNING: Code restructure failed: missing block: B:251:?, code lost:
+        /* JADX WARNING: Code restructure failed: missing block: B:250:?, code lost:
             return;
          */
         /* JADX WARNING: Code restructure failed: missing block: B:252:?, code lost:
@@ -661,10 +645,10 @@ public class CommandQueue extends CompatibilityCommandQueue {
         /* JADX WARNING: Code restructure failed: missing block: B:254:?, code lost:
             return;
          */
-        /* JADX WARNING: Code restructure failed: missing block: B:256:?, code lost:
+        /* JADX WARNING: Code restructure failed: missing block: B:255:?, code lost:
             return;
          */
-        /* JADX WARNING: Code restructure failed: missing block: B:257:?, code lost:
+        /* JADX WARNING: Code restructure failed: missing block: B:256:?, code lost:
             return;
          */
         /* JADX WARNING: Code restructure failed: missing block: B:258:?, code lost:
@@ -697,16 +681,16 @@ public class CommandQueue extends CompatibilityCommandQueue {
         /* JADX WARNING: Code restructure failed: missing block: B:267:?, code lost:
             return;
          */
+        /* JADX WARNING: Code restructure failed: missing block: B:268:?, code lost:
+            return;
+         */
         /* JADX WARNING: Code restructure failed: missing block: B:269:?, code lost:
             return;
          */
         /* JADX WARNING: Code restructure failed: missing block: B:271:?, code lost:
             return;
          */
-        /* JADX WARNING: Code restructure failed: missing block: B:274:?, code lost:
-            return;
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:275:?, code lost:
+        /* JADX WARNING: Code restructure failed: missing block: B:273:?, code lost:
             return;
          */
         /* JADX WARNING: Code restructure failed: missing block: B:276:?, code lost:
@@ -715,10 +699,10 @@ public class CommandQueue extends CompatibilityCommandQueue {
         /* JADX WARNING: Code restructure failed: missing block: B:277:?, code lost:
             return;
          */
-        /* JADX WARNING: Code restructure failed: missing block: B:280:?, code lost:
+        /* JADX WARNING: Code restructure failed: missing block: B:278:?, code lost:
             return;
          */
-        /* JADX WARNING: Code restructure failed: missing block: B:281:?, code lost:
+        /* JADX WARNING: Code restructure failed: missing block: B:279:?, code lost:
             return;
          */
         /* JADX WARNING: Code restructure failed: missing block: B:282:?, code lost:
@@ -727,128 +711,134 @@ public class CommandQueue extends CompatibilityCommandQueue {
         /* JADX WARNING: Code restructure failed: missing block: B:283:?, code lost:
             return;
          */
-        /* JADX WARNING: Code restructure failed: missing block: B:32:0x0165, code lost:
-            if (r1 >= com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).size()) goto L_0x068d;
+        /* JADX WARNING: Code restructure failed: missing block: B:284:?, code lost:
+            return;
          */
-        /* JADX WARNING: Code restructure failed: missing block: B:33:0x0167, code lost:
+        /* JADX WARNING: Code restructure failed: missing block: B:285:?, code lost:
+            return;
+         */
+        /* JADX WARNING: Code restructure failed: missing block: B:34:0x0166, code lost:
+            if (r1 >= com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).size()) goto L_0x068e;
+         */
+        /* JADX WARNING: Code restructure failed: missing block: B:35:0x0168, code lost:
             ((com.android.systemui.statusbar.CommandQueue.Callbacks) com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).get(r1)).handleSystemNavigationKey(r12.arg1);
             r1 = r1 + 1;
          */
-        /* JADX WARNING: Code restructure failed: missing block: B:35:0x0185, code lost:
-            if (r1 >= com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).size()) goto L_0x068d;
+        /* JADX WARNING: Code restructure failed: missing block: B:37:0x0186, code lost:
+            if (r1 >= com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).size()) goto L_0x068e;
          */
-        /* JADX WARNING: Code restructure failed: missing block: B:36:0x0187, code lost:
+        /* JADX WARNING: Code restructure failed: missing block: B:38:0x0188, code lost:
             ((com.android.systemui.statusbar.CommandQueue.Callbacks) com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).get(r1)).hideFingerprintDialog();
             r1 = r1 + 1;
          */
-        /* JADX WARNING: Code restructure failed: missing block: B:38:0x01a3, code lost:
-            if (r1 >= com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).size()) goto L_0x068d;
+        /* JADX WARNING: Code restructure failed: missing block: B:40:0x01a4, code lost:
+            if (r1 >= com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).size()) goto L_0x068e;
          */
-        /* JADX WARNING: Code restructure failed: missing block: B:39:0x01a5, code lost:
+        /* JADX WARNING: Code restructure failed: missing block: B:41:0x01a6, code lost:
             ((com.android.systemui.statusbar.CommandQueue.Callbacks) com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).get(r1)).onFingerprintError((java.lang.String) r12.obj);
             r1 = r1 + 1;
          */
-        /* JADX WARNING: Code restructure failed: missing block: B:41:0x01c5, code lost:
-            if (r1 >= com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).size()) goto L_0x068d;
+        /* JADX WARNING: Code restructure failed: missing block: B:43:0x01c6, code lost:
+            if (r1 >= com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).size()) goto L_0x068e;
          */
-        /* JADX WARNING: Code restructure failed: missing block: B:42:0x01c7, code lost:
+        /* JADX WARNING: Code restructure failed: missing block: B:44:0x01c8, code lost:
             ((com.android.systemui.statusbar.CommandQueue.Callbacks) com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).get(r1)).onFingerprintHelp((java.lang.String) r12.obj);
             r1 = r1 + 1;
          */
-        /* JADX WARNING: Code restructure failed: missing block: B:44:0x01e7, code lost:
-            if (r1 >= com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).size()) goto L_0x068d;
+        /* JADX WARNING: Code restructure failed: missing block: B:46:0x01e8, code lost:
+            if (r1 >= com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).size()) goto L_0x068e;
          */
-        /* JADX WARNING: Code restructure failed: missing block: B:45:0x01e9, code lost:
+        /* JADX WARNING: Code restructure failed: missing block: B:47:0x01ea, code lost:
             ((com.android.systemui.statusbar.CommandQueue.Callbacks) com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).get(r1)).onFingerprintAuthenticated();
             r1 = r1 + 1;
          */
-        /* JADX WARNING: Code restructure failed: missing block: B:51:0x0248, code lost:
-            if (r1 >= com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).size()) goto L_0x068d;
+        /* JADX WARNING: Code restructure failed: missing block: B:53:0x0249, code lost:
+            if (r1 >= com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).size()) goto L_0x068e;
          */
-        /* JADX WARNING: Code restructure failed: missing block: B:52:0x024a, code lost:
+        /* JADX WARNING: Code restructure failed: missing block: B:54:0x024b, code lost:
             ((com.android.systemui.statusbar.CommandQueue.Callbacks) com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).get(r1)).handleShowGlobalActionsMenu();
             r1 = r1 + 1;
          */
-        /* JADX WARNING: Code restructure failed: missing block: B:54:0x0266, code lost:
-            if (r1 >= com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).size()) goto L_0x068d;
+        /* JADX WARNING: Code restructure failed: missing block: B:56:0x0267, code lost:
+            if (r1 >= com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).size()) goto L_0x068e;
          */
-        /* JADX WARNING: Code restructure failed: missing block: B:55:0x0268, code lost:
+        /* JADX WARNING: Code restructure failed: missing block: B:57:0x0269, code lost:
             ((com.android.systemui.statusbar.CommandQueue.Callbacks) com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).get(r1)).dismissKeyboardShortcutsMenu();
             r1 = r1 + 1;
          */
-        /* JADX WARNING: Code restructure failed: missing block: B:57:0x0284, code lost:
-            if (r1 >= com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).size()) goto L_0x068d;
+        /* JADX WARNING: Code restructure failed: missing block: B:59:0x0285, code lost:
+            if (r1 >= com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).size()) goto L_0x068e;
          */
-        /* JADX WARNING: Code restructure failed: missing block: B:58:0x0286, code lost:
+        /* JADX WARNING: Code restructure failed: missing block: B:60:0x0287, code lost:
             ((com.android.systemui.statusbar.CommandQueue.Callbacks) com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).get(r1)).appTransitionFinished();
             r1 = r1 + 1;
          */
-        /* JADX WARNING: Code restructure failed: missing block: B:60:0x02a2, code lost:
-            if (r1 >= com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).size()) goto L_0x068d;
+        /* JADX WARNING: Code restructure failed: missing block: B:62:0x02a3, code lost:
+            if (r1 >= com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).size()) goto L_0x068e;
          */
-        /* JADX WARNING: Code restructure failed: missing block: B:61:0x02a4, code lost:
+        /* JADX WARNING: Code restructure failed: missing block: B:63:0x02a5, code lost:
             ((com.android.systemui.statusbar.CommandQueue.Callbacks) com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).get(r1)).toggleSplitScreen();
             r1 = r1 + 1;
          */
-        /* JADX WARNING: Code restructure failed: missing block: B:63:0x02c0, code lost:
-            if (r1 >= com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).size()) goto L_0x068d;
+        /* JADX WARNING: Code restructure failed: missing block: B:65:0x02c1, code lost:
+            if (r1 >= com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).size()) goto L_0x068e;
          */
-        /* JADX WARNING: Code restructure failed: missing block: B:64:0x02c2, code lost:
+        /* JADX WARNING: Code restructure failed: missing block: B:66:0x02c3, code lost:
             ((com.android.systemui.statusbar.CommandQueue.Callbacks) com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).get(r1)).clickTile((android.content.ComponentName) r12.obj);
             r1 = r1 + 1;
          */
-        /* JADX WARNING: Code restructure failed: missing block: B:66:0x02e2, code lost:
-            if (r1 >= com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).size()) goto L_0x068d;
+        /* JADX WARNING: Code restructure failed: missing block: B:68:0x02e3, code lost:
+            if (r1 >= com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).size()) goto L_0x068e;
          */
-        /* JADX WARNING: Code restructure failed: missing block: B:67:0x02e4, code lost:
+        /* JADX WARNING: Code restructure failed: missing block: B:69:0x02e5, code lost:
             ((com.android.systemui.statusbar.CommandQueue.Callbacks) com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).get(r1)).remQsTile((android.content.ComponentName) r12.obj);
             r1 = r1 + 1;
          */
-        /* JADX WARNING: Code restructure failed: missing block: B:69:0x0304, code lost:
-            if (r1 >= com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).size()) goto L_0x068d;
+        /* JADX WARNING: Code restructure failed: missing block: B:71:0x0305, code lost:
+            if (r1 >= com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).size()) goto L_0x068e;
          */
-        /* JADX WARNING: Code restructure failed: missing block: B:70:0x0306, code lost:
+        /* JADX WARNING: Code restructure failed: missing block: B:72:0x0307, code lost:
             ((com.android.systemui.statusbar.CommandQueue.Callbacks) com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).get(r1)).addQsTile((android.content.ComponentName) r12.obj);
             r1 = r1 + 1;
          */
-        /* JADX WARNING: Code restructure failed: missing block: B:72:0x0326, code lost:
-            if (r1 >= com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).size()) goto L_0x068d;
+        /* JADX WARNING: Code restructure failed: missing block: B:74:0x0327, code lost:
+            if (r1 >= com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).size()) goto L_0x068e;
          */
-        /* JADX WARNING: Code restructure failed: missing block: B:73:0x0328, code lost:
+        /* JADX WARNING: Code restructure failed: missing block: B:75:0x0329, code lost:
             ((com.android.systemui.statusbar.CommandQueue.Callbacks) com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).get(r1)).showPictureInPictureMenu();
             r1 = r1 + 1;
          */
-        /* JADX WARNING: Code restructure failed: missing block: B:75:0x0344, code lost:
-            if (r1 >= com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).size()) goto L_0x068d;
+        /* JADX WARNING: Code restructure failed: missing block: B:77:0x0345, code lost:
+            if (r1 >= com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).size()) goto L_0x068e;
          */
-        /* JADX WARNING: Code restructure failed: missing block: B:76:0x0346, code lost:
+        /* JADX WARNING: Code restructure failed: missing block: B:78:0x0347, code lost:
             ((com.android.systemui.statusbar.CommandQueue.Callbacks) com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).get(r1)).toggleKeyboardShortcutsMenu(r12.arg1);
             r1 = r1 + 1;
          */
-        /* JADX WARNING: Code restructure failed: missing block: B:78:0x0364, code lost:
-            if (r1 >= com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).size()) goto L_0x068d;
+        /* JADX WARNING: Code restructure failed: missing block: B:80:0x0365, code lost:
+            if (r1 >= com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).size()) goto L_0x068e;
          */
-        /* JADX WARNING: Code restructure failed: missing block: B:79:0x0366, code lost:
+        /* JADX WARNING: Code restructure failed: missing block: B:81:0x0367, code lost:
             r1 = r1 + 1;
          */
-        /* JADX WARNING: Code restructure failed: missing block: B:81:0x0373, code lost:
-            if (r1 >= com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).size()) goto L_0x068d;
+        /* JADX WARNING: Code restructure failed: missing block: B:83:0x0374, code lost:
+            if (r1 >= com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).size()) goto L_0x068e;
          */
-        /* JADX WARNING: Code restructure failed: missing block: B:82:0x0375, code lost:
+        /* JADX WARNING: Code restructure failed: missing block: B:84:0x0376, code lost:
             ((com.android.systemui.statusbar.CommandQueue.Callbacks) com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).get(r1)).startAssist((android.os.Bundle) r12.obj);
             r1 = r1 + 1;
          */
-        /* JADX WARNING: Code restructure failed: missing block: B:84:0x0395, code lost:
-            if (r1 >= com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).size()) goto L_0x068d;
+        /* JADX WARNING: Code restructure failed: missing block: B:86:0x0396, code lost:
+            if (r1 >= com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).size()) goto L_0x068e;
          */
-        /* JADX WARNING: Code restructure failed: missing block: B:85:0x0397, code lost:
+        /* JADX WARNING: Code restructure failed: missing block: B:87:0x0398, code lost:
             ((com.android.systemui.statusbar.CommandQueue.Callbacks) com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).get(r1)).showAssistDisclosure();
             r1 = r1 + 1;
          */
-        /* JADX WARNING: Code restructure failed: missing block: B:95:0x03ee, code lost:
-            if (r1 >= com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).size()) goto L_0x068d;
+        /* JADX WARNING: Code restructure failed: missing block: B:97:0x03ef, code lost:
+            if (r1 >= com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).size()) goto L_0x068e;
          */
-        /* JADX WARNING: Code restructure failed: missing block: B:96:0x03f0, code lost:
+        /* JADX WARNING: Code restructure failed: missing block: B:98:0x03f1, code lost:
             ((com.android.systemui.statusbar.CommandQueue.Callbacks) com.android.systemui.statusbar.CommandQueue.access$100(r11.this$0).get(r1)).appTransitionCancelled();
             r1 = r1 + 1;
          */
@@ -862,54 +852,54 @@ public class CommandQueue extends CompatibilityCommandQueue {
                 r1 = 0
                 r2 = 1
                 switch(r0) {
-                    case 65536: goto L_0x0639;
-                    case 131072: goto L_0x060f;
-                    case 196608: goto L_0x05f1;
-                    case 262144: goto L_0x05d1;
-                    case 327680: goto L_0x05af;
-                    case 393216: goto L_0x0575;
-                    case 458752: goto L_0x054f;
-                    case 524288: goto L_0x051e;
-                    case 589824: goto L_0x0500;
-                    case 655360: goto L_0x04e2;
-                    case 720896: goto L_0x04c4;
-                    case 786432: goto L_0x04a2;
-                    case 851968: goto L_0x0475;
-                    case 917504: goto L_0x0448;
-                    case 1179648: goto L_0x0428;
-                    case 1245184: goto L_0x0402;
-                    case 1310720: goto L_0x03e4;
-                    case 1376256: goto L_0x03a9;
-                    case 1441792: goto L_0x038b;
-                    case 1507328: goto L_0x0369;
-                    case 1572864: goto L_0x035a;
-                    case 1638400: goto L_0x033a;
-                    case 1703936: goto L_0x031c;
-                    case 1769472: goto L_0x02fa;
-                    case 1835008: goto L_0x02d8;
-                    case 1900544: goto L_0x02b6;
-                    case 1966080: goto L_0x0298;
-                    case 2031616: goto L_0x027a;
-                    case 2097152: goto L_0x025c;
-                    case 2162688: goto L_0x068d;
-                    case 2228224: goto L_0x023e;
-                    case 2293760: goto L_0x068d;
-                    case 2359296: goto L_0x068d;
-                    case 2424832: goto L_0x068d;
-                    case 2490368: goto L_0x068d;
-                    case 2555904: goto L_0x01fb;
-                    case 2621440: goto L_0x01dd;
-                    case 2686976: goto L_0x01bb;
-                    case 2752512: goto L_0x0199;
-                    case 2818048: goto L_0x017b;
-                    case 2883584: goto L_0x068d;
-                    case 2949120: goto L_0x068d;
-                    case 3014656: goto L_0x068d;
-                    case 6488064: goto L_0x015b;
-                    case 6553600: goto L_0x0124;
-                    case 13172736: goto L_0x00d8;
-                    case 13238272: goto L_0x00b2;
-                    case 13303808: goto L_0x0090;
+                    case 65536: goto L_0x063a;
+                    case 131072: goto L_0x0610;
+                    case 196608: goto L_0x05f2;
+                    case 262144: goto L_0x05d2;
+                    case 327680: goto L_0x05b0;
+                    case 393216: goto L_0x0576;
+                    case 458752: goto L_0x0550;
+                    case 524288: goto L_0x051f;
+                    case 589824: goto L_0x0501;
+                    case 655360: goto L_0x04e3;
+                    case 720896: goto L_0x04c5;
+                    case 786432: goto L_0x04a3;
+                    case 851968: goto L_0x0476;
+                    case 917504: goto L_0x0449;
+                    case 1179648: goto L_0x0429;
+                    case 1245184: goto L_0x0403;
+                    case 1310720: goto L_0x03e5;
+                    case 1376256: goto L_0x03aa;
+                    case 1441792: goto L_0x038c;
+                    case 1507328: goto L_0x036a;
+                    case 1572864: goto L_0x035b;
+                    case 1638400: goto L_0x033b;
+                    case 1703936: goto L_0x031d;
+                    case 1769472: goto L_0x02fb;
+                    case 1835008: goto L_0x02d9;
+                    case 1900544: goto L_0x02b7;
+                    case 1966080: goto L_0x0299;
+                    case 2031616: goto L_0x027b;
+                    case 2097152: goto L_0x025d;
+                    case 2162688: goto L_0x068e;
+                    case 2228224: goto L_0x023f;
+                    case 2293760: goto L_0x068e;
+                    case 2359296: goto L_0x068e;
+                    case 2424832: goto L_0x068e;
+                    case 2490368: goto L_0x068e;
+                    case 2555904: goto L_0x01fc;
+                    case 2621440: goto L_0x01de;
+                    case 2686976: goto L_0x01bc;
+                    case 2752512: goto L_0x019a;
+                    case 2818048: goto L_0x017c;
+                    case 2883584: goto L_0x068e;
+                    case 2949120: goto L_0x068e;
+                    case 3014656: goto L_0x068e;
+                    case 6488064: goto L_0x015c;
+                    case 6553600: goto L_0x0125;
+                    case 13172736: goto L_0x00dd;
+                    case 13238272: goto L_0x00b7;
+                    case 13303808: goto L_0x0095;
                     case 13369344: goto L_0x006e;
                     case 13434880: goto L_0x0050;
                     case 19726336: goto L_0x0032;
@@ -917,7 +907,7 @@ public class CommandQueue extends CompatibilityCommandQueue {
                     default: goto L_0x000a;
                 }
             L_0x000a:
-                goto L_0x068d
+                goto L_0x068e
             L_0x000c:
                 java.lang.Object r12 = r12.obj
                 com.android.internal.os.SomeArgs r12 = (com.android.internal.os.SomeArgs) r12
@@ -930,7 +920,7 @@ public class CommandQueue extends CompatibilityCommandQueue {
                 java.util.Iterator r11 = r11.iterator()
             L_0x0022:
                 boolean r1 = r11.hasNext()
-                if (r1 == 0) goto L_0x068d
+                if (r1 == 0) goto L_0x068e
                 java.lang.Object r1 = r11.next()
                 com.android.systemui.statusbar.CommandQueue$Callbacks r1 = (com.android.systemui.statusbar.CommandQueue.Callbacks) r1
                 r1.hideToast(r0, r12)
@@ -943,7 +933,7 @@ public class CommandQueue extends CompatibilityCommandQueue {
                 java.util.Iterator r11 = r11.iterator()
             L_0x0040:
                 boolean r0 = r11.hasNext()
-                if (r0 == 0) goto L_0x068d
+                if (r0 == 0) goto L_0x068e
                 java.lang.Object r0 = r11.next()
                 com.android.systemui.statusbar.CommandQueue$Callbacks r0 = (com.android.systemui.statusbar.CommandQueue.Callbacks) r0
                 r0.showToast(r12)
@@ -952,7 +942,7 @@ public class CommandQueue extends CompatibilityCommandQueue {
                 com.android.systemui.statusbar.CommandQueue r12 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r12 = r12.mCallbacks
                 int r12 = r12.size()
-                if (r1 >= r12) goto L_0x068d
+                if (r1 >= r12) goto L_0x068e
                 com.android.systemui.statusbar.CommandQueue r12 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r12 = r12.mCallbacks
                 java.lang.Object r12 = r12.get(r1)
@@ -961,24 +951,28 @@ public class CommandQueue extends CompatibilityCommandQueue {
                 int r1 = r1 + 1
                 goto L_0x0050
             L_0x006e:
+                java.lang.Object r12 = r12.obj
+                com.android.internal.os.SomeArgs r12 = (com.android.internal.os.SomeArgs) r12
+            L_0x0072:
                 com.android.systemui.statusbar.CommandQueue r0 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r0 = r0.mCallbacks
                 int r0 = r0.size()
-                if (r1 >= r0) goto L_0x068d
+                if (r1 >= r0) goto L_0x0090
                 com.android.systemui.statusbar.CommandQueue r0 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r0 = r0.mCallbacks
                 java.lang.Object r0 = r0.get(r1)
                 com.android.systemui.statusbar.CommandQueue$Callbacks r0 = (com.android.systemui.statusbar.CommandQueue.Callbacks) r0
-                java.lang.Object r2 = r12.obj
-                java.lang.String r2 = (java.lang.String) r2
-                r0.onBiometricError(r2)
+                r0.onBiometricError(r12)
                 int r1 = r1 + 1
-                goto L_0x006e
+                goto L_0x0072
             L_0x0090:
+                r12.recycle()
+                goto L_0x068e
+            L_0x0095:
                 com.android.systemui.statusbar.CommandQueue r0 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r0 = r0.mCallbacks
                 int r0 = r0.size()
-                if (r1 >= r0) goto L_0x068d
+                if (r1 >= r0) goto L_0x068e
                 com.android.systemui.statusbar.CommandQueue r0 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r0 = r0.mCallbacks
                 java.lang.Object r0 = r0.get(r1)
@@ -987,12 +981,12 @@ public class CommandQueue extends CompatibilityCommandQueue {
                 java.lang.String r2 = (java.lang.String) r2
                 r0.onBiometricHelp(r2)
                 int r1 = r1 + 1
-                goto L_0x0090
-            L_0x00b2:
+                goto L_0x0095
+            L_0x00b7:
                 com.android.systemui.statusbar.CommandQueue r0 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r0 = r0.mCallbacks
                 int r0 = r0.size()
-                if (r1 >= r0) goto L_0x068d
+                if (r1 >= r0) goto L_0x068e
                 com.android.systemui.statusbar.CommandQueue r0 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r0 = r0.mCallbacks
                 java.lang.Object r0 = r0.get(r1)
@@ -1002,8 +996,8 @@ public class CommandQueue extends CompatibilityCommandQueue {
                 boolean r2 = r2.booleanValue()
                 r0.onBiometricAuthenticated(r2)
                 int r1 = r1 + 1
-                goto L_0x00b2
-            L_0x00d8:
+                goto L_0x00b7
+            L_0x00dd:
                 com.android.systemui.statusbar.CommandQueue r0 = com.android.systemui.statusbar.CommandQueue.this
                 android.os.Handler r0 = r0.mHandler
                 r2 = 13369344(0xcc0000, float:1.8734441E-38)
@@ -1016,26 +1010,24 @@ public class CommandQueue extends CompatibilityCommandQueue {
                 android.os.Handler r0 = r0.mHandler
                 r2 = 13238272(0xca0000, float:1.855077E-38)
                 r0.removeMessages(r2)
-                java.lang.Object r0 = r12.obj
-                com.android.internal.os.SomeArgs r0 = (com.android.internal.os.SomeArgs) r0
-            L_0x00fd:
-                com.android.systemui.statusbar.CommandQueue r2 = com.android.systemui.statusbar.CommandQueue.this
-                java.util.ArrayList r2 = r2.mCallbacks
-                int r2 = r2.size()
-                if (r1 >= r2) goto L_0x011f
-                com.android.systemui.statusbar.CommandQueue r2 = com.android.systemui.statusbar.CommandQueue.this
-                java.util.ArrayList r2 = r2.mCallbacks
-                java.lang.Object r2 = r2.get(r1)
-                com.android.systemui.statusbar.CommandQueue$Callbacks r2 = (com.android.systemui.statusbar.CommandQueue.Callbacks) r2
-                java.lang.Object r3 = r12.obj
-                com.android.internal.os.SomeArgs r3 = (com.android.internal.os.SomeArgs) r3
-                r2.showBiometricDialog(r3)
+                java.lang.Object r12 = r12.obj
+                com.android.internal.os.SomeArgs r12 = (com.android.internal.os.SomeArgs) r12
+            L_0x0102:
+                com.android.systemui.statusbar.CommandQueue r0 = com.android.systemui.statusbar.CommandQueue.this
+                java.util.ArrayList r0 = r0.mCallbacks
+                int r0 = r0.size()
+                if (r1 >= r0) goto L_0x0120
+                com.android.systemui.statusbar.CommandQueue r0 = com.android.systemui.statusbar.CommandQueue.this
+                java.util.ArrayList r0 = r0.mCallbacks
+                java.lang.Object r0 = r0.get(r1)
+                com.android.systemui.statusbar.CommandQueue$Callbacks r0 = (com.android.systemui.statusbar.CommandQueue.Callbacks) r0
+                r0.showBiometricDialog(r12)
                 int r1 = r1 + 1
-                goto L_0x00fd
-            L_0x011f:
-                r0.recycle()
-                goto L_0x068d
-            L_0x0124:
+                goto L_0x0102
+            L_0x0120:
+                r12.recycle()
+                goto L_0x068e
+            L_0x0125:
                 java.lang.Object r12 = r12.obj
                 android.os.Bundle r12 = (android.os.Bundle) r12
                 java.lang.String r0 = "what"
@@ -1045,23 +1037,23 @@ public class CommandQueue extends CompatibilityCommandQueue {
                 java.lang.String r3 = "ext"
                 android.os.Parcelable r12 = r12.getParcelable(r3)
                 android.os.Bundle r12 = (android.os.Bundle) r12
-            L_0x013d:
+            L_0x013e:
                 com.android.systemui.statusbar.CommandQueue r3 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r3 = r3.mCallbacks
                 int r3 = r3.size()
-                if (r1 >= r3) goto L_0x068d
+                if (r1 >= r3) goto L_0x068e
                 com.android.systemui.statusbar.CommandQueue r3 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r3 = r3.mCallbacks
                 java.lang.Object r3 = r3.get(r1)
                 com.android.systemui.statusbar.CommandQueue$Callbacks r3 = (com.android.systemui.statusbar.CommandQueue.Callbacks) r3
                 r3.setStatus(r0, r2, r12)
                 int r1 = r1 + 1
-                goto L_0x013d
-            L_0x015b:
+                goto L_0x013e
+            L_0x015c:
                 com.android.systemui.statusbar.CommandQueue r0 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r0 = r0.mCallbacks
                 int r0 = r0.size()
-                if (r1 >= r0) goto L_0x068d
+                if (r1 >= r0) goto L_0x068e
                 com.android.systemui.statusbar.CommandQueue r0 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r0 = r0.mCallbacks
                 java.lang.Object r0 = r0.get(r1)
@@ -1069,24 +1061,24 @@ public class CommandQueue extends CompatibilityCommandQueue {
                 int r2 = r12.arg1
                 r0.handleSystemNavigationKey(r2)
                 int r1 = r1 + 1
-                goto L_0x015b
-            L_0x017b:
+                goto L_0x015c
+            L_0x017c:
                 com.android.systemui.statusbar.CommandQueue r12 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r12 = r12.mCallbacks
                 int r12 = r12.size()
-                if (r1 >= r12) goto L_0x068d
+                if (r1 >= r12) goto L_0x068e
                 com.android.systemui.statusbar.CommandQueue r12 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r12 = r12.mCallbacks
                 java.lang.Object r12 = r12.get(r1)
                 com.android.systemui.statusbar.CommandQueue$Callbacks r12 = (com.android.systemui.statusbar.CommandQueue.Callbacks) r12
                 r12.hideFingerprintDialog()
                 int r1 = r1 + 1
-                goto L_0x017b
-            L_0x0199:
+                goto L_0x017c
+            L_0x019a:
                 com.android.systemui.statusbar.CommandQueue r0 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r0 = r0.mCallbacks
                 int r0 = r0.size()
-                if (r1 >= r0) goto L_0x068d
+                if (r1 >= r0) goto L_0x068e
                 com.android.systemui.statusbar.CommandQueue r0 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r0 = r0.mCallbacks
                 java.lang.Object r0 = r0.get(r1)
@@ -1095,12 +1087,12 @@ public class CommandQueue extends CompatibilityCommandQueue {
                 java.lang.String r2 = (java.lang.String) r2
                 r0.onFingerprintError(r2)
                 int r1 = r1 + 1
-                goto L_0x0199
-            L_0x01bb:
+                goto L_0x019a
+            L_0x01bc:
                 com.android.systemui.statusbar.CommandQueue r0 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r0 = r0.mCallbacks
                 int r0 = r0.size()
-                if (r1 >= r0) goto L_0x068d
+                if (r1 >= r0) goto L_0x068e
                 com.android.systemui.statusbar.CommandQueue r0 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r0 = r0.mCallbacks
                 java.lang.Object r0 = r0.get(r1)
@@ -1109,20 +1101,20 @@ public class CommandQueue extends CompatibilityCommandQueue {
                 java.lang.String r2 = (java.lang.String) r2
                 r0.onFingerprintHelp(r2)
                 int r1 = r1 + 1
-                goto L_0x01bb
-            L_0x01dd:
+                goto L_0x01bc
+            L_0x01de:
                 com.android.systemui.statusbar.CommandQueue r12 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r12 = r12.mCallbacks
                 int r12 = r12.size()
-                if (r1 >= r12) goto L_0x068d
+                if (r1 >= r12) goto L_0x068e
                 com.android.systemui.statusbar.CommandQueue r12 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r12 = r12.mCallbacks
                 java.lang.Object r12 = r12.get(r1)
                 com.android.systemui.statusbar.CommandQueue$Callbacks r12 = (com.android.systemui.statusbar.CommandQueue.Callbacks) r12
                 r12.onFingerprintAuthenticated()
                 int r1 = r1 + 1
-                goto L_0x01dd
-            L_0x01fb:
+                goto L_0x01de
+            L_0x01fc:
                 com.android.systemui.statusbar.CommandQueue r0 = com.android.systemui.statusbar.CommandQueue.this
                 android.os.Handler r0 = r0.mHandler
                 r2 = 2752512(0x2a0000, float:3.857091E-39)
@@ -1135,11 +1127,11 @@ public class CommandQueue extends CompatibilityCommandQueue {
                 android.os.Handler r0 = r0.mHandler
                 r2 = 2621440(0x280000, float:3.67342E-39)
                 r0.removeMessages(r2)
-            L_0x021c:
+            L_0x021d:
                 com.android.systemui.statusbar.CommandQueue r0 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r0 = r0.mCallbacks
                 int r0 = r0.size()
-                if (r1 >= r0) goto L_0x068d
+                if (r1 >= r0) goto L_0x068e
                 com.android.systemui.statusbar.CommandQueue r0 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r0 = r0.mCallbacks
                 java.lang.Object r0 = r0.get(r1)
@@ -1148,60 +1140,60 @@ public class CommandQueue extends CompatibilityCommandQueue {
                 com.android.internal.os.SomeArgs r2 = (com.android.internal.os.SomeArgs) r2
                 r0.showFingerprintDialog(r2)
                 int r1 = r1 + 1
-                goto L_0x021c
-            L_0x023e:
+                goto L_0x021d
+            L_0x023f:
                 com.android.systemui.statusbar.CommandQueue r12 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r12 = r12.mCallbacks
                 int r12 = r12.size()
-                if (r1 >= r12) goto L_0x068d
+                if (r1 >= r12) goto L_0x068e
                 com.android.systemui.statusbar.CommandQueue r12 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r12 = r12.mCallbacks
                 java.lang.Object r12 = r12.get(r1)
                 com.android.systemui.statusbar.CommandQueue$Callbacks r12 = (com.android.systemui.statusbar.CommandQueue.Callbacks) r12
                 r12.handleShowGlobalActionsMenu()
                 int r1 = r1 + 1
-                goto L_0x023e
-            L_0x025c:
+                goto L_0x023f
+            L_0x025d:
                 com.android.systemui.statusbar.CommandQueue r12 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r12 = r12.mCallbacks
                 int r12 = r12.size()
-                if (r1 >= r12) goto L_0x068d
+                if (r1 >= r12) goto L_0x068e
                 com.android.systemui.statusbar.CommandQueue r12 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r12 = r12.mCallbacks
                 java.lang.Object r12 = r12.get(r1)
                 com.android.systemui.statusbar.CommandQueue$Callbacks r12 = (com.android.systemui.statusbar.CommandQueue.Callbacks) r12
                 r12.dismissKeyboardShortcutsMenu()
                 int r1 = r1 + 1
-                goto L_0x025c
-            L_0x027a:
+                goto L_0x025d
+            L_0x027b:
                 com.android.systemui.statusbar.CommandQueue r12 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r12 = r12.mCallbacks
                 int r12 = r12.size()
-                if (r1 >= r12) goto L_0x068d
+                if (r1 >= r12) goto L_0x068e
                 com.android.systemui.statusbar.CommandQueue r12 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r12 = r12.mCallbacks
                 java.lang.Object r12 = r12.get(r1)
                 com.android.systemui.statusbar.CommandQueue$Callbacks r12 = (com.android.systemui.statusbar.CommandQueue.Callbacks) r12
                 r12.appTransitionFinished()
                 int r1 = r1 + 1
-                goto L_0x027a
-            L_0x0298:
+                goto L_0x027b
+            L_0x0299:
                 com.android.systemui.statusbar.CommandQueue r12 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r12 = r12.mCallbacks
                 int r12 = r12.size()
-                if (r1 >= r12) goto L_0x068d
+                if (r1 >= r12) goto L_0x068e
                 com.android.systemui.statusbar.CommandQueue r12 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r12 = r12.mCallbacks
                 java.lang.Object r12 = r12.get(r1)
                 com.android.systemui.statusbar.CommandQueue$Callbacks r12 = (com.android.systemui.statusbar.CommandQueue.Callbacks) r12
                 r12.toggleSplitScreen()
                 int r1 = r1 + 1
-                goto L_0x0298
-            L_0x02b6:
+                goto L_0x0299
+            L_0x02b7:
                 com.android.systemui.statusbar.CommandQueue r0 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r0 = r0.mCallbacks
                 int r0 = r0.size()
-                if (r1 >= r0) goto L_0x068d
+                if (r1 >= r0) goto L_0x068e
                 com.android.systemui.statusbar.CommandQueue r0 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r0 = r0.mCallbacks
                 java.lang.Object r0 = r0.get(r1)
@@ -1210,12 +1202,12 @@ public class CommandQueue extends CompatibilityCommandQueue {
                 android.content.ComponentName r2 = (android.content.ComponentName) r2
                 r0.clickTile(r2)
                 int r1 = r1 + 1
-                goto L_0x02b6
-            L_0x02d8:
+                goto L_0x02b7
+            L_0x02d9:
                 com.android.systemui.statusbar.CommandQueue r0 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r0 = r0.mCallbacks
                 int r0 = r0.size()
-                if (r1 >= r0) goto L_0x068d
+                if (r1 >= r0) goto L_0x068e
                 com.android.systemui.statusbar.CommandQueue r0 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r0 = r0.mCallbacks
                 java.lang.Object r0 = r0.get(r1)
@@ -1224,12 +1216,12 @@ public class CommandQueue extends CompatibilityCommandQueue {
                 android.content.ComponentName r2 = (android.content.ComponentName) r2
                 r0.remQsTile(r2)
                 int r1 = r1 + 1
-                goto L_0x02d8
-            L_0x02fa:
+                goto L_0x02d9
+            L_0x02fb:
                 com.android.systemui.statusbar.CommandQueue r0 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r0 = r0.mCallbacks
                 int r0 = r0.size()
-                if (r1 >= r0) goto L_0x068d
+                if (r1 >= r0) goto L_0x068e
                 com.android.systemui.statusbar.CommandQueue r0 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r0 = r0.mCallbacks
                 java.lang.Object r0 = r0.get(r1)
@@ -1238,24 +1230,24 @@ public class CommandQueue extends CompatibilityCommandQueue {
                 android.content.ComponentName r2 = (android.content.ComponentName) r2
                 r0.addQsTile(r2)
                 int r1 = r1 + 1
-                goto L_0x02fa
-            L_0x031c:
+                goto L_0x02fb
+            L_0x031d:
                 com.android.systemui.statusbar.CommandQueue r12 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r12 = r12.mCallbacks
                 int r12 = r12.size()
-                if (r1 >= r12) goto L_0x068d
+                if (r1 >= r12) goto L_0x068e
                 com.android.systemui.statusbar.CommandQueue r12 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r12 = r12.mCallbacks
                 java.lang.Object r12 = r12.get(r1)
                 com.android.systemui.statusbar.CommandQueue$Callbacks r12 = (com.android.systemui.statusbar.CommandQueue.Callbacks) r12
                 r12.showPictureInPictureMenu()
                 int r1 = r1 + 1
-                goto L_0x031c
-            L_0x033a:
+                goto L_0x031d
+            L_0x033b:
                 com.android.systemui.statusbar.CommandQueue r0 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r0 = r0.mCallbacks
                 int r0 = r0.size()
-                if (r1 >= r0) goto L_0x068d
+                if (r1 >= r0) goto L_0x068e
                 com.android.systemui.statusbar.CommandQueue r0 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r0 = r0.mCallbacks
                 java.lang.Object r0 = r0.get(r1)
@@ -1263,19 +1255,19 @@ public class CommandQueue extends CompatibilityCommandQueue {
                 int r2 = r12.arg1
                 r0.toggleKeyboardShortcutsMenu(r2)
                 int r1 = r1 + 1
-                goto L_0x033a
-            L_0x035a:
+                goto L_0x033b
+            L_0x035b:
                 com.android.systemui.statusbar.CommandQueue r12 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r12 = r12.mCallbacks
                 int r12 = r12.size()
-                if (r1 >= r12) goto L_0x068d
+                if (r1 >= r12) goto L_0x068e
                 int r1 = r1 + 1
-                goto L_0x035a
-            L_0x0369:
+                goto L_0x035b
+            L_0x036a:
                 com.android.systemui.statusbar.CommandQueue r0 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r0 = r0.mCallbacks
                 int r0 = r0.size()
-                if (r1 >= r0) goto L_0x068d
+                if (r1 >= r0) goto L_0x068e
                 com.android.systemui.statusbar.CommandQueue r0 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r0 = r0.mCallbacks
                 java.lang.Object r0 = r0.get(r1)
@@ -1284,26 +1276,26 @@ public class CommandQueue extends CompatibilityCommandQueue {
                 android.os.Bundle r2 = (android.os.Bundle) r2
                 r0.startAssist(r2)
                 int r1 = r1 + 1
-                goto L_0x0369
-            L_0x038b:
+                goto L_0x036a
+            L_0x038c:
                 com.android.systemui.statusbar.CommandQueue r12 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r12 = r12.mCallbacks
                 int r12 = r12.size()
-                if (r1 >= r12) goto L_0x068d
+                if (r1 >= r12) goto L_0x068e
                 com.android.systemui.statusbar.CommandQueue r12 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r12 = r12.mCallbacks
                 java.lang.Object r12 = r12.get(r1)
                 com.android.systemui.statusbar.CommandQueue$Callbacks r12 = (com.android.systemui.statusbar.CommandQueue.Callbacks) r12
                 r12.showAssistDisclosure()
                 int r1 = r1 + 1
-                goto L_0x038b
-            L_0x03a9:
-                r0 = r1
+                goto L_0x038c
             L_0x03aa:
+                r0 = r1
+            L_0x03ab:
                 com.android.systemui.statusbar.CommandQueue r3 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r3 = r3.mCallbacks
                 int r3 = r3.size()
-                if (r0 >= r3) goto L_0x068d
+                if (r0 >= r3) goto L_0x068e
                 java.lang.Object r3 = r12.obj
                 android.util.Pair r3 = (android.util.Pair) r3
                 com.android.systemui.statusbar.CommandQueue r4 = com.android.systemui.statusbar.CommandQueue.this
@@ -1318,53 +1310,53 @@ public class CommandQueue extends CompatibilityCommandQueue {
                 java.lang.Long r3 = (java.lang.Long) r3
                 long r8 = r3.longValue()
                 int r3 = r12.arg1
-                if (r3 == 0) goto L_0x03dd
+                if (r3 == 0) goto L_0x03de
                 r10 = r2
-                goto L_0x03de
-            L_0x03dd:
-                r10 = r1
+                goto L_0x03df
             L_0x03de:
+                r10 = r1
+            L_0x03df:
                 r5.appTransitionStarting(r6, r8, r10)
                 int r0 = r0 + 1
-                goto L_0x03aa
-            L_0x03e4:
+                goto L_0x03ab
+            L_0x03e5:
                 com.android.systemui.statusbar.CommandQueue r12 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r12 = r12.mCallbacks
                 int r12 = r12.size()
-                if (r1 >= r12) goto L_0x068d
+                if (r1 >= r12) goto L_0x068e
                 com.android.systemui.statusbar.CommandQueue r12 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r12 = r12.mCallbacks
                 java.lang.Object r12 = r12.get(r1)
                 com.android.systemui.statusbar.CommandQueue$Callbacks r12 = (com.android.systemui.statusbar.CommandQueue.Callbacks) r12
                 r12.appTransitionCancelled()
                 int r1 = r1 + 1
-                goto L_0x03e4
-            L_0x0402:
-                r0 = r1
+                goto L_0x03e5
             L_0x0403:
+                r0 = r1
+            L_0x0404:
                 com.android.systemui.statusbar.CommandQueue r3 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r3 = r3.mCallbacks
                 int r3 = r3.size()
-                if (r0 >= r3) goto L_0x068d
+                if (r0 >= r3) goto L_0x068e
                 com.android.systemui.statusbar.CommandQueue r3 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r3 = r3.mCallbacks
                 java.lang.Object r3 = r3.get(r0)
                 com.android.systemui.statusbar.CommandQueue$Callbacks r3 = (com.android.systemui.statusbar.CommandQueue.Callbacks) r3
                 int r4 = r12.arg1
-                if (r4 == 0) goto L_0x0421
+                if (r4 == 0) goto L_0x0422
                 r4 = r2
-                goto L_0x0422
-            L_0x0421:
-                r4 = r1
+                goto L_0x0423
             L_0x0422:
+                r4 = r1
+            L_0x0423:
                 r3.appTransitionPending(r4)
                 int r0 = r0 + 1
-                goto L_0x0403
-            L_0x0428:
+                goto L_0x0404
+            L_0x0429:
                 com.android.systemui.statusbar.CommandQueue r0 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r0 = r0.mCallbacks
                 int r0 = r0.size()
-                if (r1 >= r0) goto L_0x068d
+                if (r1 >= r0) goto L_0x068e
                 com.android.systemui.statusbar.CommandQueue r0 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r0 = r0.mCallbacks
                 java.lang.Object r0 = r0.get(r1)
@@ -1372,68 +1364,68 @@ public class CommandQueue extends CompatibilityCommandQueue {
                 int r2 = r12.arg1
                 r0.showScreenPinningRequest(r2)
                 int r1 = r1 + 1
-                goto L_0x0428
-            L_0x0448:
-                r0 = r1
+                goto L_0x0429
             L_0x0449:
+                r0 = r1
+            L_0x044a:
                 com.android.systemui.statusbar.CommandQueue r3 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r3 = r3.mCallbacks
                 int r3 = r3.size()
-                if (r0 >= r3) goto L_0x068d
+                if (r0 >= r3) goto L_0x068e
                 com.android.systemui.statusbar.CommandQueue r3 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r3 = r3.mCallbacks
                 java.lang.Object r3 = r3.get(r0)
                 com.android.systemui.statusbar.CommandQueue$Callbacks r3 = (com.android.systemui.statusbar.CommandQueue.Callbacks) r3
                 int r4 = r12.arg1
-                if (r4 == 0) goto L_0x0467
+                if (r4 == 0) goto L_0x0468
                 r4 = r2
-                goto L_0x0468
-            L_0x0467:
-                r4 = r1
+                goto L_0x0469
             L_0x0468:
+                r4 = r1
+            L_0x0469:
                 int r5 = r12.arg2
-                if (r5 == 0) goto L_0x046e
+                if (r5 == 0) goto L_0x046f
                 r5 = r2
-                goto L_0x046f
-            L_0x046e:
-                r5 = r1
+                goto L_0x0470
             L_0x046f:
+                r5 = r1
+            L_0x0470:
                 r3.hideRecentApps(r4, r5)
                 int r0 = r0 + 1
-                goto L_0x0449
-            L_0x0475:
-                r0 = r1
+                goto L_0x044a
             L_0x0476:
+                r0 = r1
+            L_0x0477:
                 com.android.systemui.statusbar.CommandQueue r3 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r3 = r3.mCallbacks
                 int r3 = r3.size()
-                if (r0 >= r3) goto L_0x068d
+                if (r0 >= r3) goto L_0x068e
                 com.android.systemui.statusbar.CommandQueue r3 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r3 = r3.mCallbacks
                 java.lang.Object r3 = r3.get(r0)
                 com.android.systemui.statusbar.CommandQueue$Callbacks r3 = (com.android.systemui.statusbar.CommandQueue.Callbacks) r3
                 int r4 = r12.arg1
-                if (r4 == 0) goto L_0x0494
+                if (r4 == 0) goto L_0x0495
                 r4 = r2
-                goto L_0x0495
-            L_0x0494:
-                r4 = r1
+                goto L_0x0496
             L_0x0495:
+                r4 = r1
+            L_0x0496:
                 int r5 = r12.arg2
-                if (r5 == 0) goto L_0x049b
+                if (r5 == 0) goto L_0x049c
                 r5 = r2
-                goto L_0x049c
-            L_0x049b:
-                r5 = r1
+                goto L_0x049d
             L_0x049c:
+                r5 = r1
+            L_0x049d:
                 r3.showRecentApps(r4, r5)
                 int r0 = r0 + 1
-                goto L_0x0476
-            L_0x04a2:
+                goto L_0x0477
+            L_0x04a3:
                 com.android.systemui.statusbar.CommandQueue r0 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r0 = r0.mCallbacks
                 int r0 = r0.size()
-                if (r1 >= r0) goto L_0x068d
+                if (r1 >= r0) goto L_0x068e
                 com.android.systemui.statusbar.CommandQueue r0 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r0 = r0.mCallbacks
                 java.lang.Object r0 = r0.get(r1)
@@ -1442,50 +1434,50 @@ public class CommandQueue extends CompatibilityCommandQueue {
                 int r3 = r12.arg2
                 r0.setWindowState(r2, r3)
                 int r1 = r1 + 1
-                goto L_0x04a2
-            L_0x04c4:
+                goto L_0x04a3
+            L_0x04c5:
                 com.android.systemui.statusbar.CommandQueue r12 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r12 = r12.mCallbacks
                 int r12 = r12.size()
-                if (r1 >= r12) goto L_0x068d
+                if (r1 >= r12) goto L_0x068e
                 com.android.systemui.statusbar.CommandQueue r12 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r12 = r12.mCallbacks
                 java.lang.Object r12 = r12.get(r1)
                 com.android.systemui.statusbar.CommandQueue$Callbacks r12 = (com.android.systemui.statusbar.CommandQueue.Callbacks) r12
                 r12.cancelPreloadRecentApps()
                 int r1 = r1 + 1
-                goto L_0x04c4
-            L_0x04e2:
+                goto L_0x04c5
+            L_0x04e3:
                 com.android.systemui.statusbar.CommandQueue r12 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r12 = r12.mCallbacks
                 int r12 = r12.size()
-                if (r1 >= r12) goto L_0x068d
+                if (r1 >= r12) goto L_0x068e
                 com.android.systemui.statusbar.CommandQueue r12 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r12 = r12.mCallbacks
                 java.lang.Object r12 = r12.get(r1)
                 com.android.systemui.statusbar.CommandQueue$Callbacks r12 = (com.android.systemui.statusbar.CommandQueue.Callbacks) r12
                 r12.preloadRecentApps()
                 int r1 = r1 + 1
-                goto L_0x04e2
-            L_0x0500:
+                goto L_0x04e3
+            L_0x0501:
                 com.android.systemui.statusbar.CommandQueue r12 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r12 = r12.mCallbacks
                 int r12 = r12.size()
-                if (r1 >= r12) goto L_0x068d
+                if (r1 >= r12) goto L_0x068e
                 com.android.systemui.statusbar.CommandQueue r12 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r12 = r12.mCallbacks
                 java.lang.Object r12 = r12.get(r1)
                 com.android.systemui.statusbar.CommandQueue$Callbacks r12 = (com.android.systemui.statusbar.CommandQueue.Callbacks) r12
                 r12.toggleRecentApps()
                 int r1 = r1 + 1
-                goto L_0x0500
-            L_0x051e:
-                r0 = r1
+                goto L_0x0501
             L_0x051f:
+                r0 = r1
+            L_0x0520:
                 com.android.systemui.statusbar.CommandQueue r2 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r2 = r2.mCallbacks
                 int r2 = r2.size()
-                if (r0 >= r2) goto L_0x068d
+                if (r0 >= r2) goto L_0x068e
                 com.android.systemui.statusbar.CommandQueue r2 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r2 = r2.mCallbacks
                 java.lang.Object r2 = r2.get(r0)
@@ -1499,36 +1491,36 @@ public class CommandQueue extends CompatibilityCommandQueue {
                 boolean r6 = r6.getBoolean(r7, r1)
                 r2.setImeWindowStatus(r3, r4, r5, r6)
                 int r0 = r0 + 1
-                goto L_0x051f
-            L_0x054f:
-                r0 = r1
+                goto L_0x0520
             L_0x0550:
+                r0 = r1
+            L_0x0551:
                 com.android.systemui.statusbar.CommandQueue r3 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r3 = r3.mCallbacks
                 int r3 = r3.size()
-                if (r0 >= r3) goto L_0x068d
+                if (r0 >= r3) goto L_0x068e
                 com.android.systemui.statusbar.CommandQueue r3 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r3 = r3.mCallbacks
                 java.lang.Object r3 = r3.get(r0)
                 com.android.systemui.statusbar.CommandQueue$Callbacks r3 = (com.android.systemui.statusbar.CommandQueue.Callbacks) r3
                 int r4 = r12.arg1
-                if (r4 == 0) goto L_0x056e
+                if (r4 == 0) goto L_0x056f
                 r4 = r2
-                goto L_0x056f
-            L_0x056e:
-                r4 = r1
+                goto L_0x0570
             L_0x056f:
+                r4 = r1
+            L_0x0570:
                 r3.topAppWindowChanged(r4)
                 int r0 = r0 + 1
-                goto L_0x0550
-            L_0x0575:
+                goto L_0x0551
+            L_0x0576:
                 java.lang.Object r12 = r12.obj
                 com.android.internal.os.SomeArgs r12 = (com.android.internal.os.SomeArgs) r12
-            L_0x0579:
+            L_0x057a:
                 com.android.systemui.statusbar.CommandQueue r0 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r0 = r0.mCallbacks
                 int r0 = r0.size()
-                if (r1 >= r0) goto L_0x05aa
+                if (r1 >= r0) goto L_0x05ab
                 com.android.systemui.statusbar.CommandQueue r0 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r0 = r0.mCallbacks
                 java.lang.Object r0 = r0.get(r1)
@@ -1546,15 +1538,15 @@ public class CommandQueue extends CompatibilityCommandQueue {
                 android.graphics.Rect r8 = (android.graphics.Rect) r8
                 r2.setSystemUiVisibility(r3, r4, r5, r6, r7, r8)
                 int r1 = r1 + 1
-                goto L_0x0579
-            L_0x05aa:
+                goto L_0x057a
+            L_0x05ab:
                 r12.recycle()
-                goto L_0x068d
-            L_0x05af:
+                goto L_0x068e
+            L_0x05b0:
                 com.android.systemui.statusbar.CommandQueue r0 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r0 = r0.mCallbacks
                 int r0 = r0.size()
-                if (r1 >= r0) goto L_0x068d
+                if (r1 >= r0) goto L_0x068e
                 com.android.systemui.statusbar.CommandQueue r0 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r0 = r0.mCallbacks
                 java.lang.Object r0 = r0.get(r1)
@@ -1563,12 +1555,12 @@ public class CommandQueue extends CompatibilityCommandQueue {
                 java.lang.String r2 = (java.lang.String) r2
                 r0.animateExpandSettingsPanel(r2)
                 int r1 = r1 + 1
-                goto L_0x05af
-            L_0x05d1:
+                goto L_0x05b0
+            L_0x05d2:
                 com.android.systemui.statusbar.CommandQueue r0 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r0 = r0.mCallbacks
                 int r0 = r0.size()
-                if (r1 >= r0) goto L_0x068d
+                if (r1 >= r0) goto L_0x068e
                 com.android.systemui.statusbar.CommandQueue r0 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r0 = r0.mCallbacks
                 java.lang.Object r0 = r0.get(r1)
@@ -1576,24 +1568,24 @@ public class CommandQueue extends CompatibilityCommandQueue {
                 int r2 = r12.arg1
                 r0.animateCollapsePanels(r2)
                 int r1 = r1 + 1
-                goto L_0x05d1
-            L_0x05f1:
+                goto L_0x05d2
+            L_0x05f2:
                 com.android.systemui.statusbar.CommandQueue r12 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r12 = r12.mCallbacks
                 int r12 = r12.size()
-                if (r1 >= r12) goto L_0x068d
+                if (r1 >= r12) goto L_0x068e
                 com.android.systemui.statusbar.CommandQueue r12 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r12 = r12.mCallbacks
                 java.lang.Object r12 = r12.get(r1)
                 com.android.systemui.statusbar.CommandQueue$Callbacks r12 = (com.android.systemui.statusbar.CommandQueue.Callbacks) r12
                 r12.animateExpandNotificationsPanel()
                 int r1 = r1 + 1
-                goto L_0x05f1
-            L_0x060f:
+                goto L_0x05f2
+            L_0x0610:
                 com.android.systemui.statusbar.CommandQueue r0 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r0 = r0.mCallbacks
                 int r0 = r0.size()
-                if (r1 >= r0) goto L_0x068d
+                if (r1 >= r0) goto L_0x068e
                 com.android.systemui.statusbar.CommandQueue r0 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r0 = r0.mCallbacks
                 java.lang.Object r0 = r0.get(r1)
@@ -1605,18 +1597,18 @@ public class CommandQueue extends CompatibilityCommandQueue {
                 boolean r4 = r4.booleanValue()
                 r0.disable(r2, r3, r4)
                 int r1 = r1 + 1
-                goto L_0x060f
-            L_0x0639:
+                goto L_0x0610
+            L_0x063a:
                 int r0 = r12.arg1
-                if (r0 == r2) goto L_0x0663
+                if (r0 == r2) goto L_0x0664
                 r2 = 2
-                if (r0 == r2) goto L_0x0641
-                goto L_0x068d
-            L_0x0641:
+                if (r0 == r2) goto L_0x0642
+                goto L_0x068e
+            L_0x0642:
                 com.android.systemui.statusbar.CommandQueue r0 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r0 = r0.mCallbacks
                 int r0 = r0.size()
-                if (r1 >= r0) goto L_0x068d
+                if (r1 >= r0) goto L_0x068e
                 com.android.systemui.statusbar.CommandQueue r0 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r0 = r0.mCallbacks
                 java.lang.Object r0 = r0.get(r1)
@@ -1625,15 +1617,15 @@ public class CommandQueue extends CompatibilityCommandQueue {
                 java.lang.String r2 = (java.lang.String) r2
                 r0.removeIcon(r2)
                 int r1 = r1 + 1
-                goto L_0x0641
-            L_0x0663:
+                goto L_0x0642
+            L_0x0664:
                 java.lang.Object r12 = r12.obj
                 android.util.Pair r12 = (android.util.Pair) r12
-            L_0x0667:
+            L_0x0668:
                 com.android.systemui.statusbar.CommandQueue r0 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r0 = r0.mCallbacks
                 int r0 = r0.size()
-                if (r1 >= r0) goto L_0x068d
+                if (r1 >= r0) goto L_0x068e
                 com.android.systemui.statusbar.CommandQueue r0 = com.android.systemui.statusbar.CommandQueue.this
                 java.util.ArrayList r0 = r0.mCallbacks
                 java.lang.Object r0 = r0.get(r1)
@@ -1644,8 +1636,8 @@ public class CommandQueue extends CompatibilityCommandQueue {
                 com.android.internal.statusbar.StatusBarIcon r3 = (com.android.internal.statusbar.StatusBarIcon) r3
                 r0.setIcon(r2, r3)
                 int r1 = r1 + 1
-                goto L_0x0667
-            L_0x068d:
+                goto L_0x0668
+            L_0x068e:
                 return
             */
             throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.CommandQueue.H.handleMessage(android.os.Message):void");

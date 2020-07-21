@@ -11,7 +11,7 @@ import com.android.systemui.Constants;
 import com.android.systemui.statusbar.ExpandableNotificationRow;
 
 public class NotificationInboxTemplateViewWrapper extends NotificationTemplateViewWrapper {
-    protected int mInboxItemTopPadding = this.mContext.getResources().getDimensionPixelSize(17105359);
+    protected int mInboxItemTopPadding = this.mContext.getResources().getDimensionPixelSize(17105341);
 
     /* access modifiers changed from: protected */
     public boolean showSingleLine() {
@@ -24,7 +24,7 @@ public class NotificationInboxTemplateViewWrapper extends NotificationTemplateVi
     }
 
     private int getTextLineCount() {
-        int[] iArr = {16909021, 16909022, 16909023, 16909024, 16909025, 16909026, 16909027};
+        int[] iArr = {16909011, 16909012, 16909013, 16909014, 16909015, 16909016, 16909017};
         int i = 0;
         int i2 = 0;
         while (i < iArr.length && this.mMainColumnContainer.findViewById(iArr[i]).getVisibility() == 0) {

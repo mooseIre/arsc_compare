@@ -689,7 +689,7 @@ class GlobalActionsDialog implements DialogInterface.OnDismissListener, DialogIn
             View inflate = layoutInflater.inflate(17367158, viewGroup, false);
             ImageView imageView = (ImageView) inflate.findViewById(16908294);
             TextView textView = (TextView) inflate.findViewById(16908299);
-            TextView textView2 = (TextView) inflate.findViewById(16909440);
+            TextView textView2 = (TextView) inflate.findViewById(16909420);
             String status = getStatus();
             if (!TextUtils.isEmpty(status)) {
                 textView2.setText(status);
@@ -765,7 +765,7 @@ class GlobalActionsDialog implements DialogInterface.OnDismissListener, DialogIn
             View inflate = layoutInflater.inflate(17367158, viewGroup, false);
             ImageView imageView = (ImageView) inflate.findViewById(16908294);
             TextView textView = (TextView) inflate.findViewById(16908299);
-            TextView textView2 = (TextView) inflate.findViewById(16909440);
+            TextView textView2 = (TextView) inflate.findViewById(16909420);
             boolean isEnabled = isEnabled();
             if (textView != null) {
                 textView.setText(this.mMessageResId);
@@ -834,7 +834,7 @@ class GlobalActionsDialog implements DialogInterface.OnDismissListener, DialogIn
     }
 
     private static class SilentModeTriStateAction implements Action, View.OnClickListener {
-        private final int[] ITEM_IDS = {16909225, 16909226, 16909227};
+        private final int[] ITEM_IDS = {16909210, 16909211, 16909212};
         private final AudioManager mAudioManager;
         private final Context mContext;
         private final Handler mHandler;

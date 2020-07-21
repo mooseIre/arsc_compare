@@ -120,7 +120,8 @@ public class BiometricDialogImpl extends SystemUI implements CommandQueue.Callba
         this.mHandler.obtainMessage(3, obtain).sendToTarget();
     }
 
-    public void onBiometricError(String str) {
+    public void onBiometricError(SomeArgs someArgs) {
+        String str = (String) someArgs.arg4;
         Log.d("BiometricDialogImpl", "onBiometricError: " + str);
         this.mHandler.obtainMessage(4, str).sendToTarget();
     }
@@ -212,6 +213,13 @@ public class BiometricDialogImpl extends SystemUI implements CommandQueue.Callba
             Log.w("BiometricDialogImpl", "Dialog already dismissed, userCanceled: " + z);
             return;
         }
+        if (z) {
+            try {
+                this.mReceiver.onDialogDismissed(3);
+            } catch (RemoteException e) {
+                Log.e("BiometricDialogImpl", "RemoteException when hiding dialog", e);
+            }
+        }
         this.mReceiver = null;
         this.mDialogShowing = false;
         this.mCurrentDialog.startDismiss();
@@ -219,20 +227,32 @@ public class BiometricDialogImpl extends SystemUI implements CommandQueue.Callba
 
     /* access modifiers changed from: private */
     public void handleButtonNegative() {
-        if (this.mReceiver == null) {
+        IBiometricServiceReceiverInternal iBiometricServiceReceiverInternal = this.mReceiver;
+        if (iBiometricServiceReceiverInternal == null) {
             Log.e("BiometricDialogImpl", "Receiver is null");
-        } else {
-            handleHideDialog(false);
+            return;
         }
+        try {
+            iBiometricServiceReceiverInternal.onDialogDismissed(2);
+        } catch (RemoteException e) {
+            Log.e("BiometricDialogImpl", "Remote exception when handling negative button", e);
+        }
+        handleHideDialog(false);
     }
 
     /* access modifiers changed from: private */
     public void handleButtonPositive() {
-        if (this.mReceiver == null) {
+        IBiometricServiceReceiverInternal iBiometricServiceReceiverInternal = this.mReceiver;
+        if (iBiometricServiceReceiverInternal == null) {
             Log.e("BiometricDialogImpl", "Receiver is null");
-        } else {
-            handleHideDialog(false);
+            return;
         }
+        try {
+            iBiometricServiceReceiverInternal.onDialogDismissed(1);
+        } catch (RemoteException e) {
+            Log.e("BiometricDialogImpl", "Remote exception when handling positive button", e);
+        }
+        handleHideDialog(false);
     }
 
     /* access modifiers changed from: private */

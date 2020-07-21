@@ -263,7 +263,7 @@ public class SystemServicesProxy {
         Resources resources = context.getResources();
         this.mDummyThumbnailWidth = resources.getDimensionPixelSize(17104898);
         this.mDummyThumbnailHeight = resources.getDimensionPixelSize(17104897);
-        this.mStatusBarHeight = resources.getDimensionPixelSize(17105467);
+        this.mStatusBarHeight = resources.getDimensionPixelSize(17105436);
         this.mBgProtectionPaint = new Paint();
         this.mBgProtectionPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_ATOP));
         this.mBgProtectionPaint.setColor(-1);

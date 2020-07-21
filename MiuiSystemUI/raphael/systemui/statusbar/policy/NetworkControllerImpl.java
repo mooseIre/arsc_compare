@@ -71,6 +71,7 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
     public boolean[] mDataConnedInMMsForOperators;
     private final DataSaverController mDataSaverController;
     private final DataUsageController mDataUsageController;
+    private int mDefaultDataSimState;
     private MobileSignalController mDefaultSignalController;
     private boolean mDemoInetCondition;
     private boolean mDemoMode;
@@ -348,8 +349,8 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
         return this.mHasMobileDataFeature;
     }
 
-    public boolean isMobileDataSupported(int i) {
-        return hasMobileDataFeature() && this.mPhone.getSimState(i) == 5;
+    public boolean isMobileDataSupported() {
+        return hasMobileDataFeature() && !this.mHasNoSims && this.mDefaultDataSimState == 5;
     }
 
     public boolean hasVoiceCallingFeature() {
@@ -516,6 +517,13 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
                     this.mSignalState.speedHdMap.remove(Integer.valueOf(intExtra));
                     this.mSignalState.imsMap.remove(Integer.valueOf(intExtra));
                     this.mSignalState.vowifiMap.remove(Integer.valueOf(intExtra));
+                }
+                if (intExtra == this.mSubDefaults.getDefaultDataSubId()) {
+                    for (SubscriptionInfo next : this.mCurrentSubscriptions) {
+                        if (next.getSubscriptionId() == intExtra) {
+                            this.mDefaultDataSimState = this.mPhone.getSimState(next.getSlotId());
+                        }
+                    }
                 }
             } else if (action.equals("android.intent.action.SERVICE_STATE")) {
                 int intExtra2 = intent.getIntExtra("slot", SubscriptionManager.INVALID_SLOT_ID);
@@ -1049,7 +1057,7 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
             boolean r1 = r1.equals(r3)
             com.android.systemui.statusbar.policy.CallbackHandler r4 = r0.mCallbackHandler
             com.android.systemui.statusbar.policy.NetworkController$IconState r7 = new com.android.systemui.statusbar.policy.NetworkController$IconState
-            r8 = 2131233867(0x7f080c4b, float:1.8083884E38)
+            r8 = 2131233864(0x7f080c48, float:1.8083878E38)
             r9 = 2131820588(0x7f11002c, float:1.9273895E38)
             android.content.Context r10 = r0.mContext
             r7.<init>((boolean) r1, (int) r8, (int) r9, (android.content.Context) r10)

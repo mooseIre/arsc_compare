@@ -72,7 +72,7 @@ public class UsbPermissionActivity extends AlertActivity implements DialogInterf
                     this.mAlwaysUse.setText(R.string.always_use_device);
                 }
                 this.mAlwaysUse.setOnCheckedChangeListener(this);
-                this.mClearDefaultHint = (TextView) alertParams.mView.findViewById(16908819);
+                this.mClearDefaultHint = (TextView) alertParams.mView.findViewById(16908814);
                 this.mClearDefaultHint.setVisibility(8);
             }
             setupAlert();

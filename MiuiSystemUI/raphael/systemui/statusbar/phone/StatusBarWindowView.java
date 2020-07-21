@@ -11,6 +11,7 @@ import android.media.session.MediaSessionLegacyHelperCompat;
 import android.os.IBinder;
 import android.os.SystemClock;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.ActionMode;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -29,6 +30,7 @@ import com.android.internal.view.FloatingActionModeCompat;
 import com.android.internal.widget.FloatingToolbar;
 import com.android.internal.widget.FloatingToolbarCompat;
 import com.android.systemui.Dependency;
+import com.android.systemui.DynamicStatusController;
 import com.android.systemui.R$styleable;
 import com.android.systemui.classifier.FalsingManager;
 import com.android.systemui.miui.statusbar.phone.ControlPanelWindowView;
@@ -197,6 +199,13 @@ public class StatusBarWindowView extends RenderAwareFrameLayout {
             return;
         }
         setWillNotDraw(!DEBUG);
+    }
+
+    public void onDescendantInvalidated(View view, View view2) {
+        super.onDescendantInvalidated(view, view2);
+        if (((DynamicStatusController) Dependency.get(DynamicStatusController.class)).isDebug()) {
+            Log.d("StatusBarWindowView", "onDescendantInvalidated  child=" + view + ";target=" + view2);
+        }
     }
 
     public boolean dispatchKeyEvent(KeyEvent keyEvent) {

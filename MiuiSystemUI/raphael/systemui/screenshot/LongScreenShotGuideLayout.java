@@ -56,6 +56,7 @@ public class LongScreenShotGuideLayout extends FrameLayout {
         if (drawable instanceof Animatable) {
             ((Animatable) drawable).start();
         }
+        this.mTextView.setMaxWidth(((i + i2) - layoutParams.width) - (this.mGap * 2));
         this.mTextView.setTranslationX((float) ((i2 - layoutParams.width) - this.mGap));
         this.mTextView.setTranslationY(f);
     }

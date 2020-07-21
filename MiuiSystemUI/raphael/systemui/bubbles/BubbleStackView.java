@@ -193,7 +193,7 @@ public class BubbleStackView extends FrameLayout {
         this.mExpandedAnimateXDistance = resources.getDimensionPixelSize(R.dimen.bubble_expanded_animate_x_distance);
         this.mExpandedAnimateYDistance = resources.getDimensionPixelSize(R.dimen.bubble_expanded_animate_y_distance);
         this.mPointerHeight = resources.getDimensionPixelSize(R.dimen.bubble_pointer_height);
-        this.mStatusBarHeight = resources.getDimensionPixelSize(17105467);
+        this.mStatusBarHeight = resources.getDimensionPixelSize(17105436);
         this.mPipDismissHeight = this.mContext.getResources().getDimensionPixelSize(R.dimen.pip_dismiss_gradient_height);
         this.mImeOffset = resources.getDimensionPixelSize(R.dimen.pip_ime_offset);
         this.mDisplaySize = new Point();

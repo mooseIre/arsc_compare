@@ -212,7 +212,7 @@ public interface StatusBarIconController {
     public static class IconManager {
         protected final Context mContext;
         protected final ViewGroup mGroup;
-        protected final int mIconSize = this.mContext.getResources().getDimensionPixelSize(17105470);
+        protected final int mIconSize = this.mContext.getResources().getDimensionPixelSize(17105439);
         public ArraySet<String> mWhiteList;
 
         public IconManager(ViewGroup viewGroup) {

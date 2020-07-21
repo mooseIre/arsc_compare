@@ -39,7 +39,7 @@ public class NotificationBigPictureTemplateViewWrapper extends NotificationTempl
     }
 
     private void resolveViews() {
-        this.mBigPictureView = (ImageView) this.mView.findViewById(16908764);
+        this.mBigPictureView = (ImageView) this.mView.findViewById(16908763);
         Util.setViewRoundCorner(this.mBigPictureView, (float) this.mBigPictureCornerRadius);
     }
 

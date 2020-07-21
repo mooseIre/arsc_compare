@@ -158,10 +158,10 @@ public class NotificationInflaterHelper {
             Notification.Action action = actionArr[0];
             PendingIntent pendingIntent = action.actionIntent;
             if (pendingIntent != null) {
-                remoteViews.setOnClickPendingIntent(16909137, pendingIntent);
+                remoteViews.setOnClickPendingIntent(16909124, pendingIntent);
             }
             if (action.getRemoteInputs() != null) {
-                remoteViews.setRemoteInputs(16909137, action.getRemoteInputs());
+                remoteViews.setRemoteInputs(16909124, action.getRemoteInputs());
             }
         }
     }

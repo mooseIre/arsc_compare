@@ -123,7 +123,7 @@ public class NotificationTemplateViewWrapper extends NotificationHeaderViewWrapp
 
     private void initResources() {
         this.mExpandButtonSize = this.mContext.getResources().getDimensionPixelSize(R.dimen.notification_expand_button_size);
-        this.mRightIconSize = this.mContext.getResources().getDimensionPixelSize(17105379);
+        this.mRightIconSize = this.mContext.getResources().getDimensionPixelSize(17105354);
         this.mProgressBarMarginTop = this.mContext.getResources().getDimensionPixelSize(R.dimen.notification_progress_bar_margin_top);
         this.mRightIconMarginStart = this.mContext.getResources().getDimensionPixelSize(R.dimen.notification_right_icon_margin_start);
         this.mRightIconMarginTop = this.mContext.getResources().getDimensionPixelSize(R.dimen.notification_right_icon_margin_top);
@@ -143,25 +143,25 @@ public class NotificationTemplateViewWrapper extends NotificationHeaderViewWrapp
         /*
             r2 = this;
             android.view.View r0 = r2.mView
-            r1 = 16909184(0x1020380, float:2.387974E-38)
+            r1 = 16909171(0x1020373, float:2.3879704E-38)
             android.view.View r0 = r0.findViewById(r1)
             r2.mBigMainContainer = r0
             android.view.View r0 = r2.mView
-            r1 = 16909189(0x1020385, float:2.3879754E-38)
+            r1 = 16909175(0x1020377, float:2.3879715E-38)
             android.view.View r0 = r0.findViewById(r1)
             r2.mMainColumnContainer = r0
             android.view.View r0 = r2.mView
-            r1 = 16909082(0x102031a, float:2.3879454E-38)
+            r1 = 16909072(0x1020310, float:2.3879426E-38)
             android.view.View r0 = r0.findViewById(r1)
             android.widget.LinearLayout r0 = (android.widget.LinearLayout) r0
             r2.mLine1Container = r0
             android.view.View r0 = r2.mView
-            r1 = 16909330(0x1020412, float:2.388015E-38)
+            r1 = 16909310(0x10203fe, float:2.3880093E-38)
             android.view.View r0 = r0.findViewById(r1)
             android.widget.LinearLayout r0 = (android.widget.LinearLayout) r0
             r2.mRightIconContainer = r0
             android.view.View r0 = r2.mView
-            r1 = 16909329(0x1020411, float:2.3880147E-38)
+            r1 = 16909309(0x10203fd, float:2.388009E-38)
             android.view.View r0 = r0.findViewById(r1)
             android.widget.ImageView r0 = (android.widget.ImageView) r0
             r2.mPicture = r0
@@ -179,12 +179,12 @@ public class NotificationTemplateViewWrapper extends NotificationHeaderViewWrapp
             android.widget.TextView r3 = (android.widget.TextView) r3
             r2.mTitle = r3
             android.view.View r3 = r2.mView
-            r0 = 16909492(0x10204b4, float:2.3880603E-38)
+            r0 = 16909472(0x10204a0, float:2.3880547E-38)
             android.view.View r3 = r3.findViewById(r0)
             android.widget.TextView r3 = (android.widget.TextView) r3
             r2.mTextLine1 = r3
             android.view.View r3 = r2.mView
-            r0 = 16909464(0x1020498, float:2.3880525E-38)
+            r0 = 16909444(0x1020484, float:2.388047E-38)
             android.view.View r3 = r3.findViewById(r0)
             android.widget.TextView r3 = (android.widget.TextView) r3
             r2.mText = r3
@@ -208,7 +208,7 @@ public class NotificationTemplateViewWrapper extends NotificationHeaderViewWrapp
             boolean r3 = r2.isNormalNotification()
             if (r3 == 0) goto L_0x00ae
             android.view.View r3 = r2.mView
-            r0 = 16909137(0x1020351, float:2.3879608E-38)
+            r0 = 16909124(0x1020344, float:2.3879572E-38)
             android.view.View r3 = r3.findViewById(r0)
             r1 = r3
             android.widget.TextView r1 = (android.widget.TextView) r1
@@ -377,7 +377,7 @@ public class NotificationTemplateViewWrapper extends NotificationHeaderViewWrapp
 
     /* access modifiers changed from: protected */
     public boolean isNormalNotification() {
-        return this.mView.getId() == 16909441 && "base".equals(this.mView.getTag());
+        return this.mView.getId() == 16909421 && "base".equals(this.mView.getTag());
     }
 
     /* access modifiers changed from: protected */
@@ -515,7 +515,7 @@ public class NotificationTemplateViewWrapper extends NotificationHeaderViewWrapp
 
         /* access modifiers changed from: package-private */
         public void handleRightIcon() {
-            View findViewById = NotificationTemplateViewWrapper.this.mView.findViewById(16909318);
+            View findViewById = NotificationTemplateViewWrapper.this.mView.findViewById(16909299);
             if (findViewById != null) {
                 findViewById.setVisibility(8);
             }

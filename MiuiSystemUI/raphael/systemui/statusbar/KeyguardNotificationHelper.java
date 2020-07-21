@@ -275,7 +275,7 @@ public class KeyguardNotificationHelper {
         /*
             r3 = this;
             boolean r0 = r4.hideSensitive
-            r1 = 16909329(0x1020411, float:2.3880147E-38)
+            r1 = 16909309(0x10203fd, float:2.388009E-38)
             r2 = 0
             if (r0 != 0) goto L_0x0024
             boolean r0 = r4.hideSensitiveByAppLock

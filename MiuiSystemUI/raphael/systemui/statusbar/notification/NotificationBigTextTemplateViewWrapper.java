@@ -15,7 +15,7 @@ public class NotificationBigTextTemplateViewWrapper extends NotificationTemplate
 
     /* access modifiers changed from: protected */
     public void resolveViews() {
-        this.mBigText = this.mView.findViewById(16908767);
+        this.mBigText = this.mView.findViewById(16908764);
         clearColorSpans(this.mBigText);
         this.mBigText.post(new Runnable() {
             public final void run() {

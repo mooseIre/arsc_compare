@@ -246,7 +246,7 @@ public class ExpandedAnimationController extends PhysicsAnimationLayout.PhysicsA
         this.mStackOffsetPx = (float) resources.getDimensionPixelSize(R.dimen.bubble_stack_offset);
         this.mBubblePaddingPx = (float) resources.getDimensionPixelSize(R.dimen.bubble_padding);
         this.mBubbleSizePx = (float) resources.getDimensionPixelSize(R.dimen.individual_bubble_size);
-        this.mStatusBarHeight = (float) resources.getDimensionPixelSize(17105467);
+        this.mStatusBarHeight = (float) resources.getDimensionPixelSize(17105436);
         this.mPipDismissHeight = (float) resources.getDimensionPixelSize(R.dimen.pip_dismiss_gradient_height);
         this.mLayout.setVisibility(0);
         animationsForChildrenFromIndex(0, $$Lambda$ExpandedAnimationController$2WcTtI3gu7zcaAxtSsEqApMIf2s.INSTANCE).startAll(new Runnable[0]);

@@ -6,6 +6,8 @@ import com.android.internal.os.SomeArgs;
 import com.android.internal.statusbar.IStatusBar;
 
 public abstract class CompatibilityCommandQueue extends IStatusBar.Stub {
+    public abstract void onBiometricError(SomeArgs someArgs);
+
     public void onDisplayReady(int i) {
     }
 
@@ -22,5 +24,11 @@ public abstract class CompatibilityCommandQueue extends IStatusBar.Stub {
         obtain.arg3 = Boolean.valueOf(z);
         obtain.argi2 = i2;
         showBiometricDialog(obtain);
+    }
+
+    public void onBiometricError(String str) {
+        SomeArgs obtain = SomeArgs.obtain();
+        obtain.arg4 = str;
+        onBiometricError(obtain);
     }
 }

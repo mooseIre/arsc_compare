@@ -742,6 +742,11 @@ public class QSTileHost implements QSHost, TunerService.Tunable, PluginListener<
             if (DEBUG) {
                 Slog.d(this.TAG, "loadTileSpecs: Loaded tile specs from config: " + str);
             }
+        } else if (!str.contains("edit")) {
+            str = resources.getString(R.string.quick_settings_tiles);
+            if (DEBUG) {
+                Slog.d(this.TAG, "loadTileSpecs: missing edit, loaded tile specs from config: " + str);
+            }
         } else if (DEBUG) {
             Slog.d(this.TAG, "loadTileSpecs: loaded tile specs from setting: " + str);
         }

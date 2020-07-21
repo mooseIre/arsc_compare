@@ -89,6 +89,7 @@ public class NotificationContentView extends AbstractFrameLayout {
     private boolean mIsLowPriority;
     private boolean mLegacy;
     private int mLowPriorityNotificationHeight;
+    private MediaTransferManager mMediaTransferManager = new MediaTransferManager(getContext());
     private int mMinContractedHeight;
     private int mNotificationAmbientHeight;
     /* access modifiers changed from: private */
@@ -125,7 +126,7 @@ public class NotificationContentView extends AbstractFrameLayout {
 
     private void initDimens() {
         this.mMinContractedHeight = getResources().getDimensionPixelSize(R.dimen.min_notification_layout_height);
-        this.mNotificationContentMarginEnd = getResources().getDimensionPixelSize(17105330);
+        this.mNotificationContentMarginEnd = getResources().getDimensionPixelSize(17105319);
         this.mLowPriorityNotificationHeight = getResources().getDimensionPixelSize(R.dimen.low_priority_notification_layout_height);
         this.mNotificationBgRadius = NotificationUtil.getOutlineRadius(this.mContext);
         this.mNotificationCustomViewMargin = NotificationUtil.getCustomViewMargin(this.mContext);
@@ -531,7 +532,7 @@ public class NotificationContentView extends AbstractFrameLayout {
         int i;
         int i2;
         if (this.mIsChildInGroup && isVisibleOrTransitioning(3)) {
-            return this.mContext.getResources().getDimensionPixelSize(17105314);
+            return this.mContext.getResources().getDimensionPixelSize(17105306);
         }
         if (!(this.mHeadsUpChild == null || this.mExpandedChild == null)) {
             boolean z = isTransitioningFromTo(2, 1) || isTransitioningFromTo(1, 2);
@@ -552,7 +553,7 @@ public class NotificationContentView extends AbstractFrameLayout {
         } else if (this.mExpandedChild != null) {
             i = getViewHeight(1);
         } else {
-            i = getViewHeight(0) + this.mContext.getResources().getDimensionPixelSize(17105314);
+            i = getViewHeight(0) + this.mContext.getResources().getDimensionPixelSize(17105306);
         }
         return (this.mExpandedChild == null || !isVisibleOrTransitioning(1)) ? i : Math.min(i, getViewHeight(1));
     }
@@ -1056,6 +1057,7 @@ public class NotificationContentView extends AbstractFrameLayout {
             this.mAmbientWrapper.onContentUpdated(entry.row);
         }
         applyRemoteInput(entry);
+        applyMediaTransfer(entry);
         updateLegacy();
         this.mForceSelectNextLayout = true;
         setDark(this.mDark, false, 0);
@@ -1079,6 +1081,19 @@ public class NotificationContentView extends AbstractFrameLayout {
         if (hybridNotificationView != null) {
             removeView(hybridNotificationView);
             this.mSingleLineView = null;
+        }
+    }
+
+    private void applyMediaTransfer(NotificationData.Entry entry) {
+        if (entry.isMediaNotification()) {
+            View view = this.mExpandedChild;
+            if (view != null && (view instanceof ViewGroup)) {
+                this.mMediaTransferManager.applyMediaTransferView((ViewGroup) view, entry);
+            }
+            View view2 = this.mContractedChild;
+            if (view2 != null && (view2 instanceof ViewGroup)) {
+                this.mMediaTransferManager.applyMediaTransferView((ViewGroup) view2, entry);
+            }
         }
     }
 
