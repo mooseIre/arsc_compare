@@ -974,7 +974,7 @@ public class SignalClusterView extends LinearLayout implements NetworkController
             imageView.setImageTintMode(PorterDuff.Mode.SRC_IN);
             if (Util.showCtsSpecifiedColor()) {
                 boolean inDarkMode = DarkIconDispatcherHelper.inDarkMode(this.mTintArea, imageView, this.mDarkIntensity);
-                imageView.setImageDrawable(this.mContext.getResources().getDrawable(Icons.get(Integer.valueOf(i), inDarkMode)));
+                imageView.setImageDrawable(this.mContext.getDrawable(Icons.get(Integer.valueOf(i), inDarkMode)));
                 if (this.mFilterColor == 0) {
                     this.mFilterColor = this.mContext.getResources().getColor(R.color.status_bar_icon_text_color_dark_mode_cts);
                 }
@@ -984,10 +984,10 @@ public class SignalClusterView extends LinearLayout implements NetworkController
                     imageView.setImageTintList((ColorStateList) null);
                 }
             } else if (this.mDarkIconDispatcher.useTint()) {
-                imageView.setImageDrawable(this.mContext.getResources().getDrawable(i));
+                imageView.setImageDrawable(this.mContext.getDrawable(i));
                 imageView.setImageTintList(ColorStateList.valueOf(DarkIconDispatcherHelper.getTint(this.mTintArea, imageView, this.mIconTint)));
             } else {
-                imageView.setImageDrawable(this.mContext.getResources().getDrawable(Icons.get(Integer.valueOf(i), DarkIconDispatcherHelper.inDarkMode(this.mTintArea, imageView, this.mDarkIntensity))));
+                imageView.setImageDrawable(this.mContext.getDrawable(Icons.get(Integer.valueOf(i), DarkIconDispatcherHelper.inDarkMode(this.mTintArea, imageView, this.mDarkIntensity))));
             }
         }
     }

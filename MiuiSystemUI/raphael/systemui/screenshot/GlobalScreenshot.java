@@ -62,6 +62,7 @@ import android.widget.Toast;
 import androidx.preference.PreferenceManager;
 import com.android.systemui.Constants;
 import com.android.systemui.SystemUICompat;
+import com.android.systemui.Util;
 import com.android.systemui.content.pm.PackageManagerCompat;
 import com.android.systemui.miui.anim.PhysicBasedInterpolator;
 import com.android.systemui.plugins.R;
@@ -1079,7 +1080,18 @@ class GlobalScreenshot {
 
     /* access modifiers changed from: private */
     public boolean hasScreenshotSoundEnabled(Context context) {
-        return MiuiSettings.System.getBooleanForUser(context.getContentResolver(), "has_screenshot_sound", true, 0);
+        if (!Build.checkRegion(Locale.KOREA.getCountry()) || !"monet".equals(android.os.Build.DEVICE) || !isCameraPreviewPage()) {
+            return MiuiSettings.System.getBooleanForUser(context.getContentResolver(), "has_screenshot_sound", true, 0);
+        }
+        return true;
+    }
+
+    private boolean isCameraPreviewPage() {
+        ComponentName topActivity = Util.getTopActivity(this.mContext);
+        if (topActivity == null) {
+            return false;
+        }
+        return "com.android.camera.Camera".equals(topActivity.getClassName());
     }
 
     /* access modifiers changed from: private */
