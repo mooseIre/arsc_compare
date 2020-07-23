@@ -6,7 +6,6 @@ import com.android.systemui.ConfigurationChangedReceiver;
 import com.android.systemui.Util;
 import com.android.systemui.statusbar.policy.ConfigurationController;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.function.Consumer;
 
 public class ConfigurationControllerImpl implements ConfigurationController, ConfigurationChangedReceiver {
@@ -38,10 +37,6 @@ public class ConfigurationControllerImpl implements ConfigurationController, Con
                 ConfigurationControllerImpl.this.lambda$onConfigurationChanged$0$ConfigurationControllerImpl(this.f$1, (ConfigurationController.ConfigurationListener) obj);
             }
         });
-        Iterator<ConfigurationController.ConfigurationListener> it = this.mListeners.iterator();
-        while (it.hasNext()) {
-            it.next().onConfigChanged(configuration);
-        }
         float f = configuration.fontScale;
         int i = configuration.densityDpi;
         boolean isThemeResourcesChanged = Util.isThemeResourcesChanged(this.mPreviousConfig.updateFrom(configuration), configuration.extraConfig.themeChangedFlags);
