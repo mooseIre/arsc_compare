@@ -171,7 +171,12 @@ public class AppMiniWindowManager implements Gefingerpoken, ConfigurationControl
         this.mHeadsUpManager.addListener(this);
     }
 
-    public boolean isStartingActivity() {
+    public boolean isStartingActivity(String str) {
+        ExpandableNotificationRow expandableNotificationRow;
+        ExpandableNotificationRow expandableNotificationRow2 = this.mHeadsUp;
+        if ((expandableNotificationRow2 == null || !expandableNotificationRow2.getEntry().key.equals(str)) && ((expandableNotificationRow = this.mPendingHeadsUp) == null || !expandableNotificationRow.getEntry().key.equals(str))) {
+            return false;
+        }
         return this.mStartingActivity;
     }
 
@@ -534,14 +539,14 @@ public class AppMiniWindowManager implements Gefingerpoken, ConfigurationControl
             }
 
             public void onAnimationEnd(Animator animator) {
+                boolean unused = AppMiniWindowManager.this.mStartingActivity = false;
                 if (AppMiniWindowManager.this.mHeadsUp != null) {
-                    boolean unused = AppMiniWindowManager.this.mStartingActivity = false;
                     AppMiniWindowManager appMiniWindowManager = AppMiniWindowManager.this;
                     appMiniWindowManager.mShadeController.performRemoveNotification(appMiniWindowManager.mHeadsUp.getStatusBarNotification());
-                    AppMiniWindowManager.this.mHeadsUpManager.releaseAllImmediately();
-                    AppMiniWindowManager.this.setTracking(false);
-                    AppMiniWindowManager.this.mContainer.setAlpha(1.0f);
                 }
+                AppMiniWindowManager.this.mHeadsUpManager.releaseAllImmediately();
+                AppMiniWindowManager.this.setTracking(false);
+                AppMiniWindowManager.this.mContainer.setAlpha(1.0f);
             }
         });
         ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {

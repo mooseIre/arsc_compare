@@ -526,7 +526,7 @@ public class RoundedCorners extends SystemUI implements CommandQueue.Callbacks, 
         WindowManager windowManager = (WindowManager) this.mContext.getSystemService("window");
         ImageView imageView = new ImageView(this.mContext);
         setBackgroundResource(imageView, i2, z);
-        WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(-1, -2, z ? 2017 : 2015, 1304, -3);
+        WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(-1, -2, z ? WindowManagerCompat.getNotchType() : 2015, 1304, -3);
         layoutParams.privateFlags = 16;
         layoutParams.privateFlags |= 64;
         if (!z || Build.VERSION.SDK_INT < 28) {

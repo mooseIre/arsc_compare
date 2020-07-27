@@ -1,7 +1,6 @@
 package com.android.systemui.statusbar;
 
 import android.content.Context;
-import android.provider.Settings;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
@@ -66,7 +65,7 @@ public class NotificationAggregate extends LinearLayout implements NotificationG
     }
 
     public static boolean canAggregate(Context context, ExpandedNotification expandedNotification) {
-        if (!Constants.IS_INTERNATIONAL && expandedNotification != null && expandedNotification.isClearable() && !expandedNotification.getNotification().isGroupSummary() && !NotificationUtil.isMediaNotification(expandedNotification) && !NotificationUtil.isCustomViewNotification(expandedNotification) && NotificationSettingsHelper.isFoldable(context, expandedNotification.getPackageName()) && Settings.Global.getInt(context.getContentResolver(), "user_fold", 0) >= 0) {
+        if (!Constants.IS_INTERNATIONAL && expandedNotification != null && expandedNotification.isClearable() && !expandedNotification.getNotification().isGroupSummary() && !NotificationUtil.isMediaNotification(expandedNotification) && !NotificationUtil.isCustomViewNotification(expandedNotification) && NotificationSettingsHelper.isFoldable(context, expandedNotification.getPackageName()) && NotificationUtil.getUserFold(context) >= 0) {
             return true;
         }
         return false;

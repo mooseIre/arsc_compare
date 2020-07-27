@@ -107,10 +107,10 @@ public class Analytics$SettingsStatusEvent extends Analytics$Event {
     }
 
     public static int getUserFold(Context context) {
-        return Settings.Global.getInt(context.getContentResolver(), "user_fold", 0);
+        return NotificationUtil.getUserFold(context);
     }
 
     public static int getUserAggregate(Context context) {
-        return Settings.Global.getInt(context.getContentResolver(), "user_aggregate", 0);
+        return NotificationUtil.getUserAggregate(context);
     }
 }

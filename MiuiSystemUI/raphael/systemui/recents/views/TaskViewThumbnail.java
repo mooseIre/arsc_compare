@@ -223,6 +223,7 @@ public class TaskViewThumbnail extends View {
         Rect rect;
         ActivityManager$TaskThumbnailInfo activityManager$TaskThumbnailInfo;
         int width;
+        this.mDisplayOrientation = Utilities.getAppConfiguration(getContext()).orientation;
         float f2 = 0.0f;
         this.mRotateDegrees = 0.0f;
         this.mThumbnailScale = 1.0f;

@@ -6,6 +6,9 @@ import com.android.internal.os.SomeArgs;
 import com.android.internal.statusbar.IStatusBar;
 
 public abstract class CompatibilityCommandQueue extends IStatusBar.Stub {
+    public void abortTransient(int i, int[] iArr) {
+    }
+
     public abstract void onBiometricError(SomeArgs someArgs);
 
     public void onDisplayReady(int i) {

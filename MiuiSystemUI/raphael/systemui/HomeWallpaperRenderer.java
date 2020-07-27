@@ -36,4 +36,9 @@ public class HomeWallpaperRenderer extends ImageWallpaperRenderer {
     public boolean enableScissorMode() {
         return !((MiuiFastUnlockController) Dependency.get(MiuiFastUnlockController.class)).isFastUnlock();
     }
+
+    /* access modifiers changed from: protected */
+    public boolean getHasKeyguardWallpaperEffects() {
+        return this.mContext.getResources().getBoolean(R.bool.miui_config_hasKeyguardWallpaperEffects);
+    }
 }

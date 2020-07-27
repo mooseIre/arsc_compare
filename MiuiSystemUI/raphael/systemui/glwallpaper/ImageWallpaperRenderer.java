@@ -52,6 +52,11 @@ public class ImageWallpaperRenderer implements GLWallpaperRenderer, ImageRevealH
     }
 
     /* access modifiers changed from: protected */
+    public boolean getHasKeyguardWallpaperEffects() {
+        return true;
+    }
+
+    /* access modifiers changed from: protected */
     public int getVertexResId() {
         throw null;
     }
@@ -138,7 +143,7 @@ public class ImageWallpaperRenderer implements GLWallpaperRenderer, ImageRevealH
     }
 
     public void startUnlockAnim(boolean z, long j) {
-        if (this.mSurfaceSize.width() == this.mScissor.width() && this.mSurfaceSize.height() == this.mScissor.height()) {
+        if (this.mSurfaceSize.width() == this.mScissor.width() && this.mSurfaceSize.height() == this.mScissor.height() && getHasKeyguardWallpaperEffects()) {
             this.mImageRevealHelper.startUnlockAnim(z, j);
         }
     }

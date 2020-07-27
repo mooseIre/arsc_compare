@@ -9,6 +9,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.Icon;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.service.notification.StatusBarNotification;
 import android.text.TextUtils;
 import android.widget.ImageView;
@@ -31,6 +32,14 @@ import miui.securityspace.XSpaceUserHandle;
 
 public class NotificationUtil {
     private static int sNotificationStyle = (Constants.IS_INTERNATIONAL ? 1 : 0);
+
+    public static int getUserFold(Context context) {
+        return Settings.Global.getInt(context.getContentResolver(), "user_fold", 0);
+    }
+
+    public static int getUserAggregate(Context context) {
+        return Settings.Global.getInt(context.getContentResolver(), "user_aggregate", 0);
+    }
 
     public static boolean isHybrid(ExpandedNotification expandedNotification) {
         return expandedNotification != null && "com.miui.hybrid".equals(expandedNotification.getBasePkg());
