@@ -538,13 +538,6 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
     }
 
     /* access modifiers changed from: package-private */
-    public void requestDrawWackLock() {
-        Log.i("MiuiGxzwManager", "requestDrawWackLock");
-        this.mDrawWakeLockStatus = 1;
-        this.mDrawWakeLock.acquire();
-    }
-
-    /* access modifiers changed from: package-private */
     public void releaseDrawWackLock() {
         Log.i("MiuiGxzwManager", "releaseDrawWackLock");
         this.mDrawWakeLockStatus = 2;

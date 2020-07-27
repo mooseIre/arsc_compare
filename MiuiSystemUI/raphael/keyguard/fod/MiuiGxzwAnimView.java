@@ -1327,9 +1327,7 @@ class MiuiGxzwAnimView {
             public void onStart() {
                 Log.i("MiuiGxzwAnimView", "onStart");
                 if (this.mArgs.aod) {
-                    MiuiGxzwManager.getInstance().requestDrawWackLock();
-                    MiuiGxzwAnimViewInternal.this.mMainHandler.removeCallbacks(MiuiGxzwAnimViewInternal.this.mReleaseDrawWackLockRunnable);
-                    MiuiGxzwAnimViewInternal.this.mMainHandler.postDelayed(MiuiGxzwAnimViewInternal.this.mReleaseDrawWackLockRunnable, 300000);
+                    MiuiGxzwManager.getInstance().requestDrawWackLock(120000);
                 }
                 if (this.mArgs.feedback) {
                     MiuiGxzwAnimViewInternal.this.performAnimFeedback();
