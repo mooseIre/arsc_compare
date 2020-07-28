@@ -1,5 +1,6 @@
 package com.android.systemui.miui.volume;
 
+import android.app.ExtraNotificationManager;
 import android.content.Context;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -12,5 +13,13 @@ public class VolumeUtil {
         if (context.getResources().getBoolean(R$bool.miui_config_enableRingerRelieveSound) && i == 0) {
             Util.playRingtoneAsync(context, RingtoneManager.getActualDefaultRingtoneUri(context, 2), 5);
         }
+    }
+
+    public static int getZenMode(Context context) {
+        return MiuiSettings.SilenceMode.getZenMode(context);
+    }
+
+    public static void setZenModeForDuration(Context context, int i, int i2) {
+        ExtraNotificationManager.startCountDownSilenceMode(context, i, i2);
     }
 }

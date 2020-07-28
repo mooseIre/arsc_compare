@@ -93,6 +93,13 @@ public class ControlPanelController implements CallbackController<UseControlPane
         return true;
     }
 
+    public void openPanel() {
+        ControlCenter controlCenter = this.mControlCenter;
+        if (controlCenter != null) {
+            controlCenter.openPanel();
+        }
+    }
+
     public void onUserSwitched() {
         this.mUseControlPanelObserver.onChange(false);
         this.mExpandableObserver.onChange(false);

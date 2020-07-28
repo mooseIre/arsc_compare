@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.provider.MiuiSettings;
 import android.transition.AutoTransition;
 import android.transition.Transition;
@@ -118,7 +119,7 @@ public class MiuiRingerModeLayout extends LinearLayout implements TimerSeekBar.O
         addTickingTimeReceivers();
         this.mTimer.setOnSeekBarChangeListener(this);
         setMotionEventSplittingEnabled(false);
-        setRingerModeInternal(MiuiSettings.SilenceMode.getZenMode(this.mContext));
+        setRingerModeInternal(VolumeUtil.getZenMode(this.mContext));
     }
 
     /* access modifiers changed from: private */
@@ -241,7 +242,7 @@ public class MiuiRingerModeLayout extends LinearLayout implements TimerSeekBar.O
         Util.setLastTotalCountDownTime(this.mContext, i);
         setupCountDownProgress();
         int i2 = i / 60;
-        ExtraNotificationManager.startCountDownSilenceMode(this.mContext, this.mRingerMode, i2);
+        VolumeUtil.setZenModeForDuration(this.mContext, this.mRingerMode, i2);
         boolean z = true;
         updateRemainTimeH(true);
         if (this.mCurrentTimerMinitues != i2) {
@@ -270,11 +271,20 @@ public class MiuiRingerModeLayout extends LinearLayout implements TimerSeekBar.O
 
     /* access modifiers changed from: private */
     public boolean isSilenceModeOn() {
-        return this.mRingerMode > 0;
+        if (Build.VERSION.SDK_INT > 29) {
+            if (this.mRingerMode == 1) {
+                return true;
+            }
+            return false;
+        } else if (this.mRingerMode > 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public void init() {
-        setRingerModeInternal(MiuiSettings.SilenceMode.getZenMode(this.mContext));
+        setRingerModeInternal(VolumeUtil.getZenMode(this.mContext));
         updateRemainTimeH();
         updateExpandedStateH();
         setupCountDownProgress();
@@ -353,18 +363,19 @@ public class MiuiRingerModeLayout extends LinearLayout implements TimerSeekBar.O
         public void updateState() {
             int i;
             int i2;
-            int i3 = this.mRingerMode;
-            if (i3 == 0) {
-                i3 = MiuiSettings.SilenceMode.getLastestQuietMode(this.mStandardView.getContext());
+            int i3;
+            int i4 = this.mRingerMode;
+            if (i4 == 0) {
+                i4 = MiuiSettings.SilenceMode.getLastestQuietMode(this.mStandardView.getContext());
             }
             boolean z = false;
             this.mStandardView.setSelected(this.mRingerMode == 4);
             this.mStandardView.setActivated(!this.mExpanded);
             this.mDndView.setSelected(this.mRingerMode == 1);
             this.mDndView.setActivated(!this.mExpanded);
-            Util.setVisOrGone(this.mStandardView, this.mExpanded || i3 != 1);
+            Util.setVisOrGone(this.mStandardView, this.mExpanded || i4 != 1);
             View view = this.mDndView;
-            if (this.mExpanded || i3 == 1) {
+            if (this.mExpanded || i4 == 1) {
                 z = true;
             }
             Util.setVisOrGone(view, z);
@@ -374,21 +385,32 @@ public class MiuiRingerModeLayout extends LinearLayout implements TimerSeekBar.O
             if (this.mDndView.getBackground() instanceof GradientDrawable) {
                 Drawable background = this.mDndView.getBackground();
                 if (this.mExpanded) {
-                    i2 = R$array.miui_volume_ringer_btn_dnd_corners;
+                    i3 = R$array.miui_volume_ringer_btn_dnd_corners;
+                } else {
+                    i3 = R$array.miui_volume_ringer_btn_corners_collapsed;
+                }
+                DrawableAnimators.updateCornerRadii(context, background, i3);
+            }
+            if (!(this.mStandardView.getBackground() instanceof GradientDrawable)) {
+                return;
+            }
+            if (Build.VERSION.SDK_INT > 29) {
+                Drawable background2 = this.mStandardView.getBackground();
+                if (this.mExpanded) {
+                    i2 = R$array.miui_volume_ringer_btn_standard_corners2;
                 } else {
                     i2 = R$array.miui_volume_ringer_btn_corners_collapsed;
                 }
-                DrawableAnimators.updateCornerRadii(context, background, i2);
+                DrawableAnimators.updateCornerRadii(context, background2, i2);
+                return;
             }
-            if (this.mStandardView.getBackground() instanceof GradientDrawable) {
-                Drawable background2 = this.mStandardView.getBackground();
-                if (this.mExpanded) {
-                    i = R$array.miui_volume_ringer_btn_standard_corners;
-                } else {
-                    i = R$array.miui_volume_ringer_btn_corners_collapsed;
-                }
-                DrawableAnimators.updateCornerRadii(context, background2, i);
+            Drawable background3 = this.mStandardView.getBackground();
+            if (this.mExpanded) {
+                i = R$array.miui_volume_ringer_btn_standard_corners;
+            } else {
+                i = R$array.miui_volume_ringer_btn_corners_collapsed;
             }
+            DrawableAnimators.updateCornerRadii(context, background3, i);
         }
     }
 }

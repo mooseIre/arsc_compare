@@ -121,6 +121,7 @@ public final class R$styleable {
     public static final int[] SeekBarPreference = {16842994, 16843062, R.attr.adjustable, R.attr.min, R.attr.seekBarIncrement, R.attr.showSeekBarValue, R.attr.updatesContinuously};
     public static final int[] SettingsBarView = {R.attr.barColor};
     public static final int[] ShapeAppearance = {R.attr.cornerFamily, R.attr.cornerFamilyBottomLeft, R.attr.cornerFamilyBottomRight, R.attr.cornerFamilyTopLeft, R.attr.cornerFamilyTopRight, R.attr.cornerSize, R.attr.cornerSizeBottomLeft, R.attr.cornerSizeBottomRight, R.attr.cornerSizeTopLeft, R.attr.cornerSizeTopRight};
+    public static final int[] SmoothRoundDrawable = {16843173, 16843176, 16843177, 16843178, 16843179, 16843180};
     public static final int[] Snackbar = {R.attr.snackbarButtonStyle, R.attr.snackbarStyle};
     public static final int[] SnackbarLayout = {16843039, R.attr.actionTextColorAlpha, R.attr.animationMode, R.attr.backgroundOverlayColorAlpha, R.attr.elevation, R.attr.maxActionInlineWidth};
     public static final int[] Spinner = {16842930, 16843126, 16843131, 16843362, R.attr.dropDownMinWidth, R.attr.popupTheme, R.attr.spinnerModeCompat};

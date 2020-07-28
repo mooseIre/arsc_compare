@@ -333,8 +333,10 @@ public class WifiTile extends QSTileImpl<QSTile.BooleanState> {
     }
 
     protected class WifiDetailAdapter implements DetailAdapter, NetworkController.AccessPointController.AccessPointCallback, QSDetailItems.Callback {
-        private AccessPoint[] mAccessPoints;
-        private QSDetailItems mItems;
+        /* access modifiers changed from: private */
+        public AccessPoint[] mAccessPoints;
+        /* access modifiers changed from: private */
+        public QSDetailItems mItems;
 
         public int getMetricsCategory() {
             return 152;
@@ -433,31 +435,25 @@ public class WifiTile extends QSTileImpl<QSTile.BooleanState> {
 
         /* access modifiers changed from: private */
         public void updateItems() {
-            QSDetailItems qSDetailItems = this.mItems;
-            if (qSDetailItems != null) {
-                if (WifiTile.this.mSignalCallback.mInfo.enabled) {
-                    AccessPoint[] accessPointArr = this.mAccessPoints;
-                    if (accessPointArr == null || accessPointArr.length <= 0) {
-                        this.mItems.setEmptyState(R.drawable.ic_qs_wifi_detail_empty, R.string.quick_settings_wifi_detail_empty_text);
-                        this.mItems.setItems((QSDetailItems.Item[]) null);
-                        return;
-                    }
-                    ArrayList arrayList = new ArrayList();
-                    int i = 0;
-                    while (true) {
-                        AccessPoint[] accessPointArr2 = this.mAccessPoints;
-                        if (i < accessPointArr2.length) {
-                            SlaveWifiHelper.updateItem(WifiTile.this.mContext, WifiTile.this.mWifiController, this.mItems, arrayList, accessPointArr2[i]);
-                            i++;
+            if (this.mItems != null) {
+                WifiTile.this.mHandler.post(new Runnable() {
+                    public void run() {
+                        WifiDetailAdapter wifiDetailAdapter = WifiDetailAdapter.this;
+                        if (!WifiTile.this.mSignalCallback.mInfo.enabled) {
+                            wifiDetailAdapter.mItems.setEmptyState(R.drawable.ic_qs_wifi_detail_empty, R.string.wifi_is_off);
+                            WifiDetailAdapter.this.mItems.setItems((QSDetailItems.Item[]) null);
+                        } else if (wifiDetailAdapter.mAccessPoints == null || WifiDetailAdapter.this.mAccessPoints.length <= 0) {
+                            WifiDetailAdapter.this.mItems.setEmptyState(R.drawable.ic_qs_wifi_detail_empty, R.string.quick_settings_wifi_detail_empty_text);
+                            WifiDetailAdapter.this.mItems.setItems((QSDetailItems.Item[]) null);
                         } else {
-                            this.mItems.setItems((QSDetailItems.Item[]) arrayList.toArray(new QSDetailItems.Item[0]));
-                            return;
+                            ArrayList arrayList = new ArrayList();
+                            for (AccessPoint updateItem : WifiDetailAdapter.this.mAccessPoints) {
+                                SlaveWifiHelper.updateItem(WifiTile.this.mContext, WifiTile.this.mWifiController, WifiDetailAdapter.this.mItems, arrayList, updateItem);
+                            }
+                            WifiDetailAdapter.this.mItems.setItems((QSDetailItems.Item[]) arrayList.toArray(new QSDetailItems.Item[0]));
                         }
                     }
-                } else {
-                    qSDetailItems.setEmptyState(R.drawable.ic_qs_wifi_detail_empty, R.string.wifi_is_off);
-                    this.mItems.setItems((QSDetailItems.Item[]) null);
-                }
+                });
             }
         }
     }

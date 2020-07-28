@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Outline;
 import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -24,6 +25,7 @@ import com.android.systemui.miui.statusbar.analytics.SystemUIStat;
 import com.android.systemui.plugins.R;
 import com.android.systemui.plugins.qs.DetailAdapter;
 import com.android.systemui.qs.QSDetailItems;
+import com.android.systemui.util.Utils;
 import java.util.Collection;
 import miui.widget.SlidingButton;
 import miuix.animation.Folme;
@@ -129,11 +131,18 @@ public class QSControlDetail extends FrameLayout {
 
     public void updateResources() {
         setBackgroundColor(this.mContext.getColor(R.color.qs_control_detail_layout_bg_color));
-        this.mDetailContainer.setBackground(this.mContext.getDrawable(R.drawable.qs_control_detail_bg));
+        updateBackground();
         this.mQsDetailHeaderTitle.setTextAppearance(R.style.TextAppearance_QSControl_DetailHeader);
         this.mDetailSettingsButton.setTextAppearance(R.style.TextAppearance_QSControl_DetailMoreButton);
         this.mDetailSettingsButton.setBackground(this.mContext.getDrawable(R.drawable.qs_control_detail_more_button_bg));
         this.mDetailViews.clear();
+    }
+
+    private void updateBackground() {
+        Drawable smoothRoundDrawable = Utils.getSmoothRoundDrawable(this.mContext, R.drawable.qs_control_detail_bg);
+        if (smoothRoundDrawable != null) {
+            this.mDetailContainer.setBackground(smoothRoundDrawable);
+        }
     }
 
     /* access modifiers changed from: protected */
@@ -145,6 +154,7 @@ public class QSControlDetail extends FrameLayout {
         Utils.createButtonFolmeTouchStyle(this.mDetailSettingsButton);
         this.mDetailContainer = findViewById(R.id.qs_detail_container);
         this.mDetailContainer.setClickable(true);
+        updateBackground();
         this.mQsDetailHeader = findViewById(R.id.qs_control_detail_header);
         this.mQsDetailHeaderTitle = (TextView) this.mQsDetailHeader.findViewById(16908310);
         this.mQsDetailHeaderSwitch = (SlidingButton) this.mQsDetailHeader.findViewById(16908311);
@@ -300,9 +310,9 @@ public class QSControlDetail extends FrameLayout {
             }
         } else if (view == null) {
             this.mFromView = null;
-            setVisibility(0);
+            setVisibility(4);
         } else {
-            setVisibility(0);
+            setVisibility(4);
             this.mFromView = view;
             this.mToView = this.mDetailContainer;
             this.mTranslateView = view2;

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Outline;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -31,6 +32,7 @@ import com.android.systemui.plugins.qs.QSTileView;
 import com.android.systemui.qs.QSPanel;
 import com.android.systemui.qs.tiles.BluetoothTile;
 import com.android.systemui.qs.tiles.WifiTile;
+import com.android.systemui.util.Utils;
 import miuix.animation.Folme;
 import miuix.animation.IStateStyle;
 import miuix.animation.ITouchStyle;
@@ -201,39 +203,46 @@ public class QSBigTileView extends QSTileView {
         if (this.mTag.equals("cell")) {
             int i = this.mState;
             if (i == 2) {
-                setBackground(this.mContext.getDrawable(R.drawable.ic_qs_big_tile_bg_1));
+                setSmoothBackground(R.drawable.ic_qs_big_tile_bg_1);
             } else if (i == 1) {
-                setBackground(this.mContext.getDrawable(R.drawable.ic_qs_big_tile_bg_inactive_1));
+                setSmoothBackground(R.drawable.ic_qs_big_tile_bg_inactive_1);
             } else if (i == 0) {
-                setBackground(this.mContext.getDrawable(R.drawable.ic_qs_big_tile_bg_unavailable_1));
+                setSmoothBackground(R.drawable.ic_qs_big_tile_bg_unavailable_1);
             }
         } else if (this.mTag.equals("wifi")) {
             int i2 = this.mState;
             if (i2 == 2) {
-                setBackground(this.mContext.getDrawable(R.drawable.ic_qs_big_tile_bg_2));
+                setSmoothBackground(R.drawable.ic_qs_big_tile_bg_2);
             } else if (i2 == 1) {
-                setBackground(this.mContext.getDrawable(R.drawable.ic_qs_big_tile_bg_inactive_2));
+                setSmoothBackground(R.drawable.ic_qs_big_tile_bg_inactive_2);
             } else if (i2 == 0) {
-                setBackground(this.mContext.getDrawable(R.drawable.ic_qs_big_tile_bg_unavailable_2));
+                setSmoothBackground(R.drawable.ic_qs_big_tile_bg_unavailable_2);
             }
         } else if (this.mTag.equals("bt")) {
             int i3 = this.mState;
             if (i3 == 2) {
-                setBackground(this.mContext.getDrawable(R.drawable.ic_qs_big_tile_bg_3));
+                setSmoothBackground(R.drawable.ic_qs_big_tile_bg_3);
             } else if (i3 == 1) {
-                setBackground(this.mContext.getDrawable(R.drawable.ic_qs_big_tile_bg_inactive_3));
+                setSmoothBackground(R.drawable.ic_qs_big_tile_bg_inactive_3);
             } else if (i3 == 0) {
-                setBackground(this.mContext.getDrawable(R.drawable.ic_qs_big_tile_bg_unavailable_3));
+                setSmoothBackground(R.drawable.ic_qs_big_tile_bg_unavailable_3);
             }
         } else if (this.mTag.equals("flashlight")) {
             int i4 = this.mState;
             if (i4 == 2) {
-                setBackground(this.mContext.getDrawable(R.drawable.ic_qs_big_tile_bg_4));
+                setSmoothBackground(R.drawable.ic_qs_big_tile_bg_4);
             } else if (i4 == 1) {
-                setBackground(this.mContext.getDrawable(R.drawable.ic_qs_big_tile_bg_inactive_4));
+                setSmoothBackground(R.drawable.ic_qs_big_tile_bg_inactive_4);
             } else if (i4 == 0) {
-                setBackground(this.mContext.getDrawable(R.drawable.ic_qs_big_tile_bg_unavailable_4));
+                setSmoothBackground(R.drawable.ic_qs_big_tile_bg_unavailable_4);
             }
+        }
+    }
+
+    private void setSmoothBackground(int i) {
+        Drawable smoothRoundDrawable = Utils.getSmoothRoundDrawable(this.mContext, i);
+        if (smoothRoundDrawable != null) {
+            setBackground(smoothRoundDrawable);
         }
     }
 

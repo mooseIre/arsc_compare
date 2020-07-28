@@ -3,6 +3,7 @@ package com.android.systemui.miui.controlcenter;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.style.TextAppearanceSpan;
@@ -20,6 +21,7 @@ import com.android.systemui.miui.controlcenter.ExpandInfoController;
 import com.android.systemui.miui.statusbar.analytics.SystemUIStat;
 import com.android.systemui.miui.statusbar.policy.ControlPanelController;
 import com.android.systemui.plugins.R;
+import com.android.systemui.util.Utils;
 import miuix.animation.Folme;
 import miuix.animation.IStateStyle;
 import miuix.animation.ITouchStyle;
@@ -57,7 +59,7 @@ public class QSControlExpandTileView extends LinearLayout implements ExpandInfoC
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        setBackground(this.mContext.getDrawable(R.drawable.ic_qs_big_tile_bg_0));
+        updateBackground();
         this.mStatusIcon = (ImageView) findViewById(R.id.status_icon);
         updateIconMargins();
         this.mIndicator = (ImageView) findViewById(R.id.indicator);
@@ -159,11 +161,18 @@ public class QSControlExpandTileView extends LinearLayout implements ExpandInfoC
     public void updateResources() {
         updateIconMargins();
         this.mQsControlExpandDetail.updateResources();
-        setBackground(this.mContext.getDrawable(R.drawable.ic_qs_big_tile_bg_0));
+        updateBackground();
         this.mTitle.setTextAppearance(R.style.TextAppearance_QSControl_ExpandTileTitle);
         this.mStatus.setTextAppearance(R.style.TextAppearance_QSControl_ExpandTileSubTitle);
         this.mIndicator.setImageDrawable(this.mContext.getDrawable(R.drawable.qs_big_tile_expand_indicator_dark));
         updateViews();
+    }
+
+    private void updateBackground() {
+        Drawable smoothRoundDrawable = Utils.getSmoothRoundDrawable(this.mContext, R.drawable.ic_qs_big_tile_bg_0);
+        if (smoothRoundDrawable != null) {
+            setBackground(smoothRoundDrawable);
+        }
     }
 
     private void updateIconMargins() {

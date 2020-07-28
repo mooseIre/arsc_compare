@@ -38,6 +38,13 @@ public class MCCUtils {
         return getResourcesForOperation(context, str, true).getBoolean(R.bool.status_bar_hide_volte);
     }
 
+    public static boolean isShowSpnWhenAirplaneOn(Context context, String str) {
+        if (TextUtils.isEmpty(str)) {
+            return false;
+        }
+        return getResourcesForOperation(context, str, true).getBoolean(R.bool.status_bar_show_spn_when_airplane);
+    }
+
     public static boolean isMobileTypeShownWhenWifiOn(Context context, String str) {
         if (TextUtils.isEmpty(str)) {
             return false;
