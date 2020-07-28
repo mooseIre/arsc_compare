@@ -29,6 +29,7 @@ import com.android.keyguard.utils.ThemeUtils;
 import com.android.keyguard.wallpaper.mode.RequestInfo;
 import com.android.keyguard.wallpaper.mode.ResultInfo;
 import com.android.keyguard.wallpaper.mode.WallpaperInfo;
+import com.android.systemui.plugins.R;
 import com.google.gson.Gson;
 import java.util.List;
 import miui.os.Build;
@@ -174,7 +175,7 @@ public class KeyguardWallpaperHelper {
                     int i = PreferenceUtils.getInt(KeyguardWallpaperHelper.this.mContext, "pref_key_current_miui_version_code", 0);
                     boolean z = PreferenceUtils.getInt(KeyguardWallpaperHelper.this.mContext, "pref_key_init_control_center_switch", 0) == 1;
                     Slog.i("KeyguardWallpaperHelper", "notifyThemeSetSuperWallpaper, isDeviceProvisioned = " + isDeviceProvisioned + "miuiVersionName = " + miuiVersionName + "miuiVersionCode = " + intValue + "oldMiuiVersionCode " + i);
-                    if (isDeviceProvisioned && intValue == 12 && i < 12) {
+                    if (isDeviceProvisioned && intValue == 12 && i < 12 && KeyguardWallpaperHelper.this.mContext.getResources().getBoolean(R.bool.miui_config_should_superwallpaper_setdefault)) {
                         boolean isUserUnlocked = KeyguardUpdateMonitor.getInstance(KeyguardWallpaperHelper.this.mContext).isUserUnlocked();
                         Slog.i("KeyguardWallpaperHelper", "notifyThemeSetSuperWallpaper, isUserUnlocked = " + isUserUnlocked);
                         if (isUserUnlocked) {

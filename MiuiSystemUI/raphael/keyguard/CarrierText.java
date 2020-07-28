@@ -20,6 +20,7 @@ import android.util.SparseBooleanArray;
 import android.widget.TextView;
 import com.android.internal.telephony.IccCardConstants;
 import com.android.systemui.Dependency;
+import com.android.systemui.MCCUtils;
 import com.android.systemui.plugins.R;
 import com.android.systemui.statusbar.policy.DarkIconDispatcher;
 import com.android.systemui.statusbar.policy.DarkIconDispatcherHelper;
@@ -341,7 +342,7 @@ public class CarrierText extends TextView implements NetworkController.CarrierNa
                 break;
             }
             int slotId = ((miui.telephony.SubscriptionInfo) it.next()).getSlotId();
-            if (this.mVowifiArray.get(slotId) && this.mShowSpnWhenAirplaneOn) {
+            if (this.mVowifiArray.get(slotId) && (this.mShowSpnWhenAirplaneOn || MCCUtils.isShowSpnWhenAirplaneOn(this.mContext, this.mPhone.getSimOperatorNumericForPhone(slotId)))) {
                 if (slotId >= 0 && slotId < this.mPhoneCount) {
                     zArr[slotId] = true;
                 }
