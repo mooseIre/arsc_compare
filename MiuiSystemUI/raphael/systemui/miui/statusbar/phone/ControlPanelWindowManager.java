@@ -39,8 +39,11 @@ public class ControlPanelWindowManager {
             WindowManager.LayoutParams layoutParams2 = this.mLp;
             layoutParams2.systemUiVisibility = 1792;
             layoutParams2.extraFlags |= 32768;
+            if (Build.VERSION.SDK_INT > 29) {
+                this.mLp.layoutInDisplayCutoutMode = 3;
+            }
             try {
-                this.mWindowManager.addView(controlPanelWindowView, layoutParams2);
+                this.mWindowManager.addView(controlPanelWindowView, this.mLp);
             } catch (Exception unused) {
             }
             this.mLpChanged = new WindowManager.LayoutParams();

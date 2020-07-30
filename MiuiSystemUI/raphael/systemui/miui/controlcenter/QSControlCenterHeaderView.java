@@ -138,6 +138,7 @@ public class QSControlCenterHeaderView extends LinearLayout {
     /* access modifiers changed from: protected */
     public void onConfigurationChanged(Configuration configuration) {
         super.onConfigurationChanged(configuration);
+        this.mTilesEdit.setVisibility(this.mPanelController.isSuperPowerMode() ? 8 : 0);
         int i = this.mOrientation;
         int i2 = configuration.orientation;
         if (i != i2) {
@@ -149,6 +150,7 @@ public class QSControlCenterHeaderView extends LinearLayout {
     private void updateLayout() {
         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) this.mShortcut.getLayoutParams();
         LinearLayout.LayoutParams layoutParams2 = (LinearLayout.LayoutParams) this.mTilesHeader.getLayoutParams();
+        int i = 8;
         if (this.mOrientation != 1 || this.mPanelController.isSuperPowerMode()) {
             layoutParams2.topMargin = 0;
             this.mTilesEdit.setVisibility(8);
@@ -160,6 +162,11 @@ public class QSControlCenterHeaderView extends LinearLayout {
         }
         this.mTilesHeader.setLayoutParams(layoutParams2);
         this.mShortcut.setLayoutParams(layoutParams);
+        ViewGroup viewGroup = this.mTilesHeader;
+        if (this.mOrientation == 1) {
+            i = 0;
+        }
+        viewGroup.setVisibility(i);
     }
 
     public void updateResources() {

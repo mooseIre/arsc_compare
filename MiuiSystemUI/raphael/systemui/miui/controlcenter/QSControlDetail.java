@@ -123,8 +123,25 @@ public class QSControlDetail extends FrameLayout {
 
     /* access modifiers changed from: protected */
     public void onConfigurationChanged(Configuration configuration) {
+        int i;
+        int i2;
         super.onConfigurationChanged(configuration);
-        this.mOrientation = configuration.orientation;
+        int i3 = this.mOrientation;
+        int i4 = configuration.orientation;
+        if (i3 != i4) {
+            this.mOrientation = i4;
+            if (this.mOrientation == 1) {
+                i = 0;
+                i2 = 0;
+            } else if (getLayoutDirection() == 0) {
+                i2 = this.mContext.getResources().getDimensionPixelSize(R.dimen.qs_control_width_land) + this.mContext.getResources().getDimensionPixelSize(R.dimen.qs_control_land_tiles_margin_middle);
+                i = 0;
+            } else {
+                i = this.mContext.getResources().getDimensionPixelSize(R.dimen.qs_control_width_land) + this.mContext.getResources().getDimensionPixelSize(R.dimen.qs_control_land_tiles_margin_middle);
+                i2 = 0;
+            }
+            setPadding(i, 0, i2, 0);
+        }
         this.mWifiBtDetailHeight = this.mContext.getResources().getDimensionPixelSize(R.dimen.qs_control_detail_wifi_bt_height);
         updateDetailLayout();
     }

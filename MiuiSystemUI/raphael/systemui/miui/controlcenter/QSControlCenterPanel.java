@@ -16,11 +16,14 @@ import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewConfiguration;
+import android.view.ViewGroup;
 import android.view.WindowInsets;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import com.android.systemui.Constants;
 import com.android.systemui.Dependency;
@@ -64,6 +67,8 @@ public class QSControlCenterPanel extends FrameLayout implements ConfigurationCo
     private QSBigTileView mBigTile3;
     private HashMap<Integer, ArrayList<IStateStyle>> mBigTileAnimArr;
     private HashMap<Integer, ArrayList<IStateStyle>> mBigTileTransAnimArr;
+    private ViewGroup mBigTiles;
+    private ScrollView mBigTilesScrollView;
     private BrightnessController mBrightnessController;
     private QCBrightnessMirrorController mBrightnessMirrorController;
     private QCToggleSliderView mBrightnessView;
@@ -95,10 +100,12 @@ public class QSControlCenterPanel extends FrameLayout implements ConfigurationCo
     private QSControlFooter mLandCtrFooter;
     private LinearLayout mLandFootPanel;
     private QCBrightnessMirrorController mLandMirrorController;
+    private LinearLayout mLandTiles;
     private boolean mListening;
     private int mMaximumVelocity;
     private int mMinimumVelocity;
     private int mOrientation;
+    private int mPaddingHorizontal;
     protected AnimConfig mPanelAnimConfig;
     private HashMap<Integer, IStateStyle> mPanelAnimMap;
     private ControlPanelController mPanelController;
@@ -113,6 +120,7 @@ public class QSControlCenterPanel extends FrameLayout implements ConfigurationCo
     private int mScreenHeight;
     protected AnimState mShowAnim;
     private View mTileView0;
+    private LinearLayout mTilesContainer;
     private int mTransLineNum;
     private ArrayList<View> mTransViews;
     private VelocityTracker mVelocityTracker;
@@ -134,6 +142,7 @@ public class QSControlCenterPanel extends FrameLayout implements ConfigurationCo
         this.mTransViews = new ArrayList<>();
         this.mContext = context;
         this.mPanelController = (ControlPanelController) Dependency.get(ControlPanelController.class);
+        this.mPaddingHorizontal = this.mContext.getResources().getDimensionPixelSize(R.dimen.qs_control_panel_margin_horizontal);
         WindowManager windowManager = (WindowManager) this.mContext.getApplicationContext().getSystemService("window");
         display = windowManager != null ? windowManager.getDefaultDisplay() : display;
         if (display != null) {
@@ -148,6 +157,7 @@ public class QSControlCenterPanel extends FrameLayout implements ConfigurationCo
         this.mEditTiles = findViewById(R.id.tiles_edit);
         this.mQSContainer = (FrameLayout) findViewById(R.id.qs_container);
         this.mQsControlScrollView = (QSControlScrollView) findViewById(R.id.scroll_container);
+        this.mBigTilesScrollView = (ScrollView) findViewById(R.id.scroll_container_big_tiles);
         this.mQuickQsControlCenterTileLayout = (QSControlCenterTileLayout) findViewById(R.id.quick_tile_layout);
         this.mQuickQsControlCenterTileLayout.setQSControlCenterPanel(this);
         this.mFootPanel = (LinearLayout) findViewById(R.id.foot_panel);
@@ -165,6 +175,9 @@ public class QSControlCenterPanel extends FrameLayout implements ConfigurationCo
         this.mAutoBrightnessView = (AutoBrightnessView) findViewById(R.id.auto_brightness);
         this.mLandAutoBrightnessView = (AutoBrightnessView) findViewById(R.id.auto_brightness_land);
         this.mExpandTileView = (QSControlExpandTileView) findViewById(R.id.expand_tile);
+        this.mTilesContainer = (LinearLayout) findViewById(R.id.tiles_container);
+        this.mBigTiles = (ViewGroup) findViewById(R.id.big_tiles);
+        this.mLandTiles = (LinearLayout) findViewById(R.id.land_tiles);
         if (Constants.IS_INTERNATIONAL) {
             this.mExpandTileView.setVisibility(8);
             this.mBigTile0 = (QSBigTileView) findViewById(R.id.big_tile_0);
@@ -280,9 +293,12 @@ public class QSControlCenterPanel extends FrameLayout implements ConfigurationCo
 
     public void onOrientationChanged(int i, boolean z) {
         if (z || this.mOrientation != i) {
+            if (this.mOrientation != i) {
+                this.mOrientation = i;
+                updateLayout();
+            }
             updateScreenHeight();
             updateFootPanelLayout();
-            this.mOrientation = i;
             this.mExpandIndicatorBottom.setAlpha(0.0f);
             this.mFootPanel.setAlpha(1.0f);
             int i2 = 0;
@@ -293,6 +309,7 @@ public class QSControlCenterPanel extends FrameLayout implements ConfigurationCo
             this.mQuickQsControlCenterTileLayout.setTranslationY(0.0f);
             int i3 = 5;
             if (i == 1) {
+                this.mBigTilesScrollView.setVisibility(8);
                 this.mFootPanel.setVisibility(0);
                 this.mControlFooter.setForceHide(false);
                 this.mControlFooter.refreshState();
@@ -328,6 +345,7 @@ public class QSControlCenterPanel extends FrameLayout implements ConfigurationCo
                 this.mBrightnessView.setAlpha(1.0f);
                 this.mControlFooter.resetViews();
             } else {
+                this.mBigTilesScrollView.setVisibility(0);
                 this.mFootPanel.setVisibility(8);
                 this.mControlFooter.setForceHide(true);
                 this.mControlFooter.refreshState();
@@ -336,7 +354,7 @@ public class QSControlCenterPanel extends FrameLayout implements ConfigurationCo
                 this.mLandCtrFooter.refreshState();
                 this.mFootPanelBaseIdx = 4;
                 this.mTransLineNum = 5;
-                this.mQuickQsControlCenterTileLayout.setBaseLineIdx(5);
+                this.mQuickQsControlCenterTileLayout.setBaseLineIdx(0);
                 this.mQuickQsControlCenterTileLayout.setExpanded(true);
                 this.mLandMirrorController.updateResources();
                 this.mQSBrightnessLayout.setVisibility(8);
@@ -554,6 +572,60 @@ public class QSControlCenterPanel extends FrameLayout implements ConfigurationCo
             this.mVelocityTracker.recycle();
             this.mVelocityTracker = null;
         }
+    }
+
+    private void updateLayout() {
+        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) this.mQsControlScrollView.getLayoutParams();
+        if (this.mOrientation == 1) {
+            this.mLandTiles.removeView(this.mBigTiles);
+            if (this.mTilesContainer.findViewById(R.id.big_tiles) == null) {
+                this.mTilesContainer.addView(this.mBigTiles, 0);
+            }
+            layoutParams.width = -1;
+            this.mBigTilesScrollView.setVisibility(8);
+            QSControlCenterHeaderView qSControlCenterHeaderView = this.mHeader;
+            qSControlCenterHeaderView.setPadding(this.mPaddingHorizontal, qSControlCenterHeaderView.getPaddingTop(), this.mPaddingHorizontal, this.mHeader.getPaddingBottom());
+            QSControlScrollView qSControlScrollView = this.mQsControlScrollView;
+            qSControlScrollView.setPadding(this.mPaddingHorizontal, qSControlScrollView.getPaddingTop(), this.mPaddingHorizontal, this.mQsControlScrollView.getPaddingBottom());
+            setPadding(0, getPaddingTop(), 0, getPaddingBottom());
+        } else {
+            this.mTilesContainer.removeView(this.mBigTiles);
+            if (this.mLandTiles.findViewById(R.id.big_tiles) == null) {
+                this.mLandTiles.addView(this.mBigTiles, 0);
+            }
+            this.mBigTilesScrollView.setVisibility(0);
+            layoutParams.width = this.mContext.getResources().getDimensionPixelSize(R.dimen.qs_control_width_land);
+            QSControlScrollView qSControlScrollView2 = this.mQsControlScrollView;
+            qSControlScrollView2.setPadding(0, qSControlScrollView2.getPaddingTop(), 0, this.mQsControlScrollView.getPaddingBottom());
+            int dimensionPixelSize = ((int) ((float) ((Utils.getScreenSize(this.mContext).x - (this.mContext.getResources().getDimensionPixelSize(R.dimen.qs_control_width_land) * 2)) - this.mContext.getResources().getDimensionPixelSize(R.dimen.qs_control_land_tiles_margin_middle)))) / 2;
+            QSControlCenterHeaderView qSControlCenterHeaderView2 = this.mHeader;
+            qSControlCenterHeaderView2.setPadding(0, qSControlCenterHeaderView2.getPaddingTop(), 0, this.mHeader.getPaddingBottom());
+            setPadding(dimensionPixelSize, getPaddingTop(), dimensionPixelSize, getPaddingBottom());
+        }
+        this.mQsControlScrollView.setLayoutParams(layoutParams);
+        int dimensionPixelSize2 = this.mContext.getResources().getDimensionPixelSize(R.dimen.qs_control_big_tile_height);
+        int dimensionPixelSize3 = this.mContext.getResources().getDimensionPixelSize(R.dimen.qs_control_big_tiles_interval_vertical);
+        QSBigTileView qSBigTileView = this.mBigTile0;
+        if (qSBigTileView != null) {
+            RelativeLayout.LayoutParams layoutParams2 = (RelativeLayout.LayoutParams) qSBigTileView.getLayoutParams();
+            layoutParams2.height = dimensionPixelSize2;
+            this.mBigTile0.setLayoutParams(layoutParams2);
+        } else {
+            RelativeLayout.LayoutParams layoutParams3 = (RelativeLayout.LayoutParams) this.mExpandTileView.getLayoutParams();
+            layoutParams3.height = dimensionPixelSize2;
+            this.mExpandTileView.setLayoutParams(layoutParams3);
+        }
+        RelativeLayout.LayoutParams layoutParams4 = (RelativeLayout.LayoutParams) this.mBigTile1.getLayoutParams();
+        layoutParams4.height = dimensionPixelSize2;
+        this.mBigTile1.setLayoutParams(layoutParams4);
+        RelativeLayout.LayoutParams layoutParams5 = (RelativeLayout.LayoutParams) this.mBigTile2.getLayoutParams();
+        layoutParams5.height = dimensionPixelSize2;
+        layoutParams5.topMargin = dimensionPixelSize3;
+        this.mBigTile2.setLayoutParams(layoutParams5);
+        RelativeLayout.LayoutParams layoutParams6 = (RelativeLayout.LayoutParams) this.mBigTile3.getLayoutParams();
+        layoutParams6.height = dimensionPixelSize2;
+        layoutParams6.topMargin = dimensionPixelSize3;
+        this.mBigTile3.setLayoutParams(layoutParams6);
     }
 
     private void toBottomAnimation() {
@@ -797,6 +869,8 @@ public class QSControlCenterPanel extends FrameLayout implements ConfigurationCo
                 setTransRatio(0.0f);
             }
             this.mExpandIndicatorBottom.setAlpha(0.0f);
+            this.mQsControlScrollView.fullScroll(33);
+            this.mBigTilesScrollView.fullScroll(33);
         }
         setListening(z);
         if (z2) {

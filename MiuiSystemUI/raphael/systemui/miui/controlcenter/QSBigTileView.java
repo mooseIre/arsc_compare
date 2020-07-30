@@ -148,9 +148,9 @@ public class QSBigTileView extends QSTileView {
     /* access modifiers changed from: protected */
     public void onConfigurationChanged(Configuration configuration) {
         super.onConfigurationChanged(configuration);
-        int layoutDirection = getLayoutDirection();
-        if (this.mLayoutDirection != layoutDirection) {
-            this.mLayoutDirection = layoutDirection;
+        int i = configuration.orientation;
+        if (this.mLayoutDirection != i) {
+            this.mLayoutDirection = i;
             updateIndicatorTouch();
         }
     }

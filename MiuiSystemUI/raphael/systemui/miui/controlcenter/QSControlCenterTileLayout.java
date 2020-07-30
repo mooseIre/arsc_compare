@@ -159,7 +159,7 @@ public class QSControlCenterTileLayout extends ViewGroup implements QSPanel.QSTi
     public void onFinishInflate() {
         super.onFinishInflate();
         this.mOrientation = this.mContext.getResources().getConfiguration().orientation;
-        updateWidth();
+        updateLayout();
     }
 
     /* access modifiers changed from: protected */
@@ -170,14 +170,15 @@ public class QSControlCenterTileLayout extends ViewGroup implements QSPanel.QSTi
         int i2 = configuration.orientation;
         if (i != i2) {
             this.mOrientation = i2;
-            updateWidth();
+            updateLayout();
         }
     }
 
-    private void updateWidth() {
+    private void updateLayout() {
         Log.d("QSControlCenterTileLayout", "updateWidth orientation=" + this.mOrientation);
+        this.mColumnMarginTop = this.mContext.getResources().getDimensionPixelSize(R.dimen.qs_control_center_tile_margin_top);
         if (this.mOrientation == 2) {
-            this.mRowMarginStart = ((int) ((this.mPanelLandWidth - (this.mPanelPaddingHorizontal * 2.0f)) - ((float) (this.mCellWidth * 4)))) / 3;
+            this.mRowMarginStart = ((int) (this.mPanelLandWidth - ((float) (this.mCellWidth * 4)))) / 3;
             requestLayout();
             return;
         }

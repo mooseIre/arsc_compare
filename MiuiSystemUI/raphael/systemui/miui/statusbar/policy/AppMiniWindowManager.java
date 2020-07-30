@@ -3,7 +3,6 @@ package com.android.systemui.miui.statusbar.policy;
 import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.app.ActivityManager;
-import android.app.ActivityManagerCompat;
 import android.app.ActivityOptions;
 import android.app.INotificationManager;
 import android.app.Notification;
@@ -36,12 +35,12 @@ import com.android.systemui.Dependency;
 import com.android.systemui.Gefingerpoken;
 import com.android.systemui.Interpolators;
 import com.android.systemui.Logger;
-import com.android.systemui.SystemUICompat;
 import com.android.systemui.miui.statusbar.ExpandedNotification;
 import com.android.systemui.miui.statusbar.notification.HeadsUpAnimatedStubView;
 import com.android.systemui.miui.statusbar.notification.NotificationSettingsManager;
 import com.android.systemui.miui.statusbar.policy.AppMiniWindowManager;
 import com.android.systemui.plugins.R;
+import com.android.systemui.recents.Recents;
 import com.android.systemui.statusbar.ExpandableNotificationRow;
 import com.android.systemui.statusbar.phone.ShadeController;
 import com.android.systemui.statusbar.policy.ConfigurationController;
@@ -626,7 +625,7 @@ public class AppMiniWindowManager implements Gefingerpoken, ConfigurationControl
     }
 
     public boolean canNotificationSlide(Context context, ExpandedNotification expandedNotification) {
-        if (!this.mHasFreeformFeature || SystemUICompat.hasDockedTask(ActivityManagerCompat.getService())) {
+        if (!this.mHasFreeformFeature || Recents.getSystemServices().hasDockedTask()) {
             return false;
         }
         PendingIntent intent = getIntent(expandedNotification.getNotification());

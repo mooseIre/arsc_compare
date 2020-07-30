@@ -764,6 +764,7 @@ public class GlobalScreenshotDisplay implements ScreenshotScrollView.AnimatingCa
                                     int update = contentResolver.update(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues, "_id=?", new String[]{String.valueOf(parseId)});
                                     if (update != 1) {
                                         Log.d("GlobalScreenshot", "update uri from photo abnormal : " + update);
+                                        GlobalScreenshotDisplay.this.mNotifyMediaStoreData.outUri = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
                                     }
                                 }
                             }

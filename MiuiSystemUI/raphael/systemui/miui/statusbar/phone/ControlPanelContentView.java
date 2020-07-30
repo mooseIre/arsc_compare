@@ -73,13 +73,6 @@ public class ControlPanelContentView extends FrameLayout {
         if (this.mQSCustomizer.isShown() && this.mOrientation == 2) {
             hideEdit();
         }
-        FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) this.mQsControlCenterPanel.getLayoutParams();
-        if (this.mOrientation == 1) {
-            layoutParams.width = -1;
-        } else {
-            layoutParams.width = this.mContext.getResources().getDimensionPixelSize(R.dimen.qs_control_width_land);
-        }
-        this.mQsControlCenterPanel.setLayoutParams(layoutParams);
         this.mQsControlCenterPanel.onOrientationChanged(this.mOrientation, false);
     }
 
