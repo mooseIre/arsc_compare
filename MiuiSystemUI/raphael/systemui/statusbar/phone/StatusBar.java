@@ -2387,7 +2387,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
         this.mIsFsgMode = MiuiSettings.Global.getBoolean(this.mContext.getContentResolver(), "force_fsg_nav_bar");
         this.mRecentsWithinLauncher = SystemServicesProxy.getInstance(this.mContext).isRecentsWithinLauncher(this.mContext);
         this.mUseMiuiHomeAsDefaultHome = SystemServicesProxy.getInstance(this.mContext).useMiuiHomeAsDefaultHome(this.mContext);
-        this.mIsLowMemoryDevice = Utilities.IS_MIUI_LITE_VERSION;
+        this.mIsLowMemoryDevice = Utilities.isLowMemoryDevice();
         this.mHideGestureLine = Settings.Global.getInt(this.mContext.getContentResolver(), "hide_gesture_line", 0) != 0;
         this.mIsRemoved = true;
         try {
@@ -6551,6 +6551,14 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
 
     public boolean isKeyguardShowing() {
         return this.mStatusBarKeyguardViewManager.isShowing();
+    }
+
+    public void suppressAmbientDisplay(boolean z) {
+        Log.w("StatusBar", "suppressAmbientDisplay: " + z);
+        DozeServiceHost dozeServiceHost = this.mDozeServiceHost;
+        if (dozeServiceHost != null) {
+            dozeServiceHost.sendCommand("suppressAmbientDisplay", z ? 1 : 0, (Bundle) null);
+        }
     }
 
     private class AodCallback extends IMiuiAodCallback.Stub {

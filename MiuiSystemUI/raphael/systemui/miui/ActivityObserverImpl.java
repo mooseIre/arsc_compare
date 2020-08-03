@@ -142,6 +142,10 @@ public class ActivityObserverImpl implements ActivityObserver, Dumpable, DeviceP
         return arrayList.isEmpty() ? this.mLastResumedActivity : (ComponentName) arrayList.get(0);
     }
 
+    public ComponentName getLastResumedActivity() {
+        return this.mResumedActivities.isEmpty() ? this.mLastResumedActivity : this.mResumedActivities.get(0);
+    }
+
     public boolean isTopActivityLauncher() {
         return this.mTopIsLauncher;
     }

@@ -36,6 +36,7 @@ import com.android.systemui.Gefingerpoken;
 import com.android.systemui.Interpolators;
 import com.android.systemui.Logger;
 import com.android.systemui.miui.statusbar.ExpandedNotification;
+import com.android.systemui.miui.statusbar.analytics.SystemUIStat;
 import com.android.systemui.miui.statusbar.notification.HeadsUpAnimatedStubView;
 import com.android.systemui.miui.statusbar.notification.NotificationSettingsManager;
 import com.android.systemui.miui.statusbar.policy.AppMiniWindowManager;
@@ -366,6 +367,7 @@ public class AppMiniWindowManager implements Gefingerpoken, ConfigurationControl
                 }
                 this.mIntent.send(this.mContext, 0, intent, (PendingIntent.OnFinished) null, (Handler) null, (String) null, activityOptions.toBundle());
                 this.mStartingActivity = true;
+                ((SystemUIStat) Dependency.get(SystemUIStat.class)).handleFreeformEvent();
             }
         } catch (Exception e) {
             Logger.fullW("AppMiniWindowManager", "Start freeform failed: " + e);

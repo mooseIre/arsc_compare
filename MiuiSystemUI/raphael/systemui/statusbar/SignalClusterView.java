@@ -29,6 +29,7 @@ import android.widget.TextView;
 import com.android.systemui.Constants;
 import com.android.systemui.DemoMode;
 import com.android.systemui.Dependency;
+import com.android.systemui.MCCUtils;
 import com.android.systemui.Util;
 import com.android.systemui.miui.statusbar.WifiLabelText;
 import com.android.systemui.plugins.R;
@@ -210,8 +211,9 @@ public class SignalClusterView extends LinearLayout implements NetworkController
             }
         };
         Resources resources = getResources();
-        this.mHideVolte = resources.getBoolean(R.bool.status_bar_hide_volte);
-        this.mShowHDIcon = resources.getBoolean(R.bool.status_bar_show_hd_icon);
+        Resources resourcesForOperation = MCCUtils.getResourcesForOperation(context, "00000", false);
+        this.mHideVolte = resourcesForOperation.getBoolean(R.bool.status_bar_hide_volte);
+        this.mShowHDIcon = resourcesForOperation.getBoolean(R.bool.status_bar_show_hd_icon);
         this.mMobileSignalGroupEndPadding = resources.getDimensionPixelSize(R.dimen.mobile_signal_group_end_padding);
         this.mMobileDataIconStartPadding = resources.getDimensionPixelSize(R.dimen.mobile_data_icon_start_padding);
         this.mWideTypeIconStartPadding = resources.getDimensionPixelSize(R.dimen.wide_type_icon_start_padding);

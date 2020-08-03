@@ -31,11 +31,8 @@ public class MCCUtils {
         return getResourcesForOperation(context, str, z).getBoolean(R.bool.show_plmn_and_spn_in_carrier);
     }
 
-    public static boolean isHideVolte(Context context, String str) {
-        if (TextUtils.isEmpty(str)) {
-            return false;
-        }
-        return getResourcesForOperation(context, str, true).getBoolean(R.bool.status_bar_hide_volte);
+    public static boolean isHideVolte(Resources resources) {
+        return resources != null && resources.getBoolean(R.bool.status_bar_hide_volte);
     }
 
     public static boolean isShowSpnWhenAirplaneOn(Context context, String str) {
@@ -45,18 +42,12 @@ public class MCCUtils {
         return getResourcesForOperation(context, str, true).getBoolean(R.bool.status_bar_show_spn_when_airplane);
     }
 
-    public static boolean isMobileTypeShownWhenWifiOn(Context context, String str) {
-        if (TextUtils.isEmpty(str)) {
-            return false;
-        }
-        return getResourcesForOperation(context, str, true).getBoolean(R.bool.status_bar_show_mobile_type_when_wifi_on);
+    public static boolean isMobileTypeShownWhenWifiOn(Resources resources) {
+        return resources != null && resources.getBoolean(R.bool.status_bar_show_mobile_type_when_wifi_on);
     }
 
-    public static boolean isShowMobileInMMS(Context context, String str) {
-        if (TextUtils.isEmpty(str)) {
-            return false;
-        }
-        return getResourcesForOperation(context, str, true).getBoolean(R.bool.status_bar_show_mobile_type_in_mms);
+    public static boolean isShowMobileInMMS(Resources resources) {
+        return resources != null && resources.getBoolean(R.bool.status_bar_show_mobile_type_in_mms);
     }
 
     public static Resources getResourcesForOperation(Context context, String str, boolean z) {

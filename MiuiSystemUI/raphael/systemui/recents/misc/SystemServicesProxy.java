@@ -947,9 +947,7 @@ public class SystemServicesProxy {
                     }
                 }
             }
-            if (sMultiWindowForceNotResizePkgList.isEmpty()) {
-                sMultiWindowForceNotResizePkgList.addAll(Arrays.asList(context.getResources().getStringArray(R.array.multi_window_force_not_resize_pkgs)));
-            }
+            sMultiWindowForceNotResizePkgList.addAll(Arrays.asList(context.getResources().getStringArray(R.array.multi_window_force_not_resize_pkgs)));
         }
         return sMultiWindowForceNotResizePkgList;
     }

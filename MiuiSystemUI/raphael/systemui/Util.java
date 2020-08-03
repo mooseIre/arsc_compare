@@ -67,6 +67,13 @@ public class Util {
         return getTopActivityLegacy(context);
     }
 
+    public static ComponentName getLastResumedActivity(Context context) {
+        if (isMainProcess()) {
+            return ((ActivityObserver) Dependency.get(ActivityObserver.class)).getLastResumedActivity();
+        }
+        return getTopActivityLegacy(context);
+    }
+
     private static ComponentName getTopActivityLegacy(Context context) {
         List<ActivityManager.RunningTaskInfo> runningTasks = ((ActivityManager) context.getSystemService("activity")).getRunningTasks(1);
         if (runningTasks == null || runningTasks.isEmpty()) {

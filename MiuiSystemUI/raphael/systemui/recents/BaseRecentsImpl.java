@@ -1477,8 +1477,8 @@ public abstract class BaseRecentsImpl {
                     this.mNavStubView.setVisibility(8);
                     showBackStubWindow();
                 } else if (this.mIsSuperPowerMode) {
-                    ComponentName topActivity = Util.getTopActivity(this.mContext);
-                    if (topActivity != null && "com.miui.home.launcher.Launcher:com.miui.personalassistant.fake.FakeStartActivity:com.miui.personalassistant.fake.FakeEndActivity:com.miui.superpower.SuperPowerLauncherActivity".contains(topActivity.getClassName())) {
+                    ComponentName lastResumedActivity = Util.getLastResumedActivity(this.mContext);
+                    if (lastResumedActivity != null && "com.miui.home.launcher.Launcher:com.miui.personalassistant.fake.FakeStartActivity:com.miui.personalassistant.fake.FakeEndActivity:com.miui.superpower.SuperPowerLauncherActivity".contains(lastResumedActivity.getClassName())) {
                         this.mNavStubView.setVisibility(8);
                         showBackStubWindow();
                     }
@@ -1490,8 +1490,8 @@ public abstract class BaseRecentsImpl {
                 this.mNavStubView.setVisibility(0);
                 showBackStubWindow();
             } else if ("typefrom_home".equals(str)) {
-                ComponentName topActivity2 = Util.getTopActivity(this.mContext);
-                if (topActivity2 != null && "com.miui.home.launcher.Launcher:com.miui.personalassistant.fake.FakeStartActivity:com.miui.personalassistant.fake.FakeEndActivity:com.miui.superpower.SuperPowerLauncherActivity".contains(topActivity2.getClassName())) {
+                ComponentName lastResumedActivity2 = Util.getLastResumedActivity(this.mContext);
+                if (lastResumedActivity2 != null && "com.miui.home.launcher.Launcher:com.miui.personalassistant.fake.FakeStartActivity:com.miui.personalassistant.fake.FakeEndActivity:com.miui.superpower.SuperPowerLauncherActivity".contains(lastResumedActivity2.getClassName())) {
                     if (this.mIsSuperPowerMode) {
                         this.mNavStubView.setVisibility(8);
                         hideBackStubWindow();

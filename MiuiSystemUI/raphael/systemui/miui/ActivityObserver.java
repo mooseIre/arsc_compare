@@ -23,6 +23,8 @@ public interface ActivityObserver extends CallbackController<ActivityObserverCal
         }
     }
 
+    ComponentName getLastResumedActivity();
+
     ComponentName getTopActivity();
 
     boolean isTopActivityLauncher();

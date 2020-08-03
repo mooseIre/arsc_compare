@@ -209,7 +209,7 @@ public class Recents extends SystemUI implements RecentsComponent, CommandQueue.
         sConfiguration = new RecentsConfiguration(this.mContext);
         this.mUseMiuiHomeAsDefaultHome = sSystemServicesProxy.useMiuiHomeAsDefaultHome(this.mContext);
         this.mIsRecentsWithinLauncher = sSystemServicesProxy.isRecentsWithinLauncher(this.mContext);
-        this.mIsLowMemoryDevice = Utilities.IS_MIUI_LITE_VERSION;
+        this.mIsLowMemoryDevice = Utilities.isLowMemoryDevice();
         this.mUseFsGestureVersionThree = useFsGestureVersionThree();
         if (this.mUseFsGestureVersionThree) {
             this.mRecentsImplementation = new OverviewProxyRecentsImpl();

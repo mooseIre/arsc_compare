@@ -58,6 +58,8 @@ public class Icons {
             sMapping.put(R.drawable.stat_sys_wifi_in, Integer.valueOf(R.drawable.stat_sys_wifi_in_darkmode));
             sMapping.put(R.drawable.stat_sys_wifi_out, Integer.valueOf(R.drawable.stat_sys_wifi_out_darkmode));
             sMapping.put(R.drawable.stat_sys_wifi_ap_on, Integer.valueOf(R.drawable.stat_sys_wifi_ap_on_darkmode));
+            sMapping.put(R.drawable.stat_sys_ethernet, Integer.valueOf(R.drawable.stat_sys_ethernet_darkmode));
+            sMapping.put(R.drawable.stat_sys_ethernet_fully, Integer.valueOf(R.drawable.stat_sys_ethernet_fully_darkmode));
             sMapping.put(R.drawable.stat_sys_warning, Integer.valueOf(R.drawable.stat_sys_warning_darkmode));
             sMapping.put(R.drawable.stat_sys_vpn, Integer.valueOf(R.drawable.stat_sys_vpn_darkmode));
             sMapping.put(R.drawable.stat_sys_data_connected_roam_small, Integer.valueOf(R.drawable.stat_sys_data_connected_roam_small_darkmode));

@@ -324,6 +324,10 @@ public class SystemUIStat {
         trackEvent("event_qs_edit_exit", miStatParams);
     }
 
+    public void handleFreeformEvent() {
+        trackEvent("freeform_notification");
+    }
+
     public void handleFreeformEventSpeed() {
         trackEvent("freeform_notification_way_speed");
     }

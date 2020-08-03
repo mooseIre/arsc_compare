@@ -63,12 +63,10 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
     private final BitSet mConnectedTransports;
     /* access modifiers changed from: private */
     public final ConnectivityManager mConnectivityManager;
-    /* access modifiers changed from: private */
-    public final Context mContext;
+    private final Context mContext;
     private List<SubscriptionInfo> mCurrentSubscriptions;
     private int mCurrentUserId;
-    /* access modifiers changed from: private */
-    public boolean[] mDataConnedInMMsForOperators;
+    private boolean[] mDataConnedInMMsForOperators;
     private final DataSaverController mDataSaverController;
     private final DataUsageController mDataUsageController;
     private int mDefaultDataSimState;
@@ -81,8 +79,7 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
     final EthernetSignalController mEthernetSignalController;
     private final boolean mHasMobileDataFeature;
     private boolean mHasNoSims;
-    /* access modifiers changed from: private */
-    public boolean[] mHideVolteForOperators;
+    private boolean[] mHideVolteForOperators;
     private boolean mInetCondition;
     private boolean mIsEmergency;
     @VisibleForTesting
@@ -96,10 +93,8 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
     private String[] mNetworkNameList;
     private String mNetworkNameSeparator;
     private final NetworkScoreManager mNetworkScoreManager;
-    /* access modifiers changed from: private */
-    public String[] mOperators;
-    /* access modifiers changed from: private */
-    public final TelephonyManager mPhone;
+    private String[] mOperators;
+    private final TelephonyManager mPhone;
     private int mPhoneCount;
     /* access modifiers changed from: private */
     public final Handler mReceiverHandler;
@@ -119,8 +114,7 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
     public final WifiManager mWifiManager;
     @VisibleForTesting
     final WifiSignalController mWifiSignalController;
-    /* access modifiers changed from: private */
-    public boolean[] misMobileTypeShownWhenWifiOn;
+    private boolean[] misMobileTypeShownWhenWifiOn;
 
     /* JADX WARNING: Illegal instructions before constructor call */
     /* Code decompiled incorrectly, please refer to instructions dump. */
@@ -240,7 +234,6 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
         });
         this.mSignalState = new NetworkController.SignalState();
         this.mSupportSlaveWifi = NetworkControllerCompat.supportSlaveWifi(context);
-        Log.d("NetworkController", "NetworkControllerImpl: mSupportSlaveWifi = " + this.mSupportSlaveWifi);
         this.mSlaveWifiSignalController = new SlaveWifiSignalController(this.mContext, this.mSupportSlaveWifi, callbackHandler2, this);
     }
 
@@ -496,6 +489,7 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
                 for (int i = 0; i < this.mMobileSignalControllers.size(); i++) {
                     this.mMobileSignalControllers.valueAt(i).handleBroadcast(intent);
                 }
+                updateDefaultDataSimState();
             } else if (action.equals("android.intent.action.SIM_STATE_CHANGED")) {
                 int phoneCount = TelephonyManager.getDefault().getPhoneCount();
                 int i2 = 0;
@@ -517,13 +511,6 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
                     this.mSignalState.speedHdMap.remove(Integer.valueOf(intExtra));
                     this.mSignalState.imsMap.remove(Integer.valueOf(intExtra));
                     this.mSignalState.vowifiMap.remove(Integer.valueOf(intExtra));
-                }
-                if (intExtra == this.mSubDefaults.getDefaultDataSubId()) {
-                    for (SubscriptionInfo next : this.mCurrentSubscriptions) {
-                        if (next.getSubscriptionId() == intExtra) {
-                            this.mDefaultDataSimState = this.mPhone.getSimState(next.getSlotId());
-                        }
-                    }
                 }
             } else if (action.equals("android.intent.action.SERVICE_STATE")) {
                 int intExtra2 = intent.getIntExtra("slot", SubscriptionManager.INVALID_SLOT_ID);
@@ -632,6 +619,7 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
         }
         setCurrentSubscriptions(activeSubscriptionInfoList);
         updateNoSims();
+        updateDefaultDataSimState();
         recalculateEmergency();
         if (isCustomizationTest()) {
             for (int i = 0; i < this.mMobileSignalControllers.size(); i++) {
@@ -647,6 +635,20 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
         if (z != this.mHasNoSims) {
             this.mHasNoSims = z;
             this.mCallbackHandler.setNoSims(this.mHasNoSims);
+        }
+    }
+
+    private void updateDefaultDataSimState() {
+        List<SubscriptionInfo> list;
+        int defaultDataSubId = this.mSubDefaults.getDefaultDataSubId();
+        if (defaultDataSubId < 0 || (list = this.mCurrentSubscriptions) == null || list.size() == 0) {
+            this.mDefaultDataSimState = 0;
+            return;
+        }
+        for (SubscriptionInfo next : this.mCurrentSubscriptions) {
+            if (next.getSubscriptionId() == defaultDataSubId) {
+                this.mDefaultDataSimState = this.mPhone.getSimState(next.getSlotId());
+            }
         }
     }
 
@@ -673,6 +675,7 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
         });
         this.mCurrentSubscriptions = list2;
         SparseArray sparseArray = new SparseArray();
+        boolean z = false;
         for (int i3 = 0; i3 < this.mMobileSignalControllers.size(); i3++) {
             sparseArray.put(this.mMobileSignalControllers.keyAt(i3), this.mMobileSignalControllers.valueAt(i3));
         }
@@ -684,21 +687,29 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
         while (i4 < size) {
             int subscriptionId = list2.get(i4).getSubscriptionId();
             int slotId = list2.get(i4).getSlotId();
+            String simOperatorNumericForPhone = this.mPhone.getSimOperatorNumericForPhone(slotId);
+            if (simOperatorNumericForPhone != null) {
+                this.mOperators[slotId] = simOperatorNumericForPhone;
+                Resources resourcesForOperation = MCCUtils.getResourcesForOperation(this.mContext, simOperatorNumericForPhone, true);
+                this.mHideVolteForOperators[slotId] = MCCUtils.isHideVolte(resourcesForOperation);
+                this.misMobileTypeShownWhenWifiOn[slotId] = MCCUtils.isMobileTypeShownWhenWifiOn(resourcesForOperation);
+                this.mDataConnedInMMsForOperators[slotId] = MCCUtils.isShowMobileInMMS(resourcesForOperation);
+            } else {
+                this.mOperators[slotId] = simOperatorNumericForPhone;
+                this.mHideVolteForOperators[slotId] = z;
+                this.misMobileTypeShownWhenWifiOn[slotId] = z;
+                this.mDataConnedInMMsForOperators[slotId] = z;
+            }
+            Log.d("NetworkController", "setCurrentSubscriptions: subId = " + subscriptionId + ", slotId = " + slotId + ", oprator = " + simOperatorNumericForPhone + ", mHideVolteForOperators = " + this.mHideVolteForOperators[slotId] + ", misMobileTypeShownWhenWifiOn = " + this.misMobileTypeShownWhenWifiOn[slotId] + ", mDataConnedInMMsForOperators = " + this.mDataConnedInMMsForOperators[slotId]);
             arrayList2.add(Integer.valueOf(subscriptionId));
             if (sparseArray.indexOfKey(subscriptionId) < 0 || !((MobileSignalController) sparseArray.get(subscriptionId)).getSubscriptionInfo().getDisplayName().equals(list2.get(i4).getDisplayName())) {
-                Context context = this.mContext;
-                Config config = this.mConfig;
-                boolean z = this.mHasMobileDataFeature;
-                TelephonyManager createForSubscriptionId = this.mPhone.createForSubscriptionId(subscriptionId);
-                CallbackHandler callbackHandler = this.mCallbackHandler;
-                SubscriptionDefaults subscriptionDefaults = this.mSubDefaults;
                 i = size;
                 MobileSignalController mobileSignalController = r0;
                 int i5 = slotId;
                 arrayList = arrayList2;
                 int i6 = subscriptionId;
                 i2 = i4;
-                MobileSignalController mobileSignalController2 = new MobileSignalController(context, config, z, createForSubscriptionId, callbackHandler, this, list2.get(i4), subscriptionDefaults, this.mReceiverHandler.getLooper());
+                MobileSignalController mobileSignalController2 = new MobileSignalController(this.mContext, this.mConfig, this.mHasMobileDataFeature, this.mPhone.createForSubscriptionId(subscriptionId), this.mCallbackHandler, this, list2.get(i4), this.mSubDefaults, this.mReceiverHandler.getLooper());
                 mobileSignalController.setUserSetupComplete(this.mUserSetup);
                 this.mMobileSignalControllers.put(i6, mobileSignalController);
                 if (Constants.IS_MEDIATEK) {
@@ -721,6 +732,7 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
             list2 = list;
             arrayList2 = arrayList;
             size = i;
+            z = false;
         }
         ArrayList arrayList3 = arrayList2;
         if (this.mListening) {
@@ -1057,7 +1069,7 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
             boolean r1 = r1.equals(r3)
             com.android.systemui.statusbar.policy.CallbackHandler r4 = r0.mCallbackHandler
             com.android.systemui.statusbar.policy.NetworkController$IconState r7 = new com.android.systemui.statusbar.policy.NetworkController$IconState
-            r8 = 2131233866(0x7f080c4a, float:1.8083882E38)
+            r8 = 2131233868(0x7f080c4c, float:1.8083886E38)
             r9 = 2131820588(0x7f11002c, float:1.9273895E38)
             android.content.Context r10 = r0.mContext
             r7.<init>((boolean) r1, (int) r8, (int) r9, (android.content.Context) r10)
@@ -1498,18 +1510,6 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
         public void onSubscriptionsChanged() {
             NetworkControllerImpl.this.mReceiverHandler.post(new Runnable() {
                 public void run() {
-                    List<SubscriptionInfo> activeSubscriptionInfoList = NetworkControllerImpl.this.mSubscriptionManager.getActiveSubscriptionInfoList();
-                    if (activeSubscriptionInfoList == null) {
-                        activeSubscriptionInfoList = Collections.emptyList();
-                    }
-                    for (SubscriptionInfo slotId : activeSubscriptionInfoList) {
-                        int slotId2 = slotId.getSlotId();
-                        String simOperatorNumericForPhone = NetworkControllerImpl.this.mPhone.getSimOperatorNumericForPhone(slotId2);
-                        NetworkControllerImpl.this.mOperators[slotId2] = simOperatorNumericForPhone;
-                        NetworkControllerImpl.this.mHideVolteForOperators[slotId2] = MCCUtils.isHideVolte(NetworkControllerImpl.this.mContext, simOperatorNumericForPhone);
-                        NetworkControllerImpl.this.misMobileTypeShownWhenWifiOn[slotId2] = MCCUtils.isMobileTypeShownWhenWifiOn(NetworkControllerImpl.this.mContext, simOperatorNumericForPhone);
-                        NetworkControllerImpl.this.mDataConnedInMMsForOperators[slotId2] = MCCUtils.isShowMobileInMMS(NetworkControllerImpl.this.mContext, simOperatorNumericForPhone);
-                    }
                     NetworkControllerImpl.this.updateMobileControllers();
                 }
             });
