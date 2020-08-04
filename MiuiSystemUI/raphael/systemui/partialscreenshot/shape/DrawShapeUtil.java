@@ -21,7 +21,7 @@ public class DrawShapeUtil {
         } else if (rect.right - rect.left > 400 && rect.bottom - rect.top > 400) {
             i3 = 100;
         } else if (rect.right - rect.left <= 300 || rect.bottom - rect.top <= 300) {
-            i3 = (rect.right - rect.left <= 200 || rect.bottom - rect.top <= 200) ? 40 : 50;
+            i3 = (rect.right - rect.left <= 200 || rect.bottom - rect.top <= 200) ? 25 : 50;
         } else {
             i3 = 75;
         }

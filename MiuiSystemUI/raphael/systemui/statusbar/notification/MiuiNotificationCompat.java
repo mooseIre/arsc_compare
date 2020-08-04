@@ -125,4 +125,8 @@ public class MiuiNotificationCompat {
         }
         return null;
     }
+
+    public static void disableColorized(Notification notification) {
+        notification.extras.putBoolean("android.colorized", false);
+    }
 }

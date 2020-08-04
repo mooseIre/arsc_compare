@@ -11,7 +11,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 public class EllipseScreenshot extends PartialScreenshotShape {
-    private Bitmap bitmap;
+    private Bitmap mDrawBitmap;
     private int mLastX;
     private int mLastY;
     private final Paint mPaintBackground;
@@ -19,7 +19,7 @@ public class EllipseScreenshot extends PartialScreenshotShape {
     private Rect mSelectionRect;
     private Point mStartPoint;
     private TouchAreaEnum mTouchArea = TouchAreaEnum.OUT_OF_BOUNDS;
-    private int mTouchInsideSize = 160;
+    private int mTouchInsideSize = 50;
     private View view;
 
     public EllipseScreenshot(View view2) {
@@ -30,6 +30,7 @@ public class EllipseScreenshot extends PartialScreenshotShape {
         this.mPaintSelection = new Paint(0);
         this.mPaintSelection.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
         this.mPaintSelection.setFlags(1);
+        this.mDrawBitmap = Bitmap.createBitmap(view2.getWidth(), view2.getHeight(), Bitmap.Config.ARGB_8888);
     }
 
     public void startSelection(int i, int i2) {
@@ -61,38 +62,24 @@ public class EllipseScreenshot extends PartialScreenshotShape {
 
     public void draw(Canvas canvas) {
         Rect rect = this.mSelectionRect;
-        if (rect != null) {
-            int i = rect.right;
-            int i2 = rect.left;
-            if (i - i2 > 50) {
-                int i3 = rect.bottom;
-                int i4 = rect.top;
-                if (i3 - i4 > 50) {
-                    this.bitmap = Bitmap.createBitmap(i - i2, i3 - i4, Bitmap.Config.ARGB_8888);
-                    Canvas canvas2 = new Canvas(this.bitmap);
-                    canvas2.drawRect(0.0f, 0.0f, (float) this.bitmap.getWidth(), (float) this.bitmap.getHeight(), this.mPaintBackground);
-                    canvas2.drawOval(0.0f, 0.0f, (float) this.bitmap.getWidth(), (float) this.bitmap.getHeight(), this.mPaintSelection);
-                    Bitmap bitmap2 = this.bitmap;
-                    Rect rect2 = this.mSelectionRect;
-                    canvas.drawBitmap(bitmap2, (float) rect2.left, (float) rect2.top, (Paint) null);
-                    this.bitmap.recycle();
-                    Rect rect3 = this.mSelectionRect;
-                    canvas.drawRect(0.0f, (float) rect3.top, (float) rect3.left, (float) rect3.bottom, this.mPaintBackground);
-                    canvas.drawRect(0.0f, 0.0f, (float) this.view.getWidth(), (float) this.mSelectionRect.top, this.mPaintBackground);
-                    Rect rect4 = this.mSelectionRect;
-                    canvas.drawRect((float) rect4.right, (float) rect4.top, (float) this.view.getWidth(), (float) this.mSelectionRect.bottom, this.mPaintBackground);
-                    canvas.drawRect(0.0f, (float) this.mSelectionRect.bottom, (float) this.view.getWidth(), (float) this.view.getHeight(), this.mPaintBackground);
-                    DrawShapeUtil.drawTrimmingFrame(canvas, this.mSelectionRect);
-                    return;
-                }
-                return;
+        if (rect == null) {
+            canvas.drawPaint(this.mPaintBackground);
+        } else if (rect.right - rect.left > 40 && rect.bottom - rect.top > 40) {
+            Bitmap bitmap = this.mDrawBitmap;
+            if (bitmap == null || bitmap.isRecycled()) {
+                this.mDrawBitmap = Bitmap.createBitmap(this.view.getWidth(), this.view.getHeight(), Bitmap.Config.ARGB_8888);
             }
-            return;
+            Canvas canvas2 = new Canvas(this.mDrawBitmap);
+            canvas2.drawColor(0, PorterDuff.Mode.CLEAR);
+            canvas2.drawPaint(this.mPaintBackground);
+            Rect rect2 = this.mSelectionRect;
+            canvas2.drawOval((float) rect2.left, (float) rect2.top, (float) rect2.right, (float) rect2.bottom, this.mPaintSelection);
+            DrawShapeUtil.drawTrimmingFrame(canvas2, this.mSelectionRect);
+            canvas.drawBitmap(this.mDrawBitmap, 0.0f, 0.0f, (Paint) null);
         }
-        canvas.drawRect(0.0f, 0.0f, (float) this.view.getWidth(), (float) this.view.getHeight(), this.mPaintBackground);
     }
 
-    public Bitmap getPartialBitmap(Bitmap bitmap2) {
+    public Bitmap getPartialBitmap(Bitmap bitmap) {
         Rect rect = this.mSelectionRect;
         if (rect.left < 0) {
             rect.left = 0;
@@ -108,19 +95,20 @@ public class EllipseScreenshot extends PartialScreenshotShape {
             rect2.top = 0;
         }
         Rect rect3 = this.mSelectionRect;
-        if (rect3.left + rect3.width() > bitmap2.getWidth()) {
-            this.mSelectionRect.left = bitmap2.getWidth() - this.mSelectionRect.width();
+        if (rect3.left + rect3.width() > bitmap.getWidth()) {
+            this.mSelectionRect.left = bitmap.getWidth() - this.mSelectionRect.width();
         }
         Rect rect4 = this.mSelectionRect;
-        if (rect4.top + rect4.height() > bitmap2.getHeight()) {
-            this.mSelectionRect.top = bitmap2.getHeight() - this.mSelectionRect.height();
+        if (rect4.top + rect4.height() > bitmap.getHeight()) {
+            this.mSelectionRect.top = bitmap.getHeight() - this.mSelectionRect.height();
         }
         Bitmap createBitmap = Bitmap.createBitmap(this.mSelectionRect.width(), this.mSelectionRect.height(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(createBitmap);
         Paint paint = new Paint(7);
         paint.setColor(-1);
-        canvas.drawOval(0.0f, 0.0f, (float) this.bitmap.getWidth(), (float) this.bitmap.getHeight(), paint);
-        return DrawShapeUtil.getResultBitmap(createBitmap.getWidth(), createBitmap.getHeight(), createBitmap, bitmap2, this.mSelectionRect);
+        Rect rect5 = this.mSelectionRect;
+        canvas.drawOval(0.0f, 0.0f, (float) (rect5.right - rect5.left), (float) (rect5.bottom - rect5.top), paint);
+        return DrawShapeUtil.getResultBitmap(createBitmap.getWidth(), createBitmap.getHeight(), createBitmap, bitmap, this.mSelectionRect);
     }
 
     public void onActionDown(MotionEvent motionEvent) {

@@ -865,6 +865,7 @@ public class NotificationTemplateViewWrapper extends NotificationHeaderViewWrapp
                     button.setPaddingRelative(0, 0, 0, 0);
                     button.setBackground((Drawable) null);
                     button.setBackgroundResource(0);
+                    button.setTextColor(NotificationTemplateViewWrapper.this.mActionsButtonColor);
                 }
             }
         }

@@ -7,8 +7,10 @@ import android.view.View;
 import com.android.systemui.partialscreenshot.PartialScreenshotView;
 import com.android.systemui.partialscreenshot.shape.DrawShapeUtil;
 import com.android.systemui.partialscreenshot.shape.IrregularScreenshot;
+import com.android.systemui.partialscreenshot.shape.PartialScreenshotShape;
 
 public class IrregularFactory extends ShapeFactory {
+    private static IrregularFactory mIrregularFactory = new IrregularFactory();
     private IrregularScreenshot Irregular;
     private float mLastX;
     private float mLastY;
@@ -16,7 +18,15 @@ public class IrregularFactory extends ShapeFactory {
     private float mX;
     private float mY;
 
-    public void notifyShapeChanged(Rect rect, PartialScreenshotView partialScreenshotView) {
+    private IrregularFactory() {
+    }
+
+    public static synchronized IrregularFactory getInstance() {
+        IrregularFactory irregularFactory;
+        synchronized (IrregularFactory.class) {
+            irregularFactory = mIrregularFactory;
+        }
+        return irregularFactory;
     }
 
     public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -40,7 +50,7 @@ public class IrregularFactory extends ShapeFactory {
             this.Irregular.clear();
             this.Irregular.addPath((float) ((int) motionEvent.getX()), (float) ((int) motionEvent.getY()));
             partialScreenshotView.setProduct(this.Irregular);
-        } else if (this.Irregular.getmSelectionRect() != null) {
+        } else if (this.Irregular.getSelectionRect() != null) {
             this.Irregular.onActionDown(motionEvent);
         } else {
             this.mState = 1;
@@ -81,8 +91,37 @@ public class IrregularFactory extends ShapeFactory {
         return true;
     }
 
+    public void knockShot(float[] fArr, PartialScreenshotView partialScreenshotView) {
+        this.Irregular = new IrregularScreenshot(partialScreenshotView);
+        for (int i = 0; i < fArr.length; i += 2) {
+            this.Irregular.addPath(fArr[i], fArr[i + 1]);
+        }
+        this.Irregular.setUp(true);
+        this.mState = 2;
+    }
+
+    public void setSelectionRect() {
+        IrregularScreenshot irregularScreenshot = this.Irregular;
+        if (irregularScreenshot != null) {
+            irregularScreenshot.setSelectionRect();
+        }
+    }
+
+    public void flash(PartialScreenshotView partialScreenshotView) {
+        partialScreenshotView.setProduct(this.Irregular);
+    }
+
     public Rect getTrimmingFrame() {
-        return this.Irregular.getmSelectionRect();
+        return this.Irregular.getSelectionRect();
+    }
+
+    public void notifyShapeChanged(Rect rect, PartialScreenshotView partialScreenshotView) {
+        IrregularScreenshot irregularScreenshot = this.Irregular;
+        if (irregularScreenshot != null) {
+            irregularScreenshot.moveHandleLeftTop((float) rect.left, (float) rect.top);
+            this.Irregular.moveHandleRightBottom((float) rect.right, (float) rect.bottom);
+            partialScreenshotView.setProduct(this.Irregular);
+        }
     }
 
     public int getState() {
@@ -91,5 +130,11 @@ public class IrregularFactory extends ShapeFactory {
 
     public Bitmap getPartialBitmap(Bitmap bitmap) {
         return this.Irregular.getPartialBitmap(bitmap);
+    }
+
+    public void clear(PartialScreenshotView partialScreenshotView) {
+        this.mState = 1;
+        this.Irregular = null;
+        partialScreenshotView.setProduct((PartialScreenshotShape) null);
     }
 }

@@ -6850,6 +6850,9 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
         }
         ExpandedNotification expandedNotification = new ExpandedNotification(this.mContextForUser, statusBarNotification);
         expandedNotification.setImportance(this.mNotificationData.getImportance(expandedNotification, rankingMap));
+        if (!NotificationUtil.isMediaNotification(expandedNotification)) {
+            MiuiNotificationCompat.disableColorized(statusBarNotification.getNotification());
+        }
         try {
             Log.d("StatusBar", "onNotificationPosted key=" + statusBarNotification.getKey() + " isUpdate=" + z);
             if (z) {

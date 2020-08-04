@@ -183,6 +183,7 @@ class MiuiStatusBarPromptImpl implements IMiuiStatusBarPrompt {
 
     public void hideReturnToInCallScreenButton() {
         this.mCallTimer.stop();
+        this.mCallTimer.setBase(SystemClock.elapsedRealtime());
         setViewVisibilty(this.mReturnToInCallScreenButton, 8, false);
         clearReturnToInCallScreenButtonIcons();
     }

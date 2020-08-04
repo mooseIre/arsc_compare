@@ -7,6 +7,8 @@ import android.view.View;
 import com.android.systemui.partialscreenshot.PartialScreenshotView;
 
 public abstract class ShapeFactory implements View.OnTouchListener {
+    public abstract void clear(PartialScreenshotView partialScreenshotView);
+
     public abstract Bitmap getPartialBitmap(Bitmap bitmap);
 
     public abstract int getState();
