@@ -651,7 +651,7 @@ public class NotificationPanelView extends PanelView implements ExpandableView.O
     public void loadDimens(Resources resources) {
         super.loadDimens(resources);
         this.mFlingAnimationUtils = new FlingAnimationUtils(getContext(), 0.4f);
-        this.mStatusBarMinHeight = resources.getDimensionPixelSize(17105436);
+        this.mStatusBarMinHeight = resources.getDimensionPixelSize(17105439);
         this.mQsPeekHeight = getResources().getDimensionPixelSize(R.dimen.qs_peek_height);
         this.mNotificationsHeaderCollideDistance = resources.getDimensionPixelSize(R.dimen.header_notifications_collide_distance);
         this.mUnlockMoveDistance = resources.getDimensionPixelOffset(R.dimen.unlock_move_distance);

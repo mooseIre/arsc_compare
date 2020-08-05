@@ -1190,9 +1190,9 @@ public abstract class BaseRecentsImpl {
 
     private void reloadResources() {
         Resources resources = this.mContext.getResources();
-        this.mStatusBarHeight = resources.getDimensionPixelSize(17105436);
-        this.mNavBarHeight = resources.getDimensionPixelSize(17105296);
-        this.mNavBarWidth = resources.getDimensionPixelSize(17105301);
+        this.mStatusBarHeight = resources.getDimensionPixelSize(17105439);
+        this.mNavBarHeight = resources.getDimensionPixelSize(17105299);
+        this.mNavBarWidth = resources.getDimensionPixelSize(17105304);
         mTaskBarHeight = TaskStackLayoutAlgorithm.getDimensionForDevice(this.mContext, R.dimen.recents_task_view_header_height, R.dimen.recents_task_view_header_height, R.dimen.recents_task_view_header_height, R.dimen.recents_task_view_header_height_tablet_land, R.dimen.recents_task_view_header_height, R.dimen.recents_task_view_header_height_tablet_land);
     }
 

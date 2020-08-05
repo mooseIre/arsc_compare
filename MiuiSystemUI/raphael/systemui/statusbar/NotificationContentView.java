@@ -126,7 +126,7 @@ public class NotificationContentView extends AbstractFrameLayout {
 
     private void initDimens() {
         this.mMinContractedHeight = getResources().getDimensionPixelSize(R.dimen.min_notification_layout_height);
-        this.mNotificationContentMarginEnd = getResources().getDimensionPixelSize(17105319);
+        this.mNotificationContentMarginEnd = getResources().getDimensionPixelSize(17105322);
         this.mLowPriorityNotificationHeight = getResources().getDimensionPixelSize(R.dimen.low_priority_notification_layout_height);
         this.mNotificationBgRadius = NotificationUtil.getOutlineRadius(this.mContext);
         this.mNotificationCustomViewMargin = NotificationUtil.getCustomViewMargin(this.mContext);
@@ -532,7 +532,7 @@ public class NotificationContentView extends AbstractFrameLayout {
         int i;
         int i2;
         if (this.mIsChildInGroup && isVisibleOrTransitioning(3)) {
-            return this.mContext.getResources().getDimensionPixelSize(17105306);
+            return this.mContext.getResources().getDimensionPixelSize(17105309);
         }
         if (!(this.mHeadsUpChild == null || this.mExpandedChild == null)) {
             boolean z = isTransitioningFromTo(2, 1) || isTransitioningFromTo(1, 2);
@@ -553,7 +553,7 @@ public class NotificationContentView extends AbstractFrameLayout {
         } else if (this.mExpandedChild != null) {
             i = getViewHeight(1);
         } else {
-            i = getViewHeight(0) + this.mContext.getResources().getDimensionPixelSize(17105306);
+            i = getViewHeight(0) + this.mContext.getResources().getDimensionPixelSize(17105309);
         }
         return (this.mExpandedChild == null || !isVisibleOrTransitioning(1)) ? i : Math.min(i, getViewHeight(1));
     }

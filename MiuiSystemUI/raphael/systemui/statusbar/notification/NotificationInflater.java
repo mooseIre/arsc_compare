@@ -374,7 +374,7 @@ public class NotificationInflater {
         }
         ImageView imageView = (ImageView) view.findViewById(16908294);
         TextView textView = (TextView) view.findViewById(16908310);
-        TextView textView2 = (TextView) view.findViewById(16909444);
+        TextView textView2 = (TextView) view.findViewById(16909448);
         CharSequence text = textView != null ? textView.getText() : null;
         CharSequence text2 = textView2 != null ? textView2.getText() : null;
         if (imageView == null || (TextUtils.isEmpty(text) && TextUtils.isEmpty(text2))) {
@@ -401,7 +401,7 @@ public class NotificationInflater {
             });
         }
         if (MiuiNotificationCompat.isShowMiuiAction(entry.notification.getNotification()) && entry.getPrivateContentView() != null) {
-            TextView textView3 = (TextView) entry.getPrivateContentView().findViewById(16909124);
+            TextView textView3 = (TextView) entry.getPrivateContentView().findViewById(16909128);
             TextView actionView = optimizedHeadsUpNotificationView.getActionView();
             if (!(textView3 == null || actionView == null)) {
                 actionView.setVisibility(0);

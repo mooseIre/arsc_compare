@@ -396,7 +396,7 @@ public class HeadsUpManager implements ViewTreeObserver.OnComputeInternalInsetsL
 
     private void initResources() {
         Resources resources = this.mContext.getResources();
-        this.mStatusBarHeight = resources.getDimensionPixelSize(17105436);
+        this.mStatusBarHeight = resources.getDimensionPixelSize(17105439);
         this.mDisplayCutoutTouchableRegionSize = resources.getDimensionPixelSize(R.dimen.display_cutout_touchable_region_size);
     }
 

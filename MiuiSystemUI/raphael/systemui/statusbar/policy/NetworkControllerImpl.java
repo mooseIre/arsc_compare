@@ -317,6 +317,17 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
         this.mCallbackHandler.setListening(emergencyListener, false);
     }
 
+    public void addCarrierNameListener(NetworkController.CarrierNameListener carrierNameListener) {
+        this.mCallbackHandler.setListening(carrierNameListener, true);
+        for (int i = 0; i < this.mPhoneCount; i++) {
+            this.mCallbackHandler.updateCarrierName(i, this.mNetworkNameList[i]);
+        }
+    }
+
+    public void removeCarrierNameListener(NetworkController.CarrierNameListener carrierNameListener) {
+        this.mCallbackHandler.setListening(carrierNameListener, false);
+    }
+
     public void addMobileTypeListener(NetworkController.MobileTypeListener mobileTypeListener) {
         this.mCallbackHandler.setListening(mobileTypeListener, true);
         for (int i = 0; i < this.mPhoneCount; i++) {

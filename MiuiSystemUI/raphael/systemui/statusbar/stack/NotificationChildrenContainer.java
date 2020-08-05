@@ -130,17 +130,17 @@ public class NotificationChildrenContainer extends ViewGroup {
         if (showGoogleStyle) {
             i = 0;
         } else {
-            i = resources.getDimensionPixelSize(17105321);
+            i = resources.getDimensionPixelSize(17105324);
         }
         this.mNotificationTopPadding = i;
         if (!showGoogleStyle) {
             i2 = resources.getDimensionPixelSize(R.dimen.notification_group_expanded_bottom_margin);
         }
         this.mExpandedBottomMargin = i2;
-        this.mCollapsedBottomMargin = (float) resources.getDimensionPixelSize(17105318);
+        this.mCollapsedBottomMargin = (float) resources.getDimensionPixelSize(17105321);
         this.mCollapsedButtonPadding = resources.getDimensionPixelSize(R.dimen.notification_collapsed_button_padding);
-        this.mContentMarginTop = resources.getDimensionPixelSize(17105321);
-        this.mContentMarginEnd = resources.getDimensionPixelSize(17105319);
+        this.mContentMarginTop = resources.getDimensionPixelSize(17105324);
+        this.mContentMarginEnd = resources.getDimensionPixelSize(17105322);
         this.mOverflowNumberTopPadding = resources.getDimensionPixelSize(R.dimen.notification_group_overflow_padding_top);
         this.mOverflowNumberBottomPadding = resources.getDimensionPixelSize(R.dimen.notification_group_overflow_padding_bottom);
         this.mOverflowNumberTopMargin = resources.getDimensionPixelSize(R.dimen.notification_group_overflow_margin_top);
@@ -308,7 +308,7 @@ public class NotificationChildrenContainer extends ViewGroup {
         if (this.mNotificationHeader == null) {
             this.mNotificationHeader = makeNotificationHeader.apply(getContext(), this);
             View findViewById = this.mNotificationHeader.findViewById(16908294);
-            this.mNotificationHeader.findViewById(16908902).setVisibility(0);
+            this.mNotificationHeader.findViewById(16908906).setVisibility(0);
             this.mNotificationHeader.setOnClickListener(this.mHeaderClickListener);
             this.mNotificationHeaderWrapper = NotificationViewWrapper.wrap(getContext(), this.mNotificationHeader, this.mContainingNotification);
             resetAppIcon(findViewById);
@@ -367,7 +367,7 @@ public class NotificationChildrenContainer extends ViewGroup {
             RemoteViews makeLowPriorityContentView = NotificationCompat.makeLowPriorityContentView(builder, true);
             if (this.mNotificationHeaderLowPriority == null) {
                 this.mNotificationHeaderLowPriority = makeLowPriorityContentView.apply(getContext(), this);
-                this.mNotificationHeaderLowPriority.findViewById(16908902).setVisibility(0);
+                this.mNotificationHeaderLowPriority.findViewById(16908906).setVisibility(0);
                 this.mNotificationHeaderLowPriority.setOnClickListener(this.mHeaderClickListener);
                 this.mNotificationHeaderWrapperLowPriority = NotificationViewWrapper.wrap(getContext(), this.mNotificationHeaderLowPriority, this.mContainingNotification);
                 addView(this.mNotificationHeaderLowPriority, 0);
@@ -990,7 +990,7 @@ public class NotificationChildrenContainer extends ViewGroup {
             imageView.setVisibility(0);
         }
         if (NotificationUtil.showGoogleStyle()) {
-            this.mNotificationHeader.findViewById(16908902).setVisibility(0);
+            this.mNotificationHeader.findViewById(16908906).setVisibility(0);
         }
         updateChildrenClipping();
     }

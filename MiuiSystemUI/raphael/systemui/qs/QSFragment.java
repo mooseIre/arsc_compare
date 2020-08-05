@@ -246,7 +246,7 @@ public class QSFragment extends Fragment implements QS, CommandQueue.Callbacks, 
         this.mQSFooterBundle = view.findViewById(R.id.qs_footer_bundle);
         this.mGutterHeight = resources.getDimensionPixelSize(R.dimen.qs_gutter_height);
         this.mContentMargin = resources.getDimensionPixelSize(R.dimen.panel_content_margin);
-        this.mStatusBarMinHeight = resources.getDimensionPixelSize(17105436);
+        this.mStatusBarMinHeight = resources.getDimensionPixelSize(17105439);
         if (resources.getBoolean(R.bool.config_showQuickSettingsRow)) {
             this.mQSAnimator = new QSAnimator(this, this.mQuickQSPanel, this.mQSPanel);
         }

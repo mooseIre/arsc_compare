@@ -66,7 +66,7 @@ public class FalsingManager implements SensorEventListener {
 
     /* access modifiers changed from: private */
     public void updateConfiguration() {
-        this.mStatusBarHeight = this.mContext.getResources().getDimensionPixelSize(17105436);
+        this.mStatusBarHeight = this.mContext.getResources().getDimensionPixelSize(17105439);
         boolean z = false;
         if (Settings.Secure.getInt(this.mContext.getContentResolver(), "falsing_manager_enforce_bouncer", 0) != 0) {
             z = true;

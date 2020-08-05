@@ -1528,7 +1528,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
 
             private boolean handleRemoteInput(View view, PendingIntent pendingIntent, Intent intent) {
                 RemoteInputView remoteInputView;
-                Object tag = view.getTag(16909293);
+                Object tag = view.getTag(16909297);
                 ExpandableNotificationRow expandableNotificationRow = null;
                 RemoteInput[] remoteInputArr = tag instanceof RemoteInput[] ? (RemoteInput[]) tag : null;
                 if (remoteInputArr == null) {
@@ -3083,7 +3083,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
 
     public int getStatusBarHeight() {
         if (this.mNaturalBarHeight < 0) {
-            this.mNaturalBarHeight = this.mContext.getResources().getDimensionPixelSize(17105436);
+            this.mNaturalBarHeight = this.mContext.getResources().getDimensionPixelSize(17105439);
         }
         return this.mNaturalBarHeight;
     }

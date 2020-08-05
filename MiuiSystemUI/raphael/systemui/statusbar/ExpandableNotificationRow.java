@@ -300,7 +300,7 @@ public class ExpandableNotificationRow extends ActivatableNotificationView imple
     private void setIconAnimationRunningForChild(boolean z, View view) {
         if (view != null) {
             setIconRunning((ImageView) view.findViewById(16908294), z);
-            setIconRunning((ImageView) view.findViewById(16909309), z);
+            setIconRunning((ImageView) view.findViewById(16909313), z);
         }
     }
 
@@ -387,7 +387,7 @@ public class ExpandableNotificationRow extends ActivatableNotificationView imple
         int i;
         int i2;
         boolean z = true;
-        boolean z2 = (notificationContentView.getContractedChild() == null || notificationContentView.getContractedChild().getId() == 16909421) ? false : true;
+        boolean z2 = (notificationContentView.getContractedChild() == null || notificationContentView.getContractedChild().getId() == 16909425) ? false : true;
         boolean z3 = this.mEntry.targetSdk < 24;
         boolean z4 = this.mEntry.targetSdk < 28;
         if (isMediaNotification()) {
@@ -399,7 +399,7 @@ public class ExpandableNotificationRow extends ActivatableNotificationView imple
         } else {
             i = this.mNotificationMinHeightLarge;
         }
-        if (notificationContentView.getHeadsUpChild() == null || notificationContentView.getHeadsUpChild().getId() == 16909421) {
+        if (notificationContentView.getHeadsUpChild() == null || notificationContentView.getHeadsUpChild().getId() == 16909425) {
             z = false;
         }
         if (!z || !z4) {

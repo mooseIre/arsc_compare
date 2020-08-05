@@ -45,7 +45,7 @@ public class NavBarTintController implements View.OnAttachStateChangeListener, V
         this.mNavigationBarView.addOnLayoutChangeListener(this);
         this.mLightBarController = lightBarTransitionsController;
         Resources resources = navigationBarView.getResources();
-        this.mNavBarHeight = resources.getDimensionPixelSize(17105296);
+        this.mNavBarHeight = resources.getDimensionPixelSize(17105299);
         this.mNavColorSampleMargin = resources.getDimensionPixelSize(R.dimen.navigation_handle_sample_horizontal_margin);
         this.mLuminanceThreshold = resources.getFloat(R.dimen.navigation_luminance_threshold);
         this.mLuminanceChangeThreshold = resources.getFloat(R.dimen.navigation_luminance_change_threshold);

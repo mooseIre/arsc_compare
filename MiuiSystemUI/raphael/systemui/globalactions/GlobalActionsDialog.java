@@ -686,10 +686,10 @@ class GlobalActionsDialog implements DialogInterface.OnDismissListener, DialogIn
         }
 
         public View create(Context context, View view, ViewGroup viewGroup, LayoutInflater layoutInflater) {
-            View inflate = layoutInflater.inflate(17367158, viewGroup, false);
+            View inflate = layoutInflater.inflate(17367159, viewGroup, false);
             ImageView imageView = (ImageView) inflate.findViewById(16908294);
             TextView textView = (TextView) inflate.findViewById(16908299);
-            TextView textView2 = (TextView) inflate.findViewById(16909420);
+            TextView textView2 = (TextView) inflate.findViewById(16909424);
             String status = getStatus();
             if (!TextUtils.isEmpty(status)) {
                 textView2.setText(status);
@@ -762,10 +762,10 @@ class GlobalActionsDialog implements DialogInterface.OnDismissListener, DialogIn
 
         public View create(Context context, View view, ViewGroup viewGroup, LayoutInflater layoutInflater) {
             willCreate();
-            View inflate = layoutInflater.inflate(17367158, viewGroup, false);
+            View inflate = layoutInflater.inflate(17367159, viewGroup, false);
             ImageView imageView = (ImageView) inflate.findViewById(16908294);
             TextView textView = (TextView) inflate.findViewById(16908299);
-            TextView textView2 = (TextView) inflate.findViewById(16909420);
+            TextView textView2 = (TextView) inflate.findViewById(16909424);
             boolean isEnabled = isEnabled();
             if (textView != null) {
                 textView.setText(this.mMessageResId);
@@ -834,7 +834,7 @@ class GlobalActionsDialog implements DialogInterface.OnDismissListener, DialogIn
     }
 
     private static class SilentModeTriStateAction implements Action, View.OnClickListener {
-        private final int[] ITEM_IDS = {16909210, 16909211, 16909212};
+        private final int[] ITEM_IDS = {16909214, 16909215, 16909216};
         private final AudioManager mAudioManager;
         private final Context mContext;
         private final Handler mHandler;
@@ -873,7 +873,7 @@ class GlobalActionsDialog implements DialogInterface.OnDismissListener, DialogIn
         }
 
         public View create(Context context, View view, ViewGroup viewGroup, LayoutInflater layoutInflater) {
-            View inflate = layoutInflater.inflate(17367159, viewGroup, false);
+            View inflate = layoutInflater.inflate(17367160, viewGroup, false);
             int ringerMode = this.mAudioManager.getRingerMode();
             ringerModeToIndex(ringerMode);
             int i = 0;

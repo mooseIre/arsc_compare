@@ -95,10 +95,10 @@ public class NotificationHeaderViewWrapper extends NotificationViewWrapper {
 
     private void initResources() {
         Resources resources = this.mContext.getResources();
-        this.mMiuiContentMarginStart = resources.getDimensionPixelSize(17105320);
-        this.mMiuiContentMarginTop = resources.getDimensionPixelSize(17105321);
-        this.mMiuiContentMarginEnd = resources.getDimensionPixelSize(17105319);
-        this.mMiuiContentMarginBottom = resources.getDimensionPixelSize(17105318);
+        this.mMiuiContentMarginStart = resources.getDimensionPixelSize(17105323);
+        this.mMiuiContentMarginTop = resources.getDimensionPixelSize(17105324);
+        this.mMiuiContentMarginEnd = resources.getDimensionPixelSize(17105322);
+        this.mMiuiContentMarginBottom = resources.getDimensionPixelSize(17105321);
         this.mGoogleContentMarginStart = resources.getDimensionPixelSize(R.dimen.google_notification_content_margin_start);
         this.mGoogleContentMarginEnd = resources.getDimensionPixelSize(R.dimen.google_notification_content_margin_end);
         this.mGoogleContentMarginTop = resources.getDimensionPixelSize(R.dimen.google_notification_content_margin_top);
@@ -118,16 +118,16 @@ public class NotificationHeaderViewWrapper extends NotificationViewWrapper {
     }
 
     private void resolveHeaderViews() {
-        this.mNotificationHeader = this.mView.findViewById(16909174);
+        this.mNotificationHeader = this.mView.findViewById(16909178);
         this.mIcon = (ImageView) this.mNotificationHeader.findViewById(16908294);
         this.mAppNameText = (TextView) this.mNotificationHeader.findViewById(16908733);
-        this.mHeaderText = (TextView) this.mNotificationHeader.findViewById(16908981);
-        this.mHeaderTextDivider = (TextView) this.mNotificationHeader.findViewById(16908982);
-        this.mTime = this.mNotificationHeader.findViewById(16909475);
+        this.mHeaderText = (TextView) this.mNotificationHeader.findViewById(16908985);
+        this.mHeaderTextDivider = (TextView) this.mNotificationHeader.findViewById(16908986);
+        this.mTime = this.mNotificationHeader.findViewById(16909479);
         this.mChronometer = this.mNotificationHeader.findViewById(16908812);
-        this.mExpandButton = (ImageView) this.mNotificationHeader.findViewById(16908902);
-        this.mXSpaceIcon = (ImageView) this.mNotificationHeader.findViewById(16909584);
-        this.mWorkProfileImage = (ImageView) this.mNotificationHeader.findViewById(16909272);
+        this.mExpandButton = (ImageView) this.mNotificationHeader.findViewById(16908906);
+        this.mXSpaceIcon = (ImageView) this.mNotificationHeader.findViewById(16909588);
+        this.mWorkProfileImage = (ImageView) this.mNotificationHeader.findViewById(16909276);
     }
 
     private void handleHeaderViews() {
@@ -430,8 +430,8 @@ public class NotificationHeaderViewWrapper extends NotificationViewWrapper {
 
         /* access modifiers changed from: package-private */
         public void handleDivider() {
-            NotificationHeaderViewWrapper.this.mNotificationHeader.findViewById(16908982).setVisibility(8);
-            NotificationHeaderViewWrapper.this.mNotificationHeader.findViewById(16909479).setVisibility(8);
+            NotificationHeaderViewWrapper.this.mNotificationHeader.findViewById(16908986).setVisibility(8);
+            NotificationHeaderViewWrapper.this.mNotificationHeader.findViewById(16909483).setVisibility(8);
         }
     }
 

@@ -179,11 +179,11 @@ public class NotificationMediaTemplateViewWrapper extends NotificationHeaderView
     }
 
     private void resolveMediaViews() {
-        this.mPicture = (ImageView) this.mView.findViewById(16909309);
-        this.mMainColumnContainer = (ViewGroup) this.mView.findViewById(16909175);
-        this.mMediaActions = (ViewGroup) this.mView.findViewById(16909101);
+        this.mPicture = (ImageView) this.mView.findViewById(16909313);
+        this.mMainColumnContainer = (ViewGroup) this.mView.findViewById(16909179);
+        this.mMediaActions = (ViewGroup) this.mView.findViewById(16909105);
         this.mMediaTitle = (TextView) this.mView.findViewById(16908310);
-        this.mMediaText = (TextView) this.mView.findViewById(16909444);
+        this.mMediaText = (TextView) this.mView.findViewById(16909448);
     }
 
     private void handleMediaViews() {
@@ -246,7 +246,7 @@ public class NotificationMediaTemplateViewWrapper extends NotificationHeaderView
                 }
             }
         }
-        ViewStub viewStub = (ViewStub) this.mView.findViewById(16909187);
+        ViewStub viewStub = (ViewStub) this.mView.findViewById(16909191);
         if (viewStub instanceof ViewStub) {
             viewStub.setLayoutInflater(LayoutInflater.from(this.mContext));
             viewStub.setLayoutResource(R.layout.notification_material_media_seekbar);
@@ -390,7 +390,7 @@ public class NotificationMediaTemplateViewWrapper extends NotificationHeaderView
 
     /* access modifiers changed from: private */
     public boolean isNormalMedia() {
-        return this.mView.getId() == 16909421 && "media".equals(this.mView.getTag());
+        return this.mView.getId() == 16909425 && "media".equals(this.mView.getTag());
     }
 
     private class MediaStyleProcessor {
