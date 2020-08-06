@@ -436,9 +436,13 @@ public class NotificationMediaTemplateViewWrapper extends NotificationHeaderView
 
         /* access modifiers changed from: package-private */
         public void handleTitleText() {
-            NotificationMediaTemplateViewWrapper.this.mMediaTitle.setTextSize(0, (float) NotificationMediaTemplateViewWrapper.this.mMediaTitleTextSize);
-            NotificationMediaTemplateViewWrapper.this.mMediaText.setTextSize(0, (float) NotificationMediaTemplateViewWrapper.this.mMediaTextTextSize);
-            NotificationMediaTemplateViewWrapper.this.mMediaText.setSingleLine(true);
+            if (NotificationMediaTemplateViewWrapper.this.mMediaTitle != null) {
+                NotificationMediaTemplateViewWrapper.this.mMediaTitle.setTextSize(0, (float) NotificationMediaTemplateViewWrapper.this.mMediaTitleTextSize);
+            }
+            if (NotificationMediaTemplateViewWrapper.this.mMediaText != null) {
+                NotificationMediaTemplateViewWrapper.this.mMediaText.setTextSize(0, (float) NotificationMediaTemplateViewWrapper.this.mMediaTextTextSize);
+                NotificationMediaTemplateViewWrapper.this.mMediaText.setSingleLine(true);
+            }
         }
 
         /* access modifiers changed from: package-private */

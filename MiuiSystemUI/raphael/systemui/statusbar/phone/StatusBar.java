@@ -1641,7 +1641,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
                     }
                     if (list != null && list.size() > 0) {
                         UserInfo userInfo = StatusBar.this.mUserManager.getUserInfo(list.get(0).userId);
-                        if (userInfo != null && userInfo.isManagedProfile()) {
+                        if (!(userInfo == null || !userInfo.isManagedProfile() || userInfo.id == 999)) {
                             Toast makeText = Toast.makeText(StatusBar.this.mContext, R.string.managed_profile_foreground_toast, 0);
                             if (makeText.getView() != null) {
                                 TextView textView = (TextView) makeText.getView().findViewById(16908299);
