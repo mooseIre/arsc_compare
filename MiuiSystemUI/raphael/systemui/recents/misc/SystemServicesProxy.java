@@ -850,11 +850,14 @@ public class SystemServicesProxy {
                     e3.printStackTrace();
                 }
                 List<String> multiWindowForceNotResizeList = SystemServicesProxy.getMultiWindowForceNotResizeList(context);
-                if (multiWindowForceNotResizeList.contains("com.miui.home")) {
-                    SystemServicesProxy systemServicesProxy = SystemServicesProxy.this;
-                    if (systemServicesProxy.isRecentsWithinLauncher(systemServicesProxy.mContext)) {
-                        Log.e("SystemServicesProxy", "Remove com.miui.home from multiWindowForceNotResizeList");
-                        multiWindowForceNotResizeList.remove("com.miui.home");
+                SystemServicesProxy systemServicesProxy = SystemServicesProxy.this;
+                if (systemServicesProxy.isRecentsWithinLauncher(systemServicesProxy.mContext) && multiWindowForceNotResizeList != null && multiWindowForceNotResizeList.size() >= 1) {
+                    Iterator<String> it = multiWindowForceNotResizeList.iterator();
+                    while (it.hasNext()) {
+                        if (TextUtils.equals(it.next(), "com.miui.home")) {
+                            it.remove();
+                            Log.e("SystemServicesProxy", "Remove com.miui.home from multiWindowForceNotResizeList");
+                        }
                     }
                 }
                 try {
