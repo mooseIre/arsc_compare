@@ -83,9 +83,6 @@ class MiuiGxzwOverlayView extends GxzwWindowFrameLayout implements MiuiGxzwIconV
         WindowManager.LayoutParams layoutParams = this.mLayoutParams;
         layoutParams.extraFlags |= 8388608;
         layoutParams.privateFlags |= MiuiGxzwUtils.PRIVATE_FLAG_IS_HBM_OVERLAY;
-        if (Build.VERSION.SDK_INT > 29) {
-            layoutParams.layoutInDisplayCutoutMode = 3;
-        }
         WindowManager.LayoutParams layoutParams2 = this.mLayoutParams;
         layoutParams2.alpha = 0.0f;
         layoutParams2.setTitle("hbm_overlay");
