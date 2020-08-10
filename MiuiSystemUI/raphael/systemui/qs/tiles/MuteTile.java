@@ -1,19 +1,18 @@
 package com.android.systemui.qs.tiles;
 
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.ContentObserver;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Handler;
 import android.os.UserHandle;
 import android.provider.MiuiSettings;
 import android.provider.Settings;
 import android.widget.Switch;
 import com.android.systemui.Dependency;
+import com.android.systemui.Util;
 import com.android.systemui.miui.volume.VolumeUtil;
 import com.android.systemui.plugins.R;
 import com.android.systemui.plugins.qs.QSTile;
@@ -24,7 +23,6 @@ import com.android.systemui.statusbar.policy.SilentModeObserverController;
 import miui.util.AudioManagerHelper;
 
 public class MuteTile extends QSTileImpl<QSTile.BooleanState> implements SilentModeObserverController.SilentModeListener {
-    private static final String MUTE_ACTION = (Build.VERSION.SDK_INT < 30 ? "com.android.settings/com.android.settings.Settings$MiuiSilentModeAcivity" : "com.android.settings/com.android.settings.Settings$SoundSettingsActivity");
     private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             if ("android.media.RINGER_MODE_CHANGED".equals(intent.getAction())) {
@@ -76,7 +74,7 @@ public class MuteTile extends QSTileImpl<QSTile.BooleanState> implements SilentM
     }
 
     public Intent getLongClickIntent() {
-        return longClickMuteIntent();
+        return Util.getSilentModeIntent();
     }
 
     /* access modifiers changed from: protected */
@@ -130,17 +128,6 @@ public class MuteTile extends QSTileImpl<QSTile.BooleanState> implements SilentM
         sb.append(this.mContext.getString(booleanState.value ? R.string.switch_bar_on : R.string.switch_bar_off));
         booleanState.contentDescription = sb.toString();
         booleanState.expandedAccessibilityClassName = Switch.class.getName();
-    }
-
-    private Intent longClickMuteIntent() {
-        ComponentName unflattenFromString = ComponentName.unflattenFromString(MUTE_ACTION);
-        if (unflattenFromString == null) {
-            return null;
-        }
-        Intent intent = new Intent("android.intent.action.MAIN");
-        intent.setComponent(unflattenFromString);
-        intent.setFlags(335544320);
-        return intent;
     }
 
     public void onSilentModeChanged(boolean z) {

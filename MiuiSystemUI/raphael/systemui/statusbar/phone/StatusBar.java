@@ -394,6 +394,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
     /* access modifiers changed from: private */
     public String mCallState;
     private long[] mCameraLaunchGestureVibePattern;
+    private final Runnable mCancelDisableTouch;
     /* access modifiers changed from: private */
     public final Runnable mCheckBarModes;
     private final ContentObserver mCloudDataObserver;
@@ -507,6 +508,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
     private KeyguardUserSwitcher mKeyguardUserSwitcher;
     private ViewMediatorCallback mKeyguardViewMediatorCallback;
     protected ArraySet<String> mKeysKeptForRemoteInput;
+    private long mLastAbortTransientTime;
     /* access modifiers changed from: private */
     public int mLastCameraLaunchSource;
     private int mLastDispatchedSystemUiVisibility = -1;
@@ -874,7 +876,10 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
             public void run() {
                 if (Build.VERSION.SDK_INT > 29) {
                     StatusBar statusBar = StatusBar.this;
-                    statusBar.clearTransient(statusBar.TRANSIENT_TYPES);
+                    if ((statusBar.mSystemUiVisibility & 201326592) != 0) {
+                        statusBar.clearTransient(statusBar.TRANSIENT_TYPES);
+                        return;
+                    }
                     return;
                 }
                 StatusBar statusBar2 = StatusBar.this;
@@ -883,6 +888,11 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
                 if (statusBar3.mSystemUiVisibility != i) {
                     statusBar3.notifyUiVisibilityChanged(i);
                 }
+            }
+        };
+        this.mCancelDisableTouch = new Runnable() {
+            public void run() {
+                StatusBar.this.cancelDisableTouch();
             }
         };
         this.mSrcXferMode = new PorterDuffXfermode(PorterDuff.Mode.SRC);
@@ -935,9 +945,9 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
             public void onFaceAuthenticated() {
                 if (StatusBar.this.mFaceUnlockManager.isShowMessageWhenFaceUnlockSuccess()) {
                     StatusBar.this.updatePublicMode();
-                    boolean access$1300 = StatusBar.this.isAnyProfilePublicMode();
+                    boolean access$1400 = StatusBar.this.isAnyProfilePublicMode();
                     StatusBar statusBar = StatusBar.this;
-                    statusBar.mStackScroller.setHideSensitive(NotificationUtil.hideNotificationsForFaceUnlock(statusBar.mContext) || access$1300, true);
+                    statusBar.mStackScroller.setHideSensitive(NotificationUtil.hideNotificationsForFaceUnlock(statusBar.mContext) || access$1400, true);
                     StatusBar.this.updateNotificationViewsOnly();
                 }
             }
@@ -1023,6 +1033,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
                 StatusBar.this.checkBarModes();
             }
         };
+        this.mLastAbortTransientTime = 0;
         this.mBroadcastReceiver = new BroadcastReceiver() {
             public void onReceive(Context context, Intent intent) {
                 if (StatusBar.DEBUG) {
@@ -1477,13 +1488,13 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
                             ActivityManagerCompat.getService().resumeAppSwitches();
                         } catch (RemoteException unused) {
                         }
-                        boolean access$9800 = AnonymousClass91.this.superOnClickHandler(view, pendingIntent, intent);
-                        if (access$9800) {
+                        boolean access$9900 = AnonymousClass92.this.superOnClickHandler(view, pendingIntent, intent);
+                        if (access$9900) {
                             StatusBar.this.animateCollapsePanels(2, true);
                             StatusBar.this.visibilityChanged(false);
                             StatusBar.this.mAssistManager.hideAssist();
                         }
-                        return access$9800;
+                        return access$9900;
                     }
                 }, PreviewInflater.wouldLaunchResolverActivity(StatusBar.this.mContext, pendingIntent.getIntent(), StatusBar.this.mCurrentUserId));
                 return true;
@@ -1710,14 +1721,14 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
                             }
                         }).forEach(new Consumer() {
                             public final void accept(Object obj) {
-                                StatusBar.AnonymousClass93.this.lambda$onReceive$1$StatusBar$93((NotificationData.Entry) obj);
+                                StatusBar.AnonymousClass94.this.lambda$onReceive$1$StatusBar$94((NotificationData.Entry) obj);
                             }
                         });
                     }
                 }
             }
 
-            public /* synthetic */ void lambda$onReceive$1$StatusBar$93(NotificationData.Entry entry) {
+            public /* synthetic */ void lambda$onReceive$1$StatusBar$94(NotificationData.Entry entry) {
                 StatusBar.this.updateAppBadgeNum(entry.notification);
             }
         };
@@ -2048,7 +2059,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
                 }
                 StatusBar.this.mHandler.post(new Runnable() {
                     public final void run() {
-                        StatusBar.AnonymousClass14.this.lambda$onDisplayChanged$0$StatusBar$14();
+                        StatusBar.AnonymousClass15.this.lambda$onDisplayChanged$0$StatusBar$15();
                     }
                 });
                 if (CustomizeUtil.HAS_NOTCH) {
@@ -2081,7 +2092,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
                 }
             }
 
-            public /* synthetic */ void lambda$onDisplayChanged$0$StatusBar$14() {
+            public /* synthetic */ void lambda$onDisplayChanged$0$StatusBar$15() {
                 if (StatusBar.this.mVisible) {
                     RenderLayerManager.getInstance().hideLayer(StatusBar.this.mStatusBarView);
                     boolean unused = StatusBar.this.mRenderLayerShown = false;
@@ -2477,7 +2488,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
         this.mLightBarController = (LightBarController) Dependency.get(LightBarController.class);
         this.mScrimController = SystemUIFactory.getInstance().createScrimController(this.mLightBarController, (ScrimView) this.mStatusBarWindow.findViewById(R.id.scrim_behind), (ScrimView) this.mStatusBarWindow.findViewById(R.id.scrim_in_front), this.mStatusBarWindow.findViewById(R.id.heads_up_scrim), this.mLockscreenWallpaper);
         if (this.mScrimSrcModeEnabled) {
-            AnonymousClass23 r1 = new Runnable() {
+            AnonymousClass24 r1 = new Runnable() {
                 public void run() {
                     boolean z = StatusBar.this.mBackdrop.getVisibility() != 0;
                     StatusBar.this.mScrimController.setDrawBehindAsSrc(z);
@@ -2685,7 +2696,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
         Fragment findFragmentByTag = FragmentHostManager.get(this.statusBarFragmentContainer, true).getFragmentManager().findFragmentByTag(fragmentTagByType);
         Log.d("StatusBar", "switchStatusBarFragment cutouttype: " + cutoutType + " targetFragment: " + findFragmentByTag);
         if (findFragmentByTag == null) {
-            AnonymousClass27 r1 = new FragmentHostManager.FragmentListener() {
+            AnonymousClass28 r1 = new FragmentHostManager.FragmentListener() {
                 public void onFragmentViewDestroyed(String str, Fragment fragment) {
                 }
 
@@ -2988,7 +2999,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
             if (r0 == 0) goto L_0x00cc
             r12.animateCollapsePanels()
         L_0x00cc:
-            com.android.systemui.statusbar.phone.StatusBar$31 r0 = new com.android.systemui.statusbar.phone.StatusBar$31
+            com.android.systemui.statusbar.phone.StatusBar$32 r0 = new com.android.systemui.statusbar.phone.StatusBar$32
             r0.<init>(r3)
             r12.addPostCollapseAction(r0)
             r12.performDismissAllAnimations(r2)
@@ -2998,7 +3009,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
     }
 
     private void performDismissAllAnimations(ArrayList<View> arrayList) {
-        AnonymousClass32 r0 = new Runnable() {
+        AnonymousClass33 r0 = new Runnable() {
             public void run() {
                 StatusBar.this.mDismissView.animatorStart(new AnimatorListenerAdapter() {
                     public void onAnimationEnd(Animator animator) {
@@ -3790,7 +3801,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
 
     /* access modifiers changed from: protected */
     public void setAreThereNotifications() {
-        AnonymousClass37 r0;
+        AnonymousClass38 r0;
         boolean z = true;
         if (SPEW) {
             Log.d("StatusBar", "setAreThereNotifications: N=" + this.mNotificationData.getActiveNotifications().size() + " any=" + hasActiveNotifications() + " clearable=" + (hasActiveNotifications() && hasActiveClearableNotifications()));
@@ -4777,6 +4788,9 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
             if ((536870912 & i) != 0) {
                 this.mSystemUiVisibility &= -536870913;
             }
+            if (Build.VERSION.SDK_INT > 29 && (this.mSystemUiVisibility & 201326592) != 0) {
+                cancelDisableTouch();
+            }
             notifyUiVisibilityChanged(this.mSystemUiVisibility);
         }
         final int i9 = Build.VERSION.SDK_INT == 23 ? i : i2;
@@ -4904,6 +4918,31 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
         this.mHandler.postDelayed(this.mAutohide, 2250);
     }
 
+    private void scheduleDisableTouch() {
+        StatusBarWindowManager statusBarWindowManager = this.mStatusBarWindowManager;
+        if (statusBarWindowManager != null) {
+            statusBarWindowManager.setNotTouchable(true);
+            StatusBarWindowView statusBarWindowView = this.mStatusBarWindow;
+            if (statusBarWindowView != null) {
+                statusBarWindowView.setNotTouchable(true);
+            }
+            this.mHandler.postDelayed(this.mCancelDisableTouch, 350);
+        }
+    }
+
+    /* access modifiers changed from: private */
+    public void cancelDisableTouch() {
+        this.mHandler.removeCallbacks(this.mCancelDisableTouch);
+        StatusBarWindowManager statusBarWindowManager = this.mStatusBarWindowManager;
+        if (statusBarWindowManager != null) {
+            statusBarWindowManager.setNotTouchable(false);
+        }
+        StatusBarWindowView statusBarWindowView = this.mStatusBarWindow;
+        if (statusBarWindowView != null) {
+            statusBarWindowView.setNotTouchable(false);
+        }
+    }
+
     /* access modifiers changed from: package-private */
     public void checkUserAutohide(View view, MotionEvent motionEvent) {
         if ((this.mSystemUiVisibility & 201326592) != 0 && motionEvent.getAction() == 4 && motionEvent.getX() == 0.0f && motionEvent.getY() == 0.0f && !this.mRemoteInputController.isRemoteInputActive()) {
@@ -4949,10 +4988,9 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
 
     /* access modifiers changed from: private */
     public void clearTransient(int[] iArr) {
+        scheduleDisableTouch();
         try {
-            int displayId = ContextCompat.getDisplayId(this.mContext);
-            IWindowManagerCompat.statusBarVisibilityChanged(this.mWindowManagerService, displayId, this.mSystemUiVisibility);
-            this.mCommandQueue.abortTransient(displayId, iArr);
+            this.mCommandQueue.abortTransient(ContextCompat.getDisplayId(this.mContext), iArr);
         } catch (RemoteException e) {
             Log.e("StatusBar", "clearTransient: " + e);
         }
@@ -5446,7 +5484,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
             public void run() {
                 StatusBar.this.executeRunnableDismissingKeyguard(new Runnable() {
                     public void run() {
-                        AnonymousClass57 r1 = AnonymousClass57.this;
+                        AnonymousClass58 r1 = AnonymousClass58.this;
                         StatusBar.this.mHandler.post(runnable);
                     }
                 }, (Runnable) null, false, false, false);
@@ -5699,7 +5737,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
     public void fadeKeyguardAfterLaunchTransition(final Runnable runnable, Runnable runnable2) {
         this.mHandler.removeMessages(b.c);
         this.mLaunchTransitionEndRunnable = runnable2;
-        AnonymousClass60 r4 = new Runnable() {
+        AnonymousClass61 r4 = new Runnable() {
             public void run() {
                 StatusBar.this.mLaunchTransitionFadingAway = true;
                 Runnable runnable = runnable;
@@ -6318,11 +6356,11 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
         updatePublicMode();
         updateNotifications();
         if (this.mPendingWorkRemoteInputView != null && !isAnyProfilePublicMode()) {
-            final AnonymousClass64 r0 = new Runnable() {
+            final AnonymousClass65 r0 = new Runnable() {
                 public void run() {
-                    View access$6500 = StatusBar.this.mPendingWorkRemoteInputView;
-                    if (access$6500 != null) {
-                        ViewParent parent = access$6500.getParent();
+                    View access$6600 = StatusBar.this.mPendingWorkRemoteInputView;
+                    if (access$6600 != null) {
+                        ViewParent parent = access$6600.getParent();
                         while (!(parent instanceof ExpandableNotificationRow)) {
                             if (parent != null) {
                                 parent = parent.getParent();
@@ -7578,7 +7616,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
                                 android.app.IActivityManager r0 = android.app.ActivityManagerCompat.getService()     // Catch:{ RemoteException -> 0x0007 }
                                 r0.resumeAppSwitches()     // Catch:{ RemoteException -> 0x0007 }
                             L_0x0007:
-                                com.android.systemui.statusbar.phone.StatusBar$104 r0 = com.android.systemui.statusbar.phone.StatusBar.AnonymousClass104.this     // Catch:{ CanceledException -> 0x0019 }
+                                com.android.systemui.statusbar.phone.StatusBar$105 r0 = com.android.systemui.statusbar.phone.StatusBar.AnonymousClass105.this     // Catch:{ CanceledException -> 0x0019 }
                                 android.app.PendingIntent r1 = r4     // Catch:{ CanceledException -> 0x0019 }
                                 r2 = 0
                                 r3 = 0
@@ -7600,18 +7638,18 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
                                 java.lang.String r1 = "StatusBar"
                                 android.util.Log.w(r1, r0)
                             L_0x0030:
-                                com.android.systemui.statusbar.phone.StatusBar$104 r0 = com.android.systemui.statusbar.phone.StatusBar.AnonymousClass104.this
+                                com.android.systemui.statusbar.phone.StatusBar$105 r0 = com.android.systemui.statusbar.phone.StatusBar.AnonymousClass105.this
                                 android.app.PendingIntent r0 = r4
                                 boolean r0 = r0.isActivity()
                                 if (r0 == 0) goto L_0x0043
-                                com.android.systemui.statusbar.phone.StatusBar$104 r9 = com.android.systemui.statusbar.phone.StatusBar.AnonymousClass104.this
+                                com.android.systemui.statusbar.phone.StatusBar$105 r9 = com.android.systemui.statusbar.phone.StatusBar.AnonymousClass105.this
                                 com.android.systemui.statusbar.phone.StatusBar r9 = com.android.systemui.statusbar.phone.StatusBar.this
                                 com.android.systemui.assist.AssistManager r9 = r9.mAssistManager
                                 r9.hideAssist()
                             L_0x0043:
                                 return
                             */
-                            throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.phone.StatusBar.AnonymousClass104.AnonymousClass1.run():void");
+                            throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.phone.StatusBar.AnonymousClass105.AnonymousClass1.run():void");
                         }
                     }.start();
                     StatusBar.this.animateCollapsePanels(2, true, true);

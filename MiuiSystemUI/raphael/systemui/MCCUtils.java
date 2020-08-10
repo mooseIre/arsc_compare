@@ -46,6 +46,10 @@ public class MCCUtils {
         return resources != null && resources.getBoolean(R.bool.status_bar_show_mobile_type_when_wifi_on);
     }
 
+    public static boolean isHideVowifiForOperator(Resources resources) {
+        return resources != null && resources.getBoolean(R.bool.status_bar_hide_vowifi_mcc_mnc);
+    }
+
     public static boolean isShowMobileInMMS(Resources resources) {
         return resources != null && resources.getBoolean(R.bool.status_bar_show_mobile_type_in_mms);
     }

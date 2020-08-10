@@ -63,6 +63,7 @@ public class StatusBarWindowView extends RenderAwareFrameLayout {
     private ViewTreeObserver.OnPreDrawListener mFloatingToolbarPreDrawListener;
     private KeyguardStatusBarView mKeyguardStatusBarView;
     private int mLeftInset = 0;
+    private boolean mNotTouchable = false;
     private NotificationPanelView mNotificationPanel;
     private boolean mPassingToControllerPanel;
     private int mRightInset = 0;
@@ -244,9 +245,16 @@ public class StatusBarWindowView extends RenderAwareFrameLayout {
         }
     }
 
+    public void setNotTouchable(boolean z) {
+        this.mNotTouchable = z;
+    }
+
     public boolean dispatchTouchEvent(MotionEvent motionEvent) {
         PhoneStatusBarView phoneStatusBarView;
         KeyguardStatusBarView keyguardStatusBarView;
+        if (this.mNotTouchable) {
+            return false;
+        }
         boolean z = true;
         boolean z2 = motionEvent.getActionMasked() == 0;
         boolean z3 = motionEvent.getActionMasked() == 1;

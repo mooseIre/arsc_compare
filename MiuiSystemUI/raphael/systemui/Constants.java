@@ -22,6 +22,7 @@ public class Constants {
     public static final boolean IS_OLED_SCREEN = ("oled".equals(SystemProperties.get("ro.vendor.display.type")) || "oled".equals(SystemProperties.get("ro.display.type")));
     public static final boolean IS_SUPPORT_LINEAR_MOTOR_VIBRATE = "linear".equals(SystemProperties.get("sys.haptic.motor"));
     public static final boolean IS_TABLET = miui.os.Build.IS_TABLET;
+    public static final String SILENT_MODE_ACTION = (Build.VERSION.SDK_INT < 30 ? "com.android.settings/com.android.settings.Settings$MiuiSilentModeAcivity" : "com.android.settings/com.android.settings.Settings$SoundSettingsActivity");
     public static final File SOUND_CHARGE_WIRELESS = new File("/system/media/audio/ui/charge_wireless.ogg");
     public static final File SOUND_CHARGING = new File("/system/media/audio/ui/charging.ogg");
     public static final File SOUND_DISCONNECT = new File("/system/media/audio/ui/disconnect.ogg");

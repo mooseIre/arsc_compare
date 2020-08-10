@@ -6,7 +6,6 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.KeyguardManager;
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -1572,14 +1571,8 @@ public class MiuiVolumeDialogImpl implements VolumeDialog, TunerService.Tunable,
             builder.setNegativeButton((CharSequence) MiuiVolumeDialogImpl.this.mContext.getResources().getString(R$string.miui_guide_dialog_button_negative_text), (DialogInterface.OnClickListener) new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialogInterface, int i) {
                     Log.d(MiuiVolumeDialogImpl.TAG, "showGuideDialog go to set.");
-                    ComponentName unflattenFromString = ComponentName.unflattenFromString("com.android.settings/com.android.settings.Settings$MiuiSilentModeAcivity");
-                    if (unflattenFromString != null) {
-                        Intent intent = new Intent("android.intent.action.MAIN");
-                        intent.setComponent(unflattenFromString);
-                        intent.setFlags(335544320);
-                        ((ActivityStarter) Dependency.get(ActivityStarter.class)).postStartActivityDismissingKeyguard(intent, 0);
-                        dialogInterface.dismiss();
-                    }
+                    ((ActivityStarter) Dependency.get(ActivityStarter.class)).postStartActivityDismissingKeyguard(Util.getSilentModeIntent(), 0);
+                    dialogInterface.dismiss();
                 }
             });
             AlertDialog create = builder.create();

@@ -256,4 +256,11 @@ public class Util {
         }
         return bool.booleanValue();
     }
+
+    public static Intent getSilentModeIntent() {
+        Intent intent = new Intent("android.intent.action.MAIN");
+        intent.setComponent(ComponentName.unflattenFromString(Constants.SILENT_MODE_ACTION));
+        intent.setFlags(335544320);
+        return intent;
+    }
 }

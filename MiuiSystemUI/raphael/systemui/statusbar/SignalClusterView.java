@@ -87,6 +87,7 @@ public class SignalClusterView extends LinearLayout implements NetworkController
     private boolean mForceBlockWifi;
     /* access modifiers changed from: private */
     public boolean mHideVolte;
+    private boolean mHideVowifi;
     private final HotspotController mHotspot;
     private final float mIconScaleFactor;
     private int mIconTint;
@@ -212,6 +213,7 @@ public class SignalClusterView extends LinearLayout implements NetworkController
         };
         Resources resources = getResources();
         Resources resourcesForOperation = MCCUtils.getResourcesForOperation(context, "00000", false);
+        this.mHideVowifi = resourcesForOperation.getBoolean(R.bool.status_bar_hide_vowifi);
         this.mHideVolte = resourcesForOperation.getBoolean(R.bool.status_bar_hide_volte);
         this.mShowHDIcon = resourcesForOperation.getBoolean(R.bool.status_bar_show_hd_icon);
         this.mMobileSignalGroupEndPadding = resources.getDimensionPixelSize(R.dimen.mobile_signal_group_end_padding);
@@ -408,7 +410,7 @@ public class SignalClusterView extends LinearLayout implements NetworkController
                 return;
             }
             this.mSlaveWifi.setVisibility(0);
-            updateIcon(this.mSlaveWifi, this.mSlaveWifiStrengthId, true);
+            updateIcon(this.mSlaveWifi, this.mSlaveWifiStrengthId);
         }
     }
 
@@ -505,9 +507,9 @@ public class SignalClusterView extends LinearLayout implements NetworkController
 
     public void setVowifi(int i, boolean z) {
         if (i < this.mVowifi.length) {
-            int i2 = ((!this.mNotchEar || this.mVoWifiEnableInEar) && z) ? 0 : 8;
+            int i2 = ((!this.mNotchEar || this.mVoWifiEnableInEar) && z && !this.mHideVowifi && !this.mNetworkController.hideVowifiForOperation(i)) ? 0 : 8;
             if (Constants.IS_INTERNATIONAL && i2 == 0) {
-                updateIcon(this.mVowifi[i], R.drawable.stat_sys_vowifi, false);
+                updateIcon(this.mVowifi[i], R.drawable.stat_sys_vowifi, this.mNetworkController.getResourcesForOperator(i));
             }
             this.mVowifi[i].setVisibility(i2);
         }
@@ -740,8 +742,8 @@ public class SignalClusterView extends LinearLayout implements NetworkController
                 this.mDemoMobileSignal.setImageResource(R.drawable.stat_sys_signal_5);
                 return;
             }
-            updateIcon(this.mVowifi[0], R.drawable.stat_sys_vowifi, false);
-            updateIcon(this.mVowifi[1], R.drawable.stat_sys_vowifi, false);
+            updateIcon(this.mVowifi[0], R.drawable.stat_sys_vowifi, this.mNetworkController.getResourcesForOperator(0));
+            updateIcon(this.mVowifi[1], R.drawable.stat_sys_vowifi, this.mNetworkController.getResourcesForOperator(1));
             int i4 = 0;
             while (true) {
                 LinearLayout[] linearLayoutArr = this.mMobileSignalGroup;
@@ -792,7 +794,7 @@ public class SignalClusterView extends LinearLayout implements NetworkController
                     this.mLastWifiStrengthId = this.mWifiStrengthId;
                     this.mLastWifiBadgeId = this.mWifiBadgeId;
                 }
-                updateIcon(this.mWifi, this.mWifiStrengthId, true);
+                updateIcon(this.mWifi, this.mWifiStrengthId);
                 ImageView imageView = this.mWifiActivity;
                 if (this.mWifiIn || this.mWifiOut) {
                     i = 0;
@@ -816,7 +818,7 @@ public class SignalClusterView extends LinearLayout implements NetworkController
                 this.mWifiLabel.setWifiLabel(true, this.mWifiName);
                 this.mWifiGroup.setVisibility(8);
             } else {
-                updateIcon(this.mWifi, this.mWifiStrengthId, true);
+                updateIcon(this.mWifi, this.mWifiStrengthId);
                 this.mWifiActivity.setVisibility(4);
                 this.mWifiLabel.setWifiLabel(false, this.mWifiName);
                 this.mWifiGroup.setContentDescription(this.mWifiDescription);
@@ -927,23 +929,23 @@ public class SignalClusterView extends LinearLayout implements NetworkController
     }
 
     private void applyIconTint() {
-        updateIcon(this.mAirplane, R.drawable.stat_sys_signal_flightmode, false);
-        updateIcon(this.mNoSims, R.drawable.stat_sys_no_sim, false);
-        updateIcon(this.mWifi, this.mDemoMode ? R.drawable.stat_sys_wifi_signal_4 : this.mWifiStrengthId, true);
-        updateIcon(this.mSlaveWifi, this.mSlaveWifiStrengthId, true);
-        updateIcon(this.mWifiApConnectMark, R.drawable.stat_sys_wifi_ap, false);
-        updateIcon(this.mWifiAp, R.drawable.stat_sys_wifi_ap_on, false);
-        updateIcon(this.mVowifi[0], R.drawable.stat_sys_vowifi, false);
-        updateIcon(this.mVowifi[1], R.drawable.stat_sys_vowifi, false);
-        updateIcon(this.mVpn, R.drawable.stat_sys_vpn, false);
+        updateIcon(this.mAirplane, R.drawable.stat_sys_signal_flightmode);
+        updateIcon(this.mNoSims, R.drawable.stat_sys_no_sim);
+        updateIcon(this.mWifi, this.mDemoMode ? R.drawable.stat_sys_wifi_signal_4 : this.mWifiStrengthId);
+        updateIcon(this.mSlaveWifi, this.mSlaveWifiStrengthId);
+        updateIcon(this.mWifiApConnectMark, R.drawable.stat_sys_wifi_ap);
+        updateIcon(this.mWifiAp, R.drawable.stat_sys_wifi_ap_on);
+        updateIcon(this.mVowifi[0], R.drawable.stat_sys_vowifi, this.mNetworkController.getResourcesForOperator(0));
+        updateIcon(this.mVowifi[1], R.drawable.stat_sys_vowifi, this.mNetworkController.getResourcesForOperator(1));
+        updateIcon(this.mVpn, R.drawable.stat_sys_vpn);
         setTextColor(this.mWifiLabel);
         setTextColor(this.mWifiGenerationView);
         int i = this.mLastWifiActivityId;
         if (i != -1) {
-            updateIcon(this.mWifiActivity, i, true);
+            updateIcon(this.mWifiActivity, i);
         }
-        updateIcon(this.mEthernet, R.drawable.stat_sys_ethernet, false);
-        updateIcon(this.mDemoMobileSignal, R.drawable.stat_sys_signal_5, false);
+        updateIcon(this.mEthernet, R.drawable.stat_sys_ethernet);
+        updateIcon(this.mDemoMobileSignal, R.drawable.stat_sys_signal_5);
         for (int i2 = 0; i2 < this.mPhoneStates.size(); i2++) {
             this.mPhoneStates.get(i2).setIconTint(this.mIconTint, this.mDarkIntensity, this.mTintArea);
         }
@@ -971,14 +973,23 @@ public class SignalClusterView extends LinearLayout implements NetworkController
     }
 
     /* access modifiers changed from: protected */
-    public void updateIcon(ImageView imageView, int i, boolean z) {
+    public void updateIcon(ImageView imageView, int i) {
+        updateIcon(imageView, i, (Resources) null);
+    }
+
+    /* access modifiers changed from: protected */
+    public void updateIcon(ImageView imageView, int i, Resources resources) {
+        if (resources == null) {
+            resources = this.mContext.getResources();
+        }
+        Resources.Theme theme = this.mContext.getTheme();
         if (imageView != null && i != 0) {
             imageView.setImageTintMode(PorterDuff.Mode.SRC_IN);
             if (Util.showCtsSpecifiedColor()) {
                 boolean inDarkMode = DarkIconDispatcherHelper.inDarkMode(this.mTintArea, imageView, this.mDarkIntensity);
-                imageView.setImageDrawable(this.mContext.getDrawable(Icons.get(Integer.valueOf(i), inDarkMode)));
+                imageView.setImageDrawable(resources.getDrawable(Icons.get(Integer.valueOf(i), inDarkMode), theme));
                 if (this.mFilterColor == 0) {
-                    this.mFilterColor = this.mContext.getResources().getColor(R.color.status_bar_icon_text_color_dark_mode_cts);
+                    this.mFilterColor = resources.getColor(R.color.status_bar_icon_text_color_dark_mode_cts, theme);
                 }
                 if (inDarkMode) {
                     imageView.setImageTintList(ColorStateList.valueOf(this.mFilterColor));
@@ -986,10 +997,10 @@ public class SignalClusterView extends LinearLayout implements NetworkController
                     imageView.setImageTintList((ColorStateList) null);
                 }
             } else if (this.mDarkIconDispatcher.useTint()) {
-                imageView.setImageDrawable(this.mContext.getDrawable(i));
+                imageView.setImageDrawable(resources.getDrawable(i, theme));
                 imageView.setImageTintList(ColorStateList.valueOf(DarkIconDispatcherHelper.getTint(this.mTintArea, imageView, this.mIconTint)));
             } else {
-                imageView.setImageDrawable(this.mContext.getDrawable(Icons.get(Integer.valueOf(i), DarkIconDispatcherHelper.inDarkMode(this.mTintArea, imageView, this.mDarkIntensity))));
+                imageView.setImageDrawable(resources.getDrawable(Icons.get(Integer.valueOf(i), DarkIconDispatcherHelper.inDarkMode(this.mTintArea, imageView, this.mDarkIntensity)), theme));
             }
         }
     }
@@ -1154,14 +1165,16 @@ public class SignalClusterView extends LinearLayout implements NetworkController
             this.mWcdmaCardSlot = (ImageView) viewGroup.findViewById(R.id.card_slot);
             this.mMobileType.setTypeface(Typeface.create("sans-serif-semibold", 1));
             if (!Constants.IS_INTERNATIONAL || SignalClusterView.this.mShowHDIcon) {
-                SignalClusterView.this.updateIcon(this.mVolte, R.drawable.stat_sys_signal_hd_big, true);
+                SignalClusterView signalClusterView = SignalClusterView.this;
+                signalClusterView.updateIcon(this.mVolte, R.drawable.stat_sys_signal_hd_big, signalClusterView.mNetworkController.getResourcesForOperator(this.mSlot));
             } else {
-                SignalClusterView.this.updateIcon(this.mVolte, R.drawable.stat_sys_signal_volte, true);
+                SignalClusterView signalClusterView2 = SignalClusterView.this;
+                signalClusterView2.updateIcon(this.mVolte, R.drawable.stat_sys_signal_volte, signalClusterView2.mNetworkController.getResourcesForOperator(this.mSlot));
             }
-            SignalClusterView signalClusterView = SignalClusterView.this;
-            signalClusterView.updateIcon(signalClusterView.mVowifi[0], R.drawable.stat_sys_vowifi, false);
-            SignalClusterView signalClusterView2 = SignalClusterView.this;
-            signalClusterView2.updateIcon(signalClusterView2.mVowifi[1], R.drawable.stat_sys_vowifi, false);
+            SignalClusterView signalClusterView3 = SignalClusterView.this;
+            signalClusterView3.updateIcon(signalClusterView3.mVowifi[0], R.drawable.stat_sys_vowifi, signalClusterView3.mNetworkController.getResourcesForOperator(0));
+            SignalClusterView signalClusterView4 = SignalClusterView.this;
+            signalClusterView4.updateIcon(signalClusterView4.mVowifi[1], R.drawable.stat_sys_vowifi, signalClusterView4.mNetworkController.getResourcesForOperator(1));
         }
 
         public boolean apply(boolean z) {
@@ -1188,7 +1201,7 @@ public class SignalClusterView extends LinearLayout implements NetworkController
                     int i2 = this.mLastMobileStrengthId;
                     int i3 = this.mMobileStrengthId;
                     if (i2 != i3) {
-                        SignalClusterView.this.updateIcon(this.mMobileSignal, i3, true);
+                        SignalClusterView.this.updateIcon(this.mMobileSignal, i3);
                         this.mLastMobileStrengthId = this.mMobileStrengthId;
                     }
                     boolean z2 = ((SignalClusterView.this.mWifiVisible && !SignalClusterView.this.mWifiNoNetwork && !SignalClusterView.this.mNetworkController.isMobileTypeShownWhenWifiOn(this.mSlot)) || isHideMobile(this.mDataConnected)) && !SignalClusterView.this.isBuildTest();
@@ -1228,7 +1241,7 @@ public class SignalClusterView extends LinearLayout implements NetworkController
                         this.mMobileInOutId = R.drawable.stat_sys_signal_in_left;
                     }
                     ImageView imageView = (is4GLTE || z3) ? this.mMobileInOut : this.mMobileInOutBottom;
-                    SignalClusterView.this.updateIcon(imageView, this.mMobileInOutId, true);
+                    SignalClusterView.this.updateIcon(imageView, this.mMobileInOutId);
                     imageView.setVisibility(((!SignalClusterView.this.mWifiVisible || SignalClusterView.this.mWifiNoNetwork) && this.mDataConnected) ? 0 : 8);
                     this.mIsSmallMode = z2 || is4GLTE || z3;
                     this.mSmallRoam.setVisibility((!this.mIsSmallMode || !this.mRoaming) ? 8 : 0);
@@ -1244,10 +1257,10 @@ public class SignalClusterView extends LinearLayout implements NetworkController
                     int i4 = this.mSlot;
                     if (i4 == 0) {
                         SignalClusterView signalClusterView3 = SignalClusterView.this;
-                        signalClusterView3.updateIcon(signalClusterView3.mSignalDualNotchMobile, Icons.getSignalHalfId(Integer.valueOf(this.mMobileStrengthId)), true);
+                        signalClusterView3.updateIcon(signalClusterView3.mSignalDualNotchMobile, Icons.getSignalHalfId(Integer.valueOf(this.mMobileStrengthId)));
                     } else if (i4 == 1) {
                         SignalClusterView signalClusterView4 = SignalClusterView.this;
-                        signalClusterView4.updateIcon(signalClusterView4.mSignalDualNotchMobile2, Icons.getSignalHalfId(Integer.valueOf(this.mMobileStrengthId)), true);
+                        signalClusterView4.updateIcon(signalClusterView4.mSignalDualNotchMobile2, Icons.getSignalHalfId(Integer.valueOf(this.mMobileStrengthId)));
                     }
                     SignalClusterView signalClusterView5 = SignalClusterView.this;
                     boolean[] zArr = signalClusterView5.mDataConnectedStatus;
@@ -1282,7 +1295,7 @@ public class SignalClusterView extends LinearLayout implements NetworkController
                             SignalClusterView signalClusterView9 = SignalClusterView.this;
                             signalClusterView9.mSignalDualNotchMobileUpgrade.setVisibility(updateMobileType ? signalClusterView9.mSignalDualNotchMobileType.getVisibility() : 8);
                             SignalClusterView signalClusterView10 = SignalClusterView.this;
-                            signalClusterView10.updateIcon(signalClusterView10.mSignalDualNotchMobileUpgrade, R.drawable.stat_sys_signal_upgrade, false);
+                            signalClusterView10.updateIcon(signalClusterView10.mSignalDualNotchMobileUpgrade, R.drawable.stat_sys_signal_upgrade);
                         }
                         if (this.mActivityIn && this.mActivityOut) {
                             this.mMobileInOutId = R.drawable.stat_sys_signal_dual_inout;
@@ -1294,7 +1307,7 @@ public class SignalClusterView extends LinearLayout implements NetworkController
                             this.mMobileInOutId = R.drawable.stat_sys_signal_dual_in;
                         }
                         SignalClusterView signalClusterView11 = SignalClusterView.this;
-                        signalClusterView11.updateIcon(signalClusterView11.mSignalDualNotchMobileInout, this.mMobileInOutId, true);
+                        signalClusterView11.updateIcon(signalClusterView11.mSignalDualNotchMobileInout, this.mMobileInOutId);
                         SignalClusterView signalClusterView12 = SignalClusterView.this;
                         ImageView imageView3 = signalClusterView12.mSignalDualNotchMobileInout;
                         if ((!signalClusterView12.mWifiVisible || SignalClusterView.this.mWifiNoNetwork) && this.mDataConnected) {
@@ -1320,9 +1333,9 @@ public class SignalClusterView extends LinearLayout implements NetworkController
         private void updateMobileTypeImage() {
             Log.d("SignalClusterView", "updateMobileTypeImage  " + getFiveGDrawable());
             if (getFiveGDrawable() > 0) {
-                SignalClusterView.this.updateIcon(this.mMobileTypeImage, getFiveGDrawable(), false);
+                SignalClusterView.this.updateIcon(this.mMobileTypeImage, getFiveGDrawable());
             } else {
-                SignalClusterView.this.updateIcon(this.mMobileTypeImage, R.drawable.stat_sys_signal_4g_lte, false);
+                SignalClusterView.this.updateIcon(this.mMobileTypeImage, R.drawable.stat_sys_signal_4g_lte);
             }
         }
 
@@ -1334,7 +1347,8 @@ public class SignalClusterView extends LinearLayout implements NetworkController
                     i = 8;
                 }
                 if (i == 0 && !SignalClusterView.this.mShowHDIcon) {
-                    SignalClusterView.this.updateIcon(this.mVolte, R.drawable.stat_sys_signal_volte, true);
+                    SignalClusterView signalClusterView = SignalClusterView.this;
+                    signalClusterView.updateIcon(this.mVolte, R.drawable.stat_sys_signal_volte, signalClusterView.mNetworkController.getResourcesForOperator(this.mSlot));
                 }
                 this.mVolte.setVisibility(i);
                 return;
@@ -1377,35 +1391,37 @@ public class SignalClusterView extends LinearLayout implements NetworkController
         public void setIconTint(int i, float f, Rect rect) {
             setTextColor();
             if (!SignalClusterView.this.mNotchEarDual) {
-                SignalClusterView.this.updateIcon(this.mMobileRoaming, R.drawable.stat_sys_data_connected_roam, false);
-                SignalClusterView.this.updateIcon(this.mMobileInOut, this.mMobileInOutId, true);
-                SignalClusterView.this.updateIcon(this.mMobileInOutBottom, this.mMobileInOutId, true);
-                SignalClusterView.this.updateIcon(this.mMobileSignal, this.mMobileStrengthId, true);
-                SignalClusterView.this.updateIcon(this.mNotchVolte, R.drawable.stat_sys_signal_hd_notch, false);
-                SignalClusterView.this.updateIcon(this.mSmallRoam, R.drawable.stat_sys_data_connected_roam_small, false);
+                SignalClusterView.this.updateIcon(this.mMobileRoaming, R.drawable.stat_sys_data_connected_roam);
+                SignalClusterView.this.updateIcon(this.mMobileInOut, this.mMobileInOutId);
+                SignalClusterView.this.updateIcon(this.mMobileInOutBottom, this.mMobileInOutId);
+                SignalClusterView.this.updateIcon(this.mMobileSignal, this.mMobileStrengthId);
+                SignalClusterView.this.updateIcon(this.mNotchVolte, R.drawable.stat_sys_signal_hd_notch);
+                SignalClusterView.this.updateIcon(this.mSmallRoam, R.drawable.stat_sys_data_connected_roam_small);
                 if (!Constants.IS_INTERNATIONAL || SignalClusterView.this.mShowHDIcon) {
-                    SignalClusterView.this.updateIcon(this.mVolte, R.drawable.stat_sys_signal_hd_big, true);
+                    SignalClusterView signalClusterView = SignalClusterView.this;
+                    signalClusterView.updateIcon(this.mVolte, R.drawable.stat_sys_signal_hd_big, signalClusterView.mNetworkController.getResourcesForOperator(this.mSlot));
                 } else {
-                    SignalClusterView.this.updateIcon(this.mVolte, R.drawable.stat_sys_signal_volte, true);
+                    SignalClusterView signalClusterView2 = SignalClusterView.this;
+                    signalClusterView2.updateIcon(this.mVolte, R.drawable.stat_sys_signal_volte, signalClusterView2.mNetworkController.getResourcesForOperator(this.mSlot));
                 }
-                SignalClusterView.this.updateIcon(this.mSpeechHd, R.drawable.stat_sys_speech_hd, false);
-                SignalClusterView.this.updateIcon(this.mVolteNoService, R.drawable.stat_sys_volte_no_service, false);
+                SignalClusterView.this.updateIcon(this.mSpeechHd, R.drawable.stat_sys_speech_hd);
+                SignalClusterView.this.updateIcon(this.mVolteNoService, R.drawable.stat_sys_volte_no_service);
                 updateMobileTypeImage();
                 return;
             }
             int i2 = this.mSlot;
             if (i2 == 0) {
-                SignalClusterView signalClusterView = SignalClusterView.this;
-                signalClusterView.updateIcon(signalClusterView.mSignalDualNotchMobile, Icons.getSignalHalfId(Integer.valueOf(this.mMobileStrengthId)), true);
+                SignalClusterView signalClusterView3 = SignalClusterView.this;
+                signalClusterView3.updateIcon(signalClusterView3.mSignalDualNotchMobile, Icons.getSignalHalfId(Integer.valueOf(this.mMobileStrengthId)));
             } else if (i2 == 1) {
-                SignalClusterView signalClusterView2 = SignalClusterView.this;
-                signalClusterView2.updateIcon(signalClusterView2.mSignalDualNotchMobile2, Icons.getSignalHalfId(Integer.valueOf(this.mMobileStrengthId)), true);
+                SignalClusterView signalClusterView4 = SignalClusterView.this;
+                signalClusterView4.updateIcon(signalClusterView4.mSignalDualNotchMobile2, Icons.getSignalHalfId(Integer.valueOf(this.mMobileStrengthId)));
             }
             if (this.mDataConnected) {
-                SignalClusterView signalClusterView3 = SignalClusterView.this;
-                signalClusterView3.updateIcon(signalClusterView3.mSignalDualNotchMobileInout, this.mMobileInOutId, true);
-                SignalClusterView signalClusterView4 = SignalClusterView.this;
-                signalClusterView4.updateIcon(signalClusterView4.mSignalDualNotchMobileUpgrade, R.drawable.stat_sys_signal_upgrade, false);
+                SignalClusterView signalClusterView5 = SignalClusterView.this;
+                signalClusterView5.updateIcon(signalClusterView5.mSignalDualNotchMobileInout, this.mMobileInOutId);
+                SignalClusterView signalClusterView6 = SignalClusterView.this;
+                signalClusterView6.updateIcon(signalClusterView6.mSignalDualNotchMobileUpgrade, R.drawable.stat_sys_signal_upgrade);
             }
         }
 

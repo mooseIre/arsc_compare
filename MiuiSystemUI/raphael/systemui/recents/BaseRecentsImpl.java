@@ -824,9 +824,9 @@ public abstract class BaseRecentsImpl {
 
     /* access modifiers changed from: private */
     public void adaptToTopActivity() {
-        ComponentName topActivity = Util.getTopActivity(this.mContext);
-        if (topActivity != null) {
-            onResumed(topActivity.getClassName());
+        ComponentName lastResumedActivity = Util.getLastResumedActivity(this.mContext);
+        if (lastResumedActivity != null) {
+            onResumed(lastResumedActivity.getClassName());
         }
     }
 

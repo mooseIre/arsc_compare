@@ -7,6 +7,7 @@ import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.systemui.Constants;
+import com.android.systemui.SmoothRoundDrawable;
 import com.android.systemui.Util;
 import com.android.systemui.plugins.R;
 import java.util.ArrayList;
@@ -85,6 +86,9 @@ public class Utils {
     public static Drawable getSmoothRoundDrawable(Context context, int i) {
         if (context == null || i <= 0) {
             return null;
+        }
+        if (!(context.getDrawable(i) instanceof SmoothRoundDrawable)) {
+            return context.getDrawable(i);
         }
         try {
             Resources resources = context.getResources();

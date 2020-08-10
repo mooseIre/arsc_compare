@@ -80,6 +80,7 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
     private final boolean mHasMobileDataFeature;
     private boolean mHasNoSims;
     private boolean[] mHideVolteForOperators;
+    private boolean[] mHideVowifiForOperators;
     private boolean mInetCondition;
     private boolean mIsEmergency;
     @VisibleForTesting
@@ -99,6 +100,7 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
     /* access modifiers changed from: private */
     public final Handler mReceiverHandler;
     private final Runnable mRegisterListeners;
+    private Resources[] mResourcesForOperators;
     private boolean mShowPlmnSPn;
     private NetworkController.SignalState mSignalState;
     private SlaveWifiSignalController mSlaveWifiSignalController;
@@ -182,9 +184,11 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
         this.mNetworkNameList = new String[i];
         this.mMobileTypeList = new String[i];
         this.mOperators = new String[i];
+        this.mResourcesForOperators = new Resources[i];
         this.mHideVolteForOperators = new boolean[i];
         this.misMobileTypeShownWhenWifiOn = new boolean[i];
         this.mDataConnedInMMsForOperators = new boolean[i];
+        this.mHideVowifiForOperators = new boolean[i];
         String string = context.getString(R.string.status_bar_network_name_separator);
         this.mNetworkNameSeparator = string;
         this.mNetworkNameSeparator = string;
@@ -580,6 +584,16 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
         }
     }
 
+    public Resources getResourcesForOperator(int i) {
+        if (i >= 0) {
+            Resources[] resourcesArr = this.mResourcesForOperators;
+            if (i < resourcesArr.length) {
+                return resourcesArr[i];
+            }
+        }
+        return null;
+    }
+
     public boolean hideVolteForOperation(int i) {
         return this.mHideVolteForOperators[i];
     }
@@ -590,6 +604,10 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
 
     public boolean dataConnedInMMsForOperation(int i) {
         return this.mDataConnedInMMsForOperators[i];
+    }
+
+    public boolean hideVowifiForOperation(int i) {
+        return this.mHideVowifiForOperators[i];
     }
 
     public void onConfigurationChanged(Configuration configuration) {
@@ -700,18 +718,21 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
             int slotId = list2.get(i4).getSlotId();
             String simOperatorNumericForPhone = this.mPhone.getSimOperatorNumericForPhone(slotId);
             if (simOperatorNumericForPhone != null) {
+                this.mResourcesForOperators[slotId] = MCCUtils.getResourcesForOperation(this.mContext, simOperatorNumericForPhone, true);
                 this.mOperators[slotId] = simOperatorNumericForPhone;
-                Resources resourcesForOperation = MCCUtils.getResourcesForOperation(this.mContext, simOperatorNumericForPhone, true);
-                this.mHideVolteForOperators[slotId] = MCCUtils.isHideVolte(resourcesForOperation);
-                this.misMobileTypeShownWhenWifiOn[slotId] = MCCUtils.isMobileTypeShownWhenWifiOn(resourcesForOperation);
-                this.mDataConnedInMMsForOperators[slotId] = MCCUtils.isShowMobileInMMS(resourcesForOperation);
+                this.mHideVolteForOperators[slotId] = MCCUtils.isHideVolte(this.mResourcesForOperators[slotId]);
+                this.misMobileTypeShownWhenWifiOn[slotId] = MCCUtils.isMobileTypeShownWhenWifiOn(this.mResourcesForOperators[slotId]);
+                this.mDataConnedInMMsForOperators[slotId] = MCCUtils.isShowMobileInMMS(this.mResourcesForOperators[slotId]);
+                this.mHideVowifiForOperators[slotId] = MCCUtils.isHideVowifiForOperator(this.mResourcesForOperators[slotId]);
             } else {
+                this.mResourcesForOperators[slotId] = null;
                 this.mOperators[slotId] = simOperatorNumericForPhone;
                 this.mHideVolteForOperators[slotId] = z;
                 this.misMobileTypeShownWhenWifiOn[slotId] = z;
                 this.mDataConnedInMMsForOperators[slotId] = z;
+                this.mHideVowifiForOperators[slotId] = this.mContext.getResources().getBoolean(R.bool.status_bar_hide_vowifi);
             }
-            Log.d("NetworkController", "setCurrentSubscriptions: subId = " + subscriptionId + ", slotId = " + slotId + ", oprator = " + simOperatorNumericForPhone + ", mHideVolteForOperators = " + this.mHideVolteForOperators[slotId] + ", misMobileTypeShownWhenWifiOn = " + this.misMobileTypeShownWhenWifiOn[slotId] + ", mDataConnedInMMsForOperators = " + this.mDataConnedInMMsForOperators[slotId]);
+            Log.d("NetworkController", "setCurrentSubscriptions: subId = " + subscriptionId + ", slotId = " + slotId + ", oprator = " + simOperatorNumericForPhone + ", mHideVolteForOperators = " + this.mHideVolteForOperators[slotId] + ", misMobileTypeShownWhenWifiOn = " + this.misMobileTypeShownWhenWifiOn[slotId] + ", mDataConnedInMMsForOperators = " + this.mDataConnedInMMsForOperators[slotId] + ", mHideVowifiForOperators = " + this.mHideVowifiForOperators[slotId]);
             arrayList2.add(Integer.valueOf(subscriptionId));
             if (sparseArray.indexOfKey(subscriptionId) < 0 || !((MobileSignalController) sparseArray.get(subscriptionId)).getSubscriptionInfo().getDisplayName().equals(list2.get(i4).getDisplayName())) {
                 i = size;

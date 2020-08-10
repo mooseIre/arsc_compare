@@ -1518,16 +1518,18 @@ public final class R {
         public static final int show_emergency_carrier_preferentially = 2131034205;
         public static final int show_plmn_and_spn_in_carrier = 2131034206;
         public static final int status_bar_hide_volte = 2131034207;
-        public static final int status_bar_notification_icons_notch_peeking_enabled = 2131034208;
-        public static final int status_bar_notification_icons_peeking_extra_padding = 2131034209;
-        public static final int status_bar_show_carrier = 2131034210;
-        public static final int status_bar_show_hd_icon = 2131034211;
-        public static final int status_bar_show_mobile_type_in_mms = 2131034212;
-        public static final int status_bar_show_mobile_type_when_wifi_on = 2131034213;
-        public static final int status_bar_show_spn_when_airplane = 2131034214;
-        public static final int support_round_corner = 2131034215;
-        public static final int taskmanager_default_is_screenshot_mode = 2131034216;
-        public static final int use_status_bar_tint = 2131034217;
+        public static final int status_bar_hide_vowifi = 2131034208;
+        public static final int status_bar_hide_vowifi_mcc_mnc = 2131034209;
+        public static final int status_bar_notification_icons_notch_peeking_enabled = 2131034210;
+        public static final int status_bar_notification_icons_peeking_extra_padding = 2131034211;
+        public static final int status_bar_show_carrier = 2131034212;
+        public static final int status_bar_show_hd_icon = 2131034213;
+        public static final int status_bar_show_mobile_type_in_mms = 2131034214;
+        public static final int status_bar_show_mobile_type_when_wifi_on = 2131034215;
+        public static final int status_bar_show_spn_when_airplane = 2131034216;
+        public static final int support_round_corner = 2131034217;
+        public static final int taskmanager_default_is_screenshot_mode = 2131034218;
+        public static final int use_status_bar_tint = 2131034219;
     }
 
     public static final class color {
