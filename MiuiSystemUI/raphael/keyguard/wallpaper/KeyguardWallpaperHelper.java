@@ -29,6 +29,8 @@ import com.android.keyguard.utils.ThemeUtils;
 import com.android.keyguard.wallpaper.mode.RequestInfo;
 import com.android.keyguard.wallpaper.mode.ResultInfo;
 import com.android.keyguard.wallpaper.mode.WallpaperInfo;
+import com.android.systemui.Dependency;
+import com.android.systemui.miui.statusbar.policy.ControlPanelController;
 import com.android.systemui.plugins.R;
 import com.google.gson.Gson;
 import java.util.List;
@@ -186,7 +188,7 @@ public class KeyguardWallpaperHelper {
                     }
                     if (!z) {
                         if (i == 12) {
-                            Settings.System.putIntForUser(KeyguardWallpaperHelper.this.mContext.getContentResolver(), "use_control_panel", Settings.System.getIntForUser(KeyguardWallpaperHelper.this.mContext.getContentResolver(), "use_control_panel", 1, 0), 0);
+                            Settings.System.putIntForUser(KeyguardWallpaperHelper.this.mContext.getContentResolver(), "use_control_panel", Settings.System.getIntForUser(KeyguardWallpaperHelper.this.mContext.getContentResolver(), "use_control_panel", ((ControlPanelController) Dependency.get(ControlPanelController.class)).getUseControlPanelSettingDefault(), 0), 0);
                         }
                         PreferenceUtils.putInt(KeyguardWallpaperHelper.this.mContext, "pref_key_init_control_center_switch", 1);
                     }
