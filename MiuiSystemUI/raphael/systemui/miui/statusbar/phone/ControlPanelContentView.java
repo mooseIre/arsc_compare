@@ -118,6 +118,7 @@ public class ControlPanelContentView extends FrameLayout {
         QSControlCenterPanel qSControlCenterPanel = this.mQsControlCenterPanel;
         if (qSControlCenterPanel != null) {
             qSControlCenterPanel.setExpand(true, true);
+            this.mQsControlCenterPanel.addControlsPlugin();
         }
     }
 
@@ -125,6 +126,7 @@ public class ControlPanelContentView extends FrameLayout {
         QSControlCenterPanel qSControlCenterPanel = this.mQsControlCenterPanel;
         if (qSControlCenterPanel != null) {
             qSControlCenterPanel.setExpand(false, true);
+            this.mQsControlCenterPanel.removeControlsPlugin();
         }
     }
 

@@ -1021,8 +1021,8 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
     }
 
     /* access modifiers changed from: private */
-    /* JADX WARNING: Removed duplicated region for block: B:182:0x0364  */
-    /* JADX WARNING: Removed duplicated region for block: B:188:0x0378  */
+    /* JADX WARNING: Removed duplicated region for block: B:182:0x0365  */
+    /* JADX WARNING: Removed duplicated region for block: B:188:0x0379  */
     /* JADX WARNING: Removed duplicated region for block: B:69:0x0160  */
     /* JADX WARNING: Removed duplicated region for block: B:75:0x0178  */
     /* Code decompiled incorrectly, please refer to instructions dump. */
@@ -1055,7 +1055,7 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
             com.android.systemui.statusbar.policy.WifiSignalController$WifiState r0 = r0.mDemoWifiState
             java.lang.String r1 = "DemoMode"
             r0.ssid = r1
-            goto L_0x03b1
+            goto L_0x03b2
         L_0x0039:
             boolean r3 = r0.mDemoMode
             r6 = 0
@@ -1087,13 +1087,13 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
             java.lang.Runnable r2 = r0.mRegisterListeners
             r1.post(r2)
             r17.notifyAllListeners()
-            goto L_0x03b1
+            goto L_0x03b2
         L_0x007b:
             boolean r3 = r0.mDemoMode
-            if (r3 == 0) goto L_0x03b1
+            if (r3 == 0) goto L_0x03b2
             java.lang.String r3 = "network"
             boolean r1 = r1.equals(r3)
-            if (r1 == 0) goto L_0x03b1
+            if (r1 == 0) goto L_0x03b2
             java.lang.String r1 = "airplane"
             java.lang.String r1 = r2.getString(r1)
             java.lang.String r3 = "show"
@@ -1270,250 +1270,250 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
         L_0x01e1:
             java.lang.String r1 = "mobile"
             java.lang.String r1 = r2.getString(r1)
-            if (r1 == 0) goto L_0x038e
+            if (r1 == 0) goto L_0x038f
             boolean r1 = r1.equals(r3)
             java.lang.String r8 = "datatype"
             java.lang.String r8 = r2.getString(r8)
             java.lang.String r9 = "slot"
             java.lang.String r9 = r2.getString(r9)
             boolean r14 = android.text.TextUtils.isEmpty(r9)
-            if (r14 == 0) goto L_0x0201
+            if (r14 == 0) goto L_0x0202
             r9 = 0
-            goto L_0x0205
-        L_0x0201:
+            goto L_0x0206
+        L_0x0202:
             int r9 = java.lang.Integer.parseInt(r9)
-        L_0x0205:
+        L_0x0206:
             r14 = 0
             int r6 = android.util.MathUtils.constrain(r9, r14, r6)
             java.util.ArrayList r9 = new java.util.ArrayList
             r9.<init>()
-        L_0x020f:
+        L_0x0210:
             android.util.SparseArray<com.android.systemui.statusbar.policy.MobileSignalController> r14 = r0.mMobileSignalControllers
             int r14 = r14.size()
-            if (r14 > r6) goto L_0x0225
+            if (r14 > r6) goto L_0x0226
             android.util.SparseArray<com.android.systemui.statusbar.policy.MobileSignalController> r14 = r0.mMobileSignalControllers
             int r14 = r14.size()
             miui.telephony.SubscriptionInfo r14 = r0.addSignalController(r14, r14)
             r9.add(r14)
-            goto L_0x020f
-        L_0x0225:
+            goto L_0x0210
+        L_0x0226:
             boolean r14 = r9.isEmpty()
-            if (r14 != 0) goto L_0x0230
+            if (r14 != 0) goto L_0x0231
             com.android.systemui.statusbar.policy.CallbackHandler r14 = r0.mCallbackHandler
             r14.setSubs(r9)
-        L_0x0230:
+        L_0x0231:
             android.util.SparseArray<com.android.systemui.statusbar.policy.MobileSignalController> r9 = r0.mMobileSignalControllers
             java.lang.Object r6 = r9.valueAt(r6)
             com.android.systemui.statusbar.policy.MobileSignalController r6 = (com.android.systemui.statusbar.policy.MobileSignalController) r6
             com.android.systemui.statusbar.policy.SignalController$State r9 = r6.getState()
             com.android.systemui.statusbar.policy.MobileSignalController$MobileState r9 = (com.android.systemui.statusbar.policy.MobileSignalController.MobileState) r9
-            if (r8 == 0) goto L_0x0242
+            if (r8 == 0) goto L_0x0243
             r14 = r5
-            goto L_0x0243
-        L_0x0242:
-            r14 = 0
+            goto L_0x0244
         L_0x0243:
+            r14 = 0
+        L_0x0244:
             r9.dataSim = r14
             com.android.systemui.statusbar.policy.SignalController$State r9 = r6.getState()
             com.android.systemui.statusbar.policy.MobileSignalController$MobileState r9 = (com.android.systemui.statusbar.policy.MobileSignalController.MobileState) r9
-            if (r8 == 0) goto L_0x024f
+            if (r8 == 0) goto L_0x0250
             r14 = r5
-            goto L_0x0250
-        L_0x024f:
-            r14 = 0
+            goto L_0x0251
         L_0x0250:
+            r14 = 0
+        L_0x0251:
             r9.isDefault = r14
             com.android.systemui.statusbar.policy.SignalController$State r9 = r6.getState()
             com.android.systemui.statusbar.policy.MobileSignalController$MobileState r9 = (com.android.systemui.statusbar.policy.MobileSignalController.MobileState) r9
-            if (r8 == 0) goto L_0x025c
+            if (r8 == 0) goto L_0x025d
             r14 = r5
-            goto L_0x025d
-        L_0x025c:
-            r14 = 0
+            goto L_0x025e
         L_0x025d:
+            r14 = 0
+        L_0x025e:
             r9.dataConnected = r14
-            if (r8 == 0) goto L_0x02da
+            if (r8 == 0) goto L_0x02db
             com.android.systemui.statusbar.policy.SignalController$State r9 = r6.getState()
             com.android.systemui.statusbar.policy.MobileSignalController$MobileState r9 = (com.android.systemui.statusbar.policy.MobileSignalController.MobileState) r9
             java.lang.String r14 = "1x"
             boolean r14 = r8.equals(r14)
-            if (r14 == 0) goto L_0x0273
+            if (r14 == 0) goto L_0x0274
             com.android.systemui.statusbar.policy.MobileSignalController$MobileIconGroup r8 = com.android.systemui.statusbar.policy.TelephonyIcons.ONE_X
-            goto L_0x02d8
-        L_0x0273:
+            goto L_0x02d9
+        L_0x0274:
             java.lang.String r14 = "3g"
             boolean r14 = r8.equals(r14)
-            if (r14 == 0) goto L_0x027e
+            if (r14 == 0) goto L_0x027f
             com.android.systemui.statusbar.policy.MobileSignalController$MobileIconGroup r8 = com.android.systemui.statusbar.policy.TelephonyIcons.THREE_G
-            goto L_0x02d8
-        L_0x027e:
+            goto L_0x02d9
+        L_0x027f:
             java.lang.String r14 = "4g"
             boolean r14 = r8.equals(r14)
-            if (r14 == 0) goto L_0x0289
+            if (r14 == 0) goto L_0x028a
             com.android.systemui.statusbar.policy.MobileSignalController$MobileIconGroup r8 = com.android.systemui.statusbar.policy.TelephonyIcons.FOUR_G
-            goto L_0x02d8
-        L_0x0289:
+            goto L_0x02d9
+        L_0x028a:
             java.lang.String r14 = "4g+"
             boolean r14 = r8.equals(r14)
-            if (r14 == 0) goto L_0x0294
+            if (r14 == 0) goto L_0x0295
             com.android.systemui.statusbar.policy.MobileSignalController$MobileIconGroup r8 = com.android.systemui.statusbar.policy.TelephonyIcons.FOUR_G_PLUS
-            goto L_0x02d8
-        L_0x0294:
+            goto L_0x02d9
+        L_0x0295:
             java.lang.String r14 = "e"
             boolean r14 = r8.equals(r14)
-            if (r14 == 0) goto L_0x029f
+            if (r14 == 0) goto L_0x02a0
             com.android.systemui.statusbar.policy.MobileSignalController$MobileIconGroup r8 = com.android.systemui.statusbar.policy.TelephonyIcons.E
-            goto L_0x02d8
-        L_0x029f:
+            goto L_0x02d9
+        L_0x02a0:
             java.lang.String r14 = "g"
             boolean r14 = r8.equals(r14)
-            if (r14 == 0) goto L_0x02aa
+            if (r14 == 0) goto L_0x02ab
             com.android.systemui.statusbar.policy.MobileSignalController$MobileIconGroup r8 = com.android.systemui.statusbar.policy.TelephonyIcons.G
-            goto L_0x02d8
-        L_0x02aa:
+            goto L_0x02d9
+        L_0x02ab:
             java.lang.String r14 = "h"
             boolean r14 = r8.equals(r14)
-            if (r14 == 0) goto L_0x02b5
+            if (r14 == 0) goto L_0x02b6
             com.android.systemui.statusbar.policy.MobileSignalController$MobileIconGroup r8 = com.android.systemui.statusbar.policy.TelephonyIcons.H
-            goto L_0x02d8
-        L_0x02b5:
+            goto L_0x02d9
+        L_0x02b6:
             java.lang.String r14 = "lte"
             boolean r14 = r8.equals(r14)
-            if (r14 == 0) goto L_0x02c0
+            if (r14 == 0) goto L_0x02c1
             com.android.systemui.statusbar.policy.MobileSignalController$MobileIconGroup r8 = com.android.systemui.statusbar.policy.TelephonyIcons.LTE
-            goto L_0x02d8
-        L_0x02c0:
+            goto L_0x02d9
+        L_0x02c1:
             java.lang.String r14 = "lte+"
             boolean r14 = r8.equals(r14)
-            if (r14 == 0) goto L_0x02cb
+            if (r14 == 0) goto L_0x02cc
             com.android.systemui.statusbar.policy.MobileSignalController$MobileIconGroup r8 = com.android.systemui.statusbar.policy.TelephonyIcons.LTE_PLUS
-            goto L_0x02d8
-        L_0x02cb:
+            goto L_0x02d9
+        L_0x02cc:
             java.lang.String r14 = "dis"
             boolean r8 = r8.equals(r14)
-            if (r8 == 0) goto L_0x02d6
+            if (r8 == 0) goto L_0x02d7
             com.android.systemui.statusbar.policy.MobileSignalController$MobileIconGroup r8 = com.android.systemui.statusbar.policy.TelephonyIcons.DATA_DISABLED
-            goto L_0x02d8
-        L_0x02d6:
+            goto L_0x02d9
+        L_0x02d7:
             com.android.systemui.statusbar.policy.MobileSignalController$MobileIconGroup r8 = com.android.systemui.statusbar.policy.TelephonyIcons.UNKNOWN
-        L_0x02d8:
+        L_0x02d9:
             r9.iconGroup = r8
-        L_0x02da:
+        L_0x02db:
             java.lang.String r8 = "roam"
             boolean r8 = r2.containsKey(r8)
-            if (r8 == 0) goto L_0x02f4
+            if (r8 == 0) goto L_0x02f5
             com.android.systemui.statusbar.policy.SignalController$State r8 = r6.getState()
             com.android.systemui.statusbar.policy.MobileSignalController$MobileState r8 = (com.android.systemui.statusbar.policy.MobileSignalController.MobileState) r8
             java.lang.String r9 = "roam"
             java.lang.String r9 = r2.getString(r9)
             boolean r9 = r3.equals(r9)
             r8.roaming = r9
-        L_0x02f4:
+        L_0x02f5:
             java.lang.String r8 = r2.getString(r13)
-            if (r8 == 0) goto L_0x0328
+            if (r8 == 0) goto L_0x0329
             com.android.systemui.statusbar.policy.SignalController$State r9 = r6.getState()
             com.android.systemui.statusbar.policy.MobileSignalController$MobileState r9 = (com.android.systemui.statusbar.policy.MobileSignalController.MobileState) r9
             boolean r11 = r8.equals(r11)
-            if (r11 == 0) goto L_0x0308
+            if (r11 == 0) goto L_0x0309
             r14 = -1
-            goto L_0x0311
-        L_0x0308:
+            goto L_0x0312
+        L_0x0309:
             int r8 = java.lang.Integer.parseInt(r8)
             r11 = 5
             int r14 = java.lang.Math.min(r8, r11)
-        L_0x0311:
+        L_0x0312:
             r9.level = r14
             com.android.systemui.statusbar.policy.SignalController$State r8 = r6.getState()
             com.android.systemui.statusbar.policy.MobileSignalController$MobileState r8 = (com.android.systemui.statusbar.policy.MobileSignalController.MobileState) r8
             com.android.systemui.statusbar.policy.SignalController$State r9 = r6.getState()
             com.android.systemui.statusbar.policy.MobileSignalController$MobileState r9 = (com.android.systemui.statusbar.policy.MobileSignalController.MobileState) r9
             int r9 = r9.level
-            if (r9 < 0) goto L_0x0325
+            if (r9 < 0) goto L_0x0326
             r9 = r5
-            goto L_0x0326
-        L_0x0325:
-            r9 = 0
+            goto L_0x0327
         L_0x0326:
+            r9 = 0
+        L_0x0327:
             r8.connected = r9
-        L_0x0328:
+        L_0x0329:
             java.lang.String r8 = r2.getString(r12)
-            if (r8 == 0) goto L_0x037e
+            if (r8 == 0) goto L_0x037f
             com.android.systemui.statusbar.policy.SignalController$State r9 = r6.getState()
             com.android.systemui.statusbar.policy.MobileSignalController$MobileState r9 = (com.android.systemui.statusbar.policy.MobileSignalController.MobileState) r9
             r9.dataConnected = r5
             int r9 = r8.hashCode()
-            if (r9 == r10) goto L_0x0359
+            if (r9 == r10) goto L_0x035a
             r10 = 110414(0x1af4e, float:1.54723E-40)
-            if (r9 == r10) goto L_0x0351
+            if (r9 == r10) goto L_0x0352
             r7 = 100357129(0x5fb5409, float:2.3634796E-35)
-            if (r9 == r7) goto L_0x0347
-            goto L_0x0361
-        L_0x0347:
+            if (r9 == r7) goto L_0x0348
+            goto L_0x0362
+        L_0x0348:
             java.lang.String r4 = "inout"
             boolean r4 = r8.equals(r4)
-            if (r4 == 0) goto L_0x0361
+            if (r4 == 0) goto L_0x0362
             r4 = 0
-            goto L_0x0362
-        L_0x0351:
+            goto L_0x0363
+        L_0x0352:
             boolean r4 = r8.equals(r4)
-            if (r4 == 0) goto L_0x0361
+            if (r4 == 0) goto L_0x0362
             r4 = 2
-            goto L_0x0362
-        L_0x0359:
+            goto L_0x0363
+        L_0x035a:
             boolean r4 = r8.equals(r7)
-            if (r4 == 0) goto L_0x0361
+            if (r4 == 0) goto L_0x0362
             r4 = r5
-            goto L_0x0362
-        L_0x0361:
-            r4 = -1
+            goto L_0x0363
         L_0x0362:
-            if (r4 == 0) goto L_0x0378
-            if (r4 == r5) goto L_0x0373
+            r4 = -1
+        L_0x0363:
+            if (r4 == 0) goto L_0x0379
+            if (r4 == r5) goto L_0x0374
             r7 = 2
-            if (r4 == r7) goto L_0x036e
+            if (r4 == r7) goto L_0x036f
             r15 = 0
             r6.setActivity(r15)
-            goto L_0x0382
-        L_0x036e:
+            goto L_0x0383
+        L_0x036f:
             r15 = 0
             r6.setActivity(r7)
-            goto L_0x0382
-        L_0x0373:
+            goto L_0x0383
+        L_0x0374:
             r15 = 0
             r6.setActivity(r5)
-            goto L_0x0382
-        L_0x0378:
+            goto L_0x0383
+        L_0x0379:
             r15 = 0
             r4 = 3
             r6.setActivity(r4)
-            goto L_0x0382
-        L_0x037e:
+            goto L_0x0383
+        L_0x037f:
             r15 = 0
             r6.setActivity(r15)
-        L_0x0382:
+        L_0x0383:
             com.android.systemui.statusbar.policy.SignalController$State r4 = r6.getState()
             com.android.systemui.statusbar.policy.MobileSignalController$MobileState r4 = (com.android.systemui.statusbar.policy.MobileSignalController.MobileState) r4
             r4.enabled = r1
             r6.notifyListeners()
-            goto L_0x038f
-        L_0x038e:
-            r15 = 0
+            goto L_0x0390
         L_0x038f:
+            r15 = 0
+        L_0x0390:
             java.lang.String r1 = "carriernetworkchange"
             java.lang.String r1 = r2.getString(r1)
-            if (r1 == 0) goto L_0x03b1
+            if (r1 == 0) goto L_0x03b2
             boolean r1 = r1.equals(r3)
-        L_0x039b:
+        L_0x039c:
             android.util.SparseArray<com.android.systemui.statusbar.policy.MobileSignalController> r2 = r0.mMobileSignalControllers
             int r2 = r2.size()
-            if (r15 >= r2) goto L_0x03b1
+            if (r15 >= r2) goto L_0x03b2
             android.util.SparseArray<com.android.systemui.statusbar.policy.MobileSignalController> r2 = r0.mMobileSignalControllers
             java.lang.Object r2 = r2.valueAt(r15)
             com.android.systemui.statusbar.policy.MobileSignalController r2 = (com.android.systemui.statusbar.policy.MobileSignalController) r2
             r2.setCarrierNetworkChangeMode(r1)
             int r15 = r15 + 1
-            goto L_0x039b
-        L_0x03b1:
+            goto L_0x039c
+        L_0x03b2:
             return
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.policy.NetworkControllerImpl.handleDemoCommand(java.lang.String, android.os.Bundle):void");

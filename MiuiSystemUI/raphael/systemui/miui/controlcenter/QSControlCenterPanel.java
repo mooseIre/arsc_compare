@@ -24,12 +24,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
-import android.widget.TextView;
 import com.android.systemui.Constants;
 import com.android.systemui.Dependency;
 import com.android.systemui.miui.controlcenter.QSControlDetail;
 import com.android.systemui.miui.controlcenter.policy.QCBrightnessMirrorController;
 import com.android.systemui.miui.controlcenter.tileImpl.CCQSTileView;
+import com.android.systemui.miui.controls.ControlsPluginManager;
 import com.android.systemui.miui.statusbar.analytics.SystemUIStat;
 import com.android.systemui.miui.statusbar.phone.ControlPanelContentView;
 import com.android.systemui.miui.statusbar.phone.ControlPanelWindowView;
@@ -57,6 +57,7 @@ import miuix.animation.utils.EaseManager;
 
 public class QSControlCenterPanel extends FrameLayout implements ConfigurationController.ConfigurationListener {
     private boolean DEBUG = Constants.DEBUG;
+    private boolean isMoveY = false;
     protected IStateStyle mAnim;
     protected AnimConfig mAnimConfig;
     private AutoBrightnessView mAutoBrightnessView;
@@ -76,8 +77,10 @@ public class QSControlCenterPanel extends FrameLayout implements ConfigurationCo
     private QSControlFooter mControlFooter;
     private ControlPanelContentView mControlPanelContentView;
     private ControlPanelWindowView mControlPanelWindowView;
+    private ControlsPluginManager mControlsPluginManager;
     private QSControlDetail.QSPanelCallback mDetailCallback;
     private QSPanel.Record mDetailRecord;
+    private int mDistanceToBottom;
     private View mEditTiles;
     /* access modifiers changed from: private */
     public int mExpandHeightThres;
@@ -100,6 +103,7 @@ public class QSControlCenterPanel extends FrameLayout implements ConfigurationCo
     private QSControlFooter mLandCtrFooter;
     private LinearLayout mLandFootPanel;
     private QCBrightnessMirrorController mLandMirrorController;
+    private LinearLayout mLandSmartControlsView;
     private LinearLayout mLandTiles;
     private boolean mListening;
     private int mMaximumVelocity;
@@ -120,6 +124,7 @@ public class QSControlCenterPanel extends FrameLayout implements ConfigurationCo
     public QSControlCenterTileLayout mQuickQsControlCenterTileLayout;
     private int mScreenHeight;
     protected AnimState mShowAnim;
+    private LinearLayout mSmartControlsView;
     private View mTileView0;
     private LinearLayout mTilesContainer;
     private int mTransLineNum;
@@ -176,6 +181,8 @@ public class QSControlCenterPanel extends FrameLayout implements ConfigurationCo
         this.mAutoBrightnessView = (AutoBrightnessView) findViewById(R.id.auto_brightness);
         this.mLandAutoBrightnessView = (AutoBrightnessView) findViewById(R.id.auto_brightness_land);
         this.mExpandTileView = (QSControlExpandTileView) findViewById(R.id.expand_tile);
+        this.mSmartControlsView = (LinearLayout) findViewById(R.id.ll_smart_controls);
+        this.mLandSmartControlsView = (LinearLayout) findViewById(R.id.ll_smart_controls_land);
         this.mTilesContainer = (LinearLayout) findViewById(R.id.tiles_container);
         this.mBigTiles = (ViewGroup) findViewById(R.id.big_tiles);
         this.mLandTiles = (LinearLayout) findViewById(R.id.land_tiles);
@@ -205,6 +212,7 @@ public class QSControlCenterPanel extends FrameLayout implements ConfigurationCo
         ViewConfiguration viewConfiguration = ViewConfiguration.get(this.mContext);
         this.mMinimumVelocity = 500;
         this.mMaximumVelocity = viewConfiguration.getScaledMaximumFlingVelocity();
+        this.mControlsPluginManager = (ControlsPluginManager) Dependency.get(ControlsPluginManager.class);
     }
 
     public void setControlPanelContentView(ControlPanelContentView controlPanelContentView) {
@@ -284,6 +292,25 @@ public class QSControlCenterPanel extends FrameLayout implements ConfigurationCo
         }
     }
 
+    public void addControlsPlugin() {
+        View controlsView;
+        if (this.mControlsPluginManager != null && !this.mPanelController.isSuperPowerMode() && (controlsView = this.mControlsPluginManager.getControlsView()) != null) {
+            if (this.mOrientation == 1) {
+                this.mSmartControlsView.addView(controlsView);
+            } else {
+                this.mLandSmartControlsView.addView(controlsView);
+            }
+        }
+    }
+
+    public void removeControlsPlugin() {
+        if (this.mControlsPluginManager != null) {
+            this.mSmartControlsView.removeAllViews();
+            this.mLandSmartControlsView.removeAllViews();
+            this.mControlsPluginManager.hideControlView();
+        }
+    }
+
     private boolean isOrientationPortrait() {
         return this.mOrientation == 1;
     }
@@ -344,6 +371,7 @@ public class QSControlCenterPanel extends FrameLayout implements ConfigurationCo
                 this.mBrightnessView.setScaleX(1.0f);
                 this.mBrightnessView.setScaleY(1.0f);
                 this.mBrightnessView.setAlpha(1.0f);
+                updateSmartControls(true);
                 this.mControlFooter.resetViews();
             } else {
                 this.mBigTilesScrollView.setVisibility(0);
@@ -366,6 +394,7 @@ public class QSControlCenterPanel extends FrameLayout implements ConfigurationCo
                 this.mLandAutoBrightnessView.setScaleX(1.0f);
                 this.mLandAutoBrightnessView.setScaleY(1.0f);
                 this.mLandAutoBrightnessView.setAlpha(1.0f);
+                updateSmartControls(false);
                 this.mLandCtrFooter.resetViews();
             }
             updateViews();
@@ -391,6 +420,20 @@ public class QSControlCenterPanel extends FrameLayout implements ConfigurationCo
         this.mQuickQsControlCenterTileLayout.updateResources();
         this.mControlFooter.updateResources();
         this.mLandCtrFooter.updateResources();
+    }
+
+    private void updateSmartControls(boolean z) {
+        if (z) {
+            if (this.mLandSmartControlsView.getChildCount() > 0) {
+                View childAt = this.mLandSmartControlsView.getChildAt(0);
+                this.mLandSmartControlsView.removeAllViews();
+                this.mSmartControlsView.addView(childAt);
+            }
+        } else if (this.mSmartControlsView.getChildCount() > 0) {
+            View childAt2 = this.mSmartControlsView.getChildAt(0);
+            this.mSmartControlsView.removeAllViews();
+            this.mLandSmartControlsView.addView(childAt2);
+        }
     }
 
     /* access modifiers changed from: protected */
@@ -422,18 +465,39 @@ public class QSControlCenterPanel extends FrameLayout implements ConfigurationCo
             this.mBaseTransitionY = this.mFootPanel.getTranslationY();
             this.mExpandIndicatorBottom.getBoundsOnScreen(new Rect());
         } else if (actionMasked == 2) {
-            if (!isBigTileTouched() && this.mQuickQsControlCenterTileLayout.isCollapsed() && Math.abs(motionEvent.getRawY() - this.mInitialTouchY) > Math.abs(motionEvent.getRawX() - this.mInitialTouchX)) {
+            this.isMoveY = Math.abs(motionEvent.getRawY() - this.mInitialTouchY) > Math.abs(motionEvent.getRawX() - this.mInitialTouchX);
+            if (!isBigTileTouched() && this.mQuickQsControlCenterTileLayout.isCollapsed() && this.isMoveY) {
+                if (this.mSmartControlsView.getChildCount() > 0) {
+                    if (motionEvent.getRawY() < this.mInitialTouchY && !this.mQsControlScrollView.isScrolledToBottom() && this.mSmartControlsView.getHeight() > this.mDistanceToBottom) {
+                        return false;
+                    }
+                    if (motionEvent.getRawY() <= this.mInitialTouchY || this.mQsControlScrollView.isScrolledToTop()) {
+                        return true;
+                    }
+                    return false;
+                }
                 return true;
-            }
-            if ((motionEvent.getRawY() < this.mInitialTouchY && this.mQuickQsControlCenterTileLayout.isExpanded() && (this.mQsControlScrollView.isScrolledToBottom() || (this.mQsControlScrollView.isScrolledToTop() && !this.mQuickQsControlCenterTileLayout.canScroll()))) || this.mQuickQsControlCenterTileLayout.isExpanding()) {
+            } else if (motionEvent.getRawY() < this.mInitialTouchY && this.isMoveY && this.mQuickQsControlCenterTileLayout.isExpanded() && (this.mQsControlScrollView.isScrolledToBottom() || (this.mQsControlScrollView.isScrolledToTop() && !this.mQuickQsControlCenterTileLayout.canScroll()))) {
                 return true;
+            } else {
+                if (this.mQuickQsControlCenterTileLayout.isExpanding() && this.isMoveY) {
+                    return true;
+                }
             }
         }
         return super.onInterceptTouchEvent(motionEvent);
     }
 
+    private boolean isHeaderAreaTouchDown(float f) {
+        int[] locationOnScreen = this.mHeader.getLocationOnScreen();
+        if (f < ((float) locationOnScreen[1]) || f > ((float) (locationOnScreen[1] + this.mHeader.getHeight()))) {
+            return false;
+        }
+        return true;
+    }
+
     /* JADX WARNING: Code restructure failed: missing block: B:9:0x003c, code lost:
-        if (r2 != 3) goto L_0x011a;
+        if (r2 != 3) goto L_0x0124;
      */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     public boolean onTouchEvent(android.view.MotionEvent r6) {
@@ -459,30 +523,35 @@ public class QSControlCenterPanel extends FrameLayout implements ConfigurationCo
             int r2 = r6.getActionMasked()
             r3 = 0
             r4 = 1
-            if (r2 == 0) goto L_0x00f6
+            if (r2 == 0) goto L_0x0100
             r0 = 2
-            if (r2 == r4) goto L_0x007d
+            if (r2 == r4) goto L_0x0087
             if (r2 == r0) goto L_0x0040
             r1 = 3
-            if (r2 == r1) goto L_0x007d
-            goto L_0x011a
+            if (r2 == r1) goto L_0x0087
+            goto L_0x0124
         L_0x0040:
             r5.mMoved = r4
             boolean r0 = r5.isOrientationPortrait()
             if (r0 != 0) goto L_0x004a
-            goto L_0x011a
+            goto L_0x0124
         L_0x004a:
+            float r0 = r5.mInitialTouchY
+            boolean r0 = r5.isHeaderAreaTouchDown(r0)
+            if (r0 == 0) goto L_0x0054
+            goto L_0x0124
+        L_0x0054:
             float r0 = r6.getRawY()
             float r2 = r5.mInitialTouchY
             int r0 = (r0 > r2 ? 1 : (r0 == r2 ? 0 : -1))
-            if (r0 >= 0) goto L_0x0063
+            if (r0 >= 0) goto L_0x006d
             com.android.systemui.miui.controlcenter.QSControlCenterTileLayout r0 = r5.mQuickQsControlCenterTileLayout
             boolean r0 = r0.isCollapsed()
-            if (r0 == 0) goto L_0x0063
+            if (r0 == 0) goto L_0x006d
             com.android.systemui.miui.statusbar.phone.ControlPanelWindowView r5 = r5.mControlPanelWindowView
             r5.onTouchEvent(r6)
-            goto L_0x011a
-        L_0x0063:
+            goto L_0x0124
+        L_0x006d:
             float r6 = r5.mInitialTouchY
             float r1 = r1 - r6
             miuix.animation.IStateStyle r6 = r5.mFootPanelTransAnim
@@ -496,26 +565,26 @@ public class QSControlCenterPanel extends FrameLayout implements ConfigurationCo
             float r0 = (float) r0
             float r6 = r6 / r0
             r5.setTransRatio(r6)
-            goto L_0x011a
-        L_0x007d:
+            goto L_0x0124
+        L_0x0087:
             boolean r1 = r5.mMoved
-            if (r1 != 0) goto L_0x0096
+            if (r1 != 0) goto L_0x00a0
             float r1 = r6.getRawX()
             int r1 = (int) r1
             float r6 = r6.getRawY()
             int r6 = (int) r6
             boolean r6 = r5.shouldCollapseByClick(r1, r6)
-            if (r6 == 0) goto L_0x0096
+            if (r6 == 0) goto L_0x00a0
             com.android.systemui.miui.statusbar.phone.ControlPanelWindowView r6 = r5.mControlPanelWindowView
             r6.collapsePanel(r4)
-        L_0x0096:
+        L_0x00a0:
             boolean r6 = r5.isOrientationPortrait()
-            if (r6 != 0) goto L_0x009e
-            goto L_0x011a
-        L_0x009e:
+            if (r6 != 0) goto L_0x00a8
+            goto L_0x0124
+        L_0x00a8:
             com.android.systemui.miui.controlcenter.QSControlCenterTileLayout r6 = r5.mQuickQsControlCenterTileLayout
             boolean r6 = r6.isExpanding()
-            if (r6 == 0) goto L_0x00f2
+            if (r6 == 0) goto L_0x00fc
             android.view.VelocityTracker r6 = r5.mVelocityTracker
             r1 = 1000(0x3e8, float:1.401E-42)
             int r2 = r5.mMaximumVelocity
@@ -528,42 +597,42 @@ public class QSControlCenterPanel extends FrameLayout implements ConfigurationCo
             float r2 = (float) r2
             int r1 = (r1 > r2 ? 1 : (r1 == r2 ? 0 : -1))
             r2 = 0
-            if (r1 <= 0) goto L_0x00ca
+            if (r1 <= 0) goto L_0x00d4
             int r1 = (r6 > r2 ? 1 : (r6 == r2 ? 0 : -1))
-            if (r1 <= 0) goto L_0x00ca
+            if (r1 <= 0) goto L_0x00d4
             r5.toBottomAnimation()
-            goto L_0x00f2
-        L_0x00ca:
+            goto L_0x00fc
+        L_0x00d4:
             float r1 = java.lang.Math.abs(r6)
             int r3 = r5.mMinimumVelocity
             float r3 = (float) r3
             int r1 = (r1 > r3 ? 1 : (r1 == r3 ? 0 : -1))
-            if (r1 <= 0) goto L_0x00dd
+            if (r1 <= 0) goto L_0x00e7
             int r6 = (r6 > r2 ? 1 : (r6 == r2 ? 0 : -1))
-            if (r6 >= 0) goto L_0x00dd
+            if (r6 >= 0) goto L_0x00e7
             r5.toTopAnimation()
-            goto L_0x00f2
-        L_0x00dd:
+            goto L_0x00fc
+        L_0x00e7:
             android.widget.LinearLayout r6 = r5.mFootPanel
             float r6 = r6.getTranslationY()
             int r1 = r5.mExpandHeightThres
             int r1 = r1 / r0
             float r0 = (float) r1
             int r6 = (r6 > r0 ? 1 : (r6 == r0 ? 0 : -1))
-            if (r6 < 0) goto L_0x00ef
+            if (r6 < 0) goto L_0x00f9
             r5.toBottomAnimation()
-            goto L_0x00f2
-        L_0x00ef:
+            goto L_0x00fc
+        L_0x00f9:
             r5.toTopAnimation()
-        L_0x00f2:
+        L_0x00fc:
             r5.recycleVelocityTracker()
-            goto L_0x011a
-        L_0x00f6:
+            goto L_0x0124
+        L_0x0100:
             r5.mMoved = r3
             boolean r6 = r5.isOrientationPortrait()
-            if (r6 != 0) goto L_0x00ff
-            goto L_0x011a
-        L_0x00ff:
+            if (r6 != 0) goto L_0x0109
+            goto L_0x0124
+        L_0x0109:
             r5.mInitialTouchX = r0
             r5.mInitialTouchY = r1
             com.android.systemui.miui.controlcenter.QSControlCenterTileLayout r6 = r5.mQuickQsControlCenterTileLayout
@@ -575,7 +644,7 @@ public class QSControlCenterPanel extends FrameLayout implements ConfigurationCo
             r6.<init>()
             android.widget.ImageView r5 = r5.mExpandIndicatorBottom
             r5.getBoundsOnScreen(r6)
-        L_0x011a:
+        L_0x0124:
             return r4
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.miui.controlcenter.QSControlCenterPanel.onTouchEvent(android.view.MotionEvent):boolean");
@@ -720,14 +789,18 @@ public class QSControlCenterPanel extends FrameLayout implements ConfigurationCo
     public void setTransRatio(float f) {
         if (!this.mPanelController.isSuperPowerMode()) {
             float min = Math.min(1.0f, Math.max(0.0f, f));
-            float f2 = 1.0f - min;
-            this.mFootPanel.setAlpha(f2);
-            this.mFootPanel.setTranslationY(((float) this.mExpandHeightThres) * min);
-            if ((this.mFootPanel.getVisibility() == 0 && f2 == 0.0f) || (this.mFootPanel.getVisibility() != 0 && f2 > 0.0f)) {
-                this.mFootPanel.setVisibility(f2 == 0.0f ? 4 : 0);
+            if (min == 1.0f) {
+                this.mSmartControlsView.setVisibility(8);
+            } else {
+                this.mSmartControlsView.setVisibility(0);
+                this.mSmartControlsView.setAlpha(1.0f - min);
             }
+            this.mFootPanel.setTranslationY(((float) this.mExpandHeightThres) * min);
             this.mQuickQsControlCenterTileLayout.setExpandRatio(min);
             this.mQsControlScrollView.srcollTotratio(min);
+            if (this.mExpandHeightThres < this.mQuickQsControlCenterTileLayout.caculateExpandHeight() || min == 0.0f) {
+                updateFootPanelLayoutBtRatio(min);
+            }
         }
     }
 
@@ -793,17 +866,30 @@ public class QSControlCenterPanel extends FrameLayout implements ConfigurationCo
         }
     }
 
+    public void updateFootPanelLayoutBtRatio(float f) {
+        FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) this.mFootPanel.getLayoutParams();
+        int round = Math.round(((float) ((this.mQuickQsControlCenterTileLayout.getMaxHeight() - this.mExpandHeightThres) + this.mContext.getResources().getDimensionPixelSize(R.dimen.qs_control_center_tile_margin_top))) * f);
+        layoutParams.topMargin = Math.round(((float) getFootPanelMarginTop()) * (1.0f - f)) + round;
+        if (f == 1.0f) {
+            this.mFootPanel.setTranslationY((float) this.mExpandHeightThres);
+            layoutParams.height = this.mContext.getResources().getDimensionPixelSize(R.dimen.qs_control_foot_panel_brightness_height) + this.mExpandHeightThres;
+        } else if (f == 0.0f) {
+            layoutParams.height = -2;
+        }
+        this.mFootPanel.setLayoutParams(layoutParams);
+        if (this.DEBUG) {
+            Log.d("QSControlCenterPanel", "updateFootPanelLayout topMargin:" + round + "  layoutParams.height:" + layoutParams.height);
+        }
+    }
+
     public void updateExpandHeightThres() {
-        this.mExpandHeightThres = (this.mScreenHeight - getFootPanelMarginTop()) - this.mContext.getResources().getDimensionPixelSize(R.dimen.qs_control_center_header_paddingTop);
-        this.mExpandHeightThres = Math.min(this.mExpandHeightThres, this.mQuickQsControlCenterTileLayout.caculateExpandHeight());
+        this.mDistanceToBottom = (this.mScreenHeight - (getFootPanelMarginTop() + this.mContext.getResources().getDimensionPixelSize(R.dimen.qs_control_foot_panel_to_top))) - this.mContext.getResources().getDimensionPixelSize(R.dimen.qs_control_center_header_paddingTop);
+        this.mExpandHeightThres = Math.min(this.mDistanceToBottom, this.mQuickQsControlCenterTileLayout.caculateExpandHeight());
         this.mQuickQsControlCenterTileLayout.setExpandHeightThres(this.mExpandHeightThres);
     }
 
     private int getFootPanelMarginTop() {
-        TextView textView = new TextView(getContext());
-        textView.setTextAppearance(R.style.TextAppearance_QSControl_Clock);
-        Paint.FontMetrics fontMetrics = textView.getPaint().getFontMetrics();
-        return this.mContext.getResources().getDimensionPixelSize(R.dimen.qs_control_foot_panel_margin_top) + ((int) (fontMetrics.descent - fontMetrics.ascent));
+        return this.mQuickQsControlCenterTileLayout.getMinHeight() + this.mContext.getResources().getDimensionPixelSize(R.dimen.qs_control_center_tile_margin_top);
     }
 
     public void showDetail(boolean z, QSPanel.Record record) {
@@ -1088,7 +1174,7 @@ public class QSControlCenterPanel extends FrameLayout implements ConfigurationCo
         this.mBigTileAnimArr.clear();
         this.mPanelTransAnimMap.clear();
         this.mBigTileTransAnimArr.clear();
-        this.mTransLineNum = (isOrientationPortrait() ? 6 : 5) + this.mQuickQsControlCenterTileLayout.getShowLines();
+        this.mTransLineNum = (isOrientationPortrait() ? 7 : 5) + this.mQuickQsControlCenterTileLayout.getShowLines();
         addAnimateView(findViewById(R.id.carrier_text), 0);
         addAnimateView(findViewById(R.id.system_icon_area), 0);
         if (!this.mPanelController.isSuperPowerMode()) {
@@ -1114,7 +1200,8 @@ public class QSControlCenterPanel extends FrameLayout implements ConfigurationCo
             addAnimateView(this.mLandCtrFooter.findViewById(R.id.footer_text), this.mFootPanelBaseIdx);
             addAnimateView(this.mLandCtrFooter.findViewById(R.id.footer_icon), this.mFootPanelBaseIdx);
         }
-        for (int i = 0; i < 7; i++) {
+        int i = 0;
+        for (int i2 = 7; i < i2; i2 = 7) {
             ArrayList arrayList = new ArrayList();
             ArrayList arrayList2 = new ArrayList();
             Iterator<View> it = this.mViews.iterator();
@@ -1132,6 +1219,7 @@ public class QSControlCenterPanel extends FrameLayout implements ConfigurationCo
             if (arrayList.size() > 0) {
                 this.mPanelAnimMap.put(Integer.valueOf(i), Folme.useAt((View[]) arrayList.toArray(new View[arrayList.size()])).state());
             }
+            i++;
         }
         addTransAnimateView(this.mHeader.findViewById(R.id.panel_header), 0);
         addTransAnimateView(this.mHeader.findViewById(R.id.tiles_header), 1);
@@ -1140,8 +1228,9 @@ public class QSControlCenterPanel extends FrameLayout implements ConfigurationCo
         addTransAnimateView(this.mBigTile2, 3);
         addTransAnimateView(this.mBigTile3, 3);
         if (isOrientationPortrait()) {
-            addTransAnimateView(findViewById(R.id.auto_brightness), this.mTransLineNum - 2);
-            addTransAnimateView(findViewById(R.id.qs_brightness), this.mTransLineNum - 2);
+            addTransAnimateView(findViewById(R.id.auto_brightness), this.mTransLineNum - 3);
+            addTransAnimateView(findViewById(R.id.qs_brightness), this.mTransLineNum - 3);
+            addTransAnimateView(this.mSmartControlsView, this.mTransLineNum - 2);
             addTransAnimateView(this.mControlFooter.findViewById(R.id.footer_text), this.mFootPanelBaseIdx);
             addTransAnimateView(this.mControlFooter.findViewById(R.id.footer_icon), this.mFootPanelBaseIdx);
             if (!this.mPanelController.isSuperPowerMode()) {
@@ -1153,23 +1242,23 @@ public class QSControlCenterPanel extends FrameLayout implements ConfigurationCo
             addTransAnimateView(this.mLandCtrFooter.findViewById(R.id.footer_text), this.mFootPanelBaseIdx);
             addTransAnimateView(this.mLandCtrFooter.findViewById(R.id.footer_icon), this.mFootPanelBaseIdx);
         }
-        for (int i2 = 0; i2 < this.mTransLineNum; i2++) {
+        for (int i3 = 0; i3 < this.mTransLineNum; i3++) {
             ArrayList arrayList3 = new ArrayList();
             ArrayList arrayList4 = new ArrayList();
             Iterator<View> it2 = this.mTransViews.iterator();
             while (it2.hasNext()) {
                 View next2 = it2.next();
-                if (((Integer) next2.getTag(R.id.tag_control_center_trans)).intValue() == i2) {
-                    if (i2 == 2 || i2 == 3) {
+                if (((Integer) next2.getTag(R.id.tag_control_center_trans)).intValue() == i3) {
+                    if (i3 == 2 || i3 == 3) {
                         arrayList3.add(Folme.useAt(next2).state());
-                        this.mBigTileTransAnimArr.put(Integer.valueOf(i2), arrayList3);
+                        this.mBigTileTransAnimArr.put(Integer.valueOf(i3), arrayList3);
                     } else {
                         arrayList4.add(next2);
                     }
                 }
             }
             if (arrayList4.size() > 0) {
-                this.mPanelTransAnimMap.put(Integer.valueOf(i2), Folme.useAt((View[]) arrayList4.toArray(new View[arrayList4.size()])).state());
+                this.mPanelTransAnimMap.put(Integer.valueOf(i3), Folme.useAt((View[]) arrayList4.toArray(new View[arrayList4.size()])).state());
             }
         }
     }

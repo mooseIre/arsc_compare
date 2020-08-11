@@ -27,6 +27,7 @@ import com.android.systemui.Dependency;
 import com.android.systemui.plugins.R;
 import com.android.systemui.statusbar.ExpandableNotificationRow;
 import com.android.systemui.statusbar.notification.NotificationMediaTemplateViewWrapper;
+import com.xiaomi.stat.d;
 import java.util.Timer;
 
 public class NotificationMediaTemplateViewWrapper extends NotificationHeaderViewWrapper {
@@ -82,6 +83,8 @@ public class NotificationMediaTemplateViewWrapper extends NotificationHeaderView
     public MediaController mMediaController;
     /* access modifiers changed from: private */
     public MediaMetadata mMediaMetadata;
+    /* access modifiers changed from: private */
+    public ImageView mMediaSeamlessButton;
     /* access modifiers changed from: private */
     public TextView mMediaText;
     /* access modifiers changed from: private */
@@ -184,6 +187,10 @@ public class NotificationMediaTemplateViewWrapper extends NotificationHeaderView
         this.mMediaActions = (ViewGroup) this.mView.findViewById(16909105);
         this.mMediaTitle = (TextView) this.mView.findViewById(16908310);
         this.mMediaText = (TextView) this.mView.findViewById(16909448);
+        int identifier = this.mView.getContext().getResources().getIdentifier("media_seamless", d.h, "android");
+        if (identifier != 0) {
+            this.mMediaSeamlessButton = (ImageView) this.mView.findViewById(identifier);
+        }
     }
 
     private void handleMediaViews() {
@@ -195,6 +202,7 @@ public class NotificationMediaTemplateViewWrapper extends NotificationHeaderView
         this.mStyleProcessor.handleMainColumn();
         this.mStyleProcessor.handleTitleText();
         this.mStyleProcessor.handleActions();
+        this.mStyleProcessor.handleMiuiMediaSeamlessButton();
         this.mStyleProcessor.handleRightIcon();
     }
 
@@ -453,6 +461,15 @@ public class NotificationMediaTemplateViewWrapper extends NotificationHeaderView
             marginLayoutParams.rightMargin = NotificationMediaTemplateViewWrapper.this.mMediaActionsMargin;
             marginLayoutParams.bottomMargin = NotificationMediaTemplateViewWrapper.this.isNormalMedia() ? 0 : NotificationMediaTemplateViewWrapper.this.mMediaActionsMargin;
             NotificationMediaTemplateViewWrapper.this.mMediaActions.setLayoutParams(marginLayoutParams);
+        }
+
+        /* access modifiers changed from: package-private */
+        public void handleMiuiMediaSeamlessButton() {
+            int identifier;
+            if (NotificationMediaTemplateViewWrapper.this.mMediaSeamlessButton != null && (identifier = NotificationMediaTemplateViewWrapper.this.mView.getContext().getResources().getIdentifier("ic_media_seamless", "drawable", "android")) != 0) {
+                NotificationMediaTemplateViewWrapper.this.mMediaSeamlessButton.setImageResource(identifier);
+                NotificationMediaTemplateViewWrapper.this.mMediaSeamlessButton.setImageTintList(ColorStateList.valueOf(NotificationMediaTemplateViewWrapper.this.getNotificationHeader().getOriginalIconColor()));
+            }
         }
 
         /* access modifiers changed from: package-private */

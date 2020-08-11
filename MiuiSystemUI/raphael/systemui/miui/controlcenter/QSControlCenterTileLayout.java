@@ -342,6 +342,7 @@ public class QSControlCenterTileLayout extends ViewGroup implements QSPanel.QSTi
         this.mMinHeight = (i * i2) + ((i2 - 1) * i3);
         this.mMaxHeight = (this.mCellHeight * ceil) + ((ceil - 1) * i3);
         this.mQSControlCenterPanel.updateExpandHeightThres();
+        this.mQSControlCenterPanel.updateFootPanelLayoutBtRatio(isCollapsed() ? 0.0f : 1.0f);
     }
 
     public void setHost(QSControlTileHost qSControlTileHost) {

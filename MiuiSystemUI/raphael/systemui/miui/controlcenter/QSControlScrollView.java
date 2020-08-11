@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EdgeEffect;
+import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import com.android.systemui.plugins.R;
 import java.lang.reflect.Field;
@@ -37,12 +38,14 @@ public class QSControlScrollView extends ScrollView {
     private boolean ismTouchScrolledToBottom;
     private IStateStyle mBounceState;
     private Rect mBound = new Rect();
+    private float mInitialX;
     private float mInitialY;
     private boolean mIsScrolledToBottom = false;
     private boolean mIsScrolledToTop = true;
     private int mOrientation;
     private boolean mOverTrans;
     private QSControlCenterTileLayout mQsControlCenterTileLayout;
+    private LinearLayout mSmartControlsView;
     private int mStartSrcollY = 0;
     private boolean mTouchScrolledToTop;
     private float mTransHeight;
@@ -61,6 +64,7 @@ public class QSControlScrollView extends ScrollView {
     public void onFinishInflate() {
         super.onFinishInflate();
         this.mQsControlCenterTileLayout = (QSControlCenterTileLayout) findViewById(R.id.quick_tile_layout);
+        this.mSmartControlsView = (LinearLayout) findViewById(R.id.ll_smart_controls);
         ArrayList arrayList = new ArrayList();
         int childCount = getChildCount();
         for (int i = 0; i < childCount; i++) {
@@ -134,16 +138,23 @@ public class QSControlScrollView extends ScrollView {
     public boolean onInterceptTouchEvent(MotionEvent motionEvent) {
         if (motionEvent.getActionMasked() == 0) {
             this.mInitialY = motionEvent.getRawY();
+            this.mInitialX = motionEvent.getRawX();
             this.mTouchScrolledToTop = this.mIsScrolledToTop;
             this.ismTouchScrolledToBottom = this.mIsScrolledToBottom;
+        }
+        if (motionEvent.getActionMasked() == 2) {
+            boolean z = Math.abs(motionEvent.getRawY() - this.mInitialY) > Math.abs(motionEvent.getRawX() - this.mInitialX);
+            if (!this.mIsScrolledToBottom && !this.mIsScrolledToTop && this.mSmartControlsView.getChildCount() > 0 && z) {
+                return true;
+            }
         }
         boolean onInterceptTouchEvent = super.onInterceptTouchEvent(motionEvent);
         Log.d("QSControlScrollView", "onInterceptTouchEvent " + motionEvent.getActionMasked() + "  return " + onInterceptTouchEvent);
         return onInterceptTouchEvent;
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:11:0x0021, code lost:
-        if (r0 != 3) goto L_0x009c;
+    /* JADX WARNING: Code restructure failed: missing block: B:13:0x0029, code lost:
+        if (r0 != 3) goto L_0x00a4;
      */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     public boolean onTouchEvent(android.view.MotionEvent r8) {
@@ -153,53 +164,56 @@ public class QSControlScrollView extends ScrollView {
             boolean r0 = r0.isCollapsed()
             java.lang.String r1 = "QSControlScrollView"
             r2 = 0
-            if (r0 == 0) goto L_0x0011
+            if (r0 == 0) goto L_0x0019
+            android.widget.LinearLayout r0 = r7.mSmartControlsView
+            int r0 = r0.getChildCount()
+            if (r0 != 0) goto L_0x0019
             java.lang.String r7 = "onTouchEvent collapsed return false"
             android.util.Log.d(r1, r7)
             return r2
-        L_0x0011:
+        L_0x0019:
             int r0 = r8.getActionMasked()
-            if (r0 == 0) goto L_0x008e
+            if (r0 == 0) goto L_0x0096
             java.lang.String r3 = "bounce"
             r4 = 1
             r5 = 0
-            if (r0 == r4) goto L_0x007a
+            if (r0 == r4) goto L_0x0082
             r6 = 2
-            if (r0 == r6) goto L_0x0025
+            if (r0 == r6) goto L_0x002d
             r4 = 3
-            if (r0 == r4) goto L_0x007a
-            goto L_0x009c
-        L_0x0025:
+            if (r0 == r4) goto L_0x0082
+            goto L_0x00a4
+        L_0x002d:
             boolean r0 = r7.mTouchScrolledToTop
             boolean r6 = r7.mIsScrolledToTop
-            if (r0 != r6) goto L_0x0031
+            if (r0 != r6) goto L_0x0039
             boolean r0 = r7.ismTouchScrolledToBottom
             boolean r6 = r7.mIsScrolledToBottom
-            if (r0 == r6) goto L_0x003f
-        L_0x0031:
+            if (r0 == r6) goto L_0x0047
+        L_0x0039:
             boolean r0 = r7.mIsScrolledToTop
             r7.mTouchScrolledToTop = r0
             boolean r0 = r7.mIsScrolledToBottom
             r7.ismTouchScrolledToBottom = r0
             float r0 = r8.getRawY()
             r7.mInitialY = r0
-        L_0x003f:
+        L_0x0047:
             boolean r0 = r7.isScrolledToTop()
-            if (r0 == 0) goto L_0x0050
+            if (r0 == 0) goto L_0x0058
             float r0 = r8.getRawY()
             float r6 = r7.mInitialY
             float r0 = r0 - r6
             int r0 = (r0 > r5 ? 1 : (r0 == r5 ? 0 : -1))
-            if (r0 >= 0) goto L_0x0061
-        L_0x0050:
+            if (r0 >= 0) goto L_0x0069
+        L_0x0058:
             boolean r0 = r7.isScrolledToBottom()
-            if (r0 == 0) goto L_0x009c
+            if (r0 == 0) goto L_0x00a4
             float r0 = r8.getRawY()
             float r6 = r7.mInitialY
             float r0 = r0 - r6
             int r0 = (r0 > r5 ? 1 : (r0 == r5 ? 0 : -1))
-            if (r0 >= 0) goto L_0x009c
-        L_0x0061:
+            if (r0 >= 0) goto L_0x00a4
+        L_0x0069:
             miuix.animation.controller.AnimState r0 = new miuix.animation.controller.AnimState
             r0.<init>(r3)
             miuix.animation.property.FloatProperty r1 = TRANS_HEIGHT
@@ -211,7 +225,7 @@ public class QSControlScrollView extends ScrollView {
             miuix.animation.IStateStyle r7 = r7.mBounceState
             r7.setTo((java.lang.Object) r0)
             return r4
-        L_0x007a:
+        L_0x0082:
             miuix.animation.controller.AnimState r0 = new miuix.animation.controller.AnimState
             r0.<init>(r3)
             miuix.animation.property.FloatProperty r3 = TRANS_HEIGHT
@@ -220,15 +234,15 @@ public class QSControlScrollView extends ScrollView {
             miuix.animation.IStateStyle r2 = r7.mBounceState
             r2.setTo((java.lang.Object) r0)
             r7.mInitialY = r5
-            goto L_0x009c
-        L_0x008e:
+            goto L_0x00a4
+        L_0x0096:
             float r0 = r8.getRawY()
             r7.mInitialY = r0
             boolean r0 = r7.mIsScrolledToTop
             r7.mTouchScrolledToTop = r0
             boolean r0 = r7.mIsScrolledToBottom
             r7.ismTouchScrolledToBottom = r0
-        L_0x009c:
+        L_0x00a4:
             boolean r7 = super.onTouchEvent(r8)
             java.lang.StringBuilder r0 = new java.lang.StringBuilder
             r0.<init>()

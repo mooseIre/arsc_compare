@@ -169,7 +169,12 @@ public class NotificationPanelView extends PanelView implements ExpandableView.O
     public float mBlurRatio;
     private AutoCleanFloatTransitionListener mBlurRatioListener = new AutoCleanFloatTransitionListener("PanelViewBlur") {
         public void onUpdate(Map<String, Float> map) {
-            float unused = NotificationPanelView.this.mBlurRatio = map.get("blurRatio").floatValue();
+            float floatValue = map.get("blurRatio").floatValue();
+            NotificationPanelView notificationPanelView = NotificationPanelView.this;
+            if (Float.isNaN(floatValue)) {
+                floatValue = NotificationPanelView.this.mToBlurRatio;
+            }
+            float unused = notificationPanelView.mBlurRatio = floatValue;
             ((StatusBarWindowManager) Dependency.get(StatusBarWindowManager.class)).setBlurRatio(NotificationPanelView.this.mBlurRatio);
         }
     };
@@ -388,6 +393,8 @@ public class NotificationPanelView extends PanelView implements ExpandableView.O
     /* access modifiers changed from: private */
     public View mSwitchSystemUser;
     private View mThemeBackgroundView;
+    /* access modifiers changed from: private */
+    public float mToBlurRatio;
     private int mTopPaddingAdjustment;
     private int mTopPaddingWhenQsBeingCovered;
     private boolean mTouchAtKeyguardBottomArea = false;
@@ -2314,8 +2321,8 @@ public class NotificationPanelView extends PanelView implements ExpandableView.O
         }
     }
 
-    /* JADX WARNING: Removed duplicated region for block: B:45:0x00f3  */
-    /* JADX WARNING: Removed duplicated region for block: B:50:0x011f  */
+    /* JADX WARNING: Removed duplicated region for block: B:45:0x00ff  */
+    /* JADX WARNING: Removed duplicated region for block: B:50:0x012b  */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     private void updateStatusBarWindowBlur() {
         /*
@@ -2329,7 +2336,7 @@ public class NotificationPanelView extends PanelView implements ExpandableView.O
             r1 = r2
         L_0x0009:
             r0 = r3
-            goto L_0x00eb
+            goto L_0x00f7
         L_0x000c:
             boolean r0 = r10.isPanelVisibleBecauseOfHeadsUp()
             if (r0 == 0) goto L_0x001c
@@ -2339,12 +2346,12 @@ public class NotificationPanelView extends PanelView implements ExpandableView.O
             r9 = r3
             r3 = r0
             r0 = r9
-            goto L_0x00eb
+            goto L_0x00f7
         L_0x001c:
             int r0 = r10.mStatusBarState
             r4 = 2
             r5 = 1
-            if (r0 != 0) goto L_0x00cc
+            if (r0 != 0) goto L_0x00d8
             boolean r0 = r10.mOpening
             java.lang.String r6 = "PanelViewBlur"
             if (r0 != 0) goto L_0x006a
@@ -2395,62 +2402,68 @@ public class NotificationPanelView extends PanelView implements ExpandableView.O
             r8 = 1117782016(0x42a00000, float:80.0)
             float r7 = r7 / r8
             float r0 = r0 + r7
+            r10.mToBlurRatio = r0
+            float r0 = r10.mToBlurRatio
             float r0 = java.lang.Math.max(r2, r0)
             float r0 = java.lang.Math.min(r0, r1)
-            miuix.animation.ValueTarget r1 = miuix.animation.Folme.getValueTarget(r6)
-            r2 = 953267991(0x38d1b717, float:1.0E-4)
-            java.lang.String r7 = "blurRatio"
-            java.lang.String[] r8 = new java.lang.String[]{r7}
-            r1.setMinVisibleChange((float) r2, (java.lang.String[]) r8)
-            float r1 = r10.mBlurRatio
-            int r1 = (r1 > r0 ? 1 : (r1 == r0 ? 0 : -1))
-            if (r1 == 0) goto L_0x00c0
-            java.lang.Object[] r1 = new java.lang.Object[r5]
-            r1[r3] = r6
-            miuix.animation.IStateStyle r1 = miuix.animation.Folme.useValue(r1)
-            java.lang.Object[] r2 = new java.lang.Object[r4]
-            r2[r3] = r7
+            r10.mToBlurRatio = r0
+            miuix.animation.ValueTarget r0 = miuix.animation.Folme.getValueTarget(r6)
+            r1 = 953267991(0x38d1b717, float:1.0E-4)
+            java.lang.String r2 = "blurRatio"
+            java.lang.String[] r7 = new java.lang.String[]{r2}
+            r0.setMinVisibleChange((float) r1, (java.lang.String[]) r7)
+            float r0 = r10.mBlurRatio
+            float r1 = r10.mToBlurRatio
+            int r0 = (r0 > r1 ? 1 : (r0 == r1 ? 0 : -1))
+            if (r0 == 0) goto L_0x00ca
+            java.lang.Object[] r0 = new java.lang.Object[r5]
+            r0[r3] = r6
+            miuix.animation.IStateStyle r0 = miuix.animation.Folme.useValue(r0)
+            java.lang.Object[] r1 = new java.lang.Object[r4]
+            r1[r3] = r2
             float r6 = r10.mBlurRatio
             java.lang.Float r6 = java.lang.Float.valueOf(r6)
-            r2[r5] = r6
-            r1.setTo((java.lang.Object[]) r2)
-            com.android.systemui.util.AutoCleanFloatTransitionListener r10 = r10.mBlurRatioListener
-            r1.addListener(r10)
-            java.lang.Object[] r10 = new java.lang.Object[r4]
-            r10[r3] = r7
-            java.lang.Float r0 = java.lang.Float.valueOf(r0)
-            r10[r5] = r0
-            r1.to(r10)
-            goto L_0x00cb
-        L_0x00c0:
-            java.lang.Class<com.android.systemui.statusbar.phone.StatusBarWindowManager> r10 = com.android.systemui.statusbar.phone.StatusBarWindowManager.class
-            java.lang.Object r10 = com.android.systemui.Dependency.get(r10)
-            com.android.systemui.statusbar.phone.StatusBarWindowManager r10 = (com.android.systemui.statusbar.phone.StatusBarWindowManager) r10
-            r10.setBlurRatio(r0)
-        L_0x00cb:
+            r1[r5] = r6
+            r0.setTo((java.lang.Object[]) r1)
+            com.android.systemui.util.AutoCleanFloatTransitionListener r1 = r10.mBlurRatioListener
+            r0.addListener(r1)
+            java.lang.Object[] r1 = new java.lang.Object[r4]
+            r1[r3] = r2
+            float r10 = r10.mToBlurRatio
+            java.lang.Float r10 = java.lang.Float.valueOf(r10)
+            r1[r5] = r10
+            r0.to(r1)
+            goto L_0x00d7
+        L_0x00ca:
+            java.lang.Class<com.android.systemui.statusbar.phone.StatusBarWindowManager> r0 = com.android.systemui.statusbar.phone.StatusBarWindowManager.class
+            java.lang.Object r0 = com.android.systemui.Dependency.get(r0)
+            com.android.systemui.statusbar.phone.StatusBarWindowManager r0 = (com.android.systemui.statusbar.phone.StatusBarWindowManager) r0
+            float r10 = r10.mToBlurRatio
+            r0.setBlurRatio(r10)
+        L_0x00d7:
             return
-        L_0x00cc:
-            if (r0 != r5) goto L_0x00dd
+        L_0x00d8:
+            if (r0 != r5) goto L_0x00e9
             boolean r0 = r10.mKeyguardOccluded
-            if (r0 != 0) goto L_0x00dd
+            if (r0 != 0) goto L_0x00e9
             com.android.keyguard.wallpaper.MiuiKeyguardWallpaperController r0 = r10.mKeyguardWallpaperController
             boolean r0 = r0.hasKeyguardWallpaperLayer()
             float r1 = r10.calculateBlurInKeyguard()
-            goto L_0x00eb
-        L_0x00dd:
+            goto L_0x00f7
+        L_0x00e9:
             int r0 = r10.mStatusBarState
             if (r0 != r4) goto L_0x0008
             android.animation.ValueAnimator r0 = r10.mQsTopPaddingAnimator
             if (r0 == 0) goto L_0x0009
             float r0 = r0.getAnimatedFraction()
             goto L_0x0068
-        L_0x00eb:
+        L_0x00f7:
             r10.mBlurRatio = r1
             boolean r4 = com.android.keyguard.wallpaper.KeyguardWallpaperUtils.isSupportWallpaperBlur()
-            if (r4 == 0) goto L_0x011f
-            if (r0 == 0) goto L_0x010c
+            if (r4 == 0) goto L_0x012b
+            if (r0 == 0) goto L_0x0118
             boolean r0 = r10.mKeyguardBouncerShowing
-            if (r0 != 0) goto L_0x010c
+            if (r0 != 0) goto L_0x0118
             com.android.keyguard.wallpaper.MiuiKeyguardWallpaperController r10 = r10.mKeyguardWallpaperController
             java.lang.String r0 = TAG
             r10.requestWallpaperBlur(r0, r1)
@@ -2458,8 +2471,8 @@ public class NotificationPanelView extends PanelView implements ExpandableView.O
             java.lang.Object r10 = com.android.systemui.Dependency.get(r10)
             com.android.systemui.statusbar.phone.StatusBarWindowManager r10 = (com.android.systemui.statusbar.phone.StatusBarWindowManager) r10
             r10.setBlurRatio(r2, r3)
-            goto L_0x012a
-        L_0x010c:
+            goto L_0x0136
+        L_0x0118:
             com.android.keyguard.wallpaper.MiuiKeyguardWallpaperController r10 = r10.mKeyguardWallpaperController
             java.lang.String r0 = TAG
             r10.requestWallpaperBlur(r0, r2)
@@ -2467,13 +2480,13 @@ public class NotificationPanelView extends PanelView implements ExpandableView.O
             java.lang.Object r10 = com.android.systemui.Dependency.get(r10)
             com.android.systemui.statusbar.phone.StatusBarWindowManager r10 = (com.android.systemui.statusbar.phone.StatusBarWindowManager) r10
             r10.setBlurRatio(r1, r3)
-            goto L_0x012a
-        L_0x011f:
+            goto L_0x0136
+        L_0x012b:
             java.lang.Class<com.android.systemui.statusbar.phone.StatusBarWindowManager> r10 = com.android.systemui.statusbar.phone.StatusBarWindowManager.class
             java.lang.Object r10 = com.android.systemui.Dependency.get(r10)
             com.android.systemui.statusbar.phone.StatusBarWindowManager r10 = (com.android.systemui.statusbar.phone.StatusBarWindowManager) r10
             r10.setBlurRatio(r1, r3)
-        L_0x012a:
+        L_0x0136:
             return
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.phone.NotificationPanelView.updateStatusBarWindowBlur():void");

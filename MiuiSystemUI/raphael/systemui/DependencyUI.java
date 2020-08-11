@@ -19,6 +19,7 @@ import com.android.systemui.miui.Dependencies;
 import com.android.systemui.miui.PackageEventReceiver;
 import com.android.systemui.miui.controlcenter.ExpandInfoController;
 import com.android.systemui.miui.controlcenter.ExpandInfoControllerImpl;
+import com.android.systemui.miui.controls.ControlsPluginManager;
 import com.android.systemui.miui.statusbar.ControlCenterActivityStarter;
 import com.android.systemui.miui.statusbar.analytics.NotificationStat;
 import com.android.systemui.miui.statusbar.analytics.SystemUIStat;
@@ -402,6 +403,11 @@ public class DependencyUI extends SystemUI {
         this.mProviders.put(ControlPanelWindowManager.class, new Dependency.DependencyProvider() {
             public Object createDependency() {
                 return new ControlPanelWindowManager(DependencyUI.this.mContext);
+            }
+        });
+        this.mProviders.put(ControlsPluginManager.class, new Dependency.DependencyProvider() {
+            public Object createDependency() {
+                return new ControlsPluginManager();
             }
         });
         SystemUIFactory.getInstance().injectDependencies(this.mProviders, this.mContext);

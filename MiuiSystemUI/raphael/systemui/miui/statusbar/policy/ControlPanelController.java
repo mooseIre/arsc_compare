@@ -10,6 +10,7 @@ import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.systemui.Application;
 import com.android.systemui.keyguard.KeyguardViewMediator;
 import com.android.systemui.miui.statusbar.ControlCenter;
+import com.android.systemui.plugins.R;
 import com.android.systemui.statusbar.policy.CallbackController;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +29,8 @@ public class ControlPanelController implements CallbackController<UseControlPane
     /* access modifiers changed from: private */
     public boolean mUseControlPanel;
     private ContentObserver mUseControlPanelObserver;
+    /* access modifiers changed from: private */
+    public int mUseControlPanelSettingDefault;
 
     public interface UseControlPanelChangeListener {
         void onUseControlPanelChange(boolean z);
@@ -36,12 +39,13 @@ public class ControlPanelController implements CallbackController<UseControlPane
     public ControlPanelController(Context context) {
         this.mContext = context;
         this.mListeners = new ArrayList();
+        this.mUseControlPanelSettingDefault = context.getResources().getInteger(R.integer.use_control_panel_setting_default);
         this.mKeyguardViewMediator = (KeyguardViewMediator) ((Application) context.getApplicationContext()).getSystemUIApplication().getComponent(KeyguardViewMediator.class);
         this.mUseControlPanelObserver = new ContentObserver(this.mHandler) {
             public void onChange(boolean z) {
                 ControlPanelController controlPanelController = ControlPanelController.this;
                 boolean z2 = false;
-                if (Settings.System.getIntForUser(controlPanelController.mContext.getContentResolver(), "use_control_panel", 0, 0) != 0) {
+                if (Settings.System.getIntForUser(controlPanelController.mContext.getContentResolver(), "use_control_panel", ControlPanelController.this.mUseControlPanelSettingDefault, 0) != 0) {
                     z2 = true;
                 }
                 boolean unused = controlPanelController.mUseControlPanel = z2;
@@ -79,6 +83,10 @@ public class ControlPanelController implements CallbackController<UseControlPane
 
     public boolean isUseControlCenter() {
         return this.mUseControlPanel;
+    }
+
+    public int getUseControlPanelSettingDefault() {
+        return this.mUseControlPanelSettingDefault;
     }
 
     public boolean isExpandable() {
@@ -146,7 +154,7 @@ public class ControlPanelController implements CallbackController<UseControlPane
     }
 
     public boolean useControlPanel() {
-        return Settings.System.getIntForUser(this.mContext.getContentResolver(), "use_control_panel", 0, 0) != 0;
+        return Settings.System.getIntForUser(this.mContext.getContentResolver(), "use_control_panel", this.mUseControlPanelSettingDefault, 0) != 0;
     }
 
     public void addCallback(UseControlPanelChangeListener useControlPanelChangeListener) {

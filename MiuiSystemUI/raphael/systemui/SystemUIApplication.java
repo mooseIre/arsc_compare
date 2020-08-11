@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
 import android.content.res.Configuration;
-import android.os.Build;
 import android.os.Handler;
 import android.os.Process;
 import android.os.SystemProperties;
@@ -186,9 +185,6 @@ public class SystemUIApplication extends ApplicationDelegate implements SysUiSer
     public void onConfigurationChanged(Configuration configuration) {
         Log.v("SystemUIService", "onConfigurationChanged: " + configuration);
         if (this.mServicesStarted) {
-            if (Build.VERSION.SDK_INT > 29) {
-                getResources().updateConfiguration(configuration, getResources().getDisplayMetrics());
-            }
             int length = this.mServices.length;
             for (int i = 0; i < length; i++) {
                 SystemUI[] systemUIArr = this.mServices;

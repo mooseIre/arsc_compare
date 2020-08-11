@@ -590,7 +590,7 @@ class GlobalScreenshot {
 
     /* access modifiers changed from: package-private */
     /* JADX WARNING: Code restructure failed: missing block: B:9:0x0023, code lost:
-        if (r0 != 3) goto L_0x00ec;
+        if (r0 != 3) goto L_0x00ed;
      */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     public boolean onThumbnailViewTouch(android.view.MotionEvent r8) {
@@ -608,13 +608,13 @@ class GlobalScreenshot {
             r0.addMovement(r8)
             int r0 = r8.getAction()
             r2 = 1
-            if (r0 == 0) goto L_0x00d4
+            if (r0 == 0) goto L_0x00d5
             if (r0 == r2) goto L_0x0072
             r3 = 2
             if (r0 == r3) goto L_0x0027
             r8 = 3
             if (r0 == r8) goto L_0x0072
-            goto L_0x00ec
+            goto L_0x00ed
         L_0x0027:
             float r0 = r8.getRawY()
             float r1 = r7.mTouchDownY
@@ -652,7 +652,7 @@ class GlobalScreenshot {
         L_0x006c:
             int r0 = r0 + r1
             r7.moveThumbnailWindow((int) r8, (int) r0)
-            goto L_0x00ec
+            goto L_0x00ed
         L_0x0072:
             boolean r8 = r7.mIsThumbnailMoving
             if (r8 != 0) goto L_0x0089
@@ -664,7 +664,7 @@ class GlobalScreenshot {
             com.android.systemui.screenshot.NotifyMediaStoreData r0 = r7.mNotifyMediaStoreData
             java.lang.String r3 = "edit"
             r7.jumpProcess(r8, r0, r3)
-            goto L_0x00cc
+            goto L_0x00cd
         L_0x0089:
             android.view.VelocityTracker r8 = r7.mVTracker
             r0 = 1000(0x3e8, float:1.401E-42)
@@ -680,14 +680,14 @@ class GlobalScreenshot {
             float r0 = r0.getYVelocity()
             float r8 = (float) r8
             int r8 = (r0 > r8 ? 1 : (r0 == r8 ? 0 : -1))
-            if (r8 >= 0) goto L_0x00b8
+            if (r8 >= 0) goto L_0x00b9
             r7.quitThumbnailWindow(r2, r2)
             android.content.Context r8 = r7.mContext
             java.lang.String r0 = "quit_thumbnail"
             java.lang.String r3 = "slide_up"
             com.android.systemui.screenshot.StatHelper.recordCountEvent((android.content.Context) r8, (java.lang.String) r0, (java.lang.String) r3)
-            goto L_0x00cc
-        L_0x00b8:
+            goto L_0x00cd
+        L_0x00b9:
             r7.getTranslation()
             r7.goInitialPosition()
             r8 = 1065353216(0x3f800000, float:1.0)
@@ -696,12 +696,12 @@ class GlobalScreenshot {
             java.lang.Runnable r0 = r7.mQuitThumbnailRunnable
             r3 = 3600(0xe10, double:1.7786E-320)
             r8.postDelayed(r0, r3)
-        L_0x00cc:
+        L_0x00cd:
             r7.mIsThumbnailMoving = r1
             android.view.VelocityTracker r7 = r7.mVTracker
             r7.clear()
-            goto L_0x00ec
-        L_0x00d4:
+            goto L_0x00ed
+        L_0x00d5:
             float r0 = r8.getRawY()
             r7.mTouchDownY = r0
             float r8 = r8.getRawX()
@@ -711,7 +711,7 @@ class GlobalScreenshot {
             r8.removeCallbacks(r0)
             android.animation.ValueAnimator r7 = r7.mThumbnailShakeAnimator
             r7.cancel()
-        L_0x00ec:
+        L_0x00ed:
             return r2
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.screenshot.GlobalScreenshot.onThumbnailViewTouch(android.view.MotionEvent):boolean");
