@@ -8,6 +8,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.AnimatedVectorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Binder;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -406,7 +407,7 @@ public abstract class BiometricDialogView extends LinearLayout {
     }
 
     public WindowManager.LayoutParams getLayoutParams() {
-        WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(-1, -1, 2014, 16777216, -3);
+        WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(-1, -1, Build.VERSION.SDK_INT > 29 ? 2017 : 2014, 16777216, -3);
         layoutParams.privateFlags |= 16;
         layoutParams.setTitle("BiometricDialogView");
         layoutParams.token = this.mWindowToken;
