@@ -8116,9 +8116,8 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
     }
 
     public void startAssist(Bundle bundle) {
-        AssistManager assistManager = this.mAssistManager;
-        if (assistManager != null) {
-            assistManager.startAssist(bundle);
+        if (this.mAssistManager != null && (getFlagDisable1() & 33554432) == 0) {
+            this.mAssistManager.startAssist(bundle);
         }
     }
 

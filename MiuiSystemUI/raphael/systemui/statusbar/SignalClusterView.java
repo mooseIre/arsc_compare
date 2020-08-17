@@ -418,11 +418,12 @@ public class SignalClusterView extends LinearLayout implements NetworkController
         ImageView imageView;
         this.mNotchEar = this.mController.isNotch();
         this.mVpnVisible = isVpnVisible();
+        ImageView imageView2 = this.mWifiAp;
+        int i = 0;
+        if (imageView2 != null) {
+            imageView2.setVisibility((!this.mHotspot.isHotspotEnabled() || this.mNotchEar) ? 8 : 0);
+        }
         if (this.mNotchEar) {
-            ImageView imageView2 = this.mWifiAp;
-            if (imageView2 != null) {
-                imageView2.setVisibility(8);
-            }
             if (!this.mVpnEnableInEar && (imageView = this.mVpn) != null) {
                 imageView.setVisibility(8);
             }
@@ -431,7 +432,6 @@ public class SignalClusterView extends LinearLayout implements NetworkController
                 imageView3.setVisibility(8);
             }
             if (!this.mVoWifiEnableInEar && this.mVowifi != null) {
-                int i = 0;
                 while (true) {
                     ImageView[] imageViewArr = this.mVowifi;
                     if (i >= imageViewArr.length) {

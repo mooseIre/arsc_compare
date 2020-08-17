@@ -443,7 +443,7 @@ public class CollapsedStatusBarFragment extends Fragment implements LocationCont
         refreshClockVisibility(z, isStateNormal, z2, false);
         FrameLayout frameLayout = this.mMiuiStatusBarPromptLayout;
         if (this.mKeyguardMonitor.isShowing()) {
-            i4 = 4;
+            i4 = 8;
         }
         frameLayout.setVisibility(i4);
     }

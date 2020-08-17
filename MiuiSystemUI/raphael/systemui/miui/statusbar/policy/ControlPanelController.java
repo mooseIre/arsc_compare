@@ -109,10 +109,11 @@ public class ControlPanelController implements CallbackController<UseControlPane
     }
 
     public void onUserSwitched() {
+        ControlCenter controlCenter;
         this.mUseControlPanelObserver.onChange(false);
         this.mExpandableObserver.onChange(false);
-        if (this.mUseControlPanel) {
-            this.mControlCenter.onUserSwitched(KeyguardUpdateMonitor.getCurrentUser());
+        if (this.mUseControlPanel && (controlCenter = this.mControlCenter) != null) {
+            controlCenter.onUserSwitched(KeyguardUpdateMonitor.getCurrentUser());
         }
     }
 
