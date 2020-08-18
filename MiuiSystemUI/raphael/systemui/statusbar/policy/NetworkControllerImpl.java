@@ -1101,7 +1101,7 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
             boolean r1 = r1.equals(r3)
             com.android.systemui.statusbar.policy.CallbackHandler r4 = r0.mCallbackHandler
             com.android.systemui.statusbar.policy.NetworkController$IconState r7 = new com.android.systemui.statusbar.policy.NetworkController$IconState
-            r8 = 2131233868(0x7f080c4c, float:1.8083886E38)
+            r8 = 2131233871(0x7f080c4f, float:1.8083892E38)
             r9 = 2131820588(0x7f11002c, float:1.9273895E38)
             android.content.Context r10 = r0.mContext
             r7.<init>((boolean) r1, (int) r8, (int) r9, (android.content.Context) r10)

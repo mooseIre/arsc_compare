@@ -122,7 +122,7 @@ public class BatteryMeterView extends LinearLayout implements BatteryController.
             public void onRefreshBatteryInfo(BatteryStatus batteryStatus) {
                 super.onRefreshBatteryInfo(batteryStatus);
                 boolean isCharging = batteryStatus.isCharging();
-                boolean z = isCharging && (batteryStatus.isQuickCharge() || batteryStatus.isSuperQuickCharge());
+                boolean z = isCharging && (batteryStatus.isQuickCharge() || batteryStatus.isSuperQuickCharge() || batteryStatus.isStrongSuperQuickCharge());
                 int level = batteryStatus.getLevel();
                 if (isCharging != BatteryMeterView.this.mCharging) {
                     boolean unused = BatteryMeterView.this.mCharging = isCharging;

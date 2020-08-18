@@ -432,9 +432,7 @@ public class NotificationPanelView extends PanelView implements ExpandableView.O
         this.mLockScreenMagazineController = LockScreenMagazineController.getInstance(context);
         this.mKeyguardWallpaperController = (MiuiKeyguardWallpaperController) Dependency.get(MiuiKeyguardWallpaperController.class);
         this.mMiuiStatusBarPromptController = (MiuiStatusBarPromptController) Dependency.get(MiuiStatusBarPromptController.class);
-        if (ChargeUtils.supportWirelessCharge() || ChargeUtils.supportNewChargeAnimation()) {
-            this.mMiuiChargeController = new MiuiChargeController(this.mContext);
-        }
+        this.mMiuiChargeController = new MiuiChargeController(this.mContext);
         this.mPowerManager = (PowerManager) context.getSystemService("power");
         this.mDoubleTapHelper = new DoubleTapHelper(this, 200, new DoubleTapHelper.ActivationListener() {
             public void onActiveChanged(boolean z) {
@@ -3531,6 +3529,8 @@ public class NotificationPanelView extends PanelView implements ExpandableView.O
 
     public void setKeyguardIndicationController(KeyguardIndicationController keyguardIndicationController) {
         this.mKeyguardIndicationController = keyguardIndicationController;
+        this.mMiuiChargeController.setKeyguardIndicationController(this.mKeyguardIndicationController);
+        this.mKeyguardIndicationController.setChargeController(this.mMiuiChargeController);
     }
 
     public void onKeyguardOccludedChanged(boolean z) {

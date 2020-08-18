@@ -278,11 +278,18 @@ public class Recents extends SystemUI implements RecentsComponent, CommandQueue.
         }
 
         public void onPackageModified(String str) {
-            boolean isRecentsWithinLauncher;
             Log.e("Recents", "packageMonitor   onPackageModified  packageName=" + str + "   mIsRecentsWithinLauncher=" + Recents.this.mIsRecentsWithinLauncher);
-            if (str != null && "com.miui.home".equals(str) && Recents.this.mIsRecentsWithinLauncher != (isRecentsWithinLauncher = Recents.sSystemServicesProxy.isRecentsWithinLauncher(Recents.this.mContext))) {
-                boolean unused = Recents.this.mIsRecentsWithinLauncher = isRecentsWithinLauncher;
-                RecentsEventBus.getDefault().send(new RecentsWithinLauncherChangedEvent(Recents.this.mIsRecentsWithinLauncher));
+            if (str != null && "com.miui.home".equals(str)) {
+                boolean isRecentsWithinLauncher = Recents.sSystemServicesProxy.isRecentsWithinLauncher(Recents.this.mContext);
+                if (Recents.this.mIsRecentsWithinLauncher != isRecentsWithinLauncher) {
+                    boolean unused = Recents.this.mIsRecentsWithinLauncher = isRecentsWithinLauncher;
+                    RecentsEventBus.getDefault().send(new RecentsWithinLauncherChangedEvent(Recents.this.mIsRecentsWithinLauncher));
+                }
+                boolean useMiuiHomeAsDefaultHome = Recents.sSystemServicesProxy.useMiuiHomeAsDefaultHome(Recents.this.mContext);
+                if (Recents.this.mUseMiuiHomeAsDefaultHome != useMiuiHomeAsDefaultHome) {
+                    boolean unused2 = Recents.this.mUseMiuiHomeAsDefaultHome = useMiuiHomeAsDefaultHome;
+                    RecentsEventBus.getDefault().send(new DefaultHomeChangedEvent(Recents.this.mUseMiuiHomeAsDefaultHome));
+                }
                 Recents.this.updateRecentsImplementation();
             }
         }
