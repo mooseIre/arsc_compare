@@ -16,6 +16,9 @@ import android.widget.RelativeLayout;
 import com.android.systemui.plugins.R;
 
 public class ChargeVideoView extends RelativeLayout {
+    private ObjectAnimator alphaOut;
+    private ObjectAnimator alphaRapidOut;
+    private ObjectAnimator alphaStrongOut;
     private ImageView mBackImage;
     private TextureView.SurfaceTextureListener mChargeSurfaceTextureListener;
     /* access modifiers changed from: private */
@@ -33,8 +36,17 @@ public class ChargeVideoView extends RelativeLayout {
     public TextureView mRapidChargeView;
     /* access modifiers changed from: private */
     public MediaPlayer mRapidMediaPlayer;
+    private TextureView.SurfaceTextureListener mStrongRapidChargeSurfaceTextureListener;
+    /* access modifiers changed from: private */
+    public String mStrongRapidChargeUri;
+    /* access modifiers changed from: private */
+    public TextureView mStrongRapidChargeView;
+    /* access modifiers changed from: private */
+    public MediaPlayer mStrongRapidMediaPlayer;
     private AnimatorSet mToNormalAnimatorSet;
     private AnimatorSet mToRapidAnimatorSet;
+    private AnimatorSet mToStrongRapidAnimatorSet;
+    MediaPlayer.OnErrorListener onErrorListener;
 
     public ChargeVideoView(Context context) {
         this(context, (AttributeSet) null);
@@ -46,6 +58,7 @@ public class ChargeVideoView extends RelativeLayout {
 
     public ChargeVideoView(Context context, AttributeSet attributeSet, int i) {
         super(context, attributeSet, i);
+        this.mToStrongRapidAnimatorSet = new AnimatorSet();
         this.mToRapidAnimatorSet = new AnimatorSet();
         this.mToNormalAnimatorSet = new AnimatorSet();
         this.mOnPreparedListener = new MediaPlayer.OnPreparedListener() {
@@ -53,6 +66,12 @@ public class ChargeVideoView extends RelativeLayout {
                 if (mediaPlayer != null && !mediaPlayer.isPlaying()) {
                     mediaPlayer.start();
                 }
+            }
+        };
+        this.onErrorListener = new MediaPlayer.OnErrorListener() {
+            public boolean onError(MediaPlayer mediaPlayer, int i, int i2) {
+                Log.e("ChargeVideoView", "error in playing charge video " + i + " " + i2);
+                return true;
             }
         };
         this.mOnCompletionListener = new MediaPlayer.OnCompletionListener() {
@@ -124,9 +143,44 @@ public class ChargeVideoView extends RelativeLayout {
                 return false;
             }
         };
+        this.mStrongRapidChargeSurfaceTextureListener = new TextureView.SurfaceTextureListener() {
+            public void onSurfaceTextureSizeChanged(SurfaceTexture surfaceTexture, int i, int i2) {
+            }
+
+            public void onSurfaceTextureUpdated(SurfaceTexture surfaceTexture) {
+            }
+
+            public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int i, int i2) {
+                try {
+                    if (ChargeVideoView.this.mStrongRapidMediaPlayer != null) {
+                        ChargeVideoView.this.mStrongRapidMediaPlayer.setSurface(new Surface(surfaceTexture));
+                        ChargeVideoView.this.mStrongRapidMediaPlayer.setDataSource(ChargeVideoView.this.mContext, Uri.parse(ChargeVideoView.this.mStrongRapidChargeUri));
+                        ChargeVideoView.this.mStrongRapidMediaPlayer.prepareAsync();
+                        ChargeVideoView.this.mStrongRapidMediaPlayer.setLooping(true);
+                    }
+                } catch (Exception e) {
+                    Log.e("ChargeVideoView", "play strong rapid charge video exception:", e);
+                }
+            }
+
+            public boolean onSurfaceTextureDestroyed(SurfaceTexture surfaceTexture) {
+                if (ChargeVideoView.this.mStrongRapidMediaPlayer == null) {
+                    return false;
+                }
+                ChargeVideoView.this.mStrongRapidMediaPlayer.pause();
+                ChargeVideoView.this.mStrongRapidMediaPlayer.stop();
+                ChargeVideoView.this.mStrongRapidMediaPlayer.release();
+                MediaPlayer unused = ChargeVideoView.this.mStrongRapidMediaPlayer = null;
+                return false;
+            }
+        };
         this.mBackImage = new ImageView(this.mContext);
         this.mBackImage.setBackgroundResource(R.drawable.wired_charge_video_bg_img);
         addView(this.mBackImage, getVideoLayoutParams());
+    }
+
+    public void setDefaultImage(int i) {
+        this.mBackImage.setBackgroundResource(i);
     }
 
     public void setChargeUri(String str) {
@@ -137,6 +191,10 @@ public class ChargeVideoView extends RelativeLayout {
         this.mRapidChargeUri = str;
     }
 
+    public void setStrongRapidChargeUri(String str) {
+        this.mStrongRapidChargeUri = str;
+    }
+
     /* access modifiers changed from: protected */
     public RelativeLayout.LayoutParams getVideoLayoutParams() {
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(1080, 2340);
@@ -145,13 +203,73 @@ public class ChargeVideoView extends RelativeLayout {
     }
 
     /* access modifiers changed from: protected */
+    public void switchToStrongRapidChargeAnim() {
+        if (!(this.mChargeView == null && this.mRapidChargeView == null) && !this.mToStrongRapidAnimatorSet.isRunning()) {
+            if (this.mStrongRapidChargeView == null) {
+                addStrongRapidChargeView();
+            }
+            TextureView textureView = this.mChargeView;
+            if (textureView != null) {
+                this.alphaStrongOut = ObjectAnimator.ofFloat(textureView, RelativeLayout.ALPHA, new float[]{1.0f, 0.0f});
+            }
+            TextureView textureView2 = this.mRapidChargeView;
+            if (textureView2 != null) {
+                this.alphaStrongOut = ObjectAnimator.ofFloat(textureView2, RelativeLayout.ALPHA, new float[]{1.0f, 0.0f});
+            }
+            this.mToStrongRapidAnimatorSet.play(ObjectAnimator.ofFloat(this.mStrongRapidChargeView, RelativeLayout.ALPHA, new float[]{0.0f, 1.0f})).with(this.alphaStrongOut);
+            this.mToStrongRapidAnimatorSet.addListener(new Animator.AnimatorListener() {
+                public void onAnimationCancel(Animator animator) {
+                }
+
+                public void onAnimationRepeat(Animator animator) {
+                }
+
+                public void onAnimationStart(Animator animator) {
+                    if (ChargeVideoView.this.mChargeView != null) {
+                        ChargeVideoView.this.mChargeView.setAlpha(1.0f);
+                    }
+                    if (ChargeVideoView.this.mRapidChargeView != null) {
+                        ChargeVideoView.this.mRapidChargeView.setAlpha(1.0f);
+                    }
+                    if (ChargeVideoView.this.mStrongRapidChargeView != null) {
+                        ChargeVideoView.this.mStrongRapidChargeView.setAlpha(0.0f);
+                    }
+                }
+
+                public void onAnimationEnd(Animator animator) {
+                    if (ChargeVideoView.this.mStrongRapidChargeView != null) {
+                        ChargeVideoView.this.mStrongRapidChargeView.setAlpha(1.0f);
+                    }
+                    if (ChargeVideoView.this.mChargeView != null) {
+                        ChargeVideoView.this.mChargeView.setAlpha(0.0f);
+                        ChargeVideoView.this.removeChargeView();
+                    }
+                    if (ChargeVideoView.this.mRapidChargeView != null) {
+                        ChargeVideoView.this.mRapidChargeView.setAlpha(0.0f);
+                        ChargeVideoView.this.removeRapidChargeView();
+                    }
+                }
+            });
+            this.mToStrongRapidAnimatorSet.setDuration(600);
+            this.mToStrongRapidAnimatorSet.start();
+        }
+    }
+
+    /* access modifiers changed from: protected */
     public void switchToRapidChargeAnim() {
-        if (this.mChargeView != null && !this.mToRapidAnimatorSet.isRunning()) {
+        if (!(this.mChargeView == null && this.mStrongRapidChargeView == null) && !this.mToRapidAnimatorSet.isRunning()) {
             if (this.mRapidChargeView == null) {
                 addRapidChargeView();
             }
-            ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this.mChargeView, RelativeLayout.ALPHA, new float[]{1.0f, 0.0f});
-            this.mToRapidAnimatorSet.play(ofFloat).with(ObjectAnimator.ofFloat(this.mRapidChargeView, RelativeLayout.ALPHA, new float[]{0.0f, 1.0f}));
+            TextureView textureView = this.mChargeView;
+            if (textureView != null) {
+                this.alphaRapidOut = ObjectAnimator.ofFloat(textureView, RelativeLayout.ALPHA, new float[]{1.0f, 0.0f});
+            }
+            TextureView textureView2 = this.mStrongRapidChargeView;
+            if (textureView2 != null) {
+                this.alphaRapidOut = ObjectAnimator.ofFloat(textureView2, RelativeLayout.ALPHA, new float[]{1.0f, 0.0f});
+            }
+            this.mToRapidAnimatorSet.play(this.alphaRapidOut).with(ObjectAnimator.ofFloat(this.mRapidChargeView, RelativeLayout.ALPHA, new float[]{0.0f, 1.0f}));
             this.mToRapidAnimatorSet.addListener(new Animator.AnimatorListener() {
                 public void onAnimationCancel(Animator animator) {
                 }
@@ -160,12 +278,25 @@ public class ChargeVideoView extends RelativeLayout {
                 }
 
                 public void onAnimationStart(Animator animator) {
-                    ChargeVideoView.this.mChargeView.setAlpha(1.0f);
-                    ChargeVideoView.this.mRapidChargeView.setAlpha(0.0f);
+                    if (ChargeVideoView.this.mChargeView != null) {
+                        ChargeVideoView.this.mChargeView.setAlpha(1.0f);
+                    }
+                    if (ChargeVideoView.this.mStrongRapidChargeView != null) {
+                        ChargeVideoView.this.mStrongRapidChargeView.setAlpha(1.0f);
+                    }
+                    if (ChargeVideoView.this.mRapidChargeView != null) {
+                        ChargeVideoView.this.mRapidChargeView.setAlpha(0.0f);
+                    }
                 }
 
                 public void onAnimationEnd(Animator animator) {
-                    ChargeVideoView.this.mRapidChargeView.setAlpha(1.0f);
+                    if (ChargeVideoView.this.mRapidChargeView != null) {
+                        ChargeVideoView.this.mRapidChargeView.setAlpha(1.0f);
+                    }
+                    if (ChargeVideoView.this.mStrongRapidChargeView != null) {
+                        ChargeVideoView.this.mStrongRapidChargeView.setAlpha(0.0f);
+                        ChargeVideoView.this.removeStrongRapidChargeView();
+                    }
                     if (ChargeVideoView.this.mChargeView != null) {
                         ChargeVideoView.this.mChargeView.setAlpha(0.0f);
                         ChargeVideoView.this.removeChargeView();
@@ -179,12 +310,19 @@ public class ChargeVideoView extends RelativeLayout {
 
     /* access modifiers changed from: protected */
     public void switchToNormalChargeAnim() {
-        if (this.mRapidChargeView != null && !this.mToNormalAnimatorSet.isRunning()) {
+        if (!(this.mRapidChargeView == null && this.mStrongRapidChargeView == null) && !this.mToNormalAnimatorSet.isRunning()) {
             if (this.mChargeView == null) {
                 addChargeView();
             }
-            ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this.mRapidChargeView, RelativeLayout.ALPHA, new float[]{1.0f, 0.0f});
-            this.mToNormalAnimatorSet.play(ofFloat).with(ObjectAnimator.ofFloat(this.mChargeView, RelativeLayout.ALPHA, new float[]{0.0f, 1.0f}));
+            TextureView textureView = this.mRapidChargeView;
+            if (textureView != null) {
+                this.alphaOut = ObjectAnimator.ofFloat(textureView, RelativeLayout.ALPHA, new float[]{1.0f, 0.0f});
+            }
+            TextureView textureView2 = this.mStrongRapidChargeView;
+            if (textureView2 != null) {
+                this.alphaOut = ObjectAnimator.ofFloat(textureView2, RelativeLayout.ALPHA, new float[]{1.0f, 0.0f});
+            }
+            this.mToNormalAnimatorSet.play(this.alphaOut).with(ObjectAnimator.ofFloat(this.mChargeView, RelativeLayout.ALPHA, new float[]{0.0f, 1.0f}));
             this.mToNormalAnimatorSet.addListener(new Animator.AnimatorListener() {
                 public void onAnimationCancel(Animator animator) {
                 }
@@ -193,12 +331,25 @@ public class ChargeVideoView extends RelativeLayout {
                 }
 
                 public void onAnimationStart(Animator animator) {
-                    ChargeVideoView.this.mRapidChargeView.setAlpha(1.0f);
-                    ChargeVideoView.this.mChargeView.setAlpha(0.0f);
+                    if (ChargeVideoView.this.mRapidChargeView != null) {
+                        ChargeVideoView.this.mRapidChargeView.setAlpha(1.0f);
+                    }
+                    if (ChargeVideoView.this.mStrongRapidChargeView != null) {
+                        ChargeVideoView.this.mStrongRapidChargeView.setAlpha(1.0f);
+                    }
+                    if (ChargeVideoView.this.mChargeView != null) {
+                        ChargeVideoView.this.mChargeView.setAlpha(0.0f);
+                    }
                 }
 
                 public void onAnimationEnd(Animator animator) {
-                    ChargeVideoView.this.mChargeView.setAlpha(1.0f);
+                    if (ChargeVideoView.this.mChargeView != null) {
+                        ChargeVideoView.this.mChargeView.setAlpha(1.0f);
+                    }
+                    if (ChargeVideoView.this.mStrongRapidChargeView != null) {
+                        ChargeVideoView.this.mStrongRapidChargeView.setAlpha(0.0f);
+                        ChargeVideoView.this.removeStrongRapidChargeView();
+                    }
                     if (ChargeVideoView.this.mRapidChargeView != null) {
                         ChargeVideoView.this.mRapidChargeView.setAlpha(0.0f);
                         ChargeVideoView.this.removeRapidChargeView();
@@ -219,6 +370,10 @@ public class ChargeVideoView extends RelativeLayout {
         if (animatorSet2 != null && animatorSet2.isRunning()) {
             this.mToRapidAnimatorSet.cancel();
         }
+        AnimatorSet animatorSet3 = this.mToStrongRapidAnimatorSet;
+        if (animatorSet3 != null && animatorSet3.isRunning()) {
+            this.mToStrongRapidAnimatorSet.cancel();
+        }
     }
 
     /* access modifiers changed from: protected */
@@ -227,6 +382,7 @@ public class ChargeVideoView extends RelativeLayout {
         this.mMediaPlayer = new MediaPlayer();
         this.mMediaPlayer.setOnPreparedListener(this.mOnPreparedListener);
         this.mMediaPlayer.setOnCompletionListener(this.mOnCompletionListener);
+        this.mMediaPlayer.setOnErrorListener(this.onErrorListener);
         addView(this.mChargeView, -1, getVideoLayoutParams());
         this.mChargeView.setSurfaceTextureListener(this.mChargeSurfaceTextureListener);
     }
@@ -246,6 +402,7 @@ public class ChargeVideoView extends RelativeLayout {
         this.mRapidMediaPlayer = new MediaPlayer();
         this.mRapidMediaPlayer.setOnPreparedListener(this.mOnPreparedListener);
         this.mRapidMediaPlayer.setOnCompletionListener(this.mOnCompletionListener);
+        this.mRapidMediaPlayer.setOnErrorListener(this.onErrorListener);
         addView(this.mRapidChargeView, -1, getVideoLayoutParams());
         this.mRapidChargeView.setSurfaceTextureListener(this.mRapidChargeSurfaceTextureListener);
     }
@@ -256,6 +413,26 @@ public class ChargeVideoView extends RelativeLayout {
         if (textureView != null) {
             removeView(textureView);
             this.mRapidChargeView = null;
+        }
+    }
+
+    /* access modifiers changed from: protected */
+    public void addStrongRapidChargeView() {
+        this.mStrongRapidChargeView = new TextureView(this.mContext);
+        this.mStrongRapidMediaPlayer = new MediaPlayer();
+        this.mStrongRapidMediaPlayer.setOnPreparedListener(this.mOnPreparedListener);
+        this.mStrongRapidMediaPlayer.setOnCompletionListener(this.mOnCompletionListener);
+        this.mStrongRapidMediaPlayer.setOnErrorListener(this.onErrorListener);
+        addView(this.mStrongRapidChargeView, -1, getVideoLayoutParams());
+        this.mStrongRapidChargeView.setSurfaceTextureListener(this.mStrongRapidChargeSurfaceTextureListener);
+    }
+
+    /* access modifiers changed from: protected */
+    public void removeStrongRapidChargeView() {
+        TextureView textureView = this.mStrongRapidChargeView;
+        if (textureView != null) {
+            removeView(textureView);
+            this.mStrongRapidChargeView = null;
         }
     }
 }

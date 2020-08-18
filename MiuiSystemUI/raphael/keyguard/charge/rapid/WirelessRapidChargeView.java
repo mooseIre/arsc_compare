@@ -11,7 +11,7 @@ public class WirelessRapidChargeView extends FrameLayout {
     public void removeFromWindow(String str) {
     }
 
-    public void setChargeState(boolean z, boolean z2) {
+    public void setChargeState(boolean z, boolean z2, boolean z3) {
     }
 
     public void setProgress(float f) {
@@ -26,7 +26,10 @@ public class WirelessRapidChargeView extends FrameLayout {
     public void startDismiss(String str) {
     }
 
-    public void zoomLarge(boolean z) {
+    public void startValueAnimation(float f, float f2) {
+    }
+
+    public void zoomLarge(boolean z, boolean z2) {
     }
 
     public WirelessRapidChargeView(Context context) {

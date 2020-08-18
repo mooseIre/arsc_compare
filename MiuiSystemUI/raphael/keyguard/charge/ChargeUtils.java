@@ -28,6 +28,10 @@ public class ChargeUtils {
         return i == 1;
     }
 
+    public static boolean isStrongSuperRapidCharge(int i) {
+        return i == 4;
+    }
+
     public static boolean isSuperRapidCharge(int i) {
         return i == 2 || i == 3;
     }
@@ -36,8 +40,12 @@ public class ChargeUtils {
         return i == 11;
     }
 
+    public static boolean isWirelessStrongSuperRapidCharge(int i) {
+        return i == 14;
+    }
+
     public static boolean isWirelessSuperRapidCharge(int i) {
-        return i >= 9;
+        return i >= 9 && i != 14;
     }
 
     public static boolean supportWirelessCharge() {
@@ -97,7 +105,9 @@ public class ChargeUtils {
         if (i == 100) {
             return resources.getString(R.string.keyguard_charged);
         }
-        if (isSuperQuickCharging()) {
+        if (isStrongSuperQuickCharging()) {
+            return resources.getString(R.string.keyguard_charging_super_quick_and_level_tip, new Object[]{Integer.valueOf(i)});
+        } else if (isSuperQuickCharging()) {
             return resources.getString(R.string.keyguard_charging_super_quick_and_level_tip, new Object[]{Integer.valueOf(i)});
         } else if (isQuickCharging()) {
             return resources.getString(R.string.keyguard_charging_quick_and_level_tip, new Object[]{Integer.valueOf(i)});
@@ -125,6 +135,10 @@ public class ChargeUtils {
 
     public static boolean isSuperQuickCharging() {
         return ((MiuiChargeManager) Dependency.get(MiuiChargeManager.class)).isSuperQuickCharging();
+    }
+
+    public static boolean isStrongSuperQuickCharging() {
+        return ((MiuiChargeManager) Dependency.get(MiuiChargeManager.class)).isStrongSuperQuickCharging();
     }
 
     public static long getHours(long j) {
