@@ -490,7 +490,7 @@ public class QSControlCenterPanel extends FrameLayout implements ConfigurationCo
 
     private boolean isHeaderAreaTouchDown(float f) {
         int[] locationOnScreen = this.mHeader.getLocationOnScreen();
-        if (f < ((float) locationOnScreen[1]) || f > ((float) (locationOnScreen[1] + this.mHeader.getHeight()))) {
+        if (f < 0.0f || f > ((float) (locationOnScreen[1] + this.mHeader.getHeight()))) {
             return false;
         }
         return true;
@@ -527,8 +527,8 @@ public class QSControlCenterPanel extends FrameLayout implements ConfigurationCo
             r0 = 2
             if (r2 == r4) goto L_0x0087
             if (r2 == r0) goto L_0x0040
-            r1 = 3
-            if (r2 == r1) goto L_0x0087
+            r6 = 3
+            if (r2 == r6) goto L_0x00a0
             goto L_0x0124
         L_0x0040:
             r5.mMoved = r4
@@ -660,7 +660,7 @@ public class QSControlCenterPanel extends FrameLayout implements ConfigurationCo
             int i4 = this.mPaddingHorizontal;
             rect2.left = i3 + i4;
             rect2.right -= i4;
-            if (rect.contains(i, i2) || rect2.contains(i, i2)) {
+            if ((rect.contains(i, i2) || rect2.contains(i, i2)) && !isHeaderAreaTouchDown((float) i2)) {
                 return false;
             }
             return true;

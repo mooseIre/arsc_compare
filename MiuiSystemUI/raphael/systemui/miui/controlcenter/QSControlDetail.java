@@ -134,11 +134,11 @@ public class QSControlDetail extends FrameLayout {
                 i = 0;
                 i2 = 0;
             } else if (getLayoutDirection() == 0) {
-                i2 = this.mContext.getResources().getDimensionPixelSize(R.dimen.qs_control_width_land) + this.mContext.getResources().getDimensionPixelSize(R.dimen.qs_control_land_tiles_margin_middle);
-                i = 0;
-            } else {
                 i = this.mContext.getResources().getDimensionPixelSize(R.dimen.qs_control_width_land) + this.mContext.getResources().getDimensionPixelSize(R.dimen.qs_control_land_tiles_margin_middle);
                 i2 = 0;
+            } else {
+                i2 = this.mContext.getResources().getDimensionPixelSize(R.dimen.qs_control_width_land) + this.mContext.getResources().getDimensionPixelSize(R.dimen.qs_control_land_tiles_margin_middle);
+                i = 0;
             }
             setPadding(i, 0, i2, 0);
         }
