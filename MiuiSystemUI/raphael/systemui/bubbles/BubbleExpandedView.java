@@ -32,7 +32,6 @@ import com.android.systemui.plugins.R;
 import com.android.systemui.statusbar.ExpandableNotificationRow;
 import com.android.systemui.statusbar.NotificationData;
 import com.android.systemui.statusbar.stack.ExpandableViewState;
-import miui.view.MiuiHapticFeedbackConstants;
 
 public class BubbleExpandedView extends LinearLayout implements View.OnClickListener {
     /* access modifiers changed from: private */
@@ -480,7 +479,7 @@ public class BubbleExpandedView extends LinearLayout implements View.OnClickList
         intent.putExtra("android.provider.extra.APP_PACKAGE", str);
         intent.putExtra("app_uid", i);
         intent.addFlags(134217728);
-        intent.addFlags(MiuiHapticFeedbackConstants.FLAG_MIUI_HAPTIC_TAP_NORMAL);
+        intent.addFlags(268435456);
         intent.addFlags(536870912);
         return intent;
     }

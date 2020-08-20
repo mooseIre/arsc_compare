@@ -32,7 +32,6 @@ import com.android.systemui.recents.misc.SystemServicesProxy;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
-import miui.view.MiuiHapticFeedbackConstants;
 
 public class PipManager implements BasePipManager {
     static final boolean DEBUG = Log.isLoggable("PipManager", 3);
@@ -424,7 +423,7 @@ public class PipManager implements BasePipManager {
             this.mListeners.get(size).onShowPipMenu();
         }
         Intent intent = new Intent(this.mContext, PipMenuActivity.class);
-        intent.setFlags(MiuiHapticFeedbackConstants.FLAG_MIUI_HAPTIC_TAP_NORMAL);
+        intent.setFlags(268435456);
         intent.putExtra("custom_actions", this.mCustomActions);
         this.mContext.startActivity(intent);
     }

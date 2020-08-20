@@ -13,7 +13,6 @@ import android.os.IBinder;
 import android.os.RemoteException;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.systemui.recents.misc.SystemServicesProxy;
-import miui.view.MiuiHapticFeedbackConstants;
 
 public class WorkLockActivityController {
     private final Context mContext;
@@ -52,7 +51,7 @@ public class WorkLockActivityController {
     private int startActivityAsUser(Intent intent, Bundle bundle, int i) {
         try {
             Intent intent2 = intent;
-            return this.mIam.startActivityAsUser(this.mContext.getIApplicationThread(), this.mContext.getBasePackageName(), intent, intent.resolveTypeIfNeeded(this.mContext.getContentResolver()), (IBinder) null, (String) null, 0, MiuiHapticFeedbackConstants.FLAG_MIUI_HAPTIC_TAP_NORMAL, (ProfilerInfo) null, bundle, i);
+            return this.mIam.startActivityAsUser(this.mContext.getIApplicationThread(), this.mContext.getBasePackageName(), intent, intent.resolveTypeIfNeeded(this.mContext.getContentResolver()), (IBinder) null, (String) null, 0, 268435456, (ProfilerInfo) null, bundle, i);
         } catch (RemoteException | Exception unused) {
             return -96;
         }

@@ -22,7 +22,6 @@ import com.android.systemui.statusbar.SignalClusterView;
 import com.android.systemui.statusbar.phone.StatusBarIconController;
 import com.android.systemui.statusbar.policy.Clock;
 import com.android.systemui.util.Utils;
-import miui.view.MiuiHapticFeedbackConstants;
 
 public class QSControlCenterHeaderView extends LinearLayout {
     /* access modifiers changed from: private */
@@ -60,7 +59,7 @@ public class QSControlCenterHeaderView extends LinearLayout {
                 ((SystemUIStat) Dependency.get(SystemUIStat.class)).handleClickShortcutEvent("settings");
             }
             if (intent != null) {
-                intent.addFlags(MiuiHapticFeedbackConstants.FLAG_MIUI_HAPTIC_TAP_NORMAL);
+                intent.addFlags(268435456);
                 QSControlCenterHeaderView.this.mActStarter.startActivity(intent);
             }
         }

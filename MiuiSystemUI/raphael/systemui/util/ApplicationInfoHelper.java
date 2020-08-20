@@ -20,7 +20,6 @@ import android.util.ArraySet;
 import android.util.Pair;
 import com.android.systemui.plugins.R;
 import java.util.List;
-import miui.view.MiuiHapticFeedbackConstants;
 
 public final class ApplicationInfoHelper {
     public static void postEphemeralNotificationIfNeeded(Context context, String str, int i, ApplicationInfo applicationInfo, NotificationManager notificationManager, int i2, ArraySet<Pair<String, Integer>> arraySet) {
@@ -44,7 +43,7 @@ public final class ApplicationInfoHelper {
         Intent taskIntent = getTaskIntent(context2, i2, i3);
         Notification.Builder newBuilder = NotificationCompat.newBuilder(context2, NotificationChannels.GENERAL);
         if (taskIntent != null) {
-            taskIntent.setComponent((ComponentName) null).setPackage((String) null).addFlags(512).addFlags(MiuiHapticFeedbackConstants.FLAG_MIUI_HAPTIC_TAP_NORMAL);
+            taskIntent.setComponent((ComponentName) null).setPackage((String) null).addFlags(512).addFlags(268435456);
             PendingIntent activity2 = PendingIntent.getActivity(context2, 0, taskIntent, 0);
             try {
                 componentName = AppGlobals.getPackageManager().getInstantAppInstallerComponent();

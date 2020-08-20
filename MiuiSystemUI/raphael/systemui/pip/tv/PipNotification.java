@@ -17,7 +17,6 @@ import android.util.Log;
 import com.android.systemui.pip.tv.PipManager;
 import com.android.systemui.plugins.R;
 import com.android.systemui.util.NotificationChannels;
-import miui.view.MiuiHapticFeedbackConstants;
 
 public class PipNotification {
     /* access modifiers changed from: private */
@@ -169,6 +168,6 @@ public class PipNotification {
     }
 
     private static PendingIntent createPendingIntent(Context context, String str) {
-        return PendingIntent.getBroadcast(context, 0, new Intent(str), MiuiHapticFeedbackConstants.FLAG_MIUI_HAPTIC_TAP_NORMAL);
+        return PendingIntent.getBroadcast(context, 0, new Intent(str), 268435456);
     }
 }

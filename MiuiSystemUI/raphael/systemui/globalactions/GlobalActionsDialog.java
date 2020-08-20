@@ -52,7 +52,6 @@ import com.android.internal.widget.LockPatternUtils;
 import com.android.systemui.plugins.GlobalActions;
 import java.util.ArrayList;
 import java.util.List;
-import miui.view.MiuiHapticFeedbackConstants;
 
 class GlobalActionsDialog implements DialogInterface.OnDismissListener, DialogInterface.OnClickListener {
     /* access modifiers changed from: private */
@@ -248,7 +247,7 @@ class GlobalActionsDialog implements DialogInterface.OnDismissListener, DialogIn
                 }
                 boolean unused = GlobalActionsDialog.this.mIsWaitingForEcmExit = true;
                 Intent intent = new Intent("com.android.internal.intent.action.ACTION_SHOW_NOTICE_ECM_BLOCK_OTHERS", (Uri) null);
-                intent.addFlags(MiuiHapticFeedbackConstants.FLAG_MIUI_HAPTIC_TAP_NORMAL);
+                intent.addFlags(268435456);
                 GlobalActionsDialog.this.mContext.startActivity(intent);
             }
 

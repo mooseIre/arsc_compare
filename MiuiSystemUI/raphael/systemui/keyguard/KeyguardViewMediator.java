@@ -104,7 +104,6 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import miui.security.SecurityManager;
-import miui.view.MiuiHapticFeedbackConstants;
 
 public class KeyguardViewMediator extends SystemUI {
     /* access modifiers changed from: private */
@@ -1078,8 +1077,8 @@ public class KeyguardViewMediator extends SystemUI {
         long elapsedRealtime = SystemClock.elapsedRealtime() + j;
         Intent intent = new Intent("com.android.internal.policy.impl.PhoneWindowManager.DELAYED_KEYGUARD");
         intent.putExtra("seq", this.mDelayedShowingSequence);
-        intent.addFlags(MiuiHapticFeedbackConstants.FLAG_MIUI_HAPTIC_TAP_NORMAL);
-        this.mAlarmManager.setExactAndAllowWhileIdle(2, elapsedRealtime, PendingIntent.getBroadcast(this.mContext, 0, intent, MiuiHapticFeedbackConstants.FLAG_MIUI_HAPTIC_TAP_NORMAL));
+        intent.addFlags(268435456);
+        this.mAlarmManager.setExactAndAllowWhileIdle(2, elapsedRealtime, PendingIntent.getBroadcast(this.mContext, 0, intent, 268435456));
         Log.d("KeyguardViewMediator", "setting alarm to turn off keyguard, seq = " + this.mDelayedShowingSequence);
         doKeyguardLaterForChildProfilesLocked();
     }
@@ -1095,8 +1094,8 @@ public class KeyguardViewMediator extends SystemUI {
                     Intent intent = new Intent("com.android.internal.policy.impl.PhoneWindowManager.DELAYED_LOCK");
                     intent.putExtra("seq", this.mDelayedProfileShowingSequence);
                     intent.putExtra("android.intent.extra.USER_ID", i);
-                    intent.addFlags(MiuiHapticFeedbackConstants.FLAG_MIUI_HAPTIC_TAP_NORMAL);
-                    this.mAlarmManager.setExactAndAllowWhileIdle(2, elapsedRealtime, PendingIntent.getBroadcast(this.mContext, 0, intent, MiuiHapticFeedbackConstants.FLAG_MIUI_HAPTIC_TAP_NORMAL));
+                    intent.addFlags(268435456);
+                    this.mAlarmManager.setExactAndAllowWhileIdle(2, elapsedRealtime, PendingIntent.getBroadcast(this.mContext, 0, intent, 268435456));
                 }
             }
         }

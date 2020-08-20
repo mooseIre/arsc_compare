@@ -42,7 +42,6 @@ import com.android.systemui.recents.model.RecentsTaskLoader;
 import com.android.systemui.stackdivider.Divider;
 import java.util.ArrayList;
 import java.util.Iterator;
-import miui.view.MiuiHapticFeedbackConstants;
 
 public class LegacyRecentsImpl implements RecentsImplementation {
     /* access modifiers changed from: private */
@@ -517,7 +516,7 @@ public class LegacyRecentsImpl implements RecentsImplementation {
         }
         Intent intent = new Intent(str);
         intent.setPackage(this.mOverrideRecentsPackageName);
-        intent.addFlags(MiuiHapticFeedbackConstants.FLAG_MIUI_HAPTIC_TAP_NORMAL);
+        intent.addFlags(268435456);
         this.mContext.sendBroadcast(intent);
         return true;
     }

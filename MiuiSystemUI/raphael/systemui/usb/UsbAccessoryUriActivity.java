@@ -11,7 +11,6 @@ import android.util.Log;
 import com.android.internal.app.AlertActivity;
 import com.android.internal.app.AlertController;
 import com.android.systemui.plugins.R;
-import miui.view.MiuiHapticFeedbackConstants;
 
 public class UsbAccessoryUriActivity extends AlertActivity implements DialogInterface.OnClickListener {
     private UsbAccessory mAccessory;
@@ -59,7 +58,7 @@ public class UsbAccessoryUriActivity extends AlertActivity implements DialogInte
         if (i == -1) {
             Intent intent = new Intent("android.intent.action.VIEW", this.mUri);
             intent.addCategory("android.intent.category.BROWSABLE");
-            intent.addFlags(MiuiHapticFeedbackConstants.FLAG_MIUI_HAPTIC_TAP_NORMAL);
+            intent.addFlags(268435456);
             try {
                 startActivityAsUser(intent, UserHandle.CURRENT);
             } catch (ActivityNotFoundException unused) {

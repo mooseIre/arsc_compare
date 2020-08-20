@@ -32,7 +32,6 @@ import com.android.systemui.statusbar.policy.KeyguardMonitor;
 import com.android.systemui.util.NotificationChannels;
 import java.util.List;
 import java.util.function.Consumer;
-import miui.view.MiuiHapticFeedbackConstants;
 
 public class InstantAppNotifier extends SystemUI implements CommandQueue.Callbacks, KeyguardMonitor.Callback {
     private final ArraySet<Pair<String, Integer>> mCurrentNotifs = new ArraySet<>();
@@ -207,7 +206,7 @@ public class InstantAppNotifier extends SystemUI implements CommandQueue.Callbac
             builder = builder2;
             pendingIntent2 = pendingIntent;
         } else {
-            taskIntent.setComponent((ComponentName) null).setPackage((String) null).addFlags(512).addFlags(MiuiHapticFeedbackConstants.FLAG_MIUI_HAPTIC_TAP_NORMAL);
+            taskIntent.setComponent((ComponentName) null).setPackage((String) null).addFlags(512).addFlags(268435456);
             Notification.Builder builder3 = builder2;
             pendingIntent2 = pendingIntent;
             PendingIntent activityAsUser = PendingIntent.getActivityAsUser(this.mContext, 0, taskIntent, 0, (Bundle) null, of);

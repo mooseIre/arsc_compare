@@ -16,7 +16,6 @@ import com.android.systemui.qs.tileimpl.QSTileImpl;
 import com.android.systemui.statusbar.Icons;
 import miui.os.Build;
 import miui.securityspace.CrossUserUtils;
-import miui.view.MiuiHapticFeedbackConstants;
 
 public class DriveModeTile extends QSTileImpl<QSTile.BooleanState> {
     public static final boolean IS_MIUI_LITE_VERSION = Build.IS_MIUI_LITE_VERSION;
@@ -82,7 +81,7 @@ public class DriveModeTile extends QSTileImpl<QSTile.BooleanState> {
         } else if (!this.mMiuiLabDriveModeOn) {
             Intent intent = new Intent();
             intent.setComponent(new ComponentName("com.xiaomi.drivemode", "com.xiaomi.drivemode.MiuiLabDriveModeActivity"));
-            intent.addFlags(MiuiHapticFeedbackConstants.FLAG_MIUI_HAPTIC_TAP_NORMAL);
+            intent.addFlags(268435456);
             intent.putExtra("EXTRA_START_MODE", true);
             postStartActivityDismissingKeyguard(intent, 0);
         } else if (!((QSTile.BooleanState) this.mState).value) {
@@ -124,7 +123,7 @@ public class DriveModeTile extends QSTileImpl<QSTile.BooleanState> {
     private void startDriveModeActivity() {
         Intent intent = new Intent();
         intent.setComponent(new ComponentName("com.xiaomi.drivemode", "com.xiaomi.drivemode.UserGuideActivity"));
-        intent.addFlags(MiuiHapticFeedbackConstants.FLAG_MIUI_HAPTIC_TAP_NORMAL);
+        intent.addFlags(268435456);
         intent.putExtra("EXTRA_START_MODE", true);
         postStartActivityDismissingKeyguard(intent, 0);
     }

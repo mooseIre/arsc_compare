@@ -10,7 +10,6 @@ import com.android.systemui.Dependency;
 import com.android.systemui.plugins.ActivityStarter;
 import com.android.systemui.statusbar.NotificationData;
 import com.xiaomi.stat.d;
-import miui.view.MiuiHapticFeedbackConstants;
 
 public class MediaTransferManager {
     private static final boolean MIUI_MEDIA_SEAMLESS_ENABLED = (Build.VERSION.SDK_INT > 28);
@@ -30,7 +29,7 @@ public class MediaTransferManager {
             if (identifier == 0 || view.findViewById(identifier) == null) {
                 return false;
             }
-            MediaTransferManager.this.mActivityStarter.startActivity(new Intent().setAction("miui.bluetooth.mible.MiuiAudioRelayActivity"), false, true, MiuiHapticFeedbackConstants.FLAG_MIUI_HAPTIC_TAP_NORMAL);
+            MediaTransferManager.this.mActivityStarter.startActivity(new Intent().setAction("miui.bluetooth.mible.MiuiAudioRelayActivity"), false, true, 268435456);
             return true;
         }
     };

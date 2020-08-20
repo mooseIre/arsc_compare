@@ -17,7 +17,6 @@ import com.android.systemui.recents.misc.SystemServicesProxy;
 import com.android.systemui.recents.misc.Utilities;
 import com.android.systemui.stackdivider.events.StartedDragingEvent;
 import com.android.systemui.stackdivider.events.StoppedDragingEvent;
-import miui.view.MiuiHapticFeedbackConstants;
 
 public class ForcedResizableInfoActivityController {
     /* access modifiers changed from: private */
@@ -108,7 +107,7 @@ public class ForcedResizableInfoActivityController {
         this.mHandler.removeCallbacks(this.mTimeoutRunnable);
         for (int size = this.mPendingTaskIds.size() - 1; size >= 0; size--) {
             Intent intent = new Intent(this.mContext, ForcedResizableInfoActivity.class);
-            intent.addFlags(MiuiHapticFeedbackConstants.FLAG_MIUI_HAPTIC_TAP_NORMAL);
+            intent.addFlags(268435456);
             ActivityOptions makeBasic = ActivityOptions.makeBasic();
             if (Utilities.isAndroidNorNewer()) {
                 ActivityOptionsCompat.setLaunchTaskId(makeBasic, this.mPendingTaskIds.valueAt(size).intValue());

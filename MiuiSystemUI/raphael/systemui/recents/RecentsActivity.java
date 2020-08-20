@@ -138,7 +138,6 @@ import miui.process.ProcessConfig;
 import miui.process.ProcessManager;
 import miui.securityspace.XSpaceUserHandle;
 import miui.util.HardwareInfo;
-import miui.view.MiuiHapticFeedbackConstants;
 import miui.view.animation.SineEaseInOutInterpolator;
 import miui.view.animation.SineEaseOutInterpolator;
 
@@ -444,7 +443,7 @@ public class RecentsActivity extends Activity implements ViewTreeObserver.OnPreD
                 Intent intent = new Intent("android.intent.action.MAIN");
                 intent.setClassName("com.android.settings", "com.android.settings.applications.ManageApplicationsActivity");
                 intent.putExtra("com.android.settings.APPLICATION_LIST_TYPE", 2);
-                intent.setFlags(MiuiHapticFeedbackConstants.FLAG_MIUI_HAPTIC_TAP_NORMAL);
+                intent.setFlags(268435456);
                 TaskStackBuilder.create(RecentsActivity.this.getApplicationContext()).addNextIntentWithParentStack(intent).startActivities((Bundle) null, UserHandle.CURRENT);
                 return true;
             }

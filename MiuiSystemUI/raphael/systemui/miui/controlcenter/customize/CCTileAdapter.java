@@ -34,7 +34,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import miui.app.AlertDialog;
-import miui.view.MiuiHapticFeedbackConstants;
 
 public class CCTileAdapter extends RecyclerView.Adapter<Holder> implements TileQueryHelper.TileStateListener {
     private int mAccessibilityFromIndex;
@@ -476,7 +475,7 @@ public class CCTileAdapter extends RecyclerView.Adapter<Holder> implements TileQ
         int i2 = this.mEditIndex;
         this.mEditIndex = i2 + 1;
         list.add(i2, (Object) null);
-        ((HapticFeedBackImpl) Dependency.get(HapticFeedBackImpl.class)).getHapticFeedbackUtil().performHapticFeedback(MiuiHapticFeedbackConstants.FLAG_MIUI_HAPTIC_MESH_NORMAL, false);
+        ((HapticFeedBackImpl) Dependency.get(HapticFeedBackImpl.class)).getHapticFeedbackUtil().performHapticFeedback(268435461, false);
         notifyDataSetChanged();
     }
 

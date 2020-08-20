@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import miui.view.MiuiHapticFeedbackConstants;
 
 public class ExpandInfoControllerImpl implements ExpandInfoController {
     private ControlCenterActivityStarter mActivityStarter = ((ControlCenterActivityStarter) Dependency.get(ControlCenterActivityStarter.class));
@@ -190,7 +189,7 @@ public class ExpandInfoControllerImpl implements ExpandInfoController {
             Intent intent = new Intent();
             intent.setAction(str);
             intent.putExtra("misettings_from_page", "controller_center");
-            intent.addFlags(MiuiHapticFeedbackConstants.FLAG_MIUI_HAPTIC_TAP_NORMAL);
+            intent.addFlags(268435456);
             this.mActivityStarter.postStartActivityDismissingKeyguard(intent);
         }
     }
@@ -200,7 +199,7 @@ public class ExpandInfoControllerImpl implements ExpandInfoController {
             try {
                 Intent parseUri = Intent.parseUri(str, 0);
                 parseUri.putExtra("misettings_from_page", "controller_center");
-                parseUri.addFlags(MiuiHapticFeedbackConstants.FLAG_MIUI_HAPTIC_TAP_NORMAL);
+                parseUri.addFlags(268435456);
                 this.mActivityStarter.postStartActivityDismissingKeyguard(parseUri);
             } catch (Exception e) {
                 e.printStackTrace();

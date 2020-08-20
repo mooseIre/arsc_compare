@@ -20,7 +20,6 @@ import com.android.systemui.Dependency;
 import miui.os.Build;
 import miui.securityspace.XSpaceUserHandle;
 import miui.util.NotificationFilterHelper;
-import miui.view.MiuiHapticFeedbackConstants;
 
 public class NotificationSettingsHelper {
     private static final boolean DEBUG = Constants.DEBUG;
@@ -217,7 +216,7 @@ public class NotificationSettingsHelper {
         }
         Intent intent = new Intent("android.intent.action.MAIN");
         intent.addFlags(32768);
-        intent.addFlags(MiuiHapticFeedbackConstants.FLAG_MIUI_HAPTIC_TAP_NORMAL);
+        intent.addFlags(268435456);
         intent.setClassName("com.android.settings", "com.android.settings.Settings$AppNotificationSettingsActivity");
         intent.putExtra("package", str);
         intent.putExtra("uid", i);

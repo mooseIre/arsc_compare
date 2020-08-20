@@ -21,7 +21,6 @@ import android.widget.TextView;
 import com.android.internal.app.AlertActivity;
 import com.android.internal.app.AlertController;
 import com.android.systemui.plugins.R;
-import miui.view.MiuiHapticFeedbackConstants;
 
 public class UsbConfirmActivity extends AlertActivity implements DialogInterface.OnClickListener, CompoundButton.OnCheckedChangeListener {
     private UsbAccessory mAccessory;
@@ -105,7 +104,7 @@ public class UsbConfirmActivity extends AlertActivity implements DialogInterface
                 } else {
                     intent = null;
                 }
-                intent.addFlags(MiuiHapticFeedbackConstants.FLAG_MIUI_HAPTIC_TAP_NORMAL);
+                intent.addFlags(268435456);
                 intent.setComponent(new ComponentName(this.mResolveInfo.activityInfo.packageName, this.mResolveInfo.activityInfo.name));
                 startActivityAsUser(intent, new UserHandle(myUserId));
             } catch (Exception e) {

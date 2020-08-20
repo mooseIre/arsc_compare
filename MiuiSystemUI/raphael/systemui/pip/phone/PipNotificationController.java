@@ -17,7 +17,6 @@ import android.util.Log;
 import com.android.systemui.SystemUI;
 import com.android.systemui.plugins.R;
 import com.android.systemui.util.NotificationChannels;
-import miui.view.MiuiHapticFeedbackConstants;
 
 public class PipNotificationController {
     private static final String NOTIFICATION_TAG = "com.android.systemui.pip.phone.PipNotificationController";
@@ -104,7 +103,7 @@ public class PipNotificationController {
             } else {
                 icon = Icon.createWithResource(Resources.getSystem(), 17301651);
             }
-            builder.setContentTitle(this.mContext.getString(R.string.pip_notification_title, new Object[]{charSequence})).setContentText(string).setContentIntent(PendingIntent.getActivity(this.mContext, str.hashCode(), intent, MiuiHapticFeedbackConstants.FLAG_MIUI_HAPTIC_TAP_NORMAL)).setStyle(new Notification.BigTextStyle().bigText(string)).setLargeIcon(icon);
+            builder.setContentTitle(this.mContext.getString(R.string.pip_notification_title, new Object[]{charSequence})).setContentText(string).setContentIntent(PendingIntent.getActivity(this.mContext, str.hashCode(), intent, 268435456)).setStyle(new Notification.BigTextStyle().bigText(string)).setLargeIcon(icon);
             return true;
         } catch (PackageManager.NameNotFoundException e) {
             Log.e(TAG, "Could not update notification for application", e);

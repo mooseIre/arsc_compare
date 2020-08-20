@@ -61,7 +61,6 @@ import java.util.function.Consumer;
 import miui.process.ForegroundInfo;
 import miui.process.IForegroundWindowListener;
 import miui.process.ProcessManager;
-import miui.view.MiuiHapticFeedbackConstants;
 import miuix.animation.Folme;
 import miuix.animation.IStateStyle;
 import miuix.animation.listener.TransitionListener;
@@ -362,7 +361,7 @@ public class AppMiniWindowManager implements Gefingerpoken, ConfigurationControl
                 Intent intent = new Intent();
                 if (!"com.tencent.tim".equals(this.mIntent.getCreatorPackage())) {
                     intent.addFlags(134217728);
-                    intent.addFlags(MiuiHapticFeedbackConstants.FLAG_MIUI_HAPTIC_TAP_NORMAL);
+                    intent.addFlags(268435456);
                     intent.addFlags(8388608);
                 }
                 this.mIntent.send(this.mContext, 0, intent, (PendingIntent.OnFinished) null, (Handler) null, (String) null, activityOptions.toBundle());

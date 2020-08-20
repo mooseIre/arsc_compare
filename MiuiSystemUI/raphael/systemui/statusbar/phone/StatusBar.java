@@ -316,7 +316,6 @@ import miui.security.SecurityManager;
 import miui.telephony.TelephonyManager;
 import miui.telephony.TelephonyManagerEx;
 import miui.util.CustomizeUtil;
-import miui.view.MiuiHapticFeedbackConstants;
 
 public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.DragDownCallback, ActivityStarter, UnlockMethodCache.OnUnlockMethodChangedListener, OnHeadsUpChangedListener, VisualStabilityManager.Callback, CommandQueue.Callbacks, SilentModeObserverController.SilentModeListener, MiuiActivityLaunchAnimator.Callback, ExpandableNotificationRow.ExpansionLogger, NotificationData.Environment, ShadeController, NotificationInflater.InflationCallback, InCallNotificationView.InCallCallback, NotificationPresenter {
     public static final Interpolator ALPHA_IN = Interpolators.ALPHA_IN;
@@ -1670,7 +1669,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
                     Settings.Secure.putInt(StatusBar.this.mContext.getContentResolver(), "show_note_about_notification_hiding", 0);
                     if ("com.android.systemui.statusbar.banner_action_setup".equals(action)) {
                         StatusBar.this.animateCollapsePanels(2, true);
-                        StatusBar.this.mContext.startActivity(new Intent("android.settings.ACTION_APP_NOTIFICATION_REDACTION").addFlags(MiuiHapticFeedbackConstants.FLAG_MIUI_HAPTIC_TAP_NORMAL));
+                        StatusBar.this.mContext.startActivity(new Intent("android.settings.ACTION_APP_NOTIFICATION_REDACTION").addFlags(268435456));
                     }
                 } else if ("com.android.systemui.statusbar.work_challenge_unlocked_notification_action".equals(action)) {
                     IntentSender intentSender = (IntentSender) intent.getParcelableExtra("android.intent.extra.INTENT");
@@ -2554,7 +2553,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
                         PrintWriter printWriter = new PrintWriter(stringWriter);
                         FalsingLog.dump(printWriter);
                         printWriter.flush();
-                        StatusBar.this.startActivityDismissingKeyguard(Intent.createChooser(new Intent("android.intent.action.SEND").setType("*/*").putExtra("android.intent.extra.SUBJECT", "Rejected touch report").putExtra("android.intent.extra.STREAM", reportRejectedTouch).putExtra("android.intent.extra.TEXT", stringWriter.toString()), "Share rejected touch report").addFlags(MiuiHapticFeedbackConstants.FLAG_MIUI_HAPTIC_TAP_NORMAL), true, true);
+                        StatusBar.this.startActivityDismissingKeyguard(Intent.createChooser(new Intent("android.intent.action.SEND").setType("*/*").putExtra("android.intent.extra.SUBJECT", "Rejected touch report").putExtra("android.intent.extra.STREAM", reportRejectedTouch).putExtra("android.intent.extra.TEXT", stringWriter.toString()), "Share rejected touch report").addFlags(268435456), true, true);
                     }
                 }
             });
@@ -3219,7 +3218,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
         boolean z;
         String packageName = expandedNotification.getPackageName();
         String channelId = expandedNotification.getNotification().getChannelId();
-        if ((!expandedNotification.isSubstituteNotification() || !NotificationSettingsHelper.isNotificationsBanned(this.mContext, packageName)) && (((expandedNotification.getNotification().flags & 64) == 0 || !((NotificationSettingsManager) Dependency.get(NotificationSettingsManager.class)).hideForegroundNotification(packageName, channelId)) && (((expandedNotification.getNotification().flags & 2) == 0 || expandedNotification.getId() != 0 || !TextUtils.equals("android", expandedNotification.getBasePkg()) || !((NotificationSettingsManager) Dependency.get(NotificationSettingsManager.class)).hideAlertWindowNotification(expandedNotification.getTag())) && !((UsbNotificationController) Dependency.get(UsbNotificationController.class)).needDisableUsbNotification(expandedNotification) && ((expandedNotification.getNotification().flags & MiuiHapticFeedbackConstants.FLAG_MIUI_HAPTIC_TAP_NORMAL) == 0 || (!packageName.equalsIgnoreCase("com.mediatek.selfregister") && !packageName.equalsIgnoreCase("com.mediatek.deviceregister")))))) {
+        if ((!expandedNotification.isSubstituteNotification() || !NotificationSettingsHelper.isNotificationsBanned(this.mContext, packageName)) && (((expandedNotification.getNotification().flags & 64) == 0 || !((NotificationSettingsManager) Dependency.get(NotificationSettingsManager.class)).hideForegroundNotification(packageName, channelId)) && (((expandedNotification.getNotification().flags & 2) == 0 || expandedNotification.getId() != 0 || !TextUtils.equals("android", expandedNotification.getBasePkg()) || !((NotificationSettingsManager) Dependency.get(NotificationSettingsManager.class)).hideAlertWindowNotification(expandedNotification.getTag())) && !((UsbNotificationController) Dependency.get(UsbNotificationController.class)).needDisableUsbNotification(expandedNotification) && ((expandedNotification.getNotification().flags & 268435456) == 0 || (!packageName.equalsIgnoreCase("com.mediatek.selfregister") && !packageName.equalsIgnoreCase("com.mediatek.deviceregister")))))) {
             z = false;
         } else {
             z = true;
@@ -5191,7 +5190,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
                         ActivityOptionsCompat.setRotationAnimationHint(activityOptions, 3);
                     }
                     try {
-                        i = ActivityManagerCompat.getService().startActivityAsUser((IApplicationThread) null, StatusBar.this.mContext.getBasePackageName(), intent, intent.resolveTypeIfNeeded(StatusBar.this.mContext.getContentResolver()), (IBinder) null, (String) null, 0, MiuiHapticFeedbackConstants.FLAG_MIUI_HAPTIC_TAP_NORMAL, (ProfilerInfo) null, activityOptions.toBundle(), UserHandle.CURRENT.getIdentifier());
+                        i = ActivityManagerCompat.getService().startActivityAsUser((IApplicationThread) null, StatusBar.this.mContext.getBasePackageName(), intent, intent.resolveTypeIfNeeded(StatusBar.this.mContext.getContentResolver()), (IBinder) null, (String) null, 0, 268435456, (ProfilerInfo) null, activityOptions.toBundle(), UserHandle.CURRENT.getIdentifier());
                     } catch (RemoteException e) {
                         Log.w("StatusBar", "Unable to start activity", e);
                         i = -96;

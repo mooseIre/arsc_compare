@@ -15,7 +15,6 @@ import android.os.UserHandle;
 import com.android.systemui.SystemUI;
 import com.android.systemui.plugins.R;
 import com.android.systemui.util.NotificationChannels;
-import miui.view.MiuiHapticFeedbackConstants;
 
 public class UsbPortPolicy extends SystemUI {
     private boolean mIsUsbShortCircuit;
@@ -73,7 +72,7 @@ public class UsbPortPolicy extends SystemUI {
             this.mNotificationManager.cancel("USB_PORT", 0);
             if (this.mIsUsbShortCircuit) {
                 Intent intent = new Intent(this.mContext, UsbPortRecoveredActivity.class);
-                intent.setFlags(MiuiHapticFeedbackConstants.FLAG_MIUI_HAPTIC_TAP_NORMAL);
+                intent.setFlags(268435456);
                 this.mContext.startActivityAsUser(intent, UserHandle.CURRENT);
             }
         }
