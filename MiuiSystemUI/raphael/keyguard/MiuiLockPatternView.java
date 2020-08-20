@@ -34,7 +34,6 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import miui.view.MiuiHapticFeedbackConstants;
 
 public class MiuiLockPatternView extends View {
     private long mAnimatingPeriodStart;
@@ -440,7 +439,7 @@ public class MiuiLockPatternView extends View {
         addCellToPattern(checkForNewHit);
         if (this.mEnableHapticFeedback) {
             if (MiuiKeyguardUtils.SUPPORT_LINEAR_MOTOR_VIBRATE) {
-                i = MiuiHapticFeedbackConstants.FLAG_MIUI_HAPTIC_MESH_NORMAL;
+                i = 268435461;
             }
             performHapticFeedback(i, 3);
         }

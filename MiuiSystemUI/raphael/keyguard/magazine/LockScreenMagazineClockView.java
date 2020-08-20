@@ -21,7 +21,6 @@ import com.android.keyguard.wallpaper.WallpaperAuthorityUtils;
 import com.android.systemui.plugins.R;
 import java.util.Locale;
 import miui.os.Build;
-import miui.view.MiuiHapticFeedbackConstants;
 
 public class LockScreenMagazineClockView extends LinearLayout {
     private LinearLayout mContentsLayout;
@@ -124,7 +123,7 @@ public class LockScreenMagazineClockView extends LinearLayout {
                     public Intent doInBackground(Void... voidArr) {
                         Intent intent = new Intent("android.intent.action.VIEW");
                         intent.setData(Uri.parse(LockScreenMagazineClockView.this.mMagazineWallpaperInfo.titleClickUri));
-                        intent.addFlags(MiuiHapticFeedbackConstants.FLAG_MIUI_HAPTIC_TAP_NORMAL);
+                        intent.addFlags(268435456);
                         intent.addFlags(67108864);
                         if (PackageUtils.resolveIntent(LockScreenMagazineClockView.this.mContext, intent) != null) {
                             return intent;

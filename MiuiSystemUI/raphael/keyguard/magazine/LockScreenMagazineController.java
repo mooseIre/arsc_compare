@@ -53,7 +53,6 @@ import com.android.systemui.statusbar.stack.NotificationStackScrollLayout;
 import com.google.gson.Gson;
 import com.xiaomi.stat.MiStat;
 import miui.os.Build;
-import miui.view.MiuiHapticFeedbackConstants;
 import org.json.JSONObject;
 
 public class LockScreenMagazineController {
@@ -795,7 +794,7 @@ public class LockScreenMagazineController {
             }
             Intent intent = new Intent();
             intent.setComponent(new ComponentName(LockScreenMagazineUtils.LOCK_SCREEN_MAGAZINE_PACKAGE_NAME, preLeftScreenActivityName));
-            intent.addFlags(MiuiHapticFeedbackConstants.FLAG_MIUI_HAPTIC_TAP_NORMAL);
+            intent.addFlags(268435456);
             if (Build.IS_INTERNATIONAL_BUILD) {
                 intent.putExtra("wc_enable_source", "systemui");
                 intent.putExtra("wallpaper_uri", this.mUpdateMonitor.getLockScreenMagazineWallpaperInfo().wallpaperUri);

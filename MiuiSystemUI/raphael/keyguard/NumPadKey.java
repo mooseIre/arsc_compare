@@ -17,7 +17,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import com.android.internal.widget.LockPatternUtils;
 import com.android.systemui.plugins.R;
-import miui.view.MiuiHapticFeedbackConstants;
 
 public class NumPadKey extends ViewGroup {
     static String[] sKlondike;
@@ -183,7 +182,7 @@ public class NumPadKey extends ViewGroup {
 
     public void doHapticKeyClick() {
         if (this.mEnableHaptics) {
-            performHapticFeedback(MiuiKeyguardUtils.SUPPORT_LINEAR_MOTOR_VIBRATE ? MiuiHapticFeedbackConstants.FLAG_MIUI_HAPTIC_TAP_LIGHT : 1, 3);
+            performHapticFeedback(MiuiKeyguardUtils.SUPPORT_LINEAR_MOTOR_VIBRATE ? 268435457 : 1, 3);
         }
     }
 

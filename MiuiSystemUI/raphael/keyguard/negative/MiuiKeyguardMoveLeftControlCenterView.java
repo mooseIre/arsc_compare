@@ -34,7 +34,6 @@ import com.android.systemui.statusbar.phone.NotificationPanelView;
 import com.android.systemui.statusbar.phone.StatusBar;
 import com.xiaomi.stat.MiStat;
 import miui.os.Build;
-import miui.view.MiuiHapticFeedbackConstants;
 
 public class MiuiKeyguardMoveLeftControlCenterView extends MiuiKeyguardMoveLeftBaseView {
     /* access modifiers changed from: private */
@@ -78,7 +77,7 @@ public class MiuiKeyguardMoveLeftControlCenterView extends MiuiKeyguardMoveLeftB
                     MiuiKeyguardMoveLeftControlCenterView.this.mContext.sendBroadcast(PackageUtils.getToggleTorchIntent(!z));
                     MiuiKeyguardMoveLeftControlCenterView.this.mTorchLightImageView.setSelected(!z);
                     if (MiuiKeyguardUtils.SUPPORT_LINEAR_MOTOR_VIBRATE) {
-                        view.performHapticFeedback(MiuiHapticFeedbackConstants.FLAG_MIUI_HAPTIC_FLICK);
+                        view.performHapticFeedback(268435458);
                         return;
                     }
                     return;
@@ -97,7 +96,7 @@ public class MiuiKeyguardMoveLeftControlCenterView extends MiuiKeyguardMoveLeftB
                 case R.id.keyguard_remote_controller_info /*2131362340*/:
                     if (PackageUtils.isAppInstalledForUser(MiuiKeyguardMoveLeftControlCenterView.this.mContext, "com.duokan.phone.remotecontroller", KeyguardUpdateMonitor.getCurrentUser())) {
                         Intent launchIntentForPackage = MiuiKeyguardMoveLeftControlCenterView.this.mContext.getPackageManager().getLaunchIntentForPackage("com.duokan.phone.remotecontroller");
-                        launchIntentForPackage.addFlags(MiuiHapticFeedbackConstants.FLAG_MIUI_HAPTIC_TAP_NORMAL);
+                        launchIntentForPackage.addFlags(268435456);
                         MiuiKeyguardMoveLeftControlCenterView.this.mStatusBar.startActivity(launchIntentForPackage, true);
                         return;
                     }

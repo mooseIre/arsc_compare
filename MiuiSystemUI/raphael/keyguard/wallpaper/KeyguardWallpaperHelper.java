@@ -35,7 +35,6 @@ import com.android.systemui.plugins.R;
 import com.google.gson.Gson;
 import java.util.List;
 import miui.os.Build;
-import miui.view.MiuiHapticFeedbackConstants;
 
 public class KeyguardWallpaperHelper {
     private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
@@ -381,7 +380,7 @@ public class KeyguardWallpaperHelper {
                     }
                     Intent intent = new Intent();
                     intent.setComponent(componentName);
-                    intent.addFlags(MiuiHapticFeedbackConstants.FLAG_MIUI_HAPTIC_TAP_NORMAL);
+                    intent.addFlags(268435456);
                     intent.putExtras(bundle);
                     try {
                         KeyguardWallpaperHelper.this.mContext.startActivity(intent, KeyguardWallpaperHelper.makeCustomAnimation(KeyguardWallpaperHelper.this.mContext, 0, 0, new Handler()).toBundle());
