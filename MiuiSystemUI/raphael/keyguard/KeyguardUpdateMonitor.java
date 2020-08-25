@@ -456,6 +456,7 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener {
     };
     HashMap<Integer, ServiceState> mServiceStates = new HashMap<>();
     HashMap<Integer, SimData> mSimDatas = new HashMap<>();
+    private boolean mSimLocked;
     HashMap<Integer, Boolean> mSimStateEarlyReadyStatus = new HashMap<>();
     private int mStatusBarHeight;
     private final BroadcastReceiver mStrongAuthTimeoutReceiver = new BroadcastReceiver() {
@@ -1041,6 +1042,8 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener {
                         state = IccCardConstants.State.PIN_REQUIRED;
                     } else if ("PUK".equals(stringExtra2)) {
                         state = IccCardConstants.State.PUK_REQUIRED;
+                    } else if ("PERM_DISABLED".equals(stringExtra2)) {
+                        state = IccCardConstants.State.PERM_DISABLED;
                     } else {
                         state = IccCardConstants.State.UNKNOWN;
                     }
@@ -1491,7 +1494,7 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener {
     }
 
     public boolean shouldListenForFingerprint() {
-        boolean z = (this.mKeyguardIsVisible || !this.mDeviceInteractive || ((this.mBouncer && !this.mKeyguardGoingAway) || this.mGoingToSleep || this.mKeyguardShowingAndOccluded)) && !this.mSwitchingUser && !isFingerprintDisabled(getCurrentUser()) && (!isKeyguardHide() || this.mGoingToSleep) && !isFingerprintUnlock() && MiuiKeyguardUtils.isSystemProcess() && (!isFaceUnlock() || !MiuiKeyguardUtils.isBroadSideFingerprint());
+        boolean z = (this.mKeyguardIsVisible || !this.mDeviceInteractive || ((this.mBouncer && !this.mKeyguardGoingAway) || this.mGoingToSleep || this.mKeyguardShowingAndOccluded)) && !this.mSwitchingUser && !isFingerprintDisabled(getCurrentUser()) && (!isKeyguardHide() || this.mGoingToSleep) && !isFingerprintUnlock() && MiuiKeyguardUtils.isSystemProcess() && ((!isFaceUnlock() || !MiuiKeyguardUtils.isBroadSideFingerprint()) && !this.mSimLocked);
         if (MiuiKeyguardUtils.isGxzwSensor() && MiuiKeyguardUtils.isInvertColorsEnable(this.mContext)) {
             z = z && this.mDeviceInteractive;
         }
@@ -1715,11 +1718,45 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener {
         return this.mBatteryStatus.getChargingState();
     }
 
+    public boolean isSimLocked() {
+        return this.mSimLocked;
+    }
+
+    private void handleSimLockedStateChange(boolean z) {
+        if (this.mSimLocked != z) {
+            this.mSimLocked = z;
+            if (z) {
+                FaceUnlockManager.getInstance().stopFaceUnlock();
+                updateFingerprintListeningState();
+            }
+            for (int i = 0; i < this.mCallbacks.size(); i++) {
+                KeyguardUpdateMonitorCallback keyguardUpdateMonitorCallback = (KeyguardUpdateMonitorCallback) this.mCallbacks.get(i).get();
+                if (keyguardUpdateMonitorCallback != null) {
+                    keyguardUpdateMonitorCallback.onSimLockedStateChanged(z);
+                }
+            }
+        }
+    }
+
+    private boolean isSupportShowSimLockedTips() {
+        return this.mContext.getResources().getBoolean(R.bool.config_switch_sim_locked_tips);
+    }
+
+    private void handleSimLocked(int i, int i2, IccCardConstants.State state) {
+        if (isSupportShowSimLockedTips()) {
+            if (state == IccCardConstants.State.ABSENT || state == IccCardConstants.State.READY) {
+                handleSimLockedStateChange(false);
+            } else if (state == IccCardConstants.State.PERM_DISABLED) {
+                handleSimLockedStateChange(true);
+            }
+        }
+    }
+
     /* access modifiers changed from: private */
-    /* JADX WARNING: Removed duplicated region for block: B:17:0x0071  */
-    /* JADX WARNING: Removed duplicated region for block: B:18:0x0080  */
-    /* JADX WARNING: Removed duplicated region for block: B:37:0x00af  */
-    /* JADX WARNING: Removed duplicated region for block: B:43:0x00cb  */
+    /* JADX WARNING: Removed duplicated region for block: B:17:0x0074  */
+    /* JADX WARNING: Removed duplicated region for block: B:18:0x0083  */
+    /* JADX WARNING: Removed duplicated region for block: B:37:0x00b2  */
+    /* JADX WARNING: Removed duplicated region for block: B:43:0x00ce  */
     /* JADX WARNING: Removed duplicated region for block: B:52:? A[RETURN, SYNTHETIC] */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     public void handleSimStateChange(int r7, int r8, com.android.internal.telephony.IccCardConstants.State r9) {
@@ -1741,97 +1778,98 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener {
             java.lang.String r0 = r0.toString()
             java.lang.String r1 = "KeyguardUpdateMonitor"
             android.util.Log.d(r1, r0)
+            r6.handleSimLocked(r7, r8, r9)
             boolean r0 = android.telephony.SubscriptionManager.isValidSubscriptionId(r7)
             r2 = 0
             r3 = 1
-            if (r0 != 0) goto L_0x0062
+            if (r0 != 0) goto L_0x0065
             java.lang.String r0 = "invalid subId in handleSimStateChange()"
             android.util.Log.w(r1, r0)
             com.android.internal.telephony.IccCardConstants$State r0 = com.android.internal.telephony.IccCardConstants.State.ABSENT
-            if (r9 != r0) goto L_0x005d
+            if (r9 != r0) goto L_0x0060
             java.util.HashMap<java.lang.Integer, com.android.keyguard.KeyguardUpdateMonitor$SimData> r0 = r6.mSimDatas
             java.util.Collection r0 = r0.values()
             java.util.Iterator r0 = r0.iterator()
-        L_0x0046:
+        L_0x0049:
             boolean r1 = r0.hasNext()
-            if (r1 == 0) goto L_0x005b
+            if (r1 == 0) goto L_0x005e
             java.lang.Object r1 = r0.next()
             com.android.keyguard.KeyguardUpdateMonitor$SimData r1 = (com.android.keyguard.KeyguardUpdateMonitor.SimData) r1
             int r4 = r1.slotId
-            if (r4 != r8) goto L_0x0046
+            if (r4 != r8) goto L_0x0049
             com.android.internal.telephony.IccCardConstants$State r4 = com.android.internal.telephony.IccCardConstants.State.ABSENT
             r1.simState = r4
-            goto L_0x0046
-        L_0x005b:
+            goto L_0x0049
+        L_0x005e:
             r0 = r3
-            goto L_0x0063
-        L_0x005d:
+            goto L_0x0066
+        L_0x0060:
             boolean r0 = com.android.keyguard.MiuiKeyguardUtils.IS_MTK_BUILD
-            if (r0 != 0) goto L_0x0062
+            if (r0 != 0) goto L_0x0065
             return
-        L_0x0062:
+        L_0x0065:
             r0 = r2
-        L_0x0063:
+        L_0x0066:
             java.util.HashMap<java.lang.Integer, com.android.keyguard.KeyguardUpdateMonitor$SimData> r1 = r6.mSimDatas
             java.lang.Integer r4 = java.lang.Integer.valueOf(r8)
             java.lang.Object r1 = r1.get(r4)
             com.android.keyguard.KeyguardUpdateMonitor$SimData r1 = (com.android.keyguard.KeyguardUpdateMonitor.SimData) r1
-            if (r1 != 0) goto L_0x0080
+            if (r1 != 0) goto L_0x0083
             com.android.keyguard.KeyguardUpdateMonitor$SimData r1 = new com.android.keyguard.KeyguardUpdateMonitor$SimData
             r1.<init>(r9, r8, r7)
             java.util.HashMap<java.lang.Integer, com.android.keyguard.KeyguardUpdateMonitor$SimData> r4 = r6.mSimDatas
             java.lang.Integer r5 = java.lang.Integer.valueOf(r8)
             r4.put(r5, r1)
-            goto L_0x009f
-        L_0x0080:
+            goto L_0x00a2
+        L_0x0083:
             com.android.internal.telephony.IccCardConstants$State r4 = r1.simState
-            if (r4 == r9) goto L_0x008e
+            if (r4 == r9) goto L_0x0091
             boolean r4 = r6.isEarlyReportSimUnlocked(r9, r4, r8)
-            if (r4 != 0) goto L_0x008e
+            if (r4 != 0) goto L_0x0091
             r1.simState = r9
             r4 = r3
-            goto L_0x008f
-        L_0x008e:
+            goto L_0x0092
+        L_0x0091:
             r4 = r2
-        L_0x008f:
-            if (r4 != 0) goto L_0x009b
+        L_0x0092:
+            if (r4 != 0) goto L_0x009e
             int r4 = r1.subId
-            if (r4 != r7) goto L_0x009b
+            if (r4 != r7) goto L_0x009e
             int r4 = r1.slotId
-            if (r4 == r8) goto L_0x009a
-            goto L_0x009b
-        L_0x009a:
+            if (r4 == r8) goto L_0x009d
+            goto L_0x009e
+        L_0x009d:
             r3 = r2
-        L_0x009b:
+        L_0x009e:
             r1.subId = r7
             r1.slotId = r8
-        L_0x009f:
-            if (r3 != 0) goto L_0x00a3
-            if (r0 == 0) goto L_0x00c5
-        L_0x00a3:
+        L_0x00a2:
+            if (r3 != 0) goto L_0x00a6
+            if (r0 == 0) goto L_0x00c8
+        L_0x00a6:
             com.android.internal.telephony.IccCardConstants$State r0 = com.android.internal.telephony.IccCardConstants.State.UNKNOWN
-            if (r9 == r0) goto L_0x00c5
-        L_0x00a7:
+            if (r9 == r0) goto L_0x00c8
+        L_0x00aa:
             java.util.ArrayList<java.lang.ref.WeakReference<com.android.keyguard.KeyguardUpdateMonitorCallback>> r0 = r6.mCallbacks
             int r0 = r0.size()
-            if (r2 >= r0) goto L_0x00c5
+            if (r2 >= r0) goto L_0x00c8
             java.util.ArrayList<java.lang.ref.WeakReference<com.android.keyguard.KeyguardUpdateMonitorCallback>> r0 = r6.mCallbacks
             java.lang.Object r0 = r0.get(r2)
             java.lang.ref.WeakReference r0 = (java.lang.ref.WeakReference) r0
             java.lang.Object r0 = r0.get()
             com.android.keyguard.KeyguardUpdateMonitorCallback r0 = (com.android.keyguard.KeyguardUpdateMonitorCallback) r0
-            if (r0 == 0) goto L_0x00c2
+            if (r0 == 0) goto L_0x00c5
             r0.onSimStateChanged(r7, r8, r9)
-        L_0x00c2:
-            int r2 = r2 + 1
-            goto L_0x00a7
         L_0x00c5:
+            int r2 = r2 + 1
+            goto L_0x00aa
+        L_0x00c8:
             com.android.systemui.doze.AodHost r7 = com.android.systemui.Dependency.getHost()
-            if (r7 == 0) goto L_0x00d6
+            if (r7 == 0) goto L_0x00d9
             com.android.systemui.doze.AodHost r7 = com.android.systemui.Dependency.getHost()
             boolean r6 = r6.isSimPinSecure()
             r7.onSimPinSecureChanged(r6)
-        L_0x00d6:
+        L_0x00d9:
             return
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.keyguard.KeyguardUpdateMonitor.handleSimStateChange(int, int, com.android.internal.telephony.IccCardConstants$State):void");

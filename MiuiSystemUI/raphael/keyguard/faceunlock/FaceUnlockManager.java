@@ -179,7 +179,6 @@ public class FaceUnlockManager {
             boolean unused = faceUnlockManager.mFaceUnlockSuccessStayScreen = z2;
         }
     };
-    private MiuiKeyguardFaceUnlockView mFaceUnlockView;
     private final ArrayList<WeakReference<MiuiKeyguardFaceUnlockView>> mFaceViewList = new ArrayList<>();
     private long mScreenOnDelay;
     private volatile float mScrollProgress;
@@ -228,6 +227,15 @@ public class FaceUnlockManager {
 
     public void removeFaceUnlockView(MiuiKeyguardFaceUnlockView miuiKeyguardFaceUnlockView) {
         this.mFaceViewList.remove(miuiKeyguardFaceUnlockView);
+    }
+
+    public void updateFaceUnlockView() {
+        for (int i = 0; i < this.mFaceViewList.size(); i++) {
+            MiuiKeyguardFaceUnlockView miuiKeyguardFaceUnlockView = (MiuiKeyguardFaceUnlockView) this.mFaceViewList.get(i).get();
+            if (miuiKeyguardFaceUnlockView != null) {
+                miuiKeyguardFaceUnlockView.updateFaceUnlockView();
+            }
+        }
     }
 
     private void initFaceUnlock() {
@@ -375,7 +383,7 @@ public class FaceUnlockManager {
         if (z != this.mDisableLockScreenFaceUnlockAnim) {
             this.mDisableLockScreenFaceUnlockAnim = z;
             if (!this.mUpdateMonitor.isBouncerShowing()) {
-                this.mFaceUnlockView.updateFaceUnlockView();
+                updateFaceUnlockView();
             }
         }
     }
@@ -488,7 +496,7 @@ public class FaceUnlockManager {
     }
 
     public boolean shouldListenForFaceUnlock() {
-        return MiuiFaceUnlockUtils.isSupportFaceUnlock(sContext) && MiuiFaceUnlockUtils.isFaceFeatureEnabled(sContext) && MiuiFaceUnlockUtils.hasEnrolledFaces(sContext) && isFaceUnlockApplyForKeyguard() && KeyguardUpdateMonitor.isOwnerUser();
+        return MiuiFaceUnlockUtils.isSupportFaceUnlock(sContext) && MiuiFaceUnlockUtils.isFaceFeatureEnabled(sContext) && MiuiFaceUnlockUtils.hasEnrolledFaces(sContext) && isFaceUnlockApplyForKeyguard() && KeyguardUpdateMonitor.isOwnerUser() && !this.mUpdateMonitor.isSimLocked();
     }
 
     public boolean shouldShowFaceUnlockRetryMessageInBouncer() {

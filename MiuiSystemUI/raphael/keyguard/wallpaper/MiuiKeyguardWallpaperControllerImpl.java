@@ -15,6 +15,7 @@ import android.util.Property;
 import android.view.View;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.KeyguardUpdateMonitorCallback;
+import com.android.keyguard.utils.DeviceLevelUtils;
 import com.android.keyguard.wallpaper.MiuiKeyguardWallpaperController;
 import com.android.systemui.Constants;
 import com.android.systemui.Dependency;
@@ -64,7 +65,7 @@ public class MiuiKeyguardWallpaperControllerImpl implements MiuiKeyguardWallpape
             if (!MiuiKeyguardWallpaperControllerImpl.this.mScreenOnNotified) {
                 MiuiKeyguardWallpaperControllerImpl.this.dispatchScreenTurnedOn();
             }
-            if (MiuiKeyguardWallpaperControllerImpl.this.mKeyguardOccluded || MiuiKeyguardWallpaperControllerImpl.this.mFingerprintAuthenticated) {
+            if (MiuiKeyguardWallpaperControllerImpl.this.mKeyguardOccluded || MiuiKeyguardWallpaperControllerImpl.this.mFingerprintAuthenticated || DeviceLevelUtils.isLowEndDevice()) {
                 z = false;
             }
             MiuiKeyguardWallpaperControllerImpl.this.animateWallpaperScrim(z);
@@ -286,7 +287,7 @@ public class MiuiKeyguardWallpaperControllerImpl implements MiuiKeyguardWallpape
     }
 
     public void updateKeyguardRatio(float f, long j) {
-        if (shouldDispatchEffects()) {
+        if (shouldDispatchEffects() && !DeviceLevelUtils.isLowEndDevice()) {
             ValueAnimator valueAnimator = this.mKeyguardRatioAnimator;
             if (valueAnimator != null) {
                 valueAnimator.cancel();
