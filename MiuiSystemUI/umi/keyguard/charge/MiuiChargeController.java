@@ -417,7 +417,9 @@ public class MiuiChargeController implements IRapidAnimationListener {
         Log.i("MiuiChargeController", "dismissRapidChargeAnimation: " + str);
         this.mUpdateMonitor.setShowingChargeAnimationWindow(false);
         if (shouldShowChargeAnim() && this.mRapidChargeAnimationShowing) {
-            this.mKeyguardIndicationController.handleChargeTextAnimation(false);
+            if (this.mBatteryStatus.isPluggedIn()) {
+                this.mKeyguardIndicationController.handleChargeTextAnimation(false);
+            }
             RapidChargeView rapidChargeView = this.mRapidChargeView;
             if (rapidChargeView != null) {
                 rapidChargeView.startDismiss(str);
@@ -483,7 +485,9 @@ public class MiuiChargeController implements IRapidAnimationListener {
         Log.i("MiuiChargeController", "dismissWirelessRapidChargeAnimation: " + str);
         this.mUpdateMonitor.setShowingChargeAnimationWindow(false);
         if (shouldShowChargeAnim() && this.mWirelessRapidChargeAnimationShowing) {
-            this.mKeyguardIndicationController.handleChargeTextAnimation(false);
+            if (this.mBatteryStatus.isPluggedIn()) {
+                this.mKeyguardIndicationController.handleChargeTextAnimation(false);
+            }
             WirelessRapidChargeView wirelessRapidChargeView = this.mWirelessRapidChargeView;
             if (wirelessRapidChargeView != null) {
                 wirelessRapidChargeView.startDismiss(str);

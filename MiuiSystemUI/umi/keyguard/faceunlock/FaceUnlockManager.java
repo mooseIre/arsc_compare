@@ -499,7 +499,7 @@ public class FaceUnlockManager {
     }
 
     public boolean shouldListenForFaceUnlock() {
-        return MiuiFaceUnlockUtils.isSupportFaceUnlock(sContext) && MiuiFaceUnlockUtils.isFaceFeatureEnabled(sContext) && MiuiFaceUnlockUtils.hasEnrolledFaces(sContext) && isFaceUnlockApplyForKeyguard() && KeyguardUpdateMonitor.isOwnerUser();
+        return MiuiFaceUnlockUtils.isSupportFaceUnlock(sContext) && MiuiFaceUnlockUtils.isFaceFeatureEnabled(sContext) && MiuiFaceUnlockUtils.hasEnrolledFaces(sContext) && isFaceUnlockApplyForKeyguard() && KeyguardUpdateMonitor.isOwnerUser() && !this.mUpdateMonitor.isSimLocked();
     }
 
     public boolean shouldShowFaceUnlockRetryMessageInBouncer() {

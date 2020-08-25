@@ -114,6 +114,9 @@ public class KeyguardUpdateMonitorCallback {
     public void onServiceStateChanged(int i, ServiceState serviceState) {
     }
 
+    public void onSimLockedStateChanged(boolean z) {
+    }
+
     public void onSimStateChanged(int i, int i2, IccCardConstants.State state) {
     }
 
