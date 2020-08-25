@@ -201,20 +201,41 @@ public class NotificationSettingsManager implements Dumpable, PackageEventReceiv
     }
 
     public boolean canFloat(Context context, String str, String str2) {
+        boolean canFloat = canFloat(context, str);
+        if (!canFloat || TextUtils.isEmpty(str2)) {
+            return canFloat;
+        }
         String floatKey = FilterHelperCompat.getFloatKey(str, str2);
+        SharedPreferences sharedPreferences = getSharedPreferences(context);
+        if (!sharedPreferences.contains(floatKey)) {
+            boolean isXmsfChannel = NotificationUtil.isXmsfChannel(str, str2);
+            if (USE_WHITE_LISTS) {
+                if (!isXmsfChannel) {
+                    return this.mAllowFloatPackages.contains(str);
+                }
+            } else if (this.mBlockFloatPackages.contains(str)) {
+                return false;
+            }
+            return true;
+        } else if (sharedPreferences.getInt(floatKey, 1) == 2) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private boolean canFloat(Context context, String str) {
+        String floatKey = FilterHelperCompat.getFloatKey(str, (String) null);
         SharedPreferences sharedPreferences = getSharedPreferences(context);
         if (sharedPreferences.contains(floatKey)) {
             if (sharedPreferences.getInt(floatKey, 1) == 2) {
                 return true;
             }
             return false;
-        } else if (USE_WHITE_LISTS) {
-            return this.mAllowFloatPackages.contains(str);
-        } else {
-            if (!this.mBlockFloatPackages.contains(str)) {
-                return true;
-            }
+        } else if (!USE_WHITE_LISTS && this.mBlockFloatPackages.contains(str)) {
             return false;
+        } else {
+            return true;
         }
     }
 
@@ -231,18 +252,35 @@ public class NotificationSettingsManager implements Dumpable, PackageEventReceiv
     }
 
     public boolean canShowOnKeyguard(Context context, String str, String str2) {
+        boolean canShowOnKeyguard = canShowOnKeyguard(context, str);
+        if (!canShowOnKeyguard || TextUtils.isEmpty(str2)) {
+            return canShowOnKeyguard;
+        }
         String keyguardKey = FilterHelperCompat.getKeyguardKey(str, str2);
+        SharedPreferences sharedPreferences = getSharedPreferences(context);
+        boolean z = false;
+        if (sharedPreferences.contains(keyguardKey)) {
+            return sharedPreferences.getBoolean(keyguardKey, false);
+        }
+        boolean isXmsfChannel = NotificationUtil.isXmsfChannel(str, str2);
+        if (USE_WHITE_LISTS) {
+            if (isXmsfChannel) {
+                return true;
+            }
+            z = this.mAllowKeyguardPackages.contains(str);
+        } else if (!this.mBlockKeyguardPackages.contains(str)) {
+            return true;
+        }
+        return z;
+    }
+
+    private boolean canShowOnKeyguard(Context context, String str) {
+        String keyguardKey = FilterHelperCompat.getKeyguardKey(str, (String) null);
         SharedPreferences sharedPreferences = getSharedPreferences(context);
         if (sharedPreferences.contains(keyguardKey)) {
             return sharedPreferences.getBoolean(keyguardKey, false);
         }
-        if (USE_WHITE_LISTS) {
-            return this.mAllowKeyguardPackages.contains(str);
-        }
-        if (!this.mBlockKeyguardPackages.contains(str)) {
-            return true;
-        }
-        return false;
+        return USE_WHITE_LISTS || !this.mBlockKeyguardPackages.contains(str);
     }
 
     public void setShowOnKeyguard(Context context, String str, String str2, boolean z) {

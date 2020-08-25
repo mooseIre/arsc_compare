@@ -4,6 +4,7 @@ import android.app.WallpaperManager;
 import android.content.Context;
 import android.graphics.Bitmap;
 import com.android.keyguard.MiuiFastUnlockController;
+import com.android.keyguard.utils.DeviceLevelUtils;
 import com.android.systemui.glwallpaper.GLWallpaperRenderer;
 import com.android.systemui.glwallpaper.ImageWallpaperRenderer;
 import com.android.systemui.plugins.R;
@@ -39,6 +40,6 @@ public class HomeWallpaperRenderer extends ImageWallpaperRenderer {
 
     /* access modifiers changed from: protected */
     public boolean getHasKeyguardWallpaperEffects() {
-        return this.mContext.getResources().getBoolean(R.bool.miui_config_hasKeyguardWallpaperEffects);
+        return this.mContext.getResources().getBoolean(R.bool.miui_config_hasKeyguardWallpaperEffects) && !DeviceLevelUtils.isLowEndDevice();
     }
 }

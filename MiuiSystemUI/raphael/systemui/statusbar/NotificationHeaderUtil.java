@@ -75,7 +75,6 @@ public class NotificationHeaderUtil {
     public NotificationHeaderUtil(ExpandableNotificationRow expandableNotificationRow) {
         this.mRow = expandableNotificationRow;
         this.mComparators.add(new HeaderProcessor(this.mRow, 16908294, sIconExtractor, sIconVisibilityComparator, sVisibilityApplicator));
-        this.mComparators.add(new HeaderProcessor(this.mRow, 16909178, sIconExtractor, sGreyComparator, mGreyApplicator));
         this.mComparators.add(new HeaderProcessor(this.mRow, 16909276, (DataExtractor) null, new ViewComparator() {
             public boolean compare(View view, View view2, Object obj, Object obj2) {
                 return view.getVisibility() != 8;

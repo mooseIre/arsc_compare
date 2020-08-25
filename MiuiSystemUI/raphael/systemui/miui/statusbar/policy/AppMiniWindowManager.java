@@ -425,9 +425,6 @@ public class AppMiniWindowManager implements Gefingerpoken, ConfigurationControl
         ExpandableNotificationRow expandableNotificationRow;
         Log.d("AppMiniWindowManager", "setTracking tracking=" + z);
         if (this.mTracking != z) {
-            if (z) {
-                this.mContainer.updateRenderStatus(true);
-            }
             this.mTracking = z;
             this.mContainer.setAnimationRunning(z);
             this.mContainer.setBarVisibility(z);

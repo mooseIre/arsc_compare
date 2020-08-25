@@ -1,7 +1,6 @@
 package com.android.systemui.miui.statusbar.notification;
 
 import android.content.Context;
-import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -18,11 +17,9 @@ import com.android.systemui.statusbar.ExpandableNotificationRow;
 import com.android.systemui.statusbar.notification.OptimizedHeadsUpNotificationView;
 import com.android.systemui.statusbar.policy.HeadsUpManager;
 import com.android.systemui.statusbar.policy.OnHeadsUpChangedListener;
-import com.miui.systemui.renderlayer.RenderLayerManager;
-import com.miui.systemui.renderlayer.ViewMiRenderInfo;
 import java.lang.ref.WeakReference;
 
-public class HeadsUpAnimatedStubView extends View implements OnHeadsUpChangedListener, ViewMiRenderInfo {
+public class HeadsUpAnimatedStubView extends View implements OnHeadsUpChangedListener {
     private Drawable mBar;
     private int mBarMarginBottom;
     private final Rect mBounds;
@@ -36,11 +33,9 @@ public class HeadsUpAnimatedStubView extends View implements OnHeadsUpChangedLis
     private int mIconAlpha;
     private int mIconSize;
     private Drawable mIndicatorBg;
-    private boolean mIsNightMode;
     private OnHeadsUpHiddenListener mListener;
     private final Handler mMainHandler;
     private final Runnable mRecycleRunnable;
-    private boolean mRenderInfoRegistered;
     private WeakReference<ExpandableNotificationRow> mRow;
     private final Rect mScaledContentBounds;
     private boolean mShowMiniBar;
@@ -76,8 +71,6 @@ public class HeadsUpAnimatedStubView extends View implements OnHeadsUpChangedLis
         this.mShowMiniBar = false;
         this.mContentAlpha = 255;
         this.mIconAlpha = 0;
-        this.mIsNightMode = false;
-        this.mRenderInfoRegistered = false;
     }
 
     public void setHeadsHiddenListener(OnHeadsUpHiddenListener onHeadsUpHiddenListener) {
@@ -89,7 +82,6 @@ public class HeadsUpAnimatedStubView extends View implements OnHeadsUpChangedLis
         super.onFinishInflate();
         this.mIconSize = getResources().getDimensionPixelSize(R.dimen.heads_up_animated_stub_icon_size);
         this.mBarMarginBottom = getResources().getDimensionPixelSize(R.dimen.mini_window_bar_marginBottom);
-        this.mIsNightMode = (getResources().getConfiguration().uiMode & 48) == 32;
     }
 
     /* access modifiers changed from: protected */
@@ -99,7 +91,6 @@ public class HeadsUpAnimatedStubView extends View implements OnHeadsUpChangedLis
         if (headsUpManager != null) {
             headsUpManager.addListener(this);
         }
-        updateRenderStatus(true);
     }
 
     /* access modifiers changed from: protected */
@@ -110,19 +101,6 @@ public class HeadsUpAnimatedStubView extends View implements OnHeadsUpChangedLis
             headsUpManager.removeListener(this);
         }
         recycleStubs();
-        updateRenderStatus(false);
-    }
-
-    public void updateRenderStatus(boolean z) {
-        boolean isAttachedToWindow = z & isAttachedToWindow();
-        if (this.mRenderInfoRegistered != isAttachedToWindow) {
-            if (isAttachedToWindow) {
-                RenderLayerManager.getInstance().register(this);
-            } else {
-                RenderLayerManager.getInstance().unregister(this);
-            }
-        }
-        this.mRenderInfoRegistered = isAttachedToWindow;
     }
 
     private void reScheduleRecycle() {
@@ -264,9 +242,5 @@ public class HeadsUpAnimatedStubView extends View implements OnHeadsUpChangedLis
     public void reset() {
         reScheduleRecycle();
         applyAlpha(1.0f, 0.0f);
-    }
-
-    public void onConfigurationChanged(Configuration configuration) {
-        this.mIsNightMode = (configuration.uiMode & 48) == 32;
     }
 }

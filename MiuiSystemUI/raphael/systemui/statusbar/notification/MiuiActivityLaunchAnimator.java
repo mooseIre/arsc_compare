@@ -494,7 +494,6 @@ public class MiuiActivityLaunchAnimator {
             }
             if (z) {
                 this.mSourceNotification.getViewState().cancelAnimations(this.mSourceNotification);
-                MiuiActivityLaunchAnimator.this.mHeadsUpStub.updateRenderStatus(false);
             }
         }
 

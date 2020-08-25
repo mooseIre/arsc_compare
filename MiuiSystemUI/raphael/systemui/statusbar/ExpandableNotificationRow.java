@@ -2081,7 +2081,6 @@ public class ExpandableNotificationRow extends ActivatableNotificationView imple
         setMiniBarVisible(this.mEntry.mIsShowMiniWindowBar);
         this.mIsShowHeadsUpBackground = true;
         updateBackground();
-        this.mBackgroundNormal.setShowHeadsUp(true);
     }
 
     public void hideHeadsUpBackground() {
@@ -2098,7 +2097,6 @@ public class ExpandableNotificationRow extends ActivatableNotificationView imple
         if (headsUpChild instanceof OptimizedHeadsUpNotificationView) {
             ((OptimizedHeadsUpNotificationView) headsUpChild).hideMiniWindowBar();
         }
-        this.mBackgroundNormal.setShowHeadsUp(false);
     }
 
     public void updateMiniBarAlpha(float f) {

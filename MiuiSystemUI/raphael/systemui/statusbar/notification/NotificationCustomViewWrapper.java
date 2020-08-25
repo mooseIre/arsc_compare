@@ -1,14 +1,20 @@
 package com.android.systemui.statusbar.notification;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.view.View;
 import android.view.ViewGroup;
+import com.android.systemui.Util;
 import com.android.systemui.miui.statusbar.notification.NotificationUtil;
 import com.android.systemui.plugins.R;
 import com.android.systemui.statusbar.ExpandableNotificationRow;
 
 public class NotificationCustomViewWrapper extends NotificationViewWrapper {
+    private int mCornerRadius;
     private int mCustomViewMargin;
+
+    public void onReinflated() {
+    }
 
     /* access modifiers changed from: protected */
     public boolean shouldClearBackgroundOnReapply() {
@@ -19,10 +25,13 @@ public class NotificationCustomViewWrapper extends NotificationViewWrapper {
         super(context, view, expandableNotificationRow);
         initResources();
         handleViewMargin();
+        updateRoundCorner();
     }
 
     private void initResources() {
-        this.mBackgroundColor = this.mContext.getResources().getColor(R.color.notification_material_background_color);
+        Resources resources = this.mContext.getResources();
+        this.mBackgroundColor = resources.getColor(R.color.notification_material_background_color);
+        this.mCornerRadius = resources.getDimensionPixelSize(R.dimen.notification_custom_view_corner_radius);
         this.mCustomViewMargin = NotificationUtil.getCustomViewMargin(this.mContext);
     }
 
@@ -36,6 +45,10 @@ public class NotificationCustomViewWrapper extends NotificationViewWrapper {
             marginLayoutParams.bottomMargin = i;
             this.mView.setLayoutParams(marginLayoutParams);
         }
+    }
+
+    private void updateRoundCorner() {
+        Util.setViewRoundCorner(this.mView, (float) this.mCornerRadius);
     }
 
     public void setVisible(boolean z) {

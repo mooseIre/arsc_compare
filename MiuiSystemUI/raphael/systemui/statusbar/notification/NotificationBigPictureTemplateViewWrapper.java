@@ -12,6 +12,7 @@ import com.android.systemui.statusbar.ExpandableNotificationRow;
 
 public class NotificationBigPictureTemplateViewWrapper extends NotificationTemplateViewWrapper {
     private int mBigPictureCornerRadius;
+    private int mBigPictureMaxHeight;
     private ImageView mBigPictureView;
 
     /* access modifiers changed from: protected */
@@ -35,11 +36,13 @@ public class NotificationBigPictureTemplateViewWrapper extends NotificationTempl
     }
 
     private void initResources() {
+        this.mBigPictureMaxHeight = this.mContext.getResources().getDimensionPixelSize(R.dimen.notification_big_picture_max_height);
         this.mBigPictureCornerRadius = this.mContext.getResources().getDimensionPixelSize(R.dimen.notification_big_picture_corner_radius);
     }
 
     private void resolveViews() {
         this.mBigPictureView = (ImageView) this.mView.findViewById(16908763);
+        this.mBigPictureView.setMaxHeight(this.mBigPictureMaxHeight);
         Util.setViewRoundCorner(this.mBigPictureView, (float) this.mBigPictureCornerRadius);
     }
 

@@ -41,6 +41,15 @@ public class NotificationUtil {
         return Settings.Global.getInt(context.getContentResolver(), "user_aggregate", 0);
     }
 
+    public static boolean isXmsfChannel(String str, String str2) {
+        if (!TextUtils.isEmpty(str2)) {
+            if (str2.startsWith(String.format("mipush|%s|pre", new Object[]{str}))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static boolean isHybrid(ExpandedNotification expandedNotification) {
         return expandedNotification != null && "com.miui.hybrid".equals(expandedNotification.getBasePkg());
     }

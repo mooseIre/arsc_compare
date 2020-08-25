@@ -124,13 +124,13 @@ public class NotificationSettingsHelper {
         }
     }
 
-    public static boolean checkFloat(Context context, String str) {
+    public static boolean checkFloat(Context context, String str, String str2) {
         if (isUserOwner(context)) {
-            return ((NotificationSettingsManager) Dependency.get(NotificationSettingsManager.class)).canFloat(context, str, (String) null);
+            return ((NotificationSettingsManager) Dependency.get(NotificationSettingsManager.class)).canFloat(context, str, str2);
         }
         Bundle bundle = new Bundle();
         bundle.putString("package", str);
-        bundle.putString("channel_id", (String) null);
+        bundle.putString("channel_id", str2);
         try {
             Bundle call = context.getContentResolver().call(Uri.parse("content://statusbar.notification"), "canFloat", (String) null, bundle);
             if (call != null) {
@@ -143,15 +143,15 @@ public class NotificationSettingsHelper {
         }
     }
 
-    public static boolean checkKeyguard(Context context, String str) {
+    public static boolean checkKeyguard(Context context, String str, String str2) {
         if (isUserOwner(context)) {
-            return ((NotificationSettingsManager) Dependency.get(NotificationSettingsManager.class)).canShowOnKeyguard(context, str, (String) null);
+            return ((NotificationSettingsManager) Dependency.get(NotificationSettingsManager.class)).canShowOnKeyguard(context, str, str2);
         }
         Bundle bundle = new Bundle();
         bundle.putString("package", str);
         bundle.putString("channel_id", (String) null);
         try {
-            Bundle call = context.getContentResolver().call(Uri.parse("content://statusbar.notification"), "canShowOnKeyguard", (String) null, bundle);
+            Bundle call = context.getContentResolver().call(Uri.parse("content://statusbar.notification"), "canShowOnKeyguard", str2, bundle);
             if (call != null) {
                 return call.getBoolean("canShowOnKeyguard");
             }

@@ -2,25 +2,18 @@ package com.android.systemui.statusbar;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
-import android.content.res.Configuration;
 import android.graphics.Canvas;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.RippleDrawable;
 import android.util.AttributeSet;
 import android.view.View;
-import com.miui.systemui.renderlayer.RenderLayerManager;
-import com.miui.systemui.renderlayer.ViewMiRenderInfo;
 
-public class NotificationBackgroundView extends View implements ViewMiRenderInfo {
+public class NotificationBackgroundView extends View {
     private int mActualHeight;
     private Drawable mBackground;
-    private Drawable mBackgroundCloned;
     private int mClipBottomAmount;
     private int mClipTopAmount;
-    private boolean mIsNightMode = false;
-    private boolean mIsShowHeadsUpBackground = false;
-    private boolean mRenderRegistered = false;
     private int mTintColor;
 
     public boolean hasOverlappingRendering() {
@@ -33,20 +26,13 @@ public class NotificationBackgroundView extends View implements ViewMiRenderInfo
 
     /* access modifiers changed from: protected */
     public void onDraw(Canvas canvas) {
-        if (maybeUpdateDrawableBounds()) {
-            this.mBackground.draw(canvas);
-        }
-    }
-
-    private boolean maybeUpdateDrawableBounds() {
         int i = this.mClipTopAmount;
         int i2 = this.mActualHeight - this.mClipBottomAmount;
         Drawable drawable = this.mBackground;
-        if (drawable == null || i2 <= i) {
-            return false;
+        if (drawable != null && i2 > i) {
+            drawable.setBounds(0, i, getWidth(), i2);
+            this.mBackground.draw(canvas);
         }
-        drawable.setBounds(0, i, getWidth(), i2);
-        return true;
     }
 
     /* access modifiers changed from: protected */
@@ -72,16 +58,6 @@ public class NotificationBackgroundView extends View implements ViewMiRenderInfo
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void onFinishInflate() {
-        super.onFinishInflate();
-        this.mIsNightMode = (getResources().getConfiguration().uiMode & 48) == 32;
-    }
-
-    public void onConfigurationChanged(Configuration configuration) {
-        this.mIsNightMode = (configuration.uiMode & 48) == 32;
-    }
-
     public void setCustomBackground(Drawable drawable) {
         Drawable drawable2 = this.mBackground;
         if (drawable2 != drawable) {
@@ -95,7 +71,6 @@ public class NotificationBackgroundView extends View implements ViewMiRenderInfo
                 drawable3.mutate();
                 this.mBackground.setCallback(this);
                 setTint(this.mTintColor);
-                this.mBackgroundCloned = this.mBackground.getConstantState().newDrawable().mutate();
             }
             Drawable drawable4 = this.mBackground;
             if (drawable4 instanceof RippleDrawable) {
@@ -147,34 +122,5 @@ public class NotificationBackgroundView extends View implements ViewMiRenderInfo
 
     public void setDrawableAlpha(int i) {
         this.mBackground.setAlpha(i);
-    }
-
-    /* access modifiers changed from: protected */
-    public void onAttachedToWindow() {
-        super.onAttachedToWindow();
-        handleRenderInfo();
-    }
-
-    /* access modifiers changed from: protected */
-    public void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-        handleRenderInfo();
-    }
-
-    public void setShowHeadsUp(boolean z) {
-        this.mIsShowHeadsUpBackground = z;
-        handleRenderInfo();
-    }
-
-    private void handleRenderInfo() {
-        boolean z = this.mIsShowHeadsUpBackground && isAttachedToWindow();
-        if (z != this.mRenderRegistered) {
-            this.mRenderRegistered = z;
-            if (z) {
-                RenderLayerManager.getInstance().register(this);
-            } else {
-                RenderLayerManager.getInstance().unregister(this);
-            }
-        }
     }
 }

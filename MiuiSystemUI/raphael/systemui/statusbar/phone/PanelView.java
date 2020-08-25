@@ -422,174 +422,172 @@ public abstract class PanelView extends FrameLayout {
         }
     }
 
-    /* JADX WARNING: Removed duplicated region for block: B:64:0x0121  */
+    /* JADX WARNING: Removed duplicated region for block: B:64:0x0120  */
     /* Code decompiled incorrectly, please refer to instructions dump. */
-    private void endMotionEvent(android.view.MotionEvent r10, float r11, float r12, boolean r13) {
+    private void endMotionEvent(android.view.MotionEvent r9, float r10, float r11, boolean r12) {
         /*
-            r9 = this;
+            r8 = this;
             r0 = -1
-            r9.mTrackingPointer = r0
-            boolean r0 = r9.mTracking
+            r8.mTrackingPointer = r0
+            boolean r0 = r8.mTracking
             r1 = 0
-            r2 = 0
-            if (r0 == 0) goto L_0x000d
-            boolean r0 = r9.mTouchSlopExceeded
-            if (r0 != 0) goto L_0x005a
-        L_0x000d:
-            float r0 = r9.mInitialTouchX
+            if (r0 == 0) goto L_0x000c
+            boolean r0 = r8.mTouchSlopExceeded
+            if (r0 != 0) goto L_0x0059
+        L_0x000c:
+            float r0 = r8.mInitialTouchX
+            float r0 = r10 - r0
+            float r0 = java.lang.Math.abs(r0)
+            int r2 = r8.mTouchSlop
+            float r2 = (float) r2
+            int r0 = (r0 > r2 ? 1 : (r0 == r2 ? 0 : -1))
+            if (r0 > 0) goto L_0x0059
+            float r0 = r8.mInitialTouchY
             float r0 = r11 - r0
             float r0 = java.lang.Math.abs(r0)
-            int r3 = r9.mTouchSlop
-            float r3 = (float) r3
-            int r0 = (r0 > r3 ? 1 : (r0 == r3 ? 0 : -1))
-            if (r0 > 0) goto L_0x005a
-            float r0 = r9.mInitialTouchY
-            float r0 = r12 - r0
-            float r0 = java.lang.Math.abs(r0)
-            int r3 = r9.mTouchSlop
-            float r3 = (float) r3
-            int r0 = (r0 > r3 ? 1 : (r0 == r3 ? 0 : -1))
-            if (r0 > 0) goto L_0x005a
-            int r10 = r10.getActionMasked()
+            int r2 = r8.mTouchSlop
+            float r2 = (float) r2
+            int r0 = (r0 > r2 ? 1 : (r0 == r2 ? 0 : -1))
+            if (r0 > 0) goto L_0x0059
+            int r9 = r9.getActionMasked()
             r0 = 3
-            if (r10 == r0) goto L_0x005a
-            if (r13 == 0) goto L_0x0035
-            goto L_0x005a
-        L_0x0035:
-            boolean r10 = r9.mPanelClosedOnDown
-            if (r10 == 0) goto L_0x004f
-            com.android.systemui.statusbar.policy.HeadsUpManager r10 = r9.mHeadsUpManager
-            boolean r10 = r10.hasPinnedHeadsUp()
-            if (r10 != 0) goto L_0x004f
-            boolean r10 = r9.mTracking
-            if (r10 != 0) goto L_0x004f
-            com.android.systemui.statusbar.phone.PanelView$2 r10 = new com.android.systemui.statusbar.phone.PanelView$2
-            r10.<init>()
-            r9.post(r10)
-            goto L_0x0123
-        L_0x004f:
-            float r10 = r9.mInitialTouchX
-            boolean r10 = r9.onEmptySpaceClick(r10)
-            r9.onTrackingStopped(r10)
-            goto L_0x0123
-        L_0x005a:
-            com.android.systemui.statusbar.phone.VelocityTrackerInterface r10 = r9.mVelocityTracker
-            if (r10 == 0) goto L_0x007d
+            if (r9 == r0) goto L_0x0059
+            if (r12 == 0) goto L_0x0034
+            goto L_0x0059
+        L_0x0034:
+            boolean r9 = r8.mPanelClosedOnDown
+            if (r9 == 0) goto L_0x004e
+            com.android.systemui.statusbar.policy.HeadsUpManager r9 = r8.mHeadsUpManager
+            boolean r9 = r9.hasPinnedHeadsUp()
+            if (r9 != 0) goto L_0x004e
+            boolean r9 = r8.mTracking
+            if (r9 != 0) goto L_0x004e
+            com.android.systemui.statusbar.phone.PanelView$2 r9 = new com.android.systemui.statusbar.phone.PanelView$2
+            r9.<init>()
+            r8.post(r9)
+            goto L_0x0122
+        L_0x004e:
+            float r9 = r8.mInitialTouchX
+            boolean r9 = r8.onEmptySpaceClick(r9)
+            r8.onTrackingStopped(r9)
+            goto L_0x0122
+        L_0x0059:
+            com.android.systemui.statusbar.phone.VelocityTrackerInterface r9 = r8.mVelocityTracker
+            r0 = 0
+            if (r9 == 0) goto L_0x007d
             r0 = 1000(0x3e8, float:1.401E-42)
-            r10.computeCurrentVelocity(r0)
-            com.android.systemui.statusbar.phone.VelocityTrackerInterface r10 = r9.mVelocityTracker
-            float r10 = r10.getYVelocity()
-            com.android.systemui.statusbar.phone.VelocityTrackerInterface r0 = r9.mVelocityTracker
-            float r0 = r0.getXVelocity()
-            double r3 = (double) r0
-            com.android.systemui.statusbar.phone.VelocityTrackerInterface r0 = r9.mVelocityTracker
-            float r0 = r0.getYVelocity()
-            double r5 = (double) r0
-            double r3 = java.lang.Math.hypot(r3, r5)
-            float r0 = (float) r3
-            goto L_0x007f
+            r9.computeCurrentVelocity(r0)
+            com.android.systemui.statusbar.phone.VelocityTrackerInterface r9 = r8.mVelocityTracker
+            float r0 = r9.getYVelocity()
+            com.android.systemui.statusbar.phone.VelocityTrackerInterface r9 = r8.mVelocityTracker
+            float r9 = r9.getXVelocity()
+            double r2 = (double) r9
+            com.android.systemui.statusbar.phone.VelocityTrackerInterface r9 = r8.mVelocityTracker
+            float r9 = r9.getYVelocity()
+            double r4 = (double) r9
+            double r2 = java.lang.Math.hypot(r2, r4)
+            float r9 = (float) r2
+            goto L_0x007e
         L_0x007d:
-            r10 = r1
-            r0 = r10
-        L_0x007f:
-            boolean r3 = r9.mStopTrackingAndCollapsed
-            r4 = 1
-            if (r3 != 0) goto L_0x008e
-            boolean r0 = r9.flingExpands(r10, r0, r11, r12)
-            if (r0 != 0) goto L_0x008c
-            if (r13 == 0) goto L_0x008e
-        L_0x008c:
-            r13 = r4
-            goto L_0x008f
+            r9 = r0
+        L_0x007e:
+            boolean r2 = r8.mStopTrackingAndCollapsed
+            r3 = 1
+            if (r2 != 0) goto L_0x008d
+            boolean r9 = r8.flingExpands(r0, r9, r10, r11)
+            if (r9 != 0) goto L_0x008b
+            if (r12 == 0) goto L_0x008d
+        L_0x008b:
+            r9 = r3
+            goto L_0x008e
+        L_0x008d:
+            r9 = r1
         L_0x008e:
-            r13 = r2
-        L_0x008f:
-            com.android.systemui.classifier.FalsingManager r0 = r9.mFalsingManager
-            r0.onPanelEvent(r13)
-            if (r13 != 0) goto L_0x009d
-            boolean r0 = r9.mStopTrackingAndCollapsed
-            if (r0 == 0) goto L_0x009b
+            com.android.systemui.classifier.FalsingManager r12 = r8.mFalsingManager
+            r12.onPanelEvent(r9)
+            if (r9 != 0) goto L_0x009c
+            boolean r12 = r8.mStopTrackingAndCollapsed
+            if (r12 == 0) goto L_0x009a
+            goto L_0x009c
+        L_0x009a:
+            r12 = r1
             goto L_0x009d
-        L_0x009b:
-            r0 = r2
-            goto L_0x009e
+        L_0x009c:
+            r12 = r3
         L_0x009d:
-            r0 = r4
-        L_0x009e:
-            boolean r3 = r9.mTouchAboveFalsingThreshold
-            com.android.systemui.statusbar.phone.StatusBar r5 = r9.mStatusBar
-            boolean r5 = r5.isFalsingThresholdNeeded()
-            com.android.systemui.statusbar.phone.StatusBar r6 = r9.mStatusBar
-            boolean r6 = r6.isWakeUpComingFromTouch()
-            com.android.systemui.doze.DozeLog.traceFling(r13, r3, r5, r6)
-            if (r0 != 0) goto L_0x00db
-            com.android.systemui.statusbar.phone.StatusBar r3 = r9.mStatusBar
-            int r3 = r3.getBarState()
-            if (r3 != r4) goto L_0x00db
-            com.android.systemui.statusbar.phone.StatusBar r3 = r9.mStatusBar
-            float r3 = r3.getDisplayDensity()
-            float r5 = r9.mInitialTouchY
-            float r5 = r12 - r5
-            float r5 = r5 / r3
-            float r5 = java.lang.Math.abs(r5)
-            int r5 = (int) r5
-            float r3 = r10 / r3
-            float r3 = java.lang.Math.abs(r3)
-            int r3 = (int) r3
-            com.android.systemui.statusbar.phone.LockscreenGestureLogger r6 = r9.mLockscreenGestureLogger
-            android.content.Context r7 = r9.getContext()
-            r8 = 186(0xba, float:2.6E-43)
-            r6.write(r7, r8, r5, r3)
-        L_0x00db:
-            if (r13 != 0) goto L_0x00f2
-            boolean r3 = r9.isOnKeyguard()
-            if (r3 == 0) goto L_0x00f2
-            boolean r11 = r9.mExpanding
-            if (r11 == 0) goto L_0x00ea
-            r9.notifyExpandingFinished()
-        L_0x00ea:
-            if (r0 != 0) goto L_0x0109
-            com.android.systemui.statusbar.phone.StatusBar r11 = r9.mStatusBar
-            r11.showBouncer()
+            boolean r2 = r8.mTouchAboveFalsingThreshold
+            com.android.systemui.statusbar.phone.StatusBar r4 = r8.mStatusBar
+            boolean r4 = r4.isFalsingThresholdNeeded()
+            com.android.systemui.statusbar.phone.StatusBar r5 = r8.mStatusBar
+            boolean r5 = r5.isWakeUpComingFromTouch()
+            com.android.systemui.doze.DozeLog.traceFling(r9, r2, r4, r5)
+            if (r12 != 0) goto L_0x00da
+            com.android.systemui.statusbar.phone.StatusBar r2 = r8.mStatusBar
+            int r2 = r2.getBarState()
+            if (r2 != r3) goto L_0x00da
+            com.android.systemui.statusbar.phone.StatusBar r2 = r8.mStatusBar
+            float r2 = r2.getDisplayDensity()
+            float r4 = r8.mInitialTouchY
+            float r4 = r11 - r4
+            float r4 = r4 / r2
+            float r4 = java.lang.Math.abs(r4)
+            int r4 = (int) r4
+            float r2 = r0 / r2
+            float r2 = java.lang.Math.abs(r2)
+            int r2 = (int) r2
+            com.android.systemui.statusbar.phone.LockscreenGestureLogger r5 = r8.mLockscreenGestureLogger
+            android.content.Context r6 = r8.getContext()
+            r7 = 186(0xba, float:2.6E-43)
+            r5.write(r6, r7, r4, r2)
+        L_0x00da:
+            if (r9 != 0) goto L_0x00f1
+            boolean r2 = r8.isOnKeyguard()
+            if (r2 == 0) goto L_0x00f1
+            boolean r10 = r8.mExpanding
+            if (r10 == 0) goto L_0x00e9
+            r8.notifyExpandingFinished()
+        L_0x00e9:
+            if (r12 != 0) goto L_0x0108
+            com.android.systemui.statusbar.phone.StatusBar r10 = r8.mStatusBar
+            r10.showBouncer()
+            goto L_0x0108
+        L_0x00f1:
+            boolean r12 = r8.isOnKeyguard()
+            if (r12 != 0) goto L_0x0101
+            com.android.systemui.statusbar.phone.-$$Lambda$PanelView$J2YZxITIq5LzGfRLI28gYyozSww r10 = new com.android.systemui.statusbar.phone.-$$Lambda$PanelView$J2YZxITIq5LzGfRLI28gYyozSww
+            r10.<init>(r0, r9)
+            r8.post(r10)
+            r10 = r3
             goto L_0x0109
-        L_0x00f2:
-            boolean r0 = r9.isOnKeyguard()
-            if (r0 != 0) goto L_0x0102
-            com.android.systemui.statusbar.phone.-$$Lambda$PanelView$J2YZxITIq5LzGfRLI28gYyozSww r11 = new com.android.systemui.statusbar.phone.-$$Lambda$PanelView$J2YZxITIq5LzGfRLI28gYyozSww
-            r11.<init>(r10, r13)
-            r9.post(r11)
-            r11 = r4
-            goto L_0x010a
-        L_0x0102:
-            boolean r11 = r9.isFalseTouch(r11, r12)
-            r9.fling(r10, r13, r11)
+        L_0x0101:
+            boolean r10 = r8.isFalseTouch(r10, r11)
+            r8.fling(r0, r9, r10)
+        L_0x0108:
+            r10 = r1
         L_0x0109:
-            r11 = r2
-        L_0x010a:
-            r9.onTrackingStopped(r13)
-            if (r11 != 0) goto L_0x011a
-            if (r13 == 0) goto L_0x011a
-            boolean r11 = r9.mPanelClosedOnDown
-            if (r11 == 0) goto L_0x011a
-            boolean r11 = r9.mHasLayoutedSinceDown
-            if (r11 != 0) goto L_0x011a
-            goto L_0x011b
+            r8.onTrackingStopped(r9)
+            if (r10 != 0) goto L_0x0119
+            if (r9 == 0) goto L_0x0119
+            boolean r9 = r8.mPanelClosedOnDown
+            if (r9 == 0) goto L_0x0119
+            boolean r9 = r8.mHasLayoutedSinceDown
+            if (r9 != 0) goto L_0x0119
+            goto L_0x011a
+        L_0x0119:
+            r3 = r1
         L_0x011a:
-            r4 = r2
-        L_0x011b:
-            r9.mUpdateFlingOnLayout = r4
-            boolean r11 = r9.mUpdateFlingOnLayout
-            if (r11 == 0) goto L_0x0123
-            r9.mUpdateFlingVelocity = r10
-        L_0x0123:
-            com.android.systemui.statusbar.phone.VelocityTrackerInterface r10 = r9.mVelocityTracker
-            if (r10 == 0) goto L_0x012d
-            r10.recycle()
-            r10 = 0
-            r9.mVelocityTracker = r10
-        L_0x012d:
-            r9.mPeekTouching = r2
-            r9.mStretchLength = r1
+            r8.mUpdateFlingOnLayout = r3
+            boolean r9 = r8.mUpdateFlingOnLayout
+            if (r9 == 0) goto L_0x0122
+            r8.mUpdateFlingVelocity = r0
+        L_0x0122:
+            com.android.systemui.statusbar.phone.VelocityTrackerInterface r9 = r8.mVelocityTracker
+            if (r9 == 0) goto L_0x012c
+            r9.recycle()
+            r9 = 0
+            r8.mVelocityTracker = r9
+        L_0x012c:
+            r8.mPeekTouching = r1
             return
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.phone.PanelView.endMotionEvent(android.view.MotionEvent, float, float, boolean):void");

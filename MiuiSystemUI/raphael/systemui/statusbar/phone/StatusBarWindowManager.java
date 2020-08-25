@@ -270,7 +270,7 @@ public class StatusBarWindowManager implements RemoteInputController.Callback, D
     }
 
     private void applyBlurRatio(State state) {
-        SurfaceControlCompat.setBlur(this.mLpChanged, this.mStatusBarView.getViewRootImpl(), state.blurRatio, state.blurMode);
+        SurfaceControlCompat.setBlur(this.mLpChanged, this.mStatusBarView.getViewRootImpl(), state.blurRatio, 0);
         for (BlurRatioChangedListener onBlurRatioChanged : this.mBlurRatioListeners) {
             onBlurRatioChanged.onBlurRatioChanged(state.blurRatio);
         }
@@ -373,13 +373,8 @@ public class StatusBarWindowManager implements RemoteInputController.Callback, D
     }
 
     public void setBlurRatio(float f) {
-        setBlurRatio(f, 0);
-    }
-
-    public void setBlurRatio(float f, int i) {
         State state = this.mCurrentState;
         state.blurRatio = f;
-        state.blurMode = i;
         apply(state);
     }
 
@@ -475,7 +470,6 @@ public class StatusBarWindowManager implements RemoteInputController.Callback, D
 
     private static class State {
         boolean backdropShowing;
-        int blurMode;
         float blurRatio;
         boolean bouncerShowing;
         boolean bubbleExpanded;

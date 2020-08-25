@@ -39,9 +39,8 @@ import com.android.systemui.plugins.R;
 import com.android.systemui.statusbar.DragDownHelper;
 import com.android.systemui.statusbar.phone.DoubleTapHelper;
 import com.android.systemui.statusbar.stack.NotificationStackScrollLayout;
-import com.miui.systemui.renderlayer.RenderAwareFrameLayout;
 
-public class StatusBarWindowView extends RenderAwareFrameLayout {
+public class StatusBarWindowView extends FrameLayout {
     public static final boolean DEBUG = StatusBar.DEBUG;
     private View mBrightnessMirror;
     public ControlPanelWindowView mControllerPanel;

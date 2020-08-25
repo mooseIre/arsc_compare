@@ -34,8 +34,8 @@ public class ExpandedNotification extends StatusBarNotification {
         this.mPkgName = (!notificationSettingsManager.canSendSubstituteNotification(statusBarNotification.getPackageName()) || TextUtils.isEmpty(targetPkg)) ? statusBarNotification.getPackageName() : targetPkg.toString();
         this.mIsSystemApp = Util.isSystemApp(context, this.mPkgName);
         this.mIsPrioritizedApp = notificationSettingsManager.isPrioritizedApp(this.mPkgName);
-        this.mCanFloat = NotificationSettingsHelper.checkFloat(context, this.mPkgName);
-        this.mCanShowOnKeyguard = NotificationSettingsHelper.checkKeyguard(context, this.mPkgName);
+        this.mCanFloat = NotificationSettingsHelper.checkFloat(context, this.mPkgName, getNotification().getChannelId());
+        this.mCanShowOnKeyguard = NotificationSettingsHelper.checkKeyguard(context, this.mPkgName, getNotification().getChannelId());
     }
 
     public void setAppName(String str) {

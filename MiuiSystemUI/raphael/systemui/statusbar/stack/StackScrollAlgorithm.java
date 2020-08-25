@@ -18,7 +18,6 @@ import java.util.List;
 public class StackScrollAlgorithm {
     private int mCollapsedSize;
     private int mHeadsUpMarginTop;
-    private float mHeadsUpShadowAlpha;
     private int mIncreasedPaddingBetweenElements;
     private boolean mIsExpanded;
     private boolean mIsExpandedBecauseOfHeadsUp;
@@ -39,7 +38,6 @@ public class StackScrollAlgorithm {
         this.mIncreasedPaddingBetweenElements = context.getResources().getDimensionPixelSize(R.dimen.notification_divider_height_increased);
         this.mCollapsedSize = context.getResources().getDimensionPixelSize(R.dimen.notification_min_height);
         this.mHeadsUpMarginTop = HeadsUpManager.getHeadsUpTopMargin(context);
-        this.mHeadsUpShadowAlpha = context.getResources().getFloat(R.dimen.notification_heads_up_shadow_alpha);
     }
 
     public void getStackScrollState(AmbientState ambientState, StackScrollState stackScrollState) {
@@ -352,7 +350,7 @@ public class StackScrollAlgorithm {
     private void applyCommonHeadsUpChildState(ExpandableViewState expandableViewState, ExpandableNotificationRow expandableNotificationRow) {
         expandableViewState.height = Math.max(expandableNotificationRow.getIntrinsicHeight(), expandableViewState.height);
         expandableViewState.hidden = false;
-        expandableViewState.shadowAlpha = this.mHeadsUpShadowAlpha;
+        expandableViewState.shadowAlpha = 0.8f;
     }
 
     private void clampPositionToShelf(ExpandableViewState expandableViewState, AmbientState ambientState) {
