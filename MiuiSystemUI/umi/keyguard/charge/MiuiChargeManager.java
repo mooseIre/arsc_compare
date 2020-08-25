@@ -137,12 +137,16 @@ public class MiuiChargeManager implements Dumpable {
                     }
                 } else if ("miui.intent.action.ACTION_QUICK_CHARGE_TYPE".equals(intent.getAction()) && Constants.SUPPORT_BROADCAST_QUICK_CHARGE) {
                     int unused4 = MiuiChargeManager.this.mWiredChargeType = intent.getIntExtra("miui.intent.extra.quick_charge_type", -1);
-                    MiuiChargeManager miuiChargeManager3 = MiuiChargeManager.this;
-                    miuiChargeManager3.onChargeDeviceTypeChanged(miuiChargeManager3.mWiredChargeType);
+                    if (MiuiChargeManager.this.mBatteryStatus.wireState == 11) {
+                        MiuiChargeManager miuiChargeManager3 = MiuiChargeManager.this;
+                        miuiChargeManager3.onChargeDeviceTypeChanged(miuiChargeManager3.mWiredChargeType);
+                    }
                 } else if ("miui.intent.action.ACTION_WIRELESS_TX_TYPE".equals(intent.getAction())) {
                     int unused5 = MiuiChargeManager.this.mWirelessChargeType = intent.getIntExtra("miui.intent.extra.wireless_tx_type", -1);
-                    MiuiChargeManager miuiChargeManager4 = MiuiChargeManager.this;
-                    miuiChargeManager4.onChargeDeviceTypeChanged(miuiChargeManager4.mWirelessChargeType);
+                    if (MiuiChargeManager.this.mBatteryStatus.wireState == 10) {
+                        MiuiChargeManager miuiChargeManager4 = MiuiChargeManager.this;
+                        miuiChargeManager4.onChargeDeviceTypeChanged(miuiChargeManager4.mWirelessChargeType);
+                    }
                 }
             }
         }, intentFilter);
@@ -213,19 +217,25 @@ public class MiuiChargeManager implements Dumpable {
 
     /* access modifiers changed from: private */
     public int getChargeSpeed(int i, int i2) {
-        if (i == 10) {
+        if (i != 10) {
+            if (i == 11) {
+                if (!ChargeUtils.isStrongSuperRapidCharge(i2)) {
+                    if (ChargeUtils.isSuperRapidCharge(i2)) {
+                        return 2;
+                    }
+                    if (ChargeUtils.isRapidCharge(i2)) {
+                        return 1;
+                    }
+                }
+            }
+            return 0;
+        } else if (!ChargeUtils.isWirelessStrongSuperRapidCharge(i2)) {
             if (ChargeUtils.isWirelessSuperRapidCharge(i2)) {
                 return 2;
             }
-        } else if (i == 11) {
-            if (ChargeUtils.isSuperRapidCharge(i2)) {
-                return 2;
-            }
-            if (ChargeUtils.isRapidCharge(i2)) {
-                return 1;
-            }
+            return 0;
         }
-        return 0;
+        return 3;
     }
 
     public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
@@ -278,6 +288,11 @@ public class MiuiChargeManager implements Dumpable {
     public boolean isSuperQuickCharging() {
         BatteryStatus batteryStatus = this.mBatteryStatus;
         return batteryStatus != null && batteryStatus.chargeSpeed == 2;
+    }
+
+    public boolean isStrongSuperQuickCharging() {
+        BatteryStatus batteryStatus = this.mBatteryStatus;
+        return batteryStatus != null && batteryStatus.chargeSpeed == 3;
     }
 
     public boolean isUsbCharging() {

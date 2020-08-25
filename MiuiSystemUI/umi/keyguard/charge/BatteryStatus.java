@@ -49,6 +49,10 @@ public class BatteryStatus {
         return this.chargeSpeed == 2;
     }
 
+    public boolean isStrongSuperQuickCharge() {
+        return this.chargeSpeed == 3;
+    }
+
     public boolean isPluggedIn() {
         return isPluggedIn(this.plugged);
     }

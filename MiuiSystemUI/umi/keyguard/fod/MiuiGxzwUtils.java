@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.Display;
 import android.view.DisplayCutout;
 import com.android.keyguard.KeyguardUpdateMonitor;
+import com.android.keyguard.MiuiKeyguardUtils;
 import com.android.systemui.plugins.R;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -103,7 +104,10 @@ class MiuiGxzwUtils {
     }
 
     public static boolean isFodAodShowEnable(Context context) {
-        return Settings.Secure.getIntForUser(context.getContentResolver(), "gxzw_icon_aod_show_enable", 1, 0) == 1;
+        if (Settings.Secure.getIntForUser(context.getContentResolver(), "gxzw_icon_aod_show_enable", 1, 0) != 1 || MiuiKeyguardUtils.isInvertColorsEnable(context)) {
+            return false;
+        }
+        return true;
     }
 
     public static void vibrateLight(Context context) {

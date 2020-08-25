@@ -29,6 +29,7 @@ import com.android.systemui.events.ScreenOffEvent;
 import com.android.systemui.events.ScreenOnEvent;
 import com.android.systemui.plugins.R;
 import com.android.systemui.recents.events.RecentsEventBus;
+import com.android.systemui.statusbar.KeyguardIndicationController;
 import com.xiaomi.stat.c.b;
 import miui.os.Build;
 
@@ -40,17 +41,19 @@ public class MiuiChargeController implements IRapidAnimationListener {
     /* access modifiers changed from: private */
     public int mChargeDeviceType;
     private int mChargeType;
+    private boolean mClickShowChargeUI;
     /* access modifiers changed from: private */
     public Context mContext;
     /* access modifiers changed from: private */
     public Handler mHandler = new Handler();
+    private KeyguardIndicationController mKeyguardIndicationController;
     KeyguardUpdateMonitorCallback mKeyguardUpdateMonitorCallback = new KeyguardUpdateMonitorCallback() {
         public void onRefreshBatteryInfo(BatteryStatus batteryStatus) {
             super.onRefreshBatteryInfo(batteryStatus);
             BatteryStatus unused = MiuiChargeController.this.mBatteryStatus = batteryStatus;
             int unused2 = MiuiChargeController.this.mChargeDeviceType = batteryStatus.chargeDeviceType;
             MiuiChargeController miuiChargeController = MiuiChargeController.this;
-            miuiChargeController.checkBatteryStatus(miuiChargeController.mBatteryStatus);
+            miuiChargeController.checkBatteryStatus(miuiChargeController.mBatteryStatus, false);
         }
 
         public void onKeyguardOccludedChanged(boolean z) {
@@ -120,15 +123,21 @@ public class MiuiChargeController implements IRapidAnimationListener {
             public void onReceive(Context context, Intent intent) {
                 int intExtra;
                 if ("miui.intent.action.ACTION_SOC_DECIMAL".equals(intent.getAction())) {
-                    Slog.i("MiuiChargeController", "receive soc decimal, chargeDeviceType:" + MiuiChargeController.this.mBatteryStatus.chargeDeviceType + ",mRapidChargeAnimationShowing:" + MiuiChargeController.this.mRapidChargeAnimationShowing);
-                    if (MiuiChargeController.this.mBatteryStatus.level < 100 && MiuiChargeController.this.mRapidChargeAnimationShowing) {
-                        int intExtra2 = intent.getIntExtra("miui.intent.extra.soc_decimal", 0);
-                        int intExtra3 = intent.getIntExtra("miui.intent.extra.soc_decimal_rate", 0);
+                    int intExtra2 = intent.getIntExtra("miui.intent.extra.soc_decimal", 0);
+                    int intExtra3 = intent.getIntExtra("miui.intent.extra.soc_decimal_rate", 0);
+                    Slog.i("MiuiChargeController", "receive soc decimal, battery:" + MiuiChargeController.this.mBatteryStatus.level + ",level:" + intExtra2 + ";rate=" + intExtra3);
+                    if (MiuiChargeController.this.mBatteryStatus.level >= 100) {
+                        return;
+                    }
+                    if (MiuiChargeController.this.mRapidChargeAnimationShowing || MiuiChargeController.this.mWirelessRapidChargeAnimationShowing) {
                         if (MiuiChargeController.this.mRapidChargeView != null) {
                             MiuiChargeController.this.mRapidChargeView.startValueAnimation(((float) MiuiChargeController.this.mBatteryStatus.level) + (((float) intExtra2) / 100.0f), ((float) intExtra3) / 100.0f);
-                            MiuiChargeController.this.mHandler.removeCallbacks(MiuiChargeController.this.mScreenOffRunnable);
-                            MiuiChargeController.this.mHandler.postDelayed(MiuiChargeController.this.mScreenOffRunnable, 9700);
                         }
+                        if (MiuiChargeController.this.mWirelessRapidChargeView != null) {
+                            MiuiChargeController.this.mWirelessRapidChargeView.startValueAnimation(((float) MiuiChargeController.this.mBatteryStatus.level) + (((float) intExtra2) / 100.0f), ((float) intExtra3) / 100.0f);
+                        }
+                        MiuiChargeController.this.mHandler.removeCallbacks(MiuiChargeController.this.mScreenOffRunnable);
+                        MiuiChargeController.this.mHandler.postDelayed(MiuiChargeController.this.mScreenOffRunnable, 9700);
                     }
                 } else if ("android.intent.action.USER_PRESENT".equals(intent.getAction())) {
                     MiuiChargeController.this.mHandler.removeCallbacks(MiuiChargeController.this.mScreenOffRunnable);
@@ -159,6 +168,10 @@ public class MiuiChargeController implements IRapidAnimationListener {
         this.mChargeType = -1;
     }
 
+    public void setKeyguardIndicationController(KeyguardIndicationController keyguardIndicationController) {
+        this.mKeyguardIndicationController = keyguardIndicationController;
+    }
+
     public final void onBusEvent(ScreenOffEvent screenOffEvent) {
         onStartedGoingToSleep();
     }
@@ -167,50 +180,60 @@ public class MiuiChargeController implements IRapidAnimationListener {
         onStartedWakingUp();
     }
 
+    public void checkBatteryStatus(boolean z) {
+        checkBatteryStatus(this.mBatteryStatus, z);
+    }
+
     /* access modifiers changed from: private */
-    public void checkBatteryStatus(BatteryStatus batteryStatus) {
-        boolean z;
+    public void checkBatteryStatus(BatteryStatus batteryStatus, boolean z) {
         boolean z2;
+        boolean z3;
+        boolean z4;
         if (batteryStatus != null) {
+            this.mClickShowChargeUI = z;
             int i = batteryStatus.status;
-            boolean z3 = false;
-            boolean z4 = batteryStatus.wireState == 10;
+            boolean z5 = false;
+            boolean z6 = batteryStatus.wireState == 10;
             int checkChargeState = checkChargeState(batteryStatus);
             if (checkChargeState != this.mChargeType) {
                 this.mChargeDeviceType = -1;
             }
             boolean isWirelessCarMode = ChargeUtils.isWirelessCarMode(this.mChargeDeviceType);
             if (checkChargeState == 10) {
-                z = ChargeUtils.isWirelessSuperRapidCharge(this.mChargeDeviceType);
-                z2 = false;
+                boolean isWirelessSuperRapidCharge = ChargeUtils.isWirelessSuperRapidCharge(this.mChargeDeviceType);
+                z2 = ChargeUtils.isWirelessStrongSuperRapidCharge(this.mChargeDeviceType);
+                z3 = isWirelessSuperRapidCharge;
+                z4 = false;
             } else if (checkChargeState == 11) {
-                z2 = ChargeUtils.isRapidCharge(this.mChargeDeviceType);
-                z = ChargeUtils.isSuperRapidCharge(this.mChargeDeviceType);
+                z4 = ChargeUtils.isRapidCharge(this.mChargeDeviceType);
+                z3 = ChargeUtils.isSuperRapidCharge(this.mChargeDeviceType);
+                z2 = ChargeUtils.isStrongSuperRapidCharge(this.mChargeDeviceType);
             } else {
+                z4 = false;
+                z3 = false;
                 z2 = false;
-                z = false;
             }
-            Log.i("MiuiChargeController", "checkBatteryStatus: chargeType " + checkChargeState + " status " + i + " plugged " + batteryStatus.plugged + " isRapidCharge " + z2 + " isSuperCharge " + z + " isCarMode " + isWirelessCarMode + " mChargeDeviceType " + this.mChargeDeviceType + " mChargeDeviceForAnalytic " + this.mChargeDeviceForAnalytic);
+            Log.i("MiuiChargeController", "checkBatteryStatus: chargeType " + checkChargeState + " status " + i + " plugged " + batteryStatus.plugged + " isRapidCharge " + z4 + " isSuperCharge " + z3 + " isCarMode " + isWirelessCarMode + " mChargeDeviceType " + this.mChargeDeviceType + " mChargeDeviceForAnalytic " + this.mChargeDeviceForAnalytic);
             if (this.mStateInitialized) {
-                dealWithAnimationShow(checkChargeState, z4);
-                dealWithBadlyCharge(z4, checkChargeState);
+                dealWithAnimationShow(checkChargeState, z6);
+                dealWithBadlyCharge(z6, checkChargeState);
             }
             dealWithWirelessChargeAnalyticEvent(checkChargeState == 10, batteryStatus.level, this.mChargeType != checkChargeState);
             RapidChargeView rapidChargeView = this.mRapidChargeView;
             if (rapidChargeView != null && this.mRapidChargeAnimationShowing) {
                 rapidChargeView.setProgress(batteryStatus.level);
-                this.mRapidChargeView.setChargeState(z2, z);
+                this.mRapidChargeView.setChargeState(z4, z3, z2);
             }
             WirelessRapidChargeView wirelessRapidChargeView = this.mWirelessRapidChargeView;
             if (wirelessRapidChargeView != null && this.mWirelessRapidChargeAnimationShowing) {
                 wirelessRapidChargeView.setProgress(batteryStatus.level);
-                this.mWirelessRapidChargeView.setChargeState(z, isWirelessCarMode);
+                this.mWirelessRapidChargeView.setChargeState(z3, isWirelessCarMode, z2);
             }
-            this.mWirelessOnline = z4;
+            this.mWirelessOnline = z6;
             if (checkChargeState == 10) {
-                z3 = true;
+                z5 = true;
             }
-            this.mWirelessCharging = z3;
+            this.mWirelessCharging = z5;
             this.mChargeType = checkChargeState;
             this.mStateInitialized = true;
         }
@@ -233,7 +256,14 @@ public class MiuiChargeController implements IRapidAnimationListener {
     }
 
     private void dealWithAnimationShow(int i, boolean z) {
-        if (shouldShowChargeAnim() && this.mChargeType != i) {
+        if (shouldShowChargeAnim()) {
+            if (this.mClickShowChargeUI) {
+                if (this.mRapidChargeAnimationShowing || this.mWirelessRapidChargeAnimationShowing) {
+                    return;
+                }
+            } else if (this.mChargeType == i) {
+                return;
+            }
             boolean isKeyguardShowing = this.mUpdateMonitor.isKeyguardShowing();
             if (i == 11 && isKeyguardShowing && !KeyguardUpdateMonitor.getInstance(this.mContext).isKeyguardOccluded()) {
                 showRapidChargeAnimation();
@@ -295,6 +325,7 @@ public class MiuiChargeController implements IRapidAnimationListener {
 
     public void onRapidAnimationStart(int i) {
         Log.i("MiuiChargeController", "onRapidAnimationStart: " + i);
+        this.mKeyguardIndicationController.handleChargeTextAnimation(true);
     }
 
     public void onRapidAnimationEnd(int i, String str) {
@@ -334,7 +365,7 @@ public class MiuiChargeController implements IRapidAnimationListener {
                 this.mRapidChargeAnimationShowing = true;
                 AnalyticsHelper.getInstance(this.mContext).recordChargeAnimation(11);
                 this.mUpdateMonitor.setShowingChargeAnimationWindow(true);
-                this.mRapidChargeView.zoomLarge(this.mScreenOn);
+                this.mRapidChargeView.zoomLarge(this.mScreenOn, this.mClickShowChargeUI);
                 if (!this.mUpdateMonitor.isDeviceInteractive()) {
                     this.mPowerManager.wakeUp(SystemClock.uptimeMillis(), "com.android.systemui:RAPID_CHARGE");
                 }
@@ -377,7 +408,7 @@ public class MiuiChargeController implements IRapidAnimationListener {
             }
             this.mRapidChargeView.setScreenOn(this.mScreenOn);
             this.mRapidChargeView.setProgress(this.mBatteryStatus.level);
-            this.mRapidChargeView.setChargeState(ChargeUtils.isRapidCharge(this.mChargeDeviceType), ChargeUtils.isSuperRapidCharge(this.mChargeDeviceType));
+            this.mRapidChargeView.setChargeState(ChargeUtils.isRapidCharge(this.mChargeDeviceType), ChargeUtils.isSuperRapidCharge(this.mChargeDeviceType), ChargeUtils.isStrongSuperRapidCharge(this.mChargeDeviceType));
             this.mRapidChargeView.addToWindow("prepareRapidChargeView");
         }
     }
@@ -386,6 +417,7 @@ public class MiuiChargeController implements IRapidAnimationListener {
         Log.i("MiuiChargeController", "dismissRapidChargeAnimation: " + str);
         this.mUpdateMonitor.setShowingChargeAnimationWindow(false);
         if (shouldShowChargeAnim() && this.mRapidChargeAnimationShowing) {
+            this.mKeyguardIndicationController.handleChargeTextAnimation(false);
             RapidChargeView rapidChargeView = this.mRapidChargeView;
             if (rapidChargeView != null) {
                 rapidChargeView.startDismiss(str);
@@ -407,7 +439,7 @@ public class MiuiChargeController implements IRapidAnimationListener {
                 AnalyticsHelper.getInstance(this.mContext).recordChargeAnimation(10);
                 KeyguardUpdateMonitor instance = KeyguardUpdateMonitor.getInstance(this.mContext);
                 this.mUpdateMonitor.setShowingChargeAnimationWindow(true);
-                this.mWirelessRapidChargeView.zoomLarge(this.mScreenOn);
+                this.mWirelessRapidChargeView.zoomLarge(this.mScreenOn, this.mClickShowChargeUI);
                 if (!instance.isDeviceInteractive()) {
                     this.mPowerManager.wakeUp(SystemClock.uptimeMillis(), "com.android.systemui:WIRELESS_RAPID_CHARGE");
                 }
@@ -442,7 +474,7 @@ public class MiuiChargeController implements IRapidAnimationListener {
             }
             this.mWirelessRapidChargeView.setScreenOn(this.mScreenOn);
             this.mWirelessRapidChargeView.setProgress(this.mBatteryStatus.level);
-            this.mWirelessRapidChargeView.setChargeState(ChargeUtils.isWirelessSuperRapidCharge(this.mChargeDeviceType), ChargeUtils.isWirelessCarMode(this.mChargeDeviceType));
+            this.mWirelessRapidChargeView.setChargeState(ChargeUtils.isWirelessSuperRapidCharge(this.mChargeDeviceType), ChargeUtils.isWirelessCarMode(this.mChargeDeviceType), ChargeUtils.isStrongSuperRapidCharge(this.mChargeDeviceType));
             this.mWirelessRapidChargeView.addToWindow("prepareWirelessRapidChargeView");
         }
     }
@@ -451,6 +483,7 @@ public class MiuiChargeController implements IRapidAnimationListener {
         Log.i("MiuiChargeController", "dismissWirelessRapidChargeAnimation: " + str);
         this.mUpdateMonitor.setShowingChargeAnimationWindow(false);
         if (shouldShowChargeAnim() && this.mWirelessRapidChargeAnimationShowing) {
+            this.mKeyguardIndicationController.handleChargeTextAnimation(false);
             WirelessRapidChargeView wirelessRapidChargeView = this.mWirelessRapidChargeView;
             if (wirelessRapidChargeView != null) {
                 wirelessRapidChargeView.startDismiss(str);

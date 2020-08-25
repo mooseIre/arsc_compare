@@ -2,6 +2,7 @@ package com.android.keyguard;
 
 import android.content.Context;
 import android.graphics.Rect;
+import android.os.SystemProperties;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -20,6 +21,9 @@ public abstract class KeyguardPinBasedInputView extends KeyguardAbsKeyInputView 
     private View mButton7;
     private View mButton8;
     private View mButton9;
+    /* access modifiers changed from: private */
+    public boolean mIsKRoperator;
+    private String mKrCustomized;
     private View mOkButton;
     protected PasswordTextView mPasswordEntry;
 
@@ -29,6 +33,8 @@ public abstract class KeyguardPinBasedInputView extends KeyguardAbsKeyInputView 
 
     public KeyguardPinBasedInputView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
+        this.mIsKRoperator = false;
+        this.mKrCustomized = SystemProperties.get("ro.miui.customized.region");
     }
 
     public void reset() {
@@ -138,6 +144,7 @@ public abstract class KeyguardPinBasedInputView extends KeyguardAbsKeyInputView 
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
+        this.mIsKRoperator = "kr_kt".equals(this.mKrCustomized) || "kr_skt".equals(this.mKrCustomized) || "kr_lgu".equals(this.mKrCustomized);
         PasswordTextView passwordTextView = (PasswordTextView) findViewById(getPasswordTextViewId());
         this.mPasswordEntry = passwordTextView;
         passwordTextView.setOnKeyListener(this);
@@ -153,7 +160,10 @@ public abstract class KeyguardPinBasedInputView extends KeyguardAbsKeyInputView 
             findViewById.setOnTouchListener(this);
             this.mOkButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View view) {
-                    if (KeyguardPinBasedInputView.this.mPasswordEntry.isEnabled()) {
+                    if (KeyguardPinBasedInputView.this.mIsKRoperator) {
+                        KeyguardPinBasedInputView.this.verifyPasswordAndUnlock();
+                        KeyguardPinBasedInputView.this.mPasswordEntry.setEnabled(true);
+                    } else if (KeyguardPinBasedInputView.this.mPasswordEntry.isEnabled()) {
                         KeyguardPinBasedInputView.this.verifyPasswordAndUnlock();
                     }
                 }
@@ -163,14 +173,20 @@ public abstract class KeyguardPinBasedInputView extends KeyguardAbsKeyInputView 
         this.mDeleteButton.setOnTouchListener(this);
         this.mDeleteButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                if (KeyguardPinBasedInputView.this.mPasswordEntry.isEnabled()) {
+                if (KeyguardPinBasedInputView.this.mIsKRoperator) {
+                    KeyguardPinBasedInputView.this.mPasswordEntry.deleteLastChar();
+                    KeyguardPinBasedInputView.this.mPasswordEntry.setEnabled(true);
+                } else if (KeyguardPinBasedInputView.this.mPasswordEntry.isEnabled()) {
                     KeyguardPinBasedInputView.this.mPasswordEntry.deleteLastChar();
                 }
             }
         });
         this.mDeleteButton.setOnLongClickListener(new View.OnLongClickListener() {
             public boolean onLongClick(View view) {
-                if (KeyguardPinBasedInputView.this.mPasswordEntry.isEnabled()) {
+                if (KeyguardPinBasedInputView.this.mIsKRoperator) {
+                    KeyguardPinBasedInputView.this.mPasswordEntry.deleteLastChar();
+                    KeyguardPinBasedInputView.this.mPasswordEntry.setEnabled(true);
+                } else if (KeyguardPinBasedInputView.this.mPasswordEntry.isEnabled()) {
                     KeyguardPinBasedInputView.this.resetPasswordText(true, true);
                 }
                 KeyguardPinBasedInputView.this.doHapticKeyClick();

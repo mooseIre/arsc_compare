@@ -36,7 +36,6 @@ import com.android.systemui.plugins.R;
 import java.util.ArrayList;
 import java.util.List;
 import miui.security.SecurityManager;
-import miui.view.MiuiHapticFeedbackConstants;
 
 class MiuiGxzwQuickOpenView extends GxzwWindowFrameLayout {
     private float mCicleRadius;
@@ -449,7 +448,7 @@ class MiuiGxzwQuickOpenView extends GxzwWindowFrameLayout {
                 }
                 if (list == null || list.size() <= 0) {
                     Intent intent2 = new Intent("android.intent.action.VIEW", Uri.parse("market://details?id=" + str));
-                    intent2.addFlags(MiuiHapticFeedbackConstants.FLAG_MIUI_HAPTIC_TAP_NORMAL);
+                    intent2.addFlags(268435456);
                     startActivitySafely(intent2);
                 } else {
                     boolean isAppLocked = AppLockHelper.isAppLocked(getContext(), this.mSecurityManager, str, KeyguardUpdateMonitor.getCurrentUser());

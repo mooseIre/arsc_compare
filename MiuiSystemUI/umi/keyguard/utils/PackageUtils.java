@@ -13,7 +13,6 @@ import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.magazine.LockScreenMagazineUtils;
 import com.android.systemui.content.pm.PackageManagerCompat;
 import miui.os.Build;
-import miui.view.MiuiHapticFeedbackConstants;
 
 public class PackageUtils {
     public static final String CLASS_NAME_CAMERA;
@@ -67,7 +66,7 @@ public class PackageUtils {
         Intent intent = new Intent();
         intent.setAction("com.miui.intent.action.DOUBLE_CLICK");
         intent.putExtra("event_source", "shortcut_of_all_cards");
-        intent.addFlags(MiuiHapticFeedbackConstants.FLAG_MIUI_HAPTIC_TAP_NORMAL);
+        intent.addFlags(268435456);
         return intent;
     }
 
@@ -83,7 +82,7 @@ public class PackageUtils {
         intent.setData(Uri.parse("http://home.mi.com/main"));
         intent.putExtra("source", 11);
         intent.setAction("android.intent.action.VIEW");
-        intent.addFlags(MiuiHapticFeedbackConstants.FLAG_MIUI_HAPTIC_TAP_NORMAL);
+        intent.addFlags(268435456);
         return intent;
     }
 
@@ -91,7 +90,7 @@ public class PackageUtils {
         Intent intent = new Intent();
         intent.setData(Uri.parse("market://details?id=" + str + "&back=true&ref=keyguard"));
         intent.setAction("android.intent.action.VIEW");
-        intent.addFlags(MiuiHapticFeedbackConstants.FLAG_MIUI_HAPTIC_TAP_NORMAL);
+        intent.addFlags(268435456);
         return intent;
     }
 

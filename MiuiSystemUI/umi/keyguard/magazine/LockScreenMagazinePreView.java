@@ -30,7 +30,6 @@ import com.android.systemui.plugins.R;
 import com.xiaomi.stat.d;
 import java.util.Locale;
 import miui.os.Build;
-import miui.view.MiuiHapticFeedbackConstants;
 
 public class LockScreenMagazinePreView extends RelativeLayout {
     private boolean mDarkMode;
@@ -148,7 +147,7 @@ public class LockScreenMagazinePreView extends RelativeLayout {
                         intent = new Intent("android.intent.action.VIEW");
                         intent.putExtra("from", "lks_preview");
                         intent.setData(Uri.parse(lockScreenMagazineSettingsDeepLink));
-                        intent.addFlags(MiuiHapticFeedbackConstants.FLAG_MIUI_HAPTIC_TAP_NORMAL);
+                        intent.addFlags(268435456);
                         intent.addFlags(67108864);
                     } else {
                         intent = null;

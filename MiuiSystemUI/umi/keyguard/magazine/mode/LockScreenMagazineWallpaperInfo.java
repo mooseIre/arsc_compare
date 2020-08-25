@@ -131,27 +131,27 @@ public class LockScreenMagazineWallpaperInfo {
     /* JADX WARNING: Removed duplicated region for block: B:13:0x0045 A[SYNTHETIC, Splitter:B:13:0x0045] */
     /* JADX WARNING: Removed duplicated region for block: B:29:0x00ad  */
     /* Code decompiled incorrectly, please refer to instructions dump. */
-    public boolean opendAd(android.content.Context r7) {
+    public boolean opendAd(android.content.Context r13) {
         /*
-            r6 = this;
+            r12 = this;
             java.lang.String r0 = "StartActivityWhenLocked"
             java.lang.String r1 = "wallpaperinfo"
             r2 = 0
             r3 = 1
-            java.lang.String r4 = r6.deeplinkUrl     // Catch:{ Exception -> 0x002c }
+            java.lang.String r4 = r12.deeplinkUrl     // Catch:{ Exception -> 0x002c }
             boolean r4 = android.text.TextUtils.isEmpty(r4)     // Catch:{ Exception -> 0x002c }
             if (r4 != 0) goto L_0x0042
-            java.lang.String r4 = r6.deeplinkUrl     // Catch:{ Exception -> 0x002c }
+            java.lang.String r4 = r12.deeplinkUrl     // Catch:{ Exception -> 0x002c }
             android.content.Intent r4 = android.content.Intent.parseUri(r4, r2)     // Catch:{ Exception -> 0x002c }
-            java.lang.String r5 = r6.packageName     // Catch:{ Exception -> 0x002c }
+            java.lang.String r5 = r12.packageName     // Catch:{ Exception -> 0x002c }
             boolean r5 = android.text.TextUtils.isEmpty(r5)     // Catch:{ Exception -> 0x002c }
             if (r5 != 0) goto L_0x0022
-            java.lang.String r5 = r6.packageName     // Catch:{ Exception -> 0x002c }
+            java.lang.String r5 = r12.packageName     // Catch:{ Exception -> 0x002c }
             r4.setPackage(r5)     // Catch:{ Exception -> 0x002c }
         L_0x0022:
             r4.putExtra(r0, r3)     // Catch:{ Exception -> 0x002c }
             android.os.UserHandle r5 = android.os.UserHandle.CURRENT     // Catch:{ Exception -> 0x002c }
-            r7.startActivityAsUser(r4, r5)     // Catch:{ Exception -> 0x002c }
+            r13.startActivityAsUser(r4, r5)     // Catch:{ Exception -> 0x002c }
             r4 = r3
             goto L_0x0043
         L_0x002c:
@@ -159,7 +159,7 @@ public class LockScreenMagazineWallpaperInfo {
             r4.<init>()
             java.lang.String r5 = "deeplinkUrl not found : "
             r4.append(r5)
-            java.lang.String r5 = r6.deeplinkUrl
+            java.lang.String r5 = r12.deeplinkUrl
             r4.append(r5)
             java.lang.String r4 = r4.toString()
             android.util.Log.e(r1, r4)
@@ -167,20 +167,20 @@ public class LockScreenMagazineWallpaperInfo {
             r4 = r2
         L_0x0043:
             if (r4 != 0) goto L_0x0082
-            java.lang.String r5 = r6.landingPageUrl     // Catch:{ Exception -> 0x006c }
+            java.lang.String r5 = r12.landingPageUrl     // Catch:{ Exception -> 0x006c }
             boolean r5 = android.text.TextUtils.isEmpty(r5)     // Catch:{ Exception -> 0x006c }
             if (r5 != 0) goto L_0x0069
-            java.lang.String r5 = r6.landingPageUrl     // Catch:{ Exception -> 0x006c }
+            java.lang.String r5 = r12.landingPageUrl     // Catch:{ Exception -> 0x006c }
             android.content.Intent r2 = android.content.Intent.parseUri(r5, r2)     // Catch:{ Exception -> 0x006c }
-            java.lang.String r5 = r6.packageName     // Catch:{ Exception -> 0x006c }
+            java.lang.String r5 = r12.packageName     // Catch:{ Exception -> 0x006c }
             boolean r5 = android.text.TextUtils.isEmpty(r5)     // Catch:{ Exception -> 0x006c }
             if (r5 != 0) goto L_0x0060
-            java.lang.String r5 = r6.packageName     // Catch:{ Exception -> 0x006c }
+            java.lang.String r5 = r12.packageName     // Catch:{ Exception -> 0x006c }
             r2.setPackage(r5)     // Catch:{ Exception -> 0x006c }
         L_0x0060:
             r2.putExtra(r0, r3)     // Catch:{ Exception -> 0x006c }
             android.os.UserHandle r0 = android.os.UserHandle.CURRENT     // Catch:{ Exception -> 0x006c }
-            r7.startActivityAsUser(r2, r0)     // Catch:{ Exception -> 0x006c }
+            r13.startActivityAsUser(r2, r0)     // Catch:{ Exception -> 0x006c }
             goto L_0x006a
         L_0x0069:
             r3 = r4
@@ -192,71 +192,74 @@ public class LockScreenMagazineWallpaperInfo {
             r0.<init>()
             java.lang.String r2 = "landingPageUrl not found : "
             r0.append(r2)
-            java.lang.String r2 = r6.landingPageUrl
+            java.lang.String r2 = r12.landingPageUrl
             r0.append(r2)
             java.lang.String r0 = r0.toString()
             android.util.Log.e(r1, r0)
         L_0x0082:
-            if (r4 == 0) goto L_0x010f
-            java.lang.String r0 = r6.authority
+            if (r4 == 0) goto L_0x0113
+            java.lang.String r0 = r12.authority
             boolean r0 = android.text.TextUtils.isEmpty(r0)
-            if (r0 != 0) goto L_0x010f
-            android.content.ContentResolver r0 = r7.getContentResolver()
+            if (r0 != 0) goto L_0x0113
+            android.content.ContentResolver r0 = r13.getContentResolver()
             java.lang.StringBuilder r2 = new java.lang.StringBuilder
             r2.<init>()
             java.lang.String r3 = "content://"
             r2.append(r3)
-            java.lang.String r3 = r6.authority
+            java.lang.String r3 = r12.authority
             r2.append(r3)
             java.lang.String r2 = r2.toString()
             android.net.Uri r2 = android.net.Uri.parse(r2)
             android.content.IContentProvider r0 = r0.acquireProvider(r2)
-            if (r0 == 0) goto L_0x010f
+            if (r0 == 0) goto L_0x0113
             java.lang.StringBuilder r2 = new java.lang.StringBuilder
             r2.<init>()
             java.lang.String r3 = "tarck ad key="
             r2.append(r3)
-            java.lang.String r3 = r6.key
+            java.lang.String r3 = r12.key
             r2.append(r3)
             java.lang.String r3 = ";authority="
             r2.append(r3)
-            java.lang.String r3 = r6.authority
+            java.lang.String r3 = r12.authority
             r2.append(r3)
             java.lang.String r2 = r2.toString()
             android.util.Log.d(r1, r2)
-            org.json.JSONObject r1 = new org.json.JSONObject     // Catch:{ Exception -> 0x00fb }
-            r1.<init>()     // Catch:{ Exception -> 0x00fb }
+            org.json.JSONObject r1 = new org.json.JSONObject     // Catch:{ Exception -> 0x00ff }
+            r1.<init>()     // Catch:{ Exception -> 0x00ff }
             java.lang.String r2 = "key"
-            java.lang.String r6 = r6.key     // Catch:{ Exception -> 0x00fb }
-            r1.put(r2, r6)     // Catch:{ Exception -> 0x00fb }
-            java.lang.String r6 = "event"
-            r2 = 2
-            r1.put(r6, r2)     // Catch:{ Exception -> 0x00fb }
-            android.os.Bundle r6 = new android.os.Bundle     // Catch:{ Exception -> 0x00fb }
-            r6.<init>()     // Catch:{ Exception -> 0x00fb }
+            java.lang.String r3 = r12.key     // Catch:{ Exception -> 0x00ff }
+            r1.put(r2, r3)     // Catch:{ Exception -> 0x00ff }
+            java.lang.String r2 = "event"
+            r3 = 2
+            r1.put(r2, r3)     // Catch:{ Exception -> 0x00ff }
+            android.os.Bundle r11 = new android.os.Bundle     // Catch:{ Exception -> 0x00ff }
+            r11.<init>()     // Catch:{ Exception -> 0x00ff }
             java.lang.String r2 = "request_json"
-            java.lang.String r1 = r1.toString()     // Catch:{ Exception -> 0x00fb }
-            r6.putString(r2, r1)     // Catch:{ Exception -> 0x00fb }
-            java.lang.String r1 = r7.getPackageName()     // Catch:{ Exception -> 0x00fb }
-            java.lang.String r2 = "recordEvent"
-            r3 = 0
-            r0.call(r1, r2, r3, r6)     // Catch:{ Exception -> 0x00fb }
-            goto L_0x00ff
-        L_0x00f9:
-            r6 = move-exception
-            goto L_0x0107
-        L_0x00fb:
-            r6 = move-exception
-            r6.printStackTrace()     // Catch:{ all -> 0x00f9 }
+            java.lang.String r1 = r1.toString()     // Catch:{ Exception -> 0x00ff }
+            r11.putString(r2, r1)     // Catch:{ Exception -> 0x00ff }
+            java.lang.String r6 = r13.getPackageName()     // Catch:{ Exception -> 0x00ff }
+            r7 = 0
+            java.lang.String r8 = r12.authority     // Catch:{ Exception -> 0x00ff }
+            java.lang.String r9 = "recordEvent"
+            r10 = 0
+            r5 = r0
+            android.content.ContentProviderCompat.call(r5, r6, r7, r8, r9, r10, r11)     // Catch:{ Exception -> 0x00ff }
+            goto L_0x0103
+        L_0x00fd:
+            r12 = move-exception
+            goto L_0x010b
         L_0x00ff:
-            android.content.ContentResolver r6 = r7.getContentResolver()
-            r6.releaseProvider(r0)
-            goto L_0x010f
-        L_0x0107:
-            android.content.ContentResolver r7 = r7.getContentResolver()
-            r7.releaseProvider(r0)
-            throw r6
-        L_0x010f:
+            r12 = move-exception
+            r12.printStackTrace()     // Catch:{ all -> 0x00fd }
+        L_0x0103:
+            android.content.ContentResolver r12 = r13.getContentResolver()
+            r12.releaseProvider(r0)
+            goto L_0x0113
+        L_0x010b:
+            android.content.ContentResolver r13 = r13.getContentResolver()
+            r13.releaseProvider(r0)
+            throw r12
+        L_0x0113:
             return r4
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.keyguard.magazine.mode.LockScreenMagazineWallpaperInfo.opendAd(android.content.Context):boolean");

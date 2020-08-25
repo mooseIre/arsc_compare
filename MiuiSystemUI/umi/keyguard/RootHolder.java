@@ -39,6 +39,7 @@ public class RootHolder {
                 this.mRoot = null;
                 return false;
             }
+            this.mRoot.setAutoDarkenWallpaper(true);
             Log.d("RootHolder", "create root");
         } else {
             this.mResourceMgr.setLocal(context.getResources().getConfiguration().locale);

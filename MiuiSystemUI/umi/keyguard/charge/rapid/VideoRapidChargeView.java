@@ -43,6 +43,7 @@ public class VideoRapidChargeView extends RapidChargeView {
         this.mVideoView = new ChargeVideoView(this.mContext);
         this.mVideoView.setChargeUri("android.resource://" + this.mContext.getPackageName() + "/" + R.raw.wired_charge_video);
         this.mVideoView.setRapidChargeUri("android.resource://" + this.mContext.getPackageName() + "/" + R.raw.wired_quick_charge_video);
+        this.mVideoView.setStrongRapidChargeUri("android.resource://" + this.mContext.getPackageName() + "/" + R.raw.wired_strong);
         if (this.mContentContainer != null) {
             Point point = this.mScreenSize;
             this.mContentContainer.setTranslationY((float) ((Math.max(point.x, point.y) - 2340) / 2));
@@ -59,9 +60,15 @@ public class VideoRapidChargeView extends RapidChargeView {
 
     /* access modifiers changed from: protected */
     public void zoomLargeOnChildView() {
-        if (this.mChargeState == 0) {
+        int i = this.mChargeState;
+        if (i == 0) {
+            this.mVideoView.setDefaultImage(R.drawable.wired_charge_video_bg_img);
             this.mVideoView.addChargeView();
+        } else if (i == 3) {
+            this.mVideoView.setDefaultImage(R.drawable.wired_strong_super_charge_video_bg_img);
+            this.mVideoView.addStrongRapidChargeView();
         } else {
+            this.mVideoView.setDefaultImage(R.drawable.wired_super_charge_video_bg_img);
             this.mVideoView.addRapidChargeView();
         }
     }
@@ -113,6 +120,11 @@ public class VideoRapidChargeView extends RapidChargeView {
     }
 
     /* access modifiers changed from: protected */
+    public void showStrongRapidChargeAnim() {
+        this.mVideoView.switchToStrongRapidChargeAnim();
+    }
+
+    /* access modifiers changed from: protected */
     public void showRapidChargeAnim() {
         this.mVideoView.switchToRapidChargeAnim();
     }
@@ -141,6 +153,7 @@ public class VideoRapidChargeView extends RapidChargeView {
         this.mVideoView.stopAnimation();
         this.mVideoView.removeChargeView();
         this.mVideoView.removeRapidChargeView();
+        this.mVideoView.removeStrongRapidChargeView();
         this.mStateTip.setAlpha(0.0f);
         this.mStateTip.setTranslationY(0.0f);
         this.mGtChargeAniView.setViewInitState();

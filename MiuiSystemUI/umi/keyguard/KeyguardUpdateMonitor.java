@@ -105,7 +105,12 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener {
     /* access modifiers changed from: private */
     public static String sVideo24WallpaperThumnailName;
     private static boolean sWallpaperColorLight = false;
+    private ContentObserver mAODObserver;
     private ActivityObserver.ActivityObserverCallback mActivityStateObserver;
+    /* access modifiers changed from: private */
+    public boolean mAodEnable;
+    /* access modifiers changed from: private */
+    public boolean mAodUsingSuperWallpaperStyle;
     private FingerprintManager.AuthenticationCallback mAuthenticationCallback;
     private MiuiBleUnlockHelper.BLEUnlockState mBLEUnlockState;
     private BatteryStatus mBatteryStatus;
@@ -492,6 +497,20 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener {
 
     public boolean isLockScreenMagazinePkgExist() {
         return this.mIsLockScreenMagazinePkgExist;
+    }
+
+    public static synchronized int getMaintenanceModeId() {
+        int i;
+        synchronized (KeyguardUpdateMonitor.class) {
+            try {
+                Class<?> cls = Class.forName("android.os.UserHandle");
+                i = cls.getField("MAINTENANCE_MODE_ID").getInt(cls);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return -10000;
+            }
+        }
+        return i;
     }
 
     public static synchronized void setCurrentUser(int i) {
@@ -1212,6 +1231,14 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener {
             }
         };
         this.mWallpaperBlurColor = -1;
+        this.mAODObserver = new ContentObserver(this.mHandler) {
+            public void onChange(boolean z) {
+                KeyguardUpdateMonitor keyguardUpdateMonitor = KeyguardUpdateMonitor.this;
+                boolean unused = keyguardUpdateMonitor.mAodEnable = MiuiKeyguardUtils.isAodEnable(keyguardUpdateMonitor.mContext);
+                KeyguardUpdateMonitor keyguardUpdateMonitor2 = KeyguardUpdateMonitor.this;
+                boolean unused2 = keyguardUpdateMonitor2.mAodUsingSuperWallpaperStyle = MiuiKeyguardUtils.isAodUsingSuperWallpaperStyle(keyguardUpdateMonitor2.mContext);
+            }
+        };
         this.mContext = context;
         this.mSubscriptionManager = SubscriptionManager.from(context);
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(AlarmManager.class);
@@ -1308,6 +1335,9 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener {
         if (MiuiKeyguardUtils.IS_OPERATOR_CUSTOMIZATION_TEST) {
             this.mPhoneSignalController = new PhoneSignalController(this.mContext);
         }
+        this.mContext.getContentResolver().registerContentObserver(Settings.Secure.getUriFor(MiuiKeyguardUtils.AOD_MODE), false, this.mAODObserver, -1);
+        this.mContext.getContentResolver().registerContentObserver(Settings.Secure.getUriFor("aod_using_super_wallpaper"), false, this.mAODObserver, -1);
+        this.mAODObserver.onChange(false);
         if (!MiuiKeyguardUtils.isSystemProcess()) {
             Slog.w("KeyguardUpdateMonitor", "second space should not init KeyguardUpdateMonitor:" + new Throwable());
         }
@@ -1413,6 +1443,7 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener {
                 Canvas canvas = new Canvas(bitmap);
                 screenElementRoot.tick(SystemClock.elapsedRealtime());
                 screenElementRoot.render(canvas);
+                screenElementRoot.setKeepResource(true);
                 screenElementRoot.finish();
                 return bitmap;
             } catch (Exception e) {
@@ -1461,9 +1492,16 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener {
     }
 
     public boolean shouldListenForFingerprint() {
-        boolean z = (this.mKeyguardIsVisible || !this.mDeviceInteractive || ((this.mBouncer && !this.mKeyguardGoingAway) || this.mGoingToSleep || this.mKeyguardShowingAndOccluded)) && !this.mSwitchingUser && !isFingerprintDisabled(getCurrentUser()) && (!isKeyguardHide() || this.mGoingToSleep) && !isFingerprintUnlock() && MiuiKeyguardUtils.isSystemProcess() && (!isFaceUnlock() || !MiuiKeyguardUtils.isBroadSideFingerprint());
-        if (!z || !this.mKeyguardOccluded || (this.mBouncer && !this.mKeyguardGoingAway)) {
-            return z;
+        boolean z = false;
+        boolean z2 = (this.mKeyguardIsVisible || !this.mDeviceInteractive || ((this.mBouncer && !this.mKeyguardGoingAway) || this.mGoingToSleep || this.mKeyguardShowingAndOccluded)) && !this.mSwitchingUser && !isFingerprintDisabled(getCurrentUser()) && (!isKeyguardHide() || this.mGoingToSleep) && !isFingerprintUnlock() && MiuiKeyguardUtils.isSystemProcess() && (!isFaceUnlock() || !MiuiKeyguardUtils.isBroadSideFingerprint());
+        if (MiuiKeyguardUtils.isGxzwSensor() && MiuiKeyguardUtils.isInvertColorsEnable(this.mContext)) {
+            if (z2 && this.mDeviceInteractive) {
+                z = true;
+            }
+            z2 = z;
+        }
+        if (!z2 || !this.mKeyguardOccluded || (this.mBouncer && !this.mKeyguardGoingAway)) {
+            return z2;
         }
         if (MiuiKeyguardUtils.isGxzwSensor()) {
             return !this.mDeviceInteractive;
@@ -2331,6 +2369,10 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener {
                 keyguardUpdateMonitorCallback.onKeyguardShowingChanged(z);
             }
         }
+    }
+
+    public boolean isAodUsingSuperWallpaper() {
+        return this.mAodEnable && this.mAodUsingSuperWallpaperStyle;
     }
 
     public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {

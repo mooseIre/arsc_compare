@@ -99,6 +99,9 @@ public class WirelessRapidChargeView extends FrameLayout implements ValueAnimato
     public void setScreenOn(boolean z) {
     }
 
+    public void startValueAnimation(float f, float f2) {
+    }
+
     public WirelessRapidChargeView(Context context) {
         this(context, (AttributeSet) null);
     }
@@ -146,7 +149,7 @@ public class WirelessRapidChargeView extends FrameLayout implements ValueAnimato
         this.mIsSuperRapidCharge = false;
         this.mIsCarMode = false;
         this.mNormalIconDrawable = context.getDrawable(R.drawable.charge_animation_normal_charge_icon);
-        this.mSuperRapidIconDrawable = context.getDrawable(R.drawable.charge_animation_super_rapid_icon);
+        this.mSuperRapidIconDrawable = context.getDrawable(R.drawable.charge_animation_super_rapid_charge_icon);
         this.mCarIconDrawable = context.getDrawable(R.drawable.charge_animation_car_mode_icon);
         this.mWindowManager = (WindowManager) context.getSystemService("window");
         this.mScreenSize = new Point();
@@ -226,7 +229,7 @@ public class WirelessRapidChargeView extends FrameLayout implements ValueAnimato
         setElevation(30.0f);
     }
 
-    public void setChargeState(boolean z, boolean z2) {
+    public void setChargeState(boolean z, boolean z2, boolean z3) {
         setChargeState(z ? 2 : 0, z2);
     }
 
@@ -421,7 +424,7 @@ public class WirelessRapidChargeView extends FrameLayout implements ValueAnimato
         this.mZoomAnimator.addUpdateListener(this);
     }
 
-    public void zoomLarge(boolean z) {
+    public void zoomLarge(boolean z, boolean z2) {
         Log.i("WirelessRapidChargeView", "zoomLarge: mInitScreenOn " + z);
         this.mInitScreenOn = z;
         this.mHandler.removeCallbacks(this.mDismissRunnable);
@@ -519,8 +522,8 @@ public class WirelessRapidChargeView extends FrameLayout implements ValueAnimato
             Slog.i("WirelessRapidChargeView", "enable orientation sensor");
             this.mOrientationEventListener.enable();
         }
-        this.mHandler.sendEmptyMessageDelayed(R.styleable.AppCompatTheme_textAppearanceListItem, 300);
-        this.mHandler.sendEmptyMessageDelayed(R.styleable.AppCompatTheme_textAppearanceListItemSecondary, 2000);
+        this.mHandler.sendEmptyMessageDelayed(R.styleable.AppCompatTheme_switchStyle, 300);
+        this.mHandler.sendEmptyMessageDelayed(R.styleable.AppCompatTheme_textAppearanceLargePopupMenu, 2000);
         this.mHandler.removeCallbacks(this.timeoutDismissJob);
         this.mHandler.postDelayed(this.timeoutDismissJob, 19400);
     }
@@ -551,8 +554,8 @@ public class WirelessRapidChargeView extends FrameLayout implements ValueAnimato
 
     /* access modifiers changed from: private */
     public void disableOrientationSensor() {
-        this.mHandler.removeMessages(R.styleable.AppCompatTheme_textAppearanceListItemSecondary);
-        this.mHandler.removeMessages(R.styleable.AppCompatTheme_textAppearanceListItem);
+        this.mHandler.removeMessages(R.styleable.AppCompatTheme_textAppearanceLargePopupMenu);
+        this.mHandler.removeMessages(R.styleable.AppCompatTheme_switchStyle);
         if (this.mOrientationEventListener.canDetectOrientation()) {
             this.mOrientationEventListener.disable();
         }
@@ -588,7 +591,9 @@ public class WirelessRapidChargeView extends FrameLayout implements ValueAnimato
         Property property = FrameLayout.SCALE_Y;
         Property property2 = FrameLayout.SCALE_X;
         Property property3 = FrameLayout.ALPHA;
-        KeyguardUpdateMonitor.getInstance(getContext()).setShowingChargeAnimationWindow(false);
+        if (str2 != "dismiss_for_timeout") {
+            KeyguardUpdateMonitor.getInstance(this.mContext).setShowingChargeAnimationWindow(false);
+        }
         if (!this.mStartingDismissWirelessAlphaAnim) {
             ValueAnimator valueAnimator = this.mZoomAnimator;
             if (valueAnimator != null) {

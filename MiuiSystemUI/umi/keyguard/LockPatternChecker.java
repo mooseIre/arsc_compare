@@ -2,13 +2,12 @@ package com.android.keyguard;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.text.TextUtils;
 import android.util.Log;
 import android.util.Slog;
 import com.android.internal.widget.LockPatternUtils;
 import com.android.internal.widget.LockPatternView;
-import com.android.internal.widget.LockscreenCredential;
 import com.android.keyguard.analytics.AnalyticsHelper;
+import com.android.settings.LockPatternUtilsCompat;
 import com.android.systemui.util.QcomBoostFramework;
 import java.util.List;
 import java.util.Objects;
@@ -121,9 +120,9 @@ public final class LockPatternChecker {
 
             private boolean checkPattern(int i, OnCheckForUsersCallback onCheckForUsersCallback) throws LockPatternUtils.RequestThrottledException {
                 LockPatternUtils lockPatternUtils = lockPatternUtils2;
-                LockscreenCredential createPattern = LockscreenCredential.createPattern(list2);
+                List list = list2;
                 Objects.requireNonNull(onCheckForUsersCallback);
-                if (!lockPatternUtils.checkCredential(createPattern, i, new LockPatternUtils.CheckCredentialProgressCallback() {
+                if (!LockPatternUtilsCompat.checkPattern(lockPatternUtils, list, i, new LockPatternUtils.CheckCredentialProgressCallback() {
                     public final void onEarlyMatched() {
                         OnCheckForUsersCallback.this.onEarlyMatched();
                     }
@@ -192,9 +191,9 @@ public final class LockPatternChecker {
 
             private boolean checkPassword(int i, OnCheckForUsersCallback onCheckForUsersCallback) throws LockPatternUtils.RequestThrottledException {
                 LockPatternUtils lockPatternUtils = lockPatternUtils2;
-                LockscreenCredential access$300 = LockPatternChecker.getCredential(lockPatternUtils, str2, i);
+                String str = str2;
                 Objects.requireNonNull(onCheckForUsersCallback);
-                if (!lockPatternUtils.checkCredential(access$300, i, new LockPatternUtils.CheckCredentialProgressCallback() {
+                if (!LockPatternUtilsCompat.checkPassword(lockPatternUtils, str, i, new LockPatternUtils.CheckCredentialProgressCallback() {
                     public final void onEarlyMatched() {
                         OnCheckForUsersCallback.this.onEarlyMatched();
                     }
@@ -232,19 +231,5 @@ public final class LockPatternChecker {
         sb.append(z ? "   enable" : "   disable");
         Log.d(str, sb.toString());
         return z;
-    }
-
-    /* access modifiers changed from: private */
-    public static LockscreenCredential getCredential(LockPatternUtils lockPatternUtils, String str, int i) {
-        if (TextUtils.isEmpty(str)) {
-            return LockscreenCredential.createNone();
-        }
-        if (!lockPatternUtils.isLockPasswordEnabled(i)) {
-            return LockscreenCredential.createPassword(str);
-        }
-        if (LockPatternUtils.isQualityAlphabeticPassword(lockPatternUtils.getKeyguardStoredPasswordQuality(i))) {
-            return LockscreenCredential.createPassword(str);
-        }
-        return LockscreenCredential.createPin(str);
     }
 }

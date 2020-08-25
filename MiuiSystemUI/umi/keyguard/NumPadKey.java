@@ -185,7 +185,7 @@ public class NumPadKey extends ViewGroup {
 
     public void doHapticKeyClick() {
         if (this.mEnableHaptics) {
-            performHapticFeedback(1, 3);
+            performHapticFeedback(MiuiKeyguardUtils.SUPPORT_LINEAR_MOTOR_VIBRATE ? 268435457 : 1, 3);
         }
     }
 

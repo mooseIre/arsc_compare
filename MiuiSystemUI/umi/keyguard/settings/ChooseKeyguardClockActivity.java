@@ -330,7 +330,7 @@ public class ChooseKeyguardClockActivity extends Activity {
                     Bitmap bitmap = ((BitmapDrawable) lockWallpaperPreview).getBitmap();
                     boolean z = true;
                     Bitmap createScaledBitmap = Bitmap.createScaledBitmap(bitmap, 1080, (bitmap.getHeight() * 1080) / bitmap.getWidth(), true);
-                    Bitmap createBitmap = Bitmap.createBitmap(createScaledBitmap, 80, 125, R.styleable.AppCompatTheme_toolbarNavigationButtonStyle, R.styleable.AppCompatTheme_toolbarNavigationButtonStyle);
+                    Bitmap createBitmap = Bitmap.createBitmap(createScaledBitmap, 80, 125, R.styleable.AppCompatTheme_textColorAlertDialogListItem, R.styleable.AppCompatTheme_textColorAlertDialogListItem);
                     if (createBitmap != null) {
                         boolean unused = ChooseKeyguardClockActivity.this.mBackImageLight = MiuiKeyguardUtils.getBitmapColorMode(createBitmap) != 0;
                         createBitmap.recycle();

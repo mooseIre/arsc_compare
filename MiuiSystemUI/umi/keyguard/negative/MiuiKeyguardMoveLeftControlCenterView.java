@@ -34,7 +34,6 @@ import com.android.systemui.statusbar.phone.NotificationPanelView;
 import com.android.systemui.statusbar.phone.StatusBar;
 import com.xiaomi.stat.MiStat;
 import miui.os.Build;
-import miui.view.MiuiHapticFeedbackConstants;
 
 public class MiuiKeyguardMoveLeftControlCenterView extends MiuiKeyguardMoveLeftBaseView {
     /* access modifiers changed from: private */
@@ -70,15 +69,19 @@ public class MiuiKeyguardMoveLeftControlCenterView extends MiuiKeyguardMoveLeftB
     View.OnClickListener mListener = new View.OnClickListener() {
         public void onClick(View view) {
             switch (view.getId()) {
-                case R.id.keyguard_electric_torch /*2131362327*/:
+                case R.id.keyguard_electric_torch /*2131362331*/:
                     boolean z = false;
                     if (Settings.Global.getInt(MiuiKeyguardMoveLeftControlCenterView.this.mContext.getContentResolver(), "torch_state", 0) != 0) {
                         z = true;
                     }
                     MiuiKeyguardMoveLeftControlCenterView.this.mContext.sendBroadcast(PackageUtils.getToggleTorchIntent(!z));
                     MiuiKeyguardMoveLeftControlCenterView.this.mTorchLightImageView.setSelected(!z);
+                    if (MiuiKeyguardUtils.SUPPORT_LINEAR_MOTOR_VIBRATE) {
+                        view.performHapticFeedback(268435458);
+                        return;
+                    }
                     return;
-                case R.id.keyguard_lock_screen_magazine_info /*2131362339*/:
+                case R.id.keyguard_lock_screen_magazine_info /*2131362343*/:
                     if (PackageUtils.isAppInstalledForUser(MiuiKeyguardMoveLeftControlCenterView.this.mContext, LockScreenMagazineUtils.LOCK_SCREEN_MAGAZINE_PACKAGE_NAME, KeyguardUpdateMonitor.getCurrentUser())) {
                         Log.d("miui_keyguard", "left view goto lock screen wall paper");
                         MiuiKeyguardMoveLeftControlCenterView.this.setPreviewButtonClicked();
@@ -87,19 +90,19 @@ public class MiuiKeyguardMoveLeftControlCenterView extends MiuiKeyguardMoveLeftB
                     }
                     MiuiKeyguardMoveLeftControlCenterView.this.startAppStoreToDownload(R.id.keyguard_lock_screen_magazine_info);
                     return;
-                case R.id.keyguard_mi_wallet_info /*2131362341*/:
+                case R.id.keyguard_mi_wallet_info /*2131362345*/:
                     MiuiKeyguardMoveLeftControlCenterView.this.startToTSMClientActivity();
                     return;
-                case R.id.keyguard_remote_controller_info /*2131362346*/:
+                case R.id.keyguard_remote_controller_info /*2131362350*/:
                     if (PackageUtils.isAppInstalledForUser(MiuiKeyguardMoveLeftControlCenterView.this.mContext, "com.duokan.phone.remotecontroller", KeyguardUpdateMonitor.getCurrentUser())) {
                         Intent launchIntentForPackage = MiuiKeyguardMoveLeftControlCenterView.this.mContext.getPackageManager().getLaunchIntentForPackage("com.duokan.phone.remotecontroller");
-                        launchIntentForPackage.addFlags(MiuiHapticFeedbackConstants.FLAG_MIUI_HAPTIC_TAP_NORMAL);
+                        launchIntentForPackage.addFlags(268435456);
                         MiuiKeyguardMoveLeftControlCenterView.this.mStatusBar.startActivity(launchIntentForPackage, true);
                         return;
                     }
                     MiuiKeyguardMoveLeftControlCenterView.this.startAppStoreToDownload(R.id.keyguard_remote_controller_info);
                     return;
-                case R.id.keyguard_smarthome_info /*2131362353*/:
+                case R.id.keyguard_smarthome_info /*2131362357*/:
                     if (PackageUtils.isAppInstalledForUser(MiuiKeyguardMoveLeftControlCenterView.this.mContext, "com.xiaomi.smarthome", KeyguardUpdateMonitor.getCurrentUser())) {
                         try {
                             MiuiKeyguardMoveLeftControlCenterView.this.mStatusBar.startActivity(PackageUtils.getSmartHomeMainIntent(), true);

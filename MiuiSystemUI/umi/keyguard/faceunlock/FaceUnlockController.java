@@ -23,7 +23,6 @@ import com.android.systemui.statusbar.phone.PanelBar;
 import com.android.systemui.statusbar.phone.StatusBar;
 import com.android.systemui.statusbar.phone.StatusBarKeyguardViewManager;
 import com.android.systemui.statusbar.phone.StatusBarWindowManager;
-import miui.os.Build;
 
 public class FaceUnlockController extends KeyguardUpdateMonitorCallback {
     /* access modifiers changed from: private */
@@ -85,7 +84,7 @@ public class FaceUnlockController extends KeyguardUpdateMonitorCallback {
                     if (!isDeviceInteractive) {
                         FaceUnlockController.this.mStatusBarKeyguardViewManager.notifyDeviceWakeUpRequested();
                     }
-                    if (FaceUnlockController.this.mStatusBar.canPanelBeCollapsed() || ("perseus".equals(Build.DEVICE) && FaceUnlockController.this.mKeyguardViewMediator.isShowingAndOccluded())) {
+                    if (FaceUnlockController.this.mStatusBar.canPanelBeCollapsed() || (MiuiFaceUnlockUtils.isSupportSlideCamera(FaceUnlockController.this.mContext) && FaceUnlockController.this.mKeyguardViewMediator.isShowingAndOccluded())) {
                         FaceUnlockController.this.mStatusBarWindowManager.setStatusBarFocusable(false);
                         if (!FaceUnlockController.this.mFaceUnlockManager.isStayScreenWhenFaceUnlockSuccess()) {
                             if (((MiuiFastUnlockController) Dependency.get(MiuiFastUnlockController.class)).fastUnlock()) {

@@ -17,6 +17,7 @@ import android.os.ServiceManager;
 import android.provider.Settings;
 import android.util.Log;
 import android.util.Slog;
+import com.android.internal.util.DumpUtils;
 import com.android.keyguard.KeyguardSecurityModel;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.KeyguardUpdateMonitorCallback;
@@ -24,17 +25,20 @@ import com.android.keyguard.MiuiFastUnlockController;
 import com.android.keyguard.MiuiKeyguardUtils;
 import com.android.keyguard.fod.MiuiGxzwManager;
 import com.android.systemui.Dependency;
+import com.android.systemui.Dumpable;
 import com.android.systemui.SystemUI;
 import com.android.systemui.plugins.R;
 import com.android.systemui.statusbar.CommandQueue;
 import com.android.systemui.statusbar.phone.NotificationPanelView;
 import com.miui.systemui.annotation.Inject;
 import com.xiaomi.stat.c.b;
+import java.io.FileDescriptor;
+import java.io.PrintWriter;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks {
+public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, Dumpable {
     private static volatile MiuiGxzwManager sService;
     private int mAuthFingerprintId = 0;
     /* access modifiers changed from: private */
@@ -74,6 +78,7 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks {
     private boolean mDismissFodInBouncer = false;
     private boolean mDozing = false;
     private PowerManager.WakeLock mDrawWakeLock;
+    public int mDrawWakeLockStatus = -1;
     private MiuiFastUnlockController.FastUnlockCallback mFastUnlockCallback = new MiuiFastUnlockController.FastUnlockCallback() {
         public void onStartFastUnlock() {
             if (MiuiGxzwManager.this.isUnlockByGxzw()) {
@@ -488,10 +493,6 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks {
         return this.mDisableLockScreenFod;
     }
 
-    public void disableReadingMode() {
-        this.mMiuiGxzwOverlayView.disableReadingMode();
-    }
-
     /* access modifiers changed from: package-private */
     public void notifyGxzwTouchDown() {
         for (int i = 0; i < this.mCallbacks.size(); i++) {
@@ -543,12 +544,9 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks {
     }
 
     /* access modifiers changed from: package-private */
-    public void requestDrawWackLock() {
-        this.mDrawWakeLock.acquire();
-    }
-
-    /* access modifiers changed from: package-private */
     public void releaseDrawWackLock() {
+        Log.i("MiuiGxzwManager", "releaseDrawWackLock");
+        this.mDrawWakeLockStatus = 2;
         this.mDrawWakeLock.release();
     }
 
@@ -804,6 +802,14 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks {
         if (z2 != this.mDisableFingerprintIcon) {
             Slog.i("MiuiGxzwManager", "disable: mDisableFingerprintIcon = " + this.mDisableFingerprintIcon);
             updateGxzwState();
+        }
+    }
+
+    public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
+        if (DumpUtils.checkDumpPermission(this.mContext, "MiuiGxzwManager", printWriter)) {
+            printWriter.println("MiuiGxzwManager state:");
+            printWriter.println("mDrawWakeLockStatus=" + this.mDrawWakeLockStatus);
+            printWriter.println("mKeyguardAuthen=" + getKeyguardAuthen());
         }
     }
 }

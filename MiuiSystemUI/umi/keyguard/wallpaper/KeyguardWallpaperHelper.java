@@ -29,10 +29,12 @@ import com.android.keyguard.utils.ThemeUtils;
 import com.android.keyguard.wallpaper.mode.RequestInfo;
 import com.android.keyguard.wallpaper.mode.ResultInfo;
 import com.android.keyguard.wallpaper.mode.WallpaperInfo;
+import com.android.systemui.Dependency;
+import com.android.systemui.miui.statusbar.policy.ControlPanelController;
+import com.android.systemui.plugins.R;
 import com.google.gson.Gson;
 import java.util.List;
 import miui.os.Build;
-import miui.view.MiuiHapticFeedbackConstants;
 
 public class KeyguardWallpaperHelper {
     private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
@@ -173,8 +175,9 @@ public class KeyguardWallpaperHelper {
                     String miuiVersionName = MiuiKeyguardUtils.getMiuiVersionName();
                     int intValue = Integer.valueOf(miuiVersionName.substring(1)).intValue();
                     int i = PreferenceUtils.getInt(KeyguardWallpaperHelper.this.mContext, "pref_key_current_miui_version_code", 0);
+                    boolean z = PreferenceUtils.getInt(KeyguardWallpaperHelper.this.mContext, "pref_key_init_control_center_switch", 0) == 1;
                     Slog.i("KeyguardWallpaperHelper", "notifyThemeSetSuperWallpaper, isDeviceProvisioned = " + isDeviceProvisioned + "miuiVersionName = " + miuiVersionName + "miuiVersionCode = " + intValue + "oldMiuiVersionCode " + i);
-                    if (isDeviceProvisioned && intValue == 12 && i < 12) {
+                    if (isDeviceProvisioned && intValue == 12 && i < 12 && KeyguardWallpaperHelper.this.mContext.getResources().getBoolean(R.bool.miui_config_should_superwallpaper_setdefault)) {
                         boolean isUserUnlocked = KeyguardUpdateMonitor.getInstance(KeyguardWallpaperHelper.this.mContext).isUserUnlocked();
                         Slog.i("KeyguardWallpaperHelper", "notifyThemeSetSuperWallpaper, isUserUnlocked = " + isUserUnlocked);
                         if (isUserUnlocked) {
@@ -182,6 +185,12 @@ public class KeyguardWallpaperHelper {
                         } else {
                             boolean unused = KeyguardWallpaperHelper.this.mPendingTellThemeSetSuperWallpaper = true;
                         }
+                    }
+                    if (!z) {
+                        if (i == 12) {
+                            Settings.System.putIntForUser(KeyguardWallpaperHelper.this.mContext.getContentResolver(), "use_control_panel", Settings.System.getIntForUser(KeyguardWallpaperHelper.this.mContext.getContentResolver(), "use_control_panel", ((ControlPanelController) Dependency.get(ControlPanelController.class)).getUseControlPanelSettingDefault(), 0), 0);
+                        }
+                        PreferenceUtils.putInt(KeyguardWallpaperHelper.this.mContext, "pref_key_init_control_center_switch", 1);
                     }
                     PreferenceUtils.putInt(KeyguardWallpaperHelper.this.mContext, "pref_key_current_miui_version_code", intValue);
                     return null;
@@ -372,7 +381,7 @@ public class KeyguardWallpaperHelper {
                     }
                     Intent intent = new Intent();
                     intent.setComponent(componentName);
-                    intent.addFlags(MiuiHapticFeedbackConstants.FLAG_MIUI_HAPTIC_TAP_NORMAL);
+                    intent.addFlags(268435456);
                     intent.putExtras(bundle);
                     try {
                         KeyguardWallpaperHelper.this.mContext.startActivity(intent, KeyguardWallpaperHelper.makeCustomAnimation(KeyguardWallpaperHelper.this.mContext, 0, 0, new Handler()).toBundle());
@@ -385,7 +394,7 @@ public class KeyguardWallpaperHelper {
     }
 
     /* access modifiers changed from: private */
-    /* JADX WARNING: Removed duplicated region for block: B:22:0x00c0  */
+    /* JADX WARNING: Removed duplicated region for block: B:22:0x00c1  */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     public android.os.Bundle getPreviewActivityExtras(long r8) {
         /*
@@ -477,11 +486,11 @@ public class KeyguardWallpaperHelper {
             java.lang.String r8 = "dialogComponent"
             r7.putString(r8, r3)
             boolean r8 = miui.os.Build.IS_INTERNATIONAL_BUILD
-            if (r8 == 0) goto L_0x00c7
+            if (r8 == 0) goto L_0x00c8
             java.lang.String r8 = "entry_source"
             java.lang.String r9 = "cta"
             r7.putString(r8, r9)
-        L_0x00c7:
+        L_0x00c8:
             return r7
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.keyguard.wallpaper.KeyguardWallpaperHelper.getPreviewActivityExtras(long):android.os.Bundle");

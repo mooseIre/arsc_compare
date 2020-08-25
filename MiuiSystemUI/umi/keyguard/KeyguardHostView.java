@@ -206,14 +206,14 @@ public class KeyguardHostView extends FrameLayout implements KeyguardSecurityCon
             if (!(keyCode == 79 || keyCode == 130 || keyCode == 222)) {
                 if (!(keyCode == 126 || keyCode == 127)) {
                     switch (keyCode) {
-                        case R.styleable.AppCompatTheme_panelMenuListTheme /*85*/:
+                        case R.styleable.AppCompatTheme_listPreferredItemPaddingStart /*85*/:
                             break;
-                        case R.styleable.AppCompatTheme_panelMenuListWidth /*86*/:
-                        case R.styleable.AppCompatTheme_popupMenuStyle /*87*/:
-                        case R.styleable.AppCompatTheme_popupWindowStyle /*88*/:
-                        case R.styleable.AppCompatTheme_radioButtonStyle /*89*/:
-                        case R.styleable.AppCompatTheme_ratingBarStyle /*90*/:
-                        case R.styleable.AppCompatTheme_ratingBarStyleIndicator /*91*/:
+                        case 86:
+                        case R.styleable.AppCompatTheme_panelMenuListTheme /*87*/:
+                        case R.styleable.AppCompatTheme_panelMenuListWidth /*88*/:
+                        case R.styleable.AppCompatTheme_popupMenuStyle /*89*/:
+                        case R.styleable.AppCompatTheme_popupWindowStyle /*90*/:
+                        case R.styleable.AppCompatTheme_radioButtonStyle /*91*/:
                             break;
                         default:
                             return false;
@@ -230,13 +230,13 @@ public class KeyguardHostView extends FrameLayout implements KeyguardSecurityCon
         } else {
             if (!(keyCode == 79 || keyCode == 130 || keyCode == 222 || keyCode == 126 || keyCode == 127)) {
                 switch (keyCode) {
-                    case R.styleable.AppCompatTheme_panelMenuListTheme /*85*/:
-                    case R.styleable.AppCompatTheme_panelMenuListWidth /*86*/:
-                    case R.styleable.AppCompatTheme_popupMenuStyle /*87*/:
-                    case R.styleable.AppCompatTheme_popupWindowStyle /*88*/:
-                    case R.styleable.AppCompatTheme_radioButtonStyle /*89*/:
-                    case R.styleable.AppCompatTheme_ratingBarStyle /*90*/:
-                    case R.styleable.AppCompatTheme_ratingBarStyleIndicator /*91*/:
+                    case R.styleable.AppCompatTheme_listPreferredItemPaddingStart /*85*/:
+                    case 86:
+                    case R.styleable.AppCompatTheme_panelMenuListTheme /*87*/:
+                    case R.styleable.AppCompatTheme_panelMenuListWidth /*88*/:
+                    case R.styleable.AppCompatTheme_popupMenuStyle /*89*/:
+                    case R.styleable.AppCompatTheme_popupWindowStyle /*90*/:
+                    case R.styleable.AppCompatTheme_radioButtonStyle /*91*/:
                         break;
                     default:
                         return false;

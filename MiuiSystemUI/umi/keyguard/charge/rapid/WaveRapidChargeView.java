@@ -57,7 +57,7 @@ public class WaveRapidChargeView extends RapidChargeView {
         super.init(context);
         this.mCenterAnchorView.setTranslationX(299.0f);
         this.mPercentCountView.setTranslationX(299.0f);
-        this.mPercentCountView.setTextSize(265, R.styleable.AppCompatTheme_textAppearanceListItemSecondary, R.styleable.AppCompatTheme_textAppearanceListItemSecondary);
+        this.mPercentCountView.setTextSize(265, R.styleable.AppCompatTheme_textAppearanceLargePopupMenu, R.styleable.AppCompatTheme_textAppearanceLargePopupMenu);
         this.mStateTip.setTranslationX(299.0f);
         this.mGtChargeAniView.setTranslationX(299.0f);
         this.mRapidIcon.setTranslationX(299.0f);
@@ -95,7 +95,7 @@ public class WaveRapidChargeView extends RapidChargeView {
     /* access modifiers changed from: protected */
     public void zoomLargeOnChildView() {
         this.mWaveView.startAnim();
-        this.mPercentCountView.setTextSize(265, R.styleable.AppCompatTheme_textAppearanceListItemSecondary, R.styleable.AppCompatTheme_textAppearanceListItemSecondary);
+        this.mPercentCountView.setTextSize(265, R.styleable.AppCompatTheme_textAppearanceLargePopupMenu, R.styleable.AppCompatTheme_textAppearanceLargePopupMenu);
         ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{0.0f, 1.0f});
         this.mPercentViewAnimator = ofFloat;
         ofFloat.setInterpolator(this.mQuartOutInterpolator);

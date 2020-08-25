@@ -25,6 +25,10 @@ abstract class MiuiGxzwAnimItem {
 
     public abstract MiuiGxzwAnimRes generalNormalRecognizing();
 
+    public int getFodMotionRtpId() {
+        return 77;
+    }
+
     public boolean isDismissRecognizingWhenFalse() {
         return true;
     }

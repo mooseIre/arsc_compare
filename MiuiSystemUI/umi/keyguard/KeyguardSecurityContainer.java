@@ -550,7 +550,7 @@ public class KeyguardSecurityContainer extends FrameLayout implements KeyguardSe
     }
 
     /* access modifiers changed from: package-private */
-    /* JADX WARNING: Removed duplicated region for block: B:28:0x0096  */
+    /* JADX WARNING: Removed duplicated region for block: B:28:0x0097  */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     public boolean showNextSecurityScreenOrFinish(boolean r7, int r8) {
         /*
@@ -569,39 +569,39 @@ public class KeyguardSecurityContainer extends FrameLayout implements KeyguardSe
             boolean r0 = r0.getUserCanSkipBouncer(r8)
             r2 = 0
             r3 = 1
-            if (r0 == 0) goto L_0x002a
-        L_0x0025:
+            if (r0 == 0) goto L_0x002b
+        L_0x0026:
             r5 = r3
             r3 = r2
             r2 = r5
-            goto L_0x0094
-        L_0x002a:
+            goto L_0x0095
+        L_0x002b:
             com.android.keyguard.KeyguardSecurityModel$SecurityMode r0 = com.android.keyguard.KeyguardSecurityModel.SecurityMode.None
             com.android.keyguard.KeyguardSecurityModel$SecurityMode r4 = r6.mCurrentSecuritySelection
-            if (r0 != r4) goto L_0x0040
+            if (r0 != r4) goto L_0x0041
             com.android.keyguard.KeyguardSecurityModel r7 = r6.mSecurityModel
             com.android.keyguard.KeyguardSecurityModel$SecurityMode r7 = r7.getSecurityMode(r8)
             com.android.keyguard.KeyguardSecurityModel$SecurityMode r0 = com.android.keyguard.KeyguardSecurityModel.SecurityMode.None
-            if (r0 != r7) goto L_0x003b
-            goto L_0x0025
-        L_0x003b:
+            if (r0 != r7) goto L_0x003c
+            goto L_0x0026
+        L_0x003c:
             r6.showSecurityScreen(r7)
             r3 = r2
-            goto L_0x0025
-        L_0x0040:
-            if (r7 == 0) goto L_0x0093
+            goto L_0x0026
+        L_0x0041:
+            if (r7 == 0) goto L_0x0094
             int[] r7 = com.android.keyguard.KeyguardSecurityContainer.AnonymousClass10.$SwitchMap$com$android$keyguard$KeyguardSecurityModel$SecurityMode
             int r0 = r4.ordinal()
             r7 = r7[r0]
-            if (r7 == r3) goto L_0x0091
+            if (r7 == r3) goto L_0x0092
             r0 = 2
-            if (r7 == r0) goto L_0x0091
+            if (r7 == r0) goto L_0x0092
             r0 = 3
-            if (r7 == r0) goto L_0x0091
+            if (r7 == r0) goto L_0x0092
             r0 = 6
-            if (r7 == r0) goto L_0x0077
+            if (r7 == r0) goto L_0x0078
             r0 = 7
-            if (r7 == r0) goto L_0x0077
+            if (r7 == r0) goto L_0x0078
             java.lang.StringBuilder r7 = new java.lang.StringBuilder
             r7.<init>()
             java.lang.String r0 = "Bad security screen "
@@ -613,29 +613,29 @@ public class KeyguardSecurityContainer extends FrameLayout implements KeyguardSe
             java.lang.String r7 = r7.toString()
             android.util.Log.v(r1, r7)
             r6.showPrimarySecurityScreen(r2)
-            goto L_0x0093
-        L_0x0077:
+            goto L_0x0094
+        L_0x0078:
             com.android.keyguard.KeyguardSecurityModel r7 = r6.mSecurityModel
             com.android.keyguard.KeyguardSecurityModel$SecurityMode r7 = r7.getSecurityMode(r8)
             com.android.keyguard.KeyguardSecurityModel$SecurityMode r0 = com.android.keyguard.KeyguardSecurityModel.SecurityMode.None
-            if (r7 != r0) goto L_0x008d
+            if (r7 != r0) goto L_0x008e
             com.android.internal.widget.LockPatternUtils r0 = r6.mLockPatternUtils
             int r1 = com.android.keyguard.KeyguardUpdateMonitor.getCurrentUser()
             boolean r0 = r0.isLockScreenDisabled(r1)
-            if (r0 != 0) goto L_0x0025
-        L_0x008d:
+            if (r0 != 0) goto L_0x0026
+        L_0x008e:
             r6.showSecurityScreen(r7)
-            goto L_0x0093
-        L_0x0091:
-            r2 = r3
             goto L_0x0094
-        L_0x0093:
-            r3 = r2
+        L_0x0092:
+            r2 = r3
+            goto L_0x0095
         L_0x0094:
-            if (r2 == 0) goto L_0x009b
+            r3 = r2
+        L_0x0095:
+            if (r2 == 0) goto L_0x009c
             com.android.keyguard.KeyguardSecurityContainer$SecurityCallback r6 = r6.mSecurityCallback
             r6.finish(r3, r8)
-        L_0x009b:
+        L_0x009c:
             return r2
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.keyguard.KeyguardSecurityContainer.showNextSecurityScreenOrFinish(boolean, int):boolean");

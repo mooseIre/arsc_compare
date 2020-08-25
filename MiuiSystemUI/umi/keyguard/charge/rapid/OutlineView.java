@@ -150,7 +150,7 @@ public class OutlineView extends View {
         this.mOutThrCirclePaint = paint3;
         paint3.setStyle(Paint.Style.STROKE);
         this.mOutThrCirclePaint.setStrokeWidth((float) this.mOuterThrCircleWidth);
-        this.mOutThrCirclePaint.setAlpha(R.styleable.AppCompatTheme_textAppearanceListItemSecondary);
+        this.mOutThrCirclePaint.setAlpha(R.styleable.AppCompatTheme_textAppearanceLargePopupMenu);
         this.mOutThrCirclePaint.setShader(linearGradient);
     }
 

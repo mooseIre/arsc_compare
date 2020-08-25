@@ -32,6 +32,7 @@ public class KeyguardHorizontalMoveLeftViewContainer extends KeyguardHorizontalM
     private KeyguardClientCallback mKeyguardClientCallback = new KeyguardClientCallback() {
         public void onOverlayScrollChanged(float f) {
             KeyguardHorizontalMoveLeftViewContainer.this.mCallBack.updateCanShowGxzw(f == 0.0f);
+            KeyguardHorizontalMoveLeftViewContainer.this.mFaceUnlockManager.updateHorizontalMoveLeftProgress(f);
             if (KeyguardHorizontalMoveLeftViewContainer.this.mScrollProgress != f) {
                 float unused = KeyguardHorizontalMoveLeftViewContainer.this.mScrollProgress = f;
                 if (KeyguardHorizontalMoveLeftViewContainer.this.mScrollProgress == 0.0f || KeyguardHorizontalMoveLeftViewContainer.this.mScrollProgress == 1.0f) {
@@ -112,7 +113,9 @@ public class KeyguardHorizontalMoveLeftViewContainer extends KeyguardHorizontalM
         if (this.mCallBack.isMoveInCenterScreen() && this.mCallBack.isRightMove() && this.mKeyguardUpdateMonitor.isLockScreenLeftOverlayAvailable()) {
             this.mInitialTouchX = f;
             this.mLockScreenMagazineClient.startMove();
-            this.mCallBack.updateCanShowGxzw(false);
+            if (this.mScrollProgress != 0.0f) {
+                this.mCallBack.updateCanShowGxzw(false);
+            }
             this.mTouchDownInitial = true;
         }
     }
@@ -127,6 +130,9 @@ public class KeyguardHorizontalMoveLeftViewContainer extends KeyguardHorizontalM
             f3 = -f3;
         }
         lockScreenMagazineClient.updateMove(f3);
+        if (this.mScrollProgress == 0.0f) {
+            return true;
+        }
         this.mCallBack.updateCanShowGxzw(false);
         return true;
     }

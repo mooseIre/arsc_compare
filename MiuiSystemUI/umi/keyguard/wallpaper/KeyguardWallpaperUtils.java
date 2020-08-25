@@ -27,6 +27,7 @@ import android.view.Display;
 import android.view.WindowManager;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.common.Utilities;
+import com.android.keyguard.fod.MiuiGxzwManager;
 import com.android.keyguard.magazine.LockScreenMagazineController;
 import com.android.keyguard.magazine.utils.HomeUtils;
 import com.android.keyguard.utils.MiuiSettingsUtils;
@@ -671,5 +672,9 @@ public class KeyguardWallpaperUtils {
 
     public static boolean isSupportWallpaperBlur() {
         return sIsSupportWallpaperBlur;
+    }
+
+    public static boolean isWallpaperShouldBlur(Context context) {
+        return !MiuiGxzwManager.isGxzwSensor() || !KeyguardUpdateMonitor.getInstance(context).isUnlockWithFingerprintPossible(KeyguardUpdateMonitor.getCurrentUser());
     }
 }

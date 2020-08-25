@@ -47,6 +47,7 @@ import java.util.HashMap;
 import java.util.List;
 import miui.content.res.ThemeResources;
 import miui.util.FeatureParser;
+import miui.util.HapticFeedbackUtil;
 
 public class MiuiKeyguardUtils {
     public static final String AOD_MODE = (Build.VERSION.SDK_INT >= 28 ? "doze_always_on" : "aod_mode");
@@ -55,6 +56,7 @@ public class MiuiKeyguardUtils {
     public static final boolean IS_MTK_BUILD = "mediatek".equals(FeatureParser.getString("vendor"));
     public static final boolean IS_OPERATOR_CUSTOMIZATION_TEST = (miui.os.Build.IS_CM_CUSTOMIZATION_TEST || miui.os.Build.IS_CT_CUSTOMIZATION_TEST);
     private static final int PROCESS_USER_ID = Process.myUid();
+    public static final boolean SUPPORT_LINEAR_MOTOR_VIBRATE = HapticFeedbackUtil.isSupportLinearMotorVibrate();
     private static List<String> sDeviceSupportPickupByMTK = new ArrayList();
     private static FingerprintHelper sFingerprintHelper = null;
     private static boolean sHasNavigationBar;
@@ -282,15 +284,15 @@ public class MiuiKeyguardUtils {
     }
 
     public static boolean isAodEnable(Context context) {
-        return Settings.Secure.getIntForUser(context.getContentResolver(), AOD_MODE, 0, -2) != 0;
+        return Settings.Secure.getIntForUser(context.getContentResolver(), AOD_MODE, 0, KeyguardUpdateMonitor.getCurrentUser()) != 0;
     }
 
     public static boolean isAodUsingSuperWallpaperStyle(Context context) {
-        return Settings.Secure.getInt(context.getContentResolver(), "aod_using_super_wallpaper", 0) == 1;
+        return Settings.Secure.getIntForUser(context.getContentResolver(), "aod_using_super_wallpaper", 0, KeyguardUpdateMonitor.getCurrentUser()) == 1;
     }
 
     public static boolean isInvertColorsEnable(Context context) {
-        return Settings.Secure.getIntForUser(context.getContentResolver(), "accessibility_display_inversion_enabled", 0, -2) != 0;
+        return Settings.Secure.getIntForUser(context.getContentResolver(), "accessibility_display_inversion_enabled", 0, KeyguardUpdateMonitor.getCurrentUser()) != 0;
     }
 
     public static int getAuthUserId(Context context, int i) {
@@ -335,7 +337,10 @@ public class MiuiKeyguardUtils {
     }
 
     public static boolean showMXTelcelLockScreen(Context context) {
-        return "mx_telcel".equals(CUSTOMIZED_REGION) && isAppRunning(context, "com.celltick.lockscreen");
+        if (!"mx_telcel".equals(CUSTOMIZED_REGION) || !isAppRunning(context, "com.celltick.lockscreen") || Settings.Secure.getIntForUser(context.getContentResolver(), "start_disabled", 1, KeyguardUpdateMonitor.getCurrentUser()) != 1) {
+            return false;
+        }
+        return true;
     }
 
     public static boolean isAppRunning(Context context, String str) {

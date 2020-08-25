@@ -187,7 +187,7 @@ public class EmergencyButton extends Button {
             if (r0 != 0) goto L_0x0043
             android.content.Context r0 = r5.mContext
             android.content.res.Resources r0 = r0.getResources()
-            r3 = 2131034155(0x7f05002b, float:1.767882E38)
+            r3 = 2131034158(0x7f05002e, float:1.7678826E38)
             boolean r0 = r0.getBoolean(r3)
             if (r0 == 0) goto L_0x0041
             goto L_0x0043
@@ -199,7 +199,7 @@ public class EmergencyButton extends Button {
         L_0x0044:
             android.content.Context r3 = r5.mContext
             android.content.res.Resources r3 = r3.getResources()
-            r4 = 2131034185(0x7f050049, float:1.767888E38)
+            r4 = 2131034188(0x7f05004c, float:1.7678886E38)
             boolean r3 = r3.getBoolean(r4)
             if (r3 == 0) goto L_0x0064
             android.content.Context r3 = r5.mContext
@@ -229,10 +229,10 @@ public class EmergencyButton extends Button {
             android.content.Context r0 = r5.mContext
             boolean r0 = com.android.keyguard.utils.PhoneUtils.isInCall(r0)
             if (r0 == 0) goto L_0x0083
-            r0 = 17040483(0x1040463, float:2.4247718E-38)
+            r0 = 17040538(0x104049a, float:2.4247872E-38)
             goto L_0x0086
         L_0x0083:
-            r0 = 2131821246(0x7f1102be, float:1.927523E38)
+            r0 = 2131821275(0x7f1102db, float:1.9275289E38)
         L_0x0086:
             r5.setText(r0)
             goto L_0x008e

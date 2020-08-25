@@ -44,6 +44,7 @@ public class RapidChargeView extends FrameLayout implements ValueAnimator.Animat
     protected int mChargeNumberTranslateSmall;
     protected int mChargeState;
     protected int mChargeTipTranslateSmall;
+    private boolean mClickShowChargeUI;
     protected ViewGroup mContentContainer;
     private AnimatorSet mContentSwitchAnimator;
     private Interpolator mCubicInterpolator;
@@ -72,6 +73,7 @@ public class RapidChargeView extends FrameLayout implements ValueAnimator.Animat
     /* access modifiers changed from: private */
     public boolean mStartingDismissWirelessAlphaAnim;
     protected TextView mStateTip;
+    private Drawable mStrongSuperRapidIconDrawable;
     protected ImageView mSuperRapidIcon;
     private Drawable mSuperRapidIconDrawable;
     private int mSuperRapidIconHeight;
@@ -135,6 +137,10 @@ public class RapidChargeView extends FrameLayout implements ValueAnimator.Animat
     }
 
     /* access modifiers changed from: protected */
+    public void showStrongRapidChargeAnim() {
+    }
+
+    /* access modifiers changed from: protected */
     public void stopChildAnimation() {
     }
 
@@ -180,7 +186,8 @@ public class RapidChargeView extends FrameLayout implements ValueAnimator.Animat
     /* access modifiers changed from: protected */
     public void init(Context context) {
         this.mRapidIconDrawable = context.getDrawable(R.drawable.charge_animation_rapid_charge_icon);
-        this.mSuperRapidIconDrawable = context.getDrawable(R.drawable.charge_animation_super_rapid_icon);
+        this.mSuperRapidIconDrawable = context.getDrawable(R.drawable.charge_animation_super_rapid_charge_icon);
+        this.mStrongSuperRapidIconDrawable = context.getDrawable(R.drawable.charge_animation_strong_super_rapid_charge_icon);
         this.mWindowManager = (WindowManager) context.getSystemService("window");
         this.mScreenSize = new Point();
         this.mWindowManager.getDefaultDisplay().getRealSize(this.mScreenSize);
@@ -262,8 +269,8 @@ public class RapidChargeView extends FrameLayout implements ValueAnimator.Animat
         }
     }
 
-    public void setChargeState(boolean z, boolean z2) {
-        setChargeState(z2 ? 2 : z ? 1 : 0);
+    public void setChargeState(boolean z, boolean z2, boolean z3) {
+        setChargeState(z3 ? 3 : z2 ? 2 : z ? 1 : 0);
     }
 
     /* access modifiers changed from: protected */
@@ -273,10 +280,16 @@ public class RapidChargeView extends FrameLayout implements ValueAnimator.Animat
             showNormalChargeAnim();
             switchToNormal();
         } else if (i == 1) {
+            this.mSuperRapidIcon.setImageDrawable(this.mRapidIconDrawable);
             showRapidChargeAnim();
             switchToRapid();
         } else if (i == 2) {
+            this.mSuperRapidIcon.setImageDrawable(this.mSuperRapidIconDrawable);
             showRapidChargeAnim();
+            switchToSuperRapid();
+        } else if (i == 3) {
+            this.mSuperRapidIcon.setImageDrawable(this.mStrongSuperRapidIconDrawable);
+            showStrongRapidChargeAnim();
             switchToSuperRapid();
         }
     }
@@ -405,8 +418,14 @@ public class RapidChargeView extends FrameLayout implements ValueAnimator.Animat
                 }
 
                 public void onAnimationEnd(Animator animator) {
-                    RapidChargeView.this.mGtChargeAniView.setViewInitState();
                     RapidChargeView.this.mGtChargeAniView.setVisibility(0);
+                    RapidChargeView rapidChargeView = RapidChargeView.this;
+                    if (rapidChargeView.mChargeState == 3) {
+                        rapidChargeView.mGtChargeAniView.setStrongViewInitState();
+                        RapidChargeView.this.mGtChargeAniView.animationWiredStrongToShow();
+                        return;
+                    }
+                    rapidChargeView.mGtChargeAniView.setViewInitState();
                     RapidChargeView.this.mGtChargeAniView.animationToShow();
                 }
 
@@ -466,9 +485,10 @@ public class RapidChargeView extends FrameLayout implements ValueAnimator.Animat
         this.mHandler.removeCallbacksAndMessages((Object) null);
     }
 
-    public void zoomLarge(boolean z) {
+    public void zoomLarge(boolean z, boolean z2) {
         Log.i("RapidChargeView", "zoomLarge: mInitScreenOn " + z);
         this.mInitScreenOn = z;
+        this.mClickShowChargeUI = z2;
         this.mHandler.removeCallbacks(this.mDismissRunnable);
         AnimatorSet animatorSet = this.mDismissAnimatorSet;
         if (animatorSet != null && this.mStartingDismissWirelessAlphaAnim) {
@@ -538,9 +558,37 @@ public class RapidChargeView extends FrameLayout implements ValueAnimator.Animat
             this.mStateTip.setAlpha(0.0f);
             this.mStateTip.setTranslationY((float) this.mChargeTipTranslateSmall);
             if (isPercentViewShown()) {
-                this.mGtChargeAniView.setViewInitState();
                 this.mGtChargeAniView.setVisibility(0);
-                this.mGtChargeAniView.animationToShow();
+                if (this.mClickShowChargeUI) {
+                    this.mGtChargeAniView.setViewShowState();
+                } else {
+                    this.mGtChargeAniView.setViewInitState();
+                    this.mGtChargeAniView.animationToShow();
+                }
+                this.mSuperRapidIcon.setImageDrawable(this.mSuperRapidIconDrawable);
+                this.mSuperRapidIcon.setScaleY(1.0f);
+                this.mSuperRapidIcon.setScaleX(1.0f);
+                this.mSuperRapidIcon.setAlpha(1.0f);
+            }
+            this.mRapidIcon.setScaleY(0.0f);
+            this.mRapidIcon.setScaleX(0.0f);
+            this.mRapidIcon.setAlpha(0.0f);
+        } else if (i == 3) {
+            this.mPercentCountView.setScaleX(0.85f);
+            this.mPercentCountView.setScaleY(0.85f);
+            this.mPercentCountView.setTranslationY((float) this.mChargeNumberTranslateSmall);
+            this.mStateTip.setAlpha(0.0f);
+            this.mStateTip.setTranslationY((float) this.mChargeTipTranslateSmall);
+            if (isPercentViewShown()) {
+                this.mGtChargeAniView.setStrongViewInitState();
+                this.mGtChargeAniView.setVisibility(0);
+                if (this.mClickShowChargeUI) {
+                    this.mGtChargeAniView.setWiredStrongViewShowState();
+                } else {
+                    this.mGtChargeAniView.setStrongViewInitState();
+                    this.mGtChargeAniView.animationWiredStrongToShow();
+                }
+                this.mSuperRapidIcon.setImageDrawable(this.mStrongSuperRapidIconDrawable);
                 this.mSuperRapidIcon.setScaleY(1.0f);
                 this.mSuperRapidIcon.setScaleX(1.0f);
                 this.mSuperRapidIcon.setAlpha(1.0f);
@@ -574,7 +622,9 @@ public class RapidChargeView extends FrameLayout implements ValueAnimator.Animat
 
     public void startDismiss(String str) {
         disableTouch(true);
-        KeyguardUpdateMonitor.getInstance(this.mContext).setShowingChargeAnimationWindow(false);
+        if (str != "dismiss_for_timeout") {
+            KeyguardUpdateMonitor.getInstance(this.mContext).setShowingChargeAnimationWindow(false);
+        }
         if (!this.mStartingDismissWirelessAlphaAnim) {
             AnimatorSet animatorSet = this.mEnterAnimatorSet;
             if (animatorSet != null) {

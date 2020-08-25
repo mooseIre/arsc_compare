@@ -4,6 +4,10 @@ import android.content.Context;
 import com.android.systemui.plugins.R;
 
 public class MiuiGxzwAnimItemLight extends MiuiGxzwAnimItem {
+    public int getFodMotionRtpId() {
+        return 78;
+    }
+
     public boolean isDismissRecognizingWhenFalse() {
         return false;
     }

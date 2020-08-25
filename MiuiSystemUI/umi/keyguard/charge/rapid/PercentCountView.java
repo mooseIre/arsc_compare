@@ -167,7 +167,7 @@ public class PercentCountView extends LinearLayout {
         Point point = this.mScreenSize;
         float min = (((float) Math.min(point.x, point.y)) * 1.0f) / 1080.0f;
         this.mLargeTextSizePx = (int) (188.0f * min);
-        this.mSmallTextSizePx = (int) (73.0f * min);
+        this.mSmallTextSizePx = (int) (100.0f * min);
         this.mPercentTextSizePx = (int) (min * 64.0f);
     }
 }

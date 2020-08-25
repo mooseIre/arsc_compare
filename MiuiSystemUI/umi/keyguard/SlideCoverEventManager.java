@@ -59,7 +59,7 @@ public class SlideCoverEventManager {
                         SlideCoverEventManager.this.mContext.startActivityAsUser(intent, UserHandle.CURRENT);
                     } else if (SlideCoverEventManager.this.mSlideChoice == 3) {
                         SlideCoverEventManager slideCoverEventManager3 = SlideCoverEventManager.this;
-                        String unused3 = slideCoverEventManager3.mLaunchPkg = Settings.System.getStringForUser(slideCoverEventManager3.mContext.getContentResolver(), "miui_slider_launch_pkg", -2);
+                        String unused3 = slideCoverEventManager3.mLaunchPkg = Settings.System.getStringForUser(slideCoverEventManager3.mContext.getContentResolver(), "miui_slider_launch_pkg", KeyguardUpdateMonitor.getCurrentUser());
                         if (SlideCoverEventManager.this.mLaunchPkg != null && (launchIntentForPackage = SlideCoverEventManager.this.mContext.getPackageManager().getLaunchIntentForPackage(SlideCoverEventManager.this.mLaunchPkg)) != null) {
                             launchIntentForPackage.setFlags(276824064);
                             SlideCoverEventManager.this.mStatusBar.startActivity(launchIntentForPackage, true);
@@ -110,6 +110,6 @@ public class SlideCoverEventManager {
         }
         this.mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor("sc_event_status"), false, this.mSCStatusProviderObserver, -1);
         this.mSCStatusProviderObserver.onChange(true);
-        this.mSlideChoice = Settings.System.getIntForUser(this.mContext.getContentResolver(), "miui_slider_tool_choice", 1, -2);
+        this.mSlideChoice = Settings.System.getIntForUser(this.mContext.getContentResolver(), "miui_slider_tool_choice", 1, KeyguardUpdateMonitor.getCurrentUser());
     }
 }

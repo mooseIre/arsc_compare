@@ -2,6 +2,7 @@ package com.android.keyguard.fod;
 
 import android.content.Context;
 import android.database.ContentObserver;
+import android.os.Build;
 import android.os.Handler;
 import android.provider.Settings;
 import android.util.Log;
@@ -120,6 +121,10 @@ class MiuiGxzwAnimManager {
         MiuiGxzwAnimArgs.Builder unused2 = builder.setFrameInterval(backAnimRes.mFrameInterval);
         MiuiGxzwAnimArgs.Builder unused3 = builder.setAod(z);
         return builder.build();
+    }
+
+    public int getFodMotionRtpId() {
+        return this.mAnimItemMap.get(Integer.valueOf(this.mGxzwAnimType)).getFodMotionRtpId();
     }
 
     public int getFingerIconResource(boolean z) {
@@ -289,7 +294,10 @@ class MiuiGxzwAnimManager {
         if (MiuiGxzwUtils.isSpecialCepheus()) {
             return 3;
         }
-        return this.mSupportAurora ? 5 : 0;
+        if (this.mSupportAurora) {
+            return 5;
+        }
+        return Build.DEVICE.equals("cas") ? 1 : 0;
     }
 
     private void initAnimItemMap() {
@@ -300,6 +308,11 @@ class MiuiGxzwAnimManager {
             this.mAnimItemMap.put(0, new MiuiGxzwAnimItemStar());
             this.mAnimItemMap.put(1, new MiuiGxzwAnimItemLight());
             this.mAnimItemMap.put(3, new MiuiGxzwAnimItemPulse());
+        } else if (Build.DEVICE.equals("cas")) {
+            this.mAnimItemMap.put(1, new MiuiGxzwAnimItemLightCas());
+            this.mAnimItemMap.put(0, new MiuiGxzwAnimItemStarCas());
+            this.mAnimItemMap.put(5, new MiuiGxzwAinmItemAuroraCas());
+            this.mAnimItemMap.put(3, new MiuiGxzwAnimItemPulseCas());
         } else {
             this.mAnimItemMap.put(0, new MiuiGxzwAnimItemStar());
             this.mAnimItemMap.put(1, new MiuiGxzwAnimItemLight());

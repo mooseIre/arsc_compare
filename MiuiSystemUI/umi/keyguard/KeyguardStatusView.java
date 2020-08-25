@@ -1,6 +1,5 @@
 package com.android.keyguard;
 
-import android.app.ActivityManager;
 import android.app.AlarmManager;
 import android.content.Context;
 import android.content.res.Configuration;
@@ -157,7 +156,7 @@ public class KeyguardStatusView extends GridLayout {
         if (alarmClockInfo == null) {
             return "";
         }
-        return DateFormat.format(DateFormat.getBestDateTimePattern(Locale.getDefault(), DateFormat.is24HourFormat(context, ActivityManager.getCurrentUser()) ? "EHm" : "Ehma"), alarmClockInfo.getTriggerTime()).toString();
+        return DateFormat.format(DateFormat.getBestDateTimePattern(Locale.getDefault(), DateFormat.is24HourFormat(context, KeyguardUpdateMonitor.getCurrentUser()) ? "EHm" : "Ehma"), alarmClockInfo.getTriggerTime()).toString();
     }
 
     /* access modifiers changed from: private */

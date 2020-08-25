@@ -3,6 +3,10 @@ package com.android.keyguard.fod;
 import android.content.Context;
 
 public class MiuiGxzwAinmItemAurora extends MiuiGxzwAnimItem {
+    public int getFodMotionRtpId() {
+        return 81;
+    }
+
     public MiuiGxzwAnimRes generalNormalRecognizing() {
         return new MiuiGxzwAnimRes(41, "gxzw_aurora_recognizing_anim_", true, 17, false);
     }
