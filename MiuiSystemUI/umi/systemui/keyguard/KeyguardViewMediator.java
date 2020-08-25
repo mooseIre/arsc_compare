@@ -576,6 +576,12 @@ public class KeyguardViewMediator extends SystemUI {
                 KeyguardViewMediator.this.disableFullScreenGesture();
             }
         }
+
+        public void onSimLockedStateChanged(boolean z) {
+            if (z) {
+                KeyguardViewMediator.this.doKeyguardLocked((Bundle) null);
+            }
+        }
     };
     /* access modifiers changed from: private */
     public KeyguardUpdateMonitor mUpdateMonitor;

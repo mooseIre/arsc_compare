@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.app.ActivityManagerNative;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.MiuiStatusBarManager;
 import android.content.BroadcastReceiver;
@@ -301,6 +302,14 @@ public class NotificationPanelView extends PanelView implements ExpandableView.O
         public void onKeyguardBouncerChanged(boolean z) {
             NotificationPanelView.this.onBouncerShowingChanged(z);
         }
+
+        public void onSimLockedStateChanged(boolean z) {
+            if (z) {
+                NotificationPanelView.this.showSimLockedTipsDialog();
+            } else {
+                NotificationPanelView.this.hideSimLockedTipsDialog();
+            }
+        }
     };
     private KeyguardUserSwitcher mKeyguardUserSwitcher;
     private MiuiKeyguardWallpaperController mKeyguardWallpaperController;
@@ -369,6 +378,7 @@ public class NotificationPanelView extends PanelView implements ExpandableView.O
     private int mScreenWidth;
     private boolean mShowEmptyShadeView;
     private boolean mShowIconsWhenExpanded;
+    private AlertDialog mSimLockedTipsDialog;
     /* access modifiers changed from: private */
     public boolean mStackScrollerOverscrolling;
     private final ValueAnimator.AnimatorUpdateListener mStatusBarAnimateAlphaListener = new ValueAnimator.AnimatorUpdateListener() {
@@ -447,6 +457,30 @@ public class NotificationPanelView extends PanelView implements ExpandableView.O
         }, intentFilter);
         initScreenSize();
         loadDimens(getResources());
+    }
+
+    /* access modifiers changed from: private */
+    public void hideSimLockedTipsDialog() {
+        AlertDialog alertDialog = this.mSimLockedTipsDialog;
+        if (alertDialog != null) {
+            alertDialog.dismiss();
+            this.mSimLockedTipsDialog = null;
+        }
+    }
+
+    /* access modifiers changed from: private */
+    public void showSimLockedTipsDialog() {
+        if (this.mSimLockedTipsDialog == null) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setTitle(getContext().getString(R.string.sim_state_locked_dialog_title));
+            builder.setMessage(getContext().getString(R.string.sim_state_locked_puk_dialog_message));
+            builder.setCancelable(false);
+            AlertDialog create = builder.create();
+            this.mSimLockedTipsDialog = create;
+            create.setCanceledOnTouchOutside(false);
+            this.mSimLockedTipsDialog.getWindow().setType(2026);
+            this.mSimLockedTipsDialog.show();
+        }
     }
 
     public void onKeyguardWallpaperUpdated(MiuiKeyguardWallpaperController.KeyguardWallpaperType keyguardWallpaperType, boolean z, File file, Drawable drawable) {

@@ -138,7 +138,7 @@ public class CollapsedStatusBarFragmentControllerDripImpl implements CollapsedSt
         this.mOrderedRightIconManager = new StatusBarIconController.OrderedIconManager(this.mFragment.mStatusIcons, new ArrayList(Arrays.asList(new String[]{"managed_profile", MiStat.Param.LOCATION, "bluetooth"})));
         ((StatusBarIconController) Dependency.get(cls)).addIconGroup(this.mOrderedRightIconManager);
         ((ConfigurationController) Dependency.get(ConfigurationController.class)).addCallback(this.mConfigurationListener);
-        this.mNetworkController.addCallback((NetworkController.SignalCallback) this);
+        this.mNetworkController.addCallback(this);
         ((DarkIconDispatcher) Dependency.get(cls2)).addDarkReceiver((ImageView) this.mSlaveWifi);
         ((RegionController) Dependency.get(RegionController.class)).addCallback(this);
     }
@@ -182,7 +182,7 @@ public class CollapsedStatusBarFragmentControllerDripImpl implements CollapsedSt
         }
         NetworkController networkController = this.mNetworkController;
         if (networkController != null) {
-            networkController.removeCallback((NetworkController.SignalCallback) this);
+            networkController.removeCallback(this);
         }
         ((RegionController) Dependency.get(RegionController.class)).removeCallback(this);
     }

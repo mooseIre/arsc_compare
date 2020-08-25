@@ -18,7 +18,7 @@ public class DataBillInfo extends BaseInfo implements NetworkController.SignalCa
         this.mInfo.initialized = true;
         NetworkController networkController = (NetworkController) Dependency.get(NetworkController.class);
         this.mNetworkController = networkController;
-        networkController.addCallback((NetworkController.SignalCallback) this);
+        networkController.addCallback(this);
         requestData(this.mUserHandle);
     }
 

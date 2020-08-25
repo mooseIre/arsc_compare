@@ -369,7 +369,7 @@ public class KeyguardIndicationController {
 
     /* access modifiers changed from: private */
     public void updateChargingInfoIndication() {
-        if (this.mChargeAsyncTask == null) {
+        if (this.mChargeAsyncTask == null && this.mPowerPluggedIn) {
             this.mChargeAsyncTask = new AsyncTask<Void, Void, String>() {
                 /* access modifiers changed from: protected */
                 public String doInBackground(Void... voidArr) {
@@ -541,6 +541,7 @@ public class KeyguardIndicationController {
                     KeyguardIndicationController.this.clearUpArrowAnimation();
                 }
                 if (!KeyguardIndicationController.this.mPowerPluggedIn && access$000) {
+                    KeyguardIndicationController.this.mTextView.clearAnimation();
                     KeyguardIndicationController keyguardIndicationController2 = KeyguardIndicationController.this;
                     String unused5 = keyguardIndicationController2.mUpArrowIndication = keyguardIndicationController2.mResources.getString(R.string.default_lockscreen_unlock_hint_text);
                 }
@@ -827,10 +828,10 @@ public class KeyguardIndicationController {
     public void handleChargeTextAnimation(boolean z) {
         this.mShowChargeAnimation = z;
         this.mHandler.removeMessages(5);
-        Log.i("KeyguardIndication", "handleChargeTextAnimation: " + z);
-        if (!this.mShowChargeAnimation) {
+        Log.i("KeyguardIndication", "handleChargeTextAnimation: " + z + ";mPowerPluggedIn=" + this.mPowerPluggedIn);
+        this.mTextView.setVisibility(0);
+        if (!this.mShowChargeAnimation && this.mPowerPluggedIn) {
             this.mChargeUIEntering = true;
-            this.mTextView.setVisibility(0);
             Animation loadAnimation = AnimationUtils.loadAnimation(this.mContext, 17432576);
             TranslateAnimation translateAnimation = new TranslateAnimation(1, 0.0f, 1, 0.0f, 1, 2.0f, 1, 0.0f);
             AnimationSet animationSet = new AnimationSet(true);
@@ -850,14 +851,16 @@ public class KeyguardIndicationController {
                 public void onAnimationEnd(Animation animation) {
                     Log.i("KeyguardIndication", "handleChargeTextAnimation: onAnimationEnd");
                     boolean unused = KeyguardIndicationController.this.mChargeUIEntering = false;
-                    KeyguardIndicationController.this.updateChargingInfoIndication();
+                    if (KeyguardIndicationController.this.mPowerPluggedIn) {
+                        KeyguardIndicationController.this.updateChargingInfoIndication();
+                    } else {
+                        KeyguardIndicationController.this.updateIndication();
+                    }
                     KeyguardIndicationController.this.mTextView.setVisibility(0);
                 }
             });
             this.mTextView.startAnimation(animationSet);
-            return;
         }
-        this.mTextView.setVisibility(4);
     }
 
     public void setChargeController(MiuiChargeController miuiChargeController) {

@@ -17,7 +17,7 @@ public class DataUsageInfo extends BaseInfo implements NetworkController.SignalC
         super(context, i, expandInfoController);
         NetworkController networkController = (NetworkController) Dependency.get(NetworkController.class);
         this.mNetworkController = networkController;
-        networkController.addCallback((NetworkController.SignalCallback) this);
+        networkController.addCallback(this);
         requestData(this.mUserHandle);
     }
 

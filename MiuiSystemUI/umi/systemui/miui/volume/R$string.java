@@ -14,6 +14,6 @@ public final class R$string {
     public static final int miui_toast_zen_to_dnd = 2131821751;
     public static final int miui_toast_zen_to_standard = 2131821752;
     public static final int miui_toast_zen_to_standard_when_shield_media = 2131821753;
-    public static final int volume_dialog_accessibility_dismissed_message = 2131822585;
-    public static final int volume_dialog_accessibility_shown_message = 2131822586;
+    public static final int volume_dialog_accessibility_dismissed_message = 2131822587;
+    public static final int volume_dialog_accessibility_shown_message = 2131822588;
 }

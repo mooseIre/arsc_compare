@@ -71,9 +71,9 @@ public class CellularTile extends QSTileImpl<QSTile.BooleanState> {
 
     public void handleSetListening(boolean z) {
         if (z) {
-            this.mController.addCallback((NetworkController.SignalCallback) this.mSignalCallback);
+            this.mController.addCallback(this.mSignalCallback);
         } else {
-            this.mController.removeCallback((NetworkController.SignalCallback) this.mSignalCallback);
+            this.mController.removeCallback(this.mSignalCallback);
         }
     }
 
@@ -279,8 +279,8 @@ public class CellularTile extends QSTileImpl<QSTile.BooleanState> {
             java.lang.String r0 = r0.getString(r1)
         L_0x0118:
             boolean r8 = r8.noSim
-            r1 = 2131822419(0x7f110753, float:1.9277609E38)
-            r2 = 2131822418(0x7f110752, float:1.9277607E38)
+            r1 = 2131822421(0x7f110755, float:1.9277613E38)
+            r2 = 2131822420(0x7f110754, float:1.927761E38)
             java.lang.String r3 = ","
             if (r8 == 0) goto L_0x0147
             java.lang.StringBuilder r8 = new java.lang.StringBuilder
