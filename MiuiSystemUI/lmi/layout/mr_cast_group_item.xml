@@ -5,5 +5,5 @@
         <ImageView android:id="@id/mr_cast_group_icon" android:layout_width="fill_parent" android:layout_height="fill_parent" android:scaleType="fitCenter" />
         <ProgressBar android:id="@id/mr_cast_group_progress_bar" android:visibility="invisible" android:layout_width="fill_parent" android:layout_height="fill_parent" android:indeterminate="true" style="?android:progressBarStyle" />
     </FrameLayout>
-    <TextView android:textAppearance="?mediaRouteBodyTextAppearance" android:id="@id/mr_cast_group_name" android:layout_width="0.0dip" android:layout_height="wrap_content" android:layout_weight="1.0" android:textAlignment="viewStart" />
+    <TextView android:textAppearance="?mediaRouteBodyTextAppearance" android:gravity="start" android:id="@id/mr_cast_group_name" android:layout_width="0.0dip" android:layout_height="wrap_content" android:layout_weight="1.0" android:textAlignment="viewStart" />
 </LinearLayout>
