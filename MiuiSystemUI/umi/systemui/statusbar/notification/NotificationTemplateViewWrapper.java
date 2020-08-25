@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -44,21 +45,25 @@ public class NotificationTemplateViewWrapper extends NotificationHeaderViewWrapp
     /* access modifiers changed from: private */
     public int mMinContractedHeight;
     /* access modifiers changed from: private */
-    public Button mMiuiAction;
+    public View mMiniBar;
+    private int mMiniBarHeight;
+    /* access modifiers changed from: private */
+    public TextView mMiuiAction;
     protected ImageView mPicture;
     /* access modifiers changed from: private */
     public ProgressBar mProgressBar;
-    /* access modifiers changed from: private */
-    public int mProgressBarMarginRight;
     /* access modifiers changed from: private */
     public int mProgressBarMarginTop;
     protected LinearLayout mRightIconContainer;
     /* access modifiers changed from: private */
     public int mRightIconCornerRadius;
     /* access modifiers changed from: private */
+    public int mRightIconMarginStart;
+    /* access modifiers changed from: private */
     public int mRightIconMarginTop;
     /* access modifiers changed from: private */
     public int mRightIconSize;
+    private boolean mShowMiniBar;
     private boolean mShowNightMode;
     /* access modifiers changed from: private */
     public boolean mShowingPublic;
@@ -118,13 +123,14 @@ public class NotificationTemplateViewWrapper extends NotificationHeaderViewWrapp
 
     private void initResources() {
         this.mExpandButtonSize = this.mContext.getResources().getDimensionPixelSize(R.dimen.notification_expand_button_size);
-        this.mRightIconSize = this.mContext.getResources().getDimensionPixelSize(17105416);
+        this.mRightIconSize = this.mContext.getResources().getDimensionPixelSize(17105396);
         this.mProgressBarMarginTop = this.mContext.getResources().getDimensionPixelSize(R.dimen.notification_progress_bar_margin_top);
-        this.mProgressBarMarginRight = this.mContext.getResources().getDimensionPixelSize(R.dimen.notification_progress_bar_margin_right);
+        this.mRightIconMarginStart = this.mContext.getResources().getDimensionPixelSize(R.dimen.notification_right_icon_margin_start);
         this.mRightIconMarginTop = this.mContext.getResources().getDimensionPixelSize(R.dimen.notification_right_icon_margin_top);
         this.mRightIconCornerRadius = this.mContext.getResources().getDimensionPixelSize(R.dimen.notification_right_icon_corner_radius);
         this.mExpandButtonMarginBottom = this.mContext.getResources().getDimensionPixelSize(R.dimen.notification_expand_button_margin_bottom);
         this.mMinContractedHeight = this.mContext.getResources().getDimensionPixelSize(R.dimen.min_notification_layout_height);
+        this.mMiniBarHeight = this.mContext.getResources().getDimensionPixelSize(R.dimen.mini_window_bar_height);
         this.mActionsButtonColor = this.mContext.getColor(R.color.notification_actions_button_color);
         this.mShowNightMode = (this.mContext.getResources().getConfiguration().uiMode & 48) == 32;
         this.mStyleProcessor = showMiuiStyle() ? new MiuiStyleProcessor() : new GoogleStyleProcessor();
@@ -137,30 +143,30 @@ public class NotificationTemplateViewWrapper extends NotificationHeaderViewWrapp
         /*
             r2 = this;
             android.view.View r0 = r2.mView
-            r1 = 16909243(0x10203bb, float:2.3879905E-38)
+            r1 = 16909235(0x10203b3, float:2.3879883E-38)
             android.view.View r0 = r0.findViewById(r1)
             r2.mBigMainContainer = r0
             android.view.View r0 = r2.mView
-            r1 = 16909248(0x10203c0, float:2.387992E-38)
+            r1 = 16909239(0x10203b7, float:2.3879894E-38)
             android.view.View r0 = r0.findViewById(r1)
             r2.mMainColumnContainer = r0
             android.view.View r0 = r2.mView
-            r1 = 16909138(0x1020352, float:2.387961E-38)
+            r1 = 16909132(0x102034c, float:2.3879594E-38)
             android.view.View r0 = r0.findViewById(r1)
             android.widget.LinearLayout r0 = (android.widget.LinearLayout) r0
             r2.mLine1Container = r0
             android.view.View r0 = r2.mView
-            r1 = 16909405(0x102045d, float:2.388036E-38)
+            r1 = 16909390(0x102044e, float:2.3880317E-38)
             android.view.View r0 = r0.findViewById(r1)
             android.widget.LinearLayout r0 = (android.widget.LinearLayout) r0
             r2.mRightIconContainer = r0
             android.view.View r0 = r2.mView
-            r1 = 16909404(0x102045c, float:2.3880357E-38)
+            r1 = 16909389(0x102044d, float:2.3880315E-38)
             android.view.View r0 = r0.findViewById(r1)
             android.widget.ImageView r0 = (android.widget.ImageView) r0
             r2.mPicture = r0
             if (r0 == 0) goto L_0x0051
-            r1 = 2131362266(0x7f0a01da, float:1.8344308E38)
+            r1 = 2131362270(0x7f0a01de, float:1.8344316E38)
             com.android.systemui.miui.statusbar.ExpandedNotification r3 = r3.getStatusBarNotification()
             android.app.Notification r3 = r3.getNotification()
             android.graphics.drawable.Icon r3 = r3.getLargeIcon()
@@ -172,12 +178,12 @@ public class NotificationTemplateViewWrapper extends NotificationHeaderViewWrapp
             android.widget.TextView r3 = (android.widget.TextView) r3
             r2.mTitle = r3
             android.view.View r3 = r2.mView
-            r0 = 16909568(0x1020500, float:2.3880816E-38)
+            r0 = 16909553(0x10204f1, float:2.3880774E-38)
             android.view.View r3 = r3.findViewById(r0)
             android.widget.TextView r3 = (android.widget.TextView) r3
             r2.mTextLine1 = r3
             android.view.View r3 = r2.mView
-            r0 = 16909540(0x10204e4, float:2.3880738E-38)
+            r0 = 16909525(0x10204d5, float:2.3880696E-38)
             android.view.View r3 = r3.findViewById(r0)
             android.widget.TextView r3 = (android.widget.TextView) r3
             r2.mText = r3
@@ -201,10 +207,10 @@ public class NotificationTemplateViewWrapper extends NotificationHeaderViewWrapp
             boolean r3 = r2.isNormalNotification()
             if (r3 == 0) goto L_0x00ac
             android.view.View r3 = r2.mView
-            r0 = 16908698(0x102019a, float:2.3878378E-38)
+            r0 = 16909189(0x1020385, float:2.3879754E-38)
             android.view.View r3 = r3.findViewById(r0)
             r1 = r3
-            android.widget.Button r1 = (android.widget.Button) r1
+            android.widget.TextView r1 = (android.widget.TextView) r1
         L_0x00ac:
             r2.mMiuiAction = r1
             return
@@ -212,7 +218,7 @@ public class NotificationTemplateViewWrapper extends NotificationHeaderViewWrapp
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.notification.NotificationTemplateViewWrapper.resolveTemplateViews(com.android.systemui.statusbar.ExpandableNotificationRow):void");
     }
 
-    /* access modifiers changed from: private */
+    /* access modifiers changed from: protected */
     public void handleTemplateViews() {
         if (NotificationViewWrapper.DEBUG) {
             Log.d("NViewWrapper", String.format("handleTemplateViews type=%s pb=%b act=%b icon=%b time=%b acts=%b ex=%b pb=%b", new Object[]{this.mShowingType, Boolean.valueOf(showProgressBar()), Boolean.valueOf(showMiuiAction()), Boolean.valueOf(showRightIcon()), Boolean.valueOf(showTimeChronometer()), Boolean.valueOf(showActions()), Boolean.valueOf(showExpandButton()), Boolean.valueOf(this.mShowingPublic)}));
@@ -228,6 +234,7 @@ public class NotificationTemplateViewWrapper extends NotificationHeaderViewWrapp
         this.mStyleProcessor.handleExpandButton();
         this.mStyleProcessor.handleWorkProfileImage();
         this.mStyleProcessor.handleActions();
+        this.mStyleProcessor.handleMiniBar();
     }
 
     private void clearColorSpans() {
@@ -288,7 +295,7 @@ public class NotificationTemplateViewWrapper extends NotificationHeaderViewWrapp
 
     /* access modifiers changed from: protected */
     public boolean showRightIcon() {
-        if (showMiuiAction() || this.mRow.isSummaryWithChildren() || this.mRow.isChildInGroup()) {
+        if (showMiuiAction()) {
             return false;
         }
         Notification notification = this.mRow.getEntry().notification.getNotification();
@@ -320,20 +327,10 @@ public class NotificationTemplateViewWrapper extends NotificationHeaderViewWrapp
 
     /* access modifiers changed from: protected */
     public boolean showExpandButton() {
-        if (this.mShowingPublic || showProgressBar() || showSingleLine() || showMiuiAction()) {
-            return false;
+        if (!this.mShowingPublic && !showProgressBar() && !showSingleLine() && !showMiuiAction() && !showRightIcon()) {
+            return super.showExpandButton();
         }
-        if (showRightIcon()) {
-            TextView textView = this.mText;
-            int lineCount = textView != null ? textView.getLineCount() : 0;
-            if (NotificationViewWrapper.DEBUG) {
-                Log.d("NViewWrapper", "showExpandButton textLineCount=" + lineCount);
-            }
-            if (lineCount < 2 || showTimeChronometer()) {
-                return false;
-            }
-        }
-        return super.showExpandButton();
+        return false;
     }
 
     /* access modifiers changed from: protected */
@@ -365,6 +362,11 @@ public class NotificationTemplateViewWrapper extends NotificationHeaderViewWrapp
     }
 
     /* access modifiers changed from: protected */
+    public boolean showMiniBar() {
+        return this.mShowMiniBar;
+    }
+
+    /* access modifiers changed from: protected */
     public boolean showSingleLine() {
         if (!showProgressBar() && !showActions()) {
             return NotificationUtil.showSingleLine(this.mRow.getEntry().notification.getNotification());
@@ -374,7 +376,7 @@ public class NotificationTemplateViewWrapper extends NotificationHeaderViewWrapp
 
     /* access modifiers changed from: protected */
     public boolean isNormalNotification() {
-        return this.mView.getId() == 16909516 && "base".equals(this.mView.getTag());
+        return this.mView.getId() == 16909501 && "base".equals(this.mView.getTag());
     }
 
     /* access modifiers changed from: protected */
@@ -398,6 +400,21 @@ public class NotificationTemplateViewWrapper extends NotificationHeaderViewWrapp
     /* access modifiers changed from: protected */
     public boolean isTemplateViewAdded(ViewGroup viewGroup, View view) {
         return viewGroup.indexOfChild(view) > 0;
+    }
+
+    public void setMiniBarVisible(boolean z) {
+        boolean z2 = this.mShowMiniBar != z;
+        this.mShowMiniBar = z;
+        if (z2) {
+            this.mStyleProcessor.handleMiniBar();
+        }
+    }
+
+    public int getMiniBarHeight() {
+        if (showMiniBar()) {
+            return this.mMiniBarHeight;
+        }
+        return 0;
     }
 
     public void setIsChildInGroup(boolean z) {
@@ -486,6 +503,7 @@ public class NotificationTemplateViewWrapper extends NotificationHeaderViewWrapp
         /* access modifiers changed from: package-private */
         public void handleMiuiAction() {
             if (NotificationTemplateViewWrapper.this.showMiuiAction()) {
+                NotificationTemplateViewWrapper.this.mMiuiAction.setBackground(NotificationTemplateViewWrapper.this.mContext.getDrawable(R.drawable.notification_action_bg));
                 NotificationTemplateViewWrapper.this.mMiuiAction.setText(NotificationTemplateViewWrapper.this.mRow.getEntry().notification.getMiuiActionTitle());
                 NotificationTemplateViewWrapper.this.mMiuiAction.setVisibility(0);
                 ViewAnimUtils.mouse(NotificationTemplateViewWrapper.this.mMiuiAction);
@@ -496,7 +514,7 @@ public class NotificationTemplateViewWrapper extends NotificationHeaderViewWrapp
 
         /* access modifiers changed from: package-private */
         public void handleRightIcon() {
-            View findViewById = NotificationTemplateViewWrapper.this.mView.findViewById(16909383);
+            View findViewById = NotificationTemplateViewWrapper.this.mView.findViewById(16909369);
             if (findViewById != null) {
                 findViewById.setVisibility(8);
             }
@@ -513,8 +531,9 @@ public class NotificationTemplateViewWrapper extends NotificationHeaderViewWrapp
             if (NotificationTemplateViewWrapper.this.showProgressBar()) {
                 ViewGroup.MarginLayoutParams marginLayoutParams = (ViewGroup.MarginLayoutParams) NotificationTemplateViewWrapper.this.mProgressBar.getLayoutParams();
                 marginLayoutParams.topMargin = NotificationTemplateViewWrapper.this.mProgressBarMarginTop;
-                marginLayoutParams.rightMargin = NotificationTemplateViewWrapper.this.showRightIcon() ? NotificationTemplateViewWrapper.this.mRightIconSize + NotificationTemplateViewWrapper.this.mProgressBarMarginRight : 0;
+                marginLayoutParams.setMarginEnd(NotificationTemplateViewWrapper.this.showRightIcon() ? NotificationTemplateViewWrapper.this.mRightIconSize + NotificationTemplateViewWrapper.this.mRightIconMarginStart : 0);
                 NotificationTemplateViewWrapper.this.mProgressBar.setLayoutParams(marginLayoutParams);
+                NotificationTemplateViewWrapper.this.mProgressBar.setScreenReaderFocusable(true);
             }
         }
 
@@ -531,6 +550,29 @@ public class NotificationTemplateViewWrapper extends NotificationHeaderViewWrapp
                     layoutParams.height = -2;
                     NotificationTemplateViewWrapper.this.mActions.setLayoutParams(layoutParams);
                 }
+            }
+        }
+
+        /* access modifiers changed from: package-private */
+        public void handleMiniBar() {
+            if (NotificationTemplateViewWrapper.this.showMiniBar()) {
+                NotificationTemplateViewWrapper notificationTemplateViewWrapper = NotificationTemplateViewWrapper.this;
+                if (!notificationTemplateViewWrapper.isTemplateViewAdded(notificationTemplateViewWrapper.mMiniBar)) {
+                    NotificationTemplateViewWrapper notificationTemplateViewWrapper2 = NotificationTemplateViewWrapper.this;
+                    View unused = notificationTemplateViewWrapper2.mMiniBar = LayoutInflater.from(notificationTemplateViewWrapper2.mContext).inflate(R.layout.heads_up_mini_window_bar, (ViewGroup) null);
+                    NotificationTemplateViewWrapper notificationTemplateViewWrapper3 = NotificationTemplateViewWrapper.this;
+                    ((ViewGroup) notificationTemplateViewWrapper3.mView).addView(notificationTemplateViewWrapper3.mMiniBar);
+                }
+            }
+            if (NotificationTemplateViewWrapper.this.mMiniBar != null) {
+                FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) NotificationTemplateViewWrapper.this.mMiniBar.getLayoutParams();
+                layoutParams.width = NotificationTemplateViewWrapper.this.mContext.getResources().getDimensionPixelSize(R.dimen.mini_window_bar_width);
+                layoutParams.height = NotificationTemplateViewWrapper.this.mContext.getResources().getDimensionPixelSize(R.dimen.mini_window_bar_height);
+                layoutParams.bottomMargin = NotificationTemplateViewWrapper.this.mContext.getResources().getDimensionPixelSize(R.dimen.mini_window_bar_marginBottom);
+                layoutParams.gravity = 81;
+                NotificationTemplateViewWrapper.this.mMiniBar.setLayoutParams(layoutParams);
+                NotificationTemplateViewWrapper.this.mMiniBar.setAlpha(0.0f);
+                NotificationTemplateViewWrapper.this.mMiniBar.setVisibility(NotificationTemplateViewWrapper.this.showMiniBar() ? 0 : 8);
             }
         }
     }
@@ -559,20 +601,22 @@ public class NotificationTemplateViewWrapper extends NotificationHeaderViewWrapp
             int i = notificationTemplateViewWrapper3.mMiuiAppIconSize;
             layoutParams.width = i;
             layoutParams.height = i;
-            layoutParams.leftMargin = notificationTemplateViewWrapper3.mMiuiAppIconMargin;
+            layoutParams.setMarginStart(notificationTemplateViewWrapper3.mMiuiAppIconMargin);
+            layoutParams.setMarginEnd(NotificationTemplateViewWrapper.this.mMiuiAppIconMargin);
             int i2 = 0;
-            layoutParams.topMargin = notificationTemplateViewWrapper3.showSingleLine() ? 0 : NotificationTemplateViewWrapper.this.mMiuiAppIconMargin;
-            layoutParams.gravity = NotificationTemplateViewWrapper.this.showSingleLine() ? 16 : 48;
+            layoutParams.topMargin = NotificationTemplateViewWrapper.this.showSingleLine() ? 0 : NotificationTemplateViewWrapper.this.mMiuiAppIconMargin;
+            layoutParams.gravity = NotificationTemplateViewWrapper.this.showSingleLine() ? 8388627 : 8388659;
             NotificationTemplateViewWrapper.this.mIcon.setLayoutParams(layoutParams);
             ExpandedNotification expandedNotification = NotificationTemplateViewWrapper.this.mRow.getEntry().notification;
             NotificationTemplateViewWrapper notificationTemplateViewWrapper4 = NotificationTemplateViewWrapper.this;
-            NotificationUtil.applyAppIcon(notificationTemplateViewWrapper4.mContext, expandedNotification, notificationTemplateViewWrapper4.mIcon);
+            NotificationUtil.applyAppIconAllowCustom(notificationTemplateViewWrapper4.mContext, expandedNotification, notificationTemplateViewWrapper4.mIcon);
             NotificationTemplateViewWrapper notificationTemplateViewWrapper5 = NotificationTemplateViewWrapper.this;
             ImageView imageView = notificationTemplateViewWrapper5.mIcon;
             if (!notificationTemplateViewWrapper5.showAppIcon()) {
                 i2 = 8;
             }
             imageView.setVisibility(i2);
+            NotificationTemplateViewWrapper.this.mIcon.setContentDescription(expandedNotification.getAppName());
         }
 
         /* access modifiers changed from: package-private */
@@ -609,25 +653,24 @@ public class NotificationTemplateViewWrapper extends NotificationHeaderViewWrapp
                     NotificationTemplateViewWrapper.this.mMainColumnContainer.setVisibility(8);
                 }
                 FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) NotificationTemplateViewWrapper.this.mLine1Container.getLayoutParams();
-                NotificationTemplateViewWrapper notificationTemplateViewWrapper4 = NotificationTemplateViewWrapper.this;
-                layoutParams.leftMargin = notificationTemplateViewWrapper4.mMiuiContentMarginStart;
-                layoutParams.rightMargin = notificationTemplateViewWrapper4.showRightIcon() ? NotificationTemplateViewWrapper.this.mRightIconSize : NotificationTemplateViewWrapper.this.mMiuiContentMarginEnd;
-                layoutParams.gravity = 16;
+                layoutParams.setMarginStart(NotificationTemplateViewWrapper.this.mMiuiContentMarginStart);
+                layoutParams.setMarginEnd(NotificationTemplateViewWrapper.this.showRightIcon() ? NotificationTemplateViewWrapper.this.mRightIconSize + NotificationTemplateViewWrapper.this.mRightIconMarginStart : NotificationTemplateViewWrapper.this.mMiuiContentMarginEnd);
+                layoutParams.gravity = 8388627;
                 NotificationTemplateViewWrapper.this.mLine1Container.setLayoutParams(layoutParams);
-                NotificationTemplateViewWrapper notificationTemplateViewWrapper5 = NotificationTemplateViewWrapper.this;
-                notificationTemplateViewWrapper5.mView.setMinimumHeight(notificationTemplateViewWrapper5.mMinContractedHeight);
+                NotificationTemplateViewWrapper notificationTemplateViewWrapper4 = NotificationTemplateViewWrapper.this;
+                notificationTemplateViewWrapper4.mView.setMinimumHeight(notificationTemplateViewWrapper4.mMinContractedHeight);
                 return;
             }
-            NotificationTemplateViewWrapper notificationTemplateViewWrapper6 = NotificationTemplateViewWrapper.this;
-            if (notificationTemplateViewWrapper6.isTemplateViewAdded(notificationTemplateViewWrapper6.mLine1Container)) {
+            NotificationTemplateViewWrapper notificationTemplateViewWrapper5 = NotificationTemplateViewWrapper.this;
+            if (notificationTemplateViewWrapper5.isTemplateViewAdded(notificationTemplateViewWrapper5.mLine1Container)) {
+                NotificationTemplateViewWrapper notificationTemplateViewWrapper6 = NotificationTemplateViewWrapper.this;
+                ((ViewGroup) notificationTemplateViewWrapper6.mView).removeView(notificationTemplateViewWrapper6.mLine1Container);
                 NotificationTemplateViewWrapper notificationTemplateViewWrapper7 = NotificationTemplateViewWrapper.this;
-                ((ViewGroup) notificationTemplateViewWrapper7.mView).removeView(notificationTemplateViewWrapper7.mLine1Container);
-                NotificationTemplateViewWrapper notificationTemplateViewWrapper8 = NotificationTemplateViewWrapper.this;
-                ((ViewGroup) notificationTemplateViewWrapper8.mMainColumnContainer).addView(notificationTemplateViewWrapper8.mLine1Container, 0);
+                ((ViewGroup) notificationTemplateViewWrapper7.mMainColumnContainer).addView(notificationTemplateViewWrapper7.mLine1Container, 0);
                 NotificationTemplateViewWrapper.this.mMainColumnContainer.setVisibility(0);
             }
             ViewGroup.MarginLayoutParams marginLayoutParams = (ViewGroup.MarginLayoutParams) NotificationTemplateViewWrapper.this.mLine1Container.getLayoutParams();
-            marginLayoutParams.rightMargin = (!NotificationTemplateViewWrapper.this.showRightIcon() || NotificationTemplateViewWrapper.this.showTimeChronometer()) ? 0 : NotificationTemplateViewWrapper.this.mRightIconSize + (NotificationTemplateViewWrapper.this.showProgressBar() ? NotificationTemplateViewWrapper.this.mProgressBarMarginRight : 0);
+            marginLayoutParams.setMarginEnd((!NotificationTemplateViewWrapper.this.showRightIcon() || NotificationTemplateViewWrapper.this.showTimeChronometer()) ? 0 : NotificationTemplateViewWrapper.this.mRightIconSize + NotificationTemplateViewWrapper.this.mRightIconMarginStart);
             NotificationTemplateViewWrapper.this.mLine1Container.setLayoutParams(marginLayoutParams);
             NotificationTemplateViewWrapper.this.mView.setMinimumHeight(0);
         }
@@ -640,13 +683,18 @@ public class NotificationTemplateViewWrapper extends NotificationHeaderViewWrapp
                 NotificationTemplateViewWrapper.this.mText.setText("");
                 NotificationTemplateViewWrapper.this.mText.setVisibility(8);
             }
+            Notification notification2 = NotificationTemplateViewWrapper.this.mRow.getStatusBarNotification().getNotification();
+            if (NotificationUtil.isInboxStyle(notification2) || NotificationUtil.isMessagingStyle(notification2)) {
+                NotificationTemplateViewWrapper.this.mText.setMaxLines(1);
+                NotificationTemplateViewWrapper.this.mText.setSingleLine(true);
+            }
             ViewGroup.MarginLayoutParams marginLayoutParams = (ViewGroup.MarginLayoutParams) NotificationTemplateViewWrapper.this.mText.getLayoutParams();
             if (NotificationTemplateViewWrapper.this.showRightIcon()) {
-                marginLayoutParams.rightMargin = NotificationTemplateViewWrapper.this.mRightIconSize;
+                marginLayoutParams.setMarginEnd(NotificationTemplateViewWrapper.this.mRightIconSize + NotificationTemplateViewWrapper.this.mRightIconMarginStart);
             } else if (NotificationTemplateViewWrapper.this.showExpandButton()) {
-                marginLayoutParams.rightMargin = NotificationTemplateViewWrapper.this.mExpandButtonSize;
+                marginLayoutParams.setMarginEnd(NotificationTemplateViewWrapper.this.mExpandButtonSize);
             } else {
-                marginLayoutParams.rightMargin = 0;
+                marginLayoutParams.setMarginEnd(0);
             }
             NotificationTemplateViewWrapper.this.mText.setLayoutParams(marginLayoutParams);
             int lineCount = NotificationTemplateViewWrapper.this.mText.getLineCount();
@@ -711,7 +759,7 @@ public class NotificationTemplateViewWrapper extends NotificationHeaderViewWrapp
             layoutParams.width = -2;
             layoutParams.height = -2;
             layoutParams.gravity = 16;
-            layoutParams.leftMargin = NotificationTemplateViewWrapper.this.mContext.getResources().getDimensionPixelSize(R.dimen.notification_header_content_margin);
+            layoutParams.setMarginStart(NotificationTemplateViewWrapper.this.mContext.getResources().getDimensionPixelSize(R.dimen.notification_header_content_margin));
             view.setLayoutParams(layoutParams);
         }
 
@@ -725,13 +773,12 @@ public class NotificationTemplateViewWrapper extends NotificationHeaderViewWrapp
             FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) NotificationTemplateViewWrapper.this.mExpandButton.getLayoutParams();
             layoutParams.width = NotificationTemplateViewWrapper.this.mExpandButtonSize;
             layoutParams.height = NotificationTemplateViewWrapper.this.mExpandButtonSize;
-            layoutParams.gravity = 85;
-            NotificationTemplateViewWrapper notificationTemplateViewWrapper3 = NotificationTemplateViewWrapper.this;
-            layoutParams.rightMargin = notificationTemplateViewWrapper3.mMiuiContentMarginEnd;
-            layoutParams.bottomMargin = notificationTemplateViewWrapper3.mExpandButtonMarginBottom;
+            layoutParams.gravity = 8388693;
+            layoutParams.setMarginEnd(NotificationTemplateViewWrapper.this.mMiuiContentMarginEnd);
+            layoutParams.bottomMargin = NotificationTemplateViewWrapper.this.mExpandButtonMarginBottom;
             NotificationTemplateViewWrapper.this.mExpandButton.setLayoutParams(layoutParams);
-            NotificationTemplateViewWrapper notificationTemplateViewWrapper4 = NotificationTemplateViewWrapper.this;
-            notificationTemplateViewWrapper4.mExpandButton.setVisibility(notificationTemplateViewWrapper4.showExpandButton() ? 0 : 8);
+            NotificationTemplateViewWrapper notificationTemplateViewWrapper3 = NotificationTemplateViewWrapper.this;
+            notificationTemplateViewWrapper3.mExpandButton.setVisibility(notificationTemplateViewWrapper3.showExpandButton() ? 0 : 8);
         }
 
         /* access modifiers changed from: package-private */
@@ -742,9 +789,9 @@ public class NotificationTemplateViewWrapper extends NotificationHeaderViewWrapp
                 notificationTemplateViewWrapper2.addTemplateView(notificationTemplateViewWrapper2.mWorkProfileImage);
             }
             FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) NotificationTemplateViewWrapper.this.mWorkProfileImage.getLayoutParams();
-            layoutParams.gravity = 85;
+            layoutParams.gravity = 8388693;
+            layoutParams.setMarginEnd(NotificationTemplateViewWrapper.this.mMiuiContentMarginEnd);
             NotificationTemplateViewWrapper notificationTemplateViewWrapper3 = NotificationTemplateViewWrapper.this;
-            layoutParams.rightMargin = notificationTemplateViewWrapper3.mMiuiContentMarginEnd;
             layoutParams.bottomMargin = notificationTemplateViewWrapper3.mMiuiContentMarginBottom;
             notificationTemplateViewWrapper3.mWorkProfileImage.setLayoutParams(layoutParams);
         }
@@ -765,9 +812,9 @@ public class NotificationTemplateViewWrapper extends NotificationHeaderViewWrapp
 
         private void setMiuiContentMargins(View view) {
             ViewGroup.MarginLayoutParams marginLayoutParams = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
+            marginLayoutParams.setMarginStart(NotificationTemplateViewWrapper.this.mMiuiContentMarginStart);
+            marginLayoutParams.setMarginEnd(NotificationTemplateViewWrapper.this.mMiuiContentMarginEnd);
             NotificationTemplateViewWrapper notificationTemplateViewWrapper = NotificationTemplateViewWrapper.this;
-            marginLayoutParams.leftMargin = notificationTemplateViewWrapper.mMiuiContentMarginStart;
-            marginLayoutParams.rightMargin = notificationTemplateViewWrapper.mMiuiContentMarginEnd;
             marginLayoutParams.topMargin = notificationTemplateViewWrapper.mMiuiContentMarginTop;
             marginLayoutParams.bottomMargin = notificationTemplateViewWrapper.mMiuiContentMarginBottom;
             view.setLayoutParams(marginLayoutParams);
@@ -795,9 +842,7 @@ public class NotificationTemplateViewWrapper extends NotificationHeaderViewWrapp
             FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) NotificationTemplateViewWrapper.this.mRightIconContainer.getLayoutParams();
             NotificationTemplateViewWrapper notificationTemplateViewWrapper = NotificationTemplateViewWrapper.this;
             layoutParams.topMargin = notificationTemplateViewWrapper.mGoogleContentMarginTop;
-            int i = notificationTemplateViewWrapper.mGoogleContentMarginEnd;
-            layoutParams.rightMargin = i;
-            layoutParams.setMarginEnd(i);
+            layoutParams.setMarginEnd(notificationTemplateViewWrapper.mGoogleContentMarginEnd);
             NotificationTemplateViewWrapper.this.mRightIconContainer.setLayoutParams(layoutParams);
             NotificationTemplateViewWrapper notificationTemplateViewWrapper2 = NotificationTemplateViewWrapper.this;
             notificationTemplateViewWrapper2.mRightIconContainer.setVisibility(notificationTemplateViewWrapper2.showRightIcon() ? 0 : 8);
@@ -806,13 +851,7 @@ public class NotificationTemplateViewWrapper extends NotificationHeaderViewWrapp
         /* access modifiers changed from: package-private */
         public void handleTitle() {
             ViewGroup.MarginLayoutParams marginLayoutParams = (ViewGroup.MarginLayoutParams) NotificationTemplateViewWrapper.this.mLine1Container.getLayoutParams();
-            int i = 0;
-            int access$700 = NotificationTemplateViewWrapper.this.showProgressBar() ? NotificationTemplateViewWrapper.this.mProgressBarMarginRight : 0;
-            if (NotificationTemplateViewWrapper.this.showRightIcon()) {
-                i = NotificationTemplateViewWrapper.this.mRightIconSize + access$700;
-            }
-            marginLayoutParams.rightMargin = i;
-            marginLayoutParams.setMarginEnd(i);
+            marginLayoutParams.setMarginEnd(NotificationTemplateViewWrapper.this.showRightIcon() ? NotificationTemplateViewWrapper.this.mRightIconSize + NotificationTemplateViewWrapper.this.mRightIconMarginStart : 0);
             NotificationTemplateViewWrapper.this.mLine1Container.setLayoutParams(marginLayoutParams);
         }
 
@@ -820,37 +859,42 @@ public class NotificationTemplateViewWrapper extends NotificationHeaderViewWrapp
         public void handleActions() {
             super.handleActions();
             if (NotificationTemplateViewWrapper.this.showActions()) {
+                clearActionsMargins();
                 int childCount = NotificationTemplateViewWrapper.this.mActions.getChildCount();
                 for (int i = 0; i < childCount; i++) {
                     Button button = (Button) NotificationTemplateViewWrapper.this.mActions.getChildAt(i);
                     button.setPaddingRelative(0, 0, 0, 0);
                     button.setBackground((Drawable) null);
                     button.setBackgroundResource(0);
+                    button.setTextColor(NotificationTemplateViewWrapper.this.mActionsButtonColor);
                 }
             }
         }
 
+        private void clearActionsMargins() {
+            View view = (View) NotificationTemplateViewWrapper.this.mActions.getParent();
+            ViewGroup.MarginLayoutParams marginLayoutParams = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
+            marginLayoutParams.topMargin = 0;
+            marginLayoutParams.bottomMargin = 0;
+            view.setLayoutParams(marginLayoutParams);
+        }
+
         private void setGoogleContentMargins(View view) {
             ViewGroup.MarginLayoutParams marginLayoutParams = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
+            marginLayoutParams.setMarginStart(NotificationTemplateViewWrapper.this.mGoogleContentMarginStart);
+            marginLayoutParams.setMarginEnd(NotificationTemplateViewWrapper.this.mGoogleContentMarginEnd);
             NotificationTemplateViewWrapper notificationTemplateViewWrapper = NotificationTemplateViewWrapper.this;
-            int i = notificationTemplateViewWrapper.mGoogleContentMarginStart;
-            marginLayoutParams.leftMargin = i;
-            marginLayoutParams.rightMargin = notificationTemplateViewWrapper.mGoogleContentMarginEnd;
             marginLayoutParams.topMargin = notificationTemplateViewWrapper.mGoogleContentMarginTop;
             marginLayoutParams.bottomMargin = notificationTemplateViewWrapper.mGoogleContentMarginBottom;
-            marginLayoutParams.setMarginStart(i);
-            marginLayoutParams.setMarginEnd(marginLayoutParams.rightMargin);
             view.setLayoutParams(marginLayoutParams);
         }
 
         private void clearGoogleContentMargins(View view) {
             ViewGroup.MarginLayoutParams marginLayoutParams = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
-            marginLayoutParams.leftMargin = 0;
-            marginLayoutParams.rightMargin = 0;
-            marginLayoutParams.topMargin = 0;
-            marginLayoutParams.bottomMargin = 0;
             marginLayoutParams.setMarginStart(0);
             marginLayoutParams.setMarginEnd(0);
+            marginLayoutParams.topMargin = 0;
+            marginLayoutParams.bottomMargin = 0;
             view.setLayoutParams(marginLayoutParams);
         }
     }

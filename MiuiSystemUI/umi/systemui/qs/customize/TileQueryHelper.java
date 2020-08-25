@@ -1,6 +1,5 @@
 package com.android.systemui.qs.customize;
 
-import android.app.ActivityManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -16,6 +15,7 @@ import android.text.TextUtils;
 import android.util.ArraySet;
 import android.util.Log;
 import android.widget.Button;
+import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.systemui.Dependency;
 import com.android.systemui.plugins.R;
 import com.android.systemui.plugins.qs.QSTile;
@@ -123,7 +123,7 @@ public class TileQueryHelper {
                 }
                 Collection<QSTile> tiles = qSTileHost.getTiles();
                 PackageManager packageManager = TileQueryHelper.this.mContext.getPackageManager();
-                List<ResolveInfo> queryIntentServicesAsUser = packageManager.queryIntentServicesAsUser(new Intent("android.service.quicksettings.action.QS_TILE"), 0, ActivityManager.getCurrentUser());
+                List<ResolveInfo> queryIntentServicesAsUser = packageManager.queryIntentServicesAsUser(new Intent("android.service.quicksettings.action.QS_TILE"), 0, KeyguardUpdateMonitor.getCurrentUser());
                 String qsStockTiles = qSTileHost.getQsStockTiles();
                 for (ResolveInfo resolveInfo : queryIntentServicesAsUser) {
                     String str = resolveInfo.serviceInfo.packageName;

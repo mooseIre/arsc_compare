@@ -83,7 +83,7 @@ public class DrawerDemoAct extends FsGestureDemoBaseActiivy {
                     android.view.ViewGroup$LayoutParams r6 = r6.getLayoutParams()
                     com.android.systemui.fsgesture.DrawerDemoAct r3 = com.android.systemui.fsgesture.DrawerDemoAct.this
                     android.content.res.Resources r3 = r3.getResources()
-                    r4 = 2131165640(0x7f0701c8, float:1.7945503E38)
+                    r4 = 2131165643(0x7f0701cb, float:1.7945509E38)
                     int r3 = r3.getDimensionPixelSize(r4)
                     r6.width = r3
                     com.android.systemui.fsgesture.DrawerDemoAct r3 = com.android.systemui.fsgesture.DrawerDemoAct.this

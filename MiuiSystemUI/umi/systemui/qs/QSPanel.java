@@ -222,7 +222,7 @@ public class QSPanel extends LinearLayout implements QSHost.Callback {
                     ((PagedTileLayout) qSTileLayout).setCurrentItem(0, false);
                 }
             }
-            MetricsLogger.visibility(getContext(), R.styleable.AppCompatTheme_toolbarStyle, this.mExpanded);
+            MetricsLogger.visibility(getContext(), R.styleable.AppCompatTheme_textColorSearchUrl, this.mExpanded);
             if (!this.mExpanded) {
                 closeDetail(false);
             } else {

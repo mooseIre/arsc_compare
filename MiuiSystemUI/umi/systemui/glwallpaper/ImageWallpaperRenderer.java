@@ -46,6 +46,11 @@ public class ImageWallpaperRenderer implements GLWallpaperRenderer, ImageRevealH
     public abstract int getFragmentResId();
 
     /* access modifiers changed from: protected */
+    public boolean getHasKeyguardWallpaperEffects() {
+        return true;
+    }
+
+    /* access modifiers changed from: protected */
     public abstract int getVertexResId();
 
     public ImageWallpaperRenderer(Context context, GLWallpaperRenderer.SurfaceProxy surfaceProxy) {
@@ -132,7 +137,9 @@ public class ImageWallpaperRenderer implements GLWallpaperRenderer, ImageRevealH
     }
 
     public void startUnlockAnim(boolean z, long j) {
-        this.mImageRevealHelper.startUnlockAnim(z, j);
+        if (this.mSurfaceSize.width() == this.mScissor.width() && this.mSurfaceSize.height() == this.mScissor.height() && getHasKeyguardWallpaperEffects()) {
+            this.mImageRevealHelper.startUnlockAnim(z, j);
+        }
     }
 
     public void updateOffsets(float f, float f2) {

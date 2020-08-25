@@ -18,7 +18,7 @@ public class Constants {
     public static final boolean IS_OLED_SCREEN = ("oled".equals(SystemProperties.get("ro.vendor.display.type")) || "oled".equals(SystemProperties.get("ro.display.type")));
     public static final boolean IS_SUPPORT_LINEAR_MOTOR_VIBRATE = "linear".equals(SystemProperties.get("sys.haptic.motor"));
     public static final boolean IS_TABLET = Build.IS_TABLET;
-    public static final boolean SHOW_NOTIFICATION_HEADER = Build.IS_INTERNATIONAL_BUILD;
+    public static final String SILENT_MODE_ACTION;
     public static final File SOUND_SCREENSHOT = new File("/system/media/audio/ui/screenshot.ogg");
     public static final File SOUND_SCREENSHOT_KR = new File("/system/media/audio/ui/screenshot_kr.ogg");
     public static final boolean SUPPORT_ANDROID_FLASHLIGHT = FeatureParser.getBoolean("support_android_flashlight", false);
@@ -32,24 +32,25 @@ public class Constants {
     public static final boolean SUPPORT_SCREEN_PAPER_MODE = FeatureParser.getBoolean("support_screen_paper_mode", false);
 
     static {
+        int i = Build.VERSION.SDK_INT;
         boolean z = true;
-        "clover".equals(Build.DEVICE);
-        boolean z2 = Build.IS_INTERNATIONAL_BUILD;
+        "clover".equals(miui.os.Build.DEVICE);
+        boolean z2 = miui.os.Build.IS_INTERNATIONAL_BUILD;
         IS_INTERNATIONAL = z2;
-        IS_INDIA_REGION = z2 && Build.getRegion().endsWith("IN");
+        IS_INDIA_REGION = z2 && miui.os.Build.getRegion().endsWith("IN");
         "fr_orange".equals(SystemProperties.get("ro.miui.customized.region"));
-        boolean z3 = Build.IS_TABLET;
-        boolean z4 = Build.IS_INTERNATIONAL_BUILD;
-        if (!"sagit".equals(Build.DEVICE) || Build.IS_STABLE_VERSION) {
+        boolean z3 = miui.os.Build.IS_TABLET;
+        boolean z4 = miui.os.Build.IS_INTERNATIONAL_BUILD;
+        if (!"sagit".equals(miui.os.Build.DEVICE) || miui.os.Build.IS_STABLE_VERSION) {
             z = false;
         }
         SUPPORT_LAB_GESTURE = z;
-        int i = Build.VERSION.SDK_INT;
         new File("/system/media/audio/ui/charging.ogg");
         new File("/system/media/audio/ui/charge_wireless.ogg");
         new File("/system/media/audio/ui/disconnect.ogg");
         new File("/system/media/audio/ui/flashlight.ogg");
         new File("/data/system/theme/com.android.systemui");
+        SILENT_MODE_ACTION = i < 30 ? "com.android.settings/com.android.settings.Settings$MiuiSilentModeAcivity" : "com.android.settings/com.android.settings.Settings$SoundSettingsActivity";
     }
 
     public static boolean isIndiaDevice() {

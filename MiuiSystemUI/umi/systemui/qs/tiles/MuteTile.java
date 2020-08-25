@@ -1,16 +1,18 @@
 package com.android.systemui.qs.tiles;
 
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.ContentObserver;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.UserHandle;
 import android.provider.MiuiSettings;
+import android.provider.Settings;
 import android.widget.Switch;
 import com.android.systemui.Dependency;
+import com.android.systemui.Util;
 import com.android.systemui.miui.volume.VolumeUtil;
 import com.android.systemui.plugins.R;
 import com.android.systemui.plugins.qs.QSTile;
@@ -26,6 +28,15 @@ public class MuteTile extends QSTileImpl<QSTile.BooleanState> implements SilentM
             if ("android.media.RINGER_MODE_CHANGED".equals(intent.getAction())) {
                 MuteTile.this.refreshState();
             }
+        }
+    };
+    private ContentObserver mContentObserver = new ContentObserver(this.mHandler) {
+        public void onChange(boolean z) {
+            MuteTile.this.refreshState();
+        }
+
+        public void onChange(boolean z, Uri uri) {
+            MuteTile.this.refreshState();
         }
     };
     private final SilentModeObserverController mSilentModeObserverController = ((SilentModeObserverController) Dependency.get(SilentModeObserverController.class));
@@ -54,14 +65,16 @@ public class MuteTile extends QSTileImpl<QSTile.BooleanState> implements SilentM
             intentFilter.addAction("android.media.RINGER_MODE_CHANGED");
             this.mContext.registerReceiverAsUser(this.mBroadcastReceiver, userHandle, intentFilter, (String) null, (Handler) null);
             this.mSilentModeObserverController.addCallback(this);
+            this.mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor("mute_music_at_silent"), false, this.mContentObserver, -1);
             return;
         }
+        this.mContext.getContentResolver().unregisterContentObserver(this.mContentObserver);
         this.mSilentModeObserverController.removeCallback(this);
         this.mContext.unregisterReceiver(this.mBroadcastReceiver);
     }
 
     public Intent getLongClickIntent() {
-        return longClickMuteIntent();
+        return Util.getSilentModeIntent();
     }
 
     /* access modifiers changed from: protected */
@@ -69,7 +82,7 @@ public class MuteTile extends QSTileImpl<QSTile.BooleanState> implements SilentM
         Object obj;
         int i = 4;
         if (MiuiSettings.SilenceMode.isSupported) {
-            boolean z = MiuiSettings.SilenceMode.getZenMode(this.mContext) != 4;
+            boolean z = VolumeUtil.getZenMode(this.mContext) != 4;
             if (z) {
                 obj = null;
             } else {
@@ -94,7 +107,7 @@ public class MuteTile extends QSTileImpl<QSTile.BooleanState> implements SilentM
     public void handleUpdateState(QSTile.BooleanState booleanState, Object obj) {
         boolean z = false;
         boolean z2 = obj == QSTileImpl.ARG_SHOW_TRANSIENT_ENABLING;
-        int zenMode = MiuiSettings.SilenceMode.getZenMode(this.mContext);
+        int zenMode = VolumeUtil.getZenMode(this.mContext);
         if (!z2 && !MiuiSettings.SilenceMode.isSupported) {
             z = AudioManagerHelper.isSilentEnabled(this.mContext);
         } else if (zenMode == 4) {
@@ -115,17 +128,6 @@ public class MuteTile extends QSTileImpl<QSTile.BooleanState> implements SilentM
         sb.append(this.mContext.getString(booleanState.value ? R.string.switch_bar_on : R.string.switch_bar_off));
         booleanState.contentDescription = sb.toString();
         booleanState.expandedAccessibilityClassName = Switch.class.getName();
-    }
-
-    private Intent longClickMuteIntent() {
-        ComponentName unflattenFromString = ComponentName.unflattenFromString("com.android.settings/com.android.settings.Settings$MiuiSilentModeAcivity");
-        if (unflattenFromString == null) {
-            return null;
-        }
-        Intent intent = new Intent("android.intent.action.MAIN");
-        intent.setComponent(unflattenFromString);
-        intent.setFlags(335544320);
-        return intent;
     }
 
     public void onSilentModeChanged(boolean z) {

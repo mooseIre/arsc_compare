@@ -30,6 +30,7 @@ import com.android.systemui.recents.events.activity.MultiWindowStateChangedEvent
 import com.android.systemui.recents.events.activity.ShowTaskMenuEvent;
 import com.android.systemui.recents.events.component.UpdateLockStateEvent;
 import com.android.systemui.recents.events.ui.DismissTaskViewEvent;
+import com.android.systemui.recents.events.ui.ShowApplicationInfoEvent;
 import com.android.systemui.recents.events.ui.dragndrop.DragEndCancelledEvent;
 import com.android.systemui.recents.events.ui.dragndrop.DragEndEvent;
 import com.android.systemui.recents.events.ui.dragndrop.DragStartEvent;
@@ -543,6 +544,10 @@ public class TaskView extends FixedSizeFrameLayout implements Task.TaskCallbacks
     public boolean onLongClick(View view) {
         if (RecentsConfiguration.sCanMultiWindow) {
             return startDrag();
+        }
+        if (Utilities.IS_MIUI_LITE_VERSION) {
+            RecentsEventBus.getDefault().send(new ShowApplicationInfoEvent(this.mTask));
+            return true;
         }
         RecentsEventBus.getDefault().send(new ShowTaskMenuEvent(this));
         return true;

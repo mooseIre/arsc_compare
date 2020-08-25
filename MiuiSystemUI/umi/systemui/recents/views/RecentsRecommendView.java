@@ -19,7 +19,6 @@ import com.android.systemui.recents.events.RecentsEventBus;
 import com.android.systemui.recents.events.activity.PackagesChangedEvent;
 import com.android.systemui.recents.misc.RecentsPushEventHelper;
 import com.android.systemui.recents.misc.Utilities;
-import miui.view.MiuiHapticFeedbackConstants;
 
 public class RecentsRecommendView extends LinearLayout implements View.OnClickListener {
     private static String ACTION_APP_MANAGER = "miui.intent.action.APP_MANAGER";
@@ -102,7 +101,7 @@ public class RecentsRecommendView extends LinearLayout implements View.OnClickLi
 
     public void onClick(View view) {
         Intent intent = new Intent();
-        intent.setFlags(MiuiHapticFeedbackConstants.FLAG_MIUI_HAPTIC_TAP_NORMAL);
+        intent.setFlags(268435456);
         switch (view.getId()) {
             case R.id.first_item:
                 intent.setAction(ACTION_GARBAGE_CLEANUP);

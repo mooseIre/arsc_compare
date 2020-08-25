@@ -2,6 +2,7 @@ package com.android.systemui.statusbar.phone;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Build;
 import android.view.WindowManager;
 import miui.app.AlertDialog;
 
@@ -46,7 +47,7 @@ public class SystemUIDialog extends AlertDialog {
     }
 
     public static void applyFlags(AlertDialog alertDialog) {
-        alertDialog.getWindow().setType(2014);
+        alertDialog.getWindow().setType(Build.VERSION.SDK_INT > 29 ? 2017 : 2014);
         alertDialog.getWindow().addFlags(655360);
     }
 }

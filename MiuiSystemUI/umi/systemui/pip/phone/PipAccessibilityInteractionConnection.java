@@ -52,7 +52,7 @@ public class PipAccessibilityInteractionConnection extends IAccessibilityInterac
                     }
                 });
             } else if (i == 262144) {
-                this.mMotionHelper.expandPip();
+                this.mMotionHelper.expandPipToFullscreen();
             } else if (i == 1048576) {
                 this.mMotionHelper.dismissPip();
             } else if (i == 16908354) {

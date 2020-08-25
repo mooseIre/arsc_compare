@@ -60,7 +60,7 @@ public abstract class SystemUI implements SysUiServiceProvider, PackageEventRece
 
     public static void overrideNotificationAppName(Context context, Notification.Builder builder) {
         Bundle bundle = new Bundle();
-        bundle.putString("android.substName", context.getString(17039637));
+        bundle.putString("android.substName", context.getString(17039645));
         builder.addExtras(bundle);
     }
 }

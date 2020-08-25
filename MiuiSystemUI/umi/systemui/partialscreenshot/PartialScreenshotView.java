@@ -2,11 +2,13 @@ package com.android.systemui.partialscreenshot;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
 import com.android.systemui.partialscreenshot.shape.PartialScreenshotShape;
 
 public class PartialScreenshotView extends View {
+    private Paint mPaintBackground;
     private PartialScreenshotShape shape;
 
     public PartialScreenshotView(Context context) {
@@ -15,6 +17,10 @@ public class PartialScreenshotView extends View {
 
     public PartialScreenshotView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
+        Paint paint = new Paint();
+        this.mPaintBackground = paint;
+        paint.setColor(-16777216);
+        this.mPaintBackground.setAlpha(165);
     }
 
     public void setProduct(PartialScreenshotShape partialScreenshotShape) {
@@ -32,6 +38,8 @@ public class PartialScreenshotView extends View {
         PartialScreenshotShape partialScreenshotShape = this.shape;
         if (partialScreenshotShape != null) {
             partialScreenshotShape.draw(canvas);
+            return;
         }
+        canvas.drawRect(0.0f, 0.0f, (float) getWidth(), (float) getHeight(), this.mPaintBackground);
     }
 }

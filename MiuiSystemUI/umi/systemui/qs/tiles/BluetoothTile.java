@@ -59,7 +59,7 @@ public class BluetoothTile extends QSTileImpl<QSTile.BooleanState> {
     public boolean mTargetEnable;
 
     public int getMetricsCategory() {
-        return R.styleable.AppCompatTheme_tooltipFrameBackground;
+        return R.styleable.AppCompatTheme_toolbarStyle;
     }
 
     public BluetoothTile(QSHost qSHost) {

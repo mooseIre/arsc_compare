@@ -14,7 +14,6 @@ import com.android.systemui.qs.tileimpl.QSTileImpl;
 import com.android.systemui.statusbar.Icons;
 import java.io.File;
 import java.io.FilenameFilter;
-import miui.view.MiuiHapticFeedbackConstants;
 
 public class ScreenShotTile extends QSTileImpl<QSTile.BooleanState> {
     public static final Uri HTTPS_AUTHORITY_URI = Uri.parse("https://gallery.i.mi.com");
@@ -126,7 +125,7 @@ public class ScreenShotTile extends QSTileImpl<QSTile.BooleanState> {
         }
         Intent intent = new Intent("android.intent.action.VIEW");
         intent.setDataAndType(Uri.fromFile(new File(str)), "image/*");
-        intent.setFlags(MiuiHapticFeedbackConstants.FLAG_MIUI_HAPTIC_TAP_NORMAL);
+        intent.setFlags(268435456);
         return intent;
     }
 }

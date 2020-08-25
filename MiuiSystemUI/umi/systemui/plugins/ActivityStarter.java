@@ -32,5 +32,7 @@ public interface ActivityStarter {
 
     void startActivity(Intent intent, boolean z, boolean z2);
 
+    void startActivity(Intent intent, boolean z, boolean z2, int i);
+
     void startPendingIntentDismissingKeyguard(PendingIntent pendingIntent);
 }

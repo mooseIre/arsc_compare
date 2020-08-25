@@ -7,12 +7,20 @@ import miui.util.Log;
 public final class Logger {
     private static final boolean IS_STABLE_VERSION = Build.IS_STABLE_VERSION;
 
+    public static void d(String str, String str2) {
+        Log.d(str, str2);
+    }
+
     public static void i(String str, String str2) {
         Log.i(str, str2);
     }
 
     public static void w(String str, String str2) {
         Log.w(str, str2);
+    }
+
+    public static void e(String str) {
+        e("SystemUI_LOG", str);
     }
 
     public static void e(String str, String str2) {

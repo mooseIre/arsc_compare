@@ -39,7 +39,6 @@ import com.android.systemui.statusbar.NotificationData;
 import com.android.systemui.statusbar.RemoteInputController;
 import com.android.systemui.statusbar.notification.NotificationViewWrapper;
 import com.android.systemui.statusbar.stack.ScrollContainer;
-import miui.view.MiuiHapticFeedbackConstants;
 
 public class RemoteInputView extends LinearLayout implements View.OnClickListener, TextWatcher {
     public static final Object VIEW_TAG = new Object();
@@ -107,7 +106,7 @@ public class RemoteInputView extends LinearLayout implements View.OnClickListene
     public void sendRemoteInput() {
         Bundle bundle = new Bundle();
         bundle.putString(this.mRemoteInput.getResultKey(), this.mEditText.getText().toString());
-        Intent addFlags = new Intent().addFlags(MiuiHapticFeedbackConstants.FLAG_MIUI_HAPTIC_TAP_NORMAL);
+        Intent addFlags = new Intent().addFlags(268435456);
         RemoteInput.addResultsToIntent(this.mRemoteInputs, addFlags, bundle);
         this.mEditText.setEnabled(false);
         this.mSendButton.setVisibility(4);

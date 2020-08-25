@@ -22,7 +22,6 @@ import android.widget.TextView;
 import com.android.internal.app.AlertActivity;
 import com.android.internal.app.AlertController;
 import com.android.systemui.plugins.R;
-import miui.view.MiuiHapticFeedbackConstants;
 
 public class UsbConfirmActivity extends AlertActivity implements DialogInterface.OnClickListener, CompoundButton.OnCheckedChangeListener {
     private UsbAccessory mAccessory;
@@ -57,7 +56,7 @@ public class UsbConfirmActivity extends AlertActivity implements DialogInterface
         alertParams.mNegativeButtonListener = this;
         View inflate = ((LayoutInflater) getSystemService("layout_inflater")).inflate(17367092, (ViewGroup) null);
         alertParams.mView = inflate;
-        CheckBox checkBox = (CheckBox) inflate.findViewById(16908752);
+        CheckBox checkBox = (CheckBox) inflate.findViewById(16908753);
         this.mAlwaysUse = checkBox;
         if (this.mDevice == null) {
             checkBox.setText(R.string.always_use_accessory);
@@ -65,7 +64,7 @@ public class UsbConfirmActivity extends AlertActivity implements DialogInterface
             checkBox.setText(R.string.always_use_device);
         }
         this.mAlwaysUse.setOnCheckedChangeListener(this);
-        TextView textView = (TextView) alertParams.mView.findViewById(16908852);
+        TextView textView = (TextView) alertParams.mView.findViewById(16908848);
         this.mClearDefaultHint = textView;
         textView.setVisibility(8);
         setupAlert();
@@ -109,12 +108,12 @@ public class UsbConfirmActivity extends AlertActivity implements DialogInterface
                             asInterface.setAccessoryPackage(this.mAccessory, (String) null, myUserId);
                         }
                     }
-                    intent2.addFlags(MiuiHapticFeedbackConstants.FLAG_MIUI_HAPTIC_TAP_NORMAL);
+                    intent2.addFlags(268435456);
                     intent2.setComponent(new ComponentName(this.mResolveInfo.activityInfo.packageName, this.mResolveInfo.activityInfo.name));
                     startActivityAsUser(intent2, new UserHandle(myUserId));
                 }
                 intent2 = intent;
-                intent2.addFlags(MiuiHapticFeedbackConstants.FLAG_MIUI_HAPTIC_TAP_NORMAL);
+                intent2.addFlags(268435456);
                 intent2.setComponent(new ComponentName(this.mResolveInfo.activityInfo.packageName, this.mResolveInfo.activityInfo.name));
                 startActivityAsUser(intent2, new UserHandle(myUserId));
             } catch (Exception e) {

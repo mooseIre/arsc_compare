@@ -31,6 +31,7 @@ public class ScrimController implements ViewTreeObserver.OnPreDrawListener, OnHe
     public boolean mAodWaitUnlocking;
     protected boolean mBouncerIsKeyguard = false;
     protected boolean mBouncerShowing;
+    private final Context mContext;
     private float mCurrentBehindAlpha = -1.0f;
     private float mCurrentHeadsUpAlpha = -1.0f;
     private float mCurrentInFrontAlpha = -1.0f;
@@ -90,10 +91,11 @@ public class ScrimController implements ViewTreeObserver.OnPreDrawListener, OnHe
         this.mScrimInFront = scrimView2;
         this.mHeadsUpScrim = view;
         Context context = scrimView.getContext();
+        this.mContext = context;
         this.mUnlockMethodCache = UnlockMethodCache.getInstance(context);
-        this.mKeyguardUpdateMonitor = KeyguardUpdateMonitor.getInstance(context);
+        this.mKeyguardUpdateMonitor = KeyguardUpdateMonitor.getInstance(this.mContext);
         this.mLightBarController = lightBarController;
-        this.mScrimBehindAlpha = context.getResources().getFloat(R.dimen.scrim_behind_alpha);
+        this.mScrimBehindAlpha = this.mContext.getResources().getFloat(R.dimen.scrim_behind_alpha);
         updateHeadsUpScrim(false);
         updateScrims();
     }
@@ -301,7 +303,7 @@ public class ScrimController implements ViewTreeObserver.OnPreDrawListener, OnHe
 
     /* access modifiers changed from: protected */
     public float getCurrentScrimAlpha(View view) {
-        if (this.mSupportAmbientMode) {
+        if (this.mSupportAmbientMode && this.mAodWaitUnlocking) {
             return 0.0f;
         }
         if (view == this.mScrimBehind) {

@@ -17,6 +17,10 @@ public class VisibleFocusedTextView extends TextView {
         super(context, attributeSet);
     }
 
+    public VisibleFocusedTextView(Context context, AttributeSet attributeSet, int i) {
+        super(context, attributeSet, i);
+    }
+
     public boolean isFocused() {
         return getVisibility() == 0 && getAlpha() == 1.0f;
     }

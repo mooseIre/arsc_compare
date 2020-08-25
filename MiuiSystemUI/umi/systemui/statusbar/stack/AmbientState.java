@@ -2,7 +2,6 @@ package com.android.systemui.statusbar.stack;
 
 import android.content.Context;
 import android.view.View;
-import com.android.systemui.plugins.R;
 import com.android.systemui.statusbar.ActivatableNotificationView;
 import com.android.systemui.statusbar.ExpandableView;
 import com.android.systemui.statusbar.NotificationShelf;
@@ -48,8 +47,8 @@ public class AmbientState {
     }
 
     public void reload(Context context) {
-        this.mZDistanceBetweenElements = Math.max(1, context.getResources().getDimensionPixelSize(R.dimen.z_distance_between_notifications));
-        this.mBaseZHeight = context.getResources().getDimensionPixelSize(R.dimen.notification_heads_up_z_translation);
+        this.mZDistanceBetweenElements = 0;
+        this.mBaseZHeight = 0;
     }
 
     public int getBaseZHeight() {

@@ -116,6 +116,7 @@ public class QSDetailItems extends FrameLayout {
     public void setTagSuffix(String str) {
         this.mTag = "QSDetailItems." + str;
         this.mSuffix = str;
+        initItemsListPosition();
     }
 
     public String getSuffix() {
@@ -204,6 +205,13 @@ public class QSDetailItems extends FrameLayout {
             for (int i = 0; i < this.mItemList.getChildCount(); i++) {
                 this.mItemList.getChildAt(i).setVisibility(this.mItemsVisible ? 0 : 4);
             }
+        }
+    }
+
+    public void initItemsListPosition() {
+        RecyclerView recyclerView = this.mItemList;
+        if (recyclerView != null) {
+            recyclerView.scrollToPosition(0);
         }
     }
 

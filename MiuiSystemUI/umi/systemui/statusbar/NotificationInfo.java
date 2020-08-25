@@ -14,7 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.android.systemui.Dependency;
 import com.android.systemui.miui.statusbar.ExpandedNotification;
-import com.android.systemui.miui.statusbar.analytics.SystemUIStat;
+import com.android.systemui.miui.statusbar.analytics.NotificationStat;
 import com.android.systemui.miui.statusbar.notification.NotificationSettingsHelper;
 import com.android.systemui.miui.statusbar.notification.NotificationUtil;
 import com.android.systemui.plugins.R;
@@ -71,7 +71,7 @@ public class NotificationInfo extends LinearLayout implements NotificationGuts.G
         boolean z = !this.mChannelEnabledSwitch.isChecked();
         TextView textView = (TextView) findViewById(R.id.title);
         textView.setText(this.mContext.getString(z ? R.string.notification_info_disabled_text : R.string.notification_info_enabled_text, new Object[]{this.mSbn.getAppName()}));
-        textView.setTextColor(this.mContext.getColor(z ? R.color.notification_info_warning_color : 17170904));
+        textView.setTextColor(this.mContext.getColor(z ? R.color.notification_info_warning_color : 17170903));
     }
 
     private void initSlidingButton() {
@@ -141,7 +141,7 @@ public class NotificationInfo extends LinearLayout implements NotificationGuts.G
                 intent.putExtra("messageId", messageId);
             }
             this.mContext.sendBroadcast(intent);
-            ((SystemUIStat) Dependency.get(SystemUIStat.class)).onBlock(this.mSbn, (NotificationChannelCompat) null, this.mIndex);
+            ((NotificationStat) Dependency.get(NotificationStat.class)).onBlock(this.mSbn, (NotificationChannelCompat) null, this.mIndex);
         }
     }
 

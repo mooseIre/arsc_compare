@@ -26,6 +26,7 @@ import android.view.MotionEvent;
 import android.view.WindowManager;
 import android.view.WindowManagerCompat;
 import android.widget.FrameLayout;
+import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.systemui.Application;
 import com.android.systemui.Constants;
 import com.android.systemui.Dependency;
@@ -211,7 +212,7 @@ public class GestureStubView extends FrameLayout {
     private static boolean isUserSetUp(ContentResolver contentResolver) {
         if (!isUserSetUp) {
             boolean z = false;
-            if (!(Settings.Global.getInt(contentResolver, "device_provisioned", 0) == 0 || Settings.Secure.getIntForUser(contentResolver, "user_setup_complete", 0, -2) == 0)) {
+            if (!(Settings.Global.getInt(contentResolver, "device_provisioned", 0) == 0 || Settings.Secure.getIntForUser(contentResolver, "user_setup_complete", 0, KeyguardUpdateMonitor.getCurrentUser()) == 0)) {
                 z = true;
             }
             isUserSetUp = z;

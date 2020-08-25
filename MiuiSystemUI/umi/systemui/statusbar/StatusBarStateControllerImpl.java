@@ -28,6 +28,7 @@ public class StatusBarStateControllerImpl implements SysuiStatusBarStateControll
     private int mLastState;
     private boolean mLeaveOpenOnKeyguardHide;
     private final ArrayList<SysuiStatusBarStateController.RankedListener> mListeners = new ArrayList<>();
+    private boolean mPulsing;
     private int mState;
 
     static {
@@ -85,6 +86,10 @@ public class StatusBarStateControllerImpl implements SysuiStatusBarStateControll
 
     public boolean isDozing() {
         return this.mIsDozing;
+    }
+
+    public boolean isPulsing() {
+        return this.mPulsing;
     }
 
     public float getDozeAmount() {

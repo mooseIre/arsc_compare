@@ -42,7 +42,7 @@ import com.android.systemui.ExpandHelper;
 import com.android.systemui.Interpolators;
 import com.android.systemui.SwipeHelper;
 import com.android.systemui.classifier.FalsingManager;
-import com.android.systemui.miui.statusbar.analytics.SystemUIStat;
+import com.android.systemui.miui.statusbar.analytics.NotificationStat;
 import com.android.systemui.miui.statusbar.notification.HeadsUpAnimatedStubView;
 import com.android.systemui.miui.statusbar.policy.ControlPanelController;
 import com.android.systemui.plugins.R;
@@ -512,7 +512,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements SwipeHel
         if (view instanceof ExpandableNotificationRow) {
             ExpandableNotificationRow expandableNotificationRow = (ExpandableNotificationRow) view;
             MetricsLogger.action(this.mContext, 332, expandableNotificationRow.getStatusBarNotification().getPackageName());
-            ((SystemUIStat) Dependency.get(SystemUIStat.class)).handleNotiOpenMenuEvent(expandableNotificationRow.getStatusBarNotification(), getNotGoneNotifications().indexOf(expandableNotificationRow.getEntry()));
+            ((NotificationStat) Dependency.get(NotificationStat.class)).handleNotiOpenMenuEvent(expandableNotificationRow.getStatusBarNotification(), getNotGoneNotifications().indexOf(expandableNotificationRow.getEntry()));
         }
         this.mSwipeHelper.onMenuShown(view);
     }
@@ -876,18 +876,9 @@ public class NotificationStackScrollLayout extends ViewGroup implements SwipeHel
         }
         float appearEndPosition = getAppearEndPosition();
         float appearStartPosition = getAppearStartPosition();
-        float f4 = 1.0f;
         if (f >= appearEndPosition) {
-            if (!this.mIsExpansionChanging || onKeyguard()) {
-                i = (int) f;
-            } else {
-                float stackAppearMinHeight = (float) getStackAppearMinHeight();
-                i = (int) Math.max(f, appearEndPosition + stackAppearMinHeight);
-                if (stackAppearMinHeight > 0.0f) {
-                    f4 = Math.min((f - appearEndPosition) / stackAppearMinHeight, 1.0f);
-                }
-            }
-            updateStackAppearState(f4, getWidth() / 2, (int) appearEndPosition);
+            i = (int) f;
+            setTransitionAlpha(1.0f);
         } else {
             float appearFraction = getAppearFraction(f);
             if (appearFraction >= 0.0f) {
@@ -909,34 +900,6 @@ public class NotificationStackScrollLayout extends ViewGroup implements SwipeHel
             requestChildrenUpdate();
         }
         setStackTranslation(f3);
-    }
-
-    private void updateStackAppearState(float f, int i, int i2) {
-        float f2 = (0.07999998f * f) + 0.92f;
-        setPivotX((float) i);
-        setPivotY((float) i2);
-        setScaleX(f2);
-        setScaleY(f2);
-        setTransitionAlpha(f);
-    }
-
-    private int getStackAppearMinHeight() {
-        int i = 0;
-        for (int i2 = 0; i2 < getChildCount(); i2++) {
-            View childAt = getChildAt(i2);
-            if (childAt.getVisibility() == 0 && (childAt instanceof ExpandableView)) {
-                if (!(childAt instanceof ExpandableNotificationRow) || ((ExpandableView) childAt).getViewType() != 0) {
-                    i += ((ExpandableView) childAt).getActualHeight();
-                } else {
-                    ExpandableNotificationRow expandableNotificationRow = (ExpandableNotificationRow) childAt;
-                    if ((expandableNotificationRow.areChildrenExpanded() || expandableNotificationRow.isGroupExpansionChanging()) && expandableNotificationRow.getNotificationChildren() != null && expandableNotificationRow.getNotificationChildren().size() > 0) {
-                        expandableNotificationRow = expandableNotificationRow.getNotificationChildren().get(0);
-                    }
-                    return (i + expandableNotificationRow.getIntrinsicHeight()) - expandableNotificationRow.getExtraPadding();
-                }
-            }
-        }
-        return i;
     }
 
     private void setRequestedClipBounds(Rect rect) {
@@ -1575,7 +1538,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements SwipeHel
             setOverScrolledPixels((getCurrentOverScrolledPixels(false) + f3) - f4, false, false);
         }
         setOwnScrollY(i2);
-        ((SystemUIStat) Dependency.get(SystemUIStat.class)).onScrollMore();
+        ((NotificationStat) Dependency.get(NotificationStat.class)).onScrollMore();
         return 0.0f;
     }
 

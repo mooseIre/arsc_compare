@@ -19,7 +19,9 @@ import com.android.systemui.miui.Dependencies;
 import com.android.systemui.miui.PackageEventReceiver;
 import com.android.systemui.miui.controlcenter.ExpandInfoController;
 import com.android.systemui.miui.controlcenter.ExpandInfoControllerImpl;
+import com.android.systemui.miui.controls.ControlsPluginManager;
 import com.android.systemui.miui.statusbar.ControlCenterActivityStarter;
+import com.android.systemui.miui.statusbar.analytics.NotificationStat;
 import com.android.systemui.miui.statusbar.analytics.SystemUIStat;
 import com.android.systemui.miui.statusbar.phone.ControlPanelWindowManager;
 import com.android.systemui.miui.statusbar.policy.ControlPanelController;
@@ -352,6 +354,11 @@ public class DependencyUI extends SystemUI {
                 return new SystemUIStat(DependencyUI.this.mContext);
             }
         });
+        this.mProviders.put(NotificationStat.class, new Dependency.DependencyProvider() {
+            public Object createDependency() {
+                return new NotificationStat(DependencyUI.this.mContext);
+            }
+        });
         this.mProviders.put(BubbleController.class, new Dependency.DependencyProvider() {
             public Object createDependency() {
                 return new BubbleController(DependencyUI.this.mContext);
@@ -396,6 +403,11 @@ public class DependencyUI extends SystemUI {
         this.mProviders.put(ControlPanelWindowManager.class, new Dependency.DependencyProvider() {
             public Object createDependency() {
                 return new ControlPanelWindowManager(DependencyUI.this.mContext);
+            }
+        });
+        this.mProviders.put(ControlsPluginManager.class, new Dependency.DependencyProvider(this) {
+            public Object createDependency() {
+                return new ControlsPluginManager();
             }
         });
         SystemUIFactory.getInstance().injectDependencies(this.mProviders, this.mContext);

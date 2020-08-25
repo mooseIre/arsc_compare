@@ -19,7 +19,7 @@ import com.android.systemui.Dependency;
 import com.android.systemui.Interpolators;
 import com.android.systemui.Util;
 import com.android.systemui.classifier.FalsingManager;
-import com.android.systemui.miui.statusbar.analytics.SystemUIStat;
+import com.android.systemui.miui.statusbar.analytics.NotificationStat;
 import com.android.systemui.miui.statusbar.policy.AppMiniWindowManager;
 import com.android.systemui.plugins.R;
 import com.android.systemui.statusbar.FlingAnimationUtils;
@@ -175,7 +175,7 @@ public abstract class PanelView extends FrameLayout {
     public abstract boolean onMiddleClicked();
 
     /* access modifiers changed from: protected */
-    public abstract void onPanelDisplayChanged(boolean z);
+    public abstract void onPanelDisplayChanged(boolean z, boolean z2);
 
     /* access modifiers changed from: protected */
     public abstract void onSpringLengthUpdated(float f);
@@ -393,7 +393,7 @@ public abstract class PanelView extends FrameLayout {
     private void startOpening() {
         Log.d(TAG, "pv startOpening");
         this.mOpening = true;
-        onPanelDisplayChanged(false);
+        onPanelDisplayChanged(false, true);
         notifyBarPanelExpansionChanged();
     }
 
@@ -875,7 +875,7 @@ public abstract class PanelView extends FrameLayout {
                 }
                 PanelView.this.mKeyguardVerticalMoveHelper.reset();
                 PanelView.this.notifyBarPanelExpansionChanged();
-                ((SystemUIStat) Dependency.get(SystemUIStat.class)).onPanelAnimationEnd();
+                ((NotificationStat) Dependency.get(NotificationStat.class)).onPanelAnimationEnd();
             }
         });
         setAnimator(createHeightAnimator);
@@ -976,7 +976,7 @@ public abstract class PanelView extends FrameLayout {
         if (this.mOpening && f > ((float) this.mTouchSlop)) {
             flingToPanelHeight(true);
         }
-        onPanelDisplayChanged(!this.mOpening ? f > -80.0f : f > 80.0f);
+        onPanelDisplayChanged(!this.mOpening ? f > -80.0f : f > 80.0f, false);
         this.mStretchLength = this.mOpening ? Math.max(0.0f, f) : f;
         if ((!this.mOpening || f <= 80.0f) && (this.mOpening || f <= 0.0f)) {
             z = false;
@@ -996,7 +996,7 @@ public abstract class PanelView extends FrameLayout {
             Log.d(str, "resetStretchLength " + z);
         }
         this.mStretchLength = 0.0f;
-        onPanelDisplayChanged(z);
+        onPanelDisplayChanged(z, false);
     }
 
     /* access modifiers changed from: protected */

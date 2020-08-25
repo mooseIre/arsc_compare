@@ -4,6 +4,7 @@ import android.app.ActivityManagerCompat;
 import android.content.Context;
 import android.content.res.Resources;
 import android.os.Binder;
+import android.os.Build;
 import android.os.RemoteException;
 import android.os.SystemProperties;
 import android.util.Log;
@@ -58,7 +59,7 @@ public class StatusBarWindowManager implements RemoteInputController.Callback, D
         this.mContext = context;
         this.mWindowManager = (WindowManager) context.getSystemService("window");
         this.mKeyguardScreenRotation = shouldEnableKeyguardScreenRotation();
-        this.mScreenBrightnessDoze = ((float) this.mContext.getResources().getInteger(17694889)) / 255.0f;
+        this.mScreenBrightnessDoze = ((float) this.mContext.getResources().getInteger(17694890)) / 255.0f;
     }
 
     private boolean shouldEnableKeyguardScreenRotation() {
@@ -239,7 +240,8 @@ public class StatusBarWindowManager implements RemoteInputController.Callback, D
     }
 
     private void applyForceStatusBarVisibleFlag(State state) {
-        if (state.forceStatusBarVisible) {
+        boolean z = Build.VERSION.SDK_INT > 29 && state.panelExpanded;
+        if (state.forceStatusBarVisible || z) {
             this.mLpChanged.privateFlags |= 4096;
             return;
         }
@@ -275,7 +277,7 @@ public class StatusBarWindowManager implements RemoteInputController.Callback, D
     }
 
     private void applyBlurRatio(State state) {
-        SurfaceControlCompat.setBlur(this.mLpChanged, this.mStatusBarView.getViewRootImpl(), state.blurRatio, state.blurMode);
+        SurfaceControlCompat.setBlur(this.mLpChanged, this.mStatusBarView.getViewRootImpl(), state.blurRatio, 0);
         for (BlurRatioChangedListener onBlurRatioChanged : this.mBlurRatioListeners) {
             onBlurRatioChanged.onBlurRatioChanged(state.blurRatio);
         }
@@ -378,13 +380,8 @@ public class StatusBarWindowManager implements RemoteInputController.Callback, D
     }
 
     public void setBlurRatio(float f) {
-        setBlurRatio(f, 0);
-    }
-
-    public void setBlurRatio(float f, int i) {
         State state = this.mCurrentState;
         state.blurRatio = f;
-        state.blurMode = i;
         apply(state);
     }
 
@@ -480,7 +477,6 @@ public class StatusBarWindowManager implements RemoteInputController.Callback, D
 
     private static class State {
         boolean backdropShowing;
-        int blurMode;
         float blurRatio;
         boolean bouncerShowing;
         boolean bubbleExpanded;

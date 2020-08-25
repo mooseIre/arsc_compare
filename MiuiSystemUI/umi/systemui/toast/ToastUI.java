@@ -30,8 +30,8 @@ public class ToastUI extends SystemUI implements CommandQueue.Callbacks {
             Log.d("ToastUI", "start()");
         }
         Resources resources = this.mContext.getResources();
-        this.mGravity = resources.getInteger(17694914);
-        this.mY = resources.getDimensionPixelSize(17105577);
+        this.mGravity = resources.getInteger(17694915);
+        this.mY = resources.getDimensionPixelSize(17105554);
         ((CommandQueue) SystemUI.getComponent(this.mContext, CommandQueue.class)).addCallbacks(this);
     }
 

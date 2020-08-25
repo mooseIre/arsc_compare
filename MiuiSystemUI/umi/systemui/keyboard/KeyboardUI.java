@@ -94,7 +94,7 @@ public class KeyboardUI extends SystemUI implements InputManager.OnTabletModeCha
     public void init() {
         LocalBluetoothManager instance;
         Context context = this.mContext;
-        String string = context.getString(17039936);
+        String string = context.getString(17039953);
         this.mKeyboardName = string;
         if (!TextUtils.isEmpty(string) && (instance = LocalBluetoothManager.getInstance(context, (LocalBluetoothManager.BluetoothManagerCallback) null)) != null) {
             this.mEnabled = true;

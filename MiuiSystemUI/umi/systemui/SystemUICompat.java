@@ -23,7 +23,9 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.os.ServiceManager;
+import android.text.TextUtils;
 import android.util.Log;
+import android.util.MiuiMultiWindowUtils;
 import android.view.InputMonitor;
 import android.view.View;
 import android.view.WindowManagerGlobal;
@@ -34,19 +36,21 @@ import com.android.internal.statusbar.RegisterStatusBarResult;
 import com.android.internal.statusbar.StatusBarIcon;
 import com.android.settingslib.bluetooth.CachedBluetoothDevice;
 import com.android.systemui.recents.Recents;
+import com.android.systemui.recents.misc.SystemServicesProxy;
 import com.android.systemui.recents.model.MutableBoolean;
 import com.android.systemui.recents.model.Task;
+import com.android.systemui.stackdivider.Divider;
+import com.android.systemui.statusbar.CompatibilityCommandQueue;
 import java.util.List;
-import miui.securityspace.XSpaceUserHandle;
 
 public class SystemUICompat {
     private static IActivityTaskManager sITM = ActivityTaskManager.getService();
 
-    public static void cancelTaskThumbnailTransition(IActivityManager iActivityManager, int i) throws RemoteException {
+    public static void cancelTaskThumbnailTransition(IActivityManager iActivityManager, int i) {
     }
 
     public static int getNotificationDefaultColor() {
-        return 17170894;
+        return 17170895;
     }
 
     public static boolean isHighPriority(String str, int i) throws RemoteException {
@@ -64,6 +68,7 @@ public class SystemUICompat {
             list2.add((StatusBarIcon) registerStatusBar.mIcons.get(str));
         }
         iArr[0] = registerStatusBar.mDisabledFlags1;
+        iArr[1] = CompatibilityCommandQueue.convertAppearanceToVisibility(registerStatusBar.mAppearance);
         iArr[3] = registerStatusBar.mImeWindowVis;
         iArr[4] = registerStatusBar.mImeBackDisposition;
         iArr[5] = registerStatusBar.mShowImeSwitcher;
@@ -108,12 +113,20 @@ public class SystemUICompat {
         return activityType == 2 || activityType == 3;
     }
 
-    public static void cancelTaskWindowTransition(IActivityManager iActivityManager, int i) throws RemoteException {
-        iActivityManager.cancelTaskWindowTransition(i);
+    public static void cancelTaskWindowTransition(IActivityManager iActivityManager, int i) {
+        try {
+            iActivityManager.cancelTaskWindowTransition(i);
+        } catch (RemoteException e) {
+            Log.w("SystemUICompat", "Error cancelTaskWindowTransition", e);
+        }
     }
 
-    public static void getStableInsets(Rect rect) throws RemoteException {
-        WindowManagerGlobal.getWindowManagerService().getStableInsets(0, rect);
+    public static void getStableInsets(Rect rect) {
+        try {
+            WindowManagerGlobal.getWindowManagerService().getStableInsets(0, rect);
+        } catch (RemoteException e) {
+            Log.w("SystemUICompat", "Error getStableInsets", e);
+        }
     }
 
     public static Rect getRecentsWindowRect(IActivityManager iActivityManager) {
@@ -190,26 +203,12 @@ public class SystemUICompat {
         return z2 & (!z);
     }
 
-    private static ActivityManager.StackInfo getSplitScreenPrimaryStack(IActivityManager iActivityManager) {
-        try {
-            return sITM.getStackInfo(3, 0);
-        } catch (RemoteException unused) {
-            return null;
-        }
-    }
-
-    public static boolean hasDockedTask(IActivityManager iActivityManager) {
-        ActivityManager.StackInfo splitScreenPrimaryStack;
-        if (iActivityManager == null || (splitScreenPrimaryStack = getSplitScreenPrimaryStack(iActivityManager)) == null) {
+    public static boolean hasDockedTask(Context context) {
+        Divider divider;
+        if (context == null || (divider = (Divider) ((Application) context.getApplicationContext()).getSystemUIApplication().getComponent(Divider.class)) == null || !divider.inSplitMode()) {
             return false;
         }
-        int currentUser = ActivityManager.getCurrentUser();
-        boolean z = false;
-        for (int length = splitScreenPrimaryStack.taskUserIds.length - 1; length >= 0 && !z; length--) {
-            int[] iArr = splitScreenPrimaryStack.taskUserIds;
-            z = iArr[length] == currentUser || XSpaceUserHandle.isXSpaceUserId(iArr[length]);
-        }
-        return z;
+        return true;
     }
 
     public static boolean startTaskInDockedMode(Task task, int i, IActivityManager iActivityManager, Context context) {
@@ -283,5 +282,31 @@ public class SystemUICompat {
         Bundle bundle = new Bundle();
         bundle.putParcelable(str, monitorGestureInput);
         return bundle;
+    }
+
+    public static boolean startFreeformActivity(Context context, Task task, String str) {
+        if (!(task == null || task.key == null || TextUtils.isEmpty(str))) {
+            try {
+                ActivityOptions makeFreeformActivityOptions = makeFreeformActivityOptions(context, str);
+                if (makeFreeformActivityOptions != null) {
+                    SystemServicesProxy.getInstance(context).startActivityFromRecents(context, task.key, task.title, makeFreeformActivityOptions);
+                    return true;
+                }
+            } catch (Exception e) {
+                Log.e("SystemUICompat", "Failed to startFreeformActivity", e);
+            }
+        }
+        return false;
+    }
+
+    public static ActivityOptions makeFreeformActivityOptions(Context context, String str) {
+        ActivityOptions activityOptions = MiuiMultiWindowUtils.getActivityOptions(context, str, true, false);
+        if (activityOptions != null) {
+            return activityOptions;
+        }
+        ActivityOptions makeBasic = ActivityOptions.makeBasic();
+        makeBasic.setLaunchWindowingMode(5);
+        makeBasic.setLaunchBounds(MiuiMultiWindowUtils.getFreeformRect(context));
+        return makeBasic;
     }
 }

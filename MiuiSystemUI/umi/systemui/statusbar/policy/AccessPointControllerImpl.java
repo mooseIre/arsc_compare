@@ -27,7 +27,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import miui.app.AlertDialog;
-import miui.view.MiuiHapticFeedbackConstants;
 
 public class AccessPointControllerImpl implements NetworkController.AccessPointController, WifiTracker.WifiListener {
     /* access modifiers changed from: private */
@@ -197,7 +196,7 @@ public class AccessPointControllerImpl implements NetworkController.AccessPointC
             Intent intent = new Intent("android.settings.WIFI_SETTINGS");
             intent.putExtra("wifi_start_connect_ssid", accessPoint.getSsidStr());
             intent.putExtra("ssid", accessPoint.getSsidStr());
-            intent.addFlags(MiuiHapticFeedbackConstants.FLAG_MIUI_HAPTIC_TAP_NORMAL);
+            intent.addFlags(268435456);
             fireSettingsIntentCallback(intent);
             return true;
         } else {

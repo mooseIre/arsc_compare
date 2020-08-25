@@ -30,7 +30,6 @@ import com.android.systemui.statusbar.Icons;
 import com.android.systemui.statusbar.phone.KeyguardStatusBarView;
 import com.android.systemui.statusbar.phone.StatusBar;
 import com.android.systemui.statusbar.policy.DarkIconDispatcherHelper;
-import miui.view.MiuiHapticFeedbackConstants;
 
 class MiuiStatusBarPromptImpl implements IMiuiStatusBarPrompt {
     private StatusBar mBar;
@@ -188,6 +187,7 @@ class MiuiStatusBarPromptImpl implements IMiuiStatusBarPrompt {
 
     public void hideReturnToInCallScreenButton() {
         this.mCallTimer.stop();
+        this.mCallTimer.setBase(SystemClock.elapsedRealtime());
         setViewVisibilty(this.mReturnToInCallScreenButton, 8, false);
         clearReturnToInCallScreenButtonIcons();
     }
@@ -410,7 +410,7 @@ class MiuiStatusBarPromptImpl implements IMiuiStatusBarPrompt {
             if (this.mClickActionType == 4) {
                 Intent intent2 = new Intent("miui.intent.action.EXIT_SOS");
                 intent2.setPackage("com.android.settings");
-                intent2.addFlags(MiuiHapticFeedbackConstants.FLAG_MIUI_HAPTIC_TAP_NORMAL);
+                intent2.addFlags(268435456);
                 this.mContext.startActivity(intent2);
             }
             if (this.mClickActionType == 5 && (view = this.mStateView) != null) {

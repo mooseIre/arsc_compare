@@ -34,8 +34,8 @@ public class NetworkSpeedController {
                     NetworkSpeedController.this.postUpdateNetworkSpeed();
                     return;
                 }
-                NetworkSpeedController.this.mBgHandler.removeMessages(R.styleable.AppCompatTheme_textAppearanceListItemSmall);
-                NetworkSpeedController.this.mBgHandler.sendEmptyMessage(R.styleable.AppCompatTheme_textAppearanceListItemSmall);
+                NetworkSpeedController.this.mBgHandler.removeMessages(R.styleable.AppCompatTheme_textAppearanceListItem);
+                NetworkSpeedController.this.mBgHandler.sendEmptyMessage(R.styleable.AppCompatTheme_textAppearanceListItem);
                 NetworkSpeedController.this.postUpdateNetworkSpeed();
             } else if ("android.intent.action.USER_SWITCHED".equals(intent.getAction())) {
                 NetworkSpeedController.this.mBgHandler.removeMessages(100);
@@ -70,8 +70,8 @@ public class NetworkSpeedController {
     private long mLastTime;
     private ContentObserver mNetworkSpeedObserver = new ContentObserver(new Handler()) {
         public void onChange(boolean z) {
-            NetworkSpeedController.this.mBgHandler.removeMessages(R.styleable.AppCompatTheme_textAppearanceListItem);
-            NetworkSpeedController.this.mBgHandler.sendEmptyMessage(R.styleable.AppCompatTheme_textAppearanceListItem);
+            NetworkSpeedController.this.mBgHandler.removeMessages(R.styleable.AppCompatTheme_switchStyle);
+            NetworkSpeedController.this.mBgHandler.sendEmptyMessage(R.styleable.AppCompatTheme_switchStyle);
             NetworkSpeedController.this.postUpdateNetworkSpeed();
         }
     };
@@ -161,8 +161,8 @@ public class NetworkSpeedController {
     }
 
     private void postUpdateNetworkSpeedDelay(long j) {
-        this.mBgHandler.removeMessages(R.styleable.AppCompatTheme_textAppearanceListItemSecondary);
-        this.mBgHandler.sendEmptyMessageDelayed(R.styleable.AppCompatTheme_textAppearanceListItemSecondary, j);
+        this.mBgHandler.removeMessages(R.styleable.AppCompatTheme_textAppearanceLargePopupMenu);
+        this.mBgHandler.sendEmptyMessageDelayed(R.styleable.AppCompatTheme_textAppearanceLargePopupMenu, j);
     }
 
     /* access modifiers changed from: private */
@@ -259,17 +259,17 @@ public class NetworkSpeedController {
 
         public void handleMessage(Message message) {
             switch (message.what) {
-                case R.styleable.AppCompatTheme_textAppearanceLargePopupMenu:
+                case R.styleable.AppCompatTheme_spinnerStyle:
                     NetworkSpeedController.this.updateSwitchState();
                     return;
-                case R.styleable.AppCompatTheme_textAppearanceListItem:
+                case R.styleable.AppCompatTheme_switchStyle:
                     NetworkSpeedController.this.updateSwitchState();
                     NetworkSpeedController.this.updateInterval();
                     return;
-                case R.styleable.AppCompatTheme_textAppearanceListItemSecondary:
+                case R.styleable.AppCompatTheme_textAppearanceLargePopupMenu:
                     NetworkSpeedController.this.updateNetworkSpeed();
                     return;
-                case R.styleable.AppCompatTheme_textAppearanceListItemSmall:
+                case R.styleable.AppCompatTheme_textAppearanceListItem:
                     NetworkSpeedController.this.updateConnectedState();
                     return;
                 default:

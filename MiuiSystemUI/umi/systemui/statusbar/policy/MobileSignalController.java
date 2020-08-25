@@ -17,7 +17,6 @@ import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
-import android.util.Slog;
 import android.util.SparseArray;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.telephony.IccCardConstants;
@@ -51,7 +50,6 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
     private FiveGController mFiveGController;
     private boolean mIsCtSim;
     private boolean mIsFirstSimStateChange = true;
-    private boolean mIsQcom = "qcom".equals(FeatureParser.getString("vendor"));
     private boolean mIsShowVoiceType;
     private List<String> mMccNncList;
     private NetworkController.MobileTypeListener mMobileTypeListener;
@@ -80,6 +78,7 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
         NetworkControllerImpl.Config config2 = config;
         boolean z2 = z;
         Looper looper2 = looper;
+        "qcom".equals(FeatureParser.getString("vendor"));
         IccCardConstants.State state = IccCardConstants.State.READY;
         this.mStyle = 0;
         this.mFiveGController = (FiveGController) Dependency.get(FiveGController.class);
@@ -92,7 +91,7 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
         this.mSlotId = getSimSlotIndex();
         this.mSubId = this.mSubscriptionInfo.getSubscriptionId();
         this.mPhoneStateListener = new MobilePhoneStateListener(this.mSubId, looper2);
-        this.mNetworkNameDefault = getStringIfExists(17040455);
+        this.mNetworkNameDefault = getStringIfExists(17040510);
         this.mMccNncList = Arrays.asList(this.mContext.getResources().getStringArray(285343744));
         if (config2.readIconsFromXml) {
             TelephonyIcons.readIconsFromXml(context);
@@ -226,7 +225,7 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
     }
 
     public int getCurrentIconId() {
-        if (!hasService()) {
+        if (!hasService(this.mServiceState)) {
             return TelephonyIcons.getSignalNullIcon(this.mSlotId);
         }
         int i = ((MobileState) this.mCurrentState).level;
@@ -520,7 +519,7 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
         return new MobileState();
     }
 
-    public void onSignalStrengthChanged(int i) {
+    public void onSignalStrengthChanged(int i, SignalController.IconGroup iconGroup) {
         update5GConnectState();
         boolean isFiveGBearerAllocated = this.mFiveGController.isFiveGBearerAllocated(getSimSlotIndex());
         if (isFiveGBearerAllocated) {
@@ -534,8 +533,11 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
         } else {
             ((MobileState) this.mCurrentState).mIsShow5GSignalStrength = false;
         }
+        if (miui.telephony.TelephonyManager.isCustForKrOps()) {
+            ((MobileState) this.mCurrentState).KrIconGroup = iconGroup;
+        }
         String str = this.mTag;
-        Log.d(str, "is5GConnected = " + isFiveGBearerAllocated + ", slotId = " + getSimSlotIndex() + ", level = " + ((MobileState) this.mCurrentState).level + ", mIsShow5GSignalStrength: " + ((MobileState) this.mCurrentState).mIsShow5GSignalStrength);
+        Log.d(str, "is5GConnected = " + isFiveGBearerAllocated + ", slotId = " + getSimSlotIndex() + ", level = " + i + ", current level = " + ((MobileState) this.mCurrentState).level + ", mIsShow5GSignalStrength: " + ((MobileState) this.mCurrentState).mIsShow5GSignalStrength);
         updateSignalStrength();
         notifyListenersIfNecessary();
     }
@@ -544,22 +546,42 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
         return this.mSlotId;
     }
 
-    private boolean hasService() {
-        return hasService(this.mServiceState);
+    /* JADX WARNING: Code restructure failed: missing block: B:3:0x0004, code lost:
+        r3 = getCombinedServiceState(r3);
+     */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public static boolean hasService(android.telephony.ServiceState r3) {
+        /*
+            r0 = 0
+            if (r3 != 0) goto L_0x0004
+            return r0
+        L_0x0004:
+            int r3 = getCombinedServiceState(r3)
+            r1 = 3
+            if (r3 == r1) goto L_0x0013
+            r1 = 1
+            if (r3 == r1) goto L_0x0013
+            r2 = 2
+            if (r3 != r2) goto L_0x0012
+            goto L_0x0013
+        L_0x0012:
+            return r1
+        L_0x0013:
+            return r0
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.policy.MobileSignalController.hasService(android.telephony.ServiceState):boolean");
     }
 
-    private boolean hasService(ServiceState serviceState) {
+    public static int getCombinedServiceState(ServiceState serviceState) {
         if (serviceState == null) {
-            return false;
+            return 1;
         }
-        int voiceRegState = serviceState.getVoiceRegState();
-        if (voiceRegState != 1 && voiceRegState != 2) {
-            return voiceRegState != 3;
+        int state = serviceState.getState();
+        int dataRegState = serviceState.getDataRegState();
+        if ((state == 1 || state == 2) && dataRegState == 0 && serviceState.getDataNetworkType() != 18) {
+            return 0;
         }
-        if (serviceState.getDataRegState() == 0) {
-            return true;
-        }
-        return false;
+        return state;
     }
 
     private boolean isCdma() {
@@ -690,8 +712,7 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
         }
     }
 
-    /* access modifiers changed from: private */
-    public int getMiuiLevel(SignalStrength signalStrength) {
+    private int getMiuiLevel(SignalStrength signalStrength) {
         if (Build.VERSION.SDK_INT > 28) {
             return miui.telephony.TelephonyManager.getDefault().getMiuiLevel(signalStrength);
         }
@@ -702,10 +723,10 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
     public final void updateTelephony() {
         ServiceState serviceState;
         if (SignalController.DEBUG) {
-            Log.d(this.mTag, "updateTelephony: hasService=" + hasService() + " ss=" + this.mSignalStrength);
+            Log.d(this.mTag, "updateTelephony: hasService=" + hasService(this.mServiceState) + " ss=" + this.mSignalStrength);
         }
         boolean z = true;
-        ((MobileState) this.mCurrentState).connected = hasService() && this.mSignalStrength != null;
+        ((MobileState) this.mCurrentState).connected = hasService(this.mServiceState) && this.mSignalStrength != null;
         updateSignalStrength();
         if (this.mNetworkToIconLookup.indexOfKey(((MobileState) this.mCurrentState).dataNetType) >= 0) {
             T t = this.mCurrentState;
@@ -749,23 +770,12 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
         return !this.mPhone.getDataEnabled(this.mSubId);
     }
 
-    /* access modifiers changed from: private */
-    public boolean needUpdateNetwork(int i, ServiceState serviceState) {
-        CallStateController callStateController = (CallStateController) Dependency.get(CallStateController.class);
-        if (!callStateController.isMsim() || callStateController.getCallState(1 - i) == 0 || !this.mSupportDualVolte || !this.mIsQcom || hasService(serviceState)) {
-            return true;
-        }
-        return false;
-    }
-
-    /* JADX WARNING: Removed duplicated region for block: B:59:0x01cd  */
-    /* JADX WARNING: Removed duplicated region for block: B:62:0x01de  */
-    /* JADX WARNING: Removed duplicated region for block: B:65:0x0221  */
-    /* JADX WARNING: Removed duplicated region for block: B:66:0x0227  */
-    /* JADX WARNING: Removed duplicated region for block: B:69:0x0247  */
-    /* JADX WARNING: Removed duplicated region for block: B:72:0x024c  */
-    /* JADX WARNING: Removed duplicated region for block: B:75:0x0283  */
-    /* JADX WARNING: Removed duplicated region for block: B:76:0x0288  */
+    /* JADX WARNING: Removed duplicated region for block: B:56:0x01a4  */
+    /* JADX WARNING: Removed duplicated region for block: B:59:0x01b5  */
+    /* JADX WARNING: Removed duplicated region for block: B:62:0x020f  */
+    /* JADX WARNING: Removed duplicated region for block: B:65:0x0214  */
+    /* JADX WARNING: Removed duplicated region for block: B:68:0x024b  */
+    /* JADX WARNING: Removed duplicated region for block: B:69:0x0250  */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     private void generateIconGroup() {
         /*
@@ -817,11 +827,11 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
             r12 = 0
             r22 = r3[r12]
             int r3 = r7.mSlotId
-            if (r3 < 0) goto L_0x02b2
+            if (r3 < 0) goto L_0x027a
             android.telephony.TelephonyManager r4 = r7.mPhone
             int r4 = r4.getPhoneCount()
             if (r3 <= r4) goto L_0x0057
-            goto L_0x02b2
+            goto L_0x027a
         L_0x0057:
             boolean r3 = com.android.systemui.statusbar.policy.SignalController.DEBUG
             if (r3 == 0) goto L_0x00e7
@@ -880,46 +890,29 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
             android.util.Log.d(r3, r0)
         L_0x00e7:
             android.telephony.ServiceState r0 = r7.mServiceState
-            if (r0 == 0) goto L_0x0111
-            java.lang.String r0 = r7.mTag
-            java.lang.StringBuilder r3 = new java.lang.StringBuilder
-            r3.<init>()
-            java.lang.String r4 = "getDataNetTypeFromServiceState slotId="
-            r3.append(r4)
-            int r4 = r7.mSlotId
-            r3.append(r4)
-            java.lang.String r4 = "  isUsingCarrierAggregation="
-            r3.append(r4)
-            android.telephony.ServiceState r4 = r7.mServiceState
-            boolean r4 = android.telephony.ServiceStateCompat.isUsingCarrierAggregation(r4)
-            r3.append(r4)
-            java.lang.String r3 = r3.toString()
-            android.util.Log.d(r0, r3)
-        L_0x0111:
-            android.telephony.ServiceState r0 = r7.mServiceState
             int r14 = com.android.systemui.statusbar.NetworkTypeUtils.getDataNetTypeFromServiceState(r2, r0)
             r13 = 1
-            if (r14 == 0) goto L_0x012b
+            if (r14 == 0) goto L_0x0101
             boolean r0 = r32.isCdma()
-            if (r0 == 0) goto L_0x0129
+            if (r0 == 0) goto L_0x00ff
             T r0 = r7.mCurrentState
             com.android.systemui.statusbar.policy.MobileSignalController$MobileState r0 = (com.android.systemui.statusbar.policy.MobileSignalController.MobileState) r0
             int r0 = r0.callState
-            if (r0 == 0) goto L_0x0129
-            goto L_0x012b
-        L_0x0129:
+            if (r0 == 0) goto L_0x00ff
+            goto L_0x0101
+        L_0x00ff:
             r0 = r12
-            goto L_0x012c
-        L_0x012b:
+            goto L_0x0102
+        L_0x0101:
             r0 = r13
-        L_0x012c:
+        L_0x0102:
             r7.mIsShowVoiceType = r0
-            if (r0 == 0) goto L_0x0132
+            if (r0 == 0) goto L_0x0108
             r2 = r1
-            goto L_0x0133
-        L_0x0132:
+            goto L_0x0109
+        L_0x0108:
             r2 = r14
-        L_0x0133:
+        L_0x0109:
             int r0 = r7.mSlotId
             r7.updateVoiceType(r0, r1)
             int r1 = r7.mSlotId
@@ -934,7 +927,7 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
             android.telephony.SignalStrength r1 = r7.mSignalStrength
             int r0 = com.android.systemui.statusbar.policy.TelephonyIcons.getSignalStrengthIcon(r0, r10, r8, r11, r1)
             boolean r1 = com.android.systemui.statusbar.policy.SignalController.DEBUG
-            if (r1 == 0) goto L_0x016e
+            if (r1 == 0) goto L_0x0145
             java.lang.String r1 = r7.mTag
             java.lang.StringBuilder r2 = new java.lang.StringBuilder
             r2.<init>()
@@ -944,24 +937,24 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
             r2.append(r3)
             java.lang.String r2 = r2.toString()
             android.util.Log.d(r1, r2)
-        L_0x016e:
+        L_0x0145:
             T r1 = r7.mCurrentState
             r2 = r1
             com.android.systemui.statusbar.policy.MobileSignalController$MobileState r2 = (com.android.systemui.statusbar.policy.MobileSignalController.MobileState) r2
             boolean r2 = r2.dataConnected
-            if (r2 == 0) goto L_0x0184
+            if (r2 == 0) goto L_0x015b
             int r2 = r7.mSlotId
-            if (r2 < 0) goto L_0x0184
+            if (r2 < 0) goto L_0x015b
             com.android.systemui.statusbar.policy.MobileSignalController$MobileState r1 = (com.android.systemui.statusbar.policy.MobileSignalController.MobileState) r1
             int r1 = r1.dataActivity
             int r1 = com.android.systemui.statusbar.policy.TelephonyIcons.getDataActivity(r2, r1)
-            goto L_0x0185
-        L_0x0184:
+            goto L_0x015c
+        L_0x015b:
             r1 = r12
-        L_0x0185:
+        L_0x015c:
             int r2 = com.android.systemui.statusbar.policy.TelephonyIcons.convertMobileStrengthIcon(r0)
             boolean r3 = com.android.systemui.statusbar.policy.SignalController.DEBUG
-            if (r3 == 0) goto L_0x01a8
+            if (r3 == 0) goto L_0x017f
             java.lang.String r3 = r7.mTag
             java.lang.StringBuilder r4 = new java.lang.StringBuilder
             r4.<init>()
@@ -971,38 +964,38 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
             r4.append(r5)
             java.lang.String r4 = r4.toString()
             android.util.Log.d(r3, r4)
-        L_0x01a8:
-            if (r0 == r2) goto L_0x01b0
+        L_0x017f:
+            if (r0 == r2) goto L_0x0187
             r31 = r2
             r2 = r0
             r0 = r31
-            goto L_0x01b1
-        L_0x01b0:
+            goto L_0x0188
+        L_0x0187:
             r2 = r12
-        L_0x01b1:
+        L_0x0188:
             int r3 = r7.mStyle
-            if (r3 != r13) goto L_0x01ca
-            if (r11 != 0) goto L_0x01c2
+            if (r3 != r13) goto L_0x01a1
+            if (r11 != 0) goto L_0x0199
             boolean r3 = r32.showDataAndVoice()
-            if (r3 == 0) goto L_0x01c2
+            if (r3 == 0) goto L_0x0199
             int r3 = com.android.systemui.statusbar.policy.TelephonyIcons.getStackedVoiceIcon(r9)
-            goto L_0x01cb
-        L_0x01c2:
-            if (r11 == 0) goto L_0x01ca
-            if (r1 == 0) goto L_0x01ca
+            goto L_0x01a2
+        L_0x0199:
+            if (r11 == 0) goto L_0x01a1
+            if (r1 == 0) goto L_0x01a1
             int r0 = com.android.systemui.statusbar.policy.TelephonyIcons.getRoamingSignalIconId(r8, r10)
-        L_0x01ca:
+        L_0x01a1:
             r3 = r12
-        L_0x01cb:
-            if (r3 != 0) goto L_0x01ce
+        L_0x01a2:
+            if (r3 != 0) goto L_0x01a5
             r2 = r12
-        L_0x01ce:
+        L_0x01a5:
             int r4 = r7.mSlotId
             int[] r17 = com.android.systemui.statusbar.policy.TelephonyIcons.getSignalStrengthDes(r4)
             int r4 = r7.mSlotId
             int r20 = com.android.systemui.statusbar.policy.TelephonyIcons.getSignalNullIcon(r4)
             boolean r4 = com.android.systemui.statusbar.policy.SignalController.DEBUG
-            if (r4 == 0) goto L_0x021c
+            if (r4 == 0) goto L_0x01f4
             java.lang.String r4 = r7.mTag
             java.lang.StringBuilder r5 = new java.lang.StringBuilder
             r5.<init>()
@@ -1024,64 +1017,52 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
             r5.append(r6)
             java.lang.String r5 = r5.toString()
             android.util.Log.d(r4, r5)
-        L_0x021c:
-            r4 = 18
-            r5 = 6
-            if (r14 != r4) goto L_0x0227
-            r4 = 2131820620(0x7f11004c, float:1.927396E38)
-            r6 = r5
-            r8 = r6
-            goto L_0x0242
-        L_0x0227:
+        L_0x01f4:
             int r4 = r7.mSlotId
-            int r5 = com.android.systemui.statusbar.policy.TelephonyIcons.getDataTypeIcon(r4)
-            int r4 = r7.mSlotId
-            int r4 = com.android.systemui.statusbar.policy.TelephonyIcons.getQSDataTypeIcon(r4)
+            int r4 = com.android.systemui.statusbar.policy.TelephonyIcons.getDataTypeIcon(r4)
+            int r5 = r7.mSlotId
+            int r5 = com.android.systemui.statusbar.policy.TelephonyIcons.getQSDataTypeIcon(r5)
             int[] r6 = com.android.systemui.statusbar.policy.TelephonyIcons.mSelectedDataActivityIndex
             int r8 = r7.mSlotId
             r6 = r6[r8]
             int r8 = com.android.systemui.statusbar.policy.TelephonyIcons.getDataTypeDesc(r8)
-            r31 = r8
-            r8 = r4
-            r4 = r31
-        L_0x0242:
             boolean r9 = r7.mIsShowVoiceType
-            if (r9 == 0) goto L_0x0247
-            goto L_0x0248
-        L_0x0247:
+            if (r9 == 0) goto L_0x020f
+            goto L_0x0210
+        L_0x020f:
             r12 = r6
-        L_0x0248:
+        L_0x0210:
             boolean r6 = com.android.systemui.statusbar.policy.SignalController.DEBUG
-            if (r6 == 0) goto L_0x027b
+            if (r6 == 0) goto L_0x0243
             java.lang.String r6 = r7.mTag
             java.lang.StringBuilder r9 = new java.lang.StringBuilder
             r9.<init>()
             java.lang.String r10 = "updateDataNetType, dataTypeIcon="
             r9.append(r10)
-            java.lang.String r5 = r7.getResourceName(r5)
-            r9.append(r5)
-            java.lang.String r5 = " qsDataTypeIcon="
-            r9.append(r5)
-            java.lang.String r5 = r7.getResourceName(r8)
-            r9.append(r5)
-            java.lang.String r5 = " dataContentDesc="
-            r9.append(r5)
+            java.lang.String r4 = r7.getResourceName(r4)
             r9.append(r4)
-            java.lang.String r5 = r9.toString()
-            android.util.Log.d(r6, r5)
-        L_0x027b:
-            T r5 = r7.mCurrentState
-            com.android.systemui.statusbar.policy.MobileSignalController$MobileState r5 = (com.android.systemui.statusbar.policy.MobileSignalController.MobileState) r5
-            boolean r5 = r5.mIs5GConnected
-            if (r5 == 0) goto L_0x0288
-            r5 = 10
-            r24 = r5
-            goto L_0x028a
-        L_0x0288:
+            java.lang.String r4 = " qsDataTypeIcon="
+            r9.append(r4)
+            java.lang.String r4 = r7.getResourceName(r5)
+            r9.append(r4)
+            java.lang.String r4 = " dataContentDesc="
+            r9.append(r4)
+            r9.append(r8)
+            java.lang.String r4 = r9.toString()
+            android.util.Log.d(r6, r4)
+        L_0x0243:
+            T r4 = r7.mCurrentState
+            com.android.systemui.statusbar.policy.MobileSignalController$MobileState r4 = (com.android.systemui.statusbar.policy.MobileSignalController.MobileState) r4
+            boolean r4 = r4.mIs5GConnected
+            if (r4 == 0) goto L_0x0250
+            r4 = 10
+            r24 = r4
+            goto L_0x0252
+        L_0x0250:
             r24 = r12
-        L_0x028a:
-            T r5 = r7.mCurrentState
-            com.android.systemui.statusbar.policy.MobileSignalController$MobileState r5 = (com.android.systemui.statusbar.policy.MobileSignalController.MobileState) r5
+        L_0x0252:
+            T r4 = r7.mCurrentState
+            com.android.systemui.statusbar.policy.MobileSignalController$MobileState r4 = (com.android.systemui.statusbar.policy.MobileSignalController.MobileState) r4
             com.android.systemui.statusbar.policy.MobileSignalController$MobileIconGroup r6 = new com.android.systemui.statusbar.policy.MobileSignalController$MobileIconGroup
             r13 = r6
             java.lang.String r14 = android.telephony.TelephonyManager.getNetworkTypeName(r14)
@@ -1091,16 +1072,16 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
             r19 = 0
             r21 = 0
             r25 = 0
-            r23 = r4
-            r26 = r8
+            r23 = r8
+            r26 = r5
             r27 = r0
             r28 = r2
             r29 = r3
             r30 = r1
             r13.<init>(r14, r15, r16, r17, r18, r19, r20, r21, r22, r23, r24, r25, r26, r27, r28, r29, r30)
-            r5.iconGroup = r6
+            r4.iconGroup = r6
             return
-        L_0x02b2:
+        L_0x027a:
             java.lang.String r0 = r7.mTag
             java.lang.StringBuilder r1 = new java.lang.StringBuilder
             r1.<init>()
@@ -1133,8 +1114,7 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
         return serviceState.getVoiceNetworkType();
     }
 
-    /* access modifiers changed from: private */
-    public int getDataNetworkType() {
+    private int getDataNetworkType() {
         ServiceState serviceState = this.mServiceState;
         if (serviceState == null) {
             return 0;
@@ -1238,50 +1218,17 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
         }
 
         public void onSignalStrengthsChanged(SignalStrength signalStrength) {
-            String str;
-            if (SignalController.DEBUG) {
-                String str2 = MobileSignalController.this.mTag;
-                StringBuilder sb = new StringBuilder();
-                sb.append("onSignalStrengthsChanged signalStrength=");
-                sb.append(signalStrength);
-                if (signalStrength == null) {
-                    str = "";
-                } else {
-                    str = " level=" + MobileSignalController.this.getMiuiLevel(signalStrength);
-                }
-                sb.append(str);
-                Log.d(str2, sb.toString());
-            }
-            MobileSignalController mobileSignalController = MobileSignalController.this;
-            if (mobileSignalController.needUpdateNetwork(mobileSignalController.mSlotId, MobileSignalController.this.mServiceState)) {
-                SignalStrength unused = MobileSignalController.this.mSignalStrength = signalStrength;
-                MobileSignalController.this.updateTelephony();
-            }
+            Log.d("MobileSignalController", "onSignalStrengthsChanged: " + signalStrength);
+            SignalStrength unused = MobileSignalController.this.mSignalStrength = signalStrength;
+            MobileSignalController.this.updateTelephony();
         }
 
         public void onServiceStateChanged(ServiceState serviceState) {
-            if (SignalController.DEBUG) {
-                String str = MobileSignalController.this.mTag;
-                StringBuilder sb = new StringBuilder();
-                sb.append("onServiceStateChanged :state=");
-                sb.append(serviceState != null ? Integer.valueOf(serviceState.getState()) : serviceState);
-                sb.append(" VoiceNetworkType=");
-                sb.append(serviceState != null ? Integer.valueOf(serviceState.getVoiceNetworkType()) : serviceState);
-                sb.append(" DataNetworkType=");
-                sb.append(serviceState != null ? Integer.valueOf(serviceState.getDataNetworkType()) : serviceState);
-                Log.d(str, sb.toString());
-            }
-            if (serviceState != null) {
-                MobileSignalController mobileSignalController = MobileSignalController.this;
-                if (mobileSignalController.needUpdateNetwork(mobileSignalController.mSlotId, serviceState)) {
-                    ServiceState unused = MobileSignalController.this.mServiceState = serviceState;
-                    ((MobileState) MobileSignalController.this.mCurrentState).dataNetType = NetworkTypeUtils.getDataNetTypeFromServiceState(serviceState.getDataNetworkType(), serviceState);
-                    MobileSignalController.this.update5GConnectState();
-                    String str2 = MobileSignalController.this.mTag;
-                    Slog.d(str2, "onServiceStateChanged slotId=" + MobileSignalController.this.mSlotId + " subId=" + this.mSubId + " voiceState=" + serviceState.getVoiceRegState() + " dataState=" + serviceState.getDataRegState() + " FiveGConnected= " + ((MobileState) MobileSignalController.this.mCurrentState).mIs5GConnected + " dataType= " + MobileSignalController.this.getDataNetworkType());
-                    MobileSignalController.this.updateTelephony();
-                }
-            }
+            ServiceState unused = MobileSignalController.this.mServiceState = serviceState;
+            ((MobileState) MobileSignalController.this.mCurrentState).dataNetType = NetworkTypeUtils.getDataNetTypeFromServiceState(serviceState.getDataNetworkType(), serviceState);
+            Log.d("MobileSignalController", "onServiceStateChanged: " + serviceState + ", data type = " + ((MobileState) MobileSignalController.this.mCurrentState).dataNetType);
+            MobileSignalController.this.update5GConnectState();
+            MobileSignalController.this.updateTelephony();
         }
 
         public void onCallStateChanged(int i, String str) {
@@ -1291,10 +1238,7 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
         }
 
         public void onDataConnectionStateChanged(int i, int i2) {
-            if (SignalController.DEBUG) {
-                String str = MobileSignalController.this.mTag;
-                Log.d(str, "onDataConnectionStateChanged: state=" + i + " type=" + i2);
-            }
+            Log.d("MobileSignalController", "onDataConnectionStateChanged: " + i);
             MobileSignalController mobileSignalController = MobileSignalController.this;
             ((MobileState) mobileSignalController.mCurrentState).dataState = i;
             mobileSignalController.updateTelephony();
@@ -1313,10 +1257,8 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
                     Log.e("MobileSignalController", "onPreciseDataConnectionStateChanged error", e);
                 }
                 if (str != null && str.equals("preempt") && preciseDataConnectionState.getDataConnectionState() != -1) {
-                    if (SignalController.DEBUG) {
-                        String str2 = MobileSignalController.this.mTag;
-                        Log.d(str2, "onPreciseDataConnectionStateChanged: dataConnectionState=" + preciseDataConnectionState);
-                    }
+                    String str2 = MobileSignalController.this.mTag;
+                    Log.d(str2, "onPreciseDataConnectionStateChanged: dataConnectionState=" + preciseDataConnectionState);
                     ((MobileState) MobileSignalController.this.mCurrentState).dataState = preciseDataConnectionState.getDataConnectionState();
                     ((MobileState) MobileSignalController.this.mCurrentState).dataNetType = preciseDataConnectionState.getDataConnectionNetworkType();
                     MobileSignalController mobileSignalController = MobileSignalController.this;
@@ -1325,10 +1267,8 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
                     }
                     MobileSignalController.this.updateTelephony();
                 } else if (str != null && str.equals("default") && ((MobileState) MobileSignalController.this.mCurrentState).dataState != preciseDataConnectionState.getDataConnectionState()) {
-                    if (SignalController.DEBUG) {
-                        String str3 = MobileSignalController.this.mTag;
-                        Log.d(str3, "onPreciseDataConnectionStateChanged: APN_TYPE_DEFAULT, dataConnectionState=" + preciseDataConnectionState);
-                    }
+                    String str3 = MobileSignalController.this.mTag;
+                    Log.d(str3, "onPreciseDataConnectionStateChanged: APN_TYPE_DEFAULT, dataConnectionState=" + preciseDataConnectionState);
                     ((MobileState) MobileSignalController.this.mCurrentState).dataState = preciseDataConnectionState.getDataConnectionState();
                     MobileSignalController.this.updateTelephony();
                 }
@@ -1381,7 +1321,7 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
     private void updateVoiceType(int i, int i2) {
         boolean z;
         String str = "";
-        if (hasService()) {
+        if (hasService(this.mServiceState)) {
             long networkClass = (long) ((int) TelephonyManagerEx.getDefault().getNetworkClass(i2));
             if (networkClass == 397312) {
                 str = (!miui.os.Build.IS_CT_CUSTOMIZATION_TEST || !SUPPORT_CA || !isCdma()) ? TelephonyIcons.getNetworkTypeName(6, this.mSlotId) : TelephonyIcons.getNetworkTypeName(7, this.mSlotId);
@@ -1416,14 +1356,14 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
         L_0x0020:
             r3 = r4
         L_0x0021:
-            r6 = 2131233344(0x7f080a40, float:1.8082823E38)
+            r6 = 2131233588(0x7f080b34, float:1.8083318E38)
             r7 = 7
             java.lang.String r9 = "MobileSignalController"
             r10 = 9
             r11 = 6
             r12 = 1
             r13 = 8
-            r14 = 2131233343(0x7f080a3f, float:1.808282E38)
+            r14 = 2131233587(0x7f080b33, float:1.8083316E38)
             r15 = 2
             r8 = 3
             r16 = 0
@@ -1502,7 +1442,7 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
             int r0 = r0.getIdentifier(r2, r4, r5)
             r3[r21] = r0
             int[] r0 = com.android.systemui.statusbar.policy.TelephonyIcons.mSelectedQSDataTypeIcon
-            r2 = 2131233350(0x7f080a46, float:1.8082835E38)
+            r2 = 2131233594(0x7f080b3a, float:1.808333E38)
             r0[r21] = r2
             java.lang.String[] r0 = com.android.systemui.statusbar.policy.TelephonyIcons.mSelectedDataTypeDesc
             java.lang.String[] r2 = com.android.systemui.statusbar.policy.TelephonyIcons.mDataTypeDescriptionArray
@@ -1516,7 +1456,7 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
             boolean r7 = r7.contains(r3)
             r12 = 10
             r17 = 5
-            r18 = 2131233348(0x7f080a44, float:1.808283E38)
+            r18 = 2131233592(0x7f080b38, float:1.8083326E38)
             r19 = 4
             if (r7 == 0) goto L_0x016a
             android.telephony.ServiceState r7 = r0.mServiceState
@@ -1686,7 +1626,7 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
             int r0 = r0.getIdentifier(r2, r4, r5)
             r3[r21] = r0
             int[] r0 = com.android.systemui.statusbar.policy.TelephonyIcons.mSelectedQSDataTypeIcon
-            r2 = 2131233342(0x7f080a3e, float:1.8082819E38)
+            r2 = 2131233586(0x7f080b32, float:1.8083314E38)
             r0[r21] = r2
             java.lang.String[] r0 = com.android.systemui.statusbar.policy.TelephonyIcons.mSelectedDataTypeDesc
             java.lang.String[] r2 = com.android.systemui.statusbar.policy.TelephonyIcons.mDataTypeDescriptionArray
@@ -1705,7 +1645,7 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
             int r0 = r0.getIdentifier(r2, r4, r5)
             r3[r21] = r0
             int[] r0 = com.android.systemui.statusbar.policy.TelephonyIcons.mSelectedQSDataTypeIcon
-            r2 = 2131233342(0x7f080a3e, float:1.8082819E38)
+            r2 = 2131233586(0x7f080b32, float:1.8083314E38)
             r0[r21] = r2
             java.lang.String[] r0 = com.android.systemui.statusbar.policy.TelephonyIcons.mSelectedDataTypeDesc
             java.lang.String[] r2 = com.android.systemui.statusbar.policy.TelephonyIcons.mDataTypeDescriptionArray
@@ -1742,7 +1682,7 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
             int r0 = r0.getIdentifier(r2, r4, r5)
             r3[r21] = r0
             int[] r0 = com.android.systemui.statusbar.policy.TelephonyIcons.mSelectedQSDataTypeIcon
-            r2 = 2131233347(0x7f080a43, float:1.8082829E38)
+            r2 = 2131233591(0x7f080b37, float:1.8083324E38)
             r0[r21] = r2
             java.lang.String[] r0 = com.android.systemui.statusbar.policy.TelephonyIcons.mSelectedDataTypeDesc
             java.lang.String[] r2 = com.android.systemui.statusbar.policy.TelephonyIcons.mDataTypeDescriptionArray
@@ -1795,7 +1735,7 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
             int r0 = r0.getIdentifier(r2, r4, r5)
             r3[r21] = r0
             int[] r0 = com.android.systemui.statusbar.policy.TelephonyIcons.mSelectedQSDataTypeIcon
-            r2 = 2131233346(0x7f080a42, float:1.8082827E38)
+            r2 = 2131233590(0x7f080b36, float:1.8083322E38)
             r0[r21] = r2
             java.lang.String[] r0 = com.android.systemui.statusbar.policy.TelephonyIcons.mSelectedDataTypeDesc
             java.lang.String[] r2 = com.android.systemui.statusbar.policy.TelephonyIcons.mDataTypeDescriptionArray
@@ -1855,6 +1795,7 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
     }
 
     static class MobileState extends SignalController.State {
+        SignalController.IconGroup KrIconGroup;
         boolean airplaneMode;
         int callState;
         boolean carrierNetworkChangeMode;
@@ -1910,6 +1851,7 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
             this.phoneType = mobileState.phoneType;
             this.mmsDataState = mobileState.mmsDataState;
             this.callState = mobileState.callState;
+            this.KrIconGroup = mobileState.KrIconGroup;
         }
 
         /* access modifiers changed from: protected */
@@ -1985,6 +1927,9 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
             sb.append("callState=");
             sb.append(this.callState);
             sb.append(',');
+            sb.append("KrIconGroup=");
+            sb.append(this.KrIconGroup);
+            sb.append(',');
             sb.append("dataActivity=");
             sb.append(this.dataActivity);
         }
@@ -1992,7 +1937,7 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
         public boolean equals(Object obj) {
             if (super.equals(obj)) {
                 MobileState mobileState = (MobileState) obj;
-                return Objects.equals(mobileState.networkName, this.networkName) && Objects.equals(mobileState.networkNameData, this.networkNameData) && Objects.equals(mobileState.networkNameVoice, this.networkNameVoice) && mobileState.dataNetType == this.dataNetType && mobileState.dataState == this.dataState && mobileState.dataSim == this.dataSim && mobileState.mIs5GConnected == this.mIs5GConnected && mobileState.mIsShow5GSignalStrength == this.mIsShow5GSignalStrength && mobileState.dataConnected == this.dataConnected && mobileState.isEmergency == this.isEmergency && mobileState.airplaneMode == this.airplaneMode && mobileState.carrierNetworkChangeMode == this.carrierNetworkChangeMode && mobileState.userSetup == this.userSetup && mobileState.isDefault == this.isDefault && mobileState.roaming == this.roaming && mobileState.imsRegister == this.imsRegister && mobileState.speedHd == this.speedHd && mobileState.vowifi == this.vowifi && mobileState.volteNoService == this.volteNoService && mobileState.voiceLevel == this.voiceLevel && mobileState.dataActivity == this.dataActivity && mobileState.phoneType == this.phoneType && mobileState.mmsDataState == this.mmsDataState && mobileState.callState == this.callState;
+                return Objects.equals(mobileState.networkName, this.networkName) && Objects.equals(mobileState.networkNameData, this.networkNameData) && Objects.equals(mobileState.networkNameVoice, this.networkNameVoice) && mobileState.dataNetType == this.dataNetType && mobileState.dataState == this.dataState && mobileState.dataSim == this.dataSim && mobileState.mIs5GConnected == this.mIs5GConnected && mobileState.mIsShow5GSignalStrength == this.mIsShow5GSignalStrength && mobileState.dataConnected == this.dataConnected && mobileState.isEmergency == this.isEmergency && mobileState.airplaneMode == this.airplaneMode && mobileState.carrierNetworkChangeMode == this.carrierNetworkChangeMode && mobileState.userSetup == this.userSetup && mobileState.isDefault == this.isDefault && mobileState.roaming == this.roaming && mobileState.imsRegister == this.imsRegister && mobileState.speedHd == this.speedHd && mobileState.vowifi == this.vowifi && mobileState.volteNoService == this.volteNoService && mobileState.voiceLevel == this.voiceLevel && mobileState.dataActivity == this.dataActivity && mobileState.phoneType == this.phoneType && mobileState.mmsDataState == this.mmsDataState && mobileState.callState == this.callState && mobileState.KrIconGroup == this.KrIconGroup;
             }
         }
     }

@@ -18,6 +18,12 @@ public interface StatusBarStateController {
         void onDozingChanged(boolean z) {
         }
 
+        void onFullscreenStateChanged(boolean z, boolean z2) {
+        }
+
+        void onPulsingChanged(boolean z) {
+        }
+
         void onStateChanged(int i) {
         }
 
@@ -35,6 +41,8 @@ public interface StatusBarStateController {
     int getState();
 
     boolean isDozing();
+
+    boolean isPulsing();
 
     void removeCallback(StateListener stateListener);
 }

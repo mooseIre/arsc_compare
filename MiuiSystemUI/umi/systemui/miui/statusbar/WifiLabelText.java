@@ -13,6 +13,7 @@ import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.widget.TextView;
+import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.systemui.Dependency;
 
 public class WifiLabelText extends TextView {
@@ -52,7 +53,7 @@ public class WifiLabelText extends TextView {
                 super.onChange(z);
                 WifiLabelText wifiLabelText = WifiLabelText.this;
                 boolean z2 = true;
-                if (Settings.System.getIntForUser(wifiLabelText.mContext.getContentResolver(), "status_bar_show_carrier_under_keyguard", 1, -2) != 1) {
+                if (Settings.System.getIntForUser(wifiLabelText.mContext.getContentResolver(), "status_bar_show_carrier_under_keyguard", 1, KeyguardUpdateMonitor.getCurrentUser()) != 1) {
                     z2 = false;
                 }
                 boolean unused = wifiLabelText.mShowCarrier = z2;
@@ -83,7 +84,7 @@ public class WifiLabelText extends TextView {
             public void onChange(boolean z) {
                 super.onChange(z);
                 WifiLabelText wifiLabelText = WifiLabelText.this;
-                String unused = wifiLabelText.mCustomCarrier = MiuiSettings.System.getStringForUser(wifiLabelText.mContext.getContentResolver(), "status_bar_custom_carrier0", -2);
+                String unused = wifiLabelText.mCustomCarrier = MiuiSettings.System.getStringForUser(wifiLabelText.mContext.getContentResolver(), "status_bar_custom_carrier0", KeyguardUpdateMonitor.getCurrentUser());
                 WifiLabelText.this.updateCarrier();
             }
         };
@@ -95,11 +96,11 @@ public class WifiLabelText extends TextView {
     /* access modifiers changed from: private */
     public void initCarrier() {
         boolean z = true;
-        if (Settings.System.getIntForUser(this.mContext.getContentResolver(), "status_bar_show_carrier_under_keyguard", 1, -2) != 1) {
+        if (Settings.System.getIntForUser(this.mContext.getContentResolver(), "status_bar_show_carrier_under_keyguard", 1, KeyguardUpdateMonitor.getCurrentUser()) != 1) {
             z = false;
         }
         this.mShowCarrier = z;
-        this.mCustomCarrier = MiuiSettings.System.getStringForUser(this.mContext.getContentResolver(), "status_bar_custom_carrier0", -2);
+        this.mCustomCarrier = MiuiSettings.System.getStringForUser(this.mContext.getContentResolver(), "status_bar_custom_carrier0", KeyguardUpdateMonitor.getCurrentUser());
         updateCarrier();
     }
 

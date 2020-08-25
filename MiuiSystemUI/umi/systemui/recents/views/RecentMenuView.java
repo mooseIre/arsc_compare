@@ -11,6 +11,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.MiuiMultiWindowUtils;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -18,6 +19,7 @@ import android.widget.ImageView;
 import com.android.systemui.Constants;
 import com.android.systemui.Dependency;
 import com.android.systemui.HapticFeedBackImpl;
+import com.android.systemui.SystemUICompat;
 import com.android.systemui.plugins.R;
 import com.android.systemui.recents.BaseRecentsImpl;
 import com.android.systemui.recents.Recents;
@@ -26,6 +28,7 @@ import com.android.systemui.recents.events.RecentsEventBus;
 import com.android.systemui.recents.events.activity.HideMemoryAndDockEvent;
 import com.android.systemui.recents.events.activity.ShowMemoryAndDockEvent;
 import com.android.systemui.recents.events.activity.ShowTaskMenuEvent;
+import com.android.systemui.recents.events.activity.StartSmallWindowEvent;
 import com.android.systemui.recents.events.component.ChangeTaskLockStateEvent;
 import com.android.systemui.recents.events.ui.ShowApplicationInfoEvent;
 import com.android.systemui.recents.events.ui.dragndrop.DragDropTargetChangedEvent;
@@ -37,6 +40,7 @@ import com.android.systemui.recents.model.Task;
 import com.android.systemui.recents.model.TaskStack;
 import com.android.systemui.stackdivider.events.StartedDragingEvent;
 import com.android.systemui.util.ViewAnimUtils;
+import java.util.ArrayList;
 import miui.util.ScreenshotUtils;
 import miui.view.animation.BackEaseOutInterpolator;
 
@@ -45,6 +49,7 @@ public class RecentMenuView extends FrameLayout implements View.OnClickListener,
     public Bitmap mBlurBackground;
     /* access modifiers changed from: private */
     public boolean mIsShowing;
+    private boolean mIsSupportSmallWindow;
     private boolean mIsTaskViewLeft;
     boolean mIsTouchInTaskViewBound;
     Drawable mLockDrawable;
@@ -54,6 +59,8 @@ public class RecentMenuView extends FrameLayout implements View.OnClickListener,
     private FrameLayout mMenuItemLockContainer;
     private ImageView mMenuItemMultiWindow;
     private FrameLayout mMenuItemMultiWindowContainer;
+    private ImageView mMenuItemSmallWindow;
+    private FrameLayout mMenuItemSmallWindowContainer;
     private TimeInterpolator mShowMenuItemAnimInterpolator;
     ValueAnimator mShowOrHideAnim;
     /* access modifiers changed from: private */
@@ -125,6 +132,17 @@ public class RecentMenuView extends FrameLayout implements View.OnClickListener,
                 ((Float) valueAnimator.getAnimatedValue()).floatValue();
             }
         });
+        this.mIsSupportSmallWindow = checkIsSupportSmallWindow();
+    }
+
+    public static boolean checkIsSupportSmallWindow() {
+        try {
+            Class<?> cls = Class.forName("android.view.Display");
+            return ((Boolean) cls.getDeclaredMethod("hasSmallFreeformFeature", (Class[]) null).invoke(cls, new Object[0])).booleanValue();
+        } catch (Exception e) {
+            Log.e("RecentMenuView", "isSupportSmallWindow: reflect error", e);
+            return false;
+        }
     }
 
     /* access modifiers changed from: protected */
@@ -132,20 +150,25 @@ public class RecentMenuView extends FrameLayout implements View.OnClickListener,
         this.mMenuItemInfoContainer = (FrameLayout) findViewById(R.id.menu_item_info_container);
         this.mMenuItemLockContainer = (FrameLayout) findViewById(R.id.menu_item_lock_container);
         this.mMenuItemMultiWindowContainer = (FrameLayout) findViewById(R.id.menu_item_multi_window_container);
+        this.mMenuItemSmallWindowContainer = (FrameLayout) findViewById(R.id.menu_item_small_window_container);
         this.mMenuItemInfo = (ImageView) findViewById(R.id.menu_item_info);
         this.mMenuItemLock = (ImageView) findViewById(R.id.menu_item_lock);
         this.mMenuItemMultiWindow = (ImageView) findViewById(R.id.menu_item_multi_window);
+        this.mMenuItemSmallWindow = (ImageView) findViewById(R.id.menu_item_small_window);
         this.mMenuItemInfo.setImageResource(R.drawable.ic_task_setting);
         this.mMenuItemInfo.setContentDescription(this.mContext.getString(R.string.recent_menu_item_info));
         this.mMenuItemMultiWindow.setImageResource(R.drawable.ic_task_multi);
+        this.mMenuItemSmallWindow.setImageResource(R.drawable.ic_task_small_window);
         this.mMenuItemInfo.setOnClickListener(this);
         this.mMenuItemLock.setOnClickListener(this);
         this.mMenuItemMultiWindow.setOnClickListener(this);
+        this.mMenuItemSmallWindow.setOnClickListener(this);
         setOnClickListener(this);
         setOnLongClickListener(this);
         ViewAnimUtils.mouse(this.mMenuItemInfo);
         ViewAnimUtils.mouse(this.mMenuItemLock);
         ViewAnimUtils.mouse(this.mMenuItemMultiWindow);
+        ViewAnimUtils.mouse(this.mMenuItemSmallWindow);
     }
 
     public boolean onLongClick(View view) {
@@ -188,61 +211,72 @@ public class RecentMenuView extends FrameLayout implements View.OnClickListener,
         if (task != null) {
             Task.TaskKey taskKey = task.key;
             String packageName = (taskKey == null || taskKey.getComponent() == null) ? "" : this.mTask.key.getComponent().getPackageName();
-            int id = view.getId();
-            if (id == R.id.menu_item_info) {
-                RecentsEventBus.getDefault().send(new ShowApplicationInfoEvent(this.mTask));
-                RecentsPushEventHelper.sendShowAppInfoEvent(packageName);
-            } else if (id == R.id.menu_item_lock) {
-                Task task2 = this.mTask;
-                boolean z = !task2.isLocked;
-                task2.isLocked = z;
-                this.mTaskView.updateLockedFlagVisible(z, true, 200);
-                RecentsEventBus recentsEventBus = RecentsEventBus.getDefault();
-                Task task3 = this.mTask;
-                recentsEventBus.send(new ChangeTaskLockStateEvent(task3, task3.isLocked));
-                if (Constants.IS_SUPPORT_LINEAR_MOTOR_VIBRATE) {
+            switch (view.getId()) {
+                case R.id.menu_item_info:
+                    RecentsEventBus.getDefault().send(new ShowApplicationInfoEvent(this.mTask));
+                    RecentsPushEventHelper.sendShowAppInfoEvent(packageName);
+                    break;
+                case R.id.menu_item_lock:
+                    Task task2 = this.mTask;
+                    boolean z = !task2.isLocked;
+                    task2.isLocked = z;
+                    this.mTaskView.updateLockedFlagVisible(z, true, 200);
+                    RecentsEventBus recentsEventBus = RecentsEventBus.getDefault();
+                    Task task3 = this.mTask;
+                    recentsEventBus.send(new ChangeTaskLockStateEvent(task3, task3.isLocked));
+                    if (Constants.IS_SUPPORT_LINEAR_MOTOR_VIBRATE) {
+                        if (this.mTask.isLocked) {
+                            ((HapticFeedBackImpl) Dependency.get(cls)).getHapticFeedbackUtil().performHapticFeedback("switch", false);
+                        } else {
+                            ((HapticFeedBackImpl) Dependency.get(cls)).getHapticFeedbackUtil().performHapticFeedback("switch", false, 1);
+                        }
+                    }
                     if (this.mTask.isLocked) {
-                        ((HapticFeedBackImpl) Dependency.get(cls)).getHapticFeedbackUtil().performHapticFeedback("switch", false);
+                        str = this.mContext.getString(R.string.accessibility_recent_task_locked_state);
                     } else {
-                        ((HapticFeedBackImpl) Dependency.get(cls)).getHapticFeedbackUtil().performHapticFeedback("switch", false, 1);
+                        str = this.mContext.getString(R.string.accessibility_recent_task_unlocked);
                     }
-                }
-                if (this.mTask.isLocked) {
-                    str = this.mContext.getString(R.string.accessibility_recent_task_locked_state);
-                } else {
-                    str = this.mContext.getString(R.string.accessibility_recent_task_unlocked);
-                }
-                announceForAccessibility(str);
-                if (this.mTask.isLocked) {
-                    RecentsPushEventHelper.sendLockTaskEvent(packageName);
-                } else {
-                    RecentsPushEventHelper.sendUnlockTaskEvent(packageName);
-                }
-            } else if (id == R.id.menu_item_multi_window) {
-                if (!BaseRecentsImpl.toastForbidDockedWhenScreening(getContext())) {
-                    final TaskStack.DockState[] dockStatesForCurrentOrientation = getDockStatesForCurrentOrientation();
-                    if (dockStatesForCurrentOrientation[0] != null) {
-                        this.mTaskStackView.postDelayed(new Runnable() {
-                            public void run() {
-                                if (!Recents.getSystemServices().hasDockedTask()) {
-                                    RecentMenuView.this.mTaskStackView.addIgnoreTask(RecentMenuView.this.mTask);
-                                    RecentsEventBus.getDefault().send(new DragDropTargetChangedEvent(RecentMenuView.this.mTask, dockStatesForCurrentOrientation[0]));
-                                    RecentsEventBus.getDefault().send(new DragEndEvent(RecentMenuView.this.mTask, RecentMenuView.this.mTaskView, dockStatesForCurrentOrientation[0]));
-                                    RecentMenuView recentMenuView = RecentMenuView.this;
-                                    recentMenuView.announceForAccessibility(recentMenuView.mContext.getString(R.string.accessibility_splite_screen_primary));
-                                    return;
+                    announceForAccessibility(str);
+                    if (!this.mTask.isLocked) {
+                        RecentsPushEventHelper.sendUnlockTaskEvent(packageName);
+                        break;
+                    } else {
+                        RecentsPushEventHelper.sendLockTaskEvent(packageName);
+                        break;
+                    }
+                case R.id.menu_item_multi_window:
+                    if (!BaseRecentsImpl.toastForbidDockedWhenScreening(getContext())) {
+                        final TaskStack.DockState[] dockStatesForCurrentOrientation = getDockStatesForCurrentOrientation();
+                        if (dockStatesForCurrentOrientation[0] != null) {
+                            this.mTaskStackView.postDelayed(new Runnable() {
+                                public void run() {
+                                    if (!Recents.getSystemServices().hasDockedTask()) {
+                                        RecentMenuView.this.mTaskStackView.addIgnoreTask(RecentMenuView.this.mTask);
+                                        RecentsEventBus.getDefault().send(new DragDropTargetChangedEvent(RecentMenuView.this.mTask, dockStatesForCurrentOrientation[0]));
+                                        RecentsEventBus.getDefault().send(new DragEndEvent(RecentMenuView.this.mTask, RecentMenuView.this.mTaskView, dockStatesForCurrentOrientation[0]));
+                                        RecentMenuView recentMenuView = RecentMenuView.this;
+                                        recentMenuView.announceForAccessibility(recentMenuView.mContext.getString(R.string.accessibility_splite_screen_primary));
+                                        return;
+                                    }
+                                    RecentMenuView.this.mTaskView.onClick(RecentMenuView.this.mTaskView);
+                                    RecentMenuView recentMenuView2 = RecentMenuView.this;
+                                    recentMenuView2.announceForAccessibility(recentMenuView2.mContext.getString(R.string.accessibility_splite_screen_secondary));
                                 }
-                                RecentMenuView.this.mTaskView.onClick(RecentMenuView.this.mTaskView);
-                                RecentMenuView recentMenuView2 = RecentMenuView.this;
-                                recentMenuView2.announceForAccessibility(recentMenuView2.mContext.getString(R.string.accessibility_splite_screen_secondary));
-                            }
-                        }, 250);
-                        RecentsPushEventHelper.sendClickMultiWindowMenuEvent(packageName);
-                        RecentsPushEventHelper.sendEnterMultiWindowEvent("clickMenu", packageName);
+                            }, 250);
+                            RecentsPushEventHelper.sendClickMultiWindowMenuEvent(packageName);
+                            RecentsPushEventHelper.sendEnterMultiWindowEvent("clickMenu", packageName);
+                            break;
+                        }
+                    } else {
+                        return;
                     }
-                } else {
-                    return;
-                }
+                    break;
+                case R.id.menu_item_small_window:
+                    if (SystemUICompat.startFreeformActivity(getContext(), this.mTask, packageName)) {
+                        RecentsEventBus.getDefault().send(new StartSmallWindowEvent(packageName));
+                        break;
+                    }
+                    break;
             }
         }
         removeMenu(true);
@@ -284,6 +318,135 @@ public class RecentMenuView extends FrameLayout implements View.OnClickListener,
 
     /* access modifiers changed from: protected */
     public void onLayout(boolean z, int i, int i2, int i3, int i4) {
+        int measuredWidth = this.mMenuItemLock.getMeasuredWidth();
+        Rect rect = new Rect();
+        this.mTaskView.getHitRect(rect);
+        rect.top += this.mTaskView.getHeaderView().getHeight();
+        rect.intersect(i, i2, i3, i4);
+        if (!this.mIsSupportSmallWindow) {
+            layoutItemWithoutSmallWindow(rect, measuredWidth, i3, i4);
+        } else {
+            layoutItemWithSmallWindow(rect, measuredWidth, i3, i4);
+        }
+    }
+
+    private void layoutItemWithoutSmallWindow(Rect rect, int i, int i2, int i3) {
+        int i4;
+        int i5;
+        int i6;
+        int i7;
+        int i8;
+        int i9;
+        int i10;
+        int i11;
+        int i12;
+        int i13;
+        Rect rect2 = rect;
+        int i14 = i;
+        int[] iArr = new int[3];
+        int[] iArr2 = new int[3];
+        if (this.mIsTaskViewLeft) {
+            int i15 = rect2.right;
+            float f = (float) i14;
+            int i16 = (int) (((float) i15) + (f * 0.4f));
+            iArr[2] = i16;
+            iArr[0] = i16;
+            iArr[1] = (int) (((float) i15) + (f * 0.9f));
+            i5 = i15 - i14;
+            i4 = rect.centerY();
+        } else {
+            int i17 = rect2.left;
+            float f2 = (float) i14;
+            int i18 = (int) (((float) i17) - (f2 * 1.4f));
+            iArr[2] = i18;
+            iArr[0] = i18;
+            iArr[1] = (int) (((float) i17) - (f2 * 1.9f));
+            i5 = i17 + i14;
+            i4 = rect.centerY();
+        }
+        float f3 = (float) i14;
+        iArr2[1] = (int) (((float) rect.centerY()) - (0.5f * f3));
+        float f4 = f3;
+        double d = (double) i14;
+        double d2 = 1.2d * d;
+        iArr2[0] = (int) (((double) iArr2[1]) - d2);
+        iArr2[2] = (int) (((double) iArr2[1]) + d2);
+        int i19 = iArr2[0];
+        int i20 = this.mVerticalMargin;
+        if (i19 < i20) {
+            if (this.mIsTaskViewLeft) {
+                int i21 = rect2.right;
+                iArr[0] = (int) (((float) i21) + (f4 * 0.6f));
+                iArr[1] = (int) (((float) i21) + (f4 * 0.4f));
+                iArr[2] = i21 - i14;
+                i12 = i14 * 2;
+                i13 = i21 - i12;
+                i11 = rect2.bottom;
+            } else {
+                int i22 = rect2.left;
+                iArr[0] = (int) (((float) i22) - (f4 * 1.6f));
+                iArr[1] = (int) (((float) i22) - (1.4f * f4));
+                iArr[2] = i22;
+                i12 = i14 * 2;
+                i13 = i22 + i12;
+                i11 = rect2.bottom;
+            }
+            i4 = i11 - i12;
+            int i23 = rect2.bottom;
+            iArr2[0] = i23 - i14;
+            iArr2[1] = (int) (((float) i23) + (0.4f * f4));
+            iArr2[2] = (int) (((double) i23) + (d * 0.6d));
+        } else if (iArr2[2] + i14 > i3 - i20) {
+            if (this.mIsTaskViewLeft) {
+                int i24 = rect2.right;
+                iArr[0] = i24 - i14;
+                iArr[1] = (int) (((float) i24) + (f4 * 0.4f));
+                iArr[2] = (int) (((float) i24) + (f4 * 0.6f));
+                i9 = i14 * 2;
+                i10 = i24 - i9;
+                i8 = rect2.top;
+            } else {
+                int i25 = rect2.left;
+                iArr[0] = i25;
+                iArr[1] = (int) (((float) i25) - (f4 * 1.4f));
+                iArr[2] = (int) (((float) i25) - (f4 * 1.6f));
+                i9 = i14 * 2;
+                i10 = i25 + i9;
+                i8 = rect2.top;
+            }
+            int i26 = rect2.top;
+            iArr2[0] = (int) (((float) i26) - (f4 * 1.6f));
+            iArr2[1] = (int) (((float) i26) - (f4 * 1.4f));
+            iArr2[2] = i26;
+            i7 = i10;
+            i6 = i8 + i9;
+            int i27 = i2 - 10;
+            iArr[0] = Math.max(10, Math.min(iArr[0], i27));
+            iArr[1] = Math.max(10, Math.min(iArr[1], i27));
+            iArr[2] = Math.max(10, Math.min(iArr[2], i27));
+            int i28 = i7;
+            int i29 = i6;
+            int i30 = i;
+            layoutMenuItem(this.mMenuItemLockContainer, iArr[0], iArr2[0], i28, i29, i30);
+            layoutMenuItem(this.mMenuItemMultiWindowContainer, iArr[1], iArr2[1], i28, i29, i30);
+            layoutMenuItem(this.mMenuItemInfoContainer, iArr[2], iArr2[2], i28, i29, i30);
+        }
+        i7 = i5;
+        i6 = i4;
+        int i272 = i2 - 10;
+        iArr[0] = Math.max(10, Math.min(iArr[0], i272));
+        iArr[1] = Math.max(10, Math.min(iArr[1], i272));
+        iArr[2] = Math.max(10, Math.min(iArr[2], i272));
+        int i282 = i7;
+        int i292 = i6;
+        int i302 = i;
+        layoutMenuItem(this.mMenuItemLockContainer, iArr[0], iArr2[0], i282, i292, i302);
+        layoutMenuItem(this.mMenuItemMultiWindowContainer, iArr[1], iArr2[1], i282, i292, i302);
+        layoutMenuItem(this.mMenuItemInfoContainer, iArr[2], iArr2[2], i282, i292, i302);
+    }
+
+    private void layoutItemWithSmallWindow(Rect rect, int i, int i2, int i3) {
+        int i4;
         int i5;
         int i6;
         int i7;
@@ -294,111 +457,140 @@ public class RecentMenuView extends FrameLayout implements View.OnClickListener,
         int i12;
         int i13;
         int i14;
-        int i15 = i3;
-        int i16 = i4;
-        int measuredWidth = this.mMenuItemLock.getMeasuredWidth();
-        Rect rect = new Rect();
-        this.mTaskView.getHitRect(rect);
-        rect.top += this.mTaskView.getHeaderView().getHeight();
-        rect.intersect(i, i2, i15, i16);
-        int[] iArr = new int[3];
-        int[] iArr2 = new int[3];
+        Rect rect2 = rect;
+        int i15 = i;
+        int[] iArr = new int[4];
+        int[] iArr2 = new int[4];
         if (this.mIsTaskViewLeft) {
-            int i17 = rect.right;
-            float f = (float) measuredWidth;
-            int i18 = (int) (((float) i17) + (f * 0.4f));
+            int i16 = rect2.right;
+            float f = (float) i15;
+            int i17 = (int) (((float) i16) + (f * 0.5f));
+            iArr[3] = i17;
+            iArr[0] = i17;
+            int i18 = (int) (((float) i16) + (f * 0.8f));
             iArr[2] = i18;
-            iArr[0] = i18;
-            iArr[1] = (int) (((float) i17) + (f * 0.9f));
-            i6 = i17 - measuredWidth;
-            i5 = rect.centerY();
+            iArr[1] = i18;
+            i5 = i16 - i15;
+            i4 = rect.centerY();
         } else {
-            int i19 = rect.left;
-            float f2 = (float) measuredWidth;
-            int i20 = (int) (((float) i19) - (f2 * 1.4f));
-            iArr[2] = i20;
+            int i19 = rect2.left;
+            float f2 = (float) i15;
+            int i20 = (int) (((float) i19) - (f2 * 1.5f));
+            iArr[3] = i20;
             iArr[0] = i20;
-            iArr[1] = (int) (((float) i19) - (f2 * 1.9f));
-            i6 = i19 + measuredWidth;
-            i5 = rect.centerY();
+            int i21 = (int) (((float) i19) - (f2 * 1.8f));
+            iArr[2] = i21;
+            iArr[1] = i21;
+            i5 = i19 + i15;
+            i4 = rect.centerY();
         }
-        float f3 = (float) measuredWidth;
-        iArr2[1] = (int) (((float) rect.centerY()) - (0.5f * f3));
-        float f4 = f3;
-        double d = (double) measuredWidth;
-        double d2 = 1.2d * d;
-        iArr2[0] = (int) (((double) iArr2[1]) - d2);
-        iArr2[2] = (int) (((double) iArr2[1]) + d2);
-        int i21 = iArr2[0];
-        int i22 = this.mVerticalMargin;
-        if (i21 < i22) {
+        float f3 = (float) i15;
+        iArr2[2] = (int) (((float) rect.centerY()) + (0.1f * f3));
+        float f4 = 1.2f * f3;
+        iArr2[1] = (int) (((float) iArr2[2]) - f4);
+        iArr2[0] = (int) (((float) iArr2[1]) - f4);
+        iArr2[3] = (int) (((float) iArr2[2]) + f4);
+        int i22 = iArr2[0];
+        int i23 = this.mVerticalMargin;
+        if (i22 < i23) {
             if (this.mIsTaskViewLeft) {
-                int i23 = rect.right;
-                iArr[0] = (int) (((float) i23) + (f4 * 0.6f));
-                iArr[1] = (int) (((float) i23) + (f4 * 0.4f));
-                iArr[2] = i23 - measuredWidth;
-                i13 = measuredWidth * 2;
-                i14 = i23 - i13;
-                i12 = rect.bottom;
+                int i24 = rect2.right;
+                iArr[0] = (int) (((float) i24) + (0.4f * f3));
+                float f5 = 0.5f * f3;
+                iArr[1] = (int) (((float) i24) + f5);
+                iArr[2] = (int) (((float) i24) - f5);
+                iArr[3] = (int) (((float) iArr[2]) - f4);
+                i14 = i15 * 2;
+                i10 = i24 - i14;
+                i13 = rect2.bottom;
             } else {
-                int i24 = rect.left;
-                iArr[0] = (int) (((float) i24) - (f4 * 1.6f));
-                iArr[1] = (int) (((float) i24) - (1.4f * f4));
-                iArr[2] = i24;
-                i13 = measuredWidth * 2;
-                i14 = i24 + i13;
-                i12 = rect.bottom;
+                int i25 = rect2.left;
+                iArr[0] = (int) (((float) i25) - (1.4f * f3));
+                iArr[1] = (int) (((float) i25) - (1.5f * f3));
+                iArr[2] = (int) (((float) i25) - (0.5f * f3));
+                iArr[3] = (int) (((float) iArr[2]) + f4);
+                i14 = i15 * 2;
+                i10 = i25 + i14;
+                i13 = rect2.bottom;
             }
-            int i25 = rect.bottom;
-            iArr2[0] = i25 - measuredWidth;
-            iArr2[1] = (int) (((float) i25) + (0.4f * f4));
-            iArr2[2] = (int) (((double) i25) + (d * 0.6d));
-            i7 = i12 - i13;
-            i8 = i14;
-        } else if (iArr2[2] + measuredWidth > i16 - i22) {
+            i11 = i13 - i14;
+            iArr2[1] = (int) (((float) rect2.bottom) - (0.3f * f3));
+            iArr2[0] = (int) (((float) iArr2[1]) - f4);
+            iArr2[2] = (int) (((float) iArr2[1]) + (0.8f * f3));
+            iArr2[3] = (int) (((float) iArr2[1]) + (f3 * 0.7f));
+        } else if (iArr2[3] + i15 > i3 - i23) {
             if (this.mIsTaskViewLeft) {
-                int i26 = rect.right;
-                iArr[0] = i26 - measuredWidth;
-                iArr[1] = (int) (((float) i26) + (f4 * 0.4f));
-                iArr[2] = (int) (((float) i26) + (f4 * 0.6f));
-                i10 = measuredWidth * 2;
-                i11 = i26 - i10;
-                i9 = rect.top;
+                int i26 = rect2.right;
+                float f6 = 0.5f * f3;
+                iArr[1] = (int) (((float) i26) - f6);
+                iArr[2] = (int) (((float) i26) + f6);
+                iArr[3] = (int) (((float) i26) + (0.4f * f3));
+                iArr[0] = (int) (((float) iArr[1]) - f4);
+                i9 = i15 * 2;
+                i12 = i26 - i9;
+                i8 = rect2.top;
             } else {
-                int i27 = rect.left;
-                iArr[0] = i27;
-                iArr[1] = (int) (((float) i27) - (f4 * 1.4f));
-                iArr[2] = (int) (((float) i27) - (f4 * 1.6f));
-                i10 = measuredWidth * 2;
-                i11 = i27 + i10;
-                i9 = rect.top;
+                int i27 = rect2.left;
+                iArr[1] = (int) (((float) i27) - (0.5f * f3));
+                iArr[2] = (int) (((float) i27) - (1.5f * f3));
+                iArr[3] = (int) (((float) i27) - (1.4f * f3));
+                iArr[0] = (int) (((float) iArr[1]) + f4);
+                i9 = i15 * 2;
+                i12 = i27 + i9;
+                i8 = rect2.top;
             }
-            int i28 = rect.top;
-            iArr2[0] = (int) (((float) i28) - (f4 * 1.6f));
-            iArr2[1] = (int) (((float) i28) - (1.4f * f4));
-            iArr2[2] = i28;
-            i8 = i11;
-            i7 = i9 + i10;
+            i11 = i8 + i9;
+            float f7 = 0.7f * f3;
+            iArr2[2] = (int) (((float) rect2.top) - f7);
+            iArr2[0] = (int) (((float) iArr2[2]) - f7);
+            iArr2[1] = (int) (((float) iArr2[2]) - (f3 * 0.8f));
+            iArr2[3] = (int) (((float) iArr2[2]) + f4);
         } else {
             i7 = i5;
-            i8 = i6;
+            i6 = i4;
+            int i28 = i2 - 10;
+            iArr[0] = Math.max(10, Math.min(iArr[0], i28));
+            iArr[1] = Math.max(10, Math.min(iArr[1], i28));
+            iArr[2] = Math.max(10, Math.min(iArr[2], i28));
+            iArr[3] = Math.max(10, Math.min(iArr[3], i28));
+            int i29 = i7;
+            int i30 = i6;
+            int i31 = i;
+            layoutMenuItem(this.mMenuItemLockContainer, iArr[0], iArr2[0], i29, i30, i31);
+            layoutMenuItem(this.mMenuItemMultiWindowContainer, iArr[1], iArr2[1], i29, i30, i31);
+            layoutMenuItem(this.mMenuItemSmallWindowContainer, iArr[2], iArr2[2], i29, i30, i31);
+            layoutMenuItem(this.mMenuItemInfoContainer, iArr[3], iArr2[3], i29, i30, i31);
         }
-        int i29 = i15 - 10;
-        iArr[0] = Math.max(10, Math.min(iArr[0], i29));
-        iArr[1] = Math.max(10, Math.min(iArr[1], i29));
-        iArr[2] = Math.max(10, Math.min(iArr[2], i29));
-        int i30 = i8;
-        int i31 = i7;
-        int i32 = measuredWidth;
-        layoutMenuItem(this.mMenuItemLockContainer, iArr[0], iArr2[0], i30, i31, i32);
-        layoutMenuItem(this.mMenuItemMultiWindowContainer, iArr[1], iArr2[1], i30, i31, i32);
-        layoutMenuItem(this.mMenuItemInfoContainer, iArr[2], iArr2[2], i30, i31, i32);
+        i7 = i10;
+        i6 = i11;
+        int i282 = i2 - 10;
+        iArr[0] = Math.max(10, Math.min(iArr[0], i282));
+        iArr[1] = Math.max(10, Math.min(iArr[1], i282));
+        iArr[2] = Math.max(10, Math.min(iArr[2], i282));
+        iArr[3] = Math.max(10, Math.min(iArr[3], i282));
+        int i292 = i7;
+        int i302 = i6;
+        int i312 = i;
+        layoutMenuItem(this.mMenuItemLockContainer, iArr[0], iArr2[0], i292, i302, i312);
+        layoutMenuItem(this.mMenuItemMultiWindowContainer, iArr[1], iArr2[1], i292, i302, i312);
+        layoutMenuItem(this.mMenuItemSmallWindowContainer, iArr[2], iArr2[2], i292, i302, i312);
+        layoutMenuItem(this.mMenuItemInfoContainer, iArr[3], iArr2[3], i292, i302, i312);
     }
 
     private void layoutMenuItem(View view, int i, int i2, int i3, int i4, int i5) {
         view.setPivotX((float) (i3 - i));
         view.setPivotY((float) (i4 - i2));
         view.layout(i, i2, i + i5, i5 + i2);
+    }
+
+    private boolean isSupportSmallWindow() {
+        Task.TaskKey taskKey;
+        ArrayList freeformSuggestionList = MiuiMultiWindowUtils.getFreeformSuggestionList(this.mContext);
+        Task task = this.mTask;
+        if (task == null || (taskKey = task.key) == null || taskKey.getComponent() == null || freeformSuggestionList == null || !freeformSuggestionList.contains(this.mTask.key.getComponent().getPackageName()) || Recents.getSystemServices().hasDockedTask()) {
+            return false;
+        }
+        return true;
     }
 
     public final void onBusEvent(ShowTaskMenuEvent showTaskMenuEvent) {
@@ -411,7 +603,7 @@ public class RecentMenuView extends FrameLayout implements View.OnClickListener,
             this.mTaskView = taskView;
             Task task = taskView.getTask();
             this.mTask = task;
-            this.mMenuItemMultiWindow.setEnabled(task.isDockable && Utilities.supportsMultiWindow());
+            this.mMenuItemMultiWindow.setEnabled(task.isDockable && Utilities.supportsMultiWindow() && !Utilities.isInSmallWindowMode(getContext()));
             this.mMenuItemLock.setImageDrawable(this.mTask.isLocked ? this.mUnlockDrawable : this.mLockDrawable);
             ImageView imageView = this.mMenuItemLock;
             if (this.mTask.isLocked) {
@@ -421,6 +613,7 @@ public class RecentMenuView extends FrameLayout implements View.OnClickListener,
             }
             imageView.setContentDescription(str);
             ImageView imageView2 = this.mMenuItemMultiWindow;
+            int i = 255;
             imageView2.setImageAlpha(imageView2.isEnabled() ? 255 : 80);
             ImageView imageView3 = this.mMenuItemMultiWindow;
             if (imageView3.isEnabled()) {
@@ -429,11 +622,22 @@ public class RecentMenuView extends FrameLayout implements View.OnClickListener,
                 str2 = this.mContext.getString(R.string.accessibility_menu_item_split_disable);
             }
             imageView3.setContentDescription(str2);
+            if (this.mIsSupportSmallWindow) {
+                this.mMenuItemSmallWindow.setEnabled(isSupportSmallWindow());
+                ImageView imageView4 = this.mMenuItemSmallWindow;
+                if (!imageView4.isEnabled()) {
+                    i = 80;
+                }
+                imageView4.setImageAlpha(i);
+            }
             this.mIsTaskViewLeft = this.mTaskStackView.getTaskViews().size() > 1 && this.mTaskView.getLeft() < this.mTaskStackView.getWidth() - this.mTaskView.getRight();
             setVisibility(0);
             setFocusable(true);
             startShowItemAnim(this.mMenuItemLockContainer, 1.0f, 0);
-            startShowItemAnim(this.mMenuItemMultiWindowContainer, 1.0f, 50);
+            startShowItemAnim(this.mMenuItemMultiWindowContainer, 1.0f, this.mIsSupportSmallWindow ? 33 : 50);
+            if (this.mIsSupportSmallWindow) {
+                startShowItemAnim(this.mMenuItemSmallWindowContainer, 1.0f, 66);
+            }
             startShowItemAnim(this.mMenuItemInfoContainer, 1.0f, 100);
             this.mShowOrHideAnim.setFloatValues(new float[]{0.0f, 1.0f});
             this.mShowOrHideAnim.start();
@@ -472,6 +676,9 @@ public class RecentMenuView extends FrameLayout implements View.OnClickListener,
         if (z) {
             startHideItemAnim(this.mMenuItemLockContainer);
             startHideItemAnim(this.mMenuItemMultiWindowContainer);
+            if (this.mIsSupportSmallWindow) {
+                startHideItemAnim(this.mMenuItemSmallWindowContainer);
+            }
             startHideItemAnim(this.mMenuItemInfoContainer);
         }
         this.mShowOrHideAnim.setFloatValues(new float[]{1.0f, 0.0f});

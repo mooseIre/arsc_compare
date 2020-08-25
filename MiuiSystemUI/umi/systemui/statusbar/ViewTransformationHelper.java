@@ -195,30 +195,26 @@ public class ViewTransformationHelper implements TransformableView {
         int id;
         int size = this.mTransformedViews.size();
         for (int i = 0; i < size; i++) {
-            Object valueAt = this.mTransformedViews.valueAt(i);
-            while (true) {
-                View view2 = (View) valueAt;
-                if (view2 == view.getParent()) {
-                    break;
-                }
-                view2.setTag(R.id.contains_transformed_view, Boolean.TRUE);
-                valueAt = view2.getParent();
+            View valueAt = this.mTransformedViews.valueAt(i);
+            while (valueAt != null && valueAt != view.getParent()) {
+                valueAt.setTag(R.id.contains_transformed_view, Boolean.TRUE);
+                valueAt = (View) valueAt.getParent();
             }
         }
         Stack stack = new Stack();
         stack.push(view);
         while (!stack.isEmpty()) {
-            View view3 = (View) stack.pop();
-            if (((Boolean) view3.getTag(R.id.contains_transformed_view)) != null || (id = view3.getId()) == -1) {
-                view3.setTag(R.id.contains_transformed_view, (Object) null);
-                if ((view3 instanceof ViewGroup) && !this.mTransformedViews.containsValue(view3)) {
-                    ViewGroup viewGroup = (ViewGroup) view3;
+            View view2 = (View) stack.pop();
+            if (((Boolean) view2.getTag(R.id.contains_transformed_view)) != null || (id = view2.getId()) == -1) {
+                view2.setTag(R.id.contains_transformed_view, (Object) null);
+                if ((view2 instanceof ViewGroup) && !this.mTransformedViews.containsValue(view2)) {
+                    ViewGroup viewGroup = (ViewGroup) view2;
                     for (int i2 = 0; i2 < viewGroup.getChildCount(); i2++) {
                         stack.push(viewGroup.getChildAt(i2));
                     }
                 }
             } else {
-                addTransformedView(id, view3);
+                addTransformedView(id, view2);
             }
         }
     }

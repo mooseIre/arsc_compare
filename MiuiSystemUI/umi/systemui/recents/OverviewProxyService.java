@@ -447,13 +447,15 @@ public class OverviewProxyService implements CallbackController<OverviewProxyLis
         this.mConnectionBackoffAttempts = 0;
         this.mQuickStepIntent = new Intent("android.intent.action.QUICKSTEP_SERVICE").setPackage(this.pakName);
         this.mBackButtonAlpha = 1.0f;
-        updateEnabledState();
-        this.mDeviceProvisionedController.addCallback(this.mDeviceProvisionedCallback);
-        IntentFilter intentFilter = new IntentFilter("android.intent.action.PACKAGE_ADDED");
-        intentFilter.addDataScheme("package");
-        intentFilter.addDataSchemeSpecificPart(this.pakName, 0);
-        intentFilter.addAction("android.intent.action.PACKAGE_CHANGED");
-        this.mContext.registerReceiver(this.mLauncherStateChangedReceiver, intentFilter);
+        if (UserHandle.myUserId() == 0) {
+            updateEnabledState();
+            this.mDeviceProvisionedController.addCallback(this.mDeviceProvisionedCallback);
+            IntentFilter intentFilter = new IntentFilter("android.intent.action.PACKAGE_ADDED");
+            intentFilter.addDataScheme("package");
+            intentFilter.addDataSchemeSpecificPart(this.pakName, 0);
+            intentFilter.addAction("android.intent.action.PACKAGE_CHANGED");
+            this.mContext.registerReceiver(this.mLauncherStateChangedReceiver, intentFilter);
+        }
     }
 
     public void setSystemUiStateFlag(int i, boolean z) {

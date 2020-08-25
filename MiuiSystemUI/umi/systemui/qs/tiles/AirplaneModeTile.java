@@ -18,7 +18,7 @@ public class AirplaneModeTile extends QSTileImpl<QSTile.BooleanState> {
     public int mTargetValue;
 
     public int getMetricsCategory() {
-        return R.styleable.AppCompatTheme_tooltipForegroundColor;
+        return R.styleable.AppCompatTheme_toolbarNavigationButtonStyle;
     }
 
     public AirplaneModeTile(QSHost qSHost) {

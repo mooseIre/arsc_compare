@@ -22,6 +22,7 @@ public class NotificationMenuRowContainer extends FrameLayout {
     private int mMenuIconMargin;
     private int mMenuIconSize;
     private int mMenuIconSpace;
+    private boolean mResetMenu;
     private float mTranslation;
 
     public NotificationMenuRowContainer(Context context) {
@@ -37,6 +38,7 @@ public class NotificationMenuRowContainer extends FrameLayout {
         new AnimConfig().setEase(-2, 0.9f, 0.2f);
         new AnimConfig().setEase(-2, 0.6f, 0.3f);
         init(context);
+        setLayoutDirection(0);
     }
 
     private void init(Context context) {
@@ -59,6 +61,7 @@ public class NotificationMenuRowContainer extends FrameLayout {
         if (DEBUG) {
             Log.d("MenuRowContainer", "resetState");
         }
+        this.mResetMenu = true;
         resetMenuLocation();
         setMenuAlpha(0.0f);
     }
@@ -81,16 +84,18 @@ public class NotificationMenuRowContainer extends FrameLayout {
         if (DEBUG) {
             Log.d("MenuRowContainer", "onTranslationUpdate translation=" + f);
         }
-        if (f != this.mTranslation) {
-            this.mTranslation = f;
-            updateClipBounds();
-            float f2 = 0.0f;
-            if (f < 0.0f) {
-                f2 = 1.0f;
-            }
-            setMenuAlpha(f2);
-            animateIconTranslation();
+        if (this.mResetMenu || f == this.mTranslation) {
+            this.mResetMenu = false;
+            return;
         }
+        this.mTranslation = f;
+        updateClipBounds();
+        float f2 = 0.0f;
+        if (f < 0.0f) {
+            f2 = 1.0f;
+        }
+        setMenuAlpha(f2);
+        animateIconTranslation();
     }
 
     private void animateIconTranslation() {
@@ -140,6 +145,7 @@ public class NotificationMenuRowContainer extends FrameLayout {
         if (DEBUG) {
             Log.d("MenuRowContainer", "handleShowMenu");
         }
+        this.mResetMenu = false;
         int childCount = getChildCount();
         for (int i = 0; i < childCount; i++) {
             animateIconReset(i, getChildAt(i));

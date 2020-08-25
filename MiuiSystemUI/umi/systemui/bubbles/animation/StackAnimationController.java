@@ -427,7 +427,7 @@ public class StackAnimationController extends PhysicsAnimationLayout.PhysicsAnim
         this.mBubblePadding = resources.getDimensionPixelSize(R.dimen.bubble_padding);
         this.mBubbleOffscreen = resources.getDimensionPixelSize(R.dimen.bubble_stack_offscreen);
         this.mStackStartingVerticalOffset = resources.getDimensionPixelSize(R.dimen.bubble_stack_starting_offset_y);
-        this.mStatusBarHeight = (float) resources.getDimensionPixelSize(17105519);
+        this.mStatusBarHeight = (float) resources.getDimensionPixelSize(17105496);
     }
 
     private void moveStackToStartPosition() {

@@ -12,11 +12,12 @@ import com.android.systemui.statusbar.ExpandableNotificationRow;
 
 public class NotificationBigPictureTemplateViewWrapper extends NotificationTemplateViewWrapper {
     private int mBigPictureCornerRadius;
+    private int mBigPictureMaxHeight;
     private ImageView mBigPictureView;
 
     /* access modifiers changed from: protected */
     public boolean showExpandButton() {
-        return true;
+        return false;
     }
 
     /* access modifiers changed from: protected */
@@ -35,13 +36,15 @@ public class NotificationBigPictureTemplateViewWrapper extends NotificationTempl
     }
 
     private void initResources() {
+        this.mBigPictureMaxHeight = this.mContext.getResources().getDimensionPixelSize(R.dimen.notification_big_picture_max_height);
         this.mBigPictureCornerRadius = this.mContext.getResources().getDimensionPixelSize(R.dimen.notification_big_picture_corner_radius);
     }
 
     private void resolveViews() {
         ImageView imageView = (ImageView) this.mView.findViewById(16908793);
         this.mBigPictureView = imageView;
-        Util.setViewRoundCorner(imageView, (float) this.mBigPictureCornerRadius);
+        imageView.setMaxHeight(this.mBigPictureMaxHeight);
+        Util.setViewRoundCorner(this.mBigPictureView, (float) this.mBigPictureCornerRadius);
     }
 
     /* access modifiers changed from: protected */

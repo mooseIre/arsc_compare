@@ -34,6 +34,7 @@ import android.view.WindowManagerGlobal;
 import android.widget.ImageView;
 import com.android.internal.os.SomeArgs;
 import com.android.internal.statusbar.StatusBarIcon;
+import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.systemui.OverlayManagerWrapper;
 import com.android.systemui.plugins.R;
 import com.android.systemui.qs.SecureSetting;
@@ -41,10 +42,8 @@ import com.android.systemui.statusbar.CommandQueue;
 import com.android.systemui.statusbar.policy.ConfigurationController;
 import miui.os.Build;
 import miui.util.CustomizeUtil;
-import miui.util.FeatureParser;
 
 public class RoundedCorners extends SystemUI implements CommandQueue.Callbacks, ConfigurationController.ConfigurationListener {
-    private static boolean sIsRoundCorner;
     RoundCornerData[] mBottomCorner = {new RoundCornerData(80, -1, -2, R.drawable.screen_round_corner_bottom), new RoundCornerData(5, -2, -1, R.drawable.screen_round_corner_bottom_rot90), new RoundCornerData(48, -1, -2, R.drawable.screen_round_corner_bottom_rot180), new RoundCornerData(3, -2, -1, R.drawable.screen_round_corner_bottom_rot270)};
     private Point mCurrentSize;
     protected int mCurrentUserId = 0;
@@ -58,7 +57,7 @@ public class RoundedCorners extends SystemUI implements CommandQueue.Callbacks, 
     /* access modifiers changed from: private */
     public boolean mForceBlack = false;
     private ContentObserver mForceBlackObserver;
-    RoundCornerData[] mForceBlackTopCorner = {new RoundCornerData(48, -1, -2, R.drawable.screen_round_corner_bottom_rot180), new RoundCornerData(3, -2, -1, R.drawable.screen_round_corner_bottom_rot270), new RoundCornerData(80, -1, -2, R.drawable.screen_round_corner_bottom), new RoundCornerData(5, -2, -1, R.drawable.screen_round_corner_bottom_rot90)};
+    RoundCornerData[] mForceBlackTopCorner = {new RoundCornerData(48, -1, -2, R.drawable.force_black_top_corner), new RoundCornerData(3, -2, -1, R.drawable.force_black_top_corner_rot90), new RoundCornerData(80, -1, -2, R.drawable.force_black_top_corner_rot180), new RoundCornerData(5, -2, -1, R.drawable.force_black_top_corner_rot270)};
     /* access modifiers changed from: private */
     public boolean mForceBlackV2 = false;
     /* access modifiers changed from: private */
@@ -68,6 +67,7 @@ public class RoundedCorners extends SystemUI implements CommandQueue.Callbacks, 
     public boolean mHandyMode;
     private ImageView mHideNotchRoundCornerView;
     private Point mInitialSize;
+    private boolean mIsRoundCorner;
     RoundCornerData[] mNotchCorner = {new RoundCornerData(48, -1, -2, R.drawable.screen_round_corner_notch), new RoundCornerData(3, -2, -1, R.drawable.screen_round_corner_notch_rot90), new RoundCornerData(80, -1, -2, R.drawable.screen_round_corner_notch_rot180), new RoundCornerData(5, -2, -1, R.drawable.screen_round_corner_notch_rot270)};
     /* access modifiers changed from: private */
     public ImageView mNotchRoundCornerView;
@@ -222,17 +222,6 @@ public class RoundedCorners extends SystemUI implements CommandQueue.Callbacks, 
     public void topAppWindowChanged(boolean z) {
     }
 
-    public RoundedCorners() {
-    }
-
-    static {
-        boolean z = true;
-        if (!SystemProperties.getBoolean("sys.miui.show_round_corner", true) || !FeatureParser.getBoolean("support_round_corner", false)) {
-            z = false;
-        }
-        sIsRoundCorner = z;
-    }
-
     /* access modifiers changed from: private */
     public boolean isOverlay(int i) {
         OverlayManagerWrapper.OverlayInfo overlayInfo;
@@ -246,6 +235,11 @@ public class RoundedCorners extends SystemUI implements CommandQueue.Callbacks, 
     }
 
     public void start() {
+        boolean z = true;
+        if (!SystemProperties.getBoolean("sys.miui.show_round_corner", true) || !this.mContext.getResources().getBoolean(R.bool.support_round_corner)) {
+            z = false;
+        }
+        this.mIsRoundCorner = z;
         Handler startHandlerThread = startHandlerThread();
         this.mHandler = startHandlerThread;
         startHandlerThread.post(new Runnable() {
@@ -264,7 +258,7 @@ public class RoundedCorners extends SystemUI implements CommandQueue.Callbacks, 
 
     /* access modifiers changed from: private */
     public void startOnScreenDecorationsThread() {
-        this.mCurrentUserId = ActivityManager.getCurrentUser();
+        this.mCurrentUserId = KeyguardUpdateMonitor.getCurrentUser();
         this.mDisplay = ((WindowManager) this.mContext.getSystemService("window")).getDefaultDisplay();
         this.mInitialSize = new Point();
         try {
@@ -325,7 +319,7 @@ public class RoundedCorners extends SystemUI implements CommandQueue.Callbacks, 
                 public void onChange(boolean z) {
                     RoundedCorners roundedCorners = RoundedCorners.this;
                     boolean z2 = false;
-                    if (Settings.System.getIntForUser(roundedCorners.mContext.getContentResolver(), "drive_mode_drive_mode", 0, -2) == 1) {
+                    if (Settings.System.getIntForUser(roundedCorners.mContext.getContentResolver(), "drive_mode_drive_mode", 0, KeyguardUpdateMonitor.getCurrentUser()) == 1) {
                         z2 = true;
                     }
                     boolean unused = roundedCorners.mDriveMode = z2;
@@ -396,8 +390,8 @@ public class RoundedCorners extends SystemUI implements CommandQueue.Callbacks, 
     }
 
     private void initRoundCornerWindows() {
-        if (sIsRoundCorner || CustomizeUtil.HAS_NOTCH) {
-            if (sIsRoundCorner) {
+        if (this.mIsRoundCorner || CustomizeUtil.HAS_NOTCH) {
+            if (this.mIsRoundCorner) {
                 this.mRoundCornerViewTop = showRoundCornerViewAt(51, R.drawable.screen_round_corner_top);
                 this.mRoundCornerViewBottom = showRoundCornerViewAt(83, R.drawable.screen_round_corner_bottom);
             }
@@ -535,7 +529,7 @@ public class RoundedCorners extends SystemUI implements CommandQueue.Callbacks, 
         WindowManager windowManager = (WindowManager) this.mContext.getSystemService("window");
         ImageView imageView = new ImageView(this.mContext);
         setBackgroundResource(imageView, i2, z);
-        WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(-1, -2, z ? 2017 : 2015, 1304, -3);
+        WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(-1, -2, z ? WindowManagerCompat.getNotchType() : 2015, 1304, -3);
         layoutParams.privateFlags = 16;
         layoutParams.privateFlags = 16 | 64;
         if (!z || Build.VERSION.SDK_INT < 28) {

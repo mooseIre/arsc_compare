@@ -53,6 +53,7 @@ public class SwipeHelper {
     private int mMenuShownSize;
     private float mPagingTouchSlop;
     private float mPerpendicularInitialTouchPos;
+    private int mScreenHeight;
     private int mScreenWidth;
     /* access modifiers changed from: private */
     public boolean mSnappingChild;
@@ -140,6 +141,7 @@ public class SwipeHelper {
         this.mMenuShownSize = context.getResources().getDimensionPixelSize(R.dimen.notification_menu_space);
         this.mMaxSwipeTranslation = context.getResources().getDimensionPixelSize(R.dimen.notification_swipe_max_distance);
         this.mScreenWidth = context.getResources().getDisplayMetrics().widthPixels;
+        this.mScreenHeight = context.getResources().getDisplayMetrics().heightPixels;
         initDismissAllAnimation();
     }
 
@@ -199,6 +201,14 @@ public class SwipeHelper {
             i = view.getMeasuredHeight();
         }
         return (float) i;
+    }
+
+    private float getTargetPos(View view) {
+        boolean z = true;
+        if (this.mContext.getResources().getConfiguration().orientation != 1) {
+            z = false;
+        }
+        return (float) (z ? this.mScreenWidth : this.mScreenHeight);
     }
 
     private float getAlphaForOffset(float f) {
@@ -435,10 +445,7 @@ public class SwipeHelper {
         if (z3 || z6 || z5) {
             f2 = -getSize(view);
         } else {
-            f2 = getSize(view);
-            if ((view2 instanceof ExpandableNotificationRow) && z2) {
-                f2 = Math.max((float) this.mScreenWidth, f2);
-            }
+            f2 = z2 ? getTargetPos(view) : getSize(view);
         }
         float f3 = f2;
         if (j2 == 0) {

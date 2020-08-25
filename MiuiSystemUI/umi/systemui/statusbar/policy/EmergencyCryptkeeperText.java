@@ -84,10 +84,10 @@ public class EmergencyCryptkeeperText extends TextView {
             if (size != 0) {
                 charSequence = subscriptionInfo.get(0).getCarrierName();
             } else {
-                charSequence = getContext().getText(17040096);
-                Intent registerReceiver = getContext().registerReceiver((BroadcastReceiver) null, new IntentFilter("android.provider.Telephony.SPN_STRINGS_UPDATED"));
+                charSequence = getContext().getText(17040138);
+                Intent registerReceiver = getContext().registerReceiver((BroadcastReceiver) null, new IntentFilter("android.telephony.action.SERVICE_PROVIDERS_UPDATED"));
                 if (registerReceiver != null) {
-                    charSequence = registerReceiver.getStringExtra("plmn");
+                    charSequence = registerReceiver.getStringExtra("android.telephony.extra.PLMN");
                 }
             }
         }

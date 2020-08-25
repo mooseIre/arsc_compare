@@ -11,7 +11,7 @@ import com.android.internal.statusbar.NotificationVisibility;
 import com.android.internal.statusbar.NotificationVisibilityCompat;
 import com.android.systemui.Dependency;
 import com.android.systemui.UiOffloadThread;
-import com.android.systemui.miui.statusbar.analytics.SystemUIStat;
+import com.android.systemui.miui.statusbar.analytics.NotificationStat;
 import com.android.systemui.statusbar.NotificationData;
 import com.android.systemui.statusbar.phone.StatusBar;
 import com.android.systemui.statusbar.stack.NotificationStackScrollLayout;
@@ -25,7 +25,9 @@ public class NotificationLogger {
     protected IStatusBarService mBarService = IStatusBarService.Stub.asInterface(ServiceManager.getService("statusbar"));
     /* access modifiers changed from: private */
     public final ArraySet<NotificationVisibility> mCurrentlyVisibleNotifications = new ArraySet<>();
+    private boolean mFloating = false;
     protected Handler mHandler = new Handler();
+    private boolean mKeyguard = false;
     /* access modifiers changed from: private */
     public long mLastVisibilityReportUptimeMs;
     protected NotificationData mNotificationData;
@@ -101,26 +103,28 @@ public class NotificationLogger {
     }
 
     public void startNotificationLogging() {
+        this.mKeyguard = this.mStatusBar.isKeyguardShowing();
+        this.mFloating = this.mStatusBar.isHeadsUpPinned();
         this.mStackScroller.setChildLocationsChangedListener(this.mNotificationLocationsChangedListener);
         this.mNotificationLocationsChangedListener.onChildLocationsChanged();
     }
 
     /* access modifiers changed from: private */
-    public void logNotificationVisibilityChanges(final Collection<NotificationVisibility> collection, Collection<NotificationVisibility> collection2) {
+    public void logNotificationVisibilityChanges(Collection<NotificationVisibility> collection, Collection<NotificationVisibility> collection2) {
         if (!collection.isEmpty() || !collection2.isEmpty()) {
             final NotificationVisibility[] cloneVisibilitiesAsArr = cloneVisibilitiesAsArr(collection);
             final NotificationVisibility[] cloneVisibilitiesAsArr2 = cloneVisibilitiesAsArr(collection2);
-            ((SystemUIStat) Dependency.get(SystemUIStat.class)).logNotificationVisibilityChanges(cloneVisibilitiesAsKeyList(collection), cloneVisibilitiesAsKeyList(collection2));
+            ((NotificationStat) Dependency.get(NotificationStat.class)).logNotificationVisibilityChanges(cloneVisibilitiesAsKeyList(collection), cloneVisibilitiesAsKeyList(collection2), this.mFloating, this.mKeyguard);
             this.mUiOffloadThread.submit(new Runnable() {
                 public void run() {
                     try {
                         NotificationLogger.this.mBarService.onNotificationVisibilityChanged(cloneVisibilitiesAsArr, cloneVisibilitiesAsArr2);
                     } catch (RemoteException unused) {
                     }
-                    int size = collection.size();
-                    if (size > 0) {
-                        String[] strArr = new String[size];
-                        for (int i = 0; i < size; i++) {
+                    int length = cloneVisibilitiesAsArr.length;
+                    if (length > 0) {
+                        String[] strArr = new String[length];
+                        for (int i = 0; i < length; i++) {
                             strArr[i] = cloneVisibilitiesAsArr[i].key;
                         }
                         try {

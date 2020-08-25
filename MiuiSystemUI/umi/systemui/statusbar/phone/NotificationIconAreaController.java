@@ -7,6 +7,7 @@ import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.drawable.IconCompat;
 import android.util.ArrayMap;
+import android.util.ArraySet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -171,15 +172,10 @@ public class NotificationIconAreaController implements DarkIconDispatcher.DarkRe
     }
 
     public void updateNotificationIcons(NotificationData notificationData) {
-        int i = 0;
-        updateIconsForLayout(notificationData, $$Lambda$NotificationIconAreaController$UqZBoYLzFV9iQ2ZKXh5_vFY0A6w.INSTANCE, this.mNotificationIcons, false);
-        updateIconsForLayout(notificationData, $$Lambda$NotificationIconAreaController$F5tpJPiPsFQj85OyZRaWS2ufQTM.INSTANCE, this.mShelfIcons, true);
+        updateIconsForLayout(notificationData, $$Lambda$NotificationIconAreaController$UqZBoYLzFV9iQ2ZKXh5_vFY0A6w.INSTANCE, this.mNotificationIcons, false, true);
+        updateIconsForLayout(notificationData, $$Lambda$NotificationIconAreaController$F5tpJPiPsFQj85OyZRaWS2ufQTM.INSTANCE, this.mShelfIcons, true, false);
         applyIconsTint(this.mNotificationIcons, this.mIconTint);
-        NotificationIconContainer notificationIconContainer = this.mNotificationIcons;
-        if (!this.mShowNotificationIcons || (isNoIconsSetGone() && this.mNotificationIcons.getChildCount() <= 0)) {
-            i = 8;
-        }
-        notificationIconContainer.setVisibility(i);
+        this.mNotificationIcons.setVisibility((!this.mShowNotificationIcons || (isNoIconsSetGone() && this.mNotificationIcons.getChildCount() <= 0)) ? 8 : 0);
         this.mClearableNotificationsCount = notificationData.getClearableNotifications().size();
         setIconsVisibility();
     }
@@ -202,23 +198,28 @@ public class NotificationIconAreaController implements DarkIconDispatcher.DarkRe
         }
     }
 
-    private ArrayList<StatusBarIconView> getDisplayStatusBarIcons(NotificationData notificationData, Function<NotificationData.Entry, StatusBarIconView> function, boolean z) {
+    private ArrayList<StatusBarIconView> getDisplayStatusBarIcons(NotificationData notificationData, Function<NotificationData.Entry, StatusBarIconView> function, boolean z, boolean z2) {
         ArrayList<StatusBarIconView> arrayList = new ArrayList<>(this.mNotificationScrollLayout.getChildCount());
+        ArraySet arraySet = new ArraySet(arrayList.size());
         for (int i = 0; i < this.mNotificationScrollLayout.getChildCount(); i++) {
             View childAt = this.mNotificationScrollLayout.getChildAt(i);
             if (childAt instanceof ExpandableNotificationRow) {
                 NotificationData.Entry entry = ((ExpandableNotificationRow) childAt).getEntry();
-                if (shouldShowNotificationIcon(entry, notificationData, z)) {
+                String targetPackageName = entry.notification.getTargetPackageName();
+                if (shouldShowNotificationIcon(entry, notificationData, z) && !arraySet.contains(targetPackageName)) {
                     arrayList.add(function.apply(entry));
+                    if (z2) {
+                        arraySet.add(targetPackageName);
+                    }
                 }
             }
         }
         return arrayList;
     }
 
-    private void updateIconsForLayout(NotificationData notificationData, Function<NotificationData.Entry, StatusBarIconView> function, NotificationIconContainer notificationIconContainer, boolean z) {
+    private void updateIconsForLayout(NotificationData notificationData, Function<NotificationData.Entry, StatusBarIconView> function, NotificationIconContainer notificationIconContainer, boolean z, boolean z2) {
         if (notificationIconContainer != null) {
-            ArrayList<StatusBarIconView> displayStatusBarIcons = getDisplayStatusBarIcons(notificationData, function, z);
+            ArrayList<StatusBarIconView> displayStatusBarIcons = getDisplayStatusBarIcons(notificationData, function, z, z2);
             ArrayMap arrayMap = new ArrayMap();
             ArrayList arrayList = new ArrayList();
             for (int i = 0; i < notificationIconContainer.getChildCount(); i++) {
@@ -227,22 +228,22 @@ public class NotificationIconAreaController implements DarkIconDispatcher.DarkRe
                     StatusBarIconView statusBarIconView = (StatusBarIconView) childAt;
                     String groupKey = statusBarIconView.getNotification().getGroupKey();
                     int i2 = 0;
-                    boolean z2 = false;
+                    boolean z3 = false;
                     while (true) {
                         if (i2 >= displayStatusBarIcons.size()) {
                             break;
                         }
                         StatusBarIconView statusBarIconView2 = displayStatusBarIcons.get(i2);
                         if (IconCompat.sameAs(statusBarIconView2.getSourceIcon(), statusBarIconView.getSourceIcon()) && statusBarIconView2.getNotification().getGroupKey().equals(groupKey)) {
-                            if (z2) {
-                                z2 = false;
+                            if (z3) {
+                                z3 = false;
                                 break;
                             }
-                            z2 = true;
+                            z3 = true;
                         }
                         i2++;
                     }
-                    if (z2) {
+                    if (z3) {
                         ArrayList arrayList2 = (ArrayList) arrayMap.get(groupKey);
                         if (arrayList2 == null) {
                             arrayList2 = new ArrayList();

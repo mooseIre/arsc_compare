@@ -43,6 +43,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 import com.airbnb.lottie.LottieAnimationView;
+import com.android.systemui.Constants;
 import com.android.systemui.content.pm.PackageManagerCompat;
 import com.android.systemui.partialscreenshot.factory.EllipseFactory;
 import com.android.systemui.partialscreenshot.factory.IrregularFactory;
@@ -53,45 +54,38 @@ import com.android.systemui.screenshot.IScreenShotCallback;
 import com.miui.blur.drawable.BlurDrawable;
 import com.miui.enterprise.RestrictionsHelper;
 import java.lang.Thread;
+import java.util.Collection;
 import java.util.List;
-import miui.animation.Folme;
-import miui.animation.IFolme;
-import miui.animation.IVisibleStyle;
-import miui.animation.base.AnimConfig;
+import miui.util.HapticFeedbackUtil;
 import miui.util.ScreenshotUtils;
+import miuix.animation.Folme;
+import miuix.animation.IFolme;
+import miuix.animation.IVisibleStyle;
+import miuix.animation.base.AnimConfig;
+import miuix.animation.listener.TransitionListener;
+import miuix.animation.listener.UpdateInfo;
 
 public class PartialScreenshot implements Thread.UncaughtExceptionHandler {
     /* access modifiers changed from: private */
     public int checkID;
     /* access modifiers changed from: private */
     public LottieAnimationView lottieAnimationView;
+    private AnimConfig mAnimConfig;
     /* access modifiers changed from: private */
     public IBitmapService mBitmapService;
+    /* access modifiers changed from: private */
+    public BlurDrawable mBlurDrawable;
     private IFolme mBottomTaskmc;
     private ImageButton mCancelButton;
-    private ServiceConnection mConnection = new ServiceConnection() {
-        public void onServiceConnected(ComponentName componentName, final IBinder iBinder) {
-            PartialScreenshot.this.mGalleryHandler.post(new Runnable() {
-                public void run() {
-                    try {
-                        IBitmapService unused = PartialScreenshot.this.mBitmapService = IBitmapService.Stub.asInterface(iBinder);
-                        PartialScreenshot.this.mBitmapService.registerCallback(PartialScreenshot.this.mScreenShotCallback);
-                    } catch (RemoteException e) {
-                        Log.e("PartialScreenshot", "bitmap service register exception : " + e);
-                    }
-                }
-            });
-        }
-
-        public void onServiceDisconnected(ComponentName componentName) {
-            IBitmapService unused = PartialScreenshot.this.mBitmapService = null;
-        }
-    };
+    private ServiceConnection mConnection;
     /* access modifiers changed from: private */
     public Context mContext;
-    private ImageView mEditButton;
+    /* access modifiers changed from: private */
+    public float mDimensionPixelOffset;
+    private BlurImageView mEditButton;
     private View mEditText;
-    private RadioButton mEllipseButton;
+    /* access modifiers changed from: private */
+    public RadioButton mEllipseButton;
     private IFolme mFolmeButtonEdit;
     private IFolme mFolmeButtonRepaint;
     private IFolme mFolmeButtonSave;
@@ -100,53 +94,42 @@ public class PartialScreenshot implements Thread.UncaughtExceptionHandler {
     public Handler mGalleryHandler;
     private ImageView mGreyBackgroundView;
     /* access modifiers changed from: private */
-    public Handler mHandler = new Handler();
-    private HandlerThread mHandlerThread = new HandlerThread("screen_gallery_thread", 10);
-    private RadioButton mIrregularButton;
+    public Handler mHandler;
+    private HandlerThread mHandlerThread;
     /* access modifiers changed from: private */
-    public long mLastClickTime = 0;
+    public RadioButton mIrregularButton;
     /* access modifiers changed from: private */
-    public View mLottieContainer;
+    public long mLastClickTime;
     private NotificationManager mNotificationManager;
     /* access modifiers changed from: private */
     public PartialNotifyMediaStoreData mPartialNotifyMediaStoreData;
     /* access modifiers changed from: private */
     public PartialScreenshotView mPartialScreenshotView;
-    private BroadcastReceiver mQuitReceiver = new BroadcastReceiver() {
-        public void onReceive(Context context, Intent intent) {
-            PartialScreenshot.this.quit();
-        }
-    };
-    private RadioButton mRectButton;
-    private ImageView mRepaintButton;
+    private BroadcastReceiver mQuitReceiver;
+    /* access modifiers changed from: private */
+    public RadioButton mRectButton;
+    private BlurImageView mRepaintButton;
     private View mRepaintText;
-    private ImageView mSaveButton;
+    private Runnable mRunnable;
+    private BlurImageView mSaveButton;
     private View mSaveText;
     private Bitmap mScreenBitmap;
     /* access modifiers changed from: private */
-    public IScreenShotCallback.Stub mScreenShotCallback = new IScreenShotCallback.Stub() {
-        public void quitThumnail() throws RemoteException {
-            PartialScreenshot.this.mHandler.post(new Runnable() {
-                public void run() {
-                    PartialScreenshot.this.quitWindow();
-                }
-            });
-        }
-    };
+    public IScreenShotCallback.Stub mScreenShotCallback;
     /* access modifiers changed from: private */
     public View mScreenshotLayout;
     private RadioGroup mShapeGroup;
-    private ImageView mShareButton;
+    private BlurImageView mShareButton;
     private View mShareText;
-    private View mTopMaskLayout;
-    private IFolme mTopTaskmc;
-    private Vibrator mVibrator;
+    /* access modifiers changed from: private */
+    public IFolme mTopTaskmc;
     /* access modifiers changed from: private */
     public WindowManager.LayoutParams mWindowLayoutParams;
     /* access modifiers changed from: private */
     public WindowManager mWindowManager;
     /* access modifiers changed from: private */
     public ShapeFactory shapeFactory;
+    private Runnable shotFinisher;
     /* access modifiers changed from: private */
     public Rect trimmingFramerect;
 
@@ -155,84 +138,125 @@ public class PartialScreenshot implements Thread.UncaughtExceptionHandler {
     }
 
     public PartialScreenshot(Context context) {
-        this.mContext = context;
+        Context context2 = context;
+        this.mLastClickTime = 0;
+        this.mHandler = new Handler();
+        this.mHandlerThread = new HandlerThread("screen_gallery_thread", 10);
+        this.mConnection = new ServiceConnection() {
+            public void onServiceConnected(ComponentName componentName, final IBinder iBinder) {
+                PartialScreenshot.this.mGalleryHandler.post(new Runnable() {
+                    public void run() {
+                        try {
+                            IBitmapService unused = PartialScreenshot.this.mBitmapService = IBitmapService.Stub.asInterface(iBinder);
+                            PartialScreenshot.this.mBitmapService.registerCallback(PartialScreenshot.this.mScreenShotCallback);
+                        } catch (RemoteException e) {
+                            Log.e("PartialScreenshot", "bitmap service register exception : " + e);
+                        }
+                    }
+                });
+            }
+
+            public void onServiceDisconnected(ComponentName componentName) {
+                IBitmapService unused = PartialScreenshot.this.mBitmapService = null;
+            }
+        };
+        this.mScreenShotCallback = new IScreenShotCallback.Stub() {
+            public void quitThumnail() throws RemoteException {
+                PartialScreenshot.this.mHandler.post(new Runnable() {
+                    public void run() {
+                        PartialScreenshot.this.saveDataInQuitOrException("false");
+                        PartialScreenshot.this.unBindPhotoService();
+                        PartialScreenshot.this.quit();
+                    }
+                });
+            }
+        };
+        this.mQuitReceiver = new BroadcastReceiver() {
+            public void onReceive(Context context, Intent intent) {
+                PartialScreenshot.this.saveDataInQuitOrException("false");
+                PartialScreenshot.this.quit();
+            }
+        };
+        this.mContext = context2;
         this.mHandlerThread.start();
         this.mGalleryHandler = new Handler(this.mHandlerThread.getLooper());
-        View inflate = ((LayoutInflater) context.getSystemService("layout_inflater")).inflate(R$layout.partial_screenshot, (ViewGroup) null);
+        View inflate = ((LayoutInflater) context2.getSystemService("layout_inflater")).inflate(R$layout.partial_screenshot, (ViewGroup) null);
         this.mScreenshotLayout = inflate;
         this.mPartialScreenshotView = (PartialScreenshotView) inflate.findViewById(R$id.partial_screenshot_selector);
-        this.mLottieContainer = this.mScreenshotLayout.findViewById(R$id.rl_container);
-        this.mTopMaskLayout = this.mScreenshotLayout.findViewById(R$id.top_mask);
         this.mShapeGroup = (RadioGroup) this.mScreenshotLayout.findViewById(R$id.rg_shape);
         this.lottieAnimationView = (LottieAnimationView) this.mScreenshotLayout.findViewById(R$id.lottie_ellipse);
         this.mEllipseButton = (RadioButton) this.mScreenshotLayout.findViewById(R$id.rbtn_ellipse);
         this.mIrregularButton = (RadioButton) this.mScreenshotLayout.findViewById(R$id.rbtn_irregular);
         this.mRectButton = (RadioButton) this.mScreenshotLayout.findViewById(R$id.rbtn_rect);
         this.mCancelButton = (ImageButton) this.mScreenshotLayout.findViewById(R$id.btn_cancel);
-        this.mRepaintButton = (ImageView) this.mScreenshotLayout.findViewById(R$id.btn_repaint);
-        this.mShareButton = (ImageView) this.mScreenshotLayout.findViewById(R$id.btn_share);
-        this.mEditButton = (ImageView) this.mScreenshotLayout.findViewById(R$id.btn_edit);
+        this.mRepaintButton = (BlurImageView) this.mScreenshotLayout.findViewById(R$id.btn_repaint);
+        this.mShareButton = (BlurImageView) this.mScreenshotLayout.findViewById(R$id.btn_share);
+        this.mEditButton = (BlurImageView) this.mScreenshotLayout.findViewById(R$id.btn_edit);
         this.mRepaintText = this.mScreenshotLayout.findViewById(R$id.text_repaint);
         this.mShareText = this.mScreenshotLayout.findViewById(R$id.text_share);
         this.mEditText = this.mScreenshotLayout.findViewById(R$id.text_edit);
         this.mSaveText = this.mScreenshotLayout.findViewById(R$id.text_save);
-        this.mSaveButton = (ImageView) this.mScreenshotLayout.findViewById(R$id.btn_save);
+        this.mSaveButton = (BlurImageView) this.mScreenshotLayout.findViewById(R$id.btn_save);
         this.mGreyBackgroundView = (ImageView) this.mScreenshotLayout.findViewById(R$id.window_Background);
         this.mScreenshotLayout.requestFocus();
-        float dimension = context.getResources().getDimension(R$dimen.screenshot_ball_width_height) / 2.0f;
+        this.mDimensionPixelOffset = context.getResources().getDimension(R$dimen.screenshot_ball_width_height) / 2.0f;
         BlurDrawable blurDrawable = new BlurDrawable();
-        blurDrawable.setBlurCornerRadii(new float[]{dimension, dimension, dimension, dimension});
-        blurDrawable.setBlurRatio(0.8f);
-        blurDrawable.setMiuiBlurType(7);
-        this.mSaveButton.setBackground(blurDrawable);
-        this.mEditButton.setBackground(blurDrawable);
-        this.mShareButton.setBackground(blurDrawable);
-        this.mRepaintButton.setBackground(blurDrawable);
+        this.mBlurDrawable = blurDrawable;
+        float f = this.mDimensionPixelOffset;
+        blurDrawable.setBlurCornerRadii(new float[]{f, f, f, f});
+        this.mBlurDrawable.setBlurRatio(0.6f);
+        this.mSaveButton.setBackground(this.mBlurDrawable);
+        this.mEditButton.setBackground(this.mBlurDrawable);
+        this.mShareButton.setBackground(this.mBlurDrawable);
+        this.mRepaintButton.setBackground(this.mBlurDrawable);
         WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(-1, -1, 0, 0, 2024, 17040640, -3);
         this.mWindowLayoutParams = layoutParams;
         layoutParams.windowAnimations = R$style.PartialTheme;
-        WindowManagerCompat.setLayoutInDisplayCutoutMode(layoutParams, 1);
+        WindowManagerCompat.setFitInsetsTypes(layoutParams);
+        WindowManagerCompat.setLayoutInDisplayCutoutMode(this.mWindowLayoutParams, 1);
         this.mWindowLayoutParams.setTitle("PartialScreenshot");
-        this.mWindowManager = (WindowManager) context.getSystemService("window");
-        this.mNotificationManager = (NotificationManager) context.getSystemService("notification");
+        this.mWindowManager = (WindowManager) context2.getSystemService("window");
+        this.mNotificationManager = (NotificationManager) context2.getSystemService("notification");
         this.mWindowLayoutParams.screenOrientation = 14;
-        this.mScreenshotLayout.setSystemUiVisibility(5894);
-        IFolme useAt = Folme.useAt(this.mRepaintButton);
-        this.mFolmeButtonRepaint = useAt;
-        useAt.touch().handleTouchOf(this.mRepaintButton, new AnimConfig[0]);
-        IFolme useAt2 = Folme.useAt(this.mShareButton);
-        this.mFolmeButtonShare = useAt2;
-        useAt2.touch().handleTouchOf(this.mShareButton, new AnimConfig[0]);
-        IFolme useAt3 = Folme.useAt(this.mEditButton);
-        this.mFolmeButtonEdit = useAt3;
-        useAt3.touch().handleTouchOf(this.mEditButton, new AnimConfig[0]);
-        IFolme useAt4 = Folme.useAt(this.mSaveButton);
-        this.mFolmeButtonSave = useAt4;
-        useAt4.touch().handleTouchOf(this.mSaveButton, new AnimConfig[0]);
+        this.mFolmeButtonRepaint = Folme.useAt(this.mRepaintButton);
+        this.mTopTaskmc = Folme.useAt(this.mCancelButton, this.mRectButton, this.mIrregularButton, this.mEllipseButton);
+        this.mBottomTaskmc = Folme.useAt(this.mRepaintText, this.mShareText, this.mEditText, this.mSaveText);
+        this.mFolmeButtonShare = Folme.useAt(this.mShareButton);
+        this.mFolmeButtonEdit = Folme.useAt(this.mEditButton);
+        this.mFolmeButtonSave = Folme.useAt(this.mSaveButton);
+        this.mFolmeButtonRepaint.touch().handleTouchOf(this.mRepaintButton, new AnimConfig[0]);
+        this.mFolmeButtonShare.touch().handleTouchOf(this.mShareButton, new AnimConfig[0]);
+        this.mFolmeButtonEdit.touch().handleTouchOf(this.mEditButton, new AnimConfig[0]);
+        this.mFolmeButtonSave.touch().handleTouchOf(this.mSaveButton, new AnimConfig[0]);
         initButtonListener();
-        setForceDarkEnable(false);
+        setForceDarkEnable();
         this.mPartialScreenshotView.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                if (SystemProperties.getBoolean("sys.miui.screenshot", false)) {
-                    PartialScreenshot.this.showTopAnimation();
+                if (motionEvent.getAction() == 3) {
+                    PartialScreenshot.this.mTopTaskmc.visible().show(new AnimConfig[0]);
                     if (PartialScreenshot.this.shapeFactory.getState() == 2) {
                         PartialScreenshot.this.showBottomAnimation();
+                    } else {
+                        PartialScreenshot.this.lottieAnimationView.playAnimation();
+                        PartialScreenshot.this.lottieAnimationView.setVisibility(0);
                     }
                 }
                 boolean onTouch = PartialScreenshot.this.shapeFactory.onTouch(view, motionEvent);
                 int action = motionEvent.getAction();
                 if (action == 0) {
-                    PartialScreenshot.this.mLottieContainer.setVisibility(4);
-                    PartialScreenshot.this.hideTopTaskAnimation();
+                    PartialScreenshot.this.lottieAnimationView.setVisibility(4);
+                    PartialScreenshot.this.lottieAnimationView.cancelAnimation();
+                    PartialScreenshot.this.mTopTaskmc.visible().hide(new AnimConfig[0]);
                     if (PartialScreenshot.this.shapeFactory.getState() == 2) {
                         PartialScreenshot.this.hideBottomTaskAnimation();
                     }
                 } else if (action == 1 || action == 6) {
-                    PartialScreenshot.this.showTopAnimation();
+                    PartialScreenshot.this.mTopTaskmc.visible().show(new AnimConfig[0]);
                     if (PartialScreenshot.this.shapeFactory.getState() == 2) {
                         PartialScreenshot.this.showBottomAnimation();
                     } else if (motionEvent.getPointerCount() == 1) {
-                        PartialScreenshot.this.mLottieContainer.setVisibility(0);
+                        PartialScreenshot.this.lottieAnimationView.playAnimation();
+                        PartialScreenshot.this.lottieAnimationView.setVisibility(0);
                     }
                 }
                 return onTouch;
@@ -243,14 +267,11 @@ public class PartialScreenshot implements Thread.UncaughtExceptionHandler {
                 if (i != 4) {
                     return false;
                 }
+                PartialScreenshot.this.saveDataInQuitOrException("false");
                 PartialScreenshot.this.quit();
                 return true;
             }
         });
-        initShapeFactory();
-        Vibrator vibrator = (Vibrator) context.getSystemService("vibrator");
-        this.mVibrator = vibrator;
-        vibrator.vibrate(100);
         Thread.currentThread().setUncaughtExceptionHandler(this);
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("android.intent.action.CLOSE_SYSTEM_DIALOGS");
@@ -259,138 +280,229 @@ public class PartialScreenshot implements Thread.UncaughtExceptionHandler {
         context.getApplicationContext().registerReceiver(this.mQuitReceiver, intentFilter);
     }
 
-    private void setForceDarkEnable(boolean z) {
+    public PartialScreenshot(Context context, final float[] fArr) {
+        this(context);
+        this.mRunnable = new Runnable() {
+            /* JADX WARNING: Removed duplicated region for block: B:12:0x004f  */
+            /* JADX WARNING: Removed duplicated region for block: B:15:0x0094  */
+            /* Code decompiled incorrectly, please refer to instructions dump. */
+            public void run() {
+                /*
+                    r4 = this;
+                    com.android.systemui.partialscreenshot.factory.IrregularFactory r0 = com.android.systemui.partialscreenshot.factory.IrregularFactory.getInstance()
+                    float[] r1 = r2
+                    com.android.systemui.partialscreenshot.PartialScreenshot r2 = com.android.systemui.partialscreenshot.PartialScreenshot.this
+                    com.android.systemui.partialscreenshot.PartialScreenshotView r2 = r2.mPartialScreenshotView
+                    r0.knockShot(r1, r2)
+                    com.android.systemui.partialscreenshot.PartialScreenshot r0 = com.android.systemui.partialscreenshot.PartialScreenshot.this
+                    com.android.systemui.partialscreenshot.factory.IrregularFactory r1 = com.android.systemui.partialscreenshot.factory.IrregularFactory.getInstance()
+                    com.android.systemui.partialscreenshot.factory.ShapeFactory unused = r0.shapeFactory = r1
+                    java.lang.String r0 = "sys.miui.screentshot.partial.shape"
+                    java.lang.String r1 = "irregular"
+                    java.lang.String r0 = android.os.SystemProperties.get(r0, r1)
+                    com.android.systemui.partialscreenshot.factory.IrregularFactory r1 = com.android.systemui.partialscreenshot.factory.IrregularFactory.getInstance()
+                    r1.setSelectionRect()
+                    int r1 = r0.hashCode()
+                    r2 = -1656480802(0xffffffff9d441bde, float:-2.595479E-21)
+                    r3 = 1
+                    if (r1 == r2) goto L_0x0042
+                    r2 = 3496420(0x3559e4, float:4.899528E-39)
+                    if (r1 == r2) goto L_0x0038
+                    goto L_0x004c
+                L_0x0038:
+                    java.lang.String r1 = "rect"
+                    boolean r0 = r0.equals(r1)
+                    if (r0 == 0) goto L_0x004c
+                    r0 = r3
+                    goto L_0x004d
+                L_0x0042:
+                    java.lang.String r1 = "ellipse"
+                    boolean r0 = r0.equals(r1)
+                    if (r0 == 0) goto L_0x004c
+                    r0 = 0
+                    goto L_0x004d
+                L_0x004c:
+                    r0 = -1
+                L_0x004d:
+                    if (r0 == 0) goto L_0x0094
+                    if (r0 == r3) goto L_0x0068
+                    com.android.systemui.partialscreenshot.PartialScreenshot r0 = com.android.systemui.partialscreenshot.PartialScreenshot.this
+                    android.widget.RadioButton r0 = r0.mIrregularButton
+                    r0.setChecked(r3)
+                    com.android.systemui.partialscreenshot.factory.IrregularFactory r0 = com.android.systemui.partialscreenshot.factory.IrregularFactory.getInstance()
+                    com.android.systemui.partialscreenshot.PartialScreenshot r1 = com.android.systemui.partialscreenshot.PartialScreenshot.this
+                    com.android.systemui.partialscreenshot.PartialScreenshotView r1 = r1.mPartialScreenshotView
+                    r0.flash(r1)
+                    goto L_0x00bf
+                L_0x0068:
+                    com.android.systemui.partialscreenshot.PartialScreenshot r0 = com.android.systemui.partialscreenshot.PartialScreenshot.this
+                    android.widget.RadioButton r0 = r0.mRectButton
+                    r0.setChecked(r3)
+                    com.android.systemui.partialscreenshot.PartialScreenshot r0 = com.android.systemui.partialscreenshot.PartialScreenshot.this
+                    com.android.systemui.partialscreenshot.factory.ShapeFactory r0 = r0.shapeFactory
+                    android.graphics.Rect r0 = r0.getTrimmingFrame()
+                    com.android.systemui.partialscreenshot.PartialScreenshot r1 = com.android.systemui.partialscreenshot.PartialScreenshot.this
+                    com.android.systemui.partialscreenshot.factory.RectFactory r2 = com.android.systemui.partialscreenshot.factory.RectFactory.getInstance()
+                    com.android.systemui.partialscreenshot.factory.ShapeFactory unused = r1.shapeFactory = r2
+                    com.android.systemui.partialscreenshot.PartialScreenshot r1 = com.android.systemui.partialscreenshot.PartialScreenshot.this
+                    com.android.systemui.partialscreenshot.factory.ShapeFactory r1 = r1.shapeFactory
+                    com.android.systemui.partialscreenshot.PartialScreenshot r2 = com.android.systemui.partialscreenshot.PartialScreenshot.this
+                    com.android.systemui.partialscreenshot.PartialScreenshotView r2 = r2.mPartialScreenshotView
+                    r1.notifyShapeChanged(r0, r2)
+                    goto L_0x00bf
+                L_0x0094:
+                    com.android.systemui.partialscreenshot.PartialScreenshot r0 = com.android.systemui.partialscreenshot.PartialScreenshot.this
+                    android.widget.RadioButton r0 = r0.mEllipseButton
+                    r0.setChecked(r3)
+                    com.android.systemui.partialscreenshot.PartialScreenshot r0 = com.android.systemui.partialscreenshot.PartialScreenshot.this
+                    com.android.systemui.partialscreenshot.factory.ShapeFactory r0 = r0.shapeFactory
+                    android.graphics.Rect r0 = r0.getTrimmingFrame()
+                    com.android.systemui.partialscreenshot.PartialScreenshot r1 = com.android.systemui.partialscreenshot.PartialScreenshot.this
+                    com.android.systemui.partialscreenshot.factory.EllipseFactory r2 = com.android.systemui.partialscreenshot.factory.EllipseFactory.getInstance()
+                    com.android.systemui.partialscreenshot.factory.ShapeFactory unused = r1.shapeFactory = r2
+                    com.android.systemui.partialscreenshot.PartialScreenshot r1 = com.android.systemui.partialscreenshot.PartialScreenshot.this
+                    com.android.systemui.partialscreenshot.factory.ShapeFactory r1 = r1.shapeFactory
+                    com.android.systemui.partialscreenshot.PartialScreenshot r2 = com.android.systemui.partialscreenshot.PartialScreenshot.this
+                    com.android.systemui.partialscreenshot.PartialScreenshotView r2 = r2.mPartialScreenshotView
+                    r1.notifyShapeChanged(r0, r2)
+                L_0x00bf:
+                    com.android.systemui.partialscreenshot.PartialScreenshot r4 = com.android.systemui.partialscreenshot.PartialScreenshot.this
+                    r4.showBottomAnimation()
+                    return
+                */
+                throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.partialscreenshot.PartialScreenshot.AnonymousClass6.run():void");
+            }
+        };
+    }
+
+    private void setForceDarkEnable() {
         try {
-            this.mScreenshotLayout.getClass().getMethod("setForceDarkAllowed", new Class[]{Boolean.TYPE}).invoke(this.mScreenshotLayout, new Object[]{Boolean.valueOf(z)});
+            this.mScreenshotLayout.getClass().getMethod("setForceDarkAllowed", new Class[]{Boolean.TYPE}).invoke(this.mScreenshotLayout, new Object[]{Boolean.FALSE});
         } catch (Exception unused) {
         }
     }
 
-    /* JADX WARNING: Removed duplicated region for block: B:12:0x0030  */
-    /* JADX WARNING: Removed duplicated region for block: B:15:0x0068  */
+    /* JADX WARNING: Removed duplicated region for block: B:12:0x004b  */
+    /* JADX WARNING: Removed duplicated region for block: B:15:0x0065  */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     private void initShapeFactory() {
         /*
             r4 = this;
             java.lang.String r0 = "sys.miui.screentshot.partial.shape"
-            java.lang.String r1 = "rect"
+            java.lang.String r1 = "irregular"
             java.lang.String r0 = android.os.SystemProperties.get(r0, r1)
+            com.android.systemui.partialscreenshot.factory.EllipseFactory r1 = com.android.systemui.partialscreenshot.factory.EllipseFactory.getInstance()
+            com.android.systemui.partialscreenshot.PartialScreenshotView r2 = r4.mPartialScreenshotView
+            r1.clear(r2)
+            com.android.systemui.partialscreenshot.factory.RectFactory r1 = com.android.systemui.partialscreenshot.factory.RectFactory.getInstance()
+            com.android.systemui.partialscreenshot.PartialScreenshotView r2 = r4.mPartialScreenshotView
+            r1.clear(r2)
+            com.android.systemui.partialscreenshot.factory.IrregularFactory r1 = com.android.systemui.partialscreenshot.factory.IrregularFactory.getInstance()
+            com.android.systemui.partialscreenshot.PartialScreenshotView r2 = r4.mPartialScreenshotView
+            r1.clear(r2)
             int r1 = r0.hashCode()
             r2 = -1656480802(0xffffffff9d441bde, float:-2.595479E-21)
             r3 = 1
-            if (r1 == r2) goto L_0x0023
-            r2 = 1394188883(0x5319a253, float:6.5985334E11)
-            if (r1 == r2) goto L_0x0019
-            goto L_0x002d
-        L_0x0019:
-            java.lang.String r1 = "irregular"
+            if (r1 == r2) goto L_0x003e
+            r2 = 3496420(0x3559e4, float:4.899528E-39)
+            if (r1 == r2) goto L_0x0034
+            goto L_0x0048
+        L_0x0034:
+            java.lang.String r1 = "rect"
             boolean r0 = r0.equals(r1)
-            if (r0 == 0) goto L_0x002d
+            if (r0 == 0) goto L_0x0048
             r0 = r3
-            goto L_0x002e
-        L_0x0023:
+            goto L_0x0049
+        L_0x003e:
             java.lang.String r1 = "ellipse"
             boolean r0 = r0.equals(r1)
-            if (r0 == 0) goto L_0x002d
+            if (r0 == 0) goto L_0x0048
             r0 = 0
-            goto L_0x002e
-        L_0x002d:
+            goto L_0x0049
+        L_0x0048:
             r0 = -1
-        L_0x002e:
-            if (r0 == 0) goto L_0x0068
-            if (r0 == r3) goto L_0x004d
-            com.android.systemui.partialscreenshot.factory.RectFactory r0 = new com.android.systemui.partialscreenshot.factory.RectFactory
-            r0.<init>()
+        L_0x0049:
+            if (r0 == 0) goto L_0x0065
+            if (r0 == r3) goto L_0x0059
+            com.android.systemui.partialscreenshot.factory.IrregularFactory r0 = com.android.systemui.partialscreenshot.factory.IrregularFactory.getInstance()
             r4.shapeFactory = r0
-            android.widget.RadioButton r0 = r4.mRectButton
-            r0.setChecked(r3)
-            com.airbnb.lottie.LottieAnimationView r0 = r4.lottieAnimationView
-            java.lang.String r1 = "image_rect"
-            r0.setImageAssetsFolder(r1)
-            com.airbnb.lottie.LottieAnimationView r0 = r4.lottieAnimationView
-            int r1 = com.android.systemui.partialscreenshot.R$raw.rect
-            r0.setAnimation((int) r1)
-            goto L_0x0082
-        L_0x004d:
-            com.android.systemui.partialscreenshot.factory.IrregularFactory r0 = new com.android.systemui.partialscreenshot.factory.IrregularFactory
-            r0.<init>()
+            android.widget.RadioButton r4 = r4.mIrregularButton
+            r4.setChecked(r3)
+            goto L_0x0070
+        L_0x0059:
+            com.android.systemui.partialscreenshot.factory.RectFactory r0 = com.android.systemui.partialscreenshot.factory.RectFactory.getInstance()
             r4.shapeFactory = r0
-            android.widget.RadioButton r0 = r4.mIrregularButton
-            r0.setChecked(r3)
-            com.airbnb.lottie.LottieAnimationView r0 = r4.lottieAnimationView
-            java.lang.String r1 = "image_irregular"
-            r0.setImageAssetsFolder(r1)
-            com.airbnb.lottie.LottieAnimationView r0 = r4.lottieAnimationView
-            int r1 = com.android.systemui.partialscreenshot.R$raw.irregular
-            r0.setAnimation((int) r1)
-            goto L_0x0082
-        L_0x0068:
-            com.android.systemui.partialscreenshot.factory.EllipseFactory r0 = new com.android.systemui.partialscreenshot.factory.EllipseFactory
-            r0.<init>()
+            android.widget.RadioButton r4 = r4.mRectButton
+            r4.setChecked(r3)
+            goto L_0x0070
+        L_0x0065:
+            com.android.systemui.partialscreenshot.factory.EllipseFactory r0 = com.android.systemui.partialscreenshot.factory.EllipseFactory.getInstance()
             r4.shapeFactory = r0
-            android.widget.RadioButton r0 = r4.mEllipseButton
-            r0.setChecked(r3)
-            com.airbnb.lottie.LottieAnimationView r0 = r4.lottieAnimationView
-            java.lang.String r1 = "image_ellipse"
-            r0.setImageAssetsFolder(r1)
-            com.airbnb.lottie.LottieAnimationView r0 = r4.lottieAnimationView
-            int r1 = com.android.systemui.partialscreenshot.R$raw.ellipse
-            r0.setAnimation((int) r1)
-        L_0x0082:
-            com.airbnb.lottie.LottieAnimationView r4 = r4.lottieAnimationView
-            r4.playAnimation()
+            android.widget.RadioButton r4 = r4.mEllipseButton
+            r4.setChecked(r3)
+        L_0x0070:
             return
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.partialscreenshot.PartialScreenshot.initShapeFactory():void");
     }
 
-    public void takePartialScreenshot() {
+    public void takePartialScreenshot(Runnable runnable) {
         if (Build.VERSION.SDK_INT < 17 || (!"trigger_restart_min_framework".equals(SystemProperties.get("vold.decrypt")) && UserManagerCompat.isUserUnlocked((UserManager) this.mContext.getSystemService(UserManager.class)))) {
             if (!(Settings.Global.getInt(this.mContext.getContentResolver(), "device_provisioned", 0) != 0)) {
                 Log.w("PartialScreenshot", "Can not screenshot when device not provisioned");
+                if (runnable != null) {
+                    runnable.run();
+                }
             } else if (RestrictionsHelper.hasRestriction(this.mContext, "disallow_screencapture", UserHandle.myUserId())) {
                 Log.w("PartialScreenshot", "Can not screenshot for enterprise forbidden.");
+                if (runnable != null) {
+                    runnable.run();
+                }
             } else {
                 Bitmap screenshot = ScreenshotUtils.getScreenshot(this.mContext);
                 this.mScreenBitmap = screenshot;
                 if (screenshot == null) {
                     Log.e("PartialScreenshot", "mScreenBitmap == null");
+                    if (runnable != null) {
+                        runnable.run();
+                    }
                     notifyPartialScreenshotError(this.mContext, this.mNotificationManager, R$string.screenshot_failed_to_capture_title);
                     return;
                 }
+                this.shotFinisher = runnable;
                 this.mScreenBitmap = screenshot.copy(Bitmap.Config.ARGB_8888, false);
                 screenshot.recycle();
                 this.mGreyBackgroundView.setImageBitmap(this.mScreenBitmap);
                 this.mGreyBackgroundView.setVisibility(0);
                 this.mScreenBitmap.setHasAlpha(false);
                 this.mScreenBitmap.prepareToDraw();
+                saveDataInQuitOrException("true");
                 this.mWindowManager.addView(this.mScreenshotLayout, this.mWindowLayoutParams);
-                SystemProperties.set("sys.miui.screenshot.partial", "true");
+                Runnable runnable2 = this.mRunnable;
+                if (runnable2 != null) {
+                    this.mHandler.postDelayed(runnable2, 50);
+                } else {
+                    initShapeFactory();
+                    this.lottieAnimationView.playAnimation();
+                    this.lottieAnimationView.setVisibility(0);
+                }
+                if (Constants.IS_SUPPORT_LINEAR_MOTOR_VIBRATE) {
+                    new HapticFeedbackUtil(this.mContext, true).performHapticFeedback("virtual_key_longpress", false);
+                } else {
+                    ((Vibrator) this.mContext.getSystemService("vibrator")).vibrate(65);
+                }
             }
         } else {
             Log.w("PartialScreenshot", "Can not screenshot when decrypt state.");
+            if (runnable != null) {
+                runnable.run();
+            }
         }
     }
 
     /* access modifiers changed from: private */
-    public void showTopAnimation() {
-        IFolme useAt = Folme.useAt(this.mTopMaskLayout);
-        this.mTopTaskmc = useAt;
-        useAt.visible().show(new AnimConfig[0]);
-    }
-
-    /* access modifiers changed from: private */
-    public void hideTopTaskAnimation() {
-        IFolme useAt = Folme.useAt(this.mTopMaskLayout);
-        this.mTopTaskmc = useAt;
-        useAt.visible().hide(new AnimConfig[0]);
-    }
-
-    /* access modifiers changed from: private */
     public void showBottomAnimation() {
-        IFolme useAt = Folme.useAt(this.mRepaintText, this.mShareText, this.mEditText, this.mSaveText);
-        this.mBottomTaskmc = useAt;
-        IVisibleStyle visible = useAt.visible();
+        IVisibleStyle visible = this.mBottomTaskmc.visible();
         visible.setScale(0.6f, IVisibleStyle.VisibleType.HIDE);
         visible.setScale(1.0f, IVisibleStyle.VisibleType.SHOW);
         visible.setHide();
@@ -399,22 +511,22 @@ public class PartialScreenshot implements Thread.UncaughtExceptionHandler {
         visible2.setScale(0.6f, IVisibleStyle.VisibleType.HIDE);
         visible2.setScale(1.0f, IVisibleStyle.VisibleType.SHOW);
         visible2.setHide();
-        visible2.show(new AnimConfig[0]);
+        visible2.show(this.mAnimConfig);
         IVisibleStyle visible3 = this.mFolmeButtonRepaint.visible();
         visible3.setScale(0.6f, IVisibleStyle.VisibleType.HIDE);
         visible3.setScale(1.0f, IVisibleStyle.VisibleType.SHOW);
         visible3.setHide();
-        visible3.show(new AnimConfig[0]);
+        visible3.show(this.mAnimConfig);
         IVisibleStyle visible4 = this.mFolmeButtonEdit.visible();
         visible4.setScale(0.6f, IVisibleStyle.VisibleType.HIDE);
         visible4.setScale(1.0f, IVisibleStyle.VisibleType.SHOW);
         visible4.setHide();
-        visible4.show(new AnimConfig[0]);
+        visible4.show(this.mAnimConfig);
         IVisibleStyle visible5 = this.mFolmeButtonSave.visible();
         visible5.setScale(0.6f, IVisibleStyle.VisibleType.HIDE);
         visible5.setScale(1.0f, IVisibleStyle.VisibleType.SHOW);
         visible5.setHide();
-        visible5.show(new AnimConfig[0]);
+        visible5.show(this.mAnimConfig);
     }
 
     /* access modifiers changed from: private */
@@ -424,21 +536,43 @@ public class PartialScreenshot implements Thread.UncaughtExceptionHandler {
         visible.hide(new AnimConfig[0]);
         IVisibleStyle visible2 = this.mFolmeButtonRepaint.visible();
         visible2.setShow();
-        visible2.hide(new AnimConfig[0]);
+        visible2.hide(this.mAnimConfig);
         IVisibleStyle visible3 = this.mFolmeButtonShare.visible();
         visible3.setShow();
-        visible3.hide(new AnimConfig[0]);
+        visible3.hide(this.mAnimConfig);
         IVisibleStyle visible4 = this.mFolmeButtonEdit.visible();
         visible4.setShow();
-        visible4.hide(new AnimConfig[0]);
+        visible4.hide(this.mAnimConfig);
         IVisibleStyle visible5 = this.mFolmeButtonSave.visible();
         visible5.setShow();
-        visible5.hide(new AnimConfig[0]);
+        visible5.hide(this.mAnimConfig);
     }
 
     private void initButtonListener() {
+        AnimConfig animConfig = new AnimConfig();
+        animConfig.addListeners(new TransitionListener() {
+            public void onUpdate(Object obj, Collection<UpdateInfo> collection) {
+                for (UpdateInfo next : collection) {
+                    if ("autoAlpha".equals(next.property.getName())) {
+                        float floatValue = next.getFloatValue();
+                        if (PartialScreenshot.this.mBlurDrawable != null) {
+                            PartialScreenshot.this.mBlurDrawable.setAlpha((int) (floatValue * 255.0f));
+                        }
+                    }
+                    if ("scaleY".equals(next.property.getName())) {
+                        float floatValue2 = next.getFloatValue();
+                        if (PartialScreenshot.this.mBlurDrawable != null) {
+                            float access$1700 = floatValue2 * PartialScreenshot.this.mDimensionPixelOffset;
+                            PartialScreenshot.this.mBlurDrawable.setBlurCornerRadii(new float[]{access$1700, access$1700, access$1700, access$1700});
+                        }
+                    }
+                }
+            }
+        });
+        this.mAnimConfig = animConfig;
         this.mCancelButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
+                PartialScreenshot.this.saveDataInQuitOrException("false");
                 PartialScreenshot.this.quit();
             }
         });
@@ -447,21 +581,24 @@ public class PartialScreenshot implements Thread.UncaughtExceptionHandler {
                 PartialScreenshot.this.hideBottomTaskAnimation();
                 PartialScreenshot.this.mPartialScreenshotView.clear();
                 PartialScreenshot.this.lottieAnimationView.cancelAnimation();
-                if ((PartialScreenshot.this.shapeFactory instanceof RectFactory) && PartialScreenshot.this.checkID != R$id.rbtn_irregular) {
-                    ShapeFactory unused = PartialScreenshot.this.shapeFactory = new RectFactory();
+                if (PartialScreenshot.this.checkID == R$id.rbtn_rect) {
+                    ShapeFactory unused = PartialScreenshot.this.shapeFactory = RectFactory.getInstance();
                     PartialScreenshot.this.lottieAnimationView.setImageAssetsFolder("image_rect");
                     PartialScreenshot.this.lottieAnimationView.setAnimation(R$raw.rect);
-                } else if (PartialScreenshot.this.shapeFactory instanceof EllipseFactory) {
-                    ShapeFactory unused2 = PartialScreenshot.this.shapeFactory = new EllipseFactory();
+                } else if (PartialScreenshot.this.checkID == R$id.rbtn_ellipse) {
+                    ShapeFactory unused2 = PartialScreenshot.this.shapeFactory = EllipseFactory.getInstance();
                     PartialScreenshot.this.lottieAnimationView.setImageAssetsFolder("image_ellipse");
                     PartialScreenshot.this.lottieAnimationView.setAnimation(R$raw.ellipse);
                 } else {
-                    ShapeFactory unused3 = PartialScreenshot.this.shapeFactory = new IrregularFactory();
+                    ShapeFactory unused3 = PartialScreenshot.this.shapeFactory = IrregularFactory.getInstance();
                     PartialScreenshot.this.lottieAnimationView.setImageAssetsFolder("image_irregular");
                     PartialScreenshot.this.lottieAnimationView.setAnimation(R$raw.irregular);
                 }
+                RectFactory.getInstance().clear(PartialScreenshot.this.mPartialScreenshotView);
+                EllipseFactory.getInstance().clear(PartialScreenshot.this.mPartialScreenshotView);
+                IrregularFactory.getInstance().clear(PartialScreenshot.this.mPartialScreenshotView);
                 PartialScreenshot.this.lottieAnimationView.playAnimation();
-                PartialScreenshot.this.mLottieContainer.setVisibility(0);
+                PartialScreenshot.this.lottieAnimationView.setVisibility(0);
             }
         });
         this.mShareButton.setOnClickListener(new View.OnClickListener() {
@@ -475,7 +612,7 @@ public class PartialScreenshot implements Thread.UncaughtExceptionHandler {
                         PartialScreenshot.this.checkBindPhotoService();
                         PartialScreenshot.this.saveScreenshotInWorkerThread(new Runnable() {
                             public void run() {
-                                SystemProperties.set("sys.miui.screenshot.partial", "false");
+                                PartialScreenshot.this.saveDataInQuitOrException("false");
                                 PartialScreenshot.this.mWindowLayoutParams.screenOrientation = -1;
                                 PartialScreenshot.this.mWindowManager.updateViewLayout(PartialScreenshot.this.mScreenshotLayout, PartialScreenshot.this.mWindowLayoutParams);
                                 PartialScreenshot partialScreenshot = PartialScreenshot.this;
@@ -498,7 +635,7 @@ public class PartialScreenshot implements Thread.UncaughtExceptionHandler {
                         PartialScreenshot.this.checkBindPhotoService();
                         PartialScreenshot.this.saveScreenshotInWorkerThread(new Runnable() {
                             public void run() {
-                                SystemProperties.set("sys.miui.screenshot.partial", "false");
+                                PartialScreenshot.this.saveDataInQuitOrException("false");
                                 PartialScreenshot.this.mWindowLayoutParams.screenOrientation = -1;
                                 PartialScreenshot.this.mWindowManager.updateViewLayout(PartialScreenshot.this.mScreenshotLayout, PartialScreenshot.this.mWindowLayoutParams);
                                 PartialScreenshot partialScreenshot = PartialScreenshot.this;
@@ -516,6 +653,7 @@ public class PartialScreenshot implements Thread.UncaughtExceptionHandler {
                 if (currentTimeMillis - PartialScreenshot.this.mLastClickTime > 60000) {
                     PartialScreenshot.this.saveScreenshotInWorkerThread(new Runnable() {
                         public void run() {
+                            PartialScreenshot.this.saveDataInQuitOrException("false");
                             PartialScreenshot.notifyPartialMediaAndFinish(PartialScreenshot.this.mContext, PartialScreenshot.this.mPartialNotifyMediaStoreData);
                             Toast.makeText(PartialScreenshot.this.mContext, R$string.partial_screenshot_save_successful, 0).show();
                             PartialScreenshot.this.quit();
@@ -528,65 +666,79 @@ public class PartialScreenshot implements Thread.UncaughtExceptionHandler {
         this.mShapeGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
                 int unused = PartialScreenshot.this.checkID = i;
-                PartialScreenshot.this.lottieAnimationView.cancelAnimation();
-                if (i == R$id.rbtn_irregular) {
-                    SystemProperties.set("sys.miui.screentshot.partial.shape", "irregular");
-                    if (PartialScreenshot.this.shapeFactory.getState() == 2) {
-                        Rect trimmingFrame = PartialScreenshot.this.shapeFactory.getTrimmingFrame();
-                        ShapeFactory unused2 = PartialScreenshot.this.shapeFactory = new RectFactory();
-                        PartialScreenshot.this.shapeFactory.notifyShapeChanged(trimmingFrame, PartialScreenshot.this.mPartialScreenshotView);
-                        return;
+                if (PartialScreenshot.this.shapeFactory != null) {
+                    if (i == R$id.rbtn_irregular) {
+                        PartialScreenshot.this.saveShapeForNext("irregular");
+                        if (PartialScreenshot.this.shapeFactory.getState() != 2) {
+                            PartialScreenshot.this.lottieAnimationView.cancelAnimation();
+                            ShapeFactory unused2 = PartialScreenshot.this.shapeFactory = IrregularFactory.getInstance();
+                            PartialScreenshot.this.shapeFactory.clear(PartialScreenshot.this.mPartialScreenshotView);
+                            PartialScreenshot.this.lottieAnimationView.setImageAssetsFolder("image_irregular");
+                            PartialScreenshot.this.lottieAnimationView.setAnimation(R$raw.irregular);
+                            PartialScreenshot.this.lottieAnimationView.playAnimation();
+                        } else if (IrregularFactory.getInstance().getState() == 2) {
+                            Rect trimmingFrame = PartialScreenshot.this.shapeFactory.getTrimmingFrame();
+                            ShapeFactory unused3 = PartialScreenshot.this.shapeFactory = IrregularFactory.getInstance();
+                            PartialScreenshot.this.shapeFactory.notifyShapeChanged(trimmingFrame, PartialScreenshot.this.mPartialScreenshotView);
+                        }
+                    } else if (i == R$id.rbtn_rect) {
+                        PartialScreenshot.this.saveShapeForNext("rect");
+                        if (PartialScreenshot.this.shapeFactory.getState() == 2) {
+                            Rect trimmingFrame2 = PartialScreenshot.this.shapeFactory.getTrimmingFrame();
+                            ShapeFactory unused4 = PartialScreenshot.this.shapeFactory = RectFactory.getInstance();
+                            PartialScreenshot.this.shapeFactory.notifyShapeChanged(trimmingFrame2, PartialScreenshot.this.mPartialScreenshotView);
+                            return;
+                        }
+                        PartialScreenshot.this.lottieAnimationView.cancelAnimation();
+                        ShapeFactory unused5 = PartialScreenshot.this.shapeFactory = RectFactory.getInstance();
+                        PartialScreenshot.this.shapeFactory.clear(PartialScreenshot.this.mPartialScreenshotView);
+                        PartialScreenshot.this.lottieAnimationView.setImageAssetsFolder("image_rect");
+                        PartialScreenshot.this.lottieAnimationView.setAnimation(R$raw.rect);
+                        PartialScreenshot.this.lottieAnimationView.playAnimation();
+                    } else if (i == R$id.rbtn_ellipse) {
+                        PartialScreenshot.this.saveShapeForNext("ellipse");
+                        if (PartialScreenshot.this.shapeFactory.getState() == 2) {
+                            Rect trimmingFrame3 = PartialScreenshot.this.shapeFactory.getTrimmingFrame();
+                            ShapeFactory unused6 = PartialScreenshot.this.shapeFactory = EllipseFactory.getInstance();
+                            PartialScreenshot.this.shapeFactory.notifyShapeChanged(trimmingFrame3, PartialScreenshot.this.mPartialScreenshotView);
+                            return;
+                        }
+                        PartialScreenshot.this.lottieAnimationView.cancelAnimation();
+                        ShapeFactory unused7 = PartialScreenshot.this.shapeFactory = EllipseFactory.getInstance();
+                        PartialScreenshot.this.shapeFactory.clear(PartialScreenshot.this.mPartialScreenshotView);
+                        PartialScreenshot.this.lottieAnimationView.setImageAssetsFolder("image_ellipse");
+                        PartialScreenshot.this.lottieAnimationView.setAnimation(R$raw.ellipse);
+                        PartialScreenshot.this.lottieAnimationView.playAnimation();
                     }
-                    ShapeFactory unused3 = PartialScreenshot.this.shapeFactory = new IrregularFactory();
-                    PartialScreenshot.this.lottieAnimationView.setImageAssetsFolder("image_irregular");
-                    PartialScreenshot.this.lottieAnimationView.setAnimation(R$raw.irregular);
-                    PartialScreenshot.this.lottieAnimationView.playAnimation();
-                } else if (i == R$id.rbtn_rect) {
-                    SystemProperties.set("sys.miui.screentshot.partial.shape", "rect");
-                    if (PartialScreenshot.this.shapeFactory.getState() == 2) {
-                        Rect trimmingFrame2 = PartialScreenshot.this.shapeFactory.getTrimmingFrame();
-                        ShapeFactory unused4 = PartialScreenshot.this.shapeFactory = new RectFactory();
-                        PartialScreenshot.this.shapeFactory.notifyShapeChanged(trimmingFrame2, PartialScreenshot.this.mPartialScreenshotView);
-                        return;
-                    }
-                    ShapeFactory unused5 = PartialScreenshot.this.shapeFactory = new RectFactory();
-                    PartialScreenshot.this.lottieAnimationView.setImageAssetsFolder("image_rect");
-                    PartialScreenshot.this.lottieAnimationView.setAnimation(R$raw.rect);
-                    PartialScreenshot.this.lottieAnimationView.playAnimation();
-                } else if (i == R$id.rbtn_ellipse) {
-                    SystemProperties.set("sys.miui.screentshot.partial.shape", "ellipse");
-                    if (PartialScreenshot.this.shapeFactory.getState() == 2) {
-                        Rect trimmingFrame3 = PartialScreenshot.this.shapeFactory.getTrimmingFrame();
-                        ShapeFactory unused6 = PartialScreenshot.this.shapeFactory = new EllipseFactory();
-                        PartialScreenshot.this.shapeFactory.notifyShapeChanged(trimmingFrame3, PartialScreenshot.this.mPartialScreenshotView);
-                        return;
-                    }
-                    ShapeFactory unused7 = PartialScreenshot.this.shapeFactory = new EllipseFactory();
-                    PartialScreenshot.this.lottieAnimationView.setImageAssetsFolder("image_ellipse");
-                    PartialScreenshot.this.lottieAnimationView.setAnimation(R$raw.ellipse);
-                    PartialScreenshot.this.lottieAnimationView.playAnimation();
                 }
             }
         });
     }
 
     /* access modifiers changed from: private */
-    public void quit() {
-        SystemProperties.set("sys.miui.screenshot.partial", "false");
-        if (this.mQuitReceiver != null) {
-            this.mContext.getApplicationContext().unregisterReceiver(this.mQuitReceiver);
-            this.mQuitReceiver = null;
+    public void saveDataInQuitOrException(String str) {
+        try {
+            SystemProperties.set("sys.miui.screenshot.partial", str);
+        } catch (RuntimeException e) {
+            Log.e("PartialScreenshot", "RuntimeException when setprop", e);
         }
-        View view = this.mScreenshotLayout;
-        if (!(view == null || view.getWindowToken() == null)) {
-            this.mWindowManager.removeView(this.mScreenshotLayout);
-        }
-        Thread.currentThread().setUncaughtExceptionHandler((Thread.UncaughtExceptionHandler) null);
     }
 
     /* access modifiers changed from: private */
-    public void quitWindow() {
-        unBindPhotoService();
+    public void saveShapeForNext(String str) {
+        try {
+            SystemProperties.set("sys.miui.screentshot.partial.shape", str);
+        } catch (RuntimeException e) {
+            Log.e("PartialScreenshot", "RuntimeException when setprop", e);
+        }
+    }
+
+    /* access modifiers changed from: private */
+    public void quit() {
+        Runnable runnable = this.shotFinisher;
+        if (runnable != null) {
+            runnable.run();
+        }
         if (this.mQuitReceiver != null) {
             this.mContext.getApplicationContext().unregisterReceiver(this.mQuitReceiver);
             this.mQuitReceiver = null;
@@ -669,27 +821,23 @@ public class PartialScreenshot implements Thread.UncaughtExceptionHandler {
                     Intent intent = new Intent();
                     intent.setPackage("com.miui.gallery");
                     intent.setData(partialNotifyMediaStoreData.outUri);
-                    int[] iArr = {PartialScreenshot.this.trimmingFramerect.left, PartialScreenshot.this.trimmingFramerect.top, PartialScreenshot.this.trimmingFramerect.width(), PartialScreenshot.this.trimmingFramerect.height()};
+                    intent.addFlags(268468224);
+                    intent.putExtra("StartActivityWhenLocked", true);
+                    intent.putExtra("from_partial_screenshot", true);
+                    intent.putExtra("skip_interception", true);
+                    intent.putExtra("ThumbnailRect", new int[]{PartialScreenshot.this.trimmingFramerect.left, PartialScreenshot.this.trimmingFramerect.top, PartialScreenshot.this.trimmingFramerect.width(), PartialScreenshot.this.trimmingFramerect.height()});
                     if (TextUtils.equals(str, "send")) {
-                        intent.addFlags(268468224);
                         intent.setAction(PartialScreenshot.this.checkShareAction(partialNotifyMediaStoreData.outUri));
                         intent.putExtra("com.miui.gallery.extra.photo_enter_choice_mode", true);
                         intent.putExtra("com.miui.gallery.extra.sync_load_intent_data", true);
                         intent.putExtra("com.miui.gallery.extra.show_menu_after_choice_mode", true);
-                        intent.putExtra("StartActivityWhenLocked", true);
-                        intent.putExtra("ThumbnailRect", iArr);
                         intent.putExtra("is_from_send", true);
-                        intent.putExtra("skip_interception", true);
                         context.startActivity(intent, PartialScreenshot.this.createQuitAnimationBundle());
                     } else if (TextUtils.equals(str, "edit")) {
-                        intent.addFlags(268468224);
                         intent.setAction(PartialScreenshot.this.checkEditAction(partialNotifyMediaStoreData.outUri));
                         intent.putExtra("IsScreenshot", true);
                         intent.putExtra("IsLongScreenshot", false);
                         intent.putExtra("screenshot_filepath", partialNotifyMediaStoreData.imageFilePath);
-                        intent.putExtra("StartActivityWhenLocked", true);
-                        intent.putExtra("skip_interception", true);
-                        intent.putExtra("ThumbnailRect", iArr);
                         context.startActivity(intent, PartialScreenshot.this.createQuitAnimationBundle());
                     }
                 } else {
@@ -711,6 +859,7 @@ public class PartialScreenshot implements Thread.UncaughtExceptionHandler {
         }
     }
 
+    /* access modifiers changed from: private */
     public String checkEditAction(Uri uri) {
         Intent intent = new Intent();
         intent.setPackage("com.miui.gallery");
@@ -722,6 +871,7 @@ public class PartialScreenshot implements Thread.UncaughtExceptionHandler {
         return "android.intent.action.EDIT";
     }
 
+    /* access modifiers changed from: private */
     public String checkShareAction(Uri uri) {
         Intent intent = new Intent();
         intent.setPackage("com.miui.gallery");
@@ -743,7 +893,8 @@ public class PartialScreenshot implements Thread.UncaughtExceptionHandler {
         }
     }
 
-    private void unBindPhotoService() {
+    /* access modifiers changed from: private */
+    public void unBindPhotoService() {
         IBitmapService iBitmapService = this.mBitmapService;
         if (iBitmapService != null) {
             try {
@@ -763,7 +914,11 @@ public class PartialScreenshot implements Thread.UncaughtExceptionHandler {
         sb.append("uncaughtException : ");
         sb.append(th);
         Log.d("PartialScreenshot", sb.toString());
-        SystemProperties.set("sys.miui.screenshot.partial", "false");
+        saveDataInQuitOrException("false");
+        Runnable runnable = this.shotFinisher;
+        if (runnable != null) {
+            runnable.run();
+        }
         Thread.UncaughtExceptionHandler defaultUncaughtExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
         if (defaultUncaughtExceptionHandler != null) {
             defaultUncaughtExceptionHandler.uncaughtException(thread, th);

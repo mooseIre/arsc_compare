@@ -1,6 +1,5 @@
 package com.android.systemui.qs;
 
-import android.app.ActivityManager;
 import android.app.MiuiStatusBarManager;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -20,9 +19,11 @@ import android.service.quicksettings.TileCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Slog;
+import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.systemui.Constants;
 import com.android.systemui.Dependency;
 import com.android.systemui.Util;
+import com.android.systemui.miui.controlcenter.QSControlTileHost;
 import com.android.systemui.miui.statusbar.policy.ControlPanelController;
 import com.android.systemui.miui.statusbar.policy.OldModeController;
 import com.android.systemui.miui.statusbar.policy.SuperSaveModeController;
@@ -75,6 +76,7 @@ public class QSTileHost implements QSHost, TunerService.Tunable, PluginListener<
     protected boolean mControlTileHost;
     private int mCurrentUser;
     private boolean mEdited;
+    private boolean mForceTileDestroy;
     private Handler mHandler;
     /* access modifiers changed from: private */
     public volatile boolean mHasDriveApp;
@@ -149,7 +151,7 @@ public class QSTileHost implements QSHost, TunerService.Tunable, PluginListener<
         this.mUpdateVersionReceiver = new BroadcastReceiver() {
             public void onReceive(Context context, Intent intent) {
                 if (QSTileHost.this.needUpdateSharedPreferences() && QSTileHost.this.mUpdateTiles != null && QSTileHost.this.mUpdateTiles.size() != 0) {
-                    String stringForUser = Settings.Secure.getStringForUser(QSTileHost.this.mContext.getContentResolver(), "sysui_qs_tiles", ActivityManager.getCurrentUser());
+                    String stringForUser = Settings.Secure.getStringForUser(QSTileHost.this.mContext.getContentResolver(), "sysui_qs_tiles", KeyguardUpdateMonitor.getCurrentUser());
                     QSTileHost qSTileHost = QSTileHost.this;
                     List<String> loadTileSpecs = qSTileHost.loadTileSpecs(qSTileHost.mContext, stringForUser);
                     SharedPreferences.Editor edit = QSTileHost.this.mMiuiQSTilesSharedPreferences.edit();
@@ -164,7 +166,7 @@ public class QSTileHost implements QSHost, TunerService.Tunable, PluginListener<
                     }
                     edit.apply();
                     QSTileHost.this.addIndependentTiles("sysui_qs_tiles", loadTileSpecs);
-                    Settings.Secure.putStringForUser(QSTileHost.this.mContext.getContentResolver(), "sysui_qs_tiles", TextUtils.join(",", loadTileSpecs), ActivityManager.getCurrentUser());
+                    Settings.Secure.putStringForUser(QSTileHost.this.mContext.getContentResolver(), "sysui_qs_tiles", TextUtils.join(",", loadTileSpecs), KeyguardUpdateMonitor.getCurrentUser());
                 }
             }
         };
@@ -552,10 +554,10 @@ public class QSTileHost implements QSHost, TunerService.Tunable, PluginListener<
             String str4 = this.TAG;
             Slog.d(str4, "onTuningChanged: recreating tiles: newValue: " + str2 + ", tileSpecs: " + loadTileSpecs);
         }
-        int currentUser = ActivityManager.getCurrentUser();
+        int currentUser = KeyguardUpdateMonitor.getCurrentUser();
         if (!loadTileSpecs.equals(this.mTileSpecs) || currentUser != this.mCurrentUser) {
             for (Map.Entry next : this.mTiles.entrySet()) {
-                if (!loadTileSpecs.contains(next.getKey())) {
+                if (this.mForceTileDestroy || !loadTileSpecs.contains(next.getKey())) {
                     if (DEBUG) {
                         String str5 = this.TAG;
                         Log.d(str5, "Destroying tile: " + ((String) next.getKey()));
@@ -563,10 +565,15 @@ public class QSTileHost implements QSHost, TunerService.Tunable, PluginListener<
                     ((QSTile) next.getValue()).destroy();
                 }
             }
+            if (this.mForceTileDestroy) {
+                this.mTiles.clear();
+            }
+            int i = 0;
+            this.mForceTileDestroy = false;
             final LinkedHashMap linkedHashMap = new LinkedHashMap();
             for (String next2 : loadTileSpecs) {
                 QSTile qSTile = this.mTiles.get(next2);
-                if (qSTile == null || (((z = qSTile instanceof CustomTile)) && ((CustomTile) qSTile).getUser() != currentUser)) {
+                if (qSTile == null || (z && ((CustomTile) qSTile).getUser() != currentUser)) {
                     if (DEBUG) {
                         String str6 = this.TAG;
                         Log.d(str6, "Creating tile: " + next2);
@@ -596,7 +603,7 @@ public class QSTileHost implements QSHost, TunerService.Tunable, PluginListener<
                         Log.d(str9, "Adding " + qSTile);
                     }
                     qSTile.removeCallbacks();
-                    if (!z && this.mCurrentUser != currentUser) {
+                    if (!((z = qSTile instanceof CustomTile)) && this.mCurrentUser != currentUser) {
                         qSTile.userSwitch(currentUser);
                     }
                     linkedHashMap.put(next2, qSTile);
@@ -613,7 +620,9 @@ public class QSTileHost implements QSHost, TunerService.Tunable, PluginListener<
             this.mTiles.clear();
             this.mTiles.putAll(linkedHashMap);
             if (Build.VERSION.SDK_INT <= 28) {
-                int i = Util.isMiuiOptimizationDisabled() ? 200 : 0;
+                if (Util.isMiuiOptimizationDisabled()) {
+                    i = 200;
+                }
                 if (this.mHandler == null) {
                     this.mHandler = new Handler();
                 }
@@ -651,7 +660,7 @@ public class QSTileHost implements QSHost, TunerService.Tunable, PluginListener<
         ArrayList arrayList = new ArrayList(this.mTileSpecs);
         arrayList.remove(str);
         addIndependentTiles(this.mTileListKey, arrayList);
-        Settings.Secure.putStringForUser(this.mContext.getContentResolver(), this.mTileListKey, TextUtils.join(",", arrayList), ActivityManager.getCurrentUser());
+        Settings.Secure.putStringForUser(this.mContext.getContentResolver(), this.mTileListKey, TextUtils.join(",", arrayList), KeyguardUpdateMonitor.getCurrentUser());
     }
 
     public int getMinTiles() {
@@ -676,7 +685,7 @@ public class QSTileHost implements QSHost, TunerService.Tunable, PluginListener<
             String str = list.get(i);
             if (str.startsWith("custom(") && !list2.contains(str)) {
                 ComponentName componentFromSpec = CustomTile.getComponentFromSpec(str);
-                TileLifecycleManager tileLifecycleManager = new TileLifecycleManager(new Handler(), this.mContext, this.mServices, TileCompat.newTile(componentFromSpec), new Intent().setComponent(componentFromSpec), new UserHandle(ActivityManager.getCurrentUser()));
+                TileLifecycleManager tileLifecycleManager = new TileLifecycleManager(new Handler(), this.mContext, this.mServices, TileCompat.newTile(componentFromSpec), new Intent().setComponent(componentFromSpec), new UserHandle(KeyguardUpdateMonitor.getCurrentUser()));
                 tileLifecycleManager.onStopListening();
                 tileLifecycleManager.onTileRemoved();
                 TileLifecycleManager.setTileAdded(this.mContext, componentFromSpec, false);
@@ -687,14 +696,17 @@ public class QSTileHost implements QSHost, TunerService.Tunable, PluginListener<
             Log.d(this.TAG, "saveCurrentTiles " + list2);
         }
         addIndependentTiles(this.mTileListKey, list2);
-        Settings.Secure.putStringForUser(getContext().getContentResolver(), this.mTileListKey, TextUtils.join(",", list2), ActivityManager.getCurrentUser());
+        Settings.Secure.putStringForUser(getContext().getContentResolver(), this.mTileListKey, TextUtils.join(",", list2), KeyguardUpdateMonitor.getCurrentUser());
     }
 
     public QSTile createTile(String str) {
-        if (str.equals("custom(com.miui.securitycenter/com.miui.superpower.notification.SuperPowerTileService)") && (ActivityManager.getCurrentUser() != 0 || (Constants.IS_INTERNATIONAL && Constants.SUPPORT_EXTREME_BATTERY_SAVER && !Constants.IS_TABLET))) {
+        if (str.equals("custom(com.miui.securitycenter/com.miui.superpower.notification.SuperPowerTileService)") && (KeyguardUpdateMonitor.getCurrentUser() != 0 || (Constants.IS_INTERNATIONAL && Constants.SUPPORT_EXTREME_BATTERY_SAVER && !Constants.IS_TABLET))) {
             return null;
         }
-        if (str.equals("custom(com.miui.screenrecorder/.service.QuickService)") && ActivityManager.getCurrentUser() != 0) {
+        if (str.equals("custom(com.miui.screenrecorder/.service.QuickService)") && KeyguardUpdateMonitor.getCurrentUser() != 0) {
+            return null;
+        }
+        if (str.equals("custom(com.google.android.gms/.nearby.sharing.SharingTileService)") && !Constants.IS_INTERNATIONAL) {
             return null;
         }
         for (int i = 0; i < this.mQsFactories.size(); i++) {
@@ -736,6 +748,11 @@ public class QSTileHost implements QSHost, TunerService.Tunable, PluginListener<
             str = resources.getString(R.string.quick_settings_tiles);
             if (DEBUG) {
                 Slog.d(this.TAG, "loadTileSpecs: Loaded tile specs from config: " + str);
+            }
+        } else if (!str.contains("edit")) {
+            str = resources.getString(R.string.quick_settings_tiles);
+            if (DEBUG) {
+                Slog.d(this.TAG, "loadTileSpecs: missing edit, loaded tile specs from config: " + str);
             }
         } else if (DEBUG) {
             Slog.d(this.TAG, "loadTileSpecs: loaded tile specs from setting: " + str);
@@ -809,6 +826,16 @@ public class QSTileHost implements QSHost, TunerService.Tunable, PluginListener<
         if (this.mOldModeOn != z) {
             this.mOldModeOn = z;
             updateTileListKey();
+        }
+    }
+
+    public void resetTiles() {
+        String str = this.TAG;
+        Log.d(str, "resetTiles " + (this instanceof QSControlTileHost) + "  " + this.mTileListKey);
+        if (this.mTileListKey.equals("sysui_qs_tiles")) {
+            this.mTileSpecs.clear();
+            this.mForceTileDestroy = true;
+            onTuningChanged(this.mTileListKey, this.mQsDefaultTiles);
         }
     }
 }

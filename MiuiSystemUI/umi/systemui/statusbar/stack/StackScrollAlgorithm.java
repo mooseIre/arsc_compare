@@ -18,7 +18,6 @@ import java.util.List;
 public class StackScrollAlgorithm {
     private int mCollapsedSize;
     private int mHeadsUpMarginTop;
-    private float mHeadsUpShadowAlpha;
     private int mIncreasedPaddingBetweenElements;
     /* access modifiers changed from: private */
     public int mPaddingBetweenElements;
@@ -43,7 +42,6 @@ public class StackScrollAlgorithm {
         this.mIncreasedPaddingBetweenElements = context.getResources().getDimensionPixelSize(R.dimen.notification_divider_height_increased);
         this.mCollapsedSize = context.getResources().getDimensionPixelSize(R.dimen.notification_min_height);
         this.mHeadsUpMarginTop = HeadsUpManager.getHeadsUpTopMargin(context);
-        this.mHeadsUpShadowAlpha = context.getResources().getFloat(R.dimen.notification_heads_up_shadow_alpha);
     }
 
     public void getStackScrollState(AmbientState ambientState, StackScrollState stackScrollState) {
@@ -72,14 +70,12 @@ public class StackScrollAlgorithm {
             if (!z || !z3) {
                 boolean z4 = z2 && ((ExpandableNotificationRow) expandableView).isPinned();
                 boolean z5 = z2 && ((ExpandableNotificationRow) expandableView).isHeadsUpAnimatingAway();
-                if (z2) {
-                    boolean isChildInGroup = ((ExpandableNotificationRow) expandableView).isChildInGroup();
-                }
-                if (!z4 && !z5) {
-                    float f = 1.0f;
+                float f = 0.0f;
+                boolean z6 = z2 && ((ExpandableNotificationRow) expandableView).getTranslation() > 0.0f;
+                if (!z4 && !z5 && !z6) {
                     float f2 = z ? 1.0f : 0.8f;
-                    if (!z) {
-                        f = 0.0f;
+                    if (z) {
+                        f = 1.0f;
                     }
                     ExpandableViewState viewState = expandableView.getViewState();
                     if (viewState != null) {
@@ -359,7 +355,7 @@ public class StackScrollAlgorithm {
     private void applyCommonHeadsUpChildState(ExpandableViewState expandableViewState, ExpandableNotificationRow expandableNotificationRow) {
         expandableViewState.height = Math.max(expandableNotificationRow.getIntrinsicHeight(), expandableViewState.height);
         expandableViewState.hidden = false;
-        expandableViewState.shadowAlpha = this.mHeadsUpShadowAlpha;
+        expandableViewState.shadowAlpha = 0.8f;
     }
 
     private void clampPositionToShelf(ExpandableViewState expandableViewState, AmbientState ambientState) {

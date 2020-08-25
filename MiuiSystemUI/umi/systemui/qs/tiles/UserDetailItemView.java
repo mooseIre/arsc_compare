@@ -19,7 +19,7 @@ import com.android.systemui.plugins.R;
 import com.android.systemui.statusbar.phone.UserAvatarView;
 
 public class UserDetailItemView extends LinearLayout {
-    protected static int layoutResId = 2131558744;
+    protected static int layoutResId = 2131558750;
     private Typeface mActivatedTypeface;
     private UserAvatarView mAvatar;
     private TextView mName;

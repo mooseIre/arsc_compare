@@ -12,6 +12,7 @@ public final class R$styleable {
     public static final int[] PluginInflateContainer = {R.attr.viewType};
     public static final int[] PseudoGridView = {R.attr.horizontalSpacing, R.attr.numColumns, R.attr.verticalSpacing};
     public static final int[] ScrimView = {R.attr.scrimColor};
+    public static final int[] SmoothRoundDrawable = {16843173, 16843176, 16843177, 16843178, 16843179, 16843180};
     public static final int[] StatusBarWindowView_Layout = {R.attr.ignoreRightInset};
     @Deprecated
     public static final int[] UserAvatarView = {R.attr.activeFrameColor, R.attr.avatarPadding, R.attr.badgeDiameter, R.attr.badgeMargin, R.attr.frameColor, R.attr.framePadding, R.attr.frameWidth};

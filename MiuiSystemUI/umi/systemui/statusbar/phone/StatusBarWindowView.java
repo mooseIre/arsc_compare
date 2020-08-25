@@ -11,6 +11,7 @@ import android.media.session.MediaSessionLegacyHelperCompat;
 import android.os.IBinder;
 import android.os.SystemClock;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.ActionMode;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -28,16 +29,18 @@ import com.android.internal.view.FloatingActionMode;
 import com.android.internal.view.FloatingActionModeCompat;
 import com.android.internal.widget.FloatingToolbar;
 import com.android.internal.widget.FloatingToolbarCompat;
+import com.android.systemui.Dependency;
+import com.android.systemui.DynamicStatusController;
 import com.android.systemui.R$styleable;
 import com.android.systemui.classifier.FalsingManager;
 import com.android.systemui.miui.statusbar.phone.ControlPanelWindowView;
+import com.android.systemui.miui.statusbar.policy.ControlPanelController;
 import com.android.systemui.plugins.R;
 import com.android.systemui.statusbar.DragDownHelper;
 import com.android.systemui.statusbar.phone.DoubleTapHelper;
 import com.android.systemui.statusbar.stack.NotificationStackScrollLayout;
-import com.miui.systemui.renderlayer.RenderAwareFrameLayout;
 
-public class StatusBarWindowView extends RenderAwareFrameLayout {
+public class StatusBarWindowView extends FrameLayout {
     public static final boolean DEBUG = StatusBar.DEBUG;
     private View mBrightnessMirror;
     public ControlPanelWindowView mControllerPanel;
@@ -59,12 +62,14 @@ public class StatusBarWindowView extends RenderAwareFrameLayout {
     private ViewTreeObserver.OnPreDrawListener mFloatingToolbarPreDrawListener;
     private KeyguardStatusBarView mKeyguardStatusBarView;
     private int mLeftInset = 0;
+    private boolean mNotTouchable = false;
     private NotificationPanelView mNotificationPanel;
     private boolean mPassingToControllerPanel;
     private int mRightInset = 0;
     /* access modifiers changed from: private */
     public StatusBar mService;
     private NotificationStackScrollLayout mStackScrollLayout;
+    private FrameLayout mStatusBarContainer;
     private PhoneStatusBarView mStatusBarView;
     private boolean mTouchActive;
     private boolean mTouchCancelled;
@@ -151,6 +156,7 @@ public class StatusBarWindowView extends RenderAwareFrameLayout {
         super.onFinishInflate();
         this.mStackScrollLayout = (NotificationStackScrollLayout) findViewById(R.id.notification_stack_scroller);
         this.mNotificationPanel = (NotificationPanelView) findViewById(R.id.notification_panel);
+        this.mStatusBarContainer = (FrameLayout) findViewById(R.id.status_bar_container);
         this.mBrightnessMirror = findViewById(R.id.brightness_mirror);
     }
 
@@ -195,6 +201,13 @@ public class StatusBarWindowView extends RenderAwareFrameLayout {
         setWillNotDraw(!DEBUG);
     }
 
+    public void onDescendantInvalidated(View view, View view2) {
+        super.onDescendantInvalidated(view, view2);
+        if (((DynamicStatusController) Dependency.get(DynamicStatusController.class)).isDebug()) {
+            Log.d("StatusBarWindowView", "onDescendantInvalidated  child=" + view + ";target=" + view2);
+        }
+    }
+
     public boolean dispatchKeyEvent(KeyEvent keyEvent) {
         if (this.mService.interceptMediaKey(keyEvent) || super.dispatchKeyEvent(keyEvent)) {
             return true;
@@ -231,9 +244,16 @@ public class StatusBarWindowView extends RenderAwareFrameLayout {
         }
     }
 
+    public void setNotTouchable(boolean z) {
+        this.mNotTouchable = z;
+    }
+
     public boolean dispatchTouchEvent(MotionEvent motionEvent) {
         PhoneStatusBarView phoneStatusBarView;
         KeyguardStatusBarView keyguardStatusBarView;
+        if (this.mNotTouchable) {
+            return false;
+        }
         boolean z = true;
         boolean z2 = motionEvent.getActionMasked() == 0;
         boolean z3 = motionEvent.getActionMasked() == 1;
@@ -254,7 +274,7 @@ public class StatusBarWindowView extends RenderAwareFrameLayout {
             } else if (this.mService.getBarState() == 0 && (phoneStatusBarView = this.mStatusBarView) != null && phoneStatusBarView.getVisibility() == 0) {
                 view = this.mStatusBarView;
             }
-            if (view != null && view.pointInView(motionEvent.getX(), motionEvent.getY(), 0.0f) && motionEvent.getX() >= ((float) view.getWidth()) / 2.0f && this.mControllerPanel.dispatchTouchEvent(motionEvent)) {
+            if (view != null && view.pointInView(motionEvent.getX(), motionEvent.getY(), 0.0f) && motionEvent.getX() >= ((float) view.getWidth()) / 2.0f && !this.mService.isHeadsUp() && this.mControllerPanel.dispatchTouchEvent(motionEvent)) {
                 this.mPassingToControllerPanel = true;
                 this.mStatusBarView.processMiuiPromptClick(motionEvent);
                 return true;
@@ -367,6 +387,23 @@ public class StatusBarWindowView extends RenderAwareFrameLayout {
             paint.setStyle(Paint.Style.STROKE);
             canvas.drawRect(0.0f, 0.0f, (float) canvas.getWidth(), (float) canvas.getHeight(), paint);
         }
+    }
+
+    /* access modifiers changed from: protected */
+    public boolean drawChild(Canvas canvas, View view, long j) {
+        boolean useControlPanel = ((ControlPanelController) Dependency.get(ControlPanelController.class)).useControlPanel();
+        boolean z = !this.mNotificationPanel.isFullyCollapsed();
+        boolean isThemeBgVisible = this.mNotificationPanel.isThemeBgVisible();
+        if (useControlPanel && z && isThemeBgVisible) {
+            FrameLayout frameLayout = this.mStatusBarContainer;
+            if (view == frameLayout) {
+                return super.drawChild(canvas, this.mNotificationPanel, j);
+            }
+            if (view == this.mNotificationPanel) {
+                return super.drawChild(canvas, frameLayout, j);
+            }
+        }
+        return super.drawChild(canvas, view, j);
     }
 
     public void cancelExpandHelper() {

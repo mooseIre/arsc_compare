@@ -21,10 +21,20 @@ public class ForcedResizableInfoActivity extends Activity implements View.OnTouc
 
     /* access modifiers changed from: protected */
     public void onCreate(Bundle bundle) {
+        String str;
         super.onCreate(bundle);
         setContentView(R.layout.forced_resizable_activity);
-        ((TextView) findViewById(16908299)).setText(R.string.dock_forced_resizable);
-        getWindow().setTitle(getString(R.string.dock_forced_resizable));
+        TextView textView = (TextView) findViewById(16908299);
+        int intExtra = getIntent().getIntExtra("extra_forced_resizeable_reason", -1);
+        if (intExtra == 1) {
+            str = getString(R.string.dock_forced_resizable);
+        } else if (intExtra == 2) {
+            str = getString(R.string.forced_resizable_secondary_display);
+        } else {
+            throw new IllegalArgumentException("Unexpected forced resizeable reason: " + intExtra);
+        }
+        textView.setText(str);
+        getWindow().setTitle(str);
         getWindow().getDecorView().setOnTouchListener(this);
     }
 

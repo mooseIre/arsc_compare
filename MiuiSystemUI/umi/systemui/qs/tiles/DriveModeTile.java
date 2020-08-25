@@ -14,10 +14,11 @@ import com.android.systemui.plugins.qs.QSTile;
 import com.android.systemui.qs.QSHost;
 import com.android.systemui.qs.tileimpl.QSTileImpl;
 import com.android.systemui.statusbar.Icons;
+import miui.os.Build;
 import miui.securityspace.CrossUserUtils;
-import miui.view.MiuiHapticFeedbackConstants;
 
 public class DriveModeTile extends QSTileImpl<QSTile.BooleanState> {
+    public static final boolean IS_MIUI_LITE_VERSION = Build.IS_MIUI_LITE_VERSION;
     private ContentObserver mDriveModeObserver = new ContentObserver(this.mHandler) {
         public void onChange(boolean z) {
             Log.d("SystemUI.DriveMode", "drive mode change detected");
@@ -48,7 +49,7 @@ public class DriveModeTile extends QSTileImpl<QSTile.BooleanState> {
     }
 
     public boolean isAvailable() {
-        return !Constants.IS_INTERNATIONAL && !Constants.IS_TABLET && CrossUserUtils.getCurrentUserId() == 0;
+        return !IS_MIUI_LITE_VERSION && !Constants.IS_INTERNATIONAL && !Constants.IS_TABLET && CrossUserUtils.getCurrentUserId() == 0;
     }
 
     public void handleSetListening(boolean z) {
@@ -83,7 +84,7 @@ public class DriveModeTile extends QSTileImpl<QSTile.BooleanState> {
         } else if (!this.mMiuiLabDriveModeOn) {
             Intent intent = new Intent();
             intent.setComponent(new ComponentName("com.xiaomi.drivemode", "com.xiaomi.drivemode.MiuiLabDriveModeActivity"));
-            intent.addFlags(MiuiHapticFeedbackConstants.FLAG_MIUI_HAPTIC_TAP_NORMAL);
+            intent.addFlags(268435456);
             intent.putExtra("EXTRA_START_MODE", true);
             postStartActivityDismissingKeyguard(intent, 0);
         } else if (!((QSTile.BooleanState) this.mState).value) {
@@ -125,7 +126,7 @@ public class DriveModeTile extends QSTileImpl<QSTile.BooleanState> {
     private void startDriveModeActivity() {
         Intent intent = new Intent();
         intent.setComponent(new ComponentName("com.xiaomi.drivemode", "com.xiaomi.drivemode.UserGuideActivity"));
-        intent.addFlags(MiuiHapticFeedbackConstants.FLAG_MIUI_HAPTIC_TAP_NORMAL);
+        intent.addFlags(268435456);
         intent.putExtra("EXTRA_START_MODE", true);
         postStartActivityDismissingKeyguard(intent, 0);
     }

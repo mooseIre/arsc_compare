@@ -232,7 +232,7 @@ public class QSCustomizer extends LinearLayout implements TileQueryHelper.TileSt
         super.onConfigurationChanged(configuration);
         this.mTitle.setText(R.string.qs_customize_title);
         this.mSubTitle.setText(R.string.drag_to_add_tiles);
-        this.mResetButton.setText(17041144);
+        this.mResetButton.setText(17041224);
         this.mDoneButton.setText(R.string.quick_settings_done);
         Resources resources = this.mContext.getResources();
         int max = Math.max(1, resources.getInteger(R.integer.quick_settings_num_columns));

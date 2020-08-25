@@ -62,6 +62,7 @@ import android.widget.Toast;
 import androidx.preference.PreferenceManager;
 import com.android.systemui.Constants;
 import com.android.systemui.SystemUICompat;
+import com.android.systemui.Util;
 import com.android.systemui.content.pm.PackageManagerCompat;
 import com.android.systemui.miui.anim.PhysicBasedInterpolator;
 import com.android.systemui.plugins.R;
@@ -81,6 +82,7 @@ import miui.view.animation.CubicEaseOutInterpolator;
 import miui.view.animation.SineEaseInOutInterpolator;
 
 class GlobalScreenshot {
+    private boolean isDeviceProvisioned;
     private BroadcastReceiver mBeforeScreenshotReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             if (!intent.getBooleanExtra("IsFinished", false)) {
@@ -135,7 +137,8 @@ class GlobalScreenshot {
     private boolean mIsConfigurationReceiver;
     /* access modifiers changed from: private */
     public boolean mIsInOutAnimating;
-    private boolean mIsQuited;
+    /* access modifiers changed from: private */
+    public boolean mIsQuited;
     /* access modifiers changed from: private */
     public boolean mIsSaved;
     /* access modifiers changed from: private */
@@ -328,29 +331,37 @@ class GlobalScreenshot {
                 return GlobalScreenshot.this.onThumbnailViewTouch(motionEvent);
             }
         });
-        this.mScreenLongShotView.setMarqueeEnable(true);
-        this.mScreenLongShotView.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                if (!GlobalScreenshot.this.mIsInOutAnimating) {
-                    GlobalScreenshot.this.removeLongScreenShotGuide(true);
-                    if (GlobalScreenshot.this.mOrientationLandscape) {
-                        Toast.makeText(context, R.string.screenshot_failed_in_landscape_mode, 0).show();
-                    } else if (GlobalScreenshot.this.mScreenLongShotView.isSelected()) {
-                        GlobalScreenshot.this.enterLongScreenshot();
-                        StatHelper.recordNewScreenshotEvent(GlobalScreenshot.this.mContext, "new_click_long_screenshot_button", (Map<String, String>) null);
+        boolean isDeviceProvisioned2 = isDeviceProvisioned();
+        this.isDeviceProvisioned = isDeviceProvisioned2;
+        if (isDeviceProvisioned2) {
+            this.mScreenLongShotView.setMarqueeEnable(true);
+            this.mScreenLongShotView.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View view) {
+                    if (!GlobalScreenshot.this.mIsInOutAnimating) {
+                        GlobalScreenshot.this.removeLongScreenShotGuide(true);
+                        if (GlobalScreenshot.this.mOrientationLandscape) {
+                            Toast.makeText(context, R.string.screenshot_failed_in_landscape_mode, 0).show();
+                        } else if (GlobalScreenshot.this.mScreenLongShotView.isSelected()) {
+                            GlobalScreenshot.this.enterLongScreenshot();
+                            StatHelper.recordNewScreenshotEvent(GlobalScreenshot.this.mContext, "new_click_long_screenshot_button", (Map<String, String>) null);
+                        }
                     }
                 }
-            }
-        });
-        this.mScreenShareView.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                GlobalScreenshot globalScreenshot = GlobalScreenshot.this;
-                globalScreenshot.jumpProcess(globalScreenshot.mContext, GlobalScreenshot.this.mNotifyMediaStoreData, "send");
-            }
-        });
+            });
+            this.mScreenShareView.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View view) {
+                    GlobalScreenshot globalScreenshot = GlobalScreenshot.this;
+                    globalScreenshot.jumpProcess(globalScreenshot.mContext, GlobalScreenshot.this.mNotifyMediaStoreData, "send");
+                }
+            });
+        } else {
+            this.mScreenLongShotViewGroup.setVisibility(4);
+            this.mScreenShareView.setVisibility(4);
+        }
         WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(-1, -1, 0, 0, 2024, 17565480, -3);
         this.mWindowLayoutParams = layoutParams;
-        WindowManagerCompat.setLayoutInDisplayCutoutMode(layoutParams, 1);
+        WindowManagerCompat.setFitInsetsTypes(layoutParams);
+        WindowManagerCompat.setLayoutInDisplayCutoutMode(this.mWindowLayoutParams, 1);
         this.mWindowLayoutParams.setTitle("ScreenshotAnimation");
         this.mWindowManager = (WindowManager) context.getSystemService("window");
         this.mNotificationManager = (NotificationManager) context.getSystemService("notification");
@@ -588,7 +599,7 @@ class GlobalScreenshot {
 
     /* access modifiers changed from: package-private */
     /* JADX WARNING: Code restructure failed: missing block: B:9:0x0023, code lost:
-        if (r0 != 3) goto L_0x00e8;
+        if (r0 != 3) goto L_0x00ed;
      */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     public boolean onThumbnailViewTouch(android.view.MotionEvent r8) {
@@ -606,13 +617,13 @@ class GlobalScreenshot {
             r0.addMovement(r8)
             int r0 = r8.getAction()
             r2 = 1
-            if (r0 == 0) goto L_0x00d0
+            if (r0 == 0) goto L_0x00d5
             if (r0 == r2) goto L_0x0072
             r3 = 2
             if (r0 == r3) goto L_0x0027
             r8 = 3
             if (r0 == r8) goto L_0x0072
-            goto L_0x00e8
+            goto L_0x00ed
         L_0x0027:
             float r0 = r8.getRawY()
             float r1 = r7.mTouchDownY
@@ -650,18 +661,20 @@ class GlobalScreenshot {
         L_0x006c:
             int r0 = r0 + r1
             r7.moveThumbnailWindow((int) r8, (int) r0)
-            goto L_0x00e8
+            goto L_0x00ed
         L_0x0072:
             boolean r8 = r7.mIsThumbnailMoving
-            if (r8 != 0) goto L_0x0085
+            if (r8 != 0) goto L_0x0089
+            boolean r8 = r7.isDeviceProvisioned
+            if (r8 == 0) goto L_0x0089
             android.animation.ValueAnimator r8 = r7.mThumbnailShakeAnimator
             r8.cancel()
             android.content.Context r8 = r7.mContext
             com.android.systemui.screenshot.NotifyMediaStoreData r0 = r7.mNotifyMediaStoreData
             java.lang.String r3 = "edit"
             r7.jumpProcess(r8, r0, r3)
-            goto L_0x00c8
-        L_0x0085:
+            goto L_0x00cd
+        L_0x0089:
             android.view.VelocityTracker r8 = r7.mVTracker
             r0 = 1000(0x3e8, float:1.401E-42)
             r8.computeCurrentVelocity(r0)
@@ -676,14 +689,14 @@ class GlobalScreenshot {
             float r0 = r0.getYVelocity()
             float r8 = (float) r8
             int r8 = (r0 > r8 ? 1 : (r0 == r8 ? 0 : -1))
-            if (r8 >= 0) goto L_0x00b4
+            if (r8 >= 0) goto L_0x00b9
             r7.quitThumbnailWindow(r2, r2)
             android.content.Context r8 = r7.mContext
             java.lang.String r0 = "quit_thumbnail"
             java.lang.String r3 = "slide_up"
             com.android.systemui.screenshot.StatHelper.recordCountEvent((android.content.Context) r8, (java.lang.String) r0, (java.lang.String) r3)
-            goto L_0x00c8
-        L_0x00b4:
+            goto L_0x00cd
+        L_0x00b9:
             r7.getTranslation()
             r7.goInitialPosition()
             r8 = 1065353216(0x3f800000, float:1.0)
@@ -692,12 +705,12 @@ class GlobalScreenshot {
             java.lang.Runnable r0 = r7.mQuitThumbnailRunnable
             r3 = 3600(0xe10, double:1.7786E-320)
             r8.postDelayed(r0, r3)
-        L_0x00c8:
+        L_0x00cd:
             r7.mIsThumbnailMoving = r1
             android.view.VelocityTracker r7 = r7.mVTracker
             r7.clear()
-            goto L_0x00e8
-        L_0x00d0:
+            goto L_0x00ed
+        L_0x00d5:
             float r0 = r8.getRawY()
             r7.mTouchDownY = r0
             float r8 = r8.getRawX()
@@ -707,7 +720,7 @@ class GlobalScreenshot {
             r8.removeCallbacks(r0)
             android.animation.ValueAnimator r7 = r7.mThumbnailShakeAnimator
             r7.cancel()
-        L_0x00e8:
+        L_0x00ed:
             return r2
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.screenshot.GlobalScreenshot.onThumbnailViewTouch(android.view.MotionEvent):boolean");
@@ -798,14 +811,6 @@ class GlobalScreenshot {
             if (runnable2 != null) {
                 runnable2.run();
             }
-        } else if (!isShowThumbnail()) {
-            Log.w("GlobalScreenshot", "Can not screenshot when device not provisioned");
-            if (runnable != null) {
-                runnable.run();
-            }
-            if (runnable2 != null) {
-                runnable2.run();
-            }
         } else if (RestrictionsHelper.hasRestriction(this.mContext, "disallow_screencapture", UserHandle.myUserId())) {
             Log.w("GlobalScreenshot", "Can not screenshot for enterprise forbidden.");
             if (runnable != null) {
@@ -861,25 +866,20 @@ class GlobalScreenshot {
             objectAnimator.end();
         }
         measureThumbnail();
-        showLongScreenshotGuideIfNeeded();
-        if (!this.mIsShowLongScreenShotGuide) {
-            this.mHandler.postDelayed(this.mQuitThumbnailRunnable, 3600);
-        } else {
-            showLongScreenshotGuideOverlayIfNeeded();
+        if (this.isDeviceProvisioned) {
+            showLongScreenshotGuideIfNeeded();
+            if (!this.mIsShowLongScreenShotGuide) {
+                this.mHandler.postDelayed(this.mQuitThumbnailRunnable, 3600);
+            } else {
+                showLongScreenshotGuideOverlayIfNeeded();
+            }
         }
         this.mWindowManager.addView(this.mScreenshotLayout, this.mWindowLayoutParams);
         ObjectAnimator createScreenshotAlphaAnimation = createScreenshotAlphaAnimation();
         this.mScreenshotAnimation = createScreenshotAlphaAnimation;
         createScreenshotAlphaAnimation.addListener(new AnimatorListenerAdapter() {
             public void onAnimationEnd(Animator animator) {
-                if (GlobalScreenshot.this.isShowThumbnail()) {
-                    GlobalScreenshot.this.startGotoThumbnailAnimation(runnable);
-                    return;
-                }
-                GlobalScreenshot.this.mWindowManager.removeView(GlobalScreenshot.this.mScreenshotLayout);
-                GlobalScreenshot.this.mScreenshotLayout.getViewTreeObserver().removeOnComputeInternalInsetsListener(GlobalScreenshot.this.mOnComputeInternalInsetsListener);
-                runnable.run();
-                GlobalScreenshot.notifyMediaAndFinish(GlobalScreenshot.this.mContext, GlobalScreenshot.this.mNotifyMediaStoreData);
+                GlobalScreenshot.this.startGotoThumbnailAnimation(runnable);
             }
         });
         this.mScreenshotLayout.post(new Runnable() {
@@ -917,7 +917,9 @@ class GlobalScreenshot {
                 super.onAnimationEnd(animator);
                 runnable.run();
                 boolean unused = GlobalScreenshot.this.mIsInOutAnimating = false;
-                GlobalScreenshot.this.mThumbnailShakeAnimator.start();
+                if (!GlobalScreenshot.this.mIsQuited) {
+                    GlobalScreenshot.this.mThumbnailShakeAnimator.start();
+                }
             }
         });
         animatorSet.start();
@@ -999,9 +1001,9 @@ class GlobalScreenshot {
                 float floatValue = ((Float) valueAnimator.getAnimatedValue()).floatValue();
                 GlobalScreenshot.this.mScreenshotView.setTranslationY(floatValue);
                 GlobalScreenshot.this.mScreenWhiteBg.setTranslationY(floatValue);
-                float access$5000 = (((floatValue + ((((float) GlobalScreenshot.this.mScreenHeight) * GlobalScreenshot.this.mScaleValue) / 2.0f)) + 0.5f) - (((float) GlobalScreenshot.this.mScreenHeight) / 2.0f)) + 0.5f;
-                GlobalScreenshot.this.mScreenShareView.setTranslationY(access$5000);
-                GlobalScreenshot.this.mScreenLongShotViewGroup.setTranslationY(access$5000);
+                float access$4800 = (((floatValue + ((((float) GlobalScreenshot.this.mScreenHeight) * GlobalScreenshot.this.mScaleValue) / 2.0f)) + 0.5f) - (((float) GlobalScreenshot.this.mScreenHeight) / 2.0f)) + 0.5f;
+                GlobalScreenshot.this.mScreenShareView.setTranslationY(access$4800);
+                GlobalScreenshot.this.mScreenLongShotViewGroup.setTranslationY(access$4800);
             }
         });
         ofFloat.addListener(new AnimatorListenerAdapter() {
@@ -1024,9 +1026,9 @@ class GlobalScreenshot {
                 float floatValue = ((Float) valueAnimator.getAnimatedValue()).floatValue();
                 GlobalScreenshot.this.mScreenshotView.setTranslationX(floatValue);
                 GlobalScreenshot.this.mScreenWhiteBg.setTranslationX(floatValue);
-                float access$5300 = ((((((float) GlobalScreenshot.this.mScreenWidth) / 2.0f) + 0.5f) + floatValue) - ((((float) GlobalScreenshot.this.mScreenWidth) * GlobalScreenshot.this.mScaleValue) / 2.0f)) + 0.5f;
-                GlobalScreenshot.this.mScreenShareView.setTranslationX(access$5300);
-                GlobalScreenshot.this.mScreenLongShotViewGroup.setTranslationX(access$5300);
+                float access$5100 = ((((((float) GlobalScreenshot.this.mScreenWidth) / 2.0f) + 0.5f) + floatValue) - ((((float) GlobalScreenshot.this.mScreenWidth) * GlobalScreenshot.this.mScaleValue) / 2.0f)) + 0.5f;
+                GlobalScreenshot.this.mScreenShareView.setTranslationX(access$5100);
+                GlobalScreenshot.this.mScreenLongShotViewGroup.setTranslationX(access$5100);
             }
         });
         ofFloat.addListener(new AnimatorListenerAdapter() {
@@ -1083,11 +1085,21 @@ class GlobalScreenshot {
 
     /* access modifiers changed from: private */
     public boolean hasScreenshotSoundEnabled(Context context) {
-        return MiuiSettings.System.getBooleanForUser(context.getContentResolver(), "has_screenshot_sound", true, 0);
+        if (!Build.checkRegion(Locale.KOREA.getCountry()) || !"monet".equals(android.os.Build.DEVICE) || !isCameraPreviewPage()) {
+            return MiuiSettings.System.getBooleanForUser(context.getContentResolver(), "has_screenshot_sound", true, 0);
+        }
+        return true;
     }
 
-    /* access modifiers changed from: private */
-    public boolean isShowThumbnail() {
+    private boolean isCameraPreviewPage() {
+        ComponentName topActivity = Util.getTopActivity(this.mContext);
+        if (topActivity == null) {
+            return false;
+        }
+        return "com.android.camera.Camera".equals(topActivity.getClassName());
+    }
+
+    private boolean isDeviceProvisioned() {
         return Settings.Global.getInt(this.mContext.getContentResolver(), "device_provisioned", 0) != 0;
     }
 
@@ -1109,8 +1121,7 @@ class GlobalScreenshot {
         this.mThumbnailWidth = (int) ((((float) this.mScreenBitmap.getWidth()) * this.mThumnailScale) + 0.5f);
         this.mThumbnailHeight = (int) ((((float) this.mScreenBitmap.getHeight()) * this.mThumnailScale) + 0.5f);
         int dimensionPixelSize = this.mContext.getResources().getDimensionPixelSize(R.dimen.screenshot_thumnail_btn_margintop);
-        int dimensionPixelSize2 = this.mContext.getResources().getDimensionPixelSize(R.dimen.screenshot_thumnail_btn_height);
-        this.mThumbnailTotalHeight = this.mThumbnailHeight + (dimensionPixelSize2 * 2) + (dimensionPixelSize * 2) + this.mThumbnailTop + this.mContext.getResources().getDimensionPixelSize(R.dimen.screenshot_thumbnail_padding_bottom);
+        this.mThumbnailTotalHeight = this.mThumbnailHeight + (this.isDeviceProvisioned ? (this.mContext.getResources().getDimensionPixelSize(R.dimen.screenshot_thumnail_btn_height) * 2) + (dimensionPixelSize * 2) : 0) + this.mThumbnailTop + this.mContext.getResources().getDimensionPixelSize(R.dimen.screenshot_thumbnail_padding_bottom);
         this.mThumbnailTotalWidth = this.mThumbnailWidth + this.mThumbnailLeft + this.mThumbnailRight;
         this.mThumbnailMarginLeft = getThumbnailMarginLeft();
     }

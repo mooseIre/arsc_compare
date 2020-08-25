@@ -38,7 +38,6 @@ import com.android.systemui.statusbar.policy.DeviceProvisionedController;
 import com.android.systemui.util.InterestingConfigChanges;
 import com.miui.systemui.annotation.Inject;
 import com.xiaomi.stat.MiStat;
-import miui.view.MiuiHapticFeedbackConstants;
 
 public class AssistManager implements ConfigurationChangedReceiver {
     private final AssistDisclosure mAssistDisclosure;
@@ -203,7 +202,7 @@ public class AssistManager implements ConfigurationChangedReceiver {
         if (this.mDeviceProvisionedController.isDeviceProvisioned()) {
             ((CommandQueue) SystemUI.getComponent(this.mContext, CommandQueue.class)).animateCollapsePanels(3);
             boolean z = true;
-            if (Settings.Secure.getIntForUser(this.mContext.getContentResolver(), "assist_structure_enabled", 1, -2) == 0) {
+            if (Settings.Secure.getIntForUser(this.mContext.getContentResolver(), "assist_structure_enabled", 1, KeyguardUpdateMonitor.getCurrentUser()) == 0) {
                 z = false;
             }
             final Intent assistIntent = ((SearchManager) this.mContext.getSystemService(MiStat.Event.SEARCH)).getAssistIntent(z);
@@ -215,7 +214,7 @@ public class AssistManager implements ConfigurationChangedReceiver {
                 }
                 try {
                     final ActivityOptions makeCustomAnimation = ActivityOptions.makeCustomAnimation(this.mContext, R.anim.search_launch_enter, R.anim.search_launch_exit);
-                    assistIntent.addFlags(MiuiHapticFeedbackConstants.FLAG_MIUI_HAPTIC_TAP_NORMAL);
+                    assistIntent.addFlags(268435456);
                     AsyncTask.execute(new Runnable() {
                         public void run() {
                             AssistManager.this.mContext.startActivityAsUser(assistIntent, makeCustomAnimation.toBundle(), new UserHandle(-2));

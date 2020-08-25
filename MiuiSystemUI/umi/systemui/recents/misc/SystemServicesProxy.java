@@ -4,6 +4,7 @@ import android.app.ActivityManager;
 import android.app.ActivityManagerCompat;
 import android.app.ActivityManagerNative;
 import android.app.ActivityOptions;
+import android.app.ActivityTaskManager;
 import android.app.AppGlobals;
 import android.app.IActivityManager;
 import android.app.WallpaperManager;
@@ -46,7 +47,6 @@ import android.util.ArraySet;
 import android.util.Log;
 import android.view.Display;
 import android.view.IAppTransitionAnimationSpecsFuture;
-import android.view.IDockedStackListener;
 import android.view.IWindowManager;
 import android.view.IWindowManagerCompat;
 import android.view.WindowManager;
@@ -54,6 +54,7 @@ import android.view.WindowManagerGlobal;
 import android.view.accessibility.AccessibilityManager;
 import com.android.internal.app.AssistUtils;
 import com.android.internal.os.BackgroundThread;
+import com.android.internal.os.SomeArgs;
 import com.android.systemui.SystemUICompat;
 import com.android.systemui.fsgesture.IFsGestureCallback;
 import com.android.systemui.plugins.R;
@@ -112,9 +113,6 @@ public class SystemServicesProxy {
     private TaskStackListener mTaskStackListener = new TaskStackListener() {
         private final List<TaskStackListener> mTmpListeners = new ArrayList();
 
-        public void onActivityPinned(String str, int i, int i2, int i3) throws RemoteException {
-        }
-
         public void onTaskStackChanged() throws RemoteException {
             synchronized (SystemServicesProxy.this.mTaskStackListeners) {
                 this.mTmpListeners.clear();
@@ -125,6 +123,11 @@ public class SystemServicesProxy {
             }
             SystemServicesProxy.this.mHandler.removeMessages(1);
             SystemServicesProxy.this.mHandler.sendEmptyMessage(1);
+        }
+
+        public void onActivityPinned(String str, int i, int i2, int i3) throws RemoteException {
+            SystemServicesProxy.this.mHandler.removeMessages(3);
+            SystemServicesProxy.this.mHandler.obtainMessage(3, i, i2, str).sendToTarget();
         }
 
         public void onActivityUnpinned() throws RemoteException {
@@ -148,6 +151,16 @@ public class SystemServicesProxy {
             SystemServicesProxy.this.mHandler.removeMessages(2);
             SystemServicesProxy.this.mHandler.obtainMessage(2, i, 0, taskSnapshot).sendToTarget();
         }
+
+        public void onActivityRestartAttempt(ActivityManager.RunningTaskInfo runningTaskInfo, boolean z, boolean z2, boolean z3) throws RemoteException {
+            SomeArgs obtain = SomeArgs.obtain();
+            obtain.arg1 = runningTaskInfo;
+            obtain.argi1 = z ? 1 : 0;
+            obtain.argi2 = z2 ? 1 : 0;
+            obtain.argi3 = z3 ? 1 : 0;
+            SystemServicesProxy.this.mHandler.removeMessages(12);
+            SystemServicesProxy.this.mHandler.obtainMessage(12, obtain).sendToTarget();
+        }
     };
     /* access modifiers changed from: private */
     public List<TaskStackListener> mTaskStackListeners = new ArrayList();
@@ -157,10 +170,6 @@ public class SystemServicesProxy {
 
     public static boolean isFreeformStack(int i) {
         return i == 2;
-    }
-
-    public ActivityManager.RunningTaskInfo getRunningTask() {
-        return null;
     }
 
     static {
@@ -186,6 +195,9 @@ public class SystemServicesProxy {
         }
 
         public void onActivityPinned(String str, int i, int i2) {
+        }
+
+        public void onActivityRestartAttempt(ActivityManager.RunningTaskInfo runningTaskInfo, boolean z, boolean z2, boolean z3) {
         }
 
         public void onActivityUnpinned() {
@@ -246,7 +258,7 @@ public class SystemServicesProxy {
         Resources resources = context.getResources();
         resources.getDimensionPixelSize(17104898);
         resources.getDimensionPixelSize(17104897);
-        resources.getDimensionPixelSize(17105519);
+        resources.getDimensionPixelSize(17105496);
         Paint paint = new Paint();
         this.mBgProtectionPaint = paint;
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_ATOP));
@@ -305,6 +317,19 @@ public class SystemServicesProxy {
         return list.subList(0, Math.min(list.size(), i));
     }
 
+    public ActivityManager.RunningTaskInfo getRunningTask() {
+        try {
+            List filteredTasks = ActivityTaskManager.getService().getFilteredTasks(1, false);
+            if (filteredTasks != null) {
+                if (!filteredTasks.isEmpty()) {
+                    return (ActivityManager.RunningTaskInfo) filteredTasks.get(0);
+                }
+            }
+        } catch (RemoteException unused) {
+        }
+        return null;
+    }
+
     public boolean isRecentsActivityVisible() {
         return isRecentsActivityVisible((MutableBoolean) null);
     }
@@ -346,12 +371,7 @@ public class SystemServicesProxy {
         if (iActivityManager == null) {
             return false;
         }
-        try {
-            return ActivityManagerCompat.moveTaskToDockedStack(iActivityManager, i, i2, true, false, rect, true);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-            return false;
-        }
+        return ActivityManagerCompat.moveTaskToDockedStack(iActivityManager, i, i2, true, false, rect, true);
     }
 
     public static boolean isHomeOrRecentsStack(int i, ActivityManager.RunningTaskInfo runningTaskInfo) {
@@ -359,7 +379,7 @@ public class SystemServicesProxy {
     }
 
     public boolean hasDockedTask() {
-        return SystemUICompat.hasDockedTask(this.mIam);
+        return SystemUICompat.hasDockedTask(this.mContext);
     }
 
     public int getWindowModeFromRecentTaskInfo(ActivityManager.RecentTaskInfo recentTaskInfo) {
@@ -378,22 +398,14 @@ public class SystemServicesProxy {
     public void cancelWindowTransition(int i) {
         IActivityManager iActivityManager = this.mIam;
         if (iActivityManager != null) {
-            try {
-                SystemUICompat.cancelTaskWindowTransition(iActivityManager, i);
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
+            SystemUICompat.cancelTaskWindowTransition(iActivityManager, i);
         }
     }
 
     public void cancelThumbnailTransition(int i) {
         IActivityManager iActivityManager = this.mIam;
         if (iActivityManager != null) {
-            try {
-                SystemUICompat.cancelTaskThumbnailTransition(iActivityManager, i);
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
+            SystemUICompat.cancelTaskThumbnailTransition(iActivityManager, i);
         }
     }
 
@@ -711,11 +723,6 @@ public class SystemServicesProxy {
         }
     }
 
-    public void registerDockedStackListener(IDockedStackListener iDockedStackListener) {
-        if (this.mWm == null) {
-        }
-    }
-
     public int getDockedDividerSize(Context context) {
         Resources resources = context.getResources();
         return resources.getDimensionPixelSize(R.dimen.docked_stack_divider_thickness) - (resources.getDimensionPixelSize(R.dimen.docked_stack_divider_insets) * 2);
@@ -817,11 +824,14 @@ public class SystemServicesProxy {
                     e3.printStackTrace();
                 }
                 List<String> multiWindowForceNotResizeList = SystemServicesProxy.getMultiWindowForceNotResizeList(context);
-                if (multiWindowForceNotResizeList.contains("com.miui.home")) {
-                    SystemServicesProxy systemServicesProxy = SystemServicesProxy.this;
-                    if (systemServicesProxy.isRecentsWithinLauncher(systemServicesProxy.mContext)) {
-                        Log.e("SystemServicesProxy", "Remove com.miui.home from multiWindowForceNotResizeList");
-                        multiWindowForceNotResizeList.remove("com.miui.home");
+                SystemServicesProxy systemServicesProxy = SystemServicesProxy.this;
+                if (systemServicesProxy.isRecentsWithinLauncher(systemServicesProxy.mContext) && multiWindowForceNotResizeList != null && multiWindowForceNotResizeList.size() >= 1) {
+                    Iterator<String> it = multiWindowForceNotResizeList.iterator();
+                    while (it.hasNext()) {
+                        if (TextUtils.equals(it.next(), "com.miui.home")) {
+                            it.remove();
+                            Log.e("SystemServicesProxy", "Remove com.miui.home from multiWindowForceNotResizeList");
+                        }
                     }
                 }
                 try {
@@ -909,9 +919,8 @@ public class SystemServicesProxy {
                     }
                 }
             }
-            if (sMultiWindowForceNotResizePkgList.isEmpty()) {
-                sMultiWindowForceNotResizePkgList.addAll(Arrays.asList(context.getResources().getStringArray(R.array.multi_window_force_not_resize_pkgs)));
-            }
+            sMultiWindowForceNotResizePkgList.addAll(Arrays.asList(context.getResources().getStringArray(R.array.multi_window_force_not_resize_pkgs)));
+            sMultiWindowForceNotResizePkgList.addAll(Arrays.asList(context.getResources().getStringArray(R.array.multi_window_force_not_resize_pkgs_for_android_r)));
         }
         return sMultiWindowForceNotResizePkgList;
     }
@@ -985,6 +994,7 @@ public class SystemServicesProxy {
 
         public void handleMessage(Message message) {
             synchronized (SystemServicesProxy.this.mTaskStackListeners) {
+                boolean z = false;
                 switch (message.what) {
                     case 1:
                         Trace.beginSection("onTaskStackChanged");
@@ -1043,6 +1053,18 @@ public class SystemServicesProxy {
                     case 11:
                         for (int size11 = SystemServicesProxy.this.mTaskStackListeners.size() - 1; size11 >= 0; size11--) {
                             ((TaskStackListener) SystemServicesProxy.this.mTaskStackListeners.get(size11)).onActivityLaunchOnSecondaryDisplayFailed();
+                        }
+                        break;
+                    case 12:
+                        SomeArgs someArgs = (SomeArgs) message.obj;
+                        ActivityManager.RunningTaskInfo runningTaskInfo = (ActivityManager.RunningTaskInfo) someArgs.arg1;
+                        boolean z2 = someArgs.argi1 != 0;
+                        boolean z3 = someArgs.argi2 != 0;
+                        if (someArgs.argi3 != 0) {
+                            z = true;
+                        }
+                        for (int size12 = SystemServicesProxy.this.mTaskStackListeners.size() - 1; size12 >= 0; size12--) {
+                            ((TaskStackListener) SystemServicesProxy.this.mTaskStackListeners.get(size12)).onActivityRestartAttempt(runningTaskInfo, z2, z3, z);
                         }
                         break;
                 }

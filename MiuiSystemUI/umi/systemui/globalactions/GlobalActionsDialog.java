@@ -52,7 +52,6 @@ import com.android.internal.widget.LockPatternUtils;
 import com.android.systemui.plugins.GlobalActions;
 import java.util.ArrayList;
 import java.util.List;
-import miui.view.MiuiHapticFeedbackConstants;
 
 class GlobalActionsDialog implements DialogInterface.OnDismissListener, DialogInterface.OnClickListener {
     /* access modifiers changed from: private */
@@ -174,7 +173,7 @@ class GlobalActionsDialog implements DialogInterface.OnDismissListener, DialogIn
             z = true;
         }
         this.mHasVibrator = z;
-        this.mShowSilentToggle = !this.mContext.getResources().getBoolean(17891575);
+        this.mShowSilentToggle = !this.mContext.getResources().getBoolean(17891574);
         this.mEmergencyAffordanceManager = new EmergencyAffordanceManager(context);
     }
 
@@ -231,7 +230,7 @@ class GlobalActionsDialog implements DialogInterface.OnDismissListener, DialogIn
         } else {
             this.mSilentModeAction = new SilentModeTriStateAction(this.mContext, this.mAudioManager, this.mHandler);
         }
-        this.mAirplaneModeOn = new ToggleAction(17302474, 17302476, 17040269, 17040268, 17040267) {
+        this.mAirplaneModeOn = new ToggleAction(17302480, 17302482, 17040314, 17040313, 17040312) {
             public boolean showBeforeProvisioning() {
                 return false;
             }
@@ -248,7 +247,7 @@ class GlobalActionsDialog implements DialogInterface.OnDismissListener, DialogIn
                 }
                 boolean unused = GlobalActionsDialog.this.mIsWaitingForEcmExit = true;
                 Intent intent = new Intent("android.telephony.action.SHOW_NOTICE_ECM_BLOCK_OTHERS", (Uri) null);
-                intent.addFlags(MiuiHapticFeedbackConstants.FLAG_MIUI_HAPTIC_TAP_NORMAL);
+                intent.addFlags(268435456);
                 GlobalActionsDialog.this.mContext.startActivity(intent);
             }
 
@@ -263,7 +262,7 @@ class GlobalActionsDialog implements DialogInterface.OnDismissListener, DialogIn
         };
         onAirplaneModeChanged();
         this.mItems = new ArrayList<>();
-        String[] stringArray = this.mContext.getResources().getStringArray(17236041);
+        String[] stringArray = this.mContext.getResources().getStringArray(17236042);
         ArraySet arraySet = new ArraySet();
         for (String str : stringArray) {
             if (!arraySet.contains(str)) {
@@ -335,7 +334,7 @@ class GlobalActionsDialog implements DialogInterface.OnDismissListener, DialogIn
         }
 
         private PowerAction() {
-            super(17301552, 17040257);
+            super(17301552, 17040301);
         }
 
         public boolean onLongPress() {
@@ -361,7 +360,7 @@ class GlobalActionsDialog implements DialogInterface.OnDismissListener, DialogIn
         }
 
         private RestartAction() {
-            super(17302821, 17040259);
+            super(17302828, 17040304);
         }
 
         public boolean onLongPress() {
@@ -387,7 +386,7 @@ class GlobalActionsDialog implements DialogInterface.OnDismissListener, DialogIn
         }
 
         public BugReportAction() {
-            super(17302478, 17039780);
+            super(17302484, 17039792);
         }
 
         public void onPress() {
@@ -417,12 +416,12 @@ class GlobalActionsDialog implements DialogInterface.OnDismissListener, DialogIn
         }
 
         public String getStatus() {
-            return GlobalActionsDialog.this.mContext.getString(17039779, new Object[]{Build.VERSION.RELEASE, Build.ID});
+            return GlobalActionsDialog.this.mContext.getString(17039791, new Object[]{Build.VERSION.RELEASE, Build.ID});
         }
     }
 
     private Action getSettingsAction() {
-        return new SinglePressAction(17302829, 17040261) {
+        return new SinglePressAction(17302836, 17040306) {
             public boolean showBeforeProvisioning() {
                 return true;
             }
@@ -440,7 +439,7 @@ class GlobalActionsDialog implements DialogInterface.OnDismissListener, DialogIn
     }
 
     private Action getEmergencyAction() {
-        return new SinglePressAction(17302217, 17040253) {
+        return new SinglePressAction(17302220, 17040297) {
             public boolean showBeforeProvisioning() {
                 return true;
             }
@@ -456,7 +455,7 @@ class GlobalActionsDialog implements DialogInterface.OnDismissListener, DialogIn
     }
 
     private Action getAssistAction() {
-        return new SinglePressAction(17302304, 17040251) {
+        return new SinglePressAction(17302307, 17040295) {
             public boolean showBeforeProvisioning() {
                 return true;
             }
@@ -474,7 +473,7 @@ class GlobalActionsDialog implements DialogInterface.OnDismissListener, DialogIn
     }
 
     private Action getVoiceAssistAction() {
-        return new SinglePressAction(17302871, 17040265) {
+        return new SinglePressAction(17302878, 17040310) {
             public boolean showBeforeProvisioning() {
                 return true;
             }
@@ -492,7 +491,7 @@ class GlobalActionsDialog implements DialogInterface.OnDismissListener, DialogIn
     }
 
     private Action getLockdownAction() {
-        return new SinglePressAction(17301551, 17040255) {
+        return new SinglePressAction(17301551, 17040299) {
             public boolean showBeforeProvisioning() {
                 return false;
             }
@@ -545,7 +544,7 @@ class GlobalActionsDialog implements DialogInterface.OnDismissListener, DialogIn
                     }
                     sb.append(str2);
                     sb.append(z ? " ✔" : "");
-                    arrayList.add(new SinglePressAction(this, 17302700, createFromPath, sb.toString()) {
+                    arrayList.add(new SinglePressAction(this, 17302706, createFromPath, sb.toString()) {
                         public boolean showBeforeProvisioning() {
                             return false;
                         }
@@ -687,10 +686,10 @@ class GlobalActionsDialog implements DialogInterface.OnDismissListener, DialogIn
         }
 
         public View create(Context context, View view, ViewGroup viewGroup, LayoutInflater layoutInflater) {
-            View inflate = layoutInflater.inflate(17367163, viewGroup, false);
+            View inflate = layoutInflater.inflate(17367168, viewGroup, false);
             ImageView imageView = (ImageView) inflate.findViewById(16908294);
             TextView textView = (TextView) inflate.findViewById(16908299);
-            TextView textView2 = (TextView) inflate.findViewById(16909515);
+            TextView textView2 = (TextView) inflate.findViewById(16909500);
             String status = getStatus();
             if (!TextUtils.isEmpty(status)) {
                 textView2.setText(status);
@@ -763,10 +762,10 @@ class GlobalActionsDialog implements DialogInterface.OnDismissListener, DialogIn
 
         public View create(Context context, View view, ViewGroup viewGroup, LayoutInflater layoutInflater) {
             willCreate();
-            View inflate = layoutInflater.inflate(17367163, viewGroup, false);
+            View inflate = layoutInflater.inflate(17367168, viewGroup, false);
             ImageView imageView = (ImageView) inflate.findViewById(16908294);
             TextView textView = (TextView) inflate.findViewById(16908299);
-            TextView textView2 = (TextView) inflate.findViewById(16909515);
+            TextView textView2 = (TextView) inflate.findViewById(16909500);
             boolean isEnabled = isEnabled();
             if (textView != null) {
                 textView.setText(this.mMessageResId);
@@ -821,7 +820,7 @@ class GlobalActionsDialog implements DialogInterface.OnDismissListener, DialogIn
         }
 
         public SilentModeToggleAction() {
-            super(17302325, 17302324, 17040264, 17040263, 17040262);
+            super(17302328, 17302327, 17040309, 17040308, 17040307);
         }
 
         /* access modifiers changed from: package-private */
@@ -835,7 +834,7 @@ class GlobalActionsDialog implements DialogInterface.OnDismissListener, DialogIn
     }
 
     private static class SilentModeTriStateAction implements Action, View.OnClickListener {
-        private final int[] ITEM_IDS = {16909284, 16909285, 16909286};
+        private final int[] ITEM_IDS = {16909274, 16909275, 16909276};
         private final AudioManager mAudioManager;
         private final Handler mHandler;
 
@@ -872,7 +871,7 @@ class GlobalActionsDialog implements DialogInterface.OnDismissListener, DialogIn
         }
 
         public View create(Context context, View view, ViewGroup viewGroup, LayoutInflater layoutInflater) {
-            View inflate = layoutInflater.inflate(17367164, viewGroup, false);
+            View inflate = layoutInflater.inflate(17367169, viewGroup, false);
             int ringerMode = this.mAudioManager.getRingerMode();
             ringerModeToIndex(ringerMode);
             int i = 0;

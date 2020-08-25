@@ -36,7 +36,7 @@ public abstract class SafetyWarningDialog extends SystemUIDialog implements Dial
         this.mAudioManager = audioManager;
         getWindow().setType(2010);
         setShowForAllUsers(true);
-        setMessage(this.mContext.getString(17041196));
+        setMessage(this.mContext.getString(17041278));
         setButton(-1, this.mContext.getString(17039379), this);
         setButton(-2, this.mContext.getString(17039369), (DialogInterface.OnClickListener) null);
         setOnDismissListener(this);

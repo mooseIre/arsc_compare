@@ -16,6 +16,8 @@ public class TelephonyIcons {
     static final MobileSignalController.MobileIconGroup DATA_DISABLED;
     static final MobileSignalController.MobileIconGroup E;
     static final MobileSignalController.MobileIconGroup FIVE_G_BASIC;
+    static final MobileSignalController.MobileIconGroup FIVE_G_KR_OFF;
+    static final MobileSignalController.MobileIconGroup FIVE_G_KR_ON;
     static final MobileSignalController.MobileIconGroup FIVE_G_SA;
     static final MobileSignalController.MobileIconGroup FIVE_G_UWB;
     static final MobileSignalController.MobileIconGroup FOUR_G;
@@ -108,7 +110,11 @@ public class TelephonyIcons {
         int[] iArr15 = AccessibilityContentDescriptions.PHONE_SIGNAL_STRENGTH;
         FIVE_G_SA = new MobileSignalController.MobileIconGroup("5GSA", (int[][]) null, (int[][]) null, iArr15, 0, 0, 0, 0, iArr15[0], R.string.data_connection_5g_sa, R.drawable.ic_5g_mobiledata, false, R.drawable.ic_5g_mobiledata);
         int[] iArr16 = AccessibilityContentDescriptions.PHONE_SIGNAL_STRENGTH;
-        DATA_DISABLED = new MobileSignalController.MobileIconGroup("DataDisabled", (int[][]) null, (int[][]) null, iArr16, 0, 0, 0, 0, iArr16[0], R.string.accessibility_cell_data_off, R.drawable.stat_sys_data_disabled, false, R.drawable.ic_data_disabled);
+        FIVE_G_KR_ON = new MobileSignalController.MobileIconGroup("5GKrOn", (int[][]) null, (int[][]) null, iArr16, 0, 0, 0, 0, iArr16[0], R.string.data_connection_5g_sa, R.drawable.ic_5g_mobiledata, false, R.drawable.ic_5g_mobiledata);
+        int[] iArr17 = AccessibilityContentDescriptions.PHONE_SIGNAL_STRENGTH;
+        FIVE_G_KR_OFF = new MobileSignalController.MobileIconGroup("5GKrOff", (int[][]) null, (int[][]) null, iArr17, 0, 0, 0, 0, iArr17[0], R.string.data_connection_5g_sa, R.drawable.ic_5g_mobiledata, false, R.drawable.ic_5g_mobiledata);
+        int[] iArr18 = AccessibilityContentDescriptions.PHONE_SIGNAL_STRENGTH;
+        DATA_DISABLED = new MobileSignalController.MobileIconGroup("DataDisabled", (int[][]) null, (int[][]) null, iArr18, 0, 0, 0, 0, iArr18[0], R.string.accessibility_cell_data_off, R.drawable.stat_sys_data_disabled, false, R.drawable.ic_data_disabled);
     }
 
     public static void initDataTypeName(Context context) {

@@ -374,21 +374,18 @@ public class NotificationInflater {
         }
         ImageView imageView = (ImageView) view.findViewById(16908294);
         TextView textView = (TextView) view.findViewById(16908310);
-        TextView textView2 = (TextView) view.findViewById(16909540);
-        TextView textView3 = (TextView) view.findViewById(16909568);
-        if (imageView == null || (textView == null && textView2 == null && textView3 == null)) {
+        TextView textView2 = (TextView) view.findViewById(16909525);
+        CharSequence text = textView != null ? textView.getText() : null;
+        CharSequence text2 = textView2 != null ? textView2.getText() : null;
+        if (imageView == null || (TextUtils.isEmpty(text) && TextUtils.isEmpty(text2))) {
             Log.d("NotificationInflater", "inflateOptimizedHeadsUpNotification() invalid content");
             return null;
         }
         OptimizedHeadsUpNotificationView optimizedHeadsUpNotificationView = (OptimizedHeadsUpNotificationView) ((LayoutInflater) context.getSystemService("layout_inflater")).inflate(R.layout.optimized_heads_up_notification, (ViewGroup) null);
         optimizedHeadsUpNotificationView.wrapIconView(imageView);
         optimizedHeadsUpNotificationView.wrapTitleView(textView, z);
+        optimizedHeadsUpNotificationView.wrapTextView(textView2, z);
         optimizedHeadsUpNotificationView.wrapMiniWindowBar(entry.row, z);
-        if (textView2 != null) {
-            optimizedHeadsUpNotificationView.wrapTextView(textView2, z);
-        } else {
-            optimizedHeadsUpNotificationView.wrapTextView(textView3, z);
-        }
         View findViewById = view.findViewById(R.id.content);
         if (findViewById != null && findViewById.hasOnClickListeners()) {
             optimizedHeadsUpNotificationView.setOnClickListener(new View.OnClickListener(findViewById) {
@@ -404,9 +401,9 @@ public class NotificationInflater {
             });
         }
         if (MiuiNotificationCompat.isShowMiuiAction(entry.notification.getNotification()) && entry.getPrivateContentView() != null) {
-            TextView textView4 = (TextView) entry.getPrivateContentView().findViewById(16908698);
+            TextView textView3 = (TextView) entry.getPrivateContentView().findViewById(16909189);
             TextView actionView = optimizedHeadsUpNotificationView.getActionView();
-            if (!(textView4 == null || actionView == null)) {
+            if (!(textView3 == null || actionView == null)) {
                 actionView.setVisibility(0);
                 actionView.setText(entry.notification.getMiuiActionTitle());
                 if (z) {
@@ -414,7 +411,7 @@ public class NotificationInflater {
                 } else {
                     actionView.setTextColor(context.getColor(R.color.optimized_heads_up_notification_action_text));
                 }
-                actionView.setOnClickListener(new View.OnClickListener(textView4) {
+                actionView.setOnClickListener(new View.OnClickListener(textView3) {
                     public final /* synthetic */ TextView f$0;
 
                     {
@@ -528,9 +525,6 @@ public class NotificationInflater {
                     this.mSbn.setAppName(String.valueOf(packageManagerForUser.getApplicationLabel(applicationInfo)));
                     this.mSbn.setAppIcon(((AppIconsManager) Dependency.get(AppIconsManager.class)).getAppIcon(this.mContext, applicationInfo, packageManagerForUser, identifier));
                     this.mSbn.setRowIcon(NotificationUtil.getRowIcon(this.mContext, this.mSbn));
-                    if (!TextUtils.equals(this.mRow.getAppName(), this.mSbn.getAppName())) {
-                        this.mRow.setAppName(this.mSbn.getAppName());
-                    }
                 }
             } catch (PackageManager.NameNotFoundException unused) {
                 this.mSbn.setAppIcon(packageManagerForUser.getDefaultActivityIcon());

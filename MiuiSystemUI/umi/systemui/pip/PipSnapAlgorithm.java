@@ -2,24 +2,35 @@ package com.android.systemui.pip;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.PointF;
 import android.graphics.Rect;
-import java.io.PrintWriter;
+import android.util.Size;
 
 public class PipSnapAlgorithm {
+    public static PipSnapAlgorithm sPipSnapAlgorithm;
     private final Context mContext;
+    private final float mDefaultSizePercent;
     private final float mMaxAspectRatioForMinSize;
-    private int mOrientation = 0;
+    private final float mMinAspectRatioForMinSize;
 
-    public PipSnapAlgorithm(Context context) {
+    public static PipSnapAlgorithm getInstance(Context context) {
+        if (sPipSnapAlgorithm == null) {
+            sPipSnapAlgorithm = new PipSnapAlgorithm(context);
+        }
+        return sPipSnapAlgorithm;
+    }
+
+    private PipSnapAlgorithm(Context context) {
         Resources resources = context.getResources();
         this.mContext = context;
-        resources.getFloat(17105073);
-        this.mMaxAspectRatioForMinSize = resources.getFloat(17105071);
-        onConfigurationChanged();
+        this.mDefaultSizePercent = resources.getFloat(17105073);
+        float f = resources.getFloat(17105071);
+        this.mMaxAspectRatioForMinSize = f;
+        this.mMinAspectRatioForMinSize = 1.0f / f;
     }
 
     public void onConfigurationChanged() {
-        this.mOrientation = this.mContext.getResources().getConfiguration().orientation;
+        int i = this.mContext.getResources().getConfiguration().orientation;
     }
 
     public float getSnapFraction(Rect rect, Rect rect2) {
@@ -49,6 +60,54 @@ public class PipSnapAlgorithm {
         }
     }
 
+    public void getMovementBounds(Rect rect, Rect rect2, Rect rect3, int i) {
+        rect3.set(rect2);
+        rect3.right = Math.max(rect2.left, rect2.right - rect.width());
+        int max = Math.max(rect2.top, rect2.bottom - rect.height());
+        rect3.bottom = max;
+        rect3.bottom = max - i;
+    }
+
+    public Size getSizeForAspectRatio(float f, float f2, int i, int i2) {
+        int i3;
+        int i4;
+        int max = (int) Math.max(f2, ((float) Math.min(i, i2)) * this.mDefaultSizePercent);
+        if (f > this.mMinAspectRatioForMinSize) {
+            float f3 = this.mMaxAspectRatioForMinSize;
+            if (f <= f3) {
+                float f4 = (float) max;
+                float length = PointF.length(f3 * f4, f4);
+                max = (int) Math.round(Math.sqrt((double) ((length * length) / ((f * f) + 1.0f))));
+                i4 = Math.round(((float) max) * f);
+                int i5 = max;
+                max = i4;
+                i3 = i5;
+                return new Size(max, i3);
+            }
+        }
+        if (f <= 1.0f) {
+            i3 = Math.round(((float) max) / f);
+            return new Size(max, i3);
+        }
+        i4 = Math.round(((float) max) * f);
+        int i52 = max;
+        max = i4;
+        i3 = i52;
+        return new Size(max, i3);
+    }
+
+    public Size getSizeForAspectRatio(Size size, float f, float f2) {
+        int i;
+        int max = (int) Math.max(f2, (float) Math.min(size.getWidth(), size.getHeight()));
+        if (f <= 1.0f) {
+            i = Math.round(((float) max) / f);
+        } else {
+            i = max;
+            max = Math.round(((float) max) * f);
+        }
+        return new Size(max, i);
+    }
+
     public void snapRectToClosestEdge(Rect rect, Rect rect2, Rect rect3) {
         int max = Math.max(rect2.left, Math.min(rect2.right, rect.left));
         int max2 = Math.max(rect2.top, Math.min(rect2.bottom, rect.top));
@@ -66,10 +125,5 @@ public class PipSnapAlgorithm {
         } else {
             rect3.offsetTo(max, rect2.bottom);
         }
-    }
-
-    public void dump(PrintWriter printWriter, String str) {
-        printWriter.println(str + PipSnapAlgorithm.class.getSimpleName());
-        printWriter.println((str + "  ") + "mOrientation=" + this.mOrientation);
     }
 }

@@ -97,9 +97,9 @@ public class NotificationPeekingIconAreaController extends NotificationIconAreaC
         if (z && !z2) {
             dispatchPeeking();
         }
-        if (z2 && !z && this.mHandler.hasMessages(R.styleable.AppCompatTheme_textAppearanceListItem)) {
-            this.mHandler.removeMessages(R.styleable.AppCompatTheme_textAppearanceListItem);
-            this.mHandler.sendEmptyMessageDelayed(R.styleable.AppCompatTheme_textAppearanceListItem, 0);
+        if (z2 && !z && this.mHandler.hasMessages(R.styleable.AppCompatTheme_switchStyle)) {
+            this.mHandler.removeMessages(R.styleable.AppCompatTheme_switchStyle);
+            this.mHandler.sendEmptyMessageDelayed(R.styleable.AppCompatTheme_switchStyle, 0);
         }
     }
 
@@ -120,8 +120,8 @@ public class NotificationPeekingIconAreaController extends NotificationIconAreaC
             } else {
                 this.mHandler.removeMessages(100);
                 this.mHandler.sendEmptyMessageDelayed(100, 10);
-                this.mHandler.removeMessages(R.styleable.AppCompatTheme_textAppearanceListItem);
-                this.mHandler.sendEmptyMessageDelayed(R.styleable.AppCompatTheme_textAppearanceListItem, (long) this.mPeekingDuration);
+                this.mHandler.removeMessages(R.styleable.AppCompatTheme_switchStyle);
+                this.mHandler.sendEmptyMessageDelayed(R.styleable.AppCompatTheme_switchStyle, (long) this.mPeekingDuration);
             }
         }
     }
@@ -174,8 +174,8 @@ public class NotificationPeekingIconAreaController extends NotificationIconAreaC
         if (z2) {
             this.mHandler.removeMessages(100);
             if (this.mPeeking) {
-                this.mHandler.removeMessages(R.styleable.AppCompatTheme_textAppearanceListItem);
-                this.mHandler.sendEmptyMessage(R.styleable.AppCompatTheme_textAppearanceListItem);
+                this.mHandler.removeMessages(R.styleable.AppCompatTheme_switchStyle);
+                this.mHandler.sendEmptyMessage(R.styleable.AppCompatTheme_switchStyle);
                 Log.d("NotificationPeekingIcon", "prompt showing, end peeking immediately");
             }
         }

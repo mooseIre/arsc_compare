@@ -64,6 +64,7 @@ import com.android.keyguard.magazine.LockScreenMagazineController;
 import com.android.keyguard.magazine.LockScreenMagazinePreView;
 import com.android.keyguard.magazine.LockScreenMagazineUtils;
 import com.android.keyguard.negative.MiuiKeyguardMoveLeftViewContainer;
+import com.android.keyguard.utils.DeviceLevelUtils;
 import com.android.keyguard.utils.ViewAnimationUtils;
 import com.android.keyguard.wallpaper.KeyguardWallpaperUtils;
 import com.android.keyguard.wallpaper.MiuiKeyguardWallpaperController;
@@ -74,7 +75,7 @@ import com.android.systemui.Interpolators;
 import com.android.systemui.Util;
 import com.android.systemui.classifier.FalsingManager;
 import com.android.systemui.fragments.FragmentHostManager;
-import com.android.systemui.miui.statusbar.analytics.SystemUIStat;
+import com.android.systemui.miui.statusbar.analytics.NotificationStat;
 import com.android.systemui.miui.statusbar.phone.MiuiStatusBarPromptController;
 import com.android.systemui.miui.statusbar.policy.ControlPanelController;
 import com.android.systemui.miui.statusbar.policy.SuperSaveModeController;
@@ -100,8 +101,6 @@ import com.android.systemui.statusbar.policy.OnHeadsUpChangedListener;
 import com.android.systemui.statusbar.stack.NotificationStackScrollLayout;
 import com.android.systemui.util.AutoCleanFloatTransitionListener;
 import com.android.systemui.util.QcomBoostFramework;
-import com.miui.systemui.renderlayer.MiRenderInfo;
-import com.miui.systemui.renderlayer.RenderLayerManager;
 import java.io.File;
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
@@ -168,14 +167,16 @@ public class NotificationPanelView extends PanelView implements ExpandableView.O
     public float mBlurRatio;
     private AutoCleanFloatTransitionListener mBlurRatioListener = new AutoCleanFloatTransitionListener("PanelViewBlur") {
         public void onUpdate(Map<String, Float> map) {
-            float unused = NotificationPanelView.this.mBlurRatio = map.get("blurRatio").floatValue();
+            float floatValue = map.get("blurRatio").floatValue();
+            NotificationPanelView notificationPanelView = NotificationPanelView.this;
+            if (Float.isNaN(floatValue)) {
+                floatValue = NotificationPanelView.this.mToBlurRatio;
+            }
+            float unused = notificationPanelView.mBlurRatio = floatValue;
             ((StatusBarWindowManager) Dependency.get(StatusBarWindowManager.class)).setBlurRatio(NotificationPanelView.this.mBlurRatio);
         }
     };
     private ValueAnimator mBouncerFractionAnimator;
-    private final MiRenderInfo mClearBlurInfo = new MiRenderInfo() {
-    };
-    private boolean mClearBlurRegistered;
     private KeyguardClockPositionAlgorithm mClockPositionAlgorithm = new KeyguardClockPositionAlgorithm();
     private KeyguardClockPositionAlgorithm.Result mClockPositionResult = new KeyguardClockPositionAlgorithm.Result();
     private float mCloseHandleUnderlapSize;
@@ -318,6 +319,7 @@ public class NotificationPanelView extends PanelView implements ExpandableView.O
     public boolean mLockScreenMagazinePreViewVisible;
     private LockscreenGestureLogger mLockscreenGestureLogger = new LockscreenGestureLogger();
     private Paint mMaskPaint = new Paint();
+    private MiuiChargeController mMiuiChargeController;
     private MiuiStatusBarPromptController mMiuiStatusBarPromptController;
     private List<View> mMoveListViews = new ArrayList();
     private int mNavigationBarBottomHeight;
@@ -383,6 +385,8 @@ public class NotificationPanelView extends PanelView implements ExpandableView.O
     /* access modifiers changed from: private */
     public View mSwitchSystemUser;
     private View mThemeBackgroundView;
+    /* access modifiers changed from: private */
+    public float mToBlurRatio;
     private int mTopPaddingAdjustment;
     private int mTopPaddingWhenQsBeingCovered;
     private boolean mTouchAtKeyguardBottomArea = false;
@@ -419,9 +423,7 @@ public class NotificationPanelView extends PanelView implements ExpandableView.O
         this.mLockScreenMagazineController = LockScreenMagazineController.getInstance(context);
         this.mKeyguardWallpaperController = (MiuiKeyguardWallpaperController) Dependency.get(MiuiKeyguardWallpaperController.class);
         this.mMiuiStatusBarPromptController = (MiuiStatusBarPromptController) Dependency.get(MiuiStatusBarPromptController.class);
-        if (ChargeUtils.supportWirelessCharge() || ChargeUtils.supportNewChargeAnimation()) {
-            new MiuiChargeController(this.mContext);
-        }
+        this.mMiuiChargeController = new MiuiChargeController(this.mContext);
         this.mPowerManager = (PowerManager) context.getSystemService("power");
         this.mDoubleTapHelper = new DoubleTapHelper(this, 200, new DoubleTapHelper.ActivationListener() {
             public void onActiveChanged(boolean z) {
@@ -649,7 +651,7 @@ public class NotificationPanelView extends PanelView implements ExpandableView.O
     public void loadDimens(Resources resources) {
         super.loadDimens(resources);
         this.mFlingAnimationUtils = new FlingAnimationUtils(getContext(), 0.4f);
-        this.mStatusBarMinHeight = resources.getDimensionPixelSize(17105519);
+        this.mStatusBarMinHeight = resources.getDimensionPixelSize(17105496);
         this.mQsPeekHeight = getResources().getDimensionPixelSize(R.dimen.qs_peek_height);
         this.mNotificationsHeaderCollideDistance = resources.getDimensionPixelSize(R.dimen.header_notifications_collide_distance);
         resources.getDimensionPixelOffset(R.dimen.unlock_move_distance);
@@ -812,8 +814,8 @@ public class NotificationPanelView extends PanelView implements ExpandableView.O
     }
 
     public void animateToFullShade(long j) {
-        onPanelDisplayChanged(true);
-        ((SystemUIStat) Dependency.get(SystemUIStat.class)).onPanelExpanded(false, true, this.mNotificationStackScroller.getNotGoneNotifications());
+        onPanelDisplayChanged(true, false);
+        ((NotificationStat) Dependency.get(NotificationStat.class)).onPanelExpanded(false, true, this.mNotificationStackScroller.getNotGoneNotifications());
         ValueAnimator valueAnimator = this.mQsTopPaddingAnimator;
         if (valueAnimator != null) {
             valueAnimator.cancel();
@@ -838,7 +840,7 @@ public class NotificationPanelView extends PanelView implements ExpandableView.O
                 boolean unused2 = NotificationPanelView.this.mAnimateNextTopPaddingChange = true;
                 NotificationPanelView.this.mNotificationStackScroller.goToFullShade(0);
                 NotificationPanelView.this.requestLayout();
-                ((SystemUIStat) Dependency.get(SystemUIStat.class)).onPanelAnimationEnd();
+                ((NotificationStat) Dependency.get(NotificationStat.class)).onPanelAnimationEnd();
             }
         });
         this.mQsTopPaddingAnimator.start();
@@ -945,7 +947,7 @@ public class NotificationPanelView extends PanelView implements ExpandableView.O
             MetricsLogger.count(this.mContext, "panel_open", 1);
             MetricsLogger.count(this.mContext, "panel_open_peek", 1);
             return true;
-        } else if (!isOnKeyguard() && isFullyExpanded() && !this.mQsOverscrollExpansionEnabled && onSpringIntercept(motionEvent)) {
+        } else if (!Constants.IS_INTERNATIONAL && !isOnKeyguard() && isFullyExpanded() && !this.mQsOverscrollExpansionEnabled && onSpringIntercept(motionEvent)) {
             return true;
         } else {
             if (this.mQsOverscrollExpansionEnabled && !isFullyCollapsed() && !this.mNotificationStackScroller.isQsCovered() && onQsIntercept(motionEvent)) {
@@ -1509,7 +1511,7 @@ public class NotificationPanelView extends PanelView implements ExpandableView.O
                 this.mLockScreenMagazineController.reset();
             }
             if (z) {
-                ((SystemUIStat) Dependency.get(SystemUIStat.class)).onOpenQSPanel();
+                ((NotificationStat) Dependency.get(NotificationStat.class)).onOpenQSPanel();
             }
             refreshNotificationStackScrollerVisible();
         }
@@ -1522,7 +1524,7 @@ public class NotificationPanelView extends PanelView implements ExpandableView.O
         setKeyguardStatusViewVisibility(i, z, z2);
         setKeyguardBottomAreaVisibility(i, z2);
         this.mStatusBarState = i;
-        setKeyguardOtherViewVisibility(i);
+        setKeyguardOtherViewVisibility();
         if (z3 && !this.mKeyguardShowing) {
             this.mKeyguardWallpaperController.updateWallpaper(false);
             this.mNotificationStackScroller.resetIsQsCovered(false);
@@ -1622,24 +1624,30 @@ public class NotificationPanelView extends PanelView implements ExpandableView.O
         }
     }
 
-    private void setKeyguardOtherViewVisibility(int i) {
+    private void setKeyguardOtherViewVisibility() {
+        updateThemeBackgroundVisibility();
         boolean z = true;
-        int i2 = 0;
-        if (i != 1) {
+        int i = 0;
+        if (this.mStatusBarState != 1) {
             z = false;
         }
-        updateThemeBackgroundVisibility(i);
         this.mKeyguardLeftView.setVisibility(z ? 0 : 4);
+        int maintenanceModeId = KeyguardUpdateMonitor.getMaintenanceModeId();
+        int currentUser = KeyguardUpdateMonitor.getCurrentUser();
         View view = this.mSwitchSystemUser;
-        if (!z || !shouldShowSwitchSystemUser()) {
-            i2 = 8;
+        if (!z || !shouldShowSwitchSystemUser() || currentUser == maintenanceModeId) {
+            i = 8;
         }
-        view.setVisibility(i2);
+        view.setVisibility(i);
         refreshNotificationStackScrollerVisible();
     }
 
-    private void updateThemeBackgroundVisibility(int i) {
-        this.mThemeBackgroundView.setVisibility(i == 0 ? 0 : 4);
+    public boolean isThemeBgVisible() {
+        return !this.mIsDefaultTheme && this.mStatusBarState == 0;
+    }
+
+    private void updateThemeBackgroundVisibility() {
+        this.mThemeBackgroundView.setVisibility(isThemeBgVisible() ? 0 : 8);
     }
 
     private void updateNotchCornerVisibility() {
@@ -2041,12 +2049,12 @@ public class NotificationPanelView extends PanelView implements ExpandableView.O
     }
 
     public void flingSettings(float f, boolean z) {
-        Class cls = SystemUIStat.class;
+        Class cls = NotificationStat.class;
         if (isKeyguardShowing()) {
             if (z) {
-                ((SystemUIStat) Dependency.get(cls)).onPanelExpanded(true, true, this.mNotificationStackScroller.getNotGoneNotifications());
+                ((NotificationStat) Dependency.get(cls)).onPanelExpanded(true, true, this.mNotificationStackScroller.getNotGoneNotifications());
             } else {
-                ((SystemUIStat) Dependency.get(cls)).onPanelCollapsed(true, true, this.mNotificationStackScroller.getNotGoneNotifications());
+                ((NotificationStat) Dependency.get(cls)).onPanelCollapsed(true, true, this.mNotificationStackScroller.getNotGoneNotifications());
             }
         }
         flingSettings(f, z, (Runnable) null, false);
@@ -2092,7 +2100,7 @@ public class NotificationPanelView extends PanelView implements ExpandableView.O
                     if (runnable != null) {
                         runnable.run();
                     }
-                    ((SystemUIStat) Dependency.get(SystemUIStat.class)).onPanelAnimationEnd();
+                    ((NotificationStat) Dependency.get(NotificationStat.class)).onPanelAnimationEnd();
                 }
             });
             ofFloat.start();
@@ -2240,20 +2248,23 @@ public class NotificationPanelView extends PanelView implements ExpandableView.O
     }
 
     /* access modifiers changed from: protected */
-    public void onPanelDisplayChanged(boolean z) {
-        boolean z2 = this.mPanelAppeared != z;
+    public void onPanelDisplayChanged(boolean z, boolean z2) {
+        boolean z3 = this.mPanelAppeared != z;
         this.mPanelAppeared = z;
-        if (z2) {
+        QS qs = this.mQs;
+        if (qs != null) {
+            qs.onPanelDisplayChanged(z, z2);
+        }
+        if (z3) {
             if (DEBUG) {
                 String str = TAG;
                 Log.d(str, "pv onPanelDisplayChanged " + z);
             }
-            QS qs = this.mQs;
-            if (qs != null) {
-                qs.onPanelDisplayChanged(z, false);
-            }
             this.mNotificationStackScroller.onPanelDisplayChanged(z);
             updateEmptyShadeView();
+        }
+        if (z3 && !z) {
+            cancelFlingSpring();
         }
     }
 
@@ -2299,162 +2310,157 @@ public class NotificationPanelView extends PanelView implements ExpandableView.O
         }
     }
 
-    /* JADX WARNING: Removed duplicated region for block: B:45:0x00f7  */
-    /* JADX WARNING: Removed duplicated region for block: B:50:0x011b  */
+    /* JADX WARNING: Removed duplicated region for block: B:41:0x00f6  */
+    /* JADX WARNING: Removed duplicated region for block: B:46:0x011a  */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     private void updateStatusBarWindowBlur() {
         /*
-            r11 = this;
+            r10 = this;
             java.lang.String r0 = TAG
             java.lang.Class<com.android.systemui.statusbar.phone.StatusBarWindowManager> r1 = com.android.systemui.statusbar.phone.StatusBarWindowManager.class
-            boolean r2 = r11.mIsInteractive
-            r3 = 1065353216(0x3f800000, float:1.0)
+            boolean r2 = r10.mIsInteractive
+            r3 = 0
             r4 = 0
-            r5 = 0
-            if (r2 != 0) goto L_0x0010
-        L_0x000c:
-            r3 = r4
-        L_0x000d:
-            r2 = r5
-            goto L_0x00ef
-        L_0x0010:
-            boolean r2 = r11.isPanelVisibleBecauseOfHeadsUp()
-            if (r2 == 0) goto L_0x0020
-            boolean r2 = r11.mClearBlurRegistered
-            if (r2 == 0) goto L_0x0020
-            r2 = -1
-            r10 = r5
-            r5 = r2
-            r2 = r10
-            goto L_0x00ef
-        L_0x0020:
-            int r2 = r11.mStatusBarState
+            if (r2 == 0) goto L_0x00ed
+            boolean r2 = r10.isPanelVisibleBecauseOfHeadsUp()
+            if (r2 == 0) goto L_0x0012
+            goto L_0x00ed
+        L_0x0012:
+            int r2 = r10.mStatusBarState
+            r5 = 1065353216(0x3f800000, float:1.0)
             r6 = 2
             r7 = 1
-            if (r2 != 0) goto L_0x00d0
-            boolean r2 = r11.mOpening
+            if (r2 != 0) goto L_0x00ce
+            boolean r2 = r10.mOpening
             java.lang.String r8 = "PanelViewBlur"
-            if (r2 != 0) goto L_0x006e
-            float r2 = r11.mStretchLength
-            int r2 = (r2 > r4 ? 1 : (r2 == r4 ? 0 : -1))
-            if (r2 >= 0) goto L_0x0033
-            goto L_0x006e
-        L_0x0033:
+            if (r2 != 0) goto L_0x0062
+            float r2 = r10.mStretchLength
+            int r2 = (r2 > r3 ? 1 : (r2 == r3 ? 0 : -1))
+            if (r2 >= 0) goto L_0x0027
+            goto L_0x0062
+        L_0x0027:
             java.lang.Object[] r2 = new java.lang.Object[r7]
-            r2[r5] = r8
+            r2[r4] = r8
             miuix.animation.IStateStyle r2 = miuix.animation.Folme.useValue(r2)
             r2.cancel()
-            float r2 = r11.mExpandedHeight
-            float r2 = r2 * r3
-            float r6 = r11.getPeekHeight()
+            float r2 = r10.mExpandedHeight
+            float r2 = r2 * r5
+            float r6 = r10.getPeekHeight()
             float r2 = r2 / r6
-            float r2 = java.lang.Math.max(r4, r2)
-            float r2 = java.lang.Math.min(r2, r3)
-            boolean r3 = r11.mFlingAfterTracking
-            if (r3 != 0) goto L_0x005a
-            boolean r3 = r11.isTracking()
-            if (r3 == 0) goto L_0x0059
-            goto L_0x005a
-        L_0x0059:
-            r7 = r5
-        L_0x005a:
-            if (r7 == 0) goto L_0x0062
-            android.view.animation.Interpolator r3 = com.android.systemui.Interpolators.DECELERATE_QUINT
-            float r2 = r3.getInterpolation(r2)
-        L_0x0062:
-            boolean r3 = r11.mKeyguardBouncerShowing
-            if (r3 == 0) goto L_0x006c
-            float r3 = r11.mKeyguardBouncerFraction
             float r2 = java.lang.Math.max(r3, r2)
-        L_0x006c:
-            r3 = r2
-            goto L_0x000d
-        L_0x006e:
-            boolean r0 = r11.mOpening
-            if (r0 == 0) goto L_0x0074
-            r0 = r5
-            goto L_0x0075
-        L_0x0074:
+            float r2 = java.lang.Math.min(r2, r5)
+            boolean r5 = r10.mFlingAfterTracking
+            if (r5 != 0) goto L_0x004e
+            boolean r5 = r10.isTracking()
+            if (r5 == 0) goto L_0x004d
+            goto L_0x004e
+        L_0x004d:
+            r7 = r4
+        L_0x004e:
+            if (r7 == 0) goto L_0x0056
+            android.view.animation.Interpolator r5 = com.android.systemui.Interpolators.DECELERATE_QUINT
+            float r2 = r5.getInterpolation(r2)
+        L_0x0056:
+            boolean r5 = r10.mKeyguardBouncerShowing
+            if (r5 == 0) goto L_0x00ee
+            float r5 = r10.mKeyguardBouncerFraction
+            float r2 = java.lang.Math.max(r5, r2)
+            goto L_0x00ee
+        L_0x0062:
+            boolean r0 = r10.mOpening
+            if (r0 == 0) goto L_0x0068
+            r0 = r4
+            goto L_0x0069
+        L_0x0068:
             r0 = r6
-        L_0x0075:
+        L_0x0069:
             float r0 = (float) r0
-            float r2 = r11.mStretchLength
+            float r2 = r10.mStretchLength
             r9 = 1117782016(0x42a00000, float:80.0)
             float r2 = r2 / r9
             float r0 = r0 + r2
-            float r0 = java.lang.Math.max(r4, r0)
-            float r0 = java.lang.Math.min(r0, r3)
-            miuix.animation.ValueTarget r2 = miuix.animation.Folme.getValueTarget(r8)
-            r3 = 953267991(0x38d1b717, float:1.0E-4)
-            java.lang.String r4 = "blurRatio"
-            java.lang.String[] r9 = new java.lang.String[]{r4}
-            r2.setMinVisibleChange((float) r3, (java.lang.String[]) r9)
-            float r2 = r11.mBlurRatio
-            int r2 = (r2 > r0 ? 1 : (r2 == r0 ? 0 : -1))
-            if (r2 == 0) goto L_0x00c6
-            java.lang.Object[] r1 = new java.lang.Object[r7]
-            r1[r5] = r8
-            miuix.animation.IStateStyle r1 = miuix.animation.Folme.useValue(r1)
-            java.lang.Object[] r2 = new java.lang.Object[r6]
-            r2[r5] = r4
-            float r3 = r11.mBlurRatio
-            java.lang.Float r3 = java.lang.Float.valueOf(r3)
-            r2[r7] = r3
-            miuix.animation.IStateStyle r1 = r1.setTo((java.lang.Object[]) r2)
-            com.android.systemui.util.AutoCleanFloatTransitionListener r11 = r11.mBlurRatioListener
-            miuix.animation.IStateStyle r11 = r1.addListener(r11)
+            r10.mToBlurRatio = r0
+            float r0 = java.lang.Math.max(r3, r0)
+            float r0 = java.lang.Math.min(r0, r5)
+            r10.mToBlurRatio = r0
+            miuix.animation.ValueTarget r0 = miuix.animation.Folme.getValueTarget(r8)
+            r2 = 953267991(0x38d1b717, float:1.0E-4)
+            java.lang.String r3 = "blurRatio"
+            java.lang.String[] r5 = new java.lang.String[]{r3}
+            r0.setMinVisibleChange((float) r2, (java.lang.String[]) r5)
+            float r0 = r10.mBlurRatio
+            float r2 = r10.mToBlurRatio
+            int r0 = (r0 > r2 ? 1 : (r0 == r2 ? 0 : -1))
+            if (r0 == 0) goto L_0x00c2
+            java.lang.Object[] r0 = new java.lang.Object[r7]
+            r0[r4] = r8
+            miuix.animation.IStateStyle r0 = miuix.animation.Folme.useValue(r0)
             java.lang.Object[] r1 = new java.lang.Object[r6]
-            r1[r5] = r4
-            java.lang.Float r0 = java.lang.Float.valueOf(r0)
-            r1[r7] = r0
-            r11.to(r1)
-            goto L_0x00cf
-        L_0x00c6:
-            java.lang.Object r11 = com.android.systemui.Dependency.get(r1)
-            com.android.systemui.statusbar.phone.StatusBarWindowManager r11 = (com.android.systemui.statusbar.phone.StatusBarWindowManager) r11
-            r11.setBlurRatio(r0)
-        L_0x00cf:
+            r1[r4] = r3
+            float r2 = r10.mBlurRatio
+            java.lang.Float r2 = java.lang.Float.valueOf(r2)
+            r1[r7] = r2
+            miuix.animation.IStateStyle r0 = r0.setTo((java.lang.Object[]) r1)
+            com.android.systemui.util.AutoCleanFloatTransitionListener r1 = r10.mBlurRatioListener
+            miuix.animation.IStateStyle r0 = r0.addListener(r1)
+            java.lang.Object[] r1 = new java.lang.Object[r6]
+            r1[r4] = r3
+            float r10 = r10.mToBlurRatio
+            java.lang.Float r10 = java.lang.Float.valueOf(r10)
+            r1[r7] = r10
+            r0.to(r1)
+            goto L_0x00cd
+        L_0x00c2:
+            java.lang.Object r0 = com.android.systemui.Dependency.get(r1)
+            com.android.systemui.statusbar.phone.StatusBarWindowManager r0 = (com.android.systemui.statusbar.phone.StatusBarWindowManager) r0
+            float r10 = r10.mToBlurRatio
+            r0.setBlurRatio(r10)
+        L_0x00cd:
             return
-        L_0x00d0:
-            if (r2 != r7) goto L_0x00e1
-            boolean r2 = r11.mKeyguardOccluded
-            if (r2 != 0) goto L_0x00e1
-            com.android.keyguard.wallpaper.MiuiKeyguardWallpaperController r2 = r11.mKeyguardWallpaperController
-            boolean r2 = r2.hasKeyguardWallpaperLayer()
-            float r3 = r11.calculateBlurInKeyguard()
-            goto L_0x00ef
-        L_0x00e1:
-            int r2 = r11.mStatusBarState
-            if (r2 != r6) goto L_0x000c
-            android.animation.ValueAnimator r2 = r11.mQsTopPaddingAnimator
-            if (r2 == 0) goto L_0x000d
-            float r2 = r2.getAnimatedFraction()
-            goto L_0x006c
-        L_0x00ef:
-            r11.mBlurRatio = r3
-            boolean r6 = com.android.keyguard.wallpaper.KeyguardWallpaperUtils.isSupportWallpaperBlur()
-            if (r6 == 0) goto L_0x011b
-            if (r2 == 0) goto L_0x010c
-            boolean r2 = r11.mKeyguardBouncerShowing
-            if (r2 != 0) goto L_0x010c
-            com.android.keyguard.wallpaper.MiuiKeyguardWallpaperController r11 = r11.mKeyguardWallpaperController
-            r11.requestWallpaperBlur(r0, r3)
-            java.lang.Object r11 = com.android.systemui.Dependency.get(r1)
-            com.android.systemui.statusbar.phone.StatusBarWindowManager r11 = (com.android.systemui.statusbar.phone.StatusBarWindowManager) r11
-            r11.setBlurRatio(r4, r5)
-            goto L_0x0124
-        L_0x010c:
-            com.android.keyguard.wallpaper.MiuiKeyguardWallpaperController r11 = r11.mKeyguardWallpaperController
-            r11.requestWallpaperBlur(r0, r4)
-            java.lang.Object r11 = com.android.systemui.Dependency.get(r1)
-            com.android.systemui.statusbar.phone.StatusBarWindowManager r11 = (com.android.systemui.statusbar.phone.StatusBarWindowManager) r11
-            r11.setBlurRatio(r3, r5)
-            goto L_0x0124
-        L_0x011b:
-            java.lang.Object r11 = com.android.systemui.Dependency.get(r1)
-            com.android.systemui.statusbar.phone.StatusBarWindowManager r11 = (com.android.systemui.statusbar.phone.StatusBarWindowManager) r11
-            r11.setBlurRatio(r3, r5)
-        L_0x0124:
+        L_0x00ce:
+            if (r2 != r7) goto L_0x00df
+            boolean r2 = r10.mKeyguardOccluded
+            if (r2 != 0) goto L_0x00df
+            com.android.keyguard.wallpaper.MiuiKeyguardWallpaperController r2 = r10.mKeyguardWallpaperController
+            boolean r4 = r2.hasKeyguardWallpaperLayer()
+            float r2 = r10.calculateBlurInKeyguard()
+            goto L_0x00ee
+        L_0x00df:
+            int r2 = r10.mStatusBarState
+            if (r2 != r6) goto L_0x00ed
+            android.animation.ValueAnimator r2 = r10.mQsTopPaddingAnimator
+            if (r2 == 0) goto L_0x00eb
+            float r5 = r2.getAnimatedFraction()
+        L_0x00eb:
+            r2 = r5
+            goto L_0x00ee
+        L_0x00ed:
+            r2 = r3
+        L_0x00ee:
+            r10.mBlurRatio = r2
+            boolean r5 = com.android.keyguard.wallpaper.KeyguardWallpaperUtils.isSupportWallpaperBlur()
+            if (r5 == 0) goto L_0x011a
+            if (r4 == 0) goto L_0x010b
+            boolean r4 = r10.mKeyguardBouncerShowing
+            if (r4 != 0) goto L_0x010b
+            com.android.keyguard.wallpaper.MiuiKeyguardWallpaperController r10 = r10.mKeyguardWallpaperController
+            r10.requestWallpaperBlur(r0, r2)
+            java.lang.Object r10 = com.android.systemui.Dependency.get(r1)
+            com.android.systemui.statusbar.phone.StatusBarWindowManager r10 = (com.android.systemui.statusbar.phone.StatusBarWindowManager) r10
+            r10.setBlurRatio(r3)
+            goto L_0x0123
+        L_0x010b:
+            com.android.keyguard.wallpaper.MiuiKeyguardWallpaperController r10 = r10.mKeyguardWallpaperController
+            r10.requestWallpaperBlur(r0, r3)
+            java.lang.Object r10 = com.android.systemui.Dependency.get(r1)
+            com.android.systemui.statusbar.phone.StatusBarWindowManager r10 = (com.android.systemui.statusbar.phone.StatusBarWindowManager) r10
+            r10.setBlurRatio(r2)
+            goto L_0x0123
+        L_0x011a:
+            java.lang.Object r10 = com.android.systemui.Dependency.get(r1)
+            com.android.systemui.statusbar.phone.StatusBarWindowManager r10 = (com.android.systemui.statusbar.phone.StatusBarWindowManager) r10
+            r10.setBlurRatio(r2)
+        L_0x0123:
             return
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.phone.NotificationPanelView.updateStatusBarWindowBlur():void");
@@ -2728,7 +2734,7 @@ public class NotificationPanelView extends PanelView implements ExpandableView.O
         View inflate = LayoutInflater.from(getContext()).inflate(R.layout.notification_panel_window_bg, (ViewGroup) null, false);
         this.mThemeBackgroundView = inflate;
         addView(inflate, indexOfChild);
-        updateThemeBackgroundVisibility(this.mStatusBarState);
+        updateThemeBackgroundVisibility();
     }
 
     public WindowInsets onApplyWindowInsets(WindowInsets windowInsets) {
@@ -2962,12 +2968,21 @@ public class NotificationPanelView extends PanelView implements ExpandableView.O
     public void onStartedWakingUp() {
         if (this.mIsDefaultTheme && this.mStatusBarState == 1 && !((MiuiFastUnlockController) Dependency.get(MiuiFastUnlockController.class)).isFastUnlock() && !this.mUpdateMonitor.isFingerprintUnlock()) {
             float dimension = this.mContext.getResources().getDimension(R.dimen.keyguard_clock_tranlation_y);
-            this.mKeyguardClockView.startAnimation(ViewAnimationUtils.generalWakeupTranslateAnimation(dimension));
+            if (DeviceLevelUtils.isLowEndDevice()) {
+                this.mKeyguardClockView.startAnimation(ViewAnimationUtils.generalWakeupAlphaAimation());
+            } else {
+                this.mKeyguardClockView.startAnimation(ViewAnimationUtils.generalWakeupTranslateAnimation(dimension));
+            }
             List<View> keyguardNotificationsViewList = getKeyguardNotificationsViewList(this.mStatusBar.mMaxAllowedKeyguardNotifications);
             for (int i = 0; i < keyguardNotificationsViewList.size(); i++) {
-                Animation generalWakeupTranslateAnimation = ViewAnimationUtils.generalWakeupTranslateAnimation(dimension);
-                generalWakeupTranslateAnimation.setStartOffset(((long) i) * 50);
-                keyguardNotificationsViewList.get(i).startAnimation(generalWakeupTranslateAnimation);
+                View view = keyguardNotificationsViewList.get(i);
+                if (DeviceLevelUtils.isLowEndDevice()) {
+                    view.startAnimation(ViewAnimationUtils.generalWakeupAlphaAimation());
+                } else {
+                    Animation generalWakeupTranslateAnimation = ViewAnimationUtils.generalWakeupTranslateAnimation(dimension);
+                    generalWakeupTranslateAnimation.setStartOffset(((long) i) * 50);
+                    view.startAnimation(generalWakeupTranslateAnimation);
+                }
             }
             this.mKeyguardBottomArea.getLeftView().startAnimation(ViewAnimationUtils.generalWakeupScaleAimation());
             this.mKeyguardBottomArea.getRightView().startAnimation(ViewAnimationUtils.generalWakeupScaleAimation());
@@ -3044,60 +3059,10 @@ public class NotificationPanelView extends PanelView implements ExpandableView.O
         if (z) {
             this.mHeadsUpExistenceChangedRunnable.run();
             updateNotificationTranslucency();
-        } else {
-            setHeadsUpAnimatingAway(true);
-            this.mNotificationStackScroller.runAfterAnimationFinished(this.mHeadsUpExistenceChangedRunnable);
-        }
-        updateClearBlurInfo(z);
-    }
-
-    private void updateClearBlurInfo(boolean z) {
-        if (z) {
-            registerClearBlur();
             return;
         }
-        if (getExpandedHeight() <= 0.0f) {
-            this.mNotificationStackScroller.runAfterAnimationFinished(new Runnable() {
-                public final void run() {
-                    NotificationPanelView.this.unregisterClearBlur();
-                }
-            });
-        } else {
-            unregisterClearBlur();
-        }
-    }
-
-    private void registerClearBlur() {
-        RenderLayerManager.getInstance().register(this.mClearBlurInfo);
-        RenderLayerManager.getInstance().runAfterDraw(getViewRootImpl(), new Runnable() {
-            public final void run() {
-                NotificationPanelView.this.lambda$registerClearBlur$3$NotificationPanelView();
-            }
-        });
-    }
-
-    /* access modifiers changed from: private */
-    /* renamed from: lambda$registerClearBlur$3 */
-    public /* synthetic */ void lambda$registerClearBlur$3$NotificationPanelView() {
-        post(new Runnable() {
-            public final void run() {
-                NotificationPanelView.this.lambda$registerClearBlur$2$NotificationPanelView();
-            }
-        });
-    }
-
-    /* access modifiers changed from: private */
-    /* renamed from: lambda$registerClearBlur$2 */
-    public /* synthetic */ void lambda$registerClearBlur$2$NotificationPanelView() {
-        this.mClearBlurRegistered = true;
-        updateStatusBarWindowBlur();
-    }
-
-    /* access modifiers changed from: private */
-    public void unregisterClearBlur() {
-        this.mClearBlurRegistered = false;
-        updateStatusBarWindowBlur();
-        RenderLayerManager.getInstance().unregister(this.mClearBlurInfo);
+        setHeadsUpAnimatingAway(true);
+        this.mNotificationStackScroller.runAfterAnimationFinished(this.mHeadsUpExistenceChangedRunnable);
     }
 
     public void setHeadsUpAnimatingAway(boolean z) {
@@ -3107,7 +3072,6 @@ public class NotificationPanelView extends PanelView implements ExpandableView.O
 
     public void onHeadsUpPinned(ExpandableNotificationRow expandableNotificationRow) {
         this.mNotificationStackScroller.onHeadsUpPinned(expandableNotificationRow);
-        updateStatusBarWindowBlur();
     }
 
     public void onHeadsUpUnPinned(ExpandableNotificationRow expandableNotificationRow) {
@@ -3151,15 +3115,15 @@ public class NotificationPanelView extends PanelView implements ExpandableView.O
             Slog.i(TAG, "Force update resources to ensure width is correct.");
             post(new Runnable() {
                 public final void run() {
-                    NotificationPanelView.this.lambda$onClosingFinished$4$NotificationPanelView();
+                    NotificationPanelView.this.lambda$onClosingFinished$2$NotificationPanelView();
                 }
             });
         }
     }
 
     /* access modifiers changed from: private */
-    /* renamed from: lambda$onClosingFinished$4 */
-    public /* synthetic */ void lambda$onClosingFinished$4$NotificationPanelView() {
+    /* renamed from: lambda$onClosingFinished$2 */
+    public /* synthetic */ void lambda$onClosingFinished$2$NotificationPanelView() {
         updateResources(false);
     }
 
@@ -3353,7 +3317,7 @@ public class NotificationPanelView extends PanelView implements ExpandableView.O
         String str7;
         String str8;
         super.dump(fileDescriptor, printWriter, strArr);
-        Object[] objArr = new Object[16];
+        Object[] objArr = new Object[17];
         objArr[0] = Float.valueOf(this.mQsExpansionHeight);
         objArr[1] = Integer.valueOf(this.mQsMinExpansionHeight);
         objArr[2] = Integer.valueOf(this.mQsMaxExpansionHeight);
@@ -3417,8 +3381,9 @@ public class NotificationPanelView extends PanelView implements ExpandableView.O
             str10 = "land";
         }
         objArr[14] = str10;
-        objArr[15] = this.mClockPositionAlgorithm.toString();
-        printWriter.println(String.format("      [NotificationPanelView: mQsExpansionHeight=%f mQsMinExpansionHeight=%d mQsMaxExpansionHeight=%d mIntercepting=%s mPanelExpanded=%s mQsExpanded=%s mQsFullyExpanded=%s mKeyguardShowing=%s mBlockTouches=%s mOnlyAffordanceInThisMotion=%s isTrackingHeadsUp=%s mConflictingQsExpansionGesture=%s mIsExpansionFromHeadsUp=%s mOrientation=%s orientation=%s mClockPositionAlgorithm=%s]", objArr));
+        objArr[15] = Float.valueOf(this.mBlurRatio);
+        objArr[16] = this.mClockPositionAlgorithm.toString();
+        printWriter.println(String.format("      [NotificationPanelView: mQsExpansionHeight=%f mQsMinExpansionHeight=%d mQsMaxExpansionHeight=%d mIntercepting=%s mPanelExpanded=%s mQsExpanded=%s mQsFullyExpanded=%s mKeyguardShowing=%s mBlockTouches=%s mOnlyAffordanceInThisMotion=%s isTrackingHeadsUp=%s mConflictingQsExpansionGesture=%s mIsExpansionFromHeadsUp=%s mOrientation=%s orientation=%s mBlurRatio=%f mClockPositionAlgorithm=%s]", objArr));
         printWriter.println(String.format("      [QsFrame: %s width=%d pv-width=%d]", new Object[]{this.mQsFrame.getLayoutParams().debug(""), Integer.valueOf(this.mQsFrame.getMeasuredWidth()), Integer.valueOf(getMeasuredWidth())}));
         this.mNotificationStackScroller.dump(fileDescriptor, printWriter, strArr);
     }
@@ -3503,8 +3468,14 @@ public class NotificationPanelView extends PanelView implements ExpandableView.O
         this.mKeyguardStatusBar.setDarkMode(!this.mForceBlack && KeyguardUpdateMonitor.isWallpaperColorLight(this.mContext));
     }
 
+    public boolean isForceBlack() {
+        return this.mForceBlack;
+    }
+
     public void setKeyguardIndicationController(KeyguardIndicationController keyguardIndicationController) {
         this.mKeyguardIndicationController = keyguardIndicationController;
+        this.mMiuiChargeController.setKeyguardIndicationController(keyguardIndicationController);
+        this.mKeyguardIndicationController.setChargeController(this.mMiuiChargeController);
     }
 
     public void onKeyguardOccludedChanged(boolean z) {
@@ -3679,24 +3650,23 @@ public class NotificationPanelView extends PanelView implements ExpandableView.O
         if (valueAnimator != null) {
             valueAnimator.cancel();
         }
-        ValueAnimator ofFloat = ObjectAnimator.ofFloat(new float[]{this.mKeyguardBouncerFraction, 0.0f});
-        this.mBouncerFractionAnimator = ofFloat;
-        if (z) {
-            ofFloat.setFloatValues(new float[]{this.mKeyguardBouncerFraction, 1.0f});
+        this.mBouncerFractionAnimator = ObjectAnimator.ofFloat(new float[]{this.mKeyguardBouncerFraction, 0.0f});
+        if (z && KeyguardWallpaperUtils.isWallpaperShouldBlur(this.mContext)) {
+            this.mBouncerFractionAnimator.setFloatValues(new float[]{this.mKeyguardBouncerFraction, 1.0f});
         }
         this.mBouncerFractionAnimator.setInterpolator(Interpolators.DECELERATE);
         this.mBouncerFractionAnimator.setDuration(300);
         this.mBouncerFractionAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-                NotificationPanelView.this.lambda$onBouncerShowingChanged$5$NotificationPanelView(valueAnimator);
+                NotificationPanelView.this.lambda$onBouncerShowingChanged$3$NotificationPanelView(valueAnimator);
             }
         });
         this.mBouncerFractionAnimator.start();
     }
 
     /* access modifiers changed from: private */
-    /* renamed from: lambda$onBouncerShowingChanged$5 */
-    public /* synthetic */ void lambda$onBouncerShowingChanged$5$NotificationPanelView(ValueAnimator valueAnimator) {
+    /* renamed from: lambda$onBouncerShowingChanged$3 */
+    public /* synthetic */ void lambda$onBouncerShowingChanged$3$NotificationPanelView(ValueAnimator valueAnimator) {
         setBouncerShowingFraction(((Float) valueAnimator.getAnimatedValue()).floatValue());
     }
 

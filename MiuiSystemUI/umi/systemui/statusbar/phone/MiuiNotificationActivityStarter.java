@@ -22,6 +22,7 @@ import android.util.MiuiMultiWindowUtils;
 import android.view.RemoteAnimationAdapter;
 import com.android.internal.statusbar.IStatusBarService;
 import com.android.internal.widget.LockPatternUtils;
+import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.MiuiKeyguardUtils;
 import com.android.systemui.Dependency;
 import com.android.systemui.Logger;
@@ -432,7 +433,7 @@ public class MiuiNotificationActivityStarter implements NotificationActivityStar
                                 MiuiNotificationActivityStarter.this.mBubbleController.expandStackAndSelectBubble(str);
                             }
                         };
-                        if (MiuiKeyguardUtils.isUserUnlocked(MiuiNotificationActivityStarter.this.mContext)) {
+                        if (MiuiKeyguardUtils.isUserUnlocked(MiuiNotificationActivityStarter.this.mContext) || KeyguardUpdateMonitor.getInstance(MiuiNotificationActivityStarter.this.mContext).isUserUnlocked()) {
                             ((UiOffloadThread) Dependency.get(UiOffloadThread.class)).submit(r2);
                         } else {
                             Runnable unused = MiuiNotificationActivityStarter.this.mRunnable = r2;

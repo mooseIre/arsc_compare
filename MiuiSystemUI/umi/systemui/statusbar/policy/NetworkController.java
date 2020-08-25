@@ -2,6 +2,7 @@ package com.android.systemui.statusbar.policy;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import com.android.settingslib.net.DataUsageController;
 import com.android.settingslib.wifi.AccessPoint;
 import com.android.systemui.DemoMode;
@@ -112,6 +113,8 @@ public interface NetworkController extends CallbackController<SignalCallback>, D
 
     DataUsageController getMobileDataController();
 
+    Resources getResourcesForOperator(int i);
+
     SignalState getSignalState();
 
     boolean hasEmergencyCryptKeeperText();
@@ -122,7 +125,9 @@ public interface NetworkController extends CallbackController<SignalCallback>, D
 
     boolean hideVolteForOperation(int i);
 
-    boolean isMobileDataSupported(int i);
+    boolean hideVowifiForOperation(int i);
+
+    boolean isMobileDataSupported();
 
     boolean isMobileTypeShownWhenWifiOn(int i);
 

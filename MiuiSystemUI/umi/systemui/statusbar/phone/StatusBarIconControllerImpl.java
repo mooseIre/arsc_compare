@@ -146,7 +146,7 @@ public class StatusBarIconControllerImpl extends StatusBarIconList implements Tu
     }
 
     public StatusBarIconControllerImpl(@Inject Context context) {
-        super(context.getResources().getStringArray(17236083));
+        super(context.getResources().getStringArray(17236084));
         ((ConfigurationController) Dependency.get(ConfigurationController.class)).addCallback(this);
         DarkIconDispatcher darkIconDispatcher = (DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class);
         this.mContext = context;

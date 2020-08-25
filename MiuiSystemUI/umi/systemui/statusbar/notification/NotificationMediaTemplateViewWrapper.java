@@ -27,6 +27,7 @@ import com.android.systemui.Dependency;
 import com.android.systemui.plugins.R;
 import com.android.systemui.statusbar.ExpandableNotificationRow;
 import com.android.systemui.statusbar.notification.NotificationMediaTemplateViewWrapper;
+import com.xiaomi.stat.d;
 import java.util.Timer;
 
 public class NotificationMediaTemplateViewWrapper extends NotificationHeaderViewWrapper {
@@ -82,6 +83,8 @@ public class NotificationMediaTemplateViewWrapper extends NotificationHeaderView
     public MediaController mMediaController;
     /* access modifiers changed from: private */
     public MediaMetadata mMediaMetadata;
+    /* access modifiers changed from: private */
+    public ImageView mMediaSeamlessButton;
     /* access modifiers changed from: private */
     public TextView mMediaText;
     /* access modifiers changed from: private */
@@ -179,11 +182,15 @@ public class NotificationMediaTemplateViewWrapper extends NotificationHeaderView
     }
 
     private void resolveMediaViews() {
-        this.mPicture = (ImageView) this.mView.findViewById(16909404);
-        this.mMainColumnContainer = (ViewGroup) this.mView.findViewById(16909248);
-        this.mMediaActions = (ViewGroup) this.mView.findViewById(16909168);
+        this.mPicture = (ImageView) this.mView.findViewById(16909389);
+        this.mMainColumnContainer = (ViewGroup) this.mView.findViewById(16909239);
+        this.mMediaActions = (ViewGroup) this.mView.findViewById(16909161);
         this.mMediaTitle = (TextView) this.mView.findViewById(16908310);
-        this.mMediaText = (TextView) this.mView.findViewById(16909540);
+        this.mMediaText = (TextView) this.mView.findViewById(16909525);
+        int identifier = this.mView.getContext().getResources().getIdentifier("media_seamless", d.h, "android");
+        if (identifier != 0) {
+            this.mMediaSeamlessButton = (ImageView) this.mView.findViewById(identifier);
+        }
     }
 
     private void handleMediaViews() {
@@ -195,6 +202,7 @@ public class NotificationMediaTemplateViewWrapper extends NotificationHeaderView
         this.mStyleProcessor.handleMainColumn();
         this.mStyleProcessor.handleTitleText();
         this.mStyleProcessor.handleActions();
+        this.mStyleProcessor.handleMiuiMediaSeamlessButton();
         this.mStyleProcessor.handleRightIcon();
     }
 
@@ -246,7 +254,7 @@ public class NotificationMediaTemplateViewWrapper extends NotificationHeaderView
                 }
             }
         }
-        ViewStub viewStub = (ViewStub) this.mView.findViewById(16909260);
+        ViewStub viewStub = (ViewStub) this.mView.findViewById(16909251);
         if (viewStub instanceof ViewStub) {
             viewStub.setLayoutInflater(LayoutInflater.from(this.mContext));
             viewStub.setLayoutResource(R.layout.notification_material_media_seekbar);
@@ -391,7 +399,7 @@ public class NotificationMediaTemplateViewWrapper extends NotificationHeaderView
 
     /* access modifiers changed from: private */
     public boolean isNormalMedia() {
-        return this.mView.getId() == 16909516 && "media".equals(this.mView.getTag());
+        return this.mView.getId() == 16909501 && "media".equals(this.mView.getTag());
     }
 
     private class MediaStyleProcessor {
@@ -437,9 +445,13 @@ public class NotificationMediaTemplateViewWrapper extends NotificationHeaderView
 
         /* access modifiers changed from: package-private */
         public void handleTitleText() {
-            NotificationMediaTemplateViewWrapper.this.mMediaTitle.setTextSize(0, (float) NotificationMediaTemplateViewWrapper.this.mMediaTitleTextSize);
-            NotificationMediaTemplateViewWrapper.this.mMediaText.setTextSize(0, (float) NotificationMediaTemplateViewWrapper.this.mMediaTextTextSize);
-            NotificationMediaTemplateViewWrapper.this.mMediaText.setSingleLine(true);
+            if (NotificationMediaTemplateViewWrapper.this.mMediaTitle != null) {
+                NotificationMediaTemplateViewWrapper.this.mMediaTitle.setTextSize(0, (float) NotificationMediaTemplateViewWrapper.this.mMediaTitleTextSize);
+            }
+            if (NotificationMediaTemplateViewWrapper.this.mMediaText != null) {
+                NotificationMediaTemplateViewWrapper.this.mMediaText.setTextSize(0, (float) NotificationMediaTemplateViewWrapper.this.mMediaTextTextSize);
+                NotificationMediaTemplateViewWrapper.this.mMediaText.setSingleLine(true);
+            }
         }
 
         /* access modifiers changed from: package-private */
@@ -447,8 +459,18 @@ public class NotificationMediaTemplateViewWrapper extends NotificationHeaderView
             ViewGroup.MarginLayoutParams marginLayoutParams = (ViewGroup.MarginLayoutParams) NotificationMediaTemplateViewWrapper.this.mMediaActions.getLayoutParams();
             marginLayoutParams.leftMargin = NotificationMediaTemplateViewWrapper.this.mMediaActionsMargin;
             marginLayoutParams.topMargin = NotificationMediaTemplateViewWrapper.this.mMediaActionsMargin;
+            marginLayoutParams.rightMargin = NotificationMediaTemplateViewWrapper.this.mMediaActionsMargin;
             marginLayoutParams.bottomMargin = NotificationMediaTemplateViewWrapper.this.isNormalMedia() ? 0 : NotificationMediaTemplateViewWrapper.this.mMediaActionsMargin;
             NotificationMediaTemplateViewWrapper.this.mMediaActions.setLayoutParams(marginLayoutParams);
+        }
+
+        /* access modifiers changed from: package-private */
+        public void handleMiuiMediaSeamlessButton() {
+            int identifier;
+            if (NotificationMediaTemplateViewWrapper.this.mMediaSeamlessButton != null && (identifier = NotificationMediaTemplateViewWrapper.this.mView.getContext().getResources().getIdentifier("ic_media_seamless", "drawable", "android")) != 0) {
+                NotificationMediaTemplateViewWrapper.this.mMediaSeamlessButton.setImageResource(identifier);
+                NotificationMediaTemplateViewWrapper.this.mMediaSeamlessButton.setImageTintList(ColorStateList.valueOf(NotificationMediaTemplateViewWrapper.this.getNotificationHeader().getOriginalIconColor()));
+            }
         }
 
         /* access modifiers changed from: package-private */

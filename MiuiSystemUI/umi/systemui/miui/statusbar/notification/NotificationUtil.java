@@ -9,6 +9,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.Icon;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.service.notification.StatusBarNotification;
 import android.text.TextUtils;
 import android.widget.ImageView;
@@ -22,6 +23,7 @@ import com.android.systemui.miui.statusbar.ExpandedNotification;
 import com.android.systemui.miui.statusbar.policy.UsbNotificationController;
 import com.android.systemui.plugins.R;
 import com.android.systemui.statusbar.NotificationData;
+import com.android.systemui.statusbar.notification.MiuiNotificationCompat;
 import com.xiaomi.stat.c.c;
 import miui.R$style;
 import miui.content.res.IconCustomizer;
@@ -29,7 +31,24 @@ import miui.securityspace.CrossUserUtils;
 import miui.securityspace.XSpaceUserHandle;
 
 public class NotificationUtil {
-    private static int sNotificationStyle = (Constants.SHOW_NOTIFICATION_HEADER ? 1 : 0);
+    private static int sNotificationStyle = (Constants.IS_INTERNATIONAL ? 1 : 0);
+
+    public static int getUserFold(Context context) {
+        return Settings.Global.getInt(context.getContentResolver(), "user_fold", 0);
+    }
+
+    public static int getUserAggregate(Context context) {
+        return Settings.Global.getInt(context.getContentResolver(), "user_aggregate", 0);
+    }
+
+    public static boolean isXmsfChannel(String str, String str2) {
+        if (!TextUtils.isEmpty(str2)) {
+            if (str2.startsWith(String.format("mipush|%s|pre", new Object[]{str}))) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     public static boolean isHybrid(ExpandedNotification expandedNotification) {
         return expandedNotification != null && "com.miui.hybrid".equals(expandedNotification.getBasePkg());
@@ -83,19 +102,39 @@ public class NotificationUtil {
         return null;
     }
 
-    public static void applyAppIcon(Context context, ExpandedNotification expandedNotification, ImageView imageView) {
+    public static void applyAppIconAllowCustom(Context context, ExpandedNotification expandedNotification, ImageView imageView) {
         if (imageView != null) {
-            Drawable appIcon = expandedNotification.getAppIcon();
-            if (isHybrid(expandedNotification) && hasLargeIcon(expandedNotification.getNotification())) {
-                appIcon = getLargeIconDrawable(context, expandedNotification.getNotification());
+            Drawable customAppIcon = getCustomAppIcon(context, expandedNotification);
+            if (customAppIcon == null) {
+                customAppIcon = getAppIcon(context, expandedNotification);
             }
-            if (appIcon == null) {
-                appIcon = expandedNotification.getNotification().getSmallIcon().loadDrawable(context);
-            }
-            if (appIcon != null) {
-                imageView.setImageDrawable(XSpaceUserHandle.getXSpaceIcon(context, appIcon, expandedNotification.getUser()));
+            if (customAppIcon != null) {
+                imageView.setImageDrawable(XSpaceUserHandle.getXSpaceIcon(context, customAppIcon, expandedNotification.getUser()));
             }
         }
+    }
+
+    public static void applyAppIcon(Context context, ExpandedNotification expandedNotification, ImageView imageView) {
+        Drawable appIcon;
+        if (imageView != null && (appIcon = getAppIcon(context, expandedNotification)) != null) {
+            imageView.setImageDrawable(XSpaceUserHandle.getXSpaceIcon(context, appIcon, expandedNotification.getUser()));
+        }
+    }
+
+    private static Drawable getAppIcon(Context context, ExpandedNotification expandedNotification) {
+        Drawable appIcon = expandedNotification.getAppIcon();
+        if (isHybrid(expandedNotification) && hasLargeIcon(expandedNotification.getNotification())) {
+            appIcon = getLargeIconDrawable(context, expandedNotification.getNotification());
+        }
+        return appIcon == null ? expandedNotification.getNotification().getSmallIcon().loadDrawable(context) : appIcon;
+    }
+
+    private static Drawable getCustomAppIcon(Context context, ExpandedNotification expandedNotification) {
+        Icon miuiAppIcon;
+        if (((NotificationSettingsManager) Dependency.get(NotificationSettingsManager.class)).canCustomAppIcon(expandedNotification.getBasePkg()) && (miuiAppIcon = MiuiNotificationCompat.getMiuiAppIcon(expandedNotification.getNotification())) != null) {
+            return ((AppIconsManager) Dependency.get(AppIconsManager.class)).getIconStyleDrawable(miuiAppIcon.loadDrawable(context), true);
+        }
+        return null;
     }
 
     public static Drawable getRowIcon(Context context, ExpandedNotification expandedNotification) {
@@ -142,7 +181,7 @@ public class NotificationUtil {
 
     private static boolean isImeNotification(ExpandedNotification expandedNotification) {
         int id = expandedNotification.getId();
-        return "android".equals(expandedNotification.getPackageName()) && (id == 17041220 || id == 8);
+        return "android".equals(expandedNotification.getPackageName()) && (id == 17041302 || id == 8);
     }
 
     public static boolean isMissedCallNotification(ExpandedNotification expandedNotification) {
@@ -234,7 +273,7 @@ public class NotificationUtil {
     }
 
     public static boolean isExpandingEnabled(boolean z) {
-        return Constants.SHOW_NOTIFICATION_HEADER && !z;
+        return Constants.IS_INTERNATIONAL && !z;
     }
 
     public static boolean showMiuiStyle() {
@@ -274,6 +313,14 @@ public class NotificationUtil {
     public static CharSequence resolveSubText(Notification notification) {
         CharSequence charSequence = notification.extras.getCharSequence("android.subText");
         return charSequence != null ? charSequence : "";
+    }
+
+    public static boolean isInboxStyle(Notification notification) {
+        return Notification.InboxStyle.class.equals(notification.getNotificationStyle());
+    }
+
+    public static boolean isMessagingStyle(Notification notification) {
+        return Notification.MessagingStyle.class.equals(notification.getNotificationStyle());
     }
 
     public static boolean showSingleLine(Notification notification) {

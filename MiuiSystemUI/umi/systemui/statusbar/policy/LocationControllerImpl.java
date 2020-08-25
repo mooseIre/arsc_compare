@@ -1,6 +1,5 @@
 package com.android.systemui.statusbar.policy;
 
-import android.app.ActivityManager;
 import android.app.AppOpsManager;
 import android.app.NotificationManager;
 import android.app.StatusBarManager;
@@ -14,6 +13,7 @@ import android.os.Message;
 import android.os.UserHandle;
 import android.os.UserHandleCompat;
 import android.os.UserManager;
+import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.systemui.qs.tiles.TilesHelper;
 import com.android.systemui.statusbar.policy.LocationController;
 import com.android.systemui.statusbar.policy.LocationControllerImpl;
@@ -59,7 +59,7 @@ public class LocationControllerImpl extends BroadcastReceiver implements Locatio
     }
 
     public boolean setLocationEnabled(boolean z) {
-        int currentUser = ActivityManager.getCurrentUser();
+        int currentUser = KeyguardUpdateMonitor.getCurrentUser();
         if (isUserLocationRestricted(currentUser)) {
             return false;
         }
@@ -67,7 +67,7 @@ public class LocationControllerImpl extends BroadcastReceiver implements Locatio
     }
 
     public boolean isLocationEnabled() {
-        return TilesHelper.isLocationEnabled(this.mContext, ActivityManager.getCurrentUser());
+        return TilesHelper.isLocationEnabled(this.mContext, KeyguardUpdateMonitor.getCurrentUser());
     }
 
     public boolean isLocationActive() {
@@ -145,8 +145,8 @@ public class LocationControllerImpl extends BroadcastReceiver implements Locatio
             r4 = 1
             if (r3 == 0) goto L_0x001e
             if (r1 == 0) goto L_0x001e
-            r0 = 285671445(0x11070015, float:1.0649647E-28)
-            r1 = 2131821350(0x7f110326, float:1.927544E38)
+            r0 = 285671442(0x11070012, float:1.0649644E-28)
+            r1 = 2131821379(0x7f110343, float:1.92755E38)
             r3 = r2
             goto L_0x003c
         L_0x001e:
@@ -162,12 +162,12 @@ public class LocationControllerImpl extends BroadcastReceiver implements Locatio
         L_0x002d:
             boolean r0 = com.android.systemui.Constants.SUPPORT_DUAL_GPS
             if (r0 == 0) goto L_0x0035
-            r0 = 2131233383(0x7f080a67, float:1.8082902E38)
+            r0 = 2131233627(0x7f080b5b, float:1.8083397E38)
             goto L_0x0038
         L_0x0035:
-            r0 = 2131233391(0x7f080a6f, float:1.8082918E38)
+            r0 = 2131233637(0x7f080b65, float:1.8083417E38)
         L_0x0038:
-            r1 = 2131821351(0x7f110327, float:1.9275443E38)
+            r1 = 2131821380(0x7f110344, float:1.9275502E38)
             r3 = r4
         L_0x003c:
             r5 = 252119(0x3d8d7, float:3.53294E-40)
@@ -234,10 +234,10 @@ public class LocationControllerImpl extends BroadcastReceiver implements Locatio
             android.content.res.Resources r15 = r15.getResources()
             boolean r3 = com.android.systemui.Constants.SUPPORT_DUAL_GPS
             if (r3 == 0) goto L_0x00d4
-            r3 = 2131233041(0x7f080911, float:1.8082208E38)
+            r3 = 2131233282(0x7f080a02, float:1.8082697E38)
             goto L_0x00d7
         L_0x00d4:
-            r3 = 2131233043(0x7f080913, float:1.8082212E38)
+            r3 = 2131233284(0x7f080a04, float:1.8082701E38)
         L_0x00d7:
             android.graphics.Bitmap r15 = android.graphics.BitmapFactory.decodeResource(r15, r3)
             r1.setLargeIcon(r15)

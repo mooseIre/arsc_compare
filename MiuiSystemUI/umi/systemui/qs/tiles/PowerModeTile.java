@@ -1,6 +1,5 @@
 package com.android.systemui.qs.tiles;
 
-import android.app.ActivityManager;
 import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Intent;
@@ -10,6 +9,7 @@ import android.os.UserHandle;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.widget.Switch;
+import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.systemui.plugins.R;
 import com.android.systemui.plugins.qs.QSTile;
 import com.android.systemui.qs.QSHost;
@@ -64,7 +64,7 @@ public class PowerModeTile extends QSTileImpl<QSTile.BooleanState> {
             str = "high";
         }
         SystemProperties.set("persist.sys.aries.power_profile", str);
-        Settings.System.putStringForUser(this.mResolver, "power_mode", str, ActivityManager.getCurrentUser());
+        Settings.System.putStringForUser(this.mResolver, "power_mode", str, KeyguardUpdateMonitor.getCurrentUser());
         this.mContext.sendBroadcastAsUser(new Intent("miui.intent.action.POWER_MODE_CHANGE"), UserHandle.CURRENT);
     }
 

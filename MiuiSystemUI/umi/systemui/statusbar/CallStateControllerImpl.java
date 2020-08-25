@@ -8,10 +8,6 @@ public class CallStateControllerImpl implements CallStateController {
     private SparseArray<Integer> mCallStateArray = new SparseArray<>();
     private int mSimCount;
 
-    public int getCallState(int i) {
-        return this.mCallStateArray.get(i, 0).intValue();
-    }
-
     public int getCallState() {
         return this.mCallState;
     }

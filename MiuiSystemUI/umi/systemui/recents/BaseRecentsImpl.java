@@ -45,6 +45,7 @@ import android.widget.Toast;
 import androidx.preference.PreferenceManager;
 import com.android.internal.os.BackgroundThread;
 import com.android.internal.policy.DockedDividerUtils;
+import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.systemui.Application;
 import com.android.systemui.Constants;
 import com.android.systemui.Dependency;
@@ -76,6 +77,7 @@ import com.android.systemui.recents.events.activity.LaunchNextTaskRequestEvent;
 import com.android.systemui.recents.events.activity.MultiWindowStateChangedEvent;
 import com.android.systemui.recents.events.activity.RecentsActivityStartingEvent;
 import com.android.systemui.recents.events.activity.RotationChangedEvent;
+import com.android.systemui.recents.events.activity.SuperPowerModeChangedEvent;
 import com.android.systemui.recents.events.activity.ThumbnailBlurPkgsChangedEvent;
 import com.android.systemui.recents.events.activity.ToggleRecentsEvent;
 import com.android.systemui.recents.events.activity.UndockingTaskEvent;
@@ -260,8 +262,7 @@ public abstract class BaseRecentsImpl {
     private boolean mIsSizeReset;
     /* access modifiers changed from: private */
     public boolean mIsStartRecent = false;
-    /* access modifiers changed from: private */
-    public boolean mIsSuperPowerMode;
+    private boolean mIsSuperPowerMode;
     protected KeyguardManager mKM;
     private String mLastResumedClassName;
     protected long mLastToggleTime;
@@ -357,15 +358,6 @@ public abstract class BaseRecentsImpl {
     public int mScreenWidth;
     /* access modifiers changed from: private */
     public String mScreeningPkg;
-    private ContentObserver mSuperSavePowerObserver = new ContentObserver(this.mHandler) {
-        public void onChange(boolean z) {
-            BaseRecentsImpl baseRecentsImpl = BaseRecentsImpl.this;
-            boolean unused = baseRecentsImpl.mIsSuperPowerMode = MiuiSettings.System.isSuperSaveModeOpen(baseRecentsImpl.mContext, UserHandle.myUserId());
-            if (BaseRecentsImpl.this.mNavStubView != null) {
-                BaseRecentsImpl.this.mNavStubView.setIsSuperPowerMode(BaseRecentsImpl.this.mIsSuperPowerMode);
-            }
-        }
-    };
     Rect mTaskStackBounds = new Rect();
     SystemServicesProxy.TaskStackListener mTaskStackListener;
     protected Bitmap mThumbTransitionBitmapCache;
@@ -414,6 +406,7 @@ public abstract class BaseRecentsImpl {
         this.mContext.getContentResolver().registerContentObserver(CloudDataHelper.URI_CLOUD_ALL_DATA_NOTIFY, false, this.mCloudDataObserver);
         registerScreeningModeObserver();
         Settings.Secure.putInt(this.mContext.getContentResolver(), "systemui_fsgesture_support_superpower", 1);
+        this.mIsSuperPowerMode = MiuiSettings.System.isSuperSaveModeOpen(this.mContext, UserHandle.myUserId());
     }
 
     public void release() {
@@ -440,7 +433,6 @@ public abstract class BaseRecentsImpl {
         unregisterContentObserverSafely(this.mAppSwitchAnimChangeListener);
         unregisterReceiverSafely(this.mReceiver);
         unregisterReceiverSafely(this.mFsgReceiver);
-        unregisterContentObserverSafely(this.mSuperSavePowerObserver);
     }
 
     private void unregisterContentObserverSafely(ContentObserver contentObserver) {
@@ -486,7 +478,7 @@ public abstract class BaseRecentsImpl {
         if (this.mThumbnailBlurObserver == null) {
             this.mThumbnailBlurObserver = new ContentObserver(this.mHandler) {
                 public void onChange(boolean z) {
-                    HashSet<String> convertStringToSet = Utilities.convertStringToSet(MiuiSettings.System.getStringForUser(BaseRecentsImpl.this.mContext.getContentResolver(), "miui_recents_privacy_thumbnail_blur", -2));
+                    HashSet<String> convertStringToSet = Utilities.convertStringToSet(MiuiSettings.System.getStringForUser(BaseRecentsImpl.this.mContext.getContentResolver(), "miui_recents_privacy_thumbnail_blur", KeyguardUpdateMonitor.getCurrentUser()));
                     RecentsEventBus.getDefault().send(new ThumbnailBlurPkgsChangedEvent(convertStringToSet));
                     Iterator<String> it = convertStringToSet.iterator();
                     while (it.hasNext()) {
@@ -599,17 +591,17 @@ public abstract class BaseRecentsImpl {
                     Log.d("RecentsImpl", "notifyGestureStartRecents");
                     BaseRecentsImpl.this.mHandler.removeMessages(100);
                     BaseRecentsImpl.this.mHandler.sendMessage(BaseRecentsImpl.this.mHandler.obtainMessage(100));
-                    BaseRecentsImpl.this.mHandler.removeMessages(R.styleable.AppCompatTheme_textAppearanceListItem);
-                    BaseRecentsImpl.this.mHandler.sendMessage(BaseRecentsImpl.this.mHandler.obtainMessage(R.styleable.AppCompatTheme_textAppearanceListItem));
-                    BaseRecentsImpl.this.mHandler.removeMessages(R.styleable.AppCompatTheme_textAppearanceSearchResultTitle);
-                    BaseRecentsImpl.this.mHandler.sendMessageDelayed(BaseRecentsImpl.this.mHandler.obtainMessage(R.styleable.AppCompatTheme_textAppearanceSearchResultTitle), 500);
+                    BaseRecentsImpl.this.mHandler.removeMessages(R.styleable.AppCompatTheme_switchStyle);
+                    BaseRecentsImpl.this.mHandler.sendMessage(BaseRecentsImpl.this.mHandler.obtainMessage(R.styleable.AppCompatTheme_switchStyle));
+                    BaseRecentsImpl.this.mHandler.removeMessages(R.styleable.AppCompatTheme_textAppearancePopupMenuHeader);
+                    BaseRecentsImpl.this.mHandler.sendMessageDelayed(BaseRecentsImpl.this.mHandler.obtainMessage(R.styleable.AppCompatTheme_textAppearancePopupMenuHeader), 500);
                 }
 
                 public void notifyGestureAnimationStart() {
                     long j;
                     Log.d("RecentsImpl", "notifyGestureAnimationStart");
-                    BaseRecentsImpl.this.mHandler.removeMessages(R.styleable.AppCompatTheme_textAppearancePopupMenuHeader);
-                    Message obtainMessage = BaseRecentsImpl.this.mHandler.obtainMessage(R.styleable.AppCompatTheme_textAppearancePopupMenuHeader);
+                    BaseRecentsImpl.this.mHandler.removeMessages(R.styleable.AppCompatTheme_textAppearanceListItemSecondary);
+                    Message obtainMessage = BaseRecentsImpl.this.mHandler.obtainMessage(R.styleable.AppCompatTheme_textAppearanceListItemSecondary);
                     try {
                         j = (long) ((BaseRecentsImpl.this.mIWindowManager.getAnimationScale(2) * 300.0f) - 17.0f);
                     } catch (RemoteException e) {
@@ -618,22 +610,22 @@ public abstract class BaseRecentsImpl {
                     }
                     BaseRecentsImpl.this.mHandler.sendMessageDelayed(obtainMessage, j);
                     long unused = BaseRecentsImpl.this.mGestureAnimationStartTime = System.currentTimeMillis();
+                    BaseRecentsImpl.this.mHandler.removeMessages(R.styleable.AppCompatTheme_textAppearanceListItemSmall);
+                    BaseRecentsImpl.this.mHandler.sendMessage(BaseRecentsImpl.this.mHandler.obtainMessage(R.styleable.AppCompatTheme_textAppearanceListItemSmall));
                     BaseRecentsImpl.this.mHandler.removeMessages(R.styleable.AppCompatTheme_textAppearanceSearchResultSubtitle);
-                    BaseRecentsImpl.this.mHandler.sendMessage(BaseRecentsImpl.this.mHandler.obtainMessage(R.styleable.AppCompatTheme_textAppearanceSearchResultSubtitle));
-                    BaseRecentsImpl.this.mHandler.removeMessages(R.styleable.AppCompatTheme_textAppearanceSmallPopupMenu);
-                    BaseRecentsImpl.this.mHandler.sendMessageDelayed(BaseRecentsImpl.this.mHandler.obtainMessage(R.styleable.AppCompatTheme_textAppearanceSmallPopupMenu), 500);
+                    BaseRecentsImpl.this.mHandler.sendMessageDelayed(BaseRecentsImpl.this.mHandler.obtainMessage(R.styleable.AppCompatTheme_textAppearanceSearchResultSubtitle), 500);
                 }
 
                 public void notifyGestureAnimationCancel() {
                     Log.d("RecentsImpl", "notifyGestureAnimationCancel");
-                    BaseRecentsImpl.this.mHandler.removeMessages(R.styleable.AppCompatTheme_textAppearanceListItemSmall);
-                    BaseRecentsImpl.this.mHandler.sendMessage(BaseRecentsImpl.this.mHandler.obtainMessage(R.styleable.AppCompatTheme_textAppearanceListItemSmall));
+                    BaseRecentsImpl.this.mHandler.removeMessages(R.styleable.AppCompatTheme_textAppearanceListItem);
+                    BaseRecentsImpl.this.mHandler.sendMessage(BaseRecentsImpl.this.mHandler.obtainMessage(R.styleable.AppCompatTheme_textAppearanceListItem));
                 }
 
                 public void notifyGestureAnimationEnd() {
                     Log.d("RecentsImpl", "notifyGestureAnimationEnd");
-                    BaseRecentsImpl.this.mHandler.removeMessages(R.styleable.AppCompatTheme_textAppearanceListItemSecondary);
-                    BaseRecentsImpl.this.mHandler.sendMessage(BaseRecentsImpl.this.mHandler.obtainMessage(R.styleable.AppCompatTheme_textAppearanceListItemSecondary));
+                    BaseRecentsImpl.this.mHandler.removeMessages(R.styleable.AppCompatTheme_textAppearanceLargePopupMenu);
+                    BaseRecentsImpl.this.mHandler.sendMessage(BaseRecentsImpl.this.mHandler.obtainMessage(R.styleable.AppCompatTheme_textAppearanceLargePopupMenu));
                 }
             };
         }
@@ -682,6 +674,15 @@ public abstract class BaseRecentsImpl {
                 Log.d("RecentsImpl", "navstubview will be added: addFsgGestureWindow");
                 createAndAddNavStubView();
             }
+        }
+    }
+
+    public final void onBusEvent(SuperPowerModeChangedEvent superPowerModeChangedEvent) {
+        boolean z = superPowerModeChangedEvent.mIsSuperPowerMode;
+        this.mIsSuperPowerMode = z;
+        NavStubView navStubView = this.mNavStubView;
+        if (navStubView != null) {
+            navStubView.setIsSuperPowerMode(z);
         }
     }
 
@@ -822,9 +823,9 @@ public abstract class BaseRecentsImpl {
 
     /* access modifiers changed from: private */
     public void adaptToTopActivity() {
-        ComponentName topActivity = Util.getTopActivity(this.mContext);
-        if (topActivity != null) {
-            onResumed(topActivity.getClassName());
+        ComponentName lastResumedActivity = Util.getLastResumedActivity(this.mContext);
+        if (lastResumedActivity != null) {
+            onResumed(lastResumedActivity.getClassName());
         }
     }
 
@@ -893,8 +894,6 @@ public abstract class BaseRecentsImpl {
         this.mNavStubView = navStubView;
         this.mWindowManager.addView(navStubView, navStubView.getWindowParam(navStubView.getHotSpaceHeight()));
         if (UserHandle.myUserId() == 0) {
-            this.mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor("power_supersave_mode_open"), false, this.mSuperSavePowerObserver, UserHandle.myUserId());
-            this.mSuperSavePowerObserver.onChange(false);
             registerAssistObserver();
         }
     }
@@ -983,7 +982,7 @@ public abstract class BaseRecentsImpl {
             r10.<init>(r8)     // Catch:{ ActivityNotFoundException -> 0x006a }
             boolean r2 = sOneKeyCleaning     // Catch:{ ActivityNotFoundException -> 0x006a }
             if (r2 == 0) goto L_0x004b
-            r7 = 2131822151(0x7f110647, float:1.9277065E38)
+            r7 = 2131822182(0x7f110666, float:1.9277128E38)
             r6.showToast(r7)     // Catch:{ ActivityNotFoundException -> 0x006a }
             return
         L_0x004b:
@@ -1187,9 +1186,9 @@ public abstract class BaseRecentsImpl {
 
     private void reloadResources() {
         Resources resources = this.mContext.getResources();
-        resources.getDimensionPixelSize(17105519);
-        resources.getDimensionPixelSize(17105341);
-        resources.getDimensionPixelSize(17105346);
+        resources.getDimensionPixelSize(17105496);
+        resources.getDimensionPixelSize(17105337);
+        resources.getDimensionPixelSize(17105342);
         mTaskBarHeight = TaskStackLayoutAlgorithm.getDimensionForDevice(this.mContext, R.dimen.recents_task_view_header_height, R.dimen.recents_task_view_header_height, R.dimen.recents_task_view_header_height, R.dimen.recents_task_view_header_height_tablet_land, R.dimen.recents_task_view_header_height, R.dimen.recents_task_view_header_height_tablet_land);
     }
 
@@ -1475,8 +1474,8 @@ public abstract class BaseRecentsImpl {
                     this.mNavStubView.setVisibility(8);
                     showBackStubWindow();
                 } else if (this.mIsSuperPowerMode) {
-                    ComponentName topActivity = Util.getTopActivity(this.mContext);
-                    if (topActivity != null && "com.miui.home.launcher.Launcher:com.miui.personalassistant.fake.FakeStartActivity:com.miui.personalassistant.fake.FakeEndActivity:com.miui.superpower.SuperPowerLauncherActivity".contains(topActivity.getClassName())) {
+                    ComponentName lastResumedActivity = Util.getLastResumedActivity(this.mContext);
+                    if (lastResumedActivity != null && "com.miui.home.launcher.Launcher:com.miui.personalassistant.fake.FakeStartActivity:com.miui.personalassistant.fake.FakeEndActivity:com.miui.superpower.SuperPowerLauncherActivity".contains(lastResumedActivity.getClassName())) {
                         this.mNavStubView.setVisibility(8);
                         showBackStubWindow();
                     }
@@ -1488,8 +1487,8 @@ public abstract class BaseRecentsImpl {
                 this.mNavStubView.setVisibility(0);
                 showBackStubWindow();
             } else if ("typefrom_home".equals(str)) {
-                ComponentName topActivity2 = Util.getTopActivity(this.mContext);
-                if (topActivity2 != null && "com.miui.home.launcher.Launcher:com.miui.personalassistant.fake.FakeStartActivity:com.miui.personalassistant.fake.FakeEndActivity:com.miui.superpower.SuperPowerLauncherActivity".contains(topActivity2.getClassName())) {
+                ComponentName lastResumedActivity2 = Util.getLastResumedActivity(this.mContext);
+                if (lastResumedActivity2 != null && "com.miui.home.launcher.Launcher:com.miui.personalassistant.fake.FakeStartActivity:com.miui.personalassistant.fake.FakeEndActivity:com.miui.superpower.SuperPowerLauncherActivity".contains(lastResumedActivity2.getClassName())) {
                     if (this.mIsSuperPowerMode) {
                         this.mNavStubView.setVisibility(8);
                         hideBackStubWindow();
@@ -1596,7 +1595,7 @@ public abstract class BaseRecentsImpl {
             } else if (i != 2777) {
                 if (i != 2877) {
                     switch (i) {
-                        case R.styleable.AppCompatTheme_textAppearanceLargePopupMenu:
+                        case R.styleable.AppCompatTheme_spinnerStyle:
                             RecentsEventBus.getDefault().post(new FsGesturePreloadRecentsEvent());
                             RecentsEventBus.getDefault().send(new FsGestureEnterRecentsEvent());
                             if (BaseRecentsImpl.this.mNavStubView != null) {
@@ -1612,7 +1611,7 @@ public abstract class BaseRecentsImpl {
                                 return;
                             }
                             return;
-                        case R.styleable.AppCompatTheme_textAppearanceListItem:
+                        case R.styleable.AppCompatTheme_switchStyle:
                             Log.d("RecentsImpl", "handleMessage: MSG_START_RECENTS_ANIAMTION mRecentsVisible = " + BaseRecentsImpl.this.mRecentsVisible);
                             if (BaseRecentsImpl.this.mRecentsVisible) {
                                 if (BaseRecentsImpl.this.mNavStubView != null) {
@@ -1623,42 +1622,42 @@ public abstract class BaseRecentsImpl {
                                 boolean unused = BaseRecentsImpl.this.mIsStartRecent = true;
                                 return;
                             }
-                            removeMessages(R.styleable.AppCompatTheme_textAppearanceListItem);
-                            sendMessageDelayed(obtainMessage(R.styleable.AppCompatTheme_textAppearanceListItem), 20);
+                            removeMessages(R.styleable.AppCompatTheme_switchStyle);
+                            sendMessageDelayed(obtainMessage(R.styleable.AppCompatTheme_switchStyle), 20);
                             return;
-                        case R.styleable.AppCompatTheme_textAppearanceListItemSecondary:
+                        case R.styleable.AppCompatTheme_textAppearanceLargePopupMenu:
                             RecentsEventBus.getDefault().send(new FsGestureEnterRecentsCompleteEvent(true));
                             RecentsEventBus.getDefault().send(new ActivitySetDummyTranslucentEvent(false));
                             removeStartRecentsAnimMsg();
                             removeZoomRecentsMsg();
                             boolean unused2 = BaseRecentsImpl.this.mIsStartRecent = false;
                             return;
-                        case R.styleable.AppCompatTheme_textAppearanceListItemSmall:
+                        case R.styleable.AppCompatTheme_textAppearanceListItem:
                             RecentsEventBus.getDefault().send(new FsGestureSlideOutEvent());
                             BaseRecentsImpl.this.showBackStubWindow();
                             boolean unused3 = BaseRecentsImpl.this.mIsStartRecent = false;
                             removeStartRecentsAnimMsg();
                             removeZoomRecentsMsg();
                             return;
-                        case R.styleable.AppCompatTheme_textAppearancePopupMenuHeader:
+                        case R.styleable.AppCompatTheme_textAppearanceListItemSecondary:
                             RecentsEventBus.getDefault().send(new FsGestureShowFirstCardEvent());
                             RecentsEventBus.getDefault().send(new AnimFirstTaskViewAlphaEvent(1.0f, false));
                             return;
-                        case R.styleable.AppCompatTheme_textAppearanceSearchResultSubtitle:
+                        case R.styleable.AppCompatTheme_textAppearanceListItemSmall:
                             Log.d("RecentsImpl", "handleMessage: MSG_ZOOM_RECENT_VIEW mRecentsVisible = " + BaseRecentsImpl.this.mRecentsVisible + " mIsStartRecent = " + BaseRecentsImpl.this.mIsStartRecent);
                             if (!BaseRecentsImpl.this.mRecentsVisible || !BaseRecentsImpl.this.mIsStartRecent) {
-                                removeMessages(R.styleable.AppCompatTheme_textAppearanceSearchResultSubtitle);
-                                sendMessageDelayed(obtainMessage(R.styleable.AppCompatTheme_textAppearanceSearchResultSubtitle), 20);
+                                removeMessages(R.styleable.AppCompatTheme_textAppearanceListItemSmall);
+                                sendMessageDelayed(obtainMessage(R.styleable.AppCompatTheme_textAppearanceListItemSmall), 20);
                                 return;
                             }
                             RecentsEventBus.getDefault().send(new FsGestureEnterRecentsZoomEvent(System.currentTimeMillis() - BaseRecentsImpl.this.mGestureAnimationStartTime, (Runnable) null));
                             removeStartRecentsAnimMsg();
                             return;
-                        case R.styleable.AppCompatTheme_textAppearanceSearchResultTitle:
-                            removeMessages(R.styleable.AppCompatTheme_textAppearanceListItem);
+                        case R.styleable.AppCompatTheme_textAppearancePopupMenuHeader:
+                            removeMessages(R.styleable.AppCompatTheme_switchStyle);
                             return;
-                        case R.styleable.AppCompatTheme_textAppearanceSmallPopupMenu:
-                            removeMessages(R.styleable.AppCompatTheme_textAppearanceSearchResultSubtitle);
+                        case R.styleable.AppCompatTheme_textAppearanceSearchResultSubtitle:
+                            removeMessages(R.styleable.AppCompatTheme_textAppearanceListItemSmall);
                             return;
                         default:
                             return;
@@ -1675,13 +1674,13 @@ public abstract class BaseRecentsImpl {
         }
 
         private void removeStartRecentsAnimMsg() {
-            removeMessages(R.styleable.AppCompatTheme_textAppearanceListItem);
-            removeMessages(R.styleable.AppCompatTheme_textAppearanceSearchResultTitle);
+            removeMessages(R.styleable.AppCompatTheme_switchStyle);
+            removeMessages(R.styleable.AppCompatTheme_textAppearancePopupMenuHeader);
         }
 
         private void removeZoomRecentsMsg() {
+            removeMessages(R.styleable.AppCompatTheme_textAppearanceListItemSmall);
             removeMessages(R.styleable.AppCompatTheme_textAppearanceSearchResultSubtitle);
-            removeMessages(R.styleable.AppCompatTheme_textAppearanceSmallPopupMenu);
         }
     }
 

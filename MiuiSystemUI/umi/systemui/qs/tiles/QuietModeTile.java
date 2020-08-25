@@ -1,12 +1,14 @@
 package com.android.systemui.qs.tiles;
 
-import android.content.ComponentName;
 import android.content.Intent;
+import android.database.ContentObserver;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.provider.MiuiSettings;
+import android.provider.Settings;
 import android.widget.Switch;
 import com.android.systemui.Dependency;
+import com.android.systemui.Util;
 import com.android.systemui.miui.volume.VolumeUtil;
 import com.android.systemui.plugins.R;
 import com.android.systemui.plugins.qs.QSTile;
@@ -16,6 +18,15 @@ import com.android.systemui.statusbar.Icons;
 import com.android.systemui.statusbar.policy.SilentModeObserverController;
 
 public class QuietModeTile extends QSTileImpl<QSTile.BooleanState> implements SilentModeObserverController.SilentModeListener {
+    private ContentObserver mContentObserver = new ContentObserver(this.mHandler) {
+        public void onChange(boolean z) {
+            QuietModeTile.this.refreshState();
+        }
+
+        public void onChange(boolean z, Uri uri) {
+            QuietModeTile.this.refreshState();
+        }
+    };
     private final SilentModeObserverController mSilentModeObserverController = ((SilentModeObserverController) Dependency.get(SilentModeObserverController.class));
 
     public int getMetricsCategory() {
@@ -38,20 +49,22 @@ public class QuietModeTile extends QSTileImpl<QSTile.BooleanState> implements Si
     public void handleSetListening(boolean z) {
         if (z) {
             this.mSilentModeObserverController.addCallback(this);
-        } else {
-            this.mSilentModeObserverController.removeCallback(this);
+            this.mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor("mute_music_at_silent"), false, this.mContentObserver, -1);
+            return;
         }
+        this.mContext.getContentResolver().unregisterContentObserver(this.mContentObserver);
+        this.mSilentModeObserverController.removeCallback(this);
     }
 
     public Intent getLongClickIntent() {
-        return longClickQuietModeIntent();
+        return Util.getSilentModeIntent();
     }
 
     /* access modifiers changed from: protected */
     public void handleClick() {
         int i = 1;
         if (MiuiSettings.SilenceMode.isSupported) {
-            if (MiuiSettings.SilenceMode.getZenMode(this.mContext) == 1) {
+            if (VolumeUtil.getZenMode(this.mContext) == 1) {
                 i = 0;
             }
             VolumeUtil.setSilenceMode(this.mContext, i, (Uri) null);
@@ -67,7 +80,7 @@ public class QuietModeTile extends QSTileImpl<QSTile.BooleanState> implements Si
     /* access modifiers changed from: protected */
     public void handleUpdateState(QSTile.BooleanState booleanState, Object obj) {
         boolean z;
-        int zenMode = MiuiSettings.SilenceMode.getZenMode(this.mContext);
+        int zenMode = VolumeUtil.getZenMode(this.mContext);
         if (MiuiSettings.SilenceMode.isSupported) {
             z = zenMode == 1;
         } else {
@@ -92,17 +105,6 @@ public class QuietModeTile extends QSTileImpl<QSTile.BooleanState> implements Si
 
     public boolean isAvailable() {
         return ((ConnectivityManager) this.mContext.getSystemService("connectivity")).isNetworkSupported(0);
-    }
-
-    private Intent longClickQuietModeIntent() {
-        ComponentName unflattenFromString = ComponentName.unflattenFromString("com.android.settings/com.android.settings.Settings$MiuiSilentModeAcivity");
-        if (unflattenFromString == null) {
-            return null;
-        }
-        Intent intent = new Intent("android.intent.action.MAIN");
-        intent.setComponent(unflattenFromString);
-        intent.setFlags(335544320);
-        return intent;
     }
 
     public void onSilentModeChanged(boolean z) {

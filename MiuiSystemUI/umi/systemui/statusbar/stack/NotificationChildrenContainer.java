@@ -129,17 +129,17 @@ public class NotificationChildrenContainer extends ViewGroup {
         if (showGoogleStyle) {
             i = 0;
         } else {
-            i = resources.getDimensionPixelSize(17105370);
+            i = resources.getDimensionPixelSize(17105362);
         }
         this.mNotificationTopPadding = i;
         if (!showGoogleStyle) {
             i2 = resources.getDimensionPixelSize(R.dimen.notification_group_expanded_bottom_margin);
         }
         this.mExpandedBottomMargin = i2;
-        this.mCollapsedBottomMargin = (float) resources.getDimensionPixelSize(17105366);
+        this.mCollapsedBottomMargin = (float) resources.getDimensionPixelSize(17105359);
         this.mCollapsedButtonPadding = resources.getDimensionPixelSize(R.dimen.notification_collapsed_button_padding);
-        resources.getDimensionPixelSize(17105370);
-        this.mContentMarginEnd = resources.getDimensionPixelSize(17105367);
+        resources.getDimensionPixelSize(17105362);
+        this.mContentMarginEnd = resources.getDimensionPixelSize(17105360);
         this.mOverflowNumberTopPadding = resources.getDimensionPixelSize(R.dimen.notification_group_overflow_padding_top);
         this.mOverflowNumberBottomPadding = resources.getDimensionPixelSize(R.dimen.notification_group_overflow_padding_bottom);
         this.mOverflowNumberTopMargin = resources.getDimensionPixelSize(R.dimen.notification_group_overflow_margin_top);
@@ -178,17 +178,22 @@ public class NotificationChildrenContainer extends ViewGroup {
         if (viewGroup != null) {
             viewGroup.layout(0, 0, viewGroup.getMeasuredWidth(), this.mNotificationHeaderAmbient.getMeasuredHeight());
         }
-        ImageView imageView = this.mAppIcon;
-        if (imageView != null) {
+        if (this.mAppIcon != null) {
+            int width = isRTL() ? (getWidth() - this.mMiuiAppIconMargin) - this.mMiuiAppIconSize : this.mMiuiAppIconMargin;
             int i6 = this.mMiuiAppIconMargin;
+            ImageView imageView = this.mAppIcon;
             int i7 = this.mMiuiAppIconSize;
-            imageView.layout(i6, i6, i6 + i7, i7 + i6);
+            imageView.layout(width, i6, width + i7, i7 + i6);
         }
         if (this.mCollapsedButton != null) {
-            int width = (getWidth() - this.mContentMarginEnd) + this.mCollapsedButtonPadding;
+            int width2 = (getWidth() - this.mContentMarginEnd) + this.mCollapsedButtonPadding;
             TextView textView2 = this.mCollapsedButton;
-            textView2.layout(width - this.mCollapsedButton.getMeasuredWidth(), 0, width, textView2.getMeasuredHeight());
+            textView2.layout(width2 - this.mCollapsedButton.getMeasuredWidth(), 0, width2, textView2.getMeasuredHeight());
         }
+    }
+
+    private boolean isRTL() {
+        return (getResources().getConfiguration().screenLayout & 192) == 128;
     }
 
     /* access modifiers changed from: protected */
@@ -303,7 +308,7 @@ public class NotificationChildrenContainer extends ViewGroup {
             NotificationHeaderView apply = makeNotificationHeader.apply(getContext(), this);
             this.mNotificationHeader = apply;
             View findViewById = apply.findViewById(16908294);
-            this.mNotificationHeader.findViewById(16908958).setVisibility(0);
+            this.mNotificationHeader.findViewById(16908957).setVisibility(0);
             this.mNotificationHeader.setOnClickListener(this.mHeaderClickListener);
             this.mNotificationHeaderWrapper = NotificationViewWrapper.wrap(getContext(), this.mNotificationHeader, this.mContainingNotification);
             resetAppIcon(findViewById);
@@ -331,6 +336,7 @@ public class NotificationChildrenContainer extends ViewGroup {
             ImageView imageView = (ImageView) view;
             this.mAppIcon = imageView;
             addView(imageView);
+            setContentDescription(this.mContainingNotification.getStatusBarNotification().getAppName());
         }
     }
 
@@ -364,7 +370,7 @@ public class NotificationChildrenContainer extends ViewGroup {
             if (this.mNotificationHeaderLowPriority == null) {
                 NotificationHeaderView apply = makeLowPriorityContentView.apply(getContext(), this);
                 this.mNotificationHeaderLowPriority = apply;
-                apply.findViewById(16908958).setVisibility(0);
+                apply.findViewById(16908957).setVisibility(0);
                 this.mNotificationHeaderLowPriority.setOnClickListener(this.mHeaderClickListener);
                 this.mNotificationHeaderWrapperLowPriority = NotificationViewWrapper.wrap(getContext(), this.mNotificationHeaderLowPriority, this.mContainingNotification);
                 addView(this.mNotificationHeaderLowPriority, 0);
@@ -980,7 +986,7 @@ public class NotificationChildrenContainer extends ViewGroup {
             imageView.setVisibility(0);
         }
         if (NotificationUtil.showGoogleStyle()) {
-            this.mNotificationHeader.findViewById(16908958).setVisibility(0);
+            this.mNotificationHeader.findViewById(16908957).setVisibility(0);
         }
         updateChildrenClipping();
     }

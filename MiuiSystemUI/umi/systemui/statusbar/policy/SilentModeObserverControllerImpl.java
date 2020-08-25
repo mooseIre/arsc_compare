@@ -1,8 +1,13 @@
 package com.android.systemui.statusbar.policy;
 
 import android.content.Context;
+import android.database.ContentObserver;
+import android.os.Build;
+import android.os.Handler;
 import android.provider.MiuiSettings;
+import android.provider.Settings;
 import android.util.Log;
+import com.android.systemui.miui.volume.VolumeUtil;
 import com.android.systemui.settings.CurrentUserTracker;
 import com.android.systemui.statusbar.policy.SilentModeObserverController;
 import java.io.FileDescriptor;
@@ -28,19 +33,32 @@ public class SilentModeObserverControllerImpl implements SilentModeObserverContr
         this.mContext = context;
         AnonymousClass1 r3 = new ExtraTelephony.QuietModeEnableListener() {
             public void onQuietModeEnableChange(boolean z) {
+                if (Build.VERSION.SDK_INT > 29) {
+                    z = SilentModeObserverControllerImpl.this.isSilenceMode();
+                }
                 boolean unused = SilentModeObserverControllerImpl.this.mEnabled = z;
                 SilentModeObserverControllerImpl.this.dispatchListeners(z);
             }
         };
         this.mQuietModeObserver = r3;
         ExtraTelephony.registerQuietModeEnableListener(this.mContext, r3);
-        this.mEnabled = MiuiSettings.SilenceMode.isSilenceModeEnable(this.mContext);
+        if (Build.VERSION.SDK_INT > 29) {
+            this.mEnabled = isSilenceMode();
+            registerModeRinger();
+        } else {
+            this.mEnabled = MiuiSettings.SilenceMode.isSilenceModeEnable(this.mContext);
+        }
         AnonymousClass2 r32 = new CurrentUserTracker(this.mContext) {
             public void onUserSwitched(int i) {
-                SilentModeObserverControllerImpl silentModeObserverControllerImpl = SilentModeObserverControllerImpl.this;
-                boolean unused = silentModeObserverControllerImpl.mEnabled = MiuiSettings.SilenceMode.isSilenceModeEnable(silentModeObserverControllerImpl.mContext);
-                SilentModeObserverControllerImpl silentModeObserverControllerImpl2 = SilentModeObserverControllerImpl.this;
-                silentModeObserverControllerImpl2.dispatchListeners(silentModeObserverControllerImpl2.mEnabled);
+                if (Build.VERSION.SDK_INT > 29) {
+                    SilentModeObserverControllerImpl silentModeObserverControllerImpl = SilentModeObserverControllerImpl.this;
+                    boolean unused = silentModeObserverControllerImpl.mEnabled = silentModeObserverControllerImpl.isSilenceMode();
+                } else {
+                    SilentModeObserverControllerImpl silentModeObserverControllerImpl2 = SilentModeObserverControllerImpl.this;
+                    boolean unused2 = silentModeObserverControllerImpl2.mEnabled = MiuiSettings.SilenceMode.isSilenceModeEnable(silentModeObserverControllerImpl2.mContext);
+                }
+                SilentModeObserverControllerImpl silentModeObserverControllerImpl3 = SilentModeObserverControllerImpl.this;
+                silentModeObserverControllerImpl3.dispatchListeners(silentModeObserverControllerImpl3.mEnabled);
             }
         };
         this.mUserTracker = r32;
@@ -91,5 +109,24 @@ public class SilentModeObserverControllerImpl implements SilentModeObserverContr
 
     public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
         printWriter.println("SilentModeObserverController state:");
+    }
+
+    /* access modifiers changed from: private */
+    public boolean isSilenceMode() {
+        return VolumeUtil.getZenMode(this.mContext) != 0;
+    }
+
+    private void registerModeRinger() {
+        if (Build.VERSION.SDK_INT > 29) {
+            this.mContext.getContentResolver().registerContentObserver(Settings.Global.getUriFor("mode_ringer"), false, new ContentObserver(new Handler()) {
+                public void onChange(boolean z) {
+                    super.onChange(z);
+                    SilentModeObserverControllerImpl silentModeObserverControllerImpl = SilentModeObserverControllerImpl.this;
+                    boolean unused = silentModeObserverControllerImpl.mEnabled = silentModeObserverControllerImpl.isSilenceMode();
+                    SilentModeObserverControllerImpl silentModeObserverControllerImpl2 = SilentModeObserverControllerImpl.this;
+                    silentModeObserverControllerImpl2.dispatchListeners(silentModeObserverControllerImpl2.mEnabled);
+                }
+            }, -1);
+        }
     }
 }

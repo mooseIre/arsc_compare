@@ -27,6 +27,7 @@ import com.android.systemui.miui.ToastOverlayManager;
 import com.android.systemui.miui.controlcenter.ExpandInfoController;
 import com.android.systemui.miui.controlcenter.QSControlCenterPanel;
 import com.android.systemui.miui.controlcenter.QSControlTileHost;
+import com.android.systemui.miui.controls.ControlsPluginManager;
 import com.android.systemui.miui.statusbar.phone.ControlPanelContentView;
 import com.android.systemui.miui.statusbar.phone.ControlPanelWindowManager;
 import com.android.systemui.miui.statusbar.phone.ControlPanelWindowView;
@@ -201,6 +202,7 @@ public class ControlCenter extends SystemUI implements ControlPanelController.Us
             this.mQSControlTileHost = createQSControlTileHost;
             createQSControlTileHost.init();
             this.mControlPanelContentView.setHost(this.mQSControlTileHost);
+            ((ControlsPluginManager) Dependency.get(ControlsPluginManager.class)).addControlsPluginListener();
         }
         RecentsEventBus.getDefault().register(this);
     }
@@ -212,6 +214,7 @@ public class ControlCenter extends SystemUI implements ControlPanelController.Us
             ((ControlPanelController) Dependency.get(ControlPanelController.class)).setControlCenter((ControlCenter) null);
             this.mCommandQueue.removeCallbacks(this);
             ((SuperSaveModeController) Dependency.get(SuperSaveModeController.class)).removeCallback((SuperSaveModeController.SuperSaveModeChangeListener) this);
+            ((ControlsPluginManager) Dependency.get(ControlsPluginManager.class)).removeControlsPluginListener();
             QSControlTileHost qSControlTileHost = this.mQSControlTileHost;
             if (qSControlTileHost != null) {
                 qSControlTileHost.destroy();
@@ -244,11 +247,19 @@ public class ControlCenter extends SystemUI implements ControlPanelController.Us
         this.mContext.unregisterReceiver(this.mBroadcastReceiver);
     }
 
+    public boolean isExpandable() {
+        return this.mPanelController.isExpandable();
+    }
+
     public void collapse(boolean z) {
         StatusBar statusBar = this.mStatusBar;
         if (statusBar != null && !statusBar.isQSFullyCollapsed()) {
             this.mStatusBar.collapsePanels();
         }
+        collapseControlCenter(z);
+    }
+
+    public void collapseControlCenter(boolean z) {
         this.mHandler.removeMessages(1);
         Message obtainMessage = this.mHandler.obtainMessage();
         obtainMessage.what = 1;
@@ -265,10 +276,12 @@ public class ControlCenter extends SystemUI implements ControlPanelController.Us
     }
 
     public void openPanel() {
-        this.mHandler.removeMessages(2);
-        Message obtainMessage = this.mHandler.obtainMessage();
-        obtainMessage.what = 2;
-        this.mHandler.sendMessage(obtainMessage);
+        if (this.mPanelController.isExpandable()) {
+            this.mHandler.removeMessages(2);
+            Message obtainMessage = this.mHandler.obtainMessage();
+            obtainMessage.what = 2;
+            this.mHandler.sendMessage(obtainMessage);
+        }
     }
 
     /* access modifiers changed from: private */
@@ -284,6 +297,11 @@ public class ControlCenter extends SystemUI implements ControlPanelController.Us
         if (this.mControlPanelWindowView != null && panelEnabled()) {
             this.mControlPanelWindowView.expandPanel();
         }
+    }
+
+    public void startActivityDismissingKeyguard(Intent intent) {
+        collapse(true);
+        this.mStatusBarActivityStarter.startActivity(intent, true);
     }
 
     public void postStartActivityDismissingKeyguard(Intent intent) {
@@ -319,6 +337,13 @@ public class ControlCenter extends SystemUI implements ControlPanelController.Us
             this.mPanelController.setSuperPowerMode(z);
             this.mExpandInfoController.setSuperPowerMode(z);
             reCreateWindow();
+        }
+    }
+
+    public void resetTiles() {
+        QSControlTileHost qSControlTileHost;
+        if (this.mUseControlCenter && (qSControlTileHost = this.mQSControlTileHost) != null) {
+            qSControlTileHost.resetTiles();
         }
     }
 

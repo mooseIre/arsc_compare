@@ -16,7 +16,7 @@ public abstract class TaskStackListener extends ITaskStackListener.Stub {
     public void onActivityRequestedOrientationChanged(int i, int i2) throws RemoteException {
     }
 
-    public void onActivityRestartAttempt(ActivityManager.RunningTaskInfo runningTaskInfo, boolean z, boolean z2, boolean z3) throws RemoteException {
+    public void onActivityRotation(int i) throws RemoteException {
     }
 
     public void onBackPressedOnTaskRoot(ActivityManager.RunningTaskInfo runningTaskInfo) throws RemoteException {

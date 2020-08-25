@@ -59,6 +59,8 @@ public class Icons {
             sMapping.put(R.drawable.stat_sys_wifi_in, Integer.valueOf(R.drawable.stat_sys_wifi_in_darkmode));
             sMapping.put(R.drawable.stat_sys_wifi_out, Integer.valueOf(R.drawable.stat_sys_wifi_out_darkmode));
             sMapping.put(R.drawable.stat_sys_wifi_ap_on, Integer.valueOf(R.drawable.stat_sys_wifi_ap_on_darkmode));
+            sMapping.put(R.drawable.stat_sys_ethernet, Integer.valueOf(R.drawable.stat_sys_ethernet_darkmode));
+            sMapping.put(R.drawable.stat_sys_ethernet_fully, Integer.valueOf(R.drawable.stat_sys_ethernet_fully_darkmode));
             sMapping.put(R.drawable.stat_sys_warning, Integer.valueOf(R.drawable.stat_sys_warning_darkmode));
             sMapping.put(R.drawable.stat_sys_vpn, Integer.valueOf(R.drawable.stat_sys_vpn_darkmode));
             sMapping.put(R.drawable.stat_sys_data_connected_roam_small, Integer.valueOf(R.drawable.stat_sys_data_connected_roam_small_darkmode));
@@ -84,6 +86,8 @@ public class Icons {
             sMapping.put(R.drawable.stat_sys_battery_charging, Integer.valueOf(R.drawable.stat_sys_battery_charging_darkmode));
             sMapping.put(R.drawable.stat_sys_quick_charging, Integer.valueOf(R.drawable.stat_sys_quick_charging_darkmode));
             sMapping.put(R.drawable.stat_sys_signal_4g_lte, Integer.valueOf(R.drawable.stat_sys_signal_4g_lte_darkmode));
+            sMapping.put(R.drawable.signal_5g_off, Integer.valueOf(R.drawable.signal_5g_off_darkmode));
+            sMapping.put(R.drawable.signal_5g_on, Integer.valueOf(R.drawable.signal_5g_on_darkmode));
             sMapping.put(R.drawable.battery_meter_charging, Integer.valueOf(R.drawable.battery_meter_charging_dark));
             sMapping.put(R.drawable.battery_meter_quick_charging, Integer.valueOf(R.drawable.battery_meter_quick_charging_dark));
             sMapping.put(R.drawable.stat_sys_sos, Integer.valueOf(R.drawable.stat_sys_sos_darkmode));
@@ -109,11 +113,9 @@ public class Icons {
             sMapping.put(R.drawable.stat_sys_slave_wifi_signal_3, Integer.valueOf(R.drawable.stat_sys_slave_wifi_signal_3_darkmode));
             sMapping.put(R.drawable.stat_sys_slave_wifi_signal_4, Integer.valueOf(R.drawable.stat_sys_slave_wifi_signal_4_darkmode));
         }
-        if (z) {
-            num = sMapping.get(num.intValue());
-        }
-        if (num == null) {
-            return 0;
+        Integer num2 = z ? sMapping.get(num.intValue()) : num;
+        if (num2 != null) {
+            num = num2;
         }
         return num.intValue();
     }
@@ -131,10 +133,10 @@ public class Icons {
             sSignalHalfMapping.put(R.drawable.stat_sys_signal_null, Integer.valueOf(R.drawable.stat_sys_signal_null_half));
         }
         Integer num2 = sSignalHalfMapping.get(num.intValue());
-        if (num2 == null) {
-            return 0;
+        if (num2 != null) {
+            num = num2;
         }
-        return num2.intValue();
+        return num.intValue();
     }
 
     public static int getQSIcons(Integer num, boolean z) {

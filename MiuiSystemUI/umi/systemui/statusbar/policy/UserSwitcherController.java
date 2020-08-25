@@ -36,6 +36,7 @@ import android.widget.BaseAdapter;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.util.UserIcons;
 import com.android.internal.util.UserIconsCompat;
+import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.settingslib.RestrictedLockUtils;
 import com.android.settingslib.RestrictedLockUtilsHelper;
 import com.android.systemui.Dependency;
@@ -91,7 +92,7 @@ public class UserSwitcherController {
         public void onCallStateChanged(int i, String str) {
             if (this.mCallState != i) {
                 this.mCallState = i;
-                int currentUser = ActivityManager.getCurrentUser();
+                int currentUser = KeyguardUpdateMonitor.getCurrentUser();
                 UserInfo userInfo = UserSwitcherController.this.mUserManager.getUserInfo(currentUser);
                 if (userInfo != null && userInfo.isGuest()) {
                     UserSwitcherController.this.showGuestNotification(currentUser);
@@ -493,7 +494,7 @@ public class UserSwitcherController {
                         com.android.systemui.statusbar.policy.UserSwitcherController r11 = com.android.systemui.statusbar.policy.UserSwitcherController.this
                         android.content.Context r11 = r11.mContext
                         android.content.res.Resources r11 = r11.getResources()
-                        r13 = 2131165899(0x7f0702cb, float:1.7946028E38)
+                        r13 = 2131165902(0x7f0702ce, float:1.7946034E38)
                         int r11 = r11.getDimensionPixelSize(r13)
                         android.graphics.Bitmap r10 = android.graphics.Bitmap.createScaledBitmap(r10, r11, r11, r4)
                     L_0x009c:
@@ -881,8 +882,8 @@ public class UserSwitcherController {
 
     /* access modifiers changed from: private */
     public void checkIfAddUserDisallowedByAdminOnly(UserRecord userRecord) {
-        RestrictedLockUtils.EnforcedAdmin checkIfRestrictionEnforced = RestrictedLockUtilsHelper.checkIfRestrictionEnforced(this.mContext, "no_add_user", ActivityManager.getCurrentUser());
-        if (checkIfRestrictionEnforced == null || RestrictedLockUtilsHelper.hasBaseUserRestriction(this.mContext, "no_add_user", ActivityManager.getCurrentUser())) {
+        RestrictedLockUtils.EnforcedAdmin checkIfRestrictionEnforced = RestrictedLockUtilsHelper.checkIfRestrictionEnforced(this.mContext, "no_add_user", KeyguardUpdateMonitor.getCurrentUser());
+        if (checkIfRestrictionEnforced == null || RestrictedLockUtilsHelper.hasBaseUserRestriction(this.mContext, "no_add_user", KeyguardUpdateMonitor.getCurrentUser())) {
             userRecord.isDisabledByAdmin = false;
             userRecord.enforcedAdmin = null;
             return;

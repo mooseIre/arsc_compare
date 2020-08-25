@@ -63,7 +63,7 @@ public final class ForegroundServicesDialog extends AlertActivity implements Ada
         alertParams.mCustomTitleView = this.mInflater.inflate(R.layout.foreground_service_title, (ViewGroup) null);
         alertParams.mIsSingleChoice = true;
         alertParams.mOnItemSelectedListener = this;
-        alertParams.mPositiveButtonText = getString(17040073);
+        alertParams.mPositiveButtonText = getString(17040102);
         alertParams.mPositiveButtonListener = this;
         alertParams.mOnPrepareListViewListener = this;
         updateApps(getIntent());

@@ -133,11 +133,16 @@ public class ActivityObserverImpl implements ActivityObserver, Dumpable, DeviceP
     }
 
     public ComponentName getTopActivity() {
-        for (ComponentName next : this.mResumedActivities) {
-            if (!taskIsLauncher(next, this.mLauncherComponent)) {
-                return next;
+        ArrayList<ComponentName> arrayList = new ArrayList<>(this.mResumedActivities);
+        for (ComponentName componentName : arrayList) {
+            if (!taskIsLauncher(componentName, this.mLauncherComponent)) {
+                return componentName;
             }
         }
+        return arrayList.isEmpty() ? this.mLastResumedActivity : (ComponentName) arrayList.get(0);
+    }
+
+    public ComponentName getLastResumedActivity() {
         return this.mResumedActivities.isEmpty() ? this.mLastResumedActivity : this.mResumedActivities.get(0);
     }
 

@@ -1,6 +1,7 @@
 package com.android.systemui.statusbar.policy;
 
 import android.content.Context;
+import com.android.systemui.plugins.R;
 import com.android.systemui.statusbar.policy.FiveGController;
 import com.android.systemui.statusbar.policy.FiveGServiceClient;
 import com.miui.systemui.annotation.Inject;
@@ -41,7 +42,7 @@ public class FiveGControllerImpl implements FiveGController {
         synchronized (this.mFiveGStateChangeCallbacks) {
             this.mFiveGStateChangeCallbacks.add(fiveGStateChangeCallback);
         }
-        fiveGStateChangeCallback.onSignalStrengthChanged(this.mFiveGServiceStates[fiveGStateChangeCallback.getSlot()].getSignalLevel());
+        fiveGStateChangeCallback.onSignalStrengthChanged(this.mFiveGServiceStates[fiveGStateChangeCallback.getSlot()].getSignalLevel(), this.mFiveGServiceStates[fiveGStateChangeCallback.getSlot()].getIconGroup());
     }
 
     public void removeCallback(FiveGController.FiveGStateChangeCallback fiveGStateChangeCallback) {
@@ -56,6 +57,16 @@ public class FiveGControllerImpl implements FiveGController {
 
     public boolean isFiveGBearerAllocated(int i) {
         return this.mFiveGServiceStates[i].getAllocated() > 0;
+    }
+
+    public int getFiveGDrawable(int i) {
+        if (this.mFiveGServiceStates[i].getIconGroup() == TelephonyIcons.FIVE_G_KR_ON) {
+            return R.drawable.signal_5g_on;
+        }
+        if (this.mFiveGServiceStates[i].getIconGroup() == TelephonyIcons.FIVE_G_KR_OFF) {
+            return R.drawable.signal_5g_off;
+        }
+        return 0;
     }
 
     public void dump(PrintWriter printWriter) {
@@ -75,7 +86,7 @@ public class FiveGControllerImpl implements FiveGController {
                 for (int i = 0; i < size; i++) {
                     FiveGController.FiveGStateChangeCallback fiveGStateChangeCallback = (FiveGController.FiveGStateChangeCallback) FiveGControllerImpl.this.mFiveGStateChangeCallbacks.get(i);
                     if (fiveGStateChangeCallback != null && this.mSlot == fiveGStateChangeCallback.getSlot()) {
-                        fiveGStateChangeCallback.onSignalStrengthChanged(fiveGServiceState.getSignalLevel());
+                        fiveGStateChangeCallback.onSignalStrengthChanged(fiveGServiceState.getSignalLevel(), fiveGServiceState.getIconGroup());
                     }
                 }
             }

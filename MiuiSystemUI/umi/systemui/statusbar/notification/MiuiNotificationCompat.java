@@ -2,6 +2,8 @@ package com.android.systemui.statusbar.notification;
 
 import android.app.Notification;
 import android.app.PendingIntent;
+import android.graphics.drawable.Icon;
+import android.os.Parcelable;
 
 public class MiuiNotificationCompat {
     public static boolean isShowMiuiAction(Notification notification) {
@@ -114,5 +116,17 @@ public class MiuiNotificationCompat {
 
     public static boolean isPersistent(Notification notification) {
         return notification.extras.getBoolean("miui.isPersistent", false);
+    }
+
+    public static Icon getMiuiAppIcon(Notification notification) {
+        Parcelable parcelable = notification.extras.getParcelable("miui.appIcon");
+        if (parcelable instanceof Icon) {
+            return (Icon) parcelable;
+        }
+        return null;
+    }
+
+    public static void disableColorized(Notification notification) {
+        notification.extras.putBoolean("android.colorized", false);
     }
 }

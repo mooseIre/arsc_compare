@@ -1,9 +1,8 @@
 package com.android.systemui.pip.phone;
 
 import android.app.ActivityManager;
-import android.app.ActivityManagerCompat;
 import android.app.ActivityOptions;
-import android.app.IActivityManager;
+import android.app.ActivityTaskManager;
 import android.app.RemoteAction;
 import android.content.Context;
 import android.content.Intent;
@@ -11,26 +10,58 @@ import android.content.pm.ParceledListSlice;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
+import android.os.SystemClock;
 import android.os.UserHandle;
 import android.util.Log;
+import android.view.MotionEvent;
 import com.android.systemui.pip.phone.PipMediaController;
-import com.android.systemui.plugins.R;
-import com.android.systemui.recents.events.RecentsEventBus;
-import com.android.systemui.recents.events.component.HidePipMenuEvent;
-import com.android.systemui.recents.misc.ReferenceCountedTrigger;
+import com.android.systemui.pip.phone.PipMenuActivityController;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class PipMenuActivityController {
     private ParceledListSlice mAppActions;
     private Context mContext;
-    /* access modifiers changed from: private */
-    public InputConsumerController mInputConsumerController;
+    private Handler mHandler = new Handler(Looper.getMainLooper()) {
+        public void handleMessage(Message message) {
+            int i = message.what;
+            boolean z = true;
+            if (i == 100) {
+                int i2 = message.arg1;
+                if (message.arg2 == 0) {
+                    z = false;
+                }
+                PipMenuActivityController pipMenuActivityController = PipMenuActivityController.this;
+                pipMenuActivityController.onMenuStateChanged(i2, z, pipMenuActivityController.getMenuStateChangeFinishedCallback(message.replyTo, (Bundle) message.obj));
+            } else if (i == 101) {
+                PipMenuActivityController.this.mListeners.forEach($$Lambda$Yf7sZoTIPl0lv58dfbsbQ3za13A.INSTANCE);
+            } else if (i == 103) {
+                PipMenuActivityController.this.mListeners.forEach($$Lambda$zhx89MCRVbbUuwAz2vBzNfzR3hg.INSTANCE);
+            } else if (i == 104) {
+                Messenger unused = PipMenuActivityController.this.mToActivityMessenger = message.replyTo;
+                PipMenuActivityController.this.setStartActivityRequested(false);
+                if (PipMenuActivityController.this.mOnAnimationEndRunnable != null) {
+                    PipMenuActivityController.this.mOnAnimationEndRunnable.run();
+                    Runnable unused2 = PipMenuActivityController.this.mOnAnimationEndRunnable = null;
+                }
+                if (PipMenuActivityController.this.mToActivityMessenger == null) {
+                    if (message.arg1 == 0) {
+                        z = false;
+                    }
+                    PipMenuActivityController.this.onMenuStateChanged(0, z, (Runnable) null);
+                }
+            } else if (i == 107) {
+                PipMenuActivityController.this.mListeners.forEach($$Lambda$ab7bqy0BtiE8EwwZ2rb49JCCbFA.INSTANCE);
+            }
+        }
+    };
+    private InputConsumerController mInputConsumerController;
     /* access modifiers changed from: private */
     public ArrayList<Listener> mListeners = new ArrayList<>();
     private PipMediaController.ActionListener mMediaActionListener = new PipMediaController.ActionListener() {
@@ -43,63 +74,16 @@ public class PipMenuActivityController {
     public ParceledListSlice mMediaActions;
     private PipMediaController mMediaController;
     private int mMenuState;
-    private Messenger mMessenger = new Messenger(new Handler() {
-        public void handleMessage(Message message) {
-            switch (message.what) {
-                case R.styleable.AppCompatTheme_textAppearanceLargePopupMenu /*100*/:
-                    PipMenuActivityController.this.onMenuStateChanged(message.arg1, true);
-                    return;
-                case R.styleable.AppCompatTheme_textAppearanceListItem /*101*/:
-                    Iterator it = PipMenuActivityController.this.mListeners.iterator();
-                    while (it.hasNext()) {
-                        ((Listener) it.next()).onPipExpand();
-                    }
-                    return;
-                case R.styleable.AppCompatTheme_textAppearanceListItemSecondary /*102*/:
-                    Iterator it2 = PipMenuActivityController.this.mListeners.iterator();
-                    while (it2.hasNext()) {
-                        ((Listener) it2.next()).onPipMinimize();
-                    }
-                    return;
-                case R.styleable.AppCompatTheme_textAppearanceListItemSmall /*103*/:
-                    Iterator it3 = PipMenuActivityController.this.mListeners.iterator();
-                    while (it3.hasNext()) {
-                        ((Listener) it3.next()).onPipDismiss();
-                    }
-                    return;
-                case R.styleable.AppCompatTheme_textAppearancePopupMenuHeader /*104*/:
-                    Messenger unused = PipMenuActivityController.this.mToActivityMessenger = message.replyTo;
-                    boolean unused2 = PipMenuActivityController.this.mStartActivityRequested = false;
-                    if (PipMenuActivityController.this.mOnAttachDecrementTrigger != null) {
-                        PipMenuActivityController.this.mOnAttachDecrementTrigger.decrement();
-                        ReferenceCountedTrigger unused3 = PipMenuActivityController.this.mOnAttachDecrementTrigger = null;
-                    }
-                    if (PipMenuActivityController.this.mToActivityMessenger == null) {
-                        PipMenuActivityController.this.onMenuStateChanged(0, true);
-                        return;
-                    }
-                    return;
-                case R.styleable.AppCompatTheme_textAppearanceSearchResultSubtitle /*105*/:
-                    PipMenuActivityController.this.mInputConsumerController.registerInputConsumer();
-                    return;
-                case R.styleable.AppCompatTheme_textAppearanceSearchResultTitle /*106*/:
-                    PipMenuActivityController.this.mInputConsumerController.unregisterInputConsumer();
-                    return;
-                case R.styleable.AppCompatTheme_textAppearanceSmallPopupMenu /*107*/:
-                    Iterator it4 = PipMenuActivityController.this.mListeners.iterator();
-                    while (it4.hasNext()) {
-                        ((Listener) it4.next()).onPipShowMenu();
-                    }
-                    return;
-                default:
-                    return;
-            }
+    private Messenger mMessenger = new Messenger(this.mHandler);
+    /* access modifiers changed from: private */
+    public Runnable mOnAnimationEndRunnable;
+    private boolean mStartActivityRequested;
+    private long mStartActivityRequestedTime;
+    private Runnable mStartActivityRequestedTimeoutRunnable = new Runnable() {
+        public final void run() {
+            PipMenuActivityController.this.lambda$new$0$PipMenuActivityController();
         }
-    });
-    /* access modifiers changed from: private */
-    public ReferenceCountedTrigger mOnAttachDecrementTrigger;
-    /* access modifiers changed from: private */
-    public boolean mStartActivityRequested;
+    };
     private Bundle mTmpDismissFractionData = new Bundle();
     /* access modifiers changed from: private */
     public Messenger mToActivityMessenger;
@@ -109,24 +93,41 @@ public class PipMenuActivityController {
 
         void onPipExpand();
 
-        void onPipMenuStateChanged(int i, boolean z);
-
-        void onPipMinimize();
+        void onPipMenuStateChanged(int i, boolean z, Runnable runnable);
 
         void onPipShowMenu();
     }
 
-    public PipMenuActivityController(Context context, IActivityManager iActivityManager, PipMediaController pipMediaController, InputConsumerController inputConsumerController) {
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$new$0 */
+    public /* synthetic */ void lambda$new$0$PipMenuActivityController() {
+        setStartActivityRequested(false);
+        Runnable runnable = this.mOnAnimationEndRunnable;
+        if (runnable != null) {
+            runnable.run();
+            this.mOnAnimationEndRunnable = null;
+        }
+        Log.e("PipMenuActController", "Expected start menu activity request timed out");
+    }
+
+    public PipMenuActivityController(Context context, PipMediaController pipMediaController, InputConsumerController inputConsumerController) {
         this.mContext = context;
         this.mMediaController = pipMediaController;
         this.mInputConsumerController = inputConsumerController;
-        RecentsEventBus.getDefault().register(this);
+    }
+
+    public boolean isMenuActivityVisible() {
+        return this.mToActivityMessenger != null;
     }
 
     public void onActivityPinned() {
-        if (this.mMenuState == 0) {
-            this.mInputConsumerController.registerInputConsumer();
-        }
+        this.mInputConsumerController.registerInputConsumer();
+    }
+
+    public void onActivityUnpinned() {
+        hideMenu();
+        this.mInputConsumerController.unregisterInputConsumer();
+        setStartActivityRequested(false);
     }
 
     public void onPinnedStackAnimationEnded() {
@@ -159,18 +160,60 @@ public class PipMenuActivityController {
             } catch (RemoteException e) {
                 Log.e("PipMenuActController", "Could not notify menu to update dismiss fraction", e);
             }
-        } else if (!this.mStartActivityRequested) {
-            startMenuActivity(0, (Rect) null, (Rect) null, false);
+        } else if (!this.mStartActivityRequested || isStartActivityRequestedElapsed()) {
+            startMenuActivity(0, (Rect) null, false, false, false, false);
         }
     }
 
-    public void showMenu(int i, Rect rect, Rect rect2, boolean z) {
+    public void showMenuWithDelay(int i, Rect rect, boolean z, boolean z2, boolean z3) {
+        fadeOutMenu();
+        showMenuInternal(i, rect, z, z2, true, z3);
+    }
+
+    public void showMenu(int i, Rect rect, boolean z, boolean z2, boolean z3) {
+        showMenuInternal(i, rect, z, z2, false, z3);
+    }
+
+    /* access modifiers changed from: private */
+    public Runnable getMenuStateChangeFinishedCallback(Messenger messenger, Bundle bundle) {
+        if (messenger == null || bundle == null) {
+            return null;
+        }
+        return new Runnable(bundle, messenger) {
+            public final /* synthetic */ Bundle f$0;
+            public final /* synthetic */ Messenger f$1;
+
+            {
+                this.f$0 = r1;
+                this.f$1 = r2;
+            }
+
+            public final void run() {
+                PipMenuActivityController.lambda$getMenuStateChangeFinishedCallback$1(this.f$0, this.f$1);
+            }
+        };
+    }
+
+    static /* synthetic */ void lambda$getMenuStateChangeFinishedCallback$1(Bundle bundle, Messenger messenger) {
+        try {
+            Message obtain = Message.obtain();
+            obtain.what = bundle.getInt("message_callback_what");
+            messenger.send(obtain);
+        } catch (RemoteException unused) {
+        }
+    }
+
+    private void showMenuInternal(int i, Rect rect, boolean z, boolean z2, boolean z3, boolean z4) {
         if (this.mToActivityMessenger != null) {
             Bundle bundle = new Bundle();
             bundle.putInt("menu_state", i);
-            bundle.putParcelable("stack_bounds", rect);
-            bundle.putParcelable("movement_bounds", rect2);
+            if (rect != null) {
+                bundle.putParcelable("stack_bounds", rect);
+            }
             bundle.putBoolean("allow_timeout", z);
+            bundle.putBoolean("resize_menu_on_show", z2);
+            bundle.putBoolean("show_menu_with_delay", z3);
+            bundle.putBoolean("show_resize_handle", z4);
             Message obtain = Message.obtain();
             obtain.what = 1;
             obtain.obj = bundle;
@@ -179,8 +222,8 @@ public class PipMenuActivityController {
             } catch (RemoteException e) {
                 Log.e("PipMenuActController", "Could not notify menu to show", e);
             }
-        } else if (!this.mStartActivityRequested) {
-            startMenuActivity(i, rect, rect2, z);
+        } else if (!this.mStartActivityRequested || isStartActivityRequestedElapsed()) {
+            startMenuActivity(i, rect, z, z2, z3, z4);
         }
     }
 
@@ -192,6 +235,18 @@ public class PipMenuActivityController {
                 this.mToActivityMessenger.send(obtain);
             } catch (RemoteException e) {
                 Log.e("PipMenuActController", "Could not notify poke menu", e);
+            }
+        }
+    }
+
+    private void fadeOutMenu() {
+        if (this.mToActivityMessenger != null) {
+            Message obtain = Message.obtain();
+            obtain.what = 9;
+            try {
+                this.mToActivityMessenger.send(obtain);
+            } catch (RemoteException e) {
+                Log.e("PipMenuActController", "Could not notify menu to fade out", e);
             }
         }
     }
@@ -209,7 +264,7 @@ public class PipMenuActivityController {
     }
 
     public void hideMenuWithoutResize() {
-        onMenuStateChanged(0, false);
+        onMenuStateChanged(0, false, (Runnable) null);
     }
 
     public void setAppActions(ParceledListSlice parceledListSlice) {
@@ -224,31 +279,32 @@ public class PipMenuActivityController {
         return this.mMediaActions;
     }
 
-    private void startMenuActivity(int i, Rect rect, Rect rect2, boolean z) {
+    private void startMenuActivity(int i, Rect rect, boolean z, boolean z2, boolean z3, boolean z4) {
         try {
-            ActivityManager.StackInfo stackInfo = ActivityManagerCompat.getStackInfo(4, 2, 0);
+            ActivityManager.StackInfo stackInfo = ActivityTaskManager.getService().getStackInfo(2, 0);
             if (stackInfo == null || stackInfo.taskIds == null || stackInfo.taskIds.length <= 0) {
                 Log.e("PipMenuActController", "No PIP tasks found");
                 return;
             }
             Intent intent = new Intent(this.mContext, PipMenuActivity.class);
+            intent.setFlags(268435456);
             intent.putExtra("messenger", this.mMessenger);
             intent.putExtra("actions", resolveMenuActions());
             if (rect != null) {
                 intent.putExtra("stack_bounds", rect);
             }
-            if (rect2 != null) {
-                intent.putExtra("movement_bounds", rect2);
-            }
             intent.putExtra("menu_state", i);
             intent.putExtra("allow_timeout", z);
+            intent.putExtra("resize_menu_on_show", z2);
+            intent.putExtra("show_menu_with_delay", z3);
+            intent.putExtra("show_resize_handle", z4);
             ActivityOptions makeCustomAnimation = ActivityOptions.makeCustomAnimation(this.mContext, 0, 0);
             makeCustomAnimation.setLaunchTaskId(stackInfo.taskIds[stackInfo.taskIds.length - 1]);
             makeCustomAnimation.setTaskOverlay(true, true);
             this.mContext.startActivityAsUser(intent, makeCustomAnimation.toBundle(), UserHandle.CURRENT);
-            this.mStartActivityRequested = true;
-        } catch (Exception e) {
-            this.mStartActivityRequested = false;
+            setStartActivityRequested(true);
+        } catch (RemoteException e) {
+            setStartActivityRequested(false);
             Log.e("PipMenuActController", "Error showing PIP menu activity", e);
         }
     }
@@ -258,11 +314,11 @@ public class PipMenuActivityController {
         if (this.mToActivityMessenger != null) {
             Rect rect = null;
             try {
-                ActivityManager.StackInfo stackInfo = ActivityManagerCompat.getStackInfo(4, 2, 0);
+                ActivityManager.StackInfo stackInfo = ActivityTaskManager.getService().getStackInfo(2, 0);
                 if (stackInfo != null) {
                     rect = stackInfo.bounds;
                 }
-            } catch (Exception e) {
+            } catch (RemoteException e) {
                 Log.e("PipMenuActController", "Error showing PIP menu activity", e);
             }
             Bundle bundle = new Bundle();
@@ -283,18 +339,28 @@ public class PipMenuActivityController {
         return parceledListSlice != null && parceledListSlice.getList().size() > 0;
     }
 
+    private boolean isStartActivityRequestedElapsed() {
+        return SystemClock.uptimeMillis() - this.mStartActivityRequestedTime >= 300;
+    }
+
     /* access modifiers changed from: private */
-    public void onMenuStateChanged(int i, boolean z) {
-        if (i == 0) {
-            this.mInputConsumerController.registerInputConsumer();
-        } else {
-            this.mInputConsumerController.unregisterInputConsumer();
-        }
+    public void onMenuStateChanged(int i, boolean z, Runnable runnable) {
         if (i != this.mMenuState) {
-            Iterator<Listener> it = this.mListeners.iterator();
-            while (it.hasNext()) {
-                it.next().onPipMenuStateChanged(i, z);
-            }
+            this.mListeners.forEach(new Consumer(i, z, runnable) {
+                public final /* synthetic */ int f$0;
+                public final /* synthetic */ boolean f$1;
+                public final /* synthetic */ Runnable f$2;
+
+                {
+                    this.f$0 = r1;
+                    this.f$1 = r2;
+                    this.f$2 = r3;
+                }
+
+                public final void accept(Object obj) {
+                    ((PipMenuActivityController.Listener) obj).onPipMenuStateChanged(this.f$0, this.f$1, this.f$2);
+                }
+            });
             if (i == 2) {
                 this.mMediaController.addListener(this.mMediaActionListener);
             } else {
@@ -304,11 +370,24 @@ public class PipMenuActivityController {
         this.mMenuState = i;
     }
 
-    public final void onBusEvent(HidePipMenuEvent hidePipMenuEvent) {
-        if (this.mStartActivityRequested) {
-            ReferenceCountedTrigger animationTrigger = hidePipMenuEvent.getAnimationTrigger();
-            this.mOnAttachDecrementTrigger = animationTrigger;
-            animationTrigger.increment();
+    /* access modifiers changed from: private */
+    public void setStartActivityRequested(boolean z) {
+        this.mHandler.removeCallbacks(this.mStartActivityRequestedTimeoutRunnable);
+        this.mStartActivityRequested = z;
+        this.mStartActivityRequestedTime = z ? SystemClock.uptimeMillis() : 0;
+    }
+
+    /* access modifiers changed from: package-private */
+    public void handlePointerEvent(MotionEvent motionEvent) {
+        if (this.mToActivityMessenger != null) {
+            Message obtain = Message.obtain();
+            obtain.what = 7;
+            obtain.obj = motionEvent;
+            try {
+                this.mToActivityMessenger.send(obtain);
+            } catch (RemoteException e) {
+                Log.e("PipMenuActController", "Could not dispatch touch event", e);
+            }
         }
     }
 
@@ -318,5 +397,7 @@ public class PipMenuActivityController {
         printWriter.println(str2 + "mMenuState=" + this.mMenuState);
         printWriter.println(str2 + "mToActivityMessenger=" + this.mToActivityMessenger);
         printWriter.println(str2 + "mListeners=" + this.mListeners.size());
+        printWriter.println(str2 + "mStartActivityRequested=" + this.mStartActivityRequested);
+        printWriter.println(str2 + "mStartActivityRequestedTime=" + this.mStartActivityRequestedTime);
     }
 }

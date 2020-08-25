@@ -7,7 +7,6 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.systemui.Constants;
 import com.android.systemui.Dependency;
 import com.android.systemui.Util;
@@ -77,87 +76,88 @@ public abstract class HeaderView extends RelativeLayout implements View.OnClickL
         }
     }
 
-    /* JADX WARNING: Removed duplicated region for block: B:31:0x006a A[Catch:{ Exception -> 0x0083 }] */
-    /* JADX WARNING: Removed duplicated region for block: B:33:0x0077 A[Catch:{ Exception -> 0x0083 }] */
+    /* JADX WARNING: Removed duplicated region for block: B:31:0x006d A[Catch:{ Exception -> 0x0086 }] */
+    /* JADX WARNING: Removed duplicated region for block: B:33:0x007a A[Catch:{ Exception -> 0x0086 }] */
     /* JADX WARNING: Removed duplicated region for block: B:37:? A[RETURN, SYNTHETIC] */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     public void onClick(android.view.View r6) {
         /*
             r5 = this;
-            com.android.systemui.statusbar.policy.Clock r0 = r5.mClock     // Catch:{ Exception -> 0x0083 }
+            com.android.systemui.statusbar.policy.Clock r0 = r5.mClock     // Catch:{ Exception -> 0x0086 }
             java.lang.String r1 = "android.intent.action.MAIN"
             r2 = 0
-            if (r6 == r0) goto L_0x0055
-            boolean r0 = com.android.systemui.Constants.IS_TABLET     // Catch:{ Exception -> 0x0083 }
+            if (r6 == r0) goto L_0x0058
+            boolean r0 = com.android.systemui.Constants.IS_TABLET     // Catch:{ Exception -> 0x0086 }
             if (r0 != 0) goto L_0x0015
-            int r0 = r5.mLastOrientation     // Catch:{ Exception -> 0x0083 }
+            int r0 = r5.mLastOrientation     // Catch:{ Exception -> 0x0086 }
             r3 = 2
             if (r0 != r3) goto L_0x0015
-            com.android.systemui.statusbar.policy.Clock r0 = r5.mDateView     // Catch:{ Exception -> 0x0083 }
+            com.android.systemui.statusbar.policy.Clock r0 = r5.mDateView     // Catch:{ Exception -> 0x0086 }
             if (r6 != r0) goto L_0x0015
-            goto L_0x0055
+            goto L_0x0058
         L_0x0015:
-            com.android.systemui.statusbar.policy.Clock r0 = r5.mDateView     // Catch:{ Exception -> 0x0083 }
-            if (r6 != r0) goto L_0x0028
-            android.content.Intent r2 = new android.content.Intent     // Catch:{ Exception -> 0x0083 }
-            r2.<init>(r1)     // Catch:{ Exception -> 0x0083 }
-            java.lang.String r6 = r5.getCalendarPkg()     // Catch:{ Exception -> 0x0083 }
-            r2.setPackage(r6)     // Catch:{ Exception -> 0x0083 }
+            com.android.systemui.statusbar.policy.Clock r0 = r5.mDateView     // Catch:{ Exception -> 0x0086 }
+            if (r6 != r0) goto L_0x002a
+            android.content.Intent r2 = new android.content.Intent     // Catch:{ Exception -> 0x0086 }
+            r2.<init>(r1)     // Catch:{ Exception -> 0x0086 }
+            android.content.Context r6 = r5.mContext     // Catch:{ Exception -> 0x0086 }
+            java.lang.String r6 = com.android.systemui.util.Utils.getCalendarPkg(r6)     // Catch:{ Exception -> 0x0086 }
+            r2.setPackage(r6)     // Catch:{ Exception -> 0x0086 }
             java.lang.String r6 = "date"
-            goto L_0x0061
-        L_0x0028:
-            android.widget.ImageView r0 = r5.mShortcut     // Catch:{ Exception -> 0x0083 }
-            if (r6 != r0) goto L_0x0053
-            android.content.Intent r6 = r5.buildShortcutClickIntent()     // Catch:{ Exception -> 0x0083 }
-            if (r6 == 0) goto L_0x0064
+            goto L_0x0064
+        L_0x002a:
+            android.widget.ImageView r0 = r5.mShortcut     // Catch:{ Exception -> 0x0086 }
+            if (r6 != r0) goto L_0x0056
+            android.content.Intent r6 = r5.buildShortcutClickIntent()     // Catch:{ Exception -> 0x0086 }
+            if (r6 == 0) goto L_0x0067
             java.lang.String r0 = "android.settings.ALL_APPS_NOTIFICATION_SETTINGS"
-            java.lang.String r1 = r6.getAction()     // Catch:{ Exception -> 0x0083 }
-            boolean r0 = r0.equals(r1)     // Catch:{ Exception -> 0x0083 }
-            if (r0 == 0) goto L_0x0041
+            java.lang.String r1 = r6.getAction()     // Catch:{ Exception -> 0x0086 }
+            boolean r0 = r0.equals(r1)     // Catch:{ Exception -> 0x0086 }
+            if (r0 == 0) goto L_0x0043
             java.lang.String r2 = "notification-settings"
-            goto L_0x0064
-        L_0x0041:
+            goto L_0x0067
+        L_0x0043:
             java.lang.String r0 = "android.settings.SETTINGS"
-            java.lang.String r1 = r6.getAction()     // Catch:{ Exception -> 0x0083 }
-            boolean r0 = r0.equals(r1)     // Catch:{ Exception -> 0x0083 }
-            if (r0 == 0) goto L_0x0050
+            java.lang.String r1 = r6.getAction()     // Catch:{ Exception -> 0x0086 }
+            boolean r0 = r0.equals(r1)     // Catch:{ Exception -> 0x0086 }
+            if (r0 == 0) goto L_0x0053
             java.lang.String r2 = "settings"
-            goto L_0x0064
-        L_0x0050:
-            java.lang.String r2 = "search"
-            goto L_0x0064
+            goto L_0x0067
         L_0x0053:
+            java.lang.String r2 = "search"
+            goto L_0x0067
+        L_0x0056:
             r6 = r2
-            goto L_0x0064
-        L_0x0055:
-            android.content.Intent r2 = new android.content.Intent     // Catch:{ Exception -> 0x0083 }
-            r2.<init>(r1)     // Catch:{ Exception -> 0x0083 }
+            goto L_0x0067
+        L_0x0058:
+            android.content.Intent r2 = new android.content.Intent     // Catch:{ Exception -> 0x0086 }
+            r2.<init>(r1)     // Catch:{ Exception -> 0x0086 }
             java.lang.String r6 = "com.android.deskclock"
-            r2.setPackage(r6)     // Catch:{ Exception -> 0x0083 }
+            r2.setPackage(r6)     // Catch:{ Exception -> 0x0086 }
             java.lang.String r6 = "clock"
-        L_0x0061:
+        L_0x0064:
             r4 = r2
             r2 = r6
             r6 = r4
-        L_0x0064:
-            boolean r0 = android.text.TextUtils.isEmpty(r2)     // Catch:{ Exception -> 0x0083 }
-            if (r0 != 0) goto L_0x0075
+        L_0x0067:
+            boolean r0 = android.text.TextUtils.isEmpty(r2)     // Catch:{ Exception -> 0x0086 }
+            if (r0 != 0) goto L_0x0078
             java.lang.Class<com.android.systemui.miui.statusbar.analytics.SystemUIStat> r0 = com.android.systemui.miui.statusbar.analytics.SystemUIStat.class
-            java.lang.Object r0 = com.android.systemui.Dependency.get(r0)     // Catch:{ Exception -> 0x0083 }
-            com.android.systemui.miui.statusbar.analytics.SystemUIStat r0 = (com.android.systemui.miui.statusbar.analytics.SystemUIStat) r0     // Catch:{ Exception -> 0x0083 }
-            r0.handleClickShortcutEvent(r2)     // Catch:{ Exception -> 0x0083 }
-        L_0x0075:
-            if (r6 == 0) goto L_0x0087
+            java.lang.Object r0 = com.android.systemui.Dependency.get(r0)     // Catch:{ Exception -> 0x0086 }
+            com.android.systemui.miui.statusbar.analytics.SystemUIStat r0 = (com.android.systemui.miui.statusbar.analytics.SystemUIStat) r0     // Catch:{ Exception -> 0x0086 }
+            r0.handleClickShortcutEvent(r2)     // Catch:{ Exception -> 0x0086 }
+        L_0x0078:
+            if (r6 == 0) goto L_0x008a
             r0 = 268435456(0x10000000, float:2.5243549E-29)
-            r6.addFlags(r0)     // Catch:{ Exception -> 0x0083 }
-            com.android.systemui.plugins.ActivityStarter r5 = r5.mActStarter     // Catch:{ Exception -> 0x0083 }
+            r6.addFlags(r0)     // Catch:{ Exception -> 0x0086 }
+            com.android.systemui.plugins.ActivityStarter r5 = r5.mActStarter     // Catch:{ Exception -> 0x0086 }
             r0 = 1
-            r5.startActivity(r6, r0)     // Catch:{ Exception -> 0x0083 }
-            goto L_0x0087
-        L_0x0083:
+            r5.startActivity(r6, r0)     // Catch:{ Exception -> 0x0086 }
+            goto L_0x008a
+        L_0x0086:
             r5 = move-exception
             r5.printStackTrace()
-        L_0x0087:
+        L_0x008a:
             return
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.HeaderView.onClick(android.view.View):void");
@@ -184,18 +184,5 @@ public abstract class HeaderView extends RelativeLayout implements View.OnClickL
             intent3.setPackage(Util.isBrowserGlobalEnabled(getContext()) ? "com.mi.globalbrowser" : "com.android.browser");
             return intent3;
         }
-    }
-
-    private String getCalendarPkg() {
-        if (!Constants.IS_INTERNATIONAL) {
-            return "com.android.calendar";
-        }
-        if (Util.isAppInstalledForUser(this.mContext, "com.xiaomi.calendar", KeyguardUpdateMonitor.getCurrentUser())) {
-            return "com.xiaomi.calendar";
-        }
-        if (Util.isAppInstalledForUser(this.mContext, "com.android.calendar", KeyguardUpdateMonitor.getCurrentUser())) {
-            return "com.android.calendar";
-        }
-        return "com.google.android.calendar";
     }
 }

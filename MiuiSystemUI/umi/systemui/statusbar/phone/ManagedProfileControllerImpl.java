@@ -1,6 +1,5 @@
 package com.android.systemui.statusbar.phone;
 
-import android.app.ActivityManager;
 import android.app.StatusBarManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -11,6 +10,7 @@ import android.content.pm.UserInfoCompat;
 import android.os.Handler;
 import android.os.UserHandle;
 import android.os.UserManager;
+import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.systemui.statusbar.phone.ManagedProfileController;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -69,7 +69,7 @@ public class ManagedProfileControllerImpl implements ManagedProfileController {
     public void reloadManagedProfiles() {
         synchronized (this.mProfiles) {
             boolean z = this.mProfiles.size() > 0;
-            int currentUser = ActivityManager.getCurrentUser();
+            int currentUser = KeyguardUpdateMonitor.getCurrentUser();
             this.mProfiles.clear();
             for (UserInfo userInfo : this.mUserManager.getEnabledProfiles(currentUser)) {
                 if (userInfo.isManagedProfile()) {

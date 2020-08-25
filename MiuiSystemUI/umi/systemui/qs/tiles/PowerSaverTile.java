@@ -1,6 +1,5 @@
 package com.android.systemui.qs.tiles;
 
-import android.app.ActivityManager;
 import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Intent;
@@ -10,6 +9,7 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.widget.Switch;
+import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.systemui.Constants;
 import com.android.systemui.plugins.R;
 import com.android.systemui.plugins.qs.QSTile;
@@ -53,13 +53,12 @@ public class PowerSaverTile extends QSTileImpl<QSTile.BooleanState> {
     /* access modifiers changed from: protected */
     public void handleClick() {
         boolean z = false;
-        if (Settings.System.getIntForUser(this.mResolver, "POWER_SAVE_MODE_OPEN", 0, -2) != 0) {
+        if (Settings.System.getIntForUser(this.mResolver, "POWER_SAVE_MODE_OPEN", 0, KeyguardUpdateMonitor.getCurrentUser()) != 0) {
             z = true;
         }
-        boolean z2 = !z;
         Bundle bundle = new Bundle();
-        bundle.putBoolean("POWER_SAVE_MODE_OPEN", z2);
-        this.mResolver.call(maybeAddUserId(Uri.parse("content://com.miui.powercenter.powersaver"), ActivityManager.getCurrentUser()), "changePowerMode", (String) null, bundle);
+        bundle.putBoolean("POWER_SAVE_MODE_OPEN", !z);
+        this.mResolver.call(maybeAddUserId(Uri.parse("content://com.miui.powercenter.powersaver"), KeyguardUpdateMonitor.getCurrentUser()), "changePowerMode", (String) null, bundle);
     }
 
     public CharSequence getTileLabel() {

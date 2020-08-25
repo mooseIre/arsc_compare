@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Outline;
+import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -23,6 +25,7 @@ import com.android.systemui.miui.statusbar.analytics.SystemUIStat;
 import com.android.systemui.plugins.R;
 import com.android.systemui.plugins.qs.DetailAdapter;
 import com.android.systemui.qs.QSDetailItems;
+import com.android.systemui.util.Utils;
 import java.util.Collection;
 import miui.widget.SlidingButton;
 import miuix.animation.Folme;
@@ -51,7 +54,8 @@ public class QSControlDetail extends FrameLayout {
     public Context mContext;
     /* access modifiers changed from: private */
     public DetailAdapter mDetailAdapter;
-    private View mDetailContainer;
+    /* access modifiers changed from: private */
+    public View mDetailContainer;
     private ViewGroup mDetailContent;
     protected TextView mDetailSettingsButton;
     private final SparseArray<View> mDetailViews = new SparseArray<>();
@@ -95,7 +99,8 @@ public class QSControlDetail extends FrameLayout {
     /* access modifiers changed from: private */
     public boolean mSwitchClicked;
     private boolean mSwitchEnabled;
-    private boolean mSwitchState;
+    /* access modifiers changed from: private */
+    public boolean mSwitchState;
     protected View mToView;
     protected int[] mToViewFrame = new int[4];
     protected int[] mToViewLocation = new int[4];
@@ -118,19 +123,43 @@ public class QSControlDetail extends FrameLayout {
 
     /* access modifiers changed from: protected */
     public void onConfigurationChanged(Configuration configuration) {
+        int i;
+        int i2;
         super.onConfigurationChanged(configuration);
-        this.mOrientation = configuration.orientation;
+        int i3 = this.mOrientation;
+        int i4 = configuration.orientation;
+        if (i3 != i4) {
+            this.mOrientation = i4;
+            if (i4 == 1) {
+                i = 0;
+                i2 = 0;
+            } else if (getLayoutDirection() == 0) {
+                i = this.mContext.getResources().getDimensionPixelSize(R.dimen.qs_control_width_land) + this.mContext.getResources().getDimensionPixelSize(R.dimen.qs_control_land_tiles_margin_middle);
+                i2 = 0;
+            } else {
+                i2 = this.mContext.getResources().getDimensionPixelSize(R.dimen.qs_control_width_land) + this.mContext.getResources().getDimensionPixelSize(R.dimen.qs_control_land_tiles_margin_middle);
+                i = 0;
+            }
+            setPadding(i, 0, i2, 0);
+        }
         this.mWifiBtDetailHeight = this.mContext.getResources().getDimensionPixelSize(R.dimen.qs_control_detail_wifi_bt_height);
         updateDetailLayout();
     }
 
     public void updateResources() {
         setBackgroundColor(this.mContext.getColor(R.color.qs_control_detail_layout_bg_color));
-        this.mDetailContainer.setBackground(this.mContext.getDrawable(R.drawable.qs_control_detail_bg));
+        updateBackground();
         this.mQsDetailHeaderTitle.setTextAppearance(R.style.TextAppearance_QSControl_DetailHeader);
         this.mDetailSettingsButton.setTextAppearance(R.style.TextAppearance_QSControl_DetailMoreButton);
         this.mDetailSettingsButton.setBackground(this.mContext.getDrawable(R.drawable.qs_control_detail_more_button_bg));
         this.mDetailViews.clear();
+    }
+
+    private void updateBackground() {
+        Drawable smoothRoundDrawable = Utils.getSmoothRoundDrawable(this.mContext, R.drawable.qs_control_detail_bg);
+        if (smoothRoundDrawable != null) {
+            this.mDetailContainer.setBackground(smoothRoundDrawable);
+        }
     }
 
     /* access modifiers changed from: protected */
@@ -144,6 +173,7 @@ public class QSControlDetail extends FrameLayout {
         View findViewById = findViewById(R.id.qs_detail_container);
         this.mDetailContainer = findViewById;
         findViewById.setClickable(true);
+        updateBackground();
         View findViewById2 = findViewById(R.id.qs_control_detail_header);
         this.mQsDetailHeader = findViewById2;
         this.mQsDetailHeaderTitle = (TextView) findViewById2.findViewById(16908310);
@@ -153,7 +183,7 @@ public class QSControlDetail extends FrameLayout {
         this.mQsDetailHeaderSwitch.setFocusableInTouchMode(true);
         this.mQsDetailHeaderSwitch.setImportantForAccessibility(1);
         this.mQsDetailHeaderSwitch.setContentDescription(this.mContext.getResources().getString(R.string.accessibility_detail_switch));
-        this.detailCornerRadius = this.mContext.getResources().getDimension(R.dimen.notification_stack_scroller_bg_radius);
+        this.detailCornerRadius = this.mContext.getResources().getDimension(R.dimen.qs_control_corner_general_radius);
         this.mDetailContainer.setClipToOutline(true);
         this.mDetailContainer.setOutlineProvider(new ViewOutlineProvider() {
             public void getOutline(View view, Outline outline) {
@@ -231,11 +261,11 @@ public class QSControlDetail extends FrameLayout {
                 this.mDetailAdapter = detailAdapter;
                 setupDetailHeader(detailAdapter);
                 setupDetailFooter(this.mDetailAdapter);
-                this.mDetailContainer.getLayoutParams().height = this.mDetailAdapter.getContainerHeight();
-                this.mDetailContainer.requestLayout();
                 int metricsCategory = this.mDetailAdapter.getMetricsCategory();
                 View createDetailView = this.mDetailAdapter.createDetailView(this.mContext, this.mDetailViews.get(metricsCategory), this.mDetailContent);
-                if (createDetailView != null && (createDetailView instanceof QSDetailItems)) {
+                if (createDetailView == null || !(createDetailView instanceof QSDetailItems)) {
+                    this.mDetailContainer.getLayoutParams().height = this.mDetailAdapter.getContainerHeight();
+                } else {
                     updateContainerHeight(((QSDetailItems) createDetailView).getSuffix());
                 }
                 if (createDetailView != null) {
@@ -301,9 +331,9 @@ public class QSControlDetail extends FrameLayout {
             }
         } else if (view == null) {
             this.mFromView = null;
-            setVisibility(0);
+            setVisibility(4);
         } else {
-            setVisibility(0);
+            setVisibility(4);
             this.mFromView = view;
             this.mToView = this.mDetailContainer;
             this.mTranslateView = view2;
@@ -338,6 +368,7 @@ public class QSControlDetail extends FrameLayout {
         this.mQsDetailHeaderSwitch.setOnPerformCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton compoundButton, boolean z) {
                 boolean unused = QSControlDetail.this.mSwitchClicked = true;
+                boolean unused2 = QSControlDetail.this.mSwitchState = z;
                 detailAdapter.setToggleState(z);
             }
         });
@@ -600,6 +631,17 @@ public class QSControlDetail extends FrameLayout {
             animState.add(ViewProperty.TRANSLATION_Z, 0, new long[0]);
             AnimConfig animConfig = new AnimConfig();
             animConfig.setEase(0, 300.0f, 0.8f, 0.6666f);
+            animConfig.addListeners(new TransitionListener() {
+                public void onBegin(Object obj) {
+                    super.onBegin(obj);
+                    QSControlDetail.this.mDetailContainer.setLayerType(2, (Paint) null);
+                }
+
+                public void onComplete(Object obj) {
+                    super.onComplete(obj);
+                    QSControlDetail.this.mDetailContainer.setLayerType(0, (Paint) null);
+                }
+            });
             state.to(animState, animConfig);
             return;
         }
@@ -612,6 +654,17 @@ public class QSControlDetail extends FrameLayout {
         animState2.add(ViewProperty.TRANSLATION_Z, 0, new long[0]);
         AnimConfig animConfig2 = new AnimConfig();
         animConfig2.setEase(0, 300.0f, 0.8f, 0.6666f);
+        animConfig2.addListeners(new TransitionListener() {
+            public void onBegin(Object obj) {
+                super.onBegin(obj);
+                QSControlDetail.this.mDetailContainer.setLayerType(2, (Paint) null);
+            }
+
+            public void onComplete(Object obj) {
+                super.onComplete(obj);
+                QSControlDetail.this.mDetailContainer.setLayerType(0, (Paint) null);
+            }
+        });
         state2.to(animState2, animConfig2);
     }
 

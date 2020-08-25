@@ -1,6 +1,7 @@
 package com.android.systemui.miui.controlcenter;
 
 import android.graphics.Bitmap;
+import android.os.UserHandle;
 import com.android.systemui.miui.statusbar.phone.ControlPanelContentView;
 import java.util.HashMap;
 
@@ -25,6 +26,8 @@ public interface ExpandInfoController {
     int getSelectedType();
 
     Info getSuperPowerInfo();
+
+    UserHandle getUserHandle();
 
     void onUserSwitched();
 

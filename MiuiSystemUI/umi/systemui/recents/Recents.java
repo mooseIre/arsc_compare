@@ -7,10 +7,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
+import android.database.ContentObserver;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.os.UserHandle;
+import android.provider.MiuiSettings;
 import android.provider.Settings;
 import android.util.Log;
 import com.android.internal.content.PackageMonitor;
@@ -22,6 +26,7 @@ import com.android.systemui.SystemUI;
 import com.android.systemui.recents.events.RecentsEventBus;
 import com.android.systemui.recents.events.activity.DefaultHomeChangedEvent;
 import com.android.systemui.recents.events.activity.RecentsWithinLauncherChangedEvent;
+import com.android.systemui.recents.events.activity.SuperPowerModeChangedEvent;
 import com.android.systemui.recents.misc.RecentsPushEventHelper;
 import com.android.systemui.recents.misc.SystemServicesProxy;
 import com.android.systemui.recents.misc.Utilities;
@@ -37,10 +42,16 @@ public class Recents extends SystemUI implements RecentsComponent, CommandQueue.
     /* access modifiers changed from: private */
     public static SystemServicesProxy sSystemServicesProxy;
     private static RecentsTaskLoader sTaskLoader;
+    private boolean mIsLowMemoryDevice;
     /* access modifiers changed from: private */
     public boolean mIsRecentsWithinLauncher;
     private LauncherPackageMonitor mPackageMonitor;
     private RecentsImplementation mRecentsImplementation;
+    private ContentObserver mSuperSavePowerObserver = new ContentObserver(new Handler(Looper.getMainLooper())) {
+        public void onChange(boolean z) {
+            RecentsEventBus.getDefault().send(new SuperPowerModeChangedEvent(MiuiSettings.System.isSuperSaveModeOpen(Recents.this.mContext, UserHandle.myUserId())));
+        }
+    };
     private boolean mUseFsGestureVersionThree;
     /* access modifiers changed from: private */
     public boolean mUseMiuiHomeAsDefaultHome;
@@ -200,6 +211,7 @@ public class Recents extends SystemUI implements RecentsComponent, CommandQueue.
         sConfiguration = new RecentsConfiguration(this.mContext);
         this.mUseMiuiHomeAsDefaultHome = sSystemServicesProxy.useMiuiHomeAsDefaultHome(this.mContext);
         this.mIsRecentsWithinLauncher = sSystemServicesProxy.isRecentsWithinLauncher(this.mContext);
+        this.mIsLowMemoryDevice = Utilities.isLowMemoryDevice();
         boolean useFsGestureVersionThree = useFsGestureVersionThree();
         this.mUseFsGestureVersionThree = useFsGestureVersionThree;
         if (useFsGestureVersionThree) {
@@ -215,6 +227,7 @@ public class Recents extends SystemUI implements RecentsComponent, CommandQueue.
             launcherPackageMonitor.register(context, context.getMainLooper(), UserHandle.ALL, true);
             this.mContext.registerReceiver(this.mUserPreferenceChangeReceiver, new IntentFilter("android.intent.action.ACTION_PREFERRED_ACTIVITY_CHANGED"));
         }
+        registerSuperSavePowerObserver();
         RecentsEventBus.getDefault().register(this, 1);
         RecentsEventBus.getDefault().register(sSystemServicesProxy, 1);
         RecentsEventBus.getDefault().register(sTaskLoader, 1);
@@ -224,8 +237,15 @@ public class Recents extends SystemUI implements RecentsComponent, CommandQueue.
         putComponent(Recents.class, this);
     }
 
+    private void registerSuperSavePowerObserver() {
+        if (UserHandle.myUserId() == 0) {
+            this.mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor("power_supersave_mode_open"), false, this.mSuperSavePowerObserver, UserHandle.myUserId());
+            this.mSuperSavePowerObserver.onChange(false);
+        }
+    }
+
     public boolean useFsGestureVersionThree() {
-        return Utilities.isAndroidQorNewer() && this.mUseMiuiHomeAsDefaultHome && this.mIsRecentsWithinLauncher;
+        return Utilities.isAndroidQorNewer() && this.mUseMiuiHomeAsDefaultHome && this.mIsRecentsWithinLauncher && !this.mIsLowMemoryDevice;
     }
 
     /* access modifiers changed from: private */
@@ -261,11 +281,18 @@ public class Recents extends SystemUI implements RecentsComponent, CommandQueue.
         }
 
         public void onPackageModified(String str) {
-            boolean isRecentsWithinLauncher;
             Log.e("Recents", "packageMonitor   onPackageModified  packageName=" + str + "   mIsRecentsWithinLauncher=" + Recents.this.mIsRecentsWithinLauncher);
-            if (str != null && "com.miui.home".equals(str) && Recents.this.mIsRecentsWithinLauncher != (isRecentsWithinLauncher = Recents.sSystemServicesProxy.isRecentsWithinLauncher(Recents.this.mContext))) {
-                boolean unused = Recents.this.mIsRecentsWithinLauncher = isRecentsWithinLauncher;
-                RecentsEventBus.getDefault().send(new RecentsWithinLauncherChangedEvent(Recents.this.mIsRecentsWithinLauncher));
+            if (str != null && "com.miui.home".equals(str)) {
+                boolean isRecentsWithinLauncher = Recents.sSystemServicesProxy.isRecentsWithinLauncher(Recents.this.mContext);
+                if (Recents.this.mIsRecentsWithinLauncher != isRecentsWithinLauncher) {
+                    boolean unused = Recents.this.mIsRecentsWithinLauncher = isRecentsWithinLauncher;
+                    RecentsEventBus.getDefault().send(new RecentsWithinLauncherChangedEvent(Recents.this.mIsRecentsWithinLauncher));
+                }
+                boolean useMiuiHomeAsDefaultHome = Recents.sSystemServicesProxy.useMiuiHomeAsDefaultHome(Recents.this.mContext);
+                if (Recents.this.mUseMiuiHomeAsDefaultHome != useMiuiHomeAsDefaultHome) {
+                    boolean unused2 = Recents.this.mUseMiuiHomeAsDefaultHome = useMiuiHomeAsDefaultHome;
+                    RecentsEventBus.getDefault().send(new DefaultHomeChangedEvent(Recents.this.mUseMiuiHomeAsDefaultHome));
+                }
                 Recents.this.updateRecentsImplementation();
             }
         }

@@ -335,8 +335,12 @@ public class SecurityControllerImpl extends CurrentUserTracker implements Securi
         /* access modifiers changed from: protected */
         public Pair<Integer, Boolean> doInBackground(final Integer... numArr) {
             KeyChain.KeyChainConnection bindAsUser;
+            UserHandle of = UserHandleCompat.of(numArr[0].intValue());
+            if (Build.VERSION.SDK_INT > 29 && !UserManager.get(SecurityControllerImpl.this.mContext).isUserUnlocked(of)) {
+                return null;
+            }
             try {
-                bindAsUser = KeyChain.bindAsUser(SecurityControllerImpl.this.mContext, UserHandleCompat.of(numArr[0].intValue()));
+                bindAsUser = KeyChain.bindAsUser(SecurityControllerImpl.this.mContext, of);
                 Pair<Integer, Boolean> pair = new Pair<>(numArr[0], Boolean.valueOf(!bindAsUser.getService().getUserCaAliases().getList().isEmpty()));
                 if (bindAsUser != null) {
                     bindAsUser.close();
@@ -363,7 +367,7 @@ public class SecurityControllerImpl extends CurrentUserTracker implements Securi
             if (SecurityControllerImpl.DEBUG) {
                 Log.d("SecurityController", "onPostExecute " + pair);
             }
-            if (pair.second != null) {
+            if (pair != null && pair.second != null) {
                 SecurityControllerImpl.this.mHasCACerts.put((Integer) pair.first, (Boolean) pair.second);
                 SecurityControllerImpl.this.fireCallbacks();
             }

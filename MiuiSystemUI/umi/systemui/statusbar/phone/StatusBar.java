@@ -35,6 +35,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.IntentSender;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.content.pm.IPackageManager;
 import android.content.pm.PackageManager;
 import android.content.pm.UserInfo;
@@ -184,7 +185,7 @@ import com.android.systemui.miui.policy.NotificationsMonitor;
 import com.android.systemui.miui.statusbar.CloudDataHelper;
 import com.android.systemui.miui.statusbar.ExpandedNotification;
 import com.android.systemui.miui.statusbar.InCallUtils;
-import com.android.systemui.miui.statusbar.analytics.SystemUIStat;
+import com.android.systemui.miui.statusbar.analytics.NotificationStat;
 import com.android.systemui.miui.statusbar.notification.HeadsUpAnimatedStubView;
 import com.android.systemui.miui.statusbar.notification.NotificationSettingsHelper;
 import com.android.systemui.miui.statusbar.notification.NotificationSettingsManager;
@@ -217,8 +218,8 @@ import com.android.systemui.recents.events.activity.DefaultHomeChangedEvent;
 import com.android.systemui.recents.events.activity.MultiWindowStateChangedEvent;
 import com.android.systemui.recents.events.activity.RecentsWithinLauncherChangedEvent;
 import com.android.systemui.recents.misc.SystemServicesProxy;
+import com.android.systemui.recents.misc.Utilities;
 import com.android.systemui.stackdivider.Divider;
-import com.android.systemui.stackdivider.WindowManagerProxy;
 import com.android.systemui.statistic.ScenarioConstants;
 import com.android.systemui.statistic.ScenarioTrackUtil;
 import com.android.systemui.statusbar.ActivatableNotificationView;
@@ -286,9 +287,6 @@ import com.android.systemui.volume.VolumeComponent;
 import com.miui.aod.IMiuiAodCallback;
 import com.miui.aod.IMiuiAodService;
 import com.miui.systemui.annotation.Inject;
-import com.miui.systemui.renderlayer.MiBlendMode;
-import com.miui.systemui.renderlayer.MiRenderConfig;
-import com.miui.systemui.renderlayer.RenderLayerManager;
 import com.xiaomi.stat.MiStat;
 import com.xiaomi.stat.c.b;
 import com.xiaomi.stat.c.c;
@@ -315,7 +313,6 @@ import miui.security.SecurityManager;
 import miui.telephony.TelephonyManager;
 import miui.telephony.TelephonyManagerEx;
 import miui.util.CustomizeUtil;
-import miui.view.MiuiHapticFeedbackConstants;
 
 public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.DragDownCallback, ActivityStarter, UnlockMethodCache.OnUnlockMethodChangedListener, OnHeadsUpChangedListener, VisualStabilityManager.Callback, CommandQueue.Callbacks, SilentModeObserverController.SilentModeListener, MiuiActivityLaunchAnimator.Callback, ExpandableNotificationRow.ExpansionLogger, NotificationData.Environment, ShadeController, NotificationInflater.InflationCallback, InCallNotificationView.InCallCallback, NotificationPresenter {
     private static final Intent APP_NOTIFICATION_PREFS_CATEGORY_INTENT = new Intent("android.intent.action.MAIN").addCategory("android.intent.category.NOTIFICATION_PREFERENCES");
@@ -333,12 +330,13 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
     /* access modifiers changed from: private */
     public static String EXTRA_HIGH_PRIORITY_SETTING = "high_priority_setting";
     public static final boolean FORCE_REMOTE_INPUT_HISTORY = SystemProperties.getBoolean("debug.force_remoteinput_history", false);
-    private static final MiRenderConfig MI_RENDER_CONFIG = MiRenderConfig.newConfig(MiBlendMode.COLOR_DODGE.ordinal(), MiBlendMode.COLOR_BURN.ordinal(), MiBlendMode.CLEAR.ordinal());
     private static final boolean ONLY_CORE_APPS;
     public static final boolean SPEW;
     private static final AudioAttributes VIBRATION_ATTRIBUTES = new AudioAttributes.Builder().setContentType(4).setUsage(13).build();
     public static boolean sBootCompleted = false;
     public static boolean sGameMode = false;
+    /* access modifiers changed from: private */
+    public int[] TRANSIENT_TYPES;
     private ContentObserver mAODObserver;
     private ContentObserver mAccessControlLockObserver;
     protected AccessibilityManager mAccessibilityManager;
@@ -386,6 +384,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
     /* access modifiers changed from: private */
     public String mCallState;
     private long[] mCameraLaunchGestureVibePattern;
+    private final Runnable mCancelDisableTouch;
     /* access modifiers changed from: private */
     public final Runnable mCheckBarModes;
     private final ContentObserver mCloudDataObserver;
@@ -414,8 +413,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
     private Divider.DockedStackExistsChangedListener mDockedStackExistsChangedListener;
     protected DozeScrimController mDozeScrimController;
     private DozeServiceHost mDozeServiceHost;
-    /* access modifiers changed from: private */
-    public boolean mDozing;
+    private boolean mDozing;
     Runnable mDozingChanged;
     /* access modifiers changed from: private */
     public boolean mDozingRequested;
@@ -480,6 +478,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
     public boolean mIsInDriveModeMask;
     /* access modifiers changed from: private */
     public boolean mIsKeyguard;
+    private boolean mIsLowMemoryDevice;
     private boolean mIsRemoved;
     private boolean mIsStatusBarHidden;
     private boolean mKeptOnKeyguard;
@@ -530,9 +529,15 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
     private MediaSessionManager mMediaSessionManager;
     private NotificationMessagingUtil mMessagingUtil;
     private final MetricsLogger mMetricsLogger;
+    /* access modifiers changed from: private */
+    public boolean mMirrorDndEnable;
+    private final ContentObserver mMirrorDndObserver;
     private ContentObserver mMiuiOptimizationObserver;
+    private BroadcastReceiver mMiuiRemoteOperationReceiver;
     /* access modifiers changed from: private */
     public MiuiStatusBarPromptController mMiuiStatusBarPrompt;
+    /* access modifiers changed from: private */
+    public SharedPreferences mMiuiUpdateVersionSharedPreferences;
     int mNaturalBarHeight = -1;
     /* access modifiers changed from: private */
     public boolean mNavigationBarLoaded;
@@ -593,8 +598,6 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
     private boolean mReinflateNotificationsOnUserSwitched;
     protected RemoteInputController mRemoteInputController;
     protected ArraySet<NotificationData.Entry> mRemoteInputEntriesToRemoveOnCollapse;
-    /* access modifiers changed from: private */
-    public boolean mRenderLayerShown;
     private View mReportRejectedTouch;
     /* access modifiers changed from: private */
     public ContentResolver mResolver;
@@ -658,6 +661,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
     protected boolean mUseHeadsUp;
     private boolean mUseMiuiHomeAsDefaultHome;
     private ContentObserver mUserExperienceObserver;
+    private final ContentObserver mUserFoldObserver;
     /* access modifiers changed from: private */
     public UserManager mUserManager;
     /* access modifiers changed from: private */
@@ -850,14 +854,28 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
         };
         this.mOrientation = 1;
         this.mUiOffloadThread = (UiOffloadThread) Dependency.get(UiOffloadThread.class);
+        this.TRANSIENT_TYPES = new int[]{0, 1};
         this.mAutohide = new Runnable() {
             public void run() {
-                StatusBar statusBar = StatusBar.this;
-                int i = (~statusBar.getTransientMask()) & statusBar.mSystemUiVisibility;
-                StatusBar statusBar2 = StatusBar.this;
-                if (statusBar2.mSystemUiVisibility != i) {
-                    statusBar2.notifyUiVisibilityChanged(i);
+                if (Build.VERSION.SDK_INT > 29) {
+                    StatusBar statusBar = StatusBar.this;
+                    if ((statusBar.mSystemUiVisibility & 201326592) != 0) {
+                        statusBar.clearTransient(statusBar.TRANSIENT_TYPES);
+                        return;
+                    }
+                    return;
                 }
+                StatusBar statusBar2 = StatusBar.this;
+                int i = (~statusBar2.getTransientMask()) & statusBar2.mSystemUiVisibility;
+                StatusBar statusBar3 = StatusBar.this;
+                if (statusBar3.mSystemUiVisibility != i) {
+                    statusBar3.notifyUiVisibilityChanged(i);
+                }
+            }
+        };
+        this.mCancelDisableTouch = new Runnable() {
+            public void run() {
+                StatusBar.this.cancelDisableTouch();
             }
         };
         this.mSrcXferMode = new PorterDuffXfermode(PorterDuff.Mode.SRC);
@@ -908,9 +926,9 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
             public void onFaceAuthenticated() {
                 if (StatusBar.this.mFaceUnlockManager.isShowMessageWhenFaceUnlockSuccess()) {
                     StatusBar.this.updatePublicMode();
-                    boolean access$1100 = StatusBar.this.isAnyProfilePublicMode();
+                    boolean access$1400 = StatusBar.this.isAnyProfilePublicMode();
                     StatusBar statusBar = StatusBar.this;
-                    statusBar.mStackScroller.setHideSensitive(NotificationUtil.hideNotificationsForFaceUnlock(statusBar.mContext) || access$1100, true);
+                    statusBar.mStackScroller.setHideSensitive(NotificationUtil.hideNotificationsForFaceUnlock(statusBar.mContext) || access$1400, true);
                     StatusBar.this.updateNotificationViewsOnly();
                 }
             }
@@ -920,7 +938,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
         this.mGameModeObserver = new ContentObserver(this.mHandler) {
             public void onChange(boolean z) {
                 boolean z2 = false;
-                if (Settings.Secure.getIntForUser(StatusBar.this.mContext.getContentResolver(), "gb_notification", 0, -2) == 1) {
+                if (Settings.Secure.getIntForUser(StatusBar.this.mContext.getContentResolver(), "gb_notification", 0, KeyguardUpdateMonitor.getCurrentUser()) == 1) {
                     z2 = true;
                 }
                 StatusBar.sGameMode = z2;
@@ -930,7 +948,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
             public void onChange(boolean z) {
                 StatusBar statusBar = StatusBar.this;
                 boolean z2 = false;
-                if (Settings.Secure.getIntForUser(statusBar.mContext.getContentResolver(), "gb_handsfree", 0, -2) == 1) {
+                if (Settings.Secure.getIntForUser(statusBar.mContext.getContentResolver(), "gb_handsfree", 0, KeyguardUpdateMonitor.getCurrentUser()) == 1) {
                     z2 = true;
                 }
                 boolean unused = statusBar.mGameHandsFreeMode = z2;
@@ -1020,7 +1038,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
                             i = 2;
                         }
                         if (stringExtra != null && stringExtra.equals("homekey")) {
-                            ((SystemUIStat) Dependency.get(SystemUIStat.class)).onHomePressed();
+                            ((NotificationStat) Dependency.get(NotificationStat.class)).onHomePressed();
                         }
                         StatusBar.this.animateCollapsePanels(i);
                     }
@@ -1082,7 +1100,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
                     if (intent.getBooleanExtra("com.miui.app.ExtraStatusBarManager.extra_forbid_notification", false)) {
                         StatusBar.this.filterPackageNotifications(stringExtra2);
                         if (!TextUtils.equals(intent.getSender(), StatusBar.this.mContext.getPackageName())) {
-                            ((SystemUIStat) Dependency.get(SystemUIStat.class)).onBlock(stringExtra2, stringExtra4, stringExtra3);
+                            ((NotificationStat) Dependency.get(NotificationStat.class)).onBlock(stringExtra2, stringExtra4, stringExtra3);
                         }
                     } else if (intent.getBooleanExtra(StatusBar.EXTRA_HIGH_PRIORITY_SETTING, false)) {
                         int intExtra = intent.getIntExtra(StatusBar.EXTRA_APP_UID, -1);
@@ -1138,6 +1156,37 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
                 }
                 if ("fake_artwork".equals(intent.getAction()) && StatusBar.DEBUG_MEDIA_FAKE_ARTWORK) {
                     StatusBar.this.updateMediaMetaData(true, true);
+                }
+            }
+        };
+        this.mMiuiRemoteOperationReceiver = new BroadcastReceiver() {
+            public void onReceive(Context context, Intent intent) {
+                String action = intent.getAction();
+                String stringExtra = intent.getStringExtra("operation");
+                ControlPanelController controlPanelController = (ControlPanelController) Dependency.get(ControlPanelController.class);
+                boolean isUseControlCenter = controlPanelController.isUseControlCenter();
+                if (!"action_panels_operation".equals(action)) {
+                    return;
+                }
+                if ("reverse_notifications_panel".equals(stringExtra)) {
+                    if (StatusBar.this.isQSFullyCollapsed()) {
+                        StatusBar.this.animateExpandNotificationsPanel();
+                    } else {
+                        StatusBar.this.animateCollapsePanels();
+                    }
+                } else if (!"reverse_quick_settings_panel".equals(stringExtra)) {
+                } else {
+                    if (isUseControlCenter) {
+                        if (controlPanelController.isQSFullyCollapsed()) {
+                            controlPanelController.openPanel();
+                        } else {
+                            controlPanelController.collapsePanel(true);
+                        }
+                    } else if (StatusBar.this.isQSFullyCollapsed()) {
+                        StatusBar.this.animateExpandSettingsPanel((String) null);
+                    } else {
+                        StatusBar.this.animateCollapsePanels();
+                    }
                 }
             }
         };
@@ -1226,8 +1275,19 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
             }
 
             public void onDeviceProvisionedChanged() {
+                Class cls = ControlPanelController.class;
                 StatusBar.this.updateNotifications();
                 StatusBar.this.updateNotificationsOnDensityOrFontScaleChanged();
+                if (StatusBar.this.isDeviceProvisioned() && !StatusBar.this.mMiuiUpdateVersionSharedPreferences.getBoolean("deviceProvisionUpdateTiles", false)) {
+                    if (((ControlPanelController) Dependency.get(cls)).isUseControlCenter()) {
+                        ((ControlPanelController) Dependency.get(cls)).resetTiles();
+                    } else if (StatusBar.this.mQSTileHost != null) {
+                        StatusBar.this.mQSTileHost.resetTiles();
+                    }
+                    SharedPreferences.Editor edit = StatusBar.this.mMiuiUpdateVersionSharedPreferences.edit();
+                    edit.putBoolean("deviceProvisionUpdateTiles", true);
+                    edit.apply();
+                }
             }
 
             public void onUserSwitched() {
@@ -1237,7 +1297,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
         this.mMiuiOptimizationObserver = new ContentObserver(this.mHandler) {
             public void onChange(boolean z) {
                 boolean z2 = true;
-                if (Settings.Secure.getIntForUser(StatusBar.this.mContext.getContentResolver(), "miui_optimization", 1, -2) != 0) {
+                if (Settings.Secure.getIntForUser(StatusBar.this.mContext.getContentResolver(), "miui_optimization", 1, KeyguardUpdateMonitor.getCurrentUser()) != 0) {
                     z2 = false;
                 }
                 Util.setMiuiOptimizationDisabled(z2);
@@ -1285,16 +1345,22 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
         };
         this.mNotificationStyleObserver = new ContentObserver(this.mHandler) {
             public void onChange(boolean z) {
-                boolean z2 = Constants.SHOW_NOTIFICATION_HEADER;
+                boolean z2 = Constants.IS_INTERNATIONAL;
                 if (NotificationUtil.isNotificationStyleChanged(Settings.System.getIntForUser(StatusBar.this.mContext.getContentResolver(), "status_bar_notification_style", z2 ? 1 : 0, StatusBar.this.mCurrentUserId))) {
                     StatusBar.this.updateNotificationsOnDensityOrFontScaleChanged();
+                    StatusBar.this.mNotificationIconAreaController.updateNotificationIcons(StatusBar.this.mNotificationData);
                 }
+            }
+        };
+        this.mUserFoldObserver = new ContentObserver(this.mHandler) {
+            public void onChange(boolean z) {
+                StatusBar.this.updateNotificationsOnDensityOrFontScaleChanged();
             }
         };
         this.mFoldImportanceObserver = new ContentObserver(this.mHandler) {
             public void onChange(boolean z, Uri uri) {
                 try {
-                    NotificationSettingsHelper.setFoldImportance(StatusBar.this.mContext, uri.getQueryParameter("package"), Integer.parseInt(uri.getQueryParameter("foldImportance")));
+                    NotificationSettingsHelper.setFoldImportance(StatusBar.this.mContextForUser, uri.getQueryParameter("package"), Integer.parseInt(uri.getQueryParameter("foldImportance")));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -1330,7 +1396,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
         this.mNavigationBarWindowLoadedObserver = new ContentObserver(this.mHandler) {
             public void onChange(boolean z) {
                 StatusBar statusBar = StatusBar.this;
-                boolean unused = statusBar.mNavigationBarLoaded = MiuiSettings.System.getBooleanForUser(statusBar.mContext.getContentResolver(), "navigation_bar_window_loaded", false, -2);
+                boolean unused = statusBar.mNavigationBarLoaded = MiuiSettings.System.getBooleanForUser(statusBar.mContext.getContentResolver(), "navigation_bar_window_loaded", false, KeyguardUpdateMonitor.getCurrentUser());
                 StatusBar statusBar2 = StatusBar.this;
                 statusBar2.mHandler.removeCallbacks(statusBar2.mAddNavigationBarRunnable);
                 if (!StatusBar.this.mNavigationBarLoaded) {
@@ -1351,6 +1417,17 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
                 StatusBar statusBar2 = StatusBar.this;
                 boolean unused2 = statusBar2.mAodUsingSuperWallpaperStyle = MiuiKeyguardUtils.isAodUsingSuperWallpaperStyle(statusBar2.mContext);
                 StatusBar.this.updateDozeAfterScreenOff();
+            }
+        };
+        this.mMirrorDndObserver = new ContentObserver(this.mHandler) {
+            public void onChange(boolean z) {
+                StatusBar statusBar = StatusBar.this;
+                boolean z2 = false;
+                if (Settings.Secure.getIntForUser(statusBar.mContext.getContentResolver(), "miui_mirror_dnd_mode", 0, StatusBar.this.mCurrentUserId) != 0) {
+                    z2 = true;
+                }
+                boolean unused = statusBar.mMirrorDndEnable = z2;
+                Log.w("StatusBar", "Miui Mirror dnd mode, " + StatusBar.this.mMirrorDndEnable);
             }
         };
         this.mAddNavigationBarRunnable = new Runnable() {
@@ -1381,13 +1458,13 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
                             ActivityManagerCompat.getService().resumeAppSwitches();
                         } catch (RemoteException unused) {
                         }
-                        boolean access$9500 = AnonymousClass88.this.superOnClickHandler(view, pendingIntent, intent);
-                        if (access$9500) {
+                        boolean access$9800 = AnonymousClass92.this.superOnClickHandler(view, pendingIntent, intent);
+                        if (access$9800) {
                             StatusBar.this.animateCollapsePanels(2, true);
                             StatusBar.this.visibilityChanged(false);
                             StatusBar.this.mAssistManager.hideAssist();
                         }
-                        return access$9500;
+                        return access$9800;
                     }
                 }, PreviewInflater.wouldLaunchResolverActivity(StatusBar.this.mContext, pendingIntent.getIntent(), StatusBar.this.mCurrentUserId));
                 return true;
@@ -1432,7 +1509,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
 
             private boolean handleRemoteInput(View view, PendingIntent pendingIntent, Intent intent) {
                 RemoteInputView remoteInputView;
-                Object tag = view.getTag(16909377);
+                Object tag = view.getTag(16909363);
                 ExpandableNotificationRow expandableNotificationRow = null;
                 RemoteInput[] remoteInputArr = tag instanceof RemoteInput[] ? (RemoteInput[]) tag : null;
                 if (remoteInputArr == null) {
@@ -1545,11 +1622,13 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
                     }
                     if (list != null && list.size() > 0) {
                         UserInfo userInfo = StatusBar.this.mUserManager.getUserInfo(list.get(0).userId);
-                        if (userInfo != null && userInfo.isManagedProfile()) {
+                        if (!(userInfo == null || !userInfo.isManagedProfile() || userInfo.id == 999)) {
                             Toast makeText = Toast.makeText(StatusBar.this.mContext, R.string.managed_profile_foreground_toast, 0);
-                            TextView textView = (TextView) makeText.getView().findViewById(16908299);
-                            textView.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.stat_sys_managed_profile_status, 0, 0, 0);
-                            textView.setCompoundDrawablePadding(StatusBar.this.mContext.getResources().getDimensionPixelSize(R.dimen.managed_profile_toast_padding));
+                            if (makeText.getView() != null) {
+                                TextView textView = (TextView) makeText.getView().findViewById(16908299);
+                                textView.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.stat_sys_managed_profile_status, 0, 0, 0);
+                                textView.setCompoundDrawablePadding(StatusBar.this.mContext.getResources().getDimensionPixelSize(R.dimen.managed_profile_toast_padding));
+                            }
                             makeText.show();
                         }
                         if (userInfo != null) {
@@ -1561,7 +1640,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
                     Settings.Secure.putInt(StatusBar.this.mContext.getContentResolver(), "show_note_about_notification_hiding", 0);
                     if ("com.android.systemui.statusbar.banner_action_setup".equals(action)) {
                         StatusBar.this.animateCollapsePanels(2, true);
-                        StatusBar.this.mContext.startActivity(new Intent("android.settings.ACTION_APP_NOTIFICATION_REDACTION").addFlags(MiuiHapticFeedbackConstants.FLAG_MIUI_HAPTIC_TAP_NORMAL));
+                        StatusBar.this.mContext.startActivity(new Intent("android.settings.ACTION_APP_NOTIFICATION_REDACTION").addFlags(268435456));
                     }
                 } else if ("com.android.systemui.statusbar.work_challenge_unlocked_notification_action".equals(action)) {
                     IntentSender intentSender = (IntentSender) intent.getParcelableExtra("android.intent.extra.INTENT");
@@ -1612,7 +1691,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
                             }
                         }).forEach(new Consumer() {
                             public final void accept(Object obj) {
-                                StatusBar.AnonymousClass90.this.lambda$onReceive$1$StatusBar$90((NotificationData.Entry) obj);
+                                StatusBar.AnonymousClass94.this.lambda$onReceive$1$StatusBar$94((NotificationData.Entry) obj);
                             }
                         });
                     }
@@ -1621,7 +1700,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
 
             /* access modifiers changed from: private */
             /* renamed from: lambda$onReceive$1 */
-            public /* synthetic */ void lambda$onReceive$1$StatusBar$90(NotificationData.Entry entry) {
+            public /* synthetic */ void lambda$onReceive$1$StatusBar$94(NotificationData.Entry entry) {
                 StatusBar.this.updateAppBadgeNum(entry.notification);
             }
         };
@@ -1700,7 +1779,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
             }
 
             public void onNotificationRemoved(StatusBarNotification statusBarNotification, final NotificationListenerService.RankingMap rankingMap, final int i) {
-                Log.d("StatusBar", "onNotificationRemoved key=" + statusBarNotification.getKey() + " reason=" + i);
+                Slog.i("StatusBar", "onNotificationRemoved key=" + statusBarNotification.getKey() + " reason=" + i);
                 if (statusBarNotification != null) {
                     final String key = statusBarNotification.getKey();
                     StatusBar.this.mHandler.post(new Runnable() {
@@ -1783,6 +1862,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
         this.mBubbleController = bubbleController;
         bubbleController.setStatusBar(this);
         this.mBubbleController.setExpandListener(this.mBubbleExpandListener);
+        this.mMiuiUpdateVersionSharedPreferences = this.mContext.getSharedPreferences("deviceProvisionUpdateTiles", 0);
         this.mNoIconsSetGone = this.mContext.getResources().getBoolean(R.bool.hide_notification_icons_if_empty);
         this.mHideAmPmForNotification = this.mContext.getResources().getBoolean(R.bool.hide_am_pm_if_show_notification_icons);
         this.mKeptOnKeyguard = this.mContext.getResources().getBoolean(R.bool.kept_notifications_on_keyguard);
@@ -1895,6 +1975,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
         this.mUserExperienceObserver.onChange(false);
         this.mMiuiOptimizationObserver.onChange(false);
         this.mAODObserver.onChange(false);
+        this.mMirrorDndObserver.onChange(false);
         this.mSilentModeObserverController.addCallback(this);
         UnlockMethodCache instance = UnlockMethodCache.getInstance(this.mContext);
         this.mUnlockMethodCache = instance;
@@ -1959,11 +2040,6 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
                 if (StatusBar.DEBUG) {
                     Log.d("StatusBar", "onDisplayChanged " + StatusBar.this.mInfo);
                 }
-                StatusBar.this.mHandler.post(new Runnable() {
-                    public final void run() {
-                        StatusBar.AnonymousClass14.this.lambda$onDisplayChanged$0$StatusBar$14();
-                    }
-                });
                 if (CustomizeUtil.HAS_NOTCH) {
                     int i2 = StatusBar.this.mInfo.rotation;
                     int i3 = StatusBar.this.mInfo.logicalHeight;
@@ -1980,12 +2056,9 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
                                 statusBar3.mHandler.removeCallbacks(statusBar3.mUpdateStausBarPaddingRunnable);
                                 StatusBar statusBar4 = StatusBar.this;
                                 statusBar4.mHandler.post(statusBar4.mUpdateStausBarPaddingRunnable);
-                                return;
                             }
-                            return;
                         }
-                        return;
-                    } else if (!(StatusBar.this.mNotchRotation == i2 && StatusBar.this.mLogicalWidth == i4 && StatusBar.this.mLogicalHeight == i3)) {
+                    } else if (StatusBar.this.mNotchRotation != i2 || StatusBar.this.mLogicalWidth != i4 || StatusBar.this.mLogicalHeight != i3) {
                         int unused4 = StatusBar.this.mNotchRotation = i2;
                         int unused5 = StatusBar.this.mLogicalWidth = i4;
                         int unused6 = StatusBar.this.mLogicalHeight = i3;
@@ -1995,19 +2068,6 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
                         statusBar6.mHandler.post(statusBar6.mUpdateStausBarPaddingRunnable);
                     }
                 }
-                if (!StatusBar.this.mDozing && StatusBar.this.getCallState() != 0 && i == 0 && StatusBar.this.mInfo.state == 1 && StatusBar.this.panelsEnabled() && !StatusBar.this.isPanelFullyCollapsed()) {
-                    StatusBar.this.postAnimateForceCollapsePanels();
-                }
-            }
-
-            /* access modifiers changed from: private */
-            /* renamed from: lambda$onDisplayChanged$0 */
-            public /* synthetic */ void lambda$onDisplayChanged$0$StatusBar$14() {
-                if (StatusBar.this.mVisible) {
-                    RenderLayerManager.getInstance().hideLayer(StatusBar.this.mStatusBarView);
-                    boolean unused = StatusBar.this.mRenderLayerShown = false;
-                    StatusBar.this.updateRenderLayer();
-                }
             }
 
             public void onDisplayAdded(int i) {
@@ -2016,7 +2076,6 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
                 }
             }
         }, this.mBgHandler);
-        this.mDisplay.getDisplayInfo(this.mInfo);
         this.mMiuiStatusBarPrompt.dealWithRecordState();
         SettingsJobSchedulerService.schedule(this.mContext);
         ((ToastOverlayManager) Dependency.get(ToastOverlayManager.class)).setup(this.mContext, getStatusBarWindow());
@@ -2113,7 +2172,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
     }
 
     public boolean isHideGestureLine() {
-        return this.mHideGestureLine || Build.VERSION.SDK_INT < 29 || !this.mRecentsWithinLauncher || !this.mUseMiuiHomeAsDefaultHome;
+        return this.mHideGestureLine || Build.VERSION.SDK_INT < 29 || !this.mRecentsWithinLauncher || !this.mUseMiuiHomeAsDefaultHome || this.mIsLowMemoryDevice;
     }
 
     public boolean isFullScreenGestureMode() {
@@ -2194,7 +2253,6 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
         }
         if (this.mNavigationBarView != null && !this.mNavigationBarLoaded) {
             if ((!this.mIsFsgMode || !isHideGestureLine()) && this.mIsRemoved) {
-                this.mIsRemoved = false;
                 prepareNavigationBarView();
                 this.mNavigationBarView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                     public void onGlobalLayout() {
@@ -2209,6 +2267,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
                         this.mWindowManager.addView(this.mNavigationBarView, getNavigationBarLayoutParams());
                         this.mNavigationBarLoaded = true;
                         MiuiSettings.System.putBoolean(this.mContext.getContentResolver(), "navigation_bar_window_loaded", true);
+                        this.mIsRemoved = false;
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -2253,6 +2312,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
         this.mContext.getContentResolver().registerContentObserver(Settings.Secure.getUriFor("gb_handsfree"), false, this.mGameHandsFreeObserver, -1);
         this.mContext.getContentResolver().registerContentObserver(Settings.Secure.getUriFor("miui_optimization"), false, this.mMiuiOptimizationObserver, -1);
         this.mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor("status_bar_notification_style"), false, this.mNotificationStyleObserver, -1);
+        this.mContext.getContentResolver().registerContentObserver(Settings.Global.getUriFor("user_fold"), false, this.mUserFoldObserver, -1);
         this.mContext.getContentResolver().registerContentObserver(NotificationProvider.URI_FOLD_IMPORTANCE, false, this.mFoldImportanceObserver, -1);
         this.mContext.getContentResolver().registerContentObserver(CloudDataHelper.URI_CLOUD_ALL_DATA_NOTIFY, false, this.mCloudDataObserver, -1);
         this.mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor("wakeup_for_keyguard_notification"), false, this.mWakeupForNotificationObserver, -1);
@@ -2263,6 +2323,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
         this.mContext.getContentResolver().registerContentObserver(Settings.Secure.getUriFor("access_control_lock_enabled"), false, this.mAccessControlLockObserver, -1);
         this.mContext.getContentResolver().registerContentObserver(Settings.Secure.getUriFor(MiuiKeyguardUtils.AOD_MODE), false, this.mAODObserver, -1);
         this.mContext.getContentResolver().registerContentObserver(Settings.Secure.getUriFor("aod_using_super_wallpaper"), false, this.mAODObserver, -1);
+        this.mContext.getContentResolver().registerContentObserver(Settings.Secure.getUriFor("miui_mirror_dnd_mode"), false, this.mMirrorDndObserver, -1);
     }
 
     /* access modifiers changed from: protected */
@@ -2308,6 +2369,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
         this.mIsFsgMode = MiuiSettings.Global.getBoolean(this.mContext.getContentResolver(), "force_fsg_nav_bar");
         this.mRecentsWithinLauncher = SystemServicesProxy.getInstance(this.mContext).isRecentsWithinLauncher(this.mContext);
         this.mUseMiuiHomeAsDefaultHome = SystemServicesProxy.getInstance(this.mContext).useMiuiHomeAsDefaultHome(this.mContext);
+        this.mIsLowMemoryDevice = Utilities.isLowMemoryDevice();
         this.mHideGestureLine = Settings.Global.getInt(this.mContext.getContentResolver(), "hide_gesture_line", 0) != 0;
         this.mIsRemoved = true;
         try {
@@ -2398,7 +2460,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
         this.mLightBarController = (LightBarController) Dependency.get(LightBarController.class);
         this.mScrimController = SystemUIFactory.getInstance().createScrimController(this.mLightBarController, (ScrimView) this.mStatusBarWindow.findViewById(R.id.scrim_behind), (ScrimView) this.mStatusBarWindow.findViewById(R.id.scrim_in_front), this.mStatusBarWindow.findViewById(R.id.heads_up_scrim), this.mLockscreenWallpaper);
         if (this.mScrimSrcModeEnabled) {
-            AnonymousClass23 r1 = new Runnable() {
+            AnonymousClass24 r1 = new Runnable() {
                 public void run() {
                     boolean z = StatusBar.this.mBackdrop.getVisibility() != 0;
                     StatusBar.this.mScrimController.setDrawBehindAsSrc(z);
@@ -2466,7 +2528,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
                         PrintWriter printWriter = new PrintWriter(stringWriter);
                         FalsingLog.dump(printWriter);
                         printWriter.flush();
-                        StatusBar.this.startActivityDismissingKeyguard(Intent.createChooser(new Intent("android.intent.action.SEND").setType("*/*").putExtra("android.intent.extra.SUBJECT", "Rejected touch report").putExtra("android.intent.extra.STREAM", reportRejectedTouch).putExtra("android.intent.extra.TEXT", stringWriter.toString()), "Share rejected touch report").addFlags(MiuiHapticFeedbackConstants.FLAG_MIUI_HAPTIC_TAP_NORMAL), true, true);
+                        StatusBar.this.startActivityDismissingKeyguard(Intent.createChooser(new Intent("android.intent.action.SEND").setType("*/*").putExtra("android.intent.extra.SUBJECT", "Rejected touch report").putExtra("android.intent.extra.STREAM", reportRejectedTouch).putExtra("android.intent.extra.TEXT", stringWriter.toString()), "Share rejected touch report").addFlags(268435456), true, true);
                     }
                 }
             });
@@ -2500,12 +2562,15 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
             intentFilter3.addAction("fake_artwork");
             context.registerReceiverAsUser(this.mFakeArtworkReceiver, UserHandle.ALL, intentFilter3, "android.permission.DUMP", (Handler) null);
         }
-        ((DemoModeController) Dependency.get(DemoModeController.class)).addCallback(this.mDemoCallback);
         IntentFilter intentFilter4 = new IntentFilter();
-        intentFilter4.addAction("com.miui.app.ExtraStatusBarManager.TRIGGER_TOGGLE_SCREEN_BUTTONS");
-        intentFilter4.addAction("com.miui.app.ExtraStatusBarManager.TRIGGER_TOGGLE_LOCK");
-        intentFilter4.addAction("com.miui.app.ExtraStatusBarManager.action_TRIGGER_TOGGLE");
-        this.mContext.registerReceiverAsUser(this.mToggleBroadcastReceiver, UserHandle.ALL, intentFilter4, "com.android.SystemUI.permission.TIGGER_TOGGLE", this.mHandler);
+        intentFilter4.addAction("action_panels_operation");
+        context.registerReceiverAsUser(this.mMiuiRemoteOperationReceiver, UserHandle.ALL, intentFilter4, "android.permission.EXPAND_STATUS_BAR", (Handler) null);
+        ((DemoModeController) Dependency.get(DemoModeController.class)).addCallback(this.mDemoCallback);
+        IntentFilter intentFilter5 = new IntentFilter();
+        intentFilter5.addAction("com.miui.app.ExtraStatusBarManager.TRIGGER_TOGGLE_SCREEN_BUTTONS");
+        intentFilter5.addAction("com.miui.app.ExtraStatusBarManager.TRIGGER_TOGGLE_LOCK");
+        intentFilter5.addAction("com.miui.app.ExtraStatusBarManager.action_TRIGGER_TOGGLE");
+        this.mContext.registerReceiverAsUser(this.mToggleBroadcastReceiver, UserHandle.ALL, intentFilter5, "com.android.SystemUI.permission.TIGGER_TOGGLE", this.mHandler);
         this.mDeviceProvisionedController.addCallback(this.mUserSetupObserver);
         this.mUserSetupObserver.onUserSetupChanged();
         ThreadedRenderer.overrideProperty("disableProfileBars", "true");
@@ -2611,7 +2676,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
         Fragment findFragmentByTag = FragmentHostManager.get(this.statusBarFragmentContainer, true).getFragmentManager().findFragmentByTag(fragmentTagByType);
         Log.d("StatusBar", "switchStatusBarFragment cutouttype: " + cutoutType + " targetFragment: " + findFragmentByTag);
         if (findFragmentByTag == null) {
-            AnonymousClass27 r1 = new FragmentHostManager.FragmentListener() {
+            AnonymousClass28 r1 = new FragmentHostManager.FragmentListener() {
                 public void onFragmentViewDestroyed(String str, Fragment fragment) {
                 }
 
@@ -2835,9 +2900,9 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
             r1.markClearAllNotifications()
             com.android.systemui.statusbar.NotificationData r1 = r12.mNotificationData
             java.util.List r1 = r1.getClearableNotifications()
-            java.lang.Class<com.android.systemui.miui.statusbar.analytics.SystemUIStat> r2 = com.android.systemui.miui.statusbar.analytics.SystemUIStat.class
+            java.lang.Class<com.android.systemui.miui.statusbar.analytics.NotificationStat> r2 = com.android.systemui.miui.statusbar.analytics.NotificationStat.class
             java.lang.Object r2 = com.android.systemui.Dependency.get(r2)
-            com.android.systemui.miui.statusbar.analytics.SystemUIStat r2 = (com.android.systemui.miui.statusbar.analytics.SystemUIStat) r2
+            com.android.systemui.miui.statusbar.analytics.NotificationStat r2 = (com.android.systemui.miui.statusbar.analytics.NotificationStat) r2
             com.android.systemui.statusbar.stack.NotificationStackScrollLayout r3 = r12.mStackScroller
             boolean r3 = r3.canScrollDown()
             r4 = 0
@@ -2919,7 +2984,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
             if (r0 == 0) goto L_0x00cc
             r12.animateCollapsePanels()
         L_0x00cc:
-            com.android.systemui.statusbar.phone.StatusBar$31 r0 = new com.android.systemui.statusbar.phone.StatusBar$31
+            com.android.systemui.statusbar.phone.StatusBar$32 r0 = new com.android.systemui.statusbar.phone.StatusBar$32
             r0.<init>(r3)
             r12.addPostCollapseAction(r0)
             r12.performDismissAllAnimations(r2)
@@ -2929,7 +2994,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
     }
 
     private void performDismissAllAnimations(ArrayList<View> arrayList) {
-        AnonymousClass32 r0 = new Runnable() {
+        AnonymousClass33 r0 = new Runnable() {
             public void run() {
                 StatusBar.this.mDismissView.animatorStart(new AnimatorListenerAdapter() {
                     public void onAnimationEnd(Animator animator) {
@@ -3015,7 +3080,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
 
     public int getStatusBarHeight() {
         if (this.mNaturalBarHeight < 0) {
-            this.mNaturalBarHeight = this.mContext.getResources().getDimensionPixelSize(17105519);
+            this.mNaturalBarHeight = this.mContext.getResources().getDimensionPixelSize(17105496);
         }
         return this.mNaturalBarHeight;
     }
@@ -3034,10 +3099,10 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
         if (this.mRecents == null) {
             return false;
         }
-        if (WindowManagerProxy.getInstance().getDockSide() == -1) {
+        Divider divider = (Divider) getComponent(Divider.class);
+        if (divider == null || !divider.inSplitMode()) {
             return this.mRecents.dockTopTask(-1, 0, (Rect) null, i);
         }
-        Divider divider = (Divider) getComponent(Divider.class);
         if (divider != null && divider.isMinimized() && !divider.isHomeStackResizable()) {
             return false;
         }
@@ -3055,8 +3120,15 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
         SystemServicesProxy.getInstance(this.mContext).awakenDreamsAsync();
     }
 
-    private void wakeUpForNotification(NotificationData.Entry entry) {
-        if (this.mWakeupForNotification && entry.notification.isClearable() && !NotificationUtil.hasProgressbar(entry.notification) && !entry.isMediaNotification() && shouldShowOnKeyguard(entry)) {
+    private void postWakeUpForNotification(NotificationData.Entry entry) {
+        if (!this.mHandler.hasMessages(b.f, entry)) {
+            this.mHandler.sendMessageDelayed(Message.obtain(this.mHandler, b.f, entry), 500);
+        }
+    }
+
+    /* access modifiers changed from: private */
+    public void wakeUpForNotification(NotificationData.Entry entry) {
+        if (this.mNotificationData.getActiveNotifications().contains(entry) && this.mWakeupForNotification && entry.notification.isClearable() && !NotificationUtil.hasProgressbar(entry.notification) && !entry.isMediaNotification() && shouldShowOnKeyguard(entry)) {
             if ((!this.mDeviceInteractive || this.mDozing) && !this.mIsDNDEnabled) {
                 Slog.i("StatusBar", "wake up for notification, pkg:" + entry.notification.getPackageName());
                 if (!KeyguardUpdateMonitor.getInstance(this.mContext).isPsensorDisabled()) {
@@ -3123,9 +3195,12 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
             abortExistingInflation(key);
             this.mForegroundServiceController.addNotification(expandedNotification, createNotificationViews.notification.getImportance());
             this.mPendingNotifications.put(key, createNotificationViews);
-            wakeUpForNotification(createNotificationViews);
+            postWakeUpForNotification(createNotificationViews);
             ((NotificationsMonitor) Dependency.get(NotificationsMonitor.class)).notifyNotificationAdded(expandedNotification);
             ((BubbleController) Dependency.get(BubbleController.class)).onPendingEntryAdded(createNotificationViews);
+            if (InCallUtils.isInCallNotification(expandedNotification)) {
+                ((ControlPanelController) Dependency.get(ControlPanelController.class)).collapseControlCenter(true);
+            }
         }
     }
 
@@ -3138,7 +3213,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
         Class cls = NotificationSettingsManager.class;
         String packageName = expandedNotification.getPackageName();
         String channelId = expandedNotification.getNotification().getChannelId();
-        if ((!expandedNotification.isSubstituteNotification() || !NotificationSettingsHelper.isNotificationsBanned(this.mContext, packageName)) && (((expandedNotification.getNotification().flags & 64) == 0 || !((NotificationSettingsManager) Dependency.get(cls)).hideForegroundNotification(packageName, channelId)) && (((expandedNotification.getNotification().flags & 2) == 0 || expandedNotification.getId() != 0 || !TextUtils.equals("android", expandedNotification.getBasePkg()) || !((NotificationSettingsManager) Dependency.get(cls)).hideAlertWindowNotification(expandedNotification.getTag())) && !((UsbNotificationController) Dependency.get(UsbNotificationController.class)).needDisableUsbNotification(expandedNotification) && ((expandedNotification.getNotification().flags & MiuiHapticFeedbackConstants.FLAG_MIUI_HAPTIC_TAP_NORMAL) == 0 || (!packageName.equalsIgnoreCase("com.mediatek.selfregister") && !packageName.equalsIgnoreCase("com.mediatek.deviceregister")))))) {
+        if ((!expandedNotification.isSubstituteNotification() || !NotificationSettingsHelper.isNotificationsBanned(this.mContext, packageName)) && (((expandedNotification.getNotification().flags & 64) == 0 || !((NotificationSettingsManager) Dependency.get(cls)).hideForegroundNotification(packageName, channelId)) && (((expandedNotification.getNotification().flags & 2) == 0 || expandedNotification.getId() != 0 || !TextUtils.equals("android", expandedNotification.getBasePkg()) || !((NotificationSettingsManager) Dependency.get(cls)).hideAlertWindowNotification(expandedNotification.getTag())) && !((UsbNotificationController) Dependency.get(UsbNotificationController.class)).needDisableUsbNotification(expandedNotification) && ((expandedNotification.getNotification().flags & 268435456) == 0 || (!packageName.equalsIgnoreCase("com.mediatek.selfregister") && !packageName.equalsIgnoreCase("com.mediatek.deviceregister")))))) {
             z = false;
         } else {
             z = true;
@@ -3183,7 +3258,9 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
         if (z && !entry.row.isRemoved()) {
             ((BubbleController) Dependency.get(BubbleController.class)).onEntryInflated(entry, 0);
             addEntry(entry);
-            this.mBgHandler.obtainMessage(b.m, entry.notification.getKey()).sendToTarget();
+            if (!this.mMirrorDndEnable) {
+                this.mBgHandler.obtainMessage(b.m, entry.notification.getKey()).sendToTarget();
+            }
         } else if (!z && entry.row.hasLowPriorityStateUpdated()) {
             this.mVisualStabilityManager.onLowPriorityUpdated(entry);
             updateNotificationShade();
@@ -3266,9 +3343,11 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
     }
 
     public void removeNotification(String str, NotificationListenerService.RankingMap rankingMap, int i) {
-        if (!this.mAppMiniWindowManager.isStartingActivity()) {
-            removeNotification(str, rankingMap, true, i);
+        if (this.mAppMiniWindowManager.isStartingActivity(str)) {
+            Slog.i("StatusBar", "cannot removeNotification key=" + str);
+            return;
         }
+        removeNotification(str, rankingMap, true, i);
     }
 
     public void removeNotification(String str, NotificationListenerService.RankingMap rankingMap, boolean z, int i) {
@@ -3719,7 +3798,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
 
     /* access modifiers changed from: protected */
     public void setAreThereNotifications() {
-        AnonymousClass37 r0;
+        AnonymousClass38 r0;
         boolean z = true;
         if (SPEW) {
             Log.d("StatusBar", "setAreThereNotifications: N=" + this.mNotificationData.getActiveNotifications().size() + " any=" + hasActiveNotifications() + " clearable=" + (hasActiveNotifications() && hasActiveClearableNotifications()));
@@ -4097,6 +4176,10 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
         return new W(this.mBgThread.getLooper());
     }
 
+    public void startActivity(Intent intent, boolean z, boolean z2, int i) {
+        startActivityDismissingKeyguard(intent, z, z2, i);
+    }
+
     public void startActivity(Intent intent, boolean z) {
         startActivityDismissingKeyguard(intent, false, z);
     }
@@ -4106,7 +4189,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
     }
 
     public void startActivity(Intent intent, boolean z, ActivityStarter.Callback callback) {
-        startActivityDismissingKeyguard(intent, false, z, callback);
+        startActivityDismissingKeyguard(intent, false, z, callback, 0);
     }
 
     public void setQsExpanded(boolean z) {
@@ -4231,8 +4314,16 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
         }
     }
 
+    public boolean isHeadsUpPinned() {
+        return this.mHeadsUpManager.hasPinnedHeadsUp();
+    }
+
     public boolean isHeadsUp(String str) {
         return this.mHeadsUpManager.isHeadsUp(str);
+    }
+
+    public boolean isHeadsUp() {
+        return this.mHeadsUpManager.isHeadsUp();
     }
 
     public boolean isSnoozedPackage(StatusBarNotification statusBarNotification) {
@@ -4321,6 +4412,9 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
                     case b.e /*1005*/:
                         SomeArgs someArgs = (SomeArgs) message.obj;
                         StatusBar.this.updateNotificationRankingDelayed((NotificationListenerService.RankingMap) someArgs.arg1, ((Long) someArgs.arg2).longValue());
+                        return;
+                    case b.f /*1006*/:
+                        StatusBar.this.wakeUpForNotification((NotificationData.Entry) message.obj);
                         return;
                     default:
                         return;
@@ -4430,7 +4524,6 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
             updateFsgState();
             recomputeDisableFlags(!z);
             setInteracting(1, true);
-            updateRenderLayer();
         }
     }
 
@@ -4476,7 +4569,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
                 return;
             }
             if (!isKeyguardShowing()) {
-                ((SystemUIStat) Dependency.get(SystemUIStat.class)).onPanelCollapsed(false, false, this.mStackScroller.getNotGoneNotifications());
+                ((NotificationStat) Dependency.get(NotificationStat.class)).onPanelCollapsed(false, false, this.mStackScroller.getNotGoneNotifications());
             }
             this.mStatusBarWindowManager.setStatusBarFocusable(false);
             this.mStatusBarWindow.cancelExpandHelper();
@@ -4563,6 +4656,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
             Log.d("StatusBar", "makeExpandedInvisible: mExpandedVisible=" + this.mExpandedVisible);
         }
         if (this.mExpandedVisible && this.mStatusBarWindow != null) {
+            ((NotificationStat) Dependency.get(NotificationStat.class)).onPanelCollapsed(false, true, this.mStackScroller.getNotGoneNotifications());
             HeadsUpAnimatedStubView headsUpAnimatedStubView = this.mHeadsUpAnimatedStub;
             if (headsUpAnimatedStubView != null) {
                 headsUpAnimatedStubView.setAnimationRunning(false);
@@ -4585,7 +4679,6 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
             if (!isKeyguardShowing()) {
                 WindowManagerGlobal.getInstance().trimMemory(20);
             }
-            updateRenderLayer();
         }
     }
 
@@ -4639,28 +4732,29 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
 
     public void setSystemUiVisibility(int i, int i2, int i3, int i4, Rect rect, Rect rect2) {
         int i5 = i4;
-        int i6 = this.mSystemUiVisibility;
-        int i7 = ((~i5) & i6) | (i & i5);
-        int i8 = i7 ^ i6;
+        int i6 = Build.VERSION.SDK_INT;
+        int i7 = this.mSystemUiVisibility;
+        int i8 = ((~i5) & i7) | (i & i5);
+        int i9 = i8 ^ i7;
         boolean z = false;
         if (DEBUG) {
-            Log.d("StatusBar", String.format("setSystemUiVisibility vis=%s mask=%s oldVal=%s newVal=%s diff=%s", new Object[]{Integer.toHexString(i), Integer.toHexString(i4), Integer.toHexString(i6), Integer.toHexString(i7), Integer.toHexString(i8)}));
+            Log.d("StatusBar", String.format("setSystemUiVisibility vis=%s mask=%s oldVal=%s newVal=%s diff=%s", new Object[]{Integer.toHexString(i), Integer.toHexString(i4), Integer.toHexString(i7), Integer.toHexString(i8), Integer.toHexString(i9)}));
         }
-        if (i8 != 0) {
-            this.mSystemUiVisibility = i7;
-            if ((i8 & 1) != 0) {
+        if (i9 != 0) {
+            this.mSystemUiVisibility = i8;
+            if ((i9 & 1) != 0) {
                 setAreThereNotifications();
             }
-            if ((268435456 & i) != 0) {
+            if ((i & 268435456) != 0) {
                 this.mSystemUiVisibility &= -268435457;
                 this.mNoAnimationOnNextBarModeChange = true;
             }
-            int computeNavigationBarMode = this.mNavigationBarView == null ? -1 : computeNavigationBarMode(i6, i7, 134217728, Integer.MIN_VALUE, 32768);
+            int computeNavigationBarMode = this.mNavigationBarView == null ? -1 : computeNavigationBarMode(i7, i8, 134217728, Integer.MIN_VALUE, 32768);
             NavigationBarView navigationBarView = this.mNavigationBarView;
-            if (navigationBarView != null && navigationBarView.isForceImmersive() && (i7 & 2) != 0 && (computeNavigationBarMode == 0 || computeNavigationBarMode == 3)) {
+            if (navigationBarView != null && navigationBarView.isForceImmersive() && (i8 & 2) != 0 && (computeNavigationBarMode == 0 || computeNavigationBarMode == 3)) {
                 computeNavigationBarMode = 1;
             }
-            int computeStatusBarMode = computeStatusBarMode(i6, i7);
+            int computeStatusBarMode = computeStatusBarMode(i7, i8);
             boolean z2 = computeNavigationBarMode != -1;
             if (computeStatusBarMode != -1) {
                 z = true;
@@ -4689,22 +4783,25 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
                     cancelAutohide();
                 }
             }
-            if ((536870912 & i) != 0) {
+            if ((i & 536870912) != 0) {
                 this.mSystemUiVisibility &= -536870913;
+            }
+            if (i6 > 29 && (this.mSystemUiVisibility & 201326592) != 0) {
+                cancelDisableTouch();
             }
             notifyUiVisibilityChanged(this.mSystemUiVisibility);
         }
-        final int i9 = Build.VERSION.SDK_INT == 23 ? i : i2;
+        final int i10 = i6 == 23 ? i : i2;
         StatusBarWindowView statusBarWindowView = this.mStatusBarWindow;
-        final int i10 = i3;
-        final int i11 = i4;
+        final int i11 = i3;
+        final int i12 = i4;
         final Rect rect3 = rect;
         final Rect rect4 = rect2;
         final boolean z3 = z;
         statusBarWindowView.post(new Runnable() {
             public void run() {
                 StatusBar statusBar = StatusBar.this;
-                statusBar.mLightBarController.onSystemUiVisibilityChanged(i9, i10, i11, rect3, rect4, z3, statusBar.mStatusBarMode);
+                statusBar.mLightBarController.onSystemUiVisibilityChanged(i10, i11, i12, rect3, rect4, z3, statusBar.mStatusBarMode);
             }
         });
     }
@@ -4819,6 +4916,31 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
         this.mHandler.postDelayed(this.mAutohide, 2250);
     }
 
+    private void scheduleDisableTouch() {
+        StatusBarWindowManager statusBarWindowManager = this.mStatusBarWindowManager;
+        if (statusBarWindowManager != null) {
+            statusBarWindowManager.setNotTouchable(true);
+            StatusBarWindowView statusBarWindowView = this.mStatusBarWindow;
+            if (statusBarWindowView != null) {
+                statusBarWindowView.setNotTouchable(true);
+            }
+            this.mHandler.postDelayed(this.mCancelDisableTouch, 350);
+        }
+    }
+
+    /* access modifiers changed from: private */
+    public void cancelDisableTouch() {
+        this.mHandler.removeCallbacks(this.mCancelDisableTouch);
+        StatusBarWindowManager statusBarWindowManager = this.mStatusBarWindowManager;
+        if (statusBarWindowManager != null) {
+            statusBarWindowManager.setNotTouchable(false);
+        }
+        StatusBarWindowView statusBarWindowView = this.mStatusBarWindow;
+        if (statusBarWindowView != null) {
+            statusBarWindowView.setNotTouchable(false);
+        }
+    }
+
     /* access modifiers changed from: package-private */
     public void checkUserAutohide(View view, MotionEvent motionEvent) {
         if ((this.mSystemUiVisibility & 201326592) != 0 && motionEvent.getAction() == 4 && motionEvent.getX() == 0.0f && motionEvent.getY() == 0.0f && !this.mRemoteInputController.isRemoteInputActive()) {
@@ -4859,6 +4981,18 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
                 this.mLastDispatchedSystemUiVisibility = i;
             }
         } catch (RemoteException unused) {
+        }
+    }
+
+    /* access modifiers changed from: private */
+    public void clearTransient(int[] iArr) {
+        scheduleDisableTouch();
+        try {
+            int displayId = ContextCompat.getDisplayId(this.mContext);
+            IWindowManagerCompat.abortTransient(this.mWindowManagerService, displayId);
+            this.mCommandQueue.abortTransient(displayId, iArr);
+        } catch (RemoteException e) {
+            Log.e("StatusBar", "clearTransient: " + e);
         }
     }
 
@@ -4982,6 +5116,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
             printWriter.print("=");
             printWriter.println(next.getValue());
         }
+        CloudDataHelper.dump(this.mContext, printWriter);
         printWriter.println("AppNotificationSettings:");
         for (Map.Entry next2 : this.mContext.getSharedPreferences("app_notification", 4).getAll().entrySet()) {
             printWriter.print("  ");
@@ -5035,23 +5170,28 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
         return this.mDisplayMetrics.density;
     }
 
-    public void startActivityDismissingKeyguard(Intent intent, boolean z, boolean z2) {
-        startActivityDismissingKeyguard(intent, z, z2, (ActivityStarter.Callback) null);
+    public void startActivityDismissingKeyguard(Intent intent, boolean z, boolean z2, int i) {
+        startActivityDismissingKeyguard(intent, z, z2, (ActivityStarter.Callback) null, i);
     }
 
-    public void startActivityDismissingKeyguard(final Intent intent, boolean z, boolean z2, final ActivityStarter.Callback callback) {
+    public void startActivityDismissingKeyguard(Intent intent, boolean z, boolean z2) {
+        startActivityDismissingKeyguard(intent, z, z2, (ActivityStarter.Callback) null, 0);
+    }
+
+    public void startActivityDismissingKeyguard(final Intent intent, boolean z, boolean z2, final ActivityStarter.Callback callback, final int i) {
         if (!z || isDeviceProvisioned()) {
             executeRunnableDismissingKeyguard(new Runnable() {
                 public void run() {
                     int i;
                     StatusBar.this.mAssistManager.hideAssist();
                     intent.setFlags(335544320);
+                    intent.addFlags(i);
                     ActivityOptions activityOptions = new ActivityOptions(StatusBar.getActivityOptions());
                     if (intent == KeyguardBottomAreaView.INSECURE_CAMERA_INTENT) {
                         ActivityOptionsCompat.setRotationAnimationHint(activityOptions, 3);
                     }
                     try {
-                        i = ActivityManagerCompat.getService().startActivityAsUser((IApplicationThread) null, StatusBar.this.mContext.getBasePackageName(), intent, intent.resolveTypeIfNeeded(StatusBar.this.mContext.getContentResolver()), (IBinder) null, (String) null, 0, MiuiHapticFeedbackConstants.FLAG_MIUI_HAPTIC_TAP_NORMAL, (ProfilerInfo) null, activityOptions.toBundle(), UserHandle.CURRENT.getIdentifier());
+                        i = ActivityManagerCompat.getService().startActivityAsUser((IApplicationThread) null, StatusBar.this.mContext.getBasePackageName(), intent, intent.resolveTypeIfNeeded(StatusBar.this.mContext.getContentResolver()), (IBinder) null, (String) null, 0, 268435456, (ProfilerInfo) null, activityOptions.toBundle(), UserHandle.CURRENT.getIdentifier());
                     } catch (RemoteException e) {
                         Log.w("StatusBar", "Unable to start activity", e);
                         i = -96;
@@ -5211,6 +5351,8 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
         this.mMiuiOptimizationObserver.onChange(false);
         this.mWakeupForNotificationObserver.onChange(false);
         this.mNotificationStyleObserver.onChange(false);
+        this.mUserFoldObserver.onChange(false);
+        this.mAODObserver.onChange(false);
         updateNotificationShade();
         clearCurrentMediaNotification();
         setLockscreenUser(i);
@@ -5338,11 +5480,9 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
     public void postQSRunnableDismissingKeyguard(final Runnable runnable) {
         this.mHandler.post(new Runnable() {
             public void run() {
-                StatusBar statusBar = StatusBar.this;
-                statusBar.mLeaveOpenOnKeyguardHide = true;
-                statusBar.executeRunnableDismissingKeyguard(new Runnable() {
+                StatusBar.this.executeRunnableDismissingKeyguard(new Runnable() {
                     public void run() {
-                        AnonymousClass56 r1 = AnonymousClass56.this;
+                        AnonymousClass58 r1 = AnonymousClass58.this;
                         StatusBar.this.mHandler.post(runnable);
                     }
                 }, (Runnable) null, false, false, false);
@@ -5595,7 +5735,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
     public void fadeKeyguardAfterLaunchTransition(final Runnable runnable, Runnable runnable2) {
         this.mHandler.removeMessages(b.c);
         this.mLaunchTransitionEndRunnable = runnable2;
-        AnonymousClass59 r4 = new Runnable() {
+        AnonymousClass61 r4 = new Runnable() {
             public void run() {
                 StatusBar.this.mLaunchTransitionFadingAway = true;
                 Runnable runnable = runnable;
@@ -5932,7 +6072,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
                 }
                 return true;
             }
-            ((SystemUIStat) Dependency.get(SystemUIStat.class)).onBackPressed();
+            ((NotificationStat) Dependency.get(NotificationStat.class)).onBackPressed();
             if (this.mNotificationPanel.canPanelBeCollapsed()) {
                 animateCollapsePanels();
             } else {
@@ -5989,7 +6129,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
         }
         int i2 = this.mState;
         if (i != i2 && i2 == 2) {
-            ((SystemUIStat) Dependency.get(SystemUIStat.class)).onPanelCollapsed(false, false, this.mStackScroller.getNotGoneNotifications());
+            ((NotificationStat) Dependency.get(NotificationStat.class)).onPanelCollapsed(false, false, this.mStackScroller.getNotGoneNotifications());
         }
         if (i != this.mState && this.mVisible && (i == 2 || (i == 0 && isGoingToNotificationShade()))) {
             clearNotificationEffects();
@@ -6031,13 +6171,13 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
 
     public void onExpandingFinished() {
         if (!isKeyguardShowing() && !this.mNotificationPanel.isFullyCollapsed()) {
-            ((SystemUIStat) Dependency.get(SystemUIStat.class)).onPanelExpanded(false, true, this.mStackScroller.getNotGoneNotifications());
+            ((NotificationStat) Dependency.get(NotificationStat.class)).onPanelExpanded(false, true, this.mStackScroller.getNotGoneNotifications());
         }
     }
 
     public void onClosingFinished() {
         if (!isKeyguardShowing()) {
-            ((SystemUIStat) Dependency.get(SystemUIStat.class)).onPanelCollapsed(false, true, this.mStackScroller.getNotGoneNotifications());
+            ((NotificationStat) Dependency.get(NotificationStat.class)).onPanelCollapsed(false, true, this.mStackScroller.getNotGoneNotifications());
         }
         runPostCollapseRunnables();
         if (!isPanelFullyCollapsed()) {
@@ -6208,11 +6348,11 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
         updatePublicMode();
         updateNotifications();
         if (this.mPendingWorkRemoteInputView != null && !isAnyProfilePublicMode()) {
-            final AnonymousClass63 r0 = new Runnable() {
+            final AnonymousClass65 r0 = new Runnable() {
                 public void run() {
-                    View access$6400 = StatusBar.this.mPendingWorkRemoteInputView;
-                    if (access$6400 != null) {
-                        ViewParent parent = access$6400.getParent();
+                    View access$6500 = StatusBar.this.mPendingWorkRemoteInputView;
+                    if (access$6500 != null) {
+                        ViewParent parent = access$6500.getParent();
                         while (!(parent instanceof ExpandableNotificationRow)) {
                             if (parent != null) {
                                 parent = parent.getParent();
@@ -6443,6 +6583,14 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
         return this.mStatusBarKeyguardViewManager.isShowing();
     }
 
+    public void suppressAmbientDisplay(boolean z) {
+        Log.w("StatusBar", "suppressAmbientDisplay: " + z);
+        DozeServiceHost dozeServiceHost = this.mDozeServiceHost;
+        if (dozeServiceHost != null) {
+            dozeServiceHost.sendCommand("suppressAmbientDisplay", z ? 1 : 0, (Bundle) null);
+        }
+    }
+
     private class AodCallback extends IMiuiAodCallback.Stub {
         public void onDozeStateChanged(int i) {
         }
@@ -6521,12 +6669,13 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
+            this.mAodService = null;
+            this.mContext.unbindService(this.serviceConnection);
         }
         AodCallback aodCallback = this.mAodCallback;
         if (aodCallback != null) {
             aodCallback.onDozingRequested(false);
         }
-        this.mAodService = null;
     }
 
     /* access modifiers changed from: private */
@@ -6666,7 +6815,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
             notificationManager.cancelAsUser((String) null, R.drawable.screen_button_notification_icon, new UserHandle(this.mCurrentUserId));
             return;
         }
-        Notification build = NotificationCompat.newBuilder(this.mContext, NotificationChannels.SCREENBUTTON).setWhen(System.currentTimeMillis()).setShowWhen(true).setOngoing(true).setSmallIcon(R.drawable.screen_button_notification_icon).setContentTitle(this.mContext.getString(R.string.screen_button_notification_title)).setContentText(this.mContext.getString(286130244)).setContentIntent(PendingIntent.getBroadcast(this.mContext, 0, new Intent("com.miui.app.ExtraStatusBarManager.TRIGGER_TOGGLE_SCREEN_BUTTONS"), 0)).build();
+        Notification build = NotificationCompat.newBuilder(this.mContext, NotificationChannels.SCREENBUTTON).setWhen(System.currentTimeMillis()).setShowWhen(true).setOngoing(true).setSmallIcon(R.drawable.screen_button_notification_icon).setContentTitle(this.mContext.getString(R.string.screen_button_notification_title)).setContentText(this.mContext.getString(286130249)).setContentIntent(PendingIntent.getBroadcast(this.mContext, 0, new Intent("com.miui.app.ExtraStatusBarManager.TRIGGER_TOGGLE_SCREEN_BUTTONS"), 0)).build();
         MiuiNotificationCompat.setTargetPkg(build, "android");
         notificationManager.notifyAsUser((String) null, R.drawable.screen_button_notification_icon, build, new UserHandle(this.mCurrentUserId));
     }
@@ -6731,6 +6880,9 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
         }
         ExpandedNotification expandedNotification = new ExpandedNotification(this.mContextForUser, statusBarNotification);
         expandedNotification.setImportance(this.mNotificationData.getImportance(expandedNotification, rankingMap));
+        if (!NotificationUtil.isMediaNotification(expandedNotification)) {
+            MiuiNotificationCompat.disableColorized(statusBarNotification.getNotification());
+        }
         try {
             Log.d("StatusBar", "onNotificationPosted key=" + statusBarNotification.getKey() + " isUpdate=" + z);
             if (z) {
@@ -6864,7 +7016,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
                 public void onClickConfirm(View view) {
                     StatusBar.this.saveAndCloseNotificationMenu(expandableNotificationRow2, guts, view);
                     StatusBar.this.saveFiler(statusBarNotification);
-                    ((SystemUIStat) Dependency.get(SystemUIStat.class)).handleNotiSetConfigEvent(statusBarNotification);
+                    ((NotificationStat) Dependency.get(NotificationStat.class)).handleNotiSetConfigEvent(statusBarNotification);
                 }
 
                 public void onClickCancel(View view) {
@@ -6956,17 +7108,17 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
                     return false;
                 }
                 ExpandableNotificationRow expandableNotificationRow = (ExpandableNotificationRow) view;
-                ((SystemUIStat) Dependency.get(SystemUIStat.class)).logNotificationLongPress(expandableNotificationRow.getEntry().key);
+                ((NotificationStat) Dependency.get(NotificationStat.class)).logNotificationLongPress(expandableNotificationRow.getEntry().key);
                 if (expandableNotificationRow.isDark()) {
                     return false;
                 }
                 if (expandableNotificationRow.isExpandable() && !NotificationUtil.isExpandingEnabled(StatusBar.this.isKeyguardShowing())) {
                     expandableNotificationRow.getExpandClickListener().onClick(expandableNotificationRow);
                     return true;
-                } else if (NotificationUtil.isExpandingEnabled(StatusBar.this.isKeyguardShowing())) {
-                    return StatusBar.this.updateGutsState(expandableNotificationRow, i, i2, menuItem);
-                } else {
+                } else if (expandableNotificationRow.isPinned() || !NotificationUtil.isExpandingEnabled(StatusBar.this.isKeyguardShowing())) {
                     return false;
+                } else {
+                    return StatusBar.this.updateGutsState(expandableNotificationRow, i, i2, menuItem);
                 }
             }
         };
@@ -7100,8 +7252,8 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
     /* access modifiers changed from: private */
     public void saveFiler(ExpandedNotification expandedNotification) {
         String targetPackageName = expandedNotification.getTargetPackageName();
-        NotificationSettingsHelper.setFoldImportance(this.mContext, targetPackageName, -1);
-        this.mContext.getContentResolver().notifyChange(NotificationProvider.URI_FOLD_IMPORTANCE.buildUpon().appendQueryParameter("package", targetPackageName).appendQueryParameter("foldImportance", "-1").build(), this.mFoldImportanceObserver);
+        NotificationSettingsHelper.setFoldImportance(this.mContextForUser, targetPackageName, -1);
+        this.mContext.getContentResolver().notifyChange(NotificationProvider.URI_FOLD_IMPORTANCE.buildUpon().appendQueryParameter("package", targetPackageName).appendQueryParameter("foldImportance", "-1").build(), this.mFoldImportanceObserver, true, this.mCurrentUserId);
     }
 
     /* access modifiers changed from: private */
@@ -7324,6 +7476,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
 
     /* access modifiers changed from: protected */
     public void inflateViews(final NotificationData.Entry entry, ViewGroup viewGroup) {
+        entry.mIsShowMiniWindowBar = showMiniWindowBar(entry.notification);
         final ExpandedNotification expandedNotification = entry.notification;
         if (entry.row != null) {
             entry.reset();
@@ -7336,6 +7489,10 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
                 StatusBar.this.updateNotification(entry, expandedNotification, expandableNotificationRow);
             }
         });
+    }
+
+    private boolean showMiniWindowBar(ExpandedNotification expandedNotification) {
+        return this.mState == 0 && this.mAppMiniWindowManager.canNotificationSlide(this.mContext, expandedNotification);
     }
 
     /* access modifiers changed from: private */
@@ -7351,7 +7508,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
         expandableNotificationRow.setAppName(entry.notification.getAppName());
         expandableNotificationRow.setOnDismissRunnable(new Runnable() {
             public void run() {
-                ((SystemUIStat) Dependency.get(SystemUIStat.class)).onRemove(expandableNotificationRow, StatusBar.this.mNotificationData.indexOf(expandableNotificationRow.getEntry()), StatusBar.this.mHeadsUpManager.isHeadsUp(expandableNotificationRow.getEntry().key), StatusBar.this.mIsKeyguard);
+                ((NotificationStat) Dependency.get(NotificationStat.class)).onRemove(expandableNotificationRow, StatusBar.this.mNotificationData.indexOf(expandableNotificationRow.getEntry()), StatusBar.this.mHeadsUpManager.isHeadsUp(expandableNotificationRow.getEntry().key), StatusBar.this.mIsKeyguard);
                 StatusBar.this.performRemoveNotification(expandableNotificationRow.getStatusBarNotification());
             }
         });
@@ -7453,7 +7610,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
                                 android.app.IActivityManager r0 = android.app.ActivityManagerCompat.getService()     // Catch:{ RemoteException -> 0x0007 }
                                 r0.resumeAppSwitches()     // Catch:{ RemoteException -> 0x0007 }
                             L_0x0007:
-                                com.android.systemui.statusbar.phone.StatusBar$101 r0 = com.android.systemui.statusbar.phone.StatusBar.AnonymousClass101.this     // Catch:{ CanceledException -> 0x0019 }
+                                com.android.systemui.statusbar.phone.StatusBar$105 r0 = com.android.systemui.statusbar.phone.StatusBar.AnonymousClass105.this     // Catch:{ CanceledException -> 0x0019 }
                                 android.app.PendingIntent r1 = r4     // Catch:{ CanceledException -> 0x0019 }
                                 r2 = 0
                                 r3 = 0
@@ -7475,18 +7632,18 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
                                 java.lang.String r1 = "StatusBar"
                                 android.util.Log.w(r1, r0)
                             L_0x0030:
-                                com.android.systemui.statusbar.phone.StatusBar$101 r0 = com.android.systemui.statusbar.phone.StatusBar.AnonymousClass101.this
+                                com.android.systemui.statusbar.phone.StatusBar$105 r0 = com.android.systemui.statusbar.phone.StatusBar.AnonymousClass105.this
                                 android.app.PendingIntent r0 = r4
                                 boolean r0 = r0.isActivity()
                                 if (r0 == 0) goto L_0x0043
-                                com.android.systemui.statusbar.phone.StatusBar$101 r9 = com.android.systemui.statusbar.phone.StatusBar.AnonymousClass101.this
+                                com.android.systemui.statusbar.phone.StatusBar$105 r9 = com.android.systemui.statusbar.phone.StatusBar.AnonymousClass105.this
                                 com.android.systemui.statusbar.phone.StatusBar r9 = com.android.systemui.statusbar.phone.StatusBar.this
                                 com.android.systemui.assist.AssistManager r9 = r9.mAssistManager
                                 r9.hideAssist()
                             L_0x0043:
                                 return
                             */
-                            throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.phone.StatusBar.AnonymousClass101.AnonymousClass1.run():void");
+                            throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.phone.StatusBar.AnonymousClass105.AnonymousClass1.run():void");
                         }
                     }.start();
                     StatusBar.this.animateCollapsePanels(2, true, true);
@@ -7529,21 +7686,6 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
         this.mVisibleToUser = z2;
         if (z != z2) {
             handleVisibleToUserChanged(z2);
-        }
-    }
-
-    /* access modifiers changed from: private */
-    public void updateRenderLayer() {
-        if (this.mVisible && !this.mRenderLayerShown) {
-            RenderLayerManager instance = RenderLayerManager.getInstance();
-            PhoneStatusBarView phoneStatusBarView = this.mStatusBarView;
-            MiRenderConfig miRenderConfig = MI_RENDER_CONFIG;
-            DisplayInfo displayInfo = this.mInfo;
-            instance.showLayer(phoneStatusBarView, "StatusBar", miRenderConfig, displayInfo.logicalWidth, displayInfo.logicalHeight);
-            this.mRenderLayerShown = true;
-        } else if (!this.mVisible && this.mRenderLayerShown) {
-            RenderLayerManager.getInstance().hideLayer(this.mStatusBarView);
-            this.mRenderLayerShown = false;
         }
     }
 
@@ -7601,7 +7743,6 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
             Log.d("StatusBar", "createNotificationViews(notification=" + expandedNotification);
         }
         NotificationData.Entry entry = new NotificationData.Entry(expandedNotification);
-        entry.mIsShowMiniWindowBar = this.mAppMiniWindowManager.canNotificationSlide(this.mContext, expandedNotification);
         entry.canBubble = this.mNotificationData.canBubble(entry.key);
         ((LeakDetector) Dependency.get(LeakDetector.class)).trackInstance(entry);
         entry.createIcons(this.mContext, expandedNotification);
@@ -7614,7 +7755,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
         if (entry != null) {
             this.mNotificationData.add(entry);
             ((NotificationsMonitor) Dependency.get(NotificationsMonitor.class)).notifyNotificationArrived(entry.notification);
-            ((SystemUIStat) Dependency.get(SystemUIStat.class)).onArrive(entry.notification);
+            ((NotificationStat) Dependency.get(NotificationStat.class)).onArrive(entry.notification);
             updateNotifications();
         }
     }
@@ -7727,7 +7868,9 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
     public void updateNotification(ExpandedNotification expandedNotification, NotificationListenerService.RankingMap rankingMap) throws InflationException {
         if (!filterNotification(expandedNotification)) {
             String key = expandedNotification.getKey();
-            this.mBgHandler.obtainMessage(b.m, key).sendToTarget();
+            if (!this.mMirrorDndEnable) {
+                this.mBgHandler.obtainMessage(b.m, key).sendToTarget();
+            }
             abortExistingInflation(key);
             NotificationData.Entry entry = this.mNotificationData.get(key);
             if (entry != null) {
@@ -7769,7 +7912,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
                     Log.d("StatusBar", sb.toString());
                 }
                 setAreThereNotifications();
-                wakeUpForNotification(entry);
+                postWakeUpForNotification(entry);
                 ((NotificationsMonitor) Dependency.get(NotificationsMonitor.class)).notifyNotificationUpdated(expandedNotification);
             }
         }
@@ -7887,6 +8030,9 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
         } else if (this.mDisableFloatNotification) {
             Log.d("StatusBar", "No peeking: disable float notification: " + expandedNotification.getKey());
             return false;
+        } else if (this.mMirrorDndEnable) {
+            Log.d("StatusBar", "No peeking: mirror dnd mode");
+            return false;
         } else if (InCallUtils.isInCallScreenShowing(this.mContext) && InCallUtils.isInCallNotificationHasVideoCall(expandedNotification)) {
             Log.d("StatusBar", "peeking: video in call notification: " + expandedNotification.getKey());
             return true;
@@ -7921,7 +8067,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
     public void logNotificationExpansion(final String str, final boolean z, final boolean z2) {
         NotificationData.Entry entry = this.mNotificationData.get(str);
         if (!(entry == null || entry.notification == null)) {
-            ((SystemUIStat) Dependency.get(SystemUIStat.class)).onExpansionChanged(entry.notification, z, z2);
+            ((NotificationStat) Dependency.get(NotificationStat.class)).onExpansionChanged(entry.notification, z, z2);
         }
         this.mUiOffloadThread.submit(new Runnable() {
             public void run() {
@@ -7950,15 +8096,14 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
     }
 
     public void startAssist(Bundle bundle) {
-        AssistManager assistManager = this.mAssistManager;
-        if (assistManager != null) {
-            assistManager.startAssist(bundle);
+        if (this.mAssistManager != null && (getFlagDisable1() & 33554432) == 0) {
+            this.mAssistManager.startAssist(bundle);
         }
     }
 
     public void onInCallNotificationShow() {
         if (this.mPhoneStateListener == null) {
-            AnonymousClass104 r0 = new PhoneStateListener() {
+            AnonymousClass108 r0 = new PhoneStateListener() {
                 public void onCallStateChanged(int i, String str) {
                     StatusBar.this.onCallStateChanged(i);
                 }
@@ -7967,7 +8112,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
             this.mTelephonyManager.listen(r0, 32);
         }
         if (this.mVoipPhoneStateReceiver == null) {
-            AnonymousClass105 r2 = new BroadcastReceiver() {
+            AnonymousClass109 r2 = new BroadcastReceiver() {
                 public void onReceive(Context context, Intent intent) {
                     StatusBar.this.onCallStateChanged(intent.getIntExtra("state", 0));
                 }
@@ -8010,7 +8155,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
     }
 
     public void onInCallNotificationHide() {
-        Settings.System.putIntForUser(this.mContext.getContentResolver(), "status_bar_in_call_notification_floating", 0, -2);
+        Settings.System.putIntForUser(this.mContext.getContentResolver(), "status_bar_in_call_notification_floating", 0, KeyguardUpdateMonitor.getCurrentUser());
     }
 
     public void onAnswerCall() {

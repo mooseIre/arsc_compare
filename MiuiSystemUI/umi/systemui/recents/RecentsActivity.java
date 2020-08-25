@@ -85,6 +85,7 @@ import com.android.systemui.recents.events.activity.RotationChangedEvent;
 import com.android.systemui.recents.events.activity.ScrollerFlingFinishEvent;
 import com.android.systemui.recents.events.activity.ShowMemoryAndDockEvent;
 import com.android.systemui.recents.events.activity.StackScrollChangedEvent;
+import com.android.systemui.recents.events.activity.StartSmallWindowEvent;
 import com.android.systemui.recents.events.activity.ToggleRecentsEvent;
 import com.android.systemui.recents.events.activity.UndockingTaskEvent;
 import com.android.systemui.recents.events.component.ChangeTaskLockStateEvent;
@@ -138,7 +139,6 @@ import miui.process.ProcessConfig;
 import miui.process.ProcessManager;
 import miui.securityspace.XSpaceUserHandle;
 import miui.util.HardwareInfo;
-import miui.view.MiuiHapticFeedbackConstants;
 import miui.view.animation.SineEaseInOutInterpolator;
 import miui.view.animation.SineEaseOutInterpolator;
 
@@ -451,7 +451,7 @@ public class RecentsActivity extends Activity implements ViewTreeObserver.OnPreD
                 Intent intent = new Intent("android.intent.action.MAIN");
                 intent.setClassName("com.android.settings", "com.android.settings.applications.ManageApplicationsActivity");
                 intent.putExtra("com.android.settings.APPLICATION_LIST_TYPE", 2);
-                intent.setFlags(MiuiHapticFeedbackConstants.FLAG_MIUI_HAPTIC_TAP_NORMAL);
+                intent.setFlags(268435456);
                 TaskStackBuilder.create(RecentsActivity.this.getApplicationContext()).addNextIntentWithParentStack(intent).startActivities((Bundle) null, UserHandle.CURRENT);
                 return true;
             }
@@ -1204,6 +1204,10 @@ public class RecentsActivity extends Activity implements ViewTreeObserver.OnPreD
         }
     }
 
+    public final void onBusEvent(StartSmallWindowEvent startSmallWindowEvent) {
+        dismissRecentsToHome(true);
+    }
+
     public final void onBusEvent(HideMemoryAndDockEvent hideMemoryAndDockEvent) {
         startRecentsContainerFadeOutAnim(0, 180);
         this.mDockBtn.setEnabled(false);
@@ -1359,7 +1363,7 @@ public class RecentsActivity extends Activity implements ViewTreeObserver.OnPreD
     }
 
     private void updateDockBtnVisible() {
-        this.mDockBtn.setVisibility((RecentsConfiguration.sCanMultiWindow || this.mRecentsView.getStack().getStackTaskCount() <= 0 || isInMultiWindowMode() || !Utilities.supportsMultiWindow() || this.mRecentsView.getMenuView().isShowing()) ? 4 : 0);
+        this.mDockBtn.setVisibility((RecentsConfiguration.sCanMultiWindow || this.mRecentsView.getStack().getStackTaskCount() <= 0 || isInMultiWindowMode() || !Utilities.supportsMultiWindow() || Utilities.isInSmallWindowMode(this) || this.mRecentsView.getMenuView().isShowing() || Utilities.IS_MIUI_LITE_VERSION) ? 4 : 0);
     }
 
     private boolean isMemInfoShow() {
@@ -1450,7 +1454,7 @@ public class RecentsActivity extends Activity implements ViewTreeObserver.OnPreD
     public static String getToastMsg(Context context, long j, long j2) {
         long max = Math.max(j2 - j, 0);
         if (max <= 10240) {
-            return context.getResources().getString(286130366);
+            return context.getResources().getString(286130379);
         }
         long j3 = max / 1024;
         if (j3 < 1024) {

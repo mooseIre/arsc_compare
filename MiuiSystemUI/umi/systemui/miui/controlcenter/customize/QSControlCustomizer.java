@@ -270,7 +270,7 @@ public class QSControlCustomizer extends FrameLayout implements TileQueryHelper.
         super.onConfigurationChanged(configuration);
         this.mTitle.setText(R.string.qs_control_customize_title);
         this.mSubTitle.setText(R.string.qs_control_customize_sub_title);
-        this.mDoneButton.setText(R.string.quick_settings_done);
+        this.mDoneButton.setText(R.string.qs_control_customize_save_text);
         Resources resources = this.mContext.getResources();
         int max = Math.max(1, resources.getInteger(R.integer.quick_settings_num_columns));
         if (this.mSpanCount != max) {

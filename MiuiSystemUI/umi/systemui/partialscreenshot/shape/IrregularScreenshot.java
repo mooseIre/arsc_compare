@@ -18,6 +18,7 @@ public class IrregularScreenshot extends PartialScreenshotShape {
     private float behindNextY;
     private float behindX;
     private float behindY;
+    private int closeType = 0;
     private float crossoverBehindX;
     private float crossoverBehindY;
     private int crossoverPointCount = 0;
@@ -28,14 +29,16 @@ public class IrregularScreenshot extends PartialScreenshotShape {
     private boolean isBegin = false;
     private int isState = -1;
     private boolean isUp;
+    private Bitmap mDrawBitmap;
     private int mLastX;
     private int mLastY;
     private final Paint mPaintBackground;
     private final Paint mPaintSelection;
     private final Paint mPloyLine;
     private Rect mSelectionRect;
+    private Path mSlidePath;
     private TouchAreaEnum mTouchArea = TouchAreaEnum.OUT_OF_BOUNDS;
-    private int mTouchInsideSize = 200;
+    private int mTouchInsideSize = 50;
     private float pX;
     private float pY;
     private List<Float> pathX;
@@ -51,7 +54,7 @@ public class IrregularScreenshot extends PartialScreenshotShape {
         Paint paint = new Paint();
         this.mPaintBackground = paint;
         paint.setColor(-16777216);
-        this.mPaintBackground.setAlpha(204);
+        this.mPaintBackground.setAlpha(165);
         Paint paint2 = new Paint(0);
         this.mPaintSelection = paint2;
         paint2.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
@@ -69,9 +72,11 @@ public class IrregularScreenshot extends PartialScreenshotShape {
         this.mPloyLine.setStyle(Paint.Style.STROKE);
         this.pathX = new ArrayList();
         this.pathY = new ArrayList();
+        this.mDrawBitmap = Bitmap.createBitmap(view2.getWidth(), view2.getHeight(), Bitmap.Config.ARGB_8888);
+        this.mSlidePath = new Path();
     }
 
-    public Rect getmSelectionRect() {
+    public Rect getSelectionRect() {
         return this.mSelectionRect;
     }
 
@@ -95,6 +100,7 @@ public class IrregularScreenshot extends PartialScreenshotShape {
     public void clear() {
         this.pathX.clear();
         this.pathY.clear();
+        this.closeType = 0;
     }
 
     public float getTop() {
@@ -163,19 +169,20 @@ public class IrregularScreenshot extends PartialScreenshotShape {
 
     public void draw(Canvas canvas) {
         if (size() <= 1 || getRight() - getLeft() <= 1.0f || getBottom() - getTop() <= 1.0f) {
-            canvas.drawRect(0.0f, 0.0f, (float) this.view.getWidth(), (float) this.view.getHeight(), this.mPaintBackground);
+            canvas.drawPaint(this.mPaintBackground);
             return;
         }
-        Bitmap createBitmap = Bitmap.createBitmap(((int) getRight()) - ((int) getLeft()), ((int) getBottom()) - ((int) getTop()), Bitmap.Config.ARGB_8888);
-        Canvas canvas2 = new Canvas(createBitmap);
+        Bitmap bitmap = this.mDrawBitmap;
+        if (bitmap == null || bitmap.isRecycled()) {
+            this.mDrawBitmap = Bitmap.createBitmap(this.view.getWidth(), this.view.getHeight(), Bitmap.Config.ARGB_8888);
+        }
+        Canvas canvas2 = new Canvas(this.mDrawBitmap);
+        canvas2.drawColor(0, PorterDuff.Mode.CLEAR);
+        canvas2.drawPaint(this.mPaintBackground);
+        pathLink(this.mSlidePath);
         if (this.isUp) {
-            canvas2.drawRect(0.0f, 0.0f, (float) (((int) getRight()) - ((int) getLeft())), (float) (((int) getBottom()) - ((int) getTop())), this.mPaintBackground);
-            Path path = new Path();
-            path.moveTo(this.pathX.get(0).floatValue() - getLeft(), this.pathY.get(0).floatValue() - getTop());
-            pathLink(path);
-            isCloseLineorQuad(path);
-            canvas2.drawPath(path, this.mPaintSelection);
-            path.reset();
+            isCloseLineOrQuad(this.mSlidePath);
+            canvas2.drawPath(this.mSlidePath, this.mPaintSelection);
             Rect rect = this.mSelectionRect;
             if (rect == null) {
                 this.mSelectionRect = new Rect((int) getLeft(), (int) getTop(), (int) getRight(), (int) getBottom());
@@ -185,23 +192,12 @@ public class IrregularScreenshot extends PartialScreenshotShape {
                 this.mSelectionRect.left = (int) getLeft();
                 this.mSelectionRect.right = (int) getRight();
             }
+            DrawShapeUtil.drawTrimmingFrame(canvas2, this.mSelectionRect);
         } else {
-            canvas2.drawRect(0.0f, 0.0f, (float) (((int) getRight()) - ((int) getLeft())), (float) (((int) getBottom()) - ((int) getTop())), this.mPaintBackground);
-            Path path2 = new Path();
-            path2.moveTo(this.pathX.get(0).floatValue() - getLeft(), this.pathY.get(0).floatValue() - getTop());
-            pathLink(path2);
-            canvas2.drawPath(path2, this.mPloyLine);
-            path2.reset();
+            canvas2.drawPath(this.mSlidePath, this.mPloyLine);
         }
-        canvas.drawBitmap(createBitmap, (float) ((int) getLeft()), (float) ((int) getTop()), (Paint) null);
-        createBitmap.recycle();
-        canvas.drawRect(0.0f, (float) ((int) getTop()), (float) ((int) getLeft()), (float) ((int) getBottom()), this.mPaintBackground);
-        canvas.drawRect(0.0f, 0.0f, (float) this.view.getWidth(), (float) ((int) getTop()), this.mPaintBackground);
-        canvas.drawRect((float) ((int) getRight()), (float) ((int) getTop()), (float) this.view.getWidth(), (float) ((int) getBottom()), this.mPaintBackground);
-        canvas.drawRect(0.0f, (float) ((int) getBottom()), (float) this.view.getWidth(), (float) this.view.getHeight(), this.mPaintBackground);
-        if (this.isUp) {
-            DrawShapeUtil.drawTrimmingFrame(canvas, this.mSelectionRect);
-        }
+        this.mSlidePath.reset();
+        canvas.drawBitmap(this.mDrawBitmap, 0.0f, 0.0f, (Paint) null);
     }
 
     public Bitmap getPartialBitmap(Bitmap bitmap) {
@@ -227,18 +223,19 @@ public class IrregularScreenshot extends PartialScreenshotShape {
         if (rect4.top + rect4.height() > bitmap.getHeight()) {
             this.mSelectionRect.top = bitmap.getHeight() - this.mSelectionRect.height();
         }
-        Bitmap createBitmap = Bitmap.createBitmap(this.mSelectionRect.width(), this.mSelectionRect.height(), Bitmap.Config.ARGB_8888);
+        Bitmap createBitmap = Bitmap.createBitmap(this.view.getWidth(), this.view.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(createBitmap);
         Paint paint = new Paint(7);
         paint.setColor(-1);
-        Path path = new Path();
         if (size() > 1) {
-            path.moveTo(this.pathX.get(0).floatValue() - getLeft(), this.pathY.get(0).floatValue() - getTop());
-            pathLink(path);
+            pathLink(this.mSlidePath);
+            isCloseLineOrQuad(this.mSlidePath);
         }
-        isCloseLineorQuad(path);
-        canvas.drawPath(path, paint);
-        return DrawShapeUtil.getResultBitmap(createBitmap.getWidth(), createBitmap.getHeight(), createBitmap, bitmap, this.mSelectionRect);
+        canvas.drawPath(this.mSlidePath, paint);
+        this.mSlidePath.reset();
+        Rect rect5 = this.mSelectionRect;
+        Bitmap createBitmap2 = Bitmap.createBitmap(createBitmap, rect5.left, rect5.top, rect5.width(), this.mSelectionRect.height());
+        return DrawShapeUtil.getResultBitmap(createBitmap2.getWidth(), createBitmap2.getHeight(), createBitmap2, bitmap, this.mSelectionRect);
     }
 
     public boolean checkIsValid() {
@@ -247,9 +244,9 @@ public class IrregularScreenshot extends PartialScreenshotShape {
             return false;
         }
         judgePath();
-        if (this.crossoverPointCount <= 1 || Math.pow((double) (this.pathX.get(size() - 1).floatValue() - this.pathX.get(0).floatValue()), 2.0d) + Math.pow((double) (this.pathY.get(size() - 1).floatValue() - this.pathY.get(0).floatValue()), 2.0d) <= 250000.0d) {
+        if (this.crossoverPointCount == 1 || distance(this.pathX.get(0).floatValue(), this.pathX.get(size() - 1).floatValue(), this.pathY.get(0).floatValue(), this.pathY.get(size() - 1).floatValue()) <= 300.0d) {
             if (this.crossoverPointCount < 2) {
-                cutpath();
+                cutPath();
                 if (getRight() - getLeft() < 200.0f || getBottom() - getTop() < 200.0f) {
                     clear();
                     return false;
@@ -262,47 +259,60 @@ public class IrregularScreenshot extends PartialScreenshotShape {
     }
 
     private void close(Path path) {
-        if (((this.pathY.get(0).floatValue() - getTop()) + this.pathY.get(size() - 1).floatValue()) - getTop() > getBottom() - getTop()) {
-            if (this.pathY.get(0).floatValue() > this.pathY.get(size() - 1).floatValue()) {
-                path.quadTo(this.pathX.get(size() - 1).floatValue() - getLeft(), this.pathY.get(0).floatValue() - getTop(), this.pathX.get(0).floatValue() - getLeft(), this.pathY.get(0).floatValue() - getTop());
+        if (this.closeType == 0) {
+            if (((this.pathY.get(0).floatValue() - getTop()) + this.pathY.get(size() - 1).floatValue()) - getTop() > getBottom() - getTop()) {
+                if (this.pathY.get(0).floatValue() > this.pathY.get(size() - 1).floatValue()) {
+                    this.closeType = 1;
+                } else {
+                    this.closeType = 2;
+                }
+            } else if (this.pathY.get(0).floatValue() > this.pathY.get(size() - 1).floatValue()) {
+                this.closeType = 3;
             } else {
-                path.quadTo(this.pathX.get(0).floatValue() - getLeft(), this.pathY.get(size() - 1).floatValue() - getTop(), this.pathX.get(0).floatValue() - getLeft(), this.pathY.get(0).floatValue() - getTop());
+                this.closeType = 4;
             }
-        } else if (this.pathY.get(0).floatValue() > this.pathY.get(size() - 1).floatValue()) {
-            path.quadTo(this.pathX.get(0).floatValue() - getLeft(), this.pathY.get(size() - 1).floatValue() - getTop(), this.pathX.get(0).floatValue() - getLeft(), this.pathY.get(0).floatValue() - getTop());
-        } else {
-            path.quadTo(this.pathX.get(size() - 1).floatValue() - getLeft(), this.pathY.get(0).floatValue() - getTop(), this.pathX.get(0).floatValue() - getLeft(), this.pathY.get(0).floatValue() - getTop());
         }
+        int i = this.closeType;
+        if (i != 1) {
+            if (i == 2 || i == 3) {
+                path.quadTo(this.pathX.get(0).floatValue(), this.pathY.get(size() - 1).floatValue(), this.pathX.get(0).floatValue(), this.pathY.get(0).floatValue());
+                return;
+            } else if (i != 4) {
+                this.closeType = 0;
+                return;
+            }
+        }
+        path.quadTo(this.pathX.get(size() - 1).floatValue(), this.pathY.get(0).floatValue(), this.pathX.get(0).floatValue(), this.pathY.get(0).floatValue());
     }
 
     private void pathLink(Path path) {
-        path.moveTo(this.pathX.get(0).floatValue() - getLeft(), this.pathY.get(0).floatValue() - getTop());
-        this.preX = this.pathX.get(0).floatValue() - getLeft();
-        this.preY = this.pathY.get(0).floatValue() - getTop();
+        path.moveTo(this.pathX.get(0).floatValue(), this.pathY.get(0).floatValue());
+        this.preX = this.pathX.get(0).floatValue();
+        this.preY = this.pathY.get(0).floatValue();
         for (int i = 1; i < size(); i++) {
-            this.endX = ((this.preX + this.pathX.get(i).floatValue()) - getLeft()) / 2.0f;
-            float floatValue = ((this.preY + this.pathY.get(i).floatValue()) - getTop()) / 2.0f;
+            this.endX = (this.preX + this.pathX.get(i).floatValue()) / 2.0f;
+            float floatValue = (this.preY + this.pathY.get(i).floatValue()) / 2.0f;
             this.endY = floatValue;
             path.quadTo(this.preX, this.preY, this.endX, floatValue);
-            this.preX = this.pathX.get(i).floatValue() - getLeft();
-            this.preY = this.pathY.get(i).floatValue() - getTop();
+            this.preX = this.pathX.get(i).floatValue();
+            this.preY = this.pathY.get(i).floatValue();
         }
     }
 
-    private void isCloseLineorQuad(Path path) {
-        if (this.isState != -1 || Math.pow((double) (this.pathX.get(size() - 1).floatValue() - this.pathX.get(0).floatValue()), 2.0d) + Math.pow((double) (this.pathY.get(size() - 1).floatValue() - this.pathY.get(0).floatValue()), 2.0d) >= 10000.0d) {
-            int i = this.isState;
-            if (i == -1) {
-                close(path);
-                this.isState = 1;
-            } else if (i == 0) {
+    private void isCloseLineOrQuad(Path path) {
+        int i = this.isState;
+        if (i == -1) {
+            if (Math.pow((double) (this.pathX.get(size() - 1).floatValue() - this.pathX.get(0).floatValue()), 2.0d) + Math.pow((double) (this.pathY.get(size() - 1).floatValue() - this.pathY.get(0).floatValue()), 2.0d) < 10000.0d) {
                 path.close();
-            } else {
-                close(path);
+                this.isState = 0;
+                return;
             }
-        } else {
+            close(path);
+            this.isState = 1;
+        } else if (i == 0) {
             path.close();
-            this.isState = 0;
+        } else {
+            close(path);
         }
     }
 
@@ -354,7 +364,7 @@ public class IrregularScreenshot extends PartialScreenshotShape {
         return Math.sqrt(Math.pow((double) (f - f2), 2.0d) + Math.pow((double) (f3 - f4), 2.0d));
     }
 
-    private void cutpath() {
+    private void cutPath() {
         int i = 1;
         if (this.crossoverPointCount == 1 && (distance(this.pathX.get(size() - 1).floatValue(), this.pathX.get(0).floatValue(), this.pathY.get(size() - 1).floatValue(), this.pathY.get(0).floatValue()) > 200.0d || (distance(this.pathX.get(size() - 1).floatValue(), this.crossoverBehindX, this.pathY.get(size() - 1).floatValue(), this.crossoverBehindY) < 200.0d && distance(this.pathX.get(0).floatValue(), this.crossoverPreX, this.pathY.get(0).floatValue(), this.crossoverPreY) < 200.0d))) {
             int i2 = 0;
@@ -367,7 +377,7 @@ public class IrregularScreenshot extends PartialScreenshotShape {
                     i3 = i4;
                 }
             }
-            if (i2 > 0 && i3 > 0) {
+            if (i2 > 0 && i3 > 0 && i3 - i2 > 5) {
                 this.pathY = this.pathY.subList(i2, i3);
                 List<Float> subList = this.pathX.subList(i2, i3);
                 this.pathX = subList;
@@ -404,15 +414,15 @@ public class IrregularScreenshot extends PartialScreenshotShape {
             if (i5 <= 0) {
                 return;
             }
-            if (this.isBegin) {
+            if (this.isBegin && i5 + 7 < size()) {
                 int i7 = i5 + 2;
                 this.pathX = this.pathX.subList(i7, size());
                 this.pathY = this.pathY.subList(i7, size());
-                return;
+            } else if (!this.isBegin && i5 > 8) {
+                int i8 = i5 - 3;
+                this.pathX = this.pathX.subList(0, i8);
+                this.pathY = this.pathY.subList(0, i8);
             }
-            int i8 = i5 - 3;
-            this.pathX = this.pathX.subList(0, i8);
-            this.pathY = this.pathY.subList(0, i8);
         }
     }
 
@@ -646,7 +656,7 @@ public class IrregularScreenshot extends PartialScreenshotShape {
         }
     }
 
-    private void moveHandleRightBottom(float f, float f2) {
+    public void moveHandleRightBottom(float f, float f2) {
         Rect rect = this.mSelectionRect;
         int i = rect.left;
         if (f - ((float) i) > ((float) this.mTouchInsideSize)) {
@@ -717,7 +727,7 @@ public class IrregularScreenshot extends PartialScreenshotShape {
         }
     }
 
-    private void moveHandleLeftTop(float f, float f2) {
+    public void moveHandleLeftTop(float f, float f2) {
         Rect rect = this.mSelectionRect;
         int i = rect.right;
         if (((float) i) - f > ((float) this.mTouchInsideSize)) {
@@ -738,6 +748,10 @@ public class IrregularScreenshot extends PartialScreenshotShape {
             }
             this.mSelectionRect.top = (int) f2;
         }
+    }
+
+    public void setSelectionRect() {
+        this.mSelectionRect = new Rect((int) getLeft(), (int) getTop(), (int) getRight(), (int) getBottom());
     }
 
     private void handleTouchArea(int i, int i2) {

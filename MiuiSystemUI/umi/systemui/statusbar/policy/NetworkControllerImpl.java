@@ -63,14 +63,13 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
     private final BitSet mConnectedTransports;
     /* access modifiers changed from: private */
     public final ConnectivityManager mConnectivityManager;
-    /* access modifiers changed from: private */
-    public final Context mContext;
+    private final Context mContext;
     private List<SubscriptionInfo> mCurrentSubscriptions;
     private int mCurrentUserId;
-    /* access modifiers changed from: private */
-    public boolean[] mDataConnedInMMsForOperators;
+    private boolean[] mDataConnedInMMsForOperators;
     private final DataSaverController mDataSaverController;
     private final DataUsageController mDataUsageController;
+    private int mDefaultDataSimState;
     private MobileSignalController mDefaultSignalController;
     private boolean mDemoInetCondition;
     private boolean mDemoMode;
@@ -80,8 +79,8 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
     final EthernetSignalController mEthernetSignalController;
     private final boolean mHasMobileDataFeature;
     private boolean mHasNoSims;
-    /* access modifiers changed from: private */
-    public boolean[] mHideVolteForOperators;
+    private boolean[] mHideVolteForOperators;
+    private boolean[] mHideVowifiForOperators;
     private boolean mInetCondition;
     private boolean mIsEmergency;
     @VisibleForTesting
@@ -95,14 +94,13 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
     private String[] mNetworkNameList;
     private String mNetworkNameSeparator;
     private final NetworkScoreManager mNetworkScoreManager;
-    /* access modifiers changed from: private */
-    public String[] mOperators;
-    /* access modifiers changed from: private */
-    public final TelephonyManager mPhone;
+    private String[] mOperators;
+    private final TelephonyManager mPhone;
     private int mPhoneCount;
     /* access modifiers changed from: private */
     public final Handler mReceiverHandler;
     private final Runnable mRegisterListeners;
+    private Resources[] mResourcesForOperators;
     private boolean mShowPlmnSPn;
     private NetworkController.SignalState mSignalState;
     private SlaveWifiSignalController mSlaveWifiSignalController;
@@ -118,8 +116,7 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
     public final WifiManager mWifiManager;
     @VisibleForTesting
     final WifiSignalController mWifiSignalController;
-    /* access modifiers changed from: private */
-    public boolean[] misMobileTypeShownWhenWifiOn;
+    private boolean[] misMobileTypeShownWhenWifiOn;
 
     /* JADX WARNING: Illegal instructions before constructor call */
     /* Code decompiled incorrectly, please refer to instructions dump. */
@@ -188,9 +185,11 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
         this.mNetworkNameList = new String[phoneCount];
         this.mMobileTypeList = new String[phoneCount];
         this.mOperators = new String[phoneCount];
+        this.mResourcesForOperators = new Resources[phoneCount];
         this.mHideVolteForOperators = new boolean[phoneCount];
         this.misMobileTypeShownWhenWifiOn = new boolean[phoneCount];
         this.mDataConnedInMMsForOperators = new boolean[phoneCount];
+        this.mHideVowifiForOperators = new boolean[phoneCount];
         String string = context.getString(R.string.status_bar_network_name_separator);
         this.mNetworkNameSeparator = string;
         this.mNetworkNameSeparator = string;
@@ -241,7 +240,6 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
         });
         this.mSignalState = new NetworkController.SignalState();
         this.mSupportSlaveWifi = NetworkControllerCompat.supportSlaveWifi(context);
-        Log.d("NetworkController", "NetworkControllerImpl: mSupportSlaveWifi = " + this.mSupportSlaveWifi);
         this.mSlaveWifiSignalController = new SlaveWifiSignalController(this.mContext, this.mSupportSlaveWifi, callbackHandler2, this);
     }
 
@@ -273,9 +271,9 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
         intentFilter.addAction("android.intent.action.ACTION_DEFAULT_DATA_SUBSCRIPTION_CHANGED");
         intentFilter.addAction("android.intent.action.ACTION_DEFAULT_VOICE_SUBSCRIPTION_CHANGED");
         intentFilter.addAction("android.intent.action.SERVICE_STATE");
-        intentFilter.addAction("android.provider.Telephony.SPN_STRINGS_UPDATED");
+        intentFilter.addAction("android.telephony.action.SERVICE_PROVIDERS_UPDATED");
         for (int i2 = 1; i2 < this.mPhoneCount; i2++) {
-            intentFilter.addAction("android.provider.Telephony.SPN_STRINGS_UPDATED" + i2);
+            intentFilter.addAction("android.telephony.action.SERVICE_PROVIDERS_UPDATED" + i2);
         }
         intentFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
         intentFilter.addAction("android.net.conn.INET_CONDITION_ACTION");
@@ -361,8 +359,8 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
         return this.mHasMobileDataFeature;
     }
 
-    public boolean isMobileDataSupported(int i) {
-        return hasMobileDataFeature() && this.mPhone.getSimState(i) == 5;
+    public boolean isMobileDataSupported() {
+        return hasMobileDataFeature() && !this.mHasNoSims && this.mDefaultDataSimState == 5;
     }
 
     public boolean hasVoiceCallingFeature() {
@@ -509,6 +507,7 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
                 for (int i = 0; i < this.mMobileSignalControllers.size(); i++) {
                     this.mMobileSignalControllers.valueAt(i).handleBroadcast(intent);
                 }
+                updateDefaultDataSimState();
             } else if (action.equals("android.intent.action.SIM_STATE_CHANGED")) {
                 int phoneCount = TelephonyManager.getDefault().getPhoneCount();
                 int i2 = 0;
@@ -548,10 +547,10 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
                     if (VirtualSimUtils.isVirtualSim(context, intExtra3)) {
                         str = VirtualSimUtils.getVirtualSimCarrierName(context);
                     }
-                    boolean booleanExtra = intent.getBooleanExtra("showSpn", false);
-                    boolean booleanExtra2 = intent.getBooleanExtra("showPlmn", false);
+                    boolean booleanExtra = intent.getBooleanExtra("android.telephony.extra.SHOW_SPN", false);
+                    boolean booleanExtra2 = intent.getBooleanExtra("android.telephony.extra.SHOW_PLMN", false);
                     if (TextUtils.isEmpty(str)) {
-                        str = getNetworkName(intExtra3, booleanExtra, intent.getStringExtra("spn"), intent.getStringExtra("spnData"), booleanExtra2, intent.getStringExtra("plmn"));
+                        str = getNetworkName(intExtra3, booleanExtra, intent.getStringExtra("android.telephony.extra.SPN"), intent.getStringExtra("android.telephony.extra.DATA_SPN"), booleanExtra2, intent.getStringExtra("android.telephony.extra.PLMN"));
                     }
                     if (intExtra3 < this.mPhoneCount) {
                         this.mNetworkNameList[intExtra3] = str;
@@ -588,6 +587,16 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
         }
     }
 
+    public Resources getResourcesForOperator(int i) {
+        if (i >= 0) {
+            Resources[] resourcesArr = this.mResourcesForOperators;
+            if (i < resourcesArr.length) {
+                return resourcesArr[i];
+            }
+        }
+        return null;
+    }
+
     public boolean hideVolteForOperation(int i) {
         return this.mHideVolteForOperators[i];
     }
@@ -598,6 +607,10 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
 
     public boolean dataConnedInMMsForOperation(int i) {
         return this.mDataConnedInMMsForOperators[i];
+    }
+
+    public boolean hideVowifiForOperation(int i) {
+        return this.mHideVowifiForOperators[i];
     }
 
     public void onConfigurationChanged(Configuration configuration) {
@@ -638,6 +651,7 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
         }
         setCurrentSubscriptions(activeSubscriptionInfoList);
         updateNoSims();
+        updateDefaultDataSimState();
         recalculateEmergency();
         if (isCustomizationTest()) {
             for (int i = 0; i < this.mMobileSignalControllers.size(); i++) {
@@ -653,6 +667,20 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
         if (z != this.mHasNoSims) {
             this.mHasNoSims = z;
             this.mCallbackHandler.setNoSims(z);
+        }
+    }
+
+    private void updateDefaultDataSimState() {
+        List<SubscriptionInfo> list;
+        int defaultDataSubId = this.mSubDefaults.getDefaultDataSubId();
+        if (defaultDataSubId < 0 || (list = this.mCurrentSubscriptions) == null || list.size() == 0) {
+            this.mDefaultDataSimState = 0;
+            return;
+        }
+        for (SubscriptionInfo next : this.mCurrentSubscriptions) {
+            if (next.getSubscriptionId() == defaultDataSubId) {
+                this.mDefaultDataSimState = this.mPhone.getSimState(next.getSlotId());
+            }
         }
     }
 
@@ -679,6 +707,7 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
         });
         this.mCurrentSubscriptions = list2;
         SparseArray sparseArray = new SparseArray();
+        boolean z = false;
         for (int i3 = 0; i3 < this.mMobileSignalControllers.size(); i3++) {
             sparseArray.put(this.mMobileSignalControllers.keyAt(i3), this.mMobileSignalControllers.valueAt(i3));
         }
@@ -690,21 +719,32 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
         while (i4 < size) {
             int subscriptionId = list2.get(i4).getSubscriptionId();
             int slotId = list2.get(i4).getSlotId();
+            String simOperatorNumericForPhone = this.mPhone.getSimOperatorNumericForPhone(slotId);
+            if (simOperatorNumericForPhone != null) {
+                this.mResourcesForOperators[slotId] = MCCUtils.getResourcesForOperation(this.mContext, simOperatorNumericForPhone, true);
+                this.mOperators[slotId] = simOperatorNumericForPhone;
+                this.mHideVolteForOperators[slotId] = MCCUtils.isHideVolte(this.mResourcesForOperators[slotId]);
+                this.misMobileTypeShownWhenWifiOn[slotId] = MCCUtils.isMobileTypeShownWhenWifiOn(this.mResourcesForOperators[slotId]);
+                this.mDataConnedInMMsForOperators[slotId] = MCCUtils.isShowMobileInMMS(this.mResourcesForOperators[slotId]);
+                this.mHideVowifiForOperators[slotId] = MCCUtils.isHideVowifiForOperator(this.mResourcesForOperators[slotId]);
+            } else {
+                this.mResourcesForOperators[slotId] = null;
+                this.mOperators[slotId] = simOperatorNumericForPhone;
+                this.mHideVolteForOperators[slotId] = z;
+                this.misMobileTypeShownWhenWifiOn[slotId] = z;
+                this.mDataConnedInMMsForOperators[slotId] = z;
+                this.mHideVowifiForOperators[slotId] = this.mContext.getResources().getBoolean(R.bool.status_bar_hide_vowifi);
+            }
+            Log.d("NetworkController", "setCurrentSubscriptions: subId = " + subscriptionId + ", slotId = " + slotId + ", oprator = " + simOperatorNumericForPhone + ", mHideVolteForOperators = " + this.mHideVolteForOperators[slotId] + ", misMobileTypeShownWhenWifiOn = " + this.misMobileTypeShownWhenWifiOn[slotId] + ", mDataConnedInMMsForOperators = " + this.mDataConnedInMMsForOperators[slotId] + ", mHideVowifiForOperators = " + this.mHideVowifiForOperators[slotId]);
             arrayList2.add(Integer.valueOf(subscriptionId));
             if (sparseArray.indexOfKey(subscriptionId) < 0 || !((MobileSignalController) sparseArray.get(subscriptionId)).getSubscriptionInfo().getDisplayName().equals(list2.get(i4).getDisplayName())) {
-                Context context = this.mContext;
-                Config config = this.mConfig;
-                boolean z = this.mHasMobileDataFeature;
-                TelephonyManager createForSubscriptionId = this.mPhone.createForSubscriptionId(subscriptionId);
-                CallbackHandler callbackHandler = this.mCallbackHandler;
-                SubscriptionDefaults subscriptionDefaults = this.mSubDefaults;
                 i = size;
                 MobileSignalController mobileSignalController = r0;
                 int i5 = slotId;
                 arrayList = arrayList2;
                 int i6 = subscriptionId;
                 i2 = i4;
-                MobileSignalController mobileSignalController2 = new MobileSignalController(context, config, z, createForSubscriptionId, callbackHandler, this, list2.get(i4), subscriptionDefaults, this.mReceiverHandler.getLooper());
+                MobileSignalController mobileSignalController2 = new MobileSignalController(this.mContext, this.mConfig, this.mHasMobileDataFeature, this.mPhone.createForSubscriptionId(subscriptionId), this.mCallbackHandler, this, list2.get(i4), this.mSubDefaults, this.mReceiverHandler.getLooper());
                 mobileSignalController.setUserSetupComplete(this.mUserSetup);
                 this.mMobileSignalControllers.put(i6, mobileSignalController);
                 if (Constants.IS_MEDIATEK) {
@@ -727,6 +767,7 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
             list2 = list;
             arrayList2 = arrayList;
             size = i;
+            z = false;
         }
         ArrayList arrayList3 = arrayList2;
         if (this.mListening) {
@@ -893,11 +934,11 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
     }
 
     private boolean isSpnUpdateActionSlot(String str) {
-        if (str.equals("android.provider.Telephony.SPN_STRINGS_UPDATED")) {
+        if (str.equals("android.telephony.action.SERVICE_PROVIDERS_UPDATED")) {
             return true;
         }
         for (int i = 1; i < this.mPhoneCount; i++) {
-            if (str.equals("android.provider.Telephony.SPN_STRINGS_UPDATED" + i)) {
+            if (str.equals("android.telephony.action.SERVICE_PROVIDERS_UPDATED" + i)) {
                 return true;
             }
         }
@@ -983,10 +1024,10 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
     }
 
     /* access modifiers changed from: private */
-    /* JADX WARNING: Removed duplicated region for block: B:183:0x0364  */
-    /* JADX WARNING: Removed duplicated region for block: B:189:0x0378  */
-    /* JADX WARNING: Removed duplicated region for block: B:70:0x0162  */
-    /* JADX WARNING: Removed duplicated region for block: B:76:0x017a  */
+    /* JADX WARNING: Removed duplicated region for block: B:183:0x0367  */
+    /* JADX WARNING: Removed duplicated region for block: B:189:0x037b  */
+    /* JADX WARNING: Removed duplicated region for block: B:70:0x0163  */
+    /* JADX WARNING: Removed duplicated region for block: B:76:0x017b  */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     public void handleDemoCommand(java.lang.String r19, android.os.Bundle r20) {
         /*
@@ -1016,7 +1057,7 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
             r0.mDemoWifiState = r1
             java.lang.String r0 = "DemoMode"
             r1.ssid = r0
-            goto L_0x03b1
+            goto L_0x03b4
         L_0x0037:
             boolean r3 = r0.mDemoMode
             r6 = 0
@@ -1048,58 +1089,58 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
             java.lang.Runnable r2 = r0.mRegisterListeners
             r1.post(r2)
             r18.notifyAllListeners()
-            goto L_0x03b1
+            goto L_0x03b4
         L_0x0079:
             boolean r3 = r0.mDemoMode
-            if (r3 == 0) goto L_0x03b1
+            if (r3 == 0) goto L_0x03b4
             java.lang.String r3 = "network"
             boolean r1 = r1.equals(r3)
-            if (r1 == 0) goto L_0x03b1
+            if (r1 == 0) goto L_0x03b4
             java.lang.String r1 = "airplane"
             java.lang.String r1 = r2.getString(r1)
             java.lang.String r3 = "show"
-            if (r1 == 0) goto L_0x00a5
+            if (r1 == 0) goto L_0x00a6
             boolean r1 = r1.equals(r3)
             com.android.systemui.statusbar.policy.CallbackHandler r4 = r0.mCallbackHandler
             com.android.systemui.statusbar.policy.NetworkController$IconState r7 = new com.android.systemui.statusbar.policy.NetworkController$IconState
-            r8 = 2131233907(0x7f080c73, float:1.8083965E38)
+            r8 = 2131234153(0x7f080d69, float:1.8084464E38)
             r9 = 2131820588(0x7f11002c, float:1.9273895E38)
             android.content.Context r10 = r0.mContext
             r7.<init>((boolean) r1, (int) r8, (int) r9, (android.content.Context) r10)
             r4.setIsAirplaneMode(r7)
-        L_0x00a5:
+        L_0x00a6:
             java.lang.String r1 = "fully"
             java.lang.String r1 = r2.getString(r1)
-            if (r1 == 0) goto L_0x00e8
+            if (r1 == 0) goto L_0x00e9
             boolean r1 = java.lang.Boolean.parseBoolean(r1)
             r0.mDemoInetCondition = r1
             java.util.BitSet r1 = new java.util.BitSet
             r1.<init>()
             boolean r4 = r0.mDemoInetCondition
-            if (r4 == 0) goto L_0x00c3
+            if (r4 == 0) goto L_0x00c4
             com.android.systemui.statusbar.policy.WifiSignalController r4 = r0.mWifiSignalController
             int r4 = r4.mTransportType
             r1.set(r4)
-        L_0x00c3:
+        L_0x00c4:
             com.android.systemui.statusbar.policy.WifiSignalController r4 = r0.mWifiSignalController
             r4.updateConnectivity(r1, r1)
             r4 = r6
-        L_0x00c9:
+        L_0x00ca:
             android.util.SparseArray<com.android.systemui.statusbar.policy.MobileSignalController> r7 = r0.mMobileSignalControllers
             int r7 = r7.size()
-            if (r4 >= r7) goto L_0x00e8
+            if (r4 >= r7) goto L_0x00e9
             android.util.SparseArray<com.android.systemui.statusbar.policy.MobileSignalController> r7 = r0.mMobileSignalControllers
             java.lang.Object r7 = r7.valueAt(r4)
             com.android.systemui.statusbar.policy.MobileSignalController r7 = (com.android.systemui.statusbar.policy.MobileSignalController) r7
             boolean r8 = r0.mDemoInetCondition
-            if (r8 == 0) goto L_0x00e2
+            if (r8 == 0) goto L_0x00e3
             int r8 = r7.mTransportType
             r1.set(r8)
-        L_0x00e2:
+        L_0x00e3:
             r7.updateConnectivity(r1, r1)
             int r4 = r4 + 1
-            goto L_0x00c9
-        L_0x00e8:
+            goto L_0x00ca
+        L_0x00e9:
             java.lang.String r1 = "wifi"
             java.lang.String r1 = r2.getString(r1)
             java.lang.String r7 = "inout"
@@ -1111,369 +1152,369 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
             java.lang.String r14 = "activity"
             java.lang.String r15 = "level"
             r16 = -1
-            if (r1 == 0) goto L_0x0190
+            if (r1 == 0) goto L_0x0191
             boolean r1 = r1.equals(r3)
             java.lang.String r6 = r2.getString(r15)
-            if (r6 == 0) goto L_0x0132
+            if (r6 == 0) goto L_0x0133
             com.android.systemui.statusbar.policy.WifiSignalController$WifiState r4 = r0.mDemoWifiState
             boolean r17 = r6.equals(r13)
-            if (r17 == 0) goto L_0x0119
+            if (r17 == 0) goto L_0x011a
             r6 = r16
-            goto L_0x0125
-        L_0x0119:
+            goto L_0x0126
+        L_0x011a:
             int r6 = java.lang.Integer.parseInt(r6)
             int r17 = com.android.systemui.statusbar.policy.WifiIcons.WIFI_LEVEL_COUNT
             int r10 = r17 + -1
             int r6 = java.lang.Math.min(r6, r10)
-        L_0x0125:
+        L_0x0126:
             r4.level = r6
             com.android.systemui.statusbar.policy.WifiSignalController$WifiState r4 = r0.mDemoWifiState
             int r6 = r4.level
-            if (r6 < 0) goto L_0x012f
+            if (r6 < 0) goto L_0x0130
             r6 = r5
-            goto L_0x0130
-        L_0x012f:
-            r6 = 0
+            goto L_0x0131
         L_0x0130:
+            r6 = 0
+        L_0x0131:
             r4.connected = r6
-        L_0x0132:
+        L_0x0133:
             java.lang.String r4 = r2.getString(r14)
-            if (r4 == 0) goto L_0x0181
+            if (r4 == 0) goto L_0x0182
             int r6 = r4.hashCode()
-            if (r6 == r12) goto L_0x0156
-            if (r6 == r11) goto L_0x014e
+            if (r6 == r12) goto L_0x0157
+            if (r6 == r11) goto L_0x014f
             r10 = 100357129(0x5fb5409, float:2.3634796E-35)
-            if (r6 == r10) goto L_0x0146
-            goto L_0x015e
-        L_0x0146:
+            if (r6 == r10) goto L_0x0147
+            goto L_0x015f
+        L_0x0147:
             boolean r4 = r4.equals(r7)
-            if (r4 == 0) goto L_0x015e
+            if (r4 == 0) goto L_0x015f
             r4 = 0
-            goto L_0x0160
-        L_0x014e:
+            goto L_0x0161
+        L_0x014f:
             boolean r4 = r4.equals(r8)
-            if (r4 == 0) goto L_0x015e
+            if (r4 == 0) goto L_0x015f
             r4 = 2
-            goto L_0x0160
-        L_0x0156:
+            goto L_0x0161
+        L_0x0157:
             boolean r4 = r4.equals(r9)
-            if (r4 == 0) goto L_0x015e
+            if (r4 == 0) goto L_0x015f
             r4 = r5
-            goto L_0x0160
-        L_0x015e:
+            goto L_0x0161
+        L_0x015f:
             r4 = r16
-        L_0x0160:
-            if (r4 == 0) goto L_0x017a
-            if (r4 == r5) goto L_0x0174
+        L_0x0161:
+            if (r4 == 0) goto L_0x017b
+            if (r4 == r5) goto L_0x0175
             r6 = 2
-            if (r4 == r6) goto L_0x016e
+            if (r4 == r6) goto L_0x016f
             com.android.systemui.statusbar.policy.WifiSignalController r4 = r0.mWifiSignalController
             r10 = 0
             r4.setActivity(r10)
-            goto L_0x0187
-        L_0x016e:
+            goto L_0x0188
+        L_0x016f:
             com.android.systemui.statusbar.policy.WifiSignalController r4 = r0.mWifiSignalController
             r4.setActivity(r6)
-            goto L_0x0187
-        L_0x0174:
+            goto L_0x0188
+        L_0x0175:
             com.android.systemui.statusbar.policy.WifiSignalController r4 = r0.mWifiSignalController
             r4.setActivity(r5)
-            goto L_0x0187
-        L_0x017a:
+            goto L_0x0188
+        L_0x017b:
             com.android.systemui.statusbar.policy.WifiSignalController r4 = r0.mWifiSignalController
             r6 = 3
             r4.setActivity(r6)
-            goto L_0x0187
-        L_0x0181:
+            goto L_0x0188
+        L_0x0182:
             com.android.systemui.statusbar.policy.WifiSignalController r4 = r0.mWifiSignalController
             r6 = 0
             r4.setActivity(r6)
-        L_0x0187:
+        L_0x0188:
             com.android.systemui.statusbar.policy.WifiSignalController$WifiState r4 = r0.mDemoWifiState
             r4.enabled = r1
             com.android.systemui.statusbar.policy.WifiSignalController r1 = r0.mWifiSignalController
             r1.notifyListeners()
-        L_0x0190:
+        L_0x0191:
             java.lang.String r1 = "sims"
             java.lang.String r1 = r2.getString(r1)
             r4 = 8
-            if (r1 == 0) goto L_0x01ce
+            if (r1 == 0) goto L_0x01d0
             int r1 = java.lang.Integer.parseInt(r1)
             int r1 = android.util.MathUtils.constrain(r1, r5, r4)
             java.util.ArrayList r6 = new java.util.ArrayList
             r6.<init>()
             android.util.SparseArray<com.android.systemui.statusbar.policy.MobileSignalController> r10 = r0.mMobileSignalControllers
             int r10 = r10.size()
-            if (r1 == r10) goto L_0x01ce
+            if (r1 == r10) goto L_0x01d0
             android.util.SparseArray<com.android.systemui.statusbar.policy.MobileSignalController> r10 = r0.mMobileSignalControllers
             r10.clear()
             miui.telephony.SubscriptionManager r10 = r0.mSubscriptionManager
             int r10 = r10.getSubscriptionInfoCount()
             r11 = r10
-        L_0x01bb:
+        L_0x01bd:
             int r12 = r10 + r1
-            if (r11 >= r12) goto L_0x01c9
+            if (r11 >= r12) goto L_0x01cb
             miui.telephony.SubscriptionInfo r12 = r0.addSignalController(r11, r11)
             r6.add(r12)
             int r11 = r11 + 1
-            goto L_0x01bb
-        L_0x01c9:
+            goto L_0x01bd
+        L_0x01cb:
             com.android.systemui.statusbar.policy.CallbackHandler r1 = r0.mCallbackHandler
             r1.setSubs(r6)
-        L_0x01ce:
+        L_0x01d0:
             java.lang.String r1 = "nosim"
             java.lang.String r1 = r2.getString(r1)
-            if (r1 == 0) goto L_0x01e1
+            if (r1 == 0) goto L_0x01e3
             boolean r1 = r1.equals(r3)
             r0.mHasNoSims = r1
             com.android.systemui.statusbar.policy.CallbackHandler r6 = r0.mCallbackHandler
             r6.setNoSims(r1)
-        L_0x01e1:
+        L_0x01e3:
             java.lang.String r1 = "mobile"
             java.lang.String r1 = r2.getString(r1)
-            if (r1 == 0) goto L_0x038e
+            if (r1 == 0) goto L_0x0391
             boolean r1 = r1.equals(r3)
             java.lang.String r6 = "datatype"
             java.lang.String r6 = r2.getString(r6)
             java.lang.String r10 = "slot"
             java.lang.String r10 = r2.getString(r10)
             boolean r11 = android.text.TextUtils.isEmpty(r10)
-            if (r11 == 0) goto L_0x0201
+            if (r11 == 0) goto L_0x0204
             r10 = 0
-            goto L_0x0205
-        L_0x0201:
+            goto L_0x0208
+        L_0x0204:
             int r10 = java.lang.Integer.parseInt(r10)
-        L_0x0205:
+        L_0x0208:
             r11 = 0
             int r4 = android.util.MathUtils.constrain(r10, r11, r4)
             java.util.ArrayList r10 = new java.util.ArrayList
             r10.<init>()
-        L_0x020f:
+        L_0x0212:
             android.util.SparseArray<com.android.systemui.statusbar.policy.MobileSignalController> r11 = r0.mMobileSignalControllers
             int r11 = r11.size()
-            if (r11 > r4) goto L_0x0225
+            if (r11 > r4) goto L_0x0228
             android.util.SparseArray<com.android.systemui.statusbar.policy.MobileSignalController> r11 = r0.mMobileSignalControllers
             int r11 = r11.size()
             miui.telephony.SubscriptionInfo r11 = r0.addSignalController(r11, r11)
             r10.add(r11)
-            goto L_0x020f
-        L_0x0225:
+            goto L_0x0212
+        L_0x0228:
             boolean r11 = r10.isEmpty()
-            if (r11 != 0) goto L_0x0230
+            if (r11 != 0) goto L_0x0233
             com.android.systemui.statusbar.policy.CallbackHandler r11 = r0.mCallbackHandler
             r11.setSubs(r10)
-        L_0x0230:
+        L_0x0233:
             android.util.SparseArray<com.android.systemui.statusbar.policy.MobileSignalController> r10 = r0.mMobileSignalControllers
             java.lang.Object r4 = r10.valueAt(r4)
             com.android.systemui.statusbar.policy.MobileSignalController r4 = (com.android.systemui.statusbar.policy.MobileSignalController) r4
             com.android.systemui.statusbar.policy.SignalController$State r10 = r4.getState()
             com.android.systemui.statusbar.policy.MobileSignalController$MobileState r10 = (com.android.systemui.statusbar.policy.MobileSignalController.MobileState) r10
-            if (r6 == 0) goto L_0x0242
+            if (r6 == 0) goto L_0x0245
             r11 = r5
-            goto L_0x0243
-        L_0x0242:
+            goto L_0x0246
+        L_0x0245:
             r11 = 0
-        L_0x0243:
+        L_0x0246:
             r10.dataSim = r11
             com.android.systemui.statusbar.policy.SignalController$State r10 = r4.getState()
             com.android.systemui.statusbar.policy.MobileSignalController$MobileState r10 = (com.android.systemui.statusbar.policy.MobileSignalController.MobileState) r10
-            if (r6 == 0) goto L_0x024f
+            if (r6 == 0) goto L_0x0252
             r11 = r5
-            goto L_0x0250
-        L_0x024f:
+            goto L_0x0253
+        L_0x0252:
             r11 = 0
-        L_0x0250:
+        L_0x0253:
             r10.isDefault = r11
             com.android.systemui.statusbar.policy.SignalController$State r10 = r4.getState()
             com.android.systemui.statusbar.policy.MobileSignalController$MobileState r10 = (com.android.systemui.statusbar.policy.MobileSignalController.MobileState) r10
-            if (r6 == 0) goto L_0x025c
+            if (r6 == 0) goto L_0x025f
             r11 = r5
-            goto L_0x025d
-        L_0x025c:
+            goto L_0x0260
+        L_0x025f:
             r11 = 0
-        L_0x025d:
+        L_0x0260:
             r10.dataConnected = r11
-            if (r6 == 0) goto L_0x02da
+            if (r6 == 0) goto L_0x02dd
             com.android.systemui.statusbar.policy.SignalController$State r10 = r4.getState()
             com.android.systemui.statusbar.policy.MobileSignalController$MobileState r10 = (com.android.systemui.statusbar.policy.MobileSignalController.MobileState) r10
             java.lang.String r11 = "1x"
             boolean r11 = r6.equals(r11)
-            if (r11 == 0) goto L_0x0273
+            if (r11 == 0) goto L_0x0276
             com.android.systemui.statusbar.policy.MobileSignalController$MobileIconGroup r6 = com.android.systemui.statusbar.policy.TelephonyIcons.ONE_X
-            goto L_0x02d8
-        L_0x0273:
+            goto L_0x02db
+        L_0x0276:
             java.lang.String r11 = "3g"
             boolean r11 = r6.equals(r11)
-            if (r11 == 0) goto L_0x027e
+            if (r11 == 0) goto L_0x0281
             com.android.systemui.statusbar.policy.MobileSignalController$MobileIconGroup r6 = com.android.systemui.statusbar.policy.TelephonyIcons.THREE_G
-            goto L_0x02d8
-        L_0x027e:
+            goto L_0x02db
+        L_0x0281:
             java.lang.String r11 = "4g"
             boolean r11 = r6.equals(r11)
-            if (r11 == 0) goto L_0x0289
+            if (r11 == 0) goto L_0x028c
             com.android.systemui.statusbar.policy.MobileSignalController$MobileIconGroup r6 = com.android.systemui.statusbar.policy.TelephonyIcons.FOUR_G
-            goto L_0x02d8
-        L_0x0289:
+            goto L_0x02db
+        L_0x028c:
             java.lang.String r11 = "4g+"
             boolean r11 = r6.equals(r11)
-            if (r11 == 0) goto L_0x0294
+            if (r11 == 0) goto L_0x0297
             com.android.systemui.statusbar.policy.MobileSignalController$MobileIconGroup r6 = com.android.systemui.statusbar.policy.TelephonyIcons.FOUR_G_PLUS
-            goto L_0x02d8
-        L_0x0294:
+            goto L_0x02db
+        L_0x0297:
             java.lang.String r11 = "e"
             boolean r11 = r6.equals(r11)
-            if (r11 == 0) goto L_0x029f
+            if (r11 == 0) goto L_0x02a2
             com.android.systemui.statusbar.policy.MobileSignalController$MobileIconGroup r6 = com.android.systemui.statusbar.policy.TelephonyIcons.E
-            goto L_0x02d8
-        L_0x029f:
+            goto L_0x02db
+        L_0x02a2:
             java.lang.String r11 = "g"
             boolean r11 = r6.equals(r11)
-            if (r11 == 0) goto L_0x02aa
+            if (r11 == 0) goto L_0x02ad
             com.android.systemui.statusbar.policy.MobileSignalController$MobileIconGroup r6 = com.android.systemui.statusbar.policy.TelephonyIcons.G
-            goto L_0x02d8
-        L_0x02aa:
+            goto L_0x02db
+        L_0x02ad:
             java.lang.String r11 = "h"
             boolean r11 = r6.equals(r11)
-            if (r11 == 0) goto L_0x02b5
+            if (r11 == 0) goto L_0x02b8
             com.android.systemui.statusbar.policy.MobileSignalController$MobileIconGroup r6 = com.android.systemui.statusbar.policy.TelephonyIcons.H
-            goto L_0x02d8
-        L_0x02b5:
+            goto L_0x02db
+        L_0x02b8:
             java.lang.String r11 = "lte"
             boolean r11 = r6.equals(r11)
-            if (r11 == 0) goto L_0x02c0
+            if (r11 == 0) goto L_0x02c3
             com.android.systemui.statusbar.policy.MobileSignalController$MobileIconGroup r6 = com.android.systemui.statusbar.policy.TelephonyIcons.LTE
-            goto L_0x02d8
-        L_0x02c0:
+            goto L_0x02db
+        L_0x02c3:
             java.lang.String r11 = "lte+"
             boolean r11 = r6.equals(r11)
-            if (r11 == 0) goto L_0x02cb
+            if (r11 == 0) goto L_0x02ce
             com.android.systemui.statusbar.policy.MobileSignalController$MobileIconGroup r6 = com.android.systemui.statusbar.policy.TelephonyIcons.LTE_PLUS
-            goto L_0x02d8
-        L_0x02cb:
+            goto L_0x02db
+        L_0x02ce:
             java.lang.String r11 = "dis"
             boolean r6 = r6.equals(r11)
-            if (r6 == 0) goto L_0x02d6
+            if (r6 == 0) goto L_0x02d9
             com.android.systemui.statusbar.policy.MobileSignalController$MobileIconGroup r6 = com.android.systemui.statusbar.policy.TelephonyIcons.DATA_DISABLED
-            goto L_0x02d8
-        L_0x02d6:
+            goto L_0x02db
+        L_0x02d9:
             com.android.systemui.statusbar.policy.MobileSignalController$MobileIconGroup r6 = com.android.systemui.statusbar.policy.TelephonyIcons.UNKNOWN
-        L_0x02d8:
+        L_0x02db:
             r10.iconGroup = r6
-        L_0x02da:
+        L_0x02dd:
             java.lang.String r6 = "roam"
             boolean r10 = r2.containsKey(r6)
-            if (r10 == 0) goto L_0x02f2
+            if (r10 == 0) goto L_0x02f5
             com.android.systemui.statusbar.policy.SignalController$State r10 = r4.getState()
             com.android.systemui.statusbar.policy.MobileSignalController$MobileState r10 = (com.android.systemui.statusbar.policy.MobileSignalController.MobileState) r10
             java.lang.String r6 = r2.getString(r6)
             boolean r6 = r3.equals(r6)
             r10.roaming = r6
-        L_0x02f2:
+        L_0x02f5:
             java.lang.String r6 = r2.getString(r15)
-            if (r6 == 0) goto L_0x0327
+            if (r6 == 0) goto L_0x032a
             com.android.systemui.statusbar.policy.SignalController$State r10 = r4.getState()
             com.android.systemui.statusbar.policy.MobileSignalController$MobileState r10 = (com.android.systemui.statusbar.policy.MobileSignalController.MobileState) r10
             boolean r11 = r6.equals(r13)
-            if (r11 == 0) goto L_0x0307
+            if (r11 == 0) goto L_0x030a
             r6 = r16
-            goto L_0x0310
-        L_0x0307:
+            goto L_0x0313
+        L_0x030a:
             int r6 = java.lang.Integer.parseInt(r6)
             r11 = 5
             int r6 = java.lang.Math.min(r6, r11)
-        L_0x0310:
+        L_0x0313:
             r10.level = r6
             com.android.systemui.statusbar.policy.SignalController$State r6 = r4.getState()
             com.android.systemui.statusbar.policy.MobileSignalController$MobileState r6 = (com.android.systemui.statusbar.policy.MobileSignalController.MobileState) r6
             com.android.systemui.statusbar.policy.SignalController$State r10 = r4.getState()
             com.android.systemui.statusbar.policy.MobileSignalController$MobileState r10 = (com.android.systemui.statusbar.policy.MobileSignalController.MobileState) r10
             int r10 = r10.level
-            if (r10 < 0) goto L_0x0324
+            if (r10 < 0) goto L_0x0327
             r10 = r5
-            goto L_0x0325
-        L_0x0324:
-            r10 = 0
-        L_0x0325:
-            r6.connected = r10
+            goto L_0x0328
         L_0x0327:
+            r10 = 0
+        L_0x0328:
+            r6.connected = r10
+        L_0x032a:
             java.lang.String r6 = r2.getString(r14)
-            if (r6 == 0) goto L_0x037e
+            if (r6 == 0) goto L_0x0381
             com.android.systemui.statusbar.policy.SignalController$State r10 = r4.getState()
             com.android.systemui.statusbar.policy.MobileSignalController$MobileState r10 = (com.android.systemui.statusbar.policy.MobileSignalController.MobileState) r10
             r10.dataConnected = r5
             int r10 = r6.hashCode()
             r11 = 3365(0xd25, float:4.715E-42)
-            if (r10 == r11) goto L_0x0358
+            if (r10 == r11) goto L_0x035b
             r11 = 110414(0x1af4e, float:1.54723E-40)
-            if (r10 == r11) goto L_0x0350
+            if (r10 == r11) goto L_0x0353
             r9 = 100357129(0x5fb5409, float:2.3634796E-35)
-            if (r10 == r9) goto L_0x0348
-            goto L_0x0360
-        L_0x0348:
+            if (r10 == r9) goto L_0x034b
+            goto L_0x0363
+        L_0x034b:
             boolean r6 = r6.equals(r7)
-            if (r6 == 0) goto L_0x0360
+            if (r6 == 0) goto L_0x0363
             r6 = 0
-            goto L_0x0362
-        L_0x0350:
+            goto L_0x0365
+        L_0x0353:
             boolean r6 = r6.equals(r8)
-            if (r6 == 0) goto L_0x0360
+            if (r6 == 0) goto L_0x0363
             r6 = 2
-            goto L_0x0362
-        L_0x0358:
+            goto L_0x0365
+        L_0x035b:
             boolean r6 = r6.equals(r9)
-            if (r6 == 0) goto L_0x0360
+            if (r6 == 0) goto L_0x0363
             r6 = r5
-            goto L_0x0362
-        L_0x0360:
+            goto L_0x0365
+        L_0x0363:
             r6 = r16
-        L_0x0362:
-            if (r6 == 0) goto L_0x0378
-            if (r6 == r5) goto L_0x0373
+        L_0x0365:
+            if (r6 == 0) goto L_0x037b
+            if (r6 == r5) goto L_0x0376
             r7 = 2
-            if (r6 == r7) goto L_0x036e
+            if (r6 == r7) goto L_0x0371
             r6 = 0
             r4.setActivity(r6)
-            goto L_0x0382
-        L_0x036e:
+            goto L_0x0385
+        L_0x0371:
             r6 = 0
             r4.setActivity(r7)
-            goto L_0x0382
-        L_0x0373:
+            goto L_0x0385
+        L_0x0376:
             r6 = 0
             r4.setActivity(r5)
-            goto L_0x0382
-        L_0x0378:
+            goto L_0x0385
+        L_0x037b:
             r5 = 3
             r6 = 0
             r4.setActivity(r5)
-            goto L_0x0382
-        L_0x037e:
+            goto L_0x0385
+        L_0x0381:
             r6 = 0
             r4.setActivity(r6)
-        L_0x0382:
+        L_0x0385:
             com.android.systemui.statusbar.policy.SignalController$State r5 = r4.getState()
             com.android.systemui.statusbar.policy.MobileSignalController$MobileState r5 = (com.android.systemui.statusbar.policy.MobileSignalController.MobileState) r5
             r5.enabled = r1
             r4.notifyListeners()
-            goto L_0x038f
-        L_0x038e:
+            goto L_0x0392
+        L_0x0391:
             r6 = 0
-        L_0x038f:
+        L_0x0392:
             java.lang.String r1 = "carriernetworkchange"
             java.lang.String r1 = r2.getString(r1)
-            if (r1 == 0) goto L_0x03b1
+            if (r1 == 0) goto L_0x03b4
             boolean r1 = r1.equals(r3)
-        L_0x039b:
+        L_0x039e:
             android.util.SparseArray<com.android.systemui.statusbar.policy.MobileSignalController> r2 = r0.mMobileSignalControllers
             int r2 = r2.size()
-            if (r6 >= r2) goto L_0x03b1
+            if (r6 >= r2) goto L_0x03b4
             android.util.SparseArray<com.android.systemui.statusbar.policy.MobileSignalController> r2 = r0.mMobileSignalControllers
             java.lang.Object r2 = r2.valueAt(r6)
             com.android.systemui.statusbar.policy.MobileSignalController r2 = (com.android.systemui.statusbar.policy.MobileSignalController) r2
             r2.setCarrierNetworkChangeMode(r1)
             int r6 = r6 + 1
-            goto L_0x039b
-        L_0x03b1:
+            goto L_0x039e
+        L_0x03b4:
             return
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.policy.NetworkControllerImpl.handleDemoCommand(java.lang.String, android.os.Bundle):void");
@@ -1502,18 +1543,6 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
         public void onSubscriptionsChanged() {
             NetworkControllerImpl.this.mReceiverHandler.post(new Runnable() {
                 public void run() {
-                    List<SubscriptionInfo> activeSubscriptionInfoList = NetworkControllerImpl.this.mSubscriptionManager.getActiveSubscriptionInfoList();
-                    if (activeSubscriptionInfoList == null) {
-                        activeSubscriptionInfoList = Collections.emptyList();
-                    }
-                    for (SubscriptionInfo slotId : activeSubscriptionInfoList) {
-                        int slotId2 = slotId.getSlotId();
-                        String simOperatorNumericForPhone = NetworkControllerImpl.this.mPhone.getSimOperatorNumericForPhone(slotId2);
-                        NetworkControllerImpl.this.mOperators[slotId2] = simOperatorNumericForPhone;
-                        NetworkControllerImpl.this.mHideVolteForOperators[slotId2] = MCCUtils.isHideVolte(NetworkControllerImpl.this.mContext, simOperatorNumericForPhone);
-                        NetworkControllerImpl.this.misMobileTypeShownWhenWifiOn[slotId2] = MCCUtils.isMobileTypeShownWhenWifiOn(NetworkControllerImpl.this.mContext, simOperatorNumericForPhone);
-                        NetworkControllerImpl.this.mDataConnedInMMsForOperators[slotId2] = MCCUtils.isShowMobileInMMS(NetworkControllerImpl.this.mContext, simOperatorNumericForPhone);
-                    }
                     NetworkControllerImpl.this.updateMobileControllers();
                 }
             });
@@ -1553,7 +1582,7 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
             Config config = new Config();
             Resources resources = context.getResources();
             config.showAtLeast3G = resources.getBoolean(R.bool.config_showMin3G);
-            resources.getBoolean(17891359);
+            resources.getBoolean(17891360);
             config.show4gForLte = resources.getBoolean(R.bool.config_show4GForLTE);
             config.hspaDataDistinguishable = resources.getBoolean(R.bool.config_hspa_data_distinguishable) && !miui.os.Build.IS_CM_CUSTOMIZATION;
             config.hideLtePlus = resources.getBoolean(R.bool.config_hideLtePlus);

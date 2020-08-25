@@ -11,7 +11,7 @@ import com.android.systemui.Dependency;
 import com.android.systemui.Logger;
 import com.android.systemui.bubbles.BubbleController;
 import com.android.systemui.miui.statusbar.ExpandedNotification;
-import com.android.systemui.miui.statusbar.analytics.SystemUIStat;
+import com.android.systemui.miui.statusbar.analytics.NotificationStat;
 import com.android.systemui.statusbar.ExpandableNotificationRow;
 import com.android.systemui.statusbar.phone.ShadeController;
 import com.android.systemui.statusbar.policy.HeadsUpManager;
@@ -47,7 +47,7 @@ public class NotificationClicker implements View.OnClickListener {
             }
             String key = statusBarNotification.getKey();
             HeadsUpManager headsUpManager = this.mHeadsUpManager;
-            ((SystemUIStat) Dependency.get(SystemUIStat.class)).onClick(statusBarNotification, headsUpManager != null && headsUpManager.isHeadsUp(key), this.mShadeController.isKeyguardShowing(), this.mShadeController.indexOfEntry(expandableNotificationRow.getEntry()));
+            ((NotificationStat) Dependency.get(NotificationStat.class)).onClick(statusBarNotification, headsUpManager != null && headsUpManager.isHeadsUp(key), this.mShadeController.isKeyguardShowing(), this.mShadeController.indexOfEntry(expandableNotificationRow.getEntry()));
             if (expandableNotificationRow.isSummaryWithChildren() && !expandableNotificationRow.isGroupExpanded() && (StatusBarNotificationCompat.isAutoGroupSummary(statusBarNotification) || pendingIntent == null)) {
                 expandableNotificationRow.getExpandClickListener().onClick(expandableNotificationRow);
             } else if (pendingIntent == null) {

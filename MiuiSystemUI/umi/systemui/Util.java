@@ -69,6 +69,13 @@ public class Util {
         return getTopActivityLegacy(context);
     }
 
+    public static ComponentName getLastResumedActivity(Context context) {
+        if (isMainProcess()) {
+            return ((ActivityObserver) Dependency.get(ActivityObserver.class)).getLastResumedActivity();
+        }
+        return getTopActivityLegacy(context);
+    }
+
     private static ComponentName getTopActivityLegacy(Context context) {
         List<ActivityManager.RunningTaskInfo> runningTasks = ((ActivityManager) context.getSystemService("activity")).getRunningTasks(1);
         if (runningTasks == null || runningTasks.isEmpty()) {
@@ -246,5 +253,12 @@ public class Util {
             return false;
         }
         return bool.booleanValue();
+    }
+
+    public static Intent getSilentModeIntent() {
+        Intent intent = new Intent("android.intent.action.MAIN");
+        intent.setComponent(ComponentName.unflattenFromString(Constants.SILENT_MODE_ACTION));
+        intent.setFlags(335544320);
+        return intent;
     }
 }

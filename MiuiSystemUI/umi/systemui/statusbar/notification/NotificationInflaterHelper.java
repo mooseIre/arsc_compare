@@ -8,6 +8,7 @@ import android.service.notification.StatusBarNotification;
 import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
+import com.android.systemui.miui.statusbar.ExpandedNotification;
 import com.android.systemui.plugins.R;
 import com.android.systemui.statusbar.ExpandableNotificationRow;
 import com.android.systemui.statusbar.NotificationContentView;
@@ -160,17 +161,19 @@ public class NotificationInflaterHelper {
             Notification.Action action = actionArr[0];
             PendingIntent pendingIntent = action.actionIntent;
             if (pendingIntent != null) {
-                remoteViews.setOnClickPendingIntent(16908698, pendingIntent);
+                remoteViews.setOnClickPendingIntent(16909189, pendingIntent);
             }
             if (action.getRemoteInputs() != null) {
-                remoteViews.setRemoteInputs(16908698, action.getRemoteInputs());
+                remoteViews.setRemoteInputs(16909189, action.getRemoteInputs());
             }
         }
     }
 
     private static RemoteViews createMiuiPublicView(ExpandableNotificationRow expandableNotificationRow) {
-        Notification notification = expandableNotificationRow.getEntry().notification.getNotification();
+        ExpandedNotification expandedNotification = expandableNotificationRow.getEntry().notification;
         int notificationChildCount = expandableNotificationRow.getChildrenContainer() != null ? expandableNotificationRow.getChildrenContainer().getNotificationChildCount() : 1;
-        return new Notification.Builder(expandableNotificationRow.getContext()).setWhen(notification.when).setShowWhen(true).setSmallIcon(notification.getSmallIcon()).setContentTitle(expandableNotificationRow.getAppName()).setContentText(expandableNotificationRow.getContext().getResources().getQuantityString(R.plurals.new_notifications_msg, notificationChildCount, new Object[]{Integer.valueOf(notificationChildCount)})).createContentView();
+        Notification.Builder contentText = new Notification.Builder(expandableNotificationRow.getContext()).setWhen(expandedNotification.getNotification().when).setShowWhen(true).setSmallIcon(expandedNotification.getNotification().getSmallIcon()).setContentTitle(expandedNotification.getAppName()).setContentText(expandableNotificationRow.getContext().getResources().getQuantityString(R.plurals.new_notifications_msg, notificationChildCount, new Object[]{Integer.valueOf(notificationChildCount)}));
+        contentText.build().extras.putString("android.substName", expandedNotification.getAppName());
+        return contentText.createContentView();
     }
 }

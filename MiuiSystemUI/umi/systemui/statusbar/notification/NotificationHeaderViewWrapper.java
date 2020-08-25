@@ -3,6 +3,7 @@ package com.android.systemui.statusbar.notification;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.drawable.Icon;
+import android.os.Build;
 import android.util.ArraySet;
 import android.util.Log;
 import android.view.NotificationHeaderView;
@@ -35,6 +36,8 @@ public class NotificationHeaderViewWrapper extends NotificationViewWrapper {
     protected View mChronometer;
     protected int mColor;
     protected ImageView mExpandButton;
+    /* access modifiers changed from: private */
+    public int mExpandIconSize;
     protected boolean mExpandable;
     protected int mGoogleContentMarginBottom;
     protected int mGoogleContentMarginEnd;
@@ -97,14 +100,15 @@ public class NotificationHeaderViewWrapper extends NotificationViewWrapper {
 
     private void initResources() {
         Resources resources = this.mContext.getResources();
-        this.mMiuiContentMarginStart = resources.getDimensionPixelSize(17105369);
-        this.mMiuiContentMarginTop = resources.getDimensionPixelSize(17105370);
-        this.mMiuiContentMarginEnd = resources.getDimensionPixelSize(17105367);
-        this.mMiuiContentMarginBottom = resources.getDimensionPixelSize(17105366);
+        this.mMiuiContentMarginStart = resources.getDimensionPixelSize(17105361);
+        this.mMiuiContentMarginTop = resources.getDimensionPixelSize(17105362);
+        this.mMiuiContentMarginEnd = resources.getDimensionPixelSize(17105360);
+        this.mMiuiContentMarginBottom = resources.getDimensionPixelSize(17105359);
         this.mGoogleContentMarginStart = resources.getDimensionPixelSize(R.dimen.google_notification_content_margin_start);
         this.mGoogleContentMarginEnd = resources.getDimensionPixelSize(R.dimen.google_notification_content_margin_end);
         this.mGoogleContentMarginTop = resources.getDimensionPixelSize(R.dimen.google_notification_content_margin_top);
         this.mGoogleContentMarginBottom = resources.getDimensionPixelSize(R.dimen.google_notification_content_margin_bottom);
+        this.mExpandIconSize = resources.getDimensionPixelSize(R.dimen.notification_header_expand_icon_size);
         this.mMiuiAppIconSize = resources.getDimensionPixelSize(R.dimen.notification_app_icon_size);
         this.mMiuiAppIconMargin = resources.getDimensionPixelSize(R.dimen.notification_app_icon_margin);
         this.mMiniViewHeight = resources.getDimensionPixelSize(R.dimen.notification_low_priority_height);
@@ -120,17 +124,17 @@ public class NotificationHeaderViewWrapper extends NotificationViewWrapper {
     }
 
     private void resolveHeaderViews() {
-        NotificationHeaderView findViewById = this.mView.findViewById(16909247);
+        NotificationHeaderView findViewById = this.mView.findViewById(16909238);
         this.mNotificationHeader = findViewById;
         this.mIcon = (ImageView) findViewById.findViewById(16908294);
-        this.mAppNameText = (TextView) this.mNotificationHeader.findViewById(16908762);
-        this.mHeaderText = (TextView) this.mNotificationHeader.findViewById(16909042);
-        this.mHeaderTextDivider = (TextView) this.mNotificationHeader.findViewById(16909043);
-        this.mTime = this.mNotificationHeader.findViewById(16909572);
-        this.mChronometer = this.mNotificationHeader.findViewById(16908850);
-        this.mExpandButton = (ImageView) this.mNotificationHeader.findViewById(16908958);
-        this.mXSpaceIcon = (ImageView) this.mNotificationHeader.findViewById(16909681);
-        this.mWorkProfileImage = (ImageView) this.mNotificationHeader.findViewById(16909351);
+        this.mAppNameText = (TextView) this.mNotificationHeader.findViewById(16908763);
+        this.mHeaderText = (TextView) this.mNotificationHeader.findViewById(16909041);
+        this.mHeaderTextDivider = (TextView) this.mNotificationHeader.findViewById(16909042);
+        this.mTime = this.mNotificationHeader.findViewById(16909556);
+        this.mChronometer = this.mNotificationHeader.findViewById(16908846);
+        this.mExpandButton = (ImageView) this.mNotificationHeader.findViewById(16908957);
+        this.mXSpaceIcon = (ImageView) this.mNotificationHeader.findViewById(16909662);
+        this.mWorkProfileImage = (ImageView) this.mNotificationHeader.findViewById(16909340);
     }
 
     private void handleHeaderViews() {
@@ -309,9 +313,9 @@ public class NotificationHeaderViewWrapper extends NotificationViewWrapper {
 
         /* access modifiers changed from: package-private */
         public void handleAppNameText() {
+            ExpandedNotification expandedNotification = NotificationHeaderViewWrapper.this.mRow.getEntry().notification;
             if (NotificationHeaderViewWrapper.this.mRow.getEntry().notification.isSubstituteNotification()) {
-                NotificationHeaderViewWrapper notificationHeaderViewWrapper = NotificationHeaderViewWrapper.this;
-                notificationHeaderViewWrapper.mAppNameText.setText(notificationHeaderViewWrapper.mRow.getAppName());
+                NotificationHeaderViewWrapper.this.mAppNameText.setText(expandedNotification.getAppName());
             }
         }
 
@@ -404,14 +408,12 @@ public class NotificationHeaderViewWrapper extends NotificationViewWrapper {
             NotificationHeaderViewWrapper notificationHeaderViewWrapper = NotificationHeaderViewWrapper.this;
             notificationHeaderViewWrapper.mExpandButton.setImageDrawable(notificationHeaderViewWrapper.mContext.getDrawable(i));
             NotificationHeaderViewWrapper notificationHeaderViewWrapper2 = NotificationHeaderViewWrapper.this;
-            notificationHeaderViewWrapper2.mExpandButton.setVisibility(notificationHeaderViewWrapper2.showExpandButton() ? 0 : 8);
-            NotificationHeaderViewWrapper notificationHeaderViewWrapper3 = NotificationHeaderViewWrapper.this;
-            if (notificationHeaderViewWrapper3.mShowMiniView) {
-                notificationHeaderViewWrapper3.mNotificationHeader.setShowExpandButtonAtEnd(true);
+            if (notificationHeaderViewWrapper2.mShowMiniView) {
+                notificationHeaderViewWrapper2.mNotificationHeader.setShowExpandButtonAtEnd(true);
                 NotificationHeaderViewWrapper.this.mExpandButton.setVisibility(0);
-            } else if (!notificationHeaderViewWrapper3.isHeaderViewRemoved(notificationHeaderViewWrapper3.mExpandButton)) {
-                NotificationHeaderViewWrapper notificationHeaderViewWrapper4 = NotificationHeaderViewWrapper.this;
-                notificationHeaderViewWrapper4.mNotificationHeader.removeView(notificationHeaderViewWrapper4.mExpandButton);
+            } else if (!notificationHeaderViewWrapper2.isHeaderViewRemoved(notificationHeaderViewWrapper2.mExpandButton)) {
+                NotificationHeaderViewWrapper notificationHeaderViewWrapper3 = NotificationHeaderViewWrapper.this;
+                notificationHeaderViewWrapper3.mNotificationHeader.removeView(notificationHeaderViewWrapper3.mExpandButton);
             }
         }
 
@@ -435,8 +437,8 @@ public class NotificationHeaderViewWrapper extends NotificationViewWrapper {
 
         /* access modifiers changed from: package-private */
         public void handleDivider() {
-            NotificationHeaderViewWrapper.this.mNotificationHeader.findViewById(16909043).setVisibility(8);
-            NotificationHeaderViewWrapper.this.mNotificationHeader.findViewById(16909576).setVisibility(8);
+            NotificationHeaderViewWrapper.this.mNotificationHeader.findViewById(16909042).setVisibility(8);
+            NotificationHeaderViewWrapper.this.mNotificationHeader.findViewById(16909560).setVisibility(8);
         }
     }
 
@@ -461,6 +463,12 @@ public class NotificationHeaderViewWrapper extends NotificationViewWrapper {
         public void handleExpandButton() {
             NotificationHeaderViewWrapper notificationHeaderViewWrapper = NotificationHeaderViewWrapper.this;
             notificationHeaderViewWrapper.mExpandButton.setVisibility(notificationHeaderViewWrapper.mExpandable ? 0 : 8);
+            if (Build.VERSION.SDK_INT > 29) {
+                ViewGroup.LayoutParams layoutParams = NotificationHeaderViewWrapper.this.mExpandButton.getLayoutParams();
+                layoutParams.width = NotificationHeaderViewWrapper.this.mExpandIconSize;
+                layoutParams.height = NotificationHeaderViewWrapper.this.mExpandIconSize;
+                NotificationHeaderViewWrapper.this.mExpandButton.setLayoutParams(layoutParams);
+            }
         }
 
         /* access modifiers changed from: package-private */

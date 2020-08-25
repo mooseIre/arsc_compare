@@ -4,12 +4,16 @@ import android.content.res.Configuration;
 import android.util.ArraySet;
 import android.view.View;
 import android.view.ViewGroup;
+import com.android.keyguard.CarrierText;
 import com.android.systemui.BatteryMeterView;
 import com.android.systemui.Dependency;
+import com.android.systemui.miui.widget.ClipEdgeLinearLayout;
 import com.android.systemui.plugins.R;
+import com.android.systemui.statusbar.RegionController;
 import com.android.systemui.statusbar.phone.CollapsedStatusBarFragment;
 import com.android.systemui.statusbar.phone.StatusBarIconController;
 import com.android.systemui.statusbar.policy.ConfigurationController;
+import com.android.systemui.statusbar.policy.DarkIconDispatcher;
 import com.xiaomi.stat.MiStat;
 import java.util.Objects;
 
@@ -84,6 +88,8 @@ public class CollapsedStatusBarFragmentControllerNarrowNotchImpl extends Collaps
         });
         ((StatusBarIconController) Dependency.get(cls)).addIconGroup(this.mDarkIconManager);
         ((StatusBarIconController) Dependency.get(cls)).addIconGroup(this.mNotchLeftEarIconManager);
+        ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).addDarkReceiver((DarkIconDispatcher.DarkReceiver) this.mCarrierText);
+        ((RegionController) Dependency.get(RegionController.class)).addCallback(this);
     }
 
     public void stop() {
@@ -97,6 +103,10 @@ public class CollapsedStatusBarFragmentControllerNarrowNotchImpl extends Collaps
         if (this.mConfigurationListener != null) {
             ((ConfigurationController) Dependency.get(ConfigurationController.class)).removeCallback(this.mConfigurationListener);
         }
+        if (this.mCarrierText != null) {
+            ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).removeDarkReceiver((DarkIconDispatcher.DarkReceiver) this.mCarrierText);
+        }
+        ((RegionController) Dependency.get(RegionController.class)).removeCallback(this);
     }
 
     public int getLayoutId() {
@@ -104,5 +114,33 @@ public class CollapsedStatusBarFragmentControllerNarrowNotchImpl extends Collaps
             return R.layout.status_bar_notch_notification_enable_contents_container;
         }
         return super.getLayoutId();
+    }
+
+    public void hideSystemIconArea(boolean z, boolean z2) {
+        CollapsedStatusBarFragment collapsedStatusBarFragment = this.mFragment;
+        if (collapsedStatusBarFragment != null) {
+            ClipEdgeLinearLayout clipEdgeLinearLayout = collapsedStatusBarFragment.mNotchLeftEarIcons;
+            if (clipEdgeLinearLayout != null) {
+                collapsedStatusBarFragment.animateHide(clipEdgeLinearLayout, z, z2);
+            }
+            CarrierText carrierText = this.mCarrierText;
+            if (carrierText != null) {
+                carrierText.forceHide(true);
+            }
+        }
+    }
+
+    public void showSystemIconArea(boolean z) {
+        CollapsedStatusBarFragment collapsedStatusBarFragment = this.mFragment;
+        if (collapsedStatusBarFragment != null) {
+            ClipEdgeLinearLayout clipEdgeLinearLayout = collapsedStatusBarFragment.mNotchLeftEarIcons;
+            if (clipEdgeLinearLayout != null) {
+                collapsedStatusBarFragment.animateShow(clipEdgeLinearLayout, z);
+            }
+            CarrierText carrierText = this.mCarrierText;
+            if (carrierText != null) {
+                carrierText.forceHide(false);
+            }
+        }
     }
 }

@@ -16,13 +16,14 @@ import android.util.LocalLog;
 import android.util.Log;
 import android.util.SparseArray;
 import com.android.internal.annotations.VisibleForTesting;
-import com.android.systemui.plugins.R;
 import com.android.systemui.statusbar.policy.MobileSignalController;
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 import miui.os.Build;
+import miui.os.SystemProperties;
 import miui.telephony.SubscriptionManager;
 import miui.telephony.TelephonyManager;
 import org.codeaurora.internal.BearerAllocationStatus;
@@ -41,12 +42,15 @@ import org.codeaurora.internal.UpperLayerIndInfo;
 
 public class FiveGServiceClient {
     private static final boolean DEBUG = true;
+    public static final int[] RSRP_THRESH_LENIENT = {-140, -125, -115, -110, -102};
     private static final HashMap<String, LocalLog> sLocalLogs = new HashMap<>();
     ContentObserver m5gEnabledObserver = new ContentObserver(this.mHandler) {
         public void onChange(boolean z) {
             FiveGServiceClient.this.update5GIcon();
         }
     };
+    /* access modifiers changed from: private */
+    public boolean[] m5gIconCarrierOptimization = new boolean[TelephonyManager.getDefault().getPhoneCount()];
     /* access modifiers changed from: private */
     public int mBindRetryTimes = 0;
     @VisibleForTesting
@@ -66,8 +70,8 @@ public class FiveGServiceClient {
         }
 
         public void onSignalStrength(int i, Token token, Status status, SignalStrength signalStrength) throws RemoteException {
-            FiveGServiceClient.localLog("onSignalStrength", "onSignalStrength: slotId=" + i + " token=" + token + " status=" + status + " signalStrength=" + signalStrength);
-            if (status.get() == 1 && signalStrength != null) {
+            FiveGServiceClient.localLog("onSignalStrength", "onSignalStrength: slotId=" + i + " token=" + token + " status=" + status + " signalStrength=" + signalStrength + " mIsCustForJpKd=" + FiveGServiceClient.this.mIsCustForJpKd);
+            if (status.get() == 1 && signalStrength != null && !FiveGServiceClient.this.mIsCustForJpKd) {
                 int unused = FiveGServiceClient.this.getCurrentServiceState(i).mLevel = FiveGServiceClient.this.getRsrpLevel(signalStrength.getRsrp());
                 FiveGServiceClient.this.notifyListenersIfNecessary(i);
             }
@@ -119,6 +123,7 @@ public class FiveGServiceClient {
     private Context mContext;
     private final SparseArray<FiveGServiceState> mCurrentServiceStates = new SparseArray<>();
     private int mDefaultDataSlotId;
+    private Method mGetCustomedRsrpThresholdsMethod;
     /* access modifiers changed from: private */
     public Handler mHandler = new Handler() {
         public void handleMessage(Message message) {
@@ -142,11 +147,22 @@ public class FiveGServiceClient {
     private final BroadcastReceiver mIntentReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            if (action != null && action.equals("miui.intent.action.ACTION_DEFAULT_DATA_SLOT_CHANGED")) {
-                FiveGServiceClient.this.update5GIcon();
+            if (action != null) {
+                if (action.equals("miui.intent.action.ACTION_DEFAULT_DATA_SLOT_CHANGED")) {
+                    FiveGServiceClient.this.update5GIcon();
+                } else if (action.equals("android.telephony.action.CARRIER_CONFIG_CHANGED")) {
+                    int i = intent.getExtras().getInt("android.telephony.extra.SLOT_INDEX");
+                    FiveGServiceClient.this.update5gIconCarrierOptimization(i);
+                    if (i >= 0 && i < FiveGServiceClient.this.m5gIconCarrierOptimization.length && FiveGServiceClient.this.m5gIconCarrierOptimization[i]) {
+                        FiveGServiceClient.this.update5GIcon(FiveGServiceClient.this.getCurrentServiceState(i), i);
+                        FiveGServiceClient.this.notifyListenersIfNecessary(i);
+                    }
+                }
             }
         }
     };
+    /* access modifiers changed from: private */
+    public boolean mIsCustForJpKd;
     private boolean mIsCustForKrOps;
     /* access modifiers changed from: private */
     public boolean[] mIsDelayUpdate5GIcon = null;
@@ -162,7 +178,6 @@ public class FiveGServiceClient {
     public IExtTelephony mNetworkService;
     /* access modifiers changed from: private */
     public String mPackageName;
-    private final int[] mRsrpThresholds;
     /* access modifiers changed from: private */
     public boolean mServiceConnected;
     private ServiceConnection mServiceConnection = new ServiceConnection() {
@@ -235,6 +250,10 @@ public class FiveGServiceClient {
 
         public boolean isConnectedOnNsaMode() {
             return this.mNrConfigType == 0 && this.mIconGroup != TelephonyIcons.UNKNOWN;
+        }
+
+        public MobileSignalController.MobileIconGroup getIconGroup() {
+            return this.mIconGroup;
         }
 
         @VisibleForTesting
@@ -323,12 +342,11 @@ public class FiveGServiceClient {
     public FiveGServiceClient(Context context) {
         this.mContext = context;
         this.mPackageName = context.getPackageName();
-        this.mRsrpThresholds = this.mContext.getResources().getIntArray(R.array.config_5g_signal_rsrp_thresholds);
-        this.mContext.getResources().getIntArray(R.array.config_5g_signal_snr_thresholds);
         try {
             this.mIsCustForKrOps = ((Boolean) TelephonyManager.class.getMethod("isCustForKrOps", (Class[]) null).invoke((Object) null, new Object[0])).booleanValue();
+            this.mIsCustForJpKd = ((Boolean) TelephonyManager.class.getMethod("isCustForJpKd", (Class[]) null).invoke((Object) null, new Object[0])).booleanValue();
         } catch (Exception e) {
-            Log.e("FiveGServiceClient", "isCustForKrOps Exception" + e);
+            Log.e("FiveGServiceClient", "isCustForKrOps or mIsCustForJpKd Exception" + e);
         }
         if (this.mIsCustForKrOps) {
             registerNetworkDisplayEvents();
@@ -339,6 +357,12 @@ public class FiveGServiceClient {
                 this.mIsDelayUpdate5GIcon[i] = false;
                 this.mLastBearerAllocationStatus[i] = 0;
             }
+        }
+        try {
+            this.mGetCustomedRsrpThresholdsMethod = Class.forName("android.telephony.MiuiCellSignalStrength").getMethod("getCustomedRsrpThresholds", (Class[]) null);
+        } catch (Exception e2) {
+            this.mGetCustomedRsrpThresholdsMethod = null;
+            Log.e("FiveGServiceClient", "init can't find getCustomedRsrpThresholds.\n" + e2.toString());
         }
         registerFivegEvents();
     }
@@ -389,31 +413,21 @@ public class FiveGServiceClient {
 
     /* access modifiers changed from: private */
     public int getRsrpLevel(int i) {
-        return getLevel(i, this.mRsrpThresholds);
+        return getLevel(i, getCustomedRsrpThresholds());
     }
 
     private static int getLevel(int i, int[] iArr) {
-        int i2 = 1;
-        int i3 = 0;
-        if (iArr[iArr.length - 1] < i || i < iArr[0]) {
+        int i2;
+        if (i < -140 || i > -44) {
             i2 = 0;
         } else {
-            while (true) {
-                if (i3 >= iArr.length - 1) {
-                    break;
-                }
-                if (iArr[i3] < i) {
-                    int i4 = i3 + 1;
-                    if (i <= iArr[i4]) {
-                        i2 = i4;
-                        break;
-                    }
-                }
-                i3++;
+            i2 = iArr.length;
+            while (i2 > 0 && i < iArr[i2 - 1]) {
+                i2--;
             }
         }
         if (DEBUG) {
-            Log.d("FiveGServiceClient", "value=" + i + " level=" + i2);
+            Log.d("FiveGServiceClient", "getLevel: value = " + i + ", level = " + i2);
         }
         return i2;
     }
@@ -493,13 +507,16 @@ public class FiveGServiceClient {
         if ("andromeda".equals(Build.DEVICE) || "crux".equals(Build.DEVICE)) {
             return getConfigDIconGroup(fiveGServiceState);
         }
-        if (Build.IS_INTERNATIONAL_BUILD) {
+        if (!Build.IS_INTERNATIONAL_BUILD) {
+            if (!isCmccSimCard(i) || !Build.IS_CM_CUSTOMIZATION) {
+                return getConfigDIconGroup(fiveGServiceState);
+            }
+            return getNrIconTypeIconGroup(fiveGServiceState);
+        } else if (this.m5gIconCarrierOptimization[i]) {
+            return getConfigDIconGroup(fiveGServiceState);
+        } else {
             return getNrIconTypeIconGroup(fiveGServiceState);
         }
-        if (isCmccSimCard(i)) {
-            return getNrIconTypeIconGroup(fiveGServiceState);
-        }
-        return getConfigDIconGroup(fiveGServiceState);
     }
 
     private MobileSignalController.MobileIconGroup getNrIconTypeIconGroup(FiveGServiceState fiveGServiceState) {
@@ -536,8 +553,19 @@ public class FiveGServiceClient {
             this.mHandler.removeMessages(1026, Integer.valueOf(i));
         }
         this.mLastBearerAllocationStatus[i] = fiveGServiceState.mBearerAllocationStatus;
+        setLguIndicatorProperties(mobileIconGroup);
         Log.d("FiveGServiceClient", "getCustKrNrIcon krNrIcon = " + mobileIconGroup + "; phoneId=" + i);
         return mobileIconGroup;
+    }
+
+    private void setLguIndicatorProperties(MobileSignalController.MobileIconGroup mobileIconGroup) {
+        if (mobileIconGroup == TelephonyIcons.FIVE_G_KR_ON) {
+            SystemProperties.set("persist.sys.lgu.5g.indicator", 0);
+        } else if (mobileIconGroup == TelephonyIcons.FIVE_G_KR_OFF) {
+            SystemProperties.set("persist.sys.lgu.5g.indicator", 1);
+        } else {
+            SystemProperties.set("persist.sys.lgu.5g.indicator", 2);
+        }
     }
 
     private MobileSignalController.MobileIconGroup getKrFiveGIcon(FiveGServiceState fiveGServiceState, int i) {
@@ -549,7 +577,7 @@ public class FiveGServiceClient {
                 Log.d("FiveGServiceClient", "5G connected removed DELAY_UPDATE_5GICON ");
                 this.mHandler.removeMessages(1026, Integer.valueOf(i));
             }
-            mobileIconGroup = TelephonyIcons.FIVE_G_BASIC;
+            mobileIconGroup = TelephonyIcons.FIVE_G_KR_ON;
         } else {
             if (this.mLastBearerAllocationStatus[i] > 0 && !this.mHandler.hasMessages(1026, Integer.valueOf(i))) {
                 this.mIsDelayUpdate5GIcon[i] = true;
@@ -559,9 +587,9 @@ public class FiveGServiceClient {
             }
             if (this.mIsDelayUpdate5GIcon[i]) {
                 Log.d("FiveGServiceClient", "isDelayUpdate5GIcon show 5G reverse icon");
-                mobileIconGroup = TelephonyIcons.FIVE_G_BASIC;
+                mobileIconGroup = TelephonyIcons.FIVE_G_KR_ON;
             } else if (i2 == 1 && fiveGServiceState.mUpperLayerInd == 1 && fiveGServiceState.mPlmn == 1) {
-                mobileIconGroup = TelephonyIcons.FIVE_G_BASIC;
+                mobileIconGroup = TelephonyIcons.FIVE_G_KR_OFF;
             }
         }
         Log.d("FiveGServiceClient", "getKrFiveGIcon isAvailNetworkDisplay = " + i2);
@@ -608,6 +636,7 @@ public class FiveGServiceClient {
         this.mContext.getContentResolver().registerContentObserver(Settings.Global.getUriFor("fiveg_user_enable"), false, this.m5gEnabledObserver);
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("miui.intent.action.ACTION_DEFAULT_DATA_SLOT_CHANGED");
+        intentFilter.addAction("android.telephony.action.CARRIER_CONFIG_CHANGED");
         this.mContext.registerReceiver(this.mIntentReceiver, intentFilter);
         update5GIcon();
     }
@@ -629,5 +658,52 @@ public class FiveGServiceClient {
             update5GIcon(getCurrentServiceState(i), i);
             notifyListenersIfNecessary(i);
         }
+    }
+
+    public int[] getCustomedRsrpThresholds() {
+        Method method = this.mGetCustomedRsrpThresholdsMethod;
+        if (method == null) {
+            return RSRP_THRESH_LENIENT;
+        }
+        try {
+            return (int[]) method.invoke((Object) null, new Object[0]);
+        } catch (Exception e) {
+            Log.e("FiveGServiceClient", "invoke getCustomedRsrpThresholds fail.\n" + e.toString());
+            return RSRP_THRESH_LENIENT;
+        }
+    }
+
+    /* access modifiers changed from: private */
+    public void update5gIconCarrierOptimization(int i) {
+        int subscriptionIdForSlot = SubscriptionManager.getDefault().getSubscriptionIdForSlot(i);
+        if (i >= 0) {
+            boolean[] zArr = this.m5gIconCarrierOptimization;
+            if (i < zArr.length) {
+                zArr[i] = getCarrierConfigIconForSubId(subscriptionIdForSlot, "config_5g_icon_optimization", false);
+                localLog("update5gIconCarrierOptimization", "slotId = " + i + ",subId = " + subscriptionIdForSlot + "," + this.m5gIconCarrierOptimization[i]);
+            }
+        }
+    }
+
+    /* JADX WARNING: Code restructure failed: missing block: B:2:0x000c, code lost:
+        r1 = r1.getConfigForSubId(r2);
+     */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    private boolean getCarrierConfigIconForSubId(int r2, java.lang.String r3, boolean r4) {
+        /*
+            r1 = this;
+            android.content.Context r1 = r1.mContext
+            java.lang.String r0 = "carrier_config"
+            java.lang.Object r1 = r1.getSystemService(r0)
+            android.telephony.CarrierConfigManager r1 = (android.telephony.CarrierConfigManager) r1
+            if (r1 == 0) goto L_0x0017
+            android.os.PersistableBundle r1 = r1.getConfigForSubId(r2)
+            if (r1 == 0) goto L_0x0017
+            boolean r1 = r1.getBoolean(r3, r4)
+            return r1
+        L_0x0017:
+            return r4
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.policy.FiveGServiceClient.getCarrierConfigIconForSubId(int, java.lang.String, boolean):boolean");
     }
 }

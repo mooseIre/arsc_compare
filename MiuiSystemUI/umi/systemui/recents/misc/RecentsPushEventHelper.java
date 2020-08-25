@@ -237,22 +237,10 @@ public class RecentsPushEventHelper {
         sendEvent("multi_window_enterMultiWindow", miStatParams);
     }
 
-    public static void sendExitMultiWindowEvent(String str) {
-        MiStatParams miStatParams = new MiStatParams();
-        miStatParams.putString("multi_window_exitType", str);
-        sendEvent("multi_window_exitMultiWindow", miStatParams);
-    }
-
     public static void sendEnterMultiWindowFailedEvent(String str) {
         MiStatParams miStatParams = new MiStatParams();
         miStatParams.putString("multi_window_componentName", str);
         sendEvent("multi_window_tryEnterMultiWindowFailed", miStatParams);
-    }
-
-    public static void sendResizeStackEvent(String str) {
-        MiStatParams miStatParams = new MiStatParams();
-        miStatParams.putString("multi_window_position", str);
-        sendEvent("multi_window_resizeStack", miStatParams);
     }
 
     public static void sendClickStatusBarToReturnMultiWindowEvent(String str) {

@@ -74,6 +74,7 @@ public class CCQSTileView extends QSTileView {
         setPadding(0, 0, 0, 0);
         setFocusable(true);
         createLabel(z);
+        setImportantForAccessibility(2);
     }
 
     public void init(final QSTile qSTile) {

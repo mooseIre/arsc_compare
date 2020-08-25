@@ -15,6 +15,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Process;
 import android.os.UserHandleCompat;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.ArraySet;
 import android.util.IntProperty;
@@ -30,6 +31,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
+import miui.os.Build;
 
 public class Utilities {
     public static final Property<Drawable, Integer> DRAWABLE_ALPHA = new IntProperty<Drawable>("drawableAlpha") {
@@ -50,6 +53,8 @@ public class Utilities {
             return drawable.getBounds();
         }
     };
+    public static final boolean IS_MIUI_LITE_VERSION = Build.IS_MIUI_LITE_VERSION;
+    public static Set<String> LOW_MEMORY_DEVICES;
     public static final RectFEvaluator RECTF_EVALUATOR = new RectFEvaluator();
     public static final RectEvaluator RECT_EVALUATOR = new RectEvaluator(new Rect());
 
@@ -59,6 +64,16 @@ public class Utilities {
 
     static {
         new Rect();
+        ArraySet arraySet = new ArraySet();
+        LOW_MEMORY_DEVICES = arraySet;
+        arraySet.add("pine");
+        LOW_MEMORY_DEVICES.add("olive");
+        LOW_MEMORY_DEVICES.add("olivelite");
+        LOW_MEMORY_DEVICES.add("olivewood");
+    }
+
+    public static boolean isLowMemoryDevice() {
+        return LOW_MEMORY_DEVICES.contains(Build.DEVICE) || IS_MIUI_LITE_VERSION;
     }
 
     public static <T> ArraySet<T> arrayToSet(T[] tArr, ArraySet<T> arraySet) {
@@ -237,6 +252,10 @@ public class Utilities {
 
     public static boolean supportsMultiWindow() {
         return Process.myUserHandle().equals(UserHandleCompat.SYSTEM);
+    }
+
+    public static boolean isInSmallWindowMode(Context context) {
+        return Settings.Secure.getInt(context.getContentResolver(), "freeform_window_state", -1) != -1;
     }
 
     public static boolean isSlideCoverDevice() {

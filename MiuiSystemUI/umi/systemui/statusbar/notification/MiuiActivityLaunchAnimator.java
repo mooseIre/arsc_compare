@@ -4,6 +4,7 @@ import android.app.WindowConfiguration;
 import android.graphics.Matrix;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.os.Build;
 import android.os.RemoteException;
 import android.view.IRemoteAnimationFinishedCallback;
 import android.view.IRemoteAnimationRunner;
@@ -33,6 +34,7 @@ import miuix.animation.listener.TransitionListener;
 import miuix.animation.listener.UpdateInfo;
 
 public class MiuiActivityLaunchAnimator {
+    private static final boolean ENABLED = (Build.VERSION.SDK_INT > 28);
     /* access modifiers changed from: private */
     public static final Pools.Pool<Matrix> MATRIX_POOL = Pools.createSimplePool(new Pools.Manager<Matrix>() {
         public Matrix createInstance() {
@@ -93,10 +95,10 @@ public class MiuiActivityLaunchAnimator {
     }
 
     public RemoteAnimationAdapter getLaunchAnimation(View view, boolean z) {
-        if (!(view instanceof ExpandableNotificationRow) || !this.mCallback.areLaunchAnimationsEnabled() || z) {
-            return null;
+        if (ENABLED && (view instanceof ExpandableNotificationRow) && this.mCallback.areLaunchAnimationsEnabled() && !z) {
+            return new RemoteAnimationAdapter(new AnimationRunner((ExpandableNotificationRow) view), 300, 200);
         }
-        return new RemoteAnimationAdapter(new AnimationRunner((ExpandableNotificationRow) view), 300, 200);
+        return null;
     }
 
     public boolean isAnimationPending() {
@@ -498,7 +500,6 @@ public class MiuiActivityLaunchAnimator {
             }
             if (z) {
                 this.mSourceNotification.getViewState().cancelAnimations(this.mSourceNotification);
-                MiuiActivityLaunchAnimator.this.mHeadsUpStub.updateRenderStatus(false);
             }
         }
 

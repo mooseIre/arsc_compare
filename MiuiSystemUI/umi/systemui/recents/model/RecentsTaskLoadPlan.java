@@ -14,6 +14,7 @@ import android.util.ArraySet;
 import android.util.Log;
 import android.util.SparseArray;
 import android.util.SparseIntArray;
+import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.systemui.Application;
 import com.android.systemui.plugins.R;
 import com.android.systemui.recents.Recents;
@@ -47,7 +48,7 @@ public class RecentsTaskLoadPlan {
     private void updateCurrentQuietProfilesCache(int i) {
         this.mCurrentQuietProfiles.clear();
         if (i == -2) {
-            i = ActivityManager.getCurrentUser();
+            i = KeyguardUpdateMonitor.getCurrentUser();
         }
         List profiles = ((UserManager) this.mContext.getSystemService("user")).getProfiles(i);
         if (profiles != null) {

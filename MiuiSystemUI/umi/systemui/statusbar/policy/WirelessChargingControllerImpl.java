@@ -12,7 +12,6 @@ import com.xiaomi.stat.MiStat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import miui.util.IWirelessSwitch;
-import miui.view.MiuiHapticFeedbackConstants;
 
 public class WirelessChargingControllerImpl implements WirelessChargingController {
     private final ArrayList<WirelessChargingController.Callback> mCallbacks = new ArrayList<>();
@@ -110,13 +109,13 @@ public class WirelessChargingControllerImpl implements WirelessChargingControlle
 
     private void showConfirmDialog() {
         Intent intent = new Intent("miui.intent.action.ACTIVITY_WIRELESS_CHG_CONFIRM");
-        intent.addFlags(MiuiHapticFeedbackConstants.FLAG_MIUI_HAPTIC_TAP_NORMAL);
+        intent.addFlags(268435456);
         this.mContext.startActivityAsUser(intent, UserHandle.CURRENT);
     }
 
     private void showWirelessChargingWarningDialog(int i) {
         Intent intent = new Intent("miui.intent.action.ACTIVITY_WIRELESS_CHG_WARNING");
-        intent.addFlags(MiuiHapticFeedbackConstants.FLAG_MIUI_HAPTIC_TAP_NORMAL);
+        intent.addFlags(268435456);
         intent.putExtra("plugstatus", i);
         this.mContext.startActivityAsUser(intent, UserHandle.CURRENT);
     }

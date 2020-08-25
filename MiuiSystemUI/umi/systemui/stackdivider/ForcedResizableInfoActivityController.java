@@ -1,128 +1,109 @@
 package com.android.systemui.stackdivider;
 
 import android.app.ActivityOptions;
-import android.app.ActivityOptionsCompat;
-import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
+import android.os.UserHandle;
 import android.util.ArraySet;
-import android.util.Log;
 import android.widget.Toast;
-import com.android.internal.os.BackgroundThread;
 import com.android.systemui.plugins.R;
-import com.android.systemui.recents.events.RecentsEventBus;
-import com.android.systemui.recents.events.activity.AppTransitionFinishedEvent;
 import com.android.systemui.recents.misc.SystemServicesProxy;
-import com.android.systemui.recents.misc.Utilities;
-import com.android.systemui.stackdivider.events.StartedDragingEvent;
-import com.android.systemui.stackdivider.events.StoppedDragingEvent;
-import miui.view.MiuiHapticFeedbackConstants;
+import java.util.function.Consumer;
 
 public class ForcedResizableInfoActivityController {
-    /* access modifiers changed from: private */
-    public final Context mContext;
-    private boolean mDividerDraging;
-    /* access modifiers changed from: private */
-    public final Handler mHandler = new Handler();
+    private final Context mContext;
+    private final Consumer<Boolean> mDockedStackExistsListener = new Consumer() {
+        public final void accept(Object obj) {
+            ForcedResizableInfoActivityController.this.lambda$new$0$ForcedResizableInfoActivityController((Boolean) obj);
+        }
+    };
+    private final Handler mHandler = new Handler();
     private final ArraySet<String> mPackagesShownInSession = new ArraySet<>();
-    private final ArraySet<Integer> mPendingTaskIds = new ArraySet<>();
+    private final ArraySet<PendingTaskRecord> mPendingTasks = new ArraySet<>();
     private final Runnable mTimeoutRunnable = new Runnable() {
         public void run() {
             ForcedResizableInfoActivityController.this.showPending();
         }
     };
 
-    public ForcedResizableInfoActivityController(Context context) {
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$new$0 */
+    public /* synthetic */ void lambda$new$0$ForcedResizableInfoActivityController(Boolean bool) {
+        if (!bool.booleanValue()) {
+            this.mPackagesShownInSession.clear();
+        }
+    }
+
+    private class PendingTaskRecord {
+        int reason;
+        int taskId;
+
+        PendingTaskRecord(ForcedResizableInfoActivityController forcedResizableInfoActivityController, int i, int i2) {
+            this.taskId = i;
+            this.reason = i2;
+        }
+    }
+
+    public ForcedResizableInfoActivityController(Context context, Divider divider) {
         this.mContext = context;
-        RecentsEventBus.getDefault().register(this);
         SystemServicesProxy.getInstance(context).registerTaskStackListener(new SystemServicesProxy.TaskStackListener() {
             public void onActivityForcedResizable(String str, int i, int i2) {
-                ForcedResizableInfoActivityController.this.activityForcedResizable(str, i);
+                ForcedResizableInfoActivityController.this.activityForcedResizable(str, i, i2);
             }
 
             public void onActivityDismissingDockedStack() {
                 ForcedResizableInfoActivityController.this.activityDismissingDockedStack();
             }
+
+            public void onActivityLaunchOnSecondaryDisplayFailed() {
+                ForcedResizableInfoActivityController.this.activityLaunchOnSecondaryDisplayFailed();
+            }
         });
+        divider.registerInSplitScreenListener(this.mDockedStackExistsListener);
     }
 
-    public void notifyDockedStackExistsChanged(boolean z) {
-        if (!z) {
-            this.mPackagesShownInSession.clear();
-        }
-    }
-
-    public final void onBusEvent(AppTransitionFinishedEvent appTransitionFinishedEvent) {
-        if (!this.mDividerDraging) {
-            showPending();
-        }
-    }
-
-    public final void onBusEvent(StartedDragingEvent startedDragingEvent) {
-        this.mDividerDraging = true;
+    /* access modifiers changed from: package-private */
+    public void onDraggingStart() {
         this.mHandler.removeCallbacks(this.mTimeoutRunnable);
     }
 
-    public final void onBusEvent(StoppedDragingEvent stoppedDragingEvent) {
-        this.mDividerDraging = false;
+    /* access modifiers changed from: package-private */
+    public void onDraggingEnd() {
         showPending();
     }
 
     /* access modifiers changed from: private */
-    public void activityForcedResizable(String str, int i) {
+    public void activityForcedResizable(String str, int i, int i2) {
         if (!debounce(str)) {
-            this.mPendingTaskIds.add(Integer.valueOf(i));
+            this.mPendingTasks.add(new PendingTaskRecord(this, i, i2));
             postTimeout();
         }
     }
 
     /* access modifiers changed from: private */
     public void activityDismissingDockedStack() {
-        BackgroundThread.getHandler().post(new Runnable() {
-            public void run() {
-                if (((KeyguardManager) ForcedResizableInfoActivityController.this.mContext.getSystemService("keyguard")).isKeyguardLocked()) {
-                    ForcedResizableInfoActivityController.this.mHandler.post(new Runnable() {
-                        public void run() {
-                            ForcedResizableInfoActivityController.this.showToast(R.string.dock_keyguard_locked_failed_to_dock_text);
-                        }
-                    });
-                } else {
-                    ForcedResizableInfoActivityController.this.mHandler.post(new Runnable() {
-                        public void run() {
-                            ForcedResizableInfoActivityController.this.showToast(R.string.dock_non_resizeble_failed_to_dock_text);
-                        }
-                    });
-                }
-            }
-        });
+        Toast.makeText(this.mContext, R.string.dock_non_resizeble_failed_to_dock_text, 0).show();
     }
 
     /* access modifiers changed from: private */
-    public void showToast(int i) {
-        Toast.makeText(this.mContext, i, 0).show();
+    public void activityLaunchOnSecondaryDisplayFailed() {
+        Toast.makeText(this.mContext, R.string.activity_launch_on_secondary_display_failed_text, 0).show();
     }
 
     /* access modifiers changed from: private */
     public void showPending() {
         this.mHandler.removeCallbacks(this.mTimeoutRunnable);
-        for (int size = this.mPendingTaskIds.size() - 1; size >= 0; size--) {
+        for (int size = this.mPendingTasks.size() - 1; size >= 0; size--) {
+            PendingTaskRecord valueAt = this.mPendingTasks.valueAt(size);
             Intent intent = new Intent(this.mContext, ForcedResizableInfoActivity.class);
-            intent.addFlags(MiuiHapticFeedbackConstants.FLAG_MIUI_HAPTIC_TAP_NORMAL);
             ActivityOptions makeBasic = ActivityOptions.makeBasic();
-            if (Utilities.isAndroidNorNewer()) {
-                ActivityOptionsCompat.setLaunchTaskId(makeBasic, this.mPendingTaskIds.valueAt(size).intValue());
-                ActivityOptionsCompat.setTaskOverlay(makeBasic, true, true);
-            } else if (!Utilities.isAndroidNorNewer()) {
-                ActivityOptionsCompat.setLaunchStackId(makeBasic, this.mPendingTaskIds.valueAt(size).intValue(), -1, -1);
-            }
-            try {
-                this.mContext.startActivity(intent, makeBasic.toBundle());
-            } catch (Exception e) {
-                Log.e("ForcedResizableInfoActivityController", "Start ForcedResizableInfoActivity error.", e);
-            }
+            makeBasic.setLaunchTaskId(valueAt.taskId);
+            makeBasic.setTaskOverlay(true, true);
+            intent.putExtra("extra_forced_resizeable_reason", valueAt.reason);
+            this.mContext.startActivityAsUser(intent, makeBasic.toBundle(), UserHandle.CURRENT);
         }
-        this.mPendingTaskIds.clear();
+        this.mPendingTasks.clear();
     }
 
     private void postTimeout() {

@@ -474,6 +474,7 @@ public class NavStubView extends FrameLayout {
         }
         this.mRecentVisible = false;
         this.mAssistManager = (AssistManager) Dependency.get(AssistManager.class);
+        this.mIsSuperPowerMode = MiuiSettings.System.isSuperSaveModeOpen(this.mContext, UserHandle.myUserId());
     }
 
     private void initValueAnimator() {

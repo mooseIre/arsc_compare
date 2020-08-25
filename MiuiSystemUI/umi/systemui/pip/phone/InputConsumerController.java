@@ -1,5 +1,6 @@
 package com.android.systemui.pip.phone;
 
+import android.os.Binder;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.RemoteException;
@@ -7,42 +8,39 @@ import android.util.Log;
 import android.view.BatchedInputEventReceiver;
 import android.view.Choreographer;
 import android.view.IWindowManager;
-import android.view.IWindowManagerCompat;
 import android.view.InputChannel;
 import android.view.InputEvent;
-import android.view.MotionEvent;
+import android.view.WindowManagerGlobal;
 import java.io.PrintWriter;
 
 public class InputConsumerController {
     private static final String TAG = "InputConsumerController";
-    private PipInputEventReceiver mInputEventReceiver;
+    private InputEventReceiver mInputEventReceiver;
     /* access modifiers changed from: private */
-    public TouchListener mListener;
+    public InputListener mListener;
+    private final String mName;
     private RegistrationListener mRegistrationListener;
-    private IWindowManager mWindowManager;
+    private final IBinder mToken = new Binder();
+    private final IWindowManager mWindowManager;
+
+    public interface InputListener {
+        boolean onInputEvent(InputEvent inputEvent);
+    }
 
     public interface RegistrationListener {
         void onRegistrationChanged(boolean z);
     }
 
-    public interface TouchListener {
-        boolean onTouchEvent(MotionEvent motionEvent);
-    }
-
-    private final class PipInputEventReceiver extends BatchedInputEventReceiver {
-        public PipInputEventReceiver(InputChannel inputChannel, Looper looper) {
-            super(inputChannel, looper, Choreographer.getSfInstance());
+    private final class InputEventReceiver extends BatchedInputEventReceiver {
+        public InputEventReceiver(InputChannel inputChannel, Looper looper) {
+            super(inputChannel, looper, Choreographer.getInstance());
         }
 
         public void onInputEvent(InputEvent inputEvent) {
-            onInputEvent(inputEvent, 0);
-        }
-
-        public void onInputEvent(InputEvent inputEvent, int i) {
             boolean z = true;
             try {
-                if (InputConsumerController.this.mListener != null && (inputEvent instanceof MotionEvent)) {
-                    z = InputConsumerController.this.mListener.onTouchEvent((MotionEvent) inputEvent);
+                if (InputConsumerController.this.mListener != null) {
+                    z = InputConsumerController.this.mListener.onInputEvent(inputEvent);
                 }
             } finally {
                 finishInputEvent(inputEvent, z);
@@ -50,13 +48,17 @@ public class InputConsumerController {
         }
     }
 
-    public InputConsumerController(IWindowManager iWindowManager) {
+    public InputConsumerController(IWindowManager iWindowManager, String str) {
         this.mWindowManager = iWindowManager;
-        registerInputConsumer();
+        this.mName = str;
     }
 
-    public void setTouchListener(TouchListener touchListener) {
-        this.mListener = touchListener;
+    public static InputConsumerController getPipInputConsumer() {
+        return new InputConsumerController(WindowManagerGlobal.getWindowManagerService(), "pip_input_consumer");
+    }
+
+    public void setInputListener(InputListener inputListener) {
+        this.mListener = inputListener;
     }
 
     public void setRegistrationListener(RegistrationListener registrationListener) {
@@ -66,20 +68,16 @@ public class InputConsumerController {
         }
     }
 
-    public boolean isRegistered() {
-        return this.mInputEventReceiver != null;
-    }
-
     public void registerInputConsumer() {
         if (this.mInputEventReceiver == null) {
             InputChannel inputChannel = new InputChannel();
             try {
-                IWindowManagerCompat.destroyInputConsumer(this.mWindowManager, "pip_input_consumer", 0);
-                IWindowManagerCompat.createInputConsumer(this.mWindowManager, (IBinder) null, "pip_input_consumer", 0, inputChannel);
+                this.mWindowManager.destroyInputConsumer(this.mName, 0);
+                this.mWindowManager.createInputConsumer(this.mToken, this.mName, 0, inputChannel);
             } catch (RemoteException e) {
-                Log.e(TAG, "Failed to create PIP input consumer", e);
+                Log.e(TAG, "Failed to create input consumer", e);
             }
-            this.mInputEventReceiver = new PipInputEventReceiver(inputChannel, Looper.myLooper());
+            this.mInputEventReceiver = new InputEventReceiver(inputChannel, Looper.myLooper());
             RegistrationListener registrationListener = this.mRegistrationListener;
             if (registrationListener != null) {
                 registrationListener.onRegistrationChanged(true);
@@ -90,9 +88,9 @@ public class InputConsumerController {
     public void unregisterInputConsumer() {
         if (this.mInputEventReceiver != null) {
             try {
-                IWindowManagerCompat.destroyInputConsumer(this.mWindowManager, "pip_input_consumer", 0);
+                this.mWindowManager.destroyInputConsumer(this.mName, 0);
             } catch (RemoteException e) {
-                Log.e(TAG, "Failed to destroy PIP input consumer", e);
+                Log.e(TAG, "Failed to destroy input consumer", e);
             }
             this.mInputEventReceiver.dispose();
             this.mInputEventReceiver = null;

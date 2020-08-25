@@ -1,30 +1,40 @@
 package com.android.systemui.pip.phone;
 
 import android.graphics.PointF;
+import android.os.Handler;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.ViewConfiguration;
-import com.android.systemui.pip.PipCompat;
 import java.io.PrintWriter;
 
 public class PipTouchState {
     private int mActivePointerId;
     private boolean mAllowDraggingOffscreen = false;
     private boolean mAllowTouches = true;
+    private final Runnable mDoubleTapTimeoutCallback;
     private final PointF mDownDelta = new PointF();
     private final PointF mDownTouch = new PointF();
+    private long mDownTouchTime = 0;
+    private final Handler mHandler;
+    private boolean mIsDoubleTap = false;
     private boolean mIsDragging = false;
     private boolean mIsUserInteracting = false;
+    private boolean mIsWaitingForDoubleTap = false;
     private final PointF mLastDelta = new PointF();
+    private long mLastDownTouchTime = 0;
     private final PointF mLastTouch = new PointF();
+    private boolean mPreviouslyDragging = false;
     private boolean mStartedDragging = false;
+    private long mUpTouchTime = 0;
     private final PointF mVelocity = new PointF();
     private VelocityTracker mVelocityTracker;
-    private ViewConfiguration mViewConfig;
+    private final ViewConfiguration mViewConfig;
 
-    public PipTouchState(ViewConfiguration viewConfiguration) {
+    public PipTouchState(ViewConfiguration viewConfiguration, Handler handler, Runnable runnable) {
         this.mViewConfig = viewConfiguration;
+        this.mHandler = handler;
+        this.mDoubleTapTimeoutCallback = runnable;
     }
 
     public void reset() {
@@ -35,22 +45,22 @@ public class PipTouchState {
     }
 
     public void onTouchEvent(MotionEvent motionEvent) {
-        int action = motionEvent.getAction();
-        int i = 0;
-        if (action != 0) {
-            if (action != 1) {
-                if (action != 2) {
-                    if (action != 3) {
-                        if (action == 6 && this.mIsUserInteracting) {
-                            this.mVelocityTracker.addMovement(motionEvent);
+        int actionMasked = motionEvent.getActionMasked();
+        boolean z = false;
+        boolean z2 = true;
+        if (actionMasked != 0) {
+            if (actionMasked != 1) {
+                if (actionMasked != 2) {
+                    if (actionMasked != 3) {
+                        if (actionMasked == 6 && this.mIsUserInteracting) {
+                            addMovementToVelocityTracker(motionEvent);
                             int actionIndex = motionEvent.getActionIndex();
                             if (motionEvent.getPointerId(actionIndex) == this.mActivePointerId) {
                                 if (actionIndex == 0) {
-                                    i = 1;
+                                    z = true;
                                 }
-                                this.mActivePointerId = motionEvent.getPointerId(i);
-                                Log.e("PipTouchHandler", "Relinquish active pointer id on POINTER_UP: " + this.mActivePointerId);
-                                this.mLastTouch.set(PipCompat.getTouchXForPointId(motionEvent, i), PipCompat.getTouchYForPointId(motionEvent, i));
+                                this.mActivePointerId = motionEvent.getPointerId(z ? 1 : 0);
+                                this.mLastTouch.set(motionEvent.getRawX(z), motionEvent.getRawY(z));
                                 return;
                             }
                             return;
@@ -58,34 +68,34 @@ public class PipTouchState {
                         return;
                     }
                 } else if (this.mIsUserInteracting) {
-                    this.mVelocityTracker.addMovement(motionEvent);
+                    addMovementToVelocityTracker(motionEvent);
                     int findPointerIndex = motionEvent.findPointerIndex(this.mActivePointerId);
                     if (findPointerIndex == -1) {
                         Log.e("PipTouchHandler", "Invalid active pointer id on MOVE: " + this.mActivePointerId);
                         return;
                     }
-                    float touchXForPointId = PipCompat.getTouchXForPointId(motionEvent, findPointerIndex);
-                    float touchYForPointId = PipCompat.getTouchYForPointId(motionEvent, findPointerIndex);
+                    float rawX = motionEvent.getRawX(findPointerIndex);
+                    float rawY = motionEvent.getRawY(findPointerIndex);
                     PointF pointF = this.mLastDelta;
                     PointF pointF2 = this.mLastTouch;
-                    pointF.set(touchXForPointId - pointF2.x, touchYForPointId - pointF2.y);
+                    pointF.set(rawX - pointF2.x, rawY - pointF2.y);
                     PointF pointF3 = this.mDownDelta;
                     PointF pointF4 = this.mDownTouch;
-                    pointF3.set(touchXForPointId - pointF4.x, touchYForPointId - pointF4.y);
-                    boolean z = this.mDownDelta.length() > ((float) this.mViewConfig.getScaledTouchSlop());
+                    pointF3.set(rawX - pointF4.x, rawY - pointF4.y);
+                    boolean z3 = this.mDownDelta.length() > ((float) this.mViewConfig.getScaledTouchSlop());
                     if (this.mIsDragging) {
                         this.mStartedDragging = false;
-                    } else if (z) {
+                    } else if (z3) {
                         this.mIsDragging = true;
                         this.mStartedDragging = true;
                     }
-                    this.mLastTouch.set(touchXForPointId, touchYForPointId);
+                    this.mLastTouch.set(rawX, rawY);
                     return;
                 } else {
                     return;
                 }
             } else if (this.mIsUserInteracting) {
-                this.mVelocityTracker.addMovement(motionEvent);
+                addMovementToVelocityTracker(motionEvent);
                 this.mVelocityTracker.computeCurrentVelocity(1000, (float) this.mViewConfig.getScaledMaximumFlingVelocity());
                 this.mVelocity.set(this.mVelocityTracker.getXVelocity(), this.mVelocityTracker.getYVelocity());
                 int findPointerIndex2 = motionEvent.findPointerIndex(this.mActivePointerId);
@@ -93,19 +103,39 @@ public class PipTouchState {
                     Log.e("PipTouchHandler", "Invalid active pointer id on UP: " + this.mActivePointerId);
                     return;
                 }
-                this.mLastTouch.set(PipCompat.getTouchXForPointId(motionEvent, findPointerIndex2), PipCompat.getTouchYForPointId(motionEvent, findPointerIndex2));
+                this.mUpTouchTime = motionEvent.getEventTime();
+                this.mLastTouch.set(motionEvent.getRawX(findPointerIndex2), motionEvent.getRawY(findPointerIndex2));
+                boolean z4 = this.mIsDragging;
+                this.mPreviouslyDragging = z4;
+                if (!this.mIsDoubleTap && !z4 && this.mUpTouchTime - this.mDownTouchTime < 200) {
+                    z = true;
+                }
+                this.mIsWaitingForDoubleTap = z;
             } else {
                 return;
             }
             recycleVelocityTracker();
         } else if (this.mAllowTouches) {
             initOrResetVelocityTracker();
+            addMovementToVelocityTracker(motionEvent);
             this.mActivePointerId = motionEvent.getPointerId(0);
-            Log.e("PipTouchHandler", "Setting active pointer id on DOWN: " + this.mActivePointerId);
-            this.mLastTouch.set(PipCompat.getTouchX(motionEvent), PipCompat.getTouchY(motionEvent));
+            this.mLastTouch.set(motionEvent.getRawX(), motionEvent.getRawY());
             this.mDownTouch.set(this.mLastTouch);
             this.mAllowDraggingOffscreen = true;
             this.mIsUserInteracting = true;
+            long eventTime = motionEvent.getEventTime();
+            this.mDownTouchTime = eventTime;
+            if (this.mPreviouslyDragging || eventTime - this.mLastDownTouchTime >= 200) {
+                z2 = false;
+            }
+            this.mIsDoubleTap = z2;
+            this.mIsWaitingForDoubleTap = false;
+            this.mIsDragging = false;
+            this.mLastDownTouchTime = this.mDownTouchTime;
+            Runnable runnable = this.mDoubleTapTimeoutCallback;
+            if (runnable != null) {
+                this.mHandler.removeCallbacks(runnable);
+            }
         }
     }
 
@@ -144,8 +174,44 @@ public class PipTouchState {
         }
     }
 
-    public boolean allowDraggingOffscreen() {
-        return this.mAllowDraggingOffscreen;
+    public boolean isDoubleTap() {
+        return this.mIsDoubleTap;
+    }
+
+    public boolean isWaitingForDoubleTap() {
+        return this.mIsWaitingForDoubleTap;
+    }
+
+    public void scheduleDoubleTapTimeoutCallback() {
+        if (this.mIsWaitingForDoubleTap) {
+            long doubleTapTimeoutCallbackDelay = getDoubleTapTimeoutCallbackDelay();
+            this.mHandler.removeCallbacks(this.mDoubleTapTimeoutCallback);
+            this.mHandler.postDelayed(this.mDoubleTapTimeoutCallback, doubleTapTimeoutCallbackDelay);
+        }
+    }
+
+    /* access modifiers changed from: package-private */
+    public long getDoubleTapTimeoutCallbackDelay() {
+        if (this.mIsWaitingForDoubleTap) {
+            return Math.max(0, 200 - (this.mUpTouchTime - this.mDownTouchTime));
+        }
+        return -1;
+    }
+
+    public void removeDoubleTapTimeoutCallback() {
+        this.mIsWaitingForDoubleTap = false;
+        this.mHandler.removeCallbacks(this.mDoubleTapTimeoutCallback);
+    }
+
+    /* access modifiers changed from: package-private */
+    public void addMovementToVelocityTracker(MotionEvent motionEvent) {
+        if (this.mVelocityTracker != null) {
+            float rawX = motionEvent.getRawX() - motionEvent.getX();
+            float rawY = motionEvent.getRawY() - motionEvent.getY();
+            motionEvent.offsetLocation(rawX, rawY);
+            this.mVelocityTracker.addMovement(motionEvent);
+            motionEvent.offsetLocation(-rawX, -rawY);
+        }
     }
 
     private void initOrResetVelocityTracker() {

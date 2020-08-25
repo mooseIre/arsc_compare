@@ -13,7 +13,7 @@ import com.android.systemui.Constants;
 import com.android.systemui.Dependency;
 import com.android.systemui.HapticFeedBackImpl;
 import com.android.systemui.miui.statusbar.ExpandedNotification;
-import com.android.systemui.miui.statusbar.analytics.SystemUIStat;
+import com.android.systemui.miui.statusbar.analytics.NotificationStat;
 import com.android.systemui.plugins.R;
 import com.android.systemui.plugins.statusbar.NotificationMenuRowPlugin;
 import com.android.systemui.plugins.statusbar.NotificationSwipeActionHelper;
@@ -251,7 +251,7 @@ public class NotificationMenuRow implements NotificationMenuRowPlugin, View.OnCl
         this.mMenuSnappedTo = true;
         this.mMenuListener.onMenuShown(view);
         this.mSwipeHelper.snap(view, f, f2);
-        ((SystemUIStat) Dependency.get(SystemUIStat.class)).logNotificationSwipeLeft(this.mParent.getEntry().key);
+        ((NotificationStat) Dependency.get(NotificationStat.class)).logNotificationSwipeLeft(this.mParent.getEntry().key);
     }
 
     private void snapBack(View view, float f) {
@@ -269,7 +269,7 @@ public class NotificationMenuRow implements NotificationMenuRowPlugin, View.OnCl
         this.mMenuSnappedTo = false;
         this.mDismissing = true;
         this.mSwipeHelper.dismiss(view, f);
-        ((SystemUIStat) Dependency.get(SystemUIStat.class)).logNotificationSwipeRight(this.mParent.getEntry().key);
+        ((NotificationStat) Dependency.get(NotificationStat.class)).logNotificationSwipeRight(this.mParent.getEntry().key);
     }
 
     private boolean swipedEnoughToShowMenu() {

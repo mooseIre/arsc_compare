@@ -75,7 +75,9 @@ public class KeyguardVerticalMoveHelper {
                         float min = Math.min(f / ((float) (this.mPanelView.getHeight() / 2)), 1.0f);
                         this.mTranslationPer = min;
                         doPanelViewAnimation();
-                        ((MiuiKeyguardWallpaperController) Dependency.get(MiuiKeyguardWallpaperController.class)).updateKeyguardRatio(min - 4.0f, 0);
+                        if (KeyguardWallpaperUtils.isWallpaperShouldBlur(this.mContext)) {
+                            ((MiuiKeyguardWallpaperController) Dependency.get(MiuiKeyguardWallpaperController.class)).updateKeyguardRatio(min - 4.0f, 0);
+                        }
                     }
                 } else if (actionMasked != 3) {
                     if (actionMasked == 5) {
@@ -155,9 +157,11 @@ public class KeyguardVerticalMoveHelper {
     private void doPanelViewAnimation() {
         float f = this.mTranslationPer;
         float f2 = 1.0f - ((1.0f - f) * (1.0f - f));
-        float f3 = 1.0f - (0.1f * f2);
-        this.mPanelView.setScaleX(f3);
-        this.mPanelView.setScaleY(f3);
+        if (!this.mPanelView.isForceBlack()) {
+            float f3 = 1.0f - (0.1f * f2);
+            this.mPanelView.setScaleX(f3);
+            this.mPanelView.setScaleY(f3);
+        }
         this.mPanelView.setTransitionAlpha(1.0f - f2);
     }
 

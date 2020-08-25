@@ -643,7 +643,7 @@ public class NotificationData {
     private void dumpEntry(PrintWriter printWriter, String str, int i, Entry entry) {
         this.mRankingMap.getRanking(entry.key, this.mTmpRanking);
         printWriter.print(str);
-        printWriter.println("  [" + i + "] " + entry.notification);
+        printWriter.println("  [" + i + "] " + entry.notification + " showMiniBar=" + entry.mIsShowMiniWindowBar);
     }
 
     private void checkNotificationLimit(String str) {

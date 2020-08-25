@@ -14,6 +14,7 @@ import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.ArrayMap;
 import android.util.ArraySet;
+import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.systemui.Dependency;
 import com.android.systemui.settings.CurrentUserTracker;
 import com.android.systemui.statusbar.phone.StatusBarIconControllerHelper;
@@ -159,7 +160,7 @@ public class TunerServiceImpl extends TunerService {
         }
 
         public void onChange(boolean z, Uri uri, int i) {
-            if (i == ActivityManager.getCurrentUser()) {
+            if (i == KeyguardUpdateMonitor.getCurrentUser()) {
                 TunerServiceImpl.this.reloadSetting(uri);
             }
         }

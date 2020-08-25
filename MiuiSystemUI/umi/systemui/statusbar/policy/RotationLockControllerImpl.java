@@ -9,6 +9,7 @@ import android.provider.Settings;
 import android.view.IWindowManager;
 import android.view.WindowManagerGlobal;
 import com.android.internal.view.RotationPolicy;
+import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.systemui.Util;
 import com.android.systemui.plugins.R;
 import com.android.systemui.statusbar.policy.RotationLockController;
@@ -76,7 +77,7 @@ public final class RotationLockControllerImpl implements RotationLockController 
     }
 
     public void setRotationLock(Context context, boolean z) {
-        Settings.System.putIntForUser(context.getContentResolver(), "hide_rotation_lock_toggle_for_accessibility", 0, -2);
+        Settings.System.putIntForUser(context.getContentResolver(), "hide_rotation_lock_toggle_for_accessibility", 0, KeyguardUpdateMonitor.getCurrentUser());
         setRotationLock(z, -1);
     }
 

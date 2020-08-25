@@ -3,7 +3,6 @@ package com.android.systemui.miui.statusbar.policy;
 import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.app.ActivityManager;
-import android.app.ActivityManagerCompat;
 import android.app.ActivityOptions;
 import android.app.INotificationManager;
 import android.app.Notification;
@@ -35,12 +34,13 @@ import android.view.WindowManager;
 import com.android.systemui.Dependency;
 import com.android.systemui.Interpolators;
 import com.android.systemui.Logger;
-import com.android.systemui.SystemUICompat;
 import com.android.systemui.miui.statusbar.ExpandedNotification;
+import com.android.systemui.miui.statusbar.analytics.SystemUIStat;
 import com.android.systemui.miui.statusbar.notification.HeadsUpAnimatedStubView;
 import com.android.systemui.miui.statusbar.notification.NotificationSettingsManager;
 import com.android.systemui.miui.statusbar.policy.AppMiniWindowManager;
 import com.android.systemui.plugins.R;
+import com.android.systemui.recents.Recents;
 import com.android.systemui.statusbar.ExpandableNotificationRow;
 import com.android.systemui.statusbar.phone.ShadeController;
 import com.android.systemui.statusbar.policy.ConfigurationController;
@@ -60,7 +60,6 @@ import java.util.function.Consumer;
 import miui.process.ForegroundInfo;
 import miui.process.IForegroundWindowListener;
 import miui.process.ProcessManager;
-import miui.view.MiuiHapticFeedbackConstants;
 import miuix.animation.Folme;
 import miuix.animation.listener.TransitionListener;
 import miuix.animation.listener.UpdateInfo;
@@ -169,7 +168,12 @@ public class AppMiniWindowManager implements ConfigurationController.Configurati
         headsUpManager.addListener(this);
     }
 
-    public boolean isStartingActivity() {
+    public boolean isStartingActivity(String str) {
+        ExpandableNotificationRow expandableNotificationRow;
+        ExpandableNotificationRow expandableNotificationRow2 = this.mHeadsUp;
+        if ((expandableNotificationRow2 == null || !expandableNotificationRow2.getEntry().key.equals(str)) && ((expandableNotificationRow = this.mPendingHeadsUp) == null || !expandableNotificationRow.getEntry().key.equals(str))) {
+            return false;
+        }
         return this.mStartingActivity;
     }
 
@@ -221,117 +225,124 @@ public class AppMiniWindowManager implements ConfigurationController.Configurati
         return this.mInterceptTouch;
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:8:0x0046, code lost:
-        if (r9 != 3) goto L_0x00d2;
+    /* JADX WARNING: Code restructure failed: missing block: B:8:0x0048, code lost:
+        if (r10 != 3) goto L_0x00e6;
      */
     /* Code decompiled incorrectly, please refer to instructions dump. */
-    public boolean onTouchEvent(android.view.MotionEvent r9) {
+    public boolean onTouchEvent(android.view.MotionEvent r10) {
         /*
-            r8 = this;
-            com.android.systemui.statusbar.ExpandableNotificationRow r0 = r8.mHeadsUp
+            r9 = this;
+            java.lang.Class<com.android.systemui.miui.statusbar.analytics.SystemUIStat> r0 = com.android.systemui.miui.statusbar.analytics.SystemUIStat.class
+            com.android.systemui.statusbar.ExpandableNotificationRow r1 = r9.mHeadsUp
+            r2 = 0
+            if (r1 != 0) goto L_0x0008
+            return r2
+        L_0x0008:
+            android.view.VelocityTracker r1 = r9.mVelocityTracker
+            r1.addMovement(r10)
+            float r1 = r10.getX()
+            float r3 = r10.getY()
+            r4 = 3
+            java.lang.Object[] r5 = new java.lang.Object[r4]
+            int r6 = r10.getActionMasked()
+            java.lang.String r6 = android.view.MotionEvent.actionToString(r6)
+            r5[r2] = r6
+            java.lang.Float r6 = java.lang.Float.valueOf(r1)
+            r7 = 1
+            r5[r7] = r6
+            java.lang.Float r6 = java.lang.Float.valueOf(r3)
+            r8 = 2
+            r5[r8] = r6
+            java.lang.String r6 = "onTouchEvent action=%s {%.1f, %.1f}"
+            java.lang.String r5 = java.lang.String.format(r6, r5)
+            java.lang.String r6 = "AppMiniWindowManager"
+            android.util.Log.d(r6, r5)
+            int r10 = r10.getActionMasked()
+            if (r10 == 0) goto L_0x00e2
+            r5 = 3000(0xbb8, double:1.482E-320)
             r1 = 0
-            if (r0 != 0) goto L_0x0006
-            return r1
-        L_0x0006:
-            android.view.VelocityTracker r0 = r8.mVelocityTracker
-            r0.addMovement(r9)
-            float r0 = r9.getX()
-            float r2 = r9.getY()
-            r3 = 3
-            java.lang.Object[] r4 = new java.lang.Object[r3]
-            int r5 = r9.getActionMasked()
-            java.lang.String r5 = android.view.MotionEvent.actionToString(r5)
-            r4[r1] = r5
-            java.lang.Float r5 = java.lang.Float.valueOf(r0)
-            r6 = 1
-            r4[r6] = r5
-            java.lang.Float r5 = java.lang.Float.valueOf(r2)
-            r7 = 2
-            r4[r7] = r5
-            java.lang.String r5 = "onTouchEvent action=%s {%.1f, %.1f}"
-            java.lang.String r4 = java.lang.String.format(r5, r4)
-            java.lang.String r5 = "AppMiniWindowManager"
-            android.util.Log.d(r5, r4)
-            int r9 = r9.getActionMasked()
-            if (r9 == 0) goto L_0x00ce
-            r4 = 3000(0xbb8, double:1.482E-320)
-            r0 = 0
-            if (r9 == r6) goto L_0x0088
-            if (r9 == r7) goto L_0x004a
-            if (r9 == r3) goto L_0x0088
-            goto L_0x00d2
-        L_0x004a:
-            float r9 = r8.mInterceptedY
-            float r2 = r2 - r9
-            float r9 = java.lang.Math.max(r0, r2)
-            boolean r0 = r8.mTracking
-            if (r0 == 0) goto L_0x00d2
-            boolean r0 = r8.mAnimationStart
-            if (r0 != 0) goto L_0x00d2
-            android.graphics.Rect r0 = r8.mPinnedNotificationBounds
-            int r0 = r0.height()
-            int r2 = SCREEN_HEIGHT
-            float r2 = (float) r2
-            int r9 = r8.getNotificationOffset(r9, r2)
-            if (r9 != 0) goto L_0x006b
-            r8.setTracking(r1)
-        L_0x006b:
-            int r0 = r0 + r9
-            r8.setHeightInternal(r0)
-            boolean r0 = r8.mIsPortrait
-            if (r0 == 0) goto L_0x0078
-            int r0 = r8.mTriggerHeightPortrait
-            if (r9 <= r0) goto L_0x00d2
-            goto L_0x007c
-        L_0x0078:
-            int r0 = r8.mTriggerHeightHorizontal
-            if (r9 <= r0) goto L_0x00d2
-        L_0x007c:
-            r8.startEnterAnimation()
-            r8.startFreeFormActivity()
-            android.os.Handler r9 = r8.mHandler
-            r9.sendEmptyMessageDelayed(r6, r4)
-            goto L_0x00d2
-        L_0x0088:
-            boolean r9 = r8.mTracking
-            if (r9 == 0) goto L_0x00c0
-            boolean r9 = r8.mAnimationStart
-            if (r9 != 0) goto L_0x00c0
-            float r9 = r8.mInterceptedY
-            float r2 = r2 - r9
-            float r9 = java.lang.Math.max(r0, r2)
-            int r0 = SCREEN_HEIGHT
-            float r0 = (float) r0
-            int r9 = r8.getNotificationOffset(r9, r0)
-            android.view.VelocityTracker r0 = r8.mVelocityTracker
-            r2 = 1000(0x3e8, float:1.401E-42)
-            r0.computeCurrentVelocity(r2)
-            android.view.VelocityTracker r0 = r8.mVelocityTracker
-            float r0 = r0.getYVelocity(r1)
-            r2 = 1148846080(0x447a0000, float:1000.0)
-            int r0 = (r0 > r2 ? 1 : (r0 == r2 ? 0 : -1))
-            if (r0 <= 0) goto L_0x00c0
-            int r0 = r8.mTriggerHeightMin
-            if (r9 <= r0) goto L_0x00c0
-            r8.startEnterAnimation()
-            r8.startFreeFormActivity()
-            android.os.Handler r9 = r8.mHandler
-            r9.sendEmptyMessageDelayed(r6, r4)
-        L_0x00c0:
-            boolean r9 = r8.mAnimationStart
-            if (r9 != 0) goto L_0x00c7
-            r8.startExitAnimation()
-        L_0x00c7:
-            boolean r9 = r8.mInterceptTouch
-            if (r9 == 0) goto L_0x00d2
-            r8.mInterceptTouch = r1
-            return r6
-        L_0x00ce:
-            r8.mInitialTouchX = r0
-            r8.mInitialTouchY = r2
-        L_0x00d2:
-            boolean r8 = r8.mInterceptTouch
-            return r8
+            if (r10 == r7) goto L_0x0093
+            if (r10 == r8) goto L_0x004c
+            if (r10 == r4) goto L_0x0093
+            goto L_0x00e6
+        L_0x004c:
+            float r10 = r9.mInterceptedY
+            float r3 = r3 - r10
+            float r10 = java.lang.Math.max(r1, r3)
+            boolean r1 = r9.mTracking
+            if (r1 == 0) goto L_0x00e6
+            boolean r1 = r9.mAnimationStart
+            if (r1 != 0) goto L_0x00e6
+            android.graphics.Rect r1 = r9.mPinnedNotificationBounds
+            int r1 = r1.height()
+            int r3 = SCREEN_HEIGHT
+            float r3 = (float) r3
+            int r10 = r9.getNotificationOffset(r10, r3)
+            if (r10 != 0) goto L_0x006d
+            r9.setTracking(r2)
+        L_0x006d:
+            int r1 = r1 + r10
+            r9.setHeightInternal(r1)
+            boolean r1 = r9.mIsPortrait
+            if (r1 == 0) goto L_0x007a
+            int r1 = r9.mTriggerHeightPortrait
+            if (r10 <= r1) goto L_0x00e6
+            goto L_0x007e
+        L_0x007a:
+            int r1 = r9.mTriggerHeightHorizontal
+            if (r10 <= r1) goto L_0x00e6
+        L_0x007e:
+            r9.startEnterAnimation()
+            r9.startFreeFormActivity()
+            java.lang.Object r10 = com.android.systemui.Dependency.get(r0)
+            com.android.systemui.miui.statusbar.analytics.SystemUIStat r10 = (com.android.systemui.miui.statusbar.analytics.SystemUIStat) r10
+            r10.handleFreeformEventDistance()
+            android.os.Handler r10 = r9.mHandler
+            r10.sendEmptyMessageDelayed(r7, r5)
+            goto L_0x00e6
+        L_0x0093:
+            boolean r10 = r9.mTracking
+            if (r10 == 0) goto L_0x00d4
+            boolean r10 = r9.mAnimationStart
+            if (r10 != 0) goto L_0x00d4
+            float r10 = r9.mInterceptedY
+            float r3 = r3 - r10
+            float r10 = java.lang.Math.max(r1, r3)
+            int r1 = SCREEN_HEIGHT
+            float r1 = (float) r1
+            int r10 = r9.getNotificationOffset(r10, r1)
+            android.view.VelocityTracker r1 = r9.mVelocityTracker
+            r3 = 1000(0x3e8, float:1.401E-42)
+            r1.computeCurrentVelocity(r3)
+            android.view.VelocityTracker r1 = r9.mVelocityTracker
+            float r1 = r1.getYVelocity(r2)
+            r3 = 1148846080(0x447a0000, float:1000.0)
+            int r1 = (r1 > r3 ? 1 : (r1 == r3 ? 0 : -1))
+            if (r1 <= 0) goto L_0x00d4
+            int r1 = r9.mTriggerHeightMin
+            if (r10 <= r1) goto L_0x00d4
+            r9.startEnterAnimation()
+            r9.startFreeFormActivity()
+            java.lang.Object r10 = com.android.systemui.Dependency.get(r0)
+            com.android.systemui.miui.statusbar.analytics.SystemUIStat r10 = (com.android.systemui.miui.statusbar.analytics.SystemUIStat) r10
+            r10.handleFreeformEventSpeed()
+            android.os.Handler r10 = r9.mHandler
+            r10.sendEmptyMessageDelayed(r7, r5)
+        L_0x00d4:
+            boolean r10 = r9.mAnimationStart
+            if (r10 != 0) goto L_0x00db
+            r9.startExitAnimation()
+        L_0x00db:
+            boolean r10 = r9.mInterceptTouch
+            if (r10 == 0) goto L_0x00e6
+            r9.mInterceptTouch = r2
+            return r7
+        L_0x00e2:
+            r9.mInitialTouchX = r1
+            r9.mInitialTouchY = r3
+        L_0x00e6:
+            boolean r9 = r9.mInterceptTouch
+            return r9
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.miui.statusbar.policy.AppMiniWindowManager.onTouchEvent(android.view.MotionEvent):boolean");
     }
@@ -349,11 +360,12 @@ public class AppMiniWindowManager implements ConfigurationController.Configurati
                 Intent intent = new Intent();
                 if (!"com.tencent.tim".equals(this.mIntent.getCreatorPackage())) {
                     intent.addFlags(134217728);
-                    intent.addFlags(MiuiHapticFeedbackConstants.FLAG_MIUI_HAPTIC_TAP_NORMAL);
+                    intent.addFlags(268435456);
                     intent.addFlags(8388608);
                 }
                 this.mIntent.send(this.mContext, 0, intent, (PendingIntent.OnFinished) null, (Handler) null, (String) null, activityOptions.toBundle());
                 this.mStartingActivity = true;
+                ((SystemUIStat) Dependency.get(SystemUIStat.class)).handleFreeformEvent();
             }
         } catch (Exception e) {
             Logger.fullW("AppMiniWindowManager", "Start freeform failed: " + e);
@@ -413,9 +425,6 @@ public class AppMiniWindowManager implements ConfigurationController.Configurati
         ExpandableNotificationRow expandableNotificationRow;
         Log.d("AppMiniWindowManager", "setTracking tracking=" + z);
         if (this.mTracking != z) {
-            if (z) {
-                this.mContainer.updateRenderStatus(true);
-            }
             this.mTracking = z;
             this.mContainer.setAnimationRunning(z);
             this.mContainer.setBarVisibility(z);
@@ -529,14 +538,14 @@ public class AppMiniWindowManager implements ConfigurationController.Configurati
             }
 
             public void onAnimationEnd(Animator animator) {
+                boolean unused = AppMiniWindowManager.this.mStartingActivity = false;
                 if (AppMiniWindowManager.this.mHeadsUp != null) {
-                    boolean unused = AppMiniWindowManager.this.mStartingActivity = false;
                     AppMiniWindowManager appMiniWindowManager = AppMiniWindowManager.this;
                     appMiniWindowManager.mShadeController.performRemoveNotification(appMiniWindowManager.mHeadsUp.getStatusBarNotification());
-                    AppMiniWindowManager.this.mHeadsUpManager.releaseAllImmediately();
-                    AppMiniWindowManager.this.setTracking(false);
-                    AppMiniWindowManager.this.mContainer.setAlpha(1.0f);
                 }
+                AppMiniWindowManager.this.mHeadsUpManager.releaseAllImmediately();
+                AppMiniWindowManager.this.setTracking(false);
+                AppMiniWindowManager.this.mContainer.setAlpha(1.0f);
             }
         });
         ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -603,18 +612,14 @@ public class AppMiniWindowManager implements ConfigurationController.Configurati
     /* access modifiers changed from: private */
     public void updateMiniWindowBar(boolean z) {
         ExpandableNotificationRow expandableNotificationRow = this.mHeadsUp;
-        if (expandableNotificationRow != null && expandableNotificationRow.getMiniWindowBar() != null) {
-            if (z) {
-                this.mHeadsUp.getMiniWindowBar().setVisibility(0);
-            } else {
-                this.mHeadsUp.getMiniWindowBar().setVisibility(8);
-            }
+        if (expandableNotificationRow != null) {
+            expandableNotificationRow.setMiniBarVisible(z);
         }
     }
 
     public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
         printWriter.println("AppMiniWindowManager state:");
-        printWriter.println("  mTracking=" + this.mTracking);
+        printWriter.println("  mTracking=" + this.mTracking + " mHasFreeformFeature=" + this.mHasFreeformFeature);
     }
 
     public boolean canNotificationSlide(Context context, ExpandableNotificationRow expandableNotificationRow) {
@@ -622,7 +627,7 @@ public class AppMiniWindowManager implements ConfigurationController.Configurati
     }
 
     public boolean canNotificationSlide(Context context, ExpandedNotification expandedNotification) {
-        if (!this.mHasFreeformFeature || SystemUICompat.hasDockedTask(ActivityManagerCompat.getService())) {
+        if (!this.mHasFreeformFeature || Recents.getSystemServices().hasDockedTask()) {
             return false;
         }
         PendingIntent intent = getIntent(expandedNotification.getNotification());

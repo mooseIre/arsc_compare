@@ -36,6 +36,10 @@ public abstract class NotificationViewWrapper implements TransformableView {
         return 0;
     }
 
+    public int getMiniBarHeight() {
+        return 0;
+    }
+
     public NotificationHeaderView getNotificationHeader() {
         return null;
     }
@@ -54,6 +58,9 @@ public abstract class NotificationViewWrapper implements TransformableView {
     }
 
     public void setLegacy(boolean z) {
+    }
+
+    public void setMiniBarVisible(boolean z) {
     }
 
     public void setRemoteInputVisible(boolean z) {
@@ -80,7 +87,7 @@ public abstract class NotificationViewWrapper implements TransformableView {
     }
 
     public static NotificationViewWrapper wrap(Context context, View view, ExpandableNotificationRow expandableNotificationRow) {
-        if (view.getId() == 16909516) {
+        if (view.getId() == 16909501) {
             if ("bigPicture".equals(view.getTag())) {
                 return new NotificationBigPictureTemplateViewWrapper(context, view, expandableNotificationRow);
             }

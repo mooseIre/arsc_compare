@@ -220,7 +220,7 @@ public interface StatusBarIconController {
             this.mGroup = viewGroup;
             Context context = viewGroup.getContext();
             this.mContext = context;
-            this.mIconSize = context.getResources().getDimensionPixelSize(17105522);
+            this.mIconSize = context.getResources().getDimensionPixelSize(17105499);
             if (this.mGroup.getTag(R.id.tag_disable_state_tracker) == null) {
                 DisableStateTracker disableStateTracker = new DisableStateTracker(0, 2);
                 this.mGroup.addOnAttachStateChangeListener(disableStateTracker);

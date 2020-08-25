@@ -35,11 +35,13 @@ import android.util.Log;
 import android.util.Pair;
 import com.android.internal.os.SomeArgs;
 import com.android.internal.statusbar.StatusBarIcon;
+import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.systemui.Constants;
 import com.android.systemui.Dependency;
 import com.android.systemui.DockedStackExistsListener;
 import com.android.systemui.SystemUI;
 import com.android.systemui.UiOffloadThread;
+import com.android.systemui.miui.volume.VolumeUtil;
 import com.android.systemui.plugins.R;
 import com.android.systemui.qs.tiles.RotationLockTile;
 import com.android.systemui.recents.misc.SystemServicesProxy;
@@ -403,7 +405,7 @@ public class PhoneStatusBarPolicy implements BluetoothController.Callback, Comma
         this.mService.setIcon(this.mSlotCallrecord, R.drawable.stat_sys_call_record, 0, (String) null);
         this.mService.setIconVisibility(this.mSlotCallrecord, false);
         this.mIconController.setIcon(this.mSlotQuiet, R.drawable.stat_sys_quiet_mode, (CharSequence) null);
-        if (MiuiSettings.SilenceMode.getZenMode(this.mContext) == 1) {
+        if (VolumeUtil.getZenMode(this.mContext) == 1) {
             setQuietMode(true);
             this.mIconController.setIconVisibility(this.mSlotVolume, false);
             this.mVolumeVisible = false;
@@ -492,9 +494,14 @@ public class PhoneStatusBarPolicy implements BluetoothController.Callback, Comma
 
     /* access modifiers changed from: private */
     public final void updateVolume() {
+        boolean z;
         String str;
         int i;
-        boolean isSilentEnabled = AudioManagerHelper.isSilentEnabled(this.mContext);
+        if (Build.VERSION.SDK_INT > 29) {
+            z = VolumeUtil.getZenMode(this.mContext) == 4;
+        } else {
+            z = AudioManagerHelper.isSilentEnabled(this.mContext);
+        }
         if (AudioManagerHelper.isVibrateEnabled(this.mContext)) {
             i = R.drawable.stat_sys_ringer_vibrate;
             str = this.mContext.getString(R.string.accessibility_ringer_vibrate);
@@ -502,12 +509,12 @@ public class PhoneStatusBarPolicy implements BluetoothController.Callback, Comma
             i = R.drawable.stat_sys_ringer_silent;
             str = this.mContext.getString(R.string.accessibility_ringer_silent);
         }
-        if (isSilentEnabled) {
+        if (z) {
             this.mIconController.setIcon(this.mSlotVolume, i, str);
         }
-        if (isSilentEnabled != this.mVolumeVisible) {
-            this.mIconController.setIconVisibility(this.mSlotVolume, isSilentEnabled);
-            this.mVolumeVisible = isSilentEnabled;
+        if (z != this.mVolumeVisible) {
+            this.mIconController.setIconVisibility(this.mSlotVolume, z);
+            this.mVolumeVisible = z;
         }
     }
 
@@ -516,7 +523,7 @@ public class PhoneStatusBarPolicy implements BluetoothController.Callback, Comma
     }
 
     public void updateSilentModeIcon() {
-        if (MiuiSettings.SilenceMode.getZenMode(this.mContext) == 1) {
+        if (VolumeUtil.getZenMode(this.mContext) == 1) {
             setQuietMode(true);
             this.mIconController.setIconVisibility(this.mSlotVolume, false);
             this.mVolumeVisible = false;
@@ -612,7 +619,7 @@ public class PhoneStatusBarPolicy implements BluetoothController.Callback, Comma
     /* access modifiers changed from: private */
     public void updateQuietState() {
         this.mManagedProfileInQuietMode = false;
-        for (UserInfo userInfo : this.mUserManager.getEnabledProfiles(ActivityManager.getCurrentUser())) {
+        for (UserInfo userInfo : this.mUserManager.getEnabledProfiles(KeyguardUpdateMonitor.getCurrentUser())) {
             if (userInfo.isManagedProfile() && UserInfoCompat.isQuietModeEnabled(userInfo)) {
                 this.mManagedProfileInQuietMode = true;
                 return;
@@ -632,7 +639,7 @@ public class PhoneStatusBarPolicy implements BluetoothController.Callback, Comma
                 try {
                     final boolean isManagedProfile = UserManagerCompat.isManagedProfile(PhoneStatusBarPolicy.this.mUserManager, ActivityManagerCompat.getLastResumedActivityUserId(PhoneStatusBarPolicy.this.mUserIdLegacy));
                     final boolean z = true;
-                    final boolean z2 = PhoneStatusBarPolicy.this.mCurrentUserId != 0 && PhoneStatusBarPolicy.this.mSecondSpaceStatusIconVisible;
+                    final boolean z2 = (PhoneStatusBarPolicy.this.mCurrentUserId == 0 || PhoneStatusBarPolicy.this.mCurrentUserId == KeyguardUpdateMonitor.getMaintenanceModeId() || !PhoneStatusBarPolicy.this.mSecondSpaceStatusIconVisible) ? false : true;
                     if (PhoneStatusBarPolicy.this.mCurrentUserId != 0 || !XSpaceUserHandle.isXSpaceUserId(PhoneStatusBarPolicy.this.mCurrentProfileId)) {
                         z = false;
                     }

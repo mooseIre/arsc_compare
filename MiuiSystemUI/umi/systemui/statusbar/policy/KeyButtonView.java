@@ -1,6 +1,5 @@
 package com.android.systemui.statusbar.policy;
 
-import android.app.ActivityManager;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
@@ -16,6 +15,7 @@ import android.view.MotionEvent;
 import android.view.ViewConfiguration;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.ImageView;
+import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.systemui.R$styleable;
 import com.android.systemui.plugins.R;
 
@@ -172,7 +172,7 @@ public class KeyButtonView extends ImageView {
     }
 
     public void playSoundEffect(int i) {
-        this.mAudioManager.playSoundEffect(i, ActivityManager.getCurrentUser());
+        this.mAudioManager.playSoundEffect(i, KeyguardUpdateMonitor.getCurrentUser());
     }
 
     public void sendEvent(int i, int i2) {

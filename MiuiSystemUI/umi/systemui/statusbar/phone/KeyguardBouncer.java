@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.database.ContentObserver;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Handler;
@@ -79,11 +80,12 @@ public class KeyguardBouncer {
     public boolean mForceBlack = false;
     private ContentObserver mForceBlackObserver;
     /* access modifiers changed from: private */
+    public Drawable mForegroundDrawable;
+    /* access modifiers changed from: private */
     public final Handler mHandler;
     /* access modifiers changed from: private */
     public boolean mHasUnlockByBle = false;
-    /* access modifiers changed from: private */
-    public boolean mIsLegacyKeyguardWallpaper;
+    private boolean mIsLegacyKeyguardWallpaper;
     protected KeyguardHostView mKeyguardView;
     protected final LockPatternUtils mLockPatternUtils;
     /* access modifiers changed from: private */
@@ -144,18 +146,6 @@ public class KeyguardBouncer {
             }
         }
 
-        public void onKeyguardOccludedChanged(boolean z) {
-            if (!KeyguardBouncer.this.mIsLegacyKeyguardWallpaper && KeyguardBouncer.this.mBgImageView != null) {
-                if (z) {
-                    KeyguardBouncer.this.mBgImageView.setVisibility(0);
-                    KeyguardBouncer.this.mBgImageView.setImageDrawable((Drawable) null);
-                    KeyguardBouncer.this.mBgImageView.setBackgroundColor(KeyguardBouncer.this.mContext.getResources().getColor(R.color.blur_background_mask));
-                    return;
-                }
-                KeyguardBouncer.this.mBgImageView.setVisibility(8);
-            }
-        }
-
         public void onStartedWakingUp() {
             KeyguardHostView keyguardHostView = KeyguardBouncer.this.mKeyguardView;
             if (keyguardHostView != null && keyguardHostView.getAlpha() != 1.0f) {
@@ -193,6 +183,7 @@ public class KeyguardBouncer {
         this.mFalsingManager = FalsingManager.getInstance(this.mContext);
         this.mDismissCallbackRegistry = dismissCallbackRegistry;
         this.mHandler = new Handler();
+        this.mForegroundDrawable = new ColorDrawable(this.mContext.getResources().getColor(R.color.blur_background_mask));
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("miui_keyguard_ble_unlock_succeed");
         this.mContext.registerReceiverAsUser(this.mBroadcastReceiver, UserHandle.CURRENT, intentFilter, (String) null, (Handler) null);
@@ -268,7 +259,10 @@ public class KeyguardBouncer {
 
     /* access modifiers changed from: private */
     public void updateWallpaper() {
-        if (this.mBgImageView != null && this.mIsLegacyKeyguardWallpaper) {
+        if (this.mBgImageView == null) {
+            return;
+        }
+        if (this.mIsLegacyKeyguardWallpaper || !KeyguardWallpaperUtils.isWallpaperShouldBlur(this.mContext)) {
             new AsyncTask<Void, Void, Drawable>() {
                 /* access modifiers changed from: protected */
                 public Drawable doInBackground(Void... voidArr) {
@@ -280,32 +274,39 @@ public class KeyguardBouncer {
                     Bitmap bitmap;
                     int i;
                     int i2;
-                    if (KeyguardBouncer.this.mBgImageView != null) {
-                        if (drawable == null) {
-                            bitmap = null;
-                        } else {
-                            bitmap = ((BitmapDrawable) drawable).getBitmap();
-                        }
-                        if (bitmap == null) {
-                            i = 0;
-                        } else {
-                            i = (int) (((float) bitmap.getWidth()) * 0.33333334f);
-                        }
-                        if (bitmap == null) {
-                            i2 = 0;
-                        } else {
-                            i2 = (int) (((float) bitmap.getHeight()) * 0.33333334f);
-                        }
-                        if (i <= 0 || i2 <= 0) {
-                            KeyguardBouncer.this.mBgImageView.setImageDrawable((Drawable) null);
-                            KeyguardBouncer.this.mBgImageView.setBackgroundColor(KeyguardBouncer.this.mContext.getResources().getColor(R.color.blur_background_mask));
-                            return;
-                        }
-                        Bitmap createScaledBitmap = Bitmap.createScaledBitmap(bitmap, i, i2, true);
-                        KeyguardBouncer.this.mBgImageView.setBackgroundColor(0);
-                        KeyguardBouncer.this.mBgImageView.setImageDrawable(new BitmapDrawable(KeyguardBouncer.this.mContext.getResources(), ScreenshotUtils.getBlurBackground(createScaledBitmap, (Bitmap) null)));
-                        createScaledBitmap.recycle();
+                    if (KeyguardBouncer.this.mBgImageView == null) {
+                        return;
                     }
+                    if (!KeyguardWallpaperUtils.isWallpaperShouldBlur(KeyguardBouncer.this.mContext)) {
+                        KeyguardBouncer.this.mBgImageView.setForeground(KeyguardBouncer.this.mForegroundDrawable);
+                        KeyguardBouncer.this.mBgImageView.setImageDrawable(drawable);
+                        return;
+                    }
+                    KeyguardBouncer.this.mBgImageView.setForeground((Drawable) null);
+                    if (drawable == null) {
+                        bitmap = null;
+                    } else {
+                        bitmap = ((BitmapDrawable) drawable).getBitmap();
+                    }
+                    if (bitmap == null) {
+                        i = 0;
+                    } else {
+                        i = (int) (((float) bitmap.getWidth()) * 0.33333334f);
+                    }
+                    if (bitmap == null) {
+                        i2 = 0;
+                    } else {
+                        i2 = (int) (((float) bitmap.getHeight()) * 0.33333334f);
+                    }
+                    if (i <= 0 || i2 <= 0) {
+                        KeyguardBouncer.this.mBgImageView.setImageDrawable((Drawable) null);
+                        KeyguardBouncer.this.mBgImageView.setBackgroundColor(KeyguardBouncer.this.mContext.getResources().getColor(R.color.blur_background_mask));
+                        return;
+                    }
+                    Bitmap createScaledBitmap = Bitmap.createScaledBitmap(bitmap, i, i2, true);
+                    KeyguardBouncer.this.mBgImageView.setBackgroundColor(0);
+                    KeyguardBouncer.this.mBgImageView.setImageDrawable(new BitmapDrawable(KeyguardBouncer.this.mContext.getResources(), ScreenshotUtils.getBlurBackground(createScaledBitmap, (Bitmap) null)));
+                    createScaledBitmap.recycle();
                 }
             }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new Void[0]);
         }
@@ -487,7 +488,7 @@ public class KeyguardBouncer {
         boolean isLegacyKeyguardWallpaper = ((MiuiKeyguardWallpaperController) Dependency.get(MiuiKeyguardWallpaperController.class)).isLegacyKeyguardWallpaper();
         this.mIsLegacyKeyguardWallpaper = isLegacyKeyguardWallpaper;
         ImageView imageView = this.mBgImageView;
-        if (isLegacyKeyguardWallpaper) {
+        if (isLegacyKeyguardWallpaper || !KeyguardWallpaperUtils.isWallpaperShouldBlur(this.mContext)) {
             i = 0;
         }
         imageView.setVisibility(i);

@@ -20,7 +20,6 @@ import com.android.systemui.Dependency;
 import miui.os.Build;
 import miui.securityspace.XSpaceUserHandle;
 import miui.util.NotificationFilterHelper;
-import miui.view.MiuiHapticFeedbackConstants;
 
 public class NotificationSettingsHelper {
     private static final boolean DEBUG = Constants.DEBUG;
@@ -76,7 +75,7 @@ public class NotificationSettingsHelper {
     }
 
     public static boolean isFoldable(Context context, String str) {
-        String[] stringArray = context.getResources().getStringArray(17236055);
+        String[] stringArray = context.getResources().getStringArray(17236056);
         if (stringArray == null || stringArray.length <= 0) {
             return true;
         }
@@ -89,7 +88,7 @@ public class NotificationSettingsHelper {
     }
 
     public static boolean isNonBlockable(Context context, String str, String str2) {
-        String[] stringArray = context.getResources().getStringArray(17236055);
+        String[] stringArray = context.getResources().getStringArray(17236056);
         if (stringArray != null) {
             int length = stringArray.length;
             for (int i = 0; i < length; i++) {
@@ -125,13 +124,13 @@ public class NotificationSettingsHelper {
         }
     }
 
-    public static boolean checkFloat(Context context, String str) {
+    public static boolean checkFloat(Context context, String str, String str2) {
         if (isUserOwner(context)) {
-            return ((NotificationSettingsManager) Dependency.get(NotificationSettingsManager.class)).canFloat(context, str, (String) null);
+            return ((NotificationSettingsManager) Dependency.get(NotificationSettingsManager.class)).canFloat(context, str, str2);
         }
         Bundle bundle = new Bundle();
         bundle.putString("package", str);
-        bundle.putString("channel_id", (String) null);
+        bundle.putString("channel_id", str2);
         try {
             Bundle call = context.getContentResolver().call(Uri.parse("content://statusbar.notification"), "canFloat", (String) null, bundle);
             if (call != null) {
@@ -144,15 +143,15 @@ public class NotificationSettingsHelper {
         }
     }
 
-    public static boolean checkKeyguard(Context context, String str) {
+    public static boolean checkKeyguard(Context context, String str, String str2) {
         if (isUserOwner(context)) {
-            return ((NotificationSettingsManager) Dependency.get(NotificationSettingsManager.class)).canShowOnKeyguard(context, str, (String) null);
+            return ((NotificationSettingsManager) Dependency.get(NotificationSettingsManager.class)).canShowOnKeyguard(context, str, str2);
         }
         Bundle bundle = new Bundle();
         bundle.putString("package", str);
         bundle.putString("channel_id", (String) null);
         try {
-            Bundle call = context.getContentResolver().call(Uri.parse("content://statusbar.notification"), "canShowOnKeyguard", (String) null, bundle);
+            Bundle call = context.getContentResolver().call(Uri.parse("content://statusbar.notification"), "canShowOnKeyguard", str2, bundle);
             if (call != null) {
                 return call.getBoolean("canShowOnKeyguard");
             }
@@ -217,7 +216,7 @@ public class NotificationSettingsHelper {
         }
         Intent intent = new Intent("android.intent.action.MAIN");
         intent.addFlags(32768);
-        intent.addFlags(MiuiHapticFeedbackConstants.FLAG_MIUI_HAPTIC_TAP_NORMAL);
+        intent.addFlags(268435456);
         intent.setClassName("com.android.settings", "com.android.settings.Settings$AppNotificationSettingsActivity");
         intent.putExtra("package", str);
         intent.putExtra("uid", i);

@@ -174,16 +174,16 @@ public final class KeyboardShortcuts {
         this.mSpecialCharacterNames.put(98, context2.getString(R.string.keyboard_key_button_template, new Object[]{"C"}));
         this.mSpecialCharacterNames.put(99, context2.getString(R.string.keyboard_key_button_template, new Object[]{"X"}));
         this.mSpecialCharacterNames.put(100, context2.getString(R.string.keyboard_key_button_template, new Object[]{"Y"}));
-        this.mSpecialCharacterNames.put(R.styleable.AppCompatTheme_textAppearanceListItem, context2.getString(R.string.keyboard_key_button_template, new Object[]{"Z"}));
-        this.mSpecialCharacterNames.put(R.styleable.AppCompatTheme_textAppearanceListItemSecondary, context2.getString(R.string.keyboard_key_button_template, new Object[]{"L1"}));
-        this.mSpecialCharacterNames.put(R.styleable.AppCompatTheme_textAppearanceListItemSmall, context2.getString(R.string.keyboard_key_button_template, new Object[]{"R1"}));
-        this.mSpecialCharacterNames.put(R.styleable.AppCompatTheme_textAppearancePopupMenuHeader, context2.getString(R.string.keyboard_key_button_template, new Object[]{"L2"}));
-        this.mSpecialCharacterNames.put(R.styleable.AppCompatTheme_textAppearanceSearchResultSubtitle, context2.getString(R.string.keyboard_key_button_template, new Object[]{"R2"}));
-        this.mSpecialCharacterNames.put(R.styleable.AppCompatTheme_textColorAlertDialogListItem, context2.getString(R.string.keyboard_key_button_template, new Object[]{"Start"}));
-        this.mSpecialCharacterNames.put(R.styleable.AppCompatTheme_textColorSearchUrl, context2.getString(R.string.keyboard_key_button_template, new Object[]{"Select"}));
-        this.mSpecialCharacterNames.put(R.styleable.AppCompatTheme_toolbarNavigationButtonStyle, context2.getString(R.string.keyboard_key_button_template, new Object[]{"Mode"}));
-        this.mSpecialCharacterNames.put(R.styleable.AppCompatTheme_tooltipForegroundColor, context2.getString(R.string.keyboard_key_forward_del));
-        this.mSpecialCharacterNames.put(R.styleable.AppCompatTheme_toolbarStyle, "Esc");
+        this.mSpecialCharacterNames.put(R.styleable.AppCompatTheme_switchStyle, context2.getString(R.string.keyboard_key_button_template, new Object[]{"Z"}));
+        this.mSpecialCharacterNames.put(R.styleable.AppCompatTheme_textAppearanceLargePopupMenu, context2.getString(R.string.keyboard_key_button_template, new Object[]{"L1"}));
+        this.mSpecialCharacterNames.put(R.styleable.AppCompatTheme_textAppearanceListItem, context2.getString(R.string.keyboard_key_button_template, new Object[]{"R1"}));
+        this.mSpecialCharacterNames.put(R.styleable.AppCompatTheme_textAppearanceListItemSecondary, context2.getString(R.string.keyboard_key_button_template, new Object[]{"L2"}));
+        this.mSpecialCharacterNames.put(R.styleable.AppCompatTheme_textAppearanceListItemSmall, context2.getString(R.string.keyboard_key_button_template, new Object[]{"R2"}));
+        this.mSpecialCharacterNames.put(R.styleable.AppCompatTheme_textAppearanceSearchResultTitle, context2.getString(R.string.keyboard_key_button_template, new Object[]{"Start"}));
+        this.mSpecialCharacterNames.put(R.styleable.AppCompatTheme_textAppearanceSmallPopupMenu, context2.getString(R.string.keyboard_key_button_template, new Object[]{"Select"}));
+        this.mSpecialCharacterNames.put(R.styleable.AppCompatTheme_textColorAlertDialogListItem, context2.getString(R.string.keyboard_key_button_template, new Object[]{"Mode"}));
+        this.mSpecialCharacterNames.put(R.styleable.AppCompatTheme_toolbarNavigationButtonStyle, context2.getString(R.string.keyboard_key_forward_del));
+        this.mSpecialCharacterNames.put(R.styleable.AppCompatTheme_textColorSearchUrl, "Esc");
         this.mSpecialCharacterNames.put(120, "SysRq");
         this.mSpecialCharacterNames.put(121, "Break");
         this.mSpecialCharacterNames.put(116, "Scroll Lock");
@@ -434,7 +434,7 @@ public final class KeyboardShortcuts {
         LinearLayout linearLayout2 = linearLayout;
         LayoutInflater from = LayoutInflater.from(this.mContext);
         int size = list.size();
-        char c2 = 'x';
+        char c2 = 127;
         boolean z2 = false;
         TextView textView = (TextView) from.inflate(R.layout.keyboard_shortcuts_key_view, (ViewGroup) null, false);
         textView.measure(0, 0);
@@ -540,7 +540,7 @@ public final class KeyboardShortcuts {
                     i4 = measuredHeight2;
                     keyboardShortcutGroup = keyboardShortcutGroup2;
                     i5 = size2;
-                    c = 'x';
+                    c = 127;
                     linearLayout3.addView(inflate);
                 }
                 i11++;

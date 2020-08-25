@@ -18,6 +18,7 @@ import android.service.vr.IVrManager;
 import android.service.vr.IVrStateCallbacks;
 import android.util.Log;
 import com.android.internal.logging.MetricsLogger;
+import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.settingslib.display.BrightnessUtils;
 import com.android.systemui.Dependency;
 import com.android.systemui.Dumpable;
@@ -131,12 +132,11 @@ public class BrightnessController implements ToggleSlider.Listener, Dumpable {
             int i;
             boolean access$1000 = BrightnessController.this.mIsVrModeEnabled;
             if (access$1000) {
-                i = Settings.System.getIntForUser(BrightnessController.this.mContext.getContentResolver(), "screen_brightness_for_vr", BrightnessController.this.mDefaultBacklightForVr, -2);
+                i = Settings.System.getIntForUser(BrightnessController.this.mContext.getContentResolver(), "screen_brightness_for_vr", BrightnessController.this.mDefaultBacklightForVr, KeyguardUpdateMonitor.getCurrentUser());
             } else {
-                int intForUser = Settings.System.getIntForUser(BrightnessController.this.mContext.getContentResolver(), "screen_brightness", BrightnessController.this.mDefaultBacklight, -2);
+                i = Settings.System.getIntForUser(BrightnessController.this.mContext.getContentResolver(), "screen_brightness", BrightnessController.this.mDefaultBacklight, KeyguardUpdateMonitor.getCurrentUser());
                 BrightnessController brightnessController = BrightnessController.this;
-                int unused = brightnessController.mSliderAnimationDuration = Settings.System.getIntForUser(brightnessController.mContext.getContentResolver(), "slider_animation_duration", 3000, -2);
-                i = intForUser;
+                int unused = brightnessController.mSliderAnimationDuration = Settings.System.getIntForUser(brightnessController.mContext.getContentResolver(), "slider_animation_duration", 3000, KeyguardUpdateMonitor.getCurrentUser());
             }
             Log.d("BrightnessController", "UpdateSliderRunnable: value: " + i);
             BrightnessController.this.mHandler.obtainMessage(0, i, access$1000 ? 1 : 0).sendToTarget();

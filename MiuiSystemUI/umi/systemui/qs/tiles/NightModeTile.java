@@ -1,6 +1,5 @@
 package com.android.systemui.qs.tiles;
 
-import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.app.UiModeManager;
 import android.content.ContentResolver;
@@ -10,6 +9,7 @@ import android.database.ContentObserver;
 import android.provider.Settings;
 import android.util.Log;
 import android.widget.Switch;
+import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.systemui.Constants;
 import com.android.systemui.Prefs;
 import com.android.systemui.plugins.R;
@@ -109,7 +109,7 @@ public class NightModeTile extends QSTileImpl<QSTile.BooleanState> {
     }
 
     public boolean isAvailable() {
-        return ActivityManager.getCurrentUser() == 0 && this.mContext.getResources().getBoolean(R.bool.config_support_night_mode);
+        return KeyguardUpdateMonitor.getCurrentUser() == 0 && this.mContext.getResources().getBoolean(R.bool.config_support_night_mode);
     }
 
     public QSTile.BooleanState newTileState() {

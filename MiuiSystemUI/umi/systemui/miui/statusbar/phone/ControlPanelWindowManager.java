@@ -5,6 +5,7 @@ import android.os.Build;
 import android.util.Log;
 import android.view.SurfaceControlCompat;
 import android.view.WindowManager;
+import android.view.WindowManagerCompat;
 import com.android.systemui.Application;
 import com.android.systemui.statusbar.phone.StatusBar;
 import com.android.systemui.util.Utils;
@@ -31,16 +32,21 @@ public class ControlPanelWindowManager {
     }
 
     public void addControlPanel(ControlPanelWindowView controlPanelWindowView) {
+        int i = Build.VERSION.SDK_INT;
         if (!hasAdded()) {
-            WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(-1, 0, 0, 0, Build.VERSION.SDK_INT > 29 ? 2017 : 2014, -2121989848, -3);
+            WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(-1, 0, 0, 0, i > 29 ? 2017 : 2014, -2121989848, -3);
             this.mLp = layoutParams;
             layoutParams.privateFlags |= 64;
             layoutParams.setTitle("control_center");
             WindowManager.LayoutParams layoutParams2 = this.mLp;
             layoutParams2.systemUiVisibility = 1792;
             layoutParams2.extraFlags |= 32768;
+            if (i > 29) {
+                WindowManagerCompat.setFitInsetsTypes(layoutParams2);
+                WindowManagerCompat.setAlwaysLayoutInDisplayCutoutMode(this.mLp);
+            }
             try {
-                this.mWindowManager.addView(controlPanelWindowView, layoutParams2);
+                this.mWindowManager.addView(controlPanelWindowView, this.mLp);
             } catch (Exception unused) {
             }
             WindowManager.LayoutParams layoutParams3 = new WindowManager.LayoutParams();
@@ -92,7 +98,10 @@ public class ControlPanelWindowManager {
             int i2 = 8 | layoutParams2.flags;
             layoutParams2.flags = i2;
             layoutParams2.flags = i2 & -131073;
-            Utils.updateFsgState(this.mContext, "typefrom_status_bar_expansion", false);
+            StatusBar statusBar = (StatusBar) ((Application) this.mContext.getApplicationContext()).getSystemUIApplication().getComponent(StatusBar.class);
+            if (statusBar == null || statusBar.isQSFullyCollapsed()) {
+                Utils.updateFsgState(this.mContext, "typefrom_status_bar_expansion", false);
+            }
             setEnableForceLightNavigationHandle(false);
         }
         apply();

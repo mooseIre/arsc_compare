@@ -17,12 +17,6 @@ public class PipMenuActivity extends Activity implements PipManager.Listener {
     private final PipManager mPipManager = PipManager.getInstance();
     private boolean mRestorePipSizeWhenClose;
 
-    public void onPipEntered() {
-    }
-
-    public void onShowPipMenu() {
-    }
-
     /* access modifiers changed from: protected */
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);

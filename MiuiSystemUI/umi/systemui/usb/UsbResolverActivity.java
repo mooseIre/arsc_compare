@@ -92,8 +92,8 @@ public class UsbResolverActivity extends ResolverActivity {
                 }
             }
         }
-        UsbResolverActivity.super.onCreate(bundle, intent2, getResources().getText(17039811), (Intent[]) null, arrayList2, true);
-        CheckBox checkBox = (CheckBox) findViewById(16908752);
+        UsbResolverActivity.super.onCreate(bundle, intent2, getResources().getText(17039828), (Intent[]) null, arrayList2, true);
+        CheckBox checkBox = (CheckBox) findViewById(16908753);
         if (checkBox == null) {
             return;
         }

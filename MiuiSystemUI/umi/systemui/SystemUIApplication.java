@@ -16,8 +16,8 @@ import android.util.Log;
 import com.android.systemui.miui.Dependencies;
 import com.android.systemui.miui.PackageEventController;
 import com.android.systemui.miui.PackageEventReceiver;
-import com.android.systemui.miui.analytics.AnalyticsWrapper;
 import com.android.systemui.miui.statusbar.DependenciesSetup;
+import com.android.systemui.miui.statusbar.analytics.StatManager;
 import com.android.systemui.plugins.OverlayPlugin;
 import com.android.systemui.plugins.PluginListener;
 import com.android.systemui.plugins.PluginManager;
@@ -137,7 +137,7 @@ public class SystemUIApplication extends ApplicationDelegate implements SysUiSer
         setTheme(R.style.Theme);
         ((DependenciesSetup) Dependencies.getInstance().get(DependenciesSetup.class, "")).setContext(this);
         SystemUIFactory.createFromConfig(this);
-        AnalyticsWrapper.init(this);
+        StatManager.init(this);
         if (Process.myUserHandle().equals(UserHandleCompat.SYSTEM)) {
             IntentFilter intentFilter = new IntentFilter("android.intent.action.BOOT_COMPLETED");
             intentFilter.setPriority(1000);
@@ -257,6 +257,7 @@ public class SystemUIApplication extends ApplicationDelegate implements SysUiSer
     }
 
     public void onConfigurationChanged(Configuration configuration) {
+        Log.v("SystemUIService", "onConfigurationChanged: " + configuration);
         if (this.mServicesStarted) {
             int length = this.mServices.length;
             for (int i = 0; i < length; i++) {

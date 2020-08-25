@@ -448,7 +448,7 @@ public class CollapsedStatusBarFragment extends Fragment implements LocationCont
         refreshClockVisibility(z, isStateNormal, z2, false);
         FrameLayout frameLayout = this.mMiuiStatusBarPromptLayout;
         if (this.mKeyguardMonitor.isShowing()) {
-            i4 = 4;
+            i4 = 8;
         }
         frameLayout.setVisibility(i4);
     }
@@ -766,11 +766,11 @@ public class CollapsedStatusBarFragment extends Fragment implements LocationCont
                 com.android.systemui.statusbar.phone.CollapsedStatusBarFragmentController r7 = r7.mController
                 boolean r7 = r7.isNarrowNotch()
                 if (r7 != 0) goto L_0x005f
-                r7 = 2131233324(0x7f080a2c, float:1.8082782E38)
+                r7 = 2131233568(0x7f080b20, float:1.8083277E38)
                 if (r1 == r7) goto L_0x0050
-                r7 = 2131233328(0x7f080a30, float:1.808279E38)
+                r7 = 2131233572(0x7f080b24, float:1.8083285E38)
                 if (r1 == r7) goto L_0x0050
-                r7 = 2131233326(0x7f080a2e, float:1.8082786E38)
+                r7 = 2131233570(0x7f080b22, float:1.8083281E38)
                 if (r1 != r7) goto L_0x004e
                 goto L_0x0050
             L_0x004e:

@@ -323,6 +323,10 @@ public class HeadsUpManager implements ViewTreeObserver.OnComputeInternalInsetsL
         return this.mHeadsUpEntries.containsKey(str);
     }
 
+    public boolean isHeadsUp() {
+        return this.mHeadsUpEntries.size() > 0;
+    }
+
     public void releaseAllImmediately() {
         if (DEBUG) {
             Log.v("HeadsUpManager", "releaseAllImmediately");
@@ -395,7 +399,7 @@ public class HeadsUpManager implements ViewTreeObserver.OnComputeInternalInsetsL
 
     private void initResources() {
         Resources resources = this.mContext.getResources();
-        this.mStatusBarHeight = resources.getDimensionPixelSize(17105519);
+        this.mStatusBarHeight = resources.getDimensionPixelSize(17105496);
         this.mDisplayCutoutTouchableRegionSize = resources.getDimensionPixelSize(R.dimen.display_cutout_touchable_region_size);
     }
 

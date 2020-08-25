@@ -12,6 +12,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowInsets;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import com.android.systemui.Dependency;
+import com.android.systemui.DynamicStatusController;
 import com.android.systemui.miui.controlcenter.QSControlCenterPanel;
 import com.android.systemui.miui.controlcenter.QSControlCenterTileLayout;
 import com.android.systemui.miui.controlcenter.QSControlScrollView;
@@ -40,6 +43,7 @@ public class ControlPanelWindowView extends FrameLayout {
     /* access modifiers changed from: private */
     public ControlPanelWindowManager mControlPanelWindowManager;
     private float mDownExpandHeight;
+    private float mDownX;
     private float mDownY;
     private float mExpandHeight;
     private AnimatorListenerAdapter mExpandListener;
@@ -48,6 +52,7 @@ public class ControlPanelWindowView extends FrameLayout {
     private boolean mInterceptTouchEvent;
     private int mOrientation;
     private QSControlScrollView mQSControlScrollView;
+    private LinearLayout mSmartControlsView;
 
     public ControlPanelWindowView(Context context) {
         this(context, (AttributeSet) null);
@@ -61,6 +66,7 @@ public class ControlPanelWindowView extends FrameLayout {
         super(context, attributeSet, i);
         this.mExpandState = 0;
         this.mDownY = 0.0f;
+        this.mDownX = 0.0f;
         this.mDownExpandHeight = 0.0f;
         this.mBlurRatioListener = new TransitionListener() {
             public void onUpdate(Object obj, FloatProperty floatProperty, float f, float f2, boolean z) {
@@ -97,6 +103,7 @@ public class ControlPanelWindowView extends FrameLayout {
         qSControlCenterPanel.setControlPanelWindowView(this);
         this.mQSControlScrollView = (QSControlScrollView) findViewById(R.id.scroll_container);
         this.mControlCenterTileLayout = (QSControlCenterTileLayout) findViewById(R.id.quick_tile_layout);
+        this.mSmartControlsView = (LinearLayout) findViewById(R.id.ll_smart_controls);
         this.mBottomArea = findViewById(R.id.control_center_bottom_area);
         Folme.getValueTarget("ControlPanelViewBlur").setMinVisibleChange(0.01f, "blurRatio");
         this.mBlurAmin = Folme.useValue("ControlPanelViewBlur").addListener(this.mBlurRatioListener);
@@ -153,33 +160,35 @@ public class ControlPanelWindowView extends FrameLayout {
     }
 
     public boolean onInterceptTouchEvent(MotionEvent motionEvent) {
-        boolean z = false;
-        boolean z2 = this.mInterceptTouchEvent || isCollapsed() || super.onInterceptTouchEvent(motionEvent);
-        boolean z3 = motionEvent.getAction() == 0;
-        if (motionEvent.getAction() == 2) {
-            z = true;
-        }
+        boolean z = this.mInterceptTouchEvent || isCollapsed() || super.onInterceptTouchEvent(motionEvent);
+        boolean z2 = motionEvent.getAction() == 0;
+        boolean z3 = motionEvent.getAction() == 2;
         int action = motionEvent.getAction();
         int action2 = motionEvent.getAction();
-        if (z3) {
+        boolean z4 = Math.abs(motionEvent.getRawY() - this.mDownY) > Math.abs(motionEvent.getRawX() - this.mDownX);
+        if (z2) {
             if (isCollapsed()) {
                 showControlCenterWindow();
             }
             this.mDownY = motionEvent.getRawY();
+            this.mDownX = motionEvent.getRawX();
             this.mDownExpandHeight = this.mExpandHeight;
         } else {
             if (!this.mContent.isDetailShowing() && !this.mContent.isEditShowing()) {
-                if (z && motionEvent.getRawY() > this.mDownY && this.mControlCenterTileLayout.isExpanded() && this.mOrientation == 1 && this.mQSControlScrollView.isScrolledToTop()) {
+                if (z3 && motionEvent.getRawY() > this.mDownY && z4 && this.mControlCenterTileLayout.isExpanded() && this.mOrientation == 1 && this.mQSControlScrollView.isScrolledToTop()) {
                     return true;
                 }
-                if (z && isBottomAreaTouchDown(this.mDownY) && motionEvent.getRawY() < this.mDownY) {
+                if (z3 && isBottomAreaTouchDown(this.mDownY) && motionEvent.getRawY() < this.mDownY && z4) {
                     return true;
+                }
+                if (z3 && motionEvent.getRawY() < this.mDownY && this.mSmartControlsView.getChildCount() > 0 && !this.mQSControlScrollView.isScrolledToBottom() && this.mControlCenterTileLayout.isCollapsed()) {
+                    return false;
                 }
             }
-            return z2;
+            return z;
         }
-        Log.d("ControllerPanelWindowView", "onInterceptTouchEvent :" + z2);
-        return z2;
+        Log.d("ControllerPanelWindowView", "onInterceptTouchEvent :" + z);
+        return z;
     }
 
     public boolean onTouchEvent(MotionEvent motionEvent) {
@@ -243,7 +252,7 @@ public class ControlPanelWindowView extends FrameLayout {
 
     /* access modifiers changed from: private */
     public void updateExpandHeight(float f) {
-        if (this.mExpandHeight != f) {
+        if ((this.mControlCenter.isExpandable() || f == 0.0f) && this.mExpandHeight != f) {
             float max = Math.max(Math.min(1.0f, f / 80.0f), 0.0f);
             float f2 = this.mBlurRatio;
             if (f2 != max) {
@@ -368,6 +377,13 @@ public class ControlPanelWindowView extends FrameLayout {
         windowInsets.consumeDisplayCutout();
         Log.d("ControllerPanelWindowView", "onApplyWindowInsets: ");
         return windowInsets.consumeDisplayCutout();
+    }
+
+    public void onDescendantInvalidated(View view, View view2) {
+        super.onDescendantInvalidated(view, view2);
+        if (((DynamicStatusController) Dependency.get(DynamicStatusController.class)).isDebug()) {
+            Log.d("ControllerPanelWindowView", "onDescendantInvalidated  child=" + view + ";target=" + view2);
+        }
     }
 
     private boolean isBottomAreaTouchDown(float f) {

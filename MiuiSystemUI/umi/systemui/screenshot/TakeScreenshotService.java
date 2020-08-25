@@ -5,6 +5,7 @@ import android.app.NotificationCompat;
 import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
@@ -23,6 +24,7 @@ public class TakeScreenshotService extends Service {
     public Handler mGalleryHandler;
     private Handler mHandler = new Handler() {
         public void handleMessage(Message message) {
+            PartialScreenshot partialScreenshot;
             int i = message.what;
             boolean z = true;
             if (i == 1) {
@@ -59,19 +61,32 @@ public class TakeScreenshotService extends Service {
                 globalScreenshot.takeScreenshot(r3, r1, z2, z);
             } else if (i == 3) {
                 final Messenger messenger2 = message.replyTo;
-                PartialScreenshot partialScreenshot = new PartialScreenshot(TakeScreenshotService.this);
-                AnonymousClass3 r12 = new Runnable() {
+                AnonymousClass3 r12 = new Runnable(this) {
                     public void run() {
                         try {
                             messenger2.send(Message.obtain((Handler) null, 1));
-                            TakeScreenshotService.this.stopSelf();
                         } catch (RemoteException e) {
                             Log.d("TakeScreenshotService", e.getMessage());
                         }
                     }
                 };
-                partialScreenshot.takePartialScreenshot();
+                TakeScreenshotService.access$008();
+                AnonymousClass4 r0 = new Runnable() {
+                    public void run() {
+                        TakeScreenshotService.access$010();
+                        if (TakeScreenshotService.sRunningCount <= 0) {
+                            TakeScreenshotService.this.stopSelf();
+                        }
+                    }
+                };
+                Bundle data = message.getData();
+                if (data == null || data.getFloatArray("partial.screenshot.points") == null) {
+                    partialScreenshot = new PartialScreenshot(TakeScreenshotService.this);
+                } else {
+                    partialScreenshot = new PartialScreenshot(TakeScreenshotService.this, data.getFloatArray("partial.screenshot.points"));
+                }
                 r12.run();
+                partialScreenshot.takePartialScreenshot(r0);
             }
         }
     };
@@ -107,5 +122,6 @@ public class TakeScreenshotService extends Service {
     public void onDestroy() {
         super.onDestroy();
         this.mHandlerThread.quitSafely();
+        Log.d("TakeScreenshotService", "Screenshot Service onDestroy");
     }
 }

@@ -8,16 +8,21 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.Icon;
 import android.media.session.MediaController;
 import android.media.session.MediaSession;
 import android.media.session.MediaSessionManager;
 import android.media.session.PlaybackState;
+import android.os.Handler;
+import com.android.systemui.Dependency;
+import com.android.systemui.pip.phone.PipMediaController;
 import com.android.systemui.plugins.R;
+import com.android.systemui.statusbar.policy.UserInfoController;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class PipMediaController {
     private final IActivityManager mActivityManager;
@@ -43,12 +48,17 @@ public class PipMediaController {
             }
         }
     };
-    private MediaController.Callback mPlaybackChangedListener = new MediaController.Callback() {
+    private final MediaController.Callback mPlaybackChangedListener = new MediaController.Callback() {
         public void onPlaybackStateChanged(PlaybackState playbackState) {
             PipMediaController.this.notifyActionsChanged();
         }
     };
     private RemoteAction mPrevAction;
+    private final MediaSessionManager.OnActiveSessionsChangedListener mSessionsChangedListener = new MediaSessionManager.OnActiveSessionsChangedListener() {
+        public void onActiveSessionsChanged(List<MediaController> list) {
+            PipMediaController.this.resolveActiveMediaController(list);
+        }
+    };
 
     public interface ActionListener {
         void onMediaActionsChanged(List<RemoteAction> list);
@@ -64,17 +74,22 @@ public class PipMediaController {
         intentFilter.addAction("com.android.systemui.pip.phone.PREV");
         this.mContext.registerReceiver(this.mPlayPauseActionReceiver, intentFilter);
         createMediaActions();
-        MediaSessionManager mediaSessionManager = (MediaSessionManager) context.getSystemService("media_session");
-        this.mMediaSessionManager = mediaSessionManager;
-        mediaSessionManager.addOnActiveSessionsChangedListener(new MediaSessionManager.OnActiveSessionsChangedListener() {
-            public final void onActiveSessionsChanged(List list) {
-                PipMediaController.this.lambda$new$0$PipMediaController(list);
+        this.mMediaSessionManager = (MediaSessionManager) context.getSystemService("media_session");
+        ((UserInfoController) Dependency.get(UserInfoController.class)).addCallback(new UserInfoController.OnUserInfoChangedListener() {
+            public final void onUserInfoChanged(String str, Drawable drawable, String str2) {
+                PipMediaController.this.lambda$new$0$PipMediaController(str, drawable, str2);
             }
-        }, (ComponentName) null);
+        });
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$new$0 */
+    public /* synthetic */ void lambda$new$0$PipMediaController(String str, Drawable drawable, String str2) {
+        registerSessionListenerForCurrentUser();
     }
 
     public void onActivityPinned() {
-        lambda$new$0(this.mMediaSessionManager.getActiveSessions((ComponentName) null));
+        resolveActiveMediaController(this.mMediaSessionManager.getActiveSessionsForUser((ComponentName) null, -2));
     }
 
     public void addListener(ActionListener actionListener) {
@@ -125,14 +140,18 @@ public class PipMediaController {
         this.mPrevAction = new RemoteAction(Icon.createWithResource(this.mContext, R.drawable.ic_skip_previous_white), string4, string4, PendingIntent.getBroadcast(this.mContext, 0, new Intent("com.android.systemui.pip.phone.PREV"), 134217728));
     }
 
+    private void registerSessionListenerForCurrentUser() {
+        this.mMediaSessionManager.removeOnActiveSessionsChangedListener(this.mSessionsChangedListener);
+        this.mMediaSessionManager.addOnActiveSessionsChangedListener(this.mSessionsChangedListener, (ComponentName) null, -2, (Handler) null);
+    }
+
     /* access modifiers changed from: private */
-    /* renamed from: resolveActiveMediaController */
-    public void lambda$new$0(List<MediaController> list) {
-        ComponentName topPinnedActivity;
-        if (!(list == null || (topPinnedActivity = PipUtils.getTopPinnedActivity(this.mContext, this.mActivityManager)) == null)) {
+    public void resolveActiveMediaController(List<MediaController> list) {
+        ComponentName componentName;
+        if (!(list == null || (componentName = (ComponentName) PipUtils.getTopPipActivity(this.mContext, this.mActivityManager).first) == null)) {
             for (int i = 0; i < list.size(); i++) {
                 MediaController mediaController = list.get(i);
-                if (mediaController.getPackageName().equals(topPinnedActivity.getPackageName())) {
+                if (mediaController.getPackageName().equals(componentName.getPackageName())) {
                     setActiveMediaController(mediaController);
                     return;
                 }
@@ -158,11 +177,17 @@ public class PipMediaController {
     /* access modifiers changed from: private */
     public void notifyActionsChanged() {
         if (!this.mListeners.isEmpty()) {
-            List<RemoteAction> mediaActions = getMediaActions();
-            Iterator<ActionListener> it = this.mListeners.iterator();
-            while (it.hasNext()) {
-                it.next().onMediaActionsChanged(mediaActions);
-            }
+            this.mListeners.forEach(new Consumer(getMediaActions()) {
+                public final /* synthetic */ List f$0;
+
+                {
+                    this.f$0 = r1;
+                }
+
+                public final void accept(Object obj) {
+                    ((PipMediaController.ActionListener) obj).onMediaActionsChanged(this.f$0);
+                }
+            });
         }
     }
 }

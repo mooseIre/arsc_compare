@@ -68,7 +68,7 @@ public class UsbPermissionActivity extends AlertActivity implements DialogInterf
             if (i < 29 || (booleanExtra && !(this.mDevice == null && this.mAccessory == null))) {
                 View inflate = ((LayoutInflater) getSystemService("layout_inflater")).inflate(17367092, (ViewGroup) null);
                 alertParams.mView = inflate;
-                CheckBox checkBox = (CheckBox) inflate.findViewById(16908752);
+                CheckBox checkBox = (CheckBox) inflate.findViewById(16908753);
                 this.mAlwaysUse = checkBox;
                 if (this.mDevice == null) {
                     checkBox.setText(R.string.always_use_accessory);
@@ -76,7 +76,7 @@ public class UsbPermissionActivity extends AlertActivity implements DialogInterf
                     checkBox.setText(R.string.always_use_device);
                 }
                 this.mAlwaysUse.setOnCheckedChangeListener(this);
-                TextView textView = (TextView) alertParams.mView.findViewById(16908852);
+                TextView textView = (TextView) alertParams.mView.findViewById(16908848);
                 this.mClearDefaultHint = textView;
                 textView.setVisibility(8);
             }

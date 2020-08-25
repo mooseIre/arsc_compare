@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import com.android.systemui.Dependency;
 import com.android.systemui.miui.statusbar.notification.NotificationSettingsManager;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import miui.util.NotificationFilterHelper;
@@ -64,6 +65,10 @@ public class CloudDataHelper {
         return jsonArray2List(createJSONArray(getCloudDataString(context.getContentResolver(), "systemui_badge_whitelist", "whitelist")));
     }
 
+    public static List<String> getSlideWhiteList(Context context) {
+        return jsonArray2List(createJSONArray(getCloudDataString(context.getContentResolver(), "small_window", "small_window_notification_whitelist")));
+    }
+
     private static String getCloudDataString(ContentResolver contentResolver, String str, String str2) {
         if (TextUtils.isEmpty(str) || TextUtils.isEmpty(str2)) {
             return null;
@@ -117,5 +122,12 @@ public class CloudDataHelper {
 
     private static int readHashCode(Context context, String str) {
         return Settings.Global.getInt(context.getContentResolver(), str, -1);
+    }
+
+    public static void dump(Context context, PrintWriter printWriter) {
+        printWriter.println("CloudData:");
+        printWriter.println("  float_whitelist" + getFloatWhitelist(context));
+        printWriter.println("  keyguard_whitelist" + getKeyguardWhitelist(context));
+        printWriter.println("  badge_whitelist" + getBadgeWhitelist(context));
     }
 }

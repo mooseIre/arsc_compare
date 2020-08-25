@@ -2,44 +2,17 @@ package com.android.systemui.statusbar;
 
 import android.app.Notification;
 import android.app.NotificationCompat;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.IconCompat;
 import android.text.TextUtils;
 import android.view.NotificationHeaderView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.android.systemui.SystemUICompat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
 public class NotificationHeaderUtil {
-    private static final ResultApplicator mGreyApplicator = new ResultApplicator() {
-        public void apply(View view, boolean z) {
-            NotificationHeaderView notificationHeaderView = (NotificationHeaderView) view;
-            applyToChild((ImageView) view.findViewById(16908294), z, notificationHeaderView.getOriginalIconColor());
-            applyToChild((ImageView) view.findViewById(16908958), z, notificationHeaderView.getOriginalNotificationColor());
-        }
-
-        private void applyToChild(View view, boolean z, int i) {
-            Drawable drawable;
-            if (view != null && i != 1 && (drawable = ((ImageView) view).getDrawable()) != null) {
-                drawable.mutate();
-                if (z) {
-                    drawable.setColorFilter(view.getContext().getColor(SystemUICompat.getNotificationDefaultColor()), PorterDuff.Mode.SRC_ATOP);
-                } else {
-                    drawable.setColorFilter(i, PorterDuff.Mode.SRC_ATOP);
-                }
-            }
-        }
-    };
-    private static final IconComparator sGreyComparator = new IconComparator() {
-        public boolean compare(View view, View view2, Object obj, Object obj2) {
-            return !hasSameIcon(obj, obj2) || hasSameColor(obj, obj2);
-        }
-    };
     private static final DataExtractor sIconExtractor = new DataExtractor() {
         public Object extractData(ExpandableNotificationRow expandableNotificationRow) {
             return expandableNotificationRow.getStatusBarNotification().getNotification();
@@ -75,8 +48,7 @@ public class NotificationHeaderUtil {
     public NotificationHeaderUtil(ExpandableNotificationRow expandableNotificationRow) {
         this.mRow = expandableNotificationRow;
         this.mComparators.add(new HeaderProcessor(expandableNotificationRow, 16908294, sIconExtractor, sIconVisibilityComparator, sVisibilityApplicator));
-        this.mComparators.add(new HeaderProcessor(this.mRow, 16909247, sIconExtractor, sGreyComparator, mGreyApplicator));
-        this.mComparators.add(new HeaderProcessor(this.mRow, 16909351, (DataExtractor) null, new ViewComparator(this) {
+        this.mComparators.add(new HeaderProcessor(this.mRow, 16909340, (DataExtractor) null, new ViewComparator(this) {
             public boolean compare(View view, View view2, Object obj, Object obj2) {
                 return view.getVisibility() != 8;
             }
@@ -88,10 +60,10 @@ public class NotificationHeaderUtil {
                 return true;
             }
         }, sVisibilityApplicator));
-        this.mComparators.add(HeaderProcessor.forTextView(this.mRow, 16908762));
-        this.mComparators.add(HeaderProcessor.forTextView(this.mRow, 16909042));
-        this.mDividers.add(16909043);
-        this.mDividers.add(16909576);
+        this.mComparators.add(HeaderProcessor.forTextView(this.mRow, 16908763));
+        this.mComparators.add(HeaderProcessor.forTextView(this.mRow, 16909041));
+        this.mDividers.add(16909042);
+        this.mDividers.add(16909560);
     }
 
     public void updateChildrenHeaderAppearance() {
@@ -129,7 +101,7 @@ public class NotificationHeaderUtil {
 
     private void sanitizeChild(View view) {
         if (view != null) {
-            sanitizeHeader(view.findViewById(16909247));
+            sanitizeHeader(view.findViewById(16909238));
         }
     }
 
@@ -139,7 +111,7 @@ public class NotificationHeaderUtil {
         boolean z2;
         if (notificationHeaderView != null) {
             int childCount = notificationHeaderView.getChildCount();
-            View findViewById = notificationHeaderView.findViewById(16909572);
+            View findViewById = notificationHeaderView.findViewById(16909556);
             if (findViewById != null) {
                 int i = 1;
                 while (true) {

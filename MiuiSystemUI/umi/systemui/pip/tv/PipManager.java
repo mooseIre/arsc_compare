@@ -7,7 +7,6 @@ import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.ParceledListSlice;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -23,8 +22,6 @@ import android.util.Pair;
 import android.view.DisplayInfo;
 import android.view.IPinnedStackController;
 import android.view.IPinnedStackListener;
-import android.view.IWindowManager;
-import android.view.WindowManagerGlobal;
 import com.android.systemui.pip.BasePipManager;
 import com.android.systemui.pip.PipUIHelper;
 import com.android.systemui.pip.tv.PipManager;
@@ -33,181 +30,47 @@ import com.android.systemui.recents.misc.SystemServicesProxy;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
-import miui.view.MiuiHapticFeedbackConstants;
 
 public class PipManager implements BasePipManager {
     static final boolean DEBUG = Log.isLoggable("PipManager", 3);
     private static PipManager sPipManager;
     private static List<Pair<String, String>> sSettingsPackageAndClassNamePairList;
-    /* access modifiers changed from: private */
-    public final MediaSessionManager.OnActiveSessionsChangedListener mActiveMediaSessionListener = new MediaSessionManager.OnActiveSessionsChangedListener() {
-        public void onActiveSessionsChanged(List<MediaController> list) {
-            PipManager.this.updateMediaController(list);
-        }
-    };
+    private final MediaSessionManager.OnActiveSessionsChangedListener mActiveMediaSessionListener;
     private IActivityManager mActivityManager;
-    private final BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
-        public void onReceive(Context context, Intent intent) {
-            if ("android.intent.action.MEDIA_RESOURCE_GRANTED".equals(intent.getAction())) {
-                String[] stringArrayExtra = intent.getStringArrayExtra("android.intent.extra.PACKAGES");
-                int intExtra = intent.getIntExtra("android.intent.extra.MEDIA_RESOURCE_TYPE", -1);
-                if (stringArrayExtra != null && stringArrayExtra.length > 0 && intExtra == 0) {
-                    PipManager.this.handleMediaResourceGranted(stringArrayExtra);
-                }
-            }
-        }
-    };
-    private final Runnable mClosePipRunnable = new Runnable() {
-        public void run() {
-            PipManager.this.closePip();
-        }
-    };
-    /* access modifiers changed from: private */
-    public Context mContext;
-    /* access modifiers changed from: private */
-    public Rect mCurrentPipBounds;
+    private final Runnable mClosePipRunnable;
+    private Context mContext;
     /* access modifiers changed from: private */
     public ParceledListSlice mCustomActions;
-    /* access modifiers changed from: private */
-    public Rect mDefaultPipBounds = new Rect();
+    private Rect mDefaultPipBounds = new Rect();
     /* access modifiers changed from: private */
     public final Handler mHandler = new Handler();
-    private boolean mInitialized;
     private int mLastOrientation = 0;
     private String[] mLastPackagesResourceGranted;
     /* access modifiers changed from: private */
     public List<Listener> mListeners = new ArrayList();
     private List<MediaListener> mMediaListeners = new ArrayList();
-    /* access modifiers changed from: private */
-    public MediaSessionManager mMediaSessionManager;
+    private MediaSessionManager mMediaSessionManager;
     private Rect mMenuModePipBounds;
-    private final PinnedStackListener mPinnedStackListener = new PinnedStackListener();
-    /* access modifiers changed from: private */
-    public Rect mPipBounds;
-    /* access modifiers changed from: private */
-    public ComponentName mPipComponentName;
+    private Rect mPipBounds;
+    private ComponentName mPipComponentName;
     private MediaController mPipMediaController;
     private PipNotification mPipNotification;
-    /* access modifiers changed from: private */
-    public int mPipTaskId = -1;
-    private final Runnable mResizePinnedStackRunnable = new Runnable() {
-        public void run() {
-            PipManager pipManager = PipManager.this;
-            pipManager.resizePinnedStack(pipManager.mResumeResizePinnedStackRunnableState);
-        }
-    };
+    private int mPipTaskId = -1;
+    private final Runnable mResizePinnedStackRunnable;
     /* access modifiers changed from: private */
     public int mResumeResizePinnedStackRunnableState = 0;
-    /* access modifiers changed from: private */
-    public Rect mSettingsPipBounds;
-    /* access modifiers changed from: private */
-    public int mState = 0;
+    private Rect mSettingsPipBounds;
+    private int mState = 0;
     private int mSuspendPipResizingReason;
-    private SystemServicesProxy.TaskStackListener mTaskStackListener = new SystemServicesProxy.TaskStackListener() {
-        public void onTaskStackChanged() {
-            int[] iArr;
-            if (PipManager.DEBUG) {
-                Log.d("PipManager", "onTaskStackChanged()");
-            }
-            if (checkCurrentUserId(PipManager.this.mContext, PipManager.DEBUG)) {
-                if (PipManager.this.getState() != 0) {
-                    ActivityManager.StackInfo access$1000 = PipManager.this.getPinnedStackInfo();
-                    boolean z = false;
-                    if (access$1000 == null || (iArr = access$1000.taskIds) == null) {
-                        Log.w("PipManager", "There is nothing in pinned stack");
-                        PipManager.this.closePipInternal(false);
-                        return;
-                    }
-                    int length = iArr.length - 1;
-                    while (true) {
-                        if (length < 0) {
-                            break;
-                        } else if (access$1000.taskIds[length] == PipManager.this.mPipTaskId) {
-                            z = true;
-                            break;
-                        } else {
-                            length--;
-                        }
-                    }
-                    if (!z) {
-                        PipManager.this.closePipInternal(true);
-                        return;
-                    }
-                }
-                if (PipManager.this.getState() == 1) {
-                    Rect access$1400 = PipManager.this.isSettingsShown() ? PipManager.this.mSettingsPipBounds : PipManager.this.mDefaultPipBounds;
-                    if (PipManager.this.mPipBounds != access$1400) {
-                        Rect unused = PipManager.this.mPipBounds = access$1400;
-                        PipManager.this.resizePinnedStack(1);
-                    }
-                }
-            }
-        }
-
-        public void onActivityPinned(String str, int i, int i2) {
-            if (PipManager.DEBUG) {
-                Log.d("PipManager", "onActivityPinned()");
-            }
-            if (checkCurrentUserId(PipManager.this.mContext, PipManager.DEBUG)) {
-                ActivityManager.StackInfo access$1000 = PipManager.this.getPinnedStackInfo();
-                if (access$1000 == null) {
-                    Log.w("PipManager", "Cannot find pinned stack");
-                    return;
-                }
-                if (PipManager.DEBUG) {
-                    Log.d("PipManager", "PINNED_STACK:" + access$1000);
-                }
-                PipManager pipManager = PipManager.this;
-                int[] iArr = access$1000.taskIds;
-                int unused = pipManager.mPipTaskId = iArr[iArr.length - 1];
-                PipManager pipManager2 = PipManager.this;
-                String[] strArr = access$1000.taskNames;
-                ComponentName unused2 = pipManager2.mPipComponentName = ComponentName.unflattenFromString(strArr[strArr.length - 1]);
-                int unused3 = PipManager.this.mState = 1;
-                PipManager pipManager3 = PipManager.this;
-                Rect unused4 = pipManager3.mCurrentPipBounds = pipManager3.mPipBounds;
-                PipManager.this.mMediaSessionManager.addOnActiveSessionsChangedListener(PipManager.this.mActiveMediaSessionListener, (ComponentName) null);
-                PipManager pipManager4 = PipManager.this;
-                pipManager4.updateMediaController(pipManager4.mMediaSessionManager.getActiveSessions((ComponentName) null));
-                for (int size = PipManager.this.mListeners.size() - 1; size >= 0; size--) {
-                    ((Listener) PipManager.this.mListeners.get(size)).onPipEntered();
-                }
-                PipManager.this.updatePipVisibility(true);
-            }
-        }
-
-        public void onPinnedActivityRestartAttempt(boolean z) {
-            if (PipManager.DEBUG) {
-                Log.d("PipManager", "onPinnedActivityRestartAttempt()");
-            }
-            if (checkCurrentUserId(PipManager.this.mContext, PipManager.DEBUG)) {
-                PipManager.this.movePipToFullscreen();
-            }
-        }
-
-        public void onPinnedStackAnimationEnded() {
-            if (PipManager.DEBUG) {
-                Log.d("PipManager", "onPinnedStackAnimationEnded()");
-            }
-            if (checkCurrentUserId(PipManager.this.mContext, PipManager.DEBUG) && PipManager.this.getState() == 2) {
-                PipManager.this.showPipMenu();
-            }
-        }
-    };
-    private IWindowManager mWindowManager;
 
     public interface Listener {
         void onMoveToFullscreen();
 
         void onPipActivityClosed();
 
-        void onPipEntered();
-
         void onPipMenuActionsChanged(ParceledListSlice parceledListSlice);
 
         void onPipResizeAboutToStart();
-
-        void onShowPipMenu();
     }
 
     public interface MediaListener {
@@ -261,50 +124,34 @@ public class PipManager implements BasePipManager {
     }
 
     private PipManager() {
-    }
-
-    public void initialize(Context context) {
-        if (!this.mInitialized) {
-            this.mInitialized = true;
-            this.mContext = context;
-            this.mActivityManager = ActivityManagerCompat.getService();
-            this.mWindowManager = WindowManagerGlobal.getWindowManagerService();
-            SystemServicesProxy.getInstance(context).registerTaskStackListener(this.mTaskStackListener);
-            IntentFilter intentFilter = new IntentFilter();
-            intentFilter.addAction("android.intent.action.MEDIA_RESOURCE_GRANTED");
-            this.mContext.registerReceiver(this.mBroadcastReceiver, intentFilter);
-            if (sSettingsPackageAndClassNamePairList == null) {
-                String[] stringArray = this.mContext.getResources().getStringArray(R.array.tv_pip_settings_class_name);
-                sSettingsPackageAndClassNamePairList = new ArrayList();
-                if (stringArray != null) {
-                    for (int i = 0; i < stringArray.length; i++) {
-                        String[] split = stringArray[i].split("/");
-                        int length = split.length;
-                        Pair pair = null;
-                        if (length == 1) {
-                            pair = Pair.create(split[0], (Object) null);
-                        } else if (length == 2 && split[1] != null && split[1].startsWith(".")) {
-                            pair = Pair.create(split[0], split[0] + split[1]);
-                        }
-                        if (pair != null) {
-                            sSettingsPackageAndClassNamePairList.add(pair);
-                        } else {
-                            Log.w("PipManager", "Ignoring malformed settings name " + stringArray[i]);
-                        }
+        new PinnedStackListener();
+        this.mResizePinnedStackRunnable = new Runnable() {
+            public void run() {
+                PipManager pipManager = PipManager.this;
+                pipManager.resizePinnedStack(pipManager.mResumeResizePinnedStackRunnableState);
+            }
+        };
+        this.mClosePipRunnable = new Runnable() {
+            public void run() {
+                PipManager.this.closePip();
+            }
+        };
+        new BroadcastReceiver() {
+            public void onReceive(Context context, Intent intent) {
+                if ("android.intent.action.MEDIA_RESOURCE_GRANTED".equals(intent.getAction())) {
+                    String[] stringArrayExtra = intent.getStringArrayExtra("android.intent.extra.PACKAGES");
+                    int intExtra = intent.getIntExtra("android.intent.extra.MEDIA_RESOURCE_TYPE", -1);
+                    if (stringArrayExtra != null && stringArrayExtra.length > 0 && intExtra == 0) {
+                        PipManager.this.handleMediaResourceGranted(stringArrayExtra);
                     }
                 }
             }
-            Configuration configuration = this.mContext.getResources().getConfiguration();
-            this.mLastOrientation = configuration.orientation;
-            loadConfigurationsAndApply(configuration);
-            this.mMediaSessionManager = (MediaSessionManager) this.mContext.getSystemService("media_session");
-            try {
-                this.mWindowManager.registerPinnedStackListener(0, this.mPinnedStackListener);
-            } catch (RemoteException e) {
-                Log.e("PipManager", "Failed to register pinned stack listener", e);
+        };
+        this.mActiveMediaSessionListener = new MediaSessionManager.OnActiveSessionsChangedListener() {
+            public void onActiveSessionsChanged(List<MediaController> list) {
+                PipManager.this.updateMediaController(list);
             }
-            this.mPipNotification = new PipNotification(context);
-        }
+        };
     }
 
     private void loadConfigurationsAndApply(Configuration configuration) {
@@ -336,8 +183,7 @@ public class PipManager implements BasePipManager {
         closePipInternal(true);
     }
 
-    /* access modifiers changed from: private */
-    public void closePipInternal(boolean z) {
+    private void closePipInternal(boolean z) {
         this.mState = 0;
         this.mPipTaskId = -1;
         this.mPipMediaController = null;
@@ -405,27 +251,11 @@ public class PipManager implements BasePipManager {
         }
     }
 
-    /* access modifiers changed from: private */
-    public int getState() {
+    private int getState() {
         if (this.mSuspendPipResizingReason != 0) {
             return this.mResumeResizePinnedStackRunnableState;
         }
         return this.mState;
-    }
-
-    /* access modifiers changed from: private */
-    public void showPipMenu() {
-        if (DEBUG) {
-            Log.d("PipManager", "showPipMenu()");
-        }
-        this.mState = 2;
-        for (int size = this.mListeners.size() - 1; size >= 0; size--) {
-            this.mListeners.get(size).onShowPipMenu();
-        }
-        Intent intent = new Intent(this.mContext, PipMenuActivity.class);
-        intent.setFlags(MiuiHapticFeedbackConstants.FLAG_MIUI_HAPTIC_TAP_NORMAL);
-        intent.putExtra("custom_actions", this.mCustomActions);
-        this.mContext.startActivity(intent);
     }
 
     public void addListener(Listener listener) {
@@ -444,8 +274,7 @@ public class PipManager implements BasePipManager {
         this.mMediaListeners.remove(mediaListener);
     }
 
-    /* access modifiers changed from: private */
-    public ActivityManager.StackInfo getPinnedStackInfo() {
+    private ActivityManager.StackInfo getPinnedStackInfo() {
         try {
             return ActivityManagerCompat.getStackInfo(4, 2, 0);
         } catch (Exception e) {
@@ -571,8 +400,7 @@ public class PipManager implements BasePipManager {
         return 2;
     }
 
-    /* access modifiers changed from: private */
-    public boolean isSettingsShown() {
+    private boolean isSettingsShown() {
         String str;
         try {
             List<ActivityManager.RunningTaskInfo> tasks = PipUIHelper.getTasks(this.mActivityManager, 1, 0);
@@ -598,8 +426,7 @@ public class PipManager implements BasePipManager {
         return sPipManager;
     }
 
-    /* access modifiers changed from: private */
-    public void updatePipVisibility(boolean z) {
+    private void updatePipVisibility(boolean z) {
         SystemServicesProxy.getInstance(this.mContext).setPipVisibility(z);
     }
 }

@@ -4,12 +4,11 @@ import android.app.Notification;
 import android.app.NotificationCompat;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.ComponentName;
 import android.content.Context;
-import android.content.Intent;
 import android.os.UserHandle;
 import android.widget.RemoteViews;
 import com.android.systemui.Dependency;
+import com.android.systemui.Util;
 import com.android.systemui.keyguard.ScreenLifecycle;
 import com.android.systemui.miui.statusbar.ExpandedNotification;
 import com.android.systemui.plugins.R;
@@ -80,7 +79,7 @@ public class DndNotificationWarnings {
     private void showNotification() {
         Notification.Builder builder = new Notification.Builder(this.mContext);
         NotificationCompat.setChannelId(builder, NotificationChannels.DND);
-        builder.setSmallIcon(17303594).setAutoCancel(false).setGroup(NotificationChannels.DND).setVisibility(1).setCustomContentView(new RemoteViews(this.mContext.getPackageName(), R.layout.dnd_notification)).setContentIntent(PendingIntent.getActivity(this.mContext, 0, generateSilentModeIntent(), 0));
+        builder.setSmallIcon(17303602).setAutoCancel(false).setGroup(NotificationChannels.DND).setVisibility(1).setCustomContentView(new RemoteViews(this.mContext.getPackageName(), R.layout.dnd_notification)).setContentIntent(PendingIntent.getActivity(this.mContext, 0, Util.getSilentModeIntent(), 0));
         Notification build = builder.build();
         build.priority = 2;
         MiuiNotificationCompat.setTargetPkg(build, "android");
@@ -90,13 +89,6 @@ public class DndNotificationWarnings {
         MiuiNotificationCompat.setCustomHeight(build, true);
         MiuiNotificationCompat.setSystemWarnings(build, true);
         this.mNoMan.notifyAsUser((String) null, R.string.dnd_notification_warnings_title, build, UserHandle.CURRENT);
-    }
-
-    private Intent generateSilentModeIntent() {
-        Intent intent = new Intent("android.intent.action.MAIN");
-        intent.setComponent(ComponentName.unflattenFromString("com.android.settings/com.android.settings.Settings$MiuiSilentModeAcivity"));
-        intent.setFlags(335544320);
-        return intent;
     }
 
     private void cancelNotification() {

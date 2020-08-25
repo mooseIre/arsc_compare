@@ -21,7 +21,7 @@ public class DrawShapeUtil {
         } else if (rect.right - rect.left > 400 && rect.bottom - rect.top > 400) {
             i3 = 100;
         } else if (rect.right - rect.left <= 300 || rect.bottom - rect.top <= 300) {
-            i3 = (rect.right - rect.left <= 200 || rect.bottom - rect.top <= 200) ? 40 : 50;
+            i3 = (rect.right - rect.left <= 200 || rect.bottom - rect.top <= 200) ? 25 : 50;
         } else {
             i3 = 75;
         }
@@ -97,6 +97,10 @@ public class DrawShapeUtil {
 
     public static boolean isUseful(int i, int i2, int i3, int i4) {
         return Math.abs(i - i3) <= 350 && Math.abs(i2 - i4) <= 350;
+    }
+
+    public static double distance(float f, float f2, float f3, float f4) {
+        return Math.sqrt(Math.pow((double) (f - f2), 2.0d) + Math.pow((double) (f3 - f4), 2.0d));
     }
 
     private static void initPaint() {
