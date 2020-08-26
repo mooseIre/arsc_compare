@@ -6555,12 +6555,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
         this.mStatusBarStateController.setIsDozing(this.mDozing);
         Log.i("StatusBar", "updateDozing: mDozing:" + this.mDozing);
         KeyguardViewMediator keyguardViewMediator = (KeyguardViewMediator) getComponent(KeyguardViewMediator.class);
-        boolean z2 = this.mDozing;
-        if (!Constants.SUPPORT_AOD) {
-            z2 = !this.mPowerManager.isInteractive();
-        }
-        ((MiuiKeyguardWallpaperController) Dependency.get(MiuiKeyguardWallpaperController.class)).isWallpaperSupportsAmbientMode();
-        if (z2 && MiuiKeyguardUtils.isAodEnable(this.mContext) && Util.isMiuiOptimizationDisabled()) {
+        if (this.mDozing && MiuiKeyguardUtils.isAodEnable(this.mContext) && Util.isMiuiOptimizationDisabled()) {
             z = true;
         }
         keyguardViewMediator.setAodShowing(z);

@@ -332,13 +332,16 @@ public class NotificationInflater {
 
     private static void optimizeHeadsUpViewIfNeed(InflationProgress inflationProgress, ExpandableNotificationRow expandableNotificationRow, boolean z, boolean z2, InCallNotificationView.InCallCallback inCallCallback) {
         NotificationData.Entry entry = expandableNotificationRow.getEntry();
+        Notification notification = entry.notification.getNotification();
         NotificationContentView privateLayout = expandableNotificationRow.getPrivateLayout();
         Context context = privateLayout.getContext();
-        if (!InCallUtils.isGlobalInCallNotification(context, entry.notification)) {
-            boolean z3 = privateLayout.getHeadsUpChild() instanceof OptimizedHeadsUpNotificationView;
+        int i = 0;
+        boolean z3 = notification.extras.getBoolean("android.contains.customView", false);
+        boolean isGlobalInCallNotification = InCallUtils.isGlobalInCallNotification(context, entry.notification);
+        if (!z3 && !isGlobalInCallNotification) {
+            boolean z4 = privateLayout.getHeadsUpChild() instanceof OptimizedHeadsUpNotificationView;
             boolean isInCallNotification = InCallUtils.isInCallNotification(expandableNotificationRow.getEntry().notification);
-            int i = 0;
-            if (z || z2 || z3 || isInCallNotification) {
+            if (z || z2 || z4 || isInCallNotification) {
                 if (inflationProgress.inflatedHeadsUpView != null) {
                     i = 2;
                 } else if (inflationProgress.inflatedExpandedView != null) {
