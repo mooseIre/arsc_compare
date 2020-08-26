@@ -1744,6 +1744,7 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener {
 
     private void handleSimLocked(int i, int i2, IccCardConstants.State state) {
         if (isSupportShowSimLockedTips()) {
+            Log.d("KeyguardUpdateMonitor", "handleSimStateChange(show sim locked tips)");
             if (state == IccCardConstants.State.ABSENT || state == IccCardConstants.State.READY) {
                 handleSimLockedStateChange(false);
             } else if (state == IccCardConstants.State.PERM_DISABLED) {
