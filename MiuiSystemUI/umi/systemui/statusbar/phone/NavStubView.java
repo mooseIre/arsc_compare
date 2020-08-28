@@ -1315,7 +1315,7 @@ public class NavStubView extends FrameLayout {
     }
 
     private boolean canTriggerAssistantAction(MotionEvent motionEvent) {
-        return this.mIsAssistantAvailable && Utilities.isAndroidQorNewer() && (motionEvent.getRawX() < ((float) this.mAssistantWidth) || motionEvent.getRawX() > ((float) (this.mScreenWidth - this.mAssistantWidth)));
+        return this.mIsAssistantAvailable && Utilities.isAndroidQorNewer() && (this.mStatusBar.getFlagDisable1() & 33554432) == 0 && (motionEvent.getRawX() < ((float) this.mAssistantWidth) || motionEvent.getRawX() > ((float) (this.mScreenWidth - this.mAssistantWidth)));
     }
 
     private void homeTouchResolution(MotionEvent motionEvent) {

@@ -7,7 +7,7 @@ public class VelocityTrackerFactory {
     public static com.android.systemui.statusbar.phone.VelocityTrackerInterface obtain(android.content.Context r3) {
         /*
             android.content.res.Resources r3 = r3.getResources()
-            r0 = 2131822581(0x7f1107f5, float:1.9277937E38)
+            r0 = 2131822580(0x7f1107f4, float:1.9277935E38)
             java.lang.String r3 = r3.getString(r0)
             int r0 = r3.hashCode()
             r1 = 104998702(0x642272e, float:3.651613E-35)

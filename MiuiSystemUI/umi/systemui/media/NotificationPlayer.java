@@ -76,7 +76,7 @@ public class NotificationPlayer implements MediaPlayer.OnCompletionListener, Med
             	at java.base/jdk.internal.util.Preconditions.outOfBoundsCheckIndex(Preconditions.java:70)
             	at java.base/jdk.internal.util.Preconditions.checkIndex(Preconditions.java:248)
             	at java.base/java.util.Objects.checkIndex(Objects.java:372)
-            	at java.base/java.util.ArrayList.get(ArrayList.java:458)
+            	at java.base/java.util.ArrayList.get(ArrayList.java:459)
             	at jadx.core.dex.nodes.InsnNode.getArg(InsnNode.java:101)
             	at jadx.core.dex.visitors.regions.RegionMaker.traverseMonitorExits(RegionMaker.java:611)
             	at jadx.core.dex.visitors.regions.RegionMaker.traverseMonitorExits(RegionMaker.java:619)

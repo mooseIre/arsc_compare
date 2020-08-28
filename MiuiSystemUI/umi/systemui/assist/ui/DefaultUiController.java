@@ -6,6 +6,7 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.WindowManager;
+import android.view.WindowManagerCompat;
 import android.view.animation.PathInterpolator;
 import android.widget.FrameLayout;
 import com.android.systemui.Dependency;
@@ -35,7 +36,8 @@ public class DefaultUiController implements AssistManager.UiController {
         this.mLayoutParams = layoutParams;
         layoutParams.privateFlags = 64;
         layoutParams.gravity = 80;
-        layoutParams.setTitle("Assist");
+        WindowManagerCompat.setFitInsetsTypes(layoutParams);
+        this.mLayoutParams.setTitle("Assist");
         InvocationLightsView invocationLightsView = (InvocationLightsView) LayoutInflater.from(context).inflate(R.layout.invocation_lights, this.mRoot, false);
         this.mInvocationLightsView = invocationLightsView;
         invocationLightsView.setColors(-16776961, -65536, -256, -16711936);

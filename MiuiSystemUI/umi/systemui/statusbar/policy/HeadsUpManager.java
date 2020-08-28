@@ -47,7 +47,6 @@ public class HeadsUpManager implements ViewTreeObserver.OnComputeInternalInsetsL
     public Clock mClock;
     private final Context mContext;
     private final int mDefaultSnoozeLengthMs;
-    private int mDisplayCutoutTouchableRegionSize;
     /* access modifiers changed from: private */
     public HashSet<NotificationData.Entry> mEntriesToRemoveAfterExpand = new HashSet<>();
     /* access modifiers changed from: private */
@@ -400,7 +399,7 @@ public class HeadsUpManager implements ViewTreeObserver.OnComputeInternalInsetsL
     private void initResources() {
         Resources resources = this.mContext.getResources();
         this.mStatusBarHeight = resources.getDimensionPixelSize(17105496);
-        this.mDisplayCutoutTouchableRegionSize = resources.getDimensionPixelSize(R.dimen.display_cutout_touchable_region_size);
+        resources.getDimensionPixelSize(R.dimen.display_cutout_touchable_region_size);
     }
 
     public void onDensityOrFontScaleChanged() {
@@ -439,18 +438,8 @@ public class HeadsUpManager implements ViewTreeObserver.OnComputeInternalInsetsL
     private void setCollapsedTouchableInsets(ViewTreeObserver.InternalInsetsInfo internalInsetsInfo) {
         internalInsetsInfo.setTouchableInsets(3);
         internalInsetsInfo.touchableRegion.set(0, 0, this.mStatusBarWindowView.getWidth(), this.mStatusBarHeight);
-        updateRegionForNotch(internalInsetsInfo.touchableRegion);
         updateRegionForPrompt(internalInsetsInfo.touchableRegion);
         updateRegionForBubble(internalInsetsInfo.touchableRegion);
-    }
-
-    private void updateRegionForNotch(Region region) {
-        Rect rect = new Rect();
-        DisplayCutoutCompat.boundsFromDirection(this.mStatusBarWindowView, 48, rect);
-        if (!rect.isEmpty()) {
-            rect.offset(0, this.mDisplayCutoutTouchableRegionSize);
-            region.op(rect, Region.Op.UNION);
-        }
     }
 
     private void updateRegionForPrompt(Region region) {

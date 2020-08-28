@@ -473,7 +473,7 @@ public class NotificationPanelView extends PanelView implements ExpandableView.O
         if (this.mSimLockedTipsDialog == null) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
             builder.setTitle(getContext().getString(R.string.sim_state_locked_dialog_title));
-            builder.setMessage(getContext().getString(R.string.sim_state_locked_puk_dialog_message));
+            builder.setMessage(String.format(getContext().getString(R.string.sim_state_locked_puk_dialog_message), new Object[]{10}));
             builder.setCancelable(false);
             AlertDialog create = builder.create();
             this.mSimLockedTipsDialog = create;

@@ -81,12 +81,17 @@ public class StatusBarWindowManager implements RemoteInputController.Callback, D
         layoutParams2.setTitle("StatusBar");
         this.mLp.packageName = this.mContext.getPackageName();
         WindowManagerCompat.setLayoutInDisplayCutoutMode(this.mLp, 1);
+        if (Build.VERSION.SDK_INT > 29) {
+            WindowManager.LayoutParams layoutParams3 = this.mLp;
+            layoutParams3.layoutInDisplayCutoutMode = 3;
+            WindowManagerCompat.setFitInsetsTypes(layoutParams3);
+        }
         this.mStatusBarView = viewGroup;
         this.mBarHeight = i;
         this.mWindowManager.addView(viewGroup, this.mLp);
-        WindowManager.LayoutParams layoutParams3 = new WindowManager.LayoutParams();
-        this.mLpChanged = layoutParams3;
-        layoutParams3.copyFrom(this.mLp);
+        WindowManager.LayoutParams layoutParams4 = new WindowManager.LayoutParams();
+        this.mLpChanged = layoutParams4;
+        layoutParams4.copyFrom(this.mLp);
     }
 
     public ViewGroup getStatusBarView() {

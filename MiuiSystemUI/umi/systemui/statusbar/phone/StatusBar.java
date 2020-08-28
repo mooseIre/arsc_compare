@@ -4109,7 +4109,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
             this.mHandler.removeMessages(1020);
             this.mHandler.sendEmptyMessage(1020);
         }
-        if (!((23069184 & i7) == 0 || (navigationBarView = this.mNavigationBarView) == null)) {
+        if (!((56623616 & i7) == 0 || (navigationBarView = this.mNavigationBarView) == null)) {
             navigationBarView.setDisabledFlags(i3);
         }
         if (i13 != 0) {
@@ -6560,12 +6560,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
         this.mStatusBarStateController.setIsDozing(this.mDozing);
         Log.i("StatusBar", "updateDozing: mDozing:" + this.mDozing);
         KeyguardViewMediator keyguardViewMediator = (KeyguardViewMediator) getComponent(KeyguardViewMediator.class);
-        boolean z2 = this.mDozing;
-        if (!Constants.SUPPORT_AOD) {
-            z2 = !this.mPowerManager.isInteractive();
-        }
-        ((MiuiKeyguardWallpaperController) Dependency.get(MiuiKeyguardWallpaperController.class)).isWallpaperSupportsAmbientMode();
-        if (z2 && MiuiKeyguardUtils.isAodEnable(this.mContext) && Util.isMiuiOptimizationDisabled()) {
+        if (this.mDozing && MiuiKeyguardUtils.isAodEnable(this.mContext) && Util.isMiuiOptimizationDisabled()) {
             z = true;
         }
         keyguardViewMediator.setAodShowing(z);

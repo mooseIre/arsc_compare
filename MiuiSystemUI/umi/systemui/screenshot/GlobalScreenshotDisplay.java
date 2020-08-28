@@ -739,6 +739,7 @@ public class GlobalScreenshotDisplay implements ScreenshotScrollView.AnimatingCa
                 public Bitmap doInBackground(Void[] voidArr) {
                     try {
                         Bitmap buildLongScreenshot = GlobalScreenshotDisplay.this.mScreenshotView.buildLongScreenshot();
+                        int i = 0;
                         if (buildLongScreenshot != null) {
                             try {
                                 int lastIndexOf = GlobalScreenshotDisplay.this.mNotifyMediaStoreData.imageFilePath.lastIndexOf("jpg");
@@ -755,21 +756,25 @@ public class GlobalScreenshotDisplay implements ScreenshotScrollView.AnimatingCa
                             GlobalScreenshotDisplay.this.mNotifyMediaStoreData.width = buildLongScreenshot.getWidth();
                             GlobalScreenshotDisplay.this.mNotifyMediaStoreData.height = buildLongScreenshot.getHeight();
                             if (GlobalScreenshotDisplay.this.mNotifyMediaStoreData.outUri != null) {
-                                long parseId = ContentUris.parseId(GlobalScreenshotDisplay.this.mNotifyMediaStoreData.outUri);
-                                if (parseId > 0) {
-                                    ContentValues contentValues = new ContentValues();
-                                    ContentResolver contentResolver = GlobalScreenshotDisplay.this.mContext.getContentResolver();
-                                    contentValues.put("_data", GlobalScreenshotDisplay.this.mNotifyMediaStoreData.imageFilePath);
-                                    contentValues.put("_display_name", GlobalScreenshotDisplay.this.mNotifyMediaStoreData.imageFileName);
-                                    contentValues.put("width", Integer.valueOf(GlobalScreenshotDisplay.this.mNotifyMediaStoreData.width));
-                                    contentValues.put("height", Integer.valueOf(GlobalScreenshotDisplay.this.mNotifyMediaStoreData.height));
-                                    contentValues.put("mime_type", "image/png");
-                                    contentValues.put("_size", Long.valueOf(new File(GlobalScreenshotDisplay.this.mNotifyMediaStoreData.imageFilePath).length()));
-                                    int update = contentResolver.update(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues, "_id=?", new String[]{String.valueOf(parseId)});
-                                    if (update != 1) {
-                                        Log.d("GlobalScreenshot", "update uri from photo abnormal : " + update);
-                                        GlobalScreenshotDisplay.this.mNotifyMediaStoreData.outUri = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
+                                ContentValues contentValues = new ContentValues();
+                                ContentResolver contentResolver = GlobalScreenshotDisplay.this.mContext.getContentResolver();
+                                contentValues.put("_display_name", GlobalScreenshotDisplay.this.mNotifyMediaStoreData.imageFileName);
+                                contentValues.put("width", Integer.valueOf(GlobalScreenshotDisplay.this.mNotifyMediaStoreData.width));
+                                contentValues.put("height", Integer.valueOf(GlobalScreenshotDisplay.this.mNotifyMediaStoreData.height));
+                                contentValues.put("_size", Long.valueOf(new File(GlobalScreenshotDisplay.this.mNotifyMediaStoreData.imageFilePath).length()));
+                                if (Build.VERSION.SDK_INT >= 30) {
+                                    contentValues.put("is_pending", 0);
+                                    i = contentResolver.update(GlobalScreenshotDisplay.this.mNotifyMediaStoreData.outUri, contentValues, (String) null, (String[]) null);
+                                } else {
+                                    long parseId = ContentUris.parseId(GlobalScreenshotDisplay.this.mNotifyMediaStoreData.outUri);
+                                    if (parseId > 0) {
+                                        contentValues.put("_data", GlobalScreenshotDisplay.this.mNotifyMediaStoreData.imageFilePath);
+                                        contentValues.put("mime_type", "image/png");
+                                        i = contentResolver.update(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues, "_id=?", new String[]{String.valueOf(parseId)});
                                     }
+                                }
+                                if (i != 1) {
+                                    Log.d("GlobalScreenshot", "update uri from photo abnormal : " + i);
                                 }
                             }
                             int height = GlobalScreenshotDisplay.this.mLongScreenshotFirstPart.getHeight();
