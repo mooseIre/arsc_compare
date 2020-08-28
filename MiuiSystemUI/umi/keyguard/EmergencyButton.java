@@ -232,7 +232,7 @@ public class EmergencyButton extends Button {
             r0 = 17040538(0x104049a, float:2.4247872E-38)
             goto L_0x0086
         L_0x0083:
-            r0 = 2131821275(0x7f1102db, float:1.9275289E38)
+            r0 = 2131821274(0x7f1102da, float:1.9275287E38)
         L_0x0086:
             r5.setText(r0)
             goto L_0x008e
