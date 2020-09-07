@@ -14,7 +14,6 @@ public class ControlsPluginManager implements PluginListener<MiuiControlsPlugin>
     private static int STATE_ADDED = 1;
     private static int STATE_ADDING = 0;
     private static int STATE_REMOVED = 3;
-    private static int STATE_REMOVING = 2;
     private int currentState = STATE_REMOVED;
     private MiuiControlsPlugin mMiuiControlsPlugin;
 
@@ -23,11 +22,6 @@ public class ControlsPluginManager implements PluginListener<MiuiControlsPlugin>
             ((PluginManager) Dependency.get(PluginManager.class)).addPluginListener(this, (Class<?>) MiuiControlsPlugin.class, true);
         }
         this.currentState = STATE_ADDING;
-    }
-
-    public void removeControlsPluginListener() {
-        this.currentState = STATE_REMOVING;
-        ((PluginManager) Dependency.get(PluginManager.class)).removePluginListener(this);
     }
 
     public View getControlsView() {

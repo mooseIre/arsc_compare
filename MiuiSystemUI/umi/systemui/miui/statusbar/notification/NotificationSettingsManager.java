@@ -88,14 +88,38 @@ public class NotificationSettingsManager implements Dumpable, PackageEventReceiv
     }
 
     /* access modifiers changed from: private */
+    /* JADX WARNING: Code restructure failed: missing block: B:3:0x000c, code lost:
+        r1 = r0.next();
+     */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
     public void enableNotificationIfNeeded() {
-        for (String next : this.mForcedEnabledPackages) {
-            int packageUid = NotificationSettingsHelper.getPackageUid(this.mContext, next);
-            if (NotificationSettingsHelper.isNotificationsBanned(next, packageUid)) {
-                NotificationSettingsHelper.setNotificationsEnabledForPackage(this.mContext, next, packageUid, true);
-            }
-            NotificationSettingsHelper.setFoldImportance(this.mContext, next, 1);
-        }
+        /*
+            r5 = this;
+            java.util.List<java.lang.String> r0 = r5.mForcedEnabledPackages
+            java.util.Iterator r0 = r0.iterator()
+        L_0x0006:
+            boolean r1 = r0.hasNext()
+            if (r1 == 0) goto L_0x002d
+            java.lang.Object r1 = r0.next()
+            java.lang.String r1 = (java.lang.String) r1
+            android.content.Context r2 = r5.mContext
+            int r2 = com.android.systemui.miui.statusbar.notification.NotificationSettingsHelper.getPackageUid(r2, r1)
+            if (r2 > 0) goto L_0x001b
+            return
+        L_0x001b:
+            boolean r3 = com.android.systemui.miui.statusbar.notification.NotificationSettingsHelper.isNotificationsBanned((java.lang.String) r1, (int) r2)
+            r4 = 1
+            if (r3 == 0) goto L_0x0027
+            android.content.Context r3 = r5.mContext
+            com.android.systemui.miui.statusbar.notification.NotificationSettingsHelper.setNotificationsEnabledForPackage(r3, r1, r2, r4)
+        L_0x0027:
+            android.content.Context r2 = r5.mContext
+            com.android.systemui.miui.statusbar.notification.NotificationSettingsHelper.setFoldImportance(r2, r1, r4)
+            goto L_0x0006
+        L_0x002d:
+            return
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.miui.statusbar.notification.NotificationSettingsManager.enableNotificationIfNeeded():void");
     }
 
     public void onCloudDataUpdated() {

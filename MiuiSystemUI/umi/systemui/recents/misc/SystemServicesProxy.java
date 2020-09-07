@@ -16,6 +16,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.IPackageManager;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -866,8 +867,13 @@ public class SystemServicesProxy {
     }
 
     public boolean useMiuiHomeAsDefaultHome(Context context) {
-        String str = context.getPackageManager().resolveActivity(new Intent("android.intent.action.MAIN").addCategory("android.intent.category.HOME"), 786432).activityInfo.packageName;
-        return str == null || "com.miui.home".equals(str);
+        ActivityInfo activityInfo;
+        String str;
+        ResolveInfo resolveActivity = context.getPackageManager().resolveActivity(new Intent("android.intent.action.MAIN").addCategory("android.intent.category.HOME"), 786432);
+        if (resolveActivity == null || (activityInfo = resolveActivity.activityInfo) == null || (str = activityInfo.packageName) == null || "com.miui.home".equals(str)) {
+            return true;
+        }
+        return false;
     }
 
     public static List<String> getMultiWindowForceResizeList(Context context) {

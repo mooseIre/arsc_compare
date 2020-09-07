@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.IBinder;
 import android.os.SystemProperties;
+import android.text.TextUtils;
+import com.android.systemui.dump.DumpManager;
 import com.android.systemui.statusbar.policy.EncryptionHelper;
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
@@ -45,6 +47,9 @@ public class SystemUIService extends Service {
             return;
         }
         String str = strArr[0];
+        if (!TextUtils.isEmpty(str)) {
+            ((DumpManager) Dependency.get(DumpManager.class)).dumpTarget(str, fileDescriptor, printWriter, strArr);
+        }
         int length2 = services.length;
         while (i < length2) {
             SystemUI systemUI2 = services[i];

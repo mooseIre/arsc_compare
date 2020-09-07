@@ -22,7 +22,9 @@ import android.util.Slog;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.systemui.Constants;
 import com.android.systemui.Dependency;
+import com.android.systemui.Dumpable;
 import com.android.systemui.Util;
+import com.android.systemui.dump.DumpManager;
 import com.android.systemui.miui.controlcenter.QSControlTileHost;
 import com.android.systemui.miui.statusbar.policy.ControlPanelController;
 import com.android.systemui.miui.statusbar.policy.OldModeController;
@@ -44,6 +46,8 @@ import com.android.systemui.qs.tiles.DriveModeTile;
 import com.android.systemui.statusbar.phone.StatusBar;
 import com.android.systemui.statusbar.phone.StatusBarIconController;
 import com.android.systemui.tuner.TunerService;
+import java.io.FileDescriptor;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -51,8 +55,9 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
-public class QSTileHost implements QSHost, TunerService.Tunable, PluginListener<QSFactory>, SuperSaveModeController.SuperSaveModeChangeListener, OldModeController.OldModeChangeListener {
+public class QSTileHost implements QSHost, TunerService.Tunable, PluginListener<QSFactory>, Dumpable, SuperSaveModeController.SuperSaveModeChangeListener, OldModeController.OldModeChangeListener {
     /* access modifiers changed from: private */
     public static final boolean DEBUG = Constants.DEBUG;
     private String MIUI_QS_TILES_EDITED;
@@ -268,6 +273,7 @@ public class QSTileHost implements QSHost, TunerService.Tunable, PluginListener<
         this.mContentObserver.onChange(false);
         ((SuperSaveModeController) Dependency.get(cls2)).addCallback((SuperSaveModeController.SuperSaveModeChangeListener) this);
         ((OldModeController) Dependency.get(cls)).addCallback((OldModeController.OldModeChangeListener) this);
+        ((DumpManager) Dependency.get(DumpManager.class)).registerDumpable(this.TAG, this);
     }
 
     public boolean isDriveModeInstalled() {
@@ -290,6 +296,7 @@ public class QSTileHost implements QSHost, TunerService.Tunable, PluginListener<
         removePluginListeners();
         ((SuperSaveModeController) Dependency.get(SuperSaveModeController.class)).removeCallback((SuperSaveModeController.SuperSaveModeChangeListener) this);
         ((OldModeController) Dependency.get(OldModeController.class)).removeCallback((OldModeController.OldModeChangeListener) this);
+        ((DumpManager) Dependency.get(DumpManager.class)).unRegisterDumpable(this.TAG);
         this.mContext.getContentResolver().unregisterContentObserver(this.mContentObserver);
         this.mContext.unregisterReceiver(this.mPackageChangeReceiver);
         this.mContext.unregisterReceiver(this.mUpdateVersionReceiver);
@@ -837,5 +844,28 @@ public class QSTileHost implements QSHost, TunerService.Tunable, PluginListener<
             this.mForceTileDestroy = true;
             onTuningChanged(this.mTileListKey, this.mQsDefaultTiles);
         }
+    }
+
+    public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
+        printWriter.println("QSTileHost:");
+        this.mTiles.values().stream().filter($$Lambda$QSTileHost$2PpjhdQZsz5HSxLRXZDakLEmIOg.INSTANCE).forEach(new Consumer(fileDescriptor, printWriter, strArr) {
+            public final /* synthetic */ FileDescriptor f$0;
+            public final /* synthetic */ PrintWriter f$1;
+            public final /* synthetic */ String[] f$2;
+
+            {
+                this.f$0 = r1;
+                this.f$1 = r2;
+                this.f$2 = r3;
+            }
+
+            public final void accept(Object obj) {
+                ((Dumpable) ((QSTile) obj)).dump(this.f$0, this.f$1, this.f$2);
+            }
+        });
+    }
+
+    static /* synthetic */ boolean lambda$dump$0(QSTile qSTile) {
+        return qSTile instanceof Dumpable;
     }
 }

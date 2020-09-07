@@ -35,8 +35,10 @@ import com.android.internal.logging.MetricsLogger;
 import com.android.internal.policy.DividerSnapAlgorithm;
 import com.android.internal.policy.DockedDividerUtils;
 import com.android.systemui.Interpolators;
+import com.android.systemui.SystemUI;
 import com.android.systemui.SystemUICompat;
 import com.android.systemui.plugins.R;
+import com.android.systemui.recents.Recents;
 import com.android.systemui.statusbar.FlingAnimationUtils;
 import java.util.function.Consumer;
 
@@ -879,6 +881,11 @@ public class DividerView extends FrameLayout implements View.OnTouchListener, Vi
                 this.mDividerPositionX = i;
                 this.mDividerPositionY = i;
             }
+        }
+        Recents recents = (Recents) SystemUI.getComponent(this.mContext, Recents.class);
+        if (recents != null && !recents.useMiuiHomeAsDefaultHome()) {
+            recents.showRecentApps(false, false);
+            Log.w("DividerView", "showRecentApps");
         }
     }
 

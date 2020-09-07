@@ -181,6 +181,7 @@ import com.android.systemui.keyguard.KeyguardViewMediator;
 import com.android.systemui.keyguard.ScreenLifecycle;
 import com.android.systemui.miui.AppIconsManager;
 import com.android.systemui.miui.ToastOverlayManager;
+import com.android.systemui.miui.controls.ControlsPluginManager;
 import com.android.systemui.miui.policy.NotificationsMonitor;
 import com.android.systemui.miui.statusbar.CloudDataHelper;
 import com.android.systemui.miui.statusbar.ExpandedNotification;
@@ -566,7 +567,8 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
     protected NotificationLogger mNotificationLogger;
     protected NotificationPanelView mNotificationPanel;
     protected NotificationShelf mNotificationShelf;
-    private final ContentObserver mNotificationStyleObserver;
+    /* access modifiers changed from: private */
+    public final ContentObserver mNotificationStyleObserver;
     /* access modifiers changed from: private */
     public View mNotifications;
     Runnable mNotifyKeycodeGoto;
@@ -1304,6 +1306,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
                 if (StatusBar.this.mNotifications != null) {
                     StatusBar.this.mShowNotificationIconObserver.onChange(false);
                 }
+                StatusBar.this.mNotificationStyleObserver.onChange(false);
             }
         };
         this.mSettingsObserver = new ContentObserver(this.mHandler) {
@@ -1345,8 +1348,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
         };
         this.mNotificationStyleObserver = new ContentObserver(this.mHandler) {
             public void onChange(boolean z) {
-                boolean z2 = Constants.IS_INTERNATIONAL;
-                if (NotificationUtil.isNotificationStyleChanged(Settings.System.getIntForUser(StatusBar.this.mContext.getContentResolver(), "status_bar_notification_style", z2 ? 1 : 0, StatusBar.this.mCurrentUserId))) {
+                if (NotificationUtil.isNotificationStyleChanged(Settings.System.getIntForUser(StatusBar.this.mContext.getContentResolver(), "status_bar_notification_style", (Constants.IS_INTERNATIONAL || Util.isMiuiOptimizationDisabled()) ? 1 : 0, StatusBar.this.mCurrentUserId))) {
                     StatusBar.this.updateNotificationsOnDensityOrFontScaleChanged();
                     StatusBar.this.mNotificationIconAreaController.updateNotificationIcons(StatusBar.this.mNotificationData);
                 }
@@ -1458,13 +1460,13 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
                             ActivityManagerCompat.getService().resumeAppSwitches();
                         } catch (RemoteException unused) {
                         }
-                        boolean access$9800 = AnonymousClass92.this.superOnClickHandler(view, pendingIntent, intent);
-                        if (access$9800) {
+                        boolean access$9900 = AnonymousClass92.this.superOnClickHandler(view, pendingIntent, intent);
+                        if (access$9900) {
                             StatusBar.this.animateCollapsePanels(2, true);
                             StatusBar.this.visibilityChanged(false);
                             StatusBar.this.mAssistManager.hideAssist();
                         }
-                        return access$9800;
+                        return access$9900;
                     }
                 }, PreviewInflater.wouldLaunchResolverActivity(StatusBar.this.mContext, pendingIntent.getIntent(), StatusBar.this.mCurrentUserId));
                 return true;
@@ -2080,6 +2082,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
         SettingsJobSchedulerService.schedule(this.mContext);
         ((ToastOverlayManager) Dependency.get(ToastOverlayManager.class)).setup(this.mContext, getStatusBarWindow());
         ((OverviewProxyService) Dependency.get(OverviewProxyService.class)).startConnectionToCurrentUser();
+        ((ControlsPluginManager) Dependency.get(ControlsPluginManager.class)).addControlsPluginListener();
     }
 
     public final void onBusEvent(MultiWindowStateChangedEvent multiWindowStateChangedEvent) {

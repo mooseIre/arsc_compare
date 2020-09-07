@@ -12,6 +12,7 @@ import com.android.internal.util.Preconditions;
 import com.android.settingslib.bluetooth.LocalBluetoothManager;
 import com.android.systemui.Dependency;
 import com.android.systemui.bubbles.BubbleController;
+import com.android.systemui.dump.DumpManager;
 import com.android.systemui.fragments.FragmentService;
 import com.android.systemui.keyguard.ScreenLifecycle;
 import com.android.systemui.keyguard.WakefulnessLifecycle;
@@ -408,6 +409,11 @@ public class DependencyUI extends SystemUI {
         this.mProviders.put(ControlsPluginManager.class, new Dependency.DependencyProvider(this) {
             public Object createDependency() {
                 return new ControlsPluginManager();
+            }
+        });
+        this.mProviders.put(DumpManager.class, new Dependency.DependencyProvider(this) {
+            public Object createDependency() {
+                return new DumpManager();
             }
         });
         SystemUIFactory.getInstance().injectDependencies(this.mProviders, this.mContext);

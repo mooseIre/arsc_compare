@@ -4,9 +4,12 @@ import android.app.Notification;
 import android.app.NotificationCompat;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.ImageDecoder;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.Icon;
+import android.media.MediaMetadata;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -24,7 +27,9 @@ import com.android.systemui.miui.statusbar.policy.UsbNotificationController;
 import com.android.systemui.plugins.R;
 import com.android.systemui.statusbar.NotificationData;
 import com.android.systemui.statusbar.notification.MiuiNotificationCompat;
+import com.xiaomi.stat.MiStat;
 import com.xiaomi.stat.c.c;
+import java.io.IOException;
 import miui.R$style;
 import miui.content.res.IconCustomizer;
 import miui.securityspace.CrossUserUtils;
@@ -345,5 +350,32 @@ public class NotificationUtil {
 
     public static String resoveSendPkg(ExpandedNotification expandedNotification) {
         return c.a.equals(expandedNotification.getOpPkg()) ? c.a : expandedNotification.getBasePkg();
+    }
+
+    public static Bitmap loadBitmapFromUri(Context context, MediaMetadata mediaMetadata) {
+        Bitmap loadBitmapFromUri;
+        String[] strArr = {"android.media.metadata.ALBUM_ART_URI", "android.media.metadata.ART_URI", "android.media.metadata.DISPLAY_ICON_URI"};
+        for (int i = 0; i < 3; i++) {
+            String string = mediaMetadata.getString(strArr[i]);
+            if (!TextUtils.isEmpty(string) && (loadBitmapFromUri = loadBitmapFromUri(context, Uri.parse(string))) != null) {
+                return loadBitmapFromUri;
+            }
+        }
+        return null;
+    }
+
+    private static Bitmap loadBitmapFromUri(Context context, Uri uri) {
+        if (uri.getScheme() == null) {
+            return null;
+        }
+        if (!uri.getScheme().equals(MiStat.Param.CONTENT) && !uri.getScheme().equals("android.resource") && !uri.getScheme().equals("file")) {
+            return null;
+        }
+        try {
+            return ImageDecoder.decodeBitmap(ImageDecoder.createSource(context.getContentResolver(), uri), $$Lambda$NotificationUtil$YfnAuhF3RlXedltGO2nVYLyxuE.INSTANCE);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

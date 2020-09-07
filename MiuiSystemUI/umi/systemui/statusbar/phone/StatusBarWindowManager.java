@@ -245,8 +245,7 @@ public class StatusBarWindowManager implements RemoteInputController.Callback, D
     }
 
     private void applyForceStatusBarVisibleFlag(State state) {
-        boolean z = Build.VERSION.SDK_INT > 29 && state.panelExpanded;
-        if (state.forceStatusBarVisible || z) {
+        if (state.forceStatusBarVisible) {
             this.mLpChanged.privateFlags |= 4096;
             return;
         }

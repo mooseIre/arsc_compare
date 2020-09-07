@@ -86,6 +86,18 @@ public class TileLifecycleManager extends BroadcastReceiver implements IQSTileSe
         }
     }
 
+    public boolean isToggleableTile() {
+        try {
+            ServiceInfo serviceInfo = this.mPackageManagerAdapter.getServiceInfo(this.mIntent.getComponent(), 8320);
+            if (serviceInfo.metaData == null || !serviceInfo.metaData.getBoolean("android.service.quicksettings.TOGGLEABLE_TILE", false)) {
+                return false;
+            }
+            return true;
+        } catch (PackageManager.NameNotFoundException unused) {
+            return false;
+        }
+    }
+
     public void flushMessagesAndUnbind() {
         this.mUnbindImmediate = true;
         setBindService(true);

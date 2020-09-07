@@ -63,7 +63,8 @@ public class CustomTile extends QSTileImpl<QSTile.State> implements TileLifecycl
         setTileIcon();
         TileServiceManager tileWrapper = qSTileHost.getTileServices().getTileWrapper(this);
         this.mServiceManager = tileWrapper;
-        this.mService = tileWrapper.getTileService();
+        CustomTileCompat.judgeResetState(tileWrapper, this);
+        this.mService = this.mServiceManager.getTileService();
         this.mServiceManager.setTileChangeListener(this);
         this.mUser = ActivityManager.getCurrentUser();
     }
@@ -261,7 +262,11 @@ public class CustomTile extends QSTileImpl<QSTile.State> implements TileLifecycl
     }
 
     public QSTile.State newTileState() {
-        return new QSTile.State();
+        TileServiceManager tileServiceManager = this.mServiceManager;
+        if (tileServiceManager == null || !tileServiceManager.isToggleableTile()) {
+            return new QSTile.State();
+        }
+        return new QSTile.BooleanState();
     }
 
     public Intent getLongClickIntent() {
@@ -379,6 +384,7 @@ public class CustomTile extends QSTileImpl<QSTile.State> implements TileLifecycl
             state.contentDescription = state.label;
         }
         state.expandedAccessibilityClassName = Switch.class.getName();
+        CustomTileCompat.judgeForceChangeValue(state);
     }
 
     public void startUnlockAndRun() {

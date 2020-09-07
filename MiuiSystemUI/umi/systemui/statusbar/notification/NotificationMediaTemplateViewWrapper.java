@@ -1,5 +1,6 @@
 package com.android.systemui.statusbar.notification;
 
+import android.app.Notification;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.ColorDrawable;
@@ -10,6 +11,7 @@ import android.media.session.MediaSession;
 import android.media.session.PlaybackState;
 import android.metrics.LogMaker;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -66,6 +68,7 @@ public class NotificationMediaTemplateViewWrapper extends NotificationHeaderView
         public void onMetadataChanged(MediaMetadata mediaMetadata) {
             if (NotificationMediaTemplateViewWrapper.this.mMediaMetadata == null || !NotificationMediaTemplateViewWrapper.this.mMediaMetadata.equals(mediaMetadata)) {
                 MediaMetadata unused = NotificationMediaTemplateViewWrapper.this.mMediaMetadata = mediaMetadata;
+                NotificationMediaTemplateViewWrapper.this.updateMediaInfo();
                 NotificationMediaTemplateViewWrapper.this.updateDuration();
                 NotificationMediaTemplateViewWrapper.this.startTimer();
             }
@@ -204,12 +207,19 @@ public class NotificationMediaTemplateViewWrapper extends NotificationHeaderView
         this.mStyleProcessor.handleActions();
         this.mStyleProcessor.handleMiuiMediaSeamlessButton();
         this.mStyleProcessor.handleRightIcon();
+        updateMediaInfo();
     }
 
     private void handleMediaData() {
         boolean z;
         MediaSession.Token token = (MediaSession.Token) this.mRow.getEntry().notification.getNotification().extras.getParcelable("android.mediaSession");
         if (token == null || isNormalMedia()) {
+            if (token != null) {
+                MediaController mediaController = new MediaController(this.mContext, token);
+                this.mMediaController = mediaController;
+                this.mMediaMetadata = mediaController.getMetadata();
+                updateMediaInfo();
+            }
             View view = this.mSeekBarView;
             if (view != null) {
                 view.setVisibility(8);
@@ -217,11 +227,11 @@ public class NotificationMediaTemplateViewWrapper extends NotificationHeaderView
             }
             return;
         }
-        MediaController mediaController = this.mMediaController;
-        if (mediaController == null || !mediaController.getSessionToken().equals(token)) {
-            MediaController mediaController2 = this.mMediaController;
-            if (mediaController2 != null) {
-                mediaController2.unregisterCallback(this.mMediaCallback);
+        MediaController mediaController2 = this.mMediaController;
+        if (mediaController2 == null || !mediaController2.getSessionToken().equals(token)) {
+            MediaController mediaController3 = this.mMediaController;
+            if (mediaController3 != null) {
+                mediaController3.unregisterCallback(this.mMediaCallback);
             }
             this.mMediaController = new MediaController(this.mContext, token);
             z = true;
@@ -231,7 +241,8 @@ public class NotificationMediaTemplateViewWrapper extends NotificationHeaderView
         MediaMetadata metadata = this.mMediaController.getMetadata();
         this.mMediaMetadata = metadata;
         if (metadata != null) {
-            if (metadata.getLong("android.media.metadata.DURATION") <= 0) {
+            updateMediaInfo();
+            if (this.mMediaMetadata.getLong("android.media.metadata.DURATION") <= 0) {
                 View view2 = this.mSeekBarView;
                 if (view2 != null && view2.getVisibility() != 8) {
                     this.mSeekBarView.setVisibility(8);
@@ -266,8 +277,8 @@ public class NotificationMediaTemplateViewWrapper extends NotificationHeaderView
             this.mSeekBarElapsedTime = (TextView) this.mSeekBarView.findViewById(R.id.media_notification_elapsed_time);
             this.mSeekBarTotalTime = (TextView) this.mSeekBarView.findViewById(R.id.media_notification_total_time);
             if (this.mSeekBarTimer == null) {
-                MediaController mediaController3 = this.mMediaController;
-                if (mediaController3 == null || !canSeekMedia(mediaController3.getPlaybackState())) {
+                MediaController mediaController4 = this.mMediaController;
+                if (mediaController4 == null || !canSeekMedia(mediaController4.getPlaybackState())) {
                     setScrubberVisible(false);
                 } else {
                     this.mMetricsLogger.write(newLog(3, 1));
@@ -324,6 +335,26 @@ public class NotificationMediaTemplateViewWrapper extends NotificationHeaderView
             this.mSeekBar.setThumb(z ? this.mSeekBarThumbDrawable : new ColorDrawable(0));
             this.mSeekBar.setEnabled(z);
             this.mMetricsLogger.write(newLog(3, z ? 1 : 0));
+        }
+    }
+
+    /* access modifiers changed from: private */
+    public void updateMediaInfo() {
+        if (this.mMediaMetadata != null) {
+            Notification notification = this.mRow.getStatusBarNotification().getNotification();
+            CharSequence string = this.mMediaMetadata.getString("android.media.metadata.DISPLAY_TITLE");
+            if (TextUtils.isEmpty(string)) {
+                string = this.mMediaMetadata.getString("android.media.metadata.TITLE");
+            }
+            if (TextUtils.isEmpty(string)) {
+                string = HybridGroupManager.resolveTitle(notification);
+            }
+            CharSequence string2 = this.mMediaMetadata.getString("android.media.metadata.ARTIST");
+            if (TextUtils.isEmpty(string2)) {
+                string2 = HybridGroupManager.resolveText(notification);
+            }
+            this.mMediaTitle.setText(string);
+            this.mMediaText.setText(string2);
         }
     }
 
