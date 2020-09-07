@@ -258,7 +258,11 @@ public class CustomTile extends QSTileImpl<QSTile.State> implements TileLifecycl
     }
 
     public QSTile.State newTileState() {
-        return new QSTile.State();
+        TileServiceManager tileServiceManager = this.mServiceManager;
+        if (tileServiceManager == null || !tileServiceManager.isToggleableTile()) {
+            return new QSTile.State();
+        }
+        return new QSTile.BooleanState();
     }
 
     public Intent getLongClickIntent() {

@@ -15,6 +15,8 @@ import android.widget.Toast;
 import com.android.systemui.Dependency;
 import com.android.systemui.SysUiServiceProvider;
 import com.android.systemui.plugins.R;
+import com.android.systemui.recents.events.RecentsEventBus;
+import com.android.systemui.recents.events.component.RecentsVisibilityChangedEvent;
 import com.android.systemui.recents.misc.SystemServicesProxy;
 import com.android.systemui.shared.recents.IOverviewProxy;
 import com.android.systemui.stackdivider.Divider;
@@ -41,9 +43,6 @@ public class OverviewProxyRecentsImpl implements RecentsImplementation {
     public void preloadRecentApps() {
     }
 
-    public void release() {
-    }
-
     public void onStart(Context context, SysUiServiceProvider sysUiServiceProvider) {
         this.mContext = context;
         this.mSysUiServiceProvider = sysUiServiceProvider;
@@ -51,6 +50,19 @@ public class OverviewProxyRecentsImpl implements RecentsImplementation {
         this.mTrustManager = (TrustManager) context.getSystemService("trust");
         this.mOverviewProxyService = (OverviewProxyService) Dependency.get(OverviewProxyService.class);
         Recents.getSystemServices().registerMiuiTaskResizeList(this.mContext);
+        RecentsEventBus.getDefault().register(this, 1);
+    }
+
+    public void release() {
+        try {
+            RecentsEventBus.getDefault().unregister(this);
+        } catch (Exception unused) {
+            Log.e("OverviewProxyRecentsImpl", "release error");
+        }
+    }
+
+    public final void onBusEvent(RecentsVisibilityChangedEvent recentsVisibilityChangedEvent) {
+        Recents.getSystemServices().setRecentsVisibility(recentsVisibilityChangedEvent.applicationContext, recentsVisibilityChangedEvent.visible);
     }
 
     public void showRecentApps(boolean z, boolean z2) {

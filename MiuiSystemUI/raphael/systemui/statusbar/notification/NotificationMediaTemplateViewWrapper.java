@@ -1,5 +1,6 @@
 package com.android.systemui.statusbar.notification;
 
+import android.app.Notification;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.ColorDrawable;
@@ -10,6 +11,7 @@ import android.media.session.MediaSession;
 import android.media.session.PlaybackState;
 import android.metrics.LogMaker;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -66,6 +68,7 @@ public class NotificationMediaTemplateViewWrapper extends NotificationHeaderView
         public void onMetadataChanged(MediaMetadata mediaMetadata) {
             if (NotificationMediaTemplateViewWrapper.this.mMediaMetadata == null || !NotificationMediaTemplateViewWrapper.this.mMediaMetadata.equals(mediaMetadata)) {
                 MediaMetadata unused = NotificationMediaTemplateViewWrapper.this.mMediaMetadata = mediaMetadata;
+                NotificationMediaTemplateViewWrapper.this.updateMediaInfo();
                 NotificationMediaTemplateViewWrapper.this.updateDuration();
                 NotificationMediaTemplateViewWrapper.this.startTimer();
             }
@@ -204,12 +207,18 @@ public class NotificationMediaTemplateViewWrapper extends NotificationHeaderView
         this.mStyleProcessor.handleActions();
         this.mStyleProcessor.handleMiuiMediaSeamlessButton();
         this.mStyleProcessor.handleRightIcon();
+        updateMediaInfo();
     }
 
     private void handleMediaData() {
         boolean z;
         MediaSession.Token token = (MediaSession.Token) this.mRow.getEntry().notification.getNotification().extras.getParcelable("android.mediaSession");
         if (token == null || isNormalMedia()) {
+            if (token != null) {
+                this.mMediaController = new MediaController(this.mContext, token);
+                this.mMediaMetadata = this.mMediaController.getMetadata();
+                updateMediaInfo();
+            }
             View view = this.mSeekBarView;
             if (view != null) {
                 view.setVisibility(8);
@@ -229,9 +238,9 @@ public class NotificationMediaTemplateViewWrapper extends NotificationHeaderView
             z = false;
         }
         this.mMediaMetadata = this.mMediaController.getMetadata();
-        MediaMetadata mediaMetadata = this.mMediaMetadata;
-        if (mediaMetadata != null) {
-            if (mediaMetadata.getLong("android.media.metadata.DURATION") <= 0) {
+        if (this.mMediaMetadata != null) {
+            updateMediaInfo();
+            if (this.mMediaMetadata.getLong("android.media.metadata.DURATION") <= 0) {
                 View view2 = this.mSeekBarView;
                 if (view2 != null && view2.getVisibility() != 8) {
                     this.mSeekBarView.setVisibility(8);
@@ -323,6 +332,26 @@ public class NotificationMediaTemplateViewWrapper extends NotificationHeaderView
             this.mSeekBar.setThumb(z ? this.mSeekBarThumbDrawable : new ColorDrawable(0));
             this.mSeekBar.setEnabled(z);
             this.mMetricsLogger.write(newLog(3, z ? 1 : 0));
+        }
+    }
+
+    /* access modifiers changed from: private */
+    public void updateMediaInfo() {
+        if (this.mMediaMetadata != null) {
+            Notification notification = this.mRow.getStatusBarNotification().getNotification();
+            CharSequence string = this.mMediaMetadata.getString("android.media.metadata.DISPLAY_TITLE");
+            if (TextUtils.isEmpty(string)) {
+                string = this.mMediaMetadata.getString("android.media.metadata.TITLE");
+            }
+            if (TextUtils.isEmpty(string)) {
+                string = HybridGroupManager.resolveTitle(notification);
+            }
+            CharSequence string2 = this.mMediaMetadata.getString("android.media.metadata.ARTIST");
+            if (TextUtils.isEmpty(string2)) {
+                string2 = HybridGroupManager.resolveText(notification);
+            }
+            this.mMediaTitle.setText(string);
+            this.mMediaText.setText(string2);
         }
     }
 

@@ -42,8 +42,10 @@ public class QSControlScrollView extends ScrollView {
     private float mInitialY;
     private boolean mIsScrolledToBottom = false;
     private boolean mIsScrolledToTop = true;
+    private boolean mMoved = false;
     private int mOrientation;
     private boolean mOverTrans;
+    private QSControlCenterPanel mQSControlCenterPanel;
     private QSControlCenterTileLayout mQsControlCenterTileLayout;
     private LinearLayout mSmartControlsView;
     private int mStartSrcollY = 0;
@@ -74,6 +76,10 @@ public class QSControlScrollView extends ScrollView {
         this.mBounceState = Folme.useAt(this).state();
         setOverScrollMode(1);
         replaceScrollViewAttribute();
+    }
+
+    public void setQSControlCenterPanel(QSControlCenterPanel qSControlCenterPanel) {
+        this.mQSControlCenterPanel = qSControlCenterPanel;
     }
 
     /* access modifiers changed from: protected */
@@ -154,108 +160,118 @@ public class QSControlScrollView extends ScrollView {
     }
 
     /* JADX WARNING: Code restructure failed: missing block: B:13:0x0029, code lost:
-        if (r0 != 3) goto L_0x00a4;
+        if (r0 != 3) goto L_0x00b9;
      */
     /* Code decompiled incorrectly, please refer to instructions dump. */
-    public boolean onTouchEvent(android.view.MotionEvent r8) {
+    public boolean onTouchEvent(android.view.MotionEvent r9) {
         /*
-            r7 = this;
-            com.android.systemui.miui.controlcenter.QSControlCenterTileLayout r0 = r7.mQsControlCenterTileLayout
+            r8 = this;
+            com.android.systemui.miui.controlcenter.QSControlCenterTileLayout r0 = r8.mQsControlCenterTileLayout
             boolean r0 = r0.isCollapsed()
             java.lang.String r1 = "QSControlScrollView"
             r2 = 0
             if (r0 == 0) goto L_0x0019
-            android.widget.LinearLayout r0 = r7.mSmartControlsView
+            android.widget.LinearLayout r0 = r8.mSmartControlsView
             int r0 = r0.getChildCount()
             if (r0 != 0) goto L_0x0019
-            java.lang.String r7 = "onTouchEvent collapsed return false"
-            android.util.Log.d(r1, r7)
+            java.lang.String r8 = "onTouchEvent collapsed return false"
+            android.util.Log.d(r1, r8)
             return r2
         L_0x0019:
-            int r0 = r8.getActionMasked()
-            if (r0 == 0) goto L_0x0096
+            int r0 = r9.getActionMasked()
+            if (r0 == 0) goto L_0x00a9
             java.lang.String r3 = "bounce"
-            r4 = 1
-            r5 = 0
-            if (r0 == r4) goto L_0x0082
+            r4 = 0
+            r5 = 1
+            if (r0 == r5) goto L_0x0084
             r6 = 2
             if (r0 == r6) goto L_0x002d
-            r4 = 3
-            if (r0 == r4) goto L_0x0082
-            goto L_0x00a4
+            r5 = 3
+            if (r0 == r5) goto L_0x0095
+            goto L_0x00b9
         L_0x002d:
-            boolean r0 = r7.mTouchScrolledToTop
-            boolean r6 = r7.mIsScrolledToTop
-            if (r0 != r6) goto L_0x0039
-            boolean r0 = r7.ismTouchScrolledToBottom
-            boolean r6 = r7.mIsScrolledToBottom
-            if (r0 == r6) goto L_0x0047
-        L_0x0039:
-            boolean r0 = r7.mIsScrolledToTop
-            r7.mTouchScrolledToTop = r0
-            boolean r0 = r7.mIsScrolledToBottom
-            r7.ismTouchScrolledToBottom = r0
-            float r0 = r8.getRawY()
-            r7.mInitialY = r0
-        L_0x0047:
-            boolean r0 = r7.isScrolledToTop()
-            if (r0 == 0) goto L_0x0058
-            float r0 = r8.getRawY()
-            float r6 = r7.mInitialY
+            r8.mMoved = r5
+            boolean r0 = r8.mTouchScrolledToTop
+            boolean r6 = r8.mIsScrolledToTop
+            if (r0 != r6) goto L_0x003b
+            boolean r0 = r8.ismTouchScrolledToBottom
+            boolean r6 = r8.mIsScrolledToBottom
+            if (r0 == r6) goto L_0x0049
+        L_0x003b:
+            boolean r0 = r8.mIsScrolledToTop
+            r8.mTouchScrolledToTop = r0
+            boolean r0 = r8.mIsScrolledToBottom
+            r8.ismTouchScrolledToBottom = r0
+            float r0 = r9.getRawY()
+            r8.mInitialY = r0
+        L_0x0049:
+            boolean r0 = r8.isScrolledToTop()
+            if (r0 == 0) goto L_0x005a
+            float r0 = r9.getRawY()
+            float r6 = r8.mInitialY
             float r0 = r0 - r6
-            int r0 = (r0 > r5 ? 1 : (r0 == r5 ? 0 : -1))
-            if (r0 >= 0) goto L_0x0069
-        L_0x0058:
-            boolean r0 = r7.isScrolledToBottom()
-            if (r0 == 0) goto L_0x00a4
-            float r0 = r8.getRawY()
-            float r6 = r7.mInitialY
+            int r0 = (r0 > r4 ? 1 : (r0 == r4 ? 0 : -1))
+            if (r0 >= 0) goto L_0x006b
+        L_0x005a:
+            boolean r0 = r8.isScrolledToBottom()
+            if (r0 == 0) goto L_0x00b9
+            float r0 = r9.getRawY()
+            float r6 = r8.mInitialY
             float r0 = r0 - r6
-            int r0 = (r0 > r5 ? 1 : (r0 == r5 ? 0 : -1))
-            if (r0 >= 0) goto L_0x00a4
-        L_0x0069:
+            int r0 = (r0 > r4 ? 1 : (r0 == r4 ? 0 : -1))
+            if (r0 >= 0) goto L_0x00b9
+        L_0x006b:
             miuix.animation.controller.AnimState r0 = new miuix.animation.controller.AnimState
             r0.<init>(r3)
             miuix.animation.property.FloatProperty r1 = TRANS_HEIGHT
-            float r8 = r8.getRawY()
-            float r3 = r7.mInitialY
-            float r8 = r8 - r3
+            float r9 = r9.getRawY()
+            float r3 = r8.mInitialY
+            float r9 = r9 - r3
             long[] r2 = new long[r2]
-            r0.add((miuix.animation.property.FloatProperty) r1, (float) r8, (long[]) r2)
-            miuix.animation.IStateStyle r7 = r7.mBounceState
-            r7.setTo((java.lang.Object) r0)
-            return r4
-        L_0x0082:
+            r0.add((miuix.animation.property.FloatProperty) r1, (float) r9, (long[]) r2)
+            miuix.animation.IStateStyle r8 = r8.mBounceState
+            r8.setTo((java.lang.Object) r0)
+            return r5
+        L_0x0084:
+            com.android.systemui.miui.controlcenter.QSControlCenterPanel r0 = r8.mQSControlCenterPanel
+            float r5 = r9.getRawX()
+            int r5 = (int) r5
+            float r6 = r9.getRawY()
+            int r6 = (int) r6
+            boolean r7 = r8.mMoved
+            r0.performCollapseByClick(r5, r6, r7)
+        L_0x0095:
             miuix.animation.controller.AnimState r0 = new miuix.animation.controller.AnimState
             r0.<init>(r3)
             miuix.animation.property.FloatProperty r3 = TRANS_HEIGHT
-            long[] r4 = new long[r2]
-            r0.add((miuix.animation.property.FloatProperty) r3, (int) r2, (long[]) r4)
-            miuix.animation.IStateStyle r2 = r7.mBounceState
+            long[] r5 = new long[r2]
+            r0.add((miuix.animation.property.FloatProperty) r3, (int) r2, (long[]) r5)
+            miuix.animation.IStateStyle r2 = r8.mBounceState
             r2.setTo((java.lang.Object) r0)
-            r7.mInitialY = r5
-            goto L_0x00a4
-        L_0x0096:
-            float r0 = r8.getRawY()
-            r7.mInitialY = r0
-            boolean r0 = r7.mIsScrolledToTop
-            r7.mTouchScrolledToTop = r0
-            boolean r0 = r7.mIsScrolledToBottom
-            r7.ismTouchScrolledToBottom = r0
-        L_0x00a4:
-            boolean r7 = super.onTouchEvent(r8)
+            r8.mInitialY = r4
+            goto L_0x00b9
+        L_0x00a9:
+            r8.mMoved = r2
+            float r0 = r9.getRawY()
+            r8.mInitialY = r0
+            boolean r0 = r8.mIsScrolledToTop
+            r8.mTouchScrolledToTop = r0
+            boolean r0 = r8.mIsScrolledToBottom
+            r8.ismTouchScrolledToBottom = r0
+        L_0x00b9:
+            boolean r8 = super.onTouchEvent(r9)
             java.lang.StringBuilder r0 = new java.lang.StringBuilder
             r0.<init>()
             java.lang.String r2 = "QSControlScrollView: onTouchEvent ev = "
             r0.append(r2)
-            int r8 = r8.getAction()
+            int r9 = r9.getAction()
+            r0.append(r9)
+            java.lang.String r9 = ", result = "
+            r0.append(r9)
             r0.append(r8)
-            java.lang.String r8 = ", result = "
-            r0.append(r8)
-            r0.append(r7)
-            java.lang.String r8 = r0.toString()
-            android.util.Log.d(r1, r8)
-            return r7
+            java.lang.String r9 = r0.toString()
+            android.util.Log.d(r1, r9)
+            return r8
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.miui.controlcenter.QSControlScrollView.onTouchEvent(android.view.MotionEvent):boolean");
     }

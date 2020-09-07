@@ -436,18 +436,8 @@ public class HeadsUpManager implements ViewTreeObserver.OnComputeInternalInsetsL
     private void setCollapsedTouchableInsets(ViewTreeObserver.InternalInsetsInfo internalInsetsInfo) {
         internalInsetsInfo.setTouchableInsets(3);
         internalInsetsInfo.touchableRegion.set(0, 0, this.mStatusBarWindowView.getWidth(), this.mStatusBarHeight);
-        updateRegionForNotch(internalInsetsInfo.touchableRegion);
         updateRegionForPrompt(internalInsetsInfo.touchableRegion);
         updateRegionForBubble(internalInsetsInfo.touchableRegion);
-    }
-
-    private void updateRegionForNotch(Region region) {
-        Rect rect = new Rect();
-        DisplayCutoutCompat.boundsFromDirection(this.mStatusBarWindowView, 48, rect);
-        if (!rect.isEmpty()) {
-            rect.offset(0, this.mDisplayCutoutTouchableRegionSize);
-            region.op(rect, Region.Op.UNION);
-        }
     }
 
     private void updateRegionForPrompt(Region region) {

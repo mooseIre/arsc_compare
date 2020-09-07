@@ -146,7 +146,7 @@ public class CellularTile extends QSTileImpl<QSTile.BooleanState> {
         L_0x000a:
             android.content.Context r0 = r6.mContext
             android.content.res.Resources r0 = r0.getResources()
-            r1 = 2131821671(0x7f110467, float:1.9276092E38)
+            r1 = 2131821677(0x7f11046d, float:1.9276104E38)
             java.lang.String r1 = r0.getString(r1)
             r7.label = r1
             com.android.systemui.statusbar.policy.NetworkController r1 = r6.mController
@@ -275,8 +275,8 @@ public class CellularTile extends QSTileImpl<QSTile.BooleanState> {
             java.lang.String r0 = r0.getString(r1)
         L_0x0118:
             boolean r8 = r8.noSim
-            r1 = 2131822316(0x7f1106ec, float:1.92774E38)
-            r2 = 2131822315(0x7f1106eb, float:1.9277398E38)
+            r1 = 2131822322(0x7f1106f2, float:1.9277412E38)
+            r2 = 2131822321(0x7f1106f1, float:1.927741E38)
             java.lang.String r3 = ","
             if (r8 == 0) goto L_0x0147
             java.lang.StringBuilder r8 = new java.lang.StringBuilder

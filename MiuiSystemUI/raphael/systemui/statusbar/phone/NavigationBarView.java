@@ -754,7 +754,7 @@ public class NavigationBarView extends LinearLayout {
             boolean z2 = (2097152 & i) != 0;
             boolean z3 = !isOverviewEnabled();
             boolean z4 = (4194304 & i) != 0 && (this.mNavigationIconHints & 1) == 0;
-            int i3 = 33554432 & i;
+            this.mOverviewProxyService.setSystemUiStateFlag(1024, (33554432 & i) != 0);
             boolean z5 = (i & 512) != 0;
             int mode = this.mBarTransitions.getMode();
             if ((z5 && (mode == 4 || mode == 6)) || mode == 0 || mode == 3) {
@@ -1240,7 +1240,13 @@ public class NavigationBarView extends LinearLayout {
     public void updateSystemUiStateFlags() {
         OverviewProxyService overviewProxyService = this.mOverviewProxyService;
         if (overviewProxyService != null) {
+            boolean z = true;
             overviewProxyService.setSystemUiStateFlag(2, !isNavBarWindowVisible());
+            OverviewProxyService overviewProxyService2 = this.mOverviewProxyService;
+            if ((this.mDisabledFlags & 33554432) == 0) {
+                z = false;
+            }
+            overviewProxyService2.setSystemUiStateFlag(1024, z);
         }
     }
 

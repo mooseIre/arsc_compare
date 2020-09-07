@@ -163,6 +163,7 @@ public class QSControlCenterPanel extends FrameLayout implements ConfigurationCo
         this.mEditTiles = findViewById(R.id.tiles_edit);
         this.mQSContainer = (FrameLayout) findViewById(R.id.qs_container);
         this.mQsControlScrollView = (QSControlScrollView) findViewById(R.id.scroll_container);
+        this.mQsControlScrollView.setQSControlCenterPanel(this);
         this.mBigTilesScrollView = (ScrollView) findViewById(R.id.scroll_container_big_tiles);
         this.mQuickQsControlCenterTileLayout = (QSControlCenterTileLayout) findViewById(R.id.quick_tile_layout);
         this.mQuickQsControlCenterTileLayout.setQSControlCenterPanel(this);
@@ -496,8 +497,17 @@ public class QSControlCenterPanel extends FrameLayout implements ConfigurationCo
         return true;
     }
 
+    private boolean isFootAreaTouchDown(float f) {
+        int[] locationOnScreen = this.mFootPanel.getLocationOnScreen();
+        int[] locationOnScreen2 = this.mSmartControlsView.getLocationOnScreen();
+        if (f < ((float) locationOnScreen[1]) || f > ((float) locationOnScreen2[1])) {
+            return false;
+        }
+        return true;
+    }
+
     /* JADX WARNING: Code restructure failed: missing block: B:9:0x003c, code lost:
-        if (r2 != 3) goto L_0x0124;
+        if (r2 != 3) goto L_0x011a;
      */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     public boolean onTouchEvent(android.view.MotionEvent r6) {
@@ -523,23 +533,23 @@ public class QSControlCenterPanel extends FrameLayout implements ConfigurationCo
             int r2 = r6.getActionMasked()
             r3 = 0
             r4 = 1
-            if (r2 == 0) goto L_0x0100
+            if (r2 == 0) goto L_0x00f6
             r0 = 2
             if (r2 == r4) goto L_0x0087
             if (r2 == r0) goto L_0x0040
             r6 = 3
-            if (r2 == r6) goto L_0x00a0
-            goto L_0x0124
+            if (r2 == r6) goto L_0x0096
+            goto L_0x011a
         L_0x0040:
             r5.mMoved = r4
             boolean r0 = r5.isOrientationPortrait()
             if (r0 != 0) goto L_0x004a
-            goto L_0x0124
+            goto L_0x011a
         L_0x004a:
             float r0 = r5.mInitialTouchY
             boolean r0 = r5.isHeaderAreaTouchDown(r0)
             if (r0 == 0) goto L_0x0054
-            goto L_0x0124
+            goto L_0x011a
         L_0x0054:
             float r0 = r6.getRawY()
             float r2 = r5.mInitialTouchY
@@ -550,7 +560,7 @@ public class QSControlCenterPanel extends FrameLayout implements ConfigurationCo
             if (r0 == 0) goto L_0x006d
             com.android.systemui.miui.statusbar.phone.ControlPanelWindowView r5 = r5.mControlPanelWindowView
             r5.onTouchEvent(r6)
-            goto L_0x0124
+            goto L_0x011a
         L_0x006d:
             float r6 = r5.mInitialTouchY
             float r1 = r1 - r6
@@ -565,26 +575,22 @@ public class QSControlCenterPanel extends FrameLayout implements ConfigurationCo
             float r0 = (float) r0
             float r6 = r6 / r0
             r5.setTransRatio(r6)
-            goto L_0x0124
+            goto L_0x011a
         L_0x0087:
-            boolean r1 = r5.mMoved
-            if (r1 != 0) goto L_0x00a0
             float r1 = r6.getRawX()
             int r1 = (int) r1
             float r6 = r6.getRawY()
             int r6 = (int) r6
-            boolean r6 = r5.shouldCollapseByClick(r1, r6)
-            if (r6 == 0) goto L_0x00a0
-            com.android.systemui.miui.statusbar.phone.ControlPanelWindowView r6 = r5.mControlPanelWindowView
-            r6.collapsePanel(r4)
-        L_0x00a0:
+            boolean r2 = r5.mMoved
+            r5.performCollapseByClick(r1, r6, r2)
+        L_0x0096:
             boolean r6 = r5.isOrientationPortrait()
-            if (r6 != 0) goto L_0x00a8
-            goto L_0x0124
-        L_0x00a8:
+            if (r6 != 0) goto L_0x009e
+            goto L_0x011a
+        L_0x009e:
             com.android.systemui.miui.controlcenter.QSControlCenterTileLayout r6 = r5.mQuickQsControlCenterTileLayout
             boolean r6 = r6.isExpanding()
-            if (r6 == 0) goto L_0x00fc
+            if (r6 == 0) goto L_0x00f2
             android.view.VelocityTracker r6 = r5.mVelocityTracker
             r1 = 1000(0x3e8, float:1.401E-42)
             int r2 = r5.mMaximumVelocity
@@ -597,42 +603,42 @@ public class QSControlCenterPanel extends FrameLayout implements ConfigurationCo
             float r2 = (float) r2
             int r1 = (r1 > r2 ? 1 : (r1 == r2 ? 0 : -1))
             r2 = 0
-            if (r1 <= 0) goto L_0x00d4
+            if (r1 <= 0) goto L_0x00ca
             int r1 = (r6 > r2 ? 1 : (r6 == r2 ? 0 : -1))
-            if (r1 <= 0) goto L_0x00d4
+            if (r1 <= 0) goto L_0x00ca
             r5.toBottomAnimation()
-            goto L_0x00fc
-        L_0x00d4:
+            goto L_0x00f2
+        L_0x00ca:
             float r1 = java.lang.Math.abs(r6)
             int r3 = r5.mMinimumVelocity
             float r3 = (float) r3
             int r1 = (r1 > r3 ? 1 : (r1 == r3 ? 0 : -1))
-            if (r1 <= 0) goto L_0x00e7
+            if (r1 <= 0) goto L_0x00dd
             int r6 = (r6 > r2 ? 1 : (r6 == r2 ? 0 : -1))
-            if (r6 >= 0) goto L_0x00e7
+            if (r6 >= 0) goto L_0x00dd
             r5.toTopAnimation()
-            goto L_0x00fc
-        L_0x00e7:
+            goto L_0x00f2
+        L_0x00dd:
             android.widget.LinearLayout r6 = r5.mFootPanel
             float r6 = r6.getTranslationY()
             int r1 = r5.mExpandHeightThres
             int r1 = r1 / r0
             float r0 = (float) r1
             int r6 = (r6 > r0 ? 1 : (r6 == r0 ? 0 : -1))
-            if (r6 < 0) goto L_0x00f9
+            if (r6 < 0) goto L_0x00ef
             r5.toBottomAnimation()
-            goto L_0x00fc
-        L_0x00f9:
+            goto L_0x00f2
+        L_0x00ef:
             r5.toTopAnimation()
-        L_0x00fc:
+        L_0x00f2:
             r5.recycleVelocityTracker()
-            goto L_0x0124
-        L_0x0100:
+            goto L_0x011a
+        L_0x00f6:
             r5.mMoved = r3
             boolean r6 = r5.isOrientationPortrait()
-            if (r6 != 0) goto L_0x0109
-            goto L_0x0124
-        L_0x0109:
+            if (r6 != 0) goto L_0x00ff
+            goto L_0x011a
+        L_0x00ff:
             r5.mInitialTouchX = r0
             r5.mInitialTouchY = r1
             com.android.systemui.miui.controlcenter.QSControlCenterTileLayout r6 = r5.mQuickQsControlCenterTileLayout
@@ -644,10 +650,16 @@ public class QSControlCenterPanel extends FrameLayout implements ConfigurationCo
             r6.<init>()
             android.widget.ImageView r5 = r5.mExpandIndicatorBottom
             r5.getBoundsOnScreen(r6)
-        L_0x0124:
+        L_0x011a:
             return r4
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.miui.controlcenter.QSControlCenterPanel.onTouchEvent(android.view.MotionEvent):boolean");
+    }
+
+    public void performCollapseByClick(int i, int i2, boolean z) {
+        if (!z && shouldCollapseByClick(i, i2)) {
+            this.mControlPanelWindowView.collapsePanel(true);
+        }
     }
 
     private boolean shouldCollapseByClick(int i, int i2) {
@@ -660,10 +672,14 @@ public class QSControlCenterPanel extends FrameLayout implements ConfigurationCo
             int i4 = this.mPaddingHorizontal;
             rect2.left = i3 + i4;
             rect2.right -= i4;
-            if ((rect.contains(i, i2) || rect2.contains(i, i2)) && !isHeaderAreaTouchDown((float) i2)) {
-                return false;
+            if (!rect.contains(i, i2) && !rect2.contains(i, i2)) {
+                return true;
             }
-            return true;
+            float f = (float) i2;
+            if (isHeaderAreaTouchDown(f) || isFootAreaTouchDown(f)) {
+                return true;
+            }
+            return false;
         }
         this.mLandTiles.getBoundsOnScreen(rect);
         this.mTilesContainer.getBoundsOnScreen(rect2);

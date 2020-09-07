@@ -17,6 +17,7 @@ import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.settingslib.RestrictedLockUtils;
 import com.android.settingslib.RestrictedLockUtilsHelper;
 import com.android.systemui.Dependency;
+import com.android.systemui.Dumpable;
 import com.android.systemui.Util;
 import com.android.systemui.miui.controlcenter.tileImpl.CCQSIconViewImpl;
 import com.android.systemui.miui.statusbar.ControlCenterActivityStarter;
@@ -29,10 +30,12 @@ import com.android.systemui.plugins.qs.QSTile.State;
 import com.android.systemui.qs.PagedTileLayout;
 import com.android.systemui.qs.QSHost;
 import com.android.systemui.qs.external.CustomTile;
+import java.io.FileDescriptor;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public abstract class QSTileImpl<TState extends QSTile.State> implements QSTile {
+public abstract class QSTileImpl<TState extends QSTile.State> implements QSTile, Dumpable {
     protected static final Object ARG_SHOW_TRANSIENT_DISABLING = new Object();
     protected static final Object ARG_SHOW_TRANSIENT_ENABLING = new Object();
     /* access modifiers changed from: protected */
@@ -534,5 +537,11 @@ public abstract class QSTileImpl<TState extends QSTile.State> implements QSTile 
         public String toString() {
             return String.format("ResourceIcon[resId=0x%08x]", new Object[]{Integer.valueOf(this.mResId)});
         }
+    }
+
+    public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
+        printWriter.println(getClass().getSimpleName() + ":");
+        printWriter.print("    ");
+        printWriter.println(getState().toString());
     }
 }

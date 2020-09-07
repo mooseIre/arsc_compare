@@ -48,27 +48,6 @@ public class DisplayCutoutCompat {
         return min2;
     }
 
-    public static void boundsFromDirection(View view, int i, Rect rect) {
-        DisplayCutout displayCutout = view.isAttachedToWindow() ? view.getRootWindowInsets().getDisplayCutout() : null;
-        if (displayCutout != null) {
-            boundsFromDirection(displayCutout, i, rect);
-        }
-    }
-
-    public static void boundsFromDirection(DisplayCutout displayCutout, int i, Rect rect) {
-        if (i == 3) {
-            rect.set(displayCutout.getBoundingRectLeft());
-        } else if (i == 5) {
-            rect.set(displayCutout.getBoundingRectRight());
-        } else if (i == 48) {
-            rect.set(displayCutout.getBoundingRectTop());
-        } else if (i != 80) {
-            rect.setEmpty();
-        } else {
-            rect.set(displayCutout.getBoundingRectBottom());
-        }
-    }
-
     public static boolean hasCutout(View view) {
         return view.getRootWindowInsets().getDisplayCutout() != null;
     }

@@ -80,6 +80,9 @@ public class StatusBarWindowManager implements RemoteInputController.Callback, D
         layoutParams.setTitle("StatusBar");
         this.mLp.packageName = this.mContext.getPackageName();
         WindowManagerCompat.setLayoutInDisplayCutoutMode(this.mLp, 1);
+        if (Build.VERSION.SDK_INT > 29) {
+            this.mLp.layoutInDisplayCutoutMode = 3;
+        }
         this.mStatusBarView = viewGroup;
         this.mBarHeight = i;
         this.mWindowManager.addView(this.mStatusBarView, this.mLp);
@@ -233,8 +236,7 @@ public class StatusBarWindowManager implements RemoteInputController.Callback, D
     }
 
     private void applyForceStatusBarVisibleFlag(State state) {
-        boolean z = Build.VERSION.SDK_INT > 29 && state.panelExpanded;
-        if (state.forceStatusBarVisible || z) {
+        if (state.forceStatusBarVisible) {
             this.mLpChanged.privateFlags |= 4096;
             return;
         }

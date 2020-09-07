@@ -6,8 +6,14 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.Icon;
+import android.media.MediaMetadata;
+import android.media.session.MediaController;
+import android.media.session.MediaSession;
+import android.os.Build;
 import com.android.internal.annotations.VisibleForTesting;
+import com.android.internal.graphics.ColorUtils;
 import com.android.internal.graphics.palette.Palette;
+import com.android.systemui.miui.statusbar.notification.NotificationUtil;
 import com.android.systemui.plugins.R;
 
 public class MediaNotificationProcessor {
@@ -38,13 +44,30 @@ public class MediaNotificationProcessor {
         this.mColorizer = imageGradientColorizer;
     }
 
+    private Icon getNotificationLargeIcon(Notification notification) {
+        MediaSession.Token token;
+        Icon largeIcon = notification.getLargeIcon();
+        if (Build.VERSION.SDK_INT < 30 || (token = (MediaSession.Token) notification.extras.getParcelable("android.mediaSession")) == null) {
+            return largeIcon;
+        }
+        MediaMetadata metadata = new MediaController(this.mContext, token).getMetadata();
+        Bitmap bitmap = metadata.getBitmap("android.media.metadata.ART");
+        if (bitmap == null) {
+            bitmap = metadata.getBitmap("android.media.metadata.ALBUM_ART");
+        }
+        if (bitmap == null) {
+            bitmap = NotificationUtil.loadBitmapFromUri(this.mContext, metadata);
+        }
+        return bitmap == null ? notification.getLargeIcon() : Icon.createWithAdaptiveBitmap(bitmap);
+    }
+
     public void processNotification(Notification notification, Notification.Builder builder) {
         int i;
-        Icon largeIcon = notification.getLargeIcon();
-        if (largeIcon != null) {
+        Icon notificationLargeIcon = getNotificationLargeIcon(notification);
+        if (notificationLargeIcon != null) {
             boolean z = true;
             builder.setRebuildStyledRemoteViews(true);
-            Drawable loadDrawable = largeIcon.loadDrawable(this.mPackageContext);
+            Drawable loadDrawable = notificationLargeIcon.loadDrawable(this.mPackageContext);
             if (notification.isColorizedMedia()) {
                 int intrinsicWidth = loadDrawable.getIntrinsicWidth();
                 int intrinsicHeight = loadDrawable.getIntrinsicHeight();
@@ -59,7 +82,7 @@ public class MediaNotificationProcessor {
                 loadDrawable.setBounds(0, 0, intrinsicWidth, intrinsicHeight);
                 loadDrawable.draw(canvas);
                 Palette.Builder resizeBitmapArea = Palette.from(createBitmap).setRegion(0, 0, createBitmap.getWidth() / 2, createBitmap.getHeight()).clearFilters().resizeBitmapArea(22500);
-                i = findBackgroundColorAndFilter(resizeBitmapArea.generate());
+                i = computeBackgroundColor(createBitmap);
                 resizeBitmapArea.setRegion((int) (((float) createBitmap.getWidth()) * 0.4f), 0, createBitmap.getWidth(), createBitmap.getHeight());
                 if (this.mFilteredBackgroundHsl != null) {
                     resizeBitmapArea.addFilter(new Palette.Filter() {
@@ -84,6 +107,38 @@ public class MediaNotificationProcessor {
     public /* synthetic */ boolean lambda$processNotification$1$MediaNotificationProcessor(int i, float[] fArr) {
         float abs = Math.abs(fArr[0] - this.mFilteredBackgroundHsl[0]);
         return abs > 10.0f && abs < 350.0f;
+    }
+
+    private int computeBackgroundColor(Bitmap bitmap) {
+        int rgb = bitmap != null ? findBackgroundSwatch(Palette.from(bitmap).setRegion(0, 0, bitmap.getWidth() / 2, bitmap.getHeight()).clearFilters().resizeBitmapArea(22500).generate()).getRgb() : -1;
+        float[] fArr = {0.0f, 0.0f, 0.0f};
+        ColorUtils.colorToHSL(rgb, fArr);
+        float f = fArr[2];
+        if (f < 0.05f || f > 0.95f) {
+            fArr[1] = 0.0f;
+        }
+        fArr[1] = fArr[1] * 0.8f;
+        fArr[2] = 0.25f;
+        return ColorUtils.HSLToColor(fArr);
+    }
+
+    private Palette.Swatch findBackgroundSwatch(Palette palette) {
+        Palette.Swatch dominantSwatch = palette.getDominantSwatch();
+        if (dominantSwatch == null) {
+            return new Palette.Swatch(-1, 100);
+        }
+        if (!isWhiteOrBlack(dominantSwatch.getHsl())) {
+            return dominantSwatch;
+        }
+        float f = -1.0f;
+        Palette.Swatch swatch = null;
+        for (Palette.Swatch swatch2 : palette.getSwatches()) {
+            if (swatch2 != dominantSwatch && ((float) swatch2.getPopulation()) > f && !isWhiteOrBlack(swatch2.getHsl())) {
+                f = (float) swatch2.getPopulation();
+                swatch = swatch2;
+            }
+        }
+        return (swatch != null && ((float) dominantSwatch.getPopulation()) / f <= 2.5f) ? swatch : dominantSwatch;
     }
 
     private int selectForegroundColor(int i, Palette palette) {
@@ -142,36 +197,6 @@ public class MediaNotificationProcessor {
 
     private boolean hasEnoughPopulation(Palette.Swatch swatch) {
         return swatch != null && ((double) (((float) swatch.getPopulation()) / 22500.0f)) > 0.002d;
-    }
-
-    private int findBackgroundColorAndFilter(Palette palette) {
-        Palette.Swatch dominantSwatch = palette.getDominantSwatch();
-        if (dominantSwatch == null) {
-            this.mFilteredBackgroundHsl = null;
-            return -1;
-        } else if (!isWhiteOrBlack(dominantSwatch.getHsl())) {
-            this.mFilteredBackgroundHsl = dominantSwatch.getHsl();
-            return dominantSwatch.getRgb();
-        } else {
-            float f = -1.0f;
-            Palette.Swatch swatch = null;
-            for (Palette.Swatch swatch2 : palette.getSwatches()) {
-                if (swatch2 != dominantSwatch && ((float) swatch2.getPopulation()) > f && !isWhiteOrBlack(swatch2.getHsl())) {
-                    f = (float) swatch2.getPopulation();
-                    swatch = swatch2;
-                }
-            }
-            if (swatch == null) {
-                this.mFilteredBackgroundHsl = null;
-                return dominantSwatch.getRgb();
-            } else if (((float) dominantSwatch.getPopulation()) / f > 2.5f) {
-                this.mFilteredBackgroundHsl = null;
-                return dominantSwatch.getRgb();
-            } else {
-                this.mFilteredBackgroundHsl = swatch.getHsl();
-                return swatch.getRgb();
-            }
-        }
     }
 
     private boolean isWhiteOrBlack(float[] fArr) {

@@ -116,6 +116,10 @@ public class TileServiceManager {
         return this.mStateManager.isActiveTile();
     }
 
+    public boolean isToggleableTile() {
+        return this.mStateManager.isToggleableTile();
+    }
+
     public void setShowingDialog(boolean z) {
         this.mShowingDialog = z;
     }

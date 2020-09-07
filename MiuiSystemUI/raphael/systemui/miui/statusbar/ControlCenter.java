@@ -27,7 +27,6 @@ import com.android.systemui.miui.ToastOverlayManager;
 import com.android.systemui.miui.controlcenter.ExpandInfoController;
 import com.android.systemui.miui.controlcenter.QSControlCenterPanel;
 import com.android.systemui.miui.controlcenter.QSControlTileHost;
-import com.android.systemui.miui.controls.ControlsPluginManager;
 import com.android.systemui.miui.statusbar.phone.ControlPanelContentView;
 import com.android.systemui.miui.statusbar.phone.ControlPanelWindowManager;
 import com.android.systemui.miui.statusbar.phone.ControlPanelWindowView;
@@ -198,7 +197,6 @@ public class ControlCenter extends SystemUI implements ControlPanelController.Us
             this.mQSControlTileHost = SystemUIFactory.getInstance().createQSControlTileHost(this.mContext, statusBar, this.mIconController);
             this.mQSControlTileHost.init();
             this.mControlPanelContentView.setHost(this.mQSControlTileHost);
-            ((ControlsPluginManager) Dependency.get(ControlsPluginManager.class)).addControlsPluginListener();
         }
         RecentsEventBus.getDefault().register(this);
     }
@@ -210,7 +208,6 @@ public class ControlCenter extends SystemUI implements ControlPanelController.Us
             ((ControlPanelController) Dependency.get(ControlPanelController.class)).setControlCenter((ControlCenter) null);
             this.mCommandQueue.removeCallbacks(this);
             ((SuperSaveModeController) Dependency.get(SuperSaveModeController.class)).removeCallback(this);
-            ((ControlsPluginManager) Dependency.get(ControlsPluginManager.class)).removeControlsPluginListener();
             QSControlTileHost qSControlTileHost = this.mQSControlTileHost;
             if (qSControlTileHost != null) {
                 qSControlTileHost.destroy();

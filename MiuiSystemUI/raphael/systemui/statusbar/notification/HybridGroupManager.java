@@ -76,12 +76,12 @@ public class HybridGroupManager {
         return hybridNotificationView;
     }
 
-    private CharSequence resolveText(Notification notification) {
+    public static CharSequence resolveText(Notification notification) {
         CharSequence charSequence = notification.extras.getCharSequence("android.text");
         return charSequence == null ? notification.extras.getCharSequence("android.bigText") : charSequence;
     }
 
-    private CharSequence resolveTitle(Notification notification) {
+    public static CharSequence resolveTitle(Notification notification) {
         CharSequence charSequence = notification.extras.getCharSequence("android.title");
         return charSequence == null ? notification.extras.getCharSequence("android.title.big") : charSequence;
     }

@@ -32,7 +32,7 @@ public class DefaultUiController implements AssistManager.UiController {
         WindowManager.LayoutParams layoutParams = this.mLayoutParams;
         layoutParams.privateFlags = 64;
         layoutParams.gravity = 80;
-        layoutParams.setTitle("Assist");
+        this.mLayoutParams.setTitle("Assist");
         this.mInvocationLightsView = (InvocationLightsView) LayoutInflater.from(context).inflate(R.layout.invocation_lights, this.mRoot, false);
         this.mInvocationLightsView.setColors(-16776961, -65536, -256, -16711936);
         this.mRoot.addView(this.mInvocationLightsView);
