@@ -1504,7 +1504,10 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener {
         if (MiuiKeyguardUtils.isGxzwSensor()) {
             return !this.mDeviceInteractive;
         }
-        return !MiuiKeyguardUtils.isTopActivitySystemApp(this.mContext);
+        if (!MiuiKeyguardUtils.isTopActivitySystemApp(this.mContext) || this.mDeviceInteractive) {
+            return true;
+        }
+        return false;
     }
 
     private void startListeningForFingerprint() {
