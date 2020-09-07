@@ -1495,21 +1495,20 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener {
     }
 
     public boolean shouldListenForFingerprint() {
-        boolean z = false;
-        boolean z2 = (this.mKeyguardIsVisible || !this.mDeviceInteractive || ((this.mBouncer && !this.mKeyguardGoingAway) || this.mGoingToSleep || this.mKeyguardShowingAndOccluded)) && !this.mSwitchingUser && !isFingerprintDisabled(getCurrentUser()) && (!isKeyguardHide() || this.mGoingToSleep) && !isFingerprintUnlock() && MiuiKeyguardUtils.isSystemProcess() && ((!isFaceUnlock() || !MiuiKeyguardUtils.isBroadSideFingerprint()) && !this.mSimLocked);
+        boolean z = (this.mKeyguardIsVisible || !this.mDeviceInteractive || ((this.mBouncer && !this.mKeyguardGoingAway) || this.mGoingToSleep || this.mKeyguardShowingAndOccluded)) && !this.mSwitchingUser && !isFingerprintDisabled(getCurrentUser()) && (!isKeyguardHide() || this.mGoingToSleep) && !isFingerprintUnlock() && MiuiKeyguardUtils.isSystemProcess() && ((!isFaceUnlock() || !MiuiKeyguardUtils.isBroadSideFingerprint()) && !this.mSimLocked);
         if (MiuiKeyguardUtils.isGxzwSensor() && MiuiKeyguardUtils.isInvertColorsEnable(this.mContext)) {
-            if (z2 && this.mDeviceInteractive) {
-                z = true;
-            }
-            z2 = z;
+            z = z && this.mDeviceInteractive;
         }
-        if (!z2 || !this.mKeyguardOccluded || (this.mBouncer && !this.mKeyguardGoingAway)) {
-            return z2;
+        if (!z || !this.mKeyguardOccluded || (this.mBouncer && !this.mKeyguardGoingAway)) {
+            return z;
         }
         if (MiuiKeyguardUtils.isGxzwSensor()) {
             return !this.mDeviceInteractive;
         }
-        return !MiuiKeyguardUtils.isTopActivitySystemApp(this.mContext);
+        if (!MiuiKeyguardUtils.isTopActivitySystemApp(this.mContext) || this.mDeviceInteractive) {
+            return true;
+        }
+        return false;
     }
 
     private void startListeningForFingerprint() {

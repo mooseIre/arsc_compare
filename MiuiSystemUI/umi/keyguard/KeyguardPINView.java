@@ -150,6 +150,7 @@ public class KeyguardPINView extends KeyguardPinBasedInputView implements Passwo
                 }
             }
         });
+        this.mEmergencyButton.setEnabled(false);
         return true;
     }
 

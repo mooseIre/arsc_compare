@@ -247,6 +247,7 @@ public class KeyguardPasswordView extends KeyguardAbsKeyInputView implements Key
             }
         });
         animatorSet.start();
+        this.mEmergencyButton.setEnabled(false);
         return true;
     }
 
