@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout android:layout_width="fill_parent" android:layout_height="fill_parent"
   xmlns:android="http://schemas.android.com/apk/res/android">
-    <ImageView android:id="@id/background" android:layout_width="fill_parent" android:layout_height="fill_parent" android:src="?android:windowBackground" android:scaleType="fitXY" />
+    <View android:id="@id/background" android:background="@color/screenshot_ui_bg" android:layout_width="fill_parent" android:layout_height="fill_parent" />
     <com.android.systemui.screenshot.ScreenshotScrollView android:id="@id/global_screenshot" android:clickable="true" android:layout_width="fill_parent" android:layout_height="0.0px" android:layout_above="@id/button_container" android:layout_alignParentTop="true" />
     <FrameLayout android:id="@id/top_titleormsg_layout" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_alignParentTop="true">
         <RelativeLayout android:id="@id/screenshot_actionbar_layout" android:background="@color/screenshot_ui_bg" android:visibility="invisible" android:layout_width="fill_parent" android:layout_height="@dimen/screenshot_actionbar_back_height">
