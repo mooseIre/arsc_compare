@@ -182,52 +182,49 @@ public class LightBarController implements BatteryController.BatteryStateChangeC
     private void updateStatus(Rect rect, Rect rect2) {
         if (this.mStatusBarExpanded) {
             this.mStatusBarIconController.getTransitionsController().setIconsDark(this.mIconsDarkInExpanded, animateChange());
+            return;
+        }
+        this.mFullScreenStackBounds = rect;
+        this.mDockedStackBounds = rect2;
+        boolean z = !rect2.isEmpty();
+        if (this.mDriveMode || this.mForceBlack) {
+            this.mStatusBarIconController.getTransitionsController().setIconsDark(false, animateChange());
         } else if (this.mSmartDark) {
-            if (DEBUG) {
-                Log.d("LightBarController", "in SmartDark update return");
-            }
             this.mStatusBarIconController.getTransitionsController().setIconsDark(this.mIconsDarkInSmart, animateChange());
-        } else {
-            this.mFullScreenStackBounds = rect;
-            this.mDockedStackBounds = rect2;
-            boolean z = !rect2.isEmpty();
-            if (this.mDriveMode || this.mForceBlack) {
-                this.mStatusBarIconController.getTransitionsController().setIconsDark(false, animateChange());
-            } else if ((this.mFullscreenLight && this.mDockedLight) || (this.mFullscreenLight && !z)) {
-                this.mStatusBarIconController.setIconsDarkArea((Rect) null);
-                this.mStatusBarIconController.getTransitionsController().setIconsDark(true, animateChange());
-            } else if ((this.mFullscreenLight || this.mDockedLight) && (this.mFullscreenLight || z)) {
-                if (this.mFullscreenLight && rect.contains(rect2)) {
-                    int i = rect.bottom;
-                    int i2 = rect2.bottom;
-                    if (i > i2) {
-                        rect.top = i2;
+        } else if ((this.mFullscreenLight && this.mDockedLight) || (this.mFullscreenLight && !z)) {
+            this.mStatusBarIconController.setIconsDarkArea((Rect) null);
+            this.mStatusBarIconController.getTransitionsController().setIconsDark(true, animateChange());
+        } else if ((this.mFullscreenLight || this.mDockedLight) && (this.mFullscreenLight || z)) {
+            if (this.mFullscreenLight && rect.contains(rect2)) {
+                int i = rect.bottom;
+                int i2 = rect2.bottom;
+                if (i > i2) {
+                    rect.top = i2;
+                } else {
+                    int i3 = rect.left;
+                    int i4 = rect2.left;
+                    if (i3 < i4) {
+                        rect.right = i4;
                     } else {
-                        int i3 = rect.left;
-                        int i4 = rect2.left;
-                        if (i3 < i4) {
-                            rect.right = i4;
-                        } else {
-                            int i5 = rect.right;
-                            int i6 = rect2.right;
-                            if (i5 > i6) {
-                                rect.left = i6;
-                            }
+                        int i5 = rect.right;
+                        int i6 = rect2.right;
+                        if (i5 > i6) {
+                            rect.left = i6;
                         }
                     }
                 }
-                if (!this.mFullscreenLight) {
-                    rect = rect2;
-                }
-                if (rect.isEmpty()) {
-                    this.mStatusBarIconController.setIconsDarkArea((Rect) null);
-                } else {
-                    this.mStatusBarIconController.setIconsDarkArea(rect);
-                }
-                this.mStatusBarIconController.getTransitionsController().setIconsDark(true, animateChange());
-            } else {
-                this.mStatusBarIconController.getTransitionsController().setIconsDark(false, animateChange());
             }
+            if (!this.mFullscreenLight) {
+                rect = rect2;
+            }
+            if (rect.isEmpty()) {
+                this.mStatusBarIconController.setIconsDarkArea((Rect) null);
+            } else {
+                this.mStatusBarIconController.setIconsDarkArea(rect);
+            }
+            this.mStatusBarIconController.getTransitionsController().setIconsDark(true, animateChange());
+        } else {
+            this.mStatusBarIconController.getTransitionsController().setIconsDark(false, animateChange());
         }
     }
 

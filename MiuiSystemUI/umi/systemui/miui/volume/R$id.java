@@ -17,12 +17,12 @@ public final class R$id {
     public static final int miui_volume_timer_progress_normal = 2131362471;
     public static final int miui_volume_timer_ticking = 2131362472;
     public static final int miui_volume_timer_ticking_port = 2131362473;
-    public static final int volume_column_icon = 2131363034;
-    public static final int volume_column_slider = 2131363035;
-    public static final int volume_dialog = 2131363036;
-    public static final int volume_dialog_column_collapsed = 2131363037;
-    public static final int volume_dialog_column_temp = 2131363038;
-    public static final int volume_dialog_columns = 2131363039;
-    public static final int volume_dialog_content = 2131363041;
-    public static final int volume_expand_button = 2131363043;
+    public static final int volume_column_icon = 2131363035;
+    public static final int volume_column_slider = 2131363036;
+    public static final int volume_dialog = 2131363037;
+    public static final int volume_dialog_column_collapsed = 2131363038;
+    public static final int volume_dialog_column_temp = 2131363039;
+    public static final int volume_dialog_columns = 2131363040;
+    public static final int volume_dialog_content = 2131363042;
+    public static final int volume_expand_button = 2131363044;
 }

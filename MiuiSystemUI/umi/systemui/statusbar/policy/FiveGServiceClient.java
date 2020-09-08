@@ -359,10 +359,12 @@ public class FiveGServiceClient {
             }
         }
         try {
-            this.mGetCustomedRsrpThresholdsMethod = Class.forName("android.telephony.MiuiCellSignalStrength").getMethod("getCustomedRsrpThresholds", (Class[]) null);
+            Method declaredMethod = Class.forName("android.telephony.MiuiCellSignalStrength").getDeclaredMethod("getCustomedRsrpThresholds", new Class[0]);
+            this.mGetCustomedRsrpThresholdsMethod = declaredMethod;
+            declaredMethod.setAccessible(true);
         } catch (Exception e2) {
             this.mGetCustomedRsrpThresholdsMethod = null;
-            Log.e("FiveGServiceClient", "init can't find getCustomedRsrpThresholds.\n" + e2.toString());
+            Log.e("FiveGServiceClient", "init can't find getCustomedRsrpThresholds.\n", e2);
         }
         registerFivegEvents();
     }
@@ -668,7 +670,7 @@ public class FiveGServiceClient {
         try {
             return (int[]) method.invoke((Object) null, new Object[0]);
         } catch (Exception e) {
-            Log.e("FiveGServiceClient", "invoke getCustomedRsrpThresholds fail.\n" + e.toString());
+            Log.e("FiveGServiceClient", "invoke getCustomedRsrpThresholds fail.\n", e);
             return RSRP_THRESH_LENIENT;
         }
     }

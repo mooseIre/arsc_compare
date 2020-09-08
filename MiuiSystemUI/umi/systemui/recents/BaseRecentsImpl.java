@@ -983,7 +983,7 @@ public abstract class BaseRecentsImpl {
             r10.<init>(r8)     // Catch:{ ActivityNotFoundException -> 0x006a }
             boolean r2 = sOneKeyCleaning     // Catch:{ ActivityNotFoundException -> 0x006a }
             if (r2 == 0) goto L_0x004b
-            r7 = 2131822187(0x7f11066b, float:1.9277138E38)
+            r7 = 2131822184(0x7f110668, float:1.9277132E38)
             r6.showToast(r7)     // Catch:{ ActivityNotFoundException -> 0x006a }
             return
         L_0x004b:

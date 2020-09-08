@@ -274,7 +274,7 @@ public class SignalClusterView extends LinearLayout implements NetworkController
         this.mSignalDualNotchGroup = viewGroup;
         this.mSignalDualNotchMobile = (ImageView) viewGroup.findViewById(R.id.notch_mobile_signal);
         this.mSignalDualNotchMobile2 = (ImageView) this.mSignalDualNotchGroup.findViewById(R.id.notch_mobile_signal2);
-        this.mSignalDualNotchMobileVoice = (TextView) this.mSignalDualNotchGroup.findViewById(R.id.carrier);
+        this.mSignalDualNotchMobileVoice = (TextView) this.mSignalDualNotchGroup.findViewById(R.id.notch_carrier);
         this.mSignalDualNotchMobileType = (TextView) this.mSignalDualNotchGroup.findViewById(R.id.mobile_type);
         this.mSignalDualNotchMobileInout = (ImageView) this.mSignalDualNotchGroup.findViewById(R.id.mobile_inout);
         this.mSignalDualNotchMobileUpgrade = (ImageView) this.mSignalDualNotchGroup.findViewById(R.id.mobile_signal_upgrade);

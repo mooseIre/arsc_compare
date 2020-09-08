@@ -509,6 +509,7 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
                 }
                 updateDefaultDataSimState();
             } else if (action.equals("android.intent.action.SIM_STATE_CHANGED")) {
+                Log.d("NetworkController", "onReceive: ACTION_SIM_STATE_CHANGED");
                 int phoneCount = TelephonyManager.getDefault().getPhoneCount();
                 int i2 = 0;
                 for (int i3 = 0; i3 < phoneCount; i3++) {
@@ -643,7 +644,10 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
     public void doUpdateMobileControllers() {
         List activeSubscriptionInfoList = this.mSubscriptionManager.getActiveSubscriptionInfoList();
         if (activeSubscriptionInfoList == null) {
+            Log.d("NetworkController", "doUpdateMobileControllers: null subs");
             activeSubscriptionInfoList = Collections.emptyList();
+        } else {
+            Log.d("NetworkController", "doUpdateMobileControllers: sub size = " + activeSubscriptionInfoList.size());
         }
         if (hasCorrectMobileControllers(activeSubscriptionInfoList)) {
             updateNoSims();
@@ -1541,6 +1545,7 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
         }
 
         public void onSubscriptionsChanged() {
+            Log.d("NetworkController", "onSubscriptionsChanged: ");
             NetworkControllerImpl.this.mReceiverHandler.post(new Runnable() {
                 public void run() {
                     NetworkControllerImpl.this.updateMobileControllers();

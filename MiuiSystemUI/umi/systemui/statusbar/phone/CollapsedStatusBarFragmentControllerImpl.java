@@ -71,7 +71,9 @@ public class CollapsedStatusBarFragmentControllerImpl implements CollapsedStatus
         this.mDarkIconManager = new StatusBarIconController.DarkIconManager(this.mFragment.mStatusIcons);
         ((StatusBarIconController) Dependency.get(cls)).addIconGroup(this.mDarkIconManager);
         ((StatusBarIconController) Dependency.get(cls)).addIconGroup(this.mInCallIconManager);
-        ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).addDarkReceiver((DarkIconDispatcher.DarkReceiver) this.mCarrierText);
+        if (this.mCarrierText != null) {
+            ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).addDarkReceiver((DarkIconDispatcher.DarkReceiver) this.mCarrierText);
+        }
         ((RegionController) Dependency.get(RegionController.class)).addCallback(this);
     }
 
@@ -121,10 +123,13 @@ public class CollapsedStatusBarFragmentControllerImpl implements CollapsedStatus
     }
 
     private void updateCarrierStyle() {
-        if (this.mShowCarrierText || this.mShowCarrierTextForRegion) {
-            this.mCarrierText.setShowStyle(1);
-        } else {
-            this.mCarrierText.setShowStyle(-1);
+        CarrierText carrierText = this.mCarrierText;
+        if (carrierText != null) {
+            if (this.mShowCarrierText || this.mShowCarrierTextForRegion) {
+                this.mCarrierText.setShowStyle(1);
+            } else {
+                carrierText.setShowStyle(-1);
+            }
         }
     }
 
