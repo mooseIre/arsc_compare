@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.android.systemui.qs.QSContainerImpl android:layout_gravity="@integer/notification_panel_layout_gravity" android:id="@id/quick_settings_container" android:clipChildren="false" android:clipToPadding="false" android:layout_width="fill_parent" android:layout_height="wrap_content"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <com.android.systemui.qs.QSContent android:orientation="vertical" android:id="@id/qs_content" android:background="@android:color/transparent" android:clipChildren="false" android:clipToPadding="false" android:layout_width="fill_parent" android:layout_height="wrap_content">
+        <include layout="@layout/quick_status_bar_expanded_header" />
+        <LinearLayout android:orientation="vertical" android:id="@id/qs_container" android:background="@android:color/transparent" android:focusable="true" android:focusableInTouchMode="true" android:layout_width="fill_parent" android:layout_height="wrap_content">
+            <FrameLayout android:id="@id/qs_background" android:background="@drawable/panel_round_corner_bg" android:focusable="true" android:focusableInTouchMode="true" android:layout_width="fill_parent" android:layout_height="wrap_content">
+                <com.android.systemui.qs.QuickQSPanel android:id="@id/quick_qs_panel" android:background="@android:color/transparent" android:clipChildren="false" android:clipToPadding="false" android:layout_width="fill_parent" android:layout_height="wrap_content" />
+                <com.android.systemui.qs.QSPanel android:id="@id/quick_settings_panel" android:background="@android:color/transparent" android:clipChildren="false" android:clipToPadding="false" android:layout_width="fill_parent" android:layout_height="wrap_content" />
+            </FrameLayout>
+            <LinearLayout android:orientation="vertical" android:id="@id/qs_footer_container" android:focusable="true" android:focusableInTouchMode="true" android:visibility="gone" android:layout_width="fill_parent" android:layout_height="wrap_content" android:accessibilityTraversalAfter="@id/qs_background" />
+            <LinearLayout android:orientation="vertical" android:id="@id/qs_footer_bundle" android:layout_width="fill_parent" android:layout_height="wrap_content">
+                <com.android.systemui.settings.ToggleSliderView android:id="@id/qs_brightness" android:focusable="true" android:focusableInTouchMode="true" android:layout_width="fill_parent" android:layout_height="@dimen/qs_brightness_dialog_height" android:layout_marginTop="@dimen/qs_brightness_top_margin" android:contentDescription="@string/accessibility_brightness" android:accessibilityTraversalAfter="@id/qs_footer_container" />
+                <ImageView android:layout_gravity="center_horizontal" android:id="@id/qs_expand_indicator" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+            </LinearLayout>
+        </LinearLayout>
+    </com.android.systemui.qs.QSContent>
+    <include layout="@layout/qs_detail" />
+    <include layout="@layout/qs_customize_panel" />
+</com.android.systemui.qs.QSContainerImpl>

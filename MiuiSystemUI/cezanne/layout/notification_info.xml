@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.android.systemui.statusbar.NotificationInfo android:theme="@android:style/Theme.DeviceDefault.Light" android:gravity="center_vertical" android:layout_gravity="end|center" android:orientation="horizontal" android:clickable="true" android:layout_width="fill_parent" android:layout_height="wrap_content"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout android:layout_gravity="center_vertical" android:layout_width="fill_parent" android:layout_height="wrap_content" android:paddingStart="@dimen/notification_guts_padding_start" android:paddingEnd="@dimen/notification_guts_padding_end">
+        <ImageView android:layout_gravity="start|center|top" android:id="@id/pkgicon" android:layout_width="@dimen/notification_app_icon_size" android:layout_height="@dimen/notification_app_icon_size" />
+        <LinearLayout android:orientation="vertical" android:layout_width="0.0dip" android:layout_height="wrap_content" android:layout_marginTop="@dimen/notification_guts_content_margin_top" android:layout_weight="1.0" android:layout_marginStart="@dimen/notification_guts_content_margin" android:layout_marginEnd="@dimen/notification_guts_content_margin">
+            <TextView android:textAppearance="@android:style/TextAppearance.Material.Notification.Title" android:id="@id/title" android:layout_width="wrap_content" android:layout_height="wrap_content" android:singleLine="false" android:labelFor="@id/channel_enabled_switch" />
+            <LinearLayout android:orientation="horizontal" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8.329987dip">
+                <TextView android:id="@id/button1" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/notification_more_settings" style="@style/TextAppearance.NotificationInfo.Button" />
+                <TextView android:id="@id/button2" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/notification_done" android:layout_marginStart="20.0dip" style="@style/TextAppearance.NotificationInfo.Button" />
+            </LinearLayout>
+        </LinearLayout>
+        <miui.widget.SlidingButton android:layout_gravity="end|center" android:id="@id/channel_enabled_switch" android:focusable="true" android:focusableInTouchMode="true" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+    </LinearLayout>
+</com.android.systemui.statusbar.NotificationInfo>

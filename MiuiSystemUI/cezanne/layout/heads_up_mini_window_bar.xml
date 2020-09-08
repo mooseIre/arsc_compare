@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View android:layout_gravity="bottom|center" android:id="@id/mini_window_bar" android:background="@drawable/mini_window_bar" android:visibility="gone" android:layout_width="@dimen/mini_window_bar_width" android:layout_height="@dimen/mini_window_bar_height" android:layout_marginBottom="@dimen/mini_window_bar_marginBottom"
+  xmlns:android="http://schemas.android.com/apk/res/android" />

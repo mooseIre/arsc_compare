@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:layout_width="fill_parent" android:layout_height="wrap_content"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <View android:background="@color/qs_divider_color" android:layout_width="fill_parent" android:layout_height="@dimen/qs_divider_size" android:layout_marginBottom="@dimen/qs_customize_content_padding_top" android:importantForAccessibility="no" />
+</LinearLayout>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <com.android.systemui.fsgesture.WidthAdaptiveView android:id="@id/drawer_main_img" android:background="@drawable/fsg_demo_drawer_main" android:layout_width="fill_parent" android:layout_height="fill_parent" />
+    <ImageView android:id="@id/drawer_img" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/fsg_demo_drawer" android:scaleType="matrix" android:layout_alignParentBottom="true" />
+    <com.android.systemui.fsgesture.FsGestureDemoSwipeView android:id="@id/fsgesture_swipe_view" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+    <View android:id="@id/shelter_view" android:layout_width="@dimen/fsgesture_shelter_width" android:layout_height="@dimen/fsgesture_shelter_height" android:layout_alignParentTop="true" />
+    <com.android.systemui.fsgesture.FsGestureDemoTitleView android:id="@id/fsgesture_title_view" android:layout_width="fill_parent" android:layout_height="wrap_content" />
+</RelativeLayout>
