@@ -233,10 +233,6 @@ public class FingerprintUnlockController extends KeyguardUpdateMonitorCallback {
     public void onStartedGoingToSleep(int i) {
         this.mPendingShowBouncer = false;
         this.mPendingAuthenticatedUserId = -1;
-        int currentUser = KeyguardUpdateMonitor.getCurrentUser();
-        if (MiuiKeyguardUtils.isAodEnable(this.mContext) || (MiuiKeyguardUtils.isGxzwSensor() && this.mUpdateMonitor.isUnlockWithFingerprintPossible(currentUser))) {
-            this.mScrimController.setAodWaitUnlocking(true);
-        }
         this.mScrimController.resetWakeAndUnlocking();
     }
 
@@ -249,6 +245,10 @@ public class FingerprintUnlockController extends KeyguardUpdateMonitorCallback {
                     FingerprintUnlockController.this.onFingerprintAuthenticated(i2);
                 }
             });
+        }
+        int currentUser = KeyguardUpdateMonitor.getCurrentUser();
+        if (MiuiKeyguardUtils.isAodEnable(this.mContext) || (MiuiKeyguardUtils.isGxzwSensor() && this.mUpdateMonitor.isUnlockWithFingerprintPossible(currentUser))) {
+            this.mScrimController.setAodWaitUnlocking(true);
         }
         this.mPendingAuthenticatedUserId = -1;
         Trace.endSection();

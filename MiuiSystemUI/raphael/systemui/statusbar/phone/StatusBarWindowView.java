@@ -3,16 +3,19 @@ package com.android.systemui.statusbar.phone;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Insets;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.media.session.MediaSessionLegacyHelperCompat;
+import android.os.Build;
 import android.os.IBinder;
 import android.os.SystemClock;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.ActionMode;
+import android.view.DisplayCutout;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,6 +24,8 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowCompat;
+import android.view.WindowInsets;
+import android.view.WindowInsetsCompat;
 import android.view.WindowManager;
 import android.view.WindowManagerGlobal;
 import android.widget.FrameLayout;
@@ -71,6 +76,7 @@ public class StatusBarWindowView extends FrameLayout {
     private NotificationStackScrollLayout mStackScrollLayout;
     private FrameLayout mStatusBarContainer;
     private PhoneStatusBarView mStatusBarView;
+    private int mTopInset = 0;
     private boolean mTouchActive;
     private boolean mTouchCancelled;
     private final Paint mTransparentSrcPaint = new Paint();
@@ -92,8 +98,27 @@ public class StatusBarWindowView extends FrameLayout {
         }, (DoubleTapHelper.SlideBackListener) null, (DoubleTapHelper.DoubleTapLogListener) null);
     }
 
+    public WindowInsets onApplyWindowInsets(WindowInsets windowInsets) {
+        if (Build.VERSION.SDK_INT <= 29) {
+            return super.onApplyWindowInsets(windowInsets);
+        }
+        Insets insetsIgnoringVisibility = WindowInsetsCompat.getInsetsIgnoringVisibility(windowInsets);
+        this.mLeftInset = insetsIgnoringVisibility.left;
+        this.mRightInset = insetsIgnoringVisibility.right;
+        this.mTopInset = 0;
+        DisplayCutout displayCutout = getRootWindowInsets().getDisplayCutout();
+        if (displayCutout != null) {
+            this.mTopInset = WindowInsetsCompat.getWaterfallInsetsTop(displayCutout);
+        }
+        applyMargins();
+        return windowInsets;
+    }
+
     /* access modifiers changed from: protected */
     public boolean fitSystemWindows(Rect rect) {
+        if (Build.VERSION.SDK_INT > 29) {
+            return super.fitSystemWindows(rect);
+        }
         boolean z = true;
         if (getFitsSystemWindows()) {
             if (rect.top == getPaddingTop() && rect.bottom == getPaddingBottom()) {
@@ -133,9 +158,10 @@ public class StatusBarWindowView extends FrameLayout {
             View childAt = getChildAt(i);
             if ((childAt.getLayoutParams() instanceof LayoutParams) && childAt.getId() != R.id.brightness_mirror) {
                 LayoutParams layoutParams = (LayoutParams) childAt.getLayoutParams();
-                if (!layoutParams.ignoreRightInset && !(layoutParams.rightMargin == this.mRightInset && layoutParams.leftMargin == this.mLeftInset)) {
+                if (!layoutParams.ignoreRightInset && !(layoutParams.rightMargin == this.mRightInset && layoutParams.leftMargin == this.mLeftInset && layoutParams.topMargin == this.mTopInset)) {
                     layoutParams.rightMargin = this.mRightInset;
                     layoutParams.leftMargin = this.mLeftInset;
+                    layoutParams.topMargin = this.mTopInset;
                     childAt.requestLayout();
                 }
             }
@@ -325,7 +351,7 @@ public class StatusBarWindowView extends FrameLayout {
             return true;
         }
         boolean z = false;
-        if (this.mNotificationPanel.isFullyExpanded() && this.mNotificationPanel.isInCenterScreen() && this.mStackScrollLayout.getVisibility() == 0 && this.mService.getBarState() == 1 && !this.mService.isBouncerShowing() && !this.mService.isDozing()) {
+        if (this.mNotificationPanel.isFullyExpanded() && this.mNotificationPanel.isInCenterScreen() && this.mStackScrollLayout.getVisibility() == 0 && this.mService.getBarState() == 1 && !this.mService.isBouncerShowing() && !this.mService.isDozing() && !this.mNotificationPanel.isQsDetailShowing()) {
             z = this.mDragDownHelper.onInterceptTouchEvent(motionEvent);
         }
         if (!z) {

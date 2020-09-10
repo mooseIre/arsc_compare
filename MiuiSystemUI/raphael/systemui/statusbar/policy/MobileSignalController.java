@@ -1104,11 +1104,13 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
     public void setSpeechHd(CallbackHandler callbackHandler, boolean z) {
         ((MobileState) this.mCurrentState).speedHd = z;
         callbackHandler.setSpeechHd(this.mSlotId, z);
+        notifyListenersIfNecessary();
     }
 
     public void setVowifi(CallbackHandler callbackHandler, boolean z) {
         ((MobileState) this.mCurrentState).vowifi = z;
         callbackHandler.setVowifi(this.mSlotId, z);
+        notifyListenersIfNecessary();
     }
 
     private int getVoiceSignalLevel() {
