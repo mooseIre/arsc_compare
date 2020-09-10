@@ -372,6 +372,7 @@ public class KeyguardPatternView extends MiuiKeyguardPasswordView implements Key
                 }
             }
         }, this);
+        this.mEmergencyButton.setEnabled(false);
         return true;
     }
 
