@@ -28,7 +28,6 @@ import com.android.keyguard.wallpaper.service.MiuiKeyguardPictorialWallpaper;
 import com.android.systemui.Dependency;
 import com.android.systemui.glwallpaper.EglHelper;
 import com.android.systemui.glwallpaper.GLWallpaperRenderer;
-import com.android.systemui.plugins.R;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
 import com.android.systemui.statusbar.policy.BatteryController;
 import java.io.File;
@@ -95,7 +94,6 @@ public class MiuiKeyguardPictorialWallpaper extends BaseKeyguardWallpaperService
                 MiuiKeyguardPictorialWallpaper.PictorialEngine.this.finishRendering();
             }
         };
-        private final boolean mHasKeyguardWallpaperEffects = this.mContext.getResources().getBoolean(R.bool.miui_config_hasKeyguardWallpaperEffects);
         private boolean mIsDozing;
         private KeyguardUpdateMonitor mKeyguardUpdateMonitor = KeyguardUpdateMonitor.getInstance(this.mContext);
         private Drawable mKeyguardWallpaper = null;
@@ -336,7 +334,7 @@ public class MiuiKeyguardPictorialWallpaper extends BaseKeyguardWallpaperService
 
         /* access modifiers changed from: protected */
         public void onKeyguardGoingAway() {
-            if (KeyguardWallpaperUtils.isSupportWallpaperBlur() && this.mHasKeyguardWallpaperEffects && !DeviceLevelUtils.isLowEndDevice() && !this.mBatteryController.isPowerSave()) {
+            if (KeyguardWallpaperUtils.isSupportWallpaperBlur() && KeyguardWallpaperUtils.hasKeyguardWallpaperEffects(this.mContext) && !DeviceLevelUtils.isLowEndDevice() && !this.mBatteryController.isPowerSave()) {
                 if (this.mKeyguardUpdateMonitor.isFingerprintWakeUnlock() || ((MiuiFastUnlockController) Dependency.get(MiuiFastUnlockController.class)).isFastUnlock()) {
                     updateSurfaceAttrs(0.0f);
                     return;

@@ -34,6 +34,7 @@ import com.android.keyguard.utils.MiuiSettingsUtils;
 import com.android.keyguard.utils.PreferenceUtils;
 import com.android.keyguard.utils.ThemeUtils;
 import com.android.systemui.miui.DrawableUtils;
+import com.android.systemui.plugins.R;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -273,7 +274,7 @@ public class KeyguardWallpaperUtils {
         try {
             inputStream = context.getContentResolver().openInputStream(uri);
             try {
-                File tmpLockScreenFile = getTmpLockScreenFile();
+                File tmpLockScreenFile = getTmpLockScreenFile(context);
                 fileOutputStream = new FileOutputStream(tmpLockScreenFile);
                 try {
                     byte[] bArr = new byte[1024];
@@ -341,16 +342,18 @@ public class KeyguardWallpaperUtils {
         }
     }
 
-    private static File getTmpLockScreenFile() throws IOException {
-        File file = new File("/sdcard/systemui/");
+    private static File getTmpLockScreenFile(Context context) throws IOException {
+        File file;
+        String absolutePath = context.getExternalCacheDir().getAbsolutePath();
+        if (absolutePath != null) {
+            file = new File(absolutePath + File.separator + "lock_wallpaper");
+        } else {
+            file = new File("/sdcard/android/data/lock_wallpaper");
+        }
         if (!file.exists()) {
-            file.mkdirs();
+            file.createNewFile();
         }
-        File file2 = new File("/sdcard/systemui/lock_wallpaper");
-        if (!file2.exists()) {
-            file2.createNewFile();
-        }
-        return file2;
+        return file;
     }
 
     private static boolean setLockWallpaperWithoutCrop(Context context, String str, boolean z) {
@@ -391,7 +394,7 @@ public class KeyguardWallpaperUtils {
     private static boolean setLockWallpaper(Context context, Bitmap bitmap, boolean z, String str) {
         synchronized (sWallpaperLock) {
             try {
-                File tmpLockScreenFile = getTmpLockScreenFile();
+                File tmpLockScreenFile = getTmpLockScreenFile(context);
                 if (bitmap != null) {
                     if (!saveToJPG(bitmap, tmpLockScreenFile.getAbsolutePath())) {
                         return false;
@@ -676,5 +679,9 @@ public class KeyguardWallpaperUtils {
 
     public static boolean isWallpaperShouldBlur(Context context) {
         return !MiuiGxzwManager.isGxzwSensor() || !KeyguardUpdateMonitor.getInstance(context).isUnlockWithFingerprintPossible(KeyguardUpdateMonitor.getCurrentUser());
+    }
+
+    public static boolean hasKeyguardWallpaperEffects(Context context) {
+        return context.getResources().getBoolean(R.bool.miui_config_hasKeyguardWallpaperEffects);
     }
 }

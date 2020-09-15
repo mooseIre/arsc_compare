@@ -243,6 +243,7 @@ public class KeyguardDisplayManager {
             getWindow().getDecorView().setSystemUiVisibility(1792);
             this.mClock = findViewById(R.id.clock);
             this.mClock.post(this.mMoveTextRunnable);
+            getWindow();
         }
     }
 }
