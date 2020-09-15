@@ -744,12 +744,12 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
         return !this.mPhone.getDataEnabled(this.mSubId);
     }
 
-    /* JADX WARNING: Removed duplicated region for block: B:57:0x01a6  */
-    /* JADX WARNING: Removed duplicated region for block: B:60:0x01b7  */
-    /* JADX WARNING: Removed duplicated region for block: B:63:0x020f  */
-    /* JADX WARNING: Removed duplicated region for block: B:66:0x0214  */
-    /* JADX WARNING: Removed duplicated region for block: B:69:0x024b  */
-    /* JADX WARNING: Removed duplicated region for block: B:70:0x0250  */
+    /* JADX WARNING: Removed duplicated region for block: B:57:0x01a7  */
+    /* JADX WARNING: Removed duplicated region for block: B:60:0x01b8  */
+    /* JADX WARNING: Removed duplicated region for block: B:63:0x0211  */
+    /* JADX WARNING: Removed duplicated region for block: B:66:0x0216  */
+    /* JADX WARNING: Removed duplicated region for block: B:69:0x024d  */
+    /* JADX WARNING: Removed duplicated region for block: B:70:0x0252  */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     private void generateIconGroup() {
         /*
@@ -802,11 +802,11 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
             r12 = 0
             r22 = r3[r12]
             int r3 = r7.mSlotId
-            if (r3 < 0) goto L_0x027a
+            if (r3 < 0) goto L_0x027c
             android.telephony.TelephonyManager r4 = r7.mPhone
             int r4 = r4.getPhoneCount()
             if (r3 <= r4) goto L_0x0058
-            goto L_0x027a
+            goto L_0x027c
         L_0x0058:
             boolean r3 = com.android.systemui.statusbar.policy.SignalController.DEBUG
             if (r3 == 0) goto L_0x00e8
@@ -903,7 +903,7 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
             android.telephony.SignalStrength r1 = r7.mSignalStrength
             int r0 = com.android.systemui.statusbar.policy.TelephonyIcons.getSignalStrengthIcon(r0, r10, r8, r11, r1)
             boolean r1 = com.android.systemui.statusbar.policy.SignalController.DEBUG
-            if (r1 == 0) goto L_0x0147
+            if (r1 == 0) goto L_0x0148
             java.lang.String r1 = r7.mTag
             java.lang.StringBuilder r2 = new java.lang.StringBuilder
             r2.<init>()
@@ -913,24 +913,24 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
             r2.append(r3)
             java.lang.String r2 = r2.toString()
             android.util.Log.d(r1, r2)
-        L_0x0147:
+        L_0x0148:
             T r1 = r7.mCurrentState
             r2 = r1
             com.android.systemui.statusbar.policy.MobileSignalController$MobileState r2 = (com.android.systemui.statusbar.policy.MobileSignalController.MobileState) r2
             boolean r2 = r2.dataConnected
-            if (r2 == 0) goto L_0x015d
+            if (r2 == 0) goto L_0x015e
             int r2 = r7.mSlotId
-            if (r2 < 0) goto L_0x015d
+            if (r2 < 0) goto L_0x015e
             com.android.systemui.statusbar.policy.MobileSignalController$MobileState r1 = (com.android.systemui.statusbar.policy.MobileSignalController.MobileState) r1
             int r1 = r1.dataActivity
             int r1 = com.android.systemui.statusbar.policy.TelephonyIcons.getDataActivity(r2, r1)
-            goto L_0x015e
-        L_0x015d:
-            r1 = r12
+            goto L_0x015f
         L_0x015e:
+            r1 = r12
+        L_0x015f:
             int r2 = com.android.systemui.statusbar.policy.TelephonyIcons.convertMobileStrengthIcon(r0)
             boolean r3 = com.android.systemui.statusbar.policy.SignalController.DEBUG
-            if (r3 == 0) goto L_0x0181
+            if (r3 == 0) goto L_0x0182
             java.lang.String r3 = r7.mTag
             java.lang.StringBuilder r4 = new java.lang.StringBuilder
             r4.<init>()
@@ -940,38 +940,38 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
             r4.append(r5)
             java.lang.String r4 = r4.toString()
             android.util.Log.d(r3, r4)
-        L_0x0181:
-            if (r0 == r2) goto L_0x0189
+        L_0x0182:
+            if (r0 == r2) goto L_0x018a
             r31 = r2
             r2 = r0
             r0 = r31
-            goto L_0x018a
-        L_0x0189:
-            r2 = r12
+            goto L_0x018b
         L_0x018a:
-            int r3 = r7.mStyle
-            if (r3 != r13) goto L_0x01a3
-            if (r11 != 0) goto L_0x019b
-            boolean r3 = r32.showDataAndVoice()
-            if (r3 == 0) goto L_0x019b
-            int r3 = com.android.systemui.statusbar.policy.TelephonyIcons.getStackedVoiceIcon(r9)
-            goto L_0x01a4
-        L_0x019b:
-            if (r11 == 0) goto L_0x01a3
-            if (r1 == 0) goto L_0x01a3
-            int r0 = com.android.systemui.statusbar.policy.TelephonyIcons.getRoamingSignalIconId(r8, r10)
-        L_0x01a3:
-            r3 = r12
-        L_0x01a4:
-            if (r3 != 0) goto L_0x01a7
             r2 = r12
-        L_0x01a7:
+        L_0x018b:
+            int r3 = r7.mStyle
+            if (r3 != r13) goto L_0x01a4
+            if (r11 != 0) goto L_0x019c
+            boolean r3 = r32.showDataAndVoice()
+            if (r3 == 0) goto L_0x019c
+            int r3 = com.android.systemui.statusbar.policy.TelephonyIcons.getStackedVoiceIcon(r9)
+            goto L_0x01a5
+        L_0x019c:
+            if (r11 == 0) goto L_0x01a4
+            if (r1 == 0) goto L_0x01a4
+            int r0 = com.android.systemui.statusbar.policy.TelephonyIcons.getRoamingSignalIconId(r8, r10)
+        L_0x01a4:
+            r3 = r12
+        L_0x01a5:
+            if (r3 != 0) goto L_0x01a8
+            r2 = r12
+        L_0x01a8:
             int r4 = r7.mSlotId
             int[] r17 = com.android.systemui.statusbar.policy.TelephonyIcons.getSignalStrengthDes(r4)
             int r4 = r7.mSlotId
             int r20 = com.android.systemui.statusbar.policy.TelephonyIcons.getSignalNullIcon(r4)
             boolean r4 = com.android.systemui.statusbar.policy.SignalController.DEBUG
-            if (r4 == 0) goto L_0x01f5
+            if (r4 == 0) goto L_0x01f7
             java.lang.String r4 = r7.mTag
             java.lang.StringBuilder r5 = new java.lang.StringBuilder
             r5.<init>()
@@ -993,7 +993,7 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
             r5.append(r6)
             java.lang.String r5 = r5.toString()
             android.util.Log.d(r4, r5)
-        L_0x01f5:
+        L_0x01f7:
             int r4 = r7.mSlotId
             int r4 = com.android.systemui.statusbar.policy.TelephonyIcons.getDataTypeIcon(r4)
             int r5 = r7.mSlotId
@@ -1003,11 +1003,11 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
             r6 = r6[r8]
             int r8 = com.android.systemui.statusbar.policy.TelephonyIcons.getDataTypeDesc(r8)
             boolean r9 = r7.mIsShowVoiceType
-            if (r9 == 0) goto L_0x0210
+            if (r9 == 0) goto L_0x0212
             r6 = r12
-        L_0x0210:
+        L_0x0212:
             boolean r9 = com.android.systemui.statusbar.policy.SignalController.DEBUG
-            if (r9 == 0) goto L_0x0243
+            if (r9 == 0) goto L_0x0245
             java.lang.String r9 = r7.mTag
             java.lang.StringBuilder r10 = new java.lang.StringBuilder
             r10.<init>()
@@ -1024,17 +1024,17 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
             r10.append(r8)
             java.lang.String r4 = r10.toString()
             android.util.Log.d(r9, r4)
-        L_0x0243:
+        L_0x0245:
             T r4 = r7.mCurrentState
             com.android.systemui.statusbar.policy.MobileSignalController$MobileState r4 = (com.android.systemui.statusbar.policy.MobileSignalController.MobileState) r4
             boolean r4 = r4.mIs5GConnected
-            if (r4 == 0) goto L_0x0250
+            if (r4 == 0) goto L_0x0252
             r4 = 10
             r24 = r4
-            goto L_0x0252
-        L_0x0250:
-            r24 = r6
+            goto L_0x0254
         L_0x0252:
+            r24 = r6
+        L_0x0254:
             T r4 = r7.mCurrentState
             com.android.systemui.statusbar.policy.MobileSignalController$MobileState r4 = (com.android.systemui.statusbar.policy.MobileSignalController.MobileState) r4
             com.android.systemui.statusbar.policy.MobileSignalController$MobileIconGroup r6 = new com.android.systemui.statusbar.policy.MobileSignalController$MobileIconGroup
@@ -1055,7 +1055,7 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
             r13.<init>(r14, r15, r16, r17, r18, r19, r20, r21, r22, r23, r24, r25, r26, r27, r28, r29, r30)
             r4.iconGroup = r6
             return
-        L_0x027a:
+        L_0x027c:
             java.lang.String r0 = r7.mTag
             java.lang.StringBuilder r1 = new java.lang.StringBuilder
             r1.<init>()

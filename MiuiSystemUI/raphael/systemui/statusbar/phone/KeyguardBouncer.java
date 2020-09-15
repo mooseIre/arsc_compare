@@ -261,7 +261,7 @@ public class KeyguardBouncer {
         if (this.mBgImageView == null) {
             return;
         }
-        if (this.mIsLegacyKeyguardWallpaper || !KeyguardWallpaperUtils.isWallpaperShouldBlur(this.mContext)) {
+        if (this.mIsLegacyKeyguardWallpaper || !KeyguardWallpaperUtils.isWallpaperShouldBlur(this.mContext) || !KeyguardWallpaperUtils.hasKeyguardWallpaperEffects(this.mContext)) {
             new AsyncTask<Void, Void, Drawable>() {
                 /* access modifiers changed from: protected */
                 public Drawable doInBackground(Void... voidArr) {
@@ -276,7 +276,7 @@ public class KeyguardBouncer {
                     if (KeyguardBouncer.this.mBgImageView == null) {
                         return;
                     }
-                    if (!KeyguardWallpaperUtils.isWallpaperShouldBlur(KeyguardBouncer.this.mContext)) {
+                    if (!KeyguardWallpaperUtils.isWallpaperShouldBlur(KeyguardBouncer.this.mContext) || !KeyguardWallpaperUtils.hasKeyguardWallpaperEffects(KeyguardBouncer.this.mContext)) {
                         KeyguardBouncer.this.mBgImageView.setForeground(KeyguardBouncer.this.mForegroundDrawable);
                         KeyguardBouncer.this.mBgImageView.setImageDrawable(drawable);
                         return;
@@ -483,7 +483,7 @@ public class KeyguardBouncer {
         this.mHasUnlockByBle = false;
         this.mIsLegacyKeyguardWallpaper = ((MiuiKeyguardWallpaperController) Dependency.get(MiuiKeyguardWallpaperController.class)).isLegacyKeyguardWallpaper();
         ImageView imageView = this.mBgImageView;
-        if (this.mIsLegacyKeyguardWallpaper || !KeyguardWallpaperUtils.isWallpaperShouldBlur(this.mContext)) {
+        if (this.mIsLegacyKeyguardWallpaper || !KeyguardWallpaperUtils.isWallpaperShouldBlur(this.mContext) || !KeyguardWallpaperUtils.hasKeyguardWallpaperEffects(this.mContext)) {
             i = 0;
         }
         imageView.setVisibility(i);

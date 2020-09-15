@@ -7,6 +7,7 @@ import com.android.systemui.Constants;
 import com.android.systemui.Dependency;
 import com.android.systemui.plugins.PluginListener;
 import com.android.systemui.plugins.PluginManager;
+import com.android.systemui.plugins.miui.controls.ControlsEditCallback;
 import com.android.systemui.plugins.miui.controls.MiuiControlsPlugin;
 
 public class ControlsPluginManager implements PluginListener<MiuiControlsPlugin> {
@@ -42,6 +43,40 @@ public class ControlsPluginManager implements PluginListener<MiuiControlsPlugin>
         MiuiControlsPlugin miuiControlsPlugin = this.mMiuiControlsPlugin;
         if (miuiControlsPlugin != null) {
             miuiControlsPlugin.hideControlsView();
+        }
+    }
+
+    public View getControlsEditView(ControlsEditCallback controlsEditCallback) {
+        MiuiControlsPlugin miuiControlsPlugin = this.mMiuiControlsPlugin;
+        if (miuiControlsPlugin == null) {
+            return null;
+        }
+        try {
+            return miuiControlsPlugin.getControlsEditView(controlsEditCallback);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public void showControlsEditView() {
+        MiuiControlsPlugin miuiControlsPlugin = this.mMiuiControlsPlugin;
+        if (miuiControlsPlugin != null) {
+            miuiControlsPlugin.showControlsEditView();
+        }
+    }
+
+    public void hideControlsEditView() {
+        MiuiControlsPlugin miuiControlsPlugin = this.mMiuiControlsPlugin;
+        if (miuiControlsPlugin != null) {
+            miuiControlsPlugin.hideControlsEditView();
+        }
+    }
+
+    public void removeControlsEditView() {
+        MiuiControlsPlugin miuiControlsPlugin = this.mMiuiControlsPlugin;
+        if (miuiControlsPlugin != null) {
+            miuiControlsPlugin.removeControlsEditView();
         }
     }
 

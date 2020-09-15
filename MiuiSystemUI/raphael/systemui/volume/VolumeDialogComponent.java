@@ -34,7 +34,7 @@ public class VolumeDialogComponent implements VolumeComponent, TunerService.Tuna
         public void onZenSettingsClicked() {
         }
     };
-    private VolumePolicy mVolumePolicy = new VolumePolicy(true, true, true, 400);
+    private VolumePolicy mVolumePolicy = new VolumePolicy(true, true, false, 400);
 
     public void dispatchDemoCommand(String str, Bundle bundle) {
     }
@@ -86,22 +86,23 @@ public class VolumeDialogComponent implements VolumeComponent, TunerService.Tuna
     }
 
     public void onTuningChanged(String str, String str2) {
-        boolean z = true;
+        boolean z = false;
+        boolean z2 = true;
         if ("sysui_volume_down_silent".equals(str)) {
             if (str2 != null && Integer.parseInt(str2) == 0) {
-                z = false;
+                z2 = false;
             }
             VolumePolicy volumePolicy = this.mVolumePolicy;
-            setVolumePolicy(z, volumePolicy.volumeUpToExitSilent, volumePolicy.doNotDisturbWhenSilent, volumePolicy.vibrateToSilentDebounce);
+            setVolumePolicy(z2, volumePolicy.volumeUpToExitSilent, volumePolicy.doNotDisturbWhenSilent, volumePolicy.vibrateToSilentDebounce);
         } else if ("sysui_volume_up_silent".equals(str)) {
             if (str2 != null && Integer.parseInt(str2) == 0) {
-                z = false;
+                z2 = false;
             }
             VolumePolicy volumePolicy2 = this.mVolumePolicy;
-            setVolumePolicy(volumePolicy2.volumeDownToEnterSilent, z, volumePolicy2.doNotDisturbWhenSilent, volumePolicy2.vibrateToSilentDebounce);
+            setVolumePolicy(volumePolicy2.volumeDownToEnterSilent, z2, volumePolicy2.doNotDisturbWhenSilent, volumePolicy2.vibrateToSilentDebounce);
         } else if ("sysui_do_not_disturb".equals(str)) {
-            if (str2 != null && Integer.parseInt(str2) == 0) {
-                z = false;
+            if (!(str2 == null || Integer.parseInt(str2) == 0)) {
+                z = true;
             }
             VolumePolicy volumePolicy3 = this.mVolumePolicy;
             setVolumePolicy(volumePolicy3.volumeDownToEnterSilent, volumePolicy3.volumeUpToExitSilent, z, volumePolicy3.vibrateToSilentDebounce);

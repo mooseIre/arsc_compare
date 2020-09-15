@@ -3,7 +3,6 @@ package com.android.systemui.statusbar.notification;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.drawable.Icon;
-import android.os.Build;
 import android.util.ArraySet;
 import android.util.Log;
 import android.view.NotificationHeaderView;
@@ -36,8 +35,6 @@ public class NotificationHeaderViewWrapper extends NotificationViewWrapper {
     protected View mChronometer;
     protected int mColor;
     protected ImageView mExpandButton;
-    /* access modifiers changed from: private */
-    public int mExpandIconSize;
     protected boolean mExpandable;
     protected int mGoogleContentMarginBottom;
     protected int mGoogleContentMarginEnd;
@@ -106,7 +103,6 @@ public class NotificationHeaderViewWrapper extends NotificationViewWrapper {
         this.mGoogleContentMarginEnd = resources.getDimensionPixelSize(R.dimen.google_notification_content_margin_end);
         this.mGoogleContentMarginTop = resources.getDimensionPixelSize(R.dimen.google_notification_content_margin_top);
         this.mGoogleContentMarginBottom = resources.getDimensionPixelSize(R.dimen.google_notification_content_margin_bottom);
-        this.mExpandIconSize = resources.getDimensionPixelSize(R.dimen.notification_header_expand_icon_size);
         this.mMiuiAppIconSize = resources.getDimensionPixelSize(R.dimen.notification_app_icon_size);
         this.mMiuiAppIconMargin = resources.getDimensionPixelSize(R.dimen.notification_app_icon_margin);
         this.mMiniViewHeight = resources.getDimensionPixelSize(R.dimen.notification_low_priority_height);
@@ -460,12 +456,6 @@ public class NotificationHeaderViewWrapper extends NotificationViewWrapper {
         public void handleExpandButton() {
             NotificationHeaderViewWrapper notificationHeaderViewWrapper = NotificationHeaderViewWrapper.this;
             notificationHeaderViewWrapper.mExpandButton.setVisibility(notificationHeaderViewWrapper.mExpandable ? 0 : 8);
-            if (Build.VERSION.SDK_INT > 29) {
-                ViewGroup.LayoutParams layoutParams = NotificationHeaderViewWrapper.this.mExpandButton.getLayoutParams();
-                layoutParams.width = NotificationHeaderViewWrapper.this.mExpandIconSize;
-                layoutParams.height = NotificationHeaderViewWrapper.this.mExpandIconSize;
-                NotificationHeaderViewWrapper.this.mExpandButton.setLayoutParams(layoutParams);
-            }
         }
 
         /* access modifiers changed from: package-private */

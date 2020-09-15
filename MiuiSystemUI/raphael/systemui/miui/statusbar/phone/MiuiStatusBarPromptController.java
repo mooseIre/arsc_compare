@@ -31,8 +31,8 @@ public class MiuiStatusBarPromptController implements IMiuiStatusBarPrompt, Stat
     private WeakReference<Handler> mHandler = new WeakReference<>((Object) null);
     private IMiuiStatusBarPrompt mLastClickablePrompt;
     private boolean mMaskMode;
-    /* access modifiers changed from: private */
-    public FrameLayout mPromptLayout;
+    private FrameLayout mPromptLayout;
+    private View.OnLayoutChangeListener mPromptLayoutListener;
     private int mPromptMaxWidth;
     private int mPromptMaxWidthForNotch;
     private Map<String, OnPromptStateChangedListener> mPromptStateChangedListeners = new HashMap();
@@ -59,6 +59,9 @@ public class MiuiStatusBarPromptController implements IMiuiStatusBarPrompt, Stat
 
     public interface OnPromptStateChangedListener {
         void onPromptStateChanged(boolean z, String str);
+    }
+
+    public void updateTouchRegion() {
     }
 
     public MiuiStatusBarPromptController() {
@@ -164,35 +167,32 @@ public class MiuiStatusBarPromptController implements IMiuiStatusBarPrompt, Stat
     }
 
     public void setPromptLayout(FrameLayout frameLayout) {
-        this.mPromptLayout = frameLayout;
-    }
-
-    public void updateTouchRegion() {
-        FrameLayout frameLayout = this.mPromptLayout;
-        if (frameLayout != null) {
-            frameLayout.post(new Runnable() {
-                public void run() {
-                    if (MiuiStatusBarPromptController.this.mPromptLayout != null) {
-                        int[] iArr = new int[2];
-                        MiuiStatusBarPromptController.this.mPromptLayout.getLocationOnScreen(iArr);
-                        MiuiStatusBarPromptController.this.mRegion.left = iArr[0];
-                        MiuiStatusBarPromptController.this.mRegion.right = MiuiStatusBarPromptController.this.mRegion.left + MiuiStatusBarPromptController.this.mPromptLayout.getWidth();
-                        MiuiStatusBarPromptController.this.mRegion.top = MiuiStatusBarPromptController.this.mStatusBarView.getTop();
-                        MiuiStatusBarPromptController.this.mRegion.bottom = MiuiStatusBarPromptController.this.mStatusBarView.getBottom();
-                        if (MiuiStatusBarPromptController.this.needExpandTouchRegion()) {
-                            MiuiStatusBarPromptController.this.mRegion.bottom += MiuiStatusBarPromptController.this.mTouchRegionExpandValue;
-                        }
-                        if (MiuiStatusBarPromptController.this.mPromptTouchWidth != 0) {
-                            if (TextUtils.getLayoutDirectionFromLocale(Locale.getDefault()) == 0) {
-                                MiuiStatusBarPromptController.this.mRegion.right = MiuiStatusBarPromptController.this.mRegion.left + MiuiStatusBarPromptController.this.mPromptTouchWidth;
-                                return;
-                            }
-                            MiuiStatusBarPromptController.this.mRegion.left = MiuiStatusBarPromptController.this.mRegion.right - MiuiStatusBarPromptController.this.mPromptTouchWidth;
-                        }
-                    }
-                }
-            });
+        FrameLayout frameLayout2 = this.mPromptLayout;
+        if (frameLayout2 != null) {
+            frameLayout2.removeOnLayoutChangeListener(this.mPromptLayoutListener);
         }
+        this.mPromptLayout = frameLayout;
+        this.mPromptLayoutListener = new View.OnLayoutChangeListener() {
+            public void onLayoutChange(View view, int i, int i2, int i3, int i4, int i5, int i6, int i7, int i8) {
+                int[] iArr = new int[2];
+                view.getLocationOnScreen(iArr);
+                MiuiStatusBarPromptController.this.mRegion.left = iArr[0];
+                MiuiStatusBarPromptController.this.mRegion.right = (MiuiStatusBarPromptController.this.mRegion.left + i3) - i;
+                MiuiStatusBarPromptController.this.mRegion.top = MiuiStatusBarPromptController.this.mStatusBarView.getTop();
+                MiuiStatusBarPromptController.this.mRegion.bottom = MiuiStatusBarPromptController.this.mStatusBarView.getBottom();
+                if (MiuiStatusBarPromptController.this.needExpandTouchRegion()) {
+                    MiuiStatusBarPromptController.this.mRegion.bottom += MiuiStatusBarPromptController.this.mTouchRegionExpandValue;
+                }
+                if (MiuiStatusBarPromptController.this.mPromptTouchWidth != 0) {
+                    if (TextUtils.getLayoutDirectionFromLocale(Locale.getDefault()) == 0) {
+                        MiuiStatusBarPromptController.this.mRegion.right = MiuiStatusBarPromptController.this.mRegion.left + MiuiStatusBarPromptController.this.mPromptTouchWidth;
+                        return;
+                    }
+                    MiuiStatusBarPromptController.this.mRegion.left = MiuiStatusBarPromptController.this.mRegion.right - MiuiStatusBarPromptController.this.mPromptTouchWidth;
+                }
+            }
+        };
+        this.mPromptLayout.addOnLayoutChangeListener(this.mPromptLayoutListener);
     }
 
     public void updateViews() {

@@ -7519,9 +7519,6 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
         expandableNotificationRow.setIsLowPriority(false);
         expandableNotificationRow.setLowPriorityStateUpdated(z3 && isLowPriority != z2);
         this.mNotificationClicker.register(expandableNotificationRow, expandedNotification);
-        entry.targetSdk = entry.notification.getTargetSdk();
-        int i = entry.targetSdk;
-        expandableNotificationRow.setLegacy(i >= 9 && i < 21);
         entry.autoRedacted = entry.notification.getNotification().publicVersion == null;
         entry.row = expandableNotificationRow;
         entry.row.setOnActivatedListener(this);

@@ -55,6 +55,7 @@ public class Utilities {
     };
     public static final Rect EMPTY_RECT = new Rect();
     public static final boolean IS_MIUI_LITE_VERSION = Build.IS_MIUI_LITE_VERSION;
+    public static final boolean IS_NOT_SUPPORT_GESTURE_V3_DEVICE = isNotSupportGestureV3Device();
     public static Set<String> LOW_MEMORY_DEVICES = new ArraySet();
     public static final RectFEvaluator RECTF_EVALUATOR = new RectFEvaluator();
     public static final RectEvaluator RECT_EVALUATOR = new RectEvaluator(new Rect());
@@ -70,8 +71,16 @@ public class Utilities {
         LOW_MEMORY_DEVICES.add("olivewood");
     }
 
+    private static final boolean isNotSupportGestureV3Device() {
+        try {
+            return ((Boolean) Class.forName("android.util.MiuiGestureUtils").getMethod("isNotSupportGestureV3Device", new Class[0]).invoke((Object) null, new Object[0])).booleanValue();
+        } catch (Exception unused) {
+            return false;
+        }
+    }
+
     public static boolean isLowMemoryDevice() {
-        return LOW_MEMORY_DEVICES.contains(Build.DEVICE) || IS_MIUI_LITE_VERSION;
+        return LOW_MEMORY_DEVICES.contains(Build.DEVICE) || IS_MIUI_LITE_VERSION || IS_NOT_SUPPORT_GESTURE_V3_DEVICE;
     }
 
     public static <T> ArraySet<T> arrayToSet(T[] tArr, ArraySet<T> arraySet) {

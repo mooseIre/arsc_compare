@@ -1065,7 +1065,7 @@ public class KeyguardViewMediator extends SystemUI {
 
     private long getLockTimeout(int i) {
         ContentResolver contentResolver = this.mContext.getContentResolver();
-        long j = (long) Settings.Secure.getInt(contentResolver, "lock_screen_lock_after_timeout", 5000);
+        long j = (long) Settings.Secure.getInt(contentResolver, "lock_screen_lock_after_timeout", 0);
         long maximumTimeToLock = this.mLockPatternUtils.getDevicePolicyManager().getMaximumTimeToLock((ComponentName) null, i);
         return maximumTimeToLock <= 0 ? j : Math.max(Math.min(maximumTimeToLock - Math.max((long) Settings.System.getInt(contentResolver, "screen_off_timeout", 30000), 0), j), 0);
     }
