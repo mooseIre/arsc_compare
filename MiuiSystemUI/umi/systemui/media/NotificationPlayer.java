@@ -26,6 +26,7 @@ public class NotificationPlayer implements MediaPlayer.OnCompletionListener, Med
     public final Object mCompletionHandlingLock = new Object();
     @GuardedBy({"mCompletionHandlingLock"})
     private CreationAndCompletionThread mCompletionThread;
+    private boolean mLockAcquired = false;
     /* access modifiers changed from: private */
     @GuardedBy({"mCompletionHandlingLock"})
     public Looper mLooper;
@@ -396,13 +397,19 @@ public class NotificationPlayer implements MediaPlayer.OnCompletionListener, Med
                         Log.d(NotificationPlayer.this.mTag, "PLAY");
                     }
                     NotificationPlayer.this.startSound(command);
+                    synchronized (NotificationPlayer.this.mCmdQueue) {
+                        if (NotificationPlayer.this.mCmdQueue.size() == 0) {
+                            CmdThread unused = NotificationPlayer.this.mThread = null;
+                            return;
+                        }
+                    }
                 } else if (i == 2) {
                     if (NotificationPlayer.DEBUG) {
                         Log.d(NotificationPlayer.this.mTag, "STOP");
                     }
                     synchronized (NotificationPlayer.this.mPlayerLock) {
                         access$800 = NotificationPlayer.this.mPlayer;
-                        MediaPlayer unused = NotificationPlayer.this.mPlayer = null;
+                        MediaPlayer unused2 = NotificationPlayer.this.mPlayer = null;
                     }
                     if (access$800 != null) {
                         long uptimeMillis = SystemClock.uptimeMillis() - command.requestTime;
@@ -412,7 +419,7 @@ public class NotificationPlayer implements MediaPlayer.OnCompletionListener, Med
                         }
                         try {
                             access$800.stop();
-                        } catch (Exception unused2) {
+                        } catch (Exception unused3) {
                         }
                         access$800.release();
                         synchronized (NotificationPlayer.this.mQueueAudioFocusLock) {
@@ -421,7 +428,7 @@ public class NotificationPlayer implements MediaPlayer.OnCompletionListener, Med
                                     Log.d(NotificationPlayer.this.mTag, "in STOP: abandonning AudioFocus");
                                 }
                                 NotificationPlayer.this.mAudioManagerWithAudioFocus.abandonAudioFocus((AudioManager.OnAudioFocusChangeListener) null);
-                                AudioManager unused3 = NotificationPlayer.this.mAudioManagerWithAudioFocus = null;
+                                AudioManager unused4 = NotificationPlayer.this.mAudioManagerWithAudioFocus = null;
                             }
                         }
                         synchronized (NotificationPlayer.this.mCompletionHandlingLock) {
@@ -436,13 +443,15 @@ public class NotificationPlayer implements MediaPlayer.OnCompletionListener, Med
                     } else {
                         Log.w(NotificationPlayer.this.mTag, "STOP command without a player");
                     }
-                }
-                synchronized (NotificationPlayer.this.mCmdQueue) {
-                    if (NotificationPlayer.this.mCmdQueue.size() == 0) {
-                        CmdThread unused4 = NotificationPlayer.this.mThread = null;
-                        NotificationPlayer.this.releaseWakeLock();
-                        return;
+                    synchronized (NotificationPlayer.this.mCmdQueue) {
+                        if (NotificationPlayer.this.mCmdQueue.size() == 0) {
+                            CmdThread unused5 = NotificationPlayer.this.mThread = null;
+                            NotificationPlayer.this.releaseWakeLock();
+                            return;
+                        }
                     }
+                } else {
+                    continue;
                 }
             }
             while (true) {
@@ -477,6 +486,7 @@ public class NotificationPlayer implements MediaPlayer.OnCompletionListener, Med
                         this.mLooper.quit();
                     }
                     this.mCompletionThread = null;
+                    releaseWakeLock();
                 }
             }
         }
@@ -562,7 +572,8 @@ public class NotificationPlayer implements MediaPlayer.OnCompletionListener, Med
     @GuardedBy({"mCmdQueue"})
     private void acquireWakeLock() {
         PowerManager.WakeLock wakeLock = this.mWakeLock;
-        if (wakeLock != null) {
+        if (wakeLock != null && !this.mLockAcquired) {
+            this.mLockAcquired = true;
             wakeLock.acquire();
         }
     }
@@ -571,8 +582,9 @@ public class NotificationPlayer implements MediaPlayer.OnCompletionListener, Med
     @GuardedBy({"mCmdQueue"})
     public void releaseWakeLock() {
         PowerManager.WakeLock wakeLock = this.mWakeLock;
-        if (wakeLock != null) {
+        if (wakeLock != null && this.mLockAcquired) {
             wakeLock.release();
+            this.mLockAcquired = false;
         }
     }
 }

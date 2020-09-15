@@ -41,7 +41,7 @@ public class TakeScreenshotService extends Service {
                 AnonymousClass1 r3 = new Runnable(this) {
                     public void run() {
                         try {
-                            messenger.send(Message.obtain((Handler) null, 1));
+                            messenger.send(Message.obtain((Handler) null, 2));
                         } catch (RemoteException unused) {
                         }
                     }
@@ -64,7 +64,7 @@ public class TakeScreenshotService extends Service {
                 AnonymousClass3 r12 = new Runnable(this) {
                     public void run() {
                         try {
-                            messenger2.send(Message.obtain((Handler) null, 1));
+                            messenger2.send(Message.obtain((Handler) null, 2));
                         } catch (RemoteException e) {
                             Log.d("TakeScreenshotService", e.getMessage());
                         }
