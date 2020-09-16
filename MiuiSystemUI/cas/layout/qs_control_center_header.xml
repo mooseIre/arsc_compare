@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.android.systemui.miui.controlcenter.QSControlCenterHeaderView android:orientation="vertical" android:id="@id/header" android:background="@android:color/transparent" android:focusable="true" android:focusableInTouchMode="true" android:clickable="false" android:clipChildren="false" android:clipToPadding="false" android:layout_width="fill_parent" android:layout_height="wrap_content" android:paddingStart="@dimen/qs_control_panel_margin_horizontal" android:paddingEnd="@dimen/qs_control_panel_margin_horizontal" android:elevation="4.0dip"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout android:orientation="horizontal" android:id="@id/panel_header" android:layout_width="fill_parent" android:layout_height="@dimen/qs_control_header_statusbar_height">
+        <com.android.keyguard.CarrierText android:textAppearance="@style/TextAppearance.StatusBar.Expanded.Weather" android:ellipsize="marquee" android:gravity="center_vertical" android:layout_gravity="center_vertical" android:id="@id/carrier_text" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:maxEms="7" android:singleLine="true" android:marqueeRepeatLimit="1" />
+        <LinearLayout android:orientation="horizontal" android:layout_width="0.0dip" android:layout_height="fill_parent" android:layout_weight="1.0">
+            <View android:layout_width="0.0dip" android:layout_height="fill_parent" android:layout_weight="1.0" />
+            <com.android.keyguard.AlphaOptimizedLinearLayout android:gravity="end" android:orientation="horizontal" android:id="@id/system_icon_area" android:focusable="true" android:focusableInTouchMode="true" android:layout_width="wrap_content" android:layout_height="fill_parent">
+                <include layout="@layout/system_icons" />
+            </com.android.keyguard.AlphaOptimizedLinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+    <RelativeLayout android:id="@id/tiles_header" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginTop="@dimen/qs_control_header_tiles_margin_top">
+        <com.android.systemui.statusbar.policy.Clock android:textAppearance="@style/TextAppearance.QSControl.Clock" android:gravity="center_vertical" android:id="@id/big_time" android:layout_width="wrap_content" android:layout_height="wrap_content" android:fontFamily="miclock" android:layout_alignParentStart="true" />
+        <com.android.systemui.statusbar.policy.Clock android:textAppearance="@style/TextAppearance.QSControl.Date" android:id="@id/date_time" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignBaseline="@id/big_time" android:layout_marginStart="@dimen/notification_panel_time_date_space" android:layout_marginEnd="@dimen/qs_control_title_margin_end" android:layout_toEndOf="@id/big_time" />
+        <ImageView android:id="@id/notification_shade_shortcut" android:layout_width="@dimen/qs_control_header_button_size" android:layout_height="@dimen/qs_control_header_button_size" android:src="@drawable/qs_control_settings" android:layout_alignBottom="@id/date_time" android:layout_marginEnd="@dimen/qs_control_button_margin_end" android:layout_alignParentEnd="true" />
+        <ImageView android:id="@id/tiles_edit" android:layout_width="@dimen/qs_control_header_button_size" android:layout_height="@dimen/qs_control_header_button_size" android:src="@drawable/qs_control_tiles_edit" android:layout_alignBottom="@id/date_time" android:layout_alignParentEnd="true" />
+    </RelativeLayout>
+</com.android.systemui.miui.controlcenter.QSControlCenterHeaderView>

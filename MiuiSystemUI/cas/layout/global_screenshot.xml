@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:clipChildren="false" android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <View android:id="@id/screenshot_shadow" android:background="@drawable/screenshot_shadow_bg" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentTop="true" android:layout_alignParentRight="true" />
+    <RelativeLayout android:id="@id/screen_layout" android:clipChildren="false" android:layout_width="fill_parent" android:layout_height="fill_parent">
+        <ImageView android:layout_gravity="center" android:id="@id/global_screenshot" android:layout_width="wrap_content" android:layout_height="wrap_content" android:adjustViewBounds="true" />
+        <View android:id="@id/screen_white_bg" android:visibility="gone" android:layout_width="fill_parent" android:layout_height="fill_parent" />
+        <RelativeLayout android:id="@id/btnLongShotViewGroup" android:layout_width="fill_parent" android:layout_height="@dimen/screenshot_thumnail_btn_height" android:layout_marginTop="@dimen/screenshot_thumnail_btn_margintop" android:layout_below="@id/global_screenshot" android:layout_alignParentLeft="true">
+            <com.android.systemui.screenshot.MarqueeTextView android:textSize="@dimen/screenshot_thumnail_txtsize" android:textColor="@color/screenshot_thumnail_btn_txtcolor" android:gravity="center" android:id="@id/btnLongShot" android:background="@drawable/screenshot_thumnail_btn_bg" android:layout_width="fill_parent" android:layout_height="@dimen/screenshot_thumnail_btn_height" android:text="@string/screenshot_long_screenshot" android:singleLine="true" />
+            <ImageView android:background="@drawable/screenshot_thumnail_btn_maskleft" android:layout_width="wrap_content" android:layout_height="fill_parent" android:layout_alignParentLeft="true" />
+            <ImageView android:background="@drawable/screenshot_thumnail_btn_maskright" android:layout_width="wrap_content" android:layout_height="fill_parent" android:layout_alignParentRight="true" />
+        </RelativeLayout>
+        <TextView android:textSize="@dimen/screenshot_thumnail_txtsize" android:textColor="@color/screenshot_thumnail_btnnormal_txtcolor" android:gravity="center" android:id="@id/btnShare" android:background="@drawable/screenshot_thumnail_btn_bg" android:layout_width="fill_parent" android:layout_height="@dimen/screenshot_thumnail_btn_height" android:layout_marginTop="@dimen/screenshot_thumnail_btn_margintop" android:text="@string/screenshot_send" android:singleLine="true" android:layout_below="@id/btnLongShotViewGroup" android:layout_alignParentLeft="true" />
+    </RelativeLayout>
+</RelativeLayout>

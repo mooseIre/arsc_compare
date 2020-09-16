@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.android.systemui.statusbar.notification.InCallNotificationView android:gravity="center" android:orientation="vertical" android:id="@id/in_call_notification" android:visibility="gone" android:layout_width="fill_parent" android:layout_height="wrap_content"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout android:gravity="center" android:layout_width="fill_parent" android:layout_height="75.0dip" android:paddingStart="16.0dip" android:paddingEnd="16.0dip">
+        <ImageView android:id="@id/end_call_icon" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/end_call_icon" android:scaleType="fitCenter" android:contentDescription="@string/description_image_button_reject" />
+        <LinearLayout android:gravity="center" android:orientation="vertical" android:layout_width="0.0dip" android:layout_height="wrap_content" android:layout_weight="1.0">
+            <TextView android:textSize="14.0sp" android:textStyle="bold" android:textColor="@color/notification_in_call_caller_name_color" android:ellipsize="marquee" android:id="@id/caller_name" android:fadingEdge="horizontal" android:layout_width="wrap_content" android:layout_height="wrap_content" android:singleLine="true" />
+            <LinearLayout android:gravity="center_vertical" android:orientation="horizontal" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="3.0dip">
+                <ImageView android:id="@id/caller_sim" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:scaleType="fitCenter" android:contentDescription="@string/description_image_icon_sim_card" />
+                <TextView android:textSize="13.0sp" android:textColor="@color/notification_in_call_caller_info_color" android:ellipsize="marquee" android:id="@id/caller_Info" android:fadingEdge="horizontal" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="5.0dip" android:singleLine="true" />
+            </LinearLayout>
+            <Chronometer android:textSize="13.0sp" android:textColor="@color/notification_in_call_caller_info_color" android:ellipsize="marquee" android:id="@id/auto_disconnect_tip" android:fadingEdge="horizontal" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="3.0dip" android:singleLine="true" />
+        </LinearLayout>
+        <ImageView android:id="@id/bubble_answer_icon" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/bubble_answer_icon" android:scaleType="fitCenter" android:contentDescription="@string/description_image_button_bubble_answer" android:layout_marginEnd="16.0dip" />
+        <ImageView android:id="@id/answer_icon" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/answer_icon" android:scaleType="fitCenter" android:contentDescription="@string/description_image_button_answer" />
+    </LinearLayout>
+</com.android.systemui.statusbar.notification.InCallNotificationView>

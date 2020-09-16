@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <FrameLayout android:layout_gravity="start|center" android:id="@id/clock_container" style="@style/StatusBarClockContainerStyle">
+        <LinearLayout android:gravity="center" android:layout_gravity="center" android:id="@id/leftside" android:layout_width="fill_parent" android:layout_height="fill_parent">
+            <include layout="@layout/miui_status_bar_prompt" />
+            <com.android.keyguard.CarrierText android:textAppearance="@style/TextAppearance.StatusBar.Expanded.Weather" android:ellipsize="marquee" android:gravity="center_vertical" android:layout_gravity="center_vertical" android:id="@id/carrier" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:maxEms="3" android:singleLine="true" android:marqueeRepeatLimit="1" />
+            <include layout="@layout/status_bar_contents_clock" />
+            <com.android.systemui.miui.widget.ClipEdgeLinearLayout android:gravity="start|center" android:orientation="horizontal" android:id="@id/notch_leftear_icons" android:layout_width="wrap_content" android:layout_height="fill_parent" app:clipEdge="true" app:clipEnd="true" />
+            <com.android.systemui.statusbar.AlphaOptimizedFrameLayout android:gravity="center" android:layout_gravity="center" android:orientation="horizontal" android:id="@id/notification_icon_area" android:visibility="gone" android:layout_width="fill_parent" android:layout_height="fill_parent" />
+        </LinearLayout>
+    </FrameLayout>
+    <com.android.systemui.statusbar.AlphaOptimizedFrameLayout android:orientation="horizontal" android:layout_width="0.0dip" android:layout_height="fill_parent" android:layout_weight="1.0" />
+    <com.android.keyguard.AlphaOptimizedLinearLayout android:orientation="horizontal" android:id="@id/system_icon_area" android:layout_width="wrap_content" android:layout_height="fill_parent"
+      xmlns:android="http://schemas.android.com/apk/res/android">
+        <include layout="@layout/system_icons" />
+    </com.android.keyguard.AlphaOptimizedLinearLayout>
+</merge>
