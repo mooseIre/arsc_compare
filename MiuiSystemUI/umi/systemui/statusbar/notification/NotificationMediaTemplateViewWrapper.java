@@ -353,8 +353,14 @@ public class NotificationMediaTemplateViewWrapper extends NotificationHeaderView
             if (TextUtils.isEmpty(string2)) {
                 string2 = HybridGroupManager.resolveText(notification);
             }
-            this.mMediaTitle.setText(string);
-            this.mMediaText.setText(string2);
+            TextView textView = this.mMediaTitle;
+            if (textView != null) {
+                textView.setText(string);
+            }
+            TextView textView2 = this.mMediaText;
+            if (textView2 != null) {
+                textView2.setText(string2);
+            }
         }
     }
 

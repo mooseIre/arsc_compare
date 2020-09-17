@@ -143,6 +143,9 @@ public class ControlPanelWindowView extends FrameLayout {
                 } else if (this.mContent.isEditShowing()) {
                     this.mContent.hideEdit();
                     return true;
+                } else if (this.mContent.isControlEditShowing()) {
+                    this.mContent.hideControlEdit();
+                    return true;
                 }
             }
             if (keyEvent.getKeyCode() == 4 || keyEvent.getKeyCode() == 3 || keyEvent.getKeyCode() == 82) {
@@ -151,6 +154,9 @@ public class ControlPanelWindowView extends FrameLayout {
                 }
                 if (this.mContent.isEditShowing()) {
                     this.mContent.hideEdit();
+                }
+                if (this.mContent.isControlEditShowing()) {
+                    this.mContent.hideControlEdit();
                 }
                 collapsePanel();
                 return true;
@@ -174,7 +180,7 @@ public class ControlPanelWindowView extends FrameLayout {
             this.mDownX = motionEvent.getRawX();
             this.mDownExpandHeight = this.mExpandHeight;
         } else {
-            if (!this.mContent.isDetailShowing() && !this.mContent.isEditShowing()) {
+            if (!this.mContent.isDetailShowing() && !this.mContent.isEditShowing() && !this.mContent.isControlEditShowing()) {
                 if (z3 && motionEvent.getRawY() > this.mDownY && z4 && this.mControlCenterTileLayout.isExpanded() && this.mOrientation == 1 && this.mQSControlScrollView.isScrolledToTop()) {
                     return true;
                 }
@@ -207,7 +213,7 @@ public class ControlPanelWindowView extends FrameLayout {
             }
             this.mDownY = motionEvent.getRawY();
             this.mDownExpandHeight = this.mExpandHeight;
-        } else if (this.mContent.isDetailShowing() || this.mContent.isEditShowing()) {
+        } else if (this.mContent.isDetailShowing() || this.mContent.isEditShowing() || this.mContent.isControlEditShowing()) {
             return false;
         } else {
             if (z2) {
@@ -319,6 +325,9 @@ public class ControlPanelWindowView extends FrameLayout {
         }
         if (this.mContent.isEditShowing()) {
             this.mContent.hideEdit();
+        }
+        if (this.mContent.isControlEditShowing()) {
+            this.mContent.hideControlEdit();
         }
         if (z) {
             createAndStartAnimator(0, this.mCollapseListener);

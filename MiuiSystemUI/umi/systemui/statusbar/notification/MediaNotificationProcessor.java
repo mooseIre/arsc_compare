@@ -48,11 +48,11 @@ public class MediaNotificationProcessor {
 
     private Icon getNotificationLargeIcon(Notification notification) {
         MediaSession.Token token;
+        MediaMetadata metadata;
         Icon largeIcon = notification.getLargeIcon();
-        if (Build.VERSION.SDK_INT < 30 || (token = (MediaSession.Token) notification.extras.getParcelable("android.mediaSession")) == null) {
+        if (Build.VERSION.SDK_INT < 30 || (token = (MediaSession.Token) notification.extras.getParcelable("android.mediaSession")) == null || (metadata = new MediaController(this.mContext, token).getMetadata()) == null) {
             return largeIcon;
         }
-        MediaMetadata metadata = new MediaController(this.mContext, token).getMetadata();
         Bitmap bitmap = metadata.getBitmap("android.media.metadata.ART");
         if (bitmap == null) {
             bitmap = metadata.getBitmap("android.media.metadata.ALBUM_ART");
@@ -60,7 +60,7 @@ public class MediaNotificationProcessor {
         if (bitmap == null) {
             bitmap = NotificationUtil.loadBitmapFromUri(this.mContext, metadata);
         }
-        return bitmap == null ? notification.getLargeIcon() : Icon.createWithAdaptiveBitmap(bitmap);
+        return bitmap != null ? Icon.createWithAdaptiveBitmap(bitmap) : largeIcon;
     }
 
     public void processNotification(Notification notification, Notification.Builder builder) {

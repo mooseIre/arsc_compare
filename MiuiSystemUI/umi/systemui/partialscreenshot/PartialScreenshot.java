@@ -264,7 +264,7 @@ public class PartialScreenshot implements Thread.UncaughtExceptionHandler {
         });
         this.mScreenshotLayout.setOnKeyListener(new View.OnKeyListener() {
             public boolean onKey(View view, int i, KeyEvent keyEvent) {
-                if (i != 4) {
+                if (i != 4 || keyEvent.getAction() != 1 || keyEvent.isCanceled()) {
                     return false;
                 }
                 PartialScreenshot.this.saveDataInQuitOrException("false");

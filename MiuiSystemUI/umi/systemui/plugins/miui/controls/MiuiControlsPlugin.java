@@ -9,7 +9,15 @@ public interface MiuiControlsPlugin extends Plugin {
     public static final String ACTION = "com.android.systemui.action.PLUGIN_MIUI_CONTROLS";
     public static final int VERSION = 1;
 
+    View getControlsEditView(ControlsEditCallback controlsEditCallback);
+
     View getControlsView();
 
+    void hideControlsEditView();
+
     void hideControlsView();
+
+    void removeControlsEditView();
+
+    void showControlsEditView();
 }

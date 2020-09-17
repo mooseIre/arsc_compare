@@ -240,10 +240,14 @@ public class StatusBarWindowView extends FrameLayout {
         }
         boolean z = keyEvent.getAction() == 0;
         int keyCode = keyEvent.getKeyCode();
-        if (keyCode != 4) {
-            if (keyCode != 62) {
-                if (keyCode != 82) {
-                    if ((keyCode == 24 || keyCode == 25) && this.mService.isDozing()) {
+        if (z && keyCode >= 8 && keyCode <= 11 && findViewById(R.id.pinEntry) != null) {
+            findViewById(R.id.keyguard_pin_view).onKeyDown(keyEvent.getKeyCode(), keyEvent);
+        }
+        int keyCode2 = keyEvent.getKeyCode();
+        if (keyCode2 != 4) {
+            if (keyCode2 != 62) {
+                if (keyCode2 != 82) {
+                    if ((keyCode2 == 24 || keyCode2 == 25) && this.mService.isDozing()) {
                         MediaSessionLegacyHelperCompat.sendVolumeKeyEvent(getContext(), keyEvent, Integer.MIN_VALUE, true);
                         return true;
                     }

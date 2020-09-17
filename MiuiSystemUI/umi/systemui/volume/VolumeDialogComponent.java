@@ -33,7 +33,7 @@ public class VolumeDialogComponent implements VolumeComponent, TunerService.Tuna
         public void onZenSettingsClicked() {
         }
     };
-    private VolumePolicy mVolumePolicy = new VolumePolicy(true, true, true, 400);
+    private VolumePolicy mVolumePolicy = new VolumePolicy(true, true, false, 400);
 
     public void dispatchDemoCommand(String str, Bundle bundle) {
     }
@@ -104,7 +104,7 @@ public class VolumeDialogComponent implements VolumeComponent, TunerService.Tuna
             VolumePolicy volumePolicy2 = this.mVolumePolicy;
             setVolumePolicy(volumePolicy2.volumeDownToEnterSilent, z, volumePolicy2.doNotDisturbWhenSilent, volumePolicy2.vibrateToSilentDebounce);
         } else if ("sysui_do_not_disturb".equals(str)) {
-            if (str2 == null || Integer.parseInt(str2) != 0) {
+            if (!(str2 == null || Integer.parseInt(str2) == 0)) {
                 z = true;
             }
             VolumePolicy volumePolicy3 = this.mVolumePolicy;
