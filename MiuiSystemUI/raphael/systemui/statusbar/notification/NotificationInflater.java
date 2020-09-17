@@ -572,10 +572,6 @@ public class NotificationInflater {
         }
 
         public void onAsyncInflationFinished(NotificationData.Entry entry) {
-            entry.targetSdk = this.mSbn.getTargetSdk();
-            ExpandableNotificationRow expandableNotificationRow = this.mRow;
-            int i = entry.targetSdk;
-            expandableNotificationRow.setLegacy(i >= 9 && i < 21);
             this.mRow.getEntry().onInflationTaskFinished();
             this.mRow.onNotificationUpdated(this.mReInflateFlags);
             this.mCallback.onAsyncInflationFinished(this.mRow.getEntry());
