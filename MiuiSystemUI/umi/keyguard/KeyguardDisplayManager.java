@@ -15,6 +15,7 @@ import android.view.Display;
 import android.view.DisplayInfo;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.WindowManagerCompat;
 import com.android.systemui.plugins.R;
 
 public class KeyguardDisplayManager {
@@ -281,6 +282,7 @@ public class KeyguardDisplayManager {
             View findViewById = findViewById(R.id.clock);
             this.mClock = findViewById;
             findViewById.post(this.mMoveTextRunnable);
+            WindowManagerCompat.makeWindowFullScreen(getWindow());
         }
     }
 }

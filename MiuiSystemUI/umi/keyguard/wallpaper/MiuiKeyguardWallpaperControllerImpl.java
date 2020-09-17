@@ -21,7 +21,6 @@ import com.android.systemui.Constants;
 import com.android.systemui.Dependency;
 import com.android.systemui.Dumpable;
 import com.android.systemui.Interpolators;
-import com.android.systemui.plugins.R;
 import com.android.systemui.statusbar.policy.BatteryController;
 import com.miui.systemui.annotation.Inject;
 import java.io.File;
@@ -40,7 +39,6 @@ public class MiuiKeyguardWallpaperControllerImpl implements MiuiKeyguardWallpape
     /* access modifiers changed from: private */
     public boolean mFingerprintAuthenticated;
     private final Handler mHandler = new Handler(Looper.getMainLooper());
-    private final boolean mHasKeyguardWallpaperEffects;
     /* access modifiers changed from: private */
     public boolean mIsInteractive;
     private boolean mIsPowerSave;
@@ -137,7 +135,6 @@ public class MiuiKeyguardWallpaperControllerImpl implements MiuiKeyguardWallpape
 
     public MiuiKeyguardWallpaperControllerImpl(@Inject Context context) {
         this.mContext = context;
-        this.mHasKeyguardWallpaperEffects = context.getResources().getBoolean(R.bool.miui_config_hasKeyguardWallpaperEffects);
         this.mKeyguardWallpaper = new MiuiKeyguardWallpaperWindow(context);
         KeyguardUpdateMonitor.getInstance(context).registerWallpaperChangeCallback(this);
         KeyguardUpdateMonitor.getInstance(context).registerCallback(this.mKeyguardCallback);
@@ -335,7 +332,7 @@ public class MiuiKeyguardWallpaperControllerImpl implements MiuiKeyguardWallpape
     }
 
     public boolean isWallpaperEffectsEnabled() {
-        return ActivityManager.isHighEndGfx() && this.mHasKeyguardWallpaperEffects;
+        return ActivityManager.isHighEndGfx() && KeyguardWallpaperUtils.hasKeyguardWallpaperEffects(this.mContext);
     }
 
     public void onPowerSaveChanged(boolean z) {
@@ -457,7 +454,6 @@ public class MiuiKeyguardWallpaperControllerImpl implements MiuiKeyguardWallpape
 
     public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
         printWriter.println("State of miui keyguard wallpaper");
-        printWriter.println("  hasWallpaperEffects=" + this.mHasKeyguardWallpaperEffects);
         printWriter.println("  shouldDispatchEffects=" + shouldDispatchEffects());
         printWriter.println("  wallpaperType=" + this.mKeyguardWallpaperType.name());
         printWriter.println("  blurRatio=" + this.mWallpaperBlurRatio);
