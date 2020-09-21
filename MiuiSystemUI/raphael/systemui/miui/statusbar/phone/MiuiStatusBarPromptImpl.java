@@ -11,7 +11,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.os.UserHandle;
-import android.view.TouchDelegate;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Chronometer;
@@ -27,7 +26,6 @@ import com.android.systemui.miui.widget.LimitedSizeStyleSavedView;
 import com.android.systemui.plugins.R;
 import com.android.systemui.recents.misc.RecentsPushEventHelper;
 import com.android.systemui.statusbar.Icons;
-import com.android.systemui.statusbar.phone.KeyguardStatusBarView;
 import com.android.systemui.statusbar.phone.StatusBar;
 import com.android.systemui.statusbar.policy.DarkIconDispatcherHelper;
 
@@ -45,8 +43,7 @@ class MiuiStatusBarPromptImpl implements IMiuiStatusBarPrompt {
     private LimitedSizeStyleSavedView mMiniStateViews;
     private MiuiStatusBarPromptController mMiuiStatusBarPrompt;
     private ImageView mNotchRecorderImage;
-    /* access modifiers changed from: private */
-    public View mParentView;
+    private View mParentView;
     private Chronometer mRecordTimer;
     private LimitedSizeStyleSavedView mReturnToDriveModeView;
     private LimitedSizeStyleSavedView mReturnToInCallScreenButton;
@@ -57,12 +54,15 @@ class MiuiStatusBarPromptImpl implements IMiuiStatusBarPrompt {
     private View mSosStatusBar;
     private ViewGroup mStandardStateViews;
     private View mStateView;
-    private boolean mTouchExpanded;
+    private Rect mTouchRegion = new Rect();
 
     private void clearReturnToInCallScreenButtonIcons() {
     }
 
     public void initReturnToInCallScreenButtonIcons() {
+    }
+
+    public void updateTouchArea(boolean z, int i) {
     }
 
     public MiuiStatusBarPromptImpl(StatusBar statusBar, View view, int i) {
@@ -97,33 +97,29 @@ class MiuiStatusBarPromptImpl implements IMiuiStatusBarPrompt {
             this.mSafepayStatusBar.setMaxWidth(i);
             this.mSafepayStatusBarText = (TextView) this.mSafepayStatusBar.findViewById(R.id.title);
         }
-        this.mSosStatusBar = (LimitedSizeStyleSavedView) findViewById(R.id.notch_sos);
-        ((LimitedSizeStyleSavedView) this.mSosStatusBar).setMaxWidth(i);
+        if (!this.mIsSosTypeImage) {
+            this.mSosStatusBar = (LimitedSizeStyleSavedView) findViewById(R.id.notch_sos);
+            ((LimitedSizeStyleSavedView) this.mSosStatusBar).setMaxWidth(i);
+        }
+    }
+
+    public Rect getTouchRegion() {
+        View findViewById = this.mParentView.findViewById(R.id.notch_prompt_content_container);
+        if (findViewById == null) {
+            this.mTouchRegion.setEmpty();
+        } else {
+            int[] iArr = new int[2];
+            findViewById.getLocationOnScreen(iArr);
+            this.mTouchRegion.right = iArr[0] + findViewById.getWidth();
+            this.mTouchRegion.top = this.mParentView.getTop();
+            this.mTouchRegion.bottom = this.mParentView.getBottom();
+        }
+        return this.mTouchRegion;
     }
 
     public void cancelState() {
         setViewVisibilty(this.mStandardStateViews, 8, false);
         setViewVisibilty(this.mMiniStateViews, 8, false);
-    }
-
-    public void updateTouchArea(final boolean z, final int i) {
-        if (i != 0) {
-            View view = this.mParentView;
-            if (!(view instanceof KeyguardStatusBarView) && this.mTouchExpanded != z) {
-                final View view2 = (View) view.getParent();
-                this.mTouchExpanded = z;
-                view2.post(new Runnable() {
-                    public void run() {
-                        Rect rect = new Rect();
-                        MiuiStatusBarPromptImpl.this.mParentView.getHitRect(rect);
-                        if (z) {
-                            rect.bottom += i;
-                        }
-                        view2.setTouchDelegate(new TouchDelegate(rect, MiuiStatusBarPromptImpl.this.mParentView));
-                    }
-                });
-            }
-        }
     }
 
     public void updateStateViews(String str) {
@@ -324,6 +320,14 @@ class MiuiStatusBarPromptImpl implements IMiuiStatusBarPrompt {
 
     public void showReturnToSosBar(boolean z) {
         if (!isSosDisabled()) {
+            if (!this.mIsSosTypeImage) {
+                this.mSosStatusBar = findViewById(R.id.notch_sos);
+                Drawable background = this.mSosStatusBar.getBackground();
+                background.setColorFilter(this.mContext.getResources().getColor(R.color.notch_sos_status_bar_bg), PorterDuff.Mode.SRC_IN);
+                this.mSosStatusBar.setBackground(background);
+            } else {
+                this.mSosStatusBar = findViewById(R.id.notch_sos_image);
+            }
             setViewVisibilty(this.mSosStatusBar, z ? 0 : 8, false);
         }
     }
@@ -334,12 +338,10 @@ class MiuiStatusBarPromptImpl implements IMiuiStatusBarPrompt {
     }
 
     public void updateSosImageDark(boolean z, Rect rect, float f) {
-        if (this.mIsSosTypeImage) {
-            View view = this.mSosStatusBar;
-            if (view instanceof ImageView) {
-                ImageView imageView = (ImageView) view;
-                imageView.setImageResource(Icons.get(Integer.valueOf(R.drawable.stat_sys_sos), DarkIconDispatcherHelper.inDarkMode(rect, imageView, f)));
-            }
+        View view = this.mSosStatusBar;
+        if (view != null && (view instanceof ImageView)) {
+            ImageView imageView = (ImageView) view;
+            imageView.setImageResource(Icons.get(Integer.valueOf(R.drawable.stat_sys_sos), DarkIconDispatcherHelper.inDarkMode(rect, imageView, f)));
         }
     }
 

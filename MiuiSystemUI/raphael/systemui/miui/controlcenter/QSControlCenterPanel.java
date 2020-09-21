@@ -125,6 +125,7 @@ public class QSControlCenterPanel extends FrameLayout implements ConfigurationCo
     private int mScreenHeight;
     protected AnimState mShowAnim;
     private LinearLayout mSmartControlsView;
+    private int mStableInsetBottom;
     private View mTileView0;
     private LinearLayout mTilesContainer;
     private int mTransLineNum;
@@ -231,7 +232,12 @@ public class QSControlCenterPanel extends FrameLayout implements ConfigurationCo
         FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) this.mExpandIndicatorBottom.getLayoutParams();
         layoutParams.bottomMargin = windowInsets.getStableInsetBottom();
         this.mExpandIndicatorBottom.setLayoutParams(layoutParams);
-        setPadding(getPaddingLeft(), getPaddingTop(), getPaddingRight(), windowInsets.getStableInsetBottom());
+        int paddingTop = getPaddingTop();
+        int paddingLeft = getPaddingLeft();
+        int paddingRight = getPaddingRight();
+        int stableInsetBottom = windowInsets.getStableInsetBottom();
+        this.mStableInsetBottom = windowInsets.getStableInsetBottom();
+        setPadding(paddingLeft, paddingTop, paddingRight, stableInsetBottom);
         return super.onApplyWindowInsets(windowInsets);
     }
 
@@ -469,7 +475,7 @@ public class QSControlCenterPanel extends FrameLayout implements ConfigurationCo
             this.isMoveY = Math.abs(motionEvent.getRawY() - this.mInitialTouchY) > Math.abs(motionEvent.getRawX() - this.mInitialTouchX);
             if (!isBigTileTouched() && this.mQuickQsControlCenterTileLayout.isCollapsed() && this.isMoveY) {
                 if (this.mSmartControlsView.getChildCount() > 0) {
-                    if (motionEvent.getRawY() < this.mInitialTouchY && !this.mQsControlScrollView.isScrolledToBottom() && this.mSmartControlsView.getHeight() > this.mDistanceToBottom) {
+                    if (motionEvent.getRawY() < this.mInitialTouchY && !this.mQsControlScrollView.isScrolledToBottom() && isSmartControlOverScreen()) {
                         return false;
                     }
                     if (motionEvent.getRawY() <= this.mInitialTouchY || this.mQsControlScrollView.isScrolledToTop()) {
@@ -487,6 +493,13 @@ public class QSControlCenterPanel extends FrameLayout implements ConfigurationCo
             }
         }
         return super.onInterceptTouchEvent(motionEvent);
+    }
+
+    private boolean isSmartControlOverScreen() {
+        if (this.mSmartControlsView.getLocationOnScreen()[1] + this.mSmartControlsView.getHeight() > this.mScreenHeight - this.mStableInsetBottom) {
+            return true;
+        }
+        return false;
     }
 
     private boolean isHeaderAreaTouchDown(float f) {

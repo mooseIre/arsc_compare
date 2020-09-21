@@ -105,6 +105,9 @@ public class HeadsUpManager implements ViewTreeObserver.OnComputeInternalInsetsL
     /* access modifiers changed from: private */
     public boolean mWaitingOnCollapseWhenGoingAway;
 
+    private void updateRegionForPrompt(Region region) {
+    }
+
     public void onConfigChanged(Configuration configuration) {
     }
 
@@ -438,12 +441,6 @@ public class HeadsUpManager implements ViewTreeObserver.OnComputeInternalInsetsL
         internalInsetsInfo.touchableRegion.set(0, 0, this.mStatusBarWindowView.getWidth(), this.mStatusBarHeight);
         updateRegionForPrompt(internalInsetsInfo.touchableRegion);
         updateRegionForBubble(internalInsetsInfo.touchableRegion);
-    }
-
-    private void updateRegionForPrompt(Region region) {
-        if (this.mMiuiStatusBarPromptController.getTouchRegion() != null) {
-            region.op(this.mMiuiStatusBarPromptController.getTouchRegion(), Region.Op.UNION);
-        }
     }
 
     private void updateRegionForBubble(Region region) {

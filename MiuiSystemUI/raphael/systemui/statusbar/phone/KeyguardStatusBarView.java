@@ -153,7 +153,7 @@ public class KeyguardStatusBarView extends RelativeLayout implements MiuiStatusB
             if (this.mBlockClickActionToStatusBar) {
                 return true;
             }
-        } else if (actionMasked == 1 && this.mBlockClickActionToStatusBar && this.mStatusBarPrompt.getTouchRegion().contains((int) motionEvent.getX(), (int) motionEvent.getY())) {
+        } else if (actionMasked == 1 && this.mBlockClickActionToStatusBar && this.mStatusBarPrompt.getTouchRegion("KeyguardStatusBarView").contains((int) motionEvent.getRawX(), (int) motionEvent.getRawY())) {
             this.mStatusBarPrompt.handleClickAction();
             this.mBlockClickActionToStatusBar = false;
             return true;

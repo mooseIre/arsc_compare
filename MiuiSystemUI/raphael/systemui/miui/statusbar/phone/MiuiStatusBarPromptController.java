@@ -16,6 +16,7 @@ import android.widget.RemoteViews;
 import com.android.systemui.Dependency;
 import com.android.systemui.miui.statusbar.analytics.SystemUIStat;
 import com.android.systemui.plugins.R;
+import com.android.systemui.recents.misc.Utilities;
 import com.android.systemui.statusbar.phone.StatusBar;
 import com.android.systemui.statusbar.phone.StatusBarTypeController;
 import java.lang.ref.WeakReference;
@@ -23,7 +24,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
-import java.util.Locale;
 import java.util.Map;
 
 public class MiuiStatusBarPromptController implements IMiuiStatusBarPrompt, StatusBarTypeController.StatusBarTypeChangeListener {
@@ -31,19 +31,14 @@ public class MiuiStatusBarPromptController implements IMiuiStatusBarPrompt, Stat
     private WeakReference<Handler> mHandler = new WeakReference<>((Object) null);
     private IMiuiStatusBarPrompt mLastClickablePrompt;
     private boolean mMaskMode;
-    private FrameLayout mPromptLayout;
-    private View.OnLayoutChangeListener mPromptLayoutListener;
     private int mPromptMaxWidth;
     private int mPromptMaxWidthForNotch;
     private Map<String, OnPromptStateChangedListener> mPromptStateChangedListeners = new HashMap();
-    /* access modifiers changed from: private */
-    public int mPromptTouchWidth;
+    private int mPromptTouchWidth;
     private boolean mPromptVisibileChanged;
     private int mRecorderState;
     private long mRecordingPausedTime;
     private long mRecordingStartTime;
-    /* access modifiers changed from: private */
-    public Rect mRegion = new Rect();
     private String mReturnToCallState;
     private boolean mShowReturnToDrive;
     private int mSilentModeDefault = -1;
@@ -51,14 +46,15 @@ public class MiuiStatusBarPromptController implements IMiuiStatusBarPrompt, Stat
     private LinkedHashMap<String, State> mStatusBarStatesMap = new LinkedHashMap<>();
     private LinkedHashMap<Integer, LinkedList<String>> mStatusBarStatesPriorityMap = new LinkedHashMap<>();
     private StatusBarTypeController mStatusBarTypeHelper;
-    /* access modifiers changed from: private */
-    public View mStatusBarView;
+    private View mStatusBarView;
     private String mTopStatusBarModeState = "legacy_nromal";
-    /* access modifiers changed from: private */
-    public int mTouchRegionExpandValue;
+    private int mTouchRegionExpandValue;
 
     public interface OnPromptStateChangedListener {
         void onPromptStateChanged(boolean z, String str);
+    }
+
+    public void setPromptLayout(FrameLayout frameLayout) {
     }
 
     public void updateTouchRegion() {
@@ -157,42 +153,12 @@ public class MiuiStatusBarPromptController implements IMiuiStatusBarPrompt, Stat
         return getShowStateTag();
     }
 
-    /* access modifiers changed from: private */
-    public boolean needExpandTouchRegion() {
-        return !"legacy_nromal".equals(calculateTopTag());
-    }
-
-    public Rect getTouchRegion() {
-        return this.mRegion;
-    }
-
-    public void setPromptLayout(FrameLayout frameLayout) {
-        FrameLayout frameLayout2 = this.mPromptLayout;
-        if (frameLayout2 != null) {
-            frameLayout2.removeOnLayoutChangeListener(this.mPromptLayoutListener);
+    public Rect getTouchRegion(String str) {
+        MiuiStatusBarPromptImpl miuiStatusBarPromptImpl = this.mStatusBarPrompts.get(str);
+        if (miuiStatusBarPromptImpl == null) {
+            return Utilities.EMPTY_RECT;
         }
-        this.mPromptLayout = frameLayout;
-        this.mPromptLayoutListener = new View.OnLayoutChangeListener() {
-            public void onLayoutChange(View view, int i, int i2, int i3, int i4, int i5, int i6, int i7, int i8) {
-                int[] iArr = new int[2];
-                view.getLocationOnScreen(iArr);
-                MiuiStatusBarPromptController.this.mRegion.left = iArr[0];
-                MiuiStatusBarPromptController.this.mRegion.right = (MiuiStatusBarPromptController.this.mRegion.left + i3) - i;
-                MiuiStatusBarPromptController.this.mRegion.top = MiuiStatusBarPromptController.this.mStatusBarView.getTop();
-                MiuiStatusBarPromptController.this.mRegion.bottom = MiuiStatusBarPromptController.this.mStatusBarView.getBottom();
-                if (MiuiStatusBarPromptController.this.needExpandTouchRegion()) {
-                    MiuiStatusBarPromptController.this.mRegion.bottom += MiuiStatusBarPromptController.this.mTouchRegionExpandValue;
-                }
-                if (MiuiStatusBarPromptController.this.mPromptTouchWidth != 0) {
-                    if (TextUtils.getLayoutDirectionFromLocale(Locale.getDefault()) == 0) {
-                        MiuiStatusBarPromptController.this.mRegion.right = MiuiStatusBarPromptController.this.mRegion.left + MiuiStatusBarPromptController.this.mPromptTouchWidth;
-                        return;
-                    }
-                    MiuiStatusBarPromptController.this.mRegion.left = MiuiStatusBarPromptController.this.mRegion.right - MiuiStatusBarPromptController.this.mPromptTouchWidth;
-                }
-            }
-        };
-        this.mPromptLayout.addOnLayoutChangeListener(this.mPromptLayoutListener);
+        return miuiStatusBarPromptImpl.getTouchRegion();
     }
 
     public void updateViews() {
