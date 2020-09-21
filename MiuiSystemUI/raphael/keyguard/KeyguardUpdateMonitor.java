@@ -1504,7 +1504,7 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener {
         if (MiuiKeyguardUtils.isGxzwSensor()) {
             return !this.mDeviceInteractive;
         }
-        if (!MiuiKeyguardUtils.isTopActivitySystemApp(this.mContext) || this.mDeviceInteractive) {
+        if (!MiuiKeyguardUtils.isTopActivitySystemApp(this.mContext) || (this.mDeviceInteractive && MiuiKeyguardUtils.isTopActivityMiAudioVisual(this.mContext))) {
             return true;
         }
         return false;
