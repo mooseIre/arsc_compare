@@ -162,7 +162,7 @@ public class PhoneStatusBarView extends PanelBar implements MiuiStatusBarPromptC
             this.mDownTime = SystemClock.uptimeMillis();
             this.mDownX = x;
             this.mDownY = y;
-        } else if (this.mMiuiStatusBarPromptController.getTouchRegion().contains((int) x, (int) y) && motionEvent.getActionMasked() == 1 && this.mPanelClosedOnDown && !this.mPanel.isPanelVisibleBecauseOfHeadsUp() && !this.mPanel.isTracking()) {
+        } else if (this.mMiuiStatusBarPromptController.getTouchRegion(this.mTag).contains((int) motionEvent.getRawX(), (int) motionEvent.getRawY()) && motionEvent.getActionMasked() == 1 && this.mPanelClosedOnDown && !this.mPanel.isPanelVisibleBecauseOfHeadsUp() && !this.mPanel.isTracking()) {
             float scaledTouchSlop = (float) ViewConfiguration.get(getContext()).getScaledTouchSlop();
             if (SystemClock.uptimeMillis() - this.mDownTime < ((long) ViewConfiguration.getLongPressTimeout()) && Math.abs(x - this.mDownX) < scaledTouchSlop && Math.abs(y - this.mDownY) < scaledTouchSlop && this.mBlockClickActionToStatusBar) {
                 this.mPanel.cancelPeek();

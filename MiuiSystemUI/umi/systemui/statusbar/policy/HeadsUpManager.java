@@ -80,7 +80,6 @@ public class HeadsUpManager implements ViewTreeObserver.OnComputeInternalInsetsL
     private final HashSet<OnHeadsUpChangedListener> mListeners = new HashSet<>();
     /* access modifiers changed from: private */
     public final int mMinimumDisplayTime;
-    private final MiuiStatusBarPromptController mMiuiStatusBarPromptController;
     private Rect mPinnedNotificationBounds = new Rect();
     private boolean mReleaseOnExpandFinish;
     private ContentObserver mSettingsObserver;
@@ -104,6 +103,9 @@ public class HeadsUpManager implements ViewTreeObserver.OnComputeInternalInsetsL
     /* access modifiers changed from: private */
     public boolean mWaitingOnCollapseWhenGoingAway;
 
+    private void updateRegionForPrompt(Region region) {
+    }
+
     public void onConfigChanged(Configuration configuration) {
     }
 
@@ -118,7 +120,7 @@ public class HeadsUpManager implements ViewTreeObserver.OnComputeInternalInsetsL
         this.mMinimumDisplayTime = resources.getInteger(R.integer.heads_up_notification_minimum_time);
         this.mHeadsUpNotificationDecay = resources.getInteger(R.integer.heads_up_notification_decay);
         this.mClock = new Clock();
-        this.mMiuiStatusBarPromptController = (MiuiStatusBarPromptController) Dependency.get(MiuiStatusBarPromptController.class);
+        MiuiStatusBarPromptController miuiStatusBarPromptController = (MiuiStatusBarPromptController) Dependency.get(MiuiStatusBarPromptController.class);
         this.mSnoozeLengthMs = Settings.Global.getInt(context.getContentResolver(), "heads_up_snooze_length_ms", this.mDefaultSnoozeLengthMs);
         this.mSettingsObserver = new ContentObserver(this.mHandler) {
             public void onChange(boolean z) {
@@ -440,12 +442,6 @@ public class HeadsUpManager implements ViewTreeObserver.OnComputeInternalInsetsL
         internalInsetsInfo.touchableRegion.set(0, 0, this.mStatusBarWindowView.getWidth(), this.mStatusBarHeight);
         updateRegionForPrompt(internalInsetsInfo.touchableRegion);
         updateRegionForBubble(internalInsetsInfo.touchableRegion);
-    }
-
-    private void updateRegionForPrompt(Region region) {
-        if (this.mMiuiStatusBarPromptController.getTouchRegion() != null) {
-            region.op(this.mMiuiStatusBarPromptController.getTouchRegion(), Region.Op.UNION);
-        }
     }
 
     private void updateRegionForBubble(Region region) {

@@ -17,7 +17,6 @@ import android.graphics.ColorSpace;
 import android.graphics.GraphicBuffer;
 import android.graphics.Picture;
 import android.graphics.Rect;
-import android.hardware.HardwareBuffer;
 import android.hardware.input.InputManager;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -253,14 +252,14 @@ public class SystemUICompat {
         if (taskSnapshot == null || taskSnapshot.getSnapshot() == null) {
             return null;
         }
-        return Bitmap.wrapHardwareBuffer(HardwareBuffer.createFromGraphicBuffer(taskSnapshot.getSnapshot()), taskSnapshot.getColorSpace());
+        return Bitmap.wrapHardwareBuffer(taskSnapshot.getSnapshot(), taskSnapshot.getColorSpace());
     }
 
     public static Bitmap createHardwareBitmapFromGraphicBuffer(GraphicBuffer graphicBuffer) {
         if (graphicBuffer == null) {
             return null;
         }
-        return Bitmap.wrapHardwareBuffer(HardwareBuffer.createFromGraphicBuffer(graphicBuffer), (ColorSpace) null);
+        return Bitmap.wrapHardwareBuffer(graphicBuffer, (ColorSpace) null);
     }
 
     public static Bitmap drawViewIntoBitmap(int i, int i2, View view, float f, int i3) {

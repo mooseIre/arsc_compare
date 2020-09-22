@@ -53,6 +53,7 @@ public class Utilities {
             return drawable.getBounds();
         }
     };
+    public static final Rect EMPTY_RECT = new Rect();
     public static final boolean IS_MIUI_LITE_VERSION = Build.IS_MIUI_LITE_VERSION;
     public static final boolean IS_NOT_SUPPORT_GESTURE_V3_DEVICE = isNotSupportGestureV3Device();
     public static Set<String> LOW_MEMORY_DEVICES;
@@ -64,7 +65,6 @@ public class Utilities {
     }
 
     static {
-        new Rect();
         ArraySet arraySet = new ArraySet();
         LOW_MEMORY_DEVICES = arraySet;
         arraySet.add("pine");
@@ -257,6 +257,10 @@ public class Utilities {
 
     public static boolean isAndroidQorNewer() {
         return Build.VERSION.SDK_INT >= 29;
+    }
+
+    public static boolean isAndroidRorNewer() {
+        return Build.VERSION.SDK_INT >= 30;
     }
 
     public static boolean supportsMultiWindow() {

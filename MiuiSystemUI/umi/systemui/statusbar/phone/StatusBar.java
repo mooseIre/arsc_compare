@@ -215,11 +215,9 @@ import com.android.systemui.recents.Recents;
 import com.android.systemui.recents.ScreenPinningRequest;
 import com.android.systemui.recents.events.RecentsEventBus;
 import com.android.systemui.recents.events.activity.AppTransitionFinishedEvent;
-import com.android.systemui.recents.events.activity.DefaultHomeChangedEvent;
 import com.android.systemui.recents.events.activity.MultiWindowStateChangedEvent;
-import com.android.systemui.recents.events.activity.RecentsWithinLauncherChangedEvent;
+import com.android.systemui.recents.events.activity.UseFsGestureVersionThreeChangedEvent;
 import com.android.systemui.recents.misc.SystemServicesProxy;
-import com.android.systemui.recents.misc.Utilities;
 import com.android.systemui.stackdivider.Divider;
 import com.android.systemui.statistic.ScenarioConstants;
 import com.android.systemui.statistic.ScenarioTrackUtil;
@@ -479,9 +477,9 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
     public boolean mIsInDriveModeMask;
     /* access modifiers changed from: private */
     public boolean mIsKeyguard;
-    private boolean mIsLowMemoryDevice;
     private boolean mIsRemoved;
     private boolean mIsStatusBarHidden;
+    private boolean mIsUseFsGestureVersionThree;
     private boolean mKeptOnKeyguard;
     KeyguardBottomAreaView mKeyguardBottomArea;
     KeyguardClockContainer mKeyguardClock;
@@ -596,7 +594,6 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
     private boolean mQuietModeEnable;
     protected RecentsComponent mRecents;
     private View.OnClickListener mRecentsClickListener;
-    private boolean mRecentsWithinLauncher;
     private boolean mReinflateNotificationsOnUserSwitched;
     protected RemoteInputController mRemoteInputController;
     protected ArraySet<NotificationData.Entry> mRemoteInputEntriesToRemoveOnCollapse;
@@ -661,7 +658,6 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
     /* access modifiers changed from: private */
     public Runnable mUpdateStausBarPaddingRunnable;
     protected boolean mUseHeadsUp;
-    private boolean mUseMiuiHomeAsDefaultHome;
     private ContentObserver mUserExperienceObserver;
     private final ContentObserver mUserFoldObserver;
     /* access modifiers changed from: private */
@@ -2132,16 +2128,6 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
         this.mOLEDScreenHelper.start(true);
     }
 
-    public final void onBusEvent(RecentsWithinLauncherChangedEvent recentsWithinLauncherChangedEvent) {
-        this.mRecentsWithinLauncher = recentsWithinLauncherChangedEvent.mRecentsWithinLauncher;
-        onFsGestureStateChange();
-    }
-
-    public final void onBusEvent(DefaultHomeChangedEvent defaultHomeChangedEvent) {
-        this.mUseMiuiHomeAsDefaultHome = defaultHomeChangedEvent.mIsMiuiHome;
-        onFsGestureStateChange();
-    }
-
     private void changeNavBarViewState() {
         if (this.mIsFsgMode) {
             Log.d("StatusBar", "NOTICE: full screen gesture function close");
@@ -2174,8 +2160,13 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
         updateStatusBarPading();
     }
 
+    public final void onBusEvent(UseFsGestureVersionThreeChangedEvent useFsGestureVersionThreeChangedEvent) {
+        this.mIsUseFsGestureVersionThree = useFsGestureVersionThreeChangedEvent.mUseFsGestureVersionThree;
+        onFsGestureStateChange();
+    }
+
     public boolean isHideGestureLine() {
-        return this.mHideGestureLine || Build.VERSION.SDK_INT < 29 || !this.mRecentsWithinLauncher || !this.mUseMiuiHomeAsDefaultHome || this.mIsLowMemoryDevice;
+        return this.mHideGestureLine || !this.mIsUseFsGestureVersionThree;
     }
 
     public boolean isFullScreenGestureMode() {
@@ -2370,9 +2361,10 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
         this.mGroupManager.setHeadsUpManager(this.mHeadsUpManager);
         this.mHeadsUpManager.setVisualStabilityManager(this.mVisualStabilityManager);
         this.mIsFsgMode = MiuiSettings.Global.getBoolean(this.mContext.getContentResolver(), "force_fsg_nav_bar");
-        this.mRecentsWithinLauncher = SystemServicesProxy.getInstance(this.mContext).isRecentsWithinLauncher(this.mContext);
-        this.mUseMiuiHomeAsDefaultHome = SystemServicesProxy.getInstance(this.mContext).useMiuiHomeAsDefaultHome(this.mContext);
-        this.mIsLowMemoryDevice = Utilities.isLowMemoryDevice();
+        RecentsComponent recentsComponent = this.mRecents;
+        if (recentsComponent != null) {
+            this.mIsUseFsGestureVersionThree = ((Recents) recentsComponent).useFsGestureVersionThree();
+        }
         this.mHideGestureLine = Settings.Global.getInt(this.mContext.getContentResolver(), "hide_gesture_line", 0) != 0;
         this.mIsRemoved = true;
         try {
