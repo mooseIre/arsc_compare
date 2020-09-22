@@ -1399,7 +1399,11 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener {
     public void processKeyguardWallpaper() {
         Drawable lockWallpaperPreview = KeyguardWallpaperUtils.getLockWallpaperPreview(this.mContext);
         if (lockWallpaperPreview != null) {
-            sWallpaperColorLight = MiuiKeyguardUtils.getBitmapColorMode(((BitmapDrawable) lockWallpaperPreview).getBitmap()) == 2;
+            Bitmap bitmap = ((BitmapDrawable) lockWallpaperPreview).getBitmap();
+            if (bitmap != null) {
+                sWallpaperColorLight = MiuiKeyguardUtils.getBitmapColorMode(bitmap) == 2;
+                Slog.w("KeyguardUpdateMonitor", "update sWallpaperColorLight: " + sWallpaperColorLight);
+            }
             updateWallpaperBlurColor();
         }
     }

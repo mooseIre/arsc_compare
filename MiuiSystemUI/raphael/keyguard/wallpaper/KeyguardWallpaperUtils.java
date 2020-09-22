@@ -90,13 +90,10 @@ public class KeyguardWallpaperUtils {
                 return loadDrawable;
             }
             Drawable loadThumbnail = wallpaperInfo.loadThumbnail(context.getPackageManager());
-            if (loadThumbnail == null) {
-                return null;
+            if (loadThumbnail != null) {
+                return new BitmapDrawable((Resources) null, DrawableUtils.drawable2Bitmap(loadThumbnail));
             }
-            if (loadThumbnail instanceof BitmapDrawable) {
-                return loadThumbnail;
-            }
-            return new BitmapDrawable((Resources) null, DrawableUtils.drawable2Bitmap(loadThumbnail));
+            return null;
         }
     }
 
