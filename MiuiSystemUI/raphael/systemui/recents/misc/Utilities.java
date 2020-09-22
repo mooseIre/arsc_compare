@@ -257,6 +257,10 @@ public class Utilities {
         return Build.VERSION.SDK_INT >= 29;
     }
 
+    public static boolean isAndroidRorNewer() {
+        return Build.VERSION.SDK_INT >= 30;
+    }
+
     public static boolean supportsMultiWindow() {
         return Process.myUserHandle().equals(UserHandleCompat.SYSTEM);
     }

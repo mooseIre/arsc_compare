@@ -27,6 +27,7 @@ import com.android.systemui.recents.events.RecentsEventBus;
 import com.android.systemui.recents.events.activity.DefaultHomeChangedEvent;
 import com.android.systemui.recents.events.activity.RecentsWithinLauncherChangedEvent;
 import com.android.systemui.recents.events.activity.SuperPowerModeChangedEvent;
+import com.android.systemui.recents.events.activity.UseFsGestureVersionThreeChangedEvent;
 import com.android.systemui.recents.misc.RecentsPushEventHelper;
 import com.android.systemui.recents.misc.SystemServicesProxy;
 import com.android.systemui.recents.misc.Utilities;
@@ -211,6 +212,7 @@ public class Recents extends SystemUI implements RecentsComponent, CommandQueue.
         this.mIsRecentsWithinLauncher = sSystemServicesProxy.isRecentsWithinLauncher(this.mContext);
         this.mIsLowMemoryDevice = Utilities.isLowMemoryDevice();
         this.mUseFsGestureVersionThree = useFsGestureVersionThree();
+        RecentsEventBus.getDefault().send(new UseFsGestureVersionThreeChangedEvent(this.mUseFsGestureVersionThree));
         if (this.mUseFsGestureVersionThree) {
             this.mRecentsImplementation = new OverviewProxyRecentsImpl();
         } else {
@@ -242,12 +244,13 @@ public class Recents extends SystemUI implements RecentsComponent, CommandQueue.
     }
 
     public boolean useFsGestureVersionThree() {
-        return Utilities.isAndroidQorNewer() && this.mUseMiuiHomeAsDefaultHome && this.mIsRecentsWithinLauncher && !this.mIsLowMemoryDevice;
+        return (Utilities.isAndroidQorNewer() && this.mUseMiuiHomeAsDefaultHome && this.mIsRecentsWithinLauncher && !this.mIsLowMemoryDevice) || Utilities.isAndroidRorNewer();
     }
 
     /* access modifiers changed from: private */
     public void updateRecentsImplementation() {
         boolean useFsGestureVersionThree = useFsGestureVersionThree();
+        RecentsEventBus.getDefault().send(new UseFsGestureVersionThreeChangedEvent(useFsGestureVersionThree));
         if (this.mUseFsGestureVersionThree != useFsGestureVersionThree) {
             this.mUseFsGestureVersionThree = useFsGestureVersionThree;
             this.mRecentsImplementation.release();

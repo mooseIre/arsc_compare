@@ -11,6 +11,7 @@ import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.RotateDrawable;
 import android.graphics.drawable.ScaleDrawable;
 import android.os.Build;
+import android.util.Slog;
 
 public class DrawableUtils {
     public static Drawable findDrawableById(Drawable drawable, int i) {
@@ -61,27 +62,33 @@ public class DrawableUtils {
     }
 
     public static Bitmap drawable2Bitmap(Drawable drawable) {
+        Bitmap bitmap;
         Bitmap.Config config;
         if (drawable == null) {
             return null;
         }
         if (drawable instanceof BitmapDrawable) {
-            return ((BitmapDrawable) drawable).getBitmap();
-        }
-        if (drawable.getIntrinsicWidth() <= 0 || drawable.getIntrinsicHeight() <= 0) {
-            return null;
-        }
-        int intrinsicWidth = drawable.getIntrinsicWidth();
-        int intrinsicHeight = drawable.getIntrinsicHeight();
-        if (drawable.getOpacity() != -1) {
-            config = Bitmap.Config.ARGB_8888;
+            bitmap = ((BitmapDrawable) drawable).getBitmap();
+        } else if (drawable.getIntrinsicWidth() <= 0 || drawable.getIntrinsicHeight() <= 0) {
+            bitmap = null;
         } else {
-            config = Bitmap.Config.RGB_565;
+            int intrinsicWidth = drawable.getIntrinsicWidth();
+            int intrinsicHeight = drawable.getIntrinsicHeight();
+            if (drawable.getOpacity() != -1) {
+                config = Bitmap.Config.ARGB_8888;
+            } else {
+                config = Bitmap.Config.RGB_565;
+            }
+            Bitmap createBitmap = Bitmap.createBitmap(intrinsicWidth, intrinsicHeight, config);
+            Canvas canvas = new Canvas(createBitmap);
+            drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+            drawable.draw(canvas);
+            bitmap = createBitmap;
         }
-        Bitmap createBitmap = Bitmap.createBitmap(intrinsicWidth, intrinsicHeight, config);
-        Canvas canvas = new Canvas(createBitmap);
-        drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
-        drawable.draw(canvas);
-        return createBitmap;
+        if (bitmap != null && bitmap.getByteCount() < 104857600) {
+            return bitmap;
+        }
+        Slog.e("DrawableUtils", "bitmap is null or too large");
+        return null;
     }
 }
