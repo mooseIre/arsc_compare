@@ -234,6 +234,10 @@ public class MiuiKeyguardUtils {
         return "com.duokan.phone.remotecontroller".equalsIgnoreCase(Util.getTopActivityPkg(context));
     }
 
+    public static boolean isTopActivityMiAudioVisual(Context context) {
+        return "com.xiaomi.miaudiovisual".equalsIgnoreCase(Util.getTopActivityPkg(context));
+    }
+
     public static boolean isFullScreenGestureOpened(Context context) {
         return MiuiSettings.Global.getBoolean(context.getContentResolver(), "force_fsg_nav_bar");
     }

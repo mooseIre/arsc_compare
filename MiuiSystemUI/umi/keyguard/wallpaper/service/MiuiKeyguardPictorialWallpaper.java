@@ -524,8 +524,8 @@ public class MiuiKeyguardPictorialWallpaper extends BaseKeyguardWallpaperService
             preRenderInternal();
         }
 
-        /* JADX WARNING: Removed duplicated region for block: B:23:0x0068  */
-        /* JADX WARNING: Removed duplicated region for block: B:27:? A[RETURN, SYNTHETIC] */
+        /* JADX WARNING: Removed duplicated region for block: B:26:0x0078  */
+        /* JADX WARNING: Removed duplicated region for block: B:30:? A[RETURN, SYNTHETIC] */
         /* Code decompiled incorrectly, please refer to instructions dump. */
         private void preRenderInternal() {
             /*
@@ -534,52 +534,60 @@ public class MiuiKeyguardPictorialWallpaper extends BaseKeyguardWallpaperService
                 android.graphics.Rect r0 = r0.getSurfaceFrame()
                 r7.cancelFinishRenderingTask()
                 com.android.systemui.glwallpaper.EglHelper r1 = r7.mEglHelper
-                boolean r1 = r1.hasEglContext()
                 java.lang.String r2 = "MiuiKeyguardPictorialWallpaper"
+                if (r1 != 0) goto L_0x001d
+                java.lang.String r1 = "mEglHelper is null!"
+                android.util.Log.w(r2, r1)
+                com.android.systemui.glwallpaper.EglHelper r1 = new com.android.systemui.glwallpaper.EglHelper
+                r1.<init>()
+                r7.mEglHelper = r1
+            L_0x001d:
+                com.android.systemui.glwallpaper.EglHelper r1 = r7.mEglHelper
+                boolean r1 = r1.hasEglContext()
                 r3 = 1
                 r4 = 0
-                if (r1 != 0) goto L_0x002c
+                if (r1 != 0) goto L_0x003c
                 com.android.systemui.glwallpaper.EglHelper r1 = r7.mEglHelper
                 r1.destroyEglSurface()
                 com.android.systemui.glwallpaper.EglHelper r1 = r7.mEglHelper
                 boolean r1 = r1.createEglContext()
-                if (r1 != 0) goto L_0x002a
+                if (r1 != 0) goto L_0x003a
                 java.lang.String r1 = "recreate egl context failed!"
                 android.util.Log.w(r2, r1)
-                goto L_0x002c
-            L_0x002a:
+                goto L_0x003c
+            L_0x003a:
                 r1 = r3
-                goto L_0x002d
-            L_0x002c:
+                goto L_0x003d
+            L_0x003c:
                 r1 = r4
-            L_0x002d:
+            L_0x003d:
                 com.android.systemui.glwallpaper.EglHelper r5 = r7.mEglHelper
                 boolean r5 = r5.hasEglContext()
-                if (r5 == 0) goto L_0x004e
+                if (r5 == 0) goto L_0x005e
                 com.android.systemui.glwallpaper.EglHelper r5 = r7.mEglHelper
                 boolean r5 = r5.hasEglSurface()
-                if (r5 != 0) goto L_0x004e
+                if (r5 != 0) goto L_0x005e
                 com.android.systemui.glwallpaper.EglHelper r5 = r7.mEglHelper
                 android.view.SurfaceHolder r6 = r7.getSurfaceHolder()
                 boolean r5 = r5.createEglSurface(r6)
-                if (r5 != 0) goto L_0x004e
+                if (r5 != 0) goto L_0x005e
                 java.lang.String r5 = "recreate egl surface failed!"
                 android.util.Log.w(r2, r5)
-            L_0x004e:
-                if (r1 != 0) goto L_0x0056
+            L_0x005e:
+                if (r1 != 0) goto L_0x0066
                 boolean r1 = r7.mKeyguardWallpaperUpdated
-                if (r1 == 0) goto L_0x0055
-                goto L_0x0056
-            L_0x0055:
+                if (r1 == 0) goto L_0x0065
+                goto L_0x0066
+            L_0x0065:
                 r3 = r4
-            L_0x0056:
-                if (r3 == 0) goto L_0x007c
+            L_0x0066:
+                if (r3 == 0) goto L_0x008c
                 com.android.systemui.glwallpaper.EglHelper r1 = r7.mEglHelper
                 boolean r1 = r1.hasEglContext()
-                if (r1 == 0) goto L_0x007c
+                if (r1 == 0) goto L_0x008c
                 com.android.systemui.glwallpaper.EglHelper r1 = r7.mEglHelper
                 boolean r1 = r1.hasEglSurface()
-                if (r1 == 0) goto L_0x007c
+                if (r1 == 0) goto L_0x008c
                 r7.mKeyguardWallpaperUpdated = r4
                 com.android.systemui.glwallpaper.GLWallpaperRenderer r1 = r7.mRenderer
                 r1.onSurfaceCreated()
@@ -587,7 +595,7 @@ public class MiuiKeyguardPictorialWallpaper extends BaseKeyguardWallpaperService
                 int r1 = r0.width()
                 int r0 = r0.height()
                 r7.onSurfaceChanged(r1, r0)
-            L_0x007c:
+            L_0x008c:
                 return
             */
             throw new UnsupportedOperationException("Method not decompiled: com.android.keyguard.wallpaper.service.MiuiKeyguardPictorialWallpaper.PictorialEngine.preRenderInternal():void");
