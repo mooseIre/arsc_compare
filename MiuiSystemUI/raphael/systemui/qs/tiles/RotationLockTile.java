@@ -66,7 +66,7 @@ public class RotationLockTile extends QSTileImpl<QSTile.BooleanState> {
         if (rotationLockController != null) {
             boolean isRotationLocked = rotationLockController.isRotationLocked();
             booleanState.value = isRotationLocked;
-            booleanState.label = this.mContext.getString(286130568);
+            booleanState.label = this.mContext.getString(286130571);
             booleanState.icon = QSTileImpl.ResourceIcon.get(Icons.getQSIcons(Integer.valueOf(!isRotationLocked ? R.drawable.ic_qs_auto_rotate_enabled : R.drawable.ic_qs_auto_rotate_disabled), this.mInControlCenter));
             booleanState.contentDescription = getAccessibilityString(isRotationLocked);
             booleanState.expandedAccessibilityClassName = Switch.class.getName();

@@ -469,8 +469,14 @@ public class OverviewProxyService implements CallbackController<OverviewProxyLis
 
     /* access modifiers changed from: private */
     public void updateSystemUiStateFlags() {
+        NavigationBarView navigationBarView;
         StatusBar statusBar = (StatusBar) ((Application) this.mContext.getApplicationContext()).getSystemUIApplication().getComponent(StatusBar.class);
-        NavigationBarView navigationBarView = statusBar != null ? statusBar.getNavigationBarView() : null;
+        if (statusBar != null) {
+            navigationBarView = statusBar.getNavigationBarView();
+            statusBar.updateSystemUiStateFlags();
+        } else {
+            navigationBarView = null;
+        }
         this.mSysUiStateFlags = 0;
         if (navigationBarView != null) {
             navigationBarView.updateSystemUiStateFlags();

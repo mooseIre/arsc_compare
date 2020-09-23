@@ -4713,6 +4713,17 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
         if (navigationBarView != null) {
             navigationBarView.setWindowState(i, i2);
         }
+        updateSystemUiStateFlags();
+    }
+
+    public void updateSystemUiStateFlags() {
+        if (Dependency.get(OverviewProxyService.class) != null) {
+            ((OverviewProxyService) Dependency.get(OverviewProxyService.class)).setSystemUiStateFlag(1048576, !isStatusBarVisible());
+        }
+    }
+
+    public boolean isStatusBarVisible() {
+        return this.mStatusBarWindowState == 0;
     }
 
     public void setSystemUiVisibility(int i, int i2, int i3, int i4, Rect rect, Rect rect2) {

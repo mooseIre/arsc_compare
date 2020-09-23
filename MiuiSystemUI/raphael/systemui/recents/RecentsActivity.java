@@ -1445,7 +1445,7 @@ public class RecentsActivity extends Activity implements ViewTreeObserver.OnPreD
     public static String getToastMsg(Context context, long j, long j2) {
         long max = Math.max(j2 - j, 0);
         if (max <= 10240) {
-            return context.getResources().getString(286130399);
+            return context.getResources().getString(286130402);
         }
         long j3 = max / 1024;
         if (j3 < 1024) {
