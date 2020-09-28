@@ -327,8 +327,9 @@ public class CarrierText extends TextView implements NetworkController.CarrierNa
             if (!it.hasNext()) {
                 break;
             }
-            int slotId = ((SubscriptionInfo) it.next()).getSlotId();
-            if (this.mVowifiArray.get(slotId) && (this.mShowSpnWhenAirplaneOn || MCCUtils.isShowSpnWhenAirplaneOn(this.mContext, this.mPhone.getSimOperatorNumericForPhone(slotId)))) {
+            SubscriptionInfo subscriptionInfo = (SubscriptionInfo) it.next();
+            int slotId = subscriptionInfo.getSlotId();
+            if (this.mVowifiArray.get(slotId) && (this.mShowSpnWhenAirplaneOn || MCCUtils.isShowSpnWhenAirplaneOn(this.mContext, this.mPhone.getSimOperatorNumericForPhone(slotId)) || MCCUtils.isShowSpnByGidWhenAirplaneOn(this.mContext, this.mPhone.getSimOperatorNumericForPhone(slotId), this.mPhone.getGroupIdLevel1(subscriptionInfo.getSubscriptionId())))) {
                 if (slotId >= 0 && slotId < this.mPhoneCount) {
                     zArr[slotId] = true;
                 }
