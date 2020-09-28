@@ -347,6 +347,13 @@ public class NotificationUtil {
         return context.getResources().getDimensionPixelSize(R.dimen.notification_custom_view_margin);
     }
 
+    public static int getCustomViewMarginByNotification(Context context, ExpandedNotification expandedNotification) {
+        if (expandedNotification == null || !expandedNotification.isCustomHideBorder()) {
+            return getCustomViewMargin(context);
+        }
+        return 0;
+    }
+
     public static String resoveSendPkg(ExpandedNotification expandedNotification) {
         return c.a.equals(expandedNotification.getOpPkg()) ? c.a : expandedNotification.getBasePkg();
     }

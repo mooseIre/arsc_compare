@@ -120,6 +120,15 @@ public class KeyguardViewMediator extends SystemUI {
     private boolean mBootSendUserPresent;
     private final BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
+            if ("android.intent.action.ACTION_SHUTDOWN".equals(intent.getAction())) {
+                synchronized (KeyguardViewMediator.this) {
+                    boolean unused = KeyguardViewMediator.this.mShuttingDown = true;
+                }
+            }
+        }
+    };
+    private final BroadcastReceiver mDelayedLockBroadcastReceiver = new BroadcastReceiver() {
+        public void onReceive(Context context, Intent intent) {
             if ("com.android.internal.policy.impl.PhoneWindowManager.DELAYED_KEYGUARD".equals(intent.getAction())) {
                 int intExtra = intent.getIntExtra("seq", 0);
                 Slog.w("KeyguardViewMediator", "received DELAYED_KEYGUARD_ACTION with seq = " + intExtra + ", mDelayedShowingSequence = " + KeyguardViewMediator.this.mDelayedShowingSequence);
@@ -138,10 +147,6 @@ public class KeyguardViewMediator extends SystemUI {
                         }
                     }
                 }
-            } else if ("android.intent.action.ACTION_SHUTDOWN".equals(intent.getAction())) {
-                synchronized (KeyguardViewMediator.this) {
-                    boolean unused = KeyguardViewMediator.this.mShuttingDown = true;
-                }
             }
         }
     };
@@ -155,27 +160,6 @@ public class KeyguardViewMediator extends SystemUI {
     /* access modifiers changed from: private */
     public Display mDisplay;
     private IKeyguardDrawnCallback mDrawnCallback;
-    /* access modifiers changed from: private */
-    public Sensor mEllipticSensor = null;
-    /* access modifiers changed from: private */
-    public SensorEventListener mEllipticSensorListener = new SensorEventListener() {
-        public void onAccuracyChanged(Sensor sensor, int i) {
-        }
-
-        public void onSensorChanged(SensorEvent sensorEvent) {
-            if (sensorEvent.values != null) {
-                Slog.i("KeyguardViewMediator", "event.values[0]=" + sensorEvent.values[0]);
-            } else {
-                Slog.e("KeyguardViewMediator", "elliptic sensor values null");
-            }
-            float[] fArr = sensorEvent.values;
-            if (fArr != null && ((double) fArr[0]) < 1.0d && !KeyguardViewMediator.this.mHiding && KeyguardViewMediator.this.mShowing && !KeyguardViewMediator.this.mUpdateMonitor.isFingerprintUnlock()) {
-                Slog.i("KeyguardViewMediator", "keyguard_screen_off_reason:elliptic sensor too close");
-                KeyguardViewMediator.this.mPM.goToSleep(SystemClock.uptimeMillis());
-            }
-            KeyguardViewMediator.this.unregisterEllipticSensor();
-        }
-    };
     private IKeyguardExitCallback mExitSecureCallback;
     /* access modifiers changed from: private */
     public boolean mExternallyEnabled = true;
@@ -302,7 +286,6 @@ public class KeyguardViewMediator extends SystemUI {
     /* access modifiers changed from: private */
     public volatile boolean mHiding;
     private boolean mInputRestricted;
-    private boolean mIsDeviceSupportEllipticSensor = false;
     private boolean mIsDeviceSupportLargeAreaTouch = false;
     /* access modifiers changed from: private */
     public KeyguardDisplayManager mKeyguardDisplayManager;
@@ -485,7 +468,7 @@ public class KeyguardViewMediator extends SystemUI {
                 z = true;
                 KeyguardViewMediator.this.mLastSimStates.append(i2, state);
             }
-            switch (AnonymousClass26.$SwitchMap$com$android$internal$telephony$IccCardConstants$State[state.ordinal()]) {
+            switch (AnonymousClass24.$SwitchMap$com$android$internal$telephony$IccCardConstants$State[state.ordinal()]) {
                 case 1:
                 case 2:
                     synchronized (KeyguardViewMediator.this) {
@@ -699,8 +682,8 @@ public class KeyguardViewMediator extends SystemUI {
     public void onShortPowerPressedGoHome() {
     }
 
-    /* renamed from: com.android.systemui.keyguard.KeyguardViewMediator$26  reason: invalid class name */
-    static /* synthetic */ class AnonymousClass26 {
+    /* renamed from: com.android.systemui.keyguard.KeyguardViewMediator$24  reason: invalid class name */
+    static /* synthetic */ class AnonymousClass24 {
         static final /* synthetic */ int[] $SwitchMap$com$android$internal$telephony$IccCardConstants$State = new int[IccCardConstants.State.values().length];
 
         /* JADX WARNING: Can't wrap try/catch for region: R(12:0|1|2|3|4|5|6|7|8|9|10|(3:11|12|14)) */
@@ -754,7 +737,7 @@ public class KeyguardViewMediator extends SystemUI {
             L_0x004b:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.keyguard.KeyguardViewMediator.AnonymousClass26.<clinit>():void");
+            throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.keyguard.KeyguardViewMediator.AnonymousClass24.<clinit>():void");
         }
     }
 
@@ -822,10 +805,12 @@ public class KeyguardViewMediator extends SystemUI {
         this.mSmartCoverHelper = new SmartCoverHelper(this.mContext, this);
         this.mWallpaperHelper = new KeyguardWallpaperHelper(this.mContext);
         IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction("com.android.internal.policy.impl.PhoneWindowManager.DELAYED_KEYGUARD");
-        intentFilter.addAction("com.android.internal.policy.impl.PhoneWindowManager.DELAYED_LOCK");
         intentFilter.addAction("android.intent.action.ACTION_SHUTDOWN");
         this.mContext.registerReceiver(this.mBroadcastReceiver, intentFilter);
+        IntentFilter intentFilter2 = new IntentFilter();
+        intentFilter2.addAction("com.android.internal.policy.impl.PhoneWindowManager.DELAYED_KEYGUARD");
+        intentFilter2.addAction("com.android.internal.policy.impl.PhoneWindowManager.DELAYED_LOCK");
+        this.mContext.registerReceiver(this.mDelayedLockBroadcastReceiver, intentFilter2, "com.android.systemui.permission.SELF", (Handler) null);
         this.mContext.registerReceiverAsUser(this.mShowUnlockScreenReceiver, UserHandle.ALL, new IntentFilter("xiaomi.intent.action.SHOW_SECURE_KEYGUARD"), (String) null, (Handler) null);
         this.mKeyguardDisplayManager = new KeyguardDisplayManager(this.mContext);
         this.mAlarmManager = (AlarmManager) this.mContext.getSystemService("alarm");
@@ -867,7 +852,6 @@ public class KeyguardViewMediator extends SystemUI {
         this.mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor("pick_up_gesture_wakeup_mode"), false, this.mPickupGestureWakeupObserver, -1);
         this.mPickupGestureWakeupObserver.onChange(false);
         this.mIsDeviceSupportLargeAreaTouch = isDeviceSupportLargeAreaTouch();
-        this.mIsDeviceSupportEllipticSensor = isDeviceSupportEllipticSensor();
     }
 
     public void start() {
@@ -1911,7 +1895,6 @@ public class KeyguardViewMediator extends SystemUI {
                 }
             }
             unregisterLargeAreaTouchSensor();
-            unregisterEllipticSensor();
             FaceUnlockManager.getInstance().printFaceUnlockTime();
             recordKeyguardExitEvent();
             printFingerprintUnlockInfo(false);
@@ -2003,7 +1986,6 @@ public class KeyguardViewMediator extends SystemUI {
             Log.d("KeyguardViewMediator", "handleNotifyFinishedGoingToSleep");
             this.mStatusBarKeyguardViewManager.onFinishedGoingToSleep();
             unregisterLargeAreaTouchSensor();
-            unregisterEllipticSensor();
             KeyguardSensorManager.getInstance(this.mContext).unregisterProximitySensor();
         }
     }
@@ -2015,7 +1997,6 @@ public class KeyguardViewMediator extends SystemUI {
             Log.d("KeyguardViewMediator", "handleNotifyWakingUp");
             this.mStatusBarKeyguardViewManager.onStartedWakingUp();
             registerLargeAreaTouchSensor();
-            registerEllipticSensor();
             trackPageStart();
             recordScreenOn();
             sendKeyguardScreenOnBroadcast();
@@ -2431,47 +2412,6 @@ public class KeyguardViewMediator extends SystemUI {
             return r1
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.keyguard.KeyguardViewMediator.isDeviceSupportLargeAreaTouch():boolean");
-    }
-
-    /* access modifiers changed from: private */
-    public boolean shouldRegisterEllipticSensor() {
-        return this.mIsDeviceSupportEllipticSensor && this.mSensorManager != null && this.mEllipticSensor == null && !this.mHiding && this.mShowing;
-    }
-
-    private void registerEllipticSensor() {
-        if (shouldRegisterEllipticSensor()) {
-            this.mUiOffloadThread.submit(new Runnable() {
-                public void run() {
-                    if (KeyguardViewMediator.this.shouldRegisterEllipticSensor()) {
-                        KeyguardViewMediator keyguardViewMediator = KeyguardViewMediator.this;
-                        Sensor unused = keyguardViewMediator.mEllipticSensor = keyguardViewMediator.mSensorManager.getDefaultSensor(65555);
-                        KeyguardViewMediator.this.mSensorManager.registerListener(KeyguardViewMediator.this.mEllipticSensorListener, KeyguardViewMediator.this.mEllipticSensor, 0);
-                    }
-                }
-            });
-        }
-    }
-
-    /* access modifiers changed from: private */
-    public void unregisterEllipticSensor() {
-        if (this.mIsDeviceSupportEllipticSensor) {
-            this.mUiOffloadThread.submit(new Runnable() {
-                public void run() {
-                    if (KeyguardViewMediator.this.mSensorManager != null && KeyguardViewMediator.this.mEllipticSensor != null) {
-                        Sensor unused = KeyguardViewMediator.this.mEllipticSensor = null;
-                        KeyguardViewMediator.this.mSensorManager.unregisterListener(KeyguardViewMediator.this.mEllipticSensorListener);
-                    }
-                }
-            });
-        }
-    }
-
-    private boolean isDeviceSupportEllipticSensor() {
-        SensorManager sensorManager;
-        if (!SystemProperties.getBoolean("ro.vendor.audio.us.cd", false) || (sensorManager = this.mSensorManager) == null || sensorManager.getDefaultSensor(65555) == null) {
-            return false;
-        }
-        return true;
     }
 
     private void trackPageStart() {

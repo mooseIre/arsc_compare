@@ -32,7 +32,8 @@ public class NotificationCustomViewWrapper extends NotificationViewWrapper {
         Resources resources = this.mContext.getResources();
         this.mBackgroundColor = resources.getColor(R.color.notification_material_background_color);
         this.mCornerRadius = resources.getDimensionPixelSize(R.dimen.notification_custom_view_corner_radius);
-        this.mCustomViewMargin = NotificationUtil.getCustomViewMargin(this.mContext);
+        ExpandableNotificationRow expandableNotificationRow = this.mRow;
+        this.mCustomViewMargin = NotificationUtil.getCustomViewMarginByNotification(this.mContext, expandableNotificationRow == null ? null : expandableNotificationRow.getStatusBarNotification());
     }
 
     private void handleViewMargin() {

@@ -275,8 +275,8 @@ public class CellularTile extends QSTileImpl<QSTile.BooleanState> {
             java.lang.String r0 = r0.getString(r1)
         L_0x0118:
             boolean r8 = r8.noSim
-            r1 = 2131822319(0x7f1106ef, float:1.9277406E38)
-            r2 = 2131822318(0x7f1106ee, float:1.9277404E38)
+            r1 = 2131822320(0x7f1106f0, float:1.9277408E38)
+            r2 = 2131822319(0x7f1106ef, float:1.9277406E38)
             java.lang.String r3 = ","
             if (r8 == 0) goto L_0x0147
             java.lang.StringBuilder r8 = new java.lang.StringBuilder

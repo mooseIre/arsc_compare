@@ -95,7 +95,6 @@ public class NotificationContentView extends AbstractFrameLayout {
     /* access modifiers changed from: private */
     public int mNotificationBgRadius;
     private int mNotificationContentMarginEnd;
-    private int mNotificationCustomViewMargin;
     private int mNotificationMaxHeight;
     private PendingIntent mPreviousExpandedRemoteInputIntent;
     private PendingIntent mPreviousHeadsUpRemoteInputIntent;
@@ -129,7 +128,10 @@ public class NotificationContentView extends AbstractFrameLayout {
         this.mNotificationContentMarginEnd = getResources().getDimensionPixelSize(17105322);
         this.mLowPriorityNotificationHeight = getResources().getDimensionPixelSize(R.dimen.low_priority_notification_layout_height);
         this.mNotificationBgRadius = NotificationUtil.getOutlineRadius(this.mContext);
-        this.mNotificationCustomViewMargin = NotificationUtil.getCustomViewMargin(this.mContext);
+    }
+
+    private int getNotificationCunstomViewMargin() {
+        return NotificationUtil.getCustomViewMarginByNotification(this.mContext, this.mStatusBarNotification);
     }
 
     public void setHeights(int i, int i2, int i3, int i4) {
@@ -267,7 +269,7 @@ public class NotificationContentView extends AbstractFrameLayout {
         }
         int min4 = Math.min(i3, i8);
         if (isCustomViewNotification(this.mStatusBarNotification)) {
-            min4 += this.mNotificationCustomViewMargin * 2;
+            min4 += getNotificationCunstomViewMargin() * 2;
         } else if (NotificationUtil.showSingleLine(this.mStatusBarNotification.getNotification())) {
             min4 = Math.max(min4, this.mMinContractedHeight);
         }
@@ -645,7 +647,7 @@ public class NotificationContentView extends AbstractFrameLayout {
         if (wrapperForView != null) {
             height = height + wrapperForView.getHeaderTranslation() + wrapperForView.getMiniBarHeight();
         }
-        return isCustomViewNotification(this.mStatusBarNotification) ? height + (this.mNotificationCustomViewMargin * 2) : height;
+        return isCustomViewNotification(this.mStatusBarNotification) ? height + (getNotificationCunstomViewMargin() * 2) : height;
     }
 
     public int getMinHeight() {

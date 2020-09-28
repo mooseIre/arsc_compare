@@ -3342,7 +3342,8 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
         CharSequence[] charSequenceArr;
         if (!((BubbleController) Dependency.get(BubbleController.class)).onNotificationRemoveRequested(str, i)) {
             abortExistingInflation(str);
-            boolean z2 = this.mHeadsUpManager.isHeadsUp(str) ? !this.mHeadsUpManager.removeNotification(str, true) : false;
+            boolean z2 = false;
+            boolean z3 = this.mHeadsUpManager.isHeadsUp(str) ? !this.mHeadsUpManager.removeNotification(str, true) : false;
             if (str.equals(this.mMediaNotificationKey)) {
                 clearCurrentMediaNotification();
                 updateMediaMetaData(true, true);
@@ -3373,14 +3374,14 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
                 build.headsUpContentView = expandedNotification.getNotification().headsUpContentView;
                 boolean handleNotification = handleNotification(expandedNotification, (NotificationListenerService.RankingMap) null, true);
                 if (!handleNotification) {
-                    z2 = false;
+                    z3 = false;
                 }
                 if (handleNotification) {
                     this.mKeysKeptForRemoteInput.add(entry.key);
                     return;
                 }
             }
-            if (z2) {
+            if (z3) {
                 this.mLatestRankingMap = rankingMap;
                 this.mHeadsUpEntriesToRemoveOnSwitch.add(this.mHeadsUpManager.getEntry(str));
                 return;
@@ -3404,7 +3405,10 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
                     hasActiveNotifications();
                 }
                 setAreThereNotifications();
-                if (isKeyguardShowing()) {
+                if (entry2 != null && ((KeyguardNotificationHelper) Dependency.get(KeyguardNotificationHelper.class)).needReadd(entry2)) {
+                    z2 = true;
+                }
+                if (z2 || isKeyguardShowing()) {
                     if (entry2 != null) {
                         str2 = entry2.notification.getPackageName();
                     }

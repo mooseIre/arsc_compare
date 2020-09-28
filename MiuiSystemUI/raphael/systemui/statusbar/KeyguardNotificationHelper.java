@@ -128,7 +128,7 @@ public class KeyguardNotificationHelper {
         }
     }
 
-    private boolean needReadd(NotificationData.Entry entry) {
+    public boolean needReadd(NotificationData.Entry entry) {
         Notification notification = entry.notification.getNotification();
         if (entry.notification.isClearable() && !MiuiNotificationCompat.isOnlyShowKeyguard(notification) && !MiuiNotificationCompat.isKeptOnKeyguard(notification)) {
             return false;
