@@ -28,6 +28,7 @@ public class FingerprintUnlockController extends KeyguardUpdateMonitorCallback {
     private MiuiKeyguardFingerprintUtils$FingerprintIdentificationState mFpiState;
     private Handler mHandler = new Handler();
     private KeyguardViewMediator mKeyguardViewMediator;
+    private boolean mKeyguardVisibility;
     private int mMode;
     private int mPendingAuthenticatedUserId = -1;
     private boolean mPendingShowBouncer;
@@ -104,6 +105,11 @@ public class FingerprintUnlockController extends KeyguardUpdateMonitorCallback {
             ((MiuiFastUnlockController) Dependency.get(MiuiFastUnlockController.class)).wakeAndFastUnlock("android.policy:FINGERPRINT");
         }
         Trace.endSection();
+    }
+
+    public void onKeyguardVisibilityChanged(boolean z) {
+        super.onKeyguardVisibilityChanged(z);
+        this.mKeyguardVisibility = z;
     }
 
     public void onFingerprintAuthenticated(int i) {
@@ -234,6 +240,12 @@ public class FingerprintUnlockController extends KeyguardUpdateMonitorCallback {
         this.mPendingShowBouncer = false;
         this.mPendingAuthenticatedUserId = -1;
         this.mScrimController.resetWakeAndUnlocking();
+        if (this.mKeyguardVisibility) {
+            int currentUser = KeyguardUpdateMonitor.getCurrentUser();
+            if (MiuiKeyguardUtils.isAodEnable(this.mContext) || (MiuiKeyguardUtils.isGxzwSensor() && this.mUpdateMonitor.isUnlockWithFingerprintPossible(currentUser))) {
+                this.mScrimController.setAodWaitUnlocking(true);
+            }
+        }
     }
 
     public void onFinishedGoingToSleep(int i) {

@@ -355,7 +355,7 @@ public class StatusBarWindowView extends FrameLayout {
             return true;
         }
         boolean z = false;
-        if (this.mNotificationPanel.isFullyExpanded() && this.mNotificationPanel.isInCenterScreen() && ((this.mStackScrollLayout.getVisibility() == 0 || !this.mNotificationPanel.mIsDefaultTheme) && this.mService.getBarState() == 1 && !this.mService.isBouncerShowing() && !this.mService.isDozing() && !this.mNotificationPanel.isQsDetailShowing())) {
+        if (this.mNotificationPanel.isFullyExpanded() && this.mNotificationPanel.isInCenterScreen() && this.mStackScrollLayout.getVisibility() == 0 && this.mService.getBarState() == 1 && !this.mService.isBouncerShowing() && !this.mService.isDozing() && !this.mNotificationPanel.isQsDetailShowing()) {
             z = this.mDragDownHelper.onInterceptTouchEvent(motionEvent);
         }
         if (!z) {
