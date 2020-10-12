@@ -41,6 +41,8 @@ import com.android.systemui.recents.model.TaskStack;
 import com.android.systemui.stackdivider.events.StartedDragingEvent;
 import com.android.systemui.util.ViewAnimUtils;
 import java.util.ArrayList;
+import java.util.Iterator;
+import miui.os.Build;
 import miui.util.ScreenshotUtils;
 import miui.view.animation.BackEaseOutInterpolator;
 
@@ -49,6 +51,7 @@ public class RecentMenuView extends FrameLayout implements View.OnClickListener,
     public Bitmap mBlurBackground;
     /* access modifiers changed from: private */
     public boolean mIsShowing;
+    private boolean mIsSupportLock;
     private boolean mIsSupportSmallWindow;
     private boolean mIsTaskViewLeft;
     boolean mIsTouchInTaskViewBound;
@@ -63,6 +66,7 @@ public class RecentMenuView extends FrameLayout implements View.OnClickListener,
     private FrameLayout mMenuItemSmallWindowContainer;
     private TimeInterpolator mShowMenuItemAnimInterpolator;
     ValueAnimator mShowOrHideAnim;
+    private ArrayList<View> mSupportViews;
     /* access modifiers changed from: private */
     public Task mTask;
     /* access modifiers changed from: private */
@@ -93,6 +97,7 @@ public class RecentMenuView extends FrameLayout implements View.OnClickListener,
         this.mBlurBackground = null;
         this.mShowOrHideAnim = new ValueAnimator();
         this.mShowMenuItemAnimInterpolator = new BackEaseOutInterpolator();
+        this.mSupportViews = new ArrayList<>();
         this.mLockDrawable = context.getResources().getDrawable(R.drawable.ic_task_lock);
         this.mUnlockDrawable = context.getResources().getDrawable(R.drawable.ic_task_unlock);
         new ColorDrawable(getResources().getColor(R.color.recent_menu_mask_color));
@@ -133,6 +138,15 @@ public class RecentMenuView extends FrameLayout implements View.OnClickListener,
             }
         });
         this.mIsSupportSmallWindow = checkIsSupportSmallWindow();
+        this.mIsSupportLock = !checkIsNotSupportLock();
+    }
+
+    private boolean checkIsNotSupportLock() {
+        return "lime".equals(Build.DEVICE) || "citrus".equals(Build.DEVICE) || "lemon".equals(Build.DEVICE) || isGlobalJ22();
+    }
+
+    private boolean isGlobalJ22() {
+        return ("cannon".equals(Build.DEVICE) || "cannong".equals(Build.DEVICE)) && Build.IS_INTERNATIONAL_BUILD;
     }
 
     public static boolean checkIsSupportSmallWindow() {
@@ -169,6 +183,14 @@ public class RecentMenuView extends FrameLayout implements View.OnClickListener,
         ViewAnimUtils.mouse(this.mMenuItemLock);
         ViewAnimUtils.mouse(this.mMenuItemMultiWindow);
         ViewAnimUtils.mouse(this.mMenuItemSmallWindow);
+        if (this.mIsSupportLock) {
+            this.mSupportViews.add(this.mMenuItemLockContainer);
+        }
+        this.mSupportViews.add(this.mMenuItemMultiWindowContainer);
+        if (this.mIsSupportSmallWindow) {
+            this.mSupportViews.add(this.mMenuItemSmallWindowContainer);
+        }
+        this.mSupportViews.add(this.mMenuItemInfoContainer);
     }
 
     public boolean onLongClick(View view) {
@@ -323,14 +345,15 @@ public class RecentMenuView extends FrameLayout implements View.OnClickListener,
         this.mTaskView.getHitRect(rect);
         rect.top += this.mTaskView.getHeaderView().getHeight();
         rect.intersect(i, i2, i3, i4);
-        if (!this.mIsSupportSmallWindow) {
-            layoutItemWithoutSmallWindow(rect, measuredWidth, i3, i4);
-        } else {
-            layoutItemWithSmallWindow(rect, measuredWidth, i3, i4);
+        if (this.mSupportViews.size() == 3) {
+            layoutThreeItem(rect, measuredWidth, i3, i4);
+        }
+        if (this.mSupportViews.size() == 4) {
+            layoutFourItem(rect, measuredWidth, i3, i4);
         }
     }
 
-    private void layoutItemWithoutSmallWindow(Rect rect, int i, int i2, int i3) {
+    private void layoutThreeItem(Rect rect, int i, int i2, int i3) {
         int i4;
         int i5;
         int i6;
@@ -339,113 +362,99 @@ public class RecentMenuView extends FrameLayout implements View.OnClickListener,
         int i9;
         int i10;
         int i11;
-        int i12;
-        int i13;
         Rect rect2 = rect;
-        int i14 = i;
+        int i12 = i;
         int[] iArr = new int[3];
         int[] iArr2 = new int[3];
         if (this.mIsTaskViewLeft) {
-            int i15 = rect2.right;
-            float f = (float) i14;
-            int i16 = (int) (((float) i15) + (f * 0.4f));
-            iArr[2] = i16;
-            iArr[0] = i16;
-            iArr[1] = (int) (((float) i15) + (f * 0.9f));
-            i5 = i15 - i14;
+            int i13 = rect2.right;
+            float f = (float) i12;
+            int i14 = (int) (((float) i13) + (f * 0.4f));
+            iArr[2] = i14;
+            iArr[0] = i14;
+            iArr[1] = (int) (((float) i13) + (f * 0.9f));
+            i5 = i13 - i12;
             i4 = rect.centerY();
         } else {
-            int i17 = rect2.left;
-            float f2 = (float) i14;
-            int i18 = (int) (((float) i17) - (f2 * 1.4f));
-            iArr[2] = i18;
-            iArr[0] = i18;
-            iArr[1] = (int) (((float) i17) - (f2 * 1.9f));
-            i5 = i17 + i14;
+            int i15 = rect2.left;
+            float f2 = (float) i12;
+            int i16 = (int) (((float) i15) - (f2 * 1.4f));
+            iArr[2] = i16;
+            iArr[0] = i16;
+            iArr[1] = (int) (((float) i15) - (f2 * 1.9f));
+            i5 = i15 + i12;
             i4 = rect.centerY();
         }
-        float f3 = (float) i14;
+        float f3 = (float) i12;
         iArr2[1] = (int) (((float) rect.centerY()) - (0.5f * f3));
-        float f4 = f3;
-        double d = (double) i14;
+        double d = (double) i12;
         double d2 = 1.2d * d;
         iArr2[0] = (int) (((double) iArr2[1]) - d2);
         iArr2[2] = (int) (((double) iArr2[1]) + d2);
-        int i19 = iArr2[0];
-        int i20 = this.mVerticalMargin;
-        if (i19 < i20) {
+        int i17 = iArr2[0];
+        int i18 = this.mVerticalMargin;
+        if (i17 < i18) {
             if (this.mIsTaskViewLeft) {
-                int i21 = rect2.right;
-                iArr[0] = (int) (((float) i21) + (f4 * 0.6f));
-                iArr[1] = (int) (((float) i21) + (f4 * 0.4f));
-                iArr[2] = i21 - i14;
-                i12 = i14 * 2;
-                i13 = i21 - i12;
-                i11 = rect2.bottom;
+                int i19 = rect2.right;
+                iArr[0] = (int) (((float) i19) + (0.6f * f3));
+                iArr[1] = (int) (((float) i19) + (f3 * 0.4f));
+                iArr[2] = i19 - i12;
+                i10 = i12 * 2;
+                i11 = i19 - i10;
+                i9 = rect2.bottom;
             } else {
-                int i22 = rect2.left;
-                iArr[0] = (int) (((float) i22) - (f4 * 1.6f));
-                iArr[1] = (int) (((float) i22) - (1.4f * f4));
-                iArr[2] = i22;
-                i12 = i14 * 2;
-                i13 = i22 + i12;
-                i11 = rect2.bottom;
+                int i20 = rect2.left;
+                iArr[0] = (int) (((float) i20) - (1.6f * f3));
+                iArr[1] = (int) (((float) i20) - (1.4f * f3));
+                iArr[2] = i20;
+                i10 = i12 * 2;
+                i11 = i20 + i10;
+                i9 = rect2.bottom;
             }
-            i4 = i11 - i12;
-            int i23 = rect2.bottom;
-            iArr2[0] = i23 - i14;
-            iArr2[1] = (int) (((float) i23) + (0.4f * f4));
-            iArr2[2] = (int) (((double) i23) + (d * 0.6d));
-        } else if (iArr2[2] + i14 > i3 - i20) {
+            i4 = i9 - i10;
+            int i21 = rect2.bottom;
+            iArr2[0] = i21 - i12;
+            iArr2[1] = (int) (((float) i21) + (f3 * 0.4f));
+            iArr2[2] = (int) (((double) i21) + (d * 0.6d));
+        } else if (iArr2[2] + i12 > i3 - i18) {
             if (this.mIsTaskViewLeft) {
-                int i24 = rect2.right;
-                iArr[0] = i24 - i14;
-                iArr[1] = (int) (((float) i24) + (f4 * 0.4f));
-                iArr[2] = (int) (((float) i24) + (f4 * 0.6f));
-                i9 = i14 * 2;
-                i10 = i24 - i9;
-                i8 = rect2.top;
+                int i22 = rect2.right;
+                iArr[0] = i22 - i12;
+                iArr[1] = (int) (((float) i22) + (0.4f * f3));
+                iArr[2] = (int) (((float) i22) + (0.6f * f3));
+                i7 = i12 * 2;
+                i8 = i22 - i7;
+                i6 = rect2.top;
             } else {
-                int i25 = rect2.left;
-                iArr[0] = i25;
-                iArr[1] = (int) (((float) i25) - (f4 * 1.4f));
-                iArr[2] = (int) (((float) i25) - (f4 * 1.6f));
-                i9 = i14 * 2;
-                i10 = i25 + i9;
-                i8 = rect2.top;
+                int i23 = rect2.left;
+                iArr[0] = i23;
+                iArr[1] = (int) (((float) i23) - (f3 * 1.4f));
+                iArr[2] = (int) (((float) i23) - (f3 * 1.6f));
+                i7 = i12 * 2;
+                i8 = i23 + i7;
+                i6 = rect2.top;
             }
-            int i26 = rect2.top;
-            iArr2[0] = (int) (((float) i26) - (f4 * 1.6f));
-            iArr2[1] = (int) (((float) i26) - (f4 * 1.4f));
-            iArr2[2] = i26;
-            i7 = i10;
-            i6 = i8 + i9;
-            int i27 = i2 - 10;
-            iArr[0] = Math.max(10, Math.min(iArr[0], i27));
-            iArr[1] = Math.max(10, Math.min(iArr[1], i27));
-            iArr[2] = Math.max(10, Math.min(iArr[2], i27));
-            int i28 = i7;
-            int i29 = i6;
-            int i30 = i;
-            layoutMenuItem(this.mMenuItemLockContainer, iArr[0], iArr2[0], i28, i29, i30);
-            layoutMenuItem(this.mMenuItemMultiWindowContainer, iArr[1], iArr2[1], i28, i29, i30);
-            layoutMenuItem(this.mMenuItemInfoContainer, iArr[2], iArr2[2], i28, i29, i30);
+            i4 = i6 + i7;
+            int i24 = rect2.top;
+            iArr2[0] = (int) (((float) i24) - (1.6f * f3));
+            iArr2[1] = (int) (((float) i24) - (f3 * 1.4f));
+            iArr2[2] = i24;
         }
-        i7 = i5;
-        i6 = i4;
-        int i272 = i2 - 10;
-        iArr[0] = Math.max(10, Math.min(iArr[0], i272));
-        iArr[1] = Math.max(10, Math.min(iArr[1], i272));
-        iArr[2] = Math.max(10, Math.min(iArr[2], i272));
-        int i282 = i7;
-        int i292 = i6;
-        int i302 = i;
-        layoutMenuItem(this.mMenuItemLockContainer, iArr[0], iArr2[0], i282, i292, i302);
-        layoutMenuItem(this.mMenuItemMultiWindowContainer, iArr[1], iArr2[1], i282, i292, i302);
-        layoutMenuItem(this.mMenuItemInfoContainer, iArr[2], iArr2[2], i282, i292, i302);
+        int i25 = i4;
+        int i26 = i5;
+        int i27 = i2 - 10;
+        iArr[0] = Math.max(10, Math.min(iArr[0], i27));
+        iArr[1] = Math.max(10, Math.min(iArr[1], i27));
+        iArr[2] = Math.max(10, Math.min(iArr[2], i27));
+        for (int i28 = 0; i28 < 3; i28++) {
+            View view = this.mSupportViews.get(i28);
+            if (view != null) {
+                layoutMenuItem(view, iArr[i28], iArr2[i28], i26, i25, i);
+            }
+        }
     }
 
-    private void layoutItemWithSmallWindow(Rect rect, int i, int i2, int i3) {
+    private void layoutFourItem(Rect rect, int i, int i2, int i3) {
         int i4;
         int i5;
         int i6;
@@ -454,127 +463,107 @@ public class RecentMenuView extends FrameLayout implements View.OnClickListener,
         int i9;
         int i10;
         int i11;
-        int i12;
-        int i13;
-        int i14;
         Rect rect2 = rect;
-        int i15 = i;
+        int i12 = i;
         int[] iArr = new int[4];
         int[] iArr2 = new int[4];
         if (this.mIsTaskViewLeft) {
-            int i16 = rect2.right;
-            float f = (float) i15;
-            int i17 = (int) (((float) i16) + (f * 0.5f));
-            iArr[3] = i17;
-            iArr[0] = i17;
-            int i18 = (int) (((float) i16) + (f * 0.8f));
-            iArr[2] = i18;
-            iArr[1] = i18;
-            i5 = i16 - i15;
+            int i13 = rect2.right;
+            float f = (float) i12;
+            int i14 = (int) (((float) i13) + (f * 0.5f));
+            iArr[3] = i14;
+            iArr[0] = i14;
+            int i15 = (int) (((float) i13) + (f * 0.8f));
+            iArr[2] = i15;
+            iArr[1] = i15;
+            i5 = i13 - i12;
             i4 = rect.centerY();
         } else {
-            int i19 = rect2.left;
-            float f2 = (float) i15;
-            int i20 = (int) (((float) i19) - (f2 * 1.5f));
-            iArr[3] = i20;
-            iArr[0] = i20;
-            int i21 = (int) (((float) i19) - (f2 * 1.8f));
-            iArr[2] = i21;
-            iArr[1] = i21;
-            i5 = i19 + i15;
+            int i16 = rect2.left;
+            float f2 = (float) i12;
+            int i17 = (int) (((float) i16) - (f2 * 1.5f));
+            iArr[3] = i17;
+            iArr[0] = i17;
+            int i18 = (int) (((float) i16) - (f2 * 1.8f));
+            iArr[2] = i18;
+            iArr[1] = i18;
+            i5 = i16 + i12;
             i4 = rect.centerY();
         }
-        float f3 = (float) i15;
+        float f3 = (float) i12;
         iArr2[2] = (int) (((float) rect.centerY()) + (0.1f * f3));
         float f4 = 1.2f * f3;
         iArr2[1] = (int) (((float) iArr2[2]) - f4);
         iArr2[0] = (int) (((float) iArr2[1]) - f4);
         iArr2[3] = (int) (((float) iArr2[2]) + f4);
-        int i22 = iArr2[0];
-        int i23 = this.mVerticalMargin;
-        if (i22 < i23) {
+        int i19 = iArr2[0];
+        int i20 = this.mVerticalMargin;
+        if (i19 < i20) {
             if (this.mIsTaskViewLeft) {
-                int i24 = rect2.right;
-                iArr[0] = (int) (((float) i24) + (0.4f * f3));
+                int i21 = rect2.right;
+                iArr[0] = (int) (((float) i21) + (0.4f * f3));
                 float f5 = 0.5f * f3;
-                iArr[1] = (int) (((float) i24) + f5);
-                iArr[2] = (int) (((float) i24) - f5);
+                iArr[1] = (int) (((float) i21) + f5);
+                iArr[2] = (int) (((float) i21) - f5);
                 iArr[3] = (int) (((float) iArr[2]) - f4);
-                i14 = i15 * 2;
-                i10 = i24 - i14;
-                i13 = rect2.bottom;
+                i10 = i12 * 2;
+                i11 = i21 - i10;
+                i9 = rect2.bottom;
             } else {
-                int i25 = rect2.left;
-                iArr[0] = (int) (((float) i25) - (1.4f * f3));
-                iArr[1] = (int) (((float) i25) - (1.5f * f3));
-                iArr[2] = (int) (((float) i25) - (0.5f * f3));
+                int i22 = rect2.left;
+                iArr[0] = (int) (((float) i22) - (1.4f * f3));
+                iArr[1] = (int) (((float) i22) - (1.5f * f3));
+                iArr[2] = (int) (((float) i22) - (0.5f * f3));
                 iArr[3] = (int) (((float) iArr[2]) + f4);
-                i14 = i15 * 2;
-                i10 = i25 + i14;
-                i13 = rect2.bottom;
+                i10 = i12 * 2;
+                i11 = i22 + i10;
+                i9 = rect2.bottom;
             }
-            i11 = i13 - i14;
+            i4 = i9 - i10;
             iArr2[1] = (int) (((float) rect2.bottom) - (0.3f * f3));
             iArr2[0] = (int) (((float) iArr2[1]) - f4);
             iArr2[2] = (int) (((float) iArr2[1]) + (0.8f * f3));
             iArr2[3] = (int) (((float) iArr2[1]) + (f3 * 0.7f));
-        } else if (iArr2[3] + i15 > i3 - i23) {
+        } else if (iArr2[3] + i12 > i3 - i20) {
             if (this.mIsTaskViewLeft) {
-                int i26 = rect2.right;
+                int i23 = rect2.right;
                 float f6 = 0.5f * f3;
-                iArr[1] = (int) (((float) i26) - f6);
-                iArr[2] = (int) (((float) i26) + f6);
-                iArr[3] = (int) (((float) i26) + (0.4f * f3));
+                iArr[1] = (int) (((float) i23) - f6);
+                iArr[2] = (int) (((float) i23) + f6);
+                iArr[3] = (int) (((float) i23) + (0.4f * f3));
                 iArr[0] = (int) (((float) iArr[1]) - f4);
-                i9 = i15 * 2;
-                i12 = i26 - i9;
-                i8 = rect2.top;
+                i7 = i12 * 2;
+                i8 = i23 - i7;
+                i6 = rect2.top;
             } else {
-                int i27 = rect2.left;
-                iArr[1] = (int) (((float) i27) - (0.5f * f3));
-                iArr[2] = (int) (((float) i27) - (1.5f * f3));
-                iArr[3] = (int) (((float) i27) - (1.4f * f3));
+                int i24 = rect2.left;
+                iArr[1] = (int) (((float) i24) - (0.5f * f3));
+                iArr[2] = (int) (((float) i24) - (1.5f * f3));
+                iArr[3] = (int) (((float) i24) - (1.4f * f3));
                 iArr[0] = (int) (((float) iArr[1]) + f4);
-                i9 = i15 * 2;
-                i12 = i27 + i9;
-                i8 = rect2.top;
+                i7 = i12 * 2;
+                i8 = i24 + i7;
+                i6 = rect2.top;
             }
-            i11 = i8 + i9;
+            i4 = i6 + i7;
             float f7 = 0.7f * f3;
             iArr2[2] = (int) (((float) rect2.top) - f7);
             iArr2[0] = (int) (((float) iArr2[2]) - f7);
             iArr2[1] = (int) (((float) iArr2[2]) - (f3 * 0.8f));
             iArr2[3] = (int) (((float) iArr2[2]) + f4);
-        } else {
-            i7 = i5;
-            i6 = i4;
-            int i28 = i2 - 10;
-            iArr[0] = Math.max(10, Math.min(iArr[0], i28));
-            iArr[1] = Math.max(10, Math.min(iArr[1], i28));
-            iArr[2] = Math.max(10, Math.min(iArr[2], i28));
-            iArr[3] = Math.max(10, Math.min(iArr[3], i28));
-            int i29 = i7;
-            int i30 = i6;
-            int i31 = i;
-            layoutMenuItem(this.mMenuItemLockContainer, iArr[0], iArr2[0], i29, i30, i31);
-            layoutMenuItem(this.mMenuItemMultiWindowContainer, iArr[1], iArr2[1], i29, i30, i31);
-            layoutMenuItem(this.mMenuItemSmallWindowContainer, iArr[2], iArr2[2], i29, i30, i31);
-            layoutMenuItem(this.mMenuItemInfoContainer, iArr[3], iArr2[3], i29, i30, i31);
         }
-        i7 = i10;
-        i6 = i11;
-        int i282 = i2 - 10;
-        iArr[0] = Math.max(10, Math.min(iArr[0], i282));
-        iArr[1] = Math.max(10, Math.min(iArr[1], i282));
-        iArr[2] = Math.max(10, Math.min(iArr[2], i282));
-        iArr[3] = Math.max(10, Math.min(iArr[3], i282));
-        int i292 = i7;
-        int i302 = i6;
-        int i312 = i;
-        layoutMenuItem(this.mMenuItemLockContainer, iArr[0], iArr2[0], i292, i302, i312);
-        layoutMenuItem(this.mMenuItemMultiWindowContainer, iArr[1], iArr2[1], i292, i302, i312);
-        layoutMenuItem(this.mMenuItemSmallWindowContainer, iArr[2], iArr2[2], i292, i302, i312);
-        layoutMenuItem(this.mMenuItemInfoContainer, iArr[3], iArr2[3], i292, i302, i312);
+        int i25 = i5;
+        int i26 = i2 - 10;
+        iArr[0] = Math.max(10, Math.min(iArr[0], i26));
+        iArr[1] = Math.max(10, Math.min(iArr[1], i26));
+        iArr[2] = Math.max(10, Math.min(iArr[2], i26));
+        iArr[3] = Math.max(10, Math.min(iArr[3], i26));
+        for (int i27 = 0; i27 < 4; i27++) {
+            View view = this.mSupportViews.get(i27);
+            if (view != null) {
+                layoutMenuItem(view, iArr[i27], iArr2[i27], i25, i4, i);
+            }
+        }
     }
 
     private void layoutMenuItem(View view, int i, int i2, int i3, int i4, int i5) {
@@ -604,24 +593,26 @@ public class RecentMenuView extends FrameLayout implements View.OnClickListener,
             Task task = taskView.getTask();
             this.mTask = task;
             this.mMenuItemMultiWindow.setEnabled(task.isDockable && Utilities.supportsMultiWindow() && !Utilities.isInSmallWindowMode(getContext()));
-            this.mMenuItemLock.setImageDrawable(this.mTask.isLocked ? this.mUnlockDrawable : this.mLockDrawable);
-            ImageView imageView = this.mMenuItemLock;
-            if (this.mTask.isLocked) {
-                str = this.mContext.getString(R.string.recent_menu_item_unlock);
-            } else {
-                str = this.mContext.getString(R.string.recent_menu_item_lock);
+            if (this.mIsSupportLock) {
+                this.mMenuItemLock.setImageDrawable(this.mTask.isLocked ? this.mUnlockDrawable : this.mLockDrawable);
+                ImageView imageView = this.mMenuItemLock;
+                if (this.mTask.isLocked) {
+                    str2 = this.mContext.getString(R.string.recent_menu_item_unlock);
+                } else {
+                    str2 = this.mContext.getString(R.string.recent_menu_item_lock);
+                }
+                imageView.setContentDescription(str2);
             }
-            imageView.setContentDescription(str);
             ImageView imageView2 = this.mMenuItemMultiWindow;
             int i = 255;
             imageView2.setImageAlpha(imageView2.isEnabled() ? 255 : 80);
             ImageView imageView3 = this.mMenuItemMultiWindow;
             if (imageView3.isEnabled()) {
-                str2 = this.mContext.getString(R.string.accessibility_menu_item_split_enable);
+                str = this.mContext.getString(R.string.accessibility_menu_item_split_enable);
             } else {
-                str2 = this.mContext.getString(R.string.accessibility_menu_item_split_disable);
+                str = this.mContext.getString(R.string.accessibility_menu_item_split_disable);
             }
-            imageView3.setContentDescription(str2);
+            imageView3.setContentDescription(str);
             if (this.mIsSupportSmallWindow) {
                 this.mMenuItemSmallWindow.setEnabled(isSupportSmallWindow());
                 ImageView imageView4 = this.mMenuItemSmallWindow;
@@ -633,12 +624,10 @@ public class RecentMenuView extends FrameLayout implements View.OnClickListener,
             this.mIsTaskViewLeft = this.mTaskStackView.getTaskViews().size() > 1 && this.mTaskView.getLeft() < this.mTaskStackView.getWidth() - this.mTaskView.getRight();
             setVisibility(0);
             setFocusable(true);
-            startShowItemAnim(this.mMenuItemLockContainer, 1.0f, 0);
-            startShowItemAnim(this.mMenuItemMultiWindowContainer, 1.0f, this.mIsSupportSmallWindow ? 33 : 50);
-            if (this.mIsSupportSmallWindow) {
-                startShowItemAnim(this.mMenuItemSmallWindowContainer, 1.0f, 66);
+            int size = this.mSupportViews.size() > 1 ? 100 / (this.mSupportViews.size() - 1) : 0;
+            for (int i2 = 0; i2 < this.mSupportViews.size(); i2++) {
+                startShowItemAnim(this.mSupportViews.get(i2), 1.0f, (long) (i2 * size));
             }
-            startShowItemAnim(this.mMenuItemInfoContainer, 1.0f, 100);
             this.mShowOrHideAnim.setFloatValues(new float[]{0.0f, 1.0f});
             this.mShowOrHideAnim.start();
             SpringAnimationUtils.getInstance().startShowTaskMenuAnim(this.mTaskStackView, this.mTaskView);
@@ -674,12 +663,10 @@ public class RecentMenuView extends FrameLayout implements View.OnClickListener,
         this.mIsShowing = false;
         this.mTaskStackView.setIsShowingMenu(false);
         if (z) {
-            startHideItemAnim(this.mMenuItemLockContainer);
-            startHideItemAnim(this.mMenuItemMultiWindowContainer);
-            if (this.mIsSupportSmallWindow) {
-                startHideItemAnim(this.mMenuItemSmallWindowContainer);
+            Iterator<View> it = this.mSupportViews.iterator();
+            while (it.hasNext()) {
+                startHideItemAnim(it.next());
             }
-            startHideItemAnim(this.mMenuItemInfoContainer);
         }
         this.mShowOrHideAnim.setFloatValues(new float[]{1.0f, 0.0f});
         this.mShowOrHideAnim.start();

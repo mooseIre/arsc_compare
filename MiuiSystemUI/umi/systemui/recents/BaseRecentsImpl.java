@@ -5,7 +5,6 @@ import android.animation.AnimatorListenerAdapter;
 import android.app.ActivityManager;
 import android.app.ActivityManagerCompat;
 import android.app.ActivityOptions;
-import android.app.ActivityOptionsCompat;
 import android.app.KeyguardManager;
 import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
@@ -983,7 +982,7 @@ public abstract class BaseRecentsImpl {
             r10.<init>(r8)     // Catch:{ ActivityNotFoundException -> 0x006a }
             boolean r2 = sOneKeyCleaning     // Catch:{ ActivityNotFoundException -> 0x006a }
             if (r2 == 0) goto L_0x004b
-            r7 = 2131822184(0x7f110668, float:1.9277132E38)
+            r7 = 2131822185(0x7f110669, float:1.9277134E38)
             r6.showToast(r7)     // Catch:{ ActivityNotFoundException -> 0x006a }
             return
         L_0x004b:
@@ -1402,9 +1401,6 @@ public abstract class BaseRecentsImpl {
         intent.setFlags(277364736);
         if (activityOptions != null) {
             try {
-                if (Build.VERSION.SDK_INT >= 30) {
-                    ActivityOptionsCompat.setLaunchActivityType(activityOptions, 3);
-                }
                 this.mContext.startActivityAsUser(intent, activityOptions.toBundle(), UserHandle.CURRENT);
             } catch (IllegalStateException e) {
                 Log.e("RecentsImpl", "startRecentsActivity", e);

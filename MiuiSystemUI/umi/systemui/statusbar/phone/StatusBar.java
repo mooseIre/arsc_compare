@@ -3349,6 +3349,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
         ExpandableNotificationRow expandableNotificationRow;
         ExpandableNotificationRow expandableNotificationRow2;
         CharSequence[] charSequenceArr;
+        Class cls = KeyguardNotificationHelper.class;
         if (!((BubbleController) Dependency.get(BubbleController.class)).onNotificationRemoveRequested(str, i)) {
             abortExistingInflation(str);
             boolean z2 = false;
@@ -3382,14 +3383,13 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
                 build.bigContentView = expandedNotification.getNotification().bigContentView;
                 build.headsUpContentView = expandedNotification.getNotification().headsUpContentView;
                 boolean handleNotification = handleNotification(expandedNotification, (NotificationListenerService.RankingMap) null, true);
-                if (handleNotification) {
-                    z2 = z3;
+                if (!handleNotification) {
+                    z3 = false;
                 }
                 if (handleNotification) {
                     this.mKeysKeptForRemoteInput.add(entry.key);
                     return;
                 }
-                z3 = z2;
             }
             if (z3) {
                 this.mLatestRankingMap = rankingMap;
@@ -3415,11 +3415,14 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
                     hasActiveNotifications();
                 }
                 setAreThereNotifications();
-                if (isKeyguardShowing()) {
+                if (entry2 != null && ((KeyguardNotificationHelper) Dependency.get(cls)).needReadd(entry2)) {
+                    z2 = true;
+                }
+                if (z2 || isKeyguardShowing()) {
                     if (entry2 != null) {
                         str2 = entry2.notification.getPackageName();
                     }
-                    ((KeyguardNotificationHelper) Dependency.get(KeyguardNotificationHelper.class)).remove(str, str2);
+                    ((KeyguardNotificationHelper) Dependency.get(cls)).remove(str, str2);
                     return;
                 }
                 return;
@@ -4723,6 +4726,18 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
         if (navigationBarView != null) {
             navigationBarView.setWindowState(i, i2);
         }
+        updateSystemUiStateFlags();
+    }
+
+    public void updateSystemUiStateFlags() {
+        Class cls = OverviewProxyService.class;
+        if (Dependency.get(cls) != null) {
+            ((OverviewProxyService) Dependency.get(cls)).setSystemUiStateFlag(1048576, !isStatusBarVisible());
+        }
+    }
+
+    public boolean isStatusBarVisible() {
+        return this.mStatusBarWindowState == 0;
     }
 
     public void setSystemUiVisibility(int i, int i2, int i3, int i4, Rect rect, Rect rect2) {

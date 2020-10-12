@@ -46,6 +46,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import miui.os.Build;
 import miui.telephony.SubscriptionInfo;
 import miui.telephony.SubscriptionManager;
@@ -101,7 +102,6 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
     public final Handler mReceiverHandler;
     private final Runnable mRegisterListeners;
     private Resources[] mResourcesForOperators;
-    private boolean mShowPlmnSPn;
     private NetworkController.SignalState mSignalState;
     private SlaveWifiSignalController mSlaveWifiSignalController;
     private final SubscriptionDefaults mSubDefaults;
@@ -201,7 +201,6 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
         this.mConnectivityManager = connectivityManager;
         this.mHasMobileDataFeature = connectivityManager.isNetworkSupported(0);
         this.mPhone = telephonyManager;
-        this.mShowPlmnSPn = context.getResources().getBoolean(R.bool.show_plmn_and_spn_in_carrier);
         this.mWifiManager = wifiManager;
         this.mNetworkScoreManager = networkScoreManager;
         this.mLastServiceState = new ServiceState[this.mPhoneCount];
@@ -556,10 +555,7 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
                     if (intExtra3 < this.mPhoneCount) {
                         this.mNetworkNameList[intExtra3] = str;
                     }
-                    if (str == null) {
-                        return;
-                    }
-                    if (booleanExtra2 || booleanExtra) {
+                    if (str != null) {
                         this.mCallbackHandler.updateCarrierName(intExtra3, str);
                     }
                 }
@@ -950,27 +946,13 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
     }
 
     private String getNetworkName(int i, boolean z, String str, String str2, boolean z2, String str3) {
-        StringBuilder sb = new StringBuilder();
-        boolean z3 = this.mShowPlmnSPn;
-        TelephonyManager telephonyManager = this.mPhone;
-        boolean z4 = true;
-        if (telephonyManager != null) {
-            String simOperatorNumericForPhone = telephonyManager.getSimOperatorNumericForPhone(i);
-            MCCUtils.checkOperation(this.mContext, simOperatorNumericForPhone);
-            z3 = z3 || MCCUtils.isShowPlmnAndSpn(this.mContext, simOperatorNumericForPhone, true) || MCCUtils.isShowPlmnAndSpn(this.mContext, simOperatorNumericForPhone, false);
-        }
         if (!z2 || str3 == null) {
-            z4 = false;
-        } else {
-            sb.append(str3);
+            return (!z || str == null) ? "" : str;
         }
-        if ((z3 || !z4) && z && str != null) {
-            if (sb.length() != 0) {
-                sb.append(this.mNetworkNameSeparator);
-            }
-            sb.append(str);
+        if (!z || str == null || Objects.equals(str, str3)) {
+            return str3;
         }
-        return sb.toString();
+        return str3 + this.mNetworkNameSeparator + str;
     }
 
     public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {

@@ -169,8 +169,10 @@ public abstract class HeaderView extends RelativeLayout implements View.OnClickL
             if (i == 1) {
                 return new Intent("android.settings.SETTINGS");
             }
-            Intent intent = new Intent("android.settings.ALL_APPS_NOTIFICATION_SETTINGS");
-            intent.setPackage("com.miui.notification");
+            Intent intent = new Intent("android.intent.action.MAIN");
+            intent.setClassName("com.android.settings", "com.android.settings.SubSettings");
+            intent.putExtra(":settings:show_fragment", "com.android.settings.NotificationControlCenterSettings");
+            intent.putExtra(":settings:show_fragment_title", getResources().getString(R.string.notification_control_center));
             return intent;
         } else if (!Constants.IS_INTERNATIONAL) {
             Intent intent2 = new Intent("android.intent.action.SEARCH");

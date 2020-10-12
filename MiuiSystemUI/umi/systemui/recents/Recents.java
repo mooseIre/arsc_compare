@@ -246,7 +246,7 @@ public class Recents extends SystemUI implements RecentsComponent, CommandQueue.
     }
 
     public boolean useFsGestureVersionThree() {
-        return (Utilities.isAndroidQorNewer() && this.mUseMiuiHomeAsDefaultHome && this.mIsRecentsWithinLauncher && !this.mIsLowMemoryDevice) || Utilities.isAndroidRorNewer();
+        return (Utilities.isAndroidQorNewer() && this.mUseMiuiHomeAsDefaultHome && this.mIsRecentsWithinLauncher && !this.mIsLowMemoryDevice) || (Utilities.isAndroidRorNewer() && this.mUseMiuiHomeAsDefaultHome);
     }
 
     public boolean useMiuiHomeAsDefaultHome() {

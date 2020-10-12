@@ -5,27 +5,10 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import com.android.systemui.plugins.R;
-import java.util.Arrays;
 
 public class MCCUtils {
-    public static void checkOperation(Context context, String str) {
-        if (!TextUtils.isEmpty(str)) {
-            String substring = str.substring(0, 3);
-            Arrays.asList(context.getResources().getStringArray(R.array.usa_mcc)).contains(substring);
-            context.getResources().getString(R.string.mx_mcc).equals(substring);
-            context.getResources().getString(R.string.ir_mcc).equals(substring);
-            context.getResources().getString(R.string.np_mcc).equals(substring);
-        }
-    }
-
-    public static boolean isShowPlmnAndSpn(Context context, String str, boolean z) {
-        if (TextUtils.isEmpty(str)) {
-            return false;
-        }
-        return getResourcesForOperation(context, str, z).getBoolean(R.bool.show_plmn_and_spn_in_carrier);
-    }
-
     public static boolean isHideVolte(Resources resources) {
         return resources != null && resources.getBoolean(R.bool.status_bar_hide_volte);
     }
@@ -47,6 +30,21 @@ public class MCCUtils {
 
     public static boolean isShowMobileInMMS(Resources resources) {
         return resources != null && resources.getBoolean(R.bool.status_bar_show_mobile_type_in_mms);
+    }
+
+    public static boolean isShowSpnByGidWhenAirplaneOn(Context context, String str, String str2) {
+        if (TextUtils.isEmpty(str)) {
+            return false;
+        }
+        String[] stringArray = getResourcesForOperation(context, str, true).getStringArray(R.array.status_bar_show_spn_by_gid_when_airplane);
+        Log.d("MCCUtils", "isShowSpnByGidWhenAirplaneOn: operation = " + str + "; gid = " + str2);
+        for (int i = 0; i < stringArray.length; i++) {
+            Log.d("MCCUtils", "isShowSpnByGidWhenAirplaneOn: cus_gid_values = " + stringArray[i]);
+            if (stringArray[i].equals(str2)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static Resources getResourcesForOperation(Context context, String str, boolean z) {

@@ -102,6 +102,10 @@ public class MiuiNotificationCompat {
         notification.extras.putBoolean("miui.customHeight", z);
     }
 
+    public static boolean isCustomHideBorder(Notification notification) {
+        return notification.extras.getBoolean("miui.customHideBorder", false);
+    }
+
     public static boolean isSystemWarnings(Notification notification) {
         return notification.extras.getBoolean("miui.systemWarnings", false);
     }

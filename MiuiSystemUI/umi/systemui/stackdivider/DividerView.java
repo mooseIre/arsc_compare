@@ -15,6 +15,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.util.SparseIntArray;
 import android.view.Display;
+import android.view.DisplayCutout;
 import android.view.InsetsState;
 import android.view.MotionEvent;
 import android.view.PointerIcon;
@@ -250,14 +251,29 @@ public class DividerView extends FrameLayout implements View.OnTouchListener, Vi
     }
 
     public WindowInsets onApplyWindowInsets(WindowInsets windowInsets) {
+        WindowInsets windowInsets2;
+        Class cls = Boolean.TYPE;
         if (isAttachedToWindow() && ViewRootImpl.sNewInsetsMode == 2) {
             InsetsState state = getWindowInsetsController().getState();
-            windowInsets = state.calculateInsets(state.getDisplayFrame(), (InsetsState) null, windowInsets.isRound(), windowInsets.shouldAlwaysConsumeSystemBars(), windowInsets.getDisplayCutout(), 0, 48, (SparseIntArray) null);
+            Class<InsetsState> cls2 = InsetsState.class;
+            try {
+                windowInsets2 = (WindowInsets) cls2.getMethod("calculateInsets", new Class[]{Rect.class, InsetsState.class, cls, cls, DisplayCutout.class, Integer.TYPE, Integer.TYPE, Integer.TYPE, SparseIntArray.class}).invoke(state, new Object[]{state.getDisplayFrame(), null, Boolean.valueOf(windowInsets.isRound()), Boolean.valueOf(windowInsets.shouldAlwaysConsumeSystemBars()), windowInsets.getDisplayCutout(), 48, 0, 0, null});
+            } catch (Exception e) {
+                Log.e("DividerView", "exception ", e);
+                try {
+                    windowInsets2 = (WindowInsets) cls2.getMethod("calculateInsets", new Class[]{Rect.class, InsetsState.class, cls, cls, DisplayCutout.class, Integer.TYPE, Integer.TYPE, SparseIntArray.class}).invoke(state, new Object[]{state.getDisplayFrame(), null, Boolean.valueOf(windowInsets.isRound()), Boolean.valueOf(windowInsets.shouldAlwaysConsumeSystemBars()), windowInsets.getDisplayCutout(), 48, 0, null});
+                } catch (Exception e2) {
+                    Log.e("DividerView", "exception2 ", e2);
+                }
+            }
+            if (!(this.mStableInsets.left == windowInsets2.getStableInsetLeft() && this.mStableInsets.top == windowInsets2.getStableInsetTop() && this.mStableInsets.right == windowInsets2.getStableInsetRight() && this.mStableInsets.bottom == windowInsets2.getStableInsetBottom())) {
+                this.mStableInsets.set(windowInsets2.getStableInsetLeft(), windowInsets2.getStableInsetTop(), windowInsets2.getStableInsetRight(), windowInsets2.getStableInsetBottom());
+            }
+            return super.onApplyWindowInsets(windowInsets2);
         }
-        if (!(this.mStableInsets.left == windowInsets.getStableInsetLeft() && this.mStableInsets.top == windowInsets.getStableInsetTop() && this.mStableInsets.right == windowInsets.getStableInsetRight() && this.mStableInsets.bottom == windowInsets.getStableInsetBottom())) {
-            this.mStableInsets.set(windowInsets.getStableInsetLeft(), windowInsets.getStableInsetTop(), windowInsets.getStableInsetRight(), windowInsets.getStableInsetBottom());
-        }
-        return super.onApplyWindowInsets(windowInsets);
+        windowInsets2 = windowInsets;
+        this.mStableInsets.set(windowInsets2.getStableInsetLeft(), windowInsets2.getStableInsetTop(), windowInsets2.getStableInsetRight(), windowInsets2.getStableInsetBottom());
+        return super.onApplyWindowInsets(windowInsets2);
     }
 
     /* access modifiers changed from: protected */

@@ -122,6 +122,21 @@ public class FiveGServiceClient {
     public Client mClient;
     private Context mContext;
     private final SparseArray<FiveGServiceState> mCurrentServiceStates = new SparseArray<>();
+    /* access modifiers changed from: private */
+    public IBinder.DeathRecipient mDeathRecipient = new IBinder.DeathRecipient() {
+        public void binderDied() {
+            if (FiveGServiceClient.this.mNetworkService != null) {
+                FiveGServiceClient.this.mNetworkService.asBinder().unlinkToDeath(FiveGServiceClient.this.mDeathRecipient, 0);
+            }
+            boolean unused = FiveGServiceClient.this.mServiceConnected = false;
+            IExtTelephony unused2 = FiveGServiceClient.this.mNetworkService = null;
+            Client unused3 = FiveGServiceClient.this.mClient = null;
+            FiveGServiceClient.this.mHandler.removeMessages(1024);
+            int unused4 = FiveGServiceClient.this.mBindRetryTimes = 0;
+            FiveGServiceClient.localLog("binderDied", "unlinkToDeath  has been completed, binderService is going");
+            FiveGServiceClient.this.binderService();
+        }
+    };
     private int mDefaultDataSlotId;
     private Method mGetCustomedRsrpThresholdsMethod;
     /* access modifiers changed from: private */
@@ -166,6 +181,7 @@ public class FiveGServiceClient {
     private boolean mIsCustForKrOps;
     /* access modifiers changed from: private */
     public boolean[] mIsDelayUpdate5GIcon = null;
+    private boolean mIsDualNrEnabled = false;
     private boolean mIsUserFiveGEnabled = true;
     private int[] mLastBearerAllocationStatus = null;
     private final SparseArray<FiveGServiceState> mLastServiceStates = new SparseArray<>();
@@ -188,6 +204,7 @@ public class FiveGServiceClient {
                 Client unused2 = FiveGServiceClient.this.mClient = FiveGServiceClient.this.mNetworkService.registerCallback(FiveGServiceClient.this.mPackageName, FiveGServiceClient.this.mCallback);
                 boolean unused3 = FiveGServiceClient.this.mServiceConnected = true;
                 FiveGServiceClient.this.initFiveGServiceState();
+                iBinder.linkToDeath(FiveGServiceClient.this.mDeathRecipient, 0);
                 Log.d("FiveGServiceClient", "Client = " + FiveGServiceClient.this.mClient);
             } catch (Exception e) {
                 Log.d("FiveGServiceClient", "onServiceConnected: Exception = " + e);
@@ -482,7 +499,7 @@ public class FiveGServiceClient {
     /* access modifiers changed from: package-private */
     @VisibleForTesting
     public void update5GIcon(FiveGServiceState fiveGServiceState, int i) {
-        if (!this.mIsUserFiveGEnabled || i != this.mDefaultDataSlotId) {
+        if (!this.mIsUserFiveGEnabled || (i != this.mDefaultDataSlotId && !this.mIsDualNrEnabled)) {
             MobileSignalController.MobileIconGroup unused = fiveGServiceState.mIconGroup = TelephonyIcons.UNKNOWN;
         } else if (fiveGServiceState.mNrConfigType == 1) {
             MobileSignalController.MobileIconGroup unused2 = fiveGServiceState.mIconGroup = getSaIcon(fiveGServiceState);
@@ -636,6 +653,11 @@ public class FiveGServiceClient {
 
     private void registerFivegEvents() {
         this.mContext.getContentResolver().registerContentObserver(Settings.Global.getUriFor("fiveg_user_enable"), false, this.m5gEnabledObserver);
+        this.mContext.getContentResolver().registerContentObserver(Settings.Global.getUriFor("dual_nr_enabled"), false, new ContentObserver(this.mHandler) {
+            public void onChange(boolean z) {
+                FiveGServiceClient.this.update5GIcon();
+            }
+        });
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("miui.intent.action.ACTION_DEFAULT_DATA_SLOT_CHANGED");
         intentFilter.addAction("android.telephony.action.CARRIER_CONFIG_CHANGED");
@@ -650,10 +672,11 @@ public class FiveGServiceClient {
     /* access modifiers changed from: private */
     public void update5GIcon() {
         boolean z = true;
-        if (Settings.Global.getInt(this.mContext.getContentResolver(), "fiveg_user_enable", 1) != 1) {
+        this.mIsUserFiveGEnabled = Settings.Global.getInt(this.mContext.getContentResolver(), "fiveg_user_enable", 1) == 1;
+        if (Settings.Global.getInt(this.mContext.getContentResolver(), "dual_nr_enabled", 0) != 1) {
             z = false;
         }
-        this.mIsUserFiveGEnabled = z;
+        this.mIsDualNrEnabled = z;
         this.mDefaultDataSlotId = SubscriptionManager.getDefault().getDefaultDataSlotId();
         localLog("5GEnabledChanged", "5G enable state has changed to " + this.mIsUserFiveGEnabled + ", dds is " + this.mDefaultDataSlotId);
         for (int i = 0; i < TelephonyManager.getDefault().getPhoneCount(); i++) {
