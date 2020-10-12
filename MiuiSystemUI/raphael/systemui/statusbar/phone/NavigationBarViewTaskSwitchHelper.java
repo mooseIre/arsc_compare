@@ -3,7 +3,6 @@ package com.android.systemui.statusbar.phone;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
-import android.provider.Settings;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -84,14 +83,7 @@ public class NavigationBarViewTaskSwitchHelper extends GestureDetector.SimpleOnG
             if (motionEvent.getX() < ((float) rect.right) && motionEvent2.getX() > ((float) rect3.left)) {
                 sendToHandyMode(2);
                 keyButtonRipple.gestureSlideEffect(rect, rect3);
-            } else if (motionEvent.getX() <= ((float) rect.left) || motionEvent2.getX() >= ((float) rect2.right)) {
-                int i = Settings.Global.getInt(this.mContext.getContentResolver(), "handy_mode", 0);
-                if (i == 1 && motionEvent.getX() < ((float) rect.left) && motionEvent2.getX() > ((float) rect.left)) {
-                    sendToHandyMode(1);
-                } else if (i == 2 && motionEvent.getX() > ((float) rect.right) && motionEvent2.getX() < ((float) rect.right)) {
-                    sendToHandyMode(2);
-                }
-            } else {
+            } else if (motionEvent.getX() > ((float) rect.left) && motionEvent2.getX() < ((float) rect2.right)) {
                 sendToHandyMode(1);
                 keyButtonRipple.gestureSlideEffect(rect, rect2);
             }

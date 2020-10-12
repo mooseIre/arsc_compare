@@ -89,7 +89,7 @@ public class UsbNotificationController {
         this.mPtpNotificationId = ResourceMapper.resolveReference(this.mContext.getResources(), 286130222);
         this.mMtpNotificationId = ResourceMapper.resolveReference(this.mContext.getResources(), 286130221);
         this.mCdInstallNotificationId = ResourceMapper.resolveReference(this.mContext.getResources(), 286130220);
-        this.mEnableUsbModeSelection = this.mContext.getResources().getBoolean(285474845);
+        this.mEnableUsbModeSelection = this.mContext.getResources().getBoolean(285474846);
         this.mChargingNotificationId = this.mContext.getResources().getIdentifier("usb_charging_notification_title", "string", "com.mediatek");
         if (this.mChargingNotificationId == 0) {
             this.mChargingNotificationId = this.mContext.getResources().getIdentifier("usb_charging_notification_title", "string", "android");
