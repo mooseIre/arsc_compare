@@ -6,6 +6,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.database.ContentObserver;
 import android.graphics.Rect;
@@ -17,6 +18,7 @@ import android.os.UserHandle;
 import android.provider.MiuiSettings;
 import android.provider.Settings;
 import android.util.Log;
+import androidx.preference.PreferenceManager;
 import com.android.internal.content.PackageMonitor;
 import com.android.internal.logging.MetricsLogger;
 import com.android.internal.os.SomeArgs;
@@ -60,8 +62,7 @@ public class Recents extends SystemUI implements RecentsComponent, CommandQueue.
         public void onReceive(Context context, Intent intent) {
             boolean useMiuiHomeAsDefaultHome = Recents.sSystemServicesProxy.useMiuiHomeAsDefaultHome(Recents.this.mContext);
             if (Recents.this.mUseMiuiHomeAsDefaultHome != useMiuiHomeAsDefaultHome) {
-                boolean unused = Recents.this.mUseMiuiHomeAsDefaultHome = useMiuiHomeAsDefaultHome;
-                RecentsEventBus.getDefault().send(new DefaultHomeChangedEvent(Recents.this.mUseMiuiHomeAsDefaultHome));
+                Recents.this.updateDefaultHome(useMiuiHomeAsDefaultHome);
                 Recents.this.updateRecentsImplementation();
             }
         }
@@ -210,7 +211,7 @@ public class Recents extends SystemUI implements RecentsComponent, CommandQueue.
         sSystemServicesProxy = SystemServicesProxy.getInstance(this.mContext);
         sTaskLoader = new RecentsTaskLoader(this.mContext);
         sConfiguration = new RecentsConfiguration(this.mContext);
-        this.mUseMiuiHomeAsDefaultHome = sSystemServicesProxy.useMiuiHomeAsDefaultHome(this.mContext);
+        updateDefaultHome(sSystemServicesProxy.useMiuiHomeAsDefaultHome(this.mContext));
         this.mIsRecentsWithinLauncher = sSystemServicesProxy.isRecentsWithinLauncher(this.mContext);
         this.mIsLowMemoryDevice = Utilities.isLowMemoryDevice();
         this.mUseFsGestureVersionThree = useFsGestureVersionThree();
@@ -251,6 +252,25 @@ public class Recents extends SystemUI implements RecentsComponent, CommandQueue.
 
     public boolean useMiuiHomeAsDefaultHome() {
         return this.mUseMiuiHomeAsDefaultHome;
+    }
+
+    /* access modifiers changed from: private */
+    public void updateDefaultHome(boolean z) {
+        boolean z2;
+        this.mUseMiuiHomeAsDefaultHome = z;
+        RecentsEventBus.getDefault().send(new DefaultHomeChangedEvent(this.mUseMiuiHomeAsDefaultHome));
+        if (Utilities.isAndroidRorNewer()) {
+            boolean z3 = MiuiSettings.Global.getBoolean(this.mContext.getContentResolver(), "force_fsg_nav_bar");
+            SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this.mContext.getApplicationContext());
+            if (!this.mUseMiuiHomeAsDefaultHome) {
+                if (z3) {
+                    MiuiSettings.Global.putBoolean(this.mContext.getContentResolver(), "force_fsg_nav_bar", false);
+                }
+                defaultSharedPreferences.edit().putBoolean("is_fs_gesture_mode_of_miui_home", z3).apply();
+            } else if (defaultSharedPreferences.contains("is_fs_gesture_mode_of_miui_home") && z3 != (z2 = defaultSharedPreferences.getBoolean("is_fs_gesture_mode_of_miui_home", false))) {
+                MiuiSettings.Global.putBoolean(this.mContext.getContentResolver(), "force_fsg_nav_bar", z2);
+            }
+        }
     }
 
     /* access modifiers changed from: private */
@@ -296,8 +316,7 @@ public class Recents extends SystemUI implements RecentsComponent, CommandQueue.
                 }
                 boolean useMiuiHomeAsDefaultHome = Recents.sSystemServicesProxy.useMiuiHomeAsDefaultHome(Recents.this.mContext);
                 if (Recents.this.mUseMiuiHomeAsDefaultHome != useMiuiHomeAsDefaultHome) {
-                    boolean unused2 = Recents.this.mUseMiuiHomeAsDefaultHome = useMiuiHomeAsDefaultHome;
-                    RecentsEventBus.getDefault().send(new DefaultHomeChangedEvent(Recents.this.mUseMiuiHomeAsDefaultHome));
+                    Recents.this.updateDefaultHome(useMiuiHomeAsDefaultHome);
                 }
                 Recents.this.updateRecentsImplementation();
             }

@@ -38,6 +38,7 @@ import com.android.systemui.recents.events.component.ScreenPinningRequestEvent;
 import com.android.systemui.recents.events.ui.RecentsDrawnEvent;
 import com.android.systemui.recents.misc.RecentsPushEventHelper;
 import com.android.systemui.recents.misc.SystemServicesProxy;
+import com.android.systemui.recents.misc.Utilities;
 import com.android.systemui.recents.model.RecentsTaskLoader;
 import com.android.systemui.stackdivider.Divider;
 import java.util.ArrayList;
@@ -318,7 +319,7 @@ public class LegacyRecentsImpl implements RecentsImplementation {
     }
 
     public boolean dockTopTask(int i, int i2, Rect rect, int i3) {
-        if (BaseRecentsImpl.toastForbidDockedWhenScreening(this.mContext)) {
+        if (BaseRecentsImpl.toastForbidDockedWhenScreening(this.mContext) || Utilities.isInSmallWindowMode(this.mContext)) {
             return false;
         }
         Point point = new Point();
