@@ -13,8 +13,6 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.os.Process;
-import android.os.UserHandleCompat;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.ArraySet;
@@ -33,6 +31,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import miui.os.Build;
+import miui.securityspace.CrossUserUtils;
 
 public class Utilities {
     public static final Property<Drawable, Integer> DRAWABLE_ALPHA = new IntProperty<Drawable>("drawableAlpha") {
@@ -262,7 +261,7 @@ public class Utilities {
     }
 
     public static boolean supportsMultiWindow() {
-        return Process.myUserHandle().equals(UserHandleCompat.SYSTEM);
+        return CrossUserUtils.getCurrentUserId() == 0;
     }
 
     public static boolean isInSmallWindowMode(Context context) {

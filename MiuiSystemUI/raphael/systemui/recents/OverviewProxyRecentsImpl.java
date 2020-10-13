@@ -18,6 +18,7 @@ import com.android.systemui.plugins.R;
 import com.android.systemui.recents.events.RecentsEventBus;
 import com.android.systemui.recents.events.component.RecentsVisibilityChangedEvent;
 import com.android.systemui.recents.misc.SystemServicesProxy;
+import com.android.systemui.recents.misc.Utilities;
 import com.android.systemui.shared.recents.IOverviewProxy;
 import com.android.systemui.stackdivider.Divider;
 import com.android.systemui.statusbar.phone.StatusBar;
@@ -122,28 +123,35 @@ public class OverviewProxyRecentsImpl implements RecentsImplementation {
         if (BaseRecentsImpl.toastForbidDockedWhenScreening(this.mContext)) {
             return false;
         }
-        Point point = new Point();
-        if (rect == null) {
-            ((DisplayManager) this.mContext.getSystemService(DisplayManager.class)).getDisplay(0).getRealSize(point);
-            rect = new Rect(0, 0, point.x, point.y);
-        }
-        SystemServicesProxy systemServices = Recents.getSystemServices();
-        ActivityManager.RunningTaskInfo runningTask = systemServices.getRunningTask();
-        boolean isScreenPinningActive = systemServices.isScreenPinningActive();
-        boolean z = runningTask != null && SystemServicesProxy.isHomeOrRecentsStack(ActivityManagerCompat.getRunningTaskStackId(runningTask), runningTask);
-        if (runningTask != null && !z && !isScreenPinningActive) {
-            if (!ActivityManagerCompat.isRunningTaskDockable(runningTask)) {
-                Toast.makeText(this.mContext, R.string.recents_incompatible_app_message, 0).show();
-            } else if (!systemServices.moveTaskToDockedStack(runningTask.id, i2, rect)) {
-                return false;
-            } else {
-                Divider divider = (Divider) this.mSysUiServiceProvider.getComponent(Divider.class);
-                if (divider != null) {
-                    divider.onRecentsDrawn();
-                }
-                return true;
+        if (!Utilities.supportsMultiWindow()) {
+            Toast.makeText(this.mContext, R.string.recent_cannot_dock, 1).show();
+            return false;
+        } else if (Utilities.isInSmallWindowMode(this.mContext)) {
+            return false;
+        } else {
+            Point point = new Point();
+            if (rect == null) {
+                ((DisplayManager) this.mContext.getSystemService(DisplayManager.class)).getDisplay(0).getRealSize(point);
+                rect = new Rect(0, 0, point.x, point.y);
             }
+            SystemServicesProxy systemServices = Recents.getSystemServices();
+            ActivityManager.RunningTaskInfo runningTask = systemServices.getRunningTask();
+            boolean isScreenPinningActive = systemServices.isScreenPinningActive();
+            boolean z = runningTask != null && SystemServicesProxy.isHomeOrRecentsStack(ActivityManagerCompat.getRunningTaskStackId(runningTask), runningTask);
+            if (runningTask != null && !z && !isScreenPinningActive) {
+                if (!ActivityManagerCompat.isRunningTaskDockable(runningTask)) {
+                    Toast.makeText(this.mContext, R.string.recents_incompatible_app_message, 0).show();
+                } else if (!systemServices.moveTaskToDockedStack(runningTask.id, i2, rect)) {
+                    return false;
+                } else {
+                    Divider divider = (Divider) this.mSysUiServiceProvider.getComponent(Divider.class);
+                    if (divider != null) {
+                        divider.onRecentsDrawn();
+                    }
+                    return true;
+                }
+            }
+            return false;
         }
-        return false;
     }
 }
