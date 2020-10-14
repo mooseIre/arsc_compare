@@ -135,7 +135,7 @@ public class ExpandedNotification extends StatusBarNotification {
     }
 
     public void setHasShownAfterUnlock(boolean z) {
-        this.mHasShownAfterUnlock = isClearable() && !isOnlyShowKeyguard() && z;
+        this.mHasShownAfterUnlock = (isClearable() || getNotification().isGroupSummary()) && !isOnlyShowKeyguard() && z;
     }
 
     public boolean isShowMiuiAction() {

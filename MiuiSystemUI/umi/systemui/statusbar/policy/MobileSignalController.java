@@ -259,8 +259,8 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
         }
     }
 
-    /* JADX WARNING: Removed duplicated region for block: B:75:0x0184  */
-    /* JADX WARNING: Removed duplicated region for block: B:81:? A[RETURN, SYNTHETIC] */
+    /* JADX WARNING: Removed duplicated region for block: B:84:0x0191  */
+    /* JADX WARNING: Removed duplicated region for block: B:90:? A[RETURN, SYNTHETIC] */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     public void notifyListeners(com.android.systemui.statusbar.policy.NetworkController.SignalCallback r24) {
         /*
@@ -442,49 +442,64 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
             r21 = r17
             r15 = r18
             r1.setMobileDataIndicators(r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14, r15)
-            boolean r1 = r0.mEnableVolteForSlot
-            if (r1 == 0) goto L_0x014e
-            T r1 = r0.mCurrentState
-            com.android.systemui.statusbar.policy.MobileSignalController$MobileState r1 = (com.android.systemui.statusbar.policy.MobileSignalController.MobileState) r1
-            boolean r1 = r1.imsRegister
-            if (r1 != 0) goto L_0x014e
             android.telephony.ServiceState r1 = r0.mServiceState
-            if (r1 == 0) goto L_0x014e
+            if (r1 == 0) goto L_0x0139
             int r1 = r1.getRilVoiceRadioTechnology()
             r2 = 6
-            if (r1 == r2) goto L_0x014e
-            boolean r1 = r0.mIsCtSim
-            if (r1 == 0) goto L_0x014e
+            if (r1 == r2) goto L_0x0136
+            r2 = 4
+            if (r1 == r2) goto L_0x0136
+            r2 = 5
+            if (r1 == r2) goto L_0x0136
+            r13 = 1
+            goto L_0x0137
+        L_0x0136:
+            r13 = 0
+        L_0x0137:
+            r12 = r13
+            goto L_0x013a
+        L_0x0139:
+            r12 = 0
+        L_0x013a:
+            if (r12 == 0) goto L_0x015b
+            boolean r1 = r0.mEnableVolteForSlot
+            if (r1 == 0) goto L_0x015b
             T r1 = r0.mCurrentState
             r2 = r1
             com.android.systemui.statusbar.policy.MobileSignalController$MobileState r2 = (com.android.systemui.statusbar.policy.MobileSignalController.MobileState) r2
+            boolean r2 = r2.imsRegister
+            if (r2 != 0) goto L_0x015b
+            boolean r2 = r0.mIsCtSim
+            if (r2 == 0) goto L_0x015b
+            r2 = r1
+            com.android.systemui.statusbar.policy.MobileSignalController$MobileState r2 = (com.android.systemui.statusbar.policy.MobileSignalController.MobileState) r2
             boolean r2 = r2.airplaneMode
-            if (r2 != 0) goto L_0x014e
+            if (r2 != 0) goto L_0x015b
             com.android.systemui.statusbar.policy.MobileSignalController$MobileState r1 = (com.android.systemui.statusbar.policy.MobileSignalController.MobileState) r1
             r2 = 1
             r1.volteNoService = r2
             r2 = 0
-            goto L_0x0155
-        L_0x014e:
+            goto L_0x0162
+        L_0x015b:
             T r1 = r0.mCurrentState
             com.android.systemui.statusbar.policy.MobileSignalController$MobileState r1 = (com.android.systemui.statusbar.policy.MobileSignalController.MobileState) r1
             r2 = 0
             r1.volteNoService = r2
-        L_0x0155:
+        L_0x0162:
             T r1 = r0.mCurrentState
             com.android.systemui.statusbar.policy.MobileSignalController$MobileState r1 = (com.android.systemui.statusbar.policy.MobileSignalController.MobileState) r1
             boolean r1 = r1.volteNoService
-            if (r1 == 0) goto L_0x0173
+            if (r1 == 0) goto L_0x0180
             boolean r1 = r0.mSupportDualVolte
-            if (r1 != 0) goto L_0x0173
+            if (r1 != 0) goto L_0x0180
             int r1 = r0.mSlotId
             miui.telephony.SubscriptionManager r3 = miui.telephony.SubscriptionManager.getDefault()
             int r3 = r3.getDefaultDataSlotId()
-            if (r1 == r3) goto L_0x0173
+            if (r1 == r3) goto L_0x0180
             T r1 = r0.mCurrentState
             com.android.systemui.statusbar.policy.MobileSignalController$MobileState r1 = (com.android.systemui.statusbar.policy.MobileSignalController.MobileState) r1
             r1.volteNoService = r2
-        L_0x0173:
+        L_0x0180:
             int r1 = r0.mSlotId
             T r2 = r0.mCurrentState
             com.android.systemui.statusbar.policy.MobileSignalController$MobileState r2 = (com.android.systemui.statusbar.policy.MobileSignalController.MobileState) r2
@@ -492,23 +507,23 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
             r3 = r24
             r3.setVolteNoService(r1, r2)
             com.android.systemui.statusbar.policy.NetworkController$MobileTypeListener r1 = r0.mMobileTypeListener
-            if (r1 == 0) goto L_0x01a0
+            if (r1 == 0) goto L_0x01ad
             boolean r1 = r0.mIsShowVoiceType
-            if (r1 == 0) goto L_0x018f
+            if (r1 == 0) goto L_0x019c
             T r1 = r0.mCurrentState
             com.android.systemui.statusbar.policy.MobileSignalController$MobileState r1 = (com.android.systemui.statusbar.policy.MobileSignalController.MobileState) r1
             java.lang.String r1 = r1.networkNameVoice
-            goto L_0x0199
-        L_0x018f:
+            goto L_0x01a6
+        L_0x019c:
             r1 = r21
             int r1 = r1.mDataType
             int r2 = r0.mSlotId
             java.lang.String r1 = com.android.systemui.statusbar.policy.TelephonyIcons.getNetworkTypeName(r1, r2)
-        L_0x0199:
+        L_0x01a6:
             com.android.systemui.statusbar.policy.NetworkController$MobileTypeListener r2 = r0.mMobileTypeListener
             int r0 = r0.mSlotId
             r2.updateMobileTypeName(r0, r1)
-        L_0x01a0:
+        L_0x01ad:
             return
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.policy.MobileSignalController.notifyListeners(com.android.systemui.statusbar.policy.NetworkController$SignalCallback):void");
