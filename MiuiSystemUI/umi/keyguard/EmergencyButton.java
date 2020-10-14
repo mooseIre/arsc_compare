@@ -1,12 +1,9 @@
 package com.android.keyguard;
 
 import android.app.ActivityManagerCompat;
-import android.app.ActivityOptions;
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.RemoteException;
-import android.os.UserHandle;
 import android.telephony.ServiceState;
 import android.util.AttributeSet;
 import android.util.Slog;
@@ -22,7 +19,6 @@ import com.android.keyguard.utils.PhoneUtils;
 import miui.os.Build;
 
 public class EmergencyButton extends Button {
-    private static final Intent INTENT_EMERGENCY_DIAL = new Intent().setAction("com.android.phone.EmergencyDialer.DIAL").setPackage("com.android.phone").setFlags(343932928);
     private int mDownX;
     private int mDownY;
     /* access modifiers changed from: private */
@@ -141,17 +137,7 @@ public class EmergencyButton extends Button {
         } catch (RemoteException unused) {
             Slog.w("EmergencyButton", "Failed to stop app pinning");
         }
-        if (PhoneUtils.isInCall(this.mContext)) {
-            PhoneUtils.resumeCall(this.mContext);
-            EmergencyButtonCallback emergencyButtonCallback = this.mEmergencyButtonCallback;
-            if (emergencyButtonCallback != null) {
-                emergencyButtonCallback.onEmergencyButtonClickedWhenInCall();
-                return;
-            }
-            return;
-        }
-        KeyguardUpdateMonitor.getInstance(this.mContext).reportEmergencyCallAction(true);
-        getContext().startActivityAsUser(INTENT_EMERGENCY_DIAL, ActivityOptions.makeCustomAnimation(getContext(), 0, 0).toBundle(), new UserHandle(KeyguardUpdateMonitor.getCurrentUser()));
+        PhoneUtils.takeEmergencyCallAction(this.mContext, this.mEmergencyButtonCallback);
     }
 
     /* JADX WARNING: Code restructure failed: missing block: B:27:0x006c, code lost:
