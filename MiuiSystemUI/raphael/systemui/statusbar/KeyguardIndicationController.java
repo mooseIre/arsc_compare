@@ -3,7 +3,6 @@ package com.android.systemui.statusbar;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
-import android.app.ActivityOptions;
 import android.app.admin.DevicePolicyManager;
 import android.app.admin.DevicePolicyManagerCompat;
 import android.content.BroadcastReceiver;
@@ -15,7 +14,6 @@ import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 import android.os.ServiceManager;
-import android.os.UserHandle;
 import android.os.UserHandleCompat;
 import android.os.UserManager;
 import android.text.TextUtils;
@@ -34,6 +32,7 @@ import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.app.IBatteryStats;
 import com.android.keyguard.Ease$Cubic;
 import com.android.keyguard.Ease$Quint;
+import com.android.keyguard.EmergencyButton;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.KeyguardUpdateMonitorCallback;
 import com.android.keyguard.MiuiKeyguardFingerprintUtils$FingerprintIdentificationState;
@@ -59,7 +58,6 @@ import com.android.systemui.util.wakelock.WakeLockHelper;
 import miui.util.FeatureParser;
 
 public class KeyguardIndicationController {
-    private static final Intent INTENT_EMERGENCY_DIAL = new Intent().setAction("com.android.phone.EmergencyDialer.DIAL").setPackage("com.android.phone").setFlags(343932928);
     private final IBatteryStats mBatteryInfo;
     /* access modifiers changed from: private */
     public int mBatteryLevel;
@@ -251,13 +249,7 @@ public class KeyguardIndicationController {
 
     /* access modifiers changed from: private */
     public void takeEmergencyCallAction() {
-        if (PhoneUtils.isInCall(this.mContext)) {
-            PhoneUtils.resumeCall(this.mContext);
-            return;
-        }
-        KeyguardUpdateMonitor.getInstance(this.mContext).reportEmergencyCallAction(true);
-        Context context = this.mContext;
-        context.startActivityAsUser(INTENT_EMERGENCY_DIAL, ActivityOptions.makeCustomAnimation(context, 0, 0).toBundle(), new UserHandle(KeyguardUpdateMonitor.getCurrentUser()));
+        PhoneUtils.takeEmergencyCallAction(this.mContext, (EmergencyButton.EmergencyButtonCallback) null);
     }
 
     private void registerCallbacks(KeyguardUpdateMonitor keyguardUpdateMonitor) {

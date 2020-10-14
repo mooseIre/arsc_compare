@@ -7788,17 +7788,17 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
             if (!isKeyguardShowing()) {
                 entry.notification.setHasShownAfterUnlock(true);
             }
-            boolean shouldShowOnKeyguard = shouldShowOnKeyguard(entry);
-            if (z3 || ((isLockscreenPublicMode(userId) && !this.mShowLockscreenNotifications) || (this.mState != 0 && !shouldShowOnKeyguard))) {
+            boolean z4 = shouldShowOnKeyguard(entry) || expandableNotificationRow.isChildInGroup();
+            if (z3 || ((isLockscreenPublicMode(userId) && !this.mShowLockscreenNotifications) || (this.mState != 0 && !z4))) {
                 entry.row.setVisibility(8);
             } else {
-                boolean z4 = entry.row.getVisibility() == 8;
-                if (z4) {
+                boolean z5 = entry.row.getVisibility() == 8;
+                if (z5) {
                     entry.row.setVisibility(0);
                 }
                 if (!isChildInGroupWithSummary && !entry.row.isRemoved()) {
-                    if (z4) {
-                        this.mStackScroller.generateAddAnimation(entry.row, !shouldShowOnKeyguard);
+                    if (z5) {
+                        this.mStackScroller.generateAddAnimation(entry.row, !z4);
                     }
                     i2++;
                 }
