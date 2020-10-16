@@ -1822,18 +1822,18 @@ public class NotificationPanelView extends PanelView implements ExpandableView.O
     }
 
     /* access modifiers changed from: private */
-    /* JADX WARNING: Removed duplicated region for block: B:21:0x005d  */
-    /* JADX WARNING: Removed duplicated region for block: B:22:0x0061  */
-    /* JADX WARNING: Removed duplicated region for block: B:35:0x0095  */
-    /* JADX WARNING: Removed duplicated region for block: B:38:0x009f  */
-    /* JADX WARNING: Removed duplicated region for block: B:63:0x00ff  */
+    /* JADX WARNING: Removed duplicated region for block: B:21:0x005c  */
+    /* JADX WARNING: Removed duplicated region for block: B:22:0x0060  */
+    /* JADX WARNING: Removed duplicated region for block: B:35:0x0094  */
+    /* JADX WARNING: Removed duplicated region for block: B:38:0x009e  */
+    /* JADX WARNING: Removed duplicated region for block: B:63:0x00fe  */
     /* JADX WARNING: Removed duplicated region for block: B:65:? A[RETURN, SYNTHETIC] */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     public void setQsExpansion(float r7) {
         /*
             r6 = this;
             boolean r0 = DEBUG
-            if (r0 == 0) goto L_0x001b
+            if (r0 == 0) goto L_0x001a
             java.lang.String r0 = TAG
             java.lang.StringBuilder r1 = new java.lang.StringBuilder
             r1.<init>()
@@ -1842,7 +1842,7 @@ public class NotificationPanelView extends PanelView implements ExpandableView.O
             r1.append(r7)
             java.lang.String r1 = r1.toString()
             android.util.Log.d(r0, r1)
-        L_0x001b:
+        L_0x001a:
             int r0 = r6.mQsMinExpansionHeight
             float r0 = (float) r0
             float r7 = java.lang.Math.max(r7, r0)
@@ -1852,83 +1852,83 @@ public class NotificationPanelView extends PanelView implements ExpandableView.O
             boolean r0 = r6.isFullyCollapsed()
             r1 = 0
             r2 = 1
-            if (r0 != 0) goto L_0x003c
+            if (r0 != 0) goto L_0x003b
             int r0 = r6.mQsMaxExpansionHeight
             float r3 = (float) r0
             int r3 = (r7 > r3 ? 1 : (r7 == r3 ? 0 : -1))
-            if (r3 != 0) goto L_0x003c
-            if (r0 == 0) goto L_0x003c
+            if (r3 != 0) goto L_0x003b
+            if (r0 == 0) goto L_0x003b
             r0 = r2
-            goto L_0x003d
-        L_0x003c:
+            goto L_0x003c
+        L_0x003b:
             r0 = r1
-        L_0x003d:
+        L_0x003c:
             r6.mQsFullyExpanded = r0
-            if (r0 == 0) goto L_0x004e
+            if (r0 == 0) goto L_0x004d
             boolean r3 = r6.mIsKeyguardCoverd
-            if (r3 == r0) goto L_0x004e
+            if (r3 == r0) goto L_0x004d
             r6.mIsKeyguardCoverd = r2
             android.content.Context r0 = r6.mContext
             java.lang.String r3 = "Wallpaper_Covered"
             com.android.keyguard.magazine.LockScreenMagazineUtils.sendLockScreenMagazineEventBroadcast(r0, r3)
-        L_0x004e:
+        L_0x004d:
             int r0 = r6.mQsMinExpansionHeight
             float r0 = (float) r0
             int r0 = (r7 > r0 ? 1 : (r7 == r0 ? 0 : -1))
-            if (r0 <= 0) goto L_0x0061
+            if (r0 <= 0) goto L_0x0060
             boolean r0 = r6.mQsExpanded
-            if (r0 != 0) goto L_0x0061
+            if (r0 != 0) goto L_0x0060
             boolean r0 = r6.mStackScrollerOverscrolling
-            if (r0 != 0) goto L_0x0061
+            if (r0 != 0) goto L_0x0060
             r6.setQsExpanded(r2)
-            goto L_0x0086
-        L_0x0061:
+            goto L_0x0085
+        L_0x0060:
             int r0 = r6.mQsMinExpansionHeight
             float r0 = (float) r0
             int r0 = (r7 > r0 ? 1 : (r7 == r0 ? 0 : -1))
-            if (r0 > 0) goto L_0x0086
+            if (r0 > 0) goto L_0x0085
             boolean r0 = r6.mQsExpanded
-            if (r0 == 0) goto L_0x0086
+            if (r0 == 0) goto L_0x0085
             r6.setQsExpanded(r1)
             boolean r0 = r6.mLastAnnouncementWasQuickSettings
-            if (r0 == 0) goto L_0x0086
+            if (r0 == 0) goto L_0x0085
             boolean r0 = r6.mTracking
-            if (r0 != 0) goto L_0x0086
+            if (r0 != 0) goto L_0x0085
             boolean r0 = r6.isCollapsing()
-            if (r0 != 0) goto L_0x0086
+            if (r0 != 0) goto L_0x0085
             java.lang.String r0 = r6.getKeyguardOrLockScreenString()
             r6.announceForAccessibility(r0)
             r6.mLastAnnouncementWasQuickSettings = r1
-        L_0x0086:
+        L_0x0085:
             r6.mQsExpansionHeight = r7
             r6.updateQsExpansion()
             r6.updateDismissViewState()
             r6.requestScrollerTopPaddingUpdate(r1)
             boolean r0 = r6.mKeyguardShowing
-            if (r0 == 0) goto L_0x0098
+            if (r0 == 0) goto L_0x0097
             r6.updateHeaderKeyguardAlpha()
-        L_0x0098:
+        L_0x0097:
             int r0 = r6.mStatusBarMinHeight
             float r0 = (float) r0
             int r0 = (r7 > r0 ? 1 : (r7 == r0 ? 0 : -1))
-            if (r0 <= 0) goto L_0x00a0
+            if (r0 <= 0) goto L_0x009f
             r1 = r2
-        L_0x00a0:
+        L_0x009f:
             r6.setListening(r1)
             int r0 = r6.mStatusBarState
             r1 = 2
-            if (r0 == r1) goto L_0x00aa
-            if (r0 != r2) goto L_0x00bb
-        L_0x00aa:
+            if (r0 == r1) goto L_0x00a9
+            if (r0 != r2) goto L_0x00ba
+        L_0x00a9:
             r6.updateKeyguardClockBottomAreaAlpha()
             boolean r0 = r6.mIsDefaultTheme
-            if (r0 != 0) goto L_0x00b8
+            if (r0 != 0) goto L_0x00b7
             com.android.keyguard.AwesomeLockScreen r0 = r6.mAwesomeLockScreen
-            if (r0 == 0) goto L_0x00b8
+            if (r0 == 0) goto L_0x00b7
             r0.updateQsExpandHeight(r7)
-        L_0x00b8:
+        L_0x00b7:
             r6.updateStatusBarWindowBlur()
-        L_0x00bb:
+        L_0x00ba:
             java.lang.Class<com.android.systemui.miui.statusbar.policy.ControlPanelController> r0 = com.android.systemui.miui.statusbar.policy.ControlPanelController.class
             java.lang.Object r0 = com.android.systemui.Dependency.get(r0)
             com.android.systemui.miui.statusbar.policy.ControlPanelController r0 = (com.android.systemui.miui.statusbar.policy.ControlPanelController) r0
@@ -1936,23 +1936,23 @@ public class NotificationPanelView extends PanelView implements ExpandableView.O
             r0 = r0 ^ r2
             r1 = 0
             int r7 = (r7 > r1 ? 1 : (r7 == r1 ? 0 : -1))
-            if (r7 == 0) goto L_0x00e5
+            if (r7 == 0) goto L_0x00e4
             boolean r7 = r6.mQsFullyExpanded
-            if (r7 == 0) goto L_0x00e5
+            if (r7 == 0) goto L_0x00e4
             boolean r7 = r6.mLastAnnouncementWasQuickSettings
-            if (r7 != 0) goto L_0x00e5
-            if (r0 == 0) goto L_0x00e5
+            if (r7 != 0) goto L_0x00e4
+            if (r0 == 0) goto L_0x00e4
             android.content.Context r7 = r6.mContext
             r0 = 2131820644(0x7f110064, float:1.9274009E38)
             java.lang.String r7 = r7.getString(r0)
             r6.announceForAccessibility(r7)
             r6.mLastAnnouncementWasQuickSettings = r2
-        L_0x00e5:
+        L_0x00e4:
             boolean r7 = r6.mQsFullyExpanded
-            if (r7 == 0) goto L_0x00fb
+            if (r7 == 0) goto L_0x00fa
             com.android.systemui.classifier.FalsingManager r7 = r6.mFalsingManager
             boolean r7 = r7.shouldEnforceBouncer()
-            if (r7 == 0) goto L_0x00fb
+            if (r7 == 0) goto L_0x00fa
             com.android.systemui.statusbar.phone.StatusBar r0 = r6.mStatusBar
             r1 = 0
             r2 = 0
@@ -1960,11 +1960,11 @@ public class NotificationPanelView extends PanelView implements ExpandableView.O
             r4 = 1
             r5 = 0
             r0.executeRunnableDismissingKeyguard(r1, r2, r3, r4, r5)
-        L_0x00fb:
+        L_0x00fa:
             boolean r7 = DEBUG
-            if (r7 == 0) goto L_0x0102
+            if (r7 == 0) goto L_0x0101
             r6.invalidate()
-        L_0x0102:
+        L_0x0101:
             return
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.phone.NotificationPanelView.setQsExpansion(float):void");
