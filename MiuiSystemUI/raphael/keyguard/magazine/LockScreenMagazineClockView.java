@@ -6,9 +6,11 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.SystemClock;
+import android.os.SystemProperties;
 import android.os.UserHandle;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -24,6 +26,7 @@ import miui.os.Build;
 
 public class LockScreenMagazineClockView extends LinearLayout {
     private LinearLayout mContentsLayout;
+    private Context mCtx;
     private boolean mDarkMode;
     private boolean mHasTitleClick;
     private boolean mIsLeftTopClock;
@@ -38,11 +41,13 @@ public class LockScreenMagazineClockView extends LinearLayout {
 
     public LockScreenMagazineClockView(Context context) {
         this(context, (AttributeSet) null);
+        this.mCtx = context;
     }
 
     public LockScreenMagazineClockView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
         this.mLastClickTime = 0;
+        this.mCtx = context;
     }
 
     /* access modifiers changed from: protected */
@@ -121,10 +126,17 @@ public class LockScreenMagazineClockView extends LinearLayout {
                 new AsyncTask<Void, Void, Intent>() {
                     /* access modifiers changed from: protected */
                     public Intent doInBackground(Void... voidArr) {
-                        Intent intent = new Intent("android.intent.action.VIEW");
+                        Intent intent = new Intent();
+                        Uri parse = Uri.parse(LockScreenMagazineClockView.this.mMagazineWallpaperInfo.carouselDeeplink);
+                        LockScreenMagazineClockView lockScreenMagazineClockView = LockScreenMagazineClockView.this;
+                        if (lockScreenMagazineClockView.needJump92(lockScreenMagazineClockView.mContext, parse)) {
+                            intent.putExtra("deeplink92Uri", parse);
+                        } else {
+                            intent.setAction("android.intent.action.VIEW");
+                            intent.addFlags(268435456);
+                            intent.addFlags(67108864);
+                        }
                         intent.setData(Uri.parse(LockScreenMagazineClockView.this.mMagazineWallpaperInfo.titleClickUri));
-                        intent.addFlags(268435456);
-                        intent.addFlags(67108864);
                         if (PackageUtils.resolveIntent(LockScreenMagazineClockView.this.mContext, intent) != null) {
                             return intent;
                         }
@@ -141,7 +153,16 @@ public class LockScreenMagazineClockView extends LinearLayout {
                             LockScreenMagazineClockView.this.mTitle.setOnClickListener(new View.OnClickListener() {
                                 public void onClick(View view) {
                                     if (SystemClock.elapsedRealtime() - LockScreenMagazineClockView.this.mLastClickTime > 500) {
-                                        LockScreenMagazineClockView.this.mContext.startActivityAsUser(intent, UserHandle.CURRENT);
+                                        Uri uri = (Uri) intent.getParcelableExtra("deeplink92Uri");
+                                        if (uri == null || !PackageUtils.isAppInstalledForUser(LockScreenMagazineClockView.this.mContext, "com.ziyou.haokan", KeyguardUpdateMonitor.getCurrentUser())) {
+                                            LockScreenMagazineClockView.this.mContext.startActivityAsUser(intent, UserHandle.CURRENT);
+                                        } else {
+                                            Intent intent = new Intent();
+                                            intent.setData(uri);
+                                            LockScreenMagazineClockView.this.mContext.startActivityAsUser(intent, UserHandle.CURRENT);
+                                            LockScreenMagazineClockView.this.mContext.sendBroadcast(new Intent("xiaomi.intent.action.SHOW_SECURE_KEYGUARD"));
+                                            Log.e("LockScreenMagazineClockView", "title onClick  start activity ! ");
+                                        }
                                     }
                                     long unused = LockScreenMagazineClockView.this.mLastClickTime = SystemClock.elapsedRealtime();
                                 }
@@ -156,6 +177,10 @@ public class LockScreenMagazineClockView extends LinearLayout {
             this.mTitle.setOnClickListener((View.OnClickListener) null);
             updateTitleClickLayout(false);
         }
+    }
+
+    public boolean needJump92(Context context, Uri uri) {
+        return uri != null && "MY".equalsIgnoreCase(SystemProperties.get("ro.miui.region", "")) && PackageUtils.isAppInstalledForUser(context, "com.ziyou.haokan", KeyguardUpdateMonitor.getCurrentUser());
     }
 
     /* access modifiers changed from: private */
