@@ -133,4 +133,8 @@ public class MiuiNotificationCompat {
     public static void disableColorized(Notification notification) {
         notification.extras.putBoolean("android.colorized", false);
     }
+
+    public static boolean isFloatWhenDnd(Notification notification) {
+        return notification.extras.getBoolean("miui.floatWhenDnd", false);
+    }
 }

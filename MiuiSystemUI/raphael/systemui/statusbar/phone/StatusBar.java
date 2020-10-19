@@ -8033,7 +8033,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
         } else if (InCallUtils.isInCallScreenShowing(this.mContext) && InCallUtils.isInCallNotificationHasVideoCall(expandedNotification)) {
             Log.d("StatusBar", "peeking: video in call notification: " + expandedNotification.getKey());
             return true;
-        } else if (expandedNotification.canFloat() && !NotificationUtil.hasProgressbar(expandedNotification) && !z) {
+        } else if (expandedNotification.canFloat() && !NotificationUtil.hasProgressbar(expandedNotification) && (!z || expandedNotification.isFloatWhenDnd())) {
             Log.d("StatusBar", "peeking: miui permission allows: " + expandedNotification.getKey());
             return true;
         } else if (!this.mQuietModeEnable || !InCallUtils.isInCallNotification(expandedNotification) || getCallState() != 1) {

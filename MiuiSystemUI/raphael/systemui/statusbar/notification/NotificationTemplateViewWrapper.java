@@ -671,6 +671,7 @@ public class NotificationTemplateViewWrapper extends NotificationHeaderViewWrapp
                 NotificationTemplateViewWrapper.this.mMainColumnContainer.setVisibility(0);
             }
             ViewGroup.MarginLayoutParams marginLayoutParams = (ViewGroup.MarginLayoutParams) NotificationTemplateViewWrapper.this.mLine1Container.getLayoutParams();
+            marginLayoutParams.setMarginStart(0);
             marginLayoutParams.setMarginEnd((!NotificationTemplateViewWrapper.this.showRightIcon() || NotificationTemplateViewWrapper.this.showTimeChronometer()) ? 0 : NotificationTemplateViewWrapper.this.mRightIconSize + NotificationTemplateViewWrapper.this.mRightIconMarginStart);
             NotificationTemplateViewWrapper.this.mLine1Container.setLayoutParams(marginLayoutParams);
             NotificationTemplateViewWrapper.this.mView.setMinimumHeight(0);
