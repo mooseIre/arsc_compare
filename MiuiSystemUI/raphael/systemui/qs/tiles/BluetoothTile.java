@@ -31,9 +31,6 @@ public class BluetoothTile extends QSTileImpl<QSTile.BooleanState> {
         public void onBluetoothInoutStateChange(String str) {
         }
 
-        public void onBluetoothStatePhoneChange() {
-        }
-
         public void onBluetoothStateChange(final boolean z) {
             String access$400 = BluetoothTile.this.TAG;
             Log.d(access$400, "onBluetoothStateChange: enabled = " + z);

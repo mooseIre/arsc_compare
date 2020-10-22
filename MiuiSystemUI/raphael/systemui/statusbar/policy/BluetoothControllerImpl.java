@@ -1,8 +1,6 @@
 package com.android.systemui.statusbar.policy;
 
 import android.app.ActivityManager;
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -35,8 +33,6 @@ import java.util.Map;
 public class BluetoothControllerImpl implements BluetoothController, BluetoothCallback, CachedBluetoothDevice.Callback, LocalBluetoothProfileManager.ServiceListener {
     private static final boolean DEBUG = Log.isLoggable("BluetoothController", 3);
     private final Handler mBgHandler;
-    /* access modifiers changed from: private */
-    public BluetoothDevice mBluetoothDevice;
     private Collection<CachedBluetoothDevice> mCachedDevices;
     private Map<String, CachedDeviceState> mCachedStates;
     private final List<CachedBluetoothDevice> mConnectedDevices = new ArrayList();
@@ -55,13 +51,6 @@ public class BluetoothControllerImpl implements BluetoothController, BluetoothCa
                 obtainMessage.what = 5;
                 obtainMessage.obj = action;
                 BluetoothControllerImpl.this.mHandler.sendMessage(obtainMessage);
-            } else if ("android.bluetooth.headset.profile.action.CONNECTION_STATE_CHANGED".equals(action)) {
-                int unused = BluetoothControllerImpl.this.mPhoneConnectionState = intent.getIntExtra("android.bluetooth.profile.extra.STATE", -1);
-                BluetoothDevice unused2 = BluetoothControllerImpl.this.mBluetoothDevice = (BluetoothDevice) intent.getParcelableExtra("android.bluetooth.device.extra.DEVICE");
-                Message obtainMessage2 = BluetoothControllerImpl.this.mHandler.obtainMessage();
-                obtainMessage2.what = 6;
-                obtainMessage2.obj = action;
-                BluetoothControllerImpl.this.mHandler.sendMessage(obtainMessage2);
             } else if ("android.intent.action.BLUETOOTH_HANDSFREE_BATTERY_CHANGED".equals(action)) {
                 BluetoothControllerImpl.this.onDeviceAttributesChanged();
             }
@@ -70,8 +59,7 @@ public class BluetoothControllerImpl implements BluetoothController, BluetoothCa
     private CachedBluetoothDevice mLastActiveDevice;
     /* access modifiers changed from: private */
     public final LocalBluetoothManager mLocalBluetoothManager;
-    /* access modifiers changed from: private */
-    public int mPhoneConnectionState = 0;
+    private int mPhoneConnectionState = 0;
     private int mState = 10;
     private final UserManager mUserManager;
 
@@ -208,20 +196,8 @@ public class BluetoothControllerImpl implements BluetoothController, BluetoothCa
         return !this.mUserManager.hasUserRestriction("no_config_bluetooth", UserHandleCompat.of(this.mCurrentUser));
     }
 
-    public boolean getProfileConnectionState() {
-        BluetoothDevice bluetoothDevice = this.mBluetoothDevice;
-        if (bluetoothDevice == null || !bluetoothDevice.isTwsPlusDevice() || this.mBluetoothDevice.getTwsPlusPeerAddress() == null) {
-            return false;
-        }
-        return BluetoothAdapter.getDefaultAdapter().getProfileConnectionState(1) == 2;
-    }
-
     public boolean isBluetoothEnabled() {
         return this.mEnabled;
-    }
-
-    public boolean isBluetoothPhoneConnected() {
-        return this.mPhoneConnectionState == 12;
     }
 
     public int getBluetoothState() {
@@ -488,28 +464,18 @@ public class BluetoothControllerImpl implements BluetoothController, BluetoothCa
         }
 
         public void handleMessage(Message message) {
-            switch (message.what) {
-                case 1:
-                    firePairedDevicesChanged();
-                    return;
-                case 2:
-                    Log.d("BluetoothController", "fireStateChange");
-                    fireStateChange();
-                    return;
-                case 3:
-                    this.mCallbacks.add((BluetoothController.Callback) message.obj);
-                    return;
-                case 4:
-                    this.mCallbacks.remove((BluetoothController.Callback) message.obj);
-                    return;
-                case 5:
-                    fireInoutStateChange((String) message.obj);
-                    return;
-                case 6:
-                    fireStatePhoneChange();
-                    return;
-                default:
-                    return;
+            int i = message.what;
+            if (i == 1) {
+                firePairedDevicesChanged();
+            } else if (i == 2) {
+                Log.d("BluetoothController", "fireStateChange");
+                fireStateChange();
+            } else if (i == 3) {
+                this.mCallbacks.add((BluetoothController.Callback) message.obj);
+            } else if (i == 4) {
+                this.mCallbacks.remove((BluetoothController.Callback) message.obj);
+            } else if (i == 5) {
+                fireInoutStateChange((String) message.obj);
             }
         }
 
@@ -527,13 +493,6 @@ public class BluetoothControllerImpl implements BluetoothController, BluetoothCa
             }
         }
 
-        private void fireStatePhoneChange() {
-            Iterator<BluetoothController.Callback> it = this.mCallbacks.iterator();
-            while (it.hasNext()) {
-                fireStatePhoneChange(it.next());
-            }
-        }
-
         private void fireInoutStateChange(String str) {
             Iterator<BluetoothController.Callback> it = this.mCallbacks.iterator();
             while (it.hasNext()) {
@@ -543,10 +502,6 @@ public class BluetoothControllerImpl implements BluetoothController, BluetoothCa
 
         private void fireStateChange(BluetoothController.Callback callback) {
             callback.onBluetoothStateChange(BluetoothControllerImpl.this.mEnabled);
-        }
-
-        private void fireStatePhoneChange(BluetoothController.Callback callback) {
-            callback.onBluetoothStatePhoneChange();
         }
 
         private void fireInoutStateChange(BluetoothController.Callback callback, String str) {
