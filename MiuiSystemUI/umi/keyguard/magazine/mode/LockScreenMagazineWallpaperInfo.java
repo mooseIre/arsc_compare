@@ -7,6 +7,7 @@ import org.json.JSONObject;
 public class LockScreenMagazineWallpaperInfo {
     public String authority;
     public String btnText;
+    public String carouselDeeplink;
     public String content;
     public String cp;
     public String deeplinkUrl;
@@ -43,6 +44,7 @@ public class LockScreenMagazineWallpaperInfo {
                 setGlobalBtnText(jSONObject);
                 setTitleClickUri(jSONObject);
                 setImgLevel(jSONObject);
+                setCarouselDeepLink(jSONObject);
             } catch (Exception e) {
                 Log.e("LockScreenMagazineWallpaperInfo", "initExtra exception " + e.getMessage());
             }
@@ -121,6 +123,14 @@ public class LockScreenMagazineWallpaperInfo {
             this.imgLevel = jSONObject.optInt("img_level", 0);
         } catch (Exception unused) {
             this.imgLevel = 0;
+        }
+    }
+
+    private void setCarouselDeepLink(JSONObject jSONObject) {
+        try {
+            this.carouselDeeplink = jSONObject.optString("deeplink");
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
