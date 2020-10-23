@@ -17,6 +17,10 @@ public interface FiveGController extends CallbackController<FiveGStateChangeCall
         return 0;
     }
 
+    boolean isConnectedOnSaMode(int i) {
+        return false;
+    }
+
     boolean isFiveGBearerAllocated(int i);
 
     boolean isFiveGConnect(int i, int i2);

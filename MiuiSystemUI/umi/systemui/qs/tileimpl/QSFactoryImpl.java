@@ -41,6 +41,7 @@ import com.android.systemui.qs.tiles.ScreenShotTile;
 import com.android.systemui.qs.tiles.SyncTile;
 import com.android.systemui.qs.tiles.UserTile;
 import com.android.systemui.qs.tiles.VibrateTile;
+import com.android.systemui.qs.tiles.VoWifiTile;
 import com.android.systemui.qs.tiles.WifiTile;
 import com.android.systemui.qs.tiles.WorkModeTile;
 import java.util.HashMap;
@@ -166,6 +167,12 @@ public class QSFactoryImpl implements QSFactory {
         }
         if (str.equals("workmode")) {
             return new WorkModeTile(this.mHost);
+        }
+        if (str.equals("vowifi1")) {
+            return new VoWifiTile(this.mHost, 0);
+        }
+        if (str.equals("vowifi2")) {
+            return new VoWifiTile(this.mHost, 1);
         }
         if (str.startsWith("intent(")) {
             return IntentTile.create(this.mHost, str);

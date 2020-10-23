@@ -150,6 +150,10 @@ public class ExpandedNotification extends StatusBarNotification {
         return MiuiNotificationCompat.isEnableFloat(getNotification());
     }
 
+    public boolean isFloatWhenDnd() {
+        return this.mIsSystemApp && MiuiNotificationCompat.isFloatWhenDnd(getNotification());
+    }
+
     public boolean isEnableKeyguard() {
         return MiuiNotificationCompat.isEnableKeyguard(getNotification());
     }
@@ -218,6 +222,7 @@ public class ExpandedNotification extends StatusBarNotification {
         String str9;
         String str10;
         String str11;
+        String str12;
         StringBuilder sb = new StringBuilder(super.toString());
         sb.append("\n   ");
         sb.append(" pkgName=");
@@ -229,46 +234,46 @@ public class ExpandedNotification extends StatusBarNotification {
         sb.append(" imp=");
         sb.append(this.mImportance);
         sb.append(" sysApp=");
-        String str12 = "T";
-        sb.append(this.mIsSystemApp ? str12 : "F");
+        String str13 = "T";
+        sb.append(this.mIsSystemApp ? str13 : "F");
         sb.append(" priApp=");
         if (this.mIsPrioritizedApp) {
-            str = str12;
+            str = str13;
         } else {
             str = "F";
         }
         sb.append(str);
         sb.append(" hasShown=");
         if (this.mHasShownAfterUnlock) {
-            str2 = str12;
+            str2 = str13;
         } else {
             str2 = "F";
         }
         sb.append(str2);
         sb.append(" float=");
         if (this.mCanFloat) {
-            str3 = str12;
+            str3 = str13;
         } else {
             str3 = "F";
         }
         sb.append(str3);
         sb.append(" keyguard=");
         if (this.mCanShowOnKeyguard) {
-            str4 = str12;
+            str4 = str13;
         } else {
             str4 = "F";
         }
         sb.append(str4);
         sb.append(" peek=");
         if (this.mPeek) {
-            str5 = str12;
+            str5 = str13;
         } else {
             str5 = "F";
         }
         sb.append(str5);
         sb.append(" fullscreen=");
         if (this.mFullscreen) {
-            str6 = str12;
+            str6 = str13;
         } else {
             str6 = "F";
         }
@@ -276,48 +281,55 @@ public class ExpandedNotification extends StatusBarNotification {
         sb.append("\n   ");
         sb.append(" showMiuiAction=");
         if (isShowMiuiAction()) {
-            str7 = str12;
+            str7 = str13;
         } else {
             str7 = "F";
         }
         sb.append(str7);
         sb.append(" enableFloat=");
         if (isEnableFloat()) {
-            str8 = str12;
+            str8 = str13;
         } else {
             str8 = "F";
         }
         sb.append(str8);
-        sb.append(" enableKeyguard=");
-        if (isEnableKeyguard()) {
-            str9 = str12;
+        sb.append(" floatWhenDnd=");
+        if (isFloatWhenDnd()) {
+            str9 = str13;
         } else {
             str9 = "F";
         }
         sb.append(str9);
+        sb.append(" enableKeyguard=");
+        if (isEnableKeyguard()) {
+            str10 = str13;
+        } else {
+            str10 = "F";
+        }
+        sb.append(str10);
         sb.append(" floatTime=");
         sb.append(getFloatTime());
         sb.append(" messageCount=");
         sb.append(getMessageCount());
         sb.append(" persistent=");
         if (isPersistent()) {
-            str10 = str12;
-        } else {
-            str10 = "F";
-        }
-        sb.append(str10);
-        sb.append(" customHeight=");
-        if (isCustomHeight()) {
-            str11 = str12;
+            str11 = str13;
         } else {
             str11 = "F";
         }
         sb.append(str11);
-        sb.append(" customHideBorder=");
-        if (!isCustomHideBorder()) {
+        sb.append(" customHeight=");
+        if (isCustomHeight()) {
+            str12 = str13;
+        } else {
             str12 = "F";
         }
         sb.append(str12);
+        sb.append(" customHideBorder=");
+        if (!isCustomHideBorder()) {
+            str13 = "F";
+        }
+        sb.append(str13);
         return sb.toString();
     }
 }

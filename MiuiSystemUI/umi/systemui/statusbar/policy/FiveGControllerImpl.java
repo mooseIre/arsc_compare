@@ -55,6 +55,10 @@ public class FiveGControllerImpl implements FiveGController {
         return this.mFiveGServiceStates[i].isConnectedOnSaMode() || (this.mFiveGServiceStates[i].isConnectedOnNsaMode() && isDataRegisteredOnLte(i2));
     }
 
+    public boolean isConnectedOnSaMode(int i) {
+        return this.mFiveGServiceStates[i].isConnectedOnSaMode();
+    }
+
     public boolean isFiveGBearerAllocated(int i) {
         return this.mFiveGServiceStates[i].getAllocated() > 0;
     }

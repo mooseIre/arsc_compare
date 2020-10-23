@@ -766,11 +766,11 @@ public class CollapsedStatusBarFragment extends Fragment implements LocationCont
                 com.android.systemui.statusbar.phone.CollapsedStatusBarFragmentController r7 = r7.mController
                 boolean r7 = r7.isNarrowNotch()
                 if (r7 != 0) goto L_0x005f
-                r7 = 2131233568(0x7f080b20, float:1.8083277E38)
+                r7 = 2131233575(0x7f080b27, float:1.8083291E38)
                 if (r1 == r7) goto L_0x0050
-                r7 = 2131233572(0x7f080b24, float:1.8083285E38)
+                r7 = 2131233579(0x7f080b2b, float:1.80833E38)
                 if (r1 == r7) goto L_0x0050
-                r7 = 2131233570(0x7f080b22, float:1.8083281E38)
+                r7 = 2131233577(0x7f080b29, float:1.8083295E38)
                 if (r1 != r7) goto L_0x004e
                 goto L_0x0050
             L_0x004e:

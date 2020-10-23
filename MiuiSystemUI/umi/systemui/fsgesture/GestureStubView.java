@@ -667,7 +667,7 @@ public class GestureStubView extends FrameLayout {
         if (!this.mKeepHidden) {
             this.mWindowManager.updateViewLayout(this, getGestureStubWindowParam());
             Log.d("GestureStubView", "resetRenderProperty: " + str);
-            if (getParent() != null) {
+            if (getParent() != null && isAttachedToWindow()) {
                 this.mNeedRender = false;
                 getParent().requestTransparentRegion(this);
             }
@@ -679,7 +679,7 @@ public class GestureStubView extends FrameLayout {
         if (!this.mKeepHidden) {
             this.mWindowManager.updateViewLayout(this, getAnimatingLayoutParam());
             Log.d("GestureStubView", "renderView");
-            if (getParent() != null) {
+            if (getParent() != null && isAttachedToWindow()) {
                 this.mNeedRender = true;
                 getParent().requestTransparentRegion(this);
             }

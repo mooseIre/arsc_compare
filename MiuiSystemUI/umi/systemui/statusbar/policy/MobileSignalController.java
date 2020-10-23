@@ -537,16 +537,18 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
     public void onSignalStrengthChanged(int i, SignalController.IconGroup iconGroup) {
         update5GConnectState();
         boolean isFiveGBearerAllocated = this.mFiveGController.isFiveGBearerAllocated(getSimSlotIndex());
-        if (isFiveGBearerAllocated) {
-            T t = this.mCurrentState;
-            ((MobileState) t).level = i;
-            if (i == 0) {
-                ((MobileState) t).mIsShow5GSignalStrength = false;
-            } else {
-                ((MobileState) t).mIsShow5GSignalStrength = true;
-            }
-        } else {
+        if (!isFiveGBearerAllocated) {
             ((MobileState) this.mCurrentState).mIsShow5GSignalStrength = false;
+        } else if (i != 0) {
+            T t = this.mCurrentState;
+            ((MobileState) t).mIsShow5GSignalStrength = true;
+            ((MobileState) t).level = i;
+        } else if (!this.mFiveGController.isConnectedOnSaMode(getSimSlotIndex()) || !isCalling(getOtherSlotId(this.mSlotId))) {
+            T t2 = this.mCurrentState;
+            ((MobileState) t2).mIsShow5GSignalStrength = false;
+            ((MobileState) t2).level = i;
+        } else {
+            ((MobileState) this.mCurrentState).mIsShow5GSignalStrength = true;
         }
         if (miui.telephony.TelephonyManager.isCustForKrOps()) {
             ((MobileState) this.mCurrentState).KrIconGroup = iconGroup;
@@ -555,6 +557,19 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
         Log.d(str, "is5GConnected = " + isFiveGBearerAllocated + ", slotId = " + getSimSlotIndex() + ", level = " + i + ", current level = " + ((MobileState) this.mCurrentState).level + ", mIsShow5GSignalStrength: " + ((MobileState) this.mCurrentState).mIsShow5GSignalStrength);
         updateSignalStrength();
         notifyListenersIfNecessary();
+    }
+
+    public boolean isCalling(int i) {
+        return ((CallStateController) Dependency.get(CallStateController.class)).getCallState(i) != 0;
+    }
+
+    public int getOtherSlotId(int i) {
+        for (int i2 = 0; i2 < TelephonyManagerEx.getDefault().getPhoneCount(); i2++) {
+            if (i2 != i) {
+                return i2;
+            }
+        }
+        return -1;
     }
 
     public int getSlot() {
@@ -1373,14 +1388,14 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
         L_0x0020:
             r3 = r4
         L_0x0021:
-            r6 = 2131233588(0x7f080b34, float:1.8083318E38)
+            r6 = 2131233595(0x7f080b3b, float:1.8083332E38)
             r7 = 7
             java.lang.String r9 = "MobileSignalController"
             r10 = 9
             r11 = 6
             r12 = 1
             r13 = 8
-            r14 = 2131233587(0x7f080b33, float:1.8083316E38)
+            r14 = 2131233594(0x7f080b3a, float:1.808333E38)
             r15 = 2
             r8 = 3
             r16 = 0
@@ -1459,7 +1474,7 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
             int r0 = r0.getIdentifier(r2, r4, r5)
             r3[r21] = r0
             int[] r0 = com.android.systemui.statusbar.policy.TelephonyIcons.mSelectedQSDataTypeIcon
-            r2 = 2131233594(0x7f080b3a, float:1.808333E38)
+            r2 = 2131233601(0x7f080b41, float:1.8083344E38)
             r0[r21] = r2
             java.lang.String[] r0 = com.android.systemui.statusbar.policy.TelephonyIcons.mSelectedDataTypeDesc
             java.lang.String[] r2 = com.android.systemui.statusbar.policy.TelephonyIcons.mDataTypeDescriptionArray
@@ -1473,7 +1488,7 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
             boolean r7 = r7.contains(r3)
             r12 = 10
             r17 = 5
-            r18 = 2131233592(0x7f080b38, float:1.8083326E38)
+            r18 = 2131233599(0x7f080b3f, float:1.808334E38)
             r19 = 4
             if (r7 == 0) goto L_0x016a
             android.telephony.ServiceState r7 = r0.mServiceState
@@ -1643,7 +1658,7 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
             int r0 = r0.getIdentifier(r2, r4, r5)
             r3[r21] = r0
             int[] r0 = com.android.systemui.statusbar.policy.TelephonyIcons.mSelectedQSDataTypeIcon
-            r2 = 2131233586(0x7f080b32, float:1.8083314E38)
+            r2 = 2131233593(0x7f080b39, float:1.8083328E38)
             r0[r21] = r2
             java.lang.String[] r0 = com.android.systemui.statusbar.policy.TelephonyIcons.mSelectedDataTypeDesc
             java.lang.String[] r2 = com.android.systemui.statusbar.policy.TelephonyIcons.mDataTypeDescriptionArray
@@ -1662,7 +1677,7 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
             int r0 = r0.getIdentifier(r2, r4, r5)
             r3[r21] = r0
             int[] r0 = com.android.systemui.statusbar.policy.TelephonyIcons.mSelectedQSDataTypeIcon
-            r2 = 2131233586(0x7f080b32, float:1.8083314E38)
+            r2 = 2131233593(0x7f080b39, float:1.8083328E38)
             r0[r21] = r2
             java.lang.String[] r0 = com.android.systemui.statusbar.policy.TelephonyIcons.mSelectedDataTypeDesc
             java.lang.String[] r2 = com.android.systemui.statusbar.policy.TelephonyIcons.mDataTypeDescriptionArray
@@ -1699,7 +1714,7 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
             int r0 = r0.getIdentifier(r2, r4, r5)
             r3[r21] = r0
             int[] r0 = com.android.systemui.statusbar.policy.TelephonyIcons.mSelectedQSDataTypeIcon
-            r2 = 2131233591(0x7f080b37, float:1.8083324E38)
+            r2 = 2131233598(0x7f080b3e, float:1.8083338E38)
             r0[r21] = r2
             java.lang.String[] r0 = com.android.systemui.statusbar.policy.TelephonyIcons.mSelectedDataTypeDesc
             java.lang.String[] r2 = com.android.systemui.statusbar.policy.TelephonyIcons.mDataTypeDescriptionArray
@@ -1752,7 +1767,7 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
             int r0 = r0.getIdentifier(r2, r4, r5)
             r3[r21] = r0
             int[] r0 = com.android.systemui.statusbar.policy.TelephonyIcons.mSelectedQSDataTypeIcon
-            r2 = 2131233590(0x7f080b36, float:1.8083322E38)
+            r2 = 2131233597(0x7f080b3d, float:1.8083336E38)
             r0[r21] = r2
             java.lang.String[] r0 = com.android.systemui.statusbar.policy.TelephonyIcons.mSelectedDataTypeDesc
             java.lang.String[] r2 = com.android.systemui.statusbar.policy.TelephonyIcons.mDataTypeDescriptionArray

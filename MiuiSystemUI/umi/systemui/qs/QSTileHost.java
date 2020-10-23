@@ -80,6 +80,7 @@ public class QSTileHost implements QSHost, TunerService.Tunable, PluginListener<
     private final ControlPanelController mControlPanelController;
     protected boolean mControlTileHost;
     private int mCurrentUser;
+    private DynamicVowifiController mDynamicVowifiController;
     private boolean mEdited;
     private boolean mForceTileDestroy;
     private Handler mHandler;
@@ -274,6 +275,11 @@ public class QSTileHost implements QSHost, TunerService.Tunable, PluginListener<
         ((SuperSaveModeController) Dependency.get(cls2)).addCallback((SuperSaveModeController.SuperSaveModeChangeListener) this);
         ((OldModeController) Dependency.get(cls)).addCallback((OldModeController.OldModeChangeListener) this);
         ((DumpManager) Dependency.get(DumpManager.class)).registerDumpable(this.TAG, this);
+        if (this.mContext.getResources().getBoolean(R.bool.show_vowifi_qs)) {
+            DynamicVowifiController dynamicVowifiController = new DynamicVowifiController(this.mContext);
+            this.mDynamicVowifiController = dynamicVowifiController;
+            dynamicVowifiController.registerReceiver();
+        }
     }
 
     public boolean isDriveModeInstalled() {
@@ -301,6 +307,10 @@ public class QSTileHost implements QSHost, TunerService.Tunable, PluginListener<
         this.mContext.unregisterReceiver(this.mPackageChangeReceiver);
         this.mContext.unregisterReceiver(this.mUpdateVersionReceiver);
         this.mContext.unregisterReceiver(this.mUserSwitchReceiver);
+        DynamicVowifiController dynamicVowifiController = this.mDynamicVowifiController;
+        if (dynamicVowifiController != null) {
+            dynamicVowifiController.unregisterReceiver();
+        }
     }
 
     public void setMiuiQSTilesEdited() {

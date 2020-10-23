@@ -541,18 +541,6 @@ public class PhoneStatusBarPolicy implements BluetoothController.Callback, Comma
         updateBluetooth((String) null);
     }
 
-    public void onBluetoothStatePhoneChange() {
-        BluetoothController bluetoothController = this.mBluetooth;
-        if (bluetoothController != null) {
-            boolean isBluetoothEnabled = bluetoothController.isBluetoothEnabled();
-            boolean isBluetoothPhoneConnected = this.mBluetooth.isBluetoothPhoneConnected();
-            if (isBluetoothEnabled) {
-                this.mIconController.setIconVisibility(this.mSlotBluetoothBattery, isBluetoothPhoneConnected || this.mBluetooth.getProfileConnectionState());
-                Log.d("PhoneStatusBarPolicy", "onBluetoothStatePhoneChange bluetoothBattery bluetoothPhoneEnableConnected = " + isBluetoothPhoneConnected + " ProfileConnectionState = " + this.mBluetooth.getProfileConnectionState());
-            }
-        }
-    }
-
     public void onBluetoothInoutStateChange(String str) {
         updateBluetooth(str);
     }
