@@ -9,13 +9,9 @@ import android.app.IActivityManager;
 import android.app.WallpaperManager;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.content.pm.ApplicationInfo;
 import android.content.pm.IPackageManager;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -854,9 +850,10 @@ public class SystemServicesProxy {
                 if (systemServicesProxy.isRecentsWithinLauncher(systemServicesProxy.mContext) && multiWindowForceNotResizeList != null && multiWindowForceNotResizeList.size() >= 1) {
                     Iterator<String> it = multiWindowForceNotResizeList.iterator();
                     while (it.hasNext()) {
-                        if (TextUtils.equals(it.next(), "com.miui.home")) {
+                        String next = it.next();
+                        if (TextUtils.equals(next, "com.miui.home") || TextUtils.equals(next, "com.mi.android.globallauncher")) {
                             it.remove();
-                            Log.e("SystemServicesProxy", "Remove com.miui.home from multiWindowForceNotResizeList");
+                            Log.e("SystemServicesProxy", "Remove " + next + " from multiWindowForceNotResizeList");
                         }
                     }
                 }
@@ -874,31 +871,11 @@ public class SystemServicesProxy {
     }
 
     public boolean isRecentsWithinLauncher(Context context) {
-        PackageInfo packageInfo;
-        ApplicationInfo applicationInfo;
-        Bundle bundle;
-        try {
-            packageInfo = context.getPackageManager().getPackageInfo("com.miui.home", 128);
-        } catch (Exception e) {
-            Log.e("SystemServicesProxy", "isRecentsWithinLauncher: getPackageInfo error.", e);
-            packageInfo = null;
-        }
-        boolean z = false;
-        if (!(packageInfo == null || (applicationInfo = packageInfo.applicationInfo) == null || (bundle = applicationInfo.metaData) == null)) {
-            z = bundle.getBoolean("supportRecents", false);
-        }
-        Log.e("RecentsImpl", "isRecentsWithinLauncher=" + z);
-        return z;
+        return Utilities.isRecentsWithinLauncher(context);
     }
 
     public boolean useMiuiHomeAsDefaultHome(Context context) {
-        ActivityInfo activityInfo;
-        String str;
-        ResolveInfo resolveActivity = context.getPackageManager().resolveActivity(new Intent("android.intent.action.MAIN").addCategory("android.intent.category.HOME"), 786432);
-        if (resolveActivity == null || (activityInfo = resolveActivity.activityInfo) == null || (str = activityInfo.packageName) == null || "com.miui.home".equals(str)) {
-            return true;
-        }
-        return false;
+        return Utilities.useMiuiHomeAsDefaultHome(context);
     }
 
     public static List<String> getMultiWindowForceResizeList(Context context) {

@@ -21,6 +21,7 @@ import android.view.AccessibilityManagerCompat;
 import android.view.MotionEvent;
 import android.view.accessibility.AccessibilityManager;
 import com.android.systemui.Application;
+import com.android.systemui.Constants;
 import com.android.systemui.Dependency;
 import com.android.systemui.Dumpable;
 import com.android.systemui.SystemUICompat;
@@ -424,7 +425,7 @@ public class OverviewProxyService implements CallbackController<OverviewProxyLis
         }
     };
     private int mSysUiStateFlags;
-    private String pakName = "com.miui.home";
+    private String pakName = Constants.HOME_LAUCNHER_PACKAGE_NAME;
 
     public interface OverviewProxyListener {
         void completeAssistant();
@@ -441,6 +442,7 @@ public class OverviewProxyService implements CallbackController<OverviewProxyLis
     }
 
     public OverviewProxyService(Context context, DeviceProvisionedController deviceProvisionedController) {
+        Log.e("OverviewProxyService", "OverviewProxyService construct method: current package name: " + Constants.HOME_LAUCNHER_PACKAGE_NAME);
         this.mContext = context;
         this.mHandler = new Handler();
         this.mDeviceProvisionedController = deviceProvisionedController;
@@ -529,6 +531,7 @@ public class OverviewProxyService implements CallbackController<OverviewProxyLis
             return;
         }
         this.mHandler.removeCallbacks(this.mConnectionRunnable);
+        Log.e("OverviewProxyService", "internalConnectToCurrentUser bindServiceAsUser current package name: " + Constants.HOME_LAUCNHER_PACKAGE_NAME);
         Intent intent = new Intent("android.intent.action.QUICKSTEP_SERVICE").setPackage(this.pakName);
         try {
             Log.e("OverviewProxyService", "internalConnectToCurrentUser  bindServiceAsUser", new Throwable());

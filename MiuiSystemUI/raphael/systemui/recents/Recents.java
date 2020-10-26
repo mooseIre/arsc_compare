@@ -212,6 +212,7 @@ public class Recents extends SystemUI implements RecentsComponent, CommandQueue.
         this.mIsLowMemoryDevice = Utilities.isLowMemoryDevice();
         this.mUseFsGestureVersionThree = useFsGestureVersionThree();
         RecentsEventBus.getDefault().send(new UseFsGestureVersionThreeChangedEvent(this.mUseFsGestureVersionThree));
+        Log.e("Recents", " recents start: mUseFsGestureVersionThree is: " + this.mUseFsGestureVersionThree);
         if (this.mUseFsGestureVersionThree) {
             this.mRecentsImplementation = new OverviewProxyRecentsImpl();
         } else {
@@ -243,6 +244,10 @@ public class Recents extends SystemUI implements RecentsComponent, CommandQueue.
     }
 
     public boolean useFsGestureVersionThree() {
+        Log.e("Recents", "useFsGestureVersionThree: QOrNewer: " + Utilities.isAndroidQorNewer());
+        Log.e("Recents", "useFsGestureVersionThree: mUseMiuiHomeAsDefaultHome:" + this.mUseMiuiHomeAsDefaultHome);
+        Log.e("Recents", "useFsGestureVersionThree: mIsRecentsWithinLauncher:" + this.mIsRecentsWithinLauncher);
+        Log.e("Recents", "useFsGestureVersionThree: mIsLowMemoryDevice: " + this.mIsLowMemoryDevice);
         return (Utilities.isAndroidQorNewer() && this.mUseMiuiHomeAsDefaultHome && this.mIsRecentsWithinLauncher && !this.mIsLowMemoryDevice) || (Utilities.isAndroidRorNewer() && this.mUseMiuiHomeAsDefaultHome);
     }
 
@@ -293,7 +298,7 @@ public class Recents extends SystemUI implements RecentsComponent, CommandQueue.
 
         public void onPackageModified(String str) {
             Log.e("Recents", "packageMonitor   onPackageModified  packageName=" + str + "   mIsRecentsWithinLauncher=" + Recents.this.mIsRecentsWithinLauncher);
-            if (str != null && "com.miui.home".equals(str)) {
+            if (str != null && Utilities.mSupportHomes.contains(str)) {
                 boolean isRecentsWithinLauncher = Recents.sSystemServicesProxy.isRecentsWithinLauncher(Recents.this.mContext);
                 if (Recents.this.mIsRecentsWithinLauncher != isRecentsWithinLauncher) {
                     boolean unused = Recents.this.mIsRecentsWithinLauncher = isRecentsWithinLauncher;
