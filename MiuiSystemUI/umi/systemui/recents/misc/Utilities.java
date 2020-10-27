@@ -5,6 +5,8 @@ import android.animation.AnimatorSet;
 import android.animation.RectEvaluator;
 import android.app.Activity;
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -13,10 +15,12 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.os.Bundle;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.ArraySet;
 import android.util.IntProperty;
+import android.util.Log;
 import android.util.Property;
 import android.util.TypedValue;
 import android.view.View;
@@ -58,12 +62,17 @@ public class Utilities {
     public static Set<String> LOW_MEMORY_DEVICES;
     public static final RectFEvaluator RECTF_EVALUATOR = new RectFEvaluator();
     public static final RectEvaluator RECT_EVALUATOR = new RectEvaluator(new Rect());
+    public static final List<String> mSupportHomes;
 
     public static float mapRange(float f, float f2, float f3) {
         return f2 + (f * (f3 - f2));
     }
 
     static {
+        ArrayList arrayList = new ArrayList();
+        mSupportHomes = arrayList;
+        arrayList.add("com.miui.home");
+        mSupportHomes.add("com.mi.android.globallauncher");
         ArraySet arraySet = new ArraySet();
         LOW_MEMORY_DEVICES = arraySet;
         arraySet.add("pine");
@@ -82,6 +91,28 @@ public class Utilities {
 
     public static boolean isLowMemoryDevice() {
         return LOW_MEMORY_DEVICES.contains(Build.DEVICE) || IS_MIUI_LITE_VERSION || IS_NOT_SUPPORT_GESTURE_V3_DEVICE;
+    }
+
+    public static boolean isRecentsWithinLauncher(Context context) {
+        return isRecentsWithinLauncher(context, "com.miui.home") || isRecentsWithinLauncher(context, "com.mi.android.globallauncher");
+    }
+
+    private static boolean isRecentsWithinLauncher(Context context, String str) {
+        PackageInfo packageInfo;
+        ApplicationInfo applicationInfo;
+        Bundle bundle;
+        try {
+            packageInfo = context.getPackageManager().getPackageInfo(str, 128);
+        } catch (Exception e) {
+            Log.e("Utilities", "isRecentsWithinLauncher: getPackageInfo error.", e);
+            packageInfo = null;
+        }
+        boolean z = false;
+        if (!(packageInfo == null || (applicationInfo = packageInfo.applicationInfo) == null || (bundle = applicationInfo.metaData) == null)) {
+            z = bundle.getBoolean("supportRecents", false);
+        }
+        Log.e("Utilities", "isRecentsWithinLauncher=" + z + " packageName: " + str);
+        return z;
     }
 
     public static <T> ArraySet<T> arrayToSet(T[] tArr, ArraySet<T> arraySet) {
