@@ -16,11 +16,11 @@ import android.view.Display;
 import android.view.DisplayCutout;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.MiuiKeyguardUtils;
+import com.android.keyguard.utils.ReflectUtil;
 import com.android.systemui.plugins.R;
 import java.util.Arrays;
 import java.util.HashSet;
 import miui.os.Build;
-import miui.util.ITouchFeature;
 
 class MiuiGxzwUtils {
     private static int DENSITY_DPI = -1;
@@ -142,9 +142,50 @@ class MiuiGxzwUtils {
         }
     }
 
+    private static int getSupportTouchFeatureVersion() {
+        try {
+            Object callStaticObjectMethod = ReflectUtil.callStaticObjectMethod(Class.forName("miui.util.ITouchFeature"), "getInstance", (Class<?>[]) null, new Object[0]);
+            if (callStaticObjectMethod != null) {
+                return ((Integer) ReflectUtil.callObjectMethod(callStaticObjectMethod, "getSupportTouchFeatureVersion", (Class<?>[]) null, new Object[0])).intValue();
+            }
+            return 1;
+        } catch (Exception e) {
+            Log.i("MiuiGxzwUtils", e.toString());
+            return 1;
+        }
+    }
+
     public static boolean setTouchMode(int i, int i2) {
-        Log.i("MiuiGxzwUtils", "setTouchMode: mode = " + i + ", value = " + i2);
-        return ITouchFeature.getInstance().setTouchMode(i, i2);
+        if (1 == getSupportTouchFeatureVersion()) {
+            return setTouchModelV1(i, i2);
+        }
+        return setTouchModelV2(i, i2);
+    }
+
+    private static boolean setTouchModelV2(int i, int i2) {
+        try {
+            Log.i("MiuiGxzwUtils", "setTouchmode v2 mode:" + i + " value" + i2);
+            Object callStaticObjectMethod = ReflectUtil.callStaticObjectMethod(Class.forName("miui.util.ITouchFeature"), "getInstance", (Class<?>[]) null, new Object[0]);
+            if (callStaticObjectMethod != null) {
+                return ((Boolean) ReflectUtil.callObjectMethod(callStaticObjectMethod, "setTouchMode", new Class[]{Integer.TYPE, Integer.TYPE, Integer.TYPE}, 0, Integer.valueOf(i), Integer.valueOf(i2))).booleanValue();
+            }
+        } catch (Exception e) {
+            Log.i("MiuiGxzwUtils", e.toString());
+        }
+        return false;
+    }
+
+    private static boolean setTouchModelV1(int i, int i2) {
+        try {
+            Log.i("MiuiGxzwUtils", "setTouchMode v1 mode:" + i + " value" + i2);
+            Object callStaticObjectMethod = ReflectUtil.callStaticObjectMethod(Class.forName("miui.util.ITouchFeature"), "getInstance", (Class<?>[]) null, new Object[0]);
+            if (callStaticObjectMethod != null) {
+                return ((Boolean) ReflectUtil.callObjectMethod(callStaticObjectMethod, "setTouchMode", new Class[]{Integer.TYPE, Integer.TYPE}, Integer.valueOf(i), Integer.valueOf(i2))).booleanValue();
+            }
+        } catch (Exception e) {
+            Log.i("MiuiGxzwUtils", e.toString());
+        }
+        return false;
     }
 
     private static void resetDefaultValue() {
