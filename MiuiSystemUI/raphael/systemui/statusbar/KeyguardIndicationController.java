@@ -521,14 +521,9 @@ public class KeyguardIndicationController {
         }
 
         public void onRefreshBatteryInfo(BatteryStatus batteryStatus) {
-            boolean z = false;
             if (!FeatureParser.getBoolean("is_pad", false)) {
                 boolean access$000 = KeyguardIndicationController.this.mPowerPluggedIn;
-                KeyguardIndicationController keyguardIndicationController = KeyguardIndicationController.this;
-                if (batteryStatus.isPluggedIn() && batteryStatus.isChargingOrFull()) {
-                    z = true;
-                }
-                boolean unused = keyguardIndicationController.mPowerPluggedIn = z;
+                boolean unused = KeyguardIndicationController.this.mPowerPluggedIn = batteryStatus.isPluggedIn() && batteryStatus.isChargingOrFull();
                 boolean unused2 = KeyguardIndicationController.this.mPowerCharged = batteryStatus.isCharged();
                 int unused3 = KeyguardIndicationController.this.mChargingSpeed = batteryStatus.getChargeSpeed();
                 int unused4 = KeyguardIndicationController.this.mBatteryLevel = batteryStatus.getLevel();
@@ -537,8 +532,11 @@ public class KeyguardIndicationController {
                 }
                 if (!KeyguardIndicationController.this.mPowerPluggedIn && access$000) {
                     KeyguardIndicationController.this.mTextView.clearAnimation();
-                    KeyguardIndicationController keyguardIndicationController2 = KeyguardIndicationController.this;
-                    String unused5 = keyguardIndicationController2.mUpArrowIndication = keyguardIndicationController2.mResources.getString(R.string.default_lockscreen_unlock_hint_text);
+                    KeyguardIndicationController keyguardIndicationController = KeyguardIndicationController.this;
+                    String unused5 = keyguardIndicationController.mUpArrowIndication = keyguardIndicationController.mResources.getString(R.string.default_lockscreen_unlock_hint_text);
+                    boolean unused6 = KeyguardIndicationController.this.mChargeUIEntering = false;
+                    boolean unused7 = KeyguardIndicationController.this.mUpArrowEntering = false;
+                    KeyguardIndicationController.this.hideTransientIndication();
                 }
                 KeyguardIndicationController.this.updateIndication();
                 KeyguardIndicationController.this.mTextView.setPowerPluggedIn(KeyguardIndicationController.this.mPowerPluggedIn);

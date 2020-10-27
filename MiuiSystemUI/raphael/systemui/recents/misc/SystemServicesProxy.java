@@ -64,8 +64,6 @@ import com.android.systemui.recents.model.RecentsTaskLoadPlan;
 import com.android.systemui.recents.model.RecentsTaskLoader;
 import com.android.systemui.recents.model.Task;
 import com.android.systemui.recents.model.ThumbnailData;
-import com.miui.browser.webapps.WebAppDAO;
-import com.miui.browser.webapps.WebAppInfo;
 import java.lang.ref.SoftReference;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -171,7 +169,6 @@ public class SystemServicesProxy {
     public List<TaskStackListener> mTaskStackListeners = new ArrayList();
     TtsEngines mTtsEngines;
     UserManager mUm;
-    WebAppDAO mWebAppDAO;
     public WindowManager mWm;
     WallpaperManager mWpm;
 
@@ -265,7 +262,6 @@ public class SystemServicesProxy {
         this.mBgProtectionPaint.setColor(-1);
         this.mBgProtectionCanvas = new Canvas();
         this.mAssistComponent = this.mAssistUtils.getAssistComponentForUser(UserHandle.myUserId());
-        this.mWebAppDAO = WebAppDAO.getInstance(context);
         this.mTtsEngines = new TtsEngines(this.mContext);
         this.mContext = context.getApplicationContext();
         this.mAccessControlLockMode = Settings.Secure.getIntForUser(this.mContext.getContentResolver(), "access_control_lock_mode", 1, -2);
@@ -536,18 +532,11 @@ public class SystemServicesProxy {
     }
 
     public String getBadgedActivityLabel(ActivityInfo activityInfo, int i) {
-        String str = null;
-        if (this.mPm == null) {
+        PackageManager packageManager = this.mPm;
+        if (packageManager == null) {
             return null;
         }
-        WebAppInfo webAppInfo = this.mWebAppDAO.get(activityInfo);
-        if (webAppInfo != null) {
-            str = webAppInfo.mLabel;
-        }
-        if (str == null) {
-            str = activityInfo.loadLabel(this.mPm).toString();
-        }
-        return getBadgedLabel(str, i);
+        return getBadgedLabel(activityInfo.loadLabel(packageManager).toString(), i);
     }
 
     public String getBadgedContentDescription(ActivityInfo activityInfo, int i, Resources resources) {
@@ -561,24 +550,18 @@ public class SystemServicesProxy {
     }
 
     public Drawable getBadgedActivityIcon(ActivityInfo activityInfo, int i) {
-        Drawable drawable = null;
-        if (this.mPm == null) {
+        PackageManager packageManager = this.mPm;
+        if (packageManager == null) {
             return null;
         }
-        WebAppInfo webAppInfo = this.mWebAppDAO.get(activityInfo);
-        if (webAppInfo != null) {
-            drawable = webAppInfo.getIcon(this.mContext);
-        }
-        if (drawable == null) {
-            drawable = AppIconsHelper.getIconDrawable(this.mContext, activityInfo, this.mPm, 43200000);
-        }
-        if (drawable == null) {
-            drawable = activityInfo.loadIcon(this.mPm);
+        Drawable iconDrawable = AppIconsHelper.getIconDrawable(this.mContext, activityInfo, packageManager, 43200000);
+        if (iconDrawable == null) {
+            iconDrawable = activityInfo.loadIcon(this.mPm);
         }
         if (XSpaceUserHandle.isXSpaceUserId(i)) {
-            drawable = XSpaceUserHandle.getXSpaceIcon(this.mContext, drawable);
+            iconDrawable = XSpaceUserHandle.getXSpaceIcon(this.mContext, iconDrawable);
         }
-        return getBadgedIcon(drawable, i);
+        return getBadgedIcon(iconDrawable, i);
     }
 
     public Drawable getBadgedTaskDescriptionIcon(ActivityManager.TaskDescription taskDescription, int i, Resources resources) {

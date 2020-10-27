@@ -10113,7 +10113,6 @@ public final class R {
         public static final int phone_locked_timeout_minutes_string = 2131689501;
         public static final int phone_locked_timeout_seconds_string = 2131689502;
         public static final int settings_toggle_position_divider_page = 2131689503;
-        public static final int status_bar_accessibility_recent_apps = 2131689504;
         public static final int view_realtime_clear = 2131689505;
         public static final int wifi_tether_connected_summary = 2131689506;
     }
