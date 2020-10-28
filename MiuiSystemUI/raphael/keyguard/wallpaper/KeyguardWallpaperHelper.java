@@ -393,7 +393,7 @@ public class KeyguardWallpaperHelper {
     }
 
     /* access modifiers changed from: private */
-    /* JADX WARNING: Removed duplicated region for block: B:21:0x00bf  */
+    /* JADX WARNING: Removed duplicated region for block: B:21:0x00c0  */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     public android.os.Bundle getPreviewActivityExtras(long r8) {
         /*
@@ -484,11 +484,11 @@ public class KeyguardWallpaperHelper {
             java.lang.String r7 = "dialogComponent"
             r1.putString(r7, r0)
             boolean r7 = miui.os.Build.IS_INTERNATIONAL_BUILD
-            if (r7 == 0) goto L_0x00c6
+            if (r7 == 0) goto L_0x00c7
             java.lang.String r7 = "entry_source"
             java.lang.String r8 = "cta"
             r1.putString(r7, r8)
-        L_0x00c6:
+        L_0x00c7:
             return r1
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.keyguard.wallpaper.KeyguardWallpaperHelper.getPreviewActivityExtras(long):android.os.Bundle");
