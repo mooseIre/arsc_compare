@@ -5,35 +5,27 @@ import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.MiuiKeyguardUtils;
 import com.android.keyguard.wallpaper.WallpaperAuthorityUtils;
 import com.xiaomi.stat.MiStat;
-import com.xiaomi.stat.MiStatParams;
-import java.util.Locale;
+import java.util.HashMap;
 
 public class LockScreenMagazineAnalytics {
-    private static MiStatParams getBaseParams(Context context) {
-        MiStatParams miStatParams = new MiStatParams();
-        miStatParams.putString("lockScreenMagazineStatus", WallpaperAuthorityUtils.isLockScreenMagazineOpenedWallpaper(context) ? "open" : "close");
-        miStatParams.putString("currentLanguage", Locale.getDefault().getLanguage());
-        return miStatParams;
-    }
-
-    public static MiStatParams getLockScreenWallperProviderStatus(Context context) {
-        MiStatParams baseParams = getBaseParams(context);
-        baseParams.putString(MiStat.Param.STATUS, WallpaperAuthorityUtils.getWallpaperAuthority(context));
+    public static HashMap getLockScreenWallperProviderStatus(Context context) {
+        HashMap hashMap = new HashMap();
+        hashMap.put(MiStat.Param.STATUS, WallpaperAuthorityUtils.getWallpaperAuthority(context));
         boolean isDefaultLockScreenTheme = MiuiKeyguardUtils.isDefaultLockScreenTheme();
         AnalyticsHelper.booleanToInt(isDefaultLockScreenTheme);
-        baseParams.putInt("isDefaultLockScreenTheme", isDefaultLockScreenTheme ? 1 : 0);
-        return baseParams;
+        hashMap.put("isDefaultLockScreenTheme", Integer.valueOf(isDefaultLockScreenTheme ? 1 : 0));
+        return hashMap;
     }
 
-    public static MiStatParams getLockScreenMagazinePreviewActionParams(Context context, String str) {
-        MiStatParams baseParams = getBaseParams(context);
-        baseParams.putString("action", str);
-        return baseParams;
+    public static HashMap getLockScreenMagazinePreviewActionParams(Context context, String str) {
+        HashMap hashMap = new HashMap();
+        hashMap.put("action", str);
+        return hashMap;
     }
 
-    public static MiStatParams getNegativeStatusParams(Context context) {
-        MiStatParams baseParams = getBaseParams(context);
-        baseParams.putString(MiStat.Param.STATUS, KeyguardUpdateMonitor.getInstance(context).isSupportLockScreenMagazineLeft() ? "lockScreenMagazine" : "controlCenter");
-        return baseParams;
+    public static HashMap getNegativeStatusParams(Context context) {
+        HashMap hashMap = new HashMap();
+        hashMap.put(MiStat.Param.STATUS, KeyguardUpdateMonitor.getInstance(context).isSupportLockScreenMagazineLeft() ? "lockScreenMagazine" : "controlCenter");
+        return hashMap;
     }
 }

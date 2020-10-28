@@ -10,10 +10,10 @@ import android.util.Slog;
 import com.android.internal.os.SomeArgs;
 import com.android.systemui.Constants;
 import com.android.systemui.SystemUI;
-import com.android.systemui.miui.analytics.AnalyticsWrapper;
+import com.android.systemui.miui.statusbar.analytics.StatManager;
 import com.android.systemui.statusbar.phone.StatusBar;
-import com.xiaomi.stat.MiStatParams;
 import java.util.HashMap;
+import java.util.Map;
 
 public class AnalyticsHelper {
     private static boolean DEBUG = Constants.DEBUG;
@@ -39,9 +39,9 @@ public class AnalyticsHelper {
             int i = message.what;
             if (i == 201) {
                 SomeArgs someArgs = (SomeArgs) message.obj;
-                AnalyticsWrapper.trackEvent((String) someArgs.arg1, (MiStatParams) someArgs.arg2);
+                StatManager.trackGenericEvent((String) someArgs.arg1, (HashMap) someArgs.arg2);
             } else if (i == 202) {
-                AnalyticsWrapper.trackEvent((String) ((SomeArgs) message.obj).arg1);
+                StatManager.trackGenericEvent((String) ((SomeArgs) message.obj).arg1, (Map<String, Object>) null);
             }
         }
     }
@@ -82,25 +82,25 @@ public class AnalyticsHelper {
     }
 
     public void recordScreenOn(boolean z, boolean z2, boolean z3, boolean z4, boolean z5, boolean z6, String str, boolean z7) {
-        MiStatParams miStatParams = new MiStatParams();
-        miStatParams.putString("way_screen_on", this.mWakeupWay);
+        HashMap hashMap = new HashMap();
+        hashMap.put("way_screen_on", this.mWakeupWay);
         booleanToInt(z);
-        miStatParams.putInt("is_fingerprint_locked", z ? 1 : 0);
+        hashMap.put("is_fingerprint_locked", Integer.valueOf(z ? 1 : 0));
         booleanToInt(z2);
-        miStatParams.putInt("is_password_locked", z2 ? 1 : 0);
+        hashMap.put("is_password_locked", Integer.valueOf(z2 ? 1 : 0));
         booleanToInt(z3);
-        miStatParams.putInt("is_screen_on_delayed", z3 ? 1 : 0);
+        hashMap.put("is_screen_on_delayed", Integer.valueOf(z3 ? 1 : 0));
         booleanToInt(z4);
-        miStatParams.putInt("is_unlocked_by_fingerprint", z4 ? 1 : 0);
+        hashMap.put("is_unlocked_by_fingerprint", Integer.valueOf(z4 ? 1 : 0));
         booleanToInt(z5);
-        miStatParams.putInt("is_keyguard_showing", z5 ? 1 : 0);
+        hashMap.put("is_keyguard_showing", Integer.valueOf(z5 ? 1 : 0));
         booleanToInt(z6);
-        miStatParams.putInt("is_occluded", z6 ? 1 : 0);
-        miStatParams.putString("charging", str);
+        hashMap.put("is_occluded", Integer.valueOf(z6 ? 1 : 0));
+        hashMap.put("charging", str);
         booleanToInt(z7);
-        miStatParams.putInt("is_lockscreen_wallpaper_open", z7 ? 1 : 0);
-        miStatParams.putBoolean("is_global_lockscreen_wallpaper_pre_show", this.mIsLockScreenMagazineMainPreShowing);
-        track("keyguard_screen_on", miStatParams);
+        hashMap.put("is_lockscreen_wallpaper_open", Integer.valueOf(z7 ? 1 : 0));
+        hashMap.put("is_global_lockscreen_wallpaper_pre_show", Boolean.valueOf(this.mIsLockScreenMagazineMainPreShowing));
+        track("keyguard_screen_on", hashMap);
     }
 
     public void trackPageStart(String str) {
@@ -128,47 +128,47 @@ public class AnalyticsHelper {
             Slog.w("miui_keyguard", "unlock keyguard by " + str);
             this.mUnlockWay = str;
         }
-        MiStatParams miStatParams = new MiStatParams();
-        miStatParams.putString("unlock_way", str);
+        HashMap hashMap = new HashMap();
+        hashMap.put("unlock_way", str);
         booleanToInt(z);
-        miStatParams.putInt("unlock_result", z ? 1 : 0);
-        track("keyguard_unlock_way", miStatParams);
+        hashMap.put("unlock_result", Integer.valueOf(z ? 1 : 0));
+        track("keyguard_unlock_way", hashMap);
     }
 
     public void recordKeyguardAction(String str) {
-        MiStatParams miStatParams = new MiStatParams();
-        miStatParams.putString("lock_screen_action", str);
-        track("keyguard_action", miStatParams);
+        HashMap hashMap = new HashMap();
+        hashMap.put("lock_screen_action", str);
+        track("keyguard_action", hashMap);
     }
 
     public void recordFaceUnlockEvent(boolean z, int i) {
-        MiStatParams miStatParams = new MiStatParams();
+        HashMap hashMap = new HashMap();
         booleanToInt(z);
-        miStatParams.putInt("unlock_result", z ? 1 : 0);
+        hashMap.put("unlock_result", Integer.valueOf(z ? 1 : 0));
         if (!z) {
-            miStatParams.putInt("face_unlock_fail_reason", i);
+            hashMap.put("face_unlock_fail_reason", Integer.valueOf(i));
         }
-        track("face_unlock_event", miStatParams);
+        track("face_unlock_event", hashMap);
     }
 
     public void recordFodQuickOpenExpandResultAction(boolean z) {
-        MiStatParams miStatParams = new MiStatParams();
+        HashMap hashMap = new HashMap();
         booleanToInt(z);
-        miStatParams.putInt("fod_quick_open_expand_result", z ? 1 : 0);
-        track("fod_quick_open_action", miStatParams);
+        hashMap.put("fod_quick_open_expand_result", Integer.valueOf(z ? 1 : 0));
+        track("fod_quick_open_action", hashMap);
     }
 
     public void recordFodQuickOpenAppAction(String str) {
-        MiStatParams miStatParams = new MiStatParams();
-        miStatParams.putString("fod_quick_open_app", str);
-        track("fod_quick_open_action", miStatParams);
+        HashMap hashMap = new HashMap();
+        hashMap.put("fod_quick_open_app", str);
+        track("fod_quick_open_action", hashMap);
     }
 
     public void recordKeyguardProximitySensor(boolean z) {
-        MiStatParams miStatParams = new MiStatParams();
+        HashMap hashMap = new HashMap();
         booleanToInt(z);
-        miStatParams.putInt("proximity_sensor_too_close", z ? 1 : 0);
-        track("keyguard_proximity_sensor_change", miStatParams);
+        hashMap.put("proximity_sensor_too_close", Integer.valueOf(z ? 1 : 0));
+        track("keyguard_proximity_sensor_change", hashMap);
     }
 
     public void recordKeyguardSettingsEvent() {
@@ -190,8 +190,8 @@ public class AnalyticsHelper {
     }
 
     public void recordLockScreenMagazineEntryClickAction() {
-        MiStatParams lockScreenMagazinePreviewActionParams = LockScreenMagazineAnalytics.getLockScreenMagazinePreviewActionParams(this.mContext, "click_entry");
-        lockScreenMagazinePreviewActionParams.putBoolean("has_notification", ((StatusBar) SystemUI.getComponent(this.mContext, StatusBar.class)).getKeyguardNotifications() > 0);
+        HashMap lockScreenMagazinePreviewActionParams = LockScreenMagazineAnalytics.getLockScreenMagazinePreviewActionParams(this.mContext, "click_entry");
+        lockScreenMagazinePreviewActionParams.put("has_notification", Boolean.valueOf(((StatusBar) SystemUI.getComponent(this.mContext, StatusBar.class)).getKeyguardNotifications() > 0));
         track("lock_screen_magazine_action", lockScreenMagazinePreviewActionParams);
     }
 
@@ -200,34 +200,34 @@ public class AnalyticsHelper {
     }
 
     public void recordChargeAnimation(int i) {
-        MiStatParams miStatParams = new MiStatParams();
-        miStatParams.putInt("charge_animation_type", i);
-        track("charge_animation_start", miStatParams);
+        HashMap hashMap = new HashMap();
+        hashMap.put("charge_animation_type", Integer.valueOf(i));
+        track("charge_animation_start", hashMap);
     }
 
     public void recordWirelessChargeEfficiency(long j, int i, int i2) {
         if (j > 0 && i > 0 && i2 > 0) {
-            MiStatParams miStatParams = new MiStatParams();
-            miStatParams.putLong("charge_efficiency_time", j / 60000);
-            miStatParams.putInt("charge_efficiency_level", i);
-            miStatParams.putInt("charge_efficiency_device", i2);
-            track("charge_efficiency", miStatParams);
+            HashMap hashMap = new HashMap();
+            hashMap.put("charge_efficiency_time", Long.valueOf(j / 60000));
+            hashMap.put("charge_efficiency_level", Integer.valueOf(i));
+            hashMap.put("charge_efficiency_device", Integer.valueOf(i2));
+            track("charge_efficiency", hashMap);
         }
     }
 
     public void recordFingerprintUnlockTimeEvent(long j) {
         if (j >= 0) {
-            MiStatParams miStatParams = new MiStatParams();
-            miStatParams.putLong("fingerprint_unlock_time", j);
-            track("fingerprint_unlock_time_event", miStatParams);
+            HashMap hashMap = new HashMap();
+            hashMap.put("fingerprint_unlock_time", Long.valueOf(j));
+            track("fingerprint_unlock_time_event", hashMap);
         }
     }
 
-    public void track(String str, MiStatParams miStatParams) {
+    public void track(String str, HashMap hashMap) {
         SomeArgs obtain = SomeArgs.obtain();
         obtain.arg1 = str;
-        obtain.arg2 = miStatParams;
-        log("trackEvent eventName=%s params=%s", str, miStatParams.toJsonString());
+        obtain.arg2 = hashMap;
+        log("trackEvent eventName=%s params=%s", str, hashMap.toString());
         this.mHandler.obtainMessage(201, obtain).sendToTarget();
     }
 
@@ -273,12 +273,12 @@ public class AnalyticsHelper {
         public void onPageEnd(String str) {
             if (this.mTrackStarted) {
                 this.mTrackStarted = false;
-                MiStatParams miStatParams = new MiStatParams();
-                miStatParams.putLong("duration", formatTime(System.currentTimeMillis() - this.mStartTime));
+                HashMap hashMap = new HashMap();
+                hashMap.put("duration", Long.valueOf(formatTime(System.currentTimeMillis() - this.mStartTime)));
                 if (str != null) {
-                    miStatParams.putString("end_action", str);
+                    hashMap.put("end_action", str);
                 }
-                AnalyticsHelper.this.track(this.mPageName, miStatParams);
+                AnalyticsHelper.this.track(this.mPageName, hashMap);
             }
         }
 

@@ -14,8 +14,8 @@ import com.android.keyguard.faceunlock.FaceUnlockManager;
 import com.android.keyguard.faceunlock.MiuiFaceUnlockUtils;
 import com.android.keyguard.fod.MiuiGxzwManager;
 import com.android.systemui.statusbar.phone.UnlockMethodCache;
-import com.xiaomi.stat.MiStatParams;
 import java.util.Calendar;
+import java.util.HashMap;
 import miui.os.Build;
 import miui.util.FeatureParser;
 
@@ -26,55 +26,47 @@ public class KeyguardSettingsAnalytics {
     public static boolean sSupportHallSensor = FeatureParser.getBoolean("support_hall_sensor", false);
     private static int sYearOfStatistics = -1;
 
-    private static MiStatParams getKeyguardSettingState(Context context, String str, int i, int i2, String str2, int i3, int i4, int i5, long j, int i6, int i7, int i8, int i9, String str3, boolean z, boolean z2, boolean z3, boolean z4, boolean z5) {
-        MiStatParams miStatParams = new MiStatParams();
+    private static HashMap getKeyguardSettingState(Context context, String str, int i, int i2, String str2, int i3, int i4, int i5, long j, int i6, int i7, int i8, int i9, String str3, boolean z, boolean z2, boolean z3, boolean z4, boolean z5) {
+        HashMap hashMap = new HashMap();
         String str4 = str;
-        miStatParams.putString("secure_type", str);
+        hashMap.put("secure_type", str);
         if (MiuiKeyguardUtils.isFingerprintHardwareAvailable(context)) {
-            int i10 = i;
-            miStatParams.putInt("fingerprint_num", i);
-            miStatParams.putString("fingerprint_type", getFingerPrintType());
+            hashMap.put("fingerprint_num", Integer.valueOf(i));
+            hashMap.put("fingerprint_type", getFingerPrintType());
         }
         if (MiuiKeyguardUtils.isGxzwSensor()) {
-            int i11 = i2;
-            miStatParams.putInt("gxzw_anim", i2);
+            hashMap.put("gxzw_anim", Integer.valueOf(i2));
         }
         if (MiuiFaceUnlockUtils.isSupportFaceUnlock(context)) {
             String str5 = str2;
-            miStatParams.putString("face_unlock_state", str2);
+            hashMap.put("face_unlock_state", str2);
             if (MiuiFaceUnlockUtils.hasEnrolledFaces(context) && FaceUnlockManager.getInstance().isFaceUnlockApplyForKeyguard()) {
-                int i12 = i4;
-                miStatParams.putInt("face_unlock_success_stay_screen", i4);
-                int i13 = i5;
-                miStatParams.putInt("face_unlock_success_show_message", i5);
-                int i14 = i3;
-                miStatParams.putInt("face_unlock_notification_toggle", i3);
+                hashMap.put("face_unlock_success_stay_screen", Integer.valueOf(i4));
+                hashMap.put("face_unlock_success_show_message", Integer.valueOf(i5));
+                hashMap.put("face_unlock_notification_toggle", Integer.valueOf(i3));
             }
         }
-        long j2 = j;
-        miStatParams.putLong("screen_off_time", j);
-        int i15 = i6;
-        miStatParams.putInt("screen_on_by_notification_toggle", i6);
-        int i16 = i7;
-        miStatParams.putInt("screen_on_by_volume_toggle", i7);
-        miStatParams.putInt("quick_camera_toggle", i8);
-        miStatParams.putInt("lunar_calendar_toggle", i9);
-        miStatParams.putString("keyguard_notification_state", str3);
+        hashMap.put("screen_off_time", Long.valueOf(j));
+        hashMap.put("screen_on_by_notification_toggle", Integer.valueOf(i6));
+        hashMap.put("screen_on_by_volume_toggle", Integer.valueOf(i7));
+        hashMap.put("quick_camera_toggle", Integer.valueOf(i8));
+        hashMap.put("lunar_calendar_toggle", Integer.valueOf(i9));
+        hashMap.put("keyguard_notification_state", str3);
         AnalyticsHelper.booleanToInt(z);
-        miStatParams.putInt("owner_info_toggle", z ? 1 : 0);
+        hashMap.put("owner_info_toggle", Integer.valueOf(z ? 1 : 0));
         AnalyticsHelper.booleanToInt(z2);
-        miStatParams.putInt("blue_unlock_state", z2 ? 1 : 0);
+        hashMap.put("blue_unlock_state", Integer.valueOf(z2 ? 1 : 0));
         if (sSupportHallSensor) {
             AnalyticsHelper.booleanToInt(z3);
-            miStatParams.putInt("smart_cover_unlock_toggle", z3 ? 1 : 0);
+            hashMap.put("smart_cover_unlock_toggle", Integer.valueOf(z3 ? 1 : 0));
         }
         AnalyticsHelper.booleanToInt(z4);
-        miStatParams.putInt("pickup_wakeup_toggle", z4 ? 1 : 0);
+        hashMap.put("pickup_wakeup_toggle", Integer.valueOf(z4 ? 1 : 0));
         if (MiuiKeyguardUtils.isGxzwSensor()) {
             AnalyticsHelper.booleanToInt(z5);
-            miStatParams.putInt("fod_quick_open_toggle", z5 ? 1 : 0);
+            hashMap.put("fod_quick_open_toggle", Integer.valueOf(z5 ? 1 : 0));
         }
-        return miStatParams;
+        return hashMap;
     }
 
     public static boolean isCurrentDay() {
@@ -87,7 +79,7 @@ public class KeyguardSettingsAnalytics {
         return false;
     }
 
-    public static MiStatParams getKeyguardSettingsStatParams(Context context) {
+    public static HashMap getKeyguardSettingsStatParams(Context context) {
         int i;
         int i2;
         int i3;
