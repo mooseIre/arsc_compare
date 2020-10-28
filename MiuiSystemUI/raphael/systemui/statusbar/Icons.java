@@ -103,6 +103,11 @@ public class Icons {
             sMapping.put(R.drawable.stat_sys_signal_hd_big, Integer.valueOf(R.drawable.stat_sys_signal_hd_big_darkmode));
             sMapping.put(R.drawable.stat_sys_signal_null_half, Integer.valueOf(R.drawable.stat_sys_signal_null_half_darkmode));
             sMapping.put(R.drawable.stat_sys_battery_charging, Integer.valueOf(R.drawable.stat_sys_battery_charging_darkmode));
+            sMapping.put(R.drawable.stat_sys_vowifi_call, Integer.valueOf(R.drawable.stat_sys_vowifi_call_darkmode));
+            sMapping.put(R.drawable.stat_sys_signal_volte_4g, Integer.valueOf(R.drawable.stat_sys_signal_volte_4g_darkmode));
+            sMapping.put(R.drawable.stat_sys_vowifi_wifi, Integer.valueOf(R.drawable.stat_sys_vowifi_wifi_darkmode));
+            sMapping.put(R.drawable.stat_sys_signal_volte_no_frame, Integer.valueOf(R.drawable.stat_sys_signal_volte_no_frame_darkmode));
+            sMapping.put(R.drawable.stat_sys_signal_volte_hd_voice, Integer.valueOf(R.drawable.stat_sys_signal_volte_hd_voice_darkmode));
             sMapping.put(R.drawable.ble_unlock_statusbar_icon_unverified, Integer.valueOf(R.drawable.ble_unlock_statusbar_icon_unverified_dark));
             sMapping.put(R.drawable.ble_unlock_statusbar_icon_verified_near, Integer.valueOf(R.drawable.ble_unlock_statusbar_icon_verified_near_dark));
             sMapping.put(R.drawable.ble_unlock_statusbar_icon_verified_far, Integer.valueOf(R.drawable.ble_unlock_statusbar_icon_verified_far_dark));

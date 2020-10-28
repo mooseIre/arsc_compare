@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import com.android.systemui.Constants;
 import com.android.systemui.Logger;
 import com.android.systemui.miui.analytics.AnalyticsWrapper;
+import com.android.systemui.miui.analytics.OneTrackWrapper$Generic;
 import com.android.systemui.miui.analytics.OneTrackWrapper$Notification;
 import com.android.systemui.miui.statusbar.analytics.StatManager;
 import com.xiaomi.stat.MiStatParams;
@@ -18,6 +19,7 @@ import org.json.JSONObject;
 
 public class StatManager {
     private static boolean DEBUG = Constants.DEBUG;
+    private static OneTrackImpl sOneTrack = new OneTrackImpl();
     private static List<Stat> sStats = new ArrayList(2);
 
     interface Stat {
@@ -28,7 +30,7 @@ public class StatManager {
 
     public static void init(Context context) {
         sStats.add(new MiStatImpl());
-        sStats.add(new OneTrackImpl());
+        sStats.add(sOneTrack);
         sStats.forEach(new Consumer(context) {
             private final /* synthetic */ Context f$0;
 
@@ -60,7 +62,14 @@ public class StatManager {
         });
     }
 
+    public static void trackGenericEvent(String str, Map<String, Object> map) {
+        sOneTrack.trackGenericEvent(str, verify(map));
+    }
+
     private static Map<String, Object> verify(Map<String, Object> map) {
+        if (map == null || map.size() == 0) {
+            return new HashMap(sOneTrack.mDefaultParams);
+        }
         HashMap hashMap = new HashMap(map.size() + 1);
         map.forEach(new BiConsumer(hashMap) {
             private final /* synthetic */ Map f$0;
@@ -185,6 +194,7 @@ public class StatManager {
 
         public void init(Context context) {
             OneTrackWrapper$Notification.init(context);
+            OneTrackWrapper$Generic.init(context);
         }
 
         public void track(String str, Map<String, Object> map, List<Object> list) {
@@ -196,6 +206,14 @@ public class StatManager {
             }
             SystemUIStat.log("trackEvent eventName=%s params=%s one", str, new JSONObject(map).toString());
             OneTrackWrapper$Notification.track(str, map);
+        }
+
+        public void trackGenericEvent(String str, Map<String, Object> map) {
+            if (map == null || map.size() == 0) {
+                map = new HashMap<>(this.mDefaultParams);
+            }
+            SystemUIStat.log("trackEvent eventName=%s params=%s one", str, new JSONObject(map).toString());
+            OneTrackWrapper$Generic.track(str, map);
         }
     }
 }

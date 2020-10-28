@@ -270,6 +270,7 @@ import com.android.systemui.statusbar.policy.KeyguardMonitor;
 import com.android.systemui.statusbar.policy.KeyguardMonitorImpl;
 import com.android.systemui.statusbar.policy.KeyguardUserSwitcher;
 import com.android.systemui.statusbar.policy.NetworkController;
+import com.android.systemui.statusbar.policy.NetworkControllerImpl;
 import com.android.systemui.statusbar.policy.OnHeadsUpChangedListener;
 import com.android.systemui.statusbar.policy.PreviewInflater;
 import com.android.systemui.statusbar.policy.RemoteInputView;
@@ -5376,6 +5377,10 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
     public void updateResources(boolean z) {
         if (z) {
             this.mContext.getTheme().rebase();
+            NetworkController networkController = (NetworkController) Dependency.get(NetworkController.class);
+            if (networkController instanceof NetworkControllerImpl) {
+                ((NetworkControllerImpl) networkController).updateResourceAboutMccMnc();
+            }
         }
         loadDimens(this.mContext.getResources());
         NotificationPanelView notificationPanelView = this.mNotificationPanel;
