@@ -3,11 +3,11 @@ package com.android.systemui.recents.misc;
 import android.util.Log;
 import com.android.internal.os.BackgroundThread;
 import com.android.systemui.Constants;
-import com.android.systemui.miui.analytics.AnalyticsWrapper;
+import com.android.systemui.miui.statusbar.analytics.StatManager;
 import com.android.systemui.recents.model.Task;
 import com.android.systemui.recents.model.TaskStack;
-import com.xiaomi.stat.MiStatParams;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class RecentsPushEventHelper {
     /* access modifiers changed from: private */
@@ -18,13 +18,13 @@ public class RecentsPushEventHelper {
     public static String mLastTopStackPkg;
 
     /* access modifiers changed from: private */
-    public static void sendEvent(final String str, final MiStatParams miStatParams) {
+    public static void sendEvent(final String str, final HashMap<String, Object> hashMap) {
         BackgroundThread.getHandler().post(new Runnable() {
             public void run() {
                 if (RecentsPushEventHelper.DEBUG) {
-                    Log.d("RecentsPushEventHelper", "trackEvent  eventName=" + str + " params=" + miStatParams.toJsonString());
+                    Log.d("RecentsPushEventHelper", "trackEvent  eventName=" + str + " params=" + hashMap.toString());
                 }
-                AnalyticsWrapper.trackEvent(str, miStatParams);
+                StatManager.trackGenericEvent(str, hashMap);
             }
         });
     }
@@ -116,9 +116,9 @@ public class RecentsPushEventHelper {
                     java.lang.String r3 = "multi_window_packageName"
                     if (r1 != 0) goto L_0x0093
                     java.lang.String unused = com.android.systemui.recents.misc.RecentsPushEventHelper.mLastTopStackPkg = r0
-                    com.xiaomi.stat.MiStatParams r1 = new com.xiaomi.stat.MiStatParams
+                    java.util.HashMap r1 = new java.util.HashMap
                     r1.<init>()
-                    r1.putString(r3, r0)
+                    r1.put(r3, r0)
                     java.lang.String r0 = "multi_window_topTaskChanged"
                     com.android.systemui.recents.misc.RecentsPushEventHelper.sendEvent(r0, r1)
                 L_0x0093:
@@ -126,12 +126,12 @@ public class RecentsPushEventHelper {
                     boolean r0 = android.text.TextUtils.equals(r0, r2)
                     if (r0 != 0) goto L_0x00b6
                     java.lang.String unused = com.android.systemui.recents.misc.RecentsPushEventHelper.mLastBottomStackPkg = r2
-                    com.xiaomi.stat.MiStatParams r0 = new com.xiaomi.stat.MiStatParams
+                    java.util.HashMap r0 = new java.util.HashMap
                     r0.<init>()
-                    r0.putString(r3, r2)
+                    r0.put(r3, r2)
                     java.lang.String r6 = android.content.pm.ActivityInfo.resizeModeToString(r6)
                     java.lang.String r1 = "multi_window_resizeMode"
-                    r0.putString(r1, r6)
+                    r0.put(r1, r6)
                     java.lang.String r6 = "multi_window_bottomTaskChanged"
                     com.android.systemui.recents.misc.RecentsPushEventHelper.sendEvent(r6, r0)
                 L_0x00b6:
@@ -150,102 +150,102 @@ public class RecentsPushEventHelper {
                 i++;
             }
         }
-        MiStatParams miStatParams = new MiStatParams();
-        miStatParams.putInt("recents_taskCount", taskStack.getTaskCount());
-        miStatParams.putInt("recents_taskLockedCount", i);
-        miStatParams.putString("recents_enterType", str);
-        miStatParams.putString("recents_screenOrientation", str2);
-        sendEvent("recents_enterRecents", miStatParams);
+        HashMap hashMap = new HashMap();
+        hashMap.put("recents_taskCount", Integer.valueOf(taskStack.getTaskCount()));
+        hashMap.put("recents_taskLockedCount", Integer.valueOf(i));
+        hashMap.put("recents_enterType", str);
+        hashMap.put("recents_screenOrientation", str2);
+        sendEvent("recents_enterRecents", hashMap);
     }
 
     public static void sendHideRecentsEvent(String str) {
-        MiStatParams miStatParams = new MiStatParams();
-        miStatParams.putString("recents_hideType", str);
-        sendEvent("recents_hideRecents", miStatParams);
+        HashMap hashMap = new HashMap();
+        hashMap.put("recents_hideType", str);
+        sendEvent("recents_hideRecents", hashMap);
     }
 
     public static void sendSwitchAppEvent(String str, int i) {
-        MiStatParams miStatParams = new MiStatParams();
-        miStatParams.putString("recents_switchType", str);
-        miStatParams.putInt("recents_taskIndex", i);
-        sendEvent("recents_switchApp", miStatParams);
+        HashMap hashMap = new HashMap();
+        hashMap.put("recents_switchType", str);
+        hashMap.put("recents_taskIndex", Integer.valueOf(i));
+        sendEvent("recents_switchApp", hashMap);
     }
 
     public static void sendRemoveTaskEvent(String str, int i) {
-        MiStatParams miStatParams = new MiStatParams();
-        miStatParams.putString("recents_packageName", str);
-        miStatParams.putInt("recents_taskIndex", i);
-        sendEvent("recents_removeTask", miStatParams);
+        HashMap hashMap = new HashMap();
+        hashMap.put("recents_packageName", str);
+        hashMap.put("recents_taskIndex", Integer.valueOf(i));
+        sendEvent("recents_removeTask", hashMap);
     }
 
     public static void sendLongCLickTaskEvent(String str, int i) {
-        MiStatParams miStatParams = new MiStatParams();
-        miStatParams.putString("recents_packageName", str);
-        miStatParams.putInt("recents_taskIndex", i);
-        sendEvent("recents_longClickTask", miStatParams);
+        HashMap hashMap = new HashMap();
+        hashMap.put("recents_packageName", str);
+        hashMap.put("recents_taskIndex", Integer.valueOf(i));
+        sendEvent("recents_longClickTask", hashMap);
     }
 
     public static void sendLockTaskEvent(String str) {
-        MiStatParams miStatParams = new MiStatParams();
-        miStatParams.putString("recents_packageName", str);
-        sendEvent("recents_longClickTask_lockTask", miStatParams);
+        HashMap hashMap = new HashMap();
+        hashMap.put("recents_packageName", str);
+        sendEvent("recents_longClickTask_lockTask", hashMap);
     }
 
     public static void sendUnlockTaskEvent(String str) {
-        MiStatParams miStatParams = new MiStatParams();
-        miStatParams.putString("recents_packageName", str);
-        sendEvent("recents_longClickTask_unLockTask", miStatParams);
+        HashMap hashMap = new HashMap();
+        hashMap.put("recents_packageName", str);
+        sendEvent("recents_longClickTask_unLockTask", hashMap);
     }
 
     public static void sendShowAppInfoEvent(String str) {
-        MiStatParams miStatParams = new MiStatParams();
-        miStatParams.putString("recents_packageName", str);
-        sendEvent("recents_longClickTask_showAppInfo", miStatParams);
+        HashMap hashMap = new HashMap();
+        hashMap.put("recents_packageName", str);
+        sendEvent("recents_longClickTask_showAppInfo", hashMap);
     }
 
     public static void sendClickMultiWindowMenuEvent(String str) {
-        MiStatParams miStatParams = new MiStatParams();
-        miStatParams.putString("recents_packageName", str);
-        sendEvent("recents_longClickTask_clickMultiWindowMenu", miStatParams);
+        HashMap hashMap = new HashMap();
+        hashMap.put("recents_packageName", str);
+        sendEvent("recents_longClickTask_clickMultiWindowMenu", hashMap);
     }
 
     public static void sendOneKeyCleanEvent(long j, long j2, long j3) {
-        MiStatParams miStatParams = new MiStatParams();
-        miStatParams.putInt("recents_freeMemoryBeforeClean", ((int) j) / 1024);
-        miStatParams.putInt("recents_freeMemoryAfterClean", ((int) j2) / 1024);
-        miStatParams.putInt("recents_cleanedMemory", (int) ((j / 1024) - (j2 / 1024)));
-        miStatParams.putInt("recents_totalMemory", ((int) j3) / 1024);
-        sendEvent("recents_oneKeyCleanStart", miStatParams);
+        HashMap hashMap = new HashMap();
+        hashMap.put("recents_freeMemoryBeforeClean", Integer.valueOf(((int) j) / 1024));
+        hashMap.put("recents_freeMemoryAfterClean", Integer.valueOf(((int) j2) / 1024));
+        hashMap.put("recents_cleanedMemory", Integer.valueOf((int) ((j / 1024) - (j2 / 1024))));
+        hashMap.put("recents_totalMemory", Integer.valueOf(((int) j3) / 1024));
+        sendEvent("recents_oneKeyCleanStart", hashMap);
     }
 
     public static void sendShowRecommendCardEvent(boolean z) {
-        MiStatParams miStatParams = new MiStatParams();
-        miStatParams.putString("recents_isShowCard", z ? "show" : "hide");
-        sendEvent("recents_cardShow", miStatParams);
+        HashMap hashMap = new HashMap();
+        hashMap.put("recents_isShowCard", z ? "show" : "hide");
+        sendEvent("recents_cardShow", hashMap);
     }
 
     public static void sendClickRecommendCardEvent(String str) {
-        MiStatParams miStatParams = new MiStatParams();
-        miStatParams.putString("recents_cardClickType", str);
-        sendEvent("recents_cardClick", miStatParams);
+        HashMap hashMap = new HashMap();
+        hashMap.put("recents_cardClickType", str);
+        sendEvent("recents_cardClick", hashMap);
     }
 
     public static void sendEnterMultiWindowEvent(String str, String str2) {
-        MiStatParams miStatParams = new MiStatParams();
-        miStatParams.putString("multi_window_enterType", str);
-        miStatParams.putString("multi_window_packageName", str2);
-        sendEvent("multi_window_enterMultiWindow", miStatParams);
+        HashMap hashMap = new HashMap();
+        hashMap.put("multi_window_enterType", str);
+        hashMap.put("multi_window_packageName", str2);
+        sendEvent("multi_window_enterMultiWindow", hashMap);
     }
 
     public static void sendEnterMultiWindowFailedEvent(String str) {
-        MiStatParams miStatParams = new MiStatParams();
-        miStatParams.putString("multi_window_componentName", str);
-        sendEvent("multi_window_tryEnterMultiWindowFailed", miStatParams);
+        HashMap hashMap = new HashMap();
+        hashMap.put("multi_window_componentName", str);
+        sendEvent("multi_window_tryEnterMultiWindowFailed", hashMap);
     }
 
     public static void sendClickStatusBarToReturnMultiWindowEvent(String str) {
-        MiStatParams miStatParams = new MiStatParams();
-        miStatParams.putString("multi_window_componentName", str);
-        sendEvent("multi_window_clickStatusBarToReturnMultiWindow", miStatParams);
+        HashMap hashMap = new HashMap();
+        hashMap.put("multi_window_componentName", str);
+        sendEvent("multi_window_clickStatusBarToReturnMultiWindow", hashMap);
     }
 }

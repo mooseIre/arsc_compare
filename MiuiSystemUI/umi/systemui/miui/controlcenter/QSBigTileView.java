@@ -155,7 +155,7 @@ public class QSBigTileView extends QSTileView {
         }
     }
 
-    private void updateIndicatorTouch() {
+    public void updateIndicatorTouch() {
         this.mExpandIndicator.post(new Runnable() {
             public void run() {
                 int dimensionPixelSize = QSBigTileView.this.mContext.getResources().getDimensionPixelSize(R.dimen.qs_control_big_tile_indicator_touch_h);
@@ -461,6 +461,7 @@ public class QSBigTileView extends QSTileView {
         AnonymousClass5 r1 = new View.OnClickListener() {
             public void onClick(View view) {
                 String str;
+                Log.d("QSBigTileView", "mExpandIndicator:onClick");
                 if (QSBigTileView.this.mTag.equals("cell")) {
                     str = "data_expand";
                 } else if (QSBigTileView.this.mTag.equals("bt")) {
@@ -486,6 +487,7 @@ public class QSBigTileView extends QSTileView {
         this.mAnimatorController = new BigQSTileAnimationController(this, this.mExpandIndicator, 0.7f, 1.0f);
         this.mExpandIndicator.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View view, MotionEvent motionEvent) {
+                Log.d("QSBigTileView", "mExpandIndicator:onTouch");
                 int actionMasked = motionEvent.getActionMasked();
                 if (actionMasked == 0) {
                     boolean unused = QSBigTileView.this.mClicked = true;

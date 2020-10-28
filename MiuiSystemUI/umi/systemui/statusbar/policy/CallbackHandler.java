@@ -215,6 +215,17 @@ public class CallbackHandler extends Handler implements NetworkController.Emerge
         post(r16);
     }
 
+    public void reApply() {
+        post(new Runnable() {
+            public void run() {
+                Iterator it = CallbackHandler.this.mSignalCallbacks.iterator();
+                while (it.hasNext()) {
+                    ((NetworkController.SignalCallback) it.next()).reApply();
+                }
+            }
+        });
+    }
+
     public void setSubs(List<SubscriptionInfo> list) {
         obtainMessage(1, list).sendToTarget();
     }

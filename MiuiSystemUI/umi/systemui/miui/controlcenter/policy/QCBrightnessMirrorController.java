@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewPropertyAnimator;
 import android.widget.FrameLayout;
 import com.android.systemui.Interpolators;
+import com.android.systemui.miui.controlcenter.QSControlCenterPanel;
 import com.android.systemui.miui.statusbar.phone.ControlPanelContentView;
 import com.android.systemui.plugins.R;
 
@@ -40,6 +41,7 @@ public class QCBrightnessMirrorController {
                 QCBrightnessMirrorController.this.mControlPanelContentView.setControlPanelWindowBlurRatio(0.0f);
             }
         });
+        ((QSControlCenterPanel) this.mControlPanelContentView.findViewById(R.id.qs_control_center_panel)).setTouchable(false);
     }
 
     public void hideMirror() {
@@ -50,6 +52,7 @@ public class QCBrightnessMirrorController {
             }
         });
         this.mControlPanelContentView.setControlPanelWindowBlurRatio(1.0f);
+        ((QSControlCenterPanel) this.mControlPanelContentView.findViewById(R.id.qs_control_center_panel)).setTouchable(true);
     }
 
     private ViewPropertyAnimator outAnimation(ViewPropertyAnimator viewPropertyAnimator) {

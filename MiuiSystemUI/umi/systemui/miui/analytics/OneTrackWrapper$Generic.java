@@ -1,0 +1,26 @@
+package com.android.systemui.miui.analytics;
+
+import android.content.Context;
+import com.android.systemui.Constants;
+import com.xiaomi.onetrack.Configuration;
+import com.xiaomi.onetrack.OneTrack;
+import java.util.Map;
+
+public class OneTrackWrapper$Generic {
+    private static OneTrack sOneTrack;
+
+    public static void init(Context context) {
+        Configuration.Builder builder = new Configuration.Builder();
+        builder.setAppId("31000000102");
+        builder.setChannel(AnalyticsWrapper.resolveChannelName());
+        builder.setMode(OneTrack.Mode.APP);
+        builder.setAutoTrackActivityAction(false);
+        sOneTrack = OneTrack.createInstance(context, builder.build());
+        OneTrack.setDebugMode(Constants.DEBUG);
+        OneTrack.setUseSystemNetTrafficOnly();
+    }
+
+    public static void track(String str, Map<String, Object> map) {
+        sOneTrack.track(str, map);
+    }
+}

@@ -303,7 +303,7 @@ public class BatteryMeterView extends LinearLayout implements BatteryController.
                 TextView loadPercentMarkView = loadPercentMarkView();
                 this.mBatteryPercentMarkView = loadPercentMarkView;
                 loadPercentMarkView.setText(this.mContext.getResources().getString(R.string.battery_meter_percent_sign));
-                addView(this.mBatteryPercentMarkView, -1, new LinearLayout.LayoutParams(this.mContext.getResources().getDimensionPixelSize(R.dimen.battery_percent_mark_view_width), -1));
+                addView(this.mBatteryPercentMarkView, -1, new LinearLayout.LayoutParams(-2, -1));
                 this.mBatteryPercentMarkView.setTypeface(this.mMarkTypeface);
                 this.mBatteryPercentMarkView.setImportantForAccessibility(2);
                 setPercentViewTextColor();

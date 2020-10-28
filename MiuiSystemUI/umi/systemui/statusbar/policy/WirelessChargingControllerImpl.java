@@ -18,13 +18,15 @@ public class WirelessChargingControllerImpl implements WirelessChargingControlle
     /* access modifiers changed from: private */
     public final Context mContext;
     private final Receiver mReceiver = new Receiver();
+    private boolean mSupportWirelessCharge;
 
     public WirelessChargingControllerImpl(@Inject Context context) {
         this.mContext = context;
+        this.mSupportWirelessCharge = IWirelessSwitch.getInstance().isWirelessChargingSupported();
     }
 
     public boolean isWirelessChargingSupported() {
-        return IWirelessSwitch.getInstance().isWirelessChargingSupported();
+        return this.mSupportWirelessCharge;
     }
 
     /* JADX WARNING: Code restructure failed: missing block: B:15:0x0043, code lost:
@@ -88,7 +90,10 @@ public class WirelessChargingControllerImpl implements WirelessChargingControlle
     }
 
     public boolean isWirelessChargingEnabled() {
-        return IWirelessSwitch.getInstance().getWirelessChargingStatus() == 0;
+        if (this.mSupportWirelessCharge && IWirelessSwitch.getInstance().getWirelessChargingStatus() == 0) {
+            return true;
+        }
+        return false;
     }
 
     public void setWirelessChargingEnabled(boolean z) {

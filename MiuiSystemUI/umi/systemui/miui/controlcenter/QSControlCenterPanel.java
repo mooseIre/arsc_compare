@@ -126,6 +126,7 @@ public class QSControlCenterPanel extends FrameLayout implements ConfigurationCo
     private int mStableInsetBottom;
     private View mTileView0;
     private LinearLayout mTilesContainer;
+    private boolean mTouchable;
     private int mTransLineNum;
     private ArrayList<View> mTransViews;
     private VelocityTracker mVelocityTracker;
@@ -145,6 +146,7 @@ public class QSControlCenterPanel extends FrameLayout implements ConfigurationCo
         this.mPanelTransAnimMap = new HashMap<>();
         this.mBigTileTransAnimArr = new HashMap<>();
         this.mTransViews = new ArrayList<>();
+        this.mTouchable = true;
         this.mContext = context;
         this.mPanelController = (ControlPanelController) Dependency.get(ControlPanelController.class);
         this.mPaddingHorizontal = this.mContext.getResources().getDimensionPixelSize(R.dimen.qs_control_panel_margin_horizontal);
@@ -460,7 +462,10 @@ public class QSControlCenterPanel extends FrameLayout implements ConfigurationCo
         if (this.DEBUG) {
             Log.d("QSControlCenterPanel", "dispatchTouchEvent " + motionEvent.getAction());
         }
-        return super.dispatchTouchEvent(motionEvent);
+        if (this.mTouchable || motionEvent.getActionMasked() != 5) {
+            return super.dispatchTouchEvent(motionEvent);
+        }
+        return true;
     }
 
     public boolean onInterceptTouchEvent(MotionEvent motionEvent) {
@@ -835,7 +840,7 @@ public class QSControlCenterPanel extends FrameLayout implements ConfigurationCo
             this.mFootPanel.setTranslationY(((float) this.mExpandHeightThres) * min);
             this.mQuickQsControlCenterTileLayout.setExpandRatio(min);
             this.mQsControlScrollView.srcollTotratio(min);
-            if (this.mExpandHeightThres < this.mQuickQsControlCenterTileLayout.caculateExpandHeight() || min == 0.0f) {
+            if (this.mExpandHeightThres <= this.mQuickQsControlCenterTileLayout.caculateExpandHeight() || min == 0.0f) {
                 updateFootPanelLayoutBtRatio(min);
             }
         }
@@ -895,6 +900,9 @@ public class QSControlCenterPanel extends FrameLayout implements ConfigurationCo
     private void updateFootPanelLayout() {
         FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) this.mFootPanel.getLayoutParams();
         int footPanelMarginTop = getFootPanelMarginTop() - (this.mPanelController.isSuperPowerMode() ? this.mContext.getResources().getDimensionPixelSize(R.dimen.qs_control_center_tile_height) + CCQSTileView.getTextHeight(getContext()) : 0);
+        if (footPanelMarginTop <= 0) {
+            footPanelMarginTop = getFootPanelMarginTop();
+        }
         layoutParams.topMargin = footPanelMarginTop;
         this.mFootPanel.setLayoutParams(layoutParams);
         updateExpandHeightThres();
@@ -1447,6 +1455,10 @@ public class QSControlCenterPanel extends FrameLayout implements ConfigurationCo
         if (isOrientationPortrait()) {
             this.mQuickQsControlCenterTileLayout.setExpanded(false);
         }
+    }
+
+    public void setTouchable(boolean z) {
+        this.mTouchable = z;
     }
 
     class H extends Handler {

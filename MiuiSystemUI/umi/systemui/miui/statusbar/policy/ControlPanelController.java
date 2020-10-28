@@ -29,8 +29,7 @@ public class ControlPanelController implements CallbackController<UseControlPane
     /* access modifiers changed from: private */
     public boolean mUseControlPanel;
     private ContentObserver mUseControlPanelObserver;
-    /* access modifiers changed from: private */
-    public int mUseControlPanelSettingDefault;
+    private int mUseControlPanelSettingDefault;
 
     public interface UseControlPanelChangeListener {
         void onUseControlPanelChange(boolean z);
@@ -43,12 +42,7 @@ public class ControlPanelController implements CallbackController<UseControlPane
         this.mKeyguardViewMediator = (KeyguardViewMediator) ((Application) context.getApplicationContext()).getSystemUIApplication().getComponent(KeyguardViewMediator.class);
         this.mUseControlPanelObserver = new ContentObserver(this.mHandler) {
             public void onChange(boolean z) {
-                ControlPanelController controlPanelController = ControlPanelController.this;
-                boolean z2 = false;
-                if (Settings.System.getIntForUser(controlPanelController.mContext.getContentResolver(), "use_control_panel", ControlPanelController.this.mUseControlPanelSettingDefault, 0) != 0) {
-                    z2 = true;
-                }
-                boolean unused = controlPanelController.mUseControlPanel = z2;
+                ControlPanelController.this.useControlPanel();
                 Log.d("ControlPanelController", "onChange: mUseControlPanel = " + ControlPanelController.this.mUseControlPanel);
                 ControlPanelController.this.notifyAllListeners();
             }
@@ -155,7 +149,16 @@ public class ControlPanelController implements CallbackController<UseControlPane
     }
 
     public boolean useControlPanel() {
-        return Settings.System.getIntForUser(this.mContext.getContentResolver(), "use_control_panel", this.mUseControlPanelSettingDefault, 0) != 0;
+        boolean z = false;
+        if (Settings.System.getIntForUser(this.mContext.getContentResolver(), "use_control_panel", this.mUseControlPanelSettingDefault, 0) != 0) {
+            z = true;
+        }
+        if (this.mUseControlPanel != z) {
+            Log.d("ControlPanelController", "useControlPanel" + this.mUseControlPanel + "," + z);
+            this.mUseControlPanel = z;
+            notifyAllListeners();
+        }
+        return z;
     }
 
     public void addCallback(UseControlPanelChangeListener useControlPanelChangeListener) {

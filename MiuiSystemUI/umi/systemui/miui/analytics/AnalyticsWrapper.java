@@ -59,23 +59,11 @@ public class AnalyticsWrapper {
         MiStat.setUserProperty("support_aggregate", String.valueOf(sSupprotAggregate));
     }
 
-    public static void trackEvent(String str) {
-        MiStat.trackEvent(str);
-    }
-
-    public static void trackEvent(String str, String str2) {
-        MiStat.trackEvent(str, str2);
-    }
-
     public static void trackEvent(String str, MiStatParams miStatParams) {
         MiStat.trackEvent(str, miStatParams);
     }
 
     public static void trackPlainTextEvent(String str, String str2) {
         MiStat.trackPlainTextEvent(str, str2);
-    }
-
-    public static void setUserProperty(MiStatParams miStatParams) {
-        MiStat.setUserProperty(miStatParams);
     }
 }
