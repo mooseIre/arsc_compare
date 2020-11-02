@@ -12,6 +12,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.UserHandle;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
@@ -384,7 +385,7 @@ public class KeyguardWallpaperHelper {
                     intent.addFlags(268435456);
                     intent.putExtras(bundle);
                     try {
-                        KeyguardWallpaperHelper.this.mContext.startActivity(intent, KeyguardWallpaperHelper.makeCustomAnimation(KeyguardWallpaperHelper.this.mContext, 0, 0, new Handler()).toBundle());
+                        KeyguardWallpaperHelper.this.mContext.startActivityAsUser(intent, KeyguardWallpaperHelper.makeCustomAnimation(KeyguardWallpaperHelper.this.mContext, 0, 0, new Handler()).toBundle(), UserHandle.CURRENT);
                     } catch (Exception e) {
                         Log.e("KeyguardWallpaperHelper", "start activity failed.", e);
                     }

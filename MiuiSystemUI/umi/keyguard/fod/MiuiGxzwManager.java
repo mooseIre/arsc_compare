@@ -247,6 +247,11 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
             MiuiGxzwManager.this.updateGxzwState();
         }
     };
+    private ContentObserver mLowlightContentObserver = new ContentObserver(this.mHandler) {
+        public void onChange(boolean z) {
+            MiuiGxzwUtils.notifySurfaceFlinger(1104, MiuiGxzwUtils.isFodAodLowlightShowEnable(MiuiGxzwManager.this.mContext) ? 1 : 0);
+        }
+    };
     /* access modifiers changed from: private */
     public MiuiGxzwIconView mMiuiGxzwIconView;
     /* access modifiers changed from: private */
@@ -598,6 +603,8 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
         ((MiuiFastUnlockController) Dependency.get(MiuiFastUnlockController.class)).registerCallback(this.mFastUnlockCallback);
         this.mContext.getContentResolver().registerContentObserver(Settings.Secure.getUriFor("gxzw_icon_aod_show_enable"), false, this.mContentObserver, 0);
         this.mContentObserver.onChange(false);
+        this.mContext.getContentResolver().registerContentObserver(Settings.Secure.getUriFor("gxzw_icon_aod_lowlight_show_enable"), false, this.mLowlightContentObserver, 0);
+        this.mLowlightContentObserver.onChange(false);
     }
 
     /* access modifiers changed from: private */

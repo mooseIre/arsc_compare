@@ -11,6 +11,7 @@ import android.os.Looper;
 import android.os.Message;
 import android.os.Process;
 import android.os.RemoteException;
+import android.os.UserHandle;
 import android.util.Log;
 import android.view.WindowManager;
 import com.android.keyguard.negative.IKeyguardOverlay;
@@ -120,7 +121,7 @@ public class LockScreenMagazineClient {
 
     private boolean connectSafely(Context context, ServiceConnection serviceConnection, int i) {
         try {
-            return context.bindService(this.mServiceIntent, serviceConnection, i | 1);
+            return context.bindServiceAsUser(this.mServiceIntent, serviceConnection, i | 1, UserHandle.CURRENT);
         } catch (SecurityException unused) {
             Log.e("LockScreenMagazineClient", "Unable to connect to overlay service");
             return false;

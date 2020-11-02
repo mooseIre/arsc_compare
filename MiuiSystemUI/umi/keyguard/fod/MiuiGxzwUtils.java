@@ -110,6 +110,10 @@ class MiuiGxzwUtils {
         return true;
     }
 
+    public static boolean isFodAodLowlightShowEnable(Context context) {
+        return Settings.Secure.getIntForUser(context.getContentResolver(), "gxzw_icon_aod_lowlight_show_enable", 1, 0) == 1;
+    }
+
     public static void vibrateLight(Context context) {
         Vibrator vibrator = (Vibrator) context.getSystemService("vibrator");
         if (vibrator != null) {

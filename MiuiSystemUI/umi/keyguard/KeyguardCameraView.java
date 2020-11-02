@@ -39,6 +39,7 @@ import com.android.keyguard.analytics.AnalyticsHelper;
 import com.android.keyguard.utils.ContentProviderUtils;
 import com.android.keyguard.utils.PackageUtils;
 import com.android.systemui.Dependency;
+import com.android.systemui.HapticFeedBackImpl;
 import com.android.systemui.miui.ActivityObserver;
 import com.android.systemui.plugins.R;
 import java.io.IOException;
@@ -190,7 +191,6 @@ public class KeyguardCameraView extends FrameLayout {
     private float mTouchY;
     /* access modifiers changed from: private */
     public boolean mUserAuthenticatedSinceBoot;
-    protected Vibrator mVibrator;
     private float mVirHeight;
     private float mVirWidth;
     private float mVirX;
@@ -225,7 +225,7 @@ public class KeyguardCameraView extends FrameLayout {
         this.mKeyguardUpdateMonitor = instance;
         instance.registerCallback(this.mKeyguardUpdateMonitorCallback);
         this.mUserAuthenticatedSinceBoot = this.mKeyguardUpdateMonitor.getStrongAuthTracker().hasUserAuthenticatedSinceBoot();
-        this.mVibrator = (Vibrator) this.mContext.getSystemService("vibrator");
+        Vibrator vibrator = (Vibrator) this.mContext.getSystemService("vibrator");
         Paint paint = new Paint();
         this.mIconCirclePaint = paint;
         paint.setColor(0);
@@ -443,6 +443,7 @@ public class KeyguardCameraView extends FrameLayout {
             startActiveAnim(this.mActiveAnimPer, 0.0f);
         } else if (this.mIsActive && !this.mLastIsActive) {
             startActiveAnim(this.mActiveAnimPer, 1.0f);
+            ((HapticFeedBackImpl) Dependency.get(HapticFeedBackImpl.class)).hapticFeedback("mesh_heavy", false);
         }
     }
 
@@ -451,7 +452,7 @@ public class KeyguardCameraView extends FrameLayout {
             this.mIsCorrectOperation = false;
             this.mMoveDistance = this.mMoveActivePer * ((float) (this.mScreenWidth / 3));
             startCancelAnim();
-            this.mVibrator.vibrate(60);
+            ((HapticFeedBackImpl) Dependency.get(HapticFeedBackImpl.class)).extLongHapticFeedback(165, true, 60);
         }
     }
 
