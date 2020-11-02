@@ -263,8 +263,8 @@ public class Clock extends TextView implements DemoMode, DarkIconDispatcher.Dark
             this.mCalendar = new Calendar();
         }
         this.mCalendar.setTimeZone(TimeZone.getDefault());
-        this.mCalendar.set(18, 2);
-        this.mCalendar.set(20, 36);
+        this.mCalendar.set(18, 8);
+        this.mCalendar.set(20, 16);
         int i = this.mClockMode;
         if (i == 2) {
             setText(this.mCalendar.format(this.mContext.getString(R.string.status_bar_clock_date_time_format)));

@@ -11,6 +11,7 @@ import android.widget.Switch;
 import com.android.internal.logging.MetricsLogger;
 import com.android.settingslib.wifi.AccessPoint;
 import com.android.systemui.Dependency;
+import com.android.systemui.HapticFeedBackImpl;
 import com.android.systemui.plugins.R;
 import com.android.systemui.plugins.qs.DetailAdapter;
 import com.android.systemui.plugins.qs.QSTile;
@@ -109,6 +110,7 @@ public class WifiTile extends QSTileImpl<QSTile.BooleanState> {
         }
         refreshState();
         this.mDetailAdapter.updateItems();
+        ((HapticFeedBackImpl) Dependency.get(HapticFeedBackImpl.class)).hapticFeedback("popup_normal", false);
         showDetail(true);
     }
 
@@ -422,6 +424,7 @@ public class WifiTile extends QSTileImpl<QSTile.BooleanState> {
             Object obj;
             if (item != null && (obj = item.tag) != null) {
                 WifiTile.this.mWifiController.connect((AccessPoint) obj);
+                ((HapticFeedBackImpl) Dependency.get(HapticFeedBackImpl.class)).meshNormal();
                 this.mItems.setItemClicked(true);
             }
         }
