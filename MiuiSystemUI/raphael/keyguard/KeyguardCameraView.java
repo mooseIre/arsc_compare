@@ -39,6 +39,7 @@ import com.android.keyguard.analytics.AnalyticsHelper;
 import com.android.keyguard.utils.ContentProviderUtils;
 import com.android.keyguard.utils.PackageUtils;
 import com.android.systemui.Dependency;
+import com.android.systemui.HapticFeedBackImpl;
 import com.android.systemui.miui.ActivityObserver;
 import com.android.systemui.plugins.R;
 import java.io.IOException;
@@ -436,6 +437,7 @@ public class KeyguardCameraView extends FrameLayout {
             startActiveAnim(this.mActiveAnimPer, 0.0f);
         } else if (this.mIsActive && !this.mLastIsActive) {
             startActiveAnim(this.mActiveAnimPer, 1.0f);
+            ((HapticFeedBackImpl) Dependency.get(HapticFeedBackImpl.class)).hapticFeedback("mesh_heavy", false);
         }
     }
 
@@ -444,7 +446,7 @@ public class KeyguardCameraView extends FrameLayout {
             this.mIsCorrectOperation = false;
             this.mMoveDistance = this.mMoveActivePer * ((float) (this.mScreenWidth / 3));
             startCancelAnim();
-            this.mVibrator.vibrate(60);
+            ((HapticFeedBackImpl) Dependency.get(HapticFeedBackImpl.class)).extLongHapticFeedback(165, true, 60);
         }
     }
 

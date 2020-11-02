@@ -26,7 +26,7 @@ public class KeyguardSettingsAnalytics {
     public static boolean sSupportHallSensor = FeatureParser.getBoolean("support_hall_sensor", false);
     private static int sYearOfStatistics = -1;
 
-    private static HashMap getKeyguardSettingState(Context context, String str, int i, int i2, String str2, int i3, int i4, int i5, long j, int i6, int i7, int i8, int i9, String str3, boolean z, boolean z2, boolean z3, boolean z4, boolean z5) {
+    private static HashMap getKeyguardSettingState(Context context, String str, int i, int i2, String str2, int i3, int i4, int i5, long j, int i6, int i7, int i8, int i9, String str3, boolean z, boolean z2, boolean z3, boolean z4, boolean z5, int i10) {
         HashMap hashMap = new HashMap();
         String str4 = str;
         hashMap.put("secure_type", str);
@@ -66,6 +66,7 @@ public class KeyguardSettingsAnalytics {
             AnalyticsHelper.booleanToInt(z5);
             hashMap.put("fod_quick_open_toggle", Integer.valueOf(z5 ? 1 : 0));
         }
+        hashMap.put("gxzw_lowlight_show_toggle", Integer.valueOf(i10));
         return hashMap;
     }
 
@@ -114,7 +115,7 @@ public class KeyguardSettingsAnalytics {
             i2 = 0;
             i = 0;
         }
-        return getKeyguardSettingState(context, str, size, intForUser, str2, i3, i2, i, Settings.System.getLongForUser(context.getContentResolver(), "screen_off_timeout", 30000, KeyguardUpdateMonitor.getCurrentUser()), MiuiKeyguardUtils.getKeyguardNotificationStatus(context.getContentResolver()), Settings.System.getIntForUser(context.getContentResolver(), "volumekey_wake_screen", 0, KeyguardUpdateMonitor.getCurrentUser()), Settings.System.getIntForUser(context.getContentResolver(), "volumekey_launch_camera", 0, KeyguardUpdateMonitor.getCurrentUser()), Settings.System.getIntForUser(context.getContentResolver(), "show_lunar_calendar", 0, KeyguardUpdateMonitor.getCurrentUser()), Settings.Secure.getIntForUser(context.getContentResolver(), "lock_screen_show_notifications", 0, KeyguardUpdateMonitor.getCurrentUser()) != 0 ? Settings.Secure.getIntForUser(context.getContentResolver(), "lock_screen_allow_private_notifications", 0, KeyguardUpdateMonitor.getCurrentUser()) != 0 ? "show_content" : "hide_content" : "hide_notification", miuiLockPatternUtils.isOwnerInfoEnabled(KeyguardUpdateMonitor.getCurrentUser()) && !TextUtils.isEmpty(miuiLockPatternUtils.getOwnerInfo(UserHandle.myUserId())), new MiuiLockPatternUtils(context2).getBluetoothUnlockEnabled(), SystemProperties.getInt("persist.sys.smartcover_mode", -1) != 0, MiuiSettings.System.getBooleanForUser(context.getContentResolver(), "pick_up_gesture_wakeup_mode", false, KeyguardUpdateMonitor.getCurrentUser()), MiuiGxzwManager.isQuickOpenEnable(context));
+        return getKeyguardSettingState(context, str, size, intForUser, str2, i3, i2, i, Settings.System.getLongForUser(context.getContentResolver(), "screen_off_timeout", 30000, KeyguardUpdateMonitor.getCurrentUser()), MiuiKeyguardUtils.getKeyguardNotificationStatus(context.getContentResolver()), Settings.System.getIntForUser(context.getContentResolver(), "volumekey_wake_screen", 0, KeyguardUpdateMonitor.getCurrentUser()), Settings.System.getIntForUser(context.getContentResolver(), "volumekey_launch_camera", 0, KeyguardUpdateMonitor.getCurrentUser()), Settings.System.getIntForUser(context.getContentResolver(), "show_lunar_calendar", 0, KeyguardUpdateMonitor.getCurrentUser()), Settings.Secure.getIntForUser(context.getContentResolver(), "lock_screen_show_notifications", 0, KeyguardUpdateMonitor.getCurrentUser()) != 0 ? Settings.Secure.getIntForUser(context.getContentResolver(), "lock_screen_allow_private_notifications", 0, KeyguardUpdateMonitor.getCurrentUser()) != 0 ? "show_content" : "hide_content" : "hide_notification", miuiLockPatternUtils.isOwnerInfoEnabled(KeyguardUpdateMonitor.getCurrentUser()) && !TextUtils.isEmpty(miuiLockPatternUtils.getOwnerInfo(UserHandle.myUserId())), new MiuiLockPatternUtils(context2).getBluetoothUnlockEnabled(), SystemProperties.getInt("persist.sys.smartcover_mode", -1) != 0, MiuiSettings.System.getBooleanForUser(context.getContentResolver(), "pick_up_gesture_wakeup_mode", false, KeyguardUpdateMonitor.getCurrentUser()), MiuiGxzwManager.isQuickOpenEnable(context), Settings.Secure.getIntForUser(context.getContentResolver(), "gxzw_icon_aod_lowlight_show_enable", 1, 0));
     }
 
     private static String getFingerPrintType() {
