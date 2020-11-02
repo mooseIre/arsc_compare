@@ -288,6 +288,7 @@ public class CCTileAdapter extends RecyclerView.Adapter<Holder> implements TileQ
                     } else {
                         CCTileAdapter.this.addTileItemFromOther(adapterPosition);
                     }
+                    ((HapticFeedBackImpl) Dependency.get(HapticFeedBackImpl.class)).meshNormal();
                 }
             }
         });

@@ -57,4 +57,12 @@ public class HapticFeedBackImpl {
             this.mVibrator.vibrate((long) i2);
         }
     }
+
+    public void extLongHapticFeedback(int i, boolean z, int i2) {
+        if (Constants.IS_SUPPORT_LINEAR_MOTOR_VIBRATE && this.mHapticFeedbackUtil.isSupportExtHapticFeedback(i)) {
+            this.mHapticFeedbackUtil.performExtHapticFeedback(i);
+        } else if (z) {
+            this.mVibrator.vibrate((long) i2);
+        }
+    }
 }
