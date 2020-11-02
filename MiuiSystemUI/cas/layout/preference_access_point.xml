@@ -12,4 +12,5 @@
     </LinearLayout>
     <include layout="@layout/preference_two_target_divider" />
     <LinearLayout android:gravity="center" android:orientation="vertical" android:id="@android:id/widget_frame" android:layout_width="wrap_content" android:layout_height="fill_parent" android:minWidth="64.0dip" />
+    <ImageButton android:layout_gravity="center" android:id="@id/icon_button" android:background="?android:selectableItemBackground" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="fill_parent" android:minWidth="64.0dip" android:minHeight="@dimen/min_tap_target_size" />
 </LinearLayout>
