@@ -186,7 +186,7 @@ public class EmergencyButton extends Button {
         L_0x0044:
             android.content.Context r3 = r5.mContext
             android.content.res.Resources r3 = r3.getResources()
-            r4 = 2131034186(0x7f05004a, float:1.7678882E38)
+            r4 = 2131034187(0x7f05004b, float:1.7678884E38)
             boolean r3 = r3.getBoolean(r4)
             if (r3 == 0) goto L_0x0064
             android.content.Context r3 = r5.mContext

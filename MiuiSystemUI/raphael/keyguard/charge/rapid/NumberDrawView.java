@@ -3,33 +3,41 @@ package com.android.keyguard.charge.rapid;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.graphics.Typeface;
-import android.text.SpannableString;
 import android.text.TextPaint;
 import android.text.TextUtils;
-import android.text.style.AbsoluteSizeSpan;
 import android.util.AttributeSet;
 import android.util.TypedValue;
-import android.view.accessibility.AccessibilityEvent;
+import android.view.WindowManager;
 import android.widget.TextView;
 import com.android.systemui.plugins.R;
+import java.util.Locale;
 
 public class NumberDrawView extends TextView {
+    private Context mContext;
+    private String mDot;
+    private int mDotWidth;
     private Paint.FontMetrics mFontMetrics;
+    private int mLargeMaxNumWidth;
     private TextPaint mLargeTextPaint;
     private int mLargeTextSizePx;
     private String mLevel;
+    private String mLocaleName;
     private Typeface mNormalTypeface;
     private TextPaint mPercentTextPaint;
     private int mPercentTextSizePx;
+    private int mPercentWidth;
     private Typeface mRegularTypeface;
     private Resources mResources;
+    private Point mScreenSize;
+    private String mShowLevel;
+    private int mSmallMaxNumWidth;
     private TextPaint mSmallTextPaint;
     private int mSmallTextSizePx;
-
-    public void onPopulateAccessibilityEventInternal(AccessibilityEvent accessibilityEvent) {
-    }
+    private int mStrHeight;
 
     public NumberDrawView(Context context) {
         this(context, (AttributeSet) null);
@@ -42,18 +50,92 @@ public class NumberDrawView extends TextView {
     public NumberDrawView(Context context, AttributeSet attributeSet, int i) {
         super(context, attributeSet, i);
         this.mLevel = "";
+        this.mShowLevel = "";
+        this.mDot = ".";
+        this.mLocaleName = "";
         init(context);
     }
 
     private void init(Context context) {
+        this.mContext = context;
+        this.mResources = context.getResources();
+        this.mScreenSize = new Point();
+        ((WindowManager) context.getSystemService("window")).getDefaultDisplay().getRealSize(this.mScreenSize);
         this.mRegularTypeface = Typeface.createFromAsset(context.getAssets(), "fonts/Mitype2018-60.otf");
         this.mNormalTypeface = Typeface.createFromAsset(context.getAssets(), "fonts/Mitype2018-35.otf");
-        this.mResources = this.mContext.getResources();
         setTypeface(this.mNormalTypeface);
         this.mLargeTextPaint = new TextPaint(1);
+        this.mLargeTextPaint.setColor(-1);
         this.mSmallTextPaint = new TextPaint(1);
+        this.mSmallTextPaint.setColor(-1);
         this.mPercentTextPaint = new TextPaint(1);
+        this.mPercentTextPaint.setColor(-1);
         updateTextPaint();
+    }
+
+    /* access modifiers changed from: protected */
+    public void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+        int indexOf = this.mShowLevel.indexOf(this.mDot);
+        int indexOf2 = this.mShowLevel.indexOf("%");
+        measureLargeNumWidth();
+        measureSmallNumWidth();
+        int i = 0;
+        if (indexOf == -1) {
+            int length = this.mShowLevel.length() - 1;
+            int measuredWidth = (getMeasuredWidth() - ((this.mLargeMaxNumWidth * length) + this.mPercentWidth)) / 2;
+            if (indexOf2 == 0) {
+                canvas.drawText("%", (float) measuredWidth, (float) this.mStrHeight, this.mPercentTextPaint);
+                int i2 = measuredWidth + this.mPercentWidth;
+                while (i < length) {
+                    int i3 = i + 1;
+                    canvas.drawText(this.mShowLevel.substring(i3, i + 2), (float) ((i * this.mLargeMaxNumWidth) + i2), (float) this.mStrHeight, this.mLargeTextPaint);
+                    i = i3;
+                }
+                return;
+            }
+            while (i < length) {
+                int i4 = i + 1;
+                canvas.drawText(this.mShowLevel.substring(i, i4), (float) ((i * this.mLargeMaxNumWidth) + measuredWidth), (float) this.mStrHeight, this.mLargeTextPaint);
+                i = i4;
+            }
+            canvas.drawText("%", (float) (measuredWidth + (indexOf2 * this.mLargeMaxNumWidth)), (float) this.mStrHeight, this.mPercentTextPaint);
+        } else if (indexOf2 == 0) {
+            int i5 = indexOf - 1;
+            int measuredWidth2 = (getMeasuredWidth() - ((((this.mLargeMaxNumWidth * i5) + (((this.mShowLevel.length() - i5) - 2) * this.mSmallMaxNumWidth)) + this.mPercentWidth) + this.mDotWidth)) / 2;
+            canvas.drawText("%", (float) measuredWidth2, (float) this.mStrHeight, this.mPercentTextPaint);
+            int i6 = measuredWidth2 + this.mPercentWidth;
+            int i7 = 1;
+            while (i7 < indexOf) {
+                int i8 = i7 + 1;
+                canvas.drawText(this.mShowLevel.substring(i7, i8), (float) (((i7 - 1) * this.mLargeMaxNumWidth) + i6), (float) this.mStrHeight, this.mLargeTextPaint);
+                i7 = i8;
+            }
+            canvas.drawText(this.mDot, (float) ((this.mLargeMaxNumWidth * i5) + i6), (float) this.mStrHeight, this.mPercentTextPaint);
+            int i9 = i6 + this.mDotWidth;
+            int i10 = indexOf + 1;
+            while (i10 < this.mShowLevel.length()) {
+                int i11 = i10 + 1;
+                canvas.drawText(this.mShowLevel.substring(i10, i11), (float) ((this.mLargeMaxNumWidth * i5) + i9 + (((i10 - indexOf) - 1) * this.mSmallMaxNumWidth)), (float) this.mStrHeight, this.mSmallTextPaint);
+                i10 = i11;
+            }
+        } else {
+            int measuredWidth3 = (getMeasuredWidth() - ((((this.mLargeMaxNumWidth * indexOf) + (((this.mShowLevel.length() - indexOf) - 2) * this.mSmallMaxNumWidth)) + this.mPercentWidth) + this.mDotWidth)) / 2;
+            while (i < indexOf) {
+                int i12 = i + 1;
+                canvas.drawText(this.mShowLevel.substring(i, i12), (float) ((i * this.mLargeMaxNumWidth) + measuredWidth3), (float) this.mStrHeight, this.mLargeTextPaint);
+                i = i12;
+            }
+            canvas.drawText(this.mDot, (float) ((this.mLargeMaxNumWidth * indexOf) + measuredWidth3), (float) this.mStrHeight, this.mPercentTextPaint);
+            int i13 = measuredWidth3 + this.mDotWidth + (this.mLargeMaxNumWidth * indexOf);
+            int i14 = indexOf + 1;
+            while (i14 < this.mShowLevel.length() - 1) {
+                int i15 = i14 + 1;
+                canvas.drawText(this.mShowLevel.substring(i14, i15), (float) ((((i14 - indexOf) - 1) * this.mSmallMaxNumWidth) + i13), (float) this.mStrHeight, this.mSmallTextPaint);
+                i14 = i15;
+            }
+            canvas.drawText("%", (float) (i13 + (((this.mShowLevel.length() - indexOf) - 2) * this.mSmallMaxNumWidth)), (float) this.mStrHeight, this.mPercentTextPaint);
+        }
     }
 
     public void setSize(int i, int i2, int i3) {
@@ -73,7 +155,8 @@ public class NumberDrawView extends TextView {
                 str = "100";
             }
             this.mLevel = str;
-            setText(getSpannableLevel(str));
+            this.mShowLevel = this.mResources.getString(R.string.keyguard_charging_battery_level, new Object[]{str});
+            this.mShowLevel = this.mShowLevel.replace(" ", "");
             invalidate();
             requestLayout();
         }
@@ -89,42 +172,65 @@ public class NumberDrawView extends TextView {
         this.mPercentTextPaint.setTextSize((float) this.mPercentTextSizePx);
     }
 
-    private int getStringLength() {
-        float measureText;
-        int i;
-        float measureText2;
-        float measureText3;
-        if (TextUtils.isEmpty(this.mLevel)) {
-            return 0;
+    private void updateDrawParams() {
+        if (!this.mLocaleName.equals(Locale.getDefault().getDisplayName())) {
+            resetStatus();
+            measureLargeNumWidth();
+            measureSmallNumWidth();
+            this.mStrHeight = (int) Math.abs(this.mFontMetrics.top);
+            this.mPercentWidth = (int) this.mPercentTextPaint.measureText("%");
+            handleDot();
+            this.mLocaleName = Locale.getDefault().getDisplayName();
         }
-        int measureText4 = (int) this.mPercentTextPaint.measureText("%");
-        int length = this.mLevel.length();
-        if (length == 1) {
-            measureText = this.mLargeTextPaint.measureText("4");
-        } else if (length == 2) {
-            measureText = this.mLargeTextPaint.measureText("44");
-        } else if (length != 3) {
-            if (length == 4) {
-                measureText2 = this.mLargeTextPaint.measureText("4");
-                measureText3 = this.mSmallTextPaint.measureText(".44");
-            } else if (length != 5) {
-                measureText = this.mLargeTextPaint.measureText(this.mLevel);
-            } else {
-                measureText2 = this.mLargeTextPaint.measureText("44");
-                measureText3 = this.mSmallTextPaint.measureText(".44");
+    }
+
+    private void handleDot() {
+        this.mDot = String.format(Locale.getDefault(), "%1.2f", new Object[]{Float.valueOf(8.88f)}).substring(1, 2);
+        this.mDotWidth = (int) this.mPercentTextPaint.measureText(this.mDot);
+    }
+
+    private void resetStatus() {
+        this.mLargeMaxNumWidth = -1;
+        this.mSmallMaxNumWidth = -1;
+    }
+
+    private void measureLargeNumWidth() {
+        if (this.mLargeMaxNumWidth <= 0) {
+            int measureText = (int) this.mLargeTextPaint.measureText(String.format(Locale.getDefault(), "%d", new Object[]{4}));
+            for (int i = 0; i <= 9; i++) {
+                int measureText2 = (int) this.mLargeTextPaint.measureText(String.format(Locale.getDefault(), "%d", new Object[]{Integer.valueOf(i)}));
+                if (measureText2 > measureText) {
+                    measureText = measureText2;
+                }
             }
-            i = (int) (measureText2 + measureText3);
-            return measureText4 + i;
-        } else {
-            measureText = this.mLargeTextPaint.measureText("100");
+            this.mLargeMaxNumWidth = measureText;
         }
-        i = (int) measureText;
-        return measureText4 + i;
+    }
+
+    private void measureSmallNumWidth() {
+        if (this.mSmallMaxNumWidth <= 0) {
+            int measureText = (int) this.mSmallTextPaint.measureText(String.format(Locale.getDefault(), "%d", new Object[]{4}));
+            for (int i = 0; i <= 9; i++) {
+                int measureText2 = (int) this.mSmallTextPaint.measureText(String.format(Locale.getDefault(), "%d", new Object[]{Integer.valueOf(i)}));
+                if (measureText2 > measureText) {
+                    measureText = measureText2;
+                }
+            }
+            this.mSmallMaxNumWidth = measureText;
+        }
+    }
+
+    private int getShowWidth() {
+        Point point = this.mScreenSize;
+        if (point != null) {
+            return point.x;
+        }
+        return 1080;
     }
 
     /* access modifiers changed from: protected */
     public void onMeasure(int i, int i2) {
-        setMeasuredDimension(getStringLength() + 1, (int) (Math.abs(this.mFontMetrics.top) + 3.0f));
+        setMeasuredDimension(getShowWidth(), this.mStrHeight + 3);
     }
 
     /* access modifiers changed from: protected */
@@ -134,66 +240,14 @@ public class NumberDrawView extends TextView {
     }
 
     /* access modifiers changed from: protected */
+    public void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        updateDrawParams();
+    }
+
+    /* access modifiers changed from: protected */
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         this.mLevel = "";
-    }
-
-    private SpannableString getSpannableLevel(String str) {
-        String string = this.mResources.getString(R.string.keyguard_charging_battery_level, new Object[]{str});
-        SpannableString spannableString = new SpannableString(string);
-        int indexOf = string.indexOf(37);
-        if (indexOf != -1) {
-            spannableString.setSpan(new CustomTypefaceSpan(this.mPercentTextSizePx, this.mRegularTypeface), indexOf, indexOf + 1, 0);
-        }
-        int indexOf2 = string.indexOf(46);
-        if (indexOf2 == -1) {
-            indexOf2 = string.indexOf(44);
-        }
-        if (indexOf2 != -1) {
-            if (indexOf2 < indexOf) {
-                spannableString.setSpan(new CustomTypefaceSpan(this.mSmallTextSizePx, this.mRegularTypeface), indexOf2, indexOf, 0);
-            } else if (indexOf2 < string.length()) {
-                spannableString.setSpan(new CustomTypefaceSpan(this.mSmallTextSizePx, this.mRegularTypeface), indexOf2, string.length(), 0);
-            }
-        }
-        return spannableString;
-    }
-
-    private static class CustomTypefaceSpan extends AbsoluteSizeSpan {
-        private final Typeface newType;
-
-        public CustomTypefaceSpan(int i, Typeface typeface) {
-            super(i);
-            this.newType = typeface;
-        }
-
-        public void updateDrawState(TextPaint textPaint) {
-            super.updateDrawState(textPaint);
-            applyCustomTypeFace(textPaint, this.newType);
-        }
-
-        public void updateMeasureState(TextPaint textPaint) {
-            super.updateMeasureState(textPaint);
-            applyCustomTypeFace(textPaint, this.newType);
-        }
-
-        private void applyCustomTypeFace(TextPaint textPaint, Typeface typeface) {
-            int i;
-            Typeface typeface2 = textPaint.getTypeface();
-            if (typeface2 == null) {
-                i = 0;
-            } else {
-                i = typeface2.getStyle();
-            }
-            int i2 = i & (~typeface.getStyle());
-            if ((i2 & 1) != 0) {
-                textPaint.setFakeBoldText(true);
-            }
-            if ((i2 & 2) != 0) {
-                textPaint.setTextSkewX(-0.25f);
-            }
-            textPaint.setTypeface(typeface);
-        }
     }
 }
