@@ -21,6 +21,7 @@ import android.media.AudioManager;
 import android.media.AudioSystem;
 import android.media.AudioSystemCompat;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -1527,20 +1528,25 @@ public class MiuiVolumeDialogImpl implements VolumeDialog, TunerService.Tunable,
                 String access$700 = MiuiVolumeDialogImpl.TAG;
                 Log.i(access$700, "onChange: screentime=" + z);
                 if (!isDeviceProvisioned || z || i != 4 || this.mSharedPreferences.getBoolean("volume_guide_dialog_already_show", false)) {
-                    boolean z2 = Settings.System.getIntForUser(MiuiVolumeDialogImpl.this.mContext.getContentResolver(), "mute_music_at_silent", 0, -3) == 0;
+                    boolean z2 = Build.VERSION.SDK_INT >= 30;
+                    boolean z3 = Settings.System.getIntForUser(MiuiVolumeDialogImpl.this.mContext.getContentResolver(), "mute_music_at_silent", 0, -3) == 0;
                     if (i == 0) {
-                        if (z2) {
+                        if (z3) {
                             i2 = R$string.miui_toast_zen_standard_to_off;
+                        } else if (z2) {
+                            i2 = R$string.miui_toast_zen_standard_to_off_when_shield_media_version_R;
                         } else {
                             i2 = R$string.miui_toast_zen_standard_to_off_when_shield_media;
                         }
                         if (i3 == 1) {
-                            i2 = R$string.miui_toast_zen_dnd_to_off;
+                            i2 = z2 ? R$string.miui_toast_zen_dnd_to_off_version_R : R$string.miui_toast_zen_dnd_to_off;
                         }
                     } else if (i == 1) {
-                        i2 = R$string.miui_toast_zen_to_dnd;
-                    } else if (z2) {
+                        i2 = z2 ? R$string.miui_toast_zen_to_dnd_version_R : R$string.miui_toast_zen_to_dnd;
+                    } else if (z3) {
                         i2 = R$string.miui_toast_zen_to_standard;
+                    } else if (z2) {
+                        i2 = R$string.miui_toast_zen_to_standard_when_shield_media_version_R;
                     } else {
                         i2 = R$string.miui_toast_zen_to_standard_when_shield_media;
                     }

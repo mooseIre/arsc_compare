@@ -119,6 +119,8 @@ public class SignalClusterView extends LinearLayout implements NetworkController
     private final SecurityController mSecurityController;
     /* access modifiers changed from: private */
     public boolean mShowHDIcon;
+    /* access modifiers changed from: private */
+    public boolean mShowSecondCardMobileType;
     private boolean mShowWifiGeneration;
     ViewGroup mSignalDualNotchGroup;
     ImageView mSignalDualNotchMobile;
@@ -215,6 +217,7 @@ public class SignalClusterView extends LinearLayout implements NetworkController
         this.mHideVowifi = resourcesForOperation.getBoolean(R.bool.status_bar_hide_vowifi);
         this.mHideVolte = resourcesForOperation.getBoolean(R.bool.status_bar_hide_volte);
         this.mShowHDIcon = resourcesForOperation.getBoolean(R.bool.status_bar_show_hd_icon);
+        this.mShowSecondCardMobileType = context.getResources().getBoolean(R.bool.config_show_mobile_type);
         this.mMobileSignalGroupEndPadding = resources.getDimensionPixelSize(R.dimen.mobile_signal_group_end_padding);
         this.mMobileDataIconStartPadding = resources.getDimensionPixelSize(R.dimen.mobile_data_icon_start_padding);
         this.mWideTypeIconStartPadding = resources.getDimensionPixelSize(R.dimen.wide_type_icon_start_padding);
@@ -1354,7 +1357,7 @@ public class SignalClusterView extends LinearLayout implements NetworkController
         }
 
         private boolean isHideMobile(boolean z) {
-            return Constants.IS_INTERNATIONAL && !z;
+            return !SignalClusterView.this.mShowSecondCardMobileType && Constants.IS_INTERNATIONAL && !z;
         }
 
         public void setVolteNoService(boolean z) {
