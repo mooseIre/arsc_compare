@@ -1,127 +1,183 @@
 package com.android.systemui.screenshot;
 
-import android.app.Notification;
-import android.app.NotificationCompat;
-import android.app.NotificationManager;
 import android.app.Service;
+import android.content.ComponentName;
 import android.content.Intent;
-import android.os.Bundle;
+import android.content.ServiceConnection;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
-import android.os.RemoteException;
-import com.android.systemui.partialscreenshot.PartialScreenshot;
-import com.android.systemui.plugins.R;
-import com.android.systemui.util.NotificationChannels;
+import android.os.UserHandle;
 import miui.util.Log;
 
 public class TakeScreenshotService extends Service {
     /* access modifiers changed from: private */
-    public static int sRunningCount;
+    public volatile Messenger mFallbackMessenger;
     /* access modifiers changed from: private */
-    public Handler mGalleryHandler;
-    private Handler mHandler = new Handler() {
-        public void handleMessage(Message message) {
-            PartialScreenshot partialScreenshot;
-            int i = message.what;
-            boolean z = true;
-            if (i == 1) {
-                StatHelper.recordCountEvent(TakeScreenshotService.this.getApplicationContext(), "all");
-                GlobalScreenshot.beforeTakeScreenshot(TakeScreenshotService.this);
-                Message obtain = Message.obtain(message);
-                obtain.what = 2;
-                sendMessageDelayed(obtain, 150);
-            } else if (i == 2) {
-                TakeScreenshotService.access$008();
-                TakeScreenshotService takeScreenshotService = TakeScreenshotService.this;
-                GlobalScreenshot globalScreenshot = new GlobalScreenshot(takeScreenshotService, takeScreenshotService.mGalleryHandler);
-                final Messenger messenger = message.replyTo;
-                AnonymousClass1 r3 = new Runnable(this) {
-                    public void run() {
-                        try {
-                            messenger.send(Message.obtain((Handler) null, 2));
-                        } catch (RemoteException unused) {
-                        }
-                    }
-                };
-                AnonymousClass2 r1 = new Runnable() {
-                    public void run() {
-                        TakeScreenshotService.access$010();
-                        if (TakeScreenshotService.sRunningCount <= 0) {
-                            TakeScreenshotService.this.stopSelf();
-                        }
-                    }
-                };
-                boolean z2 = (message.arg1 & 1) > 0;
-                if (message.arg2 <= 0) {
-                    z = false;
-                }
-                globalScreenshot.takeScreenshot(r3, r1, z2, z);
-            } else if (i == 3) {
-                final Messenger messenger2 = message.replyTo;
-                AnonymousClass3 r12 = new Runnable(this) {
-                    public void run() {
-                        try {
-                            messenger2.send(Message.obtain((Handler) null, 2));
-                        } catch (RemoteException e) {
-                            Log.d("TakeScreenshotService", e.getMessage());
-                        }
-                    }
-                };
-                TakeScreenshotService.access$008();
-                AnonymousClass4 r0 = new Runnable() {
-                    public void run() {
-                        TakeScreenshotService.access$010();
-                        if (TakeScreenshotService.sRunningCount <= 0) {
-                            TakeScreenshotService.this.stopSelf();
-                        }
-                    }
-                };
-                Bundle data = message.getData();
-                if (data == null || data.getFloatArray("partial.screenshot.points") == null) {
-                    partialScreenshot = new PartialScreenshot(TakeScreenshotService.this);
-                } else {
-                    partialScreenshot = new PartialScreenshot(TakeScreenshotService.this, data.getFloatArray("partial.screenshot.points"));
-                }
-                r12.run();
-                partialScreenshot.takePartialScreenshot(r0);
-            }
-        }
-    };
-    private HandlerThread mHandlerThread = new HandlerThread("screen_gallery_thread", 10);
-
-    static /* synthetic */ int access$008() {
-        int i = sRunningCount;
-        sRunningCount = i + 1;
-        return i;
-    }
-
-    static /* synthetic */ int access$010() {
-        int i = sRunningCount;
-        sRunningCount = i - 1;
-        return i;
-    }
+    public volatile ServiceConnection mFallbackServiceConnection;
+    /* access modifiers changed from: private */
+    public final Object mFallbackServiceLock = new Object();
+    private Handler mProxyHandler;
+    private final HandlerThread mProxyThread = new HandlerThread("screen_proxy_thread", -2);
+    /* access modifiers changed from: private */
+    public volatile Messenger mRealMessenger;
+    /* access modifiers changed from: private */
+    public volatile ServiceConnection mRealServiceConnection;
+    /* access modifiers changed from: private */
+    public final Object mServiceLock = new Object();
 
     public IBinder onBind(Intent intent) {
-        startService(new Intent(this, TakeScreenshotService.class));
-        NotificationManager notificationManager = (NotificationManager) getSystemService("notification");
-        Notification.Builder smallIcon = new Notification.Builder(this).setSmallIcon(R.drawable.fold_tips);
-        NotificationCompat.setChannelId(smallIcon, NotificationChannels.SCREENSHOTS);
-        startForeground(1, smallIcon.build());
-        return new Messenger(this.mHandler).getBinder();
+        return new Messenger(this.mProxyHandler).getBinder();
     }
 
     public void onCreate() {
         super.onCreate();
-        this.mHandlerThread.start();
-        this.mGalleryHandler = new Handler(this.mHandlerThread.getLooper());
+        this.mProxyThread.start();
+        this.mProxyHandler = new Handler(this.mProxyThread.getLooper()) {
+            public void handleMessage(Message message) {
+                if (TakeScreenshotService.this.mRealServiceConnection == null) {
+                    synchronized (TakeScreenshotService.this.mServiceLock) {
+                        TakeScreenshotService.this.bindRealService();
+                        try {
+                            TakeScreenshotService.this.mServiceLock.wait(500);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+                boolean z = false;
+                if (TakeScreenshotService.this.mRealMessenger != null) {
+                    try {
+                        TakeScreenshotService.this.mRealMessenger.send(Message.obtain(message));
+                        z = true;
+                    } catch (Exception e2) {
+                        e2.printStackTrace();
+                    }
+                }
+                if (!z) {
+                    if (TakeScreenshotService.this.mFallbackServiceConnection == null) {
+                        synchronized (TakeScreenshotService.this.mFallbackServiceLock) {
+                            TakeScreenshotService.this.bindFallbackService();
+                            try {
+                                TakeScreenshotService.this.mFallbackServiceLock.wait(500);
+                            } catch (InterruptedException e3) {
+                                e3.printStackTrace();
+                            }
+                        }
+                    }
+                    if (TakeScreenshotService.this.mFallbackMessenger != null) {
+                        try {
+                            TakeScreenshotService.this.mFallbackMessenger.send(Message.obtain(message));
+                        } catch (Exception e4) {
+                            e4.printStackTrace();
+                        }
+                    }
+                }
+            }
+        };
     }
 
     public void onDestroy() {
         super.onDestroy();
-        this.mHandlerThread.quitSafely();
+        if (this.mRealServiceConnection != null) {
+            unbindService(this.mRealServiceConnection);
+            this.mRealServiceConnection = null;
+            this.mRealMessenger = null;
+        }
+        if (this.mFallbackServiceConnection != null) {
+            unbindService(this.mFallbackServiceConnection);
+            this.mFallbackServiceConnection = null;
+            this.mFallbackMessenger = null;
+        }
+        this.mProxyThread.quitSafely();
         Log.d("TakeScreenshotService", "Screenshot Service onDestroy");
+    }
+
+    /* access modifiers changed from: private */
+    public void bindRealService() {
+        if (this.mRealServiceConnection == null) {
+            Log.i("TakeScreenshotService", "bindRealService: ");
+            ComponentName componentName = new ComponentName("com.miui.screenshot", "com.miui.screenshot.TakeScreenshotService");
+            Intent intent = new Intent();
+            intent.setComponent(componentName);
+            AnonymousClass2 r0 = new ServiceConnection() {
+                public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+                    synchronized (TakeScreenshotService.this.mServiceLock) {
+                        Messenger unused = TakeScreenshotService.this.mRealMessenger = new Messenger(iBinder);
+                        TakeScreenshotService.this.mServiceLock.notifyAll();
+                    }
+                }
+
+                public void onServiceDisconnected(ComponentName componentName) {
+                    synchronized (TakeScreenshotService.this.mServiceLock) {
+                        Messenger unused = TakeScreenshotService.this.mRealMessenger = null;
+                        TakeScreenshotService.this.mServiceLock.notifyAll();
+                        if (TakeScreenshotService.this.mRealServiceConnection != null) {
+                            TakeScreenshotService.this.unbindService(TakeScreenshotService.this.mRealServiceConnection);
+                            ServiceConnection unused2 = TakeScreenshotService.this.mRealServiceConnection = null;
+                        }
+                    }
+                }
+
+                public void onBindingDied(ComponentName componentName) {
+                    synchronized (TakeScreenshotService.this.mServiceLock) {
+                        Messenger unused = TakeScreenshotService.this.mRealMessenger = null;
+                        TakeScreenshotService.this.mServiceLock.notifyAll();
+                        if (TakeScreenshotService.this.mRealServiceConnection != null) {
+                            TakeScreenshotService.this.unbindService(TakeScreenshotService.this.mRealServiceConnection);
+                            ServiceConnection unused2 = TakeScreenshotService.this.mRealServiceConnection = null;
+                        }
+                    }
+                }
+            };
+            if (bindServiceAsUser(intent, r0, 33554433, UserHandle.CURRENT)) {
+                this.mRealServiceConnection = r0;
+            }
+        }
+    }
+
+    /* access modifiers changed from: private */
+    public void bindFallbackService() {
+        if (this.mFallbackServiceConnection == null) {
+            Log.i("TakeScreenshotService", "bindFallbackService: ");
+            ComponentName componentName = new ComponentName("com.android.systemui", "com.android.systemui.screenshot.FallbackTakeScreenshotService");
+            Intent intent = new Intent();
+            intent.setComponent(componentName);
+            AnonymousClass3 r0 = new ServiceConnection() {
+                public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+                    synchronized (TakeScreenshotService.this.mFallbackServiceLock) {
+                        Messenger unused = TakeScreenshotService.this.mFallbackMessenger = new Messenger(iBinder);
+                        TakeScreenshotService.this.mFallbackServiceLock.notifyAll();
+                    }
+                }
+
+                public void onServiceDisconnected(ComponentName componentName) {
+                    synchronized (TakeScreenshotService.this.mFallbackServiceLock) {
+                        Messenger unused = TakeScreenshotService.this.mFallbackMessenger = null;
+                        TakeScreenshotService.this.mFallbackServiceLock.notifyAll();
+                        if (TakeScreenshotService.this.mFallbackServiceConnection != null) {
+                            TakeScreenshotService.this.unbindService(TakeScreenshotService.this.mFallbackServiceConnection);
+                            ServiceConnection unused2 = TakeScreenshotService.this.mFallbackServiceConnection = null;
+                        }
+                    }
+                }
+
+                public void onBindingDied(ComponentName componentName) {
+                    synchronized (TakeScreenshotService.this.mFallbackServiceLock) {
+                        Messenger unused = TakeScreenshotService.this.mFallbackMessenger = null;
+                        TakeScreenshotService.this.mFallbackServiceLock.notifyAll();
+                        if (TakeScreenshotService.this.mFallbackServiceConnection != null) {
+                            TakeScreenshotService.this.unbindService(TakeScreenshotService.this.mFallbackServiceConnection);
+                            ServiceConnection unused2 = TakeScreenshotService.this.mFallbackServiceConnection = null;
+                        }
+                    }
+                }
+            };
+            if (bindServiceAsUser(intent, r0, 33554433, UserHandle.CURRENT)) {
+                this.mFallbackServiceConnection = r0;
+            }
+        }
     }
 }

@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Handler;
 import android.os.UserHandle;
+import android.provider.MiuiSettings;
+import android.text.TextUtils;
 import com.android.systemui.statusbar.policy.NextAlarmController;
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
@@ -21,6 +23,7 @@ public class NextAlarmControllerImpl extends BroadcastReceiver implements NextAl
         AlarmManager alarmManager = (AlarmManager) context.getSystemService("alarm");
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("android.intent.action.ALARM_CHANGED");
+        intentFilter.addAction("android.intent.action.USER_SWITCHED");
         context.registerReceiverAsUser(this, UserHandle.ALL, intentFilter, (String) null, (Handler) null);
         fireAlarmChanged();
     }
@@ -41,13 +44,17 @@ public class NextAlarmControllerImpl extends BroadcastReceiver implements NextAl
     }
 
     public void onReceive(Context context, Intent intent) {
-        if (intent.getAction().equals("android.intent.action.ALARM_CHANGED")) {
+        String action = intent.getAction();
+        if (action.equals("android.intent.action.ALARM_CHANGED")) {
             boolean booleanExtra = intent.getBooleanExtra("alarmSet", false);
             if (intent.getBooleanExtra("alarmSystem", false)) {
                 this.mHasSystemAlarm = booleanExtra;
             } else {
                 this.mHasThirdPartyAlarm = booleanExtra;
             }
+            fireAlarmChanged();
+        } else if (action.equals("android.intent.action.USER_SWITCHED")) {
+            this.mHasSystemAlarm = !TextUtils.isEmpty(MiuiSettings.System.getStringForUser(context.getContentResolver(), "next_alarm_clock_formatted", -2));
             fireAlarmChanged();
         }
     }
