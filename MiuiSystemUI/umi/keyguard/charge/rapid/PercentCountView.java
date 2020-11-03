@@ -13,6 +13,7 @@ import android.view.animation.LinearInterpolator;
 import android.widget.LinearLayout;
 import com.android.keyguard.charge.MiuiChargeManager;
 import com.android.systemui.Dependency;
+import java.util.Locale;
 
 public class PercentCountView extends LinearLayout {
     /* access modifiers changed from: private */
@@ -81,7 +82,7 @@ public class PercentCountView extends LinearLayout {
                     valueAnimator.cancel();
                 }
                 this.mCurrentProgress = i;
-                this.mIntegerTv.setLevelText(String.valueOf(i));
+                this.mIntegerTv.setLevelText(String.format(Locale.getDefault(), "%d", new Object[]{Integer.valueOf(i)}));
             }
         }
     }
@@ -91,7 +92,7 @@ public class PercentCountView extends LinearLayout {
             ValueAnimator valueAnimator = this.mValueAnimator;
             if (valueAnimator == null || !valueAnimator.isRunning()) {
                 this.mCurrentProgress = (int) f;
-                this.mIntegerTv.setLevelText(String.format("%1.2f", new Object[]{Float.valueOf(f)}));
+                this.mIntegerTv.setLevelText(String.format(Locale.getDefault(), "%1.2f", new Object[]{Float.valueOf(f)}));
                 ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{f, Math.min(f + f2, 99.99f)});
                 this.mValueAnimator = ofFloat;
                 ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -101,7 +102,7 @@ public class PercentCountView extends LinearLayout {
                             ((MiuiChargeManager) Dependency.get(MiuiChargeManager.class)).updateBattery(floatValue);
                             int unused = PercentCountView.this.mCurrentProgress = floatValue;
                         }
-                        PercentCountView.this.mIntegerTv.setLevelText(String.format("%1.2f", new Object[]{valueAnimator.getAnimatedValue()}));
+                        PercentCountView.this.mIntegerTv.setLevelText(String.format(Locale.getDefault(), "%1.2f", new Object[]{valueAnimator.getAnimatedValue()}));
                     }
                 });
                 this.mValueAnimator.addListener(new Animator.AnimatorListener() {
