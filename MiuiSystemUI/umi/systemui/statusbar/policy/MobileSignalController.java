@@ -559,11 +559,11 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
         notifyListenersIfNecessary();
     }
 
-    public boolean isCalling(int i) {
+    public static boolean isCalling(int i) {
         return ((CallStateController) Dependency.get(CallStateController.class)).getCallState(i) != 0;
     }
 
-    public int getOtherSlotId(int i) {
+    public static int getOtherSlotId(int i) {
         for (int i2 = 0; i2 < TelephonyManagerEx.getDefault().getPhoneCount(); i2++) {
             if (i2 != i) {
                 return i2;

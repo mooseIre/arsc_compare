@@ -534,8 +534,6 @@ public class RoundedCorners extends SystemUI implements CommandQueue.Callbacks, 
         layoutParams.privateFlags = 16 | 64;
         if (!z || Build.VERSION.SDK_INT < 28) {
             layoutParams.privateFlags |= 1048576;
-        } else {
-            layoutParams.extraFlags |= 8388608;
         }
         layoutParams.gravity = i;
         layoutParams.setTitle("RoundCorner");

@@ -52,7 +52,7 @@ public class FiveGControllerImpl implements FiveGController {
     }
 
     public boolean isFiveGConnect(int i, int i2) {
-        return this.mFiveGServiceStates[i].isConnectedOnSaMode() || (this.mFiveGServiceStates[i].isConnectedOnNsaMode() && isDataRegisteredOnLte(i2));
+        return this.mFiveGServiceStates[i].isConnectedOnSaMode() || (this.mFiveGServiceStates[i].isConnectedOnNsaMode() && (isDataRegisteredOnLte(i2) || MobileSignalController.isCalling(MobileSignalController.getOtherSlotId(i))));
     }
 
     public boolean isConnectedOnSaMode(int i) {
