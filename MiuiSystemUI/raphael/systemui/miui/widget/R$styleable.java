@@ -68,6 +68,7 @@ public final class R$styleable {
     public static final int[] HybridNotificationTheme = {R.attr.hybridNotificationStyle, R.attr.hybridNotificationTextStyle, R.attr.hybridNotificationTitleStyle};
     public static final int[] KeyButtonView = {16843379, R.attr.glowBackground, R.attr.keyCode, R.attr.keyRepeat, R.attr.playSound};
     public static final int[] KeyguardSecurityViewFlipper_Layout = {R.attr.layout_maxHeight, R.attr.layout_maxWidth};
+    public static final int[] Level = {R.attr.maxLevel, R.attr.minLevel, R.attr.targetLevel};
     public static final int[] LimitedSizeStyleSavedView = {R.attr.maximumHeight, R.attr.maximumWidth};
     public static final int LimitedSizeStyleSavedView_maximumHeight = 0;
     public static final int LimitedSizeStyleSavedView_maximumWidth = 1;
@@ -92,6 +93,9 @@ public final class R$styleable {
     public static final int[] MenuItem = {16842754, 16842766, 16842960, 16843014, 16843156, 16843230, 16843231, 16843233, 16843234, 16843235, 16843236, 16843237, 16843375, R.attr.actionLayout, R.attr.actionProviderClass, R.attr.actionViewClass, R.attr.alphabeticModifiers, R.attr.contentDescription, R.attr.iconTint, R.attr.iconTintMode, R.attr.numericModifiers, R.attr.showAsAction, R.attr.tooltipText};
     public static final int[] MenuView = {16842926, 16843052, 16843053, 16843054, 16843055, 16843056, 16843057, R.attr.preserveIconSpacing, R.attr.subMenuArrow};
     public static final int[] MiuiVolumeTimerSeekBar = {R.attr.drawTickingTime, R.attr.progressBoundsStart};
+    public static final int[] MiuixManifest = {R.attr.level, R.attr.moduleContent, R.attr.name};
+    public static final int[] MiuixManifestModule = {R.attr.dependencyType, R.attr.maxLevel, R.attr.minLevel, R.attr.name, R.attr.targetLevel};
+    public static final int[] MiuixManifestUsesSdk = {R.attr.maxLevel, R.attr.minLevel, R.attr.targetLevel};
     public static final int[] MultiSelectListPreference = {16842930, 16843256, R.attr.entries, R.attr.entryValues};
     public static final int[] NavigationView = {16842964, 16842973, 16843039, R.attr.elevation, R.attr.headerLayout, R.attr.itemBackground, R.attr.itemHorizontalPadding, R.attr.itemIconPadding, R.attr.itemIconSize, R.attr.itemIconTint, R.attr.itemTextAppearance, R.attr.itemTextColor, R.attr.menu};
     public static final int[] NotificationLinearLayout = {R.attr.insetLeft};

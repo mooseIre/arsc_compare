@@ -41,10 +41,10 @@ import com.android.systemui.Dependency;
 import com.android.systemui.HapticFeedBackImpl;
 import com.android.systemui.classifier.FalsingManager;
 import com.android.systemui.keyguard.DismissCallbackRegistry;
+import com.android.systemui.miui.BitmapUtils;
 import com.android.systemui.plugins.ActivityStarter;
 import miui.system.R;
 import miui.util.CustomizeUtil;
-import miui.util.ScreenshotUtils;
 
 public class KeyguardBouncer {
     /* access modifiers changed from: private */
@@ -304,7 +304,7 @@ public class KeyguardBouncer {
                     }
                     Bitmap createScaledBitmap = Bitmap.createScaledBitmap(bitmap, i, i2, true);
                     KeyguardBouncer.this.mBgImageView.setBackgroundColor(0);
-                    KeyguardBouncer.this.mBgImageView.setImageDrawable(new BitmapDrawable(KeyguardBouncer.this.mContext.getResources(), ScreenshotUtils.getBlurBackground(createScaledBitmap, (Bitmap) null)));
+                    KeyguardBouncer.this.mBgImageView.setImageDrawable(new BitmapDrawable(KeyguardBouncer.this.mContext.getResources(), BitmapUtils.getBlurBackground(createScaledBitmap, (Bitmap) null)));
                     createScaledBitmap.recycle();
                 }
             }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new Void[0]);

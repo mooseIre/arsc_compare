@@ -484,6 +484,8 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
     public boolean mIsInDriveModeMask;
     /* access modifiers changed from: private */
     public boolean mIsKeyguard;
+    /* access modifiers changed from: private */
+    public boolean mIsLockScreenDisabled;
     private boolean mIsRemoved;
     private boolean mIsStatusBarHidden;
     private boolean mIsUseFsGestureVersionThree;
@@ -519,7 +521,8 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
     boolean mLeaveOpenOnKeyguardHide;
     LightBarController mLightBarController;
     private Locale mLocale;
-    private LockPatternUtils mLockPatternUtils;
+    /* access modifiers changed from: private */
+    public LockPatternUtils mLockPatternUtils;
     private LockscreenGestureLogger mLockscreenGestureLogger;
     private final SparseBooleanArray mLockscreenPublicMode;
     private final ContentObserver mLockscreenSettingsObserver;
@@ -926,10 +929,20 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
         };
         this.mTmpChildOrderMap = new HashMap<>();
         this.mStatusBarStateController = (SysuiStatusBarStateController) Dependency.get(StatusBarStateController.class);
+        this.mIsLockScreenDisabled = false;
         this.mUpdateCallback = new KeyguardUpdateMonitorCallback() {
             public void onDreamingStateChanged(boolean z) {
                 if (z) {
                     StatusBar.this.maybeEscalateHeadsUp();
+                }
+            }
+
+            public void onDevicePolicyManagerStateChanged() {
+                super.onDevicePolicyManagerStateChanged();
+                boolean isLockScreenDisabled = StatusBar.this.mLockPatternUtils.isLockScreenDisabled(KeyguardUpdateMonitor.getCurrentUser());
+                if (StatusBar.this.mIsLockScreenDisabled != isLockScreenDisabled) {
+                    boolean unused = StatusBar.this.mIsLockScreenDisabled = isLockScreenDisabled;
+                    StatusBar.this.updateWallpaperScrim();
                 }
             }
         };
@@ -937,9 +950,9 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
             public void onFaceAuthenticated() {
                 if (StatusBar.this.mFaceUnlockManager.isShowMessageWhenFaceUnlockSuccess()) {
                     StatusBar.this.updatePublicMode();
-                    boolean access$1400 = StatusBar.this.isAnyProfilePublicMode();
+                    boolean access$1700 = StatusBar.this.isAnyProfilePublicMode();
                     StatusBar statusBar = StatusBar.this;
-                    statusBar.mStackScroller.setHideSensitive(NotificationUtil.hideNotificationsForFaceUnlock(statusBar.mContext) || access$1400, true);
+                    statusBar.mStackScroller.setHideSensitive(NotificationUtil.hideNotificationsForFaceUnlock(statusBar.mContext) || access$1700, true);
                     StatusBar.this.updateNotificationViewsOnly();
                 }
             }
@@ -1286,9 +1299,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
                     z = true;
                 }
                 boolean unused = statusBar.mSupportsAmbientMode = z;
-                ((MiuiKeyguardWallpaperController) Dependency.get(MiuiKeyguardWallpaperController.class)).setWallpaperSupportsAmbientMode(StatusBar.this.mSupportsAmbientMode);
-                StatusBar statusBar2 = StatusBar.this;
-                statusBar2.mScrimController.setWallpaperSupportsAmbientMode(statusBar2.mSupportsAmbientMode);
+                StatusBar.this.updateWallpaperScrim();
                 StatusBar.this.updateDozeAfterScreenOff();
                 Log.d("StatusBar", "deviceSupportsAodWallpaper:" + z2 + " supportsAmbientMode:" + StatusBar.this.mSupportsAmbientMode);
             }
@@ -1480,13 +1491,13 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
                             ActivityManagerCompat.getService().resumeAppSwitches();
                         } catch (RemoteException unused) {
                         }
-                        boolean access$9900 = AnonymousClass92.this.superOnClickHandler(view, pendingIntent, intent);
-                        if (access$9900) {
+                        boolean access$10200 = AnonymousClass92.this.superOnClickHandler(view, pendingIntent, intent);
+                        if (access$10200) {
                             StatusBar.this.animateCollapsePanels(2, true);
                             StatusBar.this.visibilityChanged(false);
                             StatusBar.this.mAssistManager.hideAssist();
                         }
-                        return access$9900;
+                        return access$10200;
                     }
                 }, PreviewInflater.wouldLaunchResolverActivity(StatusBar.this.mContext, pendingIntent.getIntent(), StatusBar.this.mCurrentUserId));
                 return true;
@@ -1912,6 +1923,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
         this.mUserManager = (UserManager) this.mContext.getSystemService("user");
         this.mKeyguardManager = (KeyguardManager) this.mContext.getSystemService("keyguard");
         this.mLockPatternUtils = new LockPatternUtils(this.mContext);
+        this.mIsLockScreenDisabled = this.mLockPatternUtils.isLockScreenDisabled(KeyguardUpdateMonitor.getCurrentUser());
         this.mCommandQueue = (CommandQueue) getComponent(CommandQueue.class);
         this.mCommandQueue.addCallbacks(this);
         int[] iArr = new int[9];
@@ -6360,9 +6372,9 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
         if (this.mPendingWorkRemoteInputView != null && !isAnyProfilePublicMode()) {
             final AnonymousClass65 r0 = new Runnable() {
                 public void run() {
-                    View access$6500 = StatusBar.this.mPendingWorkRemoteInputView;
-                    if (access$6500 != null) {
-                        ViewParent parent = access$6500.getParent();
+                    View access$6800 = StatusBar.this.mPendingWorkRemoteInputView;
+                    if (access$6800 != null) {
+                        ViewParent parent = access$6800.getParent();
                         while (!(parent instanceof ExpandableNotificationRow)) {
                             if (parent != null) {
                                 parent = parent.getParent();
@@ -6760,6 +6772,13 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
                 }
             }
         }
+    }
+
+    /* access modifiers changed from: private */
+    public void updateWallpaperScrim() {
+        boolean z = this.mSupportsAmbientMode && !this.mIsLockScreenDisabled;
+        ((MiuiKeyguardWallpaperController) Dependency.get(MiuiKeyguardWallpaperController.class)).setWallpaperSupportsAmbientMode(z);
+        this.mScrimController.setWallpaperSupportsAmbientMode(z);
     }
 
     /* access modifiers changed from: private */

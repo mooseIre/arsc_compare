@@ -68,6 +68,7 @@ public final class R$styleable {
     public static final int[] HybridNotificationTheme = {R.attr.hybridNotificationStyle, R.attr.hybridNotificationTextStyle, R.attr.hybridNotificationTitleStyle};
     public static final int[] KeyButtonView = {16843379, R.attr.glowBackground, R.attr.keyCode, R.attr.keyRepeat, R.attr.playSound};
     public static final int[] KeyguardSecurityViewFlipper_Layout = {R.attr.layout_maxHeight, R.attr.layout_maxWidth};
+    public static final int[] Level = {R.attr.maxLevel, R.attr.minLevel, R.attr.targetLevel};
     public static final int[] LimitedSizeStyleSavedView = {R.attr.maximumHeight, R.attr.maximumWidth};
     public static final int[] LinearLayoutCompat = {16842927, 16842948, 16843046, 16843047, 16843048, R.attr.divider, R.attr.dividerPadding, R.attr.measureWithLargestChild, R.attr.showDividers};
     public static final int[] LinearLayoutCompat_Layout = {16842931, 16842996, 16842997, 16843137};
@@ -91,6 +92,9 @@ public final class R$styleable {
     public static final int[] MiuiVolumeTimerSeekBar = {R.attr.drawTickingTime, R.attr.progressBoundsStart};
     public static final int MiuiVolumeTimerSeekBar_drawTickingTime = 0;
     public static final int MiuiVolumeTimerSeekBar_progressBoundsStart = 1;
+    public static final int[] MiuixManifest = {R.attr.level, R.attr.moduleContent, R.attr.name};
+    public static final int[] MiuixManifestModule = {R.attr.dependencyType, R.attr.maxLevel, R.attr.minLevel, R.attr.name, R.attr.targetLevel};
+    public static final int[] MiuixManifestUsesSdk = {R.attr.maxLevel, R.attr.minLevel, R.attr.targetLevel};
     public static final int[] MultiSelectListPreference = {16842930, 16843256, R.attr.entries, R.attr.entryValues};
     public static final int[] NavigationView = {16842964, 16842973, 16843039, R.attr.elevation, R.attr.headerLayout, R.attr.itemBackground, R.attr.itemHorizontalPadding, R.attr.itemIconPadding, R.attr.itemIconSize, R.attr.itemIconTint, R.attr.itemTextAppearance, R.attr.itemTextColor, R.attr.menu};
     public static final int[] NotificationLinearLayout = {R.attr.insetLeft};
