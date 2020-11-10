@@ -341,6 +341,10 @@ class MiuiGxzwIconView extends GxzwNoRotateFrameLayout implements View.OnTouchLi
         this.mMiuiGxzwAnimView.setEnrolling(z);
     }
 
+    public void updateHightlightBackground() {
+        this.mHighlightView.updateViewBackground();
+    }
+
     public void setUnlockLockout(boolean z) {
         this.mUnlockLockout = z;
     }

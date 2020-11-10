@@ -213,7 +213,7 @@ public class KeyguardHostView extends FrameLayout implements KeyguardSecurityCon
                         case R.styleable.AppCompatTheme_panelMenuListWidth /*88*/:
                         case R.styleable.AppCompatTheme_popupMenuStyle /*89*/:
                         case R.styleable.AppCompatTheme_popupWindowStyle /*90*/:
-                        case R.styleable.AppCompatTheme_radioButtonStyle /*91*/:
+                        case 91:
                             break;
                         default:
                             return false;
@@ -236,7 +236,7 @@ public class KeyguardHostView extends FrameLayout implements KeyguardSecurityCon
                     case R.styleable.AppCompatTheme_panelMenuListWidth /*88*/:
                     case R.styleable.AppCompatTheme_popupMenuStyle /*89*/:
                     case R.styleable.AppCompatTheme_popupWindowStyle /*90*/:
-                    case R.styleable.AppCompatTheme_radioButtonStyle /*91*/:
+                    case 91:
                         break;
                     default:
                         return false;

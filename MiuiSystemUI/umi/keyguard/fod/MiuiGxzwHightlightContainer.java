@@ -10,6 +10,7 @@ import com.android.keyguard.MiuiKeyguardUtils;
 import com.android.systemui.plugins.R;
 
 class MiuiGxzwHightlightContainer extends GxzwNoRotateFrameLayout {
+    private boolean mHealthFingerAuthen;
     private WindowManager.LayoutParams mLayoutParams;
     private MiuiGxzwHighlightView mMiuiGxzwHighlightView;
     private final boolean mSupportHalo = MiuiGxzwUtils.supportHalo(getContext());
@@ -74,7 +75,7 @@ class MiuiGxzwHightlightContainer extends GxzwNoRotateFrameLayout {
     public Rect caculateRegion() {
         int i;
         int i2 = 0;
-        if (this.mSupportHalo) {
+        if (this.mSupportHalo || this.mHealthFingerAuthen) {
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inJustDecodeBounds = true;
             BitmapFactory.decodeResource(getResources(), MiuiGxzwUtils.getHaloRes(), options);
@@ -111,5 +112,10 @@ class MiuiGxzwHightlightContainer extends GxzwNoRotateFrameLayout {
     private void removeHighlightView() {
         setVisibility(8);
         removeViewFromWindow();
+    }
+
+    public void updateViewBackground() {
+        this.mHealthFingerAuthen = MiuiGxzwManager.getInstance().getHealthAppAuthen();
+        this.mMiuiGxzwHighlightView.setInvertColorStatus(MiuiKeyguardUtils.isInvertColorsEnable(getContext()));
     }
 }

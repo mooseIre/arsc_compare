@@ -66,7 +66,9 @@ public class KeyguardSettingsAnalytics {
             AnalyticsHelper.booleanToInt(z5);
             hashMap.put("fod_quick_open_toggle", Integer.valueOf(z5 ? 1 : 0));
         }
-        hashMap.put("gxzw_lowlight_show_toggle", Integer.valueOf(i10));
+        if (MiuiGxzwManager.isSupportLowlight()) {
+            hashMap.put("gxzw_lowlight_show_toggle", Integer.valueOf(i10));
+        }
         return hashMap;
     }
 

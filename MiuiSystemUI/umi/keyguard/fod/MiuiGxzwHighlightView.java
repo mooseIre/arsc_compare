@@ -13,6 +13,7 @@ import com.android.systemui.plugins.R;
 class MiuiGxzwHighlightView extends ImageView {
     private int mCircleColor;
     private boolean mGradualGreenCircle = false;
+    private boolean mGreenHalo = false;
     private boolean mInvertColor = false;
     private float mOvalAngle;
     private float mOvalMajor;
@@ -58,7 +59,7 @@ class MiuiGxzwHighlightView extends ImageView {
         if (this.mGradualGreenCircle) {
             return;
         }
-        if (this.mSupportHalo && !this.mInvertColor) {
+        if ((this.mSupportHalo && !this.mInvertColor) || this.mGreenHalo) {
             return;
         }
         if (MiuiGxzwUtils.isLargeFod()) {
@@ -104,7 +105,11 @@ class MiuiGxzwHighlightView extends ImageView {
         } else {
             this.mPaint.setColor(-16777216);
         }
-        if (this.mSupportHalo && z) {
+        boolean healthAppAuthen = MiuiGxzwManager.getInstance().getHealthAppAuthen();
+        this.mGreenHalo = healthAppAuthen;
+        if (healthAppAuthen) {
+            setImageResource(MiuiGxzwUtils.getHealthHaloRes());
+        } else if (this.mSupportHalo && z) {
             setImageDrawable((Drawable) null);
         } else if (this.mSupportHalo) {
             setImageResource(MiuiGxzwUtils.getHaloRes());
