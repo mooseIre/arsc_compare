@@ -209,10 +209,10 @@ public class CellularTile extends QSTileImpl<QSTile.BooleanState> {
             r7.withAnimation = r2
             boolean r1 = r7.value
             if (r1 == 0) goto L_0x0082
-            r1 = 2131232749(0x7f0807ed, float:1.8081616E38)
+            r1 = 2131232750(0x7f0807ee, float:1.8081618E38)
             goto L_0x0085
         L_0x0082:
-            r1 = 2131232748(0x7f0807ec, float:1.8081614E38)
+            r1 = 2131232749(0x7f0807ed, float:1.8081616E38)
         L_0x0085:
             java.lang.Integer r1 = java.lang.Integer.valueOf(r1)
             boolean r2 = r6.mInControlCenter
@@ -237,7 +237,7 @@ public class CellularTile extends QSTileImpl<QSTile.BooleanState> {
             r7.value = r2
             r7.state = r2
             r7.withAnimation = r2
-            r1 = 2131232747(0x7f0807eb, float:1.8081612E38)
+            r1 = 2131232748(0x7f0807ec, float:1.8081614E38)
             java.lang.Integer r1 = java.lang.Integer.valueOf(r1)
             boolean r2 = r6.mInControlCenter
             int r1 = com.android.systemui.statusbar.Icons.getQSIcons(r1, r2)

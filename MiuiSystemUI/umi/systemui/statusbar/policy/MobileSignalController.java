@@ -1388,14 +1388,14 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
         L_0x0020:
             r3 = r4
         L_0x0021:
-            r6 = 2131233595(0x7f080b3b, float:1.8083332E38)
+            r6 = 2131233596(0x7f080b3c, float:1.8083334E38)
             r7 = 7
             java.lang.String r9 = "MobileSignalController"
             r10 = 9
             r11 = 6
             r12 = 1
             r13 = 8
-            r14 = 2131233594(0x7f080b3a, float:1.808333E38)
+            r14 = 2131233595(0x7f080b3b, float:1.8083332E38)
             r15 = 2
             r8 = 3
             r16 = 0
@@ -1474,7 +1474,7 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
             int r0 = r0.getIdentifier(r2, r4, r5)
             r3[r21] = r0
             int[] r0 = com.android.systemui.statusbar.policy.TelephonyIcons.mSelectedQSDataTypeIcon
-            r2 = 2131233601(0x7f080b41, float:1.8083344E38)
+            r2 = 2131233602(0x7f080b42, float:1.8083346E38)
             r0[r21] = r2
             java.lang.String[] r0 = com.android.systemui.statusbar.policy.TelephonyIcons.mSelectedDataTypeDesc
             java.lang.String[] r2 = com.android.systemui.statusbar.policy.TelephonyIcons.mDataTypeDescriptionArray
@@ -1488,7 +1488,7 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
             boolean r7 = r7.contains(r3)
             r12 = 10
             r17 = 5
-            r18 = 2131233599(0x7f080b3f, float:1.808334E38)
+            r18 = 2131233600(0x7f080b40, float:1.8083342E38)
             r19 = 4
             if (r7 == 0) goto L_0x016a
             android.telephony.ServiceState r7 = r0.mServiceState
@@ -1658,7 +1658,7 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
             int r0 = r0.getIdentifier(r2, r4, r5)
             r3[r21] = r0
             int[] r0 = com.android.systemui.statusbar.policy.TelephonyIcons.mSelectedQSDataTypeIcon
-            r2 = 2131233593(0x7f080b39, float:1.8083328E38)
+            r2 = 2131233594(0x7f080b3a, float:1.808333E38)
             r0[r21] = r2
             java.lang.String[] r0 = com.android.systemui.statusbar.policy.TelephonyIcons.mSelectedDataTypeDesc
             java.lang.String[] r2 = com.android.systemui.statusbar.policy.TelephonyIcons.mDataTypeDescriptionArray
@@ -1677,7 +1677,7 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
             int r0 = r0.getIdentifier(r2, r4, r5)
             r3[r21] = r0
             int[] r0 = com.android.systemui.statusbar.policy.TelephonyIcons.mSelectedQSDataTypeIcon
-            r2 = 2131233593(0x7f080b39, float:1.8083328E38)
+            r2 = 2131233594(0x7f080b3a, float:1.808333E38)
             r0[r21] = r2
             java.lang.String[] r0 = com.android.systemui.statusbar.policy.TelephonyIcons.mSelectedDataTypeDesc
             java.lang.String[] r2 = com.android.systemui.statusbar.policy.TelephonyIcons.mDataTypeDescriptionArray
@@ -1714,7 +1714,7 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
             int r0 = r0.getIdentifier(r2, r4, r5)
             r3[r21] = r0
             int[] r0 = com.android.systemui.statusbar.policy.TelephonyIcons.mSelectedQSDataTypeIcon
-            r2 = 2131233598(0x7f080b3e, float:1.8083338E38)
+            r2 = 2131233599(0x7f080b3f, float:1.808334E38)
             r0[r21] = r2
             java.lang.String[] r0 = com.android.systemui.statusbar.policy.TelephonyIcons.mSelectedDataTypeDesc
             java.lang.String[] r2 = com.android.systemui.statusbar.policy.TelephonyIcons.mDataTypeDescriptionArray
@@ -1767,7 +1767,7 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
             int r0 = r0.getIdentifier(r2, r4, r5)
             r3[r21] = r0
             int[] r0 = com.android.systemui.statusbar.policy.TelephonyIcons.mSelectedQSDataTypeIcon
-            r2 = 2131233597(0x7f080b3d, float:1.8083336E38)
+            r2 = 2131233598(0x7f080b3e, float:1.8083338E38)
             r0[r21] = r2
             java.lang.String[] r0 = com.android.systemui.statusbar.policy.TelephonyIcons.mSelectedDataTypeDesc
             java.lang.String[] r2 = com.android.systemui.statusbar.policy.TelephonyIcons.mDataTypeDescriptionArray

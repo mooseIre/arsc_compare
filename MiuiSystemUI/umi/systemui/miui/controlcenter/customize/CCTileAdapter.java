@@ -62,6 +62,9 @@ public class CCTileAdapter extends RecyclerView.Adapter<Holder> implements TileQ
         public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int i) {
             int adapterPosition;
             super.onSelectedChanged(viewHolder, i);
+            if (i == 2) {
+                ((HapticFeedBackImpl) Dependency.get(HapticFeedBackImpl.class)).hapticFeedback("pickup", false);
+            }
             if (i != 2) {
                 viewHolder = null;
             }
@@ -278,6 +281,7 @@ public class CCTileAdapter extends RecyclerView.Adapter<Holder> implements TileQ
         cCCustomizeTileView.setLayoutParams(layoutParams);
         frameLayout.removeView(imageView);
         frameLayout.addView(imageView);
+        frameLayout.setHapticFeedbackEnabled(false);
         final Holder holder = new Holder(this, frameLayout);
         imageView.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {

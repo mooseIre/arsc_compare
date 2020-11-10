@@ -166,7 +166,7 @@ public class NotificationTemplateViewWrapper extends NotificationHeaderViewWrapp
             android.widget.ImageView r0 = (android.widget.ImageView) r0
             r2.mPicture = r0
             if (r0 == 0) goto L_0x0051
-            r1 = 2131362270(0x7f0a01de, float:1.8344316E38)
+            r1 = 2131362271(0x7f0a01df, float:1.8344318E38)
             com.android.systemui.miui.statusbar.ExpandedNotification r3 = r3.getStatusBarNotification()
             android.app.Notification r3 = r3.getNotification()
             android.graphics.drawable.Icon r3 = r3.getLargeIcon()
