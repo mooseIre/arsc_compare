@@ -69,7 +69,7 @@ public class MiuiKeyguardMoveLeftControlCenterView extends MiuiKeyguardMoveLeftB
     View.OnClickListener mListener = new View.OnClickListener() {
         public void onClick(View view) {
             switch (view.getId()) {
-                case R.id.keyguard_electric_torch /*2131362321*/:
+                case R.id.keyguard_electric_torch /*2131362323*/:
                     boolean z = false;
                     if (Settings.Global.getInt(MiuiKeyguardMoveLeftControlCenterView.this.mContext.getContentResolver(), "torch_state", 0) != 0) {
                         z = true;
@@ -81,7 +81,7 @@ public class MiuiKeyguardMoveLeftControlCenterView extends MiuiKeyguardMoveLeftB
                         return;
                     }
                     return;
-                case R.id.keyguard_lock_screen_magazine_info /*2131362333*/:
+                case R.id.keyguard_lock_screen_magazine_info /*2131362335*/:
                     if (PackageUtils.isAppInstalledForUser(MiuiKeyguardMoveLeftControlCenterView.this.mContext, LockScreenMagazineUtils.LOCK_SCREEN_MAGAZINE_PACKAGE_NAME, KeyguardUpdateMonitor.getCurrentUser())) {
                         Log.d("miui_keyguard", "left view goto lock screen wall paper");
                         MiuiKeyguardMoveLeftControlCenterView.this.setPreviewButtonClicked();
@@ -90,10 +90,10 @@ public class MiuiKeyguardMoveLeftControlCenterView extends MiuiKeyguardMoveLeftB
                     }
                     MiuiKeyguardMoveLeftControlCenterView.this.startAppStoreToDownload(R.id.keyguard_lock_screen_magazine_info);
                     return;
-                case R.id.keyguard_mi_wallet_info /*2131362335*/:
+                case R.id.keyguard_mi_wallet_info /*2131362337*/:
                     MiuiKeyguardMoveLeftControlCenterView.this.startToTSMClientActivity();
                     return;
-                case R.id.keyguard_remote_controller_info /*2131362340*/:
+                case R.id.keyguard_remote_controller_info /*2131362342*/:
                     if (PackageUtils.isAppInstalledForUser(MiuiKeyguardMoveLeftControlCenterView.this.mContext, "com.duokan.phone.remotecontroller", KeyguardUpdateMonitor.getCurrentUser())) {
                         Intent launchIntentForPackage = MiuiKeyguardMoveLeftControlCenterView.this.mContext.getPackageManager().getLaunchIntentForPackage("com.duokan.phone.remotecontroller");
                         launchIntentForPackage.addFlags(268435456);
@@ -102,7 +102,7 @@ public class MiuiKeyguardMoveLeftControlCenterView extends MiuiKeyguardMoveLeftB
                     }
                     MiuiKeyguardMoveLeftControlCenterView.this.startAppStoreToDownload(R.id.keyguard_remote_controller_info);
                     return;
-                case R.id.keyguard_smarthome_info /*2131362347*/:
+                case R.id.keyguard_smarthome_info /*2131362349*/:
                     if (PackageUtils.isAppInstalledForUser(MiuiKeyguardMoveLeftControlCenterView.this.mContext, "com.xiaomi.smarthome", KeyguardUpdateMonitor.getCurrentUser())) {
                         try {
                             MiuiKeyguardMoveLeftControlCenterView.this.mStatusBar.startActivity(PackageUtils.getSmartHomeMainIntent(), true);

@@ -107,6 +107,7 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
             switch (message.what) {
                 case b.a /*1001*/:
                     MiuiGxzwManager.this.setKeyguardAuthen(KeyguardUpdateMonitor.getInstance(MiuiGxzwManager.this.mContext).isFingerprintDetectionRunning());
+                    MiuiGxzwManager.this.setHealthAppAuthen(false);
                     MiuiGxzwManager miuiGxzwManager = MiuiGxzwManager.this;
                     if (message.arg1 != 1) {
                         z = false;
@@ -116,14 +117,18 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
                     MiuiGxzwManager.this.mMiuiGxzwOverlayView.setEnrolling(false);
                     return;
                 case b.b /*1002*/:
-                    MiuiGxzwManager.this.dismissGxzwView();
-                    MiuiGxzwManager.this.setKeyguardAuthen(false);
-                    MiuiGxzwManager.this.mMiuiGxzwIconView.setEnrolling(false);
-                    MiuiGxzwManager.this.mMiuiGxzwOverlayView.setEnrolling(false);
+                    if (!MiuiGxzwManager.this.mHealthAppAuthen) {
+                        MiuiGxzwManager.this.dismissGxzwView();
+                        MiuiGxzwManager.this.setKeyguardAuthen(false);
+                        MiuiGxzwManager.this.mMiuiGxzwIconView.setEnrolling(false);
+                        MiuiGxzwManager.this.mMiuiGxzwOverlayView.setEnrolling(false);
+                        return;
+                    }
                     return;
                 case b.c /*1003*/:
                     if (!MiuiGxzwManager.this.getKeyguardAuthen()) {
                         MiuiGxzwManager.this.setKeyguardAuthen(false);
+                        MiuiGxzwManager.this.setHealthAppAuthen(false);
                         MiuiGxzwManager.this.dismissGxzwView();
                         return;
                     }
@@ -131,6 +136,7 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
                 case b.d /*1004*/:
                     if (!MiuiGxzwManager.this.getKeyguardAuthen()) {
                         MiuiGxzwManager.this.setKeyguardAuthen(false);
+                        MiuiGxzwManager.this.setHealthAppAuthen(false);
                         MiuiGxzwManager.this.dismissGxzwView();
                         MiuiGxzwManager.this.mMiuiGxzwIconView.setEnrolling(false);
                         MiuiGxzwManager.this.mMiuiGxzwOverlayView.setEnrolling(false);
@@ -139,15 +145,48 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
                     return;
                 case b.e /*1005*/:
                     MiuiGxzwManager.this.setKeyguardAuthen(false);
+                    MiuiGxzwManager.this.setHealthAppAuthen(false);
                     MiuiGxzwManager.this.mMiuiGxzwIconView.setEnrolling(true);
                     MiuiGxzwManager.this.mMiuiGxzwOverlayView.setEnrolling(true);
                     MiuiGxzwManager.this.showGxzwView(false);
                     return;
                 case b.f /*1006*/:
                     int i = message.arg1;
-                    if ((i == 5 && !MiuiGxzwManager.this.getKeyguardAuthen()) || i == 8) {
+                    if (!MiuiGxzwManager.this.mHealthAppAuthen) {
+                        if ((i == 5 && !MiuiGxzwManager.this.getKeyguardAuthen()) || i == 8) {
+                            MiuiGxzwManager.this.dismissGxzwView();
+                            MiuiGxzwManager.this.setKeyguardAuthen(false);
+                            MiuiGxzwManager.this.setHealthAppAuthen(false);
+                            MiuiGxzwManager.this.mMiuiGxzwIconView.setEnrolling(false);
+                            MiuiGxzwManager.this.mMiuiGxzwOverlayView.setEnrolling(false);
+                            return;
+                        }
+                        return;
+                    }
+                    return;
+                case b.g /*1007*/:
+                    MiuiGxzwManager.this.setKeyguardAuthen(false);
+                    MiuiGxzwManager.this.setHealthAppAuthen(true);
+                    MiuiGxzwManager miuiGxzwManager2 = MiuiGxzwManager.this;
+                    if (message.arg1 != 1) {
+                        z = false;
+                    }
+                    miuiGxzwManager2.showGxzwView(z);
+                    MiuiGxzwManager.this.mMiuiGxzwIconView.setEnrolling(false);
+                    MiuiGxzwManager.this.mMiuiGxzwOverlayView.setEnrolling(false);
+                    return;
+                case b.h /*1008*/:
+                    MiuiGxzwManager.this.setHealthAppAuthen(false);
+                    if (!MiuiGxzwManager.this.getKeyguardAuthen()) {
                         MiuiGxzwManager.this.dismissGxzwView();
-                        MiuiGxzwManager.this.setKeyguardAuthen(false);
+                        MiuiGxzwManager.this.mMiuiGxzwIconView.setEnrolling(false);
+                        MiuiGxzwManager.this.mMiuiGxzwOverlayView.setEnrolling(false);
+                        return;
+                    }
+                    return;
+                case b.i /*1009*/:
+                    if (!MiuiGxzwManager.this.getKeyguardAuthen()) {
+                        MiuiGxzwManager.this.mMiuiGxzwIconView.setHightlightTransparen();
                         MiuiGxzwManager.this.mMiuiGxzwIconView.setEnrolling(false);
                         MiuiGxzwManager.this.mMiuiGxzwOverlayView.setEnrolling(false);
                         return;
@@ -158,6 +197,8 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
             }
         }
     };
+    /* access modifiers changed from: private */
+    public boolean mHealthAppAuthen = false;
     private IntentFilter mIntentFilter;
     private boolean mKeyguardAuthen = false;
     private boolean mKeyguardShow;
@@ -247,7 +288,7 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
     };
     private ContentObserver mLowlightContentObserver = new ContentObserver(this.mHandler) {
         public void onChange(boolean z) {
-            MiuiGxzwUtils.notifySurfaceFlinger(1104, MiuiGxzwUtils.isFodAodLowlightShowEnable(MiuiGxzwManager.this.mContext) ? 1 : 0);
+            MiuiGxzwUtils.notifySurfaceFlinger(1112, MiuiGxzwUtils.isFodAodLowlightShowEnable(MiuiGxzwManager.this.mContext) ? 1 : 0);
         }
     };
     /* access modifiers changed from: private */
@@ -372,6 +413,10 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
         this.mMiuiGxzwIconView.setUnlockLockout(z);
     }
 
+    public static boolean isSupportLowlight() {
+        return MiuiGxzwUtils.isSupportLowlight();
+    }
+
     public boolean isShouldShowGxzwIcon() {
         return this.mShouldShowGxzwIcon;
     }
@@ -384,6 +429,12 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
         NotificationPanelView notificationPanelView = this.mNotificationPanelView;
         if (notificationPanelView != null) {
             notificationPanelView.updateGxzwState();
+        }
+    }
+
+    private void updateHightlightBackground() {
+        if (this.mHealthAppAuthen) {
+            this.mMiuiGxzwIconView.updateHightlightBackground();
         }
     }
 
@@ -594,8 +645,10 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
         ((MiuiFastUnlockController) Dependency.get(MiuiFastUnlockController.class)).registerCallback(this.mFastUnlockCallback);
         this.mContext.getContentResolver().registerContentObserver(Settings.Secure.getUriFor("gxzw_icon_aod_show_enable"), false, this.mContentObserver, 0);
         this.mContentObserver.onChange(false);
-        this.mContext.getContentResolver().registerContentObserver(Settings.Secure.getUriFor("gxzw_icon_aod_lowlight_show_enable"), false, this.mLowlightContentObserver, 0);
-        this.mLowlightContentObserver.onChange(false);
+        if (MiuiGxzwUtils.isSupportLowlight()) {
+            this.mContext.getContentResolver().registerContentObserver(Settings.Secure.getUriFor("gxzw_icon_aod_lowlight_show_enable"), false, this.mLowlightContentObserver, 0);
+            this.mLowlightContentObserver.onChange(false);
+        }
     }
 
     public /* synthetic */ void lambda$new$0$MiuiGxzwManager(KeyguardUpdateMonitor keyguardUpdateMonitor) {
@@ -654,7 +707,19 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
             this.mHandler.removeMessages(b.e);
             this.mHandler.sendEmptyMessage(b.e);
             return 1;
-        } else if (i != 102) {
+        } else if (i == 102) {
+            this.mHandler.removeMessages(b.d);
+            this.mHandler.sendEmptyMessage(b.d);
+            return 1;
+        } else if (i == 400001) {
+            this.mHandler.removeMessages(b.g);
+            this.mHandler.sendMessage(this.mHandler.obtainMessage(b.g, i2, 0));
+            return 1;
+        } else if (i == 400004) {
+            this.mHandler.removeMessages(b.h);
+            this.mHandler.sendEmptyMessage(b.h);
+            return 1;
+        } else if (i != 400006) {
             switch (i) {
                 case 1:
                     this.mHandler.removeMessages(b.a);
@@ -680,8 +745,8 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
                     return 1;
             }
         } else {
-            this.mHandler.removeMessages(b.d);
-            this.mHandler.sendEmptyMessage(b.d);
+            this.mHandler.removeMessages(b.i);
+            this.mHandler.sendEmptyMessage(b.i);
             return 1;
         }
     }
@@ -744,6 +809,7 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
         Log.i("MiuiGxzwManager", "showGxzwView: lightIcon = " + z + ", mShowed = " + this.mShowed + ", mShouldShowGxzwIcon = " + this.mShouldShowGxzwIcon + ", keyguardAuthen = " + getKeyguardAuthen());
         if (!this.mShowed) {
             this.mShowed = true;
+            updateHightlightBackground();
             updateGxzwState();
             MiuiGxzwUtils.caculateGxzwIconSize(this.mContext);
             this.mMiuiGxzwOverlayView.show();
@@ -776,6 +842,15 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
             this.mMiuiGxzwIconView.onKeyguardAuthen(z);
             updateGxzwState();
         }
+    }
+
+    /* access modifiers changed from: private */
+    public synchronized void setHealthAppAuthen(boolean z) {
+        this.mHealthAppAuthen = z;
+    }
+
+    public synchronized boolean getHealthAppAuthen() {
+        return this.mHealthAppAuthen;
     }
 
     private void sendUpdates(MiuiGxzwCallback miuiGxzwCallback) {

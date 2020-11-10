@@ -215,7 +215,7 @@ public class KeyguardHostView extends FrameLayout implements KeyguardSecurityCon
                                     case R.styleable.AppCompatTheme_popupWindowStyle /*88*/:
                                     case R.styleable.AppCompatTheme_radioButtonStyle /*89*/:
                                     case R.styleable.AppCompatTheme_ratingBarStyle /*90*/:
-                                    case R.styleable.AppCompatTheme_ratingBarStyleIndicator /*91*/:
+                                    case 91:
                                         break;
                                 }
                             }
@@ -238,7 +238,7 @@ public class KeyguardHostView extends FrameLayout implements KeyguardSecurityCon
                     case R.styleable.AppCompatTheme_popupWindowStyle /*88*/:
                     case R.styleable.AppCompatTheme_radioButtonStyle /*89*/:
                     case R.styleable.AppCompatTheme_ratingBarStyle /*90*/:
-                    case R.styleable.AppCompatTheme_ratingBarStyleIndicator /*91*/:
+                    case 91:
                         break;
                 }
             }

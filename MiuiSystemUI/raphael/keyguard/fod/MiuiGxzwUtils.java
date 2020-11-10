@@ -30,8 +30,9 @@ class MiuiGxzwUtils {
     public static int GXZW_ICON_WIDTH = 173;
     public static int GXZW_ICON_X = 453;
     public static int GXZW_ICON_Y = 1640;
-    private static final boolean IS_SPECIAL_CEPHEUS = ("cepheus".equals(Build.DEVICE) && new HashSet(Arrays.asList(new String[]{"1.12.2", "1.2.2", "1.9.2", "1.19.2"})).contains(SystemProperties.get("ro.boot.hwversion", "null")));
-    public static int PRIVATE_FLAG_IS_HBM_OVERLAY = Integer.MIN_VALUE;
+    private static final boolean GXZW_LOWLIGHT_SENSOR = (SystemProperties.getInt("persist.vendor.sys.fp.expolevel", 0) == 136);
+    private static final boolean IS_SPECIAL_CEPHEUS;
+    public static int PRIVATE_FLAG_IS_HBM_OVERLAY;
     private static int SCREEN_HEIGHT_DP = -1;
     private static int SCREEN_WIDTH_DP = -1;
     private static int sPreShowTouches = 0;
@@ -41,11 +42,17 @@ class MiuiGxzwUtils {
         return R.drawable.gxzw_white_halo_light;
     }
 
+    public static int getHealthHaloRes() {
+        return R.drawable.gxzw_green_halo_light;
+    }
+
     public static boolean isLargeFod() {
         return false;
     }
 
     static {
+        boolean z = true;
+        PRIVATE_FLAG_IS_HBM_OVERLAY = Integer.MIN_VALUE;
         try {
             PRIVATE_FLAG_IS_HBM_OVERLAY = Class.forName("android.view.WindowManager$LayoutParams").getDeclaredField("PRIVATE_FLAG_IS_HBM_OVERLAY").getInt((Object) null);
         } catch (ClassNotFoundException e) {
@@ -55,6 +62,16 @@ class MiuiGxzwUtils {
         } catch (NoSuchFieldException unused) {
             Log.w("MiuiGxzwUtils", "WindowManager.LayoutParams does not have this field: PRIVATE_FLAG_IS_HBM_OVERLAY");
         }
+        HashSet hashSet = new HashSet(Arrays.asList(new String[]{"1.12.2", "1.2.2", "1.9.2", "1.19.2"}));
+        String str = SystemProperties.get("ro.boot.hwversion", "null");
+        if (!"cepheus".equals(Build.DEVICE) || !hashSet.contains(str)) {
+            z = false;
+        }
+        IS_SPECIAL_CEPHEUS = z;
+    }
+
+    public static boolean isSupportLowlight() {
+        return GXZW_LOWLIGHT_SENSOR;
     }
 
     public static void caculateGxzwIconSize(Context context) {
