@@ -237,11 +237,13 @@ public class ControlCenter extends SystemUI implements ControlPanelController.Us
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("android.intent.action.CLOSE_SYSTEM_DIALOGS");
         this.mContext.registerReceiverAsUser(this.mBroadcastReceiver, UserHandle.ALL, intentFilter, (String) null, (Handler) null);
+        this.mExpandInfoController.register();
     }
 
     /* access modifiers changed from: protected */
     public void unregister() {
         this.mContext.unregisterReceiver(this.mBroadcastReceiver);
+        this.mExpandInfoController.unregister();
     }
 
     public boolean isExpandable() {

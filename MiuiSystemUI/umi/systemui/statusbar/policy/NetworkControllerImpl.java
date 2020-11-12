@@ -123,10 +123,6 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
         return i != 1 ? i != 2 ? i != 3 ? R.drawable.stat_sys_signal_volte : R.drawable.stat_sys_signal_volte_hd_voice : R.drawable.stat_sys_signal_volte_no_frame : R.drawable.stat_sys_signal_volte_4g;
     }
 
-    private int transformVowifiDrawableId(int i) {
-        return i != 1 ? i != 2 ? R.drawable.stat_sys_vowifi : R.drawable.stat_sys_vowifi_wifi : R.drawable.stat_sys_vowifi_call;
-    }
-
     /* JADX WARNING: Illegal instructions before constructor call */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     public NetworkControllerImpl(@com.miui.systemui.annotation.Inject android.content.Context r16, @com.miui.systemui.annotation.Inject(tag = "SysUiNetBg") android.os.Looper r17, @com.miui.systemui.annotation.Inject com.android.systemui.statusbar.policy.DeviceProvisionedController r18) {
@@ -203,7 +199,7 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
         this.mVowifiResourceForOperators = new int[phoneCount];
         for (int i = 0; i < this.mPhoneCount; i++) {
             this.mVolteResourceForOperators[i] = transformVolteDrawableId(0);
-            this.mVowifiResourceForOperators[i] = transformVowifiDrawableId(0);
+            this.mVowifiResourceForOperators[i] = transformVowifiDrawableId(0, i, false);
         }
         String string = context.getString(R.string.status_bar_network_name_separator);
         this.mNetworkNameSeparator = string;
@@ -827,8 +823,11 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
                     this.mHideVowifiForOperators[slotId] = MCCUtils.isHideVowifiForOperator(resourcesForOperation);
                     i = resourcesForOperation.getInteger(R.integer.status_bar_volte_drawable_type);
                     i2 = resourcesForOperation.getInteger(R.integer.status_bar_vowifi_drawable_type);
+                    boolean z = resourcesForOperation.getBoolean(R.bool.status_bar_show_dual_vowifi_icons);
                     this.mVolteResourceForOperators[slotId] = transformVolteDrawableId(i);
-                    this.mVowifiResourceForOperators[slotId] = transformVowifiDrawableId(i2);
+                    this.mVowifiResourceForOperators[slotId] = transformVowifiDrawableId(i2, slotId, z);
+                    TelephonyIcons.updateDataTypeMcc(this.mContext, simOperatorNumericForPhone, slotId);
+                    TelephonyIcons.updateDataTypeMccMnc(this.mContext, simOperatorNumericForPhone, slotId);
                 } else {
                     Resources resources = this.mContext.getResources();
                     this.mOperators[slotId] = simOperatorNumericForPhone;
@@ -838,13 +837,25 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
                     this.mHideVowifiForOperators[slotId] = this.mContext.getResources().getBoolean(R.bool.status_bar_hide_vowifi);
                     i = resources.getInteger(R.integer.status_bar_volte_drawable_type);
                     i2 = resources.getInteger(R.integer.status_bar_vowifi_drawable_type);
+                    boolean z2 = resources.getBoolean(R.bool.status_bar_show_dual_vowifi_icons);
                     this.mVolteResourceForOperators[slotId] = transformVolteDrawableId(i);
-                    this.mVowifiResourceForOperators[slotId] = transformVowifiDrawableId(i2);
+                    this.mVowifiResourceForOperators[slotId] = transformVowifiDrawableId(i2, slotId, z2);
                 }
                 Log.d("NetworkController", "updateResourceAboutMccMnc: subId = " + next.getSubscriptionId() + ", slotId = " + slotId + ", oprator = " + simOperatorNumericForPhone + ", mHideVolteForOperators = " + this.mHideVolteForOperators[slotId] + ", misMobileTypeShownWhenWifiOn = " + this.misMobileTypeShownWhenWifiOn[slotId] + ", mDataConnedInMMsForOperators = " + this.mDataConnedInMMsForOperators[slotId] + ", mHideVowifiForOperators = " + this.mHideVowifiForOperators[slotId] + ", volteType = " + i + ", vowifiType = " + i2);
             }
             this.mCallbackHandler.reApply();
         }
+    }
+
+    private int transformVowifiDrawableId(int i, int i2, boolean z) {
+        List<SubscriptionInfo> list;
+        if (i != 1) {
+            return i != 2 ? R.drawable.stat_sys_vowifi : R.drawable.stat_sys_vowifi_wifi;
+        }
+        if (!z || i2 < 0 || (list = this.mCurrentSubscriptions) == null || list.size() != 2) {
+            return R.drawable.stat_sys_vowifi_call;
+        }
+        return i2 == 0 ? R.drawable.stat_sys_vowifi_call_1 : R.drawable.stat_sys_vowifi_call_2;
     }
 
     /* access modifiers changed from: private */

@@ -184,6 +184,9 @@ public class ExpandInfoControllerImpl implements ExpandInfoController {
         if (!z) {
             this.mInfosMap.putAll(this.mInfosMapOld);
         }
+        if (z) {
+            this.mInfosMap.put(16, this.mInfosMapOld.get(Integer.valueOf(this.mSelectedType)));
+        }
     }
 
     public void startActivity(String str) {
@@ -207,5 +210,15 @@ public class ExpandInfoControllerImpl implements ExpandInfoController {
                 e.printStackTrace();
             }
         }
+    }
+
+    public void unregister() {
+        this.mDataUsageInfo.unregister();
+        this.mDataBillInfo.unregister();
+    }
+
+    public void register() {
+        this.mDataUsageInfo.register();
+        this.mDataBillInfo.register();
     }
 }

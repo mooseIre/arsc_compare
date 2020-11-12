@@ -31,6 +31,8 @@ public interface ExpandInfoController {
 
     void onUserSwitched();
 
+    void register();
+
     void requestData();
 
     void setContentView(ControlPanelContentView controlPanelContentView);
@@ -42,6 +44,8 @@ public interface ExpandInfoController {
     void startActivity(String str);
 
     void startActivityByUri(String str);
+
+    void unregister();
 
     void updateInfo(int i, Info info) {
     }

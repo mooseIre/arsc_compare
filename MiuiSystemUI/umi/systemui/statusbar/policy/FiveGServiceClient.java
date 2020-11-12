@@ -672,11 +672,11 @@ public class FiveGServiceClient {
     /* access modifiers changed from: private */
     public void update5GIcon() {
         boolean z = true;
-        this.mIsUserFiveGEnabled = Settings.Global.getInt(this.mContext.getContentResolver(), "fiveg_user_enable", 1) == 1;
-        if (Settings.Global.getInt(this.mContext.getContentResolver(), "dual_nr_enabled", 0) != 1) {
+        if (Settings.Global.getInt(this.mContext.getContentResolver(), "fiveg_user_enable", 1) != 1) {
             z = false;
         }
-        this.mIsDualNrEnabled = z;
+        this.mIsUserFiveGEnabled = z;
+        this.mIsDualNrEnabled = TelephonyManager.getDefault().isDualNrSupported();
         this.mDefaultDataSlotId = SubscriptionManager.getDefault().getDefaultDataSlotId();
         localLog("5GEnabledChanged", "5G enable state has changed to " + this.mIsUserFiveGEnabled + ", dds is " + this.mDefaultDataSlotId);
         for (int i = 0; i < TelephonyManager.getDefault().getPhoneCount(); i++) {

@@ -449,6 +449,7 @@ public class QSBigTileView extends QSTileView {
         this.mTitleView.setText(state.label);
         this.mStatusView.setText(charSequence);
         this.mQSTileState = state;
+        this.mState = state.state;
         updateBackground();
     }
 

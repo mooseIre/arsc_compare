@@ -101,6 +101,10 @@ public class ImageWallpaper extends WallpaperService {
         public GLWallpaperRenderer mRenderer;
         private boolean mWaitingForRendering;
 
+        public boolean shouldZoomOutWallpaper() {
+            return true;
+        }
+
         GLEngine(Context context) {
             super(ImageWallpaper.this);
             this.mContext = context;
