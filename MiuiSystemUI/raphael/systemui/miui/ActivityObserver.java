@@ -21,9 +21,14 @@ public interface ActivityObserver extends CallbackController<ActivityObserverCal
 
         void activityStopped(Intent intent) {
         }
+
+        void onLauncherPackageChanged(String str) {
+        }
     }
 
     ComponentName getLastResumedActivity();
+
+    String getLauncherPackage();
 
     ComponentName getTopActivity();
 

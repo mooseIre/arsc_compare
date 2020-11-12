@@ -150,6 +150,14 @@ public class ActivityObserverImpl implements ActivityObserver, Dumpable, DeviceP
         return this.mTopIsLauncher;
     }
 
+    public String getLauncherPackage() {
+        ComponentName componentName = this.mLauncherComponent;
+        if (componentName == null) {
+            return null;
+        }
+        return componentName.getPackageName();
+    }
+
     public void addCallback(ActivityObserver.ActivityObserverCallback activityObserverCallback) {
         synchronized (this.mCallbacks) {
             this.mCallbacks.add(activityObserverCallback);
@@ -165,11 +173,20 @@ public class ActivityObserverImpl implements ActivityObserver, Dumpable, DeviceP
     /* access modifiers changed from: private */
     public void checkLauncherInfo() {
         ActivityInfo activityInfo;
+        ComponentName componentName = this.mLauncherComponent;
+        String str = null;
+        String packageName = componentName != null ? componentName.getPackageName() : null;
         ResolveInfo currentLauncherInfo = getCurrentLauncherInfo(this.mContext);
         if (currentLauncherInfo == null || (activityInfo = currentLauncherInfo.activityInfo) == null) {
             this.mLauncherComponent = null;
         } else {
             this.mLauncherComponent = new ComponentName(activityInfo.packageName, currentLauncherInfo.activityInfo.name);
+            str = this.mLauncherComponent.getPackageName();
+        }
+        if (!TextUtils.equals(packageName, str)) {
+            for (ActivityObserver.ActivityObserverCallback onLauncherPackageChanged : this.mCallbacks) {
+                onLauncherPackageChanged.onLauncherPackageChanged(str);
+            }
         }
         if (Constants.DEBUG) {
             Log.i("ActivityObserver", "Launcher is: " + this.mLauncherComponent);

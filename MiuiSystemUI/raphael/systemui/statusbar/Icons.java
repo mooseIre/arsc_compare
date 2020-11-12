@@ -104,6 +104,8 @@ public class Icons {
             sMapping.put(R.drawable.stat_sys_signal_null_half, Integer.valueOf(R.drawable.stat_sys_signal_null_half_darkmode));
             sMapping.put(R.drawable.stat_sys_battery_charging, Integer.valueOf(R.drawable.stat_sys_battery_charging_darkmode));
             sMapping.put(R.drawable.stat_sys_vowifi_call, Integer.valueOf(R.drawable.stat_sys_vowifi_call_darkmode));
+            sMapping.put(R.drawable.stat_sys_vowifi_call_1, Integer.valueOf(R.drawable.stat_sys_vowifi_call_1_darkmode));
+            sMapping.put(R.drawable.stat_sys_vowifi_call_2, Integer.valueOf(R.drawable.stat_sys_vowifi_call_2_darkmode));
             sMapping.put(R.drawable.stat_sys_signal_volte_4g, Integer.valueOf(R.drawable.stat_sys_signal_volte_4g_darkmode));
             sMapping.put(R.drawable.stat_sys_vowifi_wifi, Integer.valueOf(R.drawable.stat_sys_vowifi_wifi_darkmode));
             sMapping.put(R.drawable.stat_sys_signal_volte_no_frame, Integer.valueOf(R.drawable.stat_sys_signal_volte_no_frame_darkmode));
