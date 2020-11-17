@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView android:textSize="@dimen/battery_percent_mark_view_text_size" android:textColor="?android:textColorPrimary" android:gravity="center_vertical" android:id="@id/battery_percentage_mark_view" android:paddingTop="@dimen/battery_percent_mark_view_padding_top" android:paddingBottom="@dimen/statusbar_battery_text_bottom_padding" android:layout_width="wrap_content" android:layout_height="fill_parent" android:text="@string/battery_meter_percent_sign" android:singleLine="true"
+  xmlns:android="http://schemas.android.com/apk/res/android" />
