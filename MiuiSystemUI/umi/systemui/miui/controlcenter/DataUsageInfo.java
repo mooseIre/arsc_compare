@@ -17,14 +17,14 @@ public class DataUsageInfo extends BaseInfo implements NetworkController.SignalC
         super(context, i, expandInfoController);
         NetworkController networkController = (NetworkController) Dependency.get(NetworkController.class);
         this.mNetworkController = networkController;
-        networkController.addCallback((NetworkController.SignalCallback) this);
+        networkController.addCallback(this);
         requestData(this.mUserHandle);
     }
 
     public void setIsDefaultDataSim(int i, boolean z) {
         if (z && this.mDataSlot != i) {
             this.mDataSlot = i;
-            refresh(2500);
+            refresh();
         }
     }
 
@@ -33,22 +33,21 @@ public class DataUsageInfo extends BaseInfo implements NetworkController.SignalC
         if (z2 != z) {
             boolean z3 = !z2 && z;
             this.mNoSims = z;
-            refresh(2500);
             if (z3) {
                 this.mDataSlot = 0;
+                refresh();
             }
         }
     }
 
     /* access modifiers changed from: protected */
     /* JADX WARNING: Code restructure failed: missing block: B:12:0x003b, code lost:
-        r4 = r2.getInt(r2.getColumnIndex("package_type"));
         r0.title = r2.getString(r2.getColumnIndex("traffic_name"));
         r0.status = r2.getString(r2.getColumnIndex("traffic_value"));
         r0.unit = r2.getString(r2.getColumnIndex("traffic_unit"));
      */
     /* JADX WARNING: Code restructure failed: missing block: B:13:0x006e, code lost:
-        if (r4 == -1) goto L_0x0071;
+        if (r2.getInt(r2.getColumnIndex("package_type")) == -1) goto L_0x0071;
      */
     /* JADX WARNING: Code restructure failed: missing block: B:14:0x0070, code lost:
         r3 = true;
@@ -116,21 +115,21 @@ public class DataUsageInfo extends BaseInfo implements NetworkController.SignalC
             int r5 = r2.getInt(r5)     // Catch:{ Exception -> 0x00e2, all -> 0x00df }
             int r6 = r10.mDataSlot     // Catch:{ Exception -> 0x00e2, all -> 0x00df }
             if (r5 != r6) goto L_0x00d1
+            java.lang.String r4 = "traffic_name"
+            int r4 = r2.getColumnIndex(r4)     // Catch:{ Exception -> 0x00e2, all -> 0x00df }
+            java.lang.String r4 = r2.getString(r4)     // Catch:{ Exception -> 0x00e2, all -> 0x00df }
+            r0.title = r4     // Catch:{ Exception -> 0x00e2, all -> 0x00df }
+            java.lang.String r4 = "traffic_value"
+            int r4 = r2.getColumnIndex(r4)     // Catch:{ Exception -> 0x00e2, all -> 0x00df }
+            java.lang.String r4 = r2.getString(r4)     // Catch:{ Exception -> 0x00e2, all -> 0x00df }
+            r0.status = r4     // Catch:{ Exception -> 0x00e2, all -> 0x00df }
+            java.lang.String r4 = "traffic_unit"
+            int r4 = r2.getColumnIndex(r4)     // Catch:{ Exception -> 0x00e2, all -> 0x00df }
+            java.lang.String r4 = r2.getString(r4)     // Catch:{ Exception -> 0x00e2, all -> 0x00df }
+            r0.unit = r4     // Catch:{ Exception -> 0x00e2, all -> 0x00df }
             java.lang.String r4 = "package_type"
             int r4 = r2.getColumnIndex(r4)     // Catch:{ Exception -> 0x00e2, all -> 0x00df }
             int r4 = r2.getInt(r4)     // Catch:{ Exception -> 0x00e2, all -> 0x00df }
-            java.lang.String r5 = "traffic_name"
-            int r5 = r2.getColumnIndex(r5)     // Catch:{ Exception -> 0x00e2, all -> 0x00df }
-            java.lang.String r5 = r2.getString(r5)     // Catch:{ Exception -> 0x00e2, all -> 0x00df }
-            r0.title = r5     // Catch:{ Exception -> 0x00e2, all -> 0x00df }
-            java.lang.String r5 = "traffic_value"
-            int r5 = r2.getColumnIndex(r5)     // Catch:{ Exception -> 0x00e2, all -> 0x00df }
-            java.lang.String r5 = r2.getString(r5)     // Catch:{ Exception -> 0x00e2, all -> 0x00df }
-            r0.status = r5     // Catch:{ Exception -> 0x00e2, all -> 0x00df }
-            java.lang.String r5 = "traffic_unit"
-            int r5 = r2.getColumnIndex(r5)     // Catch:{ Exception -> 0x00e2, all -> 0x00df }
-            java.lang.String r5 = r2.getString(r5)     // Catch:{ Exception -> 0x00e2, all -> 0x00df }
-            r0.unit = r5     // Catch:{ Exception -> 0x00e2, all -> 0x00df }
             r5 = -1
             r6 = 1
             if (r4 == r5) goto L_0x0071

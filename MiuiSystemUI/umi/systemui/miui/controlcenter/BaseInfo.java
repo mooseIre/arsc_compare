@@ -1,9 +1,6 @@
 package com.android.systemui.miui.controlcenter;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.database.ContentObserver;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -24,19 +21,6 @@ public abstract class BaseInfo {
     private Handler mHandler;
     protected ExpandInfoController.Info mInfo = new ExpandInfoController.Info();
     private boolean mObserverRigstered;
-    private BroadcastReceiver mSIMDataReceiver = new BroadcastReceiver() {
-        public void onReceive(Context context, Intent intent) {
-            if (intent != null) {
-                if ("android.intent.action.SIM_STATE_CHANGED".equals(intent.getAction())) {
-                    BaseInfo.this.refresh(2500);
-                } else if ("com.miui.networkassistant.CORRECTION_SUCCEED".equals(intent.getAction())) {
-                    BaseInfo.this.refresh();
-                } else if ("com.miui.networkassistant.CORRECTION_FAILED".equals(intent.getAction())) {
-                    BaseInfo.this.refresh();
-                }
-            }
-        }
-    };
     protected int mType;
     protected UserHandle mUserHandle;
 
@@ -83,30 +67,9 @@ public abstract class BaseInfo {
         }
     }
 
-    public void register() {
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction("android.intent.action.SIM_STATE_CHANGED");
-        intentFilter.addAction("com.miui.networkassistant.CORRECTION_SUCCEED");
-        intentFilter.addAction("com.miui.networkassistant.CORRECTION_FAILED");
-        this.mContext.registerReceiver(this.mSIMDataReceiver, intentFilter);
-    }
-
-    public void unregister() {
-        this.mContext.unregisterReceiver(this.mSIMDataReceiver);
-    }
-
     /* access modifiers changed from: protected */
     public void refresh() {
         new UpdateInfoDetailTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new Void[0]);
-    }
-
-    /* access modifiers changed from: protected */
-    public void refresh(long j) {
-        this.mHandler.postDelayed(new Runnable() {
-            public void run() {
-                BaseInfo.this.refresh();
-            }
-        }, j);
     }
 
     private class UpdateInfoDetailTask extends AsyncTask<Void, Void, ExpandInfoController.Info> {

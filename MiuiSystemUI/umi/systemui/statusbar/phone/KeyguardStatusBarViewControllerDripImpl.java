@@ -96,7 +96,7 @@ public class KeyguardStatusBarViewControllerDripImpl implements KeyguardStatusBa
         this.mRightOrderedIconManager = new StatusBarIconController.OrderedIconManager(this.mStatusBarView.mStatusIcons, new ArrayList(Arrays.asList(new String[]{MiStat.Param.LOCATION, "bluetooth"})), true);
         ((StatusBarIconController) Dependency.get(cls)).addIconGroup(this.mRightOrderedIconManager);
         this.mKeyguardSlaveWifi = (AnimatedImageView) this.mStatusBarView.findViewById(R.id.drip_slave_wifi);
-        ((NetworkController) Dependency.get(NetworkController.class)).addCallback((NetworkController.SignalCallback) this);
+        ((NetworkController) Dependency.get(NetworkController.class)).addCallback(this);
         ((ConfigurationController) Dependency.get(ConfigurationController.class)).addCallback(this.mConfigurationListener);
         ((MiuiStatusBarPromptController) Dependency.get(MiuiStatusBarPromptController.class)).addAndUpdatePromptStateChangedListener(TAG, this);
     }
@@ -114,7 +114,7 @@ public class KeyguardStatusBarViewControllerDripImpl implements KeyguardStatusBa
             ((ConfigurationController) Dependency.get(ConfigurationController.class)).removeCallback(this.mConfigurationListener);
         }
         ((MiuiStatusBarPromptController) Dependency.get(MiuiStatusBarPromptController.class)).removePromptStateChangedListener(TAG);
-        ((NetworkController) Dependency.get(NetworkController.class)).removeCallback((NetworkController.SignalCallback) this);
+        ((NetworkController) Dependency.get(NetworkController.class)).removeCallback(this);
     }
 
     public void setDarkMode(Rect rect, float f, int i) {

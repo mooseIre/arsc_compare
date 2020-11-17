@@ -71,9 +71,9 @@ public class CellularTile extends QSTileImpl<QSTile.BooleanState> {
 
     public void handleSetListening(boolean z) {
         if (z) {
-            this.mController.addCallback((NetworkController.SignalCallback) this.mSignalCallback);
+            this.mController.addCallback(this.mSignalCallback);
         } else {
-            this.mController.removeCallback((NetworkController.SignalCallback) this.mSignalCallback);
+            this.mController.removeCallback(this.mSignalCallback);
         }
     }
 

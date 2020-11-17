@@ -211,14 +211,4 @@ public class ExpandInfoControllerImpl implements ExpandInfoController {
             }
         }
     }
-
-    public void unregister() {
-        this.mDataUsageInfo.unregister();
-        this.mDataBillInfo.unregister();
-    }
-
-    public void register() {
-        this.mDataUsageInfo.register();
-        this.mDataBillInfo.register();
-    }
 }

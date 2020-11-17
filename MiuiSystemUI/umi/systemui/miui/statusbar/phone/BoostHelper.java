@@ -1,9 +1,11 @@
 package com.android.systemui.miui.statusbar.phone;
 
+import android.os.Build;
 import android.os.MiuiProcess;
 import android.os.Process;
 import android.util.Log;
 import android.util.Slog;
+import android.view.ThreadedRenderer;
 import android.view.View;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -25,13 +27,16 @@ public class BoostHelper {
         if (this.mRenderThreadTid == 0) {
             int i = 0;
             try {
-                Object invoke = View.class.getDeclaredMethod("getThreadedRenderer", new Class[0]).invoke(view, new Object[0]);
-                Class<?> cls = Class.forName("android.graphics.HardwareRenderer");
+                ThreadedRenderer threadedRenderer = view.getThreadedRenderer();
+                Class cls = threadedRenderer.getClass();
+                if (Build.VERSION.SDK_INT > 28) {
+                    cls = cls.getSuperclass();
+                }
                 Method declaredMethod = cls.getDeclaredMethod("nGetRenderThreadTid", new Class[]{Long.TYPE});
                 declaredMethod.setAccessible(true);
                 Field declaredField = cls.getDeclaredField("mNativeProxy");
                 declaredField.setAccessible(true);
-                i = ((Integer) declaredMethod.invoke(invoke, new Object[]{Long.valueOf(declaredField.getLong(invoke))})).intValue();
+                i = ((Integer) declaredMethod.invoke(threadedRenderer, new Object[]{Long.valueOf(declaredField.getLong(threadedRenderer))})).intValue();
                 Log.d("systemui_boost", "getRenderThreadId   tid=" + i);
             } catch (Exception e) {
                 e.printStackTrace();

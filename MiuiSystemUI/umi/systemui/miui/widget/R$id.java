@@ -17,5 +17,5 @@ public final class R$id {
     public static final int keyboard_letter = 2131362306;
     public static final int keyboard_number = 2131362307;
     public static final int keyboard_symbol = 2131362313;
-    public static final int preview_text = 2131362666;
+    public static final int preview_text = 2131362665;
 }

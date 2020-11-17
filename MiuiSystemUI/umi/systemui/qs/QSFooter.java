@@ -321,14 +321,14 @@ public class QSFooter extends FrameLayout implements View.OnClickListener, UserI
             this.mUserInfoController.addCallback(this);
             if (((NetworkController) Dependency.get(cls)).hasVoiceCallingFeature()) {
                 ((NetworkController) Dependency.get(cls)).addEmergencyListener(this);
-                ((NetworkController) Dependency.get(cls)).addCallback((NetworkController.SignalCallback) this);
+                ((NetworkController) Dependency.get(cls)).addCallback(this);
                 return;
             }
             return;
         }
         this.mUserInfoController.removeCallback(this);
         ((NetworkController) Dependency.get(cls)).removeEmergencyListener(this);
-        ((NetworkController) Dependency.get(cls)).removeCallback((NetworkController.SignalCallback) this);
+        ((NetworkController) Dependency.get(cls)).removeCallback(this);
     }
 
     public void setQSPanel(QSPanel qSPanel) {
