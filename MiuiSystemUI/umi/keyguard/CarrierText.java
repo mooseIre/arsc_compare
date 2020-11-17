@@ -84,7 +84,7 @@ public class CarrierText extends TextView implements NetworkController.CarrierNa
             if (isCustomizationTest()) {
                 ((NetworkController) Dependency.get(cls)).addMobileTypeListener(this);
             }
-            ((NetworkController) Dependency.get(cls)).addCallback((NetworkController.SignalCallback) this);
+            ((NetworkController) Dependency.get(cls)).addCallback(this);
             return;
         }
         this.mSupportNetwork = false;
@@ -175,7 +175,7 @@ public class CarrierText extends TextView implements NetworkController.CarrierNa
             if (isCustomizationTest()) {
                 ((NetworkController) Dependency.get(cls)).removeMobileTypeListener(this);
             }
-            ((NetworkController) Dependency.get(cls)).removeCallback((NetworkController.SignalCallback) this);
+            ((NetworkController) Dependency.get(cls)).removeCallback(this);
         }
         ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).removeDarkReceiver((DarkIconDispatcher.DarkReceiver) this);
     }
