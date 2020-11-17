@@ -468,7 +468,7 @@ public class KeyguardViewMediator extends SystemUI {
                 z = true;
                 KeyguardViewMediator.this.mLastSimStates.append(i2, state);
             }
-            switch (AnonymousClass24.$SwitchMap$com$android$internal$telephony$IccCardConstants$State[state.ordinal()]) {
+            switch (AnonymousClass25.$SwitchMap$com$android$internal$telephony$IccCardConstants$State[state.ordinal()]) {
                 case 1:
                 case 2:
                     synchronized (KeyguardViewMediator.this) {
@@ -682,8 +682,8 @@ public class KeyguardViewMediator extends SystemUI {
     public void onShortPowerPressedGoHome() {
     }
 
-    /* renamed from: com.android.systemui.keyguard.KeyguardViewMediator$24  reason: invalid class name */
-    static /* synthetic */ class AnonymousClass24 {
+    /* renamed from: com.android.systemui.keyguard.KeyguardViewMediator$25  reason: invalid class name */
+    static /* synthetic */ class AnonymousClass25 {
         static final /* synthetic */ int[] $SwitchMap$com$android$internal$telephony$IccCardConstants$State = new int[IccCardConstants.State.values().length];
 
         /* JADX WARNING: Can't wrap try/catch for region: R(12:0|1|2|3|4|5|6|7|8|9|10|(3:11|12|14)) */
@@ -737,7 +737,7 @@ public class KeyguardViewMediator extends SystemUI {
             L_0x004b:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.keyguard.KeyguardViewMediator.AnonymousClass24.<clinit>():void");
+            throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.keyguard.KeyguardViewMediator.AnonymousClass25.<clinit>():void");
         }
     }
 
@@ -893,27 +893,27 @@ public class KeyguardViewMediator extends SystemUI {
             r0.resetFaceUnlockMode()
             monitor-enter(r5)
             r0 = 0
-            r5.mDeviceInteractive = r0     // Catch:{ all -> 0x00fc }
+            r5.mDeviceInteractive = r0     // Catch:{ all -> 0x00f9 }
             r1 = 1
-            r5.mGoingToSleep = r1     // Catch:{ all -> 0x00fc }
-            r5.mWakeupByPickUp = r0     // Catch:{ all -> 0x00fc }
-            r5.mUnlockByFingerPrint = r0     // Catch:{ all -> 0x00fc }
-            r5.mReadyForKeyEvent = r0     // Catch:{ all -> 0x00fc }
-            r5.mSendKeyEventScreenOn = r0     // Catch:{ all -> 0x00fc }
-            android.content.Context r2 = r5.mContext     // Catch:{ all -> 0x00fc }
-            com.android.keyguard.analytics.AnalyticsHelper r2 = com.android.keyguard.analytics.AnalyticsHelper.getInstance(r2)     // Catch:{ all -> 0x00fc }
-            r2.resetAnalyticsParams()     // Catch:{ all -> 0x00fc }
-            r5.resetFingerprintUnlockState()     // Catch:{ all -> 0x00fc }
-            int r2 = com.android.keyguard.KeyguardUpdateMonitor.getCurrentUser()     // Catch:{ all -> 0x00fc }
-            android.content.Context r3 = r5.mContext     // Catch:{ all -> 0x00fc }
-            com.android.systemui.statusbar.phone.UnlockMethodCache r3 = com.android.systemui.statusbar.phone.UnlockMethodCache.getInstance(r3)     // Catch:{ all -> 0x00fc }
-            r3.updateSecure()     // Catch:{ all -> 0x00fc }
-            com.android.internal.widget.LockPatternUtils r3 = r5.mLockPatternUtils     // Catch:{ all -> 0x00fc }
-            boolean r3 = r3.getPowerButtonInstantlyLocks(r2)     // Catch:{ all -> 0x00fc }
+            r5.mGoingToSleep = r1     // Catch:{ all -> 0x00f9 }
+            r5.mWakeupByPickUp = r0     // Catch:{ all -> 0x00f9 }
+            r5.mUnlockByFingerPrint = r0     // Catch:{ all -> 0x00f9 }
+            r5.mReadyForKeyEvent = r0     // Catch:{ all -> 0x00f9 }
+            r5.mSendKeyEventScreenOn = r0     // Catch:{ all -> 0x00f9 }
+            android.content.Context r2 = r5.mContext     // Catch:{ all -> 0x00f9 }
+            com.android.keyguard.analytics.AnalyticsHelper r2 = com.android.keyguard.analytics.AnalyticsHelper.getInstance(r2)     // Catch:{ all -> 0x00f9 }
+            r2.resetAnalyticsParams()     // Catch:{ all -> 0x00f9 }
+            r5.resetFingerprintUnlockState()     // Catch:{ all -> 0x00f9 }
+            int r2 = com.android.keyguard.KeyguardUpdateMonitor.getCurrentUser()     // Catch:{ all -> 0x00f9 }
+            android.content.Context r3 = r5.mContext     // Catch:{ all -> 0x00f9 }
+            com.android.systemui.statusbar.phone.UnlockMethodCache r3 = com.android.systemui.statusbar.phone.UnlockMethodCache.getInstance(r3)     // Catch:{ all -> 0x00f9 }
+            r3.updateSecure()     // Catch:{ all -> 0x00f9 }
+            com.android.internal.widget.LockPatternUtils r3 = r5.mLockPatternUtils     // Catch:{ all -> 0x00f9 }
+            boolean r3 = r3.getPowerButtonInstantlyLocks(r2)     // Catch:{ all -> 0x00f9 }
             if (r3 != 0) goto L_0x0064
-            android.content.Context r3 = r5.mContext     // Catch:{ all -> 0x00fc }
-            com.android.systemui.statusbar.phone.UnlockMethodCache r3 = com.android.systemui.statusbar.phone.UnlockMethodCache.getInstance(r3)     // Catch:{ all -> 0x00fc }
-            boolean r3 = r3.isMethodSecure(r2)     // Catch:{ all -> 0x00fc }
+            android.content.Context r3 = r5.mContext     // Catch:{ all -> 0x00f9 }
+            com.android.systemui.statusbar.phone.UnlockMethodCache r3 = com.android.systemui.statusbar.phone.UnlockMethodCache.getInstance(r3)     // Catch:{ all -> 0x00f9 }
+            boolean r3 = r3.isMethodSecure(r2)     // Catch:{ all -> 0x00f9 }
             if (r3 != 0) goto L_0x0062
             goto L_0x0064
         L_0x0062:
@@ -922,71 +922,70 @@ public class KeyguardViewMediator extends SystemUI {
         L_0x0064:
             r3 = r1
         L_0x0065:
-            r5.mLockLater = r0     // Catch:{ all -> 0x00fc }
-            com.android.internal.policy.IKeyguardExitCallback r4 = r5.mExitSecureCallback     // Catch:{ all -> 0x00fc }
+            r5.mLockLater = r0     // Catch:{ all -> 0x00f9 }
+            com.android.internal.policy.IKeyguardExitCallback r4 = r5.mExitSecureCallback     // Catch:{ all -> 0x00f9 }
             if (r4 == 0) goto L_0x008b
             java.lang.String r2 = "KeyguardViewMediator"
             java.lang.String r3 = "pending exit secure callback cancelled"
-            android.util.Log.d(r2, r3)     // Catch:{ all -> 0x00fc }
+            android.util.Log.d(r2, r3)     // Catch:{ all -> 0x00f9 }
             com.android.internal.policy.IKeyguardExitCallback r2 = r5.mExitSecureCallback     // Catch:{ RemoteException -> 0x0078 }
             r2.onKeyguardExitResult(r0)     // Catch:{ RemoteException -> 0x0078 }
             goto L_0x0080
         L_0x0078:
-            r2 = move-exception
-            java.lang.String r3 = "KeyguardViewMediator"
-            java.lang.String r4 = "Failed to call onKeyguardExitResult(false)"
-            android.util.Slog.w(r3, r4, r2)     // Catch:{ all -> 0x00fc }
+            r0 = move-exception
+            java.lang.String r2 = "KeyguardViewMediator"
+            java.lang.String r3 = "Failed to call onKeyguardExitResult(false)"
+            android.util.Slog.w(r2, r3, r0)     // Catch:{ all -> 0x00f9 }
         L_0x0080:
-            r2 = 0
-            r5.mExitSecureCallback = r2     // Catch:{ all -> 0x00fc }
-            boolean r2 = r5.mExternallyEnabled     // Catch:{ all -> 0x00fc }
-            if (r2 != 0) goto L_0x00c8
-            r5.hideLocked()     // Catch:{ all -> 0x00fc }
+            r0 = 0
+            r5.mExitSecureCallback = r0     // Catch:{ all -> 0x00f9 }
+            boolean r0 = r5.mExternallyEnabled     // Catch:{ all -> 0x00f9 }
+            if (r0 != 0) goto L_0x00c8
+            r5.hideLocked()     // Catch:{ all -> 0x00f9 }
             goto L_0x00c8
         L_0x008b:
-            boolean r4 = r5.mShowing     // Catch:{ all -> 0x00fc }
-            if (r4 == 0) goto L_0x00af
-            boolean r4 = r5.mHiding     // Catch:{ all -> 0x00fc }
-            if (r4 != 0) goto L_0x00af
-            java.lang.Class<com.android.keyguard.MiuiFastUnlockController> r4 = com.android.keyguard.MiuiFastUnlockController.class
-            java.lang.Object r4 = com.android.systemui.Dependency.get(r4)     // Catch:{ all -> 0x00fc }
-            com.android.keyguard.MiuiFastUnlockController r4 = (com.android.keyguard.MiuiFastUnlockController) r4     // Catch:{ all -> 0x00fc }
-            boolean r4 = r4.isFastUnlock()     // Catch:{ all -> 0x00fc }
-            if (r4 != 0) goto L_0x00af
-            android.os.Handler r2 = r5.mHandler     // Catch:{ all -> 0x00fc }
-            r3 = 7
-            r2.removeMessages(r3)     // Catch:{ all -> 0x00fc }
-            r5.mPendingReset = r1     // Catch:{ all -> 0x00fc }
-            com.android.systemui.statusbar.phone.FingerprintUnlockController r2 = r5.mFingerprintUnlockController     // Catch:{ all -> 0x00fc }
-            r2.resetMode()     // Catch:{ all -> 0x00fc }
+            boolean r0 = r5.mShowing     // Catch:{ all -> 0x00f9 }
+            if (r0 == 0) goto L_0x00af
+            boolean r0 = r5.mHiding     // Catch:{ all -> 0x00f9 }
+            if (r0 != 0) goto L_0x00af
+            java.lang.Class<com.android.keyguard.MiuiFastUnlockController> r0 = com.android.keyguard.MiuiFastUnlockController.class
+            java.lang.Object r0 = com.android.systemui.Dependency.get(r0)     // Catch:{ all -> 0x00f9 }
+            com.android.keyguard.MiuiFastUnlockController r0 = (com.android.keyguard.MiuiFastUnlockController) r0     // Catch:{ all -> 0x00f9 }
+            boolean r0 = r0.isFastUnlock()     // Catch:{ all -> 0x00f9 }
+            if (r0 != 0) goto L_0x00af
+            android.os.Handler r0 = r5.mHandler     // Catch:{ all -> 0x00f9 }
+            r2 = 7
+            r0.removeMessages(r2)     // Catch:{ all -> 0x00f9 }
+            r5.mPendingReset = r1     // Catch:{ all -> 0x00f9 }
+            com.android.systemui.statusbar.phone.FingerprintUnlockController r0 = r5.mFingerprintUnlockController     // Catch:{ all -> 0x00f9 }
+            r0.resetMode()     // Catch:{ all -> 0x00f9 }
             goto L_0x00c8
         L_0x00af:
-            r4 = 2
-            if (r6 != r4) goto L_0x00be
+            r0 = 2
+            if (r6 != r0) goto L_0x00be
             if (r3 != 0) goto L_0x00be
-            long r2 = r5.getLockTimeout(r2)     // Catch:{ all -> 0x00fc }
-            r5.doKeyguardLaterLocked(r2)     // Catch:{ all -> 0x00fc }
-            r5.mLockLater = r1     // Catch:{ all -> 0x00fc }
+            long r2 = r5.getLockTimeout(r2)     // Catch:{ all -> 0x00f9 }
+            r5.doKeyguardLaterLocked(r2)     // Catch:{ all -> 0x00f9 }
+            r5.mLockLater = r1     // Catch:{ all -> 0x00f9 }
             goto L_0x00c8
         L_0x00be:
-            com.android.internal.widget.LockPatternUtils r3 = r5.mLockPatternUtils     // Catch:{ all -> 0x00fc }
-            boolean r2 = r3.isLockScreenDisabled(r2)     // Catch:{ all -> 0x00fc }
-            if (r2 != 0) goto L_0x00c8
-            r5.mPendingLock = r1     // Catch:{ all -> 0x00fc }
+            com.android.internal.widget.LockPatternUtils r0 = r5.mLockPatternUtils     // Catch:{ all -> 0x00f9 }
+            boolean r0 = r0.isLockScreenDisabled(r2)     // Catch:{ all -> 0x00f9 }
+            if (r0 != 0) goto L_0x00c8
+            r5.mPendingLock = r1     // Catch:{ all -> 0x00f9 }
         L_0x00c8:
-            r5.registerWakeupAndSleepSensor()     // Catch:{ all -> 0x00fc }
-            boolean r2 = r5.mPendingLock     // Catch:{ all -> 0x00fc }
-            if (r2 == 0) goto L_0x00e2
-            r2 = 3
-            if (r6 == r2) goto L_0x00e2
-            r5.playSounds(r1)     // Catch:{ all -> 0x00fc }
-            java.lang.Class<com.android.systemui.HapticFeedBackImpl> r1 = com.android.systemui.HapticFeedBackImpl.class
-            java.lang.Object r1 = com.android.systemui.Dependency.get(r1)     // Catch:{ all -> 0x00fc }
-            com.android.systemui.HapticFeedBackImpl r1 = (com.android.systemui.HapticFeedBackImpl) r1     // Catch:{ all -> 0x00fc }
-            r2 = 169(0xa9, float:2.37E-43)
-            r1.extLongHapticFeedback(r2, r0, r0)     // Catch:{ all -> 0x00fc }
-        L_0x00e2:
-            monitor-exit(r5)     // Catch:{ all -> 0x00fc }
+            r5.registerWakeupAndSleepSensor()     // Catch:{ all -> 0x00f9 }
+            boolean r0 = r5.mPendingLock     // Catch:{ all -> 0x00f9 }
+            if (r0 == 0) goto L_0x00df
+            r0 = 3
+            if (r6 == r0) goto L_0x00df
+            r5.playSounds(r1)     // Catch:{ all -> 0x00f9 }
+            android.os.Handler r0 = r5.mHandler     // Catch:{ all -> 0x00f9 }
+            com.android.systemui.keyguard.KeyguardViewMediator$3 r1 = new com.android.systemui.keyguard.KeyguardViewMediator$3     // Catch:{ all -> 0x00f9 }
+            r1.<init>()     // Catch:{ all -> 0x00f9 }
+            r0.post(r1)     // Catch:{ all -> 0x00f9 }
+        L_0x00df:
+            monitor-exit(r5)     // Catch:{ all -> 0x00f9 }
             android.content.Context r0 = r5.mContext
             com.android.keyguard.KeyguardUpdateMonitor r0 = com.android.keyguard.KeyguardUpdateMonitor.getInstance(r0)
             r0.dispatchStartedGoingToSleep(r6)
@@ -996,9 +995,9 @@ public class KeyguardViewMediator extends SystemUI {
             r6.<init>()
             r5.post(r6)
             return
-        L_0x00fc:
+        L_0x00f9:
             r6 = move-exception
-            monitor-exit(r5)     // Catch:{ all -> 0x00fc }
+            monitor-exit(r5)     // Catch:{ all -> 0x00f9 }
             throw r6
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.keyguard.KeyguardViewMediator.onStartedGoingToSleep(int):void");

@@ -305,9 +305,9 @@ public class ControlPanelWindowView extends FrameLayout {
     }
 
     public void showControlCenterWindow() {
+        BoostHelper.getInstance().boostSystemUI(this, true);
         this.mExpandState = 2;
         this.mControlPanelWindowManager.onExpandChange(true);
-        BoostHelper.getInstance().boostSystemUI(this, true);
     }
 
     public void hideControlCenterWindow() {

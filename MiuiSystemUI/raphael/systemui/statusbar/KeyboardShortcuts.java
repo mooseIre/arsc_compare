@@ -82,7 +82,7 @@ public final class KeyboardShortcuts {
     private final SparseArray<String> mSpecialCharacterNames = new SparseArray<>();
 
     private KeyboardShortcuts(Context context) {
-        this.mContext = new ContextThemeWrapper(context, 16974123);
+        this.mContext = new ContextThemeWrapper(context, 16974371);
         this.mPackageManager = AppGlobals.getPackageManager();
         loadResources(context);
     }

@@ -182,6 +182,9 @@ public class ExpandInfoControllerImpl implements ExpandInfoController {
         if (!z) {
             this.mInfosMap.putAll(this.mInfosMapOld);
         }
+        if (z) {
+            this.mInfosMap.put(16, this.mInfosMapOld.get(Integer.valueOf(this.mSelectedType)));
+        }
     }
 
     public void startActivity(String str) {

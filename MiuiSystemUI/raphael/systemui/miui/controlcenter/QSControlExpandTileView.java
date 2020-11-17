@@ -211,18 +211,18 @@ public class QSControlExpandTileView extends LinearLayout implements ExpandInfoC
 
     public void updateViews() {
         this.mInfo = this.mExpandInfoController.getInfosMap().get(Integer.valueOf(this.mExpandInfoController.getSelectedType()));
-        ExpandInfoController.Info info = this.mInfo;
-        if (info != null) {
-            this.mTitle.setText(info.title);
-            this.mStatusIcon.setImageBitmap(this.mInfo.icon);
-            if (!TextUtils.isEmpty(this.mInfo.status)) {
-                SpannableString spannableString = new SpannableString(this.mInfo.status + " " + this.mInfo.unit);
-                spannableString.setSpan(new TextAppearanceSpan(this.mContext, R.style.TextAppearance_QSControl_ExpandTileSubTitle), 0, this.mInfo.status.length() + -1, 18);
-                spannableString.setSpan(new TextAppearanceSpan(this.mContext, R.style.TextAppearance_QSControl_ExpandTileUnit), this.mInfo.status.length(), spannableString.length(), 18);
-                this.mStatus.setText(spannableString);
-            }
-            Log.d("QSControlExpandTileView", "updateViews" + this.mInfo.toString());
+        if (this.mInfo == null) {
+            this.mInfo = this.mExpandInfoController.getInfosMap().get(0);
         }
+        this.mTitle.setText(this.mInfo.title);
+        this.mStatusIcon.setImageBitmap(this.mInfo.icon);
+        if (!TextUtils.isEmpty(this.mInfo.status)) {
+            SpannableString spannableString = new SpannableString(this.mInfo.status + " " + this.mInfo.unit);
+            spannableString.setSpan(new TextAppearanceSpan(this.mContext, R.style.TextAppearance_QSControl_ExpandTileSubTitle), 0, this.mInfo.status.length() + -1, 18);
+            spannableString.setSpan(new TextAppearanceSpan(this.mContext, R.style.TextAppearance_QSControl_ExpandTileUnit), this.mInfo.status.length(), spannableString.length(), 18);
+            this.mStatus.setText(spannableString);
+        }
+        Log.d("QSControlExpandTileView", "updateViews" + this.mInfo.toString());
     }
 
     private static class BigQSTileAnimationController {

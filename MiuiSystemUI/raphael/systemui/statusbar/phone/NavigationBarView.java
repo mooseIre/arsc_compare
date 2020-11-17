@@ -27,7 +27,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.os.RemoteException;
-import android.os.SystemProperties;
 import android.os.UserHandle;
 import android.provider.MiuiSettings;
 import android.provider.Settings;
@@ -66,6 +65,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
+import miui.os.Build;
 
 public class NavigationBarView extends LinearLayout {
     private static int sFilterColor = 0;
@@ -153,7 +153,7 @@ public class NavigationBarView extends LinearLayout {
     private NavigationHandle mNavigationHandle;
     int mNavigationIconHints = 0;
     private OnVerticalChangedListener mOnVerticalChangedListener;
-    private boolean mOpaEnable;
+    private boolean mOpaEnable = Build.IS_INTERNATIONAL_BUILD;
     private OverviewProxyService mOverviewProxyService;
     private Drawable mRecentIcon;
     private Drawable mRecentLandIcon;
@@ -407,9 +407,6 @@ public class NavigationBarView extends LinearLayout {
 
     public NavigationBarView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-        if (SystemProperties.get("ro.miui.build.region", "").equalsIgnoreCase("eea")) {
-            this.mOpaEnable = true;
-        }
         this.mDisplay = ((WindowManager) context.getSystemService("window")).getDefaultDisplay();
         Resources resources = getContext().getResources();
         this.mBarSize = resources.getDimensionPixelSize(R.dimen.navigation_bar_size);
