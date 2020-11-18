@@ -27,7 +27,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.charge.MiuiChargeManager;
-import com.android.keyguard.charge.rapid.PercentCountView;
 import com.android.systemui.Dependency;
 import com.android.systemui.HapticFeedBackImpl;
 import com.android.systemui.plugins.R;
@@ -38,7 +37,6 @@ public class RapidChargeView extends FrameLayout implements ValueAnimator.Animat
     /* access modifiers changed from: private */
     public IRapidAnimationListener animationListener;
     protected View mCenterAnchorView;
-    private PercentCountView.ChargeLevelAnimationListener mChargeLevelAnimationListener;
     protected int mChargeNumberTranslateInit;
     protected int mChargeNumberTranslateSmall;
     protected int mChargeState;
@@ -77,8 +75,7 @@ public class RapidChargeView extends FrameLayout implements ValueAnimator.Animat
     private Drawable mSuperRapidIconDrawable;
     private int mSuperRapidIconHeight;
     private int mSuperRapidIconWidth;
-    /* access modifiers changed from: private */
-    public Runnable mTimeoutDismissJob;
+    private Runnable mTimeoutDismissJob;
     protected int mTipTopMargin;
     protected WindowManager mWindowManager;
     protected boolean mWindowShouldAdd;
@@ -156,12 +153,6 @@ public class RapidChargeView extends FrameLayout implements ValueAnimator.Animat
         this.mHandler = new Handler();
         this.mCubicInterpolator = new CubicEaseOutInterpolater();
         this.mQuartOutInterpolator = new QuartEaseOutInterpolater();
-        this.mChargeLevelAnimationListener = new PercentCountView.ChargeLevelAnimationListener() {
-            public void onChargeLevelAnimationEnd() {
-                RapidChargeView.this.mHandler.removeCallbacks(RapidChargeView.this.mTimeoutDismissJob);
-                RapidChargeView.this.startDismiss("dismiss_for_value_animation_end");
-            }
-        };
         this.mDismissRunnable = new Runnable() {
             public void run() {
                 RapidChargeView.this.stopChildAnimation();
@@ -205,7 +196,6 @@ public class RapidChargeView extends FrameLayout implements ValueAnimator.Animat
         layoutParams2.addRule(13);
         this.mPercentCountView = new PercentCountView(context);
         this.mPercentCountView.setTranslationY((float) this.mChargeNumberTranslateInit);
-        this.mPercentCountView.setChargeLevelAnimationListener(this.mChargeLevelAnimationListener);
         this.mContentContainer.addView(this.mPercentCountView, layoutParams2);
         this.mStateTip = new AccessibilityDisableTextView(context);
         this.mStateTip.setTextSize(0, (float) this.mSpeedTipTextSizePx);

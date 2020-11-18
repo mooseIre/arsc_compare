@@ -129,10 +129,6 @@ public class PercentCountView extends LinearLayout {
         }
     }
 
-    public void setChargeLevelAnimationListener(ChargeLevelAnimationListener chargeLevelAnimationListener) {
-        this.mChargeLevelAnimationListener = chargeLevelAnimationListener;
-    }
-
     public void stopValueAnimation() {
         ValueAnimator valueAnimator = this.mValueAnimator;
         if (valueAnimator != null) {
