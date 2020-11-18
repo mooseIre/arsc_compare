@@ -245,14 +245,14 @@ public class PluginInstanceManager<T extends Plugin> {
         }
 
         /* access modifiers changed from: protected */
-        /* JADX WARNING: Can't wrap try/catch for region: R(3:17|18|19) */
-        /* JADX WARNING: Code restructure failed: missing block: B:18:?, code lost:
+        /* JADX WARNING: Can't wrap try/catch for region: R(3:20|21|22) */
+        /* JADX WARNING: Code restructure failed: missing block: B:21:?, code lost:
             android.util.Log.w("PluginInstanceManager", "Plugin has invalid interface version " + r9.getVersion() + ", expected " + com.android.systemui.plugins.PluginInstanceManager.access$1300(r10.this$0));
          */
-        /* JADX WARNING: Code restructure failed: missing block: B:19:0x00c5, code lost:
+        /* JADX WARNING: Code restructure failed: missing block: B:22:0x00d2, code lost:
             return null;
          */
-        /* JADX WARNING: Missing exception handler attribute for start block: B:17:0x009f */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:20:0x00ac */
         /* Code decompiled incorrectly, please refer to instructions dump. */
         public com.android.systemui.plugins.PluginInstanceManager.PluginInfo<T> handleLoadPlugin(android.content.ComponentName r11) {
             /*
@@ -278,64 +278,70 @@ public class PluginInstanceManager<T extends Plugin> {
                 if (r0 != 0) goto L_0x0031
                 return r2
             L_0x0031:
+                java.lang.String r0 = r11.getClassName()
+                java.lang.String r3 = "VolumeDialog"
+                boolean r0 = r0.contains(r3)
+                if (r0 == 0) goto L_0x003e
+                return r2
+            L_0x003e:
                 java.lang.String r0 = r11.getPackageName()
                 java.lang.String r5 = r11.getClassName()
-                com.android.systemui.plugins.PluginInstanceManager r11 = com.android.systemui.plugins.PluginInstanceManager.this     // Catch:{ all -> 0x00c6 }
-                android.content.pm.PackageManager r11 = r11.mPm     // Catch:{ all -> 0x00c6 }
+                com.android.systemui.plugins.PluginInstanceManager r11 = com.android.systemui.plugins.PluginInstanceManager.this     // Catch:{ all -> 0x00d3 }
+                android.content.pm.PackageManager r11 = r11.mPm     // Catch:{ all -> 0x00d3 }
                 r3 = 0
-                android.content.pm.ApplicationInfo r11 = r11.getApplicationInfo(r0, r3)     // Catch:{ all -> 0x00c6 }
-                com.android.systemui.plugins.PluginInstanceManager r4 = com.android.systemui.plugins.PluginInstanceManager.this     // Catch:{ all -> 0x00c6 }
-                android.content.pm.PackageManager r4 = r4.mPm     // Catch:{ all -> 0x00c6 }
+                android.content.pm.ApplicationInfo r11 = r11.getApplicationInfo(r0, r3)     // Catch:{ all -> 0x00d3 }
+                com.android.systemui.plugins.PluginInstanceManager r4 = com.android.systemui.plugins.PluginInstanceManager.this     // Catch:{ all -> 0x00d3 }
+                android.content.pm.PackageManager r4 = r4.mPm     // Catch:{ all -> 0x00d3 }
                 java.lang.String r6 = "com.android.systemui.permission.PLUGIN"
-                int r4 = r4.checkPermission(r6, r0)     // Catch:{ all -> 0x00c6 }
-                if (r4 == 0) goto L_0x0067
-                java.lang.StringBuilder r10 = new java.lang.StringBuilder     // Catch:{ all -> 0x00c6 }
-                r10.<init>()     // Catch:{ all -> 0x00c6 }
+                int r4 = r4.checkPermission(r6, r0)     // Catch:{ all -> 0x00d3 }
+                if (r4 == 0) goto L_0x0074
+                java.lang.StringBuilder r10 = new java.lang.StringBuilder     // Catch:{ all -> 0x00d3 }
+                r10.<init>()     // Catch:{ all -> 0x00d3 }
                 java.lang.String r11 = "Plugin doesn't have permission: "
-                r10.append(r11)     // Catch:{ all -> 0x00c6 }
-                r10.append(r0)     // Catch:{ all -> 0x00c6 }
-                java.lang.String r10 = r10.toString()     // Catch:{ all -> 0x00c6 }
-                android.util.Log.d(r1, r10)     // Catch:{ all -> 0x00c6 }
+                r10.append(r11)     // Catch:{ all -> 0x00d3 }
+                r10.append(r0)     // Catch:{ all -> 0x00d3 }
+                java.lang.String r10 = r10.toString()     // Catch:{ all -> 0x00d3 }
+                android.util.Log.d(r1, r10)     // Catch:{ all -> 0x00d3 }
                 return r2
-            L_0x0067:
-                com.android.systemui.plugins.PluginInstanceManager r4 = com.android.systemui.plugins.PluginInstanceManager.this     // Catch:{ all -> 0x00c6 }
-                com.android.systemui.plugins.PluginManagerImpl r4 = r4.mManager     // Catch:{ all -> 0x00c6 }
-                java.lang.ClassLoader r4 = r4.getClassLoader(r11)     // Catch:{ all -> 0x00c6 }
-                com.android.systemui.plugins.PluginInstanceManager$PluginContextWrapper r7 = new com.android.systemui.plugins.PluginInstanceManager$PluginContextWrapper     // Catch:{ all -> 0x00c6 }
-                com.android.systemui.plugins.PluginInstanceManager r6 = com.android.systemui.plugins.PluginInstanceManager.this     // Catch:{ all -> 0x00c6 }
-                android.content.Context r6 = r6.mContext     // Catch:{ all -> 0x00c6 }
-                android.content.Context r11 = r6.createApplicationContext(r11, r3)     // Catch:{ all -> 0x00c6 }
-                r7.<init>(r11, r4)     // Catch:{ all -> 0x00c6 }
+            L_0x0074:
+                com.android.systemui.plugins.PluginInstanceManager r4 = com.android.systemui.plugins.PluginInstanceManager.this     // Catch:{ all -> 0x00d3 }
+                com.android.systemui.plugins.PluginManagerImpl r4 = r4.mManager     // Catch:{ all -> 0x00d3 }
+                java.lang.ClassLoader r4 = r4.getClassLoader(r11)     // Catch:{ all -> 0x00d3 }
+                com.android.systemui.plugins.PluginInstanceManager$PluginContextWrapper r7 = new com.android.systemui.plugins.PluginInstanceManager$PluginContextWrapper     // Catch:{ all -> 0x00d3 }
+                com.android.systemui.plugins.PluginInstanceManager r6 = com.android.systemui.plugins.PluginInstanceManager.this     // Catch:{ all -> 0x00d3 }
+                android.content.Context r6 = r6.mContext     // Catch:{ all -> 0x00d3 }
+                android.content.Context r11 = r6.createApplicationContext(r11, r3)     // Catch:{ all -> 0x00d3 }
+                r7.<init>(r11, r4)     // Catch:{ all -> 0x00d3 }
                 r11 = 1
-                java.lang.Class r11 = java.lang.Class.forName(r5, r11, r4)     // Catch:{ all -> 0x00c6 }
-                java.lang.Object r3 = r11.newInstance()     // Catch:{ all -> 0x00c6 }
+                java.lang.Class r11 = java.lang.Class.forName(r5, r11, r4)     // Catch:{ all -> 0x00d3 }
+                java.lang.Object r3 = r11.newInstance()     // Catch:{ all -> 0x00d3 }
                 r9 = r3
-                com.android.systemui.plugins.Plugin r9 = (com.android.systemui.plugins.Plugin) r9     // Catch:{ all -> 0x00c6 }
-                com.android.systemui.plugins.PluginInstanceManager r3 = com.android.systemui.plugins.PluginInstanceManager.this     // Catch:{ InvalidVersionException -> 0x009f }
-                com.android.systemui.plugins.VersionInfo r3 = r3.mVersion     // Catch:{ InvalidVersionException -> 0x009f }
-                com.android.systemui.plugins.VersionInfo r8 = r10.checkVersion(r11, r9, r3)     // Catch:{ InvalidVersionException -> 0x009f }
-                com.android.systemui.plugins.PluginInstanceManager$PluginInfo r11 = new com.android.systemui.plugins.PluginInstanceManager$PluginInfo     // Catch:{ InvalidVersionException -> 0x009f }
+                com.android.systemui.plugins.Plugin r9 = (com.android.systemui.plugins.Plugin) r9     // Catch:{ all -> 0x00d3 }
+                com.android.systemui.plugins.PluginInstanceManager r3 = com.android.systemui.plugins.PluginInstanceManager.this     // Catch:{ InvalidVersionException -> 0x00ac }
+                com.android.systemui.plugins.VersionInfo r3 = r3.mVersion     // Catch:{ InvalidVersionException -> 0x00ac }
+                com.android.systemui.plugins.VersionInfo r8 = r10.checkVersion(r11, r9, r3)     // Catch:{ InvalidVersionException -> 0x00ac }
+                com.android.systemui.plugins.PluginInstanceManager$PluginInfo r11 = new com.android.systemui.plugins.PluginInstanceManager$PluginInfo     // Catch:{ InvalidVersionException -> 0x00ac }
                 r3 = r11
                 r4 = r0
                 r6 = r9
-                r3.<init>(r4, r5, r6, r7, r8)     // Catch:{ InvalidVersionException -> 0x009f }
+                r3.<init>(r4, r5, r6, r7, r8)     // Catch:{ InvalidVersionException -> 0x00ac }
                 return r11
-            L_0x009f:
-                java.lang.StringBuilder r11 = new java.lang.StringBuilder     // Catch:{ all -> 0x00c6 }
-                r11.<init>()     // Catch:{ all -> 0x00c6 }
+            L_0x00ac:
+                java.lang.StringBuilder r11 = new java.lang.StringBuilder     // Catch:{ all -> 0x00d3 }
+                r11.<init>()     // Catch:{ all -> 0x00d3 }
                 java.lang.String r3 = "Plugin has invalid interface version "
-                r11.append(r3)     // Catch:{ all -> 0x00c6 }
-                int r3 = r9.getVersion()     // Catch:{ all -> 0x00c6 }
-                r11.append(r3)     // Catch:{ all -> 0x00c6 }
+                r11.append(r3)     // Catch:{ all -> 0x00d3 }
+                int r3 = r9.getVersion()     // Catch:{ all -> 0x00d3 }
+                r11.append(r3)     // Catch:{ all -> 0x00d3 }
                 java.lang.String r3 = ", expected "
-                r11.append(r3)     // Catch:{ all -> 0x00c6 }
-                com.android.systemui.plugins.PluginInstanceManager r10 = com.android.systemui.plugins.PluginInstanceManager.this     // Catch:{ all -> 0x00c6 }
-                com.android.systemui.plugins.VersionInfo r10 = r10.mVersion     // Catch:{ all -> 0x00c6 }
-                r11.append(r10)     // Catch:{ all -> 0x00c6 }
-                java.lang.String r10 = r11.toString()     // Catch:{ all -> 0x00c6 }
-                android.util.Log.w(r1, r10)     // Catch:{ all -> 0x00c6 }
+                r11.append(r3)     // Catch:{ all -> 0x00d3 }
+                com.android.systemui.plugins.PluginInstanceManager r10 = com.android.systemui.plugins.PluginInstanceManager.this     // Catch:{ all -> 0x00d3 }
+                com.android.systemui.plugins.VersionInfo r10 = r10.mVersion     // Catch:{ all -> 0x00d3 }
+                r11.append(r10)     // Catch:{ all -> 0x00d3 }
+                java.lang.String r10 = r11.toString()     // Catch:{ all -> 0x00d3 }
+                android.util.Log.w(r1, r10)     // Catch:{ all -> 0x00d3 }
                 return r2
-            L_0x00c6:
+            L_0x00d3:
                 r10 = move-exception
                 java.lang.StringBuilder r11 = new java.lang.StringBuilder
                 r11.<init>()

@@ -5,6 +5,9 @@ import com.android.systemui.Dumpable;
 public interface HotspotController extends CallbackController<Callback>, Dumpable {
 
     public interface Callback {
+        void onHotspotAvailabilityChanged(boolean z) {
+        }
+
         void onHotspotChanged(boolean z);
     }
 

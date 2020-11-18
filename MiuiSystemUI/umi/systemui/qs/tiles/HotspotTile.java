@@ -124,5 +124,12 @@ public class HotspotTile extends QSTileImpl<QSTile.AirplaneBooleanState> {
         public void onHotspotChanged(boolean z) {
             HotspotTile.this.refreshState(Boolean.valueOf(z));
         }
+
+        public void onHotspotAvailabilityChanged(boolean z) {
+            if (!z) {
+                Log.d(HotspotTile.this.TAG, "Tile removed. Hotspot no longer available");
+                HotspotTile.this.mHost.removeTile(HotspotTile.this.getTileSpec());
+            }
+        }
     }
 }
