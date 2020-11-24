@@ -7,4 +7,5 @@
         </ScrollView>
         <View android:layout_width="fill_parent" android:layout_height="0.0dip" android:layout_weight="1.0" />
     </LinearLayout>
+    <View android:layout_gravity="bottom" android:background="?android:dividerHorizontal" android:layout_width="fill_parent" android:layout_height="1.0dip" />
 </FrameLayout>
