@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <SurfaceView android:id="@id/surface_view" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_marginTop="@dimen/magnification_border_size" android:layout_marginStart="@dimen/magnification_border_size" />
+    <RelativeLayout android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="fill_parent">
+        <View android:id="@id/left_handle" android:background="@color/magnification_border_color" android:layout_width="@dimen/magnification_border_size" android:layout_height="fill_parent" android:layout_above="@id/drag_handle" />
+        <View android:id="@id/top_handle" android:background="@color/magnification_border_color" android:layout_width="fill_parent" android:layout_height="@dimen/magnification_border_size" />
+        <View android:id="@id/right_handle" android:background="@color/magnification_border_color" android:layout_width="@dimen/magnification_border_size" android:layout_height="fill_parent" android:layout_above="@id/drag_handle" android:layout_alignParentEnd="true" />
+        <View android:id="@id/bottom_handle" android:background="@color/magnification_border_color" android:layout_width="fill_parent" android:layout_height="@dimen/magnification_border_size" android:layout_above="@id/drag_handle" />
+        <View android:id="@id/drag_handle" android:background="@color/magnification_border_color" android:layout_width="@dimen/magnification_drag_view_width" android:layout_height="@dimen/magnification_drag_view_height" android:layout_alignParentBottom="true" android:layout_centerHorizontal="true" />
+    </RelativeLayout>
+</FrameLayout>

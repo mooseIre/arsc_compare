@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout android:id="@id/status_bar_latest_event_content" android:tag="bigText" android:clipChildren="false" android:layout_width="fill_parent" android:layout_height="wrap_content"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <include layout="@layout/notification_template_part_app_icon" />
+    <include layout="@layout/notification_template_right_icon" />
+    <LinearLayout android:layout_gravity="top" android:orientation="vertical" android:id="@id/notification_action_list_margin_target" android:clipToPadding="false" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_marginTop="@dimen/miui_notification_content_margin_top" android:layout_marginBottom="@dimen/miui_notification_content_margin_bottom" android:layout_marginStart="@dimen/miui_notification_content_margin_start" android:layout_marginEnd="@dimen/miui_notification_content_margin_end">
+        <LinearLayout android:layout_gravity="top" android:orientation="vertical" android:id="@id/notification_main_column" android:clipToPadding="false" android:layout_width="fill_parent" android:layout_height="0.0dip" android:layout_weight="1.0">
+            <include layout="@layout/notification_template_part_line1" />
+            <include android:layout_width="fill_parent" android:layout_height="@dimen/notification_progress_bar_height" android:layout_marginTop="@dimen/notification_progress_margin_top" android:layout_marginBottom="@dimen/notification_progress_margin_bottom" layout="@layout/notification_template_progress" />
+            <TextView android:ellipsize="end" android:layout_gravity="top" android:id="@id/big_text" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginTop="3.669983dip" android:maxLines="8" android:singleLine="false" android:textAlignment="viewStart" style="@style/Miui.Notification.Text" />
+        </LinearLayout>
+        <include layout="@layout/notification_material_action_list" />
+    </LinearLayout>
+</FrameLayout>
