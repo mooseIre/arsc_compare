@@ -6,11 +6,12 @@ import android.graphics.RectF;
 import android.graphics.Region;
 import android.view.View;
 import android.widget.ImageView;
-import com.android.systemui.plugins.R;
+import com.android.systemui.C0010R$drawable;
+import com.android.systemui.C0018R$string;
 
 public class XiaoaiItem extends IQuickOpenItem {
-    private static final int[] TITLE_RES = {R.string.gxzw_quick_open_xiaoai_title1, R.string.gxzw_quick_open_xiaoai_title2};
-    private static int sTitleCount = 0;
+    private static final int[] TITLE_RES = {C0018R$string.gxzw_quick_open_xiaoai_title1, C0018R$string.gxzw_quick_open_xiaoai_title2};
+    private static int sTitleCount;
     private final ImageView mView;
 
     public String getTag() {
@@ -25,7 +26,7 @@ public class XiaoaiItem extends IQuickOpenItem {
         super(rectF, region, context);
         ImageView imageView = new ImageView(context);
         this.mView = imageView;
-        imageView.setImageResource(R.drawable.gxzw_quick_open_xiaoai);
+        imageView.setImageResource(C0010R$drawable.gxzw_quick_open_xiaoai);
         this.mView.setScaleType(ImageView.ScaleType.FIT_XY);
     }
 
@@ -46,7 +47,7 @@ public class XiaoaiItem extends IQuickOpenItem {
     }
 
     public String getSubTitle() {
-        return this.mContext.getString(R.string.gxzw_quick_open_xiaoai_sub);
+        return this.mContext.getString(C0018R$string.gxzw_quick_open_xiaoai_sub);
     }
 
     private static int getStringRes() {

@@ -3,11 +3,10 @@ package com.android.keyguard;
 import android.content.Context;
 import android.util.Log;
 import android.util.Slog;
-import com.miui.internal.policy.impl.AwesomeLockScreenImp.AwesomeLockScreenView;
-import com.miui.internal.policy.impl.AwesomeLockScreenImp.LockScreenElementFactory;
-import com.miui.internal.policy.impl.AwesomeLockScreenImp.LockScreenResourceLoader;
-import com.miui.internal.policy.impl.AwesomeLockScreenImp.LockScreenRoot;
-import com.xiaomi.stat.d.r;
+import com.android.keyguard.AwesomeLockScreenImp.AwesomeLockScreenView;
+import com.android.keyguard.AwesomeLockScreenImp.LockScreenElementFactory;
+import com.android.keyguard.AwesomeLockScreenImp.LockScreenResourceLoader;
+import com.android.keyguard.AwesomeLockScreenImp.LockScreenRoot;
 import java.io.File;
 import java.util.Stack;
 import miui.content.res.ThemeResources;
@@ -27,7 +26,7 @@ public class RootHolder {
         }
         if (this.mRoot == null) {
             ThemeResources.getSystem().resetLockscreen();
-            this.mResourceMgr = new LifecycleResourceManager(new LockScreenResourceLoader().setLocal(context.getResources().getConfiguration().locale), r.a, 3600000);
+            this.mResourceMgr = new LifecycleResourceManager(new LockScreenResourceLoader().setLocal(context.getResources().getConfiguration().locale), 86400000, 3600000);
             this.mResourceMgr.setCacheSize(((int) Runtime.getRuntime().maxMemory()) / 2);
             this.mContext = new ScreenContext(context, this.mResourceMgr, new LockScreenElementFactory());
             LockScreenRoot lockScreenRoot = new LockScreenRoot(this.mContext);

@@ -2,35 +2,38 @@ package com.android.keyguard.magazine;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.SystemClock;
-import android.os.SystemProperties;
 import android.os.UserHandle;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.android.keyguard.KeyguardUpdateMonitor;
-import com.android.keyguard.MiuiKeyguardUtils;
 import com.android.keyguard.analytics.AnalyticsHelper;
-import com.android.keyguard.magazine.mode.LockScreenMagazineWallpaperInfo;
+import com.android.keyguard.magazine.entity.LockScreenMagazineWallpaperInfo;
+import com.android.keyguard.magazine.utils.LockScreenMagazineUtils;
+import com.android.keyguard.utils.MiuiKeyguardUtils;
 import com.android.keyguard.utils.PackageUtils;
 import com.android.keyguard.wallpaper.WallpaperAuthorityUtils;
-import com.android.systemui.plugins.R;
+import com.android.systemui.C0009R$dimen;
+import com.android.systemui.C0010R$drawable;
+import com.android.systemui.C0012R$id;
+import com.android.systemui.Dependency;
+import com.miui.systemui.util.CommonExtensionsKt;
 import java.util.Locale;
 import miui.os.Build;
+import miui.os.SystemProperties;
+import miui.util.Log;
 
 public class LockScreenMagazineClockView extends LinearLayout {
     private LinearLayout mContentsLayout;
-    private boolean mDarkMode;
+    private boolean mDarkStyle;
     private boolean mHasTitleClick;
     private boolean mIsLeftTopClock;
-    /* access modifiers changed from: private */
-    public long mLastClickTime;
     /* access modifiers changed from: private */
     public LockScreenMagazineWallpaperInfo mMagazineWallpaperInfo;
     private TextView mProvider;
@@ -44,29 +47,24 @@ public class LockScreenMagazineClockView extends LinearLayout {
 
     public LockScreenMagazineClockView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-        this.mLastClickTime = 0;
     }
 
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mTitle = (TextView) findViewById(R.id.lock_screen_magazine_clock_title);
+        this.mTitle = (TextView) findViewById(C0012R$id.lock_screen_magazine_clock_title);
         initTitle();
-        this.mContentsLayout = (LinearLayout) findViewById(R.id.lock_screen_magazine_clock_contents_layout);
-        this.mProvider = (TextView) findViewById(R.id.lock_screen_magazine_clock_provider);
-        this.mSource = (TextView) findViewById(R.id.lock_screen_magazine_clock_source);
+        this.mContentsLayout = (LinearLayout) findViewById(C0012R$id.lock_screen_magazine_clock_contents_layout);
+        this.mProvider = (TextView) findViewById(C0012R$id.lock_screen_magazine_clock_provider);
+        this.mSource = (TextView) findViewById(C0012R$id.lock_screen_magazine_clock_source);
     }
 
     private void initTitle() {
         if (!Build.IS_INTERNATIONAL_BUILD) {
             this.mHasTitleClick = true;
             this.mTitle.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View view) {
-                    if (SystemClock.elapsedRealtime() - LockScreenMagazineClockView.this.mLastClickTime > 500) {
-                        LockScreenMagazineUtils.gotoLockScreenMagazine(LockScreenMagazineClockView.this.mContext, "lockScreenInfo");
-                        AnalyticsHelper.getInstance(LockScreenMagazineClockView.this.mContext).recordLockScreenMagazineEntryClickAction();
-                    }
-                    long unused = LockScreenMagazineClockView.this.mLastClickTime = SystemClock.elapsedRealtime();
+                public final void onClick(View view) {
+                    LockScreenMagazineClockView.this.lambda$initTitle$0$LockScreenMagazineClockView(view);
                 }
             });
             setLockScreenMagazineTitleTouchDelegate(30);
@@ -74,19 +72,28 @@ public class LockScreenMagazineClockView extends LinearLayout {
         updateTitlePadding();
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$initTitle$0 */
+    public /* synthetic */ void lambda$initTitle$0$LockScreenMagazineClockView(View view) {
+        if (CommonExtensionsKt.checkFastDoubleClick(view, 500)) {
+            LockScreenMagazineUtils.gotoMagazine(this.mContext, "lockScreenInfo");
+            AnalyticsHelper.getInstance(this.mContext).recordLockScreenMagazineEntryClickAction();
+        }
+    }
+
     public void updateInfo() {
         String str;
         String str2;
-        LockScreenMagazineWallpaperInfo lockScreenMagazineWallpaperInfo = KeyguardUpdateMonitor.getInstance(this.mContext).getLockScreenMagazineWallpaperInfo();
-        this.mMagazineWallpaperInfo = lockScreenMagazineWallpaperInfo;
+        Class cls = LockScreenMagazineController.class;
+        this.mMagazineWallpaperInfo = ((LockScreenMagazineController) Dependency.get(cls)).getLockScreenMagazineWallpaperInfo();
         String str3 = null;
-        if (!LockScreenMagazineUtils.isLockScreenMagazineAvailable(this.mContext) || (((!Build.IS_INTERNATIONAL_BUILD || !WallpaperAuthorityUtils.isLockScreenMagazineOpenedWallpaper(this.mContext) || !MiuiKeyguardUtils.isGxzwSensor()) && (Build.IS_INTERNATIONAL_BUILD || !WallpaperAuthorityUtils.isLockScreenMagazineWallpaper(this.mContext))) || !KeyguardUpdateMonitor.getInstance(this.mContext).isLockScreenMagazinePkgExist() || lockScreenMagazineWallpaperInfo == null)) {
+        if (!LockScreenMagazineUtils.isLockScreenMagazineAvailable() || (((!Build.IS_INTERNATIONAL_BUILD || !WallpaperAuthorityUtils.isLockScreenMagazineOpenedWallpaper() || !MiuiKeyguardUtils.isGxzwSensor()) && (Build.IS_INTERNATIONAL_BUILD || !WallpaperAuthorityUtils.isLockScreenMagazineWallpaper())) || !((LockScreenMagazineController) Dependency.get(cls)).isLockScreenMagazinePkgExist() || this.mMagazineWallpaperInfo == null)) {
             str2 = null;
             str = null;
         } else {
-            str3 = getLockScreenMagazineInfoTitle(lockScreenMagazineWallpaperInfo);
-            str = getLockScreenMagazineProvider(lockScreenMagazineWallpaperInfo);
-            str2 = getLockScreenMagazineSource(lockScreenMagazineWallpaperInfo);
+            str3 = getLockScreenMagazineInfoTitle();
+            str2 = getLockScreenMagazineProvider();
+            str = getLockScreenMagazineSource();
         }
         if (TextUtils.isEmpty(str3)) {
             this.mTitle.setVisibility(8);
@@ -98,19 +105,19 @@ public class LockScreenMagazineClockView extends LinearLayout {
         this.mTitle.setVisibility(0);
         setLockScreenMagazineTitleTouchDelegate(30);
         updateTitle();
-        if (!Build.IS_INTERNATIONAL_BUILD || (TextUtils.isEmpty(str) && TextUtils.isEmpty(str2))) {
+        if (!Build.IS_INTERNATIONAL_BUILD || (TextUtils.isEmpty(str2) && TextUtils.isEmpty(str))) {
             this.mContentsLayout.setVisibility(8);
             return;
         }
         this.mContentsLayout.setVisibility(0);
-        if (!TextUtils.isEmpty(str)) {
-            this.mProvider.setText(str);
+        if (!TextUtils.isEmpty(str2)) {
+            this.mProvider.setText(str2);
             this.mProvider.setVisibility(0);
         } else {
             this.mProvider.setVisibility(8);
         }
-        if (!TextUtils.isEmpty(str2)) {
-            this.mSource.setText(str2);
+        if (!TextUtils.isEmpty(str)) {
+            this.mSource.setText(str);
             this.mSource.setVisibility(0);
             return;
         }
@@ -149,19 +156,18 @@ public class LockScreenMagazineClockView extends LinearLayout {
                         } else {
                             LockScreenMagazineClockView.this.mTitle.setOnClickListener(new View.OnClickListener() {
                                 public void onClick(View view) {
-                                    if (SystemClock.elapsedRealtime() - LockScreenMagazineClockView.this.mLastClickTime > 500) {
+                                    if (CommonExtensionsKt.checkFastDoubleClick(view, 500)) {
                                         Uri uri = (Uri) intent.getParcelableExtra("deeplink92Uri");
                                         if (uri == null || !PackageUtils.isAppInstalledForUser(LockScreenMagazineClockView.this.mContext, "com.ziyou.haokan", KeyguardUpdateMonitor.getCurrentUser())) {
                                             LockScreenMagazineClockView.this.mContext.startActivityAsUser(intent, UserHandle.CURRENT);
-                                        } else {
-                                            Intent intent = new Intent();
-                                            intent.setData(uri);
-                                            LockScreenMagazineClockView.this.mContext.startActivityAsUser(intent, UserHandle.CURRENT);
-                                            LockScreenMagazineClockView.this.mContext.sendBroadcast(new Intent("xiaomi.intent.action.SHOW_SECURE_KEYGUARD"));
-                                            Log.e("LockScreenMagazineClockView", "title onClick  start activity ! ");
+                                            return;
                                         }
+                                        Intent intent = new Intent();
+                                        intent.setData(uri);
+                                        LockScreenMagazineClockView.this.mContext.startActivityAsUser(intent, UserHandle.CURRENT);
+                                        LockScreenMagazineClockView.this.mContext.sendBroadcast(new Intent("xiaomi.intent.action.SHOW_SECURE_KEYGUARD"));
+                                        Log.e("LockScreenMagazineClockView", "title onClick  start activity ! ");
                                     }
-                                    long unused = LockScreenMagazineClockView.this.mLastClickTime = SystemClock.elapsedRealtime();
                                 }
                             });
                             z = true;
@@ -185,36 +191,39 @@ public class LockScreenMagazineClockView extends LinearLayout {
         if (z != this.mHasTitleClick) {
             this.mHasTitleClick = z;
             updateTitlePadding();
-            updateDrawableResources(this.mDarkMode);
+            updateDrawableResources(this.mDarkStyle);
         }
     }
 
-    private String getLockScreenMagazineInfoTitle(LockScreenMagazineWallpaperInfo lockScreenMagazineWallpaperInfo) {
-        if (KeyguardUpdateMonitor.getInstance(this.mContext).isSupportLockScreenMagazineLeft()) {
-            if (Build.IS_INTERNATIONAL_BUILD || lockScreenMagazineWallpaperInfo.isTitleCustomized) {
-                return lockScreenMagazineWallpaperInfo.title;
+    private String getLockScreenMagazineInfoTitle() {
+        if (((LockScreenMagazineController) Dependency.get(LockScreenMagazineController.class)).isSupportLockScreenMagazineLeft()) {
+            if (!Build.IS_INTERNATIONAL_BUILD) {
+                LockScreenMagazineWallpaperInfo lockScreenMagazineWallpaperInfo = this.mMagazineWallpaperInfo;
+                if (!lockScreenMagazineWallpaperInfo.isTitleCustomized) {
+                    if (!TextUtils.isEmpty(lockScreenMagazineWallpaperInfo.entryTitle) && Locale.CHINESE.getLanguage().equals(Locale.getDefault().getLanguage())) {
+                        return this.mMagazineWallpaperInfo.entryTitle;
+                    }
+                }
             }
-            if (!TextUtils.isEmpty(lockScreenMagazineWallpaperInfo.entryTitle) && Locale.CHINESE.getLanguage().equals(Locale.getDefault().getLanguage())) {
-                return lockScreenMagazineWallpaperInfo.entryTitle;
-            }
-        } else if (!TextUtils.isEmpty(lockScreenMagazineWallpaperInfo.title) && Locale.CHINESE.getLanguage().equals(Locale.getDefault().getLanguage())) {
-            return lockScreenMagazineWallpaperInfo.title;
+            return this.mMagazineWallpaperInfo.title;
+        } else if (!TextUtils.isEmpty(this.mMagazineWallpaperInfo.title) && Locale.CHINESE.getLanguage().equals(Locale.getDefault().getLanguage())) {
+            return this.mMagazineWallpaperInfo.title;
         }
         return null;
     }
 
-    private String getLockScreenMagazineProvider(LockScreenMagazineWallpaperInfo lockScreenMagazineWallpaperInfo) {
-        if (TextUtils.isEmpty(lockScreenMagazineWallpaperInfo.provider)) {
+    private String getLockScreenMagazineProvider() {
+        if (TextUtils.isEmpty(this.mMagazineWallpaperInfo.provider)) {
             return null;
         }
-        return lockScreenMagazineWallpaperInfo.provider;
+        return this.mMagazineWallpaperInfo.provider;
     }
 
-    private String getLockScreenMagazineSource(LockScreenMagazineWallpaperInfo lockScreenMagazineWallpaperInfo) {
-        if (TextUtils.isEmpty(lockScreenMagazineWallpaperInfo.source)) {
+    private String getLockScreenMagazineSource() {
+        if (TextUtils.isEmpty(this.mMagazineWallpaperInfo.source)) {
             return null;
         }
-        return lockScreenMagazineWallpaperInfo.source;
+        return this.mMagazineWallpaperInfo.source;
     }
 
     public void setTextColor(int i) {
@@ -224,8 +233,8 @@ public class LockScreenMagazineClockView extends LinearLayout {
     }
 
     public void setTextSize() {
-        int dimensionPixelSize = getResources().getDimensionPixelSize(R.dimen.miui_clock_date_text_size);
-        int dimensionPixelSize2 = getResources().getDimensionPixelSize(R.dimen.lock_screen_magazine_clock_provider_source_text_size);
+        int dimensionPixelSize = getResources().getDimensionPixelSize(C0009R$dimen.miui_clock_date_text_size);
+        int dimensionPixelSize2 = getResources().getDimensionPixelSize(C0009R$dimen.lock_screen_magazine_clock_provider_source_text_size);
         this.mTitle.setTextSize(0, (float) dimensionPixelSize);
         float f = (float) dimensionPixelSize2;
         this.mProvider.setTextSize(0, f);
@@ -233,16 +242,25 @@ public class LockScreenMagazineClockView extends LinearLayout {
     }
 
     public void updateDrawableResources(boolean z) {
-        this.mDarkMode = z;
-        if (!Build.IS_INTERNATIONAL_BUILD || this.mHasTitleClick) {
-            this.mTitle.setCompoundDrawablesWithIntrinsicBounds((Drawable) null, (Drawable) null, getResources().getDrawable(z ? R.drawable.keyguard_bottom_guide_right_arrow_dark : R.drawable.keyguard_bottom_guide_right_arrow), (Drawable) null);
-        } else {
+        int i;
+        if (this.mDarkStyle != z) {
+            this.mDarkStyle = z;
+            if (!Build.IS_INTERNATIONAL_BUILD || this.mHasTitleClick) {
+                Resources resources = getResources();
+                if (z) {
+                    i = C0010R$drawable.keyguard_bottom_guide_right_arrow_dark;
+                } else {
+                    i = C0010R$drawable.keyguard_bottom_guide_right_arrow;
+                }
+                this.mTitle.setCompoundDrawablesWithIntrinsicBounds((Drawable) null, (Drawable) null, resources.getDrawable(i), (Drawable) null);
+                return;
+            }
             this.mTitle.setCompoundDrawablesWithIntrinsicBounds((Drawable) null, (Drawable) null, (Drawable) null, (Drawable) null);
         }
     }
 
     public void updateTitlePadding() {
-        this.mTitle.setPaddingRelative(!this.mIsLeftTopClock && this.mHasTitleClick ? this.mContext.getResources().getDimensionPixelOffset(R.dimen.lock_screen_magazine_clock_title_padding_start) : 0, 0, 0, 0);
+        this.mTitle.setPaddingRelative(!this.mIsLeftTopClock && this.mHasTitleClick ? this.mContext.getResources().getDimensionPixelOffset(C0009R$dimen.lock_screen_magazine_clock_title_padding_start) : 0, 0, 0, 0);
     }
 
     private void updateContentsLayoutGravity() {

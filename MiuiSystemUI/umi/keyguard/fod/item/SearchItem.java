@@ -6,8 +6,9 @@ import android.graphics.RectF;
 import android.graphics.Region;
 import android.view.View;
 import android.widget.ImageView;
-import com.android.systemui.Util;
-import com.android.systemui.plugins.R;
+import com.android.keyguard.utils.MiuiKeyguardUtils;
+import com.android.systemui.C0010R$drawable;
+import com.android.systemui.C0018R$string;
 
 public class SearchItem extends IQuickOpenItem {
     private final ImageView mView;
@@ -20,7 +21,7 @@ public class SearchItem extends IQuickOpenItem {
         super(rectF, region, context);
         ImageView imageView = new ImageView(context);
         this.mView = imageView;
-        imageView.setImageResource(R.drawable.gxzw_quick_open_search);
+        imageView.setImageResource(C0010R$drawable.gxzw_quick_open_search);
         this.mView.setScaleType(ImageView.ScaleType.FIT_XY);
     }
 
@@ -30,9 +31,9 @@ public class SearchItem extends IQuickOpenItem {
 
     public Intent getIntent() {
         Intent intent;
-        if (Util.isBrowserSearchExist(this.mContext)) {
+        if (MiuiKeyguardUtils.isBrowserSearchExist(this.mContext)) {
             intent = new Intent("android.intent.action.WEB_SEARCH");
-            intent.setPackage(Util.isBrowserGlobalEnabled(this.mContext) ? "com.mi.globalbrowser" : "com.android.browser");
+            intent.setPackage(MiuiKeyguardUtils.isBrowserGlobalEnabled(this.mContext) ? "com.mi.globalbrowser" : "com.android.browser");
             intent.putExtra("from", "fingerprint");
         } else if (isGoogleQuickSearchExit()) {
             intent = getGoogleQuickSearchIntent();
@@ -44,15 +45,15 @@ public class SearchItem extends IQuickOpenItem {
     }
 
     public String getTitle() {
-        return this.mContext.getString(R.string.gxzw_quick_open_search);
+        return this.mContext.getString(C0018R$string.gxzw_quick_open_search);
     }
 
     public String getSubTitle() {
-        return this.mContext.getString(R.string.gxzw_quick_open_search_sub);
+        return this.mContext.getString(C0018R$string.gxzw_quick_open_search_sub);
     }
 
     private boolean isGoogleQuickSearchExit() {
-        return Util.isIntentActivityExist(this.mContext, getGoogleQuickSearchIntent());
+        return MiuiKeyguardUtils.isIntentActivityExist(this.mContext, getGoogleQuickSearchIntent());
     }
 
     private Intent getGoogleQuickSearchIntent() {

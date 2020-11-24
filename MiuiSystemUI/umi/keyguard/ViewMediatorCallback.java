@@ -3,6 +3,8 @@ package com.android.keyguard;
 public interface ViewMediatorCallback {
     int getBouncerPromptReason();
 
+    boolean isScreenOn();
+
     void keyguardDone(boolean z, int i);
 
     void keyguardDoneDrawing();
@@ -12,6 +14,8 @@ public interface ViewMediatorCallback {
     void keyguardGone();
 
     void onBouncerVisiblityChanged(boolean z);
+
+    void playTrustedSound();
 
     void readyForKeyguardDone();
 

@@ -18,19 +18,22 @@ import android.widget.FrameLayout;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.KeyguardUpdateMonitorCallback;
 import com.android.keyguard.MiuiFastUnlockController;
-import com.android.keyguard.MiuiKeyguardUtils;
 import com.android.keyguard.fod.MiuiGxzwAnimManager;
 import com.android.keyguard.fod.MiuiGxzwAnimView;
 import com.android.keyguard.fod.MiuiGxzwFrameAnimation;
+import com.android.keyguard.utils.MiuiKeyguardUtils;
+import com.android.keyguard.wallpaper.IMiuiKeyguardWallpaperController;
+import com.android.keyguard.wallpaper.MiuiKeyguardWallpaperControllerImpl;
+import com.android.systemui.C0018R$string;
 import com.android.systemui.Dependency;
-import com.android.systemui.HapticFeedBackImpl;
-import com.android.systemui.plugins.R;
+import com.miui.systemui.util.HapticFeedBackImpl;
 import java.util.Objects;
-import miui.animation.Folme;
-import miui.animation.IVisibleStyle;
-import miui.animation.base.AnimConfig;
-import miui.animation.listener.TransitionListener;
+import miui.util.HapticFeedbackUtil;
 import miui.view.animation.QuarticEaseOutInterpolator;
+import miuix.animation.Folme;
+import miuix.animation.IVisibleStyle;
+import miuix.animation.base.AnimConfig;
+import miuix.animation.listener.TransitionListener;
 
 class MiuiGxzwAnimView {
     private final Handler mMainHandler;
@@ -103,24 +106,30 @@ class MiuiGxzwAnimView {
         });
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$startDozing$3 */
+    public /* synthetic */ void lambda$startDozing$3$MiuiGxzwAnimView() {
+        this.mMiuiGxzwAnimView.startDozing();
+    }
+
     public void startDozing() {
-        Handler handler = this.mMainHandler;
-        MiuiGxzwAnimViewInternal miuiGxzwAnimViewInternal = this.mMiuiGxzwAnimView;
-        Objects.requireNonNull(miuiGxzwAnimViewInternal);
-        handler.post(new Runnable() {
+        this.mMainHandler.post(new Runnable() {
             public final void run() {
-                MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.this.startDozing();
+                MiuiGxzwAnimView.this.lambda$startDozing$3$MiuiGxzwAnimView();
             }
         });
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$stopDozing$4 */
+    public /* synthetic */ void lambda$stopDozing$4$MiuiGxzwAnimView() {
+        this.mMiuiGxzwAnimView.stopDozing();
+    }
+
     public void stopDozing() {
-        Handler handler = this.mMainHandler;
-        MiuiGxzwAnimViewInternal miuiGxzwAnimViewInternal = this.mMiuiGxzwAnimView;
-        Objects.requireNonNull(miuiGxzwAnimViewInternal);
-        handler.post(new Runnable() {
+        this.mMainHandler.post(new Runnable() {
             public final void run() {
-                MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.this.stopDozing();
+                MiuiGxzwAnimView.this.lambda$stopDozing$4$MiuiGxzwAnimView();
             }
         });
     }
@@ -145,75 +154,79 @@ class MiuiGxzwAnimView {
         });
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$startRecognizingAnim$6 */
+    public /* synthetic */ void lambda$startRecognizingAnim$6$MiuiGxzwAnimView() {
+        this.mMiuiGxzwAnimView.startRecognizingAnim();
+    }
+
     public void startRecognizingAnim() {
-        Handler handler = this.mMainHandler;
-        MiuiGxzwAnimViewInternal miuiGxzwAnimViewInternal = this.mMiuiGxzwAnimView;
-        Objects.requireNonNull(miuiGxzwAnimViewInternal);
-        handler.post(new Runnable() {
+        this.mMainHandler.post(new Runnable() {
             public final void run() {
-                MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.this.startRecognizingAnim();
-            }
-        });
-    }
-
-    public void startFalseAnim() {
-        Handler handler = this.mMainHandler;
-        MiuiGxzwAnimViewInternal miuiGxzwAnimViewInternal = this.mMiuiGxzwAnimView;
-        Objects.requireNonNull(miuiGxzwAnimViewInternal);
-        handler.post(new Runnable() {
-            public final void run() {
-                MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.this.startFalseAnim();
-            }
-        });
-    }
-
-    public void startBackAnim() {
-        Handler handler = this.mMainHandler;
-        MiuiGxzwAnimViewInternal miuiGxzwAnimViewInternal = this.mMiuiGxzwAnimView;
-        Objects.requireNonNull(miuiGxzwAnimViewInternal);
-        handler.post(new Runnable() {
-            public final void run() {
-                MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.this.startBackAnim();
-            }
-        });
-    }
-
-    public void stopAnim() {
-        Handler handler = this.mMainHandler;
-        MiuiGxzwAnimViewInternal miuiGxzwAnimViewInternal = this.mMiuiGxzwAnimView;
-        Objects.requireNonNull(miuiGxzwAnimViewInternal);
-        handler.post(new Runnable() {
-            public final void run() {
-                MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.this.stopAnim();
-            }
-        });
-    }
-
-    public void stopTip() {
-        Handler handler = this.mMainHandler;
-        MiuiGxzwAnimViewInternal miuiGxzwAnimViewInternal = this.mMiuiGxzwAnimView;
-        Objects.requireNonNull(miuiGxzwAnimViewInternal);
-        handler.post(new Runnable() {
-            public final void run() {
-                MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.this.stopTip();
-            }
-        });
-    }
-
-    public void showMorePress() {
-        Handler handler = this.mMainHandler;
-        MiuiGxzwAnimViewInternal miuiGxzwAnimViewInternal = this.mMiuiGxzwAnimView;
-        Objects.requireNonNull(miuiGxzwAnimViewInternal);
-        handler.post(new Runnable() {
-            public final void run() {
-                MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.this.showMorePress();
+                MiuiGxzwAnimView.this.lambda$startRecognizingAnim$6$MiuiGxzwAnimView();
             }
         });
     }
 
     /* access modifiers changed from: private */
-    /* renamed from: lambda$drawFingerprintIcon$12 */
-    public /* synthetic */ void lambda$drawFingerprintIcon$12$MiuiGxzwAnimView(boolean z) {
+    /* renamed from: lambda$startFalseAnim$7 */
+    public /* synthetic */ void lambda$startFalseAnim$7$MiuiGxzwAnimView() {
+        this.mMiuiGxzwAnimView.startFalseAnim();
+    }
+
+    public void startFalseAnim() {
+        this.mMainHandler.post(new Runnable() {
+            public final void run() {
+                MiuiGxzwAnimView.this.lambda$startFalseAnim$7$MiuiGxzwAnimView();
+            }
+        });
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$startBackAnim$8 */
+    public /* synthetic */ void lambda$startBackAnim$8$MiuiGxzwAnimView() {
+        this.mMiuiGxzwAnimView.startBackAnim();
+    }
+
+    public void startBackAnim() {
+        this.mMainHandler.post(new Runnable() {
+            public final void run() {
+                MiuiGxzwAnimView.this.lambda$startBackAnim$8$MiuiGxzwAnimView();
+            }
+        });
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$stopAnim$9 */
+    public /* synthetic */ void lambda$stopAnim$9$MiuiGxzwAnimView() {
+        this.mMiuiGxzwAnimView.stopAnim();
+    }
+
+    public void stopAnim() {
+        this.mMainHandler.post(new Runnable() {
+            public final void run() {
+                MiuiGxzwAnimView.this.lambda$stopAnim$9$MiuiGxzwAnimView();
+            }
+        });
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$stopTip$10 */
+    public /* synthetic */ void lambda$stopTip$10$MiuiGxzwAnimView() {
+        this.mMiuiGxzwAnimView.stopTip();
+    }
+
+    public void stopTip() {
+        this.mMainHandler.post(new Runnable() {
+            public final void run() {
+                MiuiGxzwAnimView.this.lambda$stopTip$10$MiuiGxzwAnimView();
+            }
+        });
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$drawFingerprintIcon$11 */
+    public /* synthetic */ void lambda$drawFingerprintIcon$11$MiuiGxzwAnimView(boolean z) {
         this.mMiuiGxzwAnimView.drawFingerprintIcon(z);
     }
 
@@ -226,14 +239,14 @@ class MiuiGxzwAnimView {
             }
 
             public final void run() {
-                MiuiGxzwAnimView.this.lambda$drawFingerprintIcon$12$MiuiGxzwAnimView(this.f$1);
+                MiuiGxzwAnimView.this.lambda$drawFingerprintIcon$11$MiuiGxzwAnimView(this.f$1);
             }
         });
     }
 
     /* access modifiers changed from: private */
-    /* renamed from: lambda$setTranslate$13 */
-    public /* synthetic */ void lambda$setTranslate$13$MiuiGxzwAnimView(int i, int i2) {
+    /* renamed from: lambda$setTranslate$12 */
+    public /* synthetic */ void lambda$setTranslate$12$MiuiGxzwAnimView(int i, int i2) {
         this.mMiuiGxzwAnimView.setTranslate(i, i2);
     }
 
@@ -248,14 +261,14 @@ class MiuiGxzwAnimView {
             }
 
             public final void run() {
-                MiuiGxzwAnimView.this.lambda$setTranslate$13$MiuiGxzwAnimView(this.f$1, this.f$2);
+                MiuiGxzwAnimView.this.lambda$setTranslate$12$MiuiGxzwAnimView(this.f$1, this.f$2);
             }
         });
     }
 
     /* access modifiers changed from: private */
-    /* renamed from: lambda$setCollecting$14 */
-    public /* synthetic */ void lambda$setCollecting$14$MiuiGxzwAnimView(boolean z) {
+    /* renamed from: lambda$setCollecting$13 */
+    public /* synthetic */ void lambda$setCollecting$13$MiuiGxzwAnimView(boolean z) {
         this.mMiuiGxzwAnimView.setCollecting(z);
     }
 
@@ -268,14 +281,14 @@ class MiuiGxzwAnimView {
             }
 
             public final void run() {
-                MiuiGxzwAnimView.this.lambda$setCollecting$14$MiuiGxzwAnimView(this.f$1);
+                MiuiGxzwAnimView.this.lambda$setCollecting$13$MiuiGxzwAnimView(this.f$1);
             }
         });
     }
 
     /* access modifiers changed from: private */
-    /* renamed from: lambda$setGxzwTransparent$15 */
-    public /* synthetic */ void lambda$setGxzwTransparent$15$MiuiGxzwAnimView(boolean z) {
+    /* renamed from: lambda$setGxzwTransparent$14 */
+    public /* synthetic */ void lambda$setGxzwTransparent$14$MiuiGxzwAnimView(boolean z) {
         this.mMiuiGxzwAnimView.setGxzwTransparent(z);
     }
 
@@ -288,24 +301,38 @@ class MiuiGxzwAnimView {
             }
 
             public final void run() {
-                MiuiGxzwAnimView.this.lambda$setGxzwTransparent$15$MiuiGxzwAnimView(this.f$1);
+                MiuiGxzwAnimView.this.lambda$setGxzwTransparent$14$MiuiGxzwAnimView(this.f$1);
             }
         });
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$performSuccessFeedback$15 */
+    public /* synthetic */ void lambda$performSuccessFeedback$15$MiuiGxzwAnimView() {
+        this.mMiuiGxzwAnimView.performSuccessFeedback();
+    }
+
     public void performSuccessFeedback() {
+        this.mMainHandler.post(new Runnable() {
+            public final void run() {
+                MiuiGxzwAnimView.this.lambda$performSuccessFeedback$15$MiuiGxzwAnimView();
+            }
+        });
+    }
+
+    public void performFailFeedback() {
         Handler handler = this.mMainHandler;
         MiuiGxzwAnimViewInternal miuiGxzwAnimViewInternal = this.mMiuiGxzwAnimView;
         Objects.requireNonNull(miuiGxzwAnimViewInternal);
         handler.post(new Runnable() {
             public final void run() {
-                MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.this.performSuccessFeedback();
+                MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.this.performFailFeedback();
             }
         });
     }
 
     public void cancelAnimFeedback(Context context) {
-        if (MiuiKeyguardUtils.SUPPORT_LINEAR_MOTOR_VIBRATE) {
+        if (HapticFeedbackUtil.isSupportLinearMotorVibrate()) {
             Vibrator vibrator = (Vibrator) context.getSystemService("vibrator");
             if (vibrator != null) {
                 vibrator.cancel();
@@ -340,26 +367,6 @@ class MiuiGxzwAnimView {
 
             public final void run() {
                 MiuiGxzwAnimView.this.lambda$disableLockScreenFodAnim$18$MiuiGxzwAnimView(this.f$1);
-            }
-        });
-    }
-
-    /* access modifiers changed from: private */
-    /* renamed from: lambda$setVisibility$19 */
-    public /* synthetic */ void lambda$setVisibility$19$MiuiGxzwAnimView(int i) {
-        this.mMiuiGxzwAnimView.setVisibility(i);
-    }
-
-    public void setVisibility(int i) {
-        this.mMainHandler.post(new Runnable(i) {
-            public final /* synthetic */ int f$1;
-
-            {
-                this.f$1 = r2;
-            }
-
-            public final void run() {
-                MiuiGxzwAnimView.this.lambda$setVisibility$19$MiuiGxzwAnimView(this.f$1);
             }
         });
     }
@@ -439,7 +446,7 @@ class MiuiGxzwAnimView {
         private boolean mSurfaceCreate = false;
         private final Handler mSystemUIHandler;
         private TextureView mTextureView;
-        private final KeyguardUpdateMonitor.WallpaperChangeCallback mWallpaperChangeCallback;
+        private final IMiuiKeyguardWallpaperController.IWallpaperChangeCallback mWallpaperChangeCallback;
 
         public void onDisplayAdded(int i) {
         }
@@ -467,23 +474,19 @@ class MiuiGxzwAnimView {
                 public void onKeyguardBouncerChanged(boolean z) {
                     MiuiGxzwAnimViewInternal.this.mMainHandler.post(
                     /*  JADX ERROR: Method code generation error
-                        jadx.core.utils.exceptions.CodegenException: Error generate insn: 0x0019: INVOKE  
-                          (wrap: android.os.Handler : 0x0010: INVOKE  (r1v1 android.os.Handler) = 
-                          (wrap: com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal : 0x000e: IGET  (r1v0 com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal) = 
+                        jadx.core.utils.exceptions.CodegenException: Error generate insn: 0x0017: INVOKE  
+                          (wrap: android.os.Handler : 0x000e: INVOKE  (r1v1 android.os.Handler) = 
+                          (wrap: com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal : 0x000c: IGET  (r1v0 com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal) = 
                           (r3v0 'this' com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$1 A[THIS])
                          com.android.keyguard.fod.MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.1.this$0 com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal)
                          com.android.keyguard.fod.MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.access$000(com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal):android.os.Handler type: STATIC)
-                          (wrap: com.android.keyguard.fod.-$$Lambda$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$1$i4db7Cf5H8H4M7ryC89z0IUwbhE : 0x0016: CONSTRUCTOR  (r2v0 com.android.keyguard.fod.-$$Lambda$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$1$i4db7Cf5H8H4M7ryC89z0IUwbhE) = 
+                          (wrap: com.android.keyguard.fod.-$$Lambda$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$1$i4db7Cf5H8H4M7ryC89z0IUwbhE : 0x0014: CONSTRUCTOR  (r2v0 com.android.keyguard.fod.-$$Lambda$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$1$i4db7Cf5H8H4M7ryC89z0IUwbhE) = 
                           (r3v0 'this' com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$1 A[THIS])
                           (r4v0 'z' boolean)
-                          (wrap: boolean : 0x000a: INVOKE  (r0v3 boolean) = 
-                          (wrap: com.android.keyguard.KeyguardUpdateMonitor : 0x0006: INVOKE  (r0v2 com.android.keyguard.KeyguardUpdateMonitor) = 
-                          (wrap: android.content.Context : 0x0002: INVOKE  (r0v1 android.content.Context) = 
-                          (wrap: com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal : 0x0000: IGET  (r0v0 com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal) = 
-                          (r3v0 'this' com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$1 A[THIS])
-                         com.android.keyguard.fod.MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.1.this$0 com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal)
-                         android.widget.FrameLayout.getContext():android.content.Context type: VIRTUAL)
-                         com.android.keyguard.KeyguardUpdateMonitor.getInstance(android.content.Context):com.android.keyguard.KeyguardUpdateMonitor type: STATIC)
+                          (wrap: boolean : 0x0008: INVOKE  (r0v3 boolean) = 
+                          (wrap: com.android.keyguard.KeyguardUpdateMonitor : 0x0006: CHECK_CAST  (r0v2 com.android.keyguard.KeyguardUpdateMonitor) = (com.android.keyguard.KeyguardUpdateMonitor) (wrap: java.lang.Object : 0x0002: INVOKE  (r0v1 java.lang.Object) = 
+                          (wrap: java.lang.Class : 0x0000: CONST_CLASS  (r0v0 java.lang.Class) =  com.android.keyguard.KeyguardUpdateMonitor.class)
+                         com.android.systemui.Dependency.get(java.lang.Class):java.lang.Object type: STATIC))
                          com.android.keyguard.KeyguardUpdateMonitor.isDeviceInteractive():boolean type: VIRTUAL)
                          call: com.android.keyguard.fod.-$$Lambda$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$1$i4db7Cf5H8H4M7ryC89z0IUwbhE.<init>(com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$1, boolean, boolean):void type: CONSTRUCTOR)
                          android.os.Handler.post(java.lang.Runnable):boolean type: VIRTUAL in method: com.android.keyguard.fod.MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.1.onKeyguardBouncerChanged(boolean):void, dex: classes.dex
@@ -562,17 +565,13 @@ class MiuiGxzwAnimView {
                         	at jadx.core.codegen.CodeGen.generate(CodeGen.java:21)
                         	at jadx.core.ProcessClass.generateCode(ProcessClass.java:61)
                         	at jadx.core.dex.nodes.ClassNode.decompile(ClassNode.java:273)
-                        Caused by: jadx.core.utils.exceptions.CodegenException: Error generate insn: 0x0016: CONSTRUCTOR  (r2v0 com.android.keyguard.fod.-$$Lambda$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$1$i4db7Cf5H8H4M7ryC89z0IUwbhE) = 
+                        Caused by: jadx.core.utils.exceptions.CodegenException: Error generate insn: 0x0014: CONSTRUCTOR  (r2v0 com.android.keyguard.fod.-$$Lambda$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$1$i4db7Cf5H8H4M7ryC89z0IUwbhE) = 
                           (r3v0 'this' com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$1 A[THIS])
                           (r4v0 'z' boolean)
-                          (wrap: boolean : 0x000a: INVOKE  (r0v3 boolean) = 
-                          (wrap: com.android.keyguard.KeyguardUpdateMonitor : 0x0006: INVOKE  (r0v2 com.android.keyguard.KeyguardUpdateMonitor) = 
-                          (wrap: android.content.Context : 0x0002: INVOKE  (r0v1 android.content.Context) = 
-                          (wrap: com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal : 0x0000: IGET  (r0v0 com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal) = 
-                          (r3v0 'this' com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$1 A[THIS])
-                         com.android.keyguard.fod.MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.1.this$0 com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal)
-                         android.widget.FrameLayout.getContext():android.content.Context type: VIRTUAL)
-                         com.android.keyguard.KeyguardUpdateMonitor.getInstance(android.content.Context):com.android.keyguard.KeyguardUpdateMonitor type: STATIC)
+                          (wrap: boolean : 0x0008: INVOKE  (r0v3 boolean) = 
+                          (wrap: com.android.keyguard.KeyguardUpdateMonitor : 0x0006: CHECK_CAST  (r0v2 com.android.keyguard.KeyguardUpdateMonitor) = (com.android.keyguard.KeyguardUpdateMonitor) (wrap: java.lang.Object : 0x0002: INVOKE  (r0v1 java.lang.Object) = 
+                          (wrap: java.lang.Class : 0x0000: CONST_CLASS  (r0v0 java.lang.Class) =  com.android.keyguard.KeyguardUpdateMonitor.class)
+                         com.android.systemui.Dependency.get(java.lang.Class):java.lang.Object type: STATIC))
                          com.android.keyguard.KeyguardUpdateMonitor.isDeviceInteractive():boolean type: VIRTUAL)
                          call: com.android.keyguard.fod.-$$Lambda$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$1$i4db7Cf5H8H4M7ryC89z0IUwbhE.<init>(com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$1, boolean, boolean):void type: CONSTRUCTOR in method: com.android.keyguard.fod.MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.1.onKeyguardBouncerChanged(boolean):void, dex: classes.dex
                         	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:256)
@@ -592,9 +591,9 @@ class MiuiGxzwAnimView {
                         */
                     /*
                         this = this;
-                        com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal r0 = com.android.keyguard.fod.MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.this
-                        android.content.Context r0 = r0.getContext()
-                        com.android.keyguard.KeyguardUpdateMonitor r0 = com.android.keyguard.KeyguardUpdateMonitor.getInstance(r0)
+                        java.lang.Class<com.android.keyguard.KeyguardUpdateMonitor> r0 = com.android.keyguard.KeyguardUpdateMonitor.class
+                        java.lang.Object r0 = com.android.systemui.Dependency.get(r0)
+                        com.android.keyguard.KeyguardUpdateMonitor r0 = (com.android.keyguard.KeyguardUpdateMonitor) r0
                         boolean r0 = r0.isDeviceInteractive()
                         com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal r1 = com.android.keyguard.fod.MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.this
                         android.os.Handler r1 = r1.mMainHandler
@@ -612,26 +611,25 @@ class MiuiGxzwAnimView {
                     MiuiGxzwAnimViewInternal.this.onKeyguardBouncerChanged(z, z2);
                 }
             };
-            this.mWallpaperChangeCallback = new KeyguardUpdateMonitor.WallpaperChangeCallback() {
+            this.mWallpaperChangeCallback = new IMiuiKeyguardWallpaperController.IWallpaperChangeCallback() {
+                /* access modifiers changed from: private */
+                /* renamed from: lambda$onWallpaperChange$0 */
+                public /* synthetic */ void lambda$onWallpaperChange$0$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$2(boolean z) {
+                    MiuiGxzwAnimViewInternal.this.onWallpaperChange(z);
+                }
+
                 public void onWallpaperChange(boolean z) {
-                    KeyguardUpdateMonitor.getInstance(MiuiGxzwAnimViewInternal.this.getContext());
                     MiuiGxzwAnimViewInternal.this.mMainHandler.post(
                     /*  JADX ERROR: Method code generation error
-                        jadx.core.utils.exceptions.CodegenException: Error generate insn: 0x001e: INVOKE  
-                          (wrap: android.os.Handler : 0x0015: INVOKE  (r0v1 android.os.Handler) = 
-                          (wrap: com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal : 0x0013: IGET  (r0v0 com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal) = 
+                        jadx.core.utils.exceptions.CodegenException: Error generate insn: 0x000b: INVOKE  
+                          (wrap: android.os.Handler : 0x0002: INVOKE  (r0v1 android.os.Handler) = 
+                          (wrap: com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal : 0x0000: IGET  (r0v0 com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal) = 
                           (r2v0 'this' com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$2 A[THIS])
                          com.android.keyguard.fod.MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.2.this$0 com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal)
                          com.android.keyguard.fod.MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.access$000(com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal):android.os.Handler type: STATIC)
-                          (wrap: com.android.keyguard.fod.-$$Lambda$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$2$rSJ0ssoNyg2LzR8PzqB-LE_kQpc : 0x001b: CONSTRUCTOR  (r1v0 com.android.keyguard.fod.-$$Lambda$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$2$rSJ0ssoNyg2LzR8PzqB-LE_kQpc) = 
+                          (wrap: com.android.keyguard.fod.-$$Lambda$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$2$rSJ0ssoNyg2LzR8PzqB-LE_kQpc : 0x0008: CONSTRUCTOR  (r1v0 com.android.keyguard.fod.-$$Lambda$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$2$rSJ0ssoNyg2LzR8PzqB-LE_kQpc) = 
                           (r2v0 'this' com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$2 A[THIS])
-                          (wrap: boolean : 0x000f: INVOKE  (r3v5 boolean) = 
-                          (wrap: android.content.Context : 0x000b: INVOKE  (r3v4 android.content.Context) = 
-                          (wrap: com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal : 0x0009: IGET  (r3v3 com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal) = 
-                          (r2v0 'this' com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$2 A[THIS])
-                         com.android.keyguard.fod.MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.2.this$0 com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal)
-                         android.widget.FrameLayout.getContext():android.content.Context type: VIRTUAL)
-                         com.android.keyguard.KeyguardUpdateMonitor.isWallpaperColorLight(android.content.Context):boolean type: STATIC)
+                          (r3v0 'z' boolean)
                          call: com.android.keyguard.fod.-$$Lambda$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$2$rSJ0ssoNyg2LzR8PzqB-LE_kQpc.<init>(com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$2, boolean):void type: CONSTRUCTOR)
                          android.os.Handler.post(java.lang.Runnable):boolean type: VIRTUAL in method: com.android.keyguard.fod.MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.2.onWallpaperChange(boolean):void, dex: classes.dex
                         	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:256)
@@ -709,15 +707,9 @@ class MiuiGxzwAnimView {
                         	at jadx.core.codegen.CodeGen.generate(CodeGen.java:21)
                         	at jadx.core.ProcessClass.generateCode(ProcessClass.java:61)
                         	at jadx.core.dex.nodes.ClassNode.decompile(ClassNode.java:273)
-                        Caused by: jadx.core.utils.exceptions.CodegenException: Error generate insn: 0x001b: CONSTRUCTOR  (r1v0 com.android.keyguard.fod.-$$Lambda$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$2$rSJ0ssoNyg2LzR8PzqB-LE_kQpc) = 
+                        Caused by: jadx.core.utils.exceptions.CodegenException: Error generate insn: 0x0008: CONSTRUCTOR  (r1v0 com.android.keyguard.fod.-$$Lambda$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$2$rSJ0ssoNyg2LzR8PzqB-LE_kQpc) = 
                           (r2v0 'this' com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$2 A[THIS])
-                          (wrap: boolean : 0x000f: INVOKE  (r3v5 boolean) = 
-                          (wrap: android.content.Context : 0x000b: INVOKE  (r3v4 android.content.Context) = 
-                          (wrap: com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal : 0x0009: IGET  (r3v3 com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal) = 
-                          (r2v0 'this' com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$2 A[THIS])
-                         com.android.keyguard.fod.MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.2.this$0 com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal)
-                         android.widget.FrameLayout.getContext():android.content.Context type: VIRTUAL)
-                         com.android.keyguard.KeyguardUpdateMonitor.isWallpaperColorLight(android.content.Context):boolean type: STATIC)
+                          (r3v0 'z' boolean)
                          call: com.android.keyguard.fod.-$$Lambda$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$2$rSJ0ssoNyg2LzR8PzqB-LE_kQpc.<init>(com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$2, boolean):void type: CONSTRUCTOR in method: com.android.keyguard.fod.MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.2.onWallpaperChange(boolean):void, dex: classes.dex
                         	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:256)
                         	at jadx.core.codegen.InsnGen.addWrappedArg(InsnGen.java:123)
@@ -736,12 +728,6 @@ class MiuiGxzwAnimView {
                         */
                     /*
                         this = this;
-                        com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal r3 = com.android.keyguard.fod.MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.this
-                        android.content.Context r3 = r3.getContext()
-                        com.android.keyguard.KeyguardUpdateMonitor.getInstance(r3)
-                        com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal r3 = com.android.keyguard.fod.MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.this
-                        android.content.Context r3 = r3.getContext()
-                        boolean r3 = com.android.keyguard.KeyguardUpdateMonitor.isWallpaperColorLight(r3)
                         com.android.keyguard.fod.MiuiGxzwAnimView$MiuiGxzwAnimViewInternal r0 = com.android.keyguard.fod.MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.this
                         android.os.Handler r0 = r0.mMainHandler
                         com.android.keyguard.fod.-$$Lambda$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$2$rSJ0ssoNyg2LzR8PzqB-LE_kQpc r1 = new com.android.keyguard.fod.-$$Lambda$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$2$rSJ0ssoNyg2LzR8PzqB-LE_kQpc
@@ -750,12 +736,6 @@ class MiuiGxzwAnimView {
                         return
                     */
                     throw new UnsupportedOperationException("Method not decompiled: com.android.keyguard.fod.MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.AnonymousClass2.onWallpaperChange(boolean):void");
-                }
-
-                /* access modifiers changed from: private */
-                /* renamed from: lambda$onWallpaperChange$0 */
-                public /* synthetic */ void lambda$onWallpaperChange$0$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$2(boolean z) {
-                    MiuiGxzwAnimViewInternal.this.onWallpaperChange(z);
                 }
             };
             this.mMainHandler = new Handler();
@@ -897,10 +877,10 @@ class MiuiGxzwAnimView {
         /* access modifiers changed from: private */
         /* renamed from: lambda$registerCallback$0 */
         public /* synthetic */ void lambda$registerCallback$0$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal() {
-            KeyguardUpdateMonitor instance = KeyguardUpdateMonitor.getInstance(getContext());
-            instance.registerWallpaperChangeCallback(this.mWallpaperChangeCallback);
-            instance.registerCallback(this.mKeyguardUpdateMonitorCallback);
-            this.mKeyguardUpdateMonitorCallback.onKeyguardBouncerChanged(instance.isBouncerShowing());
+            KeyguardUpdateMonitor keyguardUpdateMonitor = (KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class);
+            ((IMiuiKeyguardWallpaperController) Dependency.get(IMiuiKeyguardWallpaperController.class)).registerWallpaperChangeCallback(this.mWallpaperChangeCallback);
+            keyguardUpdateMonitor.registerCallback(this.mKeyguardUpdateMonitorCallback);
+            this.mKeyguardUpdateMonitorCallback.onKeyguardBouncerChanged(keyguardUpdateMonitor.isBouncerShowing());
         }
 
         /* access modifiers changed from: private */
@@ -928,9 +908,7 @@ class MiuiGxzwAnimView {
         /* access modifiers changed from: private */
         /* renamed from: lambda$unregisterCallback$1 */
         public /* synthetic */ void lambda$unregisterCallback$1$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal() {
-            KeyguardUpdateMonitor instance = KeyguardUpdateMonitor.getInstance(getContext());
-            instance.unregisterWallpaperChangeCallback(this.mWallpaperChangeCallback);
-            instance.removeCallback(this.mKeyguardUpdateMonitorCallback);
+            ((KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class)).removeCallback(this.mKeyguardUpdateMonitorCallback);
         }
 
         private void addAnimView() {
@@ -959,7 +937,7 @@ class MiuiGxzwAnimView {
         public void startDozing() {
             this.mDozing = true;
             stopAnim();
-            if (KeyguardUpdateMonitor.getInstance(getContext()).isAodUsingSuperWallpaper()) {
+            if (((MiuiKeyguardWallpaperControllerImpl) Dependency.get(MiuiKeyguardWallpaperControllerImpl.class)).isAodUsingSuperWallpaper()) {
                 this.mDozingIconAnimDone = true;
             }
             drawFingerprintIcon(this.mDozing);
@@ -1010,7 +988,7 @@ class MiuiGxzwAnimView {
             if (this.mDozing || !this.mLightWallpaperGxzw) {
                 z = false;
             }
-            startTipAnim(z, getContext().getString(R.string.gxzw_try_again), (float) this.mMiuiGxzwAnimManager.getFalseTipTranslationY(getContext()));
+            startTipAnim(z, getContext().getString(C0018R$string.gxzw_try_again), (float) this.mMiuiGxzwAnimManager.getFalseTipTranslationY(getContext()));
         }
 
         /* access modifiers changed from: private */
@@ -1045,11 +1023,6 @@ class MiuiGxzwAnimView {
         /* access modifiers changed from: private */
         public void stopTip() {
             this.mMiuiGxzwTipView.stopTipAnim();
-        }
-
-        /* access modifiers changed from: private */
-        public void showMorePress() {
-            startTipAnim(!this.mDozing && this.mLightWallpaperGxzw, getContext().getString(R.string.gxzw_press_harder), 260.0f);
         }
 
         /* access modifiers changed from: private */
@@ -1123,9 +1096,27 @@ class MiuiGxzwAnimView {
                 if (this.mAnimFeedback && vibrator != null) {
                     vibrator.cancel();
                 }
-                this.mSystemUIHandler.post($$Lambda$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$UaxnELxzuDnXdfJaaePdm_842UE.INSTANCE);
+                if (((HapticFeedBackImpl) Dependency.get(HapticFeedBackImpl.class)).isSupportExtHapticFeedback(166)) {
+                    this.mSystemUIHandler.post($$Lambda$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$UaxnELxzuDnXdfJaaePdm_842UE.INSTANCE);
+                } else {
+                    this.mSystemUIHandler.post($$Lambda$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$pU93HFtcJ915rU4l2vSbn9uDT5U.INSTANCE);
+                }
                 this.mAnimFeedback = false;
             }
+        }
+
+        /* access modifiers changed from: private */
+        public void performFailFeedback() {
+            if (((HapticFeedBackImpl) Dependency.get(HapticFeedBackImpl.class)).isSupportExtHapticFeedback(165)) {
+                Vibrator vibrator = (Vibrator) getContext().getSystemService("vibrator");
+                if (this.mAnimFeedback && vibrator != null) {
+                    vibrator.cancel();
+                }
+                this.mSystemUIHandler.post($$Lambda$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$EofAXSl4oW5sLBWNfhgzhOWxbNU.INSTANCE);
+                this.mAnimFeedback = false;
+                return;
+            }
+            MiuiGxzwUtils.vibrateNormal(getContext());
         }
 
         /* access modifiers changed from: private */

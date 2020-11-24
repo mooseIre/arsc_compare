@@ -1,21 +1,34 @@
 package com.android.keyguard;
 
+import android.hardware.biometrics.BiometricSourceType;
 import android.os.SystemClock;
 import android.telephony.ServiceState;
-import com.android.internal.telephony.IccCardConstants;
-import com.android.keyguard.charge.BatteryStatus;
+import com.android.keyguard.charge.MiuiBatteryStatus;
+import java.util.TimeZone;
 
 public class KeyguardUpdateMonitorCallback {
     private boolean mShowing;
     private long mVisibilityChangedCalled;
 
-    public void onAirplaneModeChanged() {
+    public void onBiometricAcquired(BiometricSourceType biometricSourceType) {
     }
 
-    public void onBootCompleted() {
+    public void onBiometricAuthFailed(BiometricSourceType biometricSourceType) {
     }
 
-    public void onBottomAreaButtonClicked(boolean z) {
+    public void onBiometricAuthenticated(int i, BiometricSourceType biometricSourceType, boolean z) {
+    }
+
+    public void onBiometricError(int i, String str, BiometricSourceType biometricSourceType) {
+    }
+
+    public void onBiometricHelp(int i, String str, BiometricSourceType biometricSourceType) {
+    }
+
+    public void onBiometricRunningStateChanged(boolean z, BiometricSourceType biometricSourceType) {
+    }
+
+    public void onBiometricsCleared() {
     }
 
     public void onClockVisibilityChanged() {
@@ -36,106 +49,81 @@ public class KeyguardUpdateMonitorCallback {
     public void onFaceUnlockStateChanged(boolean z, int i) {
     }
 
-    public void onFingerprintAcquired(int i) {
-    }
-
-    public void onFingerprintAuthFailed() {
-    }
-
-    public void onFingerprintAuthenticated(int i) {
-    }
-
-    public void onFingerprintError(int i, String str) {
-    }
-
-    public void onFingerprintHelp(int i, String str) {
-    }
-
-    public void onFingerprintLockoutReset() {
-    }
-
-    public void onFingerprintRunningStateChanged(boolean z) {
-    }
-
+    @Deprecated
     public void onFinishedGoingToSleep(int i) {
+    }
+
+    public void onHasLockscreenWallpaperChanged(boolean z) {
     }
 
     public void onKeyguardBouncerChanged(boolean z) {
     }
 
-    public void onKeyguardGoingAway() {
-    }
-
-    public void onKeyguardOccludedChanged(boolean z) {
-    }
-
-    public void onKeyguardShowingChanged(boolean z) {
-    }
-
     public void onKeyguardVisibilityChanged(boolean z) {
     }
 
-    public void onLockScreenMagazinePreViewVisibilityChanged(boolean z) {
-    }
-
-    public void onLockScreenMagazineStatusChanged() {
-    }
-
-    public void onLockWallpaperProviderChanged() {
-    }
-
-    public void onPhoneSignalChanged(boolean z) {
+    public void onLogoutEnabledChanged() {
     }
 
     public void onPhoneStateChanged(int i) {
     }
 
-    public void onPreFingerprintAuthenticated(int i) {
-    }
-
-    public void onRefreshBatteryInfo(BatteryStatus batteryStatus) {
+    public void onRefreshBatteryInfo(MiuiBatteryStatus miuiBatteryStatus) {
     }
 
     public void onRefreshCarrierInfo() {
     }
 
-    public void onRegionChanged() {
-    }
-
     public void onRingerModeChanged(int i) {
     }
 
+    @Deprecated
     public void onScreenTurnedOff() {
     }
 
+    @Deprecated
     public void onScreenTurnedOn() {
+    }
+
+    public void onSecondaryLockscreenRequirementChanged(int i) {
     }
 
     public void onServiceStateChanged(int i, ServiceState serviceState) {
     }
 
-    public void onSimLockedStateChanged(boolean z) {
+    public void onSimStateChanged(int i, int i2, int i3) {
     }
 
-    public void onSimStateChanged(int i, int i2, IccCardConstants.State state) {
-    }
-
+    @Deprecated
     public void onStartedGoingToSleep(int i) {
     }
 
+    @Deprecated
     public void onStartedWakingUp() {
-    }
-
-    public void onStartedWakingUpWithReason(String str) {
     }
 
     public void onStrongAuthStateChanged(int i) {
     }
 
-    public void onSuperSavePowerChanged(boolean z) {
+    public void onTelephonyCapable(boolean z) {
     }
 
     public void onTimeChanged() {
+    }
+
+    public void onTimeZoneChanged(TimeZone timeZone) {
+    }
+
+    public void onTrustAgentErrorMessage(CharSequence charSequence) {
+    }
+
+    public void onTrustChanged(int i) {
+    }
+
+    public void onTrustGrantedWithFlags(int i, int i2) {
+    }
+
+    public void onTrustManagedChanged(int i) {
     }
 
     public void onUserInfoChanged(int i) {
@@ -148,9 +136,6 @@ public class KeyguardUpdateMonitorCallback {
     }
 
     public void onUserUnlocked() {
-    }
-
-    public void updateShowingStatus(boolean z) {
     }
 
     public void onKeyguardVisibilityChangedRaw(boolean z) {

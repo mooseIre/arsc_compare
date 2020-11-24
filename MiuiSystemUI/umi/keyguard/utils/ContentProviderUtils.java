@@ -1,38 +1,11 @@
 package com.android.keyguard.utils;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.IContentProvider;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 
 public class ContentProviderUtils {
-    public static void updateData(Context context, Uri uri, ContentValues contentValues) {
-        IContentProvider iContentProvider = null;
-        try {
-            iContentProvider = context.getContentResolver().acquireUnstableProvider(uri);
-            if (iContentProvider != null) {
-                iContentProvider.update(context.getPackageName(), uri, contentValues, (String) null, (String[]) null);
-                if (iContentProvider == null) {
-                    return;
-                }
-                context.getContentResolver().releaseUnstableProvider(iContentProvider);
-            } else if (iContentProvider != null) {
-                context.getContentResolver().releaseUnstableProvider(iContentProvider);
-            }
-        } catch (Exception e) {
-            Log.d("ContentProviderUtils", "updateData", e);
-            if (iContentProvider == null) {
-            }
-        } catch (Throwable th) {
-            if (iContentProvider != null) {
-                context.getContentResolver().releaseUnstableProvider(iContentProvider);
-            }
-            throw th;
-        }
-    }
-
     public static boolean isProviderExists(Context context, Uri uri) {
         IContentProvider acquireUnstableProvider = context.getContentResolver().acquireUnstableProvider(uri);
         if (acquireUnstableProvider == null) {

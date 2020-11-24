@@ -1,7 +1,7 @@
 package com.android.keyguard.fod;
 
 import com.android.systemui.Dependency;
-import com.android.systemui.HapticFeedBackImpl;
+import com.miui.systemui.util.HapticFeedBackImpl;
 
 /* renamed from: com.android.keyguard.fod.-$$Lambda$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$UaxnELxzuDnXdfJaaePdm_842UE  reason: invalid class name */
 /* compiled from: lambda */
@@ -12,6 +12,6 @@ public final /* synthetic */ class $$Lambda$MiuiGxzwAnimView$MiuiGxzwAnimViewInt
     }
 
     public final void run() {
-        ((HapticFeedBackImpl) Dependency.get(HapticFeedBackImpl.class)).meshNormal();
+        ((HapticFeedBackImpl) Dependency.get(HapticFeedBackImpl.class)).extHapticFeedback(166, false, 0);
     }
 }

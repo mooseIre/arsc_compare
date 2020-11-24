@@ -7,8 +7,9 @@ import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import com.android.internal.widget.LockscreenCredential;
 import com.android.keyguard.PasswordTextView;
-import com.android.systemui.plugins.R;
+import com.android.systemui.C0012R$id;
 
 public abstract class KeyguardPinBasedInputView extends KeyguardAbsKeyInputView implements View.OnKeyListener, View.OnTouchListener {
     private View mButton0;
@@ -59,6 +60,9 @@ public abstract class KeyguardPinBasedInputView extends KeyguardAbsKeyInputView 
         if (view != null) {
             view.setEnabled(z);
         }
+        if (z && !this.mPasswordEntry.hasFocus()) {
+            this.mPasswordEntry.requestFocus();
+        }
     }
 
     /* access modifiers changed from: protected */
@@ -67,6 +71,9 @@ public abstract class KeyguardPinBasedInputView extends KeyguardAbsKeyInputView 
         View view = this.mOkButton;
         if (view != null) {
             view.setEnabled(z);
+        }
+        if (z && !this.mPasswordEntry.hasFocus()) {
+            this.mPasswordEntry.requestFocus();
         }
     }
 
@@ -137,8 +144,8 @@ public abstract class KeyguardPinBasedInputView extends KeyguardAbsKeyInputView 
     }
 
     /* access modifiers changed from: protected */
-    public String getPasswordText() {
-        return this.mPasswordEntry.getText();
+    public LockscreenCredential getEnteredCredential() {
+        return LockscreenCredential.createPinOrNone(this.mPasswordEntry.getText());
     }
 
     /* access modifiers changed from: protected */
@@ -154,7 +161,7 @@ public abstract class KeyguardPinBasedInputView extends KeyguardAbsKeyInputView 
                 KeyguardPinBasedInputView.this.onUserInput();
             }
         });
-        View findViewById = findViewById(R.id.key_enter);
+        View findViewById = findViewById(C0012R$id.key_enter);
         this.mOkButton = findViewById;
         if (findViewById != null) {
             findViewById.setOnTouchListener(this);
@@ -193,16 +200,21 @@ public abstract class KeyguardPinBasedInputView extends KeyguardAbsKeyInputView 
                 return true;
             }
         });
-        this.mButton0 = findViewById(R.id.key0);
-        this.mButton1 = findViewById(R.id.key1);
-        this.mButton2 = findViewById(R.id.key2);
-        this.mButton3 = findViewById(R.id.key3);
-        this.mButton4 = findViewById(R.id.key4);
-        this.mButton5 = findViewById(R.id.key5);
-        this.mButton6 = findViewById(R.id.key6);
-        this.mButton7 = findViewById(R.id.key7);
-        this.mButton8 = findViewById(R.id.key8);
-        this.mButton9 = findViewById(R.id.key9);
+        this.mButton0 = findViewById(C0012R$id.key0);
+        this.mButton1 = findViewById(C0012R$id.key1);
+        this.mButton2 = findViewById(C0012R$id.key2);
+        this.mButton3 = findViewById(C0012R$id.key3);
+        this.mButton4 = findViewById(C0012R$id.key4);
+        this.mButton5 = findViewById(C0012R$id.key5);
+        this.mButton6 = findViewById(C0012R$id.key6);
+        this.mButton7 = findViewById(C0012R$id.key7);
+        this.mButton8 = findViewById(C0012R$id.key8);
+        this.mButton9 = findViewById(C0012R$id.key9);
+        this.mPasswordEntry.requestFocus();
+    }
+
+    public void onResume(int i) {
+        super.onResume(i);
         this.mPasswordEntry.requestFocus();
     }
 

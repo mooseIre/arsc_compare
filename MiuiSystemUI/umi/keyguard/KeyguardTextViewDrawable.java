@@ -10,9 +10,6 @@ public class KeyguardTextViewDrawable extends TextView {
     private boolean mAliganCenter;
     private int mWidth;
 
-    private void initView(Context context, AttributeSet attributeSet, int i) {
-    }
-
     public KeyguardTextViewDrawable(Context context) {
         this(context, (AttributeSet) null);
     }
@@ -24,7 +21,6 @@ public class KeyguardTextViewDrawable extends TextView {
     public KeyguardTextViewDrawable(Context context, AttributeSet attributeSet, int i) {
         super(context, attributeSet, i);
         this.mAliganCenter = true;
-        initView(context, attributeSet, i);
     }
 
     /* access modifiers changed from: protected */

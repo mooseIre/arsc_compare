@@ -9,7 +9,7 @@ import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
-import com.android.systemui.plugins.R;
+import com.android.systemui.C0007R$bool;
 
 class MiuiGxzwSensor {
     private static int TYPE_NONUI_SENSOR = 33171027;
@@ -72,7 +72,7 @@ class MiuiGxzwSensor {
     MiuiGxzwSensor(Context context) {
         this.mContext = context;
         this.mSensorManager = (SensorManager) context.getSystemService("sensor");
-        this.mSupportNonuiSensor = context.getResources().getBoolean(R.bool.config_enableFodNonuiSensor);
+        this.mSupportNonuiSensor = context.getResources().getBoolean(C0007R$bool.config_enableFodNonuiSensor);
     }
 
     public void registerDozeSensor(MiuiGxzwSensorListener miuiGxzwSensorListener) {

@@ -4,16 +4,18 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Rect;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewDebug;
 import android.view.ViewGroup;
 import android.view.ViewHierarchyEncoder;
 import android.widget.FrameLayout;
-import android.widget.ViewAnimator;
+import android.widget.ViewFlipper;
 import com.android.internal.widget.LockPatternUtils;
+import com.android.systemui.R$styleable;
 
-public class KeyguardSecurityViewFlipper extends ViewAnimator implements KeyguardSecurityView {
+public class KeyguardSecurityViewFlipper extends ViewFlipper implements KeyguardSecurityView {
     private Rect mTempRect;
 
     public KeyguardSecurityViewFlipper(Context context) {
@@ -62,6 +64,13 @@ public class KeyguardSecurityViewFlipper extends ViewAnimator implements Keyguar
         KeyguardSecurityView securityView = getSecurityView();
         if (securityView != null) {
             securityView.setLockPatternUtils(lockPatternUtils);
+        }
+    }
+
+    public void reset() {
+        KeyguardSecurityView securityView = getSecurityView();
+        if (securityView != null) {
+            securityView.reset();
         }
     }
 
@@ -141,6 +150,12 @@ public class KeyguardSecurityViewFlipper extends ViewAnimator implements Keyguar
     public void onMeasure(int i, int i2) {
         int mode = View.MeasureSpec.getMode(i);
         int mode2 = View.MeasureSpec.getMode(i2);
+        if (mode != Integer.MIN_VALUE) {
+            Log.w("KeyguardSecurityViewFlipper", "onMeasure: widthSpec " + View.MeasureSpec.toString(i) + " should be AT_MOST");
+        }
+        if (mode2 != Integer.MIN_VALUE) {
+            Log.w("KeyguardSecurityViewFlipper", "onMeasure: heightSpec " + View.MeasureSpec.toString(i2) + " should be AT_MOST");
+        }
         int size = View.MeasureSpec.getSize(i);
         int size2 = View.MeasureSpec.getSize(i2);
         int childCount = getChildCount();
@@ -202,8 +217,8 @@ public class KeyguardSecurityViewFlipper extends ViewAnimator implements Keyguar
         public LayoutParams(Context context, AttributeSet attributeSet) {
             super(context, attributeSet);
             TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, R$styleable.KeyguardSecurityViewFlipper_Layout, 0, 0);
-            this.maxWidth = obtainStyledAttributes.getDimensionPixelSize(1, 0);
-            this.maxHeight = obtainStyledAttributes.getDimensionPixelSize(0, 0);
+            this.maxWidth = obtainStyledAttributes.getDimensionPixelSize(R$styleable.KeyguardSecurityViewFlipper_Layout_layout_maxWidth, 0);
+            this.maxHeight = obtainStyledAttributes.getDimensionPixelSize(R$styleable.KeyguardSecurityViewFlipper_Layout_layout_maxHeight, 0);
             obtainStyledAttributes.recycle();
         }
 

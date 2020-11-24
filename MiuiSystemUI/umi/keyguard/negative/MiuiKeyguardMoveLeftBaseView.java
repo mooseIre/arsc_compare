@@ -1,23 +1,20 @@
 package com.android.keyguard.negative;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.widget.RelativeLayout;
-import com.android.systemui.statusbar.phone.NotificationPanelView;
+import com.android.systemui.Dependency;
 import com.android.systemui.statusbar.phone.StatusBar;
 
 public abstract class MiuiKeyguardMoveLeftBaseView extends RelativeLayout {
     protected StatusBar mStatusBar;
 
-    public abstract boolean hasBackgroundImageDrawable();
-
     public abstract void initLeftView();
 
     public abstract boolean isSupportRightMove();
 
-    public abstract void setCustomBackground();
-
-    public abstract void setPanel(NotificationPanelView notificationPanelView);
+    public abstract void setCustomBackground(Drawable drawable);
 
     public abstract void uploadData();
 
@@ -32,9 +29,6 @@ public abstract class MiuiKeyguardMoveLeftBaseView extends RelativeLayout {
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-    }
-
-    public void setStatusBar(StatusBar statusBar) {
-        this.mStatusBar = statusBar;
+        this.mStatusBar = (StatusBar) Dependency.get(StatusBar.class);
     }
 }

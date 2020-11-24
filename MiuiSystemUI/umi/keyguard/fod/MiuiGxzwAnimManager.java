@@ -2,12 +2,11 @@ package com.android.keyguard.fod;
 
 import android.content.Context;
 import android.database.ContentObserver;
-import android.os.Build;
 import android.os.Handler;
 import android.provider.Settings;
 import android.util.Log;
 import com.android.keyguard.fod.MiuiGxzwFrameAnimation;
-import com.android.systemui.plugins.R;
+import com.android.systemui.C0010R$drawable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -30,19 +29,22 @@ class MiuiGxzwAnimManager {
     public Context mContext;
     private boolean mEnrolling;
     /* access modifiers changed from: private */
-    public int mGxzwAnimType = 1;
+    public int mGxzwAnimType = 6;
     private boolean mKeyguardAuthen;
     private boolean mLightIcon = false;
     private boolean mLightWallpaperGxzw;
     private MiuiGxzwFrameAnimation mMiuiGxzwFrameAnimation;
-    private final boolean mSupportAurora;
     private int mTranslateX;
     private int mTranslateY;
+
+    /* access modifiers changed from: private */
+    public int getDefaultAnimType() {
+        return 6;
+    }
 
     public MiuiGxzwAnimManager(Context context, MiuiGxzwFrameAnimation miuiGxzwFrameAnimation) {
         this.mContext = context;
         this.mMiuiGxzwFrameAnimation = miuiGxzwFrameAnimation;
-        this.mSupportAurora = MiuiGxzwAinmItemAurora.supportAuroraAnim(context);
         this.mAnimItemMap = new HashMap();
         initAnimItemMap();
         this.mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor("fod_animation_type"), false, this.mContentObserver, 0);
@@ -129,20 +131,18 @@ class MiuiGxzwAnimManager {
 
     public int getFingerIconResource(boolean z) {
         Log.i("MiuiGxzwAnimManager", "getFingerIconResource: mKeyguardAuthen = " + this.mKeyguardAuthen + ", mLightWallpaperGxzw = " + this.mLightWallpaperGxzw + ", mEnrolling = " + this.mEnrolling + ", mLightIcon = " + this.mLightIcon);
-        if (MiuiGxzwUtils.isLargeFod()) {
-            return this.mContext.getResources().getIdentifier("gxzw_scan_anim_1", "drawable", this.mContext.getPackageName());
-        } else if (this.mKeyguardAuthen) {
+        if (this.mKeyguardAuthen) {
             if (z) {
-                return R.drawable.finger_image_aod;
+                return C0010R$drawable.finger_image_aod;
             }
             if (isLightResource()) {
-                return R.drawable.finger_image_light;
+                return C0010R$drawable.finger_image_light;
             }
-            return R.drawable.finger_image_normal;
-        } else if (!this.mEnrolling && !this.mLightIcon) {
-            return R.drawable.finger_image_grey;
+            return C0010R$drawable.finger_image_normal;
+        } else if (this.mEnrolling) {
+            return C0010R$drawable.finger_image_normal;
         } else {
-            return R.drawable.finger_image_normal;
+            return this.mLightIcon ? C0010R$drawable.finger_image_normal : C0010R$drawable.finger_image_grey;
         }
     }
 
@@ -286,38 +286,10 @@ class MiuiGxzwAnimManager {
         return this.mAnimItemMap.keySet();
     }
 
-    /* access modifiers changed from: private */
-    public int getDefaultAnimType() {
-        if (MiuiGxzwUtils.isLargeFod()) {
-            return 4;
-        }
-        if (MiuiGxzwUtils.isSpecialCepheus()) {
-            return 3;
-        }
-        if (this.mSupportAurora) {
-            return 5;
-        }
-        return Build.DEVICE.equals("cas") ? 1 : 0;
-    }
-
     private void initAnimItemMap() {
-        if (MiuiGxzwUtils.isLargeFod()) {
-            this.mAnimItemMap.put(4, new MiuiGxzwAnimItemCircle());
-        } else if (this.mSupportAurora) {
-            this.mAnimItemMap.put(5, new MiuiGxzwAinmItemAurora());
-            this.mAnimItemMap.put(0, new MiuiGxzwAnimItemStar());
-            this.mAnimItemMap.put(1, new MiuiGxzwAnimItemLight());
-            this.mAnimItemMap.put(3, new MiuiGxzwAnimItemPulse());
-        } else if (Build.DEVICE.equals("cas")) {
-            this.mAnimItemMap.put(1, new MiuiGxzwAnimItemLightCas());
-            this.mAnimItemMap.put(0, new MiuiGxzwAnimItemStarCas());
-            this.mAnimItemMap.put(5, new MiuiGxzwAinmItemAuroraCas());
-            this.mAnimItemMap.put(3, new MiuiGxzwAnimItemPulseCas());
-        } else {
-            this.mAnimItemMap.put(0, new MiuiGxzwAnimItemStar());
-            this.mAnimItemMap.put(1, new MiuiGxzwAnimItemLight());
-            this.mAnimItemMap.put(2, new MiuiGxzwAnimItemRhythm());
-            this.mAnimItemMap.put(3, new MiuiGxzwAnimItemPulse());
-        }
+        this.mAnimItemMap.put(6, new MiuiGxzwAnimItemLight());
+        this.mAnimItemMap.put(7, new MiuiGxzwAnimItemStar());
+        this.mAnimItemMap.put(8, new MiuiGxzwAinmItemAurora());
+        this.mAnimItemMap.put(9, new MiuiGxzwAnimItemPulse());
     }
 }

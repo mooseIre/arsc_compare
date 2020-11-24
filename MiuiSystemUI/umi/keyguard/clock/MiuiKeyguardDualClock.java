@@ -37,9 +37,11 @@ public class MiuiKeyguardDualClock extends MiuiKeyguardBaseClock {
         addView(this.mMiuiDualClock);
     }
 
-    public void setDarkMode(boolean z) {
-        super.setDarkMode(z);
-        this.mMiuiDualClock.setTextColorDark(z);
+    public void setDarkStyle(boolean z) {
+        super.setDarkStyle(z);
+        if (this.mDarkStyle != z) {
+            this.mMiuiDualClock.setTextColorDark(z);
+        }
     }
 
     public void updateHourFormat() {

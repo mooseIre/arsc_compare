@@ -1,5 +1,7 @@
 package com.android.keyguard;
 
+import android.app.ActivityManager;
+import android.app.ActivityTaskManager;
 import android.app.StatusBarManager;
 import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
@@ -7,39 +9,47 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Handler;
+import android.os.RemoteException;
 import android.os.UserHandle;
 import android.security.MiuiLockPatternUtils;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Slog;
+import android.widget.Toast;
 import com.android.keyguard.analytics.AnalyticsHelper;
-import com.android.systemui.Util;
+import com.android.keyguard.injector.KeyguardUpdateMonitorInjector;
+import com.android.systemui.C0010R$drawable;
+import com.android.systemui.C0018R$string;
+import com.android.systemui.Dependency;
 import com.android.systemui.keyguard.KeyguardViewMediator;
-import com.android.systemui.plugins.R;
-import com.android.systemui.statusbar.phone.UnlockMethodCache;
+import com.android.systemui.keyguard.WakefulnessLifecycle;
+import com.android.systemui.shared.system.ActivityManagerWrapper;
+import com.android.systemui.shared.system.TaskStackChangeListener;
+import com.android.systemui.statusbar.policy.UserSwitcherController;
+import java.util.List;
 import miui.bluetooth.ble.MiBleProfile;
 import miui.bluetooth.ble.MiBleUnlockProfile;
+import miui.telephony.SubscriptionManager;
 
 public class MiuiBleUnlockHelper {
     private MiBleUnlockProfile.OnUnlockStateChangeListener mBleListener = new MiBleUnlockProfile.OnUnlockStateChangeListener() {
         public void onUnlocked(byte b) {
             Slog.i("MiuiBleUnlockHelper", "mBleListener state: " + b);
-            if (MiuiBleUnlockHelper.this.mUpdateMonitor.mustPasswordUnlockDevice() || MiuiBleUnlockHelper.this.mUpdateMonitor.getUserCanSkipBouncer(KeyguardUpdateMonitor.getCurrentUser())) {
+            if (MiuiBleUnlockHelper.this.mUpdateMonitor.userNeedsStrongAuth() || MiuiBleUnlockHelper.this.mUpdateMonitor.getUserCanSkipBouncer(KeyguardUpdateMonitor.getCurrentUser())) {
                 Log.i("MiuiBleUnlockHelper", "mBleListener cancel");
                 return;
             }
             if (b == 2) {
-                MiuiBleUnlockHelper.this.mUpdateMonitor.setBLEUnlockState(BLEUnlockState.SUCCEED);
-            } else if (b == 1) {
-                AnalyticsHelper.getInstance(MiuiBleUnlockHelper.this.mContext).recordUnlockWay("band", false);
-                MiuiBleUnlockHelper.this.mUpdateMonitor.setBLEUnlockState(BLEUnlockState.FAILED);
+                MiuiBleUnlockHelper.this.setBLEUnlockState(BLEUnlockState.SUCCEED);
             } else {
                 AnalyticsHelper.getInstance(MiuiBleUnlockHelper.this.mContext).recordUnlockWay("band", false);
-                MiuiBleUnlockHelper.this.mUpdateMonitor.setBLEUnlockState(BLEUnlockState.FAILED);
+                MiuiBleUnlockHelper.this.setBLEUnlockState(BLEUnlockState.FAILED);
             }
             MiuiBleUnlockHelper.this.setBLEStatusBarIcon(b);
         }
     };
+    /* access modifiers changed from: private */
+    public boolean mBouncerVisible = false;
     /* access modifiers changed from: private */
     public Context mContext;
     private final BroadcastReceiver mGlobalBluetoothBroadcastReceiver = new BroadcastReceiver() {
@@ -59,6 +69,10 @@ public class MiuiBleUnlockHelper {
             }
         }
     };
+    /* access modifiers changed from: private */
+    public boolean mHasUnlockByBle = false;
+    /* access modifiers changed from: private */
+    public boolean mIsMXtelcelActivity;
     private MiuiLockPatternUtils mLockPatternUtils;
     private MiBleProfile.IProfileStateChangeCallback mStateChangeCallback = new MiBleProfile.IProfileStateChangeCallback() {
         public void onState(int i) {
@@ -72,20 +86,47 @@ public class MiuiBleUnlockHelper {
     };
     private StatusBarManager mStatusBarManager;
     /* access modifiers changed from: private */
+    public final TaskStackChangeListener mTaskStackListener = new TaskStackChangeListener() {
+        public void onTaskStackChanged() {
+            try {
+                List tasks = ActivityTaskManager.getService().getTasks(1);
+                if (tasks.isEmpty() || !MiuiBleUnlockHelper.this.isMXtelcelActivity((ActivityManager.RunningTaskInfo) tasks.get(0))) {
+                    boolean unused = MiuiBleUnlockHelper.this.mIsMXtelcelActivity = false;
+                } else {
+                    boolean unused2 = MiuiBleUnlockHelper.this.mIsMXtelcelActivity = true;
+                }
+            } catch (RemoteException e) {
+                Log.e("MiuiBleUnlockHelper", "am.getTasks fail " + e.getStackTrace());
+                e.printStackTrace();
+            }
+        }
+    };
+    /* access modifiers changed from: private */
     public MiBleUnlockProfile mUnlockProfile;
     /* access modifiers changed from: private */
     public final KeyguardUpdateMonitor mUpdateMonitor;
     KeyguardUpdateMonitorCallback mUpdateMonitorCallback = new KeyguardUpdateMonitorCallback() {
+        public void onKeyguardBouncerChanged(boolean z) {
+            boolean unused = MiuiBleUnlockHelper.this.mBouncerVisible = z;
+            boolean unused2 = MiuiBleUnlockHelper.this.mHasUnlockByBle = false;
+            if (z && MiuiBleUnlockHelper.this.isAllowUnlockForBle()) {
+                MiuiBleUnlockHelper.this.unlockByBle();
+            }
+        }
+    };
+    private UserSwitcherController mUserContextController;
+    /* access modifiers changed from: private */
+    public KeyguardViewMediator mViewMediator;
+    protected final WakefulnessLifecycle.Observer mWakefulnessObserver = new WakefulnessLifecycle.Observer() {
         public void onStartedWakingUp() {
             MiuiBleUnlockHelper.this.verifyBLEDeviceRssi();
         }
 
-        public void onFinishedGoingToSleep(int i) {
+        public void onFinishedGoingToSleep() {
             MiuiBleUnlockHelper.this.unregisterUnlockListener();
+            ActivityManagerWrapper.getInstance().unregisterTaskStackListener(MiuiBleUnlockHelper.this.mTaskStackListener);
         }
     };
-    /* access modifiers changed from: private */
-    public KeyguardViewMediator mViewMediator;
 
     public enum BLEUnlockState {
         FAILED,
@@ -97,10 +138,13 @@ public class MiuiBleUnlockHelper {
         this.mContext = context;
         this.mViewMediator = keyguardViewMediator;
         this.mLockPatternUtils = new MiuiLockPatternUtils(context);
-        this.mUpdateMonitor = KeyguardUpdateMonitor.getInstance(context);
+        this.mUpdateMonitor = (KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class);
         this.mStatusBarManager = (StatusBarManager) this.mContext.getSystemService("statusbar");
-        KeyguardUpdateMonitor.getInstance(this.mContext).registerCallback(this.mUpdateMonitorCallback);
+        this.mUserContextController = (UserSwitcherController) Dependency.get(UserSwitcherController.class);
+        this.mUpdateMonitor.registerCallback(this.mUpdateMonitorCallback);
+        ((WakefulnessLifecycle) Dependency.get(WakefulnessLifecycle.class)).addObserver(this.mWakefulnessObserver);
         registerBleUnlockReceiver();
+        ActivityManagerWrapper.getInstance().registerTaskStackListener(this.mTaskStackListener);
     }
 
     private void registerBleUnlockReceiver() {
@@ -113,8 +157,8 @@ public class MiuiBleUnlockHelper {
     }
 
     public void verifyBLEDeviceRssi() {
-        if (!this.mViewMediator.isShowing() || ((this.mViewMediator.isOccluded() && !"com.celltick.lockscreen".equals(Util.getTopActivityPkg(this.mContext))) || this.mViewMediator.isHiding() || !KeyguardUpdateMonitor.isOwnerUser() || !this.mUpdateMonitor.isDeviceInteractive() || !this.mUpdateMonitor.getStrongAuthTracker().hasOwnerUserAuthenticatedSinceBoot() || !UnlockMethodCache.getInstance(this.mContext).isMethodSecure() || !isUnlockWithBlePossible() || this.mUpdateMonitor.mustPasswordUnlockDevice() || this.mUpdateMonitor.getUserCanSkipBouncer(KeyguardUpdateMonitor.getCurrentUser()))) {
-            Log.d("MiuiBleUnlockHelper", "verifyBLEDeviceRssi  isShowing = " + this.mViewMediator.isShowing() + " isOccluded = " + this.mViewMediator.isOccluded() + " isMXtelcel = " + "com.celltick.lockscreen".equals(Util.getTopActivityPkg(this.mContext)) + " isHiding = " + this.mViewMediator.isHiding() + " isDeviceInteractive = " + this.mUpdateMonitor.isDeviceInteractive());
+        if (!this.mViewMediator.isShowing() || ((this.mViewMediator.isOccluded() && !this.mIsMXtelcelActivity) || this.mViewMediator.isHiding() || !this.mUserContextController.isOwnerUser() || !this.mUpdateMonitor.isDeviceInteractive() || !this.mUpdateMonitor.getStrongAuthTracker().hasOwnerUserAuthenticatedSinceBoot() || !isUnlockWithBlePossible() || this.mUpdateMonitor.userNeedsStrongAuth() || this.mUpdateMonitor.getUserCanSkipBouncer(KeyguardUpdateMonitor.getCurrentUser()))) {
+            Log.d("MiuiBleUnlockHelper", "verifyBLEDeviceRssi  isShowing = " + this.mViewMediator.isShowing() + " isOccluded = " + this.mViewMediator.isOccluded() + " isMXtelcel = " + this.mIsMXtelcelActivity + " isHiding = " + this.mViewMediator.isHiding() + " isDeviceInteractive = " + this.mUpdateMonitor.isDeviceInteractive());
         } else if (this.mUnlockProfile != null) {
             registerUnlockListener();
         } else {
@@ -129,8 +173,8 @@ public class MiuiBleUnlockHelper {
 
     /* access modifiers changed from: private */
     public void connectBLEDevice() {
-        if (UnlockMethodCache.getInstance(this.mContext).isMethodSecure() && KeyguardUpdateMonitor.isOwnerUser() && this.mUpdateMonitor.getStrongAuthTracker().hasOwnerUserAuthenticatedSinceBoot() && isUnlockWithBlePossible()) {
-            this.mUpdateMonitor.setBLEUnlockState(BLEUnlockState.FAILED);
+        if (this.mUserContextController.isOwnerUser() && this.mUpdateMonitor.getStrongAuthTracker().hasOwnerUserAuthenticatedSinceBoot() && isUnlockWithBlePossible()) {
+            setBLEUnlockState(BLEUnlockState.FAILED);
             try {
                 if (this.mUnlockProfile != null) {
                     this.mUnlockProfile.disconnect();
@@ -152,6 +196,7 @@ public class MiuiBleUnlockHelper {
                 this.mUnlockProfile.disconnect();
                 this.mUnlockProfile = null;
             }
+            ActivityManagerWrapper.getInstance().unregisterTaskStackListener(this.mTaskStackListener);
         } catch (Exception e) {
             Log.e("MiuiBleUnlockHelper", e.getMessage(), e);
         }
@@ -172,11 +217,61 @@ public class MiuiBleUnlockHelper {
             miBleUnlockProfile.unregisterUnlockListener();
             this.mStatusBarManager.removeIcon("ble_unlock_mode");
         }
-        this.mUpdateMonitor.setBLEUnlockState(BLEUnlockState.FAILED);
+        setBLEUnlockState(BLEUnlockState.FAILED);
     }
 
     /* access modifiers changed from: private */
     public void setBLEStatusBarIcon(int i) {
-        this.mStatusBarManager.setIcon("ble_unlock_mode", i == 0 ? R.drawable.ble_unlock_statusbar_icon_unverified : i == 2 ? R.drawable.ble_unlock_statusbar_icon_verified_near : R.drawable.ble_unlock_statusbar_icon_verified_far, 0, (String) null);
+        int i2;
+        if (i == 0) {
+            i2 = C0010R$drawable.ble_unlock_statusbar_icon_unverified;
+        } else if (i == 2) {
+            i2 = C0010R$drawable.ble_unlock_statusbar_icon_verified_near;
+        } else {
+            i2 = C0010R$drawable.ble_unlock_statusbar_icon_verified_far;
+        }
+        this.mStatusBarManager.setIcon("ble_unlock_mode", i2, 0, (String) null);
+    }
+
+    /* access modifiers changed from: private */
+    public boolean isMXtelcelActivity(ActivityManager.RunningTaskInfo runningTaskInfo) {
+        return "com.celltick.lockscreen".equals(runningTaskInfo.topActivity.getPackageName());
+    }
+
+    /* access modifiers changed from: private */
+    public void setBLEUnlockState(BLEUnlockState bLEUnlockState) {
+        ((KeyguardUpdateMonitorInjector) Dependency.get(KeyguardUpdateMonitorInjector.class)).setBLEUnlockState(bLEUnlockState);
+        if (bLEUnlockState == BLEUnlockState.SUCCEED) {
+            this.mUpdateMonitor.putUserBleAuthenticated(this.mUserContextController.getCurrentUserId(), true);
+            if (isAllowUnlockForBle()) {
+                unlockByBle();
+            }
+        }
+    }
+
+    /* access modifiers changed from: private */
+    public boolean isAllowUnlockForBle() {
+        if (!((KeyguardUpdateMonitorInjector) Dependency.get(KeyguardUpdateMonitorInjector.class)).isBleUnlockSuccess() || !this.mBouncerVisible || this.mHasUnlockByBle || !this.mUpdateMonitor.isUnlockingWithBiometricAllowed(false) || SubscriptionManager.isValidSubscriptionId(this.mUpdateMonitor.getNextSubIdForState(2)) || SubscriptionManager.isValidSubscriptionId(this.mUpdateMonitor.getNextSubIdForState(3))) {
+            return false;
+        }
+        return true;
+    }
+
+    /* access modifiers changed from: private */
+    public void unlockByBle() {
+        this.mViewMediator.keyguardDone();
+        boolean z = true;
+        this.mHasUnlockByBle = true;
+        int currentUserId = this.mUserContextController.getCurrentUserId();
+        if (!this.mUpdateMonitor.getUserBleAuthenticated(currentUserId) || this.mUpdateMonitor.getUserUnlockedWithBiometric(currentUserId)) {
+            z = false;
+        }
+        if (z) {
+            handleBleUnlockSucceed();
+        }
+    }
+
+    private void handleBleUnlockSucceed() {
+        Toast.makeText(this.mContext, C0018R$string.miui_keyguard_ble_unlock_succeed_msg, 0).show();
     }
 }

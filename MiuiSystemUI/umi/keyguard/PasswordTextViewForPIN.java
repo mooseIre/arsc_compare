@@ -1,9 +1,5 @@
 package com.android.keyguard;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.AnimatorSet;
-import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
@@ -20,34 +16,35 @@ import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityManager;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.view.animation.AnimationUtils;
-import android.view.animation.Interpolator;
 import android.widget.EditText;
 import com.android.keyguard.PasswordTextView;
-import com.android.systemui.plugins.R;
+import com.android.systemui.C0009R$dimen;
+import com.android.systemui.R$styleable;
 import java.util.ArrayList;
 import java.util.Iterator;
+import miuix.animation.Folme;
+import miuix.animation.IStateStyle;
+import miuix.animation.base.AnimConfig;
+import miuix.animation.listener.TransitionListener;
+import miuix.animation.property.FloatProperty;
 
 public class PasswordTextViewForPIN extends PasswordTextView {
     /* access modifiers changed from: private */
-    public Interpolator mAppearInterpolator;
-    /* access modifiers changed from: private */
     public int mCharPadding;
-    /* access modifiers changed from: private */
-    public Interpolator mDisappearInterpolator;
     /* access modifiers changed from: private */
     public int mDotSize;
     /* access modifiers changed from: private */
     public final Paint mDrawPaint;
+    /* access modifiers changed from: private */
+    public final Paint mFillPaint;
     private final int mGravity;
-    private Handler mHandler;
     /* access modifiers changed from: private */
     public boolean mIsResetAnimating;
     private int mPasswordLength;
-    Runnable mResetAnimRunnable;
-    private float mStrokeWidth;
-    private String mText;
     /* access modifiers changed from: private */
-    public ArrayList<CharState> mTextChars;
+    public float mStrokeWidth;
+    private String mText;
+    private ArrayList<CharState> mTextChars;
     private final int mTextHeightRaw;
     private PasswordTextView.UserActivityListener mUserActivityListener;
     private int mWidth;
@@ -70,33 +67,21 @@ public class PasswordTextViewForPIN extends PasswordTextView {
         this.mTextChars = new ArrayList<>();
         this.mText = "";
         this.mDrawPaint = new Paint();
-        this.mHandler = new Handler(Looper.getMainLooper());
-        this.mResetAnimRunnable = new Runnable() {
-            public void run() {
-                int size = PasswordTextViewForPIN.this.mTextChars.size();
-                for (int i = 0; i < size; i++) {
-                    ((CharState) PasswordTextViewForPIN.this.mTextChars.get(i)).startRemoveAnimation(((long) (size - i)) * 40);
-                }
-            }
-        };
+        this.mFillPaint = new Paint();
+        new Handler(Looper.getMainLooper());
         setFocusableInTouchMode(true);
         setFocusable(true);
         TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, R$styleable.PasswordTextView);
         try {
-            this.mTextHeightRaw = obtainStyledAttributes.getInt(3, 0);
-            this.mGravity = obtainStyledAttributes.getInt(0, 17);
-            this.mDotSize = obtainStyledAttributes.getDimensionPixelSize(2, getContext().getResources().getDimensionPixelSize(R.dimen.password_dot_size));
-            this.mCharPadding = obtainStyledAttributes.getDimensionPixelSize(1, getContext().getResources().getDimensionPixelSize(R.dimen.password_char_padding));
-            this.mStrokeWidth = (float) getContext().getResources().getDimensionPixelSize(R.dimen.keyboard_password_dot_stroke_width);
+            this.mTextHeightRaw = obtainStyledAttributes.getInt(R$styleable.PasswordTextView_scaledTextSize, 0);
+            this.mGravity = obtainStyledAttributes.getInt(R$styleable.PasswordTextView_android_gravity, 17);
+            this.mDotSize = obtainStyledAttributes.getDimensionPixelSize(R$styleable.PasswordTextView_dotSize, getContext().getResources().getDimensionPixelSize(C0009R$dimen.password_dot_size));
+            this.mCharPadding = obtainStyledAttributes.getDimensionPixelSize(R$styleable.PasswordTextView_charPadding, getContext().getResources().getDimensionPixelSize(C0009R$dimen.password_char_padding));
+            this.mStrokeWidth = (float) getContext().getResources().getDimensionPixelSize(C0009R$dimen.keyboard_password_dot_stroke_width);
             obtainStyledAttributes.recycle();
-            this.mDrawPaint.setFlags(129);
-            this.mDrawPaint.setTextAlign(Paint.Align.CENTER);
-            this.mDrawPaint.setColor(-1);
-            this.mDrawPaint.setStrokeWidth(this.mStrokeWidth);
-            this.mDrawPaint.setTypeface(Typeface.create("sans-serif-light", 0));
             int i3 = Settings.System.getInt(this.mContext.getContentResolver(), "show_password", 1);
-            this.mAppearInterpolator = AnimationUtils.loadInterpolator(this.mContext, 17563662);
-            this.mDisappearInterpolator = AnimationUtils.loadInterpolator(this.mContext, 17563663);
+            AnimationUtils.loadInterpolator(this.mContext, 17563662);
+            AnimationUtils.loadInterpolator(this.mContext, 17563663);
             AnimationUtils.loadInterpolator(this.mContext, 17563661);
             int lockPasswordLength = (int) new MiuiLockPatternUtils(context).getLockPasswordLength(KeyguardUpdateMonitor.getCurrentUser());
             this.mPasswordLength = lockPasswordLength;
@@ -107,11 +92,29 @@ public class PasswordTextViewForPIN extends PasswordTextView {
             for (int i4 = 0; i4 < this.mPasswordLength; i4++) {
                 this.mTextChars.add(new CharState());
             }
-            this.mWidth = getResources().getDimensionPixelSize(R.dimen.keyguard_security_pin_entry_width);
+            this.mWidth = getResources().getDimensionPixelSize(C0009R$dimen.keyguard_security_pin_entry_width);
+            initPaints();
             initCharPadding();
         } catch (Throwable th) {
             obtainStyledAttributes.recycle();
             throw th;
+        }
+    }
+
+    private void initPaints() {
+        initPaintSettings(this.mDrawPaint, this.mFillPaint);
+        this.mDrawPaint.setStyle(Paint.Style.STROKE);
+        this.mDrawPaint.setColor(-1275068417);
+        this.mFillPaint.setStyle(Paint.Style.FILL);
+        this.mFillPaint.setColor(-1);
+    }
+
+    private void initPaintSettings(Paint... paintArr) {
+        for (Paint paint : paintArr) {
+            paint.setFlags(129);
+            paint.setTextAlign(Paint.Align.CENTER);
+            paint.setStrokeWidth(this.mStrokeWidth);
+            paint.setTypeface(Typeface.create("sans-serif-light", 0));
         }
     }
 
@@ -127,8 +130,7 @@ public class PasswordTextViewForPIN extends PasswordTextView {
     }
 
     /* access modifiers changed from: protected */
-    /* JADX WARNING: Removed duplicated region for block: B:13:0x0088 A[LOOP:0: B:11:0x0084->B:13:0x0088, LOOP_END] */
-    /* JADX WARNING: Removed duplicated region for block: B:17:0x00a3 A[LOOP:1: B:15:0x009d->B:17:0x00a3, LOOP_END] */
+    /* JADX WARNING: Removed duplicated region for block: B:13:0x0077 A[LOOP:0: B:11:0x0073->B:13:0x0077, LOOP_END] */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     public void onDraw(android.graphics.Canvas r12) {
         /*
@@ -190,32 +192,10 @@ public class PasswordTextViewForPIN extends PasswordTextView {
             float r0 = (float) r5
             float r3 = r0 / r3
             float r1 = r1 + r3
-            android.graphics.Paint r3 = r11.mDrawPaint
-            android.graphics.Paint$Style r5 = android.graphics.Paint.Style.STROKE
-            r3.setStyle(r5)
-            android.graphics.Paint r3 = r11.mDrawPaint
-            r5 = -1275068417(0xffffffffb3ffffff, float:-1.1920928E-7)
-            r3.setColor(r5)
             r3 = 0
-            r6 = r1
-            r5 = r3
-        L_0x0084:
-            int r7 = r11.mPasswordLength
-            if (r5 >= r7) goto L_0x0090
-            float r7 = r11.initGrayDotDraw(r12, r6, r4, r0)
-            float r6 = r6 + r7
-            int r5 = r5 + 1
-            goto L_0x0084
-        L_0x0090:
-            android.graphics.Paint r5 = r11.mDrawPaint
-            r6 = -1
-            r5.setColor(r6)
-            android.graphics.Paint r5 = r11.mDrawPaint
-            android.graphics.Paint$Style r6 = android.graphics.Paint.Style.FILL
-            r5.setStyle(r6)
-        L_0x009d:
-            int r5 = r11.getVisibleTextCharSize()
-            if (r3 >= r5) goto L_0x00b8
+        L_0x0073:
+            int r5 = r11.mPasswordLength
+            if (r3 >= r5) goto L_0x008c
             java.util.ArrayList<com.android.keyguard.PasswordTextViewForPIN$CharState> r5 = r11.mTextChars
             java.lang.Object r5 = r5.get(r3)
             com.android.keyguard.PasswordTextViewForPIN$CharState r5 = (com.android.keyguard.PasswordTextViewForPIN.CharState) r5
@@ -227,8 +207,8 @@ public class PasswordTextViewForPIN extends PasswordTextView {
             float r5 = r5.draw(r6, r7, r8, r9, r10)
             float r1 = r1 + r5
             int r3 = r3 + 1
-            goto L_0x009d
-        L_0x00b8:
+            goto L_0x0073
+        L_0x008c:
             return
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.keyguard.PasswordTextViewForPIN.onDraw(android.graphics.Canvas):void");
@@ -244,13 +224,6 @@ public class PasswordTextViewForPIN extends PasswordTextView {
             }
         }
         return i;
-    }
-
-    private float initGrayDotDraw(Canvas canvas, float f, float f2, float f3) {
-        canvas.save();
-        canvas.drawCircle(f, f2, ((float) (this.mDotSize / 2)) - (this.mStrokeWidth / 2.0f), this.mDrawPaint);
-        canvas.restore();
-        return f3 + ((float) this.mCharPadding);
     }
 
     private Rect getCharBounds() {
@@ -280,7 +253,6 @@ public class PasswordTextViewForPIN extends PasswordTextView {
         int length = str2.length();
         if (length <= this.mPasswordLength) {
             if (this.mIsResetAnimating) {
-                this.mHandler.removeCallbacks(this.mResetAnimRunnable);
                 Iterator<CharState> it = this.mTextChars.iterator();
                 while (it.hasNext()) {
                     it.next().reset();
@@ -333,7 +305,10 @@ public class PasswordTextViewForPIN extends PasswordTextView {
         this.mText = "";
         this.mIsResetAnimating = true;
         if (z) {
-            this.mHandler.postDelayed(this.mResetAnimRunnable, 320);
+            int size = this.mTextChars.size();
+            for (int i = 0; i < size; i++) {
+                this.mTextChars.get(i).startResetAnimation(z2, (((long) (size - i)) * 50) + 50);
+            }
         } else {
             Iterator<CharState> it = this.mTextChars.iterator();
             while (it.hasNext()) {
@@ -381,114 +356,131 @@ public class PasswordTextViewForPIN extends PasswordTextView {
     }
 
     private class CharState {
-        float currentDotSizeFactor;
-        boolean dotAnimationIsGrowing;
-        Animator dotAnimator;
-        Animator.AnimatorListener dotFinishListener;
-        private ValueAnimator.AnimatorUpdateListener dotSizeUpdater;
+        private final AnimConfig CONFIG;
+        private final AnimConfig Y_CONFIG;
+        float alpha;
+        float currentDotSizeFactor = 1.0f;
         boolean isVisible;
-        Animator.AnimatorListener removeDotFinishListener;
+        private final String mAlphaTarget = ("char_alpha_" + hashCode());
+        private final float mMaxYOffset;
+        private final String mScaleTarget = ("char_scale_" + hashCode());
+        private final String mYTarget = ("char_y_" + hashCode());
+        float yOffset;
 
-        private CharState() {
-            this.dotFinishListener = new AnimatorListenerAdapter() {
-                public void onAnimationEnd(Animator animator) {
-                    CharState.this.dotAnimator = null;
-                }
-            };
-            this.removeDotFinishListener = new AnimatorListenerAdapter() {
-                private boolean mCancelled;
+        CharState() {
+            AnimConfig animConfig = new AnimConfig();
+            animConfig.setEase(-2, 0.9f, 0.25f);
+            this.CONFIG = animConfig;
+            AnimConfig animConfig2 = new AnimConfig();
+            animConfig2.setEase(-2, 0.8f, 0.3f);
+            this.Y_CONFIG = animConfig2;
+            setupFolmeAnimations();
+            this.mMaxYOffset = (PasswordTextViewForPIN.this.getContext().getResources().getDisplayMetrics().density * 7.0f) + 0.5f;
+        }
 
-                public void onAnimationCancel(Animator animator) {
-                    this.mCancelled = true;
-                }
-
-                public void onAnimationEnd(Animator animator) {
+        private void setupFolmeAnimations() {
+            Folme.useValue(this.mScaleTarget).addListener(new TransitionListener() {
+                public void onUpdate(Object obj, FloatProperty floatProperty, float f, float f2, boolean z) {
                     CharState charState = CharState.this;
-                    charState.isVisible = false;
-                    if (!this.mCancelled) {
-                        charState.reset();
-                        CharState.this.dotAnimator = null;
-                    }
+                    charState.currentDotSizeFactor = f;
+                    PasswordTextViewForPIN.this.postInvalidateOnAnimation();
+                }
+            });
+            Folme.useValue(this.mAlphaTarget).addListener(new TransitionListener() {
+                public void onUpdate(Object obj, FloatProperty floatProperty, float f, float f2, boolean z) {
+                    CharState charState = CharState.this;
+                    charState.alpha = f;
+                    PasswordTextViewForPIN.this.postInvalidateOnAnimation();
+                }
+
+                public void onComplete(Object obj) {
                     if (PasswordTextViewForPIN.this.mIsResetAnimating && PasswordTextViewForPIN.this.getVisibleTextCharSize() == 0) {
                         boolean unused = PasswordTextViewForPIN.this.mIsResetAnimating = false;
                     }
                 }
-            };
-            this.dotSizeUpdater = new ValueAnimator.AnimatorUpdateListener() {
-                public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                    CharState.this.currentDotSizeFactor = ((Float) valueAnimator.getAnimatedValue()).floatValue();
-                    PasswordTextViewForPIN.this.invalidate();
+            });
+            Folme.useValue(this.mYTarget).addListener(new TransitionListener() {
+                public void onUpdate(Object obj, FloatProperty floatProperty, float f, float f2, boolean z) {
+                    CharState charState = CharState.this;
+                    charState.yOffset = f;
+                    PasswordTextViewForPIN.this.postInvalidateOnAnimation();
                 }
-            };
+            });
         }
 
         /* access modifiers changed from: package-private */
         public void reset() {
-            this.currentDotSizeFactor = 0.0f;
-            cancelAnimator(this.dotAnimator);
-            this.dotAnimator = null;
+            Folme.useValue(this.mAlphaTarget).cancel();
+            Folme.useValue(this.mAlphaTarget).to(Float.valueOf(0.0f), new AnimConfig[0]);
+            Folme.useValue(this.mScaleTarget).cancel();
+            Folme.useValue(this.mScaleTarget).to(Float.valueOf(1.0f), new AnimConfig[0]);
             this.isVisible = false;
         }
 
         /* access modifiers changed from: private */
+        public void startResetAnimation(boolean z, long j) {
+            startRemoveAnimation(j);
+            if (z) {
+                startDotAnnounceAnimation(j);
+            }
+        }
+
+        /* access modifiers changed from: private */
         public void startRemoveAnimation(long j) {
-            if ((this.currentDotSizeFactor > 0.0f && this.dotAnimator == null) || (this.dotAnimator != null && this.dotAnimationIsGrowing)) {
-                startDotDisappearAnimation(j);
+            if (this.isVisible) {
+                startDotAlphaAnimation(0.0f, j);
             }
         }
 
         /* access modifiers changed from: private */
         public void startAppearAnimation() {
-            if (this.dotAnimator == null || !this.dotAnimationIsGrowing) {
-                this.isVisible = true;
-                startDotAppearAnimation(0);
-            }
+            this.isVisible = true;
+            startDotAppearAnimation();
         }
 
-        private void startDotDisappearAnimation(long j) {
-            cancelAnimator(this.dotAnimator);
-            ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{this.currentDotSizeFactor, 0.0f});
-            ofFloat.addUpdateListener(this.dotSizeUpdater);
-            ofFloat.addListener(this.removeDotFinishListener);
-            ofFloat.setInterpolator(PasswordTextViewForPIN.this.mDisappearInterpolator);
-            ofFloat.setDuration((long) (Math.min(this.currentDotSizeFactor, 1.0f) * 160.0f));
-            ofFloat.setStartDelay(j);
-            ofFloat.start();
-            this.dotAnimator = ofFloat;
-            this.dotAnimationIsGrowing = false;
+        private void startDotAnnounceAnimation(long j) {
+            IStateStyle useValue = Folme.useValue(this.mYTarget);
+            Float valueOf = Float.valueOf(-this.mMaxYOffset);
+            AnimConfig animConfig = new AnimConfig(this.Y_CONFIG);
+            animConfig.setDelay(j);
+            IStateStyle iStateStyle = useValue.to(valueOf, animConfig);
+            Float valueOf2 = Float.valueOf(0.0f);
+            AnimConfig animConfig2 = new AnimConfig(this.Y_CONFIG);
+            animConfig2.setDelay(j + 100);
+            iStateStyle.to(valueOf2, animConfig2);
         }
 
-        private void startDotAppearAnimation(long j) {
-            cancelAnimator(this.dotAnimator);
-            ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{this.currentDotSizeFactor, 1.5f});
-            ofFloat.addUpdateListener(this.dotSizeUpdater);
-            ofFloat.setInterpolator(PasswordTextViewForPIN.this.mAppearInterpolator);
-            ofFloat.setDuration(160);
-            ValueAnimator ofFloat2 = ValueAnimator.ofFloat(new float[]{1.5f, 1.0f});
-            ofFloat2.addUpdateListener(this.dotSizeUpdater);
-            ofFloat2.setDuration(160);
-            ofFloat2.addListener(this.dotFinishListener);
-            AnimatorSet animatorSet = new AnimatorSet();
-            animatorSet.playSequentially(new Animator[]{ofFloat, ofFloat2});
-            animatorSet.setStartDelay(j);
-            animatorSet.start();
-            this.dotAnimator = animatorSet;
-            this.dotAnimationIsGrowing = true;
+        private void startDotAppearAnimation() {
+            startDotAlphaAnimation(1.0f, 0);
+            IStateStyle iStateStyle = Folme.useValue(this.mScaleTarget).to(Float.valueOf(0.8f), this.CONFIG);
+            Float valueOf = Float.valueOf(1.25f);
+            AnimConfig animConfig = new AnimConfig(this.CONFIG);
+            animConfig.setDelay(50);
+            IStateStyle iStateStyle2 = iStateStyle.to(valueOf, animConfig);
+            Float valueOf2 = Float.valueOf(1.0f);
+            AnimConfig animConfig2 = new AnimConfig(this.CONFIG);
+            animConfig2.setDelay(150);
+            iStateStyle2.to(valueOf2, animConfig2);
         }
 
-        private void cancelAnimator(Animator animator) {
-            if (animator != null) {
-                animator.cancel();
-            }
+        private void startDotAlphaAnimation(float f, long j) {
+            Folme.useValue(this.mAlphaTarget).cancel();
+            IStateStyle useValue = Folme.useValue(this.mAlphaTarget);
+            Float valueOf = Float.valueOf(f);
+            AnimConfig animConfig = new AnimConfig(this.CONFIG);
+            animConfig.setDelay(j);
+            useValue.to(valueOf, animConfig);
         }
 
         public float draw(Canvas canvas, float f, int i, float f2, float f3) {
-            if (this.currentDotSizeFactor > 0.0f) {
-                canvas.save();
-                canvas.translate(f, f2);
-                canvas.drawCircle(0.0f, 0.0f, ((float) (PasswordTextViewForPIN.this.mDotSize / 2)) * this.currentDotSizeFactor, PasswordTextViewForPIN.this.mDrawPaint);
-                canvas.restore();
+            canvas.save();
+            canvas.translate(f, f2 + this.yOffset);
+            canvas.drawCircle(0.0f, 0.0f, (((float) (PasswordTextViewForPIN.this.mDotSize / 2)) - (PasswordTextViewForPIN.this.mStrokeWidth / 2.0f)) * this.currentDotSizeFactor, PasswordTextViewForPIN.this.mDrawPaint);
+            if (this.isVisible && this.alpha > 0.0f) {
+                PasswordTextViewForPIN.this.mFillPaint.setAlpha((int) (this.alpha * 255.0f));
+                canvas.drawCircle(0.0f, 0.0f, ((float) (PasswordTextViewForPIN.this.mDotSize / 2)) * this.currentDotSizeFactor, PasswordTextViewForPIN.this.mFillPaint);
             }
+            canvas.restore();
             return f3 + ((float) PasswordTextViewForPIN.this.mCharPadding);
         }
     }

@@ -9,13 +9,16 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Slog;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
+import com.android.internal.util.LatencyTracker;
 import com.android.internal.widget.LockPatternUtils;
+import com.android.internal.widget.LockscreenCredential;
 import com.android.keyguard.EmergencyButton;
-import com.android.keyguard.analytics.AnalyticsHelper;
-import com.android.keyguard.faceunlock.FaceUnlockManager;
+import com.android.systemui.C0016R$plurals;
+import com.android.systemui.C0018R$string;
 import com.android.systemui.Dependency;
-import com.android.systemui.HapticFeedBackImpl;
-import com.android.systemui.plugins.R;
+import com.android.systemui.statusbar.policy.UserSwitcherController;
+import com.miui.systemui.util.HapticFeedBackImpl;
 import java.util.concurrent.TimeUnit;
 
 public abstract class KeyguardAbsKeyInputView extends MiuiKeyguardPasswordView implements KeyguardSecurityView, EmergencyButton.EmergencyButtonCallback {
@@ -23,16 +26,21 @@ public abstract class KeyguardAbsKeyInputView extends MiuiKeyguardPasswordView i
     private boolean mDismissing;
     protected boolean mEnableHaptics;
     protected AsyncTask<?, ?, ?> mPendingLockCheck;
+    protected boolean mResumed;
     protected SecurityMessageDisplay mSecurityMessageDisplay;
 
     /* access modifiers changed from: protected */
-    public abstract String getPasswordText();
+    public abstract LockscreenCredential getEnteredCredential();
 
     /* access modifiers changed from: protected */
     public abstract int getPasswordTextViewId();
 
     public boolean needsInput() {
         return false;
+    }
+
+    public boolean onTouchEvent(MotionEvent motionEvent) {
+        return true;
     }
 
     /* access modifiers changed from: protected */
@@ -88,6 +96,11 @@ public abstract class KeyguardAbsKeyInputView extends MiuiKeyguardPasswordView i
         this.mSecurityMessageDisplay = KeyguardMessageArea.findSecurityMessageDisplay(this);
     }
 
+    /* access modifiers changed from: protected */
+    public void onAttachedToWindow() {
+        super.onAttachedToWindow();
+    }
+
     public void onEmergencyButtonClickedWhenInCall() {
         this.mCallback.reset();
     }
@@ -95,7 +108,7 @@ public abstract class KeyguardAbsKeyInputView extends MiuiKeyguardPasswordView i
     /* access modifiers changed from: protected */
     public void verifyPasswordAndUnlock() {
         if (!this.mDismissing) {
-            String passwordText = getPasswordText();
+            LockscreenCredential enteredCredential = getEnteredCredential();
             final int i = 0;
             setPasswordEntryInputEnabled(false);
             AsyncTask<?, ?, ?> asyncTask = this.mPendingLockCheck;
@@ -103,21 +116,21 @@ public abstract class KeyguardAbsKeyInputView extends MiuiKeyguardPasswordView i
                 asyncTask.cancel(false);
             }
             final int currentUser = KeyguardUpdateMonitor.getCurrentUser();
-            if (passwordText.length() <= 3) {
+            if (enteredCredential.size() <= 3) {
                 setPasswordEntryInputEnabled(true);
                 onPasswordChecked(currentUser, false, 0, false);
                 return;
             }
             if (currentUser == 0) {
-                i = KeyguardUpdateMonitor.getSecondUser();
+                UserSwitcherController userSwitcherController = (UserSwitcherController) Dependency.get(UserSwitcherController.class);
+                i = UserSwitcherController.getSecondUser();
             }
             if (LatencyTracker.isEnabled(this.mContext)) {
                 LatencyTracker.getInstance(this.mContext).onActionStart(3);
                 LatencyTracker.getInstance(this.mContext).onActionStart(4);
             }
-            AnalyticsHelper.getInstance(this.mContext).trackPageStart("pw_unlock_time");
             final long currentTimeMillis = System.currentTimeMillis();
-            this.mPendingLockCheck = LockPatternChecker.checkPasswordForUsers(this.mLockPatternUtils, passwordText, currentUser, i, this.mContext, new OnCheckForUsersCallback() {
+            this.mPendingLockCheck = MiuiLockPatternChecker.checkCredentialForUsers(this.mLockPatternUtils, enteredCredential, currentUser, i, this.mContext, new OnCheckForUsersCallback() {
                 public void onEarlyMatched() {
                     Slog.i("miui_keyguard_password", "password unlock duration " + (System.currentTimeMillis() - currentTimeMillis));
                     KeyguardAbsKeyInputView.this.handleUserCheckMatched(currentUser);
@@ -151,7 +164,6 @@ public abstract class KeyguardAbsKeyInputView extends MiuiKeyguardPasswordView i
         if (LatencyTracker.isEnabled(this.mContext)) {
             LatencyTracker.getInstance(this.mContext).onActionEnd(3);
         }
-        AnalyticsHelper.getInstance(this.mContext).trackPageEnd("pw_verify_time");
         onPasswordChecked(i, true, 0, true);
     }
 
@@ -161,13 +173,12 @@ public abstract class KeyguardAbsKeyInputView extends MiuiKeyguardPasswordView i
             if (z2) {
                 this.mCallback.reportUnlockAttempt(i, false, i2);
                 if (i2 > 0) {
-                    FaceUnlockManager.getInstance().stopFaceUnlock();
+                    this.mKeyguardUpdateMonitor.cancelFaceAuth();
                     handleAttemptLockout(this.mLockPatternUtils.setLockoutAttemptDeadline(i, i2));
                 }
             }
             handleWrongPassword();
             ((HapticFeedBackImpl) Dependency.get(HapticFeedBackImpl.class)).extHapticFeedback(76, true, 150);
-            AnalyticsHelper.getInstance(this.mContext).recordUnlockWay("pw", false);
         } else if (!allowUnlock(i)) {
             resetPasswordText(true, false);
             return;
@@ -176,7 +187,6 @@ public abstract class KeyguardAbsKeyInputView extends MiuiKeyguardPasswordView i
             this.mCallback.reportUnlockAttempt(i, true, 0);
             this.mDismissing = true;
             this.mCallback.dismiss(true, i);
-            AnalyticsHelper.getInstance(this.mContext).recordUnlockWay("pw", true);
         }
         resetPasswordText(true, !z);
     }
@@ -201,15 +211,20 @@ public abstract class KeyguardAbsKeyInputView extends MiuiKeyguardPasswordView i
         KeyguardSecurityCallback keyguardSecurityCallback = this.mCallback;
         if (keyguardSecurityCallback != null) {
             keyguardSecurityCallback.userActivity();
+            this.mCallback.onUserInput();
         }
     }
 
     public boolean onKeyDown(int i, KeyEvent keyEvent) {
+        if (i == 0) {
+            return false;
+        }
         onUserInput();
         return false;
     }
 
     public void onPause() {
+        this.mResumed = false;
         CountDownTimer countDownTimer = this.mCountdownTimer;
         if (countDownTimer != null) {
             countDownTimer.cancel();
@@ -220,17 +235,18 @@ public abstract class KeyguardAbsKeyInputView extends MiuiKeyguardPasswordView i
             asyncTask.cancel(false);
             this.mPendingLockCheck = null;
         }
+        reset();
     }
 
     public void onResume(int i) {
-        reset();
+        this.mResumed = true;
     }
 
     public void showPromptReason(int i) {
         if (i != 0) {
             String promptReasonString = getPromptReasonString(i);
             if (!TextUtils.isEmpty(promptReasonString)) {
-                this.mKeyguardBouncerMessageView.showMessage(this.mContext.getResources().getString(R.string.input_password_hint_text), promptReasonString);
+                this.mKeyguardBouncerMessageView.showMessage(this.mContext.getResources().getString(C0018R$string.input_password_hint_text), promptReasonString);
             }
         }
     }
@@ -242,18 +258,18 @@ public abstract class KeyguardAbsKeyInputView extends MiuiKeyguardPasswordView i
             return "";
         }
         if (i == 1) {
-            return resources.getString(R.string.input_password_after_boot_msg);
+            return resources.getString(C0018R$string.input_password_after_boot_msg);
         }
         if (i == 2) {
             long requiredStrongAuthTimeout = getRequiredStrongAuthTimeout();
-            return resources.getQuantityString(R.plurals.input_password_after_timeout_msg, (int) TimeUnit.MILLISECONDS.toHours(requiredStrongAuthTimeout), new Object[]{Long.valueOf(TimeUnit.MILLISECONDS.toHours(requiredStrongAuthTimeout))});
+            return resources.getQuantityString(C0016R$plurals.input_password_after_timeout_msg, (int) TimeUnit.MILLISECONDS.toHours(requiredStrongAuthTimeout), new Object[]{Long.valueOf(TimeUnit.MILLISECONDS.toHours(requiredStrongAuthTimeout))});
         } else if (i == 3) {
-            return resources.getString(R.string.kg_prompt_reason_device_admin);
+            return resources.getString(C0018R$string.kg_prompt_reason_device_admin);
         } else {
             if (i != 4) {
-                return resources.getString(R.string.kg_prompt_reason_timeout_password);
+                return resources.getString(C0018R$string.kg_prompt_reason_timeout_password);
             }
-            return resources.getString(R.string.kg_prompt_reason_user_request);
+            return resources.getString(C0018R$string.kg_prompt_reason_user_request);
         }
     }
 

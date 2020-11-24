@@ -13,7 +13,9 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.FrameLayout;
 import com.android.keyguard.KeyguardUpdateMonitor;
-import com.android.keyguard.MiuiKeyguardUtils;
+import com.android.keyguard.MiuiKeyguardUpdateMonitorCallback;
+import com.android.keyguard.injector.KeyguardClockInjector;
+import com.android.keyguard.utils.MiuiKeyguardUtils;
 import com.android.systemui.Dependency;
 import java.util.TimeZone;
 
@@ -40,6 +42,7 @@ public class KeyguardClockContainer extends FrameLayout {
     public boolean mShowVerticalClock;
     /* access modifiers changed from: private */
     public KeyguardUpdateMonitor mUpdateMonitor;
+    private final MiuiKeyguardUpdateMonitorCallback mUpdateMonitorCallback;
     /* access modifiers changed from: private */
     public Runnable mUpdateTimeRunnable;
 
@@ -122,7 +125,7 @@ public class KeyguardClockContainer extends FrameLayout {
                 KeyguardClockContainer.this.updateKeyguardClock();
             }
         };
-        this.mUpdateMonitor = KeyguardUpdateMonitor.getInstance(context);
+        this.mUpdateMonitor = (KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class);
         this.mSelectedClockPosition = Settings.System.getIntForUser(this.mContext.getContentResolver(), "selected_keyguard_clock_position", MiuiKeyguardUtils.getDefaultKeyguardClockPosition(this.mContext), KeyguardUpdateMonitor.getCurrentUser());
         this.mDualClockOpen = Settings.System.getIntForUser(this.mContext.getContentResolver(), "auto_dual_clock", 0, KeyguardUpdateMonitor.getCurrentUser()) != 0;
         String stringForUser = Settings.System.getStringForUser(this.mContext.getContentResolver(), "resident_timezone", KeyguardUpdateMonitor.getCurrentUser());
@@ -132,6 +135,11 @@ public class KeyguardClockContainer extends FrameLayout {
         }
         this.mShowDualClock = z;
         MiuiKeyguardUtils.isSupportVerticalClock(this.mSelectedClockPosition, this.mContext);
+        this.mUpdateMonitorCallback = new MiuiKeyguardUpdateMonitorCallback() {
+            public void onUserSwitchComplete(int i) {
+                KeyguardClockContainer.this.onUserChanged();
+            }
+        };
     }
 
     /* access modifiers changed from: protected */
@@ -139,6 +147,7 @@ public class KeyguardClockContainer extends FrameLayout {
         super.onFinishInflate();
         addClockView();
         updateKeyguardClock();
+        ((KeyguardClockInjector) Dependency.get(KeyguardClockInjector.class)).onFinishInflate(this);
     }
 
     /* access modifiers changed from: protected */
@@ -151,6 +160,8 @@ public class KeyguardClockContainer extends FrameLayout {
         this.mContext.registerReceiverAsUser(this.mIntentReceiver, UserHandle.ALL, intentFilter, (String) null, (Handler) Dependency.get(Dependency.TIME_TICK_HANDLER));
         registerDualClockObserver();
         registerClockPositionObserver();
+        this.mUpdateMonitor.registerCallback(this.mUpdateMonitorCallback);
+        ((KeyguardClockInjector) Dependency.get(KeyguardClockInjector.class)).onAttachedToWindow();
     }
 
     /* access modifiers changed from: protected */
@@ -159,6 +170,8 @@ public class KeyguardClockContainer extends FrameLayout {
         this.mContext.unregisterReceiver(this.mIntentReceiver);
         unregisterDualClockObserver();
         unregisterClockPositionObserver();
+        this.mUpdateMonitor.removeCallback(this.mUpdateMonitorCallback);
+        ((KeyguardClockInjector) Dependency.get(KeyguardClockInjector.class)).onDetachedFromWindow();
     }
 
     private void registerDualClockObserver() {
@@ -248,12 +261,12 @@ public class KeyguardClockContainer extends FrameLayout {
         throw new UnsupportedOperationException("Method not decompiled: com.android.keyguard.clock.KeyguardClockContainer.updateKeyguardClock():void");
     }
 
-    public void setDarkMode(boolean z) {
-        this.mClockView.setDarkMode(z);
+    public void setDarkStyle(boolean z) {
+        this.mClockView.setDarkStyle(z);
     }
 
-    public void updateClockView(boolean z, boolean z2) {
-        this.mClockView.updateClockView(z, z2);
+    public void updateClockView(boolean z) {
+        this.mClockView.updateClockView(z);
     }
 
     public void updateTime() {
@@ -278,7 +291,12 @@ public class KeyguardClockContainer extends FrameLayout {
         this.mClockView.setClockAlpha(f);
     }
 
-    public void updateLockScreenMagazineInfo() {
-        this.mClockView.updateLockScreenMagazineInfo();
+    public void updateClockMagazineInfo() {
+        this.mClockView.updateClockMagazineInfo();
+    }
+
+    public void updateClock(float f, int i) {
+        setAlpha(f);
+        setImportantForAccessibility(i);
     }
 }

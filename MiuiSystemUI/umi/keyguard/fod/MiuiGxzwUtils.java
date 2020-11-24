@@ -11,47 +11,49 @@ import android.os.SystemProperties;
 import android.os.Vibrator;
 import android.provider.MiuiSettings;
 import android.provider.Settings;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 import android.view.DisplayCutout;
-import com.android.keyguard.KeyguardUpdateMonitor;
-import com.android.keyguard.MiuiKeyguardUtils;
-import com.android.keyguard.utils.ReflectUtil;
-import com.android.systemui.plugins.R;
-import java.util.Arrays;
-import java.util.HashSet;
-import miui.os.Build;
+import com.android.keyguard.utils.MiuiKeyguardUtils;
+import com.android.systemui.C0007R$bool;
+import com.android.systemui.C0009R$dimen;
+import com.android.systemui.C0010R$drawable;
+import com.miui.systemui.util.ReflectUtil;
+import java.math.BigDecimal;
 
 class MiuiGxzwUtils {
     private static int DENSITY_DPI = -1;
-    public static int GXZW_ANIM_HEIGHT = 1008;
-    public static int GXZW_ANIM_WIDTH = 1008;
+    public static int GXZW_ANIM_HEIGHT = 1028;
+    public static int GXZW_ANIM_WIDTH = 1028;
+    private static final float GXZW_ANIM_WIDTH_PRCENT = getPrcent(1028, 1080);
+    public static float GXZW_HEIGHT_PRCENT = -1.0f;
     public static int GXZW_ICON_HEIGHT = 173;
     public static int GXZW_ICON_WIDTH = 173;
     public static int GXZW_ICON_X = 453;
     public static int GXZW_ICON_Y = 1640;
-    private static final boolean GXZW_LOWLIGHT_SENSOR = (SystemProperties.getInt("persist.vendor.sys.fp.expolevel", 0) == 136);
-    private static final boolean IS_SPECIAL_CEPHEUS;
+    private static final boolean GXZW_LOWLIGHT_SENSOR;
+    public static float GXZW_WIDTH_PRCENT = -1.0f;
+    private static float GXZW_X_PRCENT = -1.0f;
+    private static float GXZW_Y_PRCENT = -1.0f;
     public static int PRIVATE_FLAG_IS_HBM_OVERLAY;
     private static int SCREEN_HEIGHT_DP = -1;
+    public static int SCREEN_HEIGHT_PHYSICAL = -1;
+    public static int SCREEN_HEIGHT_PX = -1;
     private static int SCREEN_WIDTH_DP = -1;
-    private static int sPreShowTouches = 0;
-    private static int sPreShowTouchesUser = -10000;
-
-    public static int getHaloRes() {
-        return R.drawable.gxzw_white_halo_light;
-    }
-
-    public static int getHealthHaloRes() {
-        return R.drawable.gxzw_green_halo_light;
-    }
+    public static int SCREEN_WIDTH_PHYSICAL = -1;
+    public static int SCREEN_WIDTH_PX = -1;
 
     public static boolean isLargeFod() {
         return false;
     }
 
     static {
-        boolean z = true;
+        boolean z = false;
+        if (SystemProperties.getInt("persist.vendor.sys.fp.expolevel", 0) == 136) {
+            z = true;
+        }
+        GXZW_LOWLIGHT_SENSOR = z;
         PRIVATE_FLAG_IS_HBM_OVERLAY = Integer.MIN_VALUE;
         try {
             PRIVATE_FLAG_IS_HBM_OVERLAY = Class.forName("android.view.WindowManager$LayoutParams").getDeclaredField("PRIVATE_FLAG_IS_HBM_OVERLAY").getInt((Object) null);
@@ -62,12 +64,6 @@ class MiuiGxzwUtils {
         } catch (NoSuchFieldException unused) {
             Log.w("MiuiGxzwUtils", "WindowManager.LayoutParams does not have this field: PRIVATE_FLAG_IS_HBM_OVERLAY");
         }
-        HashSet hashSet = new HashSet(Arrays.asList(new String[]{"1.12.2", "1.2.2", "1.9.2", "1.19.2"}));
-        String str = SystemProperties.get("ro.boot.hwversion", "null");
-        if (!"cepheus".equals(Build.DEVICE) || !hashSet.contains(str)) {
-            z = false;
-        }
-        IS_SPECIAL_CEPHEUS = z;
     }
 
     public static boolean isSupportLowlight() {
@@ -82,6 +78,10 @@ class MiuiGxzwUtils {
             DENSITY_DPI = i;
             SCREEN_WIDTH_DP = i2;
             SCREEN_HEIGHT_DP = i3;
+            if (SCREEN_WIDTH_PHYSICAL == -1) {
+                phySicalScreenPx(context);
+            }
+            screenWhPx(context);
             String str = SystemProperties.get("persist.vendor.sys.fp.fod.location.X_Y", "");
             String str2 = SystemProperties.get("persist.vendor.sys.fp.fod.size.width_height", "");
             if (str.isEmpty() || str2.isEmpty()) {
@@ -93,7 +93,20 @@ class MiuiGxzwUtils {
                 GXZW_ICON_Y = Integer.parseInt(str.split(",")[1]);
                 GXZW_ICON_WIDTH = Integer.parseInt(str2.split(",")[0]);
                 GXZW_ICON_HEIGHT = Integer.parseInt(str2.split(",")[1]);
-                GXZW_ICON_Y -= caculateCutoutHeightIfNeed(context);
+                GXZW_X_PRCENT = getPrcent(GXZW_ICON_X, SCREEN_WIDTH_PHYSICAL);
+                GXZW_Y_PRCENT = getPrcent(GXZW_ICON_Y, SCREEN_HEIGHT_PHYSICAL);
+                GXZW_WIDTH_PRCENT = getPrcent(GXZW_ICON_WIDTH, SCREEN_WIDTH_PHYSICAL);
+                float prcent = getPrcent(GXZW_ICON_HEIGHT, SCREEN_HEIGHT_PHYSICAL);
+                GXZW_HEIGHT_PRCENT = prcent;
+                GXZW_ICON_X = (int) (((float) SCREEN_WIDTH_PX) * GXZW_X_PRCENT);
+                int i4 = (int) (((float) SCREEN_HEIGHT_PX) * GXZW_Y_PRCENT);
+                GXZW_ICON_Y = i4;
+                GXZW_ICON_WIDTH = (int) (((float) SCREEN_WIDTH_PX) * GXZW_WIDTH_PRCENT);
+                GXZW_ICON_HEIGHT = (int) (((float) SCREEN_HEIGHT_PX) * prcent);
+                int i5 = (int) (((float) SCREEN_WIDTH_PX) * GXZW_ANIM_WIDTH_PRCENT);
+                GXZW_ANIM_WIDTH = i5;
+                GXZW_ANIM_HEIGHT = i5;
+                GXZW_ICON_Y = i4 - caculateCutoutHeightIfNeed(context);
             } catch (Exception e) {
                 e.printStackTrace();
                 resetDefaultValue();
@@ -103,6 +116,26 @@ class MiuiGxzwUtils {
                 GXZW_ANIM_HEIGHT += GXZW_ICON_HEIGHT;
             }
         }
+    }
+
+    public static float getPrcent(int i, int i2) {
+        if (i2 == 0 || i == 0) {
+            return 1.0f;
+        }
+        return new BigDecimal(i).divide(new BigDecimal(i2), 10, 5).floatValue();
+    }
+
+    public static void phySicalScreenPx(Context context) {
+        Display display = ((DisplayManager) context.getSystemService("display")).getDisplay(0);
+        SCREEN_WIDTH_PHYSICAL = display.getMode().getPhysicalWidth();
+        SCREEN_HEIGHT_PHYSICAL = display.getMode().getPhysicalHeight();
+    }
+
+    private static void screenWhPx(Context context) {
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        ((DisplayManager) context.getSystemService("display")).getDisplay(0).getRealMetrics(displayMetrics);
+        SCREEN_WIDTH_PX = displayMetrics.widthPixels;
+        SCREEN_HEIGHT_PX = displayMetrics.heightPixels;
     }
 
     public static int caculateCutoutHeightIfNeed(Context context) {
@@ -216,32 +249,19 @@ class MiuiGxzwUtils {
         GXZW_ICON_HEIGHT = 173;
     }
 
-    public static boolean isSpecialCepheus() {
-        return IS_SPECIAL_CEPHEUS;
+    public static boolean supportHalo(Context context) {
+        return context.getResources().getBoolean(C0007R$bool.config_enableFodCircleHalo);
     }
 
-    public static boolean supportHalo(Context context) {
-        return context.getResources().getBoolean(R.bool.config_enableFodCircleHalo);
+    public static int getHaloRes() {
+        return C0010R$drawable.gxzw_white_halo_light;
     }
 
     public static float getHaloResCircleRadius(Context context) {
-        return (float) context.getResources().getDimensionPixelOffset(R.dimen.gxzw_halo_res_circle_radius);
+        return (float) context.getResources().getDimensionPixelOffset(C0009R$dimen.gxzw_halo_res_circle_radius);
     }
 
-    public static void saveShowTouchesState(Context context) {
-        sPreShowTouchesUser = KeyguardUpdateMonitor.getCurrentUser();
-        int intForUser = Settings.System.getIntForUser(context.getContentResolver(), "show_touches", 0, sPreShowTouchesUser);
-        sPreShowTouches = intForUser;
-        if (intForUser != 0) {
-            Settings.System.putIntForUser(context.getContentResolver(), "show_touches", 0, sPreShowTouchesUser);
-        }
-    }
-
-    public static void restoreShowTouchesState(Context context) {
-        if (sPreShowTouches != 0) {
-            Settings.System.putIntForUser(context.getContentResolver(), "show_touches", sPreShowTouches, sPreShowTouchesUser);
-            sPreShowTouches = 0;
-            sPreShowTouchesUser = -10000;
-        }
+    public static int getHealthHaloRes() {
+        return C0010R$drawable.gxzw_green_halo_light;
     }
 }

@@ -20,7 +20,7 @@ public class MiuiKeyguardCenterHorizontalClock extends MiuiKeyguardSingleClock {
             Log.e("MiuiKeyguardCenterHorizontalClock", "init clock exception", e);
         }
         this.mClockContainer.addView(this.mMiuiBaseClock);
-        this.mLockScreenMagazineInfo.updateViewsForClockPosition(false);
+        this.mMagazineClockView.updateViewsForClockPosition(false);
     }
 
     /* access modifiers changed from: protected */
@@ -49,8 +49,10 @@ public class MiuiKeyguardCenterHorizontalClock extends MiuiKeyguardSingleClock {
         this.mMiuiBaseClock.getLunarCalendarView().setAlpha(f);
     }
 
-    public void setDarkMode(boolean z) {
-        super.setDarkMode(z);
-        this.mMiuiBaseClock.setTextColorDark(z);
+    public void setDarkStyle(boolean z) {
+        if (z != this.mDarkStyle) {
+            super.setDarkStyle(z);
+            this.mMiuiBaseClock.setTextColorDark(z);
+        }
     }
 }

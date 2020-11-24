@@ -1,6 +1,5 @@
 package com.android.keyguard;
 
-import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -9,16 +8,19 @@ import android.os.SystemClock;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.accessibility.AccessibilityEvent;
 import android.widget.FrameLayout;
+import androidx.constraintlayout.widget.R$styleable;
 import com.android.internal.widget.LockPatternUtils;
 import com.android.keyguard.KeyguardSecurityContainer;
 import com.android.keyguard.KeyguardSecurityModel;
 import com.android.keyguard.fod.MiuiGxzwManager;
-import com.android.keyguard.magazine.LockScreenMagazineUtils;
+import com.android.keyguard.magazine.utils.LockScreenMagazineUtils;
+import com.android.keyguard.utils.MiuiKeyguardUtils;
 import com.android.keyguard.utils.PhoneUtils;
+import com.android.systemui.C0007R$bool;
+import com.android.systemui.C0012R$id;
+import com.android.systemui.Dependency;
 import com.android.systemui.plugins.ActivityStarter;
-import com.android.systemui.plugins.R;
 import java.io.File;
 
 public class KeyguardHostView extends FrameLayout implements KeyguardSecurityContainer.SecurityCallback {
@@ -26,7 +28,7 @@ public class KeyguardHostView extends FrameLayout implements KeyguardSecurityCon
     private Runnable mCancelAction;
     private ActivityStarter.OnDismissAction mDismissAction;
     protected LockPatternUtils mLockPatternUtils;
-    private KeyguardSecurityContainer mSecurityContainer;
+    protected KeyguardSecurityContainer mSecurityContainer;
     private final KeyguardUpdateMonitorCallback mUpdateCallback;
     protected ViewMediatorCallback mViewMediatorCallback;
 
@@ -40,8 +42,30 @@ public class KeyguardHostView extends FrameLayout implements KeyguardSecurityCon
             public void onUserSwitchComplete(int i) {
                 KeyguardHostView.this.getSecurityContainer().showPrimarySecurityScreen(false);
             }
+
+            public void onTrustGrantedWithFlags(int i, int i2) {
+                if (i2 == KeyguardUpdateMonitor.getCurrentUser() && KeyguardHostView.this.isAttachedToWindow()) {
+                    boolean isVisibleToUser = KeyguardHostView.this.isVisibleToUser();
+                    boolean z = true;
+                    boolean z2 = (i & 1) != 0;
+                    if ((i & 2) == 0) {
+                        z = false;
+                    }
+                    if (!z2 && !z) {
+                        return;
+                    }
+                    if (!KeyguardHostView.this.mViewMediatorCallback.isScreenOn() || (!isVisibleToUser && !z)) {
+                        KeyguardHostView.this.mViewMediatorCallback.playTrustedSound();
+                        return;
+                    }
+                    if (!isVisibleToUser) {
+                        Log.i("KeyguardViewBase", "TrustAgent dismissed Keyguard.");
+                    }
+                    KeyguardHostView.this.dismiss(false, i2, false);
+                }
+            }
         };
-        KeyguardUpdateMonitor.getInstance(context).registerCallback(this.mUpdateCallback);
+        ((KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class)).registerCallback(this.mUpdateCallback);
     }
 
     /* access modifiers changed from: protected */
@@ -63,13 +87,17 @@ public class KeyguardHostView extends FrameLayout implements KeyguardSecurityCon
         this.mCancelAction = runnable;
     }
 
+    public boolean hasDismissActions() {
+        return (this.mDismissAction == null && this.mCancelAction == null) ? false : true;
+    }
+
     public void cancelDismissAction() {
         setOnDismissAction((ActivityStarter.OnDismissAction) null, (Runnable) null);
     }
 
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
-        this.mSecurityContainer = (KeyguardSecurityContainer) findViewById(R.id.keyguard_security_container);
+        this.mSecurityContainer = (KeyguardSecurityContainer) findViewById(C0012R$id.keyguard_security_container);
         LockPatternUtils lockPatternUtils = new LockPatternUtils(this.mContext);
         this.mLockPatternUtils = lockPatternUtils;
         this.mSecurityContainer.setLockPatternUtils(lockPatternUtils);
@@ -99,7 +127,7 @@ public class KeyguardHostView extends FrameLayout implements KeyguardSecurityCon
     }
 
     public boolean dismiss(int i) {
-        return dismiss(false, i);
+        return dismiss(false, i, false);
     }
 
     public boolean handleBackKey() {
@@ -107,21 +135,13 @@ public class KeyguardHostView extends FrameLayout implements KeyguardSecurityCon
         return this.mSecurityContainer.onBackPressed();
     }
 
-    public boolean dispatchPopulateAccessibilityEvent(AccessibilityEvent accessibilityEvent) {
-        if (accessibilityEvent.getEventType() != 32) {
-            return super.dispatchPopulateAccessibilityEvent(accessibilityEvent);
-        }
-        accessibilityEvent.getText().add(this.mSecurityContainer.getCurrentSecurityModeContentDescription());
-        return true;
-    }
-
     /* access modifiers changed from: protected */
     public KeyguardSecurityContainer getSecurityContainer() {
         return this.mSecurityContainer;
     }
 
-    public boolean dismiss(boolean z, int i) {
-        return this.mSecurityContainer.showNextSecurityScreenOrFinish(z, i);
+    public boolean dismiss(boolean z, int i, boolean z2) {
+        return this.mSecurityContainer.showNextSecurityScreenOrFinish(z, i, z2);
     }
 
     public void finish(boolean z, int i) {
@@ -147,6 +167,10 @@ public class KeyguardHostView extends FrameLayout implements KeyguardSecurityCon
 
     public void reset() {
         this.mViewMediatorCallback.resetKeyguard();
+    }
+
+    public void resetSecurityContainer() {
+        this.mSecurityContainer.reset();
     }
 
     public void onSecurityModeChanged(KeyguardSecurityModel.SecurityMode securityMode, boolean z) {
@@ -206,13 +230,13 @@ public class KeyguardHostView extends FrameLayout implements KeyguardSecurityCon
             if (!(keyCode == 79 || keyCode == 130 || keyCode == 222)) {
                 if (!(keyCode == 126 || keyCode == 127)) {
                     switch (keyCode) {
-                        case R.styleable.AppCompatTheme_listPreferredItemPaddingStart /*85*/:
+                        case 85:
                             break;
                         case 86:
-                        case R.styleable.AppCompatTheme_panelMenuListTheme /*87*/:
-                        case R.styleable.AppCompatTheme_panelMenuListWidth /*88*/:
-                        case R.styleable.AppCompatTheme_popupMenuStyle /*89*/:
-                        case R.styleable.AppCompatTheme_popupWindowStyle /*90*/:
+                        case 87:
+                        case 88:
+                        case 89:
+                        case R$styleable.Constraint_layout_constraintVertical_chainStyle:
                         case 91:
                             break;
                         default:
@@ -230,12 +254,12 @@ public class KeyguardHostView extends FrameLayout implements KeyguardSecurityCon
         } else {
             if (!(keyCode == 79 || keyCode == 130 || keyCode == 222 || keyCode == 126 || keyCode == 127)) {
                 switch (keyCode) {
-                    case R.styleable.AppCompatTheme_listPreferredItemPaddingStart /*85*/:
+                    case 85:
                     case 86:
-                    case R.styleable.AppCompatTheme_panelMenuListTheme /*87*/:
-                    case R.styleable.AppCompatTheme_panelMenuListWidth /*88*/:
-                    case R.styleable.AppCompatTheme_popupMenuStyle /*89*/:
-                    case R.styleable.AppCompatTheme_popupWindowStyle /*90*/:
+                    case 87:
+                    case 88:
+                    case 89:
+                    case R$styleable.Constraint_layout_constraintVertical_chainStyle:
                     case 91:
                         break;
                     default:
@@ -256,15 +280,8 @@ public class KeyguardHostView extends FrameLayout implements KeyguardSecurityCon
         this.mAudioManager.dispatchMediaKeyEvent(keyEvent);
     }
 
-    public void dispatchSystemUiVisibilityChanged(int i) {
-        super.dispatchSystemUiVisibilityChanged(i);
-        if (!(this.mContext instanceof Activity)) {
-            setSystemUiVisibility(4194304);
-        }
-    }
-
     public boolean shouldEnableMenuKey() {
-        return !getResources().getBoolean(R.bool.config_disableMenuKeyInLockScreen) || ActivityManager.isRunningInTestHarness() || new File("/data/local/enable_menu_key").exists();
+        return !getResources().getBoolean(C0007R$bool.config_disableMenuKeyInLockScreen) || ActivityManager.isRunningInTestHarness() || new File("/data/local/enable_menu_key").exists();
     }
 
     public void setViewMediatorCallback(ViewMediatorCallback viewMediatorCallback) {

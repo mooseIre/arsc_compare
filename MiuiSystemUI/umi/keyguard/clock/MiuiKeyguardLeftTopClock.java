@@ -20,12 +20,14 @@ public class MiuiKeyguardLeftTopClock extends MiuiKeyguardSingleClock {
             Log.e("MiuiKeyguardLeftTopClock", "init clock exception", e);
         }
         this.mClockContainer.addView(this.mMiuiBaseClock);
-        this.mLockScreenMagazineInfo.updateViewsForClockPosition(true);
+        this.mMagazineClockView.updateViewsForClockPosition(true);
     }
 
-    public void setDarkMode(boolean z) {
-        super.setDarkMode(z);
-        this.mMiuiBaseClock.setTextColorDark(z);
+    public void setDarkStyle(boolean z) {
+        if (z != this.mDarkStyle) {
+            super.setDarkStyle(z);
+            this.mMiuiBaseClock.setTextColorDark(z);
+        }
     }
 
     /* access modifiers changed from: protected */

@@ -8,11 +8,14 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.ImageView;
-import com.android.systemui.plugins.R;
+import com.android.systemui.C0007R$bool;
+import com.android.systemui.C0008R$color;
+import com.android.systemui.C0010R$drawable;
 
 class MiuiGxzwHighlightView extends ImageView {
-    private int mCircleColor;
     private boolean mGradualGreenCircle = false;
+    private boolean mGreenCircle = false;
+    private int mGreenCircleColor;
     private boolean mGreenHalo = false;
     private boolean mInvertColor = false;
     private float mOvalAngle;
@@ -83,15 +86,16 @@ class MiuiGxzwHighlightView extends ImageView {
     }
 
     private void initView() {
-        this.mCircleColor = getContext().getResources().getColor(R.color.gxzw_circle_color);
-        this.mGradualGreenCircle = getContext().getResources().getBoolean(R.bool.config_enableGradualGreenCircle);
+        this.mGreenCircle = getContext().getResources().getBoolean(C0007R$bool.config_enableGreenCircle);
+        this.mGreenCircleColor = getContext().getResources().getColor(C0008R$color.gxzw_circle_color);
+        this.mGradualGreenCircle = getContext().getResources().getBoolean(C0007R$bool.config_enableGradualGreenCircle);
         this.mSupportHalo = MiuiGxzwUtils.supportHalo(getContext());
         Paint paint = new Paint();
         this.mPaint = paint;
-        paint.setColor(this.mCircleColor);
+        paint.setColor(this.mGreenCircleColor);
         this.mPaint.setAntiAlias(true);
         if (this.mGradualGreenCircle) {
-            setImageResource(R.drawable.gxzw_green_light);
+            setImageResource(C0010R$drawable.gxzw_green_light);
         } else if (this.mSupportHalo) {
             setImageResource(MiuiGxzwUtils.getHaloRes());
         }
@@ -100,8 +104,8 @@ class MiuiGxzwHighlightView extends ImageView {
 
     public void setInvertColorStatus(boolean z) {
         this.mInvertColor = z;
-        if (!z || this.mCircleColor != -1) {
-            this.mPaint.setColor(this.mCircleColor);
+        if (!z || this.mGreenCircleColor != -1) {
+            this.mPaint.setColor(this.mGreenCircleColor);
         } else {
             this.mPaint.setColor(-16777216);
         }
@@ -109,7 +113,7 @@ class MiuiGxzwHighlightView extends ImageView {
         this.mGreenHalo = healthAppAuthen;
         if (healthAppAuthen) {
             setImageResource(MiuiGxzwUtils.getHealthHaloRes());
-        } else if (this.mSupportHalo && z) {
+        } else if ((this.mSupportHalo && z) || this.mGreenCircle) {
             setImageDrawable((Drawable) null);
         } else if (this.mSupportHalo) {
             setImageResource(MiuiGxzwUtils.getHaloRes());

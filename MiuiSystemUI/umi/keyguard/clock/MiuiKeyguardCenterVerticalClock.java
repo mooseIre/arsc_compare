@@ -29,13 +29,15 @@ public class MiuiKeyguardCenterVerticalClock extends MiuiKeyguardSingleClock {
         }
         this.mClockContainer.addView(this.mMiuiBaseClock);
         this.mClockContainer.addView(this.mMiuiCenterHorizontalClock);
-        this.mLockScreenMagazineInfo.updateViewsForClockPosition(false);
+        this.mMagazineClockView.updateViewsForClockPosition(false);
     }
 
-    public void setDarkMode(boolean z) {
-        super.setDarkMode(z);
-        this.mMiuiBaseClock.setTextColorDark(z);
-        this.mMiuiCenterHorizontalClock.setTextColorDark(z);
+    public void setDarkStyle(boolean z) {
+        if (z != this.mDarkStyle) {
+            super.setDarkStyle(z);
+            this.mMiuiBaseClock.setTextColorDark(z);
+            this.mMiuiCenterHorizontalClock.setTextColorDark(z);
+        }
     }
 
     public void updateHourFormat() {

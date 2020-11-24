@@ -2,27 +2,26 @@ package com.android.keyguard.fod;
 
 import android.content.Context;
 import android.graphics.Rect;
+import android.os.PowerManager;
+import android.os.SystemClock;
 import android.util.Log;
 import android.util.Slog;
 import android.view.MotionEvent;
-import com.android.keyguard.KeyguardUpdateMonitor;
-import com.android.keyguard.MiuiKeyguardUtils;
-import com.android.systemui.plugins.R;
 
 class MiuiGxzwTouchHelper {
     private final Context mContext;
-    private final boolean mHasPressureSensor;
     private final MiuiGxzwIconView mMiuiGxzwIconView;
     private final MiuiGxzwQuickOpenView mMiuiGxzwQuickOpenView;
-    private boolean mNeedVibrator = true;
+    private final PowerManager mPowerManager;
     private boolean mTouchDown = false;
     private int mValidRegionCount;
 
     MiuiGxzwTouchHelper(MiuiGxzwIconView miuiGxzwIconView, MiuiGxzwQuickOpenView miuiGxzwQuickOpenView) {
-        this.mContext = miuiGxzwIconView.getContext();
+        Context context = miuiGxzwIconView.getContext();
+        this.mContext = context;
         this.mMiuiGxzwIconView = miuiGxzwIconView;
         this.mMiuiGxzwQuickOpenView = miuiGxzwQuickOpenView;
-        this.mHasPressureSensor = miuiGxzwIconView.getContext().getResources().getBoolean(R.bool.config_enablePressureSensorFod);
+        this.mPowerManager = (PowerManager) context.getSystemService("power");
     }
 
     public boolean onTouch(MotionEvent motionEvent) {
@@ -42,7 +41,7 @@ class MiuiGxzwTouchHelper {
         } else {
             str = String.format("onTouch: originalAction = %s, action = %s, x = %f, y = %f, pressure = %f, area = %f", new Object[]{MotionEvent.actionToString(motionEvent.getAction()), MotionEvent.actionToString(caculateAction), Float.valueOf(x), Float.valueOf(y), Float.valueOf(pressure), Float.valueOf(toolMinor)});
         }
-        if (motionEvent.getAction() != 2 || (!this.mHasPressureSensor && toolMinor > 0.0f && !this.mTouchDown)) {
+        if (motionEvent.getAction() != 2 || (toolMinor > 0.0f && !this.mTouchDown)) {
             Slog.i("MiuiGxzwTouchHelper", str);
         } else {
             Log.i("MiuiGxzwTouchHelper", str);
@@ -66,16 +65,10 @@ class MiuiGxzwTouchHelper {
         return true;
     }
 
-    public boolean hasPressureSensor() {
-        return this.mHasPressureSensor;
-    }
-
     private void handleActionDown(float f, float f2, float f3, float f4, float f5, float f6) {
-        if (!this.mTouchDown && this.mMiuiGxzwIconView.isShowing()) {
-            if (this.mHasPressureSensor || f6 > 0.0f) {
-                this.mMiuiGxzwIconView.setCanvasInfo(f, f2, f3, f4, f5);
-                onTouchDown();
-            }
+        if (!this.mTouchDown && this.mMiuiGxzwIconView.isShowing() && f6 > 0.0f) {
+            this.mMiuiGxzwIconView.setCanvasInfo(f, f2, f3, f4, f5);
+            onTouchDown();
         }
     }
 
@@ -86,9 +79,7 @@ class MiuiGxzwTouchHelper {
     }
 
     private void handleActionMove(float f, float f2, float f3, float f4, float f5, float f6, float f7) {
-        if (f7 > 70.0f && this.mNeedVibrator && this.mTouchDown && this.mHasPressureSensor && !KeyguardUpdateMonitor.getInstance(this.mContext).shouldListenForFingerprintWhenUnlocked()) {
-            pressureEnough();
-        } else if (!this.mHasPressureSensor && !this.mTouchDown && f6 > 0.0f) {
+        if (!this.mTouchDown && f6 > 0.0f) {
             this.mMiuiGxzwIconView.setCanvasInfo(f, f2, f3, f4, f5);
             onTouchDown();
         }
@@ -150,12 +141,11 @@ class MiuiGxzwTouchHelper {
     }
 
     private void userActivity() {
-        MiuiKeyguardUtils.userActivity(this.mContext);
+        this.mPowerManager.userActivity(SystemClock.uptimeMillis(), false);
     }
 
     private void onTouchDown() {
         if (!this.mTouchDown) {
-            this.mNeedVibrator = true;
             this.mValidRegionCount = 0;
             this.mTouchDown = true;
             this.mMiuiGxzwIconView.onTouchDown();
@@ -165,7 +155,6 @@ class MiuiGxzwTouchHelper {
     /* access modifiers changed from: package-private */
     public void onTouchUp(boolean z) {
         if (this.mTouchDown) {
-            this.mNeedVibrator = true;
             this.mTouchDown = false;
             this.mValidRegionCount = 0;
             this.mMiuiGxzwIconView.onTouchUp(z);
@@ -189,15 +178,5 @@ class MiuiGxzwTouchHelper {
             }
         }
         return 2;
-    }
-
-    private void pressureEnough() {
-        Log.d("MiuiGxzwTouchHelper", "pressure value is more than 70, vibrator!!!");
-        if (!this.mMiuiGxzwIconView.isEnrolling()) {
-            MiuiGxzwUtils.vibrateNormal(this.mContext);
-        }
-        this.mNeedVibrator = false;
-        this.mMiuiGxzwIconView.startRecognizingAnim();
-        this.mMiuiGxzwIconView.removeShowMorePressMessage();
     }
 }

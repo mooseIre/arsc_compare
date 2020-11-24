@@ -7,7 +7,7 @@ import android.widget.FrameLayout;
 
 abstract class GxzwWindowFrameLayout extends FrameLayout {
     private boolean mAdded = false;
-    private final Handler mHandler = new Handler();
+    public final Handler mHandler = new Handler();
     protected final WindowManager mWindowManager = ((WindowManager) getContext().getSystemService("window"));
 
     /* access modifiers changed from: protected */
