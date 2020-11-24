@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:orientation="horizontal" android:id="@id/line1" android:layout_width="fill_parent" android:layout_height="wrap_content"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <TextView android:textAppearance="@style/Miui.Notification.Title" android:ellipsize="marquee" android:id="@id/title" android:fadingEdge="horizontal" android:layout_width="0.0dip" android:layout_height="wrap_content" android:singleLine="true" android:layout_weight="1.0" android:textAlignment="viewStart" />
+    <TextView android:ellipsize="marquee" android:gravity="end|bottom|center" android:id="@id/text_line_1" android:fadingEdge="horizontal" android:layout_width="wrap_content" android:layout_height="wrap_content" android:singleLine="true" android:layout_marginStart="16.0dip" style="@style/Miui.Notification.Subtext" />
+    <include android:layout_gravity="end|center" android:id="@id/time_line_1" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="8.0dip" layout="@layout/notification_template_part_time_container" />
+</LinearLayout>

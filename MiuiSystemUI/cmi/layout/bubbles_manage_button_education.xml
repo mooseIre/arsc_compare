@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.android.systemui.bubbles.BubbleManageEducationView android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout android:orientation="vertical" android:id="@id/manage_education_view" android:background="@drawable/bubble_stack_user_education_bg" android:paddingTop="28.0dip" android:paddingBottom="16.0dip" android:clickable="true" android:layout_width="wrap_content" android:layout_height="wrap_content" android:paddingStart="@dimen/bubble_expanded_view_padding" android:paddingEnd="48.0dip" android:layout_marginEnd="24.0dip">
+        <TextView android:textAppearance="@android:style/TextAppearance.DeviceDefault.Headline" android:ellipsize="end" android:id="@id/user_education_title" android:paddingBottom="16.0dip" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/bubbles_user_education_manage_title" android:maxLines="2" android:fontFamily="@android:string/config_bodyFontFamilyMedium" android:paddingStart="16.0dip" />
+        <TextView android:textAppearance="@android:style/TextAppearance.DeviceDefault.Body2" android:ellipsize="end" android:id="@id/user_education_description" android:paddingBottom="24.0dip" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/bubbles_user_education_manage" android:maxLines="2" android:fontFamily="@android:string/config_bodyFontFamily" android:paddingStart="16.0dip" />
+        <LinearLayout android:orientation="horizontal" android:id="@id/button_layout" android:layout_width="wrap_content" android:layout_height="wrap_content">
+            <com.android.systemui.statusbar.AlphaOptimizedButton android:textColor="?wallpaperTextColor" android:layout_gravity="start" android:id="@id/manage" android:focusable="true" android:clickable="false" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/manage_bubbles_text" style="@android:style/Widget.Material.Button.Borderless" />
+            <com.android.systemui.statusbar.AlphaOptimizedButton android:textColor="?wallpaperTextColor" android:layout_gravity="start" android:id="@id/got_it" android:focusable="true" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/bubbles_user_education_got_it" style="@android:style/Widget.Material.Button.Borderless" />
+        </LinearLayout>
+    </LinearLayout>
+</com.android.systemui.bubbles.BubbleManageEducationView>
