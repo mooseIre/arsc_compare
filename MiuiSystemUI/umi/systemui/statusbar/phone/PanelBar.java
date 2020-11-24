@@ -1,19 +1,21 @@
 package com.android.systemui.statusbar.phone;
 
 import android.content.Context;
+import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.FrameLayout;
-import com.android.systemui.Constants;
-import java.util.HashSet;
-import java.util.Set;
+import com.miui.systemui.DebugConfig;
 
 public abstract class PanelBar extends FrameLayout {
-    public static final boolean DEBUG = Constants.DEBUG;
+    public static final boolean DEBUG = DebugConfig.DEBUG_PANEL;
     public static final String TAG = PanelBar.class.getSimpleName();
-    private PanelBarStateController mController = PanelBarStateController.getInstance();
-    PanelView mPanel;
+    private boolean mBouncerShowing;
+    private boolean mExpanded;
+    PanelViewController mPanel;
+    protected float mPanelFraction;
     private int mState = 0;
     private boolean mTracking;
 
@@ -32,23 +34,32 @@ public abstract class PanelBar extends FrameLayout {
         }
     }
 
-    public static final void LOG(Class cls, String str) {
-        Log.v(TAG + " " + cls.getSimpleName(), str);
-    }
-
     public void go(int i) {
         if (DEBUG) {
             LOG("go state: %d -> %d", Integer.valueOf(this.mState), Integer.valueOf(i));
         }
-        this.mController.update(i);
-    }
-
-    public void updateState(int i) {
         this.mState = i;
     }
 
-    public int getState() {
-        return this.mState;
+    /* access modifiers changed from: protected */
+    public Parcelable onSaveInstanceState() {
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("panel_bar_super_parcelable", super.onSaveInstanceState());
+        bundle.putInt("state", this.mState);
+        return bundle;
+    }
+
+    /* access modifiers changed from: protected */
+    public void onRestoreInstanceState(Parcelable parcelable) {
+        if (parcelable == null || !(parcelable instanceof Bundle)) {
+            super.onRestoreInstanceState(parcelable);
+            return;
+        }
+        Bundle bundle = (Bundle) parcelable;
+        super.onRestoreInstanceState(bundle.getParcelable("panel_bar_super_parcelable"));
+        if (bundle.containsKey("state")) {
+            go(bundle.getInt("state", 0));
+        }
     }
 
     public PanelBar(Context context, AttributeSet attributeSet) {
@@ -56,34 +67,42 @@ public abstract class PanelBar extends FrameLayout {
     }
 
     /* access modifiers changed from: protected */
-    public void onAttachedToWindow() {
-        super.onAttachedToWindow();
-        this.mController.addPanelBar(this);
-    }
-
-    /* access modifiers changed from: protected */
-    public void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-        this.mController.removePanelBar(this);
-    }
-
-    /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
     }
 
-    public void setPanel(PanelView panelView) {
-        this.mPanel = panelView;
-        panelView.setBar(this);
+    public void setPanel(PanelViewController panelViewController) {
+        this.mPanel = panelViewController;
+        panelViewController.setBar(this);
     }
 
     public void setBouncerShowing(boolean z) {
+        this.mBouncerShowing = z;
         int i = z ? 4 : 0;
         setImportantForAccessibility(i);
-        PanelView panelView = this.mPanel;
-        if (panelView != null) {
-            panelView.setImportantForAccessibility(i);
+        updateVisibility();
+        PanelViewController panelViewController = this.mPanel;
+        if (panelViewController != null) {
+            panelViewController.getView().setImportantForAccessibility(i);
         }
+    }
+
+    public float getExpansionFraction() {
+        return this.mPanelFraction;
+    }
+
+    public boolean isExpanded() {
+        return this.mExpanded;
+    }
+
+    /* access modifiers changed from: protected */
+    public void updateVisibility() {
+        this.mPanel.getView().setVisibility(shouldPanelBeVisible() ? 0 : 4);
+    }
+
+    /* access modifiers changed from: protected */
+    public boolean shouldPanelBeVisible() {
+        return this.mExpanded || this.mBouncerShowing;
     }
 
     public boolean onTouchEvent(MotionEvent motionEvent) {
@@ -94,26 +113,26 @@ public abstract class PanelBar extends FrameLayout {
             return false;
         }
         if (motionEvent.getAction() == 0) {
-            PanelView panelView = this.mPanel;
-            if (panelView == null) {
-                Log.w(TAG, String.format("onTouch: no panel for touch at (%d,%d)", new Object[]{Integer.valueOf((int) motionEvent.getX()), Integer.valueOf((int) motionEvent.getY())}));
+            PanelViewController panelViewController = this.mPanel;
+            if (panelViewController == null) {
+                Log.v(TAG, String.format("onTouch: no panel for touch at (%d,%d)", new Object[]{Integer.valueOf((int) motionEvent.getX()), Integer.valueOf((int) motionEvent.getY())}));
                 return true;
             }
-            boolean isEnabled = panelView.isEnabled();
+            boolean isEnabled = panelViewController.isEnabled();
             if (DEBUG) {
                 Object[] objArr = new Object[3];
                 objArr[0] = Integer.valueOf(this.mState);
-                objArr[1] = panelView;
+                objArr[1] = panelViewController;
                 objArr[2] = isEnabled ? "" : " (disabled)";
                 LOG("PanelBar.onTouch: state=%d ACTION_DOWN: panel %s %s", objArr);
             }
             if (!isEnabled) {
-                Log.w(TAG, String.format("onTouch: panel (%s) is disabled, ignoring touch at (%d,%d)", new Object[]{panelView, Integer.valueOf((int) motionEvent.getX()), Integer.valueOf((int) motionEvent.getY())}));
+                Log.v(TAG, String.format("onTouch: panel (%s) is disabled, ignoring touch at (%d,%d)", new Object[]{panelViewController, Integer.valueOf((int) motionEvent.getX()), Integer.valueOf((int) motionEvent.getY())}));
                 return true;
             }
         }
-        PanelView panelView2 = this.mPanel;
-        if (panelView2 == null || panelView2.onTouchEvent(motionEvent)) {
+        PanelViewController panelViewController2 = this.mPanel;
+        if (panelViewController2 == null || panelViewController2.getView().dispatchTouchEvent(motionEvent)) {
             return true;
         }
         return false;
@@ -121,41 +140,47 @@ public abstract class PanelBar extends FrameLayout {
 
     public void panelExpansionChanged(float f, boolean z) {
         boolean z2;
-        PanelView panelView = this.mPanel;
-        panelView.setVisibility(z ? 0 : 4);
-        boolean z3 = true;
-        if (z) {
-            if (this.mState == 0) {
-                go(1);
-                onPanelPeeked();
-            }
-            if (panelView.getExpandedFraction() < 1.0f) {
+        if (!Float.isNaN(f)) {
+            PanelViewController panelViewController = this.mPanel;
+            this.mExpanded = z;
+            this.mPanelFraction = f;
+            updateVisibility();
+            boolean z3 = true;
+            if (z) {
+                if (this.mState == 0) {
+                    go(1);
+                    onPanelPeeked();
+                }
+                if (panelViewController.getExpandedFraction() < 1.0f) {
+                    z3 = false;
+                }
+                z2 = false;
+            } else {
+                z2 = true;
                 z3 = false;
             }
-            z2 = false;
+            if (z3 && !this.mTracking) {
+                go(2);
+                onPanelFullyOpened();
+            } else if (z2 && !this.mTracking && this.mState != 0) {
+                go(0);
+                onPanelCollapsed();
+            }
         } else {
-            z2 = true;
-            z3 = false;
-        }
-        if (z3 && !this.mTracking) {
-            go(2);
-            onPanelFullyOpened();
-        } else if (z2 && !this.mTracking && this.mState != 0) {
-            go(0);
-            onPanelCollapsed();
+            throw new IllegalArgumentException("frac cannot be NaN");
         }
     }
 
     public void collapsePanel(boolean z, boolean z2, float f) {
         boolean z3;
-        PanelView panelView = this.mPanel;
-        if (!z || panelView.isFullyCollapsed()) {
-            panelView.resetViews();
-            panelView.setExpandedFraction(0.0f);
-            panelView.cancelPeek();
+        PanelViewController panelViewController = this.mPanel;
+        if (!z || panelViewController.isFullyCollapsed()) {
+            panelViewController.resetViews(false);
+            panelViewController.setExpandedFraction(0.0f);
+            panelViewController.cancelPeek();
             z3 = false;
         } else {
-            panelView.collapse(z2, f);
+            panelViewController.collapse(z2, f);
             z3 = true;
         }
         if (DEBUG) {
@@ -200,34 +225,6 @@ public abstract class PanelBar extends FrameLayout {
     public void onExpandingFinished() {
         if (DEBUG) {
             LOG("onExpandingFinished", new Object[0]);
-        }
-    }
-
-    public static class PanelBarStateController {
-        private static PanelBarStateController sController = new PanelBarStateController();
-        private Set<PanelBar> panelBarSet = new HashSet();
-
-        private PanelBarStateController() {
-        }
-
-        public static PanelBarStateController getInstance() {
-            return sController;
-        }
-
-        public void addPanelBar(PanelBar panelBar) {
-            if (!this.panelBarSet.contains(panelBar)) {
-                this.panelBarSet.add(panelBar);
-            }
-        }
-
-        public void update(int i) {
-            for (PanelBar updateState : this.panelBarSet) {
-                updateState.updateState(i);
-            }
-        }
-
-        public void removePanelBar(PanelBar panelBar) {
-            this.panelBarSet.remove(panelBar);
         }
     }
 }

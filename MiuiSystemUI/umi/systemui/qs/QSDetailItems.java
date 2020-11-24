@@ -1,7 +1,7 @@
 package com.android.systemui.qs;
 
 import android.content.Context;
-import android.content.res.Resources;
+import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Looper;
@@ -12,69 +12,31 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import com.android.systemui.Constants;
-import com.android.systemui.Dependency;
-import com.android.systemui.miui.statusbar.policy.ControlPanelController;
-import com.android.systemui.plugins.R;
-import miui.util.Pools;
-import miuix.recyclerview.widget.RecyclerView;
+import com.android.systemui.C0009R$dimen;
+import com.android.systemui.C0010R$drawable;
+import com.android.systemui.C0014R$layout;
+import com.android.systemui.FontSizeUtils;
+import com.android.systemui.plugins.qs.QSTile;
 
 public class QSDetailItems extends FrameLayout {
     private static final boolean DEBUG = Log.isLoggable("QSDetailItems", 3);
-    private static final Pools.Pool<Item> ITEM_POOL = Pools.createSoftReferencePool(new Pools.Manager<Item>() {
-        private int count = 0;
-
-        public Item createInstance() {
-            if (Constants.DEBUG) {
-                StringBuilder sb = new StringBuilder();
-                sb.append("Item Pool createInstance ");
-                int i = this.count;
-                this.count = i + 1;
-                sb.append(i);
-                Log.i("QSDetailItems", sb.toString());
-            }
-            return new Item();
-        }
-    }, 50);
     protected Adapter mAdapter = new Adapter();
-    /* access modifiers changed from: protected */
-    public Callback mCallback;
+    protected Callback mCallback;
     /* access modifiers changed from: private */
     public final Context mContext;
-    /* access modifiers changed from: private */
-    public ControlPanelController mControlPanelController;
     private View mEmpty;
-    /* access modifiers changed from: private */
-    public ImageView mEmptyIcon;
-    protected Runnable mEmptyStateRunnable = new Runnable() {
-        public void run() {
-            QSDetailItems.this.mEmptyIcon.setImageResource(QSDetailItems.this.mIconId);
-            QSDetailItems.this.mEmptyText.setText(QSDetailItems.this.mTextId);
-        }
-    };
-    /* access modifiers changed from: private */
-    public TextView mEmptyText;
-    private final H mHandler = new H();
-    /* access modifiers changed from: private */
-    public int mIconId;
-    private boolean mItemClicked;
-    private RecyclerView mItemList;
-    /* access modifiers changed from: protected */
-    public Item[] mItems;
+    private TextView mEmptyText;
+    private AutoSizingList mItemList;
+    protected Item[] mItems;
     /* access modifiers changed from: private */
     public boolean mItemsVisible = true;
     /* access modifiers changed from: private */
     public final int mQsDetailIconOverlaySize;
-    private Item[] mScrapItems;
-    private String mSuffix;
     private String mTag;
-    /* access modifiers changed from: private */
-    public int mTextId;
 
     public interface Callback {
         void onDetailItemClick(Item item);
@@ -82,60 +44,48 @@ public class QSDetailItems extends FrameLayout {
         void onDetailItemDisconnect(Item item);
     }
 
-    public QSDetailItems(Context context, AttributeSet attributeSet) {
-        super(context, attributeSet);
-        this.mContext = context;
-        this.mTag = "QSDetailItems";
-        Resources resources = getResources();
-        this.mControlPanelController = (ControlPanelController) Dependency.get(ControlPanelController.class);
-        this.mQsDetailIconOverlaySize = (int) resources.getDimension(R.dimen.qs_detail_icon_overlay_size);
+    public static class Item {
+        public boolean canDisconnect;
+        public QSTile.Icon icon;
+        public int icon2 = -1;
+        public int iconResId;
+        public CharSequence line1;
+        public CharSequence line2;
+        public Drawable overlay;
     }
 
-    public static QSDetailItems convertOrInflate(Context context, View view, ViewGroup viewGroup) {
-        if (view instanceof QSDetailItems) {
-            return (QSDetailItems) view;
-        }
-        return (QSDetailItems) LayoutInflater.from(context).inflate(R.layout.qs_detail_items, viewGroup, false);
+    public QSDetailItems(Context context, AttributeSet attributeSet) {
+        super(context, attributeSet);
+        new H();
+        this.mContext = context;
+        this.mTag = "QSDetailItems";
+        this.mQsDetailIconOverlaySize = (int) getResources().getDimension(C0009R$dimen.qs_detail_icon_overlay_size);
     }
 
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        RecyclerView recyclerView = (RecyclerView) findViewById(16908298);
-        this.mItemList = recyclerView;
-        recyclerView.setVisibility(8);
-        this.mItemList.setLayoutManager(new LinearLayoutManager(getContext()));
+        AutoSizingList autoSizingList = (AutoSizingList) findViewById(16908298);
+        this.mItemList = autoSizingList;
+        autoSizingList.setVisibility(8);
         this.mItemList.setAdapter(this.mAdapter);
         View findViewById = findViewById(16908292);
         this.mEmpty = findViewById;
         findViewById.setVisibility(8);
         this.mEmptyText = (TextView) this.mEmpty.findViewById(16908310);
-        this.mEmptyIcon = (ImageView) this.mEmpty.findViewById(16908294);
+        ImageView imageView = (ImageView) this.mEmpty.findViewById(16908294);
     }
 
-    public void setTagSuffix(String str) {
-        this.mTag = "QSDetailItems." + str;
-        this.mSuffix = str;
-        initItemsListPosition();
-    }
-
-    public String getSuffix() {
-        return this.mSuffix;
-    }
-
-    public void setItemClicked(boolean z) {
-        this.mItemClicked = z;
-    }
-
-    public boolean isItemClicked() {
-        return this.mItemClicked;
-    }
-
-    public void setEmptyState(int i, int i2) {
-        this.mIconId = i;
-        this.mTextId = i2;
-        this.mEmptyIcon.removeCallbacks(this.mEmptyStateRunnable);
-        this.mEmptyIcon.post(this.mEmptyStateRunnable);
+    /* access modifiers changed from: protected */
+    public void onConfigurationChanged(Configuration configuration) {
+        super.onConfigurationChanged(configuration);
+        FontSizeUtils.updateFontSize(this.mEmptyText, C0009R$dimen.qs_detail_empty_text_size);
+        int childCount = this.mItemList.getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            View childAt = this.mItemList.getChildAt(i);
+            FontSizeUtils.updateFontSize(childAt, 16908310, C0009R$dimen.qs_detail_item_primary_text_size);
+            FontSizeUtils.updateFontSize(childAt, 16908304, C0009R$dimen.qs_detail_item_secondary_text_size);
+        }
     }
 
     /* access modifiers changed from: protected */
@@ -155,30 +105,6 @@ public class QSDetailItems extends FrameLayout {
         this.mCallback = null;
     }
 
-    public void setCallback(Callback callback) {
-        this.mHandler.removeMessages(2);
-        this.mHandler.obtainMessage(2, callback).sendToTarget();
-    }
-
-    public void setItems(Item[] itemArr) {
-        Item[] itemArr2 = this.mScrapItems;
-        if (!(itemArr2 == itemArr || itemArr2 == null)) {
-            synchronized (ITEM_POOL) {
-                for (Item release : this.mScrapItems) {
-                    ITEM_POOL.release(release);
-                }
-            }
-        }
-        this.mScrapItems = itemArr;
-        this.mHandler.removeMessages(1);
-        this.mHandler.obtainMessage(1, itemArr).sendToTarget();
-    }
-
-    public void setItemsVisible(boolean z) {
-        this.mHandler.removeMessages(3);
-        this.mHandler.obtainMessage(3, z ? 1 : 0, 0).sendToTarget();
-    }
-
     /* access modifiers changed from: private */
     public void handleSetCallback(Callback callback) {
         this.mCallback = callback;
@@ -189,11 +115,11 @@ public class QSDetailItems extends FrameLayout {
         int i = 0;
         int length = itemArr != null ? itemArr.length : 0;
         this.mEmpty.setVisibility(length == 0 ? 0 : 8);
-        RecyclerView recyclerView = this.mItemList;
+        AutoSizingList autoSizingList = this.mItemList;
         if (length == 0) {
             i = 8;
         }
-        recyclerView.setVisibility(i);
+        autoSizingList.setVisibility(i);
         this.mItems = itemArr;
         this.mAdapter.notifyDataSetChanged();
     }
@@ -208,129 +134,82 @@ public class QSDetailItems extends FrameLayout {
         }
     }
 
-    public void initItemsListPosition() {
-        RecyclerView recyclerView = this.mItemList;
-        if (recyclerView != null) {
-            recyclerView.scrollToPosition(0);
+    protected class Adapter extends BaseAdapter {
+        public long getItemId(int i) {
+            return 0;
         }
-    }
 
-    public Item acquireItem() {
-        Item acquire = ITEM_POOL.acquire();
-        Item unused = acquire.reset();
-        return acquire;
-    }
-
-    protected class Adapter extends RecyclerView.Adapter<ItemHolder> {
         protected Adapter() {
         }
 
-        public ItemHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-            if (i == 2) {
-                return new LineItemHolder(LayoutInflater.from(QSDetailItems.this.mContext).inflate(R.layout.qs_detail_line_item, viewGroup, false));
-            }
-            return new CompleteItemHolder(LayoutInflater.from(QSDetailItems.this.mContext).inflate(QSDetailItems.this.mControlPanelController.isUseControlCenter() ? R.layout.qs_control_detail_item : R.layout.qs_detail_item, viewGroup, false));
-        }
-
-        public void onBindViewHolder(ItemHolder itemHolder, int i) {
-            QSDetailItems qSDetailItems = QSDetailItems.this;
-            Item[] itemArr = qSDetailItems.mItems;
-            if (itemArr[i].type == 1) {
-                final Item item = itemArr[i];
-                CompleteItemHolder completeItemHolder = (CompleteItemHolder) itemHolder;
-                completeItemHolder.itemView.setVisibility(qSDetailItems.mItemsVisible ? 0 : 4);
-                completeItemHolder.icon.setImageResource(item.icon);
-                completeItemHolder.icon.getOverlay().clear();
-                Drawable drawable = item.overlay;
-                if (drawable != null) {
-                    drawable.setBounds(0, 0, QSDetailItems.this.mQsDetailIconOverlaySize, QSDetailItems.this.mQsDetailIconOverlaySize);
-                    completeItemHolder.icon.getOverlay().add(item.overlay);
-                }
-                completeItemHolder.itemView.setActivated(item.activated);
-                completeItemHolder.itemView.setSelected(item.selected);
-                completeItemHolder.title.setText(item.line1);
-                boolean z = !TextUtils.isEmpty(item.line2);
-                completeItemHolder.title.setMaxLines(z ? 1 : 2);
-                completeItemHolder.summary.setVisibility(z ? 0 : 8);
-                completeItemHolder.summary.setText(z ? item.line2 : null);
-                if (item.activated) {
-                    completeItemHolder.itemView.setOnClickListener(new View.OnClickListener() {
-                        public void onClick(View view) {
-                            Callback callback = QSDetailItems.this.mCallback;
-                            if (callback != null) {
-                                callback.onDetailItemClick(item);
-                            }
-                        }
-                    });
-                } else {
-                    completeItemHolder.itemView.setOnClickListener((View.OnClickListener) null);
-                }
-                if (item.canDisconnect) {
-                    completeItemHolder.button.setImageResource(R.drawable.ic_qs_cancel);
-                    completeItemHolder.button.setVisibility(0);
-                    completeItemHolder.button.setClickable(true);
-                    completeItemHolder.button.setOnClickListener(new View.OnClickListener() {
-                        public void onClick(View view) {
-                            Callback callback = QSDetailItems.this.mCallback;
-                            if (callback != null) {
-                                callback.onDetailItemDisconnect(item);
-                            }
-                        }
-                    });
-                } else if (item.icon2 != -1) {
-                    completeItemHolder.button.setVisibility(0);
-                    completeItemHolder.button.setImageResource(item.icon2);
-                    completeItemHolder.button.setClickable(false);
-                } else {
-                    completeItemHolder.button.setVisibility(8);
-                }
-            }
-        }
-
-        public int getItemCount() {
+        public int getCount() {
             Item[] itemArr = QSDetailItems.this.mItems;
             if (itemArr != null) {
-                return Math.min(itemArr.length, 20);
+                return itemArr.length;
             }
             return 0;
         }
 
-        public int getItemViewType(int i) {
-            if (i < 0) {
-                return 1;
+        public Object getItem(int i) {
+            return QSDetailItems.this.mItems[i];
+        }
+
+        public View getView(int i, View view, ViewGroup viewGroup) {
+            QSDetailItems qSDetailItems = QSDetailItems.this;
+            final Item item = qSDetailItems.mItems[i];
+            if (view == null) {
+                view = LayoutInflater.from(qSDetailItems.mContext).inflate(C0014R$layout.miui_qs_detail_item, viewGroup, false);
             }
-            Item[] itemArr = QSDetailItems.this.mItems;
-            if (i >= itemArr.length) {
-                return 1;
+            view.setVisibility(QSDetailItems.this.mItemsVisible ? 0 : 4);
+            ImageView imageView = (ImageView) view.findViewById(16908294);
+            QSTile.Icon icon = item.icon;
+            if (icon != null) {
+                imageView.setImageDrawable(icon.getDrawable(imageView.getContext()));
+            } else {
+                imageView.setImageResource(item.iconResId);
             }
-            return itemArr[i].type;
-        }
-    }
-
-    protected static abstract class ItemHolder extends RecyclerView.ViewHolder {
-        public ItemHolder(View view) {
-            super(view);
-        }
-    }
-
-    protected static class CompleteItemHolder extends ItemHolder {
-        public ImageView button;
-        public ImageView icon;
-        public TextView summary;
-        public TextView title;
-
-        public CompleteItemHolder(View view) {
-            super(view);
-            this.icon = (ImageView) view.findViewById(16908294);
-            this.title = (TextView) view.findViewById(16908310);
-            this.summary = (TextView) view.findViewById(16908304);
-            this.button = (ImageView) view.findViewById(16908296);
-        }
-    }
-
-    protected static class LineItemHolder extends ItemHolder {
-        public LineItemHolder(View view) {
-            super(view);
+            imageView.getOverlay().clear();
+            Drawable drawable = item.overlay;
+            if (drawable != null) {
+                drawable.setBounds(0, 0, QSDetailItems.this.mQsDetailIconOverlaySize, QSDetailItems.this.mQsDetailIconOverlaySize);
+                imageView.getOverlay().add(item.overlay);
+            }
+            TextView textView = (TextView) view.findViewById(16908310);
+            textView.setText(item.line1);
+            TextView textView2 = (TextView) view.findViewById(16908304);
+            boolean z = !TextUtils.isEmpty(item.line2);
+            textView.setMaxLines(z ? 1 : 2);
+            textView2.setVisibility(z ? 0 : 8);
+            textView2.setText(z ? item.line2 : null);
+            view.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View view) {
+                    Callback callback = QSDetailItems.this.mCallback;
+                    if (callback != null) {
+                        callback.onDetailItemClick(item);
+                    }
+                }
+            });
+            ImageView imageView2 = (ImageView) view.findViewById(16908296);
+            if (item.canDisconnect) {
+                imageView2.setImageResource(C0010R$drawable.ic_qs_cancel);
+                imageView2.setVisibility(0);
+                imageView2.setClickable(true);
+                imageView2.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View view) {
+                        Callback callback = QSDetailItems.this.mCallback;
+                        if (callback != null) {
+                            callback.onDetailItemDisconnect(item);
+                        }
+                    }
+                });
+            } else if (item.icon2 != -1) {
+                imageView2.setVisibility(0);
+                imageView2.setImageResource(item.icon2);
+                imageView2.setClickable(false);
+            } else {
+                imageView2.setVisibility(8);
+            }
+            return view;
         }
     }
 
@@ -353,37 +232,6 @@ public class QSDetailItems extends FrameLayout {
                 }
                 qSDetailItems.handleSetItemsVisible(z);
             }
-        }
-    }
-
-    public static class Item {
-        public boolean activated = true;
-        public boolean canDisconnect;
-        public Drawable drawable;
-        public int icon;
-        public int icon2 = -1;
-        public boolean initailed;
-        public CharSequence line1;
-        public CharSequence line2;
-        public Drawable overlay;
-        public boolean selected;
-        public Object tag;
-        public int type = 1;
-        public CharSequence unit;
-
-        /* access modifiers changed from: private */
-        public Item reset() {
-            this.icon2 = -1;
-            this.icon = -1;
-            this.overlay = null;
-            this.line1 = null;
-            this.line2 = null;
-            this.tag = null;
-            this.selected = false;
-            this.canDisconnect = false;
-            this.activated = true;
-            this.type = 1;
-            return this;
         }
     }
 }

@@ -7,30 +7,16 @@ import android.graphics.Rect;
 import android.util.Size;
 
 public class PipSnapAlgorithm {
-    public static PipSnapAlgorithm sPipSnapAlgorithm;
-    private final Context mContext;
     private final float mDefaultSizePercent;
     private final float mMaxAspectRatioForMinSize;
     private final float mMinAspectRatioForMinSize;
 
-    public static PipSnapAlgorithm getInstance(Context context) {
-        if (sPipSnapAlgorithm == null) {
-            sPipSnapAlgorithm = new PipSnapAlgorithm(context);
-        }
-        return sPipSnapAlgorithm;
-    }
-
-    private PipSnapAlgorithm(Context context) {
+    public PipSnapAlgorithm(Context context) {
         Resources resources = context.getResources();
-        this.mContext = context;
         this.mDefaultSizePercent = resources.getFloat(17105073);
         float f = resources.getFloat(17105071);
         this.mMaxAspectRatioForMinSize = f;
         this.mMinAspectRatioForMinSize = 1.0f / f;
-    }
-
-    public void onConfigurationChanged() {
-        int i = this.mContext.getResources().getConfiguration().orientation;
     }
 
     public float getSnapFraction(Rect rect, Rect rect2) {

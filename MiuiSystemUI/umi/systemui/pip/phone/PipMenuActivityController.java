@@ -20,6 +20,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import com.android.systemui.pip.phone.PipMediaController;
 import com.android.systemui.pip.phone.PipMenuActivityController;
+import com.android.systemui.shared.system.InputConsumerController;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -121,7 +122,7 @@ public class PipMenuActivityController {
     }
 
     public void onActivityPinned() {
-        this.mInputConsumerController.registerInputConsumer();
+        this.mInputConsumerController.registerInputConsumer(true);
     }
 
     public void onActivityUnpinned() {

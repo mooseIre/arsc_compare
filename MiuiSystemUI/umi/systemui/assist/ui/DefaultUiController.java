@@ -3,17 +3,28 @@ package com.android.systemui.assist.ui;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
+import android.content.ComponentName;
 import android.content.Context;
+import android.metrics.LogMaker;
+import android.os.Build;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.WindowManager;
-import android.view.WindowManagerCompat;
 import android.view.animation.PathInterpolator;
 import android.widget.FrameLayout;
+import com.android.internal.logging.MetricsLogger;
+import com.android.systemui.C0014R$layout;
 import com.android.systemui.Dependency;
+import com.android.systemui.assist.AssistHandleViewController;
+import com.android.systemui.assist.AssistLogger;
 import com.android.systemui.assist.AssistManager;
-import com.android.systemui.plugins.R;
+import com.android.systemui.assist.AssistantSessionEvent;
+import com.android.systemui.statusbar.NavigationBarController;
+import java.util.Locale;
 
 public class DefaultUiController implements AssistManager.UiController {
+    private static final boolean VERBOSE = (Build.TYPE.toLowerCase(Locale.ROOT).contains("debug") || Build.TYPE.toLowerCase(Locale.ROOT).equals("eng"));
+    protected final AssistLogger mAssistLogger;
     private boolean mAttached = false;
     private ValueAnimator mInvocationAnimator = new ValueAnimator();
     /* access modifiers changed from: private */
@@ -26,22 +37,19 @@ public class DefaultUiController implements AssistManager.UiController {
     protected final FrameLayout mRoot;
     private final WindowManager mWindowManager;
 
-    protected static void logInvocationProgressMetrics(int i, float f, boolean z) {
-    }
-
-    public DefaultUiController(Context context) {
+    public DefaultUiController(Context context, AssistLogger assistLogger) {
+        this.mAssistLogger = assistLogger;
         this.mRoot = new FrameLayout(context);
         this.mWindowManager = (WindowManager) context.getSystemService("window");
         WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(-1, -2, 0, 0, 2024, 808, -3);
         this.mLayoutParams = layoutParams;
         layoutParams.privateFlags = 64;
         layoutParams.gravity = 80;
-        WindowManagerCompat.setFitInsetsTypes(layoutParams);
+        layoutParams.setFitInsetsTypes(0);
         this.mLayoutParams.setTitle("Assist");
-        InvocationLightsView invocationLightsView = (InvocationLightsView) LayoutInflater.from(context).inflate(R.layout.invocation_lights, this.mRoot, false);
+        InvocationLightsView invocationLightsView = (InvocationLightsView) LayoutInflater.from(context).inflate(C0014R$layout.invocation_lights, this.mRoot, false);
         this.mInvocationLightsView = invocationLightsView;
-        invocationLightsView.setColors(-16776961, -65536, -256, -16711936);
-        this.mRoot.addView(this.mInvocationLightsView);
+        this.mRoot.addView(invocationLightsView);
     }
 
     public void onInvocationProgress(int i, float f) {
@@ -54,6 +62,7 @@ public class DefaultUiController implements AssistManager.UiController {
             if (!z) {
                 attach();
                 this.mInvocationInProgress = true;
+                updateAssistHandleVisibility();
             }
             setProgressInternal(i, f);
         }
@@ -63,16 +72,52 @@ public class DefaultUiController implements AssistManager.UiController {
 
     public void onGestureCompletion(float f) {
         animateInvocationCompletion(1, f);
+        logInvocationProgressMetrics(1, 1.0f, this.mInvocationInProgress);
     }
 
     public void hide() {
-        ((AssistManager) Dependency.get(AssistManager.class)).hideAssist();
         detach();
         if (this.mInvocationAnimator.isRunning()) {
             this.mInvocationAnimator.cancel();
         }
         this.mInvocationLightsView.hide();
         this.mInvocationInProgress = false;
+        updateAssistHandleVisibility();
+    }
+
+    /* access modifiers changed from: protected */
+    public void logInvocationProgressMetrics(int i, float f, boolean z) {
+        if (f == 1.0f && VERBOSE) {
+            Log.v("DefaultUiController", "Invocation complete: type=" + i);
+        }
+        if (!z && f > 0.0f) {
+            if (VERBOSE) {
+                Log.v("DefaultUiController", "Invocation started: type=" + i);
+            }
+            this.mAssistLogger.reportAssistantInvocationEventFromLegacy(i, false, (ComponentName) null, (Integer) null);
+            MetricsLogger.action(new LogMaker(1716).setType(4).setSubtype(((AssistManager) Dependency.get(AssistManager.class)).toLoggingSubType(i)));
+        }
+        ValueAnimator valueAnimator = this.mInvocationAnimator;
+        if ((valueAnimator == null || !valueAnimator.isRunning()) && z && f == 0.0f) {
+            if (VERBOSE) {
+                Log.v("DefaultUiController", "Invocation cancelled: type=" + i);
+            }
+            this.mAssistLogger.reportAssistantSessionEvent(AssistantSessionEvent.ASSISTANT_SESSION_INVOCATION_CANCELLED);
+            MetricsLogger.action(new LogMaker(1716).setType(5).setSubtype(1));
+        }
+    }
+
+    private void updateAssistHandleVisibility() {
+        AssistHandleViewController assistHandleViewController;
+        NavigationBarController navigationBarController = (NavigationBarController) Dependency.get(NavigationBarController.class);
+        if (navigationBarController == null) {
+            assistHandleViewController = null;
+        } else {
+            assistHandleViewController = navigationBarController.getAssistHandlerViewController();
+        }
+        if (assistHandleViewController != null) {
+            assistHandleViewController.lambda$setAssistHintBlocked$1(this.mInvocationInProgress);
+        }
     }
 
     private void attach() {
@@ -89,19 +134,24 @@ public class DefaultUiController implements AssistManager.UiController {
         }
     }
 
-    /* access modifiers changed from: private */
-    public void setProgressInternal(int i, float f) {
+    private void setProgressInternal(int i, float f) {
         this.mInvocationLightsView.onInvocationProgress(this.mProgressInterpolator.getInterpolation(f));
     }
 
-    private void animateInvocationCompletion(final int i, float f) {
+    private void animateInvocationCompletion(int i, float f) {
         ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{this.mLastInvocationProgress, 1.0f});
         this.mInvocationAnimator = ofFloat;
         ofFloat.setStartDelay(1);
         this.mInvocationAnimator.setDuration(200);
-        this.mInvocationAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                DefaultUiController.this.setProgressInternal(i, ((Float) valueAnimator.getAnimatedValue()).floatValue());
+        this.mInvocationAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener(i) {
+            public final /* synthetic */ int f$1;
+
+            {
+                this.f$1 = r2;
+            }
+
+            public final void onAnimationUpdate(ValueAnimator valueAnimator) {
+                DefaultUiController.this.lambda$animateInvocationCompletion$0$DefaultUiController(this.f$1, valueAnimator);
             }
         });
         this.mInvocationAnimator.addListener(new AnimatorListenerAdapter() {
@@ -113,5 +163,11 @@ public class DefaultUiController implements AssistManager.UiController {
             }
         });
         this.mInvocationAnimator.start();
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$animateInvocationCompletion$0 */
+    public /* synthetic */ void lambda$animateInvocationCompletion$0$DefaultUiController(int i, ValueAnimator valueAnimator) {
+        setProgressInternal(i, ((Float) valueAnimator.getAnimatedValue()).floatValue());
     }
 }

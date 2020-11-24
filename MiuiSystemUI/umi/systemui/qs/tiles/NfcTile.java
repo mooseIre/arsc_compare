@@ -5,19 +5,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.nfc.NfcAdapter;
-import android.os.Handler;
-import android.os.UserHandle;
 import android.util.Log;
 import android.widget.Switch;
-import com.android.systemui.plugins.R;
+import com.android.systemui.C0010R$drawable;
+import com.android.systemui.C0018R$string;
+import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.plugins.qs.QSTile;
 import com.android.systemui.qs.QSHost;
 import com.android.systemui.qs.tileimpl.QSTileImpl;
-import com.android.systemui.statusbar.Icons;
 import com.miui.enterprise.RestrictionsHelper;
 
 public class NfcTile extends QSTileImpl<QSTile.BooleanState> {
     private NfcAdapter mAdapter;
+    private BroadcastDispatcher mBroadcastDispatcher;
     private boolean mListening;
     private BroadcastReceiver mNfcReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
@@ -34,8 +34,9 @@ public class NfcTile extends QSTileImpl<QSTile.BooleanState> {
     public void handleUserSwitch(int i) {
     }
 
-    public NfcTile(QSHost qSHost) {
+    public NfcTile(QSHost qSHost, BroadcastDispatcher broadcastDispatcher) {
         super(qSHost);
+        this.mBroadcastDispatcher = broadcastDispatcher;
     }
 
     public QSTile.BooleanState newTileState() {
@@ -43,11 +44,12 @@ public class NfcTile extends QSTileImpl<QSTile.BooleanState> {
     }
 
     public void handleSetListening(boolean z) {
+        super.handleSetListening(z);
         this.mListening = z;
         if (z) {
-            this.mContext.registerReceiverAsUser(this.mNfcReceiver, UserHandle.ALL, new IntentFilter("android.nfc.action.ADAPTER_STATE_CHANGED"), (String) null, (Handler) null);
+            this.mBroadcastDispatcher.registerReceiver(this.mNfcReceiver, new IntentFilter("android.nfc.action.ADAPTER_STATE_CHANGED"));
         } else {
-            this.mContext.unregisterReceiver(this.mNfcReceiver);
+            this.mBroadcastDispatcher.unregisterReceiver(this.mNfcReceiver);
         }
     }
 
@@ -89,7 +91,7 @@ public class NfcTile extends QSTileImpl<QSTile.BooleanState> {
     }
 
     public CharSequence getTileLabel() {
-        return this.mContext.getString(R.string.quick_settings_nfc_label);
+        return this.mContext.getString(C0018R$string.quick_settings_nfc_label);
     }
 
     /* access modifiers changed from: protected */
@@ -111,8 +113,8 @@ public class NfcTile extends QSTileImpl<QSTile.BooleanState> {
             i = 2;
         }
         booleanState.state = i;
-        booleanState.label = this.mContext.getString(R.string.quick_settings_nfc_label);
-        booleanState.icon = QSTileImpl.ResourceIcon.get(Icons.getQSIcons(Integer.valueOf(booleanState.value ? R.drawable.ic_qs_nfc_enabled : R.drawable.ic_qs_nfc_disabled), this.mInControlCenter));
+        booleanState.icon = QSTileImpl.ResourceIcon.get(booleanState.value ? C0010R$drawable.ic_qs_nfc_enabled : C0010R$drawable.ic_qs_nfc_disabled);
+        booleanState.label = this.mContext.getString(C0018R$string.quick_settings_nfc_label);
         booleanState.expandedAccessibilityClassName = Switch.class.getName();
         booleanState.contentDescription = booleanState.label;
     }
@@ -120,24 +122,24 @@ public class NfcTile extends QSTileImpl<QSTile.BooleanState> {
     /* access modifiers changed from: protected */
     public String composeChangeAnnouncement() {
         if (((QSTile.BooleanState) this.mState).value) {
-            return this.mContext.getString(R.string.quick_settings_nfc_on);
+            return this.mContext.getString(C0018R$string.quick_settings_nfc_on);
         }
-        return this.mContext.getString(R.string.quick_settings_nfc_off);
-    }
-
-    private boolean isNfcReady(NfcAdapter nfcAdapter) {
-        int adapterState = nfcAdapter.getAdapterState();
-        return (adapterState == 2 || adapterState == 4) ? false : true;
+        return this.mContext.getString(C0018R$string.quick_settings_nfc_off);
     }
 
     private NfcAdapter getAdapter() {
         if (this.mAdapter == null) {
             try {
-                this.mAdapter = NfcAdapter.getNfcAdapter(this.mContext);
+                this.mAdapter = NfcAdapter.getDefaultAdapter(this.mContext);
             } catch (UnsupportedOperationException unused) {
                 this.mAdapter = null;
             }
         }
         return this.mAdapter;
+    }
+
+    private boolean isNfcReady(NfcAdapter nfcAdapter) {
+        int adapterState = nfcAdapter.getAdapterState();
+        return (adapterState == 2 || adapterState == 4) ? false : true;
     }
 }

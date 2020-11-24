@@ -1,28 +1,37 @@
 package com.android.systemui.qs;
 
+import android.app.ActivityManager;
+import android.app.AlertDialog;
+import android.app.admin.DevicePolicyEventLogger;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.UserInfo;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.os.UserManager;
 import android.text.SpannableStringBuilder;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.android.systemui.C0009R$dimen;
+import com.android.systemui.C0010R$drawable;
+import com.android.systemui.C0012R$id;
+import com.android.systemui.C0014R$layout;
+import com.android.systemui.C0018R$string;
+import com.android.systemui.C0019R$style;
 import com.android.systemui.Dependency;
-import com.android.systemui.FontUtils;
-import com.android.systemui.miui.statusbar.analytics.SystemUIStat;
+import com.android.systemui.FontSizeUtils;
 import com.android.systemui.plugins.ActivityStarter;
-import com.android.systemui.plugins.R;
 import com.android.systemui.statusbar.phone.SystemUIDialog;
 import com.android.systemui.statusbar.policy.SecurityController;
-import miui.app.AlertDialog;
 
 public class QSSecurityFooter implements View.OnClickListener, DialogInterface.OnClickListener {
     /* access modifiers changed from: private */
@@ -48,12 +57,13 @@ public class QSSecurityFooter implements View.OnClickListener, DialogInterface.O
     /* access modifiers changed from: private */
     public final View mRootView;
     private final SecurityController mSecurityController;
+    private final UserManager mUm;
     private final Runnable mUpdateDisplayState = new Runnable() {
         public void run() {
             if (QSSecurityFooter.this.mFooterTextContent != null) {
                 QSSecurityFooter.this.mFooterText.setText(QSSecurityFooter.this.mFooterTextContent);
             }
-            QSSecurityFooter.this.mRootView.setVisibility(QSSecurityFooter.this.mIsVisible ? 0 : 8);
+            QSSecurityFooter.this.mRootView.setVisibility(!QSSecurityFooter.this.mIsVisible ? 8 : 0);
         }
     };
     private final Runnable mUpdateIcon = new Runnable() {
@@ -67,17 +77,18 @@ public class QSSecurityFooter implements View.OnClickListener, DialogInterface.O
     }
 
     public QSSecurityFooter(QSPanel qSPanel, Context context) {
-        View inflate = LayoutInflater.from(context).inflate(R.layout.quick_settings_footer, qSPanel, false);
+        View inflate = LayoutInflater.from(context).inflate(C0014R$layout.quick_settings_footer, qSPanel, false);
         this.mRootView = inflate;
         inflate.setOnClickListener(this);
-        this.mFooterText = (TextView) this.mRootView.findViewById(R.id.footer_text);
-        this.mFooterIcon = (ImageView) this.mRootView.findViewById(R.id.footer_icon);
-        this.mFooterIconId = R.drawable.ic_info_outline;
+        this.mFooterText = (TextView) this.mRootView.findViewById(C0012R$id.footer_text);
+        this.mFooterIcon = (ImageView) this.mRootView.findViewById(C0012R$id.footer_icon);
+        this.mFooterIconId = C0010R$drawable.ic_info_outline;
         this.mContext = context;
-        this.mMainHandler = new Handler(Looper.getMainLooper());
+        this.mMainHandler = new Handler(Looper.myLooper());
         this.mActivityStarter = (ActivityStarter) Dependency.get(ActivityStarter.class);
         this.mSecurityController = (SecurityController) Dependency.get(SecurityController.class);
         this.mHandler = new H((Looper) Dependency.get(Dependency.BG_LOOPER));
+        this.mUm = (UserManager) this.mContext.getSystemService("user");
     }
 
     public void setHostEnvironment(QSTileHost qSTileHost) {
@@ -87,27 +98,34 @@ public class QSSecurityFooter implements View.OnClickListener, DialogInterface.O
     public void setListening(boolean z) {
         if (z) {
             this.mSecurityController.addCallback(this.mCallback);
-        } else {
-            this.mSecurityController.removeCallback(this.mCallback);
+            refreshState();
+            return;
         }
+        this.mSecurityController.removeCallback(this.mCallback);
     }
 
     public void onConfigurationChanged() {
-        FontUtils.updateFontSize(this.mFooterText, R.dimen.qs_tile_label_text_size);
+        FontSizeUtils.updateFontSize(this.mFooterText, C0009R$dimen.qs_tile_text_size);
     }
 
     public View getView() {
         return this.mRootView;
     }
 
+    public boolean hasFooter() {
+        return this.mRootView.getVisibility() != 8;
+    }
+
     public void onClick(View view) {
-        this.mHandler.sendEmptyMessage(0);
+        if (hasFooter()) {
+            this.mHandler.sendEmptyMessage(0);
+        }
     }
 
     /* access modifiers changed from: private */
     public void handleClick() {
-        ((SystemUIStat) Dependency.get(SystemUIStat.class)).handleClickShortcutEvent("security_footer");
         showDeviceMonitoringDialog();
+        DevicePolicyEventLogger.createEvent(57).write();
     }
 
     public void showDeviceMonitoringDialog() {
@@ -122,6 +140,9 @@ public class QSSecurityFooter implements View.OnClickListener, DialogInterface.O
     /* access modifiers changed from: private */
     public void handleRefreshState() {
         boolean isDeviceManaged = this.mSecurityController.isDeviceManaged();
+        UserInfo userInfo = this.mUm.getUserInfo(ActivityManager.getCurrentUser());
+        boolean z = true;
+        boolean z2 = UserManager.isDeviceInDemoMode(this.mContext) && userInfo != null && userInfo.isDemo();
         boolean hasWorkProfile = this.mSecurityController.hasWorkProfile();
         boolean hasCACertInCurrentUser = this.mSecurityController.hasCACertInCurrentUser();
         boolean hasCACertInWorkProfile = this.mSecurityController.hasCACertInWorkProfile();
@@ -130,9 +151,20 @@ public class QSSecurityFooter implements View.OnClickListener, DialogInterface.O
         String workProfileVpnName = this.mSecurityController.getWorkProfileVpnName();
         CharSequence deviceOwnerOrganizationName = this.mSecurityController.getDeviceOwnerOrganizationName();
         CharSequence workProfileOrganizationName = this.mSecurityController.getWorkProfileOrganizationName();
-        this.mIsVisible = (isDeviceManaged || hasCACertInCurrentUser || hasCACertInWorkProfile || primaryVpnName != null || workProfileVpnName != null) && !this.mSecurityController.isSilentVpnPackage();
-        this.mFooterTextContent = getFooterText(isDeviceManaged, hasWorkProfile, hasCACertInCurrentUser, hasCACertInWorkProfile, isNetworkLoggingEnabled, primaryVpnName, workProfileVpnName, deviceOwnerOrganizationName, workProfileOrganizationName);
-        int i = (primaryVpnName == null && workProfileVpnName == null) ? R.drawable.ic_info_outline : R.drawable.ic_qs_vpn;
+        boolean isProfileOwnerOfOrganizationOwnedDevice = this.mSecurityController.isProfileOwnerOfOrganizationOwnedDevice();
+        if ((!isDeviceManaged || z2) && !hasCACertInCurrentUser && !hasCACertInWorkProfile && primaryVpnName == null && workProfileVpnName == null && !isProfileOwnerOfOrganizationOwnedDevice) {
+            z = false;
+        }
+        this.mIsVisible = z;
+        this.mFooterTextContent = getFooterText(isDeviceManaged, hasWorkProfile, hasCACertInCurrentUser, hasCACertInWorkProfile, isNetworkLoggingEnabled, primaryVpnName, workProfileVpnName, deviceOwnerOrganizationName, workProfileOrganizationName, isProfileOwnerOfOrganizationOwnedDevice);
+        int i = C0010R$drawable.ic_info_outline;
+        if (!(primaryVpnName == null && workProfileVpnName == null)) {
+            if (this.mSecurityController.isVpnBranded()) {
+                i = C0010R$drawable.stat_sys_branded_vpn;
+            } else {
+                i = C0010R$drawable.stat_sys_vpn_ic;
+            }
+        }
         if (this.mFooterIconId != i) {
             this.mFooterIconId = i;
             this.mMainHandler.post(this.mUpdateIcon);
@@ -141,63 +173,70 @@ public class QSSecurityFooter implements View.OnClickListener, DialogInterface.O
     }
 
     /* access modifiers changed from: protected */
-    public CharSequence getFooterText(boolean z, boolean z2, boolean z3, boolean z4, boolean z5, String str, String str2, CharSequence charSequence, CharSequence charSequence2) {
-        if (z) {
-            if (z3 || z4 || z5) {
-                if (charSequence == null) {
-                    return this.mContext.getString(R.string.quick_settings_disclosure_management_monitoring);
+    public CharSequence getFooterText(boolean z, boolean z2, boolean z3, boolean z4, boolean z5, String str, String str2, CharSequence charSequence, CharSequence charSequence2, boolean z6) {
+        if (!z) {
+            if (z4) {
+                if (charSequence2 == null) {
+                    return this.mContext.getString(C0018R$string.quick_settings_disclosure_managed_profile_monitoring);
                 }
-                return this.mContext.getString(R.string.quick_settings_disclosure_named_management_monitoring, new Object[]{charSequence});
-            } else if (str == null || str2 == null) {
-                if (str == null && str2 == null) {
-                    if (charSequence == null) {
-                        return this.mContext.getString(R.string.quick_settings_disclosure_management);
+                return this.mContext.getString(C0018R$string.quick_settings_disclosure_named_managed_profile_monitoring, new Object[]{charSequence2});
+            } else if (z3) {
+                return this.mContext.getString(C0018R$string.quick_settings_disclosure_monitoring);
+            } else {
+                if (str != null && str2 != null) {
+                    return this.mContext.getString(C0018R$string.quick_settings_disclosure_vpns);
+                }
+                if (str2 != null) {
+                    return this.mContext.getString(C0018R$string.quick_settings_disclosure_managed_profile_named_vpn, new Object[]{str2});
+                } else if (str != null) {
+                    if (z2) {
+                        return this.mContext.getString(C0018R$string.quick_settings_disclosure_personal_profile_named_vpn, new Object[]{str});
                     }
-                    return this.mContext.getString(R.string.quick_settings_disclosure_named_management, new Object[]{charSequence});
-                } else if (charSequence == null) {
-                    Context context = this.mContext;
-                    Object[] objArr = new Object[1];
-                    if (str == null) {
-                        str = str2;
-                    }
-                    objArr[0] = str;
-                    return context.getString(R.string.quick_settings_disclosure_management_named_vpn, objArr);
+                    return this.mContext.getString(C0018R$string.quick_settings_disclosure_named_vpn, new Object[]{str});
+                } else if (!z6) {
+                    return null;
                 } else {
-                    Context context2 = this.mContext;
-                    Object[] objArr2 = new Object[2];
-                    objArr2[0] = charSequence;
-                    if (str == null) {
-                        str = str2;
+                    if (charSequence2 == null) {
+                        return this.mContext.getString(C0018R$string.quick_settings_disclosure_management);
                     }
-                    objArr2[1] = str;
-                    return context2.getString(R.string.quick_settings_disclosure_named_management_named_vpn, objArr2);
+                    return this.mContext.getString(C0018R$string.quick_settings_disclosure_named_management, new Object[]{charSequence2});
                 }
+            }
+        } else if (z3 || z4 || z5) {
+            if (charSequence == null) {
+                return this.mContext.getString(C0018R$string.quick_settings_disclosure_management_monitoring);
+            }
+            return this.mContext.getString(C0018R$string.quick_settings_disclosure_named_management_monitoring, new Object[]{charSequence});
+        } else if (str == null || str2 == null) {
+            if (str == null && str2 == null) {
+                if (charSequence == null) {
+                    return this.mContext.getString(C0018R$string.quick_settings_disclosure_management);
+                }
+                return this.mContext.getString(C0018R$string.quick_settings_disclosure_named_management, new Object[]{charSequence});
             } else if (charSequence == null) {
-                return this.mContext.getString(R.string.quick_settings_disclosure_management_vpns);
-            } else {
-                return this.mContext.getString(R.string.quick_settings_disclosure_named_management_vpns, new Object[]{charSequence});
-            }
-        } else if (z4) {
-            if (charSequence2 == null) {
-                return this.mContext.getString(R.string.quick_settings_disclosure_managed_profile_monitoring);
-            }
-            return this.mContext.getString(R.string.quick_settings_disclosure_named_managed_profile_monitoring, new Object[]{charSequence2});
-        } else if (z3) {
-            return this.mContext.getString(R.string.quick_settings_disclosure_monitoring);
-        } else {
-            if (str != null && str2 != null) {
-                return this.mContext.getString(R.string.quick_settings_disclosure_vpns);
-            }
-            if (str2 != null) {
-                return this.mContext.getString(R.string.quick_settings_disclosure_managed_profile_named_vpn, new Object[]{str2});
-            } else if (str == null) {
-                return null;
-            } else {
-                if (z2) {
-                    return this.mContext.getString(R.string.quick_settings_disclosure_personal_profile_named_vpn, new Object[]{str});
+                Context context = this.mContext;
+                int i = C0018R$string.quick_settings_disclosure_management_named_vpn;
+                Object[] objArr = new Object[1];
+                if (str == null) {
+                    str = str2;
                 }
-                return this.mContext.getString(R.string.quick_settings_disclosure_named_vpn, new Object[]{str});
+                objArr[0] = str;
+                return context.getString(i, objArr);
+            } else {
+                Context context2 = this.mContext;
+                int i2 = C0018R$string.quick_settings_disclosure_named_management_named_vpn;
+                Object[] objArr2 = new Object[2];
+                objArr2[0] = charSequence;
+                if (str == null) {
+                    str = str2;
+                }
+                objArr2[1] = str;
+                return context2.getString(i2, objArr2);
             }
+        } else if (charSequence == null) {
+            return this.mContext.getString(C0018R$string.quick_settings_disclosure_management_vpns);
+        } else {
+            return this.mContext.getString(C0018R$string.quick_settings_disclosure_named_management_vpns, new Object[]{charSequence});
         }
     }
 
@@ -211,8 +250,10 @@ public class QSSecurityFooter implements View.OnClickListener, DialogInterface.O
 
     private void createDialog() {
         boolean isDeviceManaged = this.mSecurityController.isDeviceManaged();
+        boolean isProfileOwnerOfOrganizationOwnedDevice = this.mSecurityController.isProfileOwnerOfOrganizationOwnedDevice();
         boolean hasWorkProfile = this.mSecurityController.hasWorkProfile();
         CharSequence deviceOwnerOrganizationName = this.mSecurityController.getDeviceOwnerOrganizationName();
+        CharSequence workProfileOrganizationName = this.mSecurityController.getWorkProfileOrganizationName();
         boolean hasCACertInCurrentUser = this.mSecurityController.hasCACertInCurrentUser();
         boolean hasCACertInWorkProfile = this.mSecurityController.hasCACertInWorkProfile();
         boolean isNetworkLoggingEnabled = this.mSecurityController.isNetworkLoggingEnabled();
@@ -221,63 +262,103 @@ public class QSSecurityFooter implements View.OnClickListener, DialogInterface.O
         SystemUIDialog systemUIDialog = new SystemUIDialog(this.mContext);
         this.mDialog = systemUIDialog;
         systemUIDialog.requestWindowFeature(1);
-        View inflate = LayoutInflater.from(this.mContext).inflate(R.layout.quick_settings_footer_dialog, (ViewGroup) null, false);
+        boolean z = false;
+        View inflate = LayoutInflater.from(new ContextThemeWrapper(this.mContext, C0019R$style.Theme_SystemUI_Dialog)).inflate(C0014R$layout.quick_settings_footer_dialog, (ViewGroup) null, false);
         this.mDialog.setView(inflate);
         this.mDialog.setButton(-1, getPositiveButton(), this);
-        CharSequence managementMessage = getManagementMessage(isDeviceManaged, deviceOwnerOrganizationName);
+        CharSequence managementMessage = getManagementMessage(isDeviceManaged, deviceOwnerOrganizationName, isProfileOwnerOfOrganizationOwnedDevice, workProfileOrganizationName);
         if (managementMessage == null) {
-            inflate.findViewById(R.id.device_management_disclosures).setVisibility(8);
+            inflate.findViewById(C0012R$id.device_management_disclosures).setVisibility(8);
         } else {
-            inflate.findViewById(R.id.device_management_disclosures).setVisibility(0);
-            ((TextView) inflate.findViewById(R.id.device_management_warning)).setText(managementMessage);
-            this.mDialog.setButton(-2, getSettingsButton(), this);
+            inflate.findViewById(C0012R$id.device_management_disclosures).setVisibility(0);
+            ((TextView) inflate.findViewById(C0012R$id.device_management_warning)).setText(managementMessage);
+            if (!isProfileOwnerOfOrganizationOwnedDevice) {
+                this.mDialog.setButton(-2, getSettingsButton(), this);
+            }
         }
         CharSequence caCertsMessage = getCaCertsMessage(isDeviceManaged, hasCACertInCurrentUser, hasCACertInWorkProfile);
         if (caCertsMessage == null) {
-            inflate.findViewById(R.id.ca_certs_disclosures).setVisibility(8);
+            inflate.findViewById(C0012R$id.ca_certs_disclosures).setVisibility(8);
         } else {
-            inflate.findViewById(R.id.ca_certs_disclosures).setVisibility(0);
-            TextView textView = (TextView) inflate.findViewById(R.id.ca_certs_warning);
+            inflate.findViewById(C0012R$id.ca_certs_disclosures).setVisibility(0);
+            TextView textView = (TextView) inflate.findViewById(C0012R$id.ca_certs_warning);
             textView.setText(caCertsMessage);
             textView.setMovementMethod(new LinkMovementMethod());
         }
         CharSequence networkLoggingMessage = getNetworkLoggingMessage(isNetworkLoggingEnabled);
         if (networkLoggingMessage == null) {
-            inflate.findViewById(R.id.network_logging_disclosures).setVisibility(8);
+            inflate.findViewById(C0012R$id.network_logging_disclosures).setVisibility(8);
         } else {
-            inflate.findViewById(R.id.network_logging_disclosures).setVisibility(0);
-            ((TextView) inflate.findViewById(R.id.network_logging_warning)).setText(networkLoggingMessage);
+            inflate.findViewById(C0012R$id.network_logging_disclosures).setVisibility(0);
+            ((TextView) inflate.findViewById(C0012R$id.network_logging_warning)).setText(networkLoggingMessage);
         }
         CharSequence vpnMessage = getVpnMessage(isDeviceManaged, hasWorkProfile, primaryVpnName, workProfileVpnName);
         if (vpnMessage == null) {
-            inflate.findViewById(R.id.vpn_disclosures).setVisibility(8);
+            inflate.findViewById(C0012R$id.vpn_disclosures).setVisibility(8);
         } else {
-            inflate.findViewById(R.id.vpn_disclosures).setVisibility(0);
-            TextView textView2 = (TextView) inflate.findViewById(R.id.vpn_warning);
+            inflate.findViewById(C0012R$id.vpn_disclosures).setVisibility(0);
+            TextView textView2 = (TextView) inflate.findViewById(C0012R$id.vpn_warning);
             textView2.setText(vpnMessage);
             textView2.setMovementMethod(new LinkMovementMethod());
         }
+        boolean z2 = managementMessage != null;
+        boolean z3 = caCertsMessage != null;
+        boolean z4 = networkLoggingMessage != null;
+        if (vpnMessage != null) {
+            z = true;
+        }
+        configSubtitleVisibility(z2, z3, z4, z, inflate);
         this.mDialog.show();
         this.mDialog.getWindow().setLayout(-1, -2);
     }
 
+    /* access modifiers changed from: protected */
+    public void configSubtitleVisibility(boolean z, boolean z2, boolean z3, boolean z4, View view) {
+        if (!z) {
+            int i = 0;
+            if (z2) {
+                i = 1;
+            }
+            if (z3) {
+                i++;
+            }
+            if (z4) {
+                i++;
+            }
+            if (i == 1) {
+                if (z2) {
+                    view.findViewById(C0012R$id.ca_certs_subtitle).setVisibility(8);
+                }
+                if (z3) {
+                    view.findViewById(C0012R$id.network_logging_subtitle).setVisibility(8);
+                }
+                if (z4) {
+                    view.findViewById(C0012R$id.vpn_subtitle).setVisibility(8);
+                }
+            }
+        }
+    }
+
     private String getSettingsButton() {
-        return this.mContext.getString(R.string.monitoring_button_view_policies);
+        return this.mContext.getString(C0018R$string.monitoring_button_view_policies);
     }
 
     private String getPositiveButton() {
-        return this.mContext.getString(R.string.quick_settings_done);
+        return this.mContext.getString(C0018R$string.ok);
     }
 
     /* access modifiers changed from: protected */
-    public CharSequence getManagementMessage(boolean z, CharSequence charSequence) {
-        if (!z) {
+    public CharSequence getManagementMessage(boolean z, CharSequence charSequence, boolean z2, CharSequence charSequence2) {
+        if (!z && !z2) {
             return null;
         }
-        if (charSequence == null) {
-            return this.mContext.getString(R.string.monitoring_description_management);
+        if (z && charSequence != null) {
+            return this.mContext.getString(C0018R$string.monitoring_description_named_management, new Object[]{charSequence});
+        } else if (!z2 || charSequence2 == null) {
+            return this.mContext.getString(C0018R$string.monitoring_description_management);
+        } else {
+            return this.mContext.getString(C0018R$string.monitoring_description_named_management, new Object[]{charSequence2});
         }
-        return this.mContext.getString(R.string.monitoring_description_named_management, new Object[]{charSequence});
     }
 
     /* access modifiers changed from: protected */
@@ -286,12 +367,12 @@ public class QSSecurityFooter implements View.OnClickListener, DialogInterface.O
             return null;
         }
         if (z) {
-            return this.mContext.getString(R.string.monitoring_description_management_ca_certificate);
+            return this.mContext.getString(C0018R$string.monitoring_description_management_ca_certificate);
         }
         if (z3) {
-            return this.mContext.getString(R.string.monitoring_description_managed_profile_ca_certificate);
+            return this.mContext.getString(C0018R$string.monitoring_description_managed_profile_ca_certificate);
         }
-        return this.mContext.getString(R.string.monitoring_description_ca_certificate);
+        return this.mContext.getString(C0018R$string.monitoring_description_ca_certificate);
     }
 
     /* access modifiers changed from: protected */
@@ -299,7 +380,7 @@ public class QSSecurityFooter implements View.OnClickListener, DialogInterface.O
         if (!z) {
             return null;
         }
-        return this.mContext.getString(R.string.monitoring_description_management_network_logging);
+        return this.mContext.getString(C0018R$string.monitoring_description_management_network_logging);
     }
 
     /* access modifiers changed from: protected */
@@ -311,26 +392,27 @@ public class QSSecurityFooter implements View.OnClickListener, DialogInterface.O
         if (z) {
             if (str == null || str2 == null) {
                 Context context = this.mContext;
+                int i = C0018R$string.monitoring_description_named_vpn;
                 Object[] objArr = new Object[1];
                 if (str == null) {
                     str = str2;
                 }
                 objArr[0] = str;
-                spannableStringBuilder.append(context.getString(R.string.monitoring_description_named_vpn, objArr));
+                spannableStringBuilder.append(context.getString(i, objArr));
             } else {
-                spannableStringBuilder.append(this.mContext.getString(R.string.monitoring_description_two_named_vpns, new Object[]{str, str2}));
+                spannableStringBuilder.append(this.mContext.getString(C0018R$string.monitoring_description_two_named_vpns, new Object[]{str, str2}));
             }
         } else if (str != null && str2 != null) {
-            spannableStringBuilder.append(this.mContext.getString(R.string.monitoring_description_two_named_vpns, new Object[]{str, str2}));
+            spannableStringBuilder.append(this.mContext.getString(C0018R$string.monitoring_description_two_named_vpns, new Object[]{str, str2}));
         } else if (str2 != null) {
-            spannableStringBuilder.append(this.mContext.getString(R.string.monitoring_description_managed_profile_named_vpn, new Object[]{str2}));
+            spannableStringBuilder.append(this.mContext.getString(C0018R$string.monitoring_description_managed_profile_named_vpn, new Object[]{str2}));
         } else if (z2) {
-            spannableStringBuilder.append(this.mContext.getString(R.string.monitoring_description_personal_profile_named_vpn, new Object[]{str}));
+            spannableStringBuilder.append(this.mContext.getString(C0018R$string.monitoring_description_personal_profile_named_vpn, new Object[]{str}));
         } else {
-            spannableStringBuilder.append(this.mContext.getString(R.string.monitoring_description_named_vpn, new Object[]{str}));
+            spannableStringBuilder.append(this.mContext.getString(C0018R$string.monitoring_description_named_vpn, new Object[]{str}));
         }
-        spannableStringBuilder.append(this.mContext.getString(R.string.monitoring_description_vpn_settings_separator));
-        spannableStringBuilder.append(this.mContext.getString(R.string.monitoring_description_vpn_settings), new VpnSpan(), 0);
+        spannableStringBuilder.append(this.mContext.getString(C0018R$string.monitoring_description_vpn_settings_separator));
+        spannableStringBuilder.append(this.mContext.getString(C0018R$string.monitoring_description_vpn_settings), new VpnSpan(), 0);
         return spannableStringBuilder;
     }
 

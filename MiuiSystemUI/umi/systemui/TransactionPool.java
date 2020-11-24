@@ -4,7 +4,7 @@ import android.util.Pools;
 import android.view.SurfaceControl;
 
 public class TransactionPool {
-    public final Pools.SynchronizedPool<SurfaceControl.Transaction> mTransactionPool = new Pools.SynchronizedPool<>(4);
+    private final Pools.SynchronizedPool<SurfaceControl.Transaction> mTransactionPool = new Pools.SynchronizedPool<>(4);
 
     public SurfaceControl.Transaction acquire() {
         SurfaceControl.Transaction transaction = (SurfaceControl.Transaction) this.mTransactionPool.acquire();

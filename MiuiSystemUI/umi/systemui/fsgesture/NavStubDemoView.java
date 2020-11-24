@@ -28,7 +28,9 @@ import android.view.WindowManager;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import com.android.systemui.plugins.R;
+import com.android.systemui.C0004R$anim;
+import com.android.systemui.C0009R$dimen;
+import com.android.systemui.C0010R$drawable;
 import miui.util.CustomizeUtil;
 
 public class NavStubDemoView extends View {
@@ -244,7 +246,7 @@ public class NavStubDemoView extends View {
             }
         });
         this.mRecentsAnimator.setDuration(300);
-        Bitmap decodeResource = BitmapFactory.decodeResource(getResources(), R.drawable.app_note);
+        Bitmap decodeResource = BitmapFactory.decodeResource(getResources(), C0010R$drawable.app_note);
         this.mFakeBitmap = decodeResource;
         int min = Math.min(decodeResource.getHeight(), (int) (((float) this.mFakeBitmap.getWidth()) * ((((float) this.mShowHeight) * 1.0f) / ((float) this.mShowWidth))));
         Bitmap bitmap = this.mFakeBitmap;
@@ -256,7 +258,7 @@ public class NavStubDemoView extends View {
         this.mDragBitmap = createRoundCornerBmp;
         createRoundCornerBmp.setHasAlpha(false);
         this.mDragBitmap.prepareToDraw();
-        this.mAppIcon = BitmapFactory.decodeResource(getResources(), R.drawable.note_icon);
+        this.mAppIcon = BitmapFactory.decodeResource(getResources(), C0010R$drawable.note_icon);
     }
 
     private Bitmap createRoundCornerBmp(Bitmap bitmap) {
@@ -457,7 +459,7 @@ public class NavStubDemoView extends View {
                             intent.putExtra("FULLY_SHOW_STEP", 2);
                             intent.putExtra("IS_FROM_PROVISION", NavStubDemoView.this.isFromPro);
                             NavStubDemoView.this.getContext().startActivity(intent);
-                            NavStubDemoView.this.curActivity.overridePendingTransition(R.anim.activity_start_enter, R.anim.activity_start_exit);
+                            NavStubDemoView.this.curActivity.overridePendingTransition(C0004R$anim.activity_start_enter, C0004R$anim.activity_start_exit);
                             NavStubDemoView.this.curActivity.finish();
                         }
                     }, 1000);
@@ -544,7 +546,7 @@ public class NavStubDemoView extends View {
     }
 
     private void startRecentTaskAnim() {
-        this.mShowHeight -= CustomizeUtil.HAS_NOTCH ? getContext().getResources().getDimensionPixelSize(R.dimen.status_bar_height) : 0;
+        this.mShowHeight -= CustomizeUtil.HAS_NOTCH ? getContext().getResources().getDimensionPixelSize(C0009R$dimen.status_bar_height) : 0;
         this.mIsAppToRecents = true;
         float width = (((float) this.mRecentsFirstCardBound.width()) * 1.0f) / ((float) this.mShowWidth);
         ValueAnimator ofPropertyValuesHolder = ValueAnimator.ofPropertyValuesHolder(new PropertyValuesHolder[]{PropertyValuesHolder.ofFloat("scale", new float[]{this.mCurScale, width}), PropertyValuesHolder.ofInt("bottomDec", new int[]{(int) (this.mCurScale * ((float) this.mShowHeight)), (int) (((float) this.mRecentsFirstCardBound.height()) / width)})});
@@ -560,7 +562,7 @@ public class NavStubDemoView extends View {
                             intent.putExtra("DEMO_TYPE", "DEMO_FULLY_SHOW");
                             intent.putExtra("IS_FROM_PROVISION", NavStubDemoView.this.isFromPro);
                             NavStubDemoView.this.getContext().startActivity(intent);
-                            NavStubDemoView.this.curActivity.overridePendingTransition(R.anim.activity_start_enter, R.anim.activity_start_exit);
+                            NavStubDemoView.this.curActivity.overridePendingTransition(C0004R$anim.activity_start_enter, C0004R$anim.activity_start_exit);
                             NavStubDemoView.this.curActivity.finish();
                         }
                     }, 1000);

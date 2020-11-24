@@ -8,7 +8,20 @@ public class DirectionEvaluator {
                 return z ? 5.5f : 0.0f;
             }
             if (i != 2) {
-                return i != 4 ? i != 5 ? (i == 6 && ((double) f) > 0.0d && ((double) f2) > 0.0d) ? 5.5f : 0.0f : (((double) f) >= 0.0d || ((double) f2) <= 0.0d) ? 0.0f : 5.5f : (!z || ((double) f2) >= 0.0d) ? 5.5f : 0.0f;
+                if (i != 4) {
+                    if (i == 5) {
+                        return (((double) f) >= 0.0d || ((double) f2) <= 0.0d) ? 0.0f : 5.5f;
+                    }
+                    if (i == 6) {
+                        return (((double) f) <= 0.0d || ((double) f2) <= 0.0d) ? 0.0f : 5.5f;
+                    }
+                    if (i != 8) {
+                        if (i != 9) {
+                            return 0.0f;
+                        }
+                    }
+                }
+                return (!z || ((double) f2) >= 0.0d) ? 5.5f : 0.0f;
             }
         }
         return (!z || ((double) f2) <= 0.0d) ? 5.5f : 0.0f;

@@ -12,8 +12,9 @@ import android.util.AttributeSet;
 import android.util.Property;
 import android.view.View;
 import android.view.animation.Interpolator;
+import com.android.systemui.C0008R$color;
+import com.android.systemui.C0009R$dimen;
 import com.android.systemui.Interpolators;
-import com.android.systemui.plugins.R;
 
 public class DividerHandleView extends View {
     private static final Property<DividerHandleView, Integer> HEIGHT_PROPERTY;
@@ -28,7 +29,7 @@ public class DividerHandleView extends View {
     private final int mHeight;
     private final Paint mPaint;
     private boolean mTouching;
-    private final int mWidth = getResources().getDimensionPixelSize(R.dimen.docked_divider_handle_width);
+    private final int mWidth = getResources().getDimensionPixelSize(C0009R$dimen.docked_divider_handle_width);
 
     public boolean hasOverlappingRendering() {
         return false;
@@ -62,9 +63,9 @@ public class DividerHandleView extends View {
         super(context, attributeSet);
         Paint paint = new Paint();
         this.mPaint = paint;
-        paint.setColor(getResources().getColor(R.color.docked_divider_handle, (Resources.Theme) null));
+        paint.setColor(getResources().getColor(C0008R$color.docked_divider_handle, (Resources.Theme) null));
         this.mPaint.setAntiAlias(true);
-        int dimensionPixelSize = getResources().getDimensionPixelSize(R.dimen.docked_divider_handle_height);
+        int dimensionPixelSize = getResources().getDimensionPixelSize(C0009R$dimen.docked_divider_handle_height);
         this.mHeight = dimensionPixelSize;
         int i = this.mWidth;
         this.mCurrentWidth = i;

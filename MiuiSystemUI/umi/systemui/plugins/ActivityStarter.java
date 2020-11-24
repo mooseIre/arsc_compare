@@ -2,11 +2,12 @@ package com.android.systemui.plugins;
 
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.view.View;
 import com.android.systemui.plugins.annotations.ProvidesInterface;
 
-@ProvidesInterface(version = 1)
+@ProvidesInterface(version = 2)
 public interface ActivityStarter {
-    public static final int VERSION = 1;
+    public static final int VERSION = 2;
 
     public interface Callback {
         void onActivityStarted(int i);
@@ -15,8 +16,6 @@ public interface ActivityStarter {
     public interface OnDismissAction {
         boolean onDismiss();
     }
-
-    void collapsePanels();
 
     void dismissKeyguardThenExecute(OnDismissAction onDismissAction, Runnable runnable, boolean z);
 
@@ -35,4 +34,8 @@ public interface ActivityStarter {
     void startActivity(Intent intent, boolean z, boolean z2, int i);
 
     void startPendingIntentDismissingKeyguard(PendingIntent pendingIntent);
+
+    void startPendingIntentDismissingKeyguard(PendingIntent pendingIntent, Runnable runnable);
+
+    void startPendingIntentDismissingKeyguard(PendingIntent pendingIntent, Runnable runnable, View view);
 }

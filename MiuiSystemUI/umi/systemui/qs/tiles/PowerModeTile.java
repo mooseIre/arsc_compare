@@ -1,5 +1,6 @@
 package com.android.systemui.qs.tiles;
 
+import android.app.ActivityManager;
 import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Intent;
@@ -9,8 +10,8 @@ import android.os.UserHandle;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.widget.Switch;
-import com.android.keyguard.KeyguardUpdateMonitor;
-import com.android.systemui.plugins.R;
+import com.android.systemui.C0010R$drawable;
+import com.android.systemui.C0018R$string;
 import com.android.systemui.plugins.qs.QSTile;
 import com.android.systemui.qs.QSHost;
 import com.android.systemui.qs.tileimpl.QSTileImpl;
@@ -64,12 +65,12 @@ public class PowerModeTile extends QSTileImpl<QSTile.BooleanState> {
             str = "high";
         }
         SystemProperties.set("persist.sys.aries.power_profile", str);
-        Settings.System.putStringForUser(this.mResolver, "power_mode", str, KeyguardUpdateMonitor.getCurrentUser());
+        Settings.System.putStringForUser(this.mResolver, "power_mode", str, ActivityManager.getCurrentUser());
         this.mContext.sendBroadcastAsUser(new Intent("miui.intent.action.POWER_MODE_CHANGE"), UserHandle.CURRENT);
     }
 
     public CharSequence getTileLabel() {
-        return this.mContext.getString(R.string.quick_settings_powermode_label);
+        return this.mContext.getString(C0018R$string.quick_settings_powermode_label);
     }
 
     /* access modifiers changed from: protected */
@@ -79,18 +80,18 @@ public class PowerModeTile extends QSTileImpl<QSTile.BooleanState> {
             stringForUser = "middle";
         }
         booleanState.value = "high".equals(stringForUser);
-        booleanState.label = this.mContext.getString(R.string.quick_settings_powermode_label);
+        booleanState.label = this.mContext.getString(C0018R$string.quick_settings_powermode_label);
         if (booleanState.value) {
             booleanState.state = 2;
-            booleanState.icon = QSTileImpl.ResourceIcon.get(R.drawable.ic_qs_power_high_on);
+            booleanState.icon = QSTileImpl.ResourceIcon.get(C0010R$drawable.ic_qs_power_high_on);
         } else {
             booleanState.state = 1;
-            booleanState.icon = QSTileImpl.ResourceIcon.get(R.drawable.ic_qs_power_high_off);
+            booleanState.icon = QSTileImpl.ResourceIcon.get(C0010R$drawable.ic_qs_power_high_off);
         }
         StringBuilder sb = new StringBuilder();
         sb.append(booleanState.label);
         sb.append(",");
-        sb.append(this.mContext.getString(booleanState.value ? R.string.switch_bar_on : R.string.switch_bar_off));
+        sb.append(this.mContext.getString(booleanState.value ? C0018R$string.switch_bar_on : C0018R$string.switch_bar_off));
         booleanState.contentDescription = sb.toString();
         booleanState.expandedAccessibilityClassName = Switch.class.getName();
     }

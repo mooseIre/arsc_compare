@@ -7,8 +7,9 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.View;
-import com.android.systemui.plugins.R;
-import com.android.systemui.util.Utils;
+import com.android.settingslib.Utils;
+import com.android.systemui.C0008R$color;
+import com.android.systemui.C0009R$dimen;
 
 public class DataUsageGraph extends View {
     private long mLimitLevel;
@@ -26,11 +27,19 @@ public class DataUsageGraph extends View {
     public DataUsageGraph(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
         Resources resources = context.getResources();
-        this.mTrackColor = Utils.getDefaultColor(context, R.color.data_usage_graph_track);
-        this.mWarningColor = Utils.getDefaultColor(context, R.color.data_usage_graph_warning);
-        this.mUsageColor = Utils.getColorAccent(context);
-        this.mOverlimitColor = Utils.getColorError(context);
-        this.mMarkerWidth = resources.getDimensionPixelSize(R.dimen.data_usage_graph_marker_width);
+        this.mTrackColor = Utils.getColorStateListDefaultColor(context, C0008R$color.data_usage_graph_track);
+        this.mWarningColor = Utils.getColorStateListDefaultColor(context, C0008R$color.data_usage_graph_warning);
+        this.mUsageColor = Utils.getColorAccentDefaultColor(context);
+        this.mOverlimitColor = Utils.getColorErrorDefaultColor(context);
+        this.mMarkerWidth = resources.getDimensionPixelSize(C0009R$dimen.data_usage_graph_marker_width);
+    }
+
+    public void setLevels(long j, long j2, long j3) {
+        this.mLimitLevel = Math.max(0, j);
+        this.mWarningLevel = Math.max(0, j2);
+        this.mUsageLevel = Math.max(0, j3);
+        this.mMaxLevel = Math.max(Math.max(Math.max(this.mLimitLevel, this.mWarningLevel), this.mUsageLevel), 1);
+        postInvalidate();
     }
 
     /* access modifiers changed from: protected */

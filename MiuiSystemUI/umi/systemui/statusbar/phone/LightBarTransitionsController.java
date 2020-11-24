@@ -1,33 +1,33 @@
 package com.android.systemui.statusbar.phone;
 
 import android.animation.ValueAnimator;
-import android.content.ComponentName;
 import android.content.Context;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.IBinder;
 import android.os.SystemClock;
+import android.util.MathUtils;
 import android.util.TimeUtils;
-import com.android.internal.os.SomeArgs;
-import com.android.internal.statusbar.StatusBarIcon;
 import com.android.systemui.Dependency;
 import com.android.systemui.Dumpable;
 import com.android.systemui.Interpolators;
-import com.android.systemui.SystemUI;
+import com.android.systemui.plugins.statusbar.StatusBarStateController;
 import com.android.systemui.statusbar.CommandQueue;
-import com.android.systemui.statusbar.policy.KeyguardMonitor;
+import com.android.systemui.statusbar.policy.KeyguardStateController;
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
 
-public class LightBarTransitionsController implements Dumpable, CommandQueue.Callbacks {
+public class LightBarTransitionsController implements Dumpable, CommandQueue.Callbacks, StatusBarStateController.StateListener {
     private final DarkIntensityApplier mApplier;
+    private final CommandQueue mCommandQueue;
+    private final Context mContext;
     private float mDarkIntensity;
+    private int mDisplayId;
+    private float mDozeAmount;
     private final Handler mHandler;
-    private boolean mIsDark;
-    private final KeyguardMonitor mKeyguardMonitor;
+    private final KeyguardStateController mKeyguardStateController;
     private float mNextDarkIntensity;
     private float mPendingDarkIntensity;
+    private final StatusBarStateController mStatusBarStateController;
     private ValueAnimator mTintAnimator;
     private boolean mTintChangePending;
     /* access modifiers changed from: private */
@@ -40,137 +40,68 @@ public class LightBarTransitionsController implements Dumpable, CommandQueue.Cal
     private long mTransitionDeferringDuration;
     private long mTransitionDeferringStartTime;
     private boolean mTransitionPending;
-    private boolean mUseTint;
 
     public interface DarkIntensityApplier {
         void applyDarkIntensity(float f);
+
+        int getTintAnimationDuration();
     }
 
-    public void addQsTile(ComponentName componentName) {
+    public void onStateChanged(int i) {
     }
 
-    public void animateCollapsePanels(int i) {
-    }
-
-    public void animateExpandNotificationsPanel() {
-    }
-
-    public void animateExpandSettingsPanel(String str) {
-    }
-
-    public void appTransitionFinished() {
-    }
-
-    public void cancelPreloadRecentApps() {
-    }
-
-    public void clickTile(ComponentName componentName) {
-    }
-
-    public void disable(int i, int i2, boolean z) {
-    }
-
-    public void dismissKeyboardShortcutsMenu() {
-    }
-
-    public void handleShowGlobalActionsMenu() {
-    }
-
-    public void handleSystemNavigationKey(int i) {
-    }
-
-    public void hideFingerprintDialog() {
-    }
-
-    public void hideRecentApps(boolean z, boolean z2) {
-    }
-
-    public void onFingerprintAuthenticated() {
-    }
-
-    public void onFingerprintError(String str) {
-    }
-
-    public void onFingerprintHelp(String str) {
-    }
-
-    public void preloadRecentApps() {
-    }
-
-    public void remQsTile(ComponentName componentName) {
-    }
-
-    public void removeIcon(String str) {
-    }
-
-    public void setIcon(String str, StatusBarIcon statusBarIcon) {
-    }
-
-    public void setImeWindowStatus(IBinder iBinder, int i, int i2, boolean z) {
-    }
-
-    public void setStatus(int i, String str, Bundle bundle) {
-    }
-
-    public void setSystemUiVisibility(int i, int i2, int i3, int i4, Rect rect, Rect rect2) {
-    }
-
-    public void setWindowState(int i, int i2) {
-    }
-
-    public void showAssistDisclosure() {
-    }
-
-    public void showFingerprintDialog(SomeArgs someArgs) {
-    }
-
-    public void showPictureInPictureMenu() {
-    }
-
-    public void showRecentApps(boolean z, boolean z2) {
-    }
-
-    public void showScreenPinningRequest(int i) {
-    }
-
-    public void startAssist(Bundle bundle) {
-    }
-
-    public void toggleKeyboardShortcutsMenu(int i) {
-    }
-
-    public void toggleRecentApps() {
-    }
-
-    public void toggleSplitScreen() {
-    }
-
-    public void topAppWindowChanged(boolean z) {
-    }
-
-    public LightBarTransitionsController(Context context, DarkIntensityApplier darkIntensityApplier) {
+    public LightBarTransitionsController(Context context, DarkIntensityApplier darkIntensityApplier, CommandQueue commandQueue) {
         this.mApplier = darkIntensityApplier;
         this.mHandler = new Handler();
-        this.mKeyguardMonitor = (KeyguardMonitor) Dependency.get(KeyguardMonitor.class);
-        ((CommandQueue) SystemUI.getComponent(context, CommandQueue.class)).addCallbacks(this);
+        this.mKeyguardStateController = (KeyguardStateController) Dependency.get(KeyguardStateController.class);
+        this.mStatusBarStateController = (StatusBarStateController) Dependency.get(StatusBarStateController.class);
+        this.mCommandQueue = commandQueue;
+        commandQueue.addCallback((CommandQueue.Callbacks) this);
+        this.mStatusBarStateController.addCallback(this);
+        this.mDozeAmount = this.mStatusBarStateController.getDozeAmount();
+        this.mContext = context;
+        this.mDisplayId = context.getDisplayId();
     }
 
-    public void appTransitionPending(boolean z) {
-        if (!this.mKeyguardMonitor.isKeyguardGoingAway() || z) {
+    public void destroy(Context context) {
+        this.mCommandQueue.removeCallback((CommandQueue.Callbacks) this);
+        this.mStatusBarStateController.removeCallback(this);
+    }
+
+    public void saveState(Bundle bundle) {
+        ValueAnimator valueAnimator = this.mTintAnimator;
+        bundle.putFloat("dark_intensity", (valueAnimator == null || !valueAnimator.isRunning()) ? this.mDarkIntensity : this.mNextDarkIntensity);
+    }
+
+    public void restoreState(Bundle bundle) {
+        setIconTintInternal(bundle.getFloat("dark_intensity", 0.0f));
+        this.mNextDarkIntensity = this.mDarkIntensity;
+    }
+
+    public void appTransitionPending(int i, boolean z) {
+        if (this.mDisplayId != i) {
+            return;
+        }
+        if (!this.mKeyguardStateController.isKeyguardGoingAway() || z) {
             this.mTransitionPending = true;
         }
     }
 
-    public void appTransitionCancelled() {
-        if (this.mTransitionPending && this.mTintChangePending) {
-            this.mTintChangePending = false;
-            animateIconTint(this.mPendingDarkIntensity, 0, this.mUseTint ? 500 : 120);
+    public void appTransitionCancelled(int i) {
+        if (this.mDisplayId == i) {
+            if (this.mTransitionPending && this.mTintChangePending) {
+                this.mTintChangePending = false;
+                animateIconTint(this.mPendingDarkIntensity, 0, (long) this.mApplier.getTintAnimationDuration());
+            }
+            this.mTransitionPending = false;
         }
-        this.mTransitionPending = false;
     }
 
-    public void appTransitionStarting(long j, long j2, boolean z) {
-        if (!this.mKeyguardMonitor.isKeyguardGoingAway() || z) {
+    public void appTransitionStarting(int i, long j, long j2, boolean z) {
+        if (this.mDisplayId != i) {
+            return;
+        }
+        if (!this.mKeyguardStateController.isKeyguardGoingAway() || z) {
             if (this.mTransitionPending && this.mTintChangePending) {
                 this.mTintChangePending = false;
                 animateIconTint(this.mPendingDarkIntensity, Math.max(0, j - SystemClock.uptimeMillis()), j2);
@@ -186,34 +117,33 @@ public class LightBarTransitionsController implements Dumpable, CommandQueue.Cal
     }
 
     public void setIconsDark(boolean z, boolean z2) {
-        if (this.mIsDark != z) {
-            this.mIsDark = z;
-            float f = 1.0f;
-            if (!z2) {
-                ValueAnimator valueAnimator = this.mTintAnimator;
-                if (valueAnimator != null) {
-                    valueAnimator.cancel();
-                }
-                setIconTintInternal(z ? 1.0f : 0.0f);
-                if (!z) {
-                    f = 0.0f;
-                }
-                this.mNextDarkIntensity = f;
-            } else if (this.mTransitionPending) {
-                if (!z) {
-                    f = 0.0f;
-                }
-                deferIconTintChange(f);
-            } else if (this.mTransitionDeferring) {
-                animateIconTint(z ? 1.0f : 0.0f, Math.max(0, this.mTransitionDeferringStartTime - SystemClock.uptimeMillis()), this.mTransitionDeferringDuration);
-            } else {
-                animateIconTint(z ? 1.0f : 0.0f, 0, this.mUseTint ? 500 : 120);
+        float f = 1.0f;
+        if (!z2) {
+            setIconTintInternal(z ? 1.0f : 0.0f);
+            if (!z) {
+                f = 0.0f;
             }
+            this.mNextDarkIntensity = f;
+        } else if (this.mTransitionPending) {
+            if (!z) {
+                f = 0.0f;
+            }
+            deferIconTintChange(f);
+        } else if (this.mTransitionDeferring) {
+            if (!z) {
+                f = 0.0f;
+            }
+            animateIconTint(f, Math.max(0, this.mTransitionDeferringStartTime - SystemClock.uptimeMillis()), this.mTransitionDeferringDuration);
+        } else {
+            if (!z) {
+                f = 0.0f;
+            }
+            animateIconTint(f, 0, (long) this.mApplier.getTintAnimationDuration());
         }
     }
 
-    public void setUseTint(boolean z) {
-        this.mUseTint = z;
+    public float getCurrentDarkIntensity() {
+        return this.mDarkIntensity;
     }
 
     private void deferIconTintChange(float f) {
@@ -233,21 +163,30 @@ public class LightBarTransitionsController implements Dumpable, CommandQueue.Cal
             ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{this.mDarkIntensity, f});
             this.mTintAnimator = ofFloat;
             ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                    LightBarTransitionsController.this.setIconTintInternal(((Float) valueAnimator.getAnimatedValue()).floatValue());
+                public final void onAnimationUpdate(ValueAnimator valueAnimator) {
+                    LightBarTransitionsController.this.lambda$animateIconTint$0$LightBarTransitionsController(valueAnimator);
                 }
             });
             this.mTintAnimator.setDuration(j2);
             this.mTintAnimator.setStartDelay(j);
-            this.mTintAnimator.setInterpolator(Interpolators.FAST_OUT_SLOW_IN);
+            this.mTintAnimator.setInterpolator(Interpolators.LINEAR_OUT_SLOW_IN);
             this.mTintAnimator.start();
         }
     }
 
     /* access modifiers changed from: private */
-    public void setIconTintInternal(float f) {
+    /* renamed from: lambda$animateIconTint$0 */
+    public /* synthetic */ void lambda$animateIconTint$0$LightBarTransitionsController(ValueAnimator valueAnimator) {
+        setIconTintInternal(((Float) valueAnimator.getAnimatedValue()).floatValue());
+    }
+
+    private void setIconTintInternal(float f) {
         this.mDarkIntensity = f;
-        this.mApplier.applyDarkIntensity(f);
+        dispatchDark();
+    }
+
+    private void dispatchDark() {
+        this.mApplier.applyDarkIntensity(MathUtils.lerp(this.mDarkIntensity, 0.0f, this.mDozeAmount));
     }
 
     public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
@@ -271,5 +210,10 @@ public class LightBarTransitionsController implements Dumpable, CommandQueue.Cal
         printWriter.print(this.mDarkIntensity);
         printWriter.print(" mNextDarkIntensity=");
         printWriter.println(this.mNextDarkIntensity);
+    }
+
+    public void onDozeAmountChanged(float f, float f2) {
+        this.mDozeAmount = f2;
+        dispatchDark();
     }
 }

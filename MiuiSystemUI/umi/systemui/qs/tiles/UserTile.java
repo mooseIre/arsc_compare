@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.util.Pair;
-import com.android.systemui.Dependency;
 import com.android.systemui.plugins.qs.DetailAdapter;
 import com.android.systemui.plugins.qs.QSTile;
 import com.android.systemui.qs.QSHost;
@@ -14,15 +13,18 @@ import com.android.systemui.statusbar.policy.UserSwitcherController;
 
 public class UserTile extends QSTileImpl<QSTile.State> implements UserInfoController.OnUserInfoChangedListener {
     private Pair<String, Drawable> mLastUpdate;
-    private final UserInfoController mUserInfoController = ((UserInfoController) Dependency.get(UserInfoController.class));
-    private final UserSwitcherController mUserSwitcherController = ((UserSwitcherController) Dependency.get(UserSwitcherController.class));
+    private final UserInfoController mUserInfoController;
+    private final UserSwitcherController mUserSwitcherController;
 
     public int getMetricsCategory() {
         return 260;
     }
 
-    public UserTile(QSHost qSHost) {
+    public UserTile(QSHost qSHost, UserSwitcherController userSwitcherController, UserInfoController userInfoController) {
         super(qSHost);
+        this.mUserSwitcherController = userSwitcherController;
+        this.mUserInfoController = userInfoController;
+        userInfoController.observe(getLifecycle(), this);
     }
 
     public QSTile.State newTileState() {
@@ -40,14 +42,6 @@ public class UserTile extends QSTileImpl<QSTile.State> implements UserInfoContro
 
     public DetailAdapter getDetailAdapter() {
         return this.mUserSwitcherController.userDetailAdapter;
-    }
-
-    public void handleSetListening(boolean z) {
-        if (z) {
-            this.mUserInfoController.addCallback(this);
-        } else {
-            this.mUserInfoController.removeCallback(this);
-        }
     }
 
     public CharSequence getTileLabel() {

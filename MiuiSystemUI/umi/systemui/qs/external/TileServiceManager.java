@@ -13,7 +13,7 @@ import android.os.UserHandle;
 import android.service.quicksettings.IQSTileService;
 import android.service.quicksettings.Tile;
 import android.util.Log;
-import com.android.systemui.Util;
+import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.qs.external.TileLifecycleManager;
 import java.util.Objects;
 
@@ -40,8 +40,8 @@ public class TileServiceManager {
     private final Runnable mUnbind;
     private final BroadcastReceiver mUninstallReceiver;
 
-    TileServiceManager(TileServices tileServices, Handler handler, ComponentName componentName, Tile tile) {
-        this(tileServices, handler, new TileLifecycleManager(handler, tileServices.getContext(), tileServices, tile, new Intent().setComponent(componentName), new UserHandle(ActivityManager.getCurrentUser())));
+    TileServiceManager(TileServices tileServices, Handler handler, ComponentName componentName, Tile tile, BroadcastDispatcher broadcastDispatcher) {
+        this(tileServices, handler, new TileLifecycleManager(handler, tileServices.getContext(), tileServices, tile, new Intent().setComponent(componentName), new UserHandle(ActivityManager.getCurrentUser()), broadcastDispatcher));
     }
 
     TileServiceManager(TileServices tileServices, Handler handler, TileLifecycleManager tileLifecycleManager) {
@@ -102,9 +102,7 @@ public class TileServiceManager {
         if (!TileLifecycleManager.isTileAdded(context, component)) {
             TileLifecycleManager.setTileAdded(context, component, true);
             this.mStateManager.onTileAdded();
-            if (!Util.isMiuiOptimizationDisabled()) {
-                this.mStateManager.flushMessagesAndUnbind();
-            }
+            this.mStateManager.flushMessagesAndUnbind();
         }
     }
 

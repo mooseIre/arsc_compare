@@ -1,9 +1,16 @@
 package com.android.systemui.statusbar;
 
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.text.format.DateFormat;
 import android.util.FloatProperty;
+import android.util.Log;
 import android.view.animation.Interpolator;
 import com.android.internal.annotations.GuardedBy;
+import com.android.internal.logging.UiEventLogger;
+import com.android.keyguard.wallpaper.MiuiWallpaperClient;
+import com.android.systemui.DejankUtils;
+import com.android.systemui.Dependency;
 import com.android.systemui.Dumpable;
 import com.android.systemui.Interpolators;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
@@ -17,36 +24,41 @@ import java.util.Iterator;
 import java.util.function.Predicate;
 
 public class StatusBarStateControllerImpl implements SysuiStatusBarStateController, CallbackController<StatusBarStateController.StateListener>, Dumpable {
+    private static final FloatProperty<StatusBarStateControllerImpl> SET_DARK_AMOUNT_PROPERTY = new FloatProperty<StatusBarStateControllerImpl>("mDozeAmount") {
+        public void setValue(StatusBarStateControllerImpl statusBarStateControllerImpl, float f) {
+            statusBarStateControllerImpl.setDozeAmountInternal(f);
+        }
+
+        public Float get(StatusBarStateControllerImpl statusBarStateControllerImpl) {
+            return Float.valueOf(statusBarStateControllerImpl.mDozeAmount);
+        }
+    };
     private static final Comparator<SysuiStatusBarStateController.RankedListener> sComparator = Comparator.comparingInt($$Lambda$StatusBarStateControllerImpl$7y8VOe44iFeEd9HPscwVVB7kUfw.INSTANCE);
+    private ValueAnimator mDarkAnimator;
     /* access modifiers changed from: private */
     public float mDozeAmount;
+    private float mDozeAmountTarget;
     private Interpolator mDozeInterpolator;
     private HistoricalState[] mHistoricalRecords;
     private int mHistoryIndex;
     private boolean mIsDozing;
+    private boolean mIsFullscreen;
+    private boolean mIsImmersive;
     private boolean mKeyguardRequested;
     private int mLastState;
     private boolean mLeaveOpenOnKeyguardHide;
     private final ArrayList<SysuiStatusBarStateController.RankedListener> mListeners = new ArrayList<>();
     private boolean mPulsing;
     private int mState;
+    private final UiEventLogger mUiEventLogger;
 
-    static {
-        new FloatProperty<StatusBarStateControllerImpl>("mDozeAmount") {
-            public void setValue(StatusBarStateControllerImpl statusBarStateControllerImpl, float f) {
-                statusBarStateControllerImpl.setDozeAmountInternal(f);
-            }
-
-            public Float get(StatusBarStateControllerImpl statusBarStateControllerImpl) {
-                return Float.valueOf(statusBarStateControllerImpl.mDozeAmount);
-            }
-        };
-    }
-
-    public StatusBarStateControllerImpl() {
+    public StatusBarStateControllerImpl(UiEventLogger uiEventLogger) {
         this.mHistoryIndex = 0;
         this.mHistoricalRecords = new HistoricalState[32];
+        this.mIsFullscreen = false;
+        this.mIsImmersive = false;
         this.mDozeInterpolator = Interpolators.FAST_OUT_SLOW_IN;
+        this.mUiEventLogger = uiEventLogger;
         for (int i = 0; i < 32; i++) {
             this.mHistoricalRecords[i] = new HistoricalState();
         }
@@ -65,13 +77,19 @@ public class StatusBarStateControllerImpl implements SysuiStatusBarStateControll
             return false;
         }
         recordHistoricalState(i, i2);
+        if (this.mState == 0 && i == 2) {
+            Log.e("SbStateController", "Invalid state transition: SHADE -> SHADE_LOCKED", new Throwable());
+        }
         synchronized (this.mListeners) {
+            String str = getClass().getSimpleName() + "#setState(" + i + ")";
+            DejankUtils.startDetectingBlockingIpcs(str);
             Iterator it = new ArrayList(this.mListeners).iterator();
             while (it.hasNext()) {
                 ((SysuiStatusBarStateController.RankedListener) it.next()).mListener.onStatePreChange(this.mState, i);
             }
             this.mLastState = this.mState;
             this.mState = i;
+            this.mUiEventLogger.log(StatusBarStateEvent.fromState(i));
             Iterator it2 = new ArrayList(this.mListeners).iterator();
             while (it2.hasNext()) {
                 ((SysuiStatusBarStateController.RankedListener) it2.next()).mListener.onStateChanged(this.mState);
@@ -80,6 +98,7 @@ public class StatusBarStateControllerImpl implements SysuiStatusBarStateControll
             while (it3.hasNext()) {
                 ((SysuiStatusBarStateController.RankedListener) it3.next()).mListener.onStatePostChange();
             }
+            DejankUtils.stopDetectingBlockingIpcs(str);
         }
         return true;
     }
@@ -96,18 +115,61 @@ public class StatusBarStateControllerImpl implements SysuiStatusBarStateControll
         return this.mDozeAmount;
     }
 
+    public float getInterpolatedDozeAmount() {
+        return this.mDozeInterpolator.getInterpolation(this.mDozeAmount);
+    }
+
     public boolean setIsDozing(boolean z) {
         if (this.mIsDozing == z) {
             return false;
         }
         this.mIsDozing = z;
         synchronized (this.mListeners) {
+            String str = getClass().getSimpleName() + "#setIsDozing";
+            DejankUtils.startDetectingBlockingIpcs(str);
             Iterator it = new ArrayList(this.mListeners).iterator();
             while (it.hasNext()) {
                 ((SysuiStatusBarStateController.RankedListener) it.next()).mListener.onDozingChanged(z);
             }
+            DejankUtils.stopDetectingBlockingIpcs(str);
+            ((MiuiWallpaperClient) Dependency.get(MiuiWallpaperClient.class)).onDozingChanged(z);
         }
         return true;
+    }
+
+    public void setDozeAmount(float f, boolean z) {
+        ValueAnimator valueAnimator = this.mDarkAnimator;
+        if (valueAnimator != null && valueAnimator.isRunning()) {
+            if (!z || this.mDozeAmountTarget != f) {
+                this.mDarkAnimator.cancel();
+            } else {
+                return;
+            }
+        }
+        this.mDozeAmountTarget = f;
+        if (z) {
+            startDozeAnimation();
+        } else {
+            setDozeAmountInternal(f);
+        }
+    }
+
+    private void startDozeAnimation() {
+        Interpolator interpolator;
+        float f = this.mDozeAmount;
+        if (f == 0.0f || f == 1.0f) {
+            if (this.mIsDozing) {
+                interpolator = Interpolators.FAST_OUT_SLOW_IN;
+            } else {
+                interpolator = Interpolators.TOUCH_RESPONSE_REVERSE;
+            }
+            this.mDozeInterpolator = interpolator;
+        }
+        ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this, SET_DARK_AMOUNT_PROPERTY, new float[]{this.mDozeAmountTarget});
+        this.mDarkAnimator = ofFloat;
+        ofFloat.setInterpolator(Interpolators.LINEAR);
+        this.mDarkAnimator.setDuration(500);
+        this.mDarkAnimator.start();
     }
 
     /* access modifiers changed from: private */
@@ -115,16 +177,42 @@ public class StatusBarStateControllerImpl implements SysuiStatusBarStateControll
         this.mDozeAmount = f;
         float interpolation = this.mDozeInterpolator.getInterpolation(f);
         synchronized (this.mListeners) {
+            String str = getClass().getSimpleName() + "#setDozeAmount";
+            DejankUtils.startDetectingBlockingIpcs(str);
             Iterator it = new ArrayList(this.mListeners).iterator();
             while (it.hasNext()) {
                 ((SysuiStatusBarStateController.RankedListener) it.next()).mListener.onDozeAmountChanged(this.mDozeAmount, interpolation);
             }
+            DejankUtils.stopDetectingBlockingIpcs(str);
         }
+    }
+
+    public boolean goingToFullShade() {
+        return this.mState == 0 && this.mLeaveOpenOnKeyguardHide;
+    }
+
+    public void setLeaveOpenOnKeyguardHide(boolean z) {
+        this.mLeaveOpenOnKeyguardHide = z;
+    }
+
+    public boolean leaveOpenOnKeyguardHide() {
+        return this.mLeaveOpenOnKeyguardHide;
+    }
+
+    public boolean fromShadeLocked() {
+        return this.mLastState == 2;
     }
 
     public void addCallback(StatusBarStateController.StateListener stateListener) {
         synchronized (this.mListeners) {
             addListenerInternalLocked(stateListener, Integer.MAX_VALUE);
+        }
+    }
+
+    @Deprecated
+    public void addCallback(StatusBarStateController.StateListener stateListener, int i) {
+        synchronized (this.mListeners) {
+            addListenerInternalLocked(stateListener, i);
         }
     }
 
@@ -147,6 +235,39 @@ public class StatusBarStateControllerImpl implements SysuiStatusBarStateControll
                     return ((SysuiStatusBarStateController.RankedListener) obj).mListener.equals(StatusBarStateController.StateListener.this);
                 }
             });
+        }
+    }
+
+    public void setKeyguardRequested(boolean z) {
+        this.mKeyguardRequested = z;
+    }
+
+    public boolean isKeyguardRequested() {
+        return this.mKeyguardRequested;
+    }
+
+    public void setFullscreenState(boolean z, boolean z2) {
+        if (this.mIsFullscreen != z || this.mIsImmersive != z2) {
+            this.mIsFullscreen = z;
+            this.mIsImmersive = z2;
+            synchronized (this.mListeners) {
+                Iterator it = new ArrayList(this.mListeners).iterator();
+                while (it.hasNext()) {
+                    ((SysuiStatusBarStateController.RankedListener) it.next()).mListener.onFullscreenStateChanged(z, z2);
+                }
+            }
+        }
+    }
+
+    public void setPulsing(boolean z) {
+        if (this.mPulsing != z) {
+            this.mPulsing = z;
+            synchronized (this.mListeners) {
+                Iterator it = new ArrayList(this.mListeners).iterator();
+                while (it.hasNext()) {
+                    ((SysuiStatusBarStateController.RankedListener) it.next()).mListener.onPulsingChanged(z);
+                }
+            }
         }
     }
 

@@ -1,0 +1,43 @@
+package com.android.systemui.statusbar.notification;
+
+import com.android.systemui.statusbar.notification.ConversationNotificationManager;
+import com.android.systemui.statusbar.notification.collection.NotificationEntry;
+import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow;
+import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
+import kotlin.jvm.internal.Intrinsics;
+import kotlin.jvm.internal.Lambda;
+
+/* compiled from: ConversationNotifications.kt */
+final class ConversationNotificationManager$1$onEntryInflated$1 extends Lambda implements Function1<Boolean, Unit> {
+    final /* synthetic */ NotificationEntry $entry;
+    final /* synthetic */ ConversationNotificationManager.AnonymousClass1 this$0;
+
+    /* JADX INFO: super call moved to the top of the method (can break code semantics) */
+    ConversationNotificationManager$1$onEntryInflated$1(ConversationNotificationManager.AnonymousClass1 r1, NotificationEntry notificationEntry) {
+        super(1);
+        this.this$0 = r1;
+        this.$entry = notificationEntry;
+    }
+
+    public /* bridge */ /* synthetic */ Object invoke(Object obj) {
+        invoke(((Boolean) obj).booleanValue());
+        return Unit.INSTANCE;
+    }
+
+    public final void invoke(boolean z) {
+        if (!z) {
+            return;
+        }
+        if (!this.this$0.this$0.notifPanelCollapsed || this.$entry.isPinnedAndExpanded()) {
+            ConversationNotificationManager conversationNotificationManager = this.this$0.this$0;
+            String key = this.$entry.getKey();
+            Intrinsics.checkExpressionValueIsNotNull(key, "entry.key");
+            conversationNotificationManager.resetCount(key);
+            ExpandableNotificationRow row = this.$entry.getRow();
+            if (row != null) {
+                this.this$0.this$0.resetBadgeUi(row);
+            }
+        }
+    }
+}

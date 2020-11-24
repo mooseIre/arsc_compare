@@ -19,7 +19,6 @@ import android.util.SparseArray;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import com.android.systemui.plugins.R;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -27,9 +26,9 @@ public class DessertCaseView extends FrameLayout {
     private static final float[] ALPHA_MASK = {0.0f, 0.0f, 0.0f, 0.0f, 255.0f, 0.0f, 0.0f, 0.0f, 0.0f, 255.0f, 0.0f, 0.0f, 0.0f, 0.0f, 255.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f};
     private static final float[] MASK = {0.0f, 0.0f, 0.0f, 0.0f, 255.0f, 0.0f, 0.0f, 0.0f, 0.0f, 255.0f, 0.0f, 0.0f, 0.0f, 0.0f, 255.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f};
     private static final int NUM_PASTRIES;
-    private static final int[] PASTRIES;
-    private static final int[] RARE_PASTRIES;
-    private static final int[] XRARE_PASTRIES;
+    private static final int[] PASTRIES = {C0010R$drawable.dessert_kitkat, C0010R$drawable.dessert_android};
+    private static final int[] RARE_PASTRIES = {C0010R$drawable.dessert_cupcake, C0010R$drawable.dessert_donut, C0010R$drawable.dessert_eclair, C0010R$drawable.dessert_froyo, C0010R$drawable.dessert_gingerbread, C0010R$drawable.dessert_honeycomb, C0010R$drawable.dessert_ics, C0010R$drawable.dessert_jellybean};
+    private static final int[] XRARE_PASTRIES = {C0010R$drawable.dessert_petitfour, C0010R$drawable.dessert_donutburger, C0010R$drawable.dessert_flan, C0010R$drawable.dessert_keylimepie};
     private static final int[] XXRARE_PASTRIES;
     float[] hsv;
     private int mCellSize;
@@ -50,15 +49,9 @@ public class DessertCaseView extends FrameLayout {
 
     static {
         Class<DessertCaseView> cls = DessertCaseView.class;
-        int[] iArr = {R.drawable.dessert_kitkat, R.drawable.dessert_android};
-        PASTRIES = iArr;
-        int[] iArr2 = {R.drawable.dessert_cupcake, R.drawable.dessert_donut, R.drawable.dessert_eclair, R.drawable.dessert_froyo, R.drawable.dessert_gingerbread, R.drawable.dessert_honeycomb, R.drawable.dessert_ics, R.drawable.dessert_jellybean};
-        RARE_PASTRIES = iArr2;
-        int[] iArr3 = {R.drawable.dessert_petitfour, R.drawable.dessert_donutburger, R.drawable.dessert_flan, R.drawable.dessert_keylimepie};
-        XRARE_PASTRIES = iArr3;
-        int[] iArr4 = {R.drawable.dessert_zombiegingerbread, R.drawable.dessert_dandroid, R.drawable.dessert_jandycane};
-        XXRARE_PASTRIES = iArr4;
-        NUM_PASTRIES = iArr.length + iArr2.length + iArr3.length + iArr4.length;
+        int[] iArr = {C0010R$drawable.dessert_zombiegingerbread, C0010R$drawable.dessert_dandroid, C0010R$drawable.dessert_jandycane};
+        XXRARE_PASTRIES = iArr;
+        NUM_PASTRIES = PASTRIES.length + RARE_PASTRIES.length + XRARE_PASTRIES.length + iArr.length;
     }
 
     public DessertCaseView(Context context) {
@@ -90,7 +83,7 @@ public class DessertCaseView extends FrameLayout {
         this.tmpSet = new HashSet<>();
         Resources resources = getResources();
         this.mStarted = false;
-        this.mCellSize = resources.getDimensionPixelSize(R.dimen.dessert_case_cell_size);
+        this.mCellSize = resources.getDimensionPixelSize(C0009R$dimen.dessert_case_cell_size);
         BitmapFactory.Options options = new BitmapFactory.Options();
         if (this.mCellSize < 512) {
             options.inSampleSize = 2;
@@ -296,12 +289,10 @@ public class DessertCaseView extends FrameLayout {
     }
 
     private final Animator.AnimatorListener makeHardwareLayerListener(final View view) {
-        return new AnimatorListenerAdapter() {
+        return new AnimatorListenerAdapter(this) {
             public void onAnimationStart(Animator animator) {
-                if (view.isAttachedToWindow()) {
-                    view.setLayerType(2, (Paint) null);
-                    view.buildLayer();
-                }
+                view.setLayerType(2, (Paint) null);
+                view.buildLayer();
             }
 
             public void onAnimationEnd(Animator animator) {

@@ -1,6 +1,6 @@
 package com.android.systemui.statusbar.policy;
 
-import android.app.ActivityManagerCompat;
+import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.pm.UserInfo;
 import android.content.res.Resources;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -15,11 +16,12 @@ import android.os.Handler;
 import android.os.RemoteException;
 import android.os.UserHandle;
 import android.os.UserManager;
-import android.os.UserManagerCompat;
+import android.provider.ContactsContract;
 import android.util.Log;
-import com.android.internal.util.UserIconsCompat;
+import com.android.internal.util.UserIcons;
 import com.android.settingslib.drawable.UserIconDrawable;
-import com.android.systemui.plugins.R;
+import com.android.systemui.C0009R$dimen;
+import com.android.systemui.C0019R$style;
 import com.android.systemui.statusbar.policy.UserInfoController;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -33,7 +35,7 @@ public class UserInfoControllerImpl implements UserInfoController {
             String action = intent.getAction();
             if ("android.provider.Contacts.PROFILE_CHANGED".equals(action) || "android.intent.action.USER_INFO_CHANGED".equals(action)) {
                 try {
-                    if (intent.getIntExtra("android.intent.extra.user_handle", getSendingUserId()) == ActivityManagerCompat.getService().getCurrentUser().id) {
+                    if (intent.getIntExtra("android.intent.extra.user_handle", getSendingUserId()) == ActivityManager.getService().getCurrentUser().id) {
                         UserInfoControllerImpl.this.reloadUserInfo();
                     }
                 } catch (RemoteException e) {
@@ -84,26 +86,24 @@ public class UserInfoControllerImpl implements UserInfoController {
             asyncTask.cancel(false);
             this.mUserInfoTask = null;
         }
-        try {
-            queryForUserInformation();
-        } catch (Exception e) {
-            Log.e("UserInfoController", "Couldn't query user info", e);
-        }
+        queryForUserInformation();
     }
 
     private void queryForUserInformation() {
         try {
-            UserInfo currentUser = ActivityManagerCompat.getService().getCurrentUser();
-            this.mContext.createPackageContextAsUser("android", 0, new UserHandle(currentUser.id));
+            UserInfo currentUser = ActivityManager.getService().getCurrentUser();
+            final Context createPackageContextAsUser = this.mContext.createPackageContextAsUser("android", 0, new UserHandle(currentUser.id));
             final int i = currentUser.id;
             final boolean isGuest = currentUser.isGuest();
             final String str = currentUser.name;
+            final boolean z = this.mContext.getThemeResId() != C0019R$style.Theme_SystemUI_Light;
             Resources resources = this.mContext.getResources();
-            final int max = Math.max(resources.getDimensionPixelSize(R.dimen.multi_user_avatar_expanded_size), resources.getDimensionPixelSize(R.dimen.multi_user_avatar_keyguard_size));
+            final int max = Math.max(resources.getDimensionPixelSize(C0009R$dimen.multi_user_avatar_expanded_size), resources.getDimensionPixelSize(C0009R$dimen.multi_user_avatar_keyguard_size));
             AnonymousClass3 r6 = new AsyncTask<Void, Void, UserInfoQueryResult>() {
                 /* access modifiers changed from: protected */
                 public UserInfoQueryResult doInBackground(Void... voidArr) {
                     UserIconDrawable userIconDrawable;
+                    Cursor query;
                     UserManager userManager = UserManager.get(UserInfoControllerImpl.this.mContext);
                     String str = str;
                     Bitmap userIcon = userManager.getUserIcon(i);
@@ -114,10 +114,18 @@ public class UserInfoControllerImpl implements UserInfoController {
                         userIconDrawable2.bake();
                         userIconDrawable = userIconDrawable2;
                     } else {
-                        userIconDrawable = UserIconsCompat.getDefaultUserIcon(UserInfoControllerImpl.this.mContext.getResources(), isGuest ? -10000 : i, true);
+                        userIconDrawable = UserIcons.getDefaultUserIcon(createPackageContextAsUser.getResources(), isGuest ? -10000 : i, z);
                     }
-                    int size = userManager.getUsers().size();
-                    return new UserInfoQueryResult(str, userIconDrawable, UserManagerCompat.getUserAccount(userManager, i));
+                    if (userManager.getUsers().size() <= 1 && (query = createPackageContextAsUser.getContentResolver().query(ContactsContract.Profile.CONTENT_URI, new String[]{"_id", "display_name"}, (String) null, (String[]) null, (String) null)) != null) {
+                        try {
+                            if (query.moveToFirst()) {
+                                str = query.getString(query.getColumnIndex("display_name"));
+                            }
+                        } finally {
+                            query.close();
+                        }
+                    }
+                    return new UserInfoQueryResult(str, userIconDrawable, userManager.getUserAccount(i));
                 }
 
                 /* access modifiers changed from: protected */

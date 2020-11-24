@@ -8,15 +8,18 @@ import android.util.ArraySet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Interpolator;
+import com.android.systemui.C0012R$id;
 import com.android.systemui.Interpolators;
-import com.android.systemui.plugins.R;
 import com.android.systemui.statusbar.notification.TransformState;
 import java.util.Stack;
 
-public class ViewTransformationHelper implements TransformableView {
+public class ViewTransformationHelper implements TransformableView, TransformState.TransformInfo {
+    private static final int TAG_CONTAINS_TRANSFORMED_VIEW = C0012R$id.contains_transformed_view;
     private ArrayMap<Integer, CustomTransformation> mCustomTransformations = new ArrayMap<>();
+    private ArraySet<Integer> mKeysTransformingToSimilar = new ArraySet<>();
     private ArrayMap<Integer, View> mTransformedViews = new ArrayMap<>();
-    private ValueAnimator mViewTransformationAnimation;
+    /* access modifiers changed from: private */
+    public ValueAnimator mViewTransformationAnimation;
 
     public static abstract class CustomTransformation {
         public boolean customTransformTarget(TransformState transformState, TransformState transformState2) {
@@ -40,8 +43,32 @@ public class ViewTransformationHelper implements TransformableView {
         this.mTransformedViews.put(Integer.valueOf(i), view);
     }
 
+    public void addTransformedView(View view) {
+        int id = view.getId();
+        if (id != -1) {
+            addTransformedView(id, view);
+            return;
+        }
+        throw new IllegalArgumentException("View argument does not have a valid id");
+    }
+
+    public void addViewTransformingToSimilar(int i, View view) {
+        addTransformedView(i, view);
+        this.mKeysTransformingToSimilar.add(Integer.valueOf(i));
+    }
+
+    public void addViewTransformingToSimilar(View view) {
+        int id = view.getId();
+        if (id != -1) {
+            addViewTransformingToSimilar(id, view);
+            return;
+        }
+        throw new IllegalArgumentException("View argument does not have a valid id");
+    }
+
     public void reset() {
         this.mTransformedViews.clear();
+        this.mKeysTransformingToSimilar.clear();
     }
 
     public void setCustomTransformation(CustomTransformation customTransformation, int i) {
@@ -53,7 +80,11 @@ public class ViewTransformationHelper implements TransformableView {
         if (view == null || view.getVisibility() == 8) {
             return null;
         }
-        return TransformState.createFrom(view);
+        TransformState createFrom = TransformState.createFrom(view, this);
+        if (this.mKeysTransformingToSimilar.contains(Integer.valueOf(i))) {
+            createFrom.setIsSameAsAnyView(true);
+        }
+        return createFrom;
     }
 
     public void transformTo(final TransformableView transformableView, final Runnable runnable) {
@@ -80,6 +111,7 @@ public class ViewTransformationHelper implements TransformableView {
                         runnable.run();
                     }
                     ViewTransformationHelper.this.setVisible(false);
+                    ValueAnimator unused = ViewTransformationHelper.this.mViewTransformationAnimation = null;
                     return;
                 }
                 ViewTransformationHelper.this.abortTransformations();
@@ -193,39 +225,49 @@ public class ViewTransformationHelper implements TransformableView {
 
     public void addRemainingTransformTypes(View view) {
         int id;
+        int i = TAG_CONTAINS_TRANSFORMED_VIEW;
         int size = this.mTransformedViews.size();
-        for (int i = 0; i < size; i++) {
-            View valueAt = this.mTransformedViews.valueAt(i);
-            while (valueAt != null && valueAt != view.getParent()) {
-                valueAt.setTag(R.id.contains_transformed_view, Boolean.TRUE);
-                valueAt = (View) valueAt.getParent();
+        for (int i2 = 0; i2 < size; i2++) {
+            Object valueAt = this.mTransformedViews.valueAt(i2);
+            while (true) {
+                View view2 = (View) valueAt;
+                if (view2 == view.getParent()) {
+                    break;
+                }
+                view2.setTag(i, Boolean.TRUE);
+                valueAt = view2.getParent();
             }
         }
         Stack stack = new Stack();
         stack.push(view);
         while (!stack.isEmpty()) {
-            View view2 = (View) stack.pop();
-            if (((Boolean) view2.getTag(R.id.contains_transformed_view)) != null || (id = view2.getId()) == -1) {
-                view2.setTag(R.id.contains_transformed_view, (Object) null);
-                if ((view2 instanceof ViewGroup) && !this.mTransformedViews.containsValue(view2)) {
-                    ViewGroup viewGroup = (ViewGroup) view2;
-                    for (int i2 = 0; i2 < viewGroup.getChildCount(); i2++) {
-                        stack.push(viewGroup.getChildAt(i2));
+            View view3 = (View) stack.pop();
+            if (((Boolean) view3.getTag(i)) != null || (id = view3.getId()) == -1) {
+                view3.setTag(i, (Object) null);
+                if ((view3 instanceof ViewGroup) && !this.mTransformedViews.containsValue(view3)) {
+                    ViewGroup viewGroup = (ViewGroup) view3;
+                    for (int i3 = 0; i3 < viewGroup.getChildCount(); i3++) {
+                        stack.push(viewGroup.getChildAt(i3));
                     }
                 }
             } else {
-                addTransformedView(id, view2);
+                addTransformedView(id, view3);
             }
         }
     }
 
     public void resetTransformedView(View view) {
-        TransformState createFrom = TransformState.createFrom(view);
+        TransformState createFrom = TransformState.createFrom(view, this);
         createFrom.setVisible(true, true);
         createFrom.recycle();
     }
 
     public ArraySet<View> getAllTransformingViews() {
         return new ArraySet<>(this.mTransformedViews.values());
+    }
+
+    public boolean isAnimating() {
+        ValueAnimator valueAnimator = this.mViewTransformationAnimation;
+        return valueAnimator != null && valueAnimator.isRunning();
     }
 }

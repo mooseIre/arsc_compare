@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.provider.Settings;
 import android.util.Log;
+import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.settings.CurrentUserTracker;
 import com.android.systemui.statusbar.policy.PaperModeController;
 import java.io.FileDescriptor;
@@ -32,8 +33,8 @@ public class PaperModeControllerImpl extends CurrentUserTracker implements Paper
         Log.isLoggable("PaperModeController", 3);
     }
 
-    public PaperModeControllerImpl(Context context, Looper looper) {
-        super(context);
+    public PaperModeControllerImpl(Context context, Looper looper, BroadcastDispatcher broadcastDispatcher) {
+        super(broadcastDispatcher);
         this.mBgHandler = new Handler(looper);
         this.mResolver = context.getContentResolver();
         this.mPaperModeObserver = new ContentObserver(this.mBgHandler) {

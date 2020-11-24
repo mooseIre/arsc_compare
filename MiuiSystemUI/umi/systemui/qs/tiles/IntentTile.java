@@ -11,12 +11,12 @@ import android.graphics.drawable.Drawable;
 import android.os.UserHandle;
 import android.text.TextUtils;
 import android.util.Log;
+import androidx.appcompat.R$styleable;
 import com.android.systemui.Dependency;
 import com.android.systemui.plugins.ActivityStarter;
 import com.android.systemui.plugins.qs.QSTile;
 import com.android.systemui.qs.QSHost;
 import com.android.systemui.qs.tileimpl.QSTileImpl;
-import com.xiaomi.stat.MiStat;
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -35,7 +35,7 @@ public class IntentTile extends QSTileImpl<QSTile.State> {
     }
 
     public int getMetricsCategory() {
-        return 121;
+        return R$styleable.AppCompatTheme_windowFixedHeightMinor;
     }
 
     public void handleSetListening(boolean z) {
@@ -81,7 +81,7 @@ public class IntentTile extends QSTileImpl<QSTile.State> {
 
     /* access modifiers changed from: protected */
     public void handleClick() {
-        sendIntent(MiStat.Event.CLICK, this.mOnClick, this.mOnClickUri);
+        sendIntent("click", this.mOnClick, this.mOnClickUri);
     }
 
     /* access modifiers changed from: protected */

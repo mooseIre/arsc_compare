@@ -5,13 +5,12 @@ import android.content.Context;
 import android.net.TetheringManager;
 import android.net.wifi.WifiClient;
 import android.net.wifi.WifiManager;
+import android.net.wifi.WifiManagerCompat;
 import android.os.Handler;
 import android.os.HandlerExecutor;
-import android.os.Looper;
 import android.os.UserManager;
 import android.util.Log;
 import com.android.internal.util.ConcurrentUtils;
-import com.android.systemui.Dependency;
 import com.android.systemui.statusbar.policy.HotspotController;
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
@@ -20,7 +19,7 @@ import java.util.List;
 
 public class HotspotControllerImpl implements HotspotController, WifiManager.SoftApCallback {
     /* access modifiers changed from: private */
-    public static final boolean DEBUG = Log.isLoggable("HotspotController:v30", 3);
+    public static final boolean DEBUG = Log.isLoggable("HotspotController", 3);
     private final ArrayList<HotspotController.Callback> mCallbacks = new ArrayList<>();
     private final Context mContext;
     /* access modifiers changed from: private */
@@ -67,12 +66,12 @@ public class HotspotControllerImpl implements HotspotController, WifiManager.Sof
         }
     }
 
-    public HotspotControllerImpl(Context context) {
+    public HotspotControllerImpl(Context context, Handler handler, Handler handler2) {
         this.mContext = context;
         this.mTetheringManager = (TetheringManager) context.getSystemService(TetheringManager.class);
         this.mWifiManager = (WifiManager) context.getSystemService("wifi");
-        this.mMainHandler = (Handler) Dependency.get(Dependency.MAIN_HANDLER);
-        this.mTetheringManager.registerTetheringEventCallback(new HandlerExecutor(new Handler((Looper) Dependency.get(Dependency.BG_LOOPER))), this.mTetheringCallback);
+        this.mMainHandler = handler;
+        this.mTetheringManager.registerTetheringEventCallback(new HandlerExecutor(handler2), this.mTetheringCallback);
     }
 
     public boolean isHotspotSupported() {
@@ -111,7 +110,7 @@ public class HotspotControllerImpl implements HotspotController, WifiManager.Sof
         L_0x000e:
             boolean r1 = DEBUG     // Catch:{ all -> 0x0055 }
             if (r1 == 0) goto L_0x0028
-            java.lang.String r1 = "HotspotController:v30"
+            java.lang.String r1 = "HotspotController"
             java.lang.StringBuilder r2 = new java.lang.StringBuilder     // Catch:{ all -> 0x0055 }
             r2.<init>()     // Catch:{ all -> 0x0055 }
             java.lang.String r3 = "addCallback "
@@ -156,13 +155,13 @@ public class HotspotControllerImpl implements HotspotController, WifiManager.Sof
     /* access modifiers changed from: private */
     /* renamed from: lambda$addCallback$0 */
     public /* synthetic */ void lambda$addCallback$0$HotspotControllerImpl(HotspotController.Callback callback) {
-        callback.onHotspotChanged(isHotspotEnabled());
+        callback.onHotspotChanged(isHotspotEnabled(), this.mNumConnectedDevices, getHotspotWifiStandard());
     }
 
     public void removeCallback(HotspotController.Callback callback) {
         if (callback != null) {
             if (DEBUG) {
-                Log.d("HotspotController:v30", "removeCallback " + callback);
+                Log.d("HotspotController", "removeCallback " + callback);
             }
             synchronized (this.mCallbacks) {
                 this.mCallbacks.remove(callback);
@@ -177,6 +176,14 @@ public class HotspotControllerImpl implements HotspotController, WifiManager.Sof
         return this.mHotspotState == 13;
     }
 
+    public int getHotspotWifiStandard() {
+        WifiManager wifiManager = this.mWifiManager;
+        if (wifiManager != null) {
+            return WifiManagerCompat.getSoftApWifiStandard(wifiManager);
+        }
+        return 1;
+    }
+
     public boolean isHotspotTransient() {
         return this.mWaitingForTerminalState || this.mHotspotState == 12;
     }
@@ -184,17 +191,17 @@ public class HotspotControllerImpl implements HotspotController, WifiManager.Sof
     public void setHotspotEnabled(boolean z) {
         if (this.mWaitingForTerminalState) {
             if (DEBUG) {
-                Log.d("HotspotController:v30", "Ignoring setHotspotEnabled; waiting for terminal state.");
+                Log.d("HotspotController", "Ignoring setHotspotEnabled; waiting for terminal state.");
             }
         } else if (z) {
             this.mWaitingForTerminalState = true;
             if (DEBUG) {
-                Log.d("HotspotController:v30", "Starting tethering");
+                Log.d("HotspotController", "Starting tethering");
             }
             this.mTetheringManager.startTethering(new TetheringManager.TetheringRequest.Builder(0).build(), ConcurrentUtils.DIRECT_EXECUTOR, new TetheringManager.StartTetheringCallback() {
                 public void onTetheringFailed(int i) {
                     if (HotspotControllerImpl.DEBUG) {
-                        Log.d("HotspotController:v30", "onTetheringFailed");
+                        Log.d("HotspotController", "onTetheringFailed");
                     }
                     HotspotControllerImpl.this.maybeResetSoftApState();
                     HotspotControllerImpl.this.fireHotspotChangedCallback();
@@ -205,6 +212,10 @@ public class HotspotControllerImpl implements HotspotController, WifiManager.Sof
         }
     }
 
+    public int getNumConnectedDevices() {
+        return this.mNumConnectedDevices;
+    }
+
     /* access modifiers changed from: private */
     public void fireHotspotChangedCallback() {
         ArrayList<HotspotController.Callback> arrayList;
@@ -212,7 +223,7 @@ public class HotspotControllerImpl implements HotspotController, WifiManager.Sof
             arrayList = new ArrayList<>(this.mCallbacks);
         }
         for (HotspotController.Callback onHotspotChanged : arrayList) {
-            onHotspotChanged.onHotspotChanged(isHotspotEnabled());
+            onHotspotChanged.onHotspotChanged(isHotspotEnabled(), this.mNumConnectedDevices, getHotspotWifiStandard());
         }
     }
 

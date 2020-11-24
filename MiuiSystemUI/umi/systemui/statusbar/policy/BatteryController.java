@@ -23,7 +23,19 @@ public interface BatteryController extends DemoMode, Dumpable, CallbackControlle
         }
     }
 
-    boolean isExtremePowerSave();
+    public interface EstimateFetchCompletion {
+        void onBatteryRemainingEstimateRetrieved(String str);
+    }
+
+    void getEstimatedTimeRemainingString(EstimateFetchCompletion estimateFetchCompletion) {
+    }
+
+    void init() {
+    }
+
+    boolean isAodPowerSave();
 
     boolean isPowerSave();
+
+    void setPowerSaveMode(boolean z);
 }

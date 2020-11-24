@@ -16,7 +16,7 @@ public interface SensorManagerPlugin extends Plugin {
     void unregisterListener(Sensor sensor, SensorEventListener sensorEventListener);
 
     public static class Sensor {
-        public static final int TYPE_STATUS = 4;
+        public static final int TYPE_SKIP_STATUS = 4;
         public static final int TYPE_SWIPE = 3;
         public static final int TYPE_WAKE_DISPLAY = 2;
         public static final int TYPE_WAKE_LOCK_SCREEN = 1;

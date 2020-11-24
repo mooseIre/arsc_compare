@@ -30,18 +30,21 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.android.internal.logging.MetricsLogger;
-import com.android.systemui.plugins.R;
+import com.android.systemui.C0009R$dimen;
+import com.android.systemui.C0010R$drawable;
+import com.android.systemui.C0012R$id;
+import com.android.systemui.C0014R$layout;
 import java.util.ArrayList;
 import java.util.Iterator;
 
 public class MLand extends FrameLayout {
-    static final int[] ANTENNAE = {R.drawable.mm_antennae, R.drawable.mm_antennae2};
-    static final int[] CACTI = {R.drawable.cactus1, R.drawable.cactus2, R.drawable.cactus3};
+    static final int[] ANTENNAE = {C0010R$drawable.mm_antennae, C0010R$drawable.mm_antennae2};
+    static final int[] CACTI = {C0010R$drawable.cactus1, C0010R$drawable.cactus2, C0010R$drawable.cactus3};
     public static final boolean DEBUG = Log.isLoggable("MLand", 3);
     public static final boolean DEBUG_IDDQD = Log.isLoggable("MLand.iddqd", 3);
-    static final int[] EYES = {R.drawable.mm_eyes, R.drawable.mm_eyes2};
-    static final int[] MOUNTAINS = {R.drawable.mountain1, R.drawable.mountain2, R.drawable.mountain3};
-    static final int[] MOUTHS = {R.drawable.mm_mouth1, R.drawable.mm_mouth2, R.drawable.mm_mouth3, R.drawable.mm_mouth4};
+    static final int[] EYES = {C0010R$drawable.mm_eyes, C0010R$drawable.mm_eyes2};
+    static final int[] MOUNTAINS = {C0010R$drawable.mountain1, C0010R$drawable.mountain2, C0010R$drawable.mountain3};
+    static final int[] MOUTHS = {C0010R$drawable.mm_mouth1, C0010R$drawable.mm_mouth2, C0010R$drawable.mm_mouth3, C0010R$drawable.mm_mouth4};
     /* access modifiers changed from: private */
     public static Params PARAMS;
     private static final int[][] SKIES = {new int[]{-4144897, -6250241}, new int[]{-16777200, -16777216}, new int[]{-16777152, -16777200}, new int[]{-6258656, -14663552}};
@@ -148,31 +151,31 @@ public class MLand extends FrameLayout {
         public float TRANSLATION_PER_SEC;
 
         public Params(Resources resources) {
-            this.TRANSLATION_PER_SEC = resources.getDimension(R.dimen.translation_per_sec);
-            int dimensionPixelSize = resources.getDimensionPixelSize(R.dimen.obstacle_spacing);
+            this.TRANSLATION_PER_SEC = resources.getDimension(C0009R$dimen.translation_per_sec);
+            int dimensionPixelSize = resources.getDimensionPixelSize(C0009R$dimen.obstacle_spacing);
             this.OBSTACLE_SPACING = dimensionPixelSize;
             this.OBSTACLE_PERIOD = (int) (((float) dimensionPixelSize) / this.TRANSLATION_PER_SEC);
-            this.BOOST_DV = resources.getDimensionPixelSize(R.dimen.boost_dv);
-            this.PLAYER_HIT_SIZE = resources.getDimensionPixelSize(R.dimen.player_hit_size);
-            this.PLAYER_SIZE = resources.getDimensionPixelSize(R.dimen.player_size);
-            this.OBSTACLE_WIDTH = resources.getDimensionPixelSize(R.dimen.obstacle_width);
-            this.OBSTACLE_STEM_WIDTH = resources.getDimensionPixelSize(R.dimen.obstacle_stem_width);
-            this.OBSTACLE_GAP = resources.getDimensionPixelSize(R.dimen.obstacle_gap);
-            this.OBSTACLE_MIN = resources.getDimensionPixelSize(R.dimen.obstacle_height_min);
-            this.BUILDING_HEIGHT_MIN = resources.getDimensionPixelSize(R.dimen.building_height_min);
-            this.BUILDING_WIDTH_MIN = resources.getDimensionPixelSize(R.dimen.building_width_min);
-            this.BUILDING_WIDTH_MAX = resources.getDimensionPixelSize(R.dimen.building_width_max);
-            this.CLOUD_SIZE_MIN = resources.getDimensionPixelSize(R.dimen.cloud_size_min);
-            this.CLOUD_SIZE_MAX = resources.getDimensionPixelSize(R.dimen.cloud_size_max);
-            this.STAR_SIZE_MIN = resources.getDimensionPixelSize(R.dimen.star_size_min);
-            this.STAR_SIZE_MAX = resources.getDimensionPixelSize(R.dimen.star_size_max);
-            this.G = resources.getDimensionPixelSize(R.dimen.G);
-            this.MAX_V = resources.getDimensionPixelSize(R.dimen.max_v);
-            resources.getDimensionPixelSize(R.dimen.scenery_z);
-            this.OBSTACLE_Z = (float) resources.getDimensionPixelSize(R.dimen.obstacle_z);
-            this.PLAYER_Z = (float) resources.getDimensionPixelSize(R.dimen.player_z);
-            this.PLAYER_Z_BOOST = (float) resources.getDimensionPixelSize(R.dimen.player_z_boost);
-            resources.getDimensionPixelSize(R.dimen.hud_z);
+            this.BOOST_DV = resources.getDimensionPixelSize(C0009R$dimen.boost_dv);
+            this.PLAYER_HIT_SIZE = resources.getDimensionPixelSize(C0009R$dimen.player_hit_size);
+            this.PLAYER_SIZE = resources.getDimensionPixelSize(C0009R$dimen.player_size);
+            this.OBSTACLE_WIDTH = resources.getDimensionPixelSize(C0009R$dimen.obstacle_width);
+            this.OBSTACLE_STEM_WIDTH = resources.getDimensionPixelSize(C0009R$dimen.obstacle_stem_width);
+            this.OBSTACLE_GAP = resources.getDimensionPixelSize(C0009R$dimen.obstacle_gap);
+            this.OBSTACLE_MIN = resources.getDimensionPixelSize(C0009R$dimen.obstacle_height_min);
+            this.BUILDING_HEIGHT_MIN = resources.getDimensionPixelSize(C0009R$dimen.building_height_min);
+            this.BUILDING_WIDTH_MIN = resources.getDimensionPixelSize(C0009R$dimen.building_width_min);
+            this.BUILDING_WIDTH_MAX = resources.getDimensionPixelSize(C0009R$dimen.building_width_max);
+            this.CLOUD_SIZE_MIN = resources.getDimensionPixelSize(C0009R$dimen.cloud_size_min);
+            this.CLOUD_SIZE_MAX = resources.getDimensionPixelSize(C0009R$dimen.cloud_size_max);
+            this.STAR_SIZE_MIN = resources.getDimensionPixelSize(C0009R$dimen.star_size_min);
+            this.STAR_SIZE_MAX = resources.getDimensionPixelSize(C0009R$dimen.star_size_max);
+            this.G = resources.getDimensionPixelSize(C0009R$dimen.G);
+            this.MAX_V = resources.getDimensionPixelSize(C0009R$dimen.max_v);
+            resources.getDimensionPixelSize(C0009R$dimen.scenery_z);
+            this.OBSTACLE_Z = (float) resources.getDimensionPixelSize(C0009R$dimen.obstacle_z);
+            this.PLAYER_Z = (float) resources.getDimensionPixelSize(C0009R$dimen.player_z);
+            this.PLAYER_Z_BOOST = (float) resources.getDimensionPixelSize(C0009R$dimen.player_z_boost);
+            resources.getDimensionPixelSize(C0009R$dimen.hud_z);
             if (this.OBSTACLE_MIN <= this.OBSTACLE_WIDTH / 2) {
                 MLand.L("error: obstacles might be too short, adjusting", new Object[0]);
                 this.OBSTACLE_MIN = (this.OBSTACLE_WIDTH / 2) + 1;
@@ -288,7 +291,7 @@ public class MLand extends FrameLayout {
     private int addPlayerInternal(Player player) {
         this.mPlayers.add(player);
         realignPlayers();
-        TextView textView = (TextView) LayoutInflater.from(getContext()).inflate(R.layout.mland_scorefield, (ViewGroup) null);
+        TextView textView = (TextView) LayoutInflater.from(getContext()).inflate(C0014R$layout.mland_scorefield, (ViewGroup) null);
         ViewGroup viewGroup = this.mScoreFields;
         if (viewGroup != null) {
             viewGroup.addView(textView, new ViewGroup.MarginLayoutParams(-2, -1));
@@ -383,9 +386,9 @@ public class MLand extends FrameLayout {
         int i2 = this.mTimeOfDay;
         boolean z2 = (i2 == 0 || i2 == 3) && ((double) frand()) > 0.25d;
         if (z2) {
-            Star star = new Star(getContext());
-            star.setBackgroundResource(R.drawable.sun);
-            int dimensionPixelSize = getResources().getDimensionPixelSize(R.dimen.sun_size);
+            Star star = new Star(this, getContext());
+            star.setBackgroundResource(C0010R$drawable.sun);
+            int dimensionPixelSize = getResources().getDimensionPixelSize(C0009R$dimen.sun_size);
             float f2 = (float) dimensionPixelSize;
             star.setTranslationX(frand(f2, (float) (this.mWidth - dimensionPixelSize)));
             if (this.mTimeOfDay == 0) {
@@ -404,15 +407,15 @@ public class MLand extends FrameLayout {
             boolean z3 = i4 == 1 || i4 == 2;
             float frand = frand();
             if ((z3 && frand < 0.75f) || frand < 0.5f) {
-                Star star2 = new Star(getContext());
-                star2.setBackgroundResource(R.drawable.moon);
+                Star star2 = new Star(this, getContext());
+                star2.setBackgroundResource(C0010R$drawable.moon);
                 star2.getBackground().setAlpha(z3 ? 255 : 128);
                 if (((double) frand()) <= 0.5d) {
                     f = 1.0f;
                 }
                 star2.setScaleX(f);
                 star2.setRotation(star2.getScaleX() * frand(5.0f, 30.0f));
-                int dimensionPixelSize2 = getResources().getDimensionPixelSize(R.dimen.sun_size);
+                int dimensionPixelSize2 = getResources().getDimensionPixelSize(C0009R$dimen.sun_size);
                 float f3 = (float) dimensionPixelSize2;
                 star2.setTranslationX(frand(f3, (float) (this.mWidth - dimensionPixelSize2)));
                 star2.setTranslationY(frand(f3, (float) (this.mHeight - dimensionPixelSize2)));
@@ -424,13 +427,13 @@ public class MLand extends FrameLayout {
         for (int i6 = 0; i6 < 20; i6++) {
             double frand2 = (double) frand();
             if (frand2 < 0.3d && this.mTimeOfDay != 0) {
-                scenery = new Star(getContext());
+                scenery = new Star(this, getContext());
             } else if (frand2 >= 0.6d || z4) {
                 int i7 = this.mScene;
                 if (i7 != 1) {
-                    scenery = i7 != 2 ? new Building(getContext()) : new Mountain(getContext());
+                    scenery = i7 != 2 ? new Building(this, getContext()) : new Mountain(this, getContext());
                 } else {
-                    scenery = new Cactus(getContext());
+                    scenery = new Cactus(this, getContext());
                 }
                 float f4 = ((float) i6) / 20.0f;
                 scenery.z = f4;
@@ -445,7 +448,7 @@ public class MLand extends FrameLayout {
                     background.setColorFilter(Color.rgb(i8, i8, i8), PorterDuff.Mode.MULTIPLY);
                 }
             } else {
-                scenery = new Cloud(getContext());
+                scenery = new Cloud(this, getContext());
             }
             FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(scenery.w, scenery.h);
             if (scenery instanceof Building) {
@@ -490,9 +493,9 @@ public class MLand extends FrameLayout {
         L("start(startPlaying=%s)", objArr);
         if (z && this.mCountdown <= 0) {
             showSplash();
-            this.mSplash.findViewById(R.id.play_button).setEnabled(false);
-            View findViewById = this.mSplash.findViewById(R.id.play_button_image);
-            final TextView textView = (TextView) this.mSplash.findViewById(R.id.play_button_text);
+            this.mSplash.findViewById(C0012R$id.play_button).setEnabled(false);
+            View findViewById = this.mSplash.findViewById(C0012R$id.play_button_image);
+            final TextView textView = (TextView) this.mSplash.findViewById(C0012R$id.play_button_text);
             findViewById.animate().alpha(0.0f);
             textView.animate().alpha(1.0f);
             this.mCountdown = 3;
@@ -537,10 +540,10 @@ public class MLand extends FrameLayout {
             this.mSplash.setAlpha(0.0f);
             this.mSplash.setVisibility(0);
             this.mSplash.animate().alpha(1.0f).setDuration(1000);
-            this.mSplash.findViewById(R.id.play_button_image).setAlpha(1.0f);
-            this.mSplash.findViewById(R.id.play_button_text).setAlpha(0.0f);
-            this.mSplash.findViewById(R.id.play_button).setEnabled(true);
-            this.mSplash.findViewById(R.id.play_button).requestFocus();
+            this.mSplash.findViewById(C0012R$id.play_button_image).setAlpha(1.0f);
+            this.mSplash.findViewById(C0012R$id.play_button_text).setAlpha(0.0f);
+            this.mSplash.findViewById(C0012R$id.play_button).setEnabled(true);
+            this.mSplash.findViewById(C0012R$id.play_button).requestFocus();
         }
     }
 
@@ -702,7 +705,7 @@ public class MLand extends FrameLayout {
                 int i12 = (i11 - params.OBSTACLE_STEM_WIDTH) / 2;
                 int i13 = i11 / 2;
                 int irand = irand(0, 250);
-                Stem stem = new Stem(getContext(), (float) (i10 - i13), false);
+                Stem stem = new Stem(this, getContext(), (float) (i10 - i13), false);
                 addView(stem, new FrameLayout.LayoutParams(PARAMS.OBSTACLE_STEM_WIDTH, (int) stem.h, 51));
                 stem.setTranslationX((float) (this.mWidth + i12));
                 float f4 = (float) i13;
@@ -711,7 +714,7 @@ public class MLand extends FrameLayout {
                 long j3 = (long) irand;
                 stem.animate().translationY(0.0f).setStartDelay(j3).setDuration(250);
                 this.mObstaclesInPlay.add(stem);
-                Pop pop = new Pop(getContext(), (float) PARAMS.OBSTACLE_WIDTH);
+                Pop pop = new Pop(this, getContext(), (float) PARAMS.OBSTACLE_WIDTH);
                 int i14 = PARAMS.OBSTACLE_WIDTH;
                 addView(pop, new FrameLayout.LayoutParams(i14, i14, 51));
                 pop.setTranslationX((float) this.mWidth);
@@ -722,7 +725,7 @@ public class MLand extends FrameLayout {
                 pop.animate().translationY(stem.h - ((float) i12)).scaleX(1.0f).scaleY(-1.0f).setStartDelay(j3).setDuration(250);
                 this.mObstaclesInPlay.add(pop);
                 int irand2 = irand(0, 250);
-                Stem stem2 = new Stem(getContext(), (float) (((this.mHeight - i10) - PARAMS.OBSTACLE_GAP) - i13), true);
+                Stem stem2 = new Stem(this, getContext(), (float) (((this.mHeight - i10) - PARAMS.OBSTACLE_GAP) - i13), true);
                 addView(stem2, new FrameLayout.LayoutParams(PARAMS.OBSTACLE_STEM_WIDTH, (int) stem2.h, 51));
                 stem2.setTranslationX((float) (this.mWidth + i12));
                 stem2.setTranslationY((float) (this.mHeight + i13));
@@ -730,7 +733,7 @@ public class MLand extends FrameLayout {
                 long j4 = (long) irand2;
                 stem2.animate().translationY(((float) this.mHeight) - stem2.h).setStartDelay(j4).setDuration(400);
                 this.mObstaclesInPlay.add(stem2);
-                Pop pop2 = new Pop(getContext(), (float) PARAMS.OBSTACLE_WIDTH);
+                Pop pop2 = new Pop(this, getContext(), (float) PARAMS.OBSTACLE_WIDTH);
                 int i15 = PARAMS.OBSTACLE_WIDTH;
                 addView(pop2, new FrameLayout.LayoutParams(i15, i15, 51));
                 pop2.setTranslationX((float) this.mWidth);
@@ -928,14 +931,14 @@ public class MLand extends FrameLayout {
             float[] fArr = {0.3f, 0.0f, 0.7f, 0.0f, 0.92f, 0.33f, 0.92f, 0.75f, 0.6f, 1.0f, 0.4f, 1.0f, 0.08f, 0.75f, 0.08f, 0.33f};
             this.sHull = fArr;
             this.corners = new float[fArr.length];
-            setBackgroundResource(R.drawable.f1android);
+            setBackgroundResource(C0010R$drawable.f4android);
             getBackground().setTintMode(PorterDuff.Mode.SRC_ATOP);
             int[] iArr = this.sColors;
             int i = sNextColor;
             sNextColor = i + 1;
             this.color = iArr[i % iArr.length];
             getBackground().setTint(this.color);
-            setOutlineProvider(new ViewOutlineProvider() {
+            setOutlineProvider(new ViewOutlineProvider(this) {
                 public void getOutline(View view, Outline outline) {
                     int width = view.getWidth();
                     int height = view.getHeight();
@@ -1033,7 +1036,7 @@ public class MLand extends FrameLayout {
         public float h;
         public final Rect hitRect = new Rect();
 
-        public Obstacle(Context context, float f) {
+        public Obstacle(MLand mLand, Context context, float f) {
             super(context);
             setBackgroundColor(-65536);
             this.h = f;
@@ -1076,9 +1079,9 @@ public class MLand extends FrameLayout {
         Drawable mouth;
         int r;
 
-        public Pop(Context context, float f) {
-            super(context, f);
-            setBackgroundResource(R.drawable.mm_head);
+        public Pop(MLand mLand, Context context, float f) {
+            super(mLand, context, f);
+            setBackgroundResource(C0010R$drawable.mm_head);
             this.antenna = context.getDrawable(MLand.pick(MLand.ANTENNAE));
             if (MLand.frand() > 0.5f) {
                 this.eyes = context.getDrawable(MLand.pick(MLand.EYES));
@@ -1086,7 +1089,7 @@ public class MLand extends FrameLayout {
                     this.mouth = context.getDrawable(MLand.pick(MLand.MOUTHS));
                 }
             }
-            setOutlineProvider(new ViewOutlineProvider(MLand.this) {
+            setOutlineProvider(new ViewOutlineProvider(mLand) {
                 public void getOutline(View view, Outline outline) {
                     int width = (int) ((((float) Pop.this.getWidth()) * 1.0f) / 6.0f);
                     outline.setOval(width, width, Pop.this.getWidth() - width, Pop.this.getHeight() - width);
@@ -1146,9 +1149,9 @@ public class MLand extends FrameLayout {
         Paint mPaint2;
         Path mShadow = new Path();
 
-        public Stem(Context context, float f, boolean z) {
-            super(context, f);
-            this.id = MLand.this.mCurrentPipeId;
+        public Stem(MLand mLand, Context context, float f, boolean z) {
+            super(mLand, context, f);
+            this.id = mLand.mCurrentPipeId;
             this.mDrawShadow = z;
             setBackground((Drawable) null);
             this.mGradient.setOrientation(GradientDrawable.Orientation.LEFT_RIGHT);
@@ -1217,7 +1220,7 @@ public class MLand extends FrameLayout {
         public int w;
         public float z;
 
-        public Scenery(Context context) {
+        public Scenery(MLand mLand, Context context) {
             super(context);
         }
 
@@ -1227,16 +1230,16 @@ public class MLand extends FrameLayout {
     }
 
     private class Building extends Scenery {
-        public Building(Context context) {
-            super(context);
+        public Building(MLand mLand, Context context) {
+            super(mLand, context);
             this.w = MLand.irand(MLand.PARAMS.BUILDING_WIDTH_MIN, MLand.PARAMS.BUILDING_WIDTH_MAX);
             this.h = 0;
         }
     }
 
     private class Cactus extends Building {
-        public Cactus(Context context) {
-            super(context);
+        public Cactus(MLand mLand, Context context) {
+            super(mLand, context);
             setBackgroundResource(MLand.pick(MLand.CACTI));
             int irand = MLand.irand(MLand.PARAMS.BUILDING_WIDTH_MAX / 4, MLand.PARAMS.BUILDING_WIDTH_MAX / 2);
             this.h = irand;
@@ -1245,8 +1248,8 @@ public class MLand extends FrameLayout {
     }
 
     private class Mountain extends Building {
-        public Mountain(Context context) {
-            super(context);
+        public Mountain(MLand mLand, Context context) {
+            super(mLand, context);
             setBackgroundResource(MLand.pick(MLand.MOUNTAINS));
             int irand = MLand.irand(MLand.PARAMS.BUILDING_WIDTH_MAX / 2, MLand.PARAMS.BUILDING_WIDTH_MAX);
             this.h = irand;
@@ -1256,9 +1259,9 @@ public class MLand extends FrameLayout {
     }
 
     private class Cloud extends Scenery {
-        public Cloud(Context context) {
-            super(context);
-            setBackgroundResource(MLand.frand() < 0.01f ? R.drawable.cloud_off : R.drawable.cloud);
+        public Cloud(MLand mLand, Context context) {
+            super(mLand, context);
+            setBackgroundResource(MLand.frand() < 0.01f ? C0010R$drawable.cloud_off : C0010R$drawable.cloud);
             getBackground().setAlpha(64);
             int irand = MLand.irand(MLand.PARAMS.CLOUD_SIZE_MIN, MLand.PARAMS.CLOUD_SIZE_MAX);
             this.h = irand;
@@ -1269,9 +1272,9 @@ public class MLand extends FrameLayout {
     }
 
     private class Star extends Scenery {
-        public Star(Context context) {
-            super(context);
-            setBackgroundResource(R.drawable.star);
+        public Star(MLand mLand, Context context) {
+            super(mLand, context);
+            setBackgroundResource(C0010R$drawable.star);
             int irand = MLand.irand(MLand.PARAMS.STAR_SIZE_MIN, MLand.PARAMS.STAR_SIZE_MAX);
             this.h = irand;
             this.w = irand;

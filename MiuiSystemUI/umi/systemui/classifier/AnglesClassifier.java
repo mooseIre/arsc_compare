@@ -1,19 +1,24 @@
 package com.android.systemui.classifier;
 
+import android.os.Build;
+import android.os.SystemProperties;
 import android.view.MotionEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 public class AnglesClassifier extends StrokeClassifier {
+    /* access modifiers changed from: private */
+    public static String TAG = "ANG";
+    public static final boolean VERBOSE = SystemProperties.getBoolean("debug.falsing_log.ang", Build.IS_DEBUGGABLE);
     private HashMap<Stroke, Data> mStrokeMap = new HashMap<>();
-
-    public String getTag() {
-        return "ANG";
-    }
 
     public AnglesClassifier(ClassifierData classifierData) {
         this.mClassifierData = classifierData;
+    }
+
+    public String getTag() {
+        return TAG;
     }
 
     public void onTouchEvent(MotionEvent motionEvent) {
@@ -31,7 +36,7 @@ public class AnglesClassifier extends StrokeClassifier {
 
     public float getFalseTouchEvaluation(int i, Stroke stroke) {
         Data data = this.mStrokeMap.get(stroke);
-        return AnglesVarianceEvaluator.evaluate(data.getAnglesVariance()) + AnglesPercentageEvaluator.evaluate(data.getAnglesPercentage());
+        return AnglesVarianceEvaluator.evaluate(data.getAnglesVariance(), i) + AnglesPercentageEvaluator.evaluate(data.getAnglesPercentage(), i);
     }
 
     private static class Data {
@@ -104,14 +109,38 @@ public class AnglesClassifier extends StrokeClassifier {
 
         public float getAnglesVariance() {
             float anglesVariance = getAnglesVariance(this.mSumSquares, this.mSum, this.mCount);
-            return this.mFirstLength < this.mLength / 2.0f ? Math.min(anglesVariance, this.mFirstAngleVariance + getAnglesVariance(this.mSecondSumSquares, this.mSecondSum, this.mSecondCount)) : anglesVariance;
+            if (AnglesClassifier.VERBOSE) {
+                String access$000 = AnglesClassifier.TAG;
+                FalsingLog.i(access$000, "getAnglesVariance: (first pass) " + anglesVariance);
+                String access$0002 = AnglesClassifier.TAG;
+                FalsingLog.i(access$0002, "   - mFirstLength=" + this.mFirstLength);
+                String access$0003 = AnglesClassifier.TAG;
+                FalsingLog.i(access$0003, "   - mLength=" + this.mLength);
+            }
+            if (this.mFirstLength < this.mLength / 2.0f) {
+                anglesVariance = Math.min(anglesVariance, this.mFirstAngleVariance + getAnglesVariance(this.mSecondSumSquares, this.mSecondSum, this.mSecondCount));
+                if (AnglesClassifier.VERBOSE) {
+                    String access$0004 = AnglesClassifier.TAG;
+                    FalsingLog.i(access$0004, "getAnglesVariance: (second pass) " + anglesVariance);
+                }
+            }
+            return anglesVariance;
         }
 
         public float getAnglesPercentage() {
-            if (this.mAnglesCount == 0.0f) {
+            if (this.mAnglesCount != 0.0f) {
+                float max = (Math.max(this.mLeftAngles, this.mRightAngles) + this.mStraightAngles) / this.mAnglesCount;
+                if (AnglesClassifier.VERBOSE) {
+                    String access$000 = AnglesClassifier.TAG;
+                    FalsingLog.i(access$000, "getAnglesPercentage: left=" + this.mLeftAngles + " right=" + this.mRightAngles + " straight=" + this.mStraightAngles + " count=" + this.mAnglesCount + " result=" + max);
+                }
+                return max;
+            } else if (!AnglesClassifier.VERBOSE) {
+                return 1.0f;
+            } else {
+                FalsingLog.i(AnglesClassifier.TAG, "getAnglesPercentage: count==0, result=1");
                 return 1.0f;
             }
-            return (Math.max(this.mLeftAngles, this.mRightAngles) + this.mStraightAngles) / this.mAnglesCount;
         }
     }
 }

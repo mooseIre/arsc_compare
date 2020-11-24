@@ -1,56 +1,53 @@
 package com.android.systemui.pip.phone;
 
-import android.app.IActivityTaskManager;
 import android.content.ComponentName;
 import android.content.Context;
+import android.graphics.PointF;
 import android.graphics.Rect;
 import android.util.ArrayMap;
-import androidx.dynamicanimation.animation.FloatPropertyCompat;
-import com.android.systemui.SystemUICompat;
+import android.view.Choreographer;
+import com.android.internal.graphics.SfVsyncFrameCallbackProvider;
 import com.android.systemui.pip.PipSnapAlgorithm;
 import com.android.systemui.pip.PipTaskOrganizer;
 import com.android.systemui.pip.phone.PipAppOpsListener;
-import com.android.systemui.statusbar.FlingAnimationUtils;
+import com.android.systemui.util.FloatingContentCoordinator;
 import com.android.systemui.util.animation.FloatProperties;
 import com.android.systemui.util.animation.PhysicsAnimator;
 import com.android.systemui.util.magnetictarget.MagnetizedObject;
 import java.io.PrintWriter;
 import java.util.Objects;
 import java.util.function.Consumer;
+import kotlin.Unit;
+import kotlin.jvm.functions.Function0;
 
-public class PipMotionHelper implements PipAppOpsListener.Callback {
-    private final Rect mAnimatedBounds = new Rect();
-    private PhysicsAnimator mAnimatedBoundsPhysicsAnimator = PhysicsAnimator.getInstance(this.mAnimatedBounds);
+public class PipMotionHelper implements PipAppOpsListener.Callback, FloatingContentCoordinator.FloatingContent {
     private final Rect mAnimatingToBounds = new Rect();
     private final Rect mBounds = new Rect();
+    private final PhysicsAnimator.SpringConfig mConflictResolutionSpringConfig = new PhysicsAnimator.SpringConfig(200.0f, 0.75f);
     private final Context mContext;
+    private boolean mDismissalPending;
     private PhysicsAnimator.FlingConfig mFlingConfigX;
     private PhysicsAnimator.FlingConfig mFlingConfigY;
     private final Rect mFloatingAllowedArea = new Rect();
+    private FloatingContentCoordinator mFloatingContentCoordinator;
+    private MagnetizedObject<Rect> mMagnetizedPip;
     private PipMenuActivityController mMenuController;
     private final Rect mMovementBounds = new Rect();
     private final PipTaskOrganizer mPipTaskOrganizer;
     private final PipTaskOrganizer.PipTransitionCallback mPipTransitionCallback;
     /* access modifiers changed from: private */
     public Runnable mPostPipTransitionCallback;
-    final PhysicsAnimator.UpdateListener mResizePipUpdateListener = new PhysicsAnimator.UpdateListener() {
-        public final void onAnimationUpdateForProperty(Object obj, ArrayMap arrayMap) {
-            PipMotionHelper.this.lambda$new$0$PipMotionHelper(obj, arrayMap);
-        }
-    };
+    private final PhysicsAnimator.UpdateListener<Rect> mResizePipUpdateListener;
+    private final Choreographer.FrameCallback mResizePipVsyncCallback;
+    private final SfVsyncFrameCallbackProvider mSfVsyncFrameProvider = new SfVsyncFrameCallbackProvider();
     private PipSnapAlgorithm mSnapAlgorithm;
     private final PhysicsAnimator.SpringConfig mSpringConfig = new PhysicsAnimator.SpringConfig(1500.0f, 0.75f);
     private boolean mSpringingToTouch;
-    private final Rect mStableInsets = new Rect();
+    private final Rect mTemporaryBounds = new Rect();
+    private PhysicsAnimator<Rect> mTemporaryBoundsPhysicsAnimator = PhysicsAnimator.getInstance(this.mTemporaryBounds);
     private final Consumer<Rect> mUpdateBoundsCallback;
 
-    /* access modifiers changed from: private */
-    /* renamed from: lambda$new$0 */
-    public /* synthetic */ void lambda$new$0$PipMotionHelper(Object obj, ArrayMap arrayMap) {
-        resizePipUnchecked(this.mAnimatedBounds);
-    }
-
-    public PipMotionHelper(Context context, IActivityTaskManager iActivityTaskManager, PipTaskOrganizer pipTaskOrganizer, PipMenuActivityController pipMenuActivityController, PipSnapAlgorithm pipSnapAlgorithm, FlingAnimationUtils flingAnimationUtils) {
+    public PipMotionHelper(Context context, PipTaskOrganizer pipTaskOrganizer, PipMenuActivityController pipMenuActivityController, PipSnapAlgorithm pipSnapAlgorithm, FloatingContentCoordinator floatingContentCoordinator) {
         Rect rect = this.mBounds;
         Objects.requireNonNull(rect);
         this.mUpdateBoundsCallback = new Consumer(rect) {
@@ -65,7 +62,8 @@ public class PipMotionHelper implements PipAppOpsListener.Callback {
             }
         };
         this.mSpringingToTouch = false;
-        this.mPipTransitionCallback = new PipTaskOrganizer.PipTransitionCallback() {
+        this.mDismissalPending = false;
+        AnonymousClass1 r0 = new PipTaskOrganizer.PipTransitionCallback() {
             public void onPipTransitionCanceled(ComponentName componentName, int i) {
             }
 
@@ -79,32 +77,58 @@ public class PipMotionHelper implements PipAppOpsListener.Callback {
                 }
             }
         };
+        this.mPipTransitionCallback = r0;
         this.mContext = context;
         this.mPipTaskOrganizer = pipTaskOrganizer;
         this.mMenuController = pipMenuActivityController;
         this.mSnapAlgorithm = pipSnapAlgorithm;
-        onConfigurationChanged();
-        this.mPipTaskOrganizer.registerPipTransitionCallback(this.mPipTransitionCallback);
+        this.mFloatingContentCoordinator = floatingContentCoordinator;
+        pipTaskOrganizer.registerPipTransitionCallback(r0);
+        this.mResizePipVsyncCallback = new Choreographer.FrameCallback() {
+            public final void doFrame(long j) {
+                PipMotionHelper.this.lambda$new$0$PipMotionHelper(j);
+            }
+        };
+        this.mResizePipUpdateListener = new PhysicsAnimator.UpdateListener() {
+            public final void onAnimationUpdateForProperty(Object obj, ArrayMap arrayMap) {
+                PipMotionHelper.this.lambda$new$1$PipMotionHelper((Rect) obj, arrayMap);
+            }
+        };
     }
 
-    /* access modifiers changed from: package-private */
-    public void onConfigurationChanged() {
-        this.mSnapAlgorithm.onConfigurationChanged();
-        SystemUICompat.getStableInsets(this.mStableInsets);
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$new$0 */
+    public /* synthetic */ void lambda$new$0$PipMotionHelper(long j) {
+        if (!this.mTemporaryBounds.isEmpty()) {
+            this.mPipTaskOrganizer.scheduleUserResizePip(this.mBounds, this.mTemporaryBounds, (Consumer<Rect>) null);
+        }
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$new$1 */
+    public /* synthetic */ void lambda$new$1$PipMotionHelper(Rect rect, ArrayMap arrayMap) {
+        this.mSfVsyncFrameProvider.postFrameCallback(this.mResizePipVsyncCallback);
+    }
+
+    public Rect getFloatingBoundsOnScreen() {
+        return !this.mAnimatingToBounds.isEmpty() ? this.mAnimatingToBounds : this.mBounds;
+    }
+
+    public Rect getAllowedFloatingBoundsRegion() {
+        return this.mFloatingAllowedArea;
+    }
+
+    public void moveToBounds(Rect rect) {
+        animateToBounds(rect, this.mConflictResolutionSpringConfig);
     }
 
     /* access modifiers changed from: package-private */
     public void synchronizePinnedStackBounds() {
         cancelAnimations();
         this.mBounds.set(this.mPipTaskOrganizer.getLastReportedBounds());
-    }
-
-    /* access modifiers changed from: package-private */
-    public void synchronizePinnedStackBoundsForTouchGesture() {
-        if (this.mAnimatingToBounds.isEmpty()) {
-            synchronizePinnedStackBounds();
-        } else {
-            this.mBounds.set(this.mAnimatedBounds);
+        this.mTemporaryBounds.setEmpty();
+        if (this.mPipTaskOrganizer.isInPip()) {
+            this.mFloatingContentCoordinator.onContentMoved(this);
         }
     }
 
@@ -115,40 +139,50 @@ public class PipMotionHelper implements PipAppOpsListener.Callback {
 
     /* access modifiers changed from: package-private */
     public void movePip(Rect rect, boolean z) {
+        if (!z) {
+            this.mFloatingContentCoordinator.onContentMoved(this);
+        }
         if (!this.mSpringingToTouch) {
             cancelAnimations();
-            resizePipUnchecked(rect);
-            this.mBounds.set(rect);
+            if (!z) {
+                resizePipUnchecked(rect);
+                this.mBounds.set(rect);
+                return;
+            }
+            this.mTemporaryBounds.set(rect);
+            this.mPipTaskOrganizer.scheduleUserResizePip(this.mBounds, this.mTemporaryBounds, (Consumer<Rect>) null);
             return;
         }
-        PhysicsAnimator physicsAnimator = this.mAnimatedBoundsPhysicsAnimator;
+        PhysicsAnimator<Rect> physicsAnimator = this.mTemporaryBoundsPhysicsAnimator;
+        physicsAnimator.spring(FloatProperties.RECT_WIDTH, (float) this.mBounds.width(), this.mSpringConfig);
+        physicsAnimator.spring(FloatProperties.RECT_HEIGHT, (float) this.mBounds.height(), this.mSpringConfig);
         physicsAnimator.spring(FloatProperties.RECT_X, (float) rect.left, this.mSpringConfig);
         physicsAnimator.spring(FloatProperties.RECT_Y, (float) rect.top, this.mSpringConfig);
-        physicsAnimator.withEndActions(new Runnable() {
-            public final void run() {
-                PipMotionHelper.this.lambda$movePip$1$PipMotionHelper();
-            }
-        });
         startBoundsAnimator((float) rect.left, (float) rect.top, false);
     }
 
-    /* access modifiers changed from: private */
-    /* renamed from: lambda$movePip$1 */
-    public /* synthetic */ void lambda$movePip$1$PipMotionHelper() {
-        this.mSpringingToTouch = false;
+    /* access modifiers changed from: package-private */
+    public void animateIntoDismissTarget(MagnetizedObject.MagneticTarget magneticTarget, float f, float f2, boolean z, Function0<Unit> function0) {
+        PointF centerOnScreen = magneticTarget.getCenterOnScreen();
+        float width = (float) (this.mBounds.width() / 2);
+        float height = (float) (this.mBounds.height() / 2);
+        float f3 = centerOnScreen.x - (width / 2.0f);
+        float f4 = centerOnScreen.y - (height / 2.0f);
+        if (this.mTemporaryBounds.isEmpty()) {
+            this.mTemporaryBounds.set(this.mBounds);
+        }
+        PhysicsAnimator<Rect> physicsAnimator = this.mTemporaryBoundsPhysicsAnimator;
+        physicsAnimator.spring(FloatProperties.RECT_X, f3, f, this.mSpringConfig);
+        physicsAnimator.spring(FloatProperties.RECT_Y, f4, f2, this.mSpringConfig);
+        physicsAnimator.spring(FloatProperties.RECT_WIDTH, width, this.mSpringConfig);
+        physicsAnimator.spring(FloatProperties.RECT_HEIGHT, height, this.mSpringConfig);
+        physicsAnimator.withEndActions((Function0<Unit>[]) new Function0[]{function0});
+        startBoundsAnimator(f3, f4, false);
     }
 
     /* access modifiers changed from: package-private */
     public void setSpringingToTouch(boolean z) {
-        if (z) {
-            this.mAnimatedBounds.set(this.mBounds);
-        }
         this.mSpringingToTouch = z;
-    }
-
-    /* access modifiers changed from: package-private */
-    public void prepareForAnimation() {
-        this.mAnimatedBounds.set(this.mBounds);
     }
 
     /* access modifiers changed from: package-private */
@@ -200,14 +234,21 @@ public class PipMotionHelper implements PipAppOpsListener.Callback {
     }
 
     /* access modifiers changed from: package-private */
+    public Rect getPossiblyAnimatingBounds() {
+        return this.mTemporaryBounds.isEmpty() ? this.mBounds : this.mTemporaryBounds;
+    }
+
+    /* access modifiers changed from: package-private */
     public void flingToSnapTarget(float f, float f2, Runnable runnable, Runnable runnable2) {
-        this.mAnimatedBounds.set(this.mBounds);
-        PhysicsAnimator physicsAnimator = this.mAnimatedBoundsPhysicsAnimator;
+        this.mSpringingToTouch = false;
+        PhysicsAnimator<Rect> physicsAnimator = this.mTemporaryBoundsPhysicsAnimator;
+        physicsAnimator.spring(FloatProperties.RECT_WIDTH, (float) this.mBounds.width(), this.mSpringConfig);
+        physicsAnimator.spring(FloatProperties.RECT_HEIGHT, (float) this.mBounds.height(), this.mSpringConfig);
         physicsAnimator.flingThenSpring(FloatProperties.RECT_X, f, this.mFlingConfigX, this.mSpringConfig, true);
         physicsAnimator.flingThenSpring(FloatProperties.RECT_Y, f2, this.mFlingConfigY, this.mSpringConfig);
         physicsAnimator.withEndActions(runnable2);
         if (runnable != null) {
-            this.mAnimatedBoundsPhysicsAnimator.addUpdateListener(new PhysicsAnimator.UpdateListener(runnable) {
+            this.mTemporaryBoundsPhysicsAnimator.addUpdateListener(new PhysicsAnimator.UpdateListener(runnable) {
                 public final /* synthetic */ Runnable f$0;
 
                 {
@@ -219,23 +260,32 @@ public class PipMotionHelper implements PipAppOpsListener.Callback {
                 }
             });
         }
-        startBoundsAnimator((float) (f < 0.0f ? this.mMovementBounds.left : this.mMovementBounds.right), PhysicsAnimator.estimateFlingEndValue((float) this.mBounds.top, f2, this.mFlingConfigY), false);
+        startBoundsAnimator((float) (f < 0.0f ? this.mMovementBounds.left : this.mMovementBounds.right), PhysicsAnimator.estimateFlingEndValue((float) this.mTemporaryBounds.top, f2, this.mFlingConfigY), false);
+    }
+
+    /* access modifiers changed from: package-private */
+    public void animateToBounds(Rect rect, PhysicsAnimator.SpringConfig springConfig) {
+        if (!this.mTemporaryBoundsPhysicsAnimator.isRunning()) {
+            this.mTemporaryBounds.set(this.mBounds);
+        }
+        PhysicsAnimator<Rect> physicsAnimator = this.mTemporaryBoundsPhysicsAnimator;
+        physicsAnimator.spring(FloatProperties.RECT_X, (float) rect.left, springConfig);
+        physicsAnimator.spring(FloatProperties.RECT_Y, (float) rect.top, springConfig);
+        startBoundsAnimator((float) rect.left, (float) rect.top, false);
     }
 
     /* access modifiers changed from: package-private */
     public void animateDismiss() {
-        this.mAnimatedBounds.set(this.mBounds);
-        PhysicsAnimator physicsAnimator = this.mAnimatedBoundsPhysicsAnimator;
-        FloatPropertyCompat<Rect> floatPropertyCompat = FloatProperties.RECT_Y;
-        Rect rect = this.mBounds;
-        physicsAnimator.spring(floatPropertyCompat, (float) (rect.bottom + rect.height()), 0.0f, this.mSpringConfig);
+        PhysicsAnimator<Rect> physicsAnimator = this.mTemporaryBoundsPhysicsAnimator;
+        physicsAnimator.spring(FloatProperties.RECT_Y, (float) (this.mMovementBounds.bottom + (this.mBounds.height() * 2)), 0.0f, this.mSpringConfig);
         physicsAnimator.withEndActions(new Runnable() {
             public final void run() {
                 PipMotionHelper.this.dismissPip();
             }
         });
-        Rect rect2 = this.mBounds;
-        startBoundsAnimator((float) rect2.left, (float) (rect2.bottom + rect2.height()), true);
+        Rect rect = this.mBounds;
+        startBoundsAnimator((float) rect.left, (float) (rect.bottom + rect.height()), true);
+        this.mDismissalPending = false;
     }
 
     /* access modifiers changed from: package-private */
@@ -267,7 +317,7 @@ public class PipMotionHelper implements PipAppOpsListener.Callback {
     }
 
     private void cancelAnimations() {
-        this.mAnimatedBoundsPhysicsAnimator.cancel();
+        this.mTemporaryBoundsPhysicsAnimator.cancel();
         this.mAnimatingToBounds.setEmpty();
         this.mSpringingToTouch = false;
     }
@@ -287,33 +337,40 @@ public class PipMotionHelper implements PipAppOpsListener.Callback {
         int i2 = (int) f2;
         this.mAnimatingToBounds.set(i, i2, this.mBounds.width() + i, this.mBounds.height() + i2);
         setAnimatingToBounds(this.mAnimatingToBounds);
-        PhysicsAnimator physicsAnimator = this.mAnimatedBoundsPhysicsAnimator;
-        physicsAnimator.withEndActions(new Runnable(z) {
-            public final /* synthetic */ boolean f$1;
+        if (!this.mTemporaryBoundsPhysicsAnimator.isRunning()) {
+            PhysicsAnimator<Rect> physicsAnimator = this.mTemporaryBoundsPhysicsAnimator;
+            physicsAnimator.addUpdateListener(this.mResizePipUpdateListener);
+            physicsAnimator.withEndActions(new Runnable() {
+                public final void run() {
+                    PipMotionHelper.this.onBoundsAnimationEnd();
+                }
+            });
+        }
+        this.mTemporaryBoundsPhysicsAnimator.start();
+    }
 
-            {
-                this.f$1 = r2;
-            }
-
-            public final void run() {
-                PipMotionHelper.this.lambda$startBoundsAnimator$4$PipMotionHelper(this.f$1);
-            }
-        });
-        physicsAnimator.addUpdateListener(this.mResizePipUpdateListener);
-        physicsAnimator.start();
+    /* access modifiers changed from: package-private */
+    public void notifyDismissalPending() {
+        this.mDismissalPending = true;
     }
 
     /* access modifiers changed from: private */
-    /* renamed from: lambda$startBoundsAnimator$4 */
-    public /* synthetic */ void lambda$startBoundsAnimator$4$PipMotionHelper(boolean z) {
-        if (!z) {
-            this.mPipTaskOrganizer.scheduleFinishResizePip(this.mAnimatedBounds);
+    public void onBoundsAnimationEnd() {
+        if (!this.mDismissalPending && !this.mSpringingToTouch && !this.mMagnetizedPip.getObjectStuckToTarget()) {
+            this.mBounds.set(this.mTemporaryBounds);
+            if (!this.mDismissalPending) {
+                this.mPipTaskOrganizer.scheduleFinishResizePip(this.mBounds);
+            }
+            this.mTemporaryBounds.setEmpty();
         }
         this.mAnimatingToBounds.setEmpty();
+        this.mSpringingToTouch = false;
+        this.mDismissalPending = false;
     }
 
     private void setAnimatingToBounds(Rect rect) {
         this.mAnimatingToBounds.set(rect);
+        this.mFloatingContentCoordinator.onContentMoved(this);
     }
 
     private void resizePipUnchecked(Rect rect) {
@@ -323,34 +380,33 @@ public class PipMotionHelper implements PipAppOpsListener.Callback {
     }
 
     private void resizeAndAnimatePipUnchecked(Rect rect, int i) {
-        if (!rect.equals(this.mBounds)) {
-            this.mPipTaskOrganizer.scheduleAnimateResizePip(rect, i, this.mUpdateBoundsCallback);
-            setAnimatingToBounds(rect);
-        }
+        this.mPipTaskOrganizer.scheduleAnimateResizePip(rect, i, this.mUpdateBoundsCallback);
+        setAnimatingToBounds(rect);
     }
 
     /* access modifiers changed from: package-private */
-    public MagnetizedObject getMagnetizedPip() {
-        return new MagnetizedObject(this, this.mContext, this.mAnimatedBounds, FloatProperties.RECT_X, FloatProperties.RECT_Y) {
-            public float getWidth(Rect rect) {
-                return (float) rect.width();
-            }
+    public MagnetizedObject<Rect> getMagnetizedPip() {
+        if (this.mMagnetizedPip == null) {
+            this.mMagnetizedPip = new MagnetizedObject<Rect>(this, this.mContext, this.mTemporaryBounds, FloatProperties.RECT_X, FloatProperties.RECT_Y) {
+                public float getWidth(Rect rect) {
+                    return (float) rect.width();
+                }
 
-            public float getHeight(Rect rect) {
-                return (float) rect.height();
-            }
+                public float getHeight(Rect rect) {
+                    return (float) rect.height();
+                }
 
-            public void getLocationOnScreen(Rect rect, int[] iArr) {
-                iArr[0] = rect.left;
-                iArr[1] = rect.top;
-            }
-        };
+                public void getLocationOnScreen(Rect rect, int[] iArr) {
+                    iArr[0] = rect.left;
+                    iArr[1] = rect.top;
+                }
+            };
+        }
+        return this.mMagnetizedPip;
     }
 
     public void dump(PrintWriter printWriter, String str) {
-        String str2 = str + "  ";
         printWriter.println(str + "PipMotionHelper");
-        printWriter.println(str2 + "mBounds=" + this.mBounds);
-        printWriter.println(str2 + "mStableInsets=" + this.mStableInsets);
+        printWriter.println((str + "  ") + "mBounds=" + this.mBounds);
     }
 }

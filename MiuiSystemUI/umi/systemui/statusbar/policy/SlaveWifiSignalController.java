@@ -1,56 +1,80 @@
 package com.android.systemui.statusbar.policy;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.NetworkInfo;
 import android.net.wifi.MiuiWifiManager;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.os.Handler;
+import android.os.UserHandle;
 import android.util.Log;
 import com.android.settingslib.wifi.SlaveWifiUtils;
-import com.android.systemui.plugins.R;
-import com.android.systemui.statusbar.policy.NetworkController;
-import com.android.systemui.statusbar.policy.SignalController;
+import com.android.systemui.C0010R$drawable;
+import com.android.systemui.C0018R$string;
+import com.android.systemui.broadcast.BroadcastDispatcher;
+import com.android.systemui.statusbar.phone.StatusBarIconController;
 
-public class SlaveWifiSignalController extends SignalController<SlaveWifiState, SignalController.IconGroup> {
+public class SlaveWifiSignalController extends BroadcastReceiver {
+    /* access modifiers changed from: private */
+    public static final int[] SLAVE_WIFI_ACCESSIBILITY = {C0018R$string.accessibility_no_wifi, C0018R$string.accessibility_wifi_one_bar, C0018R$string.accessibility_wifi_two_bars, C0018R$string.accessibility_wifi_three_bars, C0018R$string.accessibility_wifi_signal_full};
+    /* access modifiers changed from: private */
+    public static final int[] SLAVE_WIFI_ICONS = {C0010R$drawable.stat_sys_slave_wifi_signal_0, C0010R$drawable.stat_sys_slave_wifi_signal_1, C0010R$drawable.stat_sys_slave_wifi_signal_2, C0010R$drawable.stat_sys_slave_wifi_signal_3, C0010R$drawable.stat_sys_slave_wifi_signal_4};
+    private BroadcastDispatcher mBroadcastDispatcher;
+    /* access modifiers changed from: private */
+    public boolean mConnected;
+    /* access modifiers changed from: private */
+    public Context mContext;
+    /* access modifiers changed from: private */
+    public boolean mEnabled;
+    /* access modifiers changed from: private */
+    public int mLevel;
+    private Handler mMainHandle;
+    private int mRssi;
+    /* access modifiers changed from: private */
+    public StatusBarIconController mStatusBarIconController;
     private boolean mSupportSlaveWifi;
 
-    public SlaveWifiSignalController(Context context, boolean z, CallbackHandler callbackHandler, NetworkControllerImpl networkControllerImpl) {
-        super("SlaveWifiSignalController", context, 1, callbackHandler, networkControllerImpl);
-        this.mSupportSlaveWifi = z;
-        if (z) {
-            SignalController.IconGroup iconGroup = new SignalController.IconGroup("Slave WiFi Icons", WifiIcons.SB_SLAVE_WIFI_SIGNAL_STRENGTH, WifiIcons.QS_SLAVE_WIFI_SIGNAL_STRENGTH, AccessibilityContentDescriptions.SLAVE_WIFI_CONNECTION_STRENGTH, R.drawable.stat_sys_wifi_signal_null, R.drawable.ic_qs_wifi_no_network, R.drawable.stat_sys_wifi_signal_null, R.drawable.ic_qs_wifi_no_network, R.string.accessibility_status_bar_no_slave_wifi);
-            ((SlaveWifiState) this.mLastState).iconGroup = iconGroup;
-            ((SlaveWifiState) this.mCurrentState).iconGroup = iconGroup;
-            SlaveWifiUtils slaveWifiUtils = new SlaveWifiUtils(context);
+    public SlaveWifiSignalController(Context context, Handler handler, StatusBarIconController statusBarIconController, Handler handler2, BroadcastDispatcher broadcastDispatcher) {
+        this.mContext = context;
+        this.mStatusBarIconController = statusBarIconController;
+        statusBarIconController.setIcon("slave_wifi", C0010R$drawable.stat_sys_slave_wifi_signal_0_tint, context.getString(C0018R$string.accessibility_no_wifi));
+        this.mStatusBarIconController.setIconVisibility("slave_wifi", false);
+        this.mMainHandle = handler2;
+        this.mBroadcastDispatcher = broadcastDispatcher;
+    }
+
+    public void start() {
+        SlaveWifiUtils slaveWifiUtils = new SlaveWifiUtils(this.mContext);
+        this.mSupportSlaveWifi = slaveWifiUtils.supportDualWifi(this.mContext);
+        if (slaveWifiUtils.supportDualWifi(this.mContext)) {
+            IntentFilter intentFilter = new IntentFilter();
+            intentFilter.addAction("android.net.wifi.SLAVE_STATE_CHANGE");
+            intentFilter.addAction("android.net.wifi.SLAVE_RSSI_CHANGED");
+            intentFilter.addAction("android.net.wifi.WIFI_SLAVE_STATE_CHANGED");
+            this.mBroadcastDispatcher.registerReceiver(this, intentFilter, this.mContext.getMainExecutor(), UserHandle.ALL);
             if (slaveWifiUtils.isSlaveWifiEnabled()) {
-                ((SlaveWifiState) this.mLastState).enabled = true;
-                ((SlaveWifiState) this.mCurrentState).enabled = true;
+                this.mEnabled = slaveWifiUtils.isSlaveWifiEnabled();
                 WifiInfo wifiSlaveConnectionInfo = slaveWifiUtils.getWifiSlaveConnectionInfo();
                 if (wifiSlaveConnectionInfo == null) {
                     Log.d("SlaveWifiSignalController", "SlaveWifiSignalController: don't connected");
                     return;
                 }
-                T t = this.mCurrentState;
-                T t2 = this.mLastState;
-                ((SlaveWifiState) t2).connected = true;
-                ((SlaveWifiState) t).connected = true;
+                this.mConnected = wifiSlaveConnectionInfo.getNetworkId() != -1;
                 int rssi = wifiSlaveConnectionInfo.getRssi();
-                ((SlaveWifiState) t2).rssi = rssi;
-                ((SlaveWifiState) t).rssi = rssi;
-                T t3 = this.mCurrentState;
-                int calculateSignalLevel = WifiManager.calculateSignalLevel(((SlaveWifiState) t3).rssi, 5);
-                ((SlaveWifiState) this.mLastState).level = calculateSignalLevel;
-                ((SlaveWifiState) t3).level = calculateSignalLevel;
-                Log.d("SlaveWifiSignalController", "SlaveWifiSignalController: init, connected = true, rssi = " + ((SlaveWifiState) this.mCurrentState).rssi + ", level = " + ((SlaveWifiState) this.mCurrentState).level);
+                this.mRssi = rssi;
+                this.mLevel = WifiManager.calculateSignalLevel(rssi, 5);
+                Log.d("SlaveWifiSignalController", "SlaveWifiSignalController: init, connected = true, rssi = " + this.mRssi + ", level = " + this.mLevel);
+                updateIconState();
                 return;
             }
             Log.d("SlaveWifiSignalController", "SlaveWifiSignalController: don't enable");
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void handleBroadcast(Intent intent) {
+    public void onReceive(Context context, Intent intent) {
         String action;
         if (this.mSupportSlaveWifi && (action = intent.getAction()) != null) {
             char c = 65535;
@@ -68,47 +92,41 @@ public class SlaveWifiSignalController extends SignalController<SlaveWifiState, 
                 c = 0;
             }
             if (c == 0) {
-                ((SlaveWifiState) this.mCurrentState).rssi = intent.getIntExtra("newRssi", -200);
-                T t = this.mCurrentState;
-                ((SlaveWifiState) t).level = MiuiWifiManager.calculateSignalLevel(((SlaveWifiState) t).rssi, 5);
-                Log.d("SlaveWifiSignalController", "handleBroadcast: rssi changed,  mCurrentState.rssi = " + ((SlaveWifiState) this.mCurrentState).rssi + ", mCurrentState.level = " + ((SlaveWifiState) this.mCurrentState).level);
+                int intExtra = intent.getIntExtra("newRssi", -200);
+                this.mRssi = intExtra;
+                this.mLevel = MiuiWifiManager.calculateSignalLevel(intExtra, 5);
+                Log.d("SlaveWifiSignalController", "handleBroadcast: rssi changed,  rssi = " + this.mRssi + ", level = " + this.mLevel);
             } else if (c == 1) {
-                SlaveWifiState slaveWifiState = (SlaveWifiState) this.mCurrentState;
                 if (intent.getIntExtra("wifi_state", 18) == 17) {
                     z = true;
                 }
-                slaveWifiState.enabled = z;
-                Log.d("SlaveWifiSignalController", "handleBroadcast: wifi slave state changed, mCurrentState.enabled = " + ((SlaveWifiState) this.mCurrentState).enabled);
+                this.mEnabled = z;
+                Log.d("SlaveWifiSignalController", "handleBroadcast: wifi slave state changed, enabled = " + this.mEnabled);
             } else if (c == 2) {
                 NetworkInfo networkInfo = (NetworkInfo) intent.getParcelableExtra("networkInfo");
-                SlaveWifiState slaveWifiState2 = (SlaveWifiState) this.mCurrentState;
                 if (networkInfo != null && networkInfo.isConnected()) {
                     z = true;
                 }
-                slaveWifiState2.connected = z;
-                Log.d("SlaveWifiSignalController", "handleBroadcast: network_slave_state_change, mCurrentState.connected = " + ((SlaveWifiState) this.mCurrentState).connected);
+                this.mConnected = z;
+                Log.d("SlaveWifiSignalController", "handleBroadcast: network_slave_state_change, connected = " + this.mConnected);
             }
-            notifyListenersIfNecessary();
-        }
-    }
-
-    public void notifyListeners(NetworkController.SignalCallback signalCallback) {
-        if (this.mSupportSlaveWifi) {
-            T t = this.mCurrentState;
-            boolean z = ((SlaveWifiState) t).enabled && ((SlaveWifiState) t).connected;
-            Log.d("SlaveWifiSignalController", "notifyListeners: " + z);
-            String stringIfExists = getStringIfExists(getContentDescription());
-            signalCallback.setSlaveWifiIndicators(((SlaveWifiState) this.mCurrentState).enabled, new NetworkController.IconState(z, getCurrentIconId(), stringIfExists), new NetworkController.IconState(z, getQsCurrentIconId(), stringIfExists));
+            updateIconState();
         }
     }
 
     /* access modifiers changed from: protected */
-    public SlaveWifiState cleanState() {
-        return new SlaveWifiState();
-    }
-
-    static class SlaveWifiState extends SignalController.State {
-        SlaveWifiState() {
-        }
+    public void updateIconState() {
+        this.mMainHandle.post(new Runnable() {
+            public void run() {
+                boolean z = false;
+                int max = Math.max(Math.min(4, SlaveWifiSignalController.this.mLevel), 0);
+                SlaveWifiSignalController.this.mStatusBarIconController.setIcon("slave_wifi", SlaveWifiSignalController.SLAVE_WIFI_ICONS[max], SlaveWifiSignalController.this.mContext.getString(SlaveWifiSignalController.SLAVE_WIFI_ACCESSIBILITY[max]));
+                StatusBarIconController access$400 = SlaveWifiSignalController.this.mStatusBarIconController;
+                if (SlaveWifiSignalController.this.mEnabled && SlaveWifiSignalController.this.mConnected) {
+                    z = true;
+                }
+                access$400.setIconVisibility("slave_wifi", z);
+            }
+        });
     }
 }

@@ -8,16 +8,17 @@ import android.content.Context;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
+import com.android.systemui.C0009R$dimen;
 import com.android.systemui.ExpandHelper;
+import com.android.systemui.Gefingerpoken;
 import com.android.systemui.Interpolators;
-import com.android.systemui.classifier.FalsingManager;
-import com.android.systemui.plugins.R;
+import com.android.systemui.plugins.FalsingManager;
+import com.android.systemui.statusbar.notification.row.ExpandableView;
 
-public class DragDownHelper {
+public class DragDownHelper implements Gefingerpoken {
     /* access modifiers changed from: private */
     public ExpandHelper.Callback mCallback;
-    /* access modifiers changed from: private */
-    public DragDownCallback mDragDownCallback;
+    private DragDownCallback mDragDownCallback;
     private boolean mDraggedFarEnough;
     private boolean mDraggingDown;
     private FalsingManager mFalsingManager;
@@ -26,11 +27,18 @@ public class DragDownHelper {
     private float mInitialTouchY;
     private float mLastHeight;
     private int mMinDragDistance;
+    private final float mSlopMultiplier;
     private ExpandableView mStartingChild;
     private final int[] mTemp2 = new int[2];
-    private float mTouchSlop;
+    private final float mTouchSlop;
 
     public interface DragDownCallback {
+        boolean isDragDownAnywhereEnabled();
+
+        boolean isDragDownEnabledForView(ExpandableView expandableView);
+
+        boolean isFalsingCheckNeeded();
+
         void onCrossedThreshold(boolean z);
 
         void onDragDownReset();
@@ -42,16 +50,19 @@ public class DragDownHelper {
         void setEmptyDragAmount(float f);
     }
 
-    public DragDownHelper(Context context, View view, ExpandHelper.Callback callback, DragDownCallback dragDownCallback) {
-        this.mMinDragDistance = context.getResources().getDimensionPixelSize(R.dimen.keyguard_drag_down_min_distance);
-        this.mTouchSlop = (float) ViewConfiguration.get(context).getScaledTouchSlop();
+    public DragDownHelper(Context context, View view, ExpandHelper.Callback callback, DragDownCallback dragDownCallback, FalsingManager falsingManager) {
+        this.mMinDragDistance = context.getResources().getDimensionPixelSize(C0009R$dimen.keyguard_drag_down_min_distance);
+        ViewConfiguration viewConfiguration = ViewConfiguration.get(context);
+        this.mTouchSlop = (float) viewConfiguration.getScaledTouchSlop();
+        this.mSlopMultiplier = viewConfiguration.getScaledAmbiguousGestureMultiplier();
         this.mCallback = callback;
         this.mDragDownCallback = dragDownCallback;
         this.mHost = view;
-        this.mFalsingManager = FalsingManager.getInstance(context);
+        this.mFalsingManager = falsingManager;
     }
 
     public boolean onInterceptTouchEvent(MotionEvent motionEvent) {
+        float f;
         float x = motionEvent.getX();
         float y = motionEvent.getY();
         int actionMasked = motionEvent.getActionMasked();
@@ -62,15 +73,23 @@ public class DragDownHelper {
             this.mInitialTouchY = y;
             this.mInitialTouchX = x;
         } else if (actionMasked == 2) {
-            float f = y - this.mInitialTouchY;
-            if (f > this.mTouchSlop && f > Math.abs(x - this.mInitialTouchX)) {
+            float f2 = y - this.mInitialTouchY;
+            if (motionEvent.getClassification() == 1) {
+                f = this.mTouchSlop * this.mSlopMultiplier;
+            } else {
+                f = this.mTouchSlop;
+            }
+            if (f2 > f && f2 > Math.abs(x - this.mInitialTouchX)) {
                 this.mFalsingManager.onNotificatonStartDraggingDown();
                 this.mDraggingDown = true;
                 captureStartingChild(this.mInitialTouchX, this.mInitialTouchY);
                 this.mInitialTouchY = y;
                 this.mInitialTouchX = x;
                 this.mDragDownCallback.onTouchSlopExceeded();
-                return true;
+                if (this.mStartingChild != null || this.mDragDownCallback.isDragDownAnywhereEnabled()) {
+                    return true;
+                }
+                return false;
             }
         }
         return false;
@@ -108,13 +127,13 @@ public class DragDownHelper {
                 stopDragging();
                 return false;
             }
-        } else if (isFalseTouch() || !this.mDragDownCallback.onDraggedDown(this.mStartingChild, (int) (y - this.mInitialTouchY))) {
+        } else if (this.mFalsingManager.isUnlockingDisabled() || isFalseTouch() || !this.mDragDownCallback.onDraggedDown(this.mStartingChild, (int) (y - this.mInitialTouchY))) {
             stopDragging();
             return false;
         } else {
             ExpandableView expandableView2 = this.mStartingChild;
             if (expandableView2 == null) {
-                this.mDragDownCallback.setEmptyDragAmount(0.0f);
+                cancelExpansion();
             } else {
                 this.mCallback.setUserLockedChild(expandableView2, false);
                 this.mStartingChild = null;
@@ -125,15 +144,26 @@ public class DragDownHelper {
     }
 
     private boolean isFalseTouch() {
-        return this.mFalsingManager.isFalseTouch() || !this.mDraggedFarEnough;
+        if (!this.mDragDownCallback.isFalsingCheckNeeded()) {
+            return false;
+        }
+        if (this.mFalsingManager.isFalseTouch() || !this.mDraggedFarEnough) {
+            return true;
+        }
+        return false;
     }
 
     private void captureStartingChild(float f, float f2) {
         if (this.mStartingChild == null) {
             ExpandableView findView = findView(f, f2);
             this.mStartingChild = findView;
-            if (findView != null) {
-                this.mCallback.setUserLockedChild(findView, true);
+            if (findView == null) {
+                return;
+            }
+            if (this.mDragDownCallback.isDragDownEnabledForView(findView)) {
+                this.mCallback.setUserLockedChild(this.mStartingChild, true);
+            } else {
+                this.mStartingChild = null;
             }
         }
     }
@@ -171,11 +201,17 @@ public class DragDownHelper {
         ofFloat.setInterpolator(Interpolators.FAST_OUT_SLOW_IN);
         ofFloat.setDuration(375);
         ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                DragDownHelper.this.mDragDownCallback.setEmptyDragAmount(((Float) valueAnimator.getAnimatedValue()).floatValue());
+            public final void onAnimationUpdate(ValueAnimator valueAnimator) {
+                DragDownHelper.this.lambda$cancelExpansion$0$DragDownHelper(valueAnimator);
             }
         });
         ofFloat.start();
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$cancelExpansion$0 */
+    public /* synthetic */ void lambda$cancelExpansion$0$DragDownHelper(ValueAnimator valueAnimator) {
+        this.mDragDownCallback.setEmptyDragAmount(((Float) valueAnimator.getAnimatedValue()).floatValue());
     }
 
     private void stopDragging() {
@@ -199,5 +235,9 @@ public class DragDownHelper {
 
     public boolean isDraggingDown() {
         return this.mDraggingDown;
+    }
+
+    public boolean isDragDownEnabled() {
+        return this.mDragDownCallback.isDragDownEnabledForView((ExpandableView) null);
     }
 }

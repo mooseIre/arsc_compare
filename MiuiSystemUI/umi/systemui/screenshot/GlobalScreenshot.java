@@ -3,1293 +3,1228 @@ package com.android.systemui.screenshot;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
+import android.app.ActivityManager;
 import android.app.ActivityOptions;
-import android.app.KeyguardManager;
-import android.app.NotificationManager;
-import android.app.StatusBarManager;
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.ContextCompat;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.ServiceConnection;
-import android.content.SharedPreferences;
-import android.content.pm.ResolveInfo;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.Color;
+import android.graphics.Insets;
 import android.graphics.Outline;
 import android.graphics.Paint;
+import android.graphics.PointF;
 import android.graphics.Rect;
-import android.graphics.drawable.GradientDrawable;
-import android.media.Ringtone;
-import android.media.RingtoneManager;
+import android.graphics.Region;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.InsetDrawable;
+import android.graphics.drawable.LayerDrawable;
+import android.media.MediaActionSound;
 import android.net.Uri;
-import android.os.AsyncTask;
-import android.os.Bundle;
 import android.os.Handler;
-import android.os.IBinder;
+import android.os.Looper;
+import android.os.Message;
+import android.os.PowerManager;
 import android.os.RemoteException;
-import android.os.ServiceManager;
-import android.os.SystemProperties;
-import android.os.UserHandle;
-import android.os.UserManager;
-import android.os.UserManagerCompat;
-import android.provider.MiuiSettings;
 import android.provider.Settings;
-import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.MathUtils;
+import android.util.Slog;
 import android.view.Display;
-import android.view.IWindowManager;
-import android.view.IWindowManagerCompat;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
-import android.view.VelocityTracker;
+import android.view.SurfaceControl;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewOutlineProvider;
 import android.view.ViewTreeObserver;
+import android.view.WindowInsets;
 import android.view.WindowManager;
-import android.view.WindowManagerCompat;
+import android.view.accessibility.AccessibilityManager;
 import android.view.animation.AccelerateInterpolator;
+import android.view.animation.AnimationUtils;
+import android.view.animation.Interpolator;
+import android.widget.FrameLayout;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
 import android.widget.Toast;
-import androidx.preference.PreferenceManager;
-import com.android.systemui.Constants;
-import com.android.systemui.SystemUICompat;
-import com.android.systemui.Util;
-import com.android.systemui.content.pm.PackageManagerCompat;
-import com.android.systemui.miui.anim.PhysicBasedInterpolator;
-import com.android.systemui.plugins.R;
-import com.android.systemui.recents.misc.ForegroundThread;
-import com.android.systemui.screenshot.IBitmapService;
-import com.android.systemui.screenshot.IScreenShotCallback;
-import com.android.systemui.util.CornerRadiusUtils;
-import com.miui.enterprise.RestrictionsHelper;
+import com.android.internal.logging.UiEventLogger;
+import com.android.systemui.C0009R$dimen;
+import com.android.systemui.C0012R$id;
+import com.android.systemui.C0014R$layout;
+import com.android.systemui.C0018R$string;
+import com.android.systemui.screenshot.GlobalScreenshot;
+import com.android.systemui.shared.system.ActivityManagerWrapper;
+import com.android.systemui.shared.system.QuickStepContract;
+import com.android.systemui.statusbar.phone.StatusBar;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import miui.os.Build;
-import miui.util.HapticFeedbackUtil;
-import miui.util.ScreenshotUtils;
-import miui.view.animation.CubicEaseInOutInterpolator;
-import miui.view.animation.CubicEaseOutInterpolator;
-import miui.view.animation.SineEaseInOutInterpolator;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+import java.util.function.Consumer;
 
-class GlobalScreenshot {
-    private boolean isDeviceProvisioned;
-    private BroadcastReceiver mBeforeScreenshotReceiver = new BroadcastReceiver() {
-        public void onReceive(Context context, Intent intent) {
-            if (!intent.getBooleanExtra("IsFinished", false)) {
-                GlobalScreenshot.this.quitThumbnailWindow(false, true);
-                StatHelper.recordCountEvent(GlobalScreenshot.this.mContext, "quit_thumbnail", "continue_screenshot");
-            }
-        }
-    };
+public class GlobalScreenshot implements ViewTreeObserver.OnComputeInternalInsetsListener {
+    private final Interpolator mAccelerateInterpolator = new AccelerateInterpolator();
+    private HorizontalScrollView mActionsContainer;
+    private ImageView mActionsContainerBackground;
+    private LinearLayout mActionsView;
+    private ImageView mBackgroundProtection;
+    private MediaActionSound mCameraSound;
     /* access modifiers changed from: private */
-    public IBitmapService mBitmapService;
-    private float mBtnTranslationX;
+    public final Context mContext;
+    private float mCornerSizeX;
     /* access modifiers changed from: private */
-    public float mBtnTranslationY;
-    private BroadcastReceiver mConfigurationReceiver = new BroadcastReceiver() {
-        public void onReceive(Context context, Intent intent) {
-            GlobalScreenshot.this.quitThumbnailWindow(false, true);
-            StatHelper.recordCountEvent(GlobalScreenshot.this.mContext, "quit_thumbnail", "configuration_change");
-        }
-    };
-    private ServiceConnection mConnection = new ServiceConnection() {
-        public void onServiceConnected(ComponentName componentName, final IBinder iBinder) {
-            GlobalScreenshot.this.mGalleryHandler.post(new Runnable() {
-                public void run() {
-                    try {
-                        IBitmapService unused = GlobalScreenshot.this.mBitmapService = IBitmapService.Stub.asInterface(iBinder);
-                        GlobalScreenshot.this.mBitmapService.registerCallback(GlobalScreenshot.this.mScreenShotCallback);
-                    } catch (RemoteException e) {
-                        Log.e("GlobalScreenshot", "bitmap service register exception : " + e);
-                    }
-                }
-            });
-        }
-
-        public void onServiceDisconnected(ComponentName componentName) {
-            IBitmapService unused = GlobalScreenshot.this.mBitmapService = null;
-        }
-    };
+    public boolean mDirectionLTR;
+    private Animator mDismissAnimation;
     /* access modifiers changed from: private */
-    public Context mContext;
-    private Display mDisplay;
-    private DisplayMetrics mDisplayMetrics;
+    public FrameLayout mDismissButton;
+    private float mDismissDeltaY;
+    private final Display mDisplay;
+    private final DisplayMetrics mDisplayMetrics;
+    private final Interpolator mFastOutSlowIn;
+    private boolean mInDarkMode = false;
+    private int mLeftInset;
+    private int mNavMode;
     /* access modifiers changed from: private */
-    public float mFirstTranslationX;
+    public final ScreenshotNotificationsController mNotificationsController;
     /* access modifiers changed from: private */
-    public float mFirstTranslationY;
+    public Runnable mOnCompleteRunnable;
+    private boolean mOrientationPortrait;
+    private int mRightInset;
+    private SaveImageInBackgroundTask mSaveInBgTask;
+    private Bitmap mScreenBitmap;
     /* access modifiers changed from: private */
-    public Handler mGalleryHandler;
+    public ImageView mScreenshotAnimatedView;
+    private Animator mScreenshotAnimation;
+    private ImageView mScreenshotFlash;
     /* access modifiers changed from: private */
-    public Handler mHandler = new Handler();
-    private boolean mHasNavBar;
-    private boolean mIsBeforeScreenshotReceiver;
-    private boolean mIsConfigurationReceiver;
-    /* access modifiers changed from: private */
-    public boolean mIsInOutAnimating;
-    /* access modifiers changed from: private */
-    public boolean mIsQuited;
-    /* access modifiers changed from: private */
-    public boolean mIsSaved;
-    /* access modifiers changed from: private */
-    public boolean mIsShowLongScreenShotGuide;
-    /* access modifiers changed from: private */
-    public boolean mIsShowLongScreenShotGuideOverlay;
-    private boolean mIsThumbnailMoving;
-    /* access modifiers changed from: private */
-    public LongScreenShotGuideLayout mLongScreenShotGuideLayout;
-    /* access modifiers changed from: private */
-    public View mLongScreenShotGuideLayoutOverlay;
-    private RelativeLayout.LayoutParams mLongShotParams;
-    private int mNotificationIconSize;
-    private NotificationManager mNotificationManager;
-    /* access modifiers changed from: private */
-    public NotifyMediaStoreData mNotifyMediaStoreData;
-    /* access modifiers changed from: private */
-    public ViewTreeObserver.OnComputeInternalInsetsListener mOnComputeInternalInsetsListener = new ViewTreeObserver.OnComputeInternalInsetsListener() {
-        public void onComputeInternalInsets(ViewTreeObserver.InternalInsetsInfo internalInsetsInfo) {
-            internalInsetsInfo.setTouchableInsets(3);
-            int access$900 = (int) GlobalScreenshot.this.mThumbnailMarginLeft;
-            int access$1000 = GlobalScreenshot.this.mThumbnailTop;
-            internalInsetsInfo.touchableRegion.set(new Rect(access$900, access$1000, GlobalScreenshot.this.mThumbnailTotalWidth + access$900, GlobalScreenshot.this.mThumbnailTotalHeight + access$1000));
-        }
-    };
-    /* access modifiers changed from: private */
-    public final boolean mOrientationLandscape;
-    private float mPhoneTopRadius;
-    /* access modifiers changed from: private */
-    public Runnable mQuitThumbnailRunnable = new Runnable() {
-        public void run() {
-            GlobalScreenshot.this.quitThumbnailWindow(true, true);
-            StatHelper.recordCountEvent(GlobalScreenshot.this.mContext, "quit_thumbnail", "timeout");
-        }
-    };
-    private float mRadius;
-    private Runnable mRemoveLongScreenShotGuideOverlayRunnable = new Runnable() {
-        public void run() {
-            if (GlobalScreenshot.this.mLongScreenShotGuideLayoutOverlay != null) {
-                GlobalScreenshot.this.mWindowManager.removeView(GlobalScreenshot.this.mLongScreenShotGuideLayoutOverlay);
-                boolean unused = GlobalScreenshot.this.mIsShowLongScreenShotGuideOverlay = false;
-            }
-        }
-    };
-    /* access modifiers changed from: private */
-    public Ringtone mRingtone;
-    /* access modifiers changed from: private */
-    public float mScaleValue = 1.0f;
-    /* access modifiers changed from: private */
-    public Bitmap mScreenBitmap;
-    /* access modifiers changed from: private */
-    public int mScreenHeight;
-    /* access modifiers changed from: private */
-    public MarqueeTextView mScreenLongShotView;
-    /* access modifiers changed from: private */
-    public View mScreenLongShotViewGroup;
-    private BroadcastReceiver mScreenOffReceiver = new BroadcastReceiver() {
-        public void onReceive(Context context, Intent intent) {
-            GlobalScreenshot.this.removeLongScreenShotGuideOverlay();
-            GlobalScreenshot.this.removeLongScreenShotGuide(false);
-            GlobalScreenshot.this.mHandler.postDelayed(GlobalScreenshot.this.mQuitThumbnailRunnable, 3600);
-        }
-    };
-    /* access modifiers changed from: private */
-    public View mScreenShareView;
-    /* access modifiers changed from: private */
-    public IScreenShotCallback.Stub mScreenShotCallback = new IScreenShotCallback.Stub() {
-        public void quitThumnail() throws RemoteException {
-            GlobalScreenshot.this.mHandler.post(new Runnable() {
-                public void run() {
-                    GlobalScreenshot.this.quitThumbnailWindow(false, false);
-                }
-            });
-        }
-    };
-    private Uri mScreenShotUri;
-    /* access modifiers changed from: private */
-    public View mScreenWhiteBg;
-    /* access modifiers changed from: private */
-    public int mScreenWidth;
-    /* access modifiers changed from: private */
-    public ObjectAnimator mScreenshotAnimation;
-    /* access modifiers changed from: private */
-    public GlobalScreenshotDisplay mScreenshotDisplay;
+    public final Handler mScreenshotHandler;
     /* access modifiers changed from: private */
     public View mScreenshotLayout;
     /* access modifiers changed from: private */
-    public View mScreenshotShadow;
-    private float mScreenshotTranslationX;
+    public ImageView mScreenshotPreview;
+    private ScreenshotSelectorView mScreenshotSelectorView;
     /* access modifiers changed from: private */
-    public float mScreenshotTranslationY;
+    public final UiEventLogger mUiEventLogger;
+    private final WindowManager.LayoutParams mWindowLayoutParams;
     /* access modifiers changed from: private */
-    public ImageView mScreenshotView;
-    private int mShadowMargin;
-    private float mShadowScale;
-    private float mShadowTranslationX;
-    /* access modifiers changed from: private */
-    public float mShadowTranslationY;
-    private RelativeLayout.LayoutParams mShareParams;
-    /* access modifiers changed from: private */
-    public int mThumbnailHeight;
-    private int mThumbnailLeft;
-    /* access modifiers changed from: private */
-    public float mThumbnailMarginLeft;
-    /* access modifiers changed from: private */
-    public int mThumbnailRight;
-    /* access modifiers changed from: private */
-    public ValueAnimator mThumbnailShakeAnimator;
-    /* access modifiers changed from: private */
-    public int mThumbnailTop;
-    /* access modifiers changed from: private */
-    public int mThumbnailTotalHeight;
-    /* access modifiers changed from: private */
-    public int mThumbnailTotalWidth;
-    /* access modifiers changed from: private */
-    public int mThumbnailWidth;
-    private float mThumnailScale;
-    private float mTouchDownX;
-    private float mTouchDownY;
-    private VelocityTracker mVTracker = VelocityTracker.obtain();
-    private GradientDrawable mWhiteBgDrawable;
-    private WindowManager.LayoutParams mWindowLayoutParams;
-    /* access modifiers changed from: private */
-    public WindowManager mWindowManager;
+    public final WindowManager mWindowManager;
 
-    public interface ScreenshotFinishCallback {
-        void onFinish();
-    }
+    static class SaveImageInBackgroundData {
+        public int errorMsgResId;
+        public Consumer<Uri> finisher;
+        public Bitmap image;
+        public ActionsReadyListener mActionsReadyListener;
 
-    public static float calcPivot(float f, float f2, float f3, float f4) {
-        return f3 + (((f3 - f) * f4) / (f2 - f4));
-    }
-
-    /* access modifiers changed from: private */
-    public void updateRingtone() {
-        Log.d("GlobalScreenshot", "updateRingtone() Build.getRegion()=" + Build.getRegion());
-        if (Build.checkRegion(Locale.KOREA.getCountry())) {
-            this.mScreenShotUri = Uri.fromFile(Constants.SOUND_SCREENSHOT_KR);
-        } else {
-            this.mScreenShotUri = Uri.fromFile(Constants.SOUND_SCREENSHOT);
+        SaveImageInBackgroundData() {
         }
-        Ringtone ringtone = RingtoneManager.getRingtone(this.mContext, this.mScreenShotUri);
-        this.mRingtone = ringtone;
-        if (ringtone == null) {
-            return;
-        }
-        if (Build.checkRegion(Locale.KOREA.getCountry())) {
-            this.mRingtone.setStreamType(7);
-        } else {
-            this.mRingtone.setStreamType(1);
+
+        /* access modifiers changed from: package-private */
+        public void clearImage() {
+            this.image = null;
         }
     }
 
-    public GlobalScreenshot(final Context context, Handler handler) {
-        this.mGalleryHandler = handler;
-        Resources resources = context.getResources();
+    static class SavedImageData {
+        public Notification.Action deleteAction;
+        public Notification.Action editAction;
+        public Notification.Action shareAction;
+        public List<Notification.Action> smartActions;
+        public Uri uri;
+
+        SavedImageData() {
+        }
+
+        public void reset() {
+            this.uri = null;
+            this.shareAction = null;
+            this.editAction = null;
+            this.smartActions = null;
+        }
+    }
+
+    static abstract class ActionsReadyListener {
+        /* access modifiers changed from: package-private */
+        public abstract void onActionsReady(SavedImageData savedImageData);
+
+        ActionsReadyListener() {
+        }
+    }
+
+    public GlobalScreenshot(Context context, Resources resources, ScreenshotNotificationsController screenshotNotificationsController, UiEventLogger uiEventLogger) {
+        boolean z = true;
+        this.mDirectionLTR = true;
+        this.mOrientationPortrait = true;
+        this.mScreenshotHandler = new Handler(Looper.getMainLooper()) {
+            public void handleMessage(Message message) {
+                if (message.what == 2) {
+                    GlobalScreenshot.this.mUiEventLogger.log(ScreenshotEvent.SCREENSHOT_INTERACTION_TIMEOUT);
+                    GlobalScreenshot.this.dismissScreenshot("timeout", false);
+                    GlobalScreenshot.this.mOnCompleteRunnable.run();
+                }
+            }
+        };
         this.mContext = context;
-        LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService("layout_inflater");
-        this.mScreenshotDisplay = new GlobalScreenshotDisplay(context);
-        this.mThumbnailLeft = this.mContext.getResources().getDimensionPixelSize(R.dimen.screenshot_thumbnail_padding_left);
-        this.mThumbnailTop = this.mContext.getResources().getDimensionPixelSize(R.dimen.screenshot_thumbnail_padding_top);
-        this.mThumbnailRight = this.mContext.getResources().getDimensionPixelSize(R.dimen.screenshot_thumbnail_padding_right);
-        int i = 0;
-        this.mOrientationLandscape = this.mContext.getResources().getConfiguration().orientation == 2;
-        View inflate = layoutInflater.inflate(R.layout.global_screenshot, (ViewGroup) null);
-        this.mScreenshotLayout = inflate;
-        this.mScreenshotView = (ImageView) inflate.findViewById(R.id.global_screenshot);
-        this.mScreenWhiteBg = this.mScreenshotLayout.findViewById(R.id.screen_white_bg);
-        this.mScreenshotShadow = this.mScreenshotLayout.findViewById(R.id.screenshot_shadow);
-        this.mScreenLongShotViewGroup = this.mScreenshotLayout.findViewById(R.id.btnLongShotViewGroup);
-        this.mScreenShareView = this.mScreenshotLayout.findViewById(R.id.btnShare);
-        this.mScreenLongShotView = (MarqueeTextView) this.mScreenshotLayout.findViewById(R.id.btnLongShot);
-        this.mScreenshotLayout.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                if (motionEvent.getAction() != 4) {
-                    return false;
-                }
-                if (GlobalScreenshot.this.mIsShowLongScreenShotGuide) {
-                    GlobalScreenshot.this.removeLongScreenShotGuide(true);
-                    GlobalScreenshot.this.mHandler.postDelayed(GlobalScreenshot.this.mQuitThumbnailRunnable, 3600);
-                    return false;
-                }
-                GlobalScreenshot.this.quitThumbnailWindow(true, true);
-                StatHelper.recordCountEvent(GlobalScreenshot.this.mContext, "quit_thumbnail", "touch_outside");
-                return false;
-            }
-        });
-        this.mScreenshotView.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                return GlobalScreenshot.this.onThumbnailViewTouch(motionEvent);
-            }
-        });
-        boolean isDeviceProvisioned2 = isDeviceProvisioned();
-        this.isDeviceProvisioned = isDeviceProvisioned2;
-        if (isDeviceProvisioned2) {
-            this.mScreenLongShotView.setMarqueeEnable(true);
-            this.mScreenLongShotView.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View view) {
-                    if (!GlobalScreenshot.this.mIsInOutAnimating) {
-                        GlobalScreenshot.this.removeLongScreenShotGuide(true);
-                        if (GlobalScreenshot.this.mOrientationLandscape) {
-                            Toast.makeText(context, R.string.screenshot_failed_in_landscape_mode, 0).show();
-                        } else if (GlobalScreenshot.this.mScreenLongShotView.isSelected()) {
-                            GlobalScreenshot.this.enterLongScreenshot();
-                            StatHelper.recordNewScreenshotEvent(GlobalScreenshot.this.mContext, "new_click_long_screenshot_button", (Map<String, String>) null);
-                        }
-                    }
-                }
-            });
-            this.mScreenShareView.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View view) {
-                    GlobalScreenshot globalScreenshot = GlobalScreenshot.this;
-                    globalScreenshot.jumpProcess(globalScreenshot.mContext, GlobalScreenshot.this.mNotifyMediaStoreData, "send");
-                }
-            });
-        } else {
-            this.mScreenLongShotViewGroup.setVisibility(4);
-            this.mScreenShareView.setVisibility(4);
-        }
-        WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(-1, -1, 0, 0, 2024, 17565480, -3);
+        this.mNotificationsController = screenshotNotificationsController;
+        this.mUiEventLogger = uiEventLogger;
+        reloadAssets();
+        Configuration configuration = this.mContext.getResources().getConfiguration();
+        this.mInDarkMode = configuration.isNightModeActive();
+        this.mDirectionLTR = configuration.getLayoutDirection() == 0;
+        this.mOrientationPortrait = configuration.orientation != 1 ? false : z;
+        WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(-1, -1, 0, 0, 2036, 918816, -3);
         this.mWindowLayoutParams = layoutParams;
-        WindowManagerCompat.setFitInsetsTypes(layoutParams);
-        WindowManagerCompat.setLayoutInDisplayCutoutMode(this.mWindowLayoutParams, 1);
-        this.mWindowLayoutParams.setTitle("ScreenshotAnimation");
-        this.mWindowManager = (WindowManager) context.getSystemService("window");
-        this.mNotificationManager = (NotificationManager) context.getSystemService("notification");
-        this.mDisplay = this.mWindowManager.getDefaultDisplay();
+        layoutParams.setTitle("ScreenshotAnimation");
+        WindowManager.LayoutParams layoutParams2 = this.mWindowLayoutParams;
+        layoutParams2.layoutInDisplayCutoutMode = 3;
+        layoutParams2.setFitInsetsTypes(0);
+        WindowManager windowManager = (WindowManager) context.getSystemService("window");
+        this.mWindowManager = windowManager;
+        this.mDisplay = windowManager.getDefaultDisplay();
         DisplayMetrics displayMetrics = new DisplayMetrics();
         this.mDisplayMetrics = displayMetrics;
         this.mDisplay.getRealMetrics(displayMetrics);
-        DisplayMetrics displayMetrics2 = this.mDisplayMetrics;
-        this.mScreenHeight = displayMetrics2.heightPixels;
-        this.mScreenWidth = displayMetrics2.widthPixels;
-        RelativeLayout.LayoutParams layoutParams2 = (RelativeLayout.LayoutParams) this.mScreenShareView.getLayoutParams();
-        this.mShareParams = layoutParams2;
-        layoutParams2.width = this.mScreenWidth;
-        this.mScreenShareView.setLayoutParams(layoutParams2);
-        RelativeLayout.LayoutParams layoutParams3 = (RelativeLayout.LayoutParams) this.mScreenLongShotViewGroup.getLayoutParams();
-        this.mLongShotParams = layoutParams3;
-        layoutParams3.width = this.mScreenWidth;
-        this.mScreenLongShotViewGroup.setLayoutParams(layoutParams3);
-        float phoneRadius = (float) CornerRadiusUtils.getPhoneRadius(this.mContext);
-        this.mPhoneTopRadius = phoneRadius;
-        setWhiteBgCornerRadius(phoneRadius);
-        if (!Build.IS_TABLET) {
-            try {
-                this.mHasNavBar = IWindowManagerCompat.hasNavigationBar(IWindowManager.Stub.asInterface(ServiceManager.getService("window")), ContextCompat.getDisplayId(context));
-            } catch (RemoteException unused) {
-            }
+        this.mCornerSizeX = (float) resources.getDimensionPixelSize(C0009R$dimen.global_screenshot_x_scale);
+        this.mDismissDeltaY = (float) resources.getDimensionPixelSize(C0009R$dimen.screenshot_dismissal_height_delta);
+        this.mFastOutSlowIn = AnimationUtils.loadInterpolator(this.mContext, 17563661);
+        MediaActionSound mediaActionSound = new MediaActionSound();
+        this.mCameraSound = mediaActionSound;
+        mediaActionSound.load(0);
+    }
+
+    public void onComputeInternalInsets(ViewTreeObserver.InternalInsetsInfo internalInsetsInfo) {
+        internalInsetsInfo.setTouchableInsets(3);
+        Region region = new Region();
+        Rect rect = new Rect();
+        this.mScreenshotPreview.getBoundsOnScreen(rect);
+        region.op(rect, Region.Op.UNION);
+        Rect rect2 = new Rect();
+        this.mActionsContainer.getBoundsOnScreen(rect2);
+        region.op(rect2, Region.Op.UNION);
+        Rect rect3 = new Rect();
+        this.mDismissButton.getBoundsOnScreen(rect3);
+        region.op(rect3, Region.Op.UNION);
+        if (QuickStepContract.isGesturalMode(this.mNavMode)) {
+            Rect rect4 = new Rect(0, 0, this.mLeftInset, this.mDisplayMetrics.heightPixels);
+            region.op(rect4, Region.Op.UNION);
+            DisplayMetrics displayMetrics = this.mDisplayMetrics;
+            int i = displayMetrics.widthPixels;
+            rect4.set(i - this.mRightInset, 0, i, displayMetrics.heightPixels);
+            region.op(rect4, Region.Op.UNION);
         }
-        if (!Build.IS_TABLET && this.mHasNavBar && this.mOrientationLandscape && this.mDisplay.getRotation() == 3 && SystemProperties.getInt("ro.miui.notch", 0) == 1 && !MiuiSettings.Global.getBoolean(this.mContext.getContentResolver(), "force_black_v2")) {
-            i = 0 + this.mContext.getResources().getDimensionPixelSize(R.dimen.notch_height);
+        internalInsetsInfo.touchableRegion.set(region);
+    }
+
+    /* JADX WARNING: Removed duplicated region for block: B:12:0x001e A[ADDED_TO_REGION] */
+    /* JADX WARNING: Removed duplicated region for block: B:16:0x0028  */
+    /* JADX WARNING: Removed duplicated region for block: B:22:0x0033  */
+    /* JADX WARNING: Removed duplicated region for block: B:27:0x003e  */
+    /* JADX WARNING: Removed duplicated region for block: B:32:0x0048  */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    private void onConfigChanged(android.content.res.Configuration r5) {
+        /*
+            r4 = this;
+            boolean r0 = r5.isNightModeActive()
+            r1 = 0
+            r2 = 1
+            if (r0 == 0) goto L_0x000f
+            boolean r0 = r4.mInDarkMode
+            if (r0 != 0) goto L_0x0017
+            r4.mInDarkMode = r2
+            goto L_0x0015
+        L_0x000f:
+            boolean r0 = r4.mInDarkMode
+            if (r0 == 0) goto L_0x0017
+            r4.mInDarkMode = r1
+        L_0x0015:
+            r0 = r2
+            goto L_0x0018
+        L_0x0017:
+            r0 = r1
+        L_0x0018:
+            int r3 = r5.getLayoutDirection()
+            if (r3 == 0) goto L_0x0028
+            if (r3 == r2) goto L_0x0021
+            goto L_0x002f
+        L_0x0021:
+            boolean r3 = r4.mDirectionLTR
+            if (r3 == 0) goto L_0x002f
+            r4.mDirectionLTR = r1
+            goto L_0x002e
+        L_0x0028:
+            boolean r3 = r4.mDirectionLTR
+            if (r3 != 0) goto L_0x002f
+            r4.mDirectionLTR = r2
+        L_0x002e:
+            r0 = r2
+        L_0x002f:
+            int r5 = r5.orientation
+            if (r5 == r2) goto L_0x003e
+            r3 = 2
+            if (r5 == r3) goto L_0x0037
+            goto L_0x0045
+        L_0x0037:
+            boolean r5 = r4.mOrientationPortrait
+            if (r5 == 0) goto L_0x0045
+            r4.mOrientationPortrait = r1
+            goto L_0x0046
+        L_0x003e:
+            boolean r5 = r4.mOrientationPortrait
+            if (r5 != 0) goto L_0x0045
+            r4.mOrientationPortrait = r2
+            goto L_0x0046
+        L_0x0045:
+            r2 = r0
+        L_0x0046:
+            if (r2 == 0) goto L_0x004b
+            r4.reloadAssets()
+        L_0x004b:
+            android.content.Context r5 = r4.mContext
+            android.content.res.Resources r5 = r5.getResources()
+            r0 = 17694853(0x10e0085, float:2.6081654E-38)
+            int r5 = r5.getInteger(r0)
+            r4.mNavMode = r5
+            return
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.screenshot.GlobalScreenshot.onConfigChanged(android.content.res.Configuration):void");
+    }
+
+    private void reloadAssets() {
+        View view = this.mScreenshotLayout;
+        boolean z = view != null && view.isAttachedToWindow();
+        if (z) {
+            this.mWindowManager.removeView(this.mScreenshotLayout);
         }
-        RelativeLayout.LayoutParams layoutParams4 = (RelativeLayout.LayoutParams) this.mScreenshotShadow.getLayoutParams();
-        layoutParams4.setMarginEnd(i);
-        this.mScreenshotShadow.setLayoutParams(layoutParams4);
-        ValueAnimator ofInt = ValueAnimator.ofInt(new int[]{0, 20});
-        this.mThumbnailShakeAnimator = ofInt;
-        ofInt.setDuration(1600);
-        this.mThumbnailShakeAnimator.setInterpolator(new SineEaseInOutInterpolator());
-        this.mThumbnailShakeAnimator.setRepeatCount(-1);
-        this.mThumbnailShakeAnimator.setRepeatMode(2);
-        this.mThumbnailShakeAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                float intValue = (float) ((Integer) valueAnimator.getAnimatedValue()).intValue();
-                GlobalScreenshot.this.mScreenShareView.setTranslationY(GlobalScreenshot.this.mBtnTranslationY + intValue);
-                GlobalScreenshot.this.mScreenLongShotViewGroup.setTranslationY(GlobalScreenshot.this.mBtnTranslationY + intValue);
-                GlobalScreenshot.this.mScreenshotView.setTranslationY(GlobalScreenshot.this.mScreenshotTranslationY + intValue);
-                GlobalScreenshot.this.mScreenshotShadow.setTranslationY(GlobalScreenshot.this.mShadowTranslationY + intValue);
+        View inflate = LayoutInflater.from(this.mContext).inflate(C0014R$layout.global_screenshot, (ViewGroup) null);
+        this.mScreenshotLayout = inflate;
+        inflate.setOnTouchListener(new View.OnTouchListener() {
+            public final boolean onTouch(View view, MotionEvent motionEvent) {
+                return GlobalScreenshot.this.lambda$reloadAssets$0$GlobalScreenshot(view, motionEvent);
             }
         });
-        this.mThumbnailShakeAnimator.addListener(new AnimatorListenerAdapter() {
-            public void onAnimationCancel(Animator animator) {
-                super.onAnimationCancel(animator);
-                GlobalScreenshot.this.getTranslation();
-            }
-
-            public void onAnimationStart(Animator animator) {
-                super.onAnimationStart(animator);
-                GlobalScreenshot.this.getTranslation();
+        this.mScreenshotLayout.setOnApplyWindowInsetsListener(new View.OnApplyWindowInsetsListener() {
+            public final WindowInsets onApplyWindowInsets(View view, WindowInsets windowInsets) {
+                return GlobalScreenshot.this.lambda$reloadAssets$1$GlobalScreenshot(view, windowInsets);
             }
         });
-        this.mNotificationIconSize = resources.getDimensionPixelSize(R.dimen.notification_large_icon_height);
-        this.mRadius = (float) this.mContext.getResources().getDimensionPixelSize(R.dimen.screenshot_thumnail_btn_radius);
-    }
-
-    /* access modifiers changed from: private */
-    public void getTranslation() {
-        getTranslationY();
-        getTranslationX();
-    }
-
-    /* access modifiers changed from: private */
-    public void getTranslationX() {
-        this.mBtnTranslationX = this.mScreenShareView.getTranslationX();
-        this.mScreenshotTranslationX = this.mScreenshotView.getTranslationX();
-        this.mShadowTranslationX = this.mScreenshotShadow.getTranslationX();
-    }
-
-    /* access modifiers changed from: private */
-    public void getTranslationY() {
-        this.mBtnTranslationY = this.mScreenShareView.getTranslationY();
-        this.mScreenshotTranslationY = this.mScreenshotView.getTranslationY();
-        this.mShadowTranslationY = this.mScreenshotShadow.getTranslationY();
-    }
-
-    private void setWhiteBgCornerRadius(float f) {
-        if (this.mWhiteBgDrawable == null) {
-            GradientDrawable gradientDrawable = new GradientDrawable();
-            this.mWhiteBgDrawable = gradientDrawable;
-            gradientDrawable.setColor(Color.parseColor("#ffffff"));
-        }
-        this.mWhiteBgDrawable.setCornerRadius(f);
-        this.mScreenWhiteBg.setBackgroundDrawable(this.mWhiteBgDrawable);
-    }
-
-    public static void notifyMediaAndFinish(Context context, NotifyMediaStoreData notifyMediaStoreData) {
-        notifyMediaAndFinish(context, notifyMediaStoreData, (ScreenshotFinishCallback) null);
-    }
-
-    public static void notifyMediaAndFinish(final Context context, final NotifyMediaStoreData notifyMediaStoreData, final ScreenshotFinishCallback screenshotFinishCallback) {
-        if (notifyMediaStoreData != null && !notifyMediaStoreData.isRunned) {
-            if (!notifyMediaStoreData.saveFinished) {
-                notifyMediaStoreData.isPending = true;
-                notifyMediaStoreData.finishCallback = screenshotFinishCallback;
-                return;
-            }
-            new AsyncTask<Void, Void, Void>() {
-                /* access modifiers changed from: protected */
-                public Void doInBackground(Void[] voidArr) {
-                    Intent intent = new Intent("com.miui.gallery.SAVE_TO_CLOUD");
-                    intent.setPackage("com.miui.gallery");
-                    List<ResolveInfo> queryBroadcastReceiversAsUser = PackageManagerCompat.queryBroadcastReceiversAsUser(context.getPackageManager(), intent, 0, -2);
-                    if (queryBroadcastReceiversAsUser != null && queryBroadcastReceiversAsUser.size() > 0) {
-                        intent.setComponent(new ComponentName("com.miui.gallery", queryBroadcastReceiversAsUser.get(0).activityInfo.name));
-                    }
-                    intent.putExtra("extra_file_path", notifyMediaStoreData.imageFilePath);
-                    context.sendBroadcastAsUser(intent, UserHandle.CURRENT);
-                    return null;
+        this.mScreenshotLayout.setOnKeyListener(new View.OnKeyListener() {
+            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+                if (i != 4) {
+                    return false;
                 }
-
-                /* access modifiers changed from: protected */
-                public void onPostExecute(Void voidR) {
-                    super.onPostExecute(voidR);
-                    Runnable runnable = notifyMediaStoreData.finisher;
-                    if (runnable != null) {
-                        runnable.run();
-                    }
-                    notifyMediaStoreData.isRunned = true;
-                    ScreenshotFinishCallback screenshotFinishCallback = screenshotFinishCallback;
-                    if (screenshotFinishCallback != null) {
-                        screenshotFinishCallback.onFinish();
-                    }
-                    ScreenshotFinishCallback screenshotFinishCallback2 = notifyMediaStoreData.finishCallback;
-                    if (screenshotFinishCallback2 != null) {
-                        screenshotFinishCallback2.onFinish();
-                    }
-                }
-            }.execute(new Void[0]);
-        }
-    }
-
-    /* access modifiers changed from: package-private */
-    public void enterLongScreenshot() {
-        this.mHandler.post(new Runnable() {
-            public void run() {
-                GlobalScreenshot.this.quitThumbnailWindow(false, false);
-                GlobalScreenshot.this.mScreenshotDisplay.show(GlobalScreenshot.this.mScreenBitmap, GlobalScreenshot.this.mNotifyMediaStoreData, (GlobalScreenshot.this.mScreenBitmap.getWidth() - GlobalScreenshot.this.mThumbnailRight) - GlobalScreenshot.this.mThumbnailWidth, GlobalScreenshot.this.mThumbnailTop, GlobalScreenshot.this.mThumbnailWidth, GlobalScreenshot.this.mThumbnailHeight, true);
-                if (GlobalScreenshot.this.mIsSaved) {
-                    GlobalScreenshot.this.mScreenshotDisplay.setIsScreenshotSaved();
-                }
+                GlobalScreenshot.this.dismissScreenshot("back pressed", true);
+                return true;
             }
         });
-    }
-
-    private void checkBindPhotoService() {
-        if (this.mBitmapService == null) {
-            Intent intent = new Intent();
-            intent.setPackage("com.miui.gallery");
-            intent.setAction("com.miui.gallery.action.SCREENSHOT");
-            this.mContext.getApplicationContext().bindService(intent, this.mConnection, 1);
-        }
-    }
-
-    private void unBindPhotoService() {
-        IBitmapService iBitmapService = this.mBitmapService;
-        if (iBitmapService != null) {
-            try {
-                iBitmapService.unregisterCallback(this.mScreenShotCallback);
-            } catch (RemoteException e) {
-                Log.e("GlobalScreenshot", "bitmap service register exception : " + e);
+        this.mScreenshotLayout.setFocusableInTouchMode(true);
+        this.mScreenshotLayout.requestFocus();
+        ImageView imageView = (ImageView) this.mScreenshotLayout.findViewById(C0012R$id.global_screenshot_animated_view);
+        this.mScreenshotAnimatedView = imageView;
+        imageView.setClipToOutline(true);
+        this.mScreenshotAnimatedView.setOutlineProvider(new ViewOutlineProvider(this) {
+            public void getOutline(View view, Outline outline) {
+                outline.setRoundRect(new Rect(0, 0, view.getWidth(), view.getHeight()), ((float) view.getWidth()) * 0.05f);
             }
-            this.mContext.getApplicationContext().unbindService(this.mConnection);
-            this.mBitmapService = null;
-        }
-    }
-
-    private void dismissKeyguardIfNeed() {
-        if (((KeyguardManager) this.mContext.getSystemService("keyguard")).isKeyguardLocked()) {
-            SystemUICompat.dismissKeyguardOnNextActivity();
+        });
+        ImageView imageView2 = (ImageView) this.mScreenshotLayout.findViewById(C0012R$id.global_screenshot_preview);
+        this.mScreenshotPreview = imageView2;
+        imageView2.setClipToOutline(true);
+        this.mScreenshotPreview.setOutlineProvider(new ViewOutlineProvider(this) {
+            public void getOutline(View view, Outline outline) {
+                outline.setRoundRect(new Rect(0, 0, view.getWidth(), view.getHeight()), ((float) view.getWidth()) * 0.05f);
+            }
+        });
+        this.mActionsContainerBackground = (ImageView) this.mScreenshotLayout.findViewById(C0012R$id.global_screenshot_actions_container_background);
+        this.mActionsContainer = (HorizontalScrollView) this.mScreenshotLayout.findViewById(C0012R$id.global_screenshot_actions_container);
+        this.mActionsView = (LinearLayout) this.mScreenshotLayout.findViewById(C0012R$id.global_screenshot_actions);
+        this.mBackgroundProtection = (ImageView) this.mScreenshotLayout.findViewById(C0012R$id.global_screenshot_actions_background);
+        FrameLayout frameLayout = (FrameLayout) this.mScreenshotLayout.findViewById(C0012R$id.global_screenshot_dismiss_button);
+        this.mDismissButton = frameLayout;
+        frameLayout.setOnClickListener(new View.OnClickListener() {
+            public final void onClick(View view) {
+                GlobalScreenshot.this.lambda$reloadAssets$2$GlobalScreenshot(view);
+            }
+        });
+        this.mScreenshotFlash = (ImageView) this.mScreenshotLayout.findViewById(C0012R$id.global_screenshot_flash);
+        this.mScreenshotSelectorView = (ScreenshotSelectorView) this.mScreenshotLayout.findViewById(C0012R$id.global_screenshot_selector);
+        this.mScreenshotLayout.setFocusable(true);
+        this.mScreenshotSelectorView.setFocusable(true);
+        this.mScreenshotSelectorView.setFocusableInTouchMode(true);
+        this.mScreenshotAnimatedView.setPivotX(0.0f);
+        this.mScreenshotAnimatedView.setPivotY(0.0f);
+        this.mActionsContainer.setScrollX(0);
+        if (z) {
+            this.mWindowManager.addView(this.mScreenshotLayout, this.mWindowLayoutParams);
         }
     }
 
     /* access modifiers changed from: private */
-    public void jumpProcess(final Context context, final NotifyMediaStoreData notifyMediaStoreData, final String str) {
-        if (!this.mIsInOutAnimating) {
-            StatusBarManager statusBarManager = (StatusBarManager) this.mContext.getSystemService("statusbar");
-            if (statusBarManager != null) {
-                statusBarManager.collapsePanels();
-            }
-            this.mHandler.removeCallbacks(this.mQuitThumbnailRunnable);
-            this.mThumbnailShakeAnimator.cancel();
-            dismissKeyguardIfNeed();
-            notifyMediaAndFinish(context, notifyMediaStoreData, new ScreenshotFinishCallback() {
-                public void onFinish() {
-                    if (notifyMediaStoreData.outUri != null) {
-                        Intent intent = new Intent();
-                        intent.setPackage("com.miui.gallery");
-                        intent.setData(notifyMediaStoreData.outUri);
-                        int[] iArr = {(int) GlobalScreenshot.this.mThumbnailMarginLeft, GlobalScreenshot.this.mThumbnailTop, GlobalScreenshot.this.mThumbnailWidth, GlobalScreenshot.this.mThumbnailHeight};
-                        if (TextUtils.equals(str, "send")) {
-                            intent.addFlags(268468224);
-                            intent.setAction(GlobalScreenshot.this.mScreenshotDisplay.checkShareAction(notifyMediaStoreData.outUri));
-                            intent.putExtra("com.miui.gallery.extra.photo_enter_choice_mode", true);
-                            intent.putExtra("com.miui.gallery.extra.sync_load_intent_data", true);
-                            intent.putExtra("com.miui.gallery.extra.show_menu_after_choice_mode", true);
-                            intent.putExtra("StartActivityWhenLocked", true);
-                            intent.putExtra("ThumbnailRect", iArr);
-                            intent.putExtra("is_from_send", true);
-                            intent.putExtra("skip_interception", true);
-                            context.startActivity(intent, GlobalScreenshot.this.createQuitAnimationBundle());
-                            StatHelper.recordNewScreenshotEvent(GlobalScreenshot.this.mContext, "new_click_share_button", (Map<String, String>) null);
-                        } else if (TextUtils.equals(str, "edit")) {
-                            intent.addFlags(268468224);
-                            intent.setAction(GlobalScreenshot.this.mScreenshotDisplay.checkEditAction(notifyMediaStoreData.outUri));
-                            intent.putExtra("IsScreenshot", true);
-                            intent.putExtra("IsLongScreenshot", false);
-                            intent.putExtra("screenshot_filepath", notifyMediaStoreData.imageFilePath);
-                            intent.putExtra("StartActivityWhenLocked", true);
-                            intent.putExtra("skip_interception", true);
-                            intent.putExtra("ThumbnailRect", iArr);
-                            context.startActivity(intent, GlobalScreenshot.this.createQuitAnimationBundle());
-                            StatHelper.recordNewScreenshotEvent(GlobalScreenshot.this.mContext, "new_click_thumbnail", (Map<String, String>) null);
-                        }
-                    } else {
-                        Context context = context;
-                        Toast.makeText(context, context.getResources().getString(R.string.screenshot_insert_failed), 0).show();
-                    }
+    /* renamed from: lambda$reloadAssets$0 */
+    public /* synthetic */ boolean lambda$reloadAssets$0$GlobalScreenshot(View view, MotionEvent motionEvent) {
+        if (motionEvent.getActionMasked() == 4) {
+            setWindowFocusable(false);
+        }
+        return false;
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$reloadAssets$1 */
+    public /* synthetic */ WindowInsets lambda$reloadAssets$1$GlobalScreenshot(View view, WindowInsets windowInsets) {
+        if (QuickStepContract.isGesturalMode(this.mNavMode)) {
+            Insets insets = windowInsets.getInsets(WindowInsets.Type.systemGestures());
+            this.mLeftInset = insets.left;
+            this.mRightInset = insets.right;
+        } else {
+            this.mRightInset = 0;
+            this.mLeftInset = 0;
+        }
+        return this.mScreenshotLayout.onApplyWindowInsets(windowInsets);
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$reloadAssets$2 */
+    public /* synthetic */ void lambda$reloadAssets$2$GlobalScreenshot(View view) {
+        this.mUiEventLogger.log(ScreenshotEvent.SCREENSHOT_EXPLICIT_DISMISSAL);
+        dismissScreenshot("dismiss_button", false);
+        this.mOnCompleteRunnable.run();
+    }
+
+    private void setWindowFocusable(boolean z) {
+        if (z) {
+            this.mWindowLayoutParams.flags &= -9;
+        } else {
+            this.mWindowLayoutParams.flags |= 8;
+        }
+        if (this.mScreenshotLayout.isAttachedToWindow()) {
+            this.mWindowManager.updateViewLayout(this.mScreenshotLayout, this.mWindowLayoutParams);
+        }
+    }
+
+    private void saveScreenshotInWorkerThread(Consumer<Uri> consumer, ActionsReadyListener actionsReadyListener) {
+        SaveImageInBackgroundData saveImageInBackgroundData = new SaveImageInBackgroundData();
+        saveImageInBackgroundData.image = this.mScreenBitmap;
+        saveImageInBackgroundData.finisher = consumer;
+        saveImageInBackgroundData.mActionsReadyListener = actionsReadyListener;
+        SaveImageInBackgroundTask saveImageInBackgroundTask = this.mSaveInBgTask;
+        if (saveImageInBackgroundTask != null) {
+            saveImageInBackgroundTask.setActionsReadyListener(new ActionsReadyListener() {
+                /* access modifiers changed from: package-private */
+                public void onActionsReady(SavedImageData savedImageData) {
+                    GlobalScreenshot.this.logSuccessOnActionsReady(savedImageData);
                 }
             });
         }
+        SaveImageInBackgroundTask saveImageInBackgroundTask2 = new SaveImageInBackgroundTask(this.mContext, saveImageInBackgroundData);
+        this.mSaveInBgTask = saveImageInBackgroundTask2;
+        saveImageInBackgroundTask2.execute(new Void[0]);
     }
 
     /* access modifiers changed from: private */
-    public Bundle createQuitAnimationBundle() {
-        return ActivityOptions.makeCustomAnimation(this.mContext, 0, 0, this.mHandler, (ActivityOptions.OnAnimationStartedListener) null).toBundle();
+    public void takeScreenshot(Consumer<Uri> consumer, Rect rect) {
+        Consumer<Uri> consumer2 = consumer;
+        takeScreenshot(SurfaceControl.screenshot(rect, rect.width(), rect.height(), this.mDisplay.getRotation()), consumer2, new Rect(rect), Insets.NONE, true);
     }
 
-    /* access modifiers changed from: package-private */
-    /* JADX WARNING: Code restructure failed: missing block: B:9:0x0023, code lost:
-        if (r0 != 3) goto L_0x00ed;
-     */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public boolean onThumbnailViewTouch(android.view.MotionEvent r8) {
-        /*
-            r7 = this;
-            boolean r0 = r7.mIsInOutAnimating
-            r1 = 0
-            if (r0 == 0) goto L_0x0006
-            return r1
-        L_0x0006:
-            float r0 = r8.getRawX()
-            float r2 = r8.getRawY()
-            r8.setLocation(r0, r2)
-            android.view.VelocityTracker r0 = r7.mVTracker
-            r0.addMovement(r8)
-            int r0 = r8.getAction()
-            r2 = 1
-            if (r0 == 0) goto L_0x00d5
-            if (r0 == r2) goto L_0x0072
-            r3 = 2
-            if (r0 == r3) goto L_0x0027
-            r8 = 3
-            if (r0 == r8) goto L_0x0072
-            goto L_0x00ed
-        L_0x0027:
-            float r0 = r8.getRawY()
-            float r1 = r7.mTouchDownY
-            float r0 = r0 - r1
-            int r0 = (int) r0
-            float r8 = r8.getRawX()
-            float r1 = r7.mTouchDownX
-            float r8 = r8 - r1
-            int r8 = (int) r8
-            boolean r1 = r7.mIsThumbnailMoving
-            if (r1 != 0) goto L_0x0051
-            int r1 = java.lang.Math.abs(r0)
-            android.content.Context r3 = r7.mContext
-            android.view.ViewConfiguration r3 = android.view.ViewConfiguration.get(r3)
-            int r3 = r3.getScaledTouchSlop()
-            if (r1 <= r3) goto L_0x0051
-            r7.mIsThumbnailMoving = r2
-            r1 = 0
-            r7.startLongScreenShotGuideAlphaAnim(r1)
-        L_0x0051:
-            android.animation.ValueAnimator r1 = r7.mThumbnailShakeAnimator
-            java.lang.Object r1 = r1.getAnimatedValue()
-            java.lang.Integer r1 = (java.lang.Integer) r1
-            int r1 = r1.intValue()
-            int r8 = -r8
-            double r3 = (double) r8
-            r5 = 4587366580439587226(0x3fa999999999999a, double:0.05)
-            double r3 = r3 * r5
-            int r8 = (int) r3
-            int r8 = r8 + r1
-            if (r0 <= 0) goto L_0x006c
-            double r3 = (double) r0
-            double r3 = r3 * r5
-            int r0 = (int) r3
-        L_0x006c:
-            int r0 = r0 + r1
-            r7.moveThumbnailWindow((int) r8, (int) r0)
-            goto L_0x00ed
-        L_0x0072:
-            boolean r8 = r7.mIsThumbnailMoving
-            if (r8 != 0) goto L_0x0089
-            boolean r8 = r7.isDeviceProvisioned
-            if (r8 == 0) goto L_0x0089
-            android.animation.ValueAnimator r8 = r7.mThumbnailShakeAnimator
-            r8.cancel()
-            android.content.Context r8 = r7.mContext
-            com.android.systemui.screenshot.NotifyMediaStoreData r0 = r7.mNotifyMediaStoreData
-            java.lang.String r3 = "edit"
-            r7.jumpProcess(r8, r0, r3)
-            goto L_0x00cd
-        L_0x0089:
-            android.view.VelocityTracker r8 = r7.mVTracker
-            r0 = 1000(0x3e8, float:1.401E-42)
-            r8.computeCurrentVelocity(r0)
-            android.content.Context r8 = r7.mContext
-            android.content.res.Resources r8 = r8.getResources()
-            android.util.DisplayMetrics r8 = r8.getDisplayMetrics()
-            float r8 = r8.density
-            r0 = -1020657664(0xffffffffc32a0000, float:-170.0)
-            float r8 = r8 * r0
-            int r8 = (int) r8
-            android.view.VelocityTracker r0 = r7.mVTracker
-            float r0 = r0.getYVelocity()
-            float r8 = (float) r8
-            int r8 = (r0 > r8 ? 1 : (r0 == r8 ? 0 : -1))
-            if (r8 >= 0) goto L_0x00b9
-            r7.quitThumbnailWindow(r2, r2)
-            android.content.Context r8 = r7.mContext
-            java.lang.String r0 = "quit_thumbnail"
-            java.lang.String r3 = "slide_up"
-            com.android.systemui.screenshot.StatHelper.recordCountEvent((android.content.Context) r8, (java.lang.String) r0, (java.lang.String) r3)
-            goto L_0x00cd
-        L_0x00b9:
-            r7.getTranslation()
-            r7.goInitialPosition()
-            r8 = 1065353216(0x3f800000, float:1.0)
-            r7.startLongScreenShotGuideAlphaAnim(r8)
-            android.os.Handler r8 = r7.mHandler
-            java.lang.Runnable r0 = r7.mQuitThumbnailRunnable
-            r3 = 3600(0xe10, double:1.7786E-320)
-            r8.postDelayed(r0, r3)
-        L_0x00cd:
-            r7.mIsThumbnailMoving = r1
-            android.view.VelocityTracker r7 = r7.mVTracker
-            r7.clear()
-            goto L_0x00ed
-        L_0x00d5:
-            float r0 = r8.getRawY()
-            r7.mTouchDownY = r0
-            float r8 = r8.getRawX()
-            r7.mTouchDownX = r8
-            android.os.Handler r8 = r7.mHandler
-            java.lang.Runnable r0 = r7.mQuitThumbnailRunnable
-            r8.removeCallbacks(r0)
-            android.animation.ValueAnimator r7 = r7.mThumbnailShakeAnimator
-            r7.cancel()
-        L_0x00ed:
-            return r2
-        */
-        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.screenshot.GlobalScreenshot.onThumbnailViewTouch(android.view.MotionEvent):boolean");
-    }
-
-    private void goInitialPosition() {
-        ValueAnimator goInitialPosition = goInitialPosition((int) (this.mFirstTranslationX - this.mScreenshotTranslationX), true);
-        ValueAnimator goInitialPosition2 = goInitialPosition((int) (this.mScreenshotTranslationY - this.mFirstTranslationY), false);
-        AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.playTogether(new Animator[]{goInitialPosition, goInitialPosition2});
-        animatorSet.addListener(new AnimatorListenerAdapter() {
-            public void onAnimationEnd(Animator animator) {
-                super.onAnimationEnd(animator);
-                if (GlobalScreenshot.this.mScreenshotLayout.getWindowToken() != null) {
-                    GlobalScreenshot.this.mThumbnailShakeAnimator.start();
-                }
-            }
-        });
-        animatorSet.start();
-    }
-
-    private ValueAnimator goInitialPosition(int i, final boolean z) {
-        ValueAnimator ofInt = ValueAnimator.ofInt(new int[]{0, i});
-        ofInt.setDuration(350);
-        ofInt.setInterpolator(new PhysicBasedInterpolator(0.9f, 0.86f));
-        ofInt.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                GlobalScreenshot.this.moveThumbnailWindow(((Integer) valueAnimator.getAnimatedValue()).intValue(), z);
-            }
-        });
-        ofInt.setInterpolator(new AccelerateInterpolator());
-        return ofInt;
-    }
-
-    private void moveThumbnailWindow(int i, int i2) {
-        float f = (float) i;
-        this.mScreenShareView.setTranslationX(this.mBtnTranslationX - f);
-        this.mScreenLongShotViewGroup.setTranslationX(this.mBtnTranslationX - f);
-        this.mScreenshotView.setTranslationX(this.mScreenshotTranslationX - f);
-        this.mScreenshotShadow.setTranslationX(this.mShadowTranslationX - f);
-        float f2 = (float) i2;
-        this.mScreenShareView.setTranslationY(this.mBtnTranslationY + f2);
-        this.mScreenLongShotViewGroup.setTranslationY(this.mBtnTranslationY + f2);
-        this.mScreenshotView.setTranslationY(this.mScreenshotTranslationY + f2);
-        this.mScreenshotShadow.setTranslationY(this.mShadowTranslationY + f2);
-    }
-
-    /* access modifiers changed from: private */
-    public void moveThumbnailWindow(int i, boolean z) {
-        if (z) {
-            float f = (float) i;
-            this.mScreenShareView.setTranslationX(this.mBtnTranslationX + f);
-            this.mScreenLongShotViewGroup.setTranslationX(this.mBtnTranslationX + f);
-            this.mScreenshotView.setTranslationX(this.mScreenshotTranslationX + f);
-            this.mScreenshotShadow.setTranslationX(this.mShadowTranslationX + f);
-            return;
-        }
-        float f2 = (float) i;
-        this.mScreenShareView.setTranslationY(this.mBtnTranslationY - f2);
-        this.mScreenLongShotViewGroup.setTranslationY(this.mBtnTranslationY - f2);
-        this.mScreenshotView.setTranslationY(this.mScreenshotTranslationY - f2);
-        this.mScreenshotShadow.setTranslationY(this.mShadowTranslationY - f2);
-    }
-
-    private void saveScreenshotInWorkerThread(Runnable runnable, Runnable runnable2) {
-        SaveImageInBackgroundData saveImageInBackgroundData = new SaveImageInBackgroundData();
-        saveImageInBackgroundData.screenshotDisplay = this.mScreenshotDisplay;
-        saveImageInBackgroundData.screenLongShotView = this.mScreenLongShotView;
-        saveImageInBackgroundData.context = this.mContext;
-        saveImageInBackgroundData.image = this.mScreenBitmap;
-        saveImageInBackgroundData.finisher = runnable;
-        saveImageInBackgroundData.orientationLandscape = this.mOrientationLandscape;
-        SaveImageInBackgroundTask saveImageInBackgroundTask = new SaveImageInBackgroundTask(this.mContext, saveImageInBackgroundData, this.mNotificationManager);
-        saveImageInBackgroundTask.execute(new SaveImageInBackgroundData[]{saveImageInBackgroundData});
-        NotifyMediaStoreData notifyMediaStoreData = saveImageInBackgroundTask.mNotifyMediaStoreData;
-        this.mNotifyMediaStoreData = notifyMediaStoreData;
-        notifyMediaStoreData.finisher = runnable2;
-    }
-
-    /* access modifiers changed from: package-private */
-    public void takeScreenshot(Runnable runnable, Runnable runnable2, boolean z, boolean z2) {
-        this.mIsSaved = false;
-        if ("trigger_restart_min_framework".equals(SystemProperties.get("vold.decrypt")) || !UserManagerCompat.isUserUnlocked((UserManager) this.mContext.getSystemService(UserManager.class))) {
-            Log.w("GlobalScreenshot", "Can not screenshot when decrypt state.");
-            if (runnable != null) {
-                runnable.run();
-            }
-            if (runnable2 != null) {
-                runnable2.run();
-            }
-        } else if (RestrictionsHelper.hasRestriction(this.mContext, "disallow_screencapture", UserHandle.myUserId())) {
-            Log.w("GlobalScreenshot", "Can not screenshot for enterprise forbidden.");
-            if (runnable != null) {
-                runnable.run();
-            }
-            if (runnable2 != null) {
-                runnable2.run();
-            }
+    private void takeScreenshot(Bitmap bitmap, Consumer<Uri> consumer, Rect rect, Insets insets, boolean z) {
+        dismissScreenshot("new screenshot requested", true);
+        this.mScreenBitmap = bitmap;
+        if (bitmap == null) {
+            this.mNotificationsController.notifyScreenshotError(C0018R$string.screenshot_failed_to_capture_text);
+            consumer.accept((Object) null);
+            this.mOnCompleteRunnable.run();
+        } else if (!isUserSetupComplete()) {
+            saveScreenshotAndToast(consumer);
         } else {
-            this.mScreenBitmap = ScreenshotUtils.getScreenshot(this.mContext);
-            afterTakeScreenshot(this.mContext);
-            if (this.mScreenBitmap == null) {
-                Log.e("GlobalScreenshot", "mScreenBitmap == null");
-                notifyScreenshotError(this.mContext, this.mNotificationManager, R.string.screenshot_failed_to_capture_title);
-                if (runnable != null) {
-                    runnable.run();
-                }
-                if (runnable2 != null) {
-                    runnable2.run();
-                    return;
-                }
-                return;
-            }
-            if (Constants.IS_SUPPORT_LINEAR_MOTOR_VIBRATE) {
-                new HapticFeedbackUtil(this.mContext, true).performExtHapticFeedback(85);
-            }
-            Bitmap bitmap = this.mScreenBitmap;
-            this.mScreenBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, false);
-            bitmap.recycle();
             this.mScreenBitmap.setHasAlpha(false);
             this.mScreenBitmap.prepareToDraw();
-            saveScreenshotInWorkerThread(new Runnable() {
-                public void run() {
-                    boolean unused = GlobalScreenshot.this.mIsSaved = true;
-                    GlobalScreenshot.this.mScreenshotDisplay.setIsScreenshotSaved();
-                }
-            }, runnable2);
-            this.mDisplay.getRealMetrics(this.mDisplayMetrics);
-            DisplayMetrics displayMetrics = this.mDisplayMetrics;
-            startAnimation(runnable, displayMetrics.widthPixels, displayMetrics.heightPixels, z, z2);
-            checkBindPhotoService();
+            onConfigChanged(this.mContext.getResources().getConfiguration());
+            Animator animator = this.mDismissAnimation;
+            if (animator != null && animator.isRunning()) {
+                this.mDismissAnimation.cancel();
+            }
+            setWindowFocusable(true);
+            startAnimation(consumer, rect, insets, z);
         }
     }
 
-    private void startAnimation(final Runnable runnable, int i, int i2, boolean z, boolean z2) {
-        setRadius(this.mScreenshotView, this.mPhoneTopRadius);
-        this.mScreenshotView.setImageBitmap(this.mScreenBitmap);
-        this.mScreenshotLayout.requestFocus();
-        this.mScreenshotView.setScaleX(1.0f);
-        this.mScreenshotView.setScaleY(1.0f);
-        ObjectAnimator objectAnimator = this.mScreenshotAnimation;
-        if (objectAnimator != null) {
-            objectAnimator.end();
+    /* access modifiers changed from: package-private */
+    public void takeScreenshot(Consumer<Uri> consumer, Runnable runnable) {
+        this.mOnCompleteRunnable = runnable;
+        this.mDisplay.getRealMetrics(this.mDisplayMetrics);
+        DisplayMetrics displayMetrics = this.mDisplayMetrics;
+        takeScreenshot(consumer, new Rect(0, 0, displayMetrics.widthPixels, displayMetrics.heightPixels));
+    }
+
+    /* access modifiers changed from: package-private */
+    public void handleImageAsScreenshot(Bitmap bitmap, Rect rect, Insets insets, int i, int i2, ComponentName componentName, Consumer<Uri> consumer, Runnable runnable) {
+        this.mOnCompleteRunnable = runnable;
+        if (aspectRatiosMatch(bitmap, insets, rect)) {
+            takeScreenshot(bitmap, consumer, rect, insets, false);
+            return;
         }
-        measureThumbnail();
-        if (this.isDeviceProvisioned) {
-            showLongScreenshotGuideIfNeeded();
-            if (!this.mIsShowLongScreenShotGuide) {
-                this.mHandler.postDelayed(this.mQuitThumbnailRunnable, 3600);
-            } else {
-                showLongScreenshotGuideOverlayIfNeeded();
-            }
-        }
+        takeScreenshot(bitmap, consumer, new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight()), Insets.NONE, true);
+    }
+
+    /* access modifiers changed from: package-private */
+    @SuppressLint({"ClickableViewAccessibility"})
+    public void takeScreenshotPartial(final Consumer<Uri> consumer, Runnable runnable) {
+        dismissScreenshot("new screenshot requested", true);
+        this.mOnCompleteRunnable = runnable;
         this.mWindowManager.addView(this.mScreenshotLayout, this.mWindowLayoutParams);
-        ObjectAnimator createScreenshotAlphaAnimation = createScreenshotAlphaAnimation();
-        this.mScreenshotAnimation = createScreenshotAlphaAnimation;
-        createScreenshotAlphaAnimation.addListener(new AnimatorListenerAdapter() {
-            public void onAnimationEnd(Animator animator) {
-                GlobalScreenshot.this.startGotoThumbnailAnimation(runnable);
+        this.mScreenshotSelectorView.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                ScreenshotSelectorView screenshotSelectorView = (ScreenshotSelectorView) view;
+                int action = motionEvent.getAction();
+                if (action == 0) {
+                    screenshotSelectorView.startSelection((int) motionEvent.getX(), (int) motionEvent.getY());
+                    return true;
+                } else if (action == 1) {
+                    screenshotSelectorView.setVisibility(8);
+                    GlobalScreenshot.this.mWindowManager.removeView(GlobalScreenshot.this.mScreenshotLayout);
+                    Rect selectionRect = screenshotSelectorView.getSelectionRect();
+                    if (!(selectionRect == null || selectionRect.width() == 0 || selectionRect.height() == 0)) {
+                        GlobalScreenshot.this.mScreenshotLayout.post(new Runnable(consumer, selectionRect) {
+                            public final /* synthetic */ Consumer f$1;
+                            public final /* synthetic */ Rect f$2;
+
+                            {
+                                this.f$1 = r2;
+                                this.f$2 = r3;
+                            }
+
+                            public final void run() {
+                                GlobalScreenshot.AnonymousClass6.this.lambda$onTouch$0$GlobalScreenshot$6(this.f$1, this.f$2);
+                            }
+                        });
+                    }
+                    screenshotSelectorView.stopSelection();
+                    return true;
+                } else if (action != 2) {
+                    return false;
+                } else {
+                    screenshotSelectorView.updateSelection((int) motionEvent.getX(), (int) motionEvent.getY());
+                    return true;
+                }
+            }
+
+            /* access modifiers changed from: private */
+            /* renamed from: lambda$onTouch$0 */
+            public /* synthetic */ void lambda$onTouch$0$GlobalScreenshot$6(Consumer consumer, Rect rect) {
+                GlobalScreenshot.this.takeScreenshot((Consumer<Uri>) consumer, rect);
             }
         });
         this.mScreenshotLayout.post(new Runnable() {
-            public void run() {
-                GlobalScreenshot globalScreenshot = GlobalScreenshot.this;
-                if (globalScreenshot.hasScreenshotSoundEnabled(globalScreenshot.mContext)) {
-                    ForegroundThread.getHandler().post(new Runnable() {
-                        public void run() {
-                            GlobalScreenshot.this.updateRingtone();
-                            if (GlobalScreenshot.this.mRingtone != null) {
-                                GlobalScreenshot.this.mRingtone.play();
-                            }
-                        }
-                    });
+            public final void run() {
+                GlobalScreenshot.this.lambda$takeScreenshotPartial$3$GlobalScreenshot();
+            }
+        });
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$takeScreenshotPartial$3 */
+    public /* synthetic */ void lambda$takeScreenshotPartial$3$GlobalScreenshot() {
+        this.mScreenshotSelectorView.setVisibility(0);
+        this.mScreenshotSelectorView.requestFocus();
+    }
+
+    /* access modifiers changed from: package-private */
+    public void stopScreenshot() {
+        if (this.mScreenshotSelectorView.getSelectionRect() != null) {
+            this.mWindowManager.removeView(this.mScreenshotLayout);
+            this.mScreenshotSelectorView.stopSelection();
+        }
+    }
+
+    private void saveScreenshotAndToast(final Consumer<Uri> consumer) {
+        this.mScreenshotHandler.post(new Runnable() {
+            public final void run() {
+                GlobalScreenshot.this.lambda$saveScreenshotAndToast$4$GlobalScreenshot();
+            }
+        });
+        saveScreenshotInWorkerThread(consumer, new ActionsReadyListener() {
+            /* access modifiers changed from: package-private */
+            public void onActionsReady(SavedImageData savedImageData) {
+                consumer.accept(savedImageData.uri);
+                if (savedImageData.uri == null) {
+                    GlobalScreenshot.this.mUiEventLogger.log(ScreenshotEvent.SCREENSHOT_NOT_SAVED);
+                    GlobalScreenshot.this.mNotificationsController.notifyScreenshotError(C0018R$string.screenshot_failed_to_capture_text);
+                    return;
                 }
-                GlobalScreenshot.this.mScreenshotView.setLayerType(2, (Paint) null);
-                GlobalScreenshot.this.mScreenshotView.buildLayer();
-                GlobalScreenshot.this.mScreenshotAnimation.start();
+                GlobalScreenshot.this.mUiEventLogger.log(ScreenshotEvent.SCREENSHOT_SAVED);
+                GlobalScreenshot.this.mScreenshotHandler.post(new Runnable() {
+                    public final void run() {
+                        GlobalScreenshot.AnonymousClass7.this.lambda$onActionsReady$0$GlobalScreenshot$7();
+                    }
+                });
             }
-        });
-    }
 
-    private void screenshotAnimator(final Runnable runnable) {
-        ValueAnimator scaleAnimator = scaleAnimator();
-        ValueAnimator scaleShadowAnimator = scaleShadowAnimator();
-        ValueAnimator cornerRadiusScaleAnimator = cornerRadiusScaleAnimator();
-        ValueAnimator translationXAnimator = translationXAnimator();
-        ValueAnimator shadowTranslationXAnimator = shadowTranslationXAnimator();
-        ValueAnimator translationYAnimator = translationYAnimator();
-        ObjectAnimator alphaAnimator = alphaAnimator();
-        AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.playTogether(new Animator[]{scaleAnimator, scaleShadowAnimator, translationXAnimator, shadowTranslationXAnimator, cornerRadiusScaleAnimator, translationYAnimator, alphaAnimator});
-        animatorSet.addListener(new AnimatorListenerAdapter() {
-            public void onAnimationEnd(Animator animator) {
-                super.onAnimationEnd(animator);
-                runnable.run();
-                boolean unused = GlobalScreenshot.this.mIsInOutAnimating = false;
-                if (!GlobalScreenshot.this.mIsQuited) {
-                    GlobalScreenshot.this.mThumbnailShakeAnimator.start();
-                }
+            /* access modifiers changed from: private */
+            /* renamed from: lambda$onActionsReady$0 */
+            public /* synthetic */ void lambda$onActionsReady$0$GlobalScreenshot$7() {
+                Toast.makeText(GlobalScreenshot.this.mContext, C0018R$string.screenshot_saved_title, 0).show();
             }
         });
-        animatorSet.start();
-    }
-
-    private ObjectAnimator alphaAnimator() {
-        ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this.mScreenWhiteBg, "alpha", new float[]{0.5f, 0.0f});
-        ofFloat.setDuration(350);
-        ofFloat.setInterpolator(new CubicEaseInOutInterpolator());
-        ofFloat.addListener(new AnimatorListenerAdapter() {
-            public void onAnimationEnd(Animator animator) {
-                GlobalScreenshot.this.mScreenWhiteBg.setVisibility(8);
-            }
-        });
-        return ofFloat;
-    }
-
-    private ValueAnimator cornerRadiusScaleAnimator() {
-        ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{this.mPhoneTopRadius, this.mRadius / this.mThumnailScale});
-        ofFloat.setDuration(400);
-        ofFloat.setInterpolator(new PhysicBasedInterpolator(0.95f, 0.75f));
-        ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                float floatValue = ((Float) valueAnimator.getAnimatedValue()).floatValue();
-                GlobalScreenshot globalScreenshot = GlobalScreenshot.this;
-                globalScreenshot.setRadius(globalScreenshot.mScreenshotView, floatValue);
-                GlobalScreenshot globalScreenshot2 = GlobalScreenshot.this;
-                globalScreenshot2.setRadius(globalScreenshot2.mScreenWhiteBg, floatValue);
-            }
-        });
-        return ofFloat;
     }
 
     /* access modifiers changed from: private */
-    public void setRadius(View view, final float f) {
-        view.setOutlineProvider(new ViewOutlineProvider(this) {
-            public void getOutline(View view, Outline outline) {
-                outline.setRoundRect(0, 0, view.getWidth(), view.getHeight(), f);
-            }
-        });
-        view.setClipToOutline(true);
+    /* renamed from: lambda$saveScreenshotAndToast$4 */
+    public /* synthetic */ void lambda$saveScreenshotAndToast$4$GlobalScreenshot() {
+        this.mCameraSound.play(0);
     }
 
-    private ValueAnimator scaleAnimator() {
-        ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{1.0f, this.mThumnailScale});
-        ofFloat.setDuration(400);
-        ofFloat.setInterpolator(new PhysicBasedInterpolator(0.95f, 0.75f));
-        ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                float floatValue = ((Float) valueAnimator.getAnimatedValue()).floatValue();
-                float unused = GlobalScreenshot.this.mScaleValue = floatValue;
-                GlobalScreenshot.this.scaleScreenshot(floatValue);
-                GlobalScreenshot.this.scaleBtnWidth(floatValue);
-            }
-        });
-        return ofFloat;
+    private boolean isUserSetupComplete() {
+        return Settings.Secure.getInt(this.mContext.getContentResolver(), "user_setup_complete", 0) == 1;
     }
 
-    private ValueAnimator scaleShadowAnimator() {
-        ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{this.mShadowScale, 1.0f});
-        ofFloat.setDuration(400);
-        ofFloat.setInterpolator(new PhysicBasedInterpolator(0.95f, 0.75f));
-        ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                float floatValue = ((Float) valueAnimator.getAnimatedValue()).floatValue();
-                GlobalScreenshot.this.mScreenshotShadow.setScaleX(floatValue);
-                GlobalScreenshot.this.mScreenshotShadow.setScaleY(floatValue);
-            }
-        });
-        return ofFloat;
-    }
-
-    private ValueAnimator translationYAnimator() {
-        ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{0.0f, -(((((float) this.mScreenHeight) / 2.0f) - (((float) this.mThumbnailHeight) / 2.0f)) - ((float) this.mThumbnailTop))});
-        ofFloat.setDuration(650);
-        ofFloat.setInterpolator(new PhysicBasedInterpolator(0.9f, 0.77f));
-        ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                float floatValue = ((Float) valueAnimator.getAnimatedValue()).floatValue();
-                GlobalScreenshot.this.mScreenshotView.setTranslationY(floatValue);
-                GlobalScreenshot.this.mScreenWhiteBg.setTranslationY(floatValue);
-                float access$4800 = (((floatValue + ((((float) GlobalScreenshot.this.mScreenHeight) * GlobalScreenshot.this.mScaleValue) / 2.0f)) + 0.5f) - (((float) GlobalScreenshot.this.mScreenHeight) / 2.0f)) + 0.5f;
-                GlobalScreenshot.this.mScreenShareView.setTranslationY(access$4800);
-                GlobalScreenshot.this.mScreenLongShotViewGroup.setTranslationY(access$4800);
-            }
-        });
-        ofFloat.addListener(new AnimatorListenerAdapter() {
-            public void onAnimationEnd(Animator animator) {
-                super.onAnimationEnd(animator);
-                GlobalScreenshot.this.getTranslationY();
-                GlobalScreenshot globalScreenshot = GlobalScreenshot.this;
-                float unused = globalScreenshot.mFirstTranslationY = globalScreenshot.mScreenshotView.getTranslationY();
-            }
-        });
-        return ofFloat;
-    }
-
-    private ValueAnimator translationXAnimator() {
-        ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{0.0f, (this.mThumbnailMarginLeft - (((float) this.mScreenWidth) / 2.0f)) + (((float) this.mThumbnailWidth) / 2.0f)});
-        ofFloat.setDuration(350);
-        ofFloat.setInterpolator(new PhysicBasedInterpolator(0.9f, 0.86f));
-        ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                float floatValue = ((Float) valueAnimator.getAnimatedValue()).floatValue();
-                GlobalScreenshot.this.mScreenshotView.setTranslationX(floatValue);
-                GlobalScreenshot.this.mScreenWhiteBg.setTranslationX(floatValue);
-                float access$5100 = ((((((float) GlobalScreenshot.this.mScreenWidth) / 2.0f) + 0.5f) + floatValue) - ((((float) GlobalScreenshot.this.mScreenWidth) * GlobalScreenshot.this.mScaleValue) / 2.0f)) + 0.5f;
-                GlobalScreenshot.this.mScreenShareView.setTranslationX(access$5100);
-                GlobalScreenshot.this.mScreenLongShotViewGroup.setTranslationX(access$5100);
-            }
-        });
-        ofFloat.addListener(new AnimatorListenerAdapter() {
-            public void onAnimationEnd(Animator animator) {
-                super.onAnimationEnd(animator);
-                GlobalScreenshot.this.getTranslationX();
-                GlobalScreenshot globalScreenshot = GlobalScreenshot.this;
-                float unused = globalScreenshot.mFirstTranslationX = globalScreenshot.mScreenshotView.getTranslationX();
-            }
-        });
-        return ofFloat;
-    }
-
-    private ValueAnimator shadowTranslationXAnimator() {
-        ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{0.0f, (float) this.mShadowMargin});
-        ofFloat.setDuration(350);
-        ofFloat.setInterpolator(new PhysicBasedInterpolator(0.9f, 0.86f));
-        ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                GlobalScreenshot.this.mScreenshotShadow.setTranslationX(((Float) valueAnimator.getAnimatedValue()).floatValue());
-            }
-        });
-        ofFloat.addListener(new AnimatorListenerAdapter() {
-            public void onAnimationEnd(Animator animator) {
-                super.onAnimationEnd(animator);
-                GlobalScreenshot.this.getTranslationX();
-            }
-        });
-        return ofFloat;
-    }
-
-    private float getThumbnailMarginLeft() {
-        float f = (float) ((this.mScreenWidth - this.mThumbnailTotalWidth) + this.mThumbnailLeft);
-        return (Build.IS_TABLET || !this.mHasNavBar || this.mContext.getResources().getConfiguration().orientation != 2 || this.mDisplay.getRotation() != 3 || SystemProperties.getInt("ro.miui.notch", 0) != 1 || MiuiSettings.Global.getBoolean(this.mContext.getContentResolver(), "force_black_v2")) ? f : f - ((float) this.mContext.getResources().getDimensionPixelSize(R.dimen.notch_height));
-    }
-
-    /* access modifiers changed from: private */
-    public void scaleBtnWidth(float f) {
-        RelativeLayout.LayoutParams layoutParams = this.mShareParams;
-        layoutParams.width = (int) ((((float) this.mScreenWidth) * f) + 0.5f);
-        this.mScreenShareView.setLayoutParams(layoutParams);
-        RelativeLayout.LayoutParams layoutParams2 = this.mLongShotParams;
-        layoutParams2.width = (int) ((((float) this.mScreenWidth) * f) + 0.5f);
-        this.mScreenLongShotViewGroup.setLayoutParams(layoutParams2);
-    }
-
-    /* access modifiers changed from: private */
-    public void scaleScreenshot(float f) {
-        this.mScreenshotView.setScaleX(f);
-        this.mScreenshotView.setScaleY(f);
-        this.mScreenWhiteBg.setScaleX(f);
-        this.mScreenWhiteBg.setScaleY(f);
-    }
-
-    /* access modifiers changed from: private */
-    public boolean hasScreenshotSoundEnabled(Context context) {
-        if (!Build.checkRegion(Locale.KOREA.getCountry()) || !"monet".equals(android.os.Build.DEVICE) || !isCameraPreviewPage()) {
-            return MiuiSettings.System.getBooleanForUser(context.getContentResolver(), "has_screenshot_sound", true, 0);
-        }
-        return true;
-    }
-
-    private boolean isCameraPreviewPage() {
-        ComponentName topActivity = Util.getTopActivity(this.mContext);
-        if (topActivity == null) {
-            return false;
-        }
-        return "com.android.camera.Camera".equals(topActivity.getClassName());
-    }
-
-    private boolean isDeviceProvisioned() {
-        return Settings.Global.getInt(this.mContext.getContentResolver(), "device_provisioned", 0) != 0;
-    }
-
-    /* access modifiers changed from: private */
-    public void startGotoThumbnailAnimation(Runnable runnable) {
-        this.mIsQuited = false;
-        this.mScreenshotLayout.getViewTreeObserver().addOnComputeInternalInsetsListener(this.mOnComputeInternalInsetsListener);
-        this.mContext.getApplicationContext().registerReceiver(this.mBeforeScreenshotReceiver, new IntentFilter("miui.intent.TAKE_SCREENSHOT"));
-        this.mIsBeforeScreenshotReceiver = true;
-        this.mContext.getApplicationContext().registerReceiver(this.mConfigurationReceiver, new IntentFilter("android.intent.action.CONFIGURATION_CHANGED"));
-        this.mIsConfigurationReceiver = true;
-        this.mIsInOutAnimating = true;
-        showShadow();
-        screenshotAnimator(runnable);
-    }
-
-    private void measureThumbnail() {
-        this.mThumnailScale = (((float) this.mContext.getResources().getDimensionPixelSize(R.dimen.screenshot_thumnail_width)) * 1.0f) / ((float) Math.min(this.mScreenBitmap.getWidth(), this.mScreenBitmap.getHeight()));
-        this.mThumbnailWidth = (int) ((((float) this.mScreenBitmap.getWidth()) * this.mThumnailScale) + 0.5f);
-        this.mThumbnailHeight = (int) ((((float) this.mScreenBitmap.getHeight()) * this.mThumnailScale) + 0.5f);
-        int dimensionPixelSize = this.mContext.getResources().getDimensionPixelSize(R.dimen.screenshot_thumnail_btn_margintop);
-        this.mThumbnailTotalHeight = this.mThumbnailHeight + (this.isDeviceProvisioned ? (this.mContext.getResources().getDimensionPixelSize(R.dimen.screenshot_thumnail_btn_height) * 2) + (dimensionPixelSize * 2) : 0) + this.mThumbnailTop + this.mContext.getResources().getDimensionPixelSize(R.dimen.screenshot_thumbnail_padding_bottom);
-        this.mThumbnailTotalWidth = this.mThumbnailWidth + this.mThumbnailLeft + this.mThumbnailRight;
-        this.mThumbnailMarginLeft = getThumbnailMarginLeft();
-    }
-
-    private void showShadow() {
-        this.mShadowMargin = this.mContext.getResources().getDimensionPixelSize(R.dimen.screenshot_shadow_margin_left);
-        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) this.mScreenshotShadow.getLayoutParams();
-        layoutParams.width = this.mThumbnailTotalWidth + this.mShadowMargin;
-        layoutParams.height = this.mThumbnailTotalHeight;
-        this.mScreenshotShadow.setLayoutParams(layoutParams);
-        float f = 1.0f / this.mThumnailScale;
-        this.mShadowScale = f;
-        this.mScreenshotShadow.setScaleX(f);
-        this.mScreenshotShadow.setScaleY(this.mShadowScale);
-        this.mScreenshotShadow.setPivotX((float) this.mThumbnailWidth);
-        this.mScreenshotShadow.setPivotY(0.0f);
-        this.mScreenshotShadow.setVisibility(0);
-    }
-
-    private void showLongScreenshotGuideIfNeeded() {
-        SharedPreferences sharedPreferences = this.mContext.getSharedPreferences("screenshot_shared_prefs", 0);
-        boolean z = sharedPreferences.getBoolean("need_show_long_screenshot_guide", true);
-        if (z) {
-            SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this.mContext.getApplicationContext());
-            if (!defaultSharedPreferences.getBoolean("need_show_long_screenshot_guide", true)) {
-                sharedPreferences.edit().putBoolean("need_show_long_screenshot_guide", false).apply();
-                defaultSharedPreferences.edit().remove("need_show_long_screenshot_guide").apply();
-                z = false;
-            }
-        }
-        if (z) {
-            this.mLongScreenShotGuideLayout = (LongScreenShotGuideLayout) ((LayoutInflater) this.mContext.getSystemService("layout_inflater")).inflate(R.layout.global_screenshot_guide, (ViewGroup) null);
-            WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(2024, 134218792, -3);
-            layoutParams.setTitle("LongScreenShotGuide");
-            WindowManagerCompat.setLayoutInDisplayCutoutMode(layoutParams, 1);
-            this.mWindowManager.addView(this.mLongScreenShotGuideLayout, layoutParams);
-            this.mLongScreenShotGuideLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                public void onGlobalLayout() {
-                    GlobalScreenshot.this.mLongScreenShotGuideLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                    int dimensionPixelSize = GlobalScreenshot.this.mContext.getResources().getDimensionPixelSize(R.dimen.screenshot_thumnail_btn_margintop);
-                    int dimensionPixelSize2 = GlobalScreenshot.this.mContext.getResources().getDimensionPixelSize(R.dimen.screenshot_thumnail_btn_height);
-                    int access$900 = (int) GlobalScreenshot.this.mThumbnailMarginLeft;
-                    int access$1000 = GlobalScreenshot.this.mThumbnailTop + GlobalScreenshot.this.mThumbnailHeight + dimensionPixelSize;
-                    GlobalScreenshot.this.mLongScreenShotGuideLayout.setLongScreenShotButtonBound(new Rect(access$900, access$1000, GlobalScreenshot.this.mThumbnailWidth + access$900, dimensionPixelSize2 + access$1000), GlobalScreenshot.this.mScreenBitmap.getWidth());
+    /* access modifiers changed from: package-private */
+    public void dismissScreenshot(String str, boolean z) {
+        Log.v("GlobalScreenshot", "clearing screenshot: " + str);
+        this.mScreenshotHandler.removeMessages(2);
+        this.mScreenshotLayout.getViewTreeObserver().removeOnComputeInternalInsetsListener(this);
+        if (!z) {
+            AnimatorSet createScreenshotDismissAnimation = createScreenshotDismissAnimation();
+            this.mDismissAnimation = createScreenshotDismissAnimation;
+            createScreenshotDismissAnimation.addListener(new AnimatorListenerAdapter() {
+                public void onAnimationEnd(Animator animator) {
+                    super.onAnimationEnd(animator);
+                    GlobalScreenshot.this.clearScreenshot();
                 }
             });
-            sharedPreferences.edit().putBoolean("need_show_long_screenshot_guide", false).apply();
-            this.mIsShowLongScreenShotGuide = true;
-            this.mContext.getApplicationContext().registerReceiver(this.mScreenOffReceiver, new IntentFilter("android.intent.action.SCREEN_OFF"));
+            this.mDismissAnimation.start();
+            return;
         }
+        clearScreenshot();
     }
 
-    private void showLongScreenshotGuideOverlayIfNeeded() {
-        if (this.mIsShowLongScreenShotGuide) {
-            this.mLongScreenShotGuideLayoutOverlay = new View(this.mContext);
-            WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(2024, 134218792, -3);
-            layoutParams.setTitle("LongScreenshotGuideOverlay");
-            WindowManagerCompat.setLayoutInDisplayCutoutMode(layoutParams, 1);
-            this.mWindowManager.addView(this.mLongScreenShotGuideLayoutOverlay, layoutParams);
-            this.mHandler.postDelayed(this.mRemoveLongScreenShotGuideOverlayRunnable, 1500);
-            this.mIsShowLongScreenShotGuideOverlay = true;
+    /* access modifiers changed from: private */
+    public void clearScreenshot() {
+        if (this.mScreenshotLayout.isAttachedToWindow()) {
+            this.mWindowManager.removeView(this.mScreenshotLayout);
+        }
+        this.mScreenshotPreview.setImageDrawable((Drawable) null);
+        this.mScreenshotAnimatedView.setImageDrawable((Drawable) null);
+        this.mScreenshotAnimatedView.setVisibility(8);
+        this.mActionsContainerBackground.setVisibility(8);
+        this.mActionsContainer.setVisibility(8);
+        this.mBackgroundProtection.setAlpha(0.0f);
+        this.mDismissButton.setVisibility(8);
+        this.mScreenshotPreview.setVisibility(8);
+        this.mScreenshotPreview.setLayerType(0, (Paint) null);
+        this.mScreenshotPreview.setContentDescription(this.mContext.getResources().getString(C0018R$string.screenshot_preview_description));
+        this.mScreenshotLayout.setAlpha(1.0f);
+        this.mDismissButton.setTranslationY(0.0f);
+        this.mActionsContainer.setTranslationY(0.0f);
+        this.mActionsContainerBackground.setTranslationY(0.0f);
+        this.mScreenshotPreview.setTranslationY(0.0f);
+    }
+
+    /* access modifiers changed from: private */
+    public void showUiOnActionsReady(SavedImageData savedImageData) {
+        logSuccessOnActionsReady(savedImageData);
+        this.mScreenshotHandler.removeMessages(2);
+        Handler handler = this.mScreenshotHandler;
+        handler.sendMessageDelayed(handler.obtainMessage(2), (long) ((AccessibilityManager) this.mContext.getSystemService("accessibility")).getRecommendedTimeoutMillis(6000, 4));
+        if (savedImageData.uri != null) {
+            this.mScreenshotHandler.post(new Runnable(savedImageData) {
+                public final /* synthetic */ GlobalScreenshot.SavedImageData f$1;
+
+                {
+                    this.f$1 = r2;
+                }
+
+                public final void run() {
+                    GlobalScreenshot.this.lambda$showUiOnActionsReady$5$GlobalScreenshot(this.f$1);
+                }
+            });
         }
     }
 
     /* access modifiers changed from: private */
-    public void removeLongScreenShotGuide(boolean z) {
-        if (this.mIsShowLongScreenShotGuide) {
-            if (z) {
-                this.mLongScreenShotGuideLayout.animate().alpha(0.0f).setDuration(100).setListener(new AnimatorListenerAdapter() {
-                    public void onAnimationEnd(Animator animator) {
-                        GlobalScreenshot.this.mWindowManager.removeView(GlobalScreenshot.this.mLongScreenShotGuideLayout);
-                    }
-                }).start();
-            } else {
-                this.mWindowManager.removeView(this.mLongScreenShotGuideLayout);
-            }
-            this.mIsShowLongScreenShotGuide = false;
-            this.mContext.getApplicationContext().unregisterReceiver(this.mScreenOffReceiver);
+    /* renamed from: lambda$showUiOnActionsReady$5 */
+    public /* synthetic */ void lambda$showUiOnActionsReady$5$GlobalScreenshot(final SavedImageData savedImageData) {
+        Animator animator = this.mScreenshotAnimation;
+        if (animator == null || !animator.isRunning()) {
+            createScreenshotActionsShadeAnimation(savedImageData).start();
+        } else {
+            this.mScreenshotAnimation.addListener(new AnimatorListenerAdapter() {
+                public void onAnimationEnd(Animator animator) {
+                    super.onAnimationEnd(animator);
+                    GlobalScreenshot.this.createScreenshotActionsShadeAnimation(savedImageData).start();
+                }
+            });
         }
     }
 
     /* access modifiers changed from: private */
-    public void removeLongScreenShotGuideOverlay() {
-        if (this.mIsShowLongScreenShotGuideOverlay) {
-            this.mHandler.removeCallbacks(this.mRemoveLongScreenShotGuideOverlayRunnable);
-            this.mRemoveLongScreenShotGuideOverlayRunnable.run();
+    public void logSuccessOnActionsReady(SavedImageData savedImageData) {
+        if (savedImageData.uri == null) {
+            this.mUiEventLogger.log(ScreenshotEvent.SCREENSHOT_NOT_SAVED);
+            this.mNotificationsController.notifyScreenshotError(C0018R$string.screenshot_failed_to_capture_text);
+            return;
         }
+        this.mUiEventLogger.log(ScreenshotEvent.SCREENSHOT_SAVED);
     }
 
-    private void startLongScreenShotGuideAlphaAnim(float f) {
-        if (this.mIsShowLongScreenShotGuide) {
-            this.mLongScreenShotGuideLayout.startAlphaChangeAnim(f);
+    private void startAnimation(Consumer<Uri> consumer, Rect rect, Insets insets, boolean z) {
+        if (((PowerManager) this.mContext.getSystemService("power")).isPowerSaveMode()) {
+            Toast.makeText(this.mContext, C0018R$string.screenshot_saved_title, 0).show();
         }
+        this.mScreenshotHandler.post(new Runnable(insets, rect, z, consumer) {
+            public final /* synthetic */ Insets f$1;
+            public final /* synthetic */ Rect f$2;
+            public final /* synthetic */ boolean f$3;
+            public final /* synthetic */ Consumer f$4;
+
+            {
+                this.f$1 = r2;
+                this.f$2 = r3;
+                this.f$3 = r4;
+                this.f$4 = r5;
+            }
+
+            public final void run() {
+                GlobalScreenshot.this.lambda$startAnimation$7$GlobalScreenshot(this.f$1, this.f$2, this.f$3, this.f$4);
+            }
+        });
     }
 
     /* access modifiers changed from: private */
-    public void quitThumbnailWindow(boolean z, boolean z2) {
-        if (this.mScreenshotLayout.getWindowToken() != null && !this.mIsQuited) {
-            this.mIsQuited = true;
-            this.mHandler.removeCallbacks(this.mQuitThumbnailRunnable);
-            this.mThumbnailShakeAnimator.cancel();
-            if (this.mIsBeforeScreenshotReceiver) {
-                this.mContext.getApplicationContext().unregisterReceiver(this.mBeforeScreenshotReceiver);
-                this.mIsBeforeScreenshotReceiver = false;
-            }
-            if (this.mIsConfigurationReceiver) {
-                this.mContext.getApplicationContext().unregisterReceiver(this.mConfigurationReceiver);
-                this.mIsConfigurationReceiver = false;
-            }
-            if (!z) {
-                this.mWindowManager.removeView(this.mScreenshotLayout);
-                this.mScreenshotLayout.getViewTreeObserver().removeOnComputeInternalInsetsListener(this.mOnComputeInternalInsetsListener);
-            } else {
-                this.mIsInOutAnimating = true;
-                getTranslation();
-                ValueAnimator ofInt = ValueAnimator.ofInt(new int[]{0, this.mThumbnailTotalHeight + this.mThumbnailTop});
-                ofInt.setDuration(150);
-                ofInt.setInterpolator(new CubicEaseInOutInterpolator());
-                ofInt.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                    public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                        GlobalScreenshot.this.moveThumbnailWindow(((Integer) valueAnimator.getAnimatedValue()).intValue(), false);
-                    }
-                });
-                ofInt.addListener(new AnimatorListenerAdapter() {
-                    public void onAnimationEnd(Animator animator) {
-                        if (GlobalScreenshot.this.mScreenshotLayout.getWindowToken() != null) {
-                            GlobalScreenshot.this.mWindowManager.removeView(GlobalScreenshot.this.mScreenshotLayout);
-                            GlobalScreenshot.this.mScreenshotLayout.getViewTreeObserver().removeOnComputeInternalInsetsListener(GlobalScreenshot.this.mOnComputeInternalInsetsListener);
-                            boolean unused = GlobalScreenshot.this.mIsInOutAnimating = false;
-                        }
-                    }
-                });
-                ofInt.start();
-            }
-            removeLongScreenShotGuide(z);
-            if (z2) {
-                notifyMediaAndFinish(this.mContext, this.mNotifyMediaStoreData);
-            }
-            unBindPhotoService();
+    /* renamed from: lambda$startAnimation$7 */
+    public /* synthetic */ void lambda$startAnimation$7$GlobalScreenshot(Insets insets, Rect rect, boolean z, Consumer consumer) {
+        if (!this.mScreenshotLayout.isAttachedToWindow()) {
+            this.mWindowManager.addView(this.mScreenshotLayout, this.mWindowLayoutParams);
         }
+        this.mScreenshotAnimatedView.setImageDrawable(createScreenDrawable(this.mScreenBitmap, insets));
+        setAnimatedViewSize(rect.width(), rect.height());
+        this.mScreenshotAnimatedView.setVisibility(8);
+        this.mScreenshotPreview.setImageDrawable(createScreenDrawable(this.mScreenBitmap, insets));
+        this.mScreenshotPreview.setVisibility(4);
+        this.mScreenshotHandler.post(new Runnable(rect, z, consumer) {
+            public final /* synthetic */ Rect f$1;
+            public final /* synthetic */ boolean f$2;
+            public final /* synthetic */ Consumer f$3;
+
+            {
+                this.f$1 = r2;
+                this.f$2 = r3;
+                this.f$3 = r4;
+            }
+
+            public final void run() {
+                GlobalScreenshot.this.lambda$startAnimation$6$GlobalScreenshot(this.f$1, this.f$2, this.f$3);
+            }
+        });
     }
 
-    private ObjectAnimator createScreenshotAlphaAnimation() {
-        ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this.mScreenWhiteBg, "alpha", new float[]{0.0f, 0.5f});
-        ofFloat.setInterpolator(new CubicEaseOutInterpolator());
-        ofFloat.setDuration(150);
-        ofFloat.addListener(new AnimatorListenerAdapter() {
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$startAnimation$6 */
+    public /* synthetic */ void lambda$startAnimation$6$GlobalScreenshot(Rect rect, boolean z, Consumer consumer) {
+        this.mScreenshotLayout.getViewTreeObserver().addOnComputeInternalInsetsListener(this);
+        this.mScreenshotAnimation = createScreenshotDropInAnimation(rect, z);
+        saveScreenshotInWorkerThread(consumer, new ActionsReadyListener() {
+            /* access modifiers changed from: package-private */
+            public void onActionsReady(SavedImageData savedImageData) {
+                GlobalScreenshot.this.showUiOnActionsReady(savedImageData);
+            }
+        });
+        this.mCameraSound.play(0);
+        this.mScreenshotPreview.setLayerType(2, (Paint) null);
+        this.mScreenshotPreview.buildLayer();
+        this.mScreenshotAnimation.start();
+    }
+
+    private AnimatorSet createScreenshotDropInAnimation(Rect rect, boolean z) {
+        Rect rect2 = new Rect();
+        this.mScreenshotPreview.getBoundsOnScreen(rect2);
+        float width = this.mCornerSizeX / ((float) (this.mOrientationPortrait ? rect.width() : rect.height()));
+        this.mScreenshotAnimatedView.setScaleX(1.0f);
+        this.mScreenshotAnimatedView.setScaleY(1.0f);
+        this.mDismissButton.setAlpha(0.0f);
+        this.mDismissButton.setVisibility(0);
+        AnimatorSet animatorSet = new AnimatorSet();
+        ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{0.0f, 1.0f});
+        ofFloat.setDuration(133);
+        ofFloat.setInterpolator(this.mFastOutSlowIn);
+        ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            public final void onAnimationUpdate(ValueAnimator valueAnimator) {
+                GlobalScreenshot.this.lambda$createScreenshotDropInAnimation$8$GlobalScreenshot(valueAnimator);
+            }
+        });
+        ValueAnimator ofFloat2 = ValueAnimator.ofFloat(new float[]{1.0f, 0.0f});
+        ofFloat2.setDuration(217);
+        ofFloat2.setInterpolator(this.mFastOutSlowIn);
+        ofFloat2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            public final void onAnimationUpdate(ValueAnimator valueAnimator) {
+                GlobalScreenshot.this.lambda$createScreenshotDropInAnimation$9$GlobalScreenshot(valueAnimator);
+            }
+        });
+        PointF pointF = new PointF((float) rect.centerX(), (float) rect.centerY());
+        PointF pointF2 = new PointF((float) rect2.centerX(), (float) rect2.centerY());
+        ValueAnimator ofFloat3 = ValueAnimator.ofFloat(new float[]{0.0f, 1.0f});
+        ofFloat3.setDuration(500);
+        $$Lambda$GlobalScreenshot$ZwaN03P50fmACzyWijOKLriVmWE r12 = r0;
+        ValueAnimator valueAnimator = ofFloat3;
+        float f = width;
+        final PointF pointF3 = pointF2;
+        $$Lambda$GlobalScreenshot$ZwaN03P50fmACzyWijOKLriVmWE r0 = new ValueAnimator.AnimatorUpdateListener(0.468f, width, 0.468f, pointF, pointF2, rect, 0.4f) {
+            public final /* synthetic */ float f$1;
+            public final /* synthetic */ float f$2;
+            public final /* synthetic */ float f$3;
+            public final /* synthetic */ PointF f$4;
+            public final /* synthetic */ PointF f$5;
+            public final /* synthetic */ Rect f$6;
+            public final /* synthetic */ float f$7;
+
+            {
+                this.f$1 = r2;
+                this.f$2 = r3;
+                this.f$3 = r4;
+                this.f$4 = r5;
+                this.f$5 = r6;
+                this.f$6 = r7;
+                this.f$7 = r8;
+            }
+
+            public final void onAnimationUpdate(ValueAnimator valueAnimator) {
+                GlobalScreenshot.this.lambda$createScreenshotDropInAnimation$10$GlobalScreenshot(this.f$1, this.f$2, this.f$3, this.f$4, this.f$5, this.f$6, this.f$7, valueAnimator);
+            }
+        };
+        valueAnimator.addUpdateListener(r12);
+        valueAnimator.addListener(new AnimatorListenerAdapter() {
             public void onAnimationStart(Animator animator) {
-                GlobalScreenshot.this.mScreenWhiteBg.setVisibility(0);
+                super.onAnimationStart(animator);
+                GlobalScreenshot.this.mScreenshotAnimatedView.setVisibility(0);
+            }
+        });
+        this.mScreenshotFlash.setAlpha(0.0f);
+        this.mScreenshotFlash.setVisibility(0);
+        if (z) {
+            animatorSet.play(ofFloat2).after(ofFloat);
+            animatorSet.play(ofFloat2).with(valueAnimator);
+        } else {
+            animatorSet.play(valueAnimator);
+        }
+        final Rect rect3 = rect;
+        final float f2 = f;
+        animatorSet.addListener(new AnimatorListenerAdapter() {
+            public void onAnimationEnd(Animator animator) {
+                float f;
+                super.onAnimationEnd(animator);
+                GlobalScreenshot.this.mDismissButton.setAlpha(1.0f);
+                float width = ((float) GlobalScreenshot.this.mDismissButton.getWidth()) / 2.0f;
+                if (GlobalScreenshot.this.mDirectionLTR) {
+                    f = (pointF3.x - width) + ((((float) rect3.width()) * f2) / 2.0f);
+                } else {
+                    f = (pointF3.x - width) - ((((float) rect3.width()) * f2) / 2.0f);
+                }
+                GlobalScreenshot.this.mDismissButton.setX(f);
+                GlobalScreenshot.this.mDismissButton.setY((pointF3.y - width) - ((((float) rect3.height()) * f2) / 2.0f));
+                GlobalScreenshot.this.mScreenshotAnimatedView.setScaleX(1.0f);
+                GlobalScreenshot.this.mScreenshotAnimatedView.setScaleY(1.0f);
+                GlobalScreenshot.this.mScreenshotAnimatedView.setX(pointF3.x - ((((float) rect3.width()) * f2) / 2.0f));
+                GlobalScreenshot.this.mScreenshotAnimatedView.setY(pointF3.y - ((((float) rect3.height()) * f2) / 2.0f));
+                GlobalScreenshot.this.mScreenshotAnimatedView.setVisibility(8);
+                GlobalScreenshot.this.mScreenshotPreview.setVisibility(0);
+                GlobalScreenshot.this.mScreenshotLayout.forceLayout();
+            }
+        });
+        return animatorSet;
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$createScreenshotDropInAnimation$8 */
+    public /* synthetic */ void lambda$createScreenshotDropInAnimation$8$GlobalScreenshot(ValueAnimator valueAnimator) {
+        this.mScreenshotFlash.setAlpha(((Float) valueAnimator.getAnimatedValue()).floatValue());
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$createScreenshotDropInAnimation$9 */
+    public /* synthetic */ void lambda$createScreenshotDropInAnimation$9$GlobalScreenshot(ValueAnimator valueAnimator) {
+        this.mScreenshotFlash.setAlpha(((Float) valueAnimator.getAnimatedValue()).floatValue());
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$createScreenshotDropInAnimation$10 */
+    public /* synthetic */ void lambda$createScreenshotDropInAnimation$10$GlobalScreenshot(float f, float f2, float f3, PointF pointF, PointF pointF2, Rect rect, float f4, ValueAnimator valueAnimator) {
+        float animatedFraction = valueAnimator.getAnimatedFraction();
+        if (animatedFraction < f) {
+            float lerp = MathUtils.lerp(1.0f, f2, this.mFastOutSlowIn.getInterpolation(animatedFraction / f));
+            this.mScreenshotAnimatedView.setScaleX(lerp);
+            this.mScreenshotAnimatedView.setScaleY(lerp);
+        } else {
+            this.mScreenshotAnimatedView.setScaleX(f2);
+            this.mScreenshotAnimatedView.setScaleY(f2);
+        }
+        float scaleX = this.mScreenshotAnimatedView.getScaleX();
+        float scaleY = this.mScreenshotAnimatedView.getScaleY();
+        if (animatedFraction < f3) {
+            this.mScreenshotAnimatedView.setX(MathUtils.lerp(pointF.x, pointF2.x, this.mFastOutSlowIn.getInterpolation(animatedFraction / f3)) - ((((float) rect.width()) * scaleX) / 2.0f));
+        } else {
+            this.mScreenshotAnimatedView.setX(pointF2.x - ((((float) rect.width()) * scaleX) / 2.0f));
+        }
+        this.mScreenshotAnimatedView.setY(MathUtils.lerp(pointF.y, pointF2.y, this.mFastOutSlowIn.getInterpolation(animatedFraction)) - ((((float) rect.height()) * scaleY) / 2.0f));
+        if (animatedFraction >= f4) {
+            this.mDismissButton.setAlpha((animatedFraction - f4) / (1.0f - f4));
+            float x = this.mScreenshotAnimatedView.getX();
+            float y = this.mScreenshotAnimatedView.getY();
+            FrameLayout frameLayout = this.mDismissButton;
+            frameLayout.setY(y - (((float) frameLayout.getHeight()) / 2.0f));
+            if (this.mDirectionLTR) {
+                this.mDismissButton.setX((x + (((float) rect.width()) * scaleX)) - (((float) this.mDismissButton.getWidth()) / 2.0f));
+                return;
+            }
+            FrameLayout frameLayout2 = this.mDismissButton;
+            frameLayout2.setX(x - (((float) frameLayout2.getWidth()) / 2.0f));
+        }
+    }
+
+    /* access modifiers changed from: private */
+    public ValueAnimator createScreenshotActionsShadeAnimation(SavedImageData savedImageData) {
+        LayoutInflater from = LayoutInflater.from(this.mContext);
+        this.mActionsView.removeAllViews();
+        this.mScreenshotLayout.invalidate();
+        this.mScreenshotLayout.requestLayout();
+        this.mScreenshotLayout.getViewTreeObserver().dispatchOnGlobalLayout();
+        try {
+            ActivityManager.getService().resumeAppSwitches();
+        } catch (RemoteException unused) {
+        }
+        ArrayList arrayList = new ArrayList();
+        for (Notification.Action next : savedImageData.smartActions) {
+            ScreenshotActionChip screenshotActionChip = (ScreenshotActionChip) from.inflate(C0014R$layout.global_screenshot_action_chip, this.mActionsView, false);
+            screenshotActionChip.setText(next.title);
+            screenshotActionChip.setIcon(next.getIcon(), false);
+            screenshotActionChip.setPendingIntent(next.actionIntent, new Runnable() {
+                public final void run() {
+                    GlobalScreenshot.this.lambda$createScreenshotActionsShadeAnimation$11$GlobalScreenshot();
+                }
+            });
+            this.mActionsView.addView(screenshotActionChip);
+            arrayList.add(screenshotActionChip);
+        }
+        ScreenshotActionChip screenshotActionChip2 = (ScreenshotActionChip) from.inflate(C0014R$layout.global_screenshot_action_chip, this.mActionsView, false);
+        screenshotActionChip2.setText(savedImageData.shareAction.title);
+        screenshotActionChip2.setIcon(savedImageData.shareAction.getIcon(), true);
+        screenshotActionChip2.setPendingIntent(savedImageData.shareAction.actionIntent, new Runnable() {
+            public final void run() {
+                GlobalScreenshot.this.lambda$createScreenshotActionsShadeAnimation$12$GlobalScreenshot();
+            }
+        });
+        this.mActionsView.addView(screenshotActionChip2);
+        arrayList.add(screenshotActionChip2);
+        ScreenshotActionChip screenshotActionChip3 = (ScreenshotActionChip) from.inflate(C0014R$layout.global_screenshot_action_chip, this.mActionsView, false);
+        screenshotActionChip3.setText(savedImageData.editAction.title);
+        screenshotActionChip3.setIcon(savedImageData.editAction.getIcon(), true);
+        screenshotActionChip3.setPendingIntent(savedImageData.editAction.actionIntent, new Runnable() {
+            public final void run() {
+                GlobalScreenshot.this.lambda$createScreenshotActionsShadeAnimation$13$GlobalScreenshot();
+            }
+        });
+        this.mActionsView.addView(screenshotActionChip3);
+        arrayList.add(screenshotActionChip3);
+        this.mScreenshotPreview.setOnClickListener(new View.OnClickListener(savedImageData) {
+            public final /* synthetic */ GlobalScreenshot.SavedImageData f$1;
+
+            {
+                this.f$1 = r2;
+            }
+
+            public final void onClick(View view) {
+                GlobalScreenshot.this.lambda$createScreenshotActionsShadeAnimation$14$GlobalScreenshot(this.f$1, view);
+            }
+        });
+        this.mScreenshotPreview.setContentDescription(savedImageData.editAction.title);
+        LinearLayout linearLayout = this.mActionsView;
+        ((LinearLayout.LayoutParams) linearLayout.getChildAt(linearLayout.getChildCount() - 1).getLayoutParams()).setMarginEnd(0);
+        ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{0.0f, 1.0f});
+        ofFloat.setDuration(400);
+        this.mActionsContainer.setAlpha(0.0f);
+        this.mActionsContainerBackground.setAlpha(0.0f);
+        this.mActionsContainer.setVisibility(0);
+        this.mActionsContainerBackground.setVisibility(0);
+        ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener(0.25f, arrayList) {
+            public final /* synthetic */ float f$1;
+            public final /* synthetic */ ArrayList f$2;
+
+            {
+                this.f$1 = r2;
+                this.f$2 = r3;
+            }
+
+            public final void onAnimationUpdate(ValueAnimator valueAnimator) {
+                GlobalScreenshot.this.lambda$createScreenshotActionsShadeAnimation$15$GlobalScreenshot(this.f$1, this.f$2, valueAnimator);
             }
         });
         return ofFloat;
     }
 
-    static void notifyScreenshotError(Context context, NotificationManager notificationManager, int i) {
-        notificationManager.cancel(789);
-        Toast.makeText(context, i, 0).show();
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$createScreenshotActionsShadeAnimation$11 */
+    public /* synthetic */ void lambda$createScreenshotActionsShadeAnimation$11$GlobalScreenshot() {
+        this.mUiEventLogger.log(ScreenshotEvent.SCREENSHOT_SMART_ACTION_TAPPED);
+        dismissScreenshot("chip tapped", false);
+        this.mOnCompleteRunnable.run();
     }
 
-    public static void beforeTakeScreenshot(Context context) {
-        Intent intent = new Intent("miui.intent.TAKE_SCREENSHOT");
-        intent.putExtra("IsFinished", false);
-        context.sendBroadcast(intent);
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$createScreenshotActionsShadeAnimation$12 */
+    public /* synthetic */ void lambda$createScreenshotActionsShadeAnimation$12$GlobalScreenshot() {
+        this.mUiEventLogger.log(ScreenshotEvent.SCREENSHOT_SHARE_TAPPED);
+        dismissScreenshot("chip tapped", false);
+        this.mOnCompleteRunnable.run();
     }
 
-    public static void afterTakeScreenshot(Context context) {
-        Intent intent = new Intent("miui.intent.TAKE_SCREENSHOT");
-        intent.putExtra("IsFinished", true);
-        context.sendBroadcast(intent);
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$createScreenshotActionsShadeAnimation$13 */
+    public /* synthetic */ void lambda$createScreenshotActionsShadeAnimation$13$GlobalScreenshot() {
+        this.mUiEventLogger.log(ScreenshotEvent.SCREENSHOT_EDIT_TAPPED);
+        dismissScreenshot("chip tapped", false);
+        this.mOnCompleteRunnable.run();
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$createScreenshotActionsShadeAnimation$14 */
+    public /* synthetic */ void lambda$createScreenshotActionsShadeAnimation$14$GlobalScreenshot(SavedImageData savedImageData, View view) {
+        try {
+            savedImageData.editAction.actionIntent.send();
+            this.mUiEventLogger.log(ScreenshotEvent.SCREENSHOT_PREVIEW_TAPPED);
+            dismissScreenshot("screenshot preview tapped", false);
+            this.mOnCompleteRunnable.run();
+        } catch (PendingIntent.CanceledException e) {
+            Log.e("GlobalScreenshot", "Intent cancelled", e);
+        }
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$createScreenshotActionsShadeAnimation$15 */
+    public /* synthetic */ void lambda$createScreenshotActionsShadeAnimation$15$GlobalScreenshot(float f, ArrayList arrayList, ValueAnimator valueAnimator) {
+        float animatedFraction = valueAnimator.getAnimatedFraction();
+        this.mBackgroundProtection.setAlpha(animatedFraction);
+        float f2 = animatedFraction < f ? animatedFraction / f : 1.0f;
+        this.mActionsContainer.setAlpha(f2);
+        this.mActionsContainerBackground.setAlpha(f2);
+        float f3 = (0.3f * animatedFraction) + 0.7f;
+        this.mActionsContainer.setScaleX(f3);
+        this.mActionsContainerBackground.setScaleX(f3);
+        Iterator it = arrayList.iterator();
+        while (it.hasNext()) {
+            ScreenshotActionChip screenshotActionChip = (ScreenshotActionChip) it.next();
+            screenshotActionChip.setAlpha(animatedFraction);
+            screenshotActionChip.setScaleX(1.0f / f3);
+        }
+        HorizontalScrollView horizontalScrollView = this.mActionsContainer;
+        horizontalScrollView.setScrollX(this.mDirectionLTR ? 0 : horizontalScrollView.getWidth());
+        HorizontalScrollView horizontalScrollView2 = this.mActionsContainer;
+        float f4 = 0.0f;
+        horizontalScrollView2.setPivotX(this.mDirectionLTR ? 0.0f : (float) horizontalScrollView2.getWidth());
+        ImageView imageView = this.mActionsContainerBackground;
+        if (!this.mDirectionLTR) {
+            f4 = (float) imageView.getWidth();
+        }
+        imageView.setPivotX(f4);
+    }
+
+    private AnimatorSet createScreenshotDismissAnimation() {
+        ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{0.0f, 1.0f});
+        ofFloat.setStartDelay(50);
+        ofFloat.setDuration(183);
+        ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            public final void onAnimationUpdate(ValueAnimator valueAnimator) {
+                GlobalScreenshot.this.lambda$createScreenshotDismissAnimation$16$GlobalScreenshot(valueAnimator);
+            }
+        });
+        ValueAnimator ofFloat2 = ValueAnimator.ofFloat(new float[]{0.0f, 1.0f});
+        ofFloat2.setInterpolator(this.mAccelerateInterpolator);
+        ofFloat2.setDuration(350);
+        ofFloat2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener(this.mScreenshotPreview.getTranslationY(), this.mDismissButton.getTranslationY()) {
+            public final /* synthetic */ float f$1;
+            public final /* synthetic */ float f$2;
+
+            {
+                this.f$1 = r2;
+                this.f$2 = r3;
+            }
+
+            public final void onAnimationUpdate(ValueAnimator valueAnimator) {
+                GlobalScreenshot.this.lambda$createScreenshotDismissAnimation$17$GlobalScreenshot(this.f$1, this.f$2, valueAnimator);
+            }
+        });
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.play(ofFloat2).with(ofFloat);
+        return animatorSet;
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$createScreenshotDismissAnimation$16 */
+    public /* synthetic */ void lambda$createScreenshotDismissAnimation$16$GlobalScreenshot(ValueAnimator valueAnimator) {
+        this.mScreenshotLayout.setAlpha(1.0f - valueAnimator.getAnimatedFraction());
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$createScreenshotDismissAnimation$17 */
+    public /* synthetic */ void lambda$createScreenshotDismissAnimation$17$GlobalScreenshot(float f, float f2, ValueAnimator valueAnimator) {
+        float lerp = MathUtils.lerp(0.0f, this.mDismissDeltaY, valueAnimator.getAnimatedFraction());
+        this.mScreenshotPreview.setTranslationY(f + lerp);
+        this.mDismissButton.setTranslationY(f2 + lerp);
+        this.mActionsContainer.setTranslationY(lerp);
+        this.mActionsContainerBackground.setTranslationY(lerp);
+    }
+
+    private void setAnimatedViewSize(int i, int i2) {
+        ViewGroup.LayoutParams layoutParams = this.mScreenshotAnimatedView.getLayoutParams();
+        layoutParams.width = i;
+        layoutParams.height = i2;
+        this.mScreenshotAnimatedView.setLayoutParams(layoutParams);
+    }
+
+    private boolean aspectRatiosMatch(Bitmap bitmap, Insets insets, Rect rect) {
+        int width = (bitmap.getWidth() - insets.left) - insets.right;
+        int height = (bitmap.getHeight() - insets.top) - insets.bottom;
+        if (height == 0 || width == 0 || bitmap.getWidth() == 0 || bitmap.getHeight() == 0) {
+            Log.e("GlobalScreenshot", String.format("Provided bitmap and insets create degenerate region: %dx%d %s", new Object[]{Integer.valueOf(bitmap.getWidth()), Integer.valueOf(bitmap.getHeight()), insets}));
+            return false;
+        }
+        float f = ((float) width) / ((float) height);
+        float width2 = ((float) rect.width()) / ((float) rect.height());
+        boolean z = Math.abs(f - width2) < 0.1f;
+        if (!z) {
+            Log.d("GlobalScreenshot", String.format("aspectRatiosMatch: don't match bitmap: %f, bounds: %f", new Object[]{Float.valueOf(f), Float.valueOf(width2)}));
+        }
+        return z;
+    }
+
+    private Drawable createScreenDrawable(Bitmap bitmap, Insets insets) {
+        int width = (bitmap.getWidth() - insets.left) - insets.right;
+        int height = (bitmap.getHeight() - insets.top) - insets.bottom;
+        BitmapDrawable bitmapDrawable = new BitmapDrawable(this.mContext.getResources(), bitmap);
+        if (height == 0 || width == 0 || bitmap.getWidth() == 0 || bitmap.getHeight() == 0) {
+            Log.e("GlobalScreenshot", String.format("Can't create insetted drawable, using 0 insets bitmap and insets create degenerate region: %dx%d %s", new Object[]{Integer.valueOf(bitmap.getWidth()), Integer.valueOf(bitmap.getHeight()), insets}));
+            return bitmapDrawable;
+        }
+        float f = (float) width;
+        float f2 = (((float) insets.left) * -1.0f) / f;
+        float f3 = (float) height;
+        float f4 = (((float) insets.top) * -1.0f) / f3;
+        InsetDrawable insetDrawable = new InsetDrawable(bitmapDrawable, f2, f4, (((float) insets.right) * -1.0f) / f, (((float) insets.bottom) * -1.0f) / f3);
+        if (insets.left >= 0 && insets.top >= 0 && insets.right >= 0 && insets.bottom >= 0) {
+            return insetDrawable;
+        }
+        return new LayerDrawable(new Drawable[]{new ColorDrawable(-16777216), insetDrawable});
+    }
+
+    public static class ActionProxyReceiver extends BroadcastReceiver {
+        private final StatusBar mStatusBar;
+
+        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r2v3, resolved type: java.lang.Object} */
+        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v2, resolved type: com.android.systemui.statusbar.phone.StatusBar} */
+        /* JADX WARNING: Multi-variable type inference failed */
+        /* Code decompiled incorrectly, please refer to instructions dump. */
+        public ActionProxyReceiver(java.util.Optional<dagger.Lazy<com.android.systemui.statusbar.phone.StatusBar>> r2) {
+            /*
+                r1 = this;
+                r1.<init>()
+                r0 = 0
+                java.lang.Object r2 = r2.orElse(r0)
+                dagger.Lazy r2 = (dagger.Lazy) r2
+                if (r2 == 0) goto L_0x0013
+                java.lang.Object r2 = r2.get()
+                r0 = r2
+                com.android.systemui.statusbar.phone.StatusBar r0 = (com.android.systemui.statusbar.phone.StatusBar) r0
+            L_0x0013:
+                r1.mStatusBar = r0
+                return
+            */
+            throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.screenshot.GlobalScreenshot.ActionProxyReceiver.<init>(java.util.Optional):void");
+        }
+
+        public void onReceive(Context context, Intent intent) {
+            $$Lambda$GlobalScreenshot$ActionProxyReceiver$tBhjeKzNYNKU1TanWTPaMXUfmOc r1 = new Runnable(intent, context) {
+                public final /* synthetic */ Intent f$0;
+                public final /* synthetic */ Context f$1;
+
+                {
+                    this.f$0 = r1;
+                    this.f$1 = r2;
+                }
+
+                public final void run() {
+                    GlobalScreenshot.ActionProxyReceiver.lambda$onReceive$0(this.f$0, this.f$1);
+                }
+            };
+            StatusBar statusBar = this.mStatusBar;
+            if (statusBar != null) {
+                statusBar.executeRunnableDismissingKeyguard(r1, (Runnable) null, true, true, true);
+            } else {
+                r1.run();
+            }
+            if (intent.getBooleanExtra("android:smart_actions_enabled", false)) {
+                ScreenshotSmartActions.notifyScreenshotAction(context, intent.getStringExtra("android:screenshot_id"), "android.intent.action.EDIT".equals(intent.getAction()) ? "Edit" : "Share", false);
+            }
+        }
+
+        static /* synthetic */ void lambda$onReceive$0(Intent intent, Context context) {
+            try {
+                ActivityManagerWrapper.getInstance().closeSystemWindows("screenshot").get(3000, TimeUnit.MILLISECONDS);
+                PendingIntent pendingIntent = (PendingIntent) intent.getParcelableExtra("android:screenshot_action_intent");
+                if (intent.getBooleanExtra("android:screenshot_cancel_notification", false)) {
+                    ScreenshotNotificationsController.cancelScreenshotNotification(context);
+                }
+                ActivityOptions makeBasic = ActivityOptions.makeBasic();
+                makeBasic.setDisallowEnterPictureInPictureWhileLaunching(intent.getBooleanExtra("android:screenshot_disallow_enter_pip", false));
+                try {
+                    pendingIntent.send(context, 0, (Intent) null, (PendingIntent.OnFinished) null, (Handler) null, (String) null, makeBasic.toBundle());
+                } catch (PendingIntent.CanceledException e) {
+                    Log.e("GlobalScreenshot", "Pending intent canceled", e);
+                }
+            } catch (InterruptedException | ExecutionException | TimeoutException e2) {
+                Slog.e("GlobalScreenshot", "Unable to share screenshot", e2);
+            }
+        }
+    }
+
+    public static class TargetChosenReceiver extends BroadcastReceiver {
+        public void onReceive(Context context, Intent intent) {
+            ScreenshotNotificationsController.cancelScreenshotNotification(context);
+        }
+    }
+
+    public static class DeleteScreenshotReceiver extends BroadcastReceiver {
+        public void onReceive(Context context, Intent intent) {
+            if (intent.hasExtra("android:screenshot_uri_id")) {
+                ScreenshotNotificationsController.cancelScreenshotNotification(context);
+                Uri parse = Uri.parse(intent.getStringExtra("android:screenshot_uri_id"));
+                new DeleteImageInBackgroundTask(context).execute(new Uri[]{parse});
+                if (intent.getBooleanExtra("android:smart_actions_enabled", false)) {
+                    ScreenshotSmartActions.notifyScreenshotAction(context, intent.getStringExtra("android:screenshot_id"), "Delete", false);
+                }
+            }
+        }
+    }
+
+    public static class SmartActionsReceiver extends BroadcastReceiver {
+        public void onReceive(Context context, Intent intent) {
+            PendingIntent pendingIntent = (PendingIntent) intent.getParcelableExtra("android:screenshot_action_intent");
+            String stringExtra = intent.getStringExtra("android:screenshot_action_type");
+            Slog.d("GlobalScreenshot", "Executing smart action [" + stringExtra + "]:" + pendingIntent.getIntent());
+            try {
+                pendingIntent.send(context, 0, (Intent) null, (PendingIntent.OnFinished) null, (Handler) null, (String) null, ActivityOptions.makeBasic().toBundle());
+            } catch (PendingIntent.CanceledException e) {
+                Log.e("GlobalScreenshot", "Pending intent canceled", e);
+            }
+            ScreenshotSmartActions.notifyScreenshotAction(context, intent.getStringExtra("android:screenshot_id"), stringExtra, true);
+        }
     }
 }

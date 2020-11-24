@@ -1,55 +1,111 @@
 package com.android.systemui.statusbar;
 
+import android.app.Notification;
+import android.app.RemoteInput;
+import android.content.Context;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.SystemProperties;
+import android.service.notification.StatusBarNotification;
 import android.util.ArrayMap;
 import android.util.Pair;
-import com.android.internal.util.Preconditions;
-import com.android.systemui.Dependency;
-import com.android.systemui.statusbar.NotificationData;
-import com.android.systemui.statusbar.phone.StatusBarWindowManager;
-import com.android.systemui.statusbar.policy.HeadsUpManager;
+import com.android.systemui.statusbar.notification.collection.NotificationEntry;
+import com.android.systemui.statusbar.policy.RemoteInputUriController;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 public class RemoteInputController {
+    private static final boolean ENABLE_REMOTE_INPUT = SystemProperties.getBoolean("debug.enable_remote_input", true);
     private final ArrayList<Callback> mCallbacks = new ArrayList<>(3);
-    private final HeadsUpManager mHeadsUpManager;
-    private final ArrayList<Pair<WeakReference<NotificationData.Entry>, Object>> mOpen = new ArrayList<>();
+    private final Delegate mDelegate;
+    private final ArrayList<Pair<WeakReference<NotificationEntry>, Object>> mOpen = new ArrayList<>();
+    private final RemoteInputUriController mRemoteInputUriController;
     private final ArrayMap<String, Object> mSpinning = new ArrayMap<>();
 
     public interface Callback {
-        void onRemoteInputActive(boolean z);
-
-        void onRemoteInputSent(NotificationData.Entry entry);
-    }
-
-    public RemoteInputController(HeadsUpManager headsUpManager) {
-        addCallback((Callback) Dependency.get(StatusBarWindowManager.class));
-        this.mHeadsUpManager = headsUpManager;
-    }
-
-    public void addRemoteInput(NotificationData.Entry entry, Object obj) {
-        Preconditions.checkNotNull(entry);
-        Preconditions.checkNotNull(obj);
-        if (!pruneWeakThenRemoveAndContains(entry, (NotificationData.Entry) null, obj)) {
-            this.mOpen.add(new Pair(new WeakReference(entry), obj));
+        void onRemoteInputActive(boolean z) {
         }
-        apply(entry);
+
+        void onRemoteInputSent(NotificationEntry notificationEntry) {
+        }
     }
 
-    public void removeRemoteInput(NotificationData.Entry entry, Object obj) {
-        Preconditions.checkNotNull(entry);
-        pruneWeakThenRemoveAndContains((NotificationData.Entry) null, entry, obj);
-        apply(entry);
+    public interface Delegate {
+        void lockScrollTo(NotificationEntry notificationEntry);
+
+        void requestDisallowLongPressAndDismiss();
+
+        void setRemoteInputActive(NotificationEntry notificationEntry, boolean z);
+    }
+
+    public RemoteInputController(Delegate delegate, RemoteInputUriController remoteInputUriController) {
+        this.mDelegate = delegate;
+        this.mRemoteInputUriController = remoteInputUriController;
+    }
+
+    public static void processForRemoteInput(Notification notification, Context context) {
+        Bundle bundle;
+        RemoteInput[] remoteInputs;
+        if (ENABLE_REMOTE_INPUT && (bundle = notification.extras) != null && bundle.containsKey("android.wearable.EXTENSIONS")) {
+            Notification.Action[] actionArr = notification.actions;
+            if (actionArr == null || actionArr.length == 0) {
+                Notification.Action action = null;
+                List<Notification.Action> actions = new Notification.WearableExtender(notification).getActions();
+                int size = actions.size();
+                for (int i = 0; i < size; i++) {
+                    Notification.Action action2 = actions.get(i);
+                    if (!(action2 == null || (remoteInputs = action2.getRemoteInputs()) == null)) {
+                        int length = remoteInputs.length;
+                        int i2 = 0;
+                        while (true) {
+                            if (i2 >= length) {
+                                break;
+                            } else if (remoteInputs[i2].getAllowFreeFormInput()) {
+                                action = action2;
+                                break;
+                            } else {
+                                i2++;
+                            }
+                        }
+                        if (action != null) {
+                            break;
+                        }
+                    }
+                }
+                if (action != null) {
+                    Notification.Builder recoverBuilder = Notification.Builder.recoverBuilder(context, notification);
+                    recoverBuilder.setActions(new Notification.Action[]{action});
+                    recoverBuilder.build();
+                }
+            }
+        }
+    }
+
+    public void addRemoteInput(NotificationEntry notificationEntry, Object obj) {
+        Objects.requireNonNull(notificationEntry);
+        Objects.requireNonNull(obj);
+        if (!pruneWeakThenRemoveAndContains(notificationEntry, (NotificationEntry) null, obj)) {
+            this.mOpen.add(new Pair(new WeakReference(notificationEntry), obj));
+        }
+        apply(notificationEntry);
+    }
+
+    public void removeRemoteInput(NotificationEntry notificationEntry, Object obj) {
+        Objects.requireNonNull(notificationEntry);
+        pruneWeakThenRemoveAndContains((NotificationEntry) null, notificationEntry, obj);
+        apply(notificationEntry);
     }
 
     public void addSpinning(String str, Object obj) {
-        Preconditions.checkNotNull(str);
-        Preconditions.checkNotNull(obj);
+        Objects.requireNonNull(str);
+        Objects.requireNonNull(obj);
         this.mSpinning.put(str, obj);
     }
 
     public void removeSpinning(String str, Object obj) {
-        Preconditions.checkNotNull(str);
+        Objects.requireNonNull(str);
         if (obj == null || this.mSpinning.get(str) == obj) {
             this.mSpinning.remove(str);
         }
@@ -59,8 +115,12 @@ public class RemoteInputController {
         return this.mSpinning.containsKey(str);
     }
 
-    private void apply(NotificationData.Entry entry) {
-        this.mHeadsUpManager.setRemoteInputActive(entry, isRemoteInputActive(entry));
+    public boolean isSpinning(String str, Object obj) {
+        return this.mSpinning.get(str) == obj;
+    }
+
+    private void apply(NotificationEntry notificationEntry) {
+        this.mDelegate.setRemoteInputActive(notificationEntry, isRemoteInputActive(notificationEntry));
         boolean isRemoteInputActive = isRemoteInputActive();
         int size = this.mCallbacks.size();
         for (int i = 0; i < size; i++) {
@@ -68,24 +128,24 @@ public class RemoteInputController {
         }
     }
 
-    public boolean isRemoteInputActive(NotificationData.Entry entry) {
-        return pruneWeakThenRemoveAndContains(entry, (NotificationData.Entry) null, (Object) null);
+    public boolean isRemoteInputActive(NotificationEntry notificationEntry) {
+        return pruneWeakThenRemoveAndContains(notificationEntry, (NotificationEntry) null, (Object) null);
     }
 
     public boolean isRemoteInputActive() {
-        pruneWeakThenRemoveAndContains((NotificationData.Entry) null, (NotificationData.Entry) null, (Object) null);
+        pruneWeakThenRemoveAndContains((NotificationEntry) null, (NotificationEntry) null, (Object) null);
         return !this.mOpen.isEmpty();
     }
 
-    private boolean pruneWeakThenRemoveAndContains(NotificationData.Entry entry, NotificationData.Entry entry2, Object obj) {
+    private boolean pruneWeakThenRemoveAndContains(NotificationEntry notificationEntry, NotificationEntry notificationEntry2, Object obj) {
         boolean z = false;
         for (int size = this.mOpen.size() - 1; size >= 0; size--) {
-            NotificationData.Entry entry3 = (NotificationData.Entry) ((WeakReference) this.mOpen.get(size).first).get();
+            NotificationEntry notificationEntry3 = (NotificationEntry) ((WeakReference) this.mOpen.get(size).first).get();
             Object obj2 = this.mOpen.get(size).second;
             boolean z2 = obj == null || obj2 == obj;
-            if (entry3 == null || (entry3 == entry2 && z2)) {
+            if (notificationEntry3 == null || (notificationEntry3 == notificationEntry2 && z2)) {
                 this.mOpen.remove(size);
-            } else if (entry3 == entry) {
+            } else if (notificationEntry3 == notificationEntry) {
                 if (obj == null || obj == obj2) {
                     z = true;
                 } else {
@@ -97,14 +157,14 @@ public class RemoteInputController {
     }
 
     public void addCallback(Callback callback) {
-        Preconditions.checkNotNull(callback);
+        Objects.requireNonNull(callback);
         this.mCallbacks.add(callback);
     }
 
-    public void remoteInputSent(NotificationData.Entry entry) {
+    public void remoteInputSent(NotificationEntry notificationEntry) {
         int size = this.mCallbacks.size();
         for (int i = 0; i < size; i++) {
-            this.mCallbacks.get(i).onRemoteInputSent(entry);
+            this.mCallbacks.get(i).onRemoteInputSent(notificationEntry);
         }
     }
 
@@ -112,17 +172,29 @@ public class RemoteInputController {
         if (this.mOpen.size() != 0) {
             ArrayList arrayList = new ArrayList(this.mOpen.size());
             for (int size = this.mOpen.size() - 1; size >= 0; size--) {
-                NotificationData.Entry entry = (NotificationData.Entry) ((WeakReference) this.mOpen.get(size).first).get();
-                if (!(entry == null || entry.row == null)) {
-                    arrayList.add(entry);
+                NotificationEntry notificationEntry = (NotificationEntry) ((WeakReference) this.mOpen.get(size).first).get();
+                if (notificationEntry != null && notificationEntry.rowExists()) {
+                    arrayList.add(notificationEntry);
                 }
             }
             for (int size2 = arrayList.size() - 1; size2 >= 0; size2--) {
-                ExpandableNotificationRow expandableNotificationRow = ((NotificationData.Entry) arrayList.get(size2)).row;
-                if (expandableNotificationRow != null) {
-                    expandableNotificationRow.closeRemoteInput();
+                NotificationEntry notificationEntry2 = (NotificationEntry) arrayList.get(size2);
+                if (notificationEntry2.rowExists()) {
+                    notificationEntry2.closeRemoteInput();
                 }
             }
         }
+    }
+
+    public void requestDisallowLongPressAndDismiss() {
+        this.mDelegate.requestDisallowLongPressAndDismiss();
+    }
+
+    public void lockScrollTo(NotificationEntry notificationEntry) {
+        this.mDelegate.lockScrollTo(notificationEntry);
+    }
+
+    public void grantInlineReplyUriPermission(StatusBarNotification statusBarNotification, Uri uri) {
+        this.mRemoteInputUriController.grantInlineReplyUriPermission(statusBarNotification, uri);
     }
 }

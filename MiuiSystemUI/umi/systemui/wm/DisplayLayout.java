@@ -18,6 +18,7 @@ public class DisplayLayout {
     private boolean mHasNavigationBar = false;
     private boolean mHasStatusBar = false;
     private int mHeight;
+    private int mNavBarFrameHeight = 0;
     private final Rect mNonDecorInsets = new Rect();
     private int mRotation;
     private final Rect mStableInsets = new Rect();
@@ -79,6 +80,7 @@ public class DisplayLayout {
         if (z) {
             convertNonDecorInsetsToStableInsets(resources, this.mStableInsets, this.mWidth, this.mHeight, z);
         }
+        this.mNavBarFrameHeight = getNavigationBarFrameHeight(resources, this.mWidth > this.mHeight);
     }
 
     public void rotateTo(Resources resources, int i) {
@@ -124,6 +126,10 @@ public class DisplayLayout {
 
     public boolean isLandscape() {
         return this.mWidth > this.mHeight;
+    }
+
+    public int navBarFrameHeight() {
+        return this.mNavBarFrameHeight;
     }
 
     public int getOrientation() {
@@ -188,9 +194,9 @@ public class DisplayLayout {
 
     static int getStatusBarHeight(boolean z, Resources resources) {
         if (z) {
-            return resources.getDimensionPixelSize(17105497);
+            return resources.getDimensionPixelSize(17105490);
         }
-        return resources.getDimensionPixelSize(17105498);
+        return resources.getDimensionPixelSize(17105491);
     }
 
     public static DisplayCutout calculateDisplayCutoutForRotation(DisplayCutout displayCutout, int i, int i2, int i3) {
@@ -288,13 +294,17 @@ public class DisplayLayout {
     public static int getNavigationBarSize(Resources resources, int i, boolean z, int i2) {
         if ((i2 & 15) == 3) {
             if (i != 4) {
-                return resources.getDimensionPixelSize(17105343);
+                return resources.getDimensionPixelSize(17105342);
             }
-            return resources.getDimensionPixelSize(z ? 17105340 : 17105338);
-        } else if (i != 4) {
-            return resources.getDimensionPixelSize(17105342);
-        } else {
             return resources.getDimensionPixelSize(z ? 17105339 : 17105337);
+        } else if (i != 4) {
+            return resources.getDimensionPixelSize(17105341);
+        } else {
+            return resources.getDimensionPixelSize(z ? 17105338 : 17105336);
         }
+    }
+
+    public static int getNavigationBarFrameHeight(Resources resources, boolean z) {
+        return resources.getDimensionPixelSize(z ? 17105334 : 17105333);
     }
 }

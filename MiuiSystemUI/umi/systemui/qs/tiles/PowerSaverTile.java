@@ -1,5 +1,6 @@
 package com.android.systemui.qs.tiles;
 
+import android.app.ActivityManager;
 import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Intent;
@@ -9,14 +10,12 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.widget.Switch;
-import com.android.keyguard.KeyguardUpdateMonitor;
-import com.android.systemui.Constants;
-import com.android.systemui.plugins.R;
+import com.android.systemui.C0010R$drawable;
+import com.android.systemui.C0018R$string;
 import com.android.systemui.plugins.qs.QSTile;
 import com.android.systemui.qs.QSHost;
 import com.android.systemui.qs.tileimpl.QSTileImpl;
-import com.android.systemui.statusbar.Icons;
-import com.xiaomi.stat.MiStat;
+import miui.os.Build;
 
 public class PowerSaverTile extends QSTileImpl<QSTile.BooleanState> {
     private final ContentObserver mBatterySaverObserver = new ContentObserver(this.mHandler) {
@@ -53,16 +52,17 @@ public class PowerSaverTile extends QSTileImpl<QSTile.BooleanState> {
     /* access modifiers changed from: protected */
     public void handleClick() {
         boolean z = false;
-        if (Settings.System.getIntForUser(this.mResolver, "POWER_SAVE_MODE_OPEN", 0, KeyguardUpdateMonitor.getCurrentUser()) != 0) {
+        if (Settings.System.getIntForUser(this.mResolver, "POWER_SAVE_MODE_OPEN", 0, -2) != 0) {
             z = true;
         }
+        boolean z2 = !z;
         Bundle bundle = new Bundle();
-        bundle.putBoolean("POWER_SAVE_MODE_OPEN", !z);
-        this.mResolver.call(maybeAddUserId(Uri.parse("content://com.miui.powercenter.powersaver"), KeyguardUpdateMonitor.getCurrentUser()), "changePowerMode", (String) null, bundle);
+        bundle.putBoolean("POWER_SAVE_MODE_OPEN", z2);
+        this.mResolver.call(maybeAddUserId(Uri.parse("content://com.miui.powercenter.powersaver"), ActivityManager.getCurrentUser()), "changePowerMode", (String) null, bundle);
     }
 
     public CharSequence getTileLabel() {
-        return this.mContext.getString(R.string.quick_settings_batterysaver_label);
+        return this.mContext.getString(C0018R$string.quick_settings_batterysaver_label);
     }
 
     /* access modifiers changed from: protected */
@@ -72,25 +72,25 @@ public class PowerSaverTile extends QSTileImpl<QSTile.BooleanState> {
             z = true;
         }
         booleanState.value = z;
-        booleanState.label = this.mContext.getString(R.string.quick_settings_batterysaver_label);
+        booleanState.label = this.mContext.getString(C0018R$string.quick_settings_batterysaver_label);
         if (booleanState.value) {
             booleanState.state = 2;
-            booleanState.icon = QSTileImpl.ResourceIcon.get(Icons.getQSIcons(Integer.valueOf(R.drawable.ic_qs_battery_saver_on), this.mInControlCenter));
+            booleanState.icon = QSTileImpl.ResourceIcon.get(C0010R$drawable.ic_qs_battery_saver_on);
         } else {
             booleanState.state = 1;
-            booleanState.icon = QSTileImpl.ResourceIcon.get(Icons.getQSIcons(Integer.valueOf(R.drawable.ic_qs_battery_saver_off), this.mInControlCenter));
+            booleanState.icon = QSTileImpl.ResourceIcon.get(C0010R$drawable.ic_qs_battery_saver_off);
         }
-        booleanState.activeBgColor = 1;
         StringBuilder sb = new StringBuilder();
         sb.append(booleanState.label);
         sb.append(",");
-        sb.append(this.mContext.getString(booleanState.value ? R.string.switch_bar_on : R.string.switch_bar_off));
+        sb.append(this.mContext.getString(booleanState.value ? C0018R$string.switch_bar_on : C0018R$string.switch_bar_off));
         booleanState.contentDescription = sb.toString();
         booleanState.expandedAccessibilityClassName = Switch.class.getName();
+        booleanState.activeBgColor = 1;
     }
 
     public boolean isAvailable() {
-        return !Constants.IS_TABLET;
+        return !Build.IS_TABLET;
     }
 
     private Intent longClickBatterySaverIntent() {
@@ -108,7 +108,7 @@ public class PowerSaverTile extends QSTileImpl<QSTile.BooleanState> {
         if (uri == null) {
             return null;
         }
-        if (i == -2 || !MiStat.Param.CONTENT.equals(uri.getScheme()) || uriHasUserId(uri)) {
+        if (i == -2 || !"content".equals(uri.getScheme()) || uriHasUserId(uri)) {
             return uri;
         }
         Uri.Builder buildUpon = uri.buildUpon();

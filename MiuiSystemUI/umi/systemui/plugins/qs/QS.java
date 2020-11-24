@@ -7,11 +7,11 @@ import com.android.systemui.plugins.annotations.DependsOn;
 import com.android.systemui.plugins.annotations.ProvidesInterface;
 
 @DependsOn(target = HeightListener.class)
-@ProvidesInterface(action = "com.android.systemui.action.PLUGIN_QS", version = 6)
+@ProvidesInterface(action = "com.android.systemui.action.PLUGIN_QS", version = 8)
 public interface QS extends FragmentBase {
     public static final String ACTION = "com.android.systemui.action.PLUGIN_QS";
     public static final String TAG = "QS";
-    public static final int VERSION = 6;
+    public static final int VERSION = 8;
 
     @ProvidesInterface(version = 1)
     public interface HeightListener {
@@ -30,23 +30,15 @@ public interface QS extends FragmentBase {
 
     View getHeader();
 
-    View getQsContent();
-
-    int getQsHeaderHeight();
-
     int getQsMinExpansionHeight();
 
     void hideImmediately();
 
     boolean isCustomizing();
 
-    boolean isQSFullyCollapsed();
-
     boolean isShowingDetail();
 
     void notifyCustomizeChanged();
-
-    void onPanelDisplayChanged(boolean z, boolean z2);
 
     void setContainer(ViewGroup viewGroup);
 
@@ -56,7 +48,8 @@ public interface QS extends FragmentBase {
 
     void setExpanded(boolean z);
 
-    void setHasNotifications(boolean z);
+    void setHasNotifications(boolean z) {
+    }
 
     void setHeaderClickable(boolean z);
 
@@ -64,15 +57,18 @@ public interface QS extends FragmentBase {
 
     void setHeightOverride(int i);
 
-    void setKeyguardShowing(boolean z);
-
     void setListening(boolean z);
 
     void setOverscrolling(boolean z);
 
     void setPanelView(HeightListener heightListener);
 
-    void setQsExpansion(float f, float f2, float f3);
+    void setQsExpansion(float f, float f2);
 
-    void updateTopPadding(float f);
+    void setShowCollapsedOnKeyguard(boolean z) {
+    }
+
+    boolean disallowPanelTouches() {
+        return isShowingDetail();
+    }
 }

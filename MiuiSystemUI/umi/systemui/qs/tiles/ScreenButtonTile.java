@@ -2,31 +2,23 @@ package com.android.systemui.qs.tiles;
 
 import android.app.AlertDialog;
 import android.content.ContentResolver;
-import android.content.ContextCompat;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.ContentObserver;
-import android.os.RemoteException;
 import android.provider.MiuiSettings;
 import android.provider.Settings;
-import android.view.IWindowManager;
-import android.view.IWindowManagerCompat;
-import android.view.WindowManagerGlobal;
+import android.view.ViewConfiguration;
 import android.widget.Switch;
-import com.android.systemui.Util;
-import com.android.systemui.plugins.R;
+import com.android.systemui.C0010R$drawable;
+import com.android.systemui.C0018R$string;
+import com.android.systemui.C0019R$style;
 import com.android.systemui.plugins.qs.QSTile;
 import com.android.systemui.qs.QSHost;
 import com.android.systemui.qs.tileimpl.QSTileImpl;
 
 public class ScreenButtonTile extends QSTileImpl<QSTile.BooleanState> {
-    protected boolean mHasButtons = true;
-    private final ContentObserver mScreenButtonStateObserver = new ContentObserver(this.mHandler) {
-        public void onChange(boolean z) {
-            ScreenButtonTile.this.refreshState();
-        }
-    };
-    protected IWindowManager mWindowManagerService = WindowManagerGlobal.getWindowManagerService();
+    protected boolean mHasButtons;
+    private final ContentObserver mScreenButtonStateObserver;
 
     public Intent getLongClickIntent() {
         return null;
@@ -42,14 +34,13 @@ public class ScreenButtonTile extends QSTileImpl<QSTile.BooleanState> {
 
     public ScreenButtonTile(QSHost qSHost) {
         super(qSHost);
-        boolean z = true;
-        try {
-            if (IWindowManagerCompat.hasNavigationBar(this.mWindowManagerService, ContextCompat.getDisplayId(this.mContext))) {
-                z = false;
+        this.mHasButtons = true;
+        this.mScreenButtonStateObserver = new ContentObserver(this.mHandler) {
+            public void onChange(boolean z) {
+                ScreenButtonTile.this.refreshState();
             }
-            this.mHasButtons = z;
-        } catch (RemoteException unused) {
-        }
+        };
+        this.mHasButtons = ViewConfiguration.get(this.mContext).hasPermanentMenuKey();
     }
 
     /* access modifiers changed from: protected */
@@ -87,7 +78,7 @@ public class ScreenButtonTile extends QSTileImpl<QSTile.BooleanState> {
     }
 
     public CharSequence getTileLabel() {
-        return this.mContext.getString(R.string.quick_settings_screenbutton_label);
+        return this.mContext.getString(C0018R$string.quick_settings_screenbutton_label);
     }
 
     /* access modifiers changed from: protected */
@@ -96,7 +87,7 @@ public class ScreenButtonTile extends QSTileImpl<QSTile.BooleanState> {
         if (MiuiSettings.Global.getBoolean(this.mContext.getContentResolver(), "force_fsg_nav_bar")) {
             booleanState.value = false;
             booleanState.state = 0;
-            booleanState.icon = QSTileImpl.ResourceIcon.get(R.drawable.ic_qs_screen_button_unavailable);
+            booleanState.icon = QSTileImpl.ResourceIcon.get(C0010R$drawable.ic_qs_screen_button_unavailable);
         } else {
             if (Settings.Secure.getIntForUser(this.mContext.getContentResolver(), "screen_buttons_state", 0, -2) != 0) {
                 z = true;
@@ -104,39 +95,34 @@ public class ScreenButtonTile extends QSTileImpl<QSTile.BooleanState> {
             booleanState.value = z;
             if (z) {
                 booleanState.state = 2;
-                booleanState.icon = QSTileImpl.ResourceIcon.get(R.drawable.ic_qs_screen_button_enabled);
+                booleanState.icon = QSTileImpl.ResourceIcon.get(C0010R$drawable.ic_qs_screen_button_enabled);
             } else {
                 booleanState.state = 1;
-                booleanState.icon = QSTileImpl.ResourceIcon.get(R.drawable.ic_qs_screen_button_disabled);
+                booleanState.icon = QSTileImpl.ResourceIcon.get(C0010R$drawable.ic_qs_screen_button_disabled);
             }
         }
-        booleanState.label = this.mContext.getString(R.string.quick_settings_screenbutton_label);
+        booleanState.label = this.mContext.getString(C0018R$string.quick_settings_screenbutton_label);
         StringBuilder sb = new StringBuilder();
         sb.append(booleanState.label);
         sb.append(",");
-        sb.append(this.mContext.getString(booleanState.value ? R.string.switch_bar_on : R.string.switch_bar_off));
+        sb.append(this.mContext.getString(booleanState.value ? C0018R$string.switch_bar_on : C0018R$string.switch_bar_off));
         booleanState.contentDescription = sb.toString();
         booleanState.expandedAccessibilityClassName = Switch.class.getName();
     }
 
     protected class ClickRunnable implements Runnable {
-        private boolean disabled;
         private int value;
 
         ClickRunnable(int i, boolean z) {
             this.value = i;
-            this.disabled = z;
         }
 
         public void run() {
             if (this.value == 0) {
-                AlertDialog create = new AlertDialog.Builder(ScreenButtonTile.this.mContext, R.style.Theme_Dialog_Alert).setMessage(286130249).setPositiveButton(17039370, (DialogInterface.OnClickListener) null).create();
+                AlertDialog create = new AlertDialog.Builder(ScreenButtonTile.this.mContext, C0019R$style.Theme_Dialog_Alert).setMessage(286130249).setPositiveButton(17039370, (DialogInterface.OnClickListener) null).create();
                 create.getWindow().setType(2010);
-                create.getWindow().addPrivateFlags(16);
                 create.show();
-                return;
             }
-            Util.showSystemOverlayToast(ScreenButtonTile.this.mContext, this.disabled ? R.string.auto_disable_screenbuttons_disable_toast_text : R.string.auto_disable_screenbuttons_enable_toast_text, 0);
         }
     }
 }

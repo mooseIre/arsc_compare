@@ -6,8 +6,8 @@ import android.util.AttributeSet;
 import com.android.internal.widget.LockPatternChecker;
 import com.android.internal.widget.LockPatternView;
 import com.android.internal.widget.LockscreenCredential;
+import com.android.systemui.C0012R$id;
 import com.android.systemui.biometrics.AuthCredentialPatternView;
-import com.android.systemui.plugins.R;
 import java.util.List;
 
 public class AuthCredentialPatternView extends AuthCredentialView {
@@ -79,7 +79,7 @@ public class AuthCredentialPatternView extends AuthCredentialView {
     /* access modifiers changed from: protected */
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
-        LockPatternView findViewById = findViewById(R.id.lockPattern);
+        LockPatternView findViewById = findViewById(C0012R$id.lockPattern);
         this.mLockPatternView = findViewById;
         findViewById.setOnPatternListener(new UnlockPatternListener());
         this.mLockPatternView.setInStealthMode(!this.mLockPatternUtils.isVisiblePatternEnabled(this.mUserId));

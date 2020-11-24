@@ -6,8 +6,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import com.android.systemui.Util;
-import com.android.systemui.plugins.R;
+import com.android.systemui.C0012R$id;
+import com.android.systemui.C0014R$layout;
 import miui.os.Build;
 
 public class DrawerDemoAct extends FsGestureDemoBaseActiivy {
@@ -32,14 +32,14 @@ public class DrawerDemoAct extends FsGestureDemoBaseActiivy {
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         getWindow().addFlags(1024);
-        setContentView(R.layout.drawer_demo_layout);
-        Util.hideSystemBars(getWindow().getDecorView());
-        this.drawerImg = (ImageView) findViewById(R.id.drawer_img);
-        View findViewById = findViewById(R.id.shelter_view);
+        setContentView(C0014R$layout.drawer_demo_layout);
+        FsgestureUtil.INSTANCE.hideSystemBars(getWindow().getDecorView());
+        this.drawerImg = (ImageView) findViewById(C0012R$id.drawer_img);
+        View findViewById = findViewById(C0012R$id.shelter_view);
         this.shelterView = findViewById;
         findViewById.setOnTouchListener(new View.OnTouchListener() {
             /* JADX WARNING: Code restructure failed: missing block: B:5:0x0011, code lost:
-                if (r6 != 3) goto L_0x00ed;
+                if (r6 != 3) goto L_0x00ec;
              */
             /* Code decompiled incorrectly, please refer to instructions dump. */
             public boolean onTouch(android.view.View r6, android.view.MotionEvent r7) {
@@ -48,13 +48,13 @@ public class DrawerDemoAct extends FsGestureDemoBaseActiivy {
                     int r6 = r7.getAction()
                     float r7 = r7.getRawX()
                     r0 = 1
-                    if (r6 == 0) goto L_0x00ce
+                    if (r6 == 0) goto L_0x00cd
                     r1 = 3
                     r2 = 2
                     if (r6 == r0) goto L_0x0044
                     if (r6 == r2) goto L_0x0015
                     if (r6 == r1) goto L_0x0044
-                    goto L_0x00ed
+                    goto L_0x00ec
                 L_0x0015:
                     com.android.systemui.fsgesture.DrawerDemoAct r6 = com.android.systemui.fsgesture.DrawerDemoAct.this
                     android.widget.ImageView r6 = r6.drawerImg
@@ -76,14 +76,14 @@ public class DrawerDemoAct extends FsGestureDemoBaseActiivy {
                     float r5 = r7 - r5
                 L_0x003f:
                     r6.setTranslationX(r5)
-                    goto L_0x00ed
+                    goto L_0x00ec
                 L_0x0044:
                     com.android.systemui.fsgesture.DrawerDemoAct r6 = com.android.systemui.fsgesture.DrawerDemoAct.this
                     android.view.View r6 = r6.shelterView
                     android.view.ViewGroup$LayoutParams r6 = r6.getLayoutParams()
                     com.android.systemui.fsgesture.DrawerDemoAct r3 = com.android.systemui.fsgesture.DrawerDemoAct.this
                     android.content.res.Resources r3 = r3.getResources()
-                    r4 = 2131165643(0x7f0701cb, float:1.7945509E38)
+                    int r4 = com.android.systemui.C0009R$dimen.fsgesture_shelter_width
                     int r3 = r3.getDimensionPixelSize(r4)
                     r6.width = r3
                     com.android.systemui.fsgesture.DrawerDemoAct r3 = com.android.systemui.fsgesture.DrawerDemoAct.this
@@ -96,7 +96,7 @@ public class DrawerDemoAct extends FsGestureDemoBaseActiivy {
                     float r6 = (float) r6
                     int r6 = (r7 > r6 ? 1 : (r7 == r6 ? 0 : -1))
                     r2 = 200(0xc8, double:9.9E-322)
-                    if (r6 < 0) goto L_0x00ac
+                    if (r6 < 0) goto L_0x00ab
                     com.android.systemui.fsgesture.DrawerDemoAct r6 = com.android.systemui.fsgesture.DrawerDemoAct.this
                     android.widget.ImageView r6 = r6.drawerImg
                     android.view.ViewPropertyAnimator r6 = r6.animate()
@@ -115,8 +115,8 @@ public class DrawerDemoAct extends FsGestureDemoBaseActiivy {
                     r7.<init>()
                     r1 = 1000(0x3e8, double:4.94E-321)
                     r6.postDelayed(r7, r1)
-                    goto L_0x00ed
-                L_0x00ac:
+                    goto L_0x00ec
+                L_0x00ab:
                     com.android.systemui.fsgesture.DrawerDemoAct r6 = com.android.systemui.fsgesture.DrawerDemoAct.this
                     r6.startSwipeViewAnimation(r1)
                     com.android.systemui.fsgesture.DrawerDemoAct r6 = com.android.systemui.fsgesture.DrawerDemoAct.this
@@ -128,8 +128,8 @@ public class DrawerDemoAct extends FsGestureDemoBaseActiivy {
                     android.view.ViewPropertyAnimator r5 = r6.translationX(r5)
                     android.view.ViewPropertyAnimator r5 = r5.setDuration(r2)
                     r5.start()
-                    goto L_0x00ed
-                L_0x00ce:
+                    goto L_0x00ec
+                L_0x00cd:
                     com.android.systemui.fsgesture.DrawerDemoAct r6 = com.android.systemui.fsgesture.DrawerDemoAct.this
                     com.android.systemui.fsgesture.FsGestureDemoSwipeView r6 = r6.fsGestureDemoSwipeView
                     r6.cancelAnimation()
@@ -141,7 +141,7 @@ public class DrawerDemoAct extends FsGestureDemoBaseActiivy {
                     com.android.systemui.fsgesture.DrawerDemoAct r5 = com.android.systemui.fsgesture.DrawerDemoAct.this
                     android.view.View r5 = r5.shelterView
                     r5.setLayoutParams(r6)
-                L_0x00ed:
+                L_0x00ec:
                     return r0
                 */
                 throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.fsgesture.DrawerDemoAct.AnonymousClass1.onTouch(android.view.View, android.view.MotionEvent):boolean");
@@ -159,7 +159,7 @@ public class DrawerDemoAct extends FsGestureDemoBaseActiivy {
                 DrawerDemoAct.this.drawerImg.setTranslationX((float) DrawerDemoAct.this.initTranslateWidht);
             }
         });
-        FsGestureDemoTitleView fsGestureDemoTitleView2 = (FsGestureDemoTitleView) findViewById(R.id.fsgesture_title_view);
+        FsGestureDemoTitleView fsGestureDemoTitleView2 = (FsGestureDemoTitleView) findViewById(C0012R$id.fsgesture_title_view);
         this.fsGestureDemoTitleView = fsGestureDemoTitleView2;
         fsGestureDemoTitleView2.prepareTitleView(4);
         this.fsGestureDemoTitleView.registerSkipEvent(new View.OnClickListener() {
@@ -168,7 +168,7 @@ public class DrawerDemoAct extends FsGestureDemoBaseActiivy {
             }
         });
         GestureTitleViewUtil.setMargin(this, this.fsGestureDemoTitleView);
-        this.fsGestureDemoSwipeView = (FsGestureDemoSwipeView) findViewById(R.id.fsgesture_swipe_view);
+        this.fsGestureDemoSwipeView = (FsGestureDemoSwipeView) findViewById(C0012R$id.fsgesture_swipe_view);
         startSwipeViewAnimation(3);
         this.mNavigationHandle = GestureLineUtils.createAndaddNavigationHandle((RelativeLayout) this.drawerImg.getParent());
     }

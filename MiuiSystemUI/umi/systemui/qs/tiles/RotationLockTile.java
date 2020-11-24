@@ -2,13 +2,13 @@ package com.android.systemui.qs.tiles;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.widget.Switch;
-import com.android.systemui.Dependency;
-import com.android.systemui.plugins.R;
+import androidx.appcompat.R$styleable;
+import com.android.systemui.C0010R$drawable;
+import com.android.systemui.C0018R$string;
 import com.android.systemui.plugins.qs.QSTile;
-import com.android.systemui.qs.QSHost;
 import com.android.systemui.qs.tileimpl.QSTileImpl;
-import com.android.systemui.statusbar.Icons;
 import com.android.systemui.statusbar.policy.RotationLockController;
 
 public class RotationLockTile extends QSTileImpl<QSTile.BooleanState> {
@@ -17,30 +17,33 @@ public class RotationLockTile extends QSTileImpl<QSTile.BooleanState> {
             RotationLockTile.this.refreshState(Boolean.valueOf(z));
         }
     };
-    private final RotationLockController mController = ((RotationLockController) Dependency.get(RotationLockController.class));
+    private final RotationLockController mController;
 
     public int getMetricsCategory() {
-        return 123;
+        return R$styleable.AppCompatTheme_windowFixedWidthMinor;
     }
 
-    public RotationLockTile(QSHost qSHost) {
-        super(qSHost);
+    /* JADX WARNING: type inference failed for: r2v0, types: [com.android.systemui.statusbar.policy.CallbackController, com.android.systemui.statusbar.policy.RotationLockController] */
+    /* JADX WARNING: Unknown variable types count: 1 */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public RotationLockTile(com.android.systemui.qs.QSHost r1, com.android.systemui.statusbar.policy.RotationLockController r2) {
+        /*
+            r0 = this;
+            r0.<init>(r1)
+            com.android.systemui.qs.tiles.RotationLockTile$1 r1 = new com.android.systemui.qs.tiles.RotationLockTile$1
+            r1.<init>()
+            r0.mCallback = r1
+            r0.mController = r2
+            androidx.lifecycle.Lifecycle r1 = r0.getLifecycle()
+            com.android.systemui.statusbar.policy.RotationLockController$RotationLockControllerCallback r0 = r0.mCallback
+            r2.observe((androidx.lifecycle.Lifecycle) r1, r0)
+            return
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.qs.tiles.RotationLockTile.<init>(com.android.systemui.qs.QSHost, com.android.systemui.statusbar.policy.RotationLockController):void");
     }
 
     public QSTile.BooleanState newTileState() {
         return new QSTile.BooleanState();
-    }
-
-    /* JADX WARNING: type inference failed for: r0v0, types: [com.android.systemui.statusbar.policy.CallbackController, com.android.systemui.statusbar.policy.RotationLockController] */
-    public void handleSetListening(boolean z) {
-        ? r0 = this.mController;
-        if (r0 != 0) {
-            if (z) {
-                r0.addCallback(this.mCallback);
-            } else {
-                r0.removeCallback(this.mCallback);
-            }
-        }
     }
 
     public Intent getLongClickIntent() {
@@ -49,12 +52,9 @@ public class RotationLockTile extends QSTileImpl<QSTile.BooleanState> {
 
     /* access modifiers changed from: protected */
     public void handleClick() {
-        RotationLockController rotationLockController = this.mController;
-        if (rotationLockController != null) {
-            boolean z = !((QSTile.BooleanState) this.mState).value;
-            rotationLockController.setRotationLocked(z);
-            refreshState(Boolean.valueOf(z));
-        }
+        boolean z = !((QSTile.BooleanState) this.mState).value;
+        this.mController.setRotationLockedAtAngle(z, -1);
+        refreshState(Boolean.valueOf(z));
     }
 
     public CharSequence getTileLabel() {
@@ -63,22 +63,25 @@ public class RotationLockTile extends QSTileImpl<QSTile.BooleanState> {
 
     /* access modifiers changed from: protected */
     public void handleUpdateState(QSTile.BooleanState booleanState, Object obj) {
-        RotationLockController rotationLockController = this.mController;
-        if (rotationLockController != null) {
-            boolean isRotationLocked = rotationLockController.isRotationLocked();
-            booleanState.value = isRotationLocked;
-            booleanState.label = this.mContext.getString(286130534);
-            booleanState.icon = QSTileImpl.ResourceIcon.get(Icons.getQSIcons(Integer.valueOf(!isRotationLocked ? R.drawable.ic_qs_auto_rotate_enabled : R.drawable.ic_qs_auto_rotate_disabled), this.mInControlCenter));
-            booleanState.contentDescription = getAccessibilityString(isRotationLocked);
-            booleanState.expandedAccessibilityClassName = Switch.class.getName();
-            booleanState.state = booleanState.value ? 2 : 1;
+        int i;
+        boolean isRotationLocked = this.mController.isRotationLocked();
+        booleanState.value = isRotationLocked;
+        booleanState.label = this.mContext.getString(C0018R$string.quick_settings_rotationlock_label);
+        if (!isRotationLocked) {
+            i = C0010R$drawable.ic_qs_auto_rotate_enabled;
+        } else {
+            i = C0010R$drawable.ic_qs_auto_rotate_disabled;
         }
+        booleanState.icon = QSTileImpl.ResourceIcon.get(i);
+        booleanState.contentDescription = getAccessibilityString(isRotationLocked);
+        booleanState.expandedAccessibilityClassName = Switch.class.getName();
+        booleanState.state = booleanState.value ? 2 : 1;
     }
 
-    public static boolean isCurrentOrientationLockPortrait(RotationLockController rotationLockController, Context context) {
+    public static boolean isCurrentOrientationLockPortrait(RotationLockController rotationLockController, Resources resources) {
         int rotationLockOrientation = rotationLockController.getRotationLockOrientation();
         if (rotationLockOrientation == 0) {
-            if (context.getResources().getConfiguration().orientation != 2) {
+            if (resources.getConfiguration().orientation != 2) {
                 return true;
             }
             return false;
@@ -92,20 +95,21 @@ public class RotationLockTile extends QSTileImpl<QSTile.BooleanState> {
     private String getAccessibilityString(boolean z) {
         String str;
         if (!z) {
-            return this.mContext.getString(R.string.accessibility_quick_settings_rotation);
+            return this.mContext.getString(C0018R$string.accessibility_quick_settings_rotation);
         }
         StringBuilder sb = new StringBuilder();
         Context context = this.mContext;
+        int i = C0018R$string.accessibility_quick_settings_rotation_value;
         Object[] objArr = new Object[1];
-        if (isCurrentOrientationLockPortrait(this.mController, context)) {
-            str = this.mContext.getString(R.string.quick_settings_rotation_locked_portrait_label);
+        if (isCurrentOrientationLockPortrait(this.mController, context.getResources())) {
+            str = this.mContext.getString(C0018R$string.quick_settings_rotation_locked_portrait_label);
         } else {
-            str = this.mContext.getString(R.string.quick_settings_rotation_locked_landscape_label);
+            str = this.mContext.getString(C0018R$string.quick_settings_rotation_locked_landscape_label);
         }
         objArr[0] = str;
-        sb.append(context.getString(R.string.accessibility_quick_settings_rotation_value, objArr));
+        sb.append(context.getString(i, objArr));
         sb.append(",");
-        sb.append(this.mContext.getString(R.string.accessibility_quick_settings_rotation));
+        sb.append(this.mContext.getString(C0018R$string.accessibility_quick_settings_rotation));
         return sb.toString();
     }
 

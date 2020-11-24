@@ -7,30 +7,26 @@ import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.SeekBar;
 import com.android.settingslib.RestrictedLockUtils;
 import com.android.systemui.Dependency;
-import com.android.systemui.miui.widget.RelativeSeekBarInjector;
 import com.android.systemui.plugins.ActivityStarter;
 
 public class ToggleSeekBar extends SeekBar {
     private String mAccessibilityLabel;
-    private RestrictedLockUtils.EnforcedAdmin mEnforcedAdmin;
-    private RelativeSeekBarInjector mInjector;
+    private RestrictedLockUtils.EnforcedAdmin mEnforcedAdmin = null;
+
+    /* access modifiers changed from: protected */
+    public void internalSetPadding(int i, int i2, int i3, int i4) {
+    }
 
     public ToggleSeekBar(Context context) {
-        this(context, (AttributeSet) null);
+        super(context);
     }
 
     public ToggleSeekBar(Context context, AttributeSet attributeSet) {
-        this(context, attributeSet, 0);
+        super(context, attributeSet);
     }
 
     public ToggleSeekBar(Context context, AttributeSet attributeSet, int i) {
         super(context, attributeSet, i);
-        this.mEnforcedAdmin = null;
-        initInjector();
-    }
-
-    private void initInjector() {
-        this.mInjector = new RelativeSeekBarInjector(this, false);
     }
 
     public boolean onTouchEvent(MotionEvent motionEvent) {
@@ -41,10 +37,6 @@ public class ToggleSeekBar extends SeekBar {
         }
         if (!isEnabled()) {
             setEnabled(true);
-        }
-        RelativeSeekBarInjector relativeSeekBarInjector = this.mInjector;
-        if (relativeSeekBarInjector != null) {
-            relativeSeekBarInjector.transformTouchEvent(motionEvent);
         }
         return super.onTouchEvent(motionEvent);
     }
@@ -59,5 +51,9 @@ public class ToggleSeekBar extends SeekBar {
         if (str != null) {
             accessibilityNodeInfo.setText(str);
         }
+    }
+
+    public void setEnforcedAdmin(RestrictedLockUtils.EnforcedAdmin enforcedAdmin) {
+        this.mEnforcedAdmin = enforcedAdmin;
     }
 }

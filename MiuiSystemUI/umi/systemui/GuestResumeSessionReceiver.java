@@ -1,6 +1,6 @@
 package com.android.systemui;
 
-import android.app.ActivityManagerCompat;
+import android.app.ActivityManager;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
@@ -10,22 +10,21 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.UserInfo;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.RemoteException;
-import android.os.UserHandleCompat;
+import android.os.UserHandle;
 import android.os.UserManager;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.WindowManagerGlobal;
-import com.android.systemui.plugins.R;
+import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.statusbar.phone.SystemUIDialog;
+import java.util.concurrent.Executor;
 
 public class GuestResumeSessionReceiver extends BroadcastReceiver {
     private Dialog mNewSessionDialog;
 
-    public void register(Context context) {
-        Context context2 = context;
-        context2.registerReceiverAsUser(this, UserHandleCompat.SYSTEM, new IntentFilter("android.intent.action.USER_SWITCHED"), (String) null, (Handler) null);
+    public void register(BroadcastDispatcher broadcastDispatcher) {
+        broadcastDispatcher.registerReceiver(this, new IntentFilter("android.intent.action.USER_SWITCHED"), (Executor) null, UserHandle.SYSTEM);
     }
 
     public void onReceive(Context context, Intent intent) {
@@ -37,7 +36,7 @@ public class GuestResumeSessionReceiver extends BroadcastReceiver {
                 return;
             }
             try {
-                if (ActivityManagerCompat.getService().getCurrentUser().isGuest()) {
+                if (ActivityManager.getService().getCurrentUser().isGuest()) {
                     ContentResolver contentResolver = context.getContentResolver();
                     if (Settings.System.getIntForUser(contentResolver, "systemui.guest_has_logged_in", 0, intExtra) != 0) {
                         ResetSessionDialog resetSessionDialog = new ResetSessionDialog(context, intExtra);
@@ -56,7 +55,7 @@ public class GuestResumeSessionReceiver extends BroadcastReceiver {
     public static void wipeGuestSession(Context context, int i) {
         UserManager userManager = (UserManager) context.getSystemService("user");
         try {
-            UserInfo currentUser = ActivityManagerCompat.getService().getCurrentUser();
+            UserInfo currentUser = ActivityManager.getService().getCurrentUser();
             if (currentUser.id != i) {
                 Log.w("GuestResumeSessionReceiver", "User requesting to start a new session (" + i + ") is not current user (" + currentUser.id + ")");
             } else if (!currentUser.isGuest()) {
@@ -68,14 +67,14 @@ public class GuestResumeSessionReceiver extends BroadcastReceiver {
                 if (createGuest == null) {
                     try {
                         Log.e("GuestResumeSessionReceiver", "Could not create new guest, switching back to system user");
-                        ActivityManagerCompat.getService().switchUser(0);
+                        ActivityManager.getService().switchUser(0);
                         userManager.removeUser(currentUser.id);
                         WindowManagerGlobal.getWindowManagerService().lockNow((Bundle) null);
                     } catch (RemoteException unused) {
                         Log.e("GuestResumeSessionReceiver", "Couldn't wipe session because ActivityManager or WindowManager is dead");
                     }
                 } else {
-                    ActivityManagerCompat.getService().switchUser(createGuest.id);
+                    ActivityManager.getService().switchUser(createGuest.id);
                     userManager.removeUser(currentUser.id);
                 }
             }
@@ -97,11 +96,11 @@ public class GuestResumeSessionReceiver extends BroadcastReceiver {
 
         public ResetSessionDialog(Context context, int i) {
             super(context);
-            setTitle(context.getString(R.string.guest_wipe_session_title));
-            setMessage(context.getString(R.string.guest_wipe_session_message));
+            setTitle(context.getString(C0018R$string.guest_wipe_session_title));
+            setMessage(context.getString(C0018R$string.guest_wipe_session_message));
             setCanceledOnTouchOutside(false);
-            setButton(-2, context.getString(R.string.guest_wipe_session_wipe), this);
-            setButton(-1, context.getString(R.string.guest_wipe_session_dontwipe), this);
+            setButton(-2, context.getString(C0018R$string.guest_wipe_session_wipe), this);
+            setButton(-1, context.getString(C0018R$string.guest_wipe_session_dontwipe), this);
             this.mUserId = i;
         }
 

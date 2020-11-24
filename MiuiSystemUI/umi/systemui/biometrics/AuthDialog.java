@@ -10,6 +10,8 @@ public interface AuthDialog {
 
     void dismissWithoutCallback(boolean z);
 
+    String getOpPackageName();
+
     boolean isAllowDeviceCredentials();
 
     void onAuthenticationFailed(String str);

@@ -1,249 +1,432 @@
 package com.android.systemui.statusbar.phone;
 
 import android.content.Context;
-import android.content.res.ColorStateList;
-import android.graphics.PorterDuff;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
-import android.util.DisplayMetrics;
-import android.view.Display;
-import android.view.DisplayInfo;
-import android.view.LayoutInflater;
+import android.util.Pair;
+import android.view.DisplayCutout;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
+import android.view.ViewParent;
+import android.view.ViewTreeObserver;
+import android.view.WindowInsets;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import com.android.keyguard.CarrierText;
-import com.android.systemui.BatteryMeterView;
+import android.widget.TextView;
+import com.android.systemui.C0005R$array;
+import com.android.systemui.C0009R$dimen;
+import com.android.systemui.C0012R$id;
 import com.android.systemui.Dependency;
-import com.android.systemui.DisplayCutoutCompat;
-import com.android.systemui.miui.statusbar.phone.MiuiStatusBarPromptController;
-import com.android.systemui.plugins.R;
-import com.android.systemui.statusbar.Icons;
-import com.android.systemui.statusbar.NetworkSpeedView;
-import com.android.systemui.statusbar.StatusBarIconView;
-import com.android.systemui.statusbar.phone.StatusBarTypeController;
-import com.android.systemui.statusbar.policy.DarkIconDispatcher;
-import com.android.systemui.statusbar.policy.DarkIconDispatcherHelper;
+import com.android.systemui.Interpolators;
+import com.android.systemui.MiuiBatteryMeterView;
+import com.android.systemui.ScreenDecorations;
+import com.android.systemui.controlcenter.phone.ControlPanelWindowManager;
+import com.android.systemui.plugins.DarkIconDispatcher;
+import com.android.systemui.qs.QSPanel;
+import com.android.systemui.statusbar.CommandQueue;
+import com.android.systemui.statusbar.phone.KeyguardStatusBarView;
+import com.android.systemui.statusbar.phone.StatusBarIconController;
+import com.android.systemui.statusbar.policy.BatteryController;
+import com.android.systemui.statusbar.policy.ConfigurationController;
+import com.android.systemui.statusbar.policy.KeyguardUserSwitcher;
+import com.android.systemui.statusbar.policy.UserInfoController;
+import com.android.systemui.statusbar.policy.UserInfoControllerImpl;
+import com.android.systemui.statusbar.policy.UserSwitcherController;
+import com.android.systemui.statusbar.views.NetworkSpeedView;
+import java.io.FileDescriptor;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Arrays;
 
-public class KeyguardStatusBarView extends RelativeLayout implements MiuiStatusBarPromptController.OnPromptStateChangedListener, StatusBarTypeController.StatusBarTypeChangeListener {
+public class KeyguardStatusBarView extends RelativeLayout implements BatteryController.BatteryStateChangeCallback, UserInfoController.OnUserInfoChangedListener, ConfigurationController.ConfigurationListener {
+    private boolean mBatteryCharging;
+    private BatteryController mBatteryController;
+    private boolean mBatteryListening;
+    protected MiuiBatteryMeterView mBatteryView;
+    protected TextView mCarrierLabel;
+    private ControlPanelWindowManager mControlPanelWindowManager;
+    private int mCutoutSideNudge = 0;
+    private View mCutoutSpace;
+    private DisplayCutout mDisplayCutout;
+    protected StatusBarIconController.MiuiLightDarkIconManager mDripLeftIconManager;
+    private MiuiDripLeftStatusIconContainer mDripLeftStatusIconContainer;
+    private FrameLayout mDripLeftStatusIconFrameContainer;
+    protected StatusBarIconController.MiuiLightDarkIconManager mDripRightIconManager;
+    private MiuiStatusIconContainer mDripRightStatusIconContainer;
+    protected final Rect mEmptyRect = new Rect(0, 0, 0, 0);
+    protected StatusBarIconController.MiuiLightDarkIconManager mIconManager;
+    private KeyguardUserSwitcher mKeyguardUserSwitcher;
+    private boolean mKeyguardUserSwitcherShowing;
+    private int mLayoutState = 0;
+    private ImageView mMultiUserAvatar;
     /* access modifiers changed from: private */
-    public Rect mArea;
-    private boolean mBlockClickActionToStatusBar;
-    private LinearLayout mCarrierContainer;
-    private CarrierText mCarrierLabel;
-    private FrameLayout mCarrierSuperContainer;
+    public MultiUserSwitch mMultiUserSwitch;
+    protected NetworkSpeedView mNetworkSpeedView;
+    private Pair<Integer, Integer> mPadding = new Pair<>(0, 0);
+    private int mRoundedCornerPadding = 0;
+    protected FrameLayout mStatusBarPromptContainer;
     /* access modifiers changed from: private */
-    public KeyguardStatusBarViewController mController;
-    private StatusBarTypeController.CutoutType mCutoutType;
-    private boolean mDark;
-    private DarkIconDispatcher mDarkIconDispatcher = ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class));
+    public ViewGroup mStatusIconArea;
+    private MiuiStatusIconContainer mStatusIconContainer;
+    private int mSystemIconsBaseMargin;
     /* access modifiers changed from: private */
-    public float mDarkIntensity;
-    private int mDarkModeIconColorSingleTone;
-    private boolean mIconsDarkInExpanded;
-    private int mLightModeIconColorSingleTone;
-    private boolean mStatusBarExpanded;
-    private MiuiStatusBarPromptController mStatusBarPrompt;
-    public LinearLayout mStatusIcons;
-    private LinearLayout mSystemIcons;
-    private ViewGroup mSystemIconsSuperContainer;
-    /* access modifiers changed from: private */
-    public int mTint;
+    public View mSystemIconsContainer;
+    private int mSystemIconsSwitcherHiddenExpandedMargin;
+    private UserSwitcherController mUserSwitcherController;
+
+    private int calculateMargin(int i, int i2) {
+        if (i2 >= i) {
+            return 0;
+        }
+        return i - i2;
+    }
 
     public boolean hasOverlappingRendering() {
         return false;
     }
 
+    public void onPowerSaveChanged(boolean z) {
+    }
+
+    public void setDarkStyle(boolean z) {
+    }
+
+    /* access modifiers changed from: protected */
+    public void updateIconsAndTextColors() {
+    }
+
     public KeyguardStatusBarView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-        this.mController = StatusBarFactory.getInstance().getKeyguardStatusBarViewController(context);
     }
 
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mSystemIconsSuperContainer = (ViewGroup) findViewById(R.id.system_icons_super_container);
-        this.mCarrierSuperContainer = (FrameLayout) findViewById(R.id.keyguard_carrier_super_container);
-        this.mCarrierContainer = (LinearLayout) findViewById(R.id.keyguard_carrier_container);
-        this.mCarrierLabel = (CarrierText) findViewById(R.id.keyguard_carrier_text);
-        this.mDarkModeIconColorSingleTone = this.mContext.getColor(R.color.dark_mode_icon_color_single_tone);
-        this.mLightModeIconColorSingleTone = this.mContext.getColor(R.color.light_mode_icon_color_single_tone);
-        Display defaultDisplay = ((WindowManager) this.mContext.getSystemService("window")).getDefaultDisplay();
-        DisplayInfo displayInfo = new DisplayInfo();
-        defaultDisplay.getDisplayInfo(displayInfo);
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        defaultDisplay.getRealMetrics(displayMetrics);
-        if (DisplayCutoutCompat.isCutoutLeftTop(displayInfo, displayMetrics.widthPixels)) {
-            this.mCarrierLabel.setShowStyle(-1);
-        }
-        MiuiStatusBarPromptController miuiStatusBarPromptController = (MiuiStatusBarPromptController) Dependency.get(MiuiStatusBarPromptController.class);
-        this.mStatusBarPrompt = miuiStatusBarPromptController;
-        miuiStatusBarPromptController.addStatusBarPrompt("KeyguardStatusBarView", (StatusBar) null, this, 7, this);
-        this.mStatusBarPrompt.setPromptSosTypeImage("KeyguardStatusBarView");
-        updateCarrierSuperContainer();
-        refreshViews();
+        this.mSystemIconsContainer = findViewById(C0012R$id.system_icons_container);
+        this.mMultiUserSwitch = (MultiUserSwitch) findViewById(C0012R$id.multi_user_switch);
+        this.mMultiUserAvatar = (ImageView) findViewById(C0012R$id.multi_user_avatar);
+        this.mCarrierLabel = (TextView) findViewById(C0012R$id.keyguard_carrier_text);
+        this.mBatteryView = (MiuiBatteryMeterView) this.mSystemIconsContainer.findViewById(C0012R$id.battery);
+        this.mCutoutSpace = findViewById(C0012R$id.cutout_space_view);
+        this.mStatusIconArea = (ViewGroup) findViewById(C0012R$id.status_icon_area);
+        this.mDripRightStatusIconContainer = (MiuiStatusIconContainer) findViewById(C0012R$id.drip_right_statusIcons);
+        this.mDripLeftStatusIconFrameContainer = (FrameLayout) findViewById(C0012R$id.keyguard_drip_left_statusIcons_container);
+        this.mDripLeftStatusIconContainer = (MiuiDripLeftStatusIconContainer) findViewById(C0012R$id.keyguard_drip_left_statusIcons);
+        this.mStatusBarPromptContainer = (FrameLayout) findViewById(C0012R$id.prompt_container);
+        this.mNetworkSpeedView = (NetworkSpeedView) findViewById(C0012R$id.fullscreen_network_speed_view);
+        this.mStatusIconContainer = (MiuiStatusIconContainer) findViewById(C0012R$id.statusIcons);
+        loadDimens();
+        updateUserSwitcher();
+        this.mBatteryController = (BatteryController) Dependency.get(BatteryController.class);
+        this.mControlPanelWindowManager = (ControlPanelWindowManager) Dependency.get(ControlPanelWindowManager.class);
     }
 
-    /* access modifiers changed from: private */
-    public void updateCarrierSuperContainer() {
-        int dimensionPixelSize = this.mContext.getResources().getDimensionPixelSize(R.dimen.statusbar_carrier_max_width);
-        int dimensionPixelSize2 = this.mContext.getResources().getDimensionPixelSize(R.dimen.statusbar_carrier_width_for_hide_norch);
-        this.mCutoutType = ((StatusBarTypeController) Dependency.get(StatusBarTypeController.class)).getCutoutType();
-        FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) this.mCarrierSuperContainer.getLayoutParams();
-        StatusBarTypeController.CutoutType cutoutType = this.mCutoutType;
-        if (cutoutType == StatusBarTypeController.CutoutType.NONE || cutoutType == StatusBarTypeController.CutoutType.HOLE) {
-            this.mCarrierLabel.setMaxWidth(dimensionPixelSize2);
-            layoutParams.width = -2;
+    /* access modifiers changed from: protected */
+    public void onConfigurationChanged(Configuration configuration) {
+        super.onConfigurationChanged(configuration);
+        ViewGroup.MarginLayoutParams marginLayoutParams = (ViewGroup.MarginLayoutParams) this.mMultiUserAvatar.getLayoutParams();
+        int dimensionPixelSize = getResources().getDimensionPixelSize(C0009R$dimen.multi_user_avatar_keyguard_size);
+        marginLayoutParams.height = dimensionPixelSize;
+        marginLayoutParams.width = dimensionPixelSize;
+        this.mMultiUserAvatar.setLayoutParams(marginLayoutParams);
+        ViewGroup.MarginLayoutParams marginLayoutParams2 = (ViewGroup.MarginLayoutParams) this.mMultiUserSwitch.getLayoutParams();
+        marginLayoutParams2.width = getResources().getDimensionPixelSize(C0009R$dimen.multi_user_switch_width_keyguard);
+        marginLayoutParams2.setMarginEnd(getResources().getDimensionPixelSize(C0009R$dimen.multi_user_switch_keyguard_margin));
+        this.mMultiUserSwitch.setLayoutParams(marginLayoutParams2);
+        ViewGroup.MarginLayoutParams marginLayoutParams3 = (ViewGroup.MarginLayoutParams) this.mSystemIconsContainer.getLayoutParams();
+        marginLayoutParams3.setMarginStart(getResources().getDimensionPixelSize(C0009R$dimen.system_icons_super_container_margin_start));
+        this.mSystemIconsContainer.setLayoutParams(marginLayoutParams3);
+        View view = this.mSystemIconsContainer;
+        view.setPaddingRelative(view.getPaddingStart(), this.mSystemIconsContainer.getPaddingTop(), getResources().getDimensionPixelSize(C0009R$dimen.system_icons_keyguard_padding_end), this.mSystemIconsContainer.getPaddingBottom());
+        updateKeyguardStatusBarHeight();
+    }
+
+    private void updateKeyguardStatusBarHeight() {
+        DisplayCutout displayCutout = this.mDisplayCutout;
+        int i = displayCutout == null ? 0 : displayCutout.getWaterfallInsets().top;
+        ViewGroup.MarginLayoutParams marginLayoutParams = (ViewGroup.MarginLayoutParams) getLayoutParams();
+        marginLayoutParams.height = getResources().getDimensionPixelSize(C0009R$dimen.status_bar_height) + i;
+        setLayoutParams(marginLayoutParams);
+    }
+
+    private void loadDimens() {
+        Resources resources = getResources();
+        this.mSystemIconsSwitcherHiddenExpandedMargin = resources.getDimensionPixelSize(C0009R$dimen.system_icons_switcher_hidden_expanded_margin);
+        this.mSystemIconsBaseMargin = resources.getDimensionPixelSize(C0009R$dimen.system_icons_super_container_avatarless_margin_end);
+        this.mCutoutSideNudge = getResources().getDimensionPixelSize(C0009R$dimen.display_cutout_margin_consumption);
+        getContext().getResources().getBoolean(17891375);
+        this.mRoundedCornerPadding = resources.getDimensionPixelSize(C0009R$dimen.rounded_corner_content_padding);
+    }
+
+    private void updateVisibilities() {
+        if (this.mMultiUserSwitch.getParent() == this.mStatusIconArea || this.mKeyguardUserSwitcherShowing) {
+            ViewParent parent = this.mMultiUserSwitch.getParent();
+            ViewGroup viewGroup = this.mStatusIconArea;
+            if (parent == viewGroup && this.mKeyguardUserSwitcherShowing) {
+                viewGroup.removeView(this.mMultiUserSwitch);
+            }
         } else {
-            this.mCarrierLabel.setMaxWidth(dimensionPixelSize);
-            layoutParams.width = dimensionPixelSize;
+            if (this.mMultiUserSwitch.getParent() != null) {
+                getOverlay().remove(this.mMultiUserSwitch);
+            }
+            this.mStatusIconArea.addView(this.mMultiUserSwitch, 0);
         }
-        this.mCarrierSuperContainer.setLayoutParams(layoutParams);
+        if (this.mKeyguardUserSwitcher == null) {
+            this.mMultiUserSwitch.setVisibility(8);
+        }
     }
 
-    public void onCutoutTypeChanged() {
-        post(new Runnable() {
-            public void run() {
-                if (KeyguardStatusBarView.this.isAttachedToWindow()) {
-                    KeyguardStatusBarView.this.mController.hideStatusIcons();
+    private void updateSystemIconsLayoutParams() {
+        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) this.mSystemIconsContainer.getLayoutParams();
+        int i = this.mMultiUserSwitch.getVisibility() == 8 ? this.mSystemIconsBaseMargin : 0;
+        if (this.mKeyguardUserSwitcherShowing) {
+            i = this.mSystemIconsSwitcherHiddenExpandedMargin;
+        }
+        int calculateMargin = calculateMargin(i, ((Integer) this.mPadding.second).intValue());
+        if (calculateMargin != layoutParams.getMarginEnd()) {
+            layoutParams.setMarginEnd(calculateMargin);
+            this.mSystemIconsContainer.setLayoutParams(layoutParams);
+        }
+    }
+
+    public WindowInsets onApplyWindowInsets(WindowInsets windowInsets) {
+        this.mLayoutState = 0;
+        if (updateLayoutConsideringCutout()) {
+            requestLayout();
+        }
+        return super.onApplyWindowInsets(windowInsets);
+    }
+
+    private boolean updateLayoutConsideringCutout() {
+        this.mDisplayCutout = getRootWindowInsets().getDisplayCutout();
+        updateKeyguardStatusBarHeight();
+        Pair<Integer, Integer> cornerCutoutMargins = StatusBarWindowView.cornerCutoutMargins(this.mDisplayCutout, getDisplay());
+        updatePadding(cornerCutoutMargins);
+        if (this.mDisplayCutout == null || cornerCutoutMargins != null) {
+            return updateLayoutParamsNoCutout();
+        }
+        return updateLayoutParamsForCutout();
+    }
+
+    private void updatePadding(Pair<Integer, Integer> pair) {
+        DisplayCutout displayCutout = this.mDisplayCutout;
+        int i = displayCutout == null ? 0 : displayCutout.getWaterfallInsets().top;
+        Pair<Integer, Integer> paddingNeededForCutoutAndRoundedCorner = StatusBarWindowView.paddingNeededForCutoutAndRoundedCorner(this.mDisplayCutout, pair, this.mRoundedCornerPadding);
+        this.mPadding = paddingNeededForCutoutAndRoundedCorner;
+        setPadding(((Integer) paddingNeededForCutoutAndRoundedCorner.first).intValue(), i, ((Integer) this.mPadding.second).intValue(), 0);
+    }
+
+    private boolean updateLayoutParamsNoCutout() {
+        if (this.mLayoutState == 2) {
+            return false;
+        }
+        this.mLayoutState = 2;
+        View view = this.mCutoutSpace;
+        if (view != null) {
+            view.setVisibility(8);
+        }
+        this.mDripRightStatusIconContainer.setVisibility(8);
+        this.mDripLeftStatusIconFrameContainer.setVisibility(8);
+        this.mStatusIconContainer.setVisibility(0);
+        this.mNetworkSpeedView.setVisibilityByStatusBar(true);
+        ((RelativeLayout.LayoutParams) this.mStatusIconArea.getLayoutParams()).addRule(1, C0012R$id.keyguard_carrier_text);
+        ((LinearLayout.LayoutParams) this.mSystemIconsContainer.getLayoutParams()).setMarginStart(getResources().getDimensionPixelSize(C0009R$dimen.system_icons_super_container_margin_start));
+        return true;
+    }
+
+    private boolean updateLayoutParamsForCutout() {
+        if (this.mLayoutState == 1) {
+            return false;
+        }
+        this.mLayoutState = 1;
+        if (this.mCutoutSpace == null) {
+            updateLayoutParamsNoCutout();
+        }
+        this.mDripRightStatusIconContainer.setVisibility(0);
+        this.mDripLeftStatusIconFrameContainer.setVisibility(0);
+        this.mStatusIconContainer.setVisibility(8);
+        this.mNetworkSpeedView.setVisibilityByStatusBar(false);
+        Rect rect = new Rect();
+        ScreenDecorations.DisplayCutoutView.boundsFromDirection(this.mDisplayCutout, 48, rect);
+        this.mCutoutSpace.setVisibility(0);
+        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) this.mCutoutSpace.getLayoutParams();
+        int i = rect.left;
+        int i2 = this.mCutoutSideNudge;
+        rect.left = i + i2;
+        rect.right -= i2;
+        layoutParams.width = rect.width();
+        layoutParams.height = rect.height();
+        layoutParams.addRule(13);
+        ((RelativeLayout.LayoutParams) this.mStatusIconArea.getLayoutParams()).addRule(1, C0012R$id.cutout_space_view);
+        ((LinearLayout.LayoutParams) this.mSystemIconsContainer.getLayoutParams()).setMarginStart(0);
+        return true;
+    }
+
+    public void setListening(boolean z) {
+        if (z != this.mBatteryListening) {
+            this.mBatteryListening = z;
+            if (z) {
+                this.mBatteryController.addCallback(this);
+            } else {
+                this.mBatteryController.removeCallback(this);
+            }
+        }
+    }
+
+    private void updateUserSwitcher() {
+        boolean z = this.mKeyguardUserSwitcher != null;
+        this.mMultiUserSwitch.setClickable(z);
+        this.mMultiUserSwitch.setFocusable(z);
+        this.mMultiUserSwitch.setKeyguardMode(z);
+    }
+
+    /* access modifiers changed from: protected */
+    public void onAttachedToWindow() {
+        Class cls = StatusBarIconController.class;
+        super.onAttachedToWindow();
+        UserInfoController userInfoController = (UserInfoController) Dependency.get(UserInfoController.class);
+        userInfoController.addCallback(this);
+        UserSwitcherController userSwitcherController = (UserSwitcherController) Dependency.get(UserSwitcherController.class);
+        this.mUserSwitcherController = userSwitcherController;
+        this.mMultiUserSwitch.setUserSwitcherController(userSwitcherController);
+        userInfoController.reloadUserInfo();
+        ((ConfigurationController) Dependency.get(ConfigurationController.class)).addCallback(this);
+        int lightModeIconColorSingleTone = ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).getLightModeIconColorSingleTone();
+        this.mIconManager = new StatusBarIconController.MiuiLightDarkIconManager((ViewGroup) findViewById(C0012R$id.statusIcons), (CommandQueue) Dependency.get(CommandQueue.class), true, lightModeIconColorSingleTone);
+        ((StatusBarIconController) Dependency.get(cls)).addIconGroup(this.mIconManager);
+        ArrayList arrayList = new ArrayList(Arrays.asList(getContext().getResources().getStringArray(C0005R$array.config_drip_right_block_statusBarIcons)));
+        this.mDripRightIconManager = new StatusBarIconController.MiuiLightDarkIconManager(this.mDripRightStatusIconContainer, (CommandQueue) Dependency.get(CommandQueue.class), true, lightModeIconColorSingleTone);
+        ((StatusBarIconController) Dependency.get(cls)).addIconGroup(this.mDripRightIconManager, arrayList);
+        this.mDripLeftIconManager = new StatusBarIconController.MiuiLightDarkIconManager(this.mDripLeftStatusIconContainer, (CommandQueue) Dependency.get(CommandQueue.class), true, lightModeIconColorSingleTone);
+        ((MiuiDripLeftStatusBarIconControllerImpl) Dependency.get(MiuiDripLeftStatusBarIconControllerImpl.class)).addIconGroup(this.mDripLeftIconManager);
+        ((MiuiStatusBarPromptController) Dependency.get(MiuiStatusBarPromptController.class)).addPromptContainer(this.mStatusBarPromptContainer, 0);
+        onThemeChanged();
+    }
+
+    /* access modifiers changed from: protected */
+    public void onDetachedFromWindow() {
+        Class cls = StatusBarIconController.class;
+        super.onDetachedFromWindow();
+        ((UserInfoController) Dependency.get(UserInfoController.class)).removeCallback(this);
+        ((MiuiDripLeftStatusBarIconControllerImpl) Dependency.get(MiuiDripLeftStatusBarIconControllerImpl.class)).removeIconGroup(this.mDripLeftIconManager);
+        ((MiuiStatusBarPromptController) Dependency.get(MiuiStatusBarPromptController.class)).removePromptContainer(this.mStatusBarPromptContainer);
+        ((StatusBarIconController) Dependency.get(cls)).removeIconGroup(this.mDripRightIconManager);
+        ((StatusBarIconController) Dependency.get(cls)).removeIconGroup(this.mIconManager);
+        ((ConfigurationController) Dependency.get(ConfigurationController.class)).removeCallback(this);
+    }
+
+    public void onUserInfoChanged(String str, Drawable drawable, String str2) {
+        this.mMultiUserAvatar.setImageDrawable(drawable);
+    }
+
+    public void setQSPanel(QSPanel qSPanel) {
+        this.mMultiUserSwitch.setQsPanel(qSPanel);
+    }
+
+    public void onBatteryLevelChanged(int i, boolean z, boolean z2) {
+        if (this.mBatteryCharging != z2) {
+            this.mBatteryCharging = z2;
+            updateVisibilities();
+        }
+    }
+
+    public void setKeyguardUserSwitcher(KeyguardUserSwitcher keyguardUserSwitcher) {
+        this.mKeyguardUserSwitcher = keyguardUserSwitcher;
+        this.mMultiUserSwitch.setKeyguardUserSwitcher(keyguardUserSwitcher);
+        updateUserSwitcher();
+    }
+
+    public void setKeyguardUserSwitcherShowing(boolean z, boolean z2) {
+        this.mKeyguardUserSwitcherShowing = z;
+        if (z2) {
+            animateNextLayoutChange();
+        }
+        updateVisibilities();
+        updateLayoutConsideringCutout();
+        updateSystemIconsLayoutParams();
+    }
+
+    private void animateNextLayoutChange() {
+        final int left = this.mSystemIconsContainer.getLeft();
+        final boolean z = this.mMultiUserSwitch.getParent() == this.mStatusIconArea;
+        getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            public boolean onPreDraw() {
+                KeyguardStatusBarView.this.getViewTreeObserver().removeOnPreDrawListener(this);
+                boolean z = z && KeyguardStatusBarView.this.mMultiUserSwitch.getParent() != KeyguardStatusBarView.this.mStatusIconArea;
+                KeyguardStatusBarView.this.mSystemIconsContainer.setX((float) left);
+                KeyguardStatusBarView.this.mSystemIconsContainer.animate().translationX(0.0f).setDuration(400).setStartDelay(z ? 300 : 0).setInterpolator(Interpolators.FAST_OUT_SLOW_IN).start();
+                if (z) {
+                    KeyguardStatusBarView.this.getOverlay().add(KeyguardStatusBarView.this.mMultiUserSwitch);
+                    KeyguardStatusBarView.this.mMultiUserSwitch.animate().alpha(0.0f).setDuration(300).setStartDelay(0).setInterpolator(Interpolators.ALPHA_OUT).withEndAction(new Runnable() {
+                        public final void run() {
+                            KeyguardStatusBarView.AnonymousClass1.this.lambda$onPreDraw$0$KeyguardStatusBarView$1();
+                        }
+                    }).start();
+                } else {
+                    KeyguardStatusBarView.this.mMultiUserSwitch.setAlpha(0.0f);
+                    KeyguardStatusBarView.this.mMultiUserSwitch.animate().alpha(1.0f).setDuration(300).setStartDelay(200).setInterpolator(Interpolators.ALPHA_IN);
                 }
-                KeyguardStatusBarView.this.mController.destroy();
-                KeyguardStatusBarViewController unused = KeyguardStatusBarView.this.mController = StatusBarFactory.getInstance().getKeyguardStatusBarViewController(KeyguardStatusBarView.this.getContext());
-                KeyguardStatusBarView.this.updateCarrierSuperContainer();
-                KeyguardStatusBarView.this.refreshViews();
-                if (KeyguardStatusBarView.this.isAttachedToWindow()) {
-                    KeyguardStatusBarView.this.mController.showStatusIcons();
-                }
-                if (KeyguardStatusBarView.this.mArea != null) {
-                    KeyguardStatusBarView.this.mController.setDarkMode(KeyguardStatusBarView.this.mArea, KeyguardStatusBarView.this.mDarkIntensity, KeyguardStatusBarView.this.mTint);
-                }
+                return true;
+            }
+
+            /* access modifiers changed from: private */
+            /* renamed from: lambda$onPreDraw$0 */
+            public /* synthetic */ void lambda$onPreDraw$0$KeyguardStatusBarView$1() {
+                KeyguardStatusBarView.this.mMultiUserSwitch.setAlpha(1.0f);
+                KeyguardStatusBarView.this.getOverlay().remove(KeyguardStatusBarView.this.mMultiUserSwitch);
             }
         });
-    }
-
-    /* access modifiers changed from: private */
-    public void refreshViews() {
-        this.mSystemIconsSuperContainer.removeAllViews();
-        LayoutInflater.from(getContext()).inflate(this.mController.getLayoutId(), this.mSystemIconsSuperContainer, true);
-        this.mSystemIcons = (LinearLayout) findViewById(R.id.system_icons);
-        this.mStatusIcons = (LinearLayout) findViewById(R.id.statusIcons);
-        this.mController.init(this);
-        ((NetworkSpeedView) this.mSystemIcons.findViewById(R.id.network_speed_view)).setNotch(this.mController.isNotch());
-        ((BatteryMeterView) findViewById(R.id.battery)).setNotchEar(this.mController.isNotch());
-        updateNotchPromptViewLayout(this.mCarrierContainer);
-        this.mController.updateNotchVisible();
-        setDarkMode(this.mDark);
     }
 
     public void setVisibility(int i) {
         super.setVisibility(i);
         if (i != 0) {
-            this.mSystemIconsSuperContainer.animate().cancel();
-            this.mSystemIconsSuperContainer.setTranslationX(0.0f);
+            this.mSystemIconsContainer.animate().cancel();
+            this.mSystemIconsContainer.setTranslationX(0.0f);
+            this.mMultiUserSwitch.animate().cancel();
+            this.mMultiUserSwitch.setAlpha(1.0f);
+            return;
         }
+        updateVisibilities();
+        updateSystemIconsLayoutParams();
     }
 
-    public boolean onTouchEvent(MotionEvent motionEvent) {
-        int actionMasked = motionEvent.getActionMasked();
-        if (actionMasked == 0) {
-            boolean blockClickAction = this.mStatusBarPrompt.blockClickAction();
-            this.mBlockClickActionToStatusBar = blockClickAction;
-            if (blockClickAction) {
-                return true;
-            }
-        } else if (actionMasked == 1 && this.mBlockClickActionToStatusBar && this.mStatusBarPrompt.getTouchRegion("KeyguardStatusBarView").contains((int) motionEvent.getRawX(), (int) motionEvent.getRawY())) {
-            this.mStatusBarPrompt.handleClickAction();
-            this.mBlockClickActionToStatusBar = false;
-            return true;
+    public void onThemeChanged() {
+        updateIconsAndTextColors();
+        ((UserInfoControllerImpl) Dependency.get(UserInfoController.class)).onDensityOrFontScaleChanged();
+    }
+
+    public void onDensityOrFontScaleChanged() {
+        loadDimens();
+    }
+
+    public void onOverlayChanged() {
+        onThemeChanged();
+    }
+
+    public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
+        printWriter.println("KeyguardStatusBarView:");
+        printWriter.println("  mBatteryCharging: " + this.mBatteryCharging);
+        printWriter.println("  mKeyguardUserSwitcherShowing: " + this.mKeyguardUserSwitcherShowing);
+        printWriter.println("  mBatteryListening: " + this.mBatteryListening);
+        printWriter.println("  mLayoutState: " + this.mLayoutState);
+    }
+
+    public boolean dispatchTouchEvent(MotionEvent motionEvent) {
+        if (motionEvent.getActionMasked() != 0) {
+            return super.dispatchTouchEvent(motionEvent);
         }
-        return super.onTouchEvent(motionEvent);
-    }
-
-    /* access modifiers changed from: protected */
-    public void onAttachedToWindow() {
-        super.onAttachedToWindow();
-        ((StatusBarTypeController) Dependency.get(StatusBarTypeController.class)).addCallback(this);
-        this.mController.showStatusIcons();
-    }
-
-    /* access modifiers changed from: protected */
-    public void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-        ((StatusBarTypeController) Dependency.get(StatusBarTypeController.class)).removeCallback(this);
-        this.mController.hideStatusIcons();
-    }
-
-    public void statusBarExpandChanged(boolean z, boolean z2) {
-        if (this.mStatusBarExpanded != z || this.mIconsDarkInExpanded != z2) {
-            this.mStatusBarExpanded = z;
-            this.mIconsDarkInExpanded = z2;
-            setDarkMode(this.mDark);
+        if (!this.mControlPanelWindowManager.dispatchToControlPanel(motionEvent, (float) getWidth())) {
+            this.mControlPanelWindowManager.setTransToControlPanel(false);
+            return super.dispatchTouchEvent(motionEvent);
         }
-    }
-
-    public void setDarkMode(boolean z) {
-        this.mDark = z;
-        applyDarkMode();
-    }
-
-    private void applyDarkMode() {
-        this.mDarkModeIconColorSingleTone = this.mContext.getColor(R.color.dark_mode_icon_color_single_tone);
-        this.mLightModeIconColorSingleTone = this.mContext.getColor(R.color.light_mode_icon_color_single_tone);
-        this.mArea = new Rect(0, 0, 0, 0);
-        this.mDarkIntensity = ((this.mStatusBarExpanded || !this.mDark) && (!this.mStatusBarExpanded || !this.mIconsDarkInExpanded)) ? 0.0f : 1.0f;
-        int i = ((this.mStatusBarExpanded || !this.mDark) && (!this.mStatusBarExpanded || !this.mIconsDarkInExpanded)) ? this.mLightModeIconColorSingleTone : this.mDarkModeIconColorSingleTone;
-        this.mTint = i;
-        CarrierText carrierText = this.mCarrierLabel;
-        carrierText.setTextColor(DarkIconDispatcherHelper.getTint(this.mArea, carrierText, i));
-        this.mStatusBarPrompt.updateSosImageDark(this.mDark, this.mArea, this.mDarkIntensity);
-        for (int i2 = 0; i2 < this.mSystemIcons.getChildCount(); i2++) {
-            View childAt = this.mSystemIcons.getChildAt(i2);
-            if (childAt instanceof DarkIconDispatcher.DarkReceiver) {
-                ((DarkIconDispatcher.DarkReceiver) childAt).onDarkChanged(this.mArea, this.mDarkIntensity, this.mTint);
-            }
-        }
-        setDarkMode(this.mStatusIcons, this.mArea, this.mDarkIntensity);
-        this.mController.setDarkMode(this.mArea, this.mDarkIntensity, this.mTint);
-    }
-
-    public void setDarkMode(ViewGroup viewGroup, Rect rect, float f) {
-        if (viewGroup != null) {
-            for (int i = 0; i < viewGroup.getChildCount(); i++) {
-                if (viewGroup.getChildAt(i) instanceof StatusBarIconView) {
-                    StatusBarIconView statusBarIconView = (StatusBarIconView) viewGroup.getChildAt(i);
-                    statusBarIconView.setImageTintMode(PorterDuff.Mode.SRC_IN);
-                    if (this.mDarkIconDispatcher.useTint()) {
-                        statusBarIconView.setImageResource(Icons.get(Integer.valueOf(statusBarIconView.getStatusBarIcon().icon.getResId()), false));
-                        statusBarIconView.setImageTintList(ColorStateList.valueOf(DarkIconDispatcherHelper.getTint(this.mArea, statusBarIconView, this.mTint)));
-                    } else {
-                        statusBarIconView.setImageTintList((ColorStateList) null);
-                        statusBarIconView.setImageResource(Icons.get(Integer.valueOf(statusBarIconView.getStatusBarIcon().icon.getResId()), DarkIconDispatcherHelper.inDarkMode(rect, statusBarIconView, f)));
-                    }
-                }
-            }
-        }
-    }
-
-    private void updateNotchPromptViewLayout(View view) {
-        if (view != null) {
-            boolean isPromptCenter = this.mController.isPromptCenter();
-            FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) view.getLayoutParams();
-            int i = 17;
-            if ((layoutParams.gravity == 17) != isPromptCenter) {
-                if (!isPromptCenter) {
-                    i = 8388627;
-                }
-                layoutParams.gravity = i;
-                view.setLayoutParams(layoutParams);
-            }
-        }
-    }
-
-    public void onPromptStateChanged(boolean z, String str) {
-        this.mCarrierLabel.forceHide(!z && this.mCutoutType == StatusBarTypeController.CutoutType.NOTCH);
+        this.mControlPanelWindowManager.setTransToControlPanel(true);
+        return false;
     }
 }

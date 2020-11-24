@@ -10,10 +10,8 @@ import android.util.SparseArray;
 import android.view.Display;
 import android.view.IDisplayWindowListener;
 import android.view.IWindowManager;
-import android.view.WindowManagerGlobal;
 import com.android.systemui.wm.DisplayChangeController;
 import com.android.systemui.wm.DisplayController;
-import com.miui.systemui.annotation.Inject;
 import java.util.ArrayList;
 
 public class DisplayController {
@@ -221,12 +219,11 @@ public class DisplayController {
         return ((DisplayManager) this.mContext.getSystemService(DisplayManager.class)).getDisplay(i);
     }
 
-    public DisplayController(@Inject Context context) {
+    public DisplayController(Context context, Handler handler, IWindowManager iWindowManager) {
+        this.mHandler = handler;
         this.mContext = context;
-        this.mHandler = new Handler(context.getMainLooper());
-        IWindowManager windowManagerService = WindowManagerGlobal.getWindowManagerService();
-        this.mWmService = windowManagerService;
-        this.mChangeController = new DisplayChangeController(this.mHandler, windowManagerService);
+        this.mWmService = iWindowManager;
+        this.mChangeController = new DisplayChangeController(handler, iWindowManager);
         try {
             this.mWmService.registerDisplayWindowListener(this.mDisplayContainerListener);
         } catch (RemoteException unused) {

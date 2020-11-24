@@ -6,7 +6,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewOutlineProvider;
 import android.widget.LinearLayout;
-import com.android.systemui.plugins.R;
+import com.android.systemui.C0009R$dimen;
 import com.android.systemui.statusbar.AlphaOptimizedFrameLayout;
 
 public class FakeShadowView extends AlphaOptimizedFrameLayout {
@@ -41,7 +41,7 @@ public class FakeShadowView extends AlphaOptimizedFrameLayout {
             }
         });
         addView(this.mFakeShadow);
-        this.mShadowMinHeight = Math.max(1, context.getResources().getDimensionPixelSize(R.dimen.notification_divider_height));
+        this.mShadowMinHeight = Math.max(1, context.getResources().getDimensionPixelSize(C0009R$dimen.notification_divider_height));
     }
 
     public void setFakeShadowTranslationZ(float f, float f2, int i, int i2) {

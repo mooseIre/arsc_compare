@@ -1,14 +1,14 @@
 package com.android.systemui.fsgesture;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
 import android.widget.RelativeLayout;
-import com.android.systemui.Util;
-import com.android.systemui.plugins.R;
-import com.android.systemui.util.ScreenUtils;
+import com.android.systemui.C0012R$id;
+import com.android.systemui.C0014R$layout;
 
 public class AppQuickSwitchActivity extends FsGestureDemoBaseActiivy {
     private FsGestureDemoTitleView fsGestureDemoTitleView;
@@ -41,19 +41,19 @@ public class AppQuickSwitchActivity extends FsGestureDemoBaseActiivy {
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         getWindow().addFlags(1024);
-        setContentView(R.layout.activity_app_quick);
+        setContentView(C0014R$layout.activity_app_quick);
         initView();
         initData();
     }
 
     private void initView() {
-        this.fsGestureDemoTitleView = (FsGestureDemoTitleView) findViewById(R.id.fsgesture_title_view);
-        this.mCardContainer = (ScrollerLayout) findViewById(R.id.card_container);
-        this.mFsGestureView = findViewById(R.id.fsg_nav_view);
-        this.mFsGestureDemoSwipeView = (FsGestureDemoSwipeView) findViewById(R.id.fsgesture_swipe_view);
+        this.fsGestureDemoTitleView = (FsGestureDemoTitleView) findViewById(C0012R$id.fsgesture_title_view);
+        this.mCardContainer = (ScrollerLayout) findViewById(C0012R$id.card_container);
+        this.mFsGestureView = findViewById(C0012R$id.fsg_nav_view);
+        this.mFsGestureDemoSwipeView = (FsGestureDemoSwipeView) findViewById(C0012R$id.fsgesture_swipe_view);
         this.mNavigationHandle = GestureLineUtils.createAndaddNavigationHandle((RelativeLayout) this.fsGestureDemoTitleView.getParent());
-        this.mScreenWidth = ScreenUtils.getScreenWidth(this);
-        this.mScreenHeight = ScreenUtils.getScreenHeight(this);
+        this.mScreenWidth = getScreenWidth(this);
+        this.mScreenHeight = getScreenHeight(this);
         this.mCardContainer.setPivotX(((float) this.mScreenWidth) / 2.0f);
         this.mCardContainer.setPivotY(((float) this.mScreenHeight) / 2.0f);
         this.mVelocityThreshold = getResources().getDisplayMetrics().density * 350.0f;
@@ -276,7 +276,7 @@ public class AppQuickSwitchActivity extends FsGestureDemoBaseActiivy {
     /* access modifiers changed from: protected */
     public void onResume() {
         super.onResume();
-        Util.wholeHideSystemBars(getWindow().getDecorView());
+        FsgestureUtil.INSTANCE.wholeHideSystemBars(getWindow().getDecorView());
         updateTitle();
     }
 
@@ -302,5 +302,13 @@ public class AppQuickSwitchActivity extends FsGestureDemoBaseActiivy {
     public void onStop() {
         super.onStop();
         stopSwipeAnimation();
+    }
+
+    private static int getScreenWidth(Context context) {
+        return context.getResources().getDisplayMetrics().widthPixels;
+    }
+
+    private static int getScreenHeight(Context context) {
+        return context.getResources().getDisplayMetrics().heightPixels;
     }
 }

@@ -14,8 +14,9 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.RelativeLayout;
-import com.android.systemui.Util;
-import com.android.systemui.plugins.R;
+import com.android.systemui.C0004R$anim;
+import com.android.systemui.C0012R$id;
+import com.android.systemui.C0014R$layout;
 import java.util.Locale;
 
 public class FsGestureBackDemoActivity extends FsGestureDemoBaseActiivy {
@@ -218,9 +219,9 @@ public class FsGestureBackDemoActivity extends FsGestureDemoBaseActiivy {
     /* access modifiers changed from: protected */
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        setContentView(R.layout.fs_gesture_back_demo);
+        setContentView(C0014R$layout.fs_gesture_back_demo);
         getWindow().addFlags(1024);
-        Util.hideSystemBars(getWindow().getDecorView());
+        FsgestureUtil.INSTANCE.hideSystemBars(getWindow().getDecorView());
         DisplayMetrics displayMetrics = new DisplayMetrics();
         ((WindowManager) getSystemService("window")).getDefaultDisplay().getRealMetrics(displayMetrics);
         this.mDisplayWidth = displayMetrics.widthPixels;
@@ -239,12 +240,12 @@ public class FsGestureBackDemoActivity extends FsGestureDemoBaseActiivy {
     }
 
     private void initView() {
-        RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.root_view);
-        this.mBgView = findViewById(R.id.bg_view);
-        View findViewById = findViewById(R.id.demo_activity);
+        RelativeLayout relativeLayout = (RelativeLayout) findViewById(C0012R$id.root_view);
+        this.mBgView = findViewById(C0012R$id.bg_view);
+        View findViewById = findViewById(C0012R$id.demo_activity);
         this.mDemoActivityView = findViewById;
         findViewById.setOnTouchListener(this.mDemoActivityTouchListener);
-        this.mFsGestureDemoTitleView = (FsGestureDemoTitleView) findViewById(R.id.fsgesture_title_view);
+        this.mFsGestureDemoTitleView = (FsGestureDemoTitleView) findViewById(C0012R$id.fsgesture_title_view);
         if (TextUtils.getLayoutDirectionFromLocale(Locale.getDefault()) == 1) {
             this.mFsGestureDemoTitleView.setRTLParams();
         }
@@ -260,7 +261,7 @@ public class FsGestureBackDemoActivity extends FsGestureDemoBaseActiivy {
             }
         });
         GestureTitleViewUtil.setMargin(this, this.mFsGestureDemoTitleView);
-        this.mFsGestureDemoSwipeView = (FsGestureDemoSwipeView) findViewById(R.id.fsgesture_swipe_view);
+        this.mFsGestureDemoSwipeView = (FsGestureDemoSwipeView) findViewById(C0012R$id.fsgesture_swipe_view);
         if (this.mStatus == 1) {
             startSwipeViewAnimation(0);
         } else {
@@ -330,8 +331,8 @@ public class FsGestureBackDemoActivity extends FsGestureDemoBaseActiivy {
     /* access modifiers changed from: private */
     public void showBackAnimation() {
         this.mBgView.setVisibility(0);
-        Animation loadAnimation = AnimationUtils.loadAnimation(this, R.anim.activity_close_enter);
-        Animation loadAnimation2 = AnimationUtils.loadAnimation(this, R.anim.activity_close_exit);
+        Animation loadAnimation = AnimationUtils.loadAnimation(this, C0004R$anim.activity_close_enter);
+        Animation loadAnimation2 = AnimationUtils.loadAnimation(this, C0004R$anim.activity_close_exit);
         loadAnimation.setAnimationListener(new Animation.AnimationListener() {
             public void onAnimationRepeat(Animation animation) {
             }
@@ -363,13 +364,13 @@ public class FsGestureBackDemoActivity extends FsGestureDemoBaseActiivy {
                     intent.putExtra("DEMO_STEP", 2);
                     intent.putExtra("IS_FROM_PROVISION", FsGestureBackDemoActivity.this.isFromPro);
                     FsGestureBackDemoActivity.this.startActivity(intent);
-                    FsGestureBackDemoActivity.this.overridePendingTransition(R.anim.activity_start_enter, R.anim.activity_start_exit);
+                    FsGestureBackDemoActivity.this.overridePendingTransition(C0004R$anim.activity_start_enter, C0004R$anim.activity_start_exit);
                 } else if ("DEMO_FULLY_SHOW".equals(FsGestureBackDemoActivity.this.demoType)) {
                     Intent intent2 = new Intent(FsGestureBackDemoActivity.this, DemoFinishAct.class);
                     intent2.putExtra("DEMO_TYPE", FsGestureBackDemoActivity.this.demoType);
                     intent2.putExtra("IS_FROM_PROVISION", FsGestureBackDemoActivity.this.isFromPro);
                     FsGestureBackDemoActivity.this.startActivity(intent2);
-                    FsGestureBackDemoActivity.this.overridePendingTransition(R.anim.activity_start_enter, R.anim.activity_start_exit);
+                    FsGestureBackDemoActivity.this.overridePendingTransition(C0004R$anim.activity_start_enter, C0004R$anim.activity_start_exit);
                 }
                 FsGestureBackDemoActivity.this.finish();
             }

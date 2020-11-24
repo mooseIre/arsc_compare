@@ -7,12 +7,14 @@ import android.os.Handler;
 import android.os.UserHandle;
 import android.util.ArraySet;
 import android.widget.Toast;
-import com.android.systemui.plugins.R;
-import com.android.systemui.recents.misc.SystemServicesProxy;
+import com.android.systemui.C0018R$string;
+import com.android.systemui.shared.system.ActivityManagerWrapper;
+import com.android.systemui.shared.system.TaskStackChangeListener;
 import java.util.function.Consumer;
 
 public class ForcedResizableInfoActivityController {
     private final Context mContext;
+    private boolean mDividerDragging;
     private final Consumer<Boolean> mDockedStackExistsListener = new Consumer() {
         public final void accept(Object obj) {
             ForcedResizableInfoActivityController.this.lambda$new$0$ForcedResizableInfoActivityController((Boolean) obj);
@@ -47,7 +49,7 @@ public class ForcedResizableInfoActivityController {
 
     public ForcedResizableInfoActivityController(Context context, Divider divider) {
         this.mContext = context;
-        SystemServicesProxy.getInstance(context).registerTaskStackListener(new SystemServicesProxy.TaskStackListener() {
+        ActivityManagerWrapper.getInstance().registerTaskStackListener(new TaskStackChangeListener() {
             public void onActivityForcedResizable(String str, int i, int i2) {
                 ForcedResizableInfoActivityController.this.activityForcedResizable(str, i, i2);
             }
@@ -63,13 +65,21 @@ public class ForcedResizableInfoActivityController {
         divider.registerInSplitScreenListener(this.mDockedStackExistsListener);
     }
 
+    public void onAppTransitionFinished() {
+        if (!this.mDividerDragging) {
+            showPending();
+        }
+    }
+
     /* access modifiers changed from: package-private */
     public void onDraggingStart() {
+        this.mDividerDragging = true;
         this.mHandler.removeCallbacks(this.mTimeoutRunnable);
     }
 
     /* access modifiers changed from: package-private */
     public void onDraggingEnd() {
+        this.mDividerDragging = false;
         showPending();
     }
 
@@ -83,12 +93,12 @@ public class ForcedResizableInfoActivityController {
 
     /* access modifiers changed from: private */
     public void activityDismissingDockedStack() {
-        Toast.makeText(this.mContext, R.string.dock_non_resizeble_failed_to_dock_text, 0).show();
+        Toast.makeText(this.mContext, C0018R$string.dock_non_resizeble_failed_to_dock_text, 0).show();
     }
 
     /* access modifiers changed from: private */
     public void activityLaunchOnSecondaryDisplayFailed() {
-        Toast.makeText(this.mContext, R.string.activity_launch_on_secondary_display_failed_text, 0).show();
+        Toast.makeText(this.mContext, C0018R$string.activity_launch_on_secondary_display_failed_text, 0).show();
     }
 
     /* access modifiers changed from: private */

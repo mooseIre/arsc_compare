@@ -1,16 +1,14 @@
 package com.android.systemui.fsgesture;
 
 import android.content.Context;
+import android.provider.MiuiSettings;
 import android.provider.Settings;
 import android.widget.RelativeLayout;
-import com.android.systemui.Application;
-import com.android.systemui.recents.Recents;
 import com.android.systemui.statusbar.phone.NavigationHandle;
 
 public class GestureLineUtils {
     public static boolean isShowNavigationHandle(Context context) {
-        Recents recents = (Recents) ((Application) context.getApplicationContext()).getSystemUIApplication().getComponent(Recents.class);
-        return recents != null && recents.useFsGestureVersionThree() && !isHideGestureLine(context);
+        return MiuiSettings.Global.getBoolean(context.getContentResolver(), "force_fsg_nav_bar") && !isHideGestureLine(context);
     }
 
     private static boolean isHideGestureLine(Context context) {
@@ -25,8 +23,7 @@ public class GestureLineUtils {
 
     public static NavigationHandle createAndaddNavigationHandle(RelativeLayout relativeLayout) {
         NavigationHandle navigationHandle = new NavigationHandle(relativeLayout.getContext());
-        navigationHandle.setColor(!((relativeLayout.getContext().getResources().getConfiguration().uiMode & 32) == 32));
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(-1, relativeLayout.getContext().getResources().getDimensionPixelSize(17105337));
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(-1, relativeLayout.getContext().getResources().getDimensionPixelSize(17105336));
         layoutParams.addRule(12);
         layoutParams.addRule(14);
         relativeLayout.addView(navigationHandle, layoutParams);

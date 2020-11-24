@@ -12,8 +12,8 @@ import android.graphics.PorterDuffXfermode;
 import android.os.Handler;
 import android.view.View;
 import android.view.WindowManager;
+import com.android.systemui.C0009R$dimen;
 import com.android.systemui.Interpolators;
-import com.android.systemui.plugins.R;
 
 public class AssistDisclosure {
     private final Context mContext;
@@ -44,8 +44,9 @@ public class AssistDisclosure {
             this.mView = new AssistDisclosureView(this.mContext);
         }
         if (!this.mViewAdded) {
-            WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(2015, 17302792, -3);
+            WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(2015, 525576, -3);
             layoutParams.setTitle("AssistDisclosure");
+            layoutParams.setFitInsetsTypes(0);
             this.mWm.addView(this.mView, layoutParams);
             this.mViewAdded = true;
         }
@@ -104,8 +105,8 @@ public class AssistDisclosure {
             this.mPaint.setXfermode(porterDuffXfermode);
             this.mShadowPaint.setColor(-12303292);
             this.mShadowPaint.setXfermode(porterDuffXfermode);
-            this.mThickness = getResources().getDimension(R.dimen.assist_disclosure_thickness);
-            this.mShadowThickness = getResources().getDimension(R.dimen.assist_disclosure_shadow_thickness);
+            this.mThickness = getResources().getDimension(C0009R$dimen.assist_disclosure_thickness);
+            this.mShadowThickness = getResources().getDimension(C0009R$dimen.assist_disclosure_shadow_thickness);
         }
 
         /* access modifiers changed from: protected */

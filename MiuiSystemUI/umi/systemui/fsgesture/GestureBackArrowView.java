@@ -16,13 +16,11 @@ import android.graphics.drawable.Drawable;
 import android.os.Vibrator;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
-import com.android.systemui.Constants;
+import com.android.systemui.C0010R$drawable;
 import com.android.systemui.Dependency;
-import com.android.systemui.HapticFeedBackImpl;
-import com.android.systemui.plugins.R;
+import com.miui.systemui.util.HapticFeedBackImpl;
 
 public class GestureBackArrowView extends View {
     private static final Interpolator CUBIC_EASE_OUT_INTERPOLATOR = new DecelerateInterpolator(1.5f);
@@ -77,10 +75,6 @@ public class GestureBackArrowView extends View {
         READY_STATE_RECENT
     }
 
-    static {
-        new AccelerateDecelerateInterpolator();
-    }
-
     public GestureBackArrowView(Context context, int i) {
         this(context, (AttributeSet) null, i);
     }
@@ -128,17 +122,17 @@ public class GestureBackArrowView extends View {
     }
 
     private void loadResources() {
-        this.mLeftBackground = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.gesture_back_background);
+        this.mLeftBackground = BitmapFactory.decodeResource(getContext().getResources(), C0010R$drawable.gesture_back_background);
         Matrix matrix = new Matrix();
         matrix.postScale(1.0f, 1.0f);
         matrix.postRotate(180.0f);
         Bitmap bitmap = this.mLeftBackground;
         this.mRightBackground = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), this.mLeftBackground.getHeight(), matrix, true);
-        Drawable drawable = getContext().getDrawable(R.drawable.ic_quick_switch_empty);
+        Drawable drawable = getContext().getDrawable(C0010R$drawable.ic_quick_switch_empty);
         this.mNoneTaskIcon = drawable;
         this.mIconWidth = drawable.getIntrinsicWidth();
         this.mIconHeight = this.mNoneTaskIcon.getIntrinsicHeight();
-        Bitmap decodeResource = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.gesture_back_arrow);
+        Bitmap decodeResource = BitmapFactory.decodeResource(getContext().getResources(), C0010R$drawable.gesture_back_arrow);
         this.mArrow = decodeResource;
         this.mArrowHeight = decodeResource.getHeight();
         this.mArrowWidth = this.mArrow.getWidth();
@@ -293,8 +287,8 @@ public class GestureBackArrowView extends View {
         if (readyState != readyState2) {
             if (readyState2 == ReadyState.READY_STATE_BACK && readyState == ReadyState.READY_STATE_RECENT) {
                 changeScale(this.mScale, 1.17f, 200, false);
-                if (Constants.IS_SUPPORT_LINEAR_MOTOR_VIBRATE) {
-                    ((HapticFeedBackImpl) Dependency.get(HapticFeedBackImpl.class)).getHapticFeedbackUtil().performHapticFeedback("switch", false);
+                if (HapticFeedBackImpl.IS_SUPPORT_LINEAR_MOTOR_VIBRATE) {
+                    ((HapticFeedBackImpl) Dependency.get(HapticFeedBackImpl.class)).hapticFeedback("switch", false);
                 } else {
                     this.mVibrator.vibrate(20);
                 }
@@ -303,11 +297,6 @@ public class GestureBackArrowView extends View {
             }
             this.mReadyState = readyState;
         }
-    }
-
-    /* access modifiers changed from: package-private */
-    public ReadyState getCurrentState() {
-        return this.mReadyState;
     }
 
     private void changeScale(final float f, float f2, int i, final boolean z) {
@@ -350,34 +339,11 @@ public class GestureBackArrowView extends View {
         this.mLastIconAnimator.start();
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:6:0x0019, code lost:
-        r0 = r0.icon;
-     */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    private android.graphics.drawable.Drawable loadRecentTaskIcon() {
-        /*
-            r3 = this;
-            android.app.KeyguardManager r0 = r3.mKeyguardManager
-            android.content.ContentResolver r1 = r3.mContentResolver
-            boolean r0 = com.android.systemui.fsgesture.GestureStubView.supportNextTask(r0, r1)
-            if (r0 != 0) goto L_0x000d
-            android.graphics.drawable.Drawable r3 = r3.mNoneTaskIcon
-            return r3
-        L_0x000d:
-            android.content.Context r0 = r3.getContext()
-            r1 = 0
-            r2 = -1
-            com.android.systemui.recents.model.Task r0 = com.android.systemui.fsgesture.GestureStubView.getNextTask(r0, r1, r2)
-            if (r0 == 0) goto L_0x001e
-            android.graphics.drawable.Drawable r0 = r0.icon
-            if (r0 == 0) goto L_0x001e
-            goto L_0x0020
-        L_0x001e:
-            android.graphics.drawable.Drawable r0 = r3.mNoneTaskIcon
-        L_0x0020:
-            return r0
-        */
-        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.fsgesture.GestureBackArrowView.loadRecentTaskIcon():android.graphics.drawable.Drawable");
+    private Drawable loadRecentTaskIcon() {
+        if (!GestureStubView.supportNextTask(this.mKeyguardManager, this.mContentResolver)) {
+            return this.mNoneTaskIcon;
+        }
+        return this.mNoneTaskIcon;
     }
 
     /* access modifiers changed from: package-private */
@@ -472,13 +438,5 @@ public class GestureBackArrowView extends View {
         }
         ofFloat.start();
         this.mReadyState = ReadyState.READY_STATE_NONE;
-    }
-
-    /* access modifiers changed from: package-private */
-    public void reset() {
-        this.mScale = 0.0f;
-        onActionDown(-1000.0f, 0.0f, -1.0f);
-        this.mReadyState = ReadyState.READY_STATE_NONE;
-        invalidate();
     }
 }

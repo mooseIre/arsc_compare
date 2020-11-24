@@ -31,9 +31,7 @@ public class SettingsButton extends AlphaOptimizedImageButton {
 
     public boolean onTouchEvent(MotionEvent motionEvent) {
         int actionMasked = motionEvent.getActionMasked();
-        if (actionMasked == 0) {
-            postDelayed(this.mLongPressCallback, 1000);
-        } else if (actionMasked != 1) {
+        if (actionMasked != 1) {
             if (actionMasked == 2) {
                 float x = motionEvent.getX();
                 float y = motionEvent.getY();

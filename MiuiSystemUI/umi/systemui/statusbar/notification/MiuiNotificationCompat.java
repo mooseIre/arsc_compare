@@ -14,15 +14,15 @@ public class MiuiNotificationCompat {
         return notification.extras.getBoolean("miui.showAction", false);
     }
 
+    public static CharSequence getMiuiActionTitle(Notification notification) {
+        return isShowMiuiAction(notification) ? notification.actions[0].title : "";
+    }
+
     public static boolean isEnableFloat(Notification notification) {
         if (notification.extras.containsKey("miui.enableFloat")) {
             return notification.extras.getBoolean("miui.enableFloat", true);
         }
         return notification.extraNotification.isEnableFloat();
-    }
-
-    public static void setEnableFloat(Notification notification, boolean z) {
-        notification.extras.putBoolean("miui.enableFloat", z);
     }
 
     public static boolean isEnableKeyguard(Notification notification) {
@@ -32,10 +32,6 @@ public class MiuiNotificationCompat {
         return notification.extraNotification.isEnableKeyguard();
     }
 
-    public static void setEnableKeyguard(Notification notification, boolean z) {
-        notification.extras.putBoolean("miui.enableKeyguard", z);
-    }
-
     public static int getFloatTime(Notification notification) {
         if (notification.extras.containsKey("miui.floatTime")) {
             return notification.extras.getInt("miui.floatTime", 5000);
@@ -43,20 +39,11 @@ public class MiuiNotificationCompat {
         return notification.extraNotification.getFloatTime();
     }
 
-    public static void setFloatTime(Notification notification, int i) {
-        notification.extras.putInt("miui.floatTime", i);
-    }
-
     public static CharSequence getTargetPkg(Notification notification) {
         if (notification.extras.containsKey("miui.targetPkg")) {
             return notification.extras.getCharSequence("miui.targetPkg");
         }
         return notification.extraNotification.getTargetPkg();
-    }
-
-    public static void setTargetPkg(Notification notification, CharSequence charSequence) {
-        notification.extras.putCharSequence("miui.targetPkg", charSequence);
-        notification.extraNotification.setTargetPkg(charSequence);
     }
 
     public static int getMessageCount(Notification notification) {
@@ -77,8 +64,13 @@ public class MiuiNotificationCompat {
         return notification.extraNotification.getMessageClassName();
     }
 
-    @Deprecated
     public static PendingIntent getExitFloatingIntent(Notification notification) {
+        if (notification.extras.containsKey("miui.exitFloating")) {
+            Parcelable parcelable = notification.extras.getParcelable("miui.exitFloating");
+            if (parcelable instanceof PendingIntent) {
+                return (PendingIntent) parcelable;
+            }
+        }
         return notification.extraNotification.getExitFloatingIntent();
     }
 
@@ -86,20 +78,8 @@ public class MiuiNotificationCompat {
         return notification.extras.getBoolean("miui.onlyShowKeyguard", false);
     }
 
-    public static void setOnlyShowKeyguard(Notification notification, boolean z) {
-        notification.extras.putBoolean("miui.onlyShowKeyguard", z);
-    }
-
-    public static boolean isKeptOnKeyguard(Notification notification) {
-        return notification.extras.getBoolean("miui.keptOnKeyguard", false);
-    }
-
     public static boolean isCustomHeight(Notification notification) {
         return notification.extras.getBoolean("miui.customHeight", false);
-    }
-
-    public static void setCustomHeight(Notification notification, boolean z) {
-        notification.extras.putBoolean("miui.customHeight", z);
     }
 
     public static boolean isCustomHideBorder(Notification notification) {
@@ -108,10 +88,6 @@ public class MiuiNotificationCompat {
 
     public static boolean isSystemWarnings(Notification notification) {
         return notification.extras.getBoolean("miui.systemWarnings", false);
-    }
-
-    public static void setSystemWarnings(Notification notification, boolean z) {
-        notification.extras.putBoolean("miui.systemWarnings", z);
     }
 
     public static boolean isShowingAtTail(Notification notification) {
@@ -130,11 +106,19 @@ public class MiuiNotificationCompat {
         return null;
     }
 
-    public static void disableColorized(Notification notification) {
-        notification.extras.putBoolean("android.colorized", false);
-    }
-
     public static boolean isFloatWhenDnd(Notification notification) {
         return notification.extras.getBoolean("miui.floatWhenDnd", false);
+    }
+
+    public static boolean isGrayscaleIcon(Notification notification) {
+        return notification.extras.getBoolean("miui.isGrayscaleIcon", false);
+    }
+
+    public static PendingIntent getLongPressIntent(Notification notification) {
+        Parcelable parcelable = notification.extras.getParcelable("miui.longPressIntent");
+        if (parcelable instanceof PendingIntent) {
+            return (PendingIntent) parcelable;
+        }
+        return null;
     }
 }

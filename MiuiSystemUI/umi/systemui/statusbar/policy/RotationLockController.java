@@ -10,5 +10,5 @@ public interface RotationLockController extends Object {
 
     boolean isRotationLocked();
 
-    void setRotationLocked(boolean z);
+    void setRotationLockedAtAngle(boolean z, int i);
 }

@@ -86,10 +86,10 @@ public class SplitDisplayLayout {
     }
 
     /* access modifiers changed from: package-private */
-    public DividerSnapAlgorithm getMinimizedSnapAlgorithm() {
+    public DividerSnapAlgorithm getMinimizedSnapAlgorithm(boolean z) {
         if (this.mMinimizedSnapAlgorithm == null) {
             updateResources();
-            this.mMinimizedSnapAlgorithm = Utils.getDividerSnapAlgorithm(this.mContext, this.mDisplayLayout.width(), this.mDisplayLayout.height(), this.mDividerSize, !this.mDisplayLayout.isLandscape(), this.mDisplayLayout.stableInsets(), getPrimarySplitSide(), true, true);
+            this.mMinimizedSnapAlgorithm = new DividerSnapAlgorithm(this.mContext.getResources(), this.mDisplayLayout.width(), this.mDisplayLayout.height(), this.mDividerSize, !this.mDisplayLayout.isLandscape(), this.mDisplayLayout.stableInsets(), getPrimarySplitSide(), true, z);
         }
         return this.mMinimizedSnapAlgorithm;
     }
@@ -126,8 +126,8 @@ public class SplitDisplayLayout {
     }
 
     /* access modifiers changed from: package-private */
-    public Rect calcMinimizedHomeStackBounds() {
-        DividerSnapAlgorithm.SnapTarget middleTarget = getMinimizedSnapAlgorithm().getMiddleTarget();
+    public Rect calcResizableMinimizedHomeStackBounds() {
+        DividerSnapAlgorithm.SnapTarget middleTarget = getMinimizedSnapAlgorithm(true).getMiddleTarget();
         Rect rect = new Rect();
         DockedDividerUtils.calculateBoundsForPosition(middleTarget.position, DockedDividerUtils.invertDockSide(getPrimarySplitSide()), rect, this.mDisplayLayout.width(), this.mDisplayLayout.height(), this.mDividerSize);
         return rect;

@@ -1,42 +1,34 @@
 package com.android.systemui.qs.tiles;
 
 import android.content.ComponentName;
-import android.content.ContentResolver;
-import android.content.Context;
 import android.content.Intent;
-import android.database.ContentObserver;
-import android.provider.Settings;
 import android.util.Log;
 import android.widget.Switch;
-import com.android.systemui.Constants;
-import com.android.systemui.plugins.R;
+import androidx.lifecycle.LifecycleOwner;
+import com.android.systemui.C0010R$drawable;
+import com.android.systemui.C0018R$string;
 import com.android.systemui.plugins.qs.QSTile;
 import com.android.systemui.qs.QSHost;
 import com.android.systemui.qs.tileimpl.QSTileImpl;
-import com.android.systemui.statusbar.Icons;
+import com.android.systemui.statusbar.policy.DriveModeController;
 import miui.os.Build;
 import miui.securityspace.CrossUserUtils;
 
 public class DriveModeTile extends QSTileImpl<QSTile.BooleanState> {
-    public static final boolean IS_MIUI_LITE_VERSION = Build.IS_MIUI_LITE_VERSION;
-    private ContentObserver mDriveModeObserver = new ContentObserver(this.mHandler) {
-        public void onChange(boolean z) {
-            Log.d("SystemUI.DriveMode", "drive mode change detected");
-            DriveModeTile.this.refreshState();
-        }
-    };
-    private boolean mMiuiLabDriveModeOn;
-    private final ContentResolver mResolver;
+    private final DriveModeController mDriveModeController;
 
     public int getMetricsCategory() {
         return -1;
     }
 
-    public DriveModeTile(QSHost qSHost) {
+    public DriveModeTile(QSHost qSHost, DriveModeController driveModeController) {
         super(qSHost);
-        ContentResolver contentResolver = this.mContext.getContentResolver();
-        this.mResolver = contentResolver;
-        this.mMiuiLabDriveModeOn = -1 != Settings.System.getIntForUser(contentResolver, "drive_mode_drive_mode", -1, -2);
+        this.mDriveModeController = driveModeController;
+        driveModeController.observe((LifecycleOwner) this, new DriveModeController.DriveModeListener() {
+            public final void onDriveModeChanged() {
+                DriveModeTile.this.refreshState();
+            }
+        });
     }
 
     /* access modifiers changed from: protected */
@@ -49,39 +41,24 @@ public class DriveModeTile extends QSTileImpl<QSTile.BooleanState> {
     }
 
     public boolean isAvailable() {
-        return !IS_MIUI_LITE_VERSION && !Constants.IS_INTERNATIONAL && !Constants.IS_TABLET && CrossUserUtils.getCurrentUserId() == 0;
-    }
-
-    public void handleSetListening(boolean z) {
-        if (z) {
-            this.mResolver.registerContentObserver(Settings.System.getUriFor("drive_mode_drive_mode"), false, this.mDriveModeObserver, -1);
-        } else {
-            this.mResolver.unregisterContentObserver(this.mDriveModeObserver);
-        }
+        return !Build.IS_INTERNATIONAL_BUILD && !Build.IS_TABLET && CrossUserUtils.getCurrentUserId() == 0;
     }
 
     public Intent getLongClickIntent() {
-        if (!this.mHost.isDriveModeInstalled()) {
+        if (!this.mDriveModeController.isDriveModeAvailable()) {
             return getMiuiLabSettingsIntent();
         }
-        if (!this.mMiuiLabDriveModeOn) {
-            boolean z = -1 != Settings.System.getIntForUser(this.mResolver, "drive_mode_drive_mode", -1, -2);
-            this.mMiuiLabDriveModeOn = z;
-            if (!z) {
-                return getMiuiLabSettingsIntent();
-            }
+        if (!this.mDriveModeController.isMiuiLabDriveModeOn()) {
+            return getMiuiLabSettingsIntent();
         }
         return longClickDriveModeIntent();
     }
 
     /* access modifiers changed from: protected */
     public void handleClick() {
-        if (!this.mMiuiLabDriveModeOn) {
-            this.mMiuiLabDriveModeOn = -1 != Settings.System.getIntForUser(this.mResolver, "drive_mode_drive_mode", -1, -2);
-        }
-        if (!this.mHost.isDriveModeInstalled()) {
+        if (!this.mDriveModeController.isDriveModeAvailable()) {
             transitionMiuiLabSettings();
-        } else if (!this.mMiuiLabDriveModeOn) {
+        } else if (!this.mDriveModeController.isMiuiLabDriveModeOn()) {
             Intent intent = new Intent();
             intent.setComponent(new ComponentName("com.xiaomi.drivemode", "com.xiaomi.drivemode.MiuiLabDriveModeActivity"));
             intent.addFlags(268435456);
@@ -90,35 +67,31 @@ public class DriveModeTile extends QSTileImpl<QSTile.BooleanState> {
         } else if (!((QSTile.BooleanState) this.mState).value) {
             startDriveModeActivity();
         } else {
-            Settings.System.putIntForUser(this.mResolver, "drive_mode_drive_mode", 0, -2);
+            this.mDriveModeController.setDriveModeEnabled(false);
             this.mHost.collapsePanels();
         }
     }
 
     public CharSequence getTileLabel() {
-        return this.mContext.getString(R.string.quick_settings_drivemode_label);
+        return this.mContext.getString(C0018R$string.quick_settings_drivemode_label);
     }
 
     /* access modifiers changed from: protected */
     public void handleUpdateState(QSTile.BooleanState booleanState, Object obj) {
         Log.d("SystemUI.DriveMode", "drive mode handleUpdateState");
-        boolean z = false;
-        if (Settings.System.getIntForUser(this.mResolver, "drive_mode_drive_mode", 0, -2) > 0) {
-            z = true;
-        }
-        booleanState.value = z;
-        booleanState.label = this.mContext.getString(R.string.quick_settings_drivemode_label);
+        booleanState.value = this.mDriveModeController.isDriveModeEnabled();
+        booleanState.label = this.mContext.getString(C0018R$string.quick_settings_drivemode_label);
         if (booleanState.value) {
             booleanState.state = 2;
-            booleanState.icon = QSTileImpl.ResourceIcon.get(Icons.getQSIcons(Integer.valueOf(R.drawable.ic_qs_drive_enabled), this.mInControlCenter));
+            booleanState.icon = QSTileImpl.ResourceIcon.get(C0010R$drawable.ic_qs_drive_enabled);
         } else {
             booleanState.state = 1;
-            booleanState.icon = QSTileImpl.ResourceIcon.get(Icons.getQSIcons(Integer.valueOf(R.drawable.ic_qs_drive_disabled), this.mInControlCenter));
+            booleanState.icon = QSTileImpl.ResourceIcon.get(C0010R$drawable.ic_qs_drive_disabled);
         }
         StringBuilder sb = new StringBuilder();
         sb.append(booleanState.label);
         sb.append(",");
-        sb.append(this.mContext.getString(booleanState.value ? R.string.switch_bar_on : R.string.switch_bar_off));
+        sb.append(this.mContext.getString(booleanState.value ? C0018R$string.switch_bar_on : C0018R$string.switch_bar_off));
         booleanState.contentDescription = sb.toString();
         booleanState.expandedAccessibilityClassName = Switch.class.getName();
     }
@@ -149,13 +122,6 @@ public class DriveModeTile extends QSTileImpl<QSTile.BooleanState> {
         intent.putExtra(":android:show_fragment", "com.android.settings.MiuiLabSettings");
         intent.setClassName("com.android.settings", "com.android.settings.SubSettings");
         return intent;
-    }
-
-    public static void leaveDriveMode(Context context) {
-        Settings.System.putIntForUser(context.getContentResolver(), "drive_mode_drive_mode", -1, -2);
-        Intent intent = new Intent();
-        intent.setAction("com.miui.app.ExtraStatusBarManager.action_leave_drive_mode");
-        context.sendBroadcast(intent);
     }
 
     private void transitionMiuiLabSettings() {

@@ -18,7 +18,7 @@ public interface DarkIconDispatcher {
     public interface DarkReceiver {
         public static final int VERSION = 1;
 
-        void onDarkChanged(Rect rect, float f, int i);
+        void onDarkChanged(Rect rect, float f, int i, int i2, int i3, boolean z);
     }
 
     void addDarkReceiver(ImageView imageView);
@@ -27,11 +27,17 @@ public interface DarkIconDispatcher {
 
     void applyDark(DarkReceiver darkReceiver);
 
+    int getDarkModeIconColorSingleTone();
+
+    int getLightModeIconColorSingleTone();
+
     void removeDarkReceiver(ImageView imageView);
 
     void removeDarkReceiver(DarkReceiver darkReceiver);
 
     void setIconsDarkArea(Rect rect);
+
+    boolean useTint();
 
     static int getTint(Rect rect, View view, int i) {
         if (isInArea(rect, view)) {

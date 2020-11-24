@@ -9,9 +9,13 @@ public interface BluetoothController extends CallbackController<Callback>, Dumpa
     public interface Callback {
         void onBluetoothDevicesChanged();
 
-        void onBluetoothInoutStateChange(String str);
+        void onBluetoothInoutStateChange(String str) {
+        }
 
         void onBluetoothStateChange(boolean z);
+
+        void onBluetoothStatePhoneChange() {
+        }
     }
 
     boolean canConfigBluetooth();
@@ -22,19 +26,23 @@ public interface BluetoothController extends CallbackController<Callback>, Dumpa
 
     int getBluetoothState();
 
-    Collection<CachedBluetoothDevice> getCachedDevicesCopy();
+    Collection<CachedBluetoothDevice> getDevices();
 
     String getLastDeviceName();
 
     int getMaxConnectionState(CachedBluetoothDevice cachedBluetoothDevice);
 
-    String getSummary(CachedBluetoothDevice cachedBluetoothDevice);
+    boolean getProfileConnectionState();
 
     boolean isBluetoothConnected();
 
     boolean isBluetoothConnecting();
 
     boolean isBluetoothEnabled();
+
+    boolean isBluetoothPhoneConnected();
+
+    boolean isBluetoothReady();
 
     boolean isBluetoothSupported();
 

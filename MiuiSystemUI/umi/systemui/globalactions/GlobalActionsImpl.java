@@ -1,168 +1,153 @@
 package com.android.systemui.globalactions;
 
-import android.content.ComponentName;
+import android.app.Dialog;
 import android.content.Context;
-import android.graphics.Rect;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.view.ContextThemeWrapper;
-import com.android.internal.os.SomeArgs;
-import com.android.internal.statusbar.StatusBarIcon;
+import android.content.DialogInterface;
+import android.view.Window;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import com.android.internal.colorextraction.drawable.ScrimDrawable;
+import com.android.keyguard.KeyguardUpdateMonitor;
+import com.android.settingslib.Utils;
+import com.android.systemui.C0006R$attr;
+import com.android.systemui.C0009R$dimen;
+import com.android.systemui.C0019R$style;
 import com.android.systemui.Dependency;
-import com.android.systemui.SystemUI;
 import com.android.systemui.plugins.GlobalActions;
+import com.android.systemui.plugins.GlobalActionsPanelPlugin;
+import com.android.systemui.statusbar.BlurUtils;
 import com.android.systemui.statusbar.CommandQueue;
 import com.android.systemui.statusbar.policy.DeviceProvisionedController;
-import com.android.systemui.statusbar.policy.KeyguardMonitor;
+import com.android.systemui.statusbar.policy.ExtensionController;
+import com.android.systemui.statusbar.policy.KeyguardStateController;
+import dagger.Lazy;
 
 public class GlobalActionsImpl implements GlobalActions, CommandQueue.Callbacks {
+    private final BlurUtils mBlurUtils;
+    private final CommandQueue mCommandQueue;
     private final Context mContext;
     private final DeviceProvisionedController mDeviceProvisionedController = ((DeviceProvisionedController) Dependency.get(DeviceProvisionedController.class));
     private boolean mDisabled;
-    private GlobalActionsDialog mGlobalActions;
-    private final KeyguardMonitor mKeyguardMonitor = ((KeyguardMonitor) Dependency.get(KeyguardMonitor.class));
+    private GlobalActionsDialog mGlobalActionsDialog;
+    private final Lazy<GlobalActionsDialog> mGlobalActionsDialogLazy;
+    private final KeyguardStateController mKeyguardStateController = ((KeyguardStateController) Dependency.get(KeyguardStateController.class));
+    private final ExtensionController.Extension<GlobalActionsPanelPlugin> mWalletPluginProvider;
 
-    public void addQsTile(ComponentName componentName) {
-    }
-
-    public void animateCollapsePanels(int i) {
-    }
-
-    public void animateExpandNotificationsPanel() {
-    }
-
-    public void animateExpandSettingsPanel(String str) {
-    }
-
-    public void appTransitionCancelled() {
-    }
-
-    public void appTransitionFinished() {
-    }
-
-    public void appTransitionPending(boolean z) {
-    }
-
-    public void appTransitionStarting(long j, long j2, boolean z) {
-    }
-
-    public void cancelPreloadRecentApps() {
-    }
-
-    public void clickTile(ComponentName componentName) {
-    }
-
-    public void dismissKeyboardShortcutsMenu() {
-    }
-
-    public int getVersion() {
-        return -1;
-    }
-
-    public void handleShowGlobalActionsMenu() {
-    }
-
-    public void handleSystemNavigationKey(int i) {
-    }
-
-    public void hideFingerprintDialog() {
-    }
-
-    public void hideRecentApps(boolean z, boolean z2) {
-    }
-
-    public void onCreate(Context context, Context context2) {
-    }
-
-    public void onFingerprintAuthenticated() {
-    }
-
-    public void onFingerprintError(String str) {
-    }
-
-    public void onFingerprintHelp(String str) {
-    }
-
-    public void preloadRecentApps() {
-    }
-
-    public void remQsTile(ComponentName componentName) {
-    }
-
-    public void removeIcon(String str) {
-    }
-
-    public void setIcon(String str, StatusBarIcon statusBarIcon) {
-    }
-
-    public void setImeWindowStatus(IBinder iBinder, int i, int i2, boolean z) {
-    }
-
-    public void setStatus(int i, String str, Bundle bundle) {
-    }
-
-    public void setSystemUiVisibility(int i, int i2, int i3, int i4, Rect rect, Rect rect2) {
-    }
-
-    public void setWindowState(int i, int i2) {
-    }
-
-    public void showAssistDisclosure() {
-    }
-
-    public void showFingerprintDialog(SomeArgs someArgs) {
-    }
-
-    public void showPictureInPictureMenu() {
-    }
-
-    public void showRecentApps(boolean z, boolean z2) {
-    }
-
-    public void showScreenPinningRequest(int i) {
-    }
-
-    public void startAssist(Bundle bundle) {
-    }
-
-    public void toggleKeyboardShortcutsMenu(int i) {
-    }
-
-    public void toggleRecentApps() {
-    }
-
-    public void toggleSplitScreen() {
-    }
-
-    public void topAppWindowChanged(boolean z) {
-    }
-
-    public GlobalActionsImpl(Context context) {
+    public GlobalActionsImpl(Context context, CommandQueue commandQueue, Lazy<GlobalActionsDialog> lazy, BlurUtils blurUtils) {
+        Class<GlobalActionsPanelPlugin> cls = GlobalActionsPanelPlugin.class;
         this.mContext = context;
-        ((CommandQueue) SystemUI.getComponent(context, CommandQueue.class)).addCallbacks(this);
+        this.mGlobalActionsDialogLazy = lazy;
+        this.mCommandQueue = commandQueue;
+        this.mBlurUtils = blurUtils;
+        commandQueue.addCallback((CommandQueue.Callbacks) this);
+        ExtensionController.ExtensionBuilder<GlobalActionsPanelPlugin> newExtension = ((ExtensionController) Dependency.get(ExtensionController.class)).newExtension(cls);
+        newExtension.withPlugin(cls);
+        this.mWalletPluginProvider = newExtension.build();
+    }
+
+    public void destroy() {
+        this.mCommandQueue.removeCallback((CommandQueue.Callbacks) this);
+        GlobalActionsDialog globalActionsDialog = this.mGlobalActionsDialog;
+        if (globalActionsDialog != null) {
+            globalActionsDialog.destroy();
+            this.mGlobalActionsDialog = null;
+        }
     }
 
     public void showGlobalActions(GlobalActions.GlobalActionsManager globalActionsManager) {
         if (!this.mDisabled) {
-            if (this.mGlobalActions == null) {
-                this.mGlobalActions = new GlobalActionsDialog(new ContextThemeWrapper(this.mContext, 16974391), globalActionsManager);
-            }
-            this.mGlobalActions.showDialog(this.mKeyguardMonitor.isShowing(), this.mDeviceProvisionedController.isDeviceProvisioned());
+            GlobalActionsDialog globalActionsDialog = this.mGlobalActionsDialogLazy.get();
+            this.mGlobalActionsDialog = globalActionsDialog;
+            globalActionsDialog.showOrHideDialog(this.mKeyguardStateController.isShowing(), this.mDeviceProvisionedController.isDeviceProvisioned(), this.mWalletPluginProvider.get());
+            ((KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class)).requestFaceAuth();
         }
     }
 
-    public void disable(int i, int i2, boolean z) {
+    public void showShutdownUi(boolean z, String str) {
+        ScrimDrawable scrimDrawable = new ScrimDrawable();
+        Dialog dialog = new Dialog(this.mContext, C0019R$style.Theme_SystemUI_Dialog_GlobalActions);
+        dialog.setOnShowListener(new DialogInterface.OnShowListener(scrimDrawable, dialog) {
+            public final /* synthetic */ ScrimDrawable f$1;
+            public final /* synthetic */ Dialog f$2;
+
+            {
+                this.f$1 = r2;
+                this.f$2 = r3;
+            }
+
+            public final void onShow(DialogInterface dialogInterface) {
+                GlobalActionsImpl.this.lambda$showShutdownUi$0$GlobalActionsImpl(this.f$1, this.f$2, dialogInterface);
+            }
+        });
+        Window window = dialog.getWindow();
+        window.requestFeature(1);
+        window.getAttributes().systemUiVisibility |= 1792;
+        window.getDecorView();
+        window.getAttributes().width = -1;
+        window.getAttributes().height = -1;
+        window.getAttributes().layoutInDisplayCutoutMode = 3;
+        window.setType(2020);
+        window.getAttributes().setFitInsetsTypes(0);
+        window.clearFlags(2);
+        window.addFlags(17629472);
+        window.setBackgroundDrawable(scrimDrawable);
+        window.setWindowAnimations(C0019R$style.Animation_ShutdownUi);
+        dialog.setContentView(17367303);
+        dialog.setCancelable(false);
+        int colorAttrDefaultColor = Utils.getColorAttrDefaultColor(this.mContext, C0006R$attr.wallpaperTextColor);
+        ((ProgressBar) dialog.findViewById(16908301)).getIndeterminateDrawable().setTint(colorAttrDefaultColor);
+        TextView textView = (TextView) dialog.findViewById(16908308);
+        TextView textView2 = (TextView) dialog.findViewById(16908309);
+        textView.setTextColor(colorAttrDefaultColor);
+        textView2.setTextColor(colorAttrDefaultColor);
+        textView2.setText(getRebootMessage(z, str));
+        String reasonMessage = getReasonMessage(str);
+        if (reasonMessage != null) {
+            textView.setVisibility(0);
+            textView.setText(reasonMessage);
+        }
+        dialog.show();
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$showShutdownUi$0 */
+    public /* synthetic */ void lambda$showShutdownUi$0$GlobalActionsImpl(ScrimDrawable scrimDrawable, Dialog dialog, DialogInterface dialogInterface) {
+        if (this.mBlurUtils.supportsBlursOnWindows()) {
+            scrimDrawable.setAlpha(137);
+            this.mBlurUtils.applyBlur(dialog.getWindow().getDecorView().getViewRootImpl(), this.mBlurUtils.blurRadiusOfRatio(1.0f));
+            return;
+        }
+        scrimDrawable.setAlpha((int) (this.mContext.getResources().getFloat(C0009R$dimen.shutdown_scrim_behind_alpha) * 255.0f));
+    }
+
+    private int getRebootMessage(boolean z, String str) {
+        if (str != null && str.startsWith("recovery-update")) {
+            return 17041201;
+        }
+        if ((str == null || !str.equals("recovery")) && !z) {
+            return 17041344;
+        }
+        return 17041197;
+    }
+
+    private String getReasonMessage(String str) {
+        if (str != null && str.startsWith("recovery-update")) {
+            return this.mContext.getString(17041202);
+        }
+        if (str == null || !str.equals("recovery")) {
+            return null;
+        }
+        return this.mContext.getString(17041198);
+    }
+
+    public void disable(int i, int i2, int i3, boolean z) {
         GlobalActionsDialog globalActionsDialog;
-        boolean z2 = (i2 & 8) != 0;
-        if (z2 != this.mDisabled) {
+        boolean z2 = (i3 & 8) != 0;
+        if (i == this.mContext.getDisplayId() && z2 != this.mDisabled) {
             this.mDisabled = z2;
-            if (z2 && (globalActionsDialog = this.mGlobalActions) != null) {
+            if (z2 && (globalActionsDialog = this.mGlobalActionsDialog) != null) {
                 globalActionsDialog.dismissDialog();
             }
         }
-    }
-
-    public void onDestroy() {
-        ((CommandQueue) SystemUI.getComponent(this.mContext, CommandQueue.class)).removeCallbacks(this);
     }
 }

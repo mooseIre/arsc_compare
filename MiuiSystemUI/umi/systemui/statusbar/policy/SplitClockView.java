@@ -1,5 +1,6 @@
 package com.android.systemui.statusbar.policy;
 
+import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -10,8 +11,7 @@ import android.text.format.DateFormat;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
 import android.widget.TextClock;
-import com.android.keyguard.KeyguardUpdateMonitor;
-import com.android.systemui.plugins.R;
+import com.android.systemui.C0012R$id;
 
 public class SplitClockView extends LinearLayout {
     private TextClock mAmPmView;
@@ -32,8 +32,8 @@ public class SplitClockView extends LinearLayout {
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mTimeView = (TextClock) findViewById(R.id.time_view);
-        this.mAmPmView = (TextClock) findViewById(R.id.am_pm_view);
+        this.mTimeView = (TextClock) findViewById(C0012R$id.time_view);
+        this.mAmPmView = (TextClock) findViewById(C0012R$id.am_pm_view);
         this.mTimeView.setShowCurrentUserTime(true);
         this.mAmPmView.setShowCurrentUserTime(true);
     }
@@ -61,7 +61,7 @@ public class SplitClockView extends LinearLayout {
     public void updatePatterns() {
         String str;
         String str2;
-        String timeFormatString = DateFormat.getTimeFormatString(getContext(), KeyguardUpdateMonitor.getCurrentUser());
+        String timeFormatString = DateFormat.getTimeFormatString(getContext(), ActivityManager.getCurrentUser());
         int amPmPartEndIndex = getAmPmPartEndIndex(timeFormatString);
         if (amPmPartEndIndex == -1) {
             str2 = "";

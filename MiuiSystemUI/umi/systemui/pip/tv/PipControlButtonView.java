@@ -11,7 +11,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import com.android.systemui.plugins.R;
+import com.android.systemui.C0004R$anim;
+import com.android.systemui.C0012R$id;
+import com.android.systemui.C0014R$layout;
 
 public class PipControlButtonView extends RelativeLayout {
     private Animator mButtonFocusGainAnimator;
@@ -51,10 +53,10 @@ public class PipControlButtonView extends RelativeLayout {
                 }
             }
         };
-        ((LayoutInflater) getContext().getSystemService("layout_inflater")).inflate(R.layout.tv_pip_control_button, this);
-        this.mIconImageView = (ImageView) findViewById(R.id.icon);
-        this.mButtonImageView = (ImageView) findViewById(R.id.button);
-        this.mDescriptionTextView = (TextView) findViewById(R.id.desc);
+        ((LayoutInflater) getContext().getSystemService("layout_inflater")).inflate(C0014R$layout.tv_pip_control_button, this);
+        this.mIconImageView = (ImageView) findViewById(C0012R$id.icon);
+        this.mButtonImageView = (ImageView) findViewById(C0012R$id.button);
+        this.mDescriptionTextView = (TextView) findViewById(C0012R$id.desc);
         TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, new int[]{16843033, 16843087}, i, i2);
         setImageResource(obtainStyledAttributes.getResourceId(0, 0));
         setText(obtainStyledAttributes.getResourceId(1, 0));
@@ -64,16 +66,16 @@ public class PipControlButtonView extends RelativeLayout {
     public void onFinishInflate() {
         super.onFinishInflate();
         this.mButtonImageView.setOnFocusChangeListener(this.mInternalFocusChangeListener);
-        Animator loadAnimator = AnimatorInflater.loadAnimator(getContext(), R.anim.tv_pip_controls_focus_gain_animation);
+        Animator loadAnimator = AnimatorInflater.loadAnimator(getContext(), C0004R$anim.tv_pip_controls_focus_gain_animation);
         this.mTextFocusGainAnimator = loadAnimator;
         loadAnimator.setTarget(this.mDescriptionTextView);
-        Animator loadAnimator2 = AnimatorInflater.loadAnimator(getContext(), R.anim.tv_pip_controls_focus_gain_animation);
+        Animator loadAnimator2 = AnimatorInflater.loadAnimator(getContext(), C0004R$anim.tv_pip_controls_focus_gain_animation);
         this.mButtonFocusGainAnimator = loadAnimator2;
         loadAnimator2.setTarget(this.mButtonImageView);
-        Animator loadAnimator3 = AnimatorInflater.loadAnimator(getContext(), R.anim.tv_pip_controls_focus_loss_animation);
+        Animator loadAnimator3 = AnimatorInflater.loadAnimator(getContext(), C0004R$anim.tv_pip_controls_focus_loss_animation);
         this.mTextFocusLossAnimator = loadAnimator3;
         loadAnimator3.setTarget(this.mDescriptionTextView);
-        Animator loadAnimator4 = AnimatorInflater.loadAnimator(getContext(), R.anim.tv_pip_controls_focus_loss_animation);
+        Animator loadAnimator4 = AnimatorInflater.loadAnimator(getContext(), C0004R$anim.tv_pip_controls_focus_loss_animation);
         this.mButtonFocusLossAnimator = loadAnimator4;
         loadAnimator4.setTarget(this.mButtonImageView);
     }

@@ -5,18 +5,18 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.app.Notification;
-import android.app.NotificationCompat;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
-import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.ColorFilter;
+import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.Icon;
-import android.os.Build;
 import android.os.Parcelable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -28,17 +28,24 @@ import android.view.ViewDebug;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.animation.Interpolator;
 import android.widget.ImageView;
+import androidx.core.graphics.ColorUtils;
 import com.android.internal.statusbar.StatusBarIcon;
+import com.android.internal.util.ContrastColorUtil;
+import com.android.systemui.C0007R$bool;
+import com.android.systemui.C0009R$dimen;
+import com.android.systemui.C0010R$drawable;
+import com.android.systemui.C0012R$id;
+import com.android.systemui.C0018R$string;
 import com.android.systemui.Interpolators;
-import com.android.systemui.SystemUICompat;
-import com.android.systemui.miui.statusbar.ExpandedNotification;
-import com.android.systemui.plugins.R;
+import com.android.systemui.statusbar.notification.ExpandedNotification;
 import com.android.systemui.statusbar.notification.NotificationIconDozeHelper;
+import com.android.systemui.statusbar.notification.NotificationUtil;
 import com.android.systemui.statusbar.notification.NotificationUtils;
 import java.text.NumberFormat;
+import java.util.Arrays;
 import java.util.function.Consumer;
 
-public class StatusBarIconView extends AnimatedImageView {
+public class StatusBarIconView extends AnimatedImageView implements StatusIconDisplayable {
     private static final Property<StatusBarIconView, Float> DOT_APPEAR_AMOUNT = new FloatProperty<StatusBarIconView>("dot_appear_amount") {
         public void setValue(StatusBarIconView statusBarIconView, float f) {
             statusBarIconView.setDotAppearAmount(f);
@@ -61,11 +68,13 @@ public class StatusBarIconView extends AnimatedImageView {
     /* access modifiers changed from: private */
     public int mAnimationStartColor;
     private final boolean mBlocked;
+    private int mCachedContrastBackgroundColor;
     /* access modifiers changed from: private */
     public ValueAnimator mColorAnimator;
     private final ValueAnimator.AnimatorUpdateListener mColorUpdater;
+    private int mContrastedDrawableColor;
     private int mCurrentSetColor;
-    private float mDarkAmount;
+    private boolean mDark;
     private int mDecorColor;
     private int mDensity;
     /* access modifiers changed from: private */
@@ -73,36 +82,58 @@ public class StatusBarIconView extends AnimatedImageView {
     private float mDotAppearAmount;
     private final Paint mDotPaint;
     private float mDotRadius;
+    private float mDozeAmount;
     private final NotificationIconDozeHelper mDozer;
     private int mDrawableColor;
     private StatusBarIcon mIcon;
     private float mIconAppearAmount;
     /* access modifiers changed from: private */
     public ObjectAnimator mIconAppearAnimator;
-    /* access modifiers changed from: private */
-    public int mIconColor;
+    private int mIconColor;
     private float mIconScale;
+    private boolean mIncreasedSize;
+    private Runnable mLayoutRunnable;
+    private float[] mMatrix;
+    private ColorMatrixColorFilter mMatrixColorFilter;
+    private boolean mNightMode;
     private ExpandedNotification mNotification;
     private Drawable mNumberBackground;
     private Paint mNumberPain;
     private String mNumberText;
     private int mNumberX;
     private int mNumberY;
+    private Runnable mOnDismissListener;
     private OnVisibilityChangedListener mOnVisibilityChangedListener;
+    private boolean mShowsConversation;
     @ViewDebug.ExportedProperty
     private String mSlot;
     private int mStaticDotRadius;
     private int mStatusBarIconDrawingSize;
-    private int mStatusBarIconDrawingSizeDark;
+    private int mStatusBarIconDrawingSizeIncreased;
     private int mStatusBarIconSize;
+    private float mSystemIconDesiredHeight;
+    private float mSystemIconIntrinsicHeight;
+    private boolean mUseTint;
     private int mVisibleState;
 
     public interface OnVisibilityChangedListener {
         void onVisibilityChanged(int i);
     }
 
+    private void updateIconScaleForSystemIcons() {
+    }
+
     public boolean hasOverlappingRendering() {
         return false;
+    }
+
+    public void setIsInShelf(boolean z) {
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$new$0 */
+    public /* synthetic */ void lambda$new$0$StatusBarIconView(ValueAnimator valueAnimator) {
+        setColorInternal(NotificationUtils.interpolateColors(this.mAnimationStartColor, this.mIconColor, valueAnimator.getAnimatedFraction()));
     }
 
     public StatusBarIconView(Context context, String str, ExpandedNotification expandedNotification) {
@@ -111,58 +142,83 @@ public class StatusBarIconView extends AnimatedImageView {
 
     public StatusBarIconView(Context context, String str, ExpandedNotification expandedNotification, boolean z) {
         super(context);
-        this.mStatusBarIconDrawingSizeDark = 1;
+        this.mSystemIconDesiredHeight = 15.0f;
+        this.mSystemIconIntrinsicHeight = 17.0f;
+        boolean z2 = true;
+        this.mStatusBarIconDrawingSizeIncreased = 1;
         this.mStatusBarIconDrawingSize = 1;
         this.mStatusBarIconSize = 1;
         this.mIconScale = 1.0f;
-        this.mDotPaint = new Paint();
+        this.mDotPaint = new Paint(1);
         this.mVisibleState = 0;
         this.mIconAppearAmount = 1.0f;
         this.mCurrentSetColor = 0;
         this.mAnimationStartColor = 0;
         this.mColorUpdater = new ValueAnimator.AnimatorUpdateListener() {
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                StatusBarIconView.this.setColorInternal(NotificationUtils.interpolateColors(StatusBarIconView.this.mAnimationStartColor, StatusBarIconView.this.mIconColor, valueAnimator.getAnimatedFraction()));
+            public final void onAnimationUpdate(ValueAnimator valueAnimator) {
+                StatusBarIconView.this.lambda$new$0$StatusBarIconView(valueAnimator);
             }
         };
+        this.mCachedContrastBackgroundColor = 0;
         this.mDozer = new NotificationIconDozeHelper(context);
         this.mBlocked = z;
         this.mSlot = str;
         Paint paint = new Paint();
         this.mNumberPain = paint;
         paint.setTextAlign(Paint.Align.CENTER);
-        this.mNumberPain.setColor(context.getColor(R.drawable.notification_number_text_color));
+        this.mNumberPain.setColor(context.getColor(C0010R$drawable.notification_number_text_color));
         this.mNumberPain.setAntiAlias(true);
         setNotification(expandedNotification);
-        maybeUpdateIconScaleDimens();
         setScaleType(ImageView.ScaleType.CENTER);
         this.mDensity = context.getResources().getDisplayMetrics().densityDpi;
-        if (this.mNotification != null) {
-            setDecorColor(getContext().getColor(SystemUICompat.getNotificationDefaultColor()));
-        }
+        this.mNightMode = (context.getResources().getConfiguration().uiMode & 48) != 32 ? false : z2;
+        initializeDecorColor();
         reloadDimens();
+        maybeUpdateIconScaleDimens();
+    }
+
+    public StatusBarIconView(Context context, AttributeSet attributeSet) {
+        super(context, attributeSet);
+        this.mSystemIconDesiredHeight = 15.0f;
+        this.mSystemIconIntrinsicHeight = 17.0f;
+        this.mStatusBarIconDrawingSizeIncreased = 1;
+        this.mStatusBarIconDrawingSize = 1;
+        this.mStatusBarIconSize = 1;
+        this.mIconScale = 1.0f;
+        this.mDotPaint = new Paint(1);
+        this.mVisibleState = 0;
+        this.mIconAppearAmount = 1.0f;
+        this.mCurrentSetColor = 0;
+        this.mAnimationStartColor = 0;
+        this.mColorUpdater = new ValueAnimator.AnimatorUpdateListener() {
+            public final void onAnimationUpdate(ValueAnimator valueAnimator) {
+                StatusBarIconView.this.lambda$new$0$StatusBarIconView(valueAnimator);
+            }
+        };
+        this.mCachedContrastBackgroundColor = 0;
+        this.mDozer = new NotificationIconDozeHelper(context);
+        this.mBlocked = false;
+        this.mAlwaysScaleIcon = true;
+        reloadDimens();
+        maybeUpdateIconScaleDimens();
+        this.mDensity = context.getResources().getDisplayMetrics().densityDpi;
     }
 
     private void maybeUpdateIconScaleDimens() {
         if (this.mNotification != null || this.mAlwaysScaleIcon) {
-            updateIconScaleDimens();
+            updateIconScaleForNotifications();
+        } else {
+            updateIconScaleForSystemIcons();
         }
     }
 
-    private void updateIconScaleDimens() {
-        Resources resources = this.mContext.getResources();
-        this.mStatusBarIconSize = resources.getDimensionPixelSize(R.dimen.status_bar_icon_size);
-        this.mStatusBarIconDrawingSizeDark = resources.getDimensionPixelSize(R.dimen.status_bar_icon_drawing_size_dark);
-        this.mStatusBarIconDrawingSize = resources.getDimensionPixelSize(R.dimen.status_bar_icon_drawing_size);
-        updateIconScale();
+    private void updateIconScaleForNotifications() {
+        this.mIconScale = ((float) (this.mIncreasedSize ? this.mStatusBarIconDrawingSizeIncreased : this.mStatusBarIconDrawingSize)) / ((float) this.mStatusBarIconSize);
+        updatePivot();
     }
 
-    private void updateIconScale() {
-        this.mIconScale = NotificationUtils.interpolate((float) this.mStatusBarIconDrawingSize, (float) this.mStatusBarIconDrawingSizeDark, this.mDarkAmount) / ((float) this.mStatusBarIconSize);
-    }
-
-    public float getIconScaleFullyDark() {
-        return ((float) this.mStatusBarIconDrawingSizeDark) / ((float) this.mStatusBarIconDrawingSize);
+    public float getIconScaleIncreased() {
+        return ((float) this.mStatusBarIconDrawingSizeIncreased) / ((float) this.mStatusBarIconDrawingSize);
     }
 
     public float getIconScale() {
@@ -175,19 +231,29 @@ public class StatusBarIconView extends AnimatedImageView {
         int i = configuration.densityDpi;
         if (i != this.mDensity) {
             this.mDensity = i;
-            maybeUpdateIconScaleDimens();
-            updateDrawable();
             reloadDimens();
+            updateDrawable();
+            maybeUpdateIconScaleDimens();
+        }
+        boolean z = (configuration.uiMode & 48) == 32;
+        if (z != this.mNightMode) {
+            this.mNightMode = z;
+            initializeDecorColor();
         }
     }
 
     private void reloadDimens() {
         boolean z = this.mDotRadius == ((float) this.mStaticDotRadius);
-        int dimensionPixelSize = getResources().getDimensionPixelSize(R.dimen.overflow_dot_radius);
-        this.mStaticDotRadius = dimensionPixelSize;
+        Resources resources = getResources();
+        this.mStaticDotRadius = resources.getDimensionPixelSize(C0009R$dimen.overflow_dot_radius);
+        this.mStatusBarIconSize = resources.getDimensionPixelSize(C0009R$dimen.status_bar_icon_size);
+        this.mStatusBarIconDrawingSizeIncreased = resources.getDimensionPixelSize(C0009R$dimen.status_bar_icon_drawing_size_dark);
+        this.mStatusBarIconDrawingSize = resources.getDimensionPixelSize(C0009R$dimen.status_bar_icon_drawing_size);
         if (z) {
-            this.mDotRadius = (float) dimensionPixelSize;
+            this.mDotRadius = (float) this.mStaticDotRadius;
         }
+        this.mSystemIconDesiredHeight = resources.getDimension(17105494);
+        this.mSystemIconIntrinsicHeight = resources.getDimension(17105493);
     }
 
     public void setNotification(ExpandedNotification expandedNotification) {
@@ -195,29 +261,7 @@ public class StatusBarIconView extends AnimatedImageView {
         if (expandedNotification != null) {
             setContentDescription(expandedNotification.getNotification());
         }
-    }
-
-    public StatusBarIconView(Context context, AttributeSet attributeSet) {
-        super(context, attributeSet);
-        this.mStatusBarIconDrawingSizeDark = 1;
-        this.mStatusBarIconDrawingSize = 1;
-        this.mStatusBarIconSize = 1;
-        this.mIconScale = 1.0f;
-        this.mDotPaint = new Paint();
-        this.mVisibleState = 0;
-        this.mIconAppearAmount = 1.0f;
-        this.mCurrentSetColor = 0;
-        this.mAnimationStartColor = 0;
-        this.mColorUpdater = new ValueAnimator.AnimatorUpdateListener() {
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                StatusBarIconView.this.setColorInternal(NotificationUtils.interpolateColors(StatusBarIconView.this.mAnimationStartColor, StatusBarIconView.this.mIconColor, valueAnimator.getAnimatedFraction()));
-            }
-        };
-        this.mDozer = new NotificationIconDozeHelper(context);
-        this.mBlocked = false;
-        this.mAlwaysScaleIcon = true;
-        updateIconScaleDimens();
-        this.mDensity = context.getResources().getDisplayMetrics().densityDpi;
+        maybeUpdateIconScaleDimens();
     }
 
     public boolean equalIcons(Icon icon, Icon icon2) {
@@ -229,10 +273,10 @@ public class StatusBarIconView extends AnimatedImageView {
         }
         int type = icon.getType();
         if (type != 2) {
-            if (type != 4) {
-                return false;
+            if (type == 4 || type == 6) {
+                return icon.getUriString().equals(icon2.getUriString());
             }
-            return icon.getUriString().equals(icon2.getUriString());
+            return false;
         } else if (!icon.getResPackage().equals(icon2.getResPackage()) || icon.getResId() != icon2.getResId()) {
             return false;
         } else {
@@ -241,6 +285,7 @@ public class StatusBarIconView extends AnimatedImageView {
     }
 
     public boolean set(StatusBarIcon statusBarIcon) {
+        MiuiStatusBarIconViewHelper.transformIconIfNeed(getContext(), statusBarIcon, this.mNotification, this.mSlot, this.mUseTint, this.mDark);
         StatusBarIcon statusBarIcon2 = this.mIcon;
         int i = 0;
         boolean z = statusBarIcon2 != null && equalIcons(statusBarIcon2.icon, statusBarIcon.icon);
@@ -255,18 +300,19 @@ public class StatusBarIconView extends AnimatedImageView {
             if (!updateDrawable(false)) {
                 return false;
             }
-            setTag(R.id.icon_is_grayscale, (Object) null);
+            setTag(C0012R$id.icon_is_grayscale, (Object) null);
+            maybeUpdateIconScaleDimens();
         }
         if (!z2) {
             setImageLevel(statusBarIcon.iconLevel);
         }
         if (!z4) {
-            if (statusBarIcon.number <= 0 || !getContext().getResources().getBoolean(R.bool.config_statusBarShowNumber)) {
+            if (statusBarIcon.number <= 0 || !getContext().getResources().getBoolean(C0007R$bool.config_statusBarShowNumber)) {
                 this.mNumberBackground = null;
                 this.mNumberText = null;
             } else {
                 if (this.mNumberBackground == null) {
-                    this.mNumberBackground = getContext().getResources().getDrawable(R.drawable.ic_notification_overlay);
+                    this.mNumberBackground = getContext().getResources().getDrawable(C0010R$drawable.ic_notification_overlay);
                 }
                 placeNumber();
             }
@@ -282,11 +328,7 @@ public class StatusBarIconView extends AnimatedImageView {
     }
 
     public void updateDrawable() {
-        Icon icon;
-        StatusBarIcon statusBarIcon = this.mIcon;
-        if (statusBarIcon == null || (icon = statusBarIcon.icon) == null || icon.getType() != 2 || !TextUtils.equals("com.android.systemui", this.mIcon.icon.getResPackage()) || this.mIcon.icon.getResId() == 0) {
-            updateDrawable(true);
-        }
+        updateDrawable(true);
     }
 
     private boolean updateDrawable(boolean z) {
@@ -326,7 +368,7 @@ public class StatusBarIconView extends AnimatedImageView {
         }
         Drawable loadDrawableAsUser = statusBarIcon.icon.loadDrawableAsUser(context, identifier);
         TypedValue typedValue = new TypedValue();
-        context.getResources().getValue(R.dimen.status_bar_icon_scale_factor, typedValue, true);
+        context.getResources().getValue(C0009R$dimen.status_bar_icon_scale_factor, typedValue, true);
         float f = typedValue.getFloat();
         if (f == 1.0f) {
             return loadDrawableAsUser;
@@ -375,17 +417,17 @@ public class StatusBarIconView extends AnimatedImageView {
             drawable.draw(canvas);
             canvas.drawText(this.mNumberText, (float) this.mNumberX, (float) this.mNumberY, this.mNumberPain);
         }
-        float f4 = this.mDotAppearAmount;
-        if (f4 != 0.0f) {
-            float f5 = 1.0f;
+        if (this.mDotAppearAmount != 0.0f) {
+            float alpha = ((float) Color.alpha(this.mDecorColor)) / 255.0f;
+            float f4 = this.mDotAppearAmount;
             if (f4 <= 1.0f) {
                 f = this.mDotRadius * f4;
             } else {
-                float f6 = f4 - 1.0f;
-                f5 = 1.0f - f6;
-                f = NotificationUtils.interpolate(this.mDotRadius, (float) (getWidth() / 4), f6);
+                float f5 = f4 - 1.0f;
+                alpha *= 1.0f - f5;
+                f = NotificationUtils.interpolate(this.mDotRadius, (float) (getWidth() / 4), f5);
             }
-            this.mDotPaint.setAlpha((int) (f5 * 255.0f));
+            this.mDotPaint.setAlpha((int) (alpha * 255.0f));
             canvas.drawCircle((float) (getWidth() / 2), (float) (getHeight() / 2), f, this.mDotPaint);
         }
     }
@@ -430,7 +472,7 @@ public class StatusBarIconView extends AnimatedImageView {
 
     private void setContentDescription(Notification notification) {
         if (notification != null) {
-            CharSequence contentDescForNotification = contentDescForNotification(this.mContext, notification);
+            String contentDescForNotification = contentDescForNotification(this.mContext, notification);
             if (!TextUtils.isEmpty(contentDescForNotification)) {
                 setContentDescription(contentDescForNotification);
             }
@@ -449,14 +491,11 @@ public class StatusBarIconView extends AnimatedImageView {
         return this.mSlot;
     }
 
-    public static CharSequence contentDescForNotification(Context context, Notification notification) {
+    public static String contentDescForNotification(Context context, Notification notification) {
         CharSequence charSequence;
         CharSequence charSequence2 = "";
-        if (Build.VERSION.SDK_INT == 23 && notification != null) {
-            return notification.tickerText;
-        }
         try {
-            charSequence = NotificationCompat.loadHeaderAppName(NotificationCompat.recoverBuilder(context, notification));
+            charSequence = Notification.Builder.recoverBuilder(context, notification).loadHeaderAppName();
         } catch (RuntimeException e) {
             Log.e("StatusBarIconView", "Unable to recover builder", e);
             Parcelable parcelable = notification.extras.getParcelable("android.appInfo");
@@ -473,7 +512,7 @@ public class StatusBarIconView extends AnimatedImageView {
         } else if (!TextUtils.isEmpty(charSequence5)) {
             charSequence2 = charSequence5;
         }
-        return context.getString(R.string.accessibility_desc_notification_icon, new Object[]{charSequence, charSequence2});
+        return context.getString(C0018R$string.accessibility_desc_notification_icon, new Object[]{charSequence, charSequence2});
     }
 
     public void setDecorColor(int i) {
@@ -481,8 +520,14 @@ public class StatusBarIconView extends AnimatedImageView {
         updateDecorColor();
     }
 
+    private void initializeDecorColor() {
+        if (this.mNotification != null) {
+            setDecorColor(getContext().getColor(this.mNightMode ? 17170890 : 17170891));
+        }
+    }
+
     private void updateDecorColor() {
-        int interpolateColors = NotificationUtils.interpolateColors(this.mDecorColor, -1, this.mDarkAmount);
+        int interpolateColors = NotificationUtils.interpolateColors(this.mDecorColor, -1, this.mDozeAmount);
         if (this.mDotPaint.getColor() != interpolateColors) {
             this.mDotPaint.setColor(interpolateColors);
             if (this.mDotAppearAmount != 0.0f) {
@@ -491,27 +536,51 @@ public class StatusBarIconView extends AnimatedImageView {
         }
     }
 
+    public void setLight(boolean z, int i) {
+        this.mUseTint = false;
+        this.mDark = !z;
+        set(this.mIcon.clone());
+        setDecorColor(i);
+    }
+
     public void setStaticDrawableColor(int i) {
         this.mDrawableColor = i;
         setColorInternal(i);
+        updateContrastedStaticColor();
         this.mIconColor = i;
         this.mDozer.setColor(i);
     }
 
-    /* access modifiers changed from: private */
-    public void setColorInternal(int i) {
+    private void setColorInternal(int i) {
         this.mCurrentSetColor = i;
         updateIconColor();
     }
 
     private void updateIconColor() {
-        int i = this.mCurrentSetColor;
-        if (i != 0) {
-            setImageTintList(ColorStateList.valueOf(NotificationUtils.interpolateColors(i, -1, this.mDarkAmount)));
-            return;
+        if (this.mShowsConversation) {
+            setColorFilter((ColorFilter) null);
+        } else if (NotificationUtil.ignoreStatusBarIconColor(this.mNotification)) {
+            setColorFilter((ColorFilter) null);
+        } else if (this.mCurrentSetColor != 0) {
+            if (this.mMatrixColorFilter == null) {
+                this.mMatrix = new float[20];
+                this.mMatrixColorFilter = new ColorMatrixColorFilter(this.mMatrix);
+            }
+            updateTintMatrix(this.mMatrix, NotificationUtils.interpolateColors(this.mCurrentSetColor, -1, this.mDozeAmount), this.mDozeAmount * 0.67f);
+            this.mMatrixColorFilter.setColorMatrixArray(this.mMatrix);
+            setColorFilter((ColorFilter) null);
+            setColorFilter(this.mMatrixColorFilter);
+        } else {
+            this.mDozer.updateGrayscale(this, this.mDozeAmount);
         }
-        setImageTintList((ColorStateList) null);
-        this.mDozer.updateGrayscale(this, this.mDarkAmount);
+    }
+
+    private static void updateTintMatrix(float[] fArr, int i, float f) {
+        Arrays.fill(fArr, 0.0f);
+        fArr[4] = (float) Color.red(i);
+        fArr[9] = (float) Color.green(i);
+        fArr[14] = (float) Color.blue(i);
+        fArr[18] = (((float) Color.alpha(i)) / 255.0f) + f;
     }
 
     public void setIconColor(int i, boolean z) {
@@ -548,16 +617,52 @@ public class StatusBarIconView extends AnimatedImageView {
         return this.mDrawableColor;
     }
 
+    /* access modifiers changed from: package-private */
+    public int getContrastedStaticDrawableColor(int i) {
+        if (this.mCachedContrastBackgroundColor != i) {
+            this.mCachedContrastBackgroundColor = i;
+            updateContrastedStaticColor();
+        }
+        return this.mContrastedDrawableColor;
+    }
+
+    private void updateContrastedStaticColor() {
+        if (Color.alpha(this.mCachedContrastBackgroundColor) != 255) {
+            this.mContrastedDrawableColor = this.mDrawableColor;
+            return;
+        }
+        int i = this.mDrawableColor;
+        if (!ContrastColorUtil.satisfiesTextContrast(this.mCachedContrastBackgroundColor, i)) {
+            float[] fArr = new float[3];
+            ColorUtils.colorToHSL(this.mDrawableColor, fArr);
+            if (fArr[1] < 0.2f) {
+                i = 0;
+            }
+            i = ContrastColorUtil.resolveContrastColor(this.mContext, i, this.mCachedContrastBackgroundColor, !ContrastColorUtil.isColorLight(this.mCachedContrastBackgroundColor));
+        }
+        this.mContrastedDrawableColor = i;
+    }
+
+    public void setVisibleState(int i) {
+        setVisibleState(i, true, (Runnable) null);
+    }
+
     public void setVisibleState(int i, boolean z) {
         setVisibleState(i, z, (Runnable) null);
     }
 
-    public void setVisibleState(int i, boolean z, final Runnable runnable) {
+    public void setVisibleState(int i, boolean z, Runnable runnable) {
+        setVisibleState(i, z, runnable, 0);
+    }
+
+    public void setVisibleState(int i, boolean z, Runnable runnable, long j) {
         float f;
         boolean z2;
+        int i2 = i;
+        final Runnable runnable2 = runnable;
         boolean z3 = false;
-        if (i != this.mVisibleState) {
-            this.mVisibleState = i;
+        if (i2 != this.mVisibleState) {
+            this.mVisibleState = i2;
             ObjectAnimator objectAnimator = this.mIconAppearAnimator;
             if (objectAnimator != null) {
                 objectAnimator.cancel();
@@ -566,26 +671,25 @@ public class StatusBarIconView extends AnimatedImageView {
             if (objectAnimator2 != null) {
                 objectAnimator2.cancel();
             }
-            float f2 = 2.0f;
-            float f3 = 1.0f;
             if (z) {
                 Interpolator interpolator = Interpolators.FAST_OUT_LINEAR_IN;
-                if (i == 0) {
+                if (i2 == 0) {
                     interpolator = Interpolators.LINEAR_OUT_SLOW_IN;
                     f = 1.0f;
                 } else {
                     f = 0.0f;
                 }
                 float iconAppearAmount = getIconAppearAmount();
+                long j2 = 100;
                 if (f != iconAppearAmount) {
                     ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this, ICON_APPEAR_AMOUNT, new float[]{iconAppearAmount, f});
                     this.mIconAppearAnimator = ofFloat;
                     ofFloat.setInterpolator(interpolator);
-                    this.mIconAppearAnimator.setDuration(100);
+                    this.mIconAppearAnimator.setDuration(j == 0 ? 100 : j);
                     this.mIconAppearAnimator.addListener(new AnimatorListenerAdapter() {
                         public void onAnimationEnd(Animator animator) {
                             ObjectAnimator unused = StatusBarIconView.this.mIconAppearAnimator = null;
-                            StatusBarIconView.this.runRunnable(runnable);
+                            StatusBarIconView.this.runRunnable(runnable2);
                         }
                     });
                     this.mIconAppearAnimator.start();
@@ -593,27 +697,28 @@ public class StatusBarIconView extends AnimatedImageView {
                 } else {
                     z2 = false;
                 }
-                if (i != 0) {
-                    f2 = 0.0f;
-                }
+                float f2 = i2 == 0 ? 2.0f : 0.0f;
                 Interpolator interpolator2 = Interpolators.FAST_OUT_LINEAR_IN;
-                if (i == 1) {
+                if (i2 == 1) {
                     interpolator2 = Interpolators.LINEAR_OUT_SLOW_IN;
-                } else {
-                    f3 = f2;
+                    f2 = 1.0f;
                 }
                 float dotAppearAmount = getDotAppearAmount();
-                if (f3 != dotAppearAmount) {
-                    ObjectAnimator ofFloat2 = ObjectAnimator.ofFloat(this, DOT_APPEAR_AMOUNT, new float[]{dotAppearAmount, f3});
+                if (f2 != dotAppearAmount) {
+                    ObjectAnimator ofFloat2 = ObjectAnimator.ofFloat(this, DOT_APPEAR_AMOUNT, new float[]{dotAppearAmount, f2});
                     this.mDotAnimator = ofFloat2;
                     ofFloat2.setInterpolator(interpolator2);
-                    this.mDotAnimator.setDuration(100);
+                    ObjectAnimator objectAnimator3 = this.mDotAnimator;
+                    if (j != 0) {
+                        j2 = j;
+                    }
+                    objectAnimator3.setDuration(j2);
                     final boolean z4 = !z2;
                     this.mDotAnimator.addListener(new AnimatorListenerAdapter() {
                         public void onAnimationEnd(Animator animator) {
                             ObjectAnimator unused = StatusBarIconView.this.mDotAnimator = null;
                             if (z4) {
-                                StatusBarIconView.this.runRunnable(runnable);
+                                StatusBarIconView.this.runRunnable(runnable2);
                             }
                         }
                     });
@@ -623,17 +728,12 @@ public class StatusBarIconView extends AnimatedImageView {
                     z3 = z2;
                 }
             } else {
-                setIconAppearAmount(i == 0 ? 1.0f : 0.0f);
-                if (i == 1) {
-                    f2 = 1.0f;
-                } else if (i != 0) {
-                    f2 = 0.0f;
-                }
-                setDotAppearAmount(f2);
+                setIconAppearAmount(i2 == 0 ? 1.0f : 0.0f);
+                setDotAppearAmount(i2 == 1 ? 1.0f : i2 == 0 ? 2.0f : 0.0f);
             }
         }
         if (!z3) {
-            runRunnable(runnable);
+            runRunnable(runnable2);
         }
     }
 
@@ -682,20 +782,160 @@ public class StatusBarIconView extends AnimatedImageView {
         this.mOnVisibilityChangedListener = onVisibilityChangedListener;
     }
 
-    public void setDark(boolean z, boolean z2, long j) {
-        this.mDozer.setIntensityDark(new Consumer() {
+    public void setDozing(boolean z, boolean z2, long j) {
+        this.mDozer.setDozing(new Consumer() {
             public final void accept(Object obj) {
-                StatusBarIconView.this.lambda$setDark$0$StatusBarIconView((Float) obj);
+                StatusBarIconView.this.lambda$setDozing$1$StatusBarIconView((Float) obj);
             }
-        }, z, z2, j);
+        }, z, z2, j, this);
     }
 
     /* access modifiers changed from: private */
-    /* renamed from: lambda$setDark$0 */
-    public /* synthetic */ void lambda$setDark$0$StatusBarIconView(Float f) {
-        this.mDarkAmount = f.floatValue();
-        updateIconScale();
+    /* renamed from: lambda$setDozing$1 */
+    public /* synthetic */ void lambda$setDozing$1$StatusBarIconView(Float f) {
+        this.mDozeAmount = f.floatValue();
         updateDecorColor();
         updateIconColor();
+        updateAllowAnimation();
+    }
+
+    private void updateAllowAnimation() {
+        float f = this.mDozeAmount;
+        if (f == 0.0f || f == 1.0f) {
+            setAllowAnimation(this.mDozeAmount == 0.0f);
+        }
+    }
+
+    public void getDrawingRect(Rect rect) {
+        super.getDrawingRect(rect);
+        float translationX = getTranslationX();
+        float translationY = getTranslationY();
+        rect.left = (int) (((float) rect.left) + translationX);
+        rect.right = (int) (((float) rect.right) + translationX);
+        rect.top = (int) (((float) rect.top) + translationY);
+        rect.bottom = (int) (((float) rect.bottom) + translationY);
+    }
+
+    /* access modifiers changed from: protected */
+    public void onLayout(boolean z, int i, int i2, int i3, int i4) {
+        super.onLayout(z, i, i2, i3, i4);
+        Runnable runnable = this.mLayoutRunnable;
+        if (runnable != null) {
+            runnable.run();
+            this.mLayoutRunnable = null;
+        }
+        updatePivot();
+    }
+
+    private void updatePivot() {
+        if (isLayoutRtl()) {
+            setPivotX(((this.mIconScale + 1.0f) / 2.0f) * ((float) getWidth()));
+        } else {
+            setPivotX(((1.0f - this.mIconScale) / 2.0f) * ((float) getWidth()));
+        }
+        setPivotY((((float) getHeight()) - (this.mIconScale * ((float) getWidth()))) / 2.0f);
+    }
+
+    public void executeOnLayout(Runnable runnable) {
+        this.mLayoutRunnable = runnable;
+    }
+
+    public void setDismissed() {
+        Runnable runnable = this.mOnDismissListener;
+        if (runnable != null) {
+            runnable.run();
+        }
+    }
+
+    public void setOnDismissListener(Runnable runnable) {
+        this.mOnDismissListener = runnable;
+    }
+
+    /* JADX WARNING: Removed duplicated region for block: B:22:0x0038  */
+    /* JADX WARNING: Removed duplicated region for block: B:25:0x0045  */
+    /* JADX WARNING: Removed duplicated region for block: B:27:? A[RETURN, SYNTHETIC] */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public void onDarkChanged(android.graphics.Rect r2, float r3, int r4, int r5, int r6, boolean r7) {
+        /*
+            r1 = this;
+            java.lang.String r5 = r1.mSlot
+            com.android.internal.statusbar.StatusBarIcon r6 = r1.mIcon
+            boolean r5 = com.android.systemui.statusbar.MiuiStatusBarIconViewHelper.canUseTint(r5, r6)
+            r6 = 0
+            r0 = 1
+            if (r5 == 0) goto L_0x0010
+            if (r7 == 0) goto L_0x0010
+            r5 = r0
+            goto L_0x0011
+        L_0x0010:
+            r5 = r6
+        L_0x0011:
+            boolean r7 = r1.mUseTint
+            if (r7 == r5) goto L_0x001f
+            r1.mUseTint = r5
+            if (r5 != 0) goto L_0x001d
+            r5 = 0
+            r1.setImageTintList(r5)
+        L_0x001d:
+            r5 = r0
+            goto L_0x0020
+        L_0x001f:
+            r5 = r6
+        L_0x0020:
+            boolean r7 = r1.mUseTint
+            if (r7 != 0) goto L_0x0035
+            float r3 = com.android.systemui.plugins.DarkIconDispatcher.getDarkIntensity(r2, r1, r3)
+            r7 = 0
+            int r3 = (r3 > r7 ? 1 : (r3 == r7 ? 0 : -1))
+            if (r3 <= 0) goto L_0x002e
+            r6 = r0
+        L_0x002e:
+            boolean r3 = r1.mDark
+            if (r6 == r3) goto L_0x0035
+            r1.mDark = r6
+            goto L_0x0036
+        L_0x0035:
+            r0 = r5
+        L_0x0036:
+            if (r0 == 0) goto L_0x0041
+            com.android.internal.statusbar.StatusBarIcon r3 = r1.mIcon
+            com.android.internal.statusbar.StatusBarIcon r3 = r3.clone()
+            r1.set(r3)
+        L_0x0041:
+            boolean r3 = r1.mUseTint
+            if (r3 == 0) goto L_0x0053
+            int r2 = com.android.systemui.plugins.DarkIconDispatcher.getTint(r2, r1, r4)
+            android.content.res.ColorStateList r3 = android.content.res.ColorStateList.valueOf(r2)
+            r1.setImageTintList(r3)
+            r1.setDecorColor(r2)
+        L_0x0053:
+            return
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.StatusBarIconView.onDarkChanged(android.graphics.Rect, float, int, int, int, boolean):void");
+    }
+
+    public boolean isIconVisible() {
+        StatusBarIcon statusBarIcon = this.mIcon;
+        return statusBarIcon != null && statusBarIcon.visible;
+    }
+
+    public boolean isIconBlocked() {
+        return this.mBlocked;
+    }
+
+    public void setIncreasedSize(boolean z) {
+        this.mIncreasedSize = z;
+        maybeUpdateIconScaleDimens();
+    }
+
+    public void setShowsConversation(boolean z) {
+        if (this.mShowsConversation != z) {
+            this.mShowsConversation = z;
+            updateIconColor();
+        }
+    }
+
+    public boolean showsConversation() {
+        return this.mShowsConversation;
     }
 }

@@ -6,9 +6,12 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.ViewConfiguration;
+import com.android.internal.annotations.VisibleForTesting;
 import java.io.PrintWriter;
 
 public class PipTouchState {
+    @VisibleForTesting
+    static final long DOUBLE_TAP_TIMEOUT = 200;
     private int mActivePointerId;
     private boolean mAllowDraggingOffscreen = false;
     private boolean mAllowTouches = true;
@@ -17,6 +20,7 @@ public class PipTouchState {
     private final PointF mDownTouch = new PointF();
     private long mDownTouchTime = 0;
     private final Handler mHandler;
+    private final Runnable mHoverExitTimeoutCallback;
     private boolean mIsDoubleTap = false;
     private boolean mIsDragging = false;
     private boolean mIsUserInteracting = false;
@@ -31,10 +35,11 @@ public class PipTouchState {
     private VelocityTracker mVelocityTracker;
     private final ViewConfiguration mViewConfig;
 
-    public PipTouchState(ViewConfiguration viewConfiguration, Handler handler, Runnable runnable) {
+    public PipTouchState(ViewConfiguration viewConfiguration, Handler handler, Runnable runnable, Runnable runnable2) {
         this.mViewConfig = viewConfiguration;
         this.mHandler = handler;
         this.mDoubleTapTimeoutCallback = runnable;
+        this.mHoverExitTimeoutCallback = runnable2;
     }
 
     public void reset() {
@@ -52,7 +57,13 @@ public class PipTouchState {
             if (actionMasked != 1) {
                 if (actionMasked != 2) {
                     if (actionMasked != 3) {
-                        if (actionMasked == 6 && this.mIsUserInteracting) {
+                        if (actionMasked != 6) {
+                            if (actionMasked == 11) {
+                                removeHoverExitTimeoutCallback();
+                                return;
+                            }
+                            return;
+                        } else if (this.mIsUserInteracting) {
                             addMovementToVelocityTracker(motionEvent);
                             int actionIndex = motionEvent.getActionIndex();
                             if (motionEvent.getPointerId(actionIndex) == this.mActivePointerId) {
@@ -64,14 +75,15 @@ public class PipTouchState {
                                 return;
                             }
                             return;
+                        } else {
+                            return;
                         }
-                        return;
                     }
                 } else if (this.mIsUserInteracting) {
                     addMovementToVelocityTracker(motionEvent);
                     int findPointerIndex = motionEvent.findPointerIndex(this.mActivePointerId);
                     if (findPointerIndex == -1) {
-                        Log.e("PipTouchHandler", "Invalid active pointer id on MOVE: " + this.mActivePointerId);
+                        Log.e("PipTouchState", "Invalid active pointer id on MOVE: " + this.mActivePointerId);
                         return;
                     }
                     float rawX = motionEvent.getRawX(findPointerIndex);
@@ -100,14 +112,14 @@ public class PipTouchState {
                 this.mVelocity.set(this.mVelocityTracker.getXVelocity(), this.mVelocityTracker.getYVelocity());
                 int findPointerIndex2 = motionEvent.findPointerIndex(this.mActivePointerId);
                 if (findPointerIndex2 == -1) {
-                    Log.e("PipTouchHandler", "Invalid active pointer id on UP: " + this.mActivePointerId);
+                    Log.e("PipTouchState", "Invalid active pointer id on UP: " + this.mActivePointerId);
                     return;
                 }
                 this.mUpTouchTime = motionEvent.getEventTime();
                 this.mLastTouch.set(motionEvent.getRawX(findPointerIndex2), motionEvent.getRawY(findPointerIndex2));
                 boolean z4 = this.mIsDragging;
                 this.mPreviouslyDragging = z4;
-                if (!this.mIsDoubleTap && !z4 && this.mUpTouchTime - this.mDownTouchTime < 200) {
+                if (!this.mIsDoubleTap && !z4 && this.mUpTouchTime - this.mDownTouchTime < DOUBLE_TAP_TIMEOUT) {
                     z = true;
                 }
                 this.mIsWaitingForDoubleTap = z;
@@ -125,7 +137,7 @@ public class PipTouchState {
             this.mIsUserInteracting = true;
             long eventTime = motionEvent.getEventTime();
             this.mDownTouchTime = eventTime;
-            if (this.mPreviouslyDragging || eventTime - this.mLastDownTouchTime >= 200) {
+            if (this.mPreviouslyDragging || eventTime - this.mLastDownTouchTime >= DOUBLE_TAP_TIMEOUT) {
                 z2 = false;
             }
             this.mIsDoubleTap = z2;
@@ -191,9 +203,10 @@ public class PipTouchState {
     }
 
     /* access modifiers changed from: package-private */
+    @VisibleForTesting
     public long getDoubleTapTimeoutCallbackDelay() {
         if (this.mIsWaitingForDoubleTap) {
-            return Math.max(0, 200 - (this.mUpTouchTime - this.mDownTouchTime));
+            return Math.max(0, DOUBLE_TAP_TIMEOUT - (this.mUpTouchTime - this.mDownTouchTime));
         }
         return -1;
     }
@@ -201,6 +214,17 @@ public class PipTouchState {
     public void removeDoubleTapTimeoutCallback() {
         this.mIsWaitingForDoubleTap = false;
         this.mHandler.removeCallbacks(this.mDoubleTapTimeoutCallback);
+    }
+
+    /* access modifiers changed from: package-private */
+    public void scheduleHoverExitTimeoutCallback() {
+        this.mHandler.removeCallbacks(this.mHoverExitTimeoutCallback);
+        this.mHandler.postDelayed(this.mHoverExitTimeoutCallback, 50);
+    }
+
+    /* access modifiers changed from: package-private */
+    public void removeHoverExitTimeoutCallback() {
+        this.mHandler.removeCallbacks(this.mHoverExitTimeoutCallback);
     }
 
     /* access modifiers changed from: package-private */
@@ -233,7 +257,7 @@ public class PipTouchState {
 
     public void dump(PrintWriter printWriter, String str) {
         String str2 = str + "  ";
-        printWriter.println(str + "PipTouchHandler");
+        printWriter.println(str + "PipTouchState");
         printWriter.println(str2 + "mAllowTouches=" + this.mAllowTouches);
         printWriter.println(str2 + "mActivePointerId=" + this.mActivePointerId);
         printWriter.println(str2 + "mDownTouch=" + this.mDownTouch);

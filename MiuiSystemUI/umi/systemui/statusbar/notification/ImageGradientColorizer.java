@@ -11,7 +11,6 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Shader;
 import android.graphics.drawable.Drawable;
-import com.android.systemui.util.Utils;
 
 public class ImageGradientColorizer {
     public Bitmap colorize(Drawable drawable, int i, boolean z) {
@@ -32,7 +31,7 @@ public class ImageGradientColorizer {
         ColorMatrix colorMatrix = new ColorMatrix(new float[]{0.2126f, 0.7152f, 0.0722f, 0.0f, f - f2, 0.2126f, 0.7152f, 0.0722f, 0.0f, green - f2, 0.2126f, 0.7152f, 0.0722f, 0.0f, blue - f2, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f});
         Paint paint = new Paint(1);
         float f3 = (float) min;
-        paint.setShader(new LinearGradient(0.0f, 0.0f, f3, 0.0f, new int[]{0, Utils.argb(0.5f, 1.0f, 1.0f, 1.0f), -16777216}, new float[]{0.0f, 0.4f, 1.0f}, Shader.TileMode.CLAMP));
+        paint.setShader(new LinearGradient(0.0f, 0.0f, f3, 0.0f, new int[]{0, Color.argb(0.5f, 1.0f, 1.0f, 1.0f), -16777216}, new float[]{0.0f, 0.4f, 1.0f}, Shader.TileMode.CLAMP));
         Bitmap createBitmap2 = Bitmap.createBitmap(min, min, Bitmap.Config.ARGB_8888);
         Canvas canvas2 = new Canvas(createBitmap2);
         mutate.clearColorFilter();
@@ -47,7 +46,7 @@ public class ImageGradientColorizer {
         paint2.setColorFilter(new ColorMatrixColorFilter(colorMatrix));
         paint2.setAlpha(127);
         canvas.drawBitmap(createBitmap2, 0.0f, 0.0f, paint2);
-        paint.setShader(new LinearGradient(0.0f, 0.0f, f3, 0.0f, new int[]{0, Utils.argb(0.5f, 1.0f, 1.0f, 1.0f), -16777216}, new float[]{0.0f, 0.6f, 1.0f}, Shader.TileMode.CLAMP));
+        paint.setShader(new LinearGradient(0.0f, 0.0f, f3, 0.0f, new int[]{0, Color.argb(0.5f, 1.0f, 1.0f, 1.0f), -16777216}, new float[]{0.0f, 0.6f, 1.0f}, Shader.TileMode.CLAMP));
         canvas2.drawPaint(paint);
         canvas.drawBitmap(createBitmap2, 0.0f, 0.0f, (Paint) null);
         return createBitmap;

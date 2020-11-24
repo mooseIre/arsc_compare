@@ -8,12 +8,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-public class ImageGLProgram {
+class ImageGLProgram {
     private static final String TAG = "ImageGLProgram";
     private Context mContext;
     private int mProgramHandle;
 
-    public ImageGLProgram(Context context) {
+    ImageGLProgram(Context context) {
         this.mContext = context.getApplicationContext();
     }
 
@@ -73,6 +73,7 @@ public class ImageGLProgram {
         return glCreateProgram;
     }
 
+    /* access modifiers changed from: package-private */
     public boolean useGLProgram(int i, int i2) {
         int loadShaderProgram = loadShaderProgram(i, i2);
         this.mProgramHandle = loadShaderProgram;

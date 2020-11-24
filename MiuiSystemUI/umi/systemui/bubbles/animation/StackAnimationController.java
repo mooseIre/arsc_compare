@@ -1,8 +1,11 @@
 package com.android.systemui.bubbles.animation;
 
+import android.content.ContentResolver;
 import android.content.res.Resources;
 import android.graphics.PointF;
+import android.graphics.Rect;
 import android.graphics.RectF;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowInsets;
@@ -11,35 +14,83 @@ import androidx.dynamicanimation.animation.FlingAnimation;
 import androidx.dynamicanimation.animation.FloatPropertyCompat;
 import androidx.dynamicanimation.animation.SpringAnimation;
 import androidx.dynamicanimation.animation.SpringForce;
+import com.android.systemui.C0009R$dimen;
 import com.android.systemui.bubbles.animation.PhysicsAnimationLayout;
-import com.android.systemui.plugins.R;
+import com.android.systemui.util.FloatingContentCoordinator;
+import com.android.systemui.util.animation.PhysicsAnimator;
+import com.android.systemui.util.magnetictarget.MagnetizedObject;
 import com.google.android.collect.Sets;
+import java.io.FileDescriptor;
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Set;
+import java.util.function.IntSupplier;
 
 public class StackAnimationController extends PhysicsAnimationLayout.PhysicsAnimationController {
+    private final PhysicsAnimator.SpringConfig mAnimateOutSpringConfig = new PhysicsAnimator.SpringConfig(1000.0f, 1.0f);
+    /* access modifiers changed from: private */
+    public Rect mAnimatingToBounds = new Rect();
+    private int mBubbleBitmapSize;
+    private IntSupplier mBubbleCountSupplier;
     private int mBubbleOffscreen;
-    private int mBubblePadding;
+    /* access modifiers changed from: private */
+    public int mBubblePaddingTop;
+    /* access modifiers changed from: private */
+    public int mBubbleSize;
     private boolean mFirstBubbleSpringingToTouch = false;
+    private FloatingContentCoordinator mFloatingContentCoordinator;
     private float mImeHeight = 0.0f;
-    private int mIndividualBubbleSize;
     private boolean mIsMovingFromFlinging = false;
-    private float mPreImeY = Float.MIN_VALUE;
+    private MagnetizedObject<StackAnimationController> mMagnetizedStack;
+    private Runnable mOnBubbleAnimatedOutAction;
+    private float mPreImeY = -1.4E-45f;
     private PointF mRestingStackPosition;
+    private boolean mSpringToTouchOnNextMotionEvent = false;
+    private final FloatingContentCoordinator.FloatingContent mStackFloatingContent = new FloatingContentCoordinator.FloatingContent() {
+        private final Rect mFloatingBoundsOnScreen = new Rect();
+
+        public void moveToBounds(Rect rect) {
+            StackAnimationController.this.springStack((float) rect.left, (float) rect.top, 200.0f);
+        }
+
+        public Rect getAllowedFloatingBoundsRegion() {
+            Rect floatingBoundsOnScreen = getFloatingBoundsOnScreen();
+            Rect rect = new Rect();
+            StackAnimationController.this.getAllowableStackPositionRegion().roundOut(rect);
+            rect.right += floatingBoundsOnScreen.width();
+            rect.bottom += floatingBoundsOnScreen.height();
+            return rect;
+        }
+
+        public Rect getFloatingBoundsOnScreen() {
+            if (!StackAnimationController.this.mAnimatingToBounds.isEmpty()) {
+                return StackAnimationController.this.mAnimatingToBounds;
+            }
+            if (StackAnimationController.this.mLayout.getChildCount() > 0) {
+                this.mFloatingBoundsOnScreen.set((int) StackAnimationController.this.mStackPosition.x, (int) StackAnimationController.this.mStackPosition.y, ((int) StackAnimationController.this.mStackPosition.x) + StackAnimationController.this.mBubbleSize, ((int) StackAnimationController.this.mStackPosition.y) + StackAnimationController.this.mBubbleSize + StackAnimationController.this.mBubblePaddingTop);
+            } else {
+                this.mFloatingBoundsOnScreen.setEmpty();
+            }
+            return this.mFloatingBoundsOnScreen;
+        }
+    };
     private boolean mStackMovedToStartPosition = false;
     private float mStackOffset;
-    private PointF mStackPosition = new PointF(-1.0f, -1.0f);
+    /* access modifiers changed from: private */
+    public PointF mStackPosition = new PointF(-1.0f, -1.0f);
     private HashMap<DynamicAnimation.ViewProperty, DynamicAnimation> mStackPositionAnimations = new HashMap<>();
     private int mStackStartingVerticalOffset;
     private float mStatusBarHeight;
-    private boolean mWithinDismissTarget = false;
 
-    /* access modifiers changed from: package-private */
-    public void onChildReordered(View view, int i, int i2) {
+    public StackAnimationController(FloatingContentCoordinator floatingContentCoordinator, IntSupplier intSupplier, Runnable runnable) {
+        this.mFloatingContentCoordinator = floatingContentCoordinator;
+        this.mBubbleCountSupplier = intSupplier;
+        this.mOnBubbleAnimatedOutAction = runnable;
     }
 
     public void moveFirstBubbleWithStackFollowing(float f, float f2) {
-        this.mPreImeY = Float.MIN_VALUE;
+        this.mAnimatingToBounds.setEmpty();
+        this.mPreImeY = -1.4E-45f;
         moveFirstBubbleWithStackFollowing(DynamicAnimation.TRANSLATION_X, f);
         moveFirstBubbleWithStackFollowing(DynamicAnimation.TRANSLATION_Y, f2);
         this.mIsMovingFromFlinging = false;
@@ -50,71 +101,65 @@ public class StackAnimationController extends PhysicsAnimationLayout.PhysicsAnim
     }
 
     public boolean isStackOnLeftSide() {
-        if (this.mLayout == null || !isStackPositionSet() || this.mStackPosition.x + ((float) (this.mIndividualBubbleSize / 2)) >= ((float) (this.mLayout.getWidth() / 2))) {
-            return false;
+        if (this.mLayout == null || !isStackPositionSet() || this.mStackPosition.x + ((float) (this.mBubbleBitmapSize / 2)) < ((float) (this.mLayout.getWidth() / 2))) {
+            return true;
         }
-        return true;
+        return false;
     }
 
-    public void springStack(float f, float f2) {
+    public void springStack(float f, float f2, float f3) {
+        float f4 = f3;
+        notifyFloatingCoordinatorStackAnimatingTo(f, f2);
         DynamicAnimation.ViewProperty viewProperty = DynamicAnimation.TRANSLATION_X;
         SpringForce springForce = new SpringForce();
-        springForce.setStiffness(750.0f);
+        springForce.setStiffness(f4);
         springForce.setDampingRatio(0.85f);
-        springFirstBubbleWithStackFollowing(viewProperty, springForce, 0.0f, f);
+        springFirstBubbleWithStackFollowing(viewProperty, springForce, 0.0f, f, new Runnable[0]);
         DynamicAnimation.ViewProperty viewProperty2 = DynamicAnimation.TRANSLATION_Y;
         SpringForce springForce2 = new SpringForce();
-        springForce2.setStiffness(750.0f);
+        springForce2.setStiffness(f4);
         springForce2.setDampingRatio(0.85f);
-        springFirstBubbleWithStackFollowing(viewProperty2, springForce2, 0.0f, f2);
+        springFirstBubbleWithStackFollowing(viewProperty2, springForce2, 0.0f, f2, new Runnable[0]);
+    }
+
+    public void springStackAfterFling(float f, float f2) {
+        springStack(f, f2, 750.0f);
     }
 
     public float flingStackThenSpringToEdge(float f, float f2, float f3) {
         float f4;
-        float f5;
-        float f6 = f2;
-        boolean z = !(((f - ((float) (this.mIndividualBubbleSize / 2))) > ((float) (this.mLayout.getWidth() / 2)) ? 1 : ((f - ((float) (this.mIndividualBubbleSize / 2))) == ((float) (this.mLayout.getWidth() / 2)) ? 0 : -1)) < 0) ? f6 < -750.0f : f6 < 750.0f;
+        float f5 = f2;
+        boolean z = !(((f - ((float) (this.mBubbleBitmapSize / 2))) > ((float) (this.mLayout.getWidth() / 2)) ? 1 : ((f - ((float) (this.mBubbleBitmapSize / 2))) == ((float) (this.mLayout.getWidth() / 2)) ? 0 : -1)) < 0) ? f5 < -750.0f : f5 < 750.0f;
         RectF allowableStackPositionRegion = getAllowableStackPositionRegion();
-        if (z) {
-            f4 = allowableStackPositionRegion.left;
-        } else {
-            f4 = allowableStackPositionRegion.right;
-        }
-        float f7 = f4;
-        float f8 = (f7 - f) * 9.24f;
-        if (z) {
-            f5 = Math.min(f8, f2);
-        } else {
-            f5 = Math.max(f8, f2);
-        }
-        DynamicAnimation.ViewProperty viewProperty = DynamicAnimation.TRANSLATION_X;
-        SpringForce springForce = new SpringForce();
-        springForce.setStiffness(750.0f);
-        springForce.setDampingRatio(0.85f);
-        flingThenSpringFirstBubbleWithStackFollowing(viewProperty, f5, 2.2f, springForce, Float.valueOf(f7));
-        DynamicAnimation.ViewProperty viewProperty2 = DynamicAnimation.TRANSLATION_Y;
-        SpringForce springForce2 = new SpringForce();
-        springForce2.setStiffness(750.0f);
-        springForce2.setDampingRatio(0.85f);
-        flingThenSpringFirstBubbleWithStackFollowing(viewProperty2, f3, 2.2f, springForce2, (Float) null);
-        this.mLayout.setEndActionForMultipleProperties(new Runnable() {
-            public final void run() {
-                StackAnimationController.this.lambda$flingStackThenSpringToEdge$0$StackAnimationController();
+        float f6 = z ? allowableStackPositionRegion.left : allowableStackPositionRegion.right;
+        PhysicsAnimationLayout physicsAnimationLayout = this.mLayout;
+        if (!(physicsAnimationLayout == null || physicsAnimationLayout.getChildCount() == 0)) {
+            ContentResolver contentResolver = this.mLayout.getContext().getContentResolver();
+            float f7 = Settings.Secure.getFloat(contentResolver, "bubble_stiffness", 750.0f);
+            float f8 = Settings.Secure.getFloat(contentResolver, "bubble_damping", 0.85f);
+            float f9 = Settings.Secure.getFloat(contentResolver, "bubble_friction", 2.2f);
+            float f10 = (f6 - f) * 4.2f * f9;
+            notifyFloatingCoordinatorStackAnimatingTo(f6, PhysicsAnimator.estimateFlingEndValue(this.mStackPosition.y, f3, new PhysicsAnimator.FlingConfig(f9, allowableStackPositionRegion.top, allowableStackPositionRegion.bottom)));
+            if (z) {
+                f4 = Math.min(f10, f5);
+            } else {
+                f4 = Math.max(f10, f5);
             }
-        }, DynamicAnimation.TRANSLATION_X, DynamicAnimation.TRANSLATION_Y);
-        this.mFirstBubbleSpringingToTouch = false;
-        this.mIsMovingFromFlinging = true;
-        return f7;
-    }
-
-    /* access modifiers changed from: private */
-    /* renamed from: lambda$flingStackThenSpringToEdge$0 */
-    public /* synthetic */ void lambda$flingStackThenSpringToEdge$0$StackAnimationController() {
-        PointF pointF = new PointF();
-        this.mRestingStackPosition = pointF;
-        pointF.set(this.mStackPosition);
-        this.mLayout.removeEndActionForProperty(DynamicAnimation.TRANSLATION_X);
-        this.mLayout.removeEndActionForProperty(DynamicAnimation.TRANSLATION_Y);
+            DynamicAnimation.ViewProperty viewProperty = DynamicAnimation.TRANSLATION_X;
+            SpringForce springForce = new SpringForce();
+            springForce.setStiffness(f7);
+            springForce.setDampingRatio(f8);
+            float f11 = f9;
+            flingThenSpringFirstBubbleWithStackFollowing(viewProperty, f4, f11, springForce, Float.valueOf(f6));
+            DynamicAnimation.ViewProperty viewProperty2 = DynamicAnimation.TRANSLATION_Y;
+            SpringForce springForce2 = new SpringForce();
+            springForce2.setStiffness(f7);
+            springForce2.setDampingRatio(f8);
+            flingThenSpringFirstBubbleWithStackFollowing(viewProperty2, f3, f11, springForce2, (Float) null);
+            this.mFirstBubbleSpringingToTouch = false;
+            this.mIsMovingFromFlinging = true;
+        }
+        return f6;
     }
 
     public PointF getStackPositionAlongNearestHorizontalEdge() {
@@ -130,124 +175,165 @@ public class StackAnimationController extends PhysicsAnimationLayout.PhysicsAnim
         setStackPosition(new PointF(z ? allowableStackPositionRegion.left : allowableStackPositionRegion.right, ((allowableStackPositionRegion.bottom - allowableStackPositionRegion.top) * f) + allowableStackPositionRegion.top));
     }
 
+    public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
+        printWriter.println("StackAnimationController state:");
+        printWriter.print("  isActive:             ");
+        printWriter.println(isActiveController());
+        printWriter.print("  restingStackPos:      ");
+        PointF pointF = this.mRestingStackPosition;
+        printWriter.println(pointF != null ? pointF.toString() : "null");
+        printWriter.print("  currentStackPos:      ");
+        printWriter.println(this.mStackPosition.toString());
+        printWriter.print("  isMovingFromFlinging: ");
+        printWriter.println(this.mIsMovingFromFlinging);
+        printWriter.print("  withinDismiss:        ");
+        printWriter.println(isStackStuckToTarget());
+        printWriter.print("  firstBubbleSpringing: ");
+        printWriter.println(this.mFirstBubbleSpringingToTouch);
+    }
+
     /* access modifiers changed from: protected */
     public void flingThenSpringFirstBubbleWithStackFollowing(DynamicAnimation.ViewProperty viewProperty, float f, float f2, SpringForce springForce, Float f3) {
         float f4;
         float f5;
         DynamicAnimation.ViewProperty viewProperty2 = viewProperty;
-        Log.d("Bubbs.StackCtrl", String.format("Flinging %s.", new Object[]{PhysicsAnimationLayout.getReadablePropertyName(viewProperty)}));
-        StackPositionProperty stackPositionProperty = new StackPositionProperty(viewProperty);
-        float value = stackPositionProperty.getValue(this);
-        RectF allowableStackPositionRegion = getAllowableStackPositionRegion();
-        if (viewProperty.equals(DynamicAnimation.TRANSLATION_X)) {
-            f4 = allowableStackPositionRegion.left;
-        } else {
-            f4 = allowableStackPositionRegion.top;
-        }
-        float f6 = f4;
-        if (viewProperty.equals(DynamicAnimation.TRANSLATION_X)) {
-            f5 = allowableStackPositionRegion.right;
-        } else {
-            f5 = allowableStackPositionRegion.bottom;
-        }
-        float f7 = f5;
-        FlingAnimation flingAnimation = new FlingAnimation(this, stackPositionProperty);
-        float f8 = f2;
-        flingAnimation.setFriction(f2);
-        float f9 = f;
-        flingAnimation.setStartVelocity(f);
-        flingAnimation.setMinValue(Math.min(value, f6));
-        flingAnimation.setMaxValue(Math.max(value, f7));
-        flingAnimation.addEndListener(new DynamicAnimation.OnAnimationEndListener(viewProperty, springForce, f3, f6, f7) {
-            public final /* synthetic */ DynamicAnimation.ViewProperty f$1;
-            public final /* synthetic */ SpringForce f$2;
-            public final /* synthetic */ Float f$3;
-            public final /* synthetic */ float f$4;
-            public final /* synthetic */ float f$5;
-
-            {
-                this.f$1 = r2;
-                this.f$2 = r3;
-                this.f$3 = r4;
-                this.f$4 = r5;
-                this.f$5 = r6;
+        if (isActiveController()) {
+            Log.d("Bubbs.StackCtrl", String.format("Flinging %s.", new Object[]{PhysicsAnimationLayout.getReadablePropertyName(viewProperty)}));
+            StackPositionProperty stackPositionProperty = new StackPositionProperty(viewProperty);
+            float value = stackPositionProperty.getValue(this);
+            RectF allowableStackPositionRegion = getAllowableStackPositionRegion();
+            if (viewProperty.equals(DynamicAnimation.TRANSLATION_X)) {
+                f4 = allowableStackPositionRegion.left;
+            } else {
+                f4 = allowableStackPositionRegion.top;
             }
-
-            public final void onAnimationEnd(DynamicAnimation dynamicAnimation, boolean z, float f, float f2) {
-                StackAnimationController.this.lambda$flingThenSpringFirstBubbleWithStackFollowing$1$StackAnimationController(this.f$1, this.f$2, this.f$3, this.f$4, this.f$5, dynamicAnimation, z, f, f2);
+            float f6 = f4;
+            if (viewProperty.equals(DynamicAnimation.TRANSLATION_X)) {
+                f5 = allowableStackPositionRegion.right;
+            } else {
+                f5 = allowableStackPositionRegion.bottom;
             }
-        });
-        cancelStackPositionAnimation(viewProperty);
-        this.mStackPositionAnimations.put(viewProperty, flingAnimation);
-        flingAnimation.start();
+            float f7 = f5;
+            FlingAnimation flingAnimation = new FlingAnimation(this, stackPositionProperty);
+            float f8 = f2;
+            flingAnimation.setFriction(f2);
+            float f9 = f;
+            flingAnimation.setStartVelocity(f);
+            flingAnimation.setMinValue(Math.min(value, f6));
+            flingAnimation.setMaxValue(Math.max(value, f7));
+            flingAnimation.addEndListener(new DynamicAnimation.OnAnimationEndListener(viewProperty, springForce, f3, f6, f7) {
+                public final /* synthetic */ DynamicAnimation.ViewProperty f$1;
+                public final /* synthetic */ SpringForce f$2;
+                public final /* synthetic */ Float f$3;
+                public final /* synthetic */ float f$4;
+                public final /* synthetic */ float f$5;
+
+                {
+                    this.f$1 = r2;
+                    this.f$2 = r3;
+                    this.f$3 = r4;
+                    this.f$4 = r5;
+                    this.f$5 = r6;
+                }
+
+                public final void onAnimationEnd(DynamicAnimation dynamicAnimation, boolean z, float f, float f2) {
+                    StackAnimationController.this.lambda$flingThenSpringFirstBubbleWithStackFollowing$0$StackAnimationController(this.f$1, this.f$2, this.f$3, this.f$4, this.f$5, dynamicAnimation, z, f, f2);
+                }
+            });
+            cancelStackPositionAnimation(viewProperty);
+            this.mStackPositionAnimations.put(viewProperty, flingAnimation);
+            flingAnimation.start();
+        }
     }
 
     /* access modifiers changed from: private */
-    /* renamed from: lambda$flingThenSpringFirstBubbleWithStackFollowing$1 */
-    public /* synthetic */ void lambda$flingThenSpringFirstBubbleWithStackFollowing$1$StackAnimationController(DynamicAnimation.ViewProperty viewProperty, SpringForce springForce, Float f, float f2, float f3, DynamicAnimation dynamicAnimation, boolean z, float f4, float f5) {
+    /* renamed from: lambda$flingThenSpringFirstBubbleWithStackFollowing$0 */
+    public /* synthetic */ void lambda$flingThenSpringFirstBubbleWithStackFollowing$0$StackAnimationController(DynamicAnimation.ViewProperty viewProperty, SpringForce springForce, Float f, float f2, float f3, DynamicAnimation dynamicAnimation, boolean z, float f4, float f5) {
         float f6;
         if (!z) {
+            this.mRestingStackPosition.set(this.mStackPosition);
             if (f != null) {
                 f6 = f.floatValue();
             } else {
                 f6 = Math.max(f2, Math.min(f3, f4));
             }
-            springFirstBubbleWithStackFollowing(viewProperty, springForce, f5, f6);
+            springFirstBubbleWithStackFollowing(viewProperty, springForce, f5, f6, new Runnable[0]);
         }
     }
 
     public void cancelStackPositionAnimations() {
         cancelStackPositionAnimation(DynamicAnimation.TRANSLATION_X);
         cancelStackPositionAnimation(DynamicAnimation.TRANSLATION_Y);
-        this.mLayout.removeEndActionForProperty(DynamicAnimation.TRANSLATION_X);
-        this.mLayout.removeEndActionForProperty(DynamicAnimation.TRANSLATION_Y);
+        removeEndActionForProperty(DynamicAnimation.TRANSLATION_X);
+        removeEndActionForProperty(DynamicAnimation.TRANSLATION_Y);
     }
 
     public void setImeHeight(int i) {
         this.mImeHeight = (float) i;
     }
 
-    /* JADX WARNING: Removed duplicated region for block: B:13:0x0028  */
-    /* JADX WARNING: Removed duplicated region for block: B:15:? A[RETURN, SYNTHETIC] */
+    /* JADX WARNING: Removed duplicated region for block: B:13:0x002a  */
+    /* JADX WARNING: Removed duplicated region for block: B:15:0x0049  */
+    /* JADX WARNING: Removed duplicated region for block: B:17:? A[RETURN, SYNTHETIC] */
     /* Code decompiled incorrectly, please refer to instructions dump. */
-    public void animateForImeVisibility(boolean r4) {
+    public float animateForImeVisibility(boolean r9) {
         /*
-            r3 = this;
-            android.graphics.RectF r0 = r3.getAllowableStackPositionRegion()
+            r8 = this;
+            android.graphics.RectF r0 = r8.getAllowableStackPositionRegion()
             float r0 = r0.bottom
-            r1 = 1
-            if (r4 == 0) goto L_0x001a
-            android.graphics.PointF r4 = r3.mStackPosition
-            float r4 = r4.y
-            int r2 = (r4 > r0 ? 1 : (r4 == r0 ? 0 : -1))
-            if (r2 <= 0) goto L_0x0023
-            float r2 = r3.mPreImeY
+            r1 = -2147483647(0xffffffff80000001, float:-1.4E-45)
+            if (r9 == 0) goto L_0x001c
+            android.graphics.PointF r9 = r8.mStackPosition
+            float r9 = r9.y
+            int r2 = (r9 > r0 ? 1 : (r9 == r0 ? 0 : -1))
+            if (r2 <= 0) goto L_0x0025
+            float r2 = r8.mPreImeY
             int r2 = (r2 > r1 ? 1 : (r2 == r1 ? 0 : -1))
-            if (r2 != 0) goto L_0x0023
-            r3.mPreImeY = r4
-            goto L_0x0024
-        L_0x001a:
-            float r0 = r3.mPreImeY
-            int r4 = (r0 > r1 ? 1 : (r0 == r1 ? 0 : -1))
-            if (r4 <= 0) goto L_0x0023
-            r3.mPreImeY = r1
-            goto L_0x0024
-        L_0x0023:
+            if (r2 != 0) goto L_0x0025
+            r8.mPreImeY = r9
+            goto L_0x0026
+        L_0x001c:
+            float r0 = r8.mPreImeY
+            int r9 = (r0 > r1 ? 1 : (r0 == r1 ? 0 : -1))
+            if (r9 == 0) goto L_0x0025
+            r8.mPreImeY = r1
+            goto L_0x0026
+        L_0x0025:
             r0 = r1
-        L_0x0024:
-            int r4 = (r0 > r1 ? 1 : (r0 == r1 ? 0 : -1))
-            if (r4 <= 0) goto L_0x0038
-            androidx.dynamicanimation.animation.DynamicAnimation$ViewProperty r4 = androidx.dynamicanimation.animation.DynamicAnimation.TRANSLATION_Y
+        L_0x0026:
+            int r9 = (r0 > r1 ? 1 : (r0 == r1 ? 0 : -1))
+            if (r9 == 0) goto L_0x0046
+            androidx.dynamicanimation.animation.DynamicAnimation$ViewProperty r3 = androidx.dynamicanimation.animation.DynamicAnimation.TRANSLATION_Y
             r1 = 0
-            androidx.dynamicanimation.animation.SpringForce r1 = r3.getSpringForce(r4, r1)
-            r2 = 1128792064(0x43480000, float:200.0)
-            r1.setStiffness(r2)
-            r2 = 0
-            r3.springFirstBubbleWithStackFollowing(r4, r1, r2, r0)
-        L_0x0038:
-            return
+            androidx.dynamicanimation.animation.SpringForce r4 = r8.getSpringForce(r3, r1)
+            r1 = 1128792064(0x43480000, float:200.0)
+            r4.setStiffness(r1)
+            r5 = 0
+            r1 = 0
+            java.lang.Runnable[] r7 = new java.lang.Runnable[r1]
+            r2 = r8
+            r6 = r0
+            r2.springFirstBubbleWithStackFollowing(r3, r4, r5, r6, r7)
+            android.graphics.PointF r1 = r8.mStackPosition
+            float r1 = r1.x
+            r8.notifyFloatingCoordinatorStackAnimatingTo(r1, r0)
+        L_0x0046:
+            if (r9 == 0) goto L_0x0049
+            goto L_0x004d
+        L_0x0049:
+            android.graphics.PointF r8 = r8.mStackPosition
+            float r0 = r8.y
+        L_0x004d:
+            return r0
         */
-        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.bubbles.animation.StackAnimationController.animateForImeVisibility(boolean):void");
+        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.bubbles.animation.StackAnimationController.animateForImeVisibility(boolean):float");
+    }
+
+    private void notifyFloatingCoordinatorStackAnimatingTo(float f, float f2) {
+        Rect floatingBoundsOnScreen = this.mStackFloatingContent.getFloatingBoundsOnScreen();
+        floatingBoundsOnScreen.offsetTo((int) f, (int) f2);
+        this.mAnimatingToBounds = floatingBoundsOnScreen;
+        this.mFloatingContentCoordinator.onContentMoved(this.mStackFloatingContent);
     }
 
     public RectF getAllowableStackPositionRegion() {
@@ -256,28 +342,32 @@ public class StackAnimationController extends PhysicsAnimationLayout.PhysicsAnim
         if (rootWindowInsets != null) {
             int i = 0;
             rectF.left = (float) ((-this.mBubbleOffscreen) + Math.max(rootWindowInsets.getSystemWindowInsetLeft(), rootWindowInsets.getDisplayCutout() != null ? rootWindowInsets.getDisplayCutout().getSafeInsetLeft() : 0));
-            rectF.right = (float) (((this.mLayout.getWidth() - this.mIndividualBubbleSize) + this.mBubbleOffscreen) - Math.max(rootWindowInsets.getSystemWindowInsetRight(), rootWindowInsets.getDisplayCutout() != null ? rootWindowInsets.getDisplayCutout().getSafeInsetRight() : 0));
+            rectF.right = (float) (((this.mLayout.getWidth() - this.mBubbleSize) + this.mBubbleOffscreen) - Math.max(rootWindowInsets.getSystemWindowInsetRight(), rootWindowInsets.getDisplayCutout() != null ? rootWindowInsets.getDisplayCutout().getSafeInsetRight() : 0));
             float f = 0.0f;
-            rectF.top = ((float) this.mBubblePadding) + Math.max(this.mStatusBarHeight, rootWindowInsets.getDisplayCutout() != null ? (float) rootWindowInsets.getDisplayCutout().getSafeInsetTop() : 0.0f);
-            int height = this.mLayout.getHeight() - this.mIndividualBubbleSize;
-            int i2 = this.mBubblePadding;
+            rectF.top = ((float) this.mBubblePaddingTop) + Math.max(this.mStatusBarHeight, rootWindowInsets.getDisplayCutout() != null ? (float) rootWindowInsets.getDisplayCutout().getSafeInsetTop() : 0.0f);
+            int height = this.mLayout.getHeight() - this.mBubbleSize;
+            int i2 = this.mBubblePaddingTop;
             float f2 = (float) (height - i2);
             float f3 = this.mImeHeight;
-            if (f3 > Float.MIN_VALUE) {
+            if (f3 != -1.4E-45f) {
                 f = f3 + ((float) i2);
             }
             float f4 = f2 - f;
-            int systemWindowInsetBottom = rootWindowInsets.getSystemWindowInsetBottom();
+            int stableInsetBottom = rootWindowInsets.getStableInsetBottom();
             if (rootWindowInsets.getDisplayCutout() != null) {
                 i = rootWindowInsets.getDisplayCutout().getSafeInsetBottom();
             }
-            rectF.bottom = f4 - ((float) Math.max(systemWindowInsetBottom, i));
+            rectF.bottom = f4 - ((float) Math.max(stableInsetBottom, i));
         }
         return rectF;
     }
 
     public void moveStackFromTouch(float f, float f2) {
-        if (this.mFirstBubbleSpringingToTouch) {
+        if (this.mSpringToTouchOnNextMotionEvent) {
+            springStack(f, f2, 12000.0f);
+            this.mSpringToTouchOnNextMotionEvent = false;
+            this.mFirstBubbleSpringingToTouch = true;
+        } else if (this.mFirstBubbleSpringingToTouch) {
             SpringAnimation springAnimation = (SpringAnimation) this.mStackPositionAnimations.get(DynamicAnimation.TRANSLATION_X);
             SpringAnimation springAnimation2 = (SpringAnimation) this.mStackPositionAnimations.get(DynamicAnimation.TRANSLATION_Y);
             if (springAnimation.isRunning() || springAnimation2.isRunning()) {
@@ -287,76 +377,78 @@ public class StackAnimationController extends PhysicsAnimationLayout.PhysicsAnim
                 this.mFirstBubbleSpringingToTouch = false;
             }
         }
-        if (!this.mFirstBubbleSpringingToTouch && !this.mWithinDismissTarget) {
+        if (!this.mFirstBubbleSpringingToTouch && !isStackStuckToTarget()) {
             moveFirstBubbleWithStackFollowing(f, f2);
         }
     }
 
-    public void demagnetizeFromDismissToPoint(float f, float f2, float f3, float f4) {
-        this.mWithinDismissTarget = false;
-        this.mFirstBubbleSpringingToTouch = true;
-        DynamicAnimation.ViewProperty viewProperty = DynamicAnimation.TRANSLATION_X;
-        SpringForce springForce = new SpringForce();
-        springForce.setDampingRatio(0.9f);
-        springForce.setStiffness(12000.0f);
-        springFirstBubbleWithStackFollowing(viewProperty, springForce, f3, f);
-        DynamicAnimation.ViewProperty viewProperty2 = DynamicAnimation.TRANSLATION_Y;
-        SpringForce springForce2 = new SpringForce();
-        springForce2.setDampingRatio(0.9f);
-        springForce2.setStiffness(12000.0f);
-        springFirstBubbleWithStackFollowing(viewProperty2, springForce2, f4, f2);
+    public void onUnstuckFromTarget() {
+        this.mSpringToTouchOnNextMotionEvent = true;
     }
 
-    public void magnetToDismiss(float f, float f2, float f3, Runnable runnable) {
-        this.mWithinDismissTarget = true;
-        this.mFirstBubbleSpringingToTouch = false;
-        PhysicsAnimationLayout.PhysicsPropertyAnimator animationForChildAtIndex = animationForChildAtIndex(0);
-        animationForChildAtIndex.translationX((((float) this.mLayout.getWidth()) / 2.0f) - (((float) this.mIndividualBubbleSize) / 2.0f), new Runnable[0]);
-        animationForChildAtIndex.translationY(f3, runnable);
-        animationForChildAtIndex.withPositionStartVelocities(f, f2);
-        animationForChildAtIndex.withStiffness(1500.0f);
-        animationForChildAtIndex.withDampingRatio(0.75f);
-        animationForChildAtIndex.start(new Runnable[0]);
-    }
-
-    public void implodeStack(Runnable runnable) {
-        PhysicsAnimationLayout.PhysicsPropertyAnimator animationForChildAtIndex = animationForChildAtIndex(0);
-        animationForChildAtIndex.scaleX(0.5f, new Runnable[0]);
-        animationForChildAtIndex.scaleY(0.5f, new Runnable[0]);
-        animationForChildAtIndex.alpha(0.0f, new Runnable[0]);
-        animationForChildAtIndex.withDampingRatio(1.0f);
-        animationForChildAtIndex.withStiffness(10000.0f);
-        animationForChildAtIndex.start(new Runnable(runnable) {
-            public final /* synthetic */ Runnable f$1;
+    public void animateStackDismissal(float f, Runnable runnable) {
+        animationsForChildrenFromIndex(0, new PhysicsAnimationLayout.PhysicsAnimationController.ChildAnimationConfigurator(f) {
+            public final /* synthetic */ float f$1;
 
             {
                 this.f$1 = r2;
             }
 
-            public final void run() {
-                StackAnimationController.this.lambda$implodeStack$2$StackAnimationController(this.f$1);
+            public final void configureAnimationForChildAtIndex(int i, PhysicsAnimationLayout.PhysicsPropertyAnimator physicsPropertyAnimator) {
+                StackAnimationController.this.lambda$animateStackDismissal$1$StackAnimationController(this.f$1, i, physicsPropertyAnimator);
             }
-        });
+        }).startAll(runnable);
     }
 
     /* access modifiers changed from: private */
-    /* renamed from: lambda$implodeStack$2 */
-    public /* synthetic */ void lambda$implodeStack$2$StackAnimationController(Runnable runnable) {
-        runnable.run();
-        this.mWithinDismissTarget = false;
+    /* renamed from: lambda$animateStackDismissal$1 */
+    public /* synthetic */ void lambda$animateStackDismissal$1$StackAnimationController(float f, int i, PhysicsAnimationLayout.PhysicsPropertyAnimator physicsPropertyAnimator) {
+        physicsPropertyAnimator.scaleX(0.0f, new Runnable[0]);
+        physicsPropertyAnimator.scaleY(0.0f, new Runnable[0]);
+        physicsPropertyAnimator.alpha(0.0f, new Runnable[0]);
+        physicsPropertyAnimator.translationY(this.mLayout.getChildAt(i).getTranslationY() + f, new Runnable[0]);
+        physicsPropertyAnimator.withStiffness(10000.0f);
     }
 
     /* access modifiers changed from: protected */
-    public void springFirstBubbleWithStackFollowing(DynamicAnimation.ViewProperty viewProperty, SpringForce springForce, float f, float f2) {
-        if (this.mLayout.getChildCount() != 0) {
+    public void springFirstBubbleWithStackFollowing(DynamicAnimation.ViewProperty viewProperty, SpringForce springForce, float f, float f2, Runnable... runnableArr) {
+        if (this.mLayout.getChildCount() != 0 && isActiveController()) {
             Log.d("Bubbs.StackCtrl", String.format("Springing %s to final position %f.", new Object[]{PhysicsAnimationLayout.getReadablePropertyName(viewProperty), Float.valueOf(f2)}));
+            boolean z = this.mSpringToTouchOnNextMotionEvent;
             SpringAnimation springAnimation = new SpringAnimation(this, new StackPositionProperty(viewProperty));
             springAnimation.setSpring(springForce);
-            springAnimation.setStartVelocity(f);
+            springAnimation.addEndListener(new DynamicAnimation.OnAnimationEndListener(z, runnableArr) {
+                public final /* synthetic */ boolean f$1;
+                public final /* synthetic */ Runnable[] f$2;
+
+                {
+                    this.f$1 = r2;
+                    this.f$2 = r3;
+                }
+
+                public final void onAnimationEnd(DynamicAnimation dynamicAnimation, boolean z, float f, float f2) {
+                    StackAnimationController.this.lambda$springFirstBubbleWithStackFollowing$2$StackAnimationController(this.f$1, this.f$2, dynamicAnimation, z, f, f2);
+                }
+            });
             SpringAnimation springAnimation2 = springAnimation;
+            springAnimation2.setStartVelocity(f);
+            SpringAnimation springAnimation3 = springAnimation2;
             cancelStackPositionAnimation(viewProperty);
-            this.mStackPositionAnimations.put(viewProperty, springAnimation2);
-            springAnimation2.animateToFinalPosition(f2);
+            this.mStackPositionAnimations.put(viewProperty, springAnimation3);
+            springAnimation3.animateToFinalPosition(f2);
+        }
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$springFirstBubbleWithStackFollowing$2 */
+    public /* synthetic */ void lambda$springFirstBubbleWithStackFollowing$2$StackAnimationController(boolean z, Runnable[] runnableArr, DynamicAnimation dynamicAnimation, boolean z2, float f, float f2) {
+        if (!z) {
+            this.mRestingStackPosition.set(this.mStackPosition);
+        }
+        if (runnableArr != null) {
+            for (Runnable run : runnableArr) {
+                run.run();
+            }
         }
     }
 
@@ -370,15 +462,12 @@ public class StackAnimationController extends PhysicsAnimationLayout.PhysicsAnim
         if (viewProperty.equals(DynamicAnimation.TRANSLATION_X) || viewProperty.equals(DynamicAnimation.TRANSLATION_Y)) {
             return i + 1;
         }
-        if (this.mWithinDismissTarget) {
-            return i + 1;
-        }
         return -1;
     }
 
     /* access modifiers changed from: package-private */
     public float getOffsetForChainedPropertyAnimation(DynamicAnimation.ViewProperty viewProperty) {
-        if (!viewProperty.equals(DynamicAnimation.TRANSLATION_X) || this.mWithinDismissTarget) {
+        if (!viewProperty.equals(DynamicAnimation.TRANSLATION_X) || isStackStuckToTarget()) {
             return 0.0f;
         }
         return this.mLayout.isFirstChildXLeftOfCenter(this.mStackPosition.x) ? -this.mStackOffset : this.mStackOffset;
@@ -386,48 +475,79 @@ public class StackAnimationController extends PhysicsAnimationLayout.PhysicsAnim
 
     /* access modifiers changed from: package-private */
     public SpringForce getSpringForce(DynamicAnimation.ViewProperty viewProperty, View view) {
+        ContentResolver contentResolver = this.mLayout.getContext().getContentResolver();
+        float f = Settings.Secure.getFloat(contentResolver, "bubble_stiffness", this.mIsMovingFromFlinging ? 20000.0f : 12000.0f);
+        float f2 = Settings.Secure.getFloat(contentResolver, "bubble_damping", 0.9f);
         SpringForce springForce = new SpringForce();
-        springForce.setDampingRatio(0.9f);
-        springForce.setStiffness(this.mIsMovingFromFlinging ? 20000.0f : 12000.0f);
+        springForce.setDampingRatio(f2);
+        springForce.setStiffness(f);
         return springForce;
     }
 
     /* access modifiers changed from: package-private */
     public void onChildAdded(View view, int i) {
-        if (this.mLayout.getChildCount() == 1) {
-            moveStackToStartPosition();
-        } else if (isStackPositionSet() && this.mLayout.indexOfChild(view) == 0) {
-            animateInBubble(view);
+        if (!isStackStuckToTarget()) {
+            if (getBubbleCount() == 1) {
+                moveStackToStartPosition();
+            } else if (isStackPositionSet() && this.mLayout.indexOfChild(view) == 0) {
+                animateInBubble(view, i);
+            }
         }
     }
 
     /* access modifiers changed from: package-private */
     public void onChildRemoved(View view, int i, Runnable runnable) {
-        float offsetForChainedPropertyAnimation = getOffsetForChainedPropertyAnimation(DynamicAnimation.TRANSLATION_X);
-        PhysicsAnimationLayout.PhysicsPropertyAnimator animationForChild = animationForChild(view);
-        animationForChild.alpha(0.0f, runnable);
-        animationForChild.scaleX(1.15f, new Runnable[0]);
-        animationForChild.scaleY(1.15f, new Runnable[0]);
-        animationForChild.translationX(this.mStackPosition.x - ((-offsetForChainedPropertyAnimation) * 4.0f), new Runnable[0]);
-        animationForChild.start(new Runnable[0]);
-        if (this.mLayout.getChildCount() > 0) {
+        PhysicsAnimator instance = PhysicsAnimator.getInstance(view);
+        instance.spring(DynamicAnimation.ALPHA, 0.0f);
+        instance.spring(DynamicAnimation.SCALE_X, 0.0f, this.mAnimateOutSpringConfig);
+        instance.spring(DynamicAnimation.SCALE_Y, 0.0f, this.mAnimateOutSpringConfig);
+        instance.withEndActions(runnable, this.mOnBubbleAnimatedOutAction);
+        instance.start();
+        if (getBubbleCount() > 0) {
             PhysicsAnimationLayout.PhysicsPropertyAnimator animationForChildAtIndex = animationForChildAtIndex(0);
             animationForChildAtIndex.translationX(this.mStackPosition.x, new Runnable[0]);
             animationForChildAtIndex.start(new Runnable[0]);
             return;
         }
-        this.mStackPosition = getDefaultStartPosition();
+        PointF pointF = this.mRestingStackPosition;
+        if (pointF == null) {
+            pointF = getDefaultStartPosition();
+        }
+        setStackPosition(pointF);
+        this.mFloatingContentCoordinator.onContentRemoved(this.mStackFloatingContent);
+    }
+
+    /* access modifiers changed from: package-private */
+    public void onChildReordered(View view, int i, int i2) {
+        if (isStackPositionSet()) {
+            setStackPosition(this.mStackPosition);
+        }
     }
 
     /* access modifiers changed from: package-private */
     public void onActiveControllerForLayout(PhysicsAnimationLayout physicsAnimationLayout) {
         Resources resources = physicsAnimationLayout.getResources();
-        this.mStackOffset = (float) resources.getDimensionPixelSize(R.dimen.bubble_stack_offset);
-        this.mIndividualBubbleSize = resources.getDimensionPixelSize(R.dimen.individual_bubble_size);
-        this.mBubblePadding = resources.getDimensionPixelSize(R.dimen.bubble_padding);
-        this.mBubbleOffscreen = resources.getDimensionPixelSize(R.dimen.bubble_stack_offscreen);
-        this.mStackStartingVerticalOffset = resources.getDimensionPixelSize(R.dimen.bubble_stack_starting_offset_y);
-        this.mStatusBarHeight = (float) resources.getDimensionPixelSize(17105496);
+        this.mStackOffset = (float) resources.getDimensionPixelSize(C0009R$dimen.bubble_stack_offset);
+        this.mBubbleSize = resources.getDimensionPixelSize(C0009R$dimen.individual_bubble_size);
+        this.mBubbleBitmapSize = resources.getDimensionPixelSize(C0009R$dimen.bubble_bitmap_size);
+        this.mBubblePaddingTop = resources.getDimensionPixelSize(C0009R$dimen.bubble_padding_top);
+        this.mBubbleOffscreen = resources.getDimensionPixelSize(C0009R$dimen.bubble_stack_offscreen);
+        this.mStackStartingVerticalOffset = resources.getDimensionPixelSize(C0009R$dimen.bubble_stack_starting_offset_y);
+        this.mStatusBarHeight = (float) resources.getDimensionPixelSize(17105489);
+    }
+
+    public void updateResources(int i) {
+        PhysicsAnimationLayout physicsAnimationLayout = this.mLayout;
+        if (physicsAnimationLayout != null) {
+            Resources resources = physicsAnimationLayout.getContext().getResources();
+            this.mBubblePaddingTop = resources.getDimensionPixelSize(C0009R$dimen.bubble_padding_top);
+            this.mStatusBarHeight = (float) resources.getDimensionPixelSize(17105489);
+        }
+    }
+
+    private boolean isStackStuckToTarget() {
+        MagnetizedObject<StackAnimationController> magnetizedObject = this.mMagnetizedStack;
+        return magnetizedObject != null && magnetizedObject.getObjectStuckToTarget();
     }
 
     private void moveStackToStartPosition() {
@@ -450,7 +570,8 @@ public class StackAnimationController extends PhysicsAnimationLayout.PhysicsAnim
         this.mStackMovedToStartPosition = true;
         this.mLayout.setVisibility(0);
         if (this.mLayout.getChildCount() > 0) {
-            animateInBubble(this.mLayout.getChildAt(0));
+            this.mFloatingContentCoordinator.onContentAdded(this.mStackFloatingContent);
+            animateInBubble(this.mLayout.getChildAt(0), 0);
         }
     }
 
@@ -471,11 +592,15 @@ public class StackAnimationController extends PhysicsAnimationLayout.PhysicsAnim
         }
     }
 
-    private void setStackPosition(PointF pointF) {
+    public void setStackPosition(PointF pointF) {
         Log.d("Bubbs.StackCtrl", String.format("Setting position to (%f, %f).", new Object[]{Float.valueOf(pointF.x), Float.valueOf(pointF.y)}));
         this.mStackPosition.set(pointF.x, pointF.y);
+        if (this.mRestingStackPosition == null) {
+            this.mRestingStackPosition = new PointF();
+        }
+        this.mRestingStackPosition.set(this.mStackPosition);
         if (isActiveController()) {
-            this.mLayout.cancelAllAnimations();
+            this.mLayout.cancelAllAnimationsOfProperties(DynamicAnimation.TRANSLATION_X, DynamicAnimation.TRANSLATION_Y);
             cancelStackPositionAnimations();
             float offsetForChainedPropertyAnimation = getOffsetForChainedPropertyAnimation(DynamicAnimation.TRANSLATION_X);
             float offsetForChainedPropertyAnimation2 = getOffsetForChainedPropertyAnimation(DynamicAnimation.TRANSLATION_Y);
@@ -487,24 +612,44 @@ public class StackAnimationController extends PhysicsAnimationLayout.PhysicsAnim
         }
     }
 
-    private PointF getDefaultStartPosition() {
-        return new PointF(getAllowableStackPositionRegion().right, getAllowableStackPositionRegion().top + ((float) this.mStackStartingVerticalOffset));
+    public PointF getDefaultStartPosition() {
+        float f;
+        PhysicsAnimationLayout physicsAnimationLayout = this.mLayout;
+        boolean z = true;
+        if (physicsAnimationLayout == null || physicsAnimationLayout.getResources().getConfiguration().getLayoutDirection() != 1) {
+            z = false;
+        }
+        if (z) {
+            f = getAllowableStackPositionRegion().right;
+        } else {
+            f = getAllowableStackPositionRegion().left;
+        }
+        return new PointF(f, getAllowableStackPositionRegion().top + ((float) this.mStackStartingVerticalOffset));
     }
 
     private boolean isStackPositionSet() {
         return this.mStackMovedToStartPosition;
     }
 
-    private void animateInBubble(View view) {
+    private void animateInBubble(View view, int i) {
         if (isActiveController()) {
-            view.setTranslationY(this.mStackPosition.y);
             float offsetForChainedPropertyAnimation = getOffsetForChainedPropertyAnimation(DynamicAnimation.TRANSLATION_X);
+            view.setTranslationX(this.mStackPosition.x + (((float) i) * offsetForChainedPropertyAnimation));
+            view.setTranslationY(this.mStackPosition.y);
+            view.setScaleX(0.0f);
+            view.setScaleY(0.0f);
+            int i2 = i + 1;
+            if (i2 < this.mLayout.getChildCount()) {
+                PhysicsAnimationLayout.PhysicsPropertyAnimator animationForChildAtIndex = animationForChildAtIndex(i2);
+                animationForChildAtIndex.translationX(this.mStackPosition.x + (offsetForChainedPropertyAnimation * ((float) i2)), new Runnable[0]);
+                animationForChildAtIndex.withStiffness(200.0f);
+                animationForChildAtIndex.start(new Runnable[0]);
+            }
             PhysicsAnimationLayout.PhysicsPropertyAnimator animationForChild = animationForChild(view);
-            animationForChild.scaleX(1.15f, 1.0f, new Runnable[0]);
-            animationForChild.scaleY(1.15f, 1.0f, new Runnable[0]);
-            animationForChild.alpha(0.0f, 1.0f, new Runnable[0]);
-            float f = this.mStackPosition.x;
-            animationForChild.translationX(f - (offsetForChainedPropertyAnimation * 4.0f), f, new Runnable[0]);
+            animationForChild.scaleX(1.0f, new Runnable[0]);
+            animationForChild.scaleY(1.0f, new Runnable[0]);
+            animationForChild.withStiffness(1000.0f);
+            animationForChild.withStartDelay(this.mLayout.getChildCount() > 1 ? 25 : 0);
             animationForChild.start(new Runnable[0]);
         }
     }
@@ -513,6 +658,41 @@ public class StackAnimationController extends PhysicsAnimationLayout.PhysicsAnim
         if (this.mStackPositionAnimations.containsKey(viewProperty)) {
             this.mStackPositionAnimations.get(viewProperty).cancel();
         }
+    }
+
+    public MagnetizedObject<StackAnimationController> getMagnetizedStack(MagnetizedObject.MagneticTarget magneticTarget) {
+        if (this.mMagnetizedStack == null) {
+            AnonymousClass2 r1 = new MagnetizedObject<StackAnimationController>(this.mLayout.getContext(), this, new StackPositionProperty(DynamicAnimation.TRANSLATION_X), new StackPositionProperty(DynamicAnimation.TRANSLATION_Y)) {
+                public float getWidth(StackAnimationController stackAnimationController) {
+                    return (float) StackAnimationController.this.mBubbleSize;
+                }
+
+                public float getHeight(StackAnimationController stackAnimationController) {
+                    return (float) StackAnimationController.this.mBubbleSize;
+                }
+
+                public void getLocationOnScreen(StackAnimationController stackAnimationController, int[] iArr) {
+                    iArr[0] = (int) StackAnimationController.this.mStackPosition.x;
+                    iArr[1] = (int) StackAnimationController.this.mStackPosition.y;
+                }
+            };
+            this.mMagnetizedStack = r1;
+            r1.addTarget(magneticTarget);
+            this.mMagnetizedStack.setHapticsEnabled(true);
+            this.mMagnetizedStack.setFlingToTargetMinVelocity(4000.0f);
+        }
+        ContentResolver contentResolver = this.mLayout.getContext().getContentResolver();
+        float f = Settings.Secure.getFloat(contentResolver, "bubble_dismiss_fling_min_velocity", this.mMagnetizedStack.getFlingToTargetMinVelocity());
+        float f2 = Settings.Secure.getFloat(contentResolver, "bubble_dismiss_stick_max_velocity", this.mMagnetizedStack.getStickToTargetMaxXVelocity());
+        float f3 = Settings.Secure.getFloat(contentResolver, "bubble_dismiss_target_width_percent", this.mMagnetizedStack.getFlingToTargetWidthPercent());
+        this.mMagnetizedStack.setFlingToTargetMinVelocity(f);
+        this.mMagnetizedStack.setStickToTargetMaxXVelocity(f2);
+        this.mMagnetizedStack.setFlingToTargetWidthPercent(f3);
+        return this.mMagnetizedStack;
+    }
+
+    private int getBubbleCount() {
+        return this.mBubbleCountSupplier.getAsInt();
     }
 
     private class StackPositionProperty extends FloatPropertyCompat<StackAnimationController> {

@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
+import android.content.PermissionChecker;
 import android.content.pm.ResolveInfo;
 import android.hardware.usb.IUsbManager;
 import android.hardware.usb.UsbAccessory;
@@ -21,7 +21,7 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 import com.android.internal.app.AlertActivity;
 import com.android.internal.app.AlertController;
-import com.android.systemui.plugins.R;
+import com.android.systemui.C0018R$string;
 
 public class UsbConfirmActivity extends AlertActivity implements DialogInterface.OnClickListener, CompoundButton.OnCheckedChangeListener {
     private UsbAccessory mAccessory;
@@ -31,42 +31,53 @@ public class UsbConfirmActivity extends AlertActivity implements DialogInterface
     private UsbDisconnectedReceiver mDisconnectedReceiver;
     private ResolveInfo mResolveInfo;
 
-    /* JADX WARNING: type inference failed for: r4v0, types: [android.content.DialogInterface$OnClickListener, com.android.internal.app.AlertActivity, android.widget.CompoundButton$OnCheckedChangeListener, android.app.Activity, com.android.systemui.usb.UsbConfirmActivity] */
+    /* JADX WARNING: type inference failed for: r8v0, types: [android.content.DialogInterface$OnClickListener, android.content.Context, com.android.internal.app.AlertActivity, android.widget.CompoundButton$OnCheckedChangeListener, android.app.Activity, com.android.systemui.usb.UsbConfirmActivity] */
     public void onCreate(Bundle bundle) {
+        boolean z;
+        int i;
         UsbConfirmActivity.super.onCreate(bundle);
         Intent intent = getIntent();
         this.mDevice = (UsbDevice) intent.getParcelableExtra("device");
         this.mAccessory = (UsbAccessory) intent.getParcelableExtra("accessory");
         this.mResolveInfo = (ResolveInfo) intent.getParcelableExtra("rinfo");
-        PackageManager packageManager = getPackageManager();
-        String charSequence = this.mResolveInfo.loadLabel(packageManager).toString();
+        String stringExtra = intent.getStringExtra("android.hardware.usb.extra.PACKAGE");
+        String charSequence = this.mResolveInfo.loadLabel(getPackageManager()).toString();
         AlertController.AlertParams alertParams = this.mAlertParams;
-        alertParams.mIcon = this.mResolveInfo.loadIcon(packageManager);
         alertParams.mTitle = charSequence;
         if (this.mDevice == null) {
-            alertParams.mMessage = getString(R.string.usb_accessory_confirm_prompt, new Object[]{charSequence});
+            alertParams.mMessage = getString(C0018R$string.usb_accessory_confirm_prompt, new Object[]{charSequence, this.mAccessory.getDescription()});
             this.mDisconnectedReceiver = new UsbDisconnectedReceiver((Activity) this, this.mAccessory);
+            z = false;
         } else {
-            alertParams.mMessage = getString(R.string.usb_device_confirm_prompt, new Object[]{charSequence});
+            z = this.mDevice.getHasAudioCapture() && !(PermissionChecker.checkPermissionForPreflight(this, "android.permission.RECORD_AUDIO", -1, intent.getIntExtra("android.intent.extra.UID", -1), stringExtra) == 0);
+            if (z) {
+                i = C0018R$string.usb_device_confirm_prompt_warn;
+            } else {
+                i = C0018R$string.usb_device_confirm_prompt;
+            }
+            alertParams.mMessage = getString(i, new Object[]{charSequence, this.mDevice.getProductName()});
             this.mDisconnectedReceiver = new UsbDisconnectedReceiver((Activity) this, this.mDevice);
         }
         alertParams.mPositiveButtonText = getString(17039370);
         alertParams.mNegativeButtonText = getString(17039360);
         alertParams.mPositiveButtonListener = this;
         alertParams.mNegativeButtonListener = this;
-        View inflate = ((LayoutInflater) getSystemService("layout_inflater")).inflate(17367092, (ViewGroup) null);
-        alertParams.mView = inflate;
-        CheckBox checkBox = (CheckBox) inflate.findViewById(16908753);
-        this.mAlwaysUse = checkBox;
-        if (this.mDevice == null) {
-            checkBox.setText(R.string.always_use_accessory);
-        } else {
-            checkBox.setText(R.string.always_use_device);
+        if (!z) {
+            View inflate = ((LayoutInflater) getSystemService("layout_inflater")).inflate(17367092, (ViewGroup) null);
+            alertParams.mView = inflate;
+            CheckBox checkBox = (CheckBox) inflate.findViewById(16908753);
+            this.mAlwaysUse = checkBox;
+            UsbDevice usbDevice = this.mDevice;
+            if (usbDevice == null) {
+                checkBox.setText(getString(C0018R$string.always_use_accessory, new Object[]{charSequence, this.mAccessory.getDescription()}));
+            } else {
+                checkBox.setText(getString(C0018R$string.always_use_device, new Object[]{charSequence, usbDevice.getProductName()}));
+            }
+            this.mAlwaysUse.setOnCheckedChangeListener(this);
+            TextView textView = (TextView) alertParams.mView.findViewById(16908848);
+            this.mClearDefaultHint = textView;
+            textView.setVisibility(8);
         }
-        this.mAlwaysUse.setOnCheckedChangeListener(this);
-        TextView textView = (TextView) alertParams.mView.findViewById(16908848);
-        this.mClearDefaultHint = textView;
-        textView.setVisibility(8);
         setupAlert();
     }
 
@@ -86,7 +97,7 @@ public class UsbConfirmActivity extends AlertActivity implements DialogInterface
                 IUsbManager asInterface = IUsbManager.Stub.asInterface(ServiceManager.getService("usb"));
                 int i2 = this.mResolveInfo.activityInfo.applicationInfo.uid;
                 int myUserId = UserHandle.myUserId();
-                boolean isChecked = this.mAlwaysUse.isChecked();
+                boolean isChecked = this.mAlwaysUse != null ? this.mAlwaysUse.isChecked() : false;
                 Intent intent2 = null;
                 if (this.mDevice != null) {
                     intent = new Intent("android.hardware.usb.action.USB_DEVICE_ATTACHED");

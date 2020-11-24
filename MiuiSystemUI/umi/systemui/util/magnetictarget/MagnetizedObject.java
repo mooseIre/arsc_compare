@@ -1,9 +1,11 @@
 package com.android.systemui.util.magnetictarget;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.PointF;
-import android.graphics.Rect;
-import android.util.Log;
+import android.os.Handler;
+import android.os.Vibrator;
+import android.provider.Settings;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
@@ -12,107 +14,187 @@ import androidx.dynamicanimation.animation.FloatPropertyCompat;
 import com.android.systemui.util.animation.PhysicsAnimator;
 import java.util.ArrayList;
 import java.util.Iterator;
+import kotlin.TypeCastException;
+import kotlin.Unit;
+import kotlin.jvm.functions.Function0;
+import kotlin.jvm.functions.Function5;
+import kotlin.jvm.internal.Intrinsics;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public abstract class MagnetizedObject {
-    PhysicsAnimator animator;
-    ArrayList<MagneticTarget> associatedTargets = new ArrayList<>();
-    boolean flingToTargetEnabled = true;
-    float flingToTargetMinVelocity = 4000.0f;
-    float flingToTargetWidthPercent = 3.0f;
-    float flingUnstuckFromTargetMinVelocity = 1000.0f;
-    PhysicsAnimator.SpringConfig flungIntoTargetSpringConfig;
-    MagnetListener magnetListener;
-    boolean movedBeyondSlop = false;
-    int[] objectLocationOnScreen = new int[2];
-    PhysicsAnimator.EndListener physicsAnimatorEndListener;
-    PhysicsAnimator.UpdateListener physicsAnimatorUpdateListener;
-    PhysicsAnimator.SpringConfig springConfig;
-    float stickToTargetMaxVelocity = 2000.0f;
+/* compiled from: MagnetizedObject.kt */
+public abstract class MagnetizedObject<T> {
+    public static final Companion Companion = new Companion((DefaultConstructorMarker) null);
+    /* access modifiers changed from: private */
+    public static boolean hapticSettingObserverInitialized;
+    /* access modifiers changed from: private */
+    public static boolean systemHapticsEnabled;
+    @NotNull
+    private Function5<? super MagneticTarget, ? super Float, ? super Float, ? super Boolean, ? super Function0<Unit>, Unit> animateStuckToTarget;
+    private final PhysicsAnimator<T> animator;
+    private final ArrayList<MagneticTarget> associatedTargets = new ArrayList<>();
+    @NotNull
+    private final Context context;
+    private boolean flingToTargetEnabled;
+    private float flingToTargetMinVelocity;
+    private float flingToTargetWidthPercent;
+    private float flingUnstuckFromTargetMinVelocity;
+    @NotNull
+    private PhysicsAnimator.SpringConfig flungIntoTargetSpringConfig;
+    private boolean hapticsEnabled;
+    @NotNull
+    public MagnetListener magnetListener;
+    private boolean movedBeyondSlop;
+    private final int[] objectLocationOnScreen = new int[2];
+    @Nullable
+    private PhysicsAnimator.EndListener<T> physicsAnimatorEndListener;
+    @Nullable
+    private PhysicsAnimator.UpdateListener<T> physicsAnimatorUpdateListener;
+    @NotNull
+    private PhysicsAnimator.SpringConfig springConfig;
+    private float stickToTargetMaxXVelocity;
     /* access modifiers changed from: private */
     public MagneticTarget targetObjectIsStuckTo;
-    PointF touchDown = new PointF();
-    int touchSlop = 0;
-    private Rect underlyingObject;
-    VelocityTracker velocityTracker = VelocityTracker.obtain();
-    private FloatPropertyCompat xProperty;
-    private FloatPropertyCompat yProperty;
+    private PointF touchDown;
+    private int touchSlop;
+    @NotNull
+    private final T underlyingObject;
+    private final VelocityTracker velocityTracker;
+    private final Vibrator vibrator;
+    @NotNull
+    private final FloatPropertyCompat<? super T> xProperty;
+    @NotNull
+    private final FloatPropertyCompat<? super T> yProperty;
 
+    /* compiled from: MagnetizedObject.kt */
     public interface MagnetListener {
-        void onReleasedInTarget(MagneticTarget magneticTarget);
+        void onReleasedInTarget(@NotNull MagneticTarget magneticTarget);
 
-        void onStuckToTarget(MagneticTarget magneticTarget);
+        void onStuckToTarget(@NotNull MagneticTarget magneticTarget);
 
-        void onUnstuckFromTarget(MagneticTarget magneticTarget, float f, float f2, boolean z);
+        void onUnstuckFromTarget(@NotNull MagneticTarget magneticTarget, float f, float f2, boolean z);
     }
 
-    public abstract float getHeight(Rect rect);
+    public abstract float getHeight(@NotNull T t);
 
-    public abstract void getLocationOnScreen(Rect rect, int[] iArr);
+    public abstract void getLocationOnScreen(@NotNull T t, @NotNull int[] iArr);
 
-    public abstract float getWidth(Rect rect);
+    public abstract float getWidth(@NotNull T t);
 
-    public MagnetizedObject(Context context, Rect rect, FloatPropertyCompat floatPropertyCompat, FloatPropertyCompat floatPropertyCompat2) {
-        PhysicsAnimator.SpringConfig springConfig2 = new PhysicsAnimator.SpringConfig(1500.0f, 1.0f);
-        this.springConfig = springConfig2;
-        this.flungIntoTargetSpringConfig = springConfig2;
-        this.underlyingObject = rect;
+    public MagnetizedObject(@NotNull Context context2, @NotNull T t, @NotNull FloatPropertyCompat<? super T> floatPropertyCompat, @NotNull FloatPropertyCompat<? super T> floatPropertyCompat2) {
+        Intrinsics.checkParameterIsNotNull(context2, "context");
+        Intrinsics.checkParameterIsNotNull(t, "underlyingObject");
+        Intrinsics.checkParameterIsNotNull(floatPropertyCompat, "xProperty");
+        Intrinsics.checkParameterIsNotNull(floatPropertyCompat2, "yProperty");
+        this.context = context2;
+        this.underlyingObject = t;
         this.xProperty = floatPropertyCompat;
         this.yProperty = floatPropertyCompat2;
-        this.animator = PhysicsAnimator.getInstance(rect);
+        this.animator = PhysicsAnimator.Companion.getInstance(t);
+        VelocityTracker obtain = VelocityTracker.obtain();
+        Intrinsics.checkExpressionValueIsNotNull(obtain, "VelocityTracker.obtain()");
+        this.velocityTracker = obtain;
+        Object systemService = this.context.getSystemService("vibrator");
+        if (systemService != null) {
+            this.vibrator = (Vibrator) systemService;
+            this.touchDown = new PointF();
+            this.animateStuckToTarget = new MagnetizedObject$animateStuckToTarget$1(this);
+            this.flingToTargetEnabled = true;
+            this.flingToTargetWidthPercent = 3.0f;
+            this.flingToTargetMinVelocity = 4000.0f;
+            this.flingUnstuckFromTargetMinVelocity = 4000.0f;
+            this.stickToTargetMaxXVelocity = 2000.0f;
+            this.hapticsEnabled = true;
+            PhysicsAnimator.SpringConfig springConfig2 = new PhysicsAnimator.SpringConfig(1500.0f, 1.0f);
+            this.springConfig = springConfig2;
+            this.flungIntoTargetSpringConfig = springConfig2;
+            Companion.initHapticSettingObserver(this.context);
+            return;
+        }
+        throw new TypeCastException("null cannot be cast to non-null type android.os.Vibrator");
     }
 
-    public class MagneticTarget {
-        public PointF centerOnScreen = new PointF();
-        public int magneticFieldRadiusPx;
-        public View targetView;
-        /* access modifiers changed from: private */
-        public int[] tempLoc = new int[2];
-
-        public MagneticTarget(MagnetizedObject magnetizedObject, View view, int i) {
-            this.targetView = view;
-            this.magneticFieldRadiusPx = i;
-        }
-
-        public void updateLocationOnScreen() {
-            this.targetView.post(new Runnable() {
-                public void run() {
-                    MagneticTarget magneticTarget = MagneticTarget.this;
-                    magneticTarget.targetView.getLocationOnScreen(magneticTarget.tempLoc);
-                    MagneticTarget magneticTarget2 = MagneticTarget.this;
-                    magneticTarget2.centerOnScreen.set((((float) magneticTarget2.tempLoc[0]) + (((float) MagneticTarget.this.targetView.getWidth()) / 2.0f)) - MagneticTarget.this.targetView.getTranslationX(), (((float) MagneticTarget.this.tempLoc[1]) + (((float) MagneticTarget.this.targetView.getHeight()) / 2.0f)) - MagneticTarget.this.targetView.getTranslationY());
-                }
-            });
-        }
-
-        public void setMagneticFieldRadiusPx(int i) {
-            this.magneticFieldRadiusPx = i;
-        }
+    @NotNull
+    public final T getUnderlyingObject() {
+        return this.underlyingObject;
     }
 
-    /* access modifiers changed from: package-private */
-    public boolean isObjectStuckToTarget() {
+    public final boolean getObjectStuckToTarget() {
         return this.targetObjectIsStuckTo != null;
     }
 
-    public void addTarget(MagneticTarget magneticTarget) {
+    @NotNull
+    public final MagnetListener getMagnetListener() {
+        MagnetListener magnetListener2 = this.magnetListener;
+        if (magnetListener2 != null) {
+            return magnetListener2;
+        }
+        Intrinsics.throwUninitializedPropertyAccessException("magnetListener");
+        throw null;
+    }
+
+    public final void setMagnetListener(@NotNull MagnetListener magnetListener2) {
+        Intrinsics.checkParameterIsNotNull(magnetListener2, "<set-?>");
+        this.magnetListener = magnetListener2;
+    }
+
+    public final void setAnimateStuckToTarget(@NotNull Function5<? super MagneticTarget, ? super Float, ? super Float, ? super Boolean, ? super Function0<Unit>, Unit> function5) {
+        Intrinsics.checkParameterIsNotNull(function5, "<set-?>");
+        this.animateStuckToTarget = function5;
+    }
+
+    public final float getFlingToTargetWidthPercent() {
+        return this.flingToTargetWidthPercent;
+    }
+
+    public final void setFlingToTargetWidthPercent(float f) {
+        this.flingToTargetWidthPercent = f;
+    }
+
+    public final float getFlingToTargetMinVelocity() {
+        return this.flingToTargetMinVelocity;
+    }
+
+    public final void setFlingToTargetMinVelocity(float f) {
+        this.flingToTargetMinVelocity = f;
+    }
+
+    public final float getStickToTargetMaxXVelocity() {
+        return this.stickToTargetMaxXVelocity;
+    }
+
+    public final void setStickToTargetMaxXVelocity(float f) {
+        this.stickToTargetMaxXVelocity = f;
+    }
+
+    public final void setHapticsEnabled(boolean z) {
+        this.hapticsEnabled = z;
+    }
+
+    public final void addTarget(@NotNull MagneticTarget magneticTarget) {
+        Intrinsics.checkParameterIsNotNull(magneticTarget, "target");
         this.associatedTargets.add(magneticTarget);
         magneticTarget.updateLocationOnScreen();
     }
 
-    public MagneticTarget addTarget(View view, int i) {
-        MagneticTarget magneticTarget = new MagneticTarget(this, view, i);
+    @NotNull
+    public final MagneticTarget addTarget(@NotNull View view, int i) {
+        Intrinsics.checkParameterIsNotNull(view, "target");
+        MagneticTarget magneticTarget = new MagneticTarget(view, i);
         addTarget(magneticTarget);
         return magneticTarget;
     }
 
-    public boolean maybeConsumeMotionEvent(MotionEvent motionEvent) {
-        MagneticTarget magneticTarget;
-        final MagneticTarget magneticTarget2;
+    public final boolean maybeConsumeMotionEvent(@NotNull MotionEvent motionEvent) {
+        T t;
+        T t2;
+        boolean z;
+        Intrinsics.checkParameterIsNotNull(motionEvent, "ev");
         if (this.associatedTargets.size() == 0) {
             return false;
         }
         if (motionEvent.getAction() == 0) {
-            updateTargetViews();
+            updateTargetViews$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core();
             this.velocityTracker.clear();
             this.targetObjectIsStuckTo = null;
             this.touchDown.set(motionEvent.getRawX(), motionEvent.getRawY());
@@ -125,81 +207,144 @@ public abstract class MagnetizedObject {
             }
             this.movedBeyondSlop = true;
         }
-        Iterator<MagneticTarget> it = this.associatedTargets.iterator();
+        Iterator<T> it = this.associatedTargets.iterator();
         while (true) {
             if (!it.hasNext()) {
-                magneticTarget = null;
+                t = null;
                 break;
             }
-            MagneticTarget next = it.next();
-            if (((float) Math.hypot((double) (motionEvent.getRawX() - next.centerOnScreen.x), (double) (motionEvent.getRawY() - next.centerOnScreen.y))) < ((float) next.magneticFieldRadiusPx)) {
-                magneticTarget = next;
+            t = it.next();
+            MagneticTarget magneticTarget = (MagneticTarget) t;
+            if (((float) Math.hypot((double) (motionEvent.getRawX() - magneticTarget.getCenterOnScreen().x), (double) (motionEvent.getRawY() - magneticTarget.getCenterOnScreen().y))) < ((float) magneticTarget.getMagneticFieldRadiusPx())) {
+                z = true;
+                continue;
+            } else {
+                z = false;
+                continue;
+            }
+            if (z) {
                 break;
             }
         }
-        boolean z = !isObjectStuckToTarget() && magneticTarget != null;
-        boolean z2 = (!isObjectStuckToTarget() || magneticTarget == null || this.targetObjectIsStuckTo == magneticTarget) ? false : true;
-        Log.e("mag_test", "objectNewlyStuckToTarget=" + z + "   isObjectStuckToTarget=" + isObjectStuckToTarget() + "   targetObjectIsInMagneticFieldOf=" + magneticTarget + "   objectMovedIntoDifferentTarget=" + z2);
-        if (z || z2) {
+        MagneticTarget magneticTarget2 = (MagneticTarget) t;
+        boolean z2 = !getObjectStuckToTarget() && magneticTarget2 != null;
+        boolean z3 = getObjectStuckToTarget() && magneticTarget2 != null && (Intrinsics.areEqual((Object) this.targetObjectIsStuckTo, (Object) magneticTarget2) ^ true);
+        if (z2 || z3) {
             this.velocityTracker.computeCurrentVelocity(1000);
             float xVelocity = this.velocityTracker.getXVelocity();
             float yVelocity = this.velocityTracker.getYVelocity();
-            if (z && Math.hypot((double) xVelocity, (double) yVelocity) > ((double) this.stickToTargetMaxVelocity)) {
+            if (z2 && Math.abs(xVelocity) > this.stickToTargetMaxXVelocity) {
                 return false;
             }
-            this.targetObjectIsStuckTo = magneticTarget;
-            cancelAnimations();
-            this.magnetListener.onStuckToTarget(magneticTarget);
-            animateStuckToTarget(magneticTarget, xVelocity, yVelocity, false, (Runnable) null);
-        } else if (magneticTarget == null && isObjectStuckToTarget()) {
+            this.targetObjectIsStuckTo = magneticTarget2;
+            cancelAnimations$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core();
+            MagnetListener magnetListener2 = this.magnetListener;
+            if (magnetListener2 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("magnetListener");
+                throw null;
+            } else if (magneticTarget2 != null) {
+                magnetListener2.onStuckToTarget(magneticTarget2);
+                this.animateStuckToTarget.invoke(magneticTarget2, Float.valueOf(xVelocity), Float.valueOf(yVelocity), Boolean.FALSE, null);
+                vibrateIfEnabled(5);
+            } else {
+                Intrinsics.throwNpe();
+                throw null;
+            }
+        } else if (magneticTarget2 == null && getObjectStuckToTarget()) {
             this.velocityTracker.computeCurrentVelocity(1000);
-            cancelAnimations();
-            this.magnetListener.onUnstuckFromTarget(this.targetObjectIsStuckTo, this.velocityTracker.getXVelocity(), this.velocityTracker.getYVelocity(), false);
-            this.targetObjectIsStuckTo = null;
+            cancelAnimations$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core();
+            MagnetListener magnetListener3 = this.magnetListener;
+            if (magnetListener3 != null) {
+                MagneticTarget magneticTarget3 = this.targetObjectIsStuckTo;
+                if (magneticTarget3 != null) {
+                    magnetListener3.onUnstuckFromTarget(magneticTarget3, this.velocityTracker.getXVelocity(), this.velocityTracker.getYVelocity(), false);
+                    this.targetObjectIsStuckTo = null;
+                    vibrateIfEnabled(2);
+                } else {
+                    Intrinsics.throwNpe();
+                    throw null;
+                }
+            } else {
+                Intrinsics.throwUninitializedPropertyAccessException("magnetListener");
+                throw null;
+            }
         }
         if (motionEvent.getAction() != 1) {
-            return isObjectStuckToTarget();
+            return getObjectStuckToTarget();
         }
         this.velocityTracker.computeCurrentVelocity(1000);
         float xVelocity2 = this.velocityTracker.getXVelocity();
         float yVelocity2 = this.velocityTracker.getYVelocity();
-        cancelAnimations();
-        if (isObjectStuckToTarget()) {
-            if (Math.hypot((double) xVelocity2, (double) yVelocity2) > ((double) this.flingUnstuckFromTargetMinVelocity)) {
-                this.magnetListener.onUnstuckFromTarget(this.targetObjectIsStuckTo, xVelocity2, yVelocity2, true);
+        cancelAnimations$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core();
+        if (getObjectStuckToTarget()) {
+            if ((-yVelocity2) > this.flingUnstuckFromTargetMinVelocity) {
+                MagnetListener magnetListener4 = this.magnetListener;
+                if (magnetListener4 != null) {
+                    MagneticTarget magneticTarget4 = this.targetObjectIsStuckTo;
+                    if (magneticTarget4 != null) {
+                        magnetListener4.onUnstuckFromTarget(magneticTarget4, xVelocity2, yVelocity2, true);
+                    } else {
+                        Intrinsics.throwNpe();
+                        throw null;
+                    }
+                } else {
+                    Intrinsics.throwUninitializedPropertyAccessException("magnetListener");
+                    throw null;
+                }
             } else {
-                this.magnetListener.onReleasedInTarget(this.targetObjectIsStuckTo);
+                MagnetListener magnetListener5 = this.magnetListener;
+                if (magnetListener5 != null) {
+                    MagneticTarget magneticTarget5 = this.targetObjectIsStuckTo;
+                    if (magneticTarget5 != null) {
+                        magnetListener5.onReleasedInTarget(magneticTarget5);
+                        vibrateIfEnabled(5);
+                    } else {
+                        Intrinsics.throwNpe();
+                        throw null;
+                    }
+                } else {
+                    Intrinsics.throwUninitializedPropertyAccessException("magnetListener");
+                    throw null;
+                }
             }
             this.targetObjectIsStuckTo = null;
             return true;
         }
-        Iterator<MagneticTarget> it2 = this.associatedTargets.iterator();
+        Iterator<T> it2 = this.associatedTargets.iterator();
         while (true) {
             if (!it2.hasNext()) {
-                magneticTarget2 = null;
+                t2 = null;
                 break;
             }
-            MagneticTarget next2 = it2.next();
-            if (isForcefulFlingTowardsTarget(next2, motionEvent.getRawX(), motionEvent.getRawY(), xVelocity2, yVelocity2)) {
-                magneticTarget2 = next2;
+            t2 = it2.next();
+            if (isForcefulFlingTowardsTarget((MagneticTarget) t2, motionEvent.getRawX(), motionEvent.getRawY(), xVelocity2, yVelocity2)) {
                 break;
             }
         }
-        if (magneticTarget2 == null) {
+        MagneticTarget magneticTarget6 = (MagneticTarget) t2;
+        if (magneticTarget6 == null) {
             return false;
         }
-        this.magnetListener.onStuckToTarget(magneticTarget2);
-        this.targetObjectIsStuckTo = magneticTarget2;
-        animateStuckToTarget(magneticTarget2, xVelocity2, yVelocity2, true, new Runnable() {
-            public void run() {
-                MagneticTarget unused = MagnetizedObject.this.targetObjectIsStuckTo = null;
-                MagnetizedObject.this.magnetListener.onReleasedInTarget(magneticTarget2);
-            }
-        });
-        return true;
+        MagnetListener magnetListener6 = this.magnetListener;
+        if (magnetListener6 != null) {
+            magnetListener6.onStuckToTarget(magneticTarget6);
+            this.targetObjectIsStuckTo = magneticTarget6;
+            this.animateStuckToTarget.invoke(magneticTarget6, Float.valueOf(xVelocity2), Float.valueOf(yVelocity2), Boolean.TRUE, new MagnetizedObject$maybeConsumeMotionEvent$1(this, magneticTarget6));
+            return true;
+        }
+        Intrinsics.throwUninitializedPropertyAccessException("magnetListener");
+        throw null;
     }
 
-    private void addMovement(MotionEvent motionEvent) {
+    /* access modifiers changed from: private */
+    @SuppressLint({"MissingPermission"})
+    public final void vibrateIfEnabled(int i) {
+        if (this.hapticsEnabled && systemHapticsEnabled) {
+            this.vibrator.vibrate((long) i);
+        }
+    }
+
+    private final void addMovement(MotionEvent motionEvent) {
         float rawX = motionEvent.getRawX() - motionEvent.getX();
         float rawY = motionEvent.getRawY() - motionEvent.getY();
         motionEvent.offsetLocation(rawX, rawY);
@@ -207,77 +352,134 @@ public abstract class MagnetizedObject {
         motionEvent.offsetLocation(-rawX, -rawY);
     }
 
-    private void animateStuckToTarget(MagneticTarget magneticTarget, float f, float f2, boolean z, Runnable runnable) {
-        PhysicsAnimator.SpringConfig springConfig2;
+    /* access modifiers changed from: private */
+    public final void animateStuckToTargetInternal(MagneticTarget magneticTarget, float f, float f2, boolean z, Function0<Unit> function0) {
         magneticTarget.updateLocationOnScreen();
         getLocationOnScreen(this.underlyingObject, this.objectLocationOnScreen);
-        float width = (magneticTarget.centerOnScreen.x - (getWidth(this.underlyingObject) / 2.0f)) - ((float) this.objectLocationOnScreen[0]);
-        float height = (magneticTarget.centerOnScreen.y - (getHeight(this.underlyingObject) / 2.0f)) - ((float) this.objectLocationOnScreen[1]);
-        if (z) {
-            springConfig2 = this.flungIntoTargetSpringConfig;
-        } else {
-            springConfig2 = this.springConfig;
-        }
-        cancelAnimations();
-        PhysicsAnimator physicsAnimator = this.animator;
-        FloatPropertyCompat floatPropertyCompat = this.xProperty;
+        float width = (magneticTarget.getCenterOnScreen().x - (getWidth(this.underlyingObject) / 2.0f)) - ((float) this.objectLocationOnScreen[0]);
+        float height = (magneticTarget.getCenterOnScreen().y - (getHeight(this.underlyingObject) / 2.0f)) - ((float) this.objectLocationOnScreen[1]);
+        PhysicsAnimator.SpringConfig springConfig2 = z ? this.flungIntoTargetSpringConfig : this.springConfig;
+        cancelAnimations$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core();
+        PhysicsAnimator<T> physicsAnimator = this.animator;
+        FloatPropertyCompat<? super T> floatPropertyCompat = this.xProperty;
         physicsAnimator.spring(floatPropertyCompat, floatPropertyCompat.getValue(this.underlyingObject) + width, f, springConfig2);
-        FloatPropertyCompat floatPropertyCompat2 = this.yProperty;
+        FloatPropertyCompat<? super T> floatPropertyCompat2 = this.yProperty;
         physicsAnimator.spring(floatPropertyCompat2, floatPropertyCompat2.getValue(this.underlyingObject) + height, f2, springConfig2);
-        PhysicsAnimator.UpdateListener updateListener = this.physicsAnimatorUpdateListener;
+        PhysicsAnimator.UpdateListener<T> updateListener = this.physicsAnimatorUpdateListener;
         if (updateListener != null) {
-            this.animator.addUpdateListener(updateListener);
+            PhysicsAnimator<T> physicsAnimator2 = this.animator;
+            if (updateListener != null) {
+                physicsAnimator2.addUpdateListener(updateListener);
+            } else {
+                Intrinsics.throwNpe();
+                throw null;
+            }
         }
-        PhysicsAnimator.EndListener endListener = this.physicsAnimatorEndListener;
+        PhysicsAnimator.EndListener<T> endListener = this.physicsAnimatorEndListener;
         if (endListener != null) {
-            this.animator.addEndListener(endListener);
+            PhysicsAnimator<T> physicsAnimator3 = this.animator;
+            if (endListener != null) {
+                physicsAnimator3.addEndListener(endListener);
+            } else {
+                Intrinsics.throwNpe();
+                throw null;
+            }
         }
-        if (runnable != null) {
-            this.animator.withEndActions(runnable);
+        if (function0 != null) {
+            this.animator.withEndActions((Function0<Unit>[]) new Function0[]{function0});
         }
         this.animator.start();
     }
 
-    private boolean isForcefulFlingTowardsTarget(MagneticTarget magneticTarget, float f, float f2, float f3, float f4) {
+    private final boolean isForcefulFlingTowardsTarget(MagneticTarget magneticTarget, float f, float f2, float f3, float f4) {
         if (!this.flingToTargetEnabled) {
             return false;
         }
-        if (!(f2 >= magneticTarget.centerOnScreen.y ? f4 < this.flingToTargetMinVelocity : f4 > this.flingToTargetMinVelocity)) {
+        if (!(f2 >= magneticTarget.getCenterOnScreen().y ? f4 < this.flingToTargetMinVelocity : f4 > this.flingToTargetMinVelocity)) {
             return false;
         }
         if (f3 != 0.0f) {
             float f5 = f4 / f3;
-            f = (magneticTarget.centerOnScreen.y - (f2 - (f * f5))) / f5;
+            f = (magneticTarget.getCenterOnScreen().y - (f2 - (f * f5))) / f5;
         }
-        float width = ((float) magneticTarget.targetView.getWidth()) * this.flingToTargetWidthPercent;
-        float f6 = magneticTarget.centerOnScreen.x;
-        float f7 = width / 2.0f;
-        if (f <= f6 - f7 || f >= f6 + f7) {
+        float width = (((float) magneticTarget.getTargetView().getWidth()) * this.flingToTargetWidthPercent) / ((float) 2);
+        if (f <= magneticTarget.getCenterOnScreen().x - width || f >= magneticTarget.getCenterOnScreen().x + width) {
             return false;
         }
         return true;
     }
 
-    private void cancelAnimations() {
-        this.animator.cancel(this.xProperty);
-        this.animator.cancel(this.yProperty);
+    public final void cancelAnimations$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core() {
+        this.animator.cancel(this.xProperty, this.yProperty);
     }
 
-    private void updateTargetViews() {
-        Iterator<MagneticTarget> it = this.associatedTargets.iterator();
-        while (it.hasNext()) {
-            it.next().updateLocationOnScreen();
+    public final void updateTargetViews$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core() {
+        for (MagneticTarget updateLocationOnScreen : this.associatedTargets) {
+            updateLocationOnScreen.updateLocationOnScreen();
         }
         if (this.associatedTargets.size() > 0) {
-            this.touchSlop = ViewConfiguration.get(this.associatedTargets.get(0).targetView.getContext()).getScaledTouchSlop();
+            ViewConfiguration viewConfiguration = ViewConfiguration.get(this.associatedTargets.get(0).getTargetView().getContext());
+            Intrinsics.checkExpressionValueIsNotNull(viewConfiguration, "ViewConfiguration.get(as…ts[0].targetView.context)");
+            this.touchSlop = viewConfiguration.getScaledTouchSlop();
         }
     }
 
-    public void setPhysicsAnimatorUpdateListener(PhysicsAnimator.UpdateListener updateListener) {
-        this.physicsAnimatorUpdateListener = updateListener;
+    /* compiled from: MagnetizedObject.kt */
+    public static final class MagneticTarget {
+        @NotNull
+        private final PointF centerOnScreen = new PointF();
+        private int magneticFieldRadiusPx;
+        @NotNull
+        private final View targetView;
+        /* access modifiers changed from: private */
+        public final int[] tempLoc = new int[2];
+
+        public MagneticTarget(@NotNull View view, int i) {
+            Intrinsics.checkParameterIsNotNull(view, "targetView");
+            this.targetView = view;
+            this.magneticFieldRadiusPx = i;
+        }
+
+        @NotNull
+        public final View getTargetView() {
+            return this.targetView;
+        }
+
+        public final int getMagneticFieldRadiusPx() {
+            return this.magneticFieldRadiusPx;
+        }
+
+        public final void setMagneticFieldRadiusPx(int i) {
+            this.magneticFieldRadiusPx = i;
+        }
+
+        @NotNull
+        public final PointF getCenterOnScreen() {
+            return this.centerOnScreen;
+        }
+
+        public final void updateLocationOnScreen() {
+            this.targetView.post(new MagnetizedObject$MagneticTarget$updateLocationOnScreen$1(this));
+        }
     }
 
-    public void setMagnetListener(MagnetListener magnetListener2) {
-        this.magnetListener = magnetListener2;
+    /* compiled from: MagnetizedObject.kt */
+    public static final class Companion {
+        private Companion() {
+        }
+
+        public /* synthetic */ Companion(DefaultConstructorMarker defaultConstructorMarker) {
+            this();
+        }
+
+        /* access modifiers changed from: private */
+        public final void initHapticSettingObserver(Context context) {
+            if (!MagnetizedObject.hapticSettingObserverInitialized) {
+                MagnetizedObject$Companion$initHapticSettingObserver$hapticSettingObserver$1 magnetizedObject$Companion$initHapticSettingObserver$hapticSettingObserver$1 = new MagnetizedObject$Companion$initHapticSettingObserver$hapticSettingObserver$1(context, Handler.getMain());
+                context.getContentResolver().registerContentObserver(Settings.System.getUriFor("haptic_feedback_enabled"), true, magnetizedObject$Companion$initHapticSettingObserver$hapticSettingObserver$1);
+                magnetizedObject$Companion$initHapticSettingObserver$hapticSettingObserver$1.onChange(false);
+                MagnetizedObject.hapticSettingObserverInitialized = true;
+            }
+        }
     }
 }

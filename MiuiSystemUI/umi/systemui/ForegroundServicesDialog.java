@@ -20,7 +20,6 @@ import android.widget.TextView;
 import com.android.internal.app.AlertActivity;
 import com.android.internal.app.AlertController;
 import com.android.internal.logging.MetricsLogger;
-import com.android.systemui.plugins.R;
 import java.util.ArrayList;
 
 public final class ForegroundServicesDialog extends AlertActivity implements AdapterView.OnItemSelectedListener, DialogInterface.OnClickListener, AlertController.AlertParams.OnPrepareListViewListener {
@@ -48,11 +47,13 @@ public final class ForegroundServicesDialog extends AlertActivity implements Ada
     public void onPrepareListView(ListView listView) {
     }
 
+    ForegroundServicesDialog() {
+    }
+
     /* JADX WARNING: type inference failed for: r3v0, types: [android.content.Context, android.content.DialogInterface$OnClickListener, com.android.internal.app.AlertActivity, com.android.systemui.ForegroundServicesDialog, com.android.internal.app.AlertController$AlertParams$OnPrepareListViewListener, android.widget.AdapterView$OnItemSelectedListener] */
     /* access modifiers changed from: protected */
     public void onCreate(Bundle bundle) {
         ForegroundServicesDialog.super.onCreate(bundle);
-        DependencyUI.initDependencies(getApplicationContext());
         this.mMetricsLogger = (MetricsLogger) Dependency.get(MetricsLogger.class);
         this.mInflater = LayoutInflater.from(this);
         PackageItemAdapter packageItemAdapter = new PackageItemAdapter(this);
@@ -60,7 +61,7 @@ public final class ForegroundServicesDialog extends AlertActivity implements Ada
         AlertController.AlertParams alertParams = this.mAlertParams;
         alertParams.mAdapter = packageItemAdapter;
         alertParams.mOnClickListener = this.mAppClickListener;
-        alertParams.mCustomTitleView = this.mInflater.inflate(R.layout.foreground_service_title, (ViewGroup) null);
+        alertParams.mCustomTitleView = this.mInflater.inflate(C0014R$layout.foreground_service_title, (ViewGroup) null);
         alertParams.mIsSingleChoice = true;
         alertParams.mOnItemSelectedListener = this;
         alertParams.mPositiveButtonText = getString(17040102);
@@ -120,7 +121,7 @@ public final class ForegroundServicesDialog extends AlertActivity implements Ada
         final PackageManager mPm;
 
         public PackageItemAdapter(Context context) {
-            super(context, R.layout.foreground_service_item);
+            super(context, C0014R$layout.foreground_service_item);
             this.mPm = context.getPackageManager();
             this.mInflater = LayoutInflater.from(context);
             this.mIconDrawableFactory = IconDrawableFactory.newInstance(context, true);
@@ -141,10 +142,10 @@ public final class ForegroundServicesDialog extends AlertActivity implements Ada
 
         public View getView(int i, View view, ViewGroup viewGroup) {
             if (view == null) {
-                view = this.mInflater.inflate(R.layout.foreground_service_item, viewGroup, false);
+                view = this.mInflater.inflate(C0014R$layout.foreground_service_item, viewGroup, false);
             }
-            ((ImageView) view.findViewById(R.id.app_icon)).setImageDrawable(this.mIconDrawableFactory.getBadgedIcon((ApplicationInfo) getItem(i)));
-            ((TextView) view.findViewById(R.id.app_name)).setText(((ApplicationInfo) getItem(i)).loadLabel(this.mPm));
+            ((ImageView) view.findViewById(C0012R$id.app_icon)).setImageDrawable(this.mIconDrawableFactory.getBadgedIcon((ApplicationInfo) getItem(i)));
+            ((TextView) view.findViewById(C0012R$id.app_name)).setText(((ApplicationInfo) getItem(i)).loadLabel(this.mPm));
             return view;
         }
     }

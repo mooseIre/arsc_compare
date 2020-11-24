@@ -25,42 +25,42 @@ import android.view.SurfaceControlViewHost;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.WindowManagerGlobal;
 import android.view.WindowlessWindowManager;
 import com.android.internal.os.IResultReceiver;
 import com.android.systemui.wm.DisplayController;
-import com.miui.systemui.annotation.Inject;
 import java.util.HashMap;
 
 public class SystemWindows {
     Context mContext;
     DisplayController mDisplayController;
-    private final DisplayController.OnDisplaysChangedListener mDisplayListener = new DisplayController.OnDisplaysChangedListener() {
-        public void onDisplayAdded(int i) {
-        }
-
-        public void onDisplayRemoved(int i) {
-        }
-
-        public void onDisplayConfigurationChanged(int i, Configuration configuration) {
-            PerDisplay perDisplay = (PerDisplay) SystemWindows.this.mPerDisplay.get(i);
-            if (perDisplay != null) {
-                perDisplay.updateConfiguration(configuration);
-            }
-        }
-    };
+    private final DisplayController.OnDisplaysChangedListener mDisplayListener;
     /* access modifiers changed from: private */
     public final SparseArray<PerDisplay> mPerDisplay = new SparseArray<>();
     final HashMap<View, SurfaceControlViewHost> mViewRoots = new HashMap<>();
     IWindowManager mWmService;
 
-    public SystemWindows(@Inject Context context, @Inject DisplayController displayController) {
+    public SystemWindows(Context context, DisplayController displayController, IWindowManager iWindowManager) {
+        AnonymousClass1 r0 = new DisplayController.OnDisplaysChangedListener() {
+            public void onDisplayAdded(int i) {
+            }
+
+            public void onDisplayRemoved(int i) {
+            }
+
+            public void onDisplayConfigurationChanged(int i, Configuration configuration) {
+                PerDisplay perDisplay = (PerDisplay) SystemWindows.this.mPerDisplay.get(i);
+                if (perDisplay != null) {
+                    perDisplay.updateConfiguration(configuration);
+                }
+            }
+        };
+        this.mDisplayListener = r0;
         this.mContext = context;
-        this.mWmService = WindowManagerGlobal.getWindowManagerService();
+        this.mWmService = iWindowManager;
         this.mDisplayController = displayController;
-        displayController.addDisplayWindowListener(this.mDisplayListener);
+        displayController.addDisplayWindowListener(r0);
         try {
-            this.mWmService.openSession(new IWindowSessionCallback.Stub(this) {
+            iWindowManager.openSession(new IWindowSessionCallback.Stub(this) {
                 public void onAnimatorScaleChanged(float f) {
                 }
             });

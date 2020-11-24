@@ -21,7 +21,6 @@ import java.io.PrintWriter;
 
 public class PipBoundsHandler {
     private static final String TAG = "PipBoundsHandler";
-    public static PipBoundsHandler sPipBoundsHandler;
     private float mAspectRatio;
     /* access modifiers changed from: private */
     public final Context mContext;
@@ -52,24 +51,16 @@ public class PipBoundsHandler {
     private float mReentrySnapFraction = -1.0f;
     private Point mScreenEdgeInsets;
     private int mShelfHeight;
-    private PipSnapAlgorithm mSnapAlgorithm;
+    private final PipSnapAlgorithm mSnapAlgorithm;
 
-    public static PipBoundsHandler getInstance(Context context) {
-        if (sPipBoundsHandler == null) {
-            sPipBoundsHandler = new PipBoundsHandler(context);
-        }
-        return sPipBoundsHandler;
-    }
-
-    private PipBoundsHandler(Context context) {
+    public PipBoundsHandler(Context context, PipSnapAlgorithm pipSnapAlgorithm, DisplayController displayController) {
         this.mContext = context;
+        this.mSnapAlgorithm = pipSnapAlgorithm;
         this.mDisplayLayout = new DisplayLayout();
-        DisplayController displayController = new DisplayController(context);
         this.mDisplayController = displayController;
         displayController.addDisplayWindowListener(this.mDisplaysChangedListener);
         reloadResources();
         this.mAspectRatio = this.mDefaultAspectRatio;
-        this.mSnapAlgorithm = PipSnapAlgorithm.getInstance(this.mContext);
     }
 
     private void reloadResources() {
@@ -85,7 +76,7 @@ public class PipBoundsHandler {
         if (parseSize == null) {
             point = new Point();
         } else {
-            point = new Point(dpToPx((float) parseSize.getWidth(), resources.getDisplayMetrics()), dpToPx((float) parseSize.getHeight(), resources.getDisplayMetrics()) * 3);
+            point = new Point(dpToPx((float) parseSize.getWidth(), resources.getDisplayMetrics()), dpToPx((float) parseSize.getHeight(), resources.getDisplayMetrics()));
         }
         this.mScreenEdgeInsets = point;
         this.mMinAspectRatio = resources.getFloat(17105075);
@@ -196,6 +187,12 @@ public class PipBoundsHandler {
     /* access modifiers changed from: package-private */
     public float getDefaultAspectRatio() {
         return this.mDefaultAspectRatio;
+    }
+
+    public void onDisplayRotationChangedNotInPip(int i) {
+        this.mDisplayLayout.rotateTo(this.mContext.getResources(), i);
+        this.mDisplayInfo.rotation = i;
+        updateDisplayInfoIfNeeded();
     }
 
     public boolean onDisplayRotationChanged(Rect rect, Rect rect2, Rect rect3, int i, int i2, int i3, WindowContainerTransaction windowContainerTransaction) {

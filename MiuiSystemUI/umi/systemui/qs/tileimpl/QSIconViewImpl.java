@@ -1,43 +1,41 @@
 package com.android.systemui.qs.tileimpl;
 
-import android.animation.ObjectAnimator;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ValueAnimator;
 import android.content.Context;
-import android.content.res.Resources;
-import android.graphics.drawable.AnimatedVectorDrawable;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
+import android.graphics.drawable.Animatable2;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.LayerDrawable;
 import android.view.View;
 import android.widget.ImageView;
-import com.android.systemui.Interpolators;
-import com.android.systemui.miui.DrawableUtils;
-import com.android.systemui.plugins.R;
+import com.android.systemui.C0008R$color;
+import com.android.systemui.C0009R$dimen;
+import com.android.systemui.C0012R$id;
 import com.android.systemui.plugins.qs.QSIconView;
 import com.android.systemui.plugins.qs.QSTile;
+import com.android.systemui.qs.AlphaControlledSignalTileView$AlphaControlledSlashImageView;
 import java.util.Objects;
+import java.util.function.Supplier;
 
 public class QSIconViewImpl extends QSIconView {
     private boolean mAnimationEnabled = true;
-    private ObjectAnimator mAnimator;
     protected final View mIcon;
-    protected final int mIconBgSizePx;
-    protected int mIconColorDisabled;
-    protected int mIconColorEnabled;
     protected final int mIconSizePx;
-    private boolean mIsCustomTile = false;
+    private QSTile.Icon mLastIcon;
+    private int mState = -1;
+    private int mTint;
 
     /* access modifiers changed from: protected */
-    public int getIconMeasureMode() {
-        return 1073741824;
-    }
+    public abstract View createIcon();
+
+    /* access modifiers changed from: protected */
+    public abstract int getIconMeasureMode();
 
     public QSIconViewImpl(Context context) {
         super(context);
-        Resources resources = context.getResources();
-        this.mIconSizePx = resources.getDimensionPixelSize(R.dimen.qs_tile_icon_size);
-        this.mIconBgSizePx = resources.getDimensionPixelSize(R.dimen.qs_tile_icon_bg_size);
-        resources.getDimensionPixelSize(R.dimen.qs_tile_padding_below_icon);
-        this.mIconColorEnabled = resources.getColor(R.color.qs_tile_icon_enabled_color);
-        this.mIconColorDisabled = resources.getColor(R.color.qs_tile_icon_disabled_color);
+        this.mIconSizePx = context.getResources().getDimensionPixelSize(C0009R$dimen.qs_tile_icon_size);
         View createIcon = createIcon();
         this.mIcon = createIcon;
         addView(createIcon);
@@ -54,8 +52,20 @@ public class QSIconViewImpl extends QSIconView {
     /* access modifiers changed from: protected */
     public void onMeasure(int i, int i2) {
         int size = View.MeasureSpec.getSize(i);
-        this.mIcon.measure(View.MeasureSpec.makeMeasureSpec(size, getIconMeasureMode()), exactly(this.mIconBgSizePx));
+        this.mIcon.measure(View.MeasureSpec.makeMeasureSpec(size, getIconMeasureMode()), exactly(this.mIconSizePx));
         setMeasuredDimension(size, this.mIcon.getMeasuredHeight());
+    }
+
+    public String toString() {
+        StringBuilder sb = new StringBuilder(getClass().getSimpleName());
+        sb.append('[');
+        sb.append("state=" + this.mState);
+        sb.append(", tint=" + this.mTint);
+        if (this.mLastIcon != null) {
+            sb.append(", lastIcon=" + this.mLastIcon.toString());
+        }
+        sb.append("]");
+        return sb.toString();
     }
 
     /* access modifiers changed from: protected */
@@ -63,107 +73,148 @@ public class QSIconViewImpl extends QSIconView {
         layout(this.mIcon, (getMeasuredWidth() - this.mIcon.getMeasuredWidth()) / 2, 0);
     }
 
-    public void updateResources() {
-        Resources resources = getResources();
-        this.mIconColorEnabled = resources.getColor(R.color.qs_tile_icon_enabled_color);
-        this.mIconColorDisabled = resources.getColor(R.color.qs_tile_icon_disabled_color);
-    }
-
-    public void setIcon(QSTile.State state) {
-        setIcon((ImageView) this.mIcon, state);
-    }
-
     /* access modifiers changed from: protected */
-    public void setIcon(ImageView imageView, QSTile.State state) {
-        updateIcon(imageView, state);
-    }
-
-    /* access modifiers changed from: protected */
-    public void updateIcon(ImageView imageView, QSTile.State state) {
-        int i;
-        if (!Objects.equals(state.icon, imageView.getTag(R.id.qs_icon_tag))) {
-            imageView.setTag(R.id.qs_icon_tag, state.icon);
-            QSTile.Icon icon = state.icon;
-            Drawable drawable = icon != null ? icon.getDrawable(this.mContext) : null;
+    /* renamed from: updateIcon */
+    public void lambda$setIcon$0(ImageView imageView, QSTile.State state, boolean z) {
+        Drawable drawable;
+        Supplier<QSTile.Icon> supplier = state.iconSupplier;
+        QSTile.Icon icon = supplier != null ? supplier.get() : state.icon;
+        if (!Objects.equals(icon, imageView.getTag(C0012R$id.qs_icon_tag)) || !Objects.equals(state.slash, imageView.getTag(C0012R$id.qs_slash_tag))) {
+            boolean z2 = z && shouldAnimate(imageView);
+            this.mLastIcon = icon;
+            if (icon != null) {
+                drawable = z2 ? icon.getDrawable(this.mContext) : icon.getInvisibleDrawable(this.mContext);
+            } else {
+                drawable = null;
+            }
+            int padding = icon != null ? icon.getPadding() : 0;
             if (drawable != null) {
-                boolean z = drawable instanceof AnimatedVectorDrawable;
-                if (z) {
-                    drawable.mutate();
-                }
                 drawable.setAutoMirrored(false);
-                if (state.state == 2) {
-                    i = this.mIconColorEnabled;
-                } else {
-                    i = this.mIconColorDisabled;
-                }
-                drawable.setTint(i);
-                boolean z2 = state.state == 2;
-                boolean z3 = imageView.getTag(R.id.qs_icon_state_tag) != null ? ((Integer) imageView.getTag(R.id.qs_icon_state_tag)).intValue() == 2 : z2;
-                imageView.setTag(R.id.qs_icon_state_tag, Integer.valueOf(state.state));
-                boolean z4 = imageView.isShown() && this.mAnimationEnabled && imageView.getTag(R.id.qs_icon_tag) != null && z3 != z2;
-                int properIconSize = getProperIconSize(drawable);
-                Drawable drawable2 = getResources().getDrawable(R.drawable.ic_qs_bg_disabled);
-                Drawable drawable3 = getResources().getDrawable(R.drawable.ic_qs_bg_enabled);
-                if (!z2) {
-                    drawable3 = drawable2;
-                }
-                if (z4) {
-                    int i2 = z2 ? 255 : 0;
-                    Drawable mutate = getResources().getDrawable(R.drawable.ic_qs_bg_enabled).mutate();
-                    LayerDrawable layerDrawable = new LayerDrawable(new Drawable[]{drawable2, mutate, drawable});
-                    layerDrawable.setLayerGravity(2, 17);
-                    layerDrawable.setLayerSize(2, properIconSize, properIconSize);
-                    imageView.setImageDrawable(layerDrawable);
-                    startAnimation(mutate, i2);
-                    if (z) {
-                        AnimatedVectorDrawable animatedVectorDrawable = (AnimatedVectorDrawable) drawable;
-                        if (animatedVectorDrawable.isRunning()) {
-                            animatedVectorDrawable.stop();
-                            animatedVectorDrawable.reset();
+                drawable.setLayoutDirection(getLayoutDirection());
+            }
+            if (imageView instanceof SlashImageView) {
+                SlashImageView slashImageView = (SlashImageView) imageView;
+                slashImageView.setAnimationEnabled(z2);
+                slashImageView.setState((QSTile.SlashState) null, drawable);
+            } else {
+                imageView.setImageDrawable(drawable);
+            }
+            imageView.setTag(C0012R$id.qs_icon_tag, icon);
+            imageView.setTag(C0012R$id.qs_slash_tag, state.slash);
+            imageView.setPadding(0, padding, 0, padding);
+            if (drawable instanceof Animatable2) {
+                final Animatable2 animatable2 = (Animatable2) drawable;
+                animatable2.start();
+                if (state.isTransient) {
+                    animatable2.registerAnimationCallback(new Animatable2.AnimationCallback(this) {
+                        public void onAnimationEnd(Drawable drawable) {
+                            animatable2.start();
                         }
-                        animatedVectorDrawable.start();
-                        return;
-                    }
-                    return;
+                    });
                 }
-                LayerDrawable combine = DrawableUtils.combine(drawable3, drawable, 17);
-                combine.setLayerSize(1, properIconSize, properIconSize);
-                imageView.setImageDrawable(combine);
             }
         }
     }
 
-    private void startAnimation(Drawable drawable, int i) {
-        ObjectAnimator objectAnimator = this.mAnimator;
-        if (objectAnimator != null) {
-            objectAnimator.cancel();
-            this.mAnimator.removeAllListeners();
-            this.mAnimator.removeAllUpdateListeners();
-            this.mAnimator = null;
-        }
-        ObjectAnimator duration = ObjectAnimator.ofInt(drawable, "alpha", new int[]{255 - i, i}).setDuration(300);
-        this.mAnimator = duration;
-        duration.setInterpolator(Interpolators.CUBIC_EASE_OUT);
-        this.mAnimator.start();
-    }
-
-    public void setIsCustomTile(boolean z) {
-        this.mIsCustomTile = z;
-    }
-
-    private int getProperIconSize(Drawable drawable) {
-        if (this.mIsCustomTile) {
-            return this.mIconSizePx;
-        }
-        return drawable instanceof AnimatedVectorDrawable ? drawable.getIntrinsicWidth() : this.mIconSizePx;
+    private boolean shouldAnimate(ImageView imageView) {
+        return this.mAnimationEnabled && imageView.isShown() && imageView.getDrawable() != null;
     }
 
     /* access modifiers changed from: protected */
-    public View createIcon() {
-        ImageView imageView = new ImageView(this.mContext);
-        imageView.setId(16908294);
-        imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-        return imageView;
+    public void setIcon(ImageView imageView, QSTile.State state, boolean z) {
+        if (state.disabledByPolicy) {
+            imageView.setColorFilter(getContext().getColor(C0008R$color.qs_tile_disabled_color));
+        } else {
+            imageView.clearColorFilter();
+        }
+        int i = state.state;
+        if (i != this.mState) {
+            int color = getColor(i);
+            this.mState = state.state;
+            if (this.mTint == 0 || !z || !shouldAnimate(imageView)) {
+                if (imageView instanceof AlphaControlledSignalTileView$AlphaControlledSlashImageView) {
+                    ((AlphaControlledSignalTileView$AlphaControlledSlashImageView) imageView).setFinalImageTintList(ColorStateList.valueOf(color));
+                } else {
+                    setTint(imageView, color);
+                }
+                this.mTint = color;
+                lambda$setIcon$0(imageView, state, z);
+                return;
+            }
+            animateGrayScale(this.mTint, color, imageView, new Runnable(imageView, state, z) {
+                public final /* synthetic */ ImageView f$1;
+                public final /* synthetic */ QSTile.State f$2;
+                public final /* synthetic */ boolean f$3;
+
+                {
+                    this.f$1 = r2;
+                    this.f$2 = r3;
+                    this.f$3 = r4;
+                }
+
+                public final void run() {
+                    QSIconViewImpl.this.lambda$setIcon$0$QSIconViewImpl(this.f$1, this.f$2, this.f$3);
+                }
+            });
+            this.mTint = color;
+            return;
+        }
+        lambda$setIcon$0(imageView, state, z);
+    }
+
+    /* access modifiers changed from: protected */
+    public int getColor(int i) {
+        return QSTileImpl.getColorForState(getContext(), i);
+    }
+
+    private void animateGrayScale(int i, int i2, ImageView imageView, final Runnable runnable) {
+        if (imageView instanceof AlphaControlledSignalTileView$AlphaControlledSlashImageView) {
+            ((AlphaControlledSignalTileView$AlphaControlledSlashImageView) imageView).setFinalImageTintList(ColorStateList.valueOf(i2));
+        }
+        if (!this.mAnimationEnabled || !ValueAnimator.areAnimatorsEnabled()) {
+            setTint(imageView, i2);
+            runnable.run();
+            return;
+        }
+        float red = (float) Color.red(i);
+        float red2 = (float) Color.red(i2);
+        ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{0.0f, 1.0f});
+        ofFloat.setDuration(350);
+        ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener((float) Color.alpha(i), (float) Color.alpha(i2), red, red2, imageView) {
+            public final /* synthetic */ float f$0;
+            public final /* synthetic */ float f$1;
+            public final /* synthetic */ float f$2;
+            public final /* synthetic */ float f$3;
+            public final /* synthetic */ ImageView f$4;
+
+            {
+                this.f$0 = r1;
+                this.f$1 = r2;
+                this.f$2 = r3;
+                this.f$3 = r4;
+                this.f$4 = r5;
+            }
+
+            public final void onAnimationUpdate(ValueAnimator valueAnimator) {
+                QSIconViewImpl.lambda$animateGrayScale$1(this.f$0, this.f$1, this.f$2, this.f$3, this.f$4, valueAnimator);
+            }
+        });
+        ofFloat.addListener(new AnimatorListenerAdapter(this) {
+            public void onAnimationEnd(Animator animator) {
+                runnable.run();
+            }
+        });
+        ofFloat.start();
+    }
+
+    static /* synthetic */ void lambda$animateGrayScale$1(float f, float f2, float f3, float f4, ImageView imageView, ValueAnimator valueAnimator) {
+        float animatedFraction = valueAnimator.getAnimatedFraction();
+        int i = (int) (f3 + ((f4 - f3) * animatedFraction));
+        setTint(imageView, Color.argb((int) (f + ((f2 - f) * animatedFraction)), i, i, i));
+    }
+
+    public static void setTint(ImageView imageView, int i) {
+        imageView.setImageTintList(ColorStateList.valueOf(i));
     }
 
     /* access modifiers changed from: protected */

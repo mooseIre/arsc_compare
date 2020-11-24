@@ -1,13 +1,14 @@
 package com.android.systemui.pip.phone;
 
+import android.annotation.SuppressLint;
 import android.app.IActivityManager;
-import android.app.IActivityTaskManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.Rect;
+import android.graphics.drawable.TransitionDrawable;
 import android.os.Handler;
 import android.os.RemoteException;
 import android.util.Log;
@@ -15,6 +16,7 @@ import android.util.Pair;
 import android.util.Size;
 import android.view.IPinnedStackController;
 import android.view.InputEvent;
+import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -23,20 +25,30 @@ import android.view.accessibility.AccessibilityManager;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.FrameLayout;
 import androidx.dynamicanimation.animation.DynamicAnimation;
+import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.os.logging.MetricsLoggerWrapper;
+import com.android.systemui.C0007R$bool;
+import com.android.systemui.C0009R$dimen;
+import com.android.systemui.C0010R$drawable;
+import com.android.systemui.model.SysUiState;
 import com.android.systemui.pip.PipBoundsHandler;
 import com.android.systemui.pip.PipSnapAlgorithm;
 import com.android.systemui.pip.PipTaskOrganizer;
-import com.android.systemui.pip.phone.InputConsumerController;
 import com.android.systemui.pip.phone.PipAccessibilityInteractionConnection;
 import com.android.systemui.pip.phone.PipMenuActivityController;
 import com.android.systemui.pip.phone.PipTouchHandler;
-import com.android.systemui.plugins.R;
-import com.android.systemui.statusbar.FlingAnimationUtils;
+import com.android.systemui.shared.system.InputConsumerController;
+import com.android.systemui.util.DeviceConfigProxy;
 import com.android.systemui.util.DismissCircleView;
+import com.android.systemui.util.FloatingContentCoordinator;
 import com.android.systemui.util.animation.PhysicsAnimator;
 import com.android.systemui.util.magnetictarget.MagnetizedObject;
 import java.io.PrintWriter;
+import java.util.Objects;
+import java.util.function.Function;
+import kotlin.Unit;
+import kotlin.jvm.functions.Function0;
+import kotlin.jvm.functions.Function5;
 
 public class PipTouchHandler {
     private final AccessibilityManager mAccessibilityManager;
@@ -53,21 +65,21 @@ public class PipTouchHandler {
     public final boolean mEnableDismissDragToEdge;
     private final boolean mEnableResize;
     private Rect mExpandedBounds = new Rect();
+    @VisibleForTesting
     Rect mExpandedMovementBounds = new Rect();
     private int mExpandedShortestEdgeSize;
-    private final FlingAnimationUtils mFlingAnimationUtils;
+    private final FloatingContentCoordinator mFloatingContentCoordinator;
     private PipTouchGesture mGesture;
     /* access modifiers changed from: private */
     public Handler mHandler = new Handler();
-    private boolean mHideMenuAfterShown = false;
     private int mImeHeight;
     private int mImeOffset;
     private Rect mInsetBounds = new Rect();
     private boolean mIsImeShowing;
     private boolean mIsShelfShowing;
     private MagnetizedObject.MagneticTarget mMagneticTarget;
-    private PhysicsAnimator mMagneticTargetAnimator;
-    private MagnetizedObject mMagnetizedPip;
+    private PhysicsAnimator<View> mMagneticTargetAnimator;
+    private MagnetizedObject<Rect> mMagnetizedPip;
     /* access modifiers changed from: private */
     public final PipMenuActivityController mMenuController;
     /* access modifiers changed from: private */
@@ -80,10 +92,12 @@ public class PipTouchHandler {
     /* access modifiers changed from: private */
     public boolean mMovementWithinDismiss;
     private Rect mNormalBounds = new Rect();
+    @VisibleForTesting
     Rect mNormalMovementBounds = new Rect();
     private IPinnedStackController mPinnedStackController;
     private final PipBoundsHandler mPipBoundsHandler;
     private PipResizeGestureHandler mPipResizeGestureHandler;
+    @VisibleForTesting
     Rect mResizedBounds = new Rect();
     /* access modifiers changed from: private */
     public float mSavedSnapFraction = -1.0f;
@@ -97,7 +111,7 @@ public class PipTouchHandler {
         }
     };
     private final PipSnapAlgorithm mSnapAlgorithm;
-    private final PhysicsAnimator.SpringConfig mTargetSpringConfig = new PhysicsAnimator.SpringConfig(1500.0f, 1.0f);
+    private final PhysicsAnimator.SpringConfig mTargetSpringConfig = new PhysicsAnimator.SpringConfig(200.0f, 0.75f);
     private DismissCircleView mTargetView;
     /* access modifiers changed from: private */
     public ViewGroup mTargetViewContainer;
@@ -133,11 +147,11 @@ public class PipTouchHandler {
         }
     }
 
-    public PipTouchHandler(Context context, IActivityManager iActivityManager, IActivityTaskManager iActivityTaskManager, PipMenuActivityController pipMenuActivityController, InputConsumerController inputConsumerController, PipBoundsHandler pipBoundsHandler, PipTaskOrganizer pipTaskOrganizer, PipSnapAlgorithm pipSnapAlgorithm) {
+    @SuppressLint({"InflateParams"})
+    public PipTouchHandler(Context context, IActivityManager iActivityManager, PipMenuActivityController pipMenuActivityController, InputConsumerController inputConsumerController, PipBoundsHandler pipBoundsHandler, PipTaskOrganizer pipTaskOrganizer, FloatingContentCoordinator floatingContentCoordinator, DeviceConfigProxy deviceConfigProxy, PipSnapAlgorithm pipSnapAlgorithm, SysUiState sysUiState) {
         Context context2 = context;
         PipMenuActivityController pipMenuActivityController2 = pipMenuActivityController;
         InputConsumerController inputConsumerController2 = inputConsumerController;
-        PipBoundsHandler pipBoundsHandler2 = pipBoundsHandler;
         this.mContext = context2;
         this.mActivityManager = iActivityManager;
         this.mAccessibilityManager = (AccessibilityManager) context2.getSystemService(AccessibilityManager.class);
@@ -145,19 +159,34 @@ public class PipTouchHandler {
         this.mMenuController = pipMenuActivityController2;
         pipMenuActivityController2.addListener(new PipMenuListener());
         this.mSnapAlgorithm = pipSnapAlgorithm;
-        this.mFlingAnimationUtils = new FlingAnimationUtils(context2, 2.5f);
         this.mGesture = new DefaultPipTouchGesture();
-        PipMotionHelper pipMotionHelper = new PipMotionHelper(this.mContext, iActivityTaskManager, pipTaskOrganizer, this.mMenuController, this.mSnapAlgorithm, this.mFlingAnimationUtils);
+        PipMotionHelper pipMotionHelper = new PipMotionHelper(this.mContext, pipTaskOrganizer, this.mMenuController, this.mSnapAlgorithm, floatingContentCoordinator);
         this.mMotionHelper = pipMotionHelper;
-        this.mPipResizeGestureHandler = new PipResizeGestureHandler(context2, pipBoundsHandler2, pipMotionHelper, pipTaskOrganizer);
-        this.mTouchState = new PipTouchState(ViewConfiguration.get(context), this.mHandler, new Runnable() {
+        this.mPipResizeGestureHandler = new PipResizeGestureHandler(context, pipBoundsHandler, pipMotionHelper, deviceConfigProxy, pipTaskOrganizer, new Function() {
+            public final Object apply(Object obj) {
+                return PipTouchHandler.this.getMovementBounds((Rect) obj);
+            }
+        }, new Runnable() {
+            public final void run() {
+                PipTouchHandler.this.updateMovementBounds();
+            }
+        }, sysUiState);
+        ViewConfiguration viewConfiguration = ViewConfiguration.get(context);
+        Handler handler = this.mHandler;
+        $$Lambda$PipTouchHandler$Uq5M9Md512Sfgd22VAeFpot25E0 r4 = new Runnable() {
             public final void run() {
                 PipTouchHandler.this.lambda$new$0$PipTouchHandler();
             }
+        };
+        Objects.requireNonNull(pipMenuActivityController);
+        this.mTouchState = new PipTouchState(viewConfiguration, handler, r4, new Runnable() {
+            public final void run() {
+                PipMenuActivityController.this.hideMenu();
+            }
         });
         Resources resources = context.getResources();
-        this.mEnableDismissDragToEdge = resources.getBoolean(R.bool.config_pipEnableDismissDragToEdge);
-        this.mEnableResize = resources.getBoolean(R.bool.config_pipEnableResizeForMenu);
+        this.mEnableDismissDragToEdge = resources.getBoolean(C0007R$bool.config_pipEnableDismissDragToEdge);
+        this.mEnableResize = resources.getBoolean(C0007R$bool.config_pipEnableResizeForMenu);
         reloadResources();
         inputConsumerController2.setInputListener(new InputConsumerController.InputListener() {
             public final boolean onInputEvent(InputEvent inputEvent) {
@@ -169,26 +198,34 @@ public class PipTouchHandler {
                 PipTouchHandler.this.onRegistrationChanged(z);
             }
         });
-        this.mPipBoundsHandler = pipBoundsHandler2;
-        this.mConnection = new PipAccessibilityInteractionConnection(this.mMotionHelper, new PipAccessibilityInteractionConnection.AccessibilityCallbacks() {
+        this.mPipBoundsHandler = pipBoundsHandler;
+        this.mFloatingContentCoordinator = floatingContentCoordinator;
+        this.mConnection = new PipAccessibilityInteractionConnection(this.mContext, this.mMotionHelper, pipTaskOrganizer, pipSnapAlgorithm, new PipAccessibilityInteractionConnection.AccessibilityCallbacks() {
             public final void onAccessibilityShowMenu() {
                 PipTouchHandler.this.onAccessibilityShowMenu();
             }
+        }, new Runnable() {
+            public final void run() {
+                PipTouchHandler.this.updateMovementBounds();
+            }
         }, this.mHandler);
-        resources.getDimensionPixelSize(R.dimen.dismiss_circle_size);
         this.mTargetView = new DismissCircleView(context2);
         FrameLayout frameLayout = new FrameLayout(context2);
         this.mTargetViewContainer = frameLayout;
-        frameLayout.setClipChildren(false);
+        frameLayout.setBackgroundDrawable(context2.getDrawable(C0010R$drawable.floating_dismiss_gradient_transition));
+        this.mTargetViewContainer.setClipChildren(false);
         this.mTargetViewContainer.addView(this.mTargetView);
-        MagnetizedObject magnetizedPip = this.mMotionHelper.getMagnetizedPip();
+        MagnetizedObject<Rect> magnetizedPip = this.mMotionHelper.getMagnetizedPip();
         this.mMagnetizedPip = magnetizedPip;
         this.mMagneticTarget = magnetizedPip.addTarget(this.mTargetView, 0);
         updateMagneticTargetSize();
-        this.mMagnetizedPip.setPhysicsAnimatorUpdateListener(this.mMotionHelper.mResizePipUpdateListener);
+        this.mMagnetizedPip.setAnimateStuckToTarget(new Function5() {
+            public final Object invoke(Object obj, Object obj2, Object obj3, Object obj4, Object obj5) {
+                return PipTouchHandler.this.lambda$new$1$PipTouchHandler((MagnetizedObject.MagneticTarget) obj, (Float) obj2, (Float) obj3, (Boolean) obj4, (Function0) obj5);
+            }
+        });
         this.mMagnetizedPip.setMagnetListener(new MagnetizedObject.MagnetListener() {
             public void onStuckToTarget(MagnetizedObject.MagneticTarget magneticTarget) {
-                PipTouchHandler.this.mMotionHelper.prepareForAnimation();
                 PipTouchHandler.this.showDismissTargetMaybe();
             }
 
@@ -202,12 +239,16 @@ public class PipTouchHandler {
             }
 
             public void onReleasedInTarget(MagnetizedObject.MagneticTarget magneticTarget) {
+                PipTouchHandler.this.mMotionHelper.notifyDismissalPending();
                 PipTouchHandler.this.mHandler.post(new Runnable() {
                     public final void run() {
                         PipTouchHandler.AnonymousClass1.this.lambda$onReleasedInTarget$0$PipTouchHandler$1();
                     }
                 });
-                MetricsLoggerWrapper.logPictureInPictureDismissByDrag(PipTouchHandler.this.mContext, PipUtils.getTopPipActivity(PipTouchHandler.this.mContext, PipTouchHandler.this.mActivityManager));
+                Pair<ComponentName, Integer> topPipActivity = PipUtils.getTopPipActivity(PipTouchHandler.this.mContext, PipTouchHandler.this.mActivityManager);
+                if (topPipActivity.first != null) {
+                    MetricsLoggerWrapper.logPictureInPictureDismissByDrag(PipTouchHandler.this.mContext, topPipActivity);
+                }
             }
 
             /* access modifiers changed from: private */
@@ -226,22 +267,30 @@ public class PipTouchHandler {
         this.mMenuController.showMenuWithDelay(2, this.mMotionHelper.getBounds(), true, willResizeMenu(), shouldShowResizeHandle());
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$new$1 */
+    public /* synthetic */ Unit lambda$new$1$PipTouchHandler(MagnetizedObject.MagneticTarget magneticTarget, Float f, Float f2, Boolean bool, Function0 function0) {
+        this.mMotionHelper.animateIntoDismissTarget(magneticTarget, f.floatValue(), f2.floatValue(), bool.booleanValue(), function0);
+        return Unit.INSTANCE;
+    }
+
     private void reloadResources() {
         Resources resources = this.mContext.getResources();
-        this.mBottomOffsetBufferPx = 3;
-        this.mExpandedShortestEdgeSize = resources.getDimensionPixelSize(R.dimen.pip_expanded_shortest_edge_size);
-        this.mImeOffset = resources.getDimensionPixelSize(R.dimen.pip_ime_offset);
-        this.mDismissAreaHeight = resources.getDimensionPixelSize(R.dimen.floating_dismiss_gradient_height);
+        this.mBottomOffsetBufferPx = resources.getDimensionPixelSize(C0009R$dimen.pip_bottom_offset_buffer);
+        this.mExpandedShortestEdgeSize = resources.getDimensionPixelSize(C0009R$dimen.pip_expanded_shortest_edge_size);
+        this.mImeOffset = resources.getDimensionPixelSize(C0009R$dimen.pip_ime_offset);
+        this.mDismissAreaHeight = resources.getDimensionPixelSize(C0009R$dimen.floating_dismiss_gradient_height);
         updateMagneticTargetSize();
     }
 
     private void updateMagneticTargetSize() {
         if (this.mTargetView != null) {
-            int dimensionPixelSize = this.mContext.getResources().getDimensionPixelSize(R.dimen.dismiss_circle_size);
+            int dimensionPixelSize = this.mContext.getResources().getDimensionPixelSize(C0009R$dimen.dismiss_circle_size);
             FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(dimensionPixelSize, dimensionPixelSize);
-            layoutParams.gravity = 17;
+            layoutParams.gravity = 81;
+            layoutParams.bottomMargin = this.mContext.getResources().getDimensionPixelSize(C0009R$dimen.floating_dismiss_bottom_margin);
             this.mTargetView.setLayoutParams(layoutParams);
-            this.mMagneticTarget.setMagneticFieldRadiusPx(dimensionPixelSize * 2);
+            this.mMagneticTarget.setMagneticFieldRadiusPx((int) (((float) dimensionPixelSize) * 1.25f));
         }
     }
 
@@ -264,11 +313,13 @@ public class PipTouchHandler {
         createOrUpdateDismissTarget();
         this.mShowPipMenuOnAnimationEnd = true;
         this.mPipResizeGestureHandler.onActivityPinned();
+        this.mFloatingContentCoordinator.onContentAdded(this.mMotionHelper);
     }
 
     public void onActivityUnpinned(ComponentName componentName) {
         if (componentName == null) {
             cleanUpDismissTarget();
+            this.mFloatingContentCoordinator.onContentRemoved(this.mMotionHelper);
         }
         this.mResizedBounds.setEmpty();
         this.mPipResizeGestureHandler.onActivityUnpinned();
@@ -287,7 +338,7 @@ public class PipTouchHandler {
     }
 
     public void onConfigurationChanged() {
-        this.mMotionHelper.onConfigurationChanged();
+        this.mPipResizeGestureHandler.onConfigurationChanged();
         this.mMotionHelper.synchronizePinnedStackBounds();
         reloadResources();
         createOrUpdateDismissTarget();
@@ -312,15 +363,16 @@ public class PipTouchHandler {
     }
 
     public void onMovementBoundsChanged(Rect rect, Rect rect2, Rect rect3, boolean z, boolean z2, int i) {
-        Rect rect4;
-        boolean z3 = false;
-        int i2 = this.mIsImeShowing ? this.mImeHeight : 0;
+        int i2;
+        int i3 = 0;
+        int i4 = this.mIsImeShowing ? this.mImeHeight : 0;
+        boolean z3 = true;
         if (this.mDisplayRotation != i) {
             this.mTouchState.reset();
         }
         this.mNormalBounds.set(rect2);
-        Rect rect5 = new Rect();
-        this.mSnapAlgorithm.getMovementBounds(this.mNormalBounds, rect, rect5, i2);
+        Rect rect4 = new Rect();
+        this.mSnapAlgorithm.getMovementBounds(this.mNormalBounds, rect, rect4, i4);
         if (this.mMovementBounds.isEmpty()) {
             this.mSnapAlgorithm.getMovementBounds(rect3, rect, this.mMovementBounds, 0);
         }
@@ -329,41 +381,46 @@ public class PipTouchHandler {
         this.mContext.getDisplay().getRealSize(point);
         Size sizeForAspectRatio = this.mSnapAlgorithm.getSizeForAspectRatio(width, (float) this.mExpandedShortestEdgeSize, point.x, point.y);
         this.mExpandedBounds.set(0, 0, sizeForAspectRatio.getWidth(), sizeForAspectRatio.getHeight());
-        Rect rect6 = new Rect();
-        this.mSnapAlgorithm.getMovementBounds(this.mExpandedBounds, rect, rect6, i2);
+        Rect rect5 = new Rect();
+        this.mSnapAlgorithm.getMovementBounds(this.mExpandedBounds, rect, rect5, i4);
         this.mPipResizeGestureHandler.updateMinSize(this.mNormalBounds.width(), this.mNormalBounds.height());
         this.mPipResizeGestureHandler.updateMaxSize(this.mExpandedBounds.width(), this.mExpandedBounds.height());
         int max = Math.max(this.mIsImeShowing ? this.mImeOffset : 0, (this.mIsImeShowing || !this.mIsShelfShowing) ? 0 : this.mShelfHeight);
         if ((z || z2) && !this.mTouchState.isUserInteracting()) {
-            if (this.mMenuState == 2 && willResizeMenu()) {
-                z3 = true;
+            if (this.mMenuState != 2 || !willResizeMenu()) {
+                z3 = false;
             }
-            if (z3) {
-                rect4 = new Rect(rect6);
-            } else {
-                rect4 = new Rect(rect5);
+            Rect rect6 = new Rect();
+            PipSnapAlgorithm pipSnapAlgorithm = this.mSnapAlgorithm;
+            if (this.mIsImeShowing) {
+                i3 = this.mImeHeight;
             }
-            int i3 = this.mMovementBounds.bottom - this.mMovementBoundsExtraOffsets;
-            int i4 = rect4.bottom;
-            if (i4 >= rect4.top) {
-                i4 -= max;
+            pipSnapAlgorithm.getMovementBounds(rect3, rect, rect6, i3);
+            int i5 = this.mMovementBounds.bottom - this.mMovementBoundsExtraOffsets;
+            int i6 = rect6.bottom;
+            if (i6 >= rect6.top) {
+                i6 -= max;
             }
             if (z3) {
                 rect3.set(this.mExpandedBounds);
-                this.mSnapAlgorithm.applySnapFraction(rect3, rect4, this.mSavedSnapFraction);
+                this.mSnapAlgorithm.applySnapFraction(rect3, rect6, this.mSavedSnapFraction);
             }
-            int min = Math.min(i3, i4) - this.mBottomOffsetBufferPx;
-            int i5 = rect3.top;
-            if (min <= i5 && i5 <= Math.max(i3, i4) + this.mBottomOffsetBufferPx) {
-                this.mMotionHelper.animateToOffset(rect3, i4 - rect3.top);
+            if (i5 < i6) {
+                int i7 = rect3.top;
+                if (i7 > i5 - this.mBottomOffsetBufferPx) {
+                    this.mMotionHelper.animateToOffset(rect3, i6 - i7);
+                }
+            } else if (i5 > i6 && (i2 = rect3.top) > i6 - this.mBottomOffsetBufferPx) {
+                this.mMotionHelper.animateToOffset(rect3, i6 - i2);
             }
         }
-        this.mNormalMovementBounds.set(rect5);
-        this.mExpandedMovementBounds.set(rect6);
+        this.mNormalMovementBounds.set(rect4);
+        this.mExpandedMovementBounds.set(rect5);
         this.mDisplayRotation = i;
         this.mInsetBounds.set(rect);
         updateMovementBounds();
         this.mMovementBoundsExtraOffsets = max;
+        this.mConnection.onMovementBoundsChanged(this.mNormalBounds, this.mExpandedBounds, this.mNormalMovementBounds, this.mExpandedMovementBounds);
         if (this.mDeferResizeToNormalBoundsUntilRotation == i) {
             this.mMotionHelper.animateToUnexpandedState(rect2, this.mSavedSnapFraction, this.mNormalMovementBounds, this.mMovementBounds, true);
             this.mSavedSnapFraction = -1.0f;
@@ -404,28 +461,30 @@ public class PipTouchHandler {
             this.mTargetView.setTranslationY((float) this.mTargetViewContainer.getHeight());
             this.mTargetViewContainer.setVisibility(0);
             this.mMagneticTargetAnimator.cancel();
-            PhysicsAnimator physicsAnimator = this.mMagneticTargetAnimator;
+            PhysicsAnimator<View> physicsAnimator = this.mMagneticTargetAnimator;
             physicsAnimator.spring(DynamicAnimation.TRANSLATION_Y, 0.0f, this.mTargetSpringConfig);
             physicsAnimator.start();
+            ((TransitionDrawable) this.mTargetViewContainer.getBackground()).startTransition(200);
         }
     }
 
     /* access modifiers changed from: private */
     public void hideDismissTarget() {
         this.mHandler.removeCallbacks(this.mShowTargetAction);
-        PhysicsAnimator physicsAnimator = this.mMagneticTargetAnimator;
+        PhysicsAnimator<View> physicsAnimator = this.mMagneticTargetAnimator;
         physicsAnimator.spring(DynamicAnimation.TRANSLATION_Y, (float) this.mTargetViewContainer.getHeight(), this.mTargetSpringConfig);
         physicsAnimator.withEndActions(new Runnable() {
             public final void run() {
-                PipTouchHandler.this.lambda$hideDismissTarget$1$PipTouchHandler();
+                PipTouchHandler.this.lambda$hideDismissTarget$2$PipTouchHandler();
             }
         });
         physicsAnimator.start();
+        ((TransitionDrawable) this.mTargetViewContainer.getBackground()).reverseTransition(200);
     }
 
     /* access modifiers changed from: private */
-    /* renamed from: lambda$hideDismissTarget$1 */
-    public /* synthetic */ void lambda$hideDismissTarget$1$PipTouchHandler() {
+    /* renamed from: lambda$hideDismissTarget$2 */
+    public /* synthetic */ void lambda$hideDismissTarget$2$PipTouchHandler() {
         this.mTargetViewContainer.setVisibility(8);
     }
 
@@ -450,165 +509,161 @@ public class PipTouchHandler {
     }
 
     /* access modifiers changed from: private */
-    /* JADX WARNING: Code restructure failed: missing block: B:50:0x00e4, code lost:
-        if (r11.mGesture.onUp(r11.mTouchState) != false) goto L_0x010b;
+    /* JADX WARNING: Code restructure failed: missing block: B:57:0x00dc, code lost:
+        if (r11.mGesture.onUp(r11.mTouchState) != false) goto L_0x00fe;
      */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     public boolean handleTouchEvent(android.view.InputEvent r12) {
         /*
             r11 = this;
-            java.lang.String r0 = "pip_test"
-            java.lang.String r1 = "handleTouchEvent111"
-            android.util.Log.e(r0, r1)
-            boolean r1 = r12 instanceof android.view.MotionEvent
-            r2 = 1
-            if (r1 != 0) goto L_0x000d
-            return r2
-        L_0x000d:
-            android.view.IPinnedStackController r1 = r11.mPinnedStackController
-            if (r1 != 0) goto L_0x0012
-            return r2
-        L_0x0012:
+            boolean r0 = r12 instanceof android.view.MotionEvent
+            r1 = 1
+            if (r0 != 0) goto L_0x0006
+            return r1
+        L_0x0006:
+            android.view.IPinnedStackController r0 = r11.mPinnedStackController
+            if (r0 != 0) goto L_0x000b
+            return r1
+        L_0x000b:
             android.view.MotionEvent r12 = (android.view.MotionEvent) r12
-            java.lang.StringBuilder r1 = new java.lang.StringBuilder
-            r1.<init>()
-            java.lang.String r3 = "handleTouchEvent2222  action="
-            r1.append(r3)
-            int r3 = r12.getAction()
-            r1.append(r3)
-            java.lang.String r1 = r1.toString()
-            android.util.Log.e(r0, r1)
+            int r0 = r12.getActionMasked()
+            if (r0 != 0) goto L_0x0026
             com.android.systemui.pip.phone.PipResizeGestureHandler r0 = r11.mPipResizeGestureHandler
-            float r1 = r12.getRawX()
-            int r1 = (int) r1
-            float r3 = r12.getRawY()
-            int r3 = (int) r3
-            boolean r0 = r0.isWithinTouchRegion(r1, r3)
-            if (r0 == 0) goto L_0x003f
-            return r2
-        L_0x003f:
-            com.android.systemui.util.magnetictarget.MagnetizedObject r0 = r11.mMagnetizedPip
-            boolean r0 = r0.maybeConsumeMotionEvent(r12)
-            if (r0 == 0) goto L_0x0058
-            int r0 = r12.getAction()
-            if (r0 != 0) goto L_0x0052
+            boolean r0 = r0.willStartResizeGesture(r12)
+            if (r0 == 0) goto L_0x0026
             com.android.systemui.pip.phone.PipTouchState r0 = r11.mTouchState
             r0.onTouchEvent(r12)
-        L_0x0052:
+            com.android.systemui.pip.phone.PipTouchState r11 = r11.mTouchState
+            r11.reset()
+            return r1
+        L_0x0026:
+            int r0 = r12.getAction()
+            if (r0 == 0) goto L_0x0034
+            com.android.systemui.pip.phone.PipTouchState r0 = r11.mTouchState
+            boolean r0 = r0.isUserInteracting()
+            if (r0 == 0) goto L_0x004d
+        L_0x0034:
+            com.android.systemui.util.magnetictarget.MagnetizedObject<android.graphics.Rect> r0 = r11.mMagnetizedPip
+            boolean r0 = r0.maybeConsumeMotionEvent(r12)
+            if (r0 == 0) goto L_0x004d
+            int r0 = r12.getAction()
+            if (r0 != 0) goto L_0x0047
+            com.android.systemui.pip.phone.PipTouchState r0 = r11.mTouchState
+            r0.onTouchEvent(r12)
+        L_0x0047:
             com.android.systemui.pip.phone.PipTouchState r11 = r11.mTouchState
             r11.addMovementToVelocityTracker(r12)
-            return r2
-        L_0x0058:
+            return r1
+        L_0x004d:
             com.android.systemui.pip.phone.PipTouchState r0 = r11.mTouchState
             r0.onTouchEvent(r12)
             int r0 = r11.mMenuState
-            r1 = 0
-            if (r0 == 0) goto L_0x0064
-            r0 = r2
-            goto L_0x0065
-        L_0x0064:
+            r2 = 0
+            if (r0 == 0) goto L_0x0059
             r0 = r1
-        L_0x0065:
+            goto L_0x005a
+        L_0x0059:
+            r0 = r2
+        L_0x005a:
             int r3 = r12.getAction()
             r4 = 3
-            if (r3 == 0) goto L_0x00ff
-            if (r3 == r2) goto L_0x00d9
+            if (r3 == 0) goto L_0x00f7
+            if (r3 == r1) goto L_0x00d1
             r5 = 2
-            if (r3 == r5) goto L_0x00c6
-            if (r3 == r4) goto L_0x00e7
+            if (r3 == r5) goto L_0x00be
+            if (r3 == r4) goto L_0x00df
             r5 = 7
-            if (r3 == r5) goto L_0x00b8
+            if (r3 == r5) goto L_0x00b0
             r5 = 9
-            if (r3 == r5) goto L_0x009e
+            if (r3 == r5) goto L_0x0091
             r5 = 10
-            if (r3 == r5) goto L_0x0080
-            goto L_0x010b
-        L_0x0080:
-            r11.mHideMenuAfterShown = r2
+            if (r3 == r5) goto L_0x0075
+            goto L_0x00fe
+        L_0x0075:
             android.view.accessibility.AccessibilityManager r3 = r11.mAccessibilityManager
             boolean r3 = r3.isTouchExplorationEnabled()
-            if (r3 != 0) goto L_0x008f
-            com.android.systemui.pip.phone.PipMenuActivityController r3 = r11.mMenuController
-            r3.hideMenu()
-        L_0x008f:
-            if (r0 != 0) goto L_0x010b
+            if (r3 != 0) goto L_0x0082
+            com.android.systemui.pip.phone.PipTouchState r3 = r11.mTouchState
+            r3.scheduleHoverExitTimeoutCallback()
+        L_0x0082:
+            if (r0 != 0) goto L_0x00fe
             boolean r3 = r11.mSendingHoverAccessibilityEvents
-            if (r3 == 0) goto L_0x010b
+            if (r3 == 0) goto L_0x00fe
             r3 = 256(0x100, float:3.59E-43)
             r11.sendAccessibilityHoverEvent(r3)
-            r11.mSendingHoverAccessibilityEvents = r1
-            goto L_0x010b
-        L_0x009e:
-            android.view.accessibility.AccessibilityManager r1 = r11.mAccessibilityManager
-            boolean r1 = r1.isTouchExplorationEnabled()
-            if (r1 != 0) goto L_0x00b8
+            r11.mSendingHoverAccessibilityEvents = r2
+            goto L_0x00fe
+        L_0x0091:
+            android.view.accessibility.AccessibilityManager r2 = r11.mAccessibilityManager
+            boolean r2 = r2.isTouchExplorationEnabled()
+            if (r2 != 0) goto L_0x00b0
+            com.android.systemui.pip.phone.PipTouchState r2 = r11.mTouchState
+            r2.removeHoverExitTimeoutCallback()
             com.android.systemui.pip.phone.PipMenuActivityController r5 = r11.mMenuController
             r6 = 2
-            com.android.systemui.pip.phone.PipMotionHelper r1 = r11.mMotionHelper
-            android.graphics.Rect r7 = r1.getBounds()
+            com.android.systemui.pip.phone.PipMotionHelper r2 = r11.mMotionHelper
+            android.graphics.Rect r7 = r2.getBounds()
             r8 = 0
             r9 = 0
             boolean r10 = r11.shouldShowResizeHandle()
             r5.showMenu(r6, r7, r8, r9, r10)
-        L_0x00b8:
-            if (r0 != 0) goto L_0x010b
-            boolean r1 = r11.mSendingHoverAccessibilityEvents
-            if (r1 != 0) goto L_0x010b
-            r1 = 128(0x80, float:1.794E-43)
-            r11.sendAccessibilityHoverEvent(r1)
-            r11.mSendingHoverAccessibilityEvents = r2
-            goto L_0x010b
-        L_0x00c6:
-            com.android.systemui.pip.phone.PipTouchGesture r1 = r11.mGesture
+        L_0x00b0:
+            if (r0 != 0) goto L_0x00fe
+            boolean r2 = r11.mSendingHoverAccessibilityEvents
+            if (r2 != 0) goto L_0x00fe
+            r2 = 128(0x80, float:1.794E-43)
+            r11.sendAccessibilityHoverEvent(r2)
+            r11.mSendingHoverAccessibilityEvents = r1
+            goto L_0x00fe
+        L_0x00be:
+            com.android.systemui.pip.phone.PipTouchGesture r2 = r11.mGesture
             com.android.systemui.pip.phone.PipTouchState r3 = r11.mTouchState
-            boolean r1 = r1.onMove(r3)
-            if (r1 == 0) goto L_0x00d1
-            goto L_0x010b
-        L_0x00d1:
+            boolean r2 = r2.onMove(r3)
+            if (r2 == 0) goto L_0x00c9
+            goto L_0x00fe
+        L_0x00c9:
             com.android.systemui.pip.phone.PipTouchState r0 = r11.mTouchState
             boolean r0 = r0.isDragging()
-            r0 = r0 ^ r2
-            goto L_0x010b
-        L_0x00d9:
+            r0 = r0 ^ r1
+            goto L_0x00fe
+        L_0x00d1:
             r11.updateMovementBounds()
             com.android.systemui.pip.phone.PipTouchGesture r3 = r11.mGesture
             com.android.systemui.pip.phone.PipTouchState r5 = r11.mTouchState
             boolean r3 = r3.onUp(r5)
-            if (r3 == 0) goto L_0x00e7
-            goto L_0x010b
-        L_0x00e7:
+            if (r3 == 0) goto L_0x00df
+            goto L_0x00fe
+        L_0x00df:
             com.android.systemui.pip.phone.PipTouchState r0 = r11.mTouchState
             boolean r0 = r0.startedDragging()
-            if (r0 != 0) goto L_0x00f8
+            if (r0 != 0) goto L_0x00f0
             com.android.systemui.pip.phone.PipTouchState r0 = r11.mTouchState
             boolean r0 = r0.isDragging()
-            if (r0 != 0) goto L_0x00f8
-            r1 = r2
-        L_0x00f8:
+            if (r0 != 0) goto L_0x00f0
+            r2 = r1
+        L_0x00f0:
             com.android.systemui.pip.phone.PipTouchState r0 = r11.mTouchState
             r0.reset()
-            r0 = r1
-            goto L_0x010b
-        L_0x00ff:
-            com.android.systemui.pip.phone.PipMotionHelper r1 = r11.mMotionHelper
-            r1.synchronizePinnedStackBoundsForTouchGesture()
-            com.android.systemui.pip.phone.PipTouchGesture r1 = r11.mGesture
+            r0 = r2
+            goto L_0x00fe
+        L_0x00f7:
+            com.android.systemui.pip.phone.PipTouchGesture r2 = r11.mGesture
             com.android.systemui.pip.phone.PipTouchState r3 = r11.mTouchState
-            r1.onDown(r3)
-        L_0x010b:
-            if (r0 == 0) goto L_0x0126
+            r2.onDown(r3)
+        L_0x00fe:
+            if (r0 == 0) goto L_0x0119
             android.view.MotionEvent r12 = android.view.MotionEvent.obtain(r12)
             com.android.systemui.pip.phone.PipTouchState r0 = r11.mTouchState
             boolean r0 = r0.startedDragging()
-            if (r0 == 0) goto L_0x0121
+            if (r0 == 0) goto L_0x0114
             r12.setAction(r4)
             com.android.systemui.pip.phone.PipMenuActivityController r0 = r11.mMenuController
             r0.pokeMenu()
-        L_0x0121:
+        L_0x0114:
             com.android.systemui.pip.phone.PipMenuActivityController r11 = r11.mMenuController
             r11.handlePointerEvent(r12)
-        L_0x0126:
-            return r2
+        L_0x0119:
+            return r1
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.pip.phone.PipTouchHandler.handleTouchEvent(android.view.InputEvent):boolean");
     }
@@ -645,39 +700,35 @@ public class PipTouchHandler {
     public void setMenuState(int i, boolean z, Runnable runnable) {
         if (this.mMenuState != i || z) {
             boolean z2 = false;
-            if (i == 2 && this.mMenuState != 2) {
-                if (z) {
-                    this.mResizedBounds.set(this.mMotionHelper.getBounds());
-                    this.mSavedSnapFraction = this.mMotionHelper.animateToExpandedState(new Rect(this.mExpandedBounds), this.mMovementBounds, this.mExpandedMovementBounds, runnable);
-                }
-                if (this.mHideMenuAfterShown) {
-                    this.mMenuController.hideMenu();
-                }
-            } else if (i == 0 && this.mMenuState == 2) {
-                if (z) {
-                    if (this.mDeferResizeToNormalBoundsUntilRotation == -1) {
-                        try {
-                            int displayRotation = this.mPinnedStackController.getDisplayRotation();
-                            if (this.mDisplayRotation != displayRotation) {
-                                this.mDeferResizeToNormalBoundsUntilRotation = displayRotation;
+            if (i != 2 || this.mMenuState == 2) {
+                if (i == 0 && this.mMenuState == 2) {
+                    if (z) {
+                        if (this.mDeferResizeToNormalBoundsUntilRotation == -1) {
+                            try {
+                                int displayRotation = this.mPinnedStackController.getDisplayRotation();
+                                if (this.mDisplayRotation != displayRotation) {
+                                    this.mDeferResizeToNormalBoundsUntilRotation = displayRotation;
+                                }
+                            } catch (RemoteException unused) {
+                                Log.e("PipTouchHandler", "Could not get display rotation from controller");
                             }
-                        } catch (RemoteException unused) {
-                            Log.e("PipTouchHandler", "Could not get display rotation from controller");
                         }
-                    }
-                    if (this.mDeferResizeToNormalBoundsUntilRotation == -1) {
-                        Rect rect = new Rect(this.mResizedBounds);
-                        Rect rect2 = new Rect();
-                        this.mSnapAlgorithm.getMovementBounds(rect, this.mInsetBounds, rect2, this.mIsImeShowing ? this.mImeHeight : 0);
-                        this.mMotionHelper.animateToUnexpandedState(rect, this.mSavedSnapFraction, rect2, this.mMovementBounds, false);
+                        if (this.mDeferResizeToNormalBoundsUntilRotation == -1) {
+                            Rect rect = new Rect(this.mResizedBounds);
+                            Rect rect2 = new Rect();
+                            this.mSnapAlgorithm.getMovementBounds(rect, this.mInsetBounds, rect2, this.mIsImeShowing ? this.mImeHeight : 0);
+                            this.mMotionHelper.animateToUnexpandedState(rect, this.mSavedSnapFraction, rect2, this.mMovementBounds, false);
+                            this.mSavedSnapFraction = -1.0f;
+                        }
+                    } else {
                         this.mSavedSnapFraction = -1.0f;
                     }
-                } else {
-                    this.mSavedSnapFraction = -1.0f;
                 }
+            } else if (z) {
+                this.mResizedBounds.set(this.mMotionHelper.getBounds());
+                this.mSavedSnapFraction = this.mMotionHelper.animateToExpandedState(new Rect(this.mExpandedBounds), this.mMovementBounds, this.mExpandedMovementBounds, runnable);
             }
             this.mMenuState = i;
-            this.mHideMenuAfterShown = false;
             updateMovementBounds();
             onRegistrationChanged(i == 0);
             if (i != 1) {
@@ -692,6 +743,24 @@ public class PipTouchHandler {
 
     public PipMotionHelper getMotionHelper() {
         return this.mMotionHelper;
+    }
+
+    /* access modifiers changed from: package-private */
+    @VisibleForTesting
+    public PipResizeGestureHandler getPipResizeGestureHandler() {
+        return this.mPipResizeGestureHandler;
+    }
+
+    /* access modifiers changed from: package-private */
+    @VisibleForTesting
+    public void setPipResizeGestureHandler(PipResizeGestureHandler pipResizeGestureHandler) {
+        this.mPipResizeGestureHandler = pipResizeGestureHandler;
+    }
+
+    /* access modifiers changed from: package-private */
+    @VisibleForTesting
+    public void setPipMotionHelper(PipMotionHelper pipMotionHelper) {
+        this.mMotionHelper = pipMotionHelper;
     }
 
     public Rect getNormalBounds() {
@@ -710,9 +779,9 @@ public class PipTouchHandler {
 
         public void onDown(PipTouchState pipTouchState) {
             if (pipTouchState.isUserInteracting()) {
-                Rect bounds = PipTouchHandler.this.mMotionHelper.getBounds();
+                Rect possiblyAnimatingBounds = PipTouchHandler.this.mMotionHelper.getPossiblyAnimatingBounds();
                 this.mDelta.set(0.0f, 0.0f);
-                this.mStartPosition.set(bounds.left, bounds.top);
+                this.mStartPosition.set(possiblyAnimatingBounds.left, possiblyAnimatingBounds.top);
                 boolean unused = PipTouchHandler.this.mMovementWithinDismiss = pipTouchState.getDownTouchPosition().y >= ((float) PipTouchHandler.this.mMovementBounds.bottom);
                 PipTouchHandler.this.mMotionHelper.setSpringingToTouch(false);
                 if (PipTouchHandler.this.mMenuState != 0) {
@@ -747,7 +816,7 @@ public class PipTouchHandler {
             float f6 = lastTouchDelta.y + f4;
             pointF.x = f + (f5 - f2);
             pointF.y = f3 + (f6 - f4);
-            PipTouchHandler.this.mTmpBounds.set(PipTouchHandler.this.mMotionHelper.getBounds());
+            PipTouchHandler.this.mTmpBounds.set(PipTouchHandler.this.mMotionHelper.getPossiblyAnimatingBounds());
             PipTouchHandler.this.mTmpBounds.offsetTo((int) f5, (int) f6);
             PipTouchHandler.this.mMotionHelper.movePip(PipTouchHandler.this.mTmpBounds, true);
             PointF lastTouchPosition = pipTouchState.getLastTouchPosition();
@@ -770,7 +839,6 @@ public class PipTouchHandler {
                 return false;
             }
             PointF velocity = pipTouchState.getVelocity();
-            PointF.length(velocity.x, velocity.y);
             if (pipTouchState.isDragging()) {
                 if (PipTouchHandler.this.mMenuState != 0) {
                     PipTouchHandler.this.mMenuController.showMenu(PipTouchHandler.this.mMenuState, PipTouchHandler.this.mMotionHelper.getBounds(), true, PipTouchHandler.this.willResizeMenu(), PipTouchHandler.this.shouldShowResizeHandle());
@@ -779,6 +847,7 @@ public class PipTouchHandler {
                     z = true;
                 }
                 this.mShouldHideMenuAfterFling = z;
+                PipTouchHandler.this.mTouchState.reset();
                 PipTouchHandler.this.mMotionHelper.flingToSnapTarget(velocity.x, velocity.y, new Runnable() {
                     public final void run() {
                         PipTouchHandler.this.updateDismissFraction();
@@ -803,14 +872,14 @@ public class PipTouchHandler {
 
         /* access modifiers changed from: private */
         public void flingEndAction() {
-            PipTouchHandler.this.mTouchState.setAllowTouches(true);
             if (this.mShouldHideMenuAfterFling) {
                 PipTouchHandler.this.mMenuController.hideMenu();
             }
         }
     }
 
-    private void updateMovementBounds() {
+    /* access modifiers changed from: private */
+    public void updateMovementBounds() {
         int i = 0;
         this.mSnapAlgorithm.getMovementBounds(this.mMotionHelper.getBounds(), this.mInsetBounds, this.mMovementBounds, this.mIsImeShowing ? this.mImeHeight : 0);
         this.mMotionHelper.setCurrentMovementBounds(this.mMovementBounds);
@@ -820,6 +889,13 @@ public class PipTouchHandler {
             i = this.mExpandedShortestEdgeSize;
         }
         pipBoundsHandler.setMinEdgeSize(i);
+    }
+
+    /* access modifiers changed from: private */
+    public Rect getMovementBounds(Rect rect) {
+        Rect rect2 = new Rect();
+        this.mSnapAlgorithm.getMovementBounds(rect, this.mInsetBounds, rect2, this.mIsImeShowing ? this.mImeHeight : 0);
+        return rect2;
     }
 
     /* access modifiers changed from: private */
@@ -848,7 +924,12 @@ public class PipTouchHandler {
         printWriter.println(str2 + "mShelfHeight=" + this.mShelfHeight);
         printWriter.println(str2 + "mSavedSnapFraction=" + this.mSavedSnapFraction);
         printWriter.println(str2 + "mEnableDragToEdgeDismiss=" + this.mEnableDismissDragToEdge);
+        printWriter.println(str2 + "mMovementBoundsExtraOffsets=" + this.mMovementBoundsExtraOffsets);
         this.mTouchState.dump(printWriter, str2);
         this.mMotionHelper.dump(printWriter, str2);
+        PipResizeGestureHandler pipResizeGestureHandler = this.mPipResizeGestureHandler;
+        if (pipResizeGestureHandler != null) {
+            pipResizeGestureHandler.dump(printWriter, str2);
+        }
     }
 }

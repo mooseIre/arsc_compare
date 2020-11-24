@@ -7,7 +7,9 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
-import com.android.systemui.plugins.R;
+import com.android.systemui.C0004R$anim;
+import com.android.systemui.C0014R$layout;
+import com.android.systemui.C0018R$string;
 
 public class ForcedResizableInfoActivity extends Activity implements View.OnTouchListener {
     private final Runnable mFinishRunnable = new Runnable() {
@@ -23,13 +25,13 @@ public class ForcedResizableInfoActivity extends Activity implements View.OnTouc
     public void onCreate(Bundle bundle) {
         String str;
         super.onCreate(bundle);
-        setContentView(R.layout.forced_resizable_activity);
+        setContentView(C0014R$layout.forced_resizable_activity);
         TextView textView = (TextView) findViewById(16908299);
         int intExtra = getIntent().getIntExtra("extra_forced_resizeable_reason", -1);
         if (intExtra == 1) {
-            str = getString(R.string.dock_forced_resizable);
+            str = getString(C0018R$string.dock_forced_resizable);
         } else if (intExtra == 2) {
-            str = getString(R.string.forced_resizable_secondary_display);
+            str = getString(C0018R$string.forced_resizable_secondary_display);
         } else {
             throw new IllegalArgumentException("Unexpected forced resizeable reason: " + intExtra);
         }
@@ -62,6 +64,6 @@ public class ForcedResizableInfoActivity extends Activity implements View.OnTouc
 
     public void finish() {
         super.finish();
-        overridePendingTransition(0, R.anim.forced_resizable_exit);
+        overridePendingTransition(0, C0004R$anim.forced_resizable_exit);
     }
 }

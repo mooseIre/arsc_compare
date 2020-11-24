@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
-import com.android.systemui.plugins.R;
+import com.android.systemui.C0009R$dimen;
 
 public class ScrollerLayout extends ViewGroup {
     private int mHorizontalGap;
@@ -23,7 +23,7 @@ public class ScrollerLayout extends ViewGroup {
 
     public ScrollerLayout(Context context, AttributeSet attributeSet, int i, int i2) {
         super(context, attributeSet, i, i2);
-        this.mHorizontalGap = getResources().getDimensionPixelSize(R.dimen.quick_switch_demo_app_gap);
+        this.mHorizontalGap = getResources().getDimensionPixelSize(C0009R$dimen.quick_switch_demo_app_gap);
     }
 
     public int getHorizontalGap() {

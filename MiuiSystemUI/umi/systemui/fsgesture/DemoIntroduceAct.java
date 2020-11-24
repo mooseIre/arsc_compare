@@ -5,11 +5,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import com.android.systemui.Dependency;
-import com.android.systemui.Util;
-import com.android.systemui.miui.statusbar.analytics.SystemUIStat;
-import com.android.systemui.plugins.R;
-import java.util.HashMap;
+import com.android.systemui.C0012R$id;
+import com.android.systemui.C0014R$layout;
 
 public class DemoIntroduceAct extends FsGestureDemoBaseActiivy {
     TextView backBtn;
@@ -20,17 +17,17 @@ public class DemoIntroduceAct extends FsGestureDemoBaseActiivy {
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         getWindow().addFlags(1024);
-        setContentView(R.layout.demo_intro_layout);
-        Util.hideSystemBars(getWindow().getDecorView());
+        setContentView(C0014R$layout.demo_intro_layout);
+        FsgestureUtil.INSTANCE.hideSystemBars(getWindow().getDecorView());
         final boolean booleanExtra = getIntent().getBooleanExtra("IS_FROM_PROVISION", false);
-        TextView textView = (TextView) findViewById(R.id.btn_back);
+        TextView textView = (TextView) findViewById(C0012R$id.btn_back);
         this.backBtn = textView;
         textView.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 DemoIntroduceAct.this.finish();
             }
         });
-        TextView textView2 = (TextView) findViewById(R.id.btn_next);
+        TextView textView2 = (TextView) findViewById(C0012R$id.btn_next);
         this.nextBtn = textView2;
         textView2.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
@@ -43,10 +40,7 @@ public class DemoIntroduceAct extends FsGestureDemoBaseActiivy {
                 DemoIntroduceAct.this.finish();
             }
         });
-        HashMap hashMap = new HashMap();
-        hashMap.put("source", booleanExtra ? "oobe" : "settings");
-        ((SystemUIStat) Dependency.get(SystemUIStat.class)).reportFullScreenEventAnonymous("show_gestures_learning_page", hashMap);
-        RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.intro_container);
+        RelativeLayout relativeLayout = (RelativeLayout) findViewById(C0012R$id.intro_container);
         this.mIntroContainer = relativeLayout;
         this.mNavigationHandle = GestureLineUtils.createAndaddNavigationHandle(relativeLayout);
     }

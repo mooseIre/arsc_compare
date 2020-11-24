@@ -21,12 +21,12 @@ public class PseudoGridView extends ViewGroup {
         int indexCount = obtainStyledAttributes.getIndexCount();
         for (int i = 0; i < indexCount; i++) {
             int index = obtainStyledAttributes.getIndex(i);
-            if (index == 0) {
-                this.mHorizontalSpacing = obtainStyledAttributes.getDimensionPixelSize(index, 0);
-            } else if (index == 1) {
+            if (index == R$styleable.PseudoGridView_numColumns) {
                 this.mNumColumns = obtainStyledAttributes.getInt(index, 3);
-            } else if (index == 2) {
+            } else if (index == R$styleable.PseudoGridView_verticalSpacing) {
                 this.mVerticalSpacing = obtainStyledAttributes.getDimensionPixelSize(index, 0);
+            } else if (index == R$styleable.PseudoGridView_horizontalSpacing) {
+                this.mHorizontalSpacing = obtainStyledAttributes.getDimensionPixelSize(index, 0);
             }
         }
         obtainStyledAttributes.recycle();

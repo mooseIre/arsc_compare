@@ -1,6 +1,7 @@
 package com.android.systemui.statusbar.notification;
 
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Handler;
@@ -34,31 +35,16 @@ public class NotificationCenter extends SystemUI {
     /* access modifiers changed from: private */
     public volatile Messenger mNcService;
 
+    public NotificationCenter(Context context) {
+        super(context);
+    }
+
     public void start() {
         HandlerThread handlerThread = new HandlerThread(TAG);
         handlerThread.start();
         this.mHandler = new WorkHandler(handlerThread.getLooper());
         this.mNcClient = new Messenger(this.mHandler);
         this.mNcConn = new NcServiceConn();
-    }
-
-    public void onPackageAdded(int i, String str, boolean z) {
-        onPkgAction(str);
-    }
-
-    public void onPackageChanged(int i, String str) {
-        onPkgAction(str);
-    }
-
-    public void onPackageRemoved(int i, String str, boolean z, boolean z2) {
-        onPkgAction(str);
-    }
-
-    private void onPkgAction(String str) {
-        if ("com.miui.notification".equals(str)) {
-            this.mHandler.removeMessages(10001);
-            this.mHandler.sendEmptyMessageDelayed(10001, (long) DEFAULT_DELAY);
-        }
     }
 
     /* access modifiers changed from: protected */

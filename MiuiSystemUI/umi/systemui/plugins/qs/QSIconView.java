@@ -15,14 +15,20 @@ public abstract class QSIconView extends ViewGroup {
 
     public abstract void setAnimationEnabled(boolean z);
 
-    public abstract void setIcon(QSTile.State state);
+    public abstract void setIcon(QSTile.State state, boolean z);
 
-    public abstract void setIsCustomTile(boolean z);
+    public void setIsCustomTile(boolean z) {
+    }
 
-    public abstract void updateResources();
+    public void updateResources() {
+    }
 
     public QSIconView(Context context) {
         super(context);
+    }
+
+    public void disableAnimation() {
+        setAnimationEnabled(false);
     }
 
     public QSIconView(Context context, AttributeSet attributeSet) {

@@ -30,7 +30,7 @@ public abstract class CustomInterpolatorTransformation extends ViewTransformatio
         if (!hasCustomTransformation() || (currentState = transformableView.getCurrentState(this.mViewType)) == null) {
             return false;
         }
-        CrossFadeHelper.fadeIn(transformState.getTransformedView(), f);
+        CrossFadeHelper.fadeIn(transformState.getTransformedView(), f, true);
         transformState.transformViewFullyFrom(currentState, this, f);
         currentState.recycle();
         return true;

@@ -1,5 +1,6 @@
 package com.android.systemui.qs.tiles;
 
+import android.app.ActivityManager;
 import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Intent;
@@ -7,20 +8,19 @@ import android.content.SyncStatusObserver;
 import android.os.UserHandle;
 import android.util.Log;
 import android.widget.Switch;
-import com.android.keyguard.KeyguardUpdateMonitor;
-import com.android.systemui.plugins.R;
+import com.android.systemui.C0010R$drawable;
+import com.android.systemui.C0018R$string;
 import com.android.systemui.plugins.qs.QSTile;
 import com.android.systemui.qs.QSHost;
 import com.android.systemui.qs.tileimpl.QSTileImpl;
-import com.android.systemui.statusbar.Icons;
 import java.lang.reflect.Method;
 
 public class SyncTile extends QSTileImpl<QSTile.BooleanState> {
     private int mCurrentUserId = 0;
     private Object mStatusChangeListenerHandle;
     private SyncStatusObserver mSyncStatusObserver = new SyncStatusObserver() {
-        public void onStatusChanged(int i) {
-            SyncTile.this.refreshState();
+        public final void onStatusChanged(int i) {
+            SyncTile.this.lambda$new$0$SyncTile(i);
         }
     };
 
@@ -34,7 +34,7 @@ public class SyncTile extends QSTileImpl<QSTile.BooleanState> {
 
     public SyncTile(QSHost qSHost) {
         super(qSHost);
-        this.mCurrentUserId = "com.android.systemui".equals(this.mContext.getApplicationInfo().packageName) ? KeyguardUpdateMonitor.getCurrentUser() : UserHandle.myUserId();
+        this.mCurrentUserId = "com.android.systemui".equals(this.mContext.getApplicationInfo().packageName) ? ActivityManager.getCurrentUser() : UserHandle.myUserId();
     }
 
     /* access modifiers changed from: protected */
@@ -48,12 +48,7 @@ public class SyncTile extends QSTileImpl<QSTile.BooleanState> {
 
     public void handleSetListening(boolean z) {
         if (z) {
-            Class<ContentResolver> cls = ContentResolver.class;
-            try {
-                this.mStatusChangeListenerHandle = cls.getMethod("addStatusChangeListenerAsUser", new Class[]{Integer.TYPE, SyncStatusObserver.class, Integer.TYPE}).invoke((Object) null, new Object[]{Integer.MAX_VALUE, this.mSyncStatusObserver, Integer.valueOf(this.mCurrentUserId)});
-            } catch (Exception unused) {
-                this.mStatusChangeListenerHandle = ContentResolver.addStatusChangeListener(Integer.MAX_VALUE, this.mSyncStatusObserver);
-            }
+            this.mStatusChangeListenerHandle = ContentResolver.addStatusChangeListener(Integer.MAX_VALUE, this.mSyncStatusObserver);
         } else {
             ContentResolver.removeStatusChangeListener(this.mStatusChangeListenerHandle);
         }
@@ -93,24 +88,24 @@ public class SyncTile extends QSTileImpl<QSTile.BooleanState> {
     }
 
     public CharSequence getTileLabel() {
-        return this.mContext.getString(R.string.quick_settings_sync_label);
+        return this.mContext.getString(C0018R$string.quick_settings_sync_label);
     }
 
     /* access modifiers changed from: protected */
     public void handleUpdateState(QSTile.BooleanState booleanState, Object obj) {
         booleanState.value = isSyncOn();
-        booleanState.label = this.mContext.getString(R.string.quick_settings_sync_label);
+        booleanState.label = this.mContext.getString(C0018R$string.quick_settings_sync_label);
         if (booleanState.value) {
             booleanState.state = 2;
-            booleanState.icon = QSTileImpl.ResourceIcon.get(Icons.getQSIcons(Integer.valueOf(R.drawable.ic_qs_sync_on), this.mInControlCenter));
+            booleanState.icon = QSTileImpl.ResourceIcon.get(C0010R$drawable.ic_qs_sync_on);
         } else {
             booleanState.state = 1;
-            booleanState.icon = QSTileImpl.ResourceIcon.get(Icons.getQSIcons(Integer.valueOf(R.drawable.ic_qs_sync_off), this.mInControlCenter));
+            booleanState.icon = QSTileImpl.ResourceIcon.get(C0010R$drawable.ic_qs_sync_off);
         }
         StringBuilder sb = new StringBuilder();
         sb.append(booleanState.label);
         sb.append(",");
-        sb.append(this.mContext.getString(booleanState.value ? R.string.switch_bar_on : R.string.switch_bar_off));
+        sb.append(this.mContext.getString(booleanState.value ? C0018R$string.switch_bar_on : C0018R$string.switch_bar_off));
         booleanState.contentDescription = sb.toString();
         booleanState.expandedAccessibilityClassName = Switch.class.getName();
     }
@@ -124,5 +119,11 @@ public class SyncTile extends QSTileImpl<QSTile.BooleanState> {
         intent.setComponent(unflattenFromString);
         intent.setFlags(335544320);
         return intent;
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$new$0 */
+    public /* synthetic */ void lambda$new$0$SyncTile(int i) {
+        refreshState();
     }
 }

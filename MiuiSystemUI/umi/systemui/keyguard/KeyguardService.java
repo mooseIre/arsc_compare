@@ -15,11 +15,7 @@ import com.android.internal.policy.IKeyguardDrawnCallback;
 import com.android.internal.policy.IKeyguardExitCallback;
 import com.android.internal.policy.IKeyguardService;
 import com.android.internal.policy.IKeyguardStateCallback;
-import com.android.internal.policy.IKeyguardStateCallbackCompat;
-import com.android.keyguard.KeyguardLifecyclesDispatcher;
-import com.android.systemui.Application;
-import com.android.systemui.Dependency;
-import com.android.systemui.statusbar.policy.EncryptionHelper;
+import com.android.systemui.SystemUIApplication;
 
 public class KeyguardService extends Service {
     private final IKeyguardService.Stub mBinder = new IKeyguardService.Stub() {
@@ -28,7 +24,7 @@ public class KeyguardService extends Service {
 
         public void addStateMonitorCallback(IKeyguardStateCallback iKeyguardStateCallback) {
             KeyguardService.this.checkPermission();
-            KeyguardService.this.mKeyguardViewMediator.addStateMonitorCallback(new IKeyguardStateCallbackCompat(iKeyguardStateCallback));
+            KeyguardService.this.mKeyguardViewMediator.addStateMonitorCallback(iKeyguardStateCallback);
         }
 
         public void verifyUnlock(IKeyguardExitCallback iKeyguardExitCallback) {
@@ -47,7 +43,7 @@ public class KeyguardService extends Service {
 
         public void dismiss(IKeyguardDismissCallback iKeyguardDismissCallback, CharSequence charSequence) {
             KeyguardService.this.checkPermission();
-            KeyguardService.this.mKeyguardViewMediator.dismiss(iKeyguardDismissCallback);
+            KeyguardService.this.mKeyguardViewMediator.dismiss(iKeyguardDismissCallback, charSequence);
         }
 
         public void onDreamingStarted() {
@@ -78,14 +74,20 @@ public class KeyguardService extends Service {
             KeyguardService.this.mKeyguardViewMediator.onStartedWakingUp();
             KeyguardService.this.mKeyguardLifecyclesDispatcher.dispatch(4);
             Trace.endSection();
-            if (Dependency.getHost() != null) {
-                Dependency.getHost().stopDozing();
-            }
         }
 
         public void onStartedWakingUp(String str) {
+            Trace.beginSection("KeyguardService.mBinder#onStartedWakingUp");
             KeyguardService.this.checkPermission();
             KeyguardService.this.mKeyguardViewMediator.onStartedWakingUp(str);
+            Trace.endSection();
+        }
+
+        public void onFinishedWakingUp() {
+            Trace.beginSection("KeyguardService.mBinder#onFinishedWakingUp");
+            KeyguardService.this.checkPermission();
+            KeyguardService.this.mKeyguardLifecyclesDispatcher.dispatch(5);
+            Trace.endSection();
         }
 
         public void onScreenTurningOn(IKeyguardDrawnCallback iKeyguardDrawnCallback) {
@@ -102,6 +104,11 @@ public class KeyguardService extends Service {
             KeyguardService.this.mKeyguardViewMediator.onScreenTurnedOn();
             KeyguardService.this.mKeyguardLifecyclesDispatcher.dispatch(1);
             Trace.endSection();
+        }
+
+        public void onScreenTurningOff() {
+            KeyguardService.this.checkPermission();
+            KeyguardService.this.mKeyguardLifecyclesDispatcher.dispatch(2);
         }
 
         public void onScreenTurnedOff() {
@@ -154,16 +161,6 @@ public class KeyguardService extends Service {
             KeyguardService.this.mKeyguardViewMediator.onShortPowerPressedGoHome();
         }
 
-        public void onFinishedWakingUp() {
-            KeyguardService.this.checkPermission();
-            KeyguardService.this.mKeyguardLifecyclesDispatcher.dispatch(5);
-        }
-
-        public void onScreenTurningOff() {
-            KeyguardService.this.checkPermission();
-            KeyguardService.this.mKeyguardLifecyclesDispatcher.dispatch(2);
-        }
-
         public boolean onTransact(int i, Parcel parcel, Parcel parcel2, int i2) throws RemoteException {
             if (i != 255) {
                 return KeyguardService.super.onTransact(i, parcel, parcel2, i2);
@@ -175,18 +172,17 @@ public class KeyguardService extends Service {
         }
     };
     /* access modifiers changed from: private */
-    public KeyguardLifecyclesDispatcher mKeyguardLifecyclesDispatcher;
+    public final KeyguardLifecyclesDispatcher mKeyguardLifecyclesDispatcher;
     /* access modifiers changed from: private */
-    public KeyguardViewMediator mKeyguardViewMediator;
+    public final KeyguardViewMediator mKeyguardViewMediator;
+
+    public KeyguardService(KeyguardViewMediator keyguardViewMediator, KeyguardLifecyclesDispatcher keyguardLifecyclesDispatcher) {
+        this.mKeyguardViewMediator = keyguardViewMediator;
+        this.mKeyguardLifecyclesDispatcher = keyguardLifecyclesDispatcher;
+    }
 
     public void onCreate() {
-        if (EncryptionHelper.systemNotReady()) {
-            Log.e("KeyguardService", "abort starting service, system not ready due to data encryption");
-            return;
-        }
-        ((Application) getApplication()).getSystemUIApplication().startServicesIfNeeded();
-        this.mKeyguardViewMediator = (KeyguardViewMediator) ((Application) getApplication()).getSystemUIApplication().getComponent(KeyguardViewMediator.class);
-        this.mKeyguardLifecyclesDispatcher = new KeyguardLifecyclesDispatcher((ScreenLifecycle) Dependency.get(ScreenLifecycle.class), (WakefulnessLifecycle) Dependency.get(WakefulnessLifecycle.class));
+        ((SystemUIApplication) getApplication()).startServicesIfNeeded();
     }
 
     public IBinder onBind(Intent intent) {

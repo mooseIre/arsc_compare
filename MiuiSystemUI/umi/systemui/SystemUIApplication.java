@@ -1,152 +1,63 @@
 package com.android.systemui;
 
 import android.app.ActivityThread;
+import android.app.Application;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
 import android.content.res.Configuration;
-import android.os.Handler;
 import android.os.Process;
-import android.os.SystemProperties;
-import android.os.UserHandleCompat;
-import android.util.ArraySet;
+import android.os.UserHandle;
 import android.util.Log;
-import com.android.systemui.miui.Dependencies;
-import com.android.systemui.miui.PackageEventController;
-import com.android.systemui.miui.PackageEventReceiver;
-import com.android.systemui.miui.statusbar.DependenciesSetup;
-import com.android.systemui.miui.statusbar.analytics.StatManager;
-import com.android.systemui.plugins.OverlayPlugin;
-import com.android.systemui.plugins.PluginListener;
-import com.android.systemui.plugins.PluginManager;
-import com.android.systemui.plugins.R;
-import com.android.systemui.statusbar.phone.StatusBar;
-import com.android.systemui.statusbar.phone.StatusBarWindowManager;
-import com.android.systemui.statusbar.policy.EncryptionHelper;
+import android.util.TimingsTraceLog;
+import com.android.systemui.SystemUIAppComponentFactory;
+import com.android.systemui.dagger.ContextComponentHelper;
+import com.android.systemui.dagger.SystemUIRootComponent;
 import com.android.systemui.util.NotificationChannels;
-import com.miui.systemui.gen.SystemUIDependencies;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
-import miui.external.ApplicationDelegate;
+import miui.core.SdkManager;
 
-public class SystemUIApplication extends ApplicationDelegate implements SysUiServiceProvider, PackageEventReceiver {
-    private final Class<?>[] BASE_SERVICES;
-    private final Class<?>[] SERVICES;
-    private final Class<?>[] SERVICES_PER_USER;
+public class SystemUIApplication extends Application implements SystemUIAppComponentFactory.ContextInitializer {
+    private static Context sContext;
     /* access modifiers changed from: private */
-    public boolean mBootCompleted;
-    private final Map<Class<?>, Object> mComponents = new HashMap();
+    public BootCompleteCacheImpl mBootCompleteCache;
+    private ContextComponentHelper mComponentHelper;
+    private SystemUIAppComponentFactory.ContextAvailableCallback mContextAvailableCallback;
+    private SystemUIRootComponent mRootComponent;
     /* access modifiers changed from: private */
     public SystemUI[] mServices;
     /* access modifiers changed from: private */
     public boolean mServicesStarted;
 
-    /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v1, resolved type: java.lang.Class<?>[]} */
-    /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r6v18, resolved type: java.lang.Class<?>[]} */
-    /* JADX WARNING: Multi-variable type inference failed */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
     public SystemUIApplication() {
-        /*
-            r10 = this;
-            java.lang.Class<com.android.systemui.recents.Recents> r0 = com.android.systemui.recents.Recents.class
-            java.lang.Class<com.android.systemui.util.NotificationChannels> r1 = com.android.systemui.util.NotificationChannels.class
-            java.lang.Class<com.android.systemui.DependencyUI> r2 = com.android.systemui.DependencyUI.class
-            r10.<init>()
-            r3 = 16
-            java.lang.Class[] r3 = new java.lang.Class[r3]
-            r4 = 0
-            r3[r4] = r2
-            r5 = 1
-            r3[r5] = r1
-            java.lang.Class<com.android.systemui.statusbar.CommandQueue$CommandQueueStart> r6 = com.android.systemui.statusbar.CommandQueue.CommandQueueStart.class
-            r7 = 2
-            r3[r7] = r6
-            java.lang.Class<com.android.systemui.keyguard.KeyguardViewMediator> r6 = com.android.systemui.keyguard.KeyguardViewMediator.class
-            r8 = 3
-            r3[r8] = r6
-            r6 = 4
-            r3[r6] = r0
-            r6 = 5
-            java.lang.Class<com.android.systemui.volume.VolumeUI> r9 = com.android.systemui.volume.VolumeUI.class
-            r3[r6] = r9
-            r6 = 6
-            java.lang.Class<com.android.systemui.stackdivider.Divider> r9 = com.android.systemui.stackdivider.Divider.class
-            r3[r6] = r9
-            r6 = 7
-            java.lang.Class<com.android.systemui.SystemBars> r9 = com.android.systemui.SystemBars.class
-            r3[r6] = r9
-            r6 = 8
-            java.lang.Class<com.android.systemui.usb.StorageNotification> r9 = com.android.systemui.usb.StorageNotification.class
-            r3[r6] = r9
-            r6 = 9
-            java.lang.Class<com.android.systemui.power.PowerUI> r9 = com.android.systemui.power.PowerUI.class
-            r3[r6] = r9
-            r6 = 10
-            java.lang.Class<com.android.systemui.media.RingtonePlayer> r9 = com.android.systemui.media.RingtonePlayer.class
-            r3[r6] = r9
-            r6 = 11
-            java.lang.Class<com.android.systemui.VendorServices> r9 = com.android.systemui.VendorServices.class
-            r3[r6] = r9
-            r6 = 12
-            java.lang.Class<com.android.systemui.util.leak.GarbageMonitor$Service> r9 = com.android.systemui.util.leak.GarbageMonitor.Service.class
-            r3[r6] = r9
-            r6 = 13
-            java.lang.Class<com.android.systemui.LatencyTester> r9 = com.android.systemui.LatencyTester.class
-            r3[r6] = r9
-            r6 = 14
-            java.lang.Class<com.android.systemui.RoundedCorners> r9 = com.android.systemui.RoundedCorners.class
-            r3[r6] = r9
-            r6 = 15
-            java.lang.Class<com.android.systemui.statusbar.notification.NotificationCenter> r9 = com.android.systemui.statusbar.notification.NotificationCenter.class
-            r3[r6] = r9
-            r10.BASE_SERVICES = r3
-            com.android.systemui.miui.Dependencies r6 = com.android.systemui.miui.Dependencies.getInstance()
-            java.lang.Class<com.android.systemui.SystemUI> r9 = com.android.systemui.SystemUI.class
-            java.util.Set r6 = r6.getAllClassesFor(r9)
-            java.lang.Class[] r9 = new java.lang.Class[r4]
-            java.lang.Object[] r6 = r6.toArray(r9)
-            java.lang.Class[] r6 = (java.lang.Class[]) r6
-            java.lang.Object[] r3 = com.android.systemui.util.Utils.arrayConcat(r3, r6)
-            java.lang.Class[] r3 = (java.lang.Class[]) r3
-            r10.SERVICES = r3
-            java.lang.Class[] r6 = new java.lang.Class[r8]
-            r6[r4] = r2
-            r6[r5] = r1
-            r6[r7] = r0
-            r10.SERVICES_PER_USER = r6
-            int r0 = r3.length
-            com.android.systemui.SystemUI[] r0 = new com.android.systemui.SystemUI[r0]
-            r10.mServices = r0
-            java.util.HashMap r0 = new java.util.HashMap
-            r0.<init>()
-            r10.mComponents = r0
-            return
-        */
-        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.SystemUIApplication.<init>():void");
-    }
-
-    static {
-        Dependencies.initialize(new SystemUIDependencies());
+        SdkManager.initialize(this, (Map) null);
+        Log.v("SystemUIService", "SystemUIApplication constructed.");
     }
 
     public void onCreate() {
         super.onCreate();
-        setTheme(R.style.Theme);
-        ((DependenciesSetup) Dependencies.getInstance().get(DependenciesSetup.class, "")).setContext(this);
-        SystemUIFactory.createFromConfig(this);
-        StatManager.init(this);
-        if (Process.myUserHandle().equals(UserHandleCompat.SYSTEM)) {
+        SdkManager.start((Map) null);
+        Log.v("SystemUIService", "SystemUIApplication created.");
+        TimingsTraceLog timingsTraceLog = new TimingsTraceLog("SystemUIBootTiming", 4096);
+        timingsTraceLog.traceBegin("DependencyInjection");
+        sContext = getApplicationContext();
+        this.mContextAvailableCallback.onContextAvailable(this);
+        SystemUIRootComponent rootComponent = SystemUIFactory.getInstance().getRootComponent();
+        this.mRootComponent = rootComponent;
+        this.mComponentHelper = rootComponent.getContextComponentHelper();
+        this.mBootCompleteCache = this.mRootComponent.provideBootCacheImpl();
+        timingsTraceLog.traceEnd();
+        setTheme(C0019R$style.Theme_SystemUI);
+        if (Process.myUserHandle().equals(UserHandle.SYSTEM)) {
             IntentFilter intentFilter = new IntentFilter("android.intent.action.BOOT_COMPLETED");
             intentFilter.setPriority(1000);
             registerReceiver(new BroadcastReceiver() {
                 public void onReceive(Context context, Intent intent) {
-                    if (!SystemUIApplication.this.mBootCompleted) {
-                        Log.v("SystemUIService", "BOOT_COMPLETED received");
+                    if (!SystemUIApplication.this.mBootCompleteCache.isBootComplete()) {
                         SystemUIApplication.this.unregisterReceiver(this);
-                        boolean unused = SystemUIApplication.this.mBootCompleted = true;
+                        SystemUIApplication.this.mBootCompleteCache.setBootComplete();
                         if (SystemUIApplication.this.mServicesStarted) {
                             for (SystemUI onBootCompleted : SystemUIApplication.this.mServices) {
                                 onBootCompleted.onBootCompleted();
@@ -157,108 +68,167 @@ public class SystemUIApplication extends ApplicationDelegate implements SysUiSer
             }, intentFilter);
             registerReceiver(new BroadcastReceiver() {
                 public void onReceive(Context context, Intent intent) {
-                    if ("android.intent.action.LOCALE_CHANGED".equals(intent.getAction()) && SystemUIApplication.this.mBootCompleted) {
+                    if ("android.intent.action.LOCALE_CHANGED".equals(intent.getAction()) && SystemUIApplication.this.mBootCompleteCache.isBootComplete()) {
                         NotificationChannels.createAll(context);
                     }
                 }
             }, new IntentFilter("android.intent.action.LOCALE_CHANGED"));
-        } else {
-            String currentProcessName = ActivityThread.currentProcessName();
-            ApplicationInfo applicationInfo = getApplicationInfo();
-            if (currentProcessName != null) {
-                if (currentProcessName.startsWith(applicationInfo.processName + ":")) {
-                    return;
-                }
-            }
-            startServicesIfNeeded(this.SERVICES_PER_USER);
+            return;
         }
-        new PackageEventController(this, this, (Handler) null).start();
+        String currentProcessName = ActivityThread.currentProcessName();
+        ApplicationInfo applicationInfo = getApplicationInfo();
+        if (currentProcessName != null) {
+            if (currentProcessName.startsWith(applicationInfo.processName + ":")) {
+                return;
+            }
+        }
+        startSecondaryUserServicesIfNeeded();
+    }
+
+    public static Context getContext() {
+        return sContext;
     }
 
     public void startServicesIfNeeded() {
-        startServicesIfNeeded(this.SERVICES);
+        startServicesIfNeeded("StartServices", SystemUIFactory.getInstance().getSystemUIServiceComponents(getResources()));
     }
 
     /* access modifiers changed from: package-private */
     public void startSecondaryUserServicesIfNeeded() {
-        startServicesIfNeeded(this.SERVICES_PER_USER);
+        startServicesIfNeeded("StartSecondaryServices", SystemUIFactory.getInstance().getSystemUIServiceComponentsPerUser(getResources()));
     }
 
-    private void startServicesIfNeeded(Class<?>[] clsArr) {
-        if (EncryptionHelper.systemNotReady()) {
-            Log.e("SystemUIService", "abort starting service, system not ready due to data encryption");
-        } else if (!this.mServicesStarted) {
-            if (!this.mBootCompleted && "1".equals(SystemProperties.get("sys.boot_completed"))) {
-                this.mBootCompleted = true;
-                Log.v("SystemUIService", "BOOT_COMPLETED was already sent");
-            }
-            Log.v("SystemUIService", "Starting SystemUI services for user " + Process.myUserHandle().getIdentifier() + ".");
-            int length = clsArr.length;
-            int i = 0;
-            while (i < length) {
-                Class<?> cls = clsArr[i];
-                Log.d("SystemUIService", "loading: " + cls);
-                try {
-                    Object createInstance = SystemUIFactory.getInstance().createInstance(cls);
-                    SystemUI[] systemUIArr = this.mServices;
-                    if (createInstance == null) {
-                        createInstance = cls.newInstance();
-                    }
-                    systemUIArr[i] = (SystemUI) createInstance;
-                    SystemUI[] systemUIArr2 = this.mServices;
-                    systemUIArr2[i].mContext = this;
-                    systemUIArr2[i].mComponents = this.mComponents;
-                    Log.d("SystemUIService", "running: " + this.mServices[i]);
-                    this.mServices[i].start();
-                    if (this.mBootCompleted) {
-                        this.mServices[i].onBootCompleted();
-                    }
-                    i++;
-                } catch (IllegalAccessException e) {
-                    throw new RuntimeException(e);
-                } catch (InstantiationException e2) {
-                    throw new RuntimeException(e2);
-                }
-            }
-            ((PluginManager) Dependency.get(PluginManager.class)).addPluginListener(new PluginListener<OverlayPlugin>() {
-                /* access modifiers changed from: private */
-                public ArraySet<OverlayPlugin> mOverlays;
-
-                public void onPluginConnected(OverlayPlugin overlayPlugin, Context context) {
-                    Class cls = StatusBarWindowManager.class;
-                    StatusBar statusBar = (StatusBar) SystemUIApplication.this.getComponent(StatusBar.class);
-                    if (statusBar != null) {
-                        overlayPlugin.setup(statusBar.getStatusBarWindow(), statusBar.getNavigationBarView());
-                    }
-                    if (this.mOverlays == null) {
-                        this.mOverlays = new ArraySet<>();
-                    }
-                    if (overlayPlugin.holdStatusBarOpen()) {
-                        this.mOverlays.add(overlayPlugin);
-                        ((StatusBarWindowManager) Dependency.get(cls)).setStateListener(new StatusBarWindowManager.OtherwisedCollapsedListener() {
-                            public void setWouldOtherwiseCollapse(boolean z) {
-                                Iterator it = AnonymousClass3.this.mOverlays.iterator();
-                                while (it.hasNext()) {
-                                    ((OverlayPlugin) it.next()).setCollapseDesired(z);
-                                }
-                            }
-                        });
-                        ((StatusBarWindowManager) Dependency.get(cls)).setForcePluginOpen(this.mOverlays.size() != 0);
-                    }
-                }
-
-                public void onPluginDisconnected(OverlayPlugin overlayPlugin) {
-                    this.mOverlays.remove(overlayPlugin);
-                    ((StatusBarWindowManager) Dependency.get(StatusBarWindowManager.class)).setForcePluginOpen(this.mOverlays.size() != 0);
-                }
-            }, (Class<?>) OverlayPlugin.class, true);
-            this.mServicesStarted = true;
-        }
+    /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r6v16, resolved type: java.lang.Object} */
+    /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r10v7, resolved type: com.android.systemui.SystemUI} */
+    /* JADX WARNING: Multi-variable type inference failed */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    private void startServicesIfNeeded(java.lang.String r14, java.lang.String[] r15) {
+        /*
+            r13 = this;
+            boolean r0 = r13.mServicesStarted
+            if (r0 == 0) goto L_0x0005
+            return
+        L_0x0005:
+            int r0 = r15.length
+            com.android.systemui.SystemUI[] r0 = new com.android.systemui.SystemUI[r0]
+            r13.mServices = r0
+            com.android.systemui.BootCompleteCacheImpl r0 = r13.mBootCompleteCache
+            boolean r0 = r0.isBootComplete()
+            if (r0 != 0) goto L_0x0025
+            java.lang.String r0 = "sys.boot_completed"
+            java.lang.String r0 = android.os.SystemProperties.get(r0)
+            java.lang.String r1 = "1"
+            boolean r0 = r1.equals(r0)
+            if (r0 == 0) goto L_0x0025
+            com.android.systemui.BootCompleteCacheImpl r0 = r13.mBootCompleteCache
+            r0.setBootComplete()
+        L_0x0025:
+            com.android.systemui.dagger.SystemUIRootComponent r0 = r13.mRootComponent
+            com.android.systemui.dump.DumpManager r0 = r0.createDumpManager()
+            java.lang.StringBuilder r1 = new java.lang.StringBuilder
+            r1.<init>()
+            java.lang.String r2 = "Starting SystemUI services for user "
+            r1.append(r2)
+            android.os.UserHandle r2 = android.os.Process.myUserHandle()
+            int r2 = r2.getIdentifier()
+            r1.append(r2)
+            java.lang.String r2 = "."
+            r1.append(r2)
+            java.lang.String r1 = r1.toString()
+            java.lang.String r2 = "SystemUIService"
+            android.util.Log.v(r2, r1)
+            android.util.TimingsTraceLog r1 = new android.util.TimingsTraceLog
+            r3 = 4096(0x1000, double:2.0237E-320)
+            java.lang.String r5 = "SystemUIBootTiming"
+            r1.<init>(r5, r3)
+            r1.traceBegin(r14)
+            int r3 = r15.length
+            r4 = 0
+            r5 = r4
+        L_0x005d:
+            r6 = 1
+            if (r5 >= r3) goto L_0x0100
+            r7 = r15[r5]
+            java.lang.StringBuilder r8 = new java.lang.StringBuilder
+            r8.<init>()
+            r8.append(r14)
+            r8.append(r7)
+            java.lang.String r8 = r8.toString()
+            r1.traceBegin(r8)
+            long r8 = java.lang.System.currentTimeMillis()
+            com.android.systemui.dagger.ContextComponentHelper r10 = r13.mComponentHelper     // Catch:{ ClassNotFoundException | IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException -> 0x00f9 }
+            com.android.systemui.SystemUI r10 = r10.resolveSystemUI(r7)     // Catch:{ ClassNotFoundException | IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException -> 0x00f9 }
+            if (r10 != 0) goto L_0x0099
+            java.lang.Class r10 = java.lang.Class.forName(r7)     // Catch:{ ClassNotFoundException | IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException -> 0x00f9 }
+            java.lang.Class[] r11 = new java.lang.Class[r6]     // Catch:{ ClassNotFoundException | IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException -> 0x00f9 }
+            java.lang.Class<android.content.Context> r12 = android.content.Context.class
+            r11[r4] = r12     // Catch:{ ClassNotFoundException | IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException -> 0x00f9 }
+            java.lang.reflect.Constructor r10 = r10.getConstructor(r11)     // Catch:{ ClassNotFoundException | IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException -> 0x00f9 }
+            java.lang.Object[] r6 = new java.lang.Object[r6]     // Catch:{ ClassNotFoundException | IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException -> 0x00f9 }
+            r6[r4] = r13     // Catch:{ ClassNotFoundException | IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException -> 0x00f9 }
+            java.lang.Object r6 = r10.newInstance(r6)     // Catch:{ ClassNotFoundException | IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException -> 0x00f9 }
+            r10 = r6
+            com.android.systemui.SystemUI r10 = (com.android.systemui.SystemUI) r10     // Catch:{ ClassNotFoundException | IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException -> 0x00f9 }
+        L_0x0099:
+            com.android.systemui.SystemUI[] r6 = r13.mServices     // Catch:{ ClassNotFoundException | IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException -> 0x00f9 }
+            r6[r5] = r10     // Catch:{ ClassNotFoundException | IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException -> 0x00f9 }
+            com.android.systemui.SystemUI[] r6 = r13.mServices
+            r6 = r6[r5]
+            r6.start()
+            r1.traceEnd()
+            long r10 = java.lang.System.currentTimeMillis()
+            long r10 = r10 - r8
+            r8 = 1000(0x3e8, double:4.94E-321)
+            int r6 = (r10 > r8 ? 1 : (r10 == r8 ? 0 : -1))
+            if (r6 <= 0) goto L_0x00d3
+            java.lang.StringBuilder r6 = new java.lang.StringBuilder
+            r6.<init>()
+            java.lang.String r8 = "Initialization of "
+            r6.append(r8)
+            r6.append(r7)
+            java.lang.String r7 = " took "
+            r6.append(r7)
+            r6.append(r10)
+            java.lang.String r7 = " ms"
+            r6.append(r7)
+            java.lang.String r6 = r6.toString()
+            android.util.Log.w(r2, r6)
+        L_0x00d3:
+            com.android.systemui.BootCompleteCacheImpl r6 = r13.mBootCompleteCache
+            boolean r6 = r6.isBootComplete()
+            if (r6 == 0) goto L_0x00e2
+            com.android.systemui.SystemUI[] r6 = r13.mServices
+            r6 = r6[r5]
+            r6.onBootCompleted()
+        L_0x00e2:
+            com.android.systemui.SystemUI[] r6 = r13.mServices
+            r6 = r6[r5]
+            java.lang.Class r6 = r6.getClass()
+            java.lang.String r6 = r6.getName()
+            com.android.systemui.SystemUI[] r7 = r13.mServices
+            r7 = r7[r5]
+            r0.registerDumpable(r6, r7)
+            int r5 = r5 + 1
+            goto L_0x005d
+        L_0x00f9:
+            r13 = move-exception
+            java.lang.RuntimeException r14 = new java.lang.RuntimeException
+            r14.<init>(r13)
+            throw r14
+        L_0x0100:
+            com.android.systemui.dagger.SystemUIRootComponent r14 = r13.mRootComponent
+            com.android.systemui.InitController r14 = r14.getInitController()
+            r14.executePostInitTasks()
+            r1.traceEnd()
+            r13.mServicesStarted = r6
+            return
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.SystemUIApplication.startServicesIfNeeded(java.lang.String, java.lang.String[]):void");
     }
 
     public void onConfigurationChanged(Configuration configuration) {
-        Log.v("SystemUIService", "onConfigurationChanged: " + configuration);
         if (this.mServicesStarted) {
+            this.mRootComponent.getConfigurationController().onConfigurationChanged(configuration);
             int length = this.mServices.length;
             for (int i = 0; i < length; i++) {
                 SystemUI[] systemUIArr = this.mServices;
@@ -269,41 +239,7 @@ public class SystemUIApplication extends ApplicationDelegate implements SysUiSer
         }
     }
 
-    public void onPackageChanged(int i, String str) {
-        if (this.mServicesStarted) {
-            for (SystemUI systemUI : this.mServices) {
-                if (systemUI != null) {
-                    systemUI.onPackageChanged(i, str);
-                }
-            }
-        }
-    }
-
-    public void onPackageAdded(int i, String str, boolean z) {
-        if (this.mServicesStarted) {
-            for (SystemUI systemUI : this.mServices) {
-                if (systemUI != null) {
-                    systemUI.onPackageAdded(i, str, z);
-                }
-            }
-        }
-    }
-
-    public void onPackageRemoved(int i, String str, boolean z, boolean z2) {
-        if (this.mServicesStarted) {
-            for (SystemUI systemUI : this.mServices) {
-                if (systemUI != null) {
-                    systemUI.onPackageRemoved(i, str, z, z2);
-                }
-            }
-        }
-    }
-
-    public <T> T getComponent(Class<T> cls) {
-        return this.mComponents.get(cls);
-    }
-
-    public SystemUI[] getServices() {
-        return this.mServices;
+    public void setContextAvailableCallback(SystemUIAppComponentFactory.ContextAvailableCallback contextAvailableCallback) {
+        this.mContextAvailableCallback = contextAvailableCallback;
     }
 }

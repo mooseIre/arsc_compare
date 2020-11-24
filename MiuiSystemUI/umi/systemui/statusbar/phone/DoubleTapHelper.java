@@ -3,7 +3,7 @@ package com.android.systemui.statusbar.phone;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
-import com.android.systemui.plugins.R;
+import com.android.systemui.C0009R$dimen;
 
 public class DoubleTapHelper {
     private boolean mActivated;
@@ -22,18 +22,22 @@ public class DoubleTapHelper {
     private boolean mTrackTouch;
     private final View mView;
 
+    @FunctionalInterface
     public interface ActivationListener {
         void onActiveChanged(boolean z);
     }
 
+    @FunctionalInterface
     public interface DoubleTapListener {
         boolean onDoubleTap();
     }
 
+    @FunctionalInterface
     public interface DoubleTapLogListener {
         void onDoubleTapLog(boolean z, float f, float f2);
     }
 
+    @FunctionalInterface
     public interface SlideBackListener {
         boolean onSlideBack();
     }
@@ -44,12 +48,12 @@ public class DoubleTapHelper {
 
     public DoubleTapHelper(View view, long j, ActivationListener activationListener, DoubleTapListener doubleTapListener, SlideBackListener slideBackListener, DoubleTapLogListener doubleTapLogListener) {
         this.mTapTimeoutRunnable = new Runnable() {
-            public void run() {
+            public final void run() {
                 DoubleTapHelper.this.makeInactive();
             }
         };
         this.mTouchSlop = (float) ViewConfiguration.get(view.getContext()).getScaledTouchSlop();
-        this.mDoubleTapSlop = view.getResources().getDimension(R.dimen.double_tap_slop);
+        this.mDoubleTapSlop = view.getResources().getDimension(C0009R$dimen.double_tap_slop);
         this.mView = view;
         this.mDoubleTapTimeOutMs = j;
         this.mActivationListener = activationListener;
@@ -98,11 +102,14 @@ public class DoubleTapHelper {
                 if (doubleTapLogListener != null) {
                     doubleTapLogListener.onDoubleTapLog(isWithinDoubleTapSlop, motionEvent.getX() - this.mActivationX, motionEvent.getY() - this.mActivationY);
                 }
-                if (!isWithinDoubleTapSlop) {
+                if (isWithinDoubleTapSlop) {
+                    makeInactive();
+                    if (!this.mDoubleTapListener.onDoubleTap()) {
+                        return false;
+                    }
+                } else {
                     makeInactive();
                     this.mTrackTouch = false;
-                } else if (!this.mDoubleTapListener.onDoubleTap()) {
-                    return false;
                 }
             }
         } else {
@@ -124,6 +131,7 @@ public class DoubleTapHelper {
         if (this.mActivated) {
             this.mActivated = false;
             this.mActivationListener.onActiveChanged(false);
+            this.mView.removeCallbacks(this.mTapTimeoutRunnable);
         }
     }
 
@@ -131,7 +139,7 @@ public class DoubleTapHelper {
         return Math.abs(motionEvent.getX() - this.mDownX) < this.mTouchSlop && Math.abs(motionEvent.getY() - this.mDownY) < this.mTouchSlop;
     }
 
-    private boolean isWithinDoubleTapSlop(MotionEvent motionEvent) {
+    public boolean isWithinDoubleTapSlop(MotionEvent motionEvent) {
         if (!this.mActivated) {
             return true;
         }

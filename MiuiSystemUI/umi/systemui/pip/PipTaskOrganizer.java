@@ -22,11 +22,12 @@ import android.window.WindowContainerTransaction;
 import android.window.WindowContainerTransactionCallback;
 import android.window.WindowOrganizer;
 import com.android.internal.os.SomeArgs;
+import com.android.systemui.C0013R$integer;
 import com.android.systemui.pip.PipAnimationController;
 import com.android.systemui.pip.PipSurfaceTransactionHelper;
 import com.android.systemui.pip.PipTaskOrganizer;
 import com.android.systemui.pip.phone.PipUpdateThread;
-import com.android.systemui.plugins.R;
+import com.android.systemui.stackdivider.Divider;
 import com.android.systemui.wm.DisplayController;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -38,8 +39,6 @@ import java.util.function.Consumer;
 
 public class PipTaskOrganizer extends TaskOrganizer implements DisplayController.OnDisplaysChangedListener {
     private static final String TAG = PipTaskOrganizer.class.getSimpleName();
-    private Context mContext;
-    private final DisplayController mDisplayController;
     private final int mEnterExitAnimationDuration;
     private boolean mExitingPip;
     /* access modifiers changed from: private */
@@ -69,11 +68,12 @@ public class PipTaskOrganizer extends TaskOrganizer implements DisplayController
     };
     /* access modifiers changed from: private */
     public final PipAnimationController mPipAnimationController;
-    private PipBoundsHandler mPipBoundsHandler;
+    private final PipBoundsHandler mPipBoundsHandler;
     private final List<PipTransitionCallback> mPipTransitionCallbacks = new ArrayList();
     private boolean mShouldDeferEnteringPip;
+    private final Divider mSplitDivider;
     private PipSurfaceTransactionHelper.SurfaceControlTransactionFactory mSurfaceControlTransactionFactory;
-    private PipSurfaceTransactionHelper mSurfaceTransactionHelper;
+    private final PipSurfaceTransactionHelper mSurfaceTransactionHelper;
     private ActivityManager.RunningTaskInfo mTaskInfo;
     private WindowContainerToken mToken;
     private final Handler.Callback mUpdateCallbacks = new Handler.Callback() {
@@ -92,8 +92,8 @@ public class PipTaskOrganizer extends TaskOrganizer implements DisplayController
         void onPipTransitionStarted(ComponentName componentName, int i);
     }
 
-    private boolean syncWithSplitScreenBounds(Rect rect) {
-        return false;
+    public int getOutPipWindowingMode() {
+        return 0;
     }
 
     public void onBackPressedOnTaskRoot(ActivityManager.RunningTaskInfo runningTaskInfo) {
@@ -113,24 +113,25 @@ public class PipTaskOrganizer extends TaskOrganizer implements DisplayController
             }
         } else if (i == 2) {
             Rect rect2 = (Rect) someArgs.arg3;
-            animateResizePip((Rect) someArgs.arg2, rect2, someArgs.argi1, someArgs.argi2);
+            Rect rect3 = rect2;
+            animateResizePip((Rect) someArgs.arg2, rect3, (Rect) someArgs.arg4, someArgs.argi1, someArgs.argi2);
             if (consumer != null) {
                 consumer.accept(rect2);
             }
         } else if (i == 3) {
-            Rect rect3 = (Rect) someArgs.arg2;
+            Rect rect4 = (Rect) someArgs.arg2;
             int i2 = someArgs.argi1;
-            offsetPip(rect3, 0, i2, someArgs.argi2);
-            Rect rect4 = new Rect(rect3);
-            rect4.offset(0, i2);
-            if (consumer != null) {
-                consumer.accept(rect4);
-            }
-        } else if (i == 4) {
-            Rect rect5 = (Rect) someArgs.arg3;
-            finishResize((SurfaceControl.Transaction) someArgs.arg2, rect5, someArgs.argi1, -1);
+            offsetPip(rect4, 0, i2, someArgs.argi2);
+            Rect rect5 = new Rect(rect4);
+            rect5.offset(0, i2);
             if (consumer != null) {
                 consumer.accept(rect5);
+            }
+        } else if (i == 4) {
+            Rect rect6 = (Rect) someArgs.arg3;
+            finishResize((SurfaceControl.Transaction) someArgs.arg2, rect6, someArgs.argi1, -1);
+            if (consumer != null) {
+                consumer.accept(rect6);
             }
         } else if (i == 5) {
             userResizePip((Rect) someArgs.arg2, (Rect) someArgs.arg3);
@@ -139,15 +140,13 @@ public class PipTaskOrganizer extends TaskOrganizer implements DisplayController
         return true;
     }
 
-    public PipTaskOrganizer(Context context) {
-        this.mEnterExitAnimationDuration = context.getResources().getInteger(R.integer.config_pipResizeAnimationDuration);
-        this.mPipAnimationController = new PipAnimationController(context);
+    public PipTaskOrganizer(Context context, PipBoundsHandler pipBoundsHandler, PipSurfaceTransactionHelper pipSurfaceTransactionHelper, Divider divider, DisplayController displayController, PipAnimationController pipAnimationController) {
+        this.mPipBoundsHandler = pipBoundsHandler;
+        this.mEnterExitAnimationDuration = context.getResources().getInteger(C0013R$integer.config_pipResizeAnimationDuration);
+        this.mSurfaceTransactionHelper = pipSurfaceTransactionHelper;
+        this.mPipAnimationController = pipAnimationController;
         this.mSurfaceControlTransactionFactory = $$Lambda$0FLZQAxNoOm85ohJ3bgjkYQDWsU.INSTANCE;
-        this.mContext = context;
-        this.mPipBoundsHandler = PipBoundsHandler.getInstance(context);
-        this.mSurfaceTransactionHelper = PipSurfaceTransactionHelper.getInstance(this.mContext);
-        DisplayController displayController = new DisplayController(context);
-        this.mDisplayController = displayController;
+        this.mSplitDivider = divider;
         displayController.addDisplayWindowListener(this);
     }
 
@@ -159,8 +158,28 @@ public class PipTaskOrganizer extends TaskOrganizer implements DisplayController
         return new Rect(this.mLastReportedBounds);
     }
 
+    public Rect getCurrentOrAnimatingBounds() {
+        PipAnimationController.PipTransitionAnimator currentAnimator = this.mPipAnimationController.getCurrentAnimator();
+        if (currentAnimator == null || !currentAnimator.isRunning()) {
+            return getLastReportedBounds();
+        }
+        return new Rect(currentAnimator.getDestinationBounds());
+    }
+
+    public boolean isInPip() {
+        return this.mInPip;
+    }
+
+    public boolean isDeferringEnterPipAnimation() {
+        return this.mInPip && this.mShouldDeferEnteringPip;
+    }
+
     public void registerPipTransitionCallback(PipTransitionCallback pipTransitionCallback) {
         this.mPipTransitionCallbacks.add(pipTransitionCallback);
+    }
+
+    public void setOneShotAnimationType(int i) {
+        this.mOneShotAnimationType = i;
     }
 
     public void exitPip(final int i) {
@@ -177,8 +196,7 @@ public class PipTaskOrganizer extends TaskOrganizer implements DisplayController
         final int i3 = syncWithSplitScreenBounds(bounds) ? 4 : 3;
         if (z) {
             sendOnPipTransitionStarted(i3);
-            windowContainerTransaction.setWindowingMode(this.mToken, 0);
-            windowContainerTransaction.setActivityWindowingMode(this.mToken, 0);
+            applyWindowingModeChangeOnExit(windowContainerTransaction, i3);
             WindowOrganizer.applyTransaction(windowContainerTransaction);
             sendOnPipTransitionFinished(i3);
             this.mInPip = false;
@@ -197,12 +215,21 @@ public class PipTaskOrganizer extends TaskOrganizer implements DisplayController
                 public void onTransactionReady(int i, SurfaceControl.Transaction transaction) {
                     transaction.apply();
                     PipTaskOrganizer pipTaskOrganizer = PipTaskOrganizer.this;
-                    pipTaskOrganizer.scheduleAnimateResizePip(pipTaskOrganizer.mLastReportedBounds, bounds, i3, i, (Consumer<Rect>) null);
+                    pipTaskOrganizer.scheduleAnimateResizePip(pipTaskOrganizer.mLastReportedBounds, bounds, (Rect) null, i3, i, (Consumer<Rect>) null);
                     boolean unused = PipTaskOrganizer.this.mInPip = false;
                 }
             });
         }
         this.mExitingPip = true;
+    }
+
+    private void applyWindowingModeChangeOnExit(WindowContainerTransaction windowContainerTransaction, int i) {
+        windowContainerTransaction.setWindowingMode(this.mToken, getOutPipWindowingMode());
+        windowContainerTransaction.setActivityWindowingMode(this.mToken, 0);
+        Divider divider = this.mSplitDivider;
+        if (divider != null && i == 4) {
+            windowContainerTransaction.reparent(this.mToken, divider.getSecondaryRoot(), true);
+        }
     }
 
     public void removePip() {
@@ -257,13 +284,22 @@ public class PipTaskOrganizer extends TaskOrganizer implements DisplayController
         Rect bounds = this.mTaskInfo.configuration.windowConfiguration.getBounds();
         int i = this.mOneShotAnimationType;
         if (i == 0) {
-            scheduleAnimateResizePip(bounds, destinationBounds, 2, this.mEnterExitAnimationDuration, (Consumer<Rect>) null);
+            scheduleAnimateResizePip(bounds, destinationBounds, getValidSourceHintRect(runningTaskInfo, bounds), 2, this.mEnterExitAnimationDuration, (Consumer<Rect>) null);
         } else if (i == 1) {
             enterPipWithAlphaAnimation(destinationBounds, (long) this.mEnterExitAnimationDuration);
             this.mOneShotAnimationType = 0;
         } else {
             throw new RuntimeException("Unrecognized animation type: " + this.mOneShotAnimationType);
         }
+    }
+
+    private Rect getValidSourceHintRect(ActivityManager.RunningTaskInfo runningTaskInfo, Rect rect) {
+        PictureInPictureParams pictureInPictureParams = runningTaskInfo.pictureInPictureParams;
+        Rect sourceRectHint = (pictureInPictureParams == null || !pictureInPictureParams.hasSourceBoundsHint()) ? null : runningTaskInfo.pictureInPictureParams.getSourceRectHint();
+        if (sourceRectHint == null || !rect.contains(sourceRectHint)) {
+            return null;
+        }
+        return sourceRectHint;
     }
 
     private void enterPipWithAlphaAnimation(final Rect rect, final long j) {
@@ -305,7 +341,7 @@ public class PipTaskOrganizer extends TaskOrganizer implements DisplayController
 
     /* access modifiers changed from: private */
     public void sendOnPipTransitionStarted(int i) {
-        this.mMainHandler.post(new Runnable(i) {
+        runOnMainHandler(new Runnable(i) {
             public final /* synthetic */ int f$1;
 
             {
@@ -328,7 +364,7 @@ public class PipTaskOrganizer extends TaskOrganizer implements DisplayController
 
     /* access modifiers changed from: private */
     public void sendOnPipTransitionFinished(int i) {
-        this.mMainHandler.post(new Runnable(i) {
+        runOnMainHandler(new Runnable(i) {
             public final /* synthetic */ int f$1;
 
             {
@@ -351,7 +387,7 @@ public class PipTaskOrganizer extends TaskOrganizer implements DisplayController
 
     /* access modifiers changed from: private */
     public void sendOnPipTransitionCancelled(int i) {
-        this.mMainHandler.post(new Runnable(i) {
+        runOnMainHandler(new Runnable(i) {
             public final /* synthetic */ int f$1;
 
             {
@@ -369,6 +405,14 @@ public class PipTaskOrganizer extends TaskOrganizer implements DisplayController
     public /* synthetic */ void lambda$sendOnPipTransitionCancelled$4$PipTaskOrganizer(int i) {
         for (int size = this.mPipTransitionCallbacks.size() - 1; size >= 0; size--) {
             this.mPipTransitionCallbacks.get(size).onPipTransitionCanceled(this.mTaskInfo.baseActivity, i);
+        }
+    }
+
+    private void runOnMainHandler(Runnable runnable) {
+        if (Looper.getMainLooper() == Looper.myLooper()) {
+            runnable.run();
+        } else {
+            this.mMainHandler.post(runnable);
         }
     }
 
@@ -412,7 +456,7 @@ public class PipTaskOrganizer extends TaskOrganizer implements DisplayController
         this.mShouldDeferEnteringPip = false;
     }
 
-    public void onMovementBoundsChanged(Rect rect, boolean z, boolean z2, boolean z3) {
+    public void onMovementBoundsChanged(Rect rect, boolean z, boolean z2, boolean z3, WindowContainerTransaction windowContainerTransaction) {
         PipAnimationController.PipTransitionAnimator currentAnimator = this.mPipAnimationController.getCurrentAnimator();
         if (currentAnimator != null && currentAnimator.isRunning() && currentAnimator.getTransitionDirection() == 2) {
             Rect destinationBounds = currentAnimator.getDestinationBounds();
@@ -428,8 +472,17 @@ public class PipTaskOrganizer extends TaskOrganizer implements DisplayController
                 }
             }
         } else if (this.mInPip && z) {
+            int i = 0;
+            if (currentAnimator != null) {
+                i = currentAnimator.getTransitionDirection();
+                currentAnimator.removeAllUpdateListeners();
+                currentAnimator.removeAllListeners();
+                currentAnimator.cancel();
+                sendOnPipTransitionCancelled(i);
+                sendOnPipTransitionFinished(i);
+            }
             this.mLastReportedBounds.set(rect);
-            scheduleFinishResizePip(this.mLastReportedBounds);
+            prepareFinishResizeTransaction(rect, i, createFinishResizeSurfaceTransaction(rect), windowContainerTransaction);
         } else if (currentAnimator == null || !currentAnimator.isRunning()) {
             if (!this.mLastReportedBounds.isEmpty()) {
                 rect.set(this.mLastReportedBounds);
@@ -457,16 +510,17 @@ public class PipTaskOrganizer extends TaskOrganizer implements DisplayController
             Log.d(TAG, "skip scheduleAnimateResizePip, entering pip deferred");
             return;
         }
-        scheduleAnimateResizePip(this.mLastReportedBounds, rect, 0, i, consumer);
+        scheduleAnimateResizePip(this.mLastReportedBounds, rect, (Rect) null, 0, i, consumer);
     }
 
     /* access modifiers changed from: private */
-    public void scheduleAnimateResizePip(Rect rect, Rect rect2, int i, int i2, Consumer<Rect> consumer) {
+    public void scheduleAnimateResizePip(Rect rect, Rect rect2, Rect rect3, int i, int i2, Consumer<Rect> consumer) {
         if (this.mInPip) {
             SomeArgs obtain = SomeArgs.obtain();
             obtain.arg1 = consumer;
             obtain.arg2 = rect;
             obtain.arg3 = rect2;
+            obtain.arg4 = rect3;
             obtain.argi1 = i;
             obtain.argi2 = i2;
             Handler handler = this.mUpdateHandler;
@@ -496,19 +550,14 @@ public class PipTaskOrganizer extends TaskOrganizer implements DisplayController
     }
 
     public void scheduleFinishResizePip(Rect rect, Consumer<Rect> consumer) {
-        SurfaceControl.Transaction transaction = this.mSurfaceControlTransactionFactory.getTransaction();
-        PipSurfaceTransactionHelper pipSurfaceTransactionHelper = this.mSurfaceTransactionHelper;
-        pipSurfaceTransactionHelper.crop(transaction, this.mLeash, rect);
-        pipSurfaceTransactionHelper.resetScale(transaction, this.mLeash, rect);
-        pipSurfaceTransactionHelper.round(transaction, this.mLeash, this.mInPip);
-        scheduleFinishResizePip(transaction, rect, 0, consumer);
+        scheduleFinishResizePip(rect, 0, consumer);
     }
 
-    private void scheduleFinishResizePip(SurfaceControl.Transaction transaction, Rect rect, int i, Consumer<Rect> consumer) {
-        if (this.mInPip) {
+    private void scheduleFinishResizePip(Rect rect, int i, Consumer<Rect> consumer) {
+        if (!shouldBlockResizeRequest()) {
             SomeArgs obtain = SomeArgs.obtain();
             obtain.arg1 = consumer;
-            obtain.arg2 = transaction;
+            obtain.arg2 = createFinishResizeSurfaceTransaction(rect);
             obtain.arg3 = rect;
             obtain.argi1 = i;
             Handler handler = this.mUpdateHandler;
@@ -516,8 +565,17 @@ public class PipTaskOrganizer extends TaskOrganizer implements DisplayController
         }
     }
 
+    private SurfaceControl.Transaction createFinishResizeSurfaceTransaction(Rect rect) {
+        SurfaceControl.Transaction transaction = this.mSurfaceControlTransactionFactory.getTransaction();
+        PipSurfaceTransactionHelper pipSurfaceTransactionHelper = this.mSurfaceTransactionHelper;
+        pipSurfaceTransactionHelper.crop(transaction, this.mLeash, rect);
+        pipSurfaceTransactionHelper.resetScale(transaction, this.mLeash, rect);
+        pipSurfaceTransactionHelper.round(transaction, this.mLeash, this.mInPip);
+        return transaction;
+    }
+
     public void scheduleOffsetPip(Rect rect, int i, int i2, Consumer<Rect> consumer) {
-        if (this.mInPip) {
+        if (!shouldBlockResizeRequest()) {
             if (this.mShouldDeferEnteringPip) {
                 Log.d(TAG, "skip scheduleOffsetPip, entering pip deferred");
                 return;
@@ -540,7 +598,7 @@ public class PipTaskOrganizer extends TaskOrganizer implements DisplayController
         } else {
             Rect rect2 = new Rect(rect);
             rect2.offset(i, i2);
-            animateResizePip(rect, rect2, 1, i3);
+            animateResizePip(rect, rect2, (Rect) null, 1, i3);
         }
     }
 
@@ -560,10 +618,13 @@ public class PipTaskOrganizer extends TaskOrganizer implements DisplayController
     }
 
     private void userResizePip(Rect rect, Rect rect2) {
+        String str = TAG;
         if (Looper.myLooper() != this.mUpdateHandler.getLooper()) {
             throw new RuntimeException("Callers should call scheduleUserResizePip() instead of this directly");
         } else if (this.mToken == null || this.mLeash == null) {
-            Log.w(TAG, "Abort animation, invalid leash");
+            Log.w(str, "Abort animation, invalid leash");
+        } else if (rect.isEmpty() || rect2.isEmpty()) {
+            Log.w(str, "Attempted to user resize PIP to or from empty bounds, aborting.");
         } else {
             SurfaceControl.Transaction transaction = this.mSurfaceControlTransactionFactory.getTransaction();
             this.mSurfaceTransactionHelper.scale(transaction, this.mLeash, rect, rect2);
@@ -577,19 +638,8 @@ public class PipTaskOrganizer extends TaskOrganizer implements DisplayController
             this.mLastReportedBounds.set(rect);
             if (!PipAnimationController.isInPipDirection(i) || i2 != 1) {
                 WindowContainerTransaction windowContainerTransaction = new WindowContainerTransaction();
-                if (PipAnimationController.isInPipDirection(i)) {
-                    windowContainerTransaction.setActivityWindowingMode(this.mToken, 0);
-                    windowContainerTransaction.scheduleFinishEnterPip(this.mToken, rect);
-                } else if (PipAnimationController.isOutPipDirection(i)) {
-                    if (i == 3) {
-                        rect = null;
-                    }
-                    windowContainerTransaction.setWindowingMode(this.mToken, 0);
-                    windowContainerTransaction.setActivityWindowingMode(this.mToken, 0);
-                }
-                windowContainerTransaction.setBounds(this.mToken, rect);
-                windowContainerTransaction.setBoundsChangeTransaction(this.mToken, transaction);
-                WindowOrganizer.applyTransaction(windowContainerTransaction);
+                prepareFinishResizeTransaction(rect, i, transaction, windowContainerTransaction);
+                applyFinishBoundsResize(windowContainerTransaction, i);
                 return;
             }
             return;
@@ -597,14 +647,32 @@ public class PipTaskOrganizer extends TaskOrganizer implements DisplayController
         throw new RuntimeException("Callers should call scheduleResizePip() instead of this directly");
     }
 
-    private void animateResizePip(Rect rect, Rect rect2, int i, int i2) {
+    private void prepareFinishResizeTransaction(Rect rect, int i, SurfaceControl.Transaction transaction, WindowContainerTransaction windowContainerTransaction) {
+        if (PipAnimationController.isInPipDirection(i)) {
+            windowContainerTransaction.setActivityWindowingMode(this.mToken, 0);
+            windowContainerTransaction.scheduleFinishEnterPip(this.mToken, rect);
+        } else if (PipAnimationController.isOutPipDirection(i)) {
+            if (i == 3) {
+                rect = null;
+            }
+            applyWindowingModeChangeOnExit(windowContainerTransaction, i);
+        }
+        windowContainerTransaction.setBounds(this.mToken, rect);
+        windowContainerTransaction.setBoundsChangeTransaction(this.mToken, transaction);
+    }
+
+    public void applyFinishBoundsResize(WindowContainerTransaction windowContainerTransaction, int i) {
+        WindowOrganizer.applyTransaction(windowContainerTransaction);
+    }
+
+    private void animateResizePip(Rect rect, Rect rect2, Rect rect3, int i, int i2) {
         SurfaceControl surfaceControl;
         if (Looper.myLooper() != this.mUpdateHandler.getLooper()) {
             throw new RuntimeException("Callers should call scheduleAnimateResizePip() instead of this directly");
         } else if (this.mToken == null || (surfaceControl = this.mLeash) == null) {
             Log.w(TAG, "Abort animation, invalid leash");
         } else {
-            PipAnimationController.PipTransitionAnimator animator = this.mPipAnimationController.getAnimator(surfaceControl, rect, rect2);
+            PipAnimationController.PipTransitionAnimator animator = this.mPipAnimationController.getAnimator(surfaceControl, rect, rect2, rect3);
             animator.setTransitionDirection(i);
             animator.setPipAnimationCallback(this.mPipAnimationCallback);
             animator.setDuration((long) i2).start();
@@ -620,10 +688,23 @@ public class PipTaskOrganizer extends TaskOrganizer implements DisplayController
     }
 
     private float getAspectRatioOrDefault(PictureInPictureParams pictureInPictureParams) {
-        if (pictureInPictureParams == null) {
+        if (pictureInPictureParams == null || !pictureInPictureParams.hasSetAspectRatio()) {
             return this.mPipBoundsHandler.getDefaultAspectRatio();
         }
         return pictureInPictureParams.getAspectRatio();
+    }
+
+    private boolean shouldBlockResizeRequest() {
+        return !this.mInPip || this.mExitingPip;
+    }
+
+    private boolean syncWithSplitScreenBounds(Rect rect) {
+        Divider divider = this.mSplitDivider;
+        if (divider == null || !divider.isDividerVisible()) {
+            return false;
+        }
+        rect.set(this.mSplitDivider.getView().getNonMinimizedSplitScreenSecondaryBounds());
+        return true;
     }
 
     public void dump(PrintWriter printWriter, String str) {

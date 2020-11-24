@@ -158,10 +158,11 @@ public class PerimeterPathGuide {
             RegionAttributes[] regionAttributesArr2 = this.mRegions;
             if (i4 < regionAttributesArr2.length) {
                 regionAttributesArr2[i4].normalizedLength = regionAttributesArr2[i4].absoluteLength / f2;
-                f += regionAttributesArr2[i4].normalizedLength;
-                regionAttributesArr2[i4].endCoordinate = f;
+                f += regionAttributesArr2[i4].absoluteLength;
+                regionAttributesArr2[i4].endCoordinate = f / f2;
                 i4++;
             } else {
+                regionAttributesArr2[regionAttributesArr2.length - 1].endCoordinate = 1.0f;
                 return;
             }
         }

@@ -9,13 +9,17 @@ public class WakefulnessLifecycle extends Lifecycle<Observer> implements Dumpabl
     private int mWakefulness = 0;
 
     public interface Observer {
-        void onFinishedGoingToSleep();
+        void onFinishedGoingToSleep() {
+        }
 
-        void onFinishedWakingUp();
+        void onFinishedWakingUp() {
+        }
 
-        void onStartedGoingToSleep();
+        void onStartedGoingToSleep() {
+        }
 
-        void onStartedWakingUp();
+        void onStartedWakingUp() {
+        }
     }
 
     public int getWakefulness() {

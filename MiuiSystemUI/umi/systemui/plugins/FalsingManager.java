@@ -5,13 +5,15 @@ import android.view.MotionEvent;
 import com.android.systemui.plugins.annotations.ProvidesInterface;
 import java.io.PrintWriter;
 
-@ProvidesInterface(version = 1)
+@ProvidesInterface(version = 4)
 public interface FalsingManager {
-    public static final int VERSION = 1;
+    public static final int VERSION = 4;
+
+    void cleanup();
 
     void dump(PrintWriter printWriter);
 
-    boolean isClassiferEnabled();
+    boolean isClassifierEnabled();
 
     boolean isFalseTouch();
 
@@ -43,11 +45,11 @@ public interface FalsingManager {
 
     void onNotificationDoubleTap(boolean z, float f, float f2);
 
-    void onNotificatonStartDismissing();
+    void onNotificationStartDismissing();
+
+    void onNotificationStopDismissing();
 
     void onNotificatonStartDraggingDown();
-
-    void onNotificatonStopDismissing();
 
     void onNotificatonStopDraggingDown();
 
@@ -61,7 +63,7 @@ public interface FalsingManager {
 
     void onStartExpandingFromPulse();
 
-    void onSucccessfulUnlock();
+    void onSuccessfulUnlock();
 
     void onTouchEvent(MotionEvent motionEvent, int i, int i2);
 

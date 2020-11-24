@@ -1,23 +1,24 @@
 package com.android.systemui.statusbar.phone;
 
+import android.app.ActivityManager;
 import android.app.StatusBarManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.UserInfo;
-import android.content.pm.UserInfoCompat;
-import android.os.Handler;
 import android.os.UserHandle;
 import android.os.UserManager;
-import com.android.keyguard.KeyguardUpdateMonitor;
+import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.statusbar.phone.ManagedProfileController;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.Executor;
 
 public class ManagedProfileControllerImpl implements ManagedProfileController {
+    private final BroadcastDispatcher mBroadcastDispatcher;
     /* access modifiers changed from: private */
     public final List<ManagedProfileController.Callback> mCallbacks = new ArrayList();
     private final Context mContext;
@@ -34,9 +35,10 @@ public class ManagedProfileControllerImpl implements ManagedProfileController {
     };
     private final UserManager mUserManager;
 
-    public ManagedProfileControllerImpl(Context context) {
+    public ManagedProfileControllerImpl(Context context, BroadcastDispatcher broadcastDispatcher) {
         this.mContext = context;
         this.mUserManager = UserManager.get(context);
+        this.mBroadcastDispatcher = broadcastDispatcher;
         this.mProfiles = new LinkedList<>();
     }
 
@@ -69,7 +71,7 @@ public class ManagedProfileControllerImpl implements ManagedProfileController {
     public void reloadManagedProfiles() {
         synchronized (this.mProfiles) {
             boolean z = this.mProfiles.size() > 0;
-            int currentUser = KeyguardUpdateMonitor.getCurrentUser();
+            int currentUser = ActivityManager.getCurrentUser();
             this.mProfiles.clear();
             for (UserInfo userInfo : this.mUserManager.getEnabledProfiles(currentUser)) {
                 if (userInfo.isManagedProfile()) {
@@ -103,7 +105,7 @@ public class ManagedProfileControllerImpl implements ManagedProfileController {
         synchronized (this.mProfiles) {
             Iterator it = this.mProfiles.iterator();
             while (it.hasNext()) {
-                if (UserInfoCompat.isQuietModeEnabled((UserInfo) it.next())) {
+                if (((UserInfo) it.next()).isQuietModeEnabled()) {
                     return false;
                 }
             }
@@ -121,9 +123,9 @@ public class ManagedProfileControllerImpl implements ManagedProfileController {
             intentFilter.addAction("android.intent.action.MANAGED_PROFILE_REMOVED");
             intentFilter.addAction("android.intent.action.MANAGED_PROFILE_AVAILABLE");
             intentFilter.addAction("android.intent.action.MANAGED_PROFILE_UNAVAILABLE");
-            this.mContext.registerReceiverAsUser(this.mReceiver, UserHandle.ALL, intentFilter, (String) null, (Handler) null);
+            this.mBroadcastDispatcher.registerReceiver(this.mReceiver, intentFilter, (Executor) null, UserHandle.ALL);
             return;
         }
-        this.mContext.unregisterReceiver(this.mReceiver);
+        this.mBroadcastDispatcher.unregisterReceiver(this.mReceiver);
     }
 }

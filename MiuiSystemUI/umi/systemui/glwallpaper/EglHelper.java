@@ -6,10 +6,14 @@ import android.opengl.EGLContext;
 import android.opengl.EGLDisplay;
 import android.opengl.EGLSurface;
 import android.opengl.GLUtils;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 public class EglHelper {
     private static final String TAG = "EglHelper";
@@ -19,40 +23,66 @@ public class EglHelper {
     private boolean mEglReady;
     private EGLSurface mEglSurface;
     private final int[] mEglVersion = new int[2];
+    private final Set<String> mExts = new HashSet();
 
-    public boolean init(SurfaceHolder surfaceHolder) {
-        if (this.mEglReady) {
-            Log.w(TAG, "init cancel because egl is initialized");
+    public EglHelper() {
+        connectDisplay();
+    }
+
+    public boolean init(SurfaceHolder surfaceHolder, boolean z) {
+        if (hasEglDisplay() || connectDisplay()) {
+            EGLDisplay eGLDisplay = this.mEglDisplay;
+            int[] iArr = this.mEglVersion;
+            if (!EGL14.eglInitialize(eGLDisplay, iArr, 0, iArr, 1)) {
+                String str = TAG;
+                Log.w(str, "eglInitialize failed: " + GLUtils.getEGLErrorString(EGL14.eglGetError()));
+                return false;
+            }
+            EGLConfig chooseEglConfig = chooseEglConfig();
+            this.mEglConfig = chooseEglConfig;
+            if (chooseEglConfig == null) {
+                Log.w(TAG, "eglConfig not initialized!");
+                return false;
+            } else if (!createEglContext()) {
+                Log.w(TAG, "Can't create EGLContext!");
+                return false;
+            } else if (!createEglSurface(surfaceHolder, z)) {
+                Log.w(TAG, "Can't create EGLSurface!");
+                return false;
+            } else {
+                this.mEglReady = true;
+                return true;
+            }
+        } else {
+            Log.w(TAG, "Can not connect display, abort!");
             return false;
         }
-        EGLDisplay eglGetDisplay = EGL14.eglGetDisplay(0);
-        this.mEglDisplay = eglGetDisplay;
-        if (eglGetDisplay == EGL14.EGL_NO_DISPLAY) {
+    }
+
+    private boolean connectDisplay() {
+        this.mExts.clear();
+        this.mEglDisplay = EGL14.eglGetDisplay(0);
+        if (!hasEglDisplay()) {
             String str = TAG;
             Log.w(str, "eglGetDisplay failed: " + GLUtils.getEGLErrorString(EGL14.eglGetError()));
             return false;
         }
-        int[] iArr = this.mEglVersion;
-        if (!EGL14.eglInitialize(eglGetDisplay, iArr, 0, iArr, 1)) {
-            String str2 = TAG;
-            Log.w(str2, "eglInitialize failed: " + GLUtils.getEGLErrorString(EGL14.eglGetError()));
-            return false;
-        }
-        EGLConfig chooseEglConfig = chooseEglConfig();
-        this.mEglConfig = chooseEglConfig;
-        if (chooseEglConfig == null) {
-            Log.w(TAG, "eglConfig not initialized!");
-            return false;
-        } else if (!forceCreateEglContext()) {
-            Log.w(TAG, "Can't create EGLContext!");
-            return false;
-        } else if (!forceCreateEglSurface(surfaceHolder)) {
-            Log.w(TAG, "Can't create EGLSurface!");
-            return false;
-        } else {
-            this.mEglReady = true;
+        String eglQueryString = EGL14.eglQueryString(this.mEglDisplay, 12373);
+        if (TextUtils.isEmpty(eglQueryString)) {
             return true;
         }
+        Collections.addAll(this.mExts, eglQueryString.split(" "));
+        return true;
+    }
+
+    /* access modifiers changed from: package-private */
+    public boolean checkExtensionCapability(String str) {
+        return this.mExts.contains(str);
+    }
+
+    /* access modifiers changed from: package-private */
+    public int getWcgCapability() {
+        return checkExtensionCapability("EGL_EXT_gl_colorspace_display_p3_passthrough") ? 13456 : 0;
     }
 
     private EGLConfig chooseEglConfig() {
@@ -72,31 +102,41 @@ public class EglHelper {
     }
 
     private int[] getConfig() {
-        return new int[]{12324, 8, 12323, 8, 12322, 8, 12321, 8, 12325, 0, 12326, 0, 12352, 4, 12327, 12344, 12344};
+        return new int[]{12324, 8, 12323, 8, 12322, 8, 12321, 0, 12325, 0, 12326, 0, 12352, 4, 12327, 12344, 12344};
     }
 
-    public boolean createEglSurface(SurfaceHolder surfaceHolder) {
-        if (this.mEglReady) {
-            return forceCreateEglSurface(surfaceHolder);
-        }
-        Log.w(TAG, "createEglSurface failed: Egl not ready");
-        return false;
-    }
-
-    private boolean forceCreateEglSurface(SurfaceHolder surfaceHolder) {
-        EGLSurface eglCreateWindowSurface = EGL14.eglCreateWindowSurface(this.mEglDisplay, this.mEglConfig, surfaceHolder, (int[]) null, 0);
-        this.mEglSurface = eglCreateWindowSurface;
-        if (eglCreateWindowSurface == null || eglCreateWindowSurface == EGL14.EGL_NO_SURFACE) {
+    public boolean createEglSurface(SurfaceHolder surfaceHolder, boolean z) {
+        Log.d(TAG, "createEglSurface start");
+        if (!hasEglDisplay() || !surfaceHolder.getSurface().isValid()) {
             String str = TAG;
-            Log.w(str, "createWindowSurface failed: " + GLUtils.getEGLErrorString(EGL14.eglGetError()));
-            return false;
-        } else if (EGL14.eglMakeCurrent(this.mEglDisplay, eglCreateWindowSurface, eglCreateWindowSurface, this.mEglContext)) {
-            return true;
-        } else {
-            String str2 = TAG;
-            Log.w(str2, "eglMakeCurrent failed: " + GLUtils.getEGLErrorString(EGL14.eglGetError()));
+            Log.w(str, "Create EglSurface failed: hasEglDisplay=" + hasEglDisplay() + ", has valid surface=" + surfaceHolder.getSurface().isValid());
             return false;
         }
+        int[] iArr = null;
+        int wcgCapability = getWcgCapability();
+        if (z && checkExtensionCapability("EGL_KHR_gl_colorspace") && wcgCapability > 0) {
+            iArr = new int[]{12445, wcgCapability, 12344};
+        }
+        this.mEglSurface = askCreatingEglWindowSurface(surfaceHolder, iArr, 0);
+        if (!hasEglSurface()) {
+            String str2 = TAG;
+            Log.w(str2, "createWindowSurface failed: " + GLUtils.getEGLErrorString(EGL14.eglGetError()));
+            return false;
+        }
+        EGLDisplay eGLDisplay = this.mEglDisplay;
+        EGLSurface eGLSurface = this.mEglSurface;
+        if (!EGL14.eglMakeCurrent(eGLDisplay, eGLSurface, eGLSurface, this.mEglContext)) {
+            String str3 = TAG;
+            Log.w(str3, "eglMakeCurrent failed: " + GLUtils.getEGLErrorString(EGL14.eglGetError()));
+            return false;
+        }
+        Log.d(TAG, "createEglSurface done");
+        return true;
+    }
+
+    /* access modifiers changed from: package-private */
+    public EGLSurface askCreatingEglWindowSurface(SurfaceHolder surfaceHolder, int[] iArr, int i) {
+        return EGL14.eglCreateWindowSurface(this.mEglDisplay, this.mEglConfig, surfaceHolder, iArr, i);
     }
 
     public void destroyEglSurface() {
@@ -105,7 +145,7 @@ public class EglHelper {
             EGLSurface eGLSurface = EGL14.EGL_NO_SURFACE;
             EGL14.eglMakeCurrent(eGLDisplay, eGLSurface, eGLSurface, EGL14.EGL_NO_CONTEXT);
             EGL14.eglDestroySurface(this.mEglDisplay, this.mEglSurface);
-            this.mEglSurface = null;
+            this.mEglSurface = EGL14.EGL_NO_SURFACE;
         }
     }
 
@@ -115,40 +155,49 @@ public class EglHelper {
     }
 
     public boolean createEglContext() {
-        if (this.mEglReady) {
-            return forceCreateEglContext();
+        Log.d(TAG, "createEglContext start");
+        int[] iArr = new int[5];
+        iArr[0] = 12440;
+        char c = 2;
+        iArr[1] = 2;
+        if (checkExtensionCapability("EGL_IMG_context_priority")) {
+            iArr[2] = 12544;
+            c = 4;
+            iArr[3] = 12547;
         }
-        Log.w(TAG, "createEglContext failed: Egl not ready");
-        return false;
-    }
-
-    private boolean forceCreateEglContext() {
-        EGLContext eglCreateContext = EGL14.eglCreateContext(this.mEglDisplay, this.mEglConfig, EGL14.EGL_NO_CONTEXT, new int[]{12440, 2, 12544, 12547, 12344}, 0);
-        this.mEglContext = eglCreateContext;
-        if (eglCreateContext != EGL14.EGL_NO_CONTEXT) {
+        iArr[c] = 12344;
+        if (hasEglDisplay()) {
+            this.mEglContext = EGL14.eglCreateContext(this.mEglDisplay, this.mEglConfig, EGL14.EGL_NO_CONTEXT, iArr, 0);
+            if (!hasEglContext()) {
+                String str = TAG;
+                Log.w(str, "eglCreateContext failed: " + GLUtils.getEGLErrorString(EGL14.eglGetError()));
+                return false;
+            }
+            Log.d(TAG, "createEglContext done");
             return true;
         }
-        String str = TAG;
-        Log.w(str, "eglCreateContext failed: " + GLUtils.getEGLErrorString(EGL14.eglGetError()));
+        Log.w(TAG, "mEglDisplay is null");
         return false;
     }
 
     public void destroyEglContext() {
         if (hasEglContext()) {
             EGL14.eglDestroyContext(this.mEglDisplay, this.mEglContext);
-            this.mEglContext = null;
+            this.mEglContext = EGL14.EGL_NO_CONTEXT;
         }
     }
 
     public boolean hasEglContext() {
-        return this.mEglContext != null;
+        EGLContext eGLContext = this.mEglContext;
+        return (eGLContext == null || eGLContext == EGL14.EGL_NO_CONTEXT) ? false : true;
+    }
+
+    public boolean hasEglDisplay() {
+        EGLDisplay eGLDisplay = this.mEglDisplay;
+        return (eGLDisplay == null || eGLDisplay == EGL14.EGL_NO_DISPLAY) ? false : true;
     }
 
     public boolean swapBuffer() {
-        if (!this.mEglReady) {
-            Log.w(TAG, "swapBuffer failed: Egl not ready");
-            return false;
-        }
         boolean eglSwapBuffers = EGL14.eglSwapBuffers(this.mEglDisplay, this.mEglSurface);
         int eglGetError = EGL14.eglGetError();
         if (eglGetError != 12288) {
@@ -159,18 +208,22 @@ public class EglHelper {
     }
 
     public void finish() {
-        if (!this.mEglReady) {
-            Log.w(TAG, "finish cancel because egl is finished");
-            return;
-        }
         if (hasEglSurface()) {
             destroyEglSurface();
         }
         if (hasEglContext()) {
             destroyEglContext();
         }
-        EGL14.eglTerminate(this.mEglDisplay);
+        if (hasEglDisplay()) {
+            terminateEglDisplay();
+        }
         this.mEglReady = false;
+    }
+
+    /* access modifiers changed from: package-private */
+    public void terminateEglDisplay() {
+        EGL14.eglTerminate(this.mEglDisplay);
+        this.mEglDisplay = EGL14.EGL_NO_DISPLAY;
     }
 
     public void dump(String str, FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {

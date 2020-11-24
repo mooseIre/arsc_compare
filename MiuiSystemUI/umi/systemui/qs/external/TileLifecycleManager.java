@@ -18,14 +18,17 @@ import android.service.quicksettings.IQSTileService;
 import android.service.quicksettings.Tile;
 import android.util.ArraySet;
 import android.util.Log;
+import com.android.systemui.broadcast.BroadcastDispatcher;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class TileLifecycleManager extends BroadcastReceiver implements IQSTileService, ServiceConnection, IBinder.DeathRecipient {
     private int mBindRetryDelay;
     private int mBindTryCount;
     /* access modifiers changed from: private */
     public boolean mBound;
+    private final BroadcastDispatcher mBroadcastDispatcher;
     private TileChangeListener mChangeListener;
     private IBinder mClickBinder;
     private final Context mContext;
@@ -34,25 +37,28 @@ public class TileLifecycleManager extends BroadcastReceiver implements IQSTileSe
     private boolean mIsBound;
     private boolean mListening;
     private final PackageManagerAdapter mPackageManagerAdapter;
+    private AtomicBoolean mPackageReceiverRegistered;
     private Set<Integer> mQueuedMessages;
-    boolean mReceiverRegistered;
     private final IBinder mToken;
     private boolean mUnbindImmediate;
     private final UserHandle mUser;
+    private AtomicBoolean mUserReceiverRegistered;
     private QSTileServiceWrapper mWrapper;
 
     public interface TileChangeListener {
         void onTileChanged(ComponentName componentName);
     }
 
-    public TileLifecycleManager(Handler handler, Context context, IQSService iQSService, Tile tile, Intent intent, UserHandle userHandle) {
-        this(handler, context, iQSService, tile, intent, userHandle, new PackageManagerAdapter(context));
+    public TileLifecycleManager(Handler handler, Context context, IQSService iQSService, Tile tile, Intent intent, UserHandle userHandle, BroadcastDispatcher broadcastDispatcher) {
+        this(handler, context, iQSService, tile, intent, userHandle, new PackageManagerAdapter(context), broadcastDispatcher);
     }
 
-    TileLifecycleManager(Handler handler, Context context, IQSService iQSService, Tile tile, Intent intent, UserHandle userHandle, PackageManagerAdapter packageManagerAdapter) {
+    TileLifecycleManager(Handler handler, Context context, IQSService iQSService, Tile tile, Intent intent, UserHandle userHandle, PackageManagerAdapter packageManagerAdapter, BroadcastDispatcher broadcastDispatcher) {
         this.mToken = new Binder();
         this.mQueuedMessages = new ArraySet();
         this.mBindRetryDelay = 1000;
+        this.mPackageReceiverRegistered = new AtomicBoolean(false);
+        this.mUserReceiverRegistered = new AtomicBoolean(false);
         this.mContext = context;
         this.mHandler = handler;
         this.mIntent = intent;
@@ -60,6 +66,7 @@ public class TileLifecycleManager extends BroadcastReceiver implements IQSTileSe
         this.mIntent.putExtra("token", this.mToken);
         this.mUser = userHandle;
         this.mPackageManagerAdapter = packageManagerAdapter;
+        this.mBroadcastDispatcher = broadcastDispatcher;
     }
 
     public ComponentName getComponent() {
@@ -118,7 +125,7 @@ public class TileLifecycleManager extends BroadcastReceiver implements IQSTileSe
             } else if (checkComponentState()) {
                 this.mBindTryCount++;
                 try {
-                    this.mIsBound = this.mContext.bindServiceAsUser(this.mIntent, this, 34603009, this.mUser);
+                    this.mIsBound = this.mContext.bindServiceAsUser(this.mIntent, this, 34603041, this.mUser);
                 } catch (SecurityException e) {
                     Log.e("TileLifecycleManager", "Failed to bind to service", e);
                     this.mIsBound = false;
@@ -184,9 +191,10 @@ public class TileLifecycleManager extends BroadcastReceiver implements IQSTileSe
     }
 
     public void handleDestroy() {
-        if (this.mReceiverRegistered) {
+        if (this.mPackageReceiverRegistered.get() || this.mUserReceiverRegistered.get()) {
             stopPackageListening();
         }
+        this.mChangeListener = null;
     }
 
     private void handleDeath() {
@@ -216,14 +224,30 @@ public class TileLifecycleManager extends BroadcastReceiver implements IQSTileSe
         IntentFilter intentFilter = new IntentFilter("android.intent.action.PACKAGE_ADDED");
         intentFilter.addAction("android.intent.action.PACKAGE_CHANGED");
         intentFilter.addDataScheme("package");
-        this.mContext.registerReceiverAsUser(this, this.mUser, intentFilter, (String) null, this.mHandler);
-        this.mContext.registerReceiverAsUser(this, this.mUser, new IntentFilter("android.intent.action.USER_UNLOCKED"), (String) null, this.mHandler);
-        this.mReceiverRegistered = true;
+        try {
+            this.mPackageReceiverRegistered.set(true);
+            this.mContext.registerReceiverAsUser(this, this.mUser, intentFilter, (String) null, this.mHandler);
+        } catch (Exception e) {
+            this.mPackageReceiverRegistered.set(false);
+            Log.e("TileLifecycleManager", "Could not register package receiver", e);
+        }
+        IntentFilter intentFilter2 = new IntentFilter("android.intent.action.USER_UNLOCKED");
+        try {
+            this.mUserReceiverRegistered.set(true);
+            this.mBroadcastDispatcher.registerReceiverWithHandler(this, intentFilter2, this.mHandler, this.mUser);
+        } catch (Exception e2) {
+            this.mUserReceiverRegistered.set(false);
+            Log.e("TileLifecycleManager", "Could not register unlock receiver", e2);
+        }
     }
 
     private void stopPackageListening() {
-        this.mContext.unregisterReceiver(this);
-        this.mReceiverRegistered = false;
+        if (this.mUserReceiverRegistered.compareAndSet(true, false)) {
+            this.mBroadcastDispatcher.unregisterReceiver(this);
+        }
+        if (this.mPackageReceiverRegistered.compareAndSet(true, false)) {
+            this.mContext.unregisterReceiver(this);
+        }
     }
 
     public void setTileChangeListener(TileChangeListener tileChangeListener) {

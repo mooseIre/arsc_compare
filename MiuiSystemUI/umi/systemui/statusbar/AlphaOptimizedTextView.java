@@ -10,15 +10,15 @@ public class AlphaOptimizedTextView extends TextView {
     }
 
     public AlphaOptimizedTextView(Context context) {
-        this(context, (AttributeSet) null);
+        super(context);
     }
 
     public AlphaOptimizedTextView(Context context, AttributeSet attributeSet) {
-        this(context, attributeSet, 0);
+        super(context, attributeSet);
     }
 
     public AlphaOptimizedTextView(Context context, AttributeSet attributeSet, int i) {
-        this(context, attributeSet, i, 0);
+        super(context, attributeSet, i);
     }
 
     public AlphaOptimizedTextView(Context context, AttributeSet attributeSet, int i, int i2) {

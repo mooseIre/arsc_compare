@@ -4,9 +4,13 @@ import android.content.ComponentName;
 import android.media.AudioManager;
 import android.media.AudioSystem;
 import android.os.Handler;
+import android.os.VibrationEffect;
 import android.util.SparseArray;
+import com.android.systemui.plugins.annotations.Dependencies;
+import com.android.systemui.plugins.annotations.DependsOn;
 import com.android.systemui.plugins.annotations.ProvidesInterface;
 
+@Dependencies({@DependsOn(target = StreamState.class), @DependsOn(target = State.class), @DependsOn(target = Callbacks.class)})
 @ProvidesInterface(version = 1)
 public interface VolumeDialogController {
     public static final int VERSION = 1;
@@ -17,15 +21,20 @@ public interface VolumeDialogController {
 
         void onAccessibilityModeChanged(Boolean bool);
 
+        void onCaptionComponentStateChanged(Boolean bool, Boolean bool2);
+
         void onConfigurationChanged();
 
         void onDismissRequested(int i);
 
         void onLayoutDirectionChanged(int i);
 
+        void onPerformHapticFeedback(int i) {
+        }
+
         void onScreenOff();
 
-        void onShowRequested(int i, boolean z, int i2);
+        void onShowRequested(int i);
 
         void onShowSafetyWarning(int i);
 
@@ -34,25 +43,31 @@ public interface VolumeDialogController {
         void onShowVibrateHint();
 
         void onStateChanged(State state);
-
-        void onVolumeChanged(int i, boolean z);
     }
 
     void addCallback(Callbacks callbacks, Handler handler);
 
+    boolean areCaptionsEnabled();
+
     AudioManager getAudioManager();
+
+    void getCaptionsComponentState(boolean z);
 
     void getState();
 
-    int getVoiceAssistStreamType();
-
     boolean hasVibrator();
+
+    boolean isCaptionStreamOptedOut();
 
     void notifyVisible(boolean z);
 
     void removeCallback(Callbacks callbacks);
 
+    void scheduleTouchFeedback();
+
     void setActiveStream(int i);
+
+    void setCaptionsEnabled(boolean z);
 
     void setRingerMode(int i, boolean z);
 
@@ -60,19 +75,18 @@ public interface VolumeDialogController {
 
     void userActivity();
 
-    void vibrate();
+    void vibrate(VibrationEffect vibrationEffect);
 
     @ProvidesInterface(version = 1)
     public static final class StreamState {
         public static final int VERSION = 1;
         public boolean dynamic;
-        public int lastLevel;
         public int level;
         public int levelMax;
         public int levelMin;
         public boolean muteSupported;
         public boolean muted;
-        public int nameRes;
+        public int name;
         public String remoteLabel;
         public boolean routedToBluetooth;
 
@@ -80,12 +94,11 @@ public interface VolumeDialogController {
             StreamState streamState = new StreamState();
             streamState.dynamic = this.dynamic;
             streamState.level = this.level;
-            streamState.lastLevel = this.lastLevel;
             streamState.levelMin = this.levelMin;
             streamState.levelMax = this.levelMax;
             streamState.muted = this.muted;
             streamState.muteSupported = this.muteSupported;
-            streamState.nameRes = this.nameRes;
+            streamState.name = this.name;
             streamState.remoteLabel = this.remoteLabel;
             streamState.routedToBluetooth = this.routedToBluetooth;
             return streamState;
@@ -97,6 +110,10 @@ public interface VolumeDialogController {
         public static int NO_ACTIVE_STREAM = -1;
         public static final int VERSION = 1;
         public int activeStream = NO_ACTIVE_STREAM;
+        public boolean disallowAlarms;
+        public boolean disallowMedia;
+        public boolean disallowRinger;
+        public boolean disallowSystem;
         public ComponentName effectsSuppressor;
         public String effectsSuppressorName;
         public int ringerModeExternal;
@@ -118,6 +135,10 @@ public interface VolumeDialogController {
             }
             state.effectsSuppressorName = this.effectsSuppressorName;
             state.activeStream = this.activeStream;
+            state.disallowAlarms = this.disallowAlarms;
+            state.disallowMedia = this.disallowMedia;
+            state.disallowSystem = this.disallowSystem;
+            state.disallowRinger = this.disallowRinger;
             return state;
         }
 
@@ -169,6 +190,18 @@ public interface VolumeDialogController {
             sep(sb, i);
             sb.append("activeStream:");
             sb.append(this.activeStream);
+            sep(sb, i);
+            sb.append("disallowAlarms:");
+            sb.append(this.disallowAlarms);
+            sep(sb, i);
+            sb.append("disallowMedia:");
+            sb.append(this.disallowMedia);
+            sep(sb, i);
+            sb.append("disallowSystem:");
+            sb.append(this.disallowSystem);
+            sep(sb, i);
+            sb.append("disallowRinger:");
+            sb.append(this.disallowRinger);
             if (i > 0) {
                 sep(sb, i);
             }

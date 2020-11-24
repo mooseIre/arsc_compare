@@ -3,66 +3,99 @@ package com.android.systemui.statusbar.phone;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Canvas;
-import android.graphics.ColorFilter;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.AttributeSet;
 import android.widget.ImageView;
-import com.android.systemui.Constants;
+import com.android.keyguard.KeyguardUpdateMonitor;
+import com.android.keyguard.KeyguardUpdateMonitorCallback;
+import com.android.keyguard.charge.MiuiBatteryStatus;
+import com.android.systemui.C0010R$drawable;
 import com.android.systemui.DemoMode;
 import com.android.systemui.Dependency;
-import com.android.systemui.Util;
-import com.android.systemui.plugins.R;
 import com.android.systemui.statusbar.policy.BatteryController;
+import com.android.systemui.statusbar.policy.DemoModeController;
+import miui.util.CustomizeUtil;
 
 public class BatteryIndicator extends ImageView implements DemoMode, BatteryController.BatteryStateChangeCallback {
+    private int mBottom;
     private int mClipWidth;
+    private Context mContext;
     private boolean mDemoMode;
-    protected boolean mDisabled = false;
     protected int mDisplayWidth;
     protected boolean mIsCharging;
     protected boolean mIsExtremePowerSave;
     protected boolean mIsPowerSave;
-    protected final int mLowLevel = this.mContext.getResources().getInteger(285868035);
+    private KeyguardUpdateMonitorCallback mKeyguardUpdateMonitorCallback = new KeyguardUpdateMonitorCallback() {
+        public void onRefreshBatteryInfo(MiuiBatteryStatus miuiBatteryStatus) {
+            super.onRefreshBatteryInfo(miuiBatteryStatus);
+            BatteryIndicator.this.mPowerLevel = miuiBatteryStatus.getLevel();
+            BatteryIndicator.this.mIsCharging = miuiBatteryStatus.isCharging();
+            BatteryIndicator.this.update();
+        }
+    };
+    private int mLeft;
+    protected final int mLowLevel;
     protected int mPowerLevel;
+    private int mRight;
     private boolean mShowBatteryIndicator;
+    private int mTop;
 
     public BatteryIndicator(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
+        this.mContext = context;
+        this.mLowLevel = context.getResources().getInteger(285868035);
         updateDisplaySize();
     }
 
-    public void onAttachedToWindow() {
-        super.onAttachedToWindow();
-        ((BatteryController) Dependency.get(BatteryController.class)).addCallback(this);
-    }
-
-    public void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-        ((BatteryController) Dependency.get(BatteryController.class)).removeCallback(this);
+    private void updateDisplaySize() {
+        this.mDisplayWidth = getMeasuredWidth();
     }
 
     public void onPowerSaveChanged(boolean z) {
-        if (z != this.mIsPowerSave) {
+        if (this.mIsPowerSave != z) {
             this.mIsPowerSave = z;
             update();
         }
     }
 
-    public void onExtremePowerSaveChanged(boolean z) {
-        if (z != this.mIsExtremePowerSave) {
-            this.mIsExtremePowerSave = z;
-            update();
+    /* access modifiers changed from: private */
+    public void update() {
+        updateVisiblity();
+        if (getVisibility() == 0) {
+            updateDrawable();
         }
     }
 
-    public void onBatteryLevelChanged(int i, boolean z, boolean z2) {
-        if (z2 != this.mIsCharging || this.mPowerLevel != i) {
-            this.mIsCharging = z2;
-            this.mPowerLevel = i;
-            update();
+    private void updateDrawable() {
+        int i = 100;
+        int i2 = (this.mDisplayWidth * (this.mDemoMode ? 100 : this.mPowerLevel)) / 100;
+        if (this.mClipWidth != i2) {
+            this.mClipWidth = i2;
+            invalidate();
         }
+        int i3 = C0010R$drawable.battery_indicator;
+        if (!this.mIsCharging) {
+            if (this.mIsPowerSave || this.mIsExtremePowerSave) {
+                i3 = C0010R$drawable.battery_indicator_power_save;
+            } else {
+                if (!this.mDemoMode) {
+                    i = this.mPowerLevel;
+                }
+                if (i < this.mLowLevel) {
+                    i3 = C0010R$drawable.battery_indicator_low;
+                }
+            }
+        }
+        setImageResource(i3);
+    }
+
+    private void updateVisiblity() {
+        if (!this.mShowBatteryIndicator || CustomizeUtil.HAS_NOTCH) {
+            setVisibility(8);
+            clearAnimation();
+            return;
+        }
+        setVisibility(0);
     }
 
     public void onBatteryStyleChanged(int i) {
@@ -70,90 +103,49 @@ public class BatteryIndicator extends ImageView implements DemoMode, BatteryCont
         update();
     }
 
-    public void update() {
-        updateVisibility();
-        if (getVisibility() == 0) {
-            updateDrawable();
+    public void onExtremePowerSaveChanged(boolean z) {
+        if (this.mIsExtremePowerSave != z) {
+            this.mIsExtremePowerSave = z;
+            update();
+        }
+    }
+
+    public void dispatchDemoCommand(String str, Bundle bundle) {
+        if (!this.mDemoMode && str.equals("enter")) {
+            this.mDemoMode = true;
+            update();
+        } else if (this.mDemoMode && str.equals("exit")) {
+            this.mDemoMode = false;
+            update();
         }
     }
 
     /* access modifiers changed from: protected */
-    public void updateDrawable() {
-        if (!this.mDemoMode) {
-            int i = (this.mDisplayWidth * this.mPowerLevel) / 100;
-            if (this.mClipWidth != i) {
-                this.mClipWidth = i;
-                invalidate();
-            }
-            int i2 = R.drawable.battery_indicator;
-            if (!this.mIsCharging) {
-                if (this.mIsPowerSave || this.mIsExtremePowerSave) {
-                    i2 = R.drawable.battery_indicator_power_save;
-                } else if (this.mPowerLevel < this.mLowLevel) {
-                    i2 = R.drawable.battery_indicator_low;
-                }
-            }
-            setImageResource(i2);
-            Drawable drawable = getDrawable();
-            if (drawable == null) {
-                return;
-            }
-            if (Util.showCtsSpecifiedColor()) {
-                drawable.setColorFilter(getResources().getColor(R.color.status_bar_icon_text_color_dark_mode_cts), PorterDuff.Mode.SRC_IN);
-            } else {
-                drawable.setColorFilter((ColorFilter) null);
-            }
-        }
+    public void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        ((BatteryController) Dependency.get(BatteryController.class)).addCallback(this);
+        ((KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class)).registerCallback(this.mKeyguardUpdateMonitorCallback);
+        ((DemoModeController) Dependency.get(DemoModeController.class)).addCallback(this);
     }
 
-    /* access modifiers changed from: package-private */
-    public void updateDisplaySize() {
-        this.mDisplayWidth = getMeasuredWidth();
+    /* access modifiers changed from: protected */
+    public void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        ((DemoModeController) Dependency.get(DemoModeController.class)).removeCallback(this);
+        ((KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class)).removeCallback(this.mKeyguardUpdateMonitorCallback);
+        ((BatteryController) Dependency.get(BatteryController.class)).removeCallback(this);
     }
 
     /* access modifiers changed from: protected */
     public void onLayout(boolean z, int i, int i2, int i3, int i4) {
         super.onLayout(z, i, i2, i3, i4);
+        this.mLeft = i;
+        this.mTop = i2;
+        this.mRight = i3;
+        this.mBottom = i4;
         if (z) {
             updateDisplaySize();
             postUpdate();
-        }
-    }
-
-    /* access modifiers changed from: protected */
-    public void onConfigurationChanged(Configuration configuration) {
-        super.onConfigurationChanged(configuration);
-        updateDisplaySize();
-        postUpdate();
-    }
-
-    public void onDraw(Canvas canvas) {
-        canvas.save();
-        updateCanvas(canvas);
-        super.onDraw(canvas);
-        canvas.restore();
-    }
-
-    /* access modifiers changed from: protected */
-    public void updateCanvas(Canvas canvas) {
-        if (getLayoutDirection() == 0) {
-            int i = this.mLeft;
-            canvas.clipRect(i, this.mTop, this.mClipWidth + i, this.mBottom);
-            return;
-        }
-        int i2 = this.mRight;
-        canvas.clipRect(i2 - this.mClipWidth, this.mTop, i2, this.mBottom);
-    }
-
-    /* access modifiers changed from: protected */
-    public void updateVisibility() {
-        if (!this.mDemoMode) {
-            if (!this.mShowBatteryIndicator || this.mDisabled || Constants.IS_NOTCH) {
-                setVisibility(8);
-                clearAnimation();
-                return;
-            }
-            setVisibility(0);
         }
     }
 
@@ -165,13 +157,28 @@ public class BatteryIndicator extends ImageView implements DemoMode, BatteryCont
         });
     }
 
-    public void dispatchDemoCommand(String str, Bundle bundle) {
-        if (!this.mDemoMode && str.equals("enter")) {
-            this.mDemoMode = true;
-            setVisibility(8);
-        } else if (this.mDemoMode && str.equals("exit")) {
-            this.mDemoMode = false;
-            update();
+    /* access modifiers changed from: protected */
+    public void onDraw(Canvas canvas) {
+        canvas.save();
+        updateCanvas(canvas);
+        super.onDraw(canvas);
+        canvas.restore();
+    }
+
+    private void updateCanvas(Canvas canvas) {
+        if (getLayoutDirection() == 0) {
+            int i = this.mLeft;
+            canvas.clipRect(i, this.mTop, this.mClipWidth + i, this.mBottom);
+            return;
         }
+        int i2 = this.mRight;
+        canvas.clipRect(i2 - this.mClipWidth, this.mTop, i2, this.mBottom);
+    }
+
+    /* access modifiers changed from: protected */
+    public void onConfigurationChanged(Configuration configuration) {
+        super.onConfigurationChanged(configuration);
+        updateDisplaySize();
+        postUpdate();
     }
 }

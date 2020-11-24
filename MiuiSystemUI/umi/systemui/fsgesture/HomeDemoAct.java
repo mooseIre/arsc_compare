@@ -9,8 +9,8 @@ import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import com.android.systemui.Util;
-import com.android.systemui.plugins.R;
+import com.android.systemui.C0012R$id;
+import com.android.systemui.C0014R$layout;
 
 public class HomeDemoAct extends FsGestureDemoBaseActiivy {
     private View appBgView;
@@ -29,7 +29,6 @@ public class HomeDemoAct extends FsGestureDemoBaseActiivy {
     private View mRecentsFirstCardIconView;
     private View navSubViewBgView;
     private View recentsBgView;
-    private ImageView wallPaperImg;
 
     static {
         Class<HomeDemoAct> cls = HomeDemoAct.class;
@@ -39,15 +38,14 @@ public class HomeDemoAct extends FsGestureDemoBaseActiivy {
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         getWindow().addFlags(1024);
-        setContentView(R.layout.home_demo_layout);
-        Util.hideSystemBars(getWindow().getDecorView());
+        setContentView(C0014R$layout.home_demo_layout);
+        FsgestureUtil.INSTANCE.hideSystemBars(getWindow().getDecorView());
         Intent intent = getIntent();
         String stringExtra = intent.getStringExtra("DEMO_TYPE");
         int intExtra = intent.getIntExtra("FULLY_SHOW_STEP", 1);
         boolean booleanExtra = intent.getBooleanExtra("IS_FROM_PROVISION", false);
-        this.wallPaperImg = (ImageView) findViewById(R.id.wallpaper_img);
-        this.homeIconImg = (LinearLayout) findViewById(R.id.home_icon_img);
-        ImageView imageView = (ImageView) findViewById(R.id.anim_icon);
+        this.homeIconImg = (LinearLayout) findViewById(C0012R$id.home_icon_img);
+        ImageView imageView = (ImageView) findViewById(C0012R$id.anim_icon);
         this.mAnimIcon = imageView;
         imageView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             public void onGlobalLayout() {
@@ -60,24 +58,24 @@ public class HomeDemoAct extends FsGestureDemoBaseActiivy {
                 }
             }
         });
-        this.recentsBgView = findViewById(R.id.recents_bg_view);
-        this.mRecentsCardContainer = (LinearLayout) findViewById(R.id.recents_card_container);
-        this.mRecentsFirstCardIconView = findViewById(R.id.recents_first_card_icon);
+        this.recentsBgView = findViewById(C0012R$id.recents_bg_view);
+        this.mRecentsCardContainer = (LinearLayout) findViewById(C0012R$id.recents_card_container);
+        this.mRecentsFirstCardIconView = findViewById(C0012R$id.recents_first_card_icon);
         this.mRecentsCardContainer.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             public void onGlobalLayout() {
                 HomeDemoAct.this.mRecentsCardContainer.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 Rect rect = new Rect();
-                ((ImageView) HomeDemoAct.this.findViewById(R.id.recents_first_card)).getBoundsOnScreen(rect);
+                ((ImageView) HomeDemoAct.this.findViewById(C0012R$id.recents_first_card)).getBoundsOnScreen(rect);
                 if (HomeDemoAct.this.fsgNavView != null) {
                     HomeDemoAct.this.fsgNavView.setRecentsFirstCardBound(rect);
                 }
             }
         });
-        this.mRecentsFirstCardIconView = findViewById(R.id.recents_first_card_icon);
-        this.appBgView = findViewById(R.id.app_bg_view);
-        this.appNoteImg = findViewById(R.id.app_note_img);
-        this.navSubViewBgView = findViewById(R.id.navstubview_bg_view);
-        this.fsGestureDemoTitleView = (FsGestureDemoTitleView) findViewById(R.id.fsgesture_title_view);
+        this.mRecentsFirstCardIconView = findViewById(C0012R$id.recents_first_card_icon);
+        this.appBgView = findViewById(C0012R$id.app_bg_view);
+        this.appNoteImg = findViewById(C0012R$id.app_note_img);
+        this.navSubViewBgView = findViewById(C0012R$id.navstubview_bg_view);
+        this.fsGestureDemoTitleView = (FsGestureDemoTitleView) findViewById(C0012R$id.fsgesture_title_view);
         int i = (!"DEMO_FULLY_SHOW".equals(stringExtra) ? !"DEMO_TO_HOME".equals(stringExtra) : intExtra != 1) ? 3 : 2;
         this.fsGestureDemoTitleView.prepareTitleView(i);
         this.fsGestureDemoTitleView.registerSkipEvent(new View.OnClickListener() {
@@ -86,14 +84,14 @@ public class HomeDemoAct extends FsGestureDemoBaseActiivy {
             }
         });
         GestureTitleViewUtil.setMargin(this, this.fsGestureDemoTitleView);
-        this.fsGestureDemoSwipeView = (FsGestureDemoSwipeView) findViewById(R.id.fsgesture_swipe_view);
+        this.fsGestureDemoSwipeView = (FsGestureDemoSwipeView) findViewById(C0012R$id.fsgesture_swipe_view);
         if (i == 3) {
             startSwipeViewAnimation(4);
         } else {
             startSwipeViewAnimation(2);
         }
         this.mNavigationHandle = GestureLineUtils.createAndaddNavigationHandle((RelativeLayout) this.fsGestureDemoTitleView.getParent());
-        NavStubDemoView navStubDemoView = (NavStubDemoView) findViewById(R.id.fsg_nav_view);
+        NavStubDemoView navStubDemoView = (NavStubDemoView) findViewById(C0012R$id.fsg_nav_view);
         this.fsgNavView = navStubDemoView;
         navStubDemoView.setCurActivity(this);
         this.fsgNavView.setDemoType(stringExtra);

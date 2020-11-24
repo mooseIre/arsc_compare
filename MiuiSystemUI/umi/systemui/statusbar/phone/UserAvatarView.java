@@ -3,7 +3,6 @@ package com.android.systemui.statusbar.phone;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
-import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.View;
@@ -20,25 +19,18 @@ public class UserAvatarView extends View {
         int indexCount = obtainStyledAttributes.getIndexCount();
         for (int i3 = 0; i3 < indexCount; i3++) {
             int index = obtainStyledAttributes.getIndex(i3);
-            switch (index) {
-                case 1:
-                    setAvatarPadding(obtainStyledAttributes.getDimension(index, 0.0f));
-                    break;
-                case 2:
-                    setBadgeDiameter(obtainStyledAttributes.getDimension(index, 0.0f));
-                    break;
-                case 3:
-                    setBadgeMargin(obtainStyledAttributes.getDimension(index, 0.0f));
-                    break;
-                case 4:
-                    setFrameColor(obtainStyledAttributes.getColorStateList(index));
-                    break;
-                case 5:
-                    setFramePadding(obtainStyledAttributes.getDimension(index, 0.0f));
-                    break;
-                case 6:
-                    setFrameWidth(obtainStyledAttributes.getDimension(index, 0.0f));
-                    break;
+            if (index == R$styleable.UserAvatarView_avatarPadding) {
+                setAvatarPadding(obtainStyledAttributes.getDimension(index, 0.0f));
+            } else if (index == R$styleable.UserAvatarView_frameWidth) {
+                setFrameWidth(obtainStyledAttributes.getDimension(index, 0.0f));
+            } else if (index == R$styleable.UserAvatarView_framePadding) {
+                setFramePadding(obtainStyledAttributes.getDimension(index, 0.0f));
+            } else if (index == R$styleable.UserAvatarView_frameColor) {
+                setFrameColor(obtainStyledAttributes.getColorStateList(index));
+            } else if (index == R$styleable.UserAvatarView_badgeDiameter) {
+                setBadgeDiameter(obtainStyledAttributes.getDimension(index, 0.0f));
+            } else if (index == R$styleable.UserAvatarView_badgeMargin) {
+                setBadgeMargin(obtainStyledAttributes.getDimension(index, 0.0f));
             }
         }
         obtainStyledAttributes.recycle();
@@ -55,6 +47,11 @@ public class UserAvatarView extends View {
 
     public UserAvatarView(Context context) {
         this(context, (AttributeSet) null);
+    }
+
+    public void setActivated(boolean z) {
+        super.setActivated(z);
+        this.mDrawable.invalidateSelf();
     }
 
     public void setFrameColor(ColorStateList colorStateList) {
@@ -79,11 +76,6 @@ public class UserAvatarView extends View {
 
     public void setBadgeMargin(float f) {
         this.mDrawable.setBadgeMargin(f);
-    }
-
-    public void setAvatarWithBadge(Bitmap bitmap, int i) {
-        this.mDrawable.setIcon(bitmap);
-        this.mDrawable.setBadgeIfManagedUser(getContext(), i);
     }
 
     public void setDrawableWithBadge(Drawable drawable, int i) {

@@ -8,7 +8,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ServiceInfo;
 import android.os.RemoteException;
-import com.android.systemui.content.pm.PackageManagerCompat;
 
 public class PackageManagerAdapter {
     private IPackageManager mIPackageManager = AppGlobals.getPackageManager();
@@ -27,6 +26,6 @@ public class PackageManagerAdapter {
     }
 
     public PackageInfo getPackageInfoAsUser(String str, int i, int i2) throws PackageManager.NameNotFoundException {
-        return PackageManagerCompat.getPackageInfoAsUser(this.mPackageManager, str, i, i2);
+        return this.mPackageManager.getPackageInfoAsUser(str, i, i2);
     }
 }

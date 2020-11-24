@@ -3,26 +3,43 @@ package com.android.systemui.recents;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Rect;
-import com.android.systemui.SysUiServiceProvider;
+import java.io.PrintWriter;
 
-interface RecentsImplementation {
-    void cancelPreloadRecentApps();
+public interface RecentsImplementation {
+    void cancelPreloadRecentApps() {
+    }
 
-    boolean dockTopTask(int i, int i2, Rect rect, int i3);
+    void dump(PrintWriter printWriter) {
+    }
 
-    void hideRecentApps(boolean z, boolean z2);
+    void growRecents() {
+    }
 
-    void onBootCompleted();
+    void hideRecentApps(boolean z, boolean z2) {
+    }
 
-    void onConfigurationChanged(Configuration configuration);
+    void onAppTransitionFinished() {
+    }
 
-    void onStart(Context context, SysUiServiceProvider sysUiServiceProvider);
+    void onBootCompleted() {
+    }
 
-    void preloadRecentApps();
+    void onConfigurationChanged(Configuration configuration) {
+    }
 
-    void release();
+    void onStart(Context context) {
+    }
 
-    void showRecentApps(boolean z, boolean z2);
+    void preloadRecentApps() {
+    }
 
-    void toggleRecentApps();
+    void showRecentApps(boolean z) {
+    }
+
+    boolean splitPrimaryTask(int i, Rect rect, int i2) {
+        return false;
+    }
+
+    void toggleRecentApps() {
+    }
 }

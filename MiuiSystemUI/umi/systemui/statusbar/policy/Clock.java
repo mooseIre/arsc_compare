@@ -4,294 +4,436 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.res.Resources;
+import android.content.res.TypedArray;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Parcelable;
+import android.os.SystemClock;
 import android.os.UserHandle;
+import android.text.SpannableStringBuilder;
 import android.text.format.DateFormat;
+import android.text.style.RelativeSizeSpan;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.view.View;
 import android.widget.TextView;
+import com.android.settingslib.Utils;
+import com.android.systemui.C0006R$attr;
+import com.android.systemui.C0009R$dimen;
 import com.android.systemui.DemoMode;
 import com.android.systemui.Dependency;
-import com.android.systemui.Util;
-import com.android.systemui.plugins.R;
-import com.android.systemui.statusbar.policy.DarkIconDispatcher;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
+import com.android.systemui.FontSizeUtils;
+import com.android.systemui.R$styleable;
+import com.android.systemui.broadcast.BroadcastDispatcher;
+import com.android.systemui.plugins.DarkIconDispatcher;
+import com.android.systemui.settings.CurrentUserTracker;
+import com.android.systemui.statusbar.CommandQueue;
+import com.android.systemui.statusbar.phone.StatusBarIconController;
+import com.android.systemui.statusbar.policy.Clock;
+import com.android.systemui.statusbar.policy.ConfigurationController;
+import com.android.systemui.tuner.TunerService;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
 import java.util.TimeZone;
-import miui.date.Calendar;
-import miui.date.DateUtils;
+import libcore.icu.LocaleData;
 
-public class Clock extends TextView implements DemoMode, DarkIconDispatcher.DarkReceiver {
-    private static final ThreadLocal<ReceiverInfo> sReceiverInfo = new ThreadLocal<>();
-    private Calendar mCalendar;
-    private int mClockMode;
-    private DarkIconDispatcher mDarkIconDispatcher;
+public class Clock extends TextView implements DemoMode, TunerService.Tunable, CommandQueue.Callbacks, DarkIconDispatcher.DarkReceiver, ConfigurationController.ConfigurationListener {
+    private final int mAmPmStyle;
+    private boolean mAttached;
+    private final BroadcastDispatcher mBroadcastDispatcher;
+    protected Calendar mCalendar;
+    /* access modifiers changed from: private */
+    public SimpleDateFormat mClockFormat;
+    /* access modifiers changed from: private */
+    public String mClockFormatString;
+    private boolean mClockVisibleByPolicy;
+    private boolean mClockVisibleByUser;
+    private final CommandQueue mCommandQueue;
+    private SimpleDateFormat mContentDescriptionFormat;
+    /* access modifiers changed from: private */
+    public int mCurrentUserId;
+    private final CurrentUserTracker mCurrentUserTracker;
     private boolean mDemoMode;
-    public int mForceHideAmPm;
-    private boolean mShowAmPm;
-    private LinkedList<ClockVisibilityListener> mVisibilityListeners;
-
-    public interface ClockVisibilityListener {
-        void onClockVisibilityChanged(boolean z);
-    }
-
-    public Clock(Context context) {
-        this(context, (AttributeSet) null);
-    }
+    private final BroadcastReceiver mIntentReceiver;
+    /* access modifiers changed from: private */
+    public Locale mLocale;
+    private int mNonAdaptedColor;
+    private final BroadcastReceiver mScreenReceiver;
+    /* access modifiers changed from: private */
+    public final Runnable mSecondTick;
+    /* access modifiers changed from: private */
+    public Handler mSecondsHandler;
+    private final boolean mShowDark;
+    private boolean mShowSeconds;
+    private boolean mUseWallpaperTextColor;
 
     public Clock(Context context, AttributeSet attributeSet) {
         this(context, attributeSet, 0);
     }
 
+    /* JADX INFO: finally extract failed */
     public Clock(Context context, AttributeSet attributeSet, int i) {
         super(context, attributeSet, i);
-        this.mVisibilityListeners = new LinkedList<>();
-        this.mShowAmPm = true;
-        this.mDarkIconDispatcher = (DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class);
+        this.mClockVisibleByPolicy = true;
+        this.mClockVisibleByUser = true;
+        this.mIntentReceiver = new BroadcastReceiver() {
+            public void onReceive(Context context, Intent intent) {
+                Handler handler = Clock.this.getHandler();
+                if (handler != null) {
+                    String action = intent.getAction();
+                    if (action.equals("android.intent.action.TIMEZONE_CHANGED")) {
+                        handler.post(new Runnable(intent.getStringExtra("time-zone")) {
+                            public final /* synthetic */ String f$1;
+
+                            {
+                                this.f$1 = r2;
+                            }
+
+                            public final void run() {
+                                Clock.AnonymousClass2.this.lambda$onReceive$0$Clock$2(this.f$1);
+                            }
+                        });
+                    } else if (action.equals("android.intent.action.CONFIGURATION_CHANGED")) {
+                        handler.post(new Runnable(Clock.this.getResources().getConfiguration().locale) {
+                            public final /* synthetic */ Locale f$1;
+
+                            {
+                                this.f$1 = r2;
+                            }
+
+                            public final void run() {
+                                Clock.AnonymousClass2.this.lambda$onReceive$1$Clock$2(this.f$1);
+                            }
+                        });
+                    }
+                    handler.post(new Runnable() {
+                        public final void run() {
+                            Clock.AnonymousClass2.this.lambda$onReceive$2$Clock$2();
+                        }
+                    });
+                }
+            }
+
+            /* access modifiers changed from: private */
+            /* renamed from: lambda$onReceive$0 */
+            public /* synthetic */ void lambda$onReceive$0$Clock$2(String str) {
+                Clock.this.mCalendar = Calendar.getInstance(TimeZone.getTimeZone(str));
+                if (Clock.this.mClockFormat != null) {
+                    Clock.this.mClockFormat.setTimeZone(Clock.this.mCalendar.getTimeZone());
+                }
+            }
+
+            /* access modifiers changed from: private */
+            /* renamed from: lambda$onReceive$1 */
+            public /* synthetic */ void lambda$onReceive$1$Clock$2(Locale locale) {
+                if (!locale.equals(Clock.this.mLocale)) {
+                    Locale unused = Clock.this.mLocale = locale;
+                    String unused2 = Clock.this.mClockFormatString = "";
+                }
+            }
+
+            /* access modifiers changed from: private */
+            /* renamed from: lambda$onReceive$2 */
+            public /* synthetic */ void lambda$onReceive$2$Clock$2() {
+                Clock.this.updateClock();
+            }
+        };
+        this.mScreenReceiver = new BroadcastReceiver() {
+            public void onReceive(Context context, Intent intent) {
+                String action = intent.getAction();
+                if ("android.intent.action.SCREEN_OFF".equals(action)) {
+                    if (Clock.this.mSecondsHandler != null) {
+                        Clock.this.mSecondsHandler.removeCallbacks(Clock.this.mSecondTick);
+                    }
+                } else if ("android.intent.action.SCREEN_ON".equals(action) && Clock.this.mSecondsHandler != null) {
+                    Clock.this.mSecondsHandler.postAtTime(Clock.this.mSecondTick, ((SystemClock.uptimeMillis() / 1000) * 1000) + 1000);
+                }
+            }
+        };
+        this.mSecondTick = new Runnable() {
+            public void run() {
+                Clock clock = Clock.this;
+                if (clock.mCalendar != null) {
+                    clock.updateClock();
+                }
+                Clock.this.mSecondsHandler.postAtTime(this, ((SystemClock.uptimeMillis() / 1000) * 1000) + 1000);
+            }
+        };
+        this.mCommandQueue = (CommandQueue) Dependency.get(CommandQueue.class);
+        TypedArray obtainStyledAttributes = context.getTheme().obtainStyledAttributes(attributeSet, R$styleable.Clock, 0, 0);
+        try {
+            this.mAmPmStyle = obtainStyledAttributes.getInt(R$styleable.Clock_amPmStyle, 2);
+            this.mShowDark = obtainStyledAttributes.getBoolean(R$styleable.Clock_showDark, true);
+            this.mNonAdaptedColor = getCurrentTextColor();
+            obtainStyledAttributes.recycle();
+            BroadcastDispatcher broadcastDispatcher = (BroadcastDispatcher) Dependency.get(BroadcastDispatcher.class);
+            this.mBroadcastDispatcher = broadcastDispatcher;
+            this.mCurrentUserTracker = new CurrentUserTracker(broadcastDispatcher) {
+                public void onUserSwitched(int i) {
+                    int unused = Clock.this.mCurrentUserId = i;
+                }
+            };
+        } catch (Throwable th) {
+            obtainStyledAttributes.recycle();
+            throw th;
+        }
     }
 
-    public void setClockMode(int i) {
-        if (this.mClockMode != i) {
-            this.mClockMode = i;
-            updateClock();
+    public Parcelable onSaveInstanceState() {
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("clock_super_parcelable", super.onSaveInstanceState());
+        bundle.putInt("current_user_id", this.mCurrentUserId);
+        bundle.putBoolean("visible_by_policy", this.mClockVisibleByPolicy);
+        bundle.putBoolean("visible_by_user", this.mClockVisibleByUser);
+        bundle.putBoolean("show_seconds", this.mShowSeconds);
+        bundle.putInt("visibility", getVisibility());
+        return bundle;
+    }
+
+    public void onRestoreInstanceState(Parcelable parcelable) {
+        if (parcelable == null || !(parcelable instanceof Bundle)) {
+            super.onRestoreInstanceState(parcelable);
+            return;
+        }
+        Bundle bundle = (Bundle) parcelable;
+        super.onRestoreInstanceState(bundle.getParcelable("clock_super_parcelable"));
+        if (bundle.containsKey("current_user_id")) {
+            this.mCurrentUserId = bundle.getInt("current_user_id");
+        }
+        this.mClockVisibleByPolicy = bundle.getBoolean("visible_by_policy", true);
+        this.mClockVisibleByUser = bundle.getBoolean("visible_by_user", true);
+        this.mShowSeconds = bundle.getBoolean("show_seconds", false);
+        if (bundle.containsKey("visibility")) {
+            super.setVisibility(bundle.getInt("visibility"));
         }
     }
 
     /* access modifiers changed from: protected */
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
-        ReceiverInfo receiverInfo = sReceiverInfo.get();
-        if (receiverInfo == null) {
-            receiverInfo = new ReceiverInfo();
-            sReceiverInfo.set(receiverInfo);
-        }
-        receiverInfo.setTimeFormat(DateFormat.is24HourFormat(this.mContext, -2) ? 32 : 16);
-        receiverInfo.addView(this);
-    }
-
-    /* access modifiers changed from: protected */
-    public void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-        ReceiverInfo receiverInfo = sReceiverInfo.get();
-        if (receiverInfo != null) {
-            receiverInfo.removeView(this);
-        }
-    }
-
-    public void setShowAmPm(boolean z) {
-        this.mShowAmPm = z;
-    }
-
-    /* access modifiers changed from: package-private */
-    public final void updateClock() {
-        if (this.mDemoMode) {
-            showDemoModeClock();
-            return;
-        }
-        ReceiverInfo receiverInfo = sReceiverInfo.get();
-        int i = this.mClockMode;
-        if (i == 2) {
-            if (this.mCalendar == null) {
-                this.mCalendar = new Calendar();
-            }
-            this.mCalendar.setTimeZone(TimeZone.getDefault());
-            this.mCalendar.setTimeInMillis(System.currentTimeMillis());
-            int i2 = R.string.status_bar_clock_date_time_format;
-            if (receiverInfo != null && receiverInfo.getTimeFormat() == 16) {
-                i2 = R.string.status_bar_clock_date_time_format_12;
-            }
-            setText(this.mCalendar.format(this.mContext.getString(i2)));
-            return;
-        }
-        int i3 = R.string.status_bar_clock_date_format_12;
-        if (i == 1) {
-            if (this.mCalendar == null) {
-                this.mCalendar = new Calendar();
-            }
-            this.mCalendar.setTimeZone(TimeZone.getDefault());
-            this.mCalendar.setTimeInMillis(System.currentTimeMillis());
-            if (receiverInfo == null || receiverInfo.getTimeFormat() != 16) {
-                i3 = R.string.status_bar_clock_date_format;
-            }
-            setText(this.mCalendar.format(this.mContext.getString(i3)));
-        } else if (i == 3) {
-            if (this.mCalendar == null) {
-                this.mCalendar = new Calendar();
-            }
-            this.mCalendar.setTimeZone(TimeZone.getDefault());
-            this.mCalendar.setTimeInMillis(System.currentTimeMillis());
-            int i4 = R.string.status_bar_clock_date_weekday_format;
-            if (receiverInfo != null && receiverInfo.getTimeFormat() == 16) {
-                i4 = R.string.status_bar_clock_date_weekday_format_12;
-            }
-            setText(this.mCalendar.format(this.mContext.getString(i4)));
-            if (receiverInfo == null || receiverInfo.getTimeFormat() != 16) {
-                i3 = R.string.status_bar_clock_date_format;
-            }
-            setContentDescription(this.mCalendar.format(this.mContext.getString(i3)));
-        } else if (receiverInfo != null) {
-            int timeFormat = receiverInfo.getTimeFormat();
-            if (!this.mShowAmPm || this.mForceHideAmPm != 0) {
-                setText(DateUtils.formatDateTime(System.currentTimeMillis(), timeFormat | 12 | 64));
-            } else {
-                setText(DateUtils.formatDateTime(System.currentTimeMillis(), timeFormat | 12));
-            }
-        }
-    }
-
-    public void update() {
-        updateClock();
-    }
-
-    public void onDarkChanged(Rect rect, float f, int i) {
-        Resources resources = getResources();
-        boolean showCtsSpecifiedColor = Util.showCtsSpecifiedColor();
-        int i2 = R.color.status_bar_textColor;
-        if (showCtsSpecifiedColor) {
-            if (DarkIconDispatcherHelper.inDarkMode(rect, this, f)) {
-                i2 = R.color.status_bar_icon_text_color_dark_mode_cts;
-            }
-            setTextColor(resources.getColor(i2));
-        } else if (this.mDarkIconDispatcher.useTint()) {
-            setTextColor(DarkIconDispatcherHelper.getTint(rect, this, i));
-        } else {
-            if (DarkIconDispatcherHelper.inDarkMode(rect, this, f)) {
-                i2 = R.color.status_bar_textColor_darkmode;
-            }
-            setTextColor(resources.getColor(i2));
-        }
-    }
-
-    private static class ReceiverInfo {
-        private final ArrayList<Clock> mAttachedViews;
-        private final BroadcastReceiver mReceiver;
-        /* access modifiers changed from: private */
-        public int mTimeFormat;
-
-        private ReceiverInfo() {
-            this.mAttachedViews = new ArrayList<>();
-            this.mReceiver = new BroadcastReceiver() {
-                public void onReceive(Context context, Intent intent) {
-                    String action = intent.getAction();
-                    if ("android.intent.action.TIME_SET".equals(action) || "android.intent.action.USER_SWITCHED".equals(action)) {
-                        int unused = ReceiverInfo.this.mTimeFormat = DateFormat.is24HourFormat(context, -2) ? 32 : 16;
-                    }
-                    ReceiverInfo.this.updateAll();
-                }
-            };
-            this.mTimeFormat = 16;
-        }
-
-        public int getTimeFormat() {
-            return this.mTimeFormat;
-        }
-
-        public void setTimeFormat(int i) {
-            this.mTimeFormat = i;
-        }
-
-        public void addView(Clock clock) {
-            synchronized (this.mAttachedViews) {
-                boolean isEmpty = this.mAttachedViews.isEmpty();
-                this.mAttachedViews.add(clock);
-                if (isEmpty) {
-                    register(clock.getContext().getApplicationContext());
-                }
-            }
-            clock.updateClock();
-        }
-
-        public void removeView(Clock clock) {
-            synchronized (this.mAttachedViews) {
-                this.mAttachedViews.remove(clock);
-                if (this.mAttachedViews.isEmpty()) {
-                    unregister(clock.getContext().getApplicationContext());
-                }
-            }
-        }
-
-        /* access modifiers changed from: package-private */
-        public void updateAll() {
-            synchronized (this.mAttachedViews) {
-                int size = this.mAttachedViews.size();
-                for (int i = 0; i < size; i++) {
-                    final Clock clock = this.mAttachedViews.get(i);
-                    clock.post(new Runnable(this) {
-                        public void run() {
-                            clock.updateClock();
-                        }
-                    });
-                }
-            }
-        }
-
-        /* access modifiers changed from: package-private */
-        public void register(Context context) {
+        if (!this.mAttached) {
+            this.mAttached = true;
             IntentFilter intentFilter = new IntentFilter();
             intentFilter.addAction("android.intent.action.TIME_TICK");
             intentFilter.addAction("android.intent.action.TIME_SET");
             intentFilter.addAction("android.intent.action.TIMEZONE_CHANGED");
             intentFilter.addAction("android.intent.action.CONFIGURATION_CHANGED");
             intentFilter.addAction("android.intent.action.USER_SWITCHED");
-            context.registerReceiverAsUser(this.mReceiver, UserHandle.ALL, intentFilter, (String) null, (Handler) Dependency.get(Dependency.TIME_TICK_HANDLER));
+            this.mBroadcastDispatcher.registerReceiverWithHandler(this.mIntentReceiver, intentFilter, (Handler) Dependency.get(Dependency.TIME_TICK_HANDLER), UserHandle.ALL);
+            ((TunerService) Dependency.get(TunerService.class)).addTunable(this, "clock_seconds", "icon_blacklist");
+            this.mCommandQueue.addCallback((CommandQueue.Callbacks) this);
+            if (this.mShowDark) {
+                ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).addDarkReceiver((DarkIconDispatcher.DarkReceiver) this);
+            }
+            this.mCurrentUserTracker.startTracking();
+            this.mCurrentUserId = this.mCurrentUserTracker.getCurrentUserId();
         }
+        this.mCalendar = Calendar.getInstance(TimeZone.getDefault());
+        this.mClockFormatString = "";
+        updateClock();
+        updateClockVisibility();
+        updateShowSeconds();
+    }
 
-        /* access modifiers changed from: package-private */
-        public void unregister(Context context) {
-            context.unregisterReceiver(this.mReceiver);
+    /* access modifiers changed from: protected */
+    public void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        if (this.mAttached) {
+            this.mBroadcastDispatcher.unregisterReceiver(this.mIntentReceiver);
+            this.mAttached = false;
+            ((TunerService) Dependency.get(TunerService.class)).removeTunable(this);
+            this.mCommandQueue.removeCallback((CommandQueue.Callbacks) this);
+            if (this.mShowDark) {
+                ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).removeDarkReceiver((DarkIconDispatcher.DarkReceiver) this);
+            }
+            this.mCurrentUserTracker.stopTracking();
         }
     }
 
-    public void dispatchDemoCommand(String str, Bundle bundle) {
-        Log.d("demo_mode", "Clock mDemoMode = " + this.mDemoMode + ", command = " + str);
-        if (!this.mDemoMode && str.equals("enter")) {
-            this.mDemoMode = true;
-            showDemoModeClock();
-        } else if (this.mDemoMode && str.equals("exit")) {
-            this.mDemoMode = false;
-            updateClock();
+    public void setVisibility(int i) {
+        if (i != 0 || shouldBeVisible()) {
+            super.setVisibility(i);
         }
     }
 
-    private void showDemoModeClock() {
-        if (this.mCalendar == null) {
-            this.mCalendar = new Calendar();
+    public void setClockVisibleByUser(boolean z) {
+        this.mClockVisibleByUser = z;
+        updateClockVisibility();
+    }
+
+    public void setClockVisibilityByPolicy(boolean z) {
+        this.mClockVisibleByPolicy = z;
+        updateClockVisibility();
+    }
+
+    private boolean shouldBeVisible() {
+        return this.mClockVisibleByPolicy && this.mClockVisibleByUser;
+    }
+
+    private void updateClockVisibility() {
+        super.setVisibility(shouldBeVisible() ? 0 : 8);
+    }
+
+    /* access modifiers changed from: protected */
+    public void updateClock() {
+        if (!this.mDemoMode) {
+            this.mCalendar.setTimeInMillis(System.currentTimeMillis());
+            setText(getSmallTime());
+            setContentDescription(this.mContentDescriptionFormat.format(this.mCalendar.getTime()));
         }
-        this.mCalendar.setTimeZone(TimeZone.getDefault());
-        this.mCalendar.set(18, 8);
-        this.mCalendar.set(20, 16);
-        int i = this.mClockMode;
-        if (i == 2) {
-            setText(this.mCalendar.format(this.mContext.getString(R.string.status_bar_clock_date_time_format)));
-        } else if (i == 1) {
-            setText(this.mCalendar.format(this.mContext.getString(R.string.status_bar_clock_date_format)));
-        } else {
-            ReceiverInfo receiverInfo = sReceiverInfo.get();
-            if (receiverInfo != null) {
-                setText(DateUtils.formatDateTime(this.mCalendar.getTimeInMillis(), receiverInfo.getTimeFormat() | 12));
+    }
+
+    public void onTuningChanged(String str, String str2) {
+        if ("clock_seconds".equals(str)) {
+            this.mShowSeconds = TunerService.parseIntegerSwitch(str2, false);
+            updateShowSeconds();
+            return;
+        }
+        setClockVisibleByUser(!StatusBarIconController.getIconBlacklist(getContext(), str2).contains("clock"));
+        updateClockVisibility();
+    }
+
+    public void disable(int i, int i2, int i3, boolean z) {
+        if (i == getDisplay().getDisplayId()) {
+            boolean z2 = (8388608 & i2) == 0;
+            if (z2 != this.mClockVisibleByPolicy) {
+                setClockVisibilityByPolicy(z2);
             }
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void onVisibilityChanged(View view, int i) {
-        super.onVisibilityChanged(view, i);
-        Iterator it = this.mVisibilityListeners.iterator();
-        while (it.hasNext()) {
-            ((ClockVisibilityListener) it.next()).onClockVisibilityChanged(isShown());
+    public void onDarkChanged(Rect rect, float f, int i, int i2, int i3, boolean z) {
+        int tint = DarkIconDispatcher.getTint(rect, this, i);
+        this.mNonAdaptedColor = tint;
+        if (!this.mUseWallpaperTextColor) {
+            setTextColor(tint);
         }
     }
 
-    public void addVisibilityListener(ClockVisibilityListener clockVisibilityListener) {
-        this.mVisibilityListeners.add(clockVisibilityListener);
+    public void onDensityOrFontScaleChanged() {
+        FontSizeUtils.updateFontSize(this, C0009R$dimen.status_bar_clock_size);
+        setPaddingRelative(this.mContext.getResources().getDimensionPixelSize(C0009R$dimen.status_bar_clock_starting_padding), 0, this.mContext.getResources().getDimensionPixelSize(C0009R$dimen.status_bar_clock_end_padding), 0);
     }
 
-    public void removeVisibilityListener(ClockVisibilityListener clockVisibilityListener) {
-        this.mVisibilityListeners.remove(clockVisibilityListener);
+    public void useWallpaperTextColor(boolean z) {
+        if (z != this.mUseWallpaperTextColor) {
+            this.mUseWallpaperTextColor = z;
+            if (z) {
+                setTextColor(Utils.getColorAttr(this.mContext, C0006R$attr.wallpaperTextColor));
+            } else {
+                setTextColor(this.mNonAdaptedColor);
+            }
+        }
+    }
+
+    private void updateShowSeconds() {
+        if (this.mShowSeconds) {
+            if (this.mSecondsHandler == null && getDisplay() != null) {
+                this.mSecondsHandler = new Handler();
+                if (getDisplay().getState() == 2) {
+                    this.mSecondsHandler.postAtTime(this.mSecondTick, ((SystemClock.uptimeMillis() / 1000) * 1000) + 1000);
+                }
+                IntentFilter intentFilter = new IntentFilter("android.intent.action.SCREEN_OFF");
+                intentFilter.addAction("android.intent.action.SCREEN_ON");
+                this.mBroadcastDispatcher.registerReceiver(this.mScreenReceiver, intentFilter);
+            }
+        } else if (this.mSecondsHandler != null) {
+            this.mBroadcastDispatcher.unregisterReceiver(this.mScreenReceiver);
+            this.mSecondsHandler.removeCallbacks(this.mSecondTick);
+            this.mSecondsHandler = null;
+            updateClock();
+        }
+    }
+
+    private final CharSequence getSmallTime() {
+        String str;
+        SimpleDateFormat simpleDateFormat;
+        Context context = getContext();
+        boolean is24HourFormat = DateFormat.is24HourFormat(context, this.mCurrentUserId);
+        LocaleData localeData = LocaleData.get(context.getResources().getConfiguration().locale);
+        if (this.mShowSeconds) {
+            str = is24HourFormat ? localeData.timeFormat_Hms : localeData.timeFormat_hms;
+        } else {
+            str = is24HourFormat ? localeData.timeFormat_Hm : localeData.timeFormat_hm;
+        }
+        if (!str.equals(this.mClockFormatString)) {
+            this.mContentDescriptionFormat = new SimpleDateFormat(str);
+            if (this.mAmPmStyle != 0) {
+                int i = 0;
+                boolean z = false;
+                while (true) {
+                    if (i >= str.length()) {
+                        i = -1;
+                        break;
+                    }
+                    char charAt = str.charAt(i);
+                    if (charAt == '\'') {
+                        z = !z;
+                    }
+                    if (!z && charAt == 'a') {
+                        break;
+                    }
+                    i++;
+                }
+                if (i >= 0) {
+                    int i2 = i;
+                    while (i2 > 0 && Character.isWhitespace(str.charAt(i2 - 1))) {
+                        i2--;
+                    }
+                    str = str.substring(0, i2) + 61184 + str.substring(i2, i) + "a" + 61185 + str.substring(i + 1);
+                }
+            }
+            simpleDateFormat = new SimpleDateFormat(str);
+            this.mClockFormat = simpleDateFormat;
+            this.mClockFormatString = str;
+        } else {
+            simpleDateFormat = this.mClockFormat;
+        }
+        String format = simpleDateFormat.format(this.mCalendar.getTime());
+        if (this.mAmPmStyle != 0) {
+            int indexOf = format.indexOf(61184);
+            int indexOf2 = format.indexOf(61185);
+            if (indexOf >= 0 && indexOf2 > indexOf) {
+                SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(format);
+                int i3 = this.mAmPmStyle;
+                if (i3 == 2) {
+                    spannableStringBuilder.delete(indexOf, indexOf2 + 1);
+                } else {
+                    if (i3 == 1) {
+                        spannableStringBuilder.setSpan(new RelativeSizeSpan(0.7f), indexOf, indexOf2, 34);
+                    }
+                    spannableStringBuilder.delete(indexOf2, indexOf2 + 1);
+                    spannableStringBuilder.delete(indexOf, indexOf + 1);
+                }
+                return spannableStringBuilder;
+            }
+        }
+        return format;
+    }
+
+    public void dispatchDemoCommand(String str, Bundle bundle) {
+        if (!this.mDemoMode && str.equals("enter")) {
+            this.mDemoMode = true;
+        } else if (this.mDemoMode && str.equals("exit")) {
+            this.mDemoMode = false;
+            updateClock();
+        } else if (this.mDemoMode && str.equals("clock")) {
+            String string = bundle.getString("millis");
+            String string2 = bundle.getString("hhmm");
+            if (string != null) {
+                this.mCalendar.setTimeInMillis(Long.parseLong(string));
+            } else if (string2 != null && string2.length() == 4) {
+                int parseInt = Integer.parseInt(string2.substring(0, 2));
+                int parseInt2 = Integer.parseInt(string2.substring(2));
+                if (DateFormat.is24HourFormat(getContext(), this.mCurrentUserId)) {
+                    this.mCalendar.set(11, parseInt);
+                } else {
+                    this.mCalendar.set(10, parseInt);
+                }
+                this.mCalendar.set(12, parseInt2);
+            }
+            setText(getSmallTime());
+            setContentDescription(this.mContentDescriptionFormat.format(this.mCalendar.getTime()));
+        }
     }
 }

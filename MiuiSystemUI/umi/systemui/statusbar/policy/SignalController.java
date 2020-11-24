@@ -1,15 +1,16 @@
 package com.android.systemui.statusbar.policy;
 
 import android.content.Context;
-import android.text.format.DateFormat;
 import android.util.Log;
 import com.android.systemui.statusbar.policy.NetworkController;
 import com.android.systemui.statusbar.policy.SignalController.IconGroup;
 import com.android.systemui.statusbar.policy.SignalController.State;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
 import java.util.BitSet;
 
 public abstract class SignalController<T extends State, I extends IconGroup> {
+    protected static final boolean CHATTY = NetworkControllerImpl.CHATTY;
     protected static final boolean DEBUG = NetworkControllerImpl.DEBUG;
     private final CallbackHandler mCallbackHandler;
     protected final Context mContext;
@@ -25,10 +26,6 @@ public abstract class SignalController<T extends State, I extends IconGroup> {
     public abstract T cleanState();
 
     public abstract void notifyListeners(NetworkController.SignalCallback signalCallback);
-
-    static {
-        boolean z = NetworkControllerImpl.CHATTY;
-    }
 
     public SignalController(String str, Context context, int i, CallbackHandler callbackHandler, NetworkControllerImpl networkControllerImpl) {
         this.mTag = "NetworkController." + str;
@@ -99,15 +96,10 @@ public abstract class SignalController<T extends State, I extends IconGroup> {
     }
 
     public int getContentDescription() {
-        T t = this.mCurrentState;
-        if (!t.connected) {
-            return getIcons().mDiscContentDesc;
+        if (this.mCurrentState.connected) {
+            return getIcons().mContentDesc[this.mCurrentState.level];
         }
-        int i = t.level;
-        if (i >= 4) {
-            i = 4;
-        }
-        return getIcons().mContentDesc[i];
+        return getIcons().mDiscContentDesc;
     }
 
     public void notifyListenersIfNecessary() {
@@ -117,9 +109,9 @@ public abstract class SignalController<T extends State, I extends IconGroup> {
         }
     }
 
-    /* access modifiers changed from: protected */
-    public String getStringIfExists(int i) {
-        return i != 0 ? this.mContext.getString(i) : "";
+    /* access modifiers changed from: package-private */
+    public CharSequence getTextIfExists(int i) {
+        return i != 0 ? this.mContext.getText(i) : "";
     }
 
     /* access modifiers changed from: protected */
@@ -191,6 +183,7 @@ public abstract class SignalController<T extends State, I extends IconGroup> {
     }
 
     static class State {
+        private static SimpleDateFormat sSDF = new SimpleDateFormat("MM-dd HH:mm:ss.SSS");
         boolean activityIn;
         boolean activityOut;
         boolean connected;
@@ -252,7 +245,7 @@ public abstract class SignalController<T extends State, I extends IconGroup> {
             sb.append(this.rssi);
             sb.append(',');
             sb.append("lastModified=");
-            sb.append(DateFormat.format("MM-dd hh:mm:ss", this.time));
+            sb.append(sSDF.format(Long.valueOf(this.time)));
         }
 
         public boolean equals(Object obj) {

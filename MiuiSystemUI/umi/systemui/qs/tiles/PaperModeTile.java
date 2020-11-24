@@ -1,28 +1,27 @@
 package com.android.systemui.qs.tiles;
 
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.widget.Switch;
-import com.android.systemui.Constants;
-import com.android.systemui.Dependency;
-import com.android.systemui.plugins.R;
+import com.android.systemui.C0010R$drawable;
+import com.android.systemui.C0018R$string;
 import com.android.systemui.plugins.qs.QSTile;
 import com.android.systemui.qs.QSHost;
 import com.android.systemui.qs.tileimpl.QSTileImpl;
-import com.android.systemui.statusbar.Icons;
 import com.android.systemui.statusbar.policy.PaperModeController;
+import miui.util.FeatureParser;
 
 public class PaperModeTile extends QSTileImpl<QSTile.BooleanState> implements PaperModeController.PaperModeListener {
-    private final PaperModeController mPaperModeController = ((PaperModeController) Dependency.get(PaperModeController.class));
+    private final PaperModeController mPaperModeController;
 
     public int getMetricsCategory() {
         return -1;
     }
 
-    public PaperModeTile(QSHost qSHost) {
+    public PaperModeTile(QSHost qSHost, PaperModeController paperModeController) {
         super(qSHost);
+        this.mPaperModeController = paperModeController;
     }
 
     public QSTile.BooleanState newTileState() {
@@ -47,18 +46,15 @@ public class PaperModeTile extends QSTileImpl<QSTile.BooleanState> implements Pa
     }
 
     public CharSequence getTileLabel() {
-        return this.mContext.getString(R.string.quick_settings_papermode_label);
+        return this.mContext.getString(C0018R$string.quick_settings_papermode_label);
     }
 
     /* access modifiers changed from: protected */
     public void handleUpdateState(QSTile.BooleanState booleanState, Object obj) {
-        booleanState.label = this.mContext.getString(R.string.quick_settings_papermode_label);
-        boolean isAvailable = this.mPaperModeController.isAvailable();
-        int i = R.string.switch_bar_off;
-        Integer valueOf = Integer.valueOf(R.drawable.ic_qs_paper_mode_off);
-        if (!isAvailable) {
-            booleanState.icon = QSTileImpl.ResourceIcon.get(Icons.getQSIcons(valueOf, this.mInControlCenter));
-            booleanState.contentDescription = booleanState.label + "," + this.mContext.getString(R.string.switch_bar_off);
+        booleanState.label = this.mContext.getString(C0018R$string.quick_settings_papermode_label);
+        if (!this.mPaperModeController.isAvailable()) {
+            booleanState.icon = QSTileImpl.ResourceIcon.get(C0010R$drawable.ic_qs_paper_mode_off);
+            booleanState.contentDescription = booleanState.label + "," + this.mContext.getString(C0018R$string.switch_bar_off);
             booleanState.state = 0;
             return;
         }
@@ -73,27 +69,23 @@ public class PaperModeTile extends QSTileImpl<QSTile.BooleanState> implements Pa
             booleanState.value = this.mPaperModeController.isEnabled();
         }
         if (booleanState.value) {
-            booleanState.icon = QSTileImpl.ResourceIcon.get(Icons.getQSIcons(Integer.valueOf(R.drawable.ic_qs_paper_mode_on), this.mInControlCenter));
+            booleanState.icon = QSTileImpl.ResourceIcon.get(C0010R$drawable.ic_qs_paper_mode_on);
             booleanState.state = 2;
         } else {
-            booleanState.icon = QSTileImpl.ResourceIcon.get(Icons.getQSIcons(valueOf, this.mInControlCenter));
+            booleanState.icon = QSTileImpl.ResourceIcon.get(C0010R$drawable.ic_qs_paper_mode_off);
             booleanState.state = 1;
         }
-        booleanState.activeBgColor = 1;
         StringBuilder sb = new StringBuilder();
         sb.append(booleanState.label);
         sb.append(",");
-        Context context = this.mContext;
-        if (booleanState.value) {
-            i = R.string.switch_bar_on;
-        }
-        sb.append(context.getString(i));
+        sb.append(this.mContext.getString(booleanState.value ? C0018R$string.switch_bar_on : C0018R$string.switch_bar_off));
         booleanState.contentDescription = sb.toString();
         booleanState.expandedAccessibilityClassName = Switch.class.getName();
+        booleanState.activeBgColor = 1;
     }
 
     public boolean isAvailable() {
-        return Constants.SUPPORT_SCREEN_PAPER_MODE;
+        return FeatureParser.getBoolean("support_screen_paper_mode", false);
     }
 
     public void handleSetListening(boolean z) {

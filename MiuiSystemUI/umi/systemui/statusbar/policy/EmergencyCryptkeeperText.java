@@ -10,9 +10,9 @@ import android.telephony.SubscriptionInfo;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.widget.TextView;
-import com.android.internal.telephony.IccCardConstants;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.KeyguardUpdateMonitorCallback;
+import com.android.systemui.Dependency;
 import java.util.List;
 
 public class EmergencyCryptkeeperText extends TextView {
@@ -34,6 +34,10 @@ public class EmergencyCryptkeeperText extends TextView {
         }
     };
 
+    private boolean iccCardExist(int i) {
+        return i == 2 || i == 3 || i == 4 || i == 5 || i == 6 || i == 7 || i == 8 || i == 9 || i == 10;
+    }
+
     public EmergencyCryptkeeperText(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
         setVisibility(8);
@@ -42,9 +46,9 @@ public class EmergencyCryptkeeperText extends TextView {
     /* access modifiers changed from: protected */
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
-        KeyguardUpdateMonitor instance = KeyguardUpdateMonitor.getInstance(this.mContext);
-        this.mKeyguardUpdateMonitor = instance;
-        instance.registerCallback(this.mCallback);
+        KeyguardUpdateMonitor keyguardUpdateMonitor = (KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class);
+        this.mKeyguardUpdateMonitor = keyguardUpdateMonitor;
+        keyguardUpdateMonitor.registerCallback(this.mCallback);
         getContext().registerReceiver(this.mReceiver, new IntentFilter("android.intent.action.AIRPLANE_MODE"));
         update();
     }
@@ -69,20 +73,20 @@ public class EmergencyCryptkeeperText extends TextView {
             setVisibility(8);
             return;
         }
-        List<SubscriptionInfo> subscriptionInfo = this.mKeyguardUpdateMonitor.getSubscriptionInfo(false);
-        int size = subscriptionInfo.size();
+        List<SubscriptionInfo> filteredSubscriptionInfo = this.mKeyguardUpdateMonitor.getFilteredSubscriptionInfo(false);
+        int size = filteredSubscriptionInfo.size();
         CharSequence charSequence = null;
         for (int i2 = 0; i2 < size; i2++) {
-            IccCardConstants.State simState = this.mKeyguardUpdateMonitor.getSimState(subscriptionInfo.get(i2).getSimSlotIndex());
-            CharSequence carrierName = subscriptionInfo.get(i2).getCarrierName();
-            if (simState.iccCardExist() && !TextUtils.isEmpty(carrierName)) {
+            int simState = this.mKeyguardUpdateMonitor.getSimState(filteredSubscriptionInfo.get(i2).getSubscriptionId());
+            CharSequence carrierName = filteredSubscriptionInfo.get(i2).getCarrierName();
+            if (iccCardExist(simState) && !TextUtils.isEmpty(carrierName)) {
                 z = false;
                 charSequence = carrierName;
             }
         }
         if (z) {
             if (size != 0) {
-                charSequence = subscriptionInfo.get(0).getCarrierName();
+                charSequence = filteredSubscriptionInfo.get(0).getCarrierName();
             } else {
                 charSequence = getContext().getText(17040138);
                 Intent registerReceiver = getContext().registerReceiver((BroadcastReceiver) null, new IntentFilter("android.telephony.action.SERVICE_PROVIDERS_UPDATED"));

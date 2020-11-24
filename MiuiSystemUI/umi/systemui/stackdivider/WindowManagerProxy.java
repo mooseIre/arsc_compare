@@ -3,22 +3,26 @@ package com.android.systemui.stackdivider;
 import android.app.ActivityManager;
 import android.app.ActivityTaskManager;
 import android.graphics.Rect;
+import android.os.Handler;
 import android.os.RemoteException;
 import android.util.Log;
+import android.view.SurfaceControl;
 import android.view.WindowManagerGlobal;
 import android.window.TaskOrganizer;
 import android.window.WindowContainerToken;
 import android.window.WindowContainerTransaction;
 import android.window.WindowOrganizer;
 import com.android.internal.annotations.GuardedBy;
+import com.android.systemui.TransactionPool;
+import com.android.systemui.stackdivider.SyncTransactionQueue;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.function.Predicate;
 
 public class WindowManagerProxy {
     private static final int[] HOME_AND_RECENTS = {2, 3};
-    private static final WindowManagerProxy sInstance = new WindowManagerProxy();
     /* access modifiers changed from: private */
     @GuardedBy({"mDockedRect"})
     public final Rect mDockedRect = new Rect();
@@ -35,33 +39,32 @@ public class WindowManagerProxy {
             }
         }
     };
+    private final SyncTransactionQueue mSyncTransactionQueue;
     /* access modifiers changed from: private */
     public final Rect mTmpRect1 = new Rect();
     /* access modifiers changed from: private */
     @GuardedBy({"mDockedRect"})
     public final Rect mTouchableRegion = new Rect();
 
-    public void maximizeDockedStack() {
-    }
-
-    private WindowManagerProxy() {
-    }
-
-    public static WindowManagerProxy getInstance() {
-        return sInstance;
+    WindowManagerProxy(TransactionPool transactionPool, Handler handler) {
+        this.mSyncTransactionQueue = new SyncTransactionQueue(transactionPool, handler);
     }
 
     /* access modifiers changed from: package-private */
-    public void dismissOrMaximizeDocked(SplitScreenTaskOrganizer splitScreenTaskOrganizer, boolean z) {
-        this.mExecutor.execute(new Runnable(z) {
-            public final /* synthetic */ boolean f$1;
+    public void dismissOrMaximizeDocked(SplitScreenTaskOrganizer splitScreenTaskOrganizer, SplitDisplayLayout splitDisplayLayout, boolean z) {
+        this.mExecutor.execute(new Runnable(splitScreenTaskOrganizer, splitDisplayLayout, z) {
+            public final /* synthetic */ SplitScreenTaskOrganizer f$1;
+            public final /* synthetic */ SplitDisplayLayout f$2;
+            public final /* synthetic */ boolean f$3;
 
             {
                 this.f$1 = r2;
+                this.f$2 = r3;
+                this.f$3 = r4;
             }
 
             public final void run() {
-                WindowManagerProxy.applyDismissSplit(SplitScreenTaskOrganizer.this, this.f$1);
+                WindowManagerProxy.this.lambda$dismissOrMaximizeDocked$0$WindowManagerProxy(this.f$1, this.f$2, this.f$3);
             }
         });
     }
@@ -91,7 +94,7 @@ public class WindowManagerProxy {
         WindowOrganizer.applyTransaction(windowContainerTransaction);
     }
 
-    private static boolean getHomeAndRecentsTasks(List<WindowContainerToken> list, WindowContainerToken windowContainerToken) {
+    private static boolean getHomeAndRecentsTasks(List<ActivityManager.RunningTaskInfo> list, WindowContainerToken windowContainerToken) {
         List list2;
         int[] iArr = HOME_AND_RECENTS;
         if (windowContainerToken == null) {
@@ -103,9 +106,9 @@ public class WindowManagerProxy {
         boolean z = false;
         for (int i = 0; i < size; i++) {
             ActivityManager.RunningTaskInfo runningTaskInfo = (ActivityManager.RunningTaskInfo) list2.get(i);
-            list.add(runningTaskInfo.token);
+            list.add(runningTaskInfo);
             if (runningTaskInfo.topActivityType == 2) {
-                z = Utils.isResizable(runningTaskInfo);
+                z = runningTaskInfo.isResizeable;
             }
         }
         return z;
@@ -116,59 +119,120 @@ public class WindowManagerProxy {
         ArrayList arrayList = new ArrayList();
         boolean homeAndRecentsTasks = getHomeAndRecentsTasks(arrayList, windowContainerToken);
         if (homeAndRecentsTasks) {
-            rect = splitDisplayLayout.calcMinimizedHomeStackBounds();
+            rect = splitDisplayLayout.calcResizableMinimizedHomeStackBounds();
         } else {
-            rect = new Rect(0, 0, splitDisplayLayout.mDisplayLayout.width(), splitDisplayLayout.mDisplayLayout.height());
+            boolean z = false;
+            rect = new Rect(0, 0, 0, 0);
+            int size = arrayList.size() - 1;
+            while (true) {
+                if (size < 0) {
+                    break;
+                } else if (((ActivityManager.RunningTaskInfo) arrayList.get(size)).topActivityType == 2) {
+                    int i = ((ActivityManager.RunningTaskInfo) arrayList.get(size)).configuration.orientation;
+                    boolean isLandscape = splitDisplayLayout.mDisplayLayout.isLandscape();
+                    if (i == 2 || (i == 0 && isLandscape)) {
+                        z = true;
+                    }
+                    rect.right = z == isLandscape ? splitDisplayLayout.mDisplayLayout.width() : splitDisplayLayout.mDisplayLayout.height();
+                    rect.bottom = z == isLandscape ? splitDisplayLayout.mDisplayLayout.height() : splitDisplayLayout.mDisplayLayout.width();
+                } else {
+                    size--;
+                }
+            }
         }
-        for (int size = arrayList.size() - 1; size >= 0; size--) {
-            windowContainerTransaction.setBounds((WindowContainerToken) arrayList.get(size), rect);
+        for (int size2 = arrayList.size() - 1; size2 >= 0; size2--) {
+            if (!homeAndRecentsTasks) {
+                if (((ActivityManager.RunningTaskInfo) arrayList.get(size2)).topActivityType == 3) {
+                } else {
+                    windowContainerTransaction.setWindowingMode(((ActivityManager.RunningTaskInfo) arrayList.get(size2)).token, 1);
+                }
+            }
+            windowContainerTransaction.setBounds(((ActivityManager.RunningTaskInfo) arrayList.get(size2)).token, rect);
         }
         splitDisplayLayout.mTiles.mHomeBounds.set(rect);
         return homeAndRecentsTasks;
     }
 
-    static boolean applyEnterSplit(SplitScreenTaskOrganizer splitScreenTaskOrganizer, SplitDisplayLayout splitDisplayLayout) {
+    /* access modifiers changed from: package-private */
+    public boolean applyEnterSplit(SplitScreenTaskOrganizer splitScreenTaskOrganizer, SplitDisplayLayout splitDisplayLayout) {
         TaskOrganizer.setLaunchRoot(0, splitScreenTaskOrganizer.mSecondary.token);
         List rootTasks = TaskOrganizer.getRootTasks(0, (int[]) null);
         WindowContainerTransaction windowContainerTransaction = new WindowContainerTransaction();
         if (rootTasks.isEmpty()) {
             return false;
         }
+        ActivityManager.RunningTaskInfo runningTaskInfo = null;
         for (int size = rootTasks.size() - 1; size >= 0; size--) {
-            ActivityManager.RunningTaskInfo runningTaskInfo = (ActivityManager.RunningTaskInfo) rootTasks.get(size);
-            if (Utils.isResizable(runningTaskInfo) && runningTaskInfo.configuration.windowConfiguration.getWindowingMode() == 1) {
-                windowContainerTransaction.reparent(runningTaskInfo.token, splitScreenTaskOrganizer.mSecondary.token, true);
+            ActivityManager.RunningTaskInfo runningTaskInfo2 = (ActivityManager.RunningTaskInfo) rootTasks.get(size);
+            if ((runningTaskInfo2.isResizeable || runningTaskInfo2.topActivityType == 2) && runningTaskInfo2.configuration.windowConfiguration.getWindowingMode() == 1) {
+                runningTaskInfo = isHomeOrRecentTask(runningTaskInfo2) ? runningTaskInfo2 : null;
+                windowContainerTransaction.reparent(runningTaskInfo2.token, splitScreenTaskOrganizer.mSecondary.token, true);
             }
         }
         windowContainerTransaction.reorder(splitScreenTaskOrganizer.mSecondary.token, true);
         boolean applyHomeTasksMinimized = applyHomeTasksMinimized(splitDisplayLayout, (WindowContainerToken) null, windowContainerTransaction);
-        WindowOrganizer.applyTransaction(windowContainerTransaction);
+        if (runningTaskInfo != null) {
+            windowContainerTransaction.setBoundsChangeTransaction(runningTaskInfo.token, splitScreenTaskOrganizer.mHomeBounds);
+        }
+        applySyncTransaction(windowContainerTransaction);
         return applyHomeTasksMinimized;
     }
 
-    private static boolean isHomeOrRecentTask(ActivityManager.RunningTaskInfo runningTaskInfo) {
+    static boolean isHomeOrRecentTask(ActivityManager.RunningTaskInfo runningTaskInfo) {
         int activityType = runningTaskInfo.configuration.windowConfiguration.getActivityType();
         return activityType == 2 || activityType == 3;
     }
 
     /* access modifiers changed from: package-private */
-    public static void applyDismissSplit(SplitScreenTaskOrganizer splitScreenTaskOrganizer, boolean z) {
+    /* renamed from: applyDismissSplit */
+    public void lambda$dismissOrMaximizeDocked$0(SplitScreenTaskOrganizer splitScreenTaskOrganizer, SplitDisplayLayout splitDisplayLayout, boolean z) {
+        int i;
+        int i2;
         TaskOrganizer.setLaunchRoot(0, (WindowContainerToken) null);
         List childTasks = TaskOrganizer.getChildTasks(splitScreenTaskOrganizer.mPrimary.token, (int[]) null);
         List childTasks2 = TaskOrganizer.getChildTasks(splitScreenTaskOrganizer.mSecondary.token, (int[]) null);
         List rootTasks = TaskOrganizer.getRootTasks(0, HOME_AND_RECENTS);
+        rootTasks.removeIf(new Predicate() {
+            public final boolean test(Object obj) {
+                return WindowManagerProxy.lambda$applyDismissSplit$1(SplitScreenTaskOrganizer.this, (ActivityManager.RunningTaskInfo) obj);
+            }
+        });
         if (!childTasks.isEmpty() || !childTasks2.isEmpty() || !rootTasks.isEmpty()) {
             WindowContainerTransaction windowContainerTransaction = new WindowContainerTransaction();
             if (z) {
                 for (int size = childTasks.size() - 1; size >= 0; size--) {
                     windowContainerTransaction.reparent(((ActivityManager.RunningTaskInfo) childTasks.get(size)).token, (WindowContainerToken) null, true);
                 }
+                boolean z2 = false;
                 for (int size2 = childTasks2.size() - 1; size2 >= 0; size2--) {
                     ActivityManager.RunningTaskInfo runningTaskInfo = (ActivityManager.RunningTaskInfo) childTasks2.get(size2);
                     windowContainerTransaction.reparent(runningTaskInfo.token, (WindowContainerToken) null, true);
                     if (isHomeOrRecentTask(runningTaskInfo)) {
                         windowContainerTransaction.setBounds(runningTaskInfo.token, (Rect) null);
+                        windowContainerTransaction.setWindowingMode(runningTaskInfo.token, 0);
+                        if (size2 == 0) {
+                            z2 = true;
+                        }
                     }
+                }
+                if (z2) {
+                    boolean isLandscape = splitDisplayLayout.mDisplayLayout.isLandscape();
+                    if (isLandscape) {
+                        i = splitDisplayLayout.mSecondary.left - splitScreenTaskOrganizer.mHomeBounds.left;
+                    } else {
+                        i = splitDisplayLayout.mSecondary.left;
+                    }
+                    if (isLandscape) {
+                        i2 = splitDisplayLayout.mSecondary.top;
+                    } else {
+                        i2 = splitDisplayLayout.mSecondary.top - splitScreenTaskOrganizer.mHomeBounds.top;
+                    }
+                    SurfaceControl.Transaction transaction = new SurfaceControl.Transaction();
+                    transaction.setPosition(splitScreenTaskOrganizer.mSecondarySurface, (float) i, (float) i2);
+                    Rect rect = new Rect(0, 0, splitDisplayLayout.mDisplayLayout.width(), splitDisplayLayout.mDisplayLayout.height());
+                    rect.offset(-i, -i2);
+                    transaction.setWindowCrop(splitScreenTaskOrganizer.mSecondarySurface, rect);
+                    windowContainerTransaction.setBoundsChangeTransaction(splitScreenTaskOrganizer.mSecondary.token, transaction);
                 }
             } else {
                 for (int size3 = childTasks2.size() - 1; size3 >= 0; size3--) {
@@ -181,6 +245,7 @@ public class WindowManagerProxy {
                     if (isHomeOrRecentTask(runningTaskInfo2)) {
                         windowContainerTransaction.reparent(runningTaskInfo2.token, (WindowContainerToken) null, true);
                         windowContainerTransaction.setBounds(runningTaskInfo2.token, (Rect) null);
+                        windowContainerTransaction.setWindowingMode(runningTaskInfo2.token, 0);
                     }
                 }
                 for (int size5 = childTasks.size() - 1; size5 >= 0; size5--) {
@@ -189,9 +254,29 @@ public class WindowManagerProxy {
             }
             for (int size6 = rootTasks.size() - 1; size6 >= 0; size6--) {
                 windowContainerTransaction.setBounds(((ActivityManager.RunningTaskInfo) rootTasks.get(size6)).token, (Rect) null);
+                windowContainerTransaction.setWindowingMode(((ActivityManager.RunningTaskInfo) rootTasks.get(size6)).token, 0);
             }
             windowContainerTransaction.setFocusable(splitScreenTaskOrganizer.mPrimary.token, true);
-            WindowOrganizer.applyTransaction(windowContainerTransaction);
+            applySyncTransaction(windowContainerTransaction);
         }
+    }
+
+    static /* synthetic */ boolean lambda$applyDismissSplit$1(SplitScreenTaskOrganizer splitScreenTaskOrganizer, ActivityManager.RunningTaskInfo runningTaskInfo) {
+        return runningTaskInfo.token.equals(splitScreenTaskOrganizer.mSecondary.token) || runningTaskInfo.token.equals(splitScreenTaskOrganizer.mPrimary.token);
+    }
+
+    /* access modifiers changed from: package-private */
+    public void applySyncTransaction(WindowContainerTransaction windowContainerTransaction) {
+        this.mSyncTransactionQueue.queue(windowContainerTransaction);
+    }
+
+    /* access modifiers changed from: package-private */
+    public boolean queueSyncTransactionIfWaiting(WindowContainerTransaction windowContainerTransaction) {
+        return this.mSyncTransactionQueue.queueIfWaiting(windowContainerTransaction);
+    }
+
+    /* access modifiers changed from: package-private */
+    public void runInSync(SyncTransactionQueue.TransactionRunnable transactionRunnable) {
+        this.mSyncTransactionQueue.runInSync(transactionRunnable);
     }
 }

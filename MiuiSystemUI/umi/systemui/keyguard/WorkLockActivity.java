@@ -2,7 +2,6 @@ package com.android.systemui.keyguard;
 
 import android.app.Activity;
 import android.app.ActivityManager;
-import android.app.ActivityManagerCompat;
 import android.app.ActivityOptions;
 import android.app.KeyguardManager;
 import android.app.PendingIntent;
@@ -13,15 +12,15 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.RemoteException;
 import android.os.UserHandle;
-import android.util.Log;
 import android.view.View;
 import com.android.internal.annotations.VisibleForTesting;
-import com.android.systemui.plugins.R;
+import com.android.systemui.C0018R$string;
+import com.android.systemui.broadcast.BroadcastDispatcher;
+import java.util.concurrent.Executor;
 
 public class WorkLockActivity extends Activity {
+    private final BroadcastDispatcher mBroadcastDispatcher;
     private KeyguardManager mKgm;
     private final BroadcastReceiver mLockEventReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
@@ -38,16 +37,20 @@ public class WorkLockActivity extends Activity {
     public void setTaskDescription(ActivityManager.TaskDescription taskDescription) {
     }
 
+    public WorkLockActivity(BroadcastDispatcher broadcastDispatcher) {
+        this.mBroadcastDispatcher = broadcastDispatcher;
+    }
+
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        registerReceiverAsUser(this.mLockEventReceiver, UserHandle.ALL, new IntentFilter("android.intent.action.DEVICE_LOCKED_CHANGED"), (String) null, (Handler) null);
+        this.mBroadcastDispatcher.registerReceiver(this.mLockEventReceiver, new IntentFilter("android.intent.action.DEVICE_LOCKED_CHANGED"), (Executor) null, UserHandle.ALL);
         if (!getKeyguardManager().isDeviceLocked(getTargetUserId())) {
             finish();
             return;
         }
         setOverlayWithDecorCaptionEnabled(true);
         View view = new View(this);
-        view.setContentDescription(getString(R.string.accessibility_desc_work_lock));
+        view.setContentDescription(getString(C0018R$string.accessibility_desc_work_lock));
         view.setBackgroundColor(getPrimaryColor());
         setContentView(view);
     }
@@ -58,31 +61,45 @@ public class WorkLockActivity extends Activity {
         }
     }
 
+    /* access modifiers changed from: protected */
+    @VisibleForTesting
+    public void unregisterBroadcastReceiver() {
+        this.mBroadcastDispatcher.unregisterReceiver(this.mLockEventReceiver);
+    }
+
     public void onDestroy() {
-        unregisterReceiver(this.mLockEventReceiver);
+        unregisterBroadcastReceiver();
         super.onDestroy();
     }
 
     private void showConfirmCredentialActivity() {
         Intent createConfirmDeviceCredentialIntent;
-        if (!isFinishing() && getKeyguardManager().isDeviceLocked(getTargetUserId()) && (createConfirmDeviceCredentialIntent = getKeyguardManager().createConfirmDeviceCredentialIntent((CharSequence) null, (CharSequence) null, getTargetUserId())) != null) {
+        if (!isFinishing() && getKeyguardManager().isDeviceLocked(getTargetUserId()) && (createConfirmDeviceCredentialIntent = getKeyguardManager().createConfirmDeviceCredentialIntent((CharSequence) null, (CharSequence) null, getTargetUserId(), true)) != null) {
             ActivityOptions makeBasic = ActivityOptions.makeBasic();
             makeBasic.setLaunchTaskId(getTaskId());
-            createConfirmDeviceCredentialIntent.putExtra("android.intent.extra.INTENT", PendingIntent.getActivity(this, -1, getIntent(), 1409286144, makeBasic.toBundle()).getIntentSender());
-            try {
-                ActivityManagerCompat.getService().startConfirmDeviceCredentialIntent(createConfirmDeviceCredentialIntent, getChallengeOptions().toBundle());
-            } catch (RemoteException e) {
-                Log.e("WorkLockActivity", "Failed to start confirm credential intent", e);
+            PendingIntent activity = PendingIntent.getActivity(this, -1, getIntent(), 1409286144, makeBasic.toBundle());
+            if (activity != null) {
+                createConfirmDeviceCredentialIntent.putExtra("android.intent.extra.INTENT", activity.getIntentSender());
             }
+            ActivityOptions makeBasic2 = ActivityOptions.makeBasic();
+            makeBasic2.setLaunchTaskId(getTaskId());
+            makeBasic2.setTaskOverlay(true, true);
+            startActivityForResult(createConfirmDeviceCredentialIntent, 1, makeBasic2.toBundle());
         }
     }
 
-    private ActivityOptions getChallengeOptions() {
-        if (!isInMultiWindowMode()) {
-            return ActivityOptions.makeBasic();
+    /* access modifiers changed from: protected */
+    public void onActivityResult(int i, int i2, Intent intent) {
+        if (i == 1 && i2 != -1) {
+            goToHomeScreen();
         }
-        View decorView = getWindow().getDecorView();
-        return ActivityOptions.makeScaleUpAnimation(decorView, 0, 0, decorView.getWidth(), decorView.getHeight());
+    }
+
+    private void goToHomeScreen() {
+        Intent intent = new Intent("android.intent.action.MAIN");
+        intent.addCategory("android.intent.category.HOME");
+        intent.setFlags(268435456);
+        startActivity(intent);
     }
 
     /* access modifiers changed from: private */

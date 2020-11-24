@@ -1,18 +1,21 @@
 package com.android.systemui.pip;
 
+import android.animation.AnimationHandler;
 import android.animation.Animator;
+import android.animation.RectEvaluator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Rect;
 import android.view.SurfaceControl;
-import android.view.animation.AnimationUtils;
-import android.view.animation.Interpolator;
+import com.android.internal.annotations.VisibleForTesting;
+import com.android.internal.graphics.SfVsyncFrameCallbackProvider;
+import com.android.systemui.Interpolators;
 import com.android.systemui.pip.PipSurfaceTransactionHelper;
 
 public class PipAnimationController {
     private PipTransitionAnimator mCurrentAnimator;
-    private final Interpolator mFastOutSlowInInterpolator;
-    private PipSurfaceTransactionHelper mSurfaceTransactionHelper;
+    private ThreadLocal<AnimationHandler> mSfAnimationHandlerThreadLocal = ThreadLocal.withInitial($$Lambda$PipAnimationController$iXb7MLu8McpFbUwX5eyjXMVFMI.INSTANCE);
+    private final PipSurfaceTransactionHelper mSurfaceTransactionHelper;
 
     public static class PipAnimationCallback {
         public abstract void onPipAnimationCancel(PipTransitionAnimator pipTransitionAnimator);
@@ -30,9 +33,14 @@ public class PipAnimationController {
         return i == 3 || i == 4;
     }
 
-    public PipAnimationController(Context context) {
-        this.mFastOutSlowInInterpolator = AnimationUtils.loadInterpolator(context, 17563661);
-        this.mSurfaceTransactionHelper = PipSurfaceTransactionHelper.getInstance(context);
+    static /* synthetic */ AnimationHandler lambda$new$0() {
+        AnimationHandler animationHandler = new AnimationHandler();
+        animationHandler.setProvider(new SfVsyncFrameCallbackProvider());
+        return animationHandler;
+    }
+
+    PipAnimationController(Context context, PipSurfaceTransactionHelper pipSurfaceTransactionHelper) {
+        this.mSurfaceTransactionHelper = pipSurfaceTransactionHelper;
     }
 
     /* access modifiers changed from: package-private */
@@ -54,17 +62,17 @@ public class PipAnimationController {
     }
 
     /* access modifiers changed from: package-private */
-    public PipTransitionAnimator getAnimator(SurfaceControl surfaceControl, Rect rect, Rect rect2) {
+    public PipTransitionAnimator getAnimator(SurfaceControl surfaceControl, Rect rect, Rect rect2, Rect rect3) {
         PipTransitionAnimator pipTransitionAnimator = this.mCurrentAnimator;
         if (pipTransitionAnimator == null) {
-            PipTransitionAnimator<Rect> ofBounds = PipTransitionAnimator.ofBounds(surfaceControl, rect, rect2);
+            PipTransitionAnimator<Rect> ofBounds = PipTransitionAnimator.ofBounds(surfaceControl, rect, rect2, rect3);
             setupPipTransitionAnimator(ofBounds);
             this.mCurrentAnimator = ofBounds;
         } else if (pipTransitionAnimator.getAnimationType() == 1 && this.mCurrentAnimator.isRunning()) {
             this.mCurrentAnimator.setDestinationBounds(rect2);
         } else if (this.mCurrentAnimator.getAnimationType() != 0 || !this.mCurrentAnimator.isRunning()) {
             this.mCurrentAnimator.cancel();
-            PipTransitionAnimator<Rect> ofBounds2 = PipTransitionAnimator.ofBounds(surfaceControl, rect, rect2);
+            PipTransitionAnimator<Rect> ofBounds2 = PipTransitionAnimator.ofBounds(surfaceControl, rect, rect2, rect3);
             setupPipTransitionAnimator(ofBounds2);
             this.mCurrentAnimator = ofBounds2;
         } else {
@@ -81,8 +89,9 @@ public class PipAnimationController {
 
     private PipTransitionAnimator setupPipTransitionAnimator(PipTransitionAnimator pipTransitionAnimator) {
         pipTransitionAnimator.setSurfaceTransactionHelper(this.mSurfaceTransactionHelper);
-        pipTransitionAnimator.setInterpolator(this.mFastOutSlowInInterpolator);
+        pipTransitionAnimator.setInterpolator(Interpolators.FAST_OUT_SLOW_IN);
         pipTransitionAnimator.setFloatValues(new float[]{0.0f, 1.0f});
+        pipTransitionAnimator.setAnimationHandler(this.mSfAnimationHandlerThreadLocal.get());
         return pipTransitionAnimator;
     }
 
@@ -109,7 +118,8 @@ public class PipAnimationController {
         }
 
         /* access modifiers changed from: package-private */
-        public abstract void onStartTransaction(SurfaceControl surfaceControl, SurfaceControl.Transaction transaction);
+        public void onStartTransaction(SurfaceControl surfaceControl, SurfaceControl.Transaction transaction) {
+        }
 
         private PipTransitionAnimator(SurfaceControl surfaceControl, int i, Rect rect, T t, T t2) {
             Rect rect2 = new Rect();
@@ -231,6 +241,12 @@ public class PipAnimationController {
         }
 
         /* access modifiers changed from: package-private */
+        @VisibleForTesting
+        public void setSurfaceControlTransactionFactory(PipSurfaceTransactionHelper.SurfaceControlTransactionFactory surfaceControlTransactionFactory) {
+            this.mSurfaceControlTransactionFactory = surfaceControlTransactionFactory;
+        }
+
+        /* access modifiers changed from: package-private */
         public PipSurfaceTransactionHelper getSurfaceTransactionHelper() {
             return this.mSurfaceTransactionHelper;
         }
@@ -253,6 +269,7 @@ public class PipAnimationController {
                 /* access modifiers changed from: package-private */
                 public void onStartTransaction(SurfaceControl surfaceControl, SurfaceControl.Transaction transaction) {
                     PipSurfaceTransactionHelper surfaceTransactionHelper = getSurfaceTransactionHelper();
+                    surfaceTransactionHelper.resetScale(transaction, surfaceControl, getDestinationBounds());
                     surfaceTransactionHelper.crop(transaction, surfaceControl, getDestinationBounds());
                     surfaceTransactionHelper.round(transaction, surfaceControl, shouldApplyCornerRadius());
                     transaction.show(surfaceControl);
@@ -267,26 +284,33 @@ public class PipAnimationController {
             };
         }
 
-        static PipTransitionAnimator<Rect> ofBounds(SurfaceControl surfaceControl, Rect rect, Rect rect2) {
+        static PipTransitionAnimator<Rect> ofBounds(SurfaceControl surfaceControl, Rect rect, Rect rect2, Rect rect3) {
+            final Rect rect4 = new Rect(rect);
+            final Rect rect5 = rect3 != null ? new Rect(rect3.left - rect.left, rect3.top - rect.top, rect.right - rect3.right, rect.bottom - rect3.bottom) : null;
+            final Rect rect6 = new Rect(0, 0, 0, 0);
             return new PipTransitionAnimator<Rect>(surfaceControl, 0, rect2, new Rect(rect), new Rect(rect2)) {
-                private final Rect mTmpRect = new Rect();
-
-                private int getCastedFractionValue(float f, float f2, float f3) {
-                    return (int) ((f * (1.0f - f3)) + (f2 * f3) + 0.5f);
-                }
+                private final RectEvaluator mInsetsEvaluator = new RectEvaluator(new Rect());
+                private final RectEvaluator mRectEvaluator = new RectEvaluator(new Rect());
 
                 /* access modifiers changed from: package-private */
                 public void applySurfaceControlTransaction(SurfaceControl surfaceControl, SurfaceControl.Transaction transaction, float f) {
                     Rect rect = (Rect) getStartValue();
                     Rect rect2 = (Rect) getEndValue();
-                    this.mTmpRect.set(getCastedFractionValue((float) rect.left, (float) rect2.left, f), getCastedFractionValue((float) rect.top, (float) rect2.top, f), getCastedFractionValue((float) rect.right, (float) rect2.right, f), getCastedFractionValue((float) rect.bottom, (float) rect2.bottom, f));
-                    setCurrentValue(this.mTmpRect);
+                    Rect evaluate = this.mRectEvaluator.evaluate(f, rect, rect2);
+                    setCurrentValue(evaluate);
                     if (!inScaleTransition()) {
-                        getSurfaceTransactionHelper().crop(transaction, surfaceControl, this.mTmpRect);
+                        Rect rect3 = rect5;
+                        if (rect3 != null) {
+                            SurfaceControl.Transaction transaction2 = transaction;
+                            SurfaceControl surfaceControl2 = surfaceControl;
+                            getSurfaceTransactionHelper().scaleAndCrop(transaction2, surfaceControl2, rect4, evaluate, this.mInsetsEvaluator.evaluate(f, rect6, rect3));
+                        } else {
+                            getSurfaceTransactionHelper().scale(transaction, surfaceControl, rect, evaluate);
+                        }
                     } else if (PipAnimationController.isOutPipDirection(getTransitionDirection())) {
-                        getSurfaceTransactionHelper().scale(transaction, surfaceControl, rect2, this.mTmpRect);
+                        getSurfaceTransactionHelper().scale(transaction, surfaceControl, rect2, evaluate);
                     } else {
-                        getSurfaceTransactionHelper().scale(transaction, surfaceControl, rect, this.mTmpRect);
+                        getSurfaceTransactionHelper().scale(transaction, surfaceControl, rect, evaluate);
                     }
                     transaction.apply();
                 }
@@ -302,11 +326,9 @@ public class PipAnimationController {
 
                 /* access modifiers changed from: package-private */
                 public void onEndTransaction(SurfaceControl surfaceControl, SurfaceControl.Transaction transaction) {
-                    if (inScaleTransition()) {
-                        PipSurfaceTransactionHelper surfaceTransactionHelper = getSurfaceTransactionHelper();
-                        surfaceTransactionHelper.resetScale(transaction, surfaceControl, getDestinationBounds());
-                        surfaceTransactionHelper.crop(transaction, surfaceControl, getDestinationBounds());
-                    }
+                    PipSurfaceTransactionHelper surfaceTransactionHelper = getSurfaceTransactionHelper();
+                    surfaceTransactionHelper.resetScale(transaction, surfaceControl, getDestinationBounds());
+                    surfaceTransactionHelper.crop(transaction, surfaceControl, getDestinationBounds());
                 }
 
                 /* access modifiers changed from: package-private */

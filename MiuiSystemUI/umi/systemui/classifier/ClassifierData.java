@@ -13,7 +13,10 @@ public class ClassifierData {
         this.mDpi = f;
     }
 
-    public void update(MotionEvent motionEvent) {
+    public boolean update(MotionEvent motionEvent) {
+        if (motionEvent.getActionMasked() == 2 && this.mCurrentStrokes.size() != 0 && motionEvent.getEventTimeNano() - this.mCurrentStrokes.valueAt(0).getLastEventTimeNano() < 14166666) {
+            return false;
+        }
         this.mEndingStrokes.clear();
         int actionMasked = motionEvent.getActionMasked();
         if (actionMasked == 0) {
@@ -29,6 +32,7 @@ public class ClassifierData {
                 this.mEndingStrokes.add(getStroke(pointerId));
             }
         }
+        return true;
     }
 
     public void cleanUp(MotionEvent motionEvent) {

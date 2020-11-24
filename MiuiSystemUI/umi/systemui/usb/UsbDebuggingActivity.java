@@ -1,32 +1,44 @@
 package com.android.systemui.usb;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.debug.IAdbManager;
 import android.os.Bundle;
+import android.os.ServiceManager;
 import android.os.SystemProperties;
 import android.util.Log;
-import com.android.systemui.plugins.R;
-import miui.app.Activity;
-import miui.app.AlertDialog;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.CheckBox;
+import com.android.internal.app.AlertActivity;
+import com.android.internal.app.AlertController;
+import com.android.systemui.C0018R$string;
+import com.android.systemui.broadcast.BroadcastDispatcher;
 
-public class UsbDebuggingActivity extends Activity {
-    /* access modifiers changed from: private */
-    public AlertDialog mCheckBoxDialog;
+public class UsbDebuggingActivity extends AlertActivity implements DialogInterface.OnClickListener {
+    private CheckBox mAlwaysAllow;
+    private final BroadcastDispatcher mBroadcastDispatcher;
     private UsbDisconnectedReceiver mDisconnectedReceiver;
-    /* access modifiers changed from: private */
-    public String mKey;
-    private DialogInterface.OnClickListener onClickListener;
-    private DialogInterface.OnDismissListener onDismissListener;
+    private String mKey;
+    private boolean mServiceNotified;
 
+    public UsbDebuggingActivity(BroadcastDispatcher broadcastDispatcher) {
+        this.mBroadcastDispatcher = broadcastDispatcher;
+    }
+
+    /* JADX WARNING: type inference failed for: r5v0, types: [android.content.DialogInterface$OnClickListener, com.android.internal.app.AlertActivity, com.android.systemui.usb.UsbDebuggingActivity, android.app.Activity] */
     public void onCreate(Bundle bundle) {
-        super.onCreate(bundle);
-        if (getActionBar() != null) {
-            getActionBar().hide();
-        }
-        getWindow().getDecorView().setAlpha(0.0f);
+        Window window = getWindow();
+        window.addSystemFlags(524288);
+        window.setType(2008);
+        UsbDebuggingActivity.super.onCreate(bundle);
         if (SystemProperties.getInt("service.adb.tcp.port", 0) == 0) {
             this.mDisconnectedReceiver = new UsbDisconnectedReceiver(this);
         }
@@ -38,68 +50,91 @@ public class UsbDebuggingActivity extends Activity {
             finish();
             return;
         }
-        this.onClickListener = new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialogInterface, int i) {
-                boolean z = true;
-                boolean z2 = i == -1;
-                if (!z2 || !UsbDebuggingActivity.this.mCheckBoxDialog.isChecked()) {
-                    z = false;
-                }
-                if (z2) {
-                    try {
-                        UsbDebuggingHelper.allowDebugging(z, UsbDebuggingActivity.this.mKey);
-                    } catch (Exception e) {
-                        Log.e("UsbDebuggingActivity", "Unable to notify Usb service", e);
-                    }
-                } else {
-                    UsbDebuggingHelper.denyDebugging();
-                }
-                UsbDebuggingActivity.this.finish();
-            }
-        };
-        this.onDismissListener = new DialogInterface.OnDismissListener() {
-            public void onDismiss(DialogInterface dialogInterface) {
-                UsbDebuggingActivity.this.finish();
-            }
-        };
-        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Theme_Dialog_Alert);
-        builder.setTitle(getString(R.string.usb_debugging_title));
-        builder.setMessage((CharSequence) getString(R.string.usb_debugging_message, new Object[]{stringExtra}));
-        builder.setCheckBox(true, getString(R.string.usb_debugging_always));
-        builder.setCancelable(true);
-        builder.setPositiveButton((CharSequence) getString(17039370), this.onClickListener);
-        builder.setNegativeButton((CharSequence) getString(17039360), this.onClickListener);
-        builder.setOnDismissListener(this.onDismissListener);
-        AlertDialog create = builder.create();
-        this.mCheckBoxDialog = create;
-        create.show();
+        AlertController.AlertParams alertParams = this.mAlertParams;
+        alertParams.mTitle = getString(C0018R$string.usb_debugging_title);
+        alertParams.mMessage = getString(C0018R$string.usb_debugging_message, new Object[]{stringExtra});
+        alertParams.mPositiveButtonText = getString(C0018R$string.usb_debugging_allow);
+        alertParams.mNegativeButtonText = getString(17039360);
+        alertParams.mPositiveButtonListener = this;
+        alertParams.mNegativeButtonListener = this;
+        View inflate = LayoutInflater.from(alertParams.mContext).inflate(17367092, (ViewGroup) null);
+        CheckBox checkBox = (CheckBox) inflate.findViewById(16908753);
+        this.mAlwaysAllow = checkBox;
+        checkBox.setText(getString(C0018R$string.usb_debugging_always));
+        alertParams.mView = inflate;
+        window.setCloseOnTouchOutside(false);
+        setupAlert();
+    }
+
+    public void onWindowAttributesChanged(WindowManager.LayoutParams layoutParams) {
+        UsbDebuggingActivity.super.onWindowAttributesChanged(layoutParams);
     }
 
     private class UsbDisconnectedReceiver extends BroadcastReceiver {
         private final Activity mActivity;
 
-        public UsbDisconnectedReceiver(Activity activity) {
+        UsbDisconnectedReceiver(Activity activity) {
             this.mActivity = activity;
         }
 
         public void onReceive(Context context, Intent intent) {
             if ("android.hardware.usb.action.USB_STATE".equals(intent.getAction()) && !intent.getBooleanExtra("connected", false)) {
+                UsbDebuggingActivity.this.notifyService(false);
                 this.mActivity.finish();
             }
         }
     }
 
     public void onStart() {
-        super.onStart();
-        registerReceiver(this.mDisconnectedReceiver, new IntentFilter("android.hardware.usb.action.USB_STATE"));
+        UsbDebuggingActivity.super.onStart();
+        if (this.mDisconnectedReceiver != null) {
+            this.mBroadcastDispatcher.registerReceiver(this.mDisconnectedReceiver, new IntentFilter("android.hardware.usb.action.USB_STATE"));
+        }
     }
 
     /* access modifiers changed from: protected */
     public void onStop() {
         UsbDisconnectedReceiver usbDisconnectedReceiver = this.mDisconnectedReceiver;
         if (usbDisconnectedReceiver != null) {
-            unregisterReceiver(usbDisconnectedReceiver);
+            this.mBroadcastDispatcher.unregisterReceiver(usbDisconnectedReceiver);
         }
-        super.onStop();
+        UsbDebuggingActivity.super.onStop();
+    }
+
+    /* access modifiers changed from: protected */
+    public void onDestroy() {
+        if (!this.mServiceNotified) {
+            notifyService(false);
+        }
+        UsbDebuggingActivity.super.onDestroy();
+    }
+
+    public void onClick(DialogInterface dialogInterface, int i) {
+        boolean z = true;
+        boolean z2 = i == -1;
+        if (!z2 || !this.mAlwaysAllow.isChecked()) {
+            z = false;
+        }
+        notifyService(z2, z);
+        finish();
+    }
+
+    /* access modifiers changed from: private */
+    public void notifyService(boolean z) {
+        notifyService(z, false);
+    }
+
+    private void notifyService(boolean z, boolean z2) {
+        try {
+            IAdbManager asInterface = IAdbManager.Stub.asInterface(ServiceManager.getService("adb"));
+            if (z) {
+                asInterface.allowDebugging(z2, this.mKey);
+            } else {
+                asInterface.denyDebugging();
+            }
+            this.mServiceNotified = true;
+        } catch (Exception e) {
+            Log.e("UsbDebuggingActivity", "Unable to notify Usb service", e);
+        }
     }
 }

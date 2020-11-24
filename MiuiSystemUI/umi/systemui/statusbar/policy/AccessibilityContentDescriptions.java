@@ -1,10 +1,15 @@
 package com.android.systemui.statusbar.policy;
 
-import com.android.systemui.plugins.R;
+import com.android.systemui.C0018R$string;
 
 public class AccessibilityContentDescriptions {
-    static final int[] ETHERNET_CONNECTION_VALUES = {R.string.accessibility_ethernet_disconnected, R.string.accessibility_ethernet_connected};
-    static final int[] PHONE_SIGNAL_STRENGTH = {R.string.accessibility_no_phone, R.string.accessibility_phone_one_bar, R.string.accessibility_phone_two_bars, R.string.accessibility_phone_three_bars, R.string.accessibility_phone_signal_full};
-    public static final int[] SLAVE_WIFI_CONNECTION_STRENGTH = {R.string.accessibility_status_bar_no_slave_wifi, R.string.accessibility_status_bar_slave_wifi_one_bar, R.string.accessibility_status_bar_slave_wifi_two_bars, R.string.accessibility_status_bar_slave_wifi_three_bars, R.string.accessibility_status_bar_slave_wifi_four_bars};
-    static final int[] WIFI_CONNECTION_STRENGTH = {R.string.accessibility_no_wifi, R.string.accessibility_wifi_one_bar, R.string.accessibility_wifi_two_bars, R.string.accessibility_wifi_three_bars, R.string.accessibility_wifi_signal_full};
+    static final int[] ETHERNET_CONNECTION_VALUES = {C0018R$string.accessibility_ethernet_disconnected, C0018R$string.accessibility_ethernet_connected};
+    static final int[] PHONE_SIGNAL_STRENGTH;
+    static final int[] WIFI_CONNECTION_STRENGTH = {C0018R$string.accessibility_no_wifi, C0018R$string.accessibility_wifi_one_bar, C0018R$string.accessibility_wifi_two_bars, C0018R$string.accessibility_wifi_three_bars, C0018R$string.accessibility_wifi_signal_full};
+    static final int WIFI_NO_CONNECTION = C0018R$string.accessibility_no_wifi;
+
+    static {
+        int i = C0018R$string.accessibility_phone_signal_full;
+        PHONE_SIGNAL_STRENGTH = new int[]{C0018R$string.accessibility_no_phone, C0018R$string.accessibility_phone_one_bar, C0018R$string.accessibility_phone_two_bars, C0018R$string.accessibility_phone_three_bars, i, i};
+    }
 }

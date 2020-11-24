@@ -1,42 +1,33 @@
 package com.android.systemui.statusbar;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.ValueAnimator;
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
-import android.graphics.Rect;
+import android.graphics.PorterDuffColorFilter;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.animation.Interpolator;
-import com.android.systemui.R$styleable;
-import com.android.systemui.plugins.R;
+import androidx.core.graphics.ColorUtils;
+import com.android.internal.annotations.VisibleForTesting;
+import com.android.internal.colorextraction.ColorExtractor;
+import com.android.internal.colorextraction.drawable.ScrimDrawable;
 
 public class ScrimView extends View {
-    /* access modifiers changed from: private */
-    public ValueAnimator mAlphaAnimator;
-    private ValueAnimator.AnimatorUpdateListener mAlphaUpdateListener;
     private Runnable mChangeRunnable;
-    private AnimatorListenerAdapter mClearAnimatorListener;
-    private boolean mDrawAsSrc;
-    private Rect mExcludedRect;
-    private boolean mHasExcludedArea;
-    private boolean mIsEmpty;
-    private final Paint mPaint;
-    private int mScrimColor;
-    /* access modifiers changed from: private */
-    public float mViewAlpha;
+    private PorterDuffColorFilter mColorFilter;
+    private final ColorExtractor.GradientColors mColors;
+    private Drawable mDrawable;
+    private int mTintColor;
+    private float mViewAlpha;
 
-    public boolean hasOverlappingRendering() {
+    /* access modifiers changed from: protected */
+    public boolean canReceivePointerEvents() {
         return false;
     }
 
-    public void setExcludedArea(Rect rect) {
+    public boolean hasOverlappingRendering() {
+        return false;
     }
 
     public ScrimView(Context context) {
@@ -53,83 +44,106 @@ public class ScrimView extends View {
 
     public ScrimView(Context context, AttributeSet attributeSet, int i, int i2) {
         super(context, attributeSet, i, i2);
-        this.mPaint = new Paint();
-        this.mIsEmpty = true;
         this.mViewAlpha = 1.0f;
-        this.mExcludedRect = new Rect();
-        this.mAlphaUpdateListener = new ValueAnimator.AnimatorUpdateListener() {
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                float unused = ScrimView.this.mViewAlpha = ((Float) valueAnimator.getAnimatedValue()).floatValue();
-                ScrimView.this.invalidate();
-            }
-        };
-        this.mClearAnimatorListener = new AnimatorListenerAdapter() {
-            public void onAnimationEnd(Animator animator) {
-                ValueAnimator unused = ScrimView.this.mAlphaAnimator = null;
-            }
-        };
-        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, R$styleable.ScrimView);
-        try {
-            this.mScrimColor = obtainStyledAttributes.getColor(0, -16777216);
-        } finally {
-            obtainStyledAttributes.recycle();
-        }
+        ScrimDrawable scrimDrawable = new ScrimDrawable();
+        this.mDrawable = scrimDrawable;
+        scrimDrawable.setCallback(this);
+        this.mColors = new ColorExtractor.GradientColors();
+        updateColorWithTint(false);
     }
 
     /* access modifiers changed from: protected */
     public void onDraw(Canvas canvas) {
-        if (this.mDrawAsSrc || (!this.mIsEmpty && this.mViewAlpha > 0.0f)) {
-            PorterDuff.Mode mode = this.mDrawAsSrc ? PorterDuff.Mode.SRC : PorterDuff.Mode.SRC_OVER;
-            int scrimColorWithAlpha = getScrimColorWithAlpha();
-            if (!this.mHasExcludedArea) {
-                canvas.drawColor(scrimColorWithAlpha, mode);
-                return;
-            }
-            this.mPaint.setColor(scrimColorWithAlpha);
-            if (this.mExcludedRect.top > 0) {
-                canvas.drawRect(0.0f, 0.0f, (float) getWidth(), (float) this.mExcludedRect.top, this.mPaint);
-            }
-            Rect rect = this.mExcludedRect;
-            int i = rect.left;
-            if (i > 0) {
-                canvas.drawRect(0.0f, (float) rect.top, (float) i, (float) rect.bottom, this.mPaint);
-            }
-            if (this.mExcludedRect.right < getWidth()) {
-                Rect rect2 = this.mExcludedRect;
-                canvas.drawRect((float) rect2.right, (float) rect2.top, (float) getWidth(), (float) this.mExcludedRect.bottom, this.mPaint);
-            }
-            if (this.mExcludedRect.bottom < getHeight()) {
-                canvas.drawRect(0.0f, (float) this.mExcludedRect.bottom, (float) getWidth(), (float) getHeight(), this.mPaint);
-            }
+        if (this.mDrawable.getAlpha() > 0) {
+            this.mDrawable.draw(canvas);
         }
     }
 
-    public int getScrimColorWithAlpha() {
-        if (getId() != R.id.scrim_in_front) {
-            return 0;
-        }
-        int i = this.mScrimColor;
-        return Color.argb((int) (((float) Color.alpha(i)) * this.mViewAlpha), Color.red(i), Color.green(i), Color.blue(i));
-    }
-
-    public void setDrawAsSrc(boolean z) {
-        PorterDuff.Mode mode;
-        this.mDrawAsSrc = z;
-        Paint paint = this.mPaint;
-        if (this.mDrawAsSrc) {
-            mode = PorterDuff.Mode.SRC;
-        } else {
-            mode = PorterDuff.Mode.SRC_OVER;
-        }
-        paint.setXfermode(new PorterDuffXfermode(mode));
-        invalidate();
-    }
-
-    public void setScrimColor(int i) {
-        if (getId() == R.id.scrim_in_front && i != this.mScrimColor) {
-            this.mIsEmpty = Color.alpha(i) == 0;
-            this.mScrimColor = i;
+    public void invalidateDrawable(Drawable drawable) {
+        super.invalidateDrawable(drawable);
+        if (drawable == this.mDrawable) {
             invalidate();
+        }
+    }
+
+    /* access modifiers changed from: protected */
+    public void onLayout(boolean z, int i, int i2, int i3, int i4) {
+        super.onLayout(z, i, i2, i3, i4);
+        if (z) {
+            this.mDrawable.setBounds(i, i2, i3, i4);
+            invalidate();
+        }
+    }
+
+    public void setColors(ColorExtractor.GradientColors gradientColors, boolean z) {
+        if (gradientColors == null) {
+            throw new IllegalArgumentException("Colors cannot be null");
+        } else if (!this.mColors.equals(gradientColors)) {
+            this.mColors.set(gradientColors);
+            updateColorWithTint(z);
+        }
+    }
+
+    /* access modifiers changed from: package-private */
+    @VisibleForTesting
+    public Drawable getDrawable() {
+        return this.mDrawable;
+    }
+
+    public ColorExtractor.GradientColors getColors() {
+        return this.mColors;
+    }
+
+    public void setTint(int i) {
+        setTint(i, false);
+    }
+
+    public void setTint(int i, boolean z) {
+        if (this.mTintColor != i) {
+            this.mTintColor = i;
+            updateColorWithTint(z);
+        }
+    }
+
+    private void updateColorWithTint(boolean z) {
+        PorterDuff.Mode mode;
+        ScrimDrawable scrimDrawable = this.mDrawable;
+        if (scrimDrawable instanceof ScrimDrawable) {
+            scrimDrawable.setColor(ColorUtils.blendARGB(this.mColors.getMainColor(), this.mTintColor, ((float) Color.alpha(this.mTintColor)) / 255.0f), z);
+        } else {
+            if (Color.alpha(this.mTintColor) != 0) {
+                PorterDuffColorFilter porterDuffColorFilter = this.mColorFilter;
+                if (porterDuffColorFilter == null) {
+                    mode = PorterDuff.Mode.SRC_OVER;
+                } else {
+                    mode = porterDuffColorFilter.getMode();
+                }
+                PorterDuffColorFilter porterDuffColorFilter2 = this.mColorFilter;
+                if (porterDuffColorFilter2 == null || porterDuffColorFilter2.getColor() != this.mTintColor) {
+                    this.mColorFilter = new PorterDuffColorFilter(this.mTintColor, mode);
+                }
+            } else {
+                this.mColorFilter = null;
+            }
+            this.mDrawable.setColorFilter(this.mColorFilter);
+            this.mDrawable.invalidateSelf();
+        }
+        Runnable runnable = this.mChangeRunnable;
+        if (runnable != null) {
+            runnable.run();
+        }
+    }
+
+    public int getTint() {
+        return this.mTintColor;
+    }
+
+    public void setViewAlpha(float f) {
+        if (Float.isNaN(f)) {
+            throw new IllegalArgumentException("alpha cannot be NaN: " + f);
+        } else if (f != this.mViewAlpha) {
+            this.mViewAlpha = f;
+            this.mDrawable.setAlpha((int) (f * 255.0f));
             Runnable runnable = this.mChangeRunnable;
             if (runnable != null) {
                 runnable.run();
@@ -137,22 +151,8 @@ public class ScrimView extends View {
         }
     }
 
-    public int getScrimColor() {
-        return this.mScrimColor;
-    }
-
-    public void animateViewAlpha(float f, long j, Interpolator interpolator) {
-        ValueAnimator valueAnimator = this.mAlphaAnimator;
-        if (valueAnimator != null) {
-            valueAnimator.cancel();
-        }
-        ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{this.mViewAlpha, f});
-        this.mAlphaAnimator = ofFloat;
-        ofFloat.addUpdateListener(this.mAlphaUpdateListener);
-        this.mAlphaAnimator.addListener(this.mClearAnimatorListener);
-        this.mAlphaAnimator.setInterpolator(interpolator);
-        this.mAlphaAnimator.setDuration(j);
-        this.mAlphaAnimator.start();
+    public float getViewAlpha() {
+        return this.mViewAlpha;
     }
 
     public void setChangeRunnable(Runnable runnable) {

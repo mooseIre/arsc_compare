@@ -1,35 +1,39 @@
 package com.android.systemui.statusbar.policy;
 
 import android.content.Context;
-import com.android.systemui.plugins.R;
-import com.android.systemui.statusbar.policy.FiveGController;
-import com.android.systemui.statusbar.policy.FiveGServiceClient;
-import com.miui.systemui.annotation.Inject;
-import java.io.PrintWriter;
+import com.android.systemui.C0010R$drawable;
+import com.android.systemui.statusbar.policy.MiuiFiveGServiceClient;
+import com.android.systemui.statusbar.policy.MobileSignalController;
 import java.util.ArrayList;
 
-public class FiveGControllerImpl implements FiveGController {
+public class FiveGControllerImpl {
     private final Context mContext;
-    private FiveGServiceClient mFiveGServiceClient;
+    private MiuiFiveGServiceClient mFiveGServiceClient;
     /* access modifiers changed from: private */
-    public FiveGServiceClient.FiveGServiceState[] mFiveGServiceStates;
+    public MiuiFiveGServiceClient.FiveGServiceState[] mFiveGServiceStates;
     /* access modifiers changed from: private */
-    public ArrayList<FiveGController.FiveGStateChangeCallback> mFiveGStateChangeCallbacks = new ArrayList<>();
+    public ArrayList<FiveGStateChangeCallback> mFiveGStateChangeCallbacks = new ArrayList<>();
     private FiveGStateListener[] mFiveGStateListeners;
+
+    interface FiveGStateChangeCallback {
+        int getSlot();
+
+        void onSignalStrengthChanged(int i, MobileSignalController.MobileIconGroup mobileIconGroup);
+    }
 
     public boolean isDataRegisteredOnLte(int i) {
         return i == 13 || i == 19;
     }
 
-    public FiveGControllerImpl(@Inject Context context) {
+    public FiveGControllerImpl(Context context) {
         this.mContext = context;
-        this.mFiveGServiceClient = new FiveGServiceClient(this.mContext);
-        this.mFiveGServiceStates = new FiveGServiceClient.FiveGServiceState[2];
+        this.mFiveGServiceClient = new MiuiFiveGServiceClient(this.mContext);
+        this.mFiveGServiceStates = new MiuiFiveGServiceClient.FiveGServiceState[2];
         this.mFiveGStateListeners = new FiveGStateListener[2];
         for (int i = 0; i < 2; i++) {
             this.mFiveGStateListeners[i] = new FiveGStateListener();
             this.mFiveGStateListeners[i].mSlot = i;
-            this.mFiveGServiceStates[i] = new FiveGServiceClient.FiveGServiceState();
+            this.mFiveGServiceStates[i] = new MiuiFiveGServiceClient.FiveGServiceState();
             registerFiveGStateListener(i);
         }
     }
@@ -38,14 +42,14 @@ public class FiveGControllerImpl implements FiveGController {
         this.mFiveGServiceClient.registerListener(i, this.mFiveGStateListeners[i]);
     }
 
-    public void addCallback(FiveGController.FiveGStateChangeCallback fiveGStateChangeCallback) {
+    public void addCallback(FiveGStateChangeCallback fiveGStateChangeCallback) {
         synchronized (this.mFiveGStateChangeCallbacks) {
             this.mFiveGStateChangeCallbacks.add(fiveGStateChangeCallback);
         }
         fiveGStateChangeCallback.onSignalStrengthChanged(this.mFiveGServiceStates[fiveGStateChangeCallback.getSlot()].getSignalLevel(), this.mFiveGServiceStates[fiveGStateChangeCallback.getSlot()].getIconGroup());
     }
 
-    public void removeCallback(FiveGController.FiveGStateChangeCallback fiveGStateChangeCallback) {
+    public void removeCallback(FiveGStateChangeCallback fiveGStateChangeCallback) {
         synchronized (this.mFiveGStateChangeCallbacks) {
             this.mFiveGStateChangeCallbacks.remove(fiveGStateChangeCallback);
         }
@@ -65,30 +69,26 @@ public class FiveGControllerImpl implements FiveGController {
 
     public int getFiveGDrawable(int i) {
         if (this.mFiveGServiceStates[i].getIconGroup() == TelephonyIcons.FIVE_G_KR_ON) {
-            return R.drawable.signal_5g_on;
+            return C0010R$drawable.signal_5g_on;
         }
         if (this.mFiveGServiceStates[i].getIconGroup() == TelephonyIcons.FIVE_G_KR_OFF) {
-            return R.drawable.signal_5g_off;
+            return C0010R$drawable.signal_5g_off;
         }
         return 0;
     }
 
-    public void dump(PrintWriter printWriter) {
-        this.mFiveGServiceClient.dump(printWriter);
-    }
-
-    class FiveGStateListener implements FiveGServiceClient.IFiveGStateListener {
+    class FiveGStateListener implements MiuiFiveGServiceClient.IFiveGStateListener {
         int mSlot;
 
         FiveGStateListener() {
         }
 
-        public void onStateChanged(FiveGServiceClient.FiveGServiceState fiveGServiceState) {
+        public void onStateChanged(MiuiFiveGServiceClient.FiveGServiceState fiveGServiceState) {
             if (fiveGServiceState != null) {
                 FiveGControllerImpl.this.mFiveGServiceStates[this.mSlot] = fiveGServiceState;
                 int size = FiveGControllerImpl.this.mFiveGStateChangeCallbacks.size();
                 for (int i = 0; i < size; i++) {
-                    FiveGController.FiveGStateChangeCallback fiveGStateChangeCallback = (FiveGController.FiveGStateChangeCallback) FiveGControllerImpl.this.mFiveGStateChangeCallbacks.get(i);
+                    FiveGStateChangeCallback fiveGStateChangeCallback = (FiveGStateChangeCallback) FiveGControllerImpl.this.mFiveGStateChangeCallbacks.get(i);
                     if (fiveGStateChangeCallback != null && this.mSlot == fiveGStateChangeCallback.getSlot()) {
                         fiveGStateChangeCallback.onSignalStrengthChanged(fiveGServiceState.getSignalLevel(), fiveGServiceState.getIconGroup());
                     }

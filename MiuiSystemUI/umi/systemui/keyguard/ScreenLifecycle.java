@@ -9,17 +9,21 @@ public class ScreenLifecycle extends Lifecycle<Observer> implements Dumpable {
     private int mScreenState = 0;
 
     public interface Observer {
-        void onScreenTurnedOff();
+        void onScreenTurnedOff() {
+        }
 
-        void onScreenTurnedOn();
+        void onScreenTurnedOn() {
+        }
 
-        void onScreenTurningOff();
+        void onScreenTurningOff() {
+        }
 
-        void onScreenTurningOn();
+        void onScreenTurningOn() {
+        }
     }
 
-    public boolean isScreenOn() {
-        return this.mScreenState == 2;
+    public int getScreenState() {
+        return this.mScreenState;
     }
 
     public void dispatchScreenTurningOn() {

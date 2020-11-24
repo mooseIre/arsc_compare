@@ -1,5 +1,6 @@
 package com.android.systemui.assist.ui;
 
+import android.content.Context;
 import android.graphics.Path;
 import com.android.systemui.assist.ui.CornerPathRenderer;
 
@@ -10,11 +11,11 @@ public final class CircularCornerPathRenderer extends CornerPathRenderer {
     private final Path mPath = new Path();
     private final int mWidth;
 
-    public CircularCornerPathRenderer(int i, int i2, int i3, int i4) {
-        this.mCornerRadiusBottom = i;
-        this.mCornerRadiusTop = i2;
-        this.mHeight = i4;
-        this.mWidth = i3;
+    public CircularCornerPathRenderer(Context context) {
+        this.mCornerRadiusBottom = DisplayUtils.getCornerRadiusBottom(context);
+        this.mCornerRadiusTop = DisplayUtils.getCornerRadiusTop(context);
+        this.mHeight = DisplayUtils.getHeight(context);
+        this.mWidth = DisplayUtils.getWidth(context);
     }
 
     /* renamed from: com.android.systemui.assist.ui.CircularCornerPathRenderer$1  reason: invalid class name */

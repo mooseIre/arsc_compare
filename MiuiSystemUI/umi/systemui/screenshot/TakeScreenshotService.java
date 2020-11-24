@@ -10,6 +10,8 @@ import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.UserHandle;
+import android.os.UserManager;
+import com.android.internal.logging.UiEventLogger;
 import miui.util.Log;
 
 public class TakeScreenshotService extends Service {
@@ -30,6 +32,9 @@ public class TakeScreenshotService extends Service {
 
     public IBinder onBind(Intent intent) {
         return new Messenger(this.mProxyHandler).getBinder();
+    }
+
+    public TakeScreenshotService(GlobalScreenshot globalScreenshot, UserManager userManager, UiEventLogger uiEventLogger) {
     }
 
     public void onCreate() {

@@ -5,7 +5,8 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import com.android.systemui.plugins.R;
+import com.android.systemui.C0009R$dimen;
+import com.android.systemui.C0010R$drawable;
 
 public class DismissCircleView extends FrameLayout {
     private final ImageView mIconView = new ImageView(getContext());
@@ -13,8 +14,8 @@ public class DismissCircleView extends FrameLayout {
     public DismissCircleView(Context context) {
         super(context);
         Resources resources = getResources();
-        setBackground(resources.getDrawable(R.drawable.dismiss_circle_background));
-        this.mIconView.setImageDrawable(resources.getDrawable(R.drawable.dismiss_target_x));
+        setBackground(resources.getDrawable(C0010R$drawable.dismiss_circle_background));
+        this.mIconView.setImageDrawable(resources.getDrawable(C0010R$drawable.ic_close_white));
         addView(this.mIconView);
         setViewSizes();
     }
@@ -26,7 +27,7 @@ public class DismissCircleView extends FrameLayout {
     }
 
     private void setViewSizes() {
-        int dimensionPixelSize = getResources().getDimensionPixelSize(R.dimen.dismiss_target_x_size);
+        int dimensionPixelSize = getResources().getDimensionPixelSize(C0009R$dimen.dismiss_target_x_size);
         this.mIconView.setLayoutParams(new FrameLayout.LayoutParams(dimensionPixelSize, dimensionPixelSize, 17));
     }
 }
