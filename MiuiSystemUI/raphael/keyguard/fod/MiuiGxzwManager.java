@@ -881,4 +881,92 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
             printWriter.println("mKeyguardAuthen=" + getKeyguardAuthen());
         }
     }
+
+    /* JADX WARNING: Code restructure failed: missing block: B:22:0x006f, code lost:
+        if (r0 != 3) goto L_0x007b;
+     */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public android.graphics.Bitmap getGxzwAnimBitmap() {
+        /*
+            r10 = this;
+            android.content.Context r0 = r10.mContext
+            android.content.ContentResolver r0 = r0.getContentResolver()
+            int r1 = com.android.keyguard.fod.MiuiGxzwAnimManager.getDefaultAnimType()
+            r2 = 0
+            java.lang.String r3 = "fod_animation_type"
+            int r0 = android.provider.Settings.System.getIntForUser(r0, r3, r1, r2)
+            java.lang.StringBuilder r1 = new java.lang.StringBuilder
+            r1.<init>()
+            java.lang.String r3 = "getGxzwAnimBitmap type="
+            r1.append(r3)
+            r1.append(r0)
+            java.lang.String r1 = r1.toString()
+            java.lang.String r3 = "MiuiGxzwManager"
+            android.util.Log.d(r3, r1)
+            boolean r1 = com.android.keyguard.fod.MiuiGxzwAnimManager.SUPPORT_AURORA
+            r3 = 2131231960(0x7f0804d8, float:1.8080016E38)
+            r4 = 2131231718(0x7f0803e6, float:1.8079525E38)
+            r5 = 2131231941(0x7f0804c5, float:1.8079977E38)
+            r6 = 5
+            r7 = 3
+            r8 = 1
+            if (r1 == 0) goto L_0x0044
+            if (r0 == 0) goto L_0x007a
+            if (r0 == r8) goto L_0x0078
+            if (r0 == r7) goto L_0x0072
+            if (r0 == r6) goto L_0x0040
+            goto L_0x007b
+        L_0x0040:
+            r2 = 2131231744(0x7f080400, float:1.8079578E38)
+            goto L_0x007b
+        L_0x0044:
+            java.lang.String r1 = android.os.Build.DEVICE
+            java.lang.String r9 = "cas"
+            boolean r1 = r1.equals(r9)
+            if (r1 == 0) goto L_0x0068
+            if (r0 == 0) goto L_0x0063
+            if (r0 == r8) goto L_0x005f
+            if (r0 == r7) goto L_0x005b
+            if (r0 == r6) goto L_0x0057
+            goto L_0x007b
+        L_0x0057:
+            r0 = 2131231743(0x7f0803ff, float:1.8079576E38)
+            goto L_0x0066
+        L_0x005b:
+            r0 = 2131231953(0x7f0804d1, float:1.8080002E38)
+            goto L_0x0066
+        L_0x005f:
+            r0 = 2131231765(0x7f080415, float:1.807962E38)
+            goto L_0x0066
+        L_0x0063:
+            r0 = 2131232036(0x7f080524, float:1.808017E38)
+        L_0x0066:
+            r2 = r0
+            goto L_0x007b
+        L_0x0068:
+            if (r0 == 0) goto L_0x007a
+            if (r0 == r8) goto L_0x0078
+            r1 = 2
+            if (r0 == r1) goto L_0x0074
+            if (r0 == r7) goto L_0x0072
+            goto L_0x007b
+        L_0x0072:
+            r2 = r3
+            goto L_0x007b
+        L_0x0074:
+            r2 = 2131232022(0x7f080516, float:1.8080142E38)
+            goto L_0x007b
+        L_0x0078:
+            r2 = r4
+            goto L_0x007b
+        L_0x007a:
+            r2 = r5
+        L_0x007b:
+            android.content.Context r10 = r10.mContext
+            android.content.res.Resources r10 = r10.getResources()
+            android.graphics.Bitmap r10 = android.graphics.BitmapFactory.decodeResource(r10, r2)
+            return r10
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.keyguard.fod.MiuiGxzwManager.getGxzwAnimBitmap():android.graphics.Bitmap");
+    }
 }

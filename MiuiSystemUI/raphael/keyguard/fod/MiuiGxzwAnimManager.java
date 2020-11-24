@@ -13,17 +13,19 @@ import java.util.Map;
 import java.util.Set;
 
 class MiuiGxzwAnimManager {
+    public static final boolean SUPPORT_AURORA = (Build.DEVICE.equals("tucana") || Build.DEVICE.equals("cmi") || Build.DEVICE.equals("umi") || Build.DEVICE.startsWith("lmi") || Build.DEVICE.startsWith("lmiin"));
+    private static boolean mSupportAurora = false;
     private final Map<Integer, MiuiGxzwAnimItem> mAnimItemMap;
     private boolean mBouncer;
     private ContentObserver mContentObserver = new ContentObserver(new Handler()) {
         public void onChange(boolean z) {
-            int access$000 = MiuiGxzwAnimManager.this.getDefaultAnimType();
-            Set access$100 = MiuiGxzwAnimManager.this.getLegalAnimTypeSet();
-            int intForUser = Settings.System.getIntForUser(MiuiGxzwAnimManager.this.mContext.getContentResolver(), "fod_animation_type", access$000, 0);
-            if (access$100.contains(Integer.valueOf(intForUser))) {
-                access$000 = intForUser;
+            int defaultAnimType = MiuiGxzwAnimManager.getDefaultAnimType();
+            Set access$000 = MiuiGxzwAnimManager.this.getLegalAnimTypeSet();
+            int intForUser = Settings.System.getIntForUser(MiuiGxzwAnimManager.this.mContext.getContentResolver(), "fod_animation_type", defaultAnimType, 0);
+            if (access$000.contains(Integer.valueOf(intForUser))) {
+                defaultAnimType = intForUser;
             }
-            int unused = MiuiGxzwAnimManager.this.mGxzwAnimType = access$000;
+            int unused = MiuiGxzwAnimManager.this.mGxzwAnimType = defaultAnimType;
         }
     };
     /* access modifiers changed from: private */
@@ -35,14 +37,13 @@ class MiuiGxzwAnimManager {
     private boolean mLightIcon = false;
     private boolean mLightWallpaperGxzw;
     private MiuiGxzwFrameAnimation mMiuiGxzwFrameAnimation;
-    private final boolean mSupportAurora;
     private int mTranslateX;
     private int mTranslateY;
 
     public MiuiGxzwAnimManager(Context context, MiuiGxzwFrameAnimation miuiGxzwFrameAnimation) {
         this.mContext = context;
         this.mMiuiGxzwFrameAnimation = miuiGxzwFrameAnimation;
-        this.mSupportAurora = MiuiGxzwAinmItemAurora.supportAuroraAnim(context);
+        mSupportAurora = MiuiGxzwAinmItemAurora.supportAuroraAnim(context);
         this.mAnimItemMap = new HashMap();
         initAnimItemMap();
         this.mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor("fod_animation_type"), false, this.mContentObserver, 0);
@@ -287,15 +288,14 @@ class MiuiGxzwAnimManager {
         return this.mAnimItemMap.keySet();
     }
 
-    /* access modifiers changed from: private */
-    public int getDefaultAnimType() {
+    public static int getDefaultAnimType() {
         if (MiuiGxzwUtils.isLargeFod()) {
             return 4;
         }
         if (MiuiGxzwUtils.isSpecialCepheus()) {
             return 3;
         }
-        if (this.mSupportAurora) {
+        if (mSupportAurora) {
             return 5;
         }
         return Build.DEVICE.equals("cas") ? 1 : 0;
@@ -304,7 +304,7 @@ class MiuiGxzwAnimManager {
     private void initAnimItemMap() {
         if (MiuiGxzwUtils.isLargeFod()) {
             this.mAnimItemMap.put(4, new MiuiGxzwAnimItemCircle());
-        } else if (this.mSupportAurora) {
+        } else if (mSupportAurora) {
             this.mAnimItemMap.put(5, new MiuiGxzwAinmItemAurora());
             this.mAnimItemMap.put(0, new MiuiGxzwAnimItemStar());
             this.mAnimItemMap.put(1, new MiuiGxzwAnimItemLight());

@@ -11,6 +11,7 @@ import android.os.Looper;
 import android.os.UserHandle;
 import android.provider.Settings;
 import android.text.TextUtils;
+import com.android.keyguard.fod.MiuiGxzwManager;
 import com.android.keyguard.magazine.LockScreenMagazineUtils;
 import com.android.keyguard.negative.MiuiKeyguardMoveLeftControlCenterView;
 import com.android.keyguard.utils.ContentProviderUtils;
@@ -166,6 +167,8 @@ public class WallpaperProvider extends ContentProvider {
                 } catch (Exception e9) {
                     Log.e("WallpaperProvider", "call METHOD_SET_KEYGUARD_CLOCK_POSITION" + e9.getMessage());
                 }
+            } else if ("getGxzwAnimStyle".equals(str)) {
+                bundle2.putParcelable("thumbnail", MiuiGxzwManager.getInstance().getGxzwAnimBitmap());
             }
         }
         return bundle2;

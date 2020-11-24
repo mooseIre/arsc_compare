@@ -11,6 +11,7 @@ import android.os.SystemProperties;
 import android.os.Vibrator;
 import android.provider.MiuiSettings;
 import android.provider.Settings;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 import android.view.DisplayCutout;
@@ -18,23 +19,33 @@ import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.MiuiKeyguardUtils;
 import com.android.keyguard.utils.ReflectUtil;
 import com.android.systemui.plugins.R;
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.HashSet;
 import miui.os.Build;
 
 class MiuiGxzwUtils {
     private static int DENSITY_DPI = -1;
-    public static int GXZW_ANIM_HEIGHT = 1008;
-    public static int GXZW_ANIM_WIDTH = 1008;
+    public static int GXZW_ANIM_HEIGHT = 1028;
+    public static int GXZW_ANIM_WIDTH = 1028;
+    private static final float GXZW_ANIM_WIDTH_PRCENT = getPrcent(GXZW_ANIM_WIDTH, 1080);
+    public static float GXZW_HEIGHT_PRCENT = -1.0f;
     public static int GXZW_ICON_HEIGHT = 173;
     public static int GXZW_ICON_WIDTH = 173;
     public static int GXZW_ICON_X = 453;
     public static int GXZW_ICON_Y = 1640;
     private static final boolean GXZW_LOWLIGHT_SENSOR = (SystemProperties.getInt("persist.vendor.sys.fp.expolevel", 0) == 136);
+    public static float GXZW_WIDTH_PRCENT = -1.0f;
+    private static float GXZW_X_PRCENT = -1.0f;
+    private static float GXZW_Y_PRCENT = -1.0f;
     private static final boolean IS_SPECIAL_CEPHEUS;
     public static int PRIVATE_FLAG_IS_HBM_OVERLAY;
     private static int SCREEN_HEIGHT_DP = -1;
+    public static int SCREEN_HEIGHT_PHYSICAL = -1;
+    public static int SCREEN_HEIGHT_PX = -1;
     private static int SCREEN_WIDTH_DP = -1;
+    public static int SCREEN_WIDTH_PHYSICAL = -1;
+    public static int SCREEN_WIDTH_PX = -1;
     private static int sPreShowTouches = 0;
     private static int sPreShowTouchesUser = -10000;
 
@@ -82,6 +93,10 @@ class MiuiGxzwUtils {
             DENSITY_DPI = i;
             SCREEN_WIDTH_DP = i2;
             SCREEN_HEIGHT_DP = i3;
+            if (SCREEN_WIDTH_PHYSICAL == -1) {
+                phySicalScreenPx(context);
+            }
+            screenWhPx(context);
             String str = SystemProperties.get("persist.vendor.sys.fp.fod.location.X_Y", "");
             String str2 = SystemProperties.get("persist.vendor.sys.fp.fod.size.width_height", "");
             if (str.isEmpty() || str2.isEmpty()) {
@@ -93,6 +108,17 @@ class MiuiGxzwUtils {
                 GXZW_ICON_Y = Integer.parseInt(str.split(",")[1]);
                 GXZW_ICON_WIDTH = Integer.parseInt(str2.split(",")[0]);
                 GXZW_ICON_HEIGHT = Integer.parseInt(str2.split(",")[1]);
+                GXZW_X_PRCENT = getPrcent(GXZW_ICON_X, SCREEN_WIDTH_PHYSICAL);
+                GXZW_Y_PRCENT = getPrcent(GXZW_ICON_Y, SCREEN_HEIGHT_PHYSICAL);
+                GXZW_WIDTH_PRCENT = getPrcent(GXZW_ICON_WIDTH, SCREEN_WIDTH_PHYSICAL);
+                GXZW_HEIGHT_PRCENT = getPrcent(GXZW_ICON_HEIGHT, SCREEN_HEIGHT_PHYSICAL);
+                GXZW_ICON_X = (int) (((float) SCREEN_WIDTH_PX) * GXZW_X_PRCENT);
+                GXZW_ICON_Y = (int) (((float) SCREEN_HEIGHT_PX) * GXZW_Y_PRCENT);
+                GXZW_ICON_WIDTH = (int) (((float) SCREEN_WIDTH_PX) * GXZW_WIDTH_PRCENT);
+                GXZW_ICON_HEIGHT = (int) (((float) SCREEN_HEIGHT_PX) * GXZW_HEIGHT_PRCENT);
+                int i4 = (int) (((float) SCREEN_WIDTH_PX) * GXZW_ANIM_WIDTH_PRCENT);
+                GXZW_ANIM_WIDTH = i4;
+                GXZW_ANIM_HEIGHT = i4;
                 GXZW_ICON_Y -= caculateCutoutHeightIfNeed(context);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -103,6 +129,26 @@ class MiuiGxzwUtils {
                 GXZW_ANIM_HEIGHT += GXZW_ICON_HEIGHT;
             }
         }
+    }
+
+    public static float getPrcent(int i, int i2) {
+        if (i2 == 0 || i == 0) {
+            return 1.0f;
+        }
+        return new BigDecimal(i).divide(new BigDecimal(i2), 10, 5).floatValue();
+    }
+
+    public static void phySicalScreenPx(Context context) {
+        Display display = ((DisplayManager) context.getSystemService("display")).getDisplay(0);
+        SCREEN_WIDTH_PHYSICAL = display.getMode().getPhysicalWidth();
+        SCREEN_HEIGHT_PHYSICAL = display.getMode().getPhysicalHeight();
+    }
+
+    private static void screenWhPx(Context context) {
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        ((DisplayManager) context.getSystemService("display")).getDisplay(0).getRealMetrics(displayMetrics);
+        SCREEN_WIDTH_PX = displayMetrics.widthPixels;
+        SCREEN_HEIGHT_PX = displayMetrics.heightPixels;
     }
 
     public static int caculateCutoutHeightIfNeed(Context context) {

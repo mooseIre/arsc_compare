@@ -99,6 +99,7 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener {
     public static boolean sIsDarkWallpaperMode;
     /* access modifiers changed from: private */
     public static int sKidSpaceUser;
+    private static int sMaintenanceModeId;
     public static long sScreenTurnedOnTime;
     /* access modifiers changed from: private */
     public static int sSecondUser;
@@ -514,6 +515,16 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener {
     public void onTrustManagedChanged(boolean z, int i) {
     }
 
+    static {
+        try {
+            Class<?> cls = Class.forName("android.os.UserHandle");
+            sMaintenanceModeId = cls.getField("MAINTENANCE_MODE_ID").getInt(cls);
+        } catch (Exception unused) {
+            sMaintenanceModeId = -10000;
+            Log.e("KeyguardUpdateMonitor", "reflect failed when get maintenance_mode_id");
+        }
+    }
+
     public void setLockScreenMagazineWallpaperInfo(LockScreenMagazineWallpaperInfo lockScreenMagazineWallpaperInfo) {
         this.mLockScreenMagazineWallpaperInfo = lockScreenMagazineWallpaperInfo;
     }
@@ -589,13 +600,7 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener {
     public static synchronized int getMaintenanceModeId() {
         int i;
         synchronized (KeyguardUpdateMonitor.class) {
-            try {
-                Class<?> cls = Class.forName("android.os.UserHandle");
-                i = cls.getField("MAINTENANCE_MODE_ID").getInt(cls);
-            } catch (Exception e) {
-                e.printStackTrace();
-                return -10000;
-            }
+            i = sMaintenanceModeId;
         }
         return i;
     }
