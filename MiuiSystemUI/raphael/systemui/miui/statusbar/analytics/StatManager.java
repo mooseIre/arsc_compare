@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import miui.os.Build;
 import org.json.JSONObject;
 
 public class StatManager {
@@ -29,8 +30,10 @@ public class StatManager {
     }
 
     public static void init(Context context) {
+        if (!Build.IS_STABLE_VERSION) {
+            sStats.add(sOneTrack);
+        }
         sStats.add(new MiStatImpl());
-        sStats.add(sOneTrack);
         sStats.forEach(new Consumer(context) {
             private final /* synthetic */ Context f$0;
 

@@ -28,6 +28,8 @@ public class PaperModeControllerImpl extends CurrentUserTracker implements Paper
     public final ContentObserver mPaperModeObserver;
     /* access modifiers changed from: private */
     public ContentResolver mResolver;
+    /* access modifiers changed from: private */
+    public final ContentObserver mVideoModeObserver;
 
     public PaperModeControllerImpl(Context context, Looper looper) {
         super(context);
@@ -60,7 +62,21 @@ public class PaperModeControllerImpl extends CurrentUserTracker implements Paper
                 paperModeControllerImpl2.dispatchAvailabilityChanged(paperModeControllerImpl2.mPaperModeAvailable);
             }
         };
+        this.mVideoModeObserver = new ContentObserver(this.mBgHandler) {
+            public void onChange(boolean z) {
+                boolean z2 = false;
+                int intForUser = Settings.Secure.getIntForUser(PaperModeControllerImpl.this.mResolver, "vtb_boosting", 0, -2);
+                PaperModeControllerImpl paperModeControllerImpl = PaperModeControllerImpl.this;
+                if (intForUser == 0) {
+                    z2 = true;
+                }
+                boolean unused = paperModeControllerImpl.mPaperModeAvailable = z2;
+                PaperModeControllerImpl paperModeControllerImpl2 = PaperModeControllerImpl.this;
+                paperModeControllerImpl2.dispatchAvailabilityChanged(paperModeControllerImpl2.mPaperModeAvailable);
+            }
+        };
         this.mResolver.registerContentObserver(Settings.System.getUriFor("screen_game_mode"), false, this.mGameModeObserver, -1);
+        this.mResolver.registerContentObserver(Settings.Secure.getUriFor("vtb_boosting"), false, this.mVideoModeObserver, -1);
         postInitPaperModeState();
         startTracking();
     }
@@ -88,6 +104,7 @@ public class PaperModeControllerImpl extends CurrentUserTracker implements Paper
             public void run() {
                 PaperModeControllerImpl.this.mPaperModeObserver.onChange(false);
                 PaperModeControllerImpl.this.mGameModeObserver.onChange(false);
+                PaperModeControllerImpl.this.mVideoModeObserver.onChange(false);
             }
         });
     }

@@ -121,7 +121,7 @@ public class NightModeTile extends QSTileImpl<QSTile.BooleanState> {
     }
 
     public Intent getLongClickIntent() {
-        return new Intent("miui.settings.intent.action.DARK_MODE");
+        return new Intent("android.settings.DISPLAY_SETTINGS");
     }
 
     protected class ShowAlertRunnable implements Runnable {

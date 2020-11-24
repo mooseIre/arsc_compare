@@ -232,7 +232,7 @@ public class ControlPanelWindowView extends FrameLayout {
                 }
                 updateTransHeight(motionEvent.getRawY() - this.mDownY);
                 this.mInterceptTouchEvent = true;
-            } else if (z3 || z4) {
+            } else if ((z3 || z4) && this.mInterceptTouchEvent) {
                 this.mInterceptTouchEvent = false;
                 updateTransHeight(0.0f);
                 endWithCurrentExpandHeight();

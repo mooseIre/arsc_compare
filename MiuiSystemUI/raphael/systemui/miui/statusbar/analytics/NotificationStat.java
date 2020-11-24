@@ -3,10 +3,12 @@ package com.android.systemui.miui.statusbar.analytics;
 import android.app.NotificationChannelCompat;
 import android.content.Context;
 import android.content.Intent;
+import android.database.ContentObserver;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.os.UserHandle;
+import android.provider.Settings;
 import android.text.TextUtils;
 import com.android.internal.os.SomeArgs;
 import com.android.systemui.AdTracker;
@@ -39,6 +41,7 @@ public class NotificationStat {
     /* access modifiers changed from: private */
     public Context mContext;
     private PanelExpandSession mCurrentBarSession = new PanelExpandSession();
+    private boolean mTrackingEnabled;
 
     public void onArrive(ExpandedNotification expandedNotification) {
     }
@@ -46,6 +49,23 @@ public class NotificationStat {
     public NotificationStat(Context context) {
         this.mContext = context;
         this.mBgHandler = new WorkHandler(((SystemUIStat) Dependency.get(SystemUIStat.class)).getBgThread().getLooper());
+        setTrackEnabled();
+        if (!Constants.IS_INTERNATIONAL) {
+            this.mContext.getContentResolver().registerContentObserver(Settings.Global.getUriFor("need_tracking"), false, new ContentObserver(new Handler(Looper.getMainLooper())) {
+                public void onChange(boolean z) {
+                    NotificationStat.this.setTrackEnabled();
+                }
+            });
+        }
+    }
+
+    /* access modifiers changed from: private */
+    public void setTrackEnabled() {
+        boolean z = true;
+        if (Constants.IS_INTERNATIONAL || Settings.Global.getInt(this.mContext.getContentResolver(), "need_tracking", 0) != 1) {
+            z = false;
+        }
+        this.mTrackingEnabled = z;
     }
 
     private final class WorkHandler extends Handler {
@@ -462,7 +482,7 @@ public class NotificationStat {
     }
 
     private void trackEvent(String str, Map<String, Object> map, List list) {
-        if (!Constants.IS_INTERNATIONAL) {
+        if (this.mTrackingEnabled) {
             SomeArgs obtain = SomeArgs.obtain();
             obtain.arg1 = str;
             obtain.arg2 = map;

@@ -81,8 +81,8 @@ public class ControlCenter extends SystemUI implements ControlPanelController.Us
     }
 
     public void start() {
-        ((ControlPanelController) Dependency.get(ControlPanelController.class)).addCallback(this);
         this.mExpandInfoController = (ExpandInfoController) Dependency.get(ExpandInfoController.class);
+        ((ControlPanelController) Dependency.get(ControlPanelController.class)).addCallback(this);
         this.mPanelController = (ControlPanelController) Dependency.get(ControlPanelController.class);
         this.mCommandQueue = (CommandQueue) getComponent(CommandQueue.class);
         this.mControlPanelWindowManager = (ControlPanelWindowManager) Dependency.get(ControlPanelWindowManager.class);
@@ -233,11 +233,13 @@ public class ControlCenter extends SystemUI implements ControlPanelController.Us
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("android.intent.action.CLOSE_SYSTEM_DIALOGS");
         this.mContext.registerReceiverAsUser(this.mBroadcastReceiver, UserHandle.ALL, intentFilter, (String) null, (Handler) null);
+        this.mExpandInfoController.register();
     }
 
     /* access modifiers changed from: protected */
     public void unregister() {
         this.mContext.unregisterReceiver(this.mBroadcastReceiver);
+        this.mExpandInfoController.unregister();
     }
 
     public boolean isExpandable() {

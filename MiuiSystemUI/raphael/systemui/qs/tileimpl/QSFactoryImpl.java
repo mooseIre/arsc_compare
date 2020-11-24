@@ -25,7 +25,6 @@ import com.android.systemui.qs.tiles.GpsTile;
 import com.android.systemui.qs.tiles.HotspotTile;
 import com.android.systemui.qs.tiles.IntentTile;
 import com.android.systemui.qs.tiles.LocationTile;
-import com.android.systemui.qs.tiles.MiuiWirelessPowerTile;
 import com.android.systemui.qs.tiles.MuteTile;
 import com.android.systemui.qs.tiles.NfcTile;
 import com.android.systemui.qs.tiles.NightModeTile;
@@ -161,9 +160,6 @@ public class QSFactoryImpl implements QSFactory {
         }
         if (str.equals("night")) {
             return new NightModeTile(this.mHost);
-        }
-        if (str.equals("wirelesspower")) {
-            return new MiuiWirelessPowerTile(this.mHost);
         }
         if (str.equals("workmode")) {
             return new WorkModeTile(this.mHost);

@@ -3,7 +3,6 @@ package com.android.systemui.miui.statusbar.analytics;
 import android.content.Context;
 import android.content.ContextCompat;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
@@ -127,9 +126,14 @@ public class SystemUIStat {
 
     public void handleNotchEvent() {
         if (Constants.IS_NOTCH) {
-            String str = Build.VERSION.SDK_INT < 28 ? "force_black" : "force_black_v2";
             HashMap hashMap = new HashMap();
-            hashMap.put(str, "" + Settings.Global.getInt(this.mContext.getContentResolver(), str, -1));
+            if (Settings.Global.getInt(this.mContext.getContentResolver(), "force_black_v2", -1) == 1) {
+                hashMap.put("force_black", "2");
+            } else if (Settings.Global.getInt(this.mContext.getContentResolver(), "force_black", -1) == 1) {
+                hashMap.put("force_black", "1");
+            } else {
+                hashMap.put("force_black", "0");
+            }
             trackEvent("notch", hashMap);
         }
     }

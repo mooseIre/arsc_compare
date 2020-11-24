@@ -1,6 +1,8 @@
 package com.android.systemui.miui.controls;
 
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewParent;
 import com.android.systemui.miui.controlcenter.QSControlCenterPanel;
 import com.android.systemui.miui.statusbar.phone.ControlPanelContentView;
 import com.android.systemui.plugins.miui.controls.ControlsEditCallback;
@@ -25,8 +27,7 @@ public class ControlsEditController {
         }
     };
     private ControlPanelContentView mControlPanelContentView;
-    /* access modifiers changed from: private */
-    public View mControlsEditView;
+    private View mControlsEditView;
     /* access modifiers changed from: private */
     public ControlsPluginManager mControlsPluginManager;
     private AnimState mHideAnim;
@@ -55,8 +56,12 @@ public class ControlsEditController {
         this.mControlsEditView = this.mControlsPluginManager.getControlsEditView(this.mCallback);
         View view = this.mControlsEditView;
         if (view != null) {
+            ViewParent parent = view.getParent();
+            if (parent instanceof ViewGroup) {
+                ((ViewGroup) parent).removeView(this.mControlsEditView);
+            }
             ControlPanelContentView controlPanelContentView = this.mControlPanelContentView;
-            controlPanelContentView.addView(view, controlPanelContentView.getChildCount());
+            controlPanelContentView.addView(this.mControlsEditView, controlPanelContentView.getChildCount());
             initAnim();
         }
     }
@@ -73,19 +78,19 @@ public class ControlsEditController {
     private void initAnim() {
         this.mAnim = Folme.useAt(this.mControlsEditView).state();
         AnimState animState = new AnimState("controls_editor_show");
-        animState.add(ViewProperty.ALPHA, 1.0f, new long[0]);
+        animState.add(ViewProperty.AUTO_ALPHA, 1.0f, new long[0]);
         animState.add(ViewProperty.TRANSLATION_Y, 0, new long[0]);
         this.mShowAnim = animState;
         AnimState animState2 = new AnimState("controls_editor_hide");
-        animState2.add(ViewProperty.ALPHA, 0.0f, new long[0]);
+        animState2.add(ViewProperty.AUTO_ALPHA, 0.0f, new long[0]);
         animState2.add(ViewProperty.TRANSLATION_Y, 100, new long[0]);
         this.mHideAnim = animState2;
         this.mPanelAnim = Folme.useAt(this.mQSControlCenterPanel).state();
         AnimState animState3 = new AnimState("qs_control_customizer_show_panel");
-        animState3.add(ViewProperty.ALPHA, 1.0f, new long[0]);
+        animState3.add(ViewProperty.AUTO_ALPHA, 1.0f, new long[0]);
         this.mPanelShowAnim = animState3;
         AnimState animState4 = new AnimState("qs_control_customizer_hide_panel");
-        animState4.add(ViewProperty.ALPHA, 0.0f, new long[0]);
+        animState4.add(ViewProperty.AUTO_ALPHA, 0.0f, new long[0]);
         this.mPanelHideAnim = animState4;
     }
 
@@ -101,12 +106,6 @@ public class ControlsEditController {
                 AnimConfig animConfig = new AnimConfig();
                 animConfig.setEase(EaseManager.getStyle(-2, 0.8f, 0.5f));
                 animConfig.setDelay(0);
-                animConfig.addListeners(new TransitionListener() {
-                    public void onBegin(Object obj) {
-                        super.onBegin(obj);
-                        ControlsEditController.this.mControlsEditView.setVisibility(0);
-                    }
-                });
                 iStateStyle.fromTo(animState, animState2, animConfig);
                 this.isShown = true;
             } else if (this.isShown) {
@@ -123,7 +122,6 @@ public class ControlsEditController {
                 animConfig3.addListeners(new TransitionListener() {
                     public void onComplete(Object obj) {
                         super.onComplete(obj);
-                        ControlsEditController.this.mControlsEditView.setVisibility(8);
                         ControlsEditController.this.mControlsPluginManager.hideControlsEditView();
                     }
                 });
