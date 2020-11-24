@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:orientation="vertical" android:id="@id/global_actions_container" android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <com.android.systemui.globalactions.GlobalActionsFlatLayout android:theme="@style/qs_theme" android:orientation="horizontal" android:id="@id/global_actions_view" android:clipChildren="false" android:clipToPadding="false" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginStart="@dimen/global_actions_side_margin">
+        <LinearLayout android:gravity="center|left" android:orientation="horizontal" android:id="@android:id/list" android:paddingTop="@dimen/global_actions_grid_vertical_padding" android:paddingBottom="@dimen/global_actions_grid_vertical_padding" android:layout_width="fill_parent" android:layout_height="wrap_content" android:translationZ="@dimen/global_actions_translate">
+            <RelativeLayout android:id="@id/global_actions_overflow_button" android:layout_width="48.0dip" android:layout_height="48.0dip" android:contentDescription="@string/accessibility_menu">
+                <ImageView android:layout_width="24.0dip" android:layout_height="24.0dip" android:src="@drawable/ic_more_vert" android:tint="@color/control_more_vert" android:layout_centerInParent="true" />
+            </RelativeLayout>
+        </LinearLayout>
+    </com.android.systemui.globalactions.GlobalActionsFlatLayout>
+    <androidx.constraintlayout.widget.ConstraintLayout android:id="@id/global_actions_lock_message_container" android:visibility="gone" android:layout_width="fill_parent" android:layout_height="fill_parent">
+        <TextView android:gravity="center" android:id="@id/global_actions_lock_message" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="@string/global_action_lock_message" android:drawablePadding="12.0dip" android:layout_marginHorizontal="@dimen/global_actions_side_margin" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintTop_toTopOf="parent" app:layout_constraintVertical_bias="0.35" style="@style/TextAppearance.Control.Title" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <com.android.systemui.globalactions.MinHeightScrollView android:orientation="vertical" android:scrollbars="none" android:layout_width="fill_parent" android:layout_height="fill_parent">
+        <LinearLayout android:orientation="vertical" android:id="@id/global_actions_grid_root" android:clipChildren="false" android:clipToPadding="false" android:layout_width="fill_parent" android:layout_height="wrap_content">
+            <FrameLayout android:id="@id/global_actions_wallet" android:layout_width="fill_parent" android:layout_height="wrap_content" />
+            <LinearLayout android:orientation="vertical" android:id="@id/global_actions_controls" android:layout_width="fill_parent" android:layout_height="wrap_content" />
+        </LinearLayout>
+    </com.android.systemui.globalactions.MinHeightScrollView>
+</LinearLayout>

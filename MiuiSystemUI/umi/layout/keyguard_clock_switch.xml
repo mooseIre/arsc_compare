@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.android.keyguard.KeyguardClockSwitch android:layout_gravity="center|top" android:id="@id/keyguard_clock_container" android:layout_width="fill_parent" android:layout_height="wrap_content"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <FrameLayout android:layout_gravity="center_horizontal" android:id="@id/clock_view" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_alignParentTop="true">
+        <TextClock android:textColor="?wallpaperTextColor" android:gravity="center_horizontal" android:layout_gravity="center_horizontal" android:id="@id/default_clock_view" android:paddingBottom="@dimen/title_clock_padding" android:layout_width="fill_parent" android:layout_height="wrap_content" android:singleLine="true" android:format12Hour="@string/keyguard_widget_12_hours_format" android:format24Hour="@string/keyguard_widget_24_hours_format" android:elegantTextHeight="false" android:letterSpacing="0.02" style="@style/widget_big" />
+        <TextClock android:textColor="?wallpaperTextColor" android:gravity="center_horizontal" android:layout_gravity="bottom|center" android:id="@id/default_clock_view_bold" android:visibility="invisible" android:layout_width="fill_parent" android:layout_height="wrap_content" android:singleLine="true" android:format12Hour="@string/keyguard_widget_12_hours_format" android:format24Hour="@string/keyguard_widget_24_hours_format" android:elegantTextHeight="false" android:letterSpacing="0.03" style="@style/widget_title_bold" />
+    </FrameLayout>
+    <include android:id="@id/keyguard_status_area" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_below="@id/clock_view" layout="@layout/keyguard_status_area" />
+</com.android.keyguard.KeyguardClockSwitch>

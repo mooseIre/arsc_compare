@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:orientation="horizontal" android:id="@id/group_header" android:layout_width="fill_parent" android:layout_height="wrap_content"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <TextView android:textStyle="bold" android:textColor="@color/notification_group_collapsed_header" android:ellipsize="end" android:gravity="center_vertical" android:id="@id/group_info" android:layout_width="fill_parent" android:layout_height="wrap_content" android:singleLine="true" android:layout_alignTop="@id/collapse_button" android:layout_alignBottom="@id/collapse_button" android:fontFamily="miui" android:paddingStart="@dimen/notification_collapsed_button_padding" android:paddingEnd="@dimen/notification_collapsed_button_padding" android:layout_alignParentStart="true" />
+    <ImageView android:id="@id/collapse_button" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/notification_group_collapsed_arrow" android:contentDescription="@string/notification_group_collapse_button_text" android:paddingStart="@dimen/notification_collapsed_button_padding" android:paddingEnd="@dimen/notification_collapsed_button_padding" android:layout_alignParentEnd="true" />
+</RelativeLayout>
