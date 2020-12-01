@@ -219,10 +219,10 @@ public class MiuiKeyguardWallpaperControllerImpl implements MiuiKeyguardWallpape
         }
     }
 
-    /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v2, resolved type: java.lang.Object} */
+    /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v3, resolved type: java.lang.Object} */
     /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r2v2, resolved type: java.io.File} */
     /* JADX WARNING: Multi-variable type inference failed */
-    /* JADX WARNING: Removed duplicated region for block: B:16:0x0041  */
+    /* JADX WARNING: Removed duplicated region for block: B:19:0x004b  */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     public void updateWallpaper(boolean r7) {
         /*
@@ -230,21 +230,24 @@ public class MiuiKeyguardWallpaperControllerImpl implements MiuiKeyguardWallpape
             com.android.keyguard.wallpaper.MiuiKeyguardWallpaperController$KeyguardWallpaperType r0 = com.android.keyguard.wallpaper.MiuiKeyguardWallpaperController.KeyguardWallpaperType.PICTORIAL
             boolean r1 = com.android.keyguard.MiuiKeyguardUtils.isDefaultLockScreenTheme()
             r2 = 0
-            if (r1 != 0) goto L_0x000d
+            if (r1 != 0) goto L_0x0015
+            boolean r0 = com.android.keyguard.MiuiKeyguardUtils.isSuperWallpaperTheme()
+            if (r0 == 0) goto L_0x0012
+            com.android.keyguard.wallpaper.MiuiKeyguardWallpaperController$KeyguardWallpaperType r0 = com.android.keyguard.wallpaper.MiuiKeyguardWallpaperController.KeyguardWallpaperType.AWESOME_SUPER_LOCK
+            goto L_0x0046
+        L_0x0012:
             com.android.keyguard.wallpaper.MiuiKeyguardWallpaperController$KeyguardWallpaperType r0 = com.android.keyguard.wallpaper.MiuiKeyguardWallpaperController.KeyguardWallpaperType.AWESOME_LOCK
-        L_0x000b:
-            r1 = r2
-            goto L_0x003d
-        L_0x000d:
+            goto L_0x0046
+        L_0x0015:
             android.content.Context r1 = r6.mContext
             boolean r1 = com.android.keyguard.wallpaper.WallpaperAuthorityUtils.isThemeLockLiveWallpaper(r1)
-            if (r1 == 0) goto L_0x0018
+            if (r1 == 0) goto L_0x0020
             com.android.keyguard.wallpaper.MiuiKeyguardWallpaperController$KeyguardWallpaperType r0 = com.android.keyguard.wallpaper.MiuiKeyguardWallpaperController.KeyguardWallpaperType.LIVE_SYSTEM
-            goto L_0x000b
-        L_0x0018:
+            goto L_0x0046
+        L_0x0020:
             android.content.Context r1 = r6.mContext
             android.util.Pair r1 = com.android.keyguard.wallpaper.KeyguardWallpaperUtils.getLockWallpaper(r1)
-            if (r1 == 0) goto L_0x000b
+            if (r1 == 0) goto L_0x0046
             java.lang.Object r0 = r1.first
             r2 = r0
             java.io.File r2 = (java.io.File) r2
@@ -253,18 +256,21 @@ public class MiuiKeyguardWallpaperControllerImpl implements MiuiKeyguardWallpape
             java.lang.String r1 = r2.getPath()
             java.lang.String r3 = ".mp4"
             boolean r1 = r1.endsWith(r3)
-            if (r1 == 0) goto L_0x0038
+            if (r1 == 0) goto L_0x0040
             com.android.keyguard.wallpaper.MiuiKeyguardWallpaperController$KeyguardWallpaperType r1 = com.android.keyguard.wallpaper.MiuiKeyguardWallpaperController.KeyguardWallpaperType.LIVE_LOCK
-            goto L_0x003a
-        L_0x0038:
+            goto L_0x0042
+        L_0x0040:
             com.android.keyguard.wallpaper.MiuiKeyguardWallpaperController$KeyguardWallpaperType r1 = com.android.keyguard.wallpaper.MiuiKeyguardWallpaperController.KeyguardWallpaperType.PICTORIAL
-        L_0x003a:
+        L_0x0042:
             r5 = r1
             r1 = r0
             r0 = r5
-        L_0x003d:
+            goto L_0x0047
+        L_0x0046:
+            r1 = r2
+        L_0x0047:
             com.android.keyguard.wallpaper.MiuiKeyguardWallpaperController$KeyguardWallpaperType r3 = r6.mKeyguardWallpaperType
-            if (r3 == r0) goto L_0x0058
+            if (r3 == r0) goto L_0x0062
             java.lang.StringBuilder r3 = new java.lang.StringBuilder
             r3.<init>()
             java.lang.String r4 = "wallpaper changed, type="
@@ -273,7 +279,7 @@ public class MiuiKeyguardWallpaperControllerImpl implements MiuiKeyguardWallpape
             java.lang.String r3 = r3.toString()
             java.lang.String r4 = "MiuiKeyguardWallpaper"
             android.util.Log.i(r4, r3)
-        L_0x0058:
+        L_0x0062:
             com.android.keyguard.wallpaper.MiuiKeyguardWallpaperWindow r3 = r6.mKeyguardWallpaper
             r3.updateWallpaperType(r0)
             r6.mKeyguardWallpaperType = r0

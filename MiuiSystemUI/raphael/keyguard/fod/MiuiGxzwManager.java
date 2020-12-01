@@ -904,9 +904,9 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
             java.lang.String r3 = "MiuiGxzwManager"
             android.util.Log.d(r3, r1)
             boolean r1 = com.android.keyguard.fod.MiuiGxzwAnimManager.SUPPORT_AURORA
-            r3 = 2131231960(0x7f0804d8, float:1.8080016E38)
-            r4 = 2131231718(0x7f0803e6, float:1.8079525E38)
-            r5 = 2131231941(0x7f0804c5, float:1.8079977E38)
+            r3 = 2131232044(0x7f08052c, float:1.8080186E38)
+            r4 = 2131231802(0x7f08043a, float:1.8079695E38)
+            r5 = 2131232025(0x7f080519, float:1.8080148E38)
             r6 = 5
             r7 = 3
             r8 = 1
@@ -917,7 +917,7 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
             if (r0 == r6) goto L_0x0040
             goto L_0x007b
         L_0x0040:
-            r2 = 2131231744(0x7f080400, float:1.8079578E38)
+            r2 = 2131231828(0x7f080454, float:1.8079748E38)
             goto L_0x007b
         L_0x0044:
             java.lang.String r1 = android.os.Build.DEVICE
@@ -930,16 +930,16 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
             if (r0 == r6) goto L_0x0057
             goto L_0x007b
         L_0x0057:
-            r0 = 2131231743(0x7f0803ff, float:1.8079576E38)
+            r0 = 2131231827(0x7f080453, float:1.8079746E38)
             goto L_0x0066
         L_0x005b:
-            r0 = 2131231953(0x7f0804d1, float:1.8080002E38)
+            r0 = 2131232037(0x7f080525, float:1.8080172E38)
             goto L_0x0066
         L_0x005f:
-            r0 = 2131231765(0x7f080415, float:1.807962E38)
+            r0 = 2131231849(0x7f080469, float:1.807979E38)
             goto L_0x0066
         L_0x0063:
-            r0 = 2131232036(0x7f080524, float:1.808017E38)
+            r0 = 2131232120(0x7f080578, float:1.808034E38)
         L_0x0066:
             r2 = r0
             goto L_0x007b
@@ -954,7 +954,7 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
             r2 = r3
             goto L_0x007b
         L_0x0074:
-            r2 = 2131232022(0x7f080516, float:1.8080142E38)
+            r2 = 2131232106(0x7f08056a, float:1.8080312E38)
             goto L_0x007b
         L_0x0078:
             r2 = r4

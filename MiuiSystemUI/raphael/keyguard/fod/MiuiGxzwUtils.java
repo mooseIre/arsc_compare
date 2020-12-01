@@ -147,8 +147,12 @@ class MiuiGxzwUtils {
     private static void screenWhPx(Context context) {
         DisplayMetrics displayMetrics = new DisplayMetrics();
         ((DisplayManager) context.getSystemService("display")).getDisplay(0).getRealMetrics(displayMetrics);
-        SCREEN_WIDTH_PX = displayMetrics.widthPixels;
-        SCREEN_HEIGHT_PX = displayMetrics.heightPixels;
+        boolean z = true;
+        if (context.getResources().getConfiguration().orientation != 1) {
+            z = false;
+        }
+        SCREEN_WIDTH_PX = z ? displayMetrics.widthPixels : displayMetrics.heightPixels;
+        SCREEN_HEIGHT_PX = z ? displayMetrics.heightPixels : displayMetrics.widthPixels;
     }
 
     public static int caculateCutoutHeightIfNeed(Context context) {

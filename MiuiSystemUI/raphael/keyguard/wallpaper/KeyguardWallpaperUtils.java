@@ -3,7 +3,6 @@ package com.android.keyguard.wallpaper;
 import android.app.IWallpaperManager;
 import android.app.WallpaperInfo;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -620,18 +619,6 @@ public class KeyguardWallpaperUtils {
 
     public static void getRealSize(Display display, Point point) {
         CustomizeUtil.getRealSize(display, point);
-    }
-
-    public static boolean isDefaultLockStyle(Context context) {
-        return !new File("/data/system/theme//lockscreen").exists() && !isKeyguardShowLiveWallpaper(context);
-    }
-
-    private static boolean isKeyguardShowLiveWallpaper(Context context) {
-        return getWorldReadableSharedPreference(context).getBoolean("keyguard_show_livewallpaper", false);
-    }
-
-    private static SharedPreferences getWorldReadableSharedPreference(Context context) {
-        return context.getSharedPreferences(context.getPackageName() + "_world_readable_preferences", 0);
     }
 
     public static void clearWallpaperSrc(Context context) {

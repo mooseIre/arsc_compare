@@ -7,15 +7,18 @@ import com.miui.internal.policy.impl.AwesomeLockScreenImp.AwesomeLockScreenView;
 import com.miui.internal.policy.impl.AwesomeLockScreenImp.LockScreenElementFactory;
 import com.miui.internal.policy.impl.AwesomeLockScreenImp.LockScreenResourceLoader;
 import com.miui.internal.policy.impl.AwesomeLockScreenImp.LockScreenRoot;
+import com.miui.internal.policy.impl.AwesomeLockScreenImp.SuperWallpaperLockScreenResourceLoader;
 import com.xiaomi.stat.d.r;
 import java.io.File;
 import java.util.Stack;
 import miui.content.res.ThemeResources;
 import miui.maml.LifecycleResourceManager;
+import miui.maml.ResourceLoader;
 import miui.maml.ScreenContext;
 
 public class RootHolder {
     private ScreenContext mContext;
+    private ResourceLoader mLockScreenResourceLoader;
     private LifecycleResourceManager mResourceMgr;
     private LockScreenRoot mRoot;
     private String mTempCachePath;
@@ -27,7 +30,14 @@ public class RootHolder {
         }
         if (this.mRoot == null) {
             ThemeResources.getSystem().resetLockscreen();
-            this.mResourceMgr = new LifecycleResourceManager(new LockScreenResourceLoader().setLocal(context.getResources().getConfiguration().locale), r.a, 3600000);
+            if (ThemeResources.getSystem().hasSuperWallpaperLockscreen()) {
+                Log.d("RootHolder", "create SuperWallpaperLockScreenResourceLoader");
+                this.mLockScreenResourceLoader = new SuperWallpaperLockScreenResourceLoader();
+            } else {
+                Log.d("RootHolder", "create LockScreenResourceLoader");
+                this.mLockScreenResourceLoader = new LockScreenResourceLoader();
+            }
+            this.mResourceMgr = new LifecycleResourceManager(this.mLockScreenResourceLoader.setLocal(context.getResources().getConfiguration().locale), r.a, 3600000);
             this.mResourceMgr.setCacheSize(((int) Runtime.getRuntime().maxMemory()) / 2);
             this.mContext = new ScreenContext(context, this.mResourceMgr, new LockScreenElementFactory());
             this.mRoot = new LockScreenRoot(this.mContext);

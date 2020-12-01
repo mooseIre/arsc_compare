@@ -37,6 +37,7 @@ import android.widget.LinearLayout;
 import com.android.keyguard.KeyguardCameraView;
 import com.android.keyguard.analytics.AnalyticsHelper;
 import com.android.keyguard.utils.ContentProviderUtils;
+import com.android.keyguard.utils.DeviceLevelUtils;
 import com.android.keyguard.utils.PackageUtils;
 import com.android.systemui.Dependency;
 import com.android.systemui.HapticFeedBackImpl;
@@ -69,6 +70,8 @@ public class KeyguardCameraView extends FrameLayout {
     public View mBackgroundView;
     /* access modifiers changed from: private */
     public CallBack mCallBack;
+    /* access modifiers changed from: private */
+    public View mCameraScrimView;
     /* access modifiers changed from: private */
     public Context mContext = getContext();
     private boolean mDarkMode;
@@ -256,6 +259,10 @@ public class KeyguardCameraView extends FrameLayout {
         this.mBackgroundView.setBackgroundColor(-16777216);
         this.mBackgroundView.setAlpha(0.0f);
         addView(this.mBackgroundView, new FrameLayout.LayoutParams(-1, -1, 17));
+        this.mCameraScrimView = new View(getContext());
+        this.mCameraScrimView.setBackgroundColor(-1728053248);
+        this.mCameraScrimView.setAlpha(0.0f);
+        addView(this.mCameraScrimView, new FrameLayout.LayoutParams(-1, -1, 17));
         this.mPreViewContainer = new LinearLayout(getContext());
         this.mPreViewContainer.setOutlineProvider(this.mPreViewOutlineProvider);
         this.mPreViewContainer.setClipToOutline(true);
@@ -341,6 +348,7 @@ public class KeyguardCameraView extends FrameLayout {
             this.mTouchY = f2;
             this.mMoveYPer = 0.0f;
             this.mBackgroundView.setAlpha(0.0f);
+            this.mCameraScrimView.setAlpha(0.0f);
             this.mIsActive = false;
             this.mLastIsActive = false;
             this.mActiveAnimPer = 0.0f;
@@ -413,7 +421,11 @@ public class KeyguardCameraView extends FrameLayout {
     private void handleMoveDistanceChanged() {
         this.mMovePer = perFromVal(this.mMoveDistance, 0.0f, (float) (this.mScreenWidth / 3));
         notifyAnimUpdate();
-        updateBlurRatio();
+        if (DeviceLevelUtils.isLowGpuDevice()) {
+            updateScrimAlpha();
+        } else {
+            updateBlurRatio();
+        }
         updateActiveAnim();
         if (this.mMoveActivePer == 0.6f) {
             updateViews();
@@ -519,6 +531,11 @@ public class KeyguardCameraView extends FrameLayout {
     private void updateBlurRatio() {
         float f = this.mMoveDistance;
         applyBlurRatio(f < 270.0f ? f / 270.0f : 1.0f);
+    }
+
+    private void updateScrimAlpha() {
+        float f = this.mMoveDistance;
+        this.mCameraScrimView.setAlpha(f < 270.0f ? f / 270.0f : 1.0f);
     }
 
     private void notifyAnimUpdate() {
@@ -795,9 +812,12 @@ public class KeyguardCameraView extends FrameLayout {
                 ofFloat.setInterpolator(new PhysicBasedInterpolator(0.99f, 0.67f));
                 ofFloat.setDuration(300);
                 ofFloat.start();
-                KeyguardCameraView.this.applyBlurRatio(1.0f);
+                if (!DeviceLevelUtils.isLowGpuDevice()) {
+                    KeyguardCameraView.this.applyBlurRatio(1.0f);
+                }
                 KeyguardCameraView.this.mBackgroundView.setAlpha(1.0f);
                 KeyguardCameraView.this.mPreViewContainer.setAlpha(0.0f);
+                KeyguardCameraView.this.mCameraScrimView.setAlpha(0.0f);
                 KeyguardCameraView.this.setAlpha(1.0f);
             }
 
@@ -903,12 +923,14 @@ public class KeyguardCameraView extends FrameLayout {
         float f3 = ((((float) i) / ((float) i2)) - this.mBackAnimAspectRatio) / (f - 1.0f);
         float f4 = this.mPreViewInitRadius;
         this.mPreViewRadius = valFromPer(f3, f4, (this.mIconCircleWidth / 2.0f) + f4);
-        float f5 = this.mIconInitCenterX;
-        float f6 = this.mIconCenterX;
-        if (f5 - f6 < 270.0f) {
-            f2 = (f5 - f6) / 270.0f;
+        if (!DeviceLevelUtils.isLowGpuDevice()) {
+            float f5 = this.mIconInitCenterX;
+            float f6 = this.mIconCenterX;
+            if (f5 - f6 < 270.0f) {
+                f2 = (f5 - f6) / 270.0f;
+            }
+            applyBlurRatio(f2);
         }
-        applyBlurRatio(f2);
         invalidate();
         updateIconView();
     }

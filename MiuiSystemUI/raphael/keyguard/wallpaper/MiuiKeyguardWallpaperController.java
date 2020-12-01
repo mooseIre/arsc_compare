@@ -25,6 +25,7 @@ public interface MiuiKeyguardWallpaperController extends CallbackController<Keyg
 
     public enum KeyguardWallpaperType {
         AWESOME_LOCK,
+        AWESOME_SUPER_LOCK,
         LIVE_SYSTEM,
         LIVE_LOCK,
         PICTORIAL,

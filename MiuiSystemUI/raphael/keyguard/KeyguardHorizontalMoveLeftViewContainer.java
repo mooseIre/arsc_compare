@@ -87,7 +87,7 @@ public class KeyguardHorizontalMoveLeftViewContainer extends KeyguardHorizontalM
             if (!z) {
                 KeyguardHorizontalMoveLeftViewContainer.this.mLockScreenMagazineClient.hideOverlay(true);
                 KeyguardHorizontalMoveLeftViewContainer.this.mHandler.removeMessages(0);
-                KeyguardHorizontalMoveLeftViewContainer.this.mHandler.sendEmptyMessageDelayed(0, 5000);
+                KeyguardHorizontalMoveLeftViewContainer.this.mHandler.sendEmptyMessage(0);
             }
         }
     };

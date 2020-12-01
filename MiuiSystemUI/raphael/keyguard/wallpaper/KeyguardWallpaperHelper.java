@@ -228,7 +228,7 @@ public class KeyguardWallpaperHelper {
 
     /* access modifiers changed from: private */
     public void updateWallpaper(final boolean z) {
-        if (KeyguardWallpaperUtils.isDefaultLockStyle(this.mContext) && !this.mIsChangingLockWallpaper) {
+        if (MiuiKeyguardUtils.isDefaultLockScreenTheme() && !this.mIsChangingLockWallpaper) {
             final String wallpaperAuthority = WallpaperAuthorityUtils.getWallpaperAuthority(this.mContext);
             if (!WallpaperAuthorityUtils.isLockScreenMagazineOpenedWallpaper(this.mContext) || !this.mKeyguardUpdateMonitor.isSupportLockScreenMagazineLeft()) {
                 if (WallpaperAuthorityUtils.isGalleryCloudBabyWallpaper(this.mContext)) {
