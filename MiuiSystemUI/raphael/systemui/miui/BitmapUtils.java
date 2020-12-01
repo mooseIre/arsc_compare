@@ -19,7 +19,7 @@ public class BitmapUtils {
 
     public static Bitmap getBlurBackground(Bitmap bitmap, Bitmap bitmap2) {
         if (bitmap != null) {
-            bitmap2 = BitmapFactory.fastBlur(bitmap, bitmap2, Resources.getSystem().getDimensionPixelSize(285606022));
+            bitmap2 = BitmapFactory.fastBlur(bitmap, bitmap2, Resources.getSystem().getDimensionPixelSize(285606024));
         }
         if (bitmap2 != null) {
             new Canvas(bitmap2).drawColor(Resources.getSystem().getColor(R.color.blur_background_mask));

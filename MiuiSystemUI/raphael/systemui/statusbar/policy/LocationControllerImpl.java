@@ -163,10 +163,10 @@ public class LocationControllerImpl extends BroadcastReceiver implements Locatio
         L_0x002f:
             boolean r0 = com.android.systemui.Constants.SUPPORT_DUAL_GPS
             if (r0 == 0) goto L_0x0037
-            r0 = 2131233358(0x7f080a4e, float:1.8082851E38)
+            r0 = 2131233442(0x7f080aa2, float:1.8083022E38)
             goto L_0x003a
         L_0x0037:
-            r0 = 2131233368(0x7f080a58, float:1.8082872E38)
+            r0 = 2131233452(0x7f080aac, float:1.8083042E38)
         L_0x003a:
             r2 = 2131821298(0x7f1102f2, float:1.9275335E38)
             r3 = r2
@@ -237,10 +237,10 @@ public class LocationControllerImpl extends BroadcastReceiver implements Locatio
             android.content.res.Resources r15 = r15.getResources()
             boolean r3 = com.android.systemui.Constants.SUPPORT_DUAL_GPS
             if (r3 == 0) goto L_0x00d8
-            r3 = 2131233014(0x7f0808f6, float:1.8082154E38)
+            r3 = 2131233098(0x7f08094a, float:1.8082324E38)
             goto L_0x00db
         L_0x00d8:
-            r3 = 2131233016(0x7f0808f8, float:1.8082158E38)
+            r3 = 2131233100(0x7f08094c, float:1.8082328E38)
         L_0x00db:
             android.graphics.Bitmap r15 = android.graphics.BitmapFactory.decodeResource(r15, r3)
             r0.setLargeIcon(r15)

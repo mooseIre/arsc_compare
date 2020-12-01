@@ -38,9 +38,10 @@ import com.android.systemui.recents.events.RecentsEventBus;
 import com.android.systemui.statusbar.CommandQueue;
 import com.android.systemui.statusbar.phone.StatusBar;
 import com.android.systemui.statusbar.phone.StatusBarIconController;
+import com.android.systemui.statusbar.policy.ConfigurationController;
 import com.miui.systemui.annotation.Inject;
 
-public class ControlCenter extends SystemUI implements ControlPanelController.UseControlPanelChangeListener, SuperSaveModeController.SuperSaveModeChangeListener, CommandQueue.Callbacks {
+public class ControlCenter extends SystemUI implements ControlPanelController.UseControlPanelChangeListener, SuperSaveModeController.SuperSaveModeChangeListener, CommandQueue.Callbacks, ConfigurationController.ConfigurationListener {
     public static final boolean DEBUG = Constants.DEBUG;
     private static final boolean ONLY_CORE_APPS;
     protected BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
@@ -83,6 +84,7 @@ public class ControlCenter extends SystemUI implements ControlPanelController.Us
     public void start() {
         this.mExpandInfoController = (ExpandInfoController) Dependency.get(ExpandInfoController.class);
         ((ControlPanelController) Dependency.get(ControlPanelController.class)).addCallback(this);
+        ((ConfigurationController) Dependency.get(ConfigurationController.class)).addCallback(this);
         this.mPanelController = (ControlPanelController) Dependency.get(ControlPanelController.class);
         this.mCommandQueue = (CommandQueue) getComponent(CommandQueue.class);
         this.mControlPanelWindowManager = (ControlPanelWindowManager) Dependency.get(ControlPanelWindowManager.class);
@@ -98,6 +100,7 @@ public class ControlCenter extends SystemUI implements ControlPanelController.Us
     /* access modifiers changed from: protected */
     public void onConfigurationChanged(Configuration configuration) {
         ControlPanelContentView controlPanelContentView;
+        Log.d("ControlCenter", "onConfigurationChanged");
         if (this.mControlPanelWindowView != null) {
             int updateFrom = this.mConfiguration.updateFrom(configuration);
             boolean isThemeResourcesChanged = Util.isThemeResourcesChanged(updateFrom, configuration.extraConfig.themeChangedFlags);
@@ -112,6 +115,12 @@ public class ControlCenter extends SystemUI implements ControlPanelController.Us
             } else if (z && (controlPanelContentView = this.mControlPanelContentView) != null) {
                 controlPanelContentView.updateResources();
             }
+        }
+    }
+
+    public void onDensityOrFontScaleChanged() {
+        if (isCollapsed()) {
+            reCreateWindow();
         }
     }
 

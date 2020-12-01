@@ -22,7 +22,6 @@ import com.android.systemui.miui.statusbar.notification.PushEvents;
 import com.android.systemui.statusbar.ExpandableNotificationRow;
 import com.android.systemui.statusbar.NotificationData;
 import com.android.systemui.statusbar.phone.StatusBar;
-import com.xiaomi.stat.MiStat;
 import com.xiaomi.stat.c.b;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -430,7 +429,7 @@ public class NotificationStat {
 
     private void handleNotiBlockEvent(String str, String str2) {
         HashMap hashMap = new HashMap();
-        hashMap.put("pkg", str);
+        hashMap.put("send_pkg", str);
         hashMap.put("channel_id", str2);
         hashMap.put("source", "settings");
         trackEvent("notification_block", hashMap);
@@ -471,7 +470,7 @@ public class NotificationStat {
 
     public void handleNotiSetConfigEvent(ExpandedNotification expandedNotification) {
         Map<String, Object> statParam = Analytics$NotiEvent.getStatParam(expandedNotification);
-        statParam.put(MiStat.Param.VALUE, -1);
+        statParam.put("config_value", -1);
         statParam.put("bucket", Integer.valueOf(Analytics$SettingsStatusEvent.getBucket(this.mContext)));
         statParam.put("source", "panel");
         trackEvent("notification_set_config", statParam);

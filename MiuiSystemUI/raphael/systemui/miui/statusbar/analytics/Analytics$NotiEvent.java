@@ -32,7 +32,7 @@ public class Analytics$NotiEvent extends Analytics$Event {
 
     public static Map<String, Object> getStatParam(ExpandedNotification expandedNotification) {
         HashMap hashMap = new HashMap();
-        hashMap.put("pkg", NotificationUtil.resoveSendPkg(expandedNotification));
+        hashMap.put("send_pkg", NotificationUtil.resoveSendPkg(expandedNotification));
         hashMap.put("target_pkg", expandedNotification.getPackageName());
         hashMap.put("ts_id", Long.valueOf(expandedNotification.getPostTime()));
         hashMap.put("style", getNotiStyle(expandedNotification.getNotification()));

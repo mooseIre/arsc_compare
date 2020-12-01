@@ -107,7 +107,7 @@ public class KeyguardMoveHelper {
         }
 
         public void onAnimUpdate(float f) {
-            KeyguardMoveHelper.this.mCallback.onHorizontalMove(f, false);
+            KeyguardMoveHelper.this.mCallback.onHorizontalMove(f, true);
         }
 
         public IntentButtonProvider.IntentButton.IconState getMoveIconState(boolean z) {
