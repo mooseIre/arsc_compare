@@ -16,7 +16,7 @@
     <include android:id="@id/action4" layout="@layout/media_control_action" />
     <ImageView android:id="@id/album_art" android:layout_width="@dimen/qs_media_album_size" android:layout_height="@dimen/qs_media_album_size" />
     <LinearLayout android:orientation="horizontal" android:id="@id/media_seamless" android:background="@drawable/ripple_drawable" android:layout_width="wrap_content" android:layout_height="wrap_content" android:forceHasOverlappingRendering="false">
-        <ImageView android:layout_gravity="center" android:id="@id/media_seamless_image" android:layout_width="fill_parent" android:layout_height="fill_parent" android:src="@drawable/ic_media_seamless" android:tint="@color/media_primary_text" />
+        <ImageView android:layout_gravity="center" android:id="@id/media_seamless_image" android:layout_width="fill_parent" android:layout_height="fill_parent" android:src="@drawable/ic_media_seamless" />
         <TextView android:textSize="14.0sp" android:textColor="@color/media_primary_text" android:layout_gravity="center_vertical" android:id="@id/media_seamless_text" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Switch output" android:singleLine="true" android:fontFamily="sans-serif" android:textDirection="locale" />
     </LinearLayout>
     <ImageView android:id="@id/media_seamless_fallback" android:layout_width="@dimen/qs_seamless_icon_size" android:layout_height="@dimen/qs_seamless_icon_size" android:src="@drawable/ic_cast_connected" android:tint="@color/media_primary_text" android:forceHasOverlappingRendering="false" />
