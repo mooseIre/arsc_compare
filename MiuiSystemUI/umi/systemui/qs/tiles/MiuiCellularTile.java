@@ -13,8 +13,8 @@ import android.widget.Switch;
 import androidx.appcompat.R$styleable;
 import com.android.internal.logging.MetricsLogger;
 import com.android.settingslib.net.DataUsageController;
-import com.android.systemui.C0010R$drawable;
-import com.android.systemui.C0018R$string;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.plugins.qs.DetailAdapter;
 import com.android.systemui.plugins.qs.QSTile;
 import com.android.systemui.qs.MiuiQSDetailItems;
@@ -101,7 +101,7 @@ public class MiuiCellularTile extends QSTileImpl<QSTile.BooleanState> {
     }
 
     public CharSequence getTileLabel() {
-        return this.mContext.getString(C0018R$string.quick_settings_cellular_detail_title);
+        return this.mContext.getString(C0021R$string.quick_settings_cellular_detail_title);
     }
 
     /* access modifiers changed from: protected */
@@ -117,7 +117,7 @@ public class MiuiCellularTile extends QSTileImpl<QSTile.BooleanState> {
             callbackInfo = this.mSignalCallback.mInfo;
         }
         Resources resources = this.mContext.getResources();
-        booleanState.label = resources.getString(C0018R$string.mobile_data);
+        booleanState.label = resources.getString(C0021R$string.mobile_data);
         boolean z = false;
         if (!this.mDataController.isMobileDataSupported() || callbackInfo.airplaneModeEnabled) {
             if (((QSTile.BooleanState) this.mState).state != 0) {
@@ -126,7 +126,7 @@ public class MiuiCellularTile extends QSTileImpl<QSTile.BooleanState> {
             booleanState.dualTarget = false;
             booleanState.value = false;
             booleanState.state = 0;
-            booleanState.icon = QSTileImpl.ResourceIcon.get(C0010R$drawable.ic_qs_data_disabled);
+            booleanState.icon = QSTileImpl.ResourceIcon.get(C0013R$drawable.ic_qs_data_disabled);
         } else {
             booleanState.value = this.mDataController.isMobileDataEnabled();
             if (DETAIL_ADAPTER_ENABLED && (list2 = this.mSimInfoRecordList) != null && list2.size() > 1) {
@@ -138,9 +138,9 @@ public class MiuiCellularTile extends QSTileImpl<QSTile.BooleanState> {
             }
             booleanState.state = booleanState.value ? 2 : 1;
             if (booleanState.value) {
-                i2 = C0010R$drawable.ic_qs_data_on;
+                i2 = C0013R$drawable.ic_qs_data_on;
             } else {
-                i2 = C0010R$drawable.ic_qs_data_off;
+                i2 = C0013R$drawable.ic_qs_data_off;
             }
             booleanState.icon = QSTileImpl.ResourceIcon.get(i2);
         }
@@ -157,7 +157,7 @@ public class MiuiCellularTile extends QSTileImpl<QSTile.BooleanState> {
             booleanState.label = charSequence;
         }
         if (!callbackInfo.enabled || callbackInfo.mobileSignalIconId <= 0) {
-            str = resources.getString(C0018R$string.accessibility_no_signal);
+            str = resources.getString(C0021R$string.accessibility_no_signal);
         } else {
             str = callbackInfo.signalContentDescription.toString();
         }
@@ -165,13 +165,13 @@ public class MiuiCellularTile extends QSTileImpl<QSTile.BooleanState> {
             StringBuilder sb = new StringBuilder();
             sb.append(booleanState.label);
             sb.append(",");
-            sb.append(this.mContext.getString(booleanState.value ? C0018R$string.switch_bar_on : C0018R$string.switch_bar_off));
+            sb.append(this.mContext.getString(booleanState.value ? C0021R$string.switch_bar_on : C0021R$string.switch_bar_off));
             booleanState.contentDescription = sb.toString();
         } else {
             StringBuilder sb2 = new StringBuilder();
             sb2.append(booleanState.label);
             sb2.append(",");
-            sb2.append(this.mContext.getString(booleanState.value ? C0018R$string.switch_bar_on : C0018R$string.switch_bar_off));
+            sb2.append(this.mContext.getString(booleanState.value ? C0021R$string.switch_bar_on : C0021R$string.switch_bar_off));
             sb2.append(",");
             sb2.append(str);
             booleanState.contentDescription = sb2.toString();
@@ -243,7 +243,7 @@ public class MiuiCellularTile extends QSTileImpl<QSTile.BooleanState> {
                 callbackInfo.mobileSignalIconId = 0;
                 callbackInfo.dataTypeIconId = 0;
                 callbackInfo.enabled = true;
-                callbackInfo.enabledDesc = MiuiCellularTile.this.mContext.getString(C0018R$string.keyguard_missing_sim_message_short);
+                callbackInfo.enabledDesc = MiuiCellularTile.this.mContext.getString(C0021R$string.keyguard_missing_sim_message_short);
                 CallbackInfo callbackInfo2 = this.mInfo;
                 callbackInfo2.signalContentDescription = callbackInfo2.enabledDesc;
             }
@@ -311,11 +311,11 @@ public class MiuiCellularTile extends QSTileImpl<QSTile.BooleanState> {
         }
 
         private CellularDetailAdapter() {
-            this.SIM_SLOT_ICON = new int[]{C0010R$drawable.ic_qs_sim_card1, C0010R$drawable.ic_qs_sim_card2};
+            this.SIM_SLOT_ICON = new int[]{C0013R$drawable.ic_qs_sim_card1, C0013R$drawable.ic_qs_sim_card2};
         }
 
         public CharSequence getTitle() {
-            return MiuiCellularTile.this.mContext.getString(C0018R$string.quick_settings_cellular_detail_title);
+            return MiuiCellularTile.this.mContext.getString(C0021R$string.quick_settings_cellular_detail_title);
         }
 
         public Boolean getToggleState() {
@@ -376,7 +376,7 @@ public class MiuiCellularTile extends QSTileImpl<QSTile.BooleanState> {
             }
             boolean z = this.mDefaultDataSlot == i;
             acquireItem.selected = z;
-            acquireItem.icon2 = z ? C0010R$drawable.ic_qs_detail_item_selected : -1;
+            acquireItem.icon2 = z ? C0013R$drawable.ic_qs_detail_item_selected : -1;
             if (VirtualSimUtils.isVirtualSim(MiuiCellularTile.this.mContext, subscriptionInfo.getSimSlotIndex())) {
                 acquireItem.line1 = VirtualSimUtils.getVirtualSimCarrierName(MiuiCellularTile.this.mContext);
             } else {

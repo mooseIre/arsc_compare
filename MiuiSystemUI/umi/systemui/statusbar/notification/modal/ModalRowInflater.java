@@ -5,7 +5,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import com.android.systemui.C0014R$layout;
+import com.android.systemui.C0017R$layout;
 import com.android.systemui.statusbar.NotificationRemoteInputManager;
 import com.android.systemui.statusbar.notification.ExpandedNotification;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
@@ -34,7 +34,7 @@ public final class ModalRowInflater {
             Intrinsics.checkExpressionValueIsNotNull(modalRow, "entry.modalRow");
             return modalRow;
         }
-        View inflate = LayoutInflater.from(context).inflate(C0014R$layout.status_bar_notification_row, viewGroup, false);
+        View inflate = LayoutInflater.from(context).inflate(C0017R$layout.status_bar_notification_row, viewGroup, false);
         if (inflate != null) {
             ExpandableNotificationRow expandableNotificationRow = (ExpandableNotificationRow) inflate;
             notificationEntry.getRowController().init(expandableNotificationRow);

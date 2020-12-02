@@ -23,7 +23,7 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 import com.android.internal.app.AlertActivity;
 import com.android.internal.app.AlertController;
-import com.android.systemui.C0018R$string;
+import com.android.systemui.C0021R$string;
 
 public class UsbPermissionActivity extends AlertActivity implements DialogInterface.OnClickListener, CompoundButton.OnCheckedChangeListener {
     private UsbAccessory mAccessory;
@@ -55,15 +55,15 @@ public class UsbPermissionActivity extends AlertActivity implements DialogInterf
             AlertController.AlertParams alertParams = this.mAlertParams;
             alertParams.mTitle = charSequence;
             if (this.mDevice == null) {
-                alertParams.mMessage = getString(C0018R$string.usb_accessory_permission_prompt, new Object[]{charSequence, this.mAccessory.getDescription()});
+                alertParams.mMessage = getString(C0021R$string.usb_accessory_permission_prompt, new Object[]{charSequence, this.mAccessory.getDescription()});
                 this.mDisconnectedReceiver = new UsbDisconnectedReceiver((Activity) this, this.mAccessory);
                 z = false;
             } else {
                 z = this.mDevice.getHasAudioCapture() && !(PermissionChecker.checkPermissionForPreflight(this, "android.permission.RECORD_AUDIO", -1, applicationInfo.uid, this.mPackageName) == 0);
                 if (z) {
-                    i = C0018R$string.usb_device_permission_prompt_warn;
+                    i = C0021R$string.usb_device_permission_prompt_warn;
                 } else {
-                    i = C0018R$string.usb_device_permission_prompt;
+                    i = C0021R$string.usb_device_permission_prompt;
                 }
                 alertParams.mMessage = getString(i, new Object[]{charSequence, this.mDevice.getProductName()});
                 this.mDisconnectedReceiver = new UsbDisconnectedReceiver((Activity) this, this.mDevice);
@@ -79,9 +79,9 @@ public class UsbPermissionActivity extends AlertActivity implements DialogInterf
                 this.mAlwaysUse = checkBox;
                 UsbDevice usbDevice = this.mDevice;
                 if (usbDevice == null) {
-                    checkBox.setText(getString(C0018R$string.always_use_accessory, new Object[]{charSequence, this.mAccessory.getDescription()}));
+                    checkBox.setText(getString(C0021R$string.always_use_accessory, new Object[]{charSequence, this.mAccessory.getDescription()}));
                 } else {
-                    checkBox.setText(getString(C0018R$string.always_use_device, new Object[]{charSequence, usbDevice.getProductName()}));
+                    checkBox.setText(getString(C0021R$string.always_use_device, new Object[]{charSequence, usbDevice.getProductName()}));
                 }
                 this.mAlwaysUse.setOnCheckedChangeListener(this);
                 TextView textView = (TextView) alertParams.mView.findViewById(16908848);

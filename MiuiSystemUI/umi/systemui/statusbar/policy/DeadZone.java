@@ -6,9 +6,9 @@ import android.graphics.Canvas;
 import android.os.SystemClock;
 import android.util.Slog;
 import android.view.MotionEvent;
-import com.android.systemui.C0007R$bool;
-import com.android.systemui.C0009R$dimen;
-import com.android.systemui.C0013R$integer;
+import com.android.systemui.C0010R$bool;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0016R$integer;
 import com.android.systemui.Dependency;
 import com.android.systemui.statusbar.NavigationBarController;
 import com.android.systemui.statusbar.phone.NavigationBarView;
@@ -71,16 +71,16 @@ public class DeadZone {
     public void onConfigurationChanged(int i) {
         this.mDisplayRotation = i;
         Resources resources = this.mNavigationBarView.getResources();
-        this.mHold = resources.getInteger(C0013R$integer.navigation_bar_deadzone_hold);
-        this.mDecay = resources.getInteger(C0013R$integer.navigation_bar_deadzone_decay);
-        this.mSizeMin = resources.getDimensionPixelSize(C0009R$dimen.navigation_bar_deadzone_size);
-        this.mSizeMax = resources.getDimensionPixelSize(C0009R$dimen.navigation_bar_deadzone_size_max);
+        this.mHold = resources.getInteger(C0016R$integer.navigation_bar_deadzone_hold);
+        this.mDecay = resources.getInteger(C0016R$integer.navigation_bar_deadzone_decay);
+        this.mSizeMin = resources.getDimensionPixelSize(C0012R$dimen.navigation_bar_deadzone_size);
+        this.mSizeMax = resources.getDimensionPixelSize(C0012R$dimen.navigation_bar_deadzone_size_max);
         boolean z = true;
-        if (resources.getInteger(C0013R$integer.navigation_bar_deadzone_orientation) != 1) {
+        if (resources.getInteger(C0016R$integer.navigation_bar_deadzone_orientation) != 1) {
             z = false;
         }
         this.mVertical = z;
-        setFlashOnTouchCapture(resources.getBoolean(C0007R$bool.config_dead_zone_flash));
+        setFlashOnTouchCapture(resources.getBoolean(C0010R$bool.config_dead_zone_flash));
     }
 
     public boolean onTouchEvent(MotionEvent motionEvent) {

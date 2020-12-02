@@ -26,8 +26,8 @@ import com.android.internal.app.IVoiceInteractionSessionShowCallback;
 import com.android.internal.logging.MetricsLogger;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.settingslib.applications.InterestingConfigChanges;
-import com.android.systemui.C0009R$dimen;
-import com.android.systemui.C0014R$layout;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0017R$layout;
 import com.android.systemui.assist.ui.DefaultUiController;
 import com.android.systemui.model.SysUiState;
 import com.android.systemui.recents.OverviewProxyService;
@@ -52,7 +52,7 @@ public class AssistManager {
                     z = false;
                 }
                 AssistManager assistManager = AssistManager.this;
-                AssistOrbContainer unused = assistManager.mView = (AssistOrbContainer) LayoutInflater.from(assistManager.mContext).inflate(C0014R$layout.assist_orb, (ViewGroup) null);
+                AssistOrbContainer unused = assistManager.mView = (AssistOrbContainer) LayoutInflater.from(assistManager.mContext).inflate(C0017R$layout.assist_orb, (ViewGroup) null);
                 AssistManager.this.mView.setVisibility(8);
                 AssistManager.this.mView.setSystemUiVisibility(1792);
                 AssistManager.this.mWindowManager.addView(AssistManager.this.mView, AssistManager.this.getLayoutParams());
@@ -198,7 +198,7 @@ public class AssistManager {
 
     /* access modifiers changed from: private */
     public WindowManager.LayoutParams getLayoutParams() {
-        WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(-1, this.mContext.getResources().getDimensionPixelSize(C0009R$dimen.assist_orb_scrim_height), 2033, 280, -3);
+        WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(-1, this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.assist_orb_scrim_height), 2033, 280, -3);
         layoutParams.token = new Binder();
         layoutParams.gravity = 8388691;
         layoutParams.setTitle("AssistPreviewPanel");
@@ -266,8 +266,8 @@ public class AssistManager {
             r5.showDisclosure()
         L_0x0048:
             android.content.Context r6 = r5.mContext     // Catch:{ ActivityNotFoundException -> 0x0060 }
-            int r7 = com.android.systemui.C0004R$anim.search_launch_enter     // Catch:{ ActivityNotFoundException -> 0x0060 }
-            int r1 = com.android.systemui.C0004R$anim.search_launch_exit     // Catch:{ ActivityNotFoundException -> 0x0060 }
+            int r7 = com.android.systemui.C0007R$anim.search_launch_enter     // Catch:{ ActivityNotFoundException -> 0x0060 }
+            int r1 = com.android.systemui.C0007R$anim.search_launch_exit     // Catch:{ ActivityNotFoundException -> 0x0060 }
             android.app.ActivityOptions r6 = android.app.ActivityOptions.makeCustomAnimation(r6, r7, r1)     // Catch:{ ActivityNotFoundException -> 0x0060 }
             r7 = 268435456(0x10000000, float:2.5243549E-29)
             r0.addFlags(r7)     // Catch:{ ActivityNotFoundException -> 0x0060 }

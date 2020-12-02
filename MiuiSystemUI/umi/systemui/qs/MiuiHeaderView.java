@@ -6,8 +6,8 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import com.android.systemui.C0012R$id;
-import com.android.systemui.C0018R$string;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.Dependency;
 import com.android.systemui.plugins.ActivityStarter;
 import com.android.systemui.statusbar.policy.MiuiClock;
@@ -45,10 +45,10 @@ public abstract class MiuiHeaderView extends RelativeLayout implements View.OnCl
     public void onFinishInflate() {
         Typeface typeface;
         super.onFinishInflate();
-        MiuiClock miuiClock = (MiuiClock) findViewById(C0012R$id.date_time);
+        MiuiClock miuiClock = (MiuiClock) findViewById(C0015R$id.date_time);
         this.mDateView = miuiClock;
         miuiClock.setOnClickListener(this);
-        MiuiClock miuiClock2 = (MiuiClock) findViewById(C0012R$id.big_time);
+        MiuiClock miuiClock2 = (MiuiClock) findViewById(C0015R$id.big_time);
         this.mClock = miuiClock2;
         miuiClock2.setOnClickListener(this);
         if (new File("system/fonts/MitypeVF.ttf").exists()) {
@@ -57,10 +57,10 @@ public abstract class MiuiHeaderView extends RelativeLayout implements View.OnCl
             typeface = Typeface.createFromAsset(getContext().getAssets(), "fonts/Mitype2018-50.otf");
         }
         this.mClock.setTypeface(typeface);
-        ImageView imageView = (ImageView) findViewById(C0012R$id.notification_shade_shortcut);
+        ImageView imageView = (ImageView) findViewById(C0015R$id.notification_shade_shortcut);
         this.mShortcut = imageView;
         imageView.setOnClickListener(this);
-        this.mShortcut.setContentDescription(getResources().getString(C0018R$string.accessibility_settings));
+        this.mShortcut.setContentDescription(getResources().getString(C0021R$string.accessibility_settings));
     }
 
     /* JADX WARNING: Removed duplicated region for block: B:26:0x0078 A[Catch:{ Exception -> 0x0083 }] */
@@ -107,7 +107,7 @@ public abstract class MiuiHeaderView extends RelativeLayout implements View.OnCl
             r2.putExtra(r7, r0)     // Catch:{ Exception -> 0x0083 }
             java.lang.String r7 = ":settings:show_fragment_title"
             android.content.res.Resources r0 = r6.getResources()     // Catch:{ Exception -> 0x0083 }
-            int r3 = com.android.systemui.C0018R$string.notification_control_center     // Catch:{ Exception -> 0x0083 }
+            int r3 = com.android.systemui.C0021R$string.notification_control_center     // Catch:{ Exception -> 0x0083 }
             java.lang.String r0 = r0.getString(r3)     // Catch:{ Exception -> 0x0083 }
             r2.putExtra(r7, r0)     // Catch:{ Exception -> 0x0083 }
             java.lang.String r7 = "notification-settings"

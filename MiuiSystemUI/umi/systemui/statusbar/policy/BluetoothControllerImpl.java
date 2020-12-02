@@ -1,8 +1,6 @@
 package com.android.systemui.statusbar.policy;
 
 import android.app.ActivityManager;
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -33,8 +31,6 @@ public class BluetoothControllerImpl implements BluetoothController, BluetoothCa
     private static final boolean DEBUG = Log.isLoggable("BluetoothController", 3);
     private boolean mAudioProfileOnly;
     private final Handler mBgHandler;
-    /* access modifiers changed from: private */
-    public BluetoothDevice mBluetoothDevice;
     private final WeakHashMap<CachedBluetoothDevice, ActuallyCachedState> mCachedState = new WeakHashMap<>();
     private final List<CachedBluetoothDevice> mConnectedDevices = new ArrayList();
     private int mConnectionState = 0;
@@ -52,22 +48,17 @@ public class BluetoothControllerImpl implements BluetoothController, BluetoothCa
                 obtainMessage.what = 100;
                 obtainMessage.obj = action;
                 BluetoothControllerImpl.this.mHandler.sendMessage(obtainMessage);
-            } else if ("android.bluetooth.headset.profile.action.CONNECTION_STATE_CHANGED".equals(action)) {
-                int unused = BluetoothControllerImpl.this.mPhoneConnectionState = intent.getIntExtra("android.bluetooth.profile.extra.STATE", -1);
-                BluetoothDevice unused2 = BluetoothControllerImpl.this.mBluetoothDevice = (BluetoothDevice) intent.getParcelableExtra("android.bluetooth.device.extra.DEVICE");
+            } else if ("android.intent.action.BLUETOOTH_HANDSFREE_BATTERY_CHANGED".equals(action)) {
                 Message obtainMessage2 = BluetoothControllerImpl.this.mHandler.obtainMessage();
                 obtainMessage2.what = R$styleable.Constraint_layout_goneMarginRight;
-                obtainMessage2.obj = action;
+                obtainMessage2.obj = intent;
                 BluetoothControllerImpl.this.mHandler.sendMessage(obtainMessage2);
-            } else if ("android.intent.action.BLUETOOTH_HANDSFREE_BATTERY_CHANGED".equals(action)) {
                 BluetoothControllerImpl.this.onDeviceAttributesChanged();
             }
         }
     };
     private boolean mIsActive;
     private final LocalBluetoothManager mLocalBluetoothManager;
-    /* access modifiers changed from: private */
-    public int mPhoneConnectionState = 0;
     private int mState = 10;
     private final UserManager mUserManager;
 
@@ -91,7 +82,6 @@ public class BluetoothControllerImpl implements BluetoothController, BluetoothCa
         intentFilter.addAction("com.android.bluetooth.opp.BLUETOOTH_OPP_INBOUND_END");
         intentFilter.addAction("com.android.bluetooth.opp.BLUETOOTH_OPP_OUTBOUND_START");
         intentFilter.addAction("com.android.bluetooth.opp.BLUETOOTH_OPP_OUTBOUND_END");
-        intentFilter.addAction("android.bluetooth.headset.profile.action.CONNECTION_STATE_CHANGED");
         intentFilter.addAction("android.intent.action.BLUETOOTH_HANDSFREE_BATTERY_CHANGED");
         context.registerReceiverAsUser(this.mIntentReceiver, UserHandle.ALL, intentFilter, (String) null, this.mBgHandler);
     }
@@ -163,18 +153,6 @@ public class BluetoothControllerImpl implements BluetoothController, BluetoothCa
 
     public int getBluetoothState() {
         return this.mState;
-    }
-
-    public boolean isBluetoothPhoneConnected() {
-        return this.mPhoneConnectionState == 12;
-    }
-
-    public boolean getProfileConnectionState() {
-        BluetoothDevice bluetoothDevice = this.mBluetoothDevice;
-        if (bluetoothDevice == null || !bluetoothDevice.isTwsPlusDevice() || this.mBluetoothDevice.getTwsPlusPeerAddress() == null || BluetoothAdapter.getDefaultAdapter().getProfileConnectionState(1) != 2) {
-            return false;
-        }
-        return true;
     }
 
     public boolean isBluetoothConnected() {
@@ -417,7 +395,7 @@ public class BluetoothControllerImpl implements BluetoothController, BluetoothCa
             } else if (i == 100) {
                 fireInoutStateChange((String) message.obj);
             } else if (i == 101) {
-                fireStatePhoneChange();
+                fireHandsreeBatteryStateChange((Intent) message.obj);
             }
         }
 
@@ -446,10 +424,10 @@ public class BluetoothControllerImpl implements BluetoothController, BluetoothCa
             }
         }
 
-        private void fireStatePhoneChange() {
+        private void fireHandsreeBatteryStateChange(Intent intent) {
             Iterator<BluetoothController.Callback> it = this.mCallbacks.iterator();
             while (it.hasNext()) {
-                it.next().onBluetoothStatePhoneChange();
+                it.next().onBluetoothBatteryChange(intent);
             }
         }
     }
@@ -464,7 +442,7 @@ public class BluetoothControllerImpl implements BluetoothController, BluetoothCa
             return "";
         }
         List<CachedBluetoothDevice> list = this.mConnectedDevices;
-        CachedBluetoothDevice cachedBluetoothDevice = list.get(list.size());
+        CachedBluetoothDevice cachedBluetoothDevice = list.get(list.size() - 1);
         if (cachedBluetoothDevice == null) {
             return "";
         }

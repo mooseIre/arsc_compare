@@ -12,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
 public final class SpringAnimationEvent extends NotificationStackScrollLayout.AnimationEvent {
     public static final Companion Companion = new Companion((DefaultConstructorMarker) null);
     /* access modifiers changed from: private */
-    public static final List<Companion.DummyFolmeData> NOTIFICATION_SPRING_TABLE = CollectionsKt__CollectionsKt.listOf(new Companion.DummyFolmeData(0.7f, 0.625f, 800), new Companion.DummyFolmeData(0.74f, 0.743f, 700), new Companion.DummyFolmeData(0.78f, 0.72f, 750), new Companion.DummyFolmeData(0.82f, 0.7467f, 750), new Companion.DummyFolmeData(0.86f, 0.725f, 800), new Companion.DummyFolmeData(0.9f, 0.8f, 750), new Companion.DummyFolmeData(0.94f, 0.8857f, 700), new Companion.DummyFolmeData(0.98f, 0.7529f, 850), new Companion.DummyFolmeData(1.02f, 0.66f, 1000), new Companion.DummyFolmeData(1.06f, 0.59f, 1150));
+    public static final List<Companion.DummyFolmeData> NOTIFICATION_SPRING_TABLE = CollectionsKt__CollectionsKt.listOf(new Companion.DummyFolmeData(0.7f, 0.625f, 800), new Companion.DummyFolmeData(0.74f, 0.743f, 700), new Companion.DummyFolmeData(0.78f, 0.72f, 750), new Companion.DummyFolmeData(0.82f, 0.7467f, 750), new Companion.DummyFolmeData(0.86f, 0.725f, 800), new Companion.DummyFolmeData(0.9f, 0.8f, 750), new Companion.DummyFolmeData(0.94f, 0.8857f, 700), new Companion.DummyFolmeData(0.98f, 0.7529f, 850), new Companion.DummyFolmeData(0.99f, 0.7529f, 900));
 
     public SpringAnimationEvent(int i) {
         super((ExpandableView) null, 16, Companion.getMaxDuration(i), MiuiNotificationAnimations.INSTANCE.getRELEASE_SPRING_FILTER());

@@ -12,7 +12,7 @@ import android.graphics.drawable.RippleDrawable;
 import android.util.AttributeSet;
 import android.view.View;
 import com.android.internal.util.ArrayUtils;
-import com.android.systemui.C0007R$bool;
+import com.android.systemui.C0010R$bool;
 import com.android.systemui.Interpolators;
 import com.android.systemui.statusbar.notification.ActivityLaunchAnimator;
 
@@ -27,7 +27,7 @@ public class NotificationBackgroundView extends View {
     private int mClipTopAmount;
     private float[] mCornerRadii = new float[8];
     private float mDistanceToTopRoundness;
-    private final boolean mDontModifyCorners = getResources().getBoolean(C0007R$bool.config_clipNotificationsToOutline);
+    private final boolean mDontModifyCorners = getResources().getBoolean(C0010R$bool.config_clipNotificationsToOutline);
     private int mDrawableAlpha = 255;
     private boolean mExpandAnimationRunning;
     private boolean mFirstInSection;

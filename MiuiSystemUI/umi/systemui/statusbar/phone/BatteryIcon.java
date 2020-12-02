@@ -11,9 +11,9 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LevelListDrawable;
 import android.util.SparseArray;
 import android.util.TypedValue;
-import com.android.systemui.C0008R$color;
-import com.android.systemui.C0013R$integer;
-import com.android.systemui.C0017R$raw;
+import com.android.systemui.C0011R$color;
+import com.android.systemui.C0016R$integer;
+import com.android.systemui.C0020R$raw;
 import com.android.systemui.Dependency;
 import com.miui.systemui.SettingsManager;
 import java.io.IOException;
@@ -59,13 +59,13 @@ public class BatteryIcon {
 
     private BatteryIcon(Context context) {
         this.mContext = context;
-        this.mBatteryColumns = context.getResources().getInteger(C0013R$integer.battery_columns);
+        this.mBatteryColumns = context.getResources().getInteger(C0016R$integer.battery_columns);
     }
 
     public LevelListDrawable getGraphicIcon(int i) {
         int i2 = this.mLevel;
         if (i2 == -1 || i2 - i > 10 || i2 - i < 0) {
-            this.mGraphicIcon = generateIcon(C0017R$raw.stat_sys_battery, i, false);
+            this.mGraphicIcon = generateIcon(C0020R$raw.stat_sys_battery, i, false);
             this.mLevel = i;
         }
         return this.mGraphicIcon;
@@ -74,11 +74,11 @@ public class BatteryIcon {
     public LevelListDrawable getGraphicIconDarkMode(int i) {
         int i2 = this.mDarkLevel;
         if (i2 == -1 || i2 - i > 10 || i2 - i < 0) {
-            this.mGraphicIconDarkMode = generateIcon(C0017R$raw.stat_sys_battery_darkmode, i, false);
+            this.mGraphicIconDarkMode = generateIcon(C0020R$raw.stat_sys_battery_darkmode, i, false);
             this.mDarkLevel = i;
         }
         if (!((SettingsManager) Dependency.get(SettingsManager.class)).getMiuiOptimizationEnabled()) {
-            this.mGraphicIconDarkMode.setColorFilter(this.mContext.getResources().getColor(C0008R$color.status_bar_icon_text_color_dark_mode_cts), PorterDuff.Mode.SRC_IN);
+            this.mGraphicIconDarkMode.setColorFilter(this.mContext.getResources().getColor(C0011R$color.status_bar_icon_text_color_dark_mode_cts), PorterDuff.Mode.SRC_IN);
         } else {
             this.mGraphicIconDarkMode.setColorFilter((ColorFilter) null);
         }
@@ -88,7 +88,7 @@ public class BatteryIcon {
     public LevelListDrawable getGraphicDigitalIcon(int i) {
         int i2 = this.mDigitalLevel;
         if (i2 == -1 || i2 - i > 10 || i2 - i < 0) {
-            this.mGraphicDigitalIcon = generateIcon(C0017R$raw.stat_sys_battery_digital, i, false);
+            this.mGraphicDigitalIcon = generateIcon(C0020R$raw.stat_sys_battery_digital, i, false);
             this.mDigitalLevel = i;
         }
         return this.mGraphicDigitalIcon;
@@ -97,11 +97,11 @@ public class BatteryIcon {
     public LevelListDrawable getGraphicDigitalIconDarkMode(int i) {
         int i2 = this.mDigitalDarkLevel;
         if (i2 == -1 || i2 - i > 10 || i2 - i < 0) {
-            this.mGraphicDigitalIconDarkMode = generateIcon(C0017R$raw.stat_sys_battery_digital_darkmode, i, false);
+            this.mGraphicDigitalIconDarkMode = generateIcon(C0020R$raw.stat_sys_battery_digital_darkmode, i, false);
             this.mDigitalDarkLevel = i;
         }
         if (!((SettingsManager) Dependency.get(SettingsManager.class)).getMiuiOptimizationEnabled()) {
-            this.mGraphicDigitalIconDarkMode.setColorFilter(this.mContext.getResources().getColor(C0008R$color.status_bar_icon_text_color_dark_mode_cts), PorterDuff.Mode.SRC_IN);
+            this.mGraphicDigitalIconDarkMode.setColorFilter(this.mContext.getResources().getColor(C0011R$color.status_bar_icon_text_color_dark_mode_cts), PorterDuff.Mode.SRC_IN);
         } else {
             this.mGraphicDigitalIconDarkMode.setColorFilter((ColorFilter) null);
         }
@@ -111,7 +111,7 @@ public class BatteryIcon {
     public LevelListDrawable getGraphicChargeIcon(int i) {
         int i2 = this.mChargeLevel;
         if (i2 == -1 || i - i2 > 10 || i - i2 < 0) {
-            this.mGraphicChargeIcon = generateIcon(C0017R$raw.stat_sys_battery_charge, i, true);
+            this.mGraphicChargeIcon = generateIcon(C0020R$raw.stat_sys_battery_charge, i, true);
             this.mChargeLevel = i;
         }
         return this.mGraphicChargeIcon;
@@ -120,11 +120,11 @@ public class BatteryIcon {
     public LevelListDrawable getGraphicChargeIconDarkMode(int i) {
         int i2 = this.mChargeDarkLevel;
         if (i2 == -1 || i - i2 > 10 || i - i2 < 0) {
-            this.mGraphicChargeIconDarkMode = generateIcon(C0017R$raw.stat_sys_battery_charge_darkmode, i, true);
+            this.mGraphicChargeIconDarkMode = generateIcon(C0020R$raw.stat_sys_battery_charge_darkmode, i, true);
             this.mChargeDarkLevel = i;
         }
         if (!((SettingsManager) Dependency.get(SettingsManager.class)).getMiuiOptimizationEnabled()) {
-            this.mGraphicChargeIconDarkMode.setColorFilter(this.mContext.getResources().getColor(C0008R$color.status_bar_icon_text_color_dark_mode_cts), PorterDuff.Mode.SRC_IN);
+            this.mGraphicChargeIconDarkMode.setColorFilter(this.mContext.getResources().getColor(C0011R$color.status_bar_icon_text_color_dark_mode_cts), PorterDuff.Mode.SRC_IN);
         } else {
             this.mGraphicChargeIconDarkMode.setColorFilter((ColorFilter) null);
         }
@@ -134,7 +134,7 @@ public class BatteryIcon {
     public LevelListDrawable getGraphicChargeDigitIcon(int i) {
         int i2 = this.mChargeDigitLevel;
         if (i2 == -1 || i - i2 > 10 || i - i2 < 0) {
-            this.mGraphicChargeDigitIcon = generateIcon(C0017R$raw.stat_sys_battery_charge_digit, i, true);
+            this.mGraphicChargeDigitIcon = generateIcon(C0020R$raw.stat_sys_battery_charge_digit, i, true);
             this.mChargeDigitLevel = i;
         }
         return this.mGraphicChargeDigitIcon;
@@ -143,11 +143,11 @@ public class BatteryIcon {
     public LevelListDrawable getGraphicChargeDigitIconDarkMode(int i) {
         int i2 = this.mChargeDigitDarkLevel;
         if (i2 == -1 || i - i2 > 10 || i - i2 < 0) {
-            this.mGraphicChargeDigitIconDarkMode = generateIcon(C0017R$raw.stat_sys_battery_charge_digit_darkmode, i, true);
+            this.mGraphicChargeDigitIconDarkMode = generateIcon(C0020R$raw.stat_sys_battery_charge_digit_darkmode, i, true);
             this.mChargeDigitDarkLevel = i;
         }
         if (!((SettingsManager) Dependency.get(SettingsManager.class)).getMiuiOptimizationEnabled()) {
-            this.mGraphicChargeDigitIconDarkMode.setColorFilter(this.mContext.getResources().getColor(C0008R$color.status_bar_icon_text_color_dark_mode_cts), PorterDuff.Mode.SRC_IN);
+            this.mGraphicChargeDigitIconDarkMode.setColorFilter(this.mContext.getResources().getColor(C0011R$color.status_bar_icon_text_color_dark_mode_cts), PorterDuff.Mode.SRC_IN);
         } else {
             this.mGraphicChargeDigitIconDarkMode.setColorFilter((ColorFilter) null);
         }
@@ -157,7 +157,7 @@ public class BatteryIcon {
     public LevelListDrawable getGraphicPowerSaveIcon(int i) {
         int i2 = this.mPowerSaveLevel;
         if (i2 == -1 || i - i2 > 10 || i - i2 < 0) {
-            this.mGraphicPowerSaveIcon = generateIcon(C0017R$raw.stat_sys_battery_power_save, i, true);
+            this.mGraphicPowerSaveIcon = generateIcon(C0020R$raw.stat_sys_battery_power_save, i, true);
             this.mPowerSaveLevel = i;
         }
         return this.mGraphicPowerSaveIcon;
@@ -166,11 +166,11 @@ public class BatteryIcon {
     public LevelListDrawable getGraphicPowerSaveIconDarkMode(int i) {
         int i2 = this.mPowerSaveDarkLevel;
         if (i2 == -1 || i - i2 > 10 || i - i2 < 0) {
-            this.mGraphicPowerSaveIconDarkMode = generateIcon(C0017R$raw.stat_sys_battery_power_save_darkmode, i, true);
+            this.mGraphicPowerSaveIconDarkMode = generateIcon(C0020R$raw.stat_sys_battery_power_save_darkmode, i, true);
             this.mPowerSaveDarkLevel = i;
         }
         if (!((SettingsManager) Dependency.get(SettingsManager.class)).getMiuiOptimizationEnabled()) {
-            this.mGraphicPowerSaveIconDarkMode.setColorFilter(this.mContext.getResources().getColor(C0008R$color.status_bar_icon_text_color_dark_mode_cts), PorterDuff.Mode.SRC_IN);
+            this.mGraphicPowerSaveIconDarkMode.setColorFilter(this.mContext.getResources().getColor(C0011R$color.status_bar_icon_text_color_dark_mode_cts), PorterDuff.Mode.SRC_IN);
         } else {
             this.mGraphicPowerSaveIconDarkMode.setColorFilter((ColorFilter) null);
         }
@@ -180,7 +180,7 @@ public class BatteryIcon {
     public LevelListDrawable getGraphicPowerSaveDigitIcon(int i) {
         int i2 = this.mPowerSaveDigitLevel;
         if (i2 == -1 || i - i2 > 10 || i - i2 < 0) {
-            this.mGraphicPowerSaveDigitIcon = generateIcon(C0017R$raw.stat_sys_battery_power_save_digit, i, true);
+            this.mGraphicPowerSaveDigitIcon = generateIcon(C0020R$raw.stat_sys_battery_power_save_digit, i, true);
             this.mPowerSaveDigitLevel = i;
         }
         return this.mGraphicPowerSaveDigitIcon;
@@ -189,11 +189,11 @@ public class BatteryIcon {
     public LevelListDrawable getGraphicPowerSaveDigitIconDarkMode(int i) {
         int i2 = this.mPowerSaveDigitDarkLevel;
         if (i2 == -1 || i - i2 > 10 || i - i2 < 0) {
-            this.mGraphicPowerSaveDigitIconDarkMode = generateIcon(C0017R$raw.stat_sys_battery_power_save_digit_darkmode, i, true);
+            this.mGraphicPowerSaveDigitIconDarkMode = generateIcon(C0020R$raw.stat_sys_battery_power_save_digit_darkmode, i, true);
             this.mPowerSaveDigitDarkLevel = i;
         }
         if (!((SettingsManager) Dependency.get(SettingsManager.class)).getMiuiOptimizationEnabled()) {
-            this.mGraphicPowerSaveDigitIconDarkMode.setColorFilter(this.mContext.getResources().getColor(C0008R$color.status_bar_icon_text_color_dark_mode_cts), PorterDuff.Mode.SRC_IN);
+            this.mGraphicPowerSaveDigitIconDarkMode.setColorFilter(this.mContext.getResources().getColor(C0011R$color.status_bar_icon_text_color_dark_mode_cts), PorterDuff.Mode.SRC_IN);
         } else {
             this.mGraphicPowerSaveDigitIconDarkMode.setColorFilter((ColorFilter) null);
         }

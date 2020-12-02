@@ -10,10 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.android.systemui.C0008R$color;
-import com.android.systemui.C0009R$dimen;
-import com.android.systemui.C0012R$id;
-import com.android.systemui.C0014R$layout;
+import com.android.systemui.C0011R$color;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0017R$layout;
 import com.android.systemui.FontSizeUtils;
 import com.android.systemui.plugins.qs.QSIconView;
 import com.android.systemui.plugins.qs.QSTile;
@@ -46,8 +46,8 @@ public class MiuiQSTileView extends MiuiQSTileBaseView {
     /* access modifiers changed from: protected */
     public void onConfigurationChanged(Configuration configuration) {
         super.onConfigurationChanged(configuration);
-        FontSizeUtils.updateFontSize(this.mLabel, C0009R$dimen.qs_tile_label_text_size);
-        FontSizeUtils.updateFontSize(this.mSecondLine, C0009R$dimen.qs_tile_app_label_text_size);
+        FontSizeUtils.updateFontSize(this.mLabel, C0012R$dimen.qs_tile_label_text_size);
+        FontSizeUtils.updateFontSize(this.mSecondLine, C0012R$dimen.qs_tile_app_label_text_size);
     }
 
     public int getDetailY() {
@@ -56,18 +56,18 @@ public class MiuiQSTileView extends MiuiQSTileBaseView {
 
     /* access modifiers changed from: protected */
     public void createLabel() {
-        ViewGroup viewGroup = (ViewGroup) LayoutInflater.from(getContext()).inflate(C0014R$layout.qs_tile_label, this, false);
+        ViewGroup viewGroup = (ViewGroup) LayoutInflater.from(getContext()).inflate(C0017R$layout.qs_tile_label, this, false);
         this.mLabelContainer = viewGroup;
         viewGroup.setClipChildren(false);
         this.mLabelContainer.setClipToPadding(false);
-        TextView textView = (TextView) this.mLabelContainer.findViewById(C0012R$id.tile_label);
+        TextView textView = (TextView) this.mLabelContainer.findViewById(C0015R$id.tile_label);
         this.mLabel = textView;
         textView.setSelected(true);
-        this.mPadLock = (ImageView) this.mLabelContainer.findViewById(C0012R$id.restricted_padlock);
-        this.mLabelContainer.findViewById(C0012R$id.underline);
-        this.mExpandIndicator = this.mLabelContainer.findViewById(C0012R$id.expand_indicator);
-        this.mExpandSpace = this.mLabelContainer.findViewById(C0012R$id.expand_space);
-        this.mSecondLine = (TextView) this.mLabelContainer.findViewById(C0012R$id.app_label);
+        this.mPadLock = (ImageView) this.mLabelContainer.findViewById(C0015R$id.restricted_padlock);
+        this.mLabelContainer.findViewById(C0015R$id.underline);
+        this.mExpandIndicator = this.mLabelContainer.findViewById(C0015R$id.expand_indicator);
+        this.mExpandSpace = this.mLabelContainer.findViewById(C0015R$id.expand_space);
+        this.mSecondLine = (TextView) this.mLabelContainer.findViewById(C0015R$id.app_label);
         addView(this.mLabelContainer);
     }
 
@@ -76,7 +76,7 @@ public class MiuiQSTileView extends MiuiQSTileBaseView {
         super.handleStateChanged(state);
         if (!Objects.equals(this.mLabel.getText(), state.label) || this.mState != state.state) {
             if (state.state == 0) {
-                state.label = new SpannableStringBuilder().append(state.label, new ForegroundColorSpan(getContext().getColor(C0008R$color.qs_tile_label_text_color_secondary)), 18);
+                state.label = new SpannableStringBuilder().append(state.label, new ForegroundColorSpan(getContext().getColor(C0011R$color.qs_tile_label_text_color_secondary)), 18);
             }
             this.mState = state.state;
             this.mLabel.setText(state.label);

@@ -4,8 +4,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import com.android.systemui.C0012R$id;
-import com.android.systemui.C0014R$layout;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0017R$layout;
 import com.android.systemui.statusbar.notification.ExpandedNotification;
 import com.android.systemui.statusbar.notification.ForegroundServiceDismissalFeatureController;
 import com.android.systemui.statusbar.notification.NotificationEntryListener;
@@ -143,7 +143,7 @@ public final class ForegroundServiceSectionController {
     @NotNull
     public final View createView(@NotNull LayoutInflater layoutInflater) {
         Intrinsics.checkParameterIsNotNull(layoutInflater, "li");
-        View inflate = layoutInflater.inflate(C0014R$layout.foreground_service_dungeon, (ViewGroup) null);
+        View inflate = layoutInflater.inflate(C0017R$layout.foreground_service_dungeon, (ViewGroup) null);
         this.entriesView = inflate;
         if (inflate != null) {
             inflate.setVisibility(8);
@@ -165,12 +165,12 @@ public final class ForegroundServiceSectionController {
         if (view == null) {
             throw new IllegalStateException("ForegroundServiceSectionController is trying to show dismissed fgs notifications without having been initialized!");
         } else if (view != null) {
-            View findViewById = view.findViewById(C0012R$id.entry_list);
+            View findViewById = view.findViewById(C0015R$id.entry_list);
             if (findViewById != null) {
                 LinearLayout linearLayout = (LinearLayout) findViewById;
                 linearLayout.removeAllViews();
                 for (T t : CollectionsKt___CollectionsKt.sortedWith(this.entries, new ForegroundServiceSectionController$$special$$inlined$sortedBy$1())) {
-                    View inflate = LayoutInflater.from(linearLayout.getContext()).inflate(C0014R$layout.foreground_service_dungeon_row, (ViewGroup) null);
+                    View inflate = LayoutInflater.from(linearLayout.getContext()).inflate(C0017R$layout.foreground_service_dungeon_row, (ViewGroup) null);
                     if (inflate != null) {
                         DungeonRow dungeonRow = (DungeonRow) inflate;
                         dungeonRow.setEntry(t);

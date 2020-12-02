@@ -12,14 +12,14 @@ public class MCCUtils {
         if (TextUtils.isEmpty(str)) {
             return false;
         }
-        return getResourcesForOperation(context, str, true).getBoolean(C0007R$bool.status_bar_show_spn_when_airplane);
+        return getResourcesForOperation(context, str, true).getBoolean(C0010R$bool.status_bar_show_spn_when_airplane);
     }
 
     public static boolean isShowSpnByGidWhenAirplaneOn(Context context, String str, String str2) {
         if (TextUtils.isEmpty(str)) {
             return false;
         }
-        String[] stringArray = getResourcesForOperation(context, str, true).getStringArray(C0005R$array.status_bar_show_spn_by_gid_when_airplane);
+        String[] stringArray = getResourcesForOperation(context, str, true).getStringArray(C0008R$array.status_bar_show_spn_by_gid_when_airplane);
         Log.d("MCCUtils", "isShowSpnByGidWhenAirplaneOn: operation = " + str + "; gid = " + str2);
         for (int i = 0; i < stringArray.length; i++) {
             Log.d("MCCUtils", "isShowSpnByGidWhenAirplaneOn: cus_gid_values = " + stringArray[i]);

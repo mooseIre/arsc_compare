@@ -77,6 +77,10 @@ public class ProtoTracer implements Dumpable, FrameProtoTracer.ProtoTraceParams<
         this.mProtoTracer.add(protoTraceable);
     }
 
+    public void remove(ProtoTraceable<SystemUiTraceProto> protoTraceable) {
+        this.mProtoTracer.remove(protoTraceable);
+    }
+
     public void update() {
         this.mProtoTracer.update();
     }

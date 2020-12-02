@@ -6,8 +6,8 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
-import com.android.systemui.C0008R$color;
-import com.android.systemui.C0012R$id;
+import com.android.systemui.C0011R$color;
+import com.android.systemui.C0015R$id;
 import com.android.systemui.plugins.qs.QSIconView;
 import com.android.systemui.plugins.qs.QSTile;
 import java.util.Objects;
@@ -29,8 +29,8 @@ public class BigQSIconViewImpl extends QSIconView {
 
     public BigQSIconViewImpl(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-        this.mIconColor = context.getResources().getColor(C0008R$color.cc_qs_tile_icon_color);
-        this.mIconColorOff = getResources().getColor(C0008R$color.cc_qs_tile_icon_color_off);
+        this.mIconColor = context.getResources().getColor(C0011R$color.cc_qs_tile_icon_color);
+        this.mIconColorOff = getResources().getColor(C0011R$color.cc_qs_tile_icon_color_off);
         ImageView createIcon = createIcon();
         this.mIcon = createIcon;
         addView(createIcon);
@@ -42,16 +42,16 @@ public class BigQSIconViewImpl extends QSIconView {
     }
 
     public void updateResources() {
-        this.mIconColor = getResources().getColor(C0008R$color.cc_qs_tile_icon_color);
-        this.mIconColorOff = getResources().getColor(C0008R$color.cc_qs_tile_icon_color_off);
+        this.mIconColor = getResources().getColor(C0011R$color.cc_qs_tile_icon_color);
+        this.mIconColorOff = getResources().getColor(C0011R$color.cc_qs_tile_icon_color_off);
     }
 
     public void setIcon(QSTile.State state, boolean z) {
         QSTile.Icon icon = state.icon;
         Drawable drawable = icon != null ? icon.getDrawable(this.mContext) : null;
         if (drawable != null) {
-            Integer num = (Integer) this.mIcon.getTag(C0012R$id.qs_icon_state_tag);
-            if (num == null || num.intValue() != state.state || !Objects.equals(state.icon, this.mIcon.getTag(C0012R$id.qs_icon_tag))) {
+            Integer num = (Integer) this.mIcon.getTag(C0015R$id.qs_icon_state_tag);
+            if (num == null || num.intValue() != state.state || !Objects.equals(state.icon, this.mIcon.getTag(C0015R$id.qs_icon_tag))) {
                 drawable.setAutoMirrored(false);
                 drawable.setTint(state.state == 2 ? this.mIconColor : this.mIconColorOff);
                 if (state.state == 0) {
@@ -66,8 +66,8 @@ public class BigQSIconViewImpl extends QSIconView {
                         animatedVectorDrawable.start();
                     }
                 }
-                this.mIcon.setTag(C0012R$id.qs_icon_state_tag, Integer.valueOf(state.state));
-                this.mIcon.setTag(C0012R$id.qs_icon_tag, state.icon);
+                this.mIcon.setTag(C0015R$id.qs_icon_state_tag, Integer.valueOf(state.state));
+                this.mIcon.setTag(C0015R$id.qs_icon_tag, state.icon);
             }
         }
     }

@@ -8,8 +8,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
-import com.android.systemui.C0009R$dimen;
-import com.android.systemui.C0014R$layout;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0017R$layout;
 import com.android.systemui.Dependency;
 import com.android.systemui.controlcenter.phone.ControlPanelController;
 import com.android.systemui.controlcenter.phone.ControlPanelWindowManager;
@@ -90,19 +90,19 @@ public class MiuiNotificationShadeHeader extends RelativeLayout implements Contr
     private void updateHeaderView() {
         removeAllViews();
         ViewGroup.LayoutParams layoutParams = getLayoutParams();
-        this.mShowControlHeight = this.mContext.getResources().getDimensionPixelSize(C0009R$dimen.qs_control_center_header_paddingTop);
+        this.mShowControlHeight = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_center_header_paddingTop);
         if (!this.mUseControlPanel || this.mOrientation != 1) {
-            MiuiHeaderView miuiHeaderView = (MiuiHeaderView) LayoutInflater.from(this.mContext).inflate(C0014R$layout.miui_ns_qs_header_view, this, false);
+            MiuiHeaderView miuiHeaderView = (MiuiHeaderView) LayoutInflater.from(this.mContext).inflate(C0017R$layout.miui_ns_qs_header_view, this, false);
             this.mHeaderView = miuiHeaderView;
             if (this.mOrientation != 1) {
                 layoutParams.height = this.mContext.getResources().getDimensionPixelSize(17105489);
             } else if (((MiuiQSHeaderView) miuiHeaderView).showCarrier()) {
-                layoutParams.height = this.mContext.getResources().getDimensionPixelSize(C0009R$dimen.notch_expanded_header_height_with_carrier);
+                layoutParams.height = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.notch_expanded_header_height_with_carrier);
             } else {
-                layoutParams.height = this.mContext.getResources().getDimensionPixelSize(C0009R$dimen.notch_expanded_header_height);
+                layoutParams.height = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.notch_expanded_header_height);
             }
         } else {
-            this.mHeaderView = (MiuiHeaderView) LayoutInflater.from(this.mContext).inflate(C0014R$layout.miui_ns_notification_header_view, this, false);
+            this.mHeaderView = (MiuiHeaderView) LayoutInflater.from(this.mContext).inflate(C0017R$layout.miui_ns_notification_header_view, this, false);
             layoutParams.height = -2;
         }
         setLayoutParams(layoutParams);
@@ -147,7 +147,7 @@ public class MiuiNotificationShadeHeader extends RelativeLayout implements Contr
         if (motionEvent.getActionMasked() != 0) {
             this.mControlPanelWindowManager.setTransToControlPanel(false);
             return super.dispatchTouchEvent(motionEvent);
-        } else if (motionEvent.getRawY() >= ((float) this.mShowControlHeight) || !this.mControlPanelWindowManager.dispatchToControlPanel(motionEvent, (float) getWidth())) {
+        } else if ((motionEvent.getRawY() >= ((float) this.mShowControlHeight) && this.mOrientation != 2) || !this.mControlPanelWindowManager.dispatchToControlPanel(motionEvent, Math.max((float) getWidth(), (float) CommonUtil.getScreenSize(this.mContext).x))) {
             return super.dispatchTouchEvent(motionEvent);
         } else {
             this.mControlPanelWindowManager.setTransToControlPanel(true);

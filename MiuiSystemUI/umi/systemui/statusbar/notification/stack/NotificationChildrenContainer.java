@@ -16,9 +16,9 @@ import android.view.ViewGroup;
 import android.widget.RemoteViews;
 import android.widget.TextView;
 import com.android.internal.annotations.VisibleForTesting;
-import com.android.systemui.C0007R$bool;
-import com.android.systemui.C0009R$dimen;
-import com.android.systemui.C0014R$layout;
+import com.android.systemui.C0010R$bool;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0017R$layout;
 import com.android.systemui.statusbar.CrossFadeHelper;
 import com.android.systemui.statusbar.NotificationHeaderUtil;
 import com.android.systemui.statusbar.TransformableView;
@@ -150,17 +150,17 @@ public class NotificationChildrenContainer extends ViewGroup {
 
     private void initDimens() {
         Resources resources = getResources();
-        this.mChildPadding = resources.getDimensionPixelSize(C0009R$dimen.notification_children_padding);
-        this.mDividerAlpha = resources.getFloat(C0009R$dimen.notification_divider_alpha);
+        this.mChildPadding = resources.getDimensionPixelSize(C0012R$dimen.notification_children_padding);
+        this.mDividerAlpha = resources.getFloat(C0012R$dimen.notification_divider_alpha);
         this.mDividerHeight = getDividerHeight();
         this.mNotificationHeaderMargin = getNotificationHeaderMargin();
         int notificationTopPadding = getNotificationTopPadding();
         this.mNotificatonTopPadding = notificationTopPadding;
         this.mHeaderHeight = this.mNotificationHeaderMargin + notificationTopPadding;
         this.mCollapsedBottompadding = (float) resources.getDimensionPixelSize(17105354);
-        this.mEnableShadowOnChildNotifications = resources.getBoolean(C0007R$bool.config_enableShadowOnChildNotifications);
-        this.mShowDividersWhenExpanded = resources.getBoolean(C0007R$bool.config_showDividersWhenGroupNotificationExpanded);
-        this.mHideDividersDuringExpand = resources.getBoolean(C0007R$bool.config_hideDividersDuringExpand);
+        this.mEnableShadowOnChildNotifications = resources.getBoolean(C0010R$bool.config_enableShadowOnChildNotifications);
+        this.mShowDividersWhenExpanded = resources.getBoolean(C0010R$bool.config_showDividersWhenGroupNotificationExpanded);
+        this.mHideDividersDuringExpand = resources.getBoolean(C0010R$bool.config_hideDividersDuringExpand);
         this.mTranslationForHeader = resources.getDimensionPixelSize(17105354) - this.mNotificationHeaderMargin;
         this.mHybridGroupManager.initDimens();
     }
@@ -407,7 +407,7 @@ public class NotificationChildrenContainer extends ViewGroup {
     }
 
     private View inflateDivider() {
-        return LayoutInflater.from(this.mContext).inflate(C0014R$layout.notification_children_divider, this, false);
+        return LayoutInflater.from(this.mContext).inflate(C0017R$layout.notification_children_divider, this, false);
     }
 
     public List<ExpandableNotificationRow> getAttachedChildren() {
@@ -499,12 +499,12 @@ public class NotificationChildrenContainer extends ViewGroup {
 
     /* access modifiers changed from: protected */
     public int getNotificationHeaderMargin() {
-        return getResources().getDimensionPixelSize(C0009R$dimen.notification_children_container_margin_top);
+        return getResources().getDimensionPixelSize(C0012R$dimen.notification_children_container_margin_top);
     }
 
     /* access modifiers changed from: protected */
     public int getNotificationTopPadding() {
-        return getResources().getDimensionPixelSize(C0009R$dimen.notification_children_container_top_padding);
+        return getResources().getDimensionPixelSize(C0012R$dimen.notification_children_container_top_padding);
     }
 
     /* JADX WARNING: type inference failed for: r4v10, types: [android.widget.TextView, android.view.View] */

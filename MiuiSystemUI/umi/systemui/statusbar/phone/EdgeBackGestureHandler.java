@@ -29,8 +29,8 @@ import android.view.ViewConfiguration;
 import android.view.WindowManager;
 import android.view.WindowManagerGlobal;
 import com.android.internal.policy.GestureNavigationSettingsObserver;
-import com.android.systemui.C0009R$dimen;
-import com.android.systemui.C0018R$string;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.Dependency;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.bubbles.BubbleController;
@@ -343,10 +343,10 @@ public class EdgeBackGestureHandler extends CurrentUserTracker implements Displa
 
     private WindowManager.LayoutParams createLayoutParams() {
         Resources resources = this.mContext.getResources();
-        WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(resources.getDimensionPixelSize(C0009R$dimen.navigation_edge_panel_width), resources.getDimensionPixelSize(C0009R$dimen.navigation_edge_panel_height), 2024, 8388904, -3);
+        WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(resources.getDimensionPixelSize(C0012R$dimen.navigation_edge_panel_width), resources.getDimensionPixelSize(C0012R$dimen.navigation_edge_panel_height), 2024, 8388904, -3);
         layoutParams.privateFlags |= 16;
         layoutParams.setTitle("EdgeBackGestureHandler" + this.mContext.getDisplayId());
-        layoutParams.accessibilityTitle = this.mContext.getString(C0018R$string.nav_bar_edge_panel);
+        layoutParams.accessibilityTitle = this.mContext.getString(C0021R$string.nav_bar_edge_panel);
         layoutParams.windowAnimations = 0;
         layoutParams.setFitInsetsTypes(0);
         return layoutParams;
@@ -565,5 +565,9 @@ public class EdgeBackGestureHandler extends CurrentUserTracker implements Displa
             EdgeBackGestureHandler.this.onInputEvent(inputEvent);
             finishInputEvent(inputEvent, true);
         }
+    }
+
+    public void onDestroy() {
+        ((ProtoTracer) Dependency.get(ProtoTracer.class)).remove(this);
     }
 }

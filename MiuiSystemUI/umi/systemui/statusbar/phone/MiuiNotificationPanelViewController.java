@@ -34,9 +34,9 @@ import com.android.keyguard.magazine.LockScreenMagazinePreView;
 import com.android.keyguard.utils.MiuiKeyguardUtils;
 import com.android.keyguard.wallpaper.KeyguardWallpaperUtils;
 import com.android.keyguard.wallpaper.MiuiKeyguardWallpaperControllerImpl;
-import com.android.systemui.C0009R$dimen;
-import com.android.systemui.C0010R$drawable;
-import com.android.systemui.C0012R$id;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0015R$id;
 import com.android.systemui.Dependency;
 import com.android.systemui.Interpolators;
 import com.android.systemui.controlcenter.phone.ControlPanelController;
@@ -68,12 +68,12 @@ import com.android.systemui.statusbar.policy.ConfigurationController;
 import com.android.systemui.statusbar.policy.KeyguardStateController;
 import com.android.systemui.statusbar.policy.ZenModeController;
 import com.android.systemui.statusbar.views.DismissView;
+import com.android.systemui.util.ConvenienceExtensionsKt;
 import com.android.systemui.util.ExtensionsKt;
 import com.android.systemui.util.InjectionInflationController;
 import com.miui.systemui.DeviceConfig;
 import com.miui.systemui.EventTracker;
 import com.miui.systemui.statusbar.PanelExpansionObserver;
-import com.miui.systemui.util.BlurUtil;
 import com.miui.systemui.util.MiuiAnimationUtils;
 import dagger.Lazy;
 import java.io.FileDescriptor;
@@ -104,6 +104,8 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
     public final float mBottomAreaCollapseHotZone;
     private ValueAnimator mBouncerFractionAnimator;
     private final MiuiNotificationPanelViewController$mChildPositionsChangedListener$1 mChildPositionsChangedListener;
+    @NotNull
+    private Configuration mConfiguration;
     /* access modifiers changed from: private */
     public DismissView mDismissView;
     private final EventTracker mEventTracker;
@@ -126,7 +128,6 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
     public boolean mNssCoveredQs;
     /* access modifiers changed from: private */
     public boolean mNssCoveringQs;
-    private int mOrientation;
     /* access modifiers changed from: private */
     public boolean mPanelCollapsing;
     private long mPanelDisappearedTime;
@@ -155,6 +156,7 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
     public VelocityTracker mVelocityTracker;
     @NotNull
     private final NotificationPanelView panelView;
+    private final NotificationShadeWindowController shadeWindowController;
     private final StatusBarStateController statusBarStateController;
     private final WakefulnessLifecycle wakefulnessLifecycle;
 
@@ -168,23 +170,26 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
     }
 
     /* JADX INFO: super call moved to the top of the method (can break code semantics) */
-    public MiuiNotificationPanelViewController(@NotNull NotificationPanelView notificationPanelView, @Nullable InjectionInflationController injectionInflationController, @Nullable NotificationWakeUpCoordinator notificationWakeUpCoordinator, @Nullable PulseExpansionHandler pulseExpansionHandler, @Nullable DynamicPrivacyController dynamicPrivacyController, @Nullable KeyguardBypassController keyguardBypassController, @Nullable FalsingManager falsingManager, @Nullable ShadeController shadeController, @Nullable NotificationLockscreenUserManager notificationLockscreenUserManager, @NotNull NotificationEntryManager notificationEntryManager, @Nullable KeyguardStateController keyguardStateController, @NotNull StatusBarStateController statusBarStateController2, @Nullable DozeLog dozeLog, @Nullable DozeParameters dozeParameters, @Nullable CommandQueue commandQueue, @Nullable VibratorHelper vibratorHelper, @Nullable LatencyTracker latencyTracker, @Nullable PowerManager powerManager, @Nullable AccessibilityManager accessibilityManager, int i, @Nullable KeyguardUpdateMonitor keyguardUpdateMonitor, @Nullable MetricsLogger metricsLogger, @Nullable ActivityManager activityManager, @Nullable ZenModeController zenModeController, @Nullable ConfigurationController configurationController, @Nullable FlingAnimationUtils.Builder builder, @Nullable StatusBarTouchableRegionManager statusBarTouchableRegionManager, @Nullable ConversationNotificationManager conversationNotificationManager, @Nullable MediaHierarchyManager mediaHierarchyManager, @Nullable BiometricUnlockController biometricUnlockController, @Nullable StatusBarKeyguardViewManager statusBarKeyguardViewManager, @NotNull Lazy<ControlPanelController> lazy, @NotNull EventTracker eventTracker, @NotNull WakefulnessLifecycle wakefulnessLifecycle2) {
+    public MiuiNotificationPanelViewController(@NotNull NotificationPanelView notificationPanelView, @Nullable InjectionInflationController injectionInflationController, @Nullable NotificationWakeUpCoordinator notificationWakeUpCoordinator, @Nullable PulseExpansionHandler pulseExpansionHandler, @Nullable DynamicPrivacyController dynamicPrivacyController, @Nullable KeyguardBypassController keyguardBypassController, @Nullable FalsingManager falsingManager, @Nullable ShadeController shadeController, @Nullable NotificationLockscreenUserManager notificationLockscreenUserManager, @NotNull NotificationEntryManager notificationEntryManager, @Nullable KeyguardStateController keyguardStateController, @NotNull StatusBarStateController statusBarStateController2, @Nullable DozeLog dozeLog, @Nullable DozeParameters dozeParameters, @Nullable CommandQueue commandQueue, @Nullable VibratorHelper vibratorHelper, @Nullable LatencyTracker latencyTracker, @Nullable PowerManager powerManager, @Nullable AccessibilityManager accessibilityManager, int i, @Nullable KeyguardUpdateMonitor keyguardUpdateMonitor, @Nullable MetricsLogger metricsLogger, @Nullable ActivityManager activityManager, @Nullable ZenModeController zenModeController, @Nullable ConfigurationController configurationController, @Nullable FlingAnimationUtils.Builder builder, @Nullable StatusBarTouchableRegionManager statusBarTouchableRegionManager, @Nullable ConversationNotificationManager conversationNotificationManager, @Nullable MediaHierarchyManager mediaHierarchyManager, @Nullable BiometricUnlockController biometricUnlockController, @Nullable StatusBarKeyguardViewManager statusBarKeyguardViewManager, @NotNull Lazy<ControlPanelController> lazy, @NotNull EventTracker eventTracker, @NotNull WakefulnessLifecycle wakefulnessLifecycle2, @NotNull NotificationShadeWindowController notificationShadeWindowController) {
         super(notificationPanelView, injectionInflationController, notificationWakeUpCoordinator, pulseExpansionHandler, dynamicPrivacyController, keyguardBypassController, falsingManager, shadeController, notificationLockscreenUserManager, notificationEntryManager, keyguardStateController, statusBarStateController2, dozeLog, dozeParameters, commandQueue, vibratorHelper, latencyTracker, powerManager, accessibilityManager, i, keyguardUpdateMonitor, metricsLogger, activityManager, zenModeController, configurationController, builder, statusBarTouchableRegionManager, conversationNotificationManager, mediaHierarchyManager, biometricUnlockController, statusBarKeyguardViewManager);
         NotificationEntryManager notificationEntryManager2 = notificationEntryManager;
         StatusBarStateController statusBarStateController3 = statusBarStateController2;
         Lazy<ControlPanelController> lazy2 = lazy;
         EventTracker eventTracker2 = eventTracker;
         WakefulnessLifecycle wakefulnessLifecycle3 = wakefulnessLifecycle2;
+        NotificationShadeWindowController notificationShadeWindowController2 = notificationShadeWindowController;
         Intrinsics.checkParameterIsNotNull(notificationPanelView, "panelView");
         Intrinsics.checkParameterIsNotNull(notificationEntryManager2, "notificationEntryManager");
         Intrinsics.checkParameterIsNotNull(statusBarStateController3, "statusBarStateController");
         Intrinsics.checkParameterIsNotNull(lazy2, "controlPanelController");
         Intrinsics.checkParameterIsNotNull(eventTracker2, "eventTracker");
         Intrinsics.checkParameterIsNotNull(wakefulnessLifecycle3, "wakefulnessLifecycle");
+        Intrinsics.checkParameterIsNotNull(notificationShadeWindowController2, "shadeWindowController");
         this.panelView = notificationPanelView;
         this.statusBarStateController = statusBarStateController3;
         this.controlPanelController = lazy2;
         this.wakefulnessLifecycle = wakefulnessLifecycle3;
+        this.shadeWindowController = notificationShadeWindowController2;
         this.mNotificationEntryManager = notificationEntryManager2;
         this.mEventTracker = eventTracker2;
         ViewConfiguration viewConfiguration = ViewConfiguration.get(notificationPanelView.getContext());
@@ -192,8 +197,8 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
         this.mTouchSlop = viewConfiguration.getScaledTouchSlop();
         Context context = this.panelView.getContext();
         Intrinsics.checkExpressionValueIsNotNull(context, "panelView.context");
-        this.mBottomAreaCollapseHotZone = context.getResources().getDimension(C0009R$dimen.miui_notification_swipe_area_height);
-        View findViewById = this.panelView.findViewById(C0012R$id.notification_stack_scroller);
+        this.mBottomAreaCollapseHotZone = context.getResources().getDimension(C0012R$dimen.miui_notification_swipe_area_height);
+        View findViewById = this.panelView.findViewById(C0015R$id.notification_stack_scroller);
         Intrinsics.checkExpressionValueIsNotNull(findViewById, "panelView.findViewById(R…ification_stack_scroller)");
         this.mNotificationStackScroller = (NotificationStackScrollLayout) findViewById;
         Object obj = Dependency.get(KeyguardPanelViewInjector.class);
@@ -226,9 +231,9 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
         Intrinsics.checkExpressionValueIsNotNull(notificationPanelView2, "mView");
         Context context2 = notificationPanelView2.getContext();
         Intrinsics.checkExpressionValueIsNotNull(context2, "mView.context");
-        context2.getResources().getDimensionPixelSize(C0009R$dimen.notification_sticky_group_header_height);
+        context2.getResources().getDimensionPixelSize(C0012R$dimen.notification_sticky_group_header_height);
         this.mChildPositionsChangedListener = new MiuiNotificationPanelViewController$mChildPositionsChangedListener$1(this);
-        this.mOrientation = 1;
+        this.mConfiguration = new Configuration();
     }
 
     @NotNull
@@ -239,9 +244,7 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
     /* access modifiers changed from: private */
     public final void setMBlurRatio(float f) {
         this.mBlurRatio = f;
-        NotificationPanelView notificationPanelView = this.mView;
-        Intrinsics.checkExpressionValueIsNotNull(notificationPanelView, "mView");
-        BlurUtil.setBlur(notificationPanelView.getViewRootImpl(), f, 0);
+        this.shadeWindowController.setBlurRatio(f);
         View view = this.mThemeBackgroundView;
         if (view != null) {
             view.setAlpha(f);
@@ -308,8 +311,6 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
     }
 
     private final void setMPanelAppeared(boolean z) {
-        View view;
-        MiuiNotificationPanelViewController$mPanelAppeared$1 miuiNotificationPanelViewController$mPanelAppeared$1;
         boolean mPanelAppeared = getMPanelAppeared();
         if (z != mPanelAppeared) {
             if (z) {
@@ -321,16 +322,8 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
             }
             if (mPanelAppeared != z) {
                 QS qs = this.mQs;
-                if (!(qs == null || (view = qs.getView()) == null)) {
-                    PanelAppearDisappearEvent.Companion companion = PanelAppearDisappearEvent.Companion;
-                    ControlPanelController controlPanelController2 = this.controlPanelController.get();
-                    Intrinsics.checkExpressionValueIsNotNull(controlPanelController2, "controlPanelController.get()");
-                    if (controlPanelController2.isUseControlCenter()) {
-                        miuiNotificationPanelViewController$mPanelAppeared$1 = null;
-                    } else {
-                        miuiNotificationPanelViewController$mPanelAppeared$1 = new MiuiNotificationPanelViewController$mPanelAppeared$1(this, z);
-                    }
-                    companion.animateAppearDisappear$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core(view, z, miuiNotificationPanelViewController$mPanelAppeared$1);
+                if (qs != null) {
+                    qs.animateAppearDisappear(z);
                 }
                 resetStickHeader(z);
             }
@@ -495,7 +488,7 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
         float height = (calculateQsTopPadding - f) / (calculateQsTopPadding - ((float) header.getHeight()));
         QS qs2 = this.mQs;
         Intrinsics.checkExpressionValueIsNotNull(qs2, "mQs");
-        View findViewById = qs2.getView().findViewById(C0012R$id.qs_content);
+        View findViewById = qs2.getView().findViewById(C0015R$id.qs_content);
         if (findViewById != null && findViewById.isShown()) {
             findViewById.setPivotX(((float) findViewById.getWidth()) * 0.5f);
             QS qs3 = this.mQs;
@@ -735,6 +728,7 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
     public final void setAppearFraction(float f, float f2) {
         if (this.mExpandingFromHeadsUp && f2 >= 1.0f) {
             allowStretchFromHeadsUp();
+            this.mHeadsUpManager.releaseAllImmediately();
             updateBlur();
         }
     }
@@ -764,6 +758,11 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
         HeadsUpTouchHelper headsUpTouchHelper = this.mHeadsUpTouchHelper;
         Intrinsics.checkExpressionValueIsNotNull(headsUpTouchHelper, "mHeadsUpTouchHelper");
         headsUpTouchHelper.setTrackingHeadsUp(false);
+    }
+
+    public void setQsExpansionEnabled(boolean z) {
+        super.setQsExpansionEnabled(z);
+        NotificationStackScrollLayoutExtKt.setQsExpansionEnabled(this.mNotificationStackScroller, z);
     }
 
     public void setHeadsUpManager(@NotNull HeadsUpManagerPhone headsUpManagerPhone) {
@@ -800,10 +799,10 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mThemeBackgroundView = this.mView.findViewById(C0012R$id.theme_background);
-        this.mAwesomeLockScreenContainer = (FrameLayout) this.mView.findViewById(C0012R$id.awesome_lock_screen_container);
-        this.mDismissView = (DismissView) this.mView.findViewById(C0012R$id.dismiss_view);
-        this.mStickyGroupHeader = this.mView.findViewById(C0012R$id.group_header);
+        this.mThemeBackgroundView = this.mView.findViewById(C0015R$id.theme_background);
+        this.mAwesomeLockScreenContainer = (FrameLayout) this.mView.findViewById(C0015R$id.awesome_lock_screen_container);
+        this.mDismissView = (DismissView) this.mView.findViewById(C0015R$id.dismiss_view);
+        this.mStickyGroupHeader = this.mView.findViewById(C0015R$id.group_header);
         updateThemeBackground();
     }
 
@@ -872,11 +871,10 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
 
     /* access modifiers changed from: protected */
     public void setKeyguardBottomAreaVisibility(int i, boolean z) {
-        this.mKeyguardBottomArea.animate().cancel();
+        super.setKeyguardBottomAreaVisibility(i, z);
         Log.d(PanelViewController.TAG, "setKeyguardBottomAreaVisibility statusBarState=" + i + " goingToFullShade=" + z);
         int i2 = 0;
         if (z || i == 2) {
-            this.mKeyguardBottomArea.animate().alpha(0.0f).setStartDelay(0).setDuration(160).setInterpolator(Interpolators.ALPHA_OUT).withEndAction(this.mAnimateKeyguardBottomAreaInvisibleEndRunnable).start();
             MiuiKeyguardFaceUnlockView miuiKeyguardFaceUnlockView = this.mMiuiKeyguardFaceUnlockView;
             Intrinsics.checkExpressionValueIsNotNull(miuiKeyguardFaceUnlockView, "mMiuiKeyguardFaceUnlockView");
             if (!((KeyguardUpdateMonitorInjector) Dependency.get(KeyguardUpdateMonitorInjector.class)).isFaceUnlock()) {
@@ -890,20 +888,11 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
                 i2 = 4;
             }
             keyguardBottomAreaView.setVisibility(i2);
-            KeyguardBottomAreaView keyguardBottomAreaView2 = this.mKeyguardBottomArea;
-            Intrinsics.checkExpressionValueIsNotNull(keyguardBottomAreaView2, "mKeyguardBottomArea");
-            keyguardBottomAreaView2.setAlpha(1.0f);
             this.mMiuiKeyguardFaceUnlockView.updateFaceUnlockIconStatus();
             MiuiKeyguardFaceUnlockView miuiKeyguardFaceUnlockView2 = this.mMiuiKeyguardFaceUnlockView;
             Intrinsics.checkExpressionValueIsNotNull(miuiKeyguardFaceUnlockView2, "mMiuiKeyguardFaceUnlockView");
             miuiKeyguardFaceUnlockView2.setAlpha(1.0f);
         } else {
-            KeyguardBottomAreaView keyguardBottomAreaView3 = this.mKeyguardBottomArea;
-            Intrinsics.checkExpressionValueIsNotNull(keyguardBottomAreaView3, "mKeyguardBottomArea");
-            keyguardBottomAreaView3.setVisibility(8);
-            KeyguardBottomAreaView keyguardBottomAreaView4 = this.mKeyguardBottomArea;
-            Intrinsics.checkExpressionValueIsNotNull(keyguardBottomAreaView4, "mKeyguardBottomArea");
-            keyguardBottomAreaView4.setAlpha(1.0f);
             MiuiKeyguardFaceUnlockView miuiKeyguardFaceUnlockView3 = this.mMiuiKeyguardFaceUnlockView;
             Intrinsics.checkExpressionValueIsNotNull(miuiKeyguardFaceUnlockView3, "mMiuiKeyguardFaceUnlockView");
             miuiKeyguardFaceUnlockView3.setVisibility(8);
@@ -946,7 +935,7 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
         if (view != null) {
             NotificationPanelView notificationPanelView = this.mView;
             Intrinsics.checkExpressionValueIsNotNull(notificationPanelView, "mView");
-            view.setBackground(notificationPanelView.getContext().getDrawable(C0010R$drawable.notification_panel_window_bg));
+            view.setBackground(notificationPanelView.getContext().getDrawable(C0013R$drawable.notification_panel_window_bg));
             view.setVisibility((this.mIsDefaultTheme || !isOnShade()) ? 8 : 0);
         }
     }
@@ -1046,6 +1035,11 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
         }
     }
 
+    @NotNull
+    public final Configuration getMConfiguration() {
+        return this.mConfiguration;
+    }
+
     /* compiled from: MiuiNotificationPanelViewController.kt */
     private final class MiuiOnConfigurationChangedListener extends NotificationPanelViewController.OnConfigurationChangedListener {
         public MiuiOnConfigurationChangedListener() {
@@ -1054,23 +1048,24 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
 
         public void onConfigurationChanged(@Nullable Configuration configuration) {
             super.onConfigurationChanged(configuration);
-            if (configuration == null) {
-                Intrinsics.throwNpe();
-                throw null;
-            } else if (configuration.orientation != MiuiNotificationPanelViewController.this.getMOrientation()) {
-                MiuiNotificationPanelViewController.this.setMOrientation(configuration.orientation);
-                MiuiNotificationPanelViewController.this.mKeyguardPanelViewInjector.resetLockScreenMagazine();
-                MiuiNotificationPanelViewController.this.mKeyguardPanelViewInjector.initScreenSize();
+            Configuration mConfiguration = MiuiNotificationPanelViewController.this.getMConfiguration();
+            if (configuration != null) {
+                int updateFrom = mConfiguration.updateFrom(configuration);
+                boolean z = true;
+                boolean z2 = (updateFrom & 128) != 0;
+                if ((updateFrom & 2048) == 0) {
+                    z = false;
+                }
+                if (z2 || z) {
+                    MiuiNotificationPanelViewController.this.mKeyguardPanelViewInjector.resetLockScreenMagazine();
+                    MiuiNotificationPanelViewController.this.mKeyguardPanelViewInjector.initScreenSize();
+                    return;
+                }
+                return;
             }
+            Intrinsics.throwNpe();
+            throw null;
         }
-    }
-
-    public final int getMOrientation() {
-        return this.mOrientation;
-    }
-
-    public final void setMOrientation(int i) {
-        this.mOrientation = i;
     }
 
     public final void updateNotificationStackScrollerVisibility() {
@@ -1111,7 +1106,7 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
             if (this.mIsDefaultTheme) {
                 Context context = this.panelView.getContext();
                 Intrinsics.checkExpressionValueIsNotNull(context, "panelView.context");
-                float dimension = context.getResources().getDimension(C0009R$dimen.keyguard_clock_tranlation_y);
+                float dimension = context.getResources().getDimension(C0012R$dimen.keyguard_clock_tranlation_y);
                 if (DeviceConfig.isLowEndDevice()) {
                     view.startAnimation(MiuiAnimationUtils.INSTANCE.generalWakeupAlphaAnimation());
                 } else {
@@ -1124,16 +1119,24 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
                     Intrinsics.checkExpressionValueIsNotNull(notificationEntry, "it");
                     arrayList.add(notificationEntry.getRow());
                 }
+                ArrayList arrayList2 = new ArrayList();
                 for (Object next : arrayList) {
+                    ExpandableNotificationRow expandableNotificationRow = (ExpandableNotificationRow) next;
+                    Intrinsics.checkExpressionValueIsNotNull(expandableNotificationRow, "it");
+                    if (!expandableNotificationRow.isChildInGroup()) {
+                        arrayList2.add(next);
+                    }
+                }
+                for (View next2 : SequencesKt___SequencesKt.filter(ConvenienceExtensionsKt.getChildren(this.mNotificationStackScroller), new MiuiNotificationPanelViewController$onStartedWakingUp$animateShadeViews$1(arrayList2))) {
                     int i2 = i + 1;
                     if (i >= 0) {
-                        ExpandableNotificationRow expandableNotificationRow = (ExpandableNotificationRow) next;
+                        View view2 = next2;
                         if (DeviceConfig.isLowEndDevice()) {
-                            expandableNotificationRow.startAnimation(MiuiAnimationUtils.INSTANCE.generalWakeupAlphaAnimation());
+                            view2.startAnimation(MiuiAnimationUtils.INSTANCE.generalWakeupAlphaAnimation());
                         } else {
                             Animation generalWakeupTranslateAnimation = MiuiAnimationUtils.INSTANCE.generalWakeupTranslateAnimation(dimension);
                             generalWakeupTranslateAnimation.setStartOffset(((long) i) * 50);
-                            expandableNotificationRow.startAnimation(generalWakeupTranslateAnimation);
+                            view2.startAnimation(generalWakeupTranslateAnimation);
                         }
                         i = i2;
                     } else {
@@ -1147,9 +1150,9 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
                 KeyguardBottomAreaView keyguardBottomAreaView2 = this.mKeyguardBottomArea;
                 Intrinsics.checkExpressionValueIsNotNull(keyguardBottomAreaView2, "mKeyguardBottomArea");
                 keyguardBottomAreaView2.getRightView().startAnimation(MiuiAnimationUtils.INSTANCE.generalWakeupScaleAnimation());
-                LockScreenMagazinePreView view2 = ((LockScreenMagazineController) Dependency.get(LockScreenMagazineController.class)).getView();
-                if (view2.getMainLayout().getVisibility() == 0) {
-                    view2.getMainLayout().startAnimation(MiuiAnimationUtils.INSTANCE.generalWakeupAlphaAnimation());
+                LockScreenMagazinePreView view3 = ((LockScreenMagazineController) Dependency.get(LockScreenMagazineController.class)).getView();
+                if (view3.getMainLayout().getVisibility() == 0) {
+                    view3.getMainLayout().startAnimation(MiuiAnimationUtils.INSTANCE.generalWakeupAlphaAnimation());
                 }
             }
             view.updateTime();
@@ -1157,7 +1160,7 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
         }
         if (((MiuiKeyguardWallpaperControllerImpl) Dependency.get(MiuiKeyguardWallpaperControllerImpl.class)).isAodUsingSuperWallpaper()) {
             this.mView.animate().cancel();
-            this.mView.animate().setListener(new MiuiNotificationPanelViewController$onStartedWakingUp$3(this)).alpha(1.0f).setDuration(500).start();
+            this.mView.animate().setListener(new MiuiNotificationPanelViewController$onStartedWakingUp$2(this)).alpha(1.0f).setDuration(500).start();
         }
     }
 
@@ -1266,7 +1269,7 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
     private final void initDismissView() {
         DismissView dismissView = this.mDismissView;
         if (dismissView != null) {
-            dismissView.setDrawables(C0010R$drawable.notifications_clear_all, C0010R$drawable.btn_clear_all);
+            dismissView.setDrawables(C0013R$drawable.notifications_clear_all, C0013R$drawable.btn_clear_all);
         }
         DismissView dismissView2 = this.mDismissView;
         if (dismissView2 != null) {
@@ -1275,9 +1278,9 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
         setDismissView(this.mDismissView);
         DismissView dismissView3 = this.mDismissView;
         if (dismissView3 != null) {
-            dismissView3.setAccessibilityTraversalAfter(C0012R$id.notification_stack_scroller);
+            dismissView3.setAccessibilityTraversalAfter(C0015R$id.notification_stack_scroller);
         }
-        this.mNotificationStackScroller.setAccessibilityTraversalBefore(C0012R$id.dismiss_view);
+        this.mNotificationStackScroller.setAccessibilityTraversalBefore(C0015R$id.dismiss_view);
         updateDismissView();
     }
 
@@ -1612,7 +1615,7 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
     public void dump(@Nullable FileDescriptor fileDescriptor, @Nullable PrintWriter printWriter, @Nullable String[] strArr) {
         super.dump(fileDescriptor, printWriter, strArr);
         if (printWriter != null) {
-            printWriter.println("  mBlurRatio=" + this.mBlurRatio + " mStretchLength=" + this.mStretchLength + " mSpringLength=" + this.mSpringLength);
+            printWriter.println("  mBlurRatio=" + this.mBlurRatio + " mStretchLength=" + this.mStretchLength + " mSpringLength=" + this.mSpringLength + " mIsDefaultTheme=" + this.mIsDefaultTheme);
             return;
         }
         Intrinsics.throwNpe();

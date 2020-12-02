@@ -90,6 +90,12 @@ public class FrameProtoTracer<P, S extends P, T extends P, R> implements Choreog
         }
     }
 
+    public void remove(ProtoTraceable<R> protoTraceable) {
+        synchronized (this.mLock) {
+            this.mTraceables.remove(protoTraceable);
+        }
+    }
+
     public void update() {
         if (this.mEnabled) {
             logState();

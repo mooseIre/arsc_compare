@@ -80,14 +80,14 @@ import com.android.internal.util.ScreenRecordHelper;
 import com.android.internal.util.ScreenshotHelper;
 import com.android.internal.view.RotationPolicy;
 import com.android.internal.widget.LockPatternUtils;
-import com.android.systemui.C0005R$array;
-import com.android.systemui.C0008R$color;
-import com.android.systemui.C0009R$dimen;
-import com.android.systemui.C0010R$drawable;
-import com.android.systemui.C0012R$id;
-import com.android.systemui.C0013R$integer;
-import com.android.systemui.C0014R$layout;
-import com.android.systemui.C0019R$style;
+import com.android.systemui.C0008R$array;
+import com.android.systemui.C0011R$color;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0016R$integer;
+import com.android.systemui.C0017R$layout;
+import com.android.systemui.C0022R$style;
 import com.android.systemui.Interpolators;
 import com.android.systemui.MultiListLayout;
 import com.android.systemui.broadcast.BroadcastDispatcher;
@@ -418,7 +418,7 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
 
     private void seedFavorites() {
         if (this.mControlsControllerOptional.isPresent() && !this.mControlsServiceInfos.isEmpty()) {
-            String[] stringArray = this.mContext.getResources().getStringArray(C0005R$array.config_controlsPreferredPackages);
+            String[] stringArray = this.mContext.getResources().getStringArray(C0008R$array.config_controlsPreferredPackages);
             SharedPreferences sharedPreferences = this.mCurrentUserContextTracker.getCurrentUserContext().getSharedPreferences("controls_prefs", 0);
             Set<String> stringSet = sharedPreferences.getStringSet("SeedingCompleted", Collections.emptySet());
             ArrayList arrayList = new ArrayList();
@@ -532,7 +532,7 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
     /* access modifiers changed from: protected */
     @VisibleForTesting
     public int getMaxShownPowerItems() {
-        return this.mResources.getInteger(C0013R$integer.power_menu_max_columns);
+        return this.mResources.getInteger(C0016R$integer.power_menu_max_columns);
     }
 
     private void addActionItem(Action action) {
@@ -728,7 +728,7 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
         }
 
         private PowerOptionsAction() {
-            super(GlobalActionsDialog.this, C0010R$drawable.ic_settings_power, 17040302);
+            super(GlobalActionsDialog.this, C0013R$drawable.ic_settings_power, 17040302);
         }
 
         public void onPress() {
@@ -786,8 +786,8 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
 
         public View create(Context context, View view, ViewGroup viewGroup, LayoutInflater layoutInflater) {
             View create = super.create(context, view, viewGroup, layoutInflater);
-            create.setBackgroundTintList(ColorStateList.valueOf(create.getResources().getColor(C0008R$color.global_actions_emergency_background)));
-            int color = create.getResources().getColor(C0008R$color.global_actions_emergency_text);
+            create.setBackgroundTintList(ColorStateList.valueOf(create.getResources().getColor(C0011R$color.global_actions_emergency_background)));
+            int color = create.getResources().getColor(C0011R$color.global_actions_emergency_text);
             TextView textView = (TextView) create.findViewById(16908299);
             textView.setTextColor(color);
             textView.setSelected(true);
@@ -809,7 +809,7 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
     @VisibleForTesting
     class EmergencyDialerAction extends EmergencyAction {
         private EmergencyDialerAction() {
-            super(GlobalActionsDialog.this, C0010R$drawable.ic_emergency_star, 17040297);
+            super(GlobalActionsDialog.this, C0013R$drawable.ic_emergency_star, 17040297);
         }
 
         public void onPress() {
@@ -1327,7 +1327,7 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
                 Log.w("GlobalActionsDialog", "No power options action found at position: " + i);
                 return null;
             }
-            int i2 = C0014R$layout.global_actions_power_item;
+            int i2 = C0017R$layout.global_actions_power_item;
             if (view == null) {
                 view = LayoutInflater.from(GlobalActionsDialog.this.mContext).inflate(i2, viewGroup, false);
             }
@@ -1430,7 +1430,7 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
                 Log.w("GlobalActionsDialog", "No overflow action found at position: " + i);
                 return null;
             }
-            int i2 = C0014R$layout.controls_more_item;
+            int i2 = C0017R$layout.controls_more_item;
             if (view == null) {
                 view = LayoutInflater.from(GlobalActionsDialog.this.mContext).inflate(i2, viewGroup, false);
             }
@@ -1514,7 +1514,7 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
         }
 
         public View create(Context context, View view, ViewGroup viewGroup, LayoutInflater layoutInflater) {
-            View inflate = layoutInflater.inflate(C0014R$layout.global_actions_grid_item_v2, viewGroup, false);
+            View inflate = layoutInflater.inflate(C0017R$layout.global_actions_grid_item_v2, viewGroup, false);
             ImageView imageView = (ImageView) inflate.findViewById(16908294);
             TextView textView = (TextView) inflate.findViewById(16908299);
             textView.setSelected(true);
@@ -1591,7 +1591,7 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
 
         public View create(Context context, View view, ViewGroup viewGroup, LayoutInflater layoutInflater) {
             willCreate();
-            View inflate = layoutInflater.inflate(C0014R$layout.global_actions_grid_item_v2, viewGroup, false);
+            View inflate = layoutInflater.inflate(C0017R$layout.global_actions_grid_item_v2, viewGroup, false);
             ImageView imageView = (ImageView) inflate.findViewById(16908294);
             TextView textView = (TextView) inflate.findViewById(16908299);
             boolean isEnabled = isEnabled();
@@ -1830,7 +1830,7 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
         public final GlobalActionsPanelPlugin.PanelViewController mWalletViewController;
 
         ActionsDialog(Context context, MyAdapter myAdapter, MyOverflowAdapter myOverflowAdapter, GlobalActionsPanelPlugin.PanelViewController panelViewController, NotificationShadeDepthController notificationShadeDepthController, SysuiColorExtractor sysuiColorExtractor, IStatusBarService iStatusBarService, NotificationShadeWindowController notificationShadeWindowController, boolean z, ControlsUiController controlsUiController, SysUiState sysUiState, Runnable runnable, boolean z2, MyPowerOptionsAdapter myPowerOptionsAdapter) {
-            super(context, C0019R$style.Theme_SystemUI_Dialog_GlobalActions);
+            super(context, C0022R$style.Theme_SystemUI_Dialog_GlobalActions);
             this.mContext = context;
             this.mAdapter = myAdapter;
             this.mOverflowAdapter = myOverflowAdapter;
@@ -1892,14 +1892,14 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
                         });
                     }
                     setRotationSuggestionsEnabled(false);
-                    FrameLayout frameLayout = (FrameLayout) findViewById(C0012R$id.global_actions_wallet);
+                    FrameLayout frameLayout = (FrameLayout) findViewById(C0015R$id.global_actions_wallet);
                     FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(-1, -1);
                     if (!this.mControlsAvailable) {
-                        layoutParams.topMargin = this.mContext.getResources().getDimensionPixelSize(C0009R$dimen.global_actions_wallet_top_margin);
+                        layoutParams.topMargin = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.global_actions_wallet_top_margin);
                     }
                     View panelContent = this.mWalletViewController.getPanelContent();
                     frameLayout.addView(panelContent, layoutParams);
-                    ViewGroup viewGroup = (ViewGroup) findViewById(C0012R$id.global_actions_grid_root);
+                    ViewGroup viewGroup = (ViewGroup) findViewById(C0015R$id.global_actions_grid_root);
                     if (viewGroup != null) {
                         panelContent.addOnLayoutChangeListener(new View.OnLayoutChangeListener(viewGroup) {
                             public final /* synthetic */ ViewGroup f$0;
@@ -1950,7 +1950,7 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
         }
 
         private ListPopupWindow createPowerOverflowPopup() {
-            GlobalActionsPopupMenu globalActionsPopupMenu = new GlobalActionsPopupMenu(new ContextThemeWrapper(this.mContext, C0019R$style.Control_ListPopupWindow), false);
+            GlobalActionsPopupMenu globalActionsPopupMenu = new GlobalActionsPopupMenu(new ContextThemeWrapper(this.mContext, C0022R$style.Control_ListPopupWindow), false);
             globalActionsPopupMenu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 public final void onItemClick(AdapterView adapterView, View view, int i, long j) {
                     GlobalActionsDialog.ActionsDialog.this.lambda$createPowerOverflowPopup$3$GlobalActionsDialog$ActionsDialog(adapterView, view, i, j);
@@ -1961,7 +1961,7 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
                     return GlobalActionsDialog.ActionsDialog.this.lambda$createPowerOverflowPopup$4$GlobalActionsDialog$ActionsDialog(adapterView, view, i, j);
                 }
             });
-            globalActionsPopupMenu.setAnchorView(findViewById(C0012R$id.global_actions_overflow_button));
+            globalActionsPopupMenu.setAnchorView(findViewById(C0015R$id.global_actions_overflow_button));
             globalActionsPopupMenu.setAdapter(this.mOverflowAdapter);
             return globalActionsPopupMenu;
         }
@@ -1991,10 +1991,10 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
         }
 
         private void initializeLayout() {
-            setContentView(C0014R$layout.global_actions_grid_v2);
+            setContentView(C0017R$layout.global_actions_grid_v2);
             fixNavBarClipping();
-            this.mControlsView = (ViewGroup) findViewById(C0012R$id.global_actions_controls);
-            MultiListLayout multiListLayout = (MultiListLayout) findViewById(C0012R$id.global_actions_view);
+            this.mControlsView = (ViewGroup) findViewById(C0015R$id.global_actions_controls);
+            MultiListLayout multiListLayout = (MultiListLayout) findViewById(C0015R$id.global_actions_view);
             this.mGlobalActionsLayout = multiListLayout;
             multiListLayout.setListViewAccessibilityDelegate(new View.AccessibilityDelegate() {
                 public boolean dispatchPopulateAccessibilityEvent(View view, AccessibilityEvent accessibilityEvent) {
@@ -2008,10 +2008,10 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
                 }
             });
             this.mGlobalActionsLayout.setAdapter(this.mAdapter);
-            this.mContainer = (ViewGroup) findViewById(C0012R$id.global_actions_container);
-            this.mLockMessageContainer = (ViewGroup) requireViewById(C0012R$id.global_actions_lock_message_container);
-            this.mLockMessage = (TextView) requireViewById(C0012R$id.global_actions_lock_message);
-            View findViewById = findViewById(C0012R$id.global_actions_overflow_button);
+            this.mContainer = (ViewGroup) findViewById(C0015R$id.global_actions_container);
+            this.mLockMessageContainer = (ViewGroup) requireViewById(C0015R$id.global_actions_lock_message_container);
+            this.mLockMessage = (TextView) requireViewById(C0015R$id.global_actions_lock_message);
+            View findViewById = findViewById(C0015R$id.global_actions_overflow_button);
             if (findViewById != null) {
                 if (this.mOverflowAdapter.getCount() > 0) {
                     findViewById.setOnClickListener(new View.OnClickListener() {
@@ -2025,7 +2025,7 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
                 } else {
                     findViewById.setVisibility(8);
                     LinearLayout.LayoutParams layoutParams2 = (LinearLayout.LayoutParams) this.mGlobalActionsLayout.getLayoutParams();
-                    layoutParams2.setMarginEnd(this.mContext.getResources().getDimensionPixelSize(C0009R$dimen.global_actions_side_margin));
+                    layoutParams2.setMarginEnd(this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.global_actions_side_margin));
                     this.mGlobalActionsLayout.setLayoutParams(layoutParams2);
                 }
             }
@@ -2328,7 +2328,7 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
         /* access modifiers changed from: package-private */
         public void showLockMessage() {
             Drawable drawable = this.mContext.getDrawable(17302479);
-            drawable.setTint(this.mContext.getColor(C0008R$color.control_primary_text));
+            drawable.setTint(this.mContext.getColor(C0011R$color.control_primary_text));
             this.mLockMessage.setCompoundDrawablesWithIntrinsicBounds((Drawable) null, drawable, (Drawable) null, (Drawable) null);
             this.mLockMessageContainer.setVisibility(0);
         }

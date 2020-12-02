@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import com.android.systemui.C0012R$id;
+import com.android.systemui.C0015R$id;
 import com.android.systemui.Dependency;
 import com.android.systemui.ScreenDecorations;
 import com.android.systemui.plugins.DarkIconDispatcher;
@@ -39,19 +39,19 @@ public class MiuiPhoneStatusBarView extends PhoneStatusBarView {
 
     public void initMiuiViews() {
         super.initMiuiViews();
-        this.mStatusBarLeftContainer = findViewById(C0012R$id.phone_status_bar_left_container);
-        this.mDripStatusBarNotificationIconArea = findViewById(C0012R$id.drip_notification_icon_area);
-        this.mDripStatusBarLeftStatusIconArea = findViewById(C0012R$id.drip_left_status_icon_area);
-        this.mFullscreenStatusBarNotificationIconArea = findViewById(C0012R$id.fullscreen_notification_icon_area);
-        this.mFullscreenStatusBarStatusIcons = findViewById(C0012R$id.statusIcons);
-        this.mDripStatusBarRightStatusIcons = findViewById(C0012R$id.drip_right_statusIcons);
-        this.mSystemIconArea = findViewById(C0012R$id.system_icon_area);
-        this.mDripNetworkSpeedView = (NetworkSpeedView) findViewById(C0012R$id.drip_network_speed_view);
-        this.mDripNetworkSpeedSplitter = (NetworkSpeedSplitter) findViewById(C0012R$id.drip_network_speed_splitter);
-        this.mFullScreenNetworkSpeedView = (NetworkSpeedView) findViewById(C0012R$id.fullscreen_network_speed_view);
+        this.mStatusBarLeftContainer = findViewById(C0015R$id.phone_status_bar_left_container);
+        this.mDripStatusBarNotificationIconArea = findViewById(C0015R$id.drip_notification_icon_area);
+        this.mDripStatusBarLeftStatusIconArea = findViewById(C0015R$id.drip_left_status_icon_area);
+        this.mFullscreenStatusBarNotificationIconArea = findViewById(C0015R$id.fullscreen_notification_icon_area);
+        this.mFullscreenStatusBarStatusIcons = findViewById(C0015R$id.statusIcons);
+        this.mDripStatusBarRightStatusIcons = findViewById(C0015R$id.drip_right_statusIcons);
+        this.mSystemIconArea = findViewById(C0015R$id.system_icon_area);
+        this.mDripNetworkSpeedView = (NetworkSpeedView) findViewById(C0015R$id.drip_network_speed_view);
+        this.mDripNetworkSpeedSplitter = (NetworkSpeedSplitter) findViewById(C0015R$id.drip_network_speed_splitter);
+        this.mFullScreenNetworkSpeedView = (NetworkSpeedView) findViewById(C0015R$id.fullscreen_network_speed_view);
         this.mDripNetworkSpeedView.addVisibilityListener(this.mDripNetworkSpeedSplitter);
-        ((MiuiClock) findViewById(C0012R$id.clock)).addVisibilityListener(this.mDripNetworkSpeedSplitter);
-        ((MiuiStatusBarPromptController) Dependency.get(MiuiStatusBarPromptController.class)).addPromptContainer((FrameLayout) findViewById(C0012R$id.prompt_container), 0);
+        ((MiuiClock) findViewById(C0015R$id.clock)).addVisibilityListener(this.mDripNetworkSpeedSplitter);
+        ((MiuiStatusBarPromptController) Dependency.get(MiuiStatusBarPromptController.class)).addPromptContainer((FrameLayout) findViewById(C0015R$id.prompt_container), 0);
     }
 
     public void onMiuiAttachedToWindow() {
@@ -141,9 +141,9 @@ public class MiuiPhoneStatusBarView extends PhoneStatusBarView {
         ViewGroup viewGroup;
         if (this.mNotificationIconAreaInner != null) {
             if (this.mCurrentStatusBarType == 0) {
-                viewGroup = (ViewGroup) findViewById(C0012R$id.fullscreen_notification_icon_area);
+                viewGroup = (ViewGroup) findViewById(C0015R$id.fullscreen_notification_icon_area);
             } else {
-                viewGroup = (ViewGroup) findViewById(C0012R$id.drip_notification_icon_area);
+                viewGroup = (ViewGroup) findViewById(C0015R$id.drip_notification_icon_area);
             }
             if (this.mNotificationIconAreaInner.getParent() != null) {
                 ((ViewGroup) this.mNotificationIconAreaInner.getParent()).removeView(this.mNotificationIconAreaInner);

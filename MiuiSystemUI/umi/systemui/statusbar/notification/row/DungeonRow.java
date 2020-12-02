@@ -37,7 +37,7 @@ public final class DungeonRow extends LinearLayout {
     private final void update() {
         /*
             r3 = this;
-            int r0 = com.android.systemui.C0012R$id.app_name
+            int r0 = com.android.systemui.C0015R$id.app_name
             android.view.View r0 = r3.findViewById(r0)
             if (r0 == 0) goto L_0x0048
             android.widget.TextView r0 = (android.widget.TextView) r0
@@ -52,7 +52,7 @@ public final class DungeonRow extends LinearLayout {
             r1 = r2
         L_0x001b:
             r0.setText(r1)
-            int r0 = com.android.systemui.C0012R$id.icon
+            int r0 = com.android.systemui.C0015R$id.icon
             android.view.View r0 = r3.findViewById(r0)
             if (r0 == 0) goto L_0x0040
             com.android.systemui.statusbar.StatusBarIconView r0 = (com.android.systemui.statusbar.StatusBarIconView) r0

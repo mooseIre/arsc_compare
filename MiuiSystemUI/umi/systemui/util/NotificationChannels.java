@@ -7,7 +7,7 @@ import android.media.AudioAttributes;
 import android.net.Uri;
 import android.provider.Settings;
 import com.android.internal.annotations.VisibleForTesting;
-import com.android.systemui.C0018R$string;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.SystemUI;
 import java.util.Arrays;
 
@@ -27,14 +27,14 @@ public class NotificationChannels extends SystemUI {
 
     public static void createAll(Context context) {
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(NotificationManager.class);
-        NotificationChannel notificationChannel = new NotificationChannel(BATTERY, context.getString(C0018R$string.notification_channel_battery), 5);
+        NotificationChannel notificationChannel = new NotificationChannel(BATTERY, context.getString(C0021R$string.notification_channel_battery), 5);
         String string = Settings.Global.getString(context.getContentResolver(), "low_battery_sound");
         notificationChannel.setSound(Uri.parse("file://" + string), new AudioAttributes.Builder().setContentType(4).setUsage(10).build());
         notificationChannel.setBlockable(true);
-        notificationManager.createNotificationChannels(Arrays.asList(new NotificationChannel[]{new NotificationChannel(ALERTS, context.getString(C0018R$string.notification_channel_alerts), 4), new NotificationChannel(GENERAL, context.getString(C0018R$string.notification_channel_general), 1), new NotificationChannel(STORAGE, context.getString(C0018R$string.notification_channel_storage), isTv(context) ? 3 : 2), createScreenshotChannel(context.getString(C0018R$string.notification_channel_screenshot), notificationManager.getNotificationChannel(SCREENSHOTS_LEGACY)), notificationChannel, new NotificationChannel(HINTS, context.getString(C0018R$string.notification_channel_hints), 3)}));
+        notificationManager.createNotificationChannels(Arrays.asList(new NotificationChannel[]{new NotificationChannel(ALERTS, context.getString(C0021R$string.notification_channel_alerts), 4), new NotificationChannel(GENERAL, context.getString(C0021R$string.notification_channel_general), 1), new NotificationChannel(STORAGE, context.getString(C0021R$string.notification_channel_storage), isTv(context) ? 3 : 2), createScreenshotChannel(context.getString(C0021R$string.notification_channel_screenshot), notificationManager.getNotificationChannel(SCREENSHOTS_LEGACY)), notificationChannel, new NotificationChannel(HINTS, context.getString(C0021R$string.notification_channel_hints), 3)}));
         notificationManager.deleteNotificationChannel(SCREENSHOTS_LEGACY);
         if (isTv(context)) {
-            notificationManager.createNotificationChannel(new NotificationChannel(TVPIP, context.getString(C0018R$string.notification_channel_tv_pip), 5));
+            notificationManager.createNotificationChannel(new NotificationChannel(TVPIP, context.getString(C0021R$string.notification_channel_tv_pip), 5));
         }
     }
 

@@ -9,11 +9,11 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import com.android.systemui.C0009R$dimen;
-import com.android.systemui.C0010R$drawable;
-import com.android.systemui.C0012R$id;
-import com.android.systemui.C0014R$layout;
-import com.android.systemui.C0018R$string;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0017R$layout;
+import com.android.systemui.C0021R$string;
 
 public class FsGestureDemoTitleView extends FrameLayout {
     private TextView mSkipView;
@@ -38,11 +38,11 @@ public class FsGestureDemoTitleView extends FrameLayout {
     }
 
     private void init() {
-        View inflate = LayoutInflater.from(getContext()).inflate(C0014R$layout.fs_gesture_title_view, this);
-        this.mTitleView = (TextView) inflate.findViewById(C0012R$id.fsgesture_ready_title);
-        this.mSummaryView = (TextView) inflate.findViewById(C0012R$id.fsgesture_ready_summary);
-        this.mSkipView = (TextView) inflate.findViewById(C0012R$id.fsgesture_skip);
-        setElevation((float) getResources().getDimensionPixelSize(C0009R$dimen.gesture_title_view_elevation));
+        View inflate = LayoutInflater.from(getContext()).inflate(C0017R$layout.fs_gesture_title_view, this);
+        this.mTitleView = (TextView) inflate.findViewById(C0015R$id.fsgesture_ready_title);
+        this.mSummaryView = (TextView) inflate.findViewById(C0015R$id.fsgesture_ready_summary);
+        this.mSkipView = (TextView) inflate.findViewById(C0015R$id.fsgesture_skip);
+        setElevation((float) getResources().getDimensionPixelSize(C0012R$dimen.gesture_title_view_elevation));
     }
 
     /* access modifiers changed from: package-private */
@@ -52,8 +52,8 @@ public class FsGestureDemoTitleView extends FrameLayout {
             RelativeLayout.LayoutParams layoutParams2 = (RelativeLayout.LayoutParams) layoutParams;
             layoutParams2.removeRule(20);
             layoutParams2.addRule(11);
-            int dimensionPixelSize = getResources().getDimensionPixelSize(C0009R$dimen.fsgesture_skip_margin_right);
-            this.mSkipView.setPadding(0, getResources().getDimensionPixelSize(C0009R$dimen.fsgesture_skip_margin_top), dimensionPixelSize, 0);
+            int dimensionPixelSize = getResources().getDimensionPixelSize(C0012R$dimen.fsgesture_skip_margin_right);
+            this.mSkipView.setPadding(0, getResources().getDimensionPixelSize(C0012R$dimen.fsgesture_skip_margin_top), dimensionPixelSize, 0);
         }
     }
 
@@ -61,35 +61,35 @@ public class FsGestureDemoTitleView extends FrameLayout {
     public void prepareTitleView(int i) {
         int i2;
         int i3;
-        setBackground(getResources().getDrawable(C0010R$drawable.fs_gesture_back_bg, (Resources.Theme) null));
+        setBackground(getResources().getDrawable(C0013R$drawable.fs_gesture_back_bg, (Resources.Theme) null));
         switch (i) {
             case 0:
-                i2 = C0018R$string.fs_gesture_back_ready_title;
-                i3 = C0018R$string.fs_gesture_left_back_ready_summary;
+                i2 = C0021R$string.fs_gesture_back_ready_title;
+                i3 = C0021R$string.fs_gesture_left_back_ready_summary;
                 break;
             case 1:
-                i2 = C0018R$string.fs_gesture_back_ready_title;
-                i3 = C0018R$string.fs_gesture_right_back_ready_summary;
+                i2 = C0021R$string.fs_gesture_back_ready_title;
+                i3 = C0021R$string.fs_gesture_right_back_ready_summary;
                 break;
             case 2:
-                i2 = C0018R$string.how_to_back_home;
-                i3 = C0018R$string.fs_gesture_back_home_summary;
+                i2 = C0021R$string.how_to_back_home;
+                i3 = C0021R$string.fs_gesture_back_home_summary;
                 break;
             case 3:
-                i2 = C0018R$string.how_to_switch_recents;
-                i3 = C0018R$string.fs_gesture_switch_recents_summary;
+                i2 = C0021R$string.how_to_switch_recents;
+                i3 = C0021R$string.fs_gesture_switch_recents_summary;
                 break;
             case 4:
-                i2 = C0018R$string.how_to_use_drawer;
-                i3 = C0018R$string.how_to_use_drawer_summary;
+                i2 = C0021R$string.how_to_use_drawer;
+                i3 = C0021R$string.how_to_use_drawer_summary;
                 break;
             case 5:
-                i2 = C0018R$string.how_to_use_app_quick;
-                i3 = C0018R$string.how_to_use_app_quick_summary;
+                i2 = C0021R$string.how_to_use_app_quick;
+                i3 = C0021R$string.how_to_use_app_quick_summary;
                 break;
             case 6:
-                i2 = C0018R$string.how_to_use_app_quick;
-                i3 = C0018R$string.how_to_use_app_quick_hide_line_summary;
+                i2 = C0021R$string.how_to_use_app_quick;
+                i3 = C0021R$string.how_to_use_app_quick_hide_line_summary;
                 break;
             default:
                 i2 = 0;
@@ -106,10 +106,10 @@ public class FsGestureDemoTitleView extends FrameLayout {
 
     /* access modifiers changed from: package-private */
     public void notifyFinish() {
-        setBackground(getResources().getDrawable(C0010R$drawable.fs_gesture_finish_bg, (Resources.Theme) null));
+        setBackground(getResources().getDrawable(C0013R$drawable.fs_gesture_finish_bg, (Resources.Theme) null));
         this.mTitleView.setVisibility(4);
         this.mSummaryView.setTranslationY(this.mSummaryView.getTranslationX() - 15.0f);
-        this.mSummaryView.setText(C0018R$string.fs_gesture_finish);
+        this.mSummaryView.setText(C0021R$string.fs_gesture_finish);
         this.mSkipView.setVisibility(8);
     }
 

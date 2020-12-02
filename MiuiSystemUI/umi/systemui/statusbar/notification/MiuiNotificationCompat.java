@@ -78,6 +78,10 @@ public class MiuiNotificationCompat {
         return notification.extras.getBoolean("miui.onlyShowKeyguard", false);
     }
 
+    public static boolean isKeptOnKeyguard(Notification notification) {
+        return notification.extras.getBoolean("miui.keptOnKeyguard", false);
+    }
+
     public static boolean isCustomHeight(Notification notification) {
         return notification.extras.getBoolean("miui.customHeight", false);
     }

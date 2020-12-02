@@ -9,8 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import com.android.systemui.C0012R$id;
-import com.android.systemui.C0014R$layout;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0017R$layout;
 import com.android.systemui.media.MediaDataManager;
 import com.android.systemui.media.MediaHostStatesManager;
 import com.android.systemui.media.PlayerViewHolder;
@@ -20,6 +20,7 @@ import com.android.systemui.qs.PageIndicator;
 import com.android.systemui.statusbar.notification.VisualStabilityManager;
 import com.android.systemui.statusbar.notification.mediacontrol.MiuiMediaCarouselScrollHandler;
 import com.android.systemui.statusbar.notification.mediacontrol.MiuiMediaControlPanel;
+import com.android.systemui.statusbar.notification.stack.MiuiMediaHeaderView;
 import com.android.systemui.statusbar.policy.ConfigurationController;
 import com.android.systemui.util.Utils;
 import com.android.systemui.util.animation.TransitionLayout;
@@ -105,10 +106,10 @@ public final class MediaCarouselController {
         this.activityStarter = activityStarter3;
         ViewGroup inflateMediaCarousel = inflateMediaCarousel();
         this.mediaFrame = inflateMediaCarousel;
-        View requireViewById = inflateMediaCarousel.requireViewById(C0012R$id.media_carousel_scroller);
+        View requireViewById = inflateMediaCarousel.requireViewById(C0015R$id.media_carousel_scroller);
         Intrinsics.checkExpressionValueIsNotNull(requireViewById, "mediaFrame.requireViewBy….media_carousel_scroller)");
         this.mediaCarousel = (MediaScrollView) requireViewById;
-        View requireViewById2 = this.mediaFrame.requireViewById(C0012R$id.media_page_indicator);
+        View requireViewById2 = this.mediaFrame.requireViewById(C0015R$id.media_page_indicator);
         Intrinsics.checkExpressionValueIsNotNull(requireViewById2, "mediaFrame.requireViewBy….id.media_page_indicator)");
         this.pageIndicator = (PageIndicator) requireViewById2;
         this.mediaCarouselScrollHandler = new MiuiMediaCarouselScrollHandler(this.mediaCarousel, this.pageIndicator, delayableExecutor2, new Function0<Unit>(mediaDataFilter2) {
@@ -150,7 +151,7 @@ public final class MediaCarouselController {
         Intrinsics.checkExpressionValueIsNotNull(configuration, "context.resources.configuration");
         setRtl(configuration.getLayoutDirection() == 1);
         inflateSettingsButton();
-        View requireViewById3 = this.mediaCarousel.requireViewById(C0012R$id.media_carousel);
+        View requireViewById3 = this.mediaCarousel.requireViewById(C0015R$id.media_carousel);
         Intrinsics.checkExpressionValueIsNotNull(requireViewById3, "mediaCarousel.requireViewById(R.id.media_carousel)");
         this.mediaContent = (ViewGroup) requireViewById3;
         configurationController2.addCallback(this.configListener);
@@ -251,7 +252,7 @@ public final class MediaCarouselController {
 
     /* access modifiers changed from: private */
     public final void inflateSettingsButton() {
-        View inflate = LayoutInflater.from(this.context).inflate(C0014R$layout.media_carousel_settings_button, this.mediaFrame, false);
+        View inflate = LayoutInflater.from(this.context).inflate(C0017R$layout.media_carousel_settings_button, this.mediaFrame, false);
         if (inflate != null) {
             View view = this.settingsButton;
             if (view != null) {
@@ -285,7 +286,7 @@ public final class MediaCarouselController {
     }
 
     private final ViewGroup inflateMediaCarousel() {
-        View inflate = LayoutInflater.from(this.context).inflate(C0014R$layout.media_carousel, new UniqueObjectHostView(this.context), false);
+        View inflate = LayoutInflater.from(this.context).inflate(C0017R$layout.media_carousel, new UniqueObjectHostView(this.context), false);
         if (inflate != null) {
             ViewGroup viewGroup = (ViewGroup) inflate;
             viewGroup.setLayoutDirection(3);
@@ -487,7 +488,7 @@ public final class MediaCarouselController {
         if (i != this.currentCarouselWidth || i2 != this.currentCarouselHeight) {
             this.currentCarouselWidth = i;
             this.currentCarouselHeight = i2;
-            this.mediaCarouselScrollHandler.setCarouselBounds(i, i2);
+            this.mediaCarouselScrollHandler.setCarouselBounds(i + (MiuiMediaHeaderView.Companion.getMSidePaddings() * 2), this.currentCarouselHeight);
             updatePageIndicatorLocation();
         }
     }
@@ -571,42 +572,38 @@ public final class MediaCarouselController {
             if (r0 != 0) goto L_0x002d
         L_0x0027:
             int r3 = r6.carouselMeasureHeight
-            if (r2 == r3) goto L_0x0071
-            if (r2 == 0) goto L_0x0071
+            if (r2 == r3) goto L_0x006c
+            if (r2 == 0) goto L_0x006c
         L_0x002d:
             r6.carouselMeasureWidth = r0
             r6.carouselMeasureHeight = r2
-            android.content.Context r2 = r6.context
-            android.content.res.Resources r2 = r2.getResources()
-            int r3 = com.android.systemui.C0009R$dimen.qs_media_padding
-            int r2 = r2.getDimensionPixelSize(r3)
-            int r2 = r2 + r0
-            com.android.systemui.media.MediaHostState r3 = r6.desiredHostState
-            if (r3 == 0) goto L_0x004d
-            com.android.systemui.util.animation.MeasurementInput r3 = r3.getMeasurementInput()
-            if (r3 == 0) goto L_0x004d
-            int r3 = r3.getWidthMeasureSpec()
-            goto L_0x004e
-        L_0x004d:
-            r3 = r1
-        L_0x004e:
+            com.android.systemui.statusbar.notification.stack.MiuiMediaHeaderView$Companion r2 = com.android.systemui.statusbar.notification.stack.MiuiMediaHeaderView.Companion
+            int r2 = r2.getMSidePaddings()
+            int r0 = r0 + r2
+            int r2 = r6.carouselMeasureWidth
+            com.android.systemui.statusbar.notification.stack.MiuiMediaHeaderView$Companion r3 = com.android.systemui.statusbar.notification.stack.MiuiMediaHeaderView.Companion
+            int r3 = r3.getMSidePaddings()
+            int r3 = r3 * 2
+            int r2 = r2 + r3
+            r3 = 1073741824(0x40000000, float:2.0)
+            int r3 = android.view.View.MeasureSpec.makeMeasureSpec(r2, r3)
             com.android.systemui.media.MediaHostState r4 = r6.desiredHostState
-            if (r4 == 0) goto L_0x005d
+            if (r4 == 0) goto L_0x0058
             com.android.systemui.util.animation.MeasurementInput r4 = r4.getMeasurementInput()
-            if (r4 == 0) goto L_0x005d
+            if (r4 == 0) goto L_0x0058
             int r4 = r4.getHeightMeasureSpec()
-            goto L_0x005e
-        L_0x005d:
+            goto L_0x0059
+        L_0x0058:
             r4 = r1
-        L_0x005e:
+        L_0x0059:
             com.android.systemui.media.MediaScrollView r5 = r6.mediaCarousel
             r5.measure(r3, r4)
             com.android.systemui.media.MediaScrollView r3 = r6.mediaCarousel
             int r4 = r3.getMeasuredHeight()
-            r3.layout(r1, r1, r0, r4)
+            r3.layout(r1, r1, r2, r4)
             com.android.systemui.media.MediaCarouselScrollHandler r6 = r6.mediaCarouselScrollHandler
-            r6.setPlayerWidthPlusPadding(r2)
-        L_0x0071:
+            r6.setPlayerWidthPlusPadding(r0)
+        L_0x006c:
             return
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.media.MediaCarouselController.updateCarouselSize():void");

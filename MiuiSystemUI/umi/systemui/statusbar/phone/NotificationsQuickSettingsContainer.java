@@ -9,8 +9,8 @@ import android.view.View;
 import android.view.ViewStub;
 import android.view.WindowInsets;
 import android.widget.FrameLayout;
-import com.android.systemui.C0009R$dimen;
-import com.android.systemui.C0012R$id;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0015R$id;
 import com.android.systemui.fragments.FragmentHostManager;
 import com.android.systemui.plugins.qs.QS;
 import com.android.systemui.statusbar.notification.AboveShelfObserver;
@@ -45,12 +45,12 @@ public class NotificationsQuickSettingsContainer extends FrameLayout implements 
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mQsFrame = (FrameLayout) findViewById(C0012R$id.qs_frame);
-        NotificationStackScrollLayout notificationStackScrollLayout = (NotificationStackScrollLayout) findViewById(C0012R$id.notification_stack_scroller);
+        this.mQsFrame = (FrameLayout) findViewById(C0015R$id.qs_frame);
+        NotificationStackScrollLayout notificationStackScrollLayout = (NotificationStackScrollLayout) findViewById(C0015R$id.notification_stack_scroller);
         this.mStackScroller = notificationStackScrollLayout;
         this.mStackScrollerMargin = ((FrameLayout.LayoutParams) notificationStackScrollLayout.getLayoutParams()).bottomMargin;
-        this.mKeyguardStatusBar = findViewById(C0012R$id.keyguard_header);
-        ViewStub viewStub = (ViewStub) findViewById(C0012R$id.keyguard_user_switcher);
+        this.mKeyguardStatusBar = findViewById(C0015R$id.keyguard_header);
+        ViewStub viewStub = (ViewStub) findViewById(C0015R$id.keyguard_user_switcher);
         viewStub.setOnInflateListener(this);
         this.mUserSwitcher = viewStub;
     }
@@ -70,8 +70,8 @@ public class NotificationsQuickSettingsContainer extends FrameLayout implements 
     /* access modifiers changed from: protected */
     public void onConfigurationChanged(Configuration configuration) {
         super.onConfigurationChanged(configuration);
-        reloadWidth(this.mQsFrame, C0009R$dimen.qs_panel_width);
-        reloadWidth(this.mStackScroller, C0009R$dimen.notification_panel_width);
+        reloadWidth(this.mQsFrame, C0012R$dimen.qs_panel_width);
+        reloadWidth(this.mStackScroller, C0012R$dimen.notification_panel_width);
     }
 
     private void reloadWidth(View view, int i) {

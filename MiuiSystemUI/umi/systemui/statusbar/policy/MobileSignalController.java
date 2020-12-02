@@ -30,11 +30,11 @@ import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.telephony.PhoneConstants;
 import com.android.settingslib.Utils;
 import com.android.settingslib.net.SignalStrengthUtil;
-import com.android.systemui.C0005R$array;
-import com.android.systemui.C0007R$bool;
-import com.android.systemui.C0010R$drawable;
-import com.android.systemui.C0013R$integer;
-import com.android.systemui.C0018R$string;
+import com.android.systemui.C0008R$array;
+import com.android.systemui.C0010R$bool;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0016R$integer;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.Dependency;
 import com.android.systemui.statusbar.policy.FiveGControllerImpl;
 import com.android.systemui.statusbar.policy.NetworkControllerImpl;
@@ -151,7 +151,7 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
                 this.f$0.post(runnable);
             }
         });
-        this.mNetworkNameSeparator = getTextIfExists(C0018R$string.status_bar_network_name_separator).toString();
+        this.mNetworkNameSeparator = getTextIfExists(C0021R$string.status_bar_network_name_separator).toString();
         this.mNetworkNameDefault = getTextIfExists(17040510).toString();
         mapIconSets();
         if (subscriptionInfo.getCarrierName() != null) {
@@ -487,7 +487,7 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
         if (Utils.isInService(this.mServiceState)) {
             return TelephonyIcons.TELEPHONY_SIGNAL_STRENGTH[((MobileState) this.mCurrentState).level];
         }
-        return C0010R$drawable.stat_sys_signal_null;
+        return C0013R$drawable.stat_sys_signal_null;
     }
 
     public int getQsCurrentIconId() {
@@ -503,10 +503,10 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
         int voiceNetworkType = getVoiceNetworkType();
         T t = this.mCurrentState;
         if ((((MobileState) t).voiceCapable || ((MobileState) t).videoCapable) && ((MobileState) this.mCurrentState).imsRegistered) {
-            return C0010R$drawable.ic_volte;
+            return C0013R$drawable.ic_volte;
         }
         if ((this.mTelephonyDisplayInfo.getNetworkType() == 13 || this.mTelephonyDisplayInfo.getNetworkType() == 19) && voiceNetworkType == 0) {
-            return C0010R$drawable.ic_volte_no_voice;
+            return C0013R$drawable.ic_volte_no_voice;
         }
         return 0;
     }
@@ -585,7 +585,7 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
             int r5 = r5.inetCondition
             if (r5 != 0) goto L_0x0035
             android.content.Context r3 = r0.mContext
-            int r5 = com.android.systemui.C0018R$string.data_connection_no_internet
+            int r5 = com.android.systemui.C0021R$string.data_connection_no_internet
             java.lang.String r3 = r3.getString(r5)
         L_0x0035:
             r12 = r3
@@ -1250,6 +1250,10 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
         return this.mSubscriptionInfo.getSimSlotIndex();
     }
 
+    public ServiceState getServiceState() {
+        return this.mServiceState;
+    }
+
     public void onSignalStrengthChanged(int i, MobileIconGroup mobileIconGroup) {
         update5GConnectState();
         boolean isFiveGBearerAllocated = this.mFiveGController.isFiveGBearerAllocated(getSlot());
@@ -1777,22 +1781,26 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
     public void updateMiuiConfig() {
         int i;
         String simOperatorNumericForPhone = this.mPhone.getSimOperatorNumericForPhone(this.mSlotId);
+        boolean z = true;
         Resources resourcesForOperation = getResourcesForOperation(this.mContext, simOperatorNumericForPhone, true);
         ((MobileState) this.mCurrentState).CTSim = isCTSim(simOperatorNumericForPhone);
-        ((MobileState) this.mCurrentState).hideVolte = resourcesForOperation.getBoolean(C0007R$bool.status_bar_hide_volte);
-        ((MobileState) this.mCurrentState).hideVowifi = resourcesForOperation.getBoolean(C0007R$bool.status_bar_hide_vowifi);
+        ((MobileState) this.mCurrentState).hideVolte = resourcesForOperation.getBoolean(C0010R$bool.status_bar_hide_volte);
+        ((MobileState) this.mCurrentState).hideVowifi = resourcesForOperation.getBoolean(C0010R$bool.status_bar_hide_vowifi);
         MobileState mobileState = (MobileState) this.mCurrentState;
         if (Build.IS_INTERNATIONAL_BUILD) {
-            i = transformVolteDrawableId(resourcesForOperation.getInteger(C0013R$integer.status_bar_volte_drawable_type));
+            i = transformVolteDrawableId(resourcesForOperation.getInteger(C0016R$integer.status_bar_volte_drawable_type));
         } else {
-            i = C0010R$drawable.stat_sys_signal_hd_big;
+            i = C0013R$drawable.stat_sys_signal_hd_big;
         }
         mobileState.volteResId = i;
-        ((MobileState) this.mCurrentState).vowifiResId = transformVowifiDrawableId(resourcesForOperation.getInteger(C0013R$integer.status_bar_vowifi_drawable_type), resourcesForOperation.getBoolean(C0007R$bool.status_bar_show_dual_vowifi_icons), this.mSlotId, this.mNetworkController);
-        ((MobileState) this.mCurrentState).showDataTypeWhenWifiOn = resourcesForOperation.getBoolean(C0007R$bool.status_bar_show_mobile_type_when_wifi_on);
-        T t = this.mCurrentState;
-        ((MobileState) t).showDataTypeDataDisconnected = true ^ Build.IS_INTERNATIONAL_BUILD;
-        ((MobileState) t).showMobileDataTypeInMMS = resourcesForOperation.getBoolean(C0007R$bool.status_bar_show_mobile_type_in_mms);
+        ((MobileState) this.mCurrentState).vowifiResId = transformVowifiDrawableId(resourcesForOperation.getInteger(C0016R$integer.status_bar_vowifi_drawable_type), resourcesForOperation.getBoolean(C0010R$bool.status_bar_show_dual_vowifi_icons), this.mSlotId, this.mNetworkController);
+        ((MobileState) this.mCurrentState).showDataTypeWhenWifiOn = resourcesForOperation.getBoolean(C0010R$bool.status_bar_show_mobile_type_when_wifi_on);
+        MobileState mobileState2 = (MobileState) this.mCurrentState;
+        if (Build.IS_INTERNATIONAL_BUILD && !resourcesForOperation.getBoolean(C0010R$bool.config_show_mobile_type)) {
+            z = false;
+        }
+        mobileState2.showDataTypeDataDisconnected = z;
+        ((MobileState) this.mCurrentState).showMobileDataTypeInMMS = resourcesForOperation.getBoolean(C0010R$bool.status_bar_show_mobile_type_in_mms);
         this.mMiuiMobileTypeNameArray = getMiuiMobileTypeNameArray(resourcesForOperation);
     }
 
@@ -1826,54 +1834,54 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
 
     public static int transformVolteDrawableId(int i) {
         if (i == 1) {
-            return C0010R$drawable.stat_sys_signal_volte_4g;
+            return C0013R$drawable.stat_sys_signal_volte_4g;
         }
         if (i == 2) {
-            return C0010R$drawable.stat_sys_signal_volte_no_frame;
+            return C0013R$drawable.stat_sys_signal_volte_no_frame;
         }
         if (i != 3) {
-            return C0010R$drawable.stat_sys_signal_volte;
+            return C0013R$drawable.stat_sys_signal_volte;
         }
-        return C0010R$drawable.stat_sys_signal_volte_hd_voice;
+        return C0013R$drawable.stat_sys_signal_volte_hd_voice;
     }
 
     public static int transformVowifiDrawableId(int i, boolean z, int i2, NetworkController networkController) {
         if (i == 1) {
             if (z && networkController.getNumberSubscriptions() == 2) {
                 if (i2 == 1) {
-                    return C0010R$drawable.stat_sys_vowifi_call_2;
+                    return C0013R$drawable.stat_sys_vowifi_call_2;
                 }
                 if (i2 == 0) {
-                    return C0010R$drawable.stat_sys_vowifi_call_1;
+                    return C0013R$drawable.stat_sys_vowifi_call_1;
                 }
             }
-            return C0010R$drawable.stat_sys_vowifi_call;
+            return C0013R$drawable.stat_sys_vowifi_call;
         } else if (i != 2) {
-            return C0010R$drawable.stat_sys_vowifi;
+            return C0013R$drawable.stat_sys_vowifi;
         } else {
-            return C0010R$drawable.stat_sys_vowifi_wifi;
+            return C0013R$drawable.stat_sys_vowifi_wifi;
         }
     }
 
     public static String[] getMiuiMobileTypeNameArray(Resources resources) {
         String[] strArr = new String[11];
-        int[] intArray = resources.getIntArray(C0005R$array.data_type_name_default_key);
-        String[] stringArray = resources.getStringArray(C0005R$array.data_type_name_default_value);
+        int[] intArray = resources.getIntArray(C0008R$array.data_type_name_default_key);
+        String[] stringArray = resources.getStringArray(C0008R$array.data_type_name_default_value);
         for (int i = 0; i < intArray.length; i++) {
             strArr[intArray[i]] = stringArray[i];
         }
-        int[] intArray2 = resources.getIntArray(C0005R$array.data_type_name_mcc_key);
-        String[] stringArray2 = resources.getStringArray(C0005R$array.data_type_name_mcc_value);
+        int[] intArray2 = resources.getIntArray(C0008R$array.data_type_name_mcc_key);
+        String[] stringArray2 = resources.getStringArray(C0008R$array.data_type_name_mcc_value);
         for (int i2 = 0; i2 < intArray2.length; i2++) {
             strArr[intArray2[i2]] = stringArray2[i2];
         }
-        int[] intArray3 = resources.getIntArray(C0005R$array.data_type_name_mcc_mnc_key);
-        String[] stringArray3 = resources.getStringArray(C0005R$array.data_type_name_mcc_mnc_value);
+        int[] intArray3 = resources.getIntArray(C0008R$array.data_type_name_mcc_mnc_key);
+        String[] stringArray3 = resources.getStringArray(C0008R$array.data_type_name_mcc_mnc_value);
         for (int i3 = 0; i3 < intArray3.length; i3++) {
             strArr[intArray3[i3]] = stringArray3[i3];
         }
-        int[] intArray4 = resources.getIntArray(C0005R$array.data_type_name_cus_reg_key);
-        String[] stringArray4 = resources.getStringArray(C0005R$array.data_type_name_cus_reg_value);
+        int[] intArray4 = resources.getIntArray(C0008R$array.data_type_name_cus_reg_key);
+        String[] stringArray4 = resources.getStringArray(C0008R$array.data_type_name_cus_reg_value);
         for (int i4 = 0; i4 < intArray4.length; i4++) {
             strArr[intArray4[i4]] = stringArray4[i4];
         }

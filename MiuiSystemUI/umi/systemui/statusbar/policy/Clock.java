@@ -17,8 +17,8 @@ import android.text.style.RelativeSizeSpan;
 import android.util.AttributeSet;
 import android.widget.TextView;
 import com.android.settingslib.Utils;
-import com.android.systemui.C0006R$attr;
-import com.android.systemui.C0009R$dimen;
+import com.android.systemui.C0009R$attr;
+import com.android.systemui.C0012R$dimen;
 import com.android.systemui.DemoMode;
 import com.android.systemui.Dependency;
 import com.android.systemui.FontSizeUtils;
@@ -311,15 +311,15 @@ public class Clock extends TextView implements DemoMode, TunerService.Tunable, C
     }
 
     public void onDensityOrFontScaleChanged() {
-        FontSizeUtils.updateFontSize(this, C0009R$dimen.status_bar_clock_size);
-        setPaddingRelative(this.mContext.getResources().getDimensionPixelSize(C0009R$dimen.status_bar_clock_starting_padding), 0, this.mContext.getResources().getDimensionPixelSize(C0009R$dimen.status_bar_clock_end_padding), 0);
+        FontSizeUtils.updateFontSize(this, C0012R$dimen.status_bar_clock_size);
+        setPaddingRelative(this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.status_bar_clock_starting_padding), 0, this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.status_bar_clock_end_padding), 0);
     }
 
     public void useWallpaperTextColor(boolean z) {
         if (z != this.mUseWallpaperTextColor) {
             this.mUseWallpaperTextColor = z;
             if (z) {
-                setTextColor(Utils.getColorAttr(this.mContext, C0006R$attr.wallpaperTextColor));
+                setTextColor(Utils.getColorAttr(this.mContext, C0009R$attr.wallpaperTextColor));
             } else {
                 setTextColor(this.mNonAdaptedColor);
             }

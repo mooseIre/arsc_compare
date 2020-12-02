@@ -43,9 +43,9 @@ import androidx.core.view.inputmethod.InputConnectionCompat;
 import androidx.core.view.inputmethod.InputContentInfoCompat;
 import com.android.internal.logging.MetricsLogger;
 import com.android.internal.statusbar.IStatusBarService;
-import com.android.systemui.C0012R$id;
-import com.android.systemui.C0014R$layout;
-import com.android.systemui.C0018R$string;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0017R$layout;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.Dependency;
 import com.android.systemui.Interpolators;
 import com.android.systemui.statusbar.RemoteInputController;
@@ -93,8 +93,8 @@ public class RemoteInputView extends LinearLayout implements View.OnClickListene
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mProgressBar = (ProgressBar) findViewById(C0012R$id.remote_input_progress);
-        ImageButton imageButton = (ImageButton) findViewById(C0012R$id.remote_input_send);
+        this.mProgressBar = (ProgressBar) findViewById(C0015R$id.remote_input_progress);
+        ImageButton imageButton = (ImageButton) findViewById(C0015R$id.remote_input_send);
         this.mSendButton = imageButton;
         imageButton.setOnClickListener(this);
         RemoteEditText remoteEditText = (RemoteEditText) getChildAt(0);
@@ -143,7 +143,7 @@ public class RemoteInputView extends LinearLayout implements View.OnClickListene
         this.mController.grantInlineReplyUriPermission(this.mEntry.getSbn(), uri);
         Intent addFlags = new Intent().addFlags(268435456);
         RemoteInput.addDataResultToIntent(this.mRemoteInput, addFlags, hashMap);
-        this.mEntry.remoteInputText = this.mContext.getString(C0018R$string.remote_input_image_insertion_text);
+        this.mEntry.remoteInputText = this.mContext.getString(C0021R$string.remote_input_image_insertion_text);
         NotificationEntry notificationEntry = this.mEntry;
         notificationEntry.remoteInputMimeType = str;
         notificationEntry.remoteInputUri = uri;
@@ -176,9 +176,9 @@ public class RemoteInputView extends LinearLayout implements View.OnClickListene
     }
 
     public static RemoteInputView inflate(Context context, ViewGroup viewGroup, NotificationEntry notificationEntry, RemoteInputController remoteInputController) {
-        int i = C0014R$layout.remote_input;
-        if (viewGroup.getId() == C0012R$id.actions_container) {
-            i = C0014R$layout.miui_remote_input;
+        int i = C0017R$layout.remote_input;
+        if (viewGroup.getId() == C0015R$id.actions_container) {
+            i = C0017R$layout.miui_remote_input;
         }
         RemoteInputView remoteInputView = (RemoteInputView) LayoutInflater.from(context).inflate(i, viewGroup, false);
         remoteInputView.mController = remoteInputController;

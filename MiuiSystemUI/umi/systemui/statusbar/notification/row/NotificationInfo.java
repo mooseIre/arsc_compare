@@ -29,8 +29,8 @@ import android.widget.TextView;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.logging.MetricsLogger;
 import com.android.internal.logging.UiEventLogger;
-import com.android.systemui.C0012R$id;
-import com.android.systemui.C0018R$string;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.Dependency;
 import com.android.systemui.Interpolators;
 import com.android.systemui.statusbar.notification.VisualStabilityManager;
@@ -143,8 +143,8 @@ public class NotificationInfo extends LinearLayout implements NotificationGuts.G
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mPriorityDescriptionView = (TextView) findViewById(C0012R$id.alert_summary);
-        this.mSilentDescriptionView = (TextView) findViewById(C0012R$id.silence_summary);
+        this.mPriorityDescriptionView = (TextView) findViewById(C0015R$id.alert_summary);
+        this.mSilentDescriptionView = (TextView) findViewById(C0015R$id.silence_summary);
     }
 
     public void bindNotification(PackageManager packageManager, INotificationManager iNotificationManager, VisualStabilityManager visualStabilityManager, ChannelEditorDialogController channelEditorDialogController, String str, NotificationChannel notificationChannel, Set<NotificationChannel> set, NotificationEntry notificationEntry, OnSettingsClickListener onSettingsClickListener, OnAppSettingsClickListener onAppSettingsClickListener, UiEventLogger uiEventLogger, boolean z, boolean z2, boolean z3) throws RemoteException {
@@ -189,31 +189,31 @@ public class NotificationInfo extends LinearLayout implements NotificationGuts.G
     private void bindInlineControls() {
         int i = 8;
         if (this.mIsNonblockable) {
-            findViewById(C0012R$id.non_configurable_text).setVisibility(0);
-            findViewById(C0012R$id.non_configurable_multichannel_text).setVisibility(8);
-            findViewById(C0012R$id.interruptiveness_settings).setVisibility(8);
-            ((TextView) findViewById(C0012R$id.done)).setText(C0018R$string.inline_done_button);
-            findViewById(C0012R$id.turn_off_notifications).setVisibility(8);
+            findViewById(C0015R$id.non_configurable_text).setVisibility(0);
+            findViewById(C0015R$id.non_configurable_multichannel_text).setVisibility(8);
+            findViewById(C0015R$id.interruptiveness_settings).setVisibility(8);
+            ((TextView) findViewById(C0015R$id.done)).setText(C0021R$string.inline_done_button);
+            findViewById(C0015R$id.turn_off_notifications).setVisibility(8);
         } else if (this.mNumUniqueChannelsInRow > 1) {
-            findViewById(C0012R$id.non_configurable_text).setVisibility(8);
-            findViewById(C0012R$id.interruptiveness_settings).setVisibility(8);
-            findViewById(C0012R$id.non_configurable_multichannel_text).setVisibility(0);
+            findViewById(C0015R$id.non_configurable_text).setVisibility(8);
+            findViewById(C0015R$id.interruptiveness_settings).setVisibility(8);
+            findViewById(C0015R$id.non_configurable_multichannel_text).setVisibility(0);
         } else {
-            findViewById(C0012R$id.non_configurable_text).setVisibility(8);
-            findViewById(C0012R$id.non_configurable_multichannel_text).setVisibility(8);
-            findViewById(C0012R$id.interruptiveness_settings).setVisibility(0);
+            findViewById(C0015R$id.non_configurable_text).setVisibility(8);
+            findViewById(C0015R$id.non_configurable_multichannel_text).setVisibility(8);
+            findViewById(C0015R$id.interruptiveness_settings).setVisibility(0);
         }
-        View findViewById = findViewById(C0012R$id.turn_off_notifications);
+        View findViewById = findViewById(C0015R$id.turn_off_notifications);
         findViewById.setOnClickListener(getTurnOffNotificationsClickListener());
         if (findViewById.hasOnClickListeners() && !this.mIsNonblockable) {
             i = 0;
         }
         findViewById.setVisibility(i);
-        View findViewById2 = findViewById(C0012R$id.done);
+        View findViewById2 = findViewById(C0015R$id.done);
         findViewById2.setOnClickListener(this.mOnDismissSettings);
         findViewById2.setAccessibilityDelegate(this.mGutsContainer.getAccessibilityDelegate());
-        View findViewById3 = findViewById(C0012R$id.silence);
-        View findViewById4 = findViewById(C0012R$id.alert);
+        View findViewById3 = findViewById(C0015R$id.silence);
+        View findViewById4 = findViewById(C0015R$id.alert);
         findViewById3.setOnClickListener(this.mOnSilent);
         findViewById4.setOnClickListener(this.mOnAlert);
         applyAlertingBehavior(this.mWasShownHighPriority ^ true ? 1 : 0, false);
@@ -230,10 +230,10 @@ public class NotificationInfo extends LinearLayout implements NotificationGuts.G
         } catch (PackageManager.NameNotFoundException unused) {
             this.mPkgIcon = this.mPm.getDefaultActivityIcon();
         }
-        ((ImageView) findViewById(C0012R$id.pkg_icon)).setImageDrawable(this.mPkgIcon);
-        ((TextView) findViewById(C0012R$id.pkg_name)).setText(this.mAppName);
+        ((ImageView) findViewById(C0015R$id.pkg_icon)).setImageDrawable(this.mPkgIcon);
+        ((TextView) findViewById(C0015R$id.pkg_name)).setText(this.mAppName);
         bindDelegate();
-        View findViewById = findViewById(C0012R$id.app_settings);
+        View findViewById = findViewById(C0015R$id.app_settings);
         Intent appSettingsIntent = getAppSettingsIntent(this.mPm, this.mPackageName, this.mSingleNotificationChannel, this.mSbn.getId(), this.mSbn.getTag());
         int i = 0;
         if (appSettingsIntent == null || TextUtils.isEmpty(this.mSbn.getNotification().getSettingsText())) {
@@ -252,7 +252,7 @@ public class NotificationInfo extends LinearLayout implements NotificationGuts.G
                 }
             });
         }
-        View findViewById2 = findViewById(C0012R$id.info);
+        View findViewById2 = findViewById(C0015R$id.info);
         findViewById2.setOnClickListener(getSettingsOnClickListener());
         if (!findViewById2.hasOnClickListeners()) {
             i = 8;
@@ -327,7 +327,7 @@ public class NotificationInfo extends LinearLayout implements NotificationGuts.G
     }
 
     private void bindName() {
-        TextView textView = (TextView) findViewById(C0012R$id.channel_name);
+        TextView textView = (TextView) findViewById(C0015R$id.channel_name);
         if (this.mIsSingleDefaultChannel || this.mNumUniqueChannelsInRow > 1) {
             textView.setVisibility(8);
         } else {
@@ -336,7 +336,7 @@ public class NotificationInfo extends LinearLayout implements NotificationGuts.G
     }
 
     private void bindDelegate() {
-        TextView textView = (TextView) findViewById(C0012R$id.delegate_name);
+        TextView textView = (TextView) findViewById(C0015R$id.delegate_name);
         if (!TextUtils.equals(this.mPackageName, this.mDelegatePkg)) {
             textView.setVisibility(0);
         } else {
@@ -367,7 +367,7 @@ public class NotificationInfo extends LinearLayout implements NotificationGuts.G
         L_0x0021:
             r0 = 0
         L_0x0022:
-            int r1 = com.android.systemui.C0012R$id.group_name
+            int r1 = com.android.systemui.C0015R$id.group_name
             android.view.View r4 = r4.findViewById(r1)
             android.widget.TextView r4 = (android.widget.TextView) r4
             if (r0 == 0) goto L_0x0034
@@ -425,8 +425,8 @@ public class NotificationInfo extends LinearLayout implements NotificationGuts.G
             transitionSet.setInterpolator(Interpolators.FAST_OUT_SLOW_IN);
             TransitionManager.beginDelayedTransition(this, transitionSet);
         }
-        View findViewById = findViewById(C0012R$id.alert);
-        View findViewById2 = findViewById(C0012R$id.silence);
+        View findViewById = findViewById(C0015R$id.alert);
+        View findViewById2 = findViewById(C0015R$id.silence);
         if (i == 0) {
             this.mPriorityDescriptionView.setVisibility(0);
             this.mSilentDescriptionView.setVisibility(8);
@@ -465,11 +465,11 @@ public class NotificationInfo extends LinearLayout implements NotificationGuts.G
         if (this.mWasShownHighPriority == (i == 0)) {
             z2 = false;
         }
-        TextView textView = (TextView) findViewById(C0012R$id.done);
+        TextView textView = (TextView) findViewById(C0015R$id.done);
         if (z2) {
-            i2 = C0018R$string.inline_ok_button;
+            i2 = C0021R$string.inline_ok_button;
         } else {
-            i2 = C0018R$string.inline_done_button;
+            i2 = C0021R$string.inline_done_button;
         }
         textView.setText(i2);
     }
@@ -498,10 +498,10 @@ public class NotificationInfo extends LinearLayout implements NotificationGuts.G
         super.onInitializeAccessibilityEvent(accessibilityEvent);
         if (this.mGutsContainer != null && accessibilityEvent.getEventType() == 32) {
             if (this.mGutsContainer.isExposed()) {
-                accessibilityEvent.getText().add(this.mContext.getString(C0018R$string.notification_channel_controls_opened_accessibility, new Object[]{this.mAppName}));
+                accessibilityEvent.getText().add(this.mContext.getString(C0021R$string.notification_channel_controls_opened_accessibility, new Object[]{this.mAppName}));
                 return;
             }
-            accessibilityEvent.getText().add(this.mContext.getString(C0018R$string.notification_channel_controls_closed_accessibility, new Object[]{this.mAppName}));
+            accessibilityEvent.getText().add(this.mContext.getString(C0021R$string.notification_channel_controls_closed_accessibility, new Object[]{this.mAppName}));
         }
     }
 

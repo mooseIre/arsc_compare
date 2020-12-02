@@ -11,6 +11,7 @@ import android.os.RemoteException;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 import android.util.Log;
+import com.android.systemui.statusbar.phone.NotificationGroupManagerInjectorKt;
 import com.android.systemui.statusbar.phone.NotificationListenerWithPlugins;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -89,8 +90,10 @@ public class NotificationListener extends NotificationListenerWithPlugins {
         }
         NotificationListenerService.RankingMap rankingMap2 = new NotificationListenerService.RankingMap((NotificationListenerService.Ranking[]) arrayList.toArray(new NotificationListenerService.Ranking[0]));
         for (StatusBarNotification statusBarNotification : statusBarNotificationArr) {
-            for (NotificationHandler onNotificationPosted : this.mNotificationHandlers) {
-                onNotificationPosted.onNotificationPosted(statusBarNotification, rankingMap2);
+            if (!NotificationGroupManagerInjectorKt.shouldHideGroupSummary(statusBarNotification)) {
+                for (NotificationHandler onNotificationPosted : this.mNotificationHandlers) {
+                    onNotificationPosted.onNotificationPosted(statusBarNotification, rankingMap2);
+                }
             }
         }
         for (NotificationHandler onNotificationsInitialized : this.mNotificationHandlers) {
@@ -120,8 +123,10 @@ public class NotificationListener extends NotificationListenerWithPlugins {
     /* renamed from: lambda$onNotificationPosted$1 */
     public /* synthetic */ void lambda$onNotificationPosted$1$NotificationListener(StatusBarNotification statusBarNotification, NotificationListenerService.RankingMap rankingMap) {
         RemoteInputController.processForRemoteInput(statusBarNotification.getNotification(), this.mContext);
-        for (NotificationHandler onNotificationPosted : this.mNotificationHandlers) {
-            onNotificationPosted.onNotificationPosted(statusBarNotification, rankingMap);
+        if (!NotificationGroupManagerInjectorKt.shouldHideGroupSummary(statusBarNotification)) {
+            for (NotificationHandler onNotificationPosted : this.mNotificationHandlers) {
+                onNotificationPosted.onNotificationPosted(statusBarNotification, rankingMap);
+            }
         }
     }
 

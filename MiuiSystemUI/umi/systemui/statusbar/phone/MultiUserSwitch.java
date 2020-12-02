@@ -9,7 +9,7 @@ import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import com.android.systemui.C0007R$bool;
+import com.android.systemui.C0010R$bool;
 import com.android.systemui.DejankUtils;
 import com.android.systemui.Dependency;
 import com.android.systemui.Prefs;
@@ -74,7 +74,7 @@ public class MultiUserSwitch extends FrameLayout implements View.OnClickListener
     /* access modifiers changed from: private */
     /* renamed from: lambda$isMultiUserEnabled$0 */
     public /* synthetic */ Boolean lambda$isMultiUserEnabled$0$MultiUserSwitch() {
-        return Boolean.valueOf(this.mUserManager.isUserSwitcherEnabled(this.mContext.getResources().getBoolean(C0007R$bool.qs_show_user_switcher_for_single_user)));
+        return Boolean.valueOf(this.mUserManager.isUserSwitcherEnabled(this.mContext.getResources().getBoolean(C0010R$bool.qs_show_user_switcher_for_single_user)));
     }
 
     public boolean isMultiUserEnabled() {
@@ -155,7 +155,7 @@ public class MultiUserSwitch extends FrameLayout implements View.OnClickListener
             boolean r2 = android.text.TextUtils.isEmpty(r0)
             if (r2 != 0) goto L_0x0032
             android.content.Context r1 = r5.mContext
-            int r2 = com.android.systemui.C0018R$string.accessibility_quick_settings_user
+            int r2 = com.android.systemui.C0021R$string.accessibility_quick_settings_user
             r3 = 1
             java.lang.Object[] r3 = new java.lang.Object[r3]
             r4 = 0

@@ -127,6 +127,7 @@ import com.android.systemui.statusbar.policy.FlashlightController;
 import com.android.systemui.statusbar.policy.HotspotController;
 import com.android.systemui.statusbar.policy.KeyguardStateController;
 import com.android.systemui.statusbar.policy.LocationController;
+import com.android.systemui.statusbar.policy.MiuiAlarmControllerImpl;
 import com.android.systemui.statusbar.policy.NetworkController;
 import com.android.systemui.statusbar.policy.NextAlarmController;
 import com.android.systemui.statusbar.policy.RegionController;
@@ -836,5 +837,9 @@ public final class Dependency_MembersInjector {
 
     public static void injectMSlaveWifiSignalController(Dependency dependency, Lazy<SlaveWifiSignalController> lazy) {
         dependency.mSlaveWifiSignalController = lazy;
+    }
+
+    public static void injectMMiuiAlarmControllerImpl(Dependency dependency, Lazy<MiuiAlarmControllerImpl> lazy) {
+        dependency.mMiuiAlarmControllerImpl = lazy;
     }
 }

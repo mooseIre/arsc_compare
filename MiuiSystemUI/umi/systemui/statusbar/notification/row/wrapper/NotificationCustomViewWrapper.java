@@ -3,7 +3,7 @@ package com.android.systemui.statusbar.notification.row.wrapper;
 import android.content.Context;
 import android.view.View;
 import com.android.internal.graphics.ColorUtils;
-import com.android.systemui.C0008R$color;
+import com.android.systemui.C0011R$color;
 import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow;
 
 public class NotificationCustomViewWrapper extends NotificationViewWrapper {
@@ -21,7 +21,7 @@ public class NotificationCustomViewWrapper extends NotificationViewWrapper {
 
     protected NotificationCustomViewWrapper(Context context, View view, ExpandableNotificationRow expandableNotificationRow) {
         super(context, view, expandableNotificationRow);
-        this.mLegacyColor = expandableNotificationRow.getContext().getColor(C0008R$color.notification_legacy_background_color);
+        this.mLegacyColor = expandableNotificationRow.getContext().getColor(C0011R$color.notification_legacy_background_color);
     }
 
     public void setVisible(boolean z) {

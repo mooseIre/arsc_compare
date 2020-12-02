@@ -6,9 +6,9 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import com.android.systemui.C0009R$dimen;
-import com.android.systemui.C0010R$drawable;
-import com.android.systemui.C0018R$string;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0021R$string;
 import kotlin.TypeCastException;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.Nullable;
@@ -29,8 +29,8 @@ public final class MiuiPageIndicator extends ViewGroup {
         Intrinsics.checkExpressionValueIsNotNull(context2, "this.context");
         Resources resources = context2.getResources();
         Intrinsics.checkExpressionValueIsNotNull(resources, "this.context.resources");
-        this.mPageDotSize = (int) resources.getDimension(C0009R$dimen.qs_page_indicator_dot_size);
-        this.mPageDotSpace = (int) resources.getDimension(C0009R$dimen.qs_page_indicator_dot_space);
+        this.mPageDotSize = (int) resources.getDimension(C0012R$dimen.qs_page_indicator_dot_size);
+        this.mPageDotSpace = (int) resources.getDimension(C0012R$dimen.qs_page_indicator_dot_space);
     }
 
     public final void setNumPages(int i) {
@@ -41,7 +41,7 @@ public final class MiuiPageIndicator extends ViewGroup {
             }
             while (i > getChildCount()) {
                 ImageView imageView = new ImageView(getContext());
-                imageView.setImageResource(C0010R$drawable.qs_page_indicator_dot);
+                imageView.setImageResource(C0013R$drawable.qs_page_indicator_dot);
                 addView(imageView);
             }
             setIndex(this.mPosition >> 1);
@@ -50,7 +50,7 @@ public final class MiuiPageIndicator extends ViewGroup {
 
     public final void setLocation(float f) {
         int i = (int) f;
-        setContentDescription(getContext().getString(C0018R$string.accessibility_quick_settings_page, new Object[]{Integer.valueOf(i + 1), Integer.valueOf(getChildCount())}));
+        setContentDescription(getContext().getString(C0021R$string.accessibility_quick_settings_page, new Object[]{Integer.valueOf(i + 1), Integer.valueOf(getChildCount())}));
         int i2 = this.mPosition;
         if (i == i2) {
             return;
@@ -76,7 +76,7 @@ public final class MiuiPageIndicator extends ViewGroup {
             View childAt = getChildAt(i2);
             if (childAt != null) {
                 ImageView imageView = (ImageView) childAt;
-                imageView.setImageResource(C0010R$drawable.qs_page_indicator_dot);
+                imageView.setImageResource(C0013R$drawable.qs_page_indicator_dot);
                 imageView.setAlpha(getAlpha(i2 == i));
                 i2++;
             } else {

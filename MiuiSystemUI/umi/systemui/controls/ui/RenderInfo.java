@@ -6,7 +6,7 @@ import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.util.ArrayMap;
 import android.util.SparseArray;
-import com.android.systemui.C0010R$drawable;
+import com.android.systemui.C0013R$drawable;
 import kotlin.Pair;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
@@ -96,7 +96,7 @@ public final class RenderInfo {
             if (intValue3 == -1) {
                 drawable = (Drawable) RenderInfo.appIconMap.get(componentName);
                 if (drawable == null) {
-                    drawable = context.getResources().getDrawable(C0010R$drawable.ic_device_unknown_on, (Resources.Theme) null);
+                    drawable = context.getResources().getDrawable(C0013R$drawable.ic_device_unknown_on, (Resources.Theme) null);
                     RenderInfo.appIconMap.put(componentName, drawable);
                 }
             } else {

@@ -5,8 +5,8 @@ import android.util.Log;
 import android.widget.Switch;
 import androidx.appcompat.R$styleable;
 import androidx.lifecycle.LifecycleOwner;
-import com.android.systemui.C0010R$drawable;
-import com.android.systemui.C0018R$string;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.plugins.ActivityStarter;
 import com.android.systemui.plugins.qs.QSTile;
 import com.android.systemui.qs.QSHost;
@@ -58,7 +58,7 @@ public class LocationTile extends QSTileImpl<QSTile.BooleanState> {
     }
 
     public CharSequence getTileLabel() {
-        return this.mContext.getString(C0018R$string.quick_settings_location_label);
+        return this.mContext.getString(C0021R$string.quick_settings_location_label);
     }
 
     /* access modifiers changed from: protected */
@@ -68,9 +68,9 @@ public class LocationTile extends QSTileImpl<QSTile.BooleanState> {
         if (!booleanState.disabledByPolicy) {
             checkIfRestrictionEnforcedByAdminOnly(booleanState, "no_config_location");
         }
-        booleanState.contentDescription = this.mContext.getString(booleanState.value ? C0018R$string.accessibility_quick_settings_location_on : C0018R$string.accessibility_quick_settings_location_off);
-        booleanState.icon = QSTileImpl.ResourceIcon.get(booleanState.value ? C0010R$drawable.ic_signal_location_enable : C0010R$drawable.ic_signal_location_disable);
-        booleanState.label = this.mContext.getString(C0018R$string.quick_settings_location_label);
+        booleanState.contentDescription = this.mContext.getString(booleanState.value ? C0021R$string.accessibility_quick_settings_location_on : C0021R$string.accessibility_quick_settings_location_off);
+        booleanState.icon = QSTileImpl.ResourceIcon.get(booleanState.value ? C0013R$drawable.ic_signal_location_enable : C0013R$drawable.ic_signal_location_disable);
+        booleanState.label = this.mContext.getString(C0021R$string.quick_settings_location_label);
         booleanState.state = booleanState.value ? 2 : 1;
         booleanState.expandedAccessibilityClassName = Switch.class.getName();
     }
@@ -78,9 +78,9 @@ public class LocationTile extends QSTileImpl<QSTile.BooleanState> {
     /* access modifiers changed from: protected */
     public String composeChangeAnnouncement() {
         if (((QSTile.BooleanState) this.mState).value) {
-            return this.mContext.getString(C0018R$string.accessibility_quick_settings_location_changed_on);
+            return this.mContext.getString(C0021R$string.accessibility_quick_settings_location_changed_on);
         }
-        return this.mContext.getString(C0018R$string.accessibility_quick_settings_location_changed_off);
+        return this.mContext.getString(C0021R$string.accessibility_quick_settings_location_changed_off);
     }
 
     private final class Callback implements LocationController.LocationChangeCallback, KeyguardStateController.Callback {

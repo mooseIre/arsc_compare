@@ -14,8 +14,8 @@ import android.provider.Settings;
 import android.util.Log;
 import android.util.Slog;
 import android.widget.Switch;
-import com.android.systemui.C0010R$drawable;
-import com.android.systemui.C0018R$string;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.plugins.qs.QSTile;
 import com.android.systemui.qs.QSHost;
 import com.android.systemui.qs.tileimpl.QSTileImpl;
@@ -89,25 +89,25 @@ public class AutoBrightnessTile extends QSTileImpl<QSTile.BooleanState> {
     }
 
     public CharSequence getTileLabel() {
-        return this.mContext.getString(C0018R$string.quick_settings_autobrightness_label);
+        return this.mContext.getString(C0021R$string.quick_settings_autobrightness_label);
     }
 
     /* access modifiers changed from: protected */
     public void handleUpdateState(QSTile.BooleanState booleanState, Object obj) {
         queryAutoBrightnessStatus();
         booleanState.value = this.mAutoBrightnessMode;
-        booleanState.label = this.mContext.getString(C0018R$string.quick_settings_autobrightness_label);
+        booleanState.label = this.mContext.getString(C0021R$string.quick_settings_autobrightness_label);
         if (booleanState.value) {
             booleanState.state = 2;
-            booleanState.icon = QSTileImpl.ResourceIcon.get(C0010R$drawable.ic_qs_brightness_auto);
+            booleanState.icon = QSTileImpl.ResourceIcon.get(C0013R$drawable.ic_qs_brightness_auto);
         } else {
             booleanState.state = 1;
-            booleanState.icon = QSTileImpl.ResourceIcon.get(C0010R$drawable.ic_qs_brightness_manual);
+            booleanState.icon = QSTileImpl.ResourceIcon.get(C0013R$drawable.ic_qs_brightness_manual);
         }
         StringBuilder sb = new StringBuilder();
         sb.append(booleanState.label);
         sb.append(",");
-        sb.append(this.mContext.getString(booleanState.value ? C0018R$string.switch_bar_on : C0018R$string.switch_bar_off));
+        sb.append(this.mContext.getString(booleanState.value ? C0021R$string.switch_bar_on : C0021R$string.switch_bar_off));
         booleanState.contentDescription = sb.toString();
         booleanState.expandedAccessibilityClassName = Switch.class.getName();
         booleanState.activeBgColor = 2;

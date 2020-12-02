@@ -25,7 +25,7 @@ public class ActivityStarterDelegate implements ActivityStarter {
             }
 
             public final void accept(Object obj) {
-                ((StatusBar) ((Lazy) obj).get()).lambda$postStartActivityDismissingKeyguard$24(this.f$0);
+                ((StatusBar) ((Lazy) obj).get()).lambda$postStartActivityDismissingKeyguard$25(this.f$0);
             }
         });
     }

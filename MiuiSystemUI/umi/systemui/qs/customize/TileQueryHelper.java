@@ -15,7 +15,7 @@ import android.text.TextUtils;
 import android.util.ArraySet;
 import android.util.Log;
 import android.widget.Button;
-import com.android.systemui.C0018R$string;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.plugins.qs.QSTile;
 import com.android.systemui.qs.QSTileHost;
 import com.android.systemui.qs.customize.TileQueryHelper;
@@ -59,7 +59,7 @@ public class TileQueryHelper {
         this.mContext = context;
         this.mMainExecutor = executor;
         this.mBgExecutor = executor2;
-        this.mTilesStock = context.getString(C0018R$string.miui_quick_settings_tiles_stock);
+        this.mTilesStock = context.getString(C0021R$string.miui_quick_settings_tiles_stock);
     }
 
     public void setListener(TileStateListener tileStateListener) {

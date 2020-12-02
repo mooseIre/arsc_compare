@@ -12,8 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.FrameLayout;
-import com.android.systemui.C0009R$dimen;
-import com.android.systemui.C0012R$id;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0015R$id;
 import com.android.systemui.Dependency;
 import com.android.systemui.controlcenter.phone.ControlPanelWindowManager;
 import com.android.systemui.controlcenter.qs.tileview.CCQSTileView;
@@ -178,7 +178,7 @@ public class QSControlCenterTileLayout extends ViewGroup implements QSPanel.QSTi
 
     private void updateLayout() {
         Log.d("QSControlCenterTileLayout", "updateWidth orientation=" + this.mOrientation);
-        this.mColumnMarginTop = this.mContext.getResources().getDimensionPixelSize(C0009R$dimen.qs_control_center_tile_margin_top);
+        this.mColumnMarginTop = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_center_tile_margin_top);
         if (this.mOrientation == 2) {
             float f = this.mPanelLandWidth;
             int i = this.mCellWidth;
@@ -198,15 +198,15 @@ public class QSControlCenterTileLayout extends ViewGroup implements QSPanel.QSTi
     }
 
     public boolean updateResources() {
-        this.mPanelPaddingHorizontal = (float) this.mContext.getResources().getDimensionPixelSize(C0009R$dimen.qs_control_panel_margin_horizontal);
-        this.mPanelLandWidth = (float) this.mContext.getResources().getDimensionPixelSize(C0009R$dimen.qs_control_width_land);
-        int integer = this.mContext.getResources().getInteger(C0009R$dimen.qs_control_tiles_columns);
+        this.mPanelPaddingHorizontal = (float) this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_panel_margin_horizontal);
+        this.mPanelLandWidth = (float) this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_width_land);
+        int integer = this.mContext.getResources().getInteger(C0012R$dimen.qs_control_tiles_columns);
         if (this.mColumns != integer) {
             this.mColumns = integer;
             Iterator<QSPanel.TileRecord> it = this.mRecords.iterator();
             while (it.hasNext()) {
                 QSPanel.TileRecord next = it.next();
-                next.tileView.setTag(C0012R$id.tag_tile_layout, Integer.valueOf(this.mRecords.indexOf(next) / this.mColumns));
+                next.tileView.setTag(C0015R$id.tag_tile_layout, Integer.valueOf(this.mRecords.indexOf(next) / this.mColumns));
             }
             int ceil = (int) Math.ceil((double) (((float) this.mRecords.size()) / ((float) this.mColumns)));
             int i = this.mMinCellHeight;
@@ -215,11 +215,11 @@ public class QSControlCenterTileLayout extends ViewGroup implements QSPanel.QSTi
             this.mMinHeight = (i * i2) + ((i2 - 1) * i3);
             this.mMaxHeight = (this.mCellHeight * ceil) + ((ceil - 1) * i3);
         }
-        this.mMinShowRows = this.mPanelController.isSuperPowerMode() ? 1 : this.mContext.getResources().getInteger(C0009R$dimen.qs_control_tiles_min_rows);
-        this.mColumnMarginTop = this.mContext.getResources().getDimensionPixelSize(C0009R$dimen.qs_control_center_tile_margin_top);
-        this.mCellWidth = this.mContext.getResources().getDimensionPixelSize(C0009R$dimen.qs_control_center_tile_width);
-        this.mCellHeight = this.mContext.getResources().getDimensionPixelSize(C0009R$dimen.qs_control_center_tile_height) + CCQSTileView.getTextHeight(getContext());
-        int dimensionPixelSize = this.mContext.getResources().getDimensionPixelSize(C0009R$dimen.qs_control_tile_icon_bg_size);
+        this.mMinShowRows = this.mPanelController.isSuperPowerMode() ? 1 : this.mContext.getResources().getInteger(C0012R$dimen.qs_control_tiles_min_rows);
+        this.mColumnMarginTop = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_center_tile_margin_top);
+        this.mCellWidth = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_center_tile_width);
+        this.mCellHeight = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_center_tile_height) + CCQSTileView.getTextHeight(getContext());
+        int dimensionPixelSize = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_tile_icon_bg_size);
         this.mMinCellHeight = dimensionPixelSize;
         int i4 = this.mMinShowRows;
         int i5 = (dimensionPixelSize * i4) + ((i4 - 1) * this.mColumnMarginTop);
@@ -356,7 +356,7 @@ public class QSControlCenterTileLayout extends ViewGroup implements QSPanel.QSTi
         Iterator<QSPanel.TileRecord> it = this.mRecords.iterator();
         while (it.hasNext()) {
             QSPanel.TileRecord next = it.next();
-            next.tileView.setTag(C0012R$id.tag_tile_layout, Integer.valueOf(this.mRecords.indexOf(next) / this.mColumns));
+            next.tileView.setTag(C0015R$id.tag_tile_layout, Integer.valueOf(this.mRecords.indexOf(next) / this.mColumns));
         }
         int ceil = (int) Math.ceil((double) (((float) this.mRecords.size()) / ((float) this.mColumns)));
         int i = this.mMinCellHeight;
@@ -393,7 +393,7 @@ public class QSControlCenterTileLayout extends ViewGroup implements QSPanel.QSTi
         while (it.hasNext()) {
             QSPanel.TileRecord next = it.next();
             float f = 0.0f;
-            if (((Integer) next.tileView.getTag(C0012R$id.tag_tile_layout)).intValue() < this.mMinShowRows) {
+            if (((Integer) next.tileView.getTag(C0015R$id.tag_tile_layout)).intValue() < this.mMinShowRows) {
                 next.tileView.setAlpha(1.0f);
                 next.tileView.getIcon().setAlpha(1.0f);
                 CCQSTileView cCQSTileView = (CCQSTileView) next.tileView;
@@ -417,7 +417,7 @@ public class QSControlCenterTileLayout extends ViewGroup implements QSPanel.QSTi
             Iterator<QSPanel.TileRecord> it = this.mRecords.iterator();
             while (it.hasNext()) {
                 QSPanel.TileRecord next = it.next();
-                float intValue = (float) (this.mBaseLineIdx + ((Integer) next.tileView.getTag(C0012R$id.tag_tile_layout)).intValue());
+                float intValue = (float) (this.mBaseLineIdx + ((Integer) next.tileView.getTag(C0015R$id.tag_tile_layout)).intValue());
                 Folme.useAt(next.tileView).state().end(ViewProperty.ALPHA, ViewProperty.SCALE_X, ViewProperty.SCALE_Y);
                 IStateStyle state = Folme.useAt(next.tileView).state();
                 AnimState animState = this.mPanelHideAnim;
@@ -446,7 +446,7 @@ public class QSControlCenterTileLayout extends ViewGroup implements QSPanel.QSTi
             Iterator<QSPanel.TileRecord> it = this.mRecords.iterator();
             while (it.hasNext()) {
                 QSPanel.TileRecord next = it.next();
-                int intValue = this.mBaseLineIdx + ((Integer) next.tileView.getTag(C0012R$id.tag_tile_layout)).intValue();
+                int intValue = this.mBaseLineIdx + ((Integer) next.tileView.getTag(C0015R$id.tag_tile_layout)).intValue();
                 AnimState animState = new AnimState("control_panel_trans");
                 animState.add(ViewProperty.TRANSLATION_Y, 0.0f, new long[0]);
                 float f2 = (float) intValue;
@@ -466,7 +466,7 @@ public class QSControlCenterTileLayout extends ViewGroup implements QSPanel.QSTi
         Iterator<QSPanel.TileRecord> it2 = this.mRecords.iterator();
         while (it2.hasNext()) {
             QSPanel.TileRecord next2 = it2.next();
-            float translationY = ControlCenterUtils.getTranslationY(this.mBaseLineIdx + ((Integer) next2.tileView.getTag(C0012R$id.tag_tile_layout)).intValue(), i2, max, f4);
+            float translationY = ControlCenterUtils.getTranslationY(this.mBaseLineIdx + ((Integer) next2.tileView.getTag(C0015R$id.tag_tile_layout)).intValue(), i2, max, f4);
             AnimState animState2 = new AnimState("control_panel_trans");
             animState2.add(ViewProperty.TRANSLATION_Y, translationY, new long[0]);
             Folme.useAt(next2.tileView).state().cancel(ViewProperty.TRANSLATION_Y);
@@ -499,7 +499,7 @@ public class QSControlCenterTileLayout extends ViewGroup implements QSPanel.QSTi
         Iterator<QSPanel.TileRecord> it = this.mRecords.iterator();
         while (it.hasNext()) {
             QSPanel.TileRecord next = it.next();
-            int intValue = ((Integer) next.tileView.getTag(C0012R$id.tag_tile_layout)).intValue();
+            int intValue = ((Integer) next.tileView.getTag(C0015R$id.tag_tile_layout)).intValue();
             CCQSTileView cCQSTileView = (CCQSTileView) next.tileView;
             QSIconView icon = cCQSTileView.getIcon();
             cCQSTileView.getLabel();

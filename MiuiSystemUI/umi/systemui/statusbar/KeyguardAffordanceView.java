@@ -20,7 +20,7 @@ import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.animation.Interpolator;
 import android.widget.ImageView;
-import com.android.systemui.C0009R$dimen;
+import com.android.systemui.C0012R$dimen;
 import com.android.systemui.Interpolators;
 
 public class KeyguardAffordanceView extends ImageView {
@@ -111,7 +111,7 @@ public class KeyguardAffordanceView extends ImageView {
         this.mCirclePaint.setColor(-1);
         this.mNormalColor = obtainStyledAttributes.getColor(5, -1);
         this.mDarkIconColor = -16777216;
-        this.mMinBackgroundRadius = this.mContext.getResources().getDimensionPixelSize(C0009R$dimen.keyguard_affordance_min_background_radius);
+        this.mMinBackgroundRadius = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.keyguard_affordance_min_background_radius);
         this.mColorInterpolator = new ArgbEvaluator();
         new FlingAnimationUtils(this.mContext.getResources().getDisplayMetrics(), 0.3f);
         obtainStyledAttributes.recycle();

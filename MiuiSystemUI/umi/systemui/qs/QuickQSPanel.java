@@ -9,9 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import com.android.internal.logging.UiEventLogger;
-import com.android.systemui.C0009R$dimen;
-import com.android.systemui.C0012R$id;
-import com.android.systemui.C0013R$integer;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0016R$integer;
 import com.android.systemui.Dependency;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.dump.DumpManager;
@@ -63,7 +63,7 @@ public class QuickQSPanel extends QSPanel {
 
     public QuickQSPanel(Context context, AttributeSet attributeSet, DumpManager dumpManager, BroadcastDispatcher broadcastDispatcher, QSLogger qSLogger, MediaHost mediaHost, UiEventLogger uiEventLogger) {
         super(context, attributeSet, dumpManager, broadcastDispatcher, qSLogger, mediaHost, uiEventLogger);
-        sDefaultMaxTiles = getResources().getInteger(C0013R$integer.quick_settings_qqs_count);
+        sDefaultMaxTiles = getResources().getInteger(C0016R$integer.quick_settings_qqs_count);
     }
 
     /* access modifiers changed from: protected */
@@ -239,12 +239,12 @@ public class QuickQSPanel extends QSPanel {
 
         public boolean updateResources() {
             Resources resources = this.mContext.getResources();
-            int dimensionPixelSize = resources.getDimensionPixelSize(C0009R$dimen.qs_tile_icon_bg_size);
+            int dimensionPixelSize = resources.getDimensionPixelSize(C0012R$dimen.qs_tile_icon_bg_size);
             this.mCellWidth = dimensionPixelSize;
             this.mCellHeight = dimensionPixelSize;
-            int dimensionPixelSize2 = resources.getDimensionPixelSize(C0009R$dimen.qs_quick_panel_content_padding_horizontal);
-            int dimensionPixelSize3 = resources.getDimensionPixelSize(C0009R$dimen.qs_quick_panel_content_padding_top);
-            int dimensionPixelSize4 = resources.getDimensionPixelSize(C0009R$dimen.qs_quick_panel_content_padding_top);
+            int dimensionPixelSize2 = resources.getDimensionPixelSize(C0012R$dimen.qs_quick_panel_content_padding_horizontal);
+            int dimensionPixelSize3 = resources.getDimensionPixelSize(C0012R$dimen.qs_quick_panel_content_padding_top);
+            int dimensionPixelSize4 = resources.getDimensionPixelSize(C0012R$dimen.qs_quick_panel_content_padding_top);
             setPaddingRelative(getPaddingStart(), dimensionPixelSize3, getPaddingEnd(), dimensionPixelSize4);
             setPadding(dimensionPixelSize2, dimensionPixelSize3, dimensionPixelSize2, dimensionPixelSize4);
             return false;
@@ -295,7 +295,7 @@ public class QuickQSPanel extends QSPanel {
                     }
                 }
                 ArrayList<QSPanel.TileRecord> arrayList2 = this.mRecords;
-                arrayList2.get(arrayList2.size() - 1).tileView.setAccessibilityTraversalBefore(C0012R$id.expand_indicator);
+                arrayList2.get(arrayList2.size() - 1).tileView.setAccessibilityTraversalBefore(C0015R$id.expand_indicator);
             }
         }
 
@@ -347,6 +347,6 @@ public class QuickQSPanel extends QSPanel {
     }
 
     public void updateResources() {
-        setMaxTiles(getResources().getInteger(C0013R$integer.quick_settings_qqs_count));
+        setMaxTiles(getResources().getInteger(C0016R$integer.quick_settings_qqs_count));
     }
 }

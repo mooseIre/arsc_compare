@@ -10,10 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import com.android.internal.widget.ConversationLayout;
-import com.android.systemui.C0009R$dimen;
-import com.android.systemui.C0014R$layout;
-import com.android.systemui.C0016R$plurals;
-import com.android.systemui.C0018R$string;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0017R$layout;
+import com.android.systemui.C0019R$plurals;
+import com.android.systemui.C0021R$string;
 
 public class HybridGroupManager {
     private final Context mContext;
@@ -27,17 +27,17 @@ public class HybridGroupManager {
 
     public void initDimens() {
         Resources resources = this.mContext.getResources();
-        this.mOverflowNumberSize = (float) resources.getDimensionPixelSize(C0009R$dimen.group_overflow_number_size);
-        resources.getDimensionPixelSize(C0009R$dimen.group_overflow_number_padding);
+        this.mOverflowNumberSize = (float) resources.getDimensionPixelSize(C0012R$dimen.group_overflow_number_size);
+        resources.getDimensionPixelSize(C0012R$dimen.group_overflow_number_padding);
     }
 
     private HybridNotificationView inflateHybridViewWithStyle(int i, View view, ViewGroup viewGroup) {
         int i2;
         LayoutInflater layoutInflater = (LayoutInflater) new ContextThemeWrapper(this.mContext, i).getSystemService(LayoutInflater.class);
         if (view instanceof ConversationLayout) {
-            i2 = C0014R$layout.hybrid_conversation_notification;
+            i2 = C0017R$layout.hybrid_conversation_notification;
         } else {
-            i2 = C0014R$layout.hybrid_notification;
+            i2 = C0017R$layout.hybrid_notification;
         }
         HybridNotificationView hybridNotificationView = (HybridNotificationView) layoutInflater.inflate(i2, viewGroup, false);
         viewGroup.addView(hybridNotificationView);
@@ -45,7 +45,7 @@ public class HybridGroupManager {
     }
 
     private TextView inflateOverflowNumber(ViewGroup viewGroup) {
-        TextView textView = (TextView) ((LayoutInflater) this.mContext.getSystemService(LayoutInflater.class)).inflate(C0014R$layout.hybrid_overflow_number, viewGroup, false);
+        TextView textView = (TextView) ((LayoutInflater) this.mContext.getSystemService(LayoutInflater.class)).inflate(C0017R$layout.hybrid_overflow_number, viewGroup, false);
         viewGroup.addView(textView);
         updateOverFlowNumberColor(textView);
         return textView;
@@ -88,11 +88,11 @@ public class HybridGroupManager {
         if (textView == null) {
             textView = inflateOverflowNumber(viewGroup);
         }
-        String string = this.mContext.getResources().getString(C0018R$string.notification_group_overflow_indicator, new Object[]{Integer.valueOf(i)});
+        String string = this.mContext.getResources().getString(C0021R$string.notification_group_overflow_indicator, new Object[]{Integer.valueOf(i)});
         if (!string.equals(textView.getText())) {
             textView.setText(string);
         }
-        textView.setContentDescription(String.format(this.mContext.getResources().getQuantityString(C0016R$plurals.notification_group_overflow_description, i), new Object[]{Integer.valueOf(i)}));
+        textView.setContentDescription(String.format(this.mContext.getResources().getQuantityString(C0019R$plurals.notification_group_overflow_description, i), new Object[]{Integer.valueOf(i)}));
         textView.setTextSize(0, this.mOverflowNumberSize);
         updateOverFlowNumberColor(textView);
         return textView;

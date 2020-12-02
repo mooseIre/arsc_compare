@@ -7,11 +7,13 @@ import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.SeekBar;
 import com.android.settingslib.RestrictedLockUtils;
 import com.android.systemui.Dependency;
+import com.android.systemui.controlcenter.injector.RelativeSeekBarInjector;
 import com.android.systemui.plugins.ActivityStarter;
 
 public class ToggleSeekBar extends SeekBar {
     private String mAccessibilityLabel;
     private RestrictedLockUtils.EnforcedAdmin mEnforcedAdmin = null;
+    private RelativeSeekBarInjector mInjector;
 
     /* access modifiers changed from: protected */
     public void internalSetPadding(int i, int i2, int i3, int i4) {
@@ -38,6 +40,10 @@ public class ToggleSeekBar extends SeekBar {
         if (!isEnabled()) {
             setEnabled(true);
         }
+        if (this.mInjector == null) {
+            initInjector();
+        }
+        this.mInjector.transformTouchEvent(motionEvent);
         return super.onTouchEvent(motionEvent);
     }
 
@@ -55,5 +61,9 @@ public class ToggleSeekBar extends SeekBar {
 
     public void setEnforcedAdmin(RestrictedLockUtils.EnforcedAdmin enforcedAdmin) {
         this.mEnforcedAdmin = enforcedAdmin;
+    }
+
+    private void initInjector() {
+        this.mInjector = new RelativeSeekBarInjector(this, false);
     }
 }

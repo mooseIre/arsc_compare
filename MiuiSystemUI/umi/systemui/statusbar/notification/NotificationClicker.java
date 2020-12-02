@@ -79,10 +79,10 @@ public final class NotificationClicker implements View.OnClickListener {
 
     public void register(ExpandableNotificationRow expandableNotificationRow, StatusBarNotification statusBarNotification) {
         Notification notification = statusBarNotification.getNotification();
-        if (notification.contentIntent == null && notification.fullScreenIntent == null && !expandableNotificationRow.getEntry().isBubble()) {
-            expandableNotificationRow.setOnClickListener((View.OnClickListener) null);
-        } else {
+        if (notification.contentIntent != null || notification.fullScreenIntent != null || expandableNotificationRow.getEntry().isBubble() || statusBarNotification.isGroup()) {
             expandableNotificationRow.setOnClickListener(this);
+        } else {
+            expandableNotificationRow.setOnClickListener((View.OnClickListener) null);
         }
     }
 

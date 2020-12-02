@@ -18,12 +18,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.android.systemui.C0008R$color;
-import com.android.systemui.C0010R$drawable;
-import com.android.systemui.C0012R$id;
-import com.android.systemui.C0014R$layout;
-import com.android.systemui.C0018R$string;
-import com.android.systemui.C0019R$style;
+import com.android.systemui.C0011R$color;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0017R$layout;
+import com.android.systemui.C0021R$string;
+import com.android.systemui.C0022R$style;
 import com.android.systemui.Dependency;
 import com.android.systemui.plugins.ActivityStarter;
 import com.android.systemui.qs.QSTileHost;
@@ -93,7 +93,7 @@ public class QSControlFooter extends LinearLayout implements View.OnClickListene
 
     public void init() {
         setOnClickListener(this);
-        this.mFooterIconId = C0010R$drawable.ic_info_outline;
+        this.mFooterIconId = C0013R$drawable.ic_info_outline;
         this.mMainHandler = new Handler(Looper.getMainLooper());
         this.mActivityStarter = (ActivityStarter) Dependency.get(ActivityStarter.class);
         this.mSecurityController = (SecurityController) Dependency.get(SecurityController.class);
@@ -101,8 +101,8 @@ public class QSControlFooter extends LinearLayout implements View.OnClickListene
     }
 
     public void updateResources() {
-        this.mFooterText.setTextAppearance(C0019R$style.TextAppearance_QSControl_FooterText);
-        this.mFooterIcon.getDrawable().setTint(this.mContext.getColor(C0008R$color.qs_control_footer_icon_color));
+        this.mFooterText.setTextAppearance(C0022R$style.TextAppearance_QSControl_FooterText);
+        this.mFooterIcon.getDrawable().setTint(this.mContext.getColor(C0011R$color.qs_control_footer_icon_color));
     }
 
     public void setHostEnvironment(QSTileHost qSTileHost) {
@@ -134,8 +134,8 @@ public class QSControlFooter extends LinearLayout implements View.OnClickListene
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mFooterText = (TextView) findViewById(C0012R$id.footer_text);
-        this.mFooterIcon = (ImageView) findViewById(C0012R$id.footer_icon);
+        this.mFooterText = (TextView) findViewById(C0015R$id.footer_text);
+        this.mFooterIcon = (ImageView) findViewById(C0015R$id.footer_icon);
     }
 
     public void onClick(View view) {
@@ -171,11 +171,11 @@ public class QSControlFooter extends LinearLayout implements View.OnClickListene
         this.mIsVisible = (isDeviceManaged || hasCACertInCurrentUser || hasCACertInWorkProfile) && !this.mSecurityController.isSilentVpnPackage();
         this.mFooterTextContent = getFooterText(isDeviceManaged, hasWorkProfile, hasCACertInCurrentUser, hasCACertInWorkProfile, isNetworkLoggingEnabled, primaryVpnName, workProfileVpnName, deviceOwnerOrganizationName, workProfileOrganizationName);
         if (hasCACertInCurrentUser || hasCACertInWorkProfile || isNetworkLoggingEnabled) {
-            i = C0010R$drawable.ic_qs_footer_managed;
+            i = C0013R$drawable.ic_qs_footer_managed;
         } else if (primaryVpnName == null && workProfileVpnName == null) {
-            i = C0010R$drawable.ic_info_outline;
+            i = C0013R$drawable.ic_info_outline;
         } else {
-            i = C0010R$drawable.ic_qs_vpn;
+            i = C0013R$drawable.ic_qs_vpn;
         }
         if (this.mFooterIconId != i) {
             this.mFooterIconId = i;
@@ -189,18 +189,18 @@ public class QSControlFooter extends LinearLayout implements View.OnClickListene
         if (z) {
             if (z3 || z4 || z5) {
                 if (charSequence == null) {
-                    return this.mContext.getString(C0018R$string.quick_settings_disclosure_management_monitoring);
+                    return this.mContext.getString(C0021R$string.quick_settings_disclosure_management_monitoring);
                 }
-                return this.mContext.getString(C0018R$string.quick_settings_disclosure_named_management_monitoring, new Object[]{charSequence});
+                return this.mContext.getString(C0021R$string.quick_settings_disclosure_named_management_monitoring, new Object[]{charSequence});
             } else if (str == null || str2 == null) {
                 if (str == null && str2 == null) {
                     if (charSequence == null) {
-                        return this.mContext.getString(C0018R$string.quick_settings_disclosure_management);
+                        return this.mContext.getString(C0021R$string.quick_settings_disclosure_management);
                     }
-                    return this.mContext.getString(C0018R$string.quick_settings_disclosure_named_management, new Object[]{charSequence});
+                    return this.mContext.getString(C0021R$string.quick_settings_disclosure_named_management, new Object[]{charSequence});
                 } else if (charSequence == null) {
                     Context context = this.mContext;
-                    int i = C0018R$string.quick_settings_disclosure_management_named_vpn;
+                    int i = C0021R$string.quick_settings_disclosure_management_named_vpn;
                     Object[] objArr = new Object[1];
                     if (str == null) {
                         str = str2;
@@ -209,7 +209,7 @@ public class QSControlFooter extends LinearLayout implements View.OnClickListene
                     return context.getString(i, objArr);
                 } else {
                     Context context2 = this.mContext;
-                    int i2 = C0018R$string.quick_settings_disclosure_named_management_named_vpn;
+                    int i2 = C0021R$string.quick_settings_disclosure_named_management_named_vpn;
                     Object[] objArr2 = new Object[2];
                     objArr2[0] = charSequence;
                     if (str == null) {
@@ -219,30 +219,30 @@ public class QSControlFooter extends LinearLayout implements View.OnClickListene
                     return context2.getString(i2, objArr2);
                 }
             } else if (charSequence == null) {
-                return this.mContext.getString(C0018R$string.quick_settings_disclosure_management_vpns);
+                return this.mContext.getString(C0021R$string.quick_settings_disclosure_management_vpns);
             } else {
-                return this.mContext.getString(C0018R$string.quick_settings_disclosure_named_management_vpns, new Object[]{charSequence});
+                return this.mContext.getString(C0021R$string.quick_settings_disclosure_named_management_vpns, new Object[]{charSequence});
             }
         } else if (z4) {
             if (charSequence2 == null) {
-                return this.mContext.getString(C0018R$string.quick_settings_disclosure_managed_profile_monitoring);
+                return this.mContext.getString(C0021R$string.quick_settings_disclosure_managed_profile_monitoring);
             }
-            return this.mContext.getString(C0018R$string.quick_settings_disclosure_named_managed_profile_monitoring, new Object[]{charSequence2});
+            return this.mContext.getString(C0021R$string.quick_settings_disclosure_named_managed_profile_monitoring, new Object[]{charSequence2});
         } else if (z3) {
-            return this.mContext.getString(C0018R$string.quick_settings_disclosure_monitoring);
+            return this.mContext.getString(C0021R$string.quick_settings_disclosure_monitoring);
         } else {
             if (str != null && str2 != null) {
-                return this.mContext.getString(C0018R$string.quick_settings_disclosure_vpns);
+                return this.mContext.getString(C0021R$string.quick_settings_disclosure_vpns);
             }
             if (str2 != null) {
-                return this.mContext.getString(C0018R$string.quick_settings_disclosure_managed_profile_named_vpn, new Object[]{str2});
+                return this.mContext.getString(C0021R$string.quick_settings_disclosure_managed_profile_named_vpn, new Object[]{str2});
             } else if (str == null) {
                 return null;
             } else {
                 if (z2) {
-                    return this.mContext.getString(C0018R$string.quick_settings_disclosure_personal_profile_named_vpn, new Object[]{str});
+                    return this.mContext.getString(C0021R$string.quick_settings_disclosure_personal_profile_named_vpn, new Object[]{str});
                 }
-                return this.mContext.getString(C0018R$string.quick_settings_disclosure_named_vpn, new Object[]{str});
+                return this.mContext.getString(C0021R$string.quick_settings_disclosure_named_vpn, new Object[]{str});
             }
         }
     }
@@ -267,39 +267,39 @@ public class QSControlFooter extends LinearLayout implements View.OnClickListene
         SystemUIDialog systemUIDialog = new SystemUIDialog(this.mContext);
         this.mDialog = systemUIDialog;
         systemUIDialog.requestWindowFeature(1);
-        View inflate = LayoutInflater.from(this.mContext).inflate(C0014R$layout.quick_settings_footer_dialog, (ViewGroup) null, false);
+        View inflate = LayoutInflater.from(this.mContext).inflate(C0017R$layout.quick_settings_footer_dialog, (ViewGroup) null, false);
         this.mDialog.setView(inflate);
         this.mDialog.setButton(-1, getPositiveButton(), this);
         CharSequence managementMessage = getManagementMessage(isDeviceManaged, deviceOwnerOrganizationName);
         if (managementMessage == null) {
-            inflate.findViewById(C0012R$id.device_management_disclosures).setVisibility(8);
+            inflate.findViewById(C0015R$id.device_management_disclosures).setVisibility(8);
         } else {
-            inflate.findViewById(C0012R$id.device_management_disclosures).setVisibility(0);
-            ((TextView) inflate.findViewById(C0012R$id.device_management_warning)).setText(managementMessage);
+            inflate.findViewById(C0015R$id.device_management_disclosures).setVisibility(0);
+            ((TextView) inflate.findViewById(C0015R$id.device_management_warning)).setText(managementMessage);
             this.mDialog.setButton(-2, getSettingsButton(), this);
         }
         CharSequence caCertsMessage = getCaCertsMessage(isDeviceManaged, hasCACertInCurrentUser, hasCACertInWorkProfile);
         if (caCertsMessage == null) {
-            inflate.findViewById(C0012R$id.ca_certs_disclosures).setVisibility(8);
+            inflate.findViewById(C0015R$id.ca_certs_disclosures).setVisibility(8);
         } else {
-            inflate.findViewById(C0012R$id.ca_certs_disclosures).setVisibility(0);
-            TextView textView = (TextView) inflate.findViewById(C0012R$id.ca_certs_warning);
+            inflate.findViewById(C0015R$id.ca_certs_disclosures).setVisibility(0);
+            TextView textView = (TextView) inflate.findViewById(C0015R$id.ca_certs_warning);
             textView.setText(caCertsMessage);
             textView.setMovementMethod(new LinkMovementMethod());
         }
         CharSequence networkLoggingMessage = getNetworkLoggingMessage(isNetworkLoggingEnabled);
         if (networkLoggingMessage == null) {
-            inflate.findViewById(C0012R$id.network_logging_disclosures).setVisibility(8);
+            inflate.findViewById(C0015R$id.network_logging_disclosures).setVisibility(8);
         } else {
-            inflate.findViewById(C0012R$id.network_logging_disclosures).setVisibility(0);
-            ((TextView) inflate.findViewById(C0012R$id.network_logging_warning)).setText(networkLoggingMessage);
+            inflate.findViewById(C0015R$id.network_logging_disclosures).setVisibility(0);
+            ((TextView) inflate.findViewById(C0015R$id.network_logging_warning)).setText(networkLoggingMessage);
         }
         CharSequence vpnMessage = getVpnMessage(isDeviceManaged, hasWorkProfile, primaryVpnName, workProfileVpnName);
         if (vpnMessage == null) {
-            inflate.findViewById(C0012R$id.vpn_disclosures).setVisibility(8);
+            inflate.findViewById(C0015R$id.vpn_disclosures).setVisibility(8);
         } else {
-            inflate.findViewById(C0012R$id.vpn_disclosures).setVisibility(0);
-            TextView textView2 = (TextView) inflate.findViewById(C0012R$id.vpn_warning);
+            inflate.findViewById(C0015R$id.vpn_disclosures).setVisibility(0);
+            TextView textView2 = (TextView) inflate.findViewById(C0015R$id.vpn_warning);
             textView2.setText(vpnMessage);
             textView2.setMovementMethod(new LinkMovementMethod());
         }
@@ -308,11 +308,11 @@ public class QSControlFooter extends LinearLayout implements View.OnClickListene
     }
 
     private String getSettingsButton() {
-        return this.mContext.getString(C0018R$string.monitoring_button_view_policies);
+        return this.mContext.getString(C0021R$string.monitoring_button_view_policies);
     }
 
     private String getPositiveButton() {
-        return this.mContext.getString(C0018R$string.quick_settings_done);
+        return this.mContext.getString(C0021R$string.quick_settings_done);
     }
 
     /* access modifiers changed from: protected */
@@ -321,9 +321,9 @@ public class QSControlFooter extends LinearLayout implements View.OnClickListene
             return null;
         }
         if (charSequence == null) {
-            return this.mContext.getString(C0018R$string.monitoring_description_management);
+            return this.mContext.getString(C0021R$string.monitoring_description_management);
         }
-        return this.mContext.getString(C0018R$string.monitoring_description_named_management, new Object[]{charSequence});
+        return this.mContext.getString(C0021R$string.monitoring_description_named_management, new Object[]{charSequence});
     }
 
     /* access modifiers changed from: protected */
@@ -332,12 +332,12 @@ public class QSControlFooter extends LinearLayout implements View.OnClickListene
             return null;
         }
         if (z) {
-            return this.mContext.getString(C0018R$string.monitoring_description_management_ca_certificate);
+            return this.mContext.getString(C0021R$string.monitoring_description_management_ca_certificate);
         }
         if (z3) {
-            return this.mContext.getString(C0018R$string.monitoring_description_managed_profile_ca_certificate);
+            return this.mContext.getString(C0021R$string.monitoring_description_managed_profile_ca_certificate);
         }
-        return this.mContext.getString(C0018R$string.monitoring_description_ca_certificate);
+        return this.mContext.getString(C0021R$string.monitoring_description_ca_certificate);
     }
 
     /* access modifiers changed from: protected */
@@ -345,7 +345,7 @@ public class QSControlFooter extends LinearLayout implements View.OnClickListene
         if (!z) {
             return null;
         }
-        return this.mContext.getString(C0018R$string.monitoring_description_management_network_logging);
+        return this.mContext.getString(C0021R$string.monitoring_description_management_network_logging);
     }
 
     /* access modifiers changed from: protected */
@@ -357,7 +357,7 @@ public class QSControlFooter extends LinearLayout implements View.OnClickListene
         if (z) {
             if (str == null || str2 == null) {
                 Context context = this.mContext;
-                int i = C0018R$string.monitoring_description_named_vpn;
+                int i = C0021R$string.monitoring_description_named_vpn;
                 Object[] objArr = new Object[1];
                 if (str == null) {
                     str = str2;
@@ -365,19 +365,19 @@ public class QSControlFooter extends LinearLayout implements View.OnClickListene
                 objArr[0] = str;
                 spannableStringBuilder.append(context.getString(i, objArr));
             } else {
-                spannableStringBuilder.append(this.mContext.getString(C0018R$string.monitoring_description_two_named_vpns, new Object[]{str, str2}));
+                spannableStringBuilder.append(this.mContext.getString(C0021R$string.monitoring_description_two_named_vpns, new Object[]{str, str2}));
             }
         } else if (str != null && str2 != null) {
-            spannableStringBuilder.append(this.mContext.getString(C0018R$string.monitoring_description_two_named_vpns, new Object[]{str, str2}));
+            spannableStringBuilder.append(this.mContext.getString(C0021R$string.monitoring_description_two_named_vpns, new Object[]{str, str2}));
         } else if (str2 != null) {
-            spannableStringBuilder.append(this.mContext.getString(C0018R$string.monitoring_description_managed_profile_named_vpn, new Object[]{str2}));
+            spannableStringBuilder.append(this.mContext.getString(C0021R$string.monitoring_description_managed_profile_named_vpn, new Object[]{str2}));
         } else if (z2) {
-            spannableStringBuilder.append(this.mContext.getString(C0018R$string.monitoring_description_personal_profile_named_vpn, new Object[]{str}));
+            spannableStringBuilder.append(this.mContext.getString(C0021R$string.monitoring_description_personal_profile_named_vpn, new Object[]{str}));
         } else {
-            spannableStringBuilder.append(this.mContext.getString(C0018R$string.monitoring_description_named_vpn, new Object[]{str}));
+            spannableStringBuilder.append(this.mContext.getString(C0021R$string.monitoring_description_named_vpn, new Object[]{str}));
         }
-        spannableStringBuilder.append(this.mContext.getString(C0018R$string.monitoring_description_vpn_settings_separator));
-        spannableStringBuilder.append(this.mContext.getString(C0018R$string.monitoring_description_vpn_settings), new VpnSpan(), 0);
+        spannableStringBuilder.append(this.mContext.getString(C0021R$string.monitoring_description_vpn_settings_separator));
+        spannableStringBuilder.append(this.mContext.getString(C0021R$string.monitoring_description_vpn_settings), new VpnSpan(), 0);
         return spannableStringBuilder;
     }
 

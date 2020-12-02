@@ -11,7 +11,7 @@ import android.util.Property;
 import android.view.View;
 import androidx.collection.ArrayMap;
 import com.android.internal.statusbar.StatusBarIcon;
-import com.android.systemui.C0009R$dimen;
+import com.android.systemui.C0012R$dimen;
 import com.android.systemui.statusbar.AlphaOptimizedFrameLayout;
 import com.android.systemui.statusbar.StatusBarIconView;
 import com.android.systemui.statusbar.notification.stack.AnimationFilter;
@@ -166,8 +166,8 @@ public class NotificationIconContainer extends AlphaOptimizedFrameLayout {
     }
 
     private void initDimens() {
-        this.mDotPadding = getResources().getDimensionPixelSize(C0009R$dimen.overflow_icon_dot_padding);
-        int dimensionPixelSize = getResources().getDimensionPixelSize(C0009R$dimen.overflow_dot_radius);
+        this.mDotPadding = getResources().getDimensionPixelSize(C0012R$dimen.overflow_icon_dot_padding);
+        int dimensionPixelSize = getResources().getDimensionPixelSize(C0012R$dimen.overflow_dot_radius);
         this.mStaticDotRadius = dimensionPixelSize;
         this.mStaticDotDiameter = dimensionPixelSize * 2;
     }
@@ -209,7 +209,7 @@ public class NotificationIconContainer extends AlphaOptimizedFrameLayout {
 
     private void setIconSize(int i) {
         this.mIconSize = i;
-        this.mOverflowWidth = 0;
+        this.mOverflowWidth = i + ((this.MAX_DOTS - 1) * (this.mStaticDotDiameter + this.mDotPadding));
     }
 
     public void updateState() {
@@ -340,9 +340,6 @@ public class NotificationIconContainer extends AlphaOptimizedFrameLayout {
 
     public void calculateIconTranslations() {
         int i;
-        float f;
-        boolean z;
-        int i2;
         float actualPaddingStart = getActualPaddingStart();
         int childCount = getChildCount();
         if (this.mOnLockScreen) {
@@ -351,84 +348,61 @@ public class NotificationIconContainer extends AlphaOptimizedFrameLayout {
             i = this.mIsStaticLayout ? this.MAX_STATIC_ICONS : childCount;
         }
         float layoutEnd = getLayoutEnd();
-        float maxOverflowStart = getMaxOverflowStart();
-        float f2 = 0.0f;
+        getMaxOverflowStart();
+        float f = 0.0f;
         this.mVisualOverflowStart = 0.0f;
         this.mFirstVisibleIconState = null;
-        int i3 = this.mSpeedBumpIndex;
-        int i4 = -1;
-        boolean z2 = i3 != -1 && i3 < getChildCount();
-        int i5 = -1;
-        int i6 = 0;
-        while (i6 < childCount) {
-            View childAt = getChildAt(i6);
+        int i2 = this.mSpeedBumpIndex;
+        if (i2 == -1 || i2 >= getChildCount()) {
+        }
+        int i3 = -1;
+        int i4 = 0;
+        while (i4 < childCount) {
+            View childAt = getChildAt(i4);
             IconState iconState = this.mIconStates.get(childAt);
-            float f3 = 1.0f;
             if (iconState.iconAppearAmount == 1.0f) {
                 iconState.xTranslation = actualPaddingStart;
             }
             if (this.mFirstVisibleIconState == null) {
                 this.mFirstVisibleIconState = iconState;
             }
-            int i7 = this.mSpeedBumpIndex;
-            boolean z3 = (i7 != i4 && i6 >= i7 && iconState.iconAppearAmount > f2) || i6 >= i;
-            boolean z4 = i6 == childCount + -1;
-            if (this.mOnLockScreen && (childAt instanceof StatusBarIconView)) {
-                f3 = ((StatusBarIconView) childAt).getIconScaleIncreased();
+            int i5 = this.mSpeedBumpIndex;
+            boolean z = (i5 != -1 && i4 >= i5 && iconState.iconAppearAmount > 0.0f) || i4 >= i;
+            if (i4 == childCount - 1) {
             }
-            if (this.mOpenedAmount != f2) {
-                z4 = z4 && !z2 && !z3;
-            }
+            float iconScaleIncreased = (!this.mOnLockScreen || !(childAt instanceof StatusBarIconView)) ? 1.0f : ((StatusBarIconView) childAt).getIconScaleIncreased();
+            int i6 = (this.mOpenedAmount > 0.0f ? 1 : (this.mOpenedAmount == 0.0f ? 0 : -1));
             iconState.visibleState = 0;
-            if (z4) {
-                f = layoutEnd - ((float) this.mIconSize);
-            } else {
-                f = maxOverflowStart - ((float) this.mIconSize);
+            boolean z2 = actualPaddingStart > layoutEnd - ((float) this.mIconSize);
+            if (i3 == -1 && (z || z2)) {
+                this.mVisualOverflowStart = actualPaddingStart;
+                i3 = i4;
             }
-            if (actualPaddingStart > f) {
-                i2 = -1;
-                z = true;
-            } else {
-                z = false;
-                i2 = -1;
-            }
-            if (i5 == i2 && (z3 || z)) {
-                i5 = (!z4 || z3) ? i6 : i6 - 1;
-                this.mVisualOverflowStart = layoutEnd - ((float) this.mOverflowWidth);
-                if (z3 || this.mIsStaticLayout) {
-                    this.mVisualOverflowStart = Math.min(actualPaddingStart, this.mVisualOverflowStart);
-                }
-            }
-            actualPaddingStart += iconState.iconAppearAmount * ((float) childAt.getWidth()) * f3;
-            i6++;
-            f2 = 0.0f;
-            i4 = -1;
+            actualPaddingStart += iconState.iconAppearAmount * ((float) childAt.getWidth()) * iconScaleIncreased;
+            i4++;
         }
         this.mNumDots = 0;
-        if (i5 != -1) {
+        if (i3 != -1) {
             actualPaddingStart = this.mVisualOverflowStart;
-            for (int i8 = i5; i8 < childCount; i8++) {
-                IconState iconState2 = this.mIconStates.get(getChildAt(i8));
-                int i9 = this.mStaticDotDiameter + this.mDotPadding;
+            for (int i7 = i3; i7 < childCount; i7++) {
+                IconState iconState2 = this.mIconStates.get(getChildAt(i7));
+                int i8 = this.mStaticDotDiameter + this.mDotPadding;
                 iconState2.xTranslation = actualPaddingStart;
-                int i10 = this.mNumDots;
-                if (i10 < this.MAX_DOTS) {
-                    if (i10 != 0 || iconState2.iconAppearAmount >= 0.8f) {
+                int i9 = this.mNumDots;
+                int i10 = this.MAX_DOTS;
+                if (i9 < i10) {
+                    if (((float) (((this.mIconSize + i8) + 1) / 2)) + actualPaddingStart <= layoutEnd) {
                         iconState2.visibleState = 1;
-                        this.mNumDots++;
-                    } else {
-                        iconState2.visibleState = 0;
+                        int i11 = i9 + 1;
+                        this.mNumDots = i11;
+                        if (i11 == i10) {
+                            i8 *= i10;
+                        }
+                        actualPaddingStart += ((float) i8) * iconState2.iconAppearAmount;
+                        this.mLastVisibleIconState = iconState2;
                     }
-                    int i11 = this.mNumDots;
-                    int i12 = this.MAX_DOTS;
-                    if (i11 == i12) {
-                        i9 *= i12;
-                    }
-                    actualPaddingStart += ((float) i9) * iconState2.iconAppearAmount;
-                    this.mLastVisibleIconState = iconState2;
-                } else {
-                    iconState2.visibleState = 2;
                 }
+                iconState2.visibleState = 2;
             }
         } else if (childCount > 0) {
             this.mLastVisibleIconState = this.mIconStates.get(getChildAt(childCount - 1));
@@ -436,19 +410,22 @@ public class NotificationIconContainer extends AlphaOptimizedFrameLayout {
         }
         if (this.mOnLockScreen && actualPaddingStart < getLayoutEnd()) {
             IconState iconState3 = this.mFirstVisibleIconState;
-            float f4 = iconState3 == null ? 0.0f : iconState3.xTranslation;
+            float f2 = iconState3 == null ? 0.0f : iconState3.xTranslation;
             IconState iconState4 = this.mLastVisibleIconState;
-            float layoutEnd2 = ((getLayoutEnd() - getActualPaddingStart()) - (iconState4 != null ? Math.min((float) getWidth(), iconState4.xTranslation + ((float) this.mIconSize)) - f4 : 0.0f)) / 2.0f;
-            if (i5 != -1) {
+            if (iconState4 != null) {
+                f = Math.min((float) getWidth(), iconState4.xTranslation + ((float) this.mIconSize)) - f2;
+            }
+            float layoutEnd2 = ((getLayoutEnd() - getActualPaddingStart()) - f) / 2.0f;
+            if (i3 != -1) {
                 layoutEnd2 = (((getLayoutEnd() - this.mVisualOverflowStart) / 2.0f) + layoutEnd2) / 2.0f;
             }
-            for (int i13 = 0; i13 < childCount; i13++) {
-                this.mIconStates.get(getChildAt(i13)).xTranslation += layoutEnd2;
+            for (int i12 = 0; i12 < childCount; i12++) {
+                this.mIconStates.get(getChildAt(i12)).xTranslation += layoutEnd2;
             }
         }
         if (isLayoutRtl()) {
-            for (int i14 = 0; i14 < childCount; i14++) {
-                View childAt2 = getChildAt(i14);
+            for (int i13 = 0; i13 < childCount; i13++) {
+                View childAt2 = getChildAt(i13);
                 IconState iconState5 = this.mIconStates.get(childAt2);
                 iconState5.xTranslation = (((float) getWidth()) - iconState5.xTranslation) - ((float) childAt2.getWidth());
             }

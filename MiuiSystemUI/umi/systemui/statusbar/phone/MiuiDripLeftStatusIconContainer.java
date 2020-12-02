@@ -5,8 +5,8 @@ import android.graphics.Canvas;
 import android.util.AttributeSet;
 import android.view.View;
 import com.android.keyguard.AlphaOptimizedLinearLayout;
-import com.android.systemui.C0009R$dimen;
-import com.android.systemui.C0012R$id;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0015R$id;
 import com.android.systemui.statusbar.StatusIconDisplayable;
 import com.android.systemui.statusbar.notification.stack.AnimationFilter;
 import com.android.systemui.statusbar.notification.stack.AnimationProperties;
@@ -50,9 +50,9 @@ public class MiuiDripLeftStatusIconContainer extends AlphaOptimizedLinearLayout 
 
     private void initDimens() {
         getResources().getDimensionPixelSize(17105492);
-        getResources().getDimensionPixelSize(C0009R$dimen.overflow_icon_dot_padding);
-        this.mIconSpacing = getResources().getDimensionPixelSize(C0009R$dimen.status_bar_system_icon_spacing);
-        getResources().getDimensionPixelSize(C0009R$dimen.overflow_dot_radius);
+        getResources().getDimensionPixelSize(C0012R$dimen.overflow_icon_dot_padding);
+        this.mIconSpacing = getResources().getDimensionPixelSize(C0012R$dimen.status_bar_system_icon_spacing);
+        getResources().getDimensionPixelSize(C0012R$dimen.overflow_dot_radius);
         this.mUnderflowWidth = 0;
     }
 
@@ -97,7 +97,7 @@ public class MiuiDripLeftStatusIconContainer extends AlphaOptimizedLinearLayout 
         }
         boolean z = true;
         for (int i6 = 0; i6 < size2; i6++) {
-            View view = this.mMeasureViews.get((size2 - i6) - 1);
+            View view = this.mMeasureViews.get(i6);
             measureChild(view, makeMeasureSpec, i2);
             if (i6 == size2 - 1) {
                 i3 = 0;
@@ -117,12 +117,12 @@ public class MiuiDripLeftStatusIconContainer extends AlphaOptimizedLinearLayout 
         super.onViewAdded(view);
         StatusIconState statusIconState = new StatusIconState();
         statusIconState.justAdded = true;
-        view.setTag(C0012R$id.status_bar_view_state_tag, statusIconState);
+        view.setTag(C0015R$id.status_bar_view_state_tag, statusIconState);
     }
 
     public void onViewRemoved(View view) {
         super.onViewRemoved(view);
-        view.setTag(C0012R$id.status_bar_view_state_tag, (Object) null);
+        view.setTag(C0015R$id.status_bar_view_state_tag, (Object) null);
     }
 
     private void calculateIconTranslations() {
@@ -202,7 +202,7 @@ public class MiuiDripLeftStatusIconContainer extends AlphaOptimizedLinearLayout 
     }
 
     private static StatusIconState getViewStateFromChild(View view) {
-        return (StatusIconState) view.getTag(C0012R$id.status_bar_view_state_tag);
+        return (StatusIconState) view.getTag(C0015R$id.status_bar_view_state_tag);
     }
 
     private static int getViewTotalMeasuredWidth(View view) {

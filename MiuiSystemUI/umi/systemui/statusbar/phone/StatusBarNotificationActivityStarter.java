@@ -8,7 +8,6 @@ import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.RemoteException;
@@ -56,13 +55,13 @@ import java.util.concurrent.Executor;
 public class StatusBarNotificationActivityStarter implements NotificationActivityStarter {
     private final ActivityIntentHelper mActivityIntentHelper;
     private final ActivityLaunchAnimator mActivityLaunchAnimator;
-    private final ActivityStarter mActivityStarter;
+    protected final ActivityStarter mActivityStarter;
     private final Lazy<AssistManager> mAssistManagerLazy;
     private final Handler mBackgroundHandler;
     private final BubbleController mBubbleController;
     private final NotificationClickNotifier mClickNotifier;
-    private final CommandQueue mCommandQueue;
-    private final Context mContext;
+    protected final CommandQueue mCommandQueue;
+    protected final Context mContext;
     private final IDreamManager mDreamManager;
     /* access modifiers changed from: private */
     public final NotificationEntryManager mEntryManager;
@@ -75,8 +74,8 @@ public class StatusBarNotificationActivityStarter implements NotificationActivit
     private final KeyguardStateController mKeyguardStateController;
     private final LockPatternUtils mLockPatternUtils;
     private final NotificationLockscreenUserManager mLockscreenUserManager;
-    private final StatusBarNotificationActivityStarterLogger mLogger;
-    private final Handler mMainThreadHandler;
+    protected final StatusBarNotificationActivityStarterLogger mLogger;
+    protected final Handler mMainThreadHandler;
     private final MetricsLogger mMetricsLogger;
     /* access modifiers changed from: private */
     public final NotifCollection mNotifCollection;
@@ -94,7 +93,7 @@ public class StatusBarNotificationActivityStarter implements NotificationActivit
     private final StatusBarStateController mStatusBarStateController;
     private final Executor mUiBgExecutor;
 
-    private StatusBarNotificationActivityStarter(Context context, CommandQueue commandQueue, Handler handler, Handler handler2, Executor executor, NotificationEntryManager notificationEntryManager, NotifPipeline notifPipeline, NotifCollection notifCollection, HeadsUpManagerPhone headsUpManagerPhone, ActivityStarter activityStarter, NotificationClickNotifier notificationClickNotifier, StatusBarStateController statusBarStateController, StatusBarKeyguardViewManager statusBarKeyguardViewManager, KeyguardManager keyguardManager, IDreamManager iDreamManager, BubbleController bubbleController, Lazy<AssistManager> lazy, NotificationRemoteInputManager notificationRemoteInputManager, NotificationGroupManager notificationGroupManager, NotificationLockscreenUserManager notificationLockscreenUserManager, ShadeController shadeController, KeyguardStateController keyguardStateController, NotificationInterruptStateProvider notificationInterruptStateProvider, LockPatternUtils lockPatternUtils, StatusBarRemoteInputCallback statusBarRemoteInputCallback, ActivityIntentHelper activityIntentHelper, FeatureFlags featureFlags, MetricsLogger metricsLogger, StatusBarNotificationActivityStarterLogger statusBarNotificationActivityStarterLogger, StatusBar statusBar, NotificationPresenter notificationPresenter, NotificationPanelViewController notificationPanelViewController, ActivityLaunchAnimator activityLaunchAnimator) {
+    protected StatusBarNotificationActivityStarter(Context context, CommandQueue commandQueue, Handler handler, Handler handler2, Executor executor, NotificationEntryManager notificationEntryManager, NotifPipeline notifPipeline, NotifCollection notifCollection, HeadsUpManagerPhone headsUpManagerPhone, ActivityStarter activityStarter, NotificationClickNotifier notificationClickNotifier, StatusBarStateController statusBarStateController, StatusBarKeyguardViewManager statusBarKeyguardViewManager, KeyguardManager keyguardManager, IDreamManager iDreamManager, BubbleController bubbleController, Lazy<AssistManager> lazy, NotificationRemoteInputManager notificationRemoteInputManager, NotificationGroupManager notificationGroupManager, NotificationLockscreenUserManager notificationLockscreenUserManager, ShadeController shadeController, KeyguardStateController keyguardStateController, NotificationInterruptStateProvider notificationInterruptStateProvider, LockPatternUtils lockPatternUtils, StatusBarRemoteInputCallback statusBarRemoteInputCallback, ActivityIntentHelper activityIntentHelper, FeatureFlags featureFlags, MetricsLogger metricsLogger, StatusBarNotificationActivityStarterLogger statusBarNotificationActivityStarterLogger, StatusBar statusBar, NotificationPresenter notificationPresenter, NotificationPanelViewController notificationPanelViewController, ActivityLaunchAnimator activityLaunchAnimator) {
         this.mContext = context;
         this.mCommandQueue = commandQueue;
         this.mMainThreadHandler = handler;
@@ -409,7 +408,8 @@ public class StatusBarNotificationActivityStarter implements NotificationActivit
         this.mBubbleController.expandStackAndSelectBubble(notificationEntry);
     }
 
-    private void startNotificationIntent(PendingIntent pendingIntent, Intent intent, NotificationEntry notificationEntry, View view, boolean z, boolean z2) {
+    /* access modifiers changed from: protected */
+    public void startNotificationIntent(PendingIntent pendingIntent, Intent intent, NotificationEntry notificationEntry, View view, boolean z, boolean z2) {
         RemoteAnimationAdapter launchAnimation = this.mActivityLaunchAnimator.getLaunchAnimation(view, z);
         this.mLogger.logStartNotificationIntent(notificationEntry.getKey(), pendingIntent);
         if (launchAnimation != null) {
@@ -518,66 +518,6 @@ public class StatusBarNotificationActivityStarter implements NotificationActivit
         this.mCommandQueue.animateCollapsePanels(2, true);
     }
 
-    public void startHistoryIntent(boolean z) {
-        this.mActivityStarter.dismissKeyguardThenExecute(new ActivityStarter.OnDismissAction(z) {
-            public final /* synthetic */ boolean f$1;
-
-            {
-                this.f$1 = r2;
-            }
-
-            public final boolean onDismiss() {
-                return StatusBarNotificationActivityStarter.this.lambda$startHistoryIntent$10$StatusBarNotificationActivityStarter(this.f$1);
-            }
-        }, (Runnable) null, false);
-    }
-
-    /* access modifiers changed from: private */
-    /* renamed from: lambda$startHistoryIntent$10 */
-    public /* synthetic */ boolean lambda$startHistoryIntent$10$StatusBarNotificationActivityStarter(boolean z) {
-        AsyncTask.execute(new Runnable(z) {
-            public final /* synthetic */ boolean f$1;
-
-            {
-                this.f$1 = r2;
-            }
-
-            public final void run() {
-                StatusBarNotificationActivityStarter.this.lambda$startHistoryIntent$9$StatusBarNotificationActivityStarter(this.f$1);
-            }
-        });
-        return true;
-    }
-
-    /* access modifiers changed from: private */
-    /* renamed from: lambda$startHistoryIntent$9 */
-    public /* synthetic */ void lambda$startHistoryIntent$9$StatusBarNotificationActivityStarter(boolean z) {
-        Intent intent;
-        if (z) {
-            intent = new Intent("android.settings.NOTIFICATION_HISTORY");
-        } else {
-            intent = new Intent("android.settings.NOTIFICATION_SETTINGS");
-        }
-        TaskStackBuilder addNextIntent = TaskStackBuilder.create(this.mContext).addNextIntent(new Intent("android.settings.NOTIFICATION_SETTINGS"));
-        if (z) {
-            addNextIntent.addNextIntent(intent);
-        }
-        addNextIntent.startActivities((Bundle) null, UserHandle.CURRENT);
-        if (shouldCollapse()) {
-            this.mMainThreadHandler.post(new Runnable() {
-                public final void run() {
-                    StatusBarNotificationActivityStarter.this.lambda$startHistoryIntent$8$StatusBarNotificationActivityStarter();
-                }
-            });
-        }
-    }
-
-    /* access modifiers changed from: private */
-    /* renamed from: lambda$startHistoryIntent$8 */
-    public /* synthetic */ void lambda$startHistoryIntent$8$StatusBarNotificationActivityStarter() {
-        this.mCommandQueue.animateCollapsePanels(2, true);
-    }
-
     private void removeHUN(ExpandableNotificationRow expandableNotificationRow) {
         String key = expandableNotificationRow.getEntry().getSbn().getKey();
         HeadsUpManagerPhone headsUpManagerPhone = this.mHeadsUpManager;
@@ -652,7 +592,8 @@ public class StatusBarNotificationActivityStarter implements NotificationActivit
         });
     }
 
-    private boolean shouldCollapse() {
+    /* access modifiers changed from: protected */
+    public boolean shouldCollapse() {
         return this.mStatusBarStateController.getState() != 0 || !this.mActivityLaunchAnimator.isAnimationPending();
     }
 
@@ -802,8 +743,8 @@ public class StatusBarNotificationActivityStarter implements NotificationActivit
             return this;
         }
 
-        public StatusBarNotificationActivityStarter build() {
-            return new StatusBarNotificationActivityStarter(this.mContext, this.mCommandQueue, this.mMainThreadHandler, this.mBackgroundHandler, this.mUiBgExecutor, this.mEntryManager, this.mNotifPipeline, this.mNotifCollection, this.mHeadsUpManager, this.mActivityStarter, this.mClickNotifier, this.mStatusBarStateController, this.mStatusBarKeyguardViewManager, this.mKeyguardManager, this.mDreamManager, this.mBubbleController, this.mAssistManagerLazy, this.mRemoteInputManager, this.mGroupManager, this.mLockscreenUserManager, this.mShadeController, this.mKeyguardStateController, this.mNotificationInterruptStateProvider, this.mLockPatternUtils, this.mRemoteInputCallback, this.mActivityIntentHelper, this.mFeatureFlags, this.mMetricsLogger, this.mLogger, this.mStatusBar, this.mNotificationPresenter, this.mNotificationPanelViewController, this.mActivityLaunchAnimator);
+        public MiuiStatusBarNotificationActivityStarter build() {
+            return new MiuiStatusBarNotificationActivityStarter(this.mContext, this.mCommandQueue, this.mMainThreadHandler, this.mBackgroundHandler, this.mUiBgExecutor, this.mEntryManager, this.mNotifPipeline, this.mNotifCollection, this.mHeadsUpManager, this.mActivityStarter, this.mClickNotifier, this.mStatusBarStateController, this.mStatusBarKeyguardViewManager, this.mKeyguardManager, this.mDreamManager, this.mBubbleController, this.mAssistManagerLazy, this.mRemoteInputManager, this.mGroupManager, this.mLockscreenUserManager, this.mShadeController, this.mKeyguardStateController, this.mNotificationInterruptStateProvider, this.mLockPatternUtils, this.mRemoteInputCallback, this.mActivityIntentHelper, this.mFeatureFlags, this.mMetricsLogger, this.mLogger, this.mStatusBar, this.mNotificationPresenter, this.mNotificationPanelViewController, this.mActivityLaunchAnimator);
         }
     }
 }

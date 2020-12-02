@@ -11,8 +11,8 @@ import android.view.View;
 import android.widget.EdgeEffect;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
-import com.android.systemui.C0009R$dimen;
-import com.android.systemui.C0012R$id;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0015R$id;
 import com.android.systemui.controlcenter.utils.ControlCenterUtils;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -66,8 +66,8 @@ public class QSControlScrollView extends ScrollView {
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mQsControlCenterTileLayout = (QSControlCenterTileLayout) findViewById(C0012R$id.quick_tile_layout);
-        this.mSmartControlsView = (LinearLayout) findViewById(C0012R$id.ll_smart_controls);
+        this.mQsControlCenterTileLayout = (QSControlCenterTileLayout) findViewById(C0015R$id.quick_tile_layout);
+        this.mSmartControlsView = (LinearLayout) findViewById(C0015R$id.ll_smart_controls);
         ArrayList arrayList = new ArrayList();
         int childCount = getChildCount();
         for (int i = 0; i < childCount; i++) {
@@ -348,7 +348,7 @@ public class QSControlScrollView extends ScrollView {
 
     private void replaceScrollViewAttribute() {
         try {
-            OVERFLING_DISTANCE.set(this, Integer.valueOf((int) getContext().getResources().getDimension(C0009R$dimen.qs_control_scrollview_overfling_distance)));
+            OVERFLING_DISTANCE.set(this, Integer.valueOf((int) getContext().getResources().getDimension(C0012R$dimen.qs_control_scrollview_overfling_distance)));
             EDGE_GLOW_TOP.set(this, new EmptyEdgeEffect(getContext()));
             EDGE_GLOW_BOTTOM.set(this, new EmptyEdgeEffect(getContext()));
         } catch (IllegalAccessException e) {

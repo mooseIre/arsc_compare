@@ -38,10 +38,10 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import androidx.constraintlayout.widget.R$styleable;
-import com.android.systemui.C0009R$dimen;
-import com.android.systemui.C0012R$id;
-import com.android.systemui.C0014R$layout;
-import com.android.systemui.C0018R$string;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0017R$layout;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.Interpolators;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -130,18 +130,18 @@ public class PipMenuActivity extends Activity {
     public void onCreate(Bundle bundle) {
         getWindow().addFlags(262144);
         super.onCreate(bundle);
-        setContentView(C0014R$layout.pip_menu_activity);
+        setContentView(C0017R$layout.pip_menu_activity);
         this.mAccessibilityManager = (AccessibilityManager) getSystemService(AccessibilityManager.class);
         ColorDrawable colorDrawable = new ColorDrawable(-16777216);
         this.mBackgroundDrawable = colorDrawable;
         colorDrawable.setAlpha(0);
-        View findViewById = findViewById(C0012R$id.background);
+        View findViewById = findViewById(C0015R$id.background);
         this.mViewRoot = findViewById;
         findViewById.setBackground(this.mBackgroundDrawable);
-        View findViewById2 = findViewById(C0012R$id.menu_container);
+        View findViewById2 = findViewById(C0015R$id.menu_container);
         this.mMenuContainer = findViewById2;
         findViewById2.setAlpha(0.0f);
-        View findViewById3 = findViewById(C0012R$id.settings);
+        View findViewById3 = findViewById(C0015R$id.settings);
         this.mSettingsButton = findViewById3;
         findViewById3.setAlpha(0.0f);
         this.mSettingsButton.setOnClickListener(new View.OnClickListener() {
@@ -149,7 +149,7 @@ public class PipMenuActivity extends Activity {
                 PipMenuActivity.this.lambda$onCreate$0$PipMenuActivity(view);
             }
         });
-        View findViewById4 = findViewById(C0012R$id.dismiss);
+        View findViewById4 = findViewById(C0015R$id.dismiss);
         this.mDismissButton = findViewById4;
         findViewById4.setAlpha(0.0f);
         this.mDismissButton.setOnClickListener(new View.OnClickListener() {
@@ -157,18 +157,18 @@ public class PipMenuActivity extends Activity {
                 PipMenuActivity.this.lambda$onCreate$1$PipMenuActivity(view);
             }
         });
-        findViewById(C0012R$id.expand_button).setOnClickListener(new View.OnClickListener() {
+        findViewById(C0015R$id.expand_button).setOnClickListener(new View.OnClickListener() {
             public final void onClick(View view) {
                 PipMenuActivity.this.lambda$onCreate$2$PipMenuActivity(view);
             }
         });
-        View findViewById5 = findViewById(C0012R$id.resize_handle);
+        View findViewById5 = findViewById(C0015R$id.resize_handle);
         this.mResizeHandle = findViewById5;
         findViewById5.setAlpha(0.0f);
-        this.mActionsGroup = (LinearLayout) findViewById(C0012R$id.actions_group);
-        this.mBetweenActionPaddingLand = getResources().getDimensionPixelSize(C0009R$dimen.pip_between_action_padding_land);
+        this.mActionsGroup = (LinearLayout) findViewById(C0015R$id.actions_group);
+        this.mBetweenActionPaddingLand = getResources().getDimensionPixelSize(C0012R$dimen.pip_between_action_padding_land);
         updateFromIntent(getIntent());
-        setTitle(C0018R$string.pip_menu_title);
+        setTitle(C0021R$string.pip_menu_title);
         setDisablePreviewScreenshots(true);
         getWindow().setExitTransition((Transition) null);
         initAccessibility();
@@ -200,7 +200,7 @@ public class PipMenuActivity extends Activity {
         getWindow().getDecorView().setAccessibilityDelegate(new View.AccessibilityDelegate() {
             public void onInitializeAccessibilityNodeInfo(View view, AccessibilityNodeInfo accessibilityNodeInfo) {
                 super.onInitializeAccessibilityNodeInfo(view, accessibilityNodeInfo);
-                accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(16, PipMenuActivity.this.getResources().getString(C0018R$string.pip_menu_title)));
+                accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(16, PipMenuActivity.this.getResources().getString(C0021R$string.pip_menu_title)));
             }
 
             public boolean performAccessibilityAction(View view, int i, Bundle bundle) {
@@ -419,8 +419,8 @@ public class PipMenuActivity extends Activity {
     }
 
     private void updateActionViews(Rect rect) {
-        ViewGroup viewGroup = (ViewGroup) findViewById(C0012R$id.expand_container);
-        ViewGroup viewGroup2 = (ViewGroup) findViewById(C0012R$id.actions_container);
+        ViewGroup viewGroup = (ViewGroup) findViewById(C0015R$id.expand_container);
+        ViewGroup viewGroup2 = (ViewGroup) findViewById(C0015R$id.actions_container);
         viewGroup2.setOnTouchListener($$Lambda$PipMenuActivity$BXxmOnLUs8BTsc_oWau4TVb1pE.INSTANCE);
         if (!this.mActions.isEmpty()) {
             boolean z = true;
@@ -429,7 +429,7 @@ public class PipMenuActivity extends Activity {
                 if (this.mActionsGroup != null) {
                     LayoutInflater from = LayoutInflater.from(this);
                     while (this.mActionsGroup.getChildCount() < this.mActions.size()) {
-                        this.mActionsGroup.addView((ImageButton) from.inflate(C0014R$layout.pip_menu_action, this.mActionsGroup, false));
+                        this.mActionsGroup.addView((ImageButton) from.inflate(C0017R$layout.pip_menu_action, this.mActionsGroup, false));
                     }
                     int i = 0;
                     while (i < this.mActionsGroup.getChildCount()) {
@@ -475,8 +475,8 @@ public class PipMenuActivity extends Activity {
                     }
                 }
                 FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) viewGroup.getLayoutParams();
-                layoutParams.topMargin = getResources().getDimensionPixelSize(C0009R$dimen.pip_action_padding);
-                layoutParams.bottomMargin = getResources().getDimensionPixelSize(C0009R$dimen.pip_expand_container_edge_margin);
+                layoutParams.topMargin = getResources().getDimensionPixelSize(C0012R$dimen.pip_action_padding);
+                layoutParams.bottomMargin = getResources().getDimensionPixelSize(C0012R$dimen.pip_expand_container_edge_margin);
                 viewGroup.requestLayout();
                 return;
             }

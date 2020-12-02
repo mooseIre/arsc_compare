@@ -12,6 +12,8 @@ import android.os.IBinder;
 import android.os.Message;
 import android.os.RemoteException;
 import android.provider.Settings;
+import android.telephony.CellIdentityLte;
+import android.text.TextUtils;
 import android.util.LocalLog;
 import android.util.Log;
 import android.util.SparseArray;
@@ -182,6 +184,7 @@ public class MiuiFiveGServiceClient {
     private boolean mIsUserFiveGEnabled = true;
     private int[] mLastBearerAllocationStatus = null;
     private final SparseArray<FiveGServiceState> mLastServiceStates = new SparseArray<>();
+    private final SparseArray<MobileSignalController> mMobileSignalControllers = new SparseArray<>();
     ContentObserver mNetworkDisplayObserver = new ContentObserver(this.mHandler) {
         public void onChange(boolean z) {
             MiuiFiveGServiceClient.this.update5GIcon();
@@ -393,6 +396,20 @@ public class MiuiFiveGServiceClient {
         }
     }
 
+    public void addMobileSignalController(MobileSignalController mobileSignalController) {
+        Log.d("FiveGServiceClient", "addMobileSignalController phoneId=" + mobileSignalController.getSlot());
+        if (SubscriptionManager.isValidSlotId(mobileSignalController.getSlot())) {
+            this.mMobileSignalControllers.put(mobileSignalController.getSlot(), mobileSignalController);
+        }
+    }
+
+    public void removeMobileSignalController(MobileSignalController mobileSignalController) {
+        Log.d("FiveGServiceClient", "removeMobileSignalController phoneId=" + mobileSignalController.getSlot());
+        if (SubscriptionManager.isValidSlotId(mobileSignalController.getSlot())) {
+            this.mMobileSignalControllers.remove(mobileSignalController.getSlot());
+        }
+    }
+
     /* access modifiers changed from: private */
     public void binderService() {
         boolean bindService = ServiceUtil.bindService(this.mContext, this.mServiceConnection);
@@ -502,14 +519,15 @@ public class MiuiFiveGServiceClient {
             MobileSignalController.MobileIconGroup unused2 = fiveGServiceState.mIconGroup = getSaIcon(fiveGServiceState);
         } else if (fiveGServiceState.mNrConfigType == 0) {
             MobileSignalController.MobileIconGroup unused3 = fiveGServiceState.mIconGroup = getNrIconGroup(fiveGServiceState, i);
+            dualNrIconGroupOptimization();
         } else {
             MobileSignalController.MobileIconGroup unused4 = fiveGServiceState.mIconGroup = TelephonyIcons.UNKNOWN;
         }
-        localLog("update5GIcon slotId=" + i, "update5GIcon FiveGServiceState: " + fiveGServiceState + ", cmccSim=" + isCmccSimCard(i));
+        localLog("update5GIcon slotId=" + i, "update5GIcon FiveGServiceState: " + fiveGServiceState + ", mIsUserFiveGEnabled=" + this.mIsUserFiveGEnabled + ", mIsDualNrEnabled=" + this.mIsDualNrEnabled + ", cmccSim=" + isCmccSimCard(i));
     }
 
     private MobileSignalController.MobileIconGroup getSaIcon(FiveGServiceState fiveGServiceState) {
-        if (fiveGServiceState.mBearerAllocationStatus > 0) {
+        if (fiveGServiceState.mBearerAllocationStatus > 0 || fiveGServiceState.mNrIconType == 1) {
             return TelephonyIcons.FIVE_G_SA;
         }
         return TelephonyIcons.UNKNOWN;
@@ -533,6 +551,109 @@ public class MiuiFiveGServiceClient {
         } else {
             return getNrIconTypeIconGroup(fiveGServiceState);
         }
+    }
+
+    private void dualNrIconGroupOptimization() {
+        if (!Build.IS_INTERNATIONAL_BUILD) {
+            int otherSlotId = getOtherSlotId(this.mDefaultDataSlotId);
+            FiveGServiceState currentServiceState = getCurrentServiceState(this.mDefaultDataSlotId);
+            FiveGServiceState currentServiceState2 = getCurrentServiceState(otherSlotId);
+            if (this.mIsDualNrEnabled && currentServiceState.mIconGroup == TelephonyIcons.FIVE_G_BASIC && currentServiceState2.mIconGroup != TelephonyIcons.FIVE_G_BASIC) {
+                if (currentServiceState2.mUpperLayerInd != 1 || currentServiceState2.mPlmn != 1) {
+                    boolean isSameOperatorCard = isSameOperatorCard(this.mDefaultDataSlotId, otherSlotId);
+                    boolean isSameCell = isSameCell(this.mDefaultDataSlotId, otherSlotId);
+                    if (isSameOperatorCard && isSameCell) {
+                        MobileSignalController.MobileIconGroup unused = currentServiceState2.mIconGroup = TelephonyIcons.FIVE_G_BASIC;
+                        notifyListenersIfNecessary(otherSlotId);
+                    }
+                    localLog("dualNrIconGroupOptimization", "isSameOperatorCard = " + isSameOperatorCard + ", isSameCell = " + isSameCell + ", dataSlotIdState = " + currentServiceState + ", viceSlotIdState = " + currentServiceState2 + ", mIsDualNrEnabled = " + this.mIsDualNrEnabled + ", mDefaultDataSlotId = " + this.mDefaultDataSlotId);
+                }
+            }
+        }
+    }
+
+    private boolean isSameCell(int i, int i2) {
+        CellIdentityLte cellIdentityLte = getCellIdentityLte(i);
+        CellIdentityLte cellIdentityLte2 = getCellIdentityLte(i2);
+        if (cellIdentityLte == null || cellIdentityLte2 == null) {
+            return false;
+        }
+        return cellIdentityLte.equals(cellIdentityLte2);
+    }
+
+    /* JADX WARNING: type inference failed for: r3v8, types: [android.telephony.CellIdentity, java.lang.Object] */
+    /* JADX WARNING: Multi-variable type inference failed */
+    /* JADX WARNING: Unknown variable types count: 1 */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    private android.telephony.CellIdentityLte getCellIdentityLte(int r4) {
+        /*
+            r3 = this;
+            android.util.SparseArray<com.android.systemui.statusbar.policy.MobileSignalController> r0 = r3.mMobileSignalControllers
+            java.lang.Object r0 = r0.get(r4)
+            r1 = 0
+            if (r0 != 0) goto L_0x000a
+            return r1
+        L_0x000a:
+            android.util.SparseArray<com.android.systemui.statusbar.policy.MobileSignalController> r3 = r3.mMobileSignalControllers
+            java.lang.Object r3 = r3.get(r4)
+            com.android.systemui.statusbar.policy.MobileSignalController r3 = (com.android.systemui.statusbar.policy.MobileSignalController) r3
+            android.telephony.ServiceState r3 = r3.getServiceState()
+            if (r3 != 0) goto L_0x0019
+            return r1
+        L_0x0019:
+            r0 = 1
+            java.util.List r3 = r3.getNetworkRegistrationInfoListForTransportType(r0)
+            if (r3 == 0) goto L_0x005f
+            r0 = 0
+            java.lang.Object r2 = r3.get(r0)
+            if (r2 != 0) goto L_0x0028
+            goto L_0x005f
+        L_0x0028:
+            java.lang.Object r3 = r3.get(r0)
+            android.telephony.NetworkRegistrationInfo r3 = (android.telephony.NetworkRegistrationInfo) r3
+            android.telephony.CellIdentity r3 = r3.getCellIdentity()
+            boolean r0 = r3 instanceof android.telephony.CellIdentityLte
+            if (r0 == 0) goto L_0x0039
+            r1 = r3
+            android.telephony.CellIdentityLte r1 = (android.telephony.CellIdentityLte) r1
+        L_0x0039:
+            java.lang.StringBuilder r0 = new java.lang.StringBuilder
+            r0.<init>()
+            java.lang.String r2 = "cellIdentity = "
+            r0.append(r2)
+            r0.append(r3)
+            java.lang.String r3 = "cellIdentityLte = "
+            r0.append(r3)
+            r0.append(r1)
+            java.lang.String r3 = ", slotId = "
+            r0.append(r3)
+            r0.append(r4)
+            java.lang.String r3 = r0.toString()
+            java.lang.String r4 = "getCellIdentityLte"
+            localLog(r4, r3)
+        L_0x005f:
+            return r1
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.policy.MiuiFiveGServiceClient.getCellIdentityLte(int):android.telephony.CellIdentityLte");
+    }
+
+    private boolean isSameOperatorCard(int i, int i2) {
+        String simOperatorForSlot = TelephonyManager.getDefault().getSimOperatorForSlot(i);
+        String simOperatorForSlot2 = TelephonyManager.getDefault().getSimOperatorForSlot(i2);
+        return isChinaOperator(simOperatorForSlot) && isChinaOperator(simOperatorForSlot2) && TelephonyManager.getDefault().isSameOperator(simOperatorForSlot, simOperatorForSlot2);
+    }
+
+    private boolean isChinaOperator(String str) {
+        return !TextUtils.isEmpty(str) && str.startsWith("460");
+    }
+
+    public int getOtherSlotId(int i) {
+        for (int i2 = 0; i2 < TelephonyManager.getDefault().getPhoneCount(); i2++) {
+            if (i2 != i) {
+                return i2;
+            }
+        }
+        return -1;
     }
 
     private MobileSignalController.MobileIconGroup getNrIconTypeIconGroup(FiveGServiceState fiveGServiceState) {
@@ -647,13 +768,13 @@ public class MiuiFiveGServiceClient {
     /* access modifiers changed from: private */
     public void update5GIcon() {
         boolean z = true;
-        this.mIsUserFiveGEnabled = Settings.Global.getInt(this.mContext.getContentResolver(), "fiveg_user_enable", 1) == 1;
-        if (Settings.Global.getInt(this.mContext.getContentResolver(), "dual_nr_enabled", 0) != 1) {
+        if (Settings.Global.getInt(this.mContext.getContentResolver(), "fiveg_user_enable", 1) != 1) {
             z = false;
         }
-        this.mIsDualNrEnabled = z;
+        this.mIsUserFiveGEnabled = z;
+        this.mIsDualNrEnabled = TelephonyManager.getDefault().isDualNrEnabled();
         this.mDefaultDataSlotId = SubscriptionManager.getDefault().getDefaultDataSlotId();
-        localLog("5GEnabledChanged", "5G enable state has changed to " + this.mIsUserFiveGEnabled + ", dds is " + this.mDefaultDataSlotId);
+        localLog("5GEnabledChanged", "5G enable state has changed to " + this.mIsUserFiveGEnabled + ", mIsDualNrEnabled = " + this.mIsDualNrEnabled + ", dds is " + this.mDefaultDataSlotId);
         for (int i = 0; i < TelephonyManager.getDefault().getPhoneCount(); i++) {
             update5GIcon(getCurrentServiceState(i), i);
             notifyListenersIfNecessary(i);

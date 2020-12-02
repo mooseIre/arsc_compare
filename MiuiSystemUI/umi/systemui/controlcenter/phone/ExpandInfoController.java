@@ -28,6 +28,8 @@ public interface ExpandInfoController {
 
     UserHandle getUserHandle();
 
+    void removeCallback(Callback callback);
+
     void requestData();
 
     void setContentView(ControlPanelContentView controlPanelContentView);

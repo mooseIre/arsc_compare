@@ -7,7 +7,7 @@ import android.service.notification.StatusBarNotification;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import com.android.systemui.C0007R$bool;
+import com.android.systemui.C0010R$bool;
 import com.android.systemui.Dependency;
 import com.android.systemui.bubbles.BubbleController;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
@@ -59,7 +59,7 @@ public class NotificationViewHierarchyManager implements DynamicPrivacyControlle
         this.mStatusBarStateController = (SysuiStatusBarStateController) statusBarStateController;
         this.mEntryManager = notificationEntryManager;
         this.mFgsSectionController = foregroundServiceSectionController;
-        this.mAlwaysExpandNonGroupedNotification = context.getResources().getBoolean(C0007R$bool.config_alwaysExpandNonGroupedNotifications);
+        this.mAlwaysExpandNonGroupedNotification = context.getResources().getBoolean(C0010R$bool.config_alwaysExpandNonGroupedNotifications);
         this.mBubbleController = bubbleController;
         this.mDynamicPrivacyController = dynamicPrivacyController;
         this.mDynamicChildBindController = dynamicChildBindController;

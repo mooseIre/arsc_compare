@@ -17,9 +17,10 @@ import android.util.Log;
 import com.android.internal.logging.InstanceId;
 import com.android.internal.logging.InstanceIdSequence;
 import com.android.internal.logging.UiEventLogger;
-import com.android.systemui.C0018R$string;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.Dumpable;
 import com.android.systemui.broadcast.BroadcastDispatcher;
+import com.android.systemui.controlcenter.phone.ControlPanelController;
 import com.android.systemui.controlcenter.qs.MiuiQSTileHostInjector;
 import com.android.systemui.dump.DumpManager;
 import com.android.systemui.plugins.PluginListener;
@@ -56,6 +57,7 @@ public class QSTileHost implements QSHost, TunerService.Tunable, PluginListener<
     private final BroadcastDispatcher mBroadcastDispatcher;
     private final List<QSHost.Callback> mCallbacks = new ArrayList();
     private final Context mContext;
+    private final ControlPanelController mControlPanelController;
     private int mCurrentUser;
     private final DumpManager mDumpManager;
     private final StatusBarIconController mIconController;
@@ -75,7 +77,7 @@ public class QSTileHost implements QSHost, TunerService.Tunable, PluginListener<
     public void warn(String str, Throwable th) {
     }
 
-    public QSTileHost(Context context, StatusBarIconController statusBarIconController, QSFactory qSFactory, Handler handler, Looper looper, PluginManager pluginManager, TunerService tunerService, Provider<AutoTileManager> provider, DumpManager dumpManager, BroadcastDispatcher broadcastDispatcher, Optional<StatusBar> optional, QSLogger qSLogger, UiEventLogger uiEventLogger, StatusBarStateController statusBarStateController, MiuiQSTileHostInjector miuiQSTileHostInjector) {
+    public QSTileHost(Context context, StatusBarIconController statusBarIconController, QSFactory qSFactory, Handler handler, Looper looper, PluginManager pluginManager, TunerService tunerService, Provider<AutoTileManager> provider, DumpManager dumpManager, BroadcastDispatcher broadcastDispatcher, Optional<StatusBar> optional, QSLogger qSLogger, UiEventLogger uiEventLogger, StatusBarStateController statusBarStateController, MiuiQSTileHostInjector miuiQSTileHostInjector, ControlPanelController controlPanelController) {
         Context context2 = context;
         MiuiQSTileHostInjector miuiQSTileHostInjector2 = miuiQSTileHostInjector;
         ArrayList<QSFactory> arrayList = new ArrayList<>();
@@ -115,6 +117,7 @@ public class QSTileHost implements QSHost, TunerService.Tunable, PluginListener<
             }
         });
         this.mStatusBarStateController = statusBarStateController;
+        this.mControlPanelController = controlPanelController;
     }
 
     /* access modifiers changed from: private */
@@ -201,7 +204,7 @@ public class QSTileHost implements QSHost, TunerService.Tunable, PluginListener<
         if ("sysui_qs_tiles".equals(str)) {
             Log.d("QSTileHost", "Recreating tiles");
             if (str2 == null && UserManager.isDeviceInDemoMode(this.mContext)) {
-                str2 = this.mContext.getResources().getString(C0018R$string.quick_settings_tiles_retail_mode);
+                str2 = this.mContext.getResources().getString(C0021R$string.quick_settings_tiles_retail_mode);
             }
             List<String> loadTileSpecs = loadTileSpecs(this.mContext, str2);
             int currentUser = ActivityManager.getCurrentUser();
@@ -414,7 +417,7 @@ public class QSTileHost implements QSHost, TunerService.Tunable, PluginListener<
     public List<String> loadTileSpecs(Context context, String str) {
         Resources resources = context.getResources();
         if (TextUtils.isEmpty(str)) {
-            str = resources.getString(C0018R$string.quick_settings_tiles);
+            str = resources.getString(C0021R$string.quick_settings_tiles);
             if (DEBUG) {
                 Log.d("QSTileHost", "Loaded tile specs from config: " + str);
             }
@@ -480,6 +483,9 @@ public class QSTileHost implements QSHost, TunerService.Tunable, PluginListener<
     }
 
     public boolean isQSFullyCollapsed() {
+        if (this.mControlPanelController.isUseControlCenter()) {
+            return this.mControlPanelController.isQSFullyCollapsed();
+        }
         return ((Boolean) this.mStatusBarOptional.map($$Lambda$zJbATMYNuISzUFzW61OFGvW37bg.INSTANCE).orElse(Boolean.FALSE)).booleanValue();
     }
 }

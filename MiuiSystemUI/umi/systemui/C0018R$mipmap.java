@@ -3,7 +3,7 @@ package com.android.systemui;
 public final class R {
 
     /* renamed from: com.android.systemui.R$anim */
-    public final class C0004R$anim {
+    public final class C0007R$anim {
         public static final int $$lock_lock__1__0;
         public static final int $$lock_lock__1__1;
         public static final int $$lock_lock__1__2;
@@ -583,7 +583,7 @@ public final class R {
     }
 
     /* renamed from: com.android.systemui.R$array */
-    public final class C0005R$array {
+    public final class C0008R$array {
         public static final int animator_duration_scale_entries;
         public static final int animator_duration_scale_values;
         public static final int app_process_limit_entries;
@@ -717,7 +717,7 @@ public final class R {
     }
 
     /* renamed from: com.android.systemui.R$attr */
-    public final class C0006R$attr {
+    public final class C0009R$attr {
         public static final int MiuiAmPmStyle;
         public static final int MiuiClockMode;
         public static final int MiuiClockShowDark;
@@ -1890,7 +1890,7 @@ public final class R {
     }
 
     /* renamed from: com.android.systemui.R$bool */
-    public final class C0007R$bool {
+    public final class C0010R$bool {
         public static final int abc_action_bar_embed_tabs;
         public static final int abc_allow_stacked_button_bar;
         public static final int abc_config_actionMenuItemAllCaps;
@@ -1951,6 +1951,7 @@ public final class R {
         public static final int config_showRotationLock;
         public static final int config_showRsrpSignalLevelforLTE;
         public static final int config_show_customize_carrier_name;
+        public static final int config_show_mobile_type;
         public static final int config_smart_replies_in_notifications_edit_choices_before_sending;
         public static final int config_smart_replies_in_notifications_enabled;
         public static final int config_smart_replies_in_notifications_requires_targeting_p;
@@ -2003,7 +2004,7 @@ public final class R {
     }
 
     /* renamed from: com.android.systemui.R$color */
-    public final class C0008R$color {
+    public final class C0011R$color {
         public static final int GM2_blue_200;
         public static final int GM2_blue_300;
         public static final int GM2_blue_50;
@@ -2399,6 +2400,7 @@ public final class R {
         public static final int miui_keyguard_password_view_password_entry_bg_stroke_color;
         public static final int miui_keyguard_pin_num_pad_key_bg_color;
         public static final int miui_keyguard_view_eca_text_color;
+        public static final int miui_notification_modal_menu_text_color;
         public static final int miui_numeric_keyboard_emergency_button_normal_bg;
         public static final int miui_numeric_keyboard_emergency_button_pressed_bg;
         public static final int miui_numeric_keyboard_emergency_text_color;
@@ -2774,7 +2776,7 @@ public final class R {
     }
 
     /* renamed from: com.android.systemui.R$dimen */
-    public final class C0009R$dimen {
+    public final class C0012R$dimen {
         public static final int G;
         public static final int abc_action_bar_content_inset_material;
         public static final int abc_action_bar_content_inset_with_nav;
@@ -3908,8 +3910,14 @@ public final class R {
         public static final int miui_notification_content_margin_end;
         public static final int miui_notification_content_margin_start;
         public static final int miui_notification_content_margin_top;
+        public static final int miui_notification_header_content_margin_bottom;
+        public static final int miui_notification_header_content_margin_top;
+        public static final int miui_notification_header_height;
+        public static final int miui_notification_modal_menu_icon_bg_size;
+        public static final int miui_notification_modal_menu_icon_size;
         public static final int miui_notification_modal_menu_margin_left_right;
         public static final int miui_notification_modal_menu_text_padding;
+        public static final int miui_notification_modal_menu_text_size;
         public static final int miui_notification_swipe_area_height;
         public static final int miui_numeric_keyboard_emergency_text_size;
         public static final int miui_numeric_keyboard_row_height;
@@ -4231,6 +4239,7 @@ public final class R {
         public static final int notification_right_side_padding_top;
         public static final int notification_section_divider_height;
         public static final int notification_section_divider_height_for_text;
+        public static final int notification_section_divider_height_minus;
         public static final int notification_section_header_height;
         public static final int notification_section_header_margin_bottom_miui;
         public static final int notification_section_header_margin_start_miui;
@@ -4821,10 +4830,19 @@ public final class R {
         public static final int zen_mode_condition_detail_button_padding;
         public static final int zen_mode_condition_detail_item_interline_spacing;
         public static final int zen_mode_condition_detail_item_spacing;
+        public static final int zen_mode_icon_bottom_margin;
+        public static final int zen_mode_icon_size;
+        public static final int zen_mode_icon_start_margin;
+        public static final int zen_mode_icon_top_margin;
+        public static final int zen_mode_text_bottom_margin;
+        public static final int zen_mode_text_end_margin;
+        public static final int zen_mode_text_size;
+        public static final int zen_mode_text_start_margin;
+        public static final int zen_mode_text_top_margin;
     }
 
     /* renamed from: com.android.systemui.R$drawable */
-    public final class C0010R$drawable {
+    public final class C0013R$drawable {
         public static final int $$face_dialog_dark_to_checkmark__10__0;
         public static final int $$face_dialog_dark_to_checkmark__11__0;
         public static final int $$face_dialog_dark_to_checkmark__11__1;
@@ -6708,6 +6726,7 @@ public final class R {
         public static final int ic_media_play_light;
         public static final int ic_media_projection_permission;
         public static final int ic_media_seamless;
+        public static final int ic_media_seamless_others;
         public static final int ic_media_speaker_device;
         public static final int ic_media_stop_dark;
         public static final int ic_media_stop_light;
@@ -7802,7 +7821,7 @@ public final class R {
     }
 
     /* renamed from: com.android.systemui.R$fraction */
-    public final class C0011R$fraction {
+    public final class C0014R$fraction {
         public static final int battery_button_height_fraction;
         public static final int battery_subpixel_smoothing_left;
         public static final int battery_subpixel_smoothing_right;
@@ -7826,7 +7845,7 @@ public final class R {
     }
 
     /* renamed from: com.android.systemui.R$id */
-    public final class C0012R$id {
+    public final class C0015R$id {
         public static final int ALT;
         public static final int CTRL;
         public static final int Content;
@@ -8807,6 +8826,8 @@ public final class R {
         public static final int mobile_volte;
         public static final int mobile_volte_no_service;
         public static final int mobile_vowifi;
+        public static final int modal_menu_icon;
+        public static final int modal_menu_title;
         public static final int modal_window_view;
         public static final int more_actions_dock;
         public static final int more_button;
@@ -9502,7 +9523,7 @@ public final class R {
     }
 
     /* renamed from: com.android.systemui.R$integer */
-    public final class C0013R$integer {
+    public final class C0016R$integer {
         public static final int abc_config_activityDefaultDur;
         public static final int abc_config_activityShortDur;
         public static final int ambient_notification_extension_time;
@@ -9710,7 +9731,7 @@ public final class R {
     }
 
     /* renamed from: com.android.systemui.R$layout */
-    public final class C0014R$layout {
+    public final class C0017R$layout {
         public static final int abc_action_bar_title_item;
         public static final int abc_action_bar_up_container;
         public static final int abc_action_menu_item_layout;
@@ -10010,6 +10031,7 @@ public final class R {
         public static final int miui_keyguard_status_bar;
         public static final int miui_keyguard_wireless_charge_slowly;
         public static final int miui_modal_window;
+        public static final int miui_notification_modal_menu;
         public static final int miui_notification_template_material_base;
         public static final int miui_notification_template_material_big_base;
         public static final int miui_notification_template_material_big_picture;
@@ -10279,13 +10301,13 @@ public final class R {
     }
 
     /* renamed from: com.android.systemui.R$mipmap */
-    public final class C0015R$mipmap {
+    public final class C0018R$mipmap {
         public static final int ic_daydreams;
         public static final int ic_launcher_dreams;
     }
 
     /* renamed from: com.android.systemui.R$plurals */
-    public final class C0016R$plurals {
+    public final class C0019R$plurals {
         public static final int abc_slice_duration_days;
         public static final int abc_slice_duration_min;
         public static final int abc_slice_duration_years;
@@ -10325,7 +10347,7 @@ public final class R {
     }
 
     /* renamed from: com.android.systemui.R$raw */
-    public final class C0017R$raw {
+    public final class C0020R$raw {
         public static final int image_wallpaper_fragment_shader;
         public static final int image_wallpaper_vertex_shader;
         public static final int lb_voice_failure;
@@ -10356,7 +10378,7 @@ public final class R {
     }
 
     /* renamed from: com.android.systemui.R$string */
-    public final class C0018R$string {
+    public final class C0021R$string {
         public static final int abbrev_wday_month_day_no_year;
         public static final int abbrev_wday_month_day_no_year_alarm;
         public static final int abc_action_bar_home_description;
@@ -12608,7 +12630,7 @@ public final class R {
     }
 
     /* renamed from: com.android.systemui.R$style */
-    public final class C0019R$style {
+    public final class C0022R$style {
         public static final int AlertDialog_AppCompat;
         public static final int AlertDialog_AppCompat_Light;
         public static final int Animation;
@@ -13649,7 +13671,7 @@ public final class R {
     }
 
     /* renamed from: com.android.systemui.R$xml */
-    public final class C0020R$xml {
+    public final class C0023R$xml {
         public static final int fileprovider;
         public static final int lockscreen_settings;
         public static final int media_collapsed;

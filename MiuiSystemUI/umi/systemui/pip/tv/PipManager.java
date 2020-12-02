@@ -22,9 +22,9 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.util.Pair;
 import android.view.DisplayInfo;
-import com.android.systemui.C0005R$array;
-import com.android.systemui.C0013R$integer;
-import com.android.systemui.C0018R$string;
+import com.android.systemui.C0008R$array;
+import com.android.systemui.C0016R$integer;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.Dependency;
 import com.android.systemui.UiOffloadThread;
 import com.android.systemui.broadcast.BroadcastDispatcher;
@@ -287,7 +287,7 @@ public class PipManager implements BasePipManager, PipTaskOrganizer.PipTransitio
             DisplayInfo displayInfo = new DisplayInfo();
             context.getDisplay().getDisplayInfo(displayInfo);
             this.mPipBoundsHandler.onDisplayInfoChanged(displayInfo);
-            this.mResizeAnimationDuration = context.getResources().getInteger(C0013R$integer.config_pipResizeAnimationDuration);
+            this.mResizeAnimationDuration = context.getResources().getInteger(C0016R$integer.config_pipResizeAnimationDuration);
             this.mPipTaskOrganizer = pipTaskOrganizer;
             pipTaskOrganizer.registerPipTransitionCallback(this);
             this.mActivityTaskManager = ActivityTaskManager.getService();
@@ -296,7 +296,7 @@ public class PipManager implements BasePipManager, PipTaskOrganizer.PipTransitio
             intentFilter.addAction("android.intent.action.MEDIA_RESOURCE_GRANTED");
             broadcastDispatcher.registerReceiver(this.mBroadcastReceiver, intentFilter, (Executor) null, UserHandle.ALL);
             if (sSettingsPackageAndClassNamePairList == null) {
-                String[] stringArray = this.mContext.getResources().getStringArray(C0005R$array.tv_pip_settings_class_name);
+                String[] stringArray = this.mContext.getResources().getStringArray(C0008R$array.tv_pip_settings_class_name);
                 sSettingsPackageAndClassNamePairList = new ArrayList();
                 if (stringArray != null) {
                     for (int i = 0; i < stringArray.length; i++) {
@@ -345,8 +345,8 @@ public class PipManager implements BasePipManager, PipTaskOrganizer.PipTransitio
             return;
         }
         Resources resources = this.mContext.getResources();
-        this.mSettingsPipBounds = Rect.unflattenFromString(resources.getString(C0018R$string.pip_settings_bounds));
-        this.mMenuModePipBounds = Rect.unflattenFromString(resources.getString(C0018R$string.pip_menu_bounds));
+        this.mSettingsPipBounds = Rect.unflattenFromString(resources.getString(C0021R$string.pip_settings_bounds));
+        this.mMenuModePipBounds = Rect.unflattenFromString(resources.getString(C0021R$string.pip_menu_bounds));
         this.mPipBounds = isSettingsShown() ? this.mSettingsPipBounds : this.mDefaultPipBounds;
         resizePinnedStack(getPinnedStackInfo() == null ? 0 : 1);
     }

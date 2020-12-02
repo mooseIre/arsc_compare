@@ -4,19 +4,19 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
-import com.android.systemui.C0012R$id;
-import com.android.systemui.C0014R$layout;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0017R$layout;
 
 public class MLandActivity extends Activity {
     MLand mLand;
 
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        setContentView(C0014R$layout.mland);
-        MLand mLand2 = (MLand) findViewById(C0012R$id.world);
+        setContentView(C0017R$layout.mland);
+        MLand mLand2 = (MLand) findViewById(C0015R$id.world);
         this.mLand = mLand2;
-        mLand2.setScoreFieldHolder((ViewGroup) findViewById(C0012R$id.scores));
-        this.mLand.setSplash(findViewById(C0012R$id.welcome));
+        mLand2.setScoreFieldHolder((ViewGroup) findViewById(C0015R$id.scores));
+        this.mLand.setSplash(findViewById(C0015R$id.welcome));
         int size = this.mLand.getGameControllers().size();
         if (size > 0) {
             this.mLand.setupPlayers(size);
@@ -25,8 +25,8 @@ public class MLandActivity extends Activity {
 
     public void updateSplashPlayers() {
         int numPlayers = this.mLand.getNumPlayers();
-        View findViewById = findViewById(C0012R$id.player_minus_button);
-        View findViewById2 = findViewById(C0012R$id.player_plus_button);
+        View findViewById = findViewById(C0015R$id.player_minus_button);
+        View findViewById2 = findViewById(C0015R$id.player_plus_button);
         if (numPlayers == 1) {
             findViewById.setVisibility(4);
             findViewById2.setVisibility(0);
@@ -64,8 +64,8 @@ public class MLandActivity extends Activity {
     }
 
     public void startButtonPressed(View view) {
-        findViewById(C0012R$id.player_minus_button).setVisibility(4);
-        findViewById(C0012R$id.player_plus_button).setVisibility(4);
+        findViewById(C0015R$id.player_minus_button).setVisibility(4);
+        findViewById(C0015R$id.player_plus_button).setVisibility(4);
         this.mLand.start(true);
     }
 }

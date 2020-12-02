@@ -39,7 +39,7 @@ public class SystemUIFactory {
 
     public static void createFromConfig(Context context) {
         if (mFactory == null) {
-            String string = context.getString(C0018R$string.config_systemUIFactoryComponent);
+            String string = context.getString(C0021R$string.config_systemUIFactoryComponent);
             if (string == null || string.length() == 0) {
                 throw new RuntimeException("No SystemUIFactory component configured");
             }
@@ -79,11 +79,11 @@ public class SystemUIFactory {
     }
 
     public String[] getSystemUIServiceComponents(Resources resources) {
-        return resources.getStringArray(C0005R$array.config_systemUIServiceComponents);
+        return resources.getStringArray(C0008R$array.config_systemUIServiceComponents);
     }
 
     public String[] getSystemUIServiceComponentsPerUser(Resources resources) {
-        return resources.getStringArray(C0005R$array.config_systemUIServiceComponentsPerUser);
+        return resources.getStringArray(C0008R$array.config_systemUIServiceComponentsPerUser);
     }
 
     public ScreenshotNotificationSmartActionsProvider createScreenshotNotificationSmartActionsProvider(Context context, Executor executor, Handler handler) {

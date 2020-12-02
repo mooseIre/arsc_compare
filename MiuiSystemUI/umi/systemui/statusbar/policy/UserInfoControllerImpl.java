@@ -20,8 +20,8 @@ import android.provider.ContactsContract;
 import android.util.Log;
 import com.android.internal.util.UserIcons;
 import com.android.settingslib.drawable.UserIconDrawable;
-import com.android.systemui.C0009R$dimen;
-import com.android.systemui.C0019R$style;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0022R$style;
 import com.android.systemui.statusbar.policy.UserInfoController;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -96,9 +96,9 @@ public class UserInfoControllerImpl implements UserInfoController {
             final int i = currentUser.id;
             final boolean isGuest = currentUser.isGuest();
             final String str = currentUser.name;
-            final boolean z = this.mContext.getThemeResId() != C0019R$style.Theme_SystemUI_Light;
+            final boolean z = this.mContext.getThemeResId() != C0022R$style.Theme_SystemUI_Light;
             Resources resources = this.mContext.getResources();
-            final int max = Math.max(resources.getDimensionPixelSize(C0009R$dimen.multi_user_avatar_expanded_size), resources.getDimensionPixelSize(C0009R$dimen.multi_user_avatar_keyguard_size));
+            final int max = Math.max(resources.getDimensionPixelSize(C0012R$dimen.multi_user_avatar_expanded_size), resources.getDimensionPixelSize(C0012R$dimen.multi_user_avatar_keyguard_size));
             AnonymousClass3 r6 = new AsyncTask<Void, Void, UserInfoQueryResult>() {
                 /* access modifiers changed from: protected */
                 public UserInfoQueryResult doInBackground(Void... voidArr) {

@@ -49,7 +49,7 @@ public class SystemUIApplication extends Application implements SystemUIAppCompo
         this.mComponentHelper = rootComponent.getContextComponentHelper();
         this.mBootCompleteCache = this.mRootComponent.provideBootCacheImpl();
         timingsTraceLog.traceEnd();
-        setTheme(C0019R$style.Theme_SystemUI);
+        setTheme(C0022R$style.Theme_SystemUI);
         if (Process.myUserHandle().equals(UserHandle.SYSTEM)) {
             IntentFilter intentFilter = new IntentFilter("android.intent.action.BOOT_COMPLETED");
             intentFilter.setPriority(1000);

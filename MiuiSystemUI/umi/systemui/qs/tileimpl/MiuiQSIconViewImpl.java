@@ -8,10 +8,10 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.view.View;
 import android.widget.ImageView;
-import com.android.systemui.C0008R$color;
-import com.android.systemui.C0009R$dimen;
-import com.android.systemui.C0010R$drawable;
-import com.android.systemui.C0012R$id;
+import com.android.systemui.C0011R$color;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0015R$id;
 import com.android.systemui.plugins.qs.QSIconView;
 import com.android.systemui.plugins.qs.QSTile;
 import com.miui.systemui.graphics.DrawableUtils;
@@ -37,11 +37,11 @@ public class MiuiQSIconViewImpl extends QSIconView {
     public MiuiQSIconViewImpl(Context context) {
         super(context);
         Resources resources = context.getResources();
-        this.mIconSizePx = resources.getDimensionPixelSize(C0009R$dimen.qs_tile_icon_size);
-        this.mIconBgSizePx = resources.getDimensionPixelSize(C0009R$dimen.qs_tile_icon_bg_size);
-        resources.getDimensionPixelSize(C0009R$dimen.qs_tile_padding_below_icon);
-        this.mIconColorEnabled = resources.getColor(C0008R$color.qs_tile_icon_enabled_color);
-        this.mIconColorDisabled = resources.getColor(C0008R$color.qs_tile_icon_disabled_color);
+        this.mIconSizePx = resources.getDimensionPixelSize(C0012R$dimen.qs_tile_icon_size);
+        this.mIconBgSizePx = resources.getDimensionPixelSize(C0012R$dimen.qs_tile_icon_bg_size);
+        resources.getDimensionPixelSize(C0012R$dimen.qs_tile_padding_below_icon);
+        this.mIconColorEnabled = resources.getColor(C0011R$color.qs_tile_icon_enabled_color);
+        this.mIconColorDisabled = resources.getColor(C0011R$color.qs_tile_icon_disabled_color);
         View createIcon = createIcon();
         this.mIcon = createIcon;
         addView(createIcon);
@@ -69,8 +69,8 @@ public class MiuiQSIconViewImpl extends QSIconView {
 
     public void updateResources() {
         Resources resources = getResources();
-        this.mIconColorEnabled = resources.getColor(C0008R$color.qs_tile_icon_enabled_color);
-        this.mIconColorDisabled = resources.getColor(C0008R$color.qs_tile_icon_disabled_color);
+        this.mIconColorEnabled = resources.getColor(C0011R$color.qs_tile_icon_enabled_color);
+        this.mIconColorDisabled = resources.getColor(C0011R$color.qs_tile_icon_disabled_color);
     }
 
     public void setIcon(QSTile.State state, boolean z) {
@@ -87,8 +87,8 @@ public class MiuiQSIconViewImpl extends QSIconView {
         int i;
         Supplier<QSTile.Icon> supplier = state.iconSupplier;
         QSTile.Icon icon = supplier != null ? supplier.get() : state.icon;
-        if (!Objects.equals(icon, imageView.getTag(C0012R$id.qs_icon_tag))) {
-            imageView.setTag(C0012R$id.qs_icon_tag, icon);
+        if (!Objects.equals(icon, imageView.getTag(C0015R$id.qs_icon_tag))) {
+            imageView.setTag(C0015R$id.qs_icon_tag, icon);
             Drawable drawable = icon != null ? icon.getDrawable(this.mContext) : null;
             if (drawable != null) {
                 boolean z2 = drawable instanceof AnimatedVectorDrawable;
@@ -103,18 +103,18 @@ public class MiuiQSIconViewImpl extends QSIconView {
                 }
                 drawable.setTint(i);
                 boolean z3 = state.state == 2;
-                boolean z4 = imageView.getTag(C0012R$id.qs_icon_state_tag) != null ? ((Integer) imageView.getTag(C0012R$id.qs_icon_state_tag)).intValue() == 2 : z3;
-                imageView.setTag(C0012R$id.qs_icon_state_tag, Integer.valueOf(state.state));
-                boolean z5 = z && imageView.isShown() && this.mAnimationEnabled && imageView.getTag(C0012R$id.qs_icon_tag) != null && z4 != z3;
+                boolean z4 = imageView.getTag(C0015R$id.qs_icon_state_tag) != null ? ((Integer) imageView.getTag(C0015R$id.qs_icon_state_tag)).intValue() == 2 : z3;
+                imageView.setTag(C0015R$id.qs_icon_state_tag, Integer.valueOf(state.state));
+                boolean z5 = z && imageView.isShown() && this.mAnimationEnabled && imageView.getTag(C0015R$id.qs_icon_tag) != null && z4 != z3;
                 int properIconSize = getProperIconSize(drawable);
-                Drawable drawable2 = getResources().getDrawable(C0010R$drawable.ic_qs_bg_disabled);
-                Drawable drawable3 = getResources().getDrawable(C0010R$drawable.ic_qs_bg_enabled);
+                Drawable drawable2 = getResources().getDrawable(C0013R$drawable.ic_qs_bg_disabled);
+                Drawable drawable3 = getResources().getDrawable(C0013R$drawable.ic_qs_bg_enabled);
                 if (!z3) {
                     drawable3 = drawable2;
                 }
                 if (z5) {
                     int i2 = z3 ? 255 : 0;
-                    Drawable mutate = getResources().getDrawable(C0010R$drawable.ic_qs_bg_enabled).mutate();
+                    Drawable mutate = getResources().getDrawable(C0013R$drawable.ic_qs_bg_enabled).mutate();
                     LayerDrawable layerDrawable = new LayerDrawable(new Drawable[]{drawable2, mutate, drawable});
                     layerDrawable.setLayerGravity(2, 17);
                     layerDrawable.setLayerSize(2, properIconSize, properIconSize);

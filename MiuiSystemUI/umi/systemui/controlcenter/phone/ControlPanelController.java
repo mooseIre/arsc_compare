@@ -7,7 +7,7 @@ import android.os.Message;
 import android.provider.Settings;
 import android.util.Log;
 import com.android.keyguard.KeyguardUpdateMonitor;
-import com.android.systemui.C0013R$integer;
+import com.android.systemui.C0016R$integer;
 import com.android.systemui.controlcenter.ControlCenter;
 import com.android.systemui.keyguard.KeyguardViewMediator;
 import com.android.systemui.statusbar.policy.CallbackController;
@@ -38,7 +38,7 @@ public class ControlPanelController implements CallbackController<UseControlPane
     public ControlPanelController(Context context, KeyguardViewMediator keyguardViewMediator) {
         this.mContext = context;
         this.mListeners = new ArrayList();
-        this.mUseControlPanelSettingDefault = context.getResources().getInteger(C0013R$integer.use_control_panel_setting_default);
+        this.mUseControlPanelSettingDefault = context.getResources().getInteger(C0016R$integer.use_control_panel_setting_default);
         this.mKeyguardViewMediator = keyguardViewMediator;
         this.mUseControlPanelObserver = new ContentObserver(this.mHandler) {
             public void onChange(boolean z) {

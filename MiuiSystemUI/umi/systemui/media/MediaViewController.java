@@ -2,8 +2,9 @@ package com.android.systemui.media;
 
 import android.content.Context;
 import androidx.constraintlayout.widget.ConstraintSet;
-import com.android.systemui.C0020R$xml;
+import com.android.systemui.C0023R$xml;
 import com.android.systemui.media.MediaHostStatesManager;
+import com.android.systemui.statusbar.notification.stack.MiuiMediaHeaderView;
 import com.android.systemui.statusbar.policy.ConfigurationController;
 import com.android.systemui.util.animation.MeasurementInput;
 import com.android.systemui.util.animation.MeasurementOutput;
@@ -61,8 +62,8 @@ public final class MediaViewController {
         Intrinsics.checkParameterIsNotNull(mediaHostStatesManager2, "mediaHostStatesManager");
         this.configurationController = configurationController2;
         this.mediaHostStatesManager = mediaHostStatesManager2;
-        this.collapsedLayout.load(context, C0020R$xml.media_collapsed);
-        this.expandedLayout.load(context, C0020R$xml.media_expanded);
+        this.collapsedLayout.load(context, C0023R$xml.media_collapsed);
+        this.expandedLayout.load(context, C0023R$xml.media_expanded);
         this.mediaHostStatesManager.addController(this);
         this.layoutController.setSizeChangedListener(new Function2<Integer, Integer, Unit>(this) {
             final /* synthetic */ MediaViewController this$0;
@@ -297,7 +298,7 @@ public final class MediaViewController {
         MeasurementOutput measurementOutput = this.mediaHostStatesManager.getCarouselSizes().get(Integer.valueOf(i));
         if (measurementOutput != null) {
             copy.setHeight(Math.max(measurementOutput.getMeasuredHeight(), copy.getHeight()));
-            copy.setWidth(Math.max(measurementOutput.getMeasuredWidth(), copy.getWidth()));
+            copy.setWidth(Math.max(measurementOutput.getMeasuredWidth() - (MiuiMediaHeaderView.Companion.getMSidePaddings() * 2), copy.getWidth()));
         }
         return copy;
     }

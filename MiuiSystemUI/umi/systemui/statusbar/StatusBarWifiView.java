@@ -10,9 +10,9 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.android.systemui.C0009R$dimen;
-import com.android.systemui.C0012R$id;
-import com.android.systemui.C0014R$layout;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0017R$layout;
 import com.android.systemui.DemoMode;
 import com.android.systemui.Dependency;
 import com.android.systemui.plugins.DarkIconDispatcher;
@@ -22,12 +22,17 @@ import com.android.systemui.statusbar.policy.DemoModeController;
 
 public class StatusBarWifiView extends FrameLayout implements DarkIconDispatcher.DarkReceiver, StatusIconDisplayable, DemoMode {
     private int mColor;
+    private int mDarkColor;
+    private float mDarkIntensity;
     private StatusBarIconView mDotView;
     private boolean mForceUpdate;
     private boolean mInDemoMode;
     private boolean mLight = true;
+    private int mLightColor;
+    private Rect mRect = new Rect();
     private String mSlot;
     private StatusBarSignalPolicy.WifiIconState mState;
+    private int mTint;
     private boolean mUseTint = false;
     private int mVisibleState = -1;
     private ImageView mWifiActivityView;
@@ -36,7 +41,7 @@ public class StatusBarWifiView extends FrameLayout implements DarkIconDispatcher
     private TextView mWifiStandardView;
 
     public static StatusBarWifiView fromContext(Context context, String str) {
-        StatusBarWifiView statusBarWifiView = (StatusBarWifiView) LayoutInflater.from(context).inflate(C0014R$layout.miui_status_bar_wifi_group, (ViewGroup) null);
+        StatusBarWifiView statusBarWifiView = (StatusBarWifiView) LayoutInflater.from(context).inflate(C0017R$layout.miui_status_bar_wifi_group, (ViewGroup) null);
         statusBarWifiView.setSlot(str);
         statusBarWifiView.init();
         statusBarWifiView.setVisibleState(0);
@@ -73,10 +78,6 @@ public class StatusBarWifiView extends FrameLayout implements DarkIconDispatcher
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         ((DemoModeController) Dependency.get(DemoModeController.class)).removeCallback(this);
-    }
-
-    public void setDecorColor(int i) {
-        this.mDotView.setDecorColor(i);
     }
 
     public String getSlot() {
@@ -124,10 +125,10 @@ public class StatusBarWifiView extends FrameLayout implements DarkIconDispatcher
     }
 
     private void init() {
-        this.mWifiGroup = (FrameLayout) findViewById(C0012R$id.wifi_group);
-        this.mWifiIcon = (ImageView) findViewById(C0012R$id.wifi_signal);
-        this.mWifiActivityView = (ImageView) findViewById(C0012R$id.wifi_activity);
-        this.mWifiStandardView = (TextView) findViewById(C0012R$id.wifi_standard);
+        this.mWifiGroup = (FrameLayout) findViewById(C0015R$id.wifi_group);
+        this.mWifiIcon = (ImageView) findViewById(C0015R$id.wifi_signal);
+        this.mWifiActivityView = (ImageView) findViewById(C0015R$id.wifi_activity);
+        this.mWifiStandardView = (TextView) findViewById(C0015R$id.wifi_standard);
         initDotView();
     }
 
@@ -135,7 +136,7 @@ public class StatusBarWifiView extends FrameLayout implements DarkIconDispatcher
         StatusBarIconView statusBarIconView = new StatusBarIconView(this.mContext, this.mSlot, (ExpandedNotification) null);
         this.mDotView = statusBarIconView;
         statusBarIconView.setVisibleState(1);
-        int dimensionPixelSize = this.mContext.getResources().getDimensionPixelSize(C0009R$dimen.status_bar_icon_size);
+        int dimensionPixelSize = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.status_bar_icon_size);
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(dimensionPixelSize, dimensionPixelSize);
         layoutParams.gravity = 8388627;
         addView(this.mDotView, layoutParams);
@@ -205,23 +206,17 @@ public class StatusBarWifiView extends FrameLayout implements DarkIconDispatcher
             setVisibility(i3);
         }
         this.mState = wifiIconState;
+        onDarkChanged(this.mRect, this.mDarkIntensity, this.mTint, this.mLightColor, this.mDarkColor, this.mUseTint);
         return z2;
-    }
-
-    public void setLight(boolean z, int i) {
-        this.mUseTint = false;
-        if (this.mLight != z) {
-            this.mLight = z;
-            updateState(this.mState, true);
-        }
-        if (this.mColor != i) {
-            this.mColor = i;
-            setDecorColor(i);
-        }
     }
 
     public void onDarkChanged(Rect rect, float f, int i, int i2, int i3, boolean z) {
         boolean z2;
+        this.mRect.set(rect);
+        this.mDarkIntensity = f;
+        this.mTint = i;
+        this.mLightColor = i2;
+        this.mDarkColor = i3;
         if (this.mUseTint != z) {
             this.mUseTint = z;
             if (!z) {

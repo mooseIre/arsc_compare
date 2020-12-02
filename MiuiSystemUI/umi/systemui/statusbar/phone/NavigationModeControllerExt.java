@@ -10,7 +10,7 @@ import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import com.android.systemui.C0012R$id;
+import com.android.systemui.C0015R$id;
 import com.android.systemui.statusbar.NavigationBarController;
 import kotlin.Lazy;
 import kotlin.jvm.internal.Intrinsics;
@@ -80,6 +80,7 @@ public final class NavigationModeControllerExt {
                     z = true;
                 }
                 mHideGestureLine = z;
+                updateOverlayManager();
                 return;
             }
             Intrinsics.throwUninitializedPropertyAccessException("mContext");
@@ -87,6 +88,10 @@ public final class NavigationModeControllerExt {
         }
         Intrinsics.throwUninitializedPropertyAccessException("mContext");
         throw null;
+    }
+
+    public final boolean hideNavigationBar() {
+        return mIsFsgMode && mHideGestureLine;
     }
 
     private final void registerHideLineObserver(Context context) {
@@ -172,7 +177,7 @@ public final class NavigationModeControllerExt {
         if (!mIsFsgMode) {
             getNavigationBarController().addDefaultNavigationBar();
             NavigationBarView defaultNavigationBarView = getNavigationBarController().getDefaultNavigationBarView();
-            if (defaultNavigationBarView != null && (findViewById = defaultNavigationBarView.findViewById(C0012R$id.home_handle)) != null) {
+            if (defaultNavigationBarView != null && (findViewById = defaultNavigationBarView.findViewById(C0015R$id.home_handle)) != null) {
                 findViewById.setVisibility(8);
             }
         } else if (mHideGestureLine) {
@@ -180,7 +185,7 @@ public final class NavigationModeControllerExt {
         } else {
             getNavigationBarController().addDefaultNavigationBar();
             NavigationBarView defaultNavigationBarView2 = getNavigationBarController().getDefaultNavigationBarView();
-            if (defaultNavigationBarView2 != null && (findViewById2 = defaultNavigationBarView2.findViewById(C0012R$id.home_handle)) != null) {
+            if (defaultNavigationBarView2 != null && (findViewById2 = defaultNavigationBarView2.findViewById(C0015R$id.home_handle)) != null) {
                 findViewById2.setVisibility(0);
             }
         }
@@ -196,17 +201,25 @@ public final class NavigationModeControllerExt {
         int currentUser = ActivityManager.getCurrentUser();
         boolean z = mIsFsgMode;
         if (z != isOverlay(currentUser, "com.android.systemui.gesture.line.overlay")) {
-            try {
-                getMOverlayManager().setEnabled("com.android.systemui.gesture.line.overlay", z, currentUser);
-            } catch (Exception e) {
-                Log.w("StatusBar", "Can't apply overlay for user " + currentUser, e);
+            if (z) {
+                try {
+                    getMOverlayManager().setEnabledExclusiveInCategory("com.android.systemui.gesture.line.overlay", currentUser);
+                } catch (Exception e) {
+                    Log.w("StatusBar", "Can't apply overlay for user " + currentUser, e);
+                }
+            } else {
+                getMOverlayManager().setEnabled("com.android.systemui.gesture.line.overlay", false, currentUser);
             }
         }
         if (currentUser != 0 && z != isOverlay(0, "com.android.systemui.gesture.line.overlay")) {
-            try {
-                getMOverlayManager().setEnabled("com.android.systemui.gesture.line.overlay", z, 0);
-            } catch (Exception e2) {
-                Log.w("StatusBar", "Can't apply overlay for user owner", e2);
+            if (z) {
+                try {
+                    getMOverlayManager().setEnabledExclusiveInCategory("com.android.systemui.gesture.line.overlay", 0);
+                } catch (Exception e2) {
+                    Log.w("StatusBar", "Can't apply overlay for user owner", e2);
+                }
+            } else {
+                getMOverlayManager().setEnabled("com.android.systemui.gesture.line.overlay", false, 0);
             }
         }
     }

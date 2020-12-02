@@ -15,9 +15,9 @@ import android.widget.LinearLayout;
 import com.android.internal.logging.MetricsLogger;
 import com.android.internal.logging.UiEventLogger;
 import com.android.internal.widget.RemeasuringLinearLayout;
-import com.android.systemui.C0009R$dimen;
-import com.android.systemui.C0012R$id;
-import com.android.systemui.C0014R$layout;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0017R$layout;
 import com.android.systemui.Dependency;
 import com.android.systemui.Dumpable;
 import com.android.systemui.broadcast.BroadcastDispatcher;
@@ -80,7 +80,7 @@ public class QSPanel extends LinearLayout implements TunerService.Tunable, QSHos
     private int mLastOrientation = -1;
     protected boolean mListening;
     protected final MediaHost mMediaHost;
-    private int mMediaTotalBottomMargin = getResources().getDimensionPixelSize(C0009R$dimen.quick_settings_bottom_margin_media);
+    private int mMediaTotalBottomMargin = getResources().getDimensionPixelSize(C0012R$dimen.quick_settings_bottom_margin_media);
     private Consumer<Boolean> mMediaVisibilityChangedListener;
     private final MetricsLogger mMetricsLogger = ((MetricsLogger) Dependency.get(MetricsLogger.class));
     private final int mMovableContentStartIndex;
@@ -189,7 +189,7 @@ public class QSPanel extends LinearLayout implements TunerService.Tunable, QSHos
             this.mHorizontalTileLayout = createHorizontalTileLayout();
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(0, -2, 1.0f);
             layoutParams.setMarginStart(0);
-            layoutParams.setMarginEnd((int) this.mContext.getResources().getDimension(C0009R$dimen.qqs_media_spacing));
+            layoutParams.setMarginEnd((int) this.mContext.getResources().getDimension(C0012R$dimen.qqs_media_spacing));
             layoutParams.gravity = 16;
             this.mHorizontalLinearLayout.addView(this.mHorizontalContentContainer, layoutParams);
             addView(this.mHorizontalLinearLayout, new LinearLayout.LayoutParams(-1, 0, 1.0f));
@@ -228,7 +228,7 @@ public class QSPanel extends LinearLayout implements TunerService.Tunable, QSHos
     /* access modifiers changed from: protected */
     public QSTileLayout createRegularTileLayout() {
         if (this.mRegularTileLayout == null) {
-            this.mRegularTileLayout = (QSTileLayout) LayoutInflater.from(this.mContext).inflate(C0014R$layout.qs_paged_tile_layout, this, false);
+            this.mRegularTileLayout = (QSTileLayout) LayoutInflater.from(this.mContext).inflate(C0017R$layout.qs_paged_tile_layout, this, false);
         }
         return this.mRegularTileLayout;
     }
@@ -417,10 +417,10 @@ public class QSPanel extends LinearLayout implements TunerService.Tunable, QSHos
     }
 
     public void updateResources() {
-        this.mEditTopOffset = getResources().getDimensionPixelSize(C0009R$dimen.qs_detail_margin_top);
-        int dimensionPixelSize = getResources().getDimensionPixelSize(C0009R$dimen.qs_quick_tile_size);
-        int dimensionPixelSize2 = getResources().getDimensionPixelSize(C0009R$dimen.qs_tile_background_size);
-        this.mFooterMarginStartHorizontal = getResources().getDimensionPixelSize(C0009R$dimen.qs_footer_horizontal_margin);
+        this.mEditTopOffset = getResources().getDimensionPixelSize(C0012R$dimen.qs_detail_margin_top);
+        int dimensionPixelSize = getResources().getDimensionPixelSize(C0012R$dimen.qs_quick_tile_size);
+        int dimensionPixelSize2 = getResources().getDimensionPixelSize(C0012R$dimen.qs_tile_background_size);
+        this.mFooterMarginStartHorizontal = getResources().getDimensionPixelSize(C0012R$dimen.qs_footer_horizontal_margin);
         this.mVisualTilePadding = (int) (((float) (dimensionPixelSize - dimensionPixelSize2)) / 2.0f);
         updatePadding();
         updatePageIndicator();
@@ -456,8 +456,8 @@ public class QSPanel extends LinearLayout implements TunerService.Tunable, QSHos
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mFooter = findViewById(C0012R$id.qs_footer);
-        this.mDivider = findViewById(C0012R$id.divider);
+        this.mFooter = findViewById(C0015R$id.qs_footer);
+        this.mDivider = findViewById(C0015R$id.divider);
         switchTileLayout(true);
     }
 
@@ -596,8 +596,8 @@ public class QSPanel extends LinearLayout implements TunerService.Tunable, QSHos
 
     public void updateBrightnessMirror() {
         if (this.mBrightnessMirrorController != null) {
-            ToggleSliderView toggleSliderView = (ToggleSliderView) findViewById(C0012R$id.brightness_slider);
-            toggleSliderView.setMirror((ToggleSliderView) this.mBrightnessMirrorController.getMirror().findViewById(C0012R$id.brightness_slider));
+            ToggleSliderView toggleSliderView = (ToggleSliderView) findViewById(C0015R$id.brightness_slider);
+            toggleSliderView.setMirror((ToggleSliderView) this.mBrightnessMirrorController.getMirror().findViewById(C0015R$id.brightness_slider));
             toggleSliderView.setMirrorController(this.mBrightnessMirrorController);
         }
     }

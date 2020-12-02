@@ -1,7 +1,7 @@
 package com.android.systemui.statusbar.policy;
 
 import android.content.Context;
-import com.android.systemui.C0010R$drawable;
+import com.android.systemui.C0013R$drawable;
 import com.android.systemui.statusbar.policy.MiuiFiveGServiceClient;
 import com.android.systemui.statusbar.policy.MobileSignalController;
 import java.util.ArrayList;
@@ -47,12 +47,14 @@ public class FiveGControllerImpl {
             this.mFiveGStateChangeCallbacks.add(fiveGStateChangeCallback);
         }
         fiveGStateChangeCallback.onSignalStrengthChanged(this.mFiveGServiceStates[fiveGStateChangeCallback.getSlot()].getSignalLevel(), this.mFiveGServiceStates[fiveGStateChangeCallback.getSlot()].getIconGroup());
+        this.mFiveGServiceClient.addMobileSignalController((MobileSignalController) fiveGStateChangeCallback);
     }
 
     public void removeCallback(FiveGStateChangeCallback fiveGStateChangeCallback) {
         synchronized (this.mFiveGStateChangeCallbacks) {
             this.mFiveGStateChangeCallbacks.remove(fiveGStateChangeCallback);
         }
+        this.mFiveGServiceClient.removeMobileSignalController((MobileSignalController) fiveGStateChangeCallback);
     }
 
     public boolean isFiveGConnect(int i, int i2) {
@@ -69,10 +71,10 @@ public class FiveGControllerImpl {
 
     public int getFiveGDrawable(int i) {
         if (this.mFiveGServiceStates[i].getIconGroup() == TelephonyIcons.FIVE_G_KR_ON) {
-            return C0010R$drawable.signal_5g_on;
+            return C0013R$drawable.signal_5g_on;
         }
         if (this.mFiveGServiceStates[i].getIconGroup() == TelephonyIcons.FIVE_G_KR_OFF) {
-            return C0010R$drawable.signal_5g_off;
+            return C0013R$drawable.signal_5g_off;
         }
         return 0;
     }

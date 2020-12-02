@@ -28,8 +28,8 @@ import android.util.SparseArray;
 import com.android.internal.annotations.GuardedBy;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.settingslib.net.DataUsageController;
-import com.android.systemui.C0007R$bool;
-import com.android.systemui.C0018R$string;
+import com.android.systemui.C0010R$bool;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.DemoMode;
 import com.android.systemui.Dumpable;
 import com.android.systemui.broadcast.BroadcastDispatcher;
@@ -45,10 +45,12 @@ import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.concurrent.Executor;
+import miui.os.Build;
 
 public class NetworkControllerImpl extends BroadcastReceiver implements NetworkController, DemoMode, DataUsageController.NetworkNameProvider, Dumpable {
     static final boolean CHATTY = Log.isLoggable("NetworkControllerChat", 3);
@@ -483,7 +485,7 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
 
     public void addCallback(NetworkController.SignalCallback signalCallback) {
         signalCallback.setSubs(this.mCurrentSubscriptions);
-        signalCallback.setIsAirplaneMode(new NetworkController.IconState(this.mAirplaneMode, TelephonyIcons.FLIGHT_MODE_ICON, C0018R$string.accessibility_airplane_mode, this.mContext));
+        signalCallback.setIsAirplaneMode(new NetworkController.IconState(this.mAirplaneMode, TelephonyIcons.FLIGHT_MODE_ICON, C0021R$string.accessibility_airplane_mode, this.mContext));
         signalCallback.setNoSims(this.mHasNoSubs, this.mSimDetected);
         this.mWifiSignalController.notifyListeners(signalCallback);
         this.mEthernetSignalController.notifyListeners(signalCallback);
@@ -824,17 +826,34 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
     /* access modifiers changed from: package-private */
     @VisibleForTesting
     public void doUpdateMobileControllers() {
-        List completeActiveSubscriptionInfoList = this.mSubscriptionManager.getCompleteActiveSubscriptionInfoList();
+        List<SubscriptionInfo> completeActiveSubscriptionInfoList = this.mSubscriptionManager.getCompleteActiveSubscriptionInfoList();
         if (completeActiveSubscriptionInfoList == null) {
             completeActiveSubscriptionInfoList = Collections.emptyList();
         }
-        filterMobileSubscriptionInSameGroup(completeActiveSubscriptionInfoList);
-        if (hasCorrectMobileControllers(completeActiveSubscriptionInfoList)) {
+        ArrayList arrayList = new ArrayList();
+        List activeSubscriptionInfoList = miui.telephony.SubscriptionManager.getDefault().getActiveSubscriptionInfoList();
+        if (activeSubscriptionInfoList != null) {
+            for (SubscriptionInfo subscriptionInfo : completeActiveSubscriptionInfoList) {
+                Iterator it = activeSubscriptionInfoList.iterator();
+                while (true) {
+                    if (it.hasNext()) {
+                        if (((miui.telephony.SubscriptionInfo) it.next()).getSlotId() == subscriptionInfo.getSimSlotIndex()) {
+                            arrayList.add(subscriptionInfo);
+                            break;
+                        }
+                    } else {
+                        break;
+                    }
+                }
+            }
+        }
+        filterMobileSubscriptionInSameGroup(arrayList);
+        if (hasCorrectMobileControllers(arrayList)) {
             updateNoSims();
             return;
         }
         synchronized (this.mLock) {
-            setCurrentSubscriptionsLocked(completeActiveSubscriptionInfoList);
+            setCurrentSubscriptionsLocked(arrayList);
         }
         updateNoSims();
         recalculateEmergency();
@@ -1000,7 +1019,7 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
     }
 
     private void notifyListeners() {
-        this.mCallbackHandler.setIsAirplaneMode(new NetworkController.IconState(this.mAirplaneMode, TelephonyIcons.FLIGHT_MODE_ICON, C0018R$string.accessibility_airplane_mode, this.mContext));
+        this.mCallbackHandler.setIsAirplaneMode(new NetworkController.IconState(this.mAirplaneMode, TelephonyIcons.FLIGHT_MODE_ICON, C0021R$string.accessibility_airplane_mode, this.mContext));
         this.mCallbackHandler.setNoSims(this.mHasNoSubs, this.mSimDetected);
     }
 
@@ -1162,7 +1181,7 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
             com.android.systemui.statusbar.policy.CallbackHandler r4 = r0.mCallbackHandler
             com.android.systemui.statusbar.policy.NetworkController$IconState r7 = new com.android.systemui.statusbar.policy.NetworkController$IconState
             int r8 = com.android.systemui.statusbar.policy.TelephonyIcons.FLIGHT_MODE_ICON
-            int r9 = com.android.systemui.C0018R$string.accessibility_airplane_mode
+            int r9 = com.android.systemui.C0021R$string.accessibility_airplane_mode
             android.content.Context r10 = r0.mContext
             r7.<init>(r1, r8, r9, r10)
             r4.setIsAirplaneMode(r7)
@@ -1725,14 +1744,14 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
         static Config readConfig(Context context) {
             Config config = new Config();
             Resources resources = context.getResources();
-            config.showAtLeast3G = resources.getBoolean(C0007R$bool.config_showMin3G);
+            config.showAtLeast3G = resources.getBoolean(C0010R$bool.config_showMin3G);
             resources.getBoolean(17891360);
-            config.hspaDataDistinguishable = resources.getBoolean(C0007R$bool.config_hspa_data_distinguishable);
+            config.hspaDataDistinguishable = resources.getBoolean(C0010R$bool.config_hspa_data_distinguishable) && !Build.IS_CM_CUSTOMIZATION;
             resources.getBoolean(17891475);
-            config.alwaysShowNetworkTypeIcon = context.getResources().getBoolean(C0007R$bool.config_alwaysShowTypeIcon);
-            config.showRsrpSignalLevelforLTE = resources.getBoolean(C0007R$bool.config_showRsrpSignalLevelforLTE);
-            resources.getBoolean(C0007R$bool.config_hideNoInternetState);
-            config.showVolteIcon = resources.getBoolean(C0007R$bool.config_display_volte);
+            config.alwaysShowNetworkTypeIcon = context.getResources().getBoolean(C0010R$bool.config_alwaysShowTypeIcon);
+            config.showRsrpSignalLevelforLTE = resources.getBoolean(C0010R$bool.config_showRsrpSignalLevelforLTE);
+            resources.getBoolean(C0010R$bool.config_hideNoInternetState);
+            config.showVolteIcon = resources.getBoolean(C0010R$bool.config_display_volte);
             SubscriptionManager.from(context);
             PersistableBundle configForSubId = ((CarrierConfigManager) context.getSystemService("carrier_config")).getConfigForSubId(SubscriptionManager.getDefaultDataSubscriptionId());
             if (configForSubId != null) {
@@ -1742,7 +1761,7 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
                 config.hideLtePlus = configForSubId.getBoolean("hide_lte_plus_data_icon_bool");
             }
             SystemProperties.getBoolean("persist.sysui.rat_icon_enhancement", false);
-            config.showVowifiIcon = resources.getBoolean(C0007R$bool.config_display_vowifi);
+            config.showVowifiIcon = resources.getBoolean(C0010R$bool.config_display_vowifi);
             return config;
         }
     }

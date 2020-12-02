@@ -13,7 +13,7 @@ import android.view.WindowManager;
 import android.view.animation.PathInterpolator;
 import android.widget.FrameLayout;
 import com.android.internal.logging.MetricsLogger;
-import com.android.systemui.C0014R$layout;
+import com.android.systemui.C0017R$layout;
 import com.android.systemui.Dependency;
 import com.android.systemui.assist.AssistHandleViewController;
 import com.android.systemui.assist.AssistLogger;
@@ -47,7 +47,7 @@ public class DefaultUiController implements AssistManager.UiController {
         layoutParams.gravity = 80;
         layoutParams.setFitInsetsTypes(0);
         this.mLayoutParams.setTitle("Assist");
-        InvocationLightsView invocationLightsView = (InvocationLightsView) LayoutInflater.from(context).inflate(C0014R$layout.invocation_lights, this.mRoot, false);
+        InvocationLightsView invocationLightsView = (InvocationLightsView) LayoutInflater.from(context).inflate(C0017R$layout.invocation_lights, this.mRoot, false);
         this.mInvocationLightsView = invocationLightsView;
         this.mRoot.addView(invocationLightsView);
     }

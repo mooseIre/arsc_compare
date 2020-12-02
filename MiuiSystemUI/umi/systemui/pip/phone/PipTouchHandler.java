@@ -27,9 +27,9 @@ import android.widget.FrameLayout;
 import androidx.dynamicanimation.animation.DynamicAnimation;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.os.logging.MetricsLoggerWrapper;
-import com.android.systemui.C0007R$bool;
-import com.android.systemui.C0009R$dimen;
-import com.android.systemui.C0010R$drawable;
+import com.android.systemui.C0010R$bool;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0013R$drawable;
 import com.android.systemui.model.SysUiState;
 import com.android.systemui.pip.PipBoundsHandler;
 import com.android.systemui.pip.PipSnapAlgorithm;
@@ -185,8 +185,8 @@ public class PipTouchHandler {
             }
         });
         Resources resources = context.getResources();
-        this.mEnableDismissDragToEdge = resources.getBoolean(C0007R$bool.config_pipEnableDismissDragToEdge);
-        this.mEnableResize = resources.getBoolean(C0007R$bool.config_pipEnableResizeForMenu);
+        this.mEnableDismissDragToEdge = resources.getBoolean(C0010R$bool.config_pipEnableDismissDragToEdge);
+        this.mEnableResize = resources.getBoolean(C0010R$bool.config_pipEnableResizeForMenu);
         reloadResources();
         inputConsumerController2.setInputListener(new InputConsumerController.InputListener() {
             public final boolean onInputEvent(InputEvent inputEvent) {
@@ -212,7 +212,7 @@ public class PipTouchHandler {
         this.mTargetView = new DismissCircleView(context2);
         FrameLayout frameLayout = new FrameLayout(context2);
         this.mTargetViewContainer = frameLayout;
-        frameLayout.setBackgroundDrawable(context2.getDrawable(C0010R$drawable.floating_dismiss_gradient_transition));
+        frameLayout.setBackgroundDrawable(context2.getDrawable(C0013R$drawable.floating_dismiss_gradient_transition));
         this.mTargetViewContainer.setClipChildren(false);
         this.mTargetViewContainer.addView(this.mTargetView);
         MagnetizedObject<Rect> magnetizedPip = this.mMotionHelper.getMagnetizedPip();
@@ -276,19 +276,19 @@ public class PipTouchHandler {
 
     private void reloadResources() {
         Resources resources = this.mContext.getResources();
-        this.mBottomOffsetBufferPx = resources.getDimensionPixelSize(C0009R$dimen.pip_bottom_offset_buffer);
-        this.mExpandedShortestEdgeSize = resources.getDimensionPixelSize(C0009R$dimen.pip_expanded_shortest_edge_size);
-        this.mImeOffset = resources.getDimensionPixelSize(C0009R$dimen.pip_ime_offset);
-        this.mDismissAreaHeight = resources.getDimensionPixelSize(C0009R$dimen.floating_dismiss_gradient_height);
+        this.mBottomOffsetBufferPx = resources.getDimensionPixelSize(C0012R$dimen.pip_bottom_offset_buffer);
+        this.mExpandedShortestEdgeSize = resources.getDimensionPixelSize(C0012R$dimen.pip_expanded_shortest_edge_size);
+        this.mImeOffset = resources.getDimensionPixelSize(C0012R$dimen.pip_ime_offset);
+        this.mDismissAreaHeight = resources.getDimensionPixelSize(C0012R$dimen.floating_dismiss_gradient_height);
         updateMagneticTargetSize();
     }
 
     private void updateMagneticTargetSize() {
         if (this.mTargetView != null) {
-            int dimensionPixelSize = this.mContext.getResources().getDimensionPixelSize(C0009R$dimen.dismiss_circle_size);
+            int dimensionPixelSize = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.dismiss_circle_size);
             FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(dimensionPixelSize, dimensionPixelSize);
             layoutParams.gravity = 81;
-            layoutParams.bottomMargin = this.mContext.getResources().getDimensionPixelSize(C0009R$dimen.floating_dismiss_bottom_margin);
+            layoutParams.bottomMargin = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.floating_dismiss_bottom_margin);
             this.mTargetView.setLayoutParams(layoutParams);
             this.mMagneticTarget.setMagneticFieldRadiusPx((int) (((float) dimensionPixelSize) * 1.25f));
         }

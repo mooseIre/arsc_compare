@@ -1,5 +1,6 @@
 package com.android.systemui.media;
 
+import com.android.systemui.statusbar.notification.stack.MiuiMediaHeaderView;
 import com.android.systemui.util.animation.MeasurementOutput;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -57,8 +58,8 @@ public final class MediaHostStatesManager {
                 if (measurementsForState2.getMeasuredHeight() > measurementOutput.getMeasuredHeight()) {
                     measurementOutput.setMeasuredHeight(measurementsForState2.getMeasuredHeight());
                 }
-                if (measurementsForState2.getMeasuredWidth() > measurementOutput.getMeasuredWidth()) {
-                    measurementOutput.setMeasuredWidth(measurementsForState2.getMeasuredWidth());
+                if (measurementsForState2.getMeasuredWidth() + (MiuiMediaHeaderView.Companion.getMSidePaddings() * 2) > measurementOutput.getMeasuredWidth()) {
+                    measurementOutput.setMeasuredWidth(measurementsForState2.getMeasuredWidth() + (MiuiMediaHeaderView.Companion.getMSidePaddings() * 2));
                 }
             }
         }

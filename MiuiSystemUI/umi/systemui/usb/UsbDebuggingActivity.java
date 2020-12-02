@@ -19,7 +19,7 @@ import android.view.WindowManager;
 import android.widget.CheckBox;
 import com.android.internal.app.AlertActivity;
 import com.android.internal.app.AlertController;
-import com.android.systemui.C0018R$string;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 
 public class UsbDebuggingActivity extends AlertActivity implements DialogInterface.OnClickListener {
@@ -51,16 +51,16 @@ public class UsbDebuggingActivity extends AlertActivity implements DialogInterfa
             return;
         }
         AlertController.AlertParams alertParams = this.mAlertParams;
-        alertParams.mTitle = getString(C0018R$string.usb_debugging_title);
-        alertParams.mMessage = getString(C0018R$string.usb_debugging_message, new Object[]{stringExtra});
-        alertParams.mPositiveButtonText = getString(C0018R$string.usb_debugging_allow);
+        alertParams.mTitle = getString(C0021R$string.usb_debugging_title);
+        alertParams.mMessage = getString(C0021R$string.usb_debugging_message, new Object[]{stringExtra});
+        alertParams.mPositiveButtonText = getString(C0021R$string.usb_debugging_allow);
         alertParams.mNegativeButtonText = getString(17039360);
         alertParams.mPositiveButtonListener = this;
         alertParams.mNegativeButtonListener = this;
         View inflate = LayoutInflater.from(alertParams.mContext).inflate(17367092, (ViewGroup) null);
         CheckBox checkBox = (CheckBox) inflate.findViewById(16908753);
         this.mAlwaysAllow = checkBox;
-        checkBox.setText(getString(C0018R$string.usb_debugging_always));
+        checkBox.setText(getString(C0021R$string.usb_debugging_always));
         alertParams.mView = inflate;
         window.setCloseOnTouchOutside(false);
         setupAlert();

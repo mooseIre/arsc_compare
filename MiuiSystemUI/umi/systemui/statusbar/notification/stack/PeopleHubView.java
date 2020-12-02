@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.android.systemui.C0012R$id;
+import com.android.systemui.C0015R$id;
 import com.android.systemui.plugins.statusbar.NotificationMenuRowPlugin;
 import com.android.systemui.statusbar.notification.row.StackScrollerDecorView;
 import kotlin.jvm.internal.Intrinsics;
@@ -57,10 +57,10 @@ public final class PeopleHubView extends StackScrollerDecorView implements Swipe
 
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
-        View requireViewById = requireViewById(C0012R$id.people_list);
+        View requireViewById = requireViewById(C0015R$id.people_list);
         Intrinsics.checkExpressionValueIsNotNull(requireViewById, "requireViewById(R.id.people_list)");
         this.contents = (ViewGroup) requireViewById;
-        View requireViewById2 = requireViewById(C0012R$id.header_label);
+        View requireViewById2 = requireViewById(C0015R$id.header_label);
         Intrinsics.checkExpressionValueIsNotNull(requireViewById2, "requireViewById(R.id.header_label)");
         this.label = (TextView) requireViewById2;
         ViewGroup viewGroup = this.contents;

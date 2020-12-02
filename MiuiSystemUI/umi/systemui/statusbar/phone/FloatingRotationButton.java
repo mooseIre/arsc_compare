@@ -9,10 +9,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import com.android.settingslib.Utils;
-import com.android.systemui.C0006R$attr;
-import com.android.systemui.C0009R$dimen;
-import com.android.systemui.C0010R$drawable;
-import com.android.systemui.C0014R$layout;
+import com.android.systemui.C0009R$attr;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0017R$layout;
 import com.android.systemui.statusbar.policy.KeyButtonDrawable;
 import com.android.systemui.statusbar.policy.KeyButtonView;
 
@@ -30,12 +30,12 @@ public class FloatingRotationButton implements RotationButton {
     FloatingRotationButton(Context context) {
         this.mContext = context;
         this.mWindowManager = (WindowManager) context.getSystemService("window");
-        KeyButtonView keyButtonView = (KeyButtonView) LayoutInflater.from(this.mContext).inflate(C0014R$layout.rotate_suggestion, (ViewGroup) null);
+        KeyButtonView keyButtonView = (KeyButtonView) LayoutInflater.from(this.mContext).inflate(C0017R$layout.rotate_suggestion, (ViewGroup) null);
         this.mKeyButtonView = keyButtonView;
         keyButtonView.setVisibility(0);
         Resources resources = this.mContext.getResources();
-        this.mDiameter = resources.getDimensionPixelSize(C0009R$dimen.floating_rotation_button_diameter);
-        this.mMargin = Math.max(resources.getDimensionPixelSize(C0009R$dimen.floating_rotation_button_min_margin), resources.getDimensionPixelSize(C0009R$dimen.rounded_corner_content_padding));
+        this.mDiameter = resources.getDimensionPixelSize(C0012R$dimen.floating_rotation_button_diameter);
+        this.mMargin = Math.max(resources.getDimensionPixelSize(C0012R$dimen.floating_rotation_button_min_margin), resources.getDimensionPixelSize(C0012R$dimen.rounded_corner_content_padding));
     }
 
     public void setRotationButtonController(RotationButtonController rotationButtonController) {
@@ -114,10 +114,10 @@ public class FloatingRotationButton implements RotationButton {
 
     public KeyButtonDrawable getImageDrawable() {
         ContextThemeWrapper contextThemeWrapper = new ContextThemeWrapper(this.mContext.getApplicationContext(), this.mRotationButtonController.getStyleRes());
-        int themeAttr = Utils.getThemeAttr(contextThemeWrapper, C0006R$attr.darkIconTheme);
-        ContextThemeWrapper contextThemeWrapper2 = new ContextThemeWrapper(contextThemeWrapper, Utils.getThemeAttr(contextThemeWrapper, C0006R$attr.lightIconTheme));
-        int colorAttrDefaultColor = Utils.getColorAttrDefaultColor(new ContextThemeWrapper(contextThemeWrapper, themeAttr), C0006R$attr.singleToneColor);
-        return KeyButtonDrawable.create(contextThemeWrapper2, Utils.getColorAttrDefaultColor(contextThemeWrapper2, C0006R$attr.singleToneColor), colorAttrDefaultColor, C0010R$drawable.ic_sysbar_rotate_button, false, Color.valueOf((float) Color.red(colorAttrDefaultColor), (float) Color.green(colorAttrDefaultColor), (float) Color.blue(colorAttrDefaultColor), 0.92f));
+        int themeAttr = Utils.getThemeAttr(contextThemeWrapper, C0009R$attr.darkIconTheme);
+        ContextThemeWrapper contextThemeWrapper2 = new ContextThemeWrapper(contextThemeWrapper, Utils.getThemeAttr(contextThemeWrapper, C0009R$attr.lightIconTheme));
+        int colorAttrDefaultColor = Utils.getColorAttrDefaultColor(new ContextThemeWrapper(contextThemeWrapper, themeAttr), C0009R$attr.singleToneColor);
+        return KeyButtonDrawable.create(contextThemeWrapper2, Utils.getColorAttrDefaultColor(contextThemeWrapper2, C0009R$attr.singleToneColor), colorAttrDefaultColor, C0013R$drawable.ic_sysbar_rotate_button, false, Color.valueOf((float) Color.red(colorAttrDefaultColor), (float) Color.green(colorAttrDefaultColor), (float) Color.blue(colorAttrDefaultColor), 0.92f));
     }
 
     public void setDarkIntensity(float f) {

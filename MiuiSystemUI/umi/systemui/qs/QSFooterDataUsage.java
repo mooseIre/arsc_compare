@@ -13,7 +13,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.android.systemui.C0012R$id;
+import com.android.systemui.C0015R$id;
 import com.android.systemui.plugins.ActivityStarter;
 import kotlin.TypeCastException;
 import kotlin.jvm.internal.Intrinsics;
@@ -53,16 +53,16 @@ public final class QSFooterDataUsage extends FrameLayout {
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        View findViewById = findViewById(C0012R$id.pie);
+        View findViewById = findViewById(C0015R$id.pie);
         Intrinsics.checkExpressionValueIsNotNull(findViewById, "findViewById(R.id.pie)");
         this.pieImage = (ImageView) findViewById;
-        View findViewById2 = findViewById(C0012R$id.data_usage);
+        View findViewById2 = findViewById(C0015R$id.data_usage);
         Intrinsics.checkExpressionValueIsNotNull(findViewById2, "findViewById(R.id.data_usage)");
         TextView textView = (TextView) findViewById2;
         this.dataUsage = textView;
         if (textView != null) {
             textView.setOnClickListener(new QSFooterDataUsage$onFinishInflate$1(this));
-            View findViewById3 = findViewById(C0012R$id.data_purchase);
+            View findViewById3 = findViewById(C0015R$id.data_purchase);
             if (findViewById3 != null) {
                 TextView textView2 = (TextView) findViewById3;
                 this.purchase = textView2;

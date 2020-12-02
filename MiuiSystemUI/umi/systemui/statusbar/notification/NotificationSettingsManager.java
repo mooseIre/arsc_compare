@@ -7,7 +7,7 @@ import android.os.Looper;
 import android.text.TextUtils;
 import android.util.ArrayMap;
 import android.util.Log;
-import com.android.systemui.C0005R$array;
+import com.android.systemui.C0008R$array;
 import com.android.systemui.Dependency;
 import com.android.systemui.Dumpable;
 import com.android.systemui.Prefs;
@@ -35,6 +35,7 @@ public class NotificationSettingsManager implements Dumpable {
     private List<String> mCanShowBadgePackages;
     private Context mContext;
     private List<String> mCustomAppIconPackages;
+    private List<String> mDisableAutoGroupSummaryPackages;
     private List<String> mHideAlertWindowWhitelist;
     private List<String> mHideForegroundWhitelist;
     private List<String> mPreInstallPackages;
@@ -45,20 +46,20 @@ public class NotificationSettingsManager implements Dumpable {
     public NotificationSettingsManager(Context context, CloudDataManager cloudDataManager) {
         this.mContext = context;
         this.mBgHandler = new Handler((Looper) Dependency.get(Dependency.BG_LOOPER));
-        this.mPrioritizedPackages = getStringArray(C0005R$array.config_prioritizedPackages);
-        this.mSubstitutePackages = getStringArray(C0005R$array.config_canSendSubstituteNotificationPackages);
-        this.mCustomAppIconPackages = getStringArray(C0005R$array.config_canCustomNotificationAppIcon);
-        getStringArray(C0005R$array.config_disableAutoGroupSummaryPackages);
-        this.mHideForegroundWhitelist = getStringArray(C0005R$array.system_foreground_notification_whitelist);
-        this.mHideAlertWindowWhitelist = getStringArray(C0005R$array.system_alert_window_notification_whitelist);
-        getStringArray(C0005R$array.avoid_disturb_app_whitelist);
-        this.mPreInstallPackages = getStringArray(C0005R$array.config_preInstalledPackages);
-        this.mCanShowBadgePackages = getStringArray(C0005R$array.config_canShowBadgePackages);
-        this.mAllowFloatPackages = getStringArray(C0005R$array.config_allowFloatPackages);
-        this.mAllowKeyguardPackages = getStringArray(C0005R$array.config_allowKeyguardPackages);
-        this.mBlockFloatPackages = getStringArray(C0005R$array.config_blockFloatPackages);
-        this.mBlockKeyguardPackages = getStringArray(C0005R$array.config_blockKeyguardPackages);
-        this.mAllowNotificationSlide = getStringArray(C0005R$array.config_allowNotificationSlide);
+        this.mPrioritizedPackages = getStringArray(C0008R$array.config_prioritizedPackages);
+        this.mSubstitutePackages = getStringArray(C0008R$array.config_canSendSubstituteNotificationPackages);
+        this.mCustomAppIconPackages = getStringArray(C0008R$array.config_canCustomNotificationAppIcon);
+        this.mDisableAutoGroupSummaryPackages = getStringArray(C0008R$array.config_disableAutoGroupSummaryPackages);
+        this.mHideForegroundWhitelist = getStringArray(C0008R$array.system_foreground_notification_whitelist);
+        this.mHideAlertWindowWhitelist = getStringArray(C0008R$array.system_alert_window_notification_whitelist);
+        getStringArray(C0008R$array.avoid_disturb_app_whitelist);
+        this.mPreInstallPackages = getStringArray(C0008R$array.config_preInstalledPackages);
+        this.mCanShowBadgePackages = getStringArray(C0008R$array.config_canShowBadgePackages);
+        this.mAllowFloatPackages = getStringArray(C0008R$array.config_allowFloatPackages);
+        this.mAllowKeyguardPackages = getStringArray(C0008R$array.config_allowKeyguardPackages);
+        this.mBlockFloatPackages = getStringArray(C0008R$array.config_blockFloatPackages);
+        this.mBlockKeyguardPackages = getStringArray(C0008R$array.config_blockKeyguardPackages);
+        this.mAllowNotificationSlide = getStringArray(C0008R$array.config_allowNotificationSlide);
         cloudDataManager.registerListener(new CloudDataListener() {
             public final void onCloudDataUpdate(boolean z) {
                 NotificationSettingsManager.this.lambda$new$0$NotificationSettingsManager(z);
@@ -147,6 +148,10 @@ public class NotificationSettingsManager implements Dumpable {
 
     public boolean canCustomAppIcon(String str) {
         return DEBUG || this.mCustomAppIconPackages.contains(str);
+    }
+
+    public boolean disableAutoGroupSummary(String str) {
+        return this.mDisableAutoGroupSummaryPackages.contains(str);
     }
 
     public boolean hideForegroundNotification(String str, String str2) {

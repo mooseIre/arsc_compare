@@ -7,7 +7,7 @@ import android.hardware.SensorManager;
 import android.hardware.display.AmbientDisplayConfiguration;
 import android.os.Handler;
 import com.android.keyguard.KeyguardUpdateMonitor;
-import com.android.systemui.C0018R$string;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.dock.DockManager;
 import com.android.systemui.doze.DozeMachine;
@@ -96,7 +96,7 @@ public class DozeFactory {
     }
 
     private DozeMachine.Part createDozeScreenBrightness(Context context, DozeMachine.Service service, SensorManager sensorManager, DozeHost dozeHost, DozeParameters dozeParameters, Handler handler) {
-        return new DozeScreenBrightness(context, service, sensorManager, DozeSensors.findSensorWithType(sensorManager, context.getString(C0018R$string.doze_brightness_sensor_type)), this.mBroadcastDispatcher, dozeHost, handler, dozeParameters.getPolicy());
+        return new DozeScreenBrightness(context, service, sensorManager, DozeSensors.findSensorWithType(sensorManager, context.getString(C0021R$string.doze_brightness_sensor_type)), this.mBroadcastDispatcher, dozeHost, handler, dozeParameters.getPolicy());
     }
 
     private DozeTriggers createDozeTriggers(Context context, AsyncSensorManager asyncSensorManager, DozeHost dozeHost, AlarmManager alarmManager, AmbientDisplayConfiguration ambientDisplayConfiguration, DozeParameters dozeParameters, WakeLock wakeLock, DozeMachine dozeMachine, DockManager dockManager, DozeLog dozeLog, ProximitySensor.ProximityCheck proximityCheck) {

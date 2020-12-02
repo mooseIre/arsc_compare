@@ -10,7 +10,7 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import com.android.systemui.C0012R$id;
+import com.android.systemui.C0015R$id;
 import com.android.systemui.Dependency;
 import com.android.systemui.plugins.ActivityStarter;
 import com.android.systemui.plugins.statusbar.NotificationMenuRowPlugin;
@@ -57,7 +57,7 @@ public class ZenModeView extends ActivatableNotificationView implements Swipeabl
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        ViewGroup viewGroup = (ViewGroup) findViewById(C0012R$id.content);
+        ViewGroup viewGroup = (ViewGroup) findViewById(C0015R$id.content);
         this.mContent = viewGroup;
         viewGroup.setOnClickListener(this.onClickListener);
     }

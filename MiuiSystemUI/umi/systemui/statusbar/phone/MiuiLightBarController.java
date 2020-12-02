@@ -35,17 +35,13 @@ public class MiuiLightBarController extends LightBarController implements ForceB
     }
 
     public void setSmartDarkEnable(boolean z) {
-        if (this.mSmartDarkEnable != z) {
-            this.mSmartDarkEnable = z;
-            updateStatus();
-        }
+        this.mSmartDarkEnable = z;
+        updateStatus();
     }
 
     public void setSmartDarkLight(boolean z) {
-        if (this.mSmartDarkLight != z) {
-            this.mSmartDarkLight = z;
-            updateStatus();
-        }
+        this.mSmartDarkLight = z;
+        updateStatus();
     }
 
     /* access modifiers changed from: protected */

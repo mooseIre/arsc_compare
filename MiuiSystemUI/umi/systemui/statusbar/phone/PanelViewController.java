@@ -17,8 +17,8 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import com.android.internal.util.LatencyTracker;
 import com.android.keyguard.injector.KeyguardPanelViewInjector;
-import com.android.systemui.C0007R$bool;
-import com.android.systemui.C0009R$dimen;
+import com.android.systemui.C0010R$bool;
+import com.android.systemui.C0012R$dimen;
 import com.android.systemui.DejankUtils;
 import com.android.systemui.Dependency;
 import com.android.systemui.Interpolators;
@@ -331,9 +331,9 @@ public abstract class PanelViewController {
         this.mLatencyTracker = latencyTracker;
         this.mFalsingManager = falsingManager;
         this.mDozeLog = dozeLog;
-        this.mNotificationsDragEnabled = this.mResources.getBoolean(C0007R$bool.config_enableNotificationShadeDrag);
+        this.mNotificationsDragEnabled = this.mResources.getBoolean(C0010R$bool.config_enableNotificationShadeDrag);
         this.mVibratorHelper = vibratorHelper;
-        this.mVibrateOnOpening = this.mResources.getBoolean(C0007R$bool.config_vibrateOnIconAnimation);
+        this.mVibrateOnOpening = this.mResources.getBoolean(C0010R$bool.config_vibrateOnIconAnimation);
         this.mStatusBarTouchableRegionManager = statusBarTouchableRegionManager;
         this.mPerf = new BoostFramework();
     }
@@ -343,8 +343,8 @@ public abstract class PanelViewController {
         ViewConfiguration viewConfiguration = ViewConfiguration.get(this.mView.getContext());
         this.mTouchSlop = viewConfiguration.getScaledTouchSlop();
         this.mSlopMultiplier = viewConfiguration.getScaledAmbiguousGestureMultiplier();
-        this.mResources.getDimension(C0009R$dimen.hint_move_distance);
-        this.mUnlockFalsingThreshold = this.mResources.getDimensionPixelSize(C0009R$dimen.unlock_falsing_threshold);
+        this.mResources.getDimension(C0012R$dimen.hint_move_distance);
+        this.mUnlockFalsingThreshold = this.mResources.getDimensionPixelSize(C0012R$dimen.unlock_falsing_threshold);
     }
 
     /* access modifiers changed from: protected */

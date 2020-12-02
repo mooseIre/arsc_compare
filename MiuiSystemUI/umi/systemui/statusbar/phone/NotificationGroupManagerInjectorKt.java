@@ -1,6 +1,9 @@
 package com.android.systemui.statusbar.phone;
 
+import android.app.Notification;
+import android.service.notification.StatusBarNotification;
 import com.android.systemui.statusbar.notification.ExpandedNotification;
+import com.android.systemui.statusbar.notification.NotificationSettingsHelper;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import com.android.systemui.statusbar.phone.NotificationGroupManager;
 import com.miui.systemui.BuildConfig;
@@ -19,6 +22,22 @@ public final class NotificationGroupManagerInjectorKt {
             Collection<NotificationEntry> values = notificationGroup.children.values();
             Intrinsics.checkExpressionValueIsNotNull(values, "group.children.values");
             if (hasMediaOrCustomChildren(values)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static final boolean shouldHideGroupSummary(@NotNull StatusBarNotification statusBarNotification) {
+        Intrinsics.checkParameterIsNotNull(statusBarNotification, "sbn");
+        return isAutoGroupSummary(statusBarNotification) && NotificationSettingsHelper.disableAutoGroupSummary(statusBarNotification.getPackageName());
+    }
+
+    private static final boolean isAutoGroupSummary(StatusBarNotification statusBarNotification) {
+        if (statusBarNotification.getId() == Integer.MAX_VALUE && Intrinsics.areEqual((Object) "ranker_group", (Object) statusBarNotification.getTag())) {
+            Notification notification = statusBarNotification.getNotification();
+            Intrinsics.checkExpressionValueIsNotNull(notification, "sbn.notification");
+            if (Intrinsics.areEqual((Object) "ranker_group", (Object) notification.getGroup())) {
                 return true;
             }
         }

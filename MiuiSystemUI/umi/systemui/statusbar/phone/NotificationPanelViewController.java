@@ -38,11 +38,11 @@ import com.android.keyguard.MiuiKeyguardAffordanceHelperNoOp;
 import com.android.keyguard.faceunlock.MiuiKeyguardFaceUnlockView;
 import com.android.keyguard.magazine.LockScreenMagazineController;
 import com.android.keyguard.wallpaper.MiuiWallpaperClient;
-import com.android.systemui.C0009R$dimen;
-import com.android.systemui.C0012R$id;
-import com.android.systemui.C0013R$integer;
-import com.android.systemui.C0014R$layout;
-import com.android.systemui.C0018R$string;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0016R$integer;
+import com.android.systemui.C0017R$layout;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.DejankUtils;
 import com.android.systemui.Dependency;
 import com.android.systemui.Interpolators;
@@ -114,7 +114,7 @@ public class NotificationPanelViewController extends PanelViewController {
         public final Object apply(Object obj) {
             return NotificationPanelViewController.this.lambda$new$1$NotificationPanelViewController((NotificationPanelView) obj);
         }
-    }, C0012R$id.keyguard_hun_animator_tag, C0012R$id.keyguard_hun_animator_end_tag, C0012R$id.keyguard_hun_animator_start_tag);
+    }, C0015R$id.keyguard_hun_animator_tag, C0015R$id.keyguard_hun_animator_end_tag, C0015R$id.keyguard_hun_animator_start_tag);
     private View.AccessibilityDelegate mAccessibilityDelegate;
     /* access modifiers changed from: private */
     public final AccessibilityManager mAccessibilityManager;
@@ -289,7 +289,7 @@ public class NotificationPanelViewController extends PanelViewController {
     /* access modifiers changed from: private */
     public boolean mOnlyAffordanceInThisMotion;
     private int mPanelAlpha;
-    private final AnimatableProperty mPanelAlphaAnimator = AnimatableProperty.from("panelAlpha", $$Lambda$aKsp0zdf_wKFZXD1TonJ2cFEsN4.INSTANCE, $$Lambda$SmdYpsZqQm1fpR9OgK3SiEL3pJQ.INSTANCE, C0012R$id.panel_alpha_animator_tag, C0012R$id.panel_alpha_animator_start_tag, C0012R$id.panel_alpha_animator_end_tag);
+    private final AnimatableProperty mPanelAlphaAnimator = AnimatableProperty.from("panelAlpha", $$Lambda$aKsp0zdf_wKFZXD1TonJ2cFEsN4.INSTANCE, $$Lambda$SmdYpsZqQm1fpR9OgK3SiEL3pJQ.INSTANCE, C0015R$id.panel_alpha_animator_tag, C0015R$id.panel_alpha_animator_start_tag, C0015R$id.panel_alpha_animator_end_tag);
     private Runnable mPanelAlphaEndAction;
     private final AnimationProperties mPanelAlphaInPropertiesAnimator;
     private final AnimationProperties mPanelAlphaOutPropertiesAnimator;
@@ -555,6 +555,11 @@ public class NotificationPanelViewController extends PanelViewController {
                 NotificationPanelViewController.this.lambda$new$5$NotificationPanelViewController(valueAnimator);
             }
         });
+        this.mBottomAreaShadeAlphaAnimator.addListener(new AnimatorListenerAdapter() {
+            public void onAnimationEnd(Animator animator) {
+                NotificationPanelViewController.this.mKeyguardBottomArea.setVisibility(8);
+            }
+        });
         this.mBottomAreaShadeAlphaAnimator.setDuration(160);
         this.mBottomAreaShadeAlphaAnimator.setInterpolator(Interpolators.ALPHA_OUT);
         this.mShadeController = shadeController;
@@ -590,13 +595,13 @@ public class NotificationPanelViewController extends PanelViewController {
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         loadDimens();
-        this.mKeyguardStatusBar = (KeyguardStatusBarView) this.mView.findViewById(C0012R$id.keyguard_header);
-        this.mKeyguardStatusView = (KeyguardStatusView) this.mView.findViewById(C0012R$id.keyguard_status_view);
-        ViewGroup viewGroup = (ViewGroup) this.mView.findViewById(C0012R$id.big_clock_container);
+        this.mKeyguardStatusBar = (KeyguardStatusBarView) this.mView.findViewById(C0015R$id.keyguard_header);
+        this.mKeyguardStatusView = (KeyguardStatusView) this.mView.findViewById(C0015R$id.keyguard_status_view);
+        ViewGroup viewGroup = (ViewGroup) this.mView.findViewById(C0015R$id.big_clock_container);
         this.mBigClockContainer = viewGroup;
-        ((KeyguardClockSwitch) this.mView.findViewById(C0012R$id.keyguard_clock_container)).setBigClockContainer(viewGroup);
-        this.mNotificationContainerParent = (NotificationsQuickSettingsContainer) this.mView.findViewById(C0012R$id.notification_container_parent);
-        NotificationStackScrollLayout notificationStackScrollLayout = (NotificationStackScrollLayout) this.mView.findViewById(C0012R$id.notification_stack_scroller);
+        ((KeyguardClockSwitch) this.mView.findViewById(C0015R$id.keyguard_clock_container)).setBigClockContainer(viewGroup);
+        this.mNotificationContainerParent = (NotificationsQuickSettingsContainer) this.mView.findViewById(C0015R$id.notification_container_parent);
+        NotificationStackScrollLayout notificationStackScrollLayout = (NotificationStackScrollLayout) this.mView.findViewById(C0015R$id.notification_stack_scroller);
         this.mNotificationStackScroller = notificationStackScrollLayout;
         notificationStackScrollLayout.setOnHeightChangedListener(this.mOnHeightChangedListener);
         this.mNotificationStackScroller.setOverscrollTopChangedListener(this.mOnOverscrollTopChangedListener);
@@ -608,15 +613,15 @@ public class NotificationPanelViewController extends PanelViewController {
                 NotificationStackScrollLayout.this.setTrackingHeadsUp((ExpandableNotificationRow) obj);
             }
         });
-        this.mKeyguardBottomArea = (KeyguardBottomAreaView) this.mView.findViewById(C0012R$id.keyguard_bottom_area);
-        this.mQsNavbarScrim = this.mView.findViewById(C0012R$id.qs_navbar_scrim);
+        this.mKeyguardBottomArea = (KeyguardBottomAreaView) this.mView.findViewById(C0015R$id.keyguard_bottom_area);
+        this.mQsNavbarScrim = this.mView.findViewById(C0015R$id.qs_navbar_scrim);
         this.mLastOrientation = this.mResources.getConfiguration().orientation;
         initBottomArea();
-        MiuiKeyguardFaceUnlockView miuiKeyguardFaceUnlockView = (MiuiKeyguardFaceUnlockView) this.mView.findViewById(C0012R$id.miui_keyguard_face_unlock_view);
+        MiuiKeyguardFaceUnlockView miuiKeyguardFaceUnlockView = (MiuiKeyguardFaceUnlockView) this.mView.findViewById(C0015R$id.miui_keyguard_face_unlock_view);
         this.mMiuiKeyguardFaceUnlockView = miuiKeyguardFaceUnlockView;
         miuiKeyguardFaceUnlockView.setKeyguardFaceUnlockView(true);
         this.mWakeUpCoordinator.setStackScroller(this.mNotificationStackScroller);
-        this.mQsFrame = (FrameLayout) this.mView.findViewById(C0012R$id.qs_frame);
+        this.mQsFrame = (FrameLayout) this.mView.findViewById(C0015R$id.qs_frame);
         this.mPulseExpansionHandler.setUp(this.mNotificationStackScroller, this.mExpansionCallback, this.mShadeController);
         this.mWakeUpCoordinator.addListener(new NotificationWakeUpCoordinator.WakeUpListener() {
             public void onFullyHiddenChanged(boolean z) {
@@ -655,16 +660,16 @@ public class NotificationPanelViewController extends PanelViewController {
         builder.setMaxLengthSeconds(0.4f);
         this.mFlingAnimationUtils = builder.build();
         this.mStatusBarMinHeight = this.mResources.getDimensionPixelSize(17105489);
-        this.mQsPeekHeight = this.mResources.getDimensionPixelSize(C0009R$dimen.qs_peek_height);
-        this.mNotificationsHeaderCollideDistance = this.mResources.getDimensionPixelSize(C0009R$dimen.header_notifications_collide_distance);
+        this.mQsPeekHeight = this.mResources.getDimensionPixelSize(C0012R$dimen.qs_peek_height);
+        this.mNotificationsHeaderCollideDistance = this.mResources.getDimensionPixelSize(C0012R$dimen.header_notifications_collide_distance);
         this.mClockPositionAlgorithm.loadDimens(this.mResources);
-        this.mQsFalsingThreshold = this.mResources.getDimensionPixelSize(C0009R$dimen.qs_falsing_threshold);
-        this.mPositionMinSideMargin = this.mResources.getDimensionPixelSize(C0009R$dimen.notification_panel_min_side_margin);
-        this.mIndicationBottomPadding = this.mResources.getDimensionPixelSize(C0009R$dimen.keyguard_indication_bottom_padding);
-        this.mQsNotificationTopPadding = this.mResources.getDimensionPixelSize(C0009R$dimen.qs_notification_padding);
-        this.mShelfHeight = this.mResources.getDimensionPixelSize(C0009R$dimen.notification_shelf_height);
-        this.mDarkIconSize = this.mResources.getDimensionPixelSize(C0009R$dimen.status_bar_icon_drawing_size_dark);
-        this.mHeadsUpInset = this.mResources.getDimensionPixelSize(17105489) + this.mResources.getDimensionPixelSize(C0009R$dimen.heads_up_status_bar_padding);
+        this.mQsFalsingThreshold = this.mResources.getDimensionPixelSize(C0012R$dimen.qs_falsing_threshold);
+        this.mPositionMinSideMargin = this.mResources.getDimensionPixelSize(C0012R$dimen.notification_panel_min_side_margin);
+        this.mIndicationBottomPadding = this.mResources.getDimensionPixelSize(C0012R$dimen.keyguard_indication_bottom_padding);
+        this.mQsNotificationTopPadding = this.mResources.getDimensionPixelSize(C0012R$dimen.qs_notification_padding);
+        this.mShelfHeight = this.mResources.getDimensionPixelSize(C0012R$dimen.notification_shelf_height);
+        this.mDarkIconSize = this.mResources.getDimensionPixelSize(C0012R$dimen.status_bar_icon_drawing_size_dark);
+        this.mHeadsUpInset = this.mResources.getDimensionPixelSize(17105489) + this.mResources.getDimensionPixelSize(C0012R$dimen.heads_up_status_bar_padding);
     }
 
     public boolean hasCustomClock() {
@@ -681,15 +686,15 @@ public class NotificationPanelViewController extends PanelViewController {
     }
 
     public void updateResources(boolean z) {
-        int dimensionPixelSize = this.mResources.getDimensionPixelSize(C0009R$dimen.qs_panel_width);
-        int integer = this.mResources.getInteger(C0013R$integer.notification_panel_layout_gravity);
+        int dimensionPixelSize = this.mResources.getDimensionPixelSize(C0012R$dimen.qs_panel_width);
+        int integer = this.mResources.getInteger(C0016R$integer.notification_panel_layout_gravity);
         FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) this.mQsFrame.getLayoutParams();
         if (!(layoutParams.width == dimensionPixelSize && layoutParams.gravity == integer)) {
             layoutParams.width = dimensionPixelSize;
             layoutParams.gravity = integer;
             this.mQsFrame.setLayoutParams(layoutParams);
         }
-        int dimensionPixelSize2 = this.mResources.getDimensionPixelSize(C0009R$dimen.notification_panel_width);
+        int dimensionPixelSize2 = this.mResources.getDimensionPixelSize(C0012R$dimen.notification_panel_width);
         FrameLayout.LayoutParams layoutParams2 = (FrameLayout.LayoutParams) this.mNotificationStackScroller.getLayoutParams();
         if (layoutParams2.width != dimensionPixelSize2 || layoutParams2.gravity != integer) {
             layoutParams2.width = dimensionPixelSize2;
@@ -703,15 +708,15 @@ public class NotificationPanelViewController extends PanelViewController {
         updateShowEmptyShadeView();
         int indexOfChild = this.mView.indexOfChild(this.mKeyguardStatusView);
         this.mView.removeView(this.mKeyguardStatusView);
-        KeyguardStatusView keyguardStatusView = (KeyguardStatusView) this.mInjectionInflationController.injectable(LayoutInflater.from(this.mView.getContext())).inflate(C0014R$layout.keyguard_status_view, this.mView, false);
+        KeyguardStatusView keyguardStatusView = (KeyguardStatusView) this.mInjectionInflationController.injectable(LayoutInflater.from(this.mView.getContext())).inflate(C0017R$layout.keyguard_status_view, this.mView, false);
         this.mKeyguardStatusView = keyguardStatusView;
         this.mView.addView(keyguardStatusView, indexOfChild);
         this.mBigClockContainer.removeAllViews();
-        ((KeyguardClockSwitch) this.mView.findViewById(C0012R$id.keyguard_clock_container)).setBigClockContainer(this.mBigClockContainer);
+        ((KeyguardClockSwitch) this.mView.findViewById(C0015R$id.keyguard_clock_container)).setBigClockContainer(this.mBigClockContainer);
         int indexOfChild2 = this.mView.indexOfChild(this.mKeyguardBottomArea);
         this.mView.removeView(this.mKeyguardBottomArea);
         KeyguardBottomAreaView keyguardBottomAreaView = this.mKeyguardBottomArea;
-        KeyguardBottomAreaView keyguardBottomAreaView2 = (KeyguardBottomAreaView) this.mInjectionInflationController.injectable(LayoutInflater.from(this.mView.getContext())).inflate(C0014R$layout.keyguard_bottom_area, this.mView, false);
+        KeyguardBottomAreaView keyguardBottomAreaView2 = (KeyguardBottomAreaView) this.mInjectionInflationController.injectable(LayoutInflater.from(this.mView.getContext())).inflate(C0017R$layout.keyguard_bottom_area, this.mView, false);
         this.mKeyguardBottomArea = keyguardBottomAreaView2;
         keyguardBottomAreaView2.initFrom(keyguardBottomAreaView);
         this.mView.addView(this.mKeyguardBottomArea, indexOfChild2);
@@ -832,7 +837,7 @@ public class NotificationPanelViewController extends PanelViewController {
     public int computeMaxKeyguardNotifications(int i) {
         float f;
         float minStackScrollerPadding = this.mClockPositionAlgorithm.getMinStackScrollerPadding();
-        int max = Math.max(1, this.mResources.getDimensionPixelSize(C0009R$dimen.notification_divider_height));
+        int max = Math.max(1, this.mResources.getDimensionPixelSize(C0012R$dimen.notification_divider_height));
         NotificationShelf notificationShelf = this.mNotificationStackScroller.getNotificationShelf();
         if (notificationShelf.getVisibility() == 8) {
             f = 0.0f;
@@ -1535,15 +1540,15 @@ public class NotificationPanelViewController extends PanelViewController {
     public String determineAccessibilityPaneTitle() {
         QS qs = this.mQs;
         if (qs != null && qs.isCustomizing()) {
-            return this.mResources.getString(C0018R$string.accessibility_desc_quick_settings_edit);
+            return this.mResources.getString(C0021R$string.accessibility_desc_quick_settings_edit);
         }
         if (this.mQsExpansionHeight != 0.0f && this.mQsFullyExpanded) {
-            return this.mResources.getString(C0018R$string.accessibility_desc_quick_settings);
+            return this.mResources.getString(C0021R$string.accessibility_desc_quick_settings);
         }
         if (this.mBarState == 1) {
-            return this.mResources.getString(C0018R$string.accessibility_desc_lock_screen);
+            return this.mResources.getString(C0021R$string.accessibility_desc_lock_screen);
         }
-        return this.mResources.getString(C0018R$string.accessibility_desc_notification_shade);
+        return this.mResources.getString(C0021R$string.accessibility_desc_notification_shade);
     }
 
     /* access modifiers changed from: protected */
@@ -1706,7 +1711,7 @@ public class NotificationPanelViewController extends PanelViewController {
             com.android.systemui.statusbar.phone.-$$Lambda$NotificationPanelViewController$PxDf76v5kbscyhBqkVxRT_vLxqI r7 = new com.android.systemui.statusbar.phone.-$$Lambda$NotificationPanelViewController$PxDf76v5kbscyhBqkVxRT_vLxqI
             r7.<init>()
             r3.addUpdateListener(r7)
-            com.android.systemui.statusbar.phone.NotificationPanelViewController$14 r7 = new com.android.systemui.statusbar.phone.NotificationPanelViewController$14
+            com.android.systemui.statusbar.phone.NotificationPanelViewController$15 r7 = new com.android.systemui.statusbar.phone.NotificationPanelViewController$15
             r7.<init>(r9)
             r3.addListener(r7)
             r6.mAnimatingQS = r1
@@ -1997,7 +2002,7 @@ public class NotificationPanelViewController extends PanelViewController {
 
     private void updateKeyguardBottomAreaAlpha() {
         float min = Math.min(MathUtils.map(isUnlockHintRunning() ? 0.0f : 0.95f, 1.0f, 0.0f, 1.0f, getExpandedFraction()), 1.0f - getQsExpansionFraction()) * this.mBottomAreaShadeAlpha;
-        this.mKeyguardBottomArea.setAffordanceAlpha(min);
+        this.mKeyguardBottomArea.setAlpha(min);
         this.mKeyguardBottomArea.setImportantForAccessibility(min == 0.0f ? 4 : 0);
         View ambientIndicationContainer = this.mStatusBar.getAmbientIndicationContainer();
         if (ambientIndicationContainer != null) {

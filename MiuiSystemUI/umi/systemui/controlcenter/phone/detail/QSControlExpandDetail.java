@@ -6,7 +6,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
-import com.android.systemui.C0018R$string;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.Dependency;
 import com.android.systemui.controlcenter.phone.ExpandInfoController;
 import com.android.systemui.controlcenter.phone.widget.MiuiQSPanel$MiuiRecord;
@@ -22,7 +22,7 @@ public class QSControlExpandDetail implements ExpandInfoController.Callback {
     private ExpandDetailAdapter mDetailAdapter = new ExpandDetailAdapter();
     private View mExpandIndicatorView;
     /* access modifiers changed from: private */
-    public ExpandInfoController mExpandInfoController;
+    public ExpandInfoController mExpandInfoController = ((ExpandInfoController) Dependency.get(ExpandInfoController.class));
     private MiuiQSPanel$MiuiRecord mRecord;
     private View mTileView;
 
@@ -31,9 +31,6 @@ public class QSControlExpandDetail implements ExpandInfoController.Callback {
 
     public QSControlExpandDetail(Context context, View view, View view2) {
         this.mContext = context;
-        ExpandInfoController expandInfoController = (ExpandInfoController) Dependency.get(ExpandInfoController.class);
-        this.mExpandInfoController = expandInfoController;
-        expandInfoController.addCallback(this);
         this.mTileView = view;
         this.mExpandIndicatorView = view2;
         MiuiQSPanel$MiuiRecord miuiQSPanel$MiuiRecord = new MiuiQSPanel$MiuiRecord();
@@ -45,6 +42,17 @@ public class QSControlExpandDetail implements ExpandInfoController.Callback {
 
     public void show() {
         this.mExpandInfoController.getContentView().showExpandDetail(true, this.mRecord);
+    }
+
+    public void addExpandInfoCallback() {
+        this.mExpandInfoController.addCallback(this);
+    }
+
+    public void removeExpandInfoCallback() {
+        ExpandInfoController expandInfoController = this.mExpandInfoController;
+        if (expandInfoController != null) {
+            expandInfoController.removeCallback(this);
+        }
     }
 
     public void updateInfosMap() {
@@ -90,7 +98,7 @@ public class QSControlExpandDetail implements ExpandInfoController.Callback {
         }
 
         public CharSequence getTitle() {
-            return QSControlExpandDetail.this.mContext.getString(C0018R$string.qs_control_expand_detail_title);
+            return QSControlExpandDetail.this.mContext.getString(C0021R$string.qs_control_expand_detail_title);
         }
 
         public View createDetailView(Context context, View view, ViewGroup viewGroup) {

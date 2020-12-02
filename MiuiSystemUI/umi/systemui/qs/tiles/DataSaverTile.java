@@ -3,8 +3,8 @@ package com.android.systemui.qs.tiles;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.widget.Switch;
-import com.android.systemui.C0010R$drawable;
-import com.android.systemui.C0018R$string;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.Prefs;
 import com.android.systemui.plugins.qs.QSTile;
 import com.android.systemui.qs.QSHost;
@@ -68,7 +68,7 @@ public class DataSaverTile extends QSTileImpl<QSTile.BooleanState> implements Da
     }
 
     public CharSequence getTileLabel() {
-        return this.mContext.getString(C0018R$string.data_saver);
+        return this.mContext.getString(C0021R$string.data_saver);
     }
 
     /* access modifiers changed from: protected */
@@ -82,13 +82,13 @@ public class DataSaverTile extends QSTileImpl<QSTile.BooleanState> implements Da
         }
         booleanState.value = z;
         booleanState.state = z ? 2 : 1;
-        String string = this.mContext.getString(C0018R$string.data_saver);
+        String string = this.mContext.getString(C0021R$string.data_saver);
         booleanState.label = string;
         booleanState.contentDescription = string;
         if (booleanState.value) {
-            i = C0010R$drawable.ic_data_saver;
+            i = C0013R$drawable.ic_data_saver;
         } else {
-            i = C0010R$drawable.ic_data_saver_off;
+            i = C0013R$drawable.ic_data_saver_off;
         }
         booleanState.icon = QSTileImpl.ResourceIcon.get(i);
         booleanState.expandedAccessibilityClassName = Switch.class.getName();
@@ -97,9 +97,9 @@ public class DataSaverTile extends QSTileImpl<QSTile.BooleanState> implements Da
     /* access modifiers changed from: protected */
     public String composeChangeAnnouncement() {
         if (((QSTile.BooleanState) this.mState).value) {
-            return this.mContext.getString(C0018R$string.accessibility_quick_settings_data_saver_changed_on);
+            return this.mContext.getString(C0021R$string.accessibility_quick_settings_data_saver_changed_on);
         }
-        return this.mContext.getString(C0018R$string.accessibility_quick_settings_data_saver_changed_off);
+        return this.mContext.getString(C0021R$string.accessibility_quick_settings_data_saver_changed_off);
     }
 
     public void onDataSaverChanged(boolean z) {

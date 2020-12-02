@@ -3,7 +3,7 @@ package com.android.systemui.statusbar.notification;
 import android.animation.ValueAnimator;
 import android.view.View;
 import android.view.ViewGroup;
-import com.android.systemui.C0012R$id;
+import com.android.systemui.C0015R$id;
 import java.util.Set;
 import kotlin.TypeCastException;
 import kotlin.jvm.internal.Intrinsics;
@@ -19,18 +19,18 @@ final class ViewGroupFadeHelper$Companion$fadeOutAllChildrenExcept$$inlined$appl
     }
 
     public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-        Float f = (Float) this.$root$inlined.getTag(C0012R$id.view_group_fade_helper_previous_value_tag);
+        Float f = (Float) this.$root$inlined.getTag(C0015R$id.view_group_fade_helper_previous_value_tag);
         Intrinsics.checkExpressionValueIsNotNull(valueAnimator, "animation");
         Object animatedValue = valueAnimator.getAnimatedValue();
         if (animatedValue != null) {
             float floatValue = ((Float) animatedValue).floatValue();
             for (View view : this.$viewsToFadeOut$inlined) {
                 if (!Intrinsics.areEqual(view.getAlpha(), f)) {
-                    view.setTag(C0012R$id.view_group_fade_helper_restore_tag, Float.valueOf(view.getAlpha()));
+                    view.setTag(C0015R$id.view_group_fade_helper_restore_tag, Float.valueOf(view.getAlpha()));
                 }
                 view.setAlpha(floatValue);
             }
-            this.$root$inlined.setTag(C0012R$id.view_group_fade_helper_previous_value_tag, Float.valueOf(floatValue));
+            this.$root$inlined.setTag(C0015R$id.view_group_fade_helper_previous_value_tag, Float.valueOf(floatValue));
             return;
         }
         throw new TypeCastException("null cannot be cast to non-null type kotlin.Float");

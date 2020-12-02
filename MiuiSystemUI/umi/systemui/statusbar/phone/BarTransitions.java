@@ -12,7 +12,7 @@ import android.graphics.drawable.Drawable;
 import android.os.SystemClock;
 import android.view.View;
 import com.android.settingslib.Utils;
-import com.android.systemui.C0008R$color;
+import com.android.systemui.C0011R$color;
 import com.android.systemui.Interpolators;
 
 public class BarTransitions {
@@ -125,9 +125,9 @@ public class BarTransitions {
 
         public BarBackgroundDrawable(Context context, int i) {
             context.getResources();
-            this.mOpaque = context.getColor(C0008R$color.system_bar_background_opaque);
-            this.mSemiTransparent = context.getColor(C0008R$color.status_bar_background_semi_transparent);
-            this.mTransparent = context.getColor(C0008R$color.system_bar_background_transparent);
+            this.mOpaque = context.getColor(C0011R$color.system_bar_background_opaque);
+            this.mSemiTransparent = context.getColor(C0011R$color.status_bar_background_semi_transparent);
+            this.mTransparent = context.getColor(C0011R$color.system_bar_background_transparent);
             this.mWarning = Utils.getColorAttrDefaultColor(context, 16844099);
             this.mGradient = context.getDrawable(i);
         }

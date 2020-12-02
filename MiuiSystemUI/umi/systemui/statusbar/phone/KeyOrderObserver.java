@@ -6,8 +6,8 @@ import android.os.Handler;
 import android.provider.MiuiSettings;
 import android.provider.Settings;
 import android.text.TextUtils;
-import com.android.systemui.C0012R$id;
-import com.android.systemui.C0018R$string;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0021R$string;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -27,10 +27,10 @@ public final class KeyOrderObserver {
     private final KeyOrderObserver$observer$1 observer = new KeyOrderObserver$observer$1(this, (Handler) null);
 
     public KeyOrderObserver() {
-        sKeyIdSet.add(Integer.valueOf(C0012R$id.menu));
-        sKeyIdSet.add(Integer.valueOf(C0012R$id.home));
-        sKeyIdSet.add(Integer.valueOf(C0012R$id.recent_apps));
-        sKeyIdSet.add(Integer.valueOf(C0012R$id.back));
+        sKeyIdSet.add(Integer.valueOf(C0015R$id.menu));
+        sKeyIdSet.add(Integer.valueOf(C0015R$id.home));
+        sKeyIdSet.add(Integer.valueOf(C0015R$id.recent_apps));
+        sKeyIdSet.add(Integer.valueOf(C0015R$id.back));
     }
 
     public static final /* synthetic */ Function0 access$getKeyOrderCallback$p(KeyOrderObserver keyOrderObserver) {
@@ -110,7 +110,7 @@ public final class KeyOrderObserver {
 
         public final int getDefaultLayoutResource(@NotNull Context context) {
             Intrinsics.checkParameterIsNotNull(context, "context");
-            return isReversed(context) ? C0018R$string.config_navBarLayout_reverse : C0018R$string.config_navBarLayout;
+            return isReversed(context) ? C0021R$string.config_navBarLayout_reverse : C0021R$string.config_navBarLayout;
         }
     }
 }

@@ -10,9 +10,9 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Switch;
-import com.android.systemui.C0012R$id;
-import com.android.systemui.C0014R$layout;
-import com.android.systemui.C0018R$string;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0017R$layout;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.settings.CurrentUserContextTracker;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,14 +37,14 @@ public class ScreenRecordDialog extends Activity {
         window.setLayout(-1, -2);
         window.addPrivateFlags(16);
         window.setGravity(48);
-        setTitle(C0018R$string.screenrecord_name);
-        setContentView(C0014R$layout.screen_record_dialog);
-        ((Button) findViewById(C0012R$id.button_cancel)).setOnClickListener(new View.OnClickListener() {
+        setTitle(C0021R$string.screenrecord_name);
+        setContentView(C0017R$layout.screen_record_dialog);
+        ((Button) findViewById(C0015R$id.button_cancel)).setOnClickListener(new View.OnClickListener() {
             public final void onClick(View view) {
                 ScreenRecordDialog.this.lambda$onCreate$0$ScreenRecordDialog(view);
             }
         });
-        ((Button) findViewById(C0012R$id.button_start)).setOnClickListener(new View.OnClickListener() {
+        ((Button) findViewById(C0015R$id.button_start)).setOnClickListener(new View.OnClickListener() {
             public final void onClick(View view) {
                 ScreenRecordDialog.this.lambda$onCreate$1$ScreenRecordDialog(view);
             }
@@ -54,9 +54,9 @@ public class ScreenRecordDialog extends Activity {
         arrayList.add(ScreenRecordingAudioSource.MIC);
         this.mModes.add(ScreenRecordingAudioSource.INTERNAL);
         this.mModes.add(ScreenRecordingAudioSource.MIC_AND_INTERNAL);
-        this.mAudioSwitch = (Switch) findViewById(C0012R$id.screenrecord_audio_switch);
-        this.mTapsSwitch = (Switch) findViewById(C0012R$id.screenrecord_taps_switch);
-        this.mOptions = (Spinner) findViewById(C0012R$id.screen_recording_options);
+        this.mAudioSwitch = (Switch) findViewById(C0015R$id.screenrecord_audio_switch);
+        this.mTapsSwitch = (Switch) findViewById(C0015R$id.screenrecord_taps_switch);
+        this.mOptions = (Spinner) findViewById(C0015R$id.screen_recording_options);
         ScreenRecordingAdapter screenRecordingAdapter = new ScreenRecordingAdapter(getApplicationContext(), 17367049, this.mModes);
         screenRecordingAdapter.setDropDownViewResource(17367049);
         this.mOptions.setAdapter(screenRecordingAdapter);

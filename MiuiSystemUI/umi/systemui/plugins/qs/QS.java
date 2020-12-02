@@ -20,6 +20,8 @@ public interface QS extends FragmentBase {
         void onQsHeightChanged();
     }
 
+    void animateAppearDisappear(boolean z);
+
     void animateHeaderSlidingIn(long j);
 
     void animateHeaderSlidingOut();

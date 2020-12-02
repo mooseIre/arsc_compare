@@ -4,8 +4,8 @@ import android.content.res.Resources;
 import android.view.View;
 import android.view.ViewPropertyAnimator;
 import android.widget.FrameLayout;
-import com.android.systemui.C0009R$dimen;
-import com.android.systemui.C0012R$id;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0015R$id;
 import com.android.systemui.controlcenter.phone.ControlPanelContentView;
 import com.miui.systemui.util.MiuiInterpolators;
 
@@ -24,15 +24,15 @@ public class QCBrightnessMirrorController {
 
     public QCBrightnessMirrorController(ControlPanelContentView controlPanelContentView) {
         this.mControlPanelContentView = controlPanelContentView;
-        View findViewById = controlPanelContentView.findViewById(C0012R$id.brightness_mirror);
+        View findViewById = controlPanelContentView.findViewById(C0015R$id.brightness_mirror);
         this.mBrightnessMirror = findViewById;
-        this.mMirrorContent = (FrameLayout) findViewById.findViewById(C0012R$id.mirror_content);
-        this.mContent = this.mControlPanelContentView.findViewById(C0012R$id.qs_control_center_panel);
+        this.mMirrorContent = (FrameLayout) findViewById.findViewById(C0015R$id.mirror_content);
+        this.mContent = this.mControlPanelContentView.findViewById(C0015R$id.qs_control_center_panel);
     }
 
     public void showMirror() {
         if (this.mQSBrightness == null) {
-            this.mQSBrightness = this.mContent.findViewById(C0012R$id.qs_brightness);
+            this.mQSBrightness = this.mContent.findViewById(C0015R$id.qs_brightness);
         }
         this.mQSBrightness.setVisibility(4);
         this.mBrightnessMirror.setVisibility(0);
@@ -81,7 +81,7 @@ public class QCBrightnessMirrorController {
     public void updateResources() {
         Resources resources = this.mBrightnessMirror.getResources();
         FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) this.mMirrorContent.getLayoutParams();
-        int dimensionPixelSize = resources.getDimensionPixelSize(C0009R$dimen.qs_control_brightness_width);
+        int dimensionPixelSize = resources.getDimensionPixelSize(C0012R$dimen.qs_control_brightness_width);
         if (layoutParams.width != dimensionPixelSize) {
             layoutParams.width = dimensionPixelSize;
             this.mMirrorContent.setLayoutParams(layoutParams);

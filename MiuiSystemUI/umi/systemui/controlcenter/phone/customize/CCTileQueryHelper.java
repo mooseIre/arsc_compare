@@ -1,7 +1,7 @@
 package com.android.systemui.controlcenter.phone.customize;
 
 import android.content.Context;
-import com.android.systemui.C0005R$array;
+import com.android.systemui.C0008R$array;
 import com.android.systemui.controlcenter.utils.Constants;
 import com.android.systemui.qs.customize.TileQueryHelper;
 import java.util.ArrayList;
@@ -17,9 +17,9 @@ public class CCTileQueryHelper extends TileQueryHelper {
         ArrayList arrayList = new ArrayList();
         this.mControlIndependentTiles = arrayList;
         if (Constants.IS_INTERNATIONAL) {
-            arrayList.addAll(Arrays.asList(context.getResources().getStringArray(C0005R$array.qs_control_independent_tiles_global)));
+            arrayList.addAll(Arrays.asList(context.getResources().getStringArray(C0008R$array.qs_control_independent_tiles_global)));
         } else {
-            arrayList.addAll(Arrays.asList(context.getResources().getStringArray(C0005R$array.qs_control_independent_tiles)));
+            arrayList.addAll(Arrays.asList(context.getResources().getStringArray(C0008R$array.qs_control_independent_tiles)));
         }
         for (String str : this.mControlIndependentTiles) {
             String str2 = this.mTilesStock;

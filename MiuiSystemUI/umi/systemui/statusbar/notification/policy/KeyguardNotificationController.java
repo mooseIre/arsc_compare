@@ -17,6 +17,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.DateTimeView;
 import com.android.systemui.Dependency;
+import com.android.systemui.statusbar.notification.MiuiNotificationCompat;
 import com.android.systemui.statusbar.notification.NotificationEntryManager;
 import com.android.systemui.statusbar.notification.NotificationUtil;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
@@ -122,6 +123,39 @@ public class KeyguardNotificationController {
 
     public void remove(int i) {
         this.mBgHandler.obtainMessage(3002, i, 0).sendToTarget();
+    }
+
+    public void clear() {
+        ArrayList arrayList = new ArrayList(this.mSortedKeys);
+        updateSortedKeys(3003, (String) null);
+        this.mBgHandler.obtainMessage(3003).sendToTarget();
+        this.mEntryManager.getVisibleNotifications().forEach(new Consumer(arrayList) {
+            public final /* synthetic */ ArrayList f$1;
+
+            {
+                this.f$1 = r2;
+            }
+
+            public final void accept(Object obj) {
+                KeyguardNotificationController.this.lambda$clear$0$KeyguardNotificationController(this.f$1, (NotificationEntry) obj);
+            }
+        });
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$clear$0 */
+    public /* synthetic */ void lambda$clear$0$KeyguardNotificationController(ArrayList arrayList, NotificationEntry notificationEntry) {
+        if (needReadd(notificationEntry) && arrayList.contains(notificationEntry.getKey())) {
+            add(notificationEntry);
+        }
+    }
+
+    private boolean needReadd(NotificationEntry notificationEntry) {
+        Notification notification = notificationEntry.getSbn().getNotification();
+        if (notificationEntry.getSbn().isClearable() && !MiuiNotificationCompat.isOnlyShowKeyguard(notification) && !MiuiNotificationCompat.isKeptOnKeyguard(notification)) {
+            return false;
+        }
+        return true;
     }
 
     public List<String> getSortedKeys() {

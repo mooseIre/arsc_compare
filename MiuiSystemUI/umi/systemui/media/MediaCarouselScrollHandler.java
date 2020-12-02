@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.view.ViewOutlineProvider;
 import androidx.core.view.GestureDetectorCompat;
 import com.android.settingslib.Utils;
-import com.android.systemui.C0009R$dimen;
+import com.android.systemui.C0012R$dimen;
 import com.android.systemui.plugins.FalsingManager;
 import com.android.systemui.qs.PageIndicator;
 import com.android.systemui.util.animation.PhysicsAnimator;
@@ -41,6 +41,7 @@ public class MediaCarouselScrollHandler {
     private final GestureDetectorCompat gestureDetector = new GestureDetectorCompat(this.scrollView.getContext(), this.gestureListener);
     private final MediaCarouselScrollHandler$gestureListener$1 gestureListener = new MediaCarouselScrollHandler$gestureListener$1(this);
     private final DelayableExecutor mainExecutor;
+    @NotNull
     private ViewGroup mediaContent;
     private final PageIndicator pageIndicator;
     private int playerWidthPlusPadding;
@@ -101,6 +102,12 @@ public class MediaCarouselScrollHandler {
 
     public final void setFalsingProtectionNeeded(boolean z) {
         this.falsingProtectionNeeded = z;
+    }
+
+    /* access modifiers changed from: protected */
+    @NotNull
+    public final ViewGroup getMediaContent() {
+        return this.mediaContent;
     }
 
     public final float getContentTranslation() {
@@ -441,10 +448,11 @@ public class MediaCarouselScrollHandler {
         updateMediaPaddings();
     }
 
-    private final void updateMediaPaddings() {
+    /* access modifiers changed from: protected */
+    public void updateMediaPaddings() {
         Context context = this.scrollView.getContext();
         Intrinsics.checkExpressionValueIsNotNull(context, "scrollView.context");
-        int dimensionPixelSize = context.getResources().getDimensionPixelSize(C0009R$dimen.qs_media_padding);
+        int dimensionPixelSize = context.getResources().getDimensionPixelSize(C0012R$dimen.qs_media_padding);
         int childCount = this.mediaContent.getChildCount();
         int i = 0;
         while (i < childCount) {

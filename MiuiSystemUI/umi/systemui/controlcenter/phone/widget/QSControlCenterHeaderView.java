@@ -10,12 +10,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import com.android.keyguard.CarrierText;
-import com.android.systemui.C0007R$bool;
-import com.android.systemui.C0008R$color;
-import com.android.systemui.C0009R$dimen;
-import com.android.systemui.C0010R$drawable;
-import com.android.systemui.C0012R$id;
-import com.android.systemui.C0018R$string;
+import com.android.systemui.C0010R$bool;
+import com.android.systemui.C0011R$color;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.Dependency;
 import com.android.systemui.MiuiBatteryMeterView;
 import com.android.systemui.controlcenter.phone.ControlPanelController;
@@ -119,31 +119,31 @@ public class QSControlCenterHeaderView extends LinearLayout {
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        NetworkSpeedView networkSpeedView = (NetworkSpeedView) findViewById(C0012R$id.fullscreen_network_speed_view);
+        NetworkSpeedView networkSpeedView = (NetworkSpeedView) findViewById(C0015R$id.fullscreen_network_speed_view);
         this.mFullscreenNetworkSpeedView = networkSpeedView;
         networkSpeedView.setVisibilityByStatusBar(true);
-        this.mBattery = (MiuiBatteryMeterView) findViewById(C0012R$id.battery);
-        this.mTilesHeader = (ViewGroup) findViewById(C0012R$id.tiles_header);
-        this.mCarrierText = (CarrierText) findViewById(C0012R$id.carrier_text);
-        LinearLayout linearLayout = (LinearLayout) findViewById(C0012R$id.statusIcons);
+        this.mBattery = (MiuiBatteryMeterView) findViewById(C0015R$id.battery);
+        this.mTilesHeader = (ViewGroup) findViewById(C0015R$id.tiles_header);
+        this.mCarrierText = (CarrierText) findViewById(C0015R$id.carrier_text);
+        LinearLayout linearLayout = (LinearLayout) findViewById(C0015R$id.statusIcons);
         this.mStatusIcons = linearLayout;
         this.mIconManager = new StatusBarIconController.MiuiLightDarkIconManager(linearLayout, (CommandQueue) Dependency.get(CommandQueue.class), true, ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).getLightModeIconColorSingleTone());
         this.mOrientation = getOrientation();
-        this.mDateView = (MiuiClock) findViewById(C0012R$id.date_time);
-        this.mBigTime = (MiuiClock) findViewById(C0012R$id.big_time);
+        this.mDateView = (MiuiClock) findViewById(C0015R$id.date_time);
+        this.mBigTime = (MiuiClock) findViewById(C0015R$id.big_time);
         this.mDateView.setOnClickListener(this.mOnClickListener);
         this.mBigTime.setOnClickListener(this.mOnClickListener);
-        ImageView imageView = (ImageView) findViewById(C0012R$id.tiles_edit);
+        ImageView imageView = (ImageView) findViewById(C0015R$id.tiles_edit);
         this.mTilesEdit = imageView;
-        imageView.setContentDescription(this.mContext.getResources().getString(C0018R$string.accessibility_desc_quick_settings_edit));
+        imageView.setContentDescription(this.mContext.getResources().getString(C0021R$string.accessibility_desc_quick_settings_edit));
         ControlCenterUtils.createIconFolmeTouchStyle(this.mTilesEdit);
         int i = 0;
         this.mTilesEdit.setVisibility((this.mOrientation != 1 || this.mPanelController.isSuperPowerMode()) ? 8 : 0);
-        ImageView imageView2 = (ImageView) findViewById(C0012R$id.control_center_shortcut);
+        ImageView imageView2 = (ImageView) findViewById(C0015R$id.control_center_shortcut);
         this.mShortcut = imageView2;
         ControlCenterUtils.createIconFolmeTouchStyle(imageView2);
-        this.mShortcut.setImageResource(C0010R$drawable.qs_control_settings);
-        this.mShortcut.setContentDescription(getResources().getString(C0018R$string.accessibility_settings));
+        this.mShortcut.setImageResource(C0013R$drawable.qs_control_settings);
+        this.mShortcut.setContentDescription(getResources().getString(C0021R$string.accessibility_settings));
         this.mShortcut.setOnClickListener(this.mOnClickListener);
         ImageView imageView3 = this.mShortcut;
         if (this.mPanelController.isSuperPowerMode()) {
@@ -185,7 +185,7 @@ public class QSControlCenterHeaderView extends LinearLayout {
 
     /* access modifiers changed from: protected */
     public void updateHeaderColor() {
-        boolean z = getResources().getBoolean(C0007R$bool.expanded_status_bar_darkmode);
+        boolean z = getResources().getBoolean(C0010R$bool.expanded_status_bar_darkmode);
         Rect rect = new Rect(0, 0, 0, 0);
         float f = z ? 1.0f : 0.0f;
         DarkIconDispatcher darkIconDispatcher = (DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class);
@@ -227,9 +227,9 @@ public class QSControlCenterHeaderView extends LinearLayout {
             this.mTilesEdit.setVisibility(8);
             layoutParams.setMarginEnd(0);
         } else {
-            layoutParams2.topMargin = this.mContext.getResources().getDimensionPixelSize(C0009R$dimen.qs_control_header_tiles_margin_top);
+            layoutParams2.topMargin = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_header_tiles_margin_top);
             this.mTilesEdit.setVisibility(0);
-            layoutParams.setMarginEnd(this.mContext.getResources().getDimensionPixelSize(C0009R$dimen.qs_control_button_margin_end));
+            layoutParams.setMarginEnd(this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_button_margin_end));
         }
         this.mTilesHeader.setLayoutParams(layoutParams2);
         this.mShortcut.setLayoutParams(layoutParams);
@@ -241,9 +241,9 @@ public class QSControlCenterHeaderView extends LinearLayout {
     }
 
     public void updateResources() {
-        this.mTilesEdit.setImageDrawable(this.mContext.getDrawable(C0010R$drawable.qs_control_tiles_edit));
-        this.mShortcut.setImageDrawable(this.mContext.getDrawable(C0010R$drawable.qs_control_settings));
-        this.mBigTime.setTextColor(this.mContext.getColor(C0008R$color.qs_control_header_clock_color));
-        this.mDateView.setTextColor(this.mContext.getColor(C0008R$color.qs_control_header_date_color));
+        this.mTilesEdit.setImageDrawable(this.mContext.getDrawable(C0013R$drawable.qs_control_tiles_edit));
+        this.mShortcut.setImageDrawable(this.mContext.getDrawable(C0013R$drawable.qs_control_settings));
+        this.mBigTime.setTextColor(this.mContext.getColor(C0011R$color.qs_control_header_clock_color));
+        this.mDateView.setTextColor(this.mContext.getColor(C0011R$color.qs_control_header_date_color));
     }
 }

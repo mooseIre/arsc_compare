@@ -17,6 +17,9 @@ import com.android.internal.os.SomeArgs;
 import com.android.internal.statusbar.IStatusBar;
 import com.android.internal.statusbar.StatusBarIcon;
 import com.android.internal.view.AppearanceRegion;
+import com.android.systemui.Dependency;
+import com.android.systemui.controlcenter.phone.ControlPanelController;
+import com.android.systemui.controlcenter.policy.SuperSaveModeController;
 import com.android.systemui.statusbar.phone.StatusBar;
 import com.android.systemui.statusbar.policy.CallbackController;
 import com.android.systemui.tracing.ProtoTracer;
@@ -227,6 +230,9 @@ public class CommandQueue extends IStatusBar.Stub implements CallbackController<
     }
 
     public boolean panelsEnabled() {
+        if (((SuperSaveModeController) Dependency.get(SuperSaveModeController.class)).isActive() && ((ControlPanelController) Dependency.get(ControlPanelController.class)).isUseControlCenter()) {
+            return false;
+        }
         int disabled1 = getDisabled1(0);
         int disabled2 = getDisabled2(0);
         if ((disabled1 & 65536) == 0 && (disabled2 & 4) == 0 && !StatusBar.ONLY_CORE_APPS) {

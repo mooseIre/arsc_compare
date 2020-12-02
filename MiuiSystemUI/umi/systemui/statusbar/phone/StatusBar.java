@@ -86,12 +86,12 @@ import com.android.keyguard.wallpaper.MiuiKeyguardWallpaperControllerImpl;
 import com.android.keyguard.wallpaper.WallpaperCommandSender;
 import com.android.systemui.ActivityIntentHelper;
 import com.android.systemui.AutoReinflateContainer;
-import com.android.systemui.C0005R$array;
-import com.android.systemui.C0007R$bool;
-import com.android.systemui.C0012R$id;
-import com.android.systemui.C0013R$integer;
-import com.android.systemui.C0018R$string;
-import com.android.systemui.C0019R$style;
+import com.android.systemui.C0008R$array;
+import com.android.systemui.C0010R$bool;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0016R$integer;
+import com.android.systemui.C0021R$string;
+import com.android.systemui.C0022R$style;
 import com.android.systemui.DejankUtils;
 import com.android.systemui.DemoMode;
 import com.android.systemui.Dependency;
@@ -109,6 +109,7 @@ import com.android.systemui.charging.WirelessChargingAnimation;
 import com.android.systemui.classifier.FalsingLog;
 import com.android.systemui.colorextraction.SysuiColorExtractor;
 import com.android.systemui.controlcenter.phone.ControlPanelController;
+import com.android.systemui.controlcenter.policy.SuperSaveModeController;
 import com.android.systemui.fragments.ExtensionFragmentListener;
 import com.android.systemui.fragments.FragmentHostManager;
 import com.android.systemui.keyguard.DismissCallbackRegistry;
@@ -168,6 +169,7 @@ import com.android.systemui.statusbar.notification.modal.ModalController;
 import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow;
 import com.android.systemui.statusbar.notification.row.NotificationGutsManager;
 import com.android.systemui.statusbar.notification.stack.NotificationListContainer;
+import com.android.systemui.statusbar.notification.stack.NotificationStackScrollLayout;
 import com.android.systemui.statusbar.phone.ScrimController;
 import com.android.systemui.statusbar.phone.StatusBar;
 import com.android.systemui.statusbar.phone.StatusBarNotificationActivityStarter;
@@ -245,7 +247,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
                 if (StatusBar.this.mBubbleController.isStackExpanded()) {
                     StatusBar.this.mBubbleController.collapseStack();
                 }
-                ((ModalController) Dependency.get(ModalController.class)).animExitModal();
+                ((ModalController) Dependency.get(ModalController.class)).animExitModal(150);
                 if (StatusBar.this.mLockscreenUserManager.isCurrentProfile(getSendingUserId())) {
                     String stringExtra = intent.getStringExtra("reason");
                     if (stringExtra != null && stringExtra.equals("recentapps")) {
@@ -454,7 +456,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
     private int mStatusBarWindowState = 0;
     final Runnable mStopTracing = new Runnable() {
         public final void run() {
-            StatusBar.this.lambda$new$21$StatusBar();
+            StatusBar.this.lambda$new$22$StatusBar();
         }
     };
     private final SuperStatusBarViewFactory mSuperStatusBarViewFactory;
@@ -641,8 +643,8 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         return (i & 255) | ((z ? 1 : 0) << true) | ((z2 ? 1 : 0) << true) | ((z3 ? 1 : 0) << true) | ((z4 ? 1 : 0) << true) | ((z5 ? 1 : 0) << true);
     }
 
-    public /* synthetic */ boolean lambda$executeRunnableDismissingKeyguard$18$StatusBar(Runnable runnable, boolean z, boolean z2) {
-        lambda$executeRunnableDismissingKeyguard$18(runnable, z, z2);
+    public /* synthetic */ boolean lambda$executeRunnableDismissingKeyguard$19$StatusBar(Runnable runnable, boolean z, boolean z2) {
+        lambda$executeRunnableDismissingKeyguard$19(runnable, z, z2);
         return z2;
     }
 
@@ -795,7 +797,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         this.mDisplay = defaultDisplay;
         this.mDisplayId = defaultDisplay.getDisplayId();
         updateDisplaySize();
-        this.mVibrateOnOpening = this.mContext.getResources().getBoolean(C0007R$bool.config_vibrateOnIconAnimation);
+        this.mVibrateOnOpening = this.mContext.getResources().getBoolean(C0010R$bool.config_vibrateOnIconAnimation);
         WindowManagerGlobal.getWindowManagerService();
         this.mDevicePolicyManager = (DevicePolicyManager) this.mContext.getSystemService("device_policy");
         AccessibilityManager accessibilityManager = (AccessibilityManager) this.mContext.getSystemService("accessibility");
@@ -1309,7 +1311,18 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
             }
         }, (Class<?>) OverlayPlugin.class, true);
         this.mControlPanelController.addCallback((ControlPanelController.UseControlPanelChangeListener) this);
+        ((SuperSaveModeController) Dependency.get(SuperSaveModeController.class)).addCallback((SuperSaveModeController.SuperSaveModeChangeListener) new SuperSaveModeController.SuperSaveModeChangeListener() {
+            public final void onSuperSaveModeChange(boolean z) {
+                StatusBar.this.lambda$start$3$StatusBar(z);
+            }
+        });
         ((ToggleManagerController) Dependency.get(ToggleManagerController.class)).start();
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$start$3 */
+    public /* synthetic */ void lambda$start$3$StatusBar(boolean z) {
+        updateQsExpansionEnabled();
     }
 
     public void onUseControlPanelChange(boolean z) {
@@ -1326,7 +1339,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         inflateStatusBarWindow();
         this.mNotificationShadeWindowViewController.setService(this, this.mNotificationShadeWindowController);
         this.mNotificationShadeWindowView.setOnTouchListener(getStatusBarWindowTouchListener());
-        ViewGroup viewGroup = (ViewGroup) this.mNotificationShadeWindowView.findViewById(C0012R$id.notification_stack_scroller);
+        ViewGroup viewGroup = (ViewGroup) this.mNotificationShadeWindowView.findViewById(C0015R$id.notification_stack_scroller);
         this.mStackScroller = viewGroup;
         this.mNotificationLogger.setUpWithContainer((NotificationListContainer) viewGroup);
         NotificationIconAreaController createNotificationIconAreaController = SystemUIFactory.getInstance().createNotificationIconAreaController(context, this, this.mWakeUpCoordinator, this.mKeyguardBypassController, this.mStatusBarStateController);
@@ -1349,10 +1362,10 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         FragmentHostManager fragmentHostManager = FragmentHostManager.get(this.mPhoneStatusBarWindow);
         fragmentHostManager.addTagListener("CollapsedStatusBarFragment", new FragmentHostManager.FragmentListener() {
             public final void onFragmentViewCreated(String str, Fragment fragment) {
-                StatusBar.this.lambda$makeStatusBarView$3$StatusBar(str, fragment);
+                StatusBar.this.lambda$makeStatusBarView$4$StatusBar(str, fragment);
             }
         });
-        fragmentHostManager.getFragmentManager().beginTransaction().replace(C0012R$id.status_bar_container, new MiuiCollapsedStatusBarFragment(), "CollapsedStatusBarFragment").commit();
+        fragmentHostManager.getFragmentManager().beginTransaction().replace(C0015R$id.status_bar_container, new MiuiCollapsedStatusBarFragment(), "CollapsedStatusBarFragment").commit();
         this.mHeadsUpManager.setup(this.mVisualStabilityManager);
         this.mStatusBarTouchableRegionManager.setup(this, this.mNotificationShadeWindowView);
         this.mHeadsUpManager.addListener(this);
@@ -1361,9 +1374,9 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         this.mNotificationPanelViewController.setHeadsUpManager(this.mHeadsUpManager);
         this.mNotificationLogger.setHeadsUpManager(this.mHeadsUpManager);
         createNavigationBar(registerStatusBarResult);
-        this.mKeyguardIndicationController.setIndicationArea((ViewGroup) this.mNotificationShadeWindowView.findViewById(C0012R$id.keyguard_indication_area));
+        this.mKeyguardIndicationController.setIndicationArea((ViewGroup) this.mNotificationShadeWindowView.findViewById(C0015R$id.keyguard_indication_area));
         this.mNotificationPanelViewController.setKeyguardIndicationController(this.mKeyguardIndicationController);
-        this.mAmbientIndicationContainer = this.mNotificationShadeWindowView.findViewById(C0012R$id.ambient_indication_container);
+        this.mAmbientIndicationContainer = this.mNotificationShadeWindowView.findViewById(C0015R$id.ambient_indication_container);
         this.mBatteryController.addCallback(new BatteryController.BatteryStateChangeCallback() {
             public void onBatteryLevelChanged(int i, boolean z, boolean z2) {
             }
@@ -1397,13 +1410,13 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         ScrimView scrimForBubble = this.mBubbleController.getScrimForBubble();
         this.mScrimController.setScrimVisibleListener(new Consumer() {
             public final void accept(Object obj) {
-                StatusBar.this.lambda$makeStatusBarView$4$StatusBar((Integer) obj);
+                StatusBar.this.lambda$makeStatusBarView$5$StatusBar((Integer) obj);
             }
         });
-        this.mScrimController.attachViews((ScrimView) this.mNotificationShadeWindowView.findViewById(C0012R$id.scrim_behind), (ScrimView) this.mNotificationShadeWindowView.findViewById(C0012R$id.scrim_in_front), scrimForBubble);
+        this.mScrimController.attachViews((ScrimView) this.mNotificationShadeWindowView.findViewById(C0015R$id.scrim_behind), (ScrimView) this.mNotificationShadeWindowView.findViewById(C0015R$id.scrim_in_front), scrimForBubble);
         this.mNotificationPanelViewController.initDependencies(this, this.mGroupManager, this.mNotificationShelf, this.mNotificationIconAreaController, this.mScrimController);
-        BackDropView backDropView = (BackDropView) this.mNotificationShadeWindowView.findViewById(C0012R$id.backdrop);
-        this.mMediaManager.setup(backDropView, (ImageView) backDropView.findViewById(C0012R$id.backdrop_front), (ImageView) backDropView.findViewById(C0012R$id.backdrop_back), this.mScrimController, this.mLockscreenWallpaper);
+        BackDropView backDropView = (BackDropView) this.mNotificationShadeWindowView.findViewById(C0015R$id.backdrop);
+        this.mMediaManager.setup(backDropView, (ImageView) backDropView.findViewById(C0015R$id.backdrop_front), (ImageView) backDropView.findViewById(C0015R$id.backdrop_back), this.mScrimController, this.mLockscreenWallpaper);
         this.mNotificationShadeDepthControllerLazy.get().addListener(new NotificationShadeDepthController.DepthListener(this.mContext.getResources().getFloat(17105099), backDropView) {
             public final /* synthetic */ float f$0;
             public final /* synthetic */ BackDropView f$1;
@@ -1414,7 +1427,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
             }
 
             public final void onWallpaperZoomOutChanged(float f) {
-                StatusBar.lambda$makeStatusBarView$5(this.f$0, this.f$1, f);
+                StatusBar.lambda$makeStatusBarView$6(this.f$0, this.f$1, f);
             }
         });
         this.mNotificationPanelViewController.setUserSetupComplete(this.mUserSetup);
@@ -1429,10 +1442,10 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
                 LockscreenLockIconController.this.onShowingLaunchAffordanceChanged((Boolean) obj);
             }
         });
-        View findViewById = this.mNotificationShadeWindowView.findViewById(C0012R$id.qs_frame);
+        View findViewById = this.mNotificationShadeWindowView.findViewById(C0015R$id.qs_frame);
         if (findViewById != null) {
             FragmentHostManager fragmentHostManager2 = FragmentHostManager.get(findViewById);
-            int i = C0012R$id.qs_frame;
+            int i = C0015R$id.qs_frame;
             ExtensionController.ExtensionBuilder<QS> newExtension = this.mExtensionController.newExtension(cls);
             newExtension.withPlugin(cls);
             newExtension.withDefault(new Supplier() {
@@ -1443,22 +1456,22 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
             ExtensionFragmentListener.attachExtensonToFragment(findViewById, QS.TAG, i, newExtension.build());
             this.mBrightnessMirrorController = new BrightnessMirrorController(this.mNotificationShadeWindowView, this.mNotificationPanelViewController, this.mNotificationShadeDepthControllerLazy.get(), new Consumer() {
                 public final void accept(Object obj) {
-                    StatusBar.this.lambda$makeStatusBarView$6$StatusBar((Boolean) obj);
+                    StatusBar.this.lambda$makeStatusBarView$7$StatusBar((Boolean) obj);
                 }
             });
             fragmentHostManager2.addTagListener(QS.TAG, new FragmentHostManager.FragmentListener() {
                 public final void onFragmentViewCreated(String str, Fragment fragment) {
-                    StatusBar.this.lambda$makeStatusBarView$7$StatusBar(str, fragment);
+                    StatusBar.this.lambda$makeStatusBarView$8$StatusBar(str, fragment);
                 }
             });
         }
-        View findViewById2 = this.mNotificationShadeWindowView.findViewById(C0012R$id.report_rejected_touch);
+        View findViewById2 = this.mNotificationShadeWindowView.findViewById(C0015R$id.report_rejected_touch);
         this.mReportRejectedTouch = findViewById2;
         if (findViewById2 != null) {
             updateReportRejectedTouchVisibility();
             this.mReportRejectedTouch.setOnClickListener(new View.OnClickListener() {
                 public final void onClick(View view) {
-                    StatusBar.this.lambda$makeStatusBarView$8$StatusBar(view);
+                    StatusBar.this.lambda$makeStatusBarView$9$StatusBar(view);
                 }
             });
         }
@@ -1467,7 +1480,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         }
         this.mGestureWakeLock = this.mPowerManager.newWakeLock(10, "GestureWakeLock");
         this.mVibrator = (Vibrator) this.mContext.getSystemService(Vibrator.class);
-        int[] intArray = this.mContext.getResources().getIntArray(C0005R$array.config_cameraLaunchGestureVibePattern);
+        int[] intArray = this.mContext.getResources().getIntArray(C0008R$array.config_cameraLaunchGestureVibePattern);
         this.mCameraLaunchGestureVibePattern = new long[intArray.length];
         for (int i2 = 0; i2 < intArray.length; i2++) {
             this.mCameraLaunchGestureVibePattern[i2] = (long) intArray[i2];
@@ -1480,12 +1493,12 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         this.mUserSetupObserver.onUserSetupChanged();
         ThreadedRenderer.overrideProperty("disableProfileBars", "true");
         ThreadedRenderer.overrideProperty("ambientRatio", String.valueOf(1.5f));
-        KeyguardBottomAreaView keyguardBottomAreaView = (KeyguardBottomAreaView) this.mNotificationShadeWindowView.findViewById(C0012R$id.keyguard_bottom_area);
+        KeyguardBottomAreaView keyguardBottomAreaView = (KeyguardBottomAreaView) this.mNotificationShadeWindowView.findViewById(C0015R$id.keyguard_bottom_area);
     }
 
     /* access modifiers changed from: private */
-    /* renamed from: lambda$makeStatusBarView$3 */
-    public /* synthetic */ void lambda$makeStatusBarView$3$StatusBar(String str, Fragment fragment) {
+    /* renamed from: lambda$makeStatusBarView$4 */
+    public /* synthetic */ void lambda$makeStatusBarView$4$StatusBar(String str, Fragment fragment) {
         CollapsedStatusBarFragment collapsedStatusBarFragment = (CollapsedStatusBarFragment) fragment;
         PhoneStatusBarView phoneStatusBarView = this.mStatusBarView;
         PhoneStatusBarView phoneStatusBarView2 = (PhoneStatusBarView) collapsedStatusBarFragment.getView();
@@ -1508,21 +1521,21 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         HeadsUpAppearanceController headsUpAppearanceController2 = new HeadsUpAppearanceController(this.mNotificationIconAreaController, this.mHeadsUpManager, this.mNotificationShadeWindowView, this.mStatusBarStateController, this.mKeyguardBypassController, this.mKeyguardStateController, this.mWakeUpCoordinator, this.mCommandQueue, this.mNotificationPanelViewController, this.mStatusBarView);
         this.mHeadsUpAppearanceController = headsUpAppearanceController2;
         headsUpAppearanceController2.readFrom(headsUpAppearanceController);
-        this.mLightsOutNotifController.setLightsOutNotifView(this.mStatusBarView.findViewById(C0012R$id.notification_lights_out));
+        this.mLightsOutNotifController.setLightsOutNotifView(this.mStatusBarView.findViewById(C0015R$id.notification_lights_out));
         this.mNotificationShadeWindowViewController.setStatusBarView(this.mStatusBarView);
         checkBarModes();
     }
 
     /* access modifiers changed from: private */
-    /* renamed from: lambda$makeStatusBarView$4 */
-    public /* synthetic */ void lambda$makeStatusBarView$4$StatusBar(Integer num) {
+    /* renamed from: lambda$makeStatusBarView$5 */
+    public /* synthetic */ void lambda$makeStatusBarView$5$StatusBar(Integer num) {
         this.mNotificationShadeWindowController.setScrimsVisibility(num.intValue());
         if (this.mNotificationShadeWindowView != null) {
             this.mLockscreenLockIconController.onScrimVisibilityChanged(num);
         }
     }
 
-    static /* synthetic */ void lambda$makeStatusBarView$5(float f, BackDropView backDropView, float f2) {
+    static /* synthetic */ void lambda$makeStatusBarView$6(float f, BackDropView backDropView, float f2) {
         float lerp = MathUtils.lerp(f, 1.0f, f2);
         backDropView.setPivotX(((float) backDropView.getWidth()) / 2.0f);
         backDropView.setPivotY(((float) backDropView.getHeight()) / 2.0f);
@@ -1531,15 +1544,15 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
     }
 
     /* access modifiers changed from: private */
-    /* renamed from: lambda$makeStatusBarView$6 */
-    public /* synthetic */ void lambda$makeStatusBarView$6$StatusBar(Boolean bool) {
+    /* renamed from: lambda$makeStatusBarView$7 */
+    public /* synthetic */ void lambda$makeStatusBarView$7$StatusBar(Boolean bool) {
         this.mBrightnessMirrorVisible = bool.booleanValue();
         updateScrimController();
     }
 
     /* access modifiers changed from: private */
-    /* renamed from: lambda$makeStatusBarView$7 */
-    public /* synthetic */ void lambda$makeStatusBarView$7$StatusBar(String str, Fragment fragment) {
+    /* renamed from: lambda$makeStatusBarView$8 */
+    public /* synthetic */ void lambda$makeStatusBarView$8$StatusBar(String str, Fragment fragment) {
         QS qs = (QS) fragment;
         if (qs instanceof QSFragment) {
             QSFragment qSFragment = (QSFragment) qs;
@@ -1551,8 +1564,8 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
     }
 
     /* access modifiers changed from: private */
-    /* renamed from: lambda$makeStatusBarView$8 */
-    public /* synthetic */ void lambda$makeStatusBarView$8$StatusBar(View view) {
+    /* renamed from: lambda$makeStatusBarView$9 */
+    public /* synthetic */ void lambda$makeStatusBarView$9$StatusBar(View view) {
         Uri reportRejectedTouch = this.mFalsingManager.reportRejectedTouch();
         if (reportRejectedTouch != null) {
             StringWriter stringWriter = new StringWriter();
@@ -1596,7 +1609,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         builder.setActivityLaunchAnimator(this.mActivityLaunchAnimator);
         builder.setNotificationPresenter(this.mPresenter);
         builder.setNotificationPanelViewController(this.mNotificationPanelViewController);
-        StatusBarNotificationActivityStarter build = builder.build();
+        MiuiStatusBarNotificationActivityStarter build = builder.build();
         this.mNotificationActivityStarter = build;
         ((NotificationListContainer) this.mStackScroller).setNotificationActivityStarter(build);
         this.mGutsManager.setNotificationActivityStarter(this.mNotificationActivityStarter);
@@ -1632,14 +1645,14 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
     public View.OnTouchListener getStatusBarWindowTouchListener() {
         return new View.OnTouchListener() {
             public final boolean onTouch(View view, MotionEvent motionEvent) {
-                return StatusBar.this.lambda$getStatusBarWindowTouchListener$9$StatusBar(view, motionEvent);
+                return StatusBar.this.lambda$getStatusBarWindowTouchListener$10$StatusBar(view, motionEvent);
             }
         };
     }
 
     /* access modifiers changed from: private */
-    /* renamed from: lambda$getStatusBarWindowTouchListener$9 */
-    public /* synthetic */ boolean lambda$getStatusBarWindowTouchListener$9$StatusBar(View view, MotionEvent motionEvent) {
+    /* renamed from: lambda$getStatusBarWindowTouchListener$10 */
+    public /* synthetic */ boolean lambda$getStatusBarWindowTouchListener$10$StatusBar(View view, MotionEvent motionEvent) {
         this.mAutoHideController.checkUserAutoHide(motionEvent);
         this.mRemoteInputManager.checkRemoteInputOutside(motionEvent);
         if (motionEvent.getAction() == 0 && this.mExpandedVisible) {
@@ -1699,7 +1712,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
 
     /* access modifiers changed from: protected */
     public void createUserSwitcher() {
-        this.mKeyguardUserSwitcher = new KeyguardUserSwitcher(this.mContext, (ViewStub) this.mNotificationShadeWindowView.findViewById(C0012R$id.keyguard_user_switcher), (KeyguardStatusBarView) this.mNotificationShadeWindowView.findViewById(C0012R$id.keyguard_header), this.mNotificationPanelViewController);
+        this.mKeyguardUserSwitcher = new KeyguardUserSwitcher(this.mContext, (ViewStub) this.mNotificationShadeWindowView.findViewById(C0015R$id.keyguard_user_switcher), (KeyguardStatusBarView) this.mNotificationShadeWindowView.findViewById(C0015R$id.keyguard_header), this.mNotificationPanelViewController);
     }
 
     private void inflateStatusBarWindow() {
@@ -1717,7 +1730,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
     public void startKeyguard() {
         Trace.beginSection("StatusBar#startKeyguard");
         this.mBiometricUnlockController = this.mBiometricUnlockControllerLazy.get();
-        this.mStatusBarKeyguardViewManager.registerStatusBar(this, getBouncerContainer(), this.mNotificationPanelViewController, this.mBiometricUnlockController, this.mDismissCallbackRegistry, (ViewGroup) this.mNotificationShadeWindowView.findViewById(C0012R$id.lock_icon_container), this.mStackScroller, this.mKeyguardBypassController, this.mFalsingManager);
+        this.mStatusBarKeyguardViewManager.registerStatusBar(this, getBouncerContainer(), this.mNotificationPanelViewController, this.mBiometricUnlockController, this.mDismissCallbackRegistry, (ViewGroup) this.mNotificationShadeWindowView.findViewById(C0015R$id.lock_icon_container), this.mStackScroller, this.mKeyguardBypassController, this.mFalsingManager);
         this.mKeyguardIndicationController.setStatusBarKeyguardViewManager(this.mStatusBarKeyguardViewManager);
         this.mBiometricUnlockController.setKeyguardViewController(this.mStatusBarKeyguardViewManager);
         this.mRemoteInputManager.getController().addCallback(this.mStatusBarKeyguardViewManager);
@@ -1782,8 +1795,8 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
     }
 
     /* access modifiers changed from: private */
-    /* JADX WARNING: Code restructure failed: missing block: B:16:0x002e, code lost:
-        if (r0 == false) goto L_0x0032;
+    /* JADX WARNING: Code restructure failed: missing block: B:18:0x003c, code lost:
+        if (r0 == false) goto L_0x0040;
      */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     public void updateQsExpansionEnabled() {
@@ -1794,28 +1807,33 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
             com.android.systemui.statusbar.policy.DeviceProvisionedController r1 = r4.mDeviceProvisionedController
             boolean r1 = r1.isDeviceProvisioned()
             r2 = 1
-            if (r1 == 0) goto L_0x0031
+            if (r1 == 0) goto L_0x003f
             boolean r1 = r4.mUserSetup
             if (r1 != 0) goto L_0x001d
             com.android.systemui.statusbar.policy.UserSwitcherController r1 = r4.mUserSwitcherController
             if (r1 == 0) goto L_0x001d
             boolean r1 = r1.isSimpleUserSwitcher()
-            if (r1 != 0) goto L_0x0031
+            if (r1 != 0) goto L_0x003f
         L_0x001d:
             int r1 = r4.mDisabled2
             r3 = r1 & 4
-            if (r3 != 0) goto L_0x0031
+            if (r3 != 0) goto L_0x003f
             r1 = r1 & r2
-            if (r1 != 0) goto L_0x0031
+            if (r1 != 0) goto L_0x003f
             boolean r1 = r4.mDozing
-            if (r1 != 0) goto L_0x0031
+            if (r1 != 0) goto L_0x003f
             boolean r1 = ONLY_CORE_APPS
-            if (r1 != 0) goto L_0x0031
-            if (r0 != 0) goto L_0x0031
-            goto L_0x0032
-        L_0x0031:
+            if (r1 != 0) goto L_0x003f
+            java.lang.Class<com.android.systemui.controlcenter.policy.SuperSaveModeController> r1 = com.android.systemui.controlcenter.policy.SuperSaveModeController.class
+            java.lang.Object r1 = com.android.systemui.Dependency.get(r1)
+            com.android.systemui.controlcenter.policy.SuperSaveModeController r1 = (com.android.systemui.controlcenter.policy.SuperSaveModeController) r1
+            boolean r1 = r1.isActive()
+            if (r1 != 0) goto L_0x003f
+            if (r0 != 0) goto L_0x003f
+            goto L_0x0040
+        L_0x003f:
             r2 = 0
-        L_0x0032:
+        L_0x0040:
             com.android.systemui.statusbar.phone.NotificationPanelViewController r4 = r4.mNotificationPanelViewController
             r4.setQsExpansionEnabled(r2)
             java.lang.StringBuilder r4 = new java.lang.StringBuilder
@@ -2000,7 +2018,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
                 this.mNotificationShadeWindowController.setForceWindowCollapsed(true);
                 this.mNotificationPanelViewController.getView().post(new Runnable() {
                     public final void run() {
-                        StatusBar.this.lambda$onHeadsUpPinnedModeChanged$10$StatusBar();
+                        StatusBar.this.lambda$onHeadsUpPinnedModeChanged$11$StatusBar();
                     }
                 });
                 return;
@@ -2019,20 +2037,20 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         this.mHeadsUpManager.setHeadsUpGoingAway(true);
         this.mNotificationPanelViewController.runAfterAnimationFinished(new Runnable() {
             public final void run() {
-                StatusBar.this.lambda$onHeadsUpPinnedModeChanged$11$StatusBar();
+                StatusBar.this.lambda$onHeadsUpPinnedModeChanged$12$StatusBar();
             }
         });
     }
 
     /* access modifiers changed from: private */
-    /* renamed from: lambda$onHeadsUpPinnedModeChanged$10 */
-    public /* synthetic */ void lambda$onHeadsUpPinnedModeChanged$10$StatusBar() {
+    /* renamed from: lambda$onHeadsUpPinnedModeChanged$11 */
+    public /* synthetic */ void lambda$onHeadsUpPinnedModeChanged$11$StatusBar() {
         this.mNotificationShadeWindowController.setForceWindowCollapsed(false);
     }
 
     /* access modifiers changed from: private */
-    /* renamed from: lambda$onHeadsUpPinnedModeChanged$11 */
-    public /* synthetic */ void lambda$onHeadsUpPinnedModeChanged$11$StatusBar() {
+    /* renamed from: lambda$onHeadsUpPinnedModeChanged$12 */
+    public /* synthetic */ void lambda$onHeadsUpPinnedModeChanged$12$StatusBar() {
         if (!this.mHeadsUpManager.hasPinnedHeadsUp()) {
             this.mNotificationShadeWindowController.setHeadsUpShowing(false);
             this.mHeadsUpManager.setHeadsUpGoingAway(false);
@@ -2119,7 +2137,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
                 this.mWereIconsJustHidden = true;
                 this.mHandler.postDelayed(new Runnable() {
                     public final void run() {
-                        StatusBar.this.lambda$updateHideIconsForBouncer$12$StatusBar();
+                        StatusBar.this.lambda$updateHideIconsForBouncer$13$StatusBar();
                     }
                 }, 500);
             }
@@ -2130,8 +2148,8 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
     }
 
     /* access modifiers changed from: private */
-    /* renamed from: lambda$updateHideIconsForBouncer$12 */
-    public /* synthetic */ void lambda$updateHideIconsForBouncer$12$StatusBar() {
+    /* renamed from: lambda$updateHideIconsForBouncer$13 */
+    public /* synthetic */ void lambda$updateHideIconsForBouncer$13$StatusBar() {
         this.mWereIconsJustHidden = false;
         this.mCommandQueue.recomputeDisableFlags(this.mDisplayId, true);
     }
@@ -2220,11 +2238,11 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
     }
 
     public void maybeEscalateHeadsUp() {
-        this.mHeadsUpManager.getAllEntries().forEach($$Lambda$StatusBar$b4jfaxlYnE9QVAGrlIapAKjtXiQ.INSTANCE);
+        this.mHeadsUpManager.getAllEntries().forEach($$Lambda$StatusBar$Qz8oyL0qAMzuJuwPLHs4cVCa7kg.INSTANCE);
         this.mHeadsUpManager.releaseAllImmediately();
     }
 
-    static /* synthetic */ void lambda$maybeEscalateHeadsUp$13(NotificationEntry notificationEntry) {
+    static /* synthetic */ void lambda$maybeEscalateHeadsUp$14(NotificationEntry notificationEntry) {
         ExpandedNotification sbn = notificationEntry.getSbn();
         Notification notification = sbn.getNotification();
         if (notification.fullScreenIntent != null) {
@@ -2298,15 +2316,15 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
     }
 
     /* access modifiers changed from: private */
-    /* renamed from: lambda$postAnimateForceCollapsePanels$14 */
-    public /* synthetic */ void lambda$postAnimateForceCollapsePanels$14$StatusBar() {
+    /* renamed from: lambda$postAnimateForceCollapsePanels$15 */
+    public /* synthetic */ void lambda$postAnimateForceCollapsePanels$15$StatusBar() {
         this.mShadeController.animateCollapsePanels(0, true);
     }
 
     public void postAnimateForceCollapsePanels() {
         this.mHandler.post(new Runnable() {
             public final void run() {
-                StatusBar.this.lambda$postAnimateForceCollapsePanels$14$StatusBar();
+                StatusBar.this.lambda$postAnimateForceCollapsePanels$15$StatusBar();
             }
         });
     }
@@ -2658,7 +2676,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         sb.append(1);
         sb.append(")");
         printWriter.println(sb.toString());
-        if (this.mContext.getThemeResId() == C0019R$style.Theme_SystemUI_Light) {
+        if (this.mContext.getThemeResId() == C0022R$style.Theme_SystemUI_Light) {
             z = true;
         }
         printWriter.println("    light wallpaper theme: " + z);
@@ -2766,19 +2784,19 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
                 }
 
                 public final void run() {
-                    StatusBar.this.lambda$startActivityDismissingKeyguard$16$StatusBar(this.f$1, this.f$2, this.f$3, this.f$4);
+                    StatusBar.this.lambda$startActivityDismissingKeyguard$17$StatusBar(this.f$1, this.f$2, this.f$3, this.f$4);
                 }
             }, new Runnable() {
                 public final void run() {
-                    StatusBar.lambda$startActivityDismissingKeyguard$17(ActivityStarter.Callback.this);
+                    StatusBar.lambda$startActivityDismissingKeyguard$18(ActivityStarter.Callback.this);
                 }
             }, z2, wouldLaunchResolverActivity, true);
         }
     }
 
     /* access modifiers changed from: private */
-    /* renamed from: lambda$startActivityDismissingKeyguard$16 */
-    public /* synthetic */ void lambda$startActivityDismissingKeyguard$16$StatusBar(Intent intent, int i, boolean z, ActivityStarter.Callback callback) {
+    /* renamed from: lambda$startActivityDismissingKeyguard$17 */
+    public /* synthetic */ void lambda$startActivityDismissingKeyguard$17$StatusBar(Intent intent, int i, boolean z, ActivityStarter.Callback callback) {
         int i2;
         Intent intent2 = intent;
         ActivityStarter.Callback callback2 = callback;
@@ -2804,7 +2822,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         }
     }
 
-    static /* synthetic */ void lambda$startActivityDismissingKeyguard$17(ActivityStarter.Callback callback) {
+    static /* synthetic */ void lambda$startActivityDismissingKeyguard$18(ActivityStarter.Callback callback) {
         if (callback != null) {
             callback.onActivityStarted(-96);
         }
@@ -2827,12 +2845,12 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
             }
 
             public final boolean onDismiss() {
-                return StatusBar.this.lambda$executeRunnableDismissingKeyguard$18$StatusBar(this.f$1, this.f$2, this.f$3);
+                return StatusBar.this.lambda$executeRunnableDismissingKeyguard$19$StatusBar(this.f$1, this.f$2, this.f$3);
             }
         }, runnable2, z2);
     }
 
-    private /* synthetic */ boolean lambda$executeRunnableDismissingKeyguard$18(Runnable runnable, boolean z, boolean z2) {
+    private /* synthetic */ boolean lambda$executeRunnableDismissingKeyguard$19(Runnable runnable, boolean z, boolean z2) {
         if (runnable != null) {
             if (!this.mStatusBarKeyguardViewManager.isShowing() || !this.mStatusBarKeyguardViewManager.isOccluded()) {
                 AsyncTask.execute(runnable);
@@ -2994,13 +3012,13 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
             r1 = r2
         L_0x002d:
             java.util.concurrent.Executor r4 = r3.mUiBgExecutor
-            com.android.systemui.statusbar.phone.-$$Lambda$StatusBar$Kretey6oDHJkdzCG5ebWo979aVM r2 = new com.android.systemui.statusbar.phone.-$$Lambda$StatusBar$Kretey6oDHJkdzCG5ebWo979aVM
+            com.android.systemui.statusbar.phone.-$$Lambda$StatusBar$HmJQbKES5h2Nfz54WrIvhU_YRh4 r2 = new com.android.systemui.statusbar.phone.-$$Lambda$StatusBar$HmJQbKES5h2Nfz54WrIvhU_YRh4
             r2.<init>(r0, r1)
             r4.execute(r2)
             goto L_0x0042
         L_0x0038:
             java.util.concurrent.Executor r4 = r3.mUiBgExecutor
-            com.android.systemui.statusbar.phone.-$$Lambda$StatusBar$d2Fv8ckN-uR2NVMWI_rXx_hRNKc r0 = new com.android.systemui.statusbar.phone.-$$Lambda$StatusBar$d2Fv8ckN-uR2NVMWI_rXx_hRNKc
+            com.android.systemui.statusbar.phone.-$$Lambda$StatusBar$c9qjiwrIU9RXDCI3JWlVp8xvdoU r0 = new com.android.systemui.statusbar.phone.-$$Lambda$StatusBar$c9qjiwrIU9RXDCI3JWlVp8xvdoU
             r0.<init>()
             r4.execute(r0)
         L_0x0042:
@@ -3010,8 +3028,8 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
     }
 
     /* access modifiers changed from: private */
-    /* renamed from: lambda$handleVisibleToUserChangedImpl$19 */
-    public /* synthetic */ void lambda$handleVisibleToUserChangedImpl$19$StatusBar(boolean z, int i) {
+    /* renamed from: lambda$handleVisibleToUserChangedImpl$20 */
+    public /* synthetic */ void lambda$handleVisibleToUserChangedImpl$20$StatusBar(boolean z, int i) {
         try {
             this.mBarService.onPanelRevealed(z, i);
         } catch (RemoteException unused) {
@@ -3019,8 +3037,8 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
     }
 
     /* access modifiers changed from: private */
-    /* renamed from: lambda$handleVisibleToUserChangedImpl$20 */
-    public /* synthetic */ void lambda$handleVisibleToUserChangedImpl$20$StatusBar() {
+    /* renamed from: lambda$handleVisibleToUserChangedImpl$21 */
+    public /* synthetic */ void lambda$handleVisibleToUserChangedImpl$21$StatusBar() {
         try {
             this.mBarService.onPanelHidden();
         } catch (RemoteException unused) {
@@ -3055,8 +3073,8 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
     }
 
     /* access modifiers changed from: private */
-    /* renamed from: lambda$new$21 */
-    public /* synthetic */ void lambda$new$21$StatusBar() {
+    /* renamed from: lambda$new$22 */
+    public /* synthetic */ void lambda$new$22$StatusBar() {
         Debug.stopMethodTracing();
         Log.d("StatusBar", "stopTracing");
         vibrate();
@@ -3071,14 +3089,14 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
             }
 
             public final void run() {
-                StatusBar.this.lambda$postQSRunnableDismissingKeyguard$23$StatusBar(this.f$1);
+                StatusBar.this.lambda$postQSRunnableDismissingKeyguard$24$StatusBar(this.f$1);
             }
         });
     }
 
     /* access modifiers changed from: private */
-    /* renamed from: lambda$postQSRunnableDismissingKeyguard$23 */
-    public /* synthetic */ void lambda$postQSRunnableDismissingKeyguard$23$StatusBar(Runnable runnable) {
+    /* renamed from: lambda$postQSRunnableDismissingKeyguard$24 */
+    public /* synthetic */ void lambda$postQSRunnableDismissingKeyguard$24$StatusBar(Runnable runnable) {
         this.mStatusBarStateController.setLeaveOpenOnKeyguardHide(true);
         executeRunnableDismissingKeyguard(new Runnable(runnable) {
             public final /* synthetic */ Runnable f$1;
@@ -3088,14 +3106,14 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
             }
 
             public final void run() {
-                StatusBar.this.lambda$postQSRunnableDismissingKeyguard$22$StatusBar(this.f$1);
+                StatusBar.this.lambda$postQSRunnableDismissingKeyguard$23$StatusBar(this.f$1);
             }
         }, (Runnable) null, false, false, false);
     }
 
     /* access modifiers changed from: private */
-    /* renamed from: lambda$postQSRunnableDismissingKeyguard$22 */
-    public /* synthetic */ void lambda$postQSRunnableDismissingKeyguard$22$StatusBar(Runnable runnable) {
+    /* renamed from: lambda$postQSRunnableDismissingKeyguard$23 */
+    public /* synthetic */ void lambda$postQSRunnableDismissingKeyguard$23$StatusBar(Runnable runnable) {
         this.mHandler.post(runnable);
     }
 
@@ -3108,7 +3126,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
             }
 
             public final void run() {
-                StatusBar.this.lambda$postStartActivityDismissingKeyguard$24$StatusBar(this.f$1);
+                StatusBar.this.lambda$postStartActivityDismissingKeyguard$25$StatusBar(this.f$1);
             }
         });
     }
@@ -3122,14 +3140,14 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
             }
 
             public final void run() {
-                StatusBar.this.lambda$postStartActivityDismissingKeyguard$25$StatusBar(this.f$1);
+                StatusBar.this.lambda$postStartActivityDismissingKeyguard$26$StatusBar(this.f$1);
             }
         }, (long) i);
     }
 
     /* access modifiers changed from: private */
-    /* renamed from: lambda$postStartActivityDismissingKeyguard$25 */
-    public /* synthetic */ void lambda$postStartActivityDismissingKeyguard$25$StatusBar(Intent intent) {
+    /* renamed from: lambda$postStartActivityDismissingKeyguard$26 */
+    public /* synthetic */ void lambda$postStartActivityDismissingKeyguard$26$StatusBar(Intent intent) {
         handleStartActivityDismissingKeyguard(intent, true);
     }
 
@@ -3158,7 +3176,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
                 volumeComponent.dispatchDemoCommand(str, bundle);
             }
             if (z || str.equals("clock")) {
-                dispatchDemoCommandToView(str, bundle, C0012R$id.clock);
+                dispatchDemoCommandToView(str, bundle, C0015R$id.clock);
             }
             if (z || str.equals("battery")) {
                 this.mBatteryController.dispatchDemoCommand(str, bundle);
@@ -3174,7 +3192,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
                 if (phoneStatusBarView == null) {
                     view = null;
                 } else {
-                    view = phoneStatusBarView.findViewById(C0012R$id.fullscreen_notification_icon_area);
+                    view = phoneStatusBarView.findViewById(C0015R$id.fullscreen_notification_icon_area);
                 }
                 if (view != null) {
                     view.setVisibility((!this.mDemoMode || !"false".equals(bundle.getString("visible"))) ? 0 : 4);
@@ -3199,7 +3217,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
                 }
             }
             if (z || str.equals("operator")) {
-                dispatchDemoCommandToView(str, bundle, C0012R$id.operator_name);
+                dispatchDemoCommandToView(str, bundle, C0015R$id.operator_name);
             }
         }
     }
@@ -3297,7 +3315,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
     public void fadeKeyguardAfterLaunchTransition(Runnable runnable, Runnable runnable2) {
         this.mHandler.removeMessages(1003);
         this.mLaunchTransitionEndRunnable = runnable2;
-        $$Lambda$StatusBar$7ezyz_9FnfBd8mjriwKdK6e2MnQ r4 = new Runnable(runnable) {
+        $$Lambda$StatusBar$urITUg_bdosu58crbZMswPW7bvo r4 = new Runnable(runnable) {
             public final /* synthetic */ Runnable f$1;
 
             {
@@ -3305,7 +3323,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
             }
 
             public final void run() {
-                StatusBar.this.lambda$fadeKeyguardAfterLaunchTransition$26$StatusBar(this.f$1);
+                StatusBar.this.lambda$fadeKeyguardAfterLaunchTransition$27$StatusBar(this.f$1);
             }
         };
         if (this.mNotificationPanelViewController.isLaunchTransitionRunning()) {
@@ -3316,8 +3334,8 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
     }
 
     /* access modifiers changed from: private */
-    /* renamed from: lambda$fadeKeyguardAfterLaunchTransition$26 */
-    public /* synthetic */ void lambda$fadeKeyguardAfterLaunchTransition$26$StatusBar(Runnable runnable) {
+    /* renamed from: lambda$fadeKeyguardAfterLaunchTransition$27 */
+    public /* synthetic */ void lambda$fadeKeyguardAfterLaunchTransition$27$StatusBar(Runnable runnable) {
         this.mKeyguardStateController.setLaunchTransitionFadingAway(true);
         if (runnable != null) {
             runnable.run();
@@ -3336,14 +3354,14 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
     public void fadeKeyguardWhilePulsing() {
         this.mNotificationPanelViewController.fadeOut(0, 96, new Runnable() {
             public final void run() {
-                StatusBar.this.lambda$fadeKeyguardWhilePulsing$27$StatusBar();
+                StatusBar.this.lambda$fadeKeyguardWhilePulsing$28$StatusBar();
             }
         }).start();
     }
 
     /* access modifiers changed from: private */
-    /* renamed from: lambda$fadeKeyguardWhilePulsing$27 */
-    public /* synthetic */ void lambda$fadeKeyguardWhilePulsing$27$StatusBar() {
+    /* renamed from: lambda$fadeKeyguardWhilePulsing$28 */
+    public /* synthetic */ void lambda$fadeKeyguardWhilePulsing$28$StatusBar() {
         hideKeyguard();
         this.mStatusBarKeyguardViewManager.onKeyguardFadedAway();
     }
@@ -3379,6 +3397,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         boolean leaveOpenOnKeyguardHide = this.mStatusBarStateController.leaveOpenOnKeyguardHide();
         if (!this.mStatusBarStateController.setState(0)) {
             this.mLockscreenUserManager.updatePublicMode();
+            ((NotificationStackScrollLayout) this.mStackScroller).updateSensitiveness(false);
         }
         if (this.mStatusBarStateController.leaveOpenOnKeyguardHide()) {
             if (!this.mStatusBarStateController.isKeyguardRequested()) {
@@ -3440,7 +3459,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
 
     /* access modifiers changed from: protected */
     public void updateTheme() {
-        int i = this.mColorExtractor.getNeutralColors().supportsDarkText() ? C0019R$style.Theme_SystemUI_Light : C0019R$style.Theme_SystemUI;
+        int i = this.mColorExtractor.getNeutralColors().supportsDarkText() ? C0022R$style.Theme_SystemUI_Light : C0022R$style.Theme_SystemUI;
         if (this.mContext.getThemeResId() != i) {
             this.mContext.setTheme(i);
             this.mConfigurationController.notifyThemeChanged();
@@ -3628,7 +3647,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
 
     public void onUnlockHintStarted() {
         this.mFalsingManager.onUnlockHintStarted();
-        this.mKeyguardIndicationController.showTransientIndication(C0018R$string.keyguard_unlock);
+        this.mKeyguardIndicationController.showTransientIndication(C0021R$string.keyguard_unlock);
     }
 
     public void onHintFinished() {
@@ -3866,14 +3885,14 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
     public void awakenDreams() {
         this.mUiBgExecutor.execute(new Runnable() {
             public final void run() {
-                StatusBar.this.lambda$awakenDreams$28$StatusBar();
+                StatusBar.this.lambda$awakenDreams$29$StatusBar();
             }
         });
     }
 
     /* access modifiers changed from: private */
-    /* renamed from: lambda$awakenDreams$28 */
-    public /* synthetic */ void lambda$awakenDreams$28$StatusBar() {
+    /* renamed from: lambda$awakenDreams$29 */
+    public /* synthetic */ void lambda$awakenDreams$29$StatusBar() {
         try {
             this.mDreamManager.awaken();
         } catch (RemoteException e) {
@@ -3940,15 +3959,15 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
                 }
 
                 public final boolean onDismiss() {
-                    return StatusBar.this.lambda$executeActionDismissingKeyguard$30$StatusBar(this.f$1);
+                    return StatusBar.this.lambda$executeActionDismissingKeyguard$31$StatusBar(this.f$1);
                 }
             }, z);
         }
     }
 
     /* access modifiers changed from: private */
-    /* renamed from: lambda$executeActionDismissingKeyguard$30 */
-    public /* synthetic */ boolean lambda$executeActionDismissingKeyguard$30$StatusBar(Runnable runnable) {
+    /* renamed from: lambda$executeActionDismissingKeyguard$31 */
+    public /* synthetic */ boolean lambda$executeActionDismissingKeyguard$31$StatusBar(Runnable runnable) {
         new Thread(new Runnable(runnable) {
             public final /* synthetic */ Runnable f$0;
 
@@ -3957,13 +3976,13 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
             }
 
             public final void run() {
-                StatusBar.lambda$executeActionDismissingKeyguard$29(this.f$0);
+                StatusBar.lambda$executeActionDismissingKeyguard$30(this.f$0);
             }
         }).start();
         return this.mShadeController.collapsePanel();
     }
 
-    static /* synthetic */ void lambda$executeActionDismissingKeyguard$29(Runnable runnable) {
+    static /* synthetic */ void lambda$executeActionDismissingKeyguard$30(Runnable runnable) {
         try {
             ActivityManager.getService().resumeAppSwitches();
         } catch (RemoteException unused) {
@@ -3972,7 +3991,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
     }
 
     /* renamed from: startPendingIntentDismissingKeyguard */
-    public void lambda$postStartActivityDismissingKeyguard$24(PendingIntent pendingIntent) {
+    public void lambda$postStartActivityDismissingKeyguard$25(PendingIntent pendingIntent) {
         startPendingIntentDismissingKeyguard(pendingIntent, (Runnable) null);
     }
 
@@ -3993,14 +4012,14 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
             }
 
             public final void run() {
-                StatusBar.this.lambda$startPendingIntentDismissingKeyguard$31$StatusBar(this.f$1, this.f$2, this.f$3);
+                StatusBar.this.lambda$startPendingIntentDismissingKeyguard$32$StatusBar(this.f$1, this.f$2, this.f$3);
             }
         }, pendingIntent.isActivity() && this.mActivityIntentHelper.wouldLaunchResolverActivity(pendingIntent.getIntent(), this.mLockscreenUserManager.getCurrentUserId()));
     }
 
     /* access modifiers changed from: private */
-    /* renamed from: lambda$startPendingIntentDismissingKeyguard$31 */
-    public /* synthetic */ void lambda$startPendingIntentDismissingKeyguard$31$StatusBar(PendingIntent pendingIntent, View view, Runnable runnable) {
+    /* renamed from: lambda$startPendingIntentDismissingKeyguard$32 */
+    public /* synthetic */ void lambda$startPendingIntentDismissingKeyguard$32$StatusBar(PendingIntent pendingIntent, View view, Runnable runnable) {
         try {
             pendingIntent.send((Context) null, 0, (Intent) null, (PendingIntent.OnFinished) null, (Handler) null, (String) null, getActivityOptions(this.mActivityLaunchAnimator.getLaunchAnimation(view, isOccluded())));
         } catch (PendingIntent.CanceledException e) {
@@ -4121,17 +4140,13 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
 
     public int getKeyguardNotifications() {
         if (this.mKeyguardNotifications == -1) {
-            this.mKeyguardNotifications = this.mNotificationPanelViewController.computeMaxKeyguardNotifications(this.mContext.getResources().getInteger(C0013R$integer.keyguard_max_notification_count));
+            this.mKeyguardNotifications = this.mNotificationPanelViewController.computeMaxKeyguardNotifications(this.mContext.getResources().getInteger(C0016R$integer.keyguard_max_notification_count));
         }
         return this.mKeyguardNotifications;
     }
 
     public boolean isQSFullyCollapsed() {
         return this.mNotificationPanelViewController.isFullyCollapsed();
-    }
-
-    public void collapsePanels() {
-        makeExpandedInvisible();
     }
 
     public static boolean isBootCompleted() {

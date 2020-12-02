@@ -10,9 +10,9 @@ import android.graphics.drawable.Animatable2;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.ImageView;
-import com.android.systemui.C0008R$color;
-import com.android.systemui.C0009R$dimen;
-import com.android.systemui.C0012R$id;
+import com.android.systemui.C0011R$color;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0015R$id;
 import com.android.systemui.plugins.qs.QSIconView;
 import com.android.systemui.plugins.qs.QSTile;
 import com.android.systemui.qs.AlphaControlledSignalTileView$AlphaControlledSlashImageView;
@@ -35,7 +35,7 @@ public class QSIconViewImpl extends QSIconView {
 
     public QSIconViewImpl(Context context) {
         super(context);
-        this.mIconSizePx = context.getResources().getDimensionPixelSize(C0009R$dimen.qs_tile_icon_size);
+        this.mIconSizePx = context.getResources().getDimensionPixelSize(C0012R$dimen.qs_tile_icon_size);
         View createIcon = createIcon();
         this.mIcon = createIcon;
         addView(createIcon);
@@ -79,7 +79,7 @@ public class QSIconViewImpl extends QSIconView {
         Drawable drawable;
         Supplier<QSTile.Icon> supplier = state.iconSupplier;
         QSTile.Icon icon = supplier != null ? supplier.get() : state.icon;
-        if (!Objects.equals(icon, imageView.getTag(C0012R$id.qs_icon_tag)) || !Objects.equals(state.slash, imageView.getTag(C0012R$id.qs_slash_tag))) {
+        if (!Objects.equals(icon, imageView.getTag(C0015R$id.qs_icon_tag)) || !Objects.equals(state.slash, imageView.getTag(C0015R$id.qs_slash_tag))) {
             boolean z2 = z && shouldAnimate(imageView);
             this.mLastIcon = icon;
             if (icon != null) {
@@ -99,8 +99,8 @@ public class QSIconViewImpl extends QSIconView {
             } else {
                 imageView.setImageDrawable(drawable);
             }
-            imageView.setTag(C0012R$id.qs_icon_tag, icon);
-            imageView.setTag(C0012R$id.qs_slash_tag, state.slash);
+            imageView.setTag(C0015R$id.qs_icon_tag, icon);
+            imageView.setTag(C0015R$id.qs_slash_tag, state.slash);
             imageView.setPadding(0, padding, 0, padding);
             if (drawable instanceof Animatable2) {
                 final Animatable2 animatable2 = (Animatable2) drawable;
@@ -123,7 +123,7 @@ public class QSIconViewImpl extends QSIconView {
     /* access modifiers changed from: protected */
     public void setIcon(ImageView imageView, QSTile.State state, boolean z) {
         if (state.disabledByPolicy) {
-            imageView.setColorFilter(getContext().getColor(C0008R$color.qs_tile_disabled_color));
+            imageView.setColorFilter(getContext().getColor(C0011R$color.qs_tile_disabled_color));
         } else {
             imageView.clearColorFilter();
         }

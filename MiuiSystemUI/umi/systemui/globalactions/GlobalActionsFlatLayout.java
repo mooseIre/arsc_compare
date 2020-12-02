@@ -5,8 +5,8 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import com.android.internal.annotations.VisibleForTesting;
-import com.android.systemui.C0009R$dimen;
-import com.android.systemui.C0012R$id;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0015R$id;
 import com.android.systemui.HardwareBgDrawable;
 
 public class GlobalActionsFlatLayout extends GlobalActionsLayout {
@@ -39,7 +39,7 @@ public class GlobalActionsFlatLayout extends GlobalActionsLayout {
     }
 
     private View getOverflowButton() {
-        return findViewById(C0012R$id.global_actions_overflow_button);
+        return findViewById(C0015R$id.global_actions_overflow_button);
     }
 
     /* access modifiers changed from: protected */
@@ -85,7 +85,7 @@ public class GlobalActionsFlatLayout extends GlobalActionsLayout {
     /* access modifiers changed from: protected */
     @VisibleForTesting
     public float getGridItemSize() {
-        return getContext().getResources().getDimension(C0009R$dimen.global_actions_grid_item_height);
+        return getContext().getResources().getDimension(C0012R$dimen.global_actions_grid_item_height);
     }
 
     /* access modifiers changed from: protected */

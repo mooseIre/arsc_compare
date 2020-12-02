@@ -14,12 +14,12 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.android.internal.util.ContrastColorUtil;
-import com.android.systemui.C0008R$color;
-import com.android.systemui.C0009R$dimen;
-import com.android.systemui.C0010R$drawable;
-import com.android.systemui.C0012R$id;
-import com.android.systemui.C0013R$integer;
-import com.android.systemui.C0014R$layout;
+import com.android.systemui.C0011R$color;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0016R$integer;
+import com.android.systemui.C0017R$layout;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -61,12 +61,12 @@ public class BubbleOverflowActivity extends Activity {
 
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        setContentView(C0014R$layout.bubble_overflow_activity);
-        this.mRecyclerView = (RecyclerView) findViewById(C0012R$id.bubble_overflow_recycler);
-        this.mEmptyState = (LinearLayout) findViewById(C0012R$id.bubble_overflow_empty_state);
-        this.mEmptyStateTitle = (TextView) findViewById(C0012R$id.bubble_overflow_empty_title);
-        this.mEmptyStateSubtitle = (TextView) findViewById(C0012R$id.bubble_overflow_empty_subtitle);
-        this.mEmptyStateImage = (ImageView) findViewById(C0012R$id.bubble_overflow_empty_state_image);
+        setContentView(C0017R$layout.bubble_overflow_activity);
+        this.mRecyclerView = (RecyclerView) findViewById(C0015R$id.bubble_overflow_recycler);
+        this.mEmptyState = (LinearLayout) findViewById(C0015R$id.bubble_overflow_empty_state);
+        this.mEmptyStateTitle = (TextView) findViewById(C0015R$id.bubble_overflow_empty_title);
+        this.mEmptyStateSubtitle = (TextView) findViewById(C0015R$id.bubble_overflow_empty_subtitle);
+        this.mEmptyStateImage = (ImageView) findViewById(C0015R$id.bubble_overflow_empty_state_image);
         updateDimensions();
         onDataChanged(this.mBubbleController.getOverflowBubbles());
         this.mBubbleController.setOverflowCallback(new Runnable() {
@@ -85,12 +85,12 @@ public class BubbleOverflowActivity extends Activity {
     /* access modifiers changed from: package-private */
     public void updateDimensions() {
         Resources resources = getResources();
-        int integer = resources.getInteger(C0013R$integer.bubbles_overflow_columns);
+        int integer = resources.getInteger(C0016R$integer.bubbles_overflow_columns);
         this.mRecyclerView.setLayoutManager(new NoScrollGridLayoutManager(getApplicationContext(), integer));
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int dimensionPixelSize = (displayMetrics.widthPixels - (resources.getDimensionPixelSize(C0009R$dimen.bubble_overflow_padding) * 2)) / integer;
-        int dimensionPixelSize2 = (resources.getDimensionPixelSize(C0009R$dimen.bubble_overflow_height) - resources.getDimensionPixelSize(C0009R$dimen.bubble_overflow_padding)) / ((int) Math.ceil(((double) resources.getInteger(C0013R$integer.bubbles_max_overflow)) / ((double) integer)));
+        int dimensionPixelSize = (displayMetrics.widthPixels - (resources.getDimensionPixelSize(C0012R$dimen.bubble_overflow_padding) * 2)) / integer;
+        int dimensionPixelSize2 = (resources.getDimensionPixelSize(C0012R$dimen.bubble_overflow_height) - resources.getDimensionPixelSize(C0012R$dimen.bubble_overflow_padding)) / ((int) Math.ceil(((double) resources.getInteger(C0016R$integer.bubbles_max_overflow)) / ((double) integer)));
         Context applicationContext = getApplicationContext();
         List<Bubble> list = this.mOverflowBubbles;
         BubbleController bubbleController = this.mBubbleController;
@@ -112,16 +112,16 @@ public class BubbleOverflowActivity extends Activity {
         boolean z = (resources.getConfiguration().uiMode & 48) == 32;
         ImageView imageView = this.mEmptyStateImage;
         if (z) {
-            drawable = resources.getDrawable(C0010R$drawable.ic_empty_bubble_overflow_dark);
+            drawable = resources.getDrawable(C0013R$drawable.ic_empty_bubble_overflow_dark);
         } else {
-            drawable = resources.getDrawable(C0010R$drawable.ic_empty_bubble_overflow_light);
+            drawable = resources.getDrawable(C0013R$drawable.ic_empty_bubble_overflow_light);
         }
         imageView.setImageDrawable(drawable);
         View findViewById = findViewById(16908290);
         if (z) {
-            i = resources.getColor(C0008R$color.bubbles_dark);
+            i = resources.getColor(C0011R$color.bubbles_dark);
         } else {
-            i = resources.getColor(C0008R$color.bubbles_light);
+            i = resources.getColor(C0011R$color.bubbles_light);
         }
         findViewById.setBackgroundColor(i);
         TypedArray obtainStyledAttributes = getApplicationContext().obtainStyledAttributes(new int[]{16844002, 16842808});

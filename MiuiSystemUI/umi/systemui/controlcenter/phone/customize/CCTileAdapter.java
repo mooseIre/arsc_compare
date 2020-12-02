@@ -21,12 +21,12 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.android.internal.logging.MetricsLogger;
-import com.android.systemui.C0008R$color;
-import com.android.systemui.C0009R$dimen;
-import com.android.systemui.C0010R$drawable;
-import com.android.systemui.C0012R$id;
-import com.android.systemui.C0014R$layout;
-import com.android.systemui.C0018R$string;
+import com.android.systemui.C0011R$color;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0017R$layout;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.Dependency;
 import com.android.systemui.plugins.qs.QSTile;
 import com.android.systemui.qs.QSTileHost;
@@ -65,6 +65,9 @@ public class CCTileAdapter extends RecyclerView.Adapter<Holder> implements TileQ
         public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int i) {
             int adapterPosition;
             super.onSelectedChanged(viewHolder, i);
+            if (i == 2) {
+                ((HapticFeedBackImpl) Dependency.get(HapticFeedBackImpl.class)).hapticFeedback("pickup", false);
+            }
             if (i != 2) {
                 viewHolder = null;
             }
@@ -135,8 +138,8 @@ public class CCTileAdapter extends RecyclerView.Adapter<Holder> implements TileQ
         this.mContext = context;
         this.mSpanCount = i;
         this.mAddedAdpater = z;
-        this.mTileWidth = context.getResources().getDimensionPixelSize(C0009R$dimen.qs_control_customizer_tile_width);
-        this.mTileBottom = this.mContext.getResources().getDimensionPixelSize(C0009R$dimen.qs_control_customizer_tiles_margin_bottom);
+        this.mTileWidth = context.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_customizer_tile_width);
+        this.mTileBottom = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_customizer_tiles_margin_bottom);
         this.mAccessibilityManager = (AccessibilityManager) context.getSystemService(AccessibilityManager.class);
         this.mItemTouchHelper = new ItemTouchHelper(this.mCallback);
         this.mDecoration = new TileItemDecoration(context);
@@ -266,12 +269,12 @@ public class CCTileAdapter extends RecyclerView.Adapter<Holder> implements TileQ
     public Holder onCreateViewHolder(ViewGroup viewGroup, int i) {
         Drawable drawable;
         Context context = viewGroup.getContext();
-        FrameLayout frameLayout = (FrameLayout) LayoutInflater.from(context).inflate(C0014R$layout.qs_control_customize_tile_frame, viewGroup, false);
-        ImageView imageView = (ImageView) frameLayout.findViewById(C0012R$id.marker);
+        FrameLayout frameLayout = (FrameLayout) LayoutInflater.from(context).inflate(C0017R$layout.qs_control_customize_tile_frame, viewGroup, false);
+        ImageView imageView = (ImageView) frameLayout.findViewById(C0015R$id.marker);
         if (this.mAddedAdpater) {
-            drawable = this.mContext.getDrawable(C0010R$drawable.ic_qs_control_delete_marker);
+            drawable = this.mContext.getDrawable(C0013R$drawable.ic_qs_control_delete_marker);
         } else {
-            drawable = this.mContext.getDrawable(C0010R$drawable.ic_qs_control_add_marker);
+            drawable = this.mContext.getDrawable(C0013R$drawable.ic_qs_control_add_marker);
         }
         imageView.setImageDrawable(drawable);
         CCCustomizeTileView cCCustomizeTileView = new CCCustomizeTileView(context, new CCQSIconViewImpl(context));
@@ -281,6 +284,7 @@ public class CCTileAdapter extends RecyclerView.Adapter<Holder> implements TileQ
         cCCustomizeTileView.setLayoutParams(layoutParams);
         frameLayout.removeView(imageView);
         frameLayout.addView(imageView);
+        frameLayout.setHapticFeedbackEnabled(false);
         final Holder holder = new Holder(this, frameLayout);
         imageView.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
@@ -324,7 +328,7 @@ public class CCTileAdapter extends RecyclerView.Adapter<Holder> implements TileQ
                 holder.mTileView.setFocusableInTouchMode(true);
                 holder.mTileView.setVisibility(0);
                 holder.mTileView.setImportantForAccessibility(1);
-                holder.mTileView.setContentDescription(this.mContext.getString(C0018R$string.accessibility_qs_edit_position_label, new Object[]{Integer.valueOf(i + 1)}));
+                holder.mTileView.setContentDescription(this.mContext.getString(C0021R$string.accessibility_qs_edit_position_label, new Object[]{Integer.valueOf(i + 1)}));
                 holder.mTileView.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View view) {
                         CCTileAdapter.this.selectPosition(holder.getAdapterPosition(), view);
@@ -348,11 +352,11 @@ public class CCTileAdapter extends RecyclerView.Adapter<Holder> implements TileQ
                 holder.mTileView.getIcon().setIsCustomTile(!tileInfo.isSystem);
                 if (i > this.mEditIndex) {
                     QSTile.State state = tileInfo.state;
-                    state.contentDescription = this.mContext.getString(C0018R$string.accessibility_qs_edit_add_tile_label, new Object[]{state.label});
+                    state.contentDescription = this.mContext.getString(C0021R$string.accessibility_qs_edit_add_tile_label, new Object[]{state.label});
                 } else if (this.mAccessibilityMoving) {
-                    tileInfo.state.contentDescription = this.mContext.getString(C0018R$string.accessibility_qs_edit_position_label, new Object[]{Integer.valueOf(i + 1)});
+                    tileInfo.state.contentDescription = this.mContext.getString(C0021R$string.accessibility_qs_edit_position_label, new Object[]{Integer.valueOf(i + 1)});
                 } else {
-                    tileInfo.state.contentDescription = this.mContext.getString(C0018R$string.accessibility_qs_edit_tile_label, new Object[]{Integer.valueOf(i + 1), tileInfo.state.label});
+                    tileInfo.state.contentDescription = this.mContext.getString(C0021R$string.accessibility_qs_edit_tile_label, new Object[]{Integer.valueOf(i + 1), tileInfo.state.label});
                 }
                 tileInfo.state.state = 1;
                 holder.mTileView.onStateChanged(tileInfo.state);
@@ -430,7 +434,7 @@ public class CCTileAdapter extends RecyclerView.Adapter<Holder> implements TileQ
     /* access modifiers changed from: private */
     public void showAccessibilityDialog(final int i, View view) {
         TileQueryHelper.TileInfo tileInfo = this.mTiles.get(i);
-        AlertDialog create = new AlertDialog.Builder(this.mContext).setItems(new CharSequence[]{this.mContext.getString(C0018R$string.accessibility_qs_edit_move_tile, new Object[]{tileInfo.state.label}), this.mContext.getString(C0018R$string.accessibility_qs_edit_remove_tile, new Object[]{tileInfo.state.label})}, new DialogInterface.OnClickListener() {
+        AlertDialog create = new AlertDialog.Builder(this.mContext).setItems(new CharSequence[]{this.mContext.getString(C0021R$string.accessibility_qs_edit_move_tile, new Object[]{tileInfo.state.label}), this.mContext.getString(C0021R$string.accessibility_qs_edit_remove_tile, new Object[]{tileInfo.state.label})}, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialogInterface, int i) {
                 if (i == 0) {
                     CCTileAdapter.this.startAccessibleDrag(i);
@@ -495,15 +499,15 @@ public class CCTileAdapter extends RecyclerView.Adapter<Holder> implements TileQ
         if (i2 >= i4) {
             MetricsLogger.action(this.mContext, 360, strip(this.mTiles.get(i2)));
             MetricsLogger.action(this.mContext, 361, i);
-            str = this.mContext.getString(C0018R$string.accessibility_qs_edit_tile_removed, new Object[]{charSequence});
+            str = this.mContext.getString(C0021R$string.accessibility_qs_edit_tile_removed, new Object[]{charSequence});
         } else if (i >= i4) {
             MetricsLogger.action(this.mContext, 362, strip(this.mTiles.get(i2)));
             MetricsLogger.action(this.mContext, 363, i2);
-            str = this.mContext.getString(C0018R$string.accessibility_qs_edit_tile_added, new Object[]{charSequence, Integer.valueOf(i2 + 1)});
+            str = this.mContext.getString(C0021R$string.accessibility_qs_edit_tile_added, new Object[]{charSequence, Integer.valueOf(i2 + 1)});
         } else {
             MetricsLogger.action(this.mContext, 364, strip(this.mTiles.get(i2)));
             MetricsLogger.action(this.mContext, 365, i2);
-            str = this.mContext.getString(C0018R$string.accessibility_qs_edit_tile_moved, new Object[]{charSequence, Integer.valueOf(i2 + 1)});
+            str = this.mContext.getString(C0021R$string.accessibility_qs_edit_tile_moved, new Object[]{charSequence, Integer.valueOf(i2 + 1)});
         }
         view.announceForAccessibility(str);
         saveSpecs(this.mHost, false);
@@ -581,7 +585,7 @@ public class CCTileAdapter extends RecyclerView.Adapter<Holder> implements TileQ
         private final ColorDrawable mDrawable;
 
         private TileItemDecoration(Context context) {
-            this.mDrawable = new ColorDrawable(context.getColor(C0008R$color.qs_customize_content_background_color));
+            this.mDrawable = new ColorDrawable(context.getColor(C0011R$color.qs_customize_content_background_color));
         }
 
         public void onDraw(Canvas canvas, RecyclerView recyclerView) {

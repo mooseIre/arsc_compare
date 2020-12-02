@@ -8,8 +8,8 @@ import android.provider.Settings;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
-import com.android.systemui.C0007R$bool;
-import com.android.systemui.C0012R$id;
+import com.android.systemui.C0010R$bool;
+import com.android.systemui.C0015R$id;
 import com.android.systemui.Dependency;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.plugins.DarkIconDispatcher;
@@ -45,7 +45,7 @@ public class MiuiKeyguardStatusBarView extends KeyguardStatusBarView implements 
 
     public MiuiKeyguardStatusBarView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-        this.mLeftHoleDevice = context.getResources().getBoolean(C0007R$bool.left_hole_device);
+        this.mLeftHoleDevice = context.getResources().getBoolean(C0010R$bool.left_hole_device);
     }
 
     /* access modifiers changed from: protected */
@@ -91,9 +91,9 @@ public class MiuiKeyguardStatusBarView extends KeyguardStatusBarView implements 
         int i2 = i;
         int i3 = lightModeIconColorSingleTone;
         int i4 = darkModeIconColorSingleTone;
-        applyDarkness(C0012R$id.fullscreen_network_speed_view, this.mEmptyRect, f2, i2, i3, i4);
-        applyDarkness(C0012R$id.battery, this.mEmptyRect, f2, i2, i3, i4);
-        applyDarkness(C0012R$id.clock, this.mEmptyRect, f2, i2, i3, i4);
+        applyDarkness(C0015R$id.fullscreen_network_speed_view, this.mEmptyRect, f2, i2, i3, i4);
+        applyDarkness(C0015R$id.battery, this.mEmptyRect, f2, i2, i3, i4);
+        applyDarkness(C0015R$id.clock, this.mEmptyRect, f2, i2, i3, i4);
     }
 
     /* access modifiers changed from: private */

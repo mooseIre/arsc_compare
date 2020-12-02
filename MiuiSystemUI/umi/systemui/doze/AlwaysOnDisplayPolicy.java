@@ -8,7 +8,7 @@ import android.os.Handler;
 import android.provider.Settings;
 import android.util.KeyValueListParser;
 import android.util.Log;
-import com.android.systemui.C0005R$array;
+import com.android.systemui.C0008R$array;
 
 public class AlwaysOnDisplayPolicy {
     public int[] dimmingScrimArray;
@@ -68,9 +68,9 @@ public class AlwaysOnDisplayPolicy {
                 AlwaysOnDisplayPolicy alwaysOnDisplayPolicy5 = AlwaysOnDisplayPolicy.this;
                 alwaysOnDisplayPolicy5.wallpaperVisibilityDuration = alwaysOnDisplayPolicy5.mParser.getLong("wallpaper_visibility_timeout", 60000);
                 AlwaysOnDisplayPolicy alwaysOnDisplayPolicy6 = AlwaysOnDisplayPolicy.this;
-                alwaysOnDisplayPolicy6.screenBrightnessArray = alwaysOnDisplayPolicy6.mParser.getIntArray("screen_brightness_array", resources.getIntArray(C0005R$array.config_doze_brightness_sensor_to_brightness));
+                alwaysOnDisplayPolicy6.screenBrightnessArray = alwaysOnDisplayPolicy6.mParser.getIntArray("screen_brightness_array", resources.getIntArray(C0008R$array.config_doze_brightness_sensor_to_brightness));
                 AlwaysOnDisplayPolicy alwaysOnDisplayPolicy7 = AlwaysOnDisplayPolicy.this;
-                alwaysOnDisplayPolicy7.dimmingScrimArray = alwaysOnDisplayPolicy7.mParser.getIntArray("dimming_scrim_array", resources.getIntArray(C0005R$array.config_doze_brightness_sensor_to_scrim_opacity));
+                alwaysOnDisplayPolicy7.dimmingScrimArray = alwaysOnDisplayPolicy7.mParser.getIntArray("dimming_scrim_array", resources.getIntArray(C0008R$array.config_doze_brightness_sensor_to_scrim_opacity));
             }
         }
     }

@@ -11,9 +11,9 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.android.systemui.C0012R$id;
-import com.android.systemui.C0014R$layout;
-import com.android.systemui.C0018R$string;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0017R$layout;
+import com.android.systemui.C0021R$string;
 
 public class UsbContaminantActivity extends Activity implements View.OnClickListener {
     private TextView mEnableUsb;
@@ -29,18 +29,18 @@ public class UsbContaminantActivity extends Activity implements View.OnClickList
         window.setType(2008);
         requestWindowFeature(1);
         super.onCreate(bundle);
-        setContentView(C0014R$layout.contaminant_dialog);
+        setContentView(C0017R$layout.contaminant_dialog);
         this.mUsbPort = getIntent().getParcelableExtra("port").getUsbPort((UsbManager) getSystemService(UsbManager.class));
-        this.mLearnMore = (TextView) findViewById(C0012R$id.learnMore);
-        this.mEnableUsb = (TextView) findViewById(C0012R$id.enableUsb);
-        this.mGotIt = (TextView) findViewById(C0012R$id.gotIt);
-        this.mTitle = (TextView) findViewById(C0012R$id.title);
-        this.mMessage = (TextView) findViewById(C0012R$id.message);
-        this.mTitle.setText(getString(C0018R$string.usb_contaminant_title));
-        this.mMessage.setText(getString(C0018R$string.usb_contaminant_message));
-        this.mEnableUsb.setText(getString(C0018R$string.usb_disable_contaminant_detection));
-        this.mGotIt.setText(getString(C0018R$string.got_it));
-        this.mLearnMore.setText(getString(C0018R$string.learn_more));
+        this.mLearnMore = (TextView) findViewById(C0015R$id.learnMore);
+        this.mEnableUsb = (TextView) findViewById(C0015R$id.enableUsb);
+        this.mGotIt = (TextView) findViewById(C0015R$id.gotIt);
+        this.mTitle = (TextView) findViewById(C0015R$id.title);
+        this.mMessage = (TextView) findViewById(C0015R$id.message);
+        this.mTitle.setText(getString(C0021R$string.usb_contaminant_title));
+        this.mMessage.setText(getString(C0021R$string.usb_contaminant_message));
+        this.mEnableUsb.setText(getString(C0021R$string.usb_disable_contaminant_detection));
+        this.mGotIt.setText(getString(C0021R$string.got_it));
+        this.mLearnMore.setText(getString(C0021R$string.learn_more));
         this.mEnableUsb.setOnClickListener(this);
         this.mGotIt.setOnClickListener(this);
         this.mLearnMore.setOnClickListener(this);
@@ -54,7 +54,7 @@ public class UsbContaminantActivity extends Activity implements View.OnClickList
         if (view == this.mEnableUsb) {
             try {
                 this.mUsbPort.enableContaminantDetection(false);
-                Toast.makeText(this, C0018R$string.usb_port_enabled, 0).show();
+                Toast.makeText(this, C0021R$string.usb_port_enabled, 0).show();
             } catch (Exception e) {
                 Log.e("UsbContaminantActivity", "Unable to notify Usb service", e);
             }

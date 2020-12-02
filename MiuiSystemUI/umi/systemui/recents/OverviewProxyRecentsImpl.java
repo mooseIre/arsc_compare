@@ -10,7 +10,7 @@ import android.os.Handler;
 import android.os.RemoteException;
 import android.util.Log;
 import android.widget.Toast;
-import com.android.systemui.C0018R$string;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.Dependency;
 import com.android.systemui.shared.recents.IOverviewProxy;
 import com.android.systemui.shared.system.ActivityManagerWrapper;
@@ -119,7 +119,7 @@ public class OverviewProxyRecentsImpl implements RecentsImplementation {
         boolean z = activityType == 2 || activityType == 3;
         if (runningTask != null && !z && !isScreenPinningActive) {
             if (!runningTask.supportsSplitScreenMultiWindow) {
-                Toast.makeText(this.mContext, C0018R$string.dock_non_resizeble_failed_to_dock_text, 0).show();
+                Toast.makeText(this.mContext, C0021R$string.dock_non_resizeble_failed_to_dock_text, 0).show();
             } else if (ActivityManagerWrapper.getInstance().setTaskWindowingModeSplitScreenPrimary(runningTask.id, i, rect)) {
                 this.mDividerOptional.ifPresent($$Lambda$fHPOCVoTSvBox_jGWtU7jxIAav4.INSTANCE);
                 this.mDividerOptional.ifPresent($$Lambda$SmHdjDaQkSsbiXXCyerAyvUNnY.INSTANCE);

@@ -4,7 +4,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.service.controls.actions.ControlAction;
 import android.widget.EditText;
-import com.android.systemui.C0012R$id;
+import com.android.systemui.C0015R$id;
 import kotlin.jvm.functions.Function0;
 
 /* compiled from: ChallengeDialogs.kt */
@@ -20,8 +20,8 @@ final class ChallengeDialogs$createPinDialog$$inlined$apply$lambda$1 implements 
     public final void onClick(DialogInterface dialogInterface, int i) {
         if (dialogInterface instanceof Dialog) {
             Dialog dialog = (Dialog) dialogInterface;
-            dialog.requireViewById(C0012R$id.controls_pin_input);
-            this.$cvh$inlined.action(ChallengeDialogs.INSTANCE.addChallengeValue(this.$lastAction$inlined, ((EditText) dialog.requireViewById(C0012R$id.controls_pin_input)).getText().toString()));
+            dialog.requireViewById(C0015R$id.controls_pin_input);
+            this.$cvh$inlined.action(ChallengeDialogs.INSTANCE.addChallengeValue(this.$lastAction$inlined, ((EditText) dialog.requireViewById(C0015R$id.controls_pin_input)).getText().toString()));
             dialogInterface.dismiss();
         }
     }

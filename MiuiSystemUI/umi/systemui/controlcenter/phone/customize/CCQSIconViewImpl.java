@@ -8,10 +8,10 @@ import android.graphics.drawable.LayerDrawable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
-import com.android.systemui.C0008R$color;
-import com.android.systemui.C0009R$dimen;
-import com.android.systemui.C0010R$drawable;
-import com.android.systemui.C0012R$id;
+import com.android.systemui.C0011R$color;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0015R$id;
 import com.android.systemui.plugins.qs.QSIconView;
 import com.android.systemui.plugins.qs.QSTile;
 import com.miui.systemui.graphics.DrawableUtils;
@@ -39,11 +39,11 @@ public class CCQSIconViewImpl extends QSIconView {
         super(context, attributeSet);
         this.mAnimationEnabled = true;
         this.mIsCustomTile = false;
-        this.mIconColor = getResources().getColor(C0008R$color.cc_qs_tile_icon_color);
-        this.mIconColorOff = getResources().getColor(C0008R$color.cc_qs_tile_icon_color_off);
-        this.mIconColorUnavailable = getResources().getColor(C0008R$color.qs_control_tile_icon_unavailable_color);
-        this.mCustomTileSize = (int) getResources().getDimension(C0009R$dimen.qs_control_custom_tile_icon_inner_size);
-        this.mTileSize = (int) getResources().getDimension(C0009R$dimen.qs_control_center_tile_width);
+        this.mIconColor = getResources().getColor(C0011R$color.cc_qs_tile_icon_color);
+        this.mIconColorOff = getResources().getColor(C0011R$color.cc_qs_tile_icon_color_off);
+        this.mIconColorUnavailable = getResources().getColor(C0011R$color.qs_control_tile_icon_unavailable_color);
+        this.mCustomTileSize = (int) getResources().getDimension(C0012R$dimen.qs_control_custom_tile_icon_inner_size);
+        this.mTileSize = (int) getResources().getDimension(C0012R$dimen.qs_control_center_tile_width);
         this.mState = new QSTile.State();
         View createIcon = createIcon();
         this.mIcon = createIcon;
@@ -70,10 +70,10 @@ public class CCQSIconViewImpl extends QSIconView {
     }
 
     public void updateResources() {
-        this.mIconColor = getResources().getColor(C0008R$color.cc_qs_tile_icon_color);
-        this.mIconColorOff = getResources().getColor(C0008R$color.cc_qs_tile_icon_color_off);
-        this.mIconColorUnavailable = getResources().getColor(C0008R$color.qs_control_tile_icon_unavailable_color);
-        this.mCustomTileSize = (int) getResources().getDimension(C0009R$dimen.qs_control_custom_tile_icon_inner_size);
+        this.mIconColor = getResources().getColor(C0011R$color.cc_qs_tile_icon_color);
+        this.mIconColorOff = getResources().getColor(C0011R$color.cc_qs_tile_icon_color_off);
+        this.mIconColorUnavailable = getResources().getColor(C0011R$color.qs_control_tile_icon_unavailable_color);
+        this.mCustomTileSize = (int) getResources().getDimension(C0012R$dimen.qs_control_custom_tile_icon_inner_size);
         setIcon(this.mState, false);
     }
 
@@ -96,8 +96,8 @@ public class CCQSIconViewImpl extends QSIconView {
         QSTile.Icon icon = supplier != null ? supplier.get() : state.icon;
         Drawable drawable2 = icon != null ? icon.getDrawable(this.mContext) : null;
         if (drawable2 != null) {
-            Integer num = (Integer) imageView.getTag(C0012R$id.qs_icon_state_tag);
-            if (num == null || num.intValue() != state.state || !Objects.equals(icon, imageView.getTag(C0012R$id.qs_icon_tag))) {
+            Integer num = (Integer) imageView.getTag(C0015R$id.qs_icon_state_tag);
+            if (num == null || num.intValue() != state.state || !Objects.equals(icon, imageView.getTag(C0015R$id.qs_icon_tag))) {
                 drawable2.mutate();
                 drawable2.setAutoMirrored(false);
                 if (state.activeBgColor != 2) {
@@ -118,7 +118,7 @@ public class CCQSIconViewImpl extends QSIconView {
                 int properIconSize = getProperIconSize(drawable2);
                 if ((!this.mAnimationEnabled || (i2 = state.state) == 0 || (i == 0 && i2 == 1) || i == state.state) ? false : true) {
                     int i4 = state.state == 2 ? 255 : 0;
-                    Drawable drawable3 = getResources().getDrawable(C0010R$drawable.ic_cc_qs_bg_inactive);
+                    Drawable drawable3 = getResources().getDrawable(C0013R$drawable.ic_cc_qs_bg_inactive);
                     Drawable mutate = getResources().getDrawable(getActiveBgDrawable(state)).mutate();
                     LayerDrawable layerDrawable = new LayerDrawable(new Drawable[]{drawable3, mutate, drawable2});
                     layerDrawable.setLayerGravity(2, 17);
@@ -137,11 +137,11 @@ public class CCQSIconViewImpl extends QSIconView {
                 } else {
                     int i5 = state.state;
                     if (i5 == 0) {
-                        drawable = getResources().getDrawable(C0010R$drawable.ic_cc_qs_bg_unavailable);
+                        drawable = getResources().getDrawable(C0013R$drawable.ic_cc_qs_bg_unavailable);
                     } else if (i5 == 2) {
                         drawable = getResources().getDrawable(getActiveBgDrawable(state));
                     } else {
-                        drawable = getResources().getDrawable(C0010R$drawable.ic_cc_qs_bg_inactive);
+                        drawable = getResources().getDrawable(C0013R$drawable.ic_cc_qs_bg_inactive);
                     }
                     if (drawable2 instanceof AnimatedVectorDrawable) {
                         AnimatedVectorDrawable animatedVectorDrawable2 = (AnimatedVectorDrawable) drawable2;
@@ -157,8 +157,8 @@ public class CCQSIconViewImpl extends QSIconView {
                     combine.setLayerSize(1, properIconSize, properIconSize);
                     imageView.setImageDrawable(combine);
                 }
-                imageView.setTag(C0012R$id.qs_icon_state_tag, Integer.valueOf(state.state));
-                imageView.setTag(C0012R$id.qs_icon_tag, icon);
+                imageView.setTag(C0015R$id.qs_icon_state_tag, Integer.valueOf(state.state));
+                imageView.setTag(C0015R$id.qs_icon_tag, icon);
             }
         }
     }
@@ -180,12 +180,12 @@ public class CCQSIconViewImpl extends QSIconView {
     private int getActiveBgDrawable(QSTile.State state) {
         int i = state.activeBgColor;
         if (i == 1) {
-            return C0010R$drawable.ic_cc_qs_bg_active_battery_related;
+            return C0013R$drawable.ic_cc_qs_bg_active_battery_related;
         }
         if (i != 2) {
-            return C0010R$drawable.ic_cc_qs_bg_active_normal;
+            return C0013R$drawable.ic_cc_qs_bg_active_normal;
         }
-        return C0010R$drawable.ic_cc_qs_bg_active_auto_brightness;
+        return C0013R$drawable.ic_cc_qs_bg_active_auto_brightness;
     }
 
     private int getProperIconSize(Drawable drawable) {

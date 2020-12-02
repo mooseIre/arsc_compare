@@ -8,7 +8,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.android.settingslib.Utils;
 import com.android.settingslib.graph.SignalDrawable;
-import com.android.systemui.C0012R$id;
+import com.android.systemui.C0015R$id;
 import com.android.systemui.DualToneHandler;
 import com.android.systemui.qs.QuickStatusBarHeader;
 
@@ -35,10 +35,10 @@ public class QSCarrier extends LinearLayout {
     public void onFinishInflate() {
         super.onFinishInflate();
         new DualToneHandler(getContext());
-        findViewById(C0012R$id.mobile_combo);
-        this.mMobileSignal = (ImageView) findViewById(C0012R$id.mobile_signal);
-        ImageView imageView = (ImageView) findViewById(C0012R$id.mobile_roaming);
-        TextView textView = (TextView) findViewById(C0012R$id.qs_carrier_text);
+        findViewById(C0015R$id.mobile_combo);
+        this.mMobileSignal = (ImageView) findViewById(C0015R$id.mobile_signal);
+        ImageView imageView = (ImageView) findViewById(C0015R$id.mobile_roaming);
+        TextView textView = (TextView) findViewById(C0015R$id.qs_carrier_text);
         this.mMobileSignal.setImageDrawable(new SignalDrawable(this.mContext));
         int colorAttrDefaultColor = Utils.getColorAttrDefaultColor(this.mContext, 16842800);
         ColorStateList.valueOf(colorAttrDefaultColor);

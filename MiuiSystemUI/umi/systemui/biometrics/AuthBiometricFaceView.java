@@ -11,9 +11,9 @@ import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.android.internal.annotations.VisibleForTesting;
-import com.android.systemui.C0008R$color;
-import com.android.systemui.C0010R$drawable;
-import com.android.systemui.C0018R$string;
+import com.android.systemui.C0011R$color;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0021R$string;
 
 public class AuthBiometricFaceView extends AuthBiometricView {
     @VisibleForTesting
@@ -44,7 +44,7 @@ public class AuthBiometricFaceView extends AuthBiometricView {
             this.mContext = context;
             this.mIconView = imageView;
             new Handler(Looper.getMainLooper());
-            showStaticDrawable(C0010R$drawable.face_dialog_pulse_dark_to_light);
+            showStaticDrawable(C0013R$drawable.face_dialog_pulse_dark_to_light);
         }
 
         /* access modifiers changed from: package-private */
@@ -70,16 +70,16 @@ public class AuthBiometricFaceView extends AuthBiometricView {
         /* access modifiers changed from: package-private */
         public void startPulsing() {
             this.mLastPulseLightToDark = false;
-            animateIcon(C0010R$drawable.face_dialog_pulse_dark_to_light, true);
+            animateIcon(C0013R$drawable.face_dialog_pulse_dark_to_light, true);
         }
 
         /* access modifiers changed from: package-private */
         public void pulseInNextDirection() {
             int i;
             if (this.mLastPulseLightToDark) {
-                i = C0010R$drawable.face_dialog_pulse_dark_to_light;
+                i = C0013R$drawable.face_dialog_pulse_dark_to_light;
             } else {
-                i = C0010R$drawable.face_dialog_pulse_light_to_dark;
+                i = C0013R$drawable.face_dialog_pulse_light_to_dark;
             }
             animateIcon(i, true);
             this.mLastPulseLightToDark = !this.mLastPulseLightToDark;
@@ -96,31 +96,31 @@ public class AuthBiometricFaceView extends AuthBiometricView {
         public void updateState(int i, int i2) {
             boolean z = i == 4 || i == 3;
             if (i2 == 1) {
-                showStaticDrawable(C0010R$drawable.face_dialog_pulse_dark_to_light);
-                this.mIconView.setContentDescription(this.mContext.getString(C0018R$string.biometric_dialog_face_icon_description_authenticating));
+                showStaticDrawable(C0013R$drawable.face_dialog_pulse_dark_to_light);
+                this.mIconView.setContentDescription(this.mContext.getString(C0021R$string.biometric_dialog_face_icon_description_authenticating));
             } else if (i2 == 2) {
                 startPulsing();
-                this.mIconView.setContentDescription(this.mContext.getString(C0018R$string.biometric_dialog_face_icon_description_authenticating));
+                this.mIconView.setContentDescription(this.mContext.getString(C0021R$string.biometric_dialog_face_icon_description_authenticating));
             } else if (i == 5 && i2 == 6) {
-                animateOnce(C0010R$drawable.face_dialog_dark_to_checkmark);
-                this.mIconView.setContentDescription(this.mContext.getString(C0018R$string.biometric_dialog_face_icon_description_confirmed));
+                animateOnce(C0013R$drawable.face_dialog_dark_to_checkmark);
+                this.mIconView.setContentDescription(this.mContext.getString(C0021R$string.biometric_dialog_face_icon_description_confirmed));
             } else if (z && i2 == 0) {
-                animateOnce(C0010R$drawable.face_dialog_error_to_idle);
-                this.mIconView.setContentDescription(this.mContext.getString(C0018R$string.biometric_dialog_face_icon_description_idle));
+                animateOnce(C0013R$drawable.face_dialog_error_to_idle);
+                this.mIconView.setContentDescription(this.mContext.getString(C0021R$string.biometric_dialog_face_icon_description_idle));
             } else if (z && i2 == 6) {
-                animateOnce(C0010R$drawable.face_dialog_dark_to_checkmark);
-                this.mIconView.setContentDescription(this.mContext.getString(C0018R$string.biometric_dialog_face_icon_description_authenticated));
+                animateOnce(C0013R$drawable.face_dialog_dark_to_checkmark);
+                this.mIconView.setContentDescription(this.mContext.getString(C0021R$string.biometric_dialog_face_icon_description_authenticated));
             } else if (i2 == 4 && i != 4) {
-                animateOnce(C0010R$drawable.face_dialog_dark_to_error);
+                animateOnce(C0013R$drawable.face_dialog_dark_to_error);
             } else if (i == 2 && i2 == 6) {
-                animateOnce(C0010R$drawable.face_dialog_dark_to_checkmark);
-                this.mIconView.setContentDescription(this.mContext.getString(C0018R$string.biometric_dialog_face_icon_description_authenticated));
+                animateOnce(C0013R$drawable.face_dialog_dark_to_checkmark);
+                this.mIconView.setContentDescription(this.mContext.getString(C0021R$string.biometric_dialog_face_icon_description_authenticated));
             } else if (i2 == 5) {
-                animateOnce(C0010R$drawable.face_dialog_wink_from_dark);
-                this.mIconView.setContentDescription(this.mContext.getString(C0018R$string.biometric_dialog_face_icon_description_authenticated));
+                animateOnce(C0013R$drawable.face_dialog_wink_from_dark);
+                this.mIconView.setContentDescription(this.mContext.getString(C0021R$string.biometric_dialog_face_icon_description_authenticated));
             } else if (i2 == 0) {
-                showStaticDrawable(C0010R$drawable.face_dialog_idle_static);
-                this.mIconView.setContentDescription(this.mContext.getString(C0018R$string.biometric_dialog_face_icon_description_idle));
+                showStaticDrawable(C0013R$drawable.face_dialog_idle_static);
+                this.mIconView.setContentDescription(this.mContext.getString(C0021R$string.biometric_dialog_face_icon_description_idle));
             } else {
                 Log.w("BiometricPrompt/AuthBiometricFaceView", "Unhandled state: " + i2);
             }
@@ -169,7 +169,7 @@ public class AuthBiometricFaceView extends AuthBiometricView {
     }
 
     static void resetErrorView(Context context, TextView textView) {
-        textView.setTextColor(context.getResources().getColor(C0008R$color.biometric_dialog_gray, context.getTheme()));
+        textView.setTextColor(context.getResources().getColor(C0011R$color.biometric_dialog_gray, context.getTheme()));
         textView.setVisibility(4);
     }
 }

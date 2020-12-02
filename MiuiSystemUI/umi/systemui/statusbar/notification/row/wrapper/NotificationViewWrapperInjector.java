@@ -3,7 +3,7 @@ package com.android.systemui.statusbar.notification.row.wrapper;
 import android.content.Context;
 import android.view.NotificationHeaderView;
 import android.view.View;
-import com.android.systemui.C0012R$id;
+import com.android.systemui.C0015R$id;
 import com.android.systemui.statusbar.notification.NotificationSettingsHelper;
 import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow;
 import com.android.systemui.statusbar.notification.row.MiuiExpandableNotificationRow;
@@ -11,7 +11,7 @@ import com.android.systemui.statusbar.notification.row.MiuiExpandableNotificatio
 public class NotificationViewWrapperInjector {
     public static NotificationViewWrapper wrap(Context context, View view, ExpandableNotificationRow expandableNotificationRow) {
         if (NotificationSettingsHelper.showMiuiStyle()) {
-            if (view.getId() != C0012R$id.status_bar_latest_event_content) {
+            if (view.getId() != C0015R$id.status_bar_latest_event_content) {
                 return new MiuiNotificationCustomViewWrapper(context, view, expandableNotificationRow);
             }
             if ("oneLine".equals(view.getTag())) {

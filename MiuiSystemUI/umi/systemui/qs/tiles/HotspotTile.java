@@ -7,9 +7,9 @@ import android.util.Log;
 import android.widget.Switch;
 import androidx.appcompat.R$styleable;
 import androidx.lifecycle.LifecycleOwner;
-import com.android.systemui.C0010R$drawable;
-import com.android.systemui.C0016R$plurals;
-import com.android.systemui.C0018R$string;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0019R$plurals;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.plugins.qs.QSTile;
 import com.android.systemui.qs.QSHost;
 import com.android.systemui.qs.tileimpl.QSTileImpl;
@@ -19,12 +19,12 @@ import com.android.systemui.statusbar.policy.HotspotController;
 public class HotspotTile extends QSTileImpl<QSTile.BooleanState> {
     private final HotspotAndDataSaverCallbacks mCallbacks;
     private final DataSaverController mDataSaverController;
-    private final QSTile.Icon mEnabledStatic = QSTileImpl.ResourceIcon.get(C0010R$drawable.ic_hotspot);
+    private final QSTile.Icon mEnabledStatic = QSTileImpl.ResourceIcon.get(C0013R$drawable.ic_hotspot);
     private final HotspotController mHotspotController;
     private boolean mListening;
-    private final QSTile.Icon mWifi4EnabledStatic = QSTileImpl.ResourceIcon.get(C0010R$drawable.ic_wifi_4_hotspot);
-    private final QSTile.Icon mWifi5EnabledStatic = QSTileImpl.ResourceIcon.get(C0010R$drawable.ic_wifi_5_hotspot);
-    private final QSTile.Icon mWifi6EnabledStatic = QSTileImpl.ResourceIcon.get(C0010R$drawable.ic_wifi_6_hotspot);
+    private final QSTile.Icon mWifi4EnabledStatic = QSTileImpl.ResourceIcon.get(C0013R$drawable.ic_wifi_4_hotspot);
+    private final QSTile.Icon mWifi5EnabledStatic = QSTileImpl.ResourceIcon.get(C0013R$drawable.ic_wifi_5_hotspot);
+    private final QSTile.Icon mWifi6EnabledStatic = QSTileImpl.ResourceIcon.get(C0013R$drawable.ic_wifi_6_hotspot);
     private WifiManager mWifiManager;
 
     public int getMetricsCategory() {
@@ -85,7 +85,7 @@ public class HotspotTile extends QSTileImpl<QSTile.BooleanState> {
     }
 
     public CharSequence getTileLabel() {
-        return this.mContext.getString(C0018R$string.quick_settings_hotspot_label);
+        return this.mContext.getString(C0021R$string.quick_settings_hotspot_label);
     }
 
     /* access modifiers changed from: protected */
@@ -110,7 +110,7 @@ public class HotspotTile extends QSTileImpl<QSTile.BooleanState> {
             z = this.mDataSaverController.isDataSaverEnabled();
         }
         booleanState.icon = this.mEnabledStatic;
-        booleanState.label = this.mContext.getString(C0018R$string.quick_settings_hotspot_label);
+        booleanState.label = this.mContext.getString(C0021R$string.quick_settings_hotspot_label);
         booleanState.isTransient = z3;
         booleanState.slash.isSlashed = !booleanState.value && !z3;
         if (booleanState.isTransient) {
@@ -143,23 +143,23 @@ public class HotspotTile extends QSTileImpl<QSTile.BooleanState> {
 
     private String getSecondaryLabel(boolean z, boolean z2, boolean z3, int i) {
         if (z2) {
-            return this.mContext.getString(C0018R$string.quick_settings_hotspot_secondary_label_transient);
+            return this.mContext.getString(C0021R$string.quick_settings_hotspot_secondary_label_transient);
         }
         if (z3) {
-            return this.mContext.getString(C0018R$string.quick_settings_hotspot_secondary_label_data_saver_enabled);
+            return this.mContext.getString(C0021R$string.quick_settings_hotspot_secondary_label_data_saver_enabled);
         }
         if (i <= 0 || !z) {
             return null;
         }
-        return this.mContext.getResources().getQuantityString(C0016R$plurals.quick_settings_hotspot_secondary_label_num_devices, i, new Object[]{Integer.valueOf(i)});
+        return this.mContext.getResources().getQuantityString(C0019R$plurals.quick_settings_hotspot_secondary_label_num_devices, i, new Object[]{Integer.valueOf(i)});
     }
 
     /* access modifiers changed from: protected */
     public String composeChangeAnnouncement() {
         if (((QSTile.BooleanState) this.mState).value) {
-            return this.mContext.getString(C0018R$string.accessibility_quick_settings_hotspot_changed_on);
+            return this.mContext.getString(C0021R$string.accessibility_quick_settings_hotspot_changed_on);
         }
-        return this.mContext.getString(C0018R$string.accessibility_quick_settings_hotspot_changed_off);
+        return this.mContext.getString(C0021R$string.accessibility_quick_settings_hotspot_changed_off);
     }
 
     private final class HotspotAndDataSaverCallbacks implements HotspotController.Callback, DataSaverController.Listener {

@@ -16,11 +16,11 @@ import android.view.ViewStub;
 import android.widget.FrameLayout;
 import com.android.settingslib.animation.AppearAnimationUtils;
 import com.android.settingslib.drawable.CircleFramedDrawable;
-import com.android.systemui.C0008R$color;
-import com.android.systemui.C0009R$dimen;
-import com.android.systemui.C0010R$drawable;
-import com.android.systemui.C0012R$id;
-import com.android.systemui.C0014R$layout;
+import com.android.systemui.C0011R$color;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0017R$layout;
 import com.android.systemui.Dependency;
 import com.android.systemui.Interpolators;
 import com.android.systemui.qs.tiles.UserDetailItemView;
@@ -80,8 +80,8 @@ public class KeyguardUserSwitcher {
             this.mUserSwitcher.removeOnLayoutChangeListener(this.mBackground);
         }
         this.mUserSwitcherContainer.removeAllViews();
-        LayoutInflater.from(this.mUserSwitcherContainer.getContext()).inflate(C0014R$layout.keyguard_user_switcher_inner, this.mUserSwitcherContainer);
-        ViewGroup viewGroup2 = (ViewGroup) this.mUserSwitcherContainer.findViewById(C0012R$id.keyguard_user_switcher_inner);
+        LayoutInflater.from(this.mUserSwitcherContainer.getContext()).inflate(C0017R$layout.keyguard_user_switcher_inner, this.mUserSwitcherContainer);
+        ViewGroup viewGroup2 = (ViewGroup) this.mUserSwitcherContainer.findViewById(C0015R$id.keyguard_user_switcher_inner);
         this.mUserSwitcher = viewGroup2;
         viewGroup2.addOnLayoutChangeListener(this.mBackground);
         this.mUserSwitcher.setBackground(this.mBackground);
@@ -238,7 +238,7 @@ public class KeyguardUserSwitcher {
         public View getView(int i, View view, ViewGroup viewGroup) {
             UserSwitcherController.UserRecord item = getItem(i);
             if (!(view instanceof UserDetailItemView) || !(view.getTag() instanceof UserSwitcherController.UserRecord)) {
-                view = LayoutInflater.from(this.mContext).inflate(C0014R$layout.keyguard_user_switcher_item, viewGroup, false);
+                view = LayoutInflater.from(this.mContext).inflate(C0017R$layout.keyguard_user_switcher_item, viewGroup, false);
                 view.setOnClickListener(this);
             }
             UserDetailItemView userDetailItemView = (UserDetailItemView) view;
@@ -246,7 +246,7 @@ public class KeyguardUserSwitcher {
             if (item.picture == null) {
                 userDetailItemView.bind(name, getDrawable(this.mContext, item).mutate(), item.resolveId());
             } else {
-                CircleFramedDrawable circleFramedDrawable = new CircleFramedDrawable(item.picture, (int) this.mContext.getResources().getDimension(C0009R$dimen.kg_framed_avatar_size));
+                CircleFramedDrawable circleFramedDrawable = new CircleFramedDrawable(item.picture, (int) this.mContext.getResources().getDimension(C0012R$dimen.kg_framed_avatar_size));
                 circleFramedDrawable.setColorFilter(item.isSwitchToEnabled ? null : UserSwitcherController.BaseUserAdapter.getDisabledUserAvatarColorFilter());
                 userDetailItemView.bind(name, circleFramedDrawable, item.info.id);
             }
@@ -265,17 +265,17 @@ public class KeyguardUserSwitcher {
             int i;
             Drawable iconDrawable = UserSwitcherController.BaseUserAdapter.getIconDrawable(context, userRecord);
             if (userRecord.isCurrent) {
-                i = C0008R$color.kg_user_switcher_selected_avatar_icon_color;
+                i = C0011R$color.kg_user_switcher_selected_avatar_icon_color;
             } else if (!userRecord.isSwitchToEnabled) {
-                i = C0008R$color.GM2_grey_600;
+                i = C0011R$color.GM2_grey_600;
             } else {
-                i = C0008R$color.kg_user_switcher_avatar_icon_color;
+                i = C0011R$color.kg_user_switcher_avatar_icon_color;
             }
             iconDrawable.setTint(context.getResources().getColor(i, context.getTheme()));
             if (!userRecord.isCurrent) {
                 return iconDrawable;
             }
-            return new LayerDrawable(new Drawable[]{context.getDrawable(C0010R$drawable.bg_avatar_selected), iconDrawable});
+            return new LayerDrawable(new Drawable[]{context.getDrawable(C0013R$drawable.bg_avatar_selected), iconDrawable});
         }
 
         public void onClick(View view) {

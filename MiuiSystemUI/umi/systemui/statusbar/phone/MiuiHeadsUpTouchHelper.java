@@ -9,7 +9,7 @@ import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.ViewConfiguration;
 import android.view.animation.DecelerateInterpolator;
-import com.android.systemui.C0009R$dimen;
+import com.android.systemui.C0012R$dimen;
 import com.android.systemui.Dependency;
 import com.android.systemui.statusbar.notification.ActivityLaunchAnimator;
 import com.android.systemui.statusbar.notification.MiniWindowExpandParameters;
@@ -193,10 +193,10 @@ public final class MiuiHeadsUpTouchHelper extends HeadsUpTouchHelper {
     private final void onMiniWindowTrackingStart() {
         Context context = this.mContext;
         Intrinsics.checkExpressionValueIsNotNull(context, "mContext");
-        this.mMaxTriggerThreshold = context.getResources().getDimension(C0009R$dimen.mini_window_max_trigger_threshold);
+        this.mMaxTriggerThreshold = context.getResources().getDimension(C0012R$dimen.mini_window_max_trigger_threshold);
         Context context2 = this.mContext;
         Intrinsics.checkExpressionValueIsNotNull(context2, "mContext");
-        this.mTriggerThreshold = context2.getResources().getDimension(C0009R$dimen.mini_window_trigger_threshold);
+        this.mTriggerThreshold = context2.getResources().getDimension(C0012R$dimen.mini_window_trigger_threshold);
         MiuiExpandableNotificationRow miuiExpandableNotificationRow = this.mPickedMiniWindowChild;
         if (miuiExpandableNotificationRow != null) {
             miuiExpandableNotificationRow.setExpandAnimationRunning(true);

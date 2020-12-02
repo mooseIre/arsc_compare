@@ -3,8 +3,8 @@ package com.android.systemui.statusbar;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
-import com.android.systemui.C0012R$id;
-import com.android.systemui.C0014R$layout;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0017R$layout;
 import com.android.systemui.statusbar.notification.row.dagger.NotificationRowComponent;
 import com.android.systemui.statusbar.phone.LockIcon;
 import com.android.systemui.statusbar.phone.LockscreenLockIconController;
@@ -33,10 +33,10 @@ public class SuperStatusBarViewFactory {
         if (notificationShadeWindowView != null) {
             return notificationShadeWindowView;
         }
-        NotificationShadeWindowView notificationShadeWindowView2 = (NotificationShadeWindowView) this.mInjectionInflationController.injectable(LayoutInflater.from(this.mContext)).inflate(C0014R$layout.super_notification_shade, (ViewGroup) null);
+        NotificationShadeWindowView notificationShadeWindowView2 = (NotificationShadeWindowView) this.mInjectionInflationController.injectable(LayoutInflater.from(this.mContext)).inflate(C0017R$layout.super_notification_shade, (ViewGroup) null);
         this.mNotificationShadeWindowView = notificationShadeWindowView2;
         if (notificationShadeWindowView2 != null) {
-            LockIcon lockIcon = (LockIcon) notificationShadeWindowView2.findViewById(C0012R$id.lock_icon);
+            LockIcon lockIcon = (LockIcon) notificationShadeWindowView2.findViewById(C0015R$id.lock_icon);
             if (lockIcon != null) {
                 this.mLockIconController.attach(lockIcon);
             }
@@ -50,7 +50,7 @@ public class SuperStatusBarViewFactory {
         if (statusBarWindowView != null) {
             return statusBarWindowView;
         }
-        StatusBarWindowView statusBarWindowView2 = (StatusBarWindowView) this.mInjectionInflationController.injectable(LayoutInflater.from(this.mContext)).inflate(C0014R$layout.super_status_bar, (ViewGroup) null);
+        StatusBarWindowView statusBarWindowView2 = (StatusBarWindowView) this.mInjectionInflationController.injectable(LayoutInflater.from(this.mContext)).inflate(C0017R$layout.super_status_bar, (ViewGroup) null);
         this.mStatusBarWindowView = statusBarWindowView2;
         if (statusBarWindowView2 != null) {
             return statusBarWindowView2;
@@ -63,7 +63,7 @@ public class SuperStatusBarViewFactory {
         if (notificationShelf != null) {
             return notificationShelf;
         }
-        NotificationShelf notificationShelf2 = (NotificationShelf) this.mInjectionInflationController.injectable(LayoutInflater.from(this.mContext)).inflate(C0014R$layout.status_bar_notification_shelf, viewGroup, false);
+        NotificationShelf notificationShelf2 = (NotificationShelf) this.mInjectionInflationController.injectable(LayoutInflater.from(this.mContext)).inflate(C0017R$layout.status_bar_notification_shelf, viewGroup, false);
         this.mNotificationShelf = notificationShelf2;
         this.mNotificationRowComponentBuilder.activatableNotificationView(notificationShelf2).build().getActivatableNotificationViewController().init();
         NotificationShelf notificationShelf3 = this.mNotificationShelf;

@@ -27,7 +27,6 @@ import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import com.android.internal.util.Preconditions;
-import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.systemui.CameraAvailabilityListener;
 import com.android.systemui.RegionInterceptingFrameLayout;
 import com.android.systemui.broadcast.BroadcastDispatcher;
@@ -59,30 +58,26 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
     public int mCurrentUserId;
     private DisplayManager.DisplayListener mDisplayListener;
     private DisplayManager mDisplayManager;
-    protected int[] mDripOverlayTopDrawables = {C0010R$drawable.overlay_screen_round_corner_top_rot90, C0010R$drawable.overlay_screen_round_corner_top, C0010R$drawable.overlay_screen_round_corner_top_rot270, C0010R$drawable.overlay_screen_round_corner_top_rot180};
-    /* access modifiers changed from: private */
-    public boolean mDriveMode;
-    /* access modifiers changed from: private */
-    public ContentObserver mDriveModeObserver;
+    protected int[] mDripOverlayTopDrawables = {C0013R$drawable.overlay_screen_round_corner_top_rot90, C0013R$drawable.overlay_screen_round_corner_top, C0013R$drawable.overlay_screen_round_corner_top_rot270, C0013R$drawable.overlay_screen_round_corner_top_rot180};
     private boolean mEnableForceBlack;
     /* access modifiers changed from: private */
     public boolean mForceBlack;
     /* access modifiers changed from: private */
     public ContentObserver mForceBlackObserver;
-    protected int[] mForceBlackTopDrawables = {C0010R$drawable.force_black_screen_round_corner_top_rot90, C0010R$drawable.force_black_screen_round_corner_top, C0010R$drawable.force_black_screen_round_corner_top_rot270, C0010R$drawable.force_black_screen_round_corner_top_rot180};
+    protected int[] mForceBlackTopDrawables = {C0013R$drawable.force_black_screen_round_corner_top_rot90, C0013R$drawable.force_black_screen_round_corner_top, C0013R$drawable.force_black_screen_round_corner_top_rot270, C0013R$drawable.force_black_screen_round_corner_top_rot180};
     protected View mForceBlackTopOverlay;
     /* access modifiers changed from: private */
     public boolean mForceBlackV2;
     /* access modifiers changed from: private */
     public ContentObserver mForceBlackV2Observer;
-    protected int[] mForceBlackV2TopDrawables = {C0010R$drawable.force_black_top_corner_rot90, C0010R$drawable.force_black_top_corner, C0010R$drawable.force_black_top_corner_rot270, C0010R$drawable.force_black_top_corner_rot180};
+    protected int[] mForceBlackV2TopDrawables = {C0013R$drawable.force_black_top_corner_rot90, C0013R$drawable.force_black_top_corner, C0013R$drawable.force_black_top_corner_rot270, C0013R$drawable.force_black_top_corner_rot180};
     private Handler mHandler;
     /* access modifiers changed from: private */
     public boolean mHandyMode;
     protected boolean mIsRegistered;
     private final Handler mMainHandler;
-    protected int[] mNormalBottomDrawables = {C0010R$drawable.screen_round_corner_bottom_rot270, C0010R$drawable.screen_round_corner_bottom_rot180, C0010R$drawable.screen_round_corner_bottom_rot90, C0010R$drawable.screen_round_corner_bottom};
-    protected int[] mNormalTopDrawables = {C0010R$drawable.screen_round_corner_top_rot90, C0010R$drawable.screen_round_corner_top, C0010R$drawable.screen_round_corner_top_rot270, C0010R$drawable.screen_round_corner_top_rot180};
+    protected int[] mNormalBottomDrawables = {C0013R$drawable.screen_round_corner_bottom_rot270, C0013R$drawable.screen_round_corner_bottom_rot180, C0013R$drawable.screen_round_corner_bottom_rot90, C0013R$drawable.screen_round_corner_bottom};
+    protected int[] mNormalTopDrawables = {C0013R$drawable.screen_round_corner_top_rot90, C0013R$drawable.screen_round_corner_top, C0013R$drawable.screen_round_corner_top_rot270, C0013R$drawable.screen_round_corner_top_rot180};
     /* access modifiers changed from: private */
     public boolean mOverlayDrip;
     private ContentObserver mOverlayDripObserver;
@@ -112,9 +107,6 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
             boolean z = false;
             if ("android.intent.action.USER_SWITCHED".equals(action)) {
                 int unused = ScreenDecorations.this.mCurrentUserId = intent.getIntExtra("android.intent.extra.user_handle", -1);
-                if (ScreenDecorations.this.mDriveModeObserver != null) {
-                    ScreenDecorations.this.mDriveModeObserver.onChange(false);
-                }
                 if (ScreenDecorations.this.mForceBlackObserver != null) {
                     ScreenDecorations.this.mForceBlackObserver.onChange(false);
                 }
@@ -181,7 +173,7 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
 
     /* access modifiers changed from: private */
     public void startOnScreenDecorationsThread() {
-        this.mSupportRoundCorner = this.mContext.getResources().getBoolean(C0007R$bool.support_round_corner);
+        this.mSupportRoundCorner = this.mContext.getResources().getBoolean(C0010R$bool.support_round_corner);
         this.mRotation = this.mContext.getDisplay().getRotation();
         this.mWindowManager = (WindowManager) this.mContext.getSystemService(WindowManager.class);
         this.mDisplayManager = (DisplayManager) this.mContext.getSystemService(DisplayManager.class);
@@ -222,47 +214,36 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
     }
 
     private void register() {
-        this.mDriveModeObserver = new ContentObserver(this.mHandler) {
-            public void onChange(boolean z) {
-                ScreenDecorations screenDecorations = ScreenDecorations.this;
-                boolean z2 = false;
-                if (Settings.System.getIntForUser(screenDecorations.mContext.getContentResolver(), "drive_mode_drive_mode", 0, KeyguardUpdateMonitor.getCurrentUser()) == 1) {
-                    z2 = true;
-                }
-                boolean unused = screenDecorations.mDriveMode = z2;
-                ScreenDecorations.this.postUpdateScreenDecorationsFront();
-            }
-        };
-        this.mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor("drive_mode_drive_mode"), false, this.mDriveModeObserver, -1);
-        this.mDriveModeObserver.onChange(false);
-        this.mForceBlackV2Observer = new ContentObserver(this.mHandler) {
-            public void onChange(boolean z) {
-                ScreenDecorations screenDecorations = ScreenDecorations.this;
-                boolean unused = screenDecorations.mForceBlackV2 = MiuiSettings.Global.getBoolean(screenDecorations.mContext.getContentResolver(), "force_black_v2");
-                if (CustomizeUtil.HAS_NOTCH && ScreenDecorations.this.mOverlayManager != null) {
-                    boolean isOverlayEnable = ScreenDecorations.this.mOverlayManager.isOverlayEnable("com.android.systemui.notch.overlay", ScreenDecorations.this.mCurrentUserId);
-                    boolean access$600 = ScreenDecorations.this.mForceBlackV2;
-                    if (access$600 != isOverlayEnable) {
-                        ScreenDecorations.this.mOverlayManager.setEnabled("com.android.systemui.notch.overlay", access$600, ScreenDecorations.this.mCurrentUserId);
+        if (CustomizeUtil.HAS_NOTCH) {
+            this.mForceBlackV2Observer = new ContentObserver(this.mHandler) {
+                public void onChange(boolean z) {
+                    ScreenDecorations screenDecorations = ScreenDecorations.this;
+                    boolean unused = screenDecorations.mForceBlackV2 = MiuiSettings.Global.getBoolean(screenDecorations.mContext.getContentResolver(), "force_black_v2");
+                    if (CustomizeUtil.HAS_NOTCH && ScreenDecorations.this.mOverlayManager != null) {
+                        boolean isOverlayEnable = ScreenDecorations.this.mOverlayManager.isOverlayEnable("com.android.systemui.notch.overlay", ScreenDecorations.this.mCurrentUserId);
+                        boolean access$400 = ScreenDecorations.this.mForceBlackV2;
+                        if (access$400 != isOverlayEnable) {
+                            ScreenDecorations.this.mOverlayManager.setEnabled("com.android.systemui.notch.overlay", access$400, ScreenDecorations.this.mCurrentUserId);
+                        }
+                        if (!(ScreenDecorations.this.mCurrentUserId == 0 || access$400 == ScreenDecorations.this.mOverlayManager.isOverlayEnable("com.android.systemui.notch.overlay", 0))) {
+                            ScreenDecorations.this.mOverlayManager.setEnabled("com.android.systemui.notch.overlay", access$400, 0);
+                        }
                     }
-                    if (!(ScreenDecorations.this.mCurrentUserId == 0 || access$600 == ScreenDecorations.this.mOverlayManager.isOverlayEnable("com.android.systemui.notch.overlay", 0))) {
-                        ScreenDecorations.this.mOverlayManager.setEnabled("com.android.systemui.notch.overlay", access$600, 0);
-                    }
+                    ScreenDecorations.this.postUpdateScreenDecorationsFront();
                 }
-                ScreenDecorations.this.postUpdateScreenDecorationsFront();
-            }
-        };
-        this.mContext.getContentResolver().registerContentObserver(Settings.Global.getUriFor("force_black_v2"), false, this.mForceBlackV2Observer, -1);
-        this.mForceBlackV2Observer.onChange(false);
-        this.mForceBlackObserver = new ContentObserver(this.mHandler) {
-            public void onChange(boolean z) {
-                ScreenDecorations screenDecorations = ScreenDecorations.this;
-                boolean unused = screenDecorations.mForceBlack = MiuiSettings.Global.getBoolean(screenDecorations.mContext.getContentResolver(), "force_black");
-                ScreenDecorations.this.postUpdateScreenDecorationsFront();
-            }
-        };
-        this.mContext.getContentResolver().registerContentObserver(Settings.Global.getUriFor("force_black"), false, this.mForceBlackObserver, -1);
-        this.mForceBlackObserver.onChange(false);
+            };
+            this.mContext.getContentResolver().registerContentObserver(Settings.Global.getUriFor("force_black_v2"), false, this.mForceBlackV2Observer, -1);
+            this.mForceBlackV2Observer.onChange(false);
+            this.mForceBlackObserver = new ContentObserver(this.mHandler) {
+                public void onChange(boolean z) {
+                    ScreenDecorations screenDecorations = ScreenDecorations.this;
+                    boolean unused = screenDecorations.mForceBlack = MiuiSettings.Global.getBoolean(screenDecorations.mContext.getContentResolver(), "force_black");
+                    ScreenDecorations.this.postUpdateScreenDecorationsFront();
+                }
+            };
+            this.mContext.getContentResolver().registerContentObserver(Settings.Global.getUriFor("force_black"), false, this.mForceBlackObserver, -1);
+            this.mForceBlackObserver.onChange(false);
+        }
         if (supportOverlayRoundedCorner()) {
             this.mOverlayDripObserver = new ContentObserver(this.mHandler) {
                 public void onChange(boolean z) {
@@ -281,7 +262,7 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
     }
 
     private boolean supportOverlayRoundedCorner() {
-        return this.mContext.getResources().getBoolean(C0007R$bool.support_drip_overlay);
+        return this.mContext.getResources().getBoolean(C0010R$bool.support_drip_overlay);
     }
 
     private void setupDecorations() {
@@ -317,7 +298,7 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
                 }
             });
             if (this.mColorInversionSetting == null) {
-                AnonymousClass7 r0 = new SecureSetting(this.mContext, this.mHandler, "accessibility_display_inversion_enabled") {
+                AnonymousClass6 r0 = new SecureSetting(this.mContext, this.mHandler, "accessibility_display_inversion_enabled") {
                     /* access modifiers changed from: protected */
                     public void handleValueChanged(int i, boolean z) {
                         ScreenDecorations.this.updateColorInversion(i);
@@ -462,7 +443,7 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
     public void updateForceBlackTopOverlayVisibility() {
         View view = this.mForceBlackTopOverlay;
         if (view != null) {
-            view.setVisibility(((this.mRotation == 0 || !this.mEnableForceBlack) && this.mForceBlack && !this.mDriveMode) ? 0 : 8);
+            view.setVisibility(((this.mRotation == 0 || !this.mEnableForceBlack) && this.mForceBlack) ? 0 : 8);
         }
     }
 
@@ -570,7 +551,7 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
     }
 
     private void setupCameraListener() {
-        if (this.mContext.getResources().getBoolean(C0007R$bool.config_enableDisplayCutoutProtection)) {
+        if (this.mContext.getResources().getBoolean(C0010R$bool.config_enableDisplayCutoutProtection)) {
             CameraAvailabilityListener.Factory factory = CameraAvailabilityListener.Factory;
             Context context = this.mContext;
             Handler handler = this.mHandler;

@@ -16,10 +16,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.android.internal.annotations.VisibleForTesting;
-import com.android.systemui.C0009R$dimen;
-import com.android.systemui.C0010R$drawable;
-import com.android.systemui.C0012R$id;
-import com.android.systemui.C0014R$layout;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0017R$layout;
 import com.android.systemui.DemoMode;
 import com.android.systemui.Dependency;
 import com.android.systemui.plugins.DarkIconDispatcher;
@@ -31,12 +31,15 @@ import miui.os.Build;
 
 public class StatusBarMobileView extends LinearLayout implements DarkIconDispatcher.DarkReceiver, StatusIconDisplayable, DemoMode {
     private int mColor;
+    private int mDarkColor;
+    private float mDarkIntensity;
     private StatusBarIconView mDotView;
     private boolean mForceUpdate;
     private boolean mInDemoMode;
     private String mLastShowName;
     private ImageView mLeftInOut;
     private boolean mLight = true;
+    private int mLightColor;
     private ImageView mMobile;
     private LinearLayout mMobileContent;
     private LinearLayout mMobileGroup;
@@ -45,12 +48,14 @@ public class StatusBarMobileView extends LinearLayout implements DarkIconDispatc
     private ImageView mMobileRoaming;
     private TextView mMobileType;
     private ImageView mMobileTypeImage;
+    private Rect mRect = new Rect();
     private ImageView mRightInOut;
     private String mSlot;
     private ImageView mSmallHd;
     private ImageView mSmallRoaming;
     private ImageView mSpeechHd;
     private StatusBarSignalPolicy.MobileIconState mState;
+    private int mTint;
     private boolean mUseTint = false;
     private int mVisibleState = -1;
     private ImageView mVolte;
@@ -58,7 +63,7 @@ public class StatusBarMobileView extends LinearLayout implements DarkIconDispatc
     private ImageView mVowifi;
 
     public static StatusBarMobileView fromContext(Context context, String str) {
-        StatusBarMobileView statusBarMobileView = (StatusBarMobileView) LayoutInflater.from(context).inflate(C0014R$layout.status_bar_mobile_signal_group, (ViewGroup) null);
+        StatusBarMobileView statusBarMobileView = (StatusBarMobileView) LayoutInflater.from(context).inflate(C0017R$layout.status_bar_mobile_signal_group, (ViewGroup) null);
         statusBarMobileView.setSlot(str);
         statusBarMobileView.init();
         statusBarMobileView.setVisibleState(0);
@@ -104,22 +109,22 @@ public class StatusBarMobileView extends LinearLayout implements DarkIconDispatc
     }
 
     private void init() {
-        this.mMobileGroup = (LinearLayout) findViewById(C0012R$id.mobile_group);
-        this.mMobileContent = (LinearLayout) findViewById(C0012R$id.mobile_content);
-        this.mMobile = (ImageView) findViewById(C0012R$id.mobile_signal);
-        this.mMobileType = (TextView) findViewById(C0012R$id.mobile_type);
-        this.mMobileRoaming = (ImageView) findViewById(C0012R$id.mobile_roaming);
-        this.mVolte = (ImageView) findViewById(C0012R$id.mobile_volte);
-        this.mLeftInOut = (ImageView) findViewById(C0012R$id.mobile_left_mobile_inout);
-        this.mRightInOut = (ImageView) findViewById(C0012R$id.mobile_right_mobile_inout);
-        this.mSmallHd = (ImageView) findViewById(C0012R$id.mobile_small_hd);
-        this.mSmallRoaming = (ImageView) findViewById(C0012R$id.mobile_small_roam);
-        this.mVowifi = (ImageView) findViewById(C0012R$id.mobile_vowifi);
-        this.mSpeechHd = (ImageView) findViewById(C0012R$id.mobile_speech_hd);
-        this.mMobileLeftContainer = findViewById(C0012R$id.mobile_container_left);
-        this.mMobileRightContainer = findViewById(C0012R$id.mobile_container_right);
-        this.mMobileTypeImage = (ImageView) findViewById(C0012R$id.mobile_type_image);
-        this.mVolteNoService = (ImageView) findViewById(C0012R$id.mobile_volte_no_service);
+        this.mMobileGroup = (LinearLayout) findViewById(C0015R$id.mobile_group);
+        this.mMobileContent = (LinearLayout) findViewById(C0015R$id.mobile_content);
+        this.mMobile = (ImageView) findViewById(C0015R$id.mobile_signal);
+        this.mMobileType = (TextView) findViewById(C0015R$id.mobile_type);
+        this.mMobileRoaming = (ImageView) findViewById(C0015R$id.mobile_roaming);
+        this.mVolte = (ImageView) findViewById(C0015R$id.mobile_volte);
+        this.mLeftInOut = (ImageView) findViewById(C0015R$id.mobile_left_mobile_inout);
+        this.mRightInOut = (ImageView) findViewById(C0015R$id.mobile_right_mobile_inout);
+        this.mSmallHd = (ImageView) findViewById(C0015R$id.mobile_small_hd);
+        this.mSmallRoaming = (ImageView) findViewById(C0015R$id.mobile_small_roam);
+        this.mVowifi = (ImageView) findViewById(C0015R$id.mobile_vowifi);
+        this.mSpeechHd = (ImageView) findViewById(C0015R$id.mobile_speech_hd);
+        this.mMobileLeftContainer = findViewById(C0015R$id.mobile_container_left);
+        this.mMobileRightContainer = findViewById(C0015R$id.mobile_container_right);
+        this.mMobileTypeImage = (ImageView) findViewById(C0015R$id.mobile_type_image);
+        this.mVolteNoService = (ImageView) findViewById(C0015R$id.mobile_volte_no_service);
         initDotView();
     }
 
@@ -127,7 +132,7 @@ public class StatusBarMobileView extends LinearLayout implements DarkIconDispatc
         StatusBarIconView statusBarIconView = new StatusBarIconView(this.mContext, this.mSlot, (ExpandedNotification) null);
         this.mDotView = statusBarIconView;
         statusBarIconView.setVisibleState(1);
-        int dimensionPixelSize = this.mContext.getResources().getDimensionPixelSize(C0009R$dimen.status_bar_icon_size);
+        int dimensionPixelSize = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.status_bar_icon_size);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(dimensionPixelSize, dimensionPixelSize);
         layoutParams.gravity = 8388627;
         addView(this.mDotView, layoutParams);
@@ -172,6 +177,7 @@ public class StatusBarMobileView extends LinearLayout implements DarkIconDispatc
     }
 
     private boolean updateState(StatusBarSignalPolicy.MobileIconState mobileIconState, boolean z) {
+        boolean z2;
         char c;
         int i = 0;
         this.mMobileGroup.setVisibility((!mobileIconState.visible || mobileIconState.airplane) ? 8 : 0);
@@ -199,20 +205,20 @@ public class StatusBarMobileView extends LinearLayout implements DarkIconDispatc
         StatusBarSignalPolicy.MobileIconState mobileIconState2 = this.mState;
         if ((mobileIconState2.dataConnected == mobileIconState.dataConnected && mobileIconState2.activityIn == mobileIconState.activityIn && mobileIconState2.activityOut == mobileIconState.activityOut && !z) ? false : true) {
             if (!mobileIconState.dataConnected) {
-                this.mLeftInOut.setImageResource(MiuiStatusBarIconViewHelper.transformResId(C0010R$drawable.stat_sys_signal_data_left, this.mUseTint, this.mLight));
-                this.mRightInOut.setImageResource(MiuiStatusBarIconViewHelper.transformResId(C0010R$drawable.stat_sys_signal_data_left, this.mUseTint, this.mLight));
+                this.mLeftInOut.setImageResource(MiuiStatusBarIconViewHelper.transformResId(C0013R$drawable.stat_sys_signal_data_left, this.mUseTint, this.mLight));
+                this.mRightInOut.setImageResource(MiuiStatusBarIconViewHelper.transformResId(C0013R$drawable.stat_sys_signal_data_left, this.mUseTint, this.mLight));
             } else if (mobileIconState.activityIn && mobileIconState.activityOut) {
-                this.mLeftInOut.setImageResource(MiuiStatusBarIconViewHelper.transformResId(C0010R$drawable.stat_sys_signal_inout_left, this.mUseTint, this.mLight));
-                this.mRightInOut.setImageResource(MiuiStatusBarIconViewHelper.transformResId(C0010R$drawable.stat_sys_signal_inout_left, this.mUseTint, this.mLight));
+                this.mLeftInOut.setImageResource(MiuiStatusBarIconViewHelper.transformResId(C0013R$drawable.stat_sys_signal_inout_left, this.mUseTint, this.mLight));
+                this.mRightInOut.setImageResource(MiuiStatusBarIconViewHelper.transformResId(C0013R$drawable.stat_sys_signal_inout_left, this.mUseTint, this.mLight));
             } else if (mobileIconState.activityIn) {
-                this.mLeftInOut.setImageResource(MiuiStatusBarIconViewHelper.transformResId(C0010R$drawable.stat_sys_signal_in_left, this.mUseTint, this.mLight));
-                this.mRightInOut.setImageResource(MiuiStatusBarIconViewHelper.transformResId(C0010R$drawable.stat_sys_signal_in_left, this.mUseTint, this.mLight));
+                this.mLeftInOut.setImageResource(MiuiStatusBarIconViewHelper.transformResId(C0013R$drawable.stat_sys_signal_in_left, this.mUseTint, this.mLight));
+                this.mRightInOut.setImageResource(MiuiStatusBarIconViewHelper.transformResId(C0013R$drawable.stat_sys_signal_in_left, this.mUseTint, this.mLight));
             } else if (mobileIconState.activityOut) {
-                this.mLeftInOut.setImageResource(MiuiStatusBarIconViewHelper.transformResId(C0010R$drawable.stat_sys_signal_out_left, this.mUseTint, this.mLight));
-                this.mRightInOut.setImageResource(MiuiStatusBarIconViewHelper.transformResId(C0010R$drawable.stat_sys_signal_out_left, this.mUseTint, this.mLight));
+                this.mLeftInOut.setImageResource(MiuiStatusBarIconViewHelper.transformResId(C0013R$drawable.stat_sys_signal_out_left, this.mUseTint, this.mLight));
+                this.mRightInOut.setImageResource(MiuiStatusBarIconViewHelper.transformResId(C0013R$drawable.stat_sys_signal_out_left, this.mUseTint, this.mLight));
             } else {
-                this.mLeftInOut.setImageResource(MiuiStatusBarIconViewHelper.transformResId(C0010R$drawable.stat_sys_signal_data_left, this.mUseTint, this.mLight));
-                this.mRightInOut.setImageResource(MiuiStatusBarIconViewHelper.transformResId(C0010R$drawable.stat_sys_signal_data_left, this.mUseTint, this.mLight));
+                this.mLeftInOut.setImageResource(MiuiStatusBarIconViewHelper.transformResId(C0013R$drawable.stat_sys_signal_data_left, this.mUseTint, this.mLight));
+                this.mRightInOut.setImageResource(MiuiStatusBarIconViewHelper.transformResId(C0013R$drawable.stat_sys_signal_data_left, this.mUseTint, this.mLight));
             }
         }
         int i4 = mobileIconState.strengthId;
@@ -220,11 +226,11 @@ public class StatusBarMobileView extends LinearLayout implements DarkIconDispatc
             this.mMobile.setImageResource(MiuiStatusBarIconViewHelper.transformResId(mobileIconState.strengthId, this.mUseTint, this.mLight));
         }
         if (z) {
-            this.mMobileRoaming.setImageResource(MiuiStatusBarIconViewHelper.transformResId(C0010R$drawable.stat_sys_data_connected_roam, this.mUseTint, this.mLight));
-            this.mSmallHd.setImageResource(MiuiStatusBarIconViewHelper.transformResId(C0010R$drawable.stat_sys_signal_hd_notch, this.mUseTint, this.mLight));
-            this.mSmallRoaming.setImageResource(MiuiStatusBarIconViewHelper.transformResId(C0010R$drawable.stat_sys_data_connected_roam_small, this.mUseTint, this.mLight));
-            this.mSpeechHd.setImageResource(MiuiStatusBarIconViewHelper.transformResId(C0010R$drawable.stat_sys_speech_hd, this.mUseTint, this.mLight));
-            this.mVolteNoService.setImageResource(MiuiStatusBarIconViewHelper.transformResId(C0010R$drawable.stat_sys_volte_no_service, this.mUseTint, this.mLight));
+            this.mMobileRoaming.setImageResource(MiuiStatusBarIconViewHelper.transformResId(C0013R$drawable.stat_sys_data_connected_roam, this.mUseTint, this.mLight));
+            this.mSmallHd.setImageResource(MiuiStatusBarIconViewHelper.transformResId(C0013R$drawable.stat_sys_signal_hd_notch, this.mUseTint, this.mLight));
+            this.mSmallRoaming.setImageResource(MiuiStatusBarIconViewHelper.transformResId(C0013R$drawable.stat_sys_data_connected_roam_small, this.mUseTint, this.mLight));
+            this.mSpeechHd.setImageResource(MiuiStatusBarIconViewHelper.transformResId(C0013R$drawable.stat_sys_speech_hd, this.mUseTint, this.mLight));
+            this.mVolteNoService.setImageResource(MiuiStatusBarIconViewHelper.transformResId(C0013R$drawable.stat_sys_volte_no_service, this.mUseTint, this.mLight));
         }
         if (mobileIconState.dataConnected) {
             this.mLeftInOut.setVisibility(0);
@@ -233,9 +239,13 @@ public class StatusBarMobileView extends LinearLayout implements DarkIconDispatc
             this.mLeftInOut.setVisibility(8);
             this.mRightInOut.setVisibility(8);
         }
-        boolean z2 = mobileIconState.dataConnected || mobileIconState.showDataTypeDataDisconnected;
-        if (!mobileIconState.dataConnected && mobileIconState.wifiAvailable && !mobileIconState.showDataTypeWhenWifiOn) {
-            z2 = false;
+        if (!isBuildTest()) {
+            z2 = !mobileIconState.wifiAvailable || mobileIconState.showDataTypeWhenWifiOn;
+            if (!mobileIconState.dataConnected && !mobileIconState.showDataTypeDataDisconnected) {
+                z2 = false;
+            }
+        } else {
+            z2 = true;
         }
         if (!z2) {
             this.mMobileLeftContainer.setVisibility(8);
@@ -282,11 +292,21 @@ public class StatusBarMobileView extends LinearLayout implements DarkIconDispatc
         }
         imageView.setVisibility(i);
         this.mState = mobileIconState;
+        onDarkChanged(this.mRect, this.mDarkIntensity, this.mTint, this.mLightColor, this.mDarkColor, this.mUseTint);
         return true;
+    }
+
+    private boolean isBuildTest() {
+        return Build.IS_CM_CUSTOMIZATION_TEST || Build.IS_CT_CUSTOMIZATION_TEST || Build.IS_CU_CUSTOMIZATION_TEST;
     }
 
     public void onDarkChanged(Rect rect, float f, int i, int i2, int i3, boolean z) {
         boolean z2;
+        this.mRect.set(rect);
+        this.mDarkIntensity = f;
+        this.mTint = i;
+        this.mLightColor = i2;
+        this.mDarkColor = i3;
         if (this.mUseTint != z) {
             this.mUseTint = z;
             if (!z) {
@@ -332,6 +352,7 @@ public class StatusBarMobileView extends LinearLayout implements DarkIconDispatc
             this.mMobileType.setTextColor(valueOf);
             this.mVolte.setImageTintList(valueOf);
             this.mMobileRoaming.setImageTintList(valueOf);
+            this.mVolteNoService.setImageTintList(valueOf);
             this.mDotView.setDecorColor(i);
             this.mDotView.setIconColor(i, false);
             return;
@@ -402,9 +423,9 @@ public class StatusBarMobileView extends LinearLayout implements DarkIconDispatc
             Paint.FontMetrics fontMetrics = paint.getFontMetrics();
             float f = fontMetrics.bottom - fontMetrics.top;
             float measureText = paint.measureText(str);
-            int dimensionPixelSize = this.mContext.getResources().getDimensionPixelSize(C0009R$dimen.status_bar_mobile_type_half_to_top_distance);
-            int dimensionPixelSize2 = this.mContext.getResources().getDimensionPixelSize(C0009R$dimen.status_bar_mobile_left_inout_over_strength);
-            int dimensionPixelSize3 = this.mContext.getResources().getDimensionPixelSize(C0009R$dimen.status_bar_mobile_type_middle_to_strength_start);
+            int dimensionPixelSize = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.status_bar_mobile_type_half_to_top_distance);
+            int dimensionPixelSize2 = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.status_bar_mobile_left_inout_over_strength);
+            int dimensionPixelSize3 = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.status_bar_mobile_type_middle_to_strength_start);
             FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) this.mMobileType.getLayoutParams();
             layoutParams.topMargin = (int) (((float) dimensionPixelSize) - (f / 2.0f));
             this.mMobileType.setLayoutParams(layoutParams);

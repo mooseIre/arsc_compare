@@ -8,7 +8,7 @@ import android.os.Handler;
 import android.os.UserHandle;
 import android.util.Log;
 import com.android.internal.annotations.VisibleForTesting;
-import com.android.systemui.C0005R$array;
+import com.android.systemui.C0008R$array;
 import com.android.systemui.qs.AutoAddTracker;
 import com.android.systemui.qs.QSTileHost;
 import com.android.systemui.qs.SecureSetting;
@@ -225,7 +225,7 @@ public class AutoTileManager implements UserAwareController {
 
     private void populateSettingsList() {
         try {
-            for (String str : this.mContext.getResources().getStringArray(C0005R$array.config_quickSettingsAutoAdd)) {
+            for (String str : this.mContext.getResources().getStringArray(C0008R$array.config_quickSettingsAutoAdd)) {
                 String[] split = str.split(":");
                 if (split.length == 2) {
                     this.mAutoAddSettingList.add(new AutoAddSetting(this.mContext, this.mHandler, split[0], split[1]));

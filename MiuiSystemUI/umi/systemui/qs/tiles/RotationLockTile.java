@@ -5,8 +5,8 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.widget.Switch;
 import androidx.appcompat.R$styleable;
-import com.android.systemui.C0010R$drawable;
-import com.android.systemui.C0018R$string;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.plugins.qs.QSTile;
 import com.android.systemui.qs.tileimpl.QSTileImpl;
 import com.android.systemui.statusbar.policy.RotationLockController;
@@ -66,11 +66,11 @@ public class RotationLockTile extends QSTileImpl<QSTile.BooleanState> {
         int i;
         boolean isRotationLocked = this.mController.isRotationLocked();
         booleanState.value = isRotationLocked;
-        booleanState.label = this.mContext.getString(C0018R$string.quick_settings_rotationlock_label);
+        booleanState.label = this.mContext.getString(C0021R$string.quick_settings_rotationlock_label);
         if (!isRotationLocked) {
-            i = C0010R$drawable.ic_qs_auto_rotate_enabled;
+            i = C0013R$drawable.ic_qs_auto_rotate_enabled;
         } else {
-            i = C0010R$drawable.ic_qs_auto_rotate_disabled;
+            i = C0013R$drawable.ic_qs_auto_rotate_disabled;
         }
         booleanState.icon = QSTileImpl.ResourceIcon.get(i);
         booleanState.contentDescription = getAccessibilityString(isRotationLocked);
@@ -95,21 +95,21 @@ public class RotationLockTile extends QSTileImpl<QSTile.BooleanState> {
     private String getAccessibilityString(boolean z) {
         String str;
         if (!z) {
-            return this.mContext.getString(C0018R$string.accessibility_quick_settings_rotation);
+            return this.mContext.getString(C0021R$string.accessibility_quick_settings_rotation);
         }
         StringBuilder sb = new StringBuilder();
         Context context = this.mContext;
-        int i = C0018R$string.accessibility_quick_settings_rotation_value;
+        int i = C0021R$string.accessibility_quick_settings_rotation_value;
         Object[] objArr = new Object[1];
         if (isCurrentOrientationLockPortrait(this.mController, context.getResources())) {
-            str = this.mContext.getString(C0018R$string.quick_settings_rotation_locked_portrait_label);
+            str = this.mContext.getString(C0021R$string.quick_settings_rotation_locked_portrait_label);
         } else {
-            str = this.mContext.getString(C0018R$string.quick_settings_rotation_locked_landscape_label);
+            str = this.mContext.getString(C0021R$string.quick_settings_rotation_locked_landscape_label);
         }
         objArr[0] = str;
         sb.append(context.getString(i, objArr));
         sb.append(",");
-        sb.append(this.mContext.getString(C0018R$string.accessibility_quick_settings_rotation));
+        sb.append(this.mContext.getString(C0021R$string.accessibility_quick_settings_rotation));
         return sb.toString();
     }
 

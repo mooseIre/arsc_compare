@@ -5,6 +5,7 @@ import com.android.systemui.statusbar.notification.policy.NotificationAlertContr
 import com.android.systemui.statusbar.notification.policy.NotificationCountLimitPolicy;
 import com.android.systemui.statusbar.notification.policy.NotificationDynamicFpsController;
 import com.android.systemui.statusbar.policy.MiuiHeadsUpPolicy;
+import com.android.systemui.statusbar.policy.MiuiNotificationShadePolicy;
 
 public final class MiuiVendorServices_MembersInjector {
     public static void injectMWallpaperZoomOutService(MiuiVendorServices miuiVendorServices, MiuiWallpaperZoomOutService miuiWallpaperZoomOutService) {
@@ -29,5 +30,9 @@ public final class MiuiVendorServices_MembersInjector {
 
     public static void injectMNotifCountLimitPolicy(MiuiVendorServices miuiVendorServices, NotificationCountLimitPolicy notificationCountLimitPolicy) {
         miuiVendorServices.mNotifCountLimitPolicy = notificationCountLimitPolicy;
+    }
+
+    public static void injectMMiuiNotificationShadePolicy(MiuiVendorServices miuiVendorServices, MiuiNotificationShadePolicy miuiNotificationShadePolicy) {
+        miuiVendorServices.mMiuiNotificationShadePolicy = miuiNotificationShadePolicy;
     }
 }

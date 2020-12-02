@@ -5,8 +5,8 @@ import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
 import com.android.keyguard.CarrierText;
-import com.android.systemui.C0007R$bool;
-import com.android.systemui.C0012R$id;
+import com.android.systemui.C0010R$bool;
+import com.android.systemui.C0015R$id;
 import com.android.systemui.Dependency;
 import com.android.systemui.MiuiBatteryMeterView;
 import com.android.systemui.plugins.DarkIconDispatcher;
@@ -45,12 +45,12 @@ public class MiuiNotificationHeaderView extends MiuiHeaderView {
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mCarrierText = (CarrierText) findViewById(C0012R$id.carrier_text);
-        this.mBattery = (MiuiBatteryMeterView) findViewById(C0012R$id.battery);
-        NetworkSpeedView networkSpeedView = (NetworkSpeedView) findViewById(C0012R$id.fullscreen_network_speed_view);
+        this.mCarrierText = (CarrierText) findViewById(C0015R$id.carrier_text);
+        this.mBattery = (MiuiBatteryMeterView) findViewById(C0015R$id.battery);
+        NetworkSpeedView networkSpeedView = (NetworkSpeedView) findViewById(C0015R$id.fullscreen_network_speed_view);
         this.mFullscreenNetworkSpeedView = networkSpeedView;
         networkSpeedView.setVisibilityByStatusBar(true);
-        this.mIconManager = new StatusBarIconController.MiuiLightDarkIconManager((ViewGroup) findViewById(C0012R$id.statusIcons), this.mCommandQueue, true, ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).getLightModeIconColorSingleTone());
+        this.mIconManager = new StatusBarIconController.MiuiLightDarkIconManager((ViewGroup) findViewById(C0015R$id.statusIcons), this.mCommandQueue, true, ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).getLightModeIconColorSingleTone());
     }
 
     /* access modifiers changed from: protected */
@@ -66,7 +66,7 @@ public class MiuiNotificationHeaderView extends MiuiHeaderView {
     }
 
     public void themeChanged() {
-        boolean z = getResources().getBoolean(C0007R$bool.expanded_status_bar_darkmode);
+        boolean z = getResources().getBoolean(C0010R$bool.expanded_status_bar_darkmode);
         Rect rect = new Rect(0, 0, 0, 0);
         float f = z ? 1.0f : 0.0f;
         DarkIconDispatcher darkIconDispatcher = (DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class);

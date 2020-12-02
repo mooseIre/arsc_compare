@@ -5,8 +5,8 @@ import android.content.res.Resources;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
-import com.android.systemui.C0009R$dimen;
-import com.android.systemui.C0013R$integer;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0016R$integer;
 import com.android.systemui.plugins.qs.QSTileView;
 import com.android.systemui.qs.QSPanel;
 import java.util.ArrayList;
@@ -104,13 +104,13 @@ public class TileLayout extends ViewGroup implements QSPanel.QSTileLayout {
 
     public boolean updateResources() {
         Resources resources = this.mContext.getResources();
-        this.mResourceColumns = Math.max(1, resources.getInteger(C0013R$integer.quick_settings_num_columns));
-        this.mCellHeight = this.mContext.getResources().getDimensionPixelSize(C0009R$dimen.qs_tile_height);
-        int dimensionPixelSize = resources.getDimensionPixelSize(C0009R$dimen.qs_tile_content_margin_top);
-        int dimensionPixelSize2 = resources.getDimensionPixelSize(C0009R$dimen.qs_tile_content_margin_horizontal);
+        this.mResourceColumns = Math.max(1, resources.getInteger(C0016R$integer.quick_settings_num_columns));
+        this.mCellHeight = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.qs_tile_height);
+        int dimensionPixelSize = resources.getDimensionPixelSize(C0012R$dimen.qs_tile_content_margin_top);
+        int dimensionPixelSize2 = resources.getDimensionPixelSize(C0012R$dimen.qs_tile_content_margin_horizontal);
         setPadding(dimensionPixelSize2, dimensionPixelSize, dimensionPixelSize2, getPaddingBottom());
         setClipToPadding(false);
-        int max = Math.max(1, getResources().getInteger(C0013R$integer.quick_settings_num_rows));
+        int max = Math.max(1, getResources().getInteger(C0016R$integer.quick_settings_num_rows));
         this.mMaxAllowedRows = max;
         if (this.mLessRows) {
             this.mMaxAllowedRows = Math.max(this.mMinRows, max - 1);

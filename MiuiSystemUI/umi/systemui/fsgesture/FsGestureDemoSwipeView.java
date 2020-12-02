@@ -14,8 +14,8 @@ import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
-import com.android.systemui.C0009R$dimen;
-import com.android.systemui.C0014R$layout;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0017R$layout;
 
 public class FsGestureDemoSwipeView extends FrameLayout {
     AnimatorSet finalAnimatorSet;
@@ -47,13 +47,13 @@ public class FsGestureDemoSwipeView extends FrameLayout {
     }
 
     private void init() {
-        LayoutInflater.from(getContext()).inflate(C0014R$layout.fs_gesture_swipe_view, this);
+        LayoutInflater.from(getContext()).inflate(C0017R$layout.fs_gesture_swipe_view, this);
         setAlpha(0.0f);
         DisplayMetrics displayMetrics = new DisplayMetrics();
         ((WindowManager) getContext().getSystemService("window")).getDefaultDisplay().getRealMetrics(displayMetrics);
         this.mDisplayWidth = displayMetrics.widthPixels;
         this.mDisplayHeight = displayMetrics.heightPixels;
-        this.mFinalTranslate = getResources().getDimension(C0009R$dimen.fsgesture_swipe_final_translateX);
+        this.mFinalTranslate = getResources().getDimension(C0012R$dimen.fsgesture_swipe_final_translateX);
     }
 
     /* access modifiers changed from: package-private */
@@ -62,11 +62,11 @@ public class FsGestureDemoSwipeView extends FrameLayout {
         setVisibility(0);
         switch (i) {
             case 0:
-                setTranslationY(getResources().getDimension(C0009R$dimen.fsgesture_swipe_translateY));
+                setTranslationY(getResources().getDimension(C0012R$dimen.fsgesture_swipe_translateY));
                 setTranslationX((float) ((-getWidth()) / 2));
                 return;
             case 1:
-                setTranslationY(getResources().getDimension(C0009R$dimen.fsgesture_swipe_translateY));
+                setTranslationY(getResources().getDimension(C0012R$dimen.fsgesture_swipe_translateY));
                 setTranslationX((float) (this.mDisplayWidth - (getWidth() / 2)));
                 return;
             case 2:
@@ -77,7 +77,7 @@ public class FsGestureDemoSwipeView extends FrameLayout {
                 setTranslationY((float) (this.mDisplayHeight - (getHeight() / 2)));
                 return;
             case 3:
-                setTranslationY(getResources().getDimension(C0009R$dimen.fsgesture_swipe_drawer_translateY));
+                setTranslationY(getResources().getDimension(C0012R$dimen.fsgesture_swipe_drawer_translateY));
                 setTranslationX((float) ((-getWidth()) / 2));
                 return;
             default:

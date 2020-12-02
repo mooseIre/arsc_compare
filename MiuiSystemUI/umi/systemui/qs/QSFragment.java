@@ -16,16 +16,18 @@ import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewPropertyAnimator;
 import android.view.ViewTreeObserver;
-import com.android.systemui.C0012R$id;
-import com.android.systemui.C0014R$layout;
-import com.android.systemui.C0019R$style;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0017R$layout;
+import com.android.systemui.C0022R$style;
 import com.android.systemui.Interpolators;
 import com.android.systemui.controlcenter.phone.ControlPanelController;
 import com.android.systemui.plugins.qs.QS;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
 import com.android.systemui.qs.customize.MiuiQSCustomizer;
 import com.android.systemui.statusbar.CommandQueue;
+import com.android.systemui.statusbar.notification.stack.PanelAppearDisappearEvent;
 import com.android.systemui.statusbar.phone.NotificationsQuickSettingsContainer;
 import com.android.systemui.statusbar.policy.RemoteInputQuickSettingsDisabler;
 import com.android.systemui.util.InjectionInflationController;
@@ -40,6 +42,7 @@ public class QSFragment extends LifecycleFragment implements QS, CommandQueue.Ca
             QSFragment.this.updateQsState();
         }
     };
+    private boolean mAppeared = true;
     private final Handler mBgHandler;
     private QSContainerImpl mContainer;
     private ControlPanelController mControlPanelController;
@@ -102,13 +105,13 @@ public class QSFragment extends LifecycleFragment implements QS, CommandQueue.Ca
     }
 
     public View onCreateView(LayoutInflater layoutInflater, ViewGroup viewGroup, Bundle bundle) {
-        return this.mInjectionInflater.injectable(layoutInflater.cloneInContext(new ContextThemeWrapper(getContext(), C0019R$style.qs_theme))).inflate(C0014R$layout.qs_panel, viewGroup, false);
+        return this.mInjectionInflater.injectable(layoutInflater.cloneInContext(new ContextThemeWrapper(getContext(), C0022R$style.qs_theme))).inflate(C0017R$layout.qs_panel, viewGroup, false);
     }
 
     public void onViewCreated(View view, Bundle bundle) {
         super.onViewCreated(view, bundle);
-        this.mQSPanel = (QSPanel) view.findViewById(C0012R$id.quick_settings_panel);
-        NonInterceptingScrollView nonInterceptingScrollView = (NonInterceptingScrollView) view.findViewById(C0012R$id.expanded_qs_scroll_view);
+        this.mQSPanel = (QSPanel) view.findViewById(C0015R$id.quick_settings_panel);
+        NonInterceptingScrollView nonInterceptingScrollView = (NonInterceptingScrollView) view.findViewById(C0015R$id.expanded_qs_scroll_view);
         this.mQSPanelScrollView = nonInterceptingScrollView;
         nonInterceptingScrollView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             public final void onLayoutChange(View view, int i, int i2, int i3, int i4, int i5, int i6, int i7, int i8) {
@@ -120,15 +123,15 @@ public class QSFragment extends LifecycleFragment implements QS, CommandQueue.Ca
                 QSFragment.this.lambda$onViewCreated$1$QSFragment(view, i, i2, i3, i4);
             }
         });
-        this.mQSDetail = (MiuiQSDetail) view.findViewById(C0012R$id.qs_detail);
-        this.mHeader = (MiuiNotificationShadeHeader) view.findViewById(C0012R$id.header);
-        this.mQSPanel.setHeaderContainer((ViewGroup) view.findViewById(C0012R$id.header_text_container));
-        this.mFooter = (QSFooter) view.findViewById(C0012R$id.qs_footer);
-        QSContainerImpl qSContainerImpl = (QSContainerImpl) view.findViewById(C0012R$id.quick_settings_container);
+        this.mQSDetail = (MiuiQSDetail) view.findViewById(C0015R$id.qs_detail);
+        this.mHeader = (MiuiNotificationShadeHeader) view.findViewById(C0015R$id.header);
+        this.mQSPanel.setHeaderContainer((ViewGroup) view.findViewById(C0015R$id.header_text_container));
+        this.mFooter = (QSFooter) view.findViewById(C0015R$id.qs_footer);
+        QSContainerImpl qSContainerImpl = (QSContainerImpl) view.findViewById(C0015R$id.quick_settings_container);
         this.mContainer = qSContainerImpl;
         this.mQSDetail.setQsPanel(this.mQSPanel, this.mHeader, qSContainerImpl.getQuickQSPanel(), (View) this.mFooter);
         this.mQSAnimator = new QSAnimator(this, this.mContainer.getQuickQSPanel(), this.mQSPanel);
-        MiuiQSCustomizer miuiQSCustomizer = (MiuiQSCustomizer) view.findViewById(C0012R$id.qs_customize);
+        MiuiQSCustomizer miuiQSCustomizer = (MiuiQSCustomizer) view.findViewById(C0015R$id.qs_customize);
         this.mQSCustomizer = miuiQSCustomizer;
         miuiQSCustomizer.setQs(this);
         if (bundle != null) {
@@ -488,6 +491,7 @@ public class QSFragment extends LifecycleFragment implements QS, CommandQueue.Ca
 
     public void hideImmediately() {
         getView().animate().cancel();
+        finishAppearAnimation();
         getView().setY((float) (-this.mContainer.getMinHeight()));
     }
 
@@ -533,5 +537,39 @@ public class QSFragment extends LifecycleFragment implements QS, CommandQueue.Ca
 
     public void onUseControlPanelChange(boolean z) {
         this.mContainer.setShowQSPanel(!z);
+    }
+
+    public void animateAppearDisappear(final boolean z) {
+        AnonymousClass5 r4;
+        this.mAppeared = z;
+        float f = 1.0f;
+        ViewPropertyAnimator scaleX = getView().animate().setInterpolator(PanelAppearDisappearEvent.Companion.getINTERPOLATOR()).setDuration(450).alpha(this.mAppeared ? 1.0f : 0.0f).scaleX(this.mAppeared ? 1.0f : 0.8f);
+        if (!this.mAppeared) {
+            f = 0.8f;
+        }
+        ViewPropertyAnimator scaleY = scaleX.scaleY(f);
+        if (this.mControlPanelController.isUseControlCenter()) {
+            r4 = null;
+        } else {
+            r4 = new AnimatorListenerAdapter() {
+                public void onAnimationEnd(Animator animator) {
+                    QSFragment.this.setListening(z);
+                    boolean unused = QSFragment.this.mHeaderAnimating = false;
+                }
+            };
+        }
+        scaleY.setListener(r4).start();
+    }
+
+    private void finishAppearAnimation() {
+        float f = 1.0f;
+        getView().setAlpha(this.mAppeared ? 1.0f : 0.0f);
+        getView().setScaleX(this.mAppeared ? 1.0f : 0.8f);
+        View view = getView();
+        if (!this.mAppeared) {
+            f = 0.8f;
+        }
+        view.setScaleY(f);
+        this.mHeaderAnimating = false;
     }
 }

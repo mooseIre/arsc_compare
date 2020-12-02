@@ -7,8 +7,8 @@ import android.graphics.ColorFilter;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.drawable.Drawable;
-import com.android.systemui.C0008R$color;
-import com.android.systemui.C0009R$dimen;
+import com.android.systemui.C0011R$color;
+import com.android.systemui.C0012R$dimen;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -32,23 +32,23 @@ public final class IndicatorDrawable extends Drawable {
     public IndicatorDrawable(@NotNull Context context) {
         Intrinsics.checkParameterIsNotNull(context, "context");
         Resources resources = context.getResources();
-        int dimensionPixelSize = resources.getDimensionPixelSize(C0009R$dimen.qs_panel_expand_indicator_stroke_width);
-        int dimensionPixelSize2 = resources.getDimensionPixelSize(C0009R$dimen.qs_panel_expand_indicator_shadow_spread);
-        this.mCaretPaint.setColor(context.getColor(C0008R$color.qs_panel_expand_indicator_color));
+        int dimensionPixelSize = resources.getDimensionPixelSize(C0012R$dimen.qs_panel_expand_indicator_stroke_width);
+        int dimensionPixelSize2 = resources.getDimensionPixelSize(C0012R$dimen.qs_panel_expand_indicator_shadow_spread);
+        this.mCaretPaint.setColor(context.getColor(C0011R$color.qs_panel_expand_indicator_color));
         this.mCaretPaint.setAntiAlias(true);
         float f = (float) dimensionPixelSize;
         this.mCaretPaint.setStrokeWidth(((float) dimensionPixelSize2) + f);
         this.mCaretPaint.setStyle(Paint.Style.STROKE);
         this.mCaretPaint.setStrokeCap(Paint.Cap.ROUND);
         this.mCaretPaint.setStrokeJoin(Paint.Join.MITER);
-        this.mShadowPaint.setColor(context.getColor(C0008R$color.qs_tile_divider));
+        this.mShadowPaint.setColor(context.getColor(C0011R$color.qs_tile_divider));
         this.mShadowPaint.setAntiAlias(true);
         this.mShadowPaint.setStrokeWidth(f + ((float) (dimensionPixelSize2 * 2)));
         this.mShadowPaint.setStyle(Paint.Style.STROKE);
         this.mShadowPaint.setStrokeCap(Paint.Cap.ROUND);
         this.mShadowPaint.setStrokeJoin(Paint.Join.ROUND);
-        this.mCaretWidth = resources.getDimensionPixelSize(C0009R$dimen.qs_panel_expand_indicator_width);
-        this.mCaretHeight = resources.getDimensionPixelSize(C0009R$dimen.qs_panel_expand_indicator_height);
+        this.mCaretWidth = resources.getDimensionPixelSize(C0012R$dimen.qs_panel_expand_indicator_width);
+        this.mCaretHeight = resources.getDimensionPixelSize(C0012R$dimen.qs_panel_expand_indicator_height);
     }
 
     public int getIntrinsicWidth() {

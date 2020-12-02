@@ -9,9 +9,9 @@ import android.provider.MiuiSettings;
 import android.provider.Settings;
 import android.view.ViewConfiguration;
 import android.widget.Switch;
-import com.android.systemui.C0010R$drawable;
-import com.android.systemui.C0018R$string;
-import com.android.systemui.C0019R$style;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0021R$string;
+import com.android.systemui.C0022R$style;
 import com.android.systemui.plugins.qs.QSTile;
 import com.android.systemui.qs.QSHost;
 import com.android.systemui.qs.tileimpl.QSTileImpl;
@@ -78,7 +78,7 @@ public class ScreenButtonTile extends QSTileImpl<QSTile.BooleanState> {
     }
 
     public CharSequence getTileLabel() {
-        return this.mContext.getString(C0018R$string.quick_settings_screenbutton_label);
+        return this.mContext.getString(C0021R$string.quick_settings_screenbutton_label);
     }
 
     /* access modifiers changed from: protected */
@@ -87,7 +87,7 @@ public class ScreenButtonTile extends QSTileImpl<QSTile.BooleanState> {
         if (MiuiSettings.Global.getBoolean(this.mContext.getContentResolver(), "force_fsg_nav_bar")) {
             booleanState.value = false;
             booleanState.state = 0;
-            booleanState.icon = QSTileImpl.ResourceIcon.get(C0010R$drawable.ic_qs_screen_button_unavailable);
+            booleanState.icon = QSTileImpl.ResourceIcon.get(C0013R$drawable.ic_qs_screen_button_unavailable);
         } else {
             if (Settings.Secure.getIntForUser(this.mContext.getContentResolver(), "screen_buttons_state", 0, -2) != 0) {
                 z = true;
@@ -95,17 +95,17 @@ public class ScreenButtonTile extends QSTileImpl<QSTile.BooleanState> {
             booleanState.value = z;
             if (z) {
                 booleanState.state = 2;
-                booleanState.icon = QSTileImpl.ResourceIcon.get(C0010R$drawable.ic_qs_screen_button_enabled);
+                booleanState.icon = QSTileImpl.ResourceIcon.get(C0013R$drawable.ic_qs_screen_button_enabled);
             } else {
                 booleanState.state = 1;
-                booleanState.icon = QSTileImpl.ResourceIcon.get(C0010R$drawable.ic_qs_screen_button_disabled);
+                booleanState.icon = QSTileImpl.ResourceIcon.get(C0013R$drawable.ic_qs_screen_button_disabled);
             }
         }
-        booleanState.label = this.mContext.getString(C0018R$string.quick_settings_screenbutton_label);
+        booleanState.label = this.mContext.getString(C0021R$string.quick_settings_screenbutton_label);
         StringBuilder sb = new StringBuilder();
         sb.append(booleanState.label);
         sb.append(",");
-        sb.append(this.mContext.getString(booleanState.value ? C0018R$string.switch_bar_on : C0018R$string.switch_bar_off));
+        sb.append(this.mContext.getString(booleanState.value ? C0021R$string.switch_bar_on : C0021R$string.switch_bar_off));
         booleanState.contentDescription = sb.toString();
         booleanState.expandedAccessibilityClassName = Switch.class.getName();
     }
@@ -119,7 +119,7 @@ public class ScreenButtonTile extends QSTileImpl<QSTile.BooleanState> {
 
         public void run() {
             if (this.value == 0) {
-                AlertDialog create = new AlertDialog.Builder(ScreenButtonTile.this.mContext, C0019R$style.Theme_Dialog_Alert).setMessage(286130249).setPositiveButton(17039370, (DialogInterface.OnClickListener) null).create();
+                AlertDialog create = new AlertDialog.Builder(ScreenButtonTile.this.mContext, C0022R$style.Theme_Dialog_Alert).setMessage(286195785).setPositiveButton(17039370, (DialogInterface.OnClickListener) null).create();
                 create.getWindow().setType(2010);
                 create.show();
             }

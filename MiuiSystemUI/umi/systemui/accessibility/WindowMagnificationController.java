@@ -15,11 +15,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
-import com.android.systemui.C0009R$dimen;
-import com.android.systemui.C0012R$id;
-import com.android.systemui.C0013R$integer;
-import com.android.systemui.C0014R$layout;
-import com.android.systemui.C0018R$string;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0016R$integer;
+import com.android.systemui.C0017R$layout;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.accessibility.MirrorWindowControl;
 import com.android.systemui.shared.system.WindowManagerWrapper;
 
@@ -59,8 +59,8 @@ public class WindowMagnificationController implements View.OnTouchListener, Surf
         this.mDisplayId = this.mContext.getDisplayId();
         this.mWm = (WindowManager) context.getSystemService("window");
         Resources resources = context.getResources();
-        this.mBorderSize = (int) resources.getDimension(C0009R$dimen.magnification_border_size);
-        this.mScale = (float) resources.getInteger(C0013R$integer.magnification_default_scale);
+        this.mBorderSize = (int) resources.getDimension(C0012R$dimen.magnification_border_size);
+        this.mScale = (float) resources.getInteger(C0016R$integer.magnification_default_scale);
         this.mMirrorWindowControl = mirrorWindowControl;
         if (mirrorWindowControl != null) {
             mirrorWindowControl.setWindowDelegate(this);
@@ -80,7 +80,7 @@ public class WindowMagnificationController implements View.OnTouchListener, Surf
         WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(-1, -1, 2039, 24, -2);
         layoutParams.gravity = 51;
         layoutParams.token = new Binder();
-        layoutParams.setTitle(this.mContext.getString(C0018R$string.magnification_overlay_title));
+        layoutParams.setTitle(this.mContext.getString(C0021R$string.magnification_overlay_title));
         View view = new View(this.mContext);
         this.mOverlayView = view;
         view.getViewTreeObserver().addOnWindowAttachListener(new ViewTreeObserver.OnWindowAttachListener() {
@@ -132,17 +132,17 @@ public class WindowMagnificationController implements View.OnTouchListener, Surf
 
     /* access modifiers changed from: private */
     public void createMirrorWindow() {
-        WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(this.mMagnificationFrame.width() + (this.mBorderSize * 2), this.mMagnificationFrame.height() + ((int) this.mContext.getResources().getDimension(C0009R$dimen.magnification_drag_view_height)) + (this.mBorderSize * 2), 1000, 40, -2);
+        WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(this.mMagnificationFrame.width() + (this.mBorderSize * 2), this.mMagnificationFrame.height() + ((int) this.mContext.getResources().getDimension(C0012R$dimen.magnification_drag_view_height)) + (this.mBorderSize * 2), 1000, 40, -2);
         layoutParams.gravity = 51;
         layoutParams.token = this.mOverlayView.getWindowToken();
         Rect rect = this.mMagnificationFrame;
         layoutParams.x = rect.left;
         layoutParams.y = rect.top;
         layoutParams.layoutInDisplayCutoutMode = 1;
-        layoutParams.setTitle(this.mContext.getString(C0018R$string.magnification_window_title));
-        View inflate = LayoutInflater.from(this.mContext).inflate(C0014R$layout.window_magnifier_view, (ViewGroup) null);
+        layoutParams.setTitle(this.mContext.getString(C0021R$string.magnification_window_title));
+        View inflate = LayoutInflater.from(this.mContext).inflate(C0017R$layout.window_magnifier_view, (ViewGroup) null);
         this.mMirrorView = inflate;
-        SurfaceView surfaceView = (SurfaceView) inflate.findViewById(C0012R$id.surface_view);
+        SurfaceView surfaceView = (SurfaceView) inflate.findViewById(C0015R$id.surface_view);
         this.mMirrorSurfaceView = surfaceView;
         surfaceView.setZOrderOnTop(true);
         this.mMirrorView.setSystemUiVisibility(5894);
@@ -183,11 +183,11 @@ public class WindowMagnificationController implements View.OnTouchListener, Surf
     }
 
     private void addDragTouchListeners() {
-        this.mDragView = this.mMirrorView.findViewById(C0012R$id.drag_handle);
-        this.mLeftDrag = this.mMirrorView.findViewById(C0012R$id.left_handle);
-        this.mTopDrag = this.mMirrorView.findViewById(C0012R$id.top_handle);
-        this.mRightDrag = this.mMirrorView.findViewById(C0012R$id.right_handle);
-        this.mBottomDrag = this.mMirrorView.findViewById(C0012R$id.bottom_handle);
+        this.mDragView = this.mMirrorView.findViewById(C0015R$id.drag_handle);
+        this.mLeftDrag = this.mMirrorView.findViewById(C0015R$id.left_handle);
+        this.mTopDrag = this.mMirrorView.findViewById(C0015R$id.top_handle);
+        this.mRightDrag = this.mMirrorView.findViewById(C0015R$id.right_handle);
+        this.mBottomDrag = this.mMirrorView.findViewById(C0015R$id.bottom_handle);
         this.mDragView.setOnTouchListener(this);
         this.mLeftDrag.setOnTouchListener(this);
         this.mTopDrag.setOnTouchListener(this);

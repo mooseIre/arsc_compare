@@ -8,7 +8,7 @@ import android.os.Handler;
 import android.view.accessibility.AccessibilityManager;
 import com.android.internal.logging.MetricsLogger;
 import com.android.internal.logging.UiEventLogger;
-import com.android.systemui.C0007R$bool;
+import com.android.systemui.C0010R$bool;
 import com.android.systemui.bubbles.BubbleController;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
 import com.android.systemui.settings.CurrentUserContextTracker;
@@ -67,7 +67,7 @@ public interface NotificationsModule {
     }
 
     static NotificationsController provideNotificationsController(Context context, Lazy<NotificationsControllerImpl> lazy, Lazy<NotificationsControllerStub> lazy2) {
-        if (context.getResources().getBoolean(C0007R$bool.config_renderNotifications)) {
+        if (context.getResources().getBoolean(C0010R$bool.config_renderNotifications)) {
             return lazy.get();
         }
         return lazy2.get();

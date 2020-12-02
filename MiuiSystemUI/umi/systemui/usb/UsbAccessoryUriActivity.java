@@ -10,7 +10,7 @@ import android.os.UserHandle;
 import android.util.Log;
 import com.android.internal.app.AlertActivity;
 import com.android.internal.app.AlertController;
-import com.android.systemui.C0018R$string;
+import com.android.systemui.C0021R$string;
 
 public class UsbAccessoryUriActivity extends AlertActivity implements DialogInterface.OnClickListener {
     private UsbAccessory mAccessory;
@@ -39,10 +39,10 @@ public class UsbAccessoryUriActivity extends AlertActivity implements DialogInte
             String description = this.mAccessory.getDescription();
             alertParams.mTitle = description;
             if (description == null || description.length() == 0) {
-                alertParams.mTitle = getString(C0018R$string.title_usb_accessory);
+                alertParams.mTitle = getString(C0021R$string.title_usb_accessory);
             }
-            alertParams.mMessage = getString(C0018R$string.usb_accessory_uri_prompt, new Object[]{this.mUri});
-            alertParams.mPositiveButtonText = getString(C0018R$string.label_view);
+            alertParams.mMessage = getString(C0021R$string.usb_accessory_uri_prompt, new Object[]{this.mUri});
+            alertParams.mPositiveButtonText = getString(C0021R$string.label_view);
             alertParams.mNegativeButtonText = getString(17039360);
             alertParams.mPositiveButtonListener = this;
             alertParams.mNegativeButtonListener = this;

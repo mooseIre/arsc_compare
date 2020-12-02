@@ -6,8 +6,8 @@ import android.util.Log;
 import android.util.MathUtils;
 import android.view.View;
 import android.view.ViewGroup;
-import com.android.systemui.C0007R$bool;
-import com.android.systemui.C0009R$dimen;
+import com.android.systemui.C0010R$bool;
+import com.android.systemui.C0012R$dimen;
 import com.android.systemui.statusbar.EmptyShadeView;
 import com.android.systemui.statusbar.NotificationShelf;
 import com.android.systemui.statusbar.notification.NotificationUtils;
@@ -51,14 +51,14 @@ public class StackScrollAlgorithm {
 
     private void initConstants(Context context) {
         Resources resources = context.getResources();
-        this.mPaddingBetweenElements = resources.getDimensionPixelSize(C0009R$dimen.notification_divider_height);
-        this.mIncreasedPaddingBetweenElements = resources.getDimensionPixelSize(C0009R$dimen.notification_divider_height_increased);
-        this.mCollapsedSize = resources.getDimensionPixelSize(C0009R$dimen.notification_min_height);
-        this.mStatusBarHeight = resources.getDimensionPixelSize(C0009R$dimen.status_bar_height);
-        this.mClipNotificationScrollToTop = resources.getBoolean(C0007R$bool.config_clipNotificationScrollToTop);
-        this.mHeadsUpInset = (float) (this.mStatusBarHeight + resources.getDimensionPixelSize(C0009R$dimen.heads_up_status_bar_padding));
-        this.mPinnedZTranslationExtra = resources.getDimensionPixelSize(C0009R$dimen.heads_up_pinned_elevation);
-        this.mGapHeight = resources.getDimensionPixelSize(C0009R$dimen.notification_section_divider_height);
+        this.mPaddingBetweenElements = resources.getDimensionPixelSize(C0012R$dimen.notification_divider_height);
+        this.mIncreasedPaddingBetweenElements = resources.getDimensionPixelSize(C0012R$dimen.notification_divider_height_increased);
+        this.mCollapsedSize = resources.getDimensionPixelSize(C0012R$dimen.notification_min_height);
+        this.mStatusBarHeight = resources.getDimensionPixelSize(C0012R$dimen.status_bar_height);
+        this.mClipNotificationScrollToTop = resources.getBoolean(C0010R$bool.config_clipNotificationScrollToTop);
+        this.mHeadsUpInset = (float) (this.mStatusBarHeight + resources.getDimensionPixelSize(C0012R$dimen.heads_up_status_bar_padding));
+        this.mPinnedZTranslationExtra = resources.getDimensionPixelSize(C0012R$dimen.heads_up_pinned_elevation);
+        this.mGapHeight = resources.getDimensionPixelSize(C0012R$dimen.notification_section_divider_height);
     }
 
     public void resetViewStates(AmbientState ambientState) {
@@ -251,13 +251,14 @@ public class StackScrollAlgorithm {
         float f2;
         int i2 = i;
         StackScrollAlgorithmState stackScrollAlgorithmState2 = stackScrollAlgorithmState;
+        AmbientState ambientState2 = ambientState;
         ExpandableView expandableView = stackScrollAlgorithmState2.visibleChildren.get(i2);
         boolean childNeedsGapHeight = childNeedsGapHeight(ambientState.getSectionProvider(), stackScrollAlgorithmState2.anchorViewIndex, i, expandableView, i2 > 0 ? stackScrollAlgorithmState2.visibleChildren.get(i2 - 1) : null);
         ExpandableViewState viewState = expandableView.getViewState();
         boolean z2 = false;
         viewState.location = 0;
         float f3 = (!childNeedsGapHeight || z) ? f : f + ((float) this.mGapHeight);
-        int paddingAfterChild = getPaddingAfterChild(stackScrollAlgorithmState2, expandableView, i2);
+        int paddingAfterChild = getPaddingAfterChild(stackScrollAlgorithmState2, ambientState2, expandableView, i2);
         int maxAllowedChildHeight = getMaxAllowedChildHeight(expandableView);
         if (z) {
             viewState.yTranslation = f3 - ((float) (maxAllowedChildHeight + paddingAfterChild));
@@ -288,7 +289,7 @@ public class StackScrollAlgorithm {
         } else if (z4) {
             viewState.yTranslation = ((float) (ambientState.getInnerHeight() - maxAllowedChildHeight)) + (ambientState.getStackTranslation() * 0.25f);
         } else if (expandableView != ambientState.getTrackedHeadsUpRow()) {
-            clampPositionToShelf(expandableView, viewState, ambientState);
+            clampPositionToShelf(expandableView, viewState, ambientState2);
         }
         if (z) {
             f2 = viewState.yTranslation;
@@ -325,7 +326,7 @@ public class StackScrollAlgorithm {
     }
 
     /* access modifiers changed from: protected */
-    public int getPaddingAfterChild(StackScrollAlgorithmState stackScrollAlgorithmState, ExpandableView expandableView, int i) {
+    public int getPaddingAfterChild(StackScrollAlgorithmState stackScrollAlgorithmState, AmbientState ambientState, ExpandableView expandableView, int i) {
         return getPaddingAfterChild(stackScrollAlgorithmState, expandableView);
     }
 

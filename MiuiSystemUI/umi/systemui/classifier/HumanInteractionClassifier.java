@@ -8,7 +8,7 @@ import android.os.Looper;
 import android.provider.Settings;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
-import com.android.systemui.C0007R$bool;
+import com.android.systemui.C0010R$bool;
 import java.util.ArrayDeque;
 
 public class HumanInteractionClassifier extends Classifier {
@@ -54,7 +54,7 @@ public class HumanInteractionClassifier extends Classifier {
 
     /* access modifiers changed from: private */
     public void updateConfiguration() {
-        this.mEnableClassifier = Settings.Global.getInt(this.mContext.getContentResolver(), "HIC_enable", this.mContext.getResources().getBoolean(C0007R$bool.config_lockscreenAntiFalsingClassifierEnabled) ? 1 : 0) != 0;
+        this.mEnableClassifier = Settings.Global.getInt(this.mContext.getContentResolver(), "HIC_enable", this.mContext.getResources().getBoolean(C0010R$bool.config_lockscreenAntiFalsingClassifierEnabled) ? 1 : 0) != 0;
     }
 
     public void setType(int i) {

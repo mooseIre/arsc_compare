@@ -392,8 +392,8 @@ public class StatusBarKeyguardViewManager implements RemoteInputController.Callb
         updateLockIcon();
     }
 
-    /* JADX WARNING: Removed duplicated region for block: B:20:0x007e  */
-    /* JADX WARNING: Removed duplicated region for block: B:24:0x009a  */
+    /* JADX WARNING: Removed duplicated region for block: B:20:0x0089  */
+    /* JADX WARNING: Removed duplicated region for block: B:24:0x00a5  */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     public void hide(long r19, long r21) {
         /*
@@ -419,10 +419,14 @@ public class StatusBarKeyguardViewManager implements RemoteInputController.Callb
             long r6 = r6 - r4
             r4 = 0
             long r6 = java.lang.Math.max(r4, r6)
+            java.lang.Class<com.android.systemui.statusbar.notification.policy.KeyguardNotificationController> r8 = com.android.systemui.statusbar.notification.policy.KeyguardNotificationController.class
+            java.lang.Object r8 = com.android.systemui.Dependency.get(r8)
+            com.android.systemui.statusbar.notification.policy.KeyguardNotificationController r8 = (com.android.systemui.statusbar.notification.policy.KeyguardNotificationController) r8
+            r8.clear()
             com.android.systemui.statusbar.phone.StatusBar r8 = r0.mStatusBar
             boolean r8 = r8.isInLaunchTransition()
             r15 = 1
-            if (r8 == 0) goto L_0x0048
+            if (r8 == 0) goto L_0x0053
             com.android.systemui.statusbar.phone.StatusBar r1 = r0.mStatusBar
             com.android.systemui.statusbar.phone.StatusBarKeyguardViewManager$5 r2 = new com.android.systemui.statusbar.phone.StatusBarKeyguardViewManager$5
             r2.<init>()
@@ -430,31 +434,31 @@ public class StatusBarKeyguardViewManager implements RemoteInputController.Callb
             r3.<init>()
             r1.fadeKeyguardAfterLaunchTransition(r2, r3)
             r4 = r15
-            goto L_0x00e7
-        L_0x0048:
+            goto L_0x00f2
+        L_0x0053:
             r18.executeAfterKeyguardGoneAction()
             com.android.systemui.statusbar.phone.BiometricUnlockController r8 = r0.mBiometricUnlockController
             int r8 = r8.getMode()
             r9 = 2
-            if (r8 != r9) goto L_0x0057
+            if (r8 != r9) goto L_0x0062
             r16 = r15
-            goto L_0x0059
-        L_0x0057:
+            goto L_0x0064
+        L_0x0062:
             r16 = r1
-        L_0x0059:
+        L_0x0064:
             boolean r17 = r18.needsBypassFading()
-            if (r17 == 0) goto L_0x0063
+            if (r17 == 0) goto L_0x006e
             r2 = 67
-        L_0x0061:
+        L_0x006c:
             r11 = r4
-            goto L_0x0069
-        L_0x0063:
-            if (r16 == 0) goto L_0x0068
+            goto L_0x0074
+        L_0x006e:
+            if (r16 == 0) goto L_0x0073
             r2 = 240(0xf0, double:1.186E-321)
-            goto L_0x0061
-        L_0x0068:
+            goto L_0x006c
+        L_0x0073:
             r11 = r6
-        L_0x0069:
+        L_0x0074:
             com.android.systemui.statusbar.phone.StatusBar r8 = r0.mStatusBar
             r9 = r19
             r13 = r2
@@ -464,58 +468,58 @@ public class StatusBarKeyguardViewManager implements RemoteInputController.Callb
             com.android.systemui.statusbar.phone.BiometricUnlockController r5 = r0.mBiometricUnlockController
             r5.startKeyguardFadingAway()
             r0.hideBouncer(r4)
-            if (r16 == 0) goto L_0x009a
-            if (r17 == 0) goto L_0x0091
+            if (r16 == 0) goto L_0x00a5
+            if (r17 == 0) goto L_0x009c
             com.android.systemui.statusbar.phone.NotificationPanelViewController r5 = r0.mNotificationPanelViewController
             android.view.ViewGroup r5 = r5.getView()
             android.view.View r6 = r0.mNotificationContainer
             com.android.systemui.statusbar.phone.-$$Lambda$StatusBarKeyguardViewManager$aIusP5sgaSr59XXK3nFh48FBNI4 r7 = new com.android.systemui.statusbar.phone.-$$Lambda$StatusBarKeyguardViewManager$aIusP5sgaSr59XXK3nFh48FBNI4
             r7.<init>()
             com.android.systemui.statusbar.notification.ViewGroupFadeHelper.fadeOutAllChildrenExcept(r5, r6, r2, r7)
-            goto L_0x0096
-        L_0x0091:
+            goto L_0x00a1
+        L_0x009c:
             com.android.systemui.statusbar.phone.StatusBar r2 = r0.mStatusBar
             r2.fadeKeyguardWhilePulsing()
-        L_0x0096:
+        L_0x00a1:
             r18.wakeAndUnlockDejank()
-            goto L_0x00d7
-        L_0x009a:
+            goto L_0x00e2
+        L_0x00a5:
             com.android.systemui.statusbar.SysuiStatusBarStateController r5 = r0.mStatusBarStateController
             boolean r5 = r5.leaveOpenOnKeyguardHide()
-            if (r5 != 0) goto L_0x00c8
+            if (r5 != 0) goto L_0x00d3
             com.android.systemui.statusbar.phone.NotificationShadeWindowController r5 = r0.mNotificationShadeWindowController
             r5.setKeyguardFadingAway(r4)
-            if (r17 == 0) goto L_0x00ba
+            if (r17 == 0) goto L_0x00c5
             com.android.systemui.statusbar.phone.NotificationPanelViewController r5 = r0.mNotificationPanelViewController
             android.view.ViewGroup r5 = r5.getView()
             android.view.View r6 = r0.mNotificationContainer
             com.android.systemui.statusbar.phone.-$$Lambda$StatusBarKeyguardViewManager$EJI38cHcIk60L5eHmdpMvFRistw r7 = new com.android.systemui.statusbar.phone.-$$Lambda$StatusBarKeyguardViewManager$EJI38cHcIk60L5eHmdpMvFRistw
             r7.<init>()
             com.android.systemui.statusbar.notification.ViewGroupFadeHelper.fadeOutAllChildrenExcept(r5, r6, r2, r7)
-            goto L_0x00bf
-        L_0x00ba:
+            goto L_0x00ca
+        L_0x00c5:
             com.android.systemui.statusbar.phone.StatusBar r2 = r0.mStatusBar
             r2.hideKeyguard()
-        L_0x00bf:
+        L_0x00ca:
             com.android.systemui.statusbar.phone.StatusBar r2 = r0.mStatusBar
             r2.updateScrimController()
             r18.wakeAndUnlockDejank()
-            goto L_0x00d7
-        L_0x00c8:
+            goto L_0x00e2
+        L_0x00d3:
             com.android.systemui.statusbar.phone.StatusBar r2 = r0.mStatusBar
             r2.hideKeyguard()
             com.android.systemui.statusbar.phone.StatusBar r2 = r0.mStatusBar
             r2.finishKeyguardFadingAway()
             com.android.systemui.statusbar.phone.BiometricUnlockController r2 = r0.mBiometricUnlockController
             r2.finishKeyguardFadingAway()
-        L_0x00d7:
+        L_0x00e2:
             r18.updateLockIcon()
             r18.updateStates()
             com.android.systemui.statusbar.phone.NotificationShadeWindowController r2 = r0.mNotificationShadeWindowController
             r2.setKeyguardShowing(r1)
             com.android.keyguard.ViewMediatorCallback r0 = r0.mViewMediatorCallback
             r0.keyguardGone()
-        L_0x00e7:
+        L_0x00f2:
             r0 = 62
             com.android.systemui.shared.system.SysUiStatsLog.write(r0, r4)
             return

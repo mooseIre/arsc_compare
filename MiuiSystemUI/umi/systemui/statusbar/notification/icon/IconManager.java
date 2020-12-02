@@ -12,7 +12,7 @@ import android.service.notification.NotificationListenerService;
 import android.util.Log;
 import android.widget.ImageView;
 import com.android.internal.statusbar.StatusBarIcon;
-import com.android.systemui.C0012R$id;
+import com.android.systemui.C0015R$id;
 import com.android.systemui.statusbar.StatusBarIconView;
 import com.android.systemui.statusbar.notification.ExpandedNotification;
 import com.android.systemui.statusbar.notification.InflationException;
@@ -208,7 +208,7 @@ public class IconManager {
 
     private final void setIcon(NotificationEntry notificationEntry, StatusBarIcon statusBarIcon, StatusBarIconView statusBarIconView) throws InflationException {
         statusBarIconView.setShowsConversation(showsConversation(notificationEntry, statusBarIconView, statusBarIcon));
-        statusBarIconView.setTag(C0012R$id.icon_is_pre_L, Boolean.valueOf(notificationEntry.targetSdk < 21));
+        statusBarIconView.setTag(C0015R$id.icon_is_pre_L, Boolean.valueOf(notificationEntry.targetSdk < 21));
         if (!statusBarIconView.set(statusBarIcon)) {
             throw new InflationException("Couldn't create icon " + statusBarIcon);
         }

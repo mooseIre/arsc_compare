@@ -4,7 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.res.Resources;
 import android.widget.TextView;
-import com.android.systemui.C0018R$string;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.controls.ControlStatus;
 import com.android.systemui.controls.TooltipManager;
 import com.android.systemui.controls.controller.ControlsController;
@@ -87,7 +87,7 @@ final class ControlsFavoritingActivity$loadControls$$inlined$let$lambda$1<T> imp
                 if (errorOnLoad) {
                     TextView access$getStatusText$p = ControlsFavoritingActivity.access$getStatusText$p(this.this$0.this$0);
                     Resources resources = this.this$0.this$0.getResources();
-                    int i2 = C0018R$string.controls_favorite_load_error;
+                    int i2 = C0021R$string.controls_favorite_load_error;
                     Object[] objArr = new Object[1];
                     Object access$getAppName$p = this.this$0.this$0.appName;
                     if (access$getAppName$p == null) {
@@ -97,7 +97,7 @@ final class ControlsFavoritingActivity$loadControls$$inlined$let$lambda$1<T> imp
                     access$getStatusText$p.setText(resources.getString(i2, objArr));
                     ControlsFavoritingActivity.access$getSubtitleView$p(this.this$0.this$0).setVisibility(8);
                 } else if (this.this$0.this$0.listOfStructures.isEmpty()) {
-                    ControlsFavoritingActivity.access$getStatusText$p(this.this$0.this$0).setText(this.this$0.this$0.getResources().getString(C0018R$string.controls_favorite_load_none));
+                    ControlsFavoritingActivity.access$getStatusText$p(this.this$0.this$0).setText(this.this$0.this$0.getResources().getString(C0021R$string.controls_favorite_load_none));
                     ControlsFavoritingActivity.access$getSubtitleView$p(this.this$0.this$0).setVisibility(8);
                 } else {
                     ControlsFavoritingActivity.access$getStatusText$p(this.this$0.this$0).setVisibility(8);
@@ -124,7 +124,7 @@ final class ControlsFavoritingActivity$loadControls$$inlined$let$lambda$1<T> imp
                                 int height = iArr[1] + ControlsFavoritingActivity.access$getPageIndicator$p(this.this$0.this$0.this$0).getHeight();
                                 TooltipManager access$getMTooltipManager$p = this.this$0.this$0.this$0.mTooltipManager;
                                 if (access$getMTooltipManager$p != null) {
-                                    access$getMTooltipManager$p.show(C0018R$string.controls_structure_tooltip, width, height);
+                                    access$getMTooltipManager$p.show(C0021R$string.controls_structure_tooltip, width, height);
                                 }
                             }
                         }

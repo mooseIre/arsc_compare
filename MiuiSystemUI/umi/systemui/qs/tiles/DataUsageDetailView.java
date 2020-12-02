@@ -4,8 +4,8 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
-import com.android.systemui.C0009R$dimen;
-import com.android.systemui.C0012R$id;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0015R$id;
 import com.android.systemui.FontSizeUtils;
 import java.text.DecimalFormat;
 
@@ -19,12 +19,12 @@ public class DataUsageDetailView extends LinearLayout {
     /* access modifiers changed from: protected */
     public void onConfigurationChanged(Configuration configuration) {
         super.onConfigurationChanged(configuration);
-        FontSizeUtils.updateFontSize(this, 16908310, C0009R$dimen.qs_data_usage_text_size);
-        FontSizeUtils.updateFontSize(this, C0012R$id.usage_text, C0009R$dimen.qs_data_usage_usage_text_size);
-        FontSizeUtils.updateFontSize(this, C0012R$id.usage_carrier_text, C0009R$dimen.qs_data_usage_text_size);
-        FontSizeUtils.updateFontSize(this, C0012R$id.usage_info_top_text, C0009R$dimen.qs_data_usage_text_size);
-        FontSizeUtils.updateFontSize(this, C0012R$id.usage_period_text, C0009R$dimen.qs_data_usage_text_size);
-        FontSizeUtils.updateFontSize(this, C0012R$id.usage_info_bottom_text, C0009R$dimen.qs_data_usage_text_size);
+        FontSizeUtils.updateFontSize(this, 16908310, C0012R$dimen.qs_data_usage_text_size);
+        FontSizeUtils.updateFontSize(this, C0015R$id.usage_text, C0012R$dimen.qs_data_usage_usage_text_size);
+        FontSizeUtils.updateFontSize(this, C0015R$id.usage_carrier_text, C0012R$dimen.qs_data_usage_text_size);
+        FontSizeUtils.updateFontSize(this, C0015R$id.usage_info_top_text, C0012R$dimen.qs_data_usage_text_size);
+        FontSizeUtils.updateFontSize(this, C0015R$id.usage_period_text, C0012R$dimen.qs_data_usage_text_size);
+        FontSizeUtils.updateFontSize(this, C0015R$id.usage_info_bottom_text, C0012R$dimen.qs_data_usage_text_size);
     }
 
     /* JADX WARNING: Removed duplicated region for block: B:10:0x0089  */
@@ -58,14 +58,14 @@ public class DataUsageDetailView extends LinearLayout {
         L_0x001e:
             int r5 = (r3 > r11 ? 1 : (r3 == r11 ? 0 : -1))
             if (r5 > 0) goto L_0x0044
-            int r5 = com.android.systemui.C0018R$string.quick_settings_cellular_detail_remaining_data
+            int r5 = com.android.systemui.C0021R$string.quick_settings_cellular_detail_remaining_data
             long r11 = r11 - r3
-            int r13 = com.android.systemui.C0018R$string.quick_settings_cellular_detail_data_used
+            int r13 = com.android.systemui.C0021R$string.quick_settings_cellular_detail_data_used
             java.lang.Object[] r14 = new java.lang.Object[r9]
             java.lang.String r3 = r0.formatBytes(r3)
             r14[r10] = r3
             java.lang.String r3 = r2.getString(r13, r14)
-            int r4 = com.android.systemui.C0018R$string.quick_settings_cellular_detail_data_limit
+            int r4 = com.android.systemui.C0021R$string.quick_settings_cellular_detail_data_limit
             java.lang.Object[] r13 = new java.lang.Object[r9]
             long r14 = r1.limitLevel
             java.lang.String r14 = r0.formatBytes(r14)
@@ -73,14 +73,14 @@ public class DataUsageDetailView extends LinearLayout {
             java.lang.String r2 = r2.getString(r4, r13)
             goto L_0x0087
         L_0x0044:
-            int r5 = com.android.systemui.C0018R$string.quick_settings_cellular_detail_over_limit
+            int r5 = com.android.systemui.C0021R$string.quick_settings_cellular_detail_over_limit
             long r11 = r3 - r11
-            int r6 = com.android.systemui.C0018R$string.quick_settings_cellular_detail_data_used
+            int r6 = com.android.systemui.C0021R$string.quick_settings_cellular_detail_data_used
             java.lang.Object[] r13 = new java.lang.Object[r9]
             java.lang.String r3 = r0.formatBytes(r3)
             r13[r10] = r3
             java.lang.String r3 = r2.getString(r6, r13)
-            int r4 = com.android.systemui.C0018R$string.quick_settings_cellular_detail_data_limit
+            int r4 = com.android.systemui.C0021R$string.quick_settings_cellular_detail_data_limit
             java.lang.Object[] r6 = new java.lang.Object[r9]
             long r13 = r1.limitLevel
             java.lang.String r13 = r0.formatBytes(r13)
@@ -93,9 +93,9 @@ public class DataUsageDetailView extends LinearLayout {
             r2 = r18
             goto L_0x0087
         L_0x0072:
-            int r5 = com.android.systemui.C0018R$string.quick_settings_cellular_detail_data_usage
+            int r5 = com.android.systemui.C0021R$string.quick_settings_cellular_detail_data_usage
             long r11 = r1.usageLevel
-            int r3 = com.android.systemui.C0018R$string.quick_settings_cellular_detail_data_warning
+            int r3 = com.android.systemui.C0021R$string.quick_settings_cellular_detail_data_warning
             java.lang.Object[] r4 = new java.lang.Object[r9]
             long r13 = r1.warningLevel
             java.lang.String r13 = r0.formatBytes(r13)
@@ -111,13 +111,13 @@ public class DataUsageDetailView extends LinearLayout {
             android.view.View r4 = r0.findViewById(r4)
             android.widget.TextView r4 = (android.widget.TextView) r4
             r4.setText(r5)
-            int r4 = com.android.systemui.C0012R$id.usage_text
+            int r4 = com.android.systemui.C0015R$id.usage_text
             android.view.View r4 = r0.findViewById(r4)
             android.widget.TextView r4 = (android.widget.TextView) r4
             java.lang.String r5 = r0.formatBytes(r11)
             r4.setText(r5)
             r4.setTextColor(r6)
-            int r4 = com.android.systemui.C0012R$id.usage_graph
+            int r4 = com.android.systemui.C0015R$id.usage_graph
             android.view.View r4 = r0.findViewById(r4)
             com.android.systemui.qs.DataUsageGraph r4 = (com.android.systemui.qs.DataUsageGraph) r4
             long r12 = r1.limitLevel
@@ -126,17 +126,17 @@ public class DataUsageDetailView extends LinearLayout {
             r11 = r4
             r16 = r5
             r11.setLevels(r12, r14, r16)
-            int r5 = com.android.systemui.C0012R$id.usage_carrier_text
+            int r5 = com.android.systemui.C0015R$id.usage_carrier_text
             android.view.View r5 = r0.findViewById(r5)
             android.widget.TextView r5 = (android.widget.TextView) r5
             java.lang.String r6 = r1.carrier
             r5.setText(r6)
-            int r5 = com.android.systemui.C0012R$id.usage_period_text
+            int r5 = com.android.systemui.C0015R$id.usage_period_text
             android.view.View r5 = r0.findViewById(r5)
             android.widget.TextView r5 = (android.widget.TextView) r5
             java.lang.String r6 = r1.period
             r5.setText(r6)
-            int r5 = com.android.systemui.C0012R$id.usage_info_top_text
+            int r5 = com.android.systemui.C0015R$id.usage_info_top_text
             android.view.View r5 = r0.findViewById(r5)
             android.widget.TextView r5 = (android.widget.TextView) r5
             r6 = 8
@@ -148,7 +148,7 @@ public class DataUsageDetailView extends LinearLayout {
         L_0x00ea:
             r5.setVisibility(r11)
             r5.setText(r3)
-            int r3 = com.android.systemui.C0012R$id.usage_info_bottom_text
+            int r3 = com.android.systemui.C0015R$id.usage_info_bottom_text
             android.view.View r0 = r0.findViewById(r3)
             android.widget.TextView r0 = (android.widget.TextView) r0
             if (r2 == 0) goto L_0x00fc

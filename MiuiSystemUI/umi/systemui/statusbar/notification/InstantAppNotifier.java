@@ -21,9 +21,9 @@ import android.os.UserHandle;
 import android.service.notification.StatusBarNotification;
 import android.util.ArraySet;
 import android.util.Pair;
-import com.android.systemui.C0008R$color;
-import com.android.systemui.C0010R$drawable;
-import com.android.systemui.C0018R$string;
+import com.android.systemui.C0011R$color;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.Dependency;
 import com.android.systemui.SystemUI;
 import com.android.systemui.stackdivider.Divider;
@@ -204,19 +204,19 @@ public class InstantAppNotifier extends SystemUI implements CommandQueue.Callbac
         int i5 = i;
         ApplicationInfo applicationInfo2 = applicationInfo;
         Bundle bundle = new Bundle();
-        bundle.putString("android.substName", this.mContext.getString(C0018R$string.instant_apps));
+        bundle.putString("android.substName", this.mContext.getString(C0021R$string.instant_apps));
         this.mCurrentNotifs.add(new Pair(str3, Integer.valueOf(i)));
-        String string = this.mContext.getString(C0018R$string.instant_apps_help_url);
+        String string = this.mContext.getString(C0021R$string.instant_apps_help_url);
         boolean z = !string.isEmpty();
         Context context = this.mContext;
         if (z) {
-            i3 = C0018R$string.instant_apps_message_with_help;
+            i3 = C0021R$string.instant_apps_message_with_help;
         } else {
-            i3 = C0018R$string.instant_apps_message;
+            i3 = C0021R$string.instant_apps_message;
         }
         String string2 = context.getString(i3);
         UserHandle of = UserHandle.of(i);
-        Notification.Action build = new Notification.Action.Builder((Icon) null, this.mContext.getString(C0018R$string.app_info), PendingIntent.getActivityAsUser(this.mContext, 0, new Intent("android.settings.APPLICATION_DETAILS_SETTINGS").setData(Uri.fromParts("package", str3, (String) null)), 67108864, (Bundle) null, of)).build();
+        Notification.Action build = new Notification.Action.Builder((Icon) null, this.mContext.getString(C0021R$string.app_info), PendingIntent.getActivityAsUser(this.mContext, 0, new Intent("android.settings.APPLICATION_DETAILS_SETTINGS").setData(Uri.fromParts("package", str3, (String) null)), 67108864, (Bundle) null, of)).build();
         if (z) {
             str2 = "android.intent.action.VIEW";
             action = build;
@@ -246,11 +246,11 @@ public class InstantAppNotifier extends SystemUI implements CommandQueue.Callbac
             }
             Intent addCategory = new Intent().setComponent(componentName).setAction(str2).addCategory("android.intent.category.BROWSABLE");
             builder = builder3;
-            builder.addAction(new Notification.Action.Builder((Icon) null, this.mContext.getString(C0018R$string.go_to_web), PendingIntent.getActivityAsUser(this.mContext, 0, addCategory.addCategory("unique:" + System.currentTimeMillis()).putExtra("android.intent.extra.PACKAGE_NAME", applicationInfo2.packageName).putExtra("android.intent.extra.VERSION_CODE", applicationInfo2.versionCode & Integer.MAX_VALUE).putExtra("android.intent.extra.LONG_VERSION_CODE", applicationInfo2.longVersionCode).putExtra("android.intent.extra.INSTANT_APP_FAILURE", activityAsUser), 67108864, (Bundle) null, of)).build());
+            builder.addAction(new Notification.Action.Builder((Icon) null, this.mContext.getString(C0021R$string.go_to_web), PendingIntent.getActivityAsUser(this.mContext, 0, addCategory.addCategory("unique:" + System.currentTimeMillis()).putExtra("android.intent.extra.PACKAGE_NAME", applicationInfo2.packageName).putExtra("android.intent.extra.VERSION_CODE", applicationInfo2.versionCode & Integer.MAX_VALUE).putExtra("android.intent.extra.LONG_VERSION_CODE", applicationInfo2.longVersionCode).putExtra("android.intent.extra.INSTANT_APP_FAILURE", activityAsUser), 67108864, (Bundle) null, of)).build());
         }
-        Notification.Builder color = builder.addExtras(bundle).addAction(action).setContentIntent(pendingIntent2).setColor(this.mContext.getColor(C0008R$color.instant_apps_color));
+        Notification.Builder color = builder.addExtras(bundle).addAction(action).setContentIntent(pendingIntent2).setColor(this.mContext.getColor(C0011R$color.instant_apps_color));
         Context context2 = this.mContext;
-        notificationManager.notifyAsUser(str3, 7, color.setContentTitle(context2.getString(C0018R$string.instant_apps_title, new Object[]{applicationInfo2.loadLabel(context2.getPackageManager())})).setLargeIcon(Icon.createWithResource(str3, applicationInfo2.icon)).setSmallIcon(Icon.createWithResource(this.mContext.getPackageName(), C0010R$drawable.instant_icon)).setContentText(string2).setStyle(new Notification.BigTextStyle().bigText(string2)).setOngoing(true).build(), new UserHandle(i5));
+        notificationManager.notifyAsUser(str3, 7, color.setContentTitle(context2.getString(C0021R$string.instant_apps_title, new Object[]{applicationInfo2.loadLabel(context2.getPackageManager())})).setLargeIcon(Icon.createWithResource(str3, applicationInfo2.icon)).setSmallIcon(Icon.createWithResource(this.mContext.getPackageName(), C0013R$drawable.instant_icon)).setContentText(string2).setStyle(new Notification.BigTextStyle().bigText(string2)).setOngoing(true).build(), new UserHandle(i5));
     }
 
     private Intent getTaskIntent(int i, int i2) {

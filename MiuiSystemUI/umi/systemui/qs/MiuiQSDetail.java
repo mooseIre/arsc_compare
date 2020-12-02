@@ -16,9 +16,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.android.internal.logging.MetricsLogger;
 import com.android.internal.logging.UiEventLogger;
-import com.android.systemui.C0009R$dimen;
-import com.android.systemui.C0012R$id;
-import com.android.systemui.C0018R$string;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.Dependency;
 import com.android.systemui.controlcenter.phone.widget.AnimatorListenerWrapper;
 import com.android.systemui.plugins.ActivityStarter;
@@ -181,15 +181,15 @@ public class MiuiQSDetail extends LinearLayout {
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mDetailContainer = findViewById(C0012R$id.qs_detail_container);
+        this.mDetailContainer = findViewById(C0015R$id.qs_detail_container);
         this.mDetailContent = (ViewGroup) findViewById(16908290);
         this.mDetailSettingsButton = (TextView) findViewById(16908314);
         this.mDetailDoneButton = (TextView) findViewById(16908313);
-        View findViewById = findViewById(C0012R$id.qs_detail_header);
+        View findViewById = findViewById(C0015R$id.qs_detail_header);
         this.mQsDetailHeader = findViewById;
         this.mQsDetailHeaderTitle = (TextView) findViewById.findViewById(16908310);
-        this.mQsDetailHeaderSwitchStub = (ViewStub) this.mQsDetailHeader.findViewById(C0012R$id.toggle_stub);
-        ImageView imageView = (ImageView) findViewById(C0012R$id.qs_detail_header_progress);
+        this.mQsDetailHeaderSwitchStub = (ViewStub) this.mQsDetailHeader.findViewById(C0015R$id.toggle_stub);
+        ImageView imageView = (ImageView) findViewById(C0015R$id.qs_detail_header_progress);
         updateDetailText();
         this.mClipper = new QSDetailClipper(this);
         this.mDetailDoneButton.setOnClickListener(new View.OnClickListener() {
@@ -202,7 +202,7 @@ public class MiuiQSDetail extends LinearLayout {
     /* access modifiers changed from: private */
     /* renamed from: lambda$onFinishInflate$0 */
     public /* synthetic */ void lambda$onFinishInflate$0$MiuiQSDetail(View view) {
-        announceForAccessibility(this.mContext.getString(C0018R$string.accessibility_desc_quick_settings));
+        announceForAccessibility(this.mContext.getString(C0021R$string.accessibility_desc_quick_settings));
         this.mQsPanel.closeDetail();
     }
 
@@ -230,8 +230,8 @@ public class MiuiQSDetail extends LinearLayout {
     }
 
     private void updateDetailText() {
-        this.mDetailDoneButton.setText(C0018R$string.quick_settings_done);
-        this.mDetailSettingsButton.setText(C0018R$string.quick_settings_more_settings);
+        this.mDetailDoneButton.setText(C0021R$string.quick_settings_done);
+        this.mDetailSettingsButton.setText(C0021R$string.quick_settings_more_settings);
     }
 
     public void handleShowingDetail(DetailAdapter detailAdapter, int i, int i2, boolean z) {
@@ -274,7 +274,7 @@ public class MiuiQSDetail extends LinearLayout {
                     this.mDetailViews.put(metricsCategory, createDetailView);
                     ((MetricsLogger) Dependency.get(MetricsLogger.class)).visible(detailAdapter.getMetricsCategory());
                     this.mUiEventLogger.log(detailAdapter.openDetailEvent());
-                    announceForAccessibility(this.mContext.getString(C0018R$string.accessibility_quick_settings_detail, new Object[]{detailAdapter.getTitle()}));
+                    announceForAccessibility(this.mContext.getString(C0021R$string.accessibility_quick_settings_detail, new Object[]{detailAdapter.getTitle()}));
                     this.mDetailAdapter = detailAdapter;
                     animatorListener = this.mAnimInListener;
                     setVisibility(0);
@@ -423,6 +423,6 @@ public class MiuiQSDetail extends LinearLayout {
     }
 
     public void updateHeaderHeight(int i) {
-        setPadding(getPaddingLeft(), i, getPaddingRight(), getContext().getResources().getDimensionPixelOffset(C0009R$dimen.qs_detail_margin_bottom));
+        setPadding(getPaddingLeft(), i, getPaddingRight(), getContext().getResources().getDimensionPixelOffset(C0012R$dimen.qs_detail_margin_bottom));
     }
 }

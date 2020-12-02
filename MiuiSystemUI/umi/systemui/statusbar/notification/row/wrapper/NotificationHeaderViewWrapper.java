@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.android.internal.widget.CachingIconView;
 import com.android.internal.widget.NotificationExpandButton;
 import com.android.settingslib.Utils;
-import com.android.systemui.C0007R$bool;
+import com.android.systemui.C0010R$bool;
 import com.android.systemui.Interpolators;
 import com.android.systemui.statusbar.TransformableView;
 import com.android.systemui.statusbar.ViewTransformationHelper;
@@ -48,7 +48,7 @@ public class NotificationHeaderViewWrapper extends NotificationViewWrapper {
 
     protected NotificationHeaderViewWrapper(Context context, View view, ExpandableNotificationRow expandableNotificationRow) {
         super(context, view, expandableNotificationRow);
-        this.mShowExpandButtonAtEnd = context.getResources().getBoolean(C0007R$bool.config_showNotificationExpandButtonAtEnd) || NotificationUtils.useNewInterruptionModel(context);
+        this.mShowExpandButtonAtEnd = context.getResources().getBoolean(C0010R$bool.config_showNotificationExpandButtonAtEnd) || NotificationUtils.useNewInterruptionModel(context);
         ViewTransformationHelper viewTransformationHelper = new ViewTransformationHelper();
         this.mTransformationHelper = viewTransformationHelper;
         viewTransformationHelper.setCustomTransformation(new CustomInterpolatorTransformation(1) {

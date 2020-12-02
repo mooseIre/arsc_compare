@@ -32,9 +32,9 @@ import android.view.View;
 import com.android.settingslib.Utils;
 import com.android.settingslib.fuelgauge.BatterySaverUtils;
 import com.android.settingslib.utils.PowerUtil;
-import com.android.systemui.C0010R$drawable;
-import com.android.systemui.C0018R$string;
-import com.android.systemui.C0019R$style;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0021R$string;
+import com.android.systemui.C0022R$style;
 import com.android.systemui.Dependency;
 import com.android.systemui.SystemUI;
 import com.android.systemui.plugins.ActivityStarter;
@@ -154,7 +154,7 @@ public class PowerNotificationWarnings implements PowerUI.WarningsUI {
     }
 
     private void showInvalidChargerNotification() {
-        Notification.Builder color = new Notification.Builder(this.mContext, NotificationChannels.ALERTS).setSmallIcon(C0010R$drawable.ic_power_low).setWhen(0).setShowWhen(false).setOngoing(true).setContentTitle(this.mContext.getString(C0018R$string.invalid_charger_title)).setContentText(this.mContext.getString(C0018R$string.invalid_charger_text)).setColor(this.mContext.getColor(17170460));
+        Notification.Builder color = new Notification.Builder(this.mContext, NotificationChannels.ALERTS).setSmallIcon(C0013R$drawable.ic_power_low).setWhen(0).setShowWhen(false).setOngoing(true).setContentTitle(this.mContext.getString(C0021R$string.invalid_charger_title)).setContentText(this.mContext.getString(C0021R$string.invalid_charger_text)).setColor(this.mContext.getColor(17170460));
         SystemUI.overrideNotificationAppName(this.mContext, color, false);
         Notification build = color.build();
         this.mNoMan.cancelAsUser("low_battery", 3, UserHandle.ALL);
@@ -165,13 +165,13 @@ public class PowerNotificationWarnings implements PowerUI.WarningsUI {
     public void showWarningNotification() {
         String str;
         String format = NumberFormat.getPercentInstance().format(((double) this.mCurrentBatterySnapshot.getBatteryLevel()) / 100.0d);
-        String string = this.mContext.getString(C0018R$string.battery_low_title);
+        String string = this.mContext.getString(C0021R$string.battery_low_title);
         if (this.mCurrentBatterySnapshot.isHybrid()) {
             str = getHybridContentString(format);
         } else {
-            str = this.mContext.getString(C0018R$string.battery_low_percent_format, new Object[]{format});
+            str = this.mContext.getString(C0021R$string.battery_low_percent_format, new Object[]{format});
         }
-        Notification.Builder visibility = new Notification.Builder(this.mContext, NotificationChannels.BATTERY).setSmallIcon(C0010R$drawable.ic_power_low).setWhen(this.mWarningTriggerTimeMs).setShowWhen(false).setContentText(str).setContentTitle(string).setOnlyAlertOnce(true).setDeleteIntent(pendingBroadcast("PNW.dismissedWarning")).setStyle(new Notification.BigTextStyle().bigText(str)).setVisibility(1);
+        Notification.Builder visibility = new Notification.Builder(this.mContext, NotificationChannels.BATTERY).setSmallIcon(C0013R$drawable.ic_power_low).setWhen(this.mWarningTriggerTimeMs).setShowWhen(false).setContentText(str).setContentTitle(string).setOnlyAlertOnce(true).setDeleteIntent(pendingBroadcast("PNW.dismissedWarning")).setStyle(new Notification.BigTextStyle().bigText(str)).setVisibility(1);
         if (hasBatterySettings()) {
             visibility.setContentIntent(pendingBroadcast("PNW.batterySettings"));
         }
@@ -179,7 +179,7 @@ public class PowerNotificationWarnings implements PowerUI.WarningsUI {
             visibility.setColor(Utils.getColorAttrDefaultColor(this.mContext, 16844099));
         }
         if (!this.mPowerMan.isPowerSaveMode()) {
-            visibility.addAction(0, this.mContext.getString(C0018R$string.battery_saver_start_action), pendingBroadcast("PNW.startSaver"));
+            visibility.addAction(0, this.mContext.getString(C0021R$string.battery_saver_start_action), pendingBroadcast("PNW.startSaver"));
         }
         visibility.setOnlyAlertOnce(!this.mPlaySound);
         this.mPlaySound = false;
@@ -190,11 +190,11 @@ public class PowerNotificationWarnings implements PowerUI.WarningsUI {
     }
 
     private void showAutoSaverSuggestionNotification() {
-        String string = this.mContext.getString(C0018R$string.auto_saver_text);
-        Notification.Builder contentText = new Notification.Builder(this.mContext, NotificationChannels.HINTS).setSmallIcon(C0010R$drawable.ic_power_saver).setWhen(0).setShowWhen(false).setContentTitle(this.mContext.getString(C0018R$string.auto_saver_title)).setStyle(new Notification.BigTextStyle().bigText(string)).setContentText(string);
+        String string = this.mContext.getString(C0021R$string.auto_saver_text);
+        Notification.Builder contentText = new Notification.Builder(this.mContext, NotificationChannels.HINTS).setSmallIcon(C0013R$drawable.ic_power_saver).setWhen(0).setShowWhen(false).setContentTitle(this.mContext.getString(C0021R$string.auto_saver_title)).setStyle(new Notification.BigTextStyle().bigText(string)).setContentText(string);
         contentText.setContentIntent(pendingBroadcast("PNW.enableAutoSaver"));
         contentText.setDeleteIntent(pendingBroadcast("PNW.dismissAutoSaverSuggestion"));
-        contentText.addAction(0, this.mContext.getString(C0018R$string.no_auto_saver_action), pendingBroadcast("PNW.autoSaverNoThanks"));
+        contentText.addAction(0, this.mContext.getString(C0021R$string.no_auto_saver_action), pendingBroadcast("PNW.autoSaverNoThanks"));
         SystemUI.overrideNotificationAppName(this.mContext, contentText, false);
         this.mNoMan.notifyAsUser("auto_saver", 49, contentText.build(), UserHandle.ALL);
     }
@@ -230,7 +230,7 @@ public class PowerNotificationWarnings implements PowerUI.WarningsUI {
     public void showHighTemperatureWarning() {
         if (!this.mHighTempWarning) {
             this.mHighTempWarning = true;
-            Notification.Builder color = new Notification.Builder(this.mContext, NotificationChannels.ALERTS).setSmallIcon(C0010R$drawable.ic_device_thermostat_24).setWhen(0).setShowWhen(false).setContentTitle(this.mContext.getString(C0018R$string.high_temp_title)).setContentText(this.mContext.getString(C0018R$string.high_temp_notif_message)).setVisibility(1).setContentIntent(pendingBroadcast("PNW.clickedTempWarning")).setDeleteIntent(pendingBroadcast("PNW.dismissedTempWarning")).setColor(Utils.getColorAttrDefaultColor(this.mContext, 16844099));
+            Notification.Builder color = new Notification.Builder(this.mContext, NotificationChannels.ALERTS).setSmallIcon(C0013R$drawable.ic_device_thermostat_24).setWhen(0).setShowWhen(false).setContentTitle(this.mContext.getString(C0021R$string.high_temp_title)).setContentText(this.mContext.getString(C0021R$string.high_temp_notif_message)).setVisibility(1).setContentIntent(pendingBroadcast("PNW.clickedTempWarning")).setDeleteIntent(pendingBroadcast("PNW.dismissedTempWarning")).setColor(Utils.getColorAttrDefaultColor(this.mContext, 16844099));
             SystemUI.overrideNotificationAppName(this.mContext, color, false);
             this.mNoMan.notifyAsUser("high_temp", 4, color.build(), UserHandle.ALL);
         }
@@ -241,8 +241,8 @@ public class PowerNotificationWarnings implements PowerUI.WarningsUI {
         if (this.mHighTempDialog == null) {
             SystemUIDialog systemUIDialog = new SystemUIDialog(this.mContext);
             systemUIDialog.setIconAttribute(16843605);
-            systemUIDialog.setTitle(C0018R$string.high_temp_title);
-            systemUIDialog.setMessage(C0018R$string.high_temp_dialog_message);
+            systemUIDialog.setTitle(C0021R$string.high_temp_title);
+            systemUIDialog.setMessage(C0021R$string.high_temp_dialog_message);
             systemUIDialog.setPositiveButton(17039370, (DialogInterface.OnClickListener) null);
             systemUIDialog.setShowForAllUsers(true);
             systemUIDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
@@ -271,8 +271,8 @@ public class PowerNotificationWarnings implements PowerUI.WarningsUI {
         if (this.mThermalShutdownDialog == null) {
             SystemUIDialog systemUIDialog = new SystemUIDialog(this.mContext);
             systemUIDialog.setIconAttribute(16843605);
-            systemUIDialog.setTitle(C0018R$string.thermal_shutdown_title);
-            systemUIDialog.setMessage(C0018R$string.thermal_shutdown_dialog_message);
+            systemUIDialog.setTitle(C0021R$string.thermal_shutdown_title);
+            systemUIDialog.setMessage(C0021R$string.thermal_shutdown_dialog_message);
             systemUIDialog.setPositiveButton(17039370, (DialogInterface.OnClickListener) null);
             systemUIDialog.setShowForAllUsers(true);
             systemUIDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
@@ -292,7 +292,7 @@ public class PowerNotificationWarnings implements PowerUI.WarningsUI {
     }
 
     public void showThermalShutdownWarning() {
-        Notification.Builder color = new Notification.Builder(this.mContext, NotificationChannels.ALERTS).setSmallIcon(C0010R$drawable.ic_device_thermostat_24).setWhen(0).setShowWhen(false).setContentTitle(this.mContext.getString(C0018R$string.thermal_shutdown_title)).setContentText(this.mContext.getString(C0018R$string.thermal_shutdown_message)).setVisibility(1).setContentIntent(pendingBroadcast("PNW.clickedThermalShutdownWarning")).setDeleteIntent(pendingBroadcast("PNW.dismissedThermalShutdownWarning")).setColor(Utils.getColorAttrDefaultColor(this.mContext, 16844099));
+        Notification.Builder color = new Notification.Builder(this.mContext, NotificationChannels.ALERTS).setSmallIcon(C0013R$drawable.ic_device_thermostat_24).setWhen(0).setShowWhen(false).setContentTitle(this.mContext.getString(C0021R$string.thermal_shutdown_title)).setContentText(this.mContext.getString(C0021R$string.thermal_shutdown_message)).setVisibility(1).setContentIntent(pendingBroadcast("PNW.clickedThermalShutdownWarning")).setDeleteIntent(pendingBroadcast("PNW.dismissedThermalShutdownWarning")).setColor(Utils.getColorAttrDefaultColor(this.mContext, 16844099));
         SystemUI.overrideNotificationAppName(this.mContext, color, false);
         this.mNoMan.notifyAsUser("high_temp", 39, color.build(), UserHandle.ALL);
     }
@@ -309,18 +309,18 @@ public class PowerNotificationWarnings implements PowerUI.WarningsUI {
     /* renamed from: showUsbHighTemperatureAlarmInternal */
     public void lambda$showUsbHighTemperatureAlarm$2() {
         if (this.mUsbHighTempDialog == null) {
-            SystemUIDialog systemUIDialog = new SystemUIDialog(this.mContext, C0019R$style.Theme_SystemUI_Dialog_Alert);
+            SystemUIDialog systemUIDialog = new SystemUIDialog(this.mContext, C0022R$style.Theme_SystemUI_Dialog_Alert);
             systemUIDialog.setCancelable(false);
             systemUIDialog.setIconAttribute(16843605);
-            systemUIDialog.setTitle(C0018R$string.high_temp_alarm_title);
+            systemUIDialog.setTitle(C0021R$string.high_temp_alarm_title);
             systemUIDialog.setShowForAllUsers(true);
-            systemUIDialog.setMessage(this.mContext.getString(C0018R$string.high_temp_alarm_notify_message, new Object[]{""}));
+            systemUIDialog.setMessage(this.mContext.getString(C0021R$string.high_temp_alarm_notify_message, new Object[]{""}));
             systemUIDialog.setPositiveButton(17039370, new DialogInterface.OnClickListener() {
                 public final void onClick(DialogInterface dialogInterface, int i) {
                     PowerNotificationWarnings.this.lambda$showUsbHighTemperatureAlarmInternal$3$PowerNotificationWarnings(dialogInterface, i);
                 }
             });
-            systemUIDialog.setNegativeButton(C0018R$string.high_temp_alarm_help_care_steps, new DialogInterface.OnClickListener() {
+            systemUIDialog.setNegativeButton(C0021R$string.high_temp_alarm_help_care_steps, new DialogInterface.OnClickListener() {
                 public final void onClick(DialogInterface dialogInterface, int i) {
                     PowerNotificationWarnings.this.lambda$showUsbHighTemperatureAlarmInternal$5$PowerNotificationWarnings(dialogInterface, i);
                 }
@@ -346,7 +346,7 @@ public class PowerNotificationWarnings implements PowerUI.WarningsUI {
     /* access modifiers changed from: private */
     /* renamed from: lambda$showUsbHighTemperatureAlarmInternal$5 */
     public /* synthetic */ void lambda$showUsbHighTemperatureAlarmInternal$5$PowerNotificationWarnings(DialogInterface dialogInterface, int i) {
-        String string = this.mContext.getString(C0018R$string.high_temp_alarm_help_url);
+        String string = this.mContext.getString(C0021R$string.high_temp_alarm_help_url);
         Intent intent = new Intent();
         intent.setClassName("com.android.settings", "com.android.settings.HelpTrampoline");
         intent.putExtra("android.intent.extra.TEXT", string);
@@ -447,7 +447,7 @@ public class PowerNotificationWarnings implements PowerUI.WarningsUI {
             }
             systemUIDialog.setMessageMovementMethod(LinkMovementMethod.getInstance());
             if (z) {
-                systemUIDialog.setTitle(C0018R$string.battery_saver_confirmation_title_generic);
+                systemUIDialog.setTitle(C0021R$string.battery_saver_confirmation_title_generic);
                 systemUIDialog.setPositiveButton(17040005, new DialogInterface.OnClickListener(i, i2) {
                     public final /* synthetic */ int f$1;
                     public final /* synthetic */ int f$2;
@@ -462,8 +462,8 @@ public class PowerNotificationWarnings implements PowerUI.WarningsUI {
                     }
                 });
             } else {
-                systemUIDialog.setTitle(C0018R$string.battery_saver_confirmation_title);
-                systemUIDialog.setPositiveButton(C0018R$string.battery_saver_confirmation_ok, new DialogInterface.OnClickListener() {
+                systemUIDialog.setTitle(C0021R$string.battery_saver_confirmation_title);
+                systemUIDialog.setPositiveButton(C0021R$string.battery_saver_confirmation_ok, new DialogInterface.OnClickListener() {
                     public final void onClick(DialogInterface dialogInterface, int i) {
                         PowerNotificationWarnings.this.lambda$showStartSaverConfirmation$8$PowerNotificationWarnings(dialogInterface, i);
                     }
@@ -507,7 +507,7 @@ public class PowerNotificationWarnings implements PowerUI.WarningsUI {
     }
 
     private CharSequence getBatterySaverDescription() {
-        String charSequence = this.mContext.getText(C0018R$string.help_uri_battery_saver_learn_more_link_target).toString();
+        String charSequence = this.mContext.getText(C0021R$string.help_uri_battery_saver_learn_more_link_target).toString();
         if (TextUtils.isEmpty(charSequence)) {
             return this.mContext.getText(17039770);
         }

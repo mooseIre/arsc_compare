@@ -11,15 +11,15 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.android.internal.util.ArrayUtils;
-import com.android.systemui.C0009R$dimen;
-import com.android.systemui.C0012R$id;
-import com.android.systemui.C0014R$layout;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0017R$layout;
 import com.android.systemui.FontSizeUtils;
 import com.android.systemui.R$styleable;
 import com.android.systemui.statusbar.phone.UserAvatarView;
 
 public class UserDetailItemView extends LinearLayout {
-    protected static int layoutResId = C0014R$layout.qs_user_detail_item;
+    protected static int layoutResId = C0017R$layout.qs_user_detail_item;
     private int mActivatedStyle;
     private UserAvatarView mAvatar;
     private TextView mName;
@@ -85,8 +85,8 @@ public class UserDetailItemView extends LinearLayout {
 
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
-        this.mAvatar = (UserAvatarView) findViewById(C0012R$id.user_picture);
-        TextView textView = (TextView) findViewById(C0012R$id.user_name);
+        this.mAvatar = (UserAvatarView) findViewById(C0015R$id.user_picture);
+        TextView textView = (TextView) findViewById(C0015R$id.user_name);
         this.mName = textView;
         if (this.mRegularStyle == 0) {
             this.mRegularStyle = textView.getExplicitStyle();
@@ -95,7 +95,7 @@ public class UserDetailItemView extends LinearLayout {
             this.mActivatedStyle = this.mName.getExplicitStyle();
         }
         updateTextStyle();
-        this.mRestrictedPadlock = findViewById(C0012R$id.restricted_padlock);
+        this.mRestrictedPadlock = findViewById(C0015R$id.restricted_padlock);
     }
 
     /* access modifiers changed from: protected */
@@ -116,6 +116,6 @@ public class UserDetailItemView extends LinearLayout {
 
     /* access modifiers changed from: protected */
     public int getFontSizeDimen() {
-        return C0009R$dimen.qs_detail_item_secondary_text_size;
+        return C0012R$dimen.qs_detail_item_secondary_text_size;
     }
 }

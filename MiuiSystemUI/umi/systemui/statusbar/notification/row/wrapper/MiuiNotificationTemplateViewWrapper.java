@@ -5,8 +5,8 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.android.systemui.C0009R$dimen;
-import com.android.systemui.C0012R$id;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0015R$id;
 import com.android.systemui.statusbar.notification.NotificationUtil;
 import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow;
 import miui.widget.ProgressBar;
@@ -27,12 +27,12 @@ public class MiuiNotificationTemplateViewWrapper extends MiuiNotificationViewWra
     }
 
     private void resolveTemplateViews() {
-        this.mMainColumn = this.mView.findViewById(C0012R$id.notification_main_column);
-        this.mRightIcon = (ImageView) this.mView.findViewById(C0012R$id.right_icon);
-        this.mText = (TextView) this.mView.findViewById(C0012R$id.text);
-        this.mTimeLine1 = this.mView.findViewById(C0012R$id.time_line_1);
-        this.mProgressBar = this.mView.findViewById(C0012R$id.progress);
-        this.mMiuiAction = this.mView.findViewById(C0012R$id.miui_action);
+        this.mMainColumn = this.mView.findViewById(C0015R$id.notification_main_column);
+        this.mRightIcon = (ImageView) this.mView.findViewById(C0015R$id.right_icon);
+        this.mText = (TextView) this.mView.findViewById(C0015R$id.text);
+        this.mTimeLine1 = this.mView.findViewById(C0015R$id.time_line_1);
+        this.mProgressBar = this.mView.findViewById(C0015R$id.progress);
+        this.mMiuiAction = this.mView.findViewById(C0015R$id.miui_action);
     }
 
     private void reprocessIfNeeded() {
@@ -75,11 +75,11 @@ public class MiuiNotificationTemplateViewWrapper extends MiuiNotificationViewWra
                 }
             });
         } else if (!showRightIcon() || showTimeChronometer()) {
-            setViewMarginEnd(this.mMainColumn, getDimensionPixelSize(C0009R$dimen.miui_notification_content_margin_end));
+            setViewMarginEnd(this.mMainColumn, getDimensionPixelSize(C0012R$dimen.miui_notification_content_margin_end));
         } else {
-            int dimensionPixelSize = getDimensionPixelSize(C0009R$dimen.notification_right_icon_size) + getDimensionPixelSize(C0009R$dimen.notification_main_column_right_margin);
+            int dimensionPixelSize = getDimensionPixelSize(C0012R$dimen.notification_right_icon_size) + getDimensionPixelSize(C0012R$dimen.notification_main_column_right_margin);
             if (isBaseLayout()) {
-                dimensionPixelSize += getDimensionPixelSize(C0009R$dimen.miui_notification_content_margin_end);
+                dimensionPixelSize += getDimensionPixelSize(C0012R$dimen.miui_notification_content_margin_end);
             }
             setViewMarginEnd(this.mMainColumn, dimensionPixelSize);
         }
@@ -88,16 +88,16 @@ public class MiuiNotificationTemplateViewWrapper extends MiuiNotificationViewWra
     /* access modifiers changed from: private */
     /* renamed from: lambda$handleMainColumn$1 */
     public /* synthetic */ void lambda$handleMainColumn$1$MiuiNotificationTemplateViewWrapper() {
-        setViewMarginEnd(this.mMainColumn, getDimensionPixelSize(C0009R$dimen.miui_notification_content_margin_end) + this.mMiuiAction.getMeasuredWidth() + getDimensionPixelSize(C0009R$dimen.notification_main_column_right_margin));
+        setViewMarginEnd(this.mMainColumn, getDimensionPixelSize(C0012R$dimen.miui_notification_content_margin_end) + this.mMiuiAction.getMeasuredWidth() + getDimensionPixelSize(C0012R$dimen.notification_main_column_right_margin));
     }
 
     private void handleRightIcon() {
         if (showRightIcon()) {
             FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) this.mRightIcon.getLayoutParams();
             if (showTimeChronometer()) {
-                layoutParams.topMargin = getDimensionPixelSize(C0009R$dimen.notification_right_icon_margin_top);
+                layoutParams.topMargin = getDimensionPixelSize(C0012R$dimen.notification_right_icon_margin_top);
                 if (isBaseLayout()) {
-                    layoutParams.topMargin += getDimensionPixelSize(C0009R$dimen.miui_notification_content_margin_top);
+                    layoutParams.topMargin += getDimensionPixelSize(C0012R$dimen.miui_notification_content_margin_top);
                 }
                 layoutParams.gravity = 8388661;
             } else {
@@ -109,7 +109,7 @@ public class MiuiNotificationTemplateViewWrapper extends MiuiNotificationViewWra
         } else {
             this.mRightIcon.setVisibility(8);
         }
-        NotificationUtil.setViewRoundCorner(this.mRightIcon, (float) getDimensionPixelSize(C0009R$dimen.notification_right_icon_corner_radius));
+        NotificationUtil.setViewRoundCorner(this.mRightIcon, (float) getDimensionPixelSize(C0012R$dimen.notification_right_icon_corner_radius));
     }
 
     private void handleTimeLine1() {
@@ -120,7 +120,7 @@ public class MiuiNotificationTemplateViewWrapper extends MiuiNotificationViewWra
         if (showRightIcon()) {
             int i = 0;
             if (showTimeChronometer()) {
-                i = getDimensionPixelSize(C0009R$dimen.notification_right_icon_size) + getDimensionPixelSize(C0009R$dimen.notification_main_column_right_margin);
+                i = getDimensionPixelSize(C0012R$dimen.notification_right_icon_size) + getDimensionPixelSize(C0012R$dimen.notification_main_column_right_margin);
             }
             setViewMarginEnd(this.mText, i);
         }

@@ -31,7 +31,8 @@ import android.widget.TextView;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.statusbar.IStatusBarService;
 import com.android.internal.statusbar.NotificationVisibility;
-import com.android.systemui.C0012R$id;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.Dependency;
 import com.android.systemui.Dumpable;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
 import com.android.systemui.statusbar.NotificationLifetimeExtender;
@@ -43,6 +44,7 @@ import com.android.systemui.statusbar.notification.NotificationEntryListener;
 import com.android.systemui.statusbar.notification.NotificationEntryManager;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import com.android.systemui.statusbar.notification.logging.NotificationLogger;
+import com.android.systemui.statusbar.notification.modal.ModalController;
 import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow;
 import com.android.systemui.statusbar.phone.StatusBar;
 import com.android.systemui.statusbar.policy.RemoteInputUriController;
@@ -84,6 +86,7 @@ public class NotificationRemoteInputManager implements Dumpable {
                 return true;
             }
             logActionClick(view, notificationForParent, pendingIntent);
+            ((ModalController) Dependency.get(ModalController.class)).animExitModal();
             try {
                 ActivityManager.getService().resumeAppSwitches();
             } catch (RemoteException unused) {
@@ -296,7 +299,7 @@ public class NotificationRemoteInputManager implements Dumpable {
                 View view2 = (View) parent;
                 if (view2.isRootNamespace()) {
                     remoteInputView2 = findRemoteInputView(view2);
-                    expandableNotificationRow = (ExpandableNotificationRow) view2.getTag(C0012R$id.row_tag_for_content_view);
+                    expandableNotificationRow = (ExpandableNotificationRow) view2.getTag(C0015R$id.row_tag_for_content_view);
                     break;
                 }
             }

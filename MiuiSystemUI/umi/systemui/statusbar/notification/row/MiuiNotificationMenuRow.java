@@ -7,11 +7,8 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.content.res.Resources;
 import android.database.ContentObserver;
 import android.graphics.Point;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
 import android.os.UserHandle;
 import android.service.notification.StatusBarNotification;
@@ -23,14 +20,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowInsets;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.android.systemui.C0005R$array;
-import com.android.systemui.C0009R$dimen;
-import com.android.systemui.C0010R$drawable;
-import com.android.systemui.C0014R$layout;
-import com.android.systemui.C0018R$string;
+import com.android.systemui.C0008R$array;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0017R$layout;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.Dependency;
 import com.android.systemui.plugins.statusbar.NotificationMenuRowPlugin;
 import com.android.systemui.plugins.statusbar.NotificationSwipeActionHelper;
@@ -45,6 +44,7 @@ import com.android.systemui.statusbar.notification.row.MiuiNotificationMenuRow;
 import com.android.systemui.statusbar.notification.row.NotificationGuts;
 import com.android.systemui.statusbar.notification.row.NotificationMenuRow;
 import com.android.systemui.statusbar.policy.UserSwitcherController;
+import com.android.systemui.util.ViewAnimUtils;
 import com.miui.systemui.BuildConfig;
 import com.miui.systemui.SettingsManager;
 import java.util.ArrayList;
@@ -190,7 +190,7 @@ public class MiuiNotificationMenuRow implements NotificationMenuRowPlugin {
     }
 
     private void init(Context context) {
-        this.mMenuMargin = context.getResources().getDimensionPixelOffset(C0009R$dimen.miui_notification_modal_menu_margin_left_right);
+        this.mMenuMargin = context.getResources().getDimensionPixelOffset(C0012R$dimen.miui_notification_modal_menu_margin_left_right);
     }
 
     public ArrayList<NotificationMenuRowPlugin.MenuItem> getMenuItems(Context context) {
@@ -279,7 +279,7 @@ public class MiuiNotificationMenuRow implements NotificationMenuRowPlugin {
     }
 
     private NotificationMenuRowPlugin.MenuItem createAllowItem(Context context) {
-        MiuiNotificationMenuItem miuiNotificationMenuItem = new MiuiNotificationMenuItem(this, context, C0018R$string.miui_notification_menu_allow, (NotificationGuts.GutsContent) null, C0010R$drawable.miui_notification_menu_ic_allow);
+        MiuiNotificationMenuItem miuiNotificationMenuItem = new MiuiNotificationMenuItem(this, context, C0021R$string.miui_notification_menu_allow, (NotificationGuts.GutsContent) null, C0013R$drawable.miui_notification_menu_ic_allow);
         miuiNotificationMenuItem.setOnClickListener(new View.OnClickListener(context, miuiNotificationMenuItem) {
             public final /* synthetic */ Context f$1;
             public final /* synthetic */ MiuiNotificationMenuRow.MiuiNotificationMenuItem f$2;
@@ -293,7 +293,7 @@ public class MiuiNotificationMenuRow implements NotificationMenuRowPlugin {
                 MiuiNotificationMenuRow.this.lambda$createAllowItem$2$MiuiNotificationMenuRow(this.f$1, this.f$2, view);
             }
         });
-        miuiNotificationMenuItem.setIconBgResId(C0010R$drawable.miui_notification_menu_ic_bg_active);
+        miuiNotificationMenuItem.setIconBgResId(C0013R$drawable.miui_notification_menu_ic_bg_active);
         return miuiNotificationMenuItem;
     }
 
@@ -304,7 +304,7 @@ public class MiuiNotificationMenuRow implements NotificationMenuRowPlugin {
     }
 
     private NotificationMenuRowPlugin.MenuItem createInfoItem(Context context) {
-        MiuiNotificationMenuItem miuiNotificationMenuItem = new MiuiNotificationMenuItem(this, context, C0018R$string.miui_notification_menu_more_setting, (NotificationGuts.GutsContent) null, C0010R$drawable.miui_notification_menu_ic_more_setting);
+        MiuiNotificationMenuItem miuiNotificationMenuItem = new MiuiNotificationMenuItem(this, context, C0021R$string.miui_notification_menu_more_setting, (NotificationGuts.GutsContent) null, C0013R$drawable.miui_notification_menu_ic_more_setting);
         miuiNotificationMenuItem.setOnClickListener(new View.OnClickListener(context, miuiNotificationMenuItem) {
             public final /* synthetic */ Context f$1;
             public final /* synthetic */ MiuiNotificationMenuRow.MiuiNotificationMenuItem f$2;
@@ -329,7 +329,7 @@ public class MiuiNotificationMenuRow implements NotificationMenuRowPlugin {
 
     private NotificationMenuRowPlugin.MenuItem createSnoozeItem(Context context) {
         Context context2 = context;
-        MiuiNotificationMenuItem miuiNotificationMenuItem = new MiuiNotificationMenuItem(this, context2, C0018R$string.miui_notification_menu_snooze, (NotificationSnooze) LayoutInflater.from(context).inflate(C0014R$layout.notification_snooze, (ViewGroup) null, false), C0010R$drawable.miui_notification_menu_ic_snooze);
+        MiuiNotificationMenuItem miuiNotificationMenuItem = new MiuiNotificationMenuItem(this, context2, C0021R$string.miui_notification_menu_snooze, (NotificationSnooze) LayoutInflater.from(context).inflate(C0017R$layout.notification_snooze, (ViewGroup) null, false), C0013R$drawable.miui_notification_menu_ic_snooze);
         miuiNotificationMenuItem.setOnClickListener(new View.OnClickListener(context, miuiNotificationMenuItem) {
             public final /* synthetic */ Context f$1;
             public final /* synthetic */ MiuiNotificationMenuRow.MiuiNotificationMenuItem f$2;
@@ -357,7 +357,7 @@ public class MiuiNotificationMenuRow implements NotificationMenuRowPlugin {
     }
 
     private NotificationMenuRowPlugin.MenuItem createFoldItem(Context context) {
-        MiuiNotificationMenuItem miuiNotificationMenuItem = new MiuiNotificationMenuItem(this, context, C0018R$string.miui_notification_menu_fold, (NotificationGuts.GutsContent) null, C0010R$drawable.miui_notification_menu_ic_fold);
+        MiuiNotificationMenuItem miuiNotificationMenuItem = new MiuiNotificationMenuItem(this, context, C0021R$string.miui_notification_menu_fold, (NotificationGuts.GutsContent) null, C0013R$drawable.miui_notification_menu_ic_fold);
         miuiNotificationMenuItem.setOnClickListener(new View.OnClickListener(context, miuiNotificationMenuItem) {
             public final /* synthetic */ Context f$1;
             public final /* synthetic */ MiuiNotificationMenuRow.MiuiNotificationMenuItem f$2;
@@ -381,7 +381,7 @@ public class MiuiNotificationMenuRow implements NotificationMenuRowPlugin {
     }
 
     private NotificationMenuRowPlugin.MenuItem createAggregateFeedbackItem(Context context) {
-        MiuiNotificationMenuItem miuiNotificationMenuItem = new MiuiNotificationMenuItem(this, context, C0018R$string.miui_notification_menu_aggregate_feedback, (NotificationGuts.GutsContent) null, C0010R$drawable.miui_notification_menu_ic_aggregate_feedback);
+        MiuiNotificationMenuItem miuiNotificationMenuItem = new MiuiNotificationMenuItem(this, context, C0021R$string.miui_notification_menu_aggregate_feedback, (NotificationGuts.GutsContent) null, C0013R$drawable.miui_notification_menu_ic_aggregate_feedback);
         miuiNotificationMenuItem.setOnClickListener(new View.OnClickListener(context, miuiNotificationMenuItem) {
             public final /* synthetic */ Context f$1;
             public final /* synthetic */ MiuiNotificationMenuRow.MiuiNotificationMenuItem f$2;
@@ -405,7 +405,7 @@ public class MiuiNotificationMenuRow implements NotificationMenuRowPlugin {
     }
 
     private void onClickAllowItem(Context context, MiuiNotificationMenuItem miuiNotificationMenuItem) {
-        showDialog(new AlertDialog.Builder(context, 8).setTitle(C0018R$string.miui_notification_menu_title_not_allow).setMessage(this.mContext.getString(C0018R$string.miui_notification_menu_msg_not_allow, new Object[]{this.mAppName})).setPositiveButton(C0018R$string.confirm, new DialogInterface.OnClickListener(miuiNotificationMenuItem, context) {
+        showDialog(new AlertDialog.Builder(context, 8).setTitle(C0021R$string.miui_notification_menu_title_not_allow).setMessage(this.mContext.getString(C0021R$string.miui_notification_menu_msg_not_allow, new Object[]{this.mAppName})).setPositiveButton(C0021R$string.confirm, new DialogInterface.OnClickListener(miuiNotificationMenuItem, context) {
             public final /* synthetic */ MiuiNotificationMenuRow.MiuiNotificationMenuItem f$1;
             public final /* synthetic */ Context f$2;
 
@@ -417,17 +417,17 @@ public class MiuiNotificationMenuRow implements NotificationMenuRowPlugin {
             public final void onClick(DialogInterface dialogInterface, int i) {
                 MiuiNotificationMenuRow.this.lambda$onClickAllowItem$7$MiuiNotificationMenuRow(this.f$1, this.f$2, dialogInterface, i);
             }
-        }).setNegativeButton(C0018R$string.cancel, $$Lambda$MiuiNotificationMenuRow$IqznxWljHd3cCMBspNWrzB5rUEg.INSTANCE).create());
+        }).setNegativeButton(C0021R$string.cancel, $$Lambda$MiuiNotificationMenuRow$IqznxWljHd3cCMBspNWrzB5rUEg.INSTANCE).create());
     }
 
     /* access modifiers changed from: private */
     /* renamed from: lambda$onClickAllowItem$7 */
     public /* synthetic */ void lambda$onClickAllowItem$7$MiuiNotificationMenuRow(MiuiNotificationMenuItem miuiNotificationMenuItem, Context context, DialogInterface dialogInterface, int i) {
-        miuiNotificationMenuItem.setIconBgResId(C0010R$drawable.miui_notification_menu_ic_bg_inactive);
+        miuiNotificationMenuItem.setIconBgResId(C0013R$drawable.miui_notification_menu_ic_bg_inactive);
         saveImportance();
         ((ModalController) Dependency.get(ModalController.class)).animExitModal();
         dialogInterface.dismiss();
-        Toast.makeText(context, C0018R$string.miui_notification_menu_setting_success, 0).show();
+        Toast.makeText(context, C0021R$string.miui_notification_menu_setting_success, 0).show();
     }
 
     private void saveImportance() {
@@ -447,7 +447,7 @@ public class MiuiNotificationMenuRow implements NotificationMenuRowPlugin {
     }
 
     private void onClickFeedbackItem(Context context, NotificationMenuRowPlugin.MenuItem menuItem) {
-        showDialog(new AlertDialog.Builder(context, 8).setTitle(C0018R$string.miui_notification_menu_title_aggregate_feedback).setSingleChoiceItems(context.getResources().getStringArray(C0005R$array.miui_notification_aggregate_category), -1, new DialogInterface.OnClickListener(context) {
+        showDialog(new AlertDialog.Builder(context, 8).setTitle(C0021R$string.miui_notification_menu_title_aggregate_feedback).setSingleChoiceItems(context.getResources().getStringArray(C0008R$array.miui_notification_aggregate_category), -1, new DialogInterface.OnClickListener(context) {
             public final /* synthetic */ Context f$1;
 
             {
@@ -457,7 +457,7 @@ public class MiuiNotificationMenuRow implements NotificationMenuRowPlugin {
             public final void onClick(DialogInterface dialogInterface, int i) {
                 MiuiNotificationMenuRow.this.lambda$onClickFeedbackItem$9$MiuiNotificationMenuRow(this.f$1, dialogInterface, i);
             }
-        }).setNegativeButton(C0018R$string.cancel, $$Lambda$MiuiNotificationMenuRow$ABN7pkdTwFybOgG1cg8iSJzHS_0.INSTANCE).create());
+        }).setNegativeButton(C0021R$string.cancel, $$Lambda$MiuiNotificationMenuRow$ABN7pkdTwFybOgG1cg8iSJzHS_0.INSTANCE).create());
     }
 
     /* access modifiers changed from: private */
@@ -466,7 +466,7 @@ public class MiuiNotificationMenuRow implements NotificationMenuRowPlugin {
         saveFeedback(context, i == 0 ? "CONTENT" : "AD");
         ((ModalController) Dependency.get(ModalController.class)).animExitModal();
         dialogInterface.dismiss();
-        Toast.makeText(context, C0018R$string.miui_notification_menu_feedback_success, 0).show();
+        Toast.makeText(context, C0021R$string.miui_notification_menu_feedback_success, 0).show();
     }
 
     private void saveFeedback(Context context, String str) {
@@ -483,7 +483,7 @@ public class MiuiNotificationMenuRow implements NotificationMenuRowPlugin {
     }
 
     private void onClickFoldItem(Context context, NotificationMenuRowPlugin.MenuItem menuItem) {
-        showDialog(new AlertDialog.Builder(context, 8).setTitle(this.mContext.getString(C0018R$string.miui_notification_menu_title_fold)).setMessage(this.mContext.getString(C0018R$string.miui_notification_menu_msg_fold, new Object[]{this.mAppName})).setPositiveButton(C0018R$string.confirm, new DialogInterface.OnClickListener(context) {
+        showDialog(new AlertDialog.Builder(context, 8).setTitle(this.mContext.getString(C0021R$string.miui_notification_menu_title_fold)).setMessage(this.mContext.getString(C0021R$string.miui_notification_menu_msg_fold, new Object[]{this.mAppName})).setPositiveButton(C0021R$string.confirm, new DialogInterface.OnClickListener(context) {
             public final /* synthetic */ Context f$1;
 
             {
@@ -493,7 +493,7 @@ public class MiuiNotificationMenuRow implements NotificationMenuRowPlugin {
             public final void onClick(DialogInterface dialogInterface, int i) {
                 MiuiNotificationMenuRow.this.lambda$onClickFoldItem$11$MiuiNotificationMenuRow(this.f$1, dialogInterface, i);
             }
-        }).setNegativeButton(C0018R$string.cancel, $$Lambda$MiuiNotificationMenuRow$mR0rUuji7giE5LckncocsDJD6Jg.INSTANCE).create());
+        }).setNegativeButton(C0021R$string.cancel, $$Lambda$MiuiNotificationMenuRow$mR0rUuji7giE5LckncocsDJD6Jg.INSTANCE).create());
     }
 
     /* access modifiers changed from: private */
@@ -502,7 +502,7 @@ public class MiuiNotificationMenuRow implements NotificationMenuRowPlugin {
         saveFold(this.mParent.getEntry().getSbn());
         ((ModalController) Dependency.get(ModalController.class)).animExitModal();
         dialogInterface.dismiss();
-        Toast.makeText(context, C0018R$string.miui_notification_menu_setting_success, 0).show();
+        Toast.makeText(context, C0021R$string.miui_notification_menu_setting_success, 0).show();
     }
 
     private void saveFold(ExpandedNotification expandedNotification) {
@@ -549,7 +549,7 @@ public class MiuiNotificationMenuRow implements NotificationMenuRowPlugin {
     private void onClickSnoozeItem(Context context, NotificationMenuRowPlugin.MenuItem menuItem) {
         ArrayList<NotificationSwipeActionHelper.SnoozeOption> defaultSnoozeOptions = ((NotificationSnooze) menuItem.getGutsView()).getDefaultSnoozeOptions();
         this.mChoiceIndex = 0;
-        showDialog(new AlertDialog.Builder(context, 8).setTitle(C0018R$string.miui_notification_menu_snooze_title).setPositiveButton(C0018R$string.confirm, new DialogInterface.OnClickListener(defaultSnoozeOptions) {
+        showDialog(new AlertDialog.Builder(context, 8).setTitle(C0021R$string.miui_notification_menu_snooze_title).setPositiveButton(C0021R$string.confirm, new DialogInterface.OnClickListener(defaultSnoozeOptions) {
             public final /* synthetic */ List f$1;
 
             {
@@ -559,7 +559,7 @@ public class MiuiNotificationMenuRow implements NotificationMenuRowPlugin {
             public final void onClick(DialogInterface dialogInterface, int i) {
                 MiuiNotificationMenuRow.this.lambda$onClickSnoozeItem$14$MiuiNotificationMenuRow(this.f$1, dialogInterface, i);
             }
-        }).setNegativeButton(C0018R$string.cancel, $$Lambda$MiuiNotificationMenuRow$HqidaIYBw0YsGYMT33qct3f_g8.INSTANCE).setSingleChoiceItems((CharSequence[]) defaultSnoozeOptions.stream().map($$Lambda$z3J6tczH2334AIFNVK6MFkhT7v0.INSTANCE).toArray($$Lambda$MiuiNotificationMenuRow$sm4UrPGqndr28nGsxOySExKsjUY.INSTANCE), 0, new DialogInterface.OnClickListener() {
+        }).setNegativeButton(C0021R$string.cancel, $$Lambda$MiuiNotificationMenuRow$HqidaIYBw0YsGYMT33qct3f_g8.INSTANCE).setSingleChoiceItems((CharSequence[]) defaultSnoozeOptions.stream().map($$Lambda$z3J6tczH2334AIFNVK6MFkhT7v0.INSTANCE).toArray($$Lambda$MiuiNotificationMenuRow$sm4UrPGqndr28nGsxOySExKsjUY.INSTANCE), 0, new DialogInterface.OnClickListener() {
             public final void onClick(DialogInterface dialogInterface, int i) {
                 MiuiNotificationMenuRow.this.lambda$onClickSnoozeItem$16$MiuiNotificationMenuRow(dialogInterface, i);
             }
@@ -613,37 +613,30 @@ public class MiuiNotificationMenuRow implements NotificationMenuRowPlugin {
     }
 
     public class MiuiNotificationMenuItem extends NotificationMenuRow.NotificationMenuItem {
-        private LayerDrawable mIconDrawable;
+        private ImageView mIcon;
 
         public MiuiNotificationMenuItem(MiuiNotificationMenuRow miuiNotificationMenuRow, Context context, int i, NotificationGuts.GutsContent gutsContent, int i2) {
             super(context, "", gutsContent, i2);
-            Resources resources = context.getResources();
-            this.mContentDescription = resources.getString(i);
-            int dimensionPixelSize = resources.getDimensionPixelSize(C0009R$dimen.miui_notification_modal_menu_text_padding);
+            this.mContentDescription = context.getResources().getString(i);
             if (i2 >= 0) {
-                TextView textView = new TextView(context);
-                Drawable drawable = resources.getDrawable(i2);
-                LayerDrawable layerDrawable = new LayerDrawable(new Drawable[]{resources.getDrawable(C0010R$drawable.miui_notification_menu_ic_bg_inactive), drawable});
-                this.mIconDrawable = layerDrawable;
-                layerDrawable.setLayerGravity(1, 17);
-                this.mIconDrawable.setLayerSize(1, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
-                textView.setCompoundDrawablesRelativeWithIntrinsicBounds((Drawable) null, this.mIconDrawable, (Drawable) null, (Drawable) null);
-                textView.setCompoundDrawablePadding(dimensionPixelSize);
-                textView.setText(this.mContentDescription);
-                textView.setGravity(1);
-                textView.setTextColor(-1);
-                this.mMenuView = textView;
+                View inflate = LayoutInflater.from(context).inflate(C0017R$layout.miui_notification_modal_menu, (ViewGroup) null);
+                this.mMenuView = inflate;
+                ((TextView) inflate.findViewById(C0015R$id.modal_menu_title)).setText(this.mContentDescription);
+                ImageView imageView = (ImageView) this.mMenuView.findViewById(C0015R$id.modal_menu_icon);
+                this.mIcon = imageView;
+                imageView.setBackgroundResource(C0013R$drawable.miui_notification_menu_ic_bg_inactive);
+                this.mIcon.setImageResource(i2);
+                ViewAnimUtils.mouse(this.mIcon);
             }
         }
 
         public MiuiNotificationMenuItem setIconBgResId(int i) {
-            this.mIconDrawable.setDrawable(0, this.mMenuView.getResources().getDrawable(i));
-            this.mMenuView.invalidate();
+            this.mIcon.setBackgroundResource(i);
             return this;
         }
 
         public MiuiNotificationMenuItem setOnClickListener(View.OnClickListener onClickListener) {
-            this.mMenuView.setOnClickListener(onClickListener);
+            this.mIcon.setOnClickListener(onClickListener);
             return this;
         }
     }

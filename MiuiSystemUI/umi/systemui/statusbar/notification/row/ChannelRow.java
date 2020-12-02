@@ -10,7 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 import com.android.settingslib.Utils;
-import com.android.systemui.C0012R$id;
+import com.android.systemui.C0015R$id;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -73,13 +73,13 @@ public final class ChannelRow extends LinearLayout {
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        View findViewById = findViewById(C0012R$id.channel_name);
+        View findViewById = findViewById(C0015R$id.channel_name);
         Intrinsics.checkExpressionValueIsNotNull(findViewById, "findViewById(R.id.channel_name)");
         this.channelName = (TextView) findViewById;
-        View findViewById2 = findViewById(C0012R$id.channel_description);
+        View findViewById2 = findViewById(C0015R$id.channel_description);
         Intrinsics.checkExpressionValueIsNotNull(findViewById2, "findViewById(R.id.channel_description)");
         this.channelDescription = (TextView) findViewById2;
-        View findViewById3 = findViewById(C0012R$id.toggle);
+        View findViewById3 = findViewById(C0015R$id.toggle);
         Intrinsics.checkExpressionValueIsNotNull(findViewById3, "findViewById(R.id.toggle)");
         Switch switchR = (Switch) findViewById3;
         this.f1switch = switchR;

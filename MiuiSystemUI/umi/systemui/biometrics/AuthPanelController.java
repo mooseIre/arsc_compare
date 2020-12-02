@@ -9,7 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewOutlineProvider;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import com.android.systemui.C0009R$dimen;
+import com.android.systemui.C0012R$dimen;
 
 public class AuthPanelController extends ViewOutlineProvider {
     private int mContainerHeight;
@@ -56,12 +56,12 @@ public class AuthPanelController extends ViewOutlineProvider {
         if (this.mUseFullScreen) {
             i4 = 0;
         } else {
-            i4 = (int) this.mContext.getResources().getDimension(C0009R$dimen.biometric_dialog_border_padding);
+            i4 = (int) this.mContext.getResources().getDimension(C0012R$dimen.biometric_dialog_border_padding);
         }
         if (this.mUseFullScreen) {
             f = 0.0f;
         } else {
-            f = this.mContext.getResources().getDimension(C0009R$dimen.biometric_dialog_corner_size);
+            f = this.mContext.getResources().getDimension(C0012R$dimen.biometric_dialog_corner_size);
         }
         if (i3 > 0) {
             ValueAnimator ofInt = ValueAnimator.ofInt(new int[]{this.mMargin, i4});
@@ -140,8 +140,8 @@ public class AuthPanelController extends ViewOutlineProvider {
     AuthPanelController(Context context, View view) {
         this.mContext = context;
         this.mPanelView = view;
-        this.mCornerRadius = context.getResources().getDimension(C0009R$dimen.biometric_dialog_corner_size);
-        this.mMargin = (int) context.getResources().getDimension(C0009R$dimen.biometric_dialog_border_padding);
+        this.mCornerRadius = context.getResources().getDimension(C0012R$dimen.biometric_dialog_corner_size);
+        this.mMargin = (int) context.getResources().getDimension(C0012R$dimen.biometric_dialog_border_padding);
         this.mPanelView.setOutlineProvider(this);
         this.mPanelView.setClipToOutline(true);
     }

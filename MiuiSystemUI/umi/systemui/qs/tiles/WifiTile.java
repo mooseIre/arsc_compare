@@ -11,8 +11,8 @@ import android.widget.Switch;
 import androidx.appcompat.R$styleable;
 import com.android.internal.logging.MetricsLogger;
 import com.android.settingslib.wifi.AccessPoint;
-import com.android.systemui.C0010R$drawable;
-import com.android.systemui.C0018R$string;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.Dependency;
 import com.android.systemui.plugins.ActivityStarter;
 import com.android.systemui.plugins.qs.DetailAdapter;
@@ -107,7 +107,7 @@ public class WifiTile extends QSTileImpl<QSTile.SignalState> {
     }
 
     public CharSequence getTileLabel() {
-        return this.mContext.getString(C0018R$string.quick_settings_wifi_label);
+        return this.mContext.getString(C0021R$string.quick_settings_wifi_label);
     }
 
     /* access modifiers changed from: protected */
@@ -140,19 +140,19 @@ public class WifiTile extends QSTileImpl<QSTile.SignalState> {
         StringBuffer stringBuffer = new StringBuffer();
         Resources resources = this.mContext.getResources();
         if (signalState.isTransient) {
-            signalState.label = resources.getString(C0018R$string.quick_settings_wifi_label);
+            signalState.label = resources.getString(C0021R$string.quick_settings_wifi_label);
         } else if (!signalState.value) {
-            signalState.label = resources.getString(C0018R$string.quick_settings_wifi_label);
+            signalState.label = resources.getString(C0021R$string.quick_settings_wifi_label);
         } else if (z3) {
             signalState.label = removeDoubleQuotes(callbackInfo.ssid);
         } else if (z4) {
-            signalState.label = resources.getString(C0018R$string.quick_settings_wifi_label);
+            signalState.label = resources.getString(C0021R$string.quick_settings_wifi_label);
         } else {
-            signalState.label = resources.getString(C0018R$string.quick_settings_wifi_label);
+            signalState.label = resources.getString(C0021R$string.quick_settings_wifi_label);
         }
-        stringBuffer.append(this.mContext.getString(C0018R$string.quick_settings_wifi_label));
+        stringBuffer.append(this.mContext.getString(C0021R$string.quick_settings_wifi_label));
         stringBuffer.append(",");
-        stringBuffer.append(this.mContext.getString(signalState.value ? C0018R$string.switch_bar_on : C0018R$string.switch_bar_off));
+        stringBuffer.append(this.mContext.getString(signalState.value ? C0021R$string.switch_bar_on : C0021R$string.switch_bar_off));
         stringBuffer.append(",");
         if (signalState.value && z3) {
             stringBuffer.append(callbackInfo.wifiSignalContentDescription);
@@ -164,13 +164,13 @@ public class WifiTile extends QSTileImpl<QSTile.SignalState> {
         }
         signalState.state = i2;
         if (signalState.value) {
-            i = C0010R$drawable.ic_qs_wifi_on;
+            i = C0013R$drawable.ic_qs_wifi_on;
         } else {
-            i = C0010R$drawable.ic_qs_wifi_off;
+            i = C0013R$drawable.ic_qs_wifi_off;
         }
         signalState.icon = QSTileImpl.ResourceIcon.get(i);
         signalState.contentDescription = stringBuffer.toString();
-        signalState.dualLabelContentDescription = resources.getString(C0018R$string.accessibility_quick_settings_open_settings, new Object[]{getTileLabel()});
+        signalState.dualLabelContentDescription = resources.getString(C0021R$string.accessibility_quick_settings_open_settings, new Object[]{getTileLabel()});
         signalState.expandedAccessibilityClassName = Switch.class.getName();
     }
 
@@ -182,9 +182,9 @@ public class WifiTile extends QSTileImpl<QSTile.SignalState> {
     /* access modifiers changed from: protected */
     public String composeChangeAnnouncement() {
         if (((QSTile.SignalState) this.mState).value) {
-            return this.mContext.getString(C0018R$string.accessibility_quick_settings_wifi_changed_on);
+            return this.mContext.getString(C0021R$string.accessibility_quick_settings_wifi_changed_on);
         }
-        return this.mContext.getString(C0018R$string.accessibility_quick_settings_wifi_changed_off);
+        return this.mContext.getString(C0021R$string.accessibility_quick_settings_wifi_changed_off);
     }
 
     public boolean isAvailable() {
@@ -315,7 +315,7 @@ public class WifiTile extends QSTileImpl<QSTile.SignalState> {
         }
 
         public CharSequence getTitle() {
-            return WifiTile.this.mContext.getString(C0018R$string.quick_settings_wifi_label);
+            return WifiTile.this.mContext.getString(C0021R$string.quick_settings_wifi_label);
         }
 
         public Intent getSettingsIntent() {
@@ -443,16 +443,16 @@ public class WifiTile extends QSTileImpl<QSTile.SignalState> {
                 r2 = 0
                 if (r0 != 0) goto L_0x003b
                 com.android.systemui.qs.MiuiQSDetailItems r0 = r6.mItems
-                int r1 = com.android.systemui.C0010R$drawable.ic_qs_wifi_detail_empty
-                int r3 = com.android.systemui.C0018R$string.wifi_is_off
+                int r1 = com.android.systemui.C0013R$drawable.ic_qs_wifi_detail_empty
+                int r3 = com.android.systemui.C0021R$string.wifi_is_off
                 r0.setEmptyState(r1, r3)
                 com.android.systemui.qs.MiuiQSDetailItems r6 = r6.mItems
                 r6.setItems(r2)
                 return
             L_0x003b:
                 com.android.systemui.qs.MiuiQSDetailItems r0 = r6.mItems
-                int r3 = com.android.systemui.C0010R$drawable.ic_qs_wifi_detail_empty
-                int r4 = com.android.systemui.C0018R$string.quick_settings_wifi_detail_empty_text
+                int r3 = com.android.systemui.C0013R$drawable.ic_qs_wifi_detail_empty
+                int r4 = com.android.systemui.C0021R$string.quick_settings_wifi_detail_empty_text
                 r0.setEmptyState(r3, r4)
                 com.android.settingslib.wifi.AccessPoint[] r0 = r6.mAccessPoints
                 if (r0 == 0) goto L_0x009b
@@ -484,13 +484,13 @@ public class WifiTile extends QSTileImpl<QSTile.SignalState> {
                 r4.line2 = r5
                 boolean r5 = r4.selected
                 if (r5 == 0) goto L_0x0089
-                int r3 = com.android.systemui.C0010R$drawable.ic_qs_detail_item_selected
+                int r3 = com.android.systemui.C0013R$drawable.ic_qs_detail_item_selected
                 r4.icon2 = r3
                 goto L_0x0095
             L_0x0089:
                 int r3 = r3.getSecurity()
                 if (r3 == 0) goto L_0x0092
-                int r3 = com.android.systemui.C0010R$drawable.ic_qs_wifi_lock
+                int r3 = com.android.systemui.C0013R$drawable.ic_qs_wifi_lock
                 goto L_0x0093
             L_0x0092:
                 r3 = -1

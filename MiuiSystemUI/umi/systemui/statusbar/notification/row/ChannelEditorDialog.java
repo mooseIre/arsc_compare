@@ -3,8 +3,8 @@ package com.android.systemui.statusbar.notification.row;
 import android.app.Dialog;
 import android.content.Context;
 import android.widget.TextView;
-import com.android.systemui.C0012R$id;
-import com.android.systemui.C0018R$string;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0021R$string;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
 
@@ -18,12 +18,12 @@ public final class ChannelEditorDialog extends Dialog {
 
     public final void updateDoneButtonText(boolean z) {
         int i;
-        TextView textView = (TextView) findViewById(C0012R$id.done_button);
+        TextView textView = (TextView) findViewById(C0015R$id.done_button);
         if (textView != null) {
             if (z) {
-                i = C0018R$string.inline_ok_button;
+                i = C0021R$string.inline_ok_button;
             } else {
-                i = C0018R$string.inline_done_button;
+                i = C0021R$string.inline_done_button;
             }
             textView.setText(i);
         }

@@ -17,6 +17,7 @@ import com.android.systemui.plugins.statusbar.StatusBarStateController;
 import com.android.systemui.statusbar.NotificationLockscreenUserManager;
 import com.android.systemui.statusbar.notification.NotificationEntryListener;
 import com.android.systemui.statusbar.notification.NotificationEntryManager;
+import com.android.systemui.statusbar.notification.NotificationFilterInjector;
 import com.android.systemui.statusbar.notification.NotificationUtil;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import com.android.systemui.statusbar.phone.NotificationGroupManager;
@@ -58,17 +59,21 @@ public class NotificationAlertController {
                 if (NotificationAlertController.DEBUG) {
                     Log.d("NotificationAlertController", "onNotificationAdded " + notificationEntry.getKey());
                 }
-                NotificationAlertController.this.buzzBeepBlink(notificationEntry.getKey());
-                NotificationAlertController.this.wakeUpIfNeeded(notificationEntry);
-                NotificationAlertController.this.markGroupSummaryChildrenUnShown(notificationEntry);
+                if (!NotificationFilterInjector.shouldFilterOut(notificationEntry)) {
+                    NotificationAlertController.this.buzzBeepBlink(notificationEntry.getKey());
+                    NotificationAlertController.this.wakeUpIfNeeded(notificationEntry);
+                    NotificationAlertController.this.markGroupSummaryChildrenUnShown(notificationEntry);
+                }
             }
 
             public void onPostEntryUpdated(NotificationEntry notificationEntry) {
                 if (NotificationAlertController.DEBUG) {
                     Log.d("NotificationAlertController", "onPostEntryUpdated " + notificationEntry.getKey());
                 }
-                NotificationAlertController.this.buzzBeepBlink(notificationEntry.getKey());
-                NotificationAlertController.this.wakeUpIfNeeded(notificationEntry);
+                if (!NotificationFilterInjector.shouldFilterOut(notificationEntry)) {
+                    NotificationAlertController.this.buzzBeepBlink(notificationEntry.getKey());
+                    NotificationAlertController.this.wakeUpIfNeeded(notificationEntry);
+                }
             }
         });
         this.mStatusBarStateController.addCallback(new StatusBarStateController.StateListener() {

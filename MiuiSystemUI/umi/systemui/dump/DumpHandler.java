@@ -3,8 +3,8 @@ package com.android.systemui.dump;
 import android.content.Context;
 import android.os.SystemClock;
 import android.os.Trace;
-import com.android.systemui.C0005R$array;
-import com.android.systemui.C0018R$string;
+import com.android.systemui.C0008R$array;
+import com.android.systemui.C0021R$string;
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
 import java.util.Iterator;
@@ -152,9 +152,9 @@ public final class DumpHandler {
     private final void dumpConfig(PrintWriter printWriter) {
         printWriter.println("SystemUiServiceComponents configuration:");
         printWriter.print("vendor component: ");
-        printWriter.println(this.context.getResources().getString(C0018R$string.config_systemUIVendorServiceComponent));
-        dumpServiceList(printWriter, "global", C0005R$array.config_systemUIServiceComponents);
-        dumpServiceList(printWriter, "per-user", C0005R$array.config_systemUIServiceComponentsPerUser);
+        printWriter.println(this.context.getResources().getString(C0021R$string.config_systemUIVendorServiceComponent));
+        dumpServiceList(printWriter, "global", C0008R$array.config_systemUIServiceComponents);
+        dumpServiceList(printWriter, "per-user", C0008R$array.config_systemUIServiceComponentsPerUser);
     }
 
     private final void dumpServiceList(PrintWriter printWriter, String str, int i) {

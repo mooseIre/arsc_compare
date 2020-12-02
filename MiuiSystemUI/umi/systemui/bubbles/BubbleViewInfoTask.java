@@ -20,7 +20,7 @@ import android.util.PathParser;
 import android.view.LayoutInflater;
 import com.android.internal.graphics.ColorUtils;
 import com.android.launcher3.icons.BitmapInfo;
-import com.android.systemui.C0014R$layout;
+import com.android.systemui.C0017R$layout;
 import com.android.systemui.bubbles.Bubble;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import java.lang.ref.WeakReference;
@@ -80,8 +80,8 @@ public class BubbleViewInfoTask extends AsyncTask<Void, Void, BubbleViewInfo> {
             BubbleViewInfo bubbleViewInfo = new BubbleViewInfo();
             if (!z && !bubble.isInflated()) {
                 LayoutInflater from = LayoutInflater.from(context);
-                bubbleViewInfo.imageView = (BadgedImageView) from.inflate(C0014R$layout.bubble_view, bubbleStackView, false);
-                BubbleExpandedView bubbleExpandedView = (BubbleExpandedView) from.inflate(C0014R$layout.bubble_expanded_view, bubbleStackView, false);
+                bubbleViewInfo.imageView = (BadgedImageView) from.inflate(C0017R$layout.bubble_view, bubbleStackView, false);
+                BubbleExpandedView bubbleExpandedView = (BubbleExpandedView) from.inflate(C0017R$layout.bubble_expanded_view, bubbleStackView, false);
                 bubbleViewInfo.expandedView = bubbleExpandedView;
                 bubbleExpandedView.setStackView(bubbleStackView);
             }

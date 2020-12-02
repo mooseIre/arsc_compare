@@ -15,8 +15,8 @@ import android.media.session.MediaSession;
 import android.media.session.MediaSessionManager;
 import android.media.session.PlaybackState;
 import android.os.Handler;
-import com.android.systemui.C0010R$drawable;
-import com.android.systemui.C0018R$string;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.Dependency;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.pip.phone.PipMediaController;
@@ -132,14 +132,14 @@ public class PipMediaController {
     }
 
     private void createMediaActions() {
-        String string = this.mContext.getString(C0018R$string.pip_pause);
-        this.mPauseAction = new RemoteAction(Icon.createWithResource(this.mContext, C0010R$drawable.ic_pause_white), string, string, PendingIntent.getBroadcast(this.mContext, 0, new Intent("com.android.systemui.pip.phone.PAUSE"), 134217728));
-        String string2 = this.mContext.getString(C0018R$string.pip_play);
-        this.mPlayAction = new RemoteAction(Icon.createWithResource(this.mContext, C0010R$drawable.ic_play_arrow_white), string2, string2, PendingIntent.getBroadcast(this.mContext, 0, new Intent("com.android.systemui.pip.phone.PLAY"), 134217728));
-        String string3 = this.mContext.getString(C0018R$string.pip_skip_to_next);
-        this.mNextAction = new RemoteAction(Icon.createWithResource(this.mContext, C0010R$drawable.ic_skip_next_white), string3, string3, PendingIntent.getBroadcast(this.mContext, 0, new Intent("com.android.systemui.pip.phone.NEXT"), 134217728));
-        String string4 = this.mContext.getString(C0018R$string.pip_skip_to_prev);
-        this.mPrevAction = new RemoteAction(Icon.createWithResource(this.mContext, C0010R$drawable.ic_skip_previous_white), string4, string4, PendingIntent.getBroadcast(this.mContext, 0, new Intent("com.android.systemui.pip.phone.PREV"), 134217728));
+        String string = this.mContext.getString(C0021R$string.pip_pause);
+        this.mPauseAction = new RemoteAction(Icon.createWithResource(this.mContext, C0013R$drawable.ic_pause_white), string, string, PendingIntent.getBroadcast(this.mContext, 0, new Intent("com.android.systemui.pip.phone.PAUSE"), 134217728));
+        String string2 = this.mContext.getString(C0021R$string.pip_play);
+        this.mPlayAction = new RemoteAction(Icon.createWithResource(this.mContext, C0013R$drawable.ic_play_arrow_white), string2, string2, PendingIntent.getBroadcast(this.mContext, 0, new Intent("com.android.systemui.pip.phone.PLAY"), 134217728));
+        String string3 = this.mContext.getString(C0021R$string.pip_skip_to_next);
+        this.mNextAction = new RemoteAction(Icon.createWithResource(this.mContext, C0013R$drawable.ic_skip_next_white), string3, string3, PendingIntent.getBroadcast(this.mContext, 0, new Intent("com.android.systemui.pip.phone.NEXT"), 134217728));
+        String string4 = this.mContext.getString(C0021R$string.pip_skip_to_prev);
+        this.mPrevAction = new RemoteAction(Icon.createWithResource(this.mContext, C0013R$drawable.ic_skip_previous_white), string4, string4, PendingIntent.getBroadcast(this.mContext, 0, new Intent("com.android.systemui.pip.phone.PREV"), 134217728));
     }
 
     private void registerSessionListenerForCurrentUser() {

@@ -3,14 +3,13 @@ package com.android.systemui.controlcenter.phone;
 import android.content.Context;
 import android.util.Log;
 import android.view.MotionEvent;
-import android.view.SurfaceControl;
-import android.view.ViewRootImpl;
 import android.view.WindowManager;
 import com.android.systemui.controlcenter.utils.ControlCenterUtils;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import com.android.systemui.statusbar.phone.HeadsUpManagerPhone;
 import com.android.systemui.statusbar.phone.StatusBar;
 import com.android.systemui.statusbar.policy.OnHeadsUpChangedListener;
+import com.miui.systemui.util.BlurUtil;
 import java.util.HashSet;
 import java.util.Iterator;
 
@@ -147,41 +146,21 @@ public class ControlPanelWindowManager implements OnHeadsUpChangedListener {
     private void applyBlurRatio(float f) {
         if (hasAdded()) {
             Log.d("ControlPanelWindowManager", "setBlurRatio: " + f);
-            setBlur(this.mLpChanged, this.mControlPanel.getViewRootImpl(), f, 0);
+            BlurUtil.setBlurWithWindowManager(this.mControlPanel.getViewRootImpl(), f, 0, this.mLpChanged);
             apply();
         }
     }
 
-    private void setBlur(WindowManager.LayoutParams layoutParams, ViewRootImpl viewRootImpl, float f, int i) {
-        if (viewRootImpl != null) {
-            SurfaceControl surfaceControl = viewRootImpl.getSurfaceControl();
-            if (!surfaceControl.isValid()) {
-                Log.w("ControlPanelWindowManager", "WARING: SurfaceControl is invalid so that blur maybe not work");
-                return;
-            }
-            boolean z = f > 0.0f;
-            SurfaceControl.Transaction transaction = new SurfaceControl.Transaction();
-            transaction.setBlur(surfaceControl, z);
-            if (z) {
-                transaction.setBlurRatio(surfaceControl, f);
-                transaction.setBlurMode(surfaceControl, i);
-            }
-            transaction.apply();
-        }
-    }
-
     public boolean dispatchToControlPanel(MotionEvent motionEvent, float f) {
-        if (!this.mControlPanelController.isUseControlCenter()) {
-            return false;
-        }
-        if (this.mIsHeadsUp && this.mIsRowPinned) {
+        if (!this.mControlPanelController.isUseControlCenter() || (this.mIsHeadsUp && this.mIsRowPinned)) {
+            Log.d("ControlPanelWindowManager", " mIsHeadsUp:" + this.mIsHeadsUp + " mIsRowPinned:" + this.mIsRowPinned);
             return false;
         }
         if (motionEvent.getActionMasked() == 0) {
             this.mDownX = motionEvent.getRawX();
         }
         if (this.mDownX > f / 2.0f) {
-            return this.mControlPanel.dispatchTouchEvent(motionEvent);
+            return this.mControlPanel.handleMotionEvent(motionEvent, true);
         }
         return false;
     }

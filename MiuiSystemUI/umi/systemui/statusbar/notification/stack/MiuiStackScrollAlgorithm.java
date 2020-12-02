@@ -2,8 +2,8 @@ package com.android.systemui.statusbar.notification.stack;
 
 import android.content.Context;
 import android.view.ViewGroup;
-import com.android.systemui.C0009R$dimen;
-import com.android.systemui.C0012R$id;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0015R$id;
 import com.android.systemui.statusbar.EmptyShadeView;
 import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow;
 import com.android.systemui.statusbar.notification.row.ExpandableView;
@@ -20,13 +20,15 @@ import org.jetbrains.annotations.Nullable;
 public final class MiuiStackScrollAlgorithm extends StackScrollAlgorithm {
     private int mLatestVisibleChildrenCount;
     private final int mPaddingBetweenZenModeAndNext;
+    private final int mPaddingWhenQsExpansionEnabled;
 
     /* JADX INFO: super call moved to the top of the method (can break code semantics) */
     public MiuiStackScrollAlgorithm(@NotNull Context context, @NotNull ViewGroup viewGroup) {
         super(context, viewGroup);
         Intrinsics.checkParameterIsNotNull(context, "context");
         Intrinsics.checkParameterIsNotNull(viewGroup, "hostView");
-        this.mPaddingBetweenZenModeAndNext = context.getResources().getDimensionPixelSize(C0009R$dimen.notification_section_divider_height_for_text);
+        this.mPaddingBetweenZenModeAndNext = context.getResources().getDimensionPixelSize(C0012R$dimen.notification_section_divider_height_for_text);
+        this.mPaddingWhenQsExpansionEnabled = context.getResources().getDimensionPixelSize(C0012R$dimen.notification_section_divider_height_minus);
     }
 
     /* access modifiers changed from: protected */
@@ -60,7 +62,7 @@ public final class MiuiStackScrollAlgorithm extends StackScrollAlgorithm {
                         viewState.setSpringYOffset((int) (ambientState.getSpringLength() + f));
                     }
                 }
-                expandableView.setTag(C0012R$id.miui_child_index_hint, Integer.valueOf(i));
+                expandableView.setTag(C0015R$id.miui_child_index_hint, Integer.valueOf(i));
                 i = i2;
             } else {
                 CollectionsKt.throwIndexOverflow();
@@ -263,16 +265,23 @@ public final class MiuiStackScrollAlgorithm extends StackScrollAlgorithm {
     }
 
     /* access modifiers changed from: protected */
-    public int getPaddingAfterChild(@NotNull StackScrollAlgorithm.StackScrollAlgorithmState stackScrollAlgorithmState, @NotNull ExpandableView expandableView, int i) {
+    public int getPaddingAfterChild(@NotNull StackScrollAlgorithm.StackScrollAlgorithmState stackScrollAlgorithmState, @NotNull AmbientState ambientState, @NotNull ExpandableView expandableView, int i) {
         Intrinsics.checkParameterIsNotNull(stackScrollAlgorithmState, "algorithmState");
+        Intrinsics.checkParameterIsNotNull(ambientState, "ambientState");
         Intrinsics.checkParameterIsNotNull(expandableView, "child");
-        if (i != 0 || !(expandableView instanceof ZenModeView) || ((ZenModeView) expandableView).isVisiable() || stackScrollAlgorithmState.visibleChildren.size() <= 1) {
-            return super.getPaddingAfterChild(stackScrollAlgorithmState, expandableView, i);
+        if (i == 0 && (expandableView instanceof ZenModeView) && !((ZenModeView) expandableView).isVisiable() && stackScrollAlgorithmState.visibleChildren.size() > 1) {
+            ExpandableView expandableView2 = stackScrollAlgorithmState.visibleChildren.get(i + 1);
+            if (expandableView2 instanceof MiuiMediaHeaderView) {
+                return 0;
+            }
+            if ((expandableView2 instanceof SectionHeaderView) || (expandableView2 instanceof PeopleHubView)) {
+                if (!ambientState.isQsExpansionEnabled()) {
+                    return this.mPaddingBetweenZenModeAndNext;
+                }
+                return this.mPaddingWhenQsExpansionEnabled;
+            }
         }
-        if (stackScrollAlgorithmState.visibleChildren.get(i + 1) instanceof MiuiMediaHeaderView) {
-            return 0;
-        }
-        return this.mPaddingBetweenZenModeAndNext;
+        return super.getPaddingAfterChild(stackScrollAlgorithmState, ambientState, expandableView, i);
     }
 
     public final int getLatestVisibleChildCount() {

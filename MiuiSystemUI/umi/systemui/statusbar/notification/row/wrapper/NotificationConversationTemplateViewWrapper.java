@@ -6,7 +6,7 @@ import android.view.ViewGroup;
 import com.android.internal.widget.CachingIconView;
 import com.android.internal.widget.ConversationLayout;
 import com.android.internal.widget.MessagingLinearLayout;
-import com.android.systemui.C0009R$dimen;
+import com.android.systemui.C0012R$dimen;
 import com.android.systemui.statusbar.ViewTransformationHelper;
 import com.android.systemui.statusbar.notification.NotificationUtils;
 import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow;
@@ -38,7 +38,7 @@ public final class NotificationConversationTemplateViewWrapper extends Notificat
         Intrinsics.checkParameterIsNotNull(context, "ctx");
         Intrinsics.checkParameterIsNotNull(view, "view");
         Intrinsics.checkParameterIsNotNull(expandableNotificationRow, "row");
-        this.minHeightWithActions = NotificationUtils.getFontScaledHeight(context, C0009R$dimen.notification_messaging_actions_min_height);
+        this.minHeightWithActions = NotificationUtils.getFontScaledHeight(context, C0012R$dimen.notification_messaging_actions_min_height);
         this.conversationLayout = (ConversationLayout) view;
     }
 

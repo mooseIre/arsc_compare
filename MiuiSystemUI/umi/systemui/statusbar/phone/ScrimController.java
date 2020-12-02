@@ -19,7 +19,7 @@ import com.android.internal.graphics.ColorUtils;
 import com.android.internal.util.function.TriConsumer;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.KeyguardUpdateMonitorCallback;
-import com.android.systemui.C0012R$id;
+import com.android.systemui.C0015R$id;
 import com.android.systemui.DejankUtils;
 import com.android.systemui.Dumpable;
 import com.android.systemui.colorextraction.SysuiColorExtractor;
@@ -38,9 +38,9 @@ import java.util.function.Consumer;
 
 public class ScrimController implements ViewTreeObserver.OnPreDrawListener, ColorExtractor.OnColorsChangedListener, Dumpable {
     private static final boolean DEBUG = Log.isLoggable("ScrimController", 3);
-    private static final int TAG_END_ALPHA = C0012R$id.scrim_alpha_end;
-    static final int TAG_KEY_ANIM = C0012R$id.scrim;
-    private static final int TAG_START_ALPHA = C0012R$id.scrim_alpha_start;
+    private static final int TAG_END_ALPHA = C0015R$id.scrim_alpha_end;
+    static final int TAG_KEY_ANIM = C0015R$id.scrim;
+    private static final int TAG_START_ALPHA = C0015R$id.scrim_alpha_start;
     private boolean mAnimateChange;
     private long mAnimationDelay;
     private long mAnimationDuration = -1;

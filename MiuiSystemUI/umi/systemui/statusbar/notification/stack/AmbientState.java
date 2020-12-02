@@ -3,7 +3,7 @@ package com.android.systemui.statusbar.notification.stack;
 import android.content.Context;
 import android.util.MathUtils;
 import android.view.View;
-import com.android.systemui.C0009R$dimen;
+import com.android.systemui.C0012R$dimen;
 import com.android.systemui.statusbar.NotificationShelf;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import com.android.systemui.statusbar.notification.row.ActivatableNotificationView;
@@ -77,7 +77,7 @@ public class AmbientState extends MiuiAmbientStateBase {
     }
 
     private static int getZDistanceBetweenElements(Context context) {
-        return Math.max(1, context.getResources().getDimensionPixelSize(C0009R$dimen.z_distance_between_notifications));
+        return Math.max(1, context.getResources().getDimensionPixelSize(C0012R$dimen.z_distance_between_notifications));
     }
 
     public static int getNotificationLaunchHeight(Context context) {

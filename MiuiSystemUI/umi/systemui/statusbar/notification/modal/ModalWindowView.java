@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
-import com.android.systemui.C0009R$dimen;
+import com.android.systemui.C0012R$dimen;
 import com.android.systemui.Dependency;
 import com.android.systemui.statusbar.notification.NotificationEntryManager;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
@@ -263,9 +263,9 @@ public class ModalWindowView extends FrameLayout {
 
     public void updateResource() {
         Resources resources = getResources();
-        this.mModalMenuMarginTop = resources.getDimensionPixelOffset(C0009R$dimen.notification_modal_menu_margin_top);
-        this.mLayoutWidth = resources.getDimensionPixelOffset(C0009R$dimen.notification_panel_width);
-        this.mMaxModalBottom = resources.getDisplayMetrics().heightPixels - resources.getDimensionPixelOffset(C0009R$dimen.notification_modal_menu_bottom_max);
+        this.mModalMenuMarginTop = resources.getDimensionPixelOffset(C0012R$dimen.notification_modal_menu_margin_top);
+        this.mLayoutWidth = resources.getDimensionPixelOffset(C0012R$dimen.notification_panel_width);
+        this.mMaxModalBottom = resources.getDisplayMetrics().heightPixels - resources.getDimensionPixelOffset(C0012R$dimen.notification_modal_menu_bottom_max);
     }
 
     /* access modifiers changed from: private */

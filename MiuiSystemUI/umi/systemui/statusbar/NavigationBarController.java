@@ -23,6 +23,7 @@ import com.android.systemui.statusbar.phone.LightBarController;
 import com.android.systemui.statusbar.phone.NavigationBarFragment;
 import com.android.systemui.statusbar.phone.NavigationBarView;
 import com.android.systemui.statusbar.phone.NavigationModeController;
+import com.android.systemui.statusbar.phone.NavigationModeControllerExt;
 import com.android.systemui.statusbar.policy.BatteryController;
 
 public class NavigationBarController implements CommandQueue.Callbacks {
@@ -64,7 +65,7 @@ public class NavigationBarController implements CommandQueue.Callbacks {
             int displayId = display.getDisplayId();
             boolean z = displayId == 0;
             try {
-                if (WindowManagerGlobal.getWindowManagerService().hasNavigationBar(displayId)) {
+                if (WindowManagerGlobal.getWindowManagerService().hasNavigationBar(displayId) && !NavigationModeControllerExt.INSTANCE.hideNavigationBar()) {
                     if (z) {
                         context = this.mContext;
                     } else {

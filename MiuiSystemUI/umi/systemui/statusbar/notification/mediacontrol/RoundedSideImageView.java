@@ -5,7 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Path;
 import android.util.AttributeSet;
 import androidx.appcompat.widget.AppCompatImageView;
-import com.android.systemui.C0009R$dimen;
+import com.android.systemui.C0012R$dimen;
 
 public class RoundedSideImageView extends AppCompatImageView {
     boolean isLTR;
@@ -28,7 +28,7 @@ public class RoundedSideImageView extends AppCompatImageView {
     }
 
     private void init(Context context) {
-        this.radius = context.getResources().getDimension(C0009R$dimen.media_control_bg_radius);
+        this.radius = context.getResources().getDimension(C0012R$dimen.media_control_bg_radius);
         this.path = new Path();
         this.isLTR = context.getResources().getConfiguration().getLayoutDirection() == 0;
     }

@@ -19,9 +19,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import com.android.systemui.C0005R$array;
-import com.android.systemui.C0009R$dimen;
-import com.android.systemui.C0012R$id;
+import com.android.systemui.C0008R$array;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0015R$id;
 import com.android.systemui.Dependency;
 import com.android.systemui.Interpolators;
 import com.android.systemui.MiuiBatteryMeterView;
@@ -108,19 +108,19 @@ public class KeyguardStatusBarView extends RelativeLayout implements BatteryCont
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mSystemIconsContainer = findViewById(C0012R$id.system_icons_container);
-        this.mMultiUserSwitch = (MultiUserSwitch) findViewById(C0012R$id.multi_user_switch);
-        this.mMultiUserAvatar = (ImageView) findViewById(C0012R$id.multi_user_avatar);
-        this.mCarrierLabel = (TextView) findViewById(C0012R$id.keyguard_carrier_text);
-        this.mBatteryView = (MiuiBatteryMeterView) this.mSystemIconsContainer.findViewById(C0012R$id.battery);
-        this.mCutoutSpace = findViewById(C0012R$id.cutout_space_view);
-        this.mStatusIconArea = (ViewGroup) findViewById(C0012R$id.status_icon_area);
-        this.mDripRightStatusIconContainer = (MiuiStatusIconContainer) findViewById(C0012R$id.drip_right_statusIcons);
-        this.mDripLeftStatusIconFrameContainer = (FrameLayout) findViewById(C0012R$id.keyguard_drip_left_statusIcons_container);
-        this.mDripLeftStatusIconContainer = (MiuiDripLeftStatusIconContainer) findViewById(C0012R$id.keyguard_drip_left_statusIcons);
-        this.mStatusBarPromptContainer = (FrameLayout) findViewById(C0012R$id.prompt_container);
-        this.mNetworkSpeedView = (NetworkSpeedView) findViewById(C0012R$id.fullscreen_network_speed_view);
-        this.mStatusIconContainer = (MiuiStatusIconContainer) findViewById(C0012R$id.statusIcons);
+        this.mSystemIconsContainer = findViewById(C0015R$id.system_icons_container);
+        this.mMultiUserSwitch = (MultiUserSwitch) findViewById(C0015R$id.multi_user_switch);
+        this.mMultiUserAvatar = (ImageView) findViewById(C0015R$id.multi_user_avatar);
+        this.mCarrierLabel = (TextView) findViewById(C0015R$id.keyguard_carrier_text);
+        this.mBatteryView = (MiuiBatteryMeterView) this.mSystemIconsContainer.findViewById(C0015R$id.battery);
+        this.mCutoutSpace = findViewById(C0015R$id.cutout_space_view);
+        this.mStatusIconArea = (ViewGroup) findViewById(C0015R$id.status_icon_area);
+        this.mDripRightStatusIconContainer = (MiuiStatusIconContainer) findViewById(C0015R$id.drip_right_statusIcons);
+        this.mDripLeftStatusIconFrameContainer = (FrameLayout) findViewById(C0015R$id.keyguard_drip_left_statusIcons_container);
+        this.mDripLeftStatusIconContainer = (MiuiDripLeftStatusIconContainer) findViewById(C0015R$id.keyguard_drip_left_statusIcons);
+        this.mStatusBarPromptContainer = (FrameLayout) findViewById(C0015R$id.prompt_container);
+        this.mNetworkSpeedView = (NetworkSpeedView) findViewById(C0015R$id.fullscreen_network_speed_view);
+        this.mStatusIconContainer = (MiuiStatusIconContainer) findViewById(C0015R$id.statusIcons);
         loadDimens();
         updateUserSwitcher();
         this.mBatteryController = (BatteryController) Dependency.get(BatteryController.class);
@@ -131,19 +131,19 @@ public class KeyguardStatusBarView extends RelativeLayout implements BatteryCont
     public void onConfigurationChanged(Configuration configuration) {
         super.onConfigurationChanged(configuration);
         ViewGroup.MarginLayoutParams marginLayoutParams = (ViewGroup.MarginLayoutParams) this.mMultiUserAvatar.getLayoutParams();
-        int dimensionPixelSize = getResources().getDimensionPixelSize(C0009R$dimen.multi_user_avatar_keyguard_size);
+        int dimensionPixelSize = getResources().getDimensionPixelSize(C0012R$dimen.multi_user_avatar_keyguard_size);
         marginLayoutParams.height = dimensionPixelSize;
         marginLayoutParams.width = dimensionPixelSize;
         this.mMultiUserAvatar.setLayoutParams(marginLayoutParams);
         ViewGroup.MarginLayoutParams marginLayoutParams2 = (ViewGroup.MarginLayoutParams) this.mMultiUserSwitch.getLayoutParams();
-        marginLayoutParams2.width = getResources().getDimensionPixelSize(C0009R$dimen.multi_user_switch_width_keyguard);
-        marginLayoutParams2.setMarginEnd(getResources().getDimensionPixelSize(C0009R$dimen.multi_user_switch_keyguard_margin));
+        marginLayoutParams2.width = getResources().getDimensionPixelSize(C0012R$dimen.multi_user_switch_width_keyguard);
+        marginLayoutParams2.setMarginEnd(getResources().getDimensionPixelSize(C0012R$dimen.multi_user_switch_keyguard_margin));
         this.mMultiUserSwitch.setLayoutParams(marginLayoutParams2);
         ViewGroup.MarginLayoutParams marginLayoutParams3 = (ViewGroup.MarginLayoutParams) this.mSystemIconsContainer.getLayoutParams();
-        marginLayoutParams3.setMarginStart(getResources().getDimensionPixelSize(C0009R$dimen.system_icons_super_container_margin_start));
+        marginLayoutParams3.setMarginStart(getResources().getDimensionPixelSize(C0012R$dimen.system_icons_super_container_margin_start));
         this.mSystemIconsContainer.setLayoutParams(marginLayoutParams3);
         View view = this.mSystemIconsContainer;
-        view.setPaddingRelative(view.getPaddingStart(), this.mSystemIconsContainer.getPaddingTop(), getResources().getDimensionPixelSize(C0009R$dimen.system_icons_keyguard_padding_end), this.mSystemIconsContainer.getPaddingBottom());
+        view.setPaddingRelative(view.getPaddingStart(), this.mSystemIconsContainer.getPaddingTop(), getResources().getDimensionPixelSize(C0012R$dimen.system_icons_keyguard_padding_end), this.mSystemIconsContainer.getPaddingBottom());
         updateKeyguardStatusBarHeight();
     }
 
@@ -151,17 +151,17 @@ public class KeyguardStatusBarView extends RelativeLayout implements BatteryCont
         DisplayCutout displayCutout = this.mDisplayCutout;
         int i = displayCutout == null ? 0 : displayCutout.getWaterfallInsets().top;
         ViewGroup.MarginLayoutParams marginLayoutParams = (ViewGroup.MarginLayoutParams) getLayoutParams();
-        marginLayoutParams.height = getResources().getDimensionPixelSize(C0009R$dimen.status_bar_height) + i;
+        marginLayoutParams.height = getResources().getDimensionPixelSize(C0012R$dimen.status_bar_height) + i;
         setLayoutParams(marginLayoutParams);
     }
 
     private void loadDimens() {
         Resources resources = getResources();
-        this.mSystemIconsSwitcherHiddenExpandedMargin = resources.getDimensionPixelSize(C0009R$dimen.system_icons_switcher_hidden_expanded_margin);
-        this.mSystemIconsBaseMargin = resources.getDimensionPixelSize(C0009R$dimen.system_icons_super_container_avatarless_margin_end);
-        this.mCutoutSideNudge = getResources().getDimensionPixelSize(C0009R$dimen.display_cutout_margin_consumption);
+        this.mSystemIconsSwitcherHiddenExpandedMargin = resources.getDimensionPixelSize(C0012R$dimen.system_icons_switcher_hidden_expanded_margin);
+        this.mSystemIconsBaseMargin = resources.getDimensionPixelSize(C0012R$dimen.system_icons_super_container_avatarless_margin_end);
+        this.mCutoutSideNudge = getResources().getDimensionPixelSize(C0012R$dimen.display_cutout_margin_consumption);
         getContext().getResources().getBoolean(17891375);
-        this.mRoundedCornerPadding = resources.getDimensionPixelSize(C0009R$dimen.rounded_corner_content_padding);
+        this.mRoundedCornerPadding = resources.getDimensionPixelSize(C0012R$dimen.rounded_corner_content_padding);
     }
 
     private void updateVisibilities() {
@@ -235,8 +235,8 @@ public class KeyguardStatusBarView extends RelativeLayout implements BatteryCont
         this.mDripLeftStatusIconFrameContainer.setVisibility(8);
         this.mStatusIconContainer.setVisibility(0);
         this.mNetworkSpeedView.setVisibilityByStatusBar(true);
-        ((RelativeLayout.LayoutParams) this.mStatusIconArea.getLayoutParams()).addRule(1, C0012R$id.keyguard_carrier_text);
-        ((LinearLayout.LayoutParams) this.mSystemIconsContainer.getLayoutParams()).setMarginStart(getResources().getDimensionPixelSize(C0009R$dimen.system_icons_super_container_margin_start));
+        ((RelativeLayout.LayoutParams) this.mStatusIconArea.getLayoutParams()).addRule(1, C0015R$id.keyguard_carrier_text);
+        ((LinearLayout.LayoutParams) this.mSystemIconsContainer.getLayoutParams()).setMarginStart(getResources().getDimensionPixelSize(C0012R$dimen.system_icons_super_container_margin_start));
         return true;
     }
 
@@ -263,7 +263,7 @@ public class KeyguardStatusBarView extends RelativeLayout implements BatteryCont
         layoutParams.width = rect.width();
         layoutParams.height = rect.height();
         layoutParams.addRule(13);
-        ((RelativeLayout.LayoutParams) this.mStatusIconArea.getLayoutParams()).addRule(1, C0012R$id.cutout_space_view);
+        ((RelativeLayout.LayoutParams) this.mStatusIconArea.getLayoutParams()).addRule(1, C0015R$id.cutout_space_view);
         ((LinearLayout.LayoutParams) this.mSystemIconsContainer.getLayoutParams()).setMarginStart(0);
         return true;
     }
@@ -298,9 +298,9 @@ public class KeyguardStatusBarView extends RelativeLayout implements BatteryCont
         userInfoController.reloadUserInfo();
         ((ConfigurationController) Dependency.get(ConfigurationController.class)).addCallback(this);
         int lightModeIconColorSingleTone = ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).getLightModeIconColorSingleTone();
-        this.mIconManager = new StatusBarIconController.MiuiLightDarkIconManager((ViewGroup) findViewById(C0012R$id.statusIcons), (CommandQueue) Dependency.get(CommandQueue.class), true, lightModeIconColorSingleTone);
+        this.mIconManager = new StatusBarIconController.MiuiLightDarkIconManager((ViewGroup) findViewById(C0015R$id.statusIcons), (CommandQueue) Dependency.get(CommandQueue.class), true, lightModeIconColorSingleTone);
         ((StatusBarIconController) Dependency.get(cls)).addIconGroup(this.mIconManager);
-        ArrayList arrayList = new ArrayList(Arrays.asList(getContext().getResources().getStringArray(C0005R$array.config_drip_right_block_statusBarIcons)));
+        ArrayList arrayList = new ArrayList(Arrays.asList(getContext().getResources().getStringArray(C0008R$array.config_drip_right_block_statusBarIcons)));
         this.mDripRightIconManager = new StatusBarIconController.MiuiLightDarkIconManager(this.mDripRightStatusIconContainer, (CommandQueue) Dependency.get(CommandQueue.class), true, lightModeIconColorSingleTone);
         ((StatusBarIconController) Dependency.get(cls)).addIconGroup(this.mDripRightIconManager, arrayList);
         this.mDripLeftIconManager = new StatusBarIconController.MiuiLightDarkIconManager(this.mDripLeftStatusIconContainer, (CommandQueue) Dependency.get(CommandQueue.class), true, lightModeIconColorSingleTone);

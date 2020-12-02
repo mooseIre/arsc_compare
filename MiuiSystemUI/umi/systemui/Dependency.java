@@ -130,6 +130,7 @@ import com.android.systemui.statusbar.policy.FlashlightController;
 import com.android.systemui.statusbar.policy.HotspotController;
 import com.android.systemui.statusbar.policy.KeyguardStateController;
 import com.android.systemui.statusbar.policy.LocationController;
+import com.android.systemui.statusbar.policy.MiuiAlarmControllerImpl;
 import com.android.systemui.statusbar.policy.NetworkController;
 import com.android.systemui.statusbar.policy.NextAlarmController;
 import com.android.systemui.statusbar.policy.RegionController;
@@ -260,6 +261,7 @@ public class Dependency {
     Lazy<Looper> mMainLooper;
     Lazy<ManagedProfileController> mManagedProfileController;
     Lazy<MetricsLogger> mMetricsLogger;
+    Lazy<MiuiAlarmControllerImpl> mMiuiAlarmControllerImpl;
     Lazy<MiuiCarrierTextController> mMiuiCarrierTextController;
     Lazy<MiuiChargeController> mMiuiChargeController;
     Lazy<MiuiChargeManager> mMiuiChargeManager;
@@ -1536,6 +1538,13 @@ public class Dependency {
         Lazy<SlaveWifiSignalController> lazy167 = this.mSlaveWifiSignalController;
         Objects.requireNonNull(lazy167);
         this.mProviders.put(SlaveWifiSignalController.class, new LazyDependencyCreator() {
+            public final Object createDependency() {
+                return Lazy.this.get();
+            }
+        });
+        Lazy<MiuiAlarmControllerImpl> lazy168 = this.mMiuiAlarmControllerImpl;
+        Objects.requireNonNull(lazy168);
+        this.mProviders.put(MiuiAlarmControllerImpl.class, new LazyDependencyCreator() {
             public final Object createDependency() {
                 return Lazy.this.get();
             }

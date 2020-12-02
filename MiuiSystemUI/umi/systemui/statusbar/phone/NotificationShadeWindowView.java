@@ -28,7 +28,7 @@ import android.view.WindowInsetsController;
 import android.widget.FrameLayout;
 import com.android.internal.view.FloatingActionMode;
 import com.android.internal.widget.FloatingToolbar;
-import com.android.systemui.C0012R$id;
+import com.android.systemui.C0015R$id;
 import com.android.systemui.R$styleable;
 
 public class NotificationShadeWindowView extends FrameLayout {
@@ -246,7 +246,7 @@ public class NotificationShadeWindowView extends FrameLayout {
     }
 
     public NotificationPanelView getNotificationPanelView() {
-        return (NotificationPanelView) findViewById(C0012R$id.notification_panel);
+        return (NotificationPanelView) findViewById(C0015R$id.notification_panel);
     }
 
     public WindowInsets onApplyWindowInsets(WindowInsets windowInsets) {

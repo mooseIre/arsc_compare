@@ -13,16 +13,16 @@ import android.util.TypedValue;
 import android.widget.EditText;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
-import com.android.systemui.C0010R$drawable;
-import com.android.systemui.C0018R$string;
-import com.android.systemui.C0020R$xml;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0021R$string;
+import com.android.systemui.C0023R$xml;
 import com.android.systemui.Dependency;
 import com.android.systemui.statusbar.phone.NavigationBarInflaterView;
 import com.android.systemui.tuner.TunerService;
 import java.util.ArrayList;
 
 public class NavBarTuner extends TunerPreferenceFragment {
-    private static final int[][] ICONS = {new int[]{C0010R$drawable.ic_qs_circle, C0018R$string.tuner_circle}, new int[]{C0010R$drawable.ic_add, C0018R$string.tuner_plus}, new int[]{C0010R$drawable.ic_remove, C0018R$string.tuner_minus}, new int[]{C0010R$drawable.ic_left, C0018R$string.tuner_left}, new int[]{C0010R$drawable.ic_right, C0018R$string.tuner_right}, new int[]{C0010R$drawable.ic_menu, C0018R$string.tuner_menu}};
+    private static final int[][] ICONS = {new int[]{C0013R$drawable.ic_qs_circle, C0021R$string.tuner_circle}, new int[]{C0013R$drawable.ic_add, C0021R$string.tuner_plus}, new int[]{C0013R$drawable.ic_remove, C0021R$string.tuner_minus}, new int[]{C0013R$drawable.ic_left, C0021R$string.tuner_left}, new int[]{C0013R$drawable.ic_right, C0021R$string.tuner_right}, new int[]{C0013R$drawable.ic_menu, C0021R$string.tuner_menu}};
     private Handler mHandler;
     private final ArrayList<TunerService.Tunable> mTunables = new ArrayList<>();
 
@@ -37,7 +37,7 @@ public class NavBarTuner extends TunerPreferenceFragment {
     }
 
     public void onCreatePreferences(Bundle bundle, String str) {
-        addPreferencesFromResource(C0020R$xml.nav_bar_tuner);
+        addPreferencesFromResource(C0023R$xml.nav_bar_tuner);
         bindLayout((ListPreference) findPreference("layout"));
         bindButton("sysui_nav_bar_left", "space", "left");
         bindButton("sysui_nav_bar_right", "menu_ime", "right");

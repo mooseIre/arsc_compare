@@ -4,9 +4,9 @@ import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.view.View;
-import com.android.systemui.C0009R$dimen;
-import com.android.systemui.C0010R$drawable;
-import com.android.systemui.C0012R$id;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0015R$id;
 
 public final class PhoneStatusBarTransitions extends BarTransitions {
     private View mBattery;
@@ -20,11 +20,11 @@ public final class PhoneStatusBarTransitions extends BarTransitions {
     }
 
     public PhoneStatusBarTransitions(PhoneStatusBarView phoneStatusBarView, View view) {
-        super(view, C0010R$drawable.status_background);
-        this.mIconAlphaWhenOpaque = phoneStatusBarView.getContext().getResources().getFraction(C0009R$dimen.status_bar_icon_drawing_alpha, 1, 1);
-        this.mLeftSide = phoneStatusBarView.findViewById(C0012R$id.status_bar_left_side);
-        this.mStatusIcons = phoneStatusBarView.findViewById(C0012R$id.statusIcons);
-        this.mBattery = phoneStatusBarView.findViewById(C0012R$id.battery);
+        super(view, C0013R$drawable.status_background);
+        this.mIconAlphaWhenOpaque = phoneStatusBarView.getContext().getResources().getFraction(C0012R$dimen.status_bar_icon_drawing_alpha, 1, 1);
+        this.mLeftSide = phoneStatusBarView.findViewById(C0015R$id.status_bar_left_side);
+        this.mStatusIcons = phoneStatusBarView.findViewById(C0015R$id.statusIcons);
+        this.mBattery = phoneStatusBarView.findViewById(C0015R$id.battery);
         applyModeBackground(-1, getMode(), false);
         applyMode(getMode(), false);
     }

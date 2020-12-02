@@ -15,7 +15,7 @@ import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.FrameLayout;
 import com.android.internal.R;
 import com.android.internal.annotations.VisibleForTesting;
-import com.android.systemui.C0010R$drawable;
+import com.android.systemui.C0013R$drawable;
 import com.android.systemui.Dependency;
 import com.android.systemui.Interpolators;
 
@@ -143,7 +143,7 @@ public class NotificationGuts extends FrameLayout {
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        Drawable drawable = this.mContext.getDrawable(C0010R$drawable.notification_guts_bg);
+        Drawable drawable = this.mContext.getDrawable(C0013R$drawable.notification_guts_bg);
         this.mBackground = drawable;
         if (drawable != null) {
             drawable.setCallback(this);

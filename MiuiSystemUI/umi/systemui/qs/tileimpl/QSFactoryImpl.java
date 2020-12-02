@@ -3,7 +3,7 @@ package com.android.systemui.qs.tileimpl;
 import android.os.Build;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
-import com.android.systemui.C0019R$style;
+import com.android.systemui.C0022R$style;
 import com.android.systemui.plugins.qs.QSFactory;
 import com.android.systemui.plugins.qs.QSIconView;
 import com.android.systemui.plugins.qs.QSTile;
@@ -264,7 +264,7 @@ public class QSFactoryImpl implements QSFactory {
     }
 
     public QSTileView createTileView(QSTile qSTile, boolean z) {
-        ContextThemeWrapper contextThemeWrapper = new ContextThemeWrapper(this.mQsHostLazy.get().getContext(), C0019R$style.qs_theme);
+        ContextThemeWrapper contextThemeWrapper = new ContextThemeWrapper(this.mQsHostLazy.get().getContext(), C0022R$style.qs_theme);
         QSIconView createTileView = qSTile.createTileView(contextThemeWrapper);
         if (z) {
             return new MiuiQSTileBaseView(contextThemeWrapper, createTileView, z);

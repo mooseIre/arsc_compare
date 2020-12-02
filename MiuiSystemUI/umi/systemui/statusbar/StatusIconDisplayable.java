@@ -13,9 +13,6 @@ public interface StatusIconDisplayable extends DarkIconDispatcher.DarkReceiver {
 
     boolean isIconVisible();
 
-    void setLight(boolean z, int i) {
-    }
-
     void setVisibleState(int i, boolean z);
 
     void setVisibleState(int i) {

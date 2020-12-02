@@ -7,7 +7,7 @@ import android.service.controls.templates.ControlTemplate;
 import android.service.controls.templates.TemperatureControlTemplate;
 import android.service.controls.templates.ToggleTemplate;
 import android.util.Log;
-import com.android.systemui.C0012R$id;
+import com.android.systemui.C0015R$id;
 import kotlin.TypeCastException;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
@@ -74,7 +74,7 @@ public final class ToggleBehavior implements Behavior {
                     if (controlViewHolder2 != null) {
                         Drawable background = controlViewHolder2.getLayout().getBackground();
                         if (background != null) {
-                            Drawable findDrawableByLayerId = ((LayerDrawable) background).findDrawableByLayerId(C0012R$id.clip_layer);
+                            Drawable findDrawableByLayerId = ((LayerDrawable) background).findDrawableByLayerId(C0015R$id.clip_layer);
                             Intrinsics.checkExpressionValueIsNotNull(findDrawableByLayerId, "ld.findDrawableByLayerId(R.id.clip_layer)");
                             this.clipLayer = findDrawableByLayerId;
                             if (findDrawableByLayerId != null) {

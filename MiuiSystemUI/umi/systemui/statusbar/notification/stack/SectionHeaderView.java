@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.android.systemui.C0012R$id;
+import com.android.systemui.C0015R$id;
 import com.android.systemui.statusbar.notification.row.StackScrollerDecorView;
 
 public class SectionHeaderView extends StackScrollerDecorView {
@@ -38,15 +38,15 @@ public class SectionHeaderView extends StackScrollerDecorView {
 
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
-        this.mContents = (ViewGroup) requireViewById(C0012R$id.content);
+        this.mContents = (ViewGroup) requireViewById(C0015R$id.content);
         bindContents();
         super.onFinishInflate();
         setVisible(true, false);
     }
 
     private void bindContents() {
-        this.mLabelView = (TextView) requireViewById(C0012R$id.header_label);
-        ImageView imageView = (ImageView) requireViewById(C0012R$id.btn_clear_all);
+        this.mLabelView = (TextView) requireViewById(C0015R$id.header_label);
+        ImageView imageView = (ImageView) requireViewById(C0015R$id.btn_clear_all);
         this.mClearAllButton = imageView;
         View.OnClickListener onClickListener = this.mOnClearClickListener;
         if (onClickListener != null) {

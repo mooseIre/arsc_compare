@@ -9,8 +9,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.lifecycle.Lifecycle;
 import androidx.recyclerview.widget.RecyclerView;
-import com.android.systemui.C0012R$id;
-import com.android.systemui.C0014R$layout;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0017R$layout;
 import com.android.systemui.controls.ControlsServiceInfo;
 import java.util.List;
 import java.util.concurrent.Executor;
@@ -52,7 +52,7 @@ public final class AppAdapter extends RecyclerView.Adapter<Holder> {
     @NotNull
     public Holder onCreateViewHolder(@NotNull ViewGroup viewGroup, int i) {
         Intrinsics.checkParameterIsNotNull(viewGroup, "parent");
-        View inflate = this.layoutInflater.inflate(C0014R$layout.controls_app_item, viewGroup, false);
+        View inflate = this.layoutInflater.inflate(C0017R$layout.controls_app_item, viewGroup, false);
         Intrinsics.checkExpressionValueIsNotNull(inflate, "layoutInflater.inflate(R…_app_item, parent, false)");
         return new Holder(inflate, this.favoritesRenderer);
     }
@@ -87,7 +87,7 @@ public final class AppAdapter extends RecyclerView.Adapter<Holder> {
             View requireViewById2 = this.itemView.requireViewById(16908310);
             Intrinsics.checkExpressionValueIsNotNull(requireViewById2, "itemView.requireViewById…roid.internal.R.id.title)");
             this.title = (TextView) requireViewById2;
-            View requireViewById3 = this.itemView.requireViewById(C0012R$id.favorites);
+            View requireViewById3 = this.itemView.requireViewById(C0015R$id.favorites);
             Intrinsics.checkExpressionValueIsNotNull(requireViewById3, "itemView.requireViewById(R.id.favorites)");
             this.favorites = (TextView) requireViewById3;
         }

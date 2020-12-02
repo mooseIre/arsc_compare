@@ -18,9 +18,9 @@ import android.view.ViewPropertyAnimator;
 import android.view.accessibility.AccessibilityManager;
 import android.view.animation.Interpolator;
 import android.view.animation.PathInterpolator;
-import com.android.systemui.C0008R$color;
-import com.android.systemui.C0010R$drawable;
-import com.android.systemui.C0012R$id;
+import com.android.systemui.C0011R$color;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0015R$id;
 import com.android.systemui.Gefingerpoken;
 import com.android.systemui.Interpolators;
 import com.android.systemui.statusbar.notification.FakeShadowView;
@@ -144,10 +144,10 @@ public abstract class ActivatableNotificationView extends ExpandableOutlineView 
     }
 
     private void updateColors() {
-        this.mNormalColor = this.mContext.getColor(C0008R$color.notification_material_background_color);
-        this.mTintedRippleColor = this.mContext.getColor(C0008R$color.notification_ripple_tinted_color);
-        this.mNormalRippleColor = this.mContext.getColor(C0008R$color.notification_ripple_untinted_color);
-        this.mDimmedAlpha = Color.alpha(this.mContext.getColor(C0008R$color.notification_material_background_dimmed_color));
+        this.mNormalColor = this.mContext.getColor(C0011R$color.notification_material_background_color);
+        this.mTintedRippleColor = this.mContext.getColor(C0011R$color.notification_ripple_tinted_color);
+        this.mNormalRippleColor = this.mContext.getColor(C0011R$color.notification_ripple_untinted_color);
+        this.mDimmedAlpha = Color.alpha(this.mContext.getColor(C0011R$color.notification_material_background_dimmed_color));
     }
 
     private void initDimens() {
@@ -169,11 +169,11 @@ public abstract class ActivatableNotificationView extends ExpandableOutlineView 
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mBackgroundNormal = (NotificationBackgroundView) findViewById(C0012R$id.backgroundNormal);
-        FakeShadowView fakeShadowView = (FakeShadowView) findViewById(C0012R$id.fake_shadow);
+        this.mBackgroundNormal = (NotificationBackgroundView) findViewById(C0015R$id.backgroundNormal);
+        FakeShadowView fakeShadowView = (FakeShadowView) findViewById(C0015R$id.fake_shadow);
         this.mFakeShadow = fakeShadowView;
         this.mShadowHidden = fakeShadowView.getVisibility() != 0;
-        this.mBackgroundDimmed = (NotificationBackgroundView) findViewById(C0012R$id.backgroundDimmed);
+        this.mBackgroundDimmed = (NotificationBackgroundView) findViewById(C0015R$id.backgroundDimmed);
         initBackground();
         updateBackground();
         updateBackgroundTint();
@@ -182,8 +182,8 @@ public abstract class ActivatableNotificationView extends ExpandableOutlineView 
 
     /* access modifiers changed from: protected */
     public void initBackground() {
-        this.mBackgroundNormal.setCustomBackground(C0010R$drawable.notification_material_bg);
-        this.mBackgroundDimmed.setCustomBackground(C0010R$drawable.notification_material_bg_dim);
+        this.mBackgroundNormal.setCustomBackground(C0013R$drawable.notification_material_bg);
+        this.mBackgroundDimmed.setCustomBackground(C0013R$drawable.notification_material_bg_dim);
     }
 
     public boolean onInterceptTouchEvent(MotionEvent motionEvent) {

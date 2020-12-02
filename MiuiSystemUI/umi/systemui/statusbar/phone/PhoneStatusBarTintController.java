@@ -6,7 +6,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.CompositionSamplingListener;
 import android.view.View;
-import com.android.systemui.C0009R$dimen;
+import com.android.systemui.C0012R$dimen;
 import com.android.systemui.Dependency;
 import com.miui.systemui.statusbar.phone.SmartDarkObserver;
 
@@ -42,8 +42,8 @@ public class PhoneStatusBarTintController implements View.OnAttachStateChangeLis
         this.mPhoneStatusBarView.getBoundsOnScreen(this.mSamplingBounds);
         this.mLightBarController = miuiLightBarController;
         Resources resources = this.mPhoneStatusBarView.getResources();
-        this.mLuminanceThreshold = resources.getFloat(C0009R$dimen.phone_status_bar_luminance_threshold);
-        this.mLuminanceChangeThreshold = resources.getFloat(C0009R$dimen.phone_status_bar_luminance_change_threshold);
+        this.mLuminanceThreshold = resources.getFloat(C0012R$dimen.phone_status_bar_luminance_threshold);
+        this.mLuminanceChangeThreshold = resources.getFloat(C0012R$dimen.phone_status_bar_luminance_change_threshold);
         SmartDarkObserver smartDarkObserver = (SmartDarkObserver) Dependency.get(SmartDarkObserver.class);
         smartDarkObserver.addCallback(this);
         boolean isSmartDarkEnable = smartDarkObserver.isSmartDarkEnable();
@@ -99,6 +99,7 @@ public class PhoneStatusBarTintController implements View.OnAttachStateChangeLis
                 return;
             }
             this.mSamplingListenerRegistered = true;
+            this.mCurrentMedianLuma = -1.0f;
             CompositionSamplingListener.register(this.mSamplingListener, 0, this.mPhoneStatusBarView.getViewRootImpl().getSurfaceControl(), this.mSamplingBounds);
         }
     }

@@ -2,6 +2,7 @@ package com.android.systemui.qs;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
 import android.view.View;
 import android.view.ViewAnimationUtils;
@@ -11,20 +12,22 @@ public class QSDetailClipper {
     /* access modifiers changed from: private */
     public Animator mAnimator;
     /* access modifiers changed from: private */
-    public final TransitionDrawable mBackground;
+    public final Drawable mBackground;
     /* access modifiers changed from: private */
     public final View mDetail;
     private final AnimatorListenerAdapter mGoneOnEnd = new AnimatorListenerAdapter() {
         public void onAnimationEnd(Animator animator) {
             QSDetailClipper.this.mDetail.setVisibility(8);
-            QSDetailClipper.this.mBackground.resetTransition();
+            if (QSDetailClipper.this.mBackground instanceof TransitionDrawable) {
+                ((TransitionDrawable) QSDetailClipper.this.mBackground).resetTransition();
+            }
             Animator unused = QSDetailClipper.this.mAnimator = null;
         }
     };
     private final Runnable mReverseBackground = new Runnable() {
         public void run() {
-            if (QSDetailClipper.this.mAnimator != null) {
-                QSDetailClipper.this.mBackground.reverseTransition((int) (((double) QSDetailClipper.this.mAnimator.getDuration()) * 0.35d));
+            if (QSDetailClipper.this.mAnimator != null && (QSDetailClipper.this.mBackground instanceof TransitionDrawable)) {
+                ((TransitionDrawable) QSDetailClipper.this.mBackground).reverseTransition((int) (((double) QSDetailClipper.this.mAnimator.getDuration()) * 0.35d));
             }
         }
     };
@@ -40,7 +43,7 @@ public class QSDetailClipper {
 
     public QSDetailClipper(View view) {
         this.mDetail = view;
-        this.mBackground = (TransitionDrawable) view.getBackground();
+        this.mBackground = view.getBackground();
     }
 
     public void animateCircularClip(int i, int i2, boolean z, Animator.AnimatorListener animatorListener) {
@@ -70,7 +73,10 @@ public class QSDetailClipper {
             this.mAnimator.addListener(animatorListener);
         }
         if (z) {
-            this.mBackground.startTransition((int) (((double) this.mAnimator.getDuration()) * 0.6d));
+            Drawable drawable = this.mBackground;
+            if (drawable instanceof TransitionDrawable) {
+                ((TransitionDrawable) drawable).startTransition((int) (((double) this.mAnimator.getDuration()) * 0.6d));
+            }
             this.mAnimator.addListener(this.mVisibleOnStart);
         } else {
             this.mDetail.postDelayed(this.mReverseBackground, (long) (((double) this.mAnimator.getDuration()) * 0.65d));
@@ -80,7 +86,10 @@ public class QSDetailClipper {
     }
 
     public void showBackground() {
-        this.mBackground.showSecondLayer();
+        Drawable drawable = this.mBackground;
+        if (drawable instanceof TransitionDrawable) {
+            ((TransitionDrawable) drawable).showSecondLayer();
+        }
     }
 
     public void cancelAnimator() {

@@ -11,12 +11,12 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
 import androidx.core.view.accessibility.AccessibilityViewCommand;
 import com.android.keyguard.AlphaOptimizedImageButton;
-import com.android.systemui.C0006R$attr;
-import com.android.systemui.C0010R$drawable;
-import com.android.systemui.C0018R$string;
+import com.android.systemui.C0009R$attr;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0021R$string;
 
 public class CaptionsToggleImageButton extends AlphaOptimizedImageButton {
-    private static final int[] OPTED_OUT_STATE = {C0006R$attr.optedOut};
+    private static final int[] OPTED_OUT_STATE = {C0009R$attr.optedOut};
     private boolean mCaptionsEnabled = false;
     private ConfirmedTapListener mConfirmedTapListener;
     private GestureDetector mGestureDetector;
@@ -33,7 +33,7 @@ public class CaptionsToggleImageButton extends AlphaOptimizedImageButton {
 
     public CaptionsToggleImageButton(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-        setContentDescription(getContext().getString(C0018R$string.volume_odi_captions_content_description));
+        setContentDescription(getContext().getString(C0021R$string.volume_odi_captions_content_description));
     }
 
     public boolean onTouchEvent(MotionEvent motionEvent) {
@@ -59,9 +59,9 @@ public class CaptionsToggleImageButton extends AlphaOptimizedImageButton {
         this.mCaptionsEnabled = z;
         AccessibilityNodeInfoCompat.AccessibilityActionCompat accessibilityActionCompat = AccessibilityNodeInfoCompat.AccessibilityActionCompat.ACTION_CLICK;
         if (z) {
-            str = getContext().getString(C0018R$string.volume_odi_captions_hint_disable);
+            str = getContext().getString(C0021R$string.volume_odi_captions_hint_disable);
         } else {
-            str = getContext().getString(C0018R$string.volume_odi_captions_hint_enable);
+            str = getContext().getString(C0021R$string.volume_odi_captions_hint_enable);
         }
         ViewCompat.replaceAccessibilityAction(this, accessibilityActionCompat, str, new AccessibilityViewCommand() {
             public final boolean perform(View view, AccessibilityViewCommand.CommandArguments commandArguments) {
@@ -69,9 +69,9 @@ public class CaptionsToggleImageButton extends AlphaOptimizedImageButton {
             }
         });
         if (this.mCaptionsEnabled) {
-            i = C0010R$drawable.ic_volume_odi_captions;
+            i = C0013R$drawable.ic_volume_odi_captions;
         } else {
-            i = C0010R$drawable.ic_volume_odi_captions_disabled;
+            i = C0013R$drawable.ic_volume_odi_captions_disabled;
         }
         return setImageResourceAsync(i);
     }

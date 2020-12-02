@@ -10,7 +10,7 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.view.animation.PathInterpolator;
 import com.android.internal.annotations.VisibleForTesting;
-import com.android.systemui.C0012R$id;
+import com.android.systemui.C0015R$id;
 import com.android.systemui.CornerHandleView;
 import com.android.systemui.statusbar.phone.NavigationBarTransitions;
 
@@ -26,8 +26,8 @@ public class AssistHandleViewController implements NavigationBarTransitions.Dark
 
     public AssistHandleViewController(Handler handler, View view) {
         this.mHandler = handler;
-        this.mAssistHintLeft = (CornerHandleView) view.findViewById(C0012R$id.assist_hint_left);
-        this.mAssistHintRight = (CornerHandleView) view.findViewById(C0012R$id.assist_hint_right);
+        this.mAssistHintLeft = (CornerHandleView) view.findViewById(C0015R$id.assist_hint_left);
+        this.mAssistHintRight = (CornerHandleView) view.findViewById(C0015R$id.assist_hint_right);
     }
 
     public void onDarkIntensity(float f) {

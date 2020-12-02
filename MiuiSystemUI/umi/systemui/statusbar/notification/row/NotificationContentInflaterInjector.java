@@ -12,10 +12,10 @@ import android.os.SystemClock;
 import android.text.TextUtils;
 import android.widget.RemoteViews;
 import com.android.internal.util.ContrastColorUtil;
-import com.android.systemui.C0008R$color;
-import com.android.systemui.C0012R$id;
-import com.android.systemui.C0014R$layout;
-import com.android.systemui.C0018R$string;
+import com.android.systemui.C0011R$color;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0017R$layout;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.Dependency;
 import com.android.systemui.statusbar.notification.ExpandedNotification;
 import com.android.systemui.statusbar.notification.MiuiNotificationCompat;
@@ -166,16 +166,16 @@ public class NotificationContentInflaterInjector {
         Notification buildUnstyled = builder.buildUnstyled();
         RemoteViews buildBaseContent = buildBaseContent(buildUnstyled, context);
         resetStandardTemplate(buildBaseContent);
-        buildBaseContent.setTextViewText(C0012R$id.title, builder.loadHeaderAppName());
-        buildBaseContent.setViewVisibility(C0012R$id.title, 0);
-        buildBaseContent.setTextViewText(C0012R$id.text, context.getString(C0018R$string.notification_hidden_text));
-        buildBaseContent.setViewVisibility(C0012R$id.text, 0);
+        buildBaseContent.setTextViewText(C0015R$id.title, builder.loadHeaderAppName());
+        buildBaseContent.setViewVisibility(C0015R$id.title, 0);
+        buildBaseContent.setTextViewText(C0015R$id.text, context.getString(C0021R$string.notification_hidden_text));
+        buildBaseContent.setViewVisibility(C0015R$id.text, 0);
         handleChronometerAndTime(buildBaseContent, buildUnstyled);
         return buildBaseContent;
     }
 
     private static RemoteViews buildBaseContent(Notification notification, Context context) {
-        BuilderRemoteViews builderRemoteViews = new BuilderRemoteViews(context.getApplicationInfo(), C0014R$layout.miui_notification_template_material_base);
+        BuilderRemoteViews builderRemoteViews = new BuilderRemoteViews(context.getApplicationInfo(), C0017R$layout.miui_notification_template_material_base);
         resetStandardTemplate(builderRemoteViews);
         boolean handleMiuiAction = handleMiuiAction(builderRemoteViews, notification);
         if (!handleMiuiAction) {
@@ -191,7 +191,7 @@ public class NotificationContentInflaterInjector {
     }
 
     private static RemoteViews buildBigBaseContent(Notification notification, boolean z, boolean z2, Context context) {
-        BuilderRemoteViews builderRemoteViews = new BuilderRemoteViews(context.getApplicationInfo(), C0014R$layout.miui_notification_template_material_big_base);
+        BuilderRemoteViews builderRemoteViews = new BuilderRemoteViews(context.getApplicationInfo(), C0017R$layout.miui_notification_template_material_big_base);
         resetStandardTemplateWithActions(builderRemoteViews);
         handleLargeIcon(builderRemoteViews, notification);
         boolean handleProgressBar = handleProgressBar(builderRemoteViews, notification);
@@ -205,7 +205,7 @@ public class NotificationContentInflaterInjector {
     }
 
     private static RemoteViews buildBigPictureContent(Notification notification, Bitmap bitmap, Context context) {
-        BuilderRemoteViews builderRemoteViews = new BuilderRemoteViews(context.getApplicationInfo(), C0014R$layout.miui_notification_template_material_big_picture);
+        BuilderRemoteViews builderRemoteViews = new BuilderRemoteViews(context.getApplicationInfo(), C0017R$layout.miui_notification_template_material_big_picture);
         resetStandardTemplateWithActions(builderRemoteViews);
         boolean handleProgressBar = handleProgressBar(builderRemoteViews, notification);
         if (!handleProgressBar) {
@@ -214,16 +214,16 @@ public class NotificationContentInflaterInjector {
         handleBigContentTitle(builderRemoteViews, notification, handleProgressBar, context);
         handleText(builderRemoteViews, notification, handleProgressBar, context);
         if (notification.extras.containsKey("android.summaryText")) {
-            builderRemoteViews.setTextViewText(C0012R$id.text, processTextSpans(notification.extras.getCharSequence("android.summaryText"), context));
-            builderRemoteViews.setViewVisibility(C0012R$id.text, 0);
+            builderRemoteViews.setTextViewText(C0015R$id.text, processTextSpans(notification.extras.getCharSequence("android.summaryText"), context));
+            builderRemoteViews.setViewVisibility(C0015R$id.text, 0);
         }
-        builderRemoteViews.setImageViewBitmap(C0012R$id.big_picture, bitmap);
+        builderRemoteViews.setImageViewBitmap(C0015R$id.big_picture, bitmap);
         handleActions(builderRemoteViews, notification, context);
         return builderRemoteViews;
     }
 
     private static RemoteViews buildBigTextContent(Notification notification, boolean z, Context context) {
-        BuilderRemoteViews builderRemoteViews = new BuilderRemoteViews(context.getApplicationInfo(), C0014R$layout.miui_notification_template_material_big_text);
+        BuilderRemoteViews builderRemoteViews = new BuilderRemoteViews(context.getApplicationInfo(), C0017R$layout.miui_notification_template_material_big_text);
         resetStandardTemplateWithActions(builderRemoteViews);
         handleLargeIcon(builderRemoteViews, notification);
         boolean handleProgressBar = handleProgressBar(builderRemoteViews, notification);
@@ -238,7 +238,7 @@ public class NotificationContentInflaterInjector {
     }
 
     private static RemoteViews buildInboxContent(Notification notification, ArrayList<CharSequence> arrayList, Context context) {
-        BuilderRemoteViews builderRemoteViews = new BuilderRemoteViews(context.getApplicationInfo(), C0014R$layout.miui_notification_template_material_inbox);
+        BuilderRemoteViews builderRemoteViews = new BuilderRemoteViews(context.getApplicationInfo(), C0017R$layout.miui_notification_template_material_inbox);
         resetStandardTemplateWithActions(builderRemoteViews);
         boolean handleProgressBar = handleProgressBar(builderRemoteViews, notification);
         if (!handleProgressBar) {
@@ -251,62 +251,62 @@ public class NotificationContentInflaterInjector {
     }
 
     private static RemoteViews buildOneLineContent(Notification notification, boolean z, Context context) {
-        BuilderRemoteViews builderRemoteViews = new BuilderRemoteViews(context.getApplicationInfo(), C0014R$layout.miui_notification_template_material_one_line);
+        BuilderRemoteViews builderRemoteViews = new BuilderRemoteViews(context.getApplicationInfo(), C0017R$layout.miui_notification_template_material_one_line);
         resetStandardTemplate(builderRemoteViews);
         boolean gameModeEnabled = ((SettingsManager) Dependency.get(SettingsManager.class)).getGameModeEnabled();
         boolean handleMiuiAction = handleMiuiAction(builderRemoteViews, notification);
         if (z) {
-            builderRemoteViews.setTextColor(C0012R$id.miui_action, context.getColor(gameModeEnabled ? C0008R$color.optimized_game_heads_up_notification_action_text : C0008R$color.optimized_heads_up_notification_action_text));
+            builderRemoteViews.setTextColor(C0015R$id.miui_action, context.getColor(gameModeEnabled ? C0011R$color.optimized_game_heads_up_notification_action_text : C0011R$color.optimized_heads_up_notification_action_text));
         }
         CharSequence charSequence = notification.extras.getCharSequence("android.title");
         if (charSequence != null) {
-            builderRemoteViews.setViewVisibility(C0012R$id.title, 0);
-            builderRemoteViews.setTextViewText(C0012R$id.title, processTextSpans(charSequence, context));
+            builderRemoteViews.setViewVisibility(C0015R$id.title, 0);
+            builderRemoteViews.setTextViewText(C0015R$id.title, processTextSpans(charSequence, context));
             if (z) {
-                builderRemoteViews.setTextColor(C0012R$id.title, context.getColor(gameModeEnabled ? C0008R$color.optimized_game_heads_up_notification_text : C0008R$color.optimized_heads_up_notification_text));
+                builderRemoteViews.setTextColor(C0015R$id.title, context.getColor(gameModeEnabled ? C0011R$color.optimized_game_heads_up_notification_text : C0011R$color.optimized_heads_up_notification_text));
             }
         }
         CharSequence charSequence2 = notification.extras.getCharSequence("android.text");
         if (!handleMiuiAction && charSequence2 != null) {
-            builderRemoteViews.setTextViewText(C0012R$id.text, processTextSpans(charSequence2, context));
-            builderRemoteViews.setViewVisibility(C0012R$id.text, 0);
+            builderRemoteViews.setTextViewText(C0015R$id.text, processTextSpans(charSequence2, context));
+            builderRemoteViews.setViewVisibility(C0015R$id.text, 0);
             if (z) {
-                builderRemoteViews.setTextColor(C0012R$id.text, context.getColor(gameModeEnabled ? C0008R$color.optimized_game_heads_up_notification_text : C0008R$color.optimized_heads_up_notification_text));
+                builderRemoteViews.setTextColor(C0015R$id.text, context.getColor(gameModeEnabled ? C0011R$color.optimized_game_heads_up_notification_text : C0011R$color.optimized_heads_up_notification_text));
             }
         }
         return builderRemoteViews;
     }
 
     private static void resetStandardTemplate(RemoteViews remoteViews) {
-        remoteViews.setImageViewBitmap(C0012R$id.app_icon, (Bitmap) null);
-        remoteViews.setViewVisibility(C0012R$id.time_line_1, 8);
-        remoteViews.setViewVisibility(C0012R$id.chronometer, 8);
-        remoteViews.setViewVisibility(C0012R$id.time, 8);
-        remoteViews.setViewVisibility(C0012R$id.right_icon, 8);
-        remoteViews.setViewVisibility(C0012R$id.title, 8);
-        remoteViews.setTextViewText(C0012R$id.title, (CharSequence) null);
-        remoteViews.setViewVisibility(C0012R$id.text, 8);
-        remoteViews.setTextViewText(C0012R$id.text, (CharSequence) null);
-        remoteViews.setViewVisibility(C0012R$id.text_line_1, 8);
-        remoteViews.setTextViewText(C0012R$id.text_line_1, (CharSequence) null);
-        remoteViews.setViewVisibility(C0012R$id.miui_action, 8);
-        remoteViews.setTextViewText(C0012R$id.miui_action, (CharSequence) null);
+        remoteViews.setImageViewBitmap(C0015R$id.app_icon, (Bitmap) null);
+        remoteViews.setViewVisibility(C0015R$id.time_line_1, 8);
+        remoteViews.setViewVisibility(C0015R$id.chronometer, 8);
+        remoteViews.setViewVisibility(C0015R$id.time, 8);
+        remoteViews.setViewVisibility(C0015R$id.right_icon, 8);
+        remoteViews.setViewVisibility(C0015R$id.title, 8);
+        remoteViews.setTextViewText(C0015R$id.title, (CharSequence) null);
+        remoteViews.setViewVisibility(C0015R$id.text, 8);
+        remoteViews.setTextViewText(C0015R$id.text, (CharSequence) null);
+        remoteViews.setViewVisibility(C0015R$id.text_line_1, 8);
+        remoteViews.setTextViewText(C0015R$id.text_line_1, (CharSequence) null);
+        remoteViews.setViewVisibility(C0015R$id.miui_action, 8);
+        remoteViews.setTextViewText(C0015R$id.miui_action, (CharSequence) null);
     }
 
     private static void resetStandardTemplateWithActions(RemoteViews remoteViews) {
-        remoteViews.setImageViewBitmap(C0012R$id.app_icon, (Bitmap) null);
-        remoteViews.setViewVisibility(C0012R$id.time_line_1, 8);
-        remoteViews.setViewVisibility(C0012R$id.chronometer, 8);
-        remoteViews.setViewVisibility(C0012R$id.time, 8);
-        remoteViews.setViewVisibility(C0012R$id.right_icon, 8);
-        remoteViews.setViewVisibility(C0012R$id.title, 8);
-        remoteViews.setTextViewText(C0012R$id.title, (CharSequence) null);
-        remoteViews.setViewVisibility(C0012R$id.text, 8);
-        remoteViews.setTextViewText(C0012R$id.text, (CharSequence) null);
-        remoteViews.setViewVisibility(C0012R$id.text_line_1, 8);
-        remoteViews.setTextViewText(C0012R$id.text_line_1, (CharSequence) null);
-        remoteViews.setViewVisibility(C0012R$id.actions, 8);
-        remoteViews.removeAllViews(C0012R$id.actions);
+        remoteViews.setImageViewBitmap(C0015R$id.app_icon, (Bitmap) null);
+        remoteViews.setViewVisibility(C0015R$id.time_line_1, 8);
+        remoteViews.setViewVisibility(C0015R$id.chronometer, 8);
+        remoteViews.setViewVisibility(C0015R$id.time, 8);
+        remoteViews.setViewVisibility(C0015R$id.right_icon, 8);
+        remoteViews.setViewVisibility(C0015R$id.title, 8);
+        remoteViews.setTextViewText(C0015R$id.title, (CharSequence) null);
+        remoteViews.setViewVisibility(C0015R$id.text, 8);
+        remoteViews.setTextViewText(C0015R$id.text, (CharSequence) null);
+        remoteViews.setViewVisibility(C0015R$id.text_line_1, 8);
+        remoteViews.setTextViewText(C0015R$id.text_line_1, (CharSequence) null);
+        remoteViews.setViewVisibility(C0015R$id.actions, 8);
+        remoteViews.removeAllViews(C0015R$id.actions);
     }
 
     private static boolean handleLargeIcon(RemoteViews remoteViews, Notification notification) {
@@ -317,8 +317,8 @@ public class NotificationContentInflaterInjector {
         }
         boolean z = largeIcon != null;
         if (z) {
-            remoteViews.setViewVisibility(C0012R$id.right_icon, 0);
-            remoteViews.setImageViewIcon(C0012R$id.right_icon, largeIcon);
+            remoteViews.setViewVisibility(C0015R$id.right_icon, 0);
+            remoteViews.setImageViewIcon(C0015R$id.right_icon, largeIcon);
         }
         return z;
     }
@@ -329,12 +329,12 @@ public class NotificationContentInflaterInjector {
         boolean z = notification.extras.getBoolean("android.progressIndeterminate");
         boolean z2 = i != 0 || z;
         if (z2) {
-            remoteViews.setViewVisibility(C0012R$id.progress, 0);
-            remoteViews.setProgressBar(C0012R$id.progress, i, i2, z);
-            remoteViews.setProgressTintList(C0012R$id.progress, (ColorStateList) null);
-            remoteViews.setProgressIndeterminateTintList(C0012R$id.progress, (ColorStateList) null);
+            remoteViews.setViewVisibility(C0015R$id.progress, 0);
+            remoteViews.setProgressBar(C0015R$id.progress, i, i2, z);
+            remoteViews.setProgressTintList(C0015R$id.progress, (ColorStateList) null);
+            remoteViews.setProgressIndeterminateTintList(C0015R$id.progress, (ColorStateList) null);
         } else {
-            remoteViews.setViewVisibility(C0012R$id.progress, 8);
+            remoteViews.setViewVisibility(C0015R$id.progress, 8);
         }
         return z2;
     }
@@ -351,24 +351,24 @@ public class NotificationContentInflaterInjector {
         }
         handleTitle(remoteViews, charSequence, z, context);
         if (charSequence2 == null || !charSequence2.equals("")) {
-            remoteViews.setViewVisibility(C0012R$id.line1, 0);
+            remoteViews.setViewVisibility(C0015R$id.line1, 0);
         } else {
-            remoteViews.setViewVisibility(C0012R$id.line1, 8);
+            remoteViews.setViewVisibility(C0015R$id.line1, 8);
         }
     }
 
     private static void handleTitle(RemoteViews remoteViews, CharSequence charSequence, boolean z, Context context) {
         if (charSequence != null) {
-            remoteViews.setViewVisibility(C0012R$id.title, 0);
-            remoteViews.setTextViewText(C0012R$id.title, processTextSpans(charSequence, context));
-            remoteViews.setViewLayoutWidth(C0012R$id.title, z ? -2 : -1);
+            remoteViews.setViewVisibility(C0015R$id.title, 0);
+            remoteViews.setTextViewText(C0015R$id.title, processTextSpans(charSequence, context));
+            remoteViews.setViewLayoutWidth(C0015R$id.title, z ? -2 : -1);
         }
     }
 
     private static void handleText(RemoteViews remoteViews, Notification notification, boolean z, Context context) {
         CharSequence charSequence = notification.extras.getCharSequence("android.text");
         if (charSequence != null) {
-            int i = z ? C0012R$id.text_line_1 : C0012R$id.text;
+            int i = z ? C0015R$id.text_line_1 : C0015R$id.text;
             remoteViews.setTextViewText(i, processTextSpans(charSequence, context));
             remoteViews.setViewVisibility(i, 0);
         }
@@ -379,14 +379,14 @@ public class NotificationContentInflaterInjector {
         if (TextUtils.isEmpty(charSequence)) {
             charSequence = notification.extras.getCharSequence("android.text");
         }
-        remoteViews.setTextViewText(C0012R$id.big_text, processTextSpans(charSequence, context));
-        remoteViews.setViewVisibility(C0012R$id.big_text, 0);
+        remoteViews.setTextViewText(C0015R$id.big_text, processTextSpans(charSequence, context));
+        remoteViews.setViewVisibility(C0015R$id.big_text, 0);
     }
 
     private static void handleInboxText(RemoteViews remoteViews, Notification notification, ArrayList<CharSequence> arrayList, Context context) {
         int i;
         int i2 = 7;
-        int[] iArr = {C0012R$id.inbox_text0, C0012R$id.inbox_text1, C0012R$id.inbox_text2, C0012R$id.inbox_text3, C0012R$id.inbox_text4, C0012R$id.inbox_text5, C0012R$id.inbox_text6};
+        int[] iArr = {C0015R$id.inbox_text0, C0015R$id.inbox_text1, C0015R$id.inbox_text2, C0015R$id.inbox_text3, C0015R$id.inbox_text4, C0015R$id.inbox_text5, C0015R$id.inbox_text6};
         for (int i3 = 0; i3 < 7; i3++) {
             remoteViews.setViewVisibility(iArr[i3], 8);
         }
@@ -410,9 +410,9 @@ public class NotificationContentInflaterInjector {
     private static boolean handleMiuiAction(RemoteViews remoteViews, Notification notification) {
         boolean isShowMiuiAction = MiuiNotificationCompat.isShowMiuiAction(notification);
         if (isShowMiuiAction) {
-            remoteViews.setViewVisibility(C0012R$id.miui_action, 0);
-            remoteViews.setTextViewText(C0012R$id.miui_action, MiuiNotificationCompat.getMiuiActionTitle(notification));
-            remoteViews.setOnClickPendingIntent(C0012R$id.miui_action, notification.actions[0].actionIntent);
+            remoteViews.setViewVisibility(C0015R$id.miui_action, 0);
+            remoteViews.setTextViewText(C0015R$id.miui_action, MiuiNotificationCompat.getMiuiActionTitle(notification));
+            remoteViews.setOnClickPendingIntent(C0015R$id.miui_action, notification.actions[0].actionIntent);
         }
         return isShowMiuiAction;
     }
@@ -420,18 +420,18 @@ public class NotificationContentInflaterInjector {
     private static boolean handleChronometerAndTime(RemoteViews remoteViews, Notification notification) {
         boolean z = notification.showsTime() || notification.showsChronometer();
         if (z) {
-            remoteViews.setViewVisibility(C0012R$id.time_line_1, 0);
+            remoteViews.setViewVisibility(C0015R$id.time_line_1, 0);
             if (notification.extras.getBoolean("android.showChronometer")) {
-                remoteViews.setViewVisibility(C0012R$id.chronometer, 0);
-                remoteViews.setLong(C0012R$id.chronometer, "setBase", notification.when + (SystemClock.elapsedRealtime() - System.currentTimeMillis()));
-                remoteViews.setBoolean(C0012R$id.chronometer, "setStarted", true);
-                remoteViews.setChronometerCountDown(C0012R$id.chronometer, notification.extras.getBoolean("android.chronometerCountDown"));
+                remoteViews.setViewVisibility(C0015R$id.chronometer, 0);
+                remoteViews.setLong(C0015R$id.chronometer, "setBase", notification.when + (SystemClock.elapsedRealtime() - System.currentTimeMillis()));
+                remoteViews.setBoolean(C0015R$id.chronometer, "setStarted", true);
+                remoteViews.setChronometerCountDown(C0015R$id.chronometer, notification.extras.getBoolean("android.chronometerCountDown"));
             } else {
-                remoteViews.setViewVisibility(C0012R$id.time, 0);
-                remoteViews.setLong(C0012R$id.time, "setTime", notification.when);
+                remoteViews.setViewVisibility(C0015R$id.time, 0);
+                remoteViews.setLong(C0015R$id.time, "setTime", notification.when);
             }
         } else {
-            int i = C0012R$id.time;
+            int i = C0015R$id.time;
             long j = notification.when;
             if (j == 0) {
                 j = System.currentTimeMillis();
@@ -445,16 +445,16 @@ public class NotificationContentInflaterInjector {
         Notification.Action[] actionArr = notification.actions;
         boolean z = actionArr != null && actionArr.length > 0;
         if (z) {
-            remoteViews.setViewVisibility(C0012R$id.actions, 0);
+            remoteViews.setViewVisibility(C0015R$id.actions, 0);
             for (Notification.Action action : notification.actions) {
-                BuilderRemoteViews builderRemoteViews = new BuilderRemoteViews(context.getApplicationInfo(), C0014R$layout.notification_material_action);
-                builderRemoteViews.setOnClickPendingIntent(C0012R$id.action0, action.actionIntent);
-                builderRemoteViews.setContentDescription(C0012R$id.action0, action.title);
+                BuilderRemoteViews builderRemoteViews = new BuilderRemoteViews(context.getApplicationInfo(), C0017R$layout.notification_material_action);
+                builderRemoteViews.setOnClickPendingIntent(C0015R$id.action0, action.actionIntent);
+                builderRemoteViews.setContentDescription(C0015R$id.action0, action.title);
                 if (action.getRemoteInputs() != null) {
-                    builderRemoteViews.setRemoteInputs(C0012R$id.action0, action.getRemoteInputs());
+                    builderRemoteViews.setRemoteInputs(C0015R$id.action0, action.getRemoteInputs());
                 }
-                builderRemoteViews.setTextViewText(C0012R$id.action0, processTextSpans(action.title, context));
-                remoteViews.addView(C0012R$id.actions, builderRemoteViews);
+                builderRemoteViews.setTextViewText(C0015R$id.action0, processTextSpans(action.title, context));
+                remoteViews.addView(C0015R$id.actions, builderRemoteViews);
             }
         }
         return z;

@@ -9,7 +9,7 @@ import android.graphics.Paint;
 import android.graphics.Shader;
 import android.util.AttributeSet;
 import android.view.View;
-import com.android.systemui.C0008R$color;
+import com.android.systemui.C0011R$color;
 
 public class MinimizedDockShadow extends View {
     private int mDockSide = -1;
@@ -32,8 +32,8 @@ public class MinimizedDockShadow extends View {
     }
 
     private void updatePaint(int i, int i2, int i3, int i4) {
-        int color = this.mContext.getResources().getColor(C0008R$color.minimize_dock_shadow_start, (Resources.Theme) null);
-        int color2 = this.mContext.getResources().getColor(C0008R$color.minimize_dock_shadow_end, (Resources.Theme) null);
+        int color = this.mContext.getResources().getColor(C0011R$color.minimize_dock_shadow_start, (Resources.Theme) null);
+        int color2 = this.mContext.getResources().getColor(C0011R$color.minimize_dock_shadow_end, (Resources.Theme) null);
         int argb = Color.argb((Color.alpha(color) + Color.alpha(color2)) / 2, 0, 0, 0);
         int argb2 = Color.argb((int) ((((float) Color.alpha(color)) * 0.25f) + (((float) Color.alpha(color2)) * 0.75f)), 0, 0, 0);
         int i5 = this.mDockSide;

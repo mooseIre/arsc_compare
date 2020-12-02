@@ -15,9 +15,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
-import com.android.systemui.C0009R$dimen;
-import com.android.systemui.C0012R$id;
-import com.android.systemui.C0018R$string;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.FontSizeUtils;
 import com.android.systemui.plugins.qs.DetailAdapter;
 import com.android.systemui.statusbar.phone.StatusBarWindowView;
@@ -76,8 +76,8 @@ public class QSDetail extends LinearLayout {
     /* access modifiers changed from: protected */
     public void onConfigurationChanged(Configuration configuration) {
         super.onConfigurationChanged(configuration);
-        FontSizeUtils.updateFontSize(this.mDetailDoneButton, C0009R$dimen.qs_detail_button_text_size);
-        FontSizeUtils.updateFontSize(this.mDetailSettingsButton, C0009R$dimen.qs_detail_button_text_size);
+        FontSizeUtils.updateFontSize(this.mDetailDoneButton, C0012R$dimen.qs_detail_button_text_size);
+        FontSizeUtils.updateFontSize(this.mDetailSettingsButton, C0012R$dimen.qs_detail_button_text_size);
         for (int i = 0; i < this.mDetailViews.size(); i++) {
             this.mDetailViews.valueAt(i).dispatchConfigurationChanged(configuration);
         }
@@ -89,31 +89,31 @@ public class QSDetail extends LinearLayout {
         this.mDetailContent = (ViewGroup) findViewById(16908290);
         this.mDetailSettingsButton = (TextView) findViewById(16908314);
         this.mDetailDoneButton = (TextView) findViewById(16908313);
-        View findViewById = findViewById(C0012R$id.qs_detail_header);
+        View findViewById = findViewById(C0015R$id.qs_detail_header);
         this.mQsDetailHeader = findViewById;
         TextView textView = (TextView) findViewById.findViewById(16908310);
-        ViewStub viewStub = (ViewStub) this.mQsDetailHeader.findViewById(C0012R$id.toggle_stub);
-        ImageView imageView = (ImageView) findViewById(C0012R$id.qs_detail_header_progress);
+        ViewStub viewStub = (ViewStub) this.mQsDetailHeader.findViewById(C0015R$id.toggle_stub);
+        ImageView imageView = (ImageView) findViewById(C0015R$id.qs_detail_header_progress);
         updateDetailText();
         new QSDetailClipper(this);
         this.mDetailDoneButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 QSDetail qSDetail = QSDetail.this;
-                qSDetail.announceForAccessibility(qSDetail.mContext.getString(C0018R$string.accessibility_desc_quick_settings));
+                qSDetail.announceForAccessibility(qSDetail.mContext.getString(C0021R$string.accessibility_desc_quick_settings));
                 QSDetail.this.mQsPanel.closeDetail();
             }
         });
     }
 
     private void updateDetailText() {
-        this.mDetailDoneButton.setText(C0018R$string.quick_settings_done);
-        this.mDetailSettingsButton.setText(C0018R$string.quick_settings_more_settings);
+        this.mDetailDoneButton.setText(C0021R$string.quick_settings_done);
+        this.mDetailSettingsButton.setText(C0021R$string.quick_settings_more_settings);
     }
 
     public WindowInsets onApplyWindowInsets(WindowInsets windowInsets) {
         Pair<Integer, Integer> cornerCutoutMargins = StatusBarWindowView.cornerCutoutMargins(windowInsets.getDisplayCutout(), getDisplay());
         if (cornerCutoutMargins == null) {
-            this.mQsDetailHeader.setPaddingRelative(getResources().getDimensionPixelSize(C0009R$dimen.qs_detail_header_padding), getPaddingTop(), getResources().getDimensionPixelSize(C0009R$dimen.qs_detail_header_padding), getPaddingBottom());
+            this.mQsDetailHeader.setPaddingRelative(getResources().getDimensionPixelSize(C0012R$dimen.qs_detail_header_padding), getPaddingTop(), getResources().getDimensionPixelSize(C0012R$dimen.qs_detail_header_padding), getPaddingBottom());
         } else {
             this.mQsDetailHeader.setPadding(((Integer) cornerCutoutMargins.first).intValue(), getPaddingTop(), ((Integer) cornerCutoutMargins.second).intValue(), getPaddingBottom());
         }

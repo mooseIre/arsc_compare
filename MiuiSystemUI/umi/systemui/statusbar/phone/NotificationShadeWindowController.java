@@ -13,8 +13,8 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import com.android.keyguard.fod.MiuiGxzwManager;
 import com.android.keyguard.utils.MiuiKeyguardUtils;
-import com.android.systemui.C0007R$bool;
-import com.android.systemui.C0013R$integer;
+import com.android.systemui.C0010R$bool;
+import com.android.systemui.C0016R$integer;
 import com.android.systemui.DejankUtils;
 import com.android.systemui.Dependency;
 import com.android.systemui.Dumpable;
@@ -27,6 +27,7 @@ import com.android.systemui.statusbar.RemoteInputController;
 import com.android.systemui.statusbar.SysuiStatusBarStateController;
 import com.android.systemui.statusbar.policy.ConfigurationController;
 import com.google.android.collect.Lists;
+import com.miui.systemui.util.BlurUtil;
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
 import java.lang.ref.WeakReference;
@@ -88,12 +89,12 @@ public class NotificationShadeWindowController implements RemoteInputController.
         this.mKeyguardBypassController = keyguardBypassController;
         this.mColorExtractor = sysuiColorExtractor;
         dumpManager.registerDumpable(NotificationShadeWindowController.class.getName(), this);
-        this.mLockScreenDisplayTimeout = (long) context.getResources().getInteger(C0013R$integer.config_lockScreenDisplayTimeout);
+        this.mLockScreenDisplayTimeout = (long) context.getResources().getInteger(C0016R$integer.config_lockScreenDisplayTimeout);
         ((SysuiStatusBarStateController) statusBarStateController).addCallback(this.mStateListener, 1);
         configurationController.addCallback(this);
         Display.Mode[] supportedModes = context.getDisplay().getSupportedModes();
         Display.Mode mode = context.getDisplay().getMode();
-        this.mKeyguardDisplayMode = (Display.Mode) Arrays.stream(supportedModes).filter(new Predicate(context.getResources().getInteger(C0013R$integer.config_keyguardRefreshRate), mode) {
+        this.mKeyguardDisplayMode = (Display.Mode) Arrays.stream(supportedModes).filter(new Predicate(context.getResources().getInteger(C0016R$integer.config_keyguardRefreshRate), mode) {
             public final /* synthetic */ int f$0;
             public final /* synthetic */ Display.Mode f$1;
 
@@ -132,7 +133,7 @@ public class NotificationShadeWindowController implements RemoteInputController.
 
     private boolean shouldEnableKeyguardScreenRotation() {
         Resources resources = this.mContext.getResources();
-        if (SystemProperties.getBoolean("lockscreen.rot_override", false) || resources.getBoolean(C0007R$bool.config_enableLockScreenRotation)) {
+        if (SystemProperties.getBoolean("lockscreen.rot_override", false) || resources.getBoolean(C0010R$bool.config_enableLockScreenRotation)) {
             return true;
         }
         return false;
@@ -336,6 +337,7 @@ public class NotificationShadeWindowController implements RemoteInputController.
         applyHasTopUi(state);
         applyNotTouchable(state);
         applyStatusBarColorSpaceAgnosticFlag(state);
+        applyBlurRatio(state);
         WindowManager.LayoutParams layoutParams = this.mLp;
         if (!(layoutParams == null || layoutParams.copyFrom(this.mLpChanged) == 0)) {
             this.mWindowManager.updateViewLayout(this.mNotificationShadeView, this.mLp);
@@ -421,6 +423,20 @@ public class NotificationShadeWindowController implements RemoteInputController.
         State state = this.mCurrentState;
         state.keygaurdTransparent = z;
         apply(state);
+    }
+
+    public void setBlurRatio(float f) {
+        if (f == 0.0f || f == 1.0f) {
+            State state = this.mCurrentState;
+            state.mBlurRatio = f;
+            apply(state);
+            return;
+        }
+        BlurUtil.setBlur(this.mNotificationShadeView.getViewRootImpl(), f, 0);
+    }
+
+    private void applyBlurRatio(State state) {
+        BlurUtil.setBlurWithWindowManager(this.mNotificationShadeView.getViewRootImpl(), state.mBlurRatio, 0, this.mLpChanged);
     }
 
     public void setPanelVisible(boolean z) {
@@ -599,6 +615,7 @@ public class NotificationShadeWindowController implements RemoteInputController.
         boolean keygaurdTransparent;
         boolean mBackdropShowing;
         int mBackgroundBlurRadius;
+        float mBlurRatio;
         boolean mBouncerShowing;
         boolean mDozing;
         boolean mForceCollapsed;

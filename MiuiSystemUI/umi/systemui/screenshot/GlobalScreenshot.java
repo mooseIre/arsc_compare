@@ -60,10 +60,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 import com.android.internal.logging.UiEventLogger;
-import com.android.systemui.C0009R$dimen;
-import com.android.systemui.C0012R$id;
-import com.android.systemui.C0014R$layout;
-import com.android.systemui.C0018R$string;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0017R$layout;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.screenshot.GlobalScreenshot;
 import com.android.systemui.shared.system.ActivityManagerWrapper;
 import com.android.systemui.shared.system.QuickStepContract;
@@ -197,8 +197,8 @@ public class GlobalScreenshot implements ViewTreeObserver.OnComputeInternalInset
         DisplayMetrics displayMetrics = new DisplayMetrics();
         this.mDisplayMetrics = displayMetrics;
         this.mDisplay.getRealMetrics(displayMetrics);
-        this.mCornerSizeX = (float) resources.getDimensionPixelSize(C0009R$dimen.global_screenshot_x_scale);
-        this.mDismissDeltaY = (float) resources.getDimensionPixelSize(C0009R$dimen.screenshot_dismissal_height_delta);
+        this.mCornerSizeX = (float) resources.getDimensionPixelSize(C0012R$dimen.global_screenshot_x_scale);
+        this.mDismissDeltaY = (float) resources.getDimensionPixelSize(C0012R$dimen.screenshot_dismissal_height_delta);
         this.mFastOutSlowIn = AnimationUtils.loadInterpolator(this.mContext, 17563661);
         MediaActionSound mediaActionSound = new MediaActionSound();
         this.mCameraSound = mediaActionSound;
@@ -308,7 +308,7 @@ public class GlobalScreenshot implements ViewTreeObserver.OnComputeInternalInset
         if (z) {
             this.mWindowManager.removeView(this.mScreenshotLayout);
         }
-        View inflate = LayoutInflater.from(this.mContext).inflate(C0014R$layout.global_screenshot, (ViewGroup) null);
+        View inflate = LayoutInflater.from(this.mContext).inflate(C0017R$layout.global_screenshot, (ViewGroup) null);
         this.mScreenshotLayout = inflate;
         inflate.setOnTouchListener(new View.OnTouchListener() {
             public final boolean onTouch(View view, MotionEvent motionEvent) {
@@ -331,7 +331,7 @@ public class GlobalScreenshot implements ViewTreeObserver.OnComputeInternalInset
         });
         this.mScreenshotLayout.setFocusableInTouchMode(true);
         this.mScreenshotLayout.requestFocus();
-        ImageView imageView = (ImageView) this.mScreenshotLayout.findViewById(C0012R$id.global_screenshot_animated_view);
+        ImageView imageView = (ImageView) this.mScreenshotLayout.findViewById(C0015R$id.global_screenshot_animated_view);
         this.mScreenshotAnimatedView = imageView;
         imageView.setClipToOutline(true);
         this.mScreenshotAnimatedView.setOutlineProvider(new ViewOutlineProvider(this) {
@@ -339,7 +339,7 @@ public class GlobalScreenshot implements ViewTreeObserver.OnComputeInternalInset
                 outline.setRoundRect(new Rect(0, 0, view.getWidth(), view.getHeight()), ((float) view.getWidth()) * 0.05f);
             }
         });
-        ImageView imageView2 = (ImageView) this.mScreenshotLayout.findViewById(C0012R$id.global_screenshot_preview);
+        ImageView imageView2 = (ImageView) this.mScreenshotLayout.findViewById(C0015R$id.global_screenshot_preview);
         this.mScreenshotPreview = imageView2;
         imageView2.setClipToOutline(true);
         this.mScreenshotPreview.setOutlineProvider(new ViewOutlineProvider(this) {
@@ -347,19 +347,19 @@ public class GlobalScreenshot implements ViewTreeObserver.OnComputeInternalInset
                 outline.setRoundRect(new Rect(0, 0, view.getWidth(), view.getHeight()), ((float) view.getWidth()) * 0.05f);
             }
         });
-        this.mActionsContainerBackground = (ImageView) this.mScreenshotLayout.findViewById(C0012R$id.global_screenshot_actions_container_background);
-        this.mActionsContainer = (HorizontalScrollView) this.mScreenshotLayout.findViewById(C0012R$id.global_screenshot_actions_container);
-        this.mActionsView = (LinearLayout) this.mScreenshotLayout.findViewById(C0012R$id.global_screenshot_actions);
-        this.mBackgroundProtection = (ImageView) this.mScreenshotLayout.findViewById(C0012R$id.global_screenshot_actions_background);
-        FrameLayout frameLayout = (FrameLayout) this.mScreenshotLayout.findViewById(C0012R$id.global_screenshot_dismiss_button);
+        this.mActionsContainerBackground = (ImageView) this.mScreenshotLayout.findViewById(C0015R$id.global_screenshot_actions_container_background);
+        this.mActionsContainer = (HorizontalScrollView) this.mScreenshotLayout.findViewById(C0015R$id.global_screenshot_actions_container);
+        this.mActionsView = (LinearLayout) this.mScreenshotLayout.findViewById(C0015R$id.global_screenshot_actions);
+        this.mBackgroundProtection = (ImageView) this.mScreenshotLayout.findViewById(C0015R$id.global_screenshot_actions_background);
+        FrameLayout frameLayout = (FrameLayout) this.mScreenshotLayout.findViewById(C0015R$id.global_screenshot_dismiss_button);
         this.mDismissButton = frameLayout;
         frameLayout.setOnClickListener(new View.OnClickListener() {
             public final void onClick(View view) {
                 GlobalScreenshot.this.lambda$reloadAssets$2$GlobalScreenshot(view);
             }
         });
-        this.mScreenshotFlash = (ImageView) this.mScreenshotLayout.findViewById(C0012R$id.global_screenshot_flash);
-        this.mScreenshotSelectorView = (ScreenshotSelectorView) this.mScreenshotLayout.findViewById(C0012R$id.global_screenshot_selector);
+        this.mScreenshotFlash = (ImageView) this.mScreenshotLayout.findViewById(C0015R$id.global_screenshot_flash);
+        this.mScreenshotSelectorView = (ScreenshotSelectorView) this.mScreenshotLayout.findViewById(C0015R$id.global_screenshot_selector);
         this.mScreenshotLayout.setFocusable(true);
         this.mScreenshotSelectorView.setFocusable(true);
         this.mScreenshotSelectorView.setFocusableInTouchMode(true);
@@ -442,7 +442,7 @@ public class GlobalScreenshot implements ViewTreeObserver.OnComputeInternalInset
         dismissScreenshot("new screenshot requested", true);
         this.mScreenBitmap = bitmap;
         if (bitmap == null) {
-            this.mNotificationsController.notifyScreenshotError(C0018R$string.screenshot_failed_to_capture_text);
+            this.mNotificationsController.notifyScreenshotError(C0021R$string.screenshot_failed_to_capture_text);
             consumer.accept((Object) null);
             this.mOnCompleteRunnable.run();
         } else if (!isUserSetupComplete()) {
@@ -560,7 +560,7 @@ public class GlobalScreenshot implements ViewTreeObserver.OnComputeInternalInset
                 consumer.accept(savedImageData.uri);
                 if (savedImageData.uri == null) {
                     GlobalScreenshot.this.mUiEventLogger.log(ScreenshotEvent.SCREENSHOT_NOT_SAVED);
-                    GlobalScreenshot.this.mNotificationsController.notifyScreenshotError(C0018R$string.screenshot_failed_to_capture_text);
+                    GlobalScreenshot.this.mNotificationsController.notifyScreenshotError(C0021R$string.screenshot_failed_to_capture_text);
                     return;
                 }
                 GlobalScreenshot.this.mUiEventLogger.log(ScreenshotEvent.SCREENSHOT_SAVED);
@@ -574,7 +574,7 @@ public class GlobalScreenshot implements ViewTreeObserver.OnComputeInternalInset
             /* access modifiers changed from: private */
             /* renamed from: lambda$onActionsReady$0 */
             public /* synthetic */ void lambda$onActionsReady$0$GlobalScreenshot$7() {
-                Toast.makeText(GlobalScreenshot.this.mContext, C0018R$string.screenshot_saved_title, 0).show();
+                Toast.makeText(GlobalScreenshot.this.mContext, C0021R$string.screenshot_saved_title, 0).show();
             }
         });
     }
@@ -623,7 +623,7 @@ public class GlobalScreenshot implements ViewTreeObserver.OnComputeInternalInset
         this.mDismissButton.setVisibility(8);
         this.mScreenshotPreview.setVisibility(8);
         this.mScreenshotPreview.setLayerType(0, (Paint) null);
-        this.mScreenshotPreview.setContentDescription(this.mContext.getResources().getString(C0018R$string.screenshot_preview_description));
+        this.mScreenshotPreview.setContentDescription(this.mContext.getResources().getString(C0021R$string.screenshot_preview_description));
         this.mScreenshotLayout.setAlpha(1.0f);
         this.mDismissButton.setTranslationY(0.0f);
         this.mActionsContainer.setTranslationY(0.0f);
@@ -672,7 +672,7 @@ public class GlobalScreenshot implements ViewTreeObserver.OnComputeInternalInset
     public void logSuccessOnActionsReady(SavedImageData savedImageData) {
         if (savedImageData.uri == null) {
             this.mUiEventLogger.log(ScreenshotEvent.SCREENSHOT_NOT_SAVED);
-            this.mNotificationsController.notifyScreenshotError(C0018R$string.screenshot_failed_to_capture_text);
+            this.mNotificationsController.notifyScreenshotError(C0021R$string.screenshot_failed_to_capture_text);
             return;
         }
         this.mUiEventLogger.log(ScreenshotEvent.SCREENSHOT_SAVED);
@@ -680,7 +680,7 @@ public class GlobalScreenshot implements ViewTreeObserver.OnComputeInternalInset
 
     private void startAnimation(Consumer<Uri> consumer, Rect rect, Insets insets, boolean z) {
         if (((PowerManager) this.mContext.getSystemService("power")).isPowerSaveMode()) {
-            Toast.makeText(this.mContext, C0018R$string.screenshot_saved_title, 0).show();
+            Toast.makeText(this.mContext, C0021R$string.screenshot_saved_title, 0).show();
         }
         this.mScreenshotHandler.post(new Runnable(insets, rect, z, consumer) {
             public final /* synthetic */ Insets f$1;
@@ -904,7 +904,7 @@ public class GlobalScreenshot implements ViewTreeObserver.OnComputeInternalInset
         }
         ArrayList arrayList = new ArrayList();
         for (Notification.Action next : savedImageData.smartActions) {
-            ScreenshotActionChip screenshotActionChip = (ScreenshotActionChip) from.inflate(C0014R$layout.global_screenshot_action_chip, this.mActionsView, false);
+            ScreenshotActionChip screenshotActionChip = (ScreenshotActionChip) from.inflate(C0017R$layout.global_screenshot_action_chip, this.mActionsView, false);
             screenshotActionChip.setText(next.title);
             screenshotActionChip.setIcon(next.getIcon(), false);
             screenshotActionChip.setPendingIntent(next.actionIntent, new Runnable() {
@@ -915,7 +915,7 @@ public class GlobalScreenshot implements ViewTreeObserver.OnComputeInternalInset
             this.mActionsView.addView(screenshotActionChip);
             arrayList.add(screenshotActionChip);
         }
-        ScreenshotActionChip screenshotActionChip2 = (ScreenshotActionChip) from.inflate(C0014R$layout.global_screenshot_action_chip, this.mActionsView, false);
+        ScreenshotActionChip screenshotActionChip2 = (ScreenshotActionChip) from.inflate(C0017R$layout.global_screenshot_action_chip, this.mActionsView, false);
         screenshotActionChip2.setText(savedImageData.shareAction.title);
         screenshotActionChip2.setIcon(savedImageData.shareAction.getIcon(), true);
         screenshotActionChip2.setPendingIntent(savedImageData.shareAction.actionIntent, new Runnable() {
@@ -925,7 +925,7 @@ public class GlobalScreenshot implements ViewTreeObserver.OnComputeInternalInset
         });
         this.mActionsView.addView(screenshotActionChip2);
         arrayList.add(screenshotActionChip2);
-        ScreenshotActionChip screenshotActionChip3 = (ScreenshotActionChip) from.inflate(C0014R$layout.global_screenshot_action_chip, this.mActionsView, false);
+        ScreenshotActionChip screenshotActionChip3 = (ScreenshotActionChip) from.inflate(C0017R$layout.global_screenshot_action_chip, this.mActionsView, false);
         screenshotActionChip3.setText(savedImageData.editAction.title);
         screenshotActionChip3.setIcon(savedImageData.editAction.getIcon(), true);
         screenshotActionChip3.setPendingIntent(savedImageData.editAction.actionIntent, new Runnable() {

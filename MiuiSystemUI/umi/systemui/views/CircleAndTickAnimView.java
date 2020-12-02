@@ -14,7 +14,7 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
-import com.android.systemui.C0008R$color;
+import com.android.systemui.C0011R$color;
 import com.android.systemui.util.ViewAnimUtils;
 import miui.view.animation.CubicEaseOutInterpolator;
 
@@ -101,7 +101,7 @@ public class CircleAndTickAnimView extends View {
         this.mTickPaint.setStrokeCap(Paint.Cap.ROUND);
         this.mTickPaint.setStrokeJoin(Paint.Join.ROUND);
         this.mTickPaint.setAntiAlias(true);
-        this.mTickPaint.setColor(context.getColor(C0008R$color.recent_tick_anim_color));
+        this.mTickPaint.setColor(context.getColor(C0011R$color.recent_tick_anim_color));
     }
 
     private void initRightMarkPath() {

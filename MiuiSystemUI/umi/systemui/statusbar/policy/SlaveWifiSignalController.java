@@ -12,16 +12,16 @@ import android.os.Handler;
 import android.os.UserHandle;
 import android.util.Log;
 import com.android.settingslib.wifi.SlaveWifiUtils;
-import com.android.systemui.C0010R$drawable;
-import com.android.systemui.C0018R$string;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.statusbar.phone.StatusBarIconController;
 
 public class SlaveWifiSignalController extends BroadcastReceiver {
     /* access modifiers changed from: private */
-    public static final int[] SLAVE_WIFI_ACCESSIBILITY = {C0018R$string.accessibility_no_wifi, C0018R$string.accessibility_wifi_one_bar, C0018R$string.accessibility_wifi_two_bars, C0018R$string.accessibility_wifi_three_bars, C0018R$string.accessibility_wifi_signal_full};
+    public static final int[] SLAVE_WIFI_ACCESSIBILITY = {C0021R$string.accessibility_no_wifi, C0021R$string.accessibility_wifi_one_bar, C0021R$string.accessibility_wifi_two_bars, C0021R$string.accessibility_wifi_three_bars, C0021R$string.accessibility_wifi_signal_full};
     /* access modifiers changed from: private */
-    public static final int[] SLAVE_WIFI_ICONS = {C0010R$drawable.stat_sys_slave_wifi_signal_0, C0010R$drawable.stat_sys_slave_wifi_signal_1, C0010R$drawable.stat_sys_slave_wifi_signal_2, C0010R$drawable.stat_sys_slave_wifi_signal_3, C0010R$drawable.stat_sys_slave_wifi_signal_4};
+    public static final int[] SLAVE_WIFI_ICONS = {C0013R$drawable.stat_sys_slave_wifi_signal_0, C0013R$drawable.stat_sys_slave_wifi_signal_1, C0013R$drawable.stat_sys_slave_wifi_signal_2, C0013R$drawable.stat_sys_slave_wifi_signal_3, C0013R$drawable.stat_sys_slave_wifi_signal_4};
     private BroadcastDispatcher mBroadcastDispatcher;
     /* access modifiers changed from: private */
     public boolean mConnected;
@@ -40,7 +40,7 @@ public class SlaveWifiSignalController extends BroadcastReceiver {
     public SlaveWifiSignalController(Context context, Handler handler, StatusBarIconController statusBarIconController, Handler handler2, BroadcastDispatcher broadcastDispatcher) {
         this.mContext = context;
         this.mStatusBarIconController = statusBarIconController;
-        statusBarIconController.setIcon("slave_wifi", C0010R$drawable.stat_sys_slave_wifi_signal_0_tint, context.getString(C0018R$string.accessibility_no_wifi));
+        statusBarIconController.setIcon("slave_wifi", C0013R$drawable.stat_sys_slave_wifi_signal_0_tint, context.getString(C0021R$string.accessibility_no_wifi));
         this.mStatusBarIconController.setIconVisibility("slave_wifi", false);
         this.mMainHandle = handler2;
         this.mBroadcastDispatcher = broadcastDispatcher;

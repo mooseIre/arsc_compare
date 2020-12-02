@@ -20,10 +20,10 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceFragment;
 import androidx.preference.SwitchPreference;
 import androidx.recyclerview.widget.RecyclerView;
-import com.android.systemui.C0012R$id;
-import com.android.systemui.C0014R$layout;
-import com.android.systemui.C0018R$string;
-import com.android.systemui.C0020R$xml;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0017R$layout;
+import com.android.systemui.C0021R$string;
+import com.android.systemui.C0023R$xml;
 import com.android.systemui.Dependency;
 import com.android.systemui.plugins.IntentButtonProvider;
 import com.android.systemui.statusbar.ScalingDrawableWrapper;
@@ -43,7 +43,7 @@ public class LockscreenFragment extends PreferenceFragment {
     public void onCreatePreferences(Bundle bundle, String str) {
         this.mTunerService = (TunerService) Dependency.get(TunerService.class);
         new Handler();
-        addPreferencesFromResource(C0020R$xml.lockscreen_settings);
+        addPreferencesFromResource(C0023R$xml.lockscreen_settings);
         setupGroup("sysui_keyguard_left", "sysui_keyguard_left_unlock");
         setupGroup("sysui_keyguard_right", "sysui_keyguard_right_unlock");
     }
@@ -88,7 +88,7 @@ public class LockscreenFragment extends PreferenceFragment {
 
     private void setSummary(Preference preference, String str) {
         if (str == null) {
-            preference.setSummary(C0018R$string.lockscreen_none);
+            preference.setSummary(C0021R$string.lockscreen_none);
             return;
         }
         CharSequence charSequence = null;
@@ -105,7 +105,7 @@ public class LockscreenFragment extends PreferenceFragment {
             }
             preference.setSummary(charSequence);
         } else {
-            preference.setSummary(C0018R$string.lockscreen_none);
+            preference.setSummary(C0021R$string.lockscreen_none);
         }
     }
 
@@ -135,7 +135,7 @@ public class LockscreenFragment extends PreferenceFragment {
             super(view);
             this.icon = (ImageView) view.findViewById(16908294);
             this.title = (TextView) view.findViewById(16908310);
-            this.expand = (ExpandableIndicator) view.findViewById(C0012R$id.expand);
+            this.expand = (ExpandableIndicator) view.findViewById(C0015R$id.expand);
         }
     }
 
@@ -227,7 +227,7 @@ public class LockscreenFragment extends PreferenceFragment {
         private ArrayList<Item> mItems;
 
         public Holder onCreateViewHolder(ViewGroup viewGroup, int i) {
-            return new Holder(LayoutInflater.from(viewGroup.getContext()).inflate(C0014R$layout.tuner_shortcut_item, viewGroup, false));
+            return new Holder(LayoutInflater.from(viewGroup.getContext()).inflate(C0017R$layout.tuner_shortcut_item, viewGroup, false));
         }
 
         public void onBindViewHolder(Holder holder, int i) {

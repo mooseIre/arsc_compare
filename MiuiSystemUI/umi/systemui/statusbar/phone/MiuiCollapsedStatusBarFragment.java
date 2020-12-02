@@ -5,9 +5,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import com.android.systemui.C0005R$array;
-import com.android.systemui.C0012R$id;
-import com.android.systemui.C0014R$layout;
+import com.android.systemui.C0008R$array;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0017R$layout;
 import com.android.systemui.Dependency;
 import com.android.systemui.Interpolators;
 import com.android.systemui.statusbar.CommandQueue;
@@ -26,14 +26,14 @@ public class MiuiCollapsedStatusBarFragment extends CollapsedStatusBarFragment {
     private View mStatusBarPromptContainer;
 
     public View onCreateView(LayoutInflater layoutInflater, ViewGroup viewGroup, Bundle bundle) {
-        return layoutInflater.inflate(C0014R$layout.miui_status_bar, viewGroup, false);
+        return layoutInflater.inflate(C0017R$layout.miui_status_bar, viewGroup, false);
     }
 
     public void initNotificationIconArea(NotificationIconAreaController notificationIconAreaController) {
         View notificationInnerAreaView = notificationIconAreaController.getNotificationInnerAreaView();
         this.mNotificationIconAreaInner = notificationInnerAreaView;
         this.mStatusBar.setNotificationIconAreaInnner(notificationInnerAreaView);
-        ViewGroup viewGroup = (ViewGroup) this.mStatusBar.findViewById(C0012R$id.centered_icon_area);
+        ViewGroup viewGroup = (ViewGroup) this.mStatusBar.findViewById(C0015R$id.centered_icon_area);
         View centeredNotificationAreaView = notificationIconAreaController.getCenteredNotificationAreaView();
         this.mCenteredIconArea = centeredNotificationAreaView;
         if (centeredNotificationAreaView.getParent() != null) {
@@ -46,19 +46,19 @@ public class MiuiCollapsedStatusBarFragment extends CollapsedStatusBarFragment {
     /* access modifiers changed from: protected */
     public void initMiuiViewsOnViewCreated(View view) {
         super.initMiuiViewsOnViewCreated(view);
-        StatusBarIconController.DarkIconManager darkIconManager = new StatusBarIconController.DarkIconManager((LinearLayout) view.findViewById(C0012R$id.drip_left_statusIcons), (CommandQueue) Dependency.get(CommandQueue.class));
+        StatusBarIconController.DarkIconManager darkIconManager = new StatusBarIconController.DarkIconManager((LinearLayout) view.findViewById(C0015R$id.drip_left_statusIcons), (CommandQueue) Dependency.get(CommandQueue.class));
         this.mDripLeftDarkIconManager = darkIconManager;
         darkIconManager.setShouldLog(true);
         ((MiuiDripLeftStatusBarIconControllerImpl) Dependency.get(MiuiDripLeftStatusBarIconControllerImpl.class)).addIconGroup(this.mDripLeftDarkIconManager);
-        ArrayList arrayList = new ArrayList(Arrays.asList(getContext().getResources().getStringArray(C0005R$array.config_drip_right_block_statusBarIcons)));
-        StatusBarIconController.DarkIconManager darkIconManager2 = new StatusBarIconController.DarkIconManager((LinearLayout) view.findViewById(C0012R$id.drip_right_statusIcons), (CommandQueue) Dependency.get(CommandQueue.class));
+        ArrayList arrayList = new ArrayList(Arrays.asList(getContext().getResources().getStringArray(C0008R$array.config_drip_right_block_statusBarIcons)));
+        StatusBarIconController.DarkIconManager darkIconManager2 = new StatusBarIconController.DarkIconManager((LinearLayout) view.findViewById(C0015R$id.drip_right_statusIcons), (CommandQueue) Dependency.get(CommandQueue.class));
         this.mDripRightDarkIconManager = darkIconManager2;
         darkIconManager2.setShouldLog(true);
         ((StatusBarIconController) Dependency.get(StatusBarIconController.class)).addIconGroup(this.mDripRightDarkIconManager, arrayList);
-        this.mDripSystemIconArea = (LinearLayout) this.mStatusBar.findViewById(C0012R$id.drip_left_statusIcons);
-        this.mStatusBarPromptContainer = this.mStatusBar.findViewById(C0012R$id.prompt_container);
-        this.mDripNetworkSpeedSplitter = (NetworkSpeedSplitter) this.mStatusBar.findViewById(C0012R$id.drip_network_speed_splitter);
-        this.mDripNetworkSpeedView = (NetworkSpeedView) this.mStatusBar.findViewById(C0012R$id.drip_network_speed_view);
+        this.mDripSystemIconArea = (LinearLayout) this.mStatusBar.findViewById(C0015R$id.drip_left_statusIcons);
+        this.mStatusBarPromptContainer = this.mStatusBar.findViewById(C0015R$id.prompt_container);
+        this.mDripNetworkSpeedSplitter = (NetworkSpeedSplitter) this.mStatusBar.findViewById(C0015R$id.drip_network_speed_splitter);
+        this.mDripNetworkSpeedView = (NetworkSpeedView) this.mStatusBar.findViewById(C0015R$id.drip_network_speed_view);
     }
 
     public void hideSystemIconArea(boolean z) {

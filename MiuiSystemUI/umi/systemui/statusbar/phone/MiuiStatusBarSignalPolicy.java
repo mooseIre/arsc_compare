@@ -2,8 +2,8 @@ package com.android.systemui.statusbar.phone;
 
 import android.content.Context;
 import android.os.Bundle;
-import com.android.systemui.C0010R$drawable;
-import com.android.systemui.C0018R$string;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.DemoMode;
 import com.android.systemui.Dependency;
 import com.android.systemui.statusbar.phone.StatusBarSignalPolicy;
@@ -25,13 +25,13 @@ public class MiuiStatusBarSignalPolicy extends StatusBarSignalPolicy implements 
     }
 
     public void initMiuiSlot() {
-        this.mIconController.setIcon("demo_mobile", C0010R$drawable.stat_sys_signal_5, this.mContext.getString(C0018R$string.accessibility_data_signal_full));
-        this.mIconController.setIcon("demo_wifi", C0010R$drawable.stat_sys_wifi_signal_4, this.mContext.getString(C0018R$string.accessibility_wifi_signal_full));
+        this.mIconController.setIcon("demo_mobile", C0013R$drawable.stat_sys_signal_5, this.mContext.getString(C0021R$string.accessibility_data_signal_full));
+        this.mIconController.setIcon("demo_wifi", C0013R$drawable.stat_sys_wifi_signal_4, this.mContext.getString(C0021R$string.accessibility_wifi_signal_full));
         this.mIconController.setIconVisibility("demo_mobile", false);
         this.mIconController.setIconVisibility("demo_wifi", false);
-        String string = this.mContext.getString(C0018R$string.status_bar_no_sim);
+        String string = this.mContext.getString(C0021R$string.status_bar_no_sim);
         this.mSlotNoSim = string;
-        this.mIconController.setIcon(string, C0010R$drawable.stat_sys_no_sim, this.mContext.getResources().getString(C0018R$string.accessibility_no_sim));
+        this.mIconController.setIcon(string, C0013R$drawable.stat_sys_no_sim, this.mContext.getResources().getString(C0021R$string.accessibility_no_sim));
         this.mIconController.setIconVisibility(this.mSlotNoSim, false);
         ((SlaveWifiSignalController) Dependency.get(SlaveWifiSignalController.class)).start();
     }
@@ -40,7 +40,12 @@ public class MiuiStatusBarSignalPolicy extends StatusBarSignalPolicy implements 
         super.setNoSims(z, z2);
         this.mLastShowNoSim = z;
         this.mLastSimDetected = z2;
-        this.mIconController.setIconVisibility(this.mSlotNoSim, z && !this.mInDemoMode);
+        this.mIconController.setIconVisibility(this.mSlotNoSim, z && !this.mInDemoMode && !this.mIsAirplaneMode);
+    }
+
+    public void setIsAirplaneMode(NetworkController.IconState iconState) {
+        super.setIsAirplaneMode(iconState);
+        setNoSims(this.mLastShowNoSim, this.mLastSimDetected);
     }
 
     public void setWifiIndicators(boolean z, NetworkController.IconState iconState, NetworkController.IconState iconState2, boolean z2, boolean z3, int i, String str, boolean z4, String str2, boolean z5) {
@@ -60,13 +65,13 @@ public class MiuiStatusBarSignalPolicy extends StatusBarSignalPolicy implements 
         copy.wifiNoNetwork = z5;
         if (z7 && z8) {
             copy.activityVisible = true;
-            copy.activityResId = C0010R$drawable.stat_sys_wifi_inout;
+            copy.activityResId = C0013R$drawable.stat_sys_wifi_inout;
         } else if (z7) {
             copy.activityVisible = true;
-            copy.activityResId = C0010R$drawable.stat_sys_wifi_in;
+            copy.activityResId = C0013R$drawable.stat_sys_wifi_in;
         } else if (z8) {
             copy.activityVisible = true;
-            copy.activityResId = C0010R$drawable.stat_sys_wifi_out;
+            copy.activityResId = C0013R$drawable.stat_sys_wifi_out;
         } else {
             copy.activityVisible = false;
             copy.activityResId = 0;

@@ -31,11 +31,11 @@ import android.widget.ImageView;
 import androidx.core.graphics.ColorUtils;
 import com.android.internal.statusbar.StatusBarIcon;
 import com.android.internal.util.ContrastColorUtil;
-import com.android.systemui.C0007R$bool;
-import com.android.systemui.C0009R$dimen;
-import com.android.systemui.C0010R$drawable;
-import com.android.systemui.C0012R$id;
-import com.android.systemui.C0018R$string;
+import com.android.systemui.C0010R$bool;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.Interpolators;
 import com.android.systemui.statusbar.notification.ExpandedNotification;
 import com.android.systemui.statusbar.notification.NotificationIconDozeHelper;
@@ -166,7 +166,7 @@ public class StatusBarIconView extends AnimatedImageView implements StatusIconDi
         Paint paint = new Paint();
         this.mNumberPain = paint;
         paint.setTextAlign(Paint.Align.CENTER);
-        this.mNumberPain.setColor(context.getColor(C0010R$drawable.notification_number_text_color));
+        this.mNumberPain.setColor(context.getColor(C0013R$drawable.notification_number_text_color));
         this.mNumberPain.setAntiAlias(true);
         setNotification(expandedNotification);
         setScaleType(ImageView.ScaleType.CENTER);
@@ -245,10 +245,10 @@ public class StatusBarIconView extends AnimatedImageView implements StatusIconDi
     private void reloadDimens() {
         boolean z = this.mDotRadius == ((float) this.mStaticDotRadius);
         Resources resources = getResources();
-        this.mStaticDotRadius = resources.getDimensionPixelSize(C0009R$dimen.overflow_dot_radius);
-        this.mStatusBarIconSize = resources.getDimensionPixelSize(C0009R$dimen.status_bar_icon_size);
-        this.mStatusBarIconDrawingSizeIncreased = resources.getDimensionPixelSize(C0009R$dimen.status_bar_icon_drawing_size_dark);
-        this.mStatusBarIconDrawingSize = resources.getDimensionPixelSize(C0009R$dimen.status_bar_icon_drawing_size);
+        this.mStaticDotRadius = resources.getDimensionPixelSize(C0012R$dimen.overflow_dot_radius);
+        this.mStatusBarIconSize = resources.getDimensionPixelSize(C0012R$dimen.status_bar_icon_size);
+        this.mStatusBarIconDrawingSizeIncreased = resources.getDimensionPixelSize(C0012R$dimen.status_bar_icon_drawing_size_dark);
+        this.mStatusBarIconDrawingSize = resources.getDimensionPixelSize(C0012R$dimen.status_bar_icon_drawing_size);
         if (z) {
             this.mDotRadius = (float) this.mStaticDotRadius;
         }
@@ -300,19 +300,19 @@ public class StatusBarIconView extends AnimatedImageView implements StatusIconDi
             if (!updateDrawable(false)) {
                 return false;
             }
-            setTag(C0012R$id.icon_is_grayscale, (Object) null);
+            setTag(C0015R$id.icon_is_grayscale, (Object) null);
             maybeUpdateIconScaleDimens();
         }
         if (!z2) {
             setImageLevel(statusBarIcon.iconLevel);
         }
         if (!z4) {
-            if (statusBarIcon.number <= 0 || !getContext().getResources().getBoolean(C0007R$bool.config_statusBarShowNumber)) {
+            if (statusBarIcon.number <= 0 || !getContext().getResources().getBoolean(C0010R$bool.config_statusBarShowNumber)) {
                 this.mNumberBackground = null;
                 this.mNumberText = null;
             } else {
                 if (this.mNumberBackground == null) {
-                    this.mNumberBackground = getContext().getResources().getDrawable(C0010R$drawable.ic_notification_overlay);
+                    this.mNumberBackground = getContext().getResources().getDrawable(C0013R$drawable.ic_notification_overlay);
                 }
                 placeNumber();
             }
@@ -368,7 +368,7 @@ public class StatusBarIconView extends AnimatedImageView implements StatusIconDi
         }
         Drawable loadDrawableAsUser = statusBarIcon.icon.loadDrawableAsUser(context, identifier);
         TypedValue typedValue = new TypedValue();
-        context.getResources().getValue(C0009R$dimen.status_bar_icon_scale_factor, typedValue, true);
+        context.getResources().getValue(C0012R$dimen.status_bar_icon_scale_factor, typedValue, true);
         float f = typedValue.getFloat();
         if (f == 1.0f) {
             return loadDrawableAsUser;
@@ -512,7 +512,7 @@ public class StatusBarIconView extends AnimatedImageView implements StatusIconDi
         } else if (!TextUtils.isEmpty(charSequence5)) {
             charSequence2 = charSequence5;
         }
-        return context.getString(C0018R$string.accessibility_desc_notification_icon, new Object[]{charSequence, charSequence2});
+        return context.getString(C0021R$string.accessibility_desc_notification_icon, new Object[]{charSequence, charSequence2});
     }
 
     public void setDecorColor(int i) {
@@ -534,13 +534,6 @@ public class StatusBarIconView extends AnimatedImageView implements StatusIconDi
                 invalidate();
             }
         }
-    }
-
-    public void setLight(boolean z, int i) {
-        this.mUseTint = false;
-        this.mDark = !z;
-        set(this.mIcon.clone());
-        setDecorColor(i);
     }
 
     public void setStaticDrawableColor(int i) {

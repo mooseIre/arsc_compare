@@ -9,8 +9,8 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.widget.Switch;
-import com.android.systemui.C0010R$drawable;
-import com.android.systemui.C0018R$string;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.plugins.qs.QSTile;
 import com.android.systemui.qs.QSHost;
 import com.android.systemui.qs.tileimpl.QSTileImpl;
@@ -66,7 +66,7 @@ public class PowerSaverExtremeTile extends QSTileImpl<QSTile.BooleanState> {
     }
 
     public CharSequence getTileLabel() {
-        return this.mContext.getString(C0018R$string.quick_settings_extreme_batterysaver_label);
+        return this.mContext.getString(C0021R$string.quick_settings_extreme_batterysaver_label);
     }
 
     /* access modifiers changed from: protected */
@@ -76,18 +76,18 @@ public class PowerSaverExtremeTile extends QSTileImpl<QSTile.BooleanState> {
             z = true;
         }
         booleanState.value = z;
-        booleanState.label = this.mContext.getString(C0018R$string.quick_settings_extreme_batterysaver_label);
+        booleanState.label = this.mContext.getString(C0021R$string.quick_settings_extreme_batterysaver_label);
         if (booleanState.value) {
             booleanState.state = 2;
-            booleanState.icon = QSTileImpl.ResourceIcon.get(C0010R$drawable.ic_qs_extreme_battery_saver_on);
+            booleanState.icon = QSTileImpl.ResourceIcon.get(C0013R$drawable.ic_qs_extreme_battery_saver_on);
         } else {
             booleanState.state = 1;
-            booleanState.icon = QSTileImpl.ResourceIcon.get(C0010R$drawable.ic_qs_extreme_battery_saver_off);
+            booleanState.icon = QSTileImpl.ResourceIcon.get(C0013R$drawable.ic_qs_extreme_battery_saver_off);
         }
         StringBuilder sb = new StringBuilder();
         sb.append(booleanState.label);
         sb.append(",");
-        sb.append(this.mContext.getString(booleanState.value ? C0018R$string.switch_bar_on : C0018R$string.switch_bar_off));
+        sb.append(this.mContext.getString(booleanState.value ? C0021R$string.switch_bar_on : C0021R$string.switch_bar_off));
         booleanState.contentDescription = sb.toString();
         booleanState.expandedAccessibilityClassName = Switch.class.getName();
     }

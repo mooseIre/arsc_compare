@@ -7,8 +7,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import com.android.systemui.C0012R$id;
-import com.android.systemui.C0014R$layout;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0017R$layout;
 import com.android.systemui.Dependency;
 import com.android.systemui.statusbar.notification.NotificationEntryManager;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
@@ -18,12 +18,15 @@ import com.miui.systemui.DebugConfig;
 import com.miui.systemui.util.HapticFeedBackImpl;
 import java.util.ArrayList;
 import kotlin.jvm.internal.Intrinsics;
+import miuix.view.animation.CubicEaseInOutInterpolator;
 import org.jetbrains.annotations.NotNull;
 
 /* compiled from: ModalController.kt */
 public final class ModalController {
     @NotNull
     private final Context context;
+    private final long defaultDuration = 300;
+    private long duration = 300;
     /* access modifiers changed from: private */
     public NotificationEntry entry;
     /* access modifiers changed from: private */
@@ -60,10 +63,10 @@ public final class ModalController {
     }
 
     private final void addModalWindow() {
-        View inflate = LayoutInflater.from(this.context).inflate(C0014R$layout.miui_modal_window, (ViewGroup) null);
+        View inflate = LayoutInflater.from(this.context).inflate(C0017R$layout.miui_modal_window, (ViewGroup) null);
         inflate.setOnClickListener(new ModalController$addModalWindow$1(this));
         this.modalWindowManager.addNotificationModalWindow(inflate);
-        View findViewById = inflate.findViewById(C0012R$id.modal_window_view);
+        View findViewById = inflate.findViewById(C0015R$id.modal_window_view);
         Intrinsics.checkExpressionValueIsNotNull(findViewById, "view.findViewById(R.id.modal_window_view)");
         this.modalWindowView = (ModalWindowView) findViewById;
     }
@@ -83,6 +86,7 @@ public final class ModalController {
         sb.append(entry2.getKey());
         Log.d("ModalController", sb.toString());
         if (!this.isModal && !this.isAnimating) {
+            this.duration = this.defaultDuration;
             ModalRowInflater modalRowInflater2 = this.modalRowInflater;
             ExpandableNotificationRow expandableNotificationRow2 = null;
             if (modalRowInflater2 != null) {
@@ -140,6 +144,11 @@ public final class ModalController {
         this.statusBar.animateCollapsePanels(0, false);
     }
 
+    public final void animExitModal(long j) {
+        this.duration = j;
+        animExitModal();
+    }
+
     public final void animExitModal() {
         if (this.isModal && !this.isAnimating) {
             this.isAnimating = true;
@@ -168,7 +177,8 @@ public final class ModalController {
     private final void startAnimator(ValueAnimator.AnimatorUpdateListener animatorUpdateListener, Animator.AnimatorListener animatorListener) {
         ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{0.0f, 1.0f});
         Intrinsics.checkExpressionValueIsNotNull(ofFloat, "animator");
-        ofFloat.setDuration(300);
+        ofFloat.setDuration(this.duration);
+        ofFloat.setInterpolator(new CubicEaseInOutInterpolator());
         if (animatorUpdateListener != null) {
             ofFloat.addUpdateListener(animatorUpdateListener);
         }

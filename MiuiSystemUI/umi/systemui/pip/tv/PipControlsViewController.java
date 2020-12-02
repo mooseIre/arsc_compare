@@ -10,9 +10,9 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import com.android.systemui.C0010R$drawable;
-import com.android.systemui.C0014R$layout;
-import com.android.systemui.C0018R$string;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0017R$layout;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.pip.tv.PipManager;
 import java.util.ArrayList;
 import java.util.List;
@@ -153,7 +153,7 @@ public class PipControlsViewController {
         int i = 0;
         if (!this.mCustomActions.isEmpty()) {
             while (this.mCustomButtonViews.size() < this.mCustomActions.size()) {
-                PipControlButtonView pipControlButtonView = (PipControlButtonView) this.mLayoutInflater.inflate(C0014R$layout.tv_pip_custom_control, this.mView, false);
+                PipControlButtonView pipControlButtonView = (PipControlButtonView) this.mLayoutInflater.inflate(C0017R$layout.tv_pip_custom_control, this.mView, false);
                 this.mView.addView(pipControlButtonView);
                 this.mCustomButtonViews.add(pipControlButtonView);
             }
@@ -197,11 +197,11 @@ public class PipControlsViewController {
         } else {
             this.mPlayPauseButtonView.setVisibility(0);
             if (playbackState == 0) {
-                this.mPlayPauseButtonView.setImageResource(C0010R$drawable.ic_pause_white);
-                this.mPlayPauseButtonView.setText(C0018R$string.pip_pause);
+                this.mPlayPauseButtonView.setImageResource(C0013R$drawable.ic_pause_white);
+                this.mPlayPauseButtonView.setText(C0021R$string.pip_pause);
             } else {
-                this.mPlayPauseButtonView.setImageResource(C0010R$drawable.ic_play_arrow_white);
-                this.mPlayPauseButtonView.setText(C0018R$string.pip_play);
+                this.mPlayPauseButtonView.setImageResource(C0013R$drawable.ic_play_arrow_white);
+                this.mPlayPauseButtonView.setText(C0021R$string.pip_play);
             }
         }
         while (i < this.mCustomButtonViews.size()) {

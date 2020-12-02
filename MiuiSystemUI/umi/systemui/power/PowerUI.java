@@ -21,7 +21,7 @@ import android.util.Slog;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.settingslib.fuelgauge.Estimate;
 import com.android.settingslib.utils.ThreadUtils;
-import com.android.systemui.C0013R$integer;
+import com.android.systemui.C0016R$integer;
 import com.android.systemui.Dependency;
 import com.android.systemui.SystemUI;
 import com.android.systemui.broadcast.BroadcastDispatcher;
@@ -481,7 +481,7 @@ public class PowerUI extends SystemUI implements CommandQueue.Callbacks {
         boolean z;
         boolean z2 = this.mEnableSkinTemperatureWarning;
         boolean z3 = true;
-        boolean z4 = Settings.Global.getInt(this.mContext.getContentResolver(), "show_temperature_warning", this.mContext.getResources().getInteger(C0013R$integer.config_showTemperatureWarning)) != 0;
+        boolean z4 = Settings.Global.getInt(this.mContext.getContentResolver(), "show_temperature_warning", this.mContext.getResources().getInteger(C0016R$integer.config_showTemperatureWarning)) != 0;
         this.mEnableSkinTemperatureWarning = z4;
         if (z4 != z2) {
             try {
@@ -516,7 +516,7 @@ public class PowerUI extends SystemUI implements CommandQueue.Callbacks {
         boolean z;
         boolean z2 = this.mEnableUsbTemperatureAlarm;
         boolean z3 = true;
-        boolean z4 = Settings.Global.getInt(this.mContext.getContentResolver(), "show_usb_temperature_alarm", this.mContext.getResources().getInteger(C0013R$integer.config_showUsbPortAlarm)) != 0;
+        boolean z4 = Settings.Global.getInt(this.mContext.getContentResolver(), "show_usb_temperature_alarm", this.mContext.getResources().getInteger(C0016R$integer.config_showUsbPortAlarm)) != 0;
         this.mEnableUsbTemperatureAlarm = z4;
         if (z4 != z2) {
             try {

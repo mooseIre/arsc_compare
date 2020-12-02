@@ -7,8 +7,8 @@ import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListPopupWindow;
 import android.widget.ListView;
-import com.android.systemui.C0009R$dimen;
-import com.android.systemui.C0010R$drawable;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0013R$drawable;
 
 public class GlobalActionsPopupMenu extends ListPopupWindow {
     private ListAdapter mAdapter;
@@ -22,14 +22,14 @@ public class GlobalActionsPopupMenu extends ListPopupWindow {
         super(context);
         this.mContext = context;
         Resources resources = context.getResources();
-        setBackgroundDrawable(resources.getDrawable(C0010R$drawable.rounded_bg_full, context.getTheme()));
+        setBackgroundDrawable(resources.getDrawable(C0013R$drawable.rounded_bg_full, context.getTheme()));
         this.mIsDropDownMode = z;
         setWindowLayoutType(2020);
         setInputMethodMode(2);
         setModal(true);
-        this.mGlobalActionsSidePadding = resources.getDimensionPixelSize(C0009R$dimen.global_actions_side_margin);
+        this.mGlobalActionsSidePadding = resources.getDimensionPixelSize(C0012R$dimen.global_actions_side_margin);
         if (!z) {
-            this.mMenuVerticalPadding = resources.getDimensionPixelSize(C0009R$dimen.control_menu_vertical_padding);
+            this.mMenuVerticalPadding = resources.getDimensionPixelSize(C0012R$dimen.control_menu_vertical_padding);
         }
     }
 
@@ -47,8 +47,8 @@ public class GlobalActionsPopupMenu extends ListPopupWindow {
         Resources resources = this.mContext.getResources();
         setVerticalOffset((-getAnchorView().getHeight()) / 2);
         if (this.mIsDropDownMode) {
-            listView.setDividerHeight(resources.getDimensionPixelSize(C0009R$dimen.control_list_divider));
-            listView.setDivider(resources.getDrawable(C0010R$drawable.controls_list_divider_inset));
+            listView.setDividerHeight(resources.getDimensionPixelSize(C0012R$dimen.control_list_divider));
+            listView.setDivider(resources.getDrawable(C0013R$drawable.controls_list_divider_inset));
         } else if (this.mAdapter != null) {
             double d = (double) Resources.getSystem().getDisplayMetrics().widthPixels;
             int makeMeasureSpec = View.MeasureSpec.makeMeasureSpec((int) (0.9d * d), Integer.MIN_VALUE);

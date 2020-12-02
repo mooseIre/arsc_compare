@@ -150,6 +150,10 @@ public class ExpandInfoControllerImpl implements ExpandInfoController {
         }
     }
 
+    public void removeCallback(ExpandInfoController.Callback callback) {
+        this.mCallbacks.remove(callback);
+    }
+
     public void requestData() {
         if (!Constants.IS_INTERNATIONAL) {
             if (this.mSuperPowerMode) {

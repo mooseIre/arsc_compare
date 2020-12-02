@@ -1,6 +1,7 @@
 package com.android.systemui.media;
 
 import android.view.View;
+import com.android.systemui.statusbar.notification.stack.MiuiMediaHeaderView;
 import com.android.systemui.util.animation.MeasurementInput;
 import com.android.systemui.util.animation.MeasurementOutput;
 import com.android.systemui.util.animation.UniqueObjectHostView;
@@ -20,9 +21,7 @@ public final class MediaHost$init$2 implements UniqueObjectHostView.MeasurementM
     @NotNull
     public MeasurementOutput onMeasure(@NotNull MeasurementInput measurementInput) {
         Intrinsics.checkParameterIsNotNull(measurementInput, "input");
-        if (View.MeasureSpec.getMode(measurementInput.getWidthMeasureSpec()) == Integer.MIN_VALUE) {
-            measurementInput.setWidthMeasureSpec(View.MeasureSpec.makeMeasureSpec(View.MeasureSpec.getSize(measurementInput.getWidthMeasureSpec()), 1073741824));
-        }
+        measurementInput.setWidthMeasureSpec(View.MeasureSpec.makeMeasureSpec(View.MeasureSpec.getSize(measurementInput.getWidthMeasureSpec()) - (MiuiMediaHeaderView.Companion.getMSidePaddings() * 2), 1073741824));
         this.this$0.state.setMeasurementInput(measurementInput);
         return this.this$0.mediaHostStatesManager.updateCarouselDimensions(this.$location, this.this$0.state);
     }

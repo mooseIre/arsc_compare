@@ -14,8 +14,8 @@ import android.view.MenuItem;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragment;
 import com.android.internal.logging.MetricsLogger;
-import com.android.systemui.C0018R$string;
-import com.android.systemui.C0020R$xml;
+import com.android.systemui.C0021R$string;
+import com.android.systemui.C0023R$xml;
 import com.android.systemui.shared.plugins.PluginPrefs;
 
 public class TunerFragment extends PreferenceFragment {
@@ -33,7 +33,7 @@ public class TunerFragment extends PreferenceFragment {
     }
 
     public void onCreatePreferences(Bundle bundle, String str) {
-        addPreferencesFromResource(C0020R$xml.tuner_prefs);
+        addPreferencesFromResource(C0023R$xml.tuner_prefs);
         if (!PluginPrefs.hasPlugins(getContext())) {
             getPreferenceScreen().removePreference(findPreference("plugins"));
         }
@@ -65,7 +65,7 @@ public class TunerFragment extends PreferenceFragment {
 
     public void onResume() {
         super.onResume();
-        getActivity().setTitle(C0018R$string.system_ui_tuner);
+        getActivity().setTitle(C0021R$string.system_ui_tuner);
         MetricsLogger.visibility(getContext(), 227, true);
     }
 
@@ -75,7 +75,7 @@ public class TunerFragment extends PreferenceFragment {
     }
 
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
-        menu.add(0, 2, 0, C0018R$string.remove_from_settings);
+        menu.add(0, 2, 0, C0021R$string.remove_from_settings);
     }
 
     public boolean onOptionsItemSelected(MenuItem menuItem) {
@@ -99,7 +99,7 @@ public class TunerFragment extends PreferenceFragment {
 
     public static class TunerWarningFragment extends DialogFragment {
         public Dialog onCreateDialog(Bundle bundle) {
-            return new AlertDialog.Builder(getContext()).setTitle(C0018R$string.tuner_warning_title).setMessage(C0018R$string.tuner_warning).setPositiveButton(C0018R$string.got_it, new DialogInterface.OnClickListener() {
+            return new AlertDialog.Builder(getContext()).setTitle(C0021R$string.tuner_warning_title).setMessage(C0021R$string.tuner_warning).setPositiveButton(C0021R$string.got_it, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialogInterface, int i) {
                     Settings.Secure.putInt(TunerWarningFragment.this.getContext().getContentResolver(), "seen_tuner_warning", 1);
                 }

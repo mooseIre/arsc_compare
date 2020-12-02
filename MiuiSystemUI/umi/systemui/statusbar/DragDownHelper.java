@@ -8,7 +8,7 @@ import android.content.Context;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
-import com.android.systemui.C0009R$dimen;
+import com.android.systemui.C0012R$dimen;
 import com.android.systemui.ExpandHelper;
 import com.android.systemui.Gefingerpoken;
 import com.android.systemui.Interpolators;
@@ -51,7 +51,7 @@ public class DragDownHelper implements Gefingerpoken {
     }
 
     public DragDownHelper(Context context, View view, ExpandHelper.Callback callback, DragDownCallback dragDownCallback, FalsingManager falsingManager) {
-        this.mMinDragDistance = context.getResources().getDimensionPixelSize(C0009R$dimen.keyguard_drag_down_min_distance);
+        this.mMinDragDistance = context.getResources().getDimensionPixelSize(C0012R$dimen.keyguard_drag_down_min_distance);
         ViewConfiguration viewConfiguration = ViewConfiguration.get(context);
         this.mTouchSlop = (float) viewConfiguration.getScaledTouchSlop();
         this.mSlopMultiplier = viewConfiguration.getScaledAmbiguousGestureMultiplier();

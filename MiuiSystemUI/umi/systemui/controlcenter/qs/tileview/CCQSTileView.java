@@ -18,10 +18,10 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
-import com.android.systemui.C0008R$color;
-import com.android.systemui.C0009R$dimen;
-import com.android.systemui.C0018R$string;
-import com.android.systemui.C0019R$style;
+import com.android.systemui.C0011R$color;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0021R$string;
+import com.android.systemui.C0022R$style;
 import com.android.systemui.Dependency;
 import com.android.systemui.Interpolators;
 import com.android.systemui.controlcenter.phone.widget.VisibleFocusedTextView;
@@ -38,7 +38,8 @@ public class CCQSTileView extends QSTileView {
     private String mAccessibilityClass;
     private ObjectAnimator mBreathAnimator;
     private boolean mClicked;
-    private final H mHandler;
+    /* access modifiers changed from: private */
+    public final H mHandler;
     protected QSIconView mIcon;
     /* access modifiers changed from: private */
     public final FrameLayout mIconFrame;
@@ -60,11 +61,11 @@ public class CCQSTileView extends QSTileView {
         super(context);
         this.mHandler = new H();
         setOrientation(1);
-        context.getResources().getDimensionPixelSize(C0009R$dimen.qs_control_tile_label_padding_top);
+        context.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_tile_label_padding_top);
         FrameLayout frameLayout = new FrameLayout(context);
         this.mIconFrame = frameLayout;
         frameLayout.setForegroundGravity(17);
-        int dimensionPixelSize = context.getResources().getDimensionPixelSize(C0009R$dimen.qs_control_tile_icon_bg_size);
+        int dimensionPixelSize = context.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_tile_icon_bg_size);
         addView(this.mIconFrame, new LinearLayout.LayoutParams(dimensionPixelSize, dimensionPixelSize));
         this.mIcon = qSIconView;
         this.mIconFrame.addView(qSIconView, new LinearLayout.LayoutParams(dimensionPixelSize, dimensionPixelSize));
@@ -116,9 +117,9 @@ public class CCQSTileView extends QSTileView {
 
     private static VisibleFocusedTextView createQSStyleLabel(Context context) {
         VisibleFocusedTextView visibleFocusedTextView = new VisibleFocusedTextView(context);
-        visibleFocusedTextView.setTextAppearance(C0019R$style.TextAppearance_QSControl_CCTileLabel);
+        visibleFocusedTextView.setTextAppearance(C0022R$style.TextAppearance_QSControl_CCTileLabel);
         new LinearLayout.LayoutParams(-1, -2).gravity = 17;
-        visibleFocusedTextView.setPadding(0, context.getResources().getDimensionPixelSize(C0009R$dimen.qs_control_tile_label_padding_top), 0, 0);
+        visibleFocusedTextView.setPadding(0, context.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_tile_label_padding_top), 0, 0);
         visibleFocusedTextView.setGravity(17);
         visibleFocusedTextView.setEllipsize(TextUtils.TruncateAt.MARQUEE);
         visibleFocusedTextView.setMarqueeRepeatLimit(2);
@@ -133,7 +134,6 @@ public class CCQSTileView extends QSTileView {
         this.mIconFrame.setOnLongClickListener(onLongClickListener);
         this.mIconFrame.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                Class cls = HapticFeedBackImpl.class;
                 boolean z = true;
                 if (CCQSTileView.this.mIconMouseAnim == null) {
                     CCQSTileView cCQSTileView = CCQSTileView.this;
@@ -144,14 +144,16 @@ public class CCQSTileView extends QSTileView {
                 CCQSTileView.this.mIconMouseAnim.onMotionEventEx(view, motionEvent, new AnimConfig[0]);
                 int actionMasked = motionEvent.getActionMasked();
                 if (actionMasked == 0) {
-                    ((HapticFeedBackImpl) Dependency.get(cls)).flick();
+                    CCQSTileView.this.mHandler.sendEmptyMessageDelayed(2, 80);
                 } else if (actionMasked == 1) {
                     if (motionEvent.getPointerId(0) != 0 || !CCQSTileView.this.pointInView(motionEvent.getX(), motionEvent.getY(), 0.0f) || !CCQSTileView.this.mIconFrame.isShown()) {
                         z = false;
                     }
                     if (z) {
-                        ((HapticFeedBackImpl) Dependency.get(cls)).flick();
+                        ((HapticFeedBackImpl) Dependency.get(HapticFeedBackImpl.class)).flick();
                     }
+                } else if (actionMasked == 3) {
+                    CCQSTileView.this.mHandler.removeMessages(2);
                 }
                 return false;
             }
@@ -186,7 +188,7 @@ public class CCQSTileView extends QSTileView {
         }
         if (!Objects.equals(this.mLabel.getText(), state.label) || this.mState != state.state) {
             if (state.state == 0) {
-                state.label = new SpannableStringBuilder().append(state.label, new ForegroundColorSpan(getContext().getColor(C0008R$color.qs_control_tile_text_unavailable_color)), 18);
+                state.label = new SpannableStringBuilder().append(state.label, new ForegroundColorSpan(getContext().getColor(C0011R$color.qs_control_tile_text_unavailable_color)), 18);
             }
             this.mState = state.state;
             this.mLabel.setEnabled(true ^ state.disabledByPolicy);
@@ -196,7 +198,7 @@ public class CCQSTileView extends QSTileView {
 
     public void updateResources() {
         getIcon().updateResources();
-        getLabel().setTextAppearance(C0019R$style.TextAppearance_QSControl_CCTileLabel);
+        getLabel().setTextAppearance(C0022R$style.TextAppearance_QSControl_CCTileLabel);
     }
 
     public int getDetailY() {
@@ -246,7 +248,7 @@ public class CCQSTileView extends QSTileView {
             accessibilityEvent.setClassName(this.mAccessibilityClass);
             if (Switch.class.getName().equals(this.mAccessibilityClass)) {
                 boolean z = this.mClicked ? !this.mTileState : this.mTileState;
-                accessibilityEvent.setContentDescription(getResources().getString(z ? C0018R$string.switch_bar_on : C0018R$string.switch_bar_off));
+                accessibilityEvent.setContentDescription(getResources().getString(z ? C0021R$string.switch_bar_on : C0021R$string.switch_bar_off));
                 accessibilityEvent.setChecked(z);
             }
         }
@@ -260,7 +262,7 @@ public class CCQSTileView extends QSTileView {
             }
             if (Switch.class.getName().equals(this.mAccessibilityClass)) {
                 boolean z = this.mClicked ? !this.mTileState : this.mTileState;
-                accessibilityNodeInfo.setText(getResources().getString(z ? C0018R$string.switch_bar_on : C0018R$string.switch_bar_off));
+                accessibilityNodeInfo.setText(getResources().getString(z ? C0021R$string.switch_bar_on : C0021R$string.switch_bar_off));
                 accessibilityNodeInfo.setChecked(z);
                 accessibilityNodeInfo.setCheckable(true);
             }
@@ -273,8 +275,11 @@ public class CCQSTileView extends QSTileView {
         }
 
         public void handleMessage(Message message) {
-            if (message.what == 1) {
+            int i = message.what;
+            if (i == 1) {
                 CCQSTileView.this.handleStateChanged((QSTile.State) message.obj);
+            } else if (i == 2) {
+                ((HapticFeedBackImpl) Dependency.get(HapticFeedBackImpl.class)).flick();
             }
         }
     }

@@ -5,8 +5,8 @@ import android.hardware.display.AmbientDisplayConfiguration;
 import android.os.PowerManager;
 import android.os.SystemProperties;
 import android.util.MathUtils;
-import com.android.systemui.C0007R$bool;
-import com.android.systemui.C0013R$integer;
+import com.android.systemui.C0010R$bool;
+import com.android.systemui.C0016R$integer;
 import com.android.systemui.doze.AlwaysOnDisplayPolicy;
 import com.android.systemui.tuner.TunerService;
 
@@ -32,11 +32,11 @@ public class DozeParameters implements TunerService.Tunable, com.android.systemu
     }
 
     public boolean getDisplayStateSupported() {
-        return getBoolean("doze.display.supported", C0007R$bool.doze_display_state_supported);
+        return getBoolean("doze.display.supported", C0010R$bool.doze_display_state_supported);
     }
 
     public boolean getDozeSuspendDisplayStateSupported() {
-        return this.mResources.getBoolean(C0007R$bool.doze_suspend_display_state_supported);
+        return this.mResources.getBoolean(C0010R$bool.doze_suspend_display_state_supported);
     }
 
     public float getScreenBrightnessDoze() {
@@ -44,19 +44,19 @@ public class DozeParameters implements TunerService.Tunable, com.android.systemu
     }
 
     public int getPulseVisibleDuration() {
-        return getInt("doze.pulse.duration.visible", C0013R$integer.doze_pulse_duration_visible);
+        return getInt("doze.pulse.duration.visible", C0016R$integer.doze_pulse_duration_visible);
     }
 
     public boolean getPulseOnSigMotion() {
-        return getBoolean("doze.pulse.sigmotion", C0007R$bool.doze_pulse_on_significant_motion);
+        return getBoolean("doze.pulse.sigmotion", C0010R$bool.doze_pulse_on_significant_motion);
     }
 
     public boolean getProxCheckBeforePulse() {
-        return getBoolean("doze.pulse.proxcheck", C0007R$bool.doze_proximity_check_before_pulse);
+        return getBoolean("doze.pulse.proxcheck", C0010R$bool.doze_proximity_check_before_pulse);
     }
 
     public int getPickupVibrationThreshold() {
-        return getInt("doze.pickup.vibration.threshold", C0013R$integer.doze_pickup_vibration_threshold);
+        return getInt("doze.pickup.vibration.threshold", C0016R$integer.doze_pickup_vibration_threshold);
     }
 
     public long getWallpaperAodDuration() {
@@ -102,7 +102,7 @@ public class DozeParameters implements TunerService.Tunable, com.android.systemu
     }
 
     public boolean doubleTapReportsTouchCoordinates() {
-        return this.mResources.getBoolean(C0007R$bool.doze_double_tap_reports_touch_coordinates);
+        return this.mResources.getBoolean(C0010R$bool.doze_double_tap_reports_touch_coordinates);
     }
 
     public void onTuningChanged(String str, String str2) {

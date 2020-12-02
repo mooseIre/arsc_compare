@@ -10,7 +10,7 @@ import android.icu.text.DisplayContext;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.widget.TextView;
-import com.android.systemui.C0018R$string;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.Dependency;
 import com.android.systemui.R$styleable;
 import com.android.systemui.broadcast.BroadcastDispatcher;
@@ -68,7 +68,7 @@ public class DateView extends TextView {
             this.mDatePattern = obtainStyledAttributes.getString(R$styleable.DateView_datePattern);
             obtainStyledAttributes.recycle();
             if (this.mDatePattern == null) {
-                this.mDatePattern = getContext().getString(C0018R$string.system_ui_date_pattern);
+                this.mDatePattern = getContext().getString(C0021R$string.system_ui_date_pattern);
             }
             this.mBroadcastDispatcher = (BroadcastDispatcher) Dependency.get(BroadcastDispatcher.class);
         } catch (Throwable th) {

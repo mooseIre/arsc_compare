@@ -6,9 +6,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.android.systemui.C0009R$dimen;
-import com.android.systemui.C0012R$id;
-import com.android.systemui.C0014R$layout;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0017R$layout;
 import java.util.List;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
@@ -25,7 +25,7 @@ public final class StructureAdapter extends RecyclerView.Adapter<StructureHolder
     @NotNull
     public StructureHolder onCreateViewHolder(@NotNull ViewGroup viewGroup, int i) {
         Intrinsics.checkParameterIsNotNull(viewGroup, "parent");
-        View inflate = LayoutInflater.from(viewGroup.getContext()).inflate(C0014R$layout.controls_structure_page, viewGroup, false);
+        View inflate = LayoutInflater.from(viewGroup.getContext()).inflate(C0017R$layout.controls_structure_page, viewGroup, false);
         Intrinsics.checkExpressionValueIsNotNull(inflate, "layoutInflater.inflate(R…ture_page, parent, false)");
         return new StructureHolder(inflate);
     }
@@ -48,14 +48,14 @@ public final class StructureAdapter extends RecyclerView.Adapter<StructureHolder
         public StructureHolder(@NotNull View view) {
             super(view);
             Intrinsics.checkParameterIsNotNull(view, "view");
-            View requireViewById = this.itemView.requireViewById(C0012R$id.listAll);
+            View requireViewById = this.itemView.requireViewById(C0015R$id.listAll);
             Intrinsics.checkExpressionValueIsNotNull(requireViewById, "itemView.requireViewById…cyclerView>(R.id.listAll)");
             this.recyclerView = (RecyclerView) requireViewById;
             View view2 = this.itemView;
             Intrinsics.checkExpressionValueIsNotNull(view2, "itemView");
             Context context = view2.getContext();
             Intrinsics.checkExpressionValueIsNotNull(context, "itemView.context");
-            this.controlAdapter = new ControlAdapter(context.getResources().getFloat(C0009R$dimen.control_card_elevation));
+            this.controlAdapter = new ControlAdapter(context.getResources().getFloat(C0012R$dimen.control_card_elevation));
             setUpRecyclerView();
         }
 
@@ -69,7 +69,7 @@ public final class StructureAdapter extends RecyclerView.Adapter<StructureHolder
             Intrinsics.checkExpressionValueIsNotNull(view, "itemView");
             Context context = view.getContext();
             Intrinsics.checkExpressionValueIsNotNull(context, "itemView.context");
-            int dimensionPixelSize = context.getResources().getDimensionPixelSize(C0009R$dimen.controls_card_margin);
+            int dimensionPixelSize = context.getResources().getDimensionPixelSize(C0012R$dimen.controls_card_margin);
             MarginItemDecorator marginItemDecorator = new MarginItemDecorator(dimensionPixelSize, dimensionPixelSize);
             RecyclerView recyclerView2 = this.recyclerView;
             recyclerView2.setAdapter(this.controlAdapter);

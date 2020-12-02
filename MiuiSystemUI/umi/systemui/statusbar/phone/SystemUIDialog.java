@@ -11,7 +11,7 @@ import android.os.UserHandle;
 import android.view.Window;
 import android.view.WindowInsets;
 import android.view.WindowManager;
-import com.android.systemui.C0019R$style;
+import com.android.systemui.C0022R$style;
 import com.android.systemui.Dependency;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.statusbar.phone.SystemUIDialog;
@@ -23,7 +23,7 @@ public class SystemUIDialog extends AlertDialog {
     private final DismissReceiver mDismissReceiver;
 
     public SystemUIDialog(Context context) {
-        this(context, C0019R$style.Theme_SystemUI_Dialog);
+        this(context, C0022R$style.Theme_SystemUI_Dialog);
     }
 
     public SystemUIDialog(Context context, int i) {

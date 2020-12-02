@@ -8,9 +8,11 @@ import android.service.dreams.IDreamManager;
 import android.util.Log;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
 import com.android.systemui.statusbar.CommandQueue;
+import com.android.systemui.statusbar.notification.ExpandedNotification;
 import com.android.systemui.statusbar.notification.NotificationFilter;
 import com.android.systemui.statusbar.notification.NotificationUtil;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
+import com.android.systemui.statusbar.phone.StatusBarKeyguardViewManager;
 import com.android.systemui.statusbar.policy.BatteryController;
 import com.android.systemui.statusbar.policy.HeadsUpManager;
 import com.android.systemui.statusbar.policy.ZenModeController;
@@ -19,15 +21,17 @@ import com.miui.systemui.SettingsManager;
 public class MiuiNotificationInterruptStateProviderImpl extends NotificationInterruptStateProviderImpl implements CommandQueue.Callbacks {
     private boolean mDisableFloatNotification;
     private final SettingsManager mSettingsManager;
+    private final StatusBarKeyguardViewManager mStatusBarKeyguardViewManager;
     private final StatusBarStateController mStatusBarStateController;
     private final ZenModeController mZenModeController;
 
-    public MiuiNotificationInterruptStateProviderImpl(ContentResolver contentResolver, PowerManager powerManager, IDreamManager iDreamManager, AmbientDisplayConfiguration ambientDisplayConfiguration, NotificationFilter notificationFilter, BatteryController batteryController, StatusBarStateController statusBarStateController, HeadsUpManager headsUpManager, Handler handler, ZenModeController zenModeController, SettingsManager settingsManager, CommandQueue commandQueue) {
+    public MiuiNotificationInterruptStateProviderImpl(ContentResolver contentResolver, PowerManager powerManager, IDreamManager iDreamManager, AmbientDisplayConfiguration ambientDisplayConfiguration, NotificationFilter notificationFilter, BatteryController batteryController, StatusBarStateController statusBarStateController, HeadsUpManager headsUpManager, Handler handler, ZenModeController zenModeController, SettingsManager settingsManager, CommandQueue commandQueue, StatusBarKeyguardViewManager statusBarKeyguardViewManager) {
         super(contentResolver, powerManager, iDreamManager, ambientDisplayConfiguration, notificationFilter, batteryController, statusBarStateController, headsUpManager, handler);
         this.mStatusBarStateController = statusBarStateController;
         this.mZenModeController = zenModeController;
         this.mSettingsManager = settingsManager;
         commandQueue.addCallback((CommandQueue.Callbacks) this);
+        this.mStatusBarKeyguardViewManager = statusBarKeyguardViewManager;
     }
 
     public void disable(int i, int i2, int i3, boolean z) {
@@ -46,9 +50,11 @@ public class MiuiNotificationInterruptStateProviderImpl extends NotificationInte
     }
 
     public boolean shouldPeek(NotificationEntry notificationEntry) {
-        if (NotificationUtil.isInCallNotification(notificationEntry.getSbn())) {
-            Log.d("InterruptionStateProvider", "peek in call notification " + notificationEntry.getKey());
-            return true;
+        ExpandedNotification sbn = notificationEntry.getSbn();
+        if (sbn.getNotification().fullScreenIntent != null && NotificationUtil.isInCallNotification(sbn)) {
+            boolean z = !this.mStatusBarKeyguardViewManager.isShowing();
+            Log.d("InterruptionStateProvider", "in call notification should peek: " + z);
+            return z;
         } else if (this.mDisableFloatNotification) {
             Log.d("InterruptionStateProvider", "no peek disable float notification " + notificationEntry.getKey());
             return false;

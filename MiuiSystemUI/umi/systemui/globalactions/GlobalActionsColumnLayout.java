@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 import com.android.internal.annotations.VisibleForTesting;
-import com.android.systemui.C0009R$dimen;
+import com.android.systemui.C0012R$dimen;
 
 public class GlobalActionsColumnLayout extends GlobalActionsLayout {
     private boolean mLastSnap;
@@ -96,7 +96,7 @@ public class GlobalActionsColumnLayout extends GlobalActionsLayout {
     /* access modifiers changed from: protected */
     @VisibleForTesting
     public int getPowerButtonOffsetDistance() {
-        return Math.round(getContext().getResources().getDimension(C0009R$dimen.global_actions_top_padding));
+        return Math.round(getContext().getResources().getDimension(C0012R$dimen.global_actions_top_padding));
     }
 
     /* access modifiers changed from: protected */
@@ -134,7 +134,7 @@ public class GlobalActionsColumnLayout extends GlobalActionsLayout {
     /* access modifiers changed from: protected */
     @VisibleForTesting
     public float getGridItemSize() {
-        return getContext().getResources().getDimension(C0009R$dimen.global_actions_grid_item_height);
+        return getContext().getResources().getDimension(C0012R$dimen.global_actions_grid_item_height);
     }
 
     /* access modifiers changed from: protected */

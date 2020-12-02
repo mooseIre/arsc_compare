@@ -5,8 +5,8 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Switch;
 import androidx.lifecycle.LifecycleOwner;
-import com.android.systemui.C0010R$drawable;
-import com.android.systemui.C0018R$string;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.plugins.ActivityStarter;
 import com.android.systemui.plugins.qs.QSTile;
 import com.android.systemui.qs.QSHost;
@@ -40,7 +40,7 @@ public class ScreenRecordTile extends QSTileImpl<QSTile.BooleanState> implements
 
     public QSTile.BooleanState newTileState() {
         QSTile.BooleanState booleanState = new QSTile.BooleanState();
-        booleanState.label = this.mContext.getString(C0018R$string.quick_settings_screen_record_label);
+        booleanState.label = this.mContext.getString(C0021R$string.quick_settings_screen_record_label);
         booleanState.handlesLongClick = false;
         return booleanState;
     }
@@ -68,14 +68,14 @@ public class ScreenRecordTile extends QSTileImpl<QSTile.BooleanState> implements
         boolean isRecording = this.mController.isRecording();
         booleanState.value = isRecording || isStarting;
         booleanState.state = (isRecording || isStarting) ? 2 : 1;
-        booleanState.label = this.mContext.getString(C0018R$string.quick_settings_screen_record_label);
-        booleanState.icon = QSTileImpl.ResourceIcon.get(C0010R$drawable.ic_screenrecord);
+        booleanState.label = this.mContext.getString(C0021R$string.quick_settings_screen_record_label);
+        booleanState.icon = QSTileImpl.ResourceIcon.get(C0013R$drawable.ic_screenrecord);
         if (isRecording) {
-            booleanState.secondaryLabel = this.mContext.getString(C0018R$string.quick_settings_screen_record_stop);
+            booleanState.secondaryLabel = this.mContext.getString(C0021R$string.quick_settings_screen_record_stop);
         } else if (isStarting) {
             booleanState.secondaryLabel = String.format("%d...", new Object[]{Integer.valueOf((int) Math.floorDiv(this.mMillisUntilFinished + 500, 1000))});
         } else {
-            booleanState.secondaryLabel = this.mContext.getString(C0018R$string.quick_settings_screen_record_start);
+            booleanState.secondaryLabel = this.mContext.getString(C0021R$string.quick_settings_screen_record_start);
         }
         if (TextUtils.isEmpty(booleanState.secondaryLabel)) {
             charSequence = booleanState.label;
@@ -87,7 +87,7 @@ public class ScreenRecordTile extends QSTileImpl<QSTile.BooleanState> implements
     }
 
     public CharSequence getTileLabel() {
-        return this.mContext.getString(C0018R$string.quick_settings_screen_record_label);
+        return this.mContext.getString(C0021R$string.quick_settings_screen_record_label);
     }
 
     /* access modifiers changed from: private */

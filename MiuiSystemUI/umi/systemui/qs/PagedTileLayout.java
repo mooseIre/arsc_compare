@@ -20,8 +20,8 @@ import android.widget.Scroller;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 import com.android.internal.logging.UiEventLogger;
-import com.android.systemui.C0009R$dimen;
-import com.android.systemui.C0014R$layout;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0017R$layout;
 import com.android.systemui.plugins.qs.QSTile;
 import com.android.systemui.qs.QSPanel;
 import java.util.ArrayList;
@@ -252,7 +252,7 @@ public class PagedTileLayout extends ViewPager implements QSPanel.QSTileLayout {
     }
 
     private TilePage createTilePage() {
-        TilePage tilePage = (TilePage) LayoutInflater.from(getContext()).inflate(C0014R$layout.qs_paged_page, this, false);
+        TilePage tilePage = (TilePage) LayoutInflater.from(getContext()).inflate(C0017R$layout.qs_paged_page, this, false);
         tilePage.setMinRows(this.mMinRows);
         tilePage.setMaxColumns(this.mMaxColumns);
         return tilePage;
@@ -354,8 +354,8 @@ public class PagedTileLayout extends ViewPager implements QSPanel.QSTileLayout {
     }
 
     public boolean updateResources() {
-        getContext().getResources().getDimensionPixelSize(C0009R$dimen.notification_side_paddings);
-        setPadding(0, 0, 0, getContext().getResources().getDimensionPixelSize(C0009R$dimen.qs_paged_tile_layout_padding_bottom));
+        getContext().getResources().getDimensionPixelSize(C0012R$dimen.notification_side_paddings);
+        setPadding(0, 0, 0, getContext().getResources().getDimensionPixelSize(C0012R$dimen.qs_paged_tile_layout_padding_bottom));
         boolean z = false;
         for (int i = 0; i < this.mPages.size(); i++) {
             z |= this.mPages.get(i).updateResources();

@@ -215,26 +215,7 @@ public class BiometricUnlockController extends MiuiKeyguardUpdateMonitorCallback
         if (biometricSourceType == BiometricSourceType.FINGERPRINT) {
             this.mFpiState = MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.SUCCEEDED;
         }
-        if (this.mKeyguardViewMediator.isGoingToShowKeyguard() && !MiuiKeyguardUtils.isGxzwSensor()) {
-            int i2 = 0;
-            boolean isBiometricAllowedForUser = this.mUpdateMonitor.getStrongAuthTracker().isBiometricAllowedForUser(z, i);
-            if (this.mDozeScrimController.isPulsing() && isBiometricAllowedForUser) {
-                i2 = 2;
-            } else if (isBiometricAllowedForUser || !this.mKeyguardStateController.isMethodSecure()) {
-                i2 = 1;
-            }
-            ((KeyguardUpdateMonitorInjector) Dependency.get(KeyguardUpdateMonitorInjector.class)).setFingerprintMode(i2);
-            if (!this.mKeyguardViewMediator.isShowing() && KeyguardUpdateMonitor.getCurrentUser() == i && (i2 == 2 || i2 == 1)) {
-                Slog.i("miui_keyguard_fingerprint", "Unlock by fingerprint, keyguard is not showing and wake up");
-                synchronized (this) {
-                }
-                this.mPowerManager.wakeUp(SystemClock.uptimeMillis(), "android.policy:FINGERPRINT");
-            }
-            Trace.endSection();
-        } else if (this.mUpdateMonitor.isGoingToSleep()) {
-            this.mPendingAuthenticated = new PendingAuthenticated(i, biometricSourceType, z);
-            Trace.endSection();
-        } else {
+        if (!this.mKeyguardViewMediator.isGoingToShowKeyguard() || MiuiKeyguardUtils.isGxzwSensor()) {
             this.mMetricsLogger.write(new LogMaker(1697).setType(10).setSubtype(toSubtype(biometricSourceType)));
             Optional ofNullable = Optional.ofNullable(BiometricUiEvent.SUCCESS_EVENT_BY_SOURCE_TYPE.get(biometricSourceType));
             UiEventLogger uiEventLogger = UI_EVENT_LOGGER;
@@ -256,7 +237,26 @@ public class BiometricUnlockController extends MiuiKeyguardUpdateMonitorCallback
                 return;
             }
             Log.d("BiometricUnlockCtrl", "onBiometricAuthenticated aborted by bypass controller");
+            return;
         }
+        int i2 = 0;
+        boolean isBiometricAllowedForUser = this.mUpdateMonitor.getStrongAuthTracker().isBiometricAllowedForUser(z, i);
+        if (this.mDozeScrimController.isPulsing() && isBiometricAllowedForUser) {
+            i2 = 2;
+        } else if (isBiometricAllowedForUser || !this.mKeyguardStateController.isMethodSecure()) {
+            i2 = 1;
+        }
+        ((KeyguardUpdateMonitorInjector) Dependency.get(KeyguardUpdateMonitorInjector.class)).setFingerprintMode(i2);
+        if (!this.mKeyguardViewMediator.isShowing() && KeyguardUpdateMonitor.getCurrentUser() == i && (i2 == 2 || i2 == 1)) {
+            Slog.i("miui_keyguard_fingerprint", "Unlock by fingerprint, keyguard is not showing and wake up");
+            this.mKeyguardViewMediator.cancelPendingLock();
+            synchronized (this) {
+            }
+            this.mPowerManager.wakeUp(SystemClock.uptimeMillis(), "android.policy:FINGERPRINT");
+        } else {
+            this.mPendingAuthenticated = new PendingAuthenticated(i, biometricSourceType, z);
+        }
+        Trace.endSection();
     }
 
     private void startWakeAndUnlock(BiometricSourceType biometricSourceType, boolean z, int i) {

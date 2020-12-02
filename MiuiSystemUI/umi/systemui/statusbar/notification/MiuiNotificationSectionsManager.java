@@ -1,20 +1,28 @@
 package com.android.systemui.statusbar.notification;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import com.android.internal.annotations.VisibleForTesting;
-import com.android.systemui.C0014R$layout;
+import com.android.systemui.C0017R$layout;
+import com.android.systemui.C0021R$string;
+import com.android.systemui.plugins.ActivityStarter;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
 import com.android.systemui.statusbar.notification.stack.NotificationSectionsLogger;
 import com.android.systemui.statusbar.notification.stack.NotificationSectionsManager;
 import com.android.systemui.statusbar.notification.zen.ZenModeView;
 import com.android.systemui.statusbar.notification.zen.ZenModeViewController;
+import com.miui.internal.vip.utils.Utils;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /* compiled from: MiuiNotificationSectionsManager.kt */
 public final class MiuiNotificationSectionsManager extends NotificationSectionsManager {
+    public static final Companion Companion = new Companion((DefaultConstructorMarker) null);
+    @NotNull
+    private final ActivityStarter activityStarter;
     @NotNull
     private final NotificationSectionsLogger logger;
     private final MiuiNotificationSectionsFeatureManager sectionsFeatureManager;
@@ -26,43 +34,45 @@ public final class MiuiNotificationSectionsManager extends NotificationSectionsM
 
     /* JADX WARNING: Illegal instructions before constructor call */
     /* Code decompiled incorrectly, please refer to instructions dump. */
-    public MiuiNotificationSectionsManager(@org.jetbrains.annotations.NotNull com.android.systemui.plugins.ActivityStarter r14, @org.jetbrains.annotations.NotNull com.android.systemui.plugins.statusbar.StatusBarStateController r15, @org.jetbrains.annotations.NotNull com.android.systemui.statusbar.policy.ConfigurationController r16, @org.jetbrains.annotations.NotNull com.android.systemui.statusbar.notification.people.PeopleHubViewAdapter r17, @org.jetbrains.annotations.NotNull com.android.systemui.media.KeyguardMediaController r18, @org.jetbrains.annotations.NotNull com.android.systemui.statusbar.notification.zen.ZenModeViewController r19, @org.jetbrains.annotations.NotNull com.android.systemui.statusbar.notification.MiuiNotificationSectionsFeatureManager r20, @org.jetbrains.annotations.NotNull com.android.systemui.statusbar.notification.stack.NotificationSectionsLogger r21) {
+    public MiuiNotificationSectionsManager(@org.jetbrains.annotations.NotNull com.android.systemui.plugins.ActivityStarter r15, @org.jetbrains.annotations.NotNull com.android.systemui.plugins.statusbar.StatusBarStateController r16, @org.jetbrains.annotations.NotNull com.android.systemui.statusbar.policy.ConfigurationController r17, @org.jetbrains.annotations.NotNull com.android.systemui.statusbar.notification.people.PeopleHubViewAdapter r18, @org.jetbrains.annotations.NotNull com.android.systemui.media.KeyguardMediaController r19, @org.jetbrains.annotations.NotNull com.android.systemui.statusbar.notification.zen.ZenModeViewController r20, @org.jetbrains.annotations.NotNull com.android.systemui.statusbar.notification.MiuiNotificationSectionsFeatureManager r21, @org.jetbrains.annotations.NotNull com.android.systemui.statusbar.notification.stack.NotificationSectionsLogger r22) {
         /*
-            r13 = this;
-            r8 = r13
+            r14 = this;
+            r8 = r14
             r9 = r15
-            r10 = r19
+            r10 = r16
             r11 = r20
             r12 = r21
+            r13 = r22
             java.lang.String r0 = "activityStarter"
-            r1 = r14
-            kotlin.jvm.internal.Intrinsics.checkParameterIsNotNull(r14, r0)
-            java.lang.String r0 = "statusBarStateController"
             kotlin.jvm.internal.Intrinsics.checkParameterIsNotNull(r15, r0)
+            java.lang.String r0 = "statusBarStateController"
+            kotlin.jvm.internal.Intrinsics.checkParameterIsNotNull(r10, r0)
             java.lang.String r0 = "configurationController"
-            r3 = r16
+            r3 = r17
             kotlin.jvm.internal.Intrinsics.checkParameterIsNotNull(r3, r0)
             java.lang.String r0 = "peopleHubViewAdapter"
-            r4 = r17
+            r4 = r18
             kotlin.jvm.internal.Intrinsics.checkParameterIsNotNull(r4, r0)
             java.lang.String r0 = "keyguardMediaController"
-            r5 = r18
+            r5 = r19
             kotlin.jvm.internal.Intrinsics.checkParameterIsNotNull(r5, r0)
             java.lang.String r0 = "zenModeViewController"
-            kotlin.jvm.internal.Intrinsics.checkParameterIsNotNull(r10, r0)
-            java.lang.String r0 = "sectionsFeatureManager"
             kotlin.jvm.internal.Intrinsics.checkParameterIsNotNull(r11, r0)
-            java.lang.String r0 = "logger"
+            java.lang.String r0 = "sectionsFeatureManager"
             kotlin.jvm.internal.Intrinsics.checkParameterIsNotNull(r12, r0)
-            r0 = r13
-            r2 = r15
-            r6 = r20
-            r7 = r21
+            java.lang.String r0 = "logger"
+            kotlin.jvm.internal.Intrinsics.checkParameterIsNotNull(r13, r0)
+            r0 = r14
+            r1 = r15
+            r2 = r16
+            r6 = r21
+            r7 = r22
             r0.<init>(r1, r2, r3, r4, r5, r6, r7)
-            r8.statusBarStateController = r9
-            r8.zenModeViewController = r10
-            r8.sectionsFeatureManager = r11
-            r8.logger = r12
+            r8.activityStarter = r9
+            r8.statusBarStateController = r10
+            r8.zenModeViewController = r11
+            r8.sectionsFeatureManager = r12
+            r8.logger = r13
             return
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.notification.MiuiNotificationSectionsManager.<init>(com.android.systemui.plugins.ActivityStarter, com.android.systemui.plugins.statusbar.StatusBarStateController, com.android.systemui.statusbar.policy.ConfigurationController, com.android.systemui.statusbar.notification.people.PeopleHubViewAdapter, com.android.systemui.media.KeyguardMediaController, com.android.systemui.statusbar.notification.zen.ZenModeViewController, com.android.systemui.statusbar.notification.MiuiNotificationSectionsFeatureManager, com.android.systemui.statusbar.notification.stack.NotificationSectionsLogger):void");
@@ -77,7 +87,7 @@ public final class MiuiNotificationSectionsManager extends NotificationSectionsM
     public void reinflateViews(@NotNull LayoutInflater layoutInflater) {
         Intrinsics.checkParameterIsNotNull(layoutInflater, "layoutInflater");
         super.reinflateViews(layoutInflater);
-        ZenModeView zenModeView2 = (ZenModeView) reinflateView(this.zenModeView, layoutInflater, C0014R$layout.keyguard_zen_header);
+        ZenModeView zenModeView2 = (ZenModeView) reinflateView(this.zenModeView, layoutInflater, C0017R$layout.keyguard_zen_header);
         this.zenModeViewController.attach(zenModeView2);
         this.zenModeView = zenModeView2;
     }
@@ -646,5 +656,31 @@ public final class MiuiNotificationSectionsManager extends NotificationSectionsM
             return
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.notification.MiuiNotificationSectionsManager.updateSectionBoundaries(java.lang.String):void");
+    }
+
+    public void onGentleHeaderClick() {
+        this.activityStarter.startActivity(Companion.intent4NotificationControlCenterSettings(), true);
+    }
+
+    /* compiled from: MiuiNotificationSectionsManager.kt */
+    public static final class Companion {
+        private Companion() {
+        }
+
+        public /* synthetic */ Companion(DefaultConstructorMarker defaultConstructorMarker) {
+            this();
+        }
+
+        @NotNull
+        public final Intent intent4NotificationControlCenterSettings() {
+            Intent intent = new Intent("android.intent.action.MAIN");
+            intent.setClassName("com.android.settings", "com.android.settings.SubSettings");
+            intent.putExtra(":settings:show_fragment", "com.android.settings.NotificationControlCenterSettings");
+            Context context = Utils.getContext();
+            Intrinsics.checkExpressionValueIsNotNull(context, "Utils.getContext()");
+            intent.putExtra(":settings:show_fragment_title", context.getResources().getString(C0021R$string.notification_control_center));
+            intent.addFlags(268435456);
+            return intent;
+        }
     }
 }

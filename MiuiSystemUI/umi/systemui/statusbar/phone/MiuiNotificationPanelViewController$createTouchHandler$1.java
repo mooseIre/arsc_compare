@@ -98,7 +98,7 @@ public final class MiuiNotificationPanelViewController$createTouchHandler$1 exte
         if (!this.isFullyExpandedOnDown || Math.abs(f) <= Math.abs(f2) || f >= ((float) 0) || Math.abs(f) <= ((float) this.this$0.mTouchSlop)) {
             return false;
         }
-        if (f3 > ((float) this.this$0.getPanelView().getHeight()) - this.this$0.mBottomAreaCollapseHotZone || (!this.this$0.isQsExpanded() && this.this$0.getMNotificationStackScroller().isScrolledToBottom())) {
+        if (f3 > (((float) this.this$0.getPanelView().getHeight()) - this.this$0.mBottomAreaCollapseHotZone) - ((float) this.this$0.getNotificationContainerParent().getPaddingBottom()) || (!this.this$0.isQsExpanded() && this.this$0.getMNotificationStackScroller().isScrolledToBottom())) {
             return true;
         }
         return false;

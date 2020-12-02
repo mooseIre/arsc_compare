@@ -26,9 +26,9 @@ public class DessertCaseView extends FrameLayout {
     private static final float[] ALPHA_MASK = {0.0f, 0.0f, 0.0f, 0.0f, 255.0f, 0.0f, 0.0f, 0.0f, 0.0f, 255.0f, 0.0f, 0.0f, 0.0f, 0.0f, 255.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f};
     private static final float[] MASK = {0.0f, 0.0f, 0.0f, 0.0f, 255.0f, 0.0f, 0.0f, 0.0f, 0.0f, 255.0f, 0.0f, 0.0f, 0.0f, 0.0f, 255.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f};
     private static final int NUM_PASTRIES;
-    private static final int[] PASTRIES = {C0010R$drawable.dessert_kitkat, C0010R$drawable.dessert_android};
-    private static final int[] RARE_PASTRIES = {C0010R$drawable.dessert_cupcake, C0010R$drawable.dessert_donut, C0010R$drawable.dessert_eclair, C0010R$drawable.dessert_froyo, C0010R$drawable.dessert_gingerbread, C0010R$drawable.dessert_honeycomb, C0010R$drawable.dessert_ics, C0010R$drawable.dessert_jellybean};
-    private static final int[] XRARE_PASTRIES = {C0010R$drawable.dessert_petitfour, C0010R$drawable.dessert_donutburger, C0010R$drawable.dessert_flan, C0010R$drawable.dessert_keylimepie};
+    private static final int[] PASTRIES = {C0013R$drawable.dessert_kitkat, C0013R$drawable.dessert_android};
+    private static final int[] RARE_PASTRIES = {C0013R$drawable.dessert_cupcake, C0013R$drawable.dessert_donut, C0013R$drawable.dessert_eclair, C0013R$drawable.dessert_froyo, C0013R$drawable.dessert_gingerbread, C0013R$drawable.dessert_honeycomb, C0013R$drawable.dessert_ics, C0013R$drawable.dessert_jellybean};
+    private static final int[] XRARE_PASTRIES = {C0013R$drawable.dessert_petitfour, C0013R$drawable.dessert_donutburger, C0013R$drawable.dessert_flan, C0013R$drawable.dessert_keylimepie};
     private static final int[] XXRARE_PASTRIES;
     float[] hsv;
     private int mCellSize;
@@ -49,7 +49,7 @@ public class DessertCaseView extends FrameLayout {
 
     static {
         Class<DessertCaseView> cls = DessertCaseView.class;
-        int[] iArr = {C0010R$drawable.dessert_zombiegingerbread, C0010R$drawable.dessert_dandroid, C0010R$drawable.dessert_jandycane};
+        int[] iArr = {C0013R$drawable.dessert_zombiegingerbread, C0013R$drawable.dessert_dandroid, C0013R$drawable.dessert_jandycane};
         XXRARE_PASTRIES = iArr;
         NUM_PASTRIES = PASTRIES.length + RARE_PASTRIES.length + XRARE_PASTRIES.length + iArr.length;
     }
@@ -83,7 +83,7 @@ public class DessertCaseView extends FrameLayout {
         this.tmpSet = new HashSet<>();
         Resources resources = getResources();
         this.mStarted = false;
-        this.mCellSize = resources.getDimensionPixelSize(C0009R$dimen.dessert_case_cell_size);
+        this.mCellSize = resources.getDimensionPixelSize(C0012R$dimen.dessert_case_cell_size);
         BitmapFactory.Options options = new BitmapFactory.Options();
         if (this.mCellSize < 512) {
             options.inSampleSize = 2;

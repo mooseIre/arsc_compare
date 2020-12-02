@@ -18,9 +18,9 @@ import android.graphics.drawable.Drawable;
 import android.util.FloatProperty;
 import android.view.ContextThemeWrapper;
 import com.android.settingslib.Utils;
-import com.android.systemui.C0006R$attr;
-import com.android.systemui.C0008R$color;
-import com.android.systemui.C0009R$dimen;
+import com.android.systemui.C0009R$attr;
+import com.android.systemui.C0011R$color;
+import com.android.systemui.C0012R$dimen;
 
 public class KeyButtonDrawable extends Drawable {
     public static final FloatProperty<KeyButtonDrawable> KEY_DRAWABLE_ROTATE = new FloatProperty<KeyButtonDrawable>("KeyButtonRotation") {
@@ -366,7 +366,7 @@ public class KeyButtonDrawable extends Drawable {
     }
 
     public static KeyButtonDrawable create(Context context, int i, boolean z, Color color) {
-        return create(new ContextThemeWrapper(context, Utils.getThemeAttr(context, C0006R$attr.lightIconTheme)), new ContextThemeWrapper(context, Utils.getThemeAttr(context, C0006R$attr.darkIconTheme)), i, z, color);
+        return create(new ContextThemeWrapper(context, Utils.getThemeAttr(context, C0009R$attr.lightIconTheme)), new ContextThemeWrapper(context, Utils.getThemeAttr(context, C0009R$attr.darkIconTheme)), i, z, color);
     }
 
     public static KeyButtonDrawable create(Context context, int i, boolean z) {
@@ -374,7 +374,7 @@ public class KeyButtonDrawable extends Drawable {
     }
 
     public static KeyButtonDrawable create(Context context, Context context2, int i, boolean z, Color color) {
-        return create(context, Utils.getColorAttrDefaultColor(context, C0006R$attr.singleToneColor), Utils.getColorAttrDefaultColor(context2, C0006R$attr.singleToneColor), i, z, color);
+        return create(context, Utils.getColorAttrDefaultColor(context, C0009R$attr.singleToneColor), Utils.getColorAttrDefaultColor(context2, C0009R$attr.singleToneColor), i, z, color);
     }
 
     public static KeyButtonDrawable create(Context context, int i, int i2, int i3, boolean z, Color color) {
@@ -383,7 +383,7 @@ public class KeyButtonDrawable extends Drawable {
         Drawable drawable = context.getDrawable(i3);
         KeyButtonDrawable keyButtonDrawable = new KeyButtonDrawable(drawable, i, i2, z2 && drawable.isAutoMirrored(), color);
         if (z) {
-            keyButtonDrawable.setShadowProperties(resources.getDimensionPixelSize(C0009R$dimen.nav_key_button_shadow_offset_x), resources.getDimensionPixelSize(C0009R$dimen.nav_key_button_shadow_offset_y), resources.getDimensionPixelSize(C0009R$dimen.nav_key_button_shadow_radius), context.getColor(C0008R$color.nav_key_button_shadow_color));
+            keyButtonDrawable.setShadowProperties(resources.getDimensionPixelSize(C0012R$dimen.nav_key_button_shadow_offset_x), resources.getDimensionPixelSize(C0012R$dimen.nav_key_button_shadow_offset_y), resources.getDimensionPixelSize(C0012R$dimen.nav_key_button_shadow_radius), context.getColor(C0011R$color.nav_key_button_shadow_color));
         }
         return keyButtonDrawable;
     }

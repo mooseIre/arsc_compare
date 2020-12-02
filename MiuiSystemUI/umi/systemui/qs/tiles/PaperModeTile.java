@@ -4,8 +4,8 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.util.Log;
 import android.widget.Switch;
-import com.android.systemui.C0010R$drawable;
-import com.android.systemui.C0018R$string;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.plugins.qs.QSTile;
 import com.android.systemui.qs.QSHost;
 import com.android.systemui.qs.tileimpl.QSTileImpl;
@@ -46,15 +46,15 @@ public class PaperModeTile extends QSTileImpl<QSTile.BooleanState> implements Pa
     }
 
     public CharSequence getTileLabel() {
-        return this.mContext.getString(C0018R$string.quick_settings_papermode_label);
+        return this.mContext.getString(C0021R$string.quick_settings_papermode_label);
     }
 
     /* access modifiers changed from: protected */
     public void handleUpdateState(QSTile.BooleanState booleanState, Object obj) {
-        booleanState.label = this.mContext.getString(C0018R$string.quick_settings_papermode_label);
+        booleanState.label = this.mContext.getString(C0021R$string.quick_settings_papermode_label);
         if (!this.mPaperModeController.isAvailable()) {
-            booleanState.icon = QSTileImpl.ResourceIcon.get(C0010R$drawable.ic_qs_paper_mode_off);
-            booleanState.contentDescription = booleanState.label + "," + this.mContext.getString(C0018R$string.switch_bar_off);
+            booleanState.icon = QSTileImpl.ResourceIcon.get(C0013R$drawable.ic_qs_paper_mode_off);
+            booleanState.contentDescription = booleanState.label + "," + this.mContext.getString(C0021R$string.switch_bar_off);
             booleanState.state = 0;
             return;
         }
@@ -69,16 +69,16 @@ public class PaperModeTile extends QSTileImpl<QSTile.BooleanState> implements Pa
             booleanState.value = this.mPaperModeController.isEnabled();
         }
         if (booleanState.value) {
-            booleanState.icon = QSTileImpl.ResourceIcon.get(C0010R$drawable.ic_qs_paper_mode_on);
+            booleanState.icon = QSTileImpl.ResourceIcon.get(C0013R$drawable.ic_qs_paper_mode_on);
             booleanState.state = 2;
         } else {
-            booleanState.icon = QSTileImpl.ResourceIcon.get(C0010R$drawable.ic_qs_paper_mode_off);
+            booleanState.icon = QSTileImpl.ResourceIcon.get(C0013R$drawable.ic_qs_paper_mode_off);
             booleanState.state = 1;
         }
         StringBuilder sb = new StringBuilder();
         sb.append(booleanState.label);
         sb.append(",");
-        sb.append(this.mContext.getString(booleanState.value ? C0018R$string.switch_bar_on : C0018R$string.switch_bar_off));
+        sb.append(this.mContext.getString(booleanState.value ? C0021R$string.switch_bar_on : C0021R$string.switch_bar_off));
         booleanState.contentDescription = sb.toString();
         booleanState.expandedAccessibilityClassName = Switch.class.getName();
         booleanState.activeBgColor = 1;

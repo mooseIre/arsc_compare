@@ -32,11 +32,11 @@ import com.android.internal.graphics.SfVsyncFrameCallbackProvider;
 import com.android.internal.logging.MetricsLogger;
 import com.android.internal.policy.DividerSnapAlgorithm;
 import com.android.internal.policy.DockedDividerUtils;
-import com.android.systemui.C0007R$bool;
-import com.android.systemui.C0009R$dimen;
-import com.android.systemui.C0012R$id;
-import com.android.systemui.C0013R$integer;
-import com.android.systemui.C0018R$string;
+import com.android.systemui.C0010R$bool;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0016R$integer;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.Dependency;
 import com.android.systemui.Interpolators;
 import com.android.systemui.recents.OverviewProxyService;
@@ -169,46 +169,46 @@ public class DividerView extends FrameLayout implements View.OnTouchListener, Vi
                 super.onInitializeAccessibilityNodeInfo(view, accessibilityNodeInfo);
                 DividerSnapAlgorithm snapAlgorithm = DividerView.this.getSnapAlgorithm();
                 if (DividerView.this.isHorizontalDivision()) {
-                    accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C0012R$id.action_move_tl_full, DividerView.this.mContext.getString(C0018R$string.accessibility_action_divider_top_full)));
+                    accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C0015R$id.action_move_tl_full, DividerView.this.mContext.getString(C0021R$string.accessibility_action_divider_top_full)));
                     if (snapAlgorithm.isFirstSplitTargetAvailable()) {
-                        accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C0012R$id.action_move_tl_70, DividerView.this.mContext.getString(C0018R$string.accessibility_action_divider_top_70)));
+                        accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C0015R$id.action_move_tl_70, DividerView.this.mContext.getString(C0021R$string.accessibility_action_divider_top_70)));
                     }
                     if (snapAlgorithm.showMiddleSplitTargetForAccessibility()) {
-                        accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C0012R$id.action_move_tl_50, DividerView.this.mContext.getString(C0018R$string.accessibility_action_divider_top_50)));
+                        accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C0015R$id.action_move_tl_50, DividerView.this.mContext.getString(C0021R$string.accessibility_action_divider_top_50)));
                     }
                     if (snapAlgorithm.isLastSplitTargetAvailable()) {
-                        accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C0012R$id.action_move_tl_30, DividerView.this.mContext.getString(C0018R$string.accessibility_action_divider_top_30)));
+                        accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C0015R$id.action_move_tl_30, DividerView.this.mContext.getString(C0021R$string.accessibility_action_divider_top_30)));
                     }
-                    accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C0012R$id.action_move_rb_full, DividerView.this.mContext.getString(C0018R$string.accessibility_action_divider_bottom_full)));
+                    accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C0015R$id.action_move_rb_full, DividerView.this.mContext.getString(C0021R$string.accessibility_action_divider_bottom_full)));
                     return;
                 }
-                accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C0012R$id.action_move_tl_full, DividerView.this.mContext.getString(C0018R$string.accessibility_action_divider_left_full)));
+                accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C0015R$id.action_move_tl_full, DividerView.this.mContext.getString(C0021R$string.accessibility_action_divider_left_full)));
                 if (snapAlgorithm.isFirstSplitTargetAvailable()) {
-                    accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C0012R$id.action_move_tl_70, DividerView.this.mContext.getString(C0018R$string.accessibility_action_divider_left_70)));
+                    accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C0015R$id.action_move_tl_70, DividerView.this.mContext.getString(C0021R$string.accessibility_action_divider_left_70)));
                 }
                 if (snapAlgorithm.showMiddleSplitTargetForAccessibility()) {
-                    accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C0012R$id.action_move_tl_50, DividerView.this.mContext.getString(C0018R$string.accessibility_action_divider_left_50)));
+                    accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C0015R$id.action_move_tl_50, DividerView.this.mContext.getString(C0021R$string.accessibility_action_divider_left_50)));
                 }
                 if (snapAlgorithm.isLastSplitTargetAvailable()) {
-                    accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C0012R$id.action_move_tl_30, DividerView.this.mContext.getString(C0018R$string.accessibility_action_divider_left_30)));
+                    accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C0015R$id.action_move_tl_30, DividerView.this.mContext.getString(C0021R$string.accessibility_action_divider_left_30)));
                 }
-                accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C0012R$id.action_move_rb_full, DividerView.this.mContext.getString(C0018R$string.accessibility_action_divider_right_full)));
+                accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C0015R$id.action_move_rb_full, DividerView.this.mContext.getString(C0021R$string.accessibility_action_divider_right_full)));
             }
 
             public boolean performAccessibilityAction(View view, int i, Bundle bundle) {
                 DividerSnapAlgorithm.SnapTarget dismissStartTarget;
                 int currentPosition = DividerView.this.getCurrentPosition();
                 DividerSnapAlgorithm snapAlgorithm = DividerView.this.mSplitLayout.getSnapAlgorithm();
-                if (i == C0012R$id.action_move_tl_full) {
+                if (i == C0015R$id.action_move_tl_full) {
                     dismissStartTarget = snapAlgorithm.getDismissEndTarget();
-                } else if (i == C0012R$id.action_move_tl_70) {
+                } else if (i == C0015R$id.action_move_tl_70) {
                     dismissStartTarget = snapAlgorithm.getLastSplitTarget();
-                } else if (i == C0012R$id.action_move_tl_50) {
+                } else if (i == C0015R$id.action_move_tl_50) {
                     dismissStartTarget = snapAlgorithm.getMiddleTarget();
-                } else if (i == C0012R$id.action_move_tl_30) {
+                } else if (i == C0015R$id.action_move_tl_30) {
                     dismissStartTarget = snapAlgorithm.getFirstSplitTarget();
                 } else {
-                    dismissStartTarget = i == C0012R$id.action_move_rb_full ? snapAlgorithm.getDismissStartTarget() : null;
+                    dismissStartTarget = i == C0015R$id.action_move_rb_full ? snapAlgorithm.getDismissStartTarget() : null;
                 }
                 DividerSnapAlgorithm.SnapTarget snapTarget = dismissStartTarget;
                 if (snapTarget == null) {
@@ -236,17 +236,17 @@ public class DividerView extends FrameLayout implements View.OnTouchListener, Vi
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mHandle = (DividerHandleView) findViewById(C0012R$id.docked_divider_handle);
-        this.mBackground = findViewById(C0012R$id.docked_divider_background);
-        this.mMinimizedShadow = (MinimizedDockShadow) findViewById(C0012R$id.minimized_dock_shadow);
+        this.mHandle = (DividerHandleView) findViewById(C0015R$id.docked_divider_handle);
+        this.mBackground = findViewById(C0015R$id.docked_divider_background);
+        this.mMinimizedShadow = (MinimizedDockShadow) findViewById(C0015R$id.minimized_dock_shadow);
         this.mHandle.setOnTouchListener(this);
         int dimensionPixelSize = getResources().getDimensionPixelSize(17105177);
         int dimensionPixelSize2 = getResources().getDimensionPixelSize(17105176);
         this.mDividerInsets = dimensionPixelSize2;
         this.mDividerSize = dimensionPixelSize - (dimensionPixelSize2 * 2);
-        this.mTouchElevation = getResources().getDimensionPixelSize(C0009R$dimen.docked_stack_divider_lift_elevation);
-        this.mLongPressEntraceAnimDuration = getResources().getInteger(C0013R$integer.long_press_dock_anim_duration);
-        getResources().getBoolean(C0007R$bool.recents_grow_in_multiwindow);
+        this.mTouchElevation = getResources().getDimensionPixelSize(C0012R$dimen.docked_stack_divider_lift_elevation);
+        this.mLongPressEntraceAnimDuration = getResources().getInteger(C0016R$integer.long_press_dock_anim_duration);
+        getResources().getBoolean(C0010R$bool.recents_grow_in_multiwindow);
         this.mTouchSlop = ViewConfiguration.get(this.mContext).getScaledTouchSlop();
         this.mFlingAnimationUtils = new FlingAnimationUtils(getResources().getDisplayMetrics(), 0.3f);
         this.mHandle.setPointerIcon(PointerIcon.getSystemIcon(getContext(), getResources().getConfiguration().orientation == 2 ? 1014 : 1015));

@@ -7,7 +7,7 @@ import android.content.IntentFilter;
 import android.os.Handler;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
-import com.android.systemui.C0018R$string;
+import com.android.systemui.C0021R$string;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -65,7 +65,7 @@ public class CarrierObserver {
         this.mBgHandler = handler2;
         this.mPhoneCount = TelephonyManager.getDefault().getPhoneCount();
         this.mCarriers = new String[this.mPhoneCount];
-        this.mNetworkNameSeparator = context.getString(C0018R$string.status_bar_network_name_separator);
+        this.mNetworkNameSeparator = context.getString(C0021R$string.status_bar_network_name_separator);
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("android.telephony.action.SERVICE_PROVIDERS_UPDATED");
         for (int i = 1; i < this.mPhoneCount; i++) {

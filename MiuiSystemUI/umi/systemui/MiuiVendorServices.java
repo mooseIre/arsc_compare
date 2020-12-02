@@ -9,11 +9,13 @@ import com.android.systemui.statusbar.notification.policy.NotificationAlertContr
 import com.android.systemui.statusbar.notification.policy.NotificationCountLimitPolicy;
 import com.android.systemui.statusbar.notification.policy.NotificationDynamicFpsController;
 import com.android.systemui.statusbar.policy.MiuiHeadsUpPolicy;
+import com.android.systemui.statusbar.policy.MiuiNotificationShadePolicy;
 import miui.util.Log;
 
 public class MiuiVendorServices extends SystemUI {
     MiuiGxzwPolicy mMiuiGxzwPolicy;
     MiuiHeadsUpPolicy mMiuiHeadsUpPolicy;
+    MiuiNotificationShadePolicy mMiuiNotificationShadePolicy;
     NotificationAlertController mNotifAlertController;
     NotificationCountLimitPolicy mNotifCountLimitPolicy;
     NotificationDynamicFpsController mNotifDynamicFpsController;
@@ -32,6 +34,7 @@ public class MiuiVendorServices extends SystemUI {
         this.mNotifAlertController.start();
         this.mNotifDynamicFpsController.start();
         this.mNotifCountLimitPolicy.start();
+        this.mMiuiNotificationShadePolicy.start();
     }
 
     private void setSettingsDefault() {
@@ -40,7 +43,7 @@ public class MiuiVendorServices extends SystemUI {
         Settings.Secure.putIntForUser(contentResolver, "charging_sounds_enabled", 0, 0);
         Settings.Secure.putIntForUser(contentResolver, "charging_sounds_enabled", 0, 10);
         Settings.Global.putInt(contentResolver, "music_in_white_list", 0);
-        Settings.Secure.putInt(contentResolver, "in_call_notification_enabled", this.mContext.getResources().getBoolean(C0007R$bool.play_incall_notification) ? 1 : 0);
+        Settings.Secure.putInt(contentResolver, "in_call_notification_enabled", this.mContext.getResources().getBoolean(C0010R$bool.play_incall_notification) ? 1 : 0);
     }
 
     private void setDeviceConfigDefault() {

@@ -10,7 +10,7 @@ import android.widget.ImeAwareEditText;
 import android.widget.TextView;
 import com.android.internal.widget.LockPatternChecker;
 import com.android.internal.widget.LockscreenCredential;
-import com.android.systemui.C0012R$id;
+import com.android.systemui.C0015R$id;
 
 public class AuthCredentialPasswordView extends AuthCredentialView implements TextView.OnEditorActionListener {
     private final InputMethodManager mImm = ((InputMethodManager) this.mContext.getSystemService(InputMethodManager.class));
@@ -23,7 +23,7 @@ public class AuthCredentialPasswordView extends AuthCredentialView implements Te
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        ImeAwareEditText findViewById = findViewById(C0012R$id.lockPassword);
+        ImeAwareEditText findViewById = findViewById(C0015R$id.lockPassword);
         this.mPasswordField = findViewById;
         findViewById.setOnEditorActionListener(this);
         this.mPasswordField.setOnKeyListener(new View.OnKeyListener() {

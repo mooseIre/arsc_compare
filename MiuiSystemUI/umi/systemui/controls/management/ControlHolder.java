@@ -9,8 +9,8 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.core.view.ViewCompat;
-import com.android.systemui.C0012R$id;
-import com.android.systemui.C0018R$string;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.controls.ControlInterface;
 import com.android.systemui.controls.management.ControlsModel;
 import com.android.systemui.controls.ui.RenderInfo;
@@ -50,23 +50,23 @@ public final class ControlHolder extends Holder {
         this.favoriteCallback = function2;
         View view2 = this.itemView;
         Intrinsics.checkExpressionValueIsNotNull(view2, "itemView");
-        this.favoriteStateDescription = view2.getContext().getString(C0018R$string.accessibility_control_favorite);
+        this.favoriteStateDescription = view2.getContext().getString(C0021R$string.accessibility_control_favorite);
         View view3 = this.itemView;
         Intrinsics.checkExpressionValueIsNotNull(view3, "itemView");
-        this.notFavoriteStateDescription = view3.getContext().getString(C0018R$string.accessibility_control_not_favorite);
-        View requireViewById = this.itemView.requireViewById(C0012R$id.icon);
+        this.notFavoriteStateDescription = view3.getContext().getString(C0021R$string.accessibility_control_not_favorite);
+        View requireViewById = this.itemView.requireViewById(C0015R$id.icon);
         Intrinsics.checkExpressionValueIsNotNull(requireViewById, "itemView.requireViewById(R.id.icon)");
         this.icon = (ImageView) requireViewById;
-        View requireViewById2 = this.itemView.requireViewById(C0012R$id.title);
+        View requireViewById2 = this.itemView.requireViewById(C0015R$id.title);
         Intrinsics.checkExpressionValueIsNotNull(requireViewById2, "itemView.requireViewById(R.id.title)");
         this.title = (TextView) requireViewById2;
-        View requireViewById3 = this.itemView.requireViewById(C0012R$id.subtitle);
+        View requireViewById3 = this.itemView.requireViewById(C0015R$id.subtitle);
         Intrinsics.checkExpressionValueIsNotNull(requireViewById3, "itemView.requireViewById(R.id.subtitle)");
         this.subtitle = (TextView) requireViewById3;
-        View requireViewById4 = this.itemView.requireViewById(C0012R$id.status);
+        View requireViewById4 = this.itemView.requireViewById(C0015R$id.status);
         Intrinsics.checkExpressionValueIsNotNull(requireViewById4, "itemView.requireViewById(R.id.status)");
         this.removed = (TextView) requireViewById4;
-        View requireViewById5 = this.itemView.requireViewById(C0012R$id.favorite);
+        View requireViewById5 = this.itemView.requireViewById(C0015R$id.favorite);
         CheckBox checkBox = (CheckBox) requireViewById5;
         checkBox.setVisibility(0);
         Intrinsics.checkExpressionValueIsNotNull(requireViewById5, "itemView.requireViewById…lity = View.VISIBLE\n    }");
@@ -86,7 +86,7 @@ public final class ControlHolder extends Holder {
         }
         View view = this.itemView;
         Intrinsics.checkExpressionValueIsNotNull(view, "itemView");
-        return view.getContext().getString(C0018R$string.accessibility_control_favorite_position, new Object[]{Integer.valueOf(getLayoutPosition() + 1)});
+        return view.getContext().getString(C0021R$string.accessibility_control_favorite_position, new Object[]{Integer.valueOf(getLayoutPosition() + 1)});
     }
 
     public void bindData(@NotNull ElementWrapper elementWrapper) {
@@ -101,7 +101,7 @@ public final class ControlHolder extends Holder {
         if (controlInterface.getRemoved()) {
             View view = this.itemView;
             Intrinsics.checkExpressionValueIsNotNull(view, "itemView");
-            charSequence = view.getContext().getText(C0018R$string.controls_removed);
+            charSequence = view.getContext().getText(C0021R$string.controls_removed);
         } else {
             charSequence = "";
         }

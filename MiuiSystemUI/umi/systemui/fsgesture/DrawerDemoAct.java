@@ -6,8 +6,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import com.android.systemui.C0012R$id;
-import com.android.systemui.C0014R$layout;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0017R$layout;
 import miui.os.Build;
 
 public class DrawerDemoAct extends FsGestureDemoBaseActiivy {
@@ -32,10 +32,10 @@ public class DrawerDemoAct extends FsGestureDemoBaseActiivy {
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         getWindow().addFlags(1024);
-        setContentView(C0014R$layout.drawer_demo_layout);
+        setContentView(C0017R$layout.drawer_demo_layout);
         FsgestureUtil.INSTANCE.hideSystemBars(getWindow().getDecorView());
-        this.drawerImg = (ImageView) findViewById(C0012R$id.drawer_img);
-        View findViewById = findViewById(C0012R$id.shelter_view);
+        this.drawerImg = (ImageView) findViewById(C0015R$id.drawer_img);
+        View findViewById = findViewById(C0015R$id.shelter_view);
         this.shelterView = findViewById;
         findViewById.setOnTouchListener(new View.OnTouchListener() {
             /* JADX WARNING: Code restructure failed: missing block: B:5:0x0011, code lost:
@@ -83,7 +83,7 @@ public class DrawerDemoAct extends FsGestureDemoBaseActiivy {
                     android.view.ViewGroup$LayoutParams r6 = r6.getLayoutParams()
                     com.android.systemui.fsgesture.DrawerDemoAct r3 = com.android.systemui.fsgesture.DrawerDemoAct.this
                     android.content.res.Resources r3 = r3.getResources()
-                    int r4 = com.android.systemui.C0009R$dimen.fsgesture_shelter_width
+                    int r4 = com.android.systemui.C0012R$dimen.fsgesture_shelter_width
                     int r3 = r3.getDimensionPixelSize(r4)
                     r6.width = r3
                     com.android.systemui.fsgesture.DrawerDemoAct r3 = com.android.systemui.fsgesture.DrawerDemoAct.this
@@ -159,7 +159,7 @@ public class DrawerDemoAct extends FsGestureDemoBaseActiivy {
                 DrawerDemoAct.this.drawerImg.setTranslationX((float) DrawerDemoAct.this.initTranslateWidht);
             }
         });
-        FsGestureDemoTitleView fsGestureDemoTitleView2 = (FsGestureDemoTitleView) findViewById(C0012R$id.fsgesture_title_view);
+        FsGestureDemoTitleView fsGestureDemoTitleView2 = (FsGestureDemoTitleView) findViewById(C0015R$id.fsgesture_title_view);
         this.fsGestureDemoTitleView = fsGestureDemoTitleView2;
         fsGestureDemoTitleView2.prepareTitleView(4);
         this.fsGestureDemoTitleView.registerSkipEvent(new View.OnClickListener() {
@@ -168,7 +168,7 @@ public class DrawerDemoAct extends FsGestureDemoBaseActiivy {
             }
         });
         GestureTitleViewUtil.setMargin(this, this.fsGestureDemoTitleView);
-        this.fsGestureDemoSwipeView = (FsGestureDemoSwipeView) findViewById(C0012R$id.fsgesture_swipe_view);
+        this.fsGestureDemoSwipeView = (FsGestureDemoSwipeView) findViewById(C0015R$id.fsgesture_swipe_view);
         startSwipeViewAnimation(3);
         this.mNavigationHandle = GestureLineUtils.createAndaddNavigationHandle((RelativeLayout) this.drawerImg.getParent());
     }

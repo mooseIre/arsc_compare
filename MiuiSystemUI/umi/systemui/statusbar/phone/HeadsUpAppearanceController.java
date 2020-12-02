@@ -65,20 +65,20 @@ public class HeadsUpAppearanceController implements OnHeadsUpChangedListener, Da
         /*
             r16 = this;
             r0 = r26
-            int r1 = com.android.systemui.C0012R$id.heads_up_status_bar_view
+            int r1 = com.android.systemui.C0015R$id.heads_up_status_bar_view
             android.view.View r1 = r0.findViewById(r1)
             r10 = r1
             com.android.systemui.statusbar.HeadsUpStatusBarView r10 = (com.android.systemui.statusbar.HeadsUpStatusBarView) r10
-            int r1 = com.android.systemui.C0012R$id.notification_stack_scroller
+            int r1 = com.android.systemui.C0015R$id.notification_stack_scroller
             r2 = r19
             android.view.View r1 = r2.findViewById(r1)
             r11 = r1
             com.android.systemui.statusbar.notification.stack.NotificationStackScrollLayout r11 = (com.android.systemui.statusbar.notification.stack.NotificationStackScrollLayout) r11
-            int r1 = com.android.systemui.C0012R$id.clock
+            int r1 = com.android.systemui.C0015R$id.clock
             android.view.View r13 = r0.findViewById(r1)
-            int r1 = com.android.systemui.C0012R$id.operator_name_frame
+            int r1 = com.android.systemui.C0015R$id.operator_name_frame
             android.view.View r14 = r0.findViewById(r1)
-            int r1 = com.android.systemui.C0012R$id.centered_icon_area
+            int r1 = com.android.systemui.C0015R$id.centered_icon_area
             android.view.View r15 = r0.findViewById(r1)
             r2 = r16
             r3 = r17

@@ -10,8 +10,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import com.android.systemui.C0012R$id;
-import com.android.systemui.C0014R$layout;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0017R$layout;
 import com.android.systemui.statusbar.notification.mediacontrol.DrawableFadeDisplayer;
 import com.android.systemui.statusbar.notification.mediacontrol.RoundedSideImageView;
 import com.android.systemui.util.animation.TransitionLayout;
@@ -46,27 +46,27 @@ public final class PlayerViewHolder {
     private PlayerViewHolder(View view) {
         if (view != null) {
             this.player = (TransitionLayout) view;
-            this.artwork = (RoundedSideImageView) view.requireViewById(C0012R$id.media_control_artwork);
-            this.appIcon = (ImageView) view.requireViewById(C0012R$id.icon);
-            this.appName = (TextView) view.requireViewById(C0012R$id.app_name);
-            this.albumView = (ImageView) view.requireViewById(C0012R$id.album_art);
-            this.titleText = (TextView) view.requireViewById(C0012R$id.header_title);
-            this.artistText = (TextView) view.requireViewById(C0012R$id.header_artist);
-            this.seamless = (ViewGroup) view.requireViewById(C0012R$id.media_seamless);
-            this.seamlessIcon = (ImageView) view.requireViewById(C0012R$id.media_seamless_image);
-            this.seamlessText = (TextView) view.requireViewById(C0012R$id.media_seamless_text);
-            this.seamlessFallback = (ImageView) view.requireViewById(C0012R$id.media_seamless_fallback);
-            this.seekBar = (SeekBar) view.requireViewById(C0012R$id.media_progress_bar);
-            ViewGroup viewGroup = (ViewGroup) view.requireViewById(C0012R$id.notification_media_progress_time);
-            this.elapsedTimeView = (TextView) view.requireViewById(C0012R$id.media_elapsed_time);
-            this.totalTimeView = (TextView) view.requireViewById(C0012R$id.media_total_time);
-            FrameLayout frameLayout = (FrameLayout) view.requireViewById(C0012R$id.actions);
-            this.action0 = (ImageButton) view.requireViewById(C0012R$id.action0);
-            this.action1 = (ImageButton) view.requireViewById(C0012R$id.action1);
-            this.action2 = (ImageButton) view.requireViewById(C0012R$id.action2);
-            this.action3 = (ImageButton) view.requireViewById(C0012R$id.action3);
-            this.action4 = (ImageButton) view.requireViewById(C0012R$id.action4);
-            view.requireViewById(C0012R$id.qs_media_controls_options);
+            this.artwork = (RoundedSideImageView) view.requireViewById(C0015R$id.media_control_artwork);
+            this.appIcon = (ImageView) view.requireViewById(C0015R$id.icon);
+            this.appName = (TextView) view.requireViewById(C0015R$id.app_name);
+            this.albumView = (ImageView) view.requireViewById(C0015R$id.album_art);
+            this.titleText = (TextView) view.requireViewById(C0015R$id.header_title);
+            this.artistText = (TextView) view.requireViewById(C0015R$id.header_artist);
+            this.seamless = (ViewGroup) view.requireViewById(C0015R$id.media_seamless);
+            this.seamlessIcon = (ImageView) view.requireViewById(C0015R$id.media_seamless_image);
+            this.seamlessText = (TextView) view.requireViewById(C0015R$id.media_seamless_text);
+            this.seamlessFallback = (ImageView) view.requireViewById(C0015R$id.media_seamless_fallback);
+            this.seekBar = (SeekBar) view.requireViewById(C0015R$id.media_progress_bar);
+            ViewGroup viewGroup = (ViewGroup) view.requireViewById(C0015R$id.notification_media_progress_time);
+            this.elapsedTimeView = (TextView) view.requireViewById(C0015R$id.media_elapsed_time);
+            this.totalTimeView = (TextView) view.requireViewById(C0015R$id.media_total_time);
+            FrameLayout frameLayout = (FrameLayout) view.requireViewById(C0015R$id.actions);
+            this.action0 = (ImageButton) view.requireViewById(C0015R$id.action0);
+            this.action1 = (ImageButton) view.requireViewById(C0015R$id.action1);
+            this.action2 = (ImageButton) view.requireViewById(C0015R$id.action2);
+            this.action3 = (ImageButton) view.requireViewById(C0015R$id.action3);
+            this.action4 = (ImageButton) view.requireViewById(C0015R$id.action4);
+            view.requireViewById(C0015R$id.qs_media_controls_options);
             return;
         }
         throw new TypeCastException("null cannot be cast to non-null type com.android.systemui.util.animation.TransitionLayout");
@@ -151,23 +151,23 @@ public final class PlayerViewHolder {
 
     @NotNull
     public final ImageButton getAction(int i) {
-        if (i == C0012R$id.action0) {
+        if (i == C0015R$id.action0) {
             ImageButton imageButton = this.action0;
             Intrinsics.checkExpressionValueIsNotNull(imageButton, "action0");
             return imageButton;
-        } else if (i == C0012R$id.action1) {
+        } else if (i == C0015R$id.action1) {
             ImageButton imageButton2 = this.action1;
             Intrinsics.checkExpressionValueIsNotNull(imageButton2, "action1");
             return imageButton2;
-        } else if (i == C0012R$id.action2) {
+        } else if (i == C0015R$id.action2) {
             ImageButton imageButton3 = this.action2;
             Intrinsics.checkExpressionValueIsNotNull(imageButton3, "action2");
             return imageButton3;
-        } else if (i == C0012R$id.action3) {
+        } else if (i == C0015R$id.action3) {
             ImageButton imageButton4 = this.action3;
             Intrinsics.checkExpressionValueIsNotNull(imageButton4, "action3");
             return imageButton4;
-        } else if (i == C0012R$id.action4) {
+        } else if (i == C0015R$id.action4) {
             ImageButton imageButton5 = this.action4;
             Intrinsics.checkExpressionValueIsNotNull(imageButton5, "action4");
             return imageButton5;
@@ -198,7 +198,7 @@ public final class PlayerViewHolder {
         public final PlayerViewHolder create(@NotNull LayoutInflater layoutInflater, @NotNull ViewGroup viewGroup) {
             Intrinsics.checkParameterIsNotNull(layoutInflater, "inflater");
             Intrinsics.checkParameterIsNotNull(viewGroup, "parent");
-            View inflate = layoutInflater.inflate(C0014R$layout.media_view, viewGroup, false);
+            View inflate = layoutInflater.inflate(C0017R$layout.media_view, viewGroup, false);
             Intrinsics.checkExpressionValueIsNotNull(inflate, "mediaView");
             inflate.setLayoutDirection(3);
             return new PlayerViewHolder(inflate, (DefaultConstructorMarker) null);

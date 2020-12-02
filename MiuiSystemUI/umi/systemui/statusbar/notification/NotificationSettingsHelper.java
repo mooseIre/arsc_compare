@@ -13,7 +13,7 @@ import android.os.ServiceManager;
 import android.os.UserHandle;
 import android.util.Log;
 import android.util.Slog;
-import com.android.systemui.C0007R$bool;
+import com.android.systemui.C0010R$bool;
 import com.android.systemui.Dependency;
 import com.android.systemui.statusbar.policy.UserSwitcherController;
 import com.miui.systemui.DebugConfig;
@@ -39,11 +39,11 @@ public class NotificationSettingsHelper {
     }
 
     public static boolean alwaysShowKeyguardNotifications() {
-        return ((NotificationSettingsManager) Dependency.get(NotificationSettingsManager.class)).getBoolean(C0007R$bool.kept_notifications_on_keyguard);
+        return ((NotificationSettingsManager) Dependency.get(NotificationSettingsManager.class)).getBoolean(C0010R$bool.kept_notifications_on_keyguard);
     }
 
     public static boolean shouldRunPeekAnimation() {
-        return ((NotificationSettingsManager) Dependency.get(NotificationSettingsManager.class)).getBoolean(C0007R$bool.config_runPeekAnimation);
+        return ((NotificationSettingsManager) Dependency.get(NotificationSettingsManager.class)).getBoolean(C0010R$bool.config_runPeekAnimation);
     }
 
     public static boolean isNotificationsBanned(Context context, String str) {
@@ -270,6 +270,10 @@ public class NotificationSettingsHelper {
 
     public static boolean canSendSubstituteNotification(String str) {
         return ((NotificationSettingsManager) Dependency.get(NotificationSettingsManager.class)).canSendSubstituteNotification(str);
+    }
+
+    public static boolean disableAutoGroupSummary(String str) {
+        return ((NotificationSettingsManager) Dependency.get(NotificationSettingsManager.class)).disableAutoGroupSummary(str);
     }
 
     public static void startAppNotificationSettings(Context context, String str, String str2, int i, String str3) {

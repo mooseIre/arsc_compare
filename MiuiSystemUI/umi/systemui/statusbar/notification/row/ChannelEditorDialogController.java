@@ -14,8 +14,8 @@ import android.view.WindowInsets;
 import android.view.WindowManager;
 import android.widget.TextView;
 import com.android.internal.annotations.VisibleForTesting;
-import com.android.systemui.C0012R$id;
-import com.android.systemui.C0014R$layout;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0017R$layout;
 import com.android.systemui.statusbar.notification.row.ChannelEditorDialog;
 import com.android.systemui.statusbar.notification.row.NotificationInfo;
 import java.util.ArrayList;
@@ -357,10 +357,10 @@ public final class ChannelEditorDialogController {
                 channelEditorDialog.setTitle(" ");
                 ChannelEditorDialog channelEditorDialog2 = this.dialog;
                 if (channelEditorDialog2 != null) {
-                    channelEditorDialog2.setContentView(C0014R$layout.notif_half_shelf);
+                    channelEditorDialog2.setContentView(C0017R$layout.notif_half_shelf);
                     channelEditorDialog2.setCanceledOnTouchOutside(true);
                     channelEditorDialog2.setOnDismissListener(new ChannelEditorDialogController$initDialog$$inlined$apply$lambda$1(this));
-                    ChannelEditorListView channelEditorListView = (ChannelEditorListView) channelEditorDialog2.findViewById(C0012R$id.half_shelf_container);
+                    ChannelEditorListView channelEditorListView = (ChannelEditorListView) channelEditorDialog2.findViewById(C0015R$id.half_shelf_container);
                     if (channelEditorListView != null) {
                         channelEditorListView.setController(this);
                         channelEditorListView.setAppIcon(this.appIcon);
@@ -368,11 +368,11 @@ public final class ChannelEditorDialogController {
                         channelEditorListView.setChannels(this.paddedChannels);
                     }
                     channelEditorDialog2.setOnShowListener(new ChannelEditorDialogController$initDialog$$inlined$apply$lambda$2(channelEditorListView, this));
-                    TextView textView = (TextView) channelEditorDialog2.findViewById(C0012R$id.done_button);
+                    TextView textView = (TextView) channelEditorDialog2.findViewById(C0015R$id.done_button);
                     if (textView != null) {
                         textView.setOnClickListener(new ChannelEditorDialogController$initDialog$$inlined$apply$lambda$3(this));
                     }
-                    TextView textView2 = (TextView) channelEditorDialog2.findViewById(C0012R$id.see_more_button);
+                    TextView textView2 = (TextView) channelEditorDialog2.findViewById(C0015R$id.see_more_button);
                     if (textView2 != null) {
                         textView2.setOnClickListener(new ChannelEditorDialogController$initDialog$$inlined$apply$lambda$4(this));
                     }

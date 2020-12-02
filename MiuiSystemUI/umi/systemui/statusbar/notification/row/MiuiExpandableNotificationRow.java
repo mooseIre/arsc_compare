@@ -6,7 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
-import com.android.systemui.C0010R$drawable;
+import com.android.systemui.C0013R$drawable;
 import com.android.systemui.Dependency;
 import com.android.systemui.statusbar.notification.ExpandedNotification;
 import com.android.systemui.statusbar.notification.FakeShadowView;
@@ -100,11 +100,11 @@ public final class MiuiExpandableNotificationRow extends ExpandableNotificationR
 
     private final void updateBackgroundBg() {
         if (!isHeadsUpState()) {
-            this.mBackgroundNormal.setCustomBackground(C0010R$drawable.notification_item_bg);
+            this.mBackgroundNormal.setCustomBackground(C0013R$drawable.notification_item_bg);
         } else if (((SettingsManager) Dependency.get(SettingsManager.class)).getGameModeEnabled()) {
-            this.mBackgroundNormal.setCustomBackground(C0010R$drawable.optimized_game_heads_up_notification_bg);
+            this.mBackgroundNormal.setCustomBackground(C0013R$drawable.optimized_game_heads_up_notification_bg);
         } else {
-            this.mBackgroundNormal.setCustomBackground(C0010R$drawable.notification_heads_up_bg);
+            this.mBackgroundNormal.setCustomBackground(C0013R$drawable.notification_heads_up_bg);
         }
     }
 

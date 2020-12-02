@@ -7,7 +7,7 @@ import android.provider.Settings;
 import android.util.ArrayMap;
 import android.util.Log;
 import com.android.internal.logging.MetricsLogger;
-import com.android.systemui.C0013R$integer;
+import com.android.systemui.C0016R$integer;
 import com.android.systemui.Dependency;
 import com.android.systemui.statusbar.AlertingNotificationManager;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
@@ -46,11 +46,11 @@ public abstract class HeadsUpManager extends AlertingNotificationManager {
         this.mContext = context;
         this.mAccessibilityMgr = (AccessibilityManagerWrapper) Dependency.get(AccessibilityManagerWrapper.class);
         Resources resources = context.getResources();
-        this.mMinimumDisplayTime = resources.getInteger(C0013R$integer.heads_up_notification_minimum_time);
-        this.mAutoDismissNotificationDecay = resources.getInteger(C0013R$integer.heads_up_notification_decay);
-        this.mTouchAcceptanceDelay = resources.getInteger(C0013R$integer.touch_acceptance_delay);
+        this.mMinimumDisplayTime = resources.getInteger(C0016R$integer.heads_up_notification_minimum_time);
+        this.mAutoDismissNotificationDecay = resources.getInteger(C0016R$integer.heads_up_notification_decay);
+        this.mTouchAcceptanceDelay = resources.getInteger(C0016R$integer.touch_acceptance_delay);
         this.mSnoozedPackages = new ArrayMap<>();
-        this.mSnoozeLengthMs = Settings.Global.getInt(context.getContentResolver(), "heads_up_snooze_length_ms", resources.getInteger(C0013R$integer.heads_up_default_snooze_length_ms));
+        this.mSnoozeLengthMs = Settings.Global.getInt(context.getContentResolver(), "heads_up_snooze_length_ms", resources.getInteger(C0016R$integer.heads_up_default_snooze_length_ms));
         context.getContentResolver().registerContentObserver(Settings.Global.getUriFor("heads_up_snooze_length_ms"), false, new ContentObserver(this.mHandler) {
             public void onChange(boolean z) {
                 int i = Settings.Global.getInt(context.getContentResolver(), "heads_up_snooze_length_ms", -1);
@@ -160,7 +160,11 @@ public abstract class HeadsUpManager extends AlertingNotificationManager {
 
     public void snooze() {
         for (String headsUpEntry : this.mAlertEntries.keySet()) {
-            this.mSnoozedPackages.put(snoozeKey(getHeadsUpEntry(headsUpEntry).mEntry.getSbn().getPackageName(), this.mUser), Long.valueOf(this.mClock.currentTimeMillis() + ((long) this.mSnoozeLengthMs)));
+            HeadsUpEntry headsUpEntry2 = getHeadsUpEntry(headsUpEntry);
+            String packageName = headsUpEntry2.mEntry.getSbn().getPackageName();
+            if (!HeadsUpManagerInjector.skipSnooze(headsUpEntry2.mEntry)) {
+                this.mSnoozedPackages.put(snoozeKey(packageName, this.mUser), Long.valueOf(this.mClock.currentTimeMillis() + ((long) this.mSnoozeLengthMs)));
+            }
         }
     }
 
@@ -330,6 +334,10 @@ public abstract class HeadsUpManager extends AlertingNotificationManager {
 
         /* access modifiers changed from: protected */
         public int getRecommendedHeadsUpTimeoutMs(int i) {
+            int miuiFloatTime = HeadsUpManagerInjector.getMiuiFloatTime(this.mEntry);
+            if (miuiFloatTime > 0) {
+                return miuiFloatTime;
+            }
             return HeadsUpManager.this.mAccessibilityMgr.getRecommendedTimeoutMillis(i, 7);
         }
     }

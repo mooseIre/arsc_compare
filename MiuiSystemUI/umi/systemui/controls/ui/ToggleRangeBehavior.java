@@ -14,8 +14,8 @@ import android.util.MathUtils;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
-import com.android.systemui.C0009R$dimen;
-import com.android.systemui.C0012R$id;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0015R$id;
 import com.android.systemui.Interpolators;
 import java.util.Arrays;
 import java.util.IllegalFormatException;
@@ -169,7 +169,7 @@ public final class ToggleRangeBehavior implements Behavior {
                     if (controlViewHolder2 != null) {
                         Drawable background = controlViewHolder2.getLayout().getBackground();
                         if (background != null) {
-                            Drawable findDrawableByLayerId = ((LayerDrawable) background).findDrawableByLayerId(C0012R$id.clip_layer);
+                            Drawable findDrawableByLayerId = ((LayerDrawable) background).findDrawableByLayerId(C0015R$id.clip_layer);
                             Intrinsics.checkExpressionValueIsNotNull(findDrawableByLayerId, "ld.findDrawableByLayerId(R.id.clip_layer)");
                             this.clipLayer = findDrawableByLayerId;
                             Control control3 = this.control;
@@ -235,7 +235,7 @@ public final class ToggleRangeBehavior implements Behavior {
             if (controlViewHolder2 != null) {
                 Context context2 = this.context;
                 if (context2 != null) {
-                    controlViewHolder2.setStatusTextSize((float) context2.getResources().getDimensionPixelSize(C0009R$dimen.control_status_expanded));
+                    controlViewHolder2.setStatusTextSize((float) context2.getResources().getDimensionPixelSize(C0012R$dimen.control_status_expanded));
                 } else {
                     Intrinsics.throwUninitializedPropertyAccessException("context");
                     throw null;
@@ -409,7 +409,7 @@ public final class ToggleRangeBehavior implements Behavior {
         if (controlViewHolder != null) {
             Context context2 = this.context;
             if (context2 != null) {
-                controlViewHolder.setStatusTextSize((float) context2.getResources().getDimensionPixelSize(C0009R$dimen.control_status_normal));
+                controlViewHolder.setStatusTextSize((float) context2.getResources().getDimensionPixelSize(C0012R$dimen.control_status_normal));
                 ControlViewHolder controlViewHolder2 = this.cvh;
                 if (controlViewHolder2 != null) {
                     controlViewHolder2.setStatusText(this.currentStatusText + ' ' + this.currentRangeValue, true);

@@ -6,7 +6,7 @@ import android.content.Context;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
-import com.android.systemui.C0009R$dimen;
+import com.android.systemui.C0012R$dimen;
 import com.android.systemui.plugins.FalsingManager;
 import com.android.systemui.statusbar.FlingAnimationUtils;
 import com.android.systemui.statusbar.KeyguardAffordanceView;
@@ -66,10 +66,10 @@ public class KeyguardAffordanceHelper {
         ViewConfiguration viewConfiguration = ViewConfiguration.get(this.mContext);
         viewConfiguration.getScaledPagingTouchSlop();
         viewConfiguration.getScaledMinimumFlingVelocity();
-        this.mContext.getResources().getDimensionPixelSize(C0009R$dimen.keyguard_min_swipe_amount);
-        this.mContext.getResources().getDimensionPixelSize(C0009R$dimen.keyguard_affordance_min_background_radius);
-        this.mTouchTargetSize = this.mContext.getResources().getDimensionPixelSize(C0009R$dimen.keyguard_affordance_touch_target_size);
-        this.mContext.getResources().getDimensionPixelSize(C0009R$dimen.hint_grow_amount_sideways);
+        this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.keyguard_min_swipe_amount);
+        this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.keyguard_affordance_min_background_radius);
+        this.mTouchTargetSize = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.keyguard_affordance_touch_target_size);
+        this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.hint_grow_amount_sideways);
         new FlingAnimationUtils(this.mContext.getResources().getDisplayMetrics(), 0.4f);
     }
 

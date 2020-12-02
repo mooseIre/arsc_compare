@@ -11,14 +11,16 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.RemoteException;
 import android.os.ServiceManager;
+import android.os.UserHandle;
 import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import com.android.systemui.C0012R$id;
-import com.android.systemui.C0014R$layout;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0017R$layout;
 import com.android.systemui.SystemUI;
+import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.controlcenter.phone.ControlPanelContentView;
 import com.android.systemui.controlcenter.phone.ControlPanelController;
 import com.android.systemui.controlcenter.phone.ControlPanelWindowManager;
@@ -36,14 +38,17 @@ import com.android.systemui.statusbar.phone.StatusBar;
 import com.android.systemui.statusbar.phone.StatusBarIconController;
 import com.android.systemui.util.InjectionInflationController;
 import com.miui.systemui.util.CommonUtil;
+import java.util.concurrent.Executor;
 
 public class ControlCenter extends SystemUI implements ControlPanelController.UseControlPanelChangeListener, SuperSaveModeController.SuperSaveModeChangeListener, CommandQueue.Callbacks {
     public static final boolean DEBUG = Constants.DEBUG;
     private static final boolean ONLY_CORE_APPS;
+    private BroadcastDispatcher mBroadcastDispatcher;
     protected BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
-            if ("android.intent.action.CLOSE_SYSTEM_DIALOGS".equals(intent.getAction())) {
-                ControlCenter.this.collapse(true);
+            String action = intent.getAction();
+            if ("android.intent.action.CLOSE_SYSTEM_DIALOGS".equals(action) || "android.intent.action.SCREEN_OFF".equals(action)) {
+                ControlCenter.this.collapseControlCenter(true);
             }
         }
     };
@@ -80,7 +85,7 @@ public class ControlCenter extends SystemUI implements ControlPanelController.Us
         ONLY_CORE_APPS = z;
     }
 
-    public ControlCenter(Context context, ControlPanelController controlPanelController, StatusBarIconController statusBarIconController, ExpandInfoController expandInfoController, ActivityStarter activityStarter, CommandQueue commandQueue, InjectionInflationController injectionInflationController, SuperSaveModeController superSaveModeController, ControlCenterActivityStarter controlCenterActivityStarter, QSTileHost qSTileHost, ControlPanelWindowManager controlPanelWindowManager, StatusBar statusBar, ControlsPluginManager controlsPluginManager) {
+    public ControlCenter(Context context, ControlPanelController controlPanelController, StatusBarIconController statusBarIconController, ExpandInfoController expandInfoController, ActivityStarter activityStarter, CommandQueue commandQueue, InjectionInflationController injectionInflationController, SuperSaveModeController superSaveModeController, ControlCenterActivityStarter controlCenterActivityStarter, QSTileHost qSTileHost, ControlPanelWindowManager controlPanelWindowManager, StatusBar statusBar, ControlsPluginManager controlsPluginManager, BroadcastDispatcher broadcastDispatcher) {
         super(context);
         this.mControlPanelController = controlPanelController;
         this.mExpandInfoController = expandInfoController;
@@ -93,6 +98,7 @@ public class ControlCenter extends SystemUI implements ControlPanelController.Us
         this.mControlPanelWindowManager = controlPanelWindowManager;
         this.mStatusBar = statusBar;
         this.mControlsPluginManager = controlsPluginManager;
+        this.mBroadcastDispatcher = broadcastDispatcher;
     }
 
     public void start() {
@@ -197,12 +203,12 @@ public class ControlCenter extends SystemUI implements ControlPanelController.Us
         this.mControlPanelController.setControlCenter(this);
         this.mSuperSaveModeController.addCallback((SuperSaveModeController.SuperSaveModeChangeListener) this);
         this.mCommandQueue.addCallback((CommandQueue.Callbacks) this);
-        ControlPanelWindowView controlPanelWindowView = (ControlPanelWindowView) this.mInjectionInflationController.injectable(LayoutInflater.from(this.mContext)).inflate(C0014R$layout.control_panel, (ViewGroup) null);
+        ControlPanelWindowView controlPanelWindowView = (ControlPanelWindowView) this.mInjectionInflationController.injectable(LayoutInflater.from(this.mContext)).inflate(C0017R$layout.control_panel, (ViewGroup) null);
         this.mControlPanelWindowView = controlPanelWindowView;
         controlPanelWindowView.setControlCenter(this);
         this.mControlPanelWindowManager.addControlPanel(this.mControlPanelWindowView);
         register();
-        ControlPanelContentView controlPanelContentView = (ControlPanelContentView) this.mControlPanelWindowView.findViewById(C0012R$id.control_panel_content);
+        ControlPanelContentView controlPanelContentView = (ControlPanelContentView) this.mControlPanelWindowView.findViewById(C0015R$id.control_panel_content);
         this.mControlPanelContentView = controlPanelContentView;
         if (controlPanelContentView != null) {
             controlPanelContentView.setHost(this.mQSControlTileHost);
@@ -230,12 +236,13 @@ public class ControlCenter extends SystemUI implements ControlPanelController.Us
     public void register() {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("android.intent.action.CLOSE_SYSTEM_DIALOGS");
-        this.mContext.registerReceiver(this.mBroadcastReceiver, intentFilter, (String) null, (Handler) null);
+        intentFilter.addAction("android.intent.action.SCREEN_OFF");
+        this.mBroadcastDispatcher.registerReceiver(this.mBroadcastReceiver, intentFilter, (Executor) null, UserHandle.ALL);
     }
 
     /* access modifiers changed from: protected */
     public void unregister() {
-        this.mContext.unregisterReceiver(this.mBroadcastReceiver);
+        this.mBroadcastDispatcher.unregisterReceiver(this.mBroadcastReceiver);
     }
 
     public boolean isExpandable() {
@@ -245,7 +252,7 @@ public class ControlCenter extends SystemUI implements ControlPanelController.Us
     public void collapse(boolean z) {
         StatusBar statusBar = this.mStatusBar;
         if (statusBar != null && !statusBar.isQSFullyCollapsed()) {
-            this.mStatusBar.collapsePanels();
+            this.mStatusBar.postAnimateCollapsePanels();
         }
         collapseControlCenter(z);
     }

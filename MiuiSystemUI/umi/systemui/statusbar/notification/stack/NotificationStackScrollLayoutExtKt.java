@@ -78,4 +78,9 @@ public final class NotificationStackScrollLayoutExtKt {
         }
         return 0;
     }
+
+    public static final void setQsExpansionEnabled(@NotNull NotificationStackScrollLayout notificationStackScrollLayout, boolean z) {
+        Intrinsics.checkParameterIsNotNull(notificationStackScrollLayout, "$this$setQsExpansionEnabled");
+        notificationStackScrollLayout.getAmbientState().setQsExpansionEnabled(z);
+    }
 }

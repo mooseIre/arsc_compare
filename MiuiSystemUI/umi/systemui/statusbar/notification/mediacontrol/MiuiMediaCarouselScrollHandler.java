@@ -1,10 +1,14 @@
 package com.android.systemui.statusbar.notification.mediacontrol;
 
+import android.view.View;
+import android.view.ViewGroup;
 import com.android.systemui.media.MediaCarouselScrollHandler;
 import com.android.systemui.media.MediaScrollView;
 import com.android.systemui.plugins.FalsingManager;
 import com.android.systemui.qs.PageIndicator;
+import com.android.systemui.statusbar.notification.stack.MiuiMediaHeaderView;
 import com.android.systemui.util.concurrency.DelayableExecutor;
+import kotlin.TypeCastException;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
 import kotlin.jvm.internal.Intrinsics;
@@ -30,14 +34,38 @@ public final class MiuiMediaCarouselScrollHandler extends MediaCarouselScrollHan
     /* access modifiers changed from: protected */
     public void startScroll(int i, int i2, float f) {
         getScrollView().cancelCurrentScroll();
-        int playerWidthPlusPadding = i + (getPlayerWidthPlusPadding() / 3);
-        int playerWidthPlusPadding2 = playerWidthPlusPadding - (playerWidthPlusPadding % getPlayerWidthPlusPadding());
+        int mSidePaddings = (i - MiuiMediaHeaderView.Companion.getMSidePaddings()) + (getPlayerWidthPlusPadding() / 3);
+        int playerWidthPlusPadding = mSidePaddings - (mSidePaddings % getPlayerWidthPlusPadding());
         AnimConfig animConfig = new AnimConfig();
         animConfig.setEase(-2, 0.95f, 0.4f);
         AnimState animState = new AnimState("start");
         animState.add(ViewProperty.SCROLL_X, getScrollView().getScrollX(), new long[0]);
         AnimState animState2 = new AnimState("target");
-        animState2.add(ViewProperty.SCROLL_X, playerWidthPlusPadding2, new long[0]);
+        animState2.add(ViewProperty.SCROLL_X, playerWidthPlusPadding, new long[0]);
         Folme.useAt(getScrollView()).state().fromTo(animState, animState2, animConfig);
+    }
+
+    /* access modifiers changed from: protected */
+    public void updateMediaPaddings() {
+        int childCount = getMediaContent().getChildCount();
+        int i = 0;
+        while (i < childCount) {
+            View childAt = getMediaContent().getChildAt(i);
+            Intrinsics.checkExpressionValueIsNotNull(childAt, "mediaView");
+            ViewGroup.LayoutParams layoutParams = childAt.getLayoutParams();
+            if (layoutParams != null) {
+                ViewGroup.MarginLayoutParams marginLayoutParams = (ViewGroup.MarginLayoutParams) layoutParams;
+                if (i == 0) {
+                    marginLayoutParams.setMarginStart(MiuiMediaHeaderView.Companion.getMSidePaddings());
+                } else {
+                    marginLayoutParams.setMarginStart(0);
+                }
+                marginLayoutParams.setMarginEnd(MiuiMediaHeaderView.Companion.getMSidePaddings());
+                childAt.setLayoutParams(marginLayoutParams);
+                i++;
+            } else {
+                throw new TypeCastException("null cannot be cast to non-null type android.view.ViewGroup.MarginLayoutParams");
+            }
+        }
     }
 }

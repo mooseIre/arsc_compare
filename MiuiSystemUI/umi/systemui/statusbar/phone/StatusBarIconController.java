@@ -1,6 +1,7 @@
 package com.android.systemui.statusbar.phone;
 
 import android.content.Context;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.ArraySet;
@@ -9,8 +10,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import com.android.internal.statusbar.StatusBarIcon;
-import com.android.systemui.C0005R$array;
-import com.android.systemui.C0009R$dimen;
+import com.android.systemui.C0008R$array;
+import com.android.systemui.C0012R$dimen;
 import com.android.systemui.DemoMode;
 import com.android.systemui.Dependency;
 import com.android.systemui.plugins.DarkIconDispatcher;
@@ -52,7 +53,7 @@ public interface StatusBarIconController {
         String[] strArr;
         ArraySet<String> arraySet = new ArraySet<>();
         if (str == null) {
-            strArr = context.getResources().getStringArray(C0005R$array.config_statusBarIconBlackList);
+            strArr = context.getResources().getStringArray(C0008R$array.config_statusBarIconBlackList);
         } else {
             strArr = str.split(",");
         }
@@ -66,7 +67,7 @@ public interface StatusBarIconController {
 
     public static class DarkIconManager extends IconManager {
         private final DarkIconDispatcher mDarkIconDispatcher = ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class));
-        private int mIconHPadding = this.mContext.getResources().getDimensionPixelSize(C0009R$dimen.status_bar_icon_padding);
+        private int mIconHPadding = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.status_bar_icon_padding);
 
         public DarkIconManager(LinearLayout linearLayout, CommandQueue commandQueue) {
             super(linearLayout, commandQueue);
@@ -117,16 +118,21 @@ public interface StatusBarIconController {
 
         /* access modifiers changed from: protected */
         public void onIconAdded(int i, String str, boolean z, StatusBarIconHolder statusBarIconHolder) {
-            addHolder(i, str, z, statusBarIconHolder).setLight(this.mLight, this.mColor);
+            StatusIconDisplayable addHolder = addHolder(i, str, z, statusBarIconHolder);
+            Rect rect = new Rect();
+            float f = this.mLight ? 0.0f : 1.0f;
+            int i2 = this.mColor;
+            addHolder.onDarkChanged(rect, f, i2, i2, i2, false);
         }
 
         public void setLight(boolean z, int i) {
             this.mLight = z;
             this.mColor = i;
+            Rect rect = new Rect();
             for (int i2 = 0; i2 < this.mGroup.getChildCount(); i2++) {
                 View childAt = this.mGroup.getChildAt(i2);
                 if (childAt instanceof StatusIconDisplayable) {
-                    ((StatusIconDisplayable) childAt).setLight(this.mLight, this.mColor);
+                    ((StatusIconDisplayable) childAt).onDarkChanged(rect, z ? 0.0f : 1.0f, i, i, i, false);
                 }
             }
         }
@@ -148,7 +154,7 @@ public interface StatusBarIconController {
             this.mGroup = viewGroup;
             Context context = viewGroup.getContext();
             this.mContext = context;
-            this.mIconSize = context.getResources().getDimensionPixelSize(C0009R$dimen.status_bar_icon_height);
+            this.mIconSize = context.getResources().getDimensionPixelSize(C0012R$dimen.status_bar_icon_height);
             Utils.DisableStateTracker disableStateTracker = new Utils.DisableStateTracker(0, 2, commandQueue);
             this.mGroup.addOnAttachStateChangeListener(disableStateTracker);
             if (this.mGroup.isAttachedToWindow()) {

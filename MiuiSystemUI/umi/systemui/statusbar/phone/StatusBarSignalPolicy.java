@@ -5,9 +5,9 @@ import android.os.Handler;
 import android.telephony.SubscriptionInfo;
 import android.util.ArraySet;
 import android.util.Log;
-import com.android.systemui.C0007R$bool;
-import com.android.systemui.C0010R$drawable;
-import com.android.systemui.C0018R$string;
+import com.android.systemui.C0010R$bool;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.Dependency;
 import com.android.systemui.statusbar.policy.NetworkController;
 import com.android.systemui.statusbar.policy.SecurityController;
@@ -56,7 +56,7 @@ public class StatusBarSignalPolicy implements NetworkController.SignalCallback, 
         this.mSlotWifi = this.mContext.getString(17041414);
         this.mSlotEthernet = this.mContext.getString(17041392);
         this.mSlotVpn = this.mContext.getString(17041413);
-        this.mActivityEnabled = this.mContext.getResources().getBoolean(C0007R$bool.config_showActivity);
+        this.mActivityEnabled = this.mContext.getResources().getBoolean(C0010R$bool.config_showActivity);
         this.mIconController = statusBarIconController;
         initMiuiSlot();
         this.mNetworkController = (NetworkController) Dependency.get(NetworkController.class);
@@ -69,12 +69,12 @@ public class StatusBarSignalPolicy implements NetworkController.SignalCallback, 
     /* access modifiers changed from: private */
     public void updateVpn() {
         boolean isVpnEnabled = this.mSecurityController.isVpnEnabled();
-        this.mIconController.setIcon(this.mSlotVpn, currentVpnIconId(this.mSecurityController.isVpnBranded()), this.mContext.getResources().getString(C0018R$string.accessibility_vpn_on));
+        this.mIconController.setIcon(this.mSlotVpn, currentVpnIconId(this.mSecurityController.isVpnBranded()), this.mContext.getResources().getString(C0021R$string.accessibility_vpn_on));
         this.mIconController.setIconVisibility(this.mSlotVpn, isVpnEnabled);
     }
 
     private int currentVpnIconId(boolean z) {
-        return z ? C0010R$drawable.stat_sys_branded_vpn : C0010R$drawable.stat_sys_vpn_ic;
+        return C0013R$drawable.stat_sys_vpn;
     }
 
     public void onStateChanged() {
