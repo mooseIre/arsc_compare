@@ -42,8 +42,8 @@ import com.android.keyguard.utils.ContentProviderUtils;
 import com.android.keyguard.utils.MiuiKeyguardUtils;
 import com.android.keyguard.utils.PackageUtils;
 import com.android.keyguard.wallpaper.IMiuiKeyguardWallpaperController;
-import com.android.systemui.C0009R$dimen;
-import com.android.systemui.C0010R$drawable;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0013R$drawable;
 import com.android.systemui.Dependency;
 import com.android.systemui.shared.system.ActivityManagerWrapper;
 import com.android.systemui.shared.system.TaskStackChangeListener;
@@ -63,6 +63,7 @@ public class MiuiKeyguardCameraView extends FrameLayout implements IMiuiKeyguard
     public View mBackgroundView;
     /* access modifiers changed from: private */
     public CallBack mCallBack;
+    private Configuration mConfiguration = new Configuration();
     /* access modifiers changed from: private */
     public Context mContext = getContext();
     private boolean mDarkStyle;
@@ -156,7 +157,6 @@ public class MiuiKeyguardCameraView extends FrameLayout implements IMiuiKeyguard
     private float mMoveDistance;
     private float mMovePer;
     private float mMoveYPer;
-    private int mOrientation = 1;
     /* access modifiers changed from: private */
     public ImageView mPreView;
     private float mPreViewAlpha;
@@ -177,6 +177,7 @@ public class MiuiKeyguardCameraView extends FrameLayout implements IMiuiKeyguard
     private float mPreViewWidth;
     /* access modifiers changed from: private */
     public int mScreenHeight;
+    private Point mScreenSize;
     /* access modifiers changed from: private */
     public int mScreenWidth;
     private boolean mShowing = false;
@@ -289,9 +290,12 @@ public class MiuiKeyguardCameraView extends FrameLayout implements IMiuiKeyguard
         this.mWindowManager = (WindowManager) getContext().getSystemService("window");
         Display display = ((DisplayManager) getContext().getSystemService("display")).getDisplay(0);
         Point point = new Point();
+        this.mScreenSize = point;
         display.getRealSize(point);
-        this.mScreenHeight = Math.max(point.y, point.x);
-        this.mScreenWidth = Math.min(point.y, point.x);
+        Point point2 = this.mScreenSize;
+        this.mScreenHeight = Math.max(point2.y, point2.x);
+        Point point3 = this.mScreenSize;
+        this.mScreenWidth = Math.min(point3.y, point3.x);
         View view = new View(getContext());
         this.mBackgroundView = view;
         view.setBackgroundColor(-16777216);
@@ -309,10 +313,10 @@ public class MiuiKeyguardCameraView extends FrameLayout implements IMiuiKeyguard
         this.mPreView = imageView;
         this.mPreViewContainer.addView(imageView, new FrameLayout.LayoutParams(-1, -1, 17));
         this.mIconView = new ImageView(getContext());
-        this.mIconWidth = this.mContext.getResources().getDimensionPixelOffset(C0009R$dimen.keyguard_affordance_width);
-        this.mIconHeight = this.mContext.getResources().getDimensionPixelOffset(C0009R$dimen.keyguard_affordance_height);
+        this.mIconWidth = this.mContext.getResources().getDimensionPixelOffset(C0012R$dimen.keyguard_affordance_width);
+        this.mIconHeight = this.mContext.getResources().getDimensionPixelOffset(C0012R$dimen.keyguard_affordance_height);
         this.mIconView.setScaleType(ImageView.ScaleType.CENTER);
-        this.mIconView.setImageDrawable(this.mContext.getDrawable(C0010R$drawable.keyguard_bottom_camera_img));
+        this.mIconView.setImageDrawable(this.mContext.getDrawable(C0013R$drawable.keyguard_bottom_camera_img));
         addView(this.mIconView, new FrameLayout.LayoutParams(this.mIconWidth, this.mIconHeight, 8388693));
         int i = this.mScreenWidth;
         this.mIconInitCenterX = (float) (i - (this.mIconWidth / 2));
@@ -335,13 +339,49 @@ public class MiuiKeyguardCameraView extends FrameLayout implements IMiuiKeyguard
     /* access modifiers changed from: protected */
     public void onConfigurationChanged(Configuration configuration) {
         super.onConfigurationChanged(configuration);
-        int i = configuration.orientation;
-        if (i != this.mOrientation) {
-            this.mOrientation = i;
-            if (MiuiKeyguardUtils.isPad()) {
-                updatePreViewBackground();
-            }
+        int updateFrom = this.mConfiguration.updateFrom(configuration);
+        boolean z = true;
+        boolean z2 = (updateFrom & 128) != 0;
+        if ((updateFrom & 2048) == 0) {
+            z = false;
         }
+        if (z2 && MiuiKeyguardUtils.isPad()) {
+            updatePreViewBackground();
+        }
+        if (z) {
+            checkScreenSize();
+        }
+    }
+
+    private void checkScreenSize() {
+        Point point = new Point();
+        this.mWindowManager.getDefaultDisplay().getRealSize(point);
+        if (!this.mScreenSize.equals(point.x, point.y)) {
+            this.mScreenSize.set(point.x, point.y);
+            updateSizeForScreenSizeChange();
+            updatePreViewBackground();
+            updateLayoutParamForScreenSizeChange();
+        }
+    }
+
+    private void updateSizeForScreenSizeChange() {
+        Point point = this.mScreenSize;
+        this.mScreenHeight = Math.max(point.y, point.x);
+        Point point2 = this.mScreenSize;
+        int min = Math.min(point2.y, point2.x);
+        this.mScreenWidth = min;
+        this.mIconInitCenterX = (float) (min - (this.mIconWidth / 2));
+        int i = this.mScreenHeight;
+        this.mIconInitCenterY = (float) (i - (this.mIconHeight / 2));
+        this.mIconActiveCenterX = ((float) min) * 0.55f;
+        this.mIconActiveCenterY = ((float) i) * 0.8f;
+        this.mIconActiveWidth = ((float) min) * 0.74f;
+    }
+
+    /* access modifiers changed from: protected */
+    public void updateLayoutParamForScreenSizeChange() {
+        requestLayout();
+        invalidate();
     }
 
     /* access modifiers changed from: protected */
@@ -456,9 +496,9 @@ public class MiuiKeyguardCameraView extends FrameLayout implements IMiuiKeyguard
             ImageView imageView = this.mIconView;
             Context context = this.mContext;
             if (z) {
-                i = C0010R$drawable.keyguard_bottom_camera_img_dark;
+                i = C0013R$drawable.keyguard_bottom_camera_img_dark;
             } else {
-                i = C0010R$drawable.keyguard_bottom_camera_img;
+                i = C0013R$drawable.keyguard_bottom_camera_img;
             }
             imageView.setImageDrawable(context.getDrawable(i));
         }
@@ -1132,10 +1172,10 @@ public class MiuiKeyguardCameraView extends FrameLayout implements IMiuiKeyguard
                         MiuiKeyguardCameraView.this.mPreView.setImageDrawable(drawable);
                     } else if (PackageUtils.IS_VELA_CAMERA) {
                         MiuiKeyguardCameraView.this.mPreView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-                        MiuiKeyguardCameraView.this.mPreView.setImageResource(C0010R$drawable.meitu_camera_preview);
+                        MiuiKeyguardCameraView.this.mPreView.setImageResource(C0013R$drawable.meitu_camera_preview);
                     } else {
                         MiuiKeyguardCameraView.this.mPreView.setScaleType(ImageView.ScaleType.FIT_END);
-                        MiuiKeyguardCameraView.this.mPreView.setImageResource(C0010R$drawable.camera_preview);
+                        MiuiKeyguardCameraView.this.mPreView.setImageResource(C0013R$drawable.camera_preview);
                     }
                 }
             }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new Void[0]);

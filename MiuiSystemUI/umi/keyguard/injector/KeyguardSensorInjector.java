@@ -13,7 +13,7 @@ import android.view.WindowManager;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.KeyguardUpdateMonitorCallback;
 import com.android.keyguard.utils.MiuiKeyguardUtils;
-import com.android.systemui.C0005R$array;
+import com.android.systemui.C0008R$array;
 import com.android.systemui.Dependency;
 import com.android.systemui.UiOffloadThread;
 import com.android.systemui.keyguard.KeyguardViewMediator;
@@ -344,7 +344,7 @@ public final class KeyguardSensorInjector implements SettingsObserver.Callback, 
     }
 
     public final boolean isSupportPickupByMTK() {
-        String[] stringArray = this.mContext.getResources().getStringArray(C0005R$array.device_support_pickup_by_MTK);
+        String[] stringArray = this.mContext.getResources().getStringArray(C0008R$array.device_support_pickup_by_MTK);
         Intrinsics.checkExpressionValueIsNotNull(stringArray, "mContext.resources.getSt…ce_support_pickup_by_MTK)");
         return ArraysKt___ArraysKt.contains(stringArray, Build.DEVICE);
     }

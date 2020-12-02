@@ -16,7 +16,7 @@ import android.view.animation.LinearInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import com.android.keyguard.charge.container.IChargeView;
-import com.android.systemui.C0010R$drawable;
+import com.android.systemui.C0013R$drawable;
 
 public class LollipopChargeView extends IChargeView {
     private Drawable mBottomLightDrawable;
@@ -52,9 +52,9 @@ public class LollipopChargeView extends IChargeView {
     public void init(Context context) {
         Property property = View.ROTATION;
         super.init(context);
-        this.mInnerCircleDrawable = context.getDrawable(C0010R$drawable.charge_animation_wired_rotate_circle_icon);
-        this.mInnerParticleDrawable = context.getDrawable(C0010R$drawable.charge_animation_particle_circle_icon);
-        this.mBottomLightDrawable = context.getDrawable(C0010R$drawable.charge_animation_bottom_light_icon);
+        this.mInnerCircleDrawable = context.getDrawable(C0013R$drawable.charge_animation_wired_rotate_circle_icon);
+        this.mInnerParticleDrawable = context.getDrawable(C0013R$drawable.charge_animation_particle_circle_icon);
+        this.mBottomLightDrawable = context.getDrawable(C0013R$drawable.charge_animation_bottom_light_icon);
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(-2, -2);
         layoutParams.gravity = 81;
         OutlineView outlineView = new OutlineView(context);
@@ -292,5 +292,21 @@ public class LollipopChargeView extends IChargeView {
             this.mBottomLightWidth = (int) (((float) drawable.getIntrinsicWidth()) * min);
             this.mBottomLightHeight = (int) (min * ((float) this.mBottomLightDrawable.getIntrinsicHeight()));
         }
+    }
+
+    /* access modifiers changed from: protected */
+    public void updateLayoutParamForScreenSizeChange() {
+        super.updateLayoutParamForScreenSizeChange();
+        FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) this.mInnerCircleView.getLayoutParams();
+        int i = this.mInnerCircleSize;
+        layoutParams.width = i;
+        layoutParams.height = i;
+        FrameLayout.LayoutParams layoutParams2 = (FrameLayout.LayoutParams) this.mParticleCircleView.getLayoutParams();
+        int i2 = this.mInnerParticleCircleSize;
+        layoutParams2.width = i2;
+        layoutParams2.height = i2;
+        FrameLayout.LayoutParams layoutParams3 = (FrameLayout.LayoutParams) this.mBottomLightImage.getLayoutParams();
+        layoutParams3.width = this.mBottomLightWidth;
+        layoutParams3.height = this.mBottomLightHeight;
     }
 }

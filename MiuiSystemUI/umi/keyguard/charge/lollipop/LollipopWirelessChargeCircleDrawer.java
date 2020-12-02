@@ -11,13 +11,13 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.view.TextureView;
 import com.android.keyguard.charge.lollipop.LollipopWirelessAnimationView;
-import com.android.systemui.C0010R$drawable;
+import com.android.systemui.C0013R$drawable;
 import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
 public class LollipopWirelessChargeCircleDrawer implements LollipopWirelessAnimationView.AnimationDrawer {
-    public static final int[] WIRELESS_CIRCLE_RES_ARRAY = {C0010R$drawable.wireless_rapid_charge_0, C0010R$drawable.wireless_rapid_charge_1, C0010R$drawable.wireless_rapid_charge_2, C0010R$drawable.wireless_rapid_charge_3, C0010R$drawable.wireless_rapid_charge_4, C0010R$drawable.wireless_rapid_charge_5, C0010R$drawable.wireless_rapid_charge_6, C0010R$drawable.wireless_rapid_charge_7, C0010R$drawable.wireless_rapid_charge_8, C0010R$drawable.wireless_rapid_charge_9, C0010R$drawable.wireless_rapid_charge_10, C0010R$drawable.wireless_rapid_charge_11, C0010R$drawable.wireless_rapid_charge_12, C0010R$drawable.wireless_rapid_charge_13, C0010R$drawable.wireless_rapid_charge_14, C0010R$drawable.wireless_rapid_charge_15, C0010R$drawable.wireless_rapid_charge_16, C0010R$drawable.wireless_rapid_charge_17, C0010R$drawable.wireless_rapid_charge_18, C0010R$drawable.wireless_rapid_charge_19, C0010R$drawable.wireless_rapid_charge_20, C0010R$drawable.wireless_rapid_charge_21, C0010R$drawable.wireless_rapid_charge_22, C0010R$drawable.wireless_rapid_charge_23};
+    public static final int[] WIRELESS_CIRCLE_RES_ARRAY = {C0013R$drawable.wireless_rapid_charge_0, C0013R$drawable.wireless_rapid_charge_1, C0013R$drawable.wireless_rapid_charge_2, C0013R$drawable.wireless_rapid_charge_3, C0013R$drawable.wireless_rapid_charge_4, C0013R$drawable.wireless_rapid_charge_5, C0013R$drawable.wireless_rapid_charge_6, C0013R$drawable.wireless_rapid_charge_7, C0013R$drawable.wireless_rapid_charge_8, C0013R$drawable.wireless_rapid_charge_9, C0013R$drawable.wireless_rapid_charge_10, C0013R$drawable.wireless_rapid_charge_11, C0013R$drawable.wireless_rapid_charge_12, C0013R$drawable.wireless_rapid_charge_13, C0013R$drawable.wireless_rapid_charge_14, C0013R$drawable.wireless_rapid_charge_15, C0013R$drawable.wireless_rapid_charge_16, C0013R$drawable.wireless_rapid_charge_17, C0013R$drawable.wireless_rapid_charge_18, C0013R$drawable.wireless_rapid_charge_19, C0013R$drawable.wireless_rapid_charge_20, C0013R$drawable.wireless_rapid_charge_21, C0013R$drawable.wireless_rapid_charge_22, C0013R$drawable.wireless_rapid_charge_23};
     /* access modifiers changed from: private */
     public final BlockingQueue<Bitmap> mBitmapQueue = new ArrayBlockingQueue(4);
     private Context mContext;

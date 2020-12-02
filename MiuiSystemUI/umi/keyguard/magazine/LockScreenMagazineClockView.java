@@ -19,9 +19,9 @@ import com.android.keyguard.magazine.utils.LockScreenMagazineUtils;
 import com.android.keyguard.utils.MiuiKeyguardUtils;
 import com.android.keyguard.utils.PackageUtils;
 import com.android.keyguard.wallpaper.WallpaperAuthorityUtils;
-import com.android.systemui.C0009R$dimen;
-import com.android.systemui.C0010R$drawable;
-import com.android.systemui.C0012R$id;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0015R$id;
 import com.android.systemui.Dependency;
 import com.miui.systemui.util.CommonExtensionsKt;
 import java.util.Locale;
@@ -52,11 +52,11 @@ public class LockScreenMagazineClockView extends LinearLayout {
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mTitle = (TextView) findViewById(C0012R$id.lock_screen_magazine_clock_title);
+        this.mTitle = (TextView) findViewById(C0015R$id.lock_screen_magazine_clock_title);
         initTitle();
-        this.mContentsLayout = (LinearLayout) findViewById(C0012R$id.lock_screen_magazine_clock_contents_layout);
-        this.mProvider = (TextView) findViewById(C0012R$id.lock_screen_magazine_clock_provider);
-        this.mSource = (TextView) findViewById(C0012R$id.lock_screen_magazine_clock_source);
+        this.mContentsLayout = (LinearLayout) findViewById(C0015R$id.lock_screen_magazine_clock_contents_layout);
+        this.mProvider = (TextView) findViewById(C0015R$id.lock_screen_magazine_clock_provider);
+        this.mSource = (TextView) findViewById(C0015R$id.lock_screen_magazine_clock_source);
     }
 
     private void initTitle() {
@@ -233,8 +233,8 @@ public class LockScreenMagazineClockView extends LinearLayout {
     }
 
     public void setTextSize() {
-        int dimensionPixelSize = getResources().getDimensionPixelSize(C0009R$dimen.miui_clock_date_text_size);
-        int dimensionPixelSize2 = getResources().getDimensionPixelSize(C0009R$dimen.lock_screen_magazine_clock_provider_source_text_size);
+        int dimensionPixelSize = getResources().getDimensionPixelSize(C0012R$dimen.miui_clock_date_text_size);
+        int dimensionPixelSize2 = getResources().getDimensionPixelSize(C0012R$dimen.lock_screen_magazine_clock_provider_source_text_size);
         this.mTitle.setTextSize(0, (float) dimensionPixelSize);
         float f = (float) dimensionPixelSize2;
         this.mProvider.setTextSize(0, f);
@@ -248,9 +248,9 @@ public class LockScreenMagazineClockView extends LinearLayout {
             if (!Build.IS_INTERNATIONAL_BUILD || this.mHasTitleClick) {
                 Resources resources = getResources();
                 if (z) {
-                    i = C0010R$drawable.keyguard_bottom_guide_right_arrow_dark;
+                    i = C0013R$drawable.keyguard_bottom_guide_right_arrow_dark;
                 } else {
-                    i = C0010R$drawable.keyguard_bottom_guide_right_arrow;
+                    i = C0013R$drawable.keyguard_bottom_guide_right_arrow;
                 }
                 this.mTitle.setCompoundDrawablesWithIntrinsicBounds((Drawable) null, (Drawable) null, resources.getDrawable(i), (Drawable) null);
                 return;
@@ -260,7 +260,7 @@ public class LockScreenMagazineClockView extends LinearLayout {
     }
 
     public void updateTitlePadding() {
-        this.mTitle.setPaddingRelative(!this.mIsLeftTopClock && this.mHasTitleClick ? this.mContext.getResources().getDimensionPixelOffset(C0009R$dimen.lock_screen_magazine_clock_title_padding_start) : 0, 0, 0, 0);
+        this.mTitle.setPaddingRelative(!this.mIsLeftTopClock && this.mHasTitleClick ? this.mContext.getResources().getDimensionPixelOffset(C0012R$dimen.lock_screen_magazine_clock_title_padding_start) : 0, 0, 0, 0);
     }
 
     private void updateContentsLayoutGravity() {

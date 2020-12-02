@@ -1,5 +1,7 @@
 package com.android.keyguard.wallpaper;
 
+import android.os.RemoteException;
+import android.util.Log;
 import com.android.systemui.keyguard.WakefulnessLifecycle;
 import com.miui.miwallpaper.IMiuiKeyguardWallpaperService;
 
@@ -12,20 +14,30 @@ public final class MiuiWallpaperClient$mWakefulnessLifecycle$1 implements Wakefu
     }
 
     public void onStartedWakingUp() {
-        IMiuiKeyguardWallpaperService access$getMWallpaperService$p = this.this$0.mWallpaperService;
-        if (access$getMWallpaperService$p != null) {
-            access$getMWallpaperService$p.onStartedWakingUp();
-        } else {
-            this.this$0.bindService();
+        try {
+            IMiuiKeyguardWallpaperService access$getMWallpaperService$p = this.this$0.mWallpaperService;
+            if (access$getMWallpaperService$p != null) {
+                access$getMWallpaperService$p.onStartedWakingUp();
+            } else {
+                this.this$0.bindService();
+            }
+        } catch (RemoteException e) {
+            String tag = this.this$0.getTAG();
+            Log.e(tag, "onStartedWakingUp: " + e.getMessage());
         }
     }
 
     public void onStartedGoingToSleep() {
-        IMiuiKeyguardWallpaperService access$getMWallpaperService$p = this.this$0.mWallpaperService;
-        if (access$getMWallpaperService$p != null) {
-            access$getMWallpaperService$p.onStartedGoingToSleep();
-        } else {
-            this.this$0.bindService();
+        try {
+            IMiuiKeyguardWallpaperService access$getMWallpaperService$p = this.this$0.mWallpaperService;
+            if (access$getMWallpaperService$p != null) {
+                access$getMWallpaperService$p.onStartedGoingToSleep();
+            } else {
+                this.this$0.bindService();
+            }
+        } catch (RemoteException e) {
+            String tag = this.this$0.getTAG();
+            Log.e(tag, "onStartedGoingToSleep: " + e.getMessage());
         }
     }
 }

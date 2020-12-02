@@ -14,8 +14,8 @@ import com.android.internal.util.LatencyTracker;
 import com.android.internal.widget.LockPatternUtils;
 import com.android.internal.widget.LockscreenCredential;
 import com.android.keyguard.EmergencyButton;
-import com.android.systemui.C0016R$plurals;
-import com.android.systemui.C0018R$string;
+import com.android.systemui.C0019R$plurals;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.Dependency;
 import com.android.systemui.statusbar.policy.UserSwitcherController;
 import com.miui.systemui.util.HapticFeedBackImpl;
@@ -246,7 +246,7 @@ public abstract class KeyguardAbsKeyInputView extends MiuiKeyguardPasswordView i
         if (i != 0) {
             String promptReasonString = getPromptReasonString(i);
             if (!TextUtils.isEmpty(promptReasonString)) {
-                this.mKeyguardBouncerMessageView.showMessage(this.mContext.getResources().getString(C0018R$string.input_password_hint_text), promptReasonString);
+                this.mKeyguardBouncerMessageView.showMessage(this.mContext.getResources().getString(C0021R$string.input_password_hint_text), promptReasonString);
             }
         }
     }
@@ -258,18 +258,18 @@ public abstract class KeyguardAbsKeyInputView extends MiuiKeyguardPasswordView i
             return "";
         }
         if (i == 1) {
-            return resources.getString(C0018R$string.input_password_after_boot_msg);
+            return resources.getString(C0021R$string.input_password_after_boot_msg);
         }
         if (i == 2) {
             long requiredStrongAuthTimeout = getRequiredStrongAuthTimeout();
-            return resources.getQuantityString(C0016R$plurals.input_password_after_timeout_msg, (int) TimeUnit.MILLISECONDS.toHours(requiredStrongAuthTimeout), new Object[]{Long.valueOf(TimeUnit.MILLISECONDS.toHours(requiredStrongAuthTimeout))});
+            return resources.getQuantityString(C0019R$plurals.input_password_after_timeout_msg, (int) TimeUnit.MILLISECONDS.toHours(requiredStrongAuthTimeout), new Object[]{Long.valueOf(TimeUnit.MILLISECONDS.toHours(requiredStrongAuthTimeout))});
         } else if (i == 3) {
-            return resources.getString(C0018R$string.kg_prompt_reason_device_admin);
+            return resources.getString(C0021R$string.kg_prompt_reason_device_admin);
         } else {
             if (i != 4) {
-                return resources.getString(C0018R$string.kg_prompt_reason_timeout_password);
+                return resources.getString(C0021R$string.kg_prompt_reason_timeout_password);
             }
-            return resources.getString(C0018R$string.kg_prompt_reason_user_request);
+            return resources.getString(C0021R$string.kg_prompt_reason_user_request);
         }
     }
 

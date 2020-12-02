@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-import com.android.systemui.C0012R$id;
+import com.android.systemui.C0015R$id;
 
 public class EmergencyCarrierArea extends AlphaOptimizedLinearLayout {
     /* access modifiers changed from: private */
@@ -22,8 +22,8 @@ public class EmergencyCarrierArea extends AlphaOptimizedLinearLayout {
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mCarrierText = (CarrierText) findViewById(C0012R$id.carrier_text);
-        EmergencyButton emergencyButton = (EmergencyButton) findViewById(C0012R$id.emergency_call_button);
+        this.mCarrierText = (CarrierText) findViewById(C0015R$id.carrier_text);
+        EmergencyButton emergencyButton = (EmergencyButton) findViewById(C0015R$id.emergency_call_button);
         this.mEmergencyButton = emergencyButton;
         emergencyButton.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View view, MotionEvent motionEvent) {

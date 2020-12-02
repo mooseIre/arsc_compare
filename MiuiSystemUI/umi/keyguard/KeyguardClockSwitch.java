@@ -23,8 +23,8 @@ import android.widget.TextClock;
 import com.android.internal.colorextraction.ColorExtractor;
 import com.android.keyguard.KeyguardClockSwitch;
 import com.android.keyguard.clock.ClockManager;
-import com.android.systemui.C0009R$dimen;
-import com.android.systemui.C0012R$id;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0015R$id;
 import com.android.systemui.Interpolators;
 import com.android.systemui.colorextraction.SysuiColorExtractor;
 import com.android.systemui.plugins.ClockPlugin;
@@ -91,11 +91,11 @@ public class KeyguardClockSwitch extends RelativeLayout {
         ClockVisibilityTransition clockVisibilityTransition = new ClockVisibilityTransition();
         clockVisibilityTransition.setCutoff(0.3f);
         this.mClockTransition = clockVisibilityTransition;
-        clockVisibilityTransition.addTarget(C0012R$id.default_clock_view);
+        clockVisibilityTransition.addTarget(C0015R$id.default_clock_view);
         ClockVisibilityTransition clockVisibilityTransition2 = new ClockVisibilityTransition();
         clockVisibilityTransition2.setCutoff(0.7f);
         this.mBoldClockTransition = clockVisibilityTransition2;
-        clockVisibilityTransition2.addTarget(C0012R$id.default_clock_view_bold);
+        clockVisibilityTransition2.addTarget(C0015R$id.default_clock_view_bold);
         this.mTransition = new TransitionSet().setOrdering(0).addTransition(this.mClockTransition).addTransition(this.mBoldClockTransition).setDuration(275).setInterpolator(Interpolators.LINEAR_OUT_SLOW_IN);
     }
 
@@ -106,10 +106,10 @@ public class KeyguardClockSwitch extends RelativeLayout {
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mClockView = (TextClock) findViewById(C0012R$id.default_clock_view);
-        this.mClockViewBold = (TextClock) findViewById(C0012R$id.default_clock_view_bold);
-        this.mSmallClockFrame = (FrameLayout) findViewById(C0012R$id.clock_view);
-        this.mKeyguardStatusArea = findViewById(C0012R$id.keyguard_status_area);
+        this.mClockView = (TextClock) findViewById(C0015R$id.default_clock_view);
+        this.mClockViewBold = (TextClock) findViewById(C0015R$id.default_clock_view_bold);
+        this.mSmallClockFrame = (FrameLayout) findViewById(C0015R$id.clock_view);
+        this.mKeyguardStatusArea = findViewById(C0015R$id.keyguard_status_area);
     }
 
     /* access modifiers changed from: protected */
@@ -328,8 +328,8 @@ public class KeyguardClockSwitch extends RelativeLayout {
         if (this.mShowingHeader != z) {
             this.mShowingHeader = z;
             if (!hasCustomClock()) {
-                float dimensionPixelSize = (float) this.mContext.getResources().getDimensionPixelSize(C0009R$dimen.widget_small_font_size);
-                float dimensionPixelSize2 = (float) this.mContext.getResources().getDimensionPixelSize(C0009R$dimen.widget_big_font_size);
+                float dimensionPixelSize = (float) this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.widget_small_font_size);
+                float dimensionPixelSize2 = (float) this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.widget_big_font_size);
                 this.mClockTransition.setScale(dimensionPixelSize / dimensionPixelSize2);
                 this.mBoldClockTransition.setScale(dimensionPixelSize2 / dimensionPixelSize);
                 TransitionManager.endTransitions((ViewGroup) this.mClockView.getParent());
@@ -352,7 +352,7 @@ public class KeyguardClockSwitch extends RelativeLayout {
                     i = 0;
                 }
                 textClock.setVisibility(i);
-                int dimensionPixelSize3 = this.mContext.getResources().getDimensionPixelSize(z ? C0009R$dimen.widget_vertical_padding_clock : C0009R$dimen.title_clock_padding);
+                int dimensionPixelSize3 = this.mContext.getResources().getDimensionPixelSize(z ? C0012R$dimen.widget_vertical_padding_clock : C0012R$dimen.title_clock_padding);
                 TextClock textClock2 = this.mClockView;
                 textClock2.setPadding(textClock2.getPaddingLeft(), this.mClockView.getPaddingTop(), this.mClockView.getPaddingRight(), dimensionPixelSize3);
                 TextClock textClock3 = this.mClockViewBold;

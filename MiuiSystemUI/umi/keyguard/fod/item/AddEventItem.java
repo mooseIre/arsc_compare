@@ -8,8 +8,8 @@ import android.graphics.RectF;
 import android.graphics.Region;
 import android.view.View;
 import android.widget.ImageView;
-import com.android.systemui.C0010R$drawable;
-import com.android.systemui.C0018R$string;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0021R$string;
 
 public class AddEventItem extends IQuickOpenItem {
     private String mPackageName = getMiCalendarPackageName(this.mContext);
@@ -23,7 +23,7 @@ public class AddEventItem extends IQuickOpenItem {
         super(rectF, region, context);
         ImageView imageView = new ImageView(context);
         this.mView = imageView;
-        imageView.setImageResource(C0010R$drawable.gxzw_quick_open_add_event);
+        imageView.setImageResource(C0013R$drawable.gxzw_quick_open_add_event);
         this.mView.setScaleType(ImageView.ScaleType.FIT_XY);
     }
 
@@ -40,11 +40,11 @@ public class AddEventItem extends IQuickOpenItem {
     }
 
     public String getTitle() {
-        return this.mContext.getString(C0018R$string.gxzw_quick_open_add_event);
+        return this.mContext.getString(C0021R$string.gxzw_quick_open_add_event);
     }
 
     public String getSubTitle() {
-        return this.mContext.getString(C0018R$string.gxzw_quick_open_add_event_sub);
+        return this.mContext.getString(C0021R$string.gxzw_quick_open_add_event_sub);
     }
 
     private static String getMiCalendarPackageName(Context context) {

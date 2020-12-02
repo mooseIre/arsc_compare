@@ -28,10 +28,10 @@ import com.android.keyguard.utils.MiuiKeyguardUtils;
 import com.android.settingslib.animation.AppearAnimationCreator;
 import com.android.settingslib.animation.AppearAnimationUtils;
 import com.android.settingslib.animation.DisappearAnimationUtils;
-import com.android.systemui.C0009R$dimen;
-import com.android.systemui.C0012R$id;
-import com.android.systemui.C0016R$plurals;
-import com.android.systemui.C0018R$string;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0019R$plurals;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.Dependency;
 import com.android.systemui.statusbar.policy.UserSwitcherController;
 import com.miui.systemui.anim.PhysicBasedInterpolator;
@@ -92,7 +92,7 @@ public class KeyguardPatternView extends MiuiKeyguardPasswordView implements Key
         this.mAppearAnimationUtils = new AppearAnimationUtils(context, 220, 1.5f, 2.0f, AnimationUtils.loadInterpolator(this.mContext, 17563662));
         this.mDisappearAnimationUtils = new DisappearAnimationUtils(context, 125, 1.2f, 0.6f, AnimationUtils.loadInterpolator(this.mContext, 17563663));
         this.mDisappearAnimationUtilsLocked = new DisappearAnimationUtils(context, 187, 1.2f, 0.6f, AnimationUtils.loadInterpolator(this.mContext, 17563663));
-        this.mDisappearYTranslation = getResources().getDimensionPixelSize(C0009R$dimen.miui_disappear_y_translation);
+        this.mDisappearYTranslation = getResources().getDimensionPixelSize(C0012R$dimen.miui_disappear_y_translation);
         this.mScreenHeight = context.getResources().getConfiguration().screenHeightDp;
     }
 
@@ -112,7 +112,7 @@ public class KeyguardPatternView extends MiuiKeyguardPasswordView implements Key
             lockPatternUtils = new LockPatternUtils(this.mContext);
         }
         this.mLockPatternUtils = lockPatternUtils;
-        MiuiLockPatternView miuiLockPatternView = (MiuiLockPatternView) findViewById(C0012R$id.lockPatternView);
+        MiuiLockPatternView miuiLockPatternView = (MiuiLockPatternView) findViewById(C0015R$id.lockPatternView);
         this.mLockPatternView = miuiLockPatternView;
         miuiLockPatternView.setSaveEnabled(false);
         this.mLockPatternView.setOnPatternListener(new UnlockPatternListener());
@@ -313,7 +313,7 @@ public class KeyguardPatternView extends MiuiKeyguardPasswordView implements Key
         if (i != 0) {
             String promptReasonString = getPromptReasonString(i);
             if (!TextUtils.isEmpty(promptReasonString)) {
-                this.mKeyguardBouncerMessageView.showMessage(this.mContext.getResources().getString(C0018R$string.input_password_hint_text), promptReasonString);
+                this.mKeyguardBouncerMessageView.showMessage(this.mContext.getResources().getString(C0021R$string.input_password_hint_text), promptReasonString);
             }
         }
     }
@@ -325,18 +325,18 @@ public class KeyguardPatternView extends MiuiKeyguardPasswordView implements Key
             return "";
         }
         if (i == 1) {
-            return resources.getString(C0018R$string.input_password_after_boot_msg);
+            return resources.getString(C0021R$string.input_password_after_boot_msg);
         }
         if (i == 2) {
             long requiredStrongAuthTimeout = getRequiredStrongAuthTimeout();
-            return resources.getQuantityString(C0016R$plurals.input_pattern_after_timeout_msg, (int) TimeUnit.MILLISECONDS.toHours(requiredStrongAuthTimeout), new Object[]{Long.valueOf(TimeUnit.MILLISECONDS.toHours(requiredStrongAuthTimeout))});
+            return resources.getQuantityString(C0019R$plurals.input_pattern_after_timeout_msg, (int) TimeUnit.MILLISECONDS.toHours(requiredStrongAuthTimeout), new Object[]{Long.valueOf(TimeUnit.MILLISECONDS.toHours(requiredStrongAuthTimeout))});
         } else if (i == 3) {
-            return resources.getString(C0018R$string.kg_prompt_reason_device_admin);
+            return resources.getString(C0021R$string.kg_prompt_reason_device_admin);
         } else {
             if (i != 4) {
-                return resources.getString(C0018R$string.kg_prompt_reason_timeout_pattern);
+                return resources.getString(C0021R$string.kg_prompt_reason_timeout_pattern);
             }
-            return resources.getString(C0018R$string.kg_prompt_reason_user_request);
+            return resources.getString(C0021R$string.kg_prompt_reason_user_request);
         }
     }
 
@@ -415,7 +415,7 @@ public class KeyguardPatternView extends MiuiKeyguardPasswordView implements Key
 
     /* access modifiers changed from: protected */
     public void handleConfigurationFontScaleChanged() {
-        float dimensionPixelSize = (float) getResources().getDimensionPixelSize(C0009R$dimen.miui_keyguard_view_eca_text_size);
+        float dimensionPixelSize = (float) getResources().getDimensionPixelSize(C0012R$dimen.miui_keyguard_view_eca_text_size);
         this.mEmergencyButton.setTextSize(0, dimensionPixelSize);
         this.mBackButton.setTextSize(0, dimensionPixelSize);
     }
@@ -423,7 +423,7 @@ public class KeyguardPatternView extends MiuiKeyguardPasswordView implements Key
     /* access modifiers changed from: protected */
     public void handleConfigurationOrientationChanged() {
         LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) this.mKeyguardBouncerMessageView.getLayoutParams();
-        layoutParams.topMargin = getResources().getDimensionPixelOffset(C0009R$dimen.miui_keyguard_bouncer_message_view_margin_top);
+        layoutParams.topMargin = getResources().getDimensionPixelOffset(C0012R$dimen.miui_keyguard_bouncer_message_view_margin_top);
         this.mKeyguardBouncerMessageView.setLayoutParams(layoutParams);
     }
 
@@ -433,20 +433,20 @@ public class KeyguardPatternView extends MiuiKeyguardPasswordView implements Key
             Point point = new Point();
             display.getRealSize(point);
             int max = Math.max(point.x, point.y);
-            int dimensionPixelOffset = getResources().getDimensionPixelOffset(C0009R$dimen.miui_keyguard_pattern_layout_height);
-            int dimensionPixelOffset2 = getResources().getDimensionPixelOffset(C0009R$dimen.miui_keyguard_pattern_view_pattern_view_height_width);
-            int dimensionPixelOffset3 = getResources().getDimensionPixelOffset(C0009R$dimen.miui_keyguard_pattern_view_pattern_view_margin_bottom);
-            int dimensionPixelOffset4 = getResources().getDimensionPixelOffset(C0009R$dimen.miui_keyguard_pattern_view_eca_height);
-            int dimensionPixelOffset5 = getResources().getDimensionPixelOffset(C0009R$dimen.miui_keyguard_pattern_view_eca_fod_top_margin);
+            int dimensionPixelOffset = getResources().getDimensionPixelOffset(C0012R$dimen.miui_keyguard_pattern_layout_height);
+            int dimensionPixelOffset2 = getResources().getDimensionPixelOffset(C0012R$dimen.miui_keyguard_pattern_view_pattern_view_height_width);
+            int dimensionPixelOffset3 = getResources().getDimensionPixelOffset(C0012R$dimen.miui_keyguard_pattern_view_pattern_view_margin_bottom);
+            int dimensionPixelOffset4 = getResources().getDimensionPixelOffset(C0012R$dimen.miui_keyguard_pattern_view_eca_height);
+            int dimensionPixelOffset5 = getResources().getDimensionPixelOffset(C0012R$dimen.miui_keyguard_pattern_view_eca_fod_top_margin);
             int i = max - (((dimensionPixelOffset - dimensionPixelOffset2) - dimensionPixelOffset3) - (dimensionPixelOffset4 / 2));
             Rect fodPosition = MiuiGxzwManager.getFodPosition(getContext());
             int height = fodPosition.top + (fodPosition.height() / 2);
-            View findViewById = findViewById(C0012R$id.container);
+            View findViewById = findViewById(C0015R$id.container);
             LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) findViewById.getLayoutParams();
             layoutParams.bottomMargin = i - height;
             layoutParams.height = dimensionPixelOffset + dimensionPixelOffset5;
             findViewById.setLayoutParams(layoutParams);
-            View findViewById2 = findViewById(C0012R$id.keyguard_selector_fade_container);
+            View findViewById2 = findViewById(C0015R$id.keyguard_selector_fade_container);
             LinearLayout.LayoutParams layoutParams2 = (LinearLayout.LayoutParams) findViewById2.getLayoutParams();
             layoutParams2.topMargin = dimensionPixelOffset5;
             findViewById2.setLayoutParams(layoutParams2);

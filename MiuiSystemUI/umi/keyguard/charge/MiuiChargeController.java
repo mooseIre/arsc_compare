@@ -19,7 +19,7 @@ import com.android.keyguard.analytics.AnalyticsHelper;
 import com.android.keyguard.charge.container.MiuiChargeAnimationView;
 import com.android.keyguard.charge.view.IChargeAnimationListener;
 import com.android.keyguard.injector.KeyguardUpdateMonitorInjector;
-import com.android.systemui.C0018R$string;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.Dependency;
 import com.android.systemui.keyguard.WakefulnessLifecycle;
 import com.android.systemui.statusbar.KeyguardIndicationController;
@@ -321,7 +321,7 @@ public class MiuiChargeController implements IChargeAnimationListener, Wakefulne
     private void dealWithBadlyCharge(boolean z, int i) {
         if (this.mWirelessOnline && !z) {
             if (i == 11) {
-                showToast(C0018R$string.wireless_change_to_ac_charging);
+                showToast(C0021R$string.wireless_change_to_ac_charging);
             }
             setNeedRepositionDevice(false);
             this.mHandler.removeCallbacks(this.mScreenOffRunnable);

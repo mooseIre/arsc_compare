@@ -16,7 +16,7 @@ import android.view.TextureView;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import com.android.systemui.C0010R$drawable;
+import com.android.systemui.C0013R$drawable;
 
 public class VideoView extends RelativeLayout {
     private ObjectAnimator alphaOut;
@@ -186,7 +186,7 @@ public class VideoView extends RelativeLayout {
         this.mPoint = new Point();
         ImageView imageView = new ImageView(context);
         this.mBackImage = imageView;
-        imageView.setBackgroundResource(C0010R$drawable.wired_charge_video_bg_img);
+        imageView.setBackgroundResource(C0013R$drawable.wired_charge_video_bg_img);
         addView(this.mBackImage, getVideoLayoutParams());
     }
 

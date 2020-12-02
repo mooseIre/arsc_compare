@@ -27,10 +27,10 @@ import com.android.keyguard.negative.MiuiKeyguardMoveLeftViewContainer;
 import com.android.keyguard.utils.MiuiKeyguardUtils;
 import com.android.keyguard.utils.PhoneUtils;
 import com.android.keyguard.wallpaper.IMiuiKeyguardWallpaperController;
-import com.android.systemui.C0009R$dimen;
-import com.android.systemui.C0010R$drawable;
-import com.android.systemui.C0012R$id;
-import com.android.systemui.C0018R$string;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.Dependency;
 import com.android.systemui.keyguard.WakefulnessLifecycle;
 import com.android.systemui.statusbar.KeyguardIndicationController;
@@ -60,9 +60,9 @@ public final class KeyguardPanelViewInjector extends MiuiKeyguardUpdateMonitorCa
     @NotNull
     private final Context mContext;
     private DoubleTapHelper mDoubleTapHelper;
-    private int mDoubleTapMinimumValidThresholdBottom = this.mContext.getResources().getDimensionPixelSize(C0009R$dimen.double_tap_sleep_valid_minimum_bottom);
-    private int mDoubleTapMinimumValidThresholdTop = this.mContext.getResources().getDimensionPixelSize(C0009R$dimen.double_tap_sleep_valid_minimum_top);
-    private int mDoubleTapMinimumWidthThreshold = this.mContext.getResources().getDimensionPixelSize(C0009R$dimen.double_tap_sleep_valid_minimum_width);
+    private int mDoubleTapMinimumValidThresholdBottom = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.double_tap_sleep_valid_minimum_bottom);
+    private int mDoubleTapMinimumValidThresholdTop = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.double_tap_sleep_valid_minimum_top);
+    private int mDoubleTapMinimumWidthThreshold = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.double_tap_sleep_valid_minimum_width);
     /* access modifiers changed from: private */
     public boolean mForceBlack;
     private ForceBlackObserver mForceBlackObserver;
@@ -318,7 +318,7 @@ public final class KeyguardPanelViewInjector extends MiuiKeyguardUpdateMonitorCa
     private final void initSplitUserSpace() {
         NotificationPanelView notificationPanelView = this.mPanelView;
         if (notificationPanelView != null) {
-            View findViewById = notificationPanelView.findViewById(C0012R$id.switch_to_system_user);
+            View findViewById = notificationPanelView.findViewById(C0015R$id.switch_to_system_user);
             Intrinsics.checkExpressionValueIsNotNull(findViewById, "mPanelView.findViewById(…id.switch_to_system_user)");
             TextView textView = (TextView) findViewById;
             this.mSwitchSystemUserEntrance = textView;
@@ -428,25 +428,25 @@ public final class KeyguardPanelViewInjector extends MiuiKeyguardUpdateMonitorCa
         throw null;
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:48:0x008c, code lost:
-        if (r11 == false) goto L_0x00a5;
+    /* JADX WARNING: Code restructure failed: missing block: B:52:0x0096, code lost:
+        if (r3.isQsExpanded() != false) goto L_0x00a1;
      */
-    /* JADX WARNING: Code restructure failed: missing block: B:57:0x00a3, code lost:
-        if (r3.isFullyCollapsed() == false) goto L_0x00a5;
+    /* JADX WARNING: Code restructure failed: missing block: B:63:0x00b1, code lost:
+        if (r3.isFullyCollapsed() == false) goto L_0x00b3;
      */
-    /* JADX WARNING: Code restructure failed: missing block: B:58:0x00a5, code lost:
+    /* JADX WARNING: Code restructure failed: missing block: B:64:0x00b3, code lost:
         r1 = r1.mKeyguardVerticalMoveHelper;
      */
-    /* JADX WARNING: Code restructure failed: missing block: B:59:0x00a7, code lost:
-        if (r1 == null) goto L_0x00ad;
+    /* JADX WARNING: Code restructure failed: missing block: B:65:0x00b5, code lost:
+        if (r1 == null) goto L_0x00bb;
      */
-    /* JADX WARNING: Code restructure failed: missing block: B:60:0x00a9, code lost:
+    /* JADX WARNING: Code restructure failed: missing block: B:66:0x00b7, code lost:
         r1.onTouchEvent(r2);
      */
-    /* JADX WARNING: Code restructure failed: missing block: B:61:0x00ad, code lost:
+    /* JADX WARNING: Code restructure failed: missing block: B:67:0x00bb, code lost:
         kotlin.jvm.internal.Intrinsics.throwUninitializedPropertyAccessException("mKeyguardVerticalMoveHelper");
      */
-    /* JADX WARNING: Code restructure failed: missing block: B:62:0x00b2, code lost:
+    /* JADX WARNING: Code restructure failed: missing block: B:68:0x00c0, code lost:
         throw null;
      */
     /* Code decompiled incorrectly, please refer to instructions dump. */
@@ -481,7 +481,7 @@ public final class KeyguardPanelViewInjector extends MiuiKeyguardUpdateMonitorCa
         L_0x002b:
             boolean r7 = r1.mIsBottomButtonMoving
             r8 = 1
-            if (r7 != 0) goto L_0x00c8
+            if (r7 != 0) goto L_0x00d6
             com.android.keyguard.KeyguardMoveHelper r7 = r1.mKeyguardMoveHelper
             if (r7 == 0) goto L_0x003d
             boolean r7 = r7.isInLeftView()
@@ -490,10 +490,10 @@ public final class KeyguardPanelViewInjector extends MiuiKeyguardUpdateMonitorCa
         L_0x003d:
             r7 = r0
         L_0x003e:
-            if (r7 == 0) goto L_0x00c4
+            if (r7 == 0) goto L_0x00d2
             boolean r7 = r7.booleanValue()
             if (r7 == 0) goto L_0x0048
-            goto L_0x00c8
+            goto L_0x00d6
         L_0x0048:
             boolean r7 = r1.mSupportGestureWakeup
             if (r7 == 0) goto L_0x0066
@@ -511,61 +511,68 @@ public final class KeyguardPanelViewInjector extends MiuiKeyguardUpdateMonitorCa
             throw r0
         L_0x0066:
             com.android.keyguard.magazine.LockScreenMagazineController r7 = r1.mLockScreenMagazineController
-            if (r7 == 0) goto L_0x00be
+            if (r7 == 0) goto L_0x00cc
             boolean r7 = r7.onTouchEvent(r2)
             if (r7 == 0) goto L_0x0071
             return r8
         L_0x0071:
             com.android.systemui.statusbar.KeyguardIndicationController r7 = r1.mIndicationController
-            if (r7 == 0) goto L_0x00b8
+            if (r7 == 0) goto L_0x00c6
             r7.onTouchEvent(r2, r3, r4, r5)
             int r3 = r2.getActionMasked()
             java.lang.String r4 = "mPanelViewController"
-            if (r3 != 0) goto L_0x0093
+            if (r3 != 0) goto L_0x00a1
             com.android.systemui.statusbar.phone.MiuiNotificationPanelViewController r3 = r1.mPanelViewController
-            if (r3 == 0) goto L_0x008f
+            if (r3 == 0) goto L_0x009d
             boolean r3 = r3.isFullyExpanded()
-            if (r3 == 0) goto L_0x0093
-            if (r10 != 0) goto L_0x0093
-            if (r11 == 0) goto L_0x00a5
-            goto L_0x0093
-        L_0x008f:
+            if (r3 == 0) goto L_0x00a1
+            if (r10 != 0) goto L_0x00a1
+            if (r11 != 0) goto L_0x00a1
+            com.android.systemui.statusbar.phone.MiuiNotificationPanelViewController r3 = r1.mPanelViewController
+            if (r3 == 0) goto L_0x0099
+            boolean r3 = r3.isQsExpanded()
+            if (r3 == 0) goto L_0x00b3
+            goto L_0x00a1
+        L_0x0099:
             kotlin.jvm.internal.Intrinsics.throwUninitializedPropertyAccessException(r4)
             throw r0
-        L_0x0093:
-            if (r6 != 0) goto L_0x00b7
+        L_0x009d:
+            kotlin.jvm.internal.Intrinsics.throwUninitializedPropertyAccessException(r4)
+            throw r0
+        L_0x00a1:
+            if (r6 != 0) goto L_0x00c5
             int r3 = r2.getActionMasked()
-            if (r3 == 0) goto L_0x00b7
+            if (r3 == 0) goto L_0x00c5
             com.android.systemui.statusbar.phone.MiuiNotificationPanelViewController r3 = r1.mPanelViewController
-            if (r3 == 0) goto L_0x00b3
+            if (r3 == 0) goto L_0x00c1
             boolean r3 = r3.isFullyCollapsed()
-            if (r3 != 0) goto L_0x00b7
-        L_0x00a5:
+            if (r3 != 0) goto L_0x00c5
+        L_0x00b3:
             com.android.keyguard.KeyguardVerticalMoveHelper r1 = r1.mKeyguardVerticalMoveHelper
-            if (r1 == 0) goto L_0x00ad
+            if (r1 == 0) goto L_0x00bb
             r1.onTouchEvent(r2)
-            goto L_0x00b7
-        L_0x00ad:
+            goto L_0x00c5
+        L_0x00bb:
             java.lang.String r1 = "mKeyguardVerticalMoveHelper"
             kotlin.jvm.internal.Intrinsics.throwUninitializedPropertyAccessException(r1)
             throw r0
-        L_0x00b3:
+        L_0x00c1:
             kotlin.jvm.internal.Intrinsics.throwUninitializedPropertyAccessException(r4)
             throw r0
-        L_0x00b7:
+        L_0x00c5:
             return r6
-        L_0x00b8:
+        L_0x00c6:
             java.lang.String r1 = "mIndicationController"
             kotlin.jvm.internal.Intrinsics.throwUninitializedPropertyAccessException(r1)
             throw r0
-        L_0x00be:
+        L_0x00cc:
             java.lang.String r1 = "mLockScreenMagazineController"
             kotlin.jvm.internal.Intrinsics.throwUninitializedPropertyAccessException(r1)
             throw r0
-        L_0x00c4:
+        L_0x00d2:
             kotlin.jvm.internal.Intrinsics.throwNpe()
             throw r0
-        L_0x00c8:
+        L_0x00d6:
             return r8
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.keyguard.injector.KeyguardPanelViewInjector.onTouchEvent(android.view.MotionEvent, int, float, float, boolean, boolean, boolean, boolean, boolean, boolean):boolean");
@@ -1107,7 +1114,7 @@ public final class KeyguardPanelViewInjector extends MiuiKeyguardUpdateMonitorCa
     public void onWallpaperChange(boolean z) {
         TextView switchSystemUserEntrance = getSwitchSystemUserEntrance();
         switchSystemUserEntrance.setTextColor(z ? -1308622848 : -1);
-        switchSystemUserEntrance.setCompoundDrawablesWithIntrinsicBounds(this.mContext.getResources().getDrawable(z ? C0010R$drawable.logout_light : C0010R$drawable.logout_dark), (Drawable) null, (Drawable) null, (Drawable) null);
+        switchSystemUserEntrance.setCompoundDrawablesWithIntrinsicBounds(this.mContext.getResources().getDrawable(z ? C0013R$drawable.logout_light : C0013R$drawable.logout_dark), (Drawable) null, (Drawable) null, (Drawable) null);
         KeyguardStatusBarView keyguardStatusBarView = this.mKeyguardStatusBarView;
         if (keyguardStatusBarView != null) {
             keyguardStatusBarView.setDarkStyle(!this.mForceBlack && z);
@@ -1148,17 +1155,17 @@ public final class KeyguardPanelViewInjector extends MiuiKeyguardUpdateMonitorCa
         Window window2;
         if (this.mSimLockedTipsDialog == null) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this.mContext);
-            builder.setTitle(this.mContext.getString(C0018R$string.sim_state_locked_dialog_title));
+            builder.setTitle(this.mContext.getString(C0021R$string.sim_state_locked_dialog_title));
             StringCompanionObject stringCompanionObject = StringCompanionObject.INSTANCE;
-            String string = this.mContext.getString(C0018R$string.sim_state_locked_puk_dialog_message);
+            String string = this.mContext.getString(C0021R$string.sim_state_locked_puk_dialog_message);
             Intrinsics.checkExpressionValueIsNotNull(string, "mContext.getString(R.str…ocked_puk_dialog_message)");
             String format = String.format(string, Arrays.copyOf(new Object[]{10}, 1));
             Intrinsics.checkExpressionValueIsNotNull(format, "java.lang.String.format(format, *args)");
             builder.setMessage(format);
             if (PhoneUtils.isInCall(this.mContext)) {
-                str = this.mContext.getString(C0018R$string.return_to_incall_screen);
+                str = this.mContext.getString(C0021R$string.return_to_incall_screen);
             } else {
-                str = this.mContext.getString(C0018R$string.emergency_call_string);
+                str = this.mContext.getString(C0021R$string.emergency_call_string);
             }
             builder.setNeutralButton(str, new KeyguardPanelViewInjector$showSimLockedTipsDialog$1(this));
             builder.setCancelable(false);

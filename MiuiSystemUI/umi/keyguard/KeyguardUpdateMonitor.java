@@ -1547,9 +1547,9 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
         intentFilter.addAction("android.intent.action.AIRPLANE_MODE");
         if (i == 0) {
             intentFilter.addAction("android.intent.action.SIM_STATE_CHANGED");
+            intentFilter.addAction("android.intent.action.ACTION_DEFAULT_DATA_SUBSCRIPTION_CHANGED");
         }
         intentFilter.addAction("android.intent.action.SERVICE_STATE");
-        intentFilter.addAction("android.intent.action.ACTION_DEFAULT_DATA_SUBSCRIPTION_CHANGED");
         intentFilter.addAction("android.intent.action.PHONE_STATE");
         intentFilter.addAction("android.app.action.DEVICE_POLICY_MANAGER_STATE_CHANGED");
         this.mBroadcastDispatcher.registerReceiverWithHandler(this.mBroadcastReceiver, intentFilter, this.mHandler);
@@ -1626,7 +1626,7 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
         updateAirplaneModeState();
         TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService("phone");
         this.mTelephonyManager = telephonyManager;
-        if (telephonyManager != null) {
+        if (telephonyManager != null && i == 0) {
             telephonyManager.listen(this.mPhoneStateListener, 4194304);
             for (int i3 = 0; i3 < this.mTelephonyManager.getActiveModemCount(); i3++) {
                 int simState = this.mTelephonyManager.getSimState(i3);
@@ -1749,7 +1749,8 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
         boolean z4 = keyguardBypassController != null && keyguardBypassController.canBypass();
         boolean z5 = !getUserCanSkipBouncer(currentUser) || z4;
         boolean z6 = (!z3 || (z4 && !this.mBouncer)) && !z2;
-        if (this.mSwitchingUser || isFaceDisabled(currentUser) || !z5 || this.mKeyguardGoingAway || !z6 || !this.mIsPrimaryUser) {
+        boolean isLargeScreen = MiuiKeyguardUtils.isLargeScreen(this.mContext);
+        if (this.mSwitchingUser || isFaceDisabled(currentUser) || !z5 || isLargeScreen || this.mKeyguardGoingAway || !z6 || !this.mIsPrimaryUser) {
             return false;
         }
         if ((this.mMiuiFaceUnlockManager.isWakeupByNotification() && !this.mMiuiFaceUnlockManager.isFaceUnlockStartByNotificationScreenOn()) || this.mUpdateMonitorInjector.isChargeAnimationShowing()) {
@@ -2486,10 +2487,6 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
 
     public boolean isDeviceInteractive() {
         return this.mDeviceInteractive;
-    }
-
-    public boolean isGoingToSleep() {
-        return this.mGoingToSleep;
     }
 
     public int getNextSubIdForState(int i) {

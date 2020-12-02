@@ -17,8 +17,8 @@ import com.android.keyguard.fod.MiuiGxzwManager;
 import com.android.keyguard.magazine.utils.LockScreenMagazineUtils;
 import com.android.keyguard.utils.MiuiKeyguardUtils;
 import com.android.keyguard.utils.PhoneUtils;
-import com.android.systemui.C0007R$bool;
-import com.android.systemui.C0012R$id;
+import com.android.systemui.C0010R$bool;
+import com.android.systemui.C0015R$id;
 import com.android.systemui.Dependency;
 import com.android.systemui.plugins.ActivityStarter;
 import java.io.File;
@@ -97,7 +97,7 @@ public class KeyguardHostView extends FrameLayout implements KeyguardSecurityCon
 
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
-        this.mSecurityContainer = (KeyguardSecurityContainer) findViewById(C0012R$id.keyguard_security_container);
+        this.mSecurityContainer = (KeyguardSecurityContainer) findViewById(C0015R$id.keyguard_security_container);
         LockPatternUtils lockPatternUtils = new LockPatternUtils(this.mContext);
         this.mLockPatternUtils = lockPatternUtils;
         this.mSecurityContainer.setLockPatternUtils(lockPatternUtils);
@@ -281,7 +281,7 @@ public class KeyguardHostView extends FrameLayout implements KeyguardSecurityCon
     }
 
     public boolean shouldEnableMenuKey() {
-        return !getResources().getBoolean(C0007R$bool.config_disableMenuKeyInLockScreen) || ActivityManager.isRunningInTestHarness() || new File("/data/local/enable_menu_key").exists();
+        return !getResources().getBoolean(C0010R$bool.config_disableMenuKeyInLockScreen) || ActivityManager.isRunningInTestHarness() || new File("/data/local/enable_menu_key").exists();
     }
 
     public void setViewMediatorCallback(ViewMediatorCallback viewMediatorCallback) {

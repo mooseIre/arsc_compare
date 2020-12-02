@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import com.android.keyguard.injector.KeyguardNegative1PageInjector;
 import com.android.keyguard.magazine.LockScreenMagazineController;
-import com.android.systemui.C0014R$layout;
+import com.android.systemui.C0017R$layout;
 import com.android.systemui.Dependency;
 
 public class MiuiKeyguardMoveLeftViewContainer extends FrameLayout {
@@ -35,9 +35,9 @@ public class MiuiKeyguardMoveLeftViewContainer extends FrameLayout {
             this.mKeyguardMoveLeftView = null;
         }
         if (((LockScreenMagazineController) Dependency.get(LockScreenMagazineController.class)).isSupportLockScreenMagazineLeft()) {
-            this.mKeyguardMoveLeftView = (MiuiKeyguardMoveLeftLockScreenMagazineView) LayoutInflater.from(getContext()).inflate(C0014R$layout.miui_keyguard_left_view_lock_screen_magazine_layout, (ViewGroup) null, false);
+            this.mKeyguardMoveLeftView = (MiuiKeyguardMoveLeftLockScreenMagazineView) LayoutInflater.from(getContext()).inflate(C0017R$layout.miui_keyguard_left_view_lock_screen_magazine_layout, (ViewGroup) null, false);
         } else {
-            this.mKeyguardMoveLeftView = (MiuiKeyguardMoveLeftControlCenterView) LayoutInflater.from(getContext()).inflate(C0014R$layout.miui_keyguard_left_view_control_center_layout, (ViewGroup) null, false);
+            this.mKeyguardMoveLeftView = (MiuiKeyguardMoveLeftControlCenterView) LayoutInflater.from(getContext()).inflate(C0017R$layout.miui_keyguard_left_view_control_center_layout, (ViewGroup) null, false);
         }
         setCustomBackground();
         addView(this.mKeyguardMoveLeftView);

@@ -15,7 +15,7 @@ import android.view.WindowManager;
 import android.view.animation.Interpolator;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import com.android.systemui.C0010R$drawable;
+import com.android.systemui.C0013R$drawable;
 import miui.maml.animation.interpolater.CubicEaseOutInterpolater;
 
 public class MiuiChargeTurboView extends RelativeLayout {
@@ -61,11 +61,11 @@ public class MiuiChargeTurboView extends RelativeLayout {
 
     private void init(Context context) {
         setLayoutDirection(0);
-        this.mChargeIconDrawable = context.getDrawable(C0010R$drawable.charge_animation_charge_icon);
-        this.mTurboIconDrawable = context.getDrawable(C0010R$drawable.charge_animation_turbo_icon);
-        this.mTurboTailIconDrawable = context.getDrawable(C0010R$drawable.charge_animation_turbo_tail_icon);
-        this.mWiredStrongChargeIconDrawable = context.getDrawable(C0010R$drawable.charge_animation_wired_strong_charge_icon);
-        this.mWirelessStrongChargeIconDrawable = context.getDrawable(C0010R$drawable.charge_animation_wireless_strong_charge_icon);
+        this.mChargeIconDrawable = context.getDrawable(C0013R$drawable.charge_animation_charge_icon);
+        this.mTurboIconDrawable = context.getDrawable(C0013R$drawable.charge_animation_turbo_icon);
+        this.mTurboTailIconDrawable = context.getDrawable(C0013R$drawable.charge_animation_turbo_tail_icon);
+        this.mWiredStrongChargeIconDrawable = context.getDrawable(C0013R$drawable.charge_animation_wired_strong_charge_icon);
+        this.mWirelessStrongChargeIconDrawable = context.getDrawable(C0013R$drawable.charge_animation_wireless_strong_charge_icon);
         this.mWindowManager = (WindowManager) context.getSystemService("window");
         this.mScreenSize = new Point();
         this.mWindowManager.getDefaultDisplay().getRealSize(this.mScreenSize);
@@ -206,11 +206,24 @@ public class MiuiChargeTurboView extends RelativeLayout {
     /* access modifiers changed from: protected */
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
+        checkScreenSize();
     }
 
     /* access modifiers changed from: protected */
     public void onConfigurationChanged(Configuration configuration) {
         super.onConfigurationChanged(configuration);
+        checkScreenSize();
+    }
+
+    private void checkScreenSize() {
+        Point point = new Point();
+        this.mWindowManager.getDefaultDisplay().getRealSize(point);
+        if (!this.mScreenSize.equals(point.x, point.y)) {
+            this.mScreenSize.set(point.x, point.y);
+            updateSizeForScreenSizeChange();
+            updateLayoutParamForScreenSizeChange();
+            requestLayout();
+        }
     }
 
     private void updateSizeForScreenSizeChange() {
@@ -242,5 +255,30 @@ public class MiuiChargeTurboView extends RelativeLayout {
             this.mWirelessStrongChargeIconHeight = (int) (min * ((float) this.mWirelessStrongChargeIconDrawable.getIntrinsicHeight()));
         }
         this.mTranslation = this.mTailIconWidth;
+    }
+
+    private void updateLayoutParamForScreenSizeChange() {
+        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) this.mChargeIcon.getLayoutParams();
+        layoutParams.width = this.mChargeIconWidth;
+        layoutParams.height = this.mChargeIconHeight;
+        RelativeLayout.LayoutParams layoutParams2 = (RelativeLayout.LayoutParams) this.mTailIcon.getLayoutParams();
+        int i = this.mTailIconWidth;
+        layoutParams2.width = i;
+        layoutParams2.height = this.mTailIconHeight;
+        this.mTailIcon.setPivotX((float) i);
+        RelativeLayout.LayoutParams layoutParams3 = (RelativeLayout.LayoutParams) this.mTurboIcon.getLayoutParams();
+        layoutParams3.width = this.mTurboIconWidth;
+        layoutParams3.height = this.mTurboIconHeight;
+        layoutParams3.leftMargin = this.mChargeIconWidth + 10;
+        RelativeLayout.LayoutParams layoutParams4 = (RelativeLayout.LayoutParams) this.mWiredStrongChargeIcon.getLayoutParams();
+        int i2 = this.mWiredStrongChargeIconWidth;
+        layoutParams4.width = i2;
+        layoutParams4.height = this.mWiredStrongChargeIconHeight;
+        this.mWiredStrongChargeIcon.setPivotX((float) i2);
+        RelativeLayout.LayoutParams layoutParams5 = (RelativeLayout.LayoutParams) this.mWirelessStrongChargeIcon.getLayoutParams();
+        int i3 = this.mWirelessStrongChargeIconWidth;
+        layoutParams5.width = i3;
+        layoutParams5.height = this.mWirelessStrongChargeIconHeight;
+        this.mWirelessStrongChargeIcon.setPivotX((float) i3);
     }
 }

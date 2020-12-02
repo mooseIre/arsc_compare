@@ -24,10 +24,10 @@ import com.android.keyguard.KeyguardUpdateMonitorCallback;
 import com.android.keyguard.magazine.utils.LockScreenMagazineUtils;
 import com.android.keyguard.utils.MiuiKeyguardUtils;
 import com.android.keyguard.utils.PackageUtils;
-import com.android.systemui.C0009R$dimen;
-import com.android.systemui.C0010R$drawable;
-import com.android.systemui.C0012R$id;
-import com.android.systemui.C0018R$string;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.Dependency;
 import com.android.systemui.statusbar.phone.StatusBar;
 import com.android.systemui.statusbar.policy.FlashlightController;
@@ -64,7 +64,7 @@ public class MiuiKeyguardMoveLeftControlCenterView extends MiuiKeyguardMoveLeftB
     View.OnClickListener mListener = new View.OnClickListener() {
         public void onClick(View view) {
             int id = view.getId();
-            if (id == C0012R$id.keyguard_smarthome_info) {
+            if (id == C0015R$id.keyguard_smarthome_info) {
                 if (PackageUtils.isAppInstalledForUser(MiuiKeyguardMoveLeftControlCenterView.this.mContext, "com.xiaomi.smarthome", KeyguardUpdateMonitor.getCurrentUser())) {
                     try {
                         MiuiKeyguardMoveLeftControlCenterView.this.mStatusBar.startActivity(PackageUtils.getSmartHomeMainIntent(), true);
@@ -72,9 +72,9 @@ public class MiuiKeyguardMoveLeftControlCenterView extends MiuiKeyguardMoveLeftB
                         Log.e("MiuiKeyguardMoveLeftBaseView", "StatusBar.startActivity fail " + e.getCause());
                     }
                 } else {
-                    MiuiKeyguardMoveLeftControlCenterView.this.startAppStoreToDownload(C0012R$id.keyguard_smarthome_info);
+                    MiuiKeyguardMoveLeftControlCenterView.this.startAppStoreToDownload(C0015R$id.keyguard_smarthome_info);
                 }
-            } else if (id == C0012R$id.keyguard_remote_controller_info) {
+            } else if (id == C0015R$id.keyguard_remote_controller_info) {
                 if (PackageUtils.isAppInstalledForUser(MiuiKeyguardMoveLeftControlCenterView.this.mContext, "com.duokan.phone.remotecontroller", KeyguardUpdateMonitor.getCurrentUser())) {
                     try {
                         Intent launchIntentForPackage = MiuiKeyguardMoveLeftControlCenterView.this.mContext.getPackageManager().getLaunchIntentForPackage("com.duokan.phone.remotecontroller");
@@ -84,17 +84,17 @@ public class MiuiKeyguardMoveLeftControlCenterView extends MiuiKeyguardMoveLeftB
                         Log.e("MiuiKeyguardMoveLeftBaseView", "StatusBar.startActivity fail " + e2.getCause());
                     }
                 } else {
-                    MiuiKeyguardMoveLeftControlCenterView.this.startAppStoreToDownload(C0012R$id.keyguard_remote_controller_info);
+                    MiuiKeyguardMoveLeftControlCenterView.this.startAppStoreToDownload(C0015R$id.keyguard_remote_controller_info);
                 }
-            } else if (id == C0012R$id.keyguard_mi_wallet_info) {
+            } else if (id == C0015R$id.keyguard_mi_wallet_info) {
                 MiuiKeyguardMoveLeftControlCenterView.this.startToTSMClientActivity();
-            } else if (id == C0012R$id.keyguard_electric_torch) {
+            } else if (id == C0015R$id.keyguard_electric_torch) {
                 MiuiKeyguardMoveLeftControlCenterView.this.mTorchLightImageView.setSelected(!MiuiKeyguardMoveLeftControlCenterView.this.mFlashlightController.isEnabled());
                 CommonUtil.toggleTorch();
                 if (MiuiKeyguardUtils.SUPPORT_LINEAR_MOTOR_VIBRATE) {
                     view.performHapticFeedback(268435458);
                 }
-            } else if (id != C0012R$id.keyguard_lock_screen_magazine_info) {
+            } else if (id != C0015R$id.keyguard_lock_screen_magazine_info) {
             } else {
                 if (PackageUtils.isAppInstalledForUser(MiuiKeyguardMoveLeftControlCenterView.this.mContext, LockScreenMagazineUtils.LOCK_SCREEN_MAGAZINE_PACKAGE_NAME, KeyguardUpdateMonitor.getCurrentUser())) {
                     Log.d("miui_keyguard", "left view goto lock screen wall paper");
@@ -105,7 +105,7 @@ public class MiuiKeyguardMoveLeftControlCenterView extends MiuiKeyguardMoveLeftB
                     }
                     return;
                 }
-                MiuiKeyguardMoveLeftControlCenterView.this.startAppStoreToDownload(C0012R$id.keyguard_lock_screen_magazine_info);
+                MiuiKeyguardMoveLeftControlCenterView.this.startAppStoreToDownload(C0015R$id.keyguard_lock_screen_magazine_info);
             }
         }
     };
@@ -154,21 +154,21 @@ public class MiuiKeyguardMoveLeftControlCenterView extends MiuiKeyguardMoveLeftB
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mSmartHomeLinearLayout = (LinearLayout) findViewById(C0012R$id.keyguard_smarthome_info);
-        this.mRemoteCenterLinearLayout = (LinearLayout) findViewById(C0012R$id.keyguard_remote_controller_info);
-        this.mMiWalletLinearLayout = (LinearLayout) findViewById(C0012R$id.keyguard_mi_wallet_info);
-        this.mLockScreenMagazineLinearLayout = (LinearLayout) findViewById(C0012R$id.keyguard_lock_screen_magazine_info);
-        this.mTorchLightImageView = (ImageView) findViewById(C0012R$id.keyguard_electric_torch);
-        this.mAllFourLinearLayout = (LinearLayout) findViewById(C0012R$id.keyguard_move_left);
+        this.mSmartHomeLinearLayout = (LinearLayout) findViewById(C0015R$id.keyguard_smarthome_info);
+        this.mRemoteCenterLinearLayout = (LinearLayout) findViewById(C0015R$id.keyguard_remote_controller_info);
+        this.mMiWalletLinearLayout = (LinearLayout) findViewById(C0015R$id.keyguard_mi_wallet_info);
+        this.mLockScreenMagazineLinearLayout = (LinearLayout) findViewById(C0015R$id.keyguard_lock_screen_magazine_info);
+        this.mTorchLightImageView = (ImageView) findViewById(C0015R$id.keyguard_electric_torch);
+        this.mAllFourLinearLayout = (LinearLayout) findViewById(C0015R$id.keyguard_move_left);
         this.mSmartHomeLinearLayout.setOnClickListener(this.mListener);
         this.mRemoteCenterLinearLayout.setOnClickListener(this.mListener);
         this.mMiWalletLinearLayout.setOnClickListener(this.mListener);
         this.mLockScreenMagazineLinearLayout.setOnClickListener(this.mListener);
         this.mTorchLightImageView.setOnClickListener(this.mListener);
-        this.mTwoOrOneItemTopMargin = getResources().getDimensionPixelSize(C0009R$dimen.keyguard_move_left_layout_top_margint_twoorone);
-        this.mTwoOrOneItemLeftMargin = getResources().getDimensionPixelSize(C0009R$dimen.keyguard_move_left_layout_left_margint_twoorone);
-        this.mTwoOrOneItemRightMargin = getResources().getDimensionPixelSize(C0009R$dimen.keyguard_move_left_layout_right_margint_twoorone);
-        this.mFourOrThreeItemTopMargin = getResources().getDimensionPixelOffset(C0009R$dimen.keyguard_move_left_layout_top_margint_fourorthree);
+        this.mTwoOrOneItemTopMargin = getResources().getDimensionPixelSize(C0012R$dimen.keyguard_move_left_layout_top_margint_twoorone);
+        this.mTwoOrOneItemLeftMargin = getResources().getDimensionPixelSize(C0012R$dimen.keyguard_move_left_layout_left_margint_twoorone);
+        this.mTwoOrOneItemRightMargin = getResources().getDimensionPixelSize(C0012R$dimen.keyguard_move_left_layout_right_margint_twoorone);
+        this.mFourOrThreeItemTopMargin = getResources().getDimensionPixelOffset(C0012R$dimen.keyguard_move_left_layout_top_margint_fourorthree);
         initKeyguardLeftItemInfos();
         initLeftView();
     }
@@ -196,10 +196,10 @@ public class MiuiKeyguardMoveLeftControlCenterView extends MiuiKeyguardMoveLeftB
     }
 
     private void initKeyguardLeftItemInfos() {
-        initKeyguardLeftItemInfo(C0012R$id.keyguard_smarthome_info, C0010R$drawable.keyguard_left_view_smarthome, C0018R$string.keyguard_left_smarthome);
-        initKeyguardLeftItemInfo(C0012R$id.keyguard_remote_controller_info, C0010R$drawable.keyguard_left_view_remotecontroller, C0018R$string.keyguard_left_remotecentral);
-        initKeyguardLeftItemInfo(C0012R$id.keyguard_mi_wallet_info, C0010R$drawable.keyguard_left_view_bankcard, C0018R$string.keyguard_left_mi_wallet);
-        initKeyguardLeftItemInfo(C0012R$id.keyguard_lock_screen_magazine_info, C0010R$drawable.keyguard_left_view_magazine, C0018R$string.keyguard_left_view_lock_wallpaper);
+        initKeyguardLeftItemInfo(C0015R$id.keyguard_smarthome_info, C0013R$drawable.keyguard_left_view_smarthome, C0021R$string.keyguard_left_smarthome);
+        initKeyguardLeftItemInfo(C0015R$id.keyguard_remote_controller_info, C0013R$drawable.keyguard_left_view_remotecontroller, C0021R$string.keyguard_left_remotecentral);
+        initKeyguardLeftItemInfo(C0015R$id.keyguard_mi_wallet_info, C0013R$drawable.keyguard_left_view_bankcard, C0021R$string.keyguard_left_mi_wallet);
+        initKeyguardLeftItemInfo(C0015R$id.keyguard_lock_screen_magazine_info, C0013R$drawable.keyguard_left_view_magazine, C0021R$string.keyguard_left_view_lock_wallpaper);
     }
 
     public void initLeftView() {
@@ -271,16 +271,16 @@ public class MiuiKeyguardMoveLeftControlCenterView extends MiuiKeyguardMoveLeftB
 
     private void initKeyguardLeftItemInfo(int i, int i2, int i3) {
         View findViewById = findViewById(i);
-        ((ImageView) findViewById.findViewById(C0012R$id.keyguard_left_list_item_img)).setBackgroundResource(i2);
-        TextView textView = (TextView) findViewById.findViewById(C0012R$id.keyguard_left_list_item_name);
+        ((ImageView) findViewById.findViewById(C0015R$id.keyguard_left_list_item_img)).setBackgroundResource(i2);
+        TextView textView = (TextView) findViewById.findViewById(C0015R$id.keyguard_left_list_item_name);
         textView.setText(i3);
         updateItemInfoTextSize(textView);
     }
 
     private void updateItemInfoTextSize(TextView textView) {
         Resources resources = getResources();
-        int dimensionPixelSize = resources.getDimensionPixelSize(C0009R$dimen.keyguard_move_left_litem_textview_name_size);
-        resources.getDimensionPixelSize(C0009R$dimen.keyguard_move_left_litem_textview_num_size);
+        int dimensionPixelSize = resources.getDimensionPixelSize(C0012R$dimen.keyguard_move_left_litem_textview_name_size);
+        resources.getDimensionPixelSize(C0012R$dimen.keyguard_move_left_litem_textview_num_size);
         textView.setTextSize(0, (float) dimensionPixelSize);
     }
 
@@ -288,11 +288,11 @@ public class MiuiKeyguardMoveLeftControlCenterView extends MiuiKeyguardMoveLeftB
     public void startAppStoreToDownload(int i) {
         String str = "";
         try {
-            if (i == C0012R$id.keyguard_smarthome_info) {
+            if (i == C0015R$id.keyguard_smarthome_info) {
                 str = "com.xiaomi.smarthome";
-            } else if (i == C0012R$id.keyguard_remote_controller_info) {
+            } else if (i == C0015R$id.keyguard_remote_controller_info) {
                 str = "com.duokan.phone.remotecontroller";
-            } else if (i == C0012R$id.keyguard_lock_screen_magazine_info) {
+            } else if (i == C0015R$id.keyguard_lock_screen_magazine_info) {
                 str = LockScreenMagazineUtils.LOCK_SCREEN_MAGAZINE_PACKAGE_NAME;
             }
             this.mStatusBar.startActivity(PackageUtils.getMarketDownloadIntent(str), true);

@@ -22,7 +22,7 @@ import android.view.accessibility.AccessibilityNodeInfo;
 import android.view.animation.AnimationUtils;
 import android.view.animation.Interpolator;
 import android.widget.EditText;
-import com.android.systemui.C0009R$dimen;
+import com.android.systemui.C0012R$dimen;
 import com.android.systemui.R$styleable;
 import java.util.ArrayList;
 import java.util.Stack;
@@ -90,8 +90,8 @@ public class PasswordTextView extends View {
         try {
             this.mTextHeightRaw = obtainStyledAttributes.getInt(R$styleable.PasswordTextView_scaledTextSize, 0);
             this.mGravity = obtainStyledAttributes.getInt(R$styleable.PasswordTextView_android_gravity, 17);
-            this.mDotSize = obtainStyledAttributes.getDimensionPixelSize(R$styleable.PasswordTextView_dotSize, getContext().getResources().getDimensionPixelSize(C0009R$dimen.password_dot_size));
-            this.mCharPadding = obtainStyledAttributes.getDimensionPixelSize(R$styleable.PasswordTextView_charPadding, getContext().getResources().getDimensionPixelSize(C0009R$dimen.password_char_padding));
+            this.mDotSize = obtainStyledAttributes.getDimensionPixelSize(R$styleable.PasswordTextView_dotSize, getContext().getResources().getDimensionPixelSize(C0012R$dimen.password_dot_size));
+            this.mCharPadding = obtainStyledAttributes.getDimensionPixelSize(R$styleable.PasswordTextView_charPadding, getContext().getResources().getDimensionPixelSize(C0012R$dimen.password_char_padding));
             this.mDrawPaint.setColor(obtainStyledAttributes.getColor(R$styleable.PasswordTextView_android_textColor, -1));
             obtainStyledAttributes.recycle();
             this.mDrawPaint.setFlags(129);

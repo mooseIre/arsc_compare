@@ -73,6 +73,10 @@ public class IChargeView extends FrameLayout implements ValueAnimator.AnimatorUp
     }
 
     /* access modifiers changed from: protected */
+    public void updateLayoutParamForScreenSizeChange() {
+    }
+
+    /* access modifiers changed from: protected */
     public void updateSizeForScreenSizeChange() {
     }
 
@@ -103,11 +107,6 @@ public class IChargeView extends FrameLayout implements ValueAnimator.AnimatorUp
 
     private RelativeLayout.LayoutParams getContainerLayoutParams() {
         return new RelativeLayout.LayoutParams(-1, -1);
-    }
-
-    /* access modifiers changed from: protected */
-    public void onAttachedToWindow() {
-        super.onAttachedToWindow();
     }
 
     /* access modifiers changed from: protected */
@@ -184,7 +183,25 @@ public class IChargeView extends FrameLayout implements ValueAnimator.AnimatorUp
     }
 
     /* access modifiers changed from: protected */
+    public void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        checkScreenSize();
+    }
+
+    /* access modifiers changed from: protected */
     public void onConfigurationChanged(Configuration configuration) {
         super.onConfigurationChanged(configuration);
+        checkScreenSize();
+    }
+
+    private void checkScreenSize() {
+        Point point = new Point();
+        this.mWindowManager.getDefaultDisplay().getRealSize(point);
+        if (!this.mScreenSize.equals(point.x, point.y)) {
+            this.mScreenSize.set(point.x, point.y);
+            updateSizeForScreenSizeChange();
+            updateLayoutParamForScreenSizeChange();
+            requestLayout();
+        }
     }
 }

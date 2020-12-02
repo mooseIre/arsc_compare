@@ -18,8 +18,8 @@ import android.util.Slog;
 import android.widget.Toast;
 import com.android.keyguard.analytics.AnalyticsHelper;
 import com.android.keyguard.injector.KeyguardUpdateMonitorInjector;
-import com.android.systemui.C0010R$drawable;
-import com.android.systemui.C0018R$string;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.Dependency;
 import com.android.systemui.keyguard.KeyguardViewMediator;
 import com.android.systemui.keyguard.WakefulnessLifecycle;
@@ -224,11 +224,11 @@ public class MiuiBleUnlockHelper {
     public void setBLEStatusBarIcon(int i) {
         int i2;
         if (i == 0) {
-            i2 = C0010R$drawable.ble_unlock_statusbar_icon_unverified;
+            i2 = C0013R$drawable.ble_unlock_statusbar_icon_unverified;
         } else if (i == 2) {
-            i2 = C0010R$drawable.ble_unlock_statusbar_icon_verified_near;
+            i2 = C0013R$drawable.ble_unlock_statusbar_icon_verified_near;
         } else {
-            i2 = C0010R$drawable.ble_unlock_statusbar_icon_verified_far;
+            i2 = C0013R$drawable.ble_unlock_statusbar_icon_verified_far;
         }
         this.mStatusBarManager.setIcon("ble_unlock_mode", i2, 0, (String) null);
     }
@@ -272,6 +272,6 @@ public class MiuiBleUnlockHelper {
     }
 
     private void handleBleUnlockSucceed() {
-        Toast.makeText(this.mContext, C0018R$string.miui_keyguard_ble_unlock_succeed_msg, 0).show();
+        Toast.makeText(this.mContext, C0021R$string.miui_keyguard_ble_unlock_succeed_msg, 0).show();
     }
 }

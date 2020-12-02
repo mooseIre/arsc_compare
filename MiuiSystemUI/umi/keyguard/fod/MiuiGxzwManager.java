@@ -828,13 +828,13 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
         }
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:17:0x0045, code lost:
-        if (r9.mDisableFingerprintIcon == false) goto L_0x0047;
+    /* JADX WARNING: Code restructure failed: missing block: B:17:0x0046, code lost:
+        if (r9.mDisableFingerprintIcon == false) goto L_0x0048;
      */
-    /* JADX WARNING: Code restructure failed: missing block: B:36:0x0075, code lost:
-        if (r9.mDisableLockScreenFod == false) goto L_0x0047;
+    /* JADX WARNING: Code restructure failed: missing block: B:36:0x0076, code lost:
+        if (r9.mDisableLockScreenFod == false) goto L_0x0048;
      */
-    /* JADX WARNING: Removed duplicated region for block: B:39:0x007c  */
+    /* JADX WARNING: Removed duplicated region for block: B:39:0x007d  */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     public void updateGxzwState() {
         /*
@@ -847,19 +847,19 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
             boolean r1 = r9.mDozing
             java.lang.String r2 = "MiuiGxzwManager"
             r3 = 0
-            if (r1 == 0) goto L_0x001e
+            if (r1 == 0) goto L_0x001f
             boolean r0 = r9.isShouldShowGxzwIcon()
-            if (r0 != 0) goto L_0x0019
+            if (r0 != 0) goto L_0x001a
             java.lang.String r0 = "updateGxzwState: dozing"
             android.util.Log.i(r2, r0)
-        L_0x0019:
+        L_0x001a:
             r9.dismissGxzwIconView(r3)
-            goto L_0x011e
-        L_0x001e:
+            goto L_0x0121
+        L_0x001f:
             boolean r1 = r9.mKeyguardAuthen
             java.lang.String r4 = ", disableFingerprintIcon = "
             r5 = 1
-            if (r1 == 0) goto L_0x00ee
+            if (r1 == 0) goto L_0x00f0
             java.lang.Class<com.android.keyguard.KeyguardUpdateMonitor> r1 = com.android.keyguard.KeyguardUpdateMonitor.class
             java.lang.Object r1 = com.android.systemui.Dependency.get(r1)
             com.android.keyguard.KeyguardUpdateMonitor r1 = (com.android.keyguard.KeyguardUpdateMonitor) r1
@@ -867,44 +867,44 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
             com.android.keyguard.injector.KeyguardUpdateMonitorInjector r6 = (com.android.keyguard.injector.KeyguardUpdateMonitorInjector) r6
             boolean r6 = r6.isChargeAnimationShowing()
             boolean r7 = r9.mBouncer
-            if (r7 == 0) goto L_0x0049
+            if (r7 == 0) goto L_0x004a
             boolean r7 = r9.isShowFodInBouncer()
-            if (r7 == 0) goto L_0x0078
-            if (r6 != 0) goto L_0x0078
+            if (r7 == 0) goto L_0x0079
+            if (r6 != 0) goto L_0x0079
             boolean r7 = r9.mDisableFingerprintIcon
-            if (r7 != 0) goto L_0x0078
-        L_0x0047:
+            if (r7 != 0) goto L_0x0079
+        L_0x0048:
             r3 = r5
-            goto L_0x0078
-        L_0x0049:
+            goto L_0x0079
+        L_0x004a:
             boolean r7 = r9.mQsExpanded
-            if (r7 != 0) goto L_0x0065
+            if (r7 != 0) goto L_0x0066
             java.lang.Object r7 = com.android.systemui.Dependency.get(r0)
             com.android.keyguard.injector.KeyguardUpdateMonitorInjector r7 = (com.android.keyguard.injector.KeyguardUpdateMonitorInjector) r7
             boolean r7 = r7.isKeyguardOccluded()
-            if (r7 != 0) goto L_0x0065
+            if (r7 != 0) goto L_0x0066
             boolean r7 = r9.moveHelperCanShow
-            if (r7 == 0) goto L_0x0065
+            if (r7 == 0) goto L_0x0066
             boolean r7 = r9.mLockScreenMagazinePreViewVisible
-            if (r7 != 0) goto L_0x0065
-            if (r6 != 0) goto L_0x0065
+            if (r7 != 0) goto L_0x0066
+            if (r6 != 0) goto L_0x0066
             r7 = r5
-            goto L_0x0066
-        L_0x0065:
-            r7 = r3
+            goto L_0x0067
         L_0x0066:
-            if (r7 == 0) goto L_0x0078
+            r7 = r3
+        L_0x0067:
+            if (r7 == 0) goto L_0x0079
             int r7 = r1.getStatusBarState()
             r8 = 2
-            if (r7 == r8) goto L_0x0078
+            if (r7 == r8) goto L_0x0079
             boolean r7 = r9.mDisableFingerprintIcon
-            if (r7 != 0) goto L_0x0078
+            if (r7 != 0) goto L_0x0079
             boolean r7 = r9.mDisableLockScreenFod
-            if (r7 != 0) goto L_0x0078
-            goto L_0x0047
-        L_0x0078:
+            if (r7 != 0) goto L_0x0079
+            goto L_0x0048
+        L_0x0079:
             boolean r7 = r9.mShouldShowGxzwIcon
-            if (r7 == r3) goto L_0x00e8
+            if (r7 == r3) goto L_0x00ea
             java.lang.StringBuilder r7 = new java.lang.StringBuilder
             r7.<init>()
             java.lang.String r8 = "updateGxzwState: mQsExpanded = "
@@ -945,19 +945,19 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
             r7.append(r0)
             java.lang.String r0 = r7.toString()
             android.util.Slog.i(r2, r0)
-        L_0x00e8:
+        L_0x00ea:
             r0 = r3 ^ 1
             r9.dismissGxzwIconView(r0)
-            goto L_0x011e
-        L_0x00ee:
+            goto L_0x0121
+        L_0x00f0:
             boolean r0 = r9.mPanelExpanded
-            if (r0 != 0) goto L_0x00f7
+            if (r0 != 0) goto L_0x00f9
             boolean r0 = r9.mDisableFingerprintIcon
-            if (r0 != 0) goto L_0x00f7
+            if (r0 != 0) goto L_0x00f9
             r3 = r5
-        L_0x00f7:
+        L_0x00f9:
             boolean r0 = r9.mShouldShowGxzwIcon
-            if (r0 == r3) goto L_0x0119
+            if (r0 == r3) goto L_0x011c
             java.lang.StringBuilder r0 = new java.lang.StringBuilder
             r0.<init>()
             java.lang.String r1 = "updateGxzwState: mPanelExpanded = "
@@ -969,10 +969,10 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
             r0.append(r1)
             java.lang.String r0 = r0.toString()
             android.util.Slog.i(r2, r0)
-        L_0x0119:
+        L_0x011c:
             r0 = r3 ^ 1
             r9.dismissGxzwIconView(r0)
-        L_0x011e:
+        L_0x0121:
             return
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.keyguard.fod.MiuiGxzwManager.updateGxzwState():void");

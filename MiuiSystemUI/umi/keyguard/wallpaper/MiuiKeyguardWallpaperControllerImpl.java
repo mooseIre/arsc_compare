@@ -5,7 +5,7 @@ import android.content.IntentFilter;
 import android.os.UserHandle;
 import com.android.keyguard.utils.MiuiKeyguardUtils;
 import com.android.keyguard.wallpaper.IMiuiKeyguardWallpaperController;
-import com.android.systemui.C0008R$color;
+import com.android.systemui.C0011R$color;
 import com.android.systemui.Dependency;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.google.android.collect.Lists;
@@ -50,7 +50,7 @@ public final class MiuiKeyguardWallpaperControllerImpl implements IMiuiKeyguardW
         Intrinsics.checkParameterIsNotNull(broadcastDispatcher, "mBroadcastDispatcher");
         this.mContext = context;
         this.mBroadcastDispatcher = broadcastDispatcher;
-        this.mWallpaperBlurColor = context.getResources().getColor(C0008R$color.wallpaper_des_text_dark_color);
+        this.mWallpaperBlurColor = context.getResources().getColor(C0011R$color.wallpaper_des_text_dark_color);
         this.mAODCallback = new MiuiKeyguardWallpaperControllerImpl$mAODCallback$1(this);
         ArrayList<IMiuiKeyguardWallpaperController.IWallpaperChangeCallback> newArrayList = Lists.newArrayList();
         Intrinsics.checkExpressionValueIsNotNull(newArrayList, "Lists.newArrayList()");

@@ -17,7 +17,7 @@ import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import com.android.keyguard.charge.ChargeUtils;
-import com.android.systemui.C0010R$drawable;
+import com.android.systemui.C0013R$drawable;
 import miui.maml.animation.interpolater.CubicEaseOutInterpolater;
 
 public class MiuiChargeIconView extends RelativeLayout {
@@ -70,10 +70,10 @@ public class MiuiChargeIconView extends RelativeLayout {
     }
 
     private void init(Context context) {
-        this.mSingleLightningDrawable = context.getDrawable(C0010R$drawable.charge_animation_rapid_charge_icon);
-        this.mDoubleLightningDrawable = context.getDrawable(C0010R$drawable.charge_animation_super_rapid_charge_icon);
-        this.mSpecialDoubleLightningDrawable = context.getDrawable(C0010R$drawable.charge_animation_strong_super_rapid_charge_icon);
-        this.mCarIconDrawable = context.getDrawable(C0010R$drawable.charge_animation_car_mode_icon);
+        this.mSingleLightningDrawable = context.getDrawable(C0013R$drawable.charge_animation_rapid_charge_icon);
+        this.mDoubleLightningDrawable = context.getDrawable(C0013R$drawable.charge_animation_super_rapid_charge_icon);
+        this.mSpecialDoubleLightningDrawable = context.getDrawable(C0013R$drawable.charge_animation_strong_super_rapid_charge_icon);
+        this.mCarIconDrawable = context.getDrawable(C0013R$drawable.charge_animation_car_mode_icon);
         this.mWindowManager = (WindowManager) context.getSystemService("window");
         this.mScreenSize = new Point();
         this.mWindowManager.getDefaultDisplay().getRealSize(this.mScreenSize);
@@ -251,11 +251,24 @@ public class MiuiChargeIconView extends RelativeLayout {
     /* access modifiers changed from: protected */
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
+        checkScreenSize();
     }
 
     /* access modifiers changed from: protected */
     public void onConfigurationChanged(Configuration configuration) {
         super.onConfigurationChanged(configuration);
+        checkScreenSize();
+    }
+
+    private void checkScreenSize() {
+        Point point = new Point();
+        this.mWindowManager.getDefaultDisplay().getRealSize(point);
+        if (!this.mScreenSize.equals(point.x, point.y)) {
+            this.mScreenSize.set(point.x, point.y);
+            updateSizeForScreenSizeChange();
+            updateLayoutParamForScreenSizeChange();
+            requestLayout();
+        }
     }
 
     private void updateSizeForScreenSizeChange() {
@@ -282,6 +295,53 @@ public class MiuiChargeIconView extends RelativeLayout {
         if (drawable4 != null) {
             this.mCarIconWidth = (int) (((float) drawable4.getIntrinsicWidth()) * min);
             this.mCarIconHeight = (int) (min * ((float) this.mCarIconDrawable.getIntrinsicHeight()));
+        }
+    }
+
+    private void updateLayoutParamForScreenSizeChange() {
+        ImageView imageView = this.mSingleLightningIcon;
+        if (imageView != null) {
+            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) imageView.getLayoutParams();
+            layoutParams.width = this.mSingleLightningIconWidth;
+            int i = this.mSingleLightningIconHeight;
+            int i2 = this.mIconPaddingTop;
+            layoutParams.height = i + i2;
+            this.mSingleLightningIcon.setPadding(0, i2, 0, 0);
+            this.mSingleLightningIcon.setPivotX((float) this.mPivotX);
+            this.mSingleLightningIcon.setLayoutParams(layoutParams);
+        }
+        ImageView imageView2 = this.mDoubleLightningIcon;
+        if (imageView2 != null) {
+            RelativeLayout.LayoutParams layoutParams2 = (RelativeLayout.LayoutParams) imageView2.getLayoutParams();
+            layoutParams2.width = this.mDoubleLightningIconWidth;
+            int i3 = this.mDoubleLightningIconHeight;
+            int i4 = this.mIconPaddingTop;
+            layoutParams2.height = i3 + i4;
+            this.mDoubleLightningIcon.setPadding(0, i4, 0, 0);
+            this.mDoubleLightningIcon.setPivotX((float) this.mPivotX);
+            this.mDoubleLightningIcon.setLayoutParams(layoutParams2);
+        }
+        ImageView imageView3 = this.mSpecialDoubleLightningIcon;
+        if (imageView3 != null) {
+            RelativeLayout.LayoutParams layoutParams3 = (RelativeLayout.LayoutParams) imageView3.getLayoutParams();
+            layoutParams3.width = this.mSpecialDoubleLightningIconWidth;
+            int i5 = this.mSpecialDoubleLightningIconHeight;
+            int i6 = this.mIconPaddingTop;
+            layoutParams3.height = i5 + i6;
+            this.mSpecialDoubleLightningIcon.setPadding(0, i6, 0, 0);
+            this.mSpecialDoubleLightningIcon.setPivotX((float) this.mPivotX);
+            this.mSpecialDoubleLightningIcon.setLayoutParams(layoutParams3);
+        }
+        ImageView imageView4 = this.mCarModeIcon;
+        if (imageView4 != null) {
+            RelativeLayout.LayoutParams layoutParams4 = (RelativeLayout.LayoutParams) imageView4.getLayoutParams();
+            layoutParams4.width = this.mCarIconWidth;
+            int i7 = this.mCarIconHeight;
+            int i8 = this.mIconPaddingTop;
+            layoutParams4.height = i7 + i8;
+            this.mCarModeIcon.setPadding(0, i8, 0, 0);
+            this.mCarModeIcon.setPivotX((float) this.mPivotX);
+            this.mCarModeIcon.setLayoutParams(layoutParams4);
         }
     }
 }

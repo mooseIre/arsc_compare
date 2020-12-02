@@ -11,9 +11,9 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
-import com.android.systemui.C0006R$attr;
-import com.android.systemui.C0012R$id;
-import com.android.systemui.C0019R$style;
+import com.android.systemui.C0009R$attr;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0022R$style;
 import com.android.systemui.Dependency;
 import com.android.systemui.statusbar.policy.ConfigurationController;
 import java.lang.ref.WeakReference;
@@ -91,7 +91,7 @@ public class KeyguardMessageArea extends TextView implements SecurityMessageDisp
     }
 
     public void onThemeChanged() {
-        TypedArray obtainStyledAttributes = this.mContext.obtainStyledAttributes(new int[]{C0006R$attr.wallpaperTextColor});
+        TypedArray obtainStyledAttributes = this.mContext.obtainStyledAttributes(new int[]{C0009R$attr.wallpaperTextColor});
         ColorStateList valueOf = ColorStateList.valueOf(obtainStyledAttributes.getColor(0, -65536));
         obtainStyledAttributes.recycle();
         this.mDefaultColorState = valueOf;
@@ -99,7 +99,7 @@ public class KeyguardMessageArea extends TextView implements SecurityMessageDisp
     }
 
     public void onDensityOrFontScaleChanged() {
-        TypedArray obtainStyledAttributes = this.mContext.obtainStyledAttributes(C0019R$style.Keyguard_TextView, new int[]{16842901});
+        TypedArray obtainStyledAttributes = this.mContext.obtainStyledAttributes(C0022R$style.Keyguard_TextView, new int[]{16842901});
         setTextSize(0, (float) obtainStyledAttributes.getDimensionPixelSize(0, 0));
         obtainStyledAttributes.recycle();
     }
@@ -117,8 +117,8 @@ public class KeyguardMessageArea extends TextView implements SecurityMessageDisp
     }
 
     public static KeyguardMessageArea findSecurityMessageDisplay(View view) {
-        KeyguardMessageArea keyguardMessageArea = (KeyguardMessageArea) view.findViewById(C0012R$id.keyguard_message_area);
-        return keyguardMessageArea == null ? (KeyguardMessageArea) view.getRootView().findViewById(C0012R$id.keyguard_message_area) : keyguardMessageArea;
+        KeyguardMessageArea keyguardMessageArea = (KeyguardMessageArea) view.findViewById(C0015R$id.keyguard_message_area);
+        return keyguardMessageArea == null ? (KeyguardMessageArea) view.getRootView().findViewById(C0015R$id.keyguard_message_area) : keyguardMessageArea;
     }
 
     /* access modifiers changed from: protected */

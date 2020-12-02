@@ -215,7 +215,7 @@ public class EmergencyButton extends Button {
             if (r0 != 0) goto L_0x003d
             android.content.Context r0 = r5.mContext
             android.content.res.Resources r0 = r0.getResources()
-            int r3 = com.android.systemui.C0007R$bool.config_showEmergencyButton
+            int r3 = com.android.systemui.C0010R$bool.config_showEmergencyButton
             boolean r0 = r0.getBoolean(r3)
             if (r0 == 0) goto L_0x003b
             goto L_0x003d
@@ -227,7 +227,7 @@ public class EmergencyButton extends Button {
         L_0x003e:
             android.content.Context r3 = r5.mContext
             android.content.res.Resources r3 = r3.getResources()
-            int r4 = com.android.systemui.C0007R$bool.kg_hide_emgcy_btn_when_oos
+            int r4 = com.android.systemui.C0010R$bool.kg_hide_emgcy_btn_when_oos
             boolean r3 = r3.getBoolean(r4)
             if (r3 == 0) goto L_0x005d
             java.lang.Class<com.android.keyguard.KeyguardUpdateMonitor> r3 = com.android.keyguard.KeyguardUpdateMonitor.class
@@ -251,7 +251,7 @@ public class EmergencyButton extends Button {
             r0 = 17040538(0x104049a, float:2.4247872E-38)
             goto L_0x0073
         L_0x0071:
-            int r0 = com.android.systemui.C0018R$string.emergency_call_string
+            int r0 = com.android.systemui.C0021R$string.emergency_call_string
         L_0x0073:
             r5.setText(r0)
             goto L_0x007c

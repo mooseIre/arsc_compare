@@ -29,8 +29,8 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.Interpolator;
 import com.android.internal.widget.ExploreByTouchHelper;
 import com.android.internal.widget.LockPatternView;
-import com.android.systemui.C0008R$color;
-import com.android.systemui.C0018R$string;
+import com.android.systemui.C0011R$color;
+import com.android.systemui.C0021R$string;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -138,9 +138,9 @@ public class MiuiLockPatternView extends View {
         setClickable(true);
         this.mPathPaint.setAntiAlias(true);
         this.mPathPaint.setDither(true);
-        this.mRegularColor = getResources().getColor(C0008R$color.miui_pattern_lockscreen_paint_color);
-        this.mErrorColor = getResources().getColor(C0008R$color.pattern_lockscreen_paint_error_color);
-        this.mSuccessColor = getResources().getColor(C0008R$color.miui_pattern_lockscreen_heavy_paint_color);
+        this.mRegularColor = getResources().getColor(C0011R$color.miui_pattern_lockscreen_paint_color);
+        this.mErrorColor = getResources().getColor(C0011R$color.pattern_lockscreen_paint_error_color);
+        this.mSuccessColor = getResources().getColor(C0011R$color.miui_pattern_lockscreen_heavy_paint_color);
         this.mPathPaint.setColor(this.mRegularColor);
         this.mPathPaint.setAntiAlias(true);
         this.mPathPaint.setDither(true);
@@ -306,7 +306,7 @@ public class MiuiLockPatternView extends View {
     }
 
     private void notifyPatternStarted() {
-        sendAccessEvent(C0018R$string.lockscreen_access_pattern_start);
+        sendAccessEvent(C0021R$string.lockscreen_access_pattern_start);
         OnPatternListener onPatternListener = this.mOnPatternListener;
         if (onPatternListener != null) {
             onPatternListener.onPatternStart();
@@ -314,7 +314,7 @@ public class MiuiLockPatternView extends View {
     }
 
     private void notifyPatternDetected() {
-        sendAccessEvent(C0018R$string.lockscreen_access_pattern_detected);
+        sendAccessEvent(C0021R$string.lockscreen_access_pattern_detected);
         OnPatternListener onPatternListener = this.mOnPatternListener;
         if (onPatternListener != null) {
             onPatternListener.onPatternDetected(this.mPattern);
@@ -322,7 +322,7 @@ public class MiuiLockPatternView extends View {
     }
 
     private void notifyPatternCleared() {
-        sendAccessEvent(C0018R$string.lockscreen_access_pattern_cleared);
+        sendAccessEvent(C0021R$string.lockscreen_access_pattern_cleared);
         OnPatternListener onPatternListener = this.mOnPatternListener;
         if (onPatternListener != null) {
             onPatternListener.onPatternCleared();
@@ -983,7 +983,7 @@ public class MiuiLockPatternView extends View {
                 accessibilityEvent.setContentDescription(charSequence);
                 return;
             }
-            accessibilityEvent.setContentDescription(MiuiLockPatternView.this.mContext.getResources().getString(C0018R$string.input_pattern_hint_text));
+            accessibilityEvent.setContentDescription(MiuiLockPatternView.this.mContext.getResources().getString(C0021R$string.input_pattern_hint_text));
         }
 
         public void onPopulateAccessibilityEvent(View view, AccessibilityEvent accessibilityEvent) {
@@ -1048,7 +1048,7 @@ public class MiuiLockPatternView extends View {
         }
 
         private CharSequence getTextForVirtualView(int i) {
-            return MiuiLockPatternView.this.getResources().getString(C0018R$string.lockscreen_access_pattern_cell_added_verbose, new Object[]{Integer.valueOf(i)});
+            return MiuiLockPatternView.this.getResources().getString(C0021R$string.lockscreen_access_pattern_cell_added_verbose, new Object[]{Integer.valueOf(i)});
         }
 
         private int getVirtualViewIdForHit(float f, float f2) {

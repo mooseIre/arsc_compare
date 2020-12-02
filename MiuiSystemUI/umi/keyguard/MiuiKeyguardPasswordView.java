@@ -19,8 +19,8 @@ import com.android.keyguard.EmergencyButton;
 import com.android.keyguard.faceunlock.MiuiKeyguardFaceUnlockView;
 import com.android.keyguard.utils.MiuiKeyguardUtils;
 import com.android.keyguard.utils.PhoneUtils;
-import com.android.systemui.C0012R$id;
-import com.android.systemui.C0018R$string;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.Dependency;
 
 public abstract class MiuiKeyguardPasswordView extends LinearLayout implements EmergencyButton.EmergencyButtonCallback, BackButton.BackButtonCallback {
@@ -63,16 +63,16 @@ public abstract class MiuiKeyguardPasswordView extends LinearLayout implements E
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mEmergencyCarrierArea = (EmergencyCarrierArea) findViewById(C0012R$id.keyguard_selector_fade_container);
-        EmergencyButton emergencyButton = (EmergencyButton) findViewById(C0012R$id.emergency_call_button);
+        this.mEmergencyCarrierArea = (EmergencyCarrierArea) findViewById(C0015R$id.keyguard_selector_fade_container);
+        EmergencyButton emergencyButton = (EmergencyButton) findViewById(C0015R$id.emergency_call_button);
         this.mEmergencyButton = emergencyButton;
         emergencyButton.setCallback(this);
-        BackButton backButton = (BackButton) findViewById(C0012R$id.back_button);
+        BackButton backButton = (BackButton) findViewById(C0015R$id.back_button);
         this.mBackButton = backButton;
         backButton.setCallback(this);
-        this.mDeleteButton = (TextView) findViewById(C0012R$id.delete_button);
-        this.mKeyguardBouncerMessageView = (KeyguardBouncerMessageView) findViewById(C0012R$id.keyguard_security_bouncer_message);
-        MiuiKeyguardFaceUnlockView miuiKeyguardFaceUnlockView = (MiuiKeyguardFaceUnlockView) findViewById(C0012R$id.miui_keyguard_face_unlock_view);
+        this.mDeleteButton = (TextView) findViewById(C0015R$id.delete_button);
+        this.mKeyguardBouncerMessageView = (KeyguardBouncerMessageView) findViewById(C0015R$id.keyguard_security_bouncer_message);
+        MiuiKeyguardFaceUnlockView miuiKeyguardFaceUnlockView = (MiuiKeyguardFaceUnlockView) findViewById(C0015R$id.miui_keyguard_face_unlock_view);
         this.mFaceUnlockView = miuiKeyguardFaceUnlockView;
         miuiKeyguardFaceUnlockView.setKeyguardFaceUnlockView(false);
     }
@@ -110,20 +110,20 @@ public abstract class MiuiKeyguardPasswordView extends LinearLayout implements E
     /* access modifiers changed from: protected */
     public boolean allowUnlock(int i) {
         if (i != 0 && !this.mKeyguardUpdateMonitor.getStrongAuthTracker().hasOwnerUserAuthenticatedSinceBoot()) {
-            setSwitchUserWrongMessage(C0018R$string.input_password_after_boot_msg_must_enter_owner_space);
+            setSwitchUserWrongMessage(C0021R$string.input_password_after_boot_msg_must_enter_owner_space);
             handleWrongPassword();
             return false;
         } else if (i != KeyguardUpdateMonitor.getCurrentUser() && MiuiKeyguardUtils.isSuperPowerActive(this.mContext)) {
-            setSwitchUserWrongMessage(C0018R$string.input_password_after_boot_msg_can_not_switch_when_superpower_active);
+            setSwitchUserWrongMessage(C0021R$string.input_password_after_boot_msg_can_not_switch_when_superpower_active);
             handleWrongPassword();
             return false;
         } else if (i != KeyguardUpdateMonitor.getCurrentUser() && MiuiKeyguardUtils.isGreenKidActive(this.mContext)) {
-            setSwitchUserWrongMessage(C0018R$string.input_password_after_boot_msg_can_not_switch_when_greenkid_active);
+            setSwitchUserWrongMessage(C0021R$string.input_password_after_boot_msg_can_not_switch_when_greenkid_active);
             handleWrongPassword();
             return false;
         } else if (i != KeyguardUpdateMonitor.getCurrentUser() && PhoneUtils.isInCall(this.mContext)) {
             Log.d("miui_keyguard_password", "Can't switch user to " + i + " when calling");
-            setSwitchUserWrongMessage(C0018R$string.input_password_after_boot_msg_can_not_switch_when_calling);
+            setSwitchUserWrongMessage(C0021R$string.input_password_after_boot_msg_can_not_switch_when_calling);
             handleWrongPassword();
             return false;
         } else if (i == KeyguardUpdateMonitor.getCurrentUser() || i == 0 || i != getManagedProfileId(this.mUm, UserHandle.myUserId())) {

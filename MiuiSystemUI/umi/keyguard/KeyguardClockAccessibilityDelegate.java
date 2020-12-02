@@ -6,13 +6,13 @@ import android.view.View;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.TextView;
-import com.android.systemui.C0018R$string;
+import com.android.systemui.C0021R$string;
 
 class KeyguardClockAccessibilityDelegate extends View.AccessibilityDelegate {
     private final String mFancyColon;
 
     public KeyguardClockAccessibilityDelegate(Context context) {
-        this.mFancyColon = context.getString(C0018R$string.keyguard_fancy_colon);
+        this.mFancyColon = context.getString(C0021R$string.keyguard_fancy_colon);
     }
 
     public void onInitializeAccessibilityEvent(View view, AccessibilityEvent accessibilityEvent) {
@@ -56,6 +56,6 @@ class KeyguardClockAccessibilityDelegate extends View.AccessibilityDelegate {
     }
 
     public static boolean isNeeded(Context context) {
-        return !TextUtils.isEmpty(context.getString(C0018R$string.keyguard_fancy_colon));
+        return !TextUtils.isEmpty(context.getString(C0021R$string.keyguard_fancy_colon));
     }
 }

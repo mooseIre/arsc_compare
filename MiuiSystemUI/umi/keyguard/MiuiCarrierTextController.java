@@ -6,7 +6,7 @@ import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
 import com.android.internal.telephony.IccCardConstants;
-import com.android.systemui.C0018R$string;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.Dependency;
 import com.android.systemui.MCCUtils;
 import com.android.systemui.keyguard.WakefulnessLifecycle;
@@ -164,9 +164,9 @@ public class MiuiCarrierTextController implements CustomCarrierObserver.Callback
             str2 = getAirplaneModeMessage();
         }
         if (this.mEmergencyOnly) {
-            str2 = this.mContext.getResources().getString(C0018R$string.lock_screen_no_sim_card_emergency_only);
+            str2 = this.mContext.getResources().getString(C0021R$string.lock_screen_no_sim_card_emergency_only);
         } else if (TextUtils.isEmpty(str2)) {
-            str2 = this.mContext.getResources().getString(C0018R$string.lock_screen_no_sim_card_no_service);
+            str2 = this.mContext.getResources().getString(C0021R$string.lock_screen_no_sim_card_no_service);
         }
         Log.d("MiuiCarrierTextController", "updateCarrierText: " + str2);
         fireCarrierTextChanged(str2);
@@ -207,7 +207,7 @@ public class MiuiCarrierTextController implements CustomCarrierObserver.Callback
 
     /* access modifiers changed from: protected */
     public String getAirplaneModeMessage() {
-        return this.mContext.getString(C0018R$string.lock_screen_carrier_airplane_mode_on);
+        return this.mContext.getString(C0021R$string.lock_screen_carrier_airplane_mode_on);
     }
 
     /* access modifiers changed from: protected */

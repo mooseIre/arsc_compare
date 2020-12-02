@@ -16,9 +16,9 @@ import android.util.Log;
 import android.view.Display;
 import android.view.DisplayCutout;
 import com.android.keyguard.utils.MiuiKeyguardUtils;
-import com.android.systemui.C0007R$bool;
-import com.android.systemui.C0009R$dimen;
-import com.android.systemui.C0010R$drawable;
+import com.android.systemui.C0010R$bool;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0013R$drawable;
 import com.miui.systemui.util.ReflectUtil;
 import java.math.BigDecimal;
 
@@ -133,9 +133,13 @@ class MiuiGxzwUtils {
 
     private static void screenWhPx(Context context) {
         DisplayMetrics displayMetrics = new DisplayMetrics();
+        boolean z = false;
         ((DisplayManager) context.getSystemService("display")).getDisplay(0).getRealMetrics(displayMetrics);
-        SCREEN_WIDTH_PX = displayMetrics.widthPixels;
-        SCREEN_HEIGHT_PX = displayMetrics.heightPixels;
+        if (context.getResources().getConfiguration().orientation == 1) {
+            z = true;
+        }
+        SCREEN_WIDTH_PX = z ? displayMetrics.widthPixels : displayMetrics.heightPixels;
+        SCREEN_HEIGHT_PX = z ? displayMetrics.heightPixels : displayMetrics.widthPixels;
     }
 
     public static int caculateCutoutHeightIfNeed(Context context) {
@@ -250,18 +254,18 @@ class MiuiGxzwUtils {
     }
 
     public static boolean supportHalo(Context context) {
-        return context.getResources().getBoolean(C0007R$bool.config_enableFodCircleHalo);
+        return context.getResources().getBoolean(C0010R$bool.config_enableFodCircleHalo);
     }
 
     public static int getHaloRes() {
-        return C0010R$drawable.gxzw_white_halo_light;
+        return C0013R$drawable.gxzw_white_halo_light;
     }
 
     public static float getHaloResCircleRadius(Context context) {
-        return (float) context.getResources().getDimensionPixelOffset(C0009R$dimen.gxzw_halo_res_circle_radius);
+        return (float) context.getResources().getDimensionPixelOffset(C0012R$dimen.gxzw_halo_res_circle_radius);
     }
 
     public static int getHealthHaloRes() {
-        return C0010R$drawable.gxzw_green_halo_light;
+        return C0013R$drawable.gxzw_green_halo_light;
     }
 }

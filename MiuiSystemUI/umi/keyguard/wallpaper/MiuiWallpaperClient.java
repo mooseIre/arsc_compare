@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Bitmap;
+import android.os.RemoteException;
 import android.os.UserHandle;
 import android.util.Log;
 import com.android.keyguard.KeyguardUpdateMonitor;
@@ -103,50 +104,80 @@ public final class MiuiWallpaperClient extends MiuiKeyguardUpdateMonitorCallback
                 intent.setAction("android.service.wallpaper.WallpaperRemoteService");
                 this.mContext.bindServiceAsUser(intent, this.mServiceConnection, 1, UserHandle.CURRENT);
             } catch (SecurityException unused) {
-                Log.e(this.TAG, "Unable to connect to miwallpaper state service");
+                Log.e(this.TAG, "Unable to connect to miwallpaper service");
             }
         }
     }
 
     public void onScreenTurnedOff() {
-        IMiuiKeyguardWallpaperService iMiuiKeyguardWallpaperService = this.mWallpaperService;
-        if (iMiuiKeyguardWallpaperService != null) {
-            iMiuiKeyguardWallpaperService.onScreenTurnedOff();
+        try {
+            IMiuiKeyguardWallpaperService iMiuiKeyguardWallpaperService = this.mWallpaperService;
+            if (iMiuiKeyguardWallpaperService != null) {
+                iMiuiKeyguardWallpaperService.onScreenTurnedOff();
+            }
+        } catch (RemoteException e) {
+            String str = this.TAG;
+            Log.e(str, "onScreenTurnedOff: " + e.getMessage());
         }
     }
 
     public void onFinishedGoingToSleep(int i) {
-        IMiuiKeyguardWallpaperService iMiuiKeyguardWallpaperService = this.mWallpaperService;
-        if (iMiuiKeyguardWallpaperService != null) {
-            iMiuiKeyguardWallpaperService.onFinishedGoingToSleep(i);
+        try {
+            IMiuiKeyguardWallpaperService iMiuiKeyguardWallpaperService = this.mWallpaperService;
+            if (iMiuiKeyguardWallpaperService != null) {
+                iMiuiKeyguardWallpaperService.onFinishedGoingToSleep(i);
+            }
+        } catch (RemoteException e) {
+            String str = this.TAG;
+            Log.e(str, "onFinishedGoingToSleep: " + e.getMessage());
         }
     }
 
     public void onKeyguardShowingChanged(boolean z) {
-        IMiuiKeyguardWallpaperService iMiuiKeyguardWallpaperService = this.mWallpaperService;
-        if (iMiuiKeyguardWallpaperService != null) {
-            iMiuiKeyguardWallpaperService.onKeyguardShowingChanged(z);
+        try {
+            IMiuiKeyguardWallpaperService iMiuiKeyguardWallpaperService = this.mWallpaperService;
+            if (iMiuiKeyguardWallpaperService != null) {
+                iMiuiKeyguardWallpaperService.onKeyguardShowingChanged(z);
+            }
+        } catch (RemoteException e) {
+            String str = this.TAG;
+            Log.e(str, "onKeyguardShowingChanged: " + e.getMessage());
         }
     }
 
     public final void onKeyguardGoingAway(boolean z, boolean z2) {
-        IMiuiKeyguardWallpaperService iMiuiKeyguardWallpaperService = this.mWallpaperService;
-        if (iMiuiKeyguardWallpaperService != null) {
-            iMiuiKeyguardWallpaperService.onKeyguardGoingAway(z, z2);
+        try {
+            IMiuiKeyguardWallpaperService iMiuiKeyguardWallpaperService = this.mWallpaperService;
+            if (iMiuiKeyguardWallpaperService != null) {
+                iMiuiKeyguardWallpaperService.onKeyguardGoingAway(z, z2);
+            }
+        } catch (RemoteException e) {
+            String str = this.TAG;
+            Log.e(str, "onKeyguardGoingAway: " + e.getMessage());
         }
     }
 
     public final void onDozingChanged(boolean z) {
-        IMiuiKeyguardWallpaperService iMiuiKeyguardWallpaperService = this.mWallpaperService;
-        if (iMiuiKeyguardWallpaperService != null) {
-            iMiuiKeyguardWallpaperService.onDozingChanged(z);
+        try {
+            IMiuiKeyguardWallpaperService iMiuiKeyguardWallpaperService = this.mWallpaperService;
+            if (iMiuiKeyguardWallpaperService != null) {
+                iMiuiKeyguardWallpaperService.onDozingChanged(z);
+            }
+        } catch (RemoteException e) {
+            String str = this.TAG;
+            Log.e(str, "onDozingChanged: " + e.getMessage());
         }
     }
 
     public final void updateWallpaper(boolean z) {
-        IMiuiKeyguardWallpaperService iMiuiKeyguardWallpaperService = this.mWallpaperService;
-        if (iMiuiKeyguardWallpaperService != null) {
-            iMiuiKeyguardWallpaperService.updateWallpaper(z);
+        try {
+            IMiuiKeyguardWallpaperService iMiuiKeyguardWallpaperService = this.mWallpaperService;
+            if (iMiuiKeyguardWallpaperService != null) {
+                iMiuiKeyguardWallpaperService.updateWallpaper(z);
+            }
+        } catch (RemoteException e) {
+            String str = this.TAG;
+            Log.e(str, "updateWallpaper: " + e.getMessage());
         }
     }
 

@@ -13,12 +13,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import com.android.internal.widget.LockPatternUtils;
-import com.android.systemui.C0005R$array;
-import com.android.systemui.C0008R$color;
-import com.android.systemui.C0009R$dimen;
-import com.android.systemui.C0010R$drawable;
-import com.android.systemui.C0012R$id;
-import com.android.systemui.C0014R$layout;
+import com.android.systemui.C0008R$array;
+import com.android.systemui.C0011R$color;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0017R$layout;
 import com.android.systemui.R$styleable;
 
 public class NumPadKey extends ViewGroup {
@@ -52,7 +52,7 @@ public class NumPadKey extends ViewGroup {
     }
 
     public NumPadKey(Context context, AttributeSet attributeSet, int i) {
-        this(context, attributeSet, i, C0014R$layout.keyguard_num_pad_key);
+        this(context, attributeSet, i, C0017R$layout.keyguard_num_pad_key);
     }
 
     /* JADX INFO: finally extract failed */
@@ -83,24 +83,24 @@ public class NumPadKey extends ViewGroup {
             this.mLockPatternUtils = new LockPatternUtils(context);
             this.mPM = (PowerManager) this.mContext.getSystemService("power");
             ((LayoutInflater) getContext().getSystemService("layout_inflater")).inflate(i2, this, true);
-            TextView textView = (TextView) findViewById(C0012R$id.digit_text);
+            TextView textView = (TextView) findViewById(C0015R$id.digit_text);
             this.mDigitText = textView;
             textView.setText(Integer.toString(this.mDigit));
-            this.mDigitText.setTextSize(0, getResources().getDimension(C0009R$dimen.lock_screen_numeric_keyboard_number_text_size));
-            this.mDigitText.setTextColor(getResources().getColor(C0008R$color.lock_screen_numeric_keyboard_number_text_color));
+            this.mDigitText.setTextSize(0, getResources().getDimension(C0012R$dimen.lock_screen_numeric_keyboard_number_text_size));
+            this.mDigitText.setTextColor(getResources().getColor(C0011R$color.lock_screen_numeric_keyboard_number_text_color));
             this.mDigitText.setTypeface(Typeface.create("miui-light", 0));
             this.mDigitText.setLineSpacing(0.0f, 1.0f);
             this.mDigitText.setIncludeFontPadding(false);
-            TextView textView2 = (TextView) findViewById(C0012R$id.klondike_text);
+            TextView textView2 = (TextView) findViewById(C0015R$id.klondike_text);
             this.mKlondikeText = textView2;
-            textView2.setTextSize(0, getResources().getDimension(C0009R$dimen.lock_screen_numeric_keyboard_alphabet_text_size));
-            this.mKlondikeText.setTextColor(getResources().getColor(C0008R$color.lock_screen_numeric_keyboard_alphabet_text_color));
+            textView2.setTextSize(0, getResources().getDimension(C0012R$dimen.lock_screen_numeric_keyboard_alphabet_text_size));
+            this.mKlondikeText.setTextColor(getResources().getColor(C0011R$color.lock_screen_numeric_keyboard_alphabet_text_color));
             this.mKlondikeText.setTypeface(Typeface.create("miui-regular", 0));
             this.mKlondikeText.setLineSpacing(0.0f, 1.0f);
             this.mKlondikeText.setIncludeFontPadding(false);
             if (this.mDigit >= 0) {
                 if (sKlondike == null) {
-                    sKlondike = getResources().getStringArray(C0005R$array.lockscreen_num_pad_klondike);
+                    sKlondike = getResources().getStringArray(C0008R$array.lockscreen_num_pad_klondike);
                 }
                 String[] strArr = sKlondike;
                 if (strArr != null && strArr.length > (i3 = this.mDigit)) {
@@ -114,7 +114,7 @@ public class NumPadKey extends ViewGroup {
             }
             TypedArray obtainStyledAttributes2 = context.obtainStyledAttributes(attributeSet, R.styleable.View);
             if (!obtainStyledAttributes2.hasValueOrEmpty(13)) {
-                setBackground(this.mContext.getDrawable(C0010R$drawable.ripple_drawable_pin));
+                setBackground(this.mContext.getDrawable(C0013R$drawable.ripple_drawable_pin));
             }
             obtainStyledAttributes2.recycle();
             setContentDescription(this.mDigitText.getText().toString());

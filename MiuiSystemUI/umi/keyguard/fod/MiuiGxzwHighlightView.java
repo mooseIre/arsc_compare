@@ -8,9 +8,9 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.ImageView;
-import com.android.systemui.C0007R$bool;
-import com.android.systemui.C0008R$color;
-import com.android.systemui.C0010R$drawable;
+import com.android.systemui.C0010R$bool;
+import com.android.systemui.C0011R$color;
+import com.android.systemui.C0013R$drawable;
 
 class MiuiGxzwHighlightView extends ImageView {
     private boolean mGradualGreenCircle = false;
@@ -86,16 +86,16 @@ class MiuiGxzwHighlightView extends ImageView {
     }
 
     private void initView() {
-        this.mGreenCircle = getContext().getResources().getBoolean(C0007R$bool.config_enableGreenCircle);
-        this.mGreenCircleColor = getContext().getResources().getColor(C0008R$color.gxzw_circle_color);
-        this.mGradualGreenCircle = getContext().getResources().getBoolean(C0007R$bool.config_enableGradualGreenCircle);
+        this.mGreenCircle = getContext().getResources().getBoolean(C0010R$bool.config_enableGreenCircle);
+        this.mGreenCircleColor = getContext().getResources().getColor(C0011R$color.gxzw_circle_color);
+        this.mGradualGreenCircle = getContext().getResources().getBoolean(C0010R$bool.config_enableGradualGreenCircle);
         this.mSupportHalo = MiuiGxzwUtils.supportHalo(getContext());
         Paint paint = new Paint();
         this.mPaint = paint;
         paint.setColor(this.mGreenCircleColor);
         this.mPaint.setAntiAlias(true);
         if (this.mGradualGreenCircle) {
-            setImageResource(C0010R$drawable.gxzw_green_light);
+            setImageResource(C0013R$drawable.gxzw_green_light);
         } else if (this.mSupportHalo) {
             setImageResource(MiuiGxzwUtils.getHaloRes());
         }

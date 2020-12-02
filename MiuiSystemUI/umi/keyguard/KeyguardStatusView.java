@@ -19,9 +19,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.core.graphics.ColorUtils;
 import com.android.internal.widget.LockPatternUtils;
-import com.android.systemui.C0009R$dimen;
-import com.android.systemui.C0012R$id;
-import com.android.systemui.C0018R$string;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.Dependency;
 import com.android.systemui.statusbar.policy.ConfigurationController;
 import java.io.FileDescriptor;
@@ -153,9 +153,9 @@ public class KeyguardStatusView extends GridLayout implements ConfigurationContr
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        LinearLayout linearLayout = (LinearLayout) findViewById(C0012R$id.status_view_container);
-        this.mLogoutView = (TextView) findViewById(C0012R$id.logout);
-        this.mNotificationIcons = findViewById(C0012R$id.clock_notification_icon_container);
+        LinearLayout linearLayout = (LinearLayout) findViewById(C0015R$id.status_view_container);
+        this.mLogoutView = (TextView) findViewById(C0015R$id.logout);
+        this.mNotificationIcons = findViewById(C0015R$id.clock_notification_icon_container);
         TextView textView = this.mLogoutView;
         if (textView != null) {
             textView.setOnClickListener(new View.OnClickListener() {
@@ -164,14 +164,14 @@ public class KeyguardStatusView extends GridLayout implements ConfigurationContr
                 }
             });
         }
-        KeyguardClockSwitch keyguardClockSwitch = (KeyguardClockSwitch) findViewById(C0012R$id.keyguard_clock_container);
+        KeyguardClockSwitch keyguardClockSwitch = (KeyguardClockSwitch) findViewById(C0015R$id.keyguard_clock_container);
         this.mClockView = keyguardClockSwitch;
         keyguardClockSwitch.setShowCurrentUserTime(true);
         if (KeyguardClockAccessibilityDelegate.isNeeded(this.mContext)) {
             this.mClockView.setAccessibilityDelegate(new KeyguardClockAccessibilityDelegate(this.mContext));
         }
-        this.mOwnerInfo = (TextView) findViewById(C0012R$id.owner_info);
-        this.mKeyguardSlice = (KeyguardSliceView) findViewById(C0012R$id.keyguard_status_area);
+        this.mOwnerInfo = (TextView) findViewById(C0015R$id.owner_info);
+        this.mKeyguardSlice = (KeyguardSliceView) findViewById(C0015R$id.keyguard_status_area);
         this.mTextColor = this.mClockView.getCurrentTextColor();
         this.mKeyguardSlice.setContentChangeListener(new Runnable() {
             public final void run() {
@@ -210,11 +210,11 @@ public class KeyguardStatusView extends GridLayout implements ConfigurationContr
     public void onDensityOrFontScaleChanged() {
         KeyguardClockSwitch keyguardClockSwitch = this.mClockView;
         if (keyguardClockSwitch != null) {
-            keyguardClockSwitch.setTextSize(0, (float) getResources().getDimensionPixelSize(C0009R$dimen.widget_big_font_size));
+            keyguardClockSwitch.setTextSize(0, (float) getResources().getDimensionPixelSize(C0012R$dimen.widget_big_font_size));
         }
         TextView textView = this.mOwnerInfo;
         if (textView != null) {
-            textView.setTextSize(0, (float) getResources().getDimensionPixelSize(C0009R$dimen.widget_label_font_size));
+            textView.setTextSize(0, (float) getResources().getDimensionPixelSize(C0012R$dimen.widget_label_font_size));
         }
         loadBottomMargin();
     }
@@ -333,8 +333,8 @@ public class KeyguardStatusView extends GridLayout implements ConfigurationContr
     }
 
     private void loadBottomMargin() {
-        this.mIconTopMargin = getResources().getDimensionPixelSize(C0009R$dimen.widget_vertical_padding);
-        this.mIconTopMarginWithHeader = getResources().getDimensionPixelSize(C0009R$dimen.widget_vertical_padding_with_header);
+        this.mIconTopMargin = getResources().getDimensionPixelSize(C0012R$dimen.widget_vertical_padding);
+        this.mIconTopMarginWithHeader = getResources().getDimensionPixelSize(C0012R$dimen.widget_vertical_padding_with_header);
     }
 
     private static final class Patterns {
@@ -345,8 +345,8 @@ public class KeyguardStatusView extends GridLayout implements ConfigurationContr
         static void update(Context context) {
             Locale locale = Locale.getDefault();
             Resources resources = context.getResources();
-            String string = resources.getString(C0018R$string.clock_12hr_format);
-            String string2 = resources.getString(C0018R$string.clock_24hr_format);
+            String string = resources.getString(C0021R$string.clock_12hr_format);
+            String string2 = resources.getString(C0021R$string.clock_24hr_format);
             String str = locale.toString() + string + string2;
             if (!str.equals(cacheKey)) {
                 clockView12 = DateFormat.getBestDateTimePattern(locale, string);

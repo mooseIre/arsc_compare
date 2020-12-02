@@ -24,7 +24,7 @@ import com.android.keyguard.fod.MiuiGxzwFrameAnimation;
 import com.android.keyguard.utils.MiuiKeyguardUtils;
 import com.android.keyguard.wallpaper.IMiuiKeyguardWallpaperController;
 import com.android.keyguard.wallpaper.MiuiKeyguardWallpaperControllerImpl;
-import com.android.systemui.C0018R$string;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.Dependency;
 import com.miui.systemui.util.HapticFeedBackImpl;
 import java.util.Objects;
@@ -988,7 +988,7 @@ class MiuiGxzwAnimView {
             if (this.mDozing || !this.mLightWallpaperGxzw) {
                 z = false;
             }
-            startTipAnim(z, getContext().getString(C0018R$string.gxzw_try_again), (float) this.mMiuiGxzwAnimManager.getFalseTipTranslationY(getContext()));
+            startTipAnim(z, getContext().getString(C0021R$string.gxzw_try_again), (float) this.mMiuiGxzwAnimManager.getFalseTipTranslationY(getContext()));
         }
 
         /* access modifiers changed from: private */

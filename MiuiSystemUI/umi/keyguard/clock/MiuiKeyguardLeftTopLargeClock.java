@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.ViewGroup;
-import com.android.systemui.C0008R$color;
+import com.android.systemui.C0011R$color;
 import miui.keyguard.clock.MiuiLeftTopClock;
 import miui.system.R;
 
@@ -76,7 +76,7 @@ public class MiuiKeyguardLeftTopLargeClock extends MiuiKeyguardSingleClock {
             super.setDarkStyle(z);
             this.mMiuiBaseClock.setTextColorDark(z);
             this.mLeftTopClock.setTextColorDark(z);
-            int color = z ? getContext().getResources().getColor(C0008R$color.miui_common_unlock_screen_common_time_dark_text_color) : -1;
+            int color = z ? getContext().getResources().getColor(C0011R$color.miui_common_unlock_screen_common_time_dark_text_color) : -1;
             this.mOwnerInfo.setTextColor(color);
             this.mMagazineClockView.setTextColor(color);
         }

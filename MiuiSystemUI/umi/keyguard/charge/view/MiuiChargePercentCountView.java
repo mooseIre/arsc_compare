@@ -264,11 +264,24 @@ public class MiuiChargePercentCountView extends LinearLayout {
     /* access modifiers changed from: protected */
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
+        checkScreenSize();
     }
 
     /* access modifiers changed from: protected */
     public void onConfigurationChanged(Configuration configuration) {
         super.onConfigurationChanged(configuration);
+        checkScreenSize();
+    }
+
+    private void checkScreenSize() {
+        Point point = new Point();
+        this.mWindowManager.getDefaultDisplay().getRealSize(point);
+        if (!this.mScreenSize.equals(point.x, point.y)) {
+            this.mScreenSize.set(point.x, point.y);
+            updateSizeForScreenSizeChange();
+            this.mIntegerTv.updateSizeForScreenSizeChange(this.mLargeTextSizePx, this.mSmallTextSizePx, this.mPercentTextSizePx);
+            requestLayout();
+        }
     }
 
     private void updateSizeForScreenSizeChange() {

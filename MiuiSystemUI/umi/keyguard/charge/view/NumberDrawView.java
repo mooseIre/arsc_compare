@@ -13,7 +13,7 @@ import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.WindowManager;
 import android.widget.TextView;
-import com.android.systemui.C0018R$string;
+import com.android.systemui.C0021R$string;
 import java.util.Locale;
 
 public class NumberDrawView extends TextView {
@@ -159,7 +159,7 @@ public class NumberDrawView extends TextView {
                 str = "100";
             }
             this.mLevel = str;
-            String string = this.mResources.getString(C0018R$string.keyguard_charging_battery_level, new Object[]{str});
+            String string = this.mResources.getString(C0021R$string.keyguard_charging_battery_level, new Object[]{str});
             this.mShowLevel = string;
             this.mShowLevel = string.replace(" ", "");
             invalidate();
@@ -179,13 +179,7 @@ public class NumberDrawView extends TextView {
 
     private void updateDrawParams() {
         if (!this.mLocaleName.equals(Locale.getDefault().getDisplayName())) {
-            resetStatus();
-            measureLargeNumWidth();
-            measureSmallNumWidth();
-            this.mStrHeight = (int) Math.abs(this.mFontMetrics.top);
-            this.mPercentWidth = (int) this.mPercentTextPaint.measureText("%");
-            handleDot();
-            this.mLocaleName = Locale.getDefault().getDisplayName();
+            doUpdateDrawParams();
         }
     }
 
@@ -243,6 +237,21 @@ public class NumberDrawView extends TextView {
     public void onConfigurationChanged(Configuration configuration) {
         super.onConfigurationChanged(configuration);
         this.mResources = this.mContext.getResources();
+    }
+
+    public void updateSizeForScreenSizeChange(int i, int i2, int i3) {
+        setSize(i, i2, i3);
+        doUpdateDrawParams();
+    }
+
+    private void doUpdateDrawParams() {
+        resetStatus();
+        measureLargeNumWidth();
+        measureSmallNumWidth();
+        this.mStrHeight = (int) Math.abs(this.mFontMetrics.top);
+        this.mPercentWidth = (int) this.mPercentTextPaint.measureText("%");
+        handleDot();
+        this.mLocaleName = Locale.getDefault().getDisplayName();
     }
 
     /* access modifiers changed from: protected */

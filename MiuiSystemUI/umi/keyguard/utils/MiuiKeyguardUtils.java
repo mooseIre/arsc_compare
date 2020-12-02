@@ -24,9 +24,9 @@ import android.view.TouchDelegate;
 import android.view.View;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.fod.MiuiGxzwManager;
-import com.android.systemui.C0005R$array;
-import com.android.systemui.C0007R$bool;
-import com.android.systemui.C0013R$integer;
+import com.android.systemui.C0008R$array;
+import com.android.systemui.C0010R$bool;
+import com.android.systemui.C0016R$integer;
 import com.android.systemui.Dependency;
 import com.android.systemui.SystemUIApplication;
 import com.android.systemui.statusbar.notification.NotificationEntryManager;
@@ -104,11 +104,11 @@ public class MiuiKeyguardUtils {
     }
 
     public static boolean isSupportVerticalClock(int i, Context context) {
-        return (i == 0 && context.getResources().getBoolean(C0007R$bool.keyguard_show_vertical_time)) || i == 3;
+        return (i == 0 && context.getResources().getBoolean(C0010R$bool.keyguard_show_vertical_time)) || i == 3;
     }
 
     public static int getDefaultKeyguardClockPosition(Context context) {
-        return context.getResources().getInteger(C0013R$integer.default_keyguard_clock_position);
+        return context.getResources().getInteger(C0016R$integer.default_keyguard_clock_position);
     }
 
     public static boolean isPad() {
@@ -120,7 +120,7 @@ public class MiuiKeyguardUtils {
     }
 
     public static boolean isFullScreenGestureOpened() {
-        return MiuiSettings.Global.getBoolean(SystemUIApplication.getContext().getContentResolver(), "force_fsg_nav_bar");
+        return CommonUtil.isFullScreenGestureEnabled();
     }
 
     public static String getCameraImageName(Context context, boolean z) {
@@ -157,7 +157,7 @@ public class MiuiKeyguardUtils {
 
     public static boolean isRegionSupportMiHome(Context context) {
         if (sRegionSupportMiHomeList.isEmpty()) {
-            sRegionSupportMiHomeList = Arrays.asList(context.getResources().getStringArray(C0005R$array.region_support_mihome));
+            sRegionSupportMiHomeList = Arrays.asList(context.getResources().getStringArray(C0008R$array.region_support_mihome));
         }
         return sRegionSupportMiHomeList.contains(miui.os.Build.getRegion());
     }
@@ -187,7 +187,7 @@ public class MiuiKeyguardUtils {
 
     public static boolean keepScreenOnWhenLargeAreaTouch(Context context) {
         if (sKeepScreenOnWhenLargeAreaTouchList.isEmpty()) {
-            sKeepScreenOnWhenLargeAreaTouchList = Arrays.asList(context.getResources().getStringArray(C0005R$array.keep_screen_on_when_large_area_touch));
+            sKeepScreenOnWhenLargeAreaTouchList = Arrays.asList(context.getResources().getStringArray(C0008R$array.keep_screen_on_when_large_area_touch));
         }
         return isTopActivityPkgInList(context, sKeepScreenOnWhenLargeAreaTouchList);
     }
@@ -320,5 +320,9 @@ public class MiuiKeyguardUtils {
 
     public static boolean isSuperPowerActive(Context context) {
         return MiuiSettings.System.isSuperSaveModeOpen(context, 0);
+    }
+
+    public static boolean isLargeScreen(Context context) {
+        return (context.getResources().getConfiguration().screenLayout & 15) >= 3;
     }
 }

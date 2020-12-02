@@ -9,10 +9,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import com.android.internal.colorextraction.ColorExtractor;
-import com.android.systemui.C0010R$drawable;
-import com.android.systemui.C0012R$id;
-import com.android.systemui.C0014R$layout;
-import com.android.systemui.C0018R$string;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0017R$layout;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.colorextraction.SysuiColorExtractor;
 import com.android.systemui.plugins.ClockPlugin;
 import java.util.TimeZone;
@@ -60,10 +60,10 @@ public class DefaultClockController implements ClockPlugin {
     }
 
     private void createViews() {
-        View inflate = this.mLayoutInflater.inflate(C0014R$layout.default_clock_preview, (ViewGroup) null);
+        View inflate = this.mLayoutInflater.inflate(C0017R$layout.default_clock_preview, (ViewGroup) null);
         this.mView = inflate;
-        this.mTextTime = (TextView) inflate.findViewById(C0012R$id.time);
-        this.mTextDate = (TextView) this.mView.findViewById(C0012R$id.date);
+        this.mTextTime = (TextView) inflate.findViewById(C0015R$id.time);
+        this.mTextDate = (TextView) this.mView.findViewById(C0015R$id.date);
     }
 
     public void onDestroyView() {
@@ -73,11 +73,11 @@ public class DefaultClockController implements ClockPlugin {
     }
 
     public String getTitle() {
-        return this.mResources.getString(C0018R$string.clock_title_default);
+        return this.mResources.getString(C0021R$string.clock_title_default);
     }
 
     public Bitmap getThumbnail() {
-        return BitmapFactory.decodeResource(this.mResources, C0010R$drawable.default_thumbnail);
+        return BitmapFactory.decodeResource(this.mResources, C0013R$drawable.default_thumbnail);
     }
 
     public Bitmap getPreview(int i, int i2) {

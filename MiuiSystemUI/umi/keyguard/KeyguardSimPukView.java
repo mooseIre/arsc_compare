@@ -20,13 +20,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import com.android.keyguard.PasswordTextView;
 import com.android.keyguard.utils.PhoneUtils;
-import com.android.systemui.C0005R$array;
-import com.android.systemui.C0006R$attr;
-import com.android.systemui.C0009R$dimen;
-import com.android.systemui.C0010R$drawable;
-import com.android.systemui.C0012R$id;
-import com.android.systemui.C0016R$plurals;
-import com.android.systemui.C0018R$string;
+import com.android.systemui.C0008R$array;
+import com.android.systemui.C0009R$attr;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0019R$plurals;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.Dependency;
 import java.util.HashMap;
 import java.util.Map;
@@ -89,9 +89,9 @@ public class KeyguardSimPukView extends KeyguardPinBasedInputView implements Pas
                     KeyguardSimPukView.this.mSimImageView.setVisibility(0);
                     int slotIndex = SubscriptionManager.getSlotIndex(KeyguardSimPukView.this.mSubId);
                     if (slotIndex == 0) {
-                        KeyguardSimPukView.this.mSimImageView.setImageResource(C0010R$drawable.miui_keyguard_unlock_sim_1);
+                        KeyguardSimPukView.this.mSimImageView.setImageResource(C0013R$drawable.miui_keyguard_unlock_sim_1);
                     } else if (slotIndex == 1) {
-                        KeyguardSimPukView.this.mSimImageView.setImageResource(C0010R$drawable.miui_keyguard_unlock_sim_2);
+                        KeyguardSimPukView.this.mSimImageView.setImageResource(C0013R$drawable.miui_keyguard_unlock_sim_2);
                     }
                 } else {
                     KeyguardSimPukView.this.mSimImageView.setVisibility(8);
@@ -103,7 +103,7 @@ public class KeyguardSimPukView extends KeyguardPinBasedInputView implements Pas
 
     /* access modifiers changed from: package-private */
     public void updateWrongPukMessageMap(Context context) {
-        String[] stringArray = context.getResources().getStringArray(C0005R$array.kg_wrong_puk_code_message_list);
+        String[] stringArray = context.getResources().getStringArray(C0008R$array.kg_wrong_puk_code_message_list);
         if (stringArray.length == 0) {
             Log.d("KeyguardSimPukView", "There is no customization PUK prompt");
             return;
@@ -139,26 +139,26 @@ public class KeyguardSimPukView extends KeyguardPinBasedInputView implements Pas
             if (i2 == 0) {
                 if (KeyguardSimPukView.this.checkPuk()) {
                     this.state = 1;
-                    i = C0018R$string.kg_puk_enter_pin_hint;
+                    i = C0021R$string.kg_puk_enter_pin_hint;
                 } else {
-                    i = C0018R$string.kg_invalid_sim_puk_hint;
+                    i = C0021R$string.kg_invalid_sim_puk_hint;
                 }
             } else if (i2 == 1) {
                 if (KeyguardSimPukView.this.checkPin()) {
                     this.state = 2;
-                    i = C0018R$string.kg_enter_confirm_pin_hint;
+                    i = C0021R$string.kg_enter_confirm_pin_hint;
                 } else {
-                    i = C0018R$string.kg_invalid_sim_pin_hint;
+                    i = C0021R$string.kg_invalid_sim_pin_hint;
                 }
             } else if (i2 != 2) {
                 i = 0;
             } else if (KeyguardSimPukView.this.confirmPin()) {
                 this.state = 3;
-                i = C0018R$string.keyguard_sim_unlock_progress_dialog_message;
+                i = C0021R$string.keyguard_sim_unlock_progress_dialog_message;
                 KeyguardSimPukView.this.updateSim();
             } else {
                 this.state = 1;
-                i = C0018R$string.kg_invalid_confirm_pin_hint;
+                i = C0021R$string.kg_invalid_confirm_pin_hint;
             }
             KeyguardSimPukView.this.resetPasswordText(true, true);
             if (i != 0) {
@@ -193,11 +193,11 @@ public class KeyguardSimPukView extends KeyguardPinBasedInputView implements Pas
         TelephonyManager telephonyManager = (TelephonyManager) this.mContext.getSystemService("phone");
         int activeModemCount = telephonyManager != null ? telephonyManager.getActiveModemCount() : 1;
         Resources resources = getResources();
-        TypedArray obtainStyledAttributes = this.mContext.obtainStyledAttributes(new int[]{C0006R$attr.wallpaperTextColor});
+        TypedArray obtainStyledAttributes = this.mContext.obtainStyledAttributes(new int[]{C0009R$attr.wallpaperTextColor});
         obtainStyledAttributes.getColor(0, -1);
         obtainStyledAttributes.recycle();
         if (activeModemCount < 2) {
-            str = resources.getString(C0018R$string.kg_puk_enter_puk_hint);
+            str = resources.getString(C0021R$string.kg_puk_enter_puk_hint);
         } else {
             SubscriptionInfo subscriptionInfoForSubId = ((KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class)).getSubscriptionInfoForSubId(this.mSubId);
             if (subscriptionInfoForSubId != null) {
@@ -205,14 +205,14 @@ public class KeyguardSimPukView extends KeyguardPinBasedInputView implements Pas
             } else {
                 charSequence = "";
             }
-            String string = resources.getString(C0018R$string.kg_puk_enter_puk_hint_multi, new Object[]{charSequence});
+            String string = resources.getString(C0021R$string.kg_puk_enter_puk_hint_multi, new Object[]{charSequence});
             if (subscriptionInfoForSubId != null) {
                 subscriptionInfoForSubId.getIconTint();
             }
             str = string;
         }
         if (isEsimLocked) {
-            str = resources.getString(C0018R$string.kg_sim_lock_esim_instructions, new Object[]{str});
+            str = resources.getString(C0021R$string.kg_sim_lock_esim_instructions, new Object[]{str});
         }
         SecurityMessageDisplay securityMessageDisplay = this.mSecurityMessageDisplay;
         if (securityMessageDisplay != null) {
@@ -253,25 +253,25 @@ public class KeyguardSimPukView extends KeyguardPinBasedInputView implements Pas
         if (i == 0) {
             str = getMessageTextForWrongPukCode(this.mSubId);
             if (str == null) {
-                str = getContext().getString(C0018R$string.kg_password_wrong_puk_code_dead);
+                str = getContext().getString(C0021R$string.kg_password_wrong_puk_code_dead);
             }
         } else if (i > 0) {
             if (z) {
-                i3 = C0016R$plurals.kg_password_default_puk_message;
+                i3 = C0019R$plurals.kg_password_default_puk_message;
             } else {
-                i3 = C0016R$plurals.kg_password_wrong_puk_code;
+                i3 = C0019R$plurals.kg_password_wrong_puk_code;
             }
             str = getContext().getResources().getQuantityString(i3, i, new Object[]{Integer.valueOf(i)});
         } else {
             if (z) {
-                i2 = C0018R$string.kg_puk_enter_puk_hint;
+                i2 = C0021R$string.kg_puk_enter_puk_hint;
             } else {
-                i2 = C0018R$string.kg_password_puk_failed;
+                i2 = C0021R$string.kg_password_puk_failed;
             }
             str = getContext().getString(i2);
         }
         if (KeyguardEsimArea.isEsimLocked(this.mContext, this.mSubId)) {
-            str = getResources().getString(C0018R$string.kg_sim_lock_esim_instructions, new Object[]{str});
+            str = getResources().getString(C0021R$string.kg_sim_lock_esim_instructions, new Object[]{str});
         }
         Log.d("KeyguardSimPukView", "getPukPasswordErrorMessage: attemptsRemaining=" + i + " displayMessage=" + str);
         return str;
@@ -284,15 +284,15 @@ public class KeyguardSimPukView extends KeyguardPinBasedInputView implements Pas
 
     /* access modifiers changed from: protected */
     public int getPasswordTextViewId() {
-        return C0012R$id.pukEntry;
+        return C0015R$id.pukEntry;
     }
 
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
         this.mPasswordEntry.addTextChangedListener(this);
-        this.mSimImageView = (ImageView) findViewById(C0012R$id.keyguard_sim);
-        this.mContainer = (ViewGroup) findViewById(C0012R$id.container);
+        this.mSimImageView = (ImageView) findViewById(C0015R$id.keyguard_sim);
+        this.mContainer = (ViewGroup) findViewById(C0015R$id.container);
         this.mDeleteButton.setVisibility(0);
         this.mBackButton.setVisibility(8);
     }
@@ -357,7 +357,7 @@ public class KeyguardSimPukView extends KeyguardPinBasedInputView implements Pas
         if (this.mSimUnlockProgressDialog == null) {
             ProgressDialog progressDialog = new ProgressDialog(this.mContext);
             this.mSimUnlockProgressDialog = progressDialog;
-            progressDialog.setMessage(this.mContext.getString(C0018R$string.kg_sim_unlock_progress_dialog_message));
+            progressDialog.setMessage(this.mContext.getString(C0021R$string.kg_sim_unlock_progress_dialog_message));
             this.mSimUnlockProgressDialog.setIndeterminate(true);
             this.mSimUnlockProgressDialog.setCancelable(false);
             if (!(this.mContext instanceof Activity)) {
@@ -375,7 +375,7 @@ public class KeyguardSimPukView extends KeyguardPinBasedInputView implements Pas
             AlertDialog.Builder builder = new AlertDialog.Builder(this.mContext);
             builder.setMessage(pukPasswordErrorMessage);
             builder.setCancelable(false);
-            builder.setNeutralButton(C0018R$string.ok, (DialogInterface.OnClickListener) null);
+            builder.setNeutralButton(C0021R$string.ok, (DialogInterface.OnClickListener) null);
             AlertDialog create = builder.create();
             this.mRemainingAttemptsDialog = create;
             create.getWindow().setType(2009);
@@ -442,7 +442,7 @@ public class KeyguardSimPukView extends KeyguardPinBasedInputView implements Pas
                                     }
                                 } else {
                                     KeyguardSimPukView keyguardSimPukView3 = KeyguardSimPukView.this;
-                                    keyguardSimPukView3.mSecurityMessageDisplay.setMessage((CharSequence) keyguardSimPukView3.getContext().getString(C0018R$string.kg_password_puk_failed));
+                                    keyguardSimPukView3.mSecurityMessageDisplay.setMessage((CharSequence) keyguardSimPukView3.getContext().getString(C0021R$string.kg_password_puk_failed));
                                 }
                                 Log.d("KeyguardSimPukView", "verifyPasswordAndUnlock  UpdateSim.onSimCheckResponse:  attemptsRemaining=" + pinResult.getAttemptsRemaining());
                             }
@@ -464,7 +464,7 @@ public class KeyguardSimPukView extends KeyguardPinBasedInputView implements Pas
 
     /* access modifiers changed from: protected */
     public void handleConfigurationFontScaleChanged() {
-        float dimensionPixelSize = (float) getResources().getDimensionPixelSize(C0009R$dimen.miui_keyguard_view_eca_text_size);
+        float dimensionPixelSize = (float) getResources().getDimensionPixelSize(C0012R$dimen.miui_keyguard_view_eca_text_size);
         this.mEmergencyButton.setTextSize(0, dimensionPixelSize);
         this.mDeleteButton.setTextSize(0, dimensionPixelSize);
     }
@@ -473,8 +473,8 @@ public class KeyguardSimPukView extends KeyguardPinBasedInputView implements Pas
     public void handleConfigurationOrientationChanged() {
         Resources resources = getResources();
         LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) this.mContainer.getLayoutParams();
-        layoutParams.width = resources.getDimensionPixelOffset(C0009R$dimen.miui_keyguard_sim_pin_view_layout_width);
-        layoutParams.height = resources.getDimensionPixelOffset(C0009R$dimen.miui_keyguard_sim_pin_view_layout_height);
+        layoutParams.width = resources.getDimensionPixelOffset(C0012R$dimen.miui_keyguard_sim_pin_view_layout_width);
+        layoutParams.height = resources.getDimensionPixelOffset(C0012R$dimen.miui_keyguard_sim_pin_view_layout_height);
         this.mContainer.setLayoutParams(layoutParams);
     }
 
