@@ -26,6 +26,7 @@ import miuix.animation.listener.TransitionListener;
 import miuix.animation.property.FloatProperty;
 
 public class ControlPanelWindowView extends FrameLayout {
+    private int interceptFlag;
     /* access modifiers changed from: private */
     public boolean mAnimating;
     private IStateStyle mBlurAmin;
@@ -53,6 +54,7 @@ public class ControlPanelWindowView extends FrameLayout {
     private int mOrientation;
     private QSControlScrollView mQSControlScrollView;
     private LinearLayout mSmartControlsView;
+    private int moveEventCount;
 
     public ControlPanelWindowView(Context context) {
         this(context, (AttributeSet) null);
@@ -68,6 +70,8 @@ public class ControlPanelWindowView extends FrameLayout {
         this.mDownY = 0.0f;
         this.mDownX = 0.0f;
         this.mDownExpandHeight = 0.0f;
+        this.interceptFlag = 0;
+        this.moveEventCount = 0;
         this.mBlurRatioListener = new TransitionListener() {
             public void onUpdate(Object obj, FloatProperty floatProperty, float f, float f2, boolean z) {
                 float unused = ControlPanelWindowView.this.mBlurRatio = f;
@@ -117,7 +121,6 @@ public class ControlPanelWindowView extends FrameLayout {
     }
 
     public boolean dispatchTouchEvent(MotionEvent motionEvent) {
-        Log.d("ControllerPanelWindowView", "dispatchTouchEvent");
         if (this.mContent == null || !this.mControlCenter.panelEnabled()) {
             return false;
         }
@@ -180,26 +183,22 @@ public class ControlPanelWindowView extends FrameLayout {
             this.mDownY = motionEvent.getRawY();
             this.mDownX = motionEvent.getRawX();
             this.mDownExpandHeight = this.mExpandHeight;
-        } else {
-            if (!this.mContent.isDetailShowing() && !this.mContent.isEditShowing() && !this.mContent.isControlEditShowing()) {
-                if (z3 && motionEvent.getRawY() > this.mDownY && z4 && this.mControlCenterTileLayout.isExpanded() && this.mOrientation == 1 && this.mQSControlScrollView.isScrolledToTop()) {
-                    return true;
-                }
-                if (z3 && isBottomAreaTouchDown(this.mDownY) && motionEvent.getRawY() < this.mDownY && z4) {
-                    return true;
-                }
-                if (z3 && motionEvent.getRawY() < this.mDownY && this.mSmartControlsView.getChildCount() > 0 && !this.mQSControlScrollView.isScrolledToBottom() && this.mControlCenterTileLayout.isCollapsed()) {
-                    return false;
-                }
+        } else if (!this.mContent.isDetailShowing() && !this.mContent.isEditShowing() && !this.mContent.isControlEditShowing()) {
+            if (z3 && motionEvent.getRawY() > this.mDownY && z4 && this.mControlCenterTileLayout.isExpanded() && this.mOrientation == 1 && this.mQSControlScrollView.isScrolledToTop()) {
+                return true;
             }
-            return z;
+            if (z3 && isBottomAreaTouchDown(this.mDownY) && motionEvent.getRawY() < this.mDownY && z4) {
+                return true;
+            }
+            if (!z3 || motionEvent.getRawY() >= this.mDownY || this.mSmartControlsView.getChildCount() <= 0 || this.mQSControlScrollView.isScrolledToBottom() || !this.mControlCenterTileLayout.isCollapsed()) {
+                return z;
+            }
+            return false;
         }
-        Log.d("ControllerPanelWindowView", "onInterceptTouchEvent :" + z);
         return z;
     }
 
     public boolean onTouchEvent(MotionEvent motionEvent) {
-        Log.d("ControllerPanelWindowView", "onTouchEvent start, " + motionEvent.getAction());
         ControlCenter controlCenter = this.mControlCenter;
         if (controlCenter != null && !controlCenter.panelEnabled()) {
             return false;
@@ -209,6 +208,7 @@ public class ControlPanelWindowView extends FrameLayout {
         boolean z3 = motionEvent.getAction() == 1;
         boolean z4 = motionEvent.getAction() == 3;
         if (z) {
+            this.moveEventCount = 0;
             if (isCollapsed()) {
                 showControlCenterWindow();
             }
@@ -218,6 +218,13 @@ public class ControlPanelWindowView extends FrameLayout {
             return false;
         } else {
             if (z2) {
+                this.moveEventCount++;
+                if (this.moveEventCount > 40) {
+                    this.interceptFlag++;
+                    if ((this.interceptFlag & 1) != 0) {
+                        return false;
+                    }
+                }
                 float rawY = motionEvent.getRawY();
                 float f = this.mDownY;
                 if (rawY >= f) {

@@ -9,11 +9,13 @@ import android.os.RemoteException;
 import android.os.SystemProperties;
 import android.util.Log;
 import android.view.SurfaceControlCompat;
+import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.WindowManagerCompat;
 import com.android.keyguard.MiuiKeyguardUtils;
 import com.android.keyguard.fod.MiuiGxzwManager;
+import com.android.keyguard.utils.DeviceLevelUtils;
 import com.android.keyguard.wallpaper.MiuiKeyguardWallpaperController;
 import com.android.systemui.Dependency;
 import com.android.systemui.Dumpable;
@@ -38,6 +40,7 @@ public class StatusBarWindowManager implements RemoteInputController.Callback, D
     private OtherwisedCollapsedListener mListener;
     private WindowManager.LayoutParams mLp;
     private WindowManager.LayoutParams mLpChanged;
+    private View mNotificationPanel;
     private float mRestoredBlurRatio;
     private final float mScreenBrightnessDoze;
     private ViewGroup mStatusBarView;
@@ -84,6 +87,7 @@ public class StatusBarWindowManager implements RemoteInputController.Callback, D
             this.mLp.layoutInDisplayCutoutMode = 3;
         }
         this.mStatusBarView = viewGroup;
+        this.mNotificationPanel = this.mStatusBarView.findViewById(R.id.notification_panel);
         this.mBarHeight = i;
         this.mWindowManager.addView(this.mStatusBarView, this.mLp);
         this.mLpChanged = new WindowManager.LayoutParams();
@@ -272,9 +276,15 @@ public class StatusBarWindowManager implements RemoteInputController.Callback, D
     }
 
     private void applyBlurRatio(State state) {
-        SurfaceControlCompat.setBlur(this.mLpChanged, this.mStatusBarView.getViewRootImpl(), state.blurRatio, 0);
-        for (BlurRatioChangedListener onBlurRatioChanged : this.mBlurRatioListeners) {
-            onBlurRatioChanged.onBlurRatioChanged(state.blurRatio);
+        if (((double) state.blurRatio) <= 1.0d) {
+            if (DeviceLevelUtils.isLowGpuDevice()) {
+                this.mNotificationPanel.setBackgroundColor((((int) (state.blurRatio * 255.0f)) << 24) + 7237230);
+            } else {
+                SurfaceControlCompat.setBlur(this.mLpChanged, this.mStatusBarView.getViewRootImpl(), state.blurRatio, 0);
+            }
+            for (BlurRatioChangedListener onBlurRatioChanged : this.mBlurRatioListeners) {
+                onBlurRatioChanged.onBlurRatioChanged(state.blurRatio);
+            }
         }
     }
 

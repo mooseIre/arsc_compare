@@ -5,6 +5,7 @@ import android.os.Build;
 import android.util.Log;
 import android.view.SurfaceControlCompat;
 import android.view.WindowManager;
+import com.android.keyguard.utils.DeviceLevelUtils;
 import com.android.systemui.Application;
 import com.android.systemui.statusbar.phone.StatusBar;
 import com.android.systemui.util.Utils;
@@ -142,8 +143,12 @@ public class ControlPanelWindowManager {
     }
 
     private void applyBlurRatio(float f) {
-        if (hasAdded()) {
+        if (hasAdded() && ((double) f) <= 1.0d) {
             Log.d("ControlPanelWindowManager", "setBlurRatio: " + f);
+            if (DeviceLevelUtils.isLowGpuDevice()) {
+                this.mControlPanel.setBackgroundColor((((int) (f * 255.0f)) << 24) + 7237230);
+                return;
+            }
             SurfaceControlCompat.setBlur(this.mLpChanged, this.mControlPanel.getViewRootImpl(), f, 0);
             apply();
         }
