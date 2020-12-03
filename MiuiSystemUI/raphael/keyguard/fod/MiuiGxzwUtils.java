@@ -119,7 +119,9 @@ class MiuiGxzwUtils {
                 int i4 = (int) (((float) SCREEN_WIDTH_PX) * GXZW_ANIM_WIDTH_PRCENT);
                 GXZW_ANIM_WIDTH = i4;
                 GXZW_ANIM_HEIGHT = i4;
-                GXZW_ICON_Y -= caculateCutoutHeightIfNeed(context);
+                int caculateCutoutHeightIfNeed = caculateCutoutHeightIfNeed(context);
+                GXZW_ICON_Y = (int) (((float) GXZW_ICON_Y) * getPrcent(SCREEN_HEIGHT_PHYSICAL, SCREEN_HEIGHT_PHYSICAL - caculateCutoutHeightIfNeed));
+                GXZW_ICON_Y -= caculateCutoutHeightIfNeed;
             } catch (Exception e) {
                 e.printStackTrace();
                 resetDefaultValue();
