@@ -98,7 +98,7 @@ public class KeyguardMoveHelper {
         }
 
         public void onAnimUpdate(float f) {
-            KeyguardMoveHelper.this.mCallback.onHorizontalMove(f, false);
+            KeyguardMoveHelper.this.mCallback.onHorizontalMove(f, true);
         }
 
         public IntentButtonProvider.IntentButton.IconState getMoveIconState(boolean z) {
@@ -183,7 +183,9 @@ public class KeyguardMoveHelper {
     }
 
     private void initDimens() {
-        this.mMinFlingVelocity = ViewConfiguration.get(this.mContext).getScaledMinimumFlingVelocity();
+        ViewConfiguration viewConfiguration = ViewConfiguration.get(this.mContext);
+        this.mCenterScreenTouchSlopTranslation = (float) (viewConfiguration.getScaledPagingTouchSlop() * 2);
+        this.mMinFlingVelocity = viewConfiguration.getScaledMinimumFlingVelocity();
         this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.keyguard_min_swipe_amount);
     }
 
@@ -620,9 +622,11 @@ public class KeyguardMoveHelper {
         return this.mVelocityTracker.getXVelocity();
     }
 
-    public void onConfigurationChanged() {
-        initDimens();
-        updateBottomIcons(this.mBottomAreaView);
+    public void updateResource(boolean z) {
+        if (z) {
+            initDimens();
+            updateBottomIcons(this.mBottomAreaView);
+        }
     }
 
     public void reset(boolean z) {

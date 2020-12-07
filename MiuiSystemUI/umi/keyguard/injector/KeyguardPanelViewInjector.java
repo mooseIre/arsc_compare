@@ -237,26 +237,16 @@ public final class KeyguardPanelViewInjector extends MiuiKeyguardUpdateMonitorCa
                     initSplitUserSpace();
                     initKeyguardBackground();
                     initKeyguardViewCollection();
-                    NotificationPanelView notificationPanelView = this.mPanelView;
-                    if (notificationPanelView != null) {
-                        updateResource(notificationPanelView);
-                        initScreenSize();
-                        Object systemService = this.mContext.getSystemService("power");
-                        if (systemService != null) {
-                            this.mPowerManager = (PowerManager) systemService;
-                            NotificationPanelView notificationPanelView2 = this.mPanelView;
-                            if (notificationPanelView2 != null) {
-                                this.mDoubleTapHelper = new DoubleTapHelper(notificationPanelView2, 200, KeyguardPanelViewInjector$init$1.INSTANCE, new KeyguardPanelViewInjector$init$2(this), (DoubleTapHelper.SlideBackListener) null, (DoubleTapHelper.DoubleTapLogListener) null);
-                                this.mSupportGestureWakeup = MiuiKeyguardUtils.isSupportGestureWakeup();
-                                return;
-                            }
-                            Intrinsics.throwUninitializedPropertyAccessException("mPanelView");
-                            throw null;
-                        }
-                        throw new TypeCastException("null cannot be cast to non-null type android.os.PowerManager");
+                    updateResource(false);
+                    initScreenSize();
+                    Object systemService = this.mContext.getSystemService("power");
+                    if (systemService != null) {
+                        this.mPowerManager = (PowerManager) systemService;
+                        this.mDoubleTapHelper = new DoubleTapHelper(this.mPanelView, 200, KeyguardPanelViewInjector$init$1.INSTANCE, new KeyguardPanelViewInjector$init$2(this), (DoubleTapHelper.SlideBackListener) null, (DoubleTapHelper.DoubleTapLogListener) null);
+                        this.mSupportGestureWakeup = MiuiKeyguardUtils.isSupportGestureWakeup();
+                        return;
                     }
-                    Intrinsics.throwUninitializedPropertyAccessException("mPanelView");
-                    throw null;
+                    throw new TypeCastException("null cannot be cast to non-null type android.os.PowerManager");
                 } else {
                     Intrinsics.throwNpe();
                     throw null;
@@ -319,7 +309,7 @@ public final class KeyguardPanelViewInjector extends MiuiKeyguardUpdateMonitorCa
         NotificationPanelView notificationPanelView = this.mPanelView;
         if (notificationPanelView != null) {
             View findViewById = notificationPanelView.findViewById(C0015R$id.switch_to_system_user);
-            Intrinsics.checkExpressionValueIsNotNull(findViewById, "mPanelView.findViewById(…id.switch_to_system_user)");
+            Intrinsics.checkExpressionValueIsNotNull(findViewById, "mPanelView!!.findViewByI…id.switch_to_system_user)");
             TextView textView = (TextView) findViewById;
             this.mSwitchSystemUserEntrance = textView;
             if (textView != null) {
@@ -329,7 +319,7 @@ public final class KeyguardPanelViewInjector extends MiuiKeyguardUpdateMonitorCa
                 throw null;
             }
         } else {
-            Intrinsics.throwUninitializedPropertyAccessException("mPanelView");
+            Intrinsics.throwNpe();
             throw null;
         }
     }
@@ -408,7 +398,6 @@ public final class KeyguardPanelViewInjector extends MiuiKeyguardUpdateMonitorCa
     }
 
     public final boolean onInterceptTouchEvent(@NotNull MotionEvent motionEvent) {
-        Boolean bool;
         Intrinsics.checkParameterIsNotNull(motionEvent, "event");
         initDownStates(motionEvent);
         if (((KeyguardBottomAreaInjector) Dependency.get(KeyguardBottomAreaInjector.class)).disallowTouchEvent(motionEvent)) {
@@ -416,37 +405,31 @@ public final class KeyguardPanelViewInjector extends MiuiKeyguardUpdateMonitorCa
         }
         KeyguardMoveHelper keyguardMoveHelper = this.mKeyguardMoveHelper;
         if (keyguardMoveHelper != null) {
-            keyguardMoveHelper.onInterceptTouchEvent(motionEvent);
-            bool = Boolean.FALSE;
-        } else {
-            bool = null;
-        }
-        if (bool != null) {
-            return bool.booleanValue();
+            return keyguardMoveHelper.onInterceptTouchEvent(motionEvent);
         }
         Intrinsics.throwNpe();
         throw null;
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:52:0x0096, code lost:
-        if (r3.isQsExpanded() != false) goto L_0x00a1;
+    /* JADX WARNING: Code restructure failed: missing block: B:49:0x008a, code lost:
+        if (r3.isQsExpanded() != false) goto L_0x0095;
      */
-    /* JADX WARNING: Code restructure failed: missing block: B:63:0x00b1, code lost:
-        if (r3.isFullyCollapsed() == false) goto L_0x00b3;
+    /* JADX WARNING: Code restructure failed: missing block: B:60:0x00a5, code lost:
+        if (r3.isFullyCollapsed() == false) goto L_0x00a7;
      */
-    /* JADX WARNING: Code restructure failed: missing block: B:64:0x00b3, code lost:
+    /* JADX WARNING: Code restructure failed: missing block: B:61:0x00a7, code lost:
         r1 = r1.mKeyguardVerticalMoveHelper;
      */
-    /* JADX WARNING: Code restructure failed: missing block: B:65:0x00b5, code lost:
-        if (r1 == null) goto L_0x00bb;
+    /* JADX WARNING: Code restructure failed: missing block: B:62:0x00a9, code lost:
+        if (r1 == null) goto L_0x00af;
      */
-    /* JADX WARNING: Code restructure failed: missing block: B:66:0x00b7, code lost:
+    /* JADX WARNING: Code restructure failed: missing block: B:63:0x00ab, code lost:
         r1.onTouchEvent(r2);
      */
-    /* JADX WARNING: Code restructure failed: missing block: B:67:0x00bb, code lost:
+    /* JADX WARNING: Code restructure failed: missing block: B:64:0x00af, code lost:
         kotlin.jvm.internal.Intrinsics.throwUninitializedPropertyAccessException("mKeyguardVerticalMoveHelper");
      */
-    /* JADX WARNING: Code restructure failed: missing block: B:68:0x00c0, code lost:
+    /* JADX WARNING: Code restructure failed: missing block: B:65:0x00b4, code lost:
         throw null;
      */
     /* Code decompiled incorrectly, please refer to instructions dump. */
@@ -458,169 +441,165 @@ public final class KeyguardPanelViewInjector extends MiuiKeyguardUpdateMonitorCa
             r1.initDownStates(r2)
             r0 = 0
             if (r6 == 0) goto L_0x000d
-            if (r7 == 0) goto L_0x002a
+            if (r7 == 0) goto L_0x001e
         L_0x000d:
-            if (r8 != 0) goto L_0x002a
-            if (r9 != 0) goto L_0x002a
+            if (r8 != 0) goto L_0x001e
+            if (r9 != 0) goto L_0x001e
             com.android.keyguard.KeyguardMoveHelper r6 = r1.mKeyguardMoveHelper
-            if (r6 == 0) goto L_0x001e
+            if (r6 == 0) goto L_0x001a
             boolean r6 = r6.onTouchEvent(r2)
-            java.lang.Boolean r6 = java.lang.Boolean.valueOf(r6)
             goto L_0x001f
-        L_0x001e:
-            r6 = r0
-        L_0x001f:
-            if (r6 == 0) goto L_0x0026
-            boolean r6 = r6.booleanValue()
-            goto L_0x002b
-        L_0x0026:
+        L_0x001a:
             kotlin.jvm.internal.Intrinsics.throwNpe()
             throw r0
-        L_0x002a:
+        L_0x001e:
             r6 = 0
-        L_0x002b:
+        L_0x001f:
             boolean r7 = r1.mIsBottomButtonMoving
             r8 = 1
-            if (r7 != 0) goto L_0x00d6
+            if (r7 != 0) goto L_0x00ca
             com.android.keyguard.KeyguardMoveHelper r7 = r1.mKeyguardMoveHelper
-            if (r7 == 0) goto L_0x003d
+            if (r7 == 0) goto L_0x0031
             boolean r7 = r7.isInLeftView()
             java.lang.Boolean r7 = java.lang.Boolean.valueOf(r7)
-            goto L_0x003e
-        L_0x003d:
+            goto L_0x0032
+        L_0x0031:
             r7 = r0
-        L_0x003e:
-            if (r7 == 0) goto L_0x00d2
+        L_0x0032:
+            if (r7 == 0) goto L_0x00c6
             boolean r7 = r7.booleanValue()
-            if (r7 == 0) goto L_0x0048
-            goto L_0x00d6
-        L_0x0048:
+            if (r7 == 0) goto L_0x003c
+            goto L_0x00ca
+        L_0x003c:
             boolean r7 = r1.mSupportGestureWakeup
-            if (r7 == 0) goto L_0x0066
+            if (r7 == 0) goto L_0x005a
             boolean r7 = com.android.keyguard.utils.MiuiKeyguardUtils.supportDoubleTapSleep()
-            if (r7 == 0) goto L_0x0066
+            if (r7 == 0) goto L_0x005a
             boolean r7 = r1.isDoubleTapBoundaryTouchEvent(r2)
-            if (r7 == 0) goto L_0x0066
+            if (r7 == 0) goto L_0x005a
             com.android.systemui.statusbar.phone.DoubleTapHelper r7 = r1.mDoubleTapHelper
-            if (r7 == 0) goto L_0x0060
+            if (r7 == 0) goto L_0x0054
             r7.onTouchEvent(r2)
-            goto L_0x0066
-        L_0x0060:
+            goto L_0x005a
+        L_0x0054:
             java.lang.String r1 = "mDoubleTapHelper"
             kotlin.jvm.internal.Intrinsics.throwUninitializedPropertyAccessException(r1)
             throw r0
-        L_0x0066:
+        L_0x005a:
             com.android.keyguard.magazine.LockScreenMagazineController r7 = r1.mLockScreenMagazineController
-            if (r7 == 0) goto L_0x00cc
+            if (r7 == 0) goto L_0x00c0
             boolean r7 = r7.onTouchEvent(r2)
-            if (r7 == 0) goto L_0x0071
+            if (r7 == 0) goto L_0x0065
             return r8
-        L_0x0071:
+        L_0x0065:
             com.android.systemui.statusbar.KeyguardIndicationController r7 = r1.mIndicationController
-            if (r7 == 0) goto L_0x00c6
+            if (r7 == 0) goto L_0x00ba
             r7.onTouchEvent(r2, r3, r4, r5)
             int r3 = r2.getActionMasked()
             java.lang.String r4 = "mPanelViewController"
-            if (r3 != 0) goto L_0x00a1
+            if (r3 != 0) goto L_0x0095
             com.android.systemui.statusbar.phone.MiuiNotificationPanelViewController r3 = r1.mPanelViewController
-            if (r3 == 0) goto L_0x009d
+            if (r3 == 0) goto L_0x0091
             boolean r3 = r3.isFullyExpanded()
-            if (r3 == 0) goto L_0x00a1
-            if (r10 != 0) goto L_0x00a1
-            if (r11 != 0) goto L_0x00a1
+            if (r3 == 0) goto L_0x0095
+            if (r10 != 0) goto L_0x0095
+            if (r11 != 0) goto L_0x0095
             com.android.systemui.statusbar.phone.MiuiNotificationPanelViewController r3 = r1.mPanelViewController
-            if (r3 == 0) goto L_0x0099
+            if (r3 == 0) goto L_0x008d
             boolean r3 = r3.isQsExpanded()
-            if (r3 == 0) goto L_0x00b3
-            goto L_0x00a1
-        L_0x0099:
+            if (r3 == 0) goto L_0x00a7
+            goto L_0x0095
+        L_0x008d:
             kotlin.jvm.internal.Intrinsics.throwUninitializedPropertyAccessException(r4)
             throw r0
-        L_0x009d:
+        L_0x0091:
             kotlin.jvm.internal.Intrinsics.throwUninitializedPropertyAccessException(r4)
             throw r0
-        L_0x00a1:
-            if (r6 != 0) goto L_0x00c5
+        L_0x0095:
+            if (r6 != 0) goto L_0x00b9
             int r3 = r2.getActionMasked()
-            if (r3 == 0) goto L_0x00c5
+            if (r3 == 0) goto L_0x00b9
             com.android.systemui.statusbar.phone.MiuiNotificationPanelViewController r3 = r1.mPanelViewController
-            if (r3 == 0) goto L_0x00c1
+            if (r3 == 0) goto L_0x00b5
             boolean r3 = r3.isFullyCollapsed()
-            if (r3 != 0) goto L_0x00c5
-        L_0x00b3:
+            if (r3 != 0) goto L_0x00b9
+        L_0x00a7:
             com.android.keyguard.KeyguardVerticalMoveHelper r1 = r1.mKeyguardVerticalMoveHelper
-            if (r1 == 0) goto L_0x00bb
+            if (r1 == 0) goto L_0x00af
             r1.onTouchEvent(r2)
-            goto L_0x00c5
-        L_0x00bb:
+            goto L_0x00b9
+        L_0x00af:
             java.lang.String r1 = "mKeyguardVerticalMoveHelper"
             kotlin.jvm.internal.Intrinsics.throwUninitializedPropertyAccessException(r1)
             throw r0
-        L_0x00c1:
+        L_0x00b5:
             kotlin.jvm.internal.Intrinsics.throwUninitializedPropertyAccessException(r4)
             throw r0
-        L_0x00c5:
+        L_0x00b9:
             return r6
-        L_0x00c6:
+        L_0x00ba:
             java.lang.String r1 = "mIndicationController"
             kotlin.jvm.internal.Intrinsics.throwUninitializedPropertyAccessException(r1)
             throw r0
-        L_0x00cc:
+        L_0x00c0:
             java.lang.String r1 = "mLockScreenMagazineController"
             kotlin.jvm.internal.Intrinsics.throwUninitializedPropertyAccessException(r1)
             throw r0
-        L_0x00d2:
+        L_0x00c6:
             kotlin.jvm.internal.Intrinsics.throwNpe()
             throw r0
-        L_0x00d6:
+        L_0x00ca:
             return r8
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.keyguard.injector.KeyguardPanelViewInjector.onTouchEvent(android.view.MotionEvent, int, float, float, boolean, boolean, boolean, boolean, boolean, boolean):boolean");
     }
 
-    private final void updateResource(NotificationPanelView notificationPanelView) {
-        Context context = notificationPanelView.getContext();
-        Intrinsics.checkExpressionValueIsNotNull(context, "view.context");
-        Resources resources = context.getResources();
-        Intrinsics.checkExpressionValueIsNotNull(resources, "res");
-        Configuration configuration = resources.getConfiguration();
-        int i = configuration.orientation;
-        if (i != this.mLastOrientation) {
-            this.mLastOrientation = i;
-            MiuiNotificationPanelViewController miuiNotificationPanelViewController = this.mPanelViewController;
-            if (miuiNotificationPanelViewController != null) {
-                miuiNotificationPanelViewController.resetVerticalPanelPosition();
-                KeyguardMoveHelper keyguardMoveHelper = this.mKeyguardMoveHelper;
-                if (keyguardMoveHelper != null) {
-                    keyguardMoveHelper.reset(true);
+    public final void updateResource(boolean z) {
+        NotificationPanelView notificationPanelView = this.mPanelView;
+        if (notificationPanelView != null) {
+            Context context = notificationPanelView.getContext();
+            Intrinsics.checkExpressionValueIsNotNull(context, "it.context");
+            Resources resources = context.getResources();
+            Intrinsics.checkExpressionValueIsNotNull(resources, "it.context.resources");
+            Configuration configuration = resources.getConfiguration();
+            int i = configuration.orientation;
+            if (i != this.mLastOrientation) {
+                this.mLastOrientation = i;
+                MiuiNotificationPanelViewController miuiNotificationPanelViewController = this.mPanelViewController;
+                if (miuiNotificationPanelViewController != null) {
+                    miuiNotificationPanelViewController.resetVerticalPanelPosition();
+                    KeyguardMoveHelper keyguardMoveHelper = this.mKeyguardMoveHelper;
+                    if (keyguardMoveHelper != null) {
+                        keyguardMoveHelper.reset(true);
+                    }
+                } else {
+                    Intrinsics.throwUninitializedPropertyAccessException("mPanelViewController");
+                    throw null;
                 }
+            }
+            int i2 = configuration.densityDpi;
+            if (i2 != this.mLastDensityDpi) {
+                this.mLastDensityDpi = i2;
+                MiuiKeyguardMoveLeftViewContainer miuiKeyguardMoveLeftViewContainer = this.mLeftView;
+                if (miuiKeyguardMoveLeftViewContainer != null) {
+                    miuiKeyguardMoveLeftViewContainer.inflateLeftView();
+                }
+                KeyguardMoveHelper keyguardMoveHelper2 = this.mKeyguardMoveHelper;
+                if (keyguardMoveHelper2 != null) {
+                    keyguardMoveHelper2.reset(false);
+                }
+            }
+            KeyguardMoveHelper keyguardMoveHelper3 = this.mKeyguardMoveHelper;
+            if (keyguardMoveHelper3 != null) {
+                keyguardMoveHelper3.updateResource(z);
+            }
+            LockScreenMagazineController lockScreenMagazineController = this.mLockScreenMagazineController;
+            if (lockScreenMagazineController != null) {
+                lockScreenMagazineController.updateResources(z);
             } else {
-                Intrinsics.throwUninitializedPropertyAccessException("mPanelViewController");
+                Intrinsics.throwUninitializedPropertyAccessException("mLockScreenMagazineController");
                 throw null;
             }
-        }
-        int i2 = configuration.densityDpi;
-        if (i2 != this.mLastDensityDpi) {
-            this.mLastDensityDpi = i2;
-            MiuiKeyguardMoveLeftViewContainer miuiKeyguardMoveLeftViewContainer = this.mLeftView;
-            if (miuiKeyguardMoveLeftViewContainer != null) {
-                miuiKeyguardMoveLeftViewContainer.inflateLeftView();
-            }
-            KeyguardMoveHelper keyguardMoveHelper2 = this.mKeyguardMoveHelper;
-            if (keyguardMoveHelper2 != null) {
-                keyguardMoveHelper2.reset(false);
-            }
-        }
-        KeyguardMoveHelper keyguardMoveHelper3 = this.mKeyguardMoveHelper;
-        if (keyguardMoveHelper3 != null) {
-            keyguardMoveHelper3.onConfigurationChanged();
-        }
-        LockScreenMagazineController lockScreenMagazineController = this.mLockScreenMagazineController;
-        if (lockScreenMagazineController != null) {
-            lockScreenMagazineController.updateResources(false);
-        } else {
-            Intrinsics.throwUninitializedPropertyAccessException("mLockScreenMagazineController");
-            throw null;
         }
     }
 
@@ -689,79 +668,74 @@ public final class KeyguardPanelViewInjector extends MiuiKeyguardUpdateMonitorCa
 
     public void onAnimationToSideStarted(boolean z, float f, float f2) {
         NotificationPanelView notificationPanelView = this.mPanelView;
-        if (notificationPanelView != null) {
-            if (notificationPanelView.getLayoutDirection() != 1) {
-                z = !z;
-            }
-            MiuiNotificationPanelViewController miuiNotificationPanelViewController = this.mPanelViewController;
-            if (miuiNotificationPanelViewController != null) {
-                miuiNotificationPanelViewController.setLaunchTransitionRunning(true);
-                MiuiNotificationPanelViewController miuiNotificationPanelViewController2 = this.mPanelViewController;
-                if (miuiNotificationPanelViewController2 != null) {
-                    miuiNotificationPanelViewController2.setLaunchAnimationEndRunnable((Runnable) null);
-                    float displayDensity = this.mStatusBar.getDisplayDensity();
-                    int abs = Math.abs((int) (f / displayDensity));
-                    int abs2 = Math.abs((int) (f2 / displayDensity));
-                    if (z) {
-                        MiuiNotificationPanelViewController miuiNotificationPanelViewController3 = this.mPanelViewController;
-                        if (miuiNotificationPanelViewController3 != null) {
-                            miuiNotificationPanelViewController3.getLockscreenGestureLogger().write(190, abs, abs2);
-                            MiuiNotificationPanelViewController miuiNotificationPanelViewController4 = this.mPanelViewController;
-                            if (miuiNotificationPanelViewController4 != null) {
-                                miuiNotificationPanelViewController4.getFalsingManager().onLeftAffordanceOn();
-                            } else {
-                                Intrinsics.throwUninitializedPropertyAccessException("mPanelViewController");
-                                throw null;
-                            }
+        if (notificationPanelView == null || notificationPanelView.getLayoutDirection() != 1) {
+            z = !z;
+        }
+        MiuiNotificationPanelViewController miuiNotificationPanelViewController = this.mPanelViewController;
+        if (miuiNotificationPanelViewController != null) {
+            miuiNotificationPanelViewController.setLaunchTransitionRunning(true);
+            MiuiNotificationPanelViewController miuiNotificationPanelViewController2 = this.mPanelViewController;
+            if (miuiNotificationPanelViewController2 != null) {
+                miuiNotificationPanelViewController2.setLaunchAnimationEndRunnable((Runnable) null);
+                float displayDensity = this.mStatusBar.getDisplayDensity();
+                int abs = Math.abs((int) (f / displayDensity));
+                int abs2 = Math.abs((int) (f2 / displayDensity));
+                if (z) {
+                    MiuiNotificationPanelViewController miuiNotificationPanelViewController3 = this.mPanelViewController;
+                    if (miuiNotificationPanelViewController3 != null) {
+                        miuiNotificationPanelViewController3.getLockscreenGestureLogger().write(190, abs, abs2);
+                        MiuiNotificationPanelViewController miuiNotificationPanelViewController4 = this.mPanelViewController;
+                        if (miuiNotificationPanelViewController4 != null) {
+                            miuiNotificationPanelViewController4.getFalsingManager().onLeftAffordanceOn();
                         } else {
                             Intrinsics.throwUninitializedPropertyAccessException("mPanelViewController");
                             throw null;
                         }
-                    } else {
-                        MiuiNotificationPanelViewController miuiNotificationPanelViewController5 = this.mPanelViewController;
-                        if (miuiNotificationPanelViewController5 != null) {
-                            if (Intrinsics.areEqual((Object) "lockscreen_affordance", (Object) miuiNotificationPanelViewController5.getLastCameraLaunchSource())) {
-                                MiuiNotificationPanelViewController miuiNotificationPanelViewController6 = this.mPanelViewController;
-                                if (miuiNotificationPanelViewController6 != null) {
-                                    miuiNotificationPanelViewController6.getLockscreenGestureLogger().write(189, abs, abs2);
-                                } else {
-                                    Intrinsics.throwUninitializedPropertyAccessException("mPanelViewController");
-                                    throw null;
-                                }
-                            }
-                            MiuiNotificationPanelViewController miuiNotificationPanelViewController7 = this.mPanelViewController;
-                            if (miuiNotificationPanelViewController7 != null) {
-                                miuiNotificationPanelViewController7.getFalsingManager().onCameraOn();
-                                KeyguardBottomAreaView keyguardBottomAreaView = this.mBottomAreaView;
-                                if (keyguardBottomAreaView != null) {
-                                    MiuiNotificationPanelViewController miuiNotificationPanelViewController8 = this.mPanelViewController;
-                                    if (miuiNotificationPanelViewController8 != null) {
-                                        keyguardBottomAreaView.launchCamera(miuiNotificationPanelViewController8.getLastCameraLaunchSource());
-                                    } else {
-                                        Intrinsics.throwUninitializedPropertyAccessException("mPanelViewController");
-                                        throw null;
-                                    }
-                                } else {
-                                    Intrinsics.throwUninitializedPropertyAccessException("mBottomAreaView");
-                                    throw null;
-                                }
-                            } else {
-                                Intrinsics.throwUninitializedPropertyAccessException("mPanelViewController");
-                                throw null;
-                            }
-                        } else {
-                            Intrinsics.throwUninitializedPropertyAccessException("mPanelViewController");
-                            throw null;
-                        }
-                    }
-                    this.mStatusBar.startLaunchTransitionTimeout();
-                    MiuiNotificationPanelViewController miuiNotificationPanelViewController9 = this.mPanelViewController;
-                    if (miuiNotificationPanelViewController9 != null) {
-                        miuiNotificationPanelViewController9.setBlockTouch(true);
                     } else {
                         Intrinsics.throwUninitializedPropertyAccessException("mPanelViewController");
                         throw null;
                     }
+                } else {
+                    MiuiNotificationPanelViewController miuiNotificationPanelViewController5 = this.mPanelViewController;
+                    if (miuiNotificationPanelViewController5 != null) {
+                        if (Intrinsics.areEqual((Object) "lockscreen_affordance", (Object) miuiNotificationPanelViewController5.getLastCameraLaunchSource())) {
+                            MiuiNotificationPanelViewController miuiNotificationPanelViewController6 = this.mPanelViewController;
+                            if (miuiNotificationPanelViewController6 != null) {
+                                miuiNotificationPanelViewController6.getLockscreenGestureLogger().write(189, abs, abs2);
+                            } else {
+                                Intrinsics.throwUninitializedPropertyAccessException("mPanelViewController");
+                                throw null;
+                            }
+                        }
+                        MiuiNotificationPanelViewController miuiNotificationPanelViewController7 = this.mPanelViewController;
+                        if (miuiNotificationPanelViewController7 != null) {
+                            miuiNotificationPanelViewController7.getFalsingManager().onCameraOn();
+                            KeyguardBottomAreaView keyguardBottomAreaView = this.mBottomAreaView;
+                            if (keyguardBottomAreaView != null) {
+                                MiuiNotificationPanelViewController miuiNotificationPanelViewController8 = this.mPanelViewController;
+                                if (miuiNotificationPanelViewController8 != null) {
+                                    keyguardBottomAreaView.launchCamera(miuiNotificationPanelViewController8.getLastCameraLaunchSource());
+                                } else {
+                                    Intrinsics.throwUninitializedPropertyAccessException("mPanelViewController");
+                                    throw null;
+                                }
+                            } else {
+                                Intrinsics.throwUninitializedPropertyAccessException("mBottomAreaView");
+                                throw null;
+                            }
+                        } else {
+                            Intrinsics.throwUninitializedPropertyAccessException("mPanelViewController");
+                            throw null;
+                        }
+                    } else {
+                        Intrinsics.throwUninitializedPropertyAccessException("mPanelViewController");
+                        throw null;
+                    }
+                }
+                this.mStatusBar.startLaunchTransitionTimeout();
+                MiuiNotificationPanelViewController miuiNotificationPanelViewController9 = this.mPanelViewController;
+                if (miuiNotificationPanelViewController9 != null) {
+                    miuiNotificationPanelViewController9.setBlockTouch(true);
                 } else {
                     Intrinsics.throwUninitializedPropertyAccessException("mPanelViewController");
                     throw null;
@@ -771,7 +745,7 @@ public final class KeyguardPanelViewInjector extends MiuiKeyguardUpdateMonitorCa
                 throw null;
             }
         } else {
-            Intrinsics.throwUninitializedPropertyAccessException("mPanelView");
+            Intrinsics.throwUninitializedPropertyAccessException("mPanelViewController");
             throw null;
         }
     }
@@ -812,6 +786,7 @@ public final class KeyguardPanelViewInjector extends MiuiKeyguardUpdateMonitorCa
     }
 
     public void onKeyguardOccludedChanged(boolean z) {
+        ((KeyguardSensorInjector) Dependency.get(KeyguardSensorInjector.class)).disableFullScreenGesture();
         if (!z) {
             MiuiNotificationPanelViewController miuiNotificationPanelViewController = this.mPanelViewController;
             if (miuiNotificationPanelViewController != null) {
@@ -835,6 +810,12 @@ public final class KeyguardPanelViewInjector extends MiuiKeyguardUpdateMonitorCa
                 Intrinsics.throwUninitializedPropertyAccessException("mPanelViewController");
                 throw null;
             }
+        }
+    }
+
+    public void onKeyguardShowingChanged(boolean z) {
+        if (z) {
+            ((KeyguardSensorInjector) Dependency.get(KeyguardSensorInjector.class)).disableFullScreenGesture();
         }
     }
 
@@ -878,33 +859,30 @@ public final class KeyguardPanelViewInjector extends MiuiKeyguardUpdateMonitorCa
 
     public float getMaxTranslationDistance() {
         NotificationPanelView notificationPanelView = this.mPanelView;
-        if (notificationPanelView != null) {
-            double width = (double) notificationPanelView.getWidth();
-            NotificationPanelView notificationPanelView2 = this.mPanelView;
-            if (notificationPanelView2 != null) {
-                return (float) Math.hypot(width, (double) notificationPanelView2.getHeight());
-            }
-            Intrinsics.throwUninitializedPropertyAccessException("mPanelView");
-            throw null;
+        Float valueOf = notificationPanelView != null ? Float.valueOf(hypotCompute((double) notificationPanelView.getWidth(), (double) notificationPanelView.getHeight())) : null;
+        if (valueOf != null) {
+            return valueOf.floatValue();
         }
-        Intrinsics.throwUninitializedPropertyAccessException("mPanelView");
+        Intrinsics.throwNpe();
         throw null;
+    }
+
+    private final float hypotCompute(double d, double d2) {
+        return (float) Math.hypot(d, d2);
     }
 
     public void onSwipingStarted() {
         NotificationPanelView notificationPanelView = this.mPanelView;
         if (notificationPanelView != null) {
             notificationPanelView.requestDisallowInterceptTouchEvent(true);
-            MiuiNotificationPanelViewController miuiNotificationPanelViewController = this.mPanelViewController;
-            if (miuiNotificationPanelViewController != null) {
-                miuiNotificationPanelViewController.setQsTracking(false);
-                this.mIsBottomButtonMoving = true;
-                return;
-            }
-            Intrinsics.throwUninitializedPropertyAccessException("mPanelViewController");
-            throw null;
         }
-        Intrinsics.throwUninitializedPropertyAccessException("mPanelView");
+        MiuiNotificationPanelViewController miuiNotificationPanelViewController = this.mPanelViewController;
+        if (miuiNotificationPanelViewController != null) {
+            miuiNotificationPanelViewController.setQsTracking(false);
+            this.mIsBottomButtonMoving = true;
+            return;
+        }
+        Intrinsics.throwUninitializedPropertyAccessException("mPanelViewController");
         throw null;
     }
 
@@ -948,36 +926,24 @@ public final class KeyguardPanelViewInjector extends MiuiKeyguardUpdateMonitorCa
                         String str = PanelView.TAG;
                         Slog.i(str, "onHorizontalMove per = " + coerceAtMost);
                     }
-                    if (z) {
-                        NotificationPanelView notificationPanelView = this.mPanelView;
-                        if (notificationPanelView != null) {
+                    NotificationPanelView notificationPanelView = this.mPanelView;
+                    if (notificationPanelView != null) {
+                        if (z) {
                             notificationPanelView.setAlpha(((float) 1) - coerceAtMost);
-                        } else {
-                            Intrinsics.throwUninitializedPropertyAccessException("mPanelView");
-                            throw null;
                         }
+                        float f2 = 1.0f - (coerceAtMost * 0.1f);
+                        notificationPanelView.setScaleX(f2);
+                        notificationPanelView.setScaleY(f2);
+                        return;
                     }
-                    float f2 = 1.0f - (coerceAtMost * 0.1f);
-                    NotificationPanelView notificationPanelView2 = this.mPanelView;
-                    if (notificationPanelView2 != null) {
-                        notificationPanelView2.setScaleX(f2);
-                        NotificationPanelView notificationPanelView3 = this.mPanelView;
-                        if (notificationPanelView3 != null) {
-                            notificationPanelView3.setScaleY(f2);
-                        } else {
-                            Intrinsics.throwUninitializedPropertyAccessException("mPanelView");
-                            throw null;
-                        }
-                    } else {
-                        Intrinsics.throwUninitializedPropertyAccessException("mPanelView");
-                        throw null;
-                    }
+                    return;
                 }
+                return;
             }
-        } else {
-            Intrinsics.throwUninitializedPropertyAccessException("mPanelViewController");
-            throw null;
+            return;
         }
+        Intrinsics.throwUninitializedPropertyAccessException("mPanelViewController");
+        throw null;
     }
 
     @Nullable
@@ -1212,16 +1178,11 @@ public final class KeyguardPanelViewInjector extends MiuiKeyguardUpdateMonitorCa
         KeyguardMoveHelper keyguardMoveHelper = this.mKeyguardMoveHelper;
         if (keyguardMoveHelper != null) {
             NotificationPanelView notificationPanelView = this.mPanelView;
-            if (notificationPanelView != null) {
-                boolean z2 = true;
-                if (notificationPanelView.getLayoutDirection() != 1) {
-                    z2 = false;
-                }
-                keyguardMoveHelper.launchAffordance(z, z2);
-                return;
+            boolean z2 = true;
+            if (notificationPanelView == null || notificationPanelView.getLayoutDirection() != 1) {
+                z2 = false;
             }
-            Intrinsics.throwUninitializedPropertyAccessException("mPanelView");
-            throw null;
+            keyguardMoveHelper.launchAffordance(z, z2);
         }
     }
 

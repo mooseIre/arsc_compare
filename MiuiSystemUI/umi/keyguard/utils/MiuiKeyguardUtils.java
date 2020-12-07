@@ -64,7 +64,7 @@ public class MiuiKeyguardUtils {
     }
 
     public static boolean isDefaultLockScreenTheme() {
-        return !ThemeResources.getSystem().containsAwesomeLockscreenEntry("manifest.xml");
+        return !ThemeResources.getSystem().containsAwesomeLockscreenEntry("manifest.xml") && !ThemeResources.getSystem().containsSuperWallpaperLockscreenEntry("manifest.xml");
     }
 
     public static boolean isIndianRegion(Context context) {

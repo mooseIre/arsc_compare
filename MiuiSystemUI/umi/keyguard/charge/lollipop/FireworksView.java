@@ -32,6 +32,8 @@ public class FireworksView extends View {
     public FireworksManager mFireworksManager;
     private Choreographer.FrameCallback mFrameCallback;
     /* access modifiers changed from: private */
+    public boolean mIsAnimationRuning;
+    /* access modifiers changed from: private */
     public long mLastTime;
     private Point mScreenSize;
     private float mSpeedMove;
@@ -61,13 +63,15 @@ public class FireworksView extends View {
         super(context, attributeSet, i);
         this.mFrameCallback = new Choreographer.FrameCallback() {
             public void doFrame(long j) {
-                long access$000 = (j - FireworksView.this.mLastTime) / 1000000;
-                long unused = FireworksView.this.mLastTime = j;
-                if (FireworksView.this.mFireworksManager != null) {
-                    FireworksView.this.mFireworksManager.freshPositions(FireworksView.this.mFireList, access$000);
-                    FireworksView.this.invalidate();
+                if (FireworksView.this.mIsAnimationRuning) {
+                    long access$100 = (j - FireworksView.this.mLastTime) / 1000000;
+                    long unused = FireworksView.this.mLastTime = j;
+                    if (FireworksView.this.mFireworksManager != null) {
+                        FireworksView.this.mFireworksManager.freshPositions(FireworksView.this.mFireList, access$100);
+                        FireworksView.this.invalidate();
+                    }
+                    Choreographer.getInstance().postFrameCallback(this);
                 }
-                Choreographer.getInstance().postFrameCallback(this);
             }
         };
         this.mFireRunnable = new Runnable() {
@@ -173,11 +177,13 @@ public class FireworksView extends View {
     }
 
     public void start() {
+        this.mIsAnimationRuning = true;
         Choreographer.getInstance().postFrameCallback(this.mFrameCallback);
         post(this.mFireRunnable);
     }
 
     public void stop() {
+        this.mIsAnimationRuning = false;
         removeCallbacks(this.mFireRunnable);
         Choreographer.getInstance().removeFrameCallback(this.mFrameCallback);
     }

@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 import androidx.constraintlayout.widget.R$styleable;
 import com.android.keyguard.charge.ChargeUtils;
 import com.android.keyguard.charge.MiuiChargeManager;
+import com.android.systemui.C0010R$bool;
 import com.android.systemui.Dependency;
 import java.util.Locale;
 import miui.maml.animation.interpolater.CubicEaseOutInterpolater;
@@ -36,6 +37,7 @@ public class MiuiChargePercentCountView extends LinearLayout {
     public int mCurrentProgress;
     /* access modifiers changed from: private */
     public NumberDrawView mIntegerTv;
+    private boolean mIsFoldChargeVideo;
     private int mLargeTextSizePx;
     private int mPercentTextSizePx;
     private Interpolator mQuartOutInterpolator;
@@ -60,11 +62,13 @@ public class MiuiChargePercentCountView extends LinearLayout {
         super(context, attributeSet, i);
         this.mCubicInterpolator = new CubicEaseOutInterpolater();
         this.mQuartOutInterpolator = new QuartEaseOutInterpolater();
+        this.mIsFoldChargeVideo = false;
         this.mChargeSpeed = 0;
         init(context);
     }
 
     private void init(Context context) {
+        this.mIsFoldChargeVideo = context.getResources().getBoolean(C0010R$bool.config_folding_charge_video);
         setLayoutDirection(0);
         this.mWindowManager = (WindowManager) context.getSystemService("window");
         this.mScreenSize = new Point();
@@ -286,7 +290,14 @@ public class MiuiChargePercentCountView extends LinearLayout {
 
     private void updateSizeForScreenSizeChange() {
         Point point = this.mScreenSize;
+        float f = 1.0f;
         float min = (((float) Math.min(point.x, point.y)) * 1.0f) / 1080.0f;
+        if (this.mIsFoldChargeVideo) {
+            if (min <= 1.0f) {
+                f = min;
+            }
+            min = f;
+        }
         this.mLargeTextSizePx = (int) (188.0f * min);
         this.mSmallTextSizePx = (int) (100.0f * min);
         this.mPercentTextSizePx = (int) (64.0f * min);

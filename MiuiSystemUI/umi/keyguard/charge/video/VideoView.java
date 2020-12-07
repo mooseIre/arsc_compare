@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Point;
 import android.graphics.SurfaceTexture;
 import android.media.MediaPlayer;
@@ -16,6 +17,7 @@ import android.view.TextureView;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import com.android.systemui.C0010R$bool;
 import com.android.systemui.C0013R$drawable;
 
 public class VideoView extends RelativeLayout {
@@ -28,8 +30,10 @@ public class VideoView extends RelativeLayout {
     public String mChargeUri;
     /* access modifiers changed from: private */
     public TextureView mChargeView;
+    private Configuration mConfiguration;
     /* access modifiers changed from: private */
     public Context mContext;
+    private boolean mIsFoldChargeVideo;
     /* access modifiers changed from: private */
     public MediaPlayer mMediaPlayer;
     MediaPlayer.OnCompletionListener mOnCompletionListener;
@@ -42,6 +46,7 @@ public class VideoView extends RelativeLayout {
     public TextureView mRapidChargeView;
     /* access modifiers changed from: private */
     public MediaPlayer mRapidMediaPlayer;
+    private Point mScreenSize;
     private TextureView.SurfaceTextureListener mStrongRapidChargeSurfaceTextureListener;
     /* access modifiers changed from: private */
     public String mStrongRapidChargeUri;
@@ -52,6 +57,8 @@ public class VideoView extends RelativeLayout {
     private AnimatorSet mToNormalAnimatorSet;
     private AnimatorSet mToRapidAnimatorSet;
     private AnimatorSet mToStrongRapidAnimatorSet;
+    private int mVideoHeight;
+    private int mVideoWidth;
     private WindowManager mWindowManager;
     MediaPlayer.OnErrorListener onErrorListener;
 
@@ -68,6 +75,11 @@ public class VideoView extends RelativeLayout {
         this.mToStrongRapidAnimatorSet = new AnimatorSet();
         this.mToRapidAnimatorSet = new AnimatorSet();
         this.mToNormalAnimatorSet = new AnimatorSet();
+        this.mVideoWidth = 1080;
+        this.mVideoHeight = 2340;
+        this.mScreenSize = new Point();
+        this.mConfiguration = new Configuration();
+        this.mIsFoldChargeVideo = false;
         this.mOnPreparedListener = new MediaPlayer.OnPreparedListener(this) {
             public void onPrepared(MediaPlayer mediaPlayer) {
                 if (mediaPlayer != null && !mediaPlayer.isPlaying()) {
@@ -181,18 +193,28 @@ public class VideoView extends RelativeLayout {
                 return false;
             }
         };
+        this.mIsFoldChargeVideo = context.getResources().getBoolean(C0010R$bool.config_folding_charge_video);
         this.mContext = context;
         this.mWindowManager = (WindowManager) getContext().getSystemService("window");
         this.mPoint = new Point();
         ImageView imageView = new ImageView(context);
         this.mBackImage = imageView;
         imageView.setBackgroundResource(C0013R$drawable.wired_charge_video_bg_img);
+        if (this.mIsFoldChargeVideo) {
+            checkScreenSize(true);
+            addView(this.mBackImage, getTextTureParams());
+            return;
+        }
         addView(this.mBackImage, getVideoLayoutParams());
     }
 
     public void setDefaultImage(int i) {
         this.mBackImage.setBackgroundResource(i);
-        this.mBackImage.setLayoutParams(getVideoLayoutParams());
+        if (this.mIsFoldChargeVideo) {
+            this.mBackImage.setLayoutParams(getTextTureParams());
+        } else {
+            this.mBackImage.setLayoutParams(getVideoLayoutParams());
+        }
     }
 
     public void setChargeUri(String str) {
@@ -218,6 +240,114 @@ public class VideoView extends RelativeLayout {
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(-1, getVideoHeight());
         layoutParams.addRule(13);
         return layoutParams;
+    }
+
+    /* access modifiers changed from: protected */
+    public RelativeLayout.LayoutParams getFoldingVideoLayoutParams() {
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(-1, -1);
+        layoutParams.addRule(13);
+        return layoutParams;
+    }
+
+    /* access modifiers changed from: protected */
+    public RelativeLayout.LayoutParams getTextTureParams() {
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(this.mVideoWidth, this.mVideoHeight);
+        layoutParams.addRule(13);
+        return layoutParams;
+    }
+
+    /* access modifiers changed from: protected */
+    public void onConfigurationChanged(Configuration configuration) {
+        super.onConfigurationChanged(configuration);
+        if (this.mIsFoldChargeVideo) {
+            if ((this.mConfiguration.updateFrom(configuration) & 2048) != 0) {
+                checkScreenSize(false);
+            }
+        }
+    }
+
+    private void checkScreenSize(boolean z) {
+        Point point = new Point();
+        this.mWindowManager.getDefaultDisplay().getRealSize(point);
+        boolean z2 = !this.mScreenSize.equals(point.x, point.y);
+        if (z2 || z) {
+            this.mScreenSize.set(point.x, point.y);
+            updateSizeForScreenSizeChange();
+            updateLayoutParamForScreenSizeChange();
+            if (z2) {
+                updateDataSourceForScreenSizeChange();
+            }
+        }
+    }
+
+    private void updateSizeForScreenSizeChange() {
+        Configuration configuration = getResources().getConfiguration();
+        this.mConfiguration.updateFrom(configuration);
+        int i = configuration.screenLayout & 15;
+        if (i == 3 || i == 4) {
+            this.mVideoWidth = 1080;
+            this.mVideoHeight = 2340;
+            return;
+        }
+        this.mVideoWidth = -1;
+        this.mVideoHeight = -1;
+    }
+
+    /* access modifiers changed from: protected */
+    public void updateLayoutParamForScreenSizeChange() {
+        ImageView imageView = this.mBackImage;
+        if (imageView != null && imageView.isAttachedToWindow()) {
+            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) this.mBackImage.getLayoutParams();
+            layoutParams.width = this.mVideoWidth;
+            layoutParams.height = this.mVideoHeight;
+            this.mBackImage.setLayoutParams(layoutParams);
+        }
+        TextureView textureView = this.mChargeView;
+        if (textureView != null && textureView.isAttachedToWindow()) {
+            RelativeLayout.LayoutParams layoutParams2 = (RelativeLayout.LayoutParams) this.mChargeView.getLayoutParams();
+            layoutParams2.width = this.mVideoWidth;
+            layoutParams2.height = this.mVideoHeight;
+            this.mChargeView.setLayoutParams(layoutParams2);
+        }
+        TextureView textureView2 = this.mRapidChargeView;
+        if (textureView2 != null && textureView2.isAttachedToWindow()) {
+            RelativeLayout.LayoutParams layoutParams3 = (RelativeLayout.LayoutParams) this.mRapidChargeView.getLayoutParams();
+            layoutParams3.width = this.mVideoWidth;
+            layoutParams3.height = this.mVideoHeight;
+            this.mRapidChargeView.setLayoutParams(layoutParams3);
+        }
+        TextureView textureView3 = this.mStrongRapidChargeView;
+        if (textureView3 != null && textureView3.isAttachedToWindow()) {
+            RelativeLayout.LayoutParams layoutParams4 = (RelativeLayout.LayoutParams) this.mStrongRapidChargeView.getLayoutParams();
+            layoutParams4.width = this.mVideoWidth;
+            layoutParams4.height = this.mVideoHeight;
+            this.mStrongRapidChargeView.setLayoutParams(layoutParams4);
+        }
+    }
+
+    private void updateDataSourceForScreenSizeChange() {
+        try {
+            if (this.mMediaPlayer != null) {
+                this.mMediaPlayer.reset();
+                this.mMediaPlayer.setDataSource(this.mContext, Uri.parse(this.mChargeUri));
+                this.mMediaPlayer.prepareAsync();
+                this.mMediaPlayer.setLooping(true);
+            }
+            if (this.mRapidMediaPlayer != null) {
+                this.mRapidMediaPlayer.reset();
+                this.mRapidMediaPlayer.setDataSource(this.mContext, Uri.parse(this.mRapidChargeUri));
+                this.mRapidMediaPlayer.prepareAsync();
+                this.mRapidMediaPlayer.setLooping(true);
+            }
+            if (this.mStrongRapidMediaPlayer != null) {
+                this.mStrongRapidMediaPlayer.reset();
+                this.mStrongRapidMediaPlayer.setDataSource(this.mContext, Uri.parse(this.mStrongRapidChargeUri));
+                this.mStrongRapidMediaPlayer.prepareAsync();
+                this.mStrongRapidMediaPlayer.setLooping(true);
+            }
+        } catch (Exception e) {
+            Log.e("ChargeVideoView", "update charge video exception:", e);
+        }
     }
 
     public void switchToStrongRapidChargeAnim() {
@@ -402,7 +532,12 @@ public class VideoView extends RelativeLayout {
         mediaPlayer.setOnPreparedListener(this.mOnPreparedListener);
         this.mMediaPlayer.setOnCompletionListener(this.mOnCompletionListener);
         this.mMediaPlayer.setOnErrorListener(this.onErrorListener);
-        addView(this.mChargeView, -1, getVideoLayoutParams());
+        if (this.mIsFoldChargeVideo) {
+            checkScreenSize(true);
+            addView(this.mChargeView, -1, getTextTureParams());
+        } else {
+            addView(this.mChargeView, -1, getVideoLayoutParams());
+        }
         this.mChargeView.setSurfaceTextureListener(this.mChargeSurfaceTextureListener);
     }
 
@@ -423,7 +558,12 @@ public class VideoView extends RelativeLayout {
         mediaPlayer.setOnPreparedListener(this.mOnPreparedListener);
         this.mRapidMediaPlayer.setOnCompletionListener(this.mOnCompletionListener);
         this.mRapidMediaPlayer.setOnErrorListener(this.onErrorListener);
-        addView(this.mRapidChargeView, -1, getVideoLayoutParams());
+        if (this.mIsFoldChargeVideo) {
+            checkScreenSize(true);
+            addView(this.mRapidChargeView, -1, getTextTureParams());
+        } else {
+            addView(this.mRapidChargeView, -1, getVideoLayoutParams());
+        }
         this.mRapidChargeView.setSurfaceTextureListener(this.mRapidChargeSurfaceTextureListener);
     }
 
@@ -444,7 +584,12 @@ public class VideoView extends RelativeLayout {
         mediaPlayer.setOnPreparedListener(this.mOnPreparedListener);
         this.mStrongRapidMediaPlayer.setOnCompletionListener(this.mOnCompletionListener);
         this.mStrongRapidMediaPlayer.setOnErrorListener(this.onErrorListener);
-        addView(this.mStrongRapidChargeView, -1, getVideoLayoutParams());
+        if (this.mIsFoldChargeVideo) {
+            checkScreenSize(true);
+            addView(this.mStrongRapidChargeView, -1, getTextTureParams());
+        } else {
+            addView(this.mStrongRapidChargeView, -1, getVideoLayoutParams());
+        }
         this.mStrongRapidChargeView.setSurfaceTextureListener(this.mStrongRapidChargeSurfaceTextureListener);
     }
 

@@ -17,6 +17,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.android.keyguard.charge.ChargeUtils;
 import com.android.keyguard.charge.view.MiuiChargeTurboView;
+import com.android.systemui.C0010R$bool;
 import com.android.systemui.C0021R$string;
 import miui.maml.animation.interpolater.CubicEaseOutInterpolater;
 
@@ -28,6 +29,7 @@ public class MiuiChargeLogoView extends RelativeLayout {
     /* access modifiers changed from: private */
     public MiuiChargeTurboView mChargeTurboView;
     private Interpolator mCubicInterpolator;
+    private boolean mIsFoldChargeVideo;
     private Point mScreenSize;
     private int mSpeedTipTextSizePx;
     private TextView mStateTip;
@@ -51,12 +53,14 @@ public class MiuiChargeLogoView extends RelativeLayout {
     public MiuiChargeLogoView(Context context, AttributeSet attributeSet, int i) {
         super(context, attributeSet, i);
         this.mCubicInterpolator = new CubicEaseOutInterpolater();
+        this.mIsFoldChargeVideo = false;
         this.mChargeSpeed = 0;
         this.mWireState = -1;
         init(context);
     }
 
     private void init(Context context) {
+        this.mIsFoldChargeVideo = context.getResources().getBoolean(C0010R$bool.config_folding_charge_video);
         setLayoutDirection(0);
         this.mWindowManager = (WindowManager) context.getSystemService("window");
         this.mScreenSize = new Point();
@@ -239,7 +243,14 @@ public class MiuiChargeLogoView extends RelativeLayout {
 
     private void updateSizeForScreenSizeChange() {
         Point point = this.mScreenSize;
+        float f = 1.0f;
         float min = (((float) Math.min(point.x, point.y)) * 1.0f) / 1080.0f;
+        if (this.mIsFoldChargeVideo) {
+            if (min <= 1.0f) {
+                f = min;
+            }
+            min = f;
+        }
         this.mSpeedTipTextSizePx = (int) (34.485f * min);
         this.mTipTopMargin = (int) (90.0f * min);
         this.mChargeTipTranslateSmall = (int) (min * 0.0f);

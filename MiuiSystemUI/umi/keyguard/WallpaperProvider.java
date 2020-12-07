@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.UserHandle;
+import com.android.keyguard.fod.MiuiGxzwManager;
 import com.android.keyguard.magazine.LockScreenMagazineController;
 import com.android.keyguard.negative.MiuiKeyguardMoveLeftControlCenterView;
 import com.android.keyguard.utils.ContentProviderUtils;
@@ -118,6 +119,8 @@ public class WallpaperProvider extends ContentProvider {
                 } catch (Exception e5) {
                     Log.e("WallpaperProvider", "call METHOD_SET_SUPPORT_LOCK_SCREEN_LEFT_OVERLAY" + e5.getMessage());
                 }
+            } else if ("getGxzwAnimStyle".equals(str)) {
+                bundle2.putParcelable("thumbnail", ((MiuiGxzwManager) Dependency.get(MiuiGxzwManager.class)).getGxzwAnimBitmap());
             }
         }
         return bundle2;

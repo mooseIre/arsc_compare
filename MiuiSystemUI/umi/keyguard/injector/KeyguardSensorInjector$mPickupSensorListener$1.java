@@ -6,6 +6,8 @@ import android.hardware.SensorEventListener;
 import android.os.SystemClock;
 import android.util.Slog;
 import android.view.Display;
+import com.android.keyguard.wallpaper.MiuiKeyguardWallpaperControllerImpl;
+import com.android.systemui.Dependency;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
 
@@ -43,17 +45,15 @@ public final class KeyguardSensorInjector$mPickupSensorListener$1 implements Sen
             }
         } else {
             Display access$getMDisplay$p2 = this.this$0.mDisplay;
-            if (access$getMDisplay$p2 != null) {
-                if (access$getMDisplay$p2.getState() != 2) {
-                    this.this$0.mWakeupByPickUp = true;
-                }
+            if (access$getMDisplay$p2 == null) {
+                Intrinsics.throwNpe();
+                throw null;
+            } else if (access$getMDisplay$p2.getState() != 2 || !((MiuiKeyguardWallpaperControllerImpl) Dependency.get(MiuiKeyguardWallpaperControllerImpl.class)).isAodUsingSuperWallpaper()) {
                 this.this$0.getMPowerManager().wakeUp(SystemClock.uptimeMillis(), "com.android.systemui:PICK_UP");
+                this.this$0.mWakeupByPickUp = true;
                 String tag2 = this.this$0.getTAG();
                 Slog.i(tag2, this.this$0.SCREEN_OPEN_REASON + ":pick up");
-                return;
             }
-            Intrinsics.throwNpe();
-            throw null;
         }
     }
 }

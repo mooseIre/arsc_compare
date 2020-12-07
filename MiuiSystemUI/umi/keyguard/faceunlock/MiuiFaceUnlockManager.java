@@ -71,7 +71,6 @@ public class MiuiFaceUnlockManager {
 
         public void onAuthenticationError(int i, CharSequence charSequence) {
             Slog.i("miui_face", "authenCallback, onAuthenticationError code:" + i + " msg:" + charSequence);
-            MiuiFaceUnlockManager.this.mMainHandler.sendEmptyMessage(1004);
         }
     };
     private final ArrayList<WeakReference<FaceUnlockCallback>> mCallbacks = new ArrayList<>();

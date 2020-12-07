@@ -17,6 +17,7 @@ import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import com.android.keyguard.charge.ChargeUtils;
+import com.android.systemui.C0010R$bool;
 import com.android.systemui.C0013R$drawable;
 import miui.maml.animation.interpolater.CubicEaseOutInterpolater;
 
@@ -37,6 +38,7 @@ public class MiuiChargeIconView extends RelativeLayout {
     private int mDoubleScaleXY;
     private int mIconPaddingTop;
     private boolean mIsCarMode;
+    private boolean mIsFoldChargeVideo;
     private int mPivotX;
     private Point mScreenSize;
     private int mSingleAlpha;
@@ -65,11 +67,13 @@ public class MiuiChargeIconView extends RelativeLayout {
     public MiuiChargeIconView(Context context, AttributeSet attributeSet, int i) {
         super(context, attributeSet, i);
         this.mCubicInterpolator = new CubicEaseOutInterpolater();
+        this.mIsFoldChargeVideo = false;
         this.mChargeSpeed = 0;
         init(context);
     }
 
     private void init(Context context) {
+        this.mIsFoldChargeVideo = context.getResources().getBoolean(C0010R$bool.config_folding_charge_video);
         this.mSingleLightningDrawable = context.getDrawable(C0013R$drawable.charge_animation_rapid_charge_icon);
         this.mDoubleLightningDrawable = context.getDrawable(C0013R$drawable.charge_animation_super_rapid_charge_icon);
         this.mSpecialDoubleLightningDrawable = context.getDrawable(C0013R$drawable.charge_animation_strong_super_rapid_charge_icon);
@@ -273,7 +277,14 @@ public class MiuiChargeIconView extends RelativeLayout {
 
     private void updateSizeForScreenSizeChange() {
         Point point = this.mScreenSize;
+        float f = 1.0f;
         float min = (((float) Math.min(point.x, point.y)) * 1.0f) / 1080.0f;
+        if (this.mIsFoldChargeVideo) {
+            if (min <= 1.0f) {
+                f = min;
+            }
+            min = f;
+        }
         this.mIconPaddingTop = (int) (275.0f * min);
         this.mPivotX = (int) (100.0f * min);
         Drawable drawable = this.mSingleLightningDrawable;

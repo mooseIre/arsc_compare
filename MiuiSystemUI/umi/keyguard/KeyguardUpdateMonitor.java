@@ -2444,6 +2444,9 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
     }
 
     public void dispatchStartedGoingToSleep(int i) {
+        synchronized (this) {
+            this.mDeviceInteractive = false;
+        }
         Handler handler = this.mHandler;
         handler.sendMessage(handler.obtainMessage(321, i, 0));
     }

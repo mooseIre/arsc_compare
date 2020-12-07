@@ -15,6 +15,7 @@ import android.view.WindowManager;
 import android.view.animation.Interpolator;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import com.android.systemui.C0010R$bool;
 import com.android.systemui.C0013R$drawable;
 import miui.maml.animation.interpolater.CubicEaseOutInterpolater;
 
@@ -25,6 +26,7 @@ public class MiuiChargeTurboView extends RelativeLayout {
     private Drawable mChargeIconDrawable;
     private int mChargeIconHeight;
     private int mChargeIconWidth;
+    private boolean mIsFoldChargeVideo;
     private Point mScreenSize;
     private ImageView mTailIcon;
     private int mTailIconHeight;
@@ -56,10 +58,12 @@ public class MiuiChargeTurboView extends RelativeLayout {
     public MiuiChargeTurboView(Context context, AttributeSet attributeSet, int i) {
         super(context, attributeSet, i);
         this.cubicEaseOutInterpolator = new CubicEaseOutInterpolater();
+        this.mIsFoldChargeVideo = false;
         init(context);
     }
 
     private void init(Context context) {
+        this.mIsFoldChargeVideo = context.getResources().getBoolean(C0010R$bool.config_folding_charge_video);
         setLayoutDirection(0);
         this.mChargeIconDrawable = context.getDrawable(C0013R$drawable.charge_animation_charge_icon);
         this.mTurboIconDrawable = context.getDrawable(C0013R$drawable.charge_animation_turbo_icon);
@@ -228,7 +232,14 @@ public class MiuiChargeTurboView extends RelativeLayout {
 
     private void updateSizeForScreenSizeChange() {
         Point point = this.mScreenSize;
+        float f = 1.0f;
         float min = (((float) Math.min(point.x, point.y)) * 1.0f) / 1080.0f;
+        if (this.mIsFoldChargeVideo) {
+            if (min <= 1.0f) {
+                f = min;
+            }
+            min = f;
+        }
         Drawable drawable = this.mChargeIconDrawable;
         if (drawable != null) {
             this.mChargeIconWidth = (int) (((float) drawable.getIntrinsicWidth()) * min);
@@ -261,6 +272,7 @@ public class MiuiChargeTurboView extends RelativeLayout {
         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) this.mChargeIcon.getLayoutParams();
         layoutParams.width = this.mChargeIconWidth;
         layoutParams.height = this.mChargeIconHeight;
+        this.mChargeIcon.setLayoutParams(layoutParams);
         RelativeLayout.LayoutParams layoutParams2 = (RelativeLayout.LayoutParams) this.mTailIcon.getLayoutParams();
         int i = this.mTailIconWidth;
         layoutParams2.width = i;
@@ -270,6 +282,7 @@ public class MiuiChargeTurboView extends RelativeLayout {
         layoutParams3.width = this.mTurboIconWidth;
         layoutParams3.height = this.mTurboIconHeight;
         layoutParams3.leftMargin = this.mChargeIconWidth + 10;
+        this.mTurboIcon.setLayoutParams(layoutParams3);
         RelativeLayout.LayoutParams layoutParams4 = (RelativeLayout.LayoutParams) this.mWiredStrongChargeIcon.getLayoutParams();
         int i2 = this.mWiredStrongChargeIconWidth;
         layoutParams4.width = i2;

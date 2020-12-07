@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.ContentObserver;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.hardware.biometrics.BiometricSourceType;
 import android.os.AsyncTask;
@@ -25,6 +27,7 @@ import com.android.keyguard.MiuiFastUnlockController;
 import com.android.keyguard.MiuiKeyguardUpdateMonitorCallback;
 import com.android.keyguard.fod.MiuiGxzwManager;
 import com.android.keyguard.utils.MiuiKeyguardUtils;
+import com.android.systemui.C0013R$drawable;
 import com.android.systemui.Dependency;
 import com.android.systemui.Dumpable;
 import com.android.systemui.keyguard.WakefulnessLifecycle;
@@ -997,5 +1000,24 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
         if (MiuiKeyguardUtils.isGxzwSensor()) {
             getInstance().updateGxzwState();
         }
+    }
+
+    public Bitmap getGxzwAnimBitmap() {
+        int i = 0;
+        switch (Settings.System.getIntForUser(this.mContext.getContentResolver(), "fod_animation_type", MiuiGxzwAnimManager.getDefaultAnimType(), 0)) {
+            case 6:
+                i = C0013R$drawable.gxzw_light_recognizing_anim_11;
+                break;
+            case 7:
+                i = C0013R$drawable.gxzw_star_recognizing_anim_15;
+                break;
+            case 8:
+                i = C0013R$drawable.gxzw_aurora_recognizing_anim_15;
+                break;
+            case 9:
+                i = C0013R$drawable.gxzw_pulse_recognizing_anim_10;
+                break;
+        }
+        return BitmapFactory.decodeResource(this.mContext.getResources(), i);
     }
 }

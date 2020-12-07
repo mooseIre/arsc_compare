@@ -73,7 +73,7 @@ public final class MiuiKeyguardWallpaperControllerImpl implements IMiuiKeyguardW
         Intrinsics.checkParameterIsNotNull(iWallpaperChangeCallback, "callback");
         if (!this.mWallpaperChangeCallbacks.contains(iWallpaperChangeCallback)) {
             this.mWallpaperChangeCallbacks.add(iWallpaperChangeCallback);
-            iWallpaperChangeCallback.onWallpaperChange(false);
+            iWallpaperChangeCallback.onWallpaperChange(this.mIsWallpaperColorLight);
         }
     }
 

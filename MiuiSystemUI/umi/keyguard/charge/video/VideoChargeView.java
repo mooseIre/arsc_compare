@@ -44,10 +44,17 @@ public class VideoChargeView extends IChargeView {
         this.mVideoView = new VideoView(this.mContext);
         if (this.mContentContainer != null) {
             Point point = this.mScreenSize;
-            this.mContentContainer.setTranslationY((float) ((Math.max(point.x, point.y) - this.mVideoView.getVideoHeight()) / 2));
-            ViewGroup viewGroup = this.mContentContainer;
-            VideoView videoView = this.mVideoView;
-            viewGroup.addView(videoView, videoView.getVideoLayoutParams());
+            int max = Math.max(point.x, point.y);
+            if (this.mIsFoldChargeVideo) {
+                ViewGroup viewGroup = this.mContentContainer;
+                VideoView videoView = this.mVideoView;
+                viewGroup.addView(videoView, videoView.getFoldingVideoLayoutParams());
+                return;
+            }
+            this.mContentContainer.setTranslationY((float) ((max - this.mVideoView.getVideoHeight()) / 2));
+            ViewGroup viewGroup2 = this.mContentContainer;
+            VideoView videoView2 = this.mVideoView;
+            viewGroup2.addView(videoView2, videoView2.getVideoLayoutParams());
         }
     }
 
@@ -67,12 +74,14 @@ public class VideoChargeView extends IChargeView {
 
     /* access modifiers changed from: protected */
     public void updateLayoutParamForScreenSizeChange() {
-        Point point = this.mScreenSize;
-        this.mContentContainer.setTranslationY((float) ((Math.max(point.x, point.y) - this.mVideoView.getVideoHeight()) / 2));
-        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) this.mVideoView.getLayoutParams();
-        layoutParams.width = -1;
-        layoutParams.height = this.mVideoView.getVideoHeight();
-        this.mVideoView.setLayoutParams(layoutParams);
+        if (!this.mIsFoldChargeVideo) {
+            Point point = this.mScreenSize;
+            this.mContentContainer.setTranslationY((float) ((Math.max(point.x, point.y) - this.mVideoView.getVideoHeight()) / 2));
+            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) this.mVideoView.getLayoutParams();
+            layoutParams.width = -1;
+            layoutParams.height = this.mVideoView.getVideoHeight();
+            this.mVideoView.setLayoutParams(layoutParams);
+        }
     }
 
     public void startAnimationOnChildView() {

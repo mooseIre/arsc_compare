@@ -99,14 +99,16 @@ class MiuiGxzwUtils {
                 float prcent = getPrcent(GXZW_ICON_HEIGHT, SCREEN_HEIGHT_PHYSICAL);
                 GXZW_HEIGHT_PRCENT = prcent;
                 GXZW_ICON_X = (int) (((float) SCREEN_WIDTH_PX) * GXZW_X_PRCENT);
-                int i4 = (int) (((float) SCREEN_HEIGHT_PX) * GXZW_Y_PRCENT);
-                GXZW_ICON_Y = i4;
+                GXZW_ICON_Y = (int) (((float) SCREEN_HEIGHT_PX) * GXZW_Y_PRCENT);
                 GXZW_ICON_WIDTH = (int) (((float) SCREEN_WIDTH_PX) * GXZW_WIDTH_PRCENT);
                 GXZW_ICON_HEIGHT = (int) (((float) SCREEN_HEIGHT_PX) * prcent);
-                int i5 = (int) (((float) SCREEN_WIDTH_PX) * GXZW_ANIM_WIDTH_PRCENT);
-                GXZW_ANIM_WIDTH = i5;
-                GXZW_ANIM_HEIGHT = i5;
-                GXZW_ICON_Y = i4 - caculateCutoutHeightIfNeed(context);
+                int i4 = (int) (((float) SCREEN_WIDTH_PX) * GXZW_ANIM_WIDTH_PRCENT);
+                GXZW_ANIM_WIDTH = i4;
+                GXZW_ANIM_HEIGHT = i4;
+                int caculateCutoutHeightIfNeed = caculateCutoutHeightIfNeed(context);
+                int prcent2 = (int) (((float) GXZW_ICON_Y) * getPrcent(SCREEN_HEIGHT_PHYSICAL, SCREEN_HEIGHT_PHYSICAL - caculateCutoutHeightIfNeed));
+                GXZW_ICON_Y = prcent2;
+                GXZW_ICON_Y = prcent2 - caculateCutoutHeightIfNeed;
             } catch (Exception e) {
                 e.printStackTrace();
                 resetDefaultValue();
@@ -165,7 +167,7 @@ class MiuiGxzwUtils {
     }
 
     public static boolean isFodAodLowlightShowEnable(Context context) {
-        return Settings.Secure.getIntForUser(context.getContentResolver(), "gxzw_icon_aod_lowlight_show_enable", 1, 0) == 1;
+        return Settings.Secure.getIntForUser(context.getContentResolver(), "gxzw_icon_aod_lowlight_show_enable", 0, 0) == 1;
     }
 
     public static void vibrateLight(Context context) {

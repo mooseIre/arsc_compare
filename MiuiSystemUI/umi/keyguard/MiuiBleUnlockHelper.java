@@ -2,7 +2,6 @@ package com.android.keyguard;
 
 import android.app.ActivityManager;
 import android.app.ActivityTaskManager;
-import android.app.StatusBarManager;
 import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -25,6 +24,8 @@ import com.android.systemui.keyguard.KeyguardViewMediator;
 import com.android.systemui.keyguard.WakefulnessLifecycle;
 import com.android.systemui.shared.system.ActivityManagerWrapper;
 import com.android.systemui.shared.system.TaskStackChangeListener;
+import com.android.systemui.statusbar.phone.MiuiDripLeftStatusBarIconControllerImpl;
+import com.android.systemui.statusbar.phone.StatusBarIconController;
 import com.android.systemui.statusbar.policy.UserSwitcherController;
 import java.util.List;
 import miui.bluetooth.ble.MiBleProfile;
@@ -84,7 +85,6 @@ public class MiuiBleUnlockHelper {
             }
         }
     };
-    private StatusBarManager mStatusBarManager;
     /* access modifiers changed from: private */
     public final TaskStackChangeListener mTaskStackListener = new TaskStackChangeListener() {
         public void onTaskStackChanged() {
@@ -139,7 +139,6 @@ public class MiuiBleUnlockHelper {
         this.mViewMediator = keyguardViewMediator;
         this.mLockPatternUtils = new MiuiLockPatternUtils(context);
         this.mUpdateMonitor = (KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class);
-        this.mStatusBarManager = (StatusBarManager) this.mContext.getSystemService("statusbar");
         this.mUserContextController = (UserSwitcherController) Dependency.get(UserSwitcherController.class);
         this.mUpdateMonitor.registerCallback(this.mUpdateMonitorCallback);
         ((WakefulnessLifecycle) Dependency.get(WakefulnessLifecycle.class)).addObserver(this.mWakefulnessObserver);
@@ -215,7 +214,8 @@ public class MiuiBleUnlockHelper {
         MiBleUnlockProfile miBleUnlockProfile = this.mUnlockProfile;
         if (miBleUnlockProfile != null) {
             miBleUnlockProfile.unregisterUnlockListener();
-            this.mStatusBarManager.removeIcon("ble_unlock_mode");
+            ((StatusBarIconController) Dependency.get(StatusBarIconController.class)).setIconVisibility("ble_unlock_mode", false);
+            ((MiuiDripLeftStatusBarIconControllerImpl) Dependency.get(MiuiDripLeftStatusBarIconControllerImpl.class)).setIconVisibility("ble_unlock_mode", false);
         }
         setBLEUnlockState(BLEUnlockState.FAILED);
     }
@@ -223,6 +223,8 @@ public class MiuiBleUnlockHelper {
     /* access modifiers changed from: private */
     public void setBLEStatusBarIcon(int i) {
         int i2;
+        Class cls = MiuiDripLeftStatusBarIconControllerImpl.class;
+        Class cls2 = StatusBarIconController.class;
         if (i == 0) {
             i2 = C0013R$drawable.ble_unlock_statusbar_icon_unverified;
         } else if (i == 2) {
@@ -230,7 +232,10 @@ public class MiuiBleUnlockHelper {
         } else {
             i2 = C0013R$drawable.ble_unlock_statusbar_icon_verified_far;
         }
-        this.mStatusBarManager.setIcon("ble_unlock_mode", i2, 0, (String) null);
+        ((StatusBarIconController) Dependency.get(cls2)).setIcon("ble_unlock_mode", i2, (CharSequence) null);
+        ((StatusBarIconController) Dependency.get(cls2)).setIconVisibility("ble_unlock_mode", true);
+        ((MiuiDripLeftStatusBarIconControllerImpl) Dependency.get(cls)).setIcon("ble_unlock_mode", i2, (CharSequence) null);
+        ((MiuiDripLeftStatusBarIconControllerImpl) Dependency.get(cls)).setIconVisibility("ble_unlock_mode", true);
     }
 
     /* access modifiers changed from: private */

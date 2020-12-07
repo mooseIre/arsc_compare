@@ -7,6 +7,7 @@ import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.hardware.input.InputManager;
@@ -26,6 +27,7 @@ import com.android.keyguard.charge.MiuiChargeManager;
 import com.android.keyguard.charge.view.IChargeAnimationListener;
 import com.android.keyguard.charge.view.MiuiChargePercentCountView;
 import com.android.keyguard.injector.KeyguardUpdateMonitorInjector;
+import com.android.systemui.C0010R$bool;
 import com.android.systemui.Dependency;
 import miui.maml.animation.interpolater.QuartEaseOutInterpolater;
 
@@ -38,10 +40,12 @@ public class MiuiChargeAnimationView extends FrameLayout {
     private MiuiChargeIconView mChargeIconView;
     private MiuiChargeLogoView mChargeLogoView;
     private MiuiChargePercentCountView mChargePercentView;
+    private Configuration mConfiguration;
     private String mDismissReason;
     private final Runnable mDismissRunnable;
     private Handler mHandler;
     private int mIconPaddingTop;
+    private boolean mIsFoldChargeVideo;
     /* access modifiers changed from: private */
     public ViewGroup mParentContainer;
     private Interpolator mQuartOutInterpolator;
@@ -63,6 +67,8 @@ public class MiuiChargeAnimationView extends FrameLayout {
         super(context, attributeSet, i);
         this.mHandler = new Handler();
         this.mQuartOutInterpolator = new QuartEaseOutInterpolater();
+        this.mConfiguration = new Configuration();
+        this.mIsFoldChargeVideo = false;
         this.mTimeoutDismissJob = new Runnable() {
             public void run() {
                 MiuiChargeAnimationView.this.startDismiss("dismiss_for_timeout");
@@ -82,8 +88,8 @@ public class MiuiChargeAnimationView extends FrameLayout {
     /* access modifiers changed from: protected */
     public void init(Context context) {
         this.mWindowManager = (WindowManager) context.getSystemService("window");
+        this.mIsFoldChargeVideo = context.getResources().getBoolean(C0010R$bool.config_folding_charge_video);
         this.mScreenSize = new Point();
-        this.mWindowManager.getDefaultDisplay().getRealSize(this.mScreenSize);
         updateSizeForScreenSizeChange();
         RelativeLayout relativeLayout = new RelativeLayout(context);
         this.mParentContainer = relativeLayout;
@@ -114,7 +120,9 @@ public class MiuiChargeAnimationView extends FrameLayout {
         if (ChargeUtils.supportWaveChargeAnimation()) {
             this.itemContainer.setTranslationX(299.0f);
         }
-        this.itemContainer.setTranslationY(this.mChargeContainerView.getVideoTranslationY());
+        if (!this.mIsFoldChargeVideo) {
+            this.itemContainer.setTranslationY(this.mChargeContainerView.getVideoTranslationY());
+        }
         setElevation(30.0f);
     }
 
@@ -124,9 +132,33 @@ public class MiuiChargeAnimationView extends FrameLayout {
     }
 
     /* access modifiers changed from: protected */
+    public void onConfigurationChanged(Configuration configuration) {
+        super.onConfigurationChanged(configuration);
+        if ((this.mConfiguration.updateFrom(configuration) & 2048) != 0) {
+            checkScreenSize();
+        }
+    }
+
+    private void checkScreenSize() {
+        Point point = new Point();
+        this.mWindowManager.getDefaultDisplay().getRealSize(point);
+        if (!this.mScreenSize.equals(point.x, point.y)) {
+            this.mScreenSize.set(point.x, point.y);
+            updateSizeForScreenSizeChange();
+            updateLayoutParamForScreenSizeChange();
+        }
+    }
+
+    /* access modifiers changed from: protected */
     public void updateSizeForScreenSizeChange() {
+        this.mWindowManager.getDefaultDisplay().getRealSize(this.mScreenSize);
         Point point = this.mScreenSize;
         this.mIconPaddingTop = (int) (((((float) Math.min(point.x, point.y)) * 1.0f) / 1080.0f) * 275.0f);
+    }
+
+    /* access modifiers changed from: protected */
+    public void updateLayoutParamForScreenSizeChange() {
+        this.mChargeIconView.setPadding(0, this.mIconPaddingTop, 0, 0);
     }
 
     public void setChargeAnimationListener(IChargeAnimationListener iChargeAnimationListener) {

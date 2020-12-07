@@ -7,14 +7,17 @@ import com.android.keyguard.AwesomeLockScreenImp.AwesomeLockScreenView;
 import com.android.keyguard.AwesomeLockScreenImp.LockScreenElementFactory;
 import com.android.keyguard.AwesomeLockScreenImp.LockScreenResourceLoader;
 import com.android.keyguard.AwesomeLockScreenImp.LockScreenRoot;
+import com.android.keyguard.AwesomeLockScreenImp.SuperWallpaperLockScreenResourceLoader;
 import java.io.File;
 import java.util.Stack;
 import miui.content.res.ThemeResources;
 import miui.maml.LifecycleResourceManager;
+import miui.maml.ResourceLoader;
 import miui.maml.ScreenContext;
 
 public class RootHolder {
     private ScreenContext mContext;
+    private ResourceLoader mLockScreenResourceLoader;
     private LifecycleResourceManager mResourceMgr;
     private LockScreenRoot mRoot;
     private String mTempCachePath;
@@ -26,7 +29,14 @@ public class RootHolder {
         }
         if (this.mRoot == null) {
             ThemeResources.getSystem().resetLockscreen();
-            this.mResourceMgr = new LifecycleResourceManager(new LockScreenResourceLoader().setLocal(context.getResources().getConfiguration().locale), 86400000, 3600000);
+            if (ThemeResources.getSystem().hasSuperWallpaperLockscreen()) {
+                Log.d("RootHolder", "create SuperWallpaperLockScreenResourceLoader");
+                this.mLockScreenResourceLoader = new SuperWallpaperLockScreenResourceLoader();
+            } else {
+                Log.d("RootHolder", "create LockScreenResourceLoader");
+                this.mLockScreenResourceLoader = new LockScreenResourceLoader();
+            }
+            this.mResourceMgr = new LifecycleResourceManager(this.mLockScreenResourceLoader.setLocal(context.getResources().getConfiguration().locale), 86400000, 3600000);
             this.mResourceMgr.setCacheSize(((int) Runtime.getRuntime().maxMemory()) / 2);
             this.mContext = new ScreenContext(context, this.mResourceMgr, new LockScreenElementFactory());
             LockScreenRoot lockScreenRoot = new LockScreenRoot(this.mContext);

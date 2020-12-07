@@ -16,13 +16,13 @@ class MiuiGxzwAnimManager {
     private boolean mBouncer;
     private ContentObserver mContentObserver = new ContentObserver(new Handler()) {
         public void onChange(boolean z) {
-            int access$000 = MiuiGxzwAnimManager.this.getDefaultAnimType();
-            Set access$100 = MiuiGxzwAnimManager.this.getLegalAnimTypeSet();
-            int intForUser = Settings.System.getIntForUser(MiuiGxzwAnimManager.this.mContext.getContentResolver(), "fod_animation_type", access$000, 0);
-            if (access$100.contains(Integer.valueOf(intForUser))) {
-                access$000 = intForUser;
+            int defaultAnimType = MiuiGxzwAnimManager.getDefaultAnimType();
+            Set access$000 = MiuiGxzwAnimManager.this.getLegalAnimTypeSet();
+            int intForUser = Settings.System.getIntForUser(MiuiGxzwAnimManager.this.mContext.getContentResolver(), "fod_animation_type", defaultAnimType, 0);
+            if (access$000.contains(Integer.valueOf(intForUser))) {
+                defaultAnimType = intForUser;
             }
-            int unused = MiuiGxzwAnimManager.this.mGxzwAnimType = access$000;
+            int unused = MiuiGxzwAnimManager.this.mGxzwAnimType = defaultAnimType;
         }
     };
     /* access modifiers changed from: private */
@@ -37,8 +37,7 @@ class MiuiGxzwAnimManager {
     private int mTranslateX;
     private int mTranslateY;
 
-    /* access modifiers changed from: private */
-    public int getDefaultAnimType() {
+    public static int getDefaultAnimType() {
         return 6;
     }
 

@@ -11,7 +11,7 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
-import com.android.systemui.C0009R$attr;
+import com.android.systemui.C0011R$color;
 import com.android.systemui.C0015R$id;
 import com.android.systemui.C0022R$style;
 import com.android.systemui.Dependency;
@@ -91,8 +91,8 @@ public class KeyguardMessageArea extends TextView implements SecurityMessageDisp
     }
 
     public void onThemeChanged() {
-        TypedArray obtainStyledAttributes = this.mContext.obtainStyledAttributes(new int[]{C0009R$attr.wallpaperTextColor});
-        ColorStateList valueOf = ColorStateList.valueOf(obtainStyledAttributes.getColor(0, -65536));
+        TypedArray obtainStyledAttributes = this.mContext.obtainStyledAttributes(new int[]{C0011R$color.white_disabled});
+        ColorStateList valueOf = ColorStateList.valueOf(obtainStyledAttributes.getColor(0, -1));
         obtainStyledAttributes.recycle();
         this.mDefaultColorState = valueOf;
         update();
@@ -142,7 +142,7 @@ public class KeyguardMessageArea extends TextView implements SecurityMessageDisp
     /* access modifiers changed from: private */
     public void update() {
         CharSequence charSequence = this.mMessage;
-        setVisibility((TextUtils.isEmpty(charSequence) || !this.mBouncerVisible) ? 4 : 0);
+        setVisibility(TextUtils.isEmpty(charSequence) ? 4 : 0);
         setText(charSequence);
         ColorStateList colorStateList = this.mDefaultColorState;
         if (this.mNextMessageColorState.getDefaultColor() != -1) {
