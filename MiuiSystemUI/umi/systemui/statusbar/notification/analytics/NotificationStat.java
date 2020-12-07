@@ -6,6 +6,7 @@ import android.os.UserHandle;
 import android.text.TextUtils;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
 import com.android.systemui.statusbar.notification.NotificationEntryManager;
+import com.android.systemui.statusbar.notification.NotificationUtil;
 import com.android.systemui.statusbar.notification.PushEvents;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import com.android.systemui.statusbar.phone.HeadsUpManagerPhone;
@@ -18,7 +19,9 @@ import com.miui.systemui.events.CancelEvent;
 import com.miui.systemui.events.ClearAllMode;
 import com.miui.systemui.events.ClickEvent;
 import com.miui.systemui.events.ExpansionEvent;
+import com.miui.systemui.events.MenuOpenEvent;
 import com.miui.systemui.events.NotifSource;
+import com.miui.systemui.events.SetConfigEvent;
 import com.miui.systemui.events.VisibleEvent;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -93,6 +96,14 @@ public class NotificationStat {
         }
         sendBlockNotificationEvent(str, str3);
         handleBlockEvent(str, str2);
+    }
+
+    public void onOpenMenu(NotificationEntry notificationEntry) {
+        handleMenuOpenEvent(notificationEntry);
+    }
+
+    public void onSetConfig(NotificationEntry notificationEntry) {
+        handleSetConfigEvent(notificationEntry);
     }
 
     public void logVisibilityChanges(List<String> list, List<String> list2, boolean z, boolean z2) {
@@ -213,6 +224,14 @@ public class NotificationStat {
         this.mEventTracker.track(new CancelAllEvent(ClearAllMode.CLEAR_ALL.name(), i, 1, NotifSource.PANEL.name()));
     }
 
+    private void handleMenuOpenEvent(NotificationEntry notificationEntry) {
+        this.mEventTracker.track(new MenuOpenEvent(getNotifPkg(notificationEntry), getNotifTargetPkg(notificationEntry), getNotifTsId(notificationEntry), getNotifStyle(notificationEntry), getNotifClearable(notificationEntry), getNotifSource(notificationEntry), getNotifIndex(notificationEntry)));
+    }
+
+    private void handleSetConfigEvent(NotificationEntry notificationEntry) {
+        this.mEventTracker.track(new SetConfigEvent(getNotifPkg(notificationEntry), getNotifTargetPkg(notificationEntry), getNotifTsId(notificationEntry), getNotifStyle(notificationEntry), getNotifClearable(notificationEntry), -1, NotificationUtil.getBucket(), "panel"));
+    }
+
     private String getNotifPkg(NotificationEntry notificationEntry) {
         return notificationEntry.getSbn().getOpPkg();
     }
@@ -223,6 +242,15 @@ public class NotificationStat {
 
     private long getNotifTsId(NotificationEntry notificationEntry) {
         return notificationEntry.getSbn().getPostTime();
+    }
+
+    private String getNotifStyle(NotificationEntry notificationEntry) {
+        String string = notificationEntry.getSbn().getNotification().extras.getString("android.template");
+        if (TextUtils.isEmpty(string)) {
+            return "Normal";
+        }
+        int lastIndexOf = string.lastIndexOf("$");
+        return lastIndexOf > 0 ? string.substring(lastIndexOf + 1) : "Unknown";
     }
 
     private boolean getNotifClearable(NotificationEntry notificationEntry) {

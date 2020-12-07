@@ -111,7 +111,7 @@ public class QSAnimator implements QSHost.Callback, PagedTileLayout.PageListener
     }
 
     public void onViewAttachedToWindow(View view) {
-        ((TunerService) Dependency.get(TunerService.class)).addTunable(this, "sysui_qs_fancy_anim", "sysui_qs_move_whole_rows", "sysui_qqs_count");
+        ((TunerService) Dependency.get(TunerService.class)).addTunable(this, "sysui_qs_fancy_anim", "sysui_qs_move_whole_rows");
         this.mQuickQsPanel.setQsAnimator(this);
     }
 
@@ -133,9 +133,6 @@ public class QSAnimator implements QSHost.Callback, PagedTileLayout.PageListener
             }
         } else if ("sysui_qs_move_whole_rows".equals(str)) {
             TunerService.parseIntegerSwitch(str2, true);
-        } else if ("sysui_qqs_count".equals(str)) {
-            QuickQSPanel.parseNumTiles(str2);
-            clearAnimationState();
         }
         miuiUpdateAnimators();
     }

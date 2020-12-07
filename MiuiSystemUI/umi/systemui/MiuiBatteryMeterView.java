@@ -346,6 +346,19 @@ public class MiuiBatteryMeterView extends LinearLayout implements BatteryControl
 
     public void onDensityOrFontScaleChanged() {
         scaleBatteryMeterViews();
+        TextView textView = this.mBatteryTextDigitView;
+        if (textView != null) {
+            textView.setTextSize(0, (float) this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.statusbar_battery_digit_size));
+        }
+        TextView textView2 = this.mBatteryPercentView;
+        if (textView2 != null) {
+            textView2.setTextSize(0, (float) this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.statusbar_battery_size));
+        }
+        TextView textView3 = this.mBatteryPercentMarkView;
+        if (textView3 != null) {
+            textView3.setTextSize(0, (float) this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.battery_percent_mark_view_text_size));
+        }
+        onConfigChanged(getContext().getResources().getConfiguration());
     }
 
     private void scaleBatteryMeterViews() {

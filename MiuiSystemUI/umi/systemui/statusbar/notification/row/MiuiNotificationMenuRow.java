@@ -68,6 +68,7 @@ public class MiuiNotificationMenuRow implements NotificationMenuRowPlugin {
         }
     };
     private ExpandableNotificationRow mParent;
+    private ExpandedNotification mSbn;
     private NotificationMenuRowPlugin.MenuItem mSnoozeItem;
 
     public boolean canBeDismissed() {
@@ -214,21 +215,23 @@ public class MiuiNotificationMenuRow implements NotificationMenuRowPlugin {
     }
 
     public void createMenu(ViewGroup viewGroup, StatusBarNotification statusBarNotification) {
-        this.mParent = (ExpandableNotificationRow) viewGroup;
+        ExpandableNotificationRow expandableNotificationRow = (ExpandableNotificationRow) viewGroup;
+        this.mParent = expandableNotificationRow;
+        this.mSbn = expandableNotificationRow.getEntry().getSbn();
         createMenuViews(true, (statusBarNotification == null || (statusBarNotification.getNotification().flags & 64) == 0) ? false : true);
     }
 
     private void createMenuViews(boolean z, boolean z2) {
         this.mMenuItems.clear();
         this.mAppOpsItem = createAppOpsItem(this.mContext);
-        ExpandedNotification sbn = this.mParent.getEntry().getSbn();
-        if (canBlock(this.mContext, sbn)) {
+        ExpandedNotification expandedNotification = this.mSbn;
+        if (canBlock(this.mContext, expandedNotification)) {
             this.mMenuItems.add(createAllowItem(this.mContext));
         }
-        if (canFold(this.mContext, sbn)) {
+        if (canFold(this.mContext, expandedNotification)) {
             this.mMenuItems.add(createFoldItem(this.mContext));
         }
-        if (canAggregate(this.mContext, sbn)) {
+        if (canAggregate(this.mContext, expandedNotification)) {
             this.mMenuItems.add(createAggregateFeedbackItem(this.mContext));
         }
         boolean z3 = BuildConfig.IS_INTERNATIONAL;
@@ -431,14 +434,14 @@ public class MiuiNotificationMenuRow implements NotificationMenuRowPlugin {
     }
 
     private void saveImportance() {
-        ExpandedNotification sbn = this.mParent.getEntry().getSbn();
-        String targetPackageName = sbn.getTargetPackageName();
+        ExpandedNotification expandedNotification = this.mSbn;
+        String targetPackageName = expandedNotification.getTargetPackageName();
         NotificationSettingsHelper.setNotificationsEnabledForPackage(this.mContext, targetPackageName, false);
         Intent intent = new Intent("com.miui.app.ExtraStatusBarManager.action_refresh_notification");
         intent.setPackage("com.android.systemui");
         intent.putExtra("com.miui.app.ExtraStatusBarManager.extra_forbid_notification", true);
         intent.putExtra("app_packageName", targetPackageName);
-        String messageId = PushEvents.getMessageId(sbn);
+        String messageId = PushEvents.getMessageId(expandedNotification);
         if (!TextUtils.isEmpty(messageId)) {
             intent.putExtra("messageId", messageId);
         }
@@ -463,6 +466,7 @@ public class MiuiNotificationMenuRow implements NotificationMenuRowPlugin {
     /* access modifiers changed from: private */
     /* renamed from: lambda$onClickFeedbackItem$9 */
     public /* synthetic */ void lambda$onClickFeedbackItem$9$MiuiNotificationMenuRow(Context context, DialogInterface dialogInterface, int i) {
+        ((NotificationStat) Dependency.get(NotificationStat.class)).onSetConfig(this.mParent.getEntry());
         saveFeedback(context, i == 0 ? "CONTENT" : "AD");
         ((ModalController) Dependency.get(ModalController.class)).animExitModal();
         dialogInterface.dismiss();
@@ -471,12 +475,12 @@ public class MiuiNotificationMenuRow implements NotificationMenuRowPlugin {
 
     private void saveFeedback(Context context, String str) {
         Intent intent = new Intent("com.miui.notification.action.SET_CATEGORY");
-        ExpandedNotification sbn = this.mParent.getEntry().getSbn();
-        intent.putExtra("key", sbn.getKey());
-        intent.putExtra("target_package", sbn.getTargetPackageName());
-        intent.putExtra("title", NotificationUtil.resolveTitle(sbn.getNotification()));
-        intent.putExtra("text", NotificationUtil.resolveText(sbn.getNotification()));
-        intent.putExtra("sub_text", NotificationUtil.resolveSubText(sbn.getNotification()));
+        ExpandedNotification expandedNotification = this.mSbn;
+        intent.putExtra("key", expandedNotification.getKey());
+        intent.putExtra("target_package", expandedNotification.getTargetPackageName());
+        intent.putExtra("title", NotificationUtil.resolveTitle(expandedNotification.getNotification()));
+        intent.putExtra("text", NotificationUtil.resolveText(expandedNotification.getNotification()));
+        intent.putExtra("sub_text", NotificationUtil.resolveSubText(expandedNotification.getNotification()));
         intent.putExtra("category", str);
         intent.setClassName("com.miui.notification", "miui.notification.aggregation.AggregateReceiver");
         context.sendBroadcast(intent);
@@ -499,7 +503,8 @@ public class MiuiNotificationMenuRow implements NotificationMenuRowPlugin {
     /* access modifiers changed from: private */
     /* renamed from: lambda$onClickFoldItem$11 */
     public /* synthetic */ void lambda$onClickFoldItem$11$MiuiNotificationMenuRow(Context context, DialogInterface dialogInterface, int i) {
-        saveFold(this.mParent.getEntry().getSbn());
+        ((NotificationStat) Dependency.get(NotificationStat.class)).onSetConfig(this.mParent.getEntry());
+        saveFold(this.mSbn);
         ((ModalController) Dependency.get(ModalController.class)).animExitModal();
         dialogInterface.dismiss();
         Toast.makeText(context, C0021R$string.miui_notification_menu_setting_success, 0).show();
@@ -513,12 +518,12 @@ public class MiuiNotificationMenuRow implements NotificationMenuRowPlugin {
     }
 
     private void onClickInfoItem(Context context, NotificationMenuRowPlugin.MenuItem menuItem) {
-        ExpandedNotification sbn = this.mParent.getEntry().getSbn();
-        String packageName = sbn.getPackageName();
-        String messageId = PushEvents.getMessageId(sbn);
+        ExpandedNotification expandedNotification = this.mSbn;
+        String packageName = expandedNotification.getPackageName();
+        String messageId = PushEvents.getMessageId(expandedNotification);
         PackageManager packageManager = this.mContext.getPackageManager();
         boolean z = false;
-        if (NotificationUtil.isHybrid(sbn)) {
+        if (NotificationUtil.isHybrid(expandedNotification)) {
             Intent intent = new Intent("android.intent.action.MAIN").addCategory("android.intent.category.NOTIFICATION_PREFERENCES").setPackage(packageName);
             List<ResolveInfo> queryIntentActivities = packageManager.queryIntentActivities(intent, 0);
             if (queryIntentActivities.size() > 0) {
@@ -528,10 +533,10 @@ public class MiuiNotificationMenuRow implements NotificationMenuRowPlugin {
                 intent.addFlags(268435456);
                 intent.putExtra("appName", "");
                 intent.putExtra("packageName", packageName);
-                intent.putExtra("userId", UserHandle.getUserId(sbn.getAppUid()));
+                intent.putExtra("userId", UserHandle.getUserId(expandedNotification.getAppUid()));
                 intent.putExtra("messageId", messageId);
                 intent.putExtra("notificationId", "");
-                intent.putExtra("miui.category", NotificationUtil.getCategory(sbn));
+                intent.putExtra("miui.category", NotificationUtil.getCategory(expandedNotification));
                 try {
                     this.mContext.startActivityAsUser(intent, UserHandle.CURRENT);
                     z = true;
@@ -541,7 +546,7 @@ public class MiuiNotificationMenuRow implements NotificationMenuRowPlugin {
             }
         }
         if (!z) {
-            NotificationSettingsHelper.startAppNotificationSettings(this.mContext, packageName, this.mAppName, sbn.getAppUid(), messageId);
+            NotificationSettingsHelper.startAppNotificationSettings(this.mContext, packageName, this.mAppName, expandedNotification.getAppUid(), messageId);
         }
         ((ModalController) Dependency.get(ModalController.class)).animExitModelCollapsePanels();
     }
@@ -574,7 +579,7 @@ public class MiuiNotificationMenuRow implements NotificationMenuRowPlugin {
     /* renamed from: lambda$onClickSnoozeItem$14 */
     public /* synthetic */ void lambda$onClickSnoozeItem$14$MiuiNotificationMenuRow(List list, DialogInterface dialogInterface, int i) {
         ModalController modalController = (ModalController) Dependency.get(ModalController.class);
-        modalController.getStatusBar().setNotificationSnoozed((StatusBarNotification) this.mParent.getEntry().getSbn(), (NotificationSwipeActionHelper.SnoozeOption) list.get(this.mChoiceIndex));
+        modalController.getStatusBar().setNotificationSnoozed((StatusBarNotification) this.mSbn, (NotificationSwipeActionHelper.SnoozeOption) list.get(this.mChoiceIndex));
         modalController.animExitModal();
         dialogInterface.dismiss();
     }

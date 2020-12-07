@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.window.WindowContainerToken;
 import android.window.WindowContainerTransaction;
 import android.window.WindowOrganizer;
+import com.android.systemui.C0012R$dimen;
 import com.android.systemui.C0017R$layout;
 import com.android.systemui.SystemUI;
 import com.android.systemui.TransactionPool;
@@ -92,7 +93,8 @@ public class Divider extends SystemUI implements DividerView.DividerCallbacks, D
             } else {
                 i4 = this.mView.getCurrentPosition();
             }
-            splitDisplayLayout.resizeSplits(splitDisplayLayout.getSnapAlgorithm().calculateNonDismissingSnapTarget(i4).position, windowContainerTransaction2);
+            DividerSnapAlgorithm snapAlgorithm = splitDisplayLayout.getSnapAlgorithm();
+            splitDisplayLayout.resizeSplits(DividerInjector.updateSnapTargetIfNeed(snapAlgorithm.calculateNonDismissingSnapTarget(i4), this.mContext, snapAlgorithm).position, windowContainerTransaction2);
             if (isSplitActive() && this.mHomeStackResizable) {
                 WindowManagerProxy.applyHomeTasksMinimized(splitDisplayLayout, this.mSplits.mSecondary.token, windowContainerTransaction2);
             }
@@ -154,6 +156,7 @@ public class Divider extends SystemUI implements DividerView.DividerCallbacks, D
                 this.mSplitLayout.resizeSplits(this.mSplitLayout.getSnapAlgorithm().getMiddleTarget().position, windowContainerTransaction);
                 WindowOrganizer.applyTransaction(windowContainerTransaction);
                 ActivityManagerWrapper.getInstance().registerTaskStackListener(this.mActivityRestartListener);
+                DividerInjector.updateSplitScreenFroceNotResizePkgList(this.mContext);
             } catch (Exception e) {
                 Slog.e("Divider", "Failed to register docked stack listener", e);
                 removeDivider();
@@ -240,16 +243,17 @@ public class Divider extends SystemUI implements DividerView.DividerCallbacks, D
         boolean z = false;
         this.mView.setVisibility(this.mVisible ? 0 : 4);
         this.mView.setMinimizedDockStack(this.mMinimized, this.mHomeStackResizable, (SurfaceControl.Transaction) null);
-        int dimensionPixelSize = displayContext.getResources().getDimensionPixelSize(17105177);
+        int dimensionPixelSize = displayContext.getResources().getDimensionPixelSize(C0012R$dimen.docked_stack_divider_thickness);
         if (configuration.orientation == 2) {
             z = true;
         }
-        if (z) {
+        boolean orientationIfNeed = DividerInjector.getOrientationIfNeed(configuration, z);
+        if (orientationIfNeed) {
             i = dimensionPixelSize;
         } else {
             i = displayLayout.width();
         }
-        if (z) {
+        if (orientationIfNeed) {
             dimensionPixelSize = displayLayout.height();
         }
         this.mWindowManager.add(this.mView, i, dimensionPixelSize, this.mContext.getDisplayId());

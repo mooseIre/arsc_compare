@@ -37,6 +37,10 @@ public class NotificationViewWrapperInjector {
         }
     }
 
+    public static int getExtraHeight(NotificationViewWrapper notificationViewWrapper, ExpandableNotificationRow expandableNotificationRow) {
+        return MiuiNotificationCustomViewWrapper.getExtraMeasureHeight(notificationViewWrapper) + 0 + getExtraMeasureHeight(notificationViewWrapper, expandableNotificationRow);
+    }
+
     public static int getExtraMeasureHeight(NotificationViewWrapper notificationViewWrapper, ExpandableNotificationRow expandableNotificationRow) {
         if ((notificationViewWrapper instanceof MiuiNotificationCustomViewWrapper) || (notificationViewWrapper instanceof NotificationCustomViewWrapper) || (notificationViewWrapper instanceof NotificationDecoratedCustomViewWrapper) || !(expandableNotificationRow instanceof MiuiExpandableNotificationRow)) {
             return 0;

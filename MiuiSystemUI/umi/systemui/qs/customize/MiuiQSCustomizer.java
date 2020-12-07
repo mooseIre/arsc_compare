@@ -280,12 +280,6 @@ public class MiuiQSCustomizer extends LinearLayout {
         }
     }
 
-    public void setEditLocation(int i, int i2) {
-        int[] locationOnScreen = findViewById(C0015R$id.customize_container).getLocationOnScreen();
-        this.mX = i - locationOnScreen[0];
-        this.mY = i2 - locationOnScreen[1];
-    }
-
     private void initMiuiAddedView() {
         TextView textView = (TextView) findViewById(16908314);
         this.mResetButton = textView;

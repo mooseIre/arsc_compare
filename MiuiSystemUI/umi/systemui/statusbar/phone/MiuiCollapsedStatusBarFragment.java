@@ -6,23 +6,29 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import com.android.systemui.C0008R$array;
+import com.android.systemui.C0010R$bool;
 import com.android.systemui.C0015R$id;
 import com.android.systemui.C0017R$layout;
 import com.android.systemui.Dependency;
 import com.android.systemui.Interpolators;
+import com.android.systemui.plugins.DarkIconDispatcher;
 import com.android.systemui.statusbar.CommandQueue;
 import com.android.systemui.statusbar.phone.StatusBarIconController;
+import com.android.systemui.statusbar.policy.RegionController;
+import com.android.systemui.statusbar.views.DarkCarrierText;
 import com.android.systemui.statusbar.views.NetworkSpeedSplitter;
 import com.android.systemui.statusbar.views.NetworkSpeedView;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class MiuiCollapsedStatusBarFragment extends CollapsedStatusBarFragment {
+public class MiuiCollapsedStatusBarFragment extends CollapsedStatusBarFragment implements RegionController.Callback {
     private StatusBarIconController.DarkIconManager mDripLeftDarkIconManager;
     private NetworkSpeedSplitter mDripNetworkSpeedSplitter;
     private NetworkSpeedView mDripNetworkSpeedView;
     private StatusBarIconController.DarkIconManager mDripRightDarkIconManager;
     private LinearLayout mDripSystemIconArea;
+    private String mRegion;
+    private DarkCarrierText mStatusBarCarrier;
     private View mStatusBarPromptContainer;
 
     public View onCreateView(LayoutInflater layoutInflater, ViewGroup viewGroup, Bundle bundle) {
@@ -59,6 +65,25 @@ public class MiuiCollapsedStatusBarFragment extends CollapsedStatusBarFragment {
         this.mStatusBarPromptContainer = this.mStatusBar.findViewById(C0015R$id.prompt_container);
         this.mDripNetworkSpeedSplitter = (NetworkSpeedSplitter) this.mStatusBar.findViewById(C0015R$id.drip_network_speed_splitter);
         this.mDripNetworkSpeedView = (NetworkSpeedView) this.mStatusBar.findViewById(C0015R$id.drip_network_speed_view);
+        ((RegionController) Dependency.get(RegionController.class)).addCallback(this);
+    }
+
+    public void onViewCreated(View view, Bundle bundle) {
+        super.onViewCreated(view, bundle);
+        this.mStatusBarCarrier = (DarkCarrierText) view.findViewById(C0015R$id.status_bar_carrier_text);
+        ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).addDarkReceiver((DarkIconDispatcher.DarkReceiver) this.mStatusBarCarrier);
+        updateStatusBarCarrierVisibility();
+    }
+
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (this.mDripLeftDarkIconManager != null) {
+            ((MiuiDripLeftStatusBarIconControllerImpl) Dependency.get(MiuiDripLeftStatusBarIconControllerImpl.class)).removeIconGroup(this.mDripLeftDarkIconManager);
+        }
+        if (this.mDripRightDarkIconManager != null) {
+            ((StatusBarIconController) Dependency.get(StatusBarIconController.class)).removeIconGroup(this.mDripLeftDarkIconManager);
+        }
+        ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).removeDarkReceiver((DarkIconDispatcher.DarkReceiver) this.mStatusBarCarrier);
     }
 
     public void hideSystemIconArea(boolean z) {
@@ -189,6 +214,19 @@ public class MiuiCollapsedStatusBarFragment extends CollapsedStatusBarFragment {
             if (this.mKeyguardStateController.isKeyguardFadingAway()) {
                 this.mDripNetworkSpeedView.animate().setDuration(this.mKeyguardStateController.getKeyguardFadingAwayDuration()).setInterpolator(Interpolators.LINEAR_OUT_SLOW_IN).setStartDelay(this.mKeyguardStateController.getKeyguardFadingAwayDelay()).start();
             }
+        }
+    }
+
+    public void onRegionChanged(String str) {
+        this.mRegion = str;
+        updateStatusBarCarrierVisibility();
+    }
+
+    /* access modifiers changed from: protected */
+    public void updateStatusBarCarrierVisibility() {
+        DarkCarrierText darkCarrierText = this.mStatusBarCarrier;
+        if (darkCarrierText != null) {
+            darkCarrierText.setVisibility((darkCarrierText.getContext().getResources().getBoolean(C0010R$bool.config_showOperatorNameInStatusBar) || "SA".equals(this.mRegion)) ? 0 : 8);
         }
     }
 }

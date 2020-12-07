@@ -180,8 +180,9 @@ public class NotificationContentView extends FrameLayout {
             } else {
                 z2 = false;
             }
-            measureChildWithMargins(this.mExpandedChild, i, 0, View.MeasureSpec.makeMeasureSpec(extraMeasureHeight, z2 ? 1073741824 : Integer.MIN_VALUE), 0);
-            i3 = Math.max(0, this.mExpandedChild.getMeasuredHeight());
+            int extraHeight = NotificationViewWrapperInjector.getExtraHeight(this.mExpandedWrapper, this.mContainingNotification);
+            measureChildWithMargins(this.mExpandedChild, i, 0, View.MeasureSpec.makeMeasureSpec(extraMeasureHeight + extraHeight, z2 ? 1073741824 : Integer.MIN_VALUE), 0);
+            i3 = Math.max(0, this.mExpandedChild.getMeasuredHeight() + extraHeight);
         } else {
             i3 = 0;
         }
@@ -195,20 +196,22 @@ public class NotificationContentView extends FrameLayout {
             } else {
                 z = false;
             }
+            int extraHeight2 = NotificationViewWrapperInjector.getExtraHeight(this.mContractedWrapper, this.mContainingNotification);
+            int i12 = i10 + extraHeight2;
             if (shouldContractedBeFixedSize() || z) {
-                i4 = View.MeasureSpec.makeMeasureSpec(i10, 1073741824);
+                i4 = View.MeasureSpec.makeMeasureSpec(i12, 1073741824);
             } else {
-                i4 = View.MeasureSpec.makeMeasureSpec(i10, Integer.MIN_VALUE);
+                i4 = View.MeasureSpec.makeMeasureSpec(i12, Integer.MIN_VALUE);
             }
-            int i12 = i4;
-            measureChildWithMargins(this.mContractedChild, i, 0, i12, 0);
-            int measuredHeight = this.mContractedChild.getMeasuredHeight() + MiuiNotificationCustomViewWrapper.getExtraMeasureHeight(this.mContractedWrapper) + NotificationViewWrapperInjector.getExtraMeasureHeight(this.mContractedWrapper, this.mContainingNotification);
-            int i13 = this.mMinContractedHeight;
-            if (measuredHeight < i13) {
-                i5 = View.MeasureSpec.makeMeasureSpec(i13, 1073741824);
+            int i13 = i4;
+            measureChildWithMargins(this.mContractedChild, i, 0, i13, 0);
+            int measuredHeight = extraHeight2 + this.mContractedChild.getMeasuredHeight();
+            int i14 = this.mMinContractedHeight;
+            if (measuredHeight < i14) {
+                i5 = View.MeasureSpec.makeMeasureSpec(i14, 1073741824);
                 measureChildWithMargins(this.mContractedChild, i, 0, i5, 0);
             } else {
-                i5 = i12;
+                i5 = i13;
             }
             i3 = Math.max(i3, measuredHeight);
             if (updateContractedHeaderWidth()) {
@@ -219,15 +222,15 @@ public class NotificationContentView extends FrameLayout {
             }
         }
         if (this.mHeadsUpChild != null) {
-            int i14 = this.mHeadsUpHeight;
+            int i15 = this.mHeadsUpHeight;
             SmartReplyView smartReplyView2 = this.mHeadsUpSmartReplyView;
             if (smartReplyView2 != null) {
-                i14 += smartReplyView2.getHeightUpperLimit();
+                i15 += smartReplyView2.getHeightUpperLimit();
             }
-            int extraMeasureHeight2 = i14 + this.mHeadsUpWrapper.getExtraMeasureHeight();
-            int i15 = this.mHeadsUpChild.getLayoutParams().height;
-            if (i15 >= 0) {
-                extraMeasureHeight2 = Math.min(extraMeasureHeight2, i15);
+            int extraMeasureHeight2 = i15 + this.mHeadsUpWrapper.getExtraMeasureHeight();
+            int i16 = this.mHeadsUpChild.getLayoutParams().height;
+            if (i16 >= 0) {
+                extraMeasureHeight2 = Math.min(extraMeasureHeight2, i16);
             } else {
                 z3 = false;
             }

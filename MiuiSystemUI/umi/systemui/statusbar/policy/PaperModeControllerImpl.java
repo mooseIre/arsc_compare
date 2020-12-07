@@ -28,6 +28,7 @@ public class PaperModeControllerImpl extends CurrentUserTracker implements Paper
     public final ContentObserver mPaperModeObserver;
     /* access modifiers changed from: private */
     public ContentResolver mResolver;
+    private final ContentObserver mVideoModeObserver;
 
     static {
         Log.isLoggable("PaperModeController", 3);
@@ -50,6 +51,19 @@ public class PaperModeControllerImpl extends CurrentUserTracker implements Paper
                 paperModeControllerImpl2.dispatchModeChanged(paperModeControllerImpl2.mPaperModeEnabled);
             }
         };
+        this.mVideoModeObserver = new ContentObserver(this.mBgHandler) {
+            public void onChange(boolean z) {
+                boolean z2 = false;
+                int intForUser = Settings.Secure.getIntForUser(PaperModeControllerImpl.this.mResolver, "vtb_boosting", 0, -2);
+                PaperModeControllerImpl paperModeControllerImpl = PaperModeControllerImpl.this;
+                if (intForUser == 0) {
+                    z2 = true;
+                }
+                boolean unused = paperModeControllerImpl.mPaperModeAvailable = z2;
+                PaperModeControllerImpl paperModeControllerImpl2 = PaperModeControllerImpl.this;
+                paperModeControllerImpl2.dispatchAvailabilityChanged(paperModeControllerImpl2.mPaperModeAvailable);
+            }
+        };
         this.mResolver.registerContentObserver(Settings.System.getUriFor("screen_paper_mode_enabled"), false, this.mPaperModeObserver, -1);
         this.mGameModeObserver = new ContentObserver(this.mBgHandler) {
             public void onChange(boolean z) {
@@ -65,6 +79,7 @@ public class PaperModeControllerImpl extends CurrentUserTracker implements Paper
             }
         };
         this.mResolver.registerContentObserver(Settings.System.getUriFor("screen_game_mode"), false, this.mGameModeObserver, -1);
+        this.mResolver.registerContentObserver(Settings.Secure.getUriFor("vtb_boosting"), false, this.mVideoModeObserver, -1);
         postInitPaperModeState();
         startTracking();
     }

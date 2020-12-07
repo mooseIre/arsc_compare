@@ -19,8 +19,11 @@ import android.util.Log;
 import android.util.SparseArray;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.systemui.statusbar.policy.MobileSignalController;
+import java.io.FileDescriptor;
+import java.io.PrintWriter;
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.Map;
 import miui.os.Build;
 import miui.os.SystemProperties;
 import miui.telephony.SubscriptionManager;
@@ -744,6 +747,28 @@ public class MiuiFiveGServiceClient {
         }
         if (DEBUG) {
             Log.d("FiveGServiceClient", str2);
+        }
+    }
+
+    public void dump(PrintWriter printWriter) {
+        synchronized (sLocalLogs) {
+            printWriter.println("FiveGServiceClient dump start:");
+            printWriter.print("  mServiceConnected=");
+            printWriter.println(this.mServiceConnected);
+            printWriter.print("  mBindRetryTimes=");
+            printWriter.println(this.mBindRetryTimes);
+            printWriter.print("  mInitRetryTimes=");
+            printWriter.println(this.mInitRetryTimes);
+            printWriter.print("  mNetworkService=");
+            printWriter.println(this.mNetworkService);
+            printWriter.print("  mClient=");
+            printWriter.println(this.mClient);
+            for (Map.Entry next : sLocalLogs.entrySet()) {
+                printWriter.println((String) next.getKey());
+                ((LocalLog) next.getValue()).dump((FileDescriptor) null, printWriter, (String[]) null);
+            }
+            printWriter.println("FiveGServiceClient dump end.");
+            printWriter.flush();
         }
     }
 

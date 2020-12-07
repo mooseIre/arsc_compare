@@ -14,10 +14,11 @@ import com.android.systemui.qs.QSTileHost;
 import com.android.systemui.statusbar.CommandQueue;
 import com.android.systemui.statusbar.phone.StatusBar;
 import com.android.systemui.statusbar.phone.StatusBarIconController;
+import com.android.systemui.statusbar.policy.ConfigurationController;
 import com.android.systemui.util.InjectionInflationController;
 
 public interface ControlCenterModule {
-    static ControlCenter provideControlCenter(Context context, ControlPanelController controlPanelController, StatusBarIconController statusBarIconController, ExpandInfoController expandInfoController, ActivityStarter activityStarter, CommandQueue commandQueue, InjectionInflationController injectionInflationController, SuperSaveModeController superSaveModeController, ControlCenterActivityStarter controlCenterActivityStarter, QSTileHost qSTileHost, ControlPanelWindowManager controlPanelWindowManager, StatusBar statusBar, ControlsPluginManager controlsPluginManager, BroadcastDispatcher broadcastDispatcher) {
-        return new ControlCenter(context, controlPanelController, statusBarIconController, expandInfoController, activityStarter, commandQueue, injectionInflationController, superSaveModeController, controlCenterActivityStarter, qSTileHost, controlPanelWindowManager, statusBar, controlsPluginManager, broadcastDispatcher);
+    static ControlCenter provideControlCenter(Context context, ControlPanelController controlPanelController, StatusBarIconController statusBarIconController, ExpandInfoController expandInfoController, ActivityStarter activityStarter, CommandQueue commandQueue, InjectionInflationController injectionInflationController, SuperSaveModeController superSaveModeController, ControlCenterActivityStarter controlCenterActivityStarter, QSTileHost qSTileHost, ControlPanelWindowManager controlPanelWindowManager, StatusBar statusBar, ControlsPluginManager controlsPluginManager, BroadcastDispatcher broadcastDispatcher, ConfigurationController configurationController) {
+        return new ControlCenter(context, controlPanelController, statusBarIconController, expandInfoController, activityStarter, commandQueue, injectionInflationController, superSaveModeController, controlCenterActivityStarter, qSTileHost, controlPanelWindowManager, statusBar, controlsPluginManager, broadcastDispatcher, configurationController);
     }
 }

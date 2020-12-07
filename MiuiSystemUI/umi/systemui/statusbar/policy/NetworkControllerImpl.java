@@ -31,6 +31,7 @@ import com.android.settingslib.net.DataUsageController;
 import com.android.systemui.C0010R$bool;
 import com.android.systemui.C0021R$string;
 import com.android.systemui.DemoMode;
+import com.android.systemui.Dependency;
 import com.android.systemui.Dumpable;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.settings.CurrentUserTracker;
@@ -1056,6 +1057,7 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
     }
 
     public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
+        Class cls = FiveGControllerImpl.class;
         printWriter.println("NetworkController state:");
         printWriter.println("  - telephony ------");
         printWriter.print("  hasVoiceCallingFeature()=");
@@ -1085,6 +1087,9 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
         this.mWifiSignalController.dump(printWriter);
         this.mEthernetSignalController.dump(printWriter);
         this.mAccessPoints.dump(printWriter);
+        if (Dependency.get(cls) != null) {
+            ((FiveGControllerImpl) Dependency.get(cls)).dump(printWriter);
+        }
     }
 
     private static final String emergencyToString(int i) {

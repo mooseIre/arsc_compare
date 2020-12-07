@@ -210,4 +210,15 @@ public class ExpandInfoControllerImpl implements ExpandInfoController {
             }
         }
     }
+
+    public void register() {
+        DataUsageInfo dataUsageInfo = this.mDataUsageInfo;
+        if (dataUsageInfo != null) {
+            dataUsageInfo.register();
+        }
+        DataBillInfo dataBillInfo = this.mDataBillInfo;
+        if (dataBillInfo != null) {
+            dataBillInfo.register();
+        }
+    }
 }

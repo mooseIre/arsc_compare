@@ -24,10 +24,6 @@ public class OperatorNameView extends TextView implements DemoMode, DarkIconDisp
     private boolean mDemoMode;
     private KeyguardUpdateMonitor mKeyguardUpdateMonitor;
 
-    public OperatorNameView(Context context) {
-        this(context, (AttributeSet) null);
-    }
-
     public OperatorNameView(Context context, AttributeSet attributeSet) {
         this(context, attributeSet, 0);
     }

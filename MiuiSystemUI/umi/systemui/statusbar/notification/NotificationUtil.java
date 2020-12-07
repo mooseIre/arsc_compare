@@ -18,11 +18,13 @@ import android.view.ViewOutlineProvider;
 import android.widget.ImageView;
 import com.android.systemui.C0021R$string;
 import com.android.systemui.Dependency;
+import com.android.systemui.SystemUIApplication;
 import com.android.systemui.media.MediaDataManagerKt;
 import com.miui.systemui.BuildConfig;
 import com.miui.systemui.SettingsManager;
 import com.miui.systemui.graphics.AppIconsManager;
 import java.util.Objects;
+import miui.os.SystemProperties;
 import miui.securityspace.CrossUserUtils;
 import miui.securityspace.XSpaceUserHandle;
 
@@ -125,6 +127,15 @@ public class NotificationUtil {
 
     public static Icon getSmallIcon(ExpandedNotification expandedNotification) {
         if (shouldSubstituteSmallIcon(expandedNotification)) {
+            Context context = SystemUIApplication.getContext();
+            Icon hybridSmallIcon = getHybridSmallIcon(context, expandedNotification);
+            if (hybridSmallIcon != null) {
+                return hybridSmallIcon;
+            }
+            Icon customSmallIcon = getCustomSmallIcon(context, expandedNotification);
+            if (customSmallIcon != null) {
+                return customSmallIcon;
+            }
             int identifier = expandedNotification.getUser().getIdentifier();
             if (identifier < 0) {
                 identifier = CrossUserUtils.getCurrentUserId();
@@ -135,6 +146,25 @@ public class NotificationUtil {
             }
         }
         return expandedNotification.getNotification().getSmallIcon();
+    }
+
+    private static Icon getHybridSmallIcon(Context context, ExpandedNotification expandedNotification) {
+        if (!isHybrid(expandedNotification) || !hasLargeIcon(expandedNotification.getNotification())) {
+            return null;
+        }
+        Drawable largeIconDrawable = getLargeIconDrawable(context, expandedNotification.getNotification());
+        if (largeIconDrawable instanceof BitmapDrawable) {
+            return Icon.createWithBitmap(((BitmapDrawable) largeIconDrawable).getBitmap());
+        }
+        return null;
+    }
+
+    private static Icon getCustomSmallIcon(Context context, ExpandedNotification expandedNotification) {
+        Drawable customAppIcon = getCustomAppIcon(context, expandedNotification);
+        if (customAppIcon instanceof BitmapDrawable) {
+            return Icon.createWithBitmap(((BitmapDrawable) customAppIcon).getBitmap());
+        }
+        return null;
     }
 
     public static boolean shouldSubstituteSmallIcon(ExpandedNotification expandedNotification) {
@@ -212,6 +242,10 @@ public class NotificationUtil {
             }
         });
         view.setClipToOutline(true);
+    }
+
+    public static int getBucket() {
+        return SystemProperties.getInt("persist.sys.notification_rank", 0);
     }
 
     public static boolean hasExpandingFeature() {

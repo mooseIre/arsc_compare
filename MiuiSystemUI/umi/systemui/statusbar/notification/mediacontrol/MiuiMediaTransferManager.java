@@ -32,19 +32,18 @@ public class MiuiMediaTransferManager {
     private LocalMediaManager mLocalMediaManager;
     private final MediaRouter.SimpleCallback mMediaCallback = new MediaRouter.SimpleCallback() {
         public void onRouteSelected(MediaRouter mediaRouter, int i, MediaRouter.RouteInfo routeInfo) {
-            MiuiMediaTransferManager miuiMediaTransferManager = MiuiMediaTransferManager.this;
-            miuiMediaTransferManager.updateCurrentDevice(TextUtils.equals(miuiMediaTransferManager.mPhoneName, routeInfo.getName()));
+            MiuiMediaTransferManager.this.updateCurrentDevice(routeInfo.getName().toString());
         }
     };
     private final LocalMediaManager.DeviceCallback mMediaDeviceCallback = new LocalMediaManager.DeviceCallback() {
         public void onDeviceListUpdate(List<MediaDevice> list) {
             MiuiMediaTransferManager.this.updatePhoneDevice(list);
-            MiuiMediaTransferManager.this.updateCurrentDevice(false);
+            MiuiMediaTransferManager.this.updateCurrentDevice("");
         }
 
         public void onSelectedDeviceStateChanged(MediaDevice mediaDevice, int i) {
             boolean unused = MiuiMediaTransferManager.this.updatePhoneDevice(mediaDevice);
-            MiuiMediaTransferManager.this.updateAllChips(false);
+            MiuiMediaTransferManager.this.updateAllChips(mediaDevice.getName());
         }
     };
     private MediaRouter mMediaRouter;
@@ -57,8 +56,7 @@ public class MiuiMediaTransferManager {
             MiuiMediaTransferManager.this.mActivityStarter.startActivity(new Intent().setAction("miui.bluetooth.mible.MiuiAudioRelayActivity"), false, true, 268435456);
         }
     };
-    /* access modifiers changed from: private */
-    public String mPhoneName;
+    private String mPhoneName;
     private List<ImageView> mViews = new ArrayList();
 
     public MiuiMediaTransferManager(Context context) {
@@ -68,9 +66,12 @@ public class MiuiMediaTransferManager {
     }
 
     /* access modifiers changed from: private */
-    public void updateCurrentDevice(boolean z) {
+    public void updateCurrentDevice(String str) {
         this.mCurDevice = getCurrentConnectedDevice();
-        updateAllChips(z);
+        if (TextUtils.isEmpty(str)) {
+            str = this.mCurDevice.getName();
+        }
+        updateAllChips(str);
     }
 
     /* access modifiers changed from: private */
@@ -157,25 +158,29 @@ public class MiuiMediaTransferManager {
             this.mLocalMediaManager.startScan();
             updatePhoneDevice(this.mLocalMediaManager.getSelectableMediaDevice());
             this.mCurDevice = getCurrentConnectedDevice();
-            updateChip(imageView, false);
+            updateChip(imageView);
         }
     }
 
     /* access modifiers changed from: private */
-    public void updateAllChips(boolean z) {
+    public void updateAllChips(String str) {
         for (ImageView updateChip : this.mViews) {
-            updateChip(updateChip, z);
+            updateChip(updateChip, str);
         }
     }
 
-    private void updateChip(ImageView imageView, boolean z) {
+    private void updateChip(ImageView imageView) {
+        updateChip(imageView, (String) null);
+    }
+
+    private void updateChip(ImageView imageView, String str) {
         MediaDevice mediaDevice;
-        if (z || (mediaDevice = this.mCurDevice) == null || (mediaDevice instanceof PhoneMediaDevice)) {
+        if (TextUtils.equals(this.mPhoneName, str) || (mediaDevice = this.mCurDevice) == null || (mediaDevice instanceof PhoneMediaDevice)) {
             imageView.setImageResource(C0013R$drawable.ic_media_seamless);
-            imageView.setContentDescription((CharSequence) null);
+            imageView.setContentDescription(this.mPhoneName);
             return;
         }
         imageView.setImageResource(C0013R$drawable.ic_media_seamless_others);
-        imageView.setContentDescription(this.mCurDevice.getName());
+        imageView.setContentDescription(str);
     }
 }

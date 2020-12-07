@@ -181,4 +181,8 @@ public class ControlPanelWindowManager implements OnHeadsUpChangedListener {
         this.mIsHeadsUp = z;
         this.mIsRowPinned = notificationEntry.isRowPinned();
     }
+
+    public void trimMemory() {
+        this.mStatusBar.trimMemory();
+    }
 }

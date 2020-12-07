@@ -12,7 +12,7 @@ import com.android.internal.widget.LockPatternChecker;
 import com.android.internal.widget.LockscreenCredential;
 import com.android.systemui.C0015R$id;
 
-public class AuthCredentialPasswordView extends AuthCredentialView implements TextView.OnEditorActionListener {
+public class AuthCredentialPasswordView extends AuthCredentialView implements TextView.OnEditorActionListener, View.OnClickListener {
     private final InputMethodManager mImm = ((InputMethodManager) this.mContext.getSystemService(InputMethodManager.class));
     private ImeAwareEditText mPasswordField;
 
@@ -31,6 +31,8 @@ public class AuthCredentialPasswordView extends AuthCredentialView implements Te
                 return AuthCredentialPasswordView.this.lambda$onFinishInflate$0$AuthCredentialPasswordView(view, i, keyEvent);
             }
         });
+        findViewById(C0015R$id.footerLeftButton).setOnClickListener(this);
+        findViewById(C0015R$id.footerRightButton).setOnClickListener(this);
     }
 
     /* access modifiers changed from: private */
@@ -105,6 +107,15 @@ public class AuthCredentialPasswordView extends AuthCredentialView implements Te
             this.mImm.hideSoftInputFromWindow(getWindowToken(), 0);
         } else {
             this.mPasswordField.setText("");
+        }
+    }
+
+    public void onClick(View view) {
+        if (view.getId() == C0015R$id.footerLeftButton) {
+            this.mContainerView.sendEarlyUserCanceled();
+            this.mContainerView.animateAway(1);
+        } else if (view.getId() == C0015R$id.footerRightButton) {
+            checkPasswordAndUnlock();
         }
     }
 }

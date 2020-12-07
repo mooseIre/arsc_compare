@@ -1,6 +1,7 @@
 package com.android.systemui.statusbar.notification.interruption;
 
 import android.content.ContentResolver;
+import android.content.Context;
 import android.hardware.display.AmbientDisplayConfiguration;
 import android.os.Handler;
 import android.os.PowerManager;
@@ -10,6 +11,7 @@ import com.android.systemui.statusbar.CommandQueue;
 import com.android.systemui.statusbar.notification.NotificationFilter;
 import com.android.systemui.statusbar.phone.StatusBarKeyguardViewManager;
 import com.android.systemui.statusbar.policy.BatteryController;
+import com.android.systemui.statusbar.policy.DeviceProvisionedController;
 import com.android.systemui.statusbar.policy.HeadsUpManager;
 import com.android.systemui.statusbar.policy.ZenModeController;
 import com.miui.systemui.SettingsManager;
@@ -21,6 +23,8 @@ public final class MiuiNotificationInterruptStateProviderImpl_Factory implements
     private final Provider<BatteryController> batteryControllerProvider;
     private final Provider<CommandQueue> commandQueueProvider;
     private final Provider<ContentResolver> contentResolverProvider;
+    private final Provider<Context> ctxProvider;
+    private final Provider<DeviceProvisionedController> deviceProvisionedControllerProvider;
     private final Provider<IDreamManager> dreamManagerProvider;
     private final Provider<HeadsUpManager> headsUpManagerProvider;
     private final Provider<Handler> mainHandlerProvider;
@@ -31,31 +35,33 @@ public final class MiuiNotificationInterruptStateProviderImpl_Factory implements
     private final Provider<StatusBarStateController> statusBarStateControllerProvider;
     private final Provider<ZenModeController> zenModeControllerProvider;
 
-    public MiuiNotificationInterruptStateProviderImpl_Factory(Provider<ContentResolver> provider, Provider<PowerManager> provider2, Provider<IDreamManager> provider3, Provider<AmbientDisplayConfiguration> provider4, Provider<NotificationFilter> provider5, Provider<BatteryController> provider6, Provider<StatusBarStateController> provider7, Provider<HeadsUpManager> provider8, Provider<Handler> provider9, Provider<ZenModeController> provider10, Provider<SettingsManager> provider11, Provider<CommandQueue> provider12, Provider<StatusBarKeyguardViewManager> provider13) {
-        this.contentResolverProvider = provider;
-        this.powerManagerProvider = provider2;
-        this.dreamManagerProvider = provider3;
-        this.ambientDisplayConfigurationProvider = provider4;
-        this.notificationFilterProvider = provider5;
-        this.batteryControllerProvider = provider6;
-        this.statusBarStateControllerProvider = provider7;
-        this.headsUpManagerProvider = provider8;
-        this.mainHandlerProvider = provider9;
-        this.zenModeControllerProvider = provider10;
-        this.settingsManagerProvider = provider11;
-        this.commandQueueProvider = provider12;
-        this.statusBarKeyguardViewManagerProvider = provider13;
+    public MiuiNotificationInterruptStateProviderImpl_Factory(Provider<Context> provider, Provider<ContentResolver> provider2, Provider<PowerManager> provider3, Provider<IDreamManager> provider4, Provider<AmbientDisplayConfiguration> provider5, Provider<NotificationFilter> provider6, Provider<BatteryController> provider7, Provider<StatusBarStateController> provider8, Provider<HeadsUpManager> provider9, Provider<Handler> provider10, Provider<ZenModeController> provider11, Provider<SettingsManager> provider12, Provider<CommandQueue> provider13, Provider<StatusBarKeyguardViewManager> provider14, Provider<DeviceProvisionedController> provider15) {
+        this.ctxProvider = provider;
+        this.contentResolverProvider = provider2;
+        this.powerManagerProvider = provider3;
+        this.dreamManagerProvider = provider4;
+        this.ambientDisplayConfigurationProvider = provider5;
+        this.notificationFilterProvider = provider6;
+        this.batteryControllerProvider = provider7;
+        this.statusBarStateControllerProvider = provider8;
+        this.headsUpManagerProvider = provider9;
+        this.mainHandlerProvider = provider10;
+        this.zenModeControllerProvider = provider11;
+        this.settingsManagerProvider = provider12;
+        this.commandQueueProvider = provider13;
+        this.statusBarKeyguardViewManagerProvider = provider14;
+        this.deviceProvisionedControllerProvider = provider15;
     }
 
     public MiuiNotificationInterruptStateProviderImpl get() {
-        return provideInstance(this.contentResolverProvider, this.powerManagerProvider, this.dreamManagerProvider, this.ambientDisplayConfigurationProvider, this.notificationFilterProvider, this.batteryControllerProvider, this.statusBarStateControllerProvider, this.headsUpManagerProvider, this.mainHandlerProvider, this.zenModeControllerProvider, this.settingsManagerProvider, this.commandQueueProvider, this.statusBarKeyguardViewManagerProvider);
+        return provideInstance(this.ctxProvider, this.contentResolverProvider, this.powerManagerProvider, this.dreamManagerProvider, this.ambientDisplayConfigurationProvider, this.notificationFilterProvider, this.batteryControllerProvider, this.statusBarStateControllerProvider, this.headsUpManagerProvider, this.mainHandlerProvider, this.zenModeControllerProvider, this.settingsManagerProvider, this.commandQueueProvider, this.statusBarKeyguardViewManagerProvider, this.deviceProvisionedControllerProvider);
     }
 
-    public static MiuiNotificationInterruptStateProviderImpl provideInstance(Provider<ContentResolver> provider, Provider<PowerManager> provider2, Provider<IDreamManager> provider3, Provider<AmbientDisplayConfiguration> provider4, Provider<NotificationFilter> provider5, Provider<BatteryController> provider6, Provider<StatusBarStateController> provider7, Provider<HeadsUpManager> provider8, Provider<Handler> provider9, Provider<ZenModeController> provider10, Provider<SettingsManager> provider11, Provider<CommandQueue> provider12, Provider<StatusBarKeyguardViewManager> provider13) {
-        return new MiuiNotificationInterruptStateProviderImpl(provider.get(), provider2.get(), provider3.get(), provider4.get(), provider5.get(), provider6.get(), provider7.get(), provider8.get(), provider9.get(), provider10.get(), provider11.get(), provider12.get(), provider13.get());
+    public static MiuiNotificationInterruptStateProviderImpl provideInstance(Provider<Context> provider, Provider<ContentResolver> provider2, Provider<PowerManager> provider3, Provider<IDreamManager> provider4, Provider<AmbientDisplayConfiguration> provider5, Provider<NotificationFilter> provider6, Provider<BatteryController> provider7, Provider<StatusBarStateController> provider8, Provider<HeadsUpManager> provider9, Provider<Handler> provider10, Provider<ZenModeController> provider11, Provider<SettingsManager> provider12, Provider<CommandQueue> provider13, Provider<StatusBarKeyguardViewManager> provider14, Provider<DeviceProvisionedController> provider15) {
+        return new MiuiNotificationInterruptStateProviderImpl(provider.get(), provider2.get(), provider3.get(), provider4.get(), provider5.get(), provider6.get(), provider7.get(), provider8.get(), provider9.get(), provider10.get(), provider11.get(), provider12.get(), provider13.get(), provider14.get(), provider15.get());
     }
 
-    public static MiuiNotificationInterruptStateProviderImpl_Factory create(Provider<ContentResolver> provider, Provider<PowerManager> provider2, Provider<IDreamManager> provider3, Provider<AmbientDisplayConfiguration> provider4, Provider<NotificationFilter> provider5, Provider<BatteryController> provider6, Provider<StatusBarStateController> provider7, Provider<HeadsUpManager> provider8, Provider<Handler> provider9, Provider<ZenModeController> provider10, Provider<SettingsManager> provider11, Provider<CommandQueue> provider12, Provider<StatusBarKeyguardViewManager> provider13) {
-        return new MiuiNotificationInterruptStateProviderImpl_Factory(provider, provider2, provider3, provider4, provider5, provider6, provider7, provider8, provider9, provider10, provider11, provider12, provider13);
+    public static MiuiNotificationInterruptStateProviderImpl_Factory create(Provider<Context> provider, Provider<ContentResolver> provider2, Provider<PowerManager> provider3, Provider<IDreamManager> provider4, Provider<AmbientDisplayConfiguration> provider5, Provider<NotificationFilter> provider6, Provider<BatteryController> provider7, Provider<StatusBarStateController> provider8, Provider<HeadsUpManager> provider9, Provider<Handler> provider10, Provider<ZenModeController> provider11, Provider<SettingsManager> provider12, Provider<CommandQueue> provider13, Provider<StatusBarKeyguardViewManager> provider14, Provider<DeviceProvisionedController> provider15) {
+        return new MiuiNotificationInterruptStateProviderImpl_Factory(provider, provider2, provider3, provider4, provider5, provider6, provider7, provider8, provider9, provider10, provider11, provider12, provider13, provider14, provider15);
     }
 }

@@ -1,5 +1,6 @@
 package com.android.systemui.statusbar.phone;
 
+import android.app.ActivityManager;
 import android.app.AlarmManager;
 import android.app.IActivityManager;
 import android.app.SynchronousUserSwitchObserver;
@@ -228,8 +229,13 @@ public class PhoneStatusBarPolicy implements BluetoothController.Callback, Comma
         /* access modifiers changed from: private */
         /* renamed from: lambda$onUserSwitchComplete$1 */
         public /* synthetic */ void lambda$onUserSwitchComplete$1$PhoneStatusBarPolicy$1() {
+            PhoneStatusBarPolicy.this.mCurrentUserId = ActivityManager.getCurrentUser();
             PhoneStatusBarPolicy.this.updateAlarm();
             PhoneStatusBarPolicy.this.updateManagedProfile();
+        }
+
+        public void onForegroundProfileSwitch(int i) throws RemoteException {
+            PhoneStatusBarPolicy.this.profileChanged(i);
         }
     };
     protected final ZenModeController mZenController;
@@ -241,6 +247,9 @@ public class PhoneStatusBarPolicy implements BluetoothController.Callback, Comma
 
     /* access modifiers changed from: protected */
     public abstract void miuiInit();
+
+    /* access modifiers changed from: protected */
+    public abstract void profileChanged(int i);
 
     public abstract void updateBluetooth(String str);
 

@@ -21,6 +21,11 @@ public class NotificationSectionsFeatureManager {
         this.context = context2;
     }
 
+    @NotNull
+    public final Context getContext() {
+        return this.context;
+    }
+
     public final boolean isFilteringEnabled() {
         return NotificationSectionsFeatureManagerKt.usePeopleFiltering(this.proxy);
     }

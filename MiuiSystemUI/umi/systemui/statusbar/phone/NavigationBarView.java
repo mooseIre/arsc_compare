@@ -432,11 +432,14 @@ public class NavigationBarView extends FrameLayout implements NavigationModeCont
         if (QuickStepContract.isGesturalMode(this.mNavBarMode) && this.mImeVisible && motionEvent.getAction() == 0) {
             SysUiStatsLog.write(304, (int) motionEvent.getX(), (int) motionEvent.getY());
         }
-        return this.mTaskSwitchHelper.onInterceptTouchEvent(motionEvent) || shouldDeadZoneConsumeTouchEvents(motionEvent) || super.onInterceptTouchEvent(motionEvent);
+        if ((QuickStepContract.isGesturalMode(this.mNavBarMode) || !this.mTaskSwitchHelper.onInterceptTouchEvent(motionEvent)) && !shouldDeadZoneConsumeTouchEvents(motionEvent) && !super.onInterceptTouchEvent(motionEvent)) {
+            return false;
+        }
+        return true;
     }
 
     public boolean onTouchEvent(MotionEvent motionEvent) {
-        if (this.mTaskSwitchHelper.onTouchEvent(motionEvent)) {
+        if (!QuickStepContract.isGesturalMode(this.mNavBarMode) && this.mTaskSwitchHelper.onTouchEvent(motionEvent)) {
             return true;
         }
         shouldDeadZoneConsumeTouchEvents(motionEvent);

@@ -1,6 +1,7 @@
 package com.android.systemui.statusbar.notification.stack;
 
 import android.animation.Animator;
+import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow;
 import com.android.systemui.statusbar.notification.row.NotificationBackgroundView;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
@@ -31,7 +32,10 @@ public final class MiuiNotificationChildrenContainer$startBackgroundAnimation$1 
     public void onAnimationEnd(@NotNull Animator animator) {
         Intrinsics.checkParameterIsNotNull(animator, "animator");
         this.$firstChildBackground.setVisibility(0);
-        this.$summaryBackground.setVisibility(8);
+        NotificationBackgroundView notificationBackgroundView = this.$summaryBackground;
+        ExpandableNotificationRow expandableNotificationRow = this.this$0.mContainingNotification;
+        Intrinsics.checkExpressionValueIsNotNull(expandableNotificationRow, "mContainingNotification");
+        notificationBackgroundView.setVisibility(expandableNotificationRow.isDimmed() ? 4 : 0);
         this.this$0.setGroupBackgroundAnimating(false);
     }
 

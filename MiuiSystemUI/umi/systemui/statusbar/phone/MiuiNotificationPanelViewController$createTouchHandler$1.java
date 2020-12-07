@@ -14,6 +14,7 @@ public final class MiuiNotificationPanelViewController$createTouchHandler$1 exte
     private boolean isFullyExpandedOnDown;
     private float mInitialTouchX;
     private float mInitialTouchY;
+    private float mLastTouchY;
     private int mTrackingPointer;
     final /* synthetic */ MiuiNotificationPanelViewController this$0;
 
@@ -29,6 +30,7 @@ public final class MiuiNotificationPanelViewController$createTouchHandler$1 exte
         if (motionEvent.getActionMasked() == 0) {
             this.isFullyCollapsedOnDown = this.this$0.isFullyCollapsed();
             this.isFullyExpandedOnDown = this.this$0.isFullyExpanded();
+            this.this$0.cancelFlingSpring();
         }
         if (!this.this$0.isOnKeyguard() && onPanelIntercept(motionEvent)) {
             return true;
@@ -45,6 +47,7 @@ public final class MiuiNotificationPanelViewController$createTouchHandler$1 exte
         if (motionEvent.getActionMasked() == 0) {
             this.isFullyCollapsedOnDown = this.this$0.isFullyCollapsed();
             this.isFullyExpandedOnDown = this.this$0.isFullyExpanded();
+            this.this$0.cancelFlingSpring();
         }
         MiuiNotificationPanelViewController miuiNotificationPanelViewController = this.this$0;
         boolean z = false;
@@ -82,7 +85,7 @@ public final class MiuiNotificationPanelViewController$createTouchHandler$1 exte
             Object obj = this.this$0.controlPanelController.get();
             Intrinsics.checkExpressionValueIsNotNull(obj, "controlPanelController.get()");
             boolean isUseControlCenter = ((ControlPanelController) obj).isUseControlCenter();
-            boolean z = this.isFullyCollapsedOnDown && !this.this$0.mExpandingFromHeadsUp;
+            boolean z = this.isFullyCollapsedOnDown && !this.this$0.mExpandingFromHeadsUp && !this.this$0.mNssCoveredQs;
             boolean z2 = this.isFullyExpandedOnDown && isUseControlCenter && this.this$0.getMNotificationStackScroller().isScrolledToTop();
             if (z || z2) {
                 if (isUseControlCenter && !this.this$0.getMPanelStretching()) {
@@ -264,7 +267,7 @@ public final class MiuiNotificationPanelViewController$createTouchHandler$1 exte
                         }
                         miuiNotificationPanelViewController2.mNssCoveringQs = handleSlideState;
                     }
-                    if (!this.this$0.mPanelIntercepting || this.this$0.mNssCoveringQs) {
+                    if (!this.this$0.mPanelIntercepting || this.this$0.mNssCoveringQs || this.this$0.mNssCoveredQs) {
                         this.this$0.setMPanelStretching(handleStretchState);
                         this.this$0.mPanelCollapsing = handleCollapseState;
                     } else {
@@ -286,10 +289,11 @@ public final class MiuiNotificationPanelViewController$createTouchHandler$1 exte
                         }
                         this.this$0.trackMovement(motionEvent);
                         MiuiNotificationPanelViewController miuiNotificationPanelViewController5 = this.this$0;
-                        miuiNotificationPanelViewController5.updateScrollerTopPadding(miuiNotificationPanelViewController5.calculateQsTopPadding(f2));
+                        miuiNotificationPanelViewController5.updateScrollerTopPadding(miuiNotificationPanelViewController5.calculateQsTopPadding(y - this.mLastTouchY));
                     } else if (this.this$0.getMPanelStretching() || this.this$0.mPanelCollapsing) {
                         this.this$0.setMStretchLength(f2);
                     }
+                    this.mLastTouchY = y;
                 } else if (actionMasked != 3) {
                     if (actionMasked == 6) {
                         handlePointerUp(motionEvent);
@@ -314,6 +318,7 @@ public final class MiuiNotificationPanelViewController$createTouchHandler$1 exte
         } else {
             this.mInitialTouchX = x;
             this.mInitialTouchY = y;
+            this.mLastTouchY = y;
             this.this$0.mPanelOpening = false;
             this.this$0.mNssCoveringQs = false;
             this.this$0.setMPanelStretching(false);

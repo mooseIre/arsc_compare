@@ -143,7 +143,7 @@ public interface StatusBarIconController {
         protected DemoStatusIcons mDemoStatusIcons;
         protected boolean mDemoable = true;
         protected final ViewGroup mGroup;
-        protected final int mIconSize;
+        protected int mIconSize;
         private boolean mIsInDemoMode;
         protected boolean mShouldLog = false;
 
@@ -253,6 +253,14 @@ public interface StatusBarIconController {
             imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
             imageView.setAdjustViewBounds(true);
             setHeightAndCenter(imageView, i2);
+        }
+
+        /* access modifiers changed from: protected */
+        public void onDensityOrFontScaleChanged() {
+            this.mIconSize = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.status_bar_icon_height);
+            for (int i = 0; i < this.mGroup.getChildCount(); i++) {
+                this.mGroup.getChildAt(i).setLayoutParams(new LinearLayout.LayoutParams(-2, this.mIconSize));
+            }
         }
 
         private void setHeightAndCenter(ImageView imageView, int i) {

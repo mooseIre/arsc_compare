@@ -152,6 +152,11 @@ public class QSPanel extends LinearLayout implements TunerService.Tunable, QSHos
     }
 
     /* access modifiers changed from: protected */
+    public int getTileCallbackType() {
+        return 1;
+    }
+
+    /* access modifiers changed from: protected */
     public boolean needsDynamicRowsAndColumns() {
         return true;
     }
@@ -328,7 +333,7 @@ public class QSPanel extends LinearLayout implements TunerService.Tunable, QSHos
         }
         Iterator<TileRecord> it = this.mRecords.iterator();
         while (it.hasNext()) {
-            it.next().tile.removeCallbacksByType(1);
+            it.next().tile.removeCallbacksByType(getTileCallbackType());
         }
         this.mRecords.clear();
         BrightnessMirrorController brightnessMirrorController = this.mBrightnessMirrorController;

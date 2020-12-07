@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.widget.LinearLayout;
-import com.android.systemui.C0010R$bool;
 import com.android.systemui.C0015R$id;
 import com.android.systemui.C0017R$layout;
 import com.android.systemui.Dependency;
@@ -303,9 +302,7 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
     }
 
     private void initOperatorName() {
-        if (getResources().getBoolean(C0010R$bool.config_showOperatorNameInStatusBar)) {
-            this.mOperatorNameFrame = ((ViewStub) this.mStatusBar.findViewById(C0015R$id.operator_name)).inflate();
-        }
+        this.mOperatorNameFrame = ((ViewStub) this.mStatusBar.findViewById(C0015R$id.operator_name)).inflate();
     }
 
     public void onDozingChanged(boolean z) {

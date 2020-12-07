@@ -13,6 +13,7 @@ import com.android.systemui.Dependency;
 import com.android.systemui.statusbar.notification.NotificationEntryManager;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow;
+import com.android.systemui.statusbar.notification.row.NotificationBackgroundView;
 import com.android.systemui.statusbar.phone.StatusBar;
 import com.miui.systemui.DebugConfig;
 import com.miui.systemui.util.HapticFeedBackImpl;
@@ -105,7 +106,7 @@ public final class ModalController {
                     }
                     this.modalRow = expandableNotificationRow2;
                     enterModal();
-                    startAnimator(new ModalController$animEnterModal$updateListener$1(this), new ModalController$animEnterModal$animatorListener$1(this));
+                    startAnimator(new ModalController$animEnterModal$updateListener$1(this), new ModalController$animEnterModal$animatorListener$1(this, expandableNotificationRow));
                     return;
                 }
                 Intrinsics.throwUninitializedPropertyAccessException("modalWindowView");
@@ -117,6 +118,7 @@ public final class ModalController {
     }
 
     private final void enterModal() {
+        NotificationBackgroundView notificationBackgroundView;
         this.modalWindowManager.setBlurRatio(0.0f);
         ModalWindowView modalWindowView2 = this.modalWindowView;
         if (modalWindowView2 != null) {
@@ -124,6 +126,10 @@ public final class ModalController {
             ExpandableNotificationRow expandableNotificationRow = this.modalRow;
             if (expandableNotificationRow != null) {
                 expandableNotificationRow.setOnClickListener(new ModalController$enterModal$2(this));
+            }
+            ExpandableNotificationRow expandableNotificationRow2 = this.modalRow;
+            if (!(expandableNotificationRow2 == null || (notificationBackgroundView = (NotificationBackgroundView) expandableNotificationRow2.findViewById(C0015R$id.backgroundNormal)) == null)) {
+                notificationBackgroundView.disableBlur();
             }
             ModalWindowView modalWindowView3 = this.modalWindowView;
             if (modalWindowView3 != null) {

@@ -39,6 +39,10 @@ public class MiuiNotificationCompat {
         return notification.extraNotification.getFloatTime();
     }
 
+    public static void setFloatTime(Notification notification, int i) {
+        notification.extras.putInt("miui.floatTime", i);
+    }
+
     public static CharSequence getTargetPkg(Notification notification) {
         if (notification.extras.containsKey("miui.targetPkg")) {
             return notification.extras.getCharSequence("miui.targetPkg");

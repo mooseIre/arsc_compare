@@ -1,11 +1,13 @@
 package com.android.systemui;
 
 import com.android.keyguard.fod.policy.MiuiGxzwPolicy;
+import com.android.systemui.recents.MiuiRecentProxy;
 import com.android.systemui.statusbar.notification.policy.NotificationAlertController;
 import com.android.systemui.statusbar.notification.policy.NotificationCountLimitPolicy;
 import com.android.systemui.statusbar.notification.policy.NotificationDynamicFpsController;
 import com.android.systemui.statusbar.policy.MiuiHeadsUpPolicy;
 import com.android.systemui.statusbar.policy.MiuiNotificationShadePolicy;
+import com.android.systemui.vendor.OrientationPolicy;
 
 public final class MiuiVendorServices_MembersInjector {
     public static void injectMWallpaperZoomOutService(MiuiVendorServices miuiVendorServices, MiuiWallpaperZoomOutService miuiWallpaperZoomOutService) {
@@ -34,5 +36,13 @@ public final class MiuiVendorServices_MembersInjector {
 
     public static void injectMMiuiNotificationShadePolicy(MiuiVendorServices miuiVendorServices, MiuiNotificationShadePolicy miuiNotificationShadePolicy) {
         miuiVendorServices.mMiuiNotificationShadePolicy = miuiNotificationShadePolicy;
+    }
+
+    public static void injectMMiuiRecentProxy(MiuiVendorServices miuiVendorServices, MiuiRecentProxy miuiRecentProxy) {
+        miuiVendorServices.mMiuiRecentProxy = miuiRecentProxy;
+    }
+
+    public static void injectMOrientationPolicy(MiuiVendorServices miuiVendorServices, OrientationPolicy orientationPolicy) {
+        miuiVendorServices.mOrientationPolicy = orientationPolicy;
     }
 }

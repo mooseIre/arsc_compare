@@ -137,6 +137,7 @@ public class QSControlCenterPanel extends FrameLayout implements ConfigurationCo
     private View mTileView0;
     private LinearLayout mTilesContainer;
     private final int mTouchSlop;
+    private boolean mTouchable;
     private int mTransLineNum;
     private ArrayList<View> mTransViews;
     private VelocityTracker mVelocityTracker;
@@ -157,6 +158,7 @@ public class QSControlCenterPanel extends FrameLayout implements ConfigurationCo
         this.mBigTileTransAnimArr = new HashMap<>();
         this.mTransViews = new ArrayList<>();
         this.mLocation = new int[2];
+        this.mTouchable = true;
         this.mContext = context;
         this.mPanelController = (ControlPanelController) Dependency.get(ControlPanelController.class);
         this.mPaddingHorizontal = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_panel_margin_horizontal);
@@ -464,7 +466,10 @@ public class QSControlCenterPanel extends FrameLayout implements ConfigurationCo
         if (this.DEBUG) {
             Log.d("QSControlCenterPanel", "dispatchTouchEvent " + motionEvent.getAction());
         }
-        return super.dispatchTouchEvent(motionEvent);
+        if (this.mTouchable || motionEvent.getActionMasked() != 5) {
+            return super.dispatchTouchEvent(motionEvent);
+        }
+        return true;
     }
 
     public boolean onInterceptTouchEvent(MotionEvent motionEvent) {
@@ -837,7 +842,7 @@ public class QSControlCenterPanel extends FrameLayout implements ConfigurationCo
             this.mFootPanel.setTranslationY(((float) this.mExpandHeightThres) * min);
             this.mQuickQsControlCenterTileLayout.setExpandRatio(min);
             this.mQsControlScrollView.srcollTotratio(min);
-            if (this.mExpandHeightThres < this.mQuickQsControlCenterTileLayout.caculateExpandHeight() || min == 0.0f) {
+            if (this.mExpandHeightThres <= this.mQuickQsControlCenterTileLayout.caculateExpandHeight() || min == 0.0f) {
                 updateFootPanelLayoutBtRatio(min);
             }
         }
@@ -1281,23 +1286,26 @@ public class QSControlCenterPanel extends FrameLayout implements ConfigurationCo
             addTransAnimateView(this.mLandCtrFooter.findViewById(C0015R$id.footer_text), this.mFootPanelBaseIdx);
             addTransAnimateView(this.mLandCtrFooter.findViewById(C0015R$id.footer_icon), this.mFootPanelBaseIdx);
         }
-        for (int i2 = 0; i2 < this.mTransLineNum; i2++) {
+        int i2 = 0;
+        for (int i3 = 0; i3 < this.mTransLineNum; i3++) {
             ArrayList arrayList3 = new ArrayList();
             ArrayList arrayList4 = new ArrayList();
             Iterator<View> it2 = this.mTransViews.iterator();
             while (it2.hasNext()) {
                 View next2 = it2.next();
-                if (((Integer) next2.getTag(C0015R$id.tag_control_center_trans)).intValue() == i2) {
-                    if (i2 == 2 || i2 == 3) {
+                if (((Integer) next2.getTag(C0015R$id.tag_control_center_trans)).intValue() == i3) {
+                    if (i3 == 2 || i3 == 3) {
                         arrayList3.add(Folme.useAt(next2).state());
-                        this.mBigTileTransAnimArr.put(Integer.valueOf(i2), arrayList3);
+                        this.mBigTileTransAnimArr.put(Integer.valueOf(i3), arrayList3);
                     } else {
                         arrayList4.add(next2);
                     }
                 }
             }
-            if (arrayList4.size() > 0) {
-                this.mPanelTransAnimMap.put(Integer.valueOf(i2), Folme.useAt((View[]) arrayList4.toArray(new View[arrayList4.size()])).state());
+            Iterator it3 = arrayList4.iterator();
+            while (it3.hasNext()) {
+                this.mPanelTransAnimMap.put(Integer.valueOf(i2), Folme.useAt((View) it3.next()).state());
+                i2++;
             }
         }
     }
@@ -1438,6 +1446,19 @@ public class QSControlCenterPanel extends FrameLayout implements ConfigurationCo
             animConfig6.setEase(EaseManager.getStyle(-2, 0.99f, 0.2f));
             state2.fromTo(animState7, animState8, animConfig6);
         }
+    }
+
+    public void finishCollapse() {
+        if (this.mControlPanelContentView.getVisibility() == 0) {
+            this.mControlPanelContentView.setVisibility(4);
+        }
+        if (isOrientationPortrait()) {
+            this.mQuickQsControlCenterTileLayout.setExpanded(false);
+        }
+    }
+
+    public void setTouchable(boolean z) {
+        this.mTouchable = z;
     }
 
     class H extends Handler {

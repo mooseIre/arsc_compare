@@ -12,6 +12,6 @@ public final /* synthetic */ class $$Lambda$MiuiQSTileHostInjector$UhAUapaTjkLUf
     }
 
     public final void accept(Object obj) {
-        MiuiQSTileHostInjector.lambda$switchControlCenter$1((QSTile) obj);
+        ((QSTile) obj).refreshState();
     }
 }

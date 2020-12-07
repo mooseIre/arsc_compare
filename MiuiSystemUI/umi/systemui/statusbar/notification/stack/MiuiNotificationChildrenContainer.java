@@ -39,6 +39,9 @@ public final class MiuiNotificationChildrenContainer extends NotificationChildre
     private int mMiuiAppIconSize;
     private int mOverflowNumberMarginEnd;
 
+    public void setShelfIconVisible(boolean z) {
+    }
+
     /* JADX INFO: super call moved to the top of the method (can break code semantics) */
     public MiuiNotificationChildrenContainer(@NotNull Context context, @Nullable AttributeSet attributeSet) {
         super(context, attributeSet);
@@ -129,6 +132,14 @@ public final class MiuiNotificationChildrenContainer extends NotificationChildre
                         float actualHeight = (float) animatedBackground.getActualHeight();
                         if (viewState != null) {
                             float f = (float) viewState.height;
+                            if (actualHeight == f) {
+                                firstChildBackground.setVisibility(0);
+                                ExpandableNotificationRow expandableNotificationRow4 = this.mContainingNotification;
+                                Intrinsics.checkExpressionValueIsNotNull(expandableNotificationRow4, "mContainingNotification");
+                                animatedBackground.setVisibility(expandableNotificationRow4.isDimmed() ? 4 : 0);
+                                this.isGroupBackgroundAnimating = false;
+                                return;
+                            }
                             ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{0.0f, 1.0f});
                             Intrinsics.checkExpressionValueIsNotNull(ofFloat, "anim");
                             ofFloat.setInterpolator(new DecelerateInterpolator());
@@ -142,14 +153,24 @@ public final class MiuiNotificationChildrenContainer extends NotificationChildre
                         throw null;
                     }
                     float actualHeight2 = (float) animatedBackground.getActualHeight();
-                    ExpandableNotificationRow expandableNotificationRow4 = this.mContainingNotification;
-                    Intrinsics.checkExpressionValueIsNotNull(expandableNotificationRow4, "mContainingNotification");
-                    ExpandableViewState viewState2 = expandableNotificationRow4.getViewState();
+                    ExpandableNotificationRow expandableNotificationRow5 = this.mContainingNotification;
+                    Intrinsics.checkExpressionValueIsNotNull(expandableNotificationRow5, "mContainingNotification");
+                    ExpandableViewState viewState2 = expandableNotificationRow5.getViewState();
                     if (viewState2 != null) {
+                        float f2 = (float) viewState2.height;
+                        if (actualHeight2 == f2) {
+                            animatedBackground.setVisibility(0);
+                            animatedBackground.setAlpha(1.0f);
+                            ExpandableNotificationRow expandableNotificationRow6 = this.mContainingNotification;
+                            Intrinsics.checkExpressionValueIsNotNull(expandableNotificationRow6, "mContainingNotification");
+                            animatedBackground.setActualHeight(expandableNotificationRow6.getActualHeight());
+                            this.isGroupBackgroundAnimating = false;
+                            return;
+                        }
                         float translationY = animatedBackground.getTranslationY();
                         ValueAnimator ofFloat2 = ValueAnimator.ofFloat(new float[]{0.0f, 1.0f});
                         ofFloat2.addListener(new MiuiNotificationChildrenContainer$startBackgroundAnimation$3(this, animatedBackground, firstChildBackground));
-                        ofFloat2.addUpdateListener(new MiuiNotificationChildrenContainer$startBackgroundAnimation$4(this, actualHeight2, (float) viewState2.height, animatedBackground, translationY));
+                        ofFloat2.addUpdateListener(new MiuiNotificationChildrenContainer$startBackgroundAnimation$4(this, actualHeight2, f2, animatedBackground, translationY));
                         Intrinsics.checkExpressionValueIsNotNull(ofFloat2, "anim");
                         ofFloat2.setInterpolator(new DecelerateInterpolator());
                         ofFloat2.setDuration((long) 360);
@@ -184,32 +205,39 @@ public final class MiuiNotificationChildrenContainer extends NotificationChildre
     }
 
     public void updateChildrenHeaderAppearance() {
-        super.updateChildrenHeaderAppearance();
+        if (NotificationSettingsHelper.showGoogleStyle()) {
+            super.updateChildrenHeaderAppearance();
+        }
         updateMiuiHeader();
     }
 
     private final void updateMiuiHeader() {
-        if (!NotificationSettingsHelper.showGoogleStyle()) {
-            NotificationHeaderView notificationHeaderView = this.mNotificationHeader;
-            Intrinsics.checkExpressionValueIsNotNull(notificationHeaderView, "mNotificationHeader");
-            notificationHeaderView.setVisibility(8);
-            setAppIcon();
-            if (this.mGroupHeader == null) {
-                View inflate = LayoutInflater.from(getContext()).inflate(C0017R$layout.notification_group_header, this, false);
-                this.mGroupHeader = inflate;
-                if (inflate != null) {
-                    this.mCollapsedButton = (ImageView) inflate.findViewById(C0015R$id.collapse_button);
-                    View view = this.mGroupHeader;
-                    if (view != null) {
-                        this.mGroupInfo = (TextView) view.findViewById(C0015R$id.group_info);
-                        ImageView imageView = this.mCollapsedButton;
-                        if (imageView != null) {
-                            imageView.setOnClickListener(this.mHeaderClickListener);
-                            addView(this.mGroupHeader, 0);
-                        } else {
-                            Intrinsics.throwNpe();
-                            throw null;
-                        }
+        if (NotificationSettingsHelper.showGoogleStyle()) {
+            View view = this.mGroupHeader;
+            if (view != null) {
+                removeView(view);
+                this.mGroupHeader = null;
+                updateAppIcon();
+                return;
+            }
+            return;
+        }
+        NotificationHeaderView notificationHeaderView = this.mNotificationHeader;
+        Intrinsics.checkExpressionValueIsNotNull(notificationHeaderView, "mNotificationHeader");
+        notificationHeaderView.setVisibility(8);
+        updateAppIcon();
+        if (this.mGroupHeader == null) {
+            View inflate = LayoutInflater.from(getContext()).inflate(C0017R$layout.notification_group_header, this, false);
+            this.mGroupHeader = inflate;
+            if (inflate != null) {
+                this.mCollapsedButton = (ImageView) inflate.findViewById(C0015R$id.collapse_button);
+                View view2 = this.mGroupHeader;
+                if (view2 != null) {
+                    this.mGroupInfo = (TextView) view2.findViewById(C0015R$id.group_info);
+                    ImageView imageView = this.mCollapsedButton;
+                    if (imageView != null) {
+                        imageView.setOnClickListener(this.mHeaderClickListener);
+                        addView(this.mGroupHeader, 0);
                     } else {
                         Intrinsics.throwNpe();
                         throw null;
@@ -218,26 +246,29 @@ public final class MiuiNotificationChildrenContainer extends NotificationChildre
                     Intrinsics.throwNpe();
                     throw null;
                 }
+            } else {
+                Intrinsics.throwNpe();
+                throw null;
             }
-            TextView textView = this.mGroupInfo;
-            if (textView != null) {
-                StringBuilder sb = new StringBuilder();
-                ExpandableNotificationRow expandableNotificationRow = this.mContainingNotification;
-                Intrinsics.checkExpressionValueIsNotNull(expandableNotificationRow, "mContainingNotification");
-                NotificationEntry entry = expandableNotificationRow.getEntry();
-                Intrinsics.checkExpressionValueIsNotNull(entry, "mContainingNotification.entry");
-                ExpandedNotification sbn = entry.getSbn();
-                Intrinsics.checkExpressionValueIsNotNull(sbn, "mContainingNotification.entry.sbn");
-                sb.append(sbn.getAppName());
-                sb.append("(");
-                sb.append(this.mAttachedChildren.size());
-                sb.append(")");
-                textView.setText(sb.toString());
-                return;
-            }
-            Intrinsics.throwNpe();
-            throw null;
         }
+        TextView textView = this.mGroupInfo;
+        if (textView != null) {
+            StringBuilder sb = new StringBuilder();
+            ExpandableNotificationRow expandableNotificationRow = this.mContainingNotification;
+            Intrinsics.checkExpressionValueIsNotNull(expandableNotificationRow, "mContainingNotification");
+            NotificationEntry entry = expandableNotificationRow.getEntry();
+            Intrinsics.checkExpressionValueIsNotNull(entry, "mContainingNotification.entry");
+            ExpandedNotification sbn = entry.getSbn();
+            Intrinsics.checkExpressionValueIsNotNull(sbn, "mContainingNotification.entry.sbn");
+            sb.append(sbn.getAppName());
+            sb.append("(");
+            sb.append(this.mAttachedChildren.size());
+            sb.append(")");
+            textView.setText(sb.toString());
+            return;
+        }
+        Intrinsics.throwNpe();
+        throw null;
     }
 
     public void updateState(@NotNull ExpandableViewState expandableViewState, @NotNull AmbientState ambientState) {
@@ -433,11 +464,17 @@ public final class MiuiNotificationChildrenContainer extends NotificationChildre
         Intrinsics.checkParameterIsNotNull(onClickListener, "listener");
         Intrinsics.checkParameterIsNotNull(statusBarNotification, "notification");
         super.reInflateViews(onClickListener, statusBarNotification);
-        setAppIcon();
+        updateAppIcon();
     }
 
-    private final void setAppIcon() {
-        if (!NotificationSettingsHelper.showGoogleStyle() && this.mAppIcon == null) {
+    private final void updateAppIcon() {
+        if (NotificationSettingsHelper.showGoogleStyle()) {
+            ImageView imageView = this.mAppIcon;
+            if (imageView != null) {
+                removeView(imageView);
+                this.mAppIcon = null;
+            }
+        } else if (this.mAppIcon == null) {
             View inflate = LayoutInflater.from(getContext()).inflate(C0017R$layout.notification_template_part_app_icon, this, false);
             if (inflate != null) {
                 this.mAppIcon = (ImageView) inflate;
@@ -478,6 +515,7 @@ public final class MiuiNotificationChildrenContainer extends NotificationChildre
             if (expandableNotificationRow != null) {
                 NotificationBackgroundView animatedBackground = ((MiuiExpandableNotificationRow) expandableNotificationRow).getAnimatedBackground();
                 NotificationBackgroundView firstChildBackground = getFirstChildBackground();
+                int i = 0;
                 if (this.mChildrenExpanded) {
                     animatedBackground.setVisibility(8);
                     firstChildBackground.setVisibility(0);
@@ -496,7 +534,12 @@ public final class MiuiNotificationChildrenContainer extends NotificationChildre
                     ExpandableViewState viewState4 = expandableNotificationRow3.getViewState();
                     if (viewState4 != null) {
                         animatedBackground.setActualHeight(viewState4.height);
-                        animatedBackground.setVisibility(0);
+                        ExpandableNotificationRow expandableNotificationRow4 = this.mContainingNotification;
+                        Intrinsics.checkExpressionValueIsNotNull(expandableNotificationRow4, "mContainingNotification");
+                        if (expandableNotificationRow4.isDimmed()) {
+                            i = 4;
+                        }
+                        animatedBackground.setVisibility(i);
                         animatedBackground.setTranslationY(0.0f);
                         animatedBackground.setAlpha(1.0f);
                         firstChildBackground.setVisibility(8);
@@ -529,5 +572,12 @@ public final class MiuiNotificationChildrenContainer extends NotificationChildre
     /* access modifiers changed from: protected */
     public int getOverflowNumberMarginEnd() {
         return this.mOverflowNumberMarginEnd;
+    }
+
+    public float getGroupExpandFraction() {
+        if (NotificationSettingsHelper.showGoogleStyle()) {
+            return super.getGroupExpandFraction();
+        }
+        return 0.0f;
     }
 }

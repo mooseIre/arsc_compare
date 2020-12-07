@@ -17,10 +17,11 @@ import com.android.systemui.C0021R$string;
 import com.android.systemui.C0022R$style;
 import com.android.systemui.statusbar.notification.ExpandedNotification;
 import com.miui.systemui.BuildConfig;
+import miui.telephony.TelephonyManager;
 import miui.util.ResourceMapper;
 
 public class UsbNotificationController {
-    public static final boolean SUPPORT_DISABLE_USB_NOTIF_BY_SIM = (BuildConfig.IS_CM_CUSTOMIZATION_TEST || BuildConfig.IS_CM_CUSTOMIZATION);
+    public static final boolean SUPPORT_DISABLE_USB_BY_SIM = (BuildConfig.IS_CM_CUSTOMIZATION_TEST || BuildConfig.IS_CM_CUSTOMIZATION);
     private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
@@ -37,6 +38,18 @@ public class UsbNotificationController {
                 }
             } else if ("android.hardware.usb.action.USB_STATE".equals(action)) {
                 UsbNotificationController.this.refreshWhenUsbConnectChanged(intent.getBooleanExtra("connected", false));
+            } else if ("android.intent.action.SIM_STATE_CHANGED".equals(action) && UsbNotificationController.SUPPORT_DISABLE_USB_BY_SIM) {
+                int phoneCount = TelephonyManager.getDefault().getPhoneCount();
+                int i = 0;
+                for (int i2 = 0; i2 < phoneCount; i2++) {
+                    if (TelephonyManager.getDefault().hasIccCard(i2)) {
+                        i++;
+                    }
+                }
+                if (i > 0) {
+                    Log.d("UsbNotificationController", "has sim");
+                    Settings.System.putInt(UsbNotificationController.this.mContext.getContentResolver(), "disable_usb_by_sim", 0);
+                }
             }
         }
     };
@@ -48,14 +61,14 @@ public class UsbNotificationController {
     public boolean mDisableUsbBySim;
     private final ContentObserver mDisableUsbObserver = new ContentObserver(this.mHandler) {
         public void onChange(boolean z) {
-            boolean z2 = UsbNotificationController.SUPPORT_DISABLE_USB_NOTIF_BY_SIM;
+            boolean z2 = UsbNotificationController.SUPPORT_DISABLE_USB_BY_SIM;
             UsbNotificationController usbNotificationController = UsbNotificationController.this;
             boolean z3 = true;
-            boolean unused = usbNotificationController.mDisableUsbBySim = Settings.System.getInt(usbNotificationController.mContext.getContentResolver(), "DISABLE_USB_NOTIF_BY_SIM", z2 ? 1 : 0) != 0;
-            if (!UsbNotificationController.SUPPORT_DISABLE_USB_NOTIF_BY_SIM && UsbNotificationController.this.mDisableUsbBySim) {
+            boolean unused = usbNotificationController.mDisableUsbBySim = Settings.System.getInt(usbNotificationController.mContext.getContentResolver(), "disable_usb_by_sim", z2 ? 1 : 0) != 0;
+            if (!UsbNotificationController.SUPPORT_DISABLE_USB_BY_SIM && UsbNotificationController.this.mDisableUsbBySim) {
                 Log.d("UsbNotificationController", "not support disable usb by sim!");
                 boolean unused2 = UsbNotificationController.this.mDisableUsbBySim = false;
-                Settings.System.putInt(UsbNotificationController.this.mContext.getContentResolver(), "DISABLE_USB_NOTIF_BY_SIM", 0);
+                Settings.System.putInt(UsbNotificationController.this.mContext.getContentResolver(), "disable_usb_by_sim", 0);
             }
             if (!UsbNotificationController.this.mDisableUsbBySim) {
                 if (UsbNotificationController.this.mIsDialogShowing && UsbNotificationController.this.mUsbAlert != null) {
@@ -95,17 +108,20 @@ public class UsbNotificationController {
         }
         this.mIsScreenshotMode = MiuiThemeHelper.isScreenshotMode();
         this.mEnableUsbModeSelection = this.mContext.getResources().getBoolean(285474847);
-        this.mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor("DISABLE_USB_NOTIF_BY_SIM"), false, this.mDisableUsbObserver);
+        this.mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor("disable_usb_by_sim"), false, this.mDisableUsbObserver);
         this.mDisableUsbObserver.onChange(false);
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("android.intent.action.BATTERY_CHANGED");
         intentFilter.addAction("android.hardware.usb.action.USB_STATE");
+        if (SUPPORT_DISABLE_USB_BY_SIM) {
+            intentFilter.addAction("android.intent.action.SIM_STATE_CHANGED");
+        }
         this.mContext.registerReceiver(this.mBroadcastReceiver, intentFilter);
     }
 
     /* access modifiers changed from: private */
     public void refreshWhenUsbConnectChanged(boolean z) {
-        if (SUPPORT_DISABLE_USB_NOTIF_BY_SIM && z && this.mDisableUsbBySim && !this.mIsDialogShowing) {
+        if (SUPPORT_DISABLE_USB_BY_SIM && z && this.mDisableUsbBySim && !this.mIsDialogShowing) {
             this.mIsDialogShowing = true;
             AlertDialog.Builder builder = new AlertDialog.Builder(this.mContext, C0022R$style.Theme_Dialog_Alert);
             builder.setCancelable(true);

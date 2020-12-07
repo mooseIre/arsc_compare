@@ -332,5 +332,6 @@ public class StatusBarIconControllerImpl extends StatusBarIconList implements Tu
 
     public void onDensityOrFontScaleChanged() {
         loadDimens();
+        this.mIconGroups.forEach($$Lambda$StatusBarIconControllerImpl$Y4HqZsKlJgHwiVdMKFajVijxNM.INSTANCE);
     }
 }

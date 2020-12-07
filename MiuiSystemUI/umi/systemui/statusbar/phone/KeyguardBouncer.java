@@ -36,6 +36,7 @@ import com.android.systemui.plugins.ActivityStarter;
 import com.android.systemui.plugins.FalsingManager;
 import com.android.systemui.shared.system.SysUiStatsLog;
 import com.android.systemui.statusbar.policy.KeyguardStateController;
+import com.miui.systemui.DeviceConfig;
 import com.miui.systemui.graphics.BitmapUtils;
 import com.miui.systemui.util.HapticFeedBackImpl;
 import java.io.PrintWriter;
@@ -175,7 +176,7 @@ public class KeyguardBouncer {
         if (this.mBgImageView == null) {
             return;
         }
-        if (!this.isDefaultTheme || !KeyguardWallpaperUtils.isWallpaperShouldBlur()) {
+        if (!this.isDefaultTheme || !KeyguardWallpaperUtils.isWallpaperShouldBlur() || DeviceConfig.isLowGpuDevice()) {
             new AsyncTask<Void, Void, Drawable>() {
                 /* access modifiers changed from: protected */
                 public Drawable doInBackground(Void... voidArr) {

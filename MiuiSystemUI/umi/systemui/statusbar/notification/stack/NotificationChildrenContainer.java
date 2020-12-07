@@ -224,7 +224,7 @@ public class NotificationChildrenContainer extends ViewGroup {
         int i7 = 0;
         while (i7 < min) {
             ExpandableNotificationRow expandableNotificationRow = this.mAttachedChildren.get(i7);
-            expandableNotificationRow.setSingleLineWidthIndention((!(i7 == i6) || (textView = this.mOverflowNumber) == null) ? 0 : textView.getMeasuredWidth());
+            expandableNotificationRow.setSingleLineWidthIndention((!(i7 == i6) || (textView = this.mOverflowNumber) == null) ? 0 : textView.getMeasuredWidth() + getOverflowNumberMarginEnd());
             expandableNotificationRow.measure(i4, i3);
             this.mDividers.get(i7).measure(i4, makeMeasureSpec);
             if (expandableNotificationRow.getVisibility() != 8) {

@@ -13,6 +13,7 @@ import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewConfiguration;
+import android.view.ViewGroup;
 import android.view.ViewPropertyAnimator;
 import android.view.ViewTreeObserver;
 import android.view.accessibility.AccessibilityManager;
@@ -80,6 +81,7 @@ import java.io.FileDescriptor;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+import kotlin.TypeCastException;
 import kotlin.Unit;
 import kotlin.collections.CollectionsKt;
 import kotlin.jvm.internal.Intrinsics;
@@ -458,9 +460,9 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
         float height = (float) header.getHeight();
         float calculateQsTopPadding = super.calculateQsTopPadding();
         if (f > ((float) 0)) {
-            return RangesKt___RangesKt.coerceAtMost(height + f, calculateQsTopPadding);
+            return RangesKt___RangesKt.coerceAtMost(this.mQsTopPadding + f, calculateQsTopPadding);
         }
-        return RangesKt___RangesKt.coerceAtLeast(calculateQsTopPadding + f, height);
+        return RangesKt___RangesKt.coerceAtLeast(this.mQsTopPadding + f, height);
     }
 
     /* access modifiers changed from: private */
@@ -809,6 +811,7 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
     public void expand(boolean z) {
         super.expand(z);
         setMPanelAppeared(true);
+        updateBlur();
         updateAwePauseResumeStatus();
     }
 
@@ -909,25 +912,74 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
 
     public void updateResources(boolean z) {
         super.updateResources(z);
-        if (z) {
-            boolean isDefaultLockScreenTheme = MiuiKeyguardUtils.isDefaultLockScreenTheme();
-            if (isDefaultLockScreenTheme != this.mIsDefaultTheme) {
-                String str = PanelViewController.TAG;
-                Slog.i(str, "default theme change: mIsDefaultTheme = " + this.mIsDefaultTheme + ", isDefaultTheme = " + isDefaultLockScreenTheme);
-            }
-            this.mIsDefaultTheme = isDefaultLockScreenTheme;
-            ChargeUtils.disableChargeAnimation(false);
-            if (this.mKeyguardShowing) {
-                if (this.mIsDefaultTheme) {
-                    removeAwesomeLockScreen();
-                } else {
-                    addAwesomeLockScreenIfNeed(true);
-                    updateAwePauseResumeStatus();
+        NotificationPanelView notificationPanelView = this.mView;
+        Intrinsics.checkExpressionValueIsNotNull(notificationPanelView, "mView");
+        Context context = notificationPanelView.getContext();
+        Intrinsics.checkExpressionValueIsNotNull(context, "mView.context");
+        int dimensionPixelSize = context.getResources().getDimensionPixelSize(C0012R$dimen.notification_left_right_margin);
+        FrameLayout frameLayout = this.mQsFrame;
+        if (frameLayout != null) {
+            ViewGroup.LayoutParams layoutParams = frameLayout.getLayoutParams();
+            if (layoutParams != null) {
+                FrameLayout.LayoutParams layoutParams2 = (FrameLayout.LayoutParams) layoutParams;
+                if (layoutParams2.leftMargin != dimensionPixelSize) {
+                    layoutParams2.leftMargin = dimensionPixelSize;
+                    layoutParams2.rightMargin = dimensionPixelSize;
+                    FrameLayout frameLayout2 = this.mQsFrame;
+                    if (frameLayout2 != null) {
+                        frameLayout2.setLayoutParams(layoutParams2);
+                    } else {
+                        Intrinsics.throwNpe();
+                        throw null;
+                    }
                 }
+                NotificationStackScrollLayout notificationStackScrollLayout = this.mNotificationStackScroller;
+                if (notificationStackScrollLayout != null) {
+                    ViewGroup.LayoutParams layoutParams3 = notificationStackScrollLayout.getLayoutParams();
+                    if (layoutParams3 != null) {
+                        FrameLayout.LayoutParams layoutParams4 = (FrameLayout.LayoutParams) layoutParams3;
+                        if (layoutParams4.leftMargin != dimensionPixelSize) {
+                            layoutParams4.leftMargin = dimensionPixelSize;
+                            layoutParams4.rightMargin = dimensionPixelSize;
+                            NotificationStackScrollLayout notificationStackScrollLayout2 = this.mNotificationStackScroller;
+                            if (notificationStackScrollLayout2 != null) {
+                                notificationStackScrollLayout2.setLayoutParams(layoutParams4);
+                            } else {
+                                Intrinsics.throwNpe();
+                                throw null;
+                            }
+                        }
+                        if (z) {
+                            boolean isDefaultLockScreenTheme = MiuiKeyguardUtils.isDefaultLockScreenTheme();
+                            if (isDefaultLockScreenTheme != this.mIsDefaultTheme) {
+                                String str = PanelViewController.TAG;
+                                Slog.i(str, "default theme change: mIsDefaultTheme = " + this.mIsDefaultTheme + ", isDefaultTheme = " + isDefaultLockScreenTheme);
+                            }
+                            this.mIsDefaultTheme = isDefaultLockScreenTheme;
+                            ChargeUtils.disableChargeAnimation(false);
+                            if (this.mKeyguardShowing) {
+                                if (this.mIsDefaultTheme) {
+                                    removeAwesomeLockScreen();
+                                } else {
+                                    addAwesomeLockScreenIfNeed(true);
+                                    updateAwePauseResumeStatus();
+                                }
+                            }
+                            updateThemeBackground();
+                            updateNotificationStackScrollerVisibility();
+                            return;
+                        }
+                        return;
+                    }
+                    throw new TypeCastException("null cannot be cast to non-null type android.widget.FrameLayout.LayoutParams");
+                }
+                Intrinsics.throwNpe();
+                throw null;
             }
-            updateThemeBackground();
-            updateNotificationStackScrollerVisibility();
+            throw new TypeCastException("null cannot be cast to non-null type android.widget.FrameLayout.LayoutParams");
         }
+        Intrinsics.throwNpe();
+        throw null;
     }
 
     private final void updateThemeBackground() {
@@ -1580,7 +1632,7 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
         if (valueAnimator != null) {
             valueAnimator.cancel();
         }
-        if (z && KeyguardWallpaperUtils.isWallpaperShouldBlur()) {
+        if (z && KeyguardWallpaperUtils.isWallpaperShouldBlur() && !DeviceConfig.isLowGpuDevice()) {
             ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this.mView, "alpha", new float[]{this.mKeyguardBouncerFraction, 0.0f});
             this.mBouncerFractionAnimator = ofFloat;
             if (ofFloat != null) {

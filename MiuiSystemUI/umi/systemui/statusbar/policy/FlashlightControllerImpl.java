@@ -33,6 +33,7 @@ public class FlashlightControllerImpl implements FlashlightController {
     private final CameraManager.TorchCallback mTorchCallback = new CameraManager.TorchCallback() {
         public void onTorchModeUnavailable(String str) {
             if (TextUtils.equals(str, FlashlightControllerImpl.this.mCameraId)) {
+                Log.w("FlashlightController", "flashlight unavailable cause torch mod unavailable. camera id:" + str);
                 setCameraAvailable(false);
                 Settings.Secure.putInt(FlashlightControllerImpl.this.mContext.getContentResolver(), "flashlight_available", 0);
             }
@@ -45,6 +46,7 @@ public class FlashlightControllerImpl implements FlashlightController {
                 Settings.Secure.putInt(FlashlightControllerImpl.this.mContext.getContentResolver(), "flashlight_available", 1);
                 Settings.Secure.putInt(FlashlightControllerImpl.this.mContext.getContentResolver(), "flashlight_enabled", z ? 1 : 0);
                 FlashlightControllerImpl.this.mContext.sendBroadcast(new Intent("com.android.settings.flashlight.action.FLASHLIGHT_CHANGED"));
+                Settings.Global.putInt(FlashlightControllerImpl.this.mContext.getContentResolver(), "torch_state", z);
             }
         }
 

@@ -124,10 +124,14 @@ public class NotificationRankingManager {
         if (NotificationRankingManagerKt.isColorizedForegroundService(notificationEntry)) {
             return 3;
         }
-        if (!getUsePeopleFiltering() || !isConversation(notificationEntry)) {
-            return (isRowHeadsUp || isImportantMedia || access$isSystemMax || isHighPriority(notificationEntry)) ? 5 : 6;
+        if (getUsePeopleFiltering() && isConversation(notificationEntry)) {
+            return 4;
         }
-        return 4;
+        if (isRowHeadsUp || isImportantMedia || access$isSystemMax) {
+            return 5;
+        }
+        boolean isHighPriority = isHighPriority(notificationEntry);
+        return 5;
     }
 
     private final void updateRankingForEntries(Iterable<NotificationEntry> iterable) {

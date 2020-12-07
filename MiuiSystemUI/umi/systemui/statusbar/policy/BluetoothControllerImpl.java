@@ -58,6 +58,7 @@ public class BluetoothControllerImpl implements BluetoothController, BluetoothCa
         }
     };
     private boolean mIsActive;
+    private CachedBluetoothDevice mLastActiveDevice;
     private final LocalBluetoothManager mLocalBluetoothManager;
     private int mState = 10;
     private final UserManager mUserManager;
@@ -323,6 +324,11 @@ public class BluetoothControllerImpl implements BluetoothController, BluetoothCa
             Log.d("BluetoothController", "ActiveDeviceChanged=" + cachedBluetoothDevice.getAddress() + " profileId=" + i);
         }
         updateActive();
+        if (!this.mIsActive || cachedBluetoothDevice == null) {
+            this.mLastActiveDevice = null;
+        } else {
+            this.mLastActiveDevice = cachedBluetoothDevice;
+        }
         this.mHandler.sendEmptyMessage(2);
     }
 
@@ -330,6 +336,7 @@ public class BluetoothControllerImpl implements BluetoothController, BluetoothCa
         if (DEBUG) {
             Log.d("BluetoothController", "ACLConnectionStateChanged=" + cachedBluetoothDevice.getAddress() + " " + stateToString(i));
         }
+        this.mLastActiveDevice = null;
         this.mCachedState.remove(cachedBluetoothDevice);
         updateConnected();
         this.mHandler.sendEmptyMessage(2);
@@ -441,11 +448,14 @@ public class BluetoothControllerImpl implements BluetoothController, BluetoothCa
         if (this.mConnectedDevices.isEmpty()) {
             return "";
         }
-        List<CachedBluetoothDevice> list = this.mConnectedDevices;
-        CachedBluetoothDevice cachedBluetoothDevice = list.get(list.size() - 1);
-        if (cachedBluetoothDevice == null) {
+        CachedBluetoothDevice cachedBluetoothDevice = this.mLastActiveDevice;
+        if (cachedBluetoothDevice != null) {
+            return cachedBluetoothDevice.getName();
+        }
+        CachedBluetoothDevice cachedBluetoothDevice2 = this.mConnectedDevices.get(0);
+        if (cachedBluetoothDevice2 == null) {
             return "";
         }
-        return cachedBluetoothDevice.getName();
+        return cachedBluetoothDevice2.getName();
     }
 }

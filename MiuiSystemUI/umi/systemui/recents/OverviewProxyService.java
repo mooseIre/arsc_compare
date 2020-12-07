@@ -665,6 +665,12 @@ public class OverviewProxyService extends CurrentUserTracker implements Callback
                 access$3000.setFlag(4096, z);
                 access$3000.commitUpdate(OverviewProxyService.this.mContext.getDisplayId());
             }
+
+            public void setWindowState(int i, int i2, int i3) {
+                if (OverviewProxyService.this.mContext.getDisplayId() == i) {
+                    MiuiRecentProxy.setWindowStateInject(OverviewProxyService.this.mSysUiState, i, i2, i3);
+                }
+            }
         });
         startTracking();
         updateEnabledState();

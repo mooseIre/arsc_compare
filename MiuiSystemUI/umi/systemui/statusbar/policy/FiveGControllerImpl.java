@@ -4,6 +4,7 @@ import android.content.Context;
 import com.android.systemui.C0013R$drawable;
 import com.android.systemui.statusbar.policy.MiuiFiveGServiceClient;
 import com.android.systemui.statusbar.policy.MobileSignalController;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 
 public class FiveGControllerImpl {
@@ -77,6 +78,10 @@ public class FiveGControllerImpl {
             return C0013R$drawable.signal_5g_off;
         }
         return 0;
+    }
+
+    public void dump(PrintWriter printWriter) {
+        this.mFiveGServiceClient.dump(printWriter);
     }
 
     class FiveGStateListener implements MiuiFiveGServiceClient.IFiveGStateListener {

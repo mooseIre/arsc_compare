@@ -161,7 +161,7 @@ public class QSBigTileView extends QSTileView {
         }
     }
 
-    private void updateIndicatorTouch() {
+    public void updateIndicatorTouch() {
         this.mExpandIndicator.post(new Runnable() {
             public void run() {
                 int dimensionPixelSize = QSBigTileView.this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_big_tile_indicator_touch_h);

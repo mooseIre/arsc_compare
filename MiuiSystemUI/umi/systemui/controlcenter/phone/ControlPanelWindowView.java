@@ -33,7 +33,8 @@ public class ControlPanelWindowView extends FrameLayout {
     private ControlPanelContentView mContent;
     private boolean mContentShowing;
     private ControlCenter mControlCenter;
-    private QSControlCenterPanel mControlCenterPanel;
+    /* access modifiers changed from: private */
+    public QSControlCenterPanel mControlCenterPanel;
     private QSControlCenterTileLayout mControlCenterTileLayout;
     /* access modifiers changed from: private */
     public ControlPanelWindowManager mControlPanelWindowManager;
@@ -81,13 +82,13 @@ public class ControlPanelWindowView extends FrameLayout {
                 super.onAnimationEnd(animator);
                 boolean unused = ControlPanelWindowView.this.mAnimating = false;
                 ControlPanelWindowView.this.hideControlCenterWindow();
+                ControlPanelWindowView.this.mControlCenterPanel.finishCollapse();
             }
         };
         this.mExpandListener = new AnimatorListenerAdapter() {
             public void onAnimationEnd(Animator animator) {
                 super.onAnimationEnd(animator);
                 boolean unused = ControlPanelWindowView.this.mAnimating = false;
-                ControlPanelWindowView.this.showControlCenterWindow();
             }
         };
     }
@@ -344,6 +345,7 @@ public class ControlPanelWindowView extends FrameLayout {
     public void onControlPanelFinishCollapsed() {
         this.mExpandState = 0;
         this.mIsGetSelfEvent = false;
+        this.mControlPanelWindowManager.trimMemory();
     }
 
     public void collapsePanel() {
@@ -379,6 +381,7 @@ public class ControlPanelWindowView extends FrameLayout {
     }
 
     public void expandPanel() {
+        showControlCenterWindow();
         createAndStartAnimator(80, this.mExpandListener);
     }
 

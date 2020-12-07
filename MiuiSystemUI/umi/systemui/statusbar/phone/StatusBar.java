@@ -2329,6 +2329,10 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         });
     }
 
+    public void postAnimateOpenPanels() {
+        this.mHandler.sendEmptyMessage(1002);
+    }
+
     public void togglePanel() {
         if (this.mPanelExpanded) {
             this.mShadeController.animateCollapsePanels();
@@ -2400,9 +2404,13 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
                 showBouncerIfKeyguard();
             }
             this.mCommandQueue.recomputeDisableFlags(this.mDisplayId, this.mNotificationPanelViewController.hideStatusBarIconsWhenExpanded());
-            if (!this.mStatusBarKeyguardViewManager.isShowing()) {
-                WindowManagerGlobal.getInstance().trimMemory(20);
-            }
+            trimMemory();
+        }
+    }
+
+    public void trimMemory() {
+        if (!this.mStatusBarKeyguardViewManager.isShowing()) {
+            WindowManagerGlobal.getInstance().trimMemory(20);
         }
     }
 
@@ -2428,19 +2436,17 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
 
     public void setWindowState(int i, int i2, int i3) {
         if (i == this.mDisplayId) {
-            boolean z = true;
-            boolean z2 = i3 == 0;
-            if (!(this.mNotificationShadeWindowView == null || i2 != 1 || this.mStatusBarWindowState == i3)) {
-                this.mStatusBarWindowState = i3;
-                if (!z2 && this.mState == 0) {
-                    this.mStatusBarView.collapsePanel(false, false, 1.0f);
-                }
-                if (this.mStatusBarView != null) {
-                    if (i3 != 2) {
-                        z = false;
+            if (this.mNotificationShadeWindowView != null) {
+                boolean z = true;
+                if (i2 == 1 && this.mStatusBarWindowState != i3) {
+                    this.mStatusBarWindowState = i3;
+                    if (this.mStatusBarView != null) {
+                        if (i3 != 2) {
+                            z = false;
+                        }
+                        this.mStatusBarWindowHidden = z;
+                        updateHideIconsForBouncer(false);
                     }
-                    this.mStatusBarWindowHidden = z;
-                    updateHideIconsForBouncer(false);
                 }
             }
             updateBubblesVisibility();

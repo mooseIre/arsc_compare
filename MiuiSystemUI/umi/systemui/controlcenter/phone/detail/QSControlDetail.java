@@ -28,6 +28,7 @@ import com.android.systemui.C0022R$style;
 import com.android.systemui.Dependency;
 import com.android.systemui.controlcenter.phone.QSControlCenterPanel;
 import com.android.systemui.controlcenter.policy.ControlCenterActivityStarter;
+import com.android.systemui.controlcenter.qs.tileview.QSBigTileView;
 import com.android.systemui.controlcenter.utils.ControlCenterUtils;
 import com.android.systemui.plugins.qs.DetailAdapter;
 import com.android.systemui.qs.MiuiQSDetailItems;
@@ -379,9 +380,9 @@ public class QSControlDetail extends FrameLayout {
         if (this.mSwitchState != z || this.mSwitchEnabled != z2) {
             this.mSwitchState = z;
             this.mSwitchEnabled = z2;
-            this.mQsDetailHeaderSwitch.setChecked(z);
             this.mQsDetailHeaderSwitch.setEnabled(z2);
             if (z2) {
+                this.mQsDetailHeaderSwitch.setChecked(z);
                 SlidingButton slidingButton = this.mQsDetailHeaderSwitch;
                 StringBuilder sb = new StringBuilder();
                 sb.append(this.mDetailAdapter.getTitle());
@@ -407,8 +408,7 @@ public class QSControlDetail extends FrameLayout {
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void animateShowDetailAndTile() {
+    private void computeAnimationParams() {
         getLocationInWindowWithoutTransform(this.mFromView, this.mFromViewLocation);
         getLocationInWindowWithoutTransform(this.mToView, this.mToViewLocation);
         int width = this.mFromView.getWidth();
@@ -429,6 +429,11 @@ public class QSControlDetail extends FrameLayout {
         this.mToViewFrame[1] = this.mToView.getTop();
         this.mToViewFrame[2] = this.mToView.getRight();
         this.mToViewFrame[3] = this.mToView.getBottom();
+    }
+
+    /* access modifiers changed from: protected */
+    public void animateShowDetailAndTile() {
+        computeAnimationParams();
         this.mAnim.cancel();
         IStateStyle to = this.mAnim.setTo("fromLeft", Integer.valueOf(this.mFromViewFrame[0]), "fromTop", Integer.valueOf(this.mFromViewFrame[1]), "fromRight", Integer.valueOf(this.mFromViewFrame[2]), "fromBottom", Integer.valueOf(this.mFromViewFrame[3]), "toLeft", Integer.valueOf((this.mToViewFrame[0] + this.mFromViewLocation[0]) - this.mToViewLocation[0]), "toTop", Integer.valueOf((this.mToViewFrame[1] + this.mFromViewLocation[1]) - this.mToViewLocation[1]), "toRight", Integer.valueOf((this.mToViewFrame[2] + this.mFromViewLocation[2]) - this.mToViewLocation[2]), "toBottom", Integer.valueOf((this.mToViewFrame[3] + this.mFromViewLocation[3]) - this.mToViewLocation[3]));
         AnimConfig animConfig = new AnimConfig();
@@ -511,6 +516,10 @@ public class QSControlDetail extends FrameLayout {
 
             public void onComplete(Object obj) {
                 super.onComplete(obj);
+                QSControlDetail qSControlDetail = QSControlDetail.this;
+                View view = qSControlDetail.mFromView;
+                int[] iArr = qSControlDetail.mFromViewFrame;
+                view.setLeftTopRightBottom(iArr[0], iArr[1], iArr[2], iArr[3]);
                 ((ViewGroup) QSControlDetail.this.mFromView.getParent()).suppressLayout(false);
                 ((ViewGroup) QSControlDetail.this.mToView.getParent()).suppressLayout(false);
             }
@@ -520,8 +529,9 @@ public class QSControlDetail extends FrameLayout {
 
     /* access modifiers changed from: protected */
     public void animateHideDetailAndTile() {
+        computeAnimationParams();
         this.mAnim.cancel();
-        IStateStyle iStateStyle = this.mAnim;
+        IStateStyle to = this.mAnim.setTo("fromLeft", Integer.valueOf((this.mFromViewFrame[0] + this.mToViewLocation[0]) - this.mFromViewLocation[0]), "fromTop", Integer.valueOf((this.mFromViewFrame[1] + this.mToViewLocation[1]) - this.mFromViewLocation[1]), "fromRight", Integer.valueOf((this.mFromViewFrame[2] + this.mToViewLocation[2]) - this.mFromViewLocation[2]), "fromBottom", Integer.valueOf((this.mFromViewFrame[3] + this.mToViewLocation[3]) - this.mFromViewLocation[3]), "toLeft", Integer.valueOf(this.mToViewFrame[0]), "toTop", Integer.valueOf(this.mToViewFrame[1]), "toRight", Integer.valueOf(this.mToViewFrame[2]), "toBottom", Integer.valueOf(this.mToViewFrame[3]));
         AnimConfig animConfig = new AnimConfig();
         animConfig.setEase(-2, 0.8f, 0.3f);
         animConfig.addListeners(new TransitionListener() {
@@ -604,9 +614,13 @@ public class QSControlDetail extends FrameLayout {
                 ((ViewGroup) QSControlDetail.this.mFromView.getParent()).suppressLayout(false);
                 ((ViewGroup) QSControlDetail.this.mToView.getParent()).suppressLayout(false);
                 QSControlDetail.this.setVisibility(8);
+                View view3 = QSControlDetail.this.mFromView;
+                if (view3 instanceof QSBigTileView) {
+                    ((QSBigTileView) view3).updateIndicatorTouch();
+                }
             }
         });
-        iStateStyle.to("fromLeft", Integer.valueOf(this.mFromViewFrame[0]), "fromTop", Integer.valueOf(this.mFromViewFrame[1]), "fromRight", Integer.valueOf(this.mFromViewFrame[2]), "fromBottom", Integer.valueOf(this.mFromViewFrame[3]), "toLeft", Integer.valueOf((this.mToViewFrame[0] + this.mFromViewLocation[0]) - this.mToViewLocation[0]), "toTop", Integer.valueOf((this.mToViewFrame[1] + this.mFromViewLocation[1]) - this.mToViewLocation[1]), "toRight", Integer.valueOf((this.mToViewFrame[2] + this.mFromViewLocation[2]) - this.mToViewLocation[2]), "toBottom", Integer.valueOf((this.mToViewFrame[3] + this.mFromViewLocation[3]) - this.mToViewLocation[3]), animConfig);
+        to.to("fromLeft", Integer.valueOf(this.mFromViewFrame[0]), "fromTop", Integer.valueOf(this.mFromViewFrame[1]), "fromRight", Integer.valueOf(this.mFromViewFrame[2]), "fromBottom", Integer.valueOf(this.mFromViewFrame[3]), "toLeft", Integer.valueOf((this.mToViewFrame[0] + this.mFromViewLocation[0]) - this.mToViewLocation[0]), "toTop", Integer.valueOf((this.mToViewFrame[1] + this.mFromViewLocation[1]) - this.mToViewLocation[1]), "toRight", Integer.valueOf((this.mToViewFrame[2] + this.mFromViewLocation[2]) - this.mToViewLocation[2]), "toBottom", Integer.valueOf((this.mToViewFrame[3] + this.mFromViewLocation[3]) - this.mToViewLocation[3]), animConfig);
     }
 
     /* access modifiers changed from: protected */

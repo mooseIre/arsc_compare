@@ -895,7 +895,7 @@ public class KeyguardViewMediator extends SystemUI implements Dumpable {
         DumpManager dumpManager2 = dumpManager;
         dumpManager.registerDumpable(KeyguardViewMediator.class.getName(), this);
         this.mDeviceConfig = deviceConfigProxy2;
-        this.mShowHomeOverLockscreen = deviceConfigProxy2.getBoolean("systemui", "nav_bar_handle_show_over_lockscreen", true);
+        this.mShowHomeOverLockscreen = deviceConfigProxy2.getBoolean("systemui", "nav_bar_handle_show_over_lockscreen", false);
         DeviceConfigProxy deviceConfigProxy3 = this.mDeviceConfig;
         Handler handler = this.mHandler;
         Objects.requireNonNull(handler);

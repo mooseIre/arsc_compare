@@ -12,7 +12,6 @@ import com.android.systemui.C0021R$string;
 import com.android.systemui.controlcenter.phone.ControlPanelController;
 import com.android.systemui.controlcenter.policy.OldModeController;
 import com.android.systemui.controlcenter.policy.SuperSaveModeController;
-import com.android.systemui.controlcenter.qs.tile.PluginTile;
 import com.android.systemui.controlcenter.qs.tileview.CCQSTileView;
 import com.android.systemui.controlcenter.utils.Constants;
 import com.android.systemui.plugins.PluginListener;
@@ -21,7 +20,6 @@ import com.android.systemui.plugins.qs.QSFactory;
 import com.android.systemui.plugins.qs.QSTile;
 import com.android.systemui.plugins.qs.QSTileView;
 import com.android.systemui.qs.QSTileHost;
-import com.android.systemui.qs.external.CustomTile;
 import com.android.systemui.shared.plugins.PluginManager;
 import com.android.systemui.statusbar.policy.DeviceProvisionedController;
 import com.android.systemui.tuner.TunerService;
@@ -304,12 +302,6 @@ public class MiuiQSTileHostInjector implements SuperSaveModeController.SuperSave
             this.mQsDefaultTiles = TextUtils.isEmpty(defaultTileWithOrder) ? this.mQsDefaultTiles : this.mPluginDefaultTiles;
         }
         onTuningChanged();
-    }
-
-    static /* synthetic */ void lambda$switchControlCenter$1(QSTile qSTile) {
-        if (!(qSTile instanceof CustomTile) && !(qSTile instanceof PluginTile)) {
-            qSTile.refreshState();
-        }
     }
 
     public MiuiQSTilePlugin getMiuiQSTilePlugin() {

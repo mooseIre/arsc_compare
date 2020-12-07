@@ -18,6 +18,7 @@ import android.os.ServiceManager;
 import android.os.UserHandle;
 import android.provider.MediaStore;
 import android.util.Log;
+import com.android.systemui.RingtonePlayerInjector;
 import com.android.systemui.SystemUI;
 import java.io.FileDescriptor;
 import java.io.IOException;
@@ -35,17 +36,21 @@ public class RingtonePlayer extends SystemUI {
 
         public void playWithVolumeShaping(IBinder iBinder, Uri uri, AudioAttributes audioAttributes, float f, boolean z, VolumeShaper.Configuration configuration) throws RemoteException {
             Client client;
-            synchronized (RingtonePlayer.this.mClients) {
-                client = (Client) RingtonePlayer.this.mClients.get(iBinder);
-                if (client == null) {
-                    client = new Client(iBinder, uri, Binder.getCallingUserHandle(), audioAttributes, configuration);
-                    iBinder.linkToDeath(client, 0);
-                    RingtonePlayer.this.mClients.put(iBinder, client);
+            Uri fallbackInCallNotification = RingtonePlayerInjector.fallbackInCallNotification(uri);
+            if (fallbackInCallNotification != null) {
+                synchronized (RingtonePlayer.this.mClients) {
+                    client = (Client) RingtonePlayer.this.mClients.get(iBinder);
+                    if (client == null) {
+                        Client client2 = new Client(iBinder, fallbackInCallNotification, Binder.getCallingUserHandle(), audioAttributes, configuration);
+                        iBinder.linkToDeath(client2, 0);
+                        RingtonePlayer.this.mClients.put(iBinder, client2);
+                        client = client2;
+                    }
                 }
+                client.mRingtone.setLooping(z);
+                client.mRingtone.setVolume(f);
+                client.mRingtone.play();
             }
-            client.mRingtone.setLooping(z);
-            client.mRingtone.setVolume(f);
-            client.mRingtone.play();
         }
 
         public void stop(IBinder iBinder) {
@@ -86,7 +91,7 @@ public class RingtonePlayer extends SystemUI {
                 if (UserHandle.ALL.equals(userHandle)) {
                     userHandle = UserHandle.SYSTEM;
                 }
-                RingtonePlayer.this.mAsyncPlayer.play(RingtonePlayer.this.getContextForUser(userHandle), uri, z, audioAttributes);
+                RingtonePlayer.this.mAsyncPlayer.play(RingtonePlayer.this.getContextForUser(userHandle), RingtonePlayerInjector.fallbackNotificationUri(uri, audioAttributes), z, audioAttributes);
                 return;
             }
             throw new SecurityException("Async playback only available from system UID.");
@@ -142,6 +147,7 @@ public class RingtonePlayer extends SystemUI {
     }
 
     public void start() {
+        RingtonePlayerInjector.init(this.mContext);
         this.mAsyncPlayer.setUsesWakeLock(this.mContext);
         IAudioService asInterface = IAudioService.Stub.asInterface(ServiceManager.getService("audio"));
         this.mAudioService = asInterface;
@@ -163,7 +169,7 @@ public class RingtonePlayer extends SystemUI {
             Ringtone ringtone = new Ringtone(RingtonePlayer.this.getContextForUser(userHandle), false);
             this.mRingtone = ringtone;
             ringtone.setAudioAttributes(audioAttributes);
-            this.mRingtone.setUri(uri, configuration);
+            this.mRingtone.setUri(RingtonePlayerInjector.fallbackNotificationUri(uri, audioAttributes), configuration);
         }
 
         public void binderDied() {
@@ -177,7 +183,7 @@ public class RingtonePlayer extends SystemUI {
     /* access modifiers changed from: private */
     public Context getContextForUser(UserHandle userHandle) {
         try {
-            return this.mContext.createPackageContextAsUser(this.mContext.getPackageName(), 0, userHandle);
+            return this.mContext.createPackageContextAsUser(this.mContext.getPackageName(), 0, RingtonePlayerInjector.fallbackUserHandle(userHandle));
         } catch (PackageManager.NameNotFoundException e) {
             throw new RuntimeException(e);
         }

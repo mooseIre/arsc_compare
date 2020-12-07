@@ -1138,7 +1138,7 @@ public class KeyguardBottomAreaView extends FrameLayout implements View.OnClickL
             updateRightAffordanceIcon();
             KeyguardIndicationController keyguardIndicationController = this.mKeyguardIndicationController;
             if (keyguardIndicationController != null) {
-                keyguardIndicationController.setDarkStyle(this.mDarkStyle);
+                keyguardIndicationController.setDarkStyle(z);
             } else {
                 Log.e("StatusBar/KeyguardBottomAreaView", "IndicationController == null");
             }

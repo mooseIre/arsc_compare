@@ -5,11 +5,11 @@ import android.graphics.Rect;
 import android.os.RemoteException;
 import android.view.IWindowManager;
 import android.view.WindowManagerGlobal;
-import com.android.internal.policy.DividerSnapAlgorithm;
 import com.android.systemui.SystemUI;
 import com.android.systemui.recents.Recents;
 import com.android.systemui.shortcut.ShortcutKeyServiceProxy;
 import com.android.systemui.stackdivider.Divider;
+import com.android.systemui.stackdivider.DividerSnapAlgorithm;
 import com.android.systemui.stackdivider.DividerView;
 
 public class ShortcutKeyDispatcher extends SystemUI implements ShortcutKeyServiceProxy.Callbacks {

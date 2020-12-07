@@ -259,6 +259,7 @@ public class ModalWindowView extends FrameLayout {
         updateResource();
         setFocusable(true);
         setFocusableInTouchMode(true);
+        setClipChildren(false);
     }
 
     public void updateResource() {
@@ -279,7 +280,7 @@ public class ModalWindowView extends FrameLayout {
 
     public void enterModal(NotificationEntry notificationEntry) {
         this.mEntry = notificationEntry;
-        if (notificationEntry.getModalRow().getIntrinsicHeight() != 0 || this.mFirstAddUpdateRequested) {
+        if (!(notificationEntry.getModalRow().getIntrinsicHeight() == 0 || notificationEntry.getModalRow().getActualHeight() == 0) || this.mFirstAddUpdateRequested) {
             addRow(notificationEntry);
             addMenu(notificationEntry);
             this.animationProperties.setAnimationEndAction((Consumer<Property>) null);

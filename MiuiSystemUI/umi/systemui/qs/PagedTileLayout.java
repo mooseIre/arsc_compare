@@ -230,6 +230,14 @@ public class PagedTileLayout extends ViewPager implements QSPanel.QSTileLayout {
         setOffscreenPageLimit(1);
     }
 
+    public void endFakeDrag() {
+        try {
+            super.endFakeDrag();
+        } catch (NullPointerException e) {
+            Log.e("PagedTileLayout", "endFakeDrag called before begin", e);
+        }
+    }
+
     public void computeScroll() {
         if (!this.mScroller.isFinished() && this.mScroller.computeScrollOffset()) {
             if (!isFakeDragging()) {
@@ -238,7 +246,10 @@ public class PagedTileLayout extends ViewPager implements QSPanel.QSTileLayout {
             fakeDragBy((float) (getScrollX() - this.mScroller.getCurrX()));
         } else if (isFakeDragging()) {
             endFakeDrag();
-            this.mBounceAnimatorSet.start();
+            AnimatorSet animatorSet = this.mBounceAnimatorSet;
+            if (animatorSet != null) {
+                animatorSet.start();
+            }
             setOffscreenPageLimit(1);
         }
         super.computeScroll();

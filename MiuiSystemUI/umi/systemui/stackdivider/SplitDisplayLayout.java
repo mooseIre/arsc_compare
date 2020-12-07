@@ -6,8 +6,7 @@ import android.content.res.Resources;
 import android.graphics.Rect;
 import android.util.TypedValue;
 import android.window.WindowContainerTransaction;
-import com.android.internal.policy.DividerSnapAlgorithm;
-import com.android.internal.policy.DockedDividerUtils;
+import com.android.systemui.stackdivider.DividerSnapAlgorithm;
 import com.android.systemui.wm.DisplayLayout;
 
 public class SplitDisplayLayout {
@@ -69,6 +68,9 @@ public class SplitDisplayLayout {
         }
         if (navigationBarPosition != 4) {
             return -1;
+        }
+        if (SplitDisplayLayoutInjector.canUpdatePrimarySplitSide(this.mContext)) {
+            return SplitDisplayLayoutInjector.getPrimarySplitSide(this.mContext, this.mDisplayLayout.isLandscape());
         }
         if (this.mDisplayLayout.isLandscape()) {
             return 1;

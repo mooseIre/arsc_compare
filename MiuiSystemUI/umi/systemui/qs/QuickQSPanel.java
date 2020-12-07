@@ -14,6 +14,7 @@ import com.android.systemui.C0015R$id;
 import com.android.systemui.C0016R$integer;
 import com.android.systemui.Dependency;
 import com.android.systemui.broadcast.BroadcastDispatcher;
+import com.android.systemui.controlcenter.phone.ControlPanelController;
 import com.android.systemui.dump.DumpManager;
 import com.android.systemui.media.MediaHost;
 import com.android.systemui.plugins.qs.QSTile;
@@ -47,6 +48,11 @@ public class QuickQSPanel extends QSPanel {
     /* access modifiers changed from: protected */
     public String getDumpableTag() {
         return "QuickQSPanel";
+    }
+
+    /* access modifiers changed from: protected */
+    public int getTileCallbackType() {
+        return 4;
     }
 
     /* access modifiers changed from: protected */
@@ -138,22 +144,20 @@ public class QuickQSPanel extends QSPanel {
     }
 
     public void setTiles(Collection<QSTile> collection) {
-        ArrayList arrayList = new ArrayList();
-        for (QSTile add : collection) {
-            arrayList.add(add);
-            if (arrayList.size() == this.mMaxTiles) {
-                break;
+        if (!((ControlPanelController) Dependency.get(ControlPanelController.class)).isUseControlCenter()) {
+            ArrayList arrayList = new ArrayList();
+            for (QSTile add : collection) {
+                arrayList.add(add);
+                if (arrayList.size() == this.mMaxTiles) {
+                    break;
+                }
             }
+            super.setTiles(arrayList, true);
         }
-        super.setTiles(arrayList, true);
     }
 
     public int getNumQuickTiles() {
         return this.mMaxTiles;
-    }
-
-    public static int parseNumTiles(String str) {
-        return getDefaultMaxTiles();
     }
 
     public static int getDefaultMaxTiles() {
@@ -331,8 +335,9 @@ public class QuickQSPanel extends QSPanel {
             boolean z2 = !this.mListening && z;
             super.setListening(z);
             if (z2) {
-                for (int i = 0; i < getNumVisibleTiles(); i++) {
-                    QSTile qSTile = this.mRecords.get(i).tile;
+                Iterator<QSPanel.TileRecord> it = this.mRecords.iterator();
+                while (it.hasNext()) {
+                    QSTile qSTile = it.next().tile;
                     this.mUiEventLogger.logWithInstanceId(QSEvent.QQS_TILE_VISIBLE, 0, qSTile.getMetricsSpec(), qSTile.getInstanceId());
                 }
             }

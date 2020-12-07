@@ -4,6 +4,7 @@ import android.app.ActivityManager;
 import android.app.ActivityTaskManager;
 import android.app.AlarmManager;
 import android.app.IActivityManager;
+import android.app.StatusBarManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -68,9 +69,8 @@ public class MiuiPhoneStatusBarPolicy extends PhoneStatusBarPolicy implements Mi
     public boolean mSecondSpaceStatusIconVisible;
     protected final String mSlotBluetoothBattery;
     protected final String mSlotMicphone;
-    protected final String mSlotMute;
-    protected final String mSlotSpeakerphone;
     protected final String mSlotSyncActive;
+    StatusBarManager mStatusBarManager;
     MiuiDripLeftStatusBarIconControllerImpl miuiDripLeftStatusBarIconController;
 
     public MiuiPhoneStatusBarPolicy(Context context, StatusBarIconController statusBarIconController, CommandQueue commandQueue, BroadcastDispatcher broadcastDispatcher, Executor executor, Resources resources, CastController castController, HotspotController hotspotController, BluetoothController bluetoothController, NextAlarmController nextAlarmController, UserInfoController userInfoController, RotationLockController rotationLockController, DataSaverController dataSaverController, ZenModeController zenModeController, DeviceProvisionedController deviceProvisionedController, KeyguardStateController keyguardStateController, LocationController locationController, SensorPrivacyController sensorPrivacyController, IActivityManager iActivityManager, AlarmManager alarmManager, UserManager userManager, RecordingController recordingController, TelecomManager telecomManager, int i, SharedPreferences sharedPreferences, DateFormatUtil dateFormatUtil, RingerModeTracker ringerModeTracker) {
@@ -78,13 +78,12 @@ public class MiuiPhoneStatusBarPolicy extends PhoneStatusBarPolicy implements Mi
         this.mContext = context;
         this.mSlotBluetoothBattery = "bluetooth_handsfree_battery";
         this.mSlotSyncActive = "sync_active";
-        this.mSlotMute = "mute";
-        this.mSlotSpeakerphone = "speakerphone";
         this.mSlotMicphone = "micphone";
         this.mCurrentUserId = ActivityManager.getCurrentUser();
         this.miuiDripLeftStatusBarIconController = (MiuiDripLeftStatusBarIconControllerImpl) Dependency.get(MiuiDripLeftStatusBarIconControllerImpl.class);
         this.mContext.getContentResolver().registerContentObserver(Settings.Global.getUriFor("open_second_space_status_icon"), false, this.mSecondSpaceStatusIconObserver);
         this.mSecondSpaceStatusIconObserver.onChange(false);
+        this.mStatusBarManager = (StatusBarManager) this.mContext.getSystemService("statusbar");
     }
 
     public void miuiInit() {
@@ -95,10 +94,6 @@ public class MiuiPhoneStatusBarPolicy extends PhoneStatusBarPolicy implements Mi
         this.mIconController.setIconVisibility(this.mSlotZen, false);
         this.mIconController.setIcon(this.mSlotSyncActive, C0013R$drawable.stat_sys_sync, (CharSequence) null);
         this.mIconController.setIconVisibility(this.mSlotSyncActive, false);
-        this.mIconController.setIcon(this.mSlotMute, C0013R$drawable.stat_notify_call_mute, (CharSequence) null);
-        this.mIconController.setIconVisibility(this.mSlotMute, false);
-        this.mIconController.setIcon(this.mSlotSpeakerphone, C0013R$drawable.stat_sys_speakerphone, (CharSequence) null);
-        this.mIconController.setIconVisibility(this.mSlotSpeakerphone, false);
         this.mIconController.setIcon(this.mSlotLocation, C0013R$drawable.stat_sys_gps_on, this.mResources.getString(C0021R$string.accessibility_location_active));
         this.mIconController.setIconVisibility(this.mSlotLocation, false);
         this.mIconController.setIcon(this.mSlotRotate, C0013R$drawable.stat_sys_rotate_portrait, (CharSequence) null);
@@ -122,10 +117,12 @@ public class MiuiPhoneStatusBarPolicy extends PhoneStatusBarPolicy implements Mi
         this.miuiDripLeftStatusBarIconController.setIconVisibility(this.mSlotAlarmClock, false);
         this.miuiDripLeftStatusBarIconController.setIcon(this.mSlotMicphone, C0013R$drawable.stat_sys_micphone, (CharSequence) null);
         this.miuiDripLeftStatusBarIconController.setIconVisibility(this.mSlotMicphone, false);
-        this.miuiDripLeftStatusBarIconController.setIcon(this.mSlotMute, C0013R$drawable.stat_notify_call_mute, (CharSequence) null);
-        this.miuiDripLeftStatusBarIconController.setIconVisibility(this.mSlotMute, false);
-        this.miuiDripLeftStatusBarIconController.setIcon(this.mSlotSpeakerphone, C0013R$drawable.stat_sys_speakerphone, (CharSequence) null);
-        this.miuiDripLeftStatusBarIconController.setIconVisibility(this.mSlotSpeakerphone, false);
+        this.mStatusBarManager.setIcon("mute", C0013R$drawable.stat_notify_call_mute, 0, (String) null);
+        this.mStatusBarManager.setIconVisibility("mute", false);
+        this.mStatusBarManager.setIcon("speakerphone", C0013R$drawable.stat_sys_speakerphone, 0, (String) null);
+        this.mStatusBarManager.setIconVisibility("speakerphone", false);
+        this.mStatusBarManager.setIcon("call_record", C0013R$drawable.stat_sys_call_record, 0, (String) null);
+        this.mStatusBarManager.setIconVisibility("call_record", false);
         ((MiuiAlarmControllerImpl) Dependency.get(MiuiAlarmControllerImpl.class)).addCallback((MiuiAlarmController$MiuiAlarmChangeCallback) this);
     }
 
@@ -184,6 +181,12 @@ public class MiuiPhoneStatusBarPolicy extends PhoneStatusBarPolicy implements Mi
     }
 
     /* access modifiers changed from: protected */
+    public void profileChanged(int i) {
+        this.mCurrentProfileId = i;
+        updateManagedProfile();
+    }
+
+    /* access modifiers changed from: protected */
     public void updateManagedProfile() {
         this.mUiBgExecutor.execute(new Runnable() {
             public final void run() {
@@ -202,6 +205,7 @@ public class MiuiPhoneStatusBarPolicy extends PhoneStatusBarPolicy implements Mi
             if (this.mCurrentUserId != 0 || !XSpaceUserHandle.isXSpaceUserId(this.mCurrentProfileId)) {
                 z = false;
             }
+            Log.d("MiuiPhoneStatusBarPolicy", "updateManagedProfile: secondSpace = " + z2);
             this.mHandler.post(new Runnable(z, isManagedProfile, z2) {
                 public final /* synthetic */ boolean f$1;
                 public final /* synthetic */ boolean f$2;

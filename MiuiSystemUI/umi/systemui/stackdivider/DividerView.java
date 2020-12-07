@@ -30,8 +30,6 @@ import android.view.animation.PathInterpolator;
 import android.widget.FrameLayout;
 import com.android.internal.graphics.SfVsyncFrameCallbackProvider;
 import com.android.internal.logging.MetricsLogger;
-import com.android.internal.policy.DividerSnapAlgorithm;
-import com.android.internal.policy.DockedDividerUtils;
 import com.android.systemui.C0010R$bool;
 import com.android.systemui.C0012R$dimen;
 import com.android.systemui.C0015R$id;
@@ -40,6 +38,7 @@ import com.android.systemui.C0021R$string;
 import com.android.systemui.Dependency;
 import com.android.systemui.Interpolators;
 import com.android.systemui.recents.OverviewProxyService;
+import com.android.systemui.stackdivider.DividerSnapAlgorithm;
 import com.android.systemui.statusbar.FlingAnimationUtils;
 import java.util.function.Consumer;
 
@@ -240,8 +239,8 @@ public class DividerView extends FrameLayout implements View.OnTouchListener, Vi
         this.mBackground = findViewById(C0015R$id.docked_divider_background);
         this.mMinimizedShadow = (MinimizedDockShadow) findViewById(C0015R$id.minimized_dock_shadow);
         this.mHandle.setOnTouchListener(this);
-        int dimensionPixelSize = getResources().getDimensionPixelSize(17105177);
-        int dimensionPixelSize2 = getResources().getDimensionPixelSize(17105176);
+        int dimensionPixelSize = getResources().getDimensionPixelSize(C0012R$dimen.docked_stack_divider_thickness);
+        int dimensionPixelSize2 = getResources().getDimensionPixelSize(C0012R$dimen.docked_stack_divider_insets);
         this.mDividerInsets = dimensionPixelSize2;
         this.mDividerSize = dimensionPixelSize - (dimensionPixelSize2 * 2);
         this.mTouchElevation = getResources().getDimensionPixelSize(C0012R$dimen.docked_stack_divider_lift_elevation);
@@ -427,26 +426,31 @@ public class DividerView extends FrameLayout implements View.OnTouchListener, Vi
         return isHorizontalDivision() ? this.mDividerPositionY : this.mDividerPositionX;
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:6:0x0013, code lost:
-        if (r6 != 3) goto L_0x00aa;
+    /* JADX WARNING: Code restructure failed: missing block: B:9:0x001c, code lost:
+        if (r6 != 3) goto L_0x00b3;
      */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     public boolean onTouch(android.view.View r6, android.view.MotionEvent r7) {
         /*
             r5 = this;
+            com.android.systemui.stackdivider.SplitScreenTaskOrganizer r6 = r5.mTiles
+            boolean r6 = com.android.systemui.stackdivider.DividerViewInjector.canBeDividerResized(r5, r6)
+            r0 = 1
+            if (r6 != 0) goto L_0x000a
+            return r0
+        L_0x000a:
             r5.convertToScreenCoordinates(r7)
             int r6 = r7.getAction()
             r6 = r6 & 255(0xff, float:3.57E-43)
-            r0 = 0
-            r1 = 1
-            if (r6 == 0) goto L_0x00ab
-            if (r6 == r1) goto L_0x0078
+            r1 = 0
+            if (r6 == 0) goto L_0x00b4
+            if (r6 == r0) goto L_0x0081
             r2 = 2
-            if (r6 == r2) goto L_0x0017
+            if (r6 == r2) goto L_0x0020
             r2 = 3
-            if (r6 == r2) goto L_0x0078
-            goto L_0x00aa
-        L_0x0017:
+            if (r6 == r2) goto L_0x0081
+            goto L_0x00b3
+        L_0x0020:
             android.view.VelocityTracker r6 = r5.mVelocityTracker
             r6.addMovement(r7)
             float r6 = r7.getX()
@@ -454,48 +458,48 @@ public class DividerView extends FrameLayout implements View.OnTouchListener, Vi
             float r7 = r7.getY()
             int r7 = (int) r7
             boolean r2 = r5.isHorizontalDivision()
-            if (r2 == 0) goto L_0x0038
+            if (r2 == 0) goto L_0x0041
             int r2 = r5.mStartY
             int r2 = r7 - r2
             int r2 = java.lang.Math.abs(r2)
             int r3 = r5.mTouchSlop
-            if (r2 > r3) goto L_0x004a
-        L_0x0038:
+            if (r2 > r3) goto L_0x0053
+        L_0x0041:
             boolean r2 = r5.isHorizontalDivision()
-            if (r2 != 0) goto L_0x004c
+            if (r2 != 0) goto L_0x0055
             int r2 = r5.mStartX
             int r2 = r6 - r2
             int r2 = java.lang.Math.abs(r2)
             int r3 = r5.mTouchSlop
-            if (r2 <= r3) goto L_0x004c
-        L_0x004a:
-            r2 = r1
-            goto L_0x004d
-        L_0x004c:
+            if (r2 <= r3) goto L_0x0055
+        L_0x0053:
             r2 = r0
-        L_0x004d:
+            goto L_0x0056
+        L_0x0055:
+            r2 = r1
+        L_0x0056:
             boolean r3 = r5.mMoving
-            if (r3 != 0) goto L_0x0059
-            if (r2 == 0) goto L_0x0059
+            if (r3 != 0) goto L_0x0062
+            if (r2 == 0) goto L_0x0062
             r5.mStartX = r6
             r5.mStartY = r7
-            r5.mMoving = r1
-        L_0x0059:
+            r5.mMoving = r0
+        L_0x0062:
             boolean r2 = r5.mMoving
-            if (r2 == 0) goto L_0x00aa
+            if (r2 == 0) goto L_0x00b3
             int r2 = r5.mDockSide
             r3 = -1
-            if (r2 == r3) goto L_0x00aa
-            com.android.internal.policy.DividerSnapAlgorithm r2 = r5.getSnapAlgorithm()
+            if (r2 == r3) goto L_0x00b3
+            com.android.systemui.stackdivider.DividerSnapAlgorithm r2 = r5.getSnapAlgorithm()
             int r3 = r5.mStartPosition
             r4 = 0
-            com.android.internal.policy.DividerSnapAlgorithm$SnapTarget r0 = r2.calculateSnapTarget(r3, r4, r0)
+            com.android.systemui.stackdivider.DividerSnapAlgorithm$SnapTarget r1 = r2.calculateSnapTarget(r3, r4, r1)
             int r6 = r5.calculatePosition(r6, r7)
             int r7 = r5.mStartPosition
             r2 = 0
-            r5.resizeStackSurfaces(r6, r7, r0, r2)
-            goto L_0x00aa
-        L_0x0078:
+            r5.resizeStackSurfaces(r6, r7, r1, r2)
+            goto L_0x00b3
+        L_0x0081:
             android.view.VelocityTracker r6 = r5.mVelocityTracker
             r6.addMovement(r7)
             float r6 = r7.getRawX()
@@ -507,19 +511,19 @@ public class DividerView extends FrameLayout implements View.OnTouchListener, Vi
             r2.computeCurrentVelocity(r3)
             int r6 = r5.calculatePosition(r6, r7)
             boolean r7 = r5.isHorizontalDivision()
-            if (r7 == 0) goto L_0x009f
+            if (r7 == 0) goto L_0x00a8
             android.view.VelocityTracker r7 = r5.mVelocityTracker
             float r7 = r7.getYVelocity()
-            goto L_0x00a5
-        L_0x009f:
+            goto L_0x00ae
+        L_0x00a8:
             android.view.VelocityTracker r7 = r5.mVelocityTracker
             float r7 = r7.getXVelocity()
-        L_0x00a5:
-            r5.stopDragging((int) r6, (float) r7, (boolean) r0, (boolean) r1)
-            r5.mMoving = r0
-        L_0x00aa:
-            return r1
-        L_0x00ab:
+        L_0x00ae:
+            r5.stopDragging((int) r6, (float) r7, (boolean) r1, (boolean) r0)
+            r5.mMoving = r1
+        L_0x00b3:
+            return r0
+        L_0x00b4:
             android.view.VelocityTracker r6 = android.view.VelocityTracker.obtain()
             r5.mVelocityTracker = r6
             r6.addMovement(r7)
@@ -529,13 +533,13 @@ public class DividerView extends FrameLayout implements View.OnTouchListener, Vi
             float r6 = r7.getY()
             int r6 = (int) r6
             r5.mStartY = r6
-            boolean r6 = r5.startDragging(r1, r1)
-            if (r6 != 0) goto L_0x00cb
+            boolean r6 = r5.startDragging(r0, r0)
+            if (r6 != 0) goto L_0x00d4
             r5.stopDragging()
-        L_0x00cb:
+        L_0x00d4:
             int r7 = r5.getCurrentPosition()
             r5.mStartPosition = r7
-            r5.mMoving = r0
+            r5.mMoving = r1
             return r6
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.stackdivider.DividerView.onTouch(android.view.View, android.view.MotionEvent):boolean");
@@ -612,7 +616,7 @@ public class DividerView extends FrameLayout implements View.OnTouchListener, Vi
                 DividerView.this.lambda$getFlingAnimator$2$DividerView(this.f$1, this.f$2, valueAnimator);
             }
         });
-        final $$Lambda$DividerView$tccy1KLrWHo7BodDaNEbFmJ9inc r0 = new Consumer(snapTarget) {
+        final $$Lambda$DividerView$aA39MSq9WWesT1GU553rDT5Wlhk r0 = new Consumer(snapTarget) {
             public final /* synthetic */ DividerSnapAlgorithm.SnapTarget f$1;
 
             {
@@ -744,7 +748,7 @@ public class DividerView extends FrameLayout implements View.OnTouchListener, Vi
         r6 = r5.mDockSide;
      */
     /* Code decompiled incorrectly, please refer to instructions dump. */
-    private boolean commitSnapFlags(com.android.internal.policy.DividerSnapAlgorithm.SnapTarget r6) {
+    private boolean commitSnapFlags(com.android.systemui.stackdivider.DividerSnapAlgorithm.SnapTarget r6) {
         /*
             r5 = this;
             int r6 = r6.flag
@@ -787,7 +791,7 @@ public class DividerView extends FrameLayout implements View.OnTouchListener, Vi
             r5.releaseTransaction(r6)
             return r1
         */
-        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.stackdivider.DividerView.commitSnapFlags(com.android.internal.policy.DividerSnapAlgorithm$SnapTarget):boolean");
+        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.stackdivider.DividerView.commitSnapFlags(com.android.systemui.stackdivider.DividerSnapAlgorithm$SnapTarget):boolean");
     }
 
     private void liftBackground() {
@@ -1021,6 +1025,9 @@ public class DividerView extends FrameLayout implements View.OnTouchListener, Vi
     }
 
     public boolean isHorizontalDivision() {
+        if (DividerViewInjector.canUpdateDivisionPosition(this)) {
+            return DividerViewInjector.isHorizontalDivision(this);
+        }
         return getResources().getConfiguration().orientation == 1;
     }
 

@@ -237,6 +237,7 @@ public class NotificationContentInflater implements NotificationRowContentBinder
     /* JADX WARNING: Code restructure failed: missing block: B:25:0x00d3, code lost:
         r15 = r25;
      */
+    /* JADX WARNING: Removed duplicated region for block: B:46:0x015c  */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     public static android.os.CancellationSignal apply(java.util.concurrent.Executor r23, boolean r24, com.android.systemui.statusbar.notification.row.NotificationContentInflater.InflationProgress r25, int r26, com.android.systemui.statusbar.notification.row.NotifRemoteViewCache r27, com.android.systemui.statusbar.notification.collection.NotificationEntry r28, com.android.systemui.statusbar.notification.row.ExpandableNotificationRow r29, android.widget.RemoteViews.OnClickHandler r30, com.android.systemui.statusbar.notification.row.NotificationRowContentBinder.InflationCallback r31) {
         /*
@@ -398,7 +399,7 @@ public class NotificationContentInflater implements NotificationRowContentBinder
             applyRemoteView(r0, r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14, r15)
         L_0x012d:
             r0 = r26 & 8
-            if (r0 == 0) goto L_0x018b
+            if (r0 == 0) goto L_0x0193
             r15 = r25
             android.widget.RemoteViews r0 = r15.newPublicView
             r1 = 8
@@ -420,6 +421,10 @@ public class NotificationContentInflater implements NotificationRowContentBinder
         L_0x0154:
             r8 = r20
         L_0x0156:
+            android.view.View r0 = r21.getContractedChild()
+            if (r0 != 0) goto L_0x015e
+            r8 = r20
+        L_0x015e:
             com.android.systemui.statusbar.notification.row.NotificationContentInflater$4 r11 = new com.android.systemui.statusbar.notification.row.NotificationContentInflater$4
             r11.<init>()
             android.view.View r17 = r21.getContractedChild()
@@ -444,7 +449,7 @@ public class NotificationContentInflater implements NotificationRowContentBinder
             r14 = r16
             r15 = r20
             applyRemoteView(r0, r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14, r15)
-        L_0x018b:
+        L_0x0193:
             r0 = r25
             r1 = r26
             r2 = r27

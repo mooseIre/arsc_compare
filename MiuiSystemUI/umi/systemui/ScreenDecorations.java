@@ -32,13 +32,14 @@ import com.android.systemui.RegionInterceptingFrameLayout;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.qs.SecureSetting;
 import com.android.systemui.statusbar.CommandQueue;
+import com.android.systemui.statusbar.policy.ConfigurationController;
 import com.android.systemui.tuner.TunerService;
 import com.miui.systemui.util.OverlayManagerWrapper;
 import java.util.Objects;
 import java.util.concurrent.Executor;
 import miui.util.CustomizeUtil;
 
-public class ScreenDecorations extends SystemUI implements TunerService.Tunable, CommandQueue.Callbacks {
+public class ScreenDecorations extends SystemUI implements TunerService.Tunable, CommandQueue.Callbacks, ConfigurationController.ConfigurationListener {
     private static final boolean DEBUG_COLOR;
     private static final boolean DEBUG_SCREENSHOT_ROUNDED_CORNERS;
     protected int mBottomCornerRadius;
@@ -259,6 +260,7 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
             this.mContext.getContentResolver().registerContentObserver(Settings.Global.getUriFor("overlay_drip"), false, this.mOverlayDripObserver, -1);
             this.mOverlayDripObserver.onChange(false);
         }
+        ((ConfigurationController) Dependency.get(ConfigurationController.class)).addCallback(this);
     }
 
     private boolean supportOverlayRoundedCorner() {
@@ -611,6 +613,10 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
         if (this.mOverlays != null || this.mForceBlackTopOverlay != null) {
             updateLayoutParams();
         }
+    }
+
+    public void onDensityOrFontScaleChanged() {
+        postUpdateScreenDecorationsFront();
     }
 
     /* access modifiers changed from: private */

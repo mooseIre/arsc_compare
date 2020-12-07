@@ -1,20 +1,28 @@
 package com.android.systemui.controlcenter.phone;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.ContentObserver;
 import android.os.Handler;
 import android.os.Message;
+import android.os.UserHandle;
 import android.provider.Settings;
 import android.util.Log;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.systemui.C0016R$integer;
+import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.controlcenter.ControlCenter;
 import com.android.systemui.keyguard.KeyguardViewMediator;
+import com.android.systemui.statusbar.phone.StatusBar;
 import com.android.systemui.statusbar.policy.CallbackController;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executor;
 
 public class ControlPanelController implements CallbackController<UseControlPanelChangeListener> {
+    private BroadcastDispatcher mBroadcastDispatcher;
     /* access modifiers changed from: private */
     public Context mContext;
     private ControlCenter mControlCenter;
@@ -24,6 +32,40 @@ public class ControlPanelController implements CallbackController<UseControlPane
     private Handler mHandler = new H();
     private KeyguardViewMediator mKeyguardViewMediator;
     private final List<UseControlPanelChangeListener> mListeners;
+    private BroadcastReceiver mRemoteOperationReceiver = new BroadcastReceiver() {
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            String stringExtra = intent.getStringExtra("operation");
+            if (!"action_panels_operation".equals(action)) {
+                return;
+            }
+            if (!"reverse_notifications_panel".equals(stringExtra) || ControlPanelController.this.mStatusBar == null) {
+                if (!"reverse_quick_settings_panel".equals(stringExtra)) {
+                    return;
+                }
+                if (ControlPanelController.this.mUseControlPanel) {
+                    if (ControlPanelController.this.isQSFullyCollapsed()) {
+                        ControlPanelController.this.openPanel();
+                    } else {
+                        ControlPanelController.this.collapseControlCenter(true);
+                    }
+                } else if (ControlPanelController.this.mStatusBar == null) {
+                } else {
+                    if (ControlPanelController.this.mStatusBar.isQSFullyCollapsed()) {
+                        ControlPanelController.this.mStatusBar.postAnimateOpenPanels();
+                    } else {
+                        ControlPanelController.this.mStatusBar.postAnimateCollapsePanels();
+                    }
+                }
+            } else if (ControlPanelController.this.mStatusBar.isQSFullyCollapsed()) {
+                ControlPanelController.this.mStatusBar.postAnimateOpenPanels();
+            } else {
+                ControlPanelController.this.mStatusBar.postAnimateCollapsePanels();
+            }
+        }
+    };
+    /* access modifiers changed from: private */
+    public StatusBar mStatusBar;
     private boolean mSuperPowerModeOn;
     /* access modifiers changed from: private */
     public boolean mUseControlPanel;
@@ -35,11 +77,12 @@ public class ControlPanelController implements CallbackController<UseControlPane
         void onUseControlPanelChange(boolean z);
     }
 
-    public ControlPanelController(Context context, KeyguardViewMediator keyguardViewMediator) {
+    public ControlPanelController(Context context, KeyguardViewMediator keyguardViewMediator, BroadcastDispatcher broadcastDispatcher) {
         this.mContext = context;
         this.mListeners = new ArrayList();
         this.mUseControlPanelSettingDefault = context.getResources().getInteger(C0016R$integer.use_control_panel_setting_default);
         this.mKeyguardViewMediator = keyguardViewMediator;
+        this.mBroadcastDispatcher = broadcastDispatcher;
         this.mUseControlPanelObserver = new ContentObserver(this.mHandler) {
             public void onChange(boolean z) {
                 ControlPanelController controlPanelController = ControlPanelController.this;
@@ -68,9 +111,19 @@ public class ControlPanelController implements CallbackController<UseControlPane
         this.mControlCenter = controlCenter;
     }
 
+    public void setStatusBar(StatusBar statusBar) {
+        this.mStatusBar = statusBar;
+    }
+
     public void collapsePanel(boolean z) {
         if (this.mControlCenter != null && !isQSFullyCollapsed()) {
             this.mControlCenter.collapse(z);
+        }
+    }
+
+    public void collapseControlCenter(boolean z) {
+        if (this.mControlCenter != null && !isQSFullyCollapsed()) {
+            this.mControlCenter.collapseControlCenter(z);
         }
     }
 
@@ -90,16 +143,27 @@ public class ControlPanelController implements CallbackController<UseControlPane
         return true;
     }
 
+    public void openPanel() {
+        ControlCenter controlCenter = this.mControlCenter;
+        if (controlCenter != null) {
+            controlCenter.openPanel();
+        }
+    }
+
     private void register() {
         this.mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor("use_control_panel"), false, this.mUseControlPanelObserver, -1);
         this.mUseControlPanelObserver.onChange(false);
         this.mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor("expandable_under_lock_screen"), false, this.mExpandableObserver, -1);
         this.mExpandableObserver.onChange(false);
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("action_panels_operation");
+        this.mBroadcastDispatcher.registerReceiver(this.mRemoteOperationReceiver, intentFilter, (Executor) null, UserHandle.ALL);
     }
 
     private void unRegister() {
         this.mContext.getContentResolver().unregisterContentObserver(this.mUseControlPanelObserver);
         this.mContext.getContentResolver().unregisterContentObserver(this.mExpandableObserver);
+        this.mBroadcastDispatcher.unregisterReceiver(this.mRemoteOperationReceiver);
     }
 
     /* access modifiers changed from: private */

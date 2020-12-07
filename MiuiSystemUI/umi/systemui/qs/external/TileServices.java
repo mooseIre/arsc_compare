@@ -39,7 +39,7 @@ public class TileServices extends IQSService.Stub {
     /* access modifiers changed from: private */
     public final QSTileHost mHost;
     private final Handler mMainHandler;
-    private int mMaxBound = 3;
+    private int mMaxBound = 5;
     private final BroadcastReceiver mRequestListeningReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             if ("android.service.quicksettings.action.REQUEST_LISTENING".equals(intent.getAction())) {

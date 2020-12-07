@@ -7,6 +7,7 @@ import android.widget.FrameLayout;
 import com.android.systemui.C0012R$dimen;
 import com.android.systemui.C0015R$id;
 import com.android.systemui.controlcenter.phone.ControlPanelContentView;
+import com.android.systemui.controlcenter.phone.QSControlCenterPanel;
 import com.miui.systemui.util.MiuiInterpolators;
 
 public class QCBrightnessMirrorController {
@@ -41,6 +42,7 @@ public class QCBrightnessMirrorController {
                 QCBrightnessMirrorController.this.mControlPanelContentView.setControlPanelWindowBlurRatio(0.0f);
             }
         });
+        ((QSControlCenterPanel) this.mControlPanelContentView.findViewById(C0015R$id.qs_control_center_panel)).setTouchable(false);
     }
 
     public void hideMirror() {
@@ -51,6 +53,7 @@ public class QCBrightnessMirrorController {
             }
         });
         this.mControlPanelContentView.setControlPanelWindowBlurRatio(1.0f);
+        ((QSControlCenterPanel) this.mControlPanelContentView.findViewById(C0015R$id.qs_control_center_panel)).setTouchable(true);
     }
 
     private ViewPropertyAnimator outAnimation(ViewPropertyAnimator viewPropertyAnimator) {

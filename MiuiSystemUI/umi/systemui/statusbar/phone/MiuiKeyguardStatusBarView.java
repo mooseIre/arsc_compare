@@ -8,7 +8,9 @@ import android.provider.Settings;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 import com.android.systemui.C0010R$bool;
+import com.android.systemui.C0012R$dimen;
 import com.android.systemui.C0015R$id;
 import com.android.systemui.Dependency;
 import com.android.systemui.broadcast.BroadcastDispatcher;
@@ -46,6 +48,30 @@ public class MiuiKeyguardStatusBarView extends KeyguardStatusBarView implements 
     public MiuiKeyguardStatusBarView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
         this.mLeftHoleDevice = context.getResources().getBoolean(C0010R$bool.left_hole_device);
+    }
+
+    public void onDensityOrFontScaleChanged() {
+        super.onDensityOrFontScaleChanged();
+        updateViewStatusBarPaddingTop(this.mStatusIconArea);
+        updateViewStatusBarPaddingTop(this.mStatusBarPromptContainer);
+        updateViewStatusBarPaddingTop(this.mDripLeftStatusIconFrameContainer);
+        updateViewStatusBarPaddingTop(this.mCarrierLabel);
+        updateTextViewClockSize(this.mCarrierLabel);
+        updateTextViewClockSize(this.mNetworkSpeedView);
+    }
+
+    /* access modifiers changed from: protected */
+    public void updateViewStatusBarPaddingTop(View view) {
+        if (view != null) {
+            view.setPadding(view.getPaddingLeft(), getResources().getDimensionPixelSize(C0012R$dimen.status_bar_padding_top), view.getPaddingRight(), view.getPaddingBottom());
+        }
+    }
+
+    /* access modifiers changed from: protected */
+    public void updateTextViewClockSize(TextView textView) {
+        if (textView != null) {
+            textView.setTextSize(0, (float) getContext().getResources().getDimensionPixelSize(C0012R$dimen.status_bar_clock_size));
+        }
     }
 
     /* access modifiers changed from: protected */

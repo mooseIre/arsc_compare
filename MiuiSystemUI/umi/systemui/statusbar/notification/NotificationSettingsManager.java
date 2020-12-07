@@ -29,6 +29,7 @@ public class NotificationSettingsManager implements Dumpable {
     private List<String> mAllowFloatPackages;
     private List<String> mAllowKeyguardPackages;
     private List<String> mAllowNotificationSlide;
+    private List<String> mAvoidDisturbPackages;
     private Handler mBgHandler;
     private List<String> mBlockFloatPackages;
     private List<String> mBlockKeyguardPackages;
@@ -52,7 +53,7 @@ public class NotificationSettingsManager implements Dumpable {
         this.mDisableAutoGroupSummaryPackages = getStringArray(C0008R$array.config_disableAutoGroupSummaryPackages);
         this.mHideForegroundWhitelist = getStringArray(C0008R$array.system_foreground_notification_whitelist);
         this.mHideAlertWindowWhitelist = getStringArray(C0008R$array.system_alert_window_notification_whitelist);
-        getStringArray(C0008R$array.avoid_disturb_app_whitelist);
+        this.mAvoidDisturbPackages = getStringArray(C0008R$array.avoid_disturb_app_whitelist);
         this.mPreInstallPackages = getStringArray(C0008R$array.config_preInstalledPackages);
         this.mCanShowBadgePackages = getStringArray(C0008R$array.config_canShowBadgePackages);
         this.mAllowFloatPackages = getStringArray(C0008R$array.config_allowFloatPackages);
@@ -170,6 +171,10 @@ public class NotificationSettingsManager implements Dumpable {
             return this.mHideAlertWindowWhitelist.contains(str.split(" - ", 2)[1]);
         }
         return false;
+    }
+
+    public boolean shouldPeekWhenAppShowing(String str) {
+        return this.mAvoidDisturbPackages.contains(str);
     }
 
     public int getFoldImportance(Context context, String str) {

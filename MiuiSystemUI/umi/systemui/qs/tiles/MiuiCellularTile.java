@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.SystemProperties;
-import android.telephony.SubscriptionInfo;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +24,7 @@ import com.miui.systemui.util.VirtualSimUtils;
 import java.util.ArrayList;
 import java.util.List;
 import miui.securityspace.CrossUserUtils;
+import miui.telephony.SubscriptionInfo;
 import miui.telephony.SubscriptionManager;
 
 public class MiuiCellularTile extends QSTileImpl<QSTile.BooleanState> {
@@ -149,7 +149,7 @@ public class MiuiCellularTile extends QSTileImpl<QSTile.BooleanState> {
         }
         if (booleanState.dualTarget && (list = this.mSimInfoRecordList) != null && (i = callbackInfo.defaultDataSlot) >= 0 && i < list.size()) {
             SubscriptionInfo subscriptionInfo = this.mSimInfoRecordList.get(callbackInfo.defaultDataSlot);
-            if (VirtualSimUtils.isVirtualSim(this.mContext, subscriptionInfo.getSimSlotIndex())) {
+            if (VirtualSimUtils.isVirtualSim(this.mContext, subscriptionInfo.getSlotId())) {
                 charSequence = VirtualSimUtils.getVirtualSimCarrierName(this.mContext);
             } else {
                 charSequence = subscriptionInfo.getDisplayName();
@@ -264,8 +264,8 @@ public class MiuiCellularTile extends QSTileImpl<QSTile.BooleanState> {
             }
         }
 
-        public void setSubs(List<SubscriptionInfo> list) {
-            List unused = MiuiCellularTile.this.mSimInfoRecordList = list;
+        public void setSubs(List<android.telephony.SubscriptionInfo> list) {
+            List unused = MiuiCellularTile.this.mSimInfoRecordList = SubscriptionManager.getDefault().getSubscriptionInfoList();
             MiuiCellularTile.this.refreshState(this.mInfo);
             if (!MiuiCellularTile.this.isShowingDetail()) {
                 return;
@@ -377,7 +377,7 @@ public class MiuiCellularTile extends QSTileImpl<QSTile.BooleanState> {
             boolean z = this.mDefaultDataSlot == i;
             acquireItem.selected = z;
             acquireItem.icon2 = z ? C0013R$drawable.ic_qs_detail_item_selected : -1;
-            if (VirtualSimUtils.isVirtualSim(MiuiCellularTile.this.mContext, subscriptionInfo.getSimSlotIndex())) {
+            if (VirtualSimUtils.isVirtualSim(MiuiCellularTile.this.mContext, subscriptionInfo.getSlotId())) {
                 acquireItem.line1 = VirtualSimUtils.getVirtualSimCarrierName(MiuiCellularTile.this.mContext);
             } else {
                 acquireItem.line1 = subscriptionInfo.getDisplayName();

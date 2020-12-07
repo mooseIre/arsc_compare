@@ -83,6 +83,9 @@ public class QSFragment extends LifecycleFragment implements QS, CommandQueue.Ca
     private final StatusBarStateController mStatusBarStateController;
     private final Executor mUIExecutor;
 
+    private void setEditLocation(View view) {
+    }
+
     public void setHasNotifications(boolean z) {
     }
 
@@ -231,12 +234,6 @@ public class QSFragment extends LifecycleFragment implements QS, CommandQueue.Ca
         if (miuiNotificationShadeHeader != null) {
             miuiNotificationShadeHeader.onConfigurationChanged(configuration);
         }
-    }
-
-    private void setEditLocation(View view) {
-        View findViewById = view.findViewById(16908291);
-        int[] locationOnScreen = findViewById.getLocationOnScreen();
-        this.mQSCustomizer.setEditLocation(locationOnScreen[0] + (findViewById.getWidth() / 2), locationOnScreen[1] + (findViewById.getHeight() / 2));
     }
 
     public void setContainer(ViewGroup viewGroup) {

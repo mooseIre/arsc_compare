@@ -56,7 +56,7 @@ public class KeyguardStatusBarView extends RelativeLayout implements BatteryCont
     private DisplayCutout mDisplayCutout;
     protected StatusBarIconController.MiuiLightDarkIconManager mDripLeftIconManager;
     private MiuiDripLeftStatusIconContainer mDripLeftStatusIconContainer;
-    private FrameLayout mDripLeftStatusIconFrameContainer;
+    protected FrameLayout mDripLeftStatusIconFrameContainer;
     protected StatusBarIconController.MiuiLightDarkIconManager mDripRightIconManager;
     private MiuiStatusIconContainer mDripRightStatusIconContainer;
     protected final Rect mEmptyRect = new Rect(0, 0, 0, 0);
@@ -71,8 +71,7 @@ public class KeyguardStatusBarView extends RelativeLayout implements BatteryCont
     private Pair<Integer, Integer> mPadding = new Pair<>(0, 0);
     private int mRoundedCornerPadding = 0;
     protected FrameLayout mStatusBarPromptContainer;
-    /* access modifiers changed from: private */
-    public ViewGroup mStatusIconArea;
+    protected ViewGroup mStatusIconArea;
     private MiuiStatusIconContainer mStatusIconContainer;
     private int mSystemIconsBaseMargin;
     /* access modifiers changed from: private */

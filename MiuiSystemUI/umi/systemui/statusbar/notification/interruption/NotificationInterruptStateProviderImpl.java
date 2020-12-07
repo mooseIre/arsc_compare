@@ -26,8 +26,7 @@ public class NotificationInterruptStateProviderImpl implements NotificationInter
     /* access modifiers changed from: private */
     public final ContentResolver mContentResolver;
     private final IDreamManager mDreamManager;
-    /* access modifiers changed from: private */
-    public HeadsUpManager mHeadsUpManager;
+    protected HeadsUpManager mHeadsUpManager;
     private final ContentObserver mHeadsUpObserver;
     private final NotificationFilter mNotificationFilter;
     private final PowerManager mPowerManager;
