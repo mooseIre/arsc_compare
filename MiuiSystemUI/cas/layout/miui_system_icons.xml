@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:gravity="end|center" android:id="@id/system_icons" android:layout_width="fill_parent" android:layout_height="fill_parent"
+<LinearLayout android:gravity="end|center" android:id="@id/system_icons" android:layout_width="wrap_content" android:layout_height="fill_parent"
   xmlns:android="http://schemas.android.com/apk/res/android" xmlns:systemui="http://schemas.android.com/apk/res-auto">
-    <com.android.systemui.statusbar.views.NetworkSpeedView android:textAppearance="@style/TextAppearance.StatusBar.Clock" android:gravity="end|center" android:id="@id/fullscreen_network_speed_view" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="fill_parent" android:singleLine="true" />
-    <com.android.systemui.statusbar.phone.MiuiStatusIconContainer android:gravity="center_vertical" android:orientation="horizontal" android:id="@id/drip_right_statusIcons" android:visibility="gone" android:layout_width="0.0dip" android:layout_height="fill_parent" android:layout_weight="1.0" />
-    <com.android.systemui.statusbar.phone.MiuiStatusIconContainer android:gravity="center_vertical" android:orientation="horizontal" android:id="@id/statusIcons" android:layout_width="0.0dip" android:layout_height="fill_parent" android:layout_weight="1.0" />
+    <LinearLayout android:gravity="end|center" android:layout_width="wrap_content" android:layout_height="fill_parent">
+        <com.android.systemui.statusbar.views.NetworkSpeedView android:textAppearance="@style/TextAppearance.StatusBar.Clock" android:gravity="end|center" android:id="@id/fullscreen_network_speed_view" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="fill_parent" android:singleLine="true" />
+        <com.android.systemui.statusbar.phone.MiuiStatusIconContainer android:gravity="center_vertical" android:orientation="horizontal" android:id="@id/drip_right_statusIcons" android:visibility="gone" android:layout_width="0.0dip" android:layout_height="fill_parent" android:layout_weight="1.0" />
+        <com.android.systemui.statusbar.phone.MiuiStatusIconContainer android:gravity="center_vertical" android:orientation="horizontal" android:id="@id/statusIcons" android:layout_width="0.0dip" android:layout_height="fill_parent" android:layout_weight="1.0" />
+    </LinearLayout>
     <com.android.systemui.MiuiBatteryMeterView android:id="@id/battery" android:focusable="true" android:focusableInTouchMode="true" android:layout_width="wrap_content" android:layout_height="fill_parent" />
 </LinearLayout>
