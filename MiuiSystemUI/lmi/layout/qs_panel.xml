@@ -11,7 +11,7 @@
         <View android:id="@id/quick_settings_background" android:background="@drawable/panel_round_corner_bg" android:layout_width="fill_parent" android:layout_height="0.0dip" />
         <com.android.systemui.qs.NonInterceptingScrollView android:id="@id/expanded_qs_scroll_view" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_weight="1.0" android:importantForAccessibility="no" android:elevation="4.0dip">
             <com.android.systemui.qs.QSPanel android:id="@id/quick_settings_panel" android:background="@android:color/transparent" android:focusable="true" android:layout_width="fill_parent" android:layout_height="wrap_content" android:accessibilityTraversalBefore="@android:id/edit">
-                <include layout="@layout/qs_footer_impl" />
+                <include layout="@layout/miui_qs_footer" />
                 <include android:id="@id/divider" layout="@layout/qs_media_divider" />
             </com.android.systemui.qs.QSPanel>
         </com.android.systemui.qs.NonInterceptingScrollView>
