@@ -310,6 +310,9 @@ public class NotificationHeaderViewWrapper extends NotificationViewWrapper {
             if (NotificationHeaderViewWrapper.this.mRow.getEntry().notification.isSubstituteNotification()) {
                 NotificationHeaderViewWrapper.this.mAppNameText.setText(expandedNotification.getAppName());
             }
+            if (NotificationUtil.isHybrid(expandedNotification)) {
+                NotificationHeaderViewWrapper.this.mAppNameText.setText(expandedNotification.getAppName());
+            }
         }
 
         /* access modifiers changed from: package-private */

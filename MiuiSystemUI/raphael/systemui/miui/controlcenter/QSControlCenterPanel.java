@@ -1279,23 +1279,26 @@ public class QSControlCenterPanel extends FrameLayout implements ConfigurationCo
             addTransAnimateView(this.mLandCtrFooter.findViewById(R.id.footer_text), this.mFootPanelBaseIdx);
             addTransAnimateView(this.mLandCtrFooter.findViewById(R.id.footer_icon), this.mFootPanelBaseIdx);
         }
-        for (int i3 = 0; i3 < this.mTransLineNum; i3++) {
+        int i3 = 0;
+        for (int i4 = 0; i4 < this.mTransLineNum; i4++) {
             ArrayList arrayList3 = new ArrayList();
             ArrayList arrayList4 = new ArrayList();
             Iterator<View> it2 = this.mTransViews.iterator();
             while (it2.hasNext()) {
                 View next2 = it2.next();
-                if (((Integer) next2.getTag(R.id.tag_control_center_trans)).intValue() == i3) {
-                    if (i3 == 2 || i3 == 3) {
+                if (((Integer) next2.getTag(R.id.tag_control_center_trans)).intValue() == i4) {
+                    if (i4 == 2 || i4 == 3) {
                         arrayList3.add(Folme.useAt(next2).state());
-                        this.mBigTileTransAnimArr.put(Integer.valueOf(i3), arrayList3);
+                        this.mBigTileTransAnimArr.put(Integer.valueOf(i4), arrayList3);
                     } else {
                         arrayList4.add(next2);
                     }
                 }
             }
-            if (arrayList4.size() > 0) {
-                this.mPanelTransAnimMap.put(Integer.valueOf(i3), Folme.useAt((View[]) arrayList4.toArray(new View[arrayList4.size()])).state());
+            Iterator it3 = arrayList4.iterator();
+            while (it3.hasNext()) {
+                this.mPanelTransAnimMap.put(Integer.valueOf(i3), Folme.useAt((View) it3.next()).state());
+                i3++;
             }
         }
     }

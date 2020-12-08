@@ -130,7 +130,7 @@ public class ScreenButtonTile extends QSTileImpl<QSTile.BooleanState> {
 
         public void run() {
             if (this.value == 0) {
-                AlertDialog create = new AlertDialog.Builder(ScreenButtonTile.this.mContext, R.style.Theme_Dialog_Alert).setMessage(286130250).setPositiveButton(17039370, (DialogInterface.OnClickListener) null).create();
+                AlertDialog create = new AlertDialog.Builder(ScreenButtonTile.this.mContext, R.style.Theme_Dialog_Alert).setMessage(286130251).setPositiveButton(17039370, (DialogInterface.OnClickListener) null).create();
                 create.getWindow().setType(2010);
                 create.getWindow().addPrivateFlags(16);
                 create.show();

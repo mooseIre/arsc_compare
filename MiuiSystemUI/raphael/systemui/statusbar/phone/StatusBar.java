@@ -6848,7 +6848,7 @@ public class StatusBar extends SystemUI implements DemoMode, DragDownHelper.Drag
             notificationManager.cancelAsUser((String) null, R.drawable.screen_button_notification_icon, new UserHandle(this.mCurrentUserId));
             return;
         }
-        Notification build = NotificationCompat.newBuilder(this.mContext, NotificationChannels.SCREENBUTTON).setWhen(System.currentTimeMillis()).setShowWhen(true).setOngoing(true).setSmallIcon(R.drawable.screen_button_notification_icon).setContentTitle(this.mContext.getString(R.string.screen_button_notification_title)).setContentText(this.mContext.getString(286130250)).setContentIntent(PendingIntent.getBroadcast(this.mContext, 0, new Intent("com.miui.app.ExtraStatusBarManager.TRIGGER_TOGGLE_SCREEN_BUTTONS"), 0)).build();
+        Notification build = NotificationCompat.newBuilder(this.mContext, NotificationChannels.SCREENBUTTON).setWhen(System.currentTimeMillis()).setShowWhen(true).setOngoing(true).setSmallIcon(R.drawable.screen_button_notification_icon).setContentTitle(this.mContext.getString(R.string.screen_button_notification_title)).setContentText(this.mContext.getString(286130251)).setContentIntent(PendingIntent.getBroadcast(this.mContext, 0, new Intent("com.miui.app.ExtraStatusBarManager.TRIGGER_TOGGLE_SCREEN_BUTTONS"), 0)).build();
         MiuiNotificationCompat.setTargetPkg(build, "android");
         notificationManager.notifyAsUser((String) null, R.drawable.screen_button_notification_icon, build, new UserHandle(this.mCurrentUserId));
     }

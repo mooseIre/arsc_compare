@@ -255,14 +255,14 @@ public class NotificationTemplateViewWrapper extends NotificationHeaderViewWrapp
 
     /* access modifiers changed from: protected */
     public void handleTitle() {
-        if (this.mTitle != null) {
+        if (this.mTitle != null && this.mLine1Container != null) {
             this.mStyleProcessor.handleTitle();
         }
     }
 
     /* access modifiers changed from: protected */
     public void handleText() {
-        if (this.mText != null) {
+        if (this.mText != null && this.mLine1Container != null) {
             this.mStyleProcessor.handleText();
         }
     }
