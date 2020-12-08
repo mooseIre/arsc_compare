@@ -1248,16 +1248,18 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener {
     }
 
     private KeyguardUpdateMonitor(Context context) {
-        this.mContext = context;
+        Context context2 = context;
+        this.mContext = context2;
         this.mSubscriptionManager = SubscriptionManager.from(context);
-        this.mAlarmManager = (AlarmManager) context.getSystemService(AlarmManager.class);
+        this.mAlarmManager = (AlarmManager) context2.getSystemService(AlarmManager.class);
         this.mDeviceProvisioned = MiuiKeyguardUtils.isDeviceProvisionedInSettingsDb(this.mContext);
-        this.mStrongAuthTracker = new StrongAuthTracker(context);
+        this.mStrongAuthTracker = new StrongAuthTracker(context2);
         if (!this.mDeviceProvisioned) {
             watchForDeviceProvisioning();
         }
         this.mBatteryStatus = new BatteryStatus(1, 0, 0, 0, 0, -1);
         Dependency.get(MiuiChargeManager.class);
+        int i = Settings.Secure.getInt(context.getContentResolver(), "sim_lock_enable", 0);
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("android.intent.action.TIME_TICK");
         intentFilter.addAction("android.intent.action.TIME_SET");
@@ -1267,15 +1269,17 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener {
         intentFilter2.addAction("android.intent.action.BATTERY_CHANGED");
         intentFilter2.addAction("android.intent.action.AIRPLANE_MODE");
         intentFilter2.addAction("android.intent.action.LOCALE_CHANGED");
-        intentFilter2.addAction("android.intent.action.SIM_STATE_CHANGED");
+        if (i == 0) {
+            intentFilter2.addAction("android.intent.action.SIM_STATE_CHANGED");
+        }
         intentFilter2.addAction("android.intent.action.SERVICE_STATE");
         intentFilter2.addAction("android.intent.action.PHONE_STATE");
         intentFilter2.addAction("android.media.RINGER_MODE_CHANGED");
-        context.registerReceiver(this.mBroadcastReceiver, intentFilter2, (String) null, this.mHandler);
+        context2.registerReceiver(this.mBroadcastReceiver, intentFilter2, (String) null, this.mHandler);
         IntentFilter intentFilter3 = new IntentFilter();
         intentFilter3.setPriority(1000);
         intentFilter3.addAction("android.intent.action.BOOT_COMPLETED");
-        context.registerReceiver(this.mBroadcastReceiver, intentFilter3, (String) null, this.mHandler);
+        context2.registerReceiver(this.mBroadcastReceiver, intentFilter3, (String) null, this.mHandler);
         IntentFilter intentFilter4 = new IntentFilter();
         intentFilter4.addAction("android.intent.action.USER_INFO_CHANGED");
         intentFilter4.addAction("android.app.action.NEXT_ALARM_CLOCK_CHANGED");
@@ -1286,7 +1290,9 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener {
         intentFilter4.addAction("face_unlock_release");
         intentFilter4.addAction("miui.intent.action.MIUI_REGION_CHANGED");
         context.registerReceiverAsUser(this.mBroadcastAllReceiver, UserHandle.ALL, intentFilter4, (String) null, this.mHandler);
-        this.mSubscriptionManager.addOnSubscriptionsChangedListener(this.mSubscriptionListener);
+        if (i == 0) {
+            this.mSubscriptionManager.addOnSubscriptionsChangedListener(this.mSubscriptionListener);
+        }
         try {
             ActivityManagerCompat.registerUserSwitchObserver(new UserSwitchObserverCompat() {
                 public void onUserSwitching(int i, IRemoteCallback iRemoteCallback) {
@@ -1300,18 +1306,18 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener {
         } catch (RemoteException e) {
             e.rethrowAsRuntimeException();
         }
-        this.mTrustManager = (TrustManager) context.getSystemService("trust");
+        this.mTrustManager = (TrustManager) context2.getSystemService("trust");
         this.mTrustManager.registerTrustListener(this);
-        this.mLockPatternUtils = new LockPatternUtils(context);
+        this.mLockPatternUtils = new LockPatternUtils(context2);
         this.mLockPatternUtils.registerStrongAuthTracker(this.mStrongAuthTracker);
         this.mStatusBarHeight = this.mContext.getResources().getDimensionPixelOffset(R.dimen.status_bar_height);
-        this.mFpm = (FingerprintManager) context.getSystemService("fingerprint");
+        this.mFpm = (FingerprintManager) context2.getSystemService("fingerprint");
         updateFingerprintListeningState();
         FingerprintManager fingerprintManager = this.mFpm;
         if (fingerprintManager != null) {
             fingerprintManager.addLockoutResetCallback(this.mLockoutResetCallback);
         }
-        this.mUserManager = (UserManager) context.getSystemService(UserManager.class);
+        this.mUserManager = (UserManager) context2.getSystemService(UserManager.class);
         this.mContext.getContentResolver().registerContentObserver(Settings.Secure.getUriFor("second_user_id"), false, this.mSecondUserProviderObserver, 0);
         this.mSecondUserProviderObserver.onChange(false);
         this.mContext.getContentResolver().registerContentObserver(Settings.Secure.getUriFor("kid_user_id"), false, this.mKidSpaceUserProviderObserver, 0);
