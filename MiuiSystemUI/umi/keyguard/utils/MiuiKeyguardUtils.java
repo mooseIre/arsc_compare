@@ -323,6 +323,6 @@ public class MiuiKeyguardUtils {
     }
 
     public static boolean isLargeScreen(Context context) {
-        return (context.getResources().getConfiguration().screenLayout & 15) >= 3;
+        return miui.os.Build.DEVICE.equals("cetus") && (context.getResources().getConfiguration().screenLayout & 15) >= 3;
     }
 }

@@ -1,6 +1,7 @@
 package com.android.keyguard;
 
 import android.content.ComponentName;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
@@ -12,6 +13,7 @@ import android.os.Looper;
 import android.os.PowerManager;
 import android.os.RemoteException;
 import android.os.UserHandle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import com.android.keyguard.fod.MiuiGxzwManager;
@@ -43,6 +45,7 @@ import com.android.systemui.statusbar.policy.BatteryController;
 import com.android.systemui.statusbar.policy.DeviceProvisionedController;
 import com.miui.aod.IMiuiAodCallback;
 import com.miui.aod.IMiuiAodService;
+import com.miui.systemui.SettingsManager;
 import com.miui.systemui.SettingsObserver;
 import com.miui.systemui.util.MiuiTextUtils;
 import dagger.Lazy;
@@ -55,7 +58,9 @@ public class MiuiDozeServiceHost extends DozeServiceHost {
     public IMiuiAodService mAodService;
     private boolean mAodServiceBinded = false;
     private boolean mAodUsingSuperWallpaperStyle;
-    private final Context mContext = SystemUIApplication.getContext();
+    /* access modifiers changed from: private */
+    public final Context mContext = SystemUIApplication.getContext();
+    private DeviceProvisionedController mDeviceProvisionedController;
     Runnable mDozingChanged = new Runnable() {
         public final void run() {
             MiuiDozeServiceHost.this.updateDozing();
@@ -91,12 +96,13 @@ public class MiuiDozeServiceHost extends DozeServiceHost {
     }
 
     /* JADX INFO: super call moved to the top of the method (can break code semantics) */
-    public MiuiDozeServiceHost(DozeLog dozeLog, PowerManager powerManager, WakefulnessLifecycle wakefulnessLifecycle, SysuiStatusBarStateController sysuiStatusBarStateController, DeviceProvisionedController deviceProvisionedController, HeadsUpManagerPhone headsUpManagerPhone, BatteryController batteryController, ScrimController scrimController, Lazy<BiometricUnlockController> lazy, KeyguardViewMediator keyguardViewMediator, Lazy<AssistManager> lazy2, DozeScrimController dozeScrimController, KeyguardUpdateMonitor keyguardUpdateMonitor, VisualStabilityManager visualStabilityManager, PulseExpansionHandler pulseExpansionHandler, NotificationShadeWindowController notificationShadeWindowController, NotificationWakeUpCoordinator notificationWakeUpCoordinator, LockscreenLockIconController lockscreenLockIconController) {
+    public MiuiDozeServiceHost(DozeLog dozeLog, PowerManager powerManager, WakefulnessLifecycle wakefulnessLifecycle, SysuiStatusBarStateController sysuiStatusBarStateController, DeviceProvisionedController deviceProvisionedController, HeadsUpManagerPhone headsUpManagerPhone, BatteryController batteryController, ScrimController scrimController, Lazy<BiometricUnlockController> lazy, KeyguardViewMediator keyguardViewMediator, Lazy<AssistManager> lazy2, DozeScrimController dozeScrimController, KeyguardUpdateMonitor keyguardUpdateMonitor, VisualStabilityManager visualStabilityManager, PulseExpansionHandler pulseExpansionHandler, NotificationShadeWindowController notificationShadeWindowController, NotificationWakeUpCoordinator notificationWakeUpCoordinator, LockscreenLockIconController lockscreenLockIconController, SettingsManager settingsManager) {
         super(dozeLog, powerManager, wakefulnessLifecycle, sysuiStatusBarStateController, deviceProvisionedController, headsUpManagerPhone, batteryController, scrimController, lazy, keyguardViewMediator, lazy2, dozeScrimController, keyguardUpdateMonitor, visualStabilityManager, pulseExpansionHandler, notificationShadeWindowController, notificationWakeUpCoordinator, lockscreenLockIconController);
         final KeyguardUpdateMonitor keyguardUpdateMonitor2 = keyguardUpdateMonitor;
         boolean supportAod = supportAod(this.mContext);
         this.mSupportAod = supportAod;
         this.mPowerManager = powerManager;
+        this.mDeviceProvisionedController = deviceProvisionedController;
         if (supportAod) {
             AnonymousClass1 r3 = new KeyguardUpdateMonitorCallback() {
                 public void onSimStateChanged(int i, int i2, int i3) {
@@ -117,6 +123,20 @@ public class MiuiDozeServiceHost extends DozeServiceHost {
                     MiuiDozeServiceHost.this.lambda$new$0$MiuiDozeServiceHost(str, str2);
                 }
             }, 1, MiuiKeyguardUtils.AOD_MODE, "aod_using_super_wallpaper");
+            final SettingsManager settingsManager2 = settingsManager;
+            this.mDeviceProvisionedController.addCallback(new DeviceProvisionedController.DeviceProvisionedListener() {
+                public void onDeviceProvisionedChanged() {
+                    ContentResolver contentResolver = MiuiDozeServiceHost.this.mContext.getContentResolver();
+                    boolean z = false;
+                    if (Settings.Global.getInt(contentResolver, "device_provisioned", 0) != 0) {
+                        z = true;
+                    }
+                    if (z) {
+                        Settings.Global.putInt(contentResolver, "new_device_after_support_notification_animation", 1);
+                        settingsManager2.refreshWakeupForNotificationValue();
+                    }
+                }
+            });
         }
     }
 
