@@ -5,6 +5,7 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import com.android.systemui.C0015R$id;
@@ -13,7 +14,7 @@ import com.android.systemui.Dependency;
 import com.android.systemui.statusbar.notification.NotificationEntryManager;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow;
-import com.android.systemui.statusbar.notification.row.NotificationBackgroundView;
+import com.android.systemui.statusbar.notification.row.MiuiExpandableNotificationRow;
 import com.android.systemui.statusbar.phone.StatusBar;
 import com.miui.systemui.DebugConfig;
 import com.miui.systemui.util.HapticFeedBackImpl;
@@ -27,12 +28,12 @@ public final class ModalController {
     @NotNull
     private final Context context;
     private final long defaultDuration = 300;
-    private long duration = 300;
     /* access modifiers changed from: private */
     public NotificationEntry entry;
     /* access modifiers changed from: private */
     public boolean isAnimating;
     private boolean isModal;
+    private boolean mDownEventInjected;
     private ExpandableNotificationRow modalRow;
     @NotNull
     public ModalRowInflater modalRowInflater;
@@ -87,7 +88,6 @@ public final class ModalController {
         sb.append(entry2.getKey());
         Log.d("ModalController", sb.toString());
         if (!this.isModal && !this.isAnimating) {
-            this.duration = this.defaultDuration;
             ModalRowInflater modalRowInflater2 = this.modalRowInflater;
             ExpandableNotificationRow expandableNotificationRow2 = null;
             if (modalRowInflater2 != null) {
@@ -106,7 +106,7 @@ public final class ModalController {
                     }
                     this.modalRow = expandableNotificationRow2;
                     enterModal();
-                    startAnimator(new ModalController$animEnterModal$updateListener$1(this), new ModalController$animEnterModal$animatorListener$1(this, expandableNotificationRow));
+                    startAnimator$default(this, new ModalController$animEnterModal$updateListener$1(this), new ModalController$animEnterModal$animatorListener$1(this, expandableNotificationRow), 0, 4, (Object) null);
                     return;
                 }
                 Intrinsics.throwUninitializedPropertyAccessException("modalWindowView");
@@ -118,24 +118,23 @@ public final class ModalController {
     }
 
     private final void enterModal() {
-        NotificationBackgroundView notificationBackgroundView;
+        ExpandableNotificationRow expandableNotificationRow = this.modalRow;
         this.modalWindowManager.setBlurRatio(0.0f);
         ModalWindowView modalWindowView2 = this.modalWindowView;
         if (modalWindowView2 != null) {
             modalWindowView2.setOnClickListener(new ModalController$enterModal$1(this));
-            ExpandableNotificationRow expandableNotificationRow = this.modalRow;
             if (expandableNotificationRow != null) {
                 expandableNotificationRow.setOnClickListener(new ModalController$enterModal$2(this));
-            }
-            ExpandableNotificationRow expandableNotificationRow2 = this.modalRow;
-            if (!(expandableNotificationRow2 == null || (notificationBackgroundView = (NotificationBackgroundView) expandableNotificationRow2.findViewById(C0015R$id.backgroundNormal)) == null)) {
-                notificationBackgroundView.disableBlur();
             }
             ModalWindowView modalWindowView3 = this.modalWindowView;
             if (modalWindowView3 != null) {
                 modalWindowView3.enterModal(this.entry);
                 this.modalWindowManager.show();
                 ((HapticFeedBackImpl) Dependency.get(HapticFeedBackImpl.class)).longPress();
+                if (expandableNotificationRow instanceof MiuiExpandableNotificationRow) {
+                    ((MiuiExpandableNotificationRow) expandableNotificationRow).setIsInModal(true);
+                    return;
+                }
                 return;
             }
             Intrinsics.throwUninitializedPropertyAccessException("modalWindowView");
@@ -150,23 +149,43 @@ public final class ModalController {
         this.statusBar.animateCollapsePanels(0, false);
     }
 
-    public final void animExitModal(long j) {
-        this.duration = j;
-        animExitModal();
+    public final void animExitModal() {
+        animExitModal(this.defaultDuration, true);
     }
 
-    public final void animExitModal() {
+    public final void animExitModal(long j, boolean z) {
         if (this.isModal && !this.isAnimating) {
-            this.isAnimating = true;
-            ModalWindowView modalWindowView2 = this.modalWindowView;
-            if (modalWindowView2 != null) {
-                modalWindowView2.exitModal(this.entry);
-                startAnimator(new ModalController$animExitModal$updateListener$1(this), new ModalController$animExitModal$animatorListener$1(this));
-                return;
+            ModalController$animExitModal$animatorListener$1 modalController$animExitModal$animatorListener$1 = null;
+            if (z) {
+                ModalWindowView modalWindowView2 = this.modalWindowView;
+                if (modalWindowView2 != null) {
+                    modalWindowView2.exitModal(this.entry);
+                } else {
+                    Intrinsics.throwUninitializedPropertyAccessException("modalWindowView");
+                    throw null;
+                }
             }
-            Intrinsics.throwUninitializedPropertyAccessException("modalWindowView");
-            throw null;
+            this.modalWindowManager.clearFocus();
+            ModalController$animExitModal$updateListener$1 modalController$animExitModal$updateListener$1 = new ModalController$animExitModal$updateListener$1(this);
+            ModalController$animExitModal$animatorListener$1 modalController$animExitModal$animatorListener$12 = new ModalController$animExitModal$animatorListener$1(this);
+            if (z) {
+                modalController$animExitModal$animatorListener$1 = modalController$animExitModal$animatorListener$12;
+            }
+            startAnimator(modalController$animExitModal$updateListener$1, modalController$animExitModal$animatorListener$1, j);
+            this.isAnimating = true;
         }
+    }
+
+    public final void exitModalImmediately() {
+        ModalWindowView modalWindowView2 = this.modalWindowView;
+        if (modalWindowView2 != null) {
+            modalWindowView2.exitModal(this.entry);
+            exitModal();
+            this.isAnimating = false;
+            return;
+        }
+        Intrinsics.throwUninitializedPropertyAccessException("modalWindowView");
+        throw null;
     }
 
     /* access modifiers changed from: private */
@@ -180,10 +199,17 @@ public final class ModalController {
         }
     }
 
-    private final void startAnimator(ValueAnimator.AnimatorUpdateListener animatorUpdateListener, Animator.AnimatorListener animatorListener) {
+    static /* synthetic */ void startAnimator$default(ModalController modalController, ValueAnimator.AnimatorUpdateListener animatorUpdateListener, Animator.AnimatorListener animatorListener, long j, int i, Object obj) {
+        if ((i & 4) != 0) {
+            j = modalController.defaultDuration;
+        }
+        modalController.startAnimator(animatorUpdateListener, animatorListener, j);
+    }
+
+    private final void startAnimator(ValueAnimator.AnimatorUpdateListener animatorUpdateListener, Animator.AnimatorListener animatorListener, long j) {
         ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{0.0f, 1.0f});
         Intrinsics.checkExpressionValueIsNotNull(ofFloat, "animator");
-        ofFloat.setDuration(this.duration);
+        ofFloat.setDuration(j);
         ofFloat.setInterpolator(new CubicEaseInOutInterpolator());
         if (animatorUpdateListener != null) {
             ofFloat.addUpdateListener(animatorUpdateListener);
@@ -220,5 +246,48 @@ public final class ModalController {
     public final boolean shouldExtendLifetime(@NotNull NotificationEntry notificationEntry) {
         Intrinsics.checkParameterIsNotNull(notificationEntry, "entry");
         return this.isModal && Intrinsics.areEqual((Object) this.entry, (Object) notificationEntry);
+    }
+
+    public final boolean maybeDispatchMotionEvent(@NotNull MotionEvent motionEvent) {
+        boolean z;
+        Intrinsics.checkParameterIsNotNull(motionEvent, "event");
+        if (this.isModal) {
+            if (!this.mDownEventInjected) {
+                injectMotionEvent(motionEvent, 0);
+                this.mDownEventInjected = true;
+            }
+            if (motionEvent.getActionMasked() != 1) {
+                ModalWindowView modalWindowView2 = this.modalWindowView;
+                if (modalWindowView2 != null) {
+                    modalWindowView2.dispatchTouchEvent(motionEvent);
+                } else {
+                    Intrinsics.throwUninitializedPropertyAccessException("modalWindowView");
+                    throw null;
+                }
+            } else {
+                injectMotionEvent(motionEvent, 3);
+            }
+            z = true;
+        } else {
+            z = false;
+        }
+        if (motionEvent.getActionMasked() == 1 || motionEvent.getActionMasked() == 3) {
+            this.mDownEventInjected = false;
+        }
+        return z;
+    }
+
+    private final void injectMotionEvent(MotionEvent motionEvent, int i) {
+        MotionEvent obtain = MotionEvent.obtain(motionEvent);
+        Intrinsics.checkExpressionValueIsNotNull(obtain, "downEvent");
+        obtain.setAction(i);
+        ModalWindowView modalWindowView2 = this.modalWindowView;
+        if (modalWindowView2 != null) {
+            modalWindowView2.dispatchTouchEvent(obtain);
+            obtain.recycle();
+            return;
+        }
+        Intrinsics.throwUninitializedPropertyAccessException("modalWindowView");
+        throw null;
     }
 }

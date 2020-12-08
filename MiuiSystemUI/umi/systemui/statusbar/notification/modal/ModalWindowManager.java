@@ -51,6 +51,11 @@ public class ModalWindowManager {
         apply();
     }
 
+    public void clearFocus() {
+        this.mLpChanged.flags |= 8;
+        apply();
+    }
+
     public void hide() {
         this.mWindowView.setVisibility(8);
         WindowManager.LayoutParams layoutParams = this.mLpChanged;

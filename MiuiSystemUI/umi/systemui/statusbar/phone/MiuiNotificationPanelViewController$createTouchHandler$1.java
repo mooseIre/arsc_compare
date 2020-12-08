@@ -3,7 +3,9 @@ package com.android.systemui.statusbar.phone;
 import android.animation.ValueAnimator;
 import android.view.MotionEvent;
 import com.android.keyguard.injector.KeyguardPanelViewInjector;
+import com.android.systemui.Dependency;
 import com.android.systemui.controlcenter.phone.ControlPanelController;
+import com.android.systemui.statusbar.notification.modal.ModalController;
 import com.android.systemui.statusbar.phone.NotificationPanelViewController;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
@@ -32,7 +34,7 @@ public final class MiuiNotificationPanelViewController$createTouchHandler$1 exte
             this.isFullyExpandedOnDown = this.this$0.isFullyExpanded();
             this.this$0.cancelFlingSpring();
         }
-        if (!this.this$0.isOnKeyguard() && onPanelIntercept(motionEvent)) {
+        if (!this.this$0.isOnKeyguard() && (((ModalController) Dependency.get(ModalController.class)).maybeDispatchMotionEvent(motionEvent) || onPanelIntercept(motionEvent))) {
             return true;
         }
         if (this.this$0.isOnKeyguard()) {
@@ -48,6 +50,9 @@ public final class MiuiNotificationPanelViewController$createTouchHandler$1 exte
             this.isFullyCollapsedOnDown = this.this$0.isFullyCollapsed();
             this.isFullyExpandedOnDown = this.this$0.isFullyExpanded();
             this.this$0.cancelFlingSpring();
+        }
+        if (((ModalController) Dependency.get(ModalController.class)).maybeDispatchMotionEvent(motionEvent)) {
+            return true;
         }
         MiuiNotificationPanelViewController miuiNotificationPanelViewController = this.this$0;
         boolean z = false;
@@ -74,8 +79,7 @@ public final class MiuiNotificationPanelViewController$createTouchHandler$1 exte
     private final boolean handleMiniWindowTracking(MotionEvent motionEvent) {
         boolean access$getMTrackingMiniWindowHeadsUp$p = this.this$0.mTrackingMiniWindowHeadsUp;
         MiuiNotificationPanelViewController miuiNotificationPanelViewController = this.this$0;
-        HeadsUpTouchHelper headsUpTouchHelper = miuiNotificationPanelViewController.mHeadsUpTouchHelper;
-        miuiNotificationPanelViewController.mTrackingMiniWindowHeadsUp = (headsUpTouchHelper instanceof MiuiHeadsUpTouchHelper) && ((MiuiHeadsUpTouchHelper) headsUpTouchHelper).isTrackingMiniWindowHeadsUp$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core();
+        miuiNotificationPanelViewController.mTrackingMiniWindowHeadsUp = miuiNotificationPanelViewController.isTrackingMiniWindowHeadsUp();
         int actionMasked = motionEvent.getActionMasked();
         return (actionMasked == 1 || actionMasked == 3) ? access$getMTrackingMiniWindowHeadsUp$p : this.this$0.mTrackingMiniWindowHeadsUp;
     }

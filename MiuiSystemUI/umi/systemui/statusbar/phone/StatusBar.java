@@ -247,7 +247,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
                 if (StatusBar.this.mBubbleController.isStackExpanded()) {
                     StatusBar.this.mBubbleController.collapseStack();
                 }
-                ((ModalController) Dependency.get(ModalController.class)).animExitModal(150);
+                ((ModalController) Dependency.get(ModalController.class)).animExitModal(150, true);
                 if (StatusBar.this.mLockscreenUserManager.isCurrentProfile(getSendingUserId())) {
                     String stringExtra = intent.getStringExtra("reason");
                     if (stringExtra != null && stringExtra.equals("recentapps")) {

@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.util.AttributeSet;
 import android.util.SparseArray;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
@@ -61,6 +62,7 @@ public class MiuiQSDetail extends LinearLayout {
             MiuiQSDetail.this.checkPendingAnimations();
         }
     };
+    private float mInitY;
     private boolean mIsShowingDetail;
     private NotificationsQuickSettingsContainer mNotifQsContainer;
     private int mOpenX;
@@ -173,6 +175,7 @@ public class MiuiQSDetail extends LinearLayout {
     /* access modifiers changed from: protected */
     public void onConfigurationChanged(Configuration configuration) {
         super.onConfigurationChanged(configuration);
+        updateDetailLayout();
         for (int i = 0; i < this.mDetailViews.size(); i++) {
             this.mDetailViews.valueAt(i).dispatchConfigurationChanged(configuration);
         }
@@ -197,6 +200,7 @@ public class MiuiQSDetail extends LinearLayout {
                 MiuiQSDetail.this.lambda$onFinishInflate$0$MiuiQSDetail(view);
             }
         });
+        updateDetailLayout();
     }
 
     /* access modifiers changed from: private */
@@ -424,5 +428,22 @@ public class MiuiQSDetail extends LinearLayout {
 
     public void updateHeaderHeight(int i) {
         setPadding(getPaddingLeft(), i, getPaddingRight(), getContext().getResources().getDimensionPixelOffset(C0012R$dimen.qs_detail_margin_bottom));
+    }
+
+    public boolean onTouchEvent(MotionEvent motionEvent) {
+        if (motionEvent.getActionMasked() == 0) {
+            this.mInitY = motionEvent.getY();
+        }
+        if (this.mInitY < ((float) getPaddingTop())) {
+            return false;
+        }
+        return super.onTouchEvent(motionEvent);
+    }
+
+    private void updateDetailLayout() {
+        if (this.mDetailAdapter != null) {
+            this.mDetailContainer.getLayoutParams().height = this.mDetailAdapter.getContainerHeight();
+            this.mDetailContainer.requestLayout();
+        }
     }
 }

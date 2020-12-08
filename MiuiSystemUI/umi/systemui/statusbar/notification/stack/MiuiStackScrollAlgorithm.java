@@ -1,14 +1,17 @@
 package com.android.systemui.statusbar.notification.stack;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.view.ViewGroup;
 import com.android.systemui.C0012R$dimen;
 import com.android.systemui.C0015R$id;
+import com.android.systemui.Dependency;
 import com.android.systemui.statusbar.EmptyShadeView;
 import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow;
 import com.android.systemui.statusbar.notification.row.ExpandableView;
 import com.android.systemui.statusbar.notification.stack.StackScrollAlgorithm;
 import com.android.systemui.statusbar.notification.zen.ZenModeView;
+import com.miui.systemui.SettingsManager;
 import java.util.ArrayList;
 import java.util.Iterator;
 import kotlin.collections.CollectionsKt;
@@ -18,17 +21,27 @@ import org.jetbrains.annotations.Nullable;
 
 /* compiled from: MiuiStackScrollAlgorithm.kt */
 public final class MiuiStackScrollAlgorithm extends StackScrollAlgorithm {
+    private final Context mContext;
+    private final int mHeadsUpMarginTop;
     private int mLatestVisibleChildrenCount;
     private final int mPaddingBetweenZenModeAndNext;
     private final int mPaddingWhenQsExpansionEnabled;
+    private final int mStatusBarHeight;
 
     /* JADX INFO: super call moved to the top of the method (can break code semantics) */
     public MiuiStackScrollAlgorithm(@NotNull Context context, @NotNull ViewGroup viewGroup) {
         super(context, viewGroup);
         Intrinsics.checkParameterIsNotNull(context, "context");
         Intrinsics.checkParameterIsNotNull(viewGroup, "hostView");
+        this.mContext = context;
         this.mPaddingBetweenZenModeAndNext = context.getResources().getDimensionPixelSize(C0012R$dimen.notification_section_divider_height_for_text);
         this.mPaddingWhenQsExpansionEnabled = context.getResources().getDimensionPixelSize(C0012R$dimen.notification_section_divider_height_minus);
+        this.mStatusBarHeight = context.getResources().getDimensionPixelSize(C0012R$dimen.status_bar_height);
+        this.mHeadsUpMarginTop = context.getResources().getDimensionPixelSize(C0012R$dimen.heads_up_status_bar_padding);
+    }
+
+    private final boolean getMGameModeEnabled() {
+        return ((SettingsManager) Dependency.get(SettingsManager.class)).getGameModeEnabled();
     }
 
     /* access modifiers changed from: protected */
@@ -36,10 +49,23 @@ public final class MiuiStackScrollAlgorithm extends StackScrollAlgorithm {
         Intrinsics.checkParameterIsNotNull(stackScrollAlgorithmState, "algorithmState");
         Intrinsics.checkParameterIsNotNull(ambientState, "ambientState");
         this.mLatestVisibleChildrenCount = stackScrollAlgorithmState.visibleChildren.size();
+        evaluateHeadsUpInsets();
         updateChildrenSpringYOffset(stackScrollAlgorithmState, ambientState);
         updateChildrenAppearDisappearState(stackScrollAlgorithmState, ambientState);
         updateHeadsUpAnimatingAwayState(stackScrollAlgorithmState);
         super.updatePositionsForState(stackScrollAlgorithmState, ambientState);
+    }
+
+    private final void evaluateHeadsUpInsets() {
+        Resources resources = this.mContext.getResources();
+        Intrinsics.checkExpressionValueIsNotNull(resources, "mContext.resources");
+        int i = 0;
+        boolean z = resources.getConfiguration().orientation == 2;
+        int i2 = this.mHeadsUpMarginTop;
+        if (!z) {
+            i = this.mStatusBarHeight;
+        }
+        this.mHeadsUpInset = (float) (i2 + i);
     }
 
     private final void updateChildrenSpringYOffset(StackScrollAlgorithm.StackScrollAlgorithmState stackScrollAlgorithmState, AmbientState ambientState) {
@@ -212,9 +238,9 @@ public final class MiuiStackScrollAlgorithm extends StackScrollAlgorithm {
         ArrayList<ExpandableView> arrayList = stackScrollAlgorithmState.visibleChildren;
         Intrinsics.checkExpressionValueIsNotNull(arrayList, "algorithmState.visibleChildren");
         for (ExpandableView expandableView : arrayList) {
-            if (expandableView instanceof ExpandableNotificationRow) {
+            if (!getMGameModeEnabled() && (expandableView instanceof ExpandableNotificationRow)) {
                 ExpandableNotificationRow expandableNotificationRow = (ExpandableNotificationRow) expandableView;
-                if (expandableNotificationRow.isHeadsUp()) {
+                if (expandableNotificationRow.isPinned()) {
                     int baseZHeight = ambientState.getBaseZHeight();
                     ExpandableViewState viewState = expandableNotificationRow.getViewState();
                     if (viewState != null) {

@@ -1,15 +1,15 @@
-package com.android.systemui.statusbar.phone;
+package com.android.systemui.statusbar.notification.policy;
 
 import android.animation.ValueAnimator;
 import kotlin.TypeCastException;
 import kotlin.jvm.internal.Intrinsics;
 
-/* compiled from: MiuiHeadsUpTouchHelper.kt */
-final class MiuiHeadsUpTouchHelper$startResetToNotificationAnimation$$inlined$apply$lambda$1 implements ValueAnimator.AnimatorUpdateListener {
-    final /* synthetic */ MiuiHeadsUpTouchHelper this$0;
+/* compiled from: AppMiniWindowRowTouchHelper.kt */
+final class AppMiniWindowRowTouchHelper$startResetToNotificationAnimation$$inlined$apply$lambda$1 implements ValueAnimator.AnimatorUpdateListener {
+    final /* synthetic */ AppMiniWindowRowTouchHelper this$0;
 
-    MiuiHeadsUpTouchHelper$startResetToNotificationAnimation$$inlined$apply$lambda$1(MiuiHeadsUpTouchHelper miuiHeadsUpTouchHelper) {
-        this.this$0 = miuiHeadsUpTouchHelper;
+    AppMiniWindowRowTouchHelper$startResetToNotificationAnimation$$inlined$apply$lambda$1(AppMiniWindowRowTouchHelper appMiniWindowRowTouchHelper) {
+        this.this$0 = appMiniWindowRowTouchHelper;
     }
 
     public final void onAnimationUpdate(ValueAnimator valueAnimator) {

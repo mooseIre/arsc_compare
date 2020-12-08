@@ -23,15 +23,21 @@ import com.android.systemui.media.MediaDataManagerKt;
 import com.miui.systemui.BuildConfig;
 import com.miui.systemui.SettingsManager;
 import com.miui.systemui.graphics.AppIconsManager;
-import java.util.Objects;
 import miui.os.SystemProperties;
 import miui.securityspace.CrossUserUtils;
 import miui.securityspace.XSpaceUserHandle;
 
 public class NotificationUtil {
     public static boolean isInCallNotification(ExpandedNotification expandedNotification) {
-        if (Objects.equals("call", expandedNotification.getNotification().category) && TextUtils.equals("incall", expandedNotification.getTag())) {
-            return TextUtils.equals("com.android.incallui", expandedNotification.getOpPkg());
+        return InCallUtils.isInCallNotification(expandedNotification);
+    }
+
+    public static boolean needCustomHeight(ExpandedNotification expandedNotification, boolean z) {
+        if (expandedNotification == null) {
+            return false;
+        }
+        if ((z && expandedNotification.isCustomHeight()) || isMediaNotification(expandedNotification)) {
+            return true;
         }
         return false;
     }
@@ -184,8 +190,14 @@ public class NotificationUtil {
     }
 
     public static boolean isCustomViewNotification(ExpandedNotification expandedNotification) {
-        Notification notification = expandedNotification.getNotification();
-        return (notification.contentView == null && notification.bigContentView == null) ? false : true;
+        Notification notification;
+        if (expandedNotification == null || (notification = expandedNotification.getNotification()) == null) {
+            return false;
+        }
+        if (notification.contentView == null && notification.bigContentView == null) {
+            return false;
+        }
+        return true;
     }
 
     public static String getHiddenText() {

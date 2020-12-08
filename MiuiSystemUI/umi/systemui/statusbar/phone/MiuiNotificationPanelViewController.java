@@ -536,19 +536,22 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
 
     /* access modifiers changed from: protected */
     public float calculateQsTopPadding() {
+        int i;
         float calculateQsTopPadding = super.calculateQsTopPadding();
         ControlPanelController controlPanelController2 = this.controlPanelController.get();
         Intrinsics.checkExpressionValueIsNotNull(controlPanelController2, "controlPanelController.get()");
         if (controlPanelController2.isUseControlCenter()) {
             return calculateQsTopPadding;
         }
-        if (isOnShade() && !isQsExpanded()) {
-            float f = this.mQsTopPadding;
-            if (f < calculateQsTopPadding) {
-                return f + ((float) this.mStickyHeaderHeight);
-            }
+        if (isOnShade() && !isQsExpanded() && this.mQsTopPadding < calculateQsTopPadding && (this.mNssCoveringQs || this.mNssCoveredQs)) {
+            calculateQsTopPadding = this.mQsTopPadding;
+            i = this.mStickyHeaderHeight;
+        } else if (isOnKeyguard()) {
+            return calculateQsTopPadding;
+        } else {
+            i = this.mStickyHeaderHeight;
         }
-        return !isOnKeyguard() ? calculateQsTopPadding + ((float) this.mStickyHeaderHeight) : calculateQsTopPadding;
+        return calculateQsTopPadding + ((float) i);
     }
 
     /* access modifiers changed from: protected */
@@ -698,7 +701,7 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
 
     public void setTrackedHeadsUp(@Nullable ExpandableNotificationRow expandableNotificationRow) {
         super.setTrackedHeadsUp(expandableNotificationRow);
-        if (expandableNotificationRow != null) {
+        if (expandableNotificationRow != null && !isTrackingMiniWindowHeadsUp()) {
             this.mExpandingFromHeadsUp = true;
         }
     }
@@ -1702,5 +1705,11 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
     /* access modifiers changed from: protected */
     public void updateVerticalPanelPosition(float f) {
         setHorizontalPanelTranslation(0.0f);
+    }
+
+    /* access modifiers changed from: private */
+    public final boolean isTrackingMiniWindowHeadsUp() {
+        HeadsUpTouchHelper headsUpTouchHelper = this.mHeadsUpTouchHelper;
+        return (headsUpTouchHelper instanceof MiuiHeadsUpTouchHelper) && ((MiuiHeadsUpTouchHelper) headsUpTouchHelper).isTrackingMiniWindowHeadsUp$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core();
     }
 }

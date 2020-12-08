@@ -23,7 +23,7 @@ public class StackScrollAlgorithm {
     private boolean mClipNotificationScrollToTop;
     private int mCollapsedSize;
     private int mGapHeight;
-    private float mHeadsUpInset;
+    protected float mHeadsUpInset;
     private final ViewGroup mHostView;
     private int mIncreasedPaddingBetweenElements;
     private boolean mIsExpanded;

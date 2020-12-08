@@ -1,4 +1,4 @@
-package com.android.systemui.statusbar.phone;
+package com.android.systemui.statusbar.notification.policy;
 
 import android.os.Handler;
 import android.os.Looper;
@@ -6,14 +6,14 @@ import android.os.Message;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
 
-/* compiled from: MiuiHeadsUpTouchHelper.kt */
-public final class MiuiHeadsUpTouchHelper$mHandler$1 extends Handler {
-    final /* synthetic */ MiuiHeadsUpTouchHelper this$0;
+/* compiled from: AppMiniWindowRowTouchHelper.kt */
+public final class AppMiniWindowRowTouchHelper$mHandler$1 extends Handler {
+    final /* synthetic */ AppMiniWindowRowTouchHelper this$0;
 
     /* JADX INFO: super call moved to the top of the method (can break code semantics) */
-    MiuiHeadsUpTouchHelper$mHandler$1(MiuiHeadsUpTouchHelper miuiHeadsUpTouchHelper, Looper looper) {
+    AppMiniWindowRowTouchHelper$mHandler$1(AppMiniWindowRowTouchHelper appMiniWindowRowTouchHelper, Looper looper) {
         super(looper);
-        this.this$0 = miuiHeadsUpTouchHelper;
+        this.this$0 = appMiniWindowRowTouchHelper;
     }
 
     public void handleMessage(@NotNull Message message) {

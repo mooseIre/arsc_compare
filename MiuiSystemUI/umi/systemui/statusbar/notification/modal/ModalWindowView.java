@@ -6,22 +6,28 @@ import android.content.res.Resources;
 import android.util.AttributeSet;
 import android.util.Property;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import com.android.systemui.C0012R$dimen;
 import com.android.systemui.Dependency;
+import com.android.systemui.statusbar.CommandQueue;
 import com.android.systemui.statusbar.notification.NotificationEntryManager;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
+import com.android.systemui.statusbar.notification.policy.AppMiniWindowRowTouchCallback;
+import com.android.systemui.statusbar.notification.policy.AppMiniWindowRowTouchHelper;
 import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow;
 import com.android.systemui.statusbar.notification.row.ExpandableView;
 import com.android.systemui.statusbar.notification.stack.AnimationFilter;
 import com.android.systemui.statusbar.notification.stack.AnimationProperties;
 import com.android.systemui.statusbar.notification.stack.ViewState;
+import com.miui.systemui.EventTracker;
+import com.miui.systemui.events.MiniWindowEventSource;
 import java.util.function.Consumer;
 
-public class ModalWindowView extends FrameLayout {
+public class ModalWindowView extends FrameLayout implements AppMiniWindowRowTouchCallback {
     /* access modifiers changed from: private */
     public final AnimationProperties animationProperties;
     /* access modifiers changed from: private */
@@ -37,11 +43,17 @@ public class ModalWindowView extends FrameLayout {
     /* access modifiers changed from: private */
     public View mMenuView;
     /* access modifiers changed from: private */
-    public ViewState mMenuViewState = new ViewState();
+    public final ViewState mMenuViewState = new ViewState();
     private int mModalMenuMarginTop;
     /* access modifiers changed from: private */
     public ExpandableNotificationRow mModalRow;
     private ExpandableView.OnHeightChangedListener mOnHeightChangedListener;
+    private final int[] mTmpLoc = new int[2];
+    private final AppMiniWindowRowTouchHelper mTouchHelper = new AppMiniWindowRowTouchHelper(this, (NotificationEntryManager) Dependency.get(NotificationEntryManager.class), (EventTracker) Dependency.get(EventTracker.class), MiniWindowEventSource.MODAL_NOTIFICATION);
+
+    public boolean canChildBePicked(ExpandableView expandableView) {
+        return true;
+    }
 
     public ModalWindowView(Context context) {
         super(context);
@@ -64,8 +76,12 @@ public class ModalWindowView extends FrameLayout {
         this.animationProperties = r0;
         this.mChildrenUpdater = new ViewTreeObserver.OnPreDrawListener() {
             public boolean onPreDraw() {
-                ModalWindowView.this.mModalRow.getViewState().animateTo(ModalWindowView.this.mModalRow, ModalWindowView.this.animationProperties);
-                ModalWindowView.this.mMenuViewState.animateTo(ModalWindowView.this.mMenuView, ModalWindowView.this.animationProperties);
+                if (!(ModalWindowView.this.mModalRow == null || ModalWindowView.this.mModalRow.getViewState() == null)) {
+                    ModalWindowView.this.mModalRow.getViewState().animateTo(ModalWindowView.this.mModalRow, ModalWindowView.this.animationProperties);
+                }
+                if (ModalWindowView.this.mMenuView != null) {
+                    ModalWindowView.this.mMenuViewState.animateTo(ModalWindowView.this.mMenuView, ModalWindowView.this.animationProperties);
+                }
                 boolean unused = ModalWindowView.this.mChildrenUpdateRequested = false;
                 ModalWindowView.this.getViewTreeObserver().removeOnPreDrawListener(this);
                 return true;
@@ -98,7 +114,7 @@ public class ModalWindowView extends FrameLayout {
 
     public ModalWindowView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-        AnonymousClass1 r4 = new AnimationProperties(this) {
+        AnonymousClass1 r5 = new AnimationProperties(this) {
             private final AnimationFilter filter;
 
             {
@@ -113,12 +129,16 @@ public class ModalWindowView extends FrameLayout {
                 return this.filter;
             }
         };
-        r4.setDuration(300);
-        this.animationProperties = r4;
+        r5.setDuration(300);
+        this.animationProperties = r5;
         this.mChildrenUpdater = new ViewTreeObserver.OnPreDrawListener() {
             public boolean onPreDraw() {
-                ModalWindowView.this.mModalRow.getViewState().animateTo(ModalWindowView.this.mModalRow, ModalWindowView.this.animationProperties);
-                ModalWindowView.this.mMenuViewState.animateTo(ModalWindowView.this.mMenuView, ModalWindowView.this.animationProperties);
+                if (!(ModalWindowView.this.mModalRow == null || ModalWindowView.this.mModalRow.getViewState() == null)) {
+                    ModalWindowView.this.mModalRow.getViewState().animateTo(ModalWindowView.this.mModalRow, ModalWindowView.this.animationProperties);
+                }
+                if (ModalWindowView.this.mMenuView != null) {
+                    ModalWindowView.this.mMenuViewState.animateTo(ModalWindowView.this.mMenuView, ModalWindowView.this.animationProperties);
+                }
                 boolean unused = ModalWindowView.this.mChildrenUpdateRequested = false;
                 ModalWindowView.this.getViewTreeObserver().removeOnPreDrawListener(this);
                 return true;
@@ -170,8 +190,12 @@ public class ModalWindowView extends FrameLayout {
         this.animationProperties = r4;
         this.mChildrenUpdater = new ViewTreeObserver.OnPreDrawListener() {
             public boolean onPreDraw() {
-                ModalWindowView.this.mModalRow.getViewState().animateTo(ModalWindowView.this.mModalRow, ModalWindowView.this.animationProperties);
-                ModalWindowView.this.mMenuViewState.animateTo(ModalWindowView.this.mMenuView, ModalWindowView.this.animationProperties);
+                if (!(ModalWindowView.this.mModalRow == null || ModalWindowView.this.mModalRow.getViewState() == null)) {
+                    ModalWindowView.this.mModalRow.getViewState().animateTo(ModalWindowView.this.mModalRow, ModalWindowView.this.animationProperties);
+                }
+                if (ModalWindowView.this.mMenuView != null) {
+                    ModalWindowView.this.mMenuViewState.animateTo(ModalWindowView.this.mMenuView, ModalWindowView.this.animationProperties);
+                }
                 boolean unused = ModalWindowView.this.mChildrenUpdateRequested = false;
                 ModalWindowView.this.getViewTreeObserver().removeOnPreDrawListener(this);
                 return true;
@@ -204,7 +228,7 @@ public class ModalWindowView extends FrameLayout {
 
     public ModalWindowView(Context context, AttributeSet attributeSet, int i, int i2) {
         super(context, attributeSet, i, i2);
-        AnonymousClass1 r2 = new AnimationProperties(this) {
+        AnonymousClass1 r3 = new AnimationProperties(this) {
             private final AnimationFilter filter;
 
             {
@@ -219,12 +243,16 @@ public class ModalWindowView extends FrameLayout {
                 return this.filter;
             }
         };
-        r2.setDuration(300);
-        this.animationProperties = r2;
+        r3.setDuration(300);
+        this.animationProperties = r3;
         this.mChildrenUpdater = new ViewTreeObserver.OnPreDrawListener() {
             public boolean onPreDraw() {
-                ModalWindowView.this.mModalRow.getViewState().animateTo(ModalWindowView.this.mModalRow, ModalWindowView.this.animationProperties);
-                ModalWindowView.this.mMenuViewState.animateTo(ModalWindowView.this.mMenuView, ModalWindowView.this.animationProperties);
+                if (!(ModalWindowView.this.mModalRow == null || ModalWindowView.this.mModalRow.getViewState() == null)) {
+                    ModalWindowView.this.mModalRow.getViewState().animateTo(ModalWindowView.this.mModalRow, ModalWindowView.this.animationProperties);
+                }
+                if (ModalWindowView.this.mMenuView != null) {
+                    ModalWindowView.this.mMenuViewState.animateTo(ModalWindowView.this.mMenuView, ModalWindowView.this.animationProperties);
+                }
                 boolean unused = ModalWindowView.this.mChildrenUpdateRequested = false;
                 ModalWindowView.this.getViewTreeObserver().removeOnPreDrawListener(this);
                 return true;
@@ -259,7 +287,6 @@ public class ModalWindowView extends FrameLayout {
         updateResource();
         setFocusable(true);
         setFocusableInTouchMode(true);
-        setClipChildren(false);
     }
 
     public void updateResource() {
@@ -430,5 +457,62 @@ public class ModalWindowView extends FrameLayout {
     /* access modifiers changed from: private */
     public float getMenuYInModal(ExpandableNotificationRow expandableNotificationRow, boolean z) {
         return expandableNotificationRow.getViewState().yTranslation + ((float) (z ? expandableNotificationRow.getActualHeight() : expandableNotificationRow.getIntrinsicHeight())) + ((float) this.mModalMenuMarginTop);
+    }
+
+    public boolean onInterceptTouchEvent(MotionEvent motionEvent) {
+        if (!this.mTouchHelper.onInterceptTouchEvent(motionEvent)) {
+            return super.onInterceptTouchEvent(motionEvent);
+        }
+        return true;
+    }
+
+    public boolean onTouchEvent(MotionEvent motionEvent) {
+        if (!this.mTouchHelper.onTouchEvent(motionEvent)) {
+            return super.onTouchEvent(motionEvent);
+        }
+        return true;
+    }
+
+    public void onMiniWindowTrackingUpdate(float f) {
+        updateMenuLayoutVisibility(f == 0.0f);
+    }
+
+    public void onMiniWindowReset() {
+        updateMenuLayoutVisibility(true);
+    }
+
+    private void updateMenuLayoutVisibility(boolean z) {
+        float f = z ? 1.0f : 0.0f;
+        boolean z2 = this.mMenuViewState.alpha != f;
+        this.mMenuViewState.alpha = f;
+        if (z2) {
+            requestChildrenUpdate();
+        }
+    }
+
+    public void onStartMiniWindowExpandAnimation() {
+        ((ModalController) Dependency.get(ModalController.class)).animExitModal(500, false);
+        ((CommandQueue) Dependency.get(CommandQueue.class)).animateCollapsePanels(0, false);
+    }
+
+    public void onMiniWindowAppLaunched() {
+        ((ModalController) Dependency.get(ModalController.class)).exitModalImmediately();
+    }
+
+    public ExpandableView getChildAtRawPosition(float f, float f2) {
+        ExpandableNotificationRow expandableNotificationRow = this.mModalRow;
+        if (expandableNotificationRow == null || !expandableNotificationRow.isAttachedToWindow()) {
+            return null;
+        }
+        expandableNotificationRow.getLocationInWindow(this.mTmpLoc);
+        int[] iArr = this.mTmpLoc;
+        if (f <= ((float) iArr[0]) || f >= ((float) (iArr[0] + expandableNotificationRow.getWidth()))) {
+            return null;
+        }
+        int[] iArr2 = this.mTmpLoc;
+        if (f2 <= ((float) iArr2[1]) || f2 >= ((float) (iArr2[1] + expandableNotificationRow.getHeight()))) {
+            return null;
+        }
+        return expandableNotificationRow;
     }
 }

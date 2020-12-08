@@ -28,45 +28,44 @@ import org.jetbrains.annotations.Nullable;
 /* compiled from: MiuiExpandableNotificationRow.kt */
 public final class MiuiExpandableNotificationRow extends ExpandableNotificationRow {
     static final /* synthetic */ KProperty[] $$delegatedProperties;
-    private final AppMiniWindowManager mAppMiniWindowManager = ((AppMiniWindowManager) Dependency.get(AppMiniWindowManager.class));
-    private final Lazy mBackgroundDimmed$delegate = LazyKt__LazyJVMKt.lazy(new MiuiExpandableNotificationRow$mBackgroundDimmed$2(this));
+    private final Lazy mAppMiniWindowManager$delegate = LazyKt__LazyJVMKt.lazy(MiuiExpandableNotificationRow$mAppMiniWindowManager$2.INSTANCE);
     private boolean mCanSlide;
     private final Lazy mFakeShadowView$delegate = LazyKt__LazyJVMKt.lazy(new MiuiExpandableNotificationRow$mFakeShadowView$2(this));
-    private boolean mLayoutInflated;
+    private boolean mIsInModal;
     private final Lazy mMiniBar$delegate = LazyKt__LazyJVMKt.lazy(new MiuiExpandableNotificationRow$mMiniBar$2(this));
     private final Lazy mMiniBarMarginBottom$delegate = LazyKt__LazyJVMKt.lazy(new MiuiExpandableNotificationRow$mMiniBarMarginBottom$2(this));
     private final Lazy mMiniWindowIcon$delegate = LazyKt__LazyJVMKt.lazy(new MiuiExpandableNotificationRow$mMiniWindowIcon$2(this));
     private final int[] mTmpPosition = {0, 0};
 
     static {
-        PropertyReference1Impl propertyReference1Impl = new PropertyReference1Impl(Reflection.getOrCreateKotlinClass(MiuiExpandableNotificationRow.class), "mMiniBar", "getMMiniBar()Landroid/view/View;");
+        PropertyReference1Impl propertyReference1Impl = new PropertyReference1Impl(Reflection.getOrCreateKotlinClass(MiuiExpandableNotificationRow.class), "mAppMiniWindowManager", "getMAppMiniWindowManager()Lcom/android/systemui/statusbar/notification/policy/AppMiniWindowManager;");
         Reflection.property1(propertyReference1Impl);
-        PropertyReference1Impl propertyReference1Impl2 = new PropertyReference1Impl(Reflection.getOrCreateKotlinClass(MiuiExpandableNotificationRow.class), "mMiniWindowIcon", "getMMiniWindowIcon()Landroid/widget/ImageView;");
+        PropertyReference1Impl propertyReference1Impl2 = new PropertyReference1Impl(Reflection.getOrCreateKotlinClass(MiuiExpandableNotificationRow.class), "mMiniBar", "getMMiniBar()Landroid/view/View;");
         Reflection.property1(propertyReference1Impl2);
-        PropertyReference1Impl propertyReference1Impl3 = new PropertyReference1Impl(Reflection.getOrCreateKotlinClass(MiuiExpandableNotificationRow.class), "mFakeShadowView", "getMFakeShadowView()Lcom/android/systemui/statusbar/notification/FakeShadowView;");
+        PropertyReference1Impl propertyReference1Impl3 = new PropertyReference1Impl(Reflection.getOrCreateKotlinClass(MiuiExpandableNotificationRow.class), "mMiniWindowIcon", "getMMiniWindowIcon()Landroid/widget/ImageView;");
         Reflection.property1(propertyReference1Impl3);
-        PropertyReference1Impl propertyReference1Impl4 = new PropertyReference1Impl(Reflection.getOrCreateKotlinClass(MiuiExpandableNotificationRow.class), "mBackgroundDimmed", "getMBackgroundDimmed()Lcom/android/systemui/statusbar/notification/row/NotificationBackgroundView;");
+        PropertyReference1Impl propertyReference1Impl4 = new PropertyReference1Impl(Reflection.getOrCreateKotlinClass(MiuiExpandableNotificationRow.class), "mFakeShadowView", "getMFakeShadowView()Lcom/android/systemui/statusbar/notification/FakeShadowView;");
         Reflection.property1(propertyReference1Impl4);
         PropertyReference1Impl propertyReference1Impl5 = new PropertyReference1Impl(Reflection.getOrCreateKotlinClass(MiuiExpandableNotificationRow.class), "mMiniBarMarginBottom", "getMMiniBarMarginBottom()F");
         Reflection.property1(propertyReference1Impl5);
         $$delegatedProperties = new KProperty[]{propertyReference1Impl, propertyReference1Impl2, propertyReference1Impl3, propertyReference1Impl4, propertyReference1Impl5};
     }
 
-    private final NotificationBackgroundView getMBackgroundDimmed() {
-        Lazy lazy = this.mBackgroundDimmed$delegate;
-        KProperty kProperty = $$delegatedProperties[3];
-        return (NotificationBackgroundView) lazy.getValue();
+    private final AppMiniWindowManager getMAppMiniWindowManager() {
+        Lazy lazy = this.mAppMiniWindowManager$delegate;
+        KProperty kProperty = $$delegatedProperties[0];
+        return (AppMiniWindowManager) lazy.getValue();
     }
 
     private final FakeShadowView getMFakeShadowView() {
         Lazy lazy = this.mFakeShadowView$delegate;
-        KProperty kProperty = $$delegatedProperties[2];
+        KProperty kProperty = $$delegatedProperties[3];
         return (FakeShadowView) lazy.getValue();
     }
 
     private final View getMMiniBar() {
         Lazy lazy = this.mMiniBar$delegate;
-        KProperty kProperty = $$delegatedProperties[0];
+        KProperty kProperty = $$delegatedProperties[1];
         return (View) lazy.getValue();
     }
 
@@ -78,18 +77,12 @@ public final class MiuiExpandableNotificationRow extends ExpandableNotificationR
 
     private final ImageView getMMiniWindowIcon() {
         Lazy lazy = this.mMiniWindowIcon$delegate;
-        KProperty kProperty = $$delegatedProperties[1];
+        KProperty kProperty = $$delegatedProperties[2];
         return (ImageView) lazy.getValue();
     }
 
     public MiuiExpandableNotificationRow(@Nullable Context context, @Nullable AttributeSet attributeSet) {
         super(context, attributeSet);
-    }
-
-    /* access modifiers changed from: protected */
-    public void onFinishInflate() {
-        super.onFinishInflate();
-        this.mLayoutInflated = true;
     }
 
     /* access modifiers changed from: protected */
@@ -159,21 +152,16 @@ public final class MiuiExpandableNotificationRow extends ExpandableNotificationR
         Intrinsics.checkExpressionValueIsNotNull(contentView, "contentView");
         float f4 = f3 / 2.0f;
         contentView.setTranslationY(f4);
-        ImageView mMiniWindowIcon = getMMiniWindowIcon();
-        Intrinsics.checkExpressionValueIsNotNull(mMiniWindowIcon, "mMiniWindowIcon");
-        mMiniWindowIcon.setTranslationY(f4);
         View contentView2 = getContentView();
         Intrinsics.checkExpressionValueIsNotNull(contentView2, "contentView");
         contentView2.setAlpha(f);
-        NotificationBackgroundView notificationBackgroundView = this.mBackgroundNormal;
-        Intrinsics.checkExpressionValueIsNotNull(notificationBackgroundView, "mBackgroundNormal");
-        notificationBackgroundView.setTransitionAlpha(f2);
-        FakeShadowView mFakeShadowView = getMFakeShadowView();
-        Intrinsics.checkExpressionValueIsNotNull(mFakeShadowView, "mFakeShadowView");
-        mFakeShadowView.setTransitionAlpha(f2);
-        View mMiniBar = getMMiniBar();
-        Intrinsics.checkExpressionValueIsNotNull(mMiniBar, "mMiniBar");
-        mMiniBar.setTransitionAlpha(f2);
+        ExpandableViewState viewState = getViewState();
+        if (viewState != null) {
+            setTranslationZ(viewState.zTranslation * f);
+        }
+        ImageView mMiniWindowIcon = getMMiniWindowIcon();
+        Intrinsics.checkExpressionValueIsNotNull(mMiniWindowIcon, "mMiniWindowIcon");
+        mMiniWindowIcon.setTranslationY(f4);
         ImageView mMiniWindowIcon2 = getMMiniWindowIcon();
         Intrinsics.checkExpressionValueIsNotNull(mMiniWindowIcon2, "mMiniWindowIcon");
         mMiniWindowIcon2.setTransitionAlpha(f2);
@@ -184,6 +172,15 @@ public final class MiuiExpandableNotificationRow extends ExpandableNotificationR
             i = 8;
         }
         mMiniWindowIcon3.setVisibility(i);
+        View mMiniBar = getMMiniBar();
+        Intrinsics.checkExpressionValueIsNotNull(mMiniBar, "mMiniBar");
+        mMiniBar.setTransitionAlpha(f2);
+        NotificationBackgroundView notificationBackgroundView = this.mBackgroundNormal;
+        Intrinsics.checkExpressionValueIsNotNull(notificationBackgroundView, "mBackgroundNormal");
+        notificationBackgroundView.setTransitionAlpha(f2);
+        FakeShadowView mFakeShadowView = getMFakeShadowView();
+        Intrinsics.checkExpressionValueIsNotNull(mFakeShadowView, "mFakeShadowView");
+        mFakeShadowView.setTransitionAlpha(f2);
     }
 
     private final float evaluateRowTranslationForMiniWindow(int i, int i2) {
@@ -211,13 +208,16 @@ public final class MiuiExpandableNotificationRow extends ExpandableNotificationR
     public void setPinned(boolean z) {
         super.setPinned(z);
         updateMiniWindowBar();
-        this.mBackgroundNormal.setHighSamplingFrequency(z);
     }
 
     public final void updateMiniWindowBar() {
-        boolean canNotificationSlide = this.mAppMiniWindowManager.canNotificationSlide(getPendingIntent());
-        this.mCanSlide = canNotificationSlide;
-        setMiniBarVisible(canNotificationSlide && isPinned());
+        this.mCanSlide = getMAppMiniWindowManager().canNotificationSlide(getPendingIntent());
+        boolean z = false;
+        boolean z2 = isPinned() || this.mIsInModal;
+        if (this.mCanSlide && z2) {
+            z = true;
+        }
+        setMiniBarVisible(z);
     }
 
     private final void setMiniBarVisible(boolean z) {
@@ -240,6 +240,11 @@ public final class MiuiExpandableNotificationRow extends ExpandableNotificationR
         if (z) {
             updateMiniBarTranslation();
         }
+    }
+
+    public final void setIsInModal(boolean z) {
+        this.mIsInModal = z;
+        updateMiniWindowBar();
     }
 
     public final boolean canSlideToMiniWindow() {
@@ -323,22 +328,5 @@ public final class MiuiExpandableNotificationRow extends ExpandableNotificationR
         NotificationBackgroundView notificationBackgroundView = this.mBackgroundNormal;
         Intrinsics.checkExpressionValueIsNotNull(notificationBackgroundView, "mBackgroundNormal");
         return notificationBackgroundView;
-    }
-
-    /* access modifiers changed from: protected */
-    public void damageInParent() {
-        super.damageInParent();
-        if (this.mLayoutInflated) {
-            NotificationBackgroundView notificationBackgroundView = this.mBackgroundNormal;
-            Intrinsics.checkExpressionValueIsNotNull(notificationBackgroundView, "mBackgroundNormal");
-            if (notificationBackgroundView.getVisibility() == 0) {
-                this.mBackgroundNormal.invalidate();
-            }
-            NotificationBackgroundView mBackgroundDimmed = getMBackgroundDimmed();
-            Intrinsics.checkExpressionValueIsNotNull(mBackgroundDimmed, "mBackgroundDimmed");
-            if (mBackgroundDimmed.getVisibility() == 0) {
-                getMBackgroundDimmed().invalidate();
-            }
-        }
     }
 }

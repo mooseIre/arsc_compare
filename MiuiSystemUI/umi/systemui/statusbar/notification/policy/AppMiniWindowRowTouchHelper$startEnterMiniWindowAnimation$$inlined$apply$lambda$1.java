@@ -1,4 +1,4 @@
-package com.android.systemui.statusbar.phone;
+package com.android.systemui.statusbar.notification.policy;
 
 import android.animation.ValueAnimator;
 import android.graphics.Rect;
@@ -6,14 +6,14 @@ import com.android.systemui.statusbar.notification.MiniWindowExpandParameters;
 import kotlin.TypeCastException;
 import kotlin.jvm.internal.Intrinsics;
 
-/* compiled from: MiuiHeadsUpTouchHelper.kt */
-final class MiuiHeadsUpTouchHelper$startEnterMiniWindowAnimation$$inlined$apply$lambda$1 implements ValueAnimator.AnimatorUpdateListener {
+/* compiled from: AppMiniWindowRowTouchHelper.kt */
+final class AppMiniWindowRowTouchHelper$startEnterMiniWindowAnimation$$inlined$apply$lambda$1 implements ValueAnimator.AnimatorUpdateListener {
     final /* synthetic */ Rect $from$inlined;
     final /* synthetic */ Rect $to$inlined;
-    final /* synthetic */ MiuiHeadsUpTouchHelper this$0;
+    final /* synthetic */ AppMiniWindowRowTouchHelper this$0;
 
-    MiuiHeadsUpTouchHelper$startEnterMiniWindowAnimation$$inlined$apply$lambda$1(MiuiHeadsUpTouchHelper miuiHeadsUpTouchHelper, Rect rect, Rect rect2) {
-        this.this$0 = miuiHeadsUpTouchHelper;
+    AppMiniWindowRowTouchHelper$startEnterMiniWindowAnimation$$inlined$apply$lambda$1(AppMiniWindowRowTouchHelper appMiniWindowRowTouchHelper, Rect rect, Rect rect2) {
+        this.this$0 = appMiniWindowRowTouchHelper;
         this.$from$inlined = rect;
         this.$to$inlined = rect2;
     }

@@ -6,7 +6,6 @@ import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.MiuiKeyguardUpdateMonitorCallback;
 import com.android.systemui.Dependency;
 import com.android.systemui.broadcast.BroadcastDispatcher;
-import com.android.systemui.shared.system.ActivityManagerWrapper;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import com.android.systemui.statusbar.phone.HeadsUpManagerPhone;
 import java.util.concurrent.Executor;
@@ -20,7 +19,6 @@ public final class MiuiHeadsUpPolicy implements OnHeadsUpChangedListener {
     public final HeadsUpManagerPhone headsUpManagerPhone;
     private final MiuiHeadsUpPolicy$mCloseSystemDialogReceiver$1 mCloseSystemDialogReceiver = new MiuiHeadsUpPolicy$mCloseSystemDialogReceiver$1(this);
     private final MiuiKeyguardUpdateMonitorCallback mKeyguardUpdateMonitorCallback = new MiuiHeadsUpPolicy$mKeyguardUpdateMonitorCallback$1(this);
-    private final MiuiHeadsUpPolicy$mTaskChangedListener$1 mTaskChangedListener = new MiuiHeadsUpPolicy$mTaskChangedListener$1(this);
 
     public MiuiHeadsUpPolicy(@NotNull BroadcastDispatcher broadcastDispatcher2, @NotNull HeadsUpManagerPhone headsUpManagerPhone2) {
         Intrinsics.checkParameterIsNotNull(broadcastDispatcher2, "broadcastDispatcher");
@@ -33,7 +31,6 @@ public final class MiuiHeadsUpPolicy implements OnHeadsUpChangedListener {
         this.headsUpManagerPhone.addListener(this);
         BroadcastDispatcher.registerReceiver$default(this.broadcastDispatcher, this.mCloseSystemDialogReceiver, new IntentFilter("android.intent.action.CLOSE_SYSTEM_DIALOGS"), (Executor) null, (UserHandle) null, 12, (Object) null);
         ((KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class)).registerCallback(this.mKeyguardUpdateMonitorCallback);
-        ActivityManagerWrapper.getInstance().registerTaskStackListener(this.mTaskChangedListener);
     }
 
     public void onHeadsUpUnPinned(@NotNull NotificationEntry notificationEntry) {

@@ -21,6 +21,7 @@ import com.android.systemui.statusbar.notification.NotificationFilterInjector;
 import com.android.systemui.statusbar.notification.NotificationUtil;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import com.android.systemui.statusbar.phone.NotificationGroupManager;
+import com.android.systemui.statusbar.phone.StatusBarKeyguardViewManager;
 import com.android.systemui.statusbar.policy.ZenModeController;
 import com.miui.systemui.DebugConfig;
 import com.miui.systemui.SettingsManager;
@@ -38,10 +39,11 @@ public class NotificationAlertController {
     private INotificationManager mNm;
     private NotificationLockscreenUserManager mNotificationLockscreenUserManager;
     private SettingsManager mSettingsManager;
+    private StatusBarKeyguardViewManager mStatusBarKeyguardManager;
     private StatusBarStateController mStatusBarStateController;
     private ZenModeController mZenModeController;
 
-    public NotificationAlertController(Context context, INotificationManager iNotificationManager, NotificationEntryManager notificationEntryManager, NotificationGroupManager notificationGroupManager, StatusBarStateController statusBarStateController, ScreenLifecycle screenLifecycle, ZenModeController zenModeController, SettingsManager settingsManager, NotificationLockscreenUserManager notificationLockscreenUserManager) {
+    public NotificationAlertController(Context context, INotificationManager iNotificationManager, NotificationEntryManager notificationEntryManager, NotificationGroupManager notificationGroupManager, StatusBarStateController statusBarStateController, ScreenLifecycle screenLifecycle, ZenModeController zenModeController, SettingsManager settingsManager, NotificationLockscreenUserManager notificationLockscreenUserManager, StatusBarKeyguardViewManager statusBarKeyguardViewManager) {
         this.mContext = context;
         this.mNm = iNotificationManager;
         this.mEntryManager = notificationEntryManager;
@@ -51,6 +53,7 @@ public class NotificationAlertController {
         this.mSettingsManager = settingsManager;
         this.mBgHandler = new Handler((Looper) Dependency.get(Dependency.BG_LOOPER));
         this.mNotificationLockscreenUserManager = notificationLockscreenUserManager;
+        this.mStatusBarKeyguardManager = statusBarKeyguardViewManager;
     }
 
     public void start() {
@@ -78,7 +81,7 @@ public class NotificationAlertController {
         });
         this.mStatusBarStateController.addCallback(new StatusBarStateController.StateListener() {
             public void onStateChanged(int i) {
-                if (NotificationAlertController.this.mBarState == 1 && i == 0) {
+                if (NotificationAlertController.this.mBarState == 1 && i == 0 && !NotificationAlertController.this.isShowingKeyguard()) {
                     NotificationAlertController.this.markVisibleNotificationsShown();
                 }
                 int unused = NotificationAlertController.this.mBarState = i;
@@ -111,6 +114,11 @@ public class NotificationAlertController {
         } catch (Exception e) {
             Log.e("NotificationAlertController", "beep " + str, e);
         }
+    }
+
+    /* access modifiers changed from: private */
+    public boolean isShowingKeyguard() {
+        return this.mStatusBarKeyguardManager.isShowing();
     }
 
     /* access modifiers changed from: private */

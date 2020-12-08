@@ -18,6 +18,7 @@ import com.android.systemui.shared.system.ActivityManagerWrapper;
 import com.android.systemui.shared.system.TaskStackChangeListener;
 import com.android.systemui.stackdivider.Divider;
 import com.android.systemui.statusbar.notification.NotificationSettingsManager;
+import com.android.systemui.statusbar.notification.modal.ModalController;
 import com.android.systemui.statusbar.phone.HeadsUpManagerPhone;
 import com.android.systemui.statusbar.policy.OnHeadsUpChangedListener;
 import java.util.ArrayList;
@@ -45,7 +46,11 @@ public final class AppMiniWindowManager implements OnHeadsUpChangedListener {
     public final HeadsUpManagerPhone mHeadsUpManager;
     /* access modifiers changed from: private */
     public boolean mInDockedStackMode;
+    /* access modifiers changed from: private */
+    public boolean mInModalMode;
+    private boolean mInPinnedMode;
     private final ArrayList<WindowForegroundListener> mOneshotForegroundListeners;
+    private boolean mRegisterForegroundListener;
     /* access modifiers changed from: private */
     public ComponentName mTopActivity;
     /* access modifiers changed from: private */
@@ -53,10 +58,12 @@ public final class AppMiniWindowManager implements OnHeadsUpChangedListener {
     private final AppMiniWindowManager$mWindowListener$1 mWindowListener;
     private final NotificationSettingsManager notificationSettingsManager;
 
-    public AppMiniWindowManager(@NotNull Context context2, @NotNull Divider divider, @NotNull HeadsUpManagerPhone headsUpManagerPhone, @NotNull NotificationSettingsManager notificationSettingsManager2) {
+    public AppMiniWindowManager(@NotNull Context context2, @NotNull Divider divider, @NotNull HeadsUpManagerPhone headsUpManagerPhone, @NotNull final Handler handler, @NotNull ModalController modalController, @NotNull NotificationSettingsManager notificationSettingsManager2) {
         Intrinsics.checkParameterIsNotNull(context2, "context");
         Intrinsics.checkParameterIsNotNull(divider, "divider");
         Intrinsics.checkParameterIsNotNull(headsUpManagerPhone, "headsUpManagerPhone");
+        Intrinsics.checkParameterIsNotNull(handler, "handler");
+        Intrinsics.checkParameterIsNotNull(modalController, "modalController");
         Intrinsics.checkParameterIsNotNull(notificationSettingsManager2, "notificationSettingsManager");
         this.context = context2;
         this.notificationSettingsManager = notificationSettingsManager2;
@@ -77,7 +84,7 @@ public final class AppMiniWindowManager implements OnHeadsUpChangedListener {
                 super.onTaskMovedToFront(runningTaskInfo);
                 this.this$0.mTopActivity = runningTaskInfo != null ? runningTaskInfo.topActivity : null;
                 if (this.this$0.mHeadsUpManager.hasPinnedHeadsUp()) {
-                    this.this$0.updateAllHeadsUpMiniBars();
+                    handler.post(new AppMiniWindowManager$1$onTaskMovedToFront$1(this));
                 }
                 this.this$0.mExpectingTaskStackChanged = true;
             }
@@ -130,7 +137,19 @@ public final class AppMiniWindowManager implements OnHeadsUpChangedListener {
             }
         });
         headsUpManagerPhone.addListener(this);
-        this.mWindowListener = new AppMiniWindowManager$mWindowListener$1(this);
+        modalController.addOnModalChangeListener(new ModalController.OnModalChangeListener(this) {
+            final /* synthetic */ AppMiniWindowManager this$0;
+
+            {
+                this.this$0 = r1;
+            }
+
+            public void onChange(boolean z) {
+                this.this$0.mInModalMode = z;
+                this.this$0.evaluateRegisterListener();
+            }
+        });
+        this.mWindowListener = new AppMiniWindowManager$mWindowListener$1(this, handler);
     }
 
     /* compiled from: AppMiniWindowManager.kt */
@@ -179,12 +198,22 @@ public final class AppMiniWindowManager implements OnHeadsUpChangedListener {
 
     public void onHeadsUpPinnedModeChanged(boolean z) {
         super.onHeadsUpPinnedModeChanged(z);
-        if (z) {
-            ProcessManager.registerForegroundWindowListener(this.mWindowListener);
-            return;
+        this.mInPinnedMode = z;
+        evaluateRegisterListener();
+    }
+
+    /* access modifiers changed from: private */
+    public final void evaluateRegisterListener() {
+        boolean z = this.mInPinnedMode || this.mInModalMode;
+        if (this.mRegisterForegroundListener != z) {
+            if (z) {
+                ProcessManager.registerForegroundWindowListener(this.mWindowListener);
+            } else {
+                ProcessManager.unregisterForegroundWindowListener(this.mWindowListener);
+                this.mTopWindowPackage = null;
+            }
         }
-        ProcessManager.unregisterForegroundWindowListener(this.mWindowListener);
-        this.mTopWindowPackage = null;
+        this.mRegisterForegroundListener = z;
     }
 
     public final void registerOneshotForegroundWindowListener(@NotNull String str, @NotNull Function0<Unit> function0) {
