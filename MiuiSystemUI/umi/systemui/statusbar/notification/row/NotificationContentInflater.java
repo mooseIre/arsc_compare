@@ -231,13 +231,15 @@ public class NotificationContentInflater implements NotificationRowContentBinder
     }
 
     /* access modifiers changed from: private */
-    /* JADX WARNING: Code restructure failed: missing block: B:12:0x0075, code lost:
+    /* JADX WARNING: Code restructure failed: missing block: B:16:0x007e, code lost:
         r14 = r25;
      */
-    /* JADX WARNING: Code restructure failed: missing block: B:25:0x00d3, code lost:
+    /* JADX WARNING: Code restructure failed: missing block: B:32:0x00e3, code lost:
         r15 = r25;
      */
-    /* JADX WARNING: Removed duplicated region for block: B:46:0x015c  */
+    /* JADX WARNING: Removed duplicated region for block: B:27:0x00a8  */
+    /* JADX WARNING: Removed duplicated region for block: B:43:0x010f  */
+    /* JADX WARNING: Removed duplicated region for block: B:56:0x0174  */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     public static android.os.CancellationSignal apply(java.util.concurrent.Executor r23, boolean r24, com.android.systemui.statusbar.notification.row.NotificationContentInflater.InflationProgress r25, int r26, com.android.systemui.statusbar.notification.row.NotifRemoteViewCache r27, com.android.systemui.statusbar.notification.collection.NotificationEntry r28, com.android.systemui.statusbar.notification.row.ExpandableNotificationRow r29, android.widget.RemoteViews.OnClickHandler r30, com.android.systemui.statusbar.notification.row.NotificationRowContentBinder.InflationCallback r31) {
         /*
@@ -252,21 +254,28 @@ public class NotificationContentInflater implements NotificationRowContentBinder
             r0 = r26 & 1
             r8 = 0
             r7 = 1
-            if (r0 == 0) goto L_0x006a
+            if (r0 == 0) goto L_0x0073
             android.widget.RemoteViews r0 = r15.newContentView
             android.widget.RemoteViews r1 = r14.getCachedView(r13, r7)
             boolean r0 = canReapplyRemoteView(r0, r1)
             r0 = r0 ^ r7
-            if (r0 != 0) goto L_0x0032
+            if (r0 != 0) goto L_0x0031
             com.android.systemui.statusbar.notification.row.ExpandableNotificationRow r0 = r28.getModalRow()
             if (r12 != r0) goto L_0x002f
-            goto L_0x0032
+            goto L_0x0031
         L_0x002f:
-            r16 = r8
-            goto L_0x0034
+            r0 = r8
+            goto L_0x0032
+        L_0x0031:
+            r0 = r7
         L_0x0032:
+            android.view.View r1 = r11.getContractedChild()
+            if (r1 != 0) goto L_0x003b
             r16 = r7
-        L_0x0034:
+            goto L_0x003d
+        L_0x003b:
+            r16 = r0
+        L_0x003d:
             com.android.systemui.statusbar.notification.row.NotificationContentInflater$1 r6 = new com.android.systemui.statusbar.notification.row.NotificationContentInflater$1
             r6.<init>()
             android.view.View r17 = r11.getContractedChild()
@@ -291,37 +300,41 @@ public class NotificationContentInflater implements NotificationRowContentBinder
             r14 = r16
             r15 = r19
             applyRemoteView(r0, r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14, r15)
-            goto L_0x0070
-        L_0x006a:
+            goto L_0x0079
+        L_0x0073:
             r16 = r9
             r21 = r10
             r22 = r11
-        L_0x0070:
+        L_0x0079:
             r0 = r26 & 2
             r15 = 2
-            if (r0 == 0) goto L_0x00cd
+            if (r0 == 0) goto L_0x00dd
             r14 = r25
             android.widget.RemoteViews r0 = r14.newExpandedView
-            if (r0 == 0) goto L_0x00cd
+            if (r0 == 0) goto L_0x00dd
             r13 = r27
             r12 = r28
             android.widget.RemoteViews r1 = r13.getCachedView(r12, r15)
             boolean r0 = canReapplyRemoteView(r0, r1)
             r11 = 1
             r0 = r0 ^ r11
-            if (r0 != 0) goto L_0x0096
+            if (r0 != 0) goto L_0x009f
             com.android.systemui.statusbar.notification.row.ExpandableNotificationRow r0 = r28.getModalRow()
             r10 = r29
-            if (r10 != r0) goto L_0x0094
-            goto L_0x0098
-        L_0x0094:
+            if (r10 != r0) goto L_0x009d
+            goto L_0x00a1
+        L_0x009d:
             r8 = 0
-            goto L_0x0099
-        L_0x0096:
+            goto L_0x00a2
+        L_0x009f:
             r10 = r29
-        L_0x0098:
+        L_0x00a1:
             r8 = r11
-        L_0x0099:
+        L_0x00a2:
+            android.view.View r0 = r22.getExpandedChild()
+            if (r0 != 0) goto L_0x00a9
+            r8 = r11
+        L_0x00a9:
             com.android.systemui.statusbar.notification.row.NotificationContentInflater$2 r9 = new com.android.systemui.statusbar.notification.row.NotificationContentInflater$2
             r9.<init>()
             android.view.View r17 = r22.getExpandedChild()
@@ -345,34 +358,38 @@ public class NotificationContentInflater implements NotificationRowContentBinder
             r14 = r16
             r15 = r19
             applyRemoteView(r0, r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14, r15)
-            goto L_0x00cf
-        L_0x00cd:
+            goto L_0x00df
+        L_0x00dd:
             r20 = 1
-        L_0x00cf:
+        L_0x00df:
             r0 = r26 & 4
-            if (r0 == 0) goto L_0x012d
+            if (r0 == 0) goto L_0x0145
             r15 = r25
             android.widget.RemoteViews r0 = r15.newHeadsUpView
-            if (r0 == 0) goto L_0x012d
+            if (r0 == 0) goto L_0x0145
             r1 = 4
             r14 = r27
             r13 = r28
             android.widget.RemoteViews r1 = r14.getCachedView(r13, r1)
             boolean r0 = canReapplyRemoteView(r0, r1)
             r0 = r0 ^ 1
-            if (r0 != 0) goto L_0x00f5
+            if (r0 != 0) goto L_0x0105
             com.android.systemui.statusbar.notification.row.ExpandableNotificationRow r0 = r28.getModalRow()
             r12 = r29
-            if (r12 != r0) goto L_0x00f3
-            goto L_0x00f7
-        L_0x00f3:
+            if (r12 != r0) goto L_0x0103
+            goto L_0x0107
+        L_0x0103:
             r8 = 0
-            goto L_0x00f9
-        L_0x00f5:
+            goto L_0x0109
+        L_0x0105:
             r12 = r29
-        L_0x00f7:
+        L_0x0107:
             r8 = r20
-        L_0x00f9:
+        L_0x0109:
+            android.view.View r0 = r22.getHeadsUpChild()
+            if (r0 != 0) goto L_0x0111
+            r8 = r20
+        L_0x0111:
             com.android.systemui.statusbar.notification.row.NotificationContentInflater$3 r11 = new com.android.systemui.statusbar.notification.row.NotificationContentInflater$3
             r11.<init>()
             android.view.View r17 = r22.getHeadsUpChild()
@@ -397,9 +414,9 @@ public class NotificationContentInflater implements NotificationRowContentBinder
             r14 = r16
             r15 = r22
             applyRemoteView(r0, r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14, r15)
-        L_0x012d:
+        L_0x0145:
             r0 = r26 & 8
-            if (r0 == 0) goto L_0x0193
+            if (r0 == 0) goto L_0x01ab
             r15 = r25
             android.widget.RemoteViews r0 = r15.newPublicView
             r1 = 8
@@ -408,23 +425,23 @@ public class NotificationContentInflater implements NotificationRowContentBinder
             android.widget.RemoteViews r1 = r14.getCachedView(r13, r1)
             boolean r0 = canReapplyRemoteView(r0, r1)
             r0 = r0 ^ 1
-            if (r0 != 0) goto L_0x0152
+            if (r0 != 0) goto L_0x016a
             com.android.systemui.statusbar.notification.row.ExpandableNotificationRow r0 = r28.getModalRow()
             r12 = r29
-            if (r12 != r0) goto L_0x0150
-            goto L_0x0154
-        L_0x0150:
+            if (r12 != r0) goto L_0x0168
+            goto L_0x016c
+        L_0x0168:
             r8 = 0
-            goto L_0x0156
-        L_0x0152:
+            goto L_0x016e
+        L_0x016a:
             r12 = r29
-        L_0x0154:
+        L_0x016c:
             r8 = r20
-        L_0x0156:
+        L_0x016e:
             android.view.View r0 = r21.getContractedChild()
-            if (r0 != 0) goto L_0x015e
+            if (r0 != 0) goto L_0x0176
             r8 = r20
-        L_0x015e:
+        L_0x0176:
             com.android.systemui.statusbar.notification.row.NotificationContentInflater$4 r11 = new com.android.systemui.statusbar.notification.row.NotificationContentInflater$4
             r11.<init>()
             android.view.View r17 = r21.getContractedChild()
@@ -449,7 +466,7 @@ public class NotificationContentInflater implements NotificationRowContentBinder
             r14 = r16
             r15 = r20
             applyRemoteView(r0, r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14, r15)
-        L_0x0193:
+        L_0x01ab:
             r0 = r25
             r1 = r26
             r2 = r27

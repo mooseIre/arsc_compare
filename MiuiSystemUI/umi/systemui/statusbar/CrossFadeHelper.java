@@ -1,5 +1,7 @@
 package com.android.systemui.statusbar;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.graphics.Paint;
 import android.view.View;
 import com.android.systemui.C0015R$id;
@@ -70,13 +72,18 @@ public class CrossFadeHelper {
         fadeIn(view, 210, 0);
     }
 
-    public static void fadeIn(View view, long j, int i) {
+    public static void fadeIn(final View view, long j, int i) {
         view.animate().cancel();
         if (view.getVisibility() == 4) {
             view.setAlpha(0.0f);
             view.setVisibility(0);
         }
-        view.animate().alpha(1.0f).setDuration(j).setStartDelay((long) i).setInterpolator(Interpolators.ALPHA_IN).withEndAction((Runnable) null);
+        view.animate().alpha(1.0f).setDuration(j).setStartDelay((long) i).setInterpolator(Interpolators.ALPHA_IN).setListener(new AnimatorListenerAdapter() {
+            public void onAnimationEnd(Animator animator) {
+                super.onAnimationEnd(animator);
+                view.setAlpha(1.0f);
+            }
+        }).withEndAction((Runnable) null);
         if (view.hasOverlappingRendering() && view.getLayerType() != 2) {
             view.animate().withLayer();
         }

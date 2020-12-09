@@ -210,7 +210,9 @@ public final class MiuiNotificationPanelViewController$createTouchHandler$1 exte
                     float f2 = y - this.mInitialTouchY;
                     this.this$0.setMPanelStretching(handleStretchState(f2, f, y));
                     this.this$0.mPanelCollapsing = handleCollapseState(f2, f, y);
-                    this.this$0.mNssCoveringQs = handleSlideState(f2, f, y);
+                    if (!this.this$0.mNssCoveringQs) {
+                        this.this$0.mNssCoveringQs = handleSlideState(f2, f, y);
+                    }
                     MiuiNotificationPanelViewController miuiNotificationPanelViewController = this.this$0;
                     if (miuiNotificationPanelViewController.getMPanelStretching() || this.this$0.mPanelCollapsing || this.this$0.mNssCoveringQs) {
                         z = true;
@@ -224,17 +226,16 @@ public final class MiuiNotificationPanelViewController$createTouchHandler$1 exte
             }
             this.this$0.mPanelCollapsing = false;
             this.this$0.setMPanelStretching(false);
-            this.this$0.mNssCoveringQs = false;
             this.this$0.mPanelIntercepting = false;
         } else {
             this.mInitialTouchX = x;
             this.mInitialTouchY = y;
             this.this$0.mPanelOpening = false;
-            this.this$0.mNssCoveringQs = false;
             this.this$0.setMPanelStretching(false);
             this.this$0.mPanelCollapsing = false;
             this.this$0.mPanelIntercepting = false;
         }
+        this.mLastTouchY = y;
         return this.this$0.mPanelIntercepting;
     }
 
@@ -292,8 +293,7 @@ public final class MiuiNotificationPanelViewController$createTouchHandler$1 exte
                             this.this$0.initVelocityTracker();
                         }
                         this.this$0.trackMovement(motionEvent);
-                        MiuiNotificationPanelViewController miuiNotificationPanelViewController5 = this.this$0;
-                        miuiNotificationPanelViewController5.updateScrollerTopPadding(miuiNotificationPanelViewController5.calculateQsTopPadding(y - this.mLastTouchY));
+                        this.this$0.handleNssCoverQs(y - this.mLastTouchY);
                     } else if (this.this$0.getMPanelStretching() || this.this$0.mPanelCollapsing) {
                         this.this$0.setMStretchLength(f2);
                     }
@@ -306,10 +306,9 @@ public final class MiuiNotificationPanelViewController$createTouchHandler$1 exte
             }
             if (this.this$0.mNssCoveringQs) {
                 this.this$0.trackMovement(motionEvent);
-                MiuiNotificationPanelViewController miuiNotificationPanelViewController6 = this.this$0;
-                miuiNotificationPanelViewController6.endNssCoveringQsMotion(miuiNotificationPanelViewController6.getCurrentQSVelocity());
+                MiuiNotificationPanelViewController miuiNotificationPanelViewController5 = this.this$0;
+                miuiNotificationPanelViewController5.endNssCoveringQsMotion(miuiNotificationPanelViewController5.getCurrentQSVelocity());
                 this.this$0.recycleVelocityTracker();
-                this.this$0.mNssCoveringQs = false;
             }
             this.this$0.mPanelOpening = false;
             this.this$0.setMPanelStretching(false);
@@ -324,7 +323,6 @@ public final class MiuiNotificationPanelViewController$createTouchHandler$1 exte
             this.mInitialTouchY = y;
             this.mLastTouchY = y;
             this.this$0.mPanelOpening = false;
-            this.this$0.mNssCoveringQs = false;
             this.this$0.setMPanelStretching(false);
             this.this$0.mPanelCollapsing = false;
             this.this$0.mPanelIntercepting = false;

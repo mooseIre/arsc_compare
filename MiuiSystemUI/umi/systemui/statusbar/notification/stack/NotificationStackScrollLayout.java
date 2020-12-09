@@ -48,6 +48,7 @@ import com.android.internal.logging.MetricsLogger;
 import com.android.internal.logging.UiEventLogger;
 import com.android.internal.statusbar.IStatusBarService;
 import com.android.internal.statusbar.NotificationVisibility;
+import com.android.keyguard.utils.MiuiKeyguardUtils;
 import com.android.settingslib.Utils;
 import com.android.systemui.C0009R$attr;
 import com.android.systemui.C0010R$bool;
@@ -83,6 +84,7 @@ import com.android.systemui.statusbar.notification.MiuiNotificationSectionsManag
 import com.android.systemui.statusbar.notification.NotificationActivityStarter;
 import com.android.systemui.statusbar.notification.NotificationEntryListener;
 import com.android.systemui.statusbar.notification.NotificationEntryManager;
+import com.android.systemui.statusbar.notification.NotificationPanelNavigationBarCoordinator;
 import com.android.systemui.statusbar.notification.NotificationSettingsHelper;
 import com.android.systemui.statusbar.notification.NotificationUtil;
 import com.android.systemui.statusbar.notification.NotificationUtils;
@@ -2263,6 +2265,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
     }
 
     private void updateBackground() {
+        ((NotificationPanelNavigationBarCoordinator) Dependency.get(NotificationPanelNavigationBarCoordinator.class)).switchNavigationBarModeIfNeed(this);
         if (this.mShouldDrawNotificationBackground) {
             updateBackgroundBounds();
             if (didSectionBoundsChange()) {
@@ -4177,7 +4180,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
 
     private void updateVisibility() {
         int i = 0;
-        if (!(!this.mAmbientState.isFullyHidden() || !onKeyguard())) {
+        if (!((!this.mAmbientState.isFullyHidden() && MiuiKeyguardUtils.isDefaultLockScreenTheme()) || !onKeyguard())) {
             i = 4;
         }
         setVisibility(i);

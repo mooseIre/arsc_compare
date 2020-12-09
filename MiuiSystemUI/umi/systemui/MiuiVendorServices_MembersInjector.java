@@ -2,6 +2,7 @@ package com.android.systemui;
 
 import com.android.keyguard.fod.policy.MiuiGxzwPolicy;
 import com.android.systemui.recents.MiuiRecentProxy;
+import com.android.systemui.statusbar.notification.NotificationPanelNavigationBarCoordinator;
 import com.android.systemui.statusbar.notification.policy.NotificationAlertController;
 import com.android.systemui.statusbar.notification.policy.NotificationCountLimitPolicy;
 import com.android.systemui.statusbar.notification.policy.NotificationDynamicFpsController;
@@ -44,5 +45,9 @@ public final class MiuiVendorServices_MembersInjector {
 
     public static void injectMOrientationPolicy(MiuiVendorServices miuiVendorServices, OrientationPolicy orientationPolicy) {
         miuiVendorServices.mOrientationPolicy = orientationPolicy;
+    }
+
+    public static void injectMNotificationNavigationCoordinator(MiuiVendorServices miuiVendorServices, NotificationPanelNavigationBarCoordinator notificationPanelNavigationBarCoordinator) {
+        miuiVendorServices.mNotificationNavigationCoordinator = notificationPanelNavigationBarCoordinator;
     }
 }

@@ -17,6 +17,7 @@ import com.android.systemui.statusbar.notification.row.RowContentBindStage;
 import com.android.systemui.statusbar.phone.NotificationGroupManager;
 import com.android.systemui.statusbar.policy.HeadsUpManager;
 import com.android.systemui.statusbar.policy.OnHeadsUpChangedListener;
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class NotificationGroupAlertTransferHelper implements OnHeadsUpChangedListener, StatusBarStateController.StateListener {
@@ -148,10 +149,11 @@ public class NotificationGroupAlertTransferHelper implements OnHeadsUpChangedLis
 
     /* access modifiers changed from: private */
     public void handleSuppressedSummaryAlerted(NotificationEntry notificationEntry, AlertingNotificationManager alertingNotificationManager) {
+        ArrayList<NotificationEntry> logicalChildren;
         NotificationEntry next;
         ExpandedNotification sbn = notificationEntry.getSbn();
         GroupAlertEntry groupAlertEntry = this.mGroupAlertEntries.get(this.mGroupManager.getGroupKey(sbn));
-        if (this.mGroupManager.isSummaryOfSuppressedGroup(notificationEntry.getSbn()) && alertingNotificationManager.isAlerting(sbn.getKey()) && groupAlertEntry != null && !pendingInflationsWillAddChildren(groupAlertEntry.mGroup) && (next = this.mGroupManager.getLogicalChildren(notificationEntry.getSbn()).iterator().next()) != null && !next.getRow().keepInParent() && !next.isRowRemoved() && !next.isRowDismissed()) {
+        if (this.mGroupManager.isSummaryOfSuppressedGroup(notificationEntry.getSbn()) && alertingNotificationManager.isAlerting(sbn.getKey()) && groupAlertEntry != null && !pendingInflationsWillAddChildren(groupAlertEntry.mGroup) && (logicalChildren = this.mGroupManager.getLogicalChildren(notificationEntry.getSbn())) != null && !logicalChildren.isEmpty() && (next = logicalChildren.iterator().next()) != null && !next.getRow().keepInParent() && !next.isRowRemoved() && !next.isRowDismissed()) {
             if (!alertingNotificationManager.isAlerting(next.getKey()) && onlySummaryAlerts(notificationEntry)) {
                 groupAlertEntry.mLastAlertTransferTime = SystemClock.elapsedRealtime();
             }

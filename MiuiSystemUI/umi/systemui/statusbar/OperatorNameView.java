@@ -44,7 +44,7 @@ public class OperatorNameView extends TextView implements DemoMode, DarkIconDisp
         this.mKeyguardUpdateMonitor = keyguardUpdateMonitor;
         keyguardUpdateMonitor.registerCallback(this.mCallback);
         ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).addDarkReceiver((DarkIconDispatcher.DarkReceiver) this);
-        ((NetworkController) Dependency.get(NetworkController.class)).addCallback(this);
+        ((NetworkController) Dependency.get(NetworkController.class)).addCallback((NetworkController.SignalCallback) this);
         ((TunerService) Dependency.get(TunerService.class)).addTunable(this, "show_operator_name");
     }
 
@@ -53,7 +53,7 @@ public class OperatorNameView extends TextView implements DemoMode, DarkIconDisp
         super.onDetachedFromWindow();
         this.mKeyguardUpdateMonitor.removeCallback(this.mCallback);
         ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).removeDarkReceiver((DarkIconDispatcher.DarkReceiver) this);
-        ((NetworkController) Dependency.get(NetworkController.class)).removeCallback(this);
+        ((NetworkController) Dependency.get(NetworkController.class)).removeCallback((NetworkController.SignalCallback) this);
         ((TunerService) Dependency.get(TunerService.class)).removeTunable(this);
     }
 

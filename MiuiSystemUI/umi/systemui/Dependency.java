@@ -83,6 +83,7 @@ import com.android.systemui.statusbar.SmartReplyController;
 import com.android.systemui.statusbar.VibratorHelper;
 import com.android.systemui.statusbar.notification.NotificationEntryManager;
 import com.android.systemui.statusbar.notification.NotificationFilter;
+import com.android.systemui.statusbar.notification.NotificationPanelNavigationBarCoordinator;
 import com.android.systemui.statusbar.notification.NotificationSettingsManager;
 import com.android.systemui.statusbar.notification.VisualStabilityManager;
 import com.android.systemui.statusbar.notification.analytics.NotificationStat;
@@ -292,6 +293,7 @@ public class Dependency {
     Lazy<NotificationLockscreenUserManager> mNotificationLockscreenUserManager;
     Lazy<NotificationLogger> mNotificationLogger;
     Lazy<NotificationMediaManager> mNotificationMediaManager;
+    Lazy<NotificationPanelNavigationBarCoordinator> mNotificationNavigationCoordinator;
     Lazy<NotificationRemoteInputManager> mNotificationRemoteInputManager;
     Lazy<NotificationRemoteInputManager.Callback> mNotificationRemoteInputManagerCallback;
     Lazy<NotificationSensitiveController> mNotificationSensitiveController;
@@ -1545,6 +1547,13 @@ public class Dependency {
         Lazy<MiuiAlarmControllerImpl> lazy168 = this.mMiuiAlarmControllerImpl;
         Objects.requireNonNull(lazy168);
         this.mProviders.put(MiuiAlarmControllerImpl.class, new LazyDependencyCreator() {
+            public final Object createDependency() {
+                return Lazy.this.get();
+            }
+        });
+        Lazy<NotificationPanelNavigationBarCoordinator> lazy169 = this.mNotificationNavigationCoordinator;
+        Objects.requireNonNull(lazy169);
+        this.mProviders.put(NotificationPanelNavigationBarCoordinator.class, new LazyDependencyCreator() {
             public final Object createDependency() {
                 return Lazy.this.get();
             }

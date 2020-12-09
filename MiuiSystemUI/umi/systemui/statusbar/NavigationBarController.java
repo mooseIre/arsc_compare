@@ -18,6 +18,7 @@ import com.android.systemui.assist.AssistHandleViewController;
 import com.android.systemui.fragments.FragmentHostManager;
 import com.android.systemui.plugins.DarkIconDispatcher;
 import com.android.systemui.statusbar.CommandQueue;
+import com.android.systemui.statusbar.notification.NotificationPanelNavigationBarCoordinator;
 import com.android.systemui.statusbar.phone.AutoHideController;
 import com.android.systemui.statusbar.phone.LightBarController;
 import com.android.systemui.statusbar.phone.NavigationBarFragment;
@@ -118,6 +119,9 @@ public class NavigationBarController implements CommandQueue.Callbacks {
         navigationBarFragment.setAutoHideController(autoHideController);
         navigationBarFragment.restoreAppearanceAndTransientState();
         this.mNavigationBars.append(i, navigationBarFragment);
+        if (i == 0) {
+            ((NotificationPanelNavigationBarCoordinator) Dependency.get(NotificationPanelNavigationBarCoordinator.class)).setNavigationBarView(getNavigationBarView(0));
+        }
         if (registerStatusBarResult != null) {
             navigationBarFragment.setImeWindowStatus(display.getDisplayId(), registerStatusBarResult.mImeToken, registerStatusBarResult.mImeWindowVis, registerStatusBarResult.mImeBackDisposition, registerStatusBarResult.mShowImeSwitcher);
         }
@@ -136,7 +140,7 @@ public class NavigationBarController implements CommandQueue.Callbacks {
 
     public void checkNavBarModes(int i) {
         NavigationBarFragment navigationBarFragment = this.mNavigationBars.get(i);
-        if (navigationBarFragment != null) {
+        if (!((NotificationPanelNavigationBarCoordinator) Dependency.get(NotificationPanelNavigationBarCoordinator.class)).getNavBarDarkMode() && navigationBarFragment != null) {
             navigationBarFragment.checkNavBarModes();
         }
     }

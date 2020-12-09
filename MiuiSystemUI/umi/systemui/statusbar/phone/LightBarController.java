@@ -91,6 +91,10 @@ public class LightBarController implements BatteryController.BatteryStateChangeC
         onNavigationBarAppearanceChanged(this.mAppearance, false, this.mNavigationBarMode, this.mNavbarColorManagedByIme);
     }
 
+    public int getNavigationBarMode() {
+        return this.mNavigationBarMode;
+    }
+
     /* access modifiers changed from: package-private */
     public void onNavigationBarAppearanceChanged(int i, boolean z, int i2, boolean z2) {
         int transformAppearance = MiuiNavBarHelper.transformAppearance(i, this.mMiuiLightNavBar);

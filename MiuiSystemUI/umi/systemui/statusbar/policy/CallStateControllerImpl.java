@@ -11,6 +11,12 @@ public class CallStateControllerImpl {
     }
 
     public int getCallState() {
+        for (int i = 0; i < this.mCallStateArray.size(); i++) {
+            int intValue = this.mCallStateArray.valueAt(i).intValue();
+            if (intValue == 2 || intValue == 1) {
+                return intValue;
+            }
+        }
         return this.mCallState;
     }
 

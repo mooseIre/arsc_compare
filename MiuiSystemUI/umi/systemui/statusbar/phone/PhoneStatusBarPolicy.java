@@ -328,7 +328,7 @@ public class PhoneStatusBarPolicy implements BluetoothController.Callback, Comma
         this.mIconController.setIconVisibility(this.mSlotManagedProfile, this.mManagedProfileIconVisible);
         this.mIconController.setIcon(this.mSlotDataSaver, C0013R$drawable.stat_sys_data_saver, this.mResources.getString(C0021R$string.accessibility_data_saver_on));
         this.mIconController.setIconVisibility(this.mSlotDataSaver, false);
-        this.mIconController.setIcon(this.mSlotLocation, 17303177, this.mResources.getString(C0021R$string.accessibility_location_active));
+        this.mIconController.setIcon(this.mSlotLocation, 17303180, this.mResources.getString(C0021R$string.accessibility_location_active));
         this.mIconController.setIconVisibility(this.mSlotLocation, false);
         this.mIconController.setIcon(this.mSlotSensorsOff, C0013R$drawable.stat_sys_sensors_off, this.mResources.getString(C0021R$string.accessibility_sensors_off_active));
         this.mIconController.setIconVisibility(this.mSlotSensorsOff, this.mSensorPrivacyController.isSensorPrivacyEnabled());

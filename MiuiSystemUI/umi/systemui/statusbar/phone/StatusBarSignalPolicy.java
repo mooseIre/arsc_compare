@@ -62,7 +62,7 @@ public class StatusBarSignalPolicy implements NetworkController.SignalCallback, 
         this.mNetworkController = (NetworkController) Dependency.get(NetworkController.class);
         this.mSecurityController = (SecurityController) Dependency.get(SecurityController.class);
         ((TunerService) Dependency.get(TunerService.class)).addTunable(this, "icon_blacklist");
-        this.mNetworkController.addCallback(this);
+        this.mNetworkController.addCallback((NetworkController.SignalCallback) this);
         this.mSecurityController.addCallback(this);
     }
 
@@ -97,8 +97,8 @@ public class StatusBarSignalPolicy implements NetworkController.SignalCallback, 
                 this.mBlockMobile = contains2;
                 this.mBlockEthernet = contains4;
                 this.mBlockWifi = contains3 || this.mForceBlockWifi;
-                this.mNetworkController.removeCallback(this);
-                this.mNetworkController.addCallback(this);
+                this.mNetworkController.removeCallback((NetworkController.SignalCallback) this);
+                this.mNetworkController.addCallback((NetworkController.SignalCallback) this);
             }
         }
     }

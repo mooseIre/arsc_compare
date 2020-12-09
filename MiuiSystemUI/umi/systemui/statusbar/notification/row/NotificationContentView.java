@@ -199,8 +199,7 @@ public class NotificationContentView extends FrameLayout {
             }
             int extraHeight2 = NotificationViewWrapperInjector.getExtraHeight(this.mContractedWrapper, this.mContainingNotification);
             int i11 = i9 + extraHeight2;
-            boolean isCustomViewNotification = NotificationUtil.isCustomViewNotification(this.mStatusBarNotification);
-            if (NotificationUtil.needCustomHeight(this.mStatusBarNotification, isCustomViewNotification)) {
+            if (NotificationUtil.needCustomHeight(this.mStatusBarNotification, NotificationUtil.isCustomViewNotification(this.mStatusBarNotification))) {
                 makeMeasureSpec = View.MeasureSpec.makeMeasureSpec(Integer.MAX_VALUE, Integer.MIN_VALUE);
             } else if (shouldContractedBeFixedSize() || z) {
                 makeMeasureSpec = View.MeasureSpec.makeMeasureSpec(i11, 1073741824);
@@ -210,7 +209,7 @@ public class NotificationContentView extends FrameLayout {
             int i12 = makeMeasureSpec;
             measureChildWithMargins(this.mContractedChild, i, 0, i12, 0);
             int measuredHeight = extraHeight2 + this.mContractedChild.getMeasuredHeight();
-            if (!isCustomViewNotification && measuredHeight < this.mMinContractedHeight) {
+            if (measuredHeight < this.mMinContractedHeight) {
                 i4 = View.MeasureSpec.makeMeasureSpec(this.mMinContractedHeight, 1073741824);
                 measureChildWithMargins(this.mContractedChild, i, 0, i4, 0);
             } else {

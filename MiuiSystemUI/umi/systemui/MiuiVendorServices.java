@@ -5,6 +5,7 @@ import android.content.Context;
 import android.provider.Settings;
 import com.android.keyguard.fod.policy.MiuiGxzwPolicy;
 import com.android.systemui.recents.MiuiRecentProxy;
+import com.android.systemui.statusbar.notification.NotificationPanelNavigationBarCoordinator;
 import com.android.systemui.statusbar.notification.policy.NotificationAlertController;
 import com.android.systemui.statusbar.notification.policy.NotificationCountLimitPolicy;
 import com.android.systemui.statusbar.notification.policy.NotificationDynamicFpsController;
@@ -20,6 +21,7 @@ public class MiuiVendorServices extends SystemUI {
     NotificationAlertController mNotifAlertController;
     NotificationCountLimitPolicy mNotifCountLimitPolicy;
     NotificationDynamicFpsController mNotifDynamicFpsController;
+    NotificationPanelNavigationBarCoordinator mNotificationNavigationCoordinator;
     OrientationPolicy mOrientationPolicy;
     MiuiWallpaperZoomOutService mWallpaperZoomOutService;
 
@@ -38,6 +40,7 @@ public class MiuiVendorServices extends SystemUI {
         this.mMiuiNotificationShadePolicy.start();
         this.mMiuiRecentProxy.start();
         this.mOrientationPolicy.start();
+        this.mNotificationNavigationCoordinator.start();
     }
 
     private void setSettingsDefault() {

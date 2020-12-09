@@ -80,6 +80,7 @@ import com.android.systemui.statusbar.SmartReplyController;
 import com.android.systemui.statusbar.VibratorHelper;
 import com.android.systemui.statusbar.notification.NotificationEntryManager;
 import com.android.systemui.statusbar.notification.NotificationFilter;
+import com.android.systemui.statusbar.notification.NotificationPanelNavigationBarCoordinator;
 import com.android.systemui.statusbar.notification.NotificationSettingsManager;
 import com.android.systemui.statusbar.notification.VisualStabilityManager;
 import com.android.systemui.statusbar.notification.analytics.NotificationStat;
@@ -841,5 +842,9 @@ public final class Dependency_MembersInjector {
 
     public static void injectMMiuiAlarmControllerImpl(Dependency dependency, Lazy<MiuiAlarmControllerImpl> lazy) {
         dependency.mMiuiAlarmControllerImpl = lazy;
+    }
+
+    public static void injectMNotificationNavigationCoordinator(Dependency dependency, Lazy<NotificationPanelNavigationBarCoordinator> lazy) {
+        dependency.mNotificationNavigationCoordinator = lazy;
     }
 }

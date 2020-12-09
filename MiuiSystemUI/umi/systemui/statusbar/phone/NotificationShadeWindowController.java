@@ -27,7 +27,6 @@ import com.android.systemui.statusbar.RemoteInputController;
 import com.android.systemui.statusbar.SysuiStatusBarStateController;
 import com.android.systemui.statusbar.policy.ConfigurationController;
 import com.google.android.collect.Lists;
-import com.miui.systemui.DeviceConfig;
 import com.miui.systemui.util.BlurUtil;
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
@@ -427,17 +426,13 @@ public class NotificationShadeWindowController implements RemoteInputController.
     }
 
     public void setBlurRatio(float f) {
-        if (DeviceConfig.isLowGpuDevice()) {
-            if (f <= 1.0f) {
-                this.mNotificationShadeView.setBackgroundColor((((int) (f * 255.0f)) << 24) + 7237230);
-            }
-        } else if (f == 0.0f || f == 1.0f) {
+        if (f == 0.0f || f == 1.0f) {
             State state = this.mCurrentState;
             state.mBlurRatio = f;
             apply(state);
-        } else {
-            BlurUtil.setBlur(this.mNotificationShadeView.getViewRootImpl(), f, 0);
+            return;
         }
+        BlurUtil.setBlur(this.mNotificationShadeView.getViewRootImpl(), f, 0);
     }
 
     private void applyBlurRatio(State state) {

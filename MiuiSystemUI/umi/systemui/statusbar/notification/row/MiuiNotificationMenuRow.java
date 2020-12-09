@@ -631,6 +631,7 @@ public class MiuiNotificationMenuRow implements NotificationMenuRowPlugin {
                 this.mIcon = imageView;
                 imageView.setBackgroundResource(C0013R$drawable.miui_notification_menu_ic_bg_inactive);
                 this.mIcon.setImageResource(i2);
+                this.mIcon.setContentDescription(this.mContentDescription);
                 ViewAnimUtils.mouse(this.mIcon);
             }
         }

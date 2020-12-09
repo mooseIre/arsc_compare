@@ -45,11 +45,9 @@ public class ControlPanelWindowView extends FrameLayout {
     private AnimatorListenerAdapter mExpandListener;
     private int mExpandState;
     private ValueAnimator mHeightChangeAnimator;
-    private int mInterceptFlag;
     private boolean mInterceptTouchEvent;
     private boolean mIsGetSelfEvent;
     private int[] mLocation;
-    private int mMoveEventCount;
     private int mOrientation;
     private QSControlScrollView mQSControlScrollView;
     private LinearLayout mSmartControlsView;
@@ -71,8 +69,6 @@ public class ControlPanelWindowView extends FrameLayout {
         this.mDownX = 0.0f;
         this.mDownExpandHeight = 0.0f;
         this.mLocation = new int[2];
-        this.mInterceptFlag = 0;
-        this.mMoveEventCount = 0;
         this.mBlurRatioListener = new TransitionListener() {
             public void onUpdate(Object obj, FloatProperty floatProperty, float f, float f2, boolean z) {
                 float unused = ControlPanelWindowView.this.mBlurRatio = f;
@@ -233,15 +229,6 @@ public class ControlPanelWindowView extends FrameLayout {
             return false;
         } else {
             if (z3 && z6) {
-                int i = this.mMoveEventCount + 1;
-                this.mMoveEventCount = i;
-                if (i > 40) {
-                    int i2 = this.mInterceptFlag + 1;
-                    this.mInterceptFlag = i2;
-                    if ((i2 & 1) != 0) {
-                        return false;
-                    }
-                }
                 float rawY = motionEvent.getRawY();
                 float f = this.mDownY;
                 if (rawY >= f) {
@@ -289,7 +276,6 @@ public class ControlPanelWindowView extends FrameLayout {
             } else if (this.mContentShowing) {
                 this.mContent.hideContent();
                 this.mContentShowing = false;
-                createAndStartAnimator(0, this.mCollapseListener);
                 onControlPanelFinishCollapsed();
                 Log.d("ControllerPanelWindowView", "hideContent");
             }

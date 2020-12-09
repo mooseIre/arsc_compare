@@ -452,17 +452,16 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
         return 0.0f;
     }
 
-    public final float calculateQsTopPadding(float f) {
-        QS qs = this.mQs;
-        Intrinsics.checkExpressionValueIsNotNull(qs, "mQs");
-        View header = qs.getHeader();
-        Intrinsics.checkExpressionValueIsNotNull(header, "mQs.header");
-        float height = (float) header.getHeight();
-        float calculateQsTopPadding = super.calculateQsTopPadding();
-        if (f > ((float) 0)) {
-            return RangesKt___RangesKt.coerceAtMost(this.mQsTopPadding + f, calculateQsTopPadding);
+    /* access modifiers changed from: private */
+    public final void handleNssCoverQs(float f) {
+        if (!this.mQsExpanded) {
+            QS qs = this.mQs;
+            Intrinsics.checkExpressionValueIsNotNull(qs, "mQs");
+            View header = qs.getHeader();
+            Intrinsics.checkExpressionValueIsNotNull(header, "mQs.header");
+            float calculateQsTopPadding = super.calculateQsTopPadding();
+            updateScrollerTopPadding(RangesKt___RangesKt.coerceIn(this.mQsTopPadding + f, (float) header.getHeight(), calculateQsTopPadding));
         }
-        return RangesKt___RangesKt.coerceAtLeast(this.mQsTopPadding + f, height);
     }
 
     /* access modifiers changed from: private */
@@ -514,7 +513,8 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
         float height = (float) header.getHeight();
         float calculateQsTopPadding = super.calculateQsTopPadding();
         float f2 = this.mQsTopPadding;
-        if (f2 != height && f >= ((float) 0)) {
+        boolean z = f2 == height || f < ((float) 0);
+        if (!z) {
             height = calculateQsTopPadding;
         }
         ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{f2, height});
@@ -526,11 +526,27 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
         }
         ValueAnimator valueAnimator2 = this.mQsTopPaddingAnimator;
         if (valueAnimator2 != null) {
-            valueAnimator2.addListener(new MiuiNotificationPanelViewController$endNssCoveringQsMotion$2(this));
+            valueAnimator2.addListener(new MiuiNotificationPanelViewController$endNssCoveringQsMotion$2(this, z));
         }
         ValueAnimator valueAnimator3 = this.mQsTopPaddingAnimator;
         if (valueAnimator3 != null) {
             valueAnimator3.start();
+        }
+    }
+
+    /* access modifiers changed from: private */
+    public final void refreshNssCoveringQs() {
+        ValueAnimator valueAnimator = this.mQsTopPaddingAnimator;
+        if (valueAnimator != null) {
+            valueAnimator.end();
+        } else if (this.mNssCoveredQs) {
+            QS qs = this.mQs;
+            Intrinsics.checkExpressionValueIsNotNull(qs, "mQs");
+            View header = qs.getHeader();
+            Intrinsics.checkExpressionValueIsNotNull(header, "mQs.header");
+            updateScrollerTopPadding((float) header.getHeight());
+        } else {
+            updateScrollerTopPadding(super.calculateQsTopPadding());
         }
     }
 
@@ -543,7 +559,7 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
         if (controlPanelController2.isUseControlCenter()) {
             return calculateQsTopPadding;
         }
-        if (isOnShade() && !isQsExpanded() && this.mQsTopPadding < calculateQsTopPadding && (this.mNssCoveringQs || this.mNssCoveredQs)) {
+        if ((isOnShade() || isOnShadeLocked()) && !isQsExpanded() && this.mQsTopPadding < calculateQsTopPadding && (this.mNssCoveringQs || this.mNssCoveredQs)) {
             calculateQsTopPadding = this.mQsTopPadding;
             i = this.mStickyHeaderHeight;
         } else if (isOnKeyguard()) {
@@ -619,6 +635,10 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
 
     public final boolean isOnShade() {
         return this.mBarState == 0;
+    }
+
+    public final boolean isOnShadeLocked() {
+        return this.mBarState == 2;
     }
 
     /* JADX WARNING: type inference failed for: r1v1, types: [com.android.systemui.statusbar.phone.MiuiNotificationPanelViewControllerKt$sam$java_util_function_BiConsumer$0] */
@@ -791,7 +811,6 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
 
     /* access modifiers changed from: protected */
     public void positionClockAndNotifications() {
-        super.positionClockAndNotifications();
         if (this.mBarState == 1) {
             KeyguardClockContainer view = ((KeyguardClockInjector) Dependency.get(KeyguardClockInjector.class)).getView();
             int notGoneChildCount = this.mNotificationStackScroller.getNotGoneChildCount();
@@ -799,6 +818,7 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
             Intrinsics.checkExpressionValueIsNotNull(statusBar, "mStatusBar");
             this.mClockPositionAlgorithm.setupMiuiClock(view.getClockHeight(), (int) view.getClockVisibleHeight(), notGoneChildCount, statusBar.getKeyguardNotifications());
         }
+        super.positionClockAndNotifications();
     }
 
     /* access modifiers changed from: protected */
@@ -1114,6 +1134,7 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
                 if (z2 || z) {
                     MiuiNotificationPanelViewController.this.mKeyguardPanelViewInjector.resetLockScreenMagazine();
                     MiuiNotificationPanelViewController.this.mKeyguardPanelViewInjector.initScreenSize();
+                    MiuiNotificationPanelViewController.this.refreshNssCoveringQs();
                     return;
                 }
                 return;

@@ -143,7 +143,7 @@ public class NotificationContentInflaterInjector {
         if (remoteViews != null) {
             return remoteViews;
         }
-        if (isLandscape(context)) {
+        if (isLandscape(context) || ((SettingsManager) Dependency.get(SettingsManager.class)).getGameModeEnabled()) {
             return buildOneLineContent(buildUnstyled, true, context);
         }
         if (builder.getStyle() != null) {

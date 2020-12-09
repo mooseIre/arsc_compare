@@ -9,7 +9,6 @@ import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import com.android.systemui.statusbar.phone.HeadsUpManagerPhone;
 import com.android.systemui.statusbar.phone.StatusBar;
 import com.android.systemui.statusbar.policy.OnHeadsUpChangedListener;
-import com.miui.systemui.DeviceConfig;
 import com.miui.systemui.util.BlurUtil;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -145,12 +144,8 @@ public class ControlPanelWindowManager implements OnHeadsUpChangedListener {
     }
 
     private void applyBlurRatio(float f) {
-        if (hasAdded() && f <= 1.0f) {
+        if (hasAdded()) {
             Log.d("ControlPanelWindowManager", "setBlurRatio: " + f);
-            if (DeviceConfig.isLowGpuDevice()) {
-                this.mControlPanel.setBackgroundColor((((int) (f * 255.0f)) << 24) + 7237230);
-                return;
-            }
             BlurUtil.setBlurWithWindowManager(this.mControlPanel.getViewRootImpl(), f, 0, this.mLpChanged);
             apply();
         }

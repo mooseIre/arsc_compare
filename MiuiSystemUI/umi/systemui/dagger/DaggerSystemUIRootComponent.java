@@ -481,6 +481,8 @@ import com.android.systemui.statusbar.notification.NotificationEntryManager;
 import com.android.systemui.statusbar.notification.NotificationEntryManagerLogger_Factory;
 import com.android.systemui.statusbar.notification.NotificationFilter;
 import com.android.systemui.statusbar.notification.NotificationFilter_Factory;
+import com.android.systemui.statusbar.notification.NotificationPanelNavigationBarCoordinator;
+import com.android.systemui.statusbar.notification.NotificationPanelNavigationBarCoordinator_Factory;
 import com.android.systemui.statusbar.notification.NotificationSettingsManager;
 import com.android.systemui.statusbar.notification.NotificationSettingsManager_Factory;
 import com.android.systemui.statusbar.notification.NotificationWakeUpCoordinator;
@@ -1253,6 +1255,8 @@ public final class DaggerSystemUIRootComponent implements SystemUIRootComponent 
     private Provider<NotificationInteractionTracker> notificationInteractionTrackerProvider;
     /* access modifiers changed from: private */
     public Provider<NotificationLockscreenUserManagerImpl> notificationLockscreenUserManagerImplProvider;
+    /* access modifiers changed from: private */
+    public Provider<NotificationPanelNavigationBarCoordinator> notificationPanelNavigationBarCoordinatorProvider;
     private Provider<NotificationPersonExtractorPluginBoundary> notificationPersonExtractorPluginBoundaryProvider;
     private NotificationRankingManager_Factory notificationRankingManagerProvider;
     /* access modifiers changed from: private */
@@ -2299,9 +2303,10 @@ public final class DaggerSystemUIRootComponent implements SystemUIRootComponent 
         this.notificationCountLimitPolicyProvider = DoubleCheck.provider(NotificationCountLimitPolicy_Factory.create(this.provideNotificationEntryManagerProvider));
         this.miuiNotificationShadePolicyProvider = DoubleCheck.provider(MiuiNotificationShadePolicy_Factory.create(this.provideContextProvider, this.provideBgHandlerProvider, this.provideHeadsUpManagerPhoneProvider, this.notificationShadeWindowControllerProvider));
         this.miuiRecentProxyProvider = DoubleCheck.provider(MiuiRecentProxy_Factory.create(this.provideContextProvider, this.provideCommandQueueProvider, this.provideMainHandlerProvider));
-        Provider<OrientationPolicy> provider10 = DoubleCheck.provider(OrientationPolicy_Factory.create(this.provideContextProvider));
-        this.orientationPolicyProvider = provider10;
-        this.miuiVendorServicesProvider = DoubleCheck.provider(MiuiVendorServices_Factory.create(this.provideContextProvider, this.miuiWallpaperZoomOutServiceProvider, this.miuiHeadsUpPolicyProvider, this.miuiGxzwPolicyProvider, this.notificationAlertControllerProvider, this.notificationDynamicFpsControllerProvider, this.notificationCountLimitPolicyProvider, this.miuiNotificationShadePolicyProvider, this.miuiRecentProxyProvider, provider10));
+        this.orientationPolicyProvider = DoubleCheck.provider(OrientationPolicy_Factory.create(this.provideContextProvider));
+        Provider<NotificationPanelNavigationBarCoordinator> provider10 = DoubleCheck.provider(NotificationPanelNavigationBarCoordinator_Factory.create(this.provideCommandQueueProvider, this.provideConfigurationControllerProvider, this.provideLightBarControllerProvider));
+        this.notificationPanelNavigationBarCoordinatorProvider = provider10;
+        this.miuiVendorServicesProvider = DoubleCheck.provider(MiuiVendorServices_Factory.create(this.provideContextProvider, this.miuiWallpaperZoomOutServiceProvider, this.miuiHeadsUpPolicyProvider, this.miuiGxzwPolicyProvider, this.notificationAlertControllerProvider, this.notificationDynamicFpsControllerProvider, this.notificationCountLimitPolicyProvider, this.miuiNotificationShadePolicyProvider, this.miuiRecentProxyProvider, this.orientationPolicyProvider, provider10));
         MapProviderFactory.Builder builder2 = MapProviderFactory.builder(23);
         builder2.put(AuthController.class, this.authControllerProvider);
         builder2.put(Divider.class, this.provideDividerProvider);
@@ -2401,10 +2406,10 @@ public final class DaggerSystemUIRootComponent implements SystemUIRootComponent 
         this.demoModeControllerProvider = DoubleCheck.provider(DemoModeController_Factory.create(this.providesBroadcastDispatcherProvider));
         this.slaveWifiSignalControllerProvider = DoubleCheck.provider(SlaveWifiSignalController_Factory.create(this.provideContextProvider, this.provideBgHandlerProvider, this.statusBarIconControllerImplProvider, this.provideMainHandlerProvider, this.providesBroadcastDispatcherProvider));
         this.miuiAlarmControllerImplProvider = DoubleCheck.provider(MiuiAlarmControllerImpl_Factory.create(this.provideContextProvider));
-        this.contextHolder = builder.contextHolder;
     }
 
     private void initialize6(Builder builder) {
+        this.contextHolder = builder.contextHolder;
         Provider<MediaHostStatesManager> provider = DoubleCheck.provider(MediaHostStatesManager_Factory.create());
         this.mediaHostStatesManagerProvider = provider;
         this.mediaViewControllerProvider = MediaViewController_Factory.create(this.provideContextProvider, this.provideConfigurationControllerProvider, provider);
@@ -2768,6 +2773,7 @@ public final class DaggerSystemUIRootComponent implements SystemUIRootComponent 
             Dependency_MembersInjector.injectMDemoModeController(dependency, DoubleCheck.lazy(DaggerSystemUIRootComponent.this.demoModeControllerProvider));
             Dependency_MembersInjector.injectMSlaveWifiSignalController(dependency, DoubleCheck.lazy(DaggerSystemUIRootComponent.this.slaveWifiSignalControllerProvider));
             Dependency_MembersInjector.injectMMiuiAlarmControllerImpl(dependency, DoubleCheck.lazy(DaggerSystemUIRootComponent.this.miuiAlarmControllerImplProvider));
+            Dependency_MembersInjector.injectMNotificationNavigationCoordinator(dependency, DoubleCheck.lazy(DaggerSystemUIRootComponent.this.notificationPanelNavigationBarCoordinatorProvider));
             return dependency;
         }
     }
