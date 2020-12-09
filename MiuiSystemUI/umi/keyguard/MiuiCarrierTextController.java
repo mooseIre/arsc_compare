@@ -111,7 +111,7 @@ public class MiuiCarrierTextController implements CustomCarrierObserver.Callback
         this.mCarrierObserver = (CarrierObserver) Dependency.get(CarrierObserver.class);
         this.mKeyguardUpdateMonitor = (KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class);
         NetworkController networkController = (NetworkController) Dependency.get(NetworkController.class);
-        networkController.addCallback(this);
+        networkController.addCallback((NetworkController.SignalCallback) this);
         networkController.addEmergencyListener(this);
         this.mKeyguardUpdateMonitor.registerCallback(this.mCallback);
         this.mCustomCarrierObserver.addCallback(this);
