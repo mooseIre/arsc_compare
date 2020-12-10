@@ -54,7 +54,7 @@ public class LeakReporter {
                 NotificationChannelCompat notificationChannelCompat = new NotificationChannelCompat("leak", "Leak Alerts", 4);
                 notificationChannelCompat.enableVibration(true);
                 NotificationChannelCompat.createNotificationChannel(notificationManager, notificationChannelCompat);
-                notificationManager.notify("LeakReporter", 0, NotificationCompat.newBuilder(this.mContext, "leak").setAutoCancel(true).setShowWhen(true).setContentTitle("Memory Leak Detected").setContentText(String.format("SystemUI has detected %d leaked objects. Tap to send", new Object[]{Integer.valueOf(i)})).setSmallIcon(17303616).setContentIntent(PendingIntent.getActivityAsUser(this.mContext, 0, getIntent(file2, file3), 134217728, (Bundle) null, UserHandle.CURRENT)).build());
+                notificationManager.notify("LeakReporter", 0, NotificationCompat.newBuilder(this.mContext, "leak").setAutoCancel(true).setShowWhen(true).setContentTitle("Memory Leak Detected").setContentText(String.format("SystemUI has detected %d leaked objects. Tap to send", new Object[]{Integer.valueOf(i)})).setSmallIcon(17303619).setContentIntent(PendingIntent.getActivityAsUser(this.mContext, 0, getIntent(file2, file3), 134217728, (Bundle) null, UserHandle.CURRENT)).build());
             } catch (Throwable th2) {
                 Throwable th3 = th2;
                 fileOutputStream.close();

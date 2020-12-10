@@ -79,7 +79,7 @@ public class DndNotificationWarnings {
     private void showNotification() {
         Notification.Builder builder = new Notification.Builder(this.mContext);
         NotificationCompat.setChannelId(builder, NotificationChannels.DND);
-        builder.setSmallIcon(17303616).setAutoCancel(false).setGroup(NotificationChannels.DND).setVisibility(1).setCustomContentView(new RemoteViews(this.mContext.getPackageName(), R.layout.dnd_notification)).setContentIntent(PendingIntent.getActivity(this.mContext, 0, Util.getSilentModeIntent(), 0));
+        builder.setSmallIcon(17303619).setAutoCancel(false).setGroup(NotificationChannels.DND).setVisibility(1).setCustomContentView(new RemoteViews(this.mContext.getPackageName(), R.layout.dnd_notification)).setContentIntent(PendingIntent.getActivity(this.mContext, 0, Util.getSilentModeIntent(), 0));
         Notification build = builder.build();
         build.priority = 2;
         MiuiNotificationCompat.setTargetPkg(build, "android");
