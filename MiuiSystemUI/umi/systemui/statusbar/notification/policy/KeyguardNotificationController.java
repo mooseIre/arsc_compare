@@ -19,6 +19,7 @@ import android.widget.DateTimeView;
 import com.android.systemui.Dependency;
 import com.android.systemui.statusbar.notification.MiuiNotificationCompat;
 import com.android.systemui.statusbar.notification.NotificationEntryManager;
+import com.android.systemui.statusbar.notification.NotificationFilterInjector;
 import com.android.systemui.statusbar.notification.NotificationUtil;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import com.android.systemui.statusbar.phone.NotificationGroupManager;
@@ -84,7 +85,7 @@ public class KeyguardNotificationController {
     }
 
     private boolean needUpdateNotificationProvider(NotificationEntry notificationEntry) {
-        if (this.mKeyguardStateController.isShowing() && notificationEntry.getSbn().canShowOnKeyguard() && !NotificationUtil.isMediaNotification(notificationEntry.getSbn()) && !NotificationUtil.isCustomViewNotification(notificationEntry.getSbn())) {
+        if (this.mKeyguardStateController.isShowing() && notificationEntry.getSbn().canShowOnKeyguard() && !NotificationUtil.isMediaNotification(notificationEntry.getSbn()) && !NotificationUtil.isCustomViewNotification(notificationEntry.getSbn()) && !NotificationFilterInjector.shouldFilterOut(notificationEntry)) {
             return true;
         }
         return false;

@@ -541,7 +541,7 @@ public class MiuiFiveGServiceClient {
         if (this.mIsCustForKrOps) {
             return getCustKrNrIcon(fiveGServiceState, i);
         }
-        if ("andromeda".equals(Build.DEVICE) || "crux".equals(Build.DEVICE)) {
+        if (("andromeda".equals(Build.DEVICE) && !isCustForSfrOps(i)) || "crux".equals(Build.DEVICE)) {
             return getConfigDIconGroup(fiveGServiceState);
         }
         if (!Build.IS_INTERNATIONAL_BUILD) {
@@ -706,6 +706,11 @@ public class MiuiFiveGServiceClient {
         } else {
             SystemProperties.set("persist.sys.lgu.5g.indicator", 2);
         }
+    }
+
+    private boolean isCustForSfrOps(int i) {
+        String simOperatorForSlot = TelephonyManager.getDefault().getSimOperatorForSlot(i);
+        return "20810".equals(simOperatorForSlot) || "26806".equals(simOperatorForSlot);
     }
 
     private MobileSignalController.MobileIconGroup getKrFiveGIcon(FiveGServiceState fiveGServiceState, int i) {
