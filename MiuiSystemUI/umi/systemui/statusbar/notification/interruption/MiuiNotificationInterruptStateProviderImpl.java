@@ -31,6 +31,7 @@ public class MiuiNotificationInterruptStateProviderImpl extends NotificationInte
     private final Context mContext;
     private final DeviceProvisionedController mDeviceProvisionedController;
     private boolean mDisableFloatNotification;
+    private boolean mIsStatusBarHidden;
     private final SettingsManager mSettingsManager;
     private boolean mSoftInputVisible;
     private final StatusBarKeyguardViewManager mStatusBarKeyguardViewManager;
@@ -50,7 +51,12 @@ public class MiuiNotificationInterruptStateProviderImpl extends NotificationInte
     }
 
     public void disable(int i, int i2, int i3, boolean z) {
+        boolean z2 = true;
         this.mDisableFloatNotification = (i2 & 1024) != 0;
+        if ((i2 & 256) == 0) {
+            z2 = false;
+        }
+        this.mIsStatusBarHidden = z2;
     }
 
     public boolean shouldBubbleUp(NotificationEntry notificationEntry) {
@@ -82,7 +88,7 @@ public class MiuiNotificationInterruptStateProviderImpl extends NotificationInte
                     return true;
                 }
                 return false;
-            } else if (this.mSoftInputVisible || this.mDisableFloatNotification || this.mZenModeController.isZenModeOn() || ((NotificationSettingsManager) Dependency.get(NotificationSettingsManager.class)).shouldPeekWhenAppShowing(CommonUtil.getTopActivityPkg(this.mContext, true))) {
+            } else if (this.mIsStatusBarHidden || this.mSoftInputVisible || this.mDisableFloatNotification || this.mZenModeController.isZenModeOn() || ((NotificationSettingsManager) Dependency.get(NotificationSettingsManager.class)).shouldPeekWhenAppShowing(CommonUtil.getTopActivityPkg(this.mContext, true))) {
                 if (!expandedNotification.isClearable()) {
                     MiuiNotificationCompat.setFloatTime(expandedNotification.getNotification(), Integer.MAX_VALUE);
                 }

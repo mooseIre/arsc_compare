@@ -13,11 +13,9 @@ public class StatusBarWindowController {
     private final State mCurrentState = new State();
     private WindowManager.LayoutParams mLp;
     private final WindowManager.LayoutParams mLpChanged;
-    private boolean mNotificationShadeShown;
     private final Resources mResources;
     private ViewGroup mStatusBarView;
     private final SuperStatusBarViewFactory mSuperStatusBarViewFactory;
-    private int mUserActivityTime = 10000;
     private final WindowManager mWindowManager;
 
     public StatusBarWindowController(Context context, WindowManager windowManager, SuperStatusBarViewFactory superStatusBarViewFactory, Resources resources) {
@@ -69,7 +67,6 @@ public class StatusBarWindowController {
     private void apply(State state) {
         applyForceStatusBarVisibleFlag(state);
         applyHeight();
-        applyExtraFlags();
         WindowManager.LayoutParams layoutParams = this.mLp;
         if (layoutParams != null && layoutParams.copyFrom(this.mLpChanged) != 0) {
             this.mWindowManager.updateViewLayout(this.mStatusBarView, this.mLp);
@@ -89,27 +86,5 @@ public class StatusBarWindowController {
             return;
         }
         this.mLpChanged.privateFlags &= -4097;
-    }
-
-    public void setUserActivityTime(int i) {
-        if (this.mUserActivityTime != i) {
-            this.mUserActivityTime = i;
-            apply(this.mCurrentState);
-        }
-    }
-
-    public void setNotificationShadeVisible(boolean z) {
-        if (this.mNotificationShadeShown != z) {
-            this.mNotificationShadeShown = z;
-            apply(this.mCurrentState);
-        }
-    }
-
-    private void applyExtraFlags() {
-        if (this.mNotificationShadeShown) {
-            this.mLpChanged.extraFlags |= 536870912;
-            return;
-        }
-        this.mLpChanged.extraFlags &= -536870913;
     }
 }

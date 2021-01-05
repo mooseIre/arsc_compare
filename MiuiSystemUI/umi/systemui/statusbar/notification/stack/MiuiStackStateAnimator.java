@@ -1,10 +1,10 @@
 package com.android.systemui.statusbar.notification.stack;
 
-import android.util.Log;
 import android.util.Property;
 import android.view.View;
 import android.view.animation.Interpolator;
 import com.android.systemui.C0015R$id;
+import com.android.systemui.Interpolators;
 import com.android.systemui.statusbar.notification.AnimatableProperty;
 import com.android.systemui.statusbar.notification.row.ExpandableView;
 import com.android.systemui.statusbar.notification.stack.NotificationStackScrollLayout;
@@ -16,6 +16,7 @@ import org.jetbrains.annotations.Nullable;
 
 /* compiled from: MiuiNotificationAnimationExtensions.kt */
 public final class MiuiStackStateAnimator extends StackStateAnimator {
+    private final ArrayList<ExpandableView> mChangePositionViews = new ArrayList<>();
     private boolean mHasPanelAppearDisappearEvent;
     private int mHeadsUpAppearHeightBottom;
     private final ArrayList<ExpandableView> mHeadsUpAppearView = new ArrayList<>();
@@ -30,12 +31,13 @@ public final class MiuiStackStateAnimator extends StackStateAnimator {
 
     public void startAnimationForEvents(@NotNull ArrayList<NotificationStackScrollLayout.AnimationEvent> arrayList, long j) {
         Intrinsics.checkParameterIsNotNull(arrayList, "animationEvents");
-        processAnimationEvents(arrayList);
+        processHeadsUpAnimationEvents(arrayList);
+        processAddRemoveAnimationEvents(arrayList);
         super.startAnimationForEvents(arrayList, j);
         clearAnimationState();
     }
 
-    private final void processAnimationEvents(ArrayList<NotificationStackScrollLayout.AnimationEvent> arrayList) {
+    private final void processHeadsUpAnimationEvents(ArrayList<NotificationStackScrollLayout.AnimationEvent> arrayList) {
         ExpandableViewState expandableViewState = new ExpandableViewState();
         ArrayList arrayList2 = new ArrayList();
         for (T next : arrayList) {
@@ -111,7 +113,6 @@ public final class MiuiStackStateAnimator extends StackStateAnimator {
                 expandableView2.setTransientContainer(this.mHostLayout);
                 expandableViewState.initFrom(expandableView2);
                 expandableViewState.yTranslation = -((float) expandableView2.getActualHeight());
-                Log.e("TEST", " parent " + expandableView2.getParent() + "   tmpState.yTranslation " + expandableViewState.yTranslation + "  height " + expandableView2.getActualHeight() + ' ' + expandableViewState.height);
                 this.mAnimationFilter.animateY = true;
                 AnimationProperties animationProperties = this.mAnimationProperties;
                 animationProperties.duration = (long) 300;
@@ -123,9 +124,19 @@ public final class MiuiStackStateAnimator extends StackStateAnimator {
 
     private final void clearAnimationState() {
         this.mHasPanelAppearDisappearEvent = false;
+        this.mChangePositionViews.clear();
         this.mHeadsUpAppearView.clear();
         this.mHeadsUpDisappearView.clear();
         this.mHeadsUpPositionView.clear();
+    }
+
+    /* access modifiers changed from: protected */
+    public long calculateChildAnimationDelay(@Nullable ExpandableViewState expandableViewState, int i) {
+        AnimationFilter animationFilter = this.mAnimationFilter;
+        if (animationFilter.customDelay != ((long) -1) || animationFilter.hasGoToFullShadeEvent) {
+            return super.calculateChildAnimationDelay(expandableViewState, i);
+        }
+        return 0;
     }
 
     /* access modifiers changed from: protected */
@@ -150,10 +161,13 @@ public final class MiuiStackStateAnimator extends StackStateAnimator {
             if (CollectionsKt___CollectionsKt.contains(this.mHeadsUpAppearView, view) && Intrinsics.areEqual((Object) View.TRANSLATION_Y, (Object) property)) {
                 return MiuiNotificationAnimations.INSTANCE.getHEADS_UP_APPEAR_INTERPOLATOR();
             }
-            if (!CollectionsKt___CollectionsKt.contains(this.mHeadsUpDisappearView, view) || !Intrinsics.areEqual((Object) View.TRANSLATION_Y, (Object) property)) {
+            if (CollectionsKt___CollectionsKt.contains(this.mHeadsUpDisappearView, view) && Intrinsics.areEqual((Object) View.TRANSLATION_Y, (Object) property)) {
+                return MiuiNotificationAnimations.INSTANCE.getHEADS_UP_DISAPPEAR_INTERPOLATOR();
+            }
+            if (!CollectionsKt___CollectionsKt.contains(this.mChangePositionViews, view) || !Intrinsics.areEqual((Object) View.TRANSLATION_Y, (Object) property)) {
                 return super.getCustomInterpolator(view, property);
             }
-            return MiuiNotificationAnimations.INSTANCE.getHEADS_UP_DISAPPEAR_INTERPOLATOR();
+            return Interpolators.DECELERATE_QUINT;
         }
     }
 
@@ -178,5 +192,21 @@ public final class MiuiStackStateAnimator extends StackStateAnimator {
             animationEvent2 = new HeadsUpDisappearEvent(animationEvent);
         }
         return animationEvent2;
+    }
+
+    private final void processAddRemoveAnimationEvents(ArrayList<NotificationStackScrollLayout.AnimationEvent> arrayList) {
+        ArrayList<NotificationStackScrollLayout.AnimationEvent> arrayList2 = new ArrayList<>();
+        for (T next : arrayList) {
+            NotificationStackScrollLayout.AnimationEvent animationEvent = (NotificationStackScrollLayout.AnimationEvent) next;
+            if (animationEvent.animationType == 6 && animationEvent.mChangingView != null) {
+                arrayList2.add(next);
+            }
+        }
+        ArrayList<ExpandableView> arrayList3 = this.mChangePositionViews;
+        for (NotificationStackScrollLayout.AnimationEvent animationEvent2 : arrayList2) {
+            ExpandableView expandableView = animationEvent2.mChangingView;
+            Intrinsics.checkExpressionValueIsNotNull(expandableView, "it.mChangingView");
+            arrayList3.add(expandableView);
+        }
     }
 }

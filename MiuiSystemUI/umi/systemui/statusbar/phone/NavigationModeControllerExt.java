@@ -29,8 +29,7 @@ public final class NavigationModeControllerExt {
     /* access modifiers changed from: private */
     public static boolean mHideGestureLine;
     private static NavigationModeControllerExt$mHideGestureLineObserver$1 mHideGestureLineObserver = new NavigationModeControllerExt$mHideGestureLineObserver$1((Handler) null);
-    /* access modifiers changed from: private */
-    public static boolean mIsFsgMode;
+    private static boolean mIsFsgMode;
     private static final Lazy mOverlayManager$delegate = LazyKt__LazyJVMKt.lazy(NavigationModeControllerExt$mOverlayManager$2.INSTANCE);
     private static final Lazy navigationBarController$delegate = LazyKt__LazyJVMKt.lazy(NavigationModeControllerExt$navigationBarController$2.INSTANCE);
 
@@ -65,6 +64,14 @@ public final class NavigationModeControllerExt {
         }
         Intrinsics.throwUninitializedPropertyAccessException("mContext");
         throw null;
+    }
+
+    public final boolean getMIsFsgMode() {
+        return mIsFsgMode;
+    }
+
+    public final void setMIsFsgMode(boolean z) {
+        mIsFsgMode = z;
     }
 
     private final void init(Context context) {

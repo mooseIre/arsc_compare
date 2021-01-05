@@ -9,6 +9,7 @@ import com.android.systemui.controlcenter.policy.SuperSaveModeController;
 import com.android.systemui.media.MediaDataManagerKt;
 import com.android.systemui.statusbar.notification.analytics.NotificationStat;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
+import com.android.systemui.statusbar.notification.policy.KeyguardNotificationController;
 import com.android.systemui.statusbar.notification.policy.UsbNotificationController;
 import com.android.systemui.statusbar.policy.KeyguardStateController;
 import com.miui.systemui.DebugConfig;
@@ -80,6 +81,29 @@ public class NotificationFilterInjector {
             filterNotification(context, stringExtra, notificationEntryManager);
             if (!TextUtils.equals(intent.getSender(), context.getPackageName())) {
                 ((NotificationStat) Dependency.get(NotificationStat.class)).onBlock(stringExtra, stringExtra3, stringExtra2);
+            }
+        }
+    }
+
+    public static void handleRemoveNotificationRequest(Intent intent, NotificationEntryManager notificationEntryManager) {
+        Class cls = KeyguardNotificationController.class;
+        int intExtra = intent.getIntExtra("com.miui.app.ExtraStatusBarManager.extra_notification_key", 0);
+        int intExtra2 = intent.getIntExtra("com.miui.app.ExtraStatusBarManager.extra_notification_click", 0);
+        if (intExtra == 0) {
+            Log.d("NotificationFilterInjector", "keycode == 0 CLEAR_KEYGUARD_NOTIFICATION");
+            ((KeyguardNotificationController) Dependency.get(cls)).clear();
+            return;
+        }
+        ((KeyguardNotificationController) Dependency.get(cls)).remove(intExtra);
+        for (NotificationEntry next : notificationEntryManager.getActiveNotificationsForCurrentUser()) {
+            if (intExtra == next.getKey().hashCode()) {
+                ExpandedNotification sbn = next.getSbn();
+                Log.d("NotificationFilterInjector", "keycode = " + intExtra + "; click = " + intExtra2 + "; pkg = " + sbn.getPackageName() + "; id = " + sbn.getId());
+                if (intExtra2 == 1) {
+                    next.getRow().callOnClick();
+                } else {
+                    notificationEntryManager.performRemoveNotification(sbn, 2);
+                }
             }
         }
     }

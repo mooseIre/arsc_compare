@@ -142,6 +142,7 @@ public interface StatusBarIconController {
         protected final Context mContext;
         protected DemoStatusIcons mDemoStatusIcons;
         protected boolean mDemoable = true;
+        protected boolean mDrip;
         protected final ViewGroup mGroup;
         protected int mIconSize;
         private boolean mIsInDemoMode;
@@ -234,7 +235,9 @@ public interface StatusBarIconController {
         }
 
         private StatusBarMobileView onCreateStatusBarMobileView(String str) {
-            return StatusBarMobileView.fromContext(this.mContext, str);
+            StatusBarMobileView fromContext = StatusBarMobileView.fromContext(this.mContext, str);
+            fromContext.setDrip(this.mDrip);
+            return fromContext;
         }
 
         /* access modifiers changed from: protected */
@@ -313,6 +316,10 @@ public interface StatusBarIconController {
             if (this.mIsInDemoMode) {
                 this.mDemoStatusIcons.updateMobileState(mobileIconState);
             }
+        }
+
+        public void setDrip(boolean z) {
+            this.mDrip = z;
         }
     }
 }

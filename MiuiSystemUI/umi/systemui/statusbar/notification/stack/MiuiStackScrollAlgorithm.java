@@ -2,6 +2,7 @@ package com.android.systemui.statusbar.notification.stack;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.view.View;
 import android.view.ViewGroup;
 import com.android.systemui.C0012R$dimen;
 import com.android.systemui.C0015R$id;
@@ -9,8 +10,10 @@ import com.android.systemui.Dependency;
 import com.android.systemui.statusbar.EmptyShadeView;
 import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow;
 import com.android.systemui.statusbar.notification.row.ExpandableView;
+import com.android.systemui.statusbar.notification.row.MiuiExpandableNotificationRow;
 import com.android.systemui.statusbar.notification.stack.StackScrollAlgorithm;
 import com.android.systemui.statusbar.notification.zen.ZenModeView;
+import com.android.systemui.util.ConvenienceExtensionsKt;
 import com.miui.systemui.SettingsManager;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -22,10 +25,10 @@ import org.jetbrains.annotations.Nullable;
 /* compiled from: MiuiStackScrollAlgorithm.kt */
 public final class MiuiStackScrollAlgorithm extends StackScrollAlgorithm {
     private final Context mContext;
+    private final int mGroupMinusBottom;
+    private final int mGroupMinusTop;
     private final int mHeadsUpMarginTop;
     private int mLatestVisibleChildrenCount;
-    private final int mPaddingBetweenZenModeAndNext;
-    private final int mPaddingWhenQsExpansionEnabled;
     private final int mStatusBarHeight;
 
     /* JADX INFO: super call moved to the top of the method (can break code semantics) */
@@ -34,14 +37,20 @@ public final class MiuiStackScrollAlgorithm extends StackScrollAlgorithm {
         Intrinsics.checkParameterIsNotNull(context, "context");
         Intrinsics.checkParameterIsNotNull(viewGroup, "hostView");
         this.mContext = context;
-        this.mPaddingBetweenZenModeAndNext = context.getResources().getDimensionPixelSize(C0012R$dimen.notification_section_divider_height_for_text);
-        this.mPaddingWhenQsExpansionEnabled = context.getResources().getDimensionPixelSize(C0012R$dimen.notification_section_divider_height_minus);
+        this.mGroupMinusTop = context.getResources().getDimensionPixelSize(C0012R$dimen.notification_section_group_divider_top_minus);
+        this.mGroupMinusBottom = context.getResources().getDimensionPixelSize(C0012R$dimen.notification_section_group_divider_bottom_minus);
         this.mStatusBarHeight = context.getResources().getDimensionPixelSize(C0012R$dimen.status_bar_height);
         this.mHeadsUpMarginTop = context.getResources().getDimensionPixelSize(C0012R$dimen.heads_up_status_bar_padding);
     }
 
     private final boolean getMGameModeEnabled() {
         return ((SettingsManager) Dependency.get(SettingsManager.class)).getGameModeEnabled();
+    }
+
+    /* access modifiers changed from: protected */
+    public void initAlgorithmState(@Nullable ViewGroup viewGroup, @Nullable StackScrollAlgorithm.StackScrollAlgorithmState stackScrollAlgorithmState, @Nullable AmbientState ambientState) {
+        updateSectionHeadersVisibility(viewGroup);
+        super.initAlgorithmState(viewGroup, stackScrollAlgorithmState, ambientState);
     }
 
     /* access modifiers changed from: protected */
@@ -98,7 +107,7 @@ public final class MiuiStackScrollAlgorithm extends StackScrollAlgorithm {
     }
 
     /* JADX WARNING: Removed duplicated region for block: B:21:0x0059  */
-    /* JADX WARNING: Removed duplicated region for block: B:40:0x0072 A[SYNTHETIC] */
+    /* JADX WARNING: Removed duplicated region for block: B:42:0x0078 A[SYNTHETIC] */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     private final void updateChildrenAppearDisappearState(com.android.systemui.statusbar.notification.stack.StackScrollAlgorithm.StackScrollAlgorithmState r8, com.android.systemui.statusbar.notification.stack.AmbientState r9) {
         /*
@@ -112,10 +121,10 @@ public final class MiuiStackScrollAlgorithm extends StackScrollAlgorithm {
             r1 = r0
         L_0x0011:
             boolean r2 = r8.hasNext()
-            if (r2 == 0) goto L_0x0079
+            if (r2 == 0) goto L_0x007f
             java.lang.Object r2 = r8.next()
             int r3 = r1 + 1
-            if (r1 < 0) goto L_0x0074
+            if (r1 < 0) goto L_0x007a
             com.android.systemui.statusbar.notification.row.ExpandableView r2 = (com.android.systemui.statusbar.notification.row.ExpandableView) r2
             boolean r1 = r9.getPanelStretchingFromHeadsUp()
             boolean r4 = r2 instanceof com.android.systemui.statusbar.notification.row.ExpandableNotificationRow
@@ -146,7 +155,7 @@ public final class MiuiStackScrollAlgorithm extends StackScrollAlgorithm {
             java.lang.String r1 = "child"
             kotlin.jvm.internal.Intrinsics.checkExpressionValueIsNotNull(r2, r1)
             com.android.systemui.statusbar.notification.stack.ExpandableViewState r1 = r2.getViewState()
-            if (r1 == 0) goto L_0x0072
+            if (r1 == 0) goto L_0x0078
             r2 = 1065353216(0x3f800000, float:1.0)
             if (r5 == 0) goto L_0x005f
             r4 = r2
@@ -155,28 +164,30 @@ public final class MiuiStackScrollAlgorithm extends StackScrollAlgorithm {
             r4 = 0
         L_0x0060:
             r1.alpha = r4
+            boolean r4 = r1.getAnimatingAddRemove()
+            if (r4 != 0) goto L_0x0078
             r4 = 1061997773(0x3f4ccccd, float:0.8)
-            if (r5 == 0) goto L_0x0069
-            r6 = r2
-            goto L_0x006a
-        L_0x0069:
-            r6 = r4
-        L_0x006a:
-            r1.scaleX = r6
             if (r5 == 0) goto L_0x006f
+            r6 = r2
             goto L_0x0070
         L_0x006f:
-            r2 = r4
+            r6 = r4
         L_0x0070:
+            r1.scaleX = r6
+            if (r5 == 0) goto L_0x0075
+            goto L_0x0076
+        L_0x0075:
+            r2 = r4
+        L_0x0076:
             r1.scaleY = r2
-        L_0x0072:
+        L_0x0078:
             r1 = r3
             goto L_0x0011
-        L_0x0074:
+        L_0x007a:
             kotlin.collections.CollectionsKt.throwIndexOverflow()
             r7 = 0
             throw r7
-        L_0x0079:
+        L_0x007f:
             return
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.notification.stack.MiuiStackScrollAlgorithm.updateChildrenAppearDisappearState(com.android.systemui.statusbar.notification.stack.StackScrollAlgorithm$StackScrollAlgorithmState, com.android.systemui.statusbar.notification.stack.AmbientState):void");
@@ -290,21 +301,44 @@ public final class MiuiStackScrollAlgorithm extends StackScrollAlgorithm {
         return updateChild;
     }
 
+    private final void updateSectionHeadersVisibility(ViewGroup viewGroup) {
+        if (viewGroup != null && viewGroup.getChildCount() != 0) {
+            boolean z = false;
+            for (View next : ConvenienceExtensionsKt.getChildren(viewGroup)) {
+                if ((next instanceof SectionHeaderView) || (next instanceof PeopleHubView)) {
+                    if (z) {
+                        next.setVisibility(0);
+                    } else {
+                        next.setVisibility(8);
+                    }
+                } else if (!z) {
+                    Intrinsics.checkExpressionValueIsNotNull(next, "child");
+                    if (next.getVisibility() != 0) {
+                    }
+                }
+                z = true;
+            }
+        }
+    }
+
     /* access modifiers changed from: protected */
     public int getPaddingAfterChild(@NotNull StackScrollAlgorithm.StackScrollAlgorithmState stackScrollAlgorithmState, @NotNull AmbientState ambientState, @NotNull ExpandableView expandableView, int i) {
+        int i2;
         Intrinsics.checkParameterIsNotNull(stackScrollAlgorithmState, "algorithmState");
         Intrinsics.checkParameterIsNotNull(ambientState, "ambientState");
         Intrinsics.checkParameterIsNotNull(expandableView, "child");
-        if (i == 0 && (expandableView instanceof ZenModeView) && !((ZenModeView) expandableView).isVisiable() && stackScrollAlgorithmState.visibleChildren.size() > 1) {
-            ExpandableView expandableView2 = stackScrollAlgorithmState.visibleChildren.get(i + 1);
-            if (expandableView2 instanceof MiuiMediaHeaderView) {
-                return 0;
-            }
-            if ((expandableView2 instanceof SectionHeaderView) || (expandableView2 instanceof PeopleHubView)) {
-                if (!ambientState.isQsExpansionEnabled()) {
-                    return this.mPaddingBetweenZenModeAndNext;
+        if ((expandableView instanceof MiuiExpandableNotificationRow) && ((MiuiExpandableNotificationRow) expandableView).isGroupExpanded()) {
+            int i3 = i + 1;
+            if (stackScrollAlgorithmState.visibleChildren.size() > i3) {
+                ExpandableView expandableView2 = stackScrollAlgorithmState.visibleChildren.get(i3);
+                if ((expandableView2 instanceof ZenModeView) || (expandableView2 instanceof SectionHeaderView) || (expandableView2 instanceof PeopleHubView)) {
+                    return this.mGroupMinusBottom + super.getPaddingAfterChild(stackScrollAlgorithmState, ambientState, expandableView, i);
                 }
-                return this.mPaddingWhenQsExpansionEnabled;
+            }
+        } else if (((expandableView instanceof SectionHeaderView) || (expandableView instanceof PeopleHubView)) && stackScrollAlgorithmState.visibleChildren.size() > (i2 = i + 1)) {
+            ExpandableView expandableView3 = stackScrollAlgorithmState.visibleChildren.get(i2);
+            if ((expandableView3 instanceof MiuiExpandableNotificationRow) && ((MiuiExpandableNotificationRow) expandableView3).isGroupExpanded()) {
+                return this.mGroupMinusTop;
             }
         }
         return super.getPaddingAfterChild(stackScrollAlgorithmState, ambientState, expandableView, i);

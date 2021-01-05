@@ -182,9 +182,8 @@ public class CCQSTileView extends QSTileView {
         }
         if (state.withAnimation && !this.mBreathAnimator.isStarted()) {
             this.mBreathAnimator.start();
-        } else if (!state.withAnimation) {
+        } else if (!state.withAnimation && this.mBreathAnimator.isStarted()) {
             this.mBreathAnimator.cancel();
-            this.mIcon.getIconView().animate().alpha(1.0f).setDuration(300).setInterpolator(Interpolators.FAST_OUT_SLOW_IN).start();
         }
         if (!Objects.equals(this.mLabel.getText(), state.label) || this.mState != state.state) {
             if (state.state == 0) {

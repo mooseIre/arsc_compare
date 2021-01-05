@@ -7,6 +7,8 @@ import android.view.View;
 import com.android.keyguard.AlphaOptimizedLinearLayout;
 import com.android.systemui.C0012R$dimen;
 import com.android.systemui.C0015R$id;
+import com.android.systemui.statusbar.StatusBarMobileView;
+import com.android.systemui.statusbar.StatusBarWifiView;
 import com.android.systemui.statusbar.StatusIconDisplayable;
 import com.android.systemui.statusbar.notification.stack.AnimationFilter;
 import com.android.systemui.statusbar.notification.stack.AnimationProperties;
@@ -15,19 +17,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MiuiStatusIconContainer extends AlphaOptimizedLinearLayout {
-    /* access modifiers changed from: private */
-    public static final AnimationProperties ADD_ICON_PROPERTIES;
-    /* access modifiers changed from: private */
-    public static final AnimationProperties ANIMATE_ALL_PROPERTIES;
-    /* access modifiers changed from: private */
-    public static final AnimationProperties X_ANIMATION_PROPERTIES;
     private int mDotPadding;
     private int mIconDotFrameWidth;
     private int mIconSpacing;
     private ArrayList<String> mIgnoredSlots;
     private ArrayList<StatusIconState> mLayoutStates;
     private ArrayList<View> mMeasureViews;
-    private boolean mNeedsUnderflow;
     private boolean mShouldRestrictIcons;
     private int mStaticDotDiameter;
     private int mUnderflowStart;
@@ -102,7 +97,6 @@ public class MiuiStatusIconContainer extends AlphaOptimizedLinearLayout {
         int size2 = this.mMeasureViews.size();
         int i5 = this.mPaddingLeft + this.mPaddingRight;
         int makeMeasureSpec = View.MeasureSpec.makeMeasureSpec(size, 0);
-        this.mNeedsUnderflow = false;
         if (!(mode == 1073741824 || mode == Integer.MIN_VALUE)) {
             size = 1073741823;
         }
@@ -115,7 +109,8 @@ public class MiuiStatusIconContainer extends AlphaOptimizedLinearLayout {
             } else {
                 i3 = this.mIconSpacing;
             }
-            if (!z || getViewTotalMeasuredWidth(view) + i5 + i3 > size) {
+            boolean z2 = (view instanceof StatusBarMobileView) || (view instanceof StatusBarWifiView);
+            if ((!z || getViewTotalMeasuredWidth(view) + i5 + i3 > size) && !z2) {
                 z = false;
             } else {
                 i5 += getViewTotalMeasuredWidth(view) + i3;
@@ -126,9 +121,7 @@ public class MiuiStatusIconContainer extends AlphaOptimizedLinearLayout {
 
     public void onViewAdded(View view) {
         super.onViewAdded(view);
-        StatusIconState statusIconState = new StatusIconState();
-        statusIconState.justAdded = true;
-        view.setTag(C0015R$id.status_bar_view_state_tag, statusIconState);
+        view.setTag(C0015R$id.status_bar_view_state_tag, new StatusIconState());
     }
 
     public void onViewRemoved(View view) {
@@ -158,12 +151,19 @@ public class MiuiStatusIconContainer extends AlphaOptimizedLinearLayout {
         int childCount = getChildCount();
         int i2 = childCount - 1;
         while (true) {
+            boolean z = true;
             if (i2 < 0) {
                 break;
             }
             View childAt = getChildAt(i2);
             StatusIconDisplayable statusIconDisplayable = (StatusIconDisplayable) childAt;
             StatusIconState viewStateFromChild = getViewStateFromChild(childAt);
+            if (viewStateFromChild != null) {
+                if (!(childAt instanceof StatusBarMobileView) && !(childAt instanceof StatusBarWifiView)) {
+                    z = false;
+                }
+                viewStateFromChild.signalView = z;
+            }
             if (!statusIconDisplayable.isIconVisible() || statusIconDisplayable.isIconBlocked() || this.mIgnoredSlots.contains(statusIconDisplayable.getSlot())) {
                 viewStateFromChild.visibleState = 2;
             } else {
@@ -189,7 +189,7 @@ public class MiuiStatusIconContainer extends AlphaOptimizedLinearLayout {
                 break;
             }
             StatusIconState statusIconState = this.mLayoutStates.get(i4);
-            if ((this.mNeedsUnderflow && statusIconState.xTranslation < ((float) this.mUnderflowWidth) + paddingStart) || (this.mShouldRestrictIcons && i5 >= i3)) {
+            if ((statusIconState.xTranslation < paddingStart && !statusIconState.signalView) || (this.mShouldRestrictIcons && i5 >= i3)) {
                 break;
             }
             this.mUnderflowStart = (int) Math.max(paddingStart, (statusIconState.xTranslation - ((float) this.mUnderflowWidth)) - ((float) this.mIconSpacing));
@@ -246,42 +246,13 @@ public class MiuiStatusIconContainer extends AlphaOptimizedLinearLayout {
     }
 
     public static class StatusIconState extends ViewState {
-        float distanceToViewEnd = -1.0f;
-        public boolean justAdded = true;
+        public boolean signalView;
         public int visibleState = 0;
 
         public void applyToView(View view) {
-            float width = (view.getParent() instanceof View ? (float) ((View) view.getParent()).getWidth() : 0.0f) - this.xTranslation;
             if (view instanceof StatusIconDisplayable) {
-                StatusIconDisplayable statusIconDisplayable = (StatusIconDisplayable) view;
-                AnimationProperties animationProperties = null;
-                boolean z = true;
-                if (this.justAdded || (statusIconDisplayable.getVisibleState() == 2 && this.visibleState == 0)) {
-                    super.applyToView(view);
-                    view.setAlpha(0.0f);
-                    statusIconDisplayable.setVisibleState(2);
-                    animationProperties = MiuiStatusIconContainer.ADD_ICON_PROPERTIES;
-                } else {
-                    int visibleState2 = statusIconDisplayable.getVisibleState();
-                    int i = this.visibleState;
-                    if (visibleState2 != i) {
-                        if (statusIconDisplayable.getVisibleState() == 0 && this.visibleState == 2) {
-                            z = false;
-                        } else {
-                            animationProperties = MiuiStatusIconContainer.ANIMATE_ALL_PROPERTIES;
-                        }
-                    } else if (!(i == 2 || this.distanceToViewEnd == width)) {
-                        animationProperties = MiuiStatusIconContainer.X_ANIMATION_PROPERTIES;
-                    }
-                }
-                statusIconDisplayable.setVisibleState(this.visibleState, z);
-                if (animationProperties != null) {
-                    animateTo(view, animationProperties);
-                } else {
-                    super.applyToView(view);
-                }
-                this.justAdded = false;
-                this.distanceToViewEnd = width;
+                ((StatusIconDisplayable) view).setVisibleState(this.visibleState, false);
+                super.applyToView(view);
             }
         }
     }
@@ -302,8 +273,7 @@ public class MiuiStatusIconContainer extends AlphaOptimizedLinearLayout {
         };
         r0.setDuration(200);
         r0.setDelay(50);
-        ADD_ICON_PROPERTIES = r0;
-        AnonymousClass2 r02 = new AnimationProperties() {
+        new AnimationProperties() {
             private AnimationFilter mAnimationFilter;
 
             {
@@ -315,10 +285,8 @@ public class MiuiStatusIconContainer extends AlphaOptimizedLinearLayout {
             public AnimationFilter getAnimationFilter() {
                 return this.mAnimationFilter;
             }
-        };
-        r02.setDuration(200);
-        X_ANIMATION_PROPERTIES = r02;
-        AnonymousClass3 r03 = new AnimationProperties() {
+        }.setDuration(200);
+        new AnimationProperties() {
             private AnimationFilter mAnimationFilter;
 
             {
@@ -333,8 +301,6 @@ public class MiuiStatusIconContainer extends AlphaOptimizedLinearLayout {
             public AnimationFilter getAnimationFilter() {
                 return this.mAnimationFilter;
             }
-        };
-        r03.setDuration(200);
-        ANIMATE_ALL_PROPERTIES = r03;
+        }.setDuration(200);
     }
 }

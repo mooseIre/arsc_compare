@@ -426,7 +426,7 @@ public abstract class ActivatableNotificationView extends ExpandableOutlineView 
                     ActivatableNotificationView.this.lambda$updateBackgroundTint$1$ActivatableNotificationView(valueAnimator);
                 }
             });
-            this.mBackgroundColorAnimator.setDuration(360);
+            this.mBackgroundColorAnimator.setDuration(300);
             this.mBackgroundColorAnimator.setInterpolator(Interpolators.LINEAR);
             this.mBackgroundColorAnimator.addListener(new AnimatorListenerAdapter() {
                 public void onAnimationEnd(Animator animator) {

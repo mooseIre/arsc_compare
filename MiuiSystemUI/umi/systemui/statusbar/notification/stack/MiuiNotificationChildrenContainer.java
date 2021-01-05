@@ -145,7 +145,7 @@ public final class MiuiNotificationChildrenContainer extends NotificationChildre
                             ofFloat.setInterpolator(new DecelerateInterpolator());
                             ofFloat.addListener(new MiuiNotificationChildrenContainer$startBackgroundAnimation$1(this, animatedBackground, firstChildBackground));
                             ofFloat.addUpdateListener(new MiuiNotificationChildrenContainer$startBackgroundAnimation$2(this, actualHeight, f, animatedBackground, viewState));
-                            ofFloat.setDuration((long) 360);
+                            ofFloat.setDuration((long) 300);
                             ofFloat.start();
                             return;
                         }
@@ -173,7 +173,7 @@ public final class MiuiNotificationChildrenContainer extends NotificationChildre
                         ofFloat2.addUpdateListener(new MiuiNotificationChildrenContainer$startBackgroundAnimation$4(this, actualHeight2, f2, animatedBackground, translationY));
                         Intrinsics.checkExpressionValueIsNotNull(ofFloat2, "anim");
                         ofFloat2.setInterpolator(new DecelerateInterpolator());
-                        ofFloat2.setDuration((long) 360);
+                        ofFloat2.setDuration((long) 300);
                         ofFloat2.start();
                         return;
                     }

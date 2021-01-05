@@ -1,17 +1,14 @@
 package com.android.systemui.controlcenter;
 
-import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.IPackageManager;
 import android.content.res.Configuration;
 import android.os.Handler;
 import android.os.Message;
 import android.os.RemoteException;
 import android.os.ServiceManager;
-import android.os.UserHandle;
 import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -39,20 +36,10 @@ import com.android.systemui.statusbar.phone.StatusBarIconController;
 import com.android.systemui.statusbar.policy.ConfigurationController;
 import com.android.systemui.util.InjectionInflationController;
 import com.miui.systemui.util.CommonUtil;
-import java.util.concurrent.Executor;
 
 public class ControlCenter extends SystemUI implements ControlPanelController.UseControlPanelChangeListener, SuperSaveModeController.SuperSaveModeChangeListener, CommandQueue.Callbacks, ConfigurationController.ConfigurationListener {
     public static final boolean DEBUG = Constants.DEBUG;
     private static final boolean ONLY_CORE_APPS;
-    private BroadcastDispatcher mBroadcastDispatcher;
-    protected BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            if ("android.intent.action.CLOSE_SYSTEM_DIALOGS".equals(action) || "android.intent.action.SCREEN_OFF".equals(action)) {
-                ControlCenter.this.collapseControlCenter(true);
-            }
-        }
-    };
     private CommandQueue mCommandQueue;
     private Configuration mConfiguration;
     private ConfigurationController mConfigurationController;
@@ -100,7 +87,6 @@ public class ControlCenter extends SystemUI implements ControlPanelController.Us
         this.mControlPanelWindowManager = controlPanelWindowManager;
         this.mStatusBar = statusBar;
         this.mControlsPluginManager = controlsPluginManager;
-        this.mBroadcastDispatcher = broadcastDispatcher;
         this.mConfigurationController = configurationController;
     }
 
@@ -245,16 +231,12 @@ public class ControlCenter extends SystemUI implements ControlPanelController.Us
 
     /* access modifiers changed from: protected */
     public void register() {
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction("android.intent.action.CLOSE_SYSTEM_DIALOGS");
-        intentFilter.addAction("android.intent.action.SCREEN_OFF");
         this.mExpandInfoController.register();
-        this.mBroadcastDispatcher.registerReceiver(this.mBroadcastReceiver, intentFilter, (Executor) null, UserHandle.ALL);
     }
 
     /* access modifiers changed from: protected */
     public void unregister() {
-        this.mBroadcastDispatcher.unregisterReceiver(this.mBroadcastReceiver);
+        this.mExpandInfoController.unregister();
     }
 
     public boolean isExpandable() {
@@ -270,11 +252,13 @@ public class ControlCenter extends SystemUI implements ControlPanelController.Us
     }
 
     public void collapseControlCenter(boolean z) {
-        this.mHandler.removeMessages(1);
-        Message obtainMessage = this.mHandler.obtainMessage();
-        obtainMessage.what = 1;
-        obtainMessage.obj = Boolean.valueOf(z);
-        this.mHandler.sendMessage(obtainMessage);
+        if (!isCollapsed()) {
+            this.mHandler.removeMessages(1);
+            Message obtainMessage = this.mHandler.obtainMessage();
+            obtainMessage.what = 1;
+            obtainMessage.obj = Boolean.valueOf(z);
+            this.mHandler.sendMessage(obtainMessage);
+        }
     }
 
     public boolean isCollapsed() {
@@ -306,6 +290,13 @@ public class ControlCenter extends SystemUI implements ControlPanelController.Us
     public void handleOpenPanel() {
         if (this.mControlPanelWindowView != null && panelEnabled()) {
             this.mControlPanelWindowView.expandPanel();
+        }
+    }
+
+    /* access modifiers changed from: private */
+    public void handleExpandPanelImmediately() {
+        if (this.mControlPanelWindowView != null && panelEnabled()) {
+            this.mControlPanelWindowView.expandPanelImmediately();
         }
     }
 
@@ -354,6 +345,8 @@ public class ControlCenter extends SystemUI implements ControlPanelController.Us
                 ControlCenter.this.handleCollapsePanel(((Boolean) message.obj).booleanValue());
             } else if (i == 2) {
                 ControlCenter.this.handleOpenPanel();
+            } else if (i == 3) {
+                ControlCenter.this.handleExpandPanelImmediately();
             }
         }
     }

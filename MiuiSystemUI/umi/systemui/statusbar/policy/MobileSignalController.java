@@ -17,15 +17,8 @@ import android.telephony.SignalStrength;
 import android.telephony.SubscriptionInfo;
 import android.telephony.SubscriptionManager;
 import android.telephony.TelephonyDisplayInfo;
-import android.telephony.ims.ImsMmTelManager;
-import android.telephony.ims.ImsReasonInfo;
-import android.telephony.ims.feature.MmTelFeature;
 import android.text.TextUtils;
-import android.util.DisplayMetrics;
 import android.util.Log;
-import com.android.ims.FeatureConnector;
-import com.android.ims.ImsException;
-import com.android.ims.ImsManager;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.telephony.PhoneConstants;
 import com.android.settingslib.Utils;
@@ -54,15 +47,6 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
     private static final boolean SUPPORT_CA = FeatureParser.getBoolean("support_ca", false);
     /* access modifiers changed from: private */
     public int mCallState = 0;
-    private ImsMmTelManager.CapabilityCallback mCapabilityCallback = new ImsMmTelManager.CapabilityCallback() {
-        public void onCapabilitiesStatusChanged(MmTelFeature.MmTelCapabilities mmTelCapabilities) {
-            ((MobileState) MobileSignalController.this.mCurrentState).voiceCapable = mmTelCapabilities.isCapable(1);
-            ((MobileState) MobileSignalController.this.mCurrentState).videoCapable = mmTelCapabilities.isCapable(2);
-            String str = MobileSignalController.this.mTag;
-            Log.d(str, "onCapabilitiesStatusChanged isVoiceCapable=" + ((MobileState) MobileSignalController.this.mCurrentState).voiceCapable + " isVideoCapable=" + ((MobileState) MobileSignalController.this.mCurrentState).videoCapable);
-            MobileSignalController.this.notifyListenersIfNecessary();
-        }
-    };
     /* access modifiers changed from: private */
     public NetworkControllerImpl.Config mConfig;
     /* access modifiers changed from: private */
@@ -70,35 +54,7 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
     private MobileIconGroup mDefaultIcons;
     private final NetworkControllerImpl.SubscriptionDefaults mDefaults;
     private boolean mEnableVolteForSlot;
-    private FeatureConnector<ImsManager> mFeatureConnector;
     private FiveGControllerImpl mFiveGController;
-    /* access modifiers changed from: private */
-    public ImsManager mImsManager;
-    private final ImsMmTelManager.RegistrationCallback mImsRegistrationCallback = new ImsMmTelManager.RegistrationCallback() {
-        public void onRegistered(int i) {
-            String str = MobileSignalController.this.mTag;
-            Log.d(str, "onRegistered imsTransportType=" + i);
-            MobileSignalController mobileSignalController = MobileSignalController.this;
-            ((MobileState) mobileSignalController.mCurrentState).imsRegistered = true;
-            mobileSignalController.notifyListenersIfNecessary();
-        }
-
-        public void onRegistering(int i) {
-            String str = MobileSignalController.this.mTag;
-            Log.d(str, "onRegistering imsTransportType=" + i);
-            MobileSignalController mobileSignalController = MobileSignalController.this;
-            ((MobileState) mobileSignalController.mCurrentState).imsRegistered = false;
-            mobileSignalController.notifyListenersIfNecessary();
-        }
-
-        public void onUnregistered(ImsReasonInfo imsReasonInfo) {
-            String str = MobileSignalController.this.mTag;
-            Log.d(str, "onDeregistered imsReasonInfo=" + imsReasonInfo);
-            MobileSignalController mobileSignalController = MobileSignalController.this;
-            ((MobileState) mobileSignalController.mCurrentState).imsRegistered = false;
-            mobileSignalController.notifyListenersIfNecessary();
-        }
-    };
     @VisibleForTesting
     boolean mInflateSignalStrengths = false;
     private boolean mIsSupportDoubleFiveG;
@@ -130,6 +86,10 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
             }
         }
     };
+
+    private boolean isVolteSwitchOn() {
+        return false;
+    }
 
     /* JADX INFO: super call moved to the top of the method (can break code semantics) */
     public MobileSignalController(Context context, NetworkControllerImpl.Config config, boolean z, android.telephony.TelephonyManager telephonyManager, CallbackHandler callbackHandler, NetworkControllerImpl networkControllerImpl, SubscriptionInfo subscriptionInfo, NetworkControllerImpl.SubscriptionDefaults subscriptionDefaults, Looper looper) {
@@ -188,23 +148,6 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
         ((MobileState) this.mLastState).speedHd = isSpeechHdOn;
         updateMiuiConfig();
         updateDataSim();
-        final int simSlotIndex2 = this.mSubscriptionInfo.getSimSlotIndex();
-        this.mFeatureConnector = new FeatureConnector<>(this.mContext, simSlotIndex2, new FeatureConnector.Listener<ImsManager>() {
-            public ImsManager getFeatureManager() {
-                return ImsManager.getInstance(MobileSignalController.this.mContext, simSlotIndex2);
-            }
-
-            public void connectionReady(ImsManager imsManager) throws ImsException {
-                Log.d(MobileSignalController.this.mTag, "ImsManager: connection ready.");
-                ImsManager unused = MobileSignalController.this.mImsManager = imsManager;
-                MobileSignalController.this.setListeners();
-            }
-
-            public void connectionUnavailable() {
-                Log.d(MobileSignalController.this.mTag, "ImsManager: connection unavailable.");
-                MobileSignalController.this.removeListeners();
-            }
-        }, "?");
         this.mObserver = new ContentObserver(new Handler(looper2)) {
             public void onChange(boolean z) {
                 MobileSignalController.this.updateTelephony();
@@ -253,7 +196,6 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
         ContentResolver contentResolver2 = this.mContext.getContentResolver();
         contentResolver2.registerContentObserver(Settings.Global.getUriFor("data_roaming" + this.mSubscriptionInfo.getSubscriptionId()), true, this.mObserver);
         this.mContext.registerReceiver(this.mVolteSwitchObserver, new IntentFilter("org.codeaurora.intent.action.ACTION_ENHANCE_4G_SWITCH"));
-        this.mFeatureConnector.connect();
     }
 
     public void unregisterListener() {
@@ -262,11 +204,10 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
         this.mPhone.listen(this.mPhoneStateListener, 0);
         this.mContext.getContentResolver().unregisterContentObserver(this.mObserver);
         this.mContext.unregisterReceiver(this.mVolteSwitchObserver);
-        this.mFeatureConnector.disconnect();
     }
 
     /* JADX WARNING: Removed duplicated region for block: B:17:0x0124  */
-    /* JADX WARNING: Removed duplicated region for block: B:21:0x014d  */
+    /* JADX WARNING: Removed duplicated region for block: B:18:0x013b  */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     private void mapIconSets() {
         /*
@@ -397,46 +338,28 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
             r0.put(r3, r2)
             com.android.systemui.statusbar.policy.NetworkControllerImpl$Config r0 = r7.mConfig
             boolean r0 = r0.show4gForLte
-            r2 = 13
-            r3 = 1
-            if (r0 == 0) goto L_0x014d
+            r2 = 1
+            r3 = 13
+            if (r0 == 0) goto L_0x013b
             java.util.Map<java.lang.String, com.android.systemui.statusbar.policy.MobileSignalController$MobileIconGroup> r0 = r7.mNetworkToIconLookup
-            java.lang.String r2 = r7.toIconKey(r2)
+            java.lang.String r3 = r7.toIconKey(r3)
             com.android.systemui.statusbar.policy.MobileSignalController$MobileIconGroup r6 = com.android.systemui.statusbar.policy.TelephonyIcons.FOUR_G
-            r0.put(r2, r6)
-            com.android.systemui.statusbar.policy.NetworkControllerImpl$Config r0 = r7.mConfig
-            boolean r0 = r0.hideLtePlus
-            if (r0 == 0) goto L_0x0141
+            r0.put(r3, r6)
             java.util.Map<java.lang.String, com.android.systemui.statusbar.policy.MobileSignalController$MobileIconGroup> r0 = r7.mNetworkToIconLookup
-            java.lang.String r2 = r7.toDisplayIconKey(r3)
-            com.android.systemui.statusbar.policy.MobileSignalController$MobileIconGroup r3 = com.android.systemui.statusbar.policy.TelephonyIcons.FOUR_G
-            r0.put(r2, r3)
-            goto L_0x0175
-        L_0x0141:
-            java.util.Map<java.lang.String, com.android.systemui.statusbar.policy.MobileSignalController$MobileIconGroup> r0 = r7.mNetworkToIconLookup
-            java.lang.String r2 = r7.toDisplayIconKey(r3)
+            java.lang.String r2 = r7.toDisplayIconKey(r2)
             com.android.systemui.statusbar.policy.MobileSignalController$MobileIconGroup r3 = com.android.systemui.statusbar.policy.TelephonyIcons.FOUR_G_PLUS
             r0.put(r2, r3)
-            goto L_0x0175
-        L_0x014d:
+            goto L_0x0151
+        L_0x013b:
             java.util.Map<java.lang.String, com.android.systemui.statusbar.policy.MobileSignalController$MobileIconGroup> r0 = r7.mNetworkToIconLookup
-            java.lang.String r2 = r7.toIconKey(r2)
+            java.lang.String r3 = r7.toIconKey(r3)
             com.android.systemui.statusbar.policy.MobileSignalController$MobileIconGroup r6 = com.android.systemui.statusbar.policy.TelephonyIcons.LTE
-            r0.put(r2, r6)
-            com.android.systemui.statusbar.policy.NetworkControllerImpl$Config r0 = r7.mConfig
-            boolean r0 = r0.hideLtePlus
-            if (r0 == 0) goto L_0x016a
+            r0.put(r3, r6)
             java.util.Map<java.lang.String, com.android.systemui.statusbar.policy.MobileSignalController$MobileIconGroup> r0 = r7.mNetworkToIconLookup
-            java.lang.String r2 = r7.toDisplayIconKey(r3)
-            com.android.systemui.statusbar.policy.MobileSignalController$MobileIconGroup r3 = com.android.systemui.statusbar.policy.TelephonyIcons.LTE
-            r0.put(r2, r3)
-            goto L_0x0175
-        L_0x016a:
-            java.util.Map<java.lang.String, com.android.systemui.statusbar.policy.MobileSignalController$MobileIconGroup> r0 = r7.mNetworkToIconLookup
-            java.lang.String r2 = r7.toDisplayIconKey(r3)
+            java.lang.String r2 = r7.toDisplayIconKey(r2)
             com.android.systemui.statusbar.policy.MobileSignalController$MobileIconGroup r3 = com.android.systemui.statusbar.policy.TelephonyIcons.LTE_PLUS
             r0.put(r2, r3)
-        L_0x0175:
+        L_0x0151:
             java.util.Map<java.lang.String, com.android.systemui.statusbar.policy.MobileSignalController$MobileIconGroup> r0 = r7.mNetworkToIconLookup
             r2 = 18
             java.lang.String r2 = r7.toIconKey(r2)
@@ -467,6 +390,9 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
         int networkType = this.mTelephonyDisplayInfo.getNetworkType();
         if (networkType == 13 && (serviceState = this.mServiceState) != null && (serviceState.isUsingCarrierAggregation() || (FeatureParser.getBoolean("support_ca", false) && Build.IS_CT_CUSTOMIZATION_TEST))) {
             networkType = 19;
+        }
+        if (networkType == 19) {
+            return toDisplayIconKey(1);
         }
         return toIconKey(networkType);
     }
@@ -502,11 +428,6 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
         return getCurrentIconId();
     }
 
-    private boolean isVolteSwitchOn() {
-        ImsManager imsManager = this.mImsManager;
-        return imsManager != null && imsManager.isEnhanced4gLteModeSettingEnabledByUser();
-    }
-
     private int getVolteResId() {
         int voiceNetworkType = getVoiceNetworkType();
         T t = this.mCurrentState;
@@ -519,67 +440,22 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
         return 0;
     }
 
-    /* access modifiers changed from: private */
-    public void setListeners() {
-        ImsManager imsManager = this.mImsManager;
-        if (imsManager == null) {
-            Log.e(this.mTag, "setListeners mImsManager is null");
-            return;
-        }
-        try {
-            imsManager.addCapabilitiesCallback(this.mCapabilityCallback);
-            this.mImsManager.addRegistrationCallback(this.mImsRegistrationCallback);
-            String str = this.mTag;
-            Log.d(str, "addCapabilitiesCallback " + this.mCapabilityCallback + " into " + this.mImsManager);
-            String str2 = this.mTag;
-            Log.d(str2, "addRegistrationCallback " + this.mImsRegistrationCallback + " into " + this.mImsManager);
-        } catch (ImsException unused) {
-            Log.d(this.mTag, "unable to addCapabilitiesCallback callback.");
-        }
-        queryImsState();
-    }
-
-    private void queryImsState() {
-        android.telephony.TelephonyManager createForSubscriptionId = this.mPhone.createForSubscriptionId(this.mSubscriptionInfo.getSubscriptionId());
-        ((MobileState) this.mCurrentState).voiceCapable = createForSubscriptionId.isVolteAvailable();
-        ((MobileState) this.mCurrentState).videoCapable = createForSubscriptionId.isVideoTelephonyAvailable();
-        ((MobileState) this.mCurrentState).imsRegistered = this.mPhone.isImsRegistered(this.mSubscriptionInfo.getSubscriptionId());
-        String str = this.mTag;
-        Log.d(str, "queryImsState tm=" + createForSubscriptionId + " phone=" + this.mPhone + " voiceCapable=" + ((MobileState) this.mCurrentState).voiceCapable + " videoCapable=" + ((MobileState) this.mCurrentState).videoCapable + " imsResitered=" + ((MobileState) this.mCurrentState).imsRegistered);
-        notifyListenersIfNecessary();
-    }
-
-    /* access modifiers changed from: private */
-    public void removeListeners() {
-        ImsManager imsManager = this.mImsManager;
-        if (imsManager == null) {
-            Log.e(this.mTag, "removeListeners mImsManager is null");
-            return;
-        }
-        try {
-            imsManager.removeCapabilitiesCallback(this.mCapabilityCallback);
-            this.mImsManager.removeRegistrationListener(this.mImsRegistrationCallback);
-            String str = this.mTag;
-            Log.d(str, "removeCapabilitiesCallback " + this.mCapabilityCallback + " from " + this.mImsManager);
-            String str2 = this.mTag;
-            Log.d(str2, "removeRegistrationCallback " + this.mImsRegistrationCallback + " from " + this.mImsManager);
-        } catch (ImsException unused) {
-            Log.d(this.mTag, "unable to remove callback.");
-        }
-    }
-
-    /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r39v0, resolved type: java.lang.String} */
-    /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r6v6, resolved type: com.android.systemui.statusbar.policy.NetworkController$IconState} */
-    /* JADX WARNING: type inference failed for: r10v16, types: [com.android.systemui.statusbar.policy.NetworkController$IconState] */
+    /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r9v1, resolved type: java.lang.String} */
+    /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r9v2, resolved type: java.lang.String} */
+    /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r6v49, resolved type: com.android.systemui.statusbar.policy.NetworkController$IconState} */
+    /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r9v4, resolved type: java.lang.String} */
+    /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r9v5, resolved type: java.lang.String} */
+    /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r9v6, resolved type: java.lang.String} */
+    /* JADX WARNING: type inference failed for: r10v12, types: [com.android.systemui.statusbar.policy.NetworkController$IconState] */
     /* JADX WARNING: Multi-variable type inference failed */
     /* JADX WARNING: Unknown variable types count: 1 */
     /* Code decompiled incorrectly, please refer to instructions dump. */
-    public void notifyListeners(com.android.systemui.statusbar.policy.NetworkController.SignalCallback r43) {
+    public void notifyListeners(com.android.systemui.statusbar.policy.NetworkController.SignalCallback r35) {
         /*
-            r42 = this;
-            r0 = r42
-            com.android.systemui.statusbar.policy.MobileSignalController$MobileIconGroup r1 = r42.getIcons()
-            int r2 = r42.getContentDescription()
+            r34 = this;
+            r0 = r34
+            com.android.systemui.statusbar.policy.MobileSignalController$MobileIconGroup r1 = r34.getIcons()
+            int r2 = r34.getContentDescription()
             java.lang.CharSequence r2 = r0.getTextIfExists(r2)
             java.lang.String r2 = r2.toString()
             int r3 = r1.mDataContentDescription
@@ -634,7 +510,7 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
             T r8 = r0.mCurrentState
             com.android.systemui.statusbar.policy.MobileSignalController$MobileState r8 = (com.android.systemui.statusbar.policy.MobileSignalController.MobileState) r8
             boolean r8 = r8.enabled
-            int r9 = r42.getCurrentIconId()
+            int r9 = r34.getCurrentIconId()
             r6.<init>(r8, r9, r2)
             T r8 = r0.mCurrentState
             com.android.systemui.statusbar.policy.MobileSignalController$MobileState r8 = (com.android.systemui.statusbar.policy.MobileSignalController.MobileState) r8
@@ -666,7 +542,7 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
         L_0x009b:
             r11 = r4
         L_0x009c:
-            int r14 = r42.getQsCurrentIconId()
+            int r14 = r34.getQsCurrentIconId()
             r10.<init>(r11, r14, r2)
             T r2 = r0.mCurrentState
             r11 = r2
@@ -748,12 +624,12 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
             com.android.systemui.statusbar.policy.NetworkControllerImpl$Config r11 = r0.mConfig
             boolean r11 = r11.showVolteIcon
             if (r11 == 0) goto L_0x0118
-            boolean r11 = r42.isVolteSwitchOn()
+            boolean r11 = r34.isVolteSwitchOn()
             if (r11 == 0) goto L_0x0118
-            int r4 = r42.getVolteResId()
+            int r4 = r34.getVolteResId()
         L_0x0118:
             r11 = r4
-            com.android.systemui.statusbar.policy.MobileSignalController$MobileIconGroup r4 = r42.getVowifiIconGroup()
+            com.android.systemui.statusbar.policy.MobileSignalController$MobileIconGroup r4 = r34.getVowifiIconGroup()
             com.android.systemui.statusbar.policy.NetworkControllerImpl$Config r15 = r0.mConfig
             boolean r15 = r15.showVowifiIcon
             if (r15 == 0) goto L_0x013c
@@ -799,10 +675,10 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
             r6.append(r14)
             java.lang.String r14 = " voiceNetType="
             r6.append(r14)
-            int r14 = r42.getVoiceNetworkType()
+            int r14 = r34.getVoiceNetworkType()
             r6.append(r14)
             r6.append(r15)
-            int r14 = r42.getVoiceNetworkType()
+            int r14 = r34.getVoiceNetworkType()
             java.lang.String r14 = android.telephony.TelephonyManager.getNetworkTypeName(r14)
             r6.append(r14)
             java.lang.String r14 = " showDataIcon="
@@ -824,7 +700,7 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
             r6.append(r3)
             java.lang.String r3 = " isVolteSwitchOn="
             r6.append(r3)
-            boolean r3 = r42.isVolteSwitchOn()
+            boolean r3 = r34.isVolteSwitchOn()
             r6.append(r3)
             java.lang.String r3 = " volteIcon="
             r6.append(r3)
@@ -837,97 +713,86 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
             java.lang.String r3 = r6.toString()
             android.util.Log.d(r4, r3)
             com.android.systemui.statusbar.policy.MobileSignalController$MiuiMobileState r3 = new com.android.systemui.statusbar.policy.MobileSignalController$MiuiMobileState
+            r17 = r3
             T r4 = r0.mCurrentState
             r6 = r4
             com.android.systemui.statusbar.policy.MobileSignalController$MobileState r6 = (com.android.systemui.statusbar.policy.MobileSignalController.MobileState) r6
             boolean r6 = r6.airplaneMode
-            r14 = r4
-            com.android.systemui.statusbar.policy.MobileSignalController$MobileState r14 = (com.android.systemui.statusbar.policy.MobileSignalController.MobileState) r14
-            boolean r14 = r14.dataConnected
-            r15 = r4
-            com.android.systemui.statusbar.policy.MobileSignalController$MobileState r15 = (com.android.systemui.statusbar.policy.MobileSignalController.MobileState) r15
-            boolean r15 = r15.volte
-            r32 = r13
-            r13 = r4
-            com.android.systemui.statusbar.policy.MobileSignalController$MobileState r13 = (com.android.systemui.statusbar.policy.MobileSignalController.MobileState) r13
-            boolean r13 = r13.vowifi
-            r33 = r12
-            r12 = r4
-            com.android.systemui.statusbar.policy.MobileSignalController$MobileState r12 = (com.android.systemui.statusbar.policy.MobileSignalController.MobileState) r12
-            boolean r12 = r12.hideVolte
-            r34 = r11
-            r11 = r4
-            com.android.systemui.statusbar.policy.MobileSignalController$MobileState r11 = (com.android.systemui.statusbar.policy.MobileSignalController.MobileState) r11
-            boolean r11 = r11.hideVowifi
-            r35 = r10
-            r10 = r4
-            com.android.systemui.statusbar.policy.MobileSignalController$MobileState r10 = (com.android.systemui.statusbar.policy.MobileSignalController.MobileState) r10
-            boolean r10 = r10.speedHd
-            r36 = r2
-            r2 = r4
-            com.android.systemui.statusbar.policy.MobileSignalController$MobileState r2 = (com.android.systemui.statusbar.policy.MobileSignalController.MobileState) r2
-            boolean r2 = r2.volteNoService
-            r37 = r8
-            r8 = r4
-            com.android.systemui.statusbar.policy.MobileSignalController$MobileState r8 = (com.android.systemui.statusbar.policy.MobileSignalController.MobileState) r8
-            boolean r8 = r8.showDataTypeWhenWifiOn
-            r38 = r7
-            r7 = r4
-            com.android.systemui.statusbar.policy.MobileSignalController$MobileState r7 = (com.android.systemui.statusbar.policy.MobileSignalController.MobileState) r7
-            boolean r7 = r7.showDataTypeDataDisconnected
-            r39 = r9
-            r9 = r4
-            com.android.systemui.statusbar.policy.MobileSignalController$MobileState r9 = (com.android.systemui.statusbar.policy.MobileSignalController.MobileState) r9
-            boolean r9 = r9.showMobileDataTypeInMMS
-            r40 = r5
-            r5 = r4
-            com.android.systemui.statusbar.policy.MobileSignalController$MobileState r5 = (com.android.systemui.statusbar.policy.MobileSignalController.MobileState) r5
-            java.lang.String r5 = r5.showName
-            r41 = r1
-            r1 = r4
-            com.android.systemui.statusbar.policy.MobileSignalController$MobileState r1 = (com.android.systemui.statusbar.policy.MobileSignalController.MobileState) r1
-            int r1 = r1.volteResId
-            com.android.systemui.statusbar.policy.MobileSignalController$MobileState r4 = (com.android.systemui.statusbar.policy.MobileSignalController.MobileState) r4
-            int r4 = r4.vowifiResId
-            r17 = r3
             r18 = r6
-            r19 = r14
-            r20 = r15
-            r21 = r13
-            r22 = r12
-            r23 = r11
-            r24 = r10
-            r25 = r2
-            r26 = r8
-            r27 = r7
-            r28 = r9
-            r29 = r5
-            r30 = r1
-            r31 = r4
-            r17.<init>(r18, r19, r20, r21, r22, r23, r24, r25, r26, r27, r28, r29, r30, r31)
-            android.telephony.SubscriptionInfo r1 = r0.mSubscriptionInfo
-            int r1 = r1.getSimSlotIndex()
-            T r2 = r0.mCurrentState
-            com.android.systemui.statusbar.policy.MobileSignalController$MobileState r2 = (com.android.systemui.statusbar.policy.MobileSignalController.MobileState) r2
-            boolean r2 = r2.dataSim
-            r4 = r43
-            r4.setIsDefaultDataSim(r1, r2)
-            r1 = r41
+            r6 = r4
+            com.android.systemui.statusbar.policy.MobileSignalController$MobileState r6 = (com.android.systemui.statusbar.policy.MobileSignalController.MobileState) r6
+            boolean r6 = r6.dataConnected
+            r19 = r6
+            r6 = r4
+            com.android.systemui.statusbar.policy.MobileSignalController$MobileState r6 = (com.android.systemui.statusbar.policy.MobileSignalController.MobileState) r6
+            boolean r6 = r6.volte
+            r20 = r6
+            r6 = r4
+            com.android.systemui.statusbar.policy.MobileSignalController$MobileState r6 = (com.android.systemui.statusbar.policy.MobileSignalController.MobileState) r6
+            boolean r6 = r6.vowifi
+            r21 = r6
+            r6 = r4
+            com.android.systemui.statusbar.policy.MobileSignalController$MobileState r6 = (com.android.systemui.statusbar.policy.MobileSignalController.MobileState) r6
+            boolean r6 = r6.hideVolte
+            r22 = r6
+            r6 = r4
+            com.android.systemui.statusbar.policy.MobileSignalController$MobileState r6 = (com.android.systemui.statusbar.policy.MobileSignalController.MobileState) r6
+            boolean r6 = r6.hideVowifi
+            r23 = r6
+            r6 = r4
+            com.android.systemui.statusbar.policy.MobileSignalController$MobileState r6 = (com.android.systemui.statusbar.policy.MobileSignalController.MobileState) r6
+            boolean r6 = r6.speedHd
+            r24 = r6
+            r6 = r4
+            com.android.systemui.statusbar.policy.MobileSignalController$MobileState r6 = (com.android.systemui.statusbar.policy.MobileSignalController.MobileState) r6
+            boolean r6 = r6.volteNoService
+            r25 = r6
+            r6 = r4
+            com.android.systemui.statusbar.policy.MobileSignalController$MobileState r6 = (com.android.systemui.statusbar.policy.MobileSignalController.MobileState) r6
+            boolean r6 = r6.showDataTypeWhenWifiOn
+            r26 = r6
+            r6 = r4
+            com.android.systemui.statusbar.policy.MobileSignalController$MobileState r6 = (com.android.systemui.statusbar.policy.MobileSignalController.MobileState) r6
+            boolean r6 = r6.showDataTypeDataDisconnected
+            r27 = r6
+            r6 = r4
+            com.android.systemui.statusbar.policy.MobileSignalController$MobileState r6 = (com.android.systemui.statusbar.policy.MobileSignalController.MobileState) r6
+            boolean r6 = r6.showMobileDataTypeInMMS
+            r28 = r6
+            r6 = r4
+            com.android.systemui.statusbar.policy.MobileSignalController$MobileState r6 = (com.android.systemui.statusbar.policy.MobileSignalController.MobileState) r6
+            java.lang.String r6 = r6.showName
+            r29 = r6
+            r6 = r4
+            com.android.systemui.statusbar.policy.MobileSignalController$MobileState r6 = (com.android.systemui.statusbar.policy.MobileSignalController.MobileState) r6
+            int r6 = r6.volteResId
+            r30 = r6
+            r6 = r4
+            com.android.systemui.statusbar.policy.MobileSignalController$MobileState r6 = (com.android.systemui.statusbar.policy.MobileSignalController.MobileState) r6
+            int r6 = r6.vowifiResId
+            r31 = r6
+            int r6 = r0.mSlotId
+            r32 = r6
+            com.android.systemui.statusbar.policy.MobileSignalController$MobileState r4 = (com.android.systemui.statusbar.policy.MobileSignalController.MobileState) r4
+            int r4 = r4.qcom5GDrawbleId
+            r33 = r4
+            r17.<init>(r18, r19, r20, r21, r22, r23, r24, r25, r26, r27, r28, r29, r30, r31, r32, r33)
+            android.telephony.SubscriptionInfo r4 = r0.mSubscriptionInfo
+            int r4 = r4.getSimSlotIndex()
+            T r6 = r0.mCurrentState
+            com.android.systemui.statusbar.policy.MobileSignalController$MobileState r6 = (com.android.systemui.statusbar.policy.MobileSignalController.MobileState) r6
+            boolean r6 = r6.dataSim
+            r14 = r35
+            r14.setIsDefaultDataSim(r4, r6)
             boolean r15 = r1.mIsWide
             android.telephony.SubscriptionInfo r1 = r0.mSubscriptionInfo
             int r1 = r1.getSubscriptionId()
             T r0 = r0.mCurrentState
             com.android.systemui.statusbar.policy.MobileSignalController$MobileState r0 = (com.android.systemui.statusbar.policy.MobileSignalController.MobileState) r0
             boolean r0 = r0.roaming
-            r5 = r40
-            r6 = r39
-            r7 = r38
-            r8 = r37
-            r9 = r36
-            r10 = r35
-            r11 = r34
-            r12 = r33
-            r13 = r32
+            r4 = r35
+            r6 = r9
+            r9 = r2
             r14 = r16
             r16 = r1
             r17 = r0
@@ -1104,6 +969,7 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
         int voiceNetworkType = getVoiceNetworkType();
         T t3 = this.mCurrentState;
         if (((MobileState) t3).fiveGConnected) {
+            ((MobileState) t3).iconGroup = TelephonyIcons.FIVE_G;
             ((MobileState) t3).miuiDataType = 10;
         } else {
             ((MobileState) t3).miuiDataType = ((MobileIconGroup) ((MobileState) t3).iconGroup).mMiuiDataType;
@@ -1265,8 +1131,8 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
 
     public void onSignalStrengthChanged(int i, MobileIconGroup mobileIconGroup) {
         update5GConnectState();
-        boolean isFiveGBearerAllocated = this.mFiveGController.isFiveGBearerAllocated(getSlot());
-        if (!isFiveGBearerAllocated) {
+        boolean isFiveGConnect = this.mFiveGController.isFiveGConnect(getSlot(), getDataNetworkType());
+        if (!isFiveGConnect) {
             ((MobileState) this.mCurrentState).showQcom5GSignalStrength = false;
         } else if (i != 0) {
             T t = this.mCurrentState;
@@ -1285,9 +1151,8 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
             ((MobileState) t3).qcom5GDrawbleId = this.mFiveGController.getFiveGDrawable(this.mSlotId);
         }
         String str = this.mTag;
-        Log.d(str, "is5GConnected = " + isFiveGBearerAllocated + ", slotId = " + getSlot() + ", level = " + i + ", current level = " + ((MobileState) this.mCurrentState).level + ", mIsShow5GSignalStrength: " + ((MobileState) this.mCurrentState).showQcom5GSignalStrength);
-        updateSignalStrength();
-        notifyListenersIfNecessary();
+        Log.d(str, "is5GConnected = " + isFiveGConnect + ", slotId = " + getSlot() + ", level = " + i + ", current level = " + ((MobileState) this.mCurrentState).level + ", mIsShow5GSignalStrength: " + ((MobileState) this.mCurrentState).showQcom5GSignalStrength);
+        updateTelephony();
     }
 
     public static boolean isCalling(int i) {
@@ -1374,7 +1239,7 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
 
         public void onServiceStateChanged(ServiceState serviceState) {
             String str = MobileSignalController.this.mTag;
-            Log.d(str, "onServiceStateChanged voiceState=" + serviceState.getState() + " dataState=" + serviceState.getDataRegistrationState());
+            Log.d(str, "onServiceStateChanged voiceState=" + serviceState);
             ServiceState unused = MobileSignalController.this.mServiceState = serviceState;
             MobileSignalController.this.update5GConnectState();
             MobileSignalController.this.updateTelephony();
@@ -1659,10 +1524,12 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
         public boolean dataConnected;
         public boolean hideVolte;
         public boolean hideVowifi;
+        public int qcom5GDrawableId;
         public boolean showDataTypeDataDisconnected;
         public boolean showDataTypeWhenWifiOn;
         public boolean showMobileDataTypeInMMS;
         public String showName;
+        public int slotId;
         public boolean speedHd;
         public boolean volte;
         public boolean volteNoService;
@@ -1670,7 +1537,7 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
         public boolean vowifi;
         public int vowifiResId;
 
-        public MiuiMobileState(boolean z, boolean z2, boolean z3, boolean z4, boolean z5, boolean z6, boolean z7, boolean z8, boolean z9, boolean z10, boolean z11, String str, int i, int i2) {
+        public MiuiMobileState(boolean z, boolean z2, boolean z3, boolean z4, boolean z5, boolean z6, boolean z7, boolean z8, boolean z9, boolean z10, boolean z11, String str, int i, int i2, int i3, int i4) {
             this.airplane = z;
             this.dataConnected = z2;
             this.volte = z3;
@@ -1685,6 +1552,8 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
             this.showName = str;
             this.volteResId = i;
             this.vowifiResId = i2;
+            this.slotId = i3;
+            this.qcom5GDrawableId = i4;
         }
     }
 
@@ -1693,9 +1562,10 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
         String simOperatorNumericForPhone = this.mPhone.getSimOperatorNumericForPhone(this.mSlotId);
         boolean z = true;
         Resources resourcesForOperation = getResourcesForOperation(this.mContext, simOperatorNumericForPhone, true);
+        Resources resourcesForOperation2 = getResourcesForOperation(this.mContext, "00000", true);
         ((MobileState) this.mCurrentState).CTSim = isCTSim(simOperatorNumericForPhone);
-        ((MobileState) this.mCurrentState).hideVolte = resourcesForOperation.getBoolean(C0010R$bool.status_bar_hide_volte);
-        ((MobileState) this.mCurrentState).hideVowifi = resourcesForOperation.getBoolean(C0010R$bool.status_bar_hide_vowifi);
+        ((MobileState) this.mCurrentState).hideVolte = resourcesForOperation.getBoolean(C0010R$bool.status_bar_hide_volte) || resourcesForOperation2.getBoolean(C0010R$bool.status_bar_hide_volte);
+        ((MobileState) this.mCurrentState).hideVowifi = resourcesForOperation.getBoolean(C0010R$bool.status_bar_hide_vowifi_mcc_mnc);
         MobileState mobileState = (MobileState) this.mCurrentState;
         if (Build.IS_INTERNATIONAL_BUILD) {
             i = transformVolteDrawableId(resourcesForOperation.getInteger(C0016R$integer.status_bar_volte_drawable_type));
@@ -1706,12 +1576,12 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
         ((MobileState) this.mCurrentState).vowifiResId = transformVowifiDrawableId(resourcesForOperation.getInteger(C0016R$integer.status_bar_vowifi_drawable_type), resourcesForOperation.getBoolean(C0010R$bool.status_bar_show_dual_vowifi_icons), this.mSlotId, this.mNetworkController);
         this.mIsSupportDoubleFiveG = TelephonyManagerEx.getDefault().isDualNrSupported();
         ((MobileState) this.mCurrentState).showDataTypeWhenWifiOn = resourcesForOperation.getBoolean(C0010R$bool.status_bar_show_mobile_type_when_wifi_on);
+        ((MobileState) this.mCurrentState).showDataTypeDataDisconnected = this.mIsSupportDoubleFiveG || !Build.IS_INTERNATIONAL_BUILD;
         MobileState mobileState2 = (MobileState) this.mCurrentState;
-        if (!this.mIsSupportDoubleFiveG && Build.IS_INTERNATIONAL_BUILD) {
+        if (!resourcesForOperation.getBoolean(C0010R$bool.status_bar_show_mobile_type_in_mms) && !resourcesForOperation2.getBoolean(C0010R$bool.status_bar_show_mobile_type_in_mms)) {
             z = false;
         }
-        mobileState2.showDataTypeDataDisconnected = z;
-        ((MobileState) this.mCurrentState).showMobileDataTypeInMMS = resourcesForOperation.getBoolean(C0010R$bool.status_bar_show_mobile_type_in_mms);
+        mobileState2.showMobileDataTypeInMMS = z;
         this.mMiuiMobileTypeNameArray = getMiuiMobileTypeNameArray(resourcesForOperation);
     }
 
@@ -1737,10 +1607,7 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
         if (i == 0) {
             configuration2.mnc = 65535;
         }
-        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
-        DisplayMetrics displayMetrics2 = new DisplayMetrics();
-        displayMetrics2.setTo(displayMetrics);
-        return new Resources(context.getResources().getAssets(), displayMetrics2, configuration2);
+        return context.createConfigurationContext(configuration2).getResources();
     }
 
     public static int transformVolteDrawableId(int i) {
@@ -1783,6 +1650,9 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
         String[] stringArray = resources.getStringArray(C0008R$array.data_type_name_default_value);
         for (int i = 0; i < intArray.length; i++) {
             strArr[intArray[i]] = stringArray[i];
+        }
+        if (Build.IS_CM_CUSTOMIZATION_TEST) {
+            strArr[1] = "2G";
         }
         int[] intArray2 = resources.getIntArray(C0008R$array.data_type_name_mcc_key);
         String[] stringArray2 = resources.getStringArray(C0008R$array.data_type_name_mcc_value);

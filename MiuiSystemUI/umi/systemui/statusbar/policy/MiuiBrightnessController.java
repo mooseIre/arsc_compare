@@ -28,6 +28,7 @@ import com.android.systemui.settings.BrightnessController$BrightnessStateChangeC
 import com.android.systemui.settings.CurrentUserTracker;
 import com.android.systemui.settings.ToggleSlider;
 import com.android.systemui.settings.ToggleSliderView;
+import com.miui.systemui.analytics.SystemUIStat;
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -108,6 +109,7 @@ public class MiuiBrightnessController implements ToggleSlider.Listener, Dumpable
             MiuiBrightnessController.this.mHandler.sendEmptyMessage(1);
         }
     };
+    private int mStartValue;
     private final Runnable mStopListeningRunnable = new Runnable() {
         public void run() {
             MiuiBrightnessController.this.mBrightnessObserver.stopObserving();
@@ -276,11 +278,13 @@ public class MiuiBrightnessController implements ToggleSlider.Listener, Dumpable
 
     public void onStart(int i) {
         Log.d("BrightnessController", "ToggleSlider: onStart: value: " + i);
+        this.mStartValue = i;
         MQSEventManagerDelegate.getInstance().reportBrightnessEvent(0, i, this.mAutomatic ? 1 : 0, "");
     }
 
     public void onStop(int i) {
         Log.d("BrightnessController", "ToggleSlider: onStop: value: " + i);
+        ((SystemUIStat) Dependency.get(SystemUIStat.class)).onSlideBrightnessBar(this.mStartValue, i, this.mAutomatic);
         MQSEventManagerDelegate.getInstance().reportBrightnessEvent(1, i, this.mAutomatic ? 1 : 0, "");
     }
 

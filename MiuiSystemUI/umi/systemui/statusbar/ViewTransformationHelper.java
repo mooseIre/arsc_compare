@@ -100,7 +100,7 @@ public class ViewTransformationHelper implements TransformableView, TransformSta
             }
         });
         this.mViewTransformationAnimation.setInterpolator(Interpolators.LINEAR);
-        this.mViewTransformationAnimation.setDuration(360);
+        this.mViewTransformationAnimation.setDuration(300);
         this.mViewTransformationAnimation.addListener(new AnimatorListenerAdapter() {
             public boolean mCancelled;
 
@@ -173,7 +173,7 @@ public class ViewTransformationHelper implements TransformableView, TransformSta
             }
         });
         this.mViewTransformationAnimation.setInterpolator(Interpolators.LINEAR);
-        this.mViewTransformationAnimation.setDuration(360);
+        this.mViewTransformationAnimation.setDuration(300);
         this.mViewTransformationAnimation.start();
     }
 

@@ -106,8 +106,10 @@ public class QCToggleSliderView extends RelativeLayout implements ToggleSlider {
 
     public void setMirror(QCToggleSliderView qCToggleSliderView) {
         this.mMirror = qCToggleSliderView;
-        if (qCToggleSliderView != null) {
-            qCToggleSliderView.setMax(this.mSlider.getMax());
+        setFocusable(false);
+        QCToggleSliderView qCToggleSliderView2 = this.mMirror;
+        if (qCToggleSliderView2 != null) {
+            qCToggleSliderView2.setMax(this.mSlider.getMax());
             this.mMirror.setValue(this.mSlider.getProgress());
         }
     }

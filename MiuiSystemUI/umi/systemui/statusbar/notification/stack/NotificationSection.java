@@ -82,7 +82,7 @@ public class NotificationSection {
             }
             ObjectAnimator ofInt = ObjectAnimator.ofInt(this, "backgroundTop", new int[]{this.mCurrentBounds.top, i2});
             ofInt.setInterpolator(Interpolators.FAST_OUT_SLOW_IN);
-            ofInt.setDuration(360);
+            ofInt.setDuration(300);
             ofInt.addListener(new AnimatorListenerAdapter() {
                 public void onAnimationEnd(Animator animator) {
                     NotificationSection.this.mStartAnimationRect.top = -1;
@@ -119,7 +119,7 @@ public class NotificationSection {
             }
             ObjectAnimator ofInt = ObjectAnimator.ofInt(this, "backgroundBottom", new int[]{this.mCurrentBounds.bottom, i3});
             ofInt.setInterpolator(Interpolators.FAST_OUT_SLOW_IN);
-            ofInt.setDuration(360);
+            ofInt.setDuration(300);
             ofInt.addListener(new AnimatorListenerAdapter() {
                 public void onAnimationEnd(Animator animator) {
                     NotificationSection.this.mStartAnimationRect.bottom = -1;

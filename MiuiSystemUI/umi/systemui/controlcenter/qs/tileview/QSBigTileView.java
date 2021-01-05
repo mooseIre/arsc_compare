@@ -39,11 +39,16 @@ import com.android.systemui.plugins.qs.QSTileView;
 import com.android.systemui.qs.QSTileHost;
 import com.android.systemui.qs.tiles.BluetoothTile;
 import com.android.systemui.qs.tiles.WifiTile;
+import com.miui.systemui.analytics.SystemUIStat;
+import com.miui.systemui.events.BtExpandEvent;
+import com.miui.systemui.events.DataExpandEvent;
+import com.miui.systemui.events.WifiExpandEvent;
 import miuix.animation.Folme;
 import miuix.animation.IStateStyle;
 import miuix.animation.ITouchStyle;
 import miuix.animation.base.AnimConfig;
 import miuix.animation.controller.AnimState;
+import miuix.animation.listener.TransitionListener;
 import miuix.animation.property.ViewProperty;
 import miuix.animation.utils.EaseManager;
 
@@ -322,6 +327,7 @@ public class QSBigTileView extends QSTileView {
         String str = state.expandedAccessibilityClassName;
         if ((state instanceof QSTile.BooleanState) && this.mTileState != (z = ((QSTile.BooleanState) state).value)) {
             this.mTileState = z;
+            announceForAccessibility(z ? this.mActiveString : this.mInActiveString);
         }
         Log.d("QSBigTileView" + this.mTag, "start state.state:" + state.state + " mState:" + this.mState);
         if (state.withAnimation && !this.mBreathAnimator.isStarted()) {
@@ -387,8 +393,19 @@ public class QSBigTileView extends QSTileView {
                 qSTile.click();
             }
         };
-        AnonymousClass5 r1 = new View.OnClickListener(this) {
+        AnonymousClass5 r1 = new View.OnClickListener() {
             public void onClick(View view) {
+                Object obj;
+                if (QSBigTileView.this.mTag.equals("cell")) {
+                    obj = new DataExpandEvent();
+                } else if (QSBigTileView.this.mTag.equals("bt")) {
+                    obj = new BtExpandEvent();
+                } else {
+                    obj = QSBigTileView.this.mTag.equals("wifi") ? new WifiExpandEvent() : null;
+                }
+                if (obj != null) {
+                    ((SystemUIStat) Dependency.get(SystemUIStat.class)).handleControlCenterEvent(obj);
+                }
                 qSTile.secondaryClick();
             }
         };
@@ -401,7 +418,7 @@ public class QSBigTileView extends QSTileView {
         setOnClickListener(r0);
         setOnLongClickListener(r2);
         this.mExpandIndicator.setOnClickListener(r1);
-        this.mAnimatorController = new BigQSTileAnimationController(this, this, this.mExpandIndicator, 0.7f, 1.0f);
+        this.mAnimatorController = new BigQSTileAnimationController(this, this.mExpandIndicator, 0.7f, 1.0f);
         this.mExpandIndicator.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 int actionMasked = motionEvent.getActionMasked();
@@ -425,9 +442,21 @@ public class QSBigTileView extends QSTileView {
     }
 
     public boolean onTouchEvent(MotionEvent motionEvent) {
+        if (motionEvent.getActionMasked() == 0) {
+            Folme.clean(this);
+        }
+        AnimConfig animConfig = new AnimConfig();
+        animConfig.addListeners(new TransitionListener(this) {
+            public void onComplete(Object obj) {
+                super.onComplete(obj);
+                if (obj == ITouchStyle.TouchType.UP) {
+                    Folme.clean(this);
+                }
+            }
+        });
         ITouchStyle iTouchStyle = Folme.useAt(this).touch();
         iTouchStyle.setTint(0.0f, 0.0f, 0.0f, 0.0f);
-        iTouchStyle.onMotionEventEx(this, motionEvent, new AnimConfig[0]);
+        iTouchStyle.onMotionEventEx(this, motionEvent, animConfig);
         return super.onTouchEvent(motionEvent);
     }
 
@@ -447,38 +476,36 @@ public class QSBigTileView extends QSTileView {
         }
     }
 
-    private class BigQSTileAnimationController {
+    public static class BigQSTileAnimationController {
         protected int[] location = new int[2];
         private View mBigQSTile;
-        private IStateStyle mBigQSTileAnim;
-        private AnimConfig mBigQSTileDownAnimConfig;
-        private AnimConfig mBigQSTileUpAnimConfig;
+        private AnimConfig mBigQSTileAnimConfig;
+        private View mExpandIndicator;
         private IStateStyle mExpandIndicatorAnim;
         private AnimConfig mExpandIndicatorAnimConfig;
         private AnimState mExpandIndicatorClickState;
-        private AnimState mExpandIndicatorReleaseState;
+        private float mInitAlpha;
 
-        public BigQSTileAnimationController(QSBigTileView qSBigTileView, View view, View view2, float f, float f2) {
+        public BigQSTileAnimationController(View view, View view2, float f, float f2) {
             this.mBigQSTile = view;
+            this.mExpandIndicator = view2;
+            this.mInitAlpha = f;
             this.mExpandIndicatorAnim = Folme.useAt(view2).state();
-            this.mExpandIndicatorClickState = new AnimState("clicked state");
-            this.mExpandIndicatorReleaseState = new AnimState("released state");
-            this.mExpandIndicatorClickState.add(ViewProperty.ALPHA, f2, new long[0]);
-            this.mExpandIndicatorReleaseState.add(ViewProperty.ALPHA, f, new long[0]);
+            AnimState animState = new AnimState("clicked state");
+            this.mExpandIndicatorClickState = animState;
+            animState.add(ViewProperty.ALPHA, f2, new long[0]);
             AnimConfig animConfig = new AnimConfig();
             animConfig.setEase(EaseManager.getStyle(0, 300.0f, 0.99f, 0.6666f));
             this.mExpandIndicatorAnimConfig = animConfig;
             Folme.clean(this.mBigQSTile);
-            this.mBigQSTileAnim = Folme.useAt(this.mBigQSTile).state();
             AnimConfig animConfig2 = new AnimConfig();
             animConfig2.setEase(EaseManager.getStyle(0, 300.0f, 0.99f, 0.6666f));
-            this.mBigQSTileDownAnimConfig = animConfig2;
-            AnimConfig animConfig3 = new AnimConfig();
-            animConfig3.setEase(EaseManager.getStyle(0, 300.0f, 0.99f, 0.6666f));
-            this.mBigQSTileUpAnimConfig = animConfig3;
+            this.mBigQSTileAnimConfig = animConfig2;
         }
 
         public void onTouchEvent(MotionEvent motionEvent) {
+            Folme.clean(this.mBigQSTile);
+            IStateStyle state = Folme.useAt(this.mBigQSTile).state();
             int action = motionEvent.getAction();
             if (action != 0) {
                 if (action != 1) {
@@ -488,15 +515,12 @@ public class QSBigTileView extends QSTileView {
                         }
                     }
                 }
-                this.mExpandIndicatorAnim.cancel();
-                this.mExpandIndicatorAnim.to(this.mExpandIndicatorReleaseState, this.mExpandIndicatorAnimConfig);
-                this.mBigQSTileAnim.clean();
-                IStateStyle iStateStyle = this.mBigQSTileAnim;
+                this.mExpandIndicator.setAlpha(this.mInitAlpha);
                 AnimState animState = new AnimState("qs big tile up");
                 animState.add(ViewProperty.ROTATION_X, 0, new long[0]);
                 animState.add(ViewProperty.ROTATION_Y, 0, new long[0]);
                 animState.add(ViewProperty.TRANSLATION_Z, 0, new long[0]);
-                iStateStyle.to(animState, this.mBigQSTileUpAnimConfig);
+                state.to(animState, this.mBigQSTileAnimConfig);
                 return;
             }
             if (motionEvent.getAction() == 0) {
@@ -530,16 +554,14 @@ public class QSBigTileView extends QSTileView {
             float f6 = (f3 / 213.0f) * 5.0f;
             float sqrt = (float) ((Math.sqrt((double) ((f3 * f3) + (f4 * f4))) / 211.0d) * 25.0d);
             if (motionEvent.getAction() == 0) {
-                this.mBigQSTileAnim.clean();
-                IStateStyle iStateStyle2 = this.mBigQSTileAnim;
                 AnimState animState2 = new AnimState("qs big tile down");
                 animState2.add(ViewProperty.ROTATION_X, f5, new long[0]);
                 animState2.add(ViewProperty.ROTATION_Y, f6, new long[0]);
                 animState2.add(ViewProperty.TRANSLATION_Z, sqrt, new long[0]);
-                iStateStyle2.to(animState2, this.mBigQSTileDownAnimConfig);
+                state.to(animState2, this.mBigQSTileAnimConfig);
                 return;
             }
-            this.mBigQSTileAnim.clean();
+            state.clean();
             this.mBigQSTile.setRotationX(f5);
             this.mBigQSTile.setRotationY(f6);
             this.mBigQSTile.setTranslationZ(sqrt);

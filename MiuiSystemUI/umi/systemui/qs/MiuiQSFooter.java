@@ -126,9 +126,8 @@ public final class MiuiQSFooter extends FrameLayout implements QSFooter {
         super.onDetachedFromWindow();
     }
 
-    public boolean performAccessibilityAction(int i, @NotNull Bundle bundle) {
+    public boolean performAccessibilityAction(int i, @Nullable Bundle bundle) {
         View.OnClickListener onClickListener;
-        Intrinsics.checkParameterIsNotNull(bundle, "arguments");
         if (i != 262144 || (onClickListener = this.mExpandClickListener) == null) {
             return super.performAccessibilityAction(i, bundle);
         }
@@ -140,9 +139,10 @@ public final class MiuiQSFooter extends FrameLayout implements QSFooter {
         throw null;
     }
 
-    public void onInitializeAccessibilityNodeInfo(@NotNull AccessibilityNodeInfo accessibilityNodeInfo) {
-        Intrinsics.checkParameterIsNotNull(accessibilityNodeInfo, "info");
+    public void onInitializeAccessibilityNodeInfo(@Nullable AccessibilityNodeInfo accessibilityNodeInfo) {
         super.onInitializeAccessibilityNodeInfo(accessibilityNodeInfo);
-        accessibilityNodeInfo.addAction(AccessibilityNodeInfo.AccessibilityAction.ACTION_EXPAND);
+        if (accessibilityNodeInfo != null) {
+            accessibilityNodeInfo.addAction(AccessibilityNodeInfo.AccessibilityAction.ACTION_EXPAND);
+        }
     }
 }

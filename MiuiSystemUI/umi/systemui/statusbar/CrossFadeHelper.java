@@ -54,7 +54,7 @@ public class CrossFadeHelper {
     }
 
     private static float mapToFadeDuration(float f) {
-        return Math.min(f / 0.5833333f, 1.0f);
+        return Math.min(f / 0.7f, 1.0f);
     }
 
     private static void updateLayerType(View view, float f) {

@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.BidiFormatter;
+import android.util.EventLog;
 import android.util.Log;
 import android.widget.CheckBox;
 import android.widget.TextView;
@@ -23,9 +24,15 @@ public class SlicePermissionActivity extends Activity implements DialogInterface
         super.onCreate(bundle);
         this.mUri = (Uri) getIntent().getParcelableExtra("slice_uri");
         this.mCallingPkg = getIntent().getStringExtra("pkg");
-        this.mProviderPkg = getIntent().getStringExtra("provider_pkg");
+        if (this.mUri == null) {
+            Log.e("SlicePermissionActivity", "slice_uri wasn't provided");
+            finish();
+            return;
+        }
         try {
             PackageManager packageManager = getPackageManager();
+            this.mProviderPkg = packageManager.resolveContentProvider(this.mUri.getAuthority(), 128).applicationInfo.packageName;
+            verifyCallingPkg();
             String unicodeWrap = BidiFormatter.getInstance().unicodeWrap(packageManager.getApplicationInfo(this.mCallingPkg, 0).loadSafeLabel(packageManager, 500.0f, 5).toString());
             String unicodeWrap2 = BidiFormatter.getInstance().unicodeWrap(packageManager.getApplicationInfo(this.mProviderPkg, 0).loadSafeLabel(packageManager, 500.0f, 5).toString());
             AlertDialog create = new AlertDialog.Builder(this).setTitle(getString(C0021R$string.slice_permission_title, new Object[]{unicodeWrap, unicodeWrap2})).setView(C0017R$layout.slice_permission_request).setNegativeButton(C0021R$string.slice_permission_deny, this).setPositiveButton(C0021R$string.slice_permission_allow, this).setOnDismissListener(this).create();
@@ -51,5 +58,31 @@ public class SlicePermissionActivity extends Activity implements DialogInterface
 
     public void onDismiss(DialogInterface dialogInterface) {
         finish();
+    }
+
+    private void verifyCallingPkg() {
+        String stringExtra = getIntent().getStringExtra("provider_pkg");
+        if (stringExtra != null && !this.mProviderPkg.equals(stringExtra)) {
+            EventLog.writeEvent(1397638484, new Object[]{"159145361", Integer.valueOf(getUid(getCallingPkg()))});
+        }
+    }
+
+    private String getCallingPkg() {
+        Uri referrer = getReferrer();
+        if (referrer == null) {
+            return null;
+        }
+        return referrer.getHost();
+    }
+
+    private int getUid(String str) {
+        if (str == null) {
+            return -1;
+        }
+        try {
+            return getPackageManager().getApplicationInfo(str, 0).uid;
+        } catch (PackageManager.NameNotFoundException unused) {
+            return -1;
+        }
     }
 }

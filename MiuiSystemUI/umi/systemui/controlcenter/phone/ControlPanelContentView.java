@@ -14,6 +14,9 @@ import com.android.systemui.controlcenter.phone.customize.QSControlCustomizer;
 import com.android.systemui.controlcenter.phone.detail.QSControlDetail;
 import com.android.systemui.controlcenter.phone.widget.MiuiQSPanel$MiuiRecord;
 import com.android.systemui.qs.QSTileHost;
+import com.miui.systemui.analytics.SystemUIStat;
+import com.miui.systemui.events.ExpandPanelEvent;
+import com.miui.systemui.events.QuickTilesEditEvent;
 
 public class ControlPanelContentView extends FrameLayout {
     private Context mContext;
@@ -53,6 +56,7 @@ public class ControlPanelContentView extends FrameLayout {
         this.mTilesEdit = imageView;
         imageView.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
+                ((SystemUIStat) Dependency.get(SystemUIStat.class)).handleControlCenterEvent(new QuickTilesEditEvent());
                 ControlPanelContentView.this.showEdit();
             }
         });
@@ -123,6 +127,7 @@ public class ControlPanelContentView extends FrameLayout {
     }
 
     public void showContent() {
+        ((SystemUIStat) Dependency.get(SystemUIStat.class)).handleControlCenterEvent(new ExpandPanelEvent());
         setVisibility(0);
         this.mExpandInfoController.requestData();
         QSControlCenterPanel qSControlCenterPanel = this.mQsControlCenterPanel;

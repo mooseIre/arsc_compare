@@ -6,6 +6,8 @@ import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.media.MediaDataManager;
 import com.android.systemui.settings.CurrentUserTracker;
 import com.android.systemui.statusbar.NotificationLockscreenUserManager;
+import com.android.systemui.statusbar.notification.NotificationEntryManager;
+import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -20,6 +22,7 @@ import org.jetbrains.annotations.Nullable;
 public final class MediaDataFilter implements MediaDataManager.Listener {
     private final BroadcastDispatcher broadcastDispatcher;
     private final MediaDataCombineLatest dataSource;
+    private final NotificationEntryManager entryManager;
     /* access modifiers changed from: private */
     public final Executor executor;
     private final Set<MediaDataManager.Listener> listeners = new LinkedHashSet();
@@ -29,19 +32,21 @@ public final class MediaDataFilter implements MediaDataManager.Listener {
     private final MediaResumeListener mediaResumeListener;
     private final CurrentUserTracker userTracker;
 
-    public MediaDataFilter(@NotNull MediaDataCombineLatest mediaDataCombineLatest, @NotNull BroadcastDispatcher broadcastDispatcher2, @NotNull MediaResumeListener mediaResumeListener2, @NotNull MediaDataManager mediaDataManager2, @NotNull NotificationLockscreenUserManager notificationLockscreenUserManager, @NotNull Executor executor2) {
+    public MediaDataFilter(@NotNull MediaDataCombineLatest mediaDataCombineLatest, @NotNull BroadcastDispatcher broadcastDispatcher2, @NotNull MediaResumeListener mediaResumeListener2, @NotNull MediaDataManager mediaDataManager2, @NotNull NotificationLockscreenUserManager notificationLockscreenUserManager, @NotNull Executor executor2, @NotNull NotificationEntryManager notificationEntryManager) {
         Intrinsics.checkParameterIsNotNull(mediaDataCombineLatest, "dataSource");
         Intrinsics.checkParameterIsNotNull(broadcastDispatcher2, "broadcastDispatcher");
         Intrinsics.checkParameterIsNotNull(mediaResumeListener2, "mediaResumeListener");
         Intrinsics.checkParameterIsNotNull(mediaDataManager2, "mediaDataManager");
         Intrinsics.checkParameterIsNotNull(notificationLockscreenUserManager, "lockscreenUserManager");
         Intrinsics.checkParameterIsNotNull(executor2, "executor");
+        Intrinsics.checkParameterIsNotNull(notificationEntryManager, "entryManager");
         this.dataSource = mediaDataCombineLatest;
         this.broadcastDispatcher = broadcastDispatcher2;
         this.mediaResumeListener = mediaResumeListener2;
         this.mediaDataManager = mediaDataManager2;
         this.lockscreenUserManager = notificationLockscreenUserManager;
         this.executor = executor2;
+        this.entryManager = notificationEntryManager;
         AnonymousClass1 r2 = new CurrentUserTracker(this, this.broadcastDispatcher) {
             final /* synthetic */ MediaDataFilter this$0;
 
@@ -115,6 +120,10 @@ public final class MediaDataFilter implements MediaDataManager.Listener {
             MediaDataManager mediaDataManager2 = this.mediaDataManager;
             Intrinsics.checkExpressionValueIsNotNull(t, "it");
             mediaDataManager2.setTimedOut$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core(t, true);
+            NotificationEntry activeNotificationUnfiltered = this.entryManager.getActiveNotificationUnfiltered(t);
+            if (activeNotificationUnfiltered != null) {
+                this.entryManager.performRemoveNotification(activeNotificationUnfiltered.getSbn(), 2);
+            }
         }
     }
 

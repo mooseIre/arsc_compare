@@ -1,7 +1,6 @@
 package com.android.systemui.statusbar.notification.zen;
 
 import android.service.notification.ZenModeConfig;
-import android.view.View;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
 import com.android.systemui.statusbar.NotificationLockscreenUserManager;
 import com.android.systemui.statusbar.SysuiStatusBarStateController;
@@ -84,32 +83,31 @@ public final class ZenModeViewController implements ZenModeController.Callback {
     /* access modifiers changed from: private */
     public final void updateVisibility() {
         Function2<? super Boolean, ? super Boolean, Unit> function2;
-        View contentView;
-        View contentView2;
-        int i = 0;
-        boolean z = true;
-        if (!(this.statusBarStateController.getState() == 1 || this.statusBarStateController.getState() == 2 || this.statusBarStateController.getState() == 3) || !isDndOn() || this.manuallyDismissed) {
-            z = false;
-        }
-        if (!this.bypassController.getBypassEnabled()) {
-            boolean shouldShowLockscreenNotifications = this.notifLockscreenUserManager.shouldShowLockscreenNotifications();
-        }
+        boolean shouldBeVisible = shouldBeVisible();
         ZenModeView zenModeView = this.view;
-        int visibility = (zenModeView == null || (contentView2 = zenModeView.getContentView()) == null) ? 8 : contentView2.getVisibility();
-        if (!z) {
-            i = 8;
+        int i = 8;
+        int visibility = zenModeView != null ? zenModeView.getVisibility() : 8;
+        if (shouldBeVisible) {
+            i = 0;
         }
         ZenModeView zenModeView2 = this.view;
-        if (!(zenModeView2 == null || (contentView = zenModeView2.getContentView()) == null)) {
-            contentView.setVisibility(i);
+        if (zenModeView2 != null) {
+            zenModeView2.setVisibility(i);
         }
         ZenModeView zenModeView3 = this.view;
         if (zenModeView3 != null) {
             zenModeView3.resetTranslation();
         }
         if (visibility != i && (function2 = this.visibilityChangedListener) != null) {
-            Unit invoke = function2.invoke(Boolean.valueOf(z), Boolean.valueOf(this.manuallyDismissed));
+            Unit invoke = function2.invoke(Boolean.valueOf(shouldBeVisible), Boolean.valueOf(this.manuallyDismissed));
         }
+    }
+
+    public final boolean shouldBeVisible() {
+        if (!(this.statusBarStateController.getState() == 1 || this.statusBarStateController.getState() == 2 || this.statusBarStateController.getState() == 3) || !isDndOn() || this.manuallyDismissed || this.bypassController.getBypassEnabled() || !this.notifLockscreenUserManager.shouldShowLockscreenNotifications()) {
+            return false;
+        }
+        return true;
     }
 
     public final void onSwipeToDismiss() {

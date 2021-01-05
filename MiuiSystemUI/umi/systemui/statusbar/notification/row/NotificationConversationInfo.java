@@ -467,7 +467,7 @@ public class NotificationConversationInfo extends LinearLayout implements Notifi
             public final void run() {
                 VisualStabilityManager.this.temporarilyAllowReordering();
             }
-        }, 360);
+        }, 300);
     }
 
     private boolean shouldShowPriorityOnboarding() {

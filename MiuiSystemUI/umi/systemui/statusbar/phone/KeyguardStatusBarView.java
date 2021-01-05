@@ -300,7 +300,9 @@ public class KeyguardStatusBarView extends RelativeLayout implements BatteryCont
         this.mIconManager = new StatusBarIconController.MiuiLightDarkIconManager((ViewGroup) findViewById(C0015R$id.statusIcons), (CommandQueue) Dependency.get(CommandQueue.class), true, lightModeIconColorSingleTone);
         ((StatusBarIconController) Dependency.get(cls)).addIconGroup(this.mIconManager);
         ArrayList arrayList = new ArrayList(Arrays.asList(getContext().getResources().getStringArray(C0008R$array.config_drip_right_block_statusBarIcons)));
-        this.mDripRightIconManager = new StatusBarIconController.MiuiLightDarkIconManager(this.mDripRightStatusIconContainer, (CommandQueue) Dependency.get(CommandQueue.class), true, lightModeIconColorSingleTone);
+        StatusBarIconController.MiuiLightDarkIconManager miuiLightDarkIconManager = new StatusBarIconController.MiuiLightDarkIconManager(this.mDripRightStatusIconContainer, (CommandQueue) Dependency.get(CommandQueue.class), true, lightModeIconColorSingleTone);
+        this.mDripRightIconManager = miuiLightDarkIconManager;
+        miuiLightDarkIconManager.setDrip(true);
         ((StatusBarIconController) Dependency.get(cls)).addIconGroup(this.mDripRightIconManager, arrayList);
         this.mDripLeftIconManager = new StatusBarIconController.MiuiLightDarkIconManager(this.mDripLeftStatusIconContainer, (CommandQueue) Dependency.get(CommandQueue.class), true, lightModeIconColorSingleTone);
         ((MiuiDripLeftStatusBarIconControllerImpl) Dependency.get(MiuiDripLeftStatusBarIconControllerImpl.class)).addIconGroup(this.mDripLeftIconManager);

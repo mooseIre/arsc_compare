@@ -636,6 +636,7 @@ public final class R {
         public static final int config_canCustomNotificationAppIcon;
         public static final int config_canSendSubstituteNotificationPackages;
         public static final int config_canShowBadgePackages;
+        public static final int config_charge_supportWirelessStrongSuper;
         public static final int config_controlsPreferredPackages;
         public static final int config_disableAutoGroupSummaryPackages;
         public static final int config_doze_brightness_sensor_to_brightness;
@@ -1905,6 +1906,7 @@ public final class R {
         public static final int config_clipNotificationScrollToTop;
         public static final int config_clipNotificationsToOutline;
         public static final int config_dead_zone_flash;
+        public static final int config_disableLockScreenMagazine;
         public static final int config_disableMenuKeyInLockScreen;
         public static final int config_display_volte;
         public static final int config_display_vowifi;
@@ -1942,6 +1944,7 @@ public final class R {
         public static final int config_roundedCornerMultipleRadius;
         public static final int config_runPeekAnimation;
         public static final int config_showActivity;
+        public static final int config_showAmpm;
         public static final int config_showDividersWhenGroupNotificationExpanded;
         public static final int config_showEmergencyButton;
         public static final int config_showGroupNotificationBgWhenExpanded;
@@ -1992,10 +1995,10 @@ public final class R {
         public static final int recents_grow_in_multiwindow;
         public static final int show_battery_digit_full;
         public static final int show_carrier_in_status_bar_header;
+        public static final int show_carrier_under_left_hole_keyguard;
         public static final int show_plmn_and_spn_in_carrier;
         public static final int simple_cache_enable_im_memory;
         public static final int status_bar_hide_volte;
-        public static final int status_bar_hide_vowifi;
         public static final int status_bar_hide_vowifi_mcc_mnc;
         public static final int status_bar_show_dual_vowifi_icons;
         public static final int status_bar_show_mobile_type_in_mms;
@@ -3270,6 +3273,7 @@ public final class R {
         public static final int full_smart_cover_num_size;
         public static final int full_smart_cover_time_colon_size;
         public static final int full_smart_cover_time_size;
+        public static final int fullscreen_network_speed_padding_start;
         public static final int gesture_title_view_elevation;
         public static final int gesture_title_view_margin_left_right_radius;
         public static final int gesture_title_view_margin_top;
@@ -3921,6 +3925,7 @@ public final class R {
         public static final int miui_notification_header_content_margin_bottom;
         public static final int miui_notification_header_content_margin_top;
         public static final int miui_notification_header_height;
+        public static final int miui_notification_header_icon_container_width;
         public static final int miui_notification_modal_menu_icon_bg_size;
         public static final int miui_notification_modal_menu_icon_size;
         public static final int miui_notification_modal_menu_margin_left_right;
@@ -4247,9 +4252,11 @@ public final class R {
         public static final int notification_right_icon_size;
         public static final int notification_right_side_padding_top;
         public static final int notification_section_divider_height;
-        public static final int notification_section_divider_height_for_text;
-        public static final int notification_section_divider_height_minus;
+        public static final int notification_section_group_divider_bottom_minus;
+        public static final int notification_section_group_divider_top_minus;
         public static final int notification_section_header_height;
+        public static final int notification_section_header_icon_margin_bottom;
+        public static final int notification_section_header_icon_size;
         public static final int notification_section_header_margin_bottom_miui;
         public static final int notification_section_header_margin_start_miui;
         public static final int notification_section_header_margin_top_miui;
@@ -4358,7 +4365,7 @@ public final class R {
         public static final int qs_control_big_tile_width;
         public static final int qs_control_big_tiles_interval_vertical;
         public static final int qs_control_big_tiles_margin_bottom;
-        public static final int qs_control_big_tiles_margin_top;
+        public static final int qs_control_big_tiles_padding_top;
         public static final int qs_control_bottom_expand_height;
         public static final int qs_control_bottom_indicator_height;
         public static final int qs_control_bottom_indicator_padding_vertical;
@@ -5851,7 +5858,7 @@ public final class R {
         public static final int analog_thumbnail;
 
         /* renamed from: android */
-        public static final int f4android;
+        public static final int f17android;
         public static final int android_11_dial;
         public static final int app_note;
         public static final int arrow_drop_down_24dp;
@@ -7322,6 +7329,7 @@ public final class R {
         public static final int miui_numeric_keyboard_button_pressed;
         public static final int miui_numeric_keyboard_image;
         public static final int miui_password_unlock_screen_input_field_bg_error;
+        public static final int miui_section_header_icon;
         public static final int miuix_sbl_loading_progress_bg_light;
         public static final int miuix_sbl_loading_progress_circle_light;
         public static final int miuix_sbl_loading_progress_circle_light_svg;
@@ -8283,6 +8291,7 @@ public final class R {
         public static final int date_picker_header;
         public static final int date_picker_header_title;
         public static final int date_time;
+        public static final int date_view;
         public static final int date_weekday;
         public static final int decelerate;
         public static final int decelerateAndComplete;
@@ -8941,6 +8950,7 @@ public final class R {
         public static final int noScroll;
         public static final int no_carrier_text;
         public static final int no_notifications;
+        public static final int no_use_id;
         public static final int non_configurable_multichannel_text;
         public static final int non_configurable_text;
         public static final int none;
@@ -9606,6 +9616,7 @@ public final class R {
         public static final int doze_pulse_duration_out;
         public static final int doze_pulse_duration_visible;
         public static final int doze_small_icon_alpha;
+        public static final int flash_on_value;
         public static final int heads_up_default_snooze_length_ms;
         public static final int heads_up_notification_decay;
         public static final int heads_up_notification_minimum_time;
@@ -10086,7 +10097,11 @@ public final class R {
         public static final int miui_system_icons;
         public static final int miui_unlockscreen_lockout;
         public static final int miuix_sbl_simple_indicator;
+        public static final int miuix_sbl_trigger_base_layout;
         public static final int miuix_sbl_trigger_layout;
+        public static final int miuix_sbl_trigger_loading_progress;
+        public static final int miuix_sbl_trigger_tracking_progress;
+        public static final int miuix_sbl_trigger_tracking_progress_label;
         public static final int miuix_sbl_trigger_up_layout;
         public static final int mland;
         public static final int mland_scorefield;
@@ -11239,6 +11254,7 @@ public final class R {
         public static final int fingerprint_not_identified_title;
         public static final int fingerprint_try_again_msg;
         public static final int fingerprint_try_again_text;
+        public static final int flash_device;
         public static final int force_allow_on_external;
         public static final int force_allow_on_external_summary;
         public static final int force_msaa;
@@ -11401,8 +11417,6 @@ public final class R {
         public static final int invalid_charger_text;
         public static final int invalid_charger_title;
         public static final int invalid_confirm_pin_hint;
-        public static final int invalid_sim_pin_hint;
-        public static final int invalid_sim_puk_hint;
         public static final int keep_screen_on;
         public static final int keep_screen_on_summary;
         public static final int keyboard_key;
@@ -11460,18 +11474,9 @@ public final class R {
         public static final int keyguard_charged;
         public static final int keyguard_charging_back_to_lockscreen;
         public static final int keyguard_charging_battery_level;
-        public static final int keyguard_charging_info_battery_used_time_text;
-        public static final int keyguard_charging_info_drained_power_percent_text;
         public static final int keyguard_charging_info_last_charge_time;
         public static final int keyguard_charging_info_last_charge_today_time;
         public static final int keyguard_charging_info_last_charge_yesterday_time;
-        public static final int keyguard_charging_info_last_charged_time_text;
-        public static final int keyguard_charging_info_tip_text1;
-        public static final int keyguard_charging_info_tip_text2;
-        public static final int keyguard_charging_info_tip_text3;
-        public static final int keyguard_charging_info_tip_text4;
-        public static final int keyguard_charging_info_tip_text5;
-        public static final int keyguard_charging_info_tip_text6;
         public static final int keyguard_charging_normal_and_level_tip;
         public static final int keyguard_charging_quick_and_level_tip;
         public static final int keyguard_charging_super_quick_and_level_tip;
@@ -12023,6 +12028,11 @@ public final class R {
         public static final int quick_settings_cellular_detail_data_usage;
         public static final int quick_settings_cellular_detail_data_used;
         public static final int quick_settings_cellular_detail_data_warning;
+        public static final int quick_settings_cellular_detail_dialog_message_turnoff;
+        public static final int quick_settings_cellular_detail_dialog_message_turnon;
+        public static final int quick_settings_cellular_detail_dialog_negative_button_cancel;
+        public static final int quick_settings_cellular_detail_dialog_positive_button_ok;
+        public static final int quick_settings_cellular_detail_dialog_positive_button_turnoff;
         public static final int quick_settings_cellular_detail_over_limit;
         public static final int quick_settings_cellular_detail_remaining_data;
         public static final int quick_settings_cellular_detail_title;
@@ -12349,6 +12359,7 @@ public final class R {
         public static final int title_convert_fbe;
         public static final int title_usb_accessory;
         public static final int toast_rotation_locked;
+        public static final int torch_high_temperature_warning;
         public static final int touch_filtered_warning;
         public static final int track_frame_time;
         public static final int transition_animation_scale_title;
@@ -12943,6 +12954,9 @@ public final class R {
         public static final int Miui_Notification_Subtext;
         public static final int Miui_Notification_Text;
         public static final int Miui_Notification_Title;
+        public static final int Miuix_Spring_TextAppearance;
+        public static final int Miuix_Spring_TextAppearance_indicator;
+        public static final int Miuix_Spring_TextAppearance_trigger;
         public static final int PasswordTheme;
         public static final int PasswordTheme_Light;
         public static final int PipPhoneOverlayControlTheme;
@@ -13020,7 +13034,6 @@ public final class R {
         public static final int RtlOverlay_Widget_AppCompat_SearchView_MagIcon;
         public static final int RtlUnderlay_Widget_AppCompat_ActionButton;
         public static final int RtlUnderlay_Widget_AppCompat_ActionButton_Overflow;
-        public static final int SBLTrigger;
         public static final int ScreenPinningRequestTheme;
         public static final int ScreenRecord;
         public static final int SearchPanelCircle;
@@ -13266,8 +13279,6 @@ public final class R {
         public static final int TextAppearance_Widget_AppCompat_ExpandedMenu_Item;
         public static final int TextAppearance_Widget_AppCompat_Toolbar_Subtitle;
         public static final int TextAppearance_Widget_AppCompat_Toolbar_Title;
-        public static final int TextAppearance_indicator;
-        public static final int TextAppearance_trigger;
         public static final int TextAppearanceMedium;
         public static final int TextAppearanceSmall;
         public static final int Theme;

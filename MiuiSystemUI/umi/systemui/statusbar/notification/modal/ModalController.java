@@ -15,6 +15,7 @@ import com.android.systemui.statusbar.notification.NotificationEntryManager;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow;
 import com.android.systemui.statusbar.notification.row.MiuiExpandableNotificationRow;
+import com.android.systemui.statusbar.notification.row.NotificationBackgroundView;
 import com.android.systemui.statusbar.phone.StatusBar;
 import com.miui.systemui.DebugConfig;
 import com.miui.systemui.util.HapticFeedBackImpl;
@@ -118,6 +119,7 @@ public final class ModalController {
     }
 
     private final void enterModal() {
+        NotificationBackgroundView notificationBackgroundView;
         ExpandableNotificationRow expandableNotificationRow = this.modalRow;
         this.modalWindowManager.setBlurRatio(0.0f);
         ModalWindowView modalWindowView2 = this.modalWindowView;
@@ -125,6 +127,9 @@ public final class ModalController {
             modalWindowView2.setOnClickListener(new ModalController$enterModal$1(this));
             if (expandableNotificationRow != null) {
                 expandableNotificationRow.setOnClickListener(new ModalController$enterModal$2(this));
+            }
+            if (!(expandableNotificationRow == null || (notificationBackgroundView = (NotificationBackgroundView) expandableNotificationRow.findViewById(C0015R$id.backgroundNormal)) == null)) {
+                notificationBackgroundView.disableBlur();
             }
             ModalWindowView modalWindowView3 = this.modalWindowView;
             if (modalWindowView3 != null) {

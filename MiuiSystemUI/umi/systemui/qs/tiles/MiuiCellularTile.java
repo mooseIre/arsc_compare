@@ -2,6 +2,7 @@ package com.android.systemui.qs.tiles;
 
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.SystemProperties;
@@ -23,9 +24,11 @@ import com.android.systemui.statusbar.policy.NetworkController;
 import com.miui.systemui.util.VirtualSimUtils;
 import java.util.ArrayList;
 import java.util.List;
+import miui.app.AlertDialog;
 import miui.securityspace.CrossUserUtils;
 import miui.telephony.SubscriptionInfo;
 import miui.telephony.SubscriptionManager;
+import miui.telephony.TelephonyManager;
 
 public class MiuiCellularTile extends QSTileImpl<QSTile.BooleanState> {
     private static final boolean DETAIL_ADAPTER_ENABLED;
@@ -37,6 +40,9 @@ public class MiuiCellularTile extends QSTileImpl<QSTile.BooleanState> {
     private final CellSignalCallback mSignalCallback = new CellSignalCallback();
     /* access modifiers changed from: private */
     public List<SubscriptionInfo> mSimInfoRecordList;
+
+    static /* synthetic */ void lambda$showConfirmDialog$0(DialogInterface dialogInterface, int i) {
+    }
 
     public int getMetricsCategory() {
         return 115;
@@ -73,6 +79,17 @@ public class MiuiCellularTile extends QSTileImpl<QSTile.BooleanState> {
 
     public Intent getLongClickIntent() {
         return longClickDataIntent();
+    }
+
+    public void click() {
+        if (!this.mDataController.isMobileDataSupported()) {
+            return;
+        }
+        if (TelephonyManager.isCustForKrOps()) {
+            showConfirmDialog(((QSTile.BooleanState) this.mState).state == 2);
+        } else {
+            super.click();
+        }
     }
 
     /* access modifiers changed from: protected */
@@ -413,5 +430,41 @@ public class MiuiCellularTile extends QSTileImpl<QSTile.BooleanState> {
         intent.putExtra(":miui:starting_window_label", "");
         intent.setFlags(335544320);
         return intent;
+    }
+
+    private void showConfirmDialog(boolean z) {
+        int i;
+        int i2;
+        this.mHost.collapsePanels();
+        AlertDialog.Builder builder = new AlertDialog.Builder(this.mContext, 8);
+        builder.setCancelable(false);
+        builder.setTitle(C0021R$string.quick_settings_cellular_detail_title);
+        if (z) {
+            i = C0021R$string.quick_settings_cellular_detail_dialog_message_turnoff;
+        } else {
+            i = C0021R$string.quick_settings_cellular_detail_dialog_message_turnon;
+        }
+        builder.setMessage(i);
+        builder.setNegativeButton(C0021R$string.quick_settings_cellular_detail_dialog_negative_button_cancel, $$Lambda$MiuiCellularTile$xuv9jHuPCYNuIuI1rQzDEiBE9fU.INSTANCE);
+        if (z) {
+            i2 = C0021R$string.quick_settings_cellular_detail_dialog_positive_button_turnoff;
+        } else {
+            i2 = C0021R$string.quick_settings_cellular_detail_dialog_positive_button_ok;
+        }
+        builder.setPositiveButton(i2, new DialogInterface.OnClickListener() {
+            public final void onClick(DialogInterface dialogInterface, int i) {
+                MiuiCellularTile.this.lambda$showConfirmDialog$1$MiuiCellularTile(dialogInterface, i);
+            }
+        });
+        AlertDialog create = builder.create();
+        create.getWindow().setType(2010);
+        create.getWindow().addSystemFlags(16);
+        create.show();
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$showConfirmDialog$1 */
+    public /* synthetic */ void lambda$showConfirmDialog$1$MiuiCellularTile(DialogInterface dialogInterface, int i) {
+        super.click();
     }
 }

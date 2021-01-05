@@ -22,9 +22,6 @@ public class ToggleManagerController extends CurrentUserTracker implements Flash
             String sender = intent.getSender();
             if (("com.miui.home".equals(sender) || "android".equals(sender) || "com.mi.android.globallauncher".equals(sender)) && "com.miui.app.ExtraStatusBarManager.action_TRIGGER_TOGGLE".equals(intent.getAction())) {
                 ToggleManagerController.this.mToggleManager.performToggle(intent.getIntExtra("com.miui.app.ExtraStatusBarManager.extra_TOGGLE_ID", -1));
-            } else if ("miui.intent.action.TOGGLE_TORCH".equals(intent.getAction())) {
-                FlashlightController flashlightController = ToggleManagerController.this.mFlashlightController;
-                flashlightController.setFlashlight(!flashlightController.isEnabled());
             }
         }
     };

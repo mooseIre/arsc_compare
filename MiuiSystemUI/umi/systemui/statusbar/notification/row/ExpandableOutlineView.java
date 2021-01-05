@@ -63,7 +63,7 @@ public abstract class ExpandableOutlineView extends ExpandableView {
 
     static {
         AnimationProperties animationProperties = new AnimationProperties();
-        animationProperties.setDuration(360);
+        animationProperties.setDuration(300);
         ROUNDNESS_PROPERTIES = animationProperties;
     }
 

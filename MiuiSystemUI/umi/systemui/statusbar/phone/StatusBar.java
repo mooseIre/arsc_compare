@@ -187,6 +187,7 @@ import com.android.systemui.statusbar.policy.RemoteInputQuickSettingsDisabler;
 import com.android.systemui.statusbar.policy.UserInfoControllerImpl;
 import com.android.systemui.statusbar.policy.UserSwitcherController;
 import com.android.systemui.volume.VolumeComponent;
+import com.miui.systemui.analytics.SettingsJobSchedulerService;
 import com.miui.systemui.util.CommonUtil;
 import dagger.Lazy;
 import java.io.FileDescriptor;
@@ -1317,6 +1318,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
             }
         });
         ((ToggleManagerController) Dependency.get(ToggleManagerController.class)).start();
+        SettingsJobSchedulerService.schedule(this.mContext);
     }
 
     /* access modifiers changed from: private */
@@ -1887,6 +1889,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
     public void disable(int i, int i2, int i3, boolean z) {
         int i4 = i2;
         if (i == this.mDisplayId) {
+            EventLog.writeEvent(30099, i4);
             int adjustDisableFlags = this.mRemoteInputQuickSettingsDisabler.adjustDisableFlags(i3);
             int i5 = this.mStatusBarWindowState;
             int i6 = this.mDisabled1 ^ i4;
@@ -2415,7 +2418,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
     }
 
     public boolean interceptTouchEvent(MotionEvent motionEvent) {
-        if (this.mStatusBarWindowState == 0) {
+        if (this.mStatusBarWindowState == 0 && (this.mDisabled1 & 65536) == 0) {
             if (!(motionEvent.getAction() == 1 || motionEvent.getAction() == 3) || this.mExpandedVisible) {
                 setInteracting(1, true);
             } else {
@@ -3250,6 +3253,13 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         return updateIsKeyguard();
     }
 
+    public void setKeyguardTransparent() {
+        if (this.mState == 1) {
+            this.mNotificationShadeWindowController.setKeygaurdTransparent(true);
+            ((MiuiDozeServiceHost) Dependency.get(MiuiDozeServiceHost.class)).onKeyguardTransparent();
+        }
+    }
+
     public boolean isFullScreenUserSwitcherState() {
         return this.mState == 3;
     }
@@ -3556,7 +3566,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
 
     public void showBouncerIfKeyguard() {
         int i = this.mState;
-        if ((i == 1 || i == 2) && !this.mKeyguardViewMediator.isHiding() && !this.mDozing) {
+        if ((i == 1 || i == 2) && !this.mKeyguardViewMediator.isHiding()) {
             this.mStatusBarKeyguardViewManager.showBouncer(true);
         }
     }

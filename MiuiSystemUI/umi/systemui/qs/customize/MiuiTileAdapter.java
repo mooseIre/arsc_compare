@@ -1,6 +1,5 @@
 package com.android.systemui.qs.customize;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Canvas;
@@ -30,10 +29,11 @@ import com.android.systemui.qs.customize.MiuiTileAdapter;
 import com.android.systemui.qs.customize.TileQueryHelper;
 import com.android.systemui.qs.external.CustomTile;
 import com.android.systemui.qs.tileimpl.MiuiQSIconViewImpl;
-import com.android.systemui.statusbar.phone.SystemUIDialog;
+import com.miui.systemui.statusbar.phone.MiuiSystemUIDialog;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import miui.app.AlertDialog;
 
 public class MiuiTileAdapter extends RecyclerView.Adapter<Holder> implements TileQueryHelper.TileStateListener {
     private int mAccessibilityAction = 0;
@@ -479,7 +479,7 @@ public class MiuiTileAdapter extends RecyclerView.Adapter<Holder> implements Til
 
     private void showAccessibilityDialog(int i, View view) {
         TileQueryHelper.TileInfo tileInfo = this.mTiles.get(i);
-        AlertDialog create = new AlertDialog.Builder(this.mContext).setItems(new CharSequence[]{this.mContext.getString(C0021R$string.accessibility_qs_edit_move_tile, new Object[]{tileInfo.state.label}), this.mContext.getString(C0021R$string.accessibility_qs_edit_remove_tile, new Object[]{tileInfo.state.label})}, new DialogInterface.OnClickListener(i, tileInfo, view) {
+        AlertDialog create = new AlertDialog.Builder(this.mContext, 8).setItems(new CharSequence[]{this.mContext.getString(C0021R$string.accessibility_qs_edit_move_tile, new Object[]{tileInfo.state.label}), this.mContext.getString(C0021R$string.accessibility_qs_edit_remove_tile, new Object[]{tileInfo.state.label})}, new DialogInterface.OnClickListener(i, tileInfo, view) {
             public final /* synthetic */ int f$1;
             public final /* synthetic */ TileQueryHelper.TileInfo f$2;
             public final /* synthetic */ View f$3;
@@ -494,8 +494,8 @@ public class MiuiTileAdapter extends RecyclerView.Adapter<Holder> implements Til
                 MiuiTileAdapter.this.lambda$showAccessibilityDialog$3$MiuiTileAdapter(this.f$1, this.f$2, this.f$3, dialogInterface, i);
             }
         }).setNegativeButton(17039360, (DialogInterface.OnClickListener) null).create();
-        SystemUIDialog.setShowForAllUsers(create, true);
-        SystemUIDialog.applyFlags(create);
+        MiuiSystemUIDialog.setShowForAllUsers(create, true);
+        MiuiSystemUIDialog.applyFlags(create);
         create.show();
     }
 

@@ -231,7 +231,7 @@ public class MiuiPhoneStatusBarPolicy extends PhoneStatusBarPolicy implements Mi
     public /* synthetic */ void lambda$updateManagedProfile$0$MiuiPhoneStatusBarPolicy(boolean z, boolean z2, boolean z3) {
         boolean z4 = false;
         if (!z) {
-            if (z2 && this.mKeyguardStateController.isShowing()) {
+            if (z2 && !this.mKeyguardStateController.isShowing()) {
                 this.mIconController.setIcon(this.mSlotManagedProfile, C0013R$drawable.stat_sys_managed_profile_status, this.mContext.getString(C0021R$string.accessibility_managed_profile));
             } else if (this.mManagedProfileInQuietMode) {
                 this.mIconController.setIcon(this.mSlotManagedProfile, C0013R$drawable.stat_sys_managed_profile_status_off, this.mContext.getString(C0021R$string.accessibility_managed_profile));

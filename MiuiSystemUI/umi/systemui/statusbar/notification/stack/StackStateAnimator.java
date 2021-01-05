@@ -129,7 +129,7 @@ public class StackStateAnimator {
     private void adaptDurationWhenGoingToFullShade(ExpandableView expandableView, ExpandableViewState expandableViewState, boolean z, int i) {
         if (z && this.mAnimationFilter.hasGoToFullShadeEvent) {
             expandableView.setTranslationY(expandableView.getTranslationY() + ((float) this.mGoToFullShadeAppearingTranslation));
-            this.mAnimationProperties.duration = ((long) (((float) Math.pow((double) i, 0.699999988079071d)) * 100.0f)) + 514;
+            this.mAnimationProperties.duration = ((long) (((float) Math.pow((double) i, 0.699999988079071d)) * 100.0f)) + 350;
         }
     }
 
@@ -141,7 +141,8 @@ public class StackStateAnimator {
         return true;
     }
 
-    private long calculateChildAnimationDelay(ExpandableViewState expandableViewState, int i) {
+    /* access modifiers changed from: protected */
+    public long calculateChildAnimationDelay(ExpandableViewState expandableViewState, int i) {
         ExpandableView expandableView;
         AnimationFilter animationFilter = this.mAnimationFilter;
         if (animationFilter.hasGoToFullShadeEvent) {
@@ -306,7 +307,7 @@ public class StackStateAnimator {
         L_0x008a:
             r6 = r2
         L_0x008b:
-            r2 = 464(0x1d0, double:2.29E-321)
+            r2 = 300(0x12c, double:1.48E-321)
             r4 = 0
             r8 = 0
             r9 = 0
@@ -494,7 +495,7 @@ public class StackStateAnimator {
         if (f != currentOverScrollAmount) {
             cancelOverScrollAnimators(z);
             ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{currentOverScrollAmount, f});
-            ofFloat.setDuration(360);
+            ofFloat.setDuration(300);
             ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 public void onAnimationUpdate(ValueAnimator valueAnimator) {
                     StackStateAnimator.this.mHostLayout.setOverScrollAmount(((Float) valueAnimator.getAnimatedValue()).floatValue(), z, false, false, z2);

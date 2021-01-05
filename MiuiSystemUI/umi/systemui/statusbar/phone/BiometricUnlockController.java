@@ -3,6 +3,7 @@ package com.android.systemui.statusbar.phone;
 import android.app.ActivityManagerNative;
 import android.content.Context;
 import android.content.res.Resources;
+import android.hardware.biometrics.BiometricManager;
 import android.hardware.biometrics.BiometricSourceType;
 import android.metrics.LogMaker;
 import android.os.Handler;
@@ -19,6 +20,7 @@ import com.android.internal.logging.UiEventLoggerImpl;
 import com.android.internal.util.LatencyTracker;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.KeyguardViewController;
+import com.android.keyguard.MiuiFastUnlockController;
 import com.android.keyguard.MiuiKeyguardFingerprintUtils$FingerprintIdentificationState;
 import com.android.keyguard.MiuiKeyguardUpdateMonitorCallback;
 import com.android.keyguard.faceunlock.MiuiFaceUnlockManager;
@@ -44,6 +46,8 @@ import java.util.function.Consumer;
 public class BiometricUnlockController extends MiuiKeyguardUpdateMonitorCallback implements Dumpable {
     private static final UiEventLogger UI_EVENT_LOGGER = new UiEventLoggerImpl();
     private int mAuthenticatedUserId;
+    private BiometricManager mBiometricManager = null;
+    private BiometricSourceType mBiometricSourceType;
     private final Context mContext;
     private final DozeParameters mDozeParameters;
     private DozeScrimController mDozeScrimController;
@@ -203,8 +207,8 @@ public class BiometricUnlockController extends MiuiKeyguardUpdateMonitorCallback
 
     public void onPreBiometricAuthenticated(int i) {
         Trace.beginSection("FingerprintUnlockController#onPreFingerprintAuthenticated");
-        if (this.mUpdateMonitor.isUnlockingWithBiometricAllowed(true) && KeyguardUpdateMonitor.getCurrentUser() == i && !this.mUpdateMonitor.isBouncerShowing()) {
-            this.mKeyguardViewMediator.isShowingAndNotOccluded();
+        if (this.mUpdateMonitor.isUnlockingWithBiometricAllowed(true) && KeyguardUpdateMonitor.getCurrentUser() == i && !this.mUpdateMonitor.isBouncerShowing() && this.mKeyguardViewMediator.isShowingAndNotOccluded()) {
+            ((MiuiFastUnlockController) Dependency.get(MiuiFastUnlockController.class)).wakeAndFastUnlock("android.policy:FINGERPRINT");
         }
         Trace.endSection();
     }
@@ -235,6 +239,9 @@ public class BiometricUnlockController extends MiuiKeyguardUpdateMonitorCallback
                 }
             });
             if (this.mKeyguardBypassController.onBiometricAuthenticated(biometricSourceType, z)) {
+                if (biometricSourceType == BiometricSourceType.FACE) {
+                    resetTimeout(this.mContext, (byte[]) null);
+                }
                 this.mKeyguardViewMediator.userActivity();
                 startWakeAndUnlock(biometricSourceType, z, i);
                 return;
@@ -253,8 +260,7 @@ public class BiometricUnlockController extends MiuiKeyguardUpdateMonitorCallback
         if (!this.mKeyguardViewMediator.isShowing() && KeyguardUpdateMonitor.getCurrentUser() == i && (i2 == 2 || i2 == 1)) {
             Slog.i("miui_keyguard_fingerprint", "Unlock by fingerprint, keyguard is not showing and wake up");
             this.mKeyguardViewMediator.cancelPendingLock();
-            synchronized (this) {
-            }
+            recordKeyguardUnlockWay(true);
             this.mPowerManager.wakeUp(SystemClock.uptimeMillis(), "android.policy:FINGERPRINT");
         } else {
             this.mPendingAuthenticated = new PendingAuthenticated(i, biometricSourceType, z);
@@ -280,6 +286,7 @@ public class BiometricUnlockController extends MiuiKeyguardUpdateMonitorCallback
                 }
             }
         }
+        this.mBiometricSourceType = biometricSourceType;
         setUnlockMode(biometricSourceType, this.mMode);
         startWakeAndUnlock(this.mMode);
     }
@@ -335,6 +342,7 @@ public class BiometricUnlockController extends MiuiKeyguardUpdateMonitorCallback
                 if (this.mStatusBar.getNavigationBarView() != null) {
                     this.mStatusBar.getNavigationBarView().setWakeAndUnlocking(true);
                 }
+                recordKeyguardUnlockWay(true);
                 Trace.endSection();
                 break;
             case 3:
@@ -353,6 +361,7 @@ public class BiometricUnlockController extends MiuiKeyguardUpdateMonitorCallback
                 if (!((MiuiFaceUnlockManager) Dependency.get(MiuiFaceUnlockManager.class)).isFaceUnlockSuccessAndStayScreen() || this.mKeyguardViewController.bouncerIsOrWillBeShowing() || ((KeyguardUpdateMonitorInjector) Dependency.get(KeyguardUpdateMonitorInjector.class)).isFingerprintUnlock()) {
                     this.mKeyguardViewController.notifyKeyguardAuthenticated(false);
                 }
+                recordKeyguardUnlockWay(true);
                 Trace.endSection();
                 break;
         }
@@ -520,6 +529,8 @@ public class BiometricUnlockController extends MiuiKeyguardUpdateMonitorCallback
                 this.f$0.log((BiometricUnlockController.BiometricUiEvent) obj);
             }
         });
+        this.mBiometricSourceType = biometricSourceType;
+        recordKeyguardUnlockWay(false);
         cleanup();
     }
 
@@ -707,5 +718,25 @@ public class BiometricUnlockController extends MiuiKeyguardUpdateMonitorCallback
 
     public void onStartedWakingUpWithReason(String str) {
         ((MiuiFaceUnlockManager) Dependency.get(MiuiFaceUnlockManager.class)).updateScreenOnDelyTime(str);
+    }
+
+    private void resetTimeout(Context context, byte[] bArr) {
+        if (this.mBiometricManager == null) {
+            this.mBiometricManager = (BiometricManager) context.getSystemService("biometric");
+        }
+        BiometricManager biometricManager = this.mBiometricManager;
+        if (biometricManager != null) {
+            biometricManager.resetLockout(bArr);
+        }
+    }
+
+    private void recordKeyguardUnlockWay(boolean z) {
+        Class cls = KeyguardUpdateMonitorInjector.class;
+        BiometricSourceType biometricSourceType = this.mBiometricSourceType;
+        if (biometricSourceType == BiometricSourceType.FACE) {
+            ((KeyguardUpdateMonitorInjector) Dependency.get(cls)).setKeyguardUnlockWay("face", z);
+        } else if (biometricSourceType == BiometricSourceType.FINGERPRINT) {
+            ((KeyguardUpdateMonitorInjector) Dependency.get(cls)).setKeyguardUnlockWay("fp", z);
+        }
     }
 }

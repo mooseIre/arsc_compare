@@ -7,7 +7,6 @@ import android.view.View;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.systemui.C0017R$layout;
 import com.android.systemui.C0021R$string;
-import com.android.systemui.plugins.ActivityStarter;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
 import com.android.systemui.statusbar.notification.stack.NotificationSectionsLogger;
 import com.android.systemui.statusbar.notification.stack.NotificationSectionsManager;
@@ -22,8 +21,6 @@ import org.jetbrains.annotations.Nullable;
 public final class MiuiNotificationSectionsManager extends NotificationSectionsManager {
     public static final Companion Companion = new Companion((DefaultConstructorMarker) null);
     @NotNull
-    private final ActivityStarter activityStarter;
-    @NotNull
     private final NotificationSectionsLogger logger;
     private final MiuiNotificationSectionsFeatureManager sectionsFeatureManager;
     @NotNull
@@ -32,47 +29,48 @@ public final class MiuiNotificationSectionsManager extends NotificationSectionsM
     private ZenModeView zenModeView;
     private final ZenModeViewController zenModeViewController;
 
+    public void onGentleHeaderClick() {
+    }
+
     /* JADX WARNING: Illegal instructions before constructor call */
     /* Code decompiled incorrectly, please refer to instructions dump. */
-    public MiuiNotificationSectionsManager(@org.jetbrains.annotations.NotNull com.android.systemui.plugins.ActivityStarter r15, @org.jetbrains.annotations.NotNull com.android.systemui.plugins.statusbar.StatusBarStateController r16, @org.jetbrains.annotations.NotNull com.android.systemui.statusbar.policy.ConfigurationController r17, @org.jetbrains.annotations.NotNull com.android.systemui.statusbar.notification.people.PeopleHubViewAdapter r18, @org.jetbrains.annotations.NotNull com.android.systemui.media.KeyguardMediaController r19, @org.jetbrains.annotations.NotNull com.android.systemui.statusbar.notification.zen.ZenModeViewController r20, @org.jetbrains.annotations.NotNull com.android.systemui.statusbar.notification.MiuiNotificationSectionsFeatureManager r21, @org.jetbrains.annotations.NotNull com.android.systemui.statusbar.notification.stack.NotificationSectionsLogger r22) {
+    public MiuiNotificationSectionsManager(@org.jetbrains.annotations.NotNull com.android.systemui.plugins.ActivityStarter r14, @org.jetbrains.annotations.NotNull com.android.systemui.plugins.statusbar.StatusBarStateController r15, @org.jetbrains.annotations.NotNull com.android.systemui.statusbar.policy.ConfigurationController r16, @org.jetbrains.annotations.NotNull com.android.systemui.statusbar.notification.people.PeopleHubViewAdapter r17, @org.jetbrains.annotations.NotNull com.android.systemui.media.KeyguardMediaController r18, @org.jetbrains.annotations.NotNull com.android.systemui.statusbar.notification.zen.ZenModeViewController r19, @org.jetbrains.annotations.NotNull com.android.systemui.statusbar.notification.MiuiNotificationSectionsFeatureManager r20, @org.jetbrains.annotations.NotNull com.android.systemui.statusbar.notification.stack.NotificationSectionsLogger r21) {
         /*
-            r14 = this;
-            r8 = r14
+            r13 = this;
+            r8 = r13
             r9 = r15
-            r10 = r16
+            r10 = r19
             r11 = r20
             r12 = r21
-            r13 = r22
             java.lang.String r0 = "activityStarter"
-            kotlin.jvm.internal.Intrinsics.checkParameterIsNotNull(r15, r0)
+            r1 = r14
+            kotlin.jvm.internal.Intrinsics.checkParameterIsNotNull(r14, r0)
             java.lang.String r0 = "statusBarStateController"
-            kotlin.jvm.internal.Intrinsics.checkParameterIsNotNull(r10, r0)
+            kotlin.jvm.internal.Intrinsics.checkParameterIsNotNull(r15, r0)
             java.lang.String r0 = "configurationController"
-            r3 = r17
+            r3 = r16
             kotlin.jvm.internal.Intrinsics.checkParameterIsNotNull(r3, r0)
             java.lang.String r0 = "peopleHubViewAdapter"
-            r4 = r18
+            r4 = r17
             kotlin.jvm.internal.Intrinsics.checkParameterIsNotNull(r4, r0)
             java.lang.String r0 = "keyguardMediaController"
-            r5 = r19
+            r5 = r18
             kotlin.jvm.internal.Intrinsics.checkParameterIsNotNull(r5, r0)
             java.lang.String r0 = "zenModeViewController"
-            kotlin.jvm.internal.Intrinsics.checkParameterIsNotNull(r11, r0)
+            kotlin.jvm.internal.Intrinsics.checkParameterIsNotNull(r10, r0)
             java.lang.String r0 = "sectionsFeatureManager"
-            kotlin.jvm.internal.Intrinsics.checkParameterIsNotNull(r12, r0)
+            kotlin.jvm.internal.Intrinsics.checkParameterIsNotNull(r11, r0)
             java.lang.String r0 = "logger"
-            kotlin.jvm.internal.Intrinsics.checkParameterIsNotNull(r13, r0)
-            r0 = r14
-            r1 = r15
-            r2 = r16
-            r6 = r21
-            r7 = r22
+            kotlin.jvm.internal.Intrinsics.checkParameterIsNotNull(r12, r0)
+            r0 = r13
+            r2 = r15
+            r6 = r20
+            r7 = r21
             r0.<init>(r1, r2, r3, r4, r5, r6, r7)
-            r8.activityStarter = r9
-            r8.statusBarStateController = r10
-            r8.zenModeViewController = r11
-            r8.sectionsFeatureManager = r12
-            r8.logger = r13
+            r8.statusBarStateController = r9
+            r8.zenModeViewController = r10
+            r8.sectionsFeatureManager = r11
+            r8.logger = r12
             return
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.notification.MiuiNotificationSectionsManager.<init>(com.android.systemui.plugins.ActivityStarter, com.android.systemui.plugins.statusbar.StatusBarStateController, com.android.systemui.statusbar.policy.ConfigurationController, com.android.systemui.statusbar.notification.people.PeopleHubViewAdapter, com.android.systemui.media.KeyguardMediaController, com.android.systemui.statusbar.notification.zen.ZenModeViewController, com.android.systemui.statusbar.notification.MiuiNotificationSectionsFeatureManager, com.android.systemui.statusbar.notification.stack.NotificationSectionsLogger):void");
@@ -94,15 +92,7 @@ public final class MiuiNotificationSectionsManager extends NotificationSectionsM
 
     public boolean beginsSection(@NotNull View view, @Nullable View view2) {
         Intrinsics.checkParameterIsNotNull(view, "view");
-        ZenModeView zenModeView2 = this.zenModeView;
-        if (view != zenModeView2 && view2 != zenModeView2) {
-            return super.beginsSection(view, view2);
-        }
-        ZenModeView zenModeView3 = this.zenModeView;
-        if (zenModeView3 != null) {
-            return zenModeView3.isVisiable();
-        }
-        return false;
+        return view == this.zenModeView || super.beginsSection(view, view2);
     }
 
     /* access modifiers changed from: protected */
@@ -130,22 +120,23 @@ public final class MiuiNotificationSectionsManager extends NotificationSectionsM
     /* JADX WARNING: Removed duplicated region for block: B:115:0x0202  */
     /* JADX WARNING: Removed duplicated region for block: B:122:0x021b  */
     /* JADX WARNING: Removed duplicated region for block: B:124:0x022d  */
-    /* JADX WARNING: Removed duplicated region for block: B:158:0x0294  */
-    /* JADX WARNING: Removed duplicated region for block: B:160:0x029d  */
-    /* JADX WARNING: Removed duplicated region for block: B:168:0x02b9  */
-    /* JADX WARNING: Removed duplicated region for block: B:169:0x02be  */
-    /* JADX WARNING: Removed duplicated region for block: B:174:0x02cc  */
-    /* JADX WARNING: Removed duplicated region for block: B:175:0x02d1  */
-    /* JADX WARNING: Removed duplicated region for block: B:180:0x02df  */
-    /* JADX WARNING: Removed duplicated region for block: B:181:0x02e4  */
-    /* JADX WARNING: Removed duplicated region for block: B:186:0x02f2  */
-    /* JADX WARNING: Removed duplicated region for block: B:187:0x02f7  */
-    /* JADX WARNING: Removed duplicated region for block: B:192:0x0305  */
-    /* JADX WARNING: Removed duplicated region for block: B:193:0x030a  */
-    /* JADX WARNING: Removed duplicated region for block: B:202:0x0331 A[LOOP:2: B:200:0x032b->B:202:0x0331, LOOP_END] */
-    /* JADX WARNING: Removed duplicated region for block: B:205:0x0352  */
-    /* JADX WARNING: Removed duplicated region for block: B:208:0x0366 A[ADDED_TO_REGION] */
-    /* JADX WARNING: Removed duplicated region for block: B:231:? A[RETURN, SYNTHETIC] */
+    /* JADX WARNING: Removed duplicated region for block: B:157:0x0293  */
+    /* JADX WARNING: Removed duplicated region for block: B:162:0x02a7  */
+    /* JADX WARNING: Removed duplicated region for block: B:164:0x02aa  */
+    /* JADX WARNING: Removed duplicated region for block: B:172:0x02c6  */
+    /* JADX WARNING: Removed duplicated region for block: B:173:0x02cb  */
+    /* JADX WARNING: Removed duplicated region for block: B:178:0x02d9  */
+    /* JADX WARNING: Removed duplicated region for block: B:179:0x02de  */
+    /* JADX WARNING: Removed duplicated region for block: B:184:0x02ec  */
+    /* JADX WARNING: Removed duplicated region for block: B:185:0x02f1  */
+    /* JADX WARNING: Removed duplicated region for block: B:190:0x02ff  */
+    /* JADX WARNING: Removed duplicated region for block: B:191:0x0304  */
+    /* JADX WARNING: Removed duplicated region for block: B:196:0x0312  */
+    /* JADX WARNING: Removed duplicated region for block: B:197:0x0317  */
+    /* JADX WARNING: Removed duplicated region for block: B:206:0x033e A[LOOP:2: B:204:0x0338->B:206:0x033e, LOOP_END] */
+    /* JADX WARNING: Removed duplicated region for block: B:209:0x035f  */
+    /* JADX WARNING: Removed duplicated region for block: B:212:0x0373 A[ADDED_TO_REGION] */
+    /* JADX WARNING: Removed duplicated region for block: B:235:? A[RETURN, SYNTHETIC] */
     /* JADX WARNING: Removed duplicated region for block: B:61:0x0147  */
     /* JADX WARNING: Removed duplicated region for block: B:74:0x0171  */
     /* JADX WARNING: Removed duplicated region for block: B:75:0x0174  */
@@ -529,91 +520,102 @@ public final class MiuiNotificationSectionsManager extends NotificationSectionsM
         L_0x0290:
             r3 = 1
         L_0x0291:
+            if (r2 == 0) goto L_0x02a7
+            com.android.systemui.statusbar.notification.zen.ZenModeViewController r9 = r8.zenModeViewController
+            boolean r9 = r9.shouldBeVisible()
+            if (r9 == 0) goto L_0x02a1
             r9 = 0
-            if (r2 == 0) goto L_0x029b
             java.lang.Integer r10 = java.lang.Integer.valueOf(r9)
+            goto L_0x02a3
+        L_0x02a1:
+            r9 = 0
+            r10 = 0
+        L_0x02a3:
             r2.setTargetPosition(r10)
-        L_0x029b:
-            if (r15 == 0) goto L_0x02a8
-            if (r13 == 0) goto L_0x02a4
-            java.lang.Integer r14 = java.lang.Integer.valueOf(r9)
-            goto L_0x02a5
-        L_0x02a4:
-            r14 = 0
-        L_0x02a5:
-            r15.setTargetPosition(r14)
+            goto L_0x02a8
+        L_0x02a7:
+            r9 = 0
         L_0x02a8:
+            if (r15 == 0) goto L_0x02b5
+            if (r13 == 0) goto L_0x02b1
+            java.lang.Integer r14 = java.lang.Integer.valueOf(r9)
+            goto L_0x02b2
+        L_0x02b1:
+            r14 = 0
+        L_0x02b2:
+            r15.setTargetPosition(r14)
+        L_0x02b5:
             com.android.systemui.statusbar.notification.stack.NotificationSectionsLogger r10 = r8.logger
             java.lang.String r12 = "New header target positions:"
             r10.logStr(r12)
             com.android.systemui.statusbar.notification.stack.NotificationSectionsLogger r10 = r8.logger
-            if (r2 == 0) goto L_0x02be
+            if (r2 == 0) goto L_0x02cb
             java.lang.Integer r2 = r2.getTargetPosition()
-            if (r2 == 0) goto L_0x02be
+            if (r2 == 0) goto L_0x02cb
             int r2 = r2.intValue()
-            goto L_0x02bf
-        L_0x02be:
+            goto L_0x02cc
+        L_0x02cb:
             r2 = r5
-        L_0x02bf:
+        L_0x02cc:
             r10.logZenModeView(r2)
             com.android.systemui.statusbar.notification.stack.NotificationSectionsLogger r2 = r8.logger
-            if (r15 == 0) goto L_0x02d1
+            if (r15 == 0) goto L_0x02de
             java.lang.Integer r10 = r15.getTargetPosition()
-            if (r10 == 0) goto L_0x02d1
+            if (r10 == 0) goto L_0x02de
             int r10 = r10.intValue()
-            goto L_0x02d2
-        L_0x02d1:
+            goto L_0x02df
+        L_0x02de:
             r10 = r5
-        L_0x02d2:
+        L_0x02df:
             r2.logMediaControls(r10)
             com.android.systemui.statusbar.notification.stack.NotificationSectionsLogger r2 = r8.logger
-            if (r4 == 0) goto L_0x02e4
+            if (r4 == 0) goto L_0x02f1
             java.lang.Integer r4 = r4.getTargetPosition()
-            if (r4 == 0) goto L_0x02e4
+            if (r4 == 0) goto L_0x02f1
             int r4 = r4.intValue()
-            goto L_0x02e5
-        L_0x02e4:
+            goto L_0x02f2
+        L_0x02f1:
             r4 = r5
-        L_0x02e5:
+        L_0x02f2:
             r2.logIncomingHeader(r4)
             com.android.systemui.statusbar.notification.stack.NotificationSectionsLogger r2 = r8.logger
-            if (r6 == 0) goto L_0x02f7
+            if (r6 == 0) goto L_0x0304
             java.lang.Integer r4 = r6.getTargetPosition()
-            if (r4 == 0) goto L_0x02f7
+            if (r4 == 0) goto L_0x0304
             int r4 = r4.intValue()
-            goto L_0x02f8
-        L_0x02f7:
+            goto L_0x0305
+        L_0x0304:
             r4 = r5
-        L_0x02f8:
+        L_0x0305:
             r2.logConversationsHeader(r4)
             com.android.systemui.statusbar.notification.stack.NotificationSectionsLogger r2 = r8.logger
-            if (r7 == 0) goto L_0x030a
+            if (r7 == 0) goto L_0x0317
             java.lang.Integer r4 = r7.getTargetPosition()
-            if (r4 == 0) goto L_0x030a
+            if (r4 == 0) goto L_0x0317
             int r4 = r4.intValue()
-            goto L_0x030b
-        L_0x030a:
+            goto L_0x0318
+        L_0x0317:
             r4 = r5
-        L_0x030b:
+        L_0x0318:
             r2.logAlertingHeader(r4)
             com.android.systemui.statusbar.notification.stack.NotificationSectionsLogger r2 = r8.logger
-            if (r0 == 0) goto L_0x031c
+            if (r0 == 0) goto L_0x0329
             java.lang.Integer r0 = r0.getTargetPosition()
-            if (r0 == 0) goto L_0x031c
+            if (r0 == 0) goto L_0x0329
             int r5 = r0.intValue()
-        L_0x031c:
+        L_0x0329:
             r2.logSilentHeader(r5)
             java.lang.Iterable r0 = kotlin.sequences.SequencesKt___SequencesKt.asIterable(r1)
             java.util.List r0 = kotlin.collections.CollectionsKt___CollectionsKt.reversed(r0)
             java.util.Iterator r0 = r0.iterator()
-        L_0x032b:
+        L_0x0338:
             boolean r1 = r0.hasNext()
-            if (r1 == 0) goto L_0x033b
+            if (r1 == 0) goto L_0x0348
             java.lang.Object r1 = r0.next()
             com.android.systemui.statusbar.notification.stack.NotificationSectionsManager$SectionUpdateState r1 = (com.android.systemui.statusbar.notification.stack.NotificationSectionsManager.SectionUpdateState) r1
             r1.adjustViewPosition()
-            goto L_0x032b
-        L_0x033b:
+            goto L_0x0338
+        L_0x0348:
             com.android.systemui.statusbar.notification.stack.NotificationSectionsLogger r0 = r8.logger
             java.lang.String r1 = "Final order:"
             r0.logStr(r1)
@@ -622,44 +624,40 @@ public final class MiuiNotificationSectionsManager extends NotificationSectionsM
             java.lang.String r1 = "Section boundary update complete"
             r0.logStr(r1)
             com.android.systemui.statusbar.notification.stack.SectionHeaderView r0 = r26.getSilentHeaderView()
-            if (r0 == 0) goto L_0x0360
+            if (r0 == 0) goto L_0x036d
             com.android.systemui.statusbar.notification.stack.NotificationStackScrollLayout r1 = r26.getParent()
             r2 = 2
             boolean r1 = r1.hasActiveClearableNotifications(r2)
             r0.setAreThereDismissableGentleNotifs(r1)
             kotlin.Unit r0 = kotlin.Unit.INSTANCE
-        L_0x0360:
+        L_0x036d:
             com.android.systemui.statusbar.notification.stack.PeopleHubView r0 = r26.getPeopleHeaderView()
-            if (r0 == 0) goto L_0x0392
-            if (r11 == 0) goto L_0x0371
+            if (r0 == 0) goto L_0x039f
+            if (r11 == 0) goto L_0x037e
             boolean r1 = r26.getPeopleHubVisible()
-            if (r1 == 0) goto L_0x0371
-            if (r22 != 0) goto L_0x0371
+            if (r1 == 0) goto L_0x037e
+            if (r22 != 0) goto L_0x037e
             r9 = r3
-        L_0x0371:
+        L_0x037e:
             r0.setCanSwipe(r9)
-            if (r6 == 0) goto L_0x0392
+            if (r6 == 0) goto L_0x039f
             java.lang.Integer r1 = r6.getTargetPosition()
-            if (r1 == 0) goto L_0x0392
+            if (r1 == 0) goto L_0x039f
             int r1 = r1.intValue()
             java.lang.Integer r2 = r6.getCurrentPosition()
-            if (r2 != 0) goto L_0x0387
-            goto L_0x038d
-        L_0x0387:
+            if (r2 != 0) goto L_0x0394
+            goto L_0x039a
+        L_0x0394:
             int r2 = r2.intValue()
-            if (r1 == r2) goto L_0x0390
-        L_0x038d:
+            if (r1 == r2) goto L_0x039d
+        L_0x039a:
             r0.resetTranslation()
-        L_0x0390:
+        L_0x039d:
             kotlin.Unit r0 = kotlin.Unit.INSTANCE
-        L_0x0392:
+        L_0x039f:
             return
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.notification.MiuiNotificationSectionsManager.updateSectionBoundaries(java.lang.String):void");
-    }
-
-    public void onGentleHeaderClick() {
-        this.activityStarter.startActivity(Companion.intent4NotificationControlCenterSettings(), true);
     }
 
     /* compiled from: MiuiNotificationSectionsManager.kt */

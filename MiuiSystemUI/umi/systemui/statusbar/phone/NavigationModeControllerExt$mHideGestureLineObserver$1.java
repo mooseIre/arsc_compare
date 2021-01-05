@@ -13,7 +13,7 @@ public final class NavigationModeControllerExt$mHideGestureLineObserver$1 extend
     }
 
     public void onChange(boolean z) {
-        if (!NavigationModeControllerExt.mIsFsgMode) {
+        if (!NavigationModeControllerExt.INSTANCE.getMIsFsgMode()) {
             Log.w("NavigationModeControllerExt", " not is fsg mode");
             return;
         }

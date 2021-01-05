@@ -40,7 +40,6 @@ public class AppQuickSwitchActivity extends FsGestureDemoBaseActiivy {
     /* access modifiers changed from: protected */
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        getWindow().addFlags(1024);
         setContentView(C0017R$layout.activity_app_quick);
         initView();
         initData();

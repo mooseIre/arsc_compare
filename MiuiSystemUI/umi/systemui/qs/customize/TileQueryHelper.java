@@ -66,12 +66,16 @@ public class TileQueryHelper {
         this.mListener = tileStateListener;
     }
 
-    public void queryTiles(QSTileHost qSTileHost) {
+    public void queryTiles(final QSTileHost qSTileHost) {
         this.mTiles.clear();
         this.mSpecs.clear();
         this.mFinished = false;
-        addCurrentAndStockTiles(qSTileHost);
-        addPackageTiles(qSTileHost);
+        this.mBgExecutor.execute(new Runnable() {
+            public void run() {
+                TileQueryHelper.this.addCurrentAndStockTiles(qSTileHost);
+                TileQueryHelper.this.addPackageTiles(qSTileHost);
+            }
+        });
     }
 
     public void releaseTiles() {
@@ -86,7 +90,8 @@ public class TileQueryHelper {
         return this.mFinished;
     }
 
-    private void addCurrentAndStockTiles(QSTileHost qSTileHost) {
+    /* access modifiers changed from: private */
+    public void addCurrentAndStockTiles(QSTileHost qSTileHost) {
         QSTile createTile;
         String string = Settings.Secure.getString(this.mContext.getContentResolver(), "sysui_qs_tiles");
         this.mTilesStock = qSTileHost.getHostInjector().getQsStockTiles();
@@ -115,7 +120,6 @@ public class TileQueryHelper {
                     createTile.destroy();
                 } else {
                     createTile.setListening(this, true);
-                    createTile.refreshState();
                     createTile.addCallback(new TileCallback(createTile));
                     createTile.setTileSpec(str2);
                     arrayList2.add(createTile);
@@ -123,49 +127,17 @@ public class TileQueryHelper {
                 }
             }
         }
-        this.mBgExecutor.execute(new Runnable(arrayList2) {
-            public final /* synthetic */ ArrayList f$1;
-
-            {
-                this.f$1 = r2;
-            }
-
-            public final void run() {
-                TileQueryHelper.this.lambda$addCurrentAndStockTiles$0$TileQueryHelper(this.f$1);
-            }
-        });
-    }
-
-    /* access modifiers changed from: private */
-    /* renamed from: lambda$addCurrentAndStockTiles$0 */
-    public /* synthetic */ void lambda$addCurrentAndStockTiles$0$TileQueryHelper(ArrayList arrayList) {
-        Iterator it = arrayList.iterator();
-        while (it.hasNext()) {
-            QSTile qSTile = (QSTile) it.next();
+        Iterator it2 = arrayList2.iterator();
+        while (it2.hasNext()) {
+            QSTile qSTile = (QSTile) it2.next();
             QSTile.State copy = qSTile.getState().copy();
             copy.label = qSTile.getTileLabel();
             addTile(qSTile.getTileSpec(), (CharSequence) null, copy, true);
         }
-        notifyTilesChanged(false);
-    }
-
-    private void addPackageTiles(QSTileHost qSTileHost) {
-        this.mBgExecutor.execute(new Runnable(qSTileHost) {
-            public final /* synthetic */ QSTileHost f$1;
-
-            {
-                this.f$1 = r2;
-            }
-
-            public final void run() {
-                TileQueryHelper.this.lambda$addPackageTiles$1$TileQueryHelper(this.f$1);
-            }
-        });
     }
 
     /* access modifiers changed from: private */
-    /* renamed from: lambda$addPackageTiles$1 */
-    public /* synthetic */ void lambda$addPackageTiles$1$TileQueryHelper(QSTileHost qSTileHost) {
+    public void addPackageTiles(QSTileHost qSTileHost) {
         Collection<QSTile> tiles = qSTileHost.getTiles();
         PackageManager packageManager = this.mContext.getPackageManager();
         for (ResolveInfo resolveInfo : packageManager.queryIntentServicesAsUser(new Intent("android.service.quicksettings.action.QS_TILE"), 0, ActivityManager.getCurrentUser())) {
@@ -218,14 +190,14 @@ public class TileQueryHelper {
             }
 
             public final void run() {
-                TileQueryHelper.this.lambda$notifyTilesChanged$2$TileQueryHelper(this.f$1, this.f$2);
+                TileQueryHelper.this.lambda$notifyTilesChanged$0$TileQueryHelper(this.f$1, this.f$2);
             }
         });
     }
 
     /* access modifiers changed from: private */
-    /* renamed from: lambda$notifyTilesChanged$2 */
-    public /* synthetic */ void lambda$notifyTilesChanged$2$TileQueryHelper(ArrayList arrayList, boolean z) {
+    /* renamed from: lambda$notifyTilesChanged$0 */
+    public /* synthetic */ void lambda$notifyTilesChanged$0$TileQueryHelper(ArrayList arrayList, boolean z) {
         TileStateListener tileStateListener = this.mListener;
         if (tileStateListener != null) {
             tileStateListener.onTilesChanged(arrayList, this.mLiveTiles);

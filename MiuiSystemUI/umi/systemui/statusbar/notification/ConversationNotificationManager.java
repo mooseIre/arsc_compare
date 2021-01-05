@@ -78,7 +78,7 @@ public final class ConversationNotificationManager {
                                 if (!isImportantConversation || !notificationEntry.isMarkedForUserTriggeredMovement()) {
                                     conversationLayout.setIsImportantConversation(isImportantConversation);
                                 } else {
-                                    this.this$0.mainHandler.postDelayed(new ConversationNotificationManager$1$onNotificationRankingUpdated$2(conversationLayout, isImportantConversation), (long) 960);
+                                    this.this$0.mainHandler.postDelayed(new ConversationNotificationManager$1$onNotificationRankingUpdated$2(conversationLayout, isImportantConversation), (long) 900);
                                 }
                             }
                         }

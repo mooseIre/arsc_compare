@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import com.android.systemui.C0015R$id;
 import com.android.systemui.controlcenter.ControlCenter;
 import com.android.systemui.controlcenter.policy.BoostHelper;
+import com.miui.systemui.util.AccessibilityUtils;
 import miuix.animation.Folme;
 import miuix.animation.IStateStyle;
 import miuix.animation.listener.TransitionListener;
@@ -30,6 +31,8 @@ public class ControlPanelWindowView extends FrameLayout {
     private TransitionListener mBlurRatioListener;
     private View mBottomArea;
     private AnimatorListenerAdapter mCollapseListener;
+    /* access modifiers changed from: private */
+    public boolean mCollapsingAnim;
     private ControlPanelContentView mContent;
     private boolean mContentShowing;
     private ControlCenter mControlCenter;
@@ -46,7 +49,13 @@ public class ControlPanelWindowView extends FrameLayout {
     private int mExpandState;
     private ValueAnimator mHeightChangeAnimator;
     private boolean mInterceptTouchEvent;
+    private boolean mIsCancel;
+    private boolean mIsDown;
     private boolean mIsGetSelfEvent;
+    private boolean mIsIntercept;
+    private boolean mIsMove;
+    private boolean mIsMoveY;
+    private boolean mIsUp;
     private int[] mLocation;
     private int mOrientation;
     private QSControlScrollView mQSControlScrollView;
@@ -64,6 +73,7 @@ public class ControlPanelWindowView extends FrameLayout {
         super(context, attributeSet, i);
         this.mIsGetSelfEvent = false;
         this.mInterceptTouchEvent = false;
+        this.mCollapsingAnim = false;
         this.mExpandState = 0;
         this.mDownY = 0.0f;
         this.mDownX = 0.0f;
@@ -78,11 +88,28 @@ public class ControlPanelWindowView extends FrameLayout {
             }
         };
         this.mCollapseListener = new AnimatorListenerAdapter() {
+            public void onAnimationStart(Animator animator) {
+                super.onAnimationStart(animator);
+                boolean unused = ControlPanelWindowView.this.mCollapsingAnim = true;
+            }
+
+            public void onAnimationCancel(Animator animator) {
+                super.onAnimationCancel(animator);
+                boolean unused = ControlPanelWindowView.this.mAnimating = false;
+                boolean unused2 = ControlPanelWindowView.this.mCollapsingAnim = false;
+                Log.d("ControllerPanelWindowView", "onAnimationCancel");
+                ControlPanelWindowView.this.hideControlCenterWindow();
+                ControlPanelWindowView.this.mControlCenterPanel.finishCollapse();
+                ControlPanelWindowView.this.mControlPanelWindowManager.trimMemory();
+            }
+
             public void onAnimationEnd(Animator animator) {
                 super.onAnimationEnd(animator);
                 boolean unused = ControlPanelWindowView.this.mAnimating = false;
                 ControlPanelWindowView.this.hideControlCenterWindow();
                 ControlPanelWindowView.this.mControlCenterPanel.finishCollapse();
+                ControlPanelWindowView.this.mControlPanelWindowManager.trimMemory();
+                boolean unused2 = ControlPanelWindowView.this.mCollapsingAnim = false;
             }
         };
         this.mExpandListener = new AnimatorListenerAdapter() {
@@ -117,6 +144,9 @@ public class ControlPanelWindowView extends FrameLayout {
     public boolean dispatchTouchEvent(MotionEvent motionEvent) {
         if (this.mContent == null || !this.mControlCenter.panelEnabled()) {
             return false;
+        }
+        if (this.mCollapsingAnim) {
+            return true;
         }
         if (motionEvent.getActionMasked() == 0) {
             verifyState();
@@ -169,27 +199,31 @@ public class ControlPanelWindowView extends FrameLayout {
 
     public boolean onInterceptTouchEvent(MotionEvent motionEvent) {
         boolean z = false;
-        boolean z2 = this.mInterceptTouchEvent || !isExpanded() || super.onInterceptTouchEvent(motionEvent);
-        boolean z3 = motionEvent.getAction() == 0;
-        boolean z4 = motionEvent.getAction() == 2;
+        this.mIsIntercept = this.mInterceptTouchEvent || !isExpanded() || super.onInterceptTouchEvent(motionEvent);
+        this.mIsDown = motionEvent.getAction() == 0;
+        this.mIsMove = motionEvent.getAction() == 2;
         if (Math.abs(motionEvent.getRawY() - this.mDownY) > Math.abs(motionEvent.getRawX() - this.mDownX)) {
             z = true;
         }
-        if (z3) {
+        this.mIsMoveY = z;
+        if (this.mIsDown) {
             this.mDownY = motionEvent.getRawY();
             this.mDownX = motionEvent.getRawX();
             this.mDownExpandHeight = this.mExpandHeight;
-        } else if (!this.mContent.isDetailShowing() && !this.mContent.isEditShowing() && !this.mContent.isControlEditShowing()) {
-            if (z4 && motionEvent.getRawY() > this.mDownY && z && this.mControlCenterTileLayout.isExpanded() && this.mOrientation == 1 && this.mQSControlScrollView.isScrolledToTop()) {
+        } else if (this.mContent.isDetailShowing() || this.mContent.isEditShowing() || this.mContent.isControlEditShowing()) {
+            return this.mIsIntercept;
+        } else {
+            if (this.mIsMove && motionEvent.getRawY() > this.mDownY && this.mIsMoveY && this.mControlCenterTileLayout.isExpanded() && this.mOrientation == 1 && this.mQSControlScrollView.isScrolledToTop()) {
                 return true;
             }
-            if (z4 && isBottomAreaTouchDown(this.mDownY) && motionEvent.getRawY() < this.mDownY && z) {
+            if (this.mIsMove && isBottomAreaTouchDown(this.mDownY) && motionEvent.getRawY() < this.mDownY && this.mIsMoveY) {
                 return true;
             }
-            if (!z4 || motionEvent.getRawY() >= this.mDownY || this.mSmartControlsView.getChildCount() <= 0 || this.mQSControlScrollView.isScrolledToBottom() || this.mControlCenterTileLayout.isCollapsed()) {
+            if (this.mIsMove && motionEvent.getRawY() < this.mDownY && this.mSmartControlsView.getChildCount() > 0 && !this.mQSControlScrollView.isScrolledToBottom() && this.mControlCenterTileLayout.isCollapsed()) {
+                return this.mIsIntercept;
             }
         }
-        return z2;
+        return this.mIsIntercept;
     }
 
     public boolean onTouchEvent(MotionEvent motionEvent) {
@@ -207,28 +241,31 @@ public class ControlPanelWindowView extends FrameLayout {
     }
 
     public boolean handleMotionEvent(MotionEvent motionEvent, boolean z) {
+        if (this.mCollapsingAnim) {
+            return true;
+        }
         ControlCenter controlCenter = this.mControlCenter;
         if (controlCenter != null && !controlCenter.panelEnabled()) {
             return false;
         }
-        boolean z2 = motionEvent.getAction() == 0;
-        boolean z3 = motionEvent.getAction() == 2;
-        boolean z4 = motionEvent.getAction() == 1;
-        boolean z5 = motionEvent.getAction() == 3;
-        boolean z6 = !z || !this.mIsGetSelfEvent;
-        if (z2) {
+        this.mIsDown = motionEvent.getAction() == 0;
+        this.mIsMove = motionEvent.getAction() == 2;
+        this.mIsUp = motionEvent.getAction() == 1;
+        this.mIsCancel = motionEvent.getAction() == 3;
+        boolean z2 = !z || !this.mIsGetSelfEvent;
+        if (this.mIsDown) {
             verifyState();
+            this.mDownY = motionEvent.getRawY();
             if (!isExpanded()) {
                 this.mContent.setVisibility(4);
                 showControlCenterWindow();
-                this.mDownY = motionEvent.getRawY();
                 this.mDownExpandHeight = this.mExpandHeight;
             }
             this.mInterceptTouchEvent = true;
         } else if (this.mContent.isDetailShowing() || this.mContent.isEditShowing() || this.mContent.isControlEditShowing()) {
             return false;
         } else {
-            if (z3 && z6) {
+            if (this.mIsMove && z2) {
                 float rawY = motionEvent.getRawY();
                 float f = this.mDownY;
                 if (rawY >= f) {
@@ -242,11 +279,10 @@ public class ControlPanelWindowView extends FrameLayout {
                     }
                 }
                 updateTransHeight(motionEvent.getRawY() - this.mDownY);
-            } else if (z4 || z5) {
+            } else if (this.mIsUp || this.mIsCancel) {
                 updateTransHeight(0.0f);
                 if (this.mExpandState != 2) {
                     endWithCurrentExpandHeight();
-                    onControlPanelFinishCollapsed();
                 }
                 this.mInterceptTouchEvent = false;
             }
@@ -258,15 +294,17 @@ public class ControlPanelWindowView extends FrameLayout {
     public void updateExpandHeight(float f) {
         if ((this.mControlCenter.isExpandable() || f == 0.0f) && this.mExpandHeight != f) {
             float max = Math.max(Math.min(1.0f, f / 80.0f), 0.0f);
-            if (this.mBlurRatio != max) {
+            float f2 = this.mBlurRatio;
+            if (f2 != max) {
                 this.mBlurAmin.to("blurRatio", Float.valueOf(max));
             } else {
+                this.mBlurAmin.setTo("blurRatio", Float.valueOf(f2));
                 this.mControlPanelWindowManager.setBlurRatio(max);
             }
-            float f2 = this.mExpandHeight;
+            float f3 = this.mExpandHeight;
             this.mExpandHeight = f;
-            if (f2 < 80.0f || f >= 80.0f) {
-                if (f2 < 80.0f && f >= 80.0f && !this.mContentShowing) {
+            if (f3 < 80.0f || f >= 80.0f) {
+                if (f3 < 80.0f && f >= 80.0f && !this.mContentShowing) {
                     this.mContent.showContent();
                     this.mContentShowing = true;
                     onControlPanelFinishExpand();
@@ -276,7 +314,8 @@ public class ControlPanelWindowView extends FrameLayout {
             } else if (this.mContentShowing) {
                 this.mContent.hideContent();
                 this.mContentShowing = false;
-                onControlPanelFinishCollapsed();
+                AccessibilityUtils.hapticAccessibilityTransitionIfNeeded(getContext(), 191);
+                onControlPanelHide();
                 Log.d("ControllerPanelWindowView", "hideContent");
             }
         }
@@ -308,7 +347,7 @@ public class ControlPanelWindowView extends FrameLayout {
 
     private void endWithCurrentExpandHeight() {
         Log.d("ControllerPanelWindowView", "endWithCurrentExpandHeight");
-        if (this.mExpandHeight < 80.0f) {
+        if (!this.mCollapsingAnim) {
             createAndStartAnimator(0, this.mCollapseListener);
         }
     }
@@ -335,17 +374,19 @@ public class ControlPanelWindowView extends FrameLayout {
     public void hideControlCenterWindow() {
         this.mControlPanelWindowManager.onExpandChange(false);
         BoostHelper.getInstance().boostSystemUI(this, false);
-        onControlPanelFinishCollapsed();
+        onControlPanelHide();
     }
 
     public void onControlPanelFinishExpand() {
         this.mExpandState = 2;
+        AccessibilityUtils.hapticAccessibilityTransitionIfNeeded(getContext(), 191);
+        this.mControlPanelWindowManager.updateNavigationBarSlippery();
     }
 
-    public void onControlPanelFinishCollapsed() {
+    public void onControlPanelHide() {
         this.mExpandState = 0;
         this.mIsGetSelfEvent = false;
-        this.mControlPanelWindowManager.trimMemory();
+        this.mControlPanelWindowManager.updateNavigationBarSlippery();
     }
 
     public void collapsePanel() {
@@ -371,18 +412,25 @@ public class ControlPanelWindowView extends FrameLayout {
         } else {
             collapsePanelImmediately();
         }
-        onControlPanelFinishCollapsed();
+        onControlPanelHide();
     }
 
     private void collapsePanelImmediately() {
+        updateTransHeight(0.0f);
         updateExpandHeight(0.0f);
         this.mCollapseListener.onAnimationEnd((Animator) null);
-        onControlPanelFinishCollapsed();
+        onControlPanelHide();
     }
 
     public void expandPanel() {
         showControlCenterWindow();
         createAndStartAnimator(80, this.mExpandListener);
+    }
+
+    public void expandPanelImmediately() {
+        showControlCenterWindow();
+        this.mBlurRatio = 1.0f;
+        updateExpandHeight(80.0f);
     }
 
     private void startHeightChangeAnimator() {

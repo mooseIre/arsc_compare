@@ -8,4 +8,6 @@ public interface NextAlarmController extends CallbackController<NextAlarmChangeC
     public interface NextAlarmChangeCallback {
         void onNextAlarmChanged(AlarmManager.AlarmClockInfo alarmClockInfo);
     }
+
+    boolean hasAlarm();
 }

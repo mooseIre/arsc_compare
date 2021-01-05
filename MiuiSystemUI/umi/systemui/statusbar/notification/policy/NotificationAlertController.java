@@ -8,6 +8,7 @@ import android.os.PowerManager;
 import android.os.SystemClock;
 import android.service.notification.StatusBarNotification;
 import android.util.Log;
+import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.faceunlock.MiuiFaceUnlockManager;
 import com.android.keyguard.injector.KeyguardSensorInjector;
 import com.android.keyguard.utils.MiuiKeyguardUtils;
@@ -31,8 +32,8 @@ public class NotificationAlertController {
     /* access modifiers changed from: private */
     public static final boolean DEBUG = DebugConfig.DEBUG_NOTIFICATION;
     /* access modifiers changed from: private */
-    public int mBarState = 1;
-    private Handler mBgHandler;
+    public int mBarState;
+    private Handler mBgHandler = new Handler((Looper) Dependency.get(Dependency.BG_LOOPER));
     private Context mContext;
     private NotificationEntryManager mEntryManager;
     private NotificationGroupManager mGroupManager;
@@ -51,7 +52,6 @@ public class NotificationAlertController {
         this.mStatusBarStateController = statusBarStateController;
         this.mZenModeController = zenModeController;
         this.mSettingsManager = settingsManager;
-        this.mBgHandler = new Handler((Looper) Dependency.get(Dependency.BG_LOOPER));
         this.mNotificationLockscreenUserManager = notificationLockscreenUserManager;
         this.mStatusBarKeyguardManager = statusBarKeyguardViewManager;
     }
@@ -91,7 +91,7 @@ public class NotificationAlertController {
 
     /* access modifiers changed from: private */
     public void buzzBeepBlink(String str) {
-        if (!this.mZenModeController.isZenModeOn() && !this.mSettingsManager.getMiuiMirrorDndModeEnabled()) {
+        if (!this.mSettingsManager.getMiuiMirrorDndModeEnabled()) {
             this.mBgHandler.post(new Runnable(str) {
                 public final /* synthetic */ String f$1;
 
@@ -140,7 +140,7 @@ public class NotificationAlertController {
 
     /* access modifiers changed from: private */
     public void wakeUpIfNeeded(NotificationEntry notificationEntry) {
-        if (this.mSettingsManager.getWakeupForNotification() && this.mNotificationLockscreenUserManager.shouldShowLockscreenNotifications() && !this.mZenModeController.isZenModeOn() && !notificationEntry.getSbn().getNotification().hasMediaSession() && notificationEntry.getSbn().isClearable() && !NotificationUtil.hasProgressbar(notificationEntry.getSbn()) && notificationEntry.getSbn().canShowOnKeyguard()) {
+        if (this.mSettingsManager.getWakeupForNotification() && this.mNotificationLockscreenUserManager.shouldShowLockscreenNotifications() && !this.mZenModeController.isZenModeOn() && !notificationEntry.getSbn().getNotification().hasMediaSession() && notificationEntry.getSbn().isClearable() && !NotificationUtil.hasProgressbar(notificationEntry.getSbn()) && notificationEntry.getSbn().canShowOnKeyguard() && !((KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class)).isDeviceInteractive()) {
             if (DEBUG) {
                 Log.d("NotificationAlertController", "wakeUpForNotification " + notificationEntry.getKey());
             }

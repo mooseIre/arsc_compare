@@ -60,6 +60,7 @@ public class MiuiCollapsedStatusBarFragment extends CollapsedStatusBarFragment i
         StatusBarIconController.DarkIconManager darkIconManager2 = new StatusBarIconController.DarkIconManager((LinearLayout) view.findViewById(C0015R$id.drip_right_statusIcons), (CommandQueue) Dependency.get(CommandQueue.class));
         this.mDripRightDarkIconManager = darkIconManager2;
         darkIconManager2.setShouldLog(true);
+        this.mDripRightDarkIconManager.setDrip(true);
         ((StatusBarIconController) Dependency.get(StatusBarIconController.class)).addIconGroup(this.mDripRightDarkIconManager, arrayList);
         this.mDripSystemIconArea = (LinearLayout) this.mStatusBar.findViewById(C0015R$id.drip_left_statusIcons);
         this.mStatusBarPromptContainer = this.mStatusBar.findViewById(C0015R$id.prompt_container);
@@ -77,11 +78,12 @@ public class MiuiCollapsedStatusBarFragment extends CollapsedStatusBarFragment i
 
     public void onDestroyView() {
         super.onDestroyView();
+        ((RegionController) Dependency.get(RegionController.class)).removeCallback(this);
         if (this.mDripLeftDarkIconManager != null) {
             ((MiuiDripLeftStatusBarIconControllerImpl) Dependency.get(MiuiDripLeftStatusBarIconControllerImpl.class)).removeIconGroup(this.mDripLeftDarkIconManager);
         }
         if (this.mDripRightDarkIconManager != null) {
-            ((StatusBarIconController) Dependency.get(StatusBarIconController.class)).removeIconGroup(this.mDripLeftDarkIconManager);
+            ((StatusBarIconController) Dependency.get(StatusBarIconController.class)).removeIconGroup(this.mDripRightDarkIconManager);
         }
         ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).removeDarkReceiver((DarkIconDispatcher.DarkReceiver) this.mStatusBarCarrier);
     }

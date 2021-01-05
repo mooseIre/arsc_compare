@@ -37,9 +37,7 @@ public class HomeDemoAct extends FsGestureDemoBaseActiivy {
     /* access modifiers changed from: protected */
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        getWindow().addFlags(1024);
         setContentView(C0017R$layout.home_demo_layout);
-        FsgestureUtil.INSTANCE.hideSystemBars(getWindow().getDecorView());
         Intent intent = getIntent();
         String stringExtra = intent.getStringExtra("DEMO_TYPE");
         int intExtra = intent.getIntExtra("FULLY_SHOW_STEP", 1);

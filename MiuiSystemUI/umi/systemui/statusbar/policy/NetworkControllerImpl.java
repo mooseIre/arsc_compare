@@ -1734,7 +1734,6 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
     static class Config {
         boolean alwaysShowDataRatIcon = false;
         boolean alwaysShowNetworkTypeIcon = false;
-        boolean hideLtePlus = false;
         boolean hspaDataDistinguishable;
         boolean show4gFor3g = false;
         boolean show4gForLte = false;
@@ -1763,7 +1762,7 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
                 config.alwaysShowDataRatIcon = configForSubId.getBoolean("always_show_data_rat_icon_bool");
                 config.show4gForLte = configForSubId.getBoolean("show_4g_for_lte_data_icon_bool");
                 config.show4gFor3g = configForSubId.getBoolean("show_4g_for_3g_data_icon_bool");
-                config.hideLtePlus = configForSubId.getBoolean("hide_lte_plus_data_icon_bool");
+                configForSubId.getBoolean("hide_lte_plus_data_icon_bool");
             }
             SystemProperties.getBoolean("persist.sysui.rat_icon_enhancement", false);
             config.showVowifiIcon = resources.getBoolean(C0010R$bool.config_display_vowifi);

@@ -35,7 +35,15 @@ public class MiuiStatusBarPromptController implements CommandQueue.Callbacks {
         if (str == null) {
             return;
         }
-        if ((str.startsWith("action_set_status_bar_state") || str.startsWith("action_clear_status_bar_state")) && bundle != null && (string = bundle.getString("key_status_bar_tag")) != null) {
+        if (!str.startsWith("action_set_status_bar_state") && !str.startsWith("action_clear_status_bar_state")) {
+            return;
+        }
+        if (bundle == null && i == 0 && str.startsWith("action_set_status_bar_state")) {
+            int lastIndexOf = str.lastIndexOf(46);
+            if (lastIndexOf >= 0 && lastIndexOf < str.length() - 1) {
+                removeMiuiStatusBarState(str.substring(lastIndexOf + 1));
+            }
+        } else if (bundle != null && (string = bundle.getString("key_status_bar_tag")) != null) {
             if (str.startsWith("action_clear_status_bar_state")) {
                 removeMiuiStatusBarState(string);
             } else if (str.startsWith("action_set_status_bar_state")) {

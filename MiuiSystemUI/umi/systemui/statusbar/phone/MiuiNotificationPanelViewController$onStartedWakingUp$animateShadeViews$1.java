@@ -2,6 +2,7 @@ package com.android.systemui.statusbar.phone;
 
 import android.view.View;
 import com.android.systemui.statusbar.notification.stack.MediaHeaderView;
+import com.android.systemui.statusbar.notification.zen.ZenModeView;
 import java.util.List;
 import kotlin.jvm.functions.Function1;
 import kotlin.jvm.internal.Lambda;
@@ -21,6 +22,6 @@ final class MiuiNotificationPanelViewController$onStartedWakingUp$animateShadeVi
     }
 
     public final boolean invoke(View view) {
-        return (view instanceof MediaHeaderView) || CollectionsKt___CollectionsKt.contains(this.$visibleNotifications, view);
+        return (view instanceof MediaHeaderView) || (view instanceof ZenModeView) || CollectionsKt___CollectionsKt.contains(this.$visibleNotifications, view);
     }
 }

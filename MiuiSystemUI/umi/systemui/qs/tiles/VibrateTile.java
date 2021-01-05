@@ -1,6 +1,5 @@
 package com.android.systemui.qs.tiles;
 
-import android.content.ComponentName;
 import android.content.Intent;
 import android.util.Log;
 import android.widget.Switch;
@@ -77,12 +76,8 @@ public class VibrateTile extends QSTileImpl<QSTile.BooleanState> implements ZenM
     }
 
     private Intent longClickVibrateIntent() {
-        ComponentName unflattenFromString = ComponentName.unflattenFromString("com.android.settings/com.android.settings.Settings$SoundSettingsActivity");
-        if (unflattenFromString == null) {
-            return null;
-        }
-        Intent intent = new Intent("android.intent.action.MAIN");
-        intent.setComponent(unflattenFromString);
+        Intent intent = new Intent("android.settings.SOUND_SETTINGS");
+        intent.setPackage("com.android.settings");
         intent.setFlags(335544320);
         return intent;
     }

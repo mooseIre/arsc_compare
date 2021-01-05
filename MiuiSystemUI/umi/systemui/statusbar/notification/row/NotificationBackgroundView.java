@@ -3,6 +3,7 @@ package com.android.systemui.statusbar.notification.row;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Canvas;
+import android.graphics.Outline;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.drawable.Drawable;
@@ -10,13 +11,12 @@ import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.RippleDrawable;
 import android.util.AttributeSet;
-import android.view.View;
 import com.android.internal.util.ArrayUtils;
 import com.android.systemui.C0010R$bool;
 import com.android.systemui.Interpolators;
 import com.android.systemui.statusbar.notification.ActivityLaunchAnimator;
 
-public class NotificationBackgroundView extends View {
+public class NotificationBackgroundView extends BaseMiuiNotificationBackgroundView {
     private int mActualHeight;
     private float mActualWidth;
     private Drawable mBackground;
@@ -46,6 +46,7 @@ public class NotificationBackgroundView extends View {
 
     /* access modifiers changed from: protected */
     public void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
         if (this.mClipTopAmount + this.mClipBottomAmount < this.mActualHeight - this.mBackgroundTop || this.mExpandAnimationRunning) {
             canvas.save();
             if (!this.mExpandAnimationRunning) {
@@ -79,6 +80,7 @@ public class NotificationBackgroundView extends View {
                     i2 += i4;
                 }
             }
+            drawable.setAlpha(isBlurEnabledAndSupported() ? 10 : 255);
             drawable.setBounds(i3, i, width, i2);
             drawable.draw(canvas);
         }
@@ -260,5 +262,15 @@ public class NotificationBackgroundView extends View {
 
     public void setPressedAllowed(boolean z) {
         this.mIsPressedAllowed = z;
+    }
+
+    public void getBlurOutline(Outline outline) {
+        Drawable drawable = this.mBackground;
+        if (drawable != null) {
+            drawable.getOutline(outline);
+        }
+        if (outline.mMode == 0) {
+            outline.setRect(0, 0, getWidth(), Math.max(getHeight(), this.mActualHeight));
+        }
     }
 }

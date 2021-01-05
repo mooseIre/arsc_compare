@@ -438,7 +438,7 @@ public class QSFragment extends LifecycleFragment implements QS, CommandQueue.Ca
     public void animateHeaderSlidingOut() {
         if (getView().getY() != ((float) (-this.mContainer.getMinHeight()))) {
             this.mHeaderAnimating = true;
-            getView().animate().y((float) (-this.mContainer.getMinHeight())).setStartDelay(0).setDuration(360).setInterpolator(Interpolators.FAST_OUT_SLOW_IN).setListener(new AnimatorListenerAdapter() {
+            getView().animate().y((float) (-this.mContainer.getMinHeight())).setStartDelay(0).setDuration(300).setInterpolator(Interpolators.FAST_OUT_SLOW_IN).setListener(new AnimatorListenerAdapter() {
                 public void onAnimationEnd(Animator animator) {
                     if (QSFragment.this.getView() != null) {
                         QSFragment.this.getView().animate().setListener((Animator.AnimatorListener) null);

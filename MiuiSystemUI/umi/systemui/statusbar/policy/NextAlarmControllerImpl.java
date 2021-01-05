@@ -59,4 +59,8 @@ public class NextAlarmControllerImpl extends BroadcastReceiver implements NextAl
             this.mChangeCallbacks.get(i).onNextAlarmChanged(this.mNextAlarm);
         }
     }
+
+    public boolean hasAlarm() {
+        return this.mNextAlarm != null;
+    }
 }

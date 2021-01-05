@@ -2,12 +2,15 @@ package com.android.systemui.statusbar.notification.stack;
 
 /* compiled from: NotificationStackScrollLayoutExt.kt */
 public class MiuiAmbientStateBase {
-    private boolean isQsExpansionEnabled = true;
+    private boolean isNCSwitching;
     private boolean panelAppeared;
     private boolean panelStretching;
     private boolean panelStretchingFromHeadsUp;
     private float springLength;
     private int stackScrollLayoutHeight;
+
+    public final void setQsExpansionEnabled(boolean z) {
+    }
 
     public final boolean getPanelStretching() {
         return this.panelStretching;
@@ -49,11 +52,11 @@ public class MiuiAmbientStateBase {
         this.stackScrollLayoutHeight = i;
     }
 
-    public final boolean isQsExpansionEnabled() {
-        return this.isQsExpansionEnabled;
+    public final boolean isNCSwitching() {
+        return this.isNCSwitching;
     }
 
-    public final void setQsExpansionEnabled(boolean z) {
-        this.isQsExpansionEnabled = z;
+    public final void setNCSwitching(boolean z) {
+        this.isNCSwitching = z;
     }
 }

@@ -300,7 +300,7 @@ public final class MediaHierarchyManager {
             }
             i3 = 448;
         } else if (i == 1 && i2 == 2) {
-            i3 = 464;
+            i3 = 300;
         } else {
             j = 200;
             return TuplesKt.to(Long.valueOf(j), Long.valueOf(j2));

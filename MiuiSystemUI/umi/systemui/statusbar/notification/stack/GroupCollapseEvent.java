@@ -11,7 +11,7 @@ public final class GroupCollapseEvent extends NotificationStackScrollLayout.Anim
             r7 = this;
             java.lang.String r0 = "view"
             kotlin.jvm.internal.Intrinsics.checkParameterIsNotNull(r8, r0)
-            r0 = 360(0x168, float:5.04E-43)
+            r0 = 300(0x12c, float:4.2E-43)
             long r4 = (long) r0
             com.android.systemui.statusbar.notification.stack.AnimationFilter r6 = new com.android.systemui.statusbar.notification.stack.AnimationFilter
             r6.<init>()

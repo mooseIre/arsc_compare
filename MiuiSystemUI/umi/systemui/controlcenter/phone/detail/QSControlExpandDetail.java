@@ -12,6 +12,8 @@ import com.android.systemui.controlcenter.phone.ExpandInfoController;
 import com.android.systemui.controlcenter.phone.widget.MiuiQSPanel$MiuiRecord;
 import com.android.systemui.plugins.qs.DetailAdapter;
 import com.android.systemui.qs.MiuiQSDetailItems;
+import com.miui.systemui.analytics.SystemUIStat;
+import com.miui.systemui.events.ExpandTileSwitchEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
@@ -119,6 +121,7 @@ public class QSControlExpandDetail implements ExpandInfoController.Callback {
                     int intValue = ((Integer) item.tag).intValue();
                     if (intValue != QSControlExpandDetail.this.mExpandInfoController.getSelectedType()) {
                         QSControlExpandDetail.this.mExpandInfoController.setSelectedType(intValue);
+                        ((SystemUIStat) Dependency.get(SystemUIStat.class)).handleControlCenterEvent(new ExpandTileSwitchEvent());
                     }
                 } else if (!TextUtils.isEmpty(info.action)) {
                     QSControlExpandDetail.this.mExpandInfoController.startActivity(info.action);

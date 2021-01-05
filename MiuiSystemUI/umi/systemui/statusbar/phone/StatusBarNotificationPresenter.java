@@ -218,6 +218,11 @@ public class StatusBarNotificationPresenter implements NotificationPresenter, Co
                 NotificationFilterInjector.handleRefreshRequest(context, intent, StatusBarNotificationPresenter.this.mEntryManager);
             }
         }, new IntentFilter("com.miui.app.ExtraStatusBarManager.action_refresh_notification"), (Executor) null, UserHandle.ALL);
+        ((BroadcastDispatcher) Dependency.get(BroadcastDispatcher.class)).registerReceiver(new BroadcastReceiver() {
+            public void onReceive(Context context, Intent intent) {
+                NotificationFilterInjector.handleRemoveNotificationRequest(intent, StatusBarNotificationPresenter.this.mEntryManager);
+            }
+        }, new IntentFilter("com.miui.app.ExtraStatusBarManager.action_remove_keyguard_notification"), (Executor) null, UserHandle.ALL);
     }
 
     /* access modifiers changed from: private */

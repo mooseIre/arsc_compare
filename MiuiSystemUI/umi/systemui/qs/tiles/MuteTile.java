@@ -1,7 +1,8 @@
 package com.android.systemui.qs.tiles;
 
-import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.media.RingtoneManager;
 import android.provider.MiuiSettings;
 import android.widget.Switch;
 import com.android.systemui.C0013R$drawable;
@@ -10,6 +11,7 @@ import com.android.systemui.plugins.qs.QSTile;
 import com.android.systemui.qs.QSHost;
 import com.android.systemui.qs.tileimpl.QSTileImpl;
 import com.android.systemui.statusbar.policy.ZenModeController;
+import com.miui.systemui.util.CommonUtil;
 
 public class MuteTile extends QSTileImpl<QSTile.BooleanState> implements ZenModeController.Callback {
     private final ZenModeController mZenModeController;
@@ -34,14 +36,18 @@ public class MuteTile extends QSTileImpl<QSTile.BooleanState> implements ZenMode
     }
 
     public Intent getLongClickIntent() {
-        Intent intent = new Intent("android.intent.action.MAIN");
-        intent.setComponent(ComponentName.unflattenFromString("com.android.settings/com.android.settings.Settings$SoundSettingsActivity"));
+        Intent intent = new Intent("android.settings.SOUND_SETTINGS");
+        intent.setPackage("com.android.settings");
         intent.setFlags(335544320);
         return intent;
     }
 
     /* access modifiers changed from: protected */
     public void handleClick() {
+        if (this.mZenModeController.isRingerModeOn()) {
+            Context context = this.mContext;
+            CommonUtil.playRingtoneAsync(context, RingtoneManager.getActualDefaultRingtoneUri(context, 2), 5);
+        }
         this.mZenModeController.toggleSilent();
     }
 

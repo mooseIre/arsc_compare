@@ -3,7 +3,6 @@ package com.android.systemui.statusbar.notification.stack;
 import com.android.systemui.statusbar.notification.row.ExpandableView;
 import com.android.systemui.statusbar.notification.stack.NotificationStackScrollLayout;
 import com.miui.systemui.animation.PhysicBasedInterpolator;
-import java.util.ArrayList;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -15,7 +14,7 @@ public final class SpringAnimationEvent extends NotificationStackScrollLayout.An
     public static final List<Companion.DummyFolmeData> NOTIFICATION_SPRING_TABLE = CollectionsKt__CollectionsKt.listOf(new Companion.DummyFolmeData(0.7f, 0.625f, 800), new Companion.DummyFolmeData(0.74f, 0.743f, 700), new Companion.DummyFolmeData(0.78f, 0.72f, 750), new Companion.DummyFolmeData(0.82f, 0.7467f, 750), new Companion.DummyFolmeData(0.86f, 0.725f, 800), new Companion.DummyFolmeData(0.9f, 0.8f, 750), new Companion.DummyFolmeData(0.94f, 0.8857f, 700), new Companion.DummyFolmeData(0.98f, 0.7529f, 850), new Companion.DummyFolmeData(0.99f, 0.7529f, 900));
 
     public SpringAnimationEvent(int i) {
-        super((ExpandableView) null, 16, Companion.getMaxDuration(i), MiuiNotificationAnimations.INSTANCE.getRELEASE_SPRING_FILTER());
+        super((ExpandableView) null, 16, 450, MiuiNotificationAnimations.INSTANCE.getRELEASE_SPRING_FILTER());
     }
 
     /* compiled from: MiuiNotificationAnimationExtensions.kt */
@@ -71,20 +70,6 @@ public final class SpringAnimationEvent extends NotificationStackScrollLayout.An
 
         public /* synthetic */ Companion(DefaultConstructorMarker defaultConstructorMarker) {
             this();
-        }
-
-        /* access modifiers changed from: private */
-        public final long getMaxDuration(int i) {
-            List<DummyFolmeData> subList = SpringAnimationEvent.NOTIFICATION_SPRING_TABLE.subList(0, RangesKt___RangesKt.coerceAtMost(i, CollectionsKt__CollectionsKt.getLastIndex(SpringAnimationEvent.NOTIFICATION_SPRING_TABLE)));
-            ArrayList arrayList = new ArrayList(CollectionsKt__IterablesKt.collectionSizeOrDefault(subList, 10));
-            for (DummyFolmeData duration : subList) {
-                arrayList.add(Long.valueOf(duration.getDuration()));
-            }
-            Long l = (Long) CollectionsKt___CollectionsKt.max(arrayList);
-            if (l != null) {
-                return l.longValue();
-            }
-            return 750;
         }
 
         private final DummyFolmeData getFolmeDataForIndex(int i) {

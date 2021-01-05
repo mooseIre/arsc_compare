@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +26,7 @@ import com.android.systemui.C0021R$string;
 import com.android.systemui.C0022R$style;
 import com.android.systemui.Dependency;
 import com.android.systemui.controlcenter.phone.ControlPanelContentView;
+import com.android.systemui.controlcenter.phone.QSControlCenterPanel;
 import com.android.systemui.controlcenter.utils.ControlCenterUtils;
 import com.android.systemui.plugins.qs.QSTile;
 import com.android.systemui.qs.QSTileHost;
@@ -38,6 +40,7 @@ import miuix.animation.IStateStyle;
 import miuix.animation.base.AnimConfig;
 import miuix.animation.controller.AnimState;
 import miuix.animation.listener.TransitionListener;
+import miuix.animation.property.FloatProperty;
 import miuix.animation.property.ViewProperty;
 import miuix.animation.utils.EaseManager;
 import miuix.recyclerview.widget.MiuiDefaultItemAnimator;
@@ -102,9 +105,7 @@ public class QSControlCustomizer extends FrameLayout implements TileQueryHelper.
     public CCTileAdapter mOtherTilesAdapter;
     /* access modifiers changed from: private */
     public RecyclerView mOthersRecyclerView;
-    private IStateStyle mPanelAnim;
-    private AnimState mPanelHideAnim;
-    private AnimState mPanelShowAnim;
+    protected QSControlCenterPanel mQSCenterPanel;
     protected QSControlPanelCallback mQsPanelCallback = new QSControlPanelCallback() {
         public void show() {
             if (!QSControlCustomizer.this.isShown) {
@@ -241,12 +242,6 @@ public class QSControlCustomizer extends FrameLayout implements TileQueryHelper.
         animState2.add(ViewProperty.ALPHA, 0.0f, new long[0]);
         animState2.add(ViewProperty.TRANSLATION_Y, 100, new long[0]);
         this.mHideAnim = animState2;
-        AnimState animState3 = new AnimState("qs_control_customizer_show_panel");
-        animState3.add(ViewProperty.ALPHA, 1.0f, new long[0]);
-        this.mPanelShowAnim = animState3;
-        AnimState animState4 = new AnimState("qs_control_customizer_hide_panel");
-        animState4.add(ViewProperty.ALPHA, 0.0f, new long[0]);
-        this.mPanelHideAnim = animState4;
         if (!this.mLayoutParamsInited) {
             FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) this.mHeader.getLayoutParams();
             this.mUnAddedTilesLayout.setMarginTop(this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_customizer_tiles_title_height) + this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_customizer_tiles_sub_title_height) + layoutParams.topMargin + layoutParams.bottomMargin + this.mTileVerticalIntervel + this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_customizer_tiles_content_margin_top) + this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_customizer_tile_height), this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_customizer_tiles_title_height) + this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_customizer_tiles_sub_title_height) + this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_customizer_tiles_content_margin_top) + layoutParams.topMargin + layoutParams.bottomMargin + (this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_customizer_tile_height) * 4) + (this.mTileVerticalIntervel * 4));
@@ -374,7 +369,7 @@ public class QSControlCustomizer extends FrameLayout implements TileQueryHelper.
 
     public void setQSControlCenterPanel(ControlPanelContentView controlPanelContentView) {
         controlPanelContentView.setQSCustomizerCallback(this.mQsPanelCallback);
-        this.mPanelAnim = Folme.useAt(controlPanelContentView.getControlCenterPanel()).state();
+        this.mQSCenterPanel = (QSControlCenterPanel) controlPanelContentView.getControlCenterPanel();
     }
 
     public boolean isShown() {
@@ -395,9 +390,7 @@ public class QSControlCustomizer extends FrameLayout implements TileQueryHelper.
         }
         this.mSpecs.addAll(arrayList);
         this.mTileAdapter.setTileSpecs(arrayList);
-        this.mRecyclerView.setAdapter(this.mTileAdapter);
         this.mOtherTilesAdapter.setTileSpecs(arrayList);
-        this.mOthersRecyclerView.setAdapter(this.mOtherTilesAdapter);
     }
 
     /* access modifiers changed from: private */
@@ -411,39 +404,67 @@ public class QSControlCustomizer extends FrameLayout implements TileQueryHelper.
     public void startAnimation(boolean z) {
         this.mUnAddedTilesLayout.init();
         if (z) {
-            this.mPanelAnim.fromTo(this.mPanelShowAnim, this.mPanelHideAnim, new AnimConfig());
             IStateStyle iStateStyle = this.mAnim;
             AnimState animState = this.mHideAnim;
             AnimState animState2 = this.mShowAnim;
             AnimConfig animConfig = new AnimConfig();
             animConfig.setEase(EaseManager.getStyle(-2, 0.8f, 0.5f));
-            animConfig.setDelay(0);
+            animConfig.setDelay(60);
             animConfig.addListeners(new TransitionListener() {
                 public void onBegin(Object obj) {
                     super.onBegin(obj);
+                    QSControlCustomizer.this.setLayerType(2, (Paint) null);
+                    QSControlCustomizer.this.mRecyclerView.suppressLayout(true);
+                    QSControlCustomizer.this.mOthersRecyclerView.suppressLayout(true);
+                    QSControlCustomizer.this.mQSCenterPanel.setLayerType(2, (Paint) null);
                     QSControlCustomizer.this.setVisibility(0);
+                }
+
+                public void onUpdate(Object obj, FloatProperty floatProperty, float f, float f2, boolean z) {
+                    super.onUpdate(obj, floatProperty, f, f2, z);
+                    if (floatProperty == ViewProperty.ALPHA) {
+                        QSControlCustomizer.this.mQSCenterPanel.setAlpha(1.0f - f);
+                    }
+                }
+
+                public void onComplete(Object obj) {
+                    super.onComplete(obj);
+                    QSControlCustomizer.this.setLayerType(0, (Paint) null);
+                    QSControlCustomizer.this.mQSCenterPanel.setLayerType(0, (Paint) null);
+                    QSControlCustomizer.this.mRecyclerView.suppressLayout(false);
+                    QSControlCustomizer.this.mOthersRecyclerView.suppressLayout(false);
                 }
             });
             iStateStyle.fromTo(animState, animState2, animConfig);
             return;
         }
-        IStateStyle iStateStyle2 = this.mPanelAnim;
-        AnimState animState3 = this.mPanelHideAnim;
-        AnimState animState4 = this.mPanelShowAnim;
+        IStateStyle iStateStyle2 = this.mAnim;
+        AnimState animState3 = this.mShowAnim;
+        AnimState animState4 = this.mHideAnim;
         AnimConfig animConfig2 = new AnimConfig();
         animConfig2.setDelay(60);
-        iStateStyle2.fromTo(animState3, animState4, animConfig2);
-        IStateStyle iStateStyle3 = this.mAnim;
-        AnimState animState5 = this.mShowAnim;
-        AnimState animState6 = this.mHideAnim;
-        AnimConfig animConfig3 = new AnimConfig();
-        animConfig3.addListeners(new TransitionListener() {
+        animConfig2.addListeners(new TransitionListener() {
+            public void onBegin(Object obj) {
+                super.onBegin(obj);
+                QSControlCustomizer.this.setLayerType(2, (Paint) null);
+                QSControlCustomizer.this.mQSCenterPanel.setLayerType(2, (Paint) null);
+            }
+
+            public void onUpdate(Object obj, FloatProperty floatProperty, float f, float f2, boolean z) {
+                super.onUpdate(obj, floatProperty, f, f2, z);
+                if (floatProperty == ViewProperty.ALPHA) {
+                    QSControlCustomizer.this.mQSCenterPanel.setAlpha(1.0f - f);
+                }
+            }
+
             public void onComplete(Object obj) {
                 super.onComplete(obj);
                 QSControlCustomizer.this.setVisibility(8);
+                QSControlCustomizer.this.setLayerType(0, (Paint) null);
+                QSControlCustomizer.this.mQSCenterPanel.setLayerType(0, (Paint) null);
             }
         });
-        iStateStyle3.fromTo(animState5, animState6, animConfig3);
+        iStateStyle2.fromTo(animState3, animState4, animConfig2);
     }
 
     public void onShowEdit(boolean z) {

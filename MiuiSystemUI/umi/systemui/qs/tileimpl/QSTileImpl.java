@@ -37,6 +37,7 @@ import com.android.systemui.qs.PagedTileLayout;
 import com.android.systemui.qs.QSEvent;
 import com.android.systemui.qs.QSHost;
 import com.android.systemui.qs.logging.QSLogger;
+import com.miui.systemui.analytics.SystemUIStat;
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -59,6 +60,7 @@ public abstract class QSTileImpl<TState extends QSTile.State> implements QSTile,
     public QSTileImpl<TState>.H mHandler = new H((Looper) Dependency.get(Dependency.BG_LOOPER));
     /* access modifiers changed from: protected */
     public final QSHost mHost;
+    private int mIndex = -1;
     private final InstanceId mInstanceId;
     private int mIsFullQs;
     private final LifecycleRegistry mLifecycle = new LifecycleRegistry(this);
@@ -189,6 +191,7 @@ public abstract class QSTileImpl<TState extends QSTile.State> implements QSTile,
 
     public void click(boolean z) {
         this.mMetricsLogger.write(populate(new LogMaker(925).setType(4).addTaggedData(1592, Integer.valueOf(this.mStatusBarStateController.getState()))));
+        ((SystemUIStat) Dependency.get(SystemUIStat.class)).onClickQSTile(getTileSpec(), z, getIndex());
         this.mUiEventLogger.logWithInstanceId(QSEvent.QS_ACTION_CLICK, 0, getMetricsSpec(), getInstanceId());
         this.mQSLogger.logTileClick(this.mTileSpec, this.mStatusBarStateController.getState(), this.mState.state);
         Message obtain = Message.obtain(this.mHandler, 2, Boolean.valueOf(z));
@@ -202,11 +205,24 @@ public abstract class QSTileImpl<TState extends QSTile.State> implements QSTile,
         this.mHandler.sendMessageDelayed(obtain, 420);
     }
 
+    public int getIndex() {
+        return this.mIndex;
+    }
+
     public void secondaryClick() {
         this.mMetricsLogger.write(populate(new LogMaker(926).setType(4).addTaggedData(1592, Integer.valueOf(this.mStatusBarStateController.getState()))));
+        boolean z = false;
         this.mUiEventLogger.logWithInstanceId(QSEvent.QS_ACTION_SECONDARY_CLICK, 0, getMetricsSpec(), getInstanceId());
         this.mQSLogger.logTileSecondaryClick(this.mTileSpec, this.mStatusBarStateController.getState(), this.mState.state);
         this.mHandler.sendEmptyMessage(3);
+        SystemUIStat systemUIStat = (SystemUIStat) Dependency.get(SystemUIStat.class);
+        String tileSpec = getTileSpec();
+        int index = getIndex();
+        TState tstate = this.mState;
+        if (tstate instanceof QSTile.BooleanState) {
+            z = ((QSTile.BooleanState) tstate).value;
+        }
+        systemUIStat.handleTrackQSTileSecondaryClick(tileSpec, index, z);
     }
 
     public void longClick() {
@@ -215,6 +231,7 @@ public abstract class QSTileImpl<TState extends QSTile.State> implements QSTile,
         this.mQSLogger.logTileLongClick(this.mTileSpec, this.mStatusBarStateController.getState(), this.mState.state);
         this.mHandler.sendEmptyMessage(4);
         Prefs.putInt(this.mContext, "QsLongPressTooltipShownCount", 2);
+        ((SystemUIStat) Dependency.get(SystemUIStat.class)).handleTrackQSTileLongClick(getTileSpec(), getIndex());
     }
 
     public LogMaker populate(LogMaker logMaker) {
@@ -307,7 +324,7 @@ public abstract class QSTileImpl<TState extends QSTile.State> implements QSTile,
         if (mInControlCenter) {
             ((ControlCenterActivityStarter) Dependency.get(ControlCenterActivityStarter.class)).postStartActivityDismissingKeyguard(intent);
         } else {
-            ((ActivityStarter) Dependency.get(ActivityStarter.class)).postStartActivityDismissingKeyguard(getLongClickIntent(), 0);
+            ((ActivityStarter) Dependency.get(ActivityStarter.class)).postStartActivityDismissingKeyguard(intent, i);
         }
     }
 

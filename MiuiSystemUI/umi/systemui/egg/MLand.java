@@ -931,7 +931,7 @@ public class MLand extends FrameLayout {
             float[] fArr = {0.3f, 0.0f, 0.7f, 0.0f, 0.92f, 0.33f, 0.92f, 0.75f, 0.6f, 1.0f, 0.4f, 1.0f, 0.08f, 0.75f, 0.08f, 0.33f};
             this.sHull = fArr;
             this.corners = new float[fArr.length];
-            setBackgroundResource(C0013R$drawable.f4android);
+            setBackgroundResource(C0013R$drawable.f17android);
             getBackground().setTintMode(PorterDuff.Mode.SRC_ATOP);
             int[] iArr = this.sColors;
             int i = sNextColor;

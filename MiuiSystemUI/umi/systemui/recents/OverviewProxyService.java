@@ -281,7 +281,7 @@ public class OverviewProxyService extends CurrentUserTracker implements Callback
         public /* synthetic */ void lambda$onStatusBarMotionEvent$3$OverviewProxyService$1(Lazy lazy, MotionEvent motionEvent) {
             StatusBar statusBar = (StatusBar) lazy.get();
             int actionMasked = motionEvent.getActionMasked();
-            if (!judgeInterceptByMiui(motionEvent, (float) statusBar.getStatusBarWindow().getWidth())) {
+            if (!judgeInterceptByMiui(motionEvent, statusBar)) {
                 boolean z = false;
                 if (actionMasked == 0) {
                     boolean unused = OverviewProxyService.this.mInputFocusTransferStarted = true;
@@ -291,18 +291,18 @@ public class OverviewProxyService extends CurrentUserTracker implements Callback
                 }
                 if (actionMasked == 1 || actionMasked == 3) {
                     boolean unused4 = OverviewProxyService.this.mInputFocusTransferStarted = false;
-                    boolean access$1400 = OverviewProxyService.this.mInputFocusTransferStarted;
+                    boolean access$1300 = OverviewProxyService.this.mInputFocusTransferStarted;
                     if (actionMasked == 3) {
                         z = true;
                     }
-                    statusBar.onInputFocusTransfer(access$1400, z, (motionEvent.getY() - OverviewProxyService.this.mInputFocusTransferStartY) / ((float) (motionEvent.getEventTime() - OverviewProxyService.this.mInputFocusTransferStartMillis)));
+                    statusBar.onInputFocusTransfer(access$1300, z, (motionEvent.getY() - OverviewProxyService.this.mInputFocusTransferStartY) / ((float) (motionEvent.getEventTime() - OverviewProxyService.this.mInputFocusTransferStartMillis)));
                 }
             }
             motionEvent.recycle();
         }
 
-        public boolean judgeInterceptByMiui(MotionEvent motionEvent, float f) {
-            return motionEvent.getActionMasked() != 3 && ((ControlPanelWindowManager) Dependency.get(ControlPanelWindowManager.class)).dispatchToControlPanel(motionEvent, f);
+        public boolean judgeInterceptByMiui(MotionEvent motionEvent, StatusBar statusBar) {
+            return (motionEvent.getActionMasked() == 3 || statusBar.getStatusBarWindow() == null || !((ControlPanelWindowManager) Dependency.get(ControlPanelWindowManager.class)).dispatchToControlPanel(motionEvent, (float) statusBar.getStatusBarWindow().getWidth())) ? false : true;
         }
 
         public void onSplitScreenInvoked() {
@@ -661,9 +661,9 @@ public class OverviewProxyService extends CurrentUserTracker implements Callback
         this.mScreenshotHelper = new ScreenshotHelper(context);
         commandQueue.addCallback((CommandQueue.Callbacks) new CommandQueue.Callbacks() {
             public void onTracingStateChanged(boolean z) {
-                SysUiState access$3000 = OverviewProxyService.this.mSysUiState;
-                access$3000.setFlag(4096, z);
-                access$3000.commitUpdate(OverviewProxyService.this.mContext.getDisplayId());
+                SysUiState access$2900 = OverviewProxyService.this.mSysUiState;
+                access$2900.setFlag(4096, z);
+                access$2900.commitUpdate(OverviewProxyService.this.mContext.getDisplayId());
             }
 
             public void setWindowState(int i, int i2, int i3) {
@@ -886,7 +886,6 @@ public class OverviewProxyService extends CurrentUserTracker implements Callback
         }
     }
 
-    /* access modifiers changed from: private */
     public void notifyAssistantGestureCompletion(float f) {
         for (int size = this.mConnectionCallbacks.size() - 1; size >= 0; size--) {
             this.mConnectionCallbacks.get(size).onAssistantGestureCompletion(f);

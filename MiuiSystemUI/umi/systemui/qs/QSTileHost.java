@@ -484,7 +484,7 @@ public class QSTileHost implements QSHost, TunerService.Tunable, PluginListener<
 
     public boolean isQSFullyCollapsed() {
         if (this.mControlPanelController.isUseControlCenter()) {
-            return this.mControlPanelController.isQSFullyCollapsed();
+            return this.mControlPanelController.isCCFullyCollapsed();
         }
         return ((Boolean) this.mStatusBarOptional.map($$Lambda$zJbATMYNuISzUFzW61OFGvW37bg.INSTANCE).orElse(Boolean.FALSE)).booleanValue();
     }

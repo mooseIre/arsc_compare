@@ -2,6 +2,7 @@ package com.android.systemui.statusbar.phone;
 
 import android.app.IActivityManager;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Binder;
 import android.os.RemoteException;
@@ -16,7 +17,6 @@ import com.android.keyguard.utils.MiuiKeyguardUtils;
 import com.android.systemui.C0010R$bool;
 import com.android.systemui.C0016R$integer;
 import com.android.systemui.DejankUtils;
-import com.android.systemui.Dependency;
 import com.android.systemui.Dumpable;
 import com.android.systemui.colorextraction.SysuiColorExtractor;
 import com.android.systemui.dump.DumpManager;
@@ -41,6 +41,7 @@ public class NotificationShadeWindowController implements RemoteInputController.
     private final IActivityManager mActivityManager;
     private final ArrayList<WeakReference<StatusBarWindowCallback>> mCallbacks = Lists.newArrayList();
     private final SysuiColorExtractor mColorExtractor;
+    private Configuration mConfiguration;
     private final Context mContext;
     private final State mCurrentState = new State();
     private final DozeParameters mDozeParameters;
@@ -49,24 +50,17 @@ public class NotificationShadeWindowController implements RemoteInputController.
     private boolean mHasTopUiChanged;
     private final KeyguardBypassController mKeyguardBypassController;
     private final Display.Mode mKeyguardDisplayMode;
-    private final boolean mKeyguardScreenRotation;
+    private boolean mKeyguardScreenRotation;
     private final KeyguardViewMediator mKeyguardViewMediator;
     private OtherwisedCollapsedListener mListener;
-    private final long mLockScreenDisplayTimeout;
     private WindowManager.LayoutParams mLp;
     private final WindowManager.LayoutParams mLpChanged;
     private ViewGroup mNotificationShadeView;
+    private boolean mOnPcMode;
     private float mScreenBrightnessDoze;
     private Consumer<Integer> mScrimsVisibilityListener;
-    private final StatusBarStateController.StateListener mStateListener = new StatusBarStateController.StateListener() {
-        public void onStateChanged(int i) {
-            NotificationShadeWindowController.this.setStatusBarState(i);
-        }
-
-        public void onDozingChanged(boolean z) {
-            NotificationShadeWindowController.this.setDozing(z);
-        }
-    };
+    private final StatusBarStateController.StateListener mStateListener;
+    private int mUserActivityTime;
     private final WindowManager mWindowManager;
 
     public interface ForcePluginOpenListener {
@@ -78,6 +72,19 @@ public class NotificationShadeWindowController implements RemoteInputController.
     }
 
     public NotificationShadeWindowController(Context context, WindowManager windowManager, IActivityManager iActivityManager, DozeParameters dozeParameters, StatusBarStateController statusBarStateController, ConfigurationController configurationController, KeyguardViewMediator keyguardViewMediator, KeyguardBypassController keyguardBypassController, SysuiColorExtractor sysuiColorExtractor, DumpManager dumpManager) {
+        boolean z = false;
+        this.mOnPcMode = false;
+        this.mConfiguration = new Configuration();
+        this.mUserActivityTime = 10000;
+        this.mStateListener = new StatusBarStateController.StateListener() {
+            public void onStateChanged(int i) {
+                NotificationShadeWindowController.this.setStatusBarState(i);
+            }
+
+            public void onDozingChanged(boolean z) {
+                NotificationShadeWindowController.this.setDozing(z);
+            }
+        };
         this.mContext = context;
         this.mWindowManager = windowManager;
         this.mActivityManager = iActivityManager;
@@ -89,12 +96,10 @@ public class NotificationShadeWindowController implements RemoteInputController.
         this.mKeyguardBypassController = keyguardBypassController;
         this.mColorExtractor = sysuiColorExtractor;
         dumpManager.registerDumpable(NotificationShadeWindowController.class.getName(), this);
-        this.mLockScreenDisplayTimeout = (long) context.getResources().getInteger(C0016R$integer.config_lockScreenDisplayTimeout);
+        context.getResources().getInteger(C0016R$integer.config_lockScreenDisplayTimeout);
         ((SysuiStatusBarStateController) statusBarStateController).addCallback(this.mStateListener, 1);
         configurationController.addCallback(this);
-        Display.Mode[] supportedModes = context.getDisplay().getSupportedModes();
-        Display.Mode mode = context.getDisplay().getMode();
-        this.mKeyguardDisplayMode = (Display.Mode) Arrays.stream(supportedModes).filter(new Predicate(context.getResources().getInteger(C0016R$integer.config_keyguardRefreshRate), mode) {
+        this.mKeyguardDisplayMode = (Display.Mode) Arrays.stream(context.getDisplay().getSupportedModes()).filter(new Predicate(context.getResources().getInteger(C0016R$integer.config_keyguardRefreshRate), context.getDisplay().getMode()) {
             public final /* synthetic */ int f$0;
             public final /* synthetic */ Display.Mode f$1;
 
@@ -107,6 +112,7 @@ public class NotificationShadeWindowController implements RemoteInputController.
                 return NotificationShadeWindowController.lambda$new$0(this.f$0, this.f$1, (Display.Mode) obj);
             }
         }).findFirst().orElse((Object) null);
+        this.mOnPcMode = (context.getResources().getConfiguration().uiMode & 8192) != 0 ? true : z;
     }
 
     static /* synthetic */ boolean lambda$new$0(int i, Display.Mode mode, Display.Mode mode2) {
@@ -198,10 +204,8 @@ public class NotificationShadeWindowController implements RemoteInputController.
         }
         if ((state.isKeyguardShowingAndNotOccluded() || state.mKeyguardFadingAway) && state.keygaurdTransparent) {
             WindowManager.LayoutParams layoutParams = this.mLpChanged;
-            int i = layoutParams.flags & -1048577;
-            layoutParams.flags = i;
             layoutParams.alpha = 0.0f;
-            layoutParams.flags = i | 16;
+            layoutParams.flags |= 16;
             if (MiuiKeyguardUtils.isGxzwSensor()) {
                 MiuiGxzwManager.getInstance().nofifySurfaceFlinger(false);
             }
@@ -224,6 +228,8 @@ public class NotificationShadeWindowController implements RemoteInputController.
     private void adjustScreenOrientation(State state) {
         if (!state.isKeyguardShowingAndNotOccluded() && !state.mDozing && !state.mBouncerShowing) {
             this.mLpChanged.screenOrientation = -1;
+        } else if (this.mOnPcMode) {
+            this.mLpChanged.screenOrientation = 0;
         } else if (this.mKeyguardScreenRotation) {
             this.mLpChanged.screenOrientation = 2;
         } else {
@@ -276,7 +282,6 @@ public class NotificationShadeWindowController implements RemoteInputController.
         } else {
             this.mNotificationShadeView.setVisibility(4);
         }
-        ((StatusBarWindowController) Dependency.get(StatusBarWindowController.class)).setNotificationShadeVisible(isExpanded);
     }
 
     private boolean isExpanded(State state) {
@@ -293,18 +298,11 @@ public class NotificationShadeWindowController implements RemoteInputController.
     }
 
     private void applyUserActivityTimeout(State state) {
-        long j;
         if (!state.isKeyguardShowingAndNotOccluded() || state.mStatusBarState != 1 || state.mQsExpanded) {
             this.mLpChanged.userActivityTimeout = -1;
             return;
         }
-        WindowManager.LayoutParams layoutParams = this.mLpChanged;
-        if (state.mBouncerShowing) {
-            j = 10000;
-        } else {
-            j = this.mLockScreenDisplayTimeout;
-        }
-        layoutParams.userActivityTimeout = j;
+        this.mLpChanged.userActivityTimeout = (long) this.mUserActivityTime;
     }
 
     private void applyInputFeatures(State state) {
@@ -426,17 +424,20 @@ public class NotificationShadeWindowController implements RemoteInputController.
     }
 
     public void setBlurRatio(float f) {
-        if (f == 0.0f || f == 1.0f) {
-            State state = this.mCurrentState;
-            state.mBlurRatio = f;
-            apply(state);
-            return;
-        }
-        BlurUtil.setBlur(this.mNotificationShadeView.getViewRootImpl(), f, 0);
+        State state = this.mCurrentState;
+        state.mBlurRatio = f;
+        apply(state);
     }
 
     private void applyBlurRatio(State state) {
         BlurUtil.setBlurWithWindowManager(this.mNotificationShadeView.getViewRootImpl(), state.mBlurRatio, 0, this.mLpChanged);
+    }
+
+    public void setUserActivityTime(int i) {
+        if (this.mUserActivityTime != i) {
+            this.mUserActivityTime = i;
+            apply(this.mCurrentState);
+        }
     }
 
     public void setPanelVisible(boolean z) {
@@ -535,6 +536,19 @@ public class NotificationShadeWindowController implements RemoteInputController.
         apply(state);
     }
 
+    public void onConfigChanged(Configuration configuration) {
+        boolean shouldEnableKeyguardScreenRotation;
+        boolean z = (configuration.uiMode & 8192) != 0;
+        if (z != this.mOnPcMode) {
+            this.mOnPcMode = z;
+            apply(this.mCurrentState);
+        }
+        if ((this.mConfiguration.updateFrom(configuration) & 2048) != 0 && (shouldEnableKeyguardScreenRotation = shouldEnableKeyguardScreenRotation()) != this.mKeyguardScreenRotation) {
+            this.mKeyguardScreenRotation = shouldEnableKeyguardScreenRotation;
+            apply(this.mCurrentState);
+        }
+    }
+
     public void setForceDozeBrightness(boolean z) {
         State state = this.mCurrentState;
         state.mForceDozeBrightness = z;
@@ -582,11 +596,9 @@ public class NotificationShadeWindowController implements RemoteInputController.
     public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
         printWriter.println("NotificationShadeWindowController:");
         printWriter.println("  mKeyguardDisplayMode=" + this.mKeyguardDisplayMode);
+        printWriter.println("  mOnPcMode= " + this.mOnPcMode);
+        printWriter.println("  mKeyguardScreenRotation=" + this.mKeyguardScreenRotation);
         printWriter.println(this.mCurrentState);
-    }
-
-    public boolean isShowingWallpaper() {
-        return !this.mCurrentState.mBackdropShowing;
     }
 
     public void onThemeChanged() {

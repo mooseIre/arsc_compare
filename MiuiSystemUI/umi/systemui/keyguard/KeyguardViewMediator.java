@@ -68,7 +68,6 @@ import com.android.systemui.SystemUI;
 import com.android.systemui.SystemUIFactory;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.dump.DumpManager;
-import com.android.systemui.keyguard.KeyguardViewMediator;
 import com.android.systemui.plugins.FalsingManager;
 import com.android.systemui.shared.system.QuickStepContract;
 import com.android.systemui.statusbar.phone.NavigationModeController;
@@ -256,38 +255,14 @@ public class KeyguardViewMediator extends SystemUI implements Dumpable {
             Trace.beginSection("KeyguardViewMediator.mKeyGuardGoingAwayRunnable");
             Log.d("KeyguardViewMediator", "keyguardGoingAway");
             ((KeyguardViewController) KeyguardViewMediator.this.mKeyguardViewControllerLazy.get()).keyguardGoingAway();
-            int i = (((KeyguardViewController) KeyguardViewMediator.this.mKeyguardViewControllerLazy.get()).shouldDisableWindowAnimationsForUnlock() || (KeyguardViewMediator.this.mWakeAndUnlocking && !KeyguardViewMediator.this.mPulsing)) ? 2 : 0;
-            if (((KeyguardViewController) KeyguardViewMediator.this.mKeyguardViewControllerLazy.get()).isGoingToNotificationShade() || (KeyguardViewMediator.this.mWakeAndUnlocking && KeyguardViewMediator.this.mPulsing)) {
-                i |= 1;
-            }
-            if (((KeyguardViewController) KeyguardViewMediator.this.mKeyguardViewControllerLazy.get()).isUnlockWithWallpaper()) {
-                i |= 4;
-            }
-            if (((KeyguardViewController) KeyguardViewMediator.this.mKeyguardViewControllerLazy.get()).shouldSubtleWindowAnimationsForUnlock()) {
-                i |= 8;
-            }
             KeyguardViewMediator.this.mUpdateMonitor.setKeyguardGoingAway(true);
             ((KeyguardViewController) KeyguardViewMediator.this.mKeyguardViewControllerLazy.get()).setKeyguardGoingAwayState(true);
-            KeyguardViewMediator.this.mUiBgExecutor.execute(new Runnable(i) {
-                public final /* synthetic */ int f$0;
-
-                {
-                    this.f$0 = r1;
-                }
-
-                public final void run() {
-                    KeyguardViewMediator.AnonymousClass7.lambda$run$0(this.f$0);
-                }
-            });
-            Trace.endSection();
-        }
-
-        static /* synthetic */ void lambda$run$0(int i) {
-            try {
-                ActivityTaskManager.getService().keyguardGoingAway(i);
-            } catch (RemoteException e) {
-                Log.e("KeyguardViewMediator", "Error while calling WindowManager", e);
+            if (((MiuiFastUnlockController) Dependency.get(MiuiFastUnlockController.class)).isFastUnlock()) {
+                KeyguardViewMediator.this.startKeyguardExitAnimation(SystemClock.uptimeMillis(), 0);
+            } else {
+                ((KeyguardViewMediatorInjector) Dependency.get(KeyguardViewMediatorInjector.class)).keyguardGoingAway();
             }
+            Trace.endSection();
         }
     };
     /* access modifiers changed from: private */
@@ -317,8 +292,6 @@ public class KeyguardViewMediator extends SystemUI implements Dumpable {
     private boolean mPendingReset;
     private String mPhoneState = TelephonyManager.EXTRA_STATE_IDLE;
     /* access modifiers changed from: private */
-    public boolean mPulsing;
-    /* access modifiers changed from: private */
     public boolean mShowHomeOverLockscreen;
     private PowerManager.WakeLock mShowKeyguardWakeLock;
     /* access modifiers changed from: private */
@@ -331,8 +304,7 @@ public class KeyguardViewMediator extends SystemUI implements Dumpable {
     private boolean mSystemReady;
     private final TrustManager mTrustManager;
     private int mTrustedSoundId;
-    /* access modifiers changed from: private */
-    public final Executor mUiBgExecutor;
+    private final Executor mUiBgExecutor;
     private int mUiSoundsStreamType;
     private int mUnlockSoundId;
     KeyguardUpdateMonitorCallback mUpdateCallback = new MiuiKeyguardUpdateMonitorCallback() {
@@ -873,10 +845,12 @@ public class KeyguardViewMediator extends SystemUI implements Dumpable {
         }
     };
     private boolean mWaitingUntilKeyguardVisible = false;
-    /* access modifiers changed from: private */
-    public boolean mWakeAndUnlocking;
+    private boolean mWakeAndUnlocking;
 
     public void onShortPowerPressedGoHome() {
+    }
+
+    public void setPulsing(boolean z) {
     }
 
     /* JADX INFO: super call moved to the top of the method (can break code semantics) */
@@ -1027,17 +1001,17 @@ public class KeyguardViewMediator extends SystemUI implements Dumpable {
             android.util.Log.d(r1, r0)
             monitor-enter(r10)
             r0 = 0
-            r10.mDeviceInteractive = r0     // Catch:{ all -> 0x00af }
+            r10.mDeviceInteractive = r0     // Catch:{ all -> 0x00bc }
             r1 = 1
-            r10.mGoingToSleep = r1     // Catch:{ all -> 0x00af }
-            com.android.keyguard.KeyguardUpdateMonitor r2 = r10.mUpdateMonitor     // Catch:{ all -> 0x00af }
-            r2.dispatchKeyguardGoingAway(r0)     // Catch:{ all -> 0x00af }
-            int r2 = com.android.keyguard.KeyguardUpdateMonitor.getCurrentUser()     // Catch:{ all -> 0x00af }
-            com.android.internal.widget.LockPatternUtils r3 = r10.mLockPatternUtils     // Catch:{ all -> 0x00af }
-            boolean r3 = r3.getPowerButtonInstantlyLocks(r2)     // Catch:{ all -> 0x00af }
+            r10.mGoingToSleep = r1     // Catch:{ all -> 0x00bc }
+            com.android.keyguard.KeyguardUpdateMonitor r2 = r10.mUpdateMonitor     // Catch:{ all -> 0x00bc }
+            r2.dispatchKeyguardGoingAway(r0)     // Catch:{ all -> 0x00bc }
+            int r2 = com.android.keyguard.KeyguardUpdateMonitor.getCurrentUser()     // Catch:{ all -> 0x00bc }
+            com.android.internal.widget.LockPatternUtils r3 = r10.mLockPatternUtils     // Catch:{ all -> 0x00bc }
+            boolean r3 = r3.getPowerButtonInstantlyLocks(r2)     // Catch:{ all -> 0x00bc }
             if (r3 != 0) goto L_0x003e
-            com.android.internal.widget.LockPatternUtils r3 = r10.mLockPatternUtils     // Catch:{ all -> 0x00af }
-            boolean r3 = r3.isSecure(r2)     // Catch:{ all -> 0x00af }
+            com.android.internal.widget.LockPatternUtils r3 = r10.mLockPatternUtils     // Catch:{ all -> 0x00bc }
+            boolean r3 = r3.isSecure(r2)     // Catch:{ all -> 0x00bc }
             if (r3 != 0) goto L_0x003c
             goto L_0x003e
         L_0x003c:
@@ -1046,71 +1020,76 @@ public class KeyguardViewMediator extends SystemUI implements Dumpable {
         L_0x003e:
             r3 = r1
         L_0x003f:
-            int r4 = com.android.keyguard.KeyguardUpdateMonitor.getCurrentUser()     // Catch:{ all -> 0x00af }
-            long r4 = r10.getLockTimeout(r4)     // Catch:{ all -> 0x00af }
-            r10.mLockLater = r0     // Catch:{ all -> 0x00af }
-            com.android.internal.policy.IKeyguardExitCallback r6 = r10.mExitSecureCallback     // Catch:{ all -> 0x00af }
+            int r4 = com.android.keyguard.KeyguardUpdateMonitor.getCurrentUser()     // Catch:{ all -> 0x00bc }
+            long r4 = r10.getLockTimeout(r4)     // Catch:{ all -> 0x00bc }
+            r10.mLockLater = r0     // Catch:{ all -> 0x00bc }
+            com.android.internal.policy.IKeyguardExitCallback r6 = r10.mExitSecureCallback     // Catch:{ all -> 0x00bc }
             r7 = 3
             if (r6 == 0) goto L_0x006e
             java.lang.String r2 = "KeyguardViewMediator"
             java.lang.String r3 = "pending exit secure callback cancelled"
-            android.util.Log.d(r2, r3)     // Catch:{ all -> 0x00af }
+            android.util.Log.d(r2, r3)     // Catch:{ all -> 0x00bc }
             com.android.internal.policy.IKeyguardExitCallback r2 = r10.mExitSecureCallback     // Catch:{ RemoteException -> 0x005b }
             r2.onKeyguardExitResult(r0)     // Catch:{ RemoteException -> 0x005b }
             goto L_0x0063
         L_0x005b:
-            r0 = move-exception
-            java.lang.String r2 = "KeyguardViewMediator"
-            java.lang.String r3 = "Failed to call onKeyguardExitResult(false)"
-            android.util.Slog.w(r2, r3, r0)     // Catch:{ all -> 0x00af }
+            r2 = move-exception
+            java.lang.String r3 = "KeyguardViewMediator"
+            java.lang.String r4 = "Failed to call onKeyguardExitResult(false)"
+            android.util.Slog.w(r3, r4, r2)     // Catch:{ all -> 0x00bc }
         L_0x0063:
-            r0 = 0
-            r10.mExitSecureCallback = r0     // Catch:{ all -> 0x00af }
-            boolean r0 = r10.mExternallyEnabled     // Catch:{ all -> 0x00af }
-            if (r0 != 0) goto L_0x0092
-            r10.hideLocked()     // Catch:{ all -> 0x00af }
+            r2 = 0
+            r10.mExitSecureCallback = r2     // Catch:{ all -> 0x00bc }
+            boolean r2 = r10.mExternallyEnabled     // Catch:{ all -> 0x00bc }
+            if (r2 != 0) goto L_0x0092
+            r10.hideLocked()     // Catch:{ all -> 0x00bc }
             goto L_0x0092
         L_0x006e:
-            boolean r0 = r10.mShowing     // Catch:{ all -> 0x00af }
-            if (r0 == 0) goto L_0x0075
-            r10.mPendingReset = r1     // Catch:{ all -> 0x00af }
+            boolean r6 = r10.mShowing     // Catch:{ all -> 0x00bc }
+            if (r6 == 0) goto L_0x0075
+            r10.mPendingReset = r1     // Catch:{ all -> 0x00bc }
             goto L_0x0092
         L_0x0075:
             if (r11 != r7) goto L_0x007d
             r8 = 0
-            int r0 = (r4 > r8 ? 1 : (r4 == r8 ? 0 : -1))
-            if (r0 > 0) goto L_0x0082
+            int r6 = (r4 > r8 ? 1 : (r4 == r8 ? 0 : -1))
+            if (r6 > 0) goto L_0x0082
         L_0x007d:
-            r0 = 2
-            if (r11 != r0) goto L_0x0088
+            r6 = 2
+            if (r11 != r6) goto L_0x0088
             if (r3 != 0) goto L_0x0088
         L_0x0082:
-            r10.doKeyguardLaterLocked(r4)     // Catch:{ all -> 0x00af }
-            r10.mLockLater = r1     // Catch:{ all -> 0x00af }
+            r10.doKeyguardLaterLocked(r4)     // Catch:{ all -> 0x00bc }
+            r10.mLockLater = r1     // Catch:{ all -> 0x00bc }
             goto L_0x0092
         L_0x0088:
-            com.android.internal.widget.LockPatternUtils r0 = r10.mLockPatternUtils     // Catch:{ all -> 0x00af }
-            boolean r0 = r0.isLockScreenDisabled(r2)     // Catch:{ all -> 0x00af }
-            if (r0 != 0) goto L_0x0092
-            r10.mPendingLock = r1     // Catch:{ all -> 0x00af }
+            com.android.internal.widget.LockPatternUtils r3 = r10.mLockPatternUtils     // Catch:{ all -> 0x00bc }
+            boolean r2 = r3.isLockScreenDisabled(r2)     // Catch:{ all -> 0x00bc }
+            if (r2 != 0) goto L_0x0092
+            r10.mPendingLock = r1     // Catch:{ all -> 0x00bc }
         L_0x0092:
-            boolean r0 = r10.mPendingLock     // Catch:{ all -> 0x00af }
-            if (r0 == 0) goto L_0x00a2
+            boolean r2 = r10.mPendingLock     // Catch:{ all -> 0x00bc }
+            if (r2 == 0) goto L_0x00a2
             if (r11 == r7) goto L_0x00a2
-            r10.playSounds(r1)     // Catch:{ all -> 0x00af }
-            android.os.Handler r0 = r10.mHandler     // Catch:{ all -> 0x00af }
-            com.android.systemui.keyguard.-$$Lambda$KeyguardViewMediator$qBMIp_d-hf-PXyuB_VH11Sbw3J4 r1 = com.android.systemui.keyguard.$$Lambda$KeyguardViewMediator$qBMIp_dhfPXyuB_VH11Sbw3J4.INSTANCE     // Catch:{ all -> 0x00af }
-            r0.post(r1)     // Catch:{ all -> 0x00af }
+            r10.playSounds(r1)     // Catch:{ all -> 0x00bc }
+            android.os.Handler r1 = r10.mHandler     // Catch:{ all -> 0x00bc }
+            com.android.systemui.keyguard.-$$Lambda$KeyguardViewMediator$qBMIp_d-hf-PXyuB_VH11Sbw3J4 r2 = com.android.systemui.keyguard.$$Lambda$KeyguardViewMediator$qBMIp_dhfPXyuB_VH11Sbw3J4.INSTANCE     // Catch:{ all -> 0x00bc }
+            r1.post(r2)     // Catch:{ all -> 0x00bc }
         L_0x00a2:
-            monitor-exit(r10)     // Catch:{ all -> 0x00af }
-            com.android.keyguard.KeyguardUpdateMonitor r0 = r10.mUpdateMonitor
-            r0.dispatchStartedGoingToSleep(r11)
+            monitor-exit(r10)     // Catch:{ all -> 0x00bc }
+            com.android.keyguard.KeyguardUpdateMonitor r1 = r10.mUpdateMonitor
+            r1.dispatchStartedGoingToSleep(r11)
             r10.notifyStartedGoingToSleep()
             r10.resetAppLock()
+            java.lang.Class<com.android.keyguard.injector.KeyguardUpdateMonitorInjector> r10 = com.android.keyguard.injector.KeyguardUpdateMonitorInjector.class
+            java.lang.Object r10 = com.android.systemui.Dependency.get(r10)
+            com.android.keyguard.injector.KeyguardUpdateMonitorInjector r10 = (com.android.keyguard.injector.KeyguardUpdateMonitorInjector) r10
+            java.lang.String r11 = "none"
+            r10.setKeyguardUnlockWay(r11, r0)
             return
-        L_0x00af:
+        L_0x00bc:
             r11 = move-exception
-            monitor-exit(r10)     // Catch:{ all -> 0x00af }
+            monitor-exit(r10)     // Catch:{ all -> 0x00bc }
             throw r11
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.keyguard.KeyguardViewMediator.onStartedGoingToSleep(int):void");
@@ -1134,6 +1113,10 @@ public class KeyguardViewMediator extends SystemUI implements Dumpable {
             if (this.mPendingReset) {
                 resetStateLocked();
                 this.mPendingReset = false;
+            }
+            if (this.mUpdateMonitor.getUserUnlockedWithBiometric(KeyguardUpdateMonitor.getCurrentUser())) {
+                Slog.w("KeyguardViewMediator", "doKeyguard: not showing because canceling pending lock");
+                this.mPendingLock = false;
             }
             if (this.mPendingLock) {
                 doKeyguardLocked((Bundle) null);
@@ -1875,7 +1858,7 @@ public class KeyguardViewMediator extends SystemUI implements Dumpable {
 
     public void cancelPendingLock() {
         synchronized (this) {
-            if (this.mPendingLock) {
+            if (this.mPendingLock || this.mHandler.hasMessages(1)) {
                 this.mPendingLock = false;
                 playSounds(false);
                 resetAppLock();
@@ -1928,33 +1911,84 @@ public class KeyguardViewMediator extends SystemUI implements Dumpable {
     }
 
     /* access modifiers changed from: private */
-    public void handleStartKeyguardExitAnimation(long j, long j2) {
-        Trace.beginSection("KeyguardViewMediator#handleStartKeyguardExitAnimation");
-        Log.d("KeyguardViewMediator", "handleStartKeyguardExitAnimation startTime=" + j + " fadeoutDuration=" + j2);
-        synchronized (this) {
-            if (!this.mHiding) {
-                setShowingLocked(this.mShowing, true);
-                return;
-            }
-            this.mHiding = false;
-            if (this.mWakeAndUnlocking && this.mDrawnCallback != null) {
-                this.mKeyguardViewControllerLazy.get().getViewRootImpl().setReportNextDraw();
-                notifyDrawn(this.mDrawnCallback);
-                this.mDrawnCallback = null;
-            }
-            if (TelephonyManager.EXTRA_STATE_IDLE.equals(this.mPhoneState)) {
-                playSounds(false);
-            }
-            setShowingLocked(false);
-            this.mWakeAndUnlocking = false;
-            this.mDismissCallbackRegistry.notifyDismissSucceeded();
-            this.mKeyguardViewControllerLazy.get().hide(j, j2);
-            resetKeyguardDonePendingLocked();
-            this.mHideAnimationRun = false;
-            adjustStatusBarLocked();
-            sendUserPresentBroadcast();
-            Trace.endSection();
-        }
+    /* JADX WARNING: Code restructure failed: missing block: B:9:0x003d, code lost:
+        return;
+     */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public void handleStartKeyguardExitAnimation(long r4, long r6) {
+        /*
+            r3 = this;
+            java.lang.String r0 = "KeyguardViewMediator#handleStartKeyguardExitAnimation"
+            android.os.Trace.beginSection(r0)
+            java.lang.StringBuilder r0 = new java.lang.StringBuilder
+            r0.<init>()
+            java.lang.String r1 = "handleStartKeyguardExitAnimation startTime="
+            r0.append(r1)
+            r0.append(r4)
+            java.lang.String r1 = " fadeoutDuration="
+            r0.append(r1)
+            r0.append(r6)
+            java.lang.String r0 = r0.toString()
+            java.lang.String r1 = "KeyguardViewMediator"
+            android.util.Log.d(r1, r0)
+            monitor-enter(r3)
+            boolean r0 = r3.mHiding     // Catch:{ all -> 0x0092 }
+            if (r0 != 0) goto L_0x003e
+            java.lang.Class<com.android.keyguard.MiuiFastUnlockController> r4 = com.android.keyguard.MiuiFastUnlockController.class
+            java.lang.Object r4 = com.android.systemui.Dependency.get(r4)     // Catch:{ all -> 0x0092 }
+            com.android.keyguard.MiuiFastUnlockController r4 = (com.android.keyguard.MiuiFastUnlockController) r4     // Catch:{ all -> 0x0092 }
+            boolean r4 = r4.isFastUnlock()     // Catch:{ all -> 0x0092 }
+            if (r4 != 0) goto L_0x003c
+            boolean r4 = r3.mShowing     // Catch:{ all -> 0x0092 }
+            r5 = 1
+            r3.setShowingLocked(r4, r5)     // Catch:{ all -> 0x0092 }
+        L_0x003c:
+            monitor-exit(r3)     // Catch:{ all -> 0x0092 }
+            return
+        L_0x003e:
+            r0 = 0
+            r3.mHiding = r0     // Catch:{ all -> 0x0092 }
+            boolean r1 = r3.mWakeAndUnlocking     // Catch:{ all -> 0x0092 }
+            if (r1 == 0) goto L_0x0060
+            com.android.internal.policy.IKeyguardDrawnCallback r1 = r3.mDrawnCallback     // Catch:{ all -> 0x0092 }
+            if (r1 == 0) goto L_0x0060
+            dagger.Lazy<com.android.keyguard.KeyguardViewController> r1 = r3.mKeyguardViewControllerLazy     // Catch:{ all -> 0x0092 }
+            java.lang.Object r1 = r1.get()     // Catch:{ all -> 0x0092 }
+            com.android.keyguard.KeyguardViewController r1 = (com.android.keyguard.KeyguardViewController) r1     // Catch:{ all -> 0x0092 }
+            android.view.ViewRootImpl r1 = r1.getViewRootImpl()     // Catch:{ all -> 0x0092 }
+            r1.setReportNextDraw()     // Catch:{ all -> 0x0092 }
+            com.android.internal.policy.IKeyguardDrawnCallback r1 = r3.mDrawnCallback     // Catch:{ all -> 0x0092 }
+            r3.notifyDrawn(r1)     // Catch:{ all -> 0x0092 }
+            r1 = 0
+            r3.mDrawnCallback = r1     // Catch:{ all -> 0x0092 }
+        L_0x0060:
+            java.lang.String r1 = android.telephony.TelephonyManager.EXTRA_STATE_IDLE     // Catch:{ all -> 0x0092 }
+            java.lang.String r2 = r3.mPhoneState     // Catch:{ all -> 0x0092 }
+            boolean r1 = r1.equals(r2)     // Catch:{ all -> 0x0092 }
+            if (r1 == 0) goto L_0x006d
+            r3.playSounds(r0)     // Catch:{ all -> 0x0092 }
+        L_0x006d:
+            r3.setShowingLocked(r0)     // Catch:{ all -> 0x0092 }
+            r3.mWakeAndUnlocking = r0     // Catch:{ all -> 0x0092 }
+            com.android.systemui.keyguard.DismissCallbackRegistry r1 = r3.mDismissCallbackRegistry     // Catch:{ all -> 0x0092 }
+            r1.notifyDismissSucceeded()     // Catch:{ all -> 0x0092 }
+            dagger.Lazy<com.android.keyguard.KeyguardViewController> r1 = r3.mKeyguardViewControllerLazy     // Catch:{ all -> 0x0092 }
+            java.lang.Object r1 = r1.get()     // Catch:{ all -> 0x0092 }
+            com.android.keyguard.KeyguardViewController r1 = (com.android.keyguard.KeyguardViewController) r1     // Catch:{ all -> 0x0092 }
+            r1.hide(r4, r6)     // Catch:{ all -> 0x0092 }
+            r3.resetKeyguardDonePendingLocked()     // Catch:{ all -> 0x0092 }
+            r3.mHideAnimationRun = r0     // Catch:{ all -> 0x0092 }
+            r3.adjustStatusBarLocked()     // Catch:{ all -> 0x0092 }
+            r3.sendUserPresentBroadcast()     // Catch:{ all -> 0x0092 }
+            monitor-exit(r3)     // Catch:{ all -> 0x0092 }
+            android.os.Trace.endSection()
+            return
+        L_0x0092:
+            r4 = move-exception
+            monitor-exit(r3)     // Catch:{ all -> 0x0092 }
+            throw r4
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.keyguard.KeyguardViewMediator.handleStartKeyguardExitAnimation(long, long):void");
     }
 
     /* access modifiers changed from: private */
@@ -1976,10 +2010,10 @@ public class KeyguardViewMediator extends SystemUI implements Dumpable {
         if (z2) {
             statusBarManager.disable(0);
         }
-        if (z || isShowingAndNotOccluded()) {
-            if (!this.mShowHomeOverLockscreen || !this.mInGestureNavigationMode) {
-                i = 6291456;
-            }
+        if ((z || isShowingAndNotOccluded()) && (!this.mShowHomeOverLockscreen || !this.mInGestureNavigationMode)) {
+            i = 6291456;
+        }
+        if (this.mShowing) {
             i |= 16777216;
         }
         Log.d("KeyguardViewMediator", "adjustStatusBarLocked: mShowing=" + this.mShowing + " mOccluded=" + this.mOccluded + " isSecure=" + isSecure() + " force=" + z + " --> flags=0x" + Integer.toHexString(i));
@@ -2027,7 +2061,7 @@ public class KeyguardViewMediator extends SystemUI implements Dumpable {
         synchronized (this) {
             Log.d("KeyguardViewMediator", "handleNotifyWakingUp");
             this.mKeyguardViewControllerLazy.get().onStartedWakingUp();
-            ((KeyguardViewMediatorInjector) Dependency.get(KeyguardViewMediatorInjector.class)).sendKeyguardScreenOnBroadcast();
+            ((KeyguardUpdateMonitorInjector) Dependency.get(KeyguardUpdateMonitorInjector.class)).sendKeyguardScreenOnBroadcast();
         }
         Trace.endSection();
     }
@@ -2173,10 +2207,6 @@ public class KeyguardViewMediator extends SystemUI implements Dumpable {
             this.mDozing = z;
             setShowingLocked(this.mShowing);
         }
-    }
-
-    public void setPulsing(boolean z) {
-        this.mPulsing = z;
     }
 
     private static class StartKeyguardExitAnimParams {

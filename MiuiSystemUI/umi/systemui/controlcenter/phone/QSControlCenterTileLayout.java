@@ -18,6 +18,7 @@ import com.android.systemui.Dependency;
 import com.android.systemui.controlcenter.phone.ControlPanelWindowManager;
 import com.android.systemui.controlcenter.qs.tileview.CCQSTileView;
 import com.android.systemui.controlcenter.utils.ControlCenterUtils;
+import com.android.systemui.controlcenter.utils.FolmeAnimState;
 import com.android.systemui.plugins.qs.QSIconView;
 import com.android.systemui.plugins.qs.QSTile;
 import com.android.systemui.plugins.qs.QSTileView;
@@ -29,14 +30,10 @@ import com.miui.systemui.util.CommonUtil;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import miuix.animation.Folme;
-import miuix.animation.IStateStyle;
-import miuix.animation.base.AnimConfig;
-import miuix.animation.controller.AnimState;
-import miuix.animation.property.ViewProperty;
-import miuix.animation.utils.EaseManager;
 
-public class QSControlCenterTileLayout extends ViewGroup implements QSPanel.QSTileLayout, QSHost.Callback, ControlPanelWindowManager.OnExpandChangeListener {
+public class QSControlCenterTileLayout extends ViewGroup implements QSPanel.QSTileLayout, QSHost.Callback, ControlPanelWindowManager.OnExpandChangeListener, FolmeAnimState {
     private int mBaseLineIdx;
     private int mCellHeight;
     private int mCellWidth;
@@ -47,7 +44,7 @@ public class QSControlCenterTileLayout extends ViewGroup implements QSPanel.QSTi
     private boolean mExpanded;
     private boolean mExpanding;
     /* access modifiers changed from: private */
-    public final H mHandler;
+    public final H mHandler = new H();
     private QSTileHost mHost;
     private float mLastHeight = -1.0f;
     private boolean mListening;
@@ -59,12 +56,10 @@ public class QSControlCenterTileLayout extends ViewGroup implements QSPanel.QSTi
     private float mOffset;
     private int mOrientation;
     private ControlPanelController mPanelController;
-    protected AnimState mPanelHideAnim;
     private float mPanelLandWidth;
     private float mPanelPaddingHorizontal;
-    protected AnimState mPanelShowAnim;
     private QSControlCenterPanel mQSControlCenterPanel;
-    protected final ArrayList<QSPanel.TileRecord> mRecords;
+    protected final ArrayList<QSPanel.TileRecord> mRecords = new ArrayList<>();
     private int mRowMarginStart;
     private int mShowLines;
 
@@ -78,42 +73,10 @@ public class QSControlCenterTileLayout extends ViewGroup implements QSPanel.QSTi
 
     public QSControlCenterTileLayout(Context context) {
         super(context, (AttributeSet) null);
-        AnimState animState = new AnimState("control_panel_title_show");
-        animState.add(ViewProperty.ALPHA, 1.0f, new long[0]);
-        animState.add(ViewProperty.SCALE_X, 1.0f, new long[0]);
-        animState.add(ViewProperty.SCALE_Y, 1.0f, new long[0]);
-        this.mPanelShowAnim = animState;
-        AnimState animState2 = new AnimState("control_panel_title_hide");
-        animState2.add(ViewProperty.ALPHA, 0.0f, new long[0]);
-        animState2.add(ViewProperty.SCALE_X, 0.8f, new long[0]);
-        animState2.add(ViewProperty.SCALE_Y, 0.8f, new long[0]);
-        this.mPanelHideAnim = animState2;
-        new ArrayList();
-        new ArrayList();
-        this.mRecords = new ArrayList<>();
-        new ArrayList();
-        new ArrayList();
-        this.mHandler = new H();
     }
 
     public QSControlCenterTileLayout(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-        AnimState animState = new AnimState("control_panel_title_show");
-        animState.add(ViewProperty.ALPHA, 1.0f, new long[0]);
-        animState.add(ViewProperty.SCALE_X, 1.0f, new long[0]);
-        animState.add(ViewProperty.SCALE_Y, 1.0f, new long[0]);
-        this.mPanelShowAnim = animState;
-        AnimState animState2 = new AnimState("control_panel_title_hide");
-        animState2.add(ViewProperty.ALPHA, 0.0f, new long[0]);
-        animState2.add(ViewProperty.SCALE_X, 0.8f, new long[0]);
-        animState2.add(ViewProperty.SCALE_Y, 0.8f, new long[0]);
-        this.mPanelHideAnim = animState2;
-        new ArrayList();
-        new ArrayList();
-        this.mRecords = new ArrayList<>();
-        new ArrayList();
-        new ArrayList();
-        this.mHandler = new H();
         this.mContext = context;
         this.mPanelController = (ControlPanelController) Dependency.get(ControlPanelController.class);
         updateResources();
@@ -413,64 +376,40 @@ public class QSControlCenterTileLayout extends ViewGroup implements QSPanel.QSTi
     }
 
     public void visAnimOn(boolean z) {
-        if (z) {
-            Iterator<QSPanel.TileRecord> it = this.mRecords.iterator();
-            while (it.hasNext()) {
-                QSPanel.TileRecord next = it.next();
-                float intValue = (float) (this.mBaseLineIdx + ((Integer) next.tileView.getTag(C0015R$id.tag_tile_layout)).intValue());
-                Folme.useAt(next.tileView).state().end(ViewProperty.ALPHA, ViewProperty.SCALE_X, ViewProperty.SCALE_Y);
-                IStateStyle state = Folme.useAt(next.tileView).state();
-                AnimState animState = this.mPanelHideAnim;
-                AnimState animState2 = this.mPanelShowAnim;
-                AnimConfig animConfig = new AnimConfig();
-                animConfig.setEase(EaseManager.getStyle(-2, ((0.2f * intValue) / 5.0f) + 0.7f, ((intValue * 0.1f) / 5.0f) + 0.5f));
-                state.fromTo(animState, animState2, animConfig);
-            }
-            return;
+        int size = this.mRecords.size();
+        View[] viewArr = new View[size];
+        for (int i = 0; i < this.mRecords.size(); i++) {
+            viewArr[i] = this.mRecords.get(i).tileView;
         }
-        Iterator<QSPanel.TileRecord> it2 = this.mRecords.iterator();
-        while (it2.hasNext()) {
-            QSPanel.TileRecord next2 = it2.next();
-            Folme.useAt(next2.tileView).state().end(ViewProperty.ALPHA, ViewProperty.SCALE_X, ViewProperty.SCALE_Y);
-            IStateStyle state2 = Folme.useAt(next2.tileView).state();
-            AnimState animState3 = this.mPanelShowAnim;
-            AnimState animState4 = this.mPanelHideAnim;
-            AnimConfig animConfig2 = new AnimConfig();
-            animConfig2.setEase(EaseManager.getStyle(-2, 0.99f, 0.2f));
-            state2.fromTo(animState3, animState4, animConfig2);
+        if (size > 0) {
+            if (z) {
+                Folme.useAt(viewArr).state().fromTo(FolmeAnimState.mPanelHideAnim, FolmeAnimState.mPanelShowAnim, FolmeAnimState.mPanelAnimConfig);
+                return;
+            }
+            Folme.useAt(viewArr).state().fromTo(FolmeAnimState.mPanelShowAnim, FolmeAnimState.mPanelHideAnim, FolmeAnimState.mPanelAnimConfig);
         }
     }
 
-    public void updateTransHeight(float f, int i, int i2) {
+    public void updateTransHeight(List<View> list, float f, int i, int i2) {
         if (f == 0.0f) {
-            Iterator<QSPanel.TileRecord> it = this.mRecords.iterator();
-            while (it.hasNext()) {
-                QSPanel.TileRecord next = it.next();
-                int intValue = this.mBaseLineIdx + ((Integer) next.tileView.getTag(C0015R$id.tag_tile_layout)).intValue();
-                AnimState animState = new AnimState("control_panel_trans");
-                animState.add(ViewProperty.TRANSLATION_Y, 0.0f, new long[0]);
-                float f2 = (float) intValue;
-                float f3 = (float) i2;
-                AnimConfig animConfig = new AnimConfig();
-                animConfig.setEase(EaseManager.getStyle(-2, ((0.2f * f2) / f3) + 0.7f, ((f2 * 0.1f) / f3) + 0.5f));
-                Folme.useAt(next.tileView).state().cancel(ViewProperty.TRANSLATION_Y);
-                IStateStyle state = Folme.useAt(next.tileView).state();
-                animConfig.setFromSpeed(0.0f);
-                state.to(animState, animConfig);
+            int size = this.mRecords.size() + (list == null ? 0 : list.size());
+            View[] viewArr = new View[size];
+            for (int i3 = 0; i3 < this.mRecords.size(); i3++) {
+                viewArr[i3] = this.mRecords.get(i3).tileView;
             }
+            for (int size2 = this.mRecords.size(); size2 < size; size2++) {
+                viewArr[size2] = list.get(size2 - this.mRecords.size());
+            }
+            Folme.useAt(viewArr).state().to(FolmeAnimState.mSpringBackAnim, FolmeAnimState.mSpringBackConfig);
             endExpanding();
             return;
         }
-        float f4 = (float) i;
-        float max = Math.max(0.0f, Math.min(f, f4));
-        Iterator<QSPanel.TileRecord> it2 = this.mRecords.iterator();
-        while (it2.hasNext()) {
-            QSPanel.TileRecord next2 = it2.next();
-            float translationY = ControlCenterUtils.getTranslationY(this.mBaseLineIdx + ((Integer) next2.tileView.getTag(C0015R$id.tag_tile_layout)).intValue(), i2, max, f4);
-            AnimState animState2 = new AnimState("control_panel_trans");
-            animState2.add(ViewProperty.TRANSLATION_Y, translationY, new long[0]);
-            Folme.useAt(next2.tileView).state().cancel(ViewProperty.TRANSLATION_Y);
-            Folme.useAt(next2.tileView).state().setTo((Object) animState2);
+        float f2 = (float) i;
+        float max = Math.max(0.0f, Math.min(f, f2));
+        Iterator<QSPanel.TileRecord> it = this.mRecords.iterator();
+        while (it.hasNext()) {
+            QSPanel.TileRecord next = it.next();
+            next.tileView.setTranslationY(ControlCenterUtils.getTranslationY(this.mBaseLineIdx + ((Integer) next.tileView.getTag(C0015R$id.tag_tile_layout)).intValue(), i2, max, f2));
         }
     }
 

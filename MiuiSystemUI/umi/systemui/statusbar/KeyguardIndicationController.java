@@ -839,7 +839,7 @@ public class KeyguardIndicationController implements StatusBarStateController.St
                         string = this.mResources.getString(C0021R$string.input_password_after_boot_msg_can_not_switch_when_calling);
                     } else if (MiuiKeyguardUtils.isSuperPowerActive(this.mContext)) {
                         string = this.mResources.getString(C0021R$string.input_password_after_boot_msg_can_not_switch_when_superpower_active);
-                    } else if (!this.mKeyguardUpdateMonitor.getStrongAuthTracker().hasUserAuthenticatedSinceBoot()) {
+                    } else if (!this.mKeyguardUpdateMonitor.getStrongAuthTracker().hasUserAuthenticatedSinceBoot(this.mFingerprintAuthUserId)) {
                         str2 = this.mResources.getString(C0021R$string.fingerprint_enter_second_psw_title);
                         str = this.mResources.getString(C0021R$string.fingerprint_enter_second_psw_msg);
                     }

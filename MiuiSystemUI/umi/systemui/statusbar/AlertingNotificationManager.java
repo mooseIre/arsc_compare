@@ -9,6 +9,7 @@ import android.util.Log;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.systemui.statusbar.AlertingNotificationManager;
 import com.android.systemui.statusbar.NotificationLifetimeExtender;
+import com.android.systemui.statusbar.notification.NotificationUtil;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import java.util.Iterator;
 import java.util.stream.Stream;
@@ -129,7 +130,10 @@ public abstract class AlertingNotificationManager implements NotificationLifetim
     /* access modifiers changed from: protected */
     public boolean canRemoveImmediately(String str) {
         AlertEntry alertEntry = this.mAlertEntries.get(str);
-        return alertEntry == null || alertEntry.wasShownLongEnough() || alertEntry.mEntry.isRowDismissed();
+        if (!NotificationUtil.isInCallNotification(alertEntry.mEntry.getSbn()) && alertEntry != null && !alertEntry.wasShownLongEnough() && !alertEntry.mEntry.isRowDismissed()) {
+            return false;
+        }
+        return true;
     }
 
     public void setCallback(NotificationLifetimeExtender.NotificationSafeToRemoveCallback notificationSafeToRemoveCallback) {

@@ -31,9 +31,7 @@ public class DrawerDemoAct extends FsGestureDemoBaseActiivy {
     /* access modifiers changed from: protected */
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        getWindow().addFlags(1024);
         setContentView(C0017R$layout.drawer_demo_layout);
-        FsgestureUtil.INSTANCE.hideSystemBars(getWindow().getDecorView());
         this.drawerImg = (ImageView) findViewById(C0015R$id.drawer_img);
         View findViewById = findViewById(C0015R$id.shelter_view);
         this.shelterView = findViewById;

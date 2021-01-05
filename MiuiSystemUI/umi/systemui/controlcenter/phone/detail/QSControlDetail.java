@@ -32,6 +32,7 @@ import com.android.systemui.controlcenter.qs.tileview.QSBigTileView;
 import com.android.systemui.controlcenter.utils.ControlCenterUtils;
 import com.android.systemui.plugins.qs.DetailAdapter;
 import com.android.systemui.qs.MiuiQSDetailItems;
+import com.miui.systemui.analytics.SystemUIStat;
 import java.util.Collection;
 import miui.widget.SlidingButton;
 import miuix.animation.Folme;
@@ -70,6 +71,7 @@ public class QSControlDetail extends FrameLayout {
     protected View mFromView;
     protected int[] mFromViewFrame = new int[4];
     protected int[] mFromViewLocation = new int[4];
+    private boolean mNeedComputeAnim = false;
     private int mOrientation;
     protected View mQsDetailHeader;
     protected SlidingButton mQsDetailHeaderSwitch;
@@ -132,11 +134,13 @@ public class QSControlDetail extends FrameLayout {
         int i;
         int i2;
         super.onConfigurationChanged(configuration);
-        int i3 = this.mOrientation;
-        int i4 = configuration.orientation;
-        if (i3 != i4) {
-            this.mOrientation = i4;
-            if (i4 == 1) {
+        if (this.mOrientation != configuration.orientation) {
+            if (isShowingDetail()) {
+                this.mNeedComputeAnim = true;
+            }
+            int i3 = configuration.orientation;
+            this.mOrientation = i3;
+            if (i3 == 1) {
                 i = 0;
                 i2 = 0;
             } else if (getLayoutDirection() == 0) {
@@ -254,14 +258,16 @@ public class QSControlDetail extends FrameLayout {
     }
 
     public void handleShowingDetail(DetailAdapter detailAdapter, View view, View view2) {
+        boolean z;
         String str;
-        boolean z = detailAdapter != null;
-        boolean z2 = this.mDetailAdapter != null;
-        if (z && z2 && this.mDetailAdapter == detailAdapter) {
+        String str2;
+        boolean z2 = detailAdapter != null;
+        boolean z3 = this.mDetailAdapter != null;
+        if (z2 && z3 && this.mDetailAdapter == detailAdapter) {
             return;
         }
-        if (z || z2) {
-            if (z) {
+        if (z2 || z3) {
+            if (z2) {
                 this.mDetailAdapter = detailAdapter;
                 setupDetailHeader(detailAdapter);
                 setupDetailFooter(this.mDetailAdapter);
@@ -287,17 +293,23 @@ public class QSControlDetail extends FrameLayout {
                     View view3 = this.mDetailViews.get(detailAdapter2.getMetricsCategory());
                     if (view3 == null || !(view3 instanceof MiuiQSDetailItems)) {
                         str = "";
+                        z = false;
                     } else {
                         MiuiQSDetailItems miuiQSDetailItems = (MiuiQSDetailItems) view3;
-                        boolean isItemClicked = miuiQSDetailItems.isItemClicked();
+                        z = miuiQSDetailItems.isItemClicked();
                         miuiQSDetailItems.setItemClicked(false);
                         str = miuiQSDetailItems.getSuffix();
                     }
                     if (!TextUtils.isEmpty(str)) {
                         updateContainerHeight(str);
-                        if (!this.mDonedClicked && !this.mSettingsClicked) {
-                            boolean equals = "Wifi".equals(str);
+                        if (this.mDonedClicked) {
+                            str2 = "done_btn";
+                        } else if (this.mSettingsClicked) {
+                            str2 = "settings_button";
+                        } else {
+                            str2 = (!"Wifi".equals(str) || !z) ? "back_pressed" : "item_clicked";
                         }
+                        ((SystemUIStat) Dependency.get(SystemUIStat.class)).handleQSDetailExitEvent(str, z, this.mSwitchClicked, str2);
                     }
                     MetricsLogger.hidden(this.mContext, this.mDetailAdapter.getMetricsCategory());
                     resetDataTrackStates();
@@ -306,12 +318,13 @@ public class QSControlDetail extends FrameLayout {
                 this.mQsPanelCallback.onScanStateChanged(false);
                 view = null;
             }
-            animateDetailVisibleDiff(z, view, view2);
+            animateDetailVisibleDiff(z2, view, view2);
             sendAccessibilityEvent(32);
         }
     }
 
     private void resetDataTrackStates() {
+        this.mSwitchClicked = false;
         this.mSettingsClicked = false;
         this.mDonedClicked = false;
     }
@@ -529,7 +542,10 @@ public class QSControlDetail extends FrameLayout {
 
     /* access modifiers changed from: protected */
     public void animateHideDetailAndTile() {
-        computeAnimationParams();
+        if (this.mNeedComputeAnim) {
+            this.mNeedComputeAnim = false;
+            computeAnimationParams();
+        }
         this.mAnim.cancel();
         IStateStyle to = this.mAnim.setTo("fromLeft", Integer.valueOf((this.mFromViewFrame[0] + this.mToViewLocation[0]) - this.mFromViewLocation[0]), "fromTop", Integer.valueOf((this.mFromViewFrame[1] + this.mToViewLocation[1]) - this.mFromViewLocation[1]), "fromRight", Integer.valueOf((this.mFromViewFrame[2] + this.mToViewLocation[2]) - this.mFromViewLocation[2]), "fromBottom", Integer.valueOf((this.mFromViewFrame[3] + this.mToViewLocation[3]) - this.mFromViewLocation[3]), "toLeft", Integer.valueOf(this.mToViewFrame[0]), "toTop", Integer.valueOf(this.mToViewFrame[1]), "toRight", Integer.valueOf(this.mToViewFrame[2]), "toBottom", Integer.valueOf(this.mToViewFrame[3]));
         AnimConfig animConfig = new AnimConfig();

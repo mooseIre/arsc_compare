@@ -16,9 +16,7 @@ public class DemoIntroduceAct extends FsGestureDemoBaseActiivy {
     /* access modifiers changed from: protected */
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        getWindow().addFlags(1024);
         setContentView(C0017R$layout.demo_intro_layout);
-        FsgestureUtil.INSTANCE.hideSystemBars(getWindow().getDecorView());
         final boolean booleanExtra = getIntent().getBooleanExtra("IS_FROM_PROVISION", false);
         TextView textView = (TextView) findViewById(C0015R$id.btn_back);
         this.backBtn = textView;

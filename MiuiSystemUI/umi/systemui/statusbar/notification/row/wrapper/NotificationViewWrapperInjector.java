@@ -1,8 +1,10 @@
 package com.android.systemui.statusbar.notification.row.wrapper;
 
+import android.app.Notification;
 import android.content.Context;
 import android.view.NotificationHeaderView;
 import android.view.View;
+import com.android.internal.widget.ConversationLayout;
 import com.android.systemui.C0015R$id;
 import com.android.systemui.statusbar.notification.NotificationSettingsHelper;
 import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow;
@@ -10,31 +12,44 @@ import com.android.systemui.statusbar.notification.row.MiuiExpandableNotificatio
 
 public class NotificationViewWrapperInjector {
     public static NotificationViewWrapper wrap(Context context, View view, ExpandableNotificationRow expandableNotificationRow) {
+        if (view.getId() == C0015R$id.status_bar_latest_event_content && "oneLine".equals(view.getTag())) {
+            return new MiuiNotificationOneLineViewWrapper(context, view, expandableNotificationRow);
+        }
         if (NotificationSettingsHelper.showMiuiStyle()) {
-            if (view.getId() != C0015R$id.status_bar_latest_event_content) {
-                return new MiuiNotificationCustomViewWrapper(context, view, expandableNotificationRow);
+            if (view.getId() == C0015R$id.status_bar_latest_event_content) {
+                if ("oneLine".equals(view.getTag())) {
+                    return new MiuiNotificationOneLineViewWrapper(context, view, expandableNotificationRow);
+                }
+                if ("base".equals(view.getTag()) || "big".equals(view.getTag())) {
+                    return new MiuiNotificationTemplateViewWrapper(context, view, expandableNotificationRow);
+                }
+                if ("bigPicture".equals(view.getTag())) {
+                    return new MiuiNotificationBigPictureViewWrapper(context, view, expandableNotificationRow);
+                }
+                if ("bigText".equals(view.getTag())) {
+                    return new MiuiNotificationBigTextViewWrapper(context, view, expandableNotificationRow);
+                }
+                if ("inbox".equals(view.getTag())) {
+                    return new MiuiNotificationInboxViewWrapper(context, view, expandableNotificationRow);
+                }
+                return null;
+            } else if (view.getId() != 16909500 || !"conversation".equals(view.getTag())) {
+                return getMiuiCustomViewWrapper(context, view, expandableNotificationRow);
+            } else {
+                return new MiuiNotificationConversationTemplateViewWrapper(context, (ConversationLayout) view, expandableNotificationRow);
             }
-            if ("oneLine".equals(view.getTag())) {
-                return new MiuiNotificationOneLineViewWrapper(context, view, expandableNotificationRow);
-            }
-            if ("base".equals(view.getTag()) || "big".equals(view.getTag())) {
-                return new MiuiNotificationTemplateViewWrapper(context, view, expandableNotificationRow);
-            }
-            if ("bigPicture".equals(view.getTag())) {
-                return new MiuiNotificationBigPictureViewWrapper(context, view, expandableNotificationRow);
-            }
-            if ("bigText".equals(view.getTag())) {
-                return new MiuiNotificationBigTextViewWrapper(context, view, expandableNotificationRow);
-            }
-            if ("inbox".equals(view.getTag())) {
-                return new MiuiNotificationInboxViewWrapper(context, view, expandableNotificationRow);
-            }
-            return null;
         } else if (view.getId() != 16909500 && !(view instanceof NotificationHeaderView)) {
-            return new MiuiNotificationCustomViewWrapper(context, view, expandableNotificationRow);
+            return getMiuiCustomViewWrapper(context, view, expandableNotificationRow);
         } else {
             return null;
         }
+    }
+
+    private static NotificationViewWrapper getMiuiCustomViewWrapper(Context context, View view, ExpandableNotificationRow expandableNotificationRow) {
+        if (Notification.DecoratedCustomViewStyle.class.equals(expandableNotificationRow.getEntry().getSbn().getNotification().getNotificationStyle())) {
+            return new MiuiNotificationDecoratedCustomViewWrapper(context, view, expandableNotificationRow);
+        }
+        return new MiuiNotificationCustomViewWrapper(context, view, expandableNotificationRow);
     }
 
     public static int getExtraHeight(NotificationViewWrapper notificationViewWrapper, ExpandableNotificationRow expandableNotificationRow) {

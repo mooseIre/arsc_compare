@@ -11,6 +11,7 @@ import org.jetbrains.annotations.Nullable;
 
 /* compiled from: MiuiNotificationAnimationExtensions.kt */
 public class MiuiViewStateBase {
+    private boolean animatingAddRemove;
     private int springYOffset;
 
     public final int getSpringYOffset() {
@@ -19,6 +20,14 @@ public class MiuiViewStateBase {
 
     public final void setSpringYOffset(int i) {
         this.springYOffset = i;
+    }
+
+    public final boolean getAnimatingAddRemove() {
+        return this.animatingAddRemove;
+    }
+
+    public final void setAnimatingAddRemove(boolean z) {
+        this.animatingAddRemove = z;
     }
 
     private final void animateSpringYOffset(View view, AnimationProperties animationProperties) {

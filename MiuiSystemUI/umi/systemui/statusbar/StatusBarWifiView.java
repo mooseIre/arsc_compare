@@ -175,16 +175,14 @@ public class StatusBarWifiView extends FrameLayout implements DarkIconDispatcher
         if ((this.mState.activityResId != wifiIconState.activityResId || z) && (i = wifiIconState.activityResId) > 0) {
             this.mWifiActivityView.setImageDrawable(this.mContext.getDrawable(MiuiStatusBarIconViewHelper.transformResId(i, this.mUseTint, this.mLight)));
         }
-        boolean z3 = this.mState.activityVisible;
-        boolean z4 = wifiIconState.activityVisible;
         int i3 = 8;
-        if (z3 != z4) {
-            this.mWifiActivityView.setVisibility(z4 ? 0 : 8);
+        if (this.mState.activityVisible != wifiIconState.activityVisible || z) {
+            this.mWifiActivityView.setVisibility(wifiIconState.activityVisible ? 0 : 8);
             z2 = true;
         } else {
             z2 = false;
         }
-        if (wifiIconState.showWifiStandard != this.mState.showWifiStandard) {
+        if (wifiIconState.showWifiStandard != this.mState.showWifiStandard || z) {
             z2 |= true;
             FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) this.mWifiActivityView.getLayoutParams();
             if (wifiIconState.showWifiStandard) {
@@ -195,12 +193,11 @@ public class StatusBarWifiView extends FrameLayout implements DarkIconDispatcher
                 this.mWifiStandardView.setVisibility(8);
                 layoutParams.gravity = 85;
             }
+            this.mWifiActivityView.setLayoutParams(layoutParams);
         }
-        boolean z5 = this.mState.visible;
-        boolean z6 = wifiIconState.visible;
-        if (z5 != z6) {
+        if (this.mState.visible != wifiIconState.visible || z) {
             z2 |= true;
-            if (z6) {
+            if (wifiIconState.visible) {
                 i3 = 0;
             }
             setVisibility(i3);

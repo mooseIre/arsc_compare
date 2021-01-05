@@ -45,6 +45,7 @@ public class GarbageMonitor implements Dumpable {
     private final Handler mHandler;
     /* access modifiers changed from: private */
     public long mHeapLimit;
+    private final LeakDetector mLeakDetector;
     private final LeakReporter mLeakReporter;
     private final ArrayList<Long> mPids = new ArrayList<>();
     private MemoryTile mQSTile;
@@ -65,6 +66,7 @@ public class GarbageMonitor implements Dumpable {
         ActivityManager activityManager = (ActivityManager) context.getSystemService("activity");
         this.mHandler = new BackgroundHeapCheckHandler(looper);
         this.mTrackedGarbage = leakDetector.getTrackedGarbage();
+        this.mLeakDetector = leakDetector;
         this.mLeakReporter = leakReporter;
         this.mDumpTruck = new DumpTruck(this.mContext);
         if (ENABLE_AM_HEAP_LIMIT) {
@@ -215,6 +217,7 @@ public class GarbageMonitor implements Dumpable {
                 processMemInfo.dump(fileDescriptor, printWriter, strArr);
             }
         }
+        this.mLeakDetector.dump(fileDescriptor, printWriter, strArr);
     }
 
     private static class MemoryIconDrawable extends Drawable {

@@ -48,6 +48,7 @@ import com.android.systemui.controlcenter.phone.ControlPanelWindowManager;
 import com.android.systemui.controlcenter.phone.ExpandInfoController;
 import com.android.systemui.controlcenter.phone.controls.ControlsPluginManager;
 import com.android.systemui.controlcenter.policy.ControlCenterActivityStarter;
+import com.android.systemui.controlcenter.policy.NCSwitchController;
 import com.android.systemui.controlcenter.policy.SuperSaveModeController;
 import com.android.systemui.dock.DockManager;
 import com.android.systemui.dump.DumpManager;
@@ -158,6 +159,7 @@ import com.miui.systemui.CloudDataManager;
 import com.miui.systemui.EventTracker;
 import com.miui.systemui.SettingsManager;
 import com.miui.systemui.SettingsObserver;
+import com.miui.systemui.analytics.SystemUIStat;
 import com.miui.systemui.graphics.AppIconsManager;
 import com.miui.systemui.statusbar.PanelExpansionObserver;
 import com.miui.systemui.statusbar.phone.DriveModeObserver;
@@ -275,6 +277,7 @@ public class Dependency {
     Lazy<MiuiWallpaperClient> mMiuiWallpaperClient;
     Lazy<HapticFeedBackImpl> mMiuihapticFeedBack;
     Lazy<ModalController> mModalController;
+    Lazy<NCSwitchController> mNCSwitchController;
     Lazy<NavigationModeController> mNavBarModeController;
     Lazy<NavigationBarController> mNavigationBarController;
     Lazy<NetworkController> mNetworkController;
@@ -328,6 +331,7 @@ public class Dependency {
     Lazy<StatusBarStateController> mStatusBarStateController;
     Lazy<SuperSaveModeController> mSuperSaveModeController;
     Lazy<SysUiState> mSysUiStateFlagsContainer;
+    Lazy<SystemUIStat> mSystemUIStat;
     Lazy<SystemWindows> mSystemWindows;
     Lazy<SysuiColorExtractor> mSysuiColorExtractor;
     Lazy<StatusBarWindowController> mTempStatusBarWindowController;
@@ -1554,6 +1558,20 @@ public class Dependency {
         Lazy<NotificationPanelNavigationBarCoordinator> lazy169 = this.mNotificationNavigationCoordinator;
         Objects.requireNonNull(lazy169);
         this.mProviders.put(NotificationPanelNavigationBarCoordinator.class, new LazyDependencyCreator() {
+            public final Object createDependency() {
+                return Lazy.this.get();
+            }
+        });
+        Lazy<NCSwitchController> lazy170 = this.mNCSwitchController;
+        Objects.requireNonNull(lazy170);
+        this.mProviders.put(NCSwitchController.class, new LazyDependencyCreator() {
+            public final Object createDependency() {
+                return Lazy.this.get();
+            }
+        });
+        Lazy<SystemUIStat> lazy171 = this.mSystemUIStat;
+        Objects.requireNonNull(lazy171);
+        this.mProviders.put(SystemUIStat.class, new LazyDependencyCreator() {
             public final Object createDependency() {
                 return Lazy.this.get();
             }

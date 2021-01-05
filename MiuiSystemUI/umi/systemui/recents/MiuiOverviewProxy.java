@@ -16,10 +16,6 @@ public final class MiuiOverviewProxy extends IMiuiSystemUiProxy.Stub {
     public final OverviewProxyService proxyService;
 
     /* access modifiers changed from: private */
-    public final void notifyCompleteAssistant() {
-    }
-
-    /* access modifiers changed from: private */
     public final void notifyGestureLineProgress(float f) {
     }
 
@@ -93,5 +89,17 @@ public final class MiuiOverviewProxy extends IMiuiSystemUiProxy.Stub {
         }
         Log.w("OverviewProxyService", "Launcher called sysui with invalid user: " + identifier + ", reason: " + str);
         return false;
+    }
+
+    /* access modifiers changed from: private */
+    public final void notifyCompleteAssistant() {
+        if (verifyCaller("notifyCompleteAssistant")) {
+            long clearCallingIdentity = Binder.clearCallingIdentity();
+            try {
+                this.proxyService.notifyAssistantGestureCompletion(0.0f);
+            } finally {
+                Binder.restoreCallingIdentity(clearCallingIdentity);
+            }
+        }
     }
 }

@@ -28,7 +28,7 @@ public class NearestTouchFrame extends FrameLayout {
         this.mClickableChildren = new ArrayList<>();
         this.mTmpInt = new int[2];
         this.mOffset = new int[2];
-        this.mIsActive = configuration.smallestScreenWidthDp < 600;
+        this.mIsActive = false;
     }
 
     /* access modifiers changed from: protected */

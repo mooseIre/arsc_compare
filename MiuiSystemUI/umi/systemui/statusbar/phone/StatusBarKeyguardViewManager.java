@@ -337,10 +337,6 @@ public class StatusBarKeyguardViewManager implements RemoteInputController.Callb
         this.mNotificationShadeWindowController.setKeyguardNeedsInput(z);
     }
 
-    public boolean isUnlockWithWallpaper() {
-        return this.mNotificationShadeWindowController.isShowingWallpaper();
-    }
-
     public void setOccluded(boolean z, boolean z2) {
         this.mStatusBar.setOccluded(z);
         boolean z3 = true;
@@ -761,18 +757,6 @@ public class StatusBarKeyguardViewManager implements RemoteInputController.Callb
 
     public void readyForKeyguardDone() {
         this.mViewMediatorCallback.readyForKeyguardDone();
-    }
-
-    public boolean shouldDisableWindowAnimationsForUnlock() {
-        return this.mStatusBar.isInLaunchTransition();
-    }
-
-    public boolean shouldSubtleWindowAnimationsForUnlock() {
-        return needsBypassFading();
-    }
-
-    public boolean isGoingToNotificationShade() {
-        return this.mStatusBarStateController.leaveOpenOnKeyguardHide();
     }
 
     public void keyguardGoingAway() {

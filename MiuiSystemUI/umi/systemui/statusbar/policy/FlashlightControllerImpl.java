@@ -10,6 +10,8 @@ import android.os.HandlerThread;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
+import com.android.systemui.controlcenter.policy.MiuiFlashlightHelper;
+import com.android.systemui.controlcenter.utils.Constants;
 import com.android.systemui.statusbar.policy.FlashlightController;
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
@@ -28,6 +30,7 @@ public class FlashlightControllerImpl implements FlashlightController {
     public boolean mFlashlightEnabled;
     private Handler mHandler;
     private final ArrayList<WeakReference<FlashlightController.FlashlightListener>> mListeners = new ArrayList<>(1);
+    private MiuiFlashlightHelper mMiuiFlashHelper;
     /* access modifiers changed from: private */
     public boolean mTorchAvailable;
     private final CameraManager.TorchCallback mTorchCallback = new CameraManager.TorchCallback() {
@@ -46,7 +49,6 @@ public class FlashlightControllerImpl implements FlashlightController {
                 Settings.Secure.putInt(FlashlightControllerImpl.this.mContext.getContentResolver(), "flashlight_available", 1);
                 Settings.Secure.putInt(FlashlightControllerImpl.this.mContext.getContentResolver(), "flashlight_enabled", z ? 1 : 0);
                 FlashlightControllerImpl.this.mContext.sendBroadcast(new Intent("com.android.settings.flashlight.action.FLASHLIGHT_CHANGED"));
-                Settings.Global.putInt(FlashlightControllerImpl.this.mContext.getContentResolver(), "torch_state", z);
             }
         }
 
@@ -79,10 +81,11 @@ public class FlashlightControllerImpl implements FlashlightController {
         }
     };
 
-    public FlashlightControllerImpl(Context context) {
+    public FlashlightControllerImpl(Context context, MiuiFlashlightHelper miuiFlashlightHelper) {
         this.mContext = context;
         this.mCameraManager = (CameraManager) context.getSystemService("camera");
-        tryInitCamera();
+        this.mMiuiFlashHelper = miuiFlashlightHelper;
+        miuiFlashlightHelper.setFlashlightController(this);
     }
 
     private void tryInitCamera() {
@@ -91,7 +94,13 @@ public class FlashlightControllerImpl implements FlashlightController {
             this.mCameraId = cameraId;
             if (cameraId != null) {
                 ensureHandler();
-                this.mCameraManager.registerTorchCallback(this.mTorchCallback, this.mHandler);
+                this.mMiuiFlashHelper.ensureHandler(this.mHandler);
+                if (Constants.SUPPORT_ANDROID_FLASHLIGHT) {
+                    this.mCameraManager.registerTorchCallback(this.mTorchCallback, this.mHandler);
+                } else {
+                    this.mMiuiFlashHelper.initMiuiFlash();
+                }
+                this.mMiuiFlashHelper.tryInitCamera();
             }
         } catch (Throwable th) {
             Log.e("FlashlightController", "Couldn't initialize.", th);
@@ -100,22 +109,30 @@ public class FlashlightControllerImpl implements FlashlightController {
 
     public void setFlashlight(boolean z) {
         boolean z2;
-        synchronized (this) {
-            if (this.mCameraId != null) {
-                z2 = false;
-                if (this.mFlashlightEnabled != z) {
-                    this.mFlashlightEnabled = z;
-                    try {
-                        this.mCameraManager.setTorchMode(this.mCameraId, z);
-                    } catch (CameraAccessException e) {
-                        Log.e("FlashlightController", "Couldn't set torch mode", e);
-                        this.mFlashlightEnabled = false;
-                        z2 = true;
+        if (Constants.SUPPORT_ANDROID_FLASHLIGHT) {
+            synchronized (this) {
+                if (this.mCameraId != null) {
+                    z2 = false;
+                    if (this.mFlashlightEnabled != z) {
+                        this.mFlashlightEnabled = z;
+                        try {
+                            this.mCameraManager.setTorchMode(this.mCameraId, z);
+                        } catch (CameraAccessException e) {
+                            Log.e("FlashlightController", "Couldn't set torch mode", e);
+                            this.mFlashlightEnabled = false;
+                            z2 = true;
+                        }
                     }
+                } else {
+                    return;
                 }
-            } else {
-                return;
             }
+        } else if (this.mMiuiFlashHelper.setMiuiFlashlight(z)) {
+            this.mFlashlightEnabled = z;
+            dispatchModeChanged(z);
+            return;
+        } else {
+            return;
         }
         dispatchModeChanged(this.mFlashlightEnabled);
         if (z2) {
@@ -132,7 +149,7 @@ public class FlashlightControllerImpl implements FlashlightController {
     }
 
     public synchronized boolean isAvailable() {
-        return this.mTorchAvailable;
+        return Constants.SUPPORT_ANDROID_FLASHLIGHT ? this.mTorchAvailable : true;
     }
 
     public void addCallback(FlashlightController.FlashlightListener flashlightListener) {
@@ -175,6 +192,7 @@ public class FlashlightControllerImpl implements FlashlightController {
 
     /* access modifiers changed from: private */
     public void dispatchModeChanged(boolean z) {
+        this.mMiuiFlashHelper.setTorchState(z);
         dispatchListeners(1, z);
     }
 
@@ -226,5 +244,7 @@ public class FlashlightControllerImpl implements FlashlightController {
         printWriter.println(this.mFlashlightEnabled);
         printWriter.print("  mTorchAvailable=");
         printWriter.println(this.mTorchAvailable);
+        printWriter.print("  isSupportAndroidFlashlight=");
+        printWriter.println(Constants.SUPPORT_ANDROID_FLASHLIGHT);
     }
 }

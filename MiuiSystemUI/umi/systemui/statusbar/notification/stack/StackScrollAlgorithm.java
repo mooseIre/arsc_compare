@@ -159,7 +159,8 @@ public class StackScrollAlgorithm {
         }
     }
 
-    private void initAlgorithmState(ViewGroup viewGroup, StackScrollAlgorithmState stackScrollAlgorithmState, AmbientState ambientState) {
+    /* access modifiers changed from: protected */
+    public void initAlgorithmState(ViewGroup viewGroup, StackScrollAlgorithmState stackScrollAlgorithmState, AmbientState ambientState) {
         int i;
         StackScrollAlgorithmState stackScrollAlgorithmState2 = stackScrollAlgorithmState;
         stackScrollAlgorithmState2.scrollY = (int) (((float) Math.max(0, ambientState.getScrollY())) + ambientState.getOverScrollAmount(false));
@@ -421,7 +422,7 @@ public class StackScrollAlgorithm {
             if (!expandableView.isPinned() && !expandableView.isHeadsUpAnimatingAway()) {
                 innerHeight = (int) (((float) ambientState.getInnerHeight()) + ambientState.getTopPadding());
             }
-            if (ambientState.isAppearing() && !expandableView.isAboveShelf() && !z) {
+            if (ambientState.isAppearing() && !expandableView.isAboveShelf() && !z && !ambientState.isNCSwitching()) {
                 expandableViewState.yTranslation = Math.max(expandableViewState.yTranslation, (float) innerHeight);
             }
             float f = (float) innerHeight;

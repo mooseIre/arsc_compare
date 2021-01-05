@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.accessibility.IAccessibilityManager;
 import android.widget.ToastPresenter;
 import com.android.internal.annotations.VisibleForTesting;
+import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.systemui.SystemUI;
 import com.android.systemui.statusbar.CommandQueue;
 import java.util.Objects;
@@ -45,15 +46,20 @@ public class ToastUI extends SystemUI implements CommandQueue.Callbacks {
     }
 
     public void showToast(int i, String str, IBinder iBinder, CharSequence charSequence, IBinder iBinder2, int i2, ITransientNotificationCallback iTransientNotificationCallback) {
+        Context context;
         IBinder iBinder3;
         String str2 = str;
         if (this.mPresenter != null) {
             hideCurrentToast();
         }
-        Context createContextAsUser = this.mContext.createContextAsUser(UserHandle.getUserHandleForUid(i), 0);
-        View textToastView = ToastPresenter.getTextToastView(createContextAsUser, charSequence);
+        if (i / 100000 == 999) {
+            context = this.mContext.createContextAsUser(new UserHandle(KeyguardUpdateMonitor.getCurrentUser()), 0);
+        } else {
+            context = this.mContext.createContextAsUser(UserHandle.getUserHandleForUid(i), 0);
+        }
+        View textToastView = ToastPresenter.getTextToastView(context, charSequence);
         this.mCallback = iTransientNotificationCallback;
-        this.mPresenter = new ToastPresenter(createContextAsUser, this.mAccessibilityManager, this.mNotificationManager, str2);
+        this.mPresenter = new ToastPresenter(context, this.mAccessibilityManager, this.mNotificationManager, str2);
         if (str2.equals("com.android.systemui")) {
             this.mPresenter.getLayoutParams().type = 2006;
             iBinder3 = null;

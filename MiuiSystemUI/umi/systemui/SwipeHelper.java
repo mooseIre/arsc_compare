@@ -374,44 +374,44 @@ public class SwipeHelper implements Gefingerpoken {
     }
 
     public void dismissChild(final View view, float f, Runnable runnable, long j, boolean z, long j2, boolean z2) {
-        float f2;
+        int i;
         long j3;
         View view2 = view;
         long j4 = j;
         final boolean canChildBeDismissed = this.mCallback.canChildBeDismissed(view);
         boolean z3 = false;
         boolean z4 = view.getLayoutDirection() == 1;
-        int i = (f > 0.0f ? 1 : (f == 0.0f ? 0 : -1));
-        boolean z5 = i == 0 && (getTranslation(view) == 0.0f || z2) && this.mSwipeDirection == 1;
-        boolean z6 = i == 0 && (getTranslation(view) == 0.0f || z2) && z4;
+        int i2 = (f > 0.0f ? 1 : (f == 0.0f ? 0 : -1));
+        boolean z5 = i2 == 0 && (getTranslation(view) == 0.0f || z2) && this.mSwipeDirection == 1;
+        boolean z6 = i2 == 0 && (getTranslation(view) == 0.0f || z2) && z4;
         if ((Math.abs(f) > getEscapeVelocity() && f < 0.0f) || (getTranslation(view) < 0.0f && !z2)) {
             z3 = true;
         }
         if (z3 || z6 || z5) {
-            f2 = -getSize(view);
+            i = -view.getContext().getResources().getDisplayMetrics().widthPixels;
         } else {
-            f2 = getSize(view);
+            i = view.getContext().getResources().getDisplayMetrics().widthPixels;
         }
-        float f3 = f2;
+        float f2 = (float) i;
         if (j2 == 0) {
-            j3 = i != 0 ? Math.min(400, (long) ((int) ((Math.abs(f3 - getTranslation(view)) * 1000.0f) / Math.abs(f)))) : 200;
+            j3 = i2 != 0 ? Math.min(400, (long) ((int) ((Math.abs(f2 - getTranslation(view)) * 1000.0f) / Math.abs(f)))) : 200;
         } else {
             j3 = j2;
         }
         if (!this.mDisableHwLayers) {
             view.setLayerType(2, (Paint) null);
         }
-        Animator viewTranslationAnimator = getViewTranslationAnimator(view, f3, new ValueAnimator.AnimatorUpdateListener() {
+        Animator viewTranslationAnimator = getViewTranslationAnimator(view, f2, new ValueAnimator.AnimatorUpdateListener() {
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 SwipeHelper.this.onTranslationUpdate(view, ((Float) valueAnimator.getAnimatedValue()).floatValue(), canChildBeDismissed);
             }
         });
         if (viewTranslationAnimator != null) {
             if (z) {
-                viewTranslationAnimator.setInterpolator(Interpolators.FAST_OUT_LINEAR_IN);
+                viewTranslationAnimator.setInterpolator(Interpolators.ACCELERATE_DECELERATE);
                 viewTranslationAnimator.setDuration(j3);
             } else {
-                this.mFlingAnimationUtils.applyDismissing(viewTranslationAnimator, getTranslation(view), f3, f, getSize(view));
+                this.mFlingAnimationUtils.applyDismissing(viewTranslationAnimator, getTranslation(view), f2, f, getSize(view));
             }
             if (j4 > 0) {
                 viewTranslationAnimator.setStartDelay(j4);

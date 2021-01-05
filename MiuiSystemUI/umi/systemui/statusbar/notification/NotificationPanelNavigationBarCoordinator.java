@@ -16,6 +16,8 @@ import org.jetbrains.annotations.Nullable;
 public final class NotificationPanelNavigationBarCoordinator implements CommandQueue.Callbacks, ConfigurationController.ConfigurationListener {
     private NavigationBarView barView;
     @NotNull
+    private final CommandQueue commandQueue;
+    @NotNull
     private final ConfigurationController configurationController;
     private int disable1;
     private int lastNavigationBarMode = -1;
@@ -27,10 +29,11 @@ public final class NotificationPanelNavigationBarCoordinator implements CommandQ
     private final ViewTreeObserver.OnGlobalLayoutListener onGlobalLayoutListener = new NotificationPanelNavigationBarCoordinator$onGlobalLayoutListener$1(this);
     private int orientation = 1;
 
-    public NotificationPanelNavigationBarCoordinator(@NotNull CommandQueue commandQueue, @NotNull ConfigurationController configurationController2, @NotNull LightBarController lightBarController2) {
-        Intrinsics.checkParameterIsNotNull(commandQueue, "commandQueue");
+    public NotificationPanelNavigationBarCoordinator(@NotNull CommandQueue commandQueue2, @NotNull ConfigurationController configurationController2, @NotNull LightBarController lightBarController2) {
+        Intrinsics.checkParameterIsNotNull(commandQueue2, "commandQueue");
         Intrinsics.checkParameterIsNotNull(configurationController2, "configurationController");
         Intrinsics.checkParameterIsNotNull(lightBarController2, "lightBarController");
+        this.commandQueue = commandQueue2;
         this.configurationController = configurationController2;
         this.lightBarController = lightBarController2;
     }
@@ -55,6 +58,7 @@ public final class NotificationPanelNavigationBarCoordinator implements CommandQ
 
     public final void start() {
         this.configurationController.addCallback(this);
+        this.commandQueue.addCallback((CommandQueue.Callbacks) this);
     }
 
     public void onConfigChanged(@Nullable Configuration configuration) {
@@ -92,7 +96,7 @@ public final class NotificationPanelNavigationBarCoordinator implements CommandQ
 
     public final void switchNavigationBarModeIfNeed(@NotNull NotificationStackScrollLayout notificationStackScrollLayout) {
         Intrinsics.checkParameterIsNotNull(notificationStackScrollLayout, "stackScrollLayout");
-        if (this.barView != null && !NavigationModeControllerExt.INSTANCE.hideNavigationBar()) {
+        if (this.barView != null && !NavigationModeControllerExt.INSTANCE.getMIsFsgMode()) {
             boolean z = false;
             if (this.orientation != 2) {
                 float bottomMostNotificationBottom = notificationStackScrollLayout.getBottomMostNotificationBottom();

@@ -32,6 +32,7 @@ import com.android.systemui.FontSizeUtils;
 import com.android.systemui.plugins.ActivityStarter;
 import com.android.systemui.statusbar.phone.SystemUIDialog;
 import com.android.systemui.statusbar.policy.SecurityController;
+import com.miui.systemui.analytics.SystemUIStat;
 
 public class QSSecurityFooter implements View.OnClickListener, DialogInterface.OnClickListener {
     /* access modifiers changed from: private */
@@ -126,6 +127,7 @@ public class QSSecurityFooter implements View.OnClickListener, DialogInterface.O
     public void handleClick() {
         showDeviceMonitoringDialog();
         DevicePolicyEventLogger.createEvent(57).write();
+        ((SystemUIStat) Dependency.get(SystemUIStat.class)).handleClickShortcutEvent("security_footer");
     }
 
     public void showDeviceMonitoringDialog() {

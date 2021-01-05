@@ -268,7 +268,7 @@ public class RemoteInputView extends LinearLayout implements View.OnClickListene
     public void focusAnimated() {
         if (getVisibility() != 0) {
             Animator createCircularReveal = ViewAnimationUtils.createCircularReveal(this, this.mRevealCx, this.mRevealCy, 0.0f, (float) this.mRevealR);
-            createCircularReveal.setDuration(360);
+            createCircularReveal.setDuration(300);
             createCircularReveal.setInterpolator(Interpolators.LINEAR_OUT_SLOW_IN);
             createCircularReveal.start();
         }

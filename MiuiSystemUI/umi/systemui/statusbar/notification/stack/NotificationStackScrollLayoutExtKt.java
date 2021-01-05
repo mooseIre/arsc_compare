@@ -44,6 +44,9 @@ public final class NotificationStackScrollLayoutExtKt {
                 notificationStackScrollLayout.requestAnimation();
             }
             notificationStackScrollLayout.requestChildrenUpdate();
+            for (R cancelAppearDrawing : SequencesKt___SequencesKt.map(SequencesKt___SequencesKt.filter(ConvenienceExtensionsKt.getChildren(notificationStackScrollLayout), NotificationStackScrollLayoutExtKt$setPanelAppeared$1.INSTANCE), NotificationStackScrollLayoutExtKt$setPanelAppeared$2.INSTANCE)) {
+                cancelAppearDrawing.cancelAppearDrawing();
+            }
         }
         notificationStackScrollLayout.getAmbientState().setPanelAppeared(z);
     }
@@ -82,5 +85,10 @@ public final class NotificationStackScrollLayoutExtKt {
     public static final void setQsExpansionEnabled(@NotNull NotificationStackScrollLayout notificationStackScrollLayout, boolean z) {
         Intrinsics.checkParameterIsNotNull(notificationStackScrollLayout, "$this$setQsExpansionEnabled");
         notificationStackScrollLayout.getAmbientState().setQsExpansionEnabled(z);
+    }
+
+    public static final void setNCSwitching(@NotNull NotificationStackScrollLayout notificationStackScrollLayout, boolean z) {
+        Intrinsics.checkParameterIsNotNull(notificationStackScrollLayout, "$this$setNCSwitching");
+        notificationStackScrollLayout.getAmbientState().setNCSwitching(z);
     }
 }

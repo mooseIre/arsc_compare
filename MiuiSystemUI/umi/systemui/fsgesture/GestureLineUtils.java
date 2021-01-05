@@ -4,6 +4,7 @@ import android.content.Context;
 import android.provider.MiuiSettings;
 import android.provider.Settings;
 import android.widget.RelativeLayout;
+import com.android.systemui.C0012R$dimen;
 import com.android.systemui.statusbar.phone.NavigationHandle;
 
 public class GestureLineUtils {
@@ -23,7 +24,7 @@ public class GestureLineUtils {
 
     public static NavigationHandle createAndaddNavigationHandle(RelativeLayout relativeLayout) {
         NavigationHandle navigationHandle = new NavigationHandle(relativeLayout.getContext());
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(-1, relativeLayout.getContext().getResources().getDimensionPixelSize(17105336));
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(relativeLayout.getContext().getResources().getDimensionPixelSize(C0012R$dimen.navigation_home_handle_width), relativeLayout.getContext().getResources().getDimensionPixelSize(17105336));
         layoutParams.addRule(12);
         layoutParams.addRule(14);
         relativeLayout.addView(navigationHandle, layoutParams);

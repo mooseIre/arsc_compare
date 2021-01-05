@@ -164,7 +164,7 @@ public class WindowManagerProxy {
         ActivityManager.RunningTaskInfo runningTaskInfo = null;
         for (int size = rootTasks.size() - 1; size >= 0; size--) {
             ActivityManager.RunningTaskInfo runningTaskInfo2 = (ActivityManager.RunningTaskInfo) rootTasks.get(size);
-            if ((runningTaskInfo2.isResizeable || runningTaskInfo2.topActivityType == 2) && runningTaskInfo2.configuration.windowConfiguration.getWindowingMode() == 1) {
+            if ((runningTaskInfo2.isResizeable || runningTaskInfo2.topActivityType == 2) && (runningTaskInfo2.configuration.windowConfiguration.getWindowingMode() == 1 || runningTaskInfo2.configuration.windowConfiguration.getWindowingMode() == 13)) {
                 runningTaskInfo = isHomeOrRecentTask(runningTaskInfo2) ? runningTaskInfo2 : null;
                 windowContainerTransaction.reparent(runningTaskInfo2.token, splitScreenTaskOrganizer.mSecondary.token, true);
             }

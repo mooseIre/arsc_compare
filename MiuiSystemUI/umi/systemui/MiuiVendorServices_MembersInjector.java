@@ -1,6 +1,7 @@
 package com.android.systemui;
 
 import com.android.keyguard.fod.policy.MiuiGxzwPolicy;
+import com.android.systemui.recents.MiuiFullScreenGestureProxy;
 import com.android.systemui.recents.MiuiRecentProxy;
 import com.android.systemui.statusbar.notification.NotificationPanelNavigationBarCoordinator;
 import com.android.systemui.statusbar.notification.policy.NotificationAlertController;
@@ -8,7 +9,9 @@ import com.android.systemui.statusbar.notification.policy.NotificationCountLimit
 import com.android.systemui.statusbar.notification.policy.NotificationDynamicFpsController;
 import com.android.systemui.statusbar.policy.MiuiHeadsUpPolicy;
 import com.android.systemui.statusbar.policy.MiuiNotificationShadePolicy;
+import com.android.systemui.vendor.HeadsetPolicy;
 import com.android.systemui.vendor.OrientationPolicy;
+import com.miui.systemui.display.OLEDScreenHelper;
 
 public final class MiuiVendorServices_MembersInjector {
     public static void injectMWallpaperZoomOutService(MiuiVendorServices miuiVendorServices, MiuiWallpaperZoomOutService miuiWallpaperZoomOutService) {
@@ -49,5 +52,17 @@ public final class MiuiVendorServices_MembersInjector {
 
     public static void injectMNotificationNavigationCoordinator(MiuiVendorServices miuiVendorServices, NotificationPanelNavigationBarCoordinator notificationPanelNavigationBarCoordinator) {
         miuiVendorServices.mNotificationNavigationCoordinator = notificationPanelNavigationBarCoordinator;
+    }
+
+    public static void injectMHeadsetPolicy(MiuiVendorServices miuiVendorServices, HeadsetPolicy headsetPolicy) {
+        miuiVendorServices.mHeadsetPolicy = headsetPolicy;
+    }
+
+    public static void injectMMiuiFullScreenGestureProxy(MiuiVendorServices miuiVendorServices, MiuiFullScreenGestureProxy miuiFullScreenGestureProxy) {
+        miuiVendorServices.mMiuiFullScreenGestureProxy = miuiFullScreenGestureProxy;
+    }
+
+    public static void injectMOledScreenHelper(MiuiVendorServices miuiVendorServices, OLEDScreenHelper oLEDScreenHelper) {
+        miuiVendorServices.mOledScreenHelper = oLEDScreenHelper;
     }
 }

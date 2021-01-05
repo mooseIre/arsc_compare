@@ -63,86 +63,93 @@ public abstract class MiuiHeaderView extends RelativeLayout implements View.OnCl
         this.mShortcut.setContentDescription(getResources().getString(C0021R$string.accessibility_settings));
     }
 
-    /* JADX WARNING: Removed duplicated region for block: B:26:0x0078 A[Catch:{ Exception -> 0x0083 }] */
-    /* JADX WARNING: Removed duplicated region for block: B:30:? A[RETURN, SYNTHETIC] */
+    /* JADX WARNING: Removed duplicated region for block: B:26:0x0079 A[Catch:{ Exception -> 0x0091 }] */
+    /* JADX WARNING: Removed duplicated region for block: B:28:0x0086 A[Catch:{ Exception -> 0x0091 }] */
+    /* JADX WARNING: Removed duplicated region for block: B:32:? A[RETURN, SYNTHETIC] */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     public void onClick(android.view.View r7) {
         /*
             r6 = this;
-            com.android.systemui.statusbar.policy.MiuiClock r0 = r6.mClock     // Catch:{ Exception -> 0x0083 }
+            com.android.systemui.statusbar.policy.MiuiClock r0 = r6.mClock     // Catch:{ Exception -> 0x0091 }
             r1 = 1
             r2 = 0
             java.lang.String r3 = "android.intent.action.MAIN"
             if (r7 == r0) goto L_0x0064
-            boolean r0 = miui.os.Build.IS_TABLET     // Catch:{ Exception -> 0x0083 }
+            boolean r0 = miui.os.Build.IS_TABLET     // Catch:{ Exception -> 0x0091 }
             if (r0 != 0) goto L_0x0016
-            int r0 = r6.mLastOrientation     // Catch:{ Exception -> 0x0083 }
+            int r0 = r6.mLastOrientation     // Catch:{ Exception -> 0x0091 }
             r4 = 2
             if (r0 != r4) goto L_0x0016
-            com.android.systemui.statusbar.policy.MiuiClock r0 = r6.mDateView     // Catch:{ Exception -> 0x0083 }
+            com.android.systemui.statusbar.policy.MiuiClock r0 = r6.mDateView     // Catch:{ Exception -> 0x0091 }
             if (r7 != r0) goto L_0x0016
             goto L_0x0064
         L_0x0016:
-            com.android.systemui.statusbar.policy.MiuiClock r0 = r6.mDateView     // Catch:{ Exception -> 0x0083 }
+            com.android.systemui.statusbar.policy.MiuiClock r0 = r6.mDateView     // Catch:{ Exception -> 0x0091 }
             if (r7 != r0) goto L_0x002b
-            android.content.Intent r2 = new android.content.Intent     // Catch:{ Exception -> 0x0083 }
-            r2.<init>(r3)     // Catch:{ Exception -> 0x0083 }
-            android.content.Context r7 = r6.mContext     // Catch:{ Exception -> 0x0083 }
-            java.lang.String r7 = com.miui.systemui.util.CommonUtil.getCalendarPkg(r7)     // Catch:{ Exception -> 0x0083 }
-            r2.setPackage(r7)     // Catch:{ Exception -> 0x0083 }
+            android.content.Intent r2 = new android.content.Intent     // Catch:{ Exception -> 0x0091 }
+            r2.<init>(r3)     // Catch:{ Exception -> 0x0091 }
+            android.content.Context r7 = r6.mContext     // Catch:{ Exception -> 0x0091 }
+            java.lang.String r7 = com.miui.systemui.util.CommonUtil.getCalendarPkg(r7)     // Catch:{ Exception -> 0x0091 }
+            r2.setPackage(r7)     // Catch:{ Exception -> 0x0091 }
             java.lang.String r7 = "date"
             goto L_0x0070
         L_0x002b:
-            android.widget.ImageView r0 = r6.mShortcut     // Catch:{ Exception -> 0x0083 }
+            android.widget.ImageView r0 = r6.mShortcut     // Catch:{ Exception -> 0x0091 }
             if (r7 != r0) goto L_0x0062
-            int r7 = r6.mShortcutDestination     // Catch:{ Exception -> 0x0083 }
+            int r7 = r6.mShortcutDestination     // Catch:{ Exception -> 0x0091 }
             if (r7 != r1) goto L_0x0058
-            android.content.Intent r2 = new android.content.Intent     // Catch:{ Exception -> 0x0083 }
-            r2.<init>(r3)     // Catch:{ Exception -> 0x0083 }
+            android.content.Intent r2 = new android.content.Intent     // Catch:{ Exception -> 0x0091 }
+            r2.<init>(r3)     // Catch:{ Exception -> 0x0091 }
             java.lang.String r7 = "com.android.settings"
             java.lang.String r0 = "com.android.settings.SubSettings"
-            r2.setClassName(r7, r0)     // Catch:{ Exception -> 0x0083 }
+            r2.setClassName(r7, r0)     // Catch:{ Exception -> 0x0091 }
             java.lang.String r7 = ":settings:show_fragment"
             java.lang.String r0 = "com.android.settings.NotificationControlCenterSettings"
-            r2.putExtra(r7, r0)     // Catch:{ Exception -> 0x0083 }
+            r2.putExtra(r7, r0)     // Catch:{ Exception -> 0x0091 }
             java.lang.String r7 = ":settings:show_fragment_title"
-            android.content.res.Resources r0 = r6.getResources()     // Catch:{ Exception -> 0x0083 }
-            int r3 = com.android.systemui.C0021R$string.notification_control_center     // Catch:{ Exception -> 0x0083 }
-            java.lang.String r0 = r0.getString(r3)     // Catch:{ Exception -> 0x0083 }
-            r2.putExtra(r7, r0)     // Catch:{ Exception -> 0x0083 }
+            android.content.res.Resources r0 = r6.getResources()     // Catch:{ Exception -> 0x0091 }
+            int r3 = com.android.systemui.C0021R$string.notification_control_center     // Catch:{ Exception -> 0x0091 }
+            java.lang.String r0 = r0.getString(r3)     // Catch:{ Exception -> 0x0091 }
+            r2.putExtra(r7, r0)     // Catch:{ Exception -> 0x0091 }
             java.lang.String r7 = "notification-settings"
             goto L_0x0070
         L_0x0058:
-            android.content.Intent r2 = new android.content.Intent     // Catch:{ Exception -> 0x0083 }
+            android.content.Intent r2 = new android.content.Intent     // Catch:{ Exception -> 0x0091 }
             java.lang.String r7 = "android.settings.SETTINGS"
-            r2.<init>(r7)     // Catch:{ Exception -> 0x0083 }
+            r2.<init>(r7)     // Catch:{ Exception -> 0x0091 }
             java.lang.String r7 = "settings"
             goto L_0x0070
         L_0x0062:
             r7 = r2
             goto L_0x0073
         L_0x0064:
-            android.content.Intent r2 = new android.content.Intent     // Catch:{ Exception -> 0x0083 }
-            r2.<init>(r3)     // Catch:{ Exception -> 0x0083 }
+            android.content.Intent r2 = new android.content.Intent     // Catch:{ Exception -> 0x0091 }
+            r2.<init>(r3)     // Catch:{ Exception -> 0x0091 }
             java.lang.String r7 = "com.android.deskclock"
-            r2.setPackage(r7)     // Catch:{ Exception -> 0x0083 }
+            r2.setPackage(r7)     // Catch:{ Exception -> 0x0091 }
             java.lang.String r7 = "clock"
         L_0x0070:
             r5 = r2
             r2 = r7
             r7 = r5
         L_0x0073:
-            android.text.TextUtils.isEmpty(r2)     // Catch:{ Exception -> 0x0083 }
-            if (r7 == 0) goto L_0x0087
+            boolean r0 = android.text.TextUtils.isEmpty(r2)     // Catch:{ Exception -> 0x0091 }
+            if (r0 != 0) goto L_0x0084
+            java.lang.Class<com.miui.systemui.analytics.SystemUIStat> r0 = com.miui.systemui.analytics.SystemUIStat.class
+            java.lang.Object r0 = com.android.systemui.Dependency.get(r0)     // Catch:{ Exception -> 0x0091 }
+            com.miui.systemui.analytics.SystemUIStat r0 = (com.miui.systemui.analytics.SystemUIStat) r0     // Catch:{ Exception -> 0x0091 }
+            r0.handleClickShortcutEvent(r2)     // Catch:{ Exception -> 0x0091 }
+        L_0x0084:
+            if (r7 == 0) goto L_0x0095
             r0 = 268435456(0x10000000, float:2.5243549E-29)
-            r7.addFlags(r0)     // Catch:{ Exception -> 0x0083 }
-            com.android.systemui.plugins.ActivityStarter r6 = r6.mActStarter     // Catch:{ Exception -> 0x0083 }
-            r6.startActivity(r7, r1)     // Catch:{ Exception -> 0x0083 }
-            goto L_0x0087
-        L_0x0083:
+            r7.addFlags(r0)     // Catch:{ Exception -> 0x0091 }
+            com.android.systemui.plugins.ActivityStarter r6 = r6.mActStarter     // Catch:{ Exception -> 0x0091 }
+            r6.startActivity(r7, r1)     // Catch:{ Exception -> 0x0091 }
+            goto L_0x0095
+        L_0x0091:
             r6 = move-exception
             r6.printStackTrace()
-        L_0x0087:
+        L_0x0095:
             return
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.qs.MiuiHeaderView.onClick(android.view.View):void");

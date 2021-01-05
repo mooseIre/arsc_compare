@@ -1,6 +1,5 @@
 package com.android.systemui.controlcenter.phone.customize;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Canvas;
@@ -16,6 +15,7 @@ import android.view.accessibility.AccessibilityManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import androidx.core.view.ViewCompat;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -32,11 +32,16 @@ import com.android.systemui.plugins.qs.QSTile;
 import com.android.systemui.qs.QSTileHost;
 import com.android.systemui.qs.customize.TileQueryHelper;
 import com.android.systemui.qs.external.CustomTile;
-import com.android.systemui.statusbar.phone.SystemUIDialog;
+import com.miui.systemui.analytics.SystemUIStat;
+import com.miui.systemui.events.QuickTilesAddedEvent;
+import com.miui.systemui.events.QuickTilesMovedEvent;
+import com.miui.systemui.events.QuickTilesRemovedEvent;
+import com.miui.systemui.statusbar.phone.MiuiSystemUIDialog;
 import com.miui.systemui.util.HapticFeedBackImpl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import miui.app.AlertDialog;
 
 public class CCTileAdapter extends RecyclerView.Adapter<Holder> implements TileQueryHelper.TileStateListener {
     private int mAccessibilityFromIndex;
@@ -110,7 +115,8 @@ public class CCTileAdapter extends RecyclerView.Adapter<Holder> implements TileQ
     public QSTileHost mHost;
     private final ItemTouchHelper mItemTouchHelper;
     private boolean mNeedsFocus;
-    private final List<TileQueryHelper.TileInfo> mOtherTiles = new ArrayList();
+    /* access modifiers changed from: private */
+    public List<TileQueryHelper.TileInfo> mOtherTiles = new ArrayList();
     private RecyclerView mParent;
     private QSControlCustomizer mQSControlCustomizer;
     private final GridLayoutManager.SpanSizeLookup mSizeLookup = new GridLayoutManager.SpanSizeLookup() {
@@ -131,7 +137,7 @@ public class CCTileAdapter extends RecyclerView.Adapter<Holder> implements TileQ
     /* access modifiers changed from: private */
     public int mTileWidth;
     /* access modifiers changed from: private */
-    public final List<TileQueryHelper.TileInfo> mTiles = new ArrayList();
+    public List<TileQueryHelper.TileInfo> mTiles = new ArrayList();
 
     public CCTileAdapter(Context context, int i, RecyclerView recyclerView, boolean z) {
         new Handler();
@@ -220,29 +226,42 @@ public class CCTileAdapter extends RecyclerView.Adapter<Holder> implements TileQ
     private void recalcSpecs(boolean z) {
         if (this.mCurrentSpecs != null && this.mAllTiles != null) {
             ArrayList arrayList = new ArrayList(this.mAllTiles);
-            this.mTiles.clear();
-            this.mOtherTiles.clear();
-            int i = 0;
-            for (int i2 = 0; i2 < this.mCurrentSpecs.size(); i2++) {
-                TileQueryHelper.TileInfo andRemoveOther = getAndRemoveOther(this.mCurrentSpecs.get(i2), arrayList);
+            final List<TileQueryHelper.TileInfo> list = this.mTiles;
+            final List<TileQueryHelper.TileInfo> list2 = this.mOtherTiles;
+            this.mTiles = new ArrayList();
+            this.mOtherTiles = new ArrayList();
+            for (int i = 0; i < this.mCurrentSpecs.size(); i++) {
+                TileQueryHelper.TileInfo andRemoveOther = getAndRemoveOther(this.mCurrentSpecs.get(i), arrayList);
                 if (andRemoveOther != null) {
                     this.mTiles.add(andRemoveOther);
                 }
-            }
-            while (i < this.mOtherTiles.size()) {
-                TileQueryHelper.TileInfo tileInfo = (TileQueryHelper.TileInfo) arrayList.get(i);
-                if (tileInfo.isSystem) {
-                    arrayList.remove(i);
-                    this.mOtherTiles.add(tileInfo);
-                    i--;
-                }
-                i++;
             }
             this.mTileDividerIndex = this.mTiles.size();
             this.mOtherTiles.addAll(arrayList);
             this.mEditIndex = this.mTiles.size();
             if (z) {
-                notifyDataSetChanged();
+                DiffUtil.calculateDiff(new DiffUtil.Callback() {
+                    public int getOldListSize() {
+                        return (CCTileAdapter.this.mAddedAdpater ? list : list2).size();
+                    }
+
+                    public int getNewListSize() {
+                        boolean access$200 = CCTileAdapter.this.mAddedAdpater;
+                        CCTileAdapter cCTileAdapter = CCTileAdapter.this;
+                        return (access$200 ? cCTileAdapter.mTiles : cCTileAdapter.mOtherTiles).size();
+                    }
+
+                    public boolean areItemsTheSame(int i, int i2) {
+                        if (CCTileAdapter.this.mAddedAdpater) {
+                            return ((TileQueryHelper.TileInfo) list.get(i)).spec.equals(((TileQueryHelper.TileInfo) CCTileAdapter.this.mTiles.get(i2)).spec);
+                        }
+                        return ((TileQueryHelper.TileInfo) list2.get(i)).spec.equals(((TileQueryHelper.TileInfo) CCTileAdapter.this.mOtherTiles.get(i2)).spec);
+                    }
+
+                    public boolean areContentsTheSame(int i, int i2) {
+                        return areItemsTheSame(i, i2);
+                    }
+                }, true).dispatchUpdatesTo((RecyclerView.Adapter) this);
             }
         }
     }
@@ -434,7 +453,7 @@ public class CCTileAdapter extends RecyclerView.Adapter<Holder> implements TileQ
     /* access modifiers changed from: private */
     public void showAccessibilityDialog(final int i, View view) {
         TileQueryHelper.TileInfo tileInfo = this.mTiles.get(i);
-        AlertDialog create = new AlertDialog.Builder(this.mContext).setItems(new CharSequence[]{this.mContext.getString(C0021R$string.accessibility_qs_edit_move_tile, new Object[]{tileInfo.state.label}), this.mContext.getString(C0021R$string.accessibility_qs_edit_remove_tile, new Object[]{tileInfo.state.label})}, new DialogInterface.OnClickListener() {
+        AlertDialog create = new AlertDialog.Builder(this.mContext, 8).setItems(new CharSequence[]{this.mContext.getString(C0021R$string.accessibility_qs_edit_move_tile, new Object[]{tileInfo.state.label}), this.mContext.getString(C0021R$string.accessibility_qs_edit_remove_tile, new Object[]{tileInfo.state.label})}, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialogInterface, int i) {
                 if (i == 0) {
                     CCTileAdapter.this.startAccessibleDrag(i);
@@ -443,14 +462,15 @@ public class CCTileAdapter extends RecyclerView.Adapter<Holder> implements TileQ
                 }
             }
         }).setNegativeButton(17039360, (DialogInterface.OnClickListener) null).create();
-        SystemUIDialog.setShowForAllUsers(create, true);
-        SystemUIDialog.applyFlags(create);
+        MiuiSystemUIDialog.setShowForAllUsers(create, true);
+        MiuiSystemUIDialog.applyFlags(create);
         create.show();
     }
 
     /* access modifiers changed from: private */
     public void moveTileItemToOther(int i) {
         if (this.mTiles.size() > this.mSpanCount * 2) {
+            ((SystemUIStat) Dependency.get(SystemUIStat.class)).handleControlCenterEvent(new QuickTilesRemovedEvent(this.mTiles.get(i).spec));
             this.mQSControlCustomizer.addInTileAdapter(this.mTiles.get(i), false);
             this.mTiles.remove(i);
             notifyItemRemoved(i);
@@ -460,6 +480,7 @@ public class CCTileAdapter extends RecyclerView.Adapter<Holder> implements TileQ
 
     /* access modifiers changed from: private */
     public void addTileItemFromOther(int i) {
+        ((SystemUIStat) Dependency.get(SystemUIStat.class)).handleControlCenterEvent(new QuickTilesAddedEvent(this.mOtherTiles.get(i).spec));
         this.mQSControlCustomizer.addInTileAdapter(this.mOtherTiles.get(i), true);
         this.mOtherTiles.remove(i);
         notifyItemRemoved(i);
@@ -494,6 +515,7 @@ public class CCTileAdapter extends RecyclerView.Adapter<Holder> implements TileQ
         }
         CharSequence charSequence = this.mTiles.get(i).state.label;
         move(i, i2, this.mTiles);
+        ((SystemUIStat) Dependency.get(SystemUIStat.class)).handleControlCenterEvent(new QuickTilesMovedEvent(this.mTiles.get(i2).spec));
         updateDividerLocations();
         int i4 = this.mEditIndex;
         if (i2 >= i4) {
@@ -600,12 +622,12 @@ public class CCTileAdapter extends RecyclerView.Adapter<Holder> implements TileQ
             super.getItemOffsets(rect, i, recyclerView);
             int measuredWidth = recyclerView.getMeasuredWidth();
             boolean z = recyclerView.getLayoutDirection() == 1;
-            float access$1500 = ((float) (measuredWidth - (CCTileAdapter.this.mTileWidth * CCTileAdapter.this.mSpanCount))) / ((float) (CCTileAdapter.this.mSpanCount - 1));
+            float access$1700 = ((float) (measuredWidth - (CCTileAdapter.this.mTileWidth * CCTileAdapter.this.mSpanCount))) / ((float) (CCTileAdapter.this.mSpanCount - 1));
             if (i % CCTileAdapter.this.mSpanCount < CCTileAdapter.this.mSpanCount - 1) {
                 if (z) {
-                    rect.left = Math.round(access$1500);
+                    rect.left = Math.round(access$1700);
                 } else {
-                    rect.right = Math.round(access$1500);
+                    rect.right = Math.round(access$1700);
                 }
             }
             rect.bottom = CCTileAdapter.this.mTileBottom;

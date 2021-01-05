@@ -1,31 +1,24 @@
 package com.android.systemui.statusbar.policy;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.os.Handler;
-import android.os.UserHandle;
-import android.provider.MiuiSettings;
-import android.text.TextUtils;
+import com.android.systemui.Dependency;
 import com.android.systemui.Dumpable;
+import com.miui.systemui.SettingsObserver;
+import com.miui.systemui.util.MiuiTextUtils;
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import org.jetbrains.annotations.Nullable;
 
-public class MiuiAlarmControllerImpl extends BroadcastReceiver implements CallbackController, Dumpable {
+public class MiuiAlarmControllerImpl implements CallbackController, Dumpable, SettingsObserver.Callback {
     private final ArrayList<MiuiAlarmController$MiuiAlarmChangeCallback> mChangeCallbacks = new ArrayList<>();
-    private Context mContext;
     private boolean mHasAlarm;
+    private SettingsObserver mSettingsObserver;
 
     public MiuiAlarmControllerImpl(Context context) {
-        this.mContext = context;
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction("android.intent.action.USER_SWITCHED");
-        intentFilter.addAction("android.app.action.NEXT_ALARM_CLOCK_CHANGED");
-        intentFilter.addAction("android.intent.action.ALARM_CHANGED");
-        context.registerReceiverAsUser(this, UserHandle.ALL, intentFilter, (String) null, (Handler) null);
-        updateNextAlarm();
+        SettingsObserver settingsObserver = (SettingsObserver) Dependency.get(SettingsObserver.class);
+        this.mSettingsObserver = settingsObserver;
+        settingsObserver.addCallback(this, "next_alarm_clock_formatted");
     }
 
     public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
@@ -43,25 +36,17 @@ public class MiuiAlarmControllerImpl extends BroadcastReceiver implements Callba
         this.mChangeCallbacks.remove(miuiAlarmController$MiuiAlarmChangeCallback);
     }
 
-    public void onReceive(Context context, Intent intent) {
-        String action = intent.getAction();
-        if (action == null) {
-            return;
-        }
-        if (action.equals("android.intent.action.USER_SWITCHED") || action.equals("android.app.action.NEXT_ALARM_CLOCK_CHANGED") || action.equals("android.intent.action.ALARM_CHANGED")) {
-            updateNextAlarm();
-        }
-    }
-
-    private void updateNextAlarm() {
-        this.mHasAlarm = !TextUtils.isEmpty(MiuiSettings.System.getStringForUser(this.mContext.getContentResolver(), "next_alarm_clock_formatted", -2));
-        fireNextAlarmChanged();
-    }
-
     private void fireNextAlarmChanged() {
         int size = this.mChangeCallbacks.size();
         for (int i = 0; i < size; i++) {
             this.mChangeCallbacks.get(i).onNextAlarmChanged(this.mHasAlarm);
+        }
+    }
+
+    public void onContentChanged(@Nullable String str, @Nullable String str2) {
+        if (str.equals("next_alarm_clock_formatted")) {
+            this.mHasAlarm = !MiuiTextUtils.isEmpty(str2);
+            fireNextAlarmChanged();
         }
     }
 }

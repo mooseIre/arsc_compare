@@ -14,6 +14,7 @@ import com.android.systemui.statusbar.notification.MiniWindowExpandParameters;
 import com.android.systemui.statusbar.notification.NotificationSettingsHelper;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import com.android.systemui.statusbar.notification.policy.AppMiniWindowManager;
+import com.android.systemui.statusbar.notification.row.wrapper.MiuiNotificationOneLineViewWrapper;
 import com.android.systemui.statusbar.notification.stack.ExpandableViewState;
 import com.miui.systemui.SettingsManager;
 import com.miui.systemui.util.CommonExtensionsKt;
@@ -26,12 +27,14 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /* compiled from: MiuiExpandableNotificationRow.kt */
-public final class MiuiExpandableNotificationRow extends ExpandableNotificationRow {
+public final class MiuiExpandableNotificationRow extends MiuiAnimatedNotificationRowBase {
     static final /* synthetic */ KProperty[] $$delegatedProperties;
     private final Lazy mAppMiniWindowManager$delegate = LazyKt__LazyJVMKt.lazy(MiuiExpandableNotificationRow$mAppMiniWindowManager$2.INSTANCE);
+    private final Lazy mBackgroundDimmed$delegate = LazyKt__LazyJVMKt.lazy(new MiuiExpandableNotificationRow$mBackgroundDimmed$2(this));
     private boolean mCanSlide;
     private final Lazy mFakeShadowView$delegate = LazyKt__LazyJVMKt.lazy(new MiuiExpandableNotificationRow$mFakeShadowView$2(this));
     private boolean mIsInModal;
+    private boolean mLayoutInflated;
     private final Lazy mMiniBar$delegate = LazyKt__LazyJVMKt.lazy(new MiuiExpandableNotificationRow$mMiniBar$2(this));
     private final Lazy mMiniBarMarginBottom$delegate = LazyKt__LazyJVMKt.lazy(new MiuiExpandableNotificationRow$mMiniBarMarginBottom$2(this));
     private final Lazy mMiniWindowIcon$delegate = LazyKt__LazyJVMKt.lazy(new MiuiExpandableNotificationRow$mMiniWindowIcon$2(this));
@@ -46,15 +49,23 @@ public final class MiuiExpandableNotificationRow extends ExpandableNotificationR
         Reflection.property1(propertyReference1Impl3);
         PropertyReference1Impl propertyReference1Impl4 = new PropertyReference1Impl(Reflection.getOrCreateKotlinClass(MiuiExpandableNotificationRow.class), "mFakeShadowView", "getMFakeShadowView()Lcom/android/systemui/statusbar/notification/FakeShadowView;");
         Reflection.property1(propertyReference1Impl4);
-        PropertyReference1Impl propertyReference1Impl5 = new PropertyReference1Impl(Reflection.getOrCreateKotlinClass(MiuiExpandableNotificationRow.class), "mMiniBarMarginBottom", "getMMiniBarMarginBottom()F");
+        PropertyReference1Impl propertyReference1Impl5 = new PropertyReference1Impl(Reflection.getOrCreateKotlinClass(MiuiExpandableNotificationRow.class), "mBackgroundDimmed", "getMBackgroundDimmed()Lcom/android/systemui/statusbar/notification/row/NotificationBackgroundView;");
         Reflection.property1(propertyReference1Impl5);
-        $$delegatedProperties = new KProperty[]{propertyReference1Impl, propertyReference1Impl2, propertyReference1Impl3, propertyReference1Impl4, propertyReference1Impl5};
+        PropertyReference1Impl propertyReference1Impl6 = new PropertyReference1Impl(Reflection.getOrCreateKotlinClass(MiuiExpandableNotificationRow.class), "mMiniBarMarginBottom", "getMMiniBarMarginBottom()F");
+        Reflection.property1(propertyReference1Impl6);
+        $$delegatedProperties = new KProperty[]{propertyReference1Impl, propertyReference1Impl2, propertyReference1Impl3, propertyReference1Impl4, propertyReference1Impl5, propertyReference1Impl6};
     }
 
     private final AppMiniWindowManager getMAppMiniWindowManager() {
         Lazy lazy = this.mAppMiniWindowManager$delegate;
         KProperty kProperty = $$delegatedProperties[0];
         return (AppMiniWindowManager) lazy.getValue();
+    }
+
+    private final NotificationBackgroundView getMBackgroundDimmed() {
+        Lazy lazy = this.mBackgroundDimmed$delegate;
+        KProperty kProperty = $$delegatedProperties[4];
+        return (NotificationBackgroundView) lazy.getValue();
     }
 
     private final FakeShadowView getMFakeShadowView() {
@@ -71,7 +82,7 @@ public final class MiuiExpandableNotificationRow extends ExpandableNotificationR
 
     private final float getMMiniBarMarginBottom() {
         Lazy lazy = this.mMiniBarMarginBottom$delegate;
-        KProperty kProperty = $$delegatedProperties[4];
+        KProperty kProperty = $$delegatedProperties[5];
         return ((Number) lazy.getValue()).floatValue();
     }
 
@@ -83,6 +94,12 @@ public final class MiuiExpandableNotificationRow extends ExpandableNotificationR
 
     public MiuiExpandableNotificationRow(@Nullable Context context, @Nullable AttributeSet attributeSet) {
         super(context, attributeSet);
+    }
+
+    /* access modifiers changed from: protected */
+    public void onFinishInflate() {
+        super.onFinishInflate();
+        this.mLayoutInflated = true;
     }
 
     /* access modifiers changed from: protected */
@@ -108,13 +125,21 @@ public final class MiuiExpandableNotificationRow extends ExpandableNotificationR
     }
 
     private final void updateBackgroundBg() {
-        if (!isHeadsUpState()) {
-            this.mBackgroundNormal.setCustomBackground(C0013R$drawable.notification_item_bg);
-        } else if (((SettingsManager) Dependency.get(SettingsManager.class)).getGameModeEnabled()) {
+        if (isHeadsUpState()) {
+            boolean gameModeEnabled = ((SettingsManager) Dependency.get(SettingsManager.class)).getGameModeEnabled();
+            NotificationContentView showingLayout = getShowingLayout();
+            boolean z = (showingLayout != null ? showingLayout.getVisibleWrapper(2) : null) instanceof MiuiNotificationOneLineViewWrapper;
+            if (!gameModeEnabled || !z) {
+                this.mBackgroundNormal.setCustomBackground(C0013R$drawable.notification_heads_up_bg);
+                this.mBackgroundNormal.setGameModeHint(false);
+                return;
+            }
             this.mBackgroundNormal.setCustomBackground(C0013R$drawable.optimized_game_heads_up_notification_bg);
-        } else {
-            this.mBackgroundNormal.setCustomBackground(C0013R$drawable.notification_heads_up_bg);
+            this.mBackgroundNormal.setGameModeHint(true);
+            return;
         }
+        this.mBackgroundNormal.setCustomBackground(C0013R$drawable.notification_item_bg);
+        this.mBackgroundNormal.setGameModeHint(false);
     }
 
     public void setIsChildInGroup(boolean z, @Nullable ExpandableNotificationRow expandableNotificationRow) {
@@ -208,6 +233,7 @@ public final class MiuiExpandableNotificationRow extends ExpandableNotificationR
     public void setPinned(boolean z) {
         super.setPinned(z);
         updateMiniWindowBar();
+        this.mBackgroundNormal.setHighSamplingFrequency(z);
     }
 
     public final void updateMiniWindowBar() {
@@ -328,5 +354,22 @@ public final class MiuiExpandableNotificationRow extends ExpandableNotificationR
         NotificationBackgroundView notificationBackgroundView = this.mBackgroundNormal;
         Intrinsics.checkExpressionValueIsNotNull(notificationBackgroundView, "mBackgroundNormal");
         return notificationBackgroundView;
+    }
+
+    /* access modifiers changed from: protected */
+    public void damageInParent() {
+        super.damageInParent();
+        if (this.mLayoutInflated) {
+            NotificationBackgroundView notificationBackgroundView = this.mBackgroundNormal;
+            Intrinsics.checkExpressionValueIsNotNull(notificationBackgroundView, "mBackgroundNormal");
+            if (notificationBackgroundView.getVisibility() == 0) {
+                this.mBackgroundNormal.invalidate();
+            }
+            NotificationBackgroundView mBackgroundDimmed = getMBackgroundDimmed();
+            Intrinsics.checkExpressionValueIsNotNull(mBackgroundDimmed, "mBackgroundDimmed");
+            if (mBackgroundDimmed.getVisibility() == 0) {
+                getMBackgroundDimmed().invalidate();
+            }
+        }
     }
 }

@@ -31,6 +31,7 @@ import com.android.systemui.C0022R$style;
 import com.android.systemui.Dependency;
 import com.android.systemui.Interpolators;
 import com.android.systemui.assist.AssistHandleViewController;
+import com.android.systemui.controlcenter.phone.ControlPanelWindowManager;
 import com.android.systemui.model.SysUiState;
 import com.android.systemui.recents.OverviewProxyService;
 import com.android.systemui.recents.Recents;
@@ -58,6 +59,7 @@ public class NavigationBarView extends FrameLayout implements NavigationModeCont
     private final SparseArray<ButtonDispatcher> mButtonDispatchers = new SparseArray<>();
     private Configuration mConfiguration;
     private final ContextualButtonGroup mContextualButtonGroup;
+    private ControlPanelWindowManager mControlPanelWindowManager;
     private int mCurrentRotation = -1;
     View mCurrentView = null;
     private final DeadZone mDeadZone;
@@ -819,26 +821,34 @@ public class NavigationBarView extends FrameLayout implements NavigationModeCont
     /* JADX WARNING: Code restructure failed: missing block: B:2:0x0006, code lost:
         r0 = r1.mPanelView;
      */
+    /* JADX WARNING: Code restructure failed: missing block: B:8:0x0018, code lost:
+        r0 = r1.mControlPanelWindowManager;
+     */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     public void updateSlippery() {
         /*
             r1 = this;
             boolean r0 = r1.isQuickStepSwipeUpEnabled()
-            if (r0 == 0) goto L_0x001b
+            if (r0 == 0) goto L_0x0025
             com.android.systemui.statusbar.phone.NotificationPanelViewController r0 = r1.mPanelView
-            if (r0 == 0) goto L_0x0019
+            if (r0 == 0) goto L_0x0018
             boolean r0 = r0.isFullyExpanded()
-            if (r0 == 0) goto L_0x0019
+            if (r0 == 0) goto L_0x0018
             com.android.systemui.statusbar.phone.NotificationPanelViewController r0 = r1.mPanelView
             boolean r0 = r0.isCollapsing()
-            if (r0 != 0) goto L_0x0019
-            goto L_0x001b
-        L_0x0019:
+            if (r0 == 0) goto L_0x0025
+        L_0x0018:
+            com.android.systemui.controlcenter.phone.ControlPanelWindowManager r0 = r1.mControlPanelWindowManager
+            if (r0 == 0) goto L_0x0023
+            boolean r0 = r0.isPanelExpanded()
+            if (r0 == 0) goto L_0x0023
+            goto L_0x0025
+        L_0x0023:
             r0 = 0
-            goto L_0x001c
-        L_0x001b:
+            goto L_0x0026
+        L_0x0025:
             r0 = 1
-        L_0x001c:
+        L_0x0026:
             r1.setSlippery(r0)
             return
         */
@@ -896,6 +906,7 @@ public class NavigationBarView extends FrameLayout implements NavigationModeCont
         ((Divider) Dependency.get(Divider.class)).registerInSplitScreenListener(this.mDockedListener);
         updateOrientationViews();
         reloadNavIcons();
+        this.mControlPanelWindowManager = (ControlPanelWindowManager) Dependency.get(ControlPanelWindowManager.class);
     }
 
     /* access modifiers changed from: protected */

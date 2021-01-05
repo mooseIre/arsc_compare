@@ -23,6 +23,7 @@ import com.android.systemui.shared.system.QuickStepContract;
 import com.android.systemui.statusbar.phone.NavigationModeController;
 import com.android.systemui.statusbar.phone.ReverseLinearLayout;
 import com.android.systemui.statusbar.policy.KeyButtonView;
+import com.miui.systemui.SettingsManager;
 import java.io.PrintWriter;
 import java.util.Objects;
 
@@ -388,8 +389,9 @@ public class NavigationBarInflaterView extends FrameLayout implements Navigation
 
     public void updateBackground(boolean z) {
         if (z) {
-            this.mHorizontal.setBackgroundResource(C0013R$drawable.ic_sysbar_bg_darkmode);
-            this.mVertical.setBackgroundResource(C0013R$drawable.ic_sysbar_bg_land_darkmode);
+            boolean z2 = !((SettingsManager) Dependency.get(SettingsManager.class)).getMiuiOptimizationEnabled();
+            this.mHorizontal.setBackgroundResource(z2 ? C0013R$drawable.ic_sysbar_bg_darkmode_cts : C0013R$drawable.ic_sysbar_bg_darkmode);
+            this.mVertical.setBackgroundResource(z2 ? C0013R$drawable.ic_sysbar_bg_land_darkmode_cts : C0013R$drawable.ic_sysbar_bg_land_darkmode);
             return;
         }
         this.mHorizontal.setBackgroundResource(C0013R$drawable.ic_sysbar_bg);

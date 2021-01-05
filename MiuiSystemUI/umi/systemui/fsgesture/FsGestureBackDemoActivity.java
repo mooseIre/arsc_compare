@@ -220,8 +220,6 @@ public class FsGestureBackDemoActivity extends FsGestureDemoBaseActiivy {
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         setContentView(C0017R$layout.fs_gesture_back_demo);
-        getWindow().addFlags(1024);
-        FsgestureUtil.INSTANCE.hideSystemBars(getWindow().getDecorView());
         DisplayMetrics displayMetrics = new DisplayMetrics();
         ((WindowManager) getSystemService("window")).getDefaultDisplay().getRealMetrics(displayMetrics);
         this.mDisplayWidth = displayMetrics.widthPixels;

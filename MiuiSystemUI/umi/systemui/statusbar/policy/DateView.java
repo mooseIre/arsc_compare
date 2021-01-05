@@ -8,6 +8,7 @@ import android.content.res.TypedArray;
 import android.icu.text.DateFormat;
 import android.icu.text.DisplayContext;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.widget.TextView;
 import com.android.systemui.C0021R$string;
@@ -108,6 +109,16 @@ public class DateView extends TextView {
         if (!format.equals(this.mLastText)) {
             setText(format);
             this.mLastText = format;
+        }
+    }
+
+    public void setDatePattern(String str) {
+        if (!TextUtils.equals(str, this.mDatePattern)) {
+            this.mDatePattern = str;
+            this.mDateFormat = null;
+            if (isAttachedToWindow()) {
+                updateClock();
+            }
         }
     }
 }

@@ -44,6 +44,8 @@ public interface ExpandInfoController {
 
     void startActivityByUri(String str);
 
+    void unregister();
+
     void updateInfo(int i, Info info) {
     }
 

@@ -62,15 +62,15 @@ public class StatusBarSignalPolicy implements NetworkController.SignalCallback, 
         this.mNetworkController = (NetworkController) Dependency.get(NetworkController.class);
         this.mSecurityController = (SecurityController) Dependency.get(SecurityController.class);
         ((TunerService) Dependency.get(TunerService.class)).addTunable(this, "icon_blacklist");
-        this.mNetworkController.addCallback((NetworkController.SignalCallback) this);
+        this.mNetworkController.addCallback(this);
         this.mSecurityController.addCallback(this);
     }
 
     /* access modifiers changed from: private */
     public void updateVpn() {
-        boolean isVpnEnabled = this.mSecurityController.isVpnEnabled();
+        boolean z = this.mSecurityController.isVpnEnabled() && !this.mSecurityController.isSilentVpnPackage();
         this.mIconController.setIcon(this.mSlotVpn, currentVpnIconId(this.mSecurityController.isVpnBranded()), this.mContext.getResources().getString(C0021R$string.accessibility_vpn_on));
-        this.mIconController.setIconVisibility(this.mSlotVpn, isVpnEnabled);
+        this.mIconController.setIconVisibility(this.mSlotVpn, z);
     }
 
     private int currentVpnIconId(boolean z) {
@@ -97,8 +97,8 @@ public class StatusBarSignalPolicy implements NetworkController.SignalCallback, 
                 this.mBlockMobile = contains2;
                 this.mBlockEthernet = contains4;
                 this.mBlockWifi = contains3 || this.mForceBlockWifi;
-                this.mNetworkController.removeCallback((NetworkController.SignalCallback) this);
-                this.mNetworkController.addCallback((NetworkController.SignalCallback) this);
+                this.mNetworkController.removeCallback(this);
+                this.mNetworkController.addCallback(this);
             }
         }
     }
@@ -402,7 +402,7 @@ public class StatusBarSignalPolicy implements NetworkController.SignalCallback, 
         }
 
         public String toString() {
-            return "MobileIconState(subId=" + this.subId + ", strengthId=" + this.strengthId + ", roaming=" + this.roaming + ", typeId=" + this.typeId + ", volteId=" + this.volteId + ", visible=" + this.visible + ")";
+            return "MobileIconState(subId=" + this.subId + ", strengthId=" + this.strengthId + ", roaming=" + this.roaming + ", typeId=" + this.typeId + ", volteId=" + this.volteId + ", airplane = " + this.airplane + ", dataConnected = " + this.dataConnected + ", wifiAvailable = " + this.wifiAvailable + ", networkName = " + this.networkName + ", volte = " + this.volte + ", hideVolte = " + this.hideVolte + ", vowifiId = " + this.vowifiId + ", vowifi = " + this.vowifi + ", hideVowifi = " + this.hideVowifi + ", speechHd = " + this.speechHd + ", volteNoSerivce = " + this.volteNoSerivce + ", fiveGDrawableId = " + this.fiveGDrawableId + ", showDataTypeWhenWifiOn = " + this.showDataTypeWhenWifiOn + ", showDataTypeDataDisconnected = " + this.showDataTypeDataDisconnected + ", showMobileDataTypeInMMS = " + this.showMobileDataTypeInMMS + ", visible=" + this.visible + ")";
         }
     }
 }

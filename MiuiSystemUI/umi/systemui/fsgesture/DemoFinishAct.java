@@ -19,9 +19,7 @@ public class DemoFinishAct extends FsGestureDemoBaseActiivy {
     /* access modifiers changed from: protected */
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        getWindow().addFlags(1024);
         setContentView(C0017R$layout.fs_gesture_demo_final_view);
-        FsgestureUtil.INSTANCE.hideSystemBars(getWindow().getDecorView());
         Intent intent = getIntent();
         final String stringExtra = intent.getStringExtra("DEMO_TYPE");
         this.isFromPro = intent.getBooleanExtra("IS_FROM_PROVISION", false);

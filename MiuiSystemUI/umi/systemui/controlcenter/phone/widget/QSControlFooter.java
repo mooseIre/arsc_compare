@@ -29,6 +29,7 @@ import com.android.systemui.plugins.ActivityStarter;
 import com.android.systemui.qs.QSTileHost;
 import com.android.systemui.statusbar.phone.SystemUIDialog;
 import com.android.systemui.statusbar.policy.SecurityController;
+import com.miui.systemui.analytics.SystemUIStat;
 
 public class QSControlFooter extends LinearLayout implements View.OnClickListener, DialogInterface.OnClickListener {
     /* access modifiers changed from: private */
@@ -144,6 +145,7 @@ public class QSControlFooter extends LinearLayout implements View.OnClickListene
 
     /* access modifiers changed from: private */
     public void handleClick() {
+        ((SystemUIStat) Dependency.get(SystemUIStat.class)).handleClickShortcutEvent("security_footer");
         showDeviceMonitoringDialog();
     }
 

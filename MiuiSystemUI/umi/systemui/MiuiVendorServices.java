@@ -4,6 +4,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.provider.Settings;
 import com.android.keyguard.fod.policy.MiuiGxzwPolicy;
+import com.android.systemui.recents.MiuiFullScreenGestureProxy;
 import com.android.systemui.recents.MiuiRecentProxy;
 import com.android.systemui.statusbar.notification.NotificationPanelNavigationBarCoordinator;
 import com.android.systemui.statusbar.notification.policy.NotificationAlertController;
@@ -11,9 +12,13 @@ import com.android.systemui.statusbar.notification.policy.NotificationCountLimit
 import com.android.systemui.statusbar.notification.policy.NotificationDynamicFpsController;
 import com.android.systemui.statusbar.policy.MiuiHeadsUpPolicy;
 import com.android.systemui.statusbar.policy.MiuiNotificationShadePolicy;
+import com.android.systemui.vendor.HeadsetPolicy;
 import com.android.systemui.vendor.OrientationPolicy;
+import com.miui.systemui.display.OLEDScreenHelper;
 
 public class MiuiVendorServices extends SystemUI {
+    HeadsetPolicy mHeadsetPolicy;
+    MiuiFullScreenGestureProxy mMiuiFullScreenGestureProxy;
     MiuiGxzwPolicy mMiuiGxzwPolicy;
     MiuiHeadsUpPolicy mMiuiHeadsUpPolicy;
     MiuiNotificationShadePolicy mMiuiNotificationShadePolicy;
@@ -22,6 +27,7 @@ public class MiuiVendorServices extends SystemUI {
     NotificationCountLimitPolicy mNotifCountLimitPolicy;
     NotificationDynamicFpsController mNotifDynamicFpsController;
     NotificationPanelNavigationBarCoordinator mNotificationNavigationCoordinator;
+    OLEDScreenHelper mOledScreenHelper;
     OrientationPolicy mOrientationPolicy;
     MiuiWallpaperZoomOutService mWallpaperZoomOutService;
 
@@ -41,6 +47,9 @@ public class MiuiVendorServices extends SystemUI {
         this.mMiuiRecentProxy.start();
         this.mOrientationPolicy.start();
         this.mNotificationNavigationCoordinator.start();
+        this.mHeadsetPolicy.start();
+        this.mMiuiFullScreenGestureProxy.start();
+        this.mOledScreenHelper.start();
     }
 
     private void setSettingsDefault() {

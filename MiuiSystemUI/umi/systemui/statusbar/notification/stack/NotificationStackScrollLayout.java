@@ -114,6 +114,7 @@ import com.android.systemui.statusbar.phone.HeadsUpManagerPhone;
 import com.android.systemui.statusbar.phone.HeadsUpTouchHelper;
 import com.android.systemui.statusbar.phone.KeyguardBypassController;
 import com.android.systemui.statusbar.phone.LockscreenGestureLogger;
+import com.android.systemui.statusbar.phone.MiuiNotificationPanelViewController;
 import com.android.systemui.statusbar.phone.NotificationGroupManager;
 import com.android.systemui.statusbar.phone.NotificationIconAreaController;
 import com.android.systemui.statusbar.phone.NotificationPanelViewController;
@@ -1593,7 +1594,11 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
                 f2 = (f - appearStartPosition) + getExpandTranslationStart();
             }
             i = (int) (f - f2);
-            f3 = isHeadsUpTransition() ? MathUtils.lerp((float) (this.mHeadsUpInset - this.mTopPadding), 0.0f, f4) : f2;
+            if (isHeadsUpTransition()) {
+                f3 = MathUtils.lerp((float) (this.mHeadsUpInset - this.mTopPadding), 0.0f, f4);
+            } else if (!((MiuiNotificationPanelViewController) this.mNotificationPanelController).isNCSwitching()) {
+                f3 = f2;
+            }
         } else if (this.mShouldShowShelfOnly) {
             i = this.mTopPadding + this.mShelf.getIntrinsicHeight();
         } else {
@@ -3196,7 +3201,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
         while (it.hasNext()) {
             ExpandableView next = it.next();
             if (this.mFromMoreCardAdditions.contains(next)) {
-                this.mAnimationEvents.add(new AnimationEvent(next, 0, 360));
+                this.mAnimationEvents.add(new AnimationEvent(next, 0, 300));
             } else {
                 this.mAnimationEvents.add(new AnimationEvent(next, 0));
             }
@@ -4826,12 +4831,12 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
             return;
         }
         setDismissAllInProgress(true);
-        int i = 140;
+        int i = 70;
         int i2 = 180;
         int size = arrayList.size() - 1;
         while (size >= 0) {
-            dismissViewAnimated(arrayList.get(size), size == 0 ? r0 : null, i2, 260);
-            i = Math.max(50, i - 10);
+            dismissViewAnimated(arrayList.get(size), size == 0 ? r0 : null, i2, 200);
+            i = Math.max(10, i - 5);
             i2 += i;
             size--;
         }
@@ -5092,7 +5097,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
 
     static class AnimationEvent {
         static AnimationFilter[] FILTERS;
-        static int[] LENGTHS = {464, 464, 360, 360, 220, 220, 360, 448, 360, 360, 360, 550, 300, 300, 360, 360};
+        static int[] LENGTHS = {300, 300, 300, 300, 220, 220, 300, 448, 300, 300, 300, 550, 300, 300, 300, 300};
         final int animationType;
         final AnimationFilter filter;
         boolean headsUpFromBottom;

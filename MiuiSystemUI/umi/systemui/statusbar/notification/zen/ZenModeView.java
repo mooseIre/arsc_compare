@@ -67,10 +67,6 @@ public class ZenModeView extends ActivatableNotificationView implements Swipeabl
         return this.mContent;
     }
 
-    public boolean isVisiable() {
-        return this.mContent.getVisibility() == 0;
-    }
-
     public boolean handleSlideBack() {
         if (getTranslationX() == 0.0f) {
             return false;
@@ -135,5 +131,6 @@ public class ZenModeView extends ActivatableNotificationView implements Swipeabl
         }
         setTranslation(0.0f);
         setTransitionAlpha(1.0f);
+        makeInactive(false);
     }
 }

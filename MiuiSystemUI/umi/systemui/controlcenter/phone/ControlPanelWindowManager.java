@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.WindowManager;
 import com.android.systemui.controlcenter.utils.ControlCenterUtils;
+import com.android.systemui.plugins.statusbar.StatusBarStateController;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import com.android.systemui.statusbar.phone.HeadsUpManagerPhone;
 import com.android.systemui.statusbar.phone.StatusBar;
@@ -20,12 +21,14 @@ public class ControlPanelWindowManager implements OnHeadsUpChangedListener {
     private ControlPanelController mControlPanelController;
     private float mDownX;
     private final HeadsUpManagerPhone mHeadsUpManager;
+    private boolean mIsExpand = false;
     private boolean mIsHeadsUp = false;
     private boolean mIsRowPinned = false;
     private WindowManager.LayoutParams mLp;
     private WindowManager.LayoutParams mLpChanged;
     private HashSet<OnExpandChangeListener> mOnExpandChangeListeners;
     private StatusBar mStatusBar;
+    private StatusBarStateController mStatusBarStateController;
     private boolean mTransToControlPanel = false;
     private WindowManager mWindowManager;
 
@@ -33,14 +36,12 @@ public class ControlPanelWindowManager implements OnHeadsUpChangedListener {
         void onExpandChange(boolean z);
     }
 
-    private void setEnableForceLightNavigationHandle(boolean z) {
-    }
-
-    public ControlPanelWindowManager(Context context, StatusBar statusBar, ControlPanelController controlPanelController, HeadsUpManagerPhone headsUpManagerPhone) {
+    public ControlPanelWindowManager(Context context, StatusBar statusBar, ControlPanelController controlPanelController, HeadsUpManagerPhone headsUpManagerPhone, StatusBarStateController statusBarStateController) {
         this.mContext = context;
         this.mStatusBar = statusBar;
         this.mHeadsUpManager = headsUpManagerPhone;
         this.mControlPanelController = controlPanelController;
+        this.mStatusBarStateController = statusBarStateController;
         this.mWindowManager = (WindowManager) context.getSystemService("window");
         this.mOnExpandChangeListeners = new HashSet<>();
     }
@@ -91,31 +92,37 @@ public class ControlPanelWindowManager implements OnHeadsUpChangedListener {
     }
 
     public void onExpandChange(boolean z) {
-        Log.d("ControlPanelWindowManager", "onExpandChange: " + z);
-        if (z) {
+        Log.d("ControlPanelWindowManager", "onExpandChange: " + z + "," + this.mIsExpand);
+        if (z && !this.mIsExpand) {
+            this.mIsExpand = true;
             this.mControlPanel.setVisibility(0);
             WindowManager.LayoutParams layoutParams = this.mLpChanged;
             layoutParams.height = -1;
             int i = layoutParams.flags & -9;
             layoutParams.flags = i;
             layoutParams.flags = i | 131072;
-            ControlCenterUtils.updateFsgState(this.mContext, "typefrom_status_bar_expansion", true);
-            setEnableForceLightNavigationHandle(true);
-        } else {
+        } else if (!z && this.mIsExpand) {
+            this.mIsExpand = false;
             this.mControlPanel.setVisibility(8);
             WindowManager.LayoutParams layoutParams2 = this.mLpChanged;
             layoutParams2.height = 0;
-            int i2 = 8 | layoutParams2.flags;
+            int i2 = layoutParams2.flags | 8;
             layoutParams2.flags = i2;
             layoutParams2.flags = i2 & -131073;
-            StatusBar statusBar = this.mStatusBar;
-            if (statusBar == null || statusBar.isQSFullyCollapsed()) {
-                ControlCenterUtils.updateFsgState(this.mContext, "typefrom_status_bar_expansion", false);
-            }
-            setEnableForceLightNavigationHandle(false);
         }
+        updateFsgState(z);
         apply();
         notifyListeners(z);
+    }
+
+    public void updateFsgState(boolean z) {
+        boolean z2 = false;
+        boolean z3 = this.mStatusBarStateController.getState() == 0;
+        boolean isFullyCollapsed = this.mStatusBar.getPanelController() == null ? true : this.mStatusBar.getPanelController().isFullyCollapsed();
+        if (z || (z3 && !isFullyCollapsed)) {
+            z2 = true;
+        }
+        ControlCenterUtils.updateFsgState(this.mContext, "typefrom_status_bar_expansion", z2);
     }
 
     public boolean hasAdded() {
@@ -152,16 +159,16 @@ public class ControlPanelWindowManager implements OnHeadsUpChangedListener {
     }
 
     public boolean dispatchToControlPanel(MotionEvent motionEvent, float f) {
-        if (!this.mControlPanelController.isUseControlCenter() || (this.mIsHeadsUp && this.mIsRowPinned)) {
-            Log.d("ControlPanelWindowManager", " mIsHeadsUp:" + this.mIsHeadsUp + " mIsRowPinned:" + this.mIsRowPinned);
+        if (this.mControlPanelController.isUseControlCenter()) {
+            if (motionEvent.getActionMasked() == 0) {
+                this.mDownX = motionEvent.getRawX();
+            }
+            if (this.mDownX > f / 2.0f) {
+                return this.mControlPanel.handleMotionEvent(motionEvent, true);
+            }
             return false;
         }
-        if (motionEvent.getActionMasked() == 0) {
-            this.mDownX = motionEvent.getRawX();
-        }
-        if (this.mDownX > f / 2.0f) {
-            return this.mControlPanel.handleMotionEvent(motionEvent, true);
-        }
+        Log.d("ControlPanelWindowManager", " mIsHeadsUp:" + this.mIsHeadsUp + " mIsRowPinned:" + this.mIsRowPinned);
         return false;
     }
 
@@ -184,5 +191,19 @@ public class ControlPanelWindowManager implements OnHeadsUpChangedListener {
 
     public void trimMemory() {
         this.mStatusBar.trimMemory();
+    }
+
+    public boolean isPanelExpanded() {
+        ControlPanelWindowView controlPanelWindowView = this.mControlPanel;
+        if (controlPanelWindowView != null) {
+            return controlPanelWindowView.isExpanded();
+        }
+        return false;
+    }
+
+    public void updateNavigationBarSlippery() {
+        if (this.mStatusBar.getNavigationBarView() != null) {
+            this.mStatusBar.getNavigationBarView().updateSlippery();
+        }
     }
 }

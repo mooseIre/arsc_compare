@@ -91,6 +91,10 @@ public abstract class BaseInfo {
         this.mContext.registerReceiver(this.mSIMDataReceiver, intentFilter);
     }
 
+    public void unregister() {
+        this.mContext.unregisterReceiver(this.mSIMDataReceiver);
+    }
+
     /* access modifiers changed from: protected */
     public void refresh() {
         new UpdateInfoDetailTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new Void[0]);

@@ -209,7 +209,7 @@ public final class MiuiNotificationPanelViewController$createTouchHandler$1 exte
                     float f = x - this.mInitialTouchX;
                     float f2 = y - this.mInitialTouchY;
                     this.this$0.setMPanelStretching(handleStretchState(f2, f, y));
-                    this.this$0.mPanelCollapsing = handleCollapseState(f2, f, y);
+                    this.this$0.mPanelCollapsing = handleCollapseState(f2, f, this.mInitialTouchY);
                     if (!this.this$0.mNssCoveringQs) {
                         this.this$0.mNssCoveringQs = handleSlideState(f2, f, y);
                     }
@@ -257,7 +257,7 @@ public final class MiuiNotificationPanelViewController$createTouchHandler$1 exte
                     float f = x - this.mInitialTouchX;
                     float f2 = y - this.mInitialTouchY;
                     boolean handleStretchState = handleStretchState(f2, f, y);
-                    boolean handleCollapseState = handleCollapseState(f2, f, y);
+                    boolean handleCollapseState = handleCollapseState(f2, f, this.mInitialTouchY);
                     boolean handleSlideState = handleSlideState(f2, f, y);
                     if (!this.this$0.mPanelIntercepting) {
                         this.this$0.mPanelIntercepting = handleStretchState || handleCollapseState || handleSlideState;

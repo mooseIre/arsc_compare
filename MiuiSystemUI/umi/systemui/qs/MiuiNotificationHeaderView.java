@@ -1,11 +1,15 @@
 package com.android.systemui.qs;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import com.android.keyguard.CarrierText;
 import com.android.systemui.C0010R$bool;
+import com.android.systemui.C0011R$color;
+import com.android.systemui.C0013R$drawable;
 import com.android.systemui.C0015R$id;
 import com.android.systemui.Dependency;
 import com.android.systemui.MiuiBatteryMeterView;
@@ -14,6 +18,7 @@ import com.android.systemui.statusbar.CommandQueue;
 import com.android.systemui.statusbar.phone.StatusBarIconController;
 import com.android.systemui.statusbar.policy.MiuiClock;
 import com.android.systemui.statusbar.views.NetworkSpeedView;
+import miui.os.Build;
 
 public class MiuiNotificationHeaderView extends MiuiHeaderView {
     private MiuiBatteryMeterView mBattery;
@@ -43,14 +48,40 @@ public class MiuiNotificationHeaderView extends MiuiHeaderView {
     }
 
     /* access modifiers changed from: protected */
+    public void onConfigurationChanged(Configuration configuration) {
+        super.onConfigurationChanged(configuration);
+        updateTimeColor();
+    }
+
+    /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mCarrierText = (CarrierText) findViewById(C0015R$id.carrier_text);
+        CarrierText carrierText = (CarrierText) findViewById(C0015R$id.carrier_text);
+        this.mCarrierText = carrierText;
+        if (carrierText != null && !Build.IS_INTERNATIONAL_BUILD) {
+            carrierText.setVisibility(8);
+        }
         this.mBattery = (MiuiBatteryMeterView) findViewById(C0015R$id.battery);
         NetworkSpeedView networkSpeedView = (NetworkSpeedView) findViewById(C0015R$id.fullscreen_network_speed_view);
         this.mFullscreenNetworkSpeedView = networkSpeedView;
         networkSpeedView.setVisibilityByStatusBar(true);
         this.mIconManager = new StatusBarIconController.MiuiLightDarkIconManager((ViewGroup) findViewById(C0015R$id.statusIcons), this.mCommandQueue, true, ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).getLightModeIconColorSingleTone());
+        updateTimeColor();
+    }
+
+    private void updateTimeColor() {
+        ImageView imageView = this.mShortcut;
+        if (imageView != null) {
+            imageView.setImageDrawable(getResources().getDrawable(C0013R$drawable.notification_panel_manage_icon));
+        }
+        MiuiClock miuiClock = this.mClock;
+        if (miuiClock != null) {
+            miuiClock.setTextColor(getResources().getColor(C0011R$color.qs_control_header_clock_color));
+        }
+        MiuiClock miuiClock2 = this.mDateView;
+        if (miuiClock2 != null) {
+            miuiClock2.setTextColor(getResources().getColor(C0011R$color.qs_control_header_date_color));
+        }
     }
 
     /* access modifiers changed from: protected */
@@ -73,14 +104,6 @@ public class MiuiNotificationHeaderView extends MiuiHeaderView {
         int lightModeIconColorSingleTone = darkIconDispatcher.getLightModeIconColorSingleTone();
         int darkModeIconColorSingleTone = darkIconDispatcher.getDarkModeIconColorSingleTone();
         int i = z ? darkModeIconColorSingleTone : lightModeIconColorSingleTone;
-        MiuiClock miuiClock = this.mDateView;
-        if (miuiClock != null) {
-            miuiClock.onDarkChanged(rect, f, i, lightModeIconColorSingleTone, darkModeIconColorSingleTone, false);
-        }
-        MiuiClock miuiClock2 = this.mClock;
-        if (miuiClock2 != null) {
-            miuiClock2.onDarkChanged(rect, f, i, lightModeIconColorSingleTone, darkModeIconColorSingleTone, false);
-        }
         NetworkSpeedView networkSpeedView = this.mFullscreenNetworkSpeedView;
         if (networkSpeedView != null) {
             networkSpeedView.onDarkChanged(rect, f, i, lightModeIconColorSingleTone, darkModeIconColorSingleTone, false);

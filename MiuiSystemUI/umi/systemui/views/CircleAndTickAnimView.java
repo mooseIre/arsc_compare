@@ -27,6 +27,7 @@ public class CircleAndTickAnimView extends View {
     public float mCircleRotateDegrees;
     private int mDiameter;
     private Drawable mNormalDrawable;
+    private final Rect mOutRect;
     private Path mTickDstPath;
     /* access modifiers changed from: private */
     public float mTickEndPoint;
@@ -37,7 +38,7 @@ public class CircleAndTickAnimView extends View {
     /* access modifiers changed from: private */
     public float mTickStartPoint;
     private ValueAnimator mTickStartPointAnimator;
-    private Rect mViewRect;
+    private final Rect mViewRect;
 
     public CircleAndTickAnimView(Context context) {
         this(context, (AttributeSet) null);
@@ -52,6 +53,7 @@ public class CircleAndTickAnimView extends View {
         this.mAnimatorSet = new AnimatorSet();
         this.isNormalDrawableShow = true;
         this.mViewRect = new Rect();
+        this.mOutRect = new Rect();
         this.mTickPathMeasure = new PathMeasure();
         this.mTickDstPath = new Path();
         this.mTickPaint = new Paint();
@@ -213,20 +215,19 @@ public class CircleAndTickAnimView extends View {
 
     /* access modifiers changed from: protected */
     public void onDraw(Canvas canvas) {
-        Rect rect = new Rect();
         Drawable drawable = this.mNormalDrawable;
         if (drawable != null) {
-            Gravity.apply(17, drawable.getIntrinsicWidth(), this.mNormalDrawable.getIntrinsicHeight(), this.mViewRect, rect);
-            this.mNormalDrawable.setBounds(rect);
+            Gravity.apply(17, drawable.getIntrinsicWidth(), this.mNormalDrawable.getIntrinsicHeight(), this.mViewRect, this.mOutRect);
+            this.mNormalDrawable.setBounds(this.mOutRect);
             if (this.isNormalDrawableShow) {
-                this.mNormalDrawable.setAlpha((int) (getAlpha() * 255.0f));
+                this.mNormalDrawable.setAlpha(255);
                 this.mNormalDrawable.draw(canvas);
             } else {
                 this.mNormalDrawable.setAlpha((int) (((this.mCircleRotateDegrees / 90.0f) + 1.0f) * 255.0f));
                 canvas.save();
                 float f = this.mCircleRotateDegrees;
                 int i = this.mDiameter;
-                canvas.rotate(f, (float) (i / 2), (float) (i / 2));
+                canvas.rotate(f, ((float) i) / 2.0f, ((float) i) / 2.0f);
                 this.mNormalDrawable.draw(canvas);
                 canvas.restore();
             }

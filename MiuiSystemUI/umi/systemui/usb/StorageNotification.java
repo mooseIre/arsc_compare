@@ -10,7 +10,6 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.StrictMode;
 import android.os.UserHandle;
 import android.os.storage.DiskInfo;
 import android.os.storage.StorageEventListener;
@@ -23,6 +22,7 @@ import android.util.Log;
 import android.util.SparseArray;
 import com.android.systemui.SystemUI;
 import com.android.systemui.util.NotificationChannels;
+import com.miui.systemui.util.UsbUtils;
 
 public class StorageNotification extends SystemUI {
     private final BroadcastReceiver mFinishReceiver = new BroadcastReceiver() {
@@ -236,24 +236,14 @@ public class StorageNotification extends SystemUI {
         if (findRecordByUuid.isSnoozed() && disk.isAdoptable()) {
             return null;
         }
-        if (!disk.isAdoptable() || findRecordByUuid.isInited()) {
-            String description = disk.getDescription();
-            String string = this.mContext.getString(17040177, new Object[]{disk.getDescription()});
-            PendingIntent buildBrowsePendingIntent = buildBrowsePendingIntent(volumeInfo);
-            Notification.Builder category = buildNotificationBuilder(volumeInfo, description, string).addAction(new Notification.Action(17302453, this.mContext.getString(17040161), buildBrowsePendingIntent)).addAction(new Notification.Action(17302435, this.mContext.getString(17040190), buildUnmountPendingIntent(volumeInfo))).setContentIntent(buildBrowsePendingIntent).setCategory("sys");
-            if (disk.isAdoptable()) {
-                category.setDeleteIntent(buildSnoozeIntent(volumeInfo.getFsUuid()));
-            }
-            return category.build();
+        String description = disk.getDescription();
+        String string = this.mContext.getString(17040177, new Object[]{disk.getDescription()});
+        PendingIntent buildBrowsePendingIntent = UsbUtils.buildBrowsePendingIntent(this.mContext, volumeInfo);
+        Notification.Builder category = buildNotificationBuilder(volumeInfo, description, string).addAction(new Notification.Action(17302453, this.mContext.getString(17040161), buildBrowsePendingIntent)).addAction(new Notification.Action(17302435, this.mContext.getString(17040190), buildUnmountPendingIntent(volumeInfo))).setContentIntent(buildBrowsePendingIntent).setCategory("sys");
+        if (disk.isAdoptable()) {
+            category.setDeleteIntent(buildSnoozeIntent(volumeInfo.getFsUuid()));
         }
-        String description2 = disk.getDescription();
-        String string2 = this.mContext.getString(17040173, new Object[]{disk.getDescription()});
-        PendingIntent buildInitPendingIntent = buildInitPendingIntent(volumeInfo);
-        PendingIntent buildUnmountPendingIntent = buildUnmountPendingIntent(volumeInfo);
-        if (isAutomotive()) {
-            return buildNotificationBuilder(volumeInfo, description2, string2).setContentIntent(buildUnmountPendingIntent).setDeleteIntent(buildSnoozeIntent(volumeInfo.getFsUuid())).build();
-        }
-        return buildNotificationBuilder(volumeInfo, description2, string2).addAction(new Notification.Action(17302837, this.mContext.getString(17040164), buildInitPendingIntent)).addAction(new Notification.Action(17302435, this.mContext.getString(17040190), buildUnmountPendingIntent)).setContentIntent(buildInitPendingIntent).setDeleteIntent(buildSnoozeIntent(volumeInfo.getFsUuid())).build();
+        return category.build();
     }
 
     private Notification onVolumeEjecting(VolumeInfo volumeInfo) {
@@ -400,16 +390,6 @@ public class StorageNotification extends SystemUI {
             intent.setClassName("com.android.settings", "com.android.settings.deviceinfo.StorageUnmountReceiver");
             intent.putExtra("android.os.storage.extra.VOLUME_ID", volumeInfo.getId());
             return PendingIntent.getBroadcastAsUser(this.mContext, volumeInfo.getId().hashCode(), intent, 268435456, UserHandle.CURRENT);
-        }
-    }
-
-    private PendingIntent buildBrowsePendingIntent(VolumeInfo volumeInfo) {
-        StrictMode.VmPolicy allowVmViolations = StrictMode.allowVmViolations();
-        try {
-            Intent buildBrowseIntentForUser = volumeInfo.buildBrowseIntentForUser(volumeInfo.getMountUserId());
-            return PendingIntent.getActivityAsUser(this.mContext, volumeInfo.getId().hashCode(), buildBrowseIntentForUser, 268435456, (Bundle) null, UserHandle.CURRENT);
-        } finally {
-            StrictMode.setVmPolicy(allowVmViolations);
         }
     }
 

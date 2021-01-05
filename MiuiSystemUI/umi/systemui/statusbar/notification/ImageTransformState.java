@@ -74,7 +74,7 @@ public class ImageTransformState extends TransformState {
     }
 
     private static float mapToDuration(float f) {
-        return Math.max(Math.min(((f * 360.0f) - 150.0f) / 210.0f, 1.0f), 0.0f);
+        return Math.max(Math.min(((f * 300.0f) - 90.0f) / 210.0f, 1.0f), 0.0f);
     }
 
     public Icon getIcon() {

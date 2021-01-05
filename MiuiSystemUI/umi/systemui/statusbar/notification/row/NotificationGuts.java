@@ -224,7 +224,7 @@ public class NotificationGuts extends FrameLayout {
         } else if (z) {
             setAlpha(1.0f);
             Animator createCircularReveal = ViewAnimationUtils.createCircularReveal(this, i, i2, 0.0f, (float) Math.hypot((double) Math.max(getWidth() - i, i), (double) Math.max(getHeight() - i2, i2)));
-            createCircularReveal.setDuration(360);
+            createCircularReveal.setDuration(300);
             createCircularReveal.setInterpolator(Interpolators.LINEAR_OUT_SLOW_IN);
             createCircularReveal.addListener(new AnimateOpenListener(runnable));
             createCircularReveal.start();
@@ -246,7 +246,7 @@ public class NotificationGuts extends FrameLayout {
                 i2 = getTop() + (getHeight() / 2);
             }
             Animator createCircularReveal = ViewAnimationUtils.createCircularReveal(this, i, i2, (float) Math.hypot((double) Math.max(getWidth() - i, i), (double) Math.max(getHeight() - i2, i2)), 0.0f);
-            createCircularReveal.setDuration(360);
+            createCircularReveal.setDuration(300);
             createCircularReveal.setInterpolator(Interpolators.FAST_OUT_LINEAR_IN);
             createCircularReveal.addListener(new AnimateCloseListener(this, this.mGutsContent));
             createCircularReveal.start();

@@ -86,10 +86,10 @@ public class MiuiStatusBarSignalPolicy extends StatusBarSignalPolicy implements 
 
     /* access modifiers changed from: protected */
     public void updateWifiIconWithState(StatusBarSignalPolicy.WifiIconState wifiIconState) {
+        this.mIconController.setSignalIcon(this.mSlotWifi, wifiIconState);
         if (!wifiIconState.visible || wifiIconState.resId <= 0) {
             this.mIconController.setIconVisibility(this.mSlotWifi, false);
         } else {
-            this.mIconController.setSignalIcon(this.mSlotWifi, wifiIconState);
             this.mIconController.setIconVisibility(this.mSlotWifi, true);
         }
         updateMobileIconStateOnWifiIconStateChange(wifiIconState);
@@ -138,6 +138,7 @@ public class MiuiStatusBarSignalPolicy extends StatusBarSignalPolicy implements 
             state.hideVowifi = miuiMobileState.hideVowifi;
             state.speechHd = miuiMobileState.speedHd;
             state.volteNoSerivce = miuiMobileState.volteNoService;
+            state.fiveGDrawableId = miuiMobileState.qcom5GDrawableId;
             state.showDataTypeWhenWifiOn = miuiMobileState.showDataTypeWhenWifiOn;
             state.showDataTypeDataDisconnected = miuiMobileState.showDataTypeDataDisconnected;
             state.showMobileDataTypeInMMS = miuiMobileState.showMobileDataTypeInMMS;

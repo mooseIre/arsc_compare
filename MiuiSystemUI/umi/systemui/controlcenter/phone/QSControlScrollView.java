@@ -42,6 +42,8 @@ public class QSControlScrollView extends ScrollView {
     private Rect mBound = new Rect();
     private float mInitialX;
     private float mInitialY;
+    private boolean mIntercept;
+    private boolean mIsMoveY;
     private boolean mIsScrolledToBottom = false;
     private boolean mIsScrolledToTop = true;
     private boolean mMoved = false;
@@ -150,14 +152,17 @@ public class QSControlScrollView extends ScrollView {
             this.ismTouchScrolledToBottom = this.mIsScrolledToBottom;
         }
         if (motionEvent.getActionMasked() == 2) {
-            boolean z = Math.abs(motionEvent.getRawY() - this.mInitialY) > Math.abs(motionEvent.getRawX() - this.mInitialX);
-            if (!this.mIsScrolledToBottom && !this.mIsScrolledToTop && this.mSmartControlsView.getChildCount() > 0 && z) {
+            this.mIsMoveY = Math.abs(motionEvent.getRawY() - this.mInitialY) > Math.abs(motionEvent.getRawX() - this.mInitialX);
+            if (!this.mIsScrolledToBottom && !this.mIsScrolledToTop && this.mSmartControlsView.getChildCount() > 0 && this.mIsMoveY) {
                 return true;
             }
+            if (!this.mIsMoveY) {
+                return false;
+            }
         }
-        boolean onInterceptTouchEvent = super.onInterceptTouchEvent(motionEvent);
-        Log.d("QSControlScrollView", "onInterceptTouchEvent " + motionEvent.getActionMasked() + "  return " + onInterceptTouchEvent);
-        return onInterceptTouchEvent;
+        this.mIntercept = super.onInterceptTouchEvent(motionEvent);
+        Log.d("QSControlScrollView", "onInterceptTouchEvent " + motionEvent.getActionMasked() + "  return " + this.mIntercept);
+        return this.mIntercept;
     }
 
     /* JADX WARNING: Code restructure failed: missing block: B:13:0x0029, code lost:

@@ -21,6 +21,8 @@ import com.android.settingslib.Utils;
 import com.android.systemui.C0009R$attr;
 import com.android.systemui.C0011R$color;
 import com.android.systemui.C0012R$dimen;
+import com.android.systemui.Dependency;
+import com.miui.systemui.SettingsManager;
 
 public class KeyButtonDrawable extends Drawable {
     public static final FloatProperty<KeyButtonDrawable> KEY_DRAWABLE_ROTATE = new FloatProperty<KeyButtonDrawable>("KeyButtonRotation") {
@@ -88,7 +90,7 @@ public class KeyButtonDrawable extends Drawable {
 
     public void setDarkIntensity(float f) {
         this.mState.mDarkIntensity = f;
-        int intValue = ((Integer) ArgbEvaluator.getInstance().evaluate(f, Integer.valueOf(this.mState.mLightColor), Integer.valueOf(this.mState.mDarkColor))).intValue();
+        int intValue = ((Integer) ArgbEvaluator.getInstance().evaluate(f, Integer.valueOf(this.mState.mLightColor), Integer.valueOf(((SettingsManager) Dependency.get(SettingsManager.class)).getMiuiOptimizationEnabled() ? this.mState.mDarkColor : -1728053248))).intValue();
         updateShadowAlpha();
         setColorFilter(new PorterDuffColorFilter(intValue, PorterDuff.Mode.SRC_ATOP));
     }

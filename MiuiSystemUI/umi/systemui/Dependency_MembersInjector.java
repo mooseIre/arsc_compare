@@ -45,6 +45,7 @@ import com.android.systemui.controlcenter.phone.ControlPanelWindowManager;
 import com.android.systemui.controlcenter.phone.ExpandInfoController;
 import com.android.systemui.controlcenter.phone.controls.ControlsPluginManager;
 import com.android.systemui.controlcenter.policy.ControlCenterActivityStarter;
+import com.android.systemui.controlcenter.policy.NCSwitchController;
 import com.android.systemui.controlcenter.policy.SuperSaveModeController;
 import com.android.systemui.dock.DockManager;
 import com.android.systemui.dump.DumpManager;
@@ -155,6 +156,7 @@ import com.miui.systemui.CloudDataManager;
 import com.miui.systemui.EventTracker;
 import com.miui.systemui.SettingsManager;
 import com.miui.systemui.SettingsObserver;
+import com.miui.systemui.analytics.SystemUIStat;
 import com.miui.systemui.graphics.AppIconsManager;
 import com.miui.systemui.statusbar.PanelExpansionObserver;
 import com.miui.systemui.statusbar.phone.DriveModeObserver;
@@ -846,5 +848,13 @@ public final class Dependency_MembersInjector {
 
     public static void injectMNotificationNavigationCoordinator(Dependency dependency, Lazy<NotificationPanelNavigationBarCoordinator> lazy) {
         dependency.mNotificationNavigationCoordinator = lazy;
+    }
+
+    public static void injectMNCSwitchController(Dependency dependency, Lazy<NCSwitchController> lazy) {
+        dependency.mNCSwitchController = lazy;
+    }
+
+    public static void injectMSystemUIStat(Dependency dependency, Lazy<SystemUIStat> lazy) {
+        dependency.mSystemUIStat = lazy;
     }
 }
