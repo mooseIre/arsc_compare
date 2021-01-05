@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.ViewGroup;
+import com.android.systemui.C0011R$color;
 import miui.keyguard.clock.MiuiLeftTopClock;
 import miui.system.R;
 
@@ -23,8 +24,9 @@ public class MiuiKeyguardLeftTopLargeClock extends MiuiKeyguardSingleClock {
         try {
             this.mMiuiBaseClock = this.mLayoutInflater.inflate(R.layout.miui_left_top_large_clock, (ViewGroup) null, false);
             updateLunarCalendarInfo();
-            this.mLeftTopClock = this.mLayoutInflater.inflate(R.layout.miui_left_top_clock, (ViewGroup) null, false);
-            this.mLeftTopClock.setShowLunarCalendar(false);
+            MiuiLeftTopClock inflate = this.mLayoutInflater.inflate(R.layout.miui_left_top_clock, (ViewGroup) null, false);
+            this.mLeftTopClock = inflate;
+            inflate.setShowLunarCalendar(false);
             this.mLeftTopClock.setAlpha(0.0f);
             this.mLeftTopClock.setVisibility(8);
         } catch (Exception e) {
@@ -32,7 +34,7 @@ public class MiuiKeyguardLeftTopLargeClock extends MiuiKeyguardSingleClock {
         }
         this.mClockContainer.addView(this.mMiuiBaseClock);
         this.mClockContainer.addView(this.mLeftTopClock);
-        this.mLockScreenMagazineInfo.updateViewsForClockPosition(true);
+        this.mMagazineClockView.updateViewsForClockPosition(true);
     }
 
     /* access modifiers changed from: protected */
@@ -69,13 +71,15 @@ public class MiuiKeyguardLeftTopLargeClock extends MiuiKeyguardSingleClock {
         this.mMiuiBaseClock.setAlpha(f);
     }
 
-    public void setDarkMode(boolean z) {
-        super.setDarkMode(z);
-        this.mMiuiBaseClock.setTextColorDark(z);
-        this.mLeftTopClock.setTextColorDark(z);
-        int color = z ? getContext().getResources().getColor(com.android.systemui.plugins.R.color.miui_common_unlock_screen_common_time_dark_text_color) : -1;
-        this.mOwnerInfo.setTextColor(color);
-        this.mLockScreenMagazineInfo.setTextColor(color);
+    public void setDarkStyle(boolean z) {
+        if (z != this.mDarkStyle) {
+            super.setDarkStyle(z);
+            this.mMiuiBaseClock.setTextColorDark(z);
+            this.mLeftTopClock.setTextColorDark(z);
+            int color = z ? getContext().getResources().getColor(C0011R$color.miui_common_unlock_screen_common_time_dark_text_color) : -1;
+            this.mOwnerInfo.setTextColor(color);
+            this.mMagazineClockView.setTextColor(color);
+        }
     }
 
     public void updateHourFormat() {

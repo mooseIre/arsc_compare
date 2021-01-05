@@ -9,18 +9,20 @@ import android.graphics.RectF;
 import android.graphics.Shader;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
-import com.android.systemui.plugins.R;
+import com.android.systemui.C0012R$dimen;
 
 class MiuiGxzwQuickTeachView extends View {
-    private float mCicleRadius = getContext().getResources().getDimension(R.dimen.gxzw_quick_open_circle_radius);
+    private float mCicleRadius = getContext().getResources().getDimension(C0012R$dimen.gxzw_quick_open_circle_radius);
     private float mItemRadius;
-    private Paint mPaint = new Paint();
+    private Paint mPaint;
     private ValueAnimator mValueAnimator;
 
     public MiuiGxzwQuickTeachView(Context context, float f) {
         super(context);
         this.mItemRadius = f;
-        this.mPaint.setAntiAlias(true);
+        Paint paint = new Paint();
+        this.mPaint = paint;
+        paint.setAntiAlias(true);
         this.mPaint.setStrokeCap(Paint.Cap.ROUND);
         this.mPaint.setStrokeWidth(this.mItemRadius * 2.0f);
     }
@@ -58,8 +60,9 @@ class MiuiGxzwQuickTeachView extends View {
             valueAnimator.cancel();
         }
         float f = this.mCicleRadius;
-        this.mValueAnimator = ValueAnimator.ofFloat(new float[]{3.0f * f, -f});
-        this.mValueAnimator.setDuration(2000);
+        ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{3.0f * f, -f});
+        this.mValueAnimator = ofFloat;
+        ofFloat.setDuration(2000);
         this.mValueAnimator.setInterpolator(new LinearInterpolator());
         this.mValueAnimator.setRepeatMode(1);
         this.mValueAnimator.setRepeatCount(-1);

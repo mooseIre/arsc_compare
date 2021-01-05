@@ -5,7 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.ContentObserver;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Rect;
+import android.hardware.biometrics.BiometricSourceType;
 import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Handler;
@@ -20,18 +23,15 @@ import android.util.Slog;
 import com.android.internal.util.DumpUtils;
 import com.android.keyguard.KeyguardSecurityModel;
 import com.android.keyguard.KeyguardUpdateMonitor;
-import com.android.keyguard.KeyguardUpdateMonitorCallback;
 import com.android.keyguard.MiuiFastUnlockController;
-import com.android.keyguard.MiuiKeyguardUtils;
+import com.android.keyguard.MiuiKeyguardUpdateMonitorCallback;
 import com.android.keyguard.fod.MiuiGxzwManager;
+import com.android.keyguard.utils.MiuiKeyguardUtils;
+import com.android.systemui.C0013R$drawable;
 import com.android.systemui.Dependency;
 import com.android.systemui.Dumpable;
-import com.android.systemui.SystemUI;
-import com.android.systemui.plugins.R;
+import com.android.systemui.keyguard.WakefulnessLifecycle;
 import com.android.systemui.statusbar.CommandQueue;
-import com.android.systemui.statusbar.phone.NotificationPanelView;
-import com.miui.systemui.annotation.Inject;
-import com.xiaomi.stat.c.b;
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
 import java.lang.ref.WeakReference;
@@ -58,7 +58,7 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
     private ContentObserver mContentObserver = new ContentObserver(this.mHandler) {
         public void onChange(boolean z) {
             AsyncTask.THREAD_POOL_EXECUTOR.execute(new Runnable(MiuiGxzwUtils.isFodAodShowEnable(MiuiGxzwManager.this.mContext)) {
-                private final /* synthetic */ boolean f$0;
+                public final /* synthetic */ boolean f$0;
 
                 {
                     this.f$0 = r1;
@@ -75,7 +75,6 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
     private boolean mDisableFingerprintIcon = false;
     private volatile boolean mDisableLockScreenFod = false;
     private boolean mDisableLockScreenFodAnim = false;
-    private boolean mDismissFodInBouncer = false;
     private boolean mDozing = false;
     private PowerManager.WakeLock mDrawWakeLock;
     public int mDrawWakeLockStatus = -1;
@@ -83,9 +82,6 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
         public void onStartFastUnlock() {
             if (MiuiGxzwManager.this.isUnlockByGxzw()) {
                 Log.i("MiuiGxzwManager", "onStartFastUnlock");
-                if (MiuiGxzwManager.this.mMiuiGxzwOverlayTypeManager.isOverlayTypeUrsa()) {
-                    MiuiGxzwManager.this.mMiuiGxzwOverlayView.dismiss();
-                }
                 MiuiGxzwManager.this.mMiuiGxzwOverlayView.restoreScreenEffect();
             }
         }
@@ -105,8 +101,8 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
         public void handleMessage(Message message) {
             boolean z = true;
             switch (message.what) {
-                case b.a /*1001*/:
-                    MiuiGxzwManager.this.setKeyguardAuthen(KeyguardUpdateMonitor.getInstance(MiuiGxzwManager.this.mContext).isFingerprintDetectionRunning());
+                case 1001:
+                    MiuiGxzwManager.this.setKeyguardAuthen(((KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class)).isFingerprintDetectionRunning());
                     MiuiGxzwManager.this.setHealthAppAuthen(false);
                     MiuiGxzwManager miuiGxzwManager = MiuiGxzwManager.this;
                     if (message.arg1 != 1) {
@@ -116,7 +112,7 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
                     MiuiGxzwManager.this.mMiuiGxzwIconView.setEnrolling(false);
                     MiuiGxzwManager.this.mMiuiGxzwOverlayView.setEnrolling(false);
                     return;
-                case b.b /*1002*/:
+                case 1002:
                     if (!MiuiGxzwManager.this.mHealthAppAuthen) {
                         MiuiGxzwManager.this.dismissGxzwView();
                         MiuiGxzwManager.this.setKeyguardAuthen(false);
@@ -125,7 +121,7 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
                         return;
                     }
                     return;
-                case b.c /*1003*/:
+                case 1003:
                     if (!MiuiGxzwManager.this.getKeyguardAuthen()) {
                         MiuiGxzwManager.this.setKeyguardAuthen(false);
                         MiuiGxzwManager.this.setHealthAppAuthen(false);
@@ -133,7 +129,7 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
                         return;
                     }
                     return;
-                case b.d /*1004*/:
+                case 1004:
                     if (!MiuiGxzwManager.this.getKeyguardAuthen()) {
                         MiuiGxzwManager.this.setKeyguardAuthen(false);
                         MiuiGxzwManager.this.setHealthAppAuthen(false);
@@ -143,14 +139,14 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
                         return;
                     }
                     return;
-                case b.e /*1005*/:
+                case 1005:
                     MiuiGxzwManager.this.setKeyguardAuthen(false);
                     MiuiGxzwManager.this.setHealthAppAuthen(false);
                     MiuiGxzwManager.this.mMiuiGxzwIconView.setEnrolling(true);
                     MiuiGxzwManager.this.mMiuiGxzwOverlayView.setEnrolling(true);
                     MiuiGxzwManager.this.showGxzwView(false);
                     return;
-                case b.f /*1006*/:
+                case 1006:
                     int i = message.arg1;
                     if (!MiuiGxzwManager.this.mHealthAppAuthen) {
                         if ((i == 5 && !MiuiGxzwManager.this.getKeyguardAuthen()) || i == 8) {
@@ -164,7 +160,7 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
                         return;
                     }
                     return;
-                case b.g /*1007*/:
+                case 1007:
                     MiuiGxzwManager.this.setKeyguardAuthen(false);
                     MiuiGxzwManager.this.setHealthAppAuthen(true);
                     MiuiGxzwManager miuiGxzwManager2 = MiuiGxzwManager.this;
@@ -175,7 +171,7 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
                     MiuiGxzwManager.this.mMiuiGxzwIconView.setEnrolling(false);
                     MiuiGxzwManager.this.mMiuiGxzwOverlayView.setEnrolling(false);
                     return;
-                case b.h /*1008*/:
+                case 1008:
                     MiuiGxzwManager.this.setHealthAppAuthen(false);
                     if (!MiuiGxzwManager.this.getKeyguardAuthen()) {
                         MiuiGxzwManager.this.dismissGxzwView();
@@ -184,7 +180,7 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
                         return;
                     }
                     return;
-                case b.i /*1009*/:
+                case 1009:
                     if (!MiuiGxzwManager.this.getKeyguardAuthen()) {
                         MiuiGxzwManager.this.mMiuiGxzwIconView.setHightlightTransparen();
                         MiuiGxzwManager.this.mMiuiGxzwIconView.setEnrolling(false);
@@ -202,26 +198,25 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
     private IntentFilter mIntentFilter;
     private boolean mKeyguardAuthen = false;
     private boolean mKeyguardShow;
-    private KeyguardUpdateMonitorCallback mKeyguardUpdateMonitorCallback = new KeyguardUpdateMonitorCallback() {
+    private MiuiKeyguardUpdateMonitorCallback mKeyguardUpdateMonitorCallback = new MiuiKeyguardUpdateMonitorCallback() {
         private Runnable mDelayRunnable = new Runnable() {
             public final void run() {
-                MiuiGxzwManager.AnonymousClass2.this.lambda$$0$MiuiGxzwManager$2();
+                MiuiGxzwManager.AnonymousClass3.this.lambda$$0$MiuiGxzwManager$3();
             }
         };
+
+        public void onLockScreenMagazinePreViewVisibilityChanged(boolean z) {
+            if (MiuiGxzwManager.this.mLockScreenMagazinePreViewVisible != z) {
+                boolean unused = MiuiGxzwManager.this.mLockScreenMagazinePreViewVisible = z;
+                MiuiGxzwManager.this.updateGxzwState();
+            }
+        }
 
         public void onKeyguardBouncerChanged(boolean z) {
             super.onKeyguardBouncerChanged(z);
             Log.d("MiuiGxzwManager", "onKeyguardBouncerChanged: bouncer = " + z);
             boolean unused = MiuiGxzwManager.this.mBouncer = z;
             MiuiGxzwManager.this.updateGxzwState();
-            if (!z) {
-                MiuiGxzwManager.this.setDimissFodInBouncer(false);
-            }
-        }
-
-        public void onStartedWakingUp() {
-            super.onStartedWakingUp();
-            MiuiGxzwManager.this.stopDozing();
         }
 
         public void onScreenTurnedOn() {
@@ -231,45 +226,38 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
             MiuiGxzwManager.this.mMiuiGxzwIconView.onScreenTurnedOn();
         }
 
-        public void onFingerprintAuthFailed() {
-            super.onFingerprintAuthFailed();
-            MiuiGxzwManager.this.notifyGxzwAuthFailed();
-        }
-
-        public void onFingerprintAuthenticated(int i) {
-            super.onFingerprintAuthenticated(i);
-            MiuiGxzwManager.this.notifyGxzwAuthSucceeded();
-        }
-
-        public void onStartedGoingToSleep(int i) {
-            super.onStartedGoingToSleep(i);
-            Log.d("MiuiGxzwManager", "onStartedGoingToSleep");
-            MiuiGxzwManager.this.mMiuiGxzwOverlayView.onStartedGoingToSleep();
-            MiuiGxzwManager.this.mMiuiGxzwIconView.onStartedGoingToSleep();
-            MiuiGxzwManager.this.startDozing();
-        }
-
-        public void onFinishedGoingToSleep(int i) {
-            super.onFinishedGoingToSleep(i);
-            MiuiGxzwManager.this.mMiuiGxzwOverlayView.onFinishedGoingToSleep();
-        }
-
-        public void onFingerprintError(int i, String str) {
-            super.onFingerprintError(i, str);
-            Log.d("MiuiGxzwManager", "onFingerprintError: msgId = " + i + ", errString = " + str);
-            if ((i == 7 || i == 9) && !MiuiGxzwManager.this.mShowed) {
-                MiuiGxzwManager.this.showGxzwInKeyguardWhenLockout();
-            }
-            if (i == 7 || i == 9) {
-                MiuiGxzwManager.this.mHandler.removeCallbacks(this.mDelayRunnable);
-                boolean unused = MiuiGxzwManager.this.mFingerprintLockout = true;
-                MiuiGxzwManager.this.updateGxzwState();
+        public void onBiometricAuthFailed(BiometricSourceType biometricSourceType) {
+            super.onBiometricAuthFailed(biometricSourceType);
+            if (biometricSourceType == BiometricSourceType.FINGERPRINT) {
+                MiuiGxzwManager.this.notifyGxzwAuthFailed();
             }
         }
 
-        public void onFingerprintRunningStateChanged(boolean z) {
-            super.onFingerprintRunningStateChanged(z);
-            if (z) {
+        public void onBiometricAuthenticated(int i, BiometricSourceType biometricSourceType, boolean z) {
+            super.onBiometricAuthenticated(i, biometricSourceType, z);
+            if (biometricSourceType == BiometricSourceType.FINGERPRINT) {
+                MiuiGxzwManager.this.notifyGxzwAuthSucceeded();
+            }
+        }
+
+        public void onBiometricError(int i, String str, BiometricSourceType biometricSourceType) {
+            super.onBiometricError(i, str, biometricSourceType);
+            if (biometricSourceType == BiometricSourceType.FINGERPRINT) {
+                Log.d("MiuiGxzwManager", "onFingerprintError: msgId = " + i + ", errString = " + str);
+                if ((i == 7 || i == 9) && !MiuiGxzwManager.this.mShowed) {
+                    MiuiGxzwManager.this.showGxzwInKeyguardWhenLockout();
+                }
+                if (i == 7 || i == 9) {
+                    MiuiGxzwManager.this.mHandler.removeCallbacks(this.mDelayRunnable);
+                    boolean unused = MiuiGxzwManager.this.mFingerprintLockout = true;
+                    MiuiGxzwManager.this.updateGxzwState();
+                }
+            }
+        }
+
+        public void onBiometricRunningStateChanged(boolean z, BiometricSourceType biometricSourceType) {
+            super.onBiometricRunningStateChanged(z, biometricSourceType);
+            if (biometricSourceType == BiometricSourceType.FINGERPRINT && z) {
                 MiuiGxzwManager.this.mHandler.removeCallbacks(this.mDelayRunnable);
                 MiuiGxzwManager.this.mHandler.postDelayed(this.mDelayRunnable, 200);
             }
@@ -281,11 +269,25 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
             MiuiGxzwManager.this.mHandler.postDelayed(this.mDelayRunnable, 200);
         }
 
-        public /* synthetic */ void lambda$$0$MiuiGxzwManager$2() {
+        /* access modifiers changed from: private */
+        /* renamed from: lambda$$0 */
+        public /* synthetic */ void lambda$$0$MiuiGxzwManager$3() {
             boolean unused = MiuiGxzwManager.this.mFingerprintLockout = false;
             MiuiGxzwManager.this.updateGxzwState();
         }
+
+        public void onKeyguardOccludedChanged(boolean z) {
+            super.onKeyguardOccludedChanged(z);
+            MiuiGxzwManager.this.updateGxzwState();
+        }
+
+        public void onChargeAnimationShowingChanged(boolean z) {
+            super.onChargeAnimationShowingChanged(z);
+            MiuiGxzwManager.this.updateGxzwState();
+        }
     };
+    /* access modifiers changed from: private */
+    public boolean mLockScreenMagazinePreViewVisible;
     private ContentObserver mLowlightContentObserver = new ContentObserver(this.mHandler) {
         public void onChange(boolean z) {
             MiuiGxzwUtils.notifySurfaceFlinger(1112, MiuiGxzwUtils.isFodAodLowlightShowEnable(MiuiGxzwManager.this.mContext) ? 1 : 0);
@@ -294,21 +296,33 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
     /* access modifiers changed from: private */
     public MiuiGxzwIconView mMiuiGxzwIconView;
     /* access modifiers changed from: private */
-    public MiuiGxzwOverlayTypeManager mMiuiGxzwOverlayTypeManager;
-    /* access modifiers changed from: private */
     public MiuiGxzwOverlayView mMiuiGxzwOverlayView;
-    private NotificationPanelView mNotificationPanelView;
+    private boolean mPanelExpanded;
+    private boolean mQsExpanded;
     private KeyguardSecurityModel.SecurityMode mSecurityMode = KeyguardSecurityModel.SecurityMode.None;
     private boolean mShouldShowGxzwIcon = true;
-    private final boolean mShowFodWithPassword;
     private boolean mShowLockoutView = false;
     /* access modifiers changed from: private */
     public boolean mShowed = false;
     private boolean mStrongAuthUnlocking = false;
-    private final boolean mSupportHbmAlwaysOn;
-    private final boolean mSupportNotifySurfaceFlinger;
-    private final boolean mSupportWakeLockIcon;
     private boolean mSurfaceFlingerStatusbarShow = true;
+    protected final WakefulnessLifecycle.Observer mWakefulnessObserver = new WakefulnessLifecycle.Observer() {
+        public void onStartedWakingUp() {
+            MiuiGxzwManager.this.stopDozing();
+        }
+
+        public void onStartedGoingToSleep() {
+            Log.d("MiuiGxzwManager", "onStartedGoingToSleep");
+            MiuiGxzwManager.this.mMiuiGxzwOverlayView.onStartedGoingToSleep();
+            MiuiGxzwManager.this.mMiuiGxzwIconView.onStartedGoingToSleep();
+            MiuiGxzwManager.this.startDozing();
+        }
+
+        public void onFinishedGoingToSleep() {
+            MiuiGxzwManager.this.mMiuiGxzwOverlayView.onFinishedGoingToSleep();
+        }
+    };
+    private boolean moveHelperCanShow;
 
     public static boolean isGxzwSensor() {
         return true;
@@ -350,10 +364,6 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
         return rect;
     }
 
-    public static boolean isQuickOpenEnable(Context context) {
-        return MiuiGxzwQuickOpenUtil.isQuickOpenEnable(context);
-    }
-
     public boolean isDozing() {
         return this.mDozing;
     }
@@ -364,9 +374,9 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
         this.mStrongAuthUnlocking = false;
         setGxzwUnlockMode(0);
         setGxzwAuthFingerprintID(0);
-        if (KeyguardUpdateMonitor.getInstance(this.mContext).isFingerprintDetectionRunning() && !this.mShowed) {
-            this.mHandler.removeMessages(b.a);
-            this.mHandler.sendMessage(this.mHandler.obtainMessage(b.a, 0, 0));
+        if (((KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class)).isFingerprintDetectionRunning() && !this.mShowed) {
+            this.mHandler.removeMessages(1001);
+            this.mHandler.sendMessage(this.mHandler.obtainMessage(1001, 0, 0));
         }
     }
 
@@ -409,55 +419,8 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
         return z;
     }
 
-    public void setUnlockLockout(boolean z) {
-        this.mMiuiGxzwIconView.setUnlockLockout(z);
-    }
-
-    public static boolean isSupportLowlight() {
-        return MiuiGxzwUtils.isSupportLowlight();
-    }
-
     public boolean isShouldShowGxzwIcon() {
         return this.mShouldShowGxzwIcon;
-    }
-
-    public void setNotificationPanelView(NotificationPanelView notificationPanelView) {
-        this.mNotificationPanelView = notificationPanelView;
-    }
-
-    public void updateGxzwState() {
-        NotificationPanelView notificationPanelView = this.mNotificationPanelView;
-        if (notificationPanelView != null) {
-            notificationPanelView.updateGxzwState();
-        }
-    }
-
-    private void updateHightlightBackground() {
-        if (this.mHealthAppAuthen) {
-            this.mMiuiGxzwIconView.updateHightlightBackground();
-        }
-    }
-
-    public boolean isShowFodWithPassword() {
-        return this.mShowFodWithPassword;
-    }
-
-    public boolean isShowFodInBouncer() {
-        int currentUser = KeyguardUpdateMonitor.getCurrentUser();
-        KeyguardUpdateMonitor instance = KeyguardUpdateMonitor.getInstance(this.mContext);
-        boolean isUnlockingWithFingerprintAllowed = instance.isUnlockingWithFingerprintAllowed(currentUser);
-        boolean isUnlockWithFingerprintPossible = instance.isUnlockWithFingerprintPossible(currentUser);
-        KeyguardSecurityModel.SecurityMode securityMode = this.mSecurityMode;
-        boolean z = (securityMode == KeyguardSecurityModel.SecurityMode.Pattern || securityMode == KeyguardSecurityModel.SecurityMode.PIN || securityMode == KeyguardSecurityModel.SecurityMode.Password) && !this.mShowLockoutView && isUnlockingWithFingerprintAllowed && isUnlockWithFingerprintPossible && !this.mStrongAuthUnlocking && !this.mFingerprintLockout;
-        if (!z || isShowFodWithPassword()) {
-            return z;
-        }
-        return z && !this.mDismissFodInBouncer;
-    }
-
-    public void setSecurityMode(KeyguardSecurityModel.SecurityMode securityMode) {
-        this.mSecurityMode = securityMode;
-        updateGxzwState();
     }
 
     public void setShowLockoutView(boolean z) {
@@ -465,11 +428,21 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
         updateGxzwState();
     }
 
-    public void setDimissFodInBouncer(boolean z) {
-        if (this.mDismissFodInBouncer != z) {
-            this.mDismissFodInBouncer = z;
-            updateGxzwState();
+    public void setSecurityMode(KeyguardSecurityModel.SecurityMode securityMode) {
+        this.mSecurityMode = securityMode;
+        updateGxzwState();
+    }
+
+    public boolean isShowFodInBouncer() {
+        int currentUser = KeyguardUpdateMonitor.getCurrentUser();
+        KeyguardUpdateMonitor keyguardUpdateMonitor = (KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class);
+        boolean isUnlockingWithBiometricAllowed = keyguardUpdateMonitor.isUnlockingWithBiometricAllowed(true);
+        boolean isUnlockWithFingerprintPossible = keyguardUpdateMonitor.isUnlockWithFingerprintPossible(currentUser);
+        KeyguardSecurityModel.SecurityMode securityMode = this.mSecurityMode;
+        if ((securityMode == KeyguardSecurityModel.SecurityMode.Pattern || securityMode == KeyguardSecurityModel.SecurityMode.PIN || securityMode == KeyguardSecurityModel.SecurityMode.Password) && !this.mShowLockoutView && isUnlockingWithBiometricAllowed && isUnlockWithFingerprintPossible && !this.mStrongAuthUnlocking && !this.mFingerprintLockout) {
+            return true;
         }
+        return false;
     }
 
     public void reportSuccessfulStrongAuthUnlockAttempt() {
@@ -478,20 +451,12 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
         }
     }
 
-    public boolean isDisableFingerprintIcon() {
-        return this.mDisableFingerprintIcon;
-    }
-
     public synchronized boolean getKeyguardAuthen() {
         return this.mKeyguardAuthen;
     }
 
-    public boolean isShow() {
-        return this.mShowed;
-    }
-
     public void nofifySurfaceFlinger(boolean z) {
-        if (this.mSupportNotifySurfaceFlinger && this.mSurfaceFlingerStatusbarShow != z) {
+        if (this.mSurfaceFlingerStatusbarShow != z) {
             this.mSurfaceFlingerStatusbarShow = z;
             MiuiGxzwUtils.notifySurfaceFlinger(1103, z ? 1 : 0);
             Log.i("MiuiGxzwManager", "nofifySurfaceFlinger: statusbarShow = " + z);
@@ -537,10 +502,6 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
             }
             this.mMiuiGxzwIconView.disableLockScreenFodAnim(this.mDisableLockScreenFodAnim);
         }
-    }
-
-    public boolean isDisableLockScreenFod() {
-        return this.mDisableLockScreenFod;
     }
 
     /* access modifiers changed from: package-private */
@@ -602,36 +563,29 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
 
     /* access modifiers changed from: package-private */
     public boolean isHbmAlwaysOnWhenDoze() {
-        return this.mSupportHbmAlwaysOn && !MiuiKeyguardUtils.isAodEnable(this.mContext);
+        return !MiuiKeyguardUtils.isAodEnable(this.mContext);
     }
 
-    /* access modifiers changed from: package-private */
-    public boolean isSupportWakeLockIcon() {
-        return this.mSupportWakeLockIcon;
-    }
-
-    public MiuiGxzwManager(@Inject Context context) {
+    public MiuiGxzwManager(Context context, WakefulnessLifecycle wakefulnessLifecycle) {
         this.mContext = context;
-        this.mMiuiGxzwOverlayTypeManager = new MiuiGxzwOverlayTypeManager(this.mContext);
-        this.mSupportNotifySurfaceFlinger = !this.mMiuiGxzwOverlayTypeManager.isOverlayTypeUrsa();
-        this.mShowFodWithPassword = context.getResources().getBoolean(R.bool.config_enableShowFodWithPassword) && !MiuiGxzwUtils.isLargeFod();
-        this.mSupportHbmAlwaysOn = !this.mMiuiGxzwOverlayTypeManager.isOverlayTypeUrsa();
-        this.mSupportWakeLockIcon = !this.mMiuiGxzwOverlayTypeManager.isOverlayTypeUrsa();
         MiuiGxzwUtils.caculateGxzwIconSize(context);
-        this.mMiuiGxzwOverlayView = new MiuiGxzwOverlayView(this.mContext, this.mMiuiGxzwOverlayTypeManager);
-        this.mMiuiGxzwIconView = new MiuiGxzwIconView(this.mContext);
-        this.mMiuiGxzwIconView.setCollectGxzwListener(this.mMiuiGxzwOverlayView);
-        KeyguardUpdateMonitor instance = KeyguardUpdateMonitor.getInstance(this.mContext);
-        instance.registerCallback(this.mKeyguardUpdateMonitorCallback);
-        this.mIntentFilter = new IntentFilter();
-        this.mIntentFilter.addAction("android.intent.action.ACTION_SHUTDOWN");
+        this.mMiuiGxzwOverlayView = new MiuiGxzwOverlayView(this.mContext);
+        MiuiGxzwIconView miuiGxzwIconView = new MiuiGxzwIconView(this.mContext);
+        this.mMiuiGxzwIconView = miuiGxzwIconView;
+        miuiGxzwIconView.setCollectGxzwListener(this.mMiuiGxzwOverlayView);
+        KeyguardUpdateMonitor keyguardUpdateMonitor = (KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class);
+        keyguardUpdateMonitor.registerCallback(this.mKeyguardUpdateMonitorCallback);
+        wakefulnessLifecycle.addObserver(this.mWakefulnessObserver);
+        IntentFilter intentFilter = new IntentFilter();
+        this.mIntentFilter = intentFilter;
+        intentFilter.addAction("android.intent.action.ACTION_SHUTDOWN");
         this.mIntentFilter.addAction("miui.intent.action.HANG_UP_CHANGED");
         this.mDrawWakeLock = ((PowerManager) this.mContext.getSystemService("power")).newWakeLock(128, "gxzw");
-        if (instance.isFingerprintDetectionRunning()) {
+        if (keyguardUpdateMonitor.isFingerprintDetectionRunning()) {
             dealCallback(1, 0);
         }
-        this.mHandler.post(new Runnable(instance) {
-            private final /* synthetic */ KeyguardUpdateMonitor f$1;
+        this.mHandler.post(new Runnable(keyguardUpdateMonitor) {
+            public final /* synthetic */ KeyguardUpdateMonitor f$1;
 
             {
                 this.f$1 = r2;
@@ -641,7 +595,7 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
                 MiuiGxzwManager.this.lambda$new$0$MiuiGxzwManager(this.f$1);
             }
         });
-        ((CommandQueue) SystemUI.getComponent(this.mContext, CommandQueue.class)).addCallbacks(this);
+        ((CommandQueue) Dependency.get(CommandQueue.class)).addCallback((CommandQueue.Callbacks) this);
         ((MiuiFastUnlockController) Dependency.get(MiuiFastUnlockController.class)).registerCallback(this.mFastUnlockCallback);
         this.mContext.getContentResolver().registerContentObserver(Settings.Secure.getUriFor("gxzw_icon_aod_show_enable"), false, this.mContentObserver, 0);
         this.mContentObserver.onChange(false);
@@ -651,6 +605,8 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
         }
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$new$0 */
     public /* synthetic */ void lambda$new$0$MiuiGxzwManager(KeyguardUpdateMonitor keyguardUpdateMonitor) {
         if (keyguardUpdateMonitor.isDeviceInteractive()) {
             stopDozing();
@@ -675,10 +631,7 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
         this.mDozing = true;
         this.mMiuiGxzwOverlayView.startDozing();
         this.mMiuiGxzwIconView.startDozing();
-        NotificationPanelView notificationPanelView = this.mNotificationPanelView;
-        if (notificationPanelView != null) {
-            notificationPanelView.updateGxzwState();
-        }
+        updateGxzwState();
     }
 
     /* access modifiers changed from: private */
@@ -687,10 +640,7 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
         this.mDozing = false;
         this.mMiuiGxzwOverlayView.stopDozing();
         this.mMiuiGxzwIconView.stopDozing();
-        NotificationPanelView notificationPanelView = this.mNotificationPanelView;
-        if (notificationPanelView != null) {
-            notificationPanelView.updateGxzwState();
-        }
+        updateGxzwState();
     }
 
     private synchronized void setGxzwUnlockMode(int i) {
@@ -704,49 +654,49 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
     private int dealCallback(int i, int i2) {
         Log.i("MiuiGxzwManager", "dealCallback, cmd: " + i + " param: " + i2);
         if (i == 101) {
-            this.mHandler.removeMessages(b.e);
-            this.mHandler.sendEmptyMessage(b.e);
+            this.mHandler.removeMessages(1005);
+            this.mHandler.sendEmptyMessage(1005);
             return 1;
         } else if (i == 102) {
-            this.mHandler.removeMessages(b.d);
-            this.mHandler.sendEmptyMessage(b.d);
+            this.mHandler.removeMessages(1004);
+            this.mHandler.sendEmptyMessage(1004);
             return 1;
         } else if (i == 400001) {
-            this.mHandler.removeMessages(b.g);
-            this.mHandler.sendMessage(this.mHandler.obtainMessage(b.g, i2, 0));
+            this.mHandler.removeMessages(1007);
+            this.mHandler.sendMessage(this.mHandler.obtainMessage(1007, i2, 0));
             return 1;
         } else if (i == 400004) {
-            this.mHandler.removeMessages(b.h);
-            this.mHandler.sendEmptyMessage(b.h);
+            this.mHandler.removeMessages(1008);
+            this.mHandler.sendEmptyMessage(1008);
             return 1;
         } else if (i != 400006) {
             switch (i) {
                 case 1:
-                    this.mHandler.removeMessages(b.a);
-                    this.mHandler.sendMessage(this.mHandler.obtainMessage(b.a, i2, 0));
+                    this.mHandler.removeMessages(1001);
+                    this.mHandler.sendMessage(this.mHandler.obtainMessage(1001, i2, 0));
                     return 1;
                 case 2:
                 case 6:
-                    this.mHandler.removeMessages(b.b);
-                    this.mHandler.sendEmptyMessage(b.b);
+                    this.mHandler.removeMessages(1002);
+                    this.mHandler.sendEmptyMessage(1002);
                     return 1;
                 case 3:
                     processVendorSucess(i2);
                     return 1;
                 case 4:
-                    this.mHandler.removeMessages(b.f);
-                    this.mHandler.sendMessage(this.mHandler.obtainMessage(b.f, i2, 0));
+                    this.mHandler.removeMessages(1006);
+                    this.mHandler.sendMessage(this.mHandler.obtainMessage(1006, i2, 0));
                     return 1;
                 case 5:
-                    this.mHandler.removeMessages(b.c);
-                    this.mHandler.sendEmptyMessage(b.c);
+                    this.mHandler.removeMessages(1003);
+                    this.mHandler.sendEmptyMessage(1003);
                     return 1;
                 default:
                     return 1;
             }
         } else {
-            this.mHandler.removeMessages(b.i);
-            this.mHandler.sendEmptyMessage(b.i);
+            this.mHandler.removeMessages(1009);
+            this.mHandler.sendEmptyMessage(1009);
             return 1;
         }
     }
@@ -763,13 +713,17 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
             });
         } else if (getKeyguardAuthen()) {
             int authUserId = MiuiKeyguardUtils.getAuthUserId(this.mContext, i);
-            boolean isUnlockingWithFingerprintAllowed = KeyguardUpdateMonitor.getInstance(this.mContext).isUnlockingWithFingerprintAllowed(authUserId);
-            if (isUnlockingWithFingerprintAllowed && KeyguardUpdateMonitor.getCurrentUser() != authUserId && !MiuiKeyguardUtils.canSwitchUser(this.mContext, authUserId)) {
-                isUnlockingWithFingerprintAllowed = false;
+            int i2 = 1;
+            boolean isBiometricAllowedForUser = ((KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class)).getStrongAuthTracker().isBiometricAllowedForUser(true, authUserId);
+            if (isBiometricAllowedForUser && KeyguardUpdateMonitor.getCurrentUser() != authUserId && !MiuiKeyguardUtils.canSwitchUser(this.mContext, authUserId)) {
+                isBiometricAllowedForUser = false;
             }
-            if (isUnlockingWithFingerprintAllowed) {
+            if (isBiometricAllowedForUser) {
                 Log.i("MiuiGxzwManager", "onAuthenticated:start to unlock");
-                setGxzwUnlockMode(isDozing() ? 1 : 2);
+                if (!isDozing()) {
+                    i2 = 2;
+                }
+                setGxzwUnlockMode(i2);
                 if (this.mDisableLockScreenFod) {
                     this.mHandler.post(new Runnable() {
                         public final void run() {
@@ -779,16 +733,18 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
                 }
                 setGxzwAuthFingerprintID(i);
                 if (KeyguardUpdateMonitor.getCurrentUser() != authUserId) {
-                    this.mHandler.removeMessages(b.b);
-                    this.mHandler.sendEmptyMessage(b.b);
+                    this.mHandler.removeMessages(1002);
+                    this.mHandler.sendEmptyMessage(1002);
                 }
             }
         } else {
-            this.mHandler.removeMessages(b.b);
-            this.mHandler.sendEmptyMessage(b.b);
+            this.mHandler.removeMessages(1002);
+            this.mHandler.sendEmptyMessage(1002);
         }
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$processVendorSucess$1 */
     public /* synthetic */ void lambda$processVendorSucess$1$MiuiGxzwManager() {
         disableLockScreenFod(false);
     }
@@ -853,17 +809,23 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
         return this.mHealthAppAuthen;
     }
 
+    private void updateHightlightBackground() {
+        if (this.mHealthAppAuthen) {
+            this.mMiuiGxzwIconView.updateHightlightBackground();
+        }
+    }
+
     private void sendUpdates(MiuiGxzwCallback miuiGxzwCallback) {
         miuiGxzwCallback.onGxzwEnableChange(isFodEnable());
     }
 
     private boolean isFodEnable() {
-        return KeyguardUpdateMonitor.getInstance(this.mContext).isUnlockWithFingerprintPossible(KeyguardUpdateMonitor.getCurrentUser());
+        return ((KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class)).isUnlockWithFingerprintPossible(KeyguardUpdateMonitor.getCurrentUser());
     }
 
-    public void disable(int i, int i2, boolean z) {
+    public void disable(int i, int i2, int i3, boolean z) {
         boolean z2 = this.mDisableFingerprintIcon;
-        if ((i & 2048) != 0) {
+        if ((i2 & 2048) != 0) {
             this.mDisableFingerprintIcon = true;
         } else {
             this.mDisableFingerprintIcon = false;
@@ -882,91 +844,193 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
         }
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:22:0x006f, code lost:
-        if (r0 != 3) goto L_0x007b;
+    /* JADX WARNING: Code restructure failed: missing block: B:17:0x0046, code lost:
+        if (r9.mDisableFingerprintIcon == false) goto L_0x0048;
      */
+    /* JADX WARNING: Code restructure failed: missing block: B:36:0x0076, code lost:
+        if (r9.mDisableLockScreenFod == false) goto L_0x0048;
+     */
+    /* JADX WARNING: Removed duplicated region for block: B:39:0x007d  */
     /* Code decompiled incorrectly, please refer to instructions dump. */
-    public android.graphics.Bitmap getGxzwAnimBitmap() {
+    public void updateGxzwState() {
         /*
-            r10 = this;
-            android.content.Context r0 = r10.mContext
-            android.content.ContentResolver r0 = r0.getContentResolver()
-            int r1 = com.android.keyguard.fod.MiuiGxzwAnimManager.getDefaultAnimType()
-            r2 = 0
-            java.lang.String r3 = "fod_animation_type"
-            int r0 = android.provider.Settings.System.getIntForUser(r0, r3, r1, r2)
-            java.lang.StringBuilder r1 = new java.lang.StringBuilder
-            r1.<init>()
-            java.lang.String r3 = "getGxzwAnimBitmap type="
-            r1.append(r3)
-            r1.append(r0)
-            java.lang.String r1 = r1.toString()
-            java.lang.String r3 = "MiuiGxzwManager"
-            android.util.Log.d(r3, r1)
-            boolean r1 = com.android.keyguard.fod.MiuiGxzwAnimManager.SUPPORT_AURORA
-            r3 = 2131232044(0x7f08052c, float:1.8080186E38)
-            r4 = 2131231802(0x7f08043a, float:1.8079695E38)
-            r5 = 2131232025(0x7f080519, float:1.8080148E38)
-            r6 = 5
-            r7 = 3
-            r8 = 1
-            if (r1 == 0) goto L_0x0044
-            if (r0 == 0) goto L_0x007a
-            if (r0 == r8) goto L_0x0078
-            if (r0 == r7) goto L_0x0072
-            if (r0 == r6) goto L_0x0040
-            goto L_0x007b
-        L_0x0040:
-            r2 = 2131231828(0x7f080454, float:1.8079748E38)
-            goto L_0x007b
-        L_0x0044:
-            java.lang.String r1 = android.os.Build.DEVICE
-            java.lang.String r9 = "cas"
-            boolean r1 = r1.equals(r9)
-            if (r1 == 0) goto L_0x0068
-            if (r0 == 0) goto L_0x0063
-            if (r0 == r8) goto L_0x005f
-            if (r0 == r7) goto L_0x005b
-            if (r0 == r6) goto L_0x0057
-            goto L_0x007b
-        L_0x0057:
-            r0 = 2131231827(0x7f080453, float:1.8079746E38)
-            goto L_0x0066
-        L_0x005b:
-            r0 = 2131232037(0x7f080525, float:1.8080172E38)
-            goto L_0x0066
-        L_0x005f:
-            r0 = 2131231849(0x7f080469, float:1.807979E38)
-            goto L_0x0066
-        L_0x0063:
-            r0 = 2131232120(0x7f080578, float:1.808034E38)
+            r9 = this;
+            java.lang.Class<com.android.keyguard.injector.KeyguardUpdateMonitorInjector> r0 = com.android.keyguard.injector.KeyguardUpdateMonitorInjector.class
+            boolean r1 = r9.mShowed
+            if (r1 != 0) goto L_0x0007
+            return
+        L_0x0007:
+            boolean r1 = r9.mDozing
+            java.lang.String r2 = "MiuiGxzwManager"
+            r3 = 0
+            if (r1 == 0) goto L_0x001f
+            boolean r0 = r9.isShouldShowGxzwIcon()
+            if (r0 != 0) goto L_0x001a
+            java.lang.String r0 = "updateGxzwState: dozing"
+            android.util.Log.i(r2, r0)
+        L_0x001a:
+            r9.dismissGxzwIconView(r3)
+            goto L_0x0121
+        L_0x001f:
+            boolean r1 = r9.mKeyguardAuthen
+            java.lang.String r4 = ", disableFingerprintIcon = "
+            r5 = 1
+            if (r1 == 0) goto L_0x00f0
+            java.lang.Class<com.android.keyguard.KeyguardUpdateMonitor> r1 = com.android.keyguard.KeyguardUpdateMonitor.class
+            java.lang.Object r1 = com.android.systemui.Dependency.get(r1)
+            com.android.keyguard.KeyguardUpdateMonitor r1 = (com.android.keyguard.KeyguardUpdateMonitor) r1
+            java.lang.Object r6 = com.android.systemui.Dependency.get(r0)
+            com.android.keyguard.injector.KeyguardUpdateMonitorInjector r6 = (com.android.keyguard.injector.KeyguardUpdateMonitorInjector) r6
+            boolean r6 = r6.isChargeAnimationShowing()
+            boolean r7 = r9.mBouncer
+            if (r7 == 0) goto L_0x004a
+            boolean r7 = r9.isShowFodInBouncer()
+            if (r7 == 0) goto L_0x0079
+            if (r6 != 0) goto L_0x0079
+            boolean r7 = r9.mDisableFingerprintIcon
+            if (r7 != 0) goto L_0x0079
+        L_0x0048:
+            r3 = r5
+            goto L_0x0079
+        L_0x004a:
+            boolean r7 = r9.mQsExpanded
+            if (r7 != 0) goto L_0x0066
+            java.lang.Object r7 = com.android.systemui.Dependency.get(r0)
+            com.android.keyguard.injector.KeyguardUpdateMonitorInjector r7 = (com.android.keyguard.injector.KeyguardUpdateMonitorInjector) r7
+            boolean r7 = r7.isKeyguardOccluded()
+            if (r7 != 0) goto L_0x0066
+            boolean r7 = r9.moveHelperCanShow
+            if (r7 == 0) goto L_0x0066
+            boolean r7 = r9.mLockScreenMagazinePreViewVisible
+            if (r7 != 0) goto L_0x0066
+            if (r6 != 0) goto L_0x0066
+            r7 = r5
+            goto L_0x0067
         L_0x0066:
-            r2 = r0
-            goto L_0x007b
-        L_0x0068:
-            if (r0 == 0) goto L_0x007a
-            if (r0 == r8) goto L_0x0078
-            r1 = 2
-            if (r0 == r1) goto L_0x0074
-            if (r0 == r7) goto L_0x0072
-            goto L_0x007b
-        L_0x0072:
-            r2 = r3
-            goto L_0x007b
-        L_0x0074:
-            r2 = 2131232106(0x7f08056a, float:1.8080312E38)
-            goto L_0x007b
-        L_0x0078:
-            r2 = r4
-            goto L_0x007b
-        L_0x007a:
-            r2 = r5
-        L_0x007b:
-            android.content.Context r10 = r10.mContext
-            android.content.res.Resources r10 = r10.getResources()
-            android.graphics.Bitmap r10 = android.graphics.BitmapFactory.decodeResource(r10, r2)
-            return r10
+            r7 = r3
+        L_0x0067:
+            if (r7 == 0) goto L_0x0079
+            int r7 = r1.getStatusBarState()
+            r8 = 2
+            if (r7 == r8) goto L_0x0079
+            boolean r7 = r9.mDisableFingerprintIcon
+            if (r7 != 0) goto L_0x0079
+            boolean r7 = r9.mDisableLockScreenFod
+            if (r7 != 0) goto L_0x0079
+            goto L_0x0048
+        L_0x0079:
+            boolean r7 = r9.mShouldShowGxzwIcon
+            if (r7 == r3) goto L_0x00ea
+            java.lang.StringBuilder r7 = new java.lang.StringBuilder
+            r7.<init>()
+            java.lang.String r8 = "updateGxzwState: mQsExpanded = "
+            r7.append(r8)
+            boolean r8 = r9.mQsExpanded
+            r7.append(r8)
+            java.lang.String r8 = ", mKeyguardOccluded = "
+            r7.append(r8)
+            java.lang.Object r0 = com.android.systemui.Dependency.get(r0)
+            com.android.keyguard.injector.KeyguardUpdateMonitorInjector r0 = (com.android.keyguard.injector.KeyguardUpdateMonitorInjector) r0
+            boolean r0 = r0.isKeyguardOccluded()
+            r7.append(r0)
+            java.lang.String r0 = ", moveHelperCanShow = "
+            r7.append(r0)
+            boolean r0 = r9.moveHelperCanShow
+            r7.append(r0)
+            java.lang.String r0 = ", bouncer = "
+            r7.append(r0)
+            boolean r0 = r9.mBouncer
+            r7.append(r0)
+            java.lang.String r0 = ", mLockScreenMagazinePreViewVisible = "
+            r7.append(r0)
+            boolean r0 = r9.mLockScreenMagazinePreViewVisible
+            r7.append(r0)
+            java.lang.String r0 = ",isShowingChargeAnimationWindow = "
+            r7.append(r0)
+            r7.append(r6)
+            java.lang.String r0 = ", mStatusBarState = "
+            r7.append(r0)
+            int r0 = r1.getStatusBarState()
+            r7.append(r0)
+            r7.append(r4)
+            boolean r0 = r9.mDisableFingerprintIcon
+            r7.append(r0)
+            java.lang.String r0 = ", disableLockScreenFod = "
+            r7.append(r0)
+            boolean r0 = r9.mDisableLockScreenFod
+            r7.append(r0)
+            java.lang.String r0 = r7.toString()
+            android.util.Slog.i(r2, r0)
+        L_0x00ea:
+            r0 = r3 ^ 1
+            r9.dismissGxzwIconView(r0)
+            goto L_0x0121
+        L_0x00f0:
+            boolean r0 = r9.mPanelExpanded
+            if (r0 != 0) goto L_0x00f9
+            boolean r0 = r9.mDisableFingerprintIcon
+            if (r0 != 0) goto L_0x00f9
+            r3 = r5
+        L_0x00f9:
+            boolean r0 = r9.mShouldShowGxzwIcon
+            if (r0 == r3) goto L_0x011c
+            java.lang.StringBuilder r0 = new java.lang.StringBuilder
+            r0.<init>()
+            java.lang.String r1 = "updateGxzwState: mPanelExpanded = "
+            r0.append(r1)
+            boolean r1 = r9.mPanelExpanded
+            r0.append(r1)
+            r0.append(r4)
+            boolean r1 = r9.mDisableFingerprintIcon
+            r0.append(r1)
+            java.lang.String r0 = r0.toString()
+            android.util.Slog.i(r2, r0)
+        L_0x011c:
+            r0 = r3 ^ 1
+            r9.dismissGxzwIconView(r0)
+        L_0x0121:
+            return
         */
-        throw new UnsupportedOperationException("Method not decompiled: com.android.keyguard.fod.MiuiGxzwManager.getGxzwAnimBitmap():android.graphics.Bitmap");
+        throw new UnsupportedOperationException("Method not decompiled: com.android.keyguard.fod.MiuiGxzwManager.updateGxzwState():void");
+    }
+
+    public void updatePanelExpandedStatus(boolean z) {
+        if (this.mPanelExpanded != z) {
+            this.mPanelExpanded = z;
+            updateGxzwState();
+        }
+    }
+
+    public void updateQsExpandedStatus(boolean z) {
+        if (this.mQsExpanded != z) {
+            this.mQsExpanded = z;
+            updateGxzwState();
+        }
+    }
+
+    public void setCanShowGxzw(boolean z) {
+        this.moveHelperCanShow = z;
+        if (MiuiKeyguardUtils.isGxzwSensor()) {
+            getInstance().updateGxzwState();
+        }
+    }
+
+    public Bitmap getGxzwAnimBitmap() {
+        int i = 0;
+        switch (Settings.System.getIntForUser(this.mContext.getContentResolver(), "fod_animation_type", MiuiGxzwAnimManager.getDefaultAnimType(), 0)) {
+            case 6:
+                i = C0013R$drawable.gxzw_light_recognizing_anim_11;
+                break;
+            case 7:
+                i = C0013R$drawable.gxzw_star_recognizing_anim_15;
+                break;
+            case 8:
+                i = C0013R$drawable.gxzw_aurora_recognizing_anim_15;
+                break;
+            case 9:
+                i = C0013R$drawable.gxzw_pulse_recognizing_anim_10;
+                break;
+        }
+        return BitmapFactory.decodeResource(this.mContext.getResources(), i);
     }
 }

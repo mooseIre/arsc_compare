@@ -9,20 +9,16 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.UserHandle;
-import android.provider.Settings;
-import android.text.TextUtils;
 import com.android.keyguard.fod.MiuiGxzwManager;
-import com.android.keyguard.magazine.LockScreenMagazineUtils;
+import com.android.keyguard.magazine.LockScreenMagazineController;
 import com.android.keyguard.negative.MiuiKeyguardMoveLeftControlCenterView;
 import com.android.keyguard.utils.ContentProviderUtils;
+import com.android.keyguard.utils.MiuiKeyguardUtils;
 import com.android.keyguard.utils.PackageUtils;
-import com.android.keyguard.utils.PreferenceUtils;
-import com.android.keyguard.wallpaper.KeyguardWallpaperUtils;
-import com.android.keyguard.wallpaper.WallpaperAuthorityUtils;
-import com.android.systemui.Application;
-import com.android.systemui.miui.DrawableUtils;
+import com.android.systemui.Dependency;
 import com.android.systemui.statusbar.phone.StatusBar;
-import com.xiaomi.stat.MiStat;
+import com.android.systemui.statusbar.policy.FlashlightController;
+import com.miui.systemui.util.CommonUtil;
 import miui.util.Log;
 
 public class WallpaperProvider extends ContentProvider {
@@ -56,17 +52,11 @@ public class WallpaperProvider extends ContentProvider {
         Intent intent;
         Log.d("WallpaperProvider", "call method = " + str);
         Bundle bundle2 = new Bundle();
-        boolean z = false;
-        if (str.equals("SET_LOCK_SCREEN_MAGAZINE_STATUS")) {
-            LockScreenMagazineUtils.setLockScreenMagazineStatus(getContext(), bundle.getBoolean(MiStat.Param.STATUS, false));
-        } else if (str.equals("GET_ELECTRIC_TORCH_STATUS")) {
-            if (Settings.Global.getInt(getContext().getContentResolver(), "torch_state", 0) != 0) {
-                z = true;
-            }
-            bundle2.putBoolean("electric_torch_status", z);
+        if (str.equals("GET_ELECTRIC_TORCH_STATUS")) {
+            bundle2.putBoolean("electric_torch_status", ((FlashlightController) Dependency.get(FlashlightController.class)).isEnabled());
         } else if (str.equals("SET_ELECTRIC_TORCH_STATUS")) {
             try {
-                getContext().sendBroadcast(PackageUtils.getToggleTorchIntent(bundle.getBoolean(MiStat.Param.STATUS, false)));
+                CommonUtil.toggleTorch();
             } catch (Exception e) {
                 Log.e("WallpaperProvider", "call METHOD_SET_ELECTRIC_TORCH_STATUS" + e.getMessage());
             }
@@ -83,14 +73,16 @@ public class WallpaperProvider extends ContentProvider {
                 Log.e("WallpaperProvider", "call METHOD_OPEN_TSM_CLIENT" + e3.getMessage());
             }
         } else {
-            String str3 = "";
+            boolean z = true;
             if (str.equals("CHECK_SMART_HOME_STATUS")) {
-                if (PackageUtils.isAppInstalledForUser(getContext(), "com.xiaomi.smarthome", KeyguardUpdateMonitor.getCurrentUser()) && MiuiKeyguardUtils.isRegionSupportMiHome(getContext())) {
+                String str3 = "";
+                if (!PackageUtils.isAppInstalledForUser(getContext(), "com.xiaomi.smarthome", KeyguardUpdateMonitor.getCurrentUser()) || !MiuiKeyguardUtils.isRegionSupportMiHome(getContext())) {
+                    z = false;
+                } else {
                     Bundle resultFromProvider = ContentProviderUtils.getResultFromProvider(getContext(), MiuiKeyguardUtils.maybeAddUserId(MiuiKeyguardMoveLeftControlCenterView.KEYGUARD_SMART_HOME, KeyguardUpdateMonitor.getCurrentUser()), "online_devices_count", (String) null, (Bundle) null);
                     if (resultFromProvider != null) {
-                        str3 = resultFromProvider.getString(MiStat.Param.COUNT, str3);
+                        str3 = resultFromProvider.getString("count", str3);
                     }
-                    z = true;
                 }
                 bundle2.putBoolean("smart_home_status", z);
                 if (z) {
@@ -103,10 +95,10 @@ public class WallpaperProvider extends ContentProvider {
                     } else {
                         intent = PackageUtils.getMarketDownloadIntent("com.xiaomi.smarthome");
                     }
-                    StatusBar statusBar = (StatusBar) ((Application) getContext().getApplicationContext()).getSystemUIApplication().getComponent(StatusBar.class);
+                    StatusBar statusBar = (StatusBar) Dependency.get(StatusBar.class);
                     if (statusBar != null) {
                         this.mHandler.post(new Runnable(intent) {
-                            private final /* synthetic */ Intent f$1;
+                            public final /* synthetic */ Intent f$1;
 
                             {
                                 this.f$1 = r2;
@@ -120,55 +112,15 @@ public class WallpaperProvider extends ContentProvider {
                 } catch (Exception e4) {
                     Log.e("WallpaperProvider", "call METHOD_OPEN_SMART_HOME" + e4.getMessage());
                 }
-            } else if (str.equals("setLockWallpaperAuthority")) {
-                boolean wallpaperAuthoritySystemSetting = WallpaperAuthorityUtils.setWallpaperAuthoritySystemSetting(getContext(), str2);
-                String callingPackage = getCallingPackage();
-                Log.d("WallpaperProvider", "call METHOD_SET_LOCK_WALLPAPER_PROVIDER_AUTHORITY" + wallpaperAuthoritySystemSetting + " by " + callingPackage);
-                if (WallpaperAuthorityUtils.APPLY_MAGAZINE_DEFAULT_AUTHORITY.equals(callingPackage)) {
-                    KeyguardWallpaperUtils.setProviderClosedByUser(getContext().getApplicationContext(), TextUtils.isEmpty(str2));
-                }
-                bundle2.putBoolean("result_boolean", wallpaperAuthoritySystemSetting);
-            } else if ("setLockWallpaperUpdateMinute".equals(str)) {
-                try {
-                    bundle2.putBoolean("result_boolean", LockScreenMagazineUtils.setLockScreenMagazineWallpaperAutoUpdateMinute(getContext(), Integer.parseInt(str2)));
-                } catch (Exception e5) {
-                    Log.e("WallpaperProvider", "call METHOD_OPEN_SMART_HOME" + e5.getMessage());
-                }
-            } else if ("getLockScreenPath".equals(str)) {
-                String string = PreferenceUtils.getString(getContext(), "pref_key_lock_wallpaper_path", str3);
-                if (!TextUtils.isEmpty(string)) {
-                    bundle2.putString("result_string", string);
-                }
-            } else if ("getLockWallpaperInfo".equals(str)) {
-                try {
-                    String currentWallpaperInfo = KeyguardWallpaperUtils.getCurrentWallpaperInfo(getContext());
-                    if (!TextUtils.isEmpty(currentWallpaperInfo)) {
-                        bundle2.putString("result_json", currentWallpaperInfo);
-                    }
-                } catch (Exception e6) {
-                    Log.e("WallpaperProvider", "call METHOD_GET_LOCK_WALLPAPER_INFO" + e6.getMessage());
-                }
             } else if ("SET_SUPPORT_LOCK_SCREEN_LEFT_OVERLAY".equals(str)) {
                 try {
-                    KeyguardUpdateMonitor.getInstance(getContext()).setSupportLockScreenMagazineOverlay(bundle.getBoolean("support_overlay"));
+                    ((LockScreenMagazineController) Dependency.get(LockScreenMagazineController.class)).setSupportLockScreenMagazineOverlay(bundle.getBoolean("support_overlay"));
                     bundle2.putBoolean("result_boolean", true);
-                } catch (Exception e7) {
-                    Log.e("WallpaperProvider", "call METHOD_SET_SUPPORT_LOCK_SCREEN_LEFT_OVERLAY" + e7.getMessage());
-                }
-            } else if ("getLockWallpaper".equals(str)) {
-                try {
-                    bundle2.putParcelable("wallpaper", DrawableUtils.drawable2Bitmap(KeyguardWallpaperUtils.getLockWallpaperPreview(getContext())));
-                } catch (Exception e8) {
-                    Log.e("WallpaperProvider", "call METHOD_GET_LOCK_WALLPAPER " + e8.getMessage());
-                }
-            } else if ("SET_KEYGUARD_CLOCK_POSITION".equals(str)) {
-                try {
-                    bundle2.putBoolean("result_boolean", Settings.System.putIntForUser(getContext().getContentResolver(), "selected_keyguard_clock_position", bundle.getInt("position", 0), KeyguardUpdateMonitor.getCurrentUser()));
-                } catch (Exception e9) {
-                    Log.e("WallpaperProvider", "call METHOD_SET_KEYGUARD_CLOCK_POSITION" + e9.getMessage());
+                } catch (Exception e5) {
+                    Log.e("WallpaperProvider", "call METHOD_SET_SUPPORT_LOCK_SCREEN_LEFT_OVERLAY" + e5.getMessage());
                 }
             } else if ("getGxzwAnimStyle".equals(str)) {
-                bundle2.putParcelable("thumbnail", MiuiGxzwManager.getInstance().getGxzwAnimBitmap());
+                bundle2.putParcelable("thumbnail", ((MiuiGxzwManager) Dependency.get(MiuiGxzwManager.class)).getGxzwAnimBitmap());
             }
         }
         return bundle2;

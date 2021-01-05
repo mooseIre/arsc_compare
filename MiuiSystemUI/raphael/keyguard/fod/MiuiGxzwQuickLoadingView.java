@@ -4,7 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.view.View;
-import com.android.systemui.plugins.R;
+import com.android.systemui.C0012R$dimen;
 
 class MiuiGxzwQuickLoadingView extends View {
     private float mCurrentLoadingRadius = this.mLoadingOriginalRadius;
@@ -61,13 +61,14 @@ class MiuiGxzwQuickLoadingView extends View {
 
     private void initView() {
         updatePixelSize();
-        this.mPaint = new Paint();
-        this.mPaint.setAntiAlias(true);
+        Paint paint = new Paint();
+        this.mPaint = paint;
+        paint.setAntiAlias(true);
         this.mPaint.setStyle(Paint.Style.FILL);
         this.mPaint.setStrokeWidth(1.0f);
     }
 
     private void updatePixelSize() {
-        this.mLoadingMaxRadius = getContext().getResources().getDimension(R.dimen.gxzw_quick_open_loading_max_radius);
+        this.mLoadingMaxRadius = getContext().getResources().getDimension(C0012R$dimen.gxzw_quick_open_loading_max_radius);
     }
 }

@@ -10,7 +10,6 @@ import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.Settings;
-import com.android.keyguard.MiuiKeyguardUtils;
 import com.android.keyguard.fod.item.AddEventItem;
 import com.android.keyguard.fod.item.AlipayPayItem;
 import com.android.keyguard.fod.item.AlipayScanItem;
@@ -20,9 +19,8 @@ import com.android.keyguard.fod.item.SearchItem;
 import com.android.keyguard.fod.item.WechatPayItem;
 import com.android.keyguard.fod.item.WechatScanItem;
 import com.android.keyguard.fod.item.XiaoaiItem;
-import com.android.systemui.Util;
-import com.android.systemui.plugins.R;
-import com.xiaomi.stat.c.b;
+import com.android.keyguard.utils.MiuiKeyguardUtils;
+import com.android.systemui.C0012R$dimen;
 import java.util.ArrayList;
 import java.util.List;
 import miui.os.Build;
@@ -44,9 +42,9 @@ class MiuiGxzwQuickOpenUtil {
     static {
         int[] iArr;
         if (Build.IS_INTERNATIONAL_BUILD) {
-            iArr = new int[]{b.f, b.g, b.h};
+            iArr = new int[]{1006, 1007, 1008};
         } else {
-            iArr = new int[]{b.a, b.b, b.c, b.e, b.d};
+            iArr = new int[]{1001, 1002, 1003, 1005, 1004};
         }
         DEFAULT_ITEM_ID_LIST = iArr;
     }
@@ -70,7 +68,7 @@ class MiuiGxzwQuickOpenUtil {
                     final int i = sharedPreferences.getInt("sp_fod_show_quick_open_press_count", 0);
                     final long j = sharedPreferences.getLong("sp_fod_show_quick_open_slide_time", 0);
                     final int i2 = sharedPreferences.getInt("sp_fod_show_quick_open_teach", 1);
-                    handler.post(new Runnable() {
+                    handler.post(new Runnable(this) {
                         public void run() {
                             int unused = MiuiGxzwQuickOpenUtil.sShowQuickOpenPressCount = i;
                             long unused2 = MiuiGxzwQuickOpenUtil.sShowQuickOpenSlideTime = j;
@@ -100,15 +98,16 @@ class MiuiGxzwQuickOpenUtil {
             if (sShowQuickOpenPressCount == -1) {
                 sShowQuickOpenPressCount = context.getSharedPreferences("quick_open", 0).getInt("sp_fod_show_quick_open_press_count", 0);
             }
-            sShowQuickOpenPressCount++;
-            if (sShowQuickOpenPressCount > 5) {
+            int i = sShowQuickOpenPressCount + 1;
+            sShowQuickOpenPressCount = i;
+            if (i > 5) {
                 sShowQuickOpenPressCount = 5;
             }
-            final int i = sShowQuickOpenPressCount;
+            final int i2 = sShowQuickOpenPressCount;
             AsyncTask.THREAD_POOL_EXECUTOR.execute(new Runnable() {
                 public void run() {
                     SharedPreferences.Editor edit = context.getSharedPreferences("quick_open", 0).edit();
-                    edit.putInt("sp_fod_show_quick_open_press_count", i);
+                    edit.putInt("sp_fod_show_quick_open_press_count", i2);
                     edit.commit();
                 }
             });
@@ -190,8 +189,8 @@ class MiuiGxzwQuickOpenUtil {
         MiuiGxzwUtils.caculateGxzwIconSize(context);
         int i = MiuiGxzwUtils.GXZW_ICON_X + (MiuiGxzwUtils.GXZW_ICON_WIDTH / 2);
         int i2 = MiuiGxzwUtils.GXZW_ICON_Y + (MiuiGxzwUtils.GXZW_ICON_HEIGHT / 2);
-        float dimension = context.getResources().getDimension(R.dimen.gxzw_quick_open_region_big);
-        float dimension2 = context.getResources().getDimension(R.dimen.gxzw_quick_open_region_samll);
+        float dimension = context.getResources().getDimension(C0012R$dimen.gxzw_quick_open_region_big);
+        float dimension2 = context.getResources().getDimension(C0012R$dimen.gxzw_quick_open_region_samll);
         float f4 = (float) i;
         float f5 = (float) i2;
         RectF rectF = new RectF(f4 - dimension, f5 - dimension, f4 + dimension, dimension + f5);
@@ -245,7 +244,7 @@ class MiuiGxzwQuickOpenUtil {
             if (str == null && intent.getComponent() != null) {
                 str = intent.getComponent().getPackageName();
             }
-            if (str == null || !str.startsWith("com.android") || Util.isIntentActivityExist(context, intent)) {
+            if (str == null || !str.startsWith("com.android") || MiuiKeyguardUtils.isIntentActivityExist(context, intent)) {
                 arrayList.add(Integer.valueOf(i));
             }
         }
@@ -270,21 +269,21 @@ class MiuiGxzwQuickOpenUtil {
 
     private static IQuickOpenItem generateQuickOpenItem(RectF rectF, Region region, Context context, int i) {
         switch (i) {
-            case b.a /*1001*/:
+            case 1001:
                 return new WechatPayItem(rectF, region, context);
-            case b.b /*1002*/:
+            case 1002:
                 return new WechatScanItem(rectF, region, context);
-            case b.c /*1003*/:
+            case 1003:
                 return new XiaoaiItem(rectF, region, context);
-            case b.d /*1004*/:
+            case 1004:
                 return new AlipayPayItem(rectF, region, context);
-            case b.e /*1005*/:
+            case 1005:
                 return new AlipayScanItem(rectF, region, context);
-            case b.f /*1006*/:
+            case 1006:
                 return new QrCodeItem(rectF, region, context);
-            case b.g /*1007*/:
+            case 1007:
                 return new SearchItem(rectF, region, context);
-            case b.h /*1008*/:
+            case 1008:
                 return new AddEventItem(rectF, region, context);
             default:
                 throw new UnsupportedOperationException();

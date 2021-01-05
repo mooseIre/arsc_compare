@@ -29,7 +29,8 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.Interpolator;
 import com.android.internal.widget.ExploreByTouchHelper;
 import com.android.internal.widget.LockPatternView;
-import com.android.systemui.plugins.R;
+import com.android.systemui.C0011R$color;
+import com.android.systemui.C0021R$string;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,7 +39,6 @@ import java.util.List;
 public class MiuiLockPatternView extends View {
     private long mAnimatingPeriodStart;
     private int mAspect;
-    private AudioManager mAudioManager;
     /* access modifiers changed from: private */
     public final CellState[][] mCellStates;
     private final Path mCurrentPath;
@@ -46,7 +46,6 @@ public class MiuiLockPatternView extends View {
     public final int mDotSize;
     /* access modifiers changed from: private */
     public final int mDotSizeActivated;
-    private boolean mDrawingProfilingStarted;
     private boolean mEnableHapticFeedback;
     private int mErrorColor;
     private PatternExploreByTouchHelper mExploreByTouchHelper;
@@ -98,9 +97,9 @@ public class MiuiLockPatternView extends View {
     }
 
     public enum DisplayMode {
-        Correct,
-        Animate,
-        Wrong
+        CORRECT,
+        ANIMATE,
+        WRONG
     }
 
     public interface OnPatternListener {
@@ -117,17 +116,16 @@ public class MiuiLockPatternView extends View {
         this(context, (AttributeSet) null);
     }
 
-    /* JADX WARNING: type inference failed for: r7v3, types: [com.android.keyguard.MiuiLockPatternView$PatternExploreByTouchHelper, android.view.View$AccessibilityDelegate] */
+    /* JADX WARNING: type inference failed for: r8v2, types: [com.android.keyguard.MiuiLockPatternView$PatternExploreByTouchHelper, android.view.View$AccessibilityDelegate] */
     public MiuiLockPatternView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-        this.mDrawingProfilingStarted = false;
         this.mPaint = new Paint();
         this.mPathPaint = new Paint();
         this.mPattern = new ArrayList<>(9);
         this.mPatternDrawLookup = (boolean[][]) Array.newInstance(boolean.class, new int[]{3, 3});
         this.mInProgressX = -1.0f;
         this.mInProgressY = -1.0f;
-        this.mPatternDisplayMode = DisplayMode.Correct;
+        this.mPatternDisplayMode = DisplayMode.CORRECT;
         this.mInputEnabled = true;
         this.mInStealthMode = false;
         this.mEnableHapticFeedback = true;
@@ -140,9 +138,9 @@ public class MiuiLockPatternView extends View {
         setClickable(true);
         this.mPathPaint.setAntiAlias(true);
         this.mPathPaint.setDither(true);
-        this.mRegularColor = getResources().getColor(R.color.miui_pattern_lockscreen_paint_color);
-        this.mErrorColor = getResources().getColor(R.color.pattern_lockscreen_paint_error_color);
-        this.mSuccessColor = getResources().getColor(R.color.miui_pattern_lockscreen_heavy_paint_color);
+        this.mRegularColor = getResources().getColor(C0011R$color.miui_pattern_lockscreen_paint_color);
+        this.mErrorColor = getResources().getColor(C0011R$color.pattern_lockscreen_paint_error_color);
+        this.mSuccessColor = getResources().getColor(C0011R$color.miui_pattern_lockscreen_heavy_paint_color);
         this.mPathPaint.setColor(this.mRegularColor);
         this.mPathPaint.setAntiAlias(true);
         this.mPathPaint.setDither(true);
@@ -150,7 +148,7 @@ public class MiuiLockPatternView extends View {
         this.mPathPaint.setStrokeJoin(Paint.Join.ROUND);
         this.mPathPaint.setStrokeCap(Paint.Cap.ROUND);
         this.mPathWidth = 7;
-        this.mPathPaint.setStrokeWidth((float) this.mPathWidth);
+        this.mPathPaint.setStrokeWidth((float) 7);
         this.mDotSize = 18;
         this.mDotSizeActivated = 27;
         this.mCellStates = (CellState[][]) Array.newInstance(CellState.class, new int[]{3, 3});
@@ -165,9 +163,10 @@ public class MiuiLockPatternView extends View {
         }
         this.mFastOutSlowInInterpolator = AnimationUtils.loadInterpolator(context, 17563661);
         this.mLinearOutSlowInInterpolator = AnimationUtils.loadInterpolator(context, 17563662);
-        this.mExploreByTouchHelper = new PatternExploreByTouchHelper(this);
-        setAccessibilityDelegate(this.mExploreByTouchHelper);
-        this.mAudioManager = (AudioManager) this.mContext.getSystemService("audio");
+        ? patternExploreByTouchHelper = new PatternExploreByTouchHelper(this);
+        this.mExploreByTouchHelper = patternExploreByTouchHelper;
+        setAccessibilityDelegate(patternExploreByTouchHelper);
+        AudioManager audioManager = (AudioManager) this.mContext.getSystemService("audio");
     }
 
     public CellState[][] getCellStates() {
@@ -188,7 +187,7 @@ public class MiuiLockPatternView extends View {
 
     public void setDisplayMode(DisplayMode displayMode) {
         this.mPatternDisplayMode = displayMode;
-        if (displayMode == DisplayMode.Animate) {
+        if (displayMode == DisplayMode.ANIMATE) {
             if (this.mPattern.size() != 0) {
                 this.mAnimatingPeriodStart = SystemClock.elapsedRealtime();
                 LockPatternView.Cell cell = this.mPattern.get(0);
@@ -237,7 +236,7 @@ public class MiuiLockPatternView extends View {
             }
         });
         final Runnable runnable2 = runnable;
-        ofFloat.addListener(new AnimatorListenerAdapter() {
+        ofFloat.addListener(new AnimatorListenerAdapter(this) {
             public void onAnimationEnd(Animator animator) {
                 Runnable runnable = runnable2;
                 if (runnable != null) {
@@ -267,7 +266,7 @@ public class MiuiLockPatternView extends View {
         startRtFloatAnimation(cellState2.hwCenterY, getCenterYForRow(cellState2.row) + f7, j3, j4, interpolator2);
         startRtFloatAnimation(cellState2.hwRadius, ((float) (this.mDotSize / 2)) * f6, j3, j4, interpolator2);
         final Runnable runnable2 = runnable;
-        startRtAlphaAnimation(cellState, f2, j3, j4, interpolator2, new AnimatorListenerAdapter() {
+        startRtAlphaAnimation(cellState, f2, j3, j4, interpolator2, new AnimatorListenerAdapter(this) {
             public void onAnimationEnd(Animator animator) {
                 cellState.hwAnimating = false;
                 Runnable runnable = runnable2;
@@ -307,7 +306,7 @@ public class MiuiLockPatternView extends View {
     }
 
     private void notifyPatternStarted() {
-        sendAccessEvent(R.string.lockscreen_access_pattern_start);
+        sendAccessEvent(C0021R$string.lockscreen_access_pattern_start);
         OnPatternListener onPatternListener = this.mOnPatternListener;
         if (onPatternListener != null) {
             onPatternListener.onPatternStart();
@@ -315,7 +314,7 @@ public class MiuiLockPatternView extends View {
     }
 
     private void notifyPatternDetected() {
-        sendAccessEvent(R.string.lockscreen_access_pattern_detected);
+        sendAccessEvent(C0021R$string.lockscreen_access_pattern_detected);
         OnPatternListener onPatternListener = this.mOnPatternListener;
         if (onPatternListener != null) {
             onPatternListener.onPatternDetected(this.mPattern);
@@ -323,7 +322,7 @@ public class MiuiLockPatternView extends View {
     }
 
     private void notifyPatternCleared() {
-        sendAccessEvent(R.string.lockscreen_access_pattern_cleared);
+        sendAccessEvent(C0021R$string.lockscreen_access_pattern_cleared);
         OnPatternListener onPatternListener = this.mOnPatternListener;
         if (onPatternListener != null) {
             onPatternListener.onPatternCleared();
@@ -342,8 +341,12 @@ public class MiuiLockPatternView extends View {
     private void resetPattern() {
         this.mPattern.clear();
         clearPatternDrawLookup();
-        this.mPatternDisplayMode = DisplayMode.Correct;
+        this.mPatternDisplayMode = DisplayMode.CORRECT;
         invalidate();
+    }
+
+    public boolean isEmpty() {
+        return this.mPattern.isEmpty();
     }
 
     private void clearPatternDrawLookup() {
@@ -413,23 +416,22 @@ public class MiuiLockPatternView extends View {
             return null;
         }
         ArrayList<LockPatternView.Cell> arrayList = this.mPattern;
-        int i = 1;
         if (!arrayList.isEmpty()) {
+            int i = 1;
             LockPatternView.Cell cell2 = arrayList.get(arrayList.size() - 1);
             int row = checkForNewHit.getRow() - cell2.getRow();
             int column = checkForNewHit.getColumn() - cell2.getColumn();
             int row2 = cell2.getRow();
             int column2 = cell2.getColumn();
-            int i2 = -1;
             if (Math.abs(row) == 2 && Math.abs(column) != 1) {
                 row2 = cell2.getRow() + (row > 0 ? 1 : -1);
             }
             if (Math.abs(column) == 2 && Math.abs(row) != 1) {
                 int column3 = cell2.getColumn();
-                if (column > 0) {
-                    i2 = 1;
+                if (column <= 0) {
+                    i = -1;
                 }
-                column2 = column3 + i2;
+                column2 = column3 + i;
             }
             cell = LockPatternView.Cell.of(row2, column2);
         }
@@ -437,12 +439,6 @@ public class MiuiLockPatternView extends View {
             addCellToPattern(cell);
         }
         addCellToPattern(checkForNewHit);
-        if (this.mEnableHapticFeedback) {
-            if (MiuiKeyguardUtils.SUPPORT_LINEAR_MOTOR_VIBRATE) {
-                i = 268435461;
-            }
-            performHapticFeedback(i, 3);
-        }
         return checkForNewHit;
     }
 
@@ -483,7 +479,7 @@ public class MiuiLockPatternView extends View {
                 MiuiLockPatternView.this.invalidate();
             }
         });
-        ofFloat.addListener(new AnimatorListenerAdapter() {
+        ofFloat.addListener(new AnimatorListenerAdapter(this) {
             public void onAnimationEnd(Animator animator) {
                 cellState.lineAnimator = null;
             }
@@ -504,7 +500,7 @@ public class MiuiLockPatternView extends View {
             }
         });
         if (runnable != null) {
-            ofFloat.addListener(new AnimatorListenerAdapter() {
+            ofFloat.addListener(new AnimatorListenerAdapter(this) {
                 public void onAnimationEnd(Animator animator) {
                     runnable.run();
                 }
@@ -684,7 +680,7 @@ public class MiuiLockPatternView extends View {
         LockPatternView.Cell detectAndAddHit = detectAndAddHit(x, y);
         if (detectAndAddHit != null) {
             setPatternInProgress(true);
-            this.mPatternDisplayMode = DisplayMode.Correct;
+            this.mPatternDisplayMode = DisplayMode.CORRECT;
             notifyPatternStarted();
         } else if (this.mPatternInProgress) {
             setPatternInProgress(false);
@@ -722,7 +718,7 @@ public class MiuiLockPatternView extends View {
         ArrayList<LockPatternView.Cell> arrayList = this.mPattern;
         int size = arrayList.size();
         boolean[][] zArr = this.mPatternDrawLookup;
-        if (this.mPatternDisplayMode == DisplayMode.Animate) {
+        if (this.mPatternDisplayMode == DisplayMode.ANIMATE) {
             int elapsedRealtime = ((int) (SystemClock.elapsedRealtime() - this.mAnimatingPeriodStart)) % ((size + 1) * 700);
             int i3 = elapsedRealtime / 700;
             clearPatternDrawLookup();
@@ -817,7 +813,7 @@ public class MiuiLockPatternView extends View {
                 f9 = centerYForRow3;
                 z2 = true;
             }
-            if ((this.mPatternInProgress || this.mPatternDisplayMode == DisplayMode.Animate) && z2) {
+            if ((this.mPatternInProgress || this.mPatternDisplayMode == DisplayMode.ANIMATE) && z2) {
                 path.rewind();
                 path.moveTo(f8, f9);
                 path.lineTo(this.mInProgressX, this.mInProgressY);
@@ -838,10 +834,10 @@ public class MiuiLockPatternView extends View {
             return this.mRegularColor;
         }
         DisplayMode displayMode = this.mPatternDisplayMode;
-        if (displayMode == DisplayMode.Wrong) {
+        if (displayMode == DisplayMode.WRONG) {
             return this.mErrorColor;
         }
-        if (displayMode == DisplayMode.Correct || displayMode == DisplayMode.Animate) {
+        if (displayMode == DisplayMode.CORRECT || displayMode == DisplayMode.ANIMATE) {
             return this.mSuccessColor;
         }
         throw new IllegalStateException("unknown display mode " + this.mPatternDisplayMode);
@@ -953,7 +949,7 @@ public class MiuiLockPatternView extends View {
         class VirtualViewContainer {
             CharSequence description;
 
-            public VirtualViewContainer(CharSequence charSequence) {
+            public VirtualViewContainer(PatternExploreByTouchHelper patternExploreByTouchHelper, CharSequence charSequence) {
                 this.description = charSequence;
             }
         }
@@ -972,7 +968,7 @@ public class MiuiLockPatternView extends View {
             if (MiuiLockPatternView.this.mPatternInProgress) {
                 for (int i = 1; i < 10; i++) {
                     if (!this.mItems.containsKey(Integer.valueOf(i))) {
-                        this.mItems.put(Integer.valueOf(i), new VirtualViewContainer(getTextForVirtualView(i)));
+                        this.mItems.put(Integer.valueOf(i), new VirtualViewContainer(this, getTextForVirtualView(i)));
                     }
                     intArray.add(i);
                 }
@@ -987,13 +983,13 @@ public class MiuiLockPatternView extends View {
                 accessibilityEvent.setContentDescription(charSequence);
                 return;
             }
-            accessibilityEvent.setContentDescription(MiuiLockPatternView.this.mContext.getResources().getString(R.string.input_pattern_hint_text));
+            accessibilityEvent.setContentDescription(MiuiLockPatternView.this.mContext.getResources().getString(C0021R$string.input_pattern_hint_text));
         }
 
         public void onPopulateAccessibilityEvent(View view, AccessibilityEvent accessibilityEvent) {
             MiuiLockPatternView.super.onPopulateAccessibilityEvent(view, accessibilityEvent);
             if (!MiuiLockPatternView.this.mPatternInProgress) {
-                accessibilityEvent.setContentDescription(MiuiLockPatternView.this.getContext().getText(17040308));
+                accessibilityEvent.setContentDescription(MiuiLockPatternView.this.getContext().getText(17040504));
             }
         }
 
@@ -1052,7 +1048,7 @@ public class MiuiLockPatternView extends View {
         }
 
         private CharSequence getTextForVirtualView(int i) {
-            return MiuiLockPatternView.this.getResources().getString(R.string.lockscreen_access_pattern_cell_added_verbose, new Object[]{Integer.valueOf(i)});
+            return MiuiLockPatternView.this.getResources().getString(C0021R$string.lockscreen_access_pattern_cell_added_verbose, new Object[]{Integer.valueOf(i)});
         }
 
         private int getVirtualViewIdForHit(float f, float f2) {

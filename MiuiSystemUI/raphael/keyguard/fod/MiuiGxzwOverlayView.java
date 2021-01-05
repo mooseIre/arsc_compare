@@ -10,10 +10,11 @@ import android.util.Slog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
-import com.android.keyguard.MiuiKeyguardUtils;
 import com.android.keyguard.fod.MiuiGxzwIconView;
-import com.android.systemui.plugins.R;
-import com.android.systemui.util.FixedFileObserver;
+import com.android.keyguard.utils.MiuiKeyguardUtils;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0017R$layout;
+import com.miui.systemui.util.MiuiTextUtils;
 import java.io.File;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -21,7 +22,6 @@ import miui.hardware.display.DisplayFeatureManager;
 
 class MiuiGxzwOverlayView extends GxzwWindowFrameLayout implements MiuiGxzwIconView.CollectGxzwListener, DisplayManager.DisplayListener {
     private static final double[] CEPHEUS_LOW_BRIGHTNESS_ALPHA = {0.9271d, 0.9235d, 0.9201d, 0.92d, 0.92005d, 0.9169d};
-    private BrightnessFileObserver mBrightnessFileObserver;
     private String mBrightnessFilePath = getBrightnessFile();
     private boolean mCollecting = false;
     private final Runnable mDisableReadingModeAction = new Runnable() {
@@ -31,24 +31,18 @@ class MiuiGxzwOverlayView extends GxzwWindowFrameLayout implements MiuiGxzwIconV
     };
     private DisplayManager mDisplayManager;
     private int mDisplayState = 2;
-    /* access modifiers changed from: private */
-    public volatile boolean mDozing = false;
+    private volatile boolean mDozing = false;
     private boolean mEnrolling;
-    /* access modifiers changed from: private */
-    public final Executor mExecutor = Executors.newSingleThreadExecutor();
+    private final Executor mExecutor = Executors.newSingleThreadExecutor();
     private volatile boolean mGoingToSleep;
     private Handler mHandler = new Handler();
     private View mHbmOverlay;
     private volatile boolean mInvertColors = false;
-    /* access modifiers changed from: private */
-    public boolean mKeyguardAuthen;
+    private boolean mKeyguardAuthen;
     private WindowManager.LayoutParams mLayoutParams;
     private int mMaxBrightness = -1;
-    private MiuiGxzwOverlayTypeManager mMiuiGxzwOverlayTypeManager;
     /* access modifiers changed from: private */
     public float mOverlayAlpha = 0.5f;
-    /* access modifiers changed from: private */
-    public final boolean mOverlayAlwaysOn;
     private float mPreAlpha = 0.5f;
     private volatile boolean mScreenEffectNone = false;
     private volatile boolean mShowed = false;
@@ -60,6 +54,8 @@ class MiuiGxzwOverlayView extends GxzwWindowFrameLayout implements MiuiGxzwIconV
     public void onDisplayRemoved(int i) {
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$new$0 */
     public /* synthetic */ void lambda$new$0$MiuiGxzwOverlayView() {
         this.mExecutor.execute(new Runnable() {
             public final void run() {
@@ -68,30 +64,27 @@ class MiuiGxzwOverlayView extends GxzwWindowFrameLayout implements MiuiGxzwIconV
         });
     }
 
-    public MiuiGxzwOverlayView(Context context, MiuiGxzwOverlayTypeManager miuiGxzwOverlayTypeManager) {
+    public MiuiGxzwOverlayView(Context context) {
         super(context);
-        this.mMiuiGxzwOverlayTypeManager = miuiGxzwOverlayTypeManager;
-        this.mOverlayAlwaysOn = miuiGxzwOverlayTypeManager.isOverlayTypeAlwaysOn();
         initView();
     }
 
     private void initView() {
-        LayoutInflater.from(getContext()).inflate(R.layout.miui_keyguard_gxzw_overlay, this);
-        this.mHbmOverlay = findViewById(R.id.hbm_overlay);
+        LayoutInflater.from(getContext()).inflate(C0017R$layout.miui_keyguard_gxzw_overlay, this);
+        this.mHbmOverlay = findViewById(C0015R$id.hbm_overlay);
         setSystemUiVisibility(4864);
-        this.mLayoutParams = new WindowManager.LayoutParams(-1, -1, 2021, 83957016, -2);
-        WindowManager.LayoutParams layoutParams = this.mLayoutParams;
+        WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(-1, -1, 2021, 83957016, -2);
+        this.mLayoutParams = layoutParams;
         layoutParams.extraFlags |= 8388608;
         layoutParams.privateFlags |= MiuiGxzwUtils.PRIVATE_FLAG_IS_HBM_OVERLAY;
-        WindowManager.LayoutParams layoutParams2 = this.mLayoutParams;
-        layoutParams2.alpha = 0.0f;
-        layoutParams2.setTitle("hbm_overlay");
-        this.mBrightnessFileObserver = new BrightnessFileObserver(this.mBrightnessFilePath);
+        layoutParams.layoutInDisplayCutoutMode = 3;
+        layoutParams.alpha = 0.0f;
+        layoutParams.setTitle("hbm_overlay");
+        this.mLayoutParams.setFitInsetsTypes(0);
         setVisibility(8);
-        this.mDisplayManager = (DisplayManager) getContext().getSystemService("display");
-        if (!this.mMiuiGxzwOverlayTypeManager.isOverlayTypeUrsa()) {
-            this.mDisplayManager.registerDisplayListener(this, this.mHandler);
-        }
+        DisplayManager displayManager = (DisplayManager) getContext().getSystemService("display");
+        this.mDisplayManager = displayManager;
+        displayManager.registerDisplayListener(this, this.mHandler);
     }
 
     public void show() {
@@ -121,6 +114,8 @@ class MiuiGxzwOverlayView extends GxzwWindowFrameLayout implements MiuiGxzwIconV
         }
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$show$1 */
     public /* synthetic */ void lambda$show$1$MiuiGxzwOverlayView() {
         notifySurfaceFlinger(1);
         DisplayFeatureManager.getInstance().setScreenEffect(17, 1, 1);
@@ -132,7 +127,6 @@ class MiuiGxzwOverlayView extends GxzwWindowFrameLayout implements MiuiGxzwIconV
             this.mShowed = false;
             restoreScreenEffect();
             removeOverlayView();
-            updateBrightnessFileWatchState();
         }
     }
 
@@ -140,33 +134,25 @@ class MiuiGxzwOverlayView extends GxzwWindowFrameLayout implements MiuiGxzwIconV
         Log.d("MiuiGxzwOverlayView", "startDozing");
         this.mDozing = true;
         this.mOverlayAlpha = 0.657f;
-        updateAlpha(this.mOverlayAlpha);
+        updateAlpha(0.657f);
         addOverlayView();
     }
 
     public void stopDozing() {
         Log.d("MiuiGxzwOverlayView", "stopDozing");
         this.mDozing = false;
-        if (!this.mCollecting && !this.mOverlayAlwaysOn) {
-            removeOverlayView();
-        }
-        if (this.mOverlayAlwaysOn && !MiuiGxzwManager.getInstance().isUnlockByGxzw()) {
+        if (!MiuiGxzwManager.getInstance().isUnlockByGxzw()) {
             updateAlpha(this.mOverlayAlpha);
         }
-        updateBrightnessFileWatchState();
     }
 
     public void onScreenTurnedOn() {
         Log.d("MiuiGxzwOverlayView", "onScreenTurnedOn");
-        updateBrightnessFileWatchState();
     }
 
     public void onStartedGoingToSleep() {
         this.mGoingToSleep = true;
         Log.d("MiuiGxzwOverlayView", "onStartedGoingToSleep");
-        if (!this.mCollecting && !this.mOverlayAlwaysOn) {
-            removeOverlayView();
-        }
     }
 
     public void disableReadingMode() {
@@ -194,7 +180,7 @@ class MiuiGxzwOverlayView extends GxzwWindowFrameLayout implements MiuiGxzwIconV
     public void restoreScreenEffect() {
         if (this.mScreenEffectNone) {
             this.mExecutor.execute(new Runnable(isAttachedToWindow()) {
-                private final /* synthetic */ boolean f$1;
+                public final /* synthetic */ boolean f$1;
 
                 {
                     this.f$1 = r2;
@@ -210,6 +196,8 @@ class MiuiGxzwOverlayView extends GxzwWindowFrameLayout implements MiuiGxzwIconV
         this.mHandler.removeCallbacks(this.mDisableReadingModeAction);
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$restoreScreenEffect$2 */
     public /* synthetic */ void lambda$restoreScreenEffect$2$MiuiGxzwOverlayView(boolean z) {
         int i = z ? 0 : 2;
         notifySurfaceFlinger(i);
@@ -257,9 +245,7 @@ class MiuiGxzwOverlayView extends GxzwWindowFrameLayout implements MiuiGxzwIconV
             if (isDisplayDozing() && !this.mCollecting && !MiuiGxzwManager.getInstance().isHbmAlwaysOnWhenDoze()) {
                 this.mLayoutParams.alpha = 0.0f;
             }
-            if (!this.mMiuiGxzwOverlayTypeManager.isOverlayTypeUrsa()) {
-                this.mLayoutParams.setTitle(this.mEnrolling ? "enroll_overlay" : "hbm_overlay");
-            }
+            this.mLayoutParams.setTitle(this.mEnrolling ? "enroll_overlay" : "hbm_overlay");
             Slog.i("MiuiGxzwOverlayView", "add overlay view: mLayoutParams.alpha = " + this.mLayoutParams.alpha);
             addViewToWindow();
             setVisibility(0);
@@ -287,10 +273,7 @@ class MiuiGxzwOverlayView extends GxzwWindowFrameLayout implements MiuiGxzwIconV
             /* access modifiers changed from: protected */
             public void onPostExecute(Float f) {
                 float unused = MiuiGxzwOverlayView.this.mOverlayAlpha = f.floatValue();
-                if (!MiuiGxzwOverlayView.this.mKeyguardAuthen || MiuiGxzwOverlayView.this.mDozing || MiuiGxzwOverlayView.this.mOverlayAlwaysOn) {
-                    MiuiGxzwOverlayView.this.addOverlayView();
-                }
-                MiuiGxzwOverlayView.this.updateBrightnessFileWatchState();
+                MiuiGxzwOverlayView.this.addOverlayView();
             }
         }.executeOnExecutor(this.mExecutor, new Void[0]);
     }
@@ -299,8 +282,7 @@ class MiuiGxzwOverlayView extends GxzwWindowFrameLayout implements MiuiGxzwIconV
         MiuiGxzwUtils.notifySurfaceFlinger(1102, i);
     }
 
-    /* access modifiers changed from: private */
-    public void updateAlpha(float f) {
+    private void updateAlpha(float f) {
         if (this.mShowed && isAttachedToWindow()) {
             if (isDisplayDozing() && !this.mCollecting && !MiuiGxzwManager.getInstance().isHbmAlwaysOnWhenDoze()) {
                 f = 0.0f;
@@ -317,17 +299,14 @@ class MiuiGxzwOverlayView extends GxzwWindowFrameLayout implements MiuiGxzwIconV
     }
 
     private boolean isDisplayDozing() {
-        if (this.mMiuiGxzwOverlayTypeManager.isOverlayTypeUrsa()) {
-            return this.mDozing;
-        }
         int i = this.mDisplayState;
         return (i == 3 || i == 4) && this.mDozing;
     }
 
     private String getBrightnessFile() {
-        String[] stringArray = getResources().getStringArray(285343775);
+        String[] stringArray = getResources().getStringArray(285343778);
         for (int i = 0; i < stringArray.length; i++) {
-            if (new File(stringArray[i]).exists()) {
+            if (MiuiTextUtils.isNotEmpty(stringArray[i]) && new File(stringArray[i]).exists()) {
                 return stringArray[i];
             }
         }
@@ -376,8 +355,6 @@ class MiuiGxzwOverlayView extends GxzwWindowFrameLayout implements MiuiGxzwIconV
                 d2 = (((double) i) * 0.0032d) + 0.0739d;
             } else if (i >= 5 && i <= 10 && "cepheus".equals(Build.DEVICE)) {
                 d = CEPHEUS_LOW_BRIGHTNESS_ALPHA[i - 5];
-            } else if (this.mMiuiGxzwOverlayTypeManager.isOverlayTypeUrsa()) {
-                d2 = Math.pow((((((double) i) * 1.0d) / ((double) this.mMaxBrightness)) * 430.0d) / 600.0d, 0.45d);
             } else if (i > 500) {
                 d2 = Math.pow((((((double) i) * 1.0d) / 2047.0d) * 430.0d) / 600.0d, 0.455d);
             } else {
@@ -401,21 +378,21 @@ class MiuiGxzwOverlayView extends GxzwWindowFrameLayout implements MiuiGxzwIconV
         return readIntFromFile(file.getParentFile().getAbsolutePath() + "/max_brightness");
     }
 
-    /* JADX WARNING: Removed duplicated region for block: B:23:0x0032 A[SYNTHETIC, Splitter:B:23:0x0032] */
-    /* JADX WARNING: Removed duplicated region for block: B:28:0x003e A[SYNTHETIC, Splitter:B:28:0x003e] */
+    /* JADX WARNING: Removed duplicated region for block: B:22:0x0030 A[SYNTHETIC, Splitter:B:22:0x0030] */
+    /* JADX WARNING: Removed duplicated region for block: B:28:0x003d A[SYNTHETIC, Splitter:B:28:0x003d] */
     /* JADX WARNING: Removed duplicated region for block: B:34:? A[RETURN, SYNTHETIC] */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     private int readIntFromFile(java.lang.String r3) {
         /*
             r2 = this;
             r2 = 0
-            java.io.BufferedReader r0 = new java.io.BufferedReader     // Catch:{ Exception -> 0x002c }
-            java.io.FileReader r1 = new java.io.FileReader     // Catch:{ Exception -> 0x002c }
-            r1.<init>(r3)     // Catch:{ Exception -> 0x002c }
-            r0.<init>(r1)     // Catch:{ Exception -> 0x002c }
-            java.lang.String r2 = r0.readLine()     // Catch:{ Exception -> 0x0026, all -> 0x0022 }
+            java.io.BufferedReader r0 = new java.io.BufferedReader     // Catch:{ Exception -> 0x0028, all -> 0x0024 }
+            java.io.FileReader r1 = new java.io.FileReader     // Catch:{ Exception -> 0x0028, all -> 0x0024 }
+            r1.<init>(r3)     // Catch:{ Exception -> 0x0028, all -> 0x0024 }
+            r0.<init>(r1)     // Catch:{ Exception -> 0x0028, all -> 0x0024 }
+            java.lang.String r2 = r0.readLine()     // Catch:{ Exception -> 0x0022 }
             if (r2 == 0) goto L_0x001e
-            int r2 = java.lang.Integer.parseInt(r2)     // Catch:{ Exception -> 0x0026, all -> 0x0022 }
+            int r2 = java.lang.Integer.parseInt(r2)     // Catch:{ Exception -> 0x0022 }
             r0.close()     // Catch:{ IOException -> 0x0019 }
             goto L_0x001d
         L_0x0019:
@@ -424,58 +401,44 @@ class MiuiGxzwOverlayView extends GxzwWindowFrameLayout implements MiuiGxzwIconV
         L_0x001d:
             return r2
         L_0x001e:
-            r0.close()     // Catch:{ IOException -> 0x0036 }
-            goto L_0x003a
+            r0.close()     // Catch:{ IOException -> 0x0034 }
+            goto L_0x0038
         L_0x0022:
             r2 = move-exception
-            r3 = r2
-            r2 = r0
-            goto L_0x003c
-        L_0x0026:
-            r2 = move-exception
-            r3 = r2
-            r2 = r0
-            goto L_0x002d
-        L_0x002a:
+            goto L_0x002b
+        L_0x0024:
             r3 = move-exception
-            goto L_0x003c
-        L_0x002c:
+            r0 = r2
+            r2 = r3
+            goto L_0x003b
+        L_0x0028:
             r3 = move-exception
-        L_0x002d:
-            r3.printStackTrace()     // Catch:{ all -> 0x002a }
-            if (r2 == 0) goto L_0x003a
-            r2.close()     // Catch:{ IOException -> 0x0036 }
-            goto L_0x003a
-        L_0x0036:
+            r0 = r2
+            r2 = r3
+        L_0x002b:
+            r2.printStackTrace()     // Catch:{ all -> 0x003a }
+            if (r0 == 0) goto L_0x0038
+            r0.close()     // Catch:{ IOException -> 0x0034 }
+            goto L_0x0038
+        L_0x0034:
             r2 = move-exception
             r2.printStackTrace()
-        L_0x003a:
+        L_0x0038:
             r2 = -1
             return r2
-        L_0x003c:
-            if (r2 == 0) goto L_0x0046
-            r2.close()     // Catch:{ IOException -> 0x0042 }
-            goto L_0x0046
-        L_0x0042:
+        L_0x003a:
             r2 = move-exception
-            r2.printStackTrace()
-        L_0x0046:
-            throw r3
+        L_0x003b:
+            if (r0 == 0) goto L_0x0045
+            r0.close()     // Catch:{ IOException -> 0x0041 }
+            goto L_0x0045
+        L_0x0041:
+            r3 = move-exception
+            r3.printStackTrace()
+        L_0x0045:
+            throw r2
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.keyguard.fod.MiuiGxzwOverlayView.readIntFromFile(java.lang.String):int");
-    }
-
-    /* access modifiers changed from: private */
-    public void updateBrightnessFileWatchState() {
-        if (this.mMiuiGxzwOverlayTypeManager.isOverlayTypeUrsa()) {
-            if (this.mShowed) {
-                this.mBrightnessFileObserver.stopWatching();
-                this.mBrightnessFileObserver.startWatching();
-                this.mBrightnessFileObserver.onEvent(2, this.mBrightnessFilePath);
-                return;
-            }
-            this.mBrightnessFileObserver.stopWatching();
-        }
     }
 
     /* access modifiers changed from: protected */
@@ -498,30 +461,6 @@ class MiuiGxzwOverlayView extends GxzwWindowFrameLayout implements MiuiGxzwIconV
             this.mDisplayState = state;
             if ((i2 == 3 || i2 == 4 || (state != 3 && state != 4)) ? false : true) {
                 updateAlpha(this.mOverlayAlpha);
-            }
-        }
-    }
-
-    private class BrightnessFileObserver extends FixedFileObserver {
-        public BrightnessFileObserver(String str) {
-            super(str, 2);
-        }
-
-        public void onEvent(int i, String str) {
-            Log.i("MiuiGxzwOverlayView", "onEvent: event = " + i);
-            if (i == 2) {
-                new AsyncTask<Void, Void, Float>() {
-                    /* access modifiers changed from: protected */
-                    public Float doInBackground(Void... voidArr) {
-                        return Float.valueOf(MiuiGxzwOverlayView.this.caculateOverlayAlpha());
-                    }
-
-                    /* access modifiers changed from: protected */
-                    public void onPostExecute(Float f) {
-                        float unused = MiuiGxzwOverlayView.this.mOverlayAlpha = f.floatValue();
-                        MiuiGxzwOverlayView.this.updateAlpha(f.floatValue());
-                    }
-                }.executeOnExecutor(MiuiGxzwOverlayView.this.mExecutor, new Void[0]);
             }
         }
     }

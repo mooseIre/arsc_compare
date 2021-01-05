@@ -2,30 +2,26 @@ package com.android.keyguard;
 
 import android.app.ActivityManagerNative;
 import android.app.admin.DevicePolicyManager;
-import android.app.admin.DevicePolicyManagerCompat;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.res.Configuration;
-import android.graphics.Point;
-import android.hardware.display.DisplayManager;
 import android.os.RemoteException;
 import android.os.UserHandle;
 import android.os.UserManager;
-import android.os.UserManagerCompat;
 import android.os.Vibrator;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.Display;
-import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.android.internal.widget.LockPatternUtils;
 import com.android.keyguard.BackButton;
 import com.android.keyguard.EmergencyButton;
-import com.android.keyguard.fod.MiuiGxzwManager;
+import com.android.keyguard.faceunlock.MiuiKeyguardFaceUnlockView;
+import com.android.keyguard.utils.MiuiKeyguardUtils;
 import com.android.keyguard.utils.PhoneUtils;
-import com.android.systemui.plugins.R;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0021R$string;
+import com.android.systemui.Dependency;
 
 public abstract class MiuiKeyguardPasswordView extends LinearLayout implements EmergencyButton.EmergencyButtonCallback, BackButton.BackButtonCallback {
     protected BackButton mBackButton;
@@ -38,16 +34,10 @@ public abstract class MiuiKeyguardPasswordView extends LinearLayout implements E
     private float mFontScale;
     protected KeyguardBouncerMessageView mKeyguardBouncerMessageView;
     protected KeyguardUpdateMonitor mKeyguardUpdateMonitor;
-    private KeyguardUpdateMonitorCallback mKeyguardUpdateMonitorCallback;
     protected LockPatternUtils mLockPatternUtils;
     private int mOrientation;
     protected UserManager mUm;
-    private TextView mUsePassword;
     protected Vibrator mVibrator;
-
-    /* access modifiers changed from: protected */
-    public void dismissFodView() {
-    }
 
     /* access modifiers changed from: protected */
     public abstract void handleConfigurationFontScaleChanged();
@@ -59,55 +49,32 @@ public abstract class MiuiKeyguardPasswordView extends LinearLayout implements E
     public void handleWrongPassword() {
     }
 
-    /* access modifiers changed from: protected */
-    public void showFodViewIfNeed() {
-    }
-
     public MiuiKeyguardPasswordView(Context context) {
         super(context);
-        this.mKeyguardUpdateMonitorCallback = new KeyguardUpdateMonitorCallback() {
-            public void onFingerprintError(int i, String str) {
-                super.onFingerprintError(i, str);
-                if (i == 7 || i == 9) {
-                    MiuiKeyguardPasswordView.this.usePassword();
-                }
-            }
-        };
     }
 
     public MiuiKeyguardPasswordView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-        this.mKeyguardUpdateMonitorCallback = new KeyguardUpdateMonitorCallback() {
-            public void onFingerprintError(int i, String str) {
-                super.onFingerprintError(i, str);
-                if (i == 7 || i == 9) {
-                    MiuiKeyguardPasswordView.this.usePassword();
-                }
-            }
-        };
         this.mVibrator = (Vibrator) this.mContext.getSystemService("vibrator");
         this.mUm = (UserManager) this.mContext.getSystemService("user");
-        this.mKeyguardUpdateMonitor = KeyguardUpdateMonitor.getInstance(this.mContext);
-    }
-
-    /* access modifiers changed from: protected */
-    public void onAttachedToWindow() {
-        super.onAttachedToWindow();
-        initUsePassword();
+        this.mKeyguardUpdateMonitor = (KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class);
     }
 
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mEmergencyCarrierArea = (EmergencyCarrierArea) findViewById(R.id.keyguard_selector_fade_container);
-        this.mEmergencyButton = (EmergencyButton) findViewById(R.id.emergency_call_button);
-        this.mEmergencyButton.setCallback(this);
-        this.mBackButton = (BackButton) findViewById(R.id.back_button);
-        this.mBackButton.setCallback(this);
-        this.mDeleteButton = (TextView) findViewById(R.id.delete_button);
-        this.mKeyguardBouncerMessageView = (KeyguardBouncerMessageView) findViewById(R.id.keyguard_security_bouncer_message);
-        this.mFaceUnlockView = (MiuiKeyguardFaceUnlockView) findViewById(R.id.miui_keyguard_face_unlock_view);
-        this.mFaceUnlockView.setKeyguardFaceUnlockView(false);
+        this.mEmergencyCarrierArea = (EmergencyCarrierArea) findViewById(C0015R$id.keyguard_selector_fade_container);
+        EmergencyButton emergencyButton = (EmergencyButton) findViewById(C0015R$id.emergency_call_button);
+        this.mEmergencyButton = emergencyButton;
+        emergencyButton.setCallback(this);
+        BackButton backButton = (BackButton) findViewById(C0015R$id.back_button);
+        this.mBackButton = backButton;
+        backButton.setCallback(this);
+        this.mDeleteButton = (TextView) findViewById(C0015R$id.delete_button);
+        this.mKeyguardBouncerMessageView = (KeyguardBouncerMessageView) findViewById(C0015R$id.keyguard_security_bouncer_message);
+        MiuiKeyguardFaceUnlockView miuiKeyguardFaceUnlockView = (MiuiKeyguardFaceUnlockView) findViewById(C0015R$id.miui_keyguard_face_unlock_view);
+        this.mFaceUnlockView = miuiKeyguardFaceUnlockView;
+        miuiKeyguardFaceUnlockView.setKeyguardFaceUnlockView(false);
     }
 
     /* access modifiers changed from: protected */
@@ -116,7 +83,6 @@ public abstract class MiuiKeyguardPasswordView extends LinearLayout implements E
         float f = configuration.fontScale;
         if (this.mFontScale != f) {
             handleConfigurationFontScaleChanged();
-            updateFodTextSize();
             this.mFontScale = f;
         }
         int i = configuration.orientation;
@@ -126,7 +92,6 @@ public abstract class MiuiKeyguardPasswordView extends LinearLayout implements E
         }
         int i2 = configuration.densityDpi;
         if (this.mDensityDpi != i2) {
-            updateFodPosition();
             this.mDensityDpi = i2;
         }
     }
@@ -144,21 +109,21 @@ public abstract class MiuiKeyguardPasswordView extends LinearLayout implements E
 
     /* access modifiers changed from: protected */
     public boolean allowUnlock(int i) {
-        if (i != 0 && !KeyguardUpdateMonitor.getInstance(this.mContext).getStrongAuthTracker().hasOwnerUserAuthenticatedSinceBoot()) {
-            setSwitchUserWrongMessage(R.string.input_password_after_boot_msg_must_enter_owner_space);
+        if (i != 0 && !this.mKeyguardUpdateMonitor.getStrongAuthTracker().hasOwnerUserAuthenticatedSinceBoot()) {
+            setSwitchUserWrongMessage(C0021R$string.input_password_after_boot_msg_must_enter_owner_space);
             handleWrongPassword();
             return false;
         } else if (i != KeyguardUpdateMonitor.getCurrentUser() && MiuiKeyguardUtils.isSuperPowerActive(this.mContext)) {
-            setSwitchUserWrongMessage(R.string.input_password_after_boot_msg_can_not_switch_when_superpower_active);
+            setSwitchUserWrongMessage(C0021R$string.input_password_after_boot_msg_can_not_switch_when_superpower_active);
             handleWrongPassword();
             return false;
         } else if (i != KeyguardUpdateMonitor.getCurrentUser() && MiuiKeyguardUtils.isGreenKidActive(this.mContext)) {
-            setSwitchUserWrongMessage(R.string.input_password_after_boot_msg_can_not_switch_when_greenkid_active);
+            setSwitchUserWrongMessage(C0021R$string.input_password_after_boot_msg_can_not_switch_when_greenkid_active);
             handleWrongPassword();
             return false;
         } else if (i != KeyguardUpdateMonitor.getCurrentUser() && PhoneUtils.isInCall(this.mContext)) {
             Log.d("miui_keyguard_password", "Can't switch user to " + i + " when calling");
-            setSwitchUserWrongMessage(R.string.input_password_after_boot_msg_can_not_switch_when_calling);
+            setSwitchUserWrongMessage(C0021R$string.input_password_after_boot_msg_can_not_switch_when_calling);
             handleWrongPassword();
             return false;
         } else if (i == KeyguardUpdateMonitor.getCurrentUser() || i == 0 || i != getManagedProfileId(this.mUm, UserHandle.myUserId())) {
@@ -171,7 +136,7 @@ public abstract class MiuiKeyguardPasswordView extends LinearLayout implements E
     }
 
     private int getManagedProfileId(UserManager userManager, int i) {
-        int[] profileIdsWithDisabled = UserManagerCompat.getProfileIdsWithDisabled(userManager, i);
+        int[] profileIdsWithDisabled = userManager.getProfileIdsWithDisabled(i);
         if (profileIdsWithDisabled == null || profileIdsWithDisabled.length <= 0) {
             return -10000;
         }
@@ -204,66 +169,6 @@ public abstract class MiuiKeyguardPasswordView extends LinearLayout implements E
 
     /* access modifiers changed from: protected */
     public long getRequiredStrongAuthTimeout() {
-        return DevicePolicyManagerCompat.getRequiredStrongAuthTimeout((DevicePolicyManager) this.mContext.getSystemService("device_policy"), (ComponentName) null, KeyguardUpdateMonitor.getCurrentUser());
-    }
-
-    private void initUsePassword() {
-        View rootView;
-        if (MiuiKeyguardUtils.isGxzwSensor() && !MiuiGxzwManager.getInstance().isShowFodWithPassword() && (rootView = getRootView()) != null) {
-            this.mUsePassword = (TextView) rootView.findViewById(R.id.gxzw_password_button);
-            if (this.mUsePassword != null) {
-                updateFodPosition();
-                updateFodTextSize();
-                this.mUsePassword.setOnClickListener(new View.OnClickListener() {
-                    public void onClick(View view) {
-                        MiuiKeyguardPasswordView.this.usePassword();
-                    }
-                });
-            }
-        }
-    }
-
-    private void updateFodPosition() {
-        if (MiuiKeyguardUtils.isGxzwSensor() && !MiuiGxzwManager.getInstance().isShowFodWithPassword() && this.mUsePassword != null) {
-            Display display = ((DisplayManager) getContext().getSystemService("display")).getDisplay(0);
-            Point point = new Point();
-            display.getRealSize(point);
-            int dimensionPixelOffset = getResources().getDimensionPixelOffset(R.dimen.gxzw_bouncer_use_password_margin) + (Math.max(point.x, point.y) - MiuiGxzwManager.getFodPosition(getContext()).top);
-            FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) this.mUsePassword.getLayoutParams();
-            layoutParams.bottomMargin = dimensionPixelOffset;
-            this.mUsePassword.setLayoutParams(layoutParams);
-        }
-    }
-
-    private void updateFodTextSize() {
-        if (MiuiKeyguardUtils.isGxzwSensor() && !MiuiGxzwManager.getInstance().isShowFodWithPassword() && this.mUsePassword != null) {
-            this.mUsePassword.setTextSize(0, (float) getResources().getDimensionPixelSize(R.dimen.gxzw_bouncer_use_password_size));
-        }
-    }
-
-    /* access modifiers changed from: protected */
-    public final void onShowFodView() {
-        TextView textView = this.mUsePassword;
-        if (textView != null) {
-            textView.setVisibility(0);
-        }
-        KeyguardUpdateMonitor.getInstance(getContext()).registerCallback(this.mKeyguardUpdateMonitorCallback);
-    }
-
-    /* access modifiers changed from: protected */
-    public final void onDismissFodView() {
-        TextView textView = this.mUsePassword;
-        if (textView != null) {
-            textView.setVisibility(8);
-        }
-        KeyguardUpdateMonitor.getInstance(getContext()).removeCallback(this.mKeyguardUpdateMonitorCallback);
-    }
-
-    /* access modifiers changed from: protected */
-    public void usePassword() {
-        dismissFodView();
-        if (MiuiKeyguardUtils.isGxzwSensor()) {
-            MiuiGxzwManager.getInstance().setDimissFodInBouncer(true);
-        }
+        return ((DevicePolicyManager) this.mContext.getSystemService("device_policy")).getRequiredStrongAuthTimeout((ComponentName) null, KeyguardUpdateMonitor.getCurrentUser());
     }
 }

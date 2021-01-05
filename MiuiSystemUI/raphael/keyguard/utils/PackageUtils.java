@@ -10,19 +10,22 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.util.Log;
 import com.android.keyguard.KeyguardUpdateMonitor;
-import com.android.keyguard.magazine.LockScreenMagazineUtils;
-import com.android.systemui.content.pm.PackageManagerCompat;
 import miui.os.Build;
 
 public class PackageUtils {
-    public static final String CLASS_NAME_CAMERA = (IS_VELA_CAMERA ? "com.mtlab.camera.CameraActivity" : "com.android.camera.Camera");
-    public static final boolean IS_VELA_CAMERA = "vela".equals(Build.DEVICE);
+    public static final String CLASS_NAME_CAMERA;
+    public static final boolean IS_VELA_CAMERA;
     public static final String PACKAGE_NAME_CAMERA = ("vela".equals(Build.DEVICE) ? "com.mlab.cam" : "com.android.camera");
-    public static final String PACKAGE_NAME_LOCK_SCREEN_MAGAZINE = LockScreenMagazineUtils.LOCK_SCREEN_MAGAZINE_PACKAGE_NAME;
+
+    static {
+        boolean equals = "vela".equals(Build.DEVICE);
+        IS_VELA_CAMERA = equals;
+        CLASS_NAME_CAMERA = equals ? "com.mtlab.camera.CameraActivity" : "com.android.camera.Camera";
+    }
 
     public static boolean isAppInstalledForUser(Context context, String str, int i) {
         try {
-            PackageManagerCompat.getPackageInfoAsUser(context.getPackageManager(), str, 1, i);
+            context.getPackageManager().getPackageInfoAsUser(str, 1, i);
             return true;
         } catch (PackageManager.NameNotFoundException unused) {
             Log.e("miui_keyguard", "name not found pkg=" + str);
@@ -61,12 +64,6 @@ public class PackageUtils {
         intent.setAction("com.miui.intent.action.DOUBLE_CLICK");
         intent.putExtra("event_source", "shortcut_of_all_cards");
         intent.addFlags(268435456);
-        return intent;
-    }
-
-    public static Intent getToggleTorchIntent(boolean z) {
-        Intent intent = new Intent("miui.intent.action.TOGGLE_TORCH");
-        intent.putExtra("miui.intent.extra.IS_ENABLE", z);
         return intent;
     }
 

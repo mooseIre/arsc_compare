@@ -9,13 +9,13 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import com.android.systemui.plugins.R;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0015R$id;
 import miui.view.animation.SineEaseInInterpolator;
 import miui.view.animation.SineEaseInOutInterpolator;
 import miui.view.animation.SineEaseOutInterpolator;
 
 public class KeyguardBouncerMessageView extends RelativeLayout {
-    private final int MAX_SHAKE_TIMES;
     private TextView mContent;
     private Resources mResources;
     private int mShakeDistance;
@@ -31,15 +31,14 @@ public class KeyguardBouncerMessageView extends RelativeLayout {
     public KeyguardBouncerMessageView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
         this.mShakeDuration = 25;
-        this.MAX_SHAKE_TIMES = 2;
         this.mResources = getResources();
     }
 
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mTitle = (TextView) findViewById(R.id.secure_keyguard_bouncer_message_title);
-        this.mContent = (TextView) findViewById(R.id.secure_keyguard_bouncer_message_content);
+        this.mTitle = (TextView) findViewById(C0015R$id.secure_keyguard_bouncer_message_title);
+        this.mContent = (TextView) findViewById(C0015R$id.secure_keyguard_bouncer_message_content);
         resetAnimValue();
     }
 
@@ -120,6 +119,6 @@ public class KeyguardBouncerMessageView extends RelativeLayout {
 
     public void resetAnimValue() {
         this.mShakeTimes = 0;
-        this.mShakeDistance = this.mContext.getResources().getDimensionPixelSize(R.dimen.miui_common_unlock_screen_tip_shake_distance);
+        this.mShakeDistance = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.miui_common_unlock_screen_tip_shake_distance);
     }
 }

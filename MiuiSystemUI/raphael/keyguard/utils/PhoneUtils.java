@@ -2,22 +2,20 @@ package com.android.keyguard.utils;
 
 import android.app.ActivityOptions;
 import android.content.Context;
-import android.content.Intent;
 import android.os.UserHandle;
 import android.telecom.TelecomManager;
-import com.android.keyguard.EmergencyButton;
+import android.util.Log;
 import com.android.keyguard.KeyguardUpdateMonitor;
+import com.android.systemui.Dependency;
 import miui.telephony.TelephonyManager;
 
 public class PhoneUtils {
-    private static final Intent INTENT_EMERGENCY_DIAL = new Intent().setAction("com.android.phone.EmergencyDialer.DIAL").setPackage("com.android.phone").setFlags(343932928);
-
     public static void resumeCall(Context context) {
         getTelecommManager(context).showInCallScreen(false);
     }
 
     public static boolean isInCall(Context context) {
-        int phoneState = KeyguardUpdateMonitor.getInstance(context).getPhoneState();
+        int phoneState = ((KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class)).getPhoneState();
         return phoneState == 1 || phoneState == 2;
     }
 
@@ -33,16 +31,20 @@ public class PhoneUtils {
         return (TelecomManager) context.getSystemService("telecom");
     }
 
-    public static void takeEmergencyCallAction(Context context, EmergencyButton.EmergencyButtonCallback emergencyButtonCallback) {
-        if (isInCall(context)) {
-            resumeCall(context);
-            if (emergencyButtonCallback != null) {
-                emergencyButtonCallback.onEmergencyButtonClickedWhenInCall();
-                return;
+    public static void takeEmergencyCallAction(Context context) {
+        TelecomManager telecommManager = getTelecommManager(context);
+        if (telecommManager == null) {
+            Log.wtf("PhoneUtils", "TelecomManager was null, cannot launch emergency dialer");
+        } else if (telecommManager.isInCall()) {
+            telecommManager.showInCallScreen(false);
+        } else {
+            KeyguardUpdateMonitor keyguardUpdateMonitor = (KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class);
+            if (keyguardUpdateMonitor != null) {
+                keyguardUpdateMonitor.reportEmergencyCallAction(true);
+            } else {
+                Log.w("PhoneUtils", "KeyguardUpdateMonitor was null, launching intent anyway.");
             }
-            return;
+            context.startActivityAsUser(telecommManager.createLaunchEmergencyDialerIntent((String) null).setFlags(343932928).putExtra("com.android.phone.EmergencyDialer.extra.ENTRY_TYPE", 1), ActivityOptions.makeCustomAnimation(context, 0, 0).toBundle(), new UserHandle(KeyguardUpdateMonitor.getCurrentUser()));
         }
-        KeyguardUpdateMonitor.getInstance(context).reportEmergencyCallAction(true);
-        context.startActivityAsUser(INTENT_EMERGENCY_DIAL, ActivityOptions.makeCustomAnimation(context, 0, 0).toBundle(), new UserHandle(KeyguardUpdateMonitor.getCurrentUser()));
     }
 }

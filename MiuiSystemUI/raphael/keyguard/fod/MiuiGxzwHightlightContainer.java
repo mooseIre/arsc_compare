@@ -6,8 +6,9 @@ import android.graphics.Rect;
 import android.util.Slog;
 import android.view.LayoutInflater;
 import android.view.WindowManager;
-import com.android.keyguard.MiuiKeyguardUtils;
-import com.android.systemui.plugins.R;
+import com.android.keyguard.utils.MiuiKeyguardUtils;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0017R$layout;
 
 class MiuiGxzwHightlightContainer extends GxzwNoRotateFrameLayout {
     private boolean mHealthFingerAuthen;
@@ -89,11 +90,11 @@ class MiuiGxzwHightlightContainer extends GxzwNoRotateFrameLayout {
     }
 
     private void initView() {
-        LayoutInflater.from(getContext()).inflate(R.layout.miui_keyguard_gxzw_icon_view, this);
-        this.mMiuiGxzwHighlightView = (MiuiGxzwHighlightView) findViewById(R.id.gxzw_highlight);
+        LayoutInflater.from(getContext()).inflate(C0017R$layout.miui_keyguard_gxzw_icon_view, this);
+        this.mMiuiGxzwHighlightView = (MiuiGxzwHighlightView) findViewById(C0015R$id.gxzw_highlight);
         setSystemUiVisibility(4864);
-        this.mLayoutParams = new WindowManager.LayoutParams(this.mRegion.width(), this.mRegion.height(), 2018, 16778776, -2);
-        WindowManager.LayoutParams layoutParams = this.mLayoutParams;
+        WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(this.mRegion.width(), this.mRegion.height(), 2018, 16778776, -2);
+        this.mLayoutParams = layoutParams;
         layoutParams.layoutInDisplayCutoutMode = 1;
         layoutParams.privateFlags |= MiuiGxzwUtils.PRIVATE_FLAG_IS_HBM_OVERLAY;
         layoutParams.gravity = 51;

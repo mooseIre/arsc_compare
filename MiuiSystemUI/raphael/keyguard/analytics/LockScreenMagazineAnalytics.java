@@ -1,31 +1,30 @@
 package com.android.keyguard.analytics;
 
-import android.content.Context;
-import com.android.keyguard.KeyguardUpdateMonitor;
-import com.android.keyguard.MiuiKeyguardUtils;
+import com.android.keyguard.magazine.LockScreenMagazineController;
+import com.android.keyguard.utils.MiuiKeyguardUtils;
 import com.android.keyguard.wallpaper.WallpaperAuthorityUtils;
-import com.xiaomi.stat.MiStat;
+import com.android.systemui.Dependency;
 import java.util.HashMap;
 
 public class LockScreenMagazineAnalytics {
-    public static HashMap getLockScreenWallperProviderStatus(Context context) {
+    public static HashMap getLockScreenWallperProviderStatus() {
         HashMap hashMap = new HashMap();
-        hashMap.put(MiStat.Param.STATUS, WallpaperAuthorityUtils.getWallpaperAuthority(context));
+        hashMap.put("status", WallpaperAuthorityUtils.getWallpaperAuthority());
         boolean isDefaultLockScreenTheme = MiuiKeyguardUtils.isDefaultLockScreenTheme();
         AnalyticsHelper.booleanToInt(isDefaultLockScreenTheme);
         hashMap.put("isDefaultLockScreenTheme", Integer.valueOf(isDefaultLockScreenTheme ? 1 : 0));
         return hashMap;
     }
 
-    public static HashMap getLockScreenMagazinePreviewActionParams(Context context, String str) {
+    public static HashMap getLockScreenMagazinePreviewActionParams(String str) {
         HashMap hashMap = new HashMap();
         hashMap.put("action", str);
         return hashMap;
     }
 
-    public static HashMap getNegativeStatusParams(Context context) {
+    public static HashMap getNegativeStatusParams() {
         HashMap hashMap = new HashMap();
-        hashMap.put(MiStat.Param.STATUS, KeyguardUpdateMonitor.getInstance(context).isSupportLockScreenMagazineLeft() ? "lockScreenMagazine" : "controlCenter");
+        hashMap.put("status", ((LockScreenMagazineController) Dependency.get(LockScreenMagazineController.class)).isSupportLockScreenMagazineLeft() ? "lockScreenMagazine" : "controlCenter");
         return hashMap;
     }
 }

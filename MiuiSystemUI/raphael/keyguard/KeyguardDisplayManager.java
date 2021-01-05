@@ -9,32 +9,42 @@ import android.media.MediaRouter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.util.Slog;
 import android.util.SparseArray;
 import android.view.Display;
 import android.view.DisplayInfo;
-import android.view.View;
+import android.view.LayoutInflater;
+import android.view.ViewGroup;
 import android.view.WindowManager;
-import com.android.systemui.plugins.R;
+import com.android.internal.annotations.VisibleForTesting;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0017R$layout;
+import com.android.systemui.C0022R$style;
+import com.android.systemui.Dependency;
+import com.android.systemui.statusbar.NavigationBarController;
+import com.android.systemui.statusbar.phone.NavigationBarView;
+import com.android.systemui.util.InjectionInflationController;
+import com.android.systemui.util.wakelock.WakeLock;
 
 public class KeyguardDisplayManager {
     /* access modifiers changed from: private */
     public static boolean DEBUG = true;
-    private Context mContext;
+    private final Context mContext;
     private final DisplayManager.DisplayListener mDisplayListener = new DisplayManager.DisplayListener() {
         public void onDisplayAdded(int i) {
             Display display = KeyguardDisplayManager.this.mDisplayService.getDisplay(i);
             if (KeyguardDisplayManager.this.mShowing) {
+                KeyguardDisplayManager.this.updateNavigationBarVisibility(i, false);
                 boolean unused = KeyguardDisplayManager.this.showPresentation(display);
             }
         }
 
         public void onDisplayChanged(int i) {
-            Display display;
-            Presentation presentation;
-            if (i != 0 && (display = KeyguardDisplayManager.this.mDisplayService.getDisplay(i)) != null && KeyguardDisplayManager.this.mShowing && (presentation = (Presentation) KeyguardDisplayManager.this.mPresentations.get(i)) != null && !presentation.getDisplay().equals(display)) {
+            if (i != 0 && ((Presentation) KeyguardDisplayManager.this.mPresentations.get(i)) != null && KeyguardDisplayManager.this.mShowing) {
                 KeyguardDisplayManager.this.hidePresentation(i);
-                boolean unused = KeyguardDisplayManager.this.showPresentation(display);
+                Display display = KeyguardDisplayManager.this.mDisplayService.getDisplay(i);
+                if (display != null) {
+                    boolean unused = KeyguardDisplayManager.this.showPresentation(display);
+                }
             }
         }
 
@@ -44,11 +54,12 @@ public class KeyguardDisplayManager {
     };
     /* access modifiers changed from: private */
     public final DisplayManager mDisplayService;
-    private MediaRouter mMediaRouter;
+    private final InjectionInflationController mInjectableInflater;
+    private final MediaRouter mMediaRouter;
     private final MediaRouter.SimpleCallback mMediaRouterCallback = new MediaRouter.SimpleCallback() {
         public void onRouteSelected(MediaRouter mediaRouter, int i, MediaRouter.RouteInfo routeInfo) {
             if (KeyguardDisplayManager.DEBUG) {
-                Slog.d("KeyguardDisplayManager", "onRouteSelected: type=" + i + ", info=" + routeInfo);
+                Log.d("KeyguardDisplayManager", "onRouteSelected: type=" + i + ", info=" + routeInfo);
             }
             KeyguardDisplayManager keyguardDisplayManager = KeyguardDisplayManager.this;
             keyguardDisplayManager.updateDisplays(keyguardDisplayManager.mShowing);
@@ -56,7 +67,7 @@ public class KeyguardDisplayManager {
 
         public void onRouteUnselected(MediaRouter mediaRouter, int i, MediaRouter.RouteInfo routeInfo) {
             if (KeyguardDisplayManager.DEBUG) {
-                Slog.d("KeyguardDisplayManager", "onRouteUnselected: type=" + i + ", info=" + routeInfo);
+                Log.d("KeyguardDisplayManager", "onRouteUnselected: type=" + i + ", info=" + routeInfo);
             }
             KeyguardDisplayManager keyguardDisplayManager = KeyguardDisplayManager.this;
             keyguardDisplayManager.updateDisplays(keyguardDisplayManager.mShowing);
@@ -64,23 +75,26 @@ public class KeyguardDisplayManager {
 
         public void onRoutePresentationDisplayChanged(MediaRouter mediaRouter, MediaRouter.RouteInfo routeInfo) {
             if (KeyguardDisplayManager.DEBUG) {
-                Slog.d("KeyguardDisplayManager", "onRoutePresentationDisplayChanged: info=" + routeInfo);
+                Log.d("KeyguardDisplayManager", "onRoutePresentationDisplayChanged: info=" + routeInfo);
             }
             KeyguardDisplayManager keyguardDisplayManager = KeyguardDisplayManager.this;
             keyguardDisplayManager.updateDisplays(keyguardDisplayManager.mShowing);
         }
     };
+    private final NavigationBarController mNavBarController = ((NavigationBarController) Dependency.get(NavigationBarController.class));
     /* access modifiers changed from: private */
     public final SparseArray<Presentation> mPresentations = new SparseArray<>();
     /* access modifiers changed from: private */
     public boolean mShowing;
     private final DisplayInfo mTmpDisplayInfo = new DisplayInfo();
 
-    public KeyguardDisplayManager(Context context) {
+    public KeyguardDisplayManager(Context context, InjectionInflationController injectionInflationController) {
         this.mContext = context;
-        this.mMediaRouter = (MediaRouter) this.mContext.getSystemService("media_router");
-        this.mDisplayService = (DisplayManager) this.mContext.getSystemService(DisplayManager.class);
-        this.mDisplayService.registerDisplayListener(this.mDisplayListener, (Handler) null);
+        this.mInjectableInflater = injectionInflationController;
+        this.mMediaRouter = (MediaRouter) context.getSystemService(MediaRouter.class);
+        DisplayManager displayManager = (DisplayManager) this.mContext.getSystemService(DisplayManager.class);
+        this.mDisplayService = displayManager;
+        displayManager.registerDisplayListener(this.mDisplayListener, (Handler) null);
     }
 
     private boolean isKeyguardShowable(Display display) {
@@ -116,16 +130,19 @@ public class KeyguardDisplayManager {
         }
         int displayId = display.getDisplayId();
         if (this.mPresentations.get(displayId) == null) {
-            KeyguardPresentation keyguardPresentation = new KeyguardPresentation(this.mContext, display, R.style.keyguard_presentation_theme);
-            keyguardPresentation.setOnDismissListener(new DialogInterface.OnDismissListener(displayId) {
-                private final /* synthetic */ int f$1;
+            Context context = this.mContext;
+            KeyguardPresentation keyguardPresentation = new KeyguardPresentation(context, display, this.mInjectableInflater.injectable(LayoutInflater.from(context)));
+            keyguardPresentation.setOnDismissListener(new DialogInterface.OnDismissListener(keyguardPresentation, displayId) {
+                public final /* synthetic */ Presentation f$1;
+                public final /* synthetic */ int f$2;
 
                 {
                     this.f$1 = r2;
+                    this.f$2 = r3;
                 }
 
                 public final void onDismiss(DialogInterface dialogInterface) {
-                    KeyguardDisplayManager.this.lambda$showPresentation$0$KeyguardDisplayManager(this.f$1, dialogInterface);
+                    KeyguardDisplayManager.this.lambda$showPresentation$0$KeyguardDisplayManager(this.f$1, this.f$2, dialogInterface);
                 }
             });
             try {
@@ -142,8 +159,10 @@ public class KeyguardDisplayManager {
         return false;
     }
 
-    public /* synthetic */ void lambda$showPresentation$0$KeyguardDisplayManager(int i, DialogInterface dialogInterface) {
-        if (this.mPresentations.get(i) != null) {
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$showPresentation$0 */
+    public /* synthetic */ void lambda$showPresentation$0$KeyguardDisplayManager(Presentation presentation, int i, DialogInterface dialogInterface) {
+        if (presentation.equals(this.mPresentations.get(i))) {
             this.mPresentations.remove(i);
         }
     }
@@ -160,7 +179,7 @@ public class KeyguardDisplayManager {
     public void show() {
         if (!this.mShowing) {
             if (DEBUG) {
-                Slog.v("KeyguardDisplayManager", "show");
+                Log.v("KeyguardDisplayManager", "show");
             }
             this.mMediaRouter.addCallback(4, this.mMediaRouterCallback, 8);
             updateDisplays(true);
@@ -171,7 +190,7 @@ public class KeyguardDisplayManager {
     public void hide() {
         if (this.mShowing) {
             if (DEBUG) {
-                Slog.v("KeyguardDisplayManager", "hide");
+                Log.v("KeyguardDisplayManager", "hide");
             }
             this.mMediaRouter.removeCallback(this.mMediaRouterCallback);
             updateDisplays(false);
@@ -181,50 +200,76 @@ public class KeyguardDisplayManager {
 
     /* access modifiers changed from: protected */
     public boolean updateDisplays(boolean z) {
-        boolean z2;
+        boolean z2 = false;
         if (z) {
-            z2 = false;
-            for (Display showPresentation : this.mDisplayService.getDisplays()) {
-                z2 |= showPresentation(showPresentation);
+            boolean z3 = false;
+            for (Display display : this.mDisplayService.getDisplays()) {
+                updateNavigationBarVisibility(display.getDisplayId(), false);
+                z3 |= showPresentation(display);
             }
-        } else {
-            z2 = this.mPresentations.size() > 0;
-            for (int size = this.mPresentations.size() - 1; size >= 0; size--) {
-                this.mPresentations.valueAt(size).dismiss();
-            }
-            this.mPresentations.clear();
+            return z3;
         }
+        if (this.mPresentations.size() > 0) {
+            z2 = true;
+        }
+        for (int size = this.mPresentations.size() - 1; size >= 0; size--) {
+            updateNavigationBarVisibility(this.mPresentations.keyAt(size), true);
+            this.mPresentations.valueAt(size).dismiss();
+        }
+        this.mPresentations.clear();
         return z2;
     }
 
-    private static final class KeyguardPresentation extends Presentation {
+    /* access modifiers changed from: private */
+    public void updateNavigationBarVisibility(int i, boolean z) {
+        NavigationBarView navigationBarView;
+        if (i != 0 && (navigationBarView = this.mNavBarController.getNavigationBarView(i)) != null) {
+            if (z) {
+                navigationBarView.getRootView().setVisibility(0);
+            } else {
+                navigationBarView.getRootView().setVisibility(8);
+            }
+        }
+    }
+
+    @VisibleForTesting
+    static final class KeyguardPresentation extends Presentation {
         /* access modifiers changed from: private */
-        public View mClock;
+        public KeyguardStatusView mClock;
+        private final LayoutInflater mInjectableLayoutInflater;
         /* access modifiers changed from: private */
         public int mMarginLeft;
         /* access modifiers changed from: private */
         public int mMarginTop;
         Runnable mMoveTextRunnable = new Runnable() {
             public void run() {
-                int access$600 = KeyguardPresentation.this.mMarginLeft + ((int) (Math.random() * ((double) (KeyguardPresentation.this.mUsableWidth - KeyguardPresentation.this.mClock.getWidth()))));
-                int access$900 = KeyguardPresentation.this.mMarginTop + ((int) (Math.random() * ((double) (KeyguardPresentation.this.mUsableHeight - KeyguardPresentation.this.mClock.getHeight()))));
-                KeyguardPresentation.this.mClock.setTranslationX((float) access$600);
-                KeyguardPresentation.this.mClock.setTranslationY((float) access$900);
-                KeyguardPresentation.this.mClock.postDelayed(KeyguardPresentation.this.mMoveTextRunnable, 10000);
+                int access$700 = KeyguardPresentation.this.mMarginLeft + ((int) (Math.random() * ((double) (KeyguardPresentation.this.mUsableWidth - KeyguardPresentation.this.mClock.getWidth()))));
+                int access$1000 = KeyguardPresentation.this.mMarginTop + ((int) (Math.random() * ((double) (KeyguardPresentation.this.mUsableHeight - KeyguardPresentation.this.mClock.getHeight()))));
+                KeyguardPresentation.this.mClock.setTranslationX((float) access$700);
+                KeyguardPresentation.this.mClock.setTranslationY((float) access$1000);
+                KeyguardPresentation.this.mClock.refreshTime();
+                KeyguardPresentation.this.mClock.postDelayed(KeyguardPresentation.this.mMoveTextRunnable, 30000);
             }
         };
         /* access modifiers changed from: private */
         public int mUsableHeight;
         /* access modifiers changed from: private */
         public int mUsableWidth;
+        private WakeLock wakeLock;
 
-        public KeyguardPresentation(Context context, Display display, int i) {
-            super(context, display, i);
+        public void cancel() {
+        }
+
+        KeyguardPresentation(Context context, Display display, LayoutInflater layoutInflater) {
+            super(context, display, C0022R$style.Theme_SystemUI_KeyguardPresentation);
+            this.mInjectableLayoutInflater = layoutInflater;
             getWindow().setType(2009);
             setCancelable(false);
         }
 
         public void onDetachedFromWindow() {
+            this.wakeLock.release("screenlock");
+            this.wakeLock = null;
             this.mClock.removeCallbacks(this.mMoveTextRunnable);
         }
 
@@ -239,11 +284,16 @@ public class KeyguardDisplayManager {
             this.mUsableHeight = (i2 * 80) / 100;
             this.mMarginLeft = (i * 20) / 200;
             this.mMarginTop = (i2 * 20) / 200;
-            setContentView(R.layout.keyguard_presentation);
+            setContentView(this.mInjectableLayoutInflater.inflate(C0017R$layout.keyguard_presentation, (ViewGroup) null));
             getWindow().getDecorView().setSystemUiVisibility(1792);
-            this.mClock = findViewById(R.id.clock);
+            getWindow().getAttributes().setFitInsetsTypes(0);
+            getWindow().setNavigationBarContrastEnforced(false);
+            getWindow().setNavigationBarColor(0);
+            this.mClock = (KeyguardStatusView) findViewById(C0015R$id.clock);
+            WakeLock createPartial = WakeLock.createPartial(getContext(), "KeyguardDisplayManager");
+            this.wakeLock = createPartial;
+            createPartial.acquire("screenlock");
             this.mClock.post(this.mMoveTextRunnable);
-            getWindow();
         }
     }
 }

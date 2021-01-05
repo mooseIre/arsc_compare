@@ -3,11 +3,11 @@ package com.android.keyguard;
 import android.content.Context;
 import android.os.PowerManager;
 import android.os.SystemClock;
-import com.android.systemui.Application;
+import com.android.keyguard.injector.KeyguardUpdateMonitorInjector;
+import com.android.keyguard.injector.KeyguardViewMediatorInjector;
+import com.android.keyguard.utils.MiuiKeyguardUtils;
 import com.android.systemui.Dependency;
 import com.android.systemui.keyguard.KeyguardViewMediator;
-import com.android.systemui.miui.ActivityObserver;
-import com.miui.systemui.annotation.Inject;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
@@ -15,6 +15,7 @@ public class MiuiFastUnlockController {
     private final ArrayList<WeakReference<FastUnlockCallback>> mCallbacks = new ArrayList<>();
     private Context mContext;
     private volatile boolean mFastUnlock = false;
+    private KeyguardViewMediator mKeyguardViewMediator;
     private PowerManager mPowerManager;
 
     public interface FastUnlockCallback {
@@ -25,36 +26,25 @@ public class MiuiFastUnlockController {
         }
     }
 
-    public MiuiFastUnlockController(@Inject Context context) {
+    public MiuiFastUnlockController(Context context, KeyguardViewMediator keyguardViewMediator) {
         this.mContext = context;
-        this.mPowerManager = (PowerManager) this.mContext.getSystemService("power");
-    }
-
-    public boolean fastUnlock() {
-        KeyguardViewMediator keyguardViewMediator = (KeyguardViewMediator) ((Application) this.mContext.getApplicationContext()).getSystemUIApplication().getComponent(KeyguardViewMediator.class);
-        if (!supportFastUnlock() || keyguardViewMediator == null) {
-            return false;
-        }
-        onStartFastUnlock();
-        this.mFastUnlock = true;
-        hideKeygaurdFast(keyguardViewMediator);
-        onFinishFashUnlock();
-        return true;
+        this.mPowerManager = (PowerManager) context.getSystemService("power");
+        this.mKeyguardViewMediator = keyguardViewMediator;
     }
 
     public boolean wakeAndFastUnlock(String str) {
-        KeyguardViewMediator keyguardViewMediator = (KeyguardViewMediator) ((Application) this.mContext.getApplicationContext()).getSystemUIApplication().getComponent(KeyguardViewMediator.class);
-        if (!supportFastUnlock() || keyguardViewMediator == null) {
+        if (!supportFastUnlock() || this.mKeyguardViewMediator == null) {
             return false;
         }
         onStartFastUnlock();
         this.mFastUnlock = true;
+        ((KeyguardUpdateMonitorInjector) Dependency.get(KeyguardUpdateMonitorInjector.class)).setKeyguardUnlockWay("fp", true);
         if (MiuiKeyguardUtils.isGxzwSensor()) {
-            hideKeygaurdFast(keyguardViewMediator);
+            hideKeygaurdFast(this.mKeyguardViewMediator);
             wakeupIfNeed(str);
         } else {
             wakeupIfNeed(str);
-            hideKeygaurdFast(keyguardViewMediator);
+            hideKeygaurdFast(this.mKeyguardViewMediator);
         }
         onFinishFashUnlock();
         return true;
@@ -108,16 +98,16 @@ public class MiuiFastUnlockController {
     }
 
     private void hideKeygaurdFast(KeyguardViewMediator keyguardViewMediator) {
-        keyguardViewMediator.preHideKeyguard();
+        ((KeyguardViewMediatorInjector) Dependency.get(KeyguardViewMediatorInjector.class)).preHideKeyguard();
     }
 
     private void wakeupIfNeed(String str) {
-        if (!KeyguardUpdateMonitor.getInstance(this.mContext).isDeviceInteractive()) {
+        if (!((KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class)).isDeviceInteractive()) {
             this.mPowerManager.wakeUp(SystemClock.uptimeMillis(), str);
         }
     }
 
     private boolean supportFastUnlock() {
-        return (MiuiKeyguardUtils.isGxzwSensor() || MiuiKeyguardUtils.isBroadSideFingerprint()) && (MiuiKeyguardUtils.isWeakenAimationEnable(this.mContext) || (!KeyguardUpdateMonitor.getInstance(this.mContext).isDeviceInteractive() && ((ActivityObserver) Dependency.get(ActivityObserver.class)).isTopActivityLauncher()));
+        return (MiuiKeyguardUtils.isGxzwSensor() || MiuiKeyguardUtils.isBroadSideFingerprint()) && (MiuiKeyguardUtils.isWeakenAimationEnable(this.mContext) || (!((KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class)).isDeviceInteractive() && MiuiKeyguardUtils.isTopActivityLauncher(this.mContext)));
     }
 }

@@ -6,31 +6,27 @@ import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
-import android.util.Slog;
 import com.android.internal.os.SomeArgs;
-import com.android.systemui.Constants;
-import com.android.systemui.SystemUI;
-import com.android.systemui.miui.statusbar.analytics.StatManager;
+import com.android.systemui.Dependency;
 import com.android.systemui.statusbar.phone.StatusBar;
+import com.miui.systemui.DebugConfig;
 import java.util.HashMap;
-import java.util.Map;
 
 public class AnalyticsHelper {
-    private static boolean DEBUG = Constants.DEBUG;
+    private static boolean DEBUG = DebugConfig.DEBUG_KEYGUARD;
     private static volatile AnalyticsHelper sInstance;
-    private Context mContext;
     private Handler mHandler;
-    private boolean mIsLockScreenMagazineMainPreShowing;
     private HashMap<String, TrackPageEvent> mTrackPageEvents = new HashMap<>();
-    private String mUnlockWay = "none";
-    private String mWakeupWay = "others";
 
     public static int booleanToInt(boolean z) {
         return z ? 1 : 0;
     }
 
+    public void setLockScreenMagazineMainPreShow(boolean z) {
+    }
+
     private final class WorkHandler extends Handler {
-        public WorkHandler(Looper looper) {
+        public WorkHandler(AnalyticsHelper analyticsHelper, Looper looper) {
             super(looper);
         }
 
@@ -39,18 +35,16 @@ public class AnalyticsHelper {
             int i = message.what;
             if (i == 201) {
                 SomeArgs someArgs = (SomeArgs) message.obj;
-                StatManager.trackGenericEvent((String) someArgs.arg1, (HashMap) someArgs.arg2);
             } else if (i == 202) {
-                StatManager.trackGenericEvent((String) ((SomeArgs) message.obj).arg1, (Map<String, Object>) null);
+                SomeArgs someArgs2 = (SomeArgs) message.obj;
             }
         }
     }
 
     private AnalyticsHelper(Context context) {
-        this.mContext = context;
         HandlerThread handlerThread = new HandlerThread("keyguard_analytics", 10);
         handlerThread.start();
-        this.mHandler = new WorkHandler(handlerThread.getLooper());
+        this.mHandler = new WorkHandler(this, handlerThread.getLooper());
         initTrackPageEvents();
     }
 
@@ -73,58 +67,12 @@ public class AnalyticsHelper {
         return sInstance;
     }
 
-    public void setWakeupWay(String str) {
-        this.mWakeupWay = str;
-    }
-
-    public void resetAnalyticsParams() {
-        this.mWakeupWay = "others";
-    }
-
-    public void recordScreenOn(boolean z, boolean z2, boolean z3, boolean z4, boolean z5, boolean z6, String str, boolean z7) {
-        HashMap hashMap = new HashMap();
-        hashMap.put("way_screen_on", this.mWakeupWay);
-        hashMap.put("is_fingerprint_locked", Integer.valueOf(z ? 1 : 0));
-        hashMap.put("is_password_locked", Integer.valueOf(z2 ? 1 : 0));
-        hashMap.put("is_screen_on_delayed", Integer.valueOf(z3 ? 1 : 0));
-        hashMap.put("is_unlocked_by_fingerprint", Integer.valueOf(z4 ? 1 : 0));
-        hashMap.put("is_keyguard_showing", Integer.valueOf(z5 ? 1 : 0));
-        hashMap.put("is_occluded", Integer.valueOf(z6 ? 1 : 0));
-        hashMap.put("charging", str);
-        hashMap.put("is_lockscreen_wallpaper_open", Integer.valueOf(z7 ? 1 : 0));
-        hashMap.put("is_global_lockscreen_wallpaper_pre_show", Boolean.valueOf(this.mIsLockScreenMagazineMainPreShowing));
-        track("keyguard_screen_on", hashMap);
-    }
-
     public void trackPageStart(String str) {
         this.mTrackPageEvents.get(str).onPageStart();
     }
 
-    public void trackPageEnd(String str) {
-        trackPageEnd(str, (String) null);
-    }
-
     public void trackPageEnd(String str, String str2) {
         this.mTrackPageEvents.get(str).onPageEnd(str2);
-    }
-
-    public boolean isPWUnlock() {
-        return "pw".equalsIgnoreCase(this.mUnlockWay);
-    }
-
-    public String getUnlockWay() {
-        return this.mUnlockWay;
-    }
-
-    public void recordUnlockWay(String str, boolean z) {
-        if (z) {
-            Slog.w("miui_keyguard", "unlock keyguard by " + str);
-            this.mUnlockWay = str;
-        }
-        HashMap hashMap = new HashMap();
-        hashMap.put("unlock_way", str);
-        hashMap.put("unlock_result", Integer.valueOf(z ? 1 : 0));
-        track("keyguard_unlock_way", hashMap);
     }
 
     public void recordKeyguardAction(String str) {
@@ -133,17 +81,9 @@ public class AnalyticsHelper {
         track("keyguard_action", hashMap);
     }
 
-    public void recordFaceUnlockEvent(boolean z, int i) {
-        HashMap hashMap = new HashMap();
-        hashMap.put("unlock_result", Integer.valueOf(z ? 1 : 0));
-        if (!z) {
-            hashMap.put("face_unlock_fail_reason", Integer.valueOf(i));
-        }
-        track("face_unlock_event", hashMap);
-    }
-
     public void recordFodQuickOpenExpandResultAction(boolean z) {
         HashMap hashMap = new HashMap();
+        booleanToInt(z);
         hashMap.put("fod_quick_open_expand_result", Integer.valueOf(z ? 1 : 0));
         track("fod_quick_open_action", hashMap);
     }
@@ -156,36 +96,27 @@ public class AnalyticsHelper {
 
     public void recordKeyguardProximitySensor(boolean z) {
         HashMap hashMap = new HashMap();
+        booleanToInt(z);
         hashMap.put("proximity_sensor_too_close", Integer.valueOf(z ? 1 : 0));
         track("keyguard_proximity_sensor_change", hashMap);
     }
 
-    public void recordKeyguardSettingsEvent() {
-        if (KeyguardSettingsAnalytics.getKeyguardSettingsStatParams(this.mContext) != null) {
-            track("keyguard_settings_state", KeyguardSettingsAnalytics.getKeyguardSettingsStatParams(this.mContext));
-        }
-    }
-
     public void recordLockScreenWallperProviderChanged() {
-        track("lock_screen_wallpaper_provider_changed", LockScreenMagazineAnalytics.getLockScreenWallperProviderStatus(this.mContext));
-    }
-
-    public void recordLockScreenWallperProviderStatus() {
-        track("lock_screen_magazine_open_status", LockScreenMagazineAnalytics.getLockScreenWallperProviderStatus(this.mContext));
+        track("lock_screen_wallpaper_provider_changed", LockScreenMagazineAnalytics.getLockScreenWallperProviderStatus());
     }
 
     public void recordLockScreenMagazinePreviewAction(String str) {
-        track("lock_screen_magazine_action", LockScreenMagazineAnalytics.getLockScreenMagazinePreviewActionParams(this.mContext, str));
+        track("lock_screen_magazine_action", LockScreenMagazineAnalytics.getLockScreenMagazinePreviewActionParams(str));
     }
 
     public void recordLockScreenMagazineEntryClickAction() {
-        HashMap lockScreenMagazinePreviewActionParams = LockScreenMagazineAnalytics.getLockScreenMagazinePreviewActionParams(this.mContext, "click_entry");
-        lockScreenMagazinePreviewActionParams.put("has_notification", Boolean.valueOf(((StatusBar) SystemUI.getComponent(this.mContext, StatusBar.class)).getKeyguardNotifications() > 0));
+        HashMap lockScreenMagazinePreviewActionParams = LockScreenMagazineAnalytics.getLockScreenMagazinePreviewActionParams("click_entry");
+        lockScreenMagazinePreviewActionParams.put("has_notification", Boolean.valueOf(((StatusBar) Dependency.get(StatusBar.class)).getKeyguardNotifications() > 0));
         track("lock_screen_magazine_action", lockScreenMagazinePreviewActionParams);
     }
 
     public void recordNegativeStatus() {
-        track("lock_screen_negative_status", LockScreenMagazineAnalytics.getNegativeStatusParams(this.mContext));
+        track("lock_screen_negative_status", LockScreenMagazineAnalytics.getNegativeStatusParams());
     }
 
     public void recordChargeAnimation(int i) {
@@ -201,14 +132,6 @@ public class AnalyticsHelper {
             hashMap.put("charge_efficiency_level", Integer.valueOf(i));
             hashMap.put("charge_efficiency_device", Integer.valueOf(i2));
             track("charge_efficiency", hashMap);
-        }
-    }
-
-    public void recordFingerprintUnlockTimeEvent(long j) {
-        if (j >= 0) {
-            HashMap hashMap = new HashMap();
-            hashMap.put("fingerprint_unlock_time", Long.valueOf(j));
-            track("fingerprint_unlock_time_event", hashMap);
         }
     }
 
@@ -231,10 +154,6 @@ public class AnalyticsHelper {
         if (DEBUG) {
             Log.d("MiuiKeyguardStat", String.format(str, objArr));
         }
-    }
-
-    public void setLockScreenMagazineMainPreShow(boolean z) {
-        this.mIsLockScreenMagazineMainPreShowing = z;
     }
 
     private class TrackPageEvent {

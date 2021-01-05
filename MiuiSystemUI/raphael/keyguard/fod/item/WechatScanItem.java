@@ -7,7 +7,8 @@ import android.graphics.RectF;
 import android.graphics.Region;
 import android.view.View;
 import android.widget.ImageView;
-import com.android.systemui.plugins.R;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0021R$string;
 
 public class WechatScanItem extends IQuickOpenItem {
     private final ImageView mView;
@@ -22,8 +23,9 @@ public class WechatScanItem extends IQuickOpenItem {
 
     public WechatScanItem(RectF rectF, Region region, Context context) {
         super(rectF, region, context);
-        this.mView = new ImageView(context);
-        this.mView.setImageResource(R.drawable.gxzw_quick_open_wechat_scan);
+        ImageView imageView = new ImageView(context);
+        this.mView = imageView;
+        imageView.setImageResource(C0013R$drawable.gxzw_quick_open_wechat_scan);
         this.mView.setScaleType(ImageView.ScaleType.FIT_XY);
     }
 
@@ -40,10 +42,10 @@ public class WechatScanItem extends IQuickOpenItem {
     }
 
     public String getTitle() {
-        return this.mContext.getString(R.string.gxzw_quick_open_wechat_scan);
+        return this.mContext.getString(C0021R$string.gxzw_quick_open_wechat_scan);
     }
 
     public String getSubTitle() {
-        return this.mContext.getString(R.string.gxzw_quick_open_wechat_scan_sub);
+        return this.mContext.getString(C0021R$string.gxzw_quick_open_wechat_scan_sub);
     }
 }

@@ -19,29 +19,34 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.RemoteViews;
 import android.widget.TextView;
-import com.android.keyguard.KeyguardUpdateMonitor;
-import com.android.keyguard.MiuiKeyguardUtils;
 import com.android.keyguard.analytics.AnalyticsHelper;
-import com.android.keyguard.magazine.mode.LockScreenMagazineWallpaperInfo;
+import com.android.keyguard.magazine.entity.LockScreenMagazineWallpaperInfo;
+import com.android.keyguard.magazine.utils.LockScreenMagazineUtils;
+import com.android.keyguard.utils.MiuiKeyguardUtils;
 import com.android.keyguard.utils.PackageUtils;
 import com.android.keyguard.wallpaper.WallpaperAuthorityUtils;
-import com.android.systemui.SystemUICompat;
-import com.android.systemui.plugins.R;
-import com.xiaomi.stat.d;
+import com.android.systemui.C0011R$color;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0021R$string;
+import com.android.systemui.Dependency;
+import com.miui.systemui.util.CommonUtil;
 import java.util.Locale;
 import miui.os.Build;
 
 public class LockScreenMagazinePreView extends RelativeLayout {
-    private boolean mDarkMode;
+    private boolean mDarkStyle;
     private int mDensityDpi;
+    private TextView mEnterButton;
     private float mFontScale;
     private LinearLayout mFullScreenBottomLayout;
-    private TextView mFullScreenButton;
     private TextView mFullScreenContent;
     private LinearLayout mFullScreenLayout;
     private ImageView mFullScreenLinkButton;
     private TextView mFullScreenProvider;
-    private RemoteViews mFullScreenRemoteView;
+    /* access modifiers changed from: private */
+    public RemoteViews mFullScreenRemoteView;
     private boolean mFullScreenRemoteViewApplyed;
     private ImageView mFullScreenSettingButton;
     private TextView mFullScreenSource;
@@ -54,18 +59,19 @@ public class LockScreenMagazinePreView extends RelativeLayout {
     protected LockScreenMagazineWallpaperInfo mLockScreenMagazineWallpaperInfo;
     private LinearLayout mMainLayout;
     private TextView mMainProvider;
-    private RemoteViews mMainRemoteView;
+    /* access modifiers changed from: private */
+    public RemoteViews mMainRemoteView;
     private boolean mMainRemoteViewApplyed;
     private TextView mMainSource;
     private TextView mMainTitle;
-    protected KeyguardUpdateMonitor mMonitor;
     /* access modifiers changed from: private */
     public OnPreViewClickListener mPreViewClickListener;
     private LinearLayout mRemoteFullScreenLayout;
     private View mRemoteFullScreenView;
     private LinearLayout mRemoteMainLayout;
     private View mRemoteMainView;
-    private String mRemotePackageName;
+    /* access modifiers changed from: private */
+    public String mRemotePackageName;
     private Resources mResources;
 
     public interface OnPreViewClickListener {
@@ -86,30 +92,48 @@ public class LockScreenMagazinePreView extends RelativeLayout {
 
     public LockScreenMagazinePreView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-        this.mMonitor = KeyguardUpdateMonitor.getInstance(context);
-        this.mLockScreenMagazineWallpaperInfo = this.mMonitor.getLockScreenMagazineWallpaperInfo();
         this.mResources = context.getResources();
     }
 
     public void onFinishInflate() {
-        this.mFullScreenLayout = (LinearLayout) findViewById(R.id.lock_screen_magazine_preview_fullscreen_layout);
-        this.mFullScreenSettingButton = (ImageView) findViewById(R.id.lock_screen_magazine_preview_fullscreen_setting);
-        this.mFullScreenTitleLayout = (RelativeLayout) findViewById(R.id.lock_screen_magazine_preview_fullscreen_bottom_title_layout);
-        this.mFullScreenTitle = (TextView) findViewById(R.id.lock_screen_magazine_preview_fullscreen_bottom_title_layout_title);
-        this.mFullScreenLinkButton = (ImageView) findViewById(R.id.lock_screen_magazine_preview_fullscreen_bottom_title_layout_link);
-        this.mFullScreenBottomLayout = (LinearLayout) findViewById(R.id.lock_screen_magazine_preview_fullscreen_bottom_layout);
-        this.mFullScreenContent = (TextView) findViewById(R.id.lock_screen_magazine_preview_fullscreen_bottom_content);
-        this.mFullScreenButton = (TextView) findViewById(R.id.lock_screen_magazine_preview_fullscreen_bottom_button);
-        this.mFullScreenProvider = (TextView) findViewById(R.id.lock_screen_magazine_preview_fullscreen_bottom_provider);
-        this.mFullScreenSource = (TextView) findViewById(R.id.lock_screen_magazine_preview_fullscreen_bottom_source);
-        this.mMainLayout = (LinearLayout) findViewById(R.id.lock_screen_magazine_preview_main_layout);
-        this.mMainTitle = (TextView) findViewById(R.id.lock_screen_magazine_preview_main_title);
-        this.mMainProvider = (TextView) findViewById(R.id.lock_screen_magazine_preview_main_provider);
-        this.mMainSource = (TextView) findViewById(R.id.lock_screen_magazine_preview_main_source);
-        this.mRemoteMainLayout = (LinearLayout) findViewById(R.id.lock_screen_magazine_preview_remote_main_layout);
-        this.mRemoteFullScreenLayout = (LinearLayout) findViewById(R.id.lock_screen_magazine_preview_remote_fullscreen_layout);
+        super.onFinishInflate();
+        this.mFullScreenLayout = (LinearLayout) findViewById(C0015R$id.lock_screen_magazine_preview_fullscreen_layout);
+        this.mFullScreenSettingButton = (ImageView) findViewById(C0015R$id.lock_screen_magazine_preview_fullscreen_setting);
+        this.mFullScreenTitleLayout = (RelativeLayout) findViewById(C0015R$id.lock_screen_magazine_preview_fullscreen_bottom_title_layout);
+        this.mFullScreenTitle = (TextView) findViewById(C0015R$id.lock_screen_magazine_preview_fullscreen_bottom_title_layout_title);
+        this.mFullScreenLinkButton = (ImageView) findViewById(C0015R$id.lock_screen_magazine_preview_fullscreen_bottom_title_layout_link);
+        this.mFullScreenBottomLayout = (LinearLayout) findViewById(C0015R$id.lock_screen_magazine_preview_fullscreen_bottom_layout);
+        this.mFullScreenContent = (TextView) findViewById(C0015R$id.lock_screen_magazine_preview_fullscreen_bottom_content);
+        this.mEnterButton = (TextView) findViewById(C0015R$id.lock_screen_magazine_preview_fullscreen_bottom_button);
+        this.mFullScreenProvider = (TextView) findViewById(C0015R$id.lock_screen_magazine_preview_fullscreen_bottom_provider);
+        this.mFullScreenSource = (TextView) findViewById(C0015R$id.lock_screen_magazine_preview_fullscreen_bottom_source);
+        this.mMainLayout = (LinearLayout) findViewById(C0015R$id.lock_screen_magazine_preview_main_layout);
+        this.mMainTitle = (TextView) findViewById(C0015R$id.lock_screen_magazine_preview_main_title);
+        this.mMainProvider = (TextView) findViewById(C0015R$id.lock_screen_magazine_preview_main_provider);
+        this.mMainSource = (TextView) findViewById(C0015R$id.lock_screen_magazine_preview_main_source);
+        this.mRemoteMainLayout = (LinearLayout) findViewById(C0015R$id.lock_screen_magazine_preview_remote_main_layout);
+        this.mRemoteFullScreenLayout = (LinearLayout) findViewById(C0015R$id.lock_screen_magazine_preview_remote_fullscreen_layout);
         initViews();
         updateFontScale();
+        initData();
+    }
+
+    private void initData() {
+        Class cls = LockScreenMagazineController.class;
+        this.mLockScreenMagazineWallpaperInfo = ((LockScreenMagazineController) Dependency.get(cls)).getLockScreenMagazineWallpaperInfo();
+        ((LockScreenMagazineController) Dependency.get(cls)).setView(this);
+    }
+
+    /* access modifiers changed from: protected */
+    public void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        ((LockScreenMagazineController) Dependency.get(LockScreenMagazineController.class)).onAttachedToWindow();
+    }
+
+    /* access modifiers changed from: protected */
+    public void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        ((LockScreenMagazineController) Dependency.get(LockScreenMagazineController.class)).onDetachedFromWindow();
     }
 
     private void initViews() {
@@ -128,7 +152,7 @@ public class LockScreenMagazinePreView extends RelativeLayout {
         this.mRemoteMainLayout.setVisibility(8);
         this.mFullScreenLayout.setVisibility(8);
         this.mRemoteFullScreenLayout.setVisibility(8);
-        if (!Build.IS_INTERNATIONAL_BUILD || !this.mMonitor.isSupportLockScreenMagazineLeft() || MiuiKeyguardUtils.isGxzwSensor()) {
+        if (!Build.IS_INTERNATIONAL_BUILD || !((LockScreenMagazineController) Dependency.get(LockScreenMagazineController.class)).isSupportLockScreenMagazineLeft() || MiuiKeyguardUtils.isGxzwSensor()) {
             getMainLayout().setVisibility(8);
         } else {
             getMainLayout().setVisibility(0);
@@ -197,7 +221,7 @@ public class LockScreenMagazinePreView extends RelativeLayout {
                 }
             }
         });
-        this.mFullScreenLinkButton.setOnLongClickListener(new View.OnLongClickListener() {
+        this.mFullScreenLinkButton.setOnLongClickListener(new View.OnLongClickListener(this) {
             public boolean onLongClick(View view) {
                 return true;
             }
@@ -212,25 +236,25 @@ public class LockScreenMagazinePreView extends RelativeLayout {
         if (Build.IS_INTERNATIONAL_BUILD) {
             this.mFullScreenContent.setFilters(new InputFilter[]{new InputFilter.LengthFilter(150)});
             this.mFullScreenContent.setLetterSpacing(0.01f);
-            this.mFullScreenContent.setTextColor(getResources().getColor(R.color.lock_screen_magazine_preview_fullscreen_global_bottom_content_text_color));
-            this.mFullScreenContent.setLineSpacing((float) getResources().getDimensionPixelOffset(R.dimen.lock_screen_magazine_preview_fullscreen_bottom_global_content_line_spacing_extra), 1.0f);
+            this.mFullScreenContent.setTextColor(getResources().getColor(C0011R$color.lock_screen_magazine_preview_fullscreen_global_bottom_content_text_color));
+            this.mFullScreenContent.setLineSpacing((float) getResources().getDimensionPixelOffset(C0012R$dimen.lock_screen_magazine_preview_fullscreen_bottom_global_content_line_spacing_extra), 1.0f);
         } else {
             this.mFullScreenContent.setTypeface(Typeface.create("miui-light", 0));
-            this.mFullScreenContent.setLineSpacing((float) getResources().getDimensionPixelOffset(R.dimen.lock_screen_magazine_preview_fullscreen_bottom_content_line_spacing_extra), 1.0f);
+            this.mFullScreenContent.setLineSpacing((float) getResources().getDimensionPixelOffset(C0012R$dimen.lock_screen_magazine_preview_fullscreen_bottom_content_line_spacing_extra), 1.0f);
         }
         setFullScreenContentMargin();
     }
 
     private void initFullScreenButton() {
-        this.mFullScreenButton.setContentDescription(this.mResources.getText(R.string.accessibility_enter_lock_wallpaper));
-        this.mFullScreenButton.setOnClickListener(new View.OnClickListener() {
+        this.mEnterButton.setContentDescription(this.mResources.getText(C0021R$string.accessibility_enter_lock_wallpaper));
+        this.mEnterButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 if (LockScreenMagazinePreView.this.mPreViewClickListener != null) {
                     LockScreenMagazinePreView.this.mPreViewClickListener.onPreButtonClick(view);
                 }
             }
         });
-        this.mFullScreenButton.setOnLongClickListener(new View.OnLongClickListener() {
+        this.mEnterButton.setOnLongClickListener(new View.OnLongClickListener(this) {
             public boolean onLongClick(View view) {
                 return true;
             }
@@ -240,19 +264,19 @@ public class LockScreenMagazinePreView extends RelativeLayout {
 
     private void setFullScreenButtonPadding() {
         int i;
-        int dimensionPixelOffset = this.mResources.getDimensionPixelOffset(R.dimen.lock_screen_magazine_preview_fullscreen_bottom_button_padding_top);
+        int dimensionPixelOffset = this.mResources.getDimensionPixelOffset(C0012R$dimen.lock_screen_magazine_preview_fullscreen_bottom_button_padding_top);
         if (Build.IS_INTERNATIONAL_BUILD) {
-            i = this.mResources.getDimensionPixelOffset(R.dimen.lock_screen_magazine_preview_fullscreen_bottom_global_button_padding_start_end);
+            i = this.mResources.getDimensionPixelOffset(C0012R$dimen.lock_screen_magazine_preview_fullscreen_bottom_global_button_padding_start_end);
         } else {
-            i = this.mResources.getDimensionPixelOffset(R.dimen.lock_screen_magazine_preview_fullscreen_bottom_button_padding_start_end);
+            i = this.mResources.getDimensionPixelOffset(C0012R$dimen.lock_screen_magazine_preview_fullscreen_bottom_button_padding_start_end);
         }
-        this.mFullScreenButton.setPadding(i, dimensionPixelOffset, i, Build.IS_INTERNATIONAL_BUILD ? dimensionPixelOffset : this.mResources.getDimensionPixelOffset(R.dimen.lock_screen_magazine_preview_fullscreen_bottom_button_padding_bottom));
+        this.mEnterButton.setPadding(i, dimensionPixelOffset, i, Build.IS_INTERNATIONAL_BUILD ? dimensionPixelOffset : this.mResources.getDimensionPixelOffset(C0012R$dimen.lock_screen_magazine_preview_fullscreen_bottom_button_padding_bottom));
     }
 
     /* access modifiers changed from: protected */
     public void onConfigurationChanged(Configuration configuration) {
         super.onConfigurationChanged(configuration);
-        Object locales = SystemUICompat.getLocales(configuration);
+        Object locales = CommonUtil.getLocales(configuration);
         float f = configuration.fontScale;
         int i = configuration.densityDpi;
         if (this.mLocaleList != locales) {
@@ -276,9 +300,9 @@ public class LockScreenMagazinePreView extends RelativeLayout {
         int i;
         LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) this.mFullScreenTitleLayout.getLayoutParams();
         if (Build.IS_INTERNATIONAL_BUILD) {
-            i = this.mResources.getDimensionPixelOffset(R.dimen.lock_screen_magazine_preview_fullscreen_bottom_global_title_layout_margin_bottom);
+            i = this.mResources.getDimensionPixelOffset(C0012R$dimen.lock_screen_magazine_preview_fullscreen_bottom_global_title_layout_margin_bottom);
         } else {
-            i = this.mResources.getDimensionPixelOffset(R.dimen.lock_screen_magazine_preview_fullscreen_bottom_title_layout_margin_bottom);
+            i = this.mResources.getDimensionPixelOffset(C0012R$dimen.lock_screen_magazine_preview_fullscreen_bottom_title_layout_margin_bottom);
         }
         layoutParams.setMargins(0, 0, 0, i);
         this.mFullScreenTitleLayout.setLayoutParams(layoutParams);
@@ -288,9 +312,9 @@ public class LockScreenMagazinePreView extends RelativeLayout {
         int i;
         LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) this.mFullScreenContent.getLayoutParams();
         if (Build.IS_INTERNATIONAL_BUILD) {
-            i = this.mResources.getDimensionPixelOffset(R.dimen.lock_screen_magazine_preview_fullscreen_bottom_global_content_margin_bottom);
+            i = this.mResources.getDimensionPixelOffset(C0012R$dimen.lock_screen_magazine_preview_fullscreen_bottom_global_content_margin_bottom);
         } else {
-            i = this.mResources.getDimensionPixelOffset(R.dimen.lock_screen_magazine_preview_fullscreen_bottom_content_margin_bottom);
+            i = this.mResources.getDimensionPixelOffset(C0012R$dimen.lock_screen_magazine_preview_fullscreen_bottom_content_margin_bottom);
         }
         layoutParams.setMargins(0, 0, 0, i);
         this.mFullScreenContent.setLayoutParams(layoutParams);
@@ -299,14 +323,14 @@ public class LockScreenMagazinePreView extends RelativeLayout {
     private void setFullScreenBottomLayoutPadding() {
         int i;
         LinearLayout linearLayout = this.mFullScreenBottomLayout;
-        int dimensionPixelOffset = this.mResources.getDimensionPixelOffset(R.dimen.lock_screen_magazine_preview_fullscreen_bottom_padding_start);
-        int dimensionPixelOffset2 = this.mResources.getDimensionPixelOffset(R.dimen.lock_screen_magazine_preview_fullscreen_bottom_padding_top);
+        int dimensionPixelOffset = this.mResources.getDimensionPixelOffset(C0012R$dimen.lock_screen_magazine_preview_fullscreen_bottom_padding_start);
+        int dimensionPixelOffset2 = this.mResources.getDimensionPixelOffset(C0012R$dimen.lock_screen_magazine_preview_fullscreen_bottom_padding_top);
         if (Build.IS_INTERNATIONAL_BUILD) {
-            i = this.mResources.getDimensionPixelOffset(R.dimen.lock_screen_magazine_preview_fullscreen_bottom_global_padding_end);
+            i = this.mResources.getDimensionPixelOffset(C0012R$dimen.lock_screen_magazine_preview_fullscreen_bottom_global_padding_end);
         } else {
-            i = this.mResources.getDimensionPixelOffset(R.dimen.lock_screen_magazine_preview_fullscreen_bottom_padding_end);
+            i = this.mResources.getDimensionPixelOffset(C0012R$dimen.lock_screen_magazine_preview_fullscreen_bottom_padding_end);
         }
-        linearLayout.setPaddingRelative(dimensionPixelOffset, dimensionPixelOffset2, i, this.mResources.getDimensionPixelOffset(R.dimen.lock_screen_magazine_preview_fullscreen_bottom_padding_bottom));
+        linearLayout.setPaddingRelative(dimensionPixelOffset, dimensionPixelOffset2, i, this.mResources.getDimensionPixelOffset(C0012R$dimen.lock_screen_magazine_preview_fullscreen_bottom_padding_bottom));
     }
 
     /* access modifiers changed from: private */
@@ -320,7 +344,7 @@ public class LockScreenMagazinePreView extends RelativeLayout {
                     }
                 }
             });
-            this.mFullScreenSettingButton.setOnLongClickListener(new View.OnLongClickListener() {
+            this.mFullScreenSettingButton.setOnLongClickListener(new View.OnLongClickListener(this) {
                 public boolean onLongClick(View view) {
                     return true;
                 }
@@ -337,21 +361,38 @@ public class LockScreenMagazinePreView extends RelativeLayout {
     }
 
     private void updateFontScale() {
+        int i;
+        int i2;
+        Class cls = LockScreenMagazineController.class;
         if (!isDefaultMainLayout()) {
             updateRemoteTextView(this.mRemoteMainView, true);
-        } else if (Build.IS_INTERNATIONAL_BUILD && this.mMonitor.isSupportLockScreenMagazineLeft()) {
-            this.mMainTitle.setTextSize(0, (float) this.mResources.getDimensionPixelSize(R.dimen.lock_screen_magazine_preview_main_title_text_size));
-            this.mMainProvider.setTextSize(0, (float) this.mResources.getDimensionPixelSize(R.dimen.lock_screen_magazine_preview_main_content_text_size));
-            this.mMainSource.setTextSize(0, (float) this.mResources.getDimensionPixelSize(R.dimen.lock_screen_magazine_preview_main_content_text_size));
+        } else if (Build.IS_INTERNATIONAL_BUILD && ((LockScreenMagazineController) Dependency.get(cls)).isSupportLockScreenMagazineLeft()) {
+            this.mMainTitle.setTextSize(0, (float) this.mResources.getDimensionPixelSize(C0012R$dimen.lock_screen_magazine_preview_main_title_text_size));
+            this.mMainProvider.setTextSize(0, (float) this.mResources.getDimensionPixelSize(C0012R$dimen.lock_screen_magazine_preview_main_content_text_size));
+            this.mMainSource.setTextSize(0, (float) this.mResources.getDimensionPixelSize(C0012R$dimen.lock_screen_magazine_preview_main_content_text_size));
         }
         if (isDefaultFullScreenLayout()) {
-            if (Build.IS_INTERNATIONAL_BUILD && this.mMonitor.isSupportLockScreenMagazineLeft()) {
-                this.mFullScreenProvider.setTextSize(0, (float) this.mResources.getDimensionPixelSize(R.dimen.lock_screen_magazine_preview_fullscreen_bottom_provider_text_size));
-                this.mFullScreenSource.setTextSize(0, (float) this.mResources.getDimensionPixelSize(R.dimen.lock_screen_magazine_preview_fullscreen_bottom_source_text_size));
+            if (Build.IS_INTERNATIONAL_BUILD && ((LockScreenMagazineController) Dependency.get(cls)).isSupportLockScreenMagazineLeft()) {
+                this.mFullScreenProvider.setTextSize(0, (float) this.mResources.getDimensionPixelSize(C0012R$dimen.lock_screen_magazine_preview_fullscreen_bottom_provider_text_size));
+                this.mFullScreenSource.setTextSize(0, (float) this.mResources.getDimensionPixelSize(C0012R$dimen.lock_screen_magazine_preview_fullscreen_bottom_source_text_size));
             }
-            this.mFullScreenTitle.setTextSize(0, (float) this.mResources.getDimensionPixelSize(Build.IS_INTERNATIONAL_BUILD ? R.dimen.lock_screen_magazine_preview_fullscreen_bottom_title_layout_global_title_text_size : R.dimen.lock_screen_magazine_preview_fullscreen_bottom_title_layout_title_text_size));
-            this.mFullScreenContent.setTextSize(0, (float) this.mResources.getDimensionPixelSize(Build.IS_INTERNATIONAL_BUILD ? R.dimen.lock_screen_magazine_preview_fullscreen_bottom_global_content_text_size : R.dimen.lock_screen_magazine_preview_fullscreen_bottom_content_text_size));
-            this.mFullScreenButton.setTextSize(0, (float) this.mResources.getDimensionPixelSize(R.dimen.lock_screen_magazine_preview_fullscreen_bottom_button_text_size));
+            TextView textView = this.mFullScreenTitle;
+            Resources resources = this.mResources;
+            if (Build.IS_INTERNATIONAL_BUILD) {
+                i = C0012R$dimen.lock_screen_magazine_preview_fullscreen_bottom_title_layout_global_title_text_size;
+            } else {
+                i = C0012R$dimen.lock_screen_magazine_preview_fullscreen_bottom_title_layout_title_text_size;
+            }
+            textView.setTextSize(0, (float) resources.getDimensionPixelSize(i));
+            TextView textView2 = this.mFullScreenContent;
+            Resources resources2 = this.mResources;
+            if (Build.IS_INTERNATIONAL_BUILD) {
+                i2 = C0012R$dimen.lock_screen_magazine_preview_fullscreen_bottom_global_content_text_size;
+            } else {
+                i2 = C0012R$dimen.lock_screen_magazine_preview_fullscreen_bottom_content_text_size;
+            }
+            textView2.setTextSize(0, (float) resources2.getDimensionPixelSize(i2));
+            this.mEnterButton.setTextSize(0, (float) this.mResources.getDimensionPixelSize(C0012R$dimen.lock_screen_magazine_preview_fullscreen_bottom_button_text_size));
             return;
         }
         updateRemoteTextView(this.mRemoteFullScreenView, false);
@@ -359,18 +400,25 @@ public class LockScreenMagazinePreView extends RelativeLayout {
 
     private void updateDrawableResource() {
         if (isDefaultFullScreenLayout()) {
-            if (!Build.IS_INTERNATIONAL_BUILD && this.mMonitor.isSupportLockScreenMagazineLeft()) {
+            if (!Build.IS_INTERNATIONAL_BUILD && ((LockScreenMagazineController) Dependency.get(LockScreenMagazineController.class)).isSupportLockScreenMagazineLeft()) {
                 updateSettingButtonDrawableResource();
                 updateLinkButtonDrawableResource();
             }
-            this.mFullScreenButton.setBackgroundResource(R.drawable.lock_screen_magazine_des_more_btn_bg);
+            this.mEnterButton.setBackgroundResource(C0013R$drawable.lock_screen_magazine_des_more_btn_bg);
             return;
         }
         updateRemoteTextView(this.mRemoteFullScreenLayout, false);
     }
 
     private void updateSettingButtonDrawableResource() {
-        this.mFullScreenSettingButton.setImageResource(this.mDarkMode ? R.drawable.lock_screen_magazine_pre_settings_dark : R.drawable.lock_screen_magazine_pre_settings);
+        int i;
+        ImageView imageView = this.mFullScreenSettingButton;
+        if (this.mDarkStyle) {
+            i = C0013R$drawable.lock_screen_magazine_pre_settings_dark;
+        } else {
+            i = C0013R$drawable.lock_screen_magazine_pre_settings;
+        }
+        imageView.setImageResource(i);
     }
 
     private void updateLinkButtonDrawableResource() {
@@ -378,45 +426,46 @@ public class LockScreenMagazinePreView extends RelativeLayout {
         if (lockScreenMagazineWallpaperInfo != null) {
             int i = lockScreenMagazineWallpaperInfo.linkType;
             if (i == 1) {
-                this.mFullScreenLinkButton.setImageResource(R.drawable.lock_screen_magazine_pre_link);
+                this.mFullScreenLinkButton.setImageResource(C0013R$drawable.lock_screen_magazine_pre_link);
             } else if (i == 2) {
-                this.mFullScreenLinkButton.setImageResource(R.drawable.wallpaper_play);
+                this.mFullScreenLinkButton.setImageResource(C0013R$drawable.wallpaper_play);
             }
         }
     }
 
     private void updateViewsLayoutParams() {
-        if (Build.IS_INTERNATIONAL_BUILD && this.mMonitor.isSupportLockScreenMagazineLeft()) {
+        Class cls = LockScreenMagazineController.class;
+        if (Build.IS_INTERNATIONAL_BUILD && ((LockScreenMagazineController) Dependency.get(cls)).isSupportLockScreenMagazineLeft()) {
             if (isDefaultMainLayout()) {
                 RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) this.mMainLayout.getLayoutParams();
-                layoutParams.setMargins(0, 0, 0, this.mResources.getDimensionPixelOffset(R.dimen.keyguard_affordance_height));
+                layoutParams.setMargins(0, 0, 0, this.mResources.getDimensionPixelOffset(C0012R$dimen.keyguard_affordance_height));
                 this.mMainLayout.setLayoutParams(layoutParams);
                 LinearLayout.LayoutParams layoutParams2 = (LinearLayout.LayoutParams) this.mMainTitle.getLayoutParams();
-                layoutParams2.setMargins(this.mResources.getDimensionPixelOffset(R.dimen.lock_screen_magazine_preview_main_title_margin_start_end), 0, this.mResources.getDimensionPixelOffset(R.dimen.lock_screen_magazine_preview_main_title_margin_start_end), this.mResources.getDimensionPixelOffset(R.dimen.lock_screen_magazine_preview_main_title_margin_bottom));
+                layoutParams2.setMargins(this.mResources.getDimensionPixelOffset(C0012R$dimen.lock_screen_magazine_preview_main_title_margin_start_end), 0, this.mResources.getDimensionPixelOffset(C0012R$dimen.lock_screen_magazine_preview_main_title_margin_start_end), this.mResources.getDimensionPixelOffset(C0012R$dimen.lock_screen_magazine_preview_main_title_margin_bottom));
                 this.mMainTitle.setLayoutParams(layoutParams2);
                 LinearLayout.LayoutParams layoutParams3 = (LinearLayout.LayoutParams) this.mMainProvider.getLayoutParams();
-                layoutParams3.setMargins(this.mResources.getDimensionPixelOffset(R.dimen.lock_screen_magazine_preview_main_provider_margin_start), 0, 0, 0);
+                layoutParams3.setMargins(this.mResources.getDimensionPixelOffset(C0012R$dimen.lock_screen_magazine_preview_main_provider_margin_start), 0, 0, 0);
                 this.mMainProvider.setLayoutParams(layoutParams3);
             } else {
                 updateRemoteTextView(this.mRemoteMainLayout, true);
             }
         }
         if (isDefaultFullScreenLayout()) {
-            if (this.mMonitor.isSupportLockScreenMagazineLeft()) {
+            if (((LockScreenMagazineController) Dependency.get(cls)).isSupportLockScreenMagazineLeft()) {
                 LinearLayout.LayoutParams layoutParams4 = (LinearLayout.LayoutParams) this.mFullScreenSettingButton.getLayoutParams();
-                layoutParams4.setMargins(0, this.mResources.getDimensionPixelOffset(R.dimen.lock_screen_magazine_preview_fullscreen_setting_margin_top), this.mResources.getDimensionPixelOffset(R.dimen.lock_screen_magazine_preview_fullscreen_setting_margin_end), 0);
+                layoutParams4.setMargins(0, this.mResources.getDimensionPixelOffset(C0012R$dimen.lock_screen_magazine_preview_fullscreen_setting_margin_top), this.mResources.getDimensionPixelOffset(C0012R$dimen.lock_screen_magazine_preview_fullscreen_setting_margin_end), 0);
                 this.mFullScreenSettingButton.setLayoutParams(layoutParams4);
                 RelativeLayout.LayoutParams layoutParams5 = (RelativeLayout.LayoutParams) this.mFullScreenLinkButton.getLayoutParams();
-                layoutParams5.width = this.mResources.getDimensionPixelOffset(R.dimen.lock_screen_magazine_preview_fullscreen_bottom_title_layout_link_width_height);
-                layoutParams5.height = this.mResources.getDimensionPixelOffset(R.dimen.lock_screen_magazine_preview_fullscreen_bottom_title_layout_link_width_height);
+                layoutParams5.width = this.mResources.getDimensionPixelOffset(C0012R$dimen.lock_screen_magazine_preview_fullscreen_bottom_title_layout_link_width_height);
+                layoutParams5.height = this.mResources.getDimensionPixelOffset(C0012R$dimen.lock_screen_magazine_preview_fullscreen_bottom_title_layout_link_width_height);
                 this.mFullScreenLinkButton.setLayoutParams(layoutParams5);
             }
             setFullScreenBottomLayoutPadding();
             setFullScreenTitleLayoutMargin();
             setFullScreenContentMargin();
-            LinearLayout.LayoutParams layoutParams6 = (LinearLayout.LayoutParams) this.mFullScreenButton.getLayoutParams();
-            layoutParams6.setMargins(this.mResources.getDimensionPixelOffset(R.dimen.lock_screen_magazine_preview_fullscreen_bottom_button_margin_start), 0, 0, 0);
-            this.mFullScreenButton.setLayoutParams(layoutParams6);
+            LinearLayout.LayoutParams layoutParams6 = (LinearLayout.LayoutParams) this.mEnterButton.getLayoutParams();
+            layoutParams6.setMargins(this.mResources.getDimensionPixelOffset(C0012R$dimen.lock_screen_magazine_preview_fullscreen_bottom_button_margin_start), 0, 0, 0);
+            this.mEnterButton.setLayoutParams(layoutParams6);
             setFullScreenButtonPadding();
             return;
         }
@@ -424,8 +473,8 @@ public class LockScreenMagazinePreView extends RelativeLayout {
     }
 
     public void refreshWallpaperInfo(RemoteViews remoteViews, RemoteViews remoteViews2) {
-        this.mLockScreenMagazineWallpaperInfo = this.mMonitor.getLockScreenMagazineWallpaperInfo();
-        LockScreenMagazineWallpaperInfo lockScreenMagazineWallpaperInfo = this.mLockScreenMagazineWallpaperInfo;
+        LockScreenMagazineWallpaperInfo lockScreenMagazineWallpaperInfo = ((LockScreenMagazineController) Dependency.get(LockScreenMagazineController.class)).getLockScreenMagazineWallpaperInfo();
+        this.mLockScreenMagazineWallpaperInfo = lockScreenMagazineWallpaperInfo;
         if (lockScreenMagazineWallpaperInfo != null) {
             if (!Build.IS_INTERNATIONAL_BUILD && !TextUtils.isEmpty(lockScreenMagazineWallpaperInfo.content)) {
                 LockScreenMagazineWallpaperInfo lockScreenMagazineWallpaperInfo2 = this.mLockScreenMagazineWallpaperInfo;
@@ -441,45 +490,51 @@ public class LockScreenMagazinePreView extends RelativeLayout {
     }
 
     public void updateViews() {
-        RemoteViews remoteViews = this.mMainRemoteView;
-        if (remoteViews == null) {
-            this.mRemotePackageName = null;
-            updateMainView();
-        } else {
-            this.mRemotePackageName = remoteViews.getPackage();
-            try {
-                updateRemoteMainView();
-            } catch (Exception e) {
-                Log.e("LockScreenMagazinePreView", "updateRemoteMainView " + e.getMessage());
-                updateMainView();
+        post(new Runnable() {
+            public void run() {
+                if (LockScreenMagazinePreView.this.mMainRemoteView == null) {
+                    String unused = LockScreenMagazinePreView.this.mRemotePackageName = null;
+                    LockScreenMagazinePreView.this.updateMainView();
+                } else {
+                    LockScreenMagazinePreView lockScreenMagazinePreView = LockScreenMagazinePreView.this;
+                    String unused2 = lockScreenMagazinePreView.mRemotePackageName = lockScreenMagazinePreView.mMainRemoteView.getPackage();
+                    try {
+                        LockScreenMagazinePreView.this.updateRemoteMainView();
+                    } catch (Exception e) {
+                        Log.e("LockScreenMagazinePreView", "updateRemoteMainView " + e.getMessage());
+                        LockScreenMagazinePreView.this.updateMainView();
+                    }
+                }
+                if (LockScreenMagazinePreView.this.mFullScreenRemoteView == null) {
+                    String unused3 = LockScreenMagazinePreView.this.mRemotePackageName = null;
+                    LockScreenMagazinePreView.this.updateFullScreenView();
+                } else {
+                    LockScreenMagazinePreView lockScreenMagazinePreView2 = LockScreenMagazinePreView.this;
+                    String unused4 = lockScreenMagazinePreView2.mRemotePackageName = lockScreenMagazinePreView2.mFullScreenRemoteView.getPackage();
+                    try {
+                        LockScreenMagazinePreView.this.updateRemoteFullScreenView();
+                    } catch (Exception e2) {
+                        Log.e("LockScreenMagazinePreView", "updateRemoteFullScreenView " + e2.getMessage());
+                        LockScreenMagazinePreView.this.updateFullScreenView();
+                    }
+                }
+                LockScreenMagazinePreView.this.initLayoutVisibility();
             }
-        }
-        RemoteViews remoteViews2 = this.mFullScreenRemoteView;
-        if (remoteViews2 == null) {
-            this.mRemotePackageName = null;
-            updateFullScreenView();
-        } else {
-            this.mRemotePackageName = remoteViews2.getPackage();
-            try {
-                updateRemoteFullScreenView();
-            } catch (Exception e2) {
-                Log.e("LockScreenMagazinePreView", "updateRemoteFullScreenView " + e2.getMessage());
-                updateFullScreenView();
-            }
-        }
-        initLayoutVisibility();
+        });
     }
 
-    private void updateMainView() {
-        if (Build.IS_INTERNATIONAL_BUILD && this.mMonitor.isSupportLockScreenMagazineLeft()) {
+    /* access modifiers changed from: private */
+    public void updateMainView() {
+        if (Build.IS_INTERNATIONAL_BUILD && ((LockScreenMagazineController) Dependency.get(LockScreenMagazineController.class)).isSupportLockScreenMagazineLeft()) {
             updateMainTitle();
             updateMainProviderText();
             updateMainSourceText();
         }
     }
 
-    private void updateFullScreenView() {
-        if (Build.IS_INTERNATIONAL_BUILD && this.mMonitor.isSupportLockScreenMagazineLeft()) {
+    /* access modifiers changed from: private */
+    public void updateFullScreenView() {
+        if (Build.IS_INTERNATIONAL_BUILD && ((LockScreenMagazineController) Dependency.get(LockScreenMagazineController.class)).isSupportLockScreenMagazineLeft()) {
             updateFullScreenProviderText();
             updateFullScreenSourceText();
         }
@@ -488,7 +543,8 @@ public class LockScreenMagazinePreView extends RelativeLayout {
         updateFullScreenButtonText();
     }
 
-    private void updateRemoteMainView() {
+    /* access modifiers changed from: private */
+    public void updateRemoteMainView() {
         if (!this.mMainRemoteViewApplyed) {
             this.mMainRemoteViewApplyed = true;
             applyMainRemoteView();
@@ -504,12 +560,14 @@ public class LockScreenMagazinePreView extends RelativeLayout {
 
     private void applyMainRemoteView() {
         this.mRemoteMainLayout.removeView(this.mRemoteMainView);
-        this.mRemoteMainView = this.mMainRemoteView.apply(getContext(), this.mRemoteMainLayout);
-        updateRemoteTextView(this.mRemoteMainView, true);
+        View apply = this.mMainRemoteView.apply(getContext(), this.mRemoteMainLayout);
+        this.mRemoteMainView = apply;
+        updateRemoteTextView(apply, true);
         this.mRemoteMainLayout.addView(this.mRemoteMainView);
     }
 
-    private void updateRemoteFullScreenView() {
+    /* access modifiers changed from: private */
+    public void updateRemoteFullScreenView() {
         if (!this.mFullScreenRemoteViewApplyed) {
             this.mFullScreenRemoteViewApplyed = true;
             applyFullScreenRemoteView();
@@ -525,27 +583,36 @@ public class LockScreenMagazinePreView extends RelativeLayout {
 
     private void applyFullScreenRemoteView() {
         this.mRemoteFullScreenLayout.removeView(this.mRemoteFullScreenView);
-        this.mRemoteFullScreenView = this.mFullScreenRemoteView.apply(getContext(), this.mRemoteFullScreenLayout);
-        updateRemoteTextView(this.mRemoteFullScreenView, false);
+        View apply = this.mFullScreenRemoteView.apply(getContext(), this.mRemoteFullScreenLayout);
+        this.mRemoteFullScreenView = apply;
+        updateRemoteTextView(apply, false);
         this.mRemoteFullScreenLayout.addView(this.mRemoteFullScreenView);
     }
 
     private void updateRemoteTextView(View view, boolean z) {
+        int i;
+        int i2;
         if (view != null) {
             String str = this.mRemotePackageName;
             if (!TextUtils.isEmpty(str)) {
                 try {
                     Resources resourcesForApplication = getContext().getPackageManager().getResourcesForApplication(str);
-                    int identifier = resourcesForApplication.getIdentifier("wallpaper_title", d.h, str);
-                    int identifier2 = resourcesForApplication.getIdentifier("wallpaper_content", d.h, str);
-                    int identifier3 = resourcesForApplication.getIdentifier("more_info", d.h, str);
+                    int identifier = resourcesForApplication.getIdentifier("wallpaper_title", "id", str);
+                    int identifier2 = resourcesForApplication.getIdentifier("wallpaper_content", "id", str);
+                    int identifier3 = resourcesForApplication.getIdentifier("more_info", "id", str);
                     View findViewById = view.findViewById(identifier);
                     View findViewById2 = view.findViewById(identifier2);
                     View findViewById3 = view.findViewById(identifier3);
-                    int color = this.mDarkMode ? getContext().getResources().getColor(R.color.miui_common_unlock_screen_common_time_dark_text_color) : -1;
+                    int color = this.mDarkStyle ? getContext().getResources().getColor(C0011R$color.miui_common_unlock_screen_common_time_dark_text_color) : -1;
                     if (findViewById instanceof TextView) {
                         TextView textView = (TextView) findViewById;
-                        textView.setTextSize(0, (float) this.mResources.getDimensionPixelSize(Build.IS_INTERNATIONAL_BUILD ? R.dimen.lock_screen_magazine_preview_fullscreen_bottom_title_layout_global_title_text_size : R.dimen.lock_screen_magazine_preview_fullscreen_bottom_title_layout_title_text_size));
+                        Resources resources = this.mResources;
+                        if (Build.IS_INTERNATIONAL_BUILD) {
+                            i2 = C0012R$dimen.lock_screen_magazine_preview_fullscreen_bottom_title_layout_global_title_text_size;
+                        } else {
+                            i2 = C0012R$dimen.lock_screen_magazine_preview_fullscreen_bottom_title_layout_title_text_size;
+                        }
+                        textView.setTextSize(0, (float) resources.getDimensionPixelSize(i2));
                         textView.setTypeface(Typeface.create("sans-serif-medium", 0));
                         if (z) {
                             textView.setTextColor(color);
@@ -553,7 +620,13 @@ public class LockScreenMagazinePreView extends RelativeLayout {
                     }
                     if (findViewById2 instanceof TextView) {
                         TextView textView2 = (TextView) findViewById2;
-                        textView2.setTextSize(0, (float) this.mResources.getDimensionPixelSize(Build.IS_INTERNATIONAL_BUILD ? R.dimen.lock_screen_magazine_preview_fullscreen_bottom_global_content_text_size : R.dimen.lock_screen_magazine_preview_fullscreen_bottom_content_text_size));
+                        Resources resources2 = this.mResources;
+                        if (Build.IS_INTERNATIONAL_BUILD) {
+                            i = C0012R$dimen.lock_screen_magazine_preview_fullscreen_bottom_global_content_text_size;
+                        } else {
+                            i = C0012R$dimen.lock_screen_magazine_preview_fullscreen_bottom_content_text_size;
+                        }
+                        textView2.setTextSize(0, (float) resources2.getDimensionPixelSize(i));
                         textView2.setTypeface(Typeface.create("miui-light", 0));
                         if (z) {
                             textView2.setTextColor(color);
@@ -561,10 +634,10 @@ public class LockScreenMagazinePreView extends RelativeLayout {
                     }
                     if (findViewById3 instanceof TextView) {
                         TextView textView3 = (TextView) findViewById3;
-                        textView3.setTextSize(0, (float) this.mResources.getDimensionPixelSize(R.dimen.lock_screen_magazine_preview_fullscreen_bottom_button_text_size));
+                        textView3.setTextSize(0, (float) this.mResources.getDimensionPixelSize(C0012R$dimen.lock_screen_magazine_preview_fullscreen_bottom_button_text_size));
                         if (z) {
                             textView3.setTextColor(color);
-                            textView3.setBackground(this.mResources.getDrawable(this.mDarkMode ? R.drawable.lock_screen_magazine_des_global_more_btn_bg_dark : R.drawable.lock_screen_magazine_des_global_more_btn_bg));
+                            textView3.setBackground(this.mResources.getDrawable(this.mDarkStyle ? C0013R$drawable.lock_screen_magazine_des_global_more_btn_bg_dark : C0013R$drawable.lock_screen_magazine_des_global_more_btn_bg));
                         }
                     }
                 } catch (Exception e) {
@@ -590,19 +663,26 @@ public class LockScreenMagazinePreView extends RelativeLayout {
     }
 
     private void updateFullScreenButtonText() {
+        int i;
         if (this.mLockScreenMagazineWallpaperInfo != null) {
-            String string = this.mContext.getResources().getString(Build.IS_INTERNATIONAL_BUILD ? R.string.lock_screen_magazine_preview_fullscreen_bottom_button_global_text : R.string.lock_screen_magazine_preview_fullscreen_bottom_button_text);
-            if (this.mMonitor.isLockScreenMagazinePkgExist()) {
-                if (!WallpaperAuthorityUtils.isLockScreenMagazineOpenedWallpaper(this.mContext) && !TextUtils.isEmpty(this.mLockScreenMagazineWallpaperInfo.btnText)) {
+            Resources resources = this.mContext.getResources();
+            if (Build.IS_INTERNATIONAL_BUILD) {
+                i = C0021R$string.lock_screen_magazine_preview_fullscreen_bottom_button_global_text;
+            } else {
+                i = C0021R$string.lock_screen_magazine_preview_fullscreen_bottom_button_text;
+            }
+            String string = resources.getString(i);
+            if (((LockScreenMagazineController) Dependency.get(LockScreenMagazineController.class)).isLockScreenMagazinePkgExist()) {
+                if (!WallpaperAuthorityUtils.isLockScreenMagazineOpenedWallpaper() && !TextUtils.isEmpty(this.mLockScreenMagazineWallpaperInfo.btnText)) {
                     string = this.mLockScreenMagazineWallpaperInfo.btnText;
                 }
                 if (Build.IS_INTERNATIONAL_BUILD && !TextUtils.isEmpty(this.mLockScreenMagazineWallpaperInfo.globalBtnText)) {
                     string = this.mLockScreenMagazineWallpaperInfo.globalBtnText;
                 }
             } else {
-                string = this.mContext.getResources().getString(R.string.download_lock_wallpaper);
+                string = this.mContext.getResources().getString(C0021R$string.download_lock_wallpaper);
             }
-            this.mFullScreenButton.setText(string);
+            this.mEnterButton.setText(string);
         }
     }
 
@@ -626,8 +706,8 @@ public class LockScreenMagazinePreView extends RelativeLayout {
                 this.mFullScreenLinkButton.setVisibility(8);
                 return;
             }
-            float dimensionPixelOffset = (float) this.mResources.getDimensionPixelOffset(R.dimen.lock_screen_magazine_preview_fullscreen_bottom_title_layout_link_width_height);
-            float dimensionPixelOffset2 = (float) this.mResources.getDimensionPixelOffset(R.dimen.lock_screen_magazine_preview_fullscreen_bottom_link_margin_start);
+            float dimensionPixelOffset = (float) this.mResources.getDimensionPixelOffset(C0012R$dimen.lock_screen_magazine_preview_fullscreen_bottom_title_layout_link_width_height);
+            float dimensionPixelOffset2 = (float) this.mResources.getDimensionPixelOffset(C0012R$dimen.lock_screen_magazine_preview_fullscreen_bottom_link_margin_start);
             float f = dimensionPixelOffset + dimensionPixelOffset2;
             int titleTextWidth = getTitleTextWidth() + 20;
             float f2 = (float) titleTextWidth;
@@ -670,10 +750,10 @@ public class LockScreenMagazinePreView extends RelativeLayout {
     }
 
     private String getFullScreenTitleText() {
-        if (!WallpaperAuthorityUtils.isLockScreenMagazineWallpaper(this.mContext)) {
+        if (!WallpaperAuthorityUtils.isLockScreenMagazineWallpaper()) {
             return null;
         }
-        String string = getResources().getString(R.string.lock_screen_magazine_default_title);
+        String string = getResources().getString(C0021R$string.lock_screen_magazine_default_title);
         LockScreenMagazineWallpaperInfo lockScreenMagazineWallpaperInfo = this.mLockScreenMagazineWallpaperInfo;
         if (lockScreenMagazineWallpaperInfo == null) {
             return string;
@@ -692,7 +772,7 @@ public class LockScreenMagazinePreView extends RelativeLayout {
 
     private String getMainTitleText() {
         LockScreenMagazineWallpaperInfo lockScreenMagazineWallpaperInfo;
-        if (!WallpaperAuthorityUtils.isLockScreenMagazineOpenedWallpaper(this.mContext) || (lockScreenMagazineWallpaperInfo = this.mLockScreenMagazineWallpaperInfo) == null || TextUtils.isEmpty(lockScreenMagazineWallpaperInfo.title)) {
+        if (!WallpaperAuthorityUtils.isLockScreenMagazineOpenedWallpaper() || (lockScreenMagazineWallpaperInfo = this.mLockScreenMagazineWallpaperInfo) == null || TextUtils.isEmpty(lockScreenMagazineWallpaperInfo.title)) {
             return null;
         }
         return this.mLockScreenMagazineWallpaperInfo.title;
@@ -720,7 +800,7 @@ public class LockScreenMagazinePreView extends RelativeLayout {
 
     private void updateFullScreenProviderText() {
         String providerText = getProviderText();
-        if (TextUtils.isEmpty(providerText) || !Build.IS_INTERNATIONAL_BUILD || !this.mMonitor.isSupportLockScreenMagazineLeft()) {
+        if (TextUtils.isEmpty(providerText) || !Build.IS_INTERNATIONAL_BUILD || !((LockScreenMagazineController) Dependency.get(LockScreenMagazineController.class)).isSupportLockScreenMagazineLeft()) {
             this.mFullScreenProvider.setVisibility(8);
             return;
         }
@@ -730,7 +810,7 @@ public class LockScreenMagazinePreView extends RelativeLayout {
 
     private void updateFullScreenSourceText() {
         String sourceText = getSourceText();
-        if (TextUtils.isEmpty(sourceText) || !Build.IS_INTERNATIONAL_BUILD || !this.mMonitor.isSupportLockScreenMagazineLeft()) {
+        if (TextUtils.isEmpty(sourceText) || !Build.IS_INTERNATIONAL_BUILD || !((LockScreenMagazineController) Dependency.get(LockScreenMagazineController.class)).isSupportLockScreenMagazineLeft()) {
             this.mFullScreenSource.setVisibility(8);
             return;
         }
@@ -755,10 +835,10 @@ public class LockScreenMagazinePreView extends RelativeLayout {
     }
 
     private String getFullScreenContentText() {
-        if (!WallpaperAuthorityUtils.isLockScreenMagazineWallpaper(this.mContext)) {
+        if (!WallpaperAuthorityUtils.isLockScreenMagazineWallpaper()) {
             return null;
         }
-        String string = getResources().getString(R.string.lock_screen_magazine_default_content);
+        String string = getResources().getString(C0021R$string.lock_screen_magazine_default_content);
         LockScreenMagazineWallpaperInfo lockScreenMagazineWallpaperInfo = this.mLockScreenMagazineWallpaperInfo;
         if (lockScreenMagazineWallpaperInfo == null || TextUtils.isEmpty(lockScreenMagazineWallpaperInfo.content)) {
             return string;
@@ -768,7 +848,7 @@ public class LockScreenMagazinePreView extends RelativeLayout {
 
     private String getProviderText() {
         LockScreenMagazineWallpaperInfo lockScreenMagazineWallpaperInfo;
-        if (WallpaperAuthorityUtils.isLockScreenMagazineOpenedWallpaper(this.mContext) && (lockScreenMagazineWallpaperInfo = this.mLockScreenMagazineWallpaperInfo) != null && !TextUtils.isEmpty(lockScreenMagazineWallpaperInfo.provider)) {
+        if (WallpaperAuthorityUtils.isLockScreenMagazineOpenedWallpaper() && (lockScreenMagazineWallpaperInfo = this.mLockScreenMagazineWallpaperInfo) != null && !TextUtils.isEmpty(lockScreenMagazineWallpaperInfo.provider)) {
             return this.mLockScreenMagazineWallpaperInfo.provider;
         }
         return null;
@@ -776,7 +856,7 @@ public class LockScreenMagazinePreView extends RelativeLayout {
 
     private String getSourceText() {
         LockScreenMagazineWallpaperInfo lockScreenMagazineWallpaperInfo;
-        if (WallpaperAuthorityUtils.isLockScreenMagazineOpenedWallpaper(this.mContext) && (lockScreenMagazineWallpaperInfo = this.mLockScreenMagazineWallpaperInfo) != null && !TextUtils.isEmpty(lockScreenMagazineWallpaperInfo.source)) {
+        if (WallpaperAuthorityUtils.isLockScreenMagazineOpenedWallpaper() && (lockScreenMagazineWallpaperInfo = this.mLockScreenMagazineWallpaperInfo) != null && !TextUtils.isEmpty(lockScreenMagazineWallpaperInfo.source)) {
             return this.mLockScreenMagazineWallpaperInfo.source;
         }
         return null;
@@ -784,32 +864,10 @@ public class LockScreenMagazinePreView extends RelativeLayout {
 
     private String getMainSourceText() {
         LockScreenMagazineWallpaperInfo lockScreenMagazineWallpaperInfo;
-        if (WallpaperAuthorityUtils.isLockScreenMagazineOpenedWallpaper(this.mContext) && (lockScreenMagazineWallpaperInfo = this.mLockScreenMagazineWallpaperInfo) != null && !TextUtils.isEmpty(lockScreenMagazineWallpaperInfo.source)) {
+        if (WallpaperAuthorityUtils.isLockScreenMagazineOpenedWallpaper() && (lockScreenMagazineWallpaperInfo = this.mLockScreenMagazineWallpaperInfo) != null && !TextUtils.isEmpty(lockScreenMagazineWallpaperInfo.source)) {
             return this.mLockScreenMagazineWallpaperInfo.source;
         }
         return null;
-    }
-
-    public void setDarkMode(boolean z) {
-        if (this.mDarkMode != z) {
-            this.mDarkMode = z;
-            updateSettingButtonDrawableResource();
-            setMainLayoutDarkMode();
-        }
-    }
-
-    public void setMainLayoutDarkMode() {
-        if (isDefaultMainLayout()) {
-            int color = this.mDarkMode ? getContext().getResources().getColor(R.color.miui_common_unlock_screen_common_time_dark_text_color) : -1;
-            this.mMainTitle.setTextColor(color);
-            this.mMainProvider.setTextColor(color);
-            if (TextUtils.isEmpty(this.mLockScreenMagazineWallpaperInfo.sourceColor)) {
-                this.mMainSource.setTextColor(color);
-                return;
-            }
-            return;
-        }
-        updateRemoteTextView(this.mRemoteMainLayout, true);
     }
 
     public void setMainLayoutVisible(int i) {
@@ -842,6 +900,7 @@ public class LockScreenMagazinePreView extends RelativeLayout {
     }
 
     private View getFullScreenLayout() {
+        Log.e("LockScreenMagazinePreView", "getFullScreenLayout()  mRemoteFullScreenView:" + this.mRemoteFullScreenView);
         View view = this.mRemoteFullScreenView;
         if (view == null || view.getParent() == null) {
             return this.mFullScreenLayout;

@@ -15,30 +15,27 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 import android.view.DisplayCutout;
-import com.android.keyguard.KeyguardUpdateMonitor;
-import com.android.keyguard.MiuiKeyguardUtils;
-import com.android.keyguard.utils.ReflectUtil;
-import com.android.systemui.plugins.R;
+import com.android.keyguard.utils.MiuiKeyguardUtils;
+import com.android.systemui.C0010R$bool;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0013R$drawable;
+import com.miui.systemui.util.ReflectUtil;
 import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.HashSet;
-import miui.os.Build;
 
 class MiuiGxzwUtils {
     private static int DENSITY_DPI = -1;
     public static int GXZW_ANIM_HEIGHT = 1028;
     public static int GXZW_ANIM_WIDTH = 1028;
-    private static final float GXZW_ANIM_WIDTH_PRCENT = getPrcent(GXZW_ANIM_WIDTH, 1080);
+    private static final float GXZW_ANIM_WIDTH_PRCENT = getPrcent(1028, 1080);
     public static float GXZW_HEIGHT_PRCENT = -1.0f;
     public static int GXZW_ICON_HEIGHT = 173;
     public static int GXZW_ICON_WIDTH = 173;
     public static int GXZW_ICON_X = 453;
     public static int GXZW_ICON_Y = 1640;
-    private static final boolean GXZW_LOWLIGHT_SENSOR = (SystemProperties.getInt("persist.vendor.sys.fp.expolevel", 0) == 136);
+    private static final boolean GXZW_LOWLIGHT_SENSOR;
     public static float GXZW_WIDTH_PRCENT = -1.0f;
     private static float GXZW_X_PRCENT = -1.0f;
     private static float GXZW_Y_PRCENT = -1.0f;
-    private static final boolean IS_SPECIAL_CEPHEUS;
     public static int PRIVATE_FLAG_IS_HBM_OVERLAY;
     private static int SCREEN_HEIGHT_DP = -1;
     public static int SCREEN_HEIGHT_PHYSICAL = -1;
@@ -46,23 +43,17 @@ class MiuiGxzwUtils {
     private static int SCREEN_WIDTH_DP = -1;
     public static int SCREEN_WIDTH_PHYSICAL = -1;
     public static int SCREEN_WIDTH_PX = -1;
-    private static int sPreShowTouches = 0;
-    private static int sPreShowTouchesUser = -10000;
-
-    public static int getHaloRes() {
-        return R.drawable.gxzw_white_halo_light;
-    }
-
-    public static int getHealthHaloRes() {
-        return R.drawable.gxzw_green_halo_light;
-    }
 
     public static boolean isLargeFod() {
         return false;
     }
 
     static {
-        boolean z = true;
+        boolean z = false;
+        if (SystemProperties.getInt("persist.vendor.sys.fp.expolevel", 0) == 136) {
+            z = true;
+        }
+        GXZW_LOWLIGHT_SENSOR = z;
         PRIVATE_FLAG_IS_HBM_OVERLAY = Integer.MIN_VALUE;
         try {
             PRIVATE_FLAG_IS_HBM_OVERLAY = Class.forName("android.view.WindowManager$LayoutParams").getDeclaredField("PRIVATE_FLAG_IS_HBM_OVERLAY").getInt((Object) null);
@@ -73,12 +64,6 @@ class MiuiGxzwUtils {
         } catch (NoSuchFieldException unused) {
             Log.w("MiuiGxzwUtils", "WindowManager.LayoutParams does not have this field: PRIVATE_FLAG_IS_HBM_OVERLAY");
         }
-        HashSet hashSet = new HashSet(Arrays.asList(new String[]{"1.12.2", "1.2.2", "1.9.2", "1.19.2"}));
-        String str = SystemProperties.get("ro.boot.hwversion", "null");
-        if (!"cepheus".equals(Build.DEVICE) || !hashSet.contains(str)) {
-            z = false;
-        }
-        IS_SPECIAL_CEPHEUS = z;
     }
 
     public static boolean isSupportLowlight() {
@@ -111,17 +96,19 @@ class MiuiGxzwUtils {
                 GXZW_X_PRCENT = getPrcent(GXZW_ICON_X, SCREEN_WIDTH_PHYSICAL);
                 GXZW_Y_PRCENT = getPrcent(GXZW_ICON_Y, SCREEN_HEIGHT_PHYSICAL);
                 GXZW_WIDTH_PRCENT = getPrcent(GXZW_ICON_WIDTH, SCREEN_WIDTH_PHYSICAL);
-                GXZW_HEIGHT_PRCENT = getPrcent(GXZW_ICON_HEIGHT, SCREEN_HEIGHT_PHYSICAL);
+                float prcent = getPrcent(GXZW_ICON_HEIGHT, SCREEN_HEIGHT_PHYSICAL);
+                GXZW_HEIGHT_PRCENT = prcent;
                 GXZW_ICON_X = (int) (((float) SCREEN_WIDTH_PX) * GXZW_X_PRCENT);
                 GXZW_ICON_Y = (int) (((float) SCREEN_HEIGHT_PX) * GXZW_Y_PRCENT);
                 GXZW_ICON_WIDTH = (int) (((float) SCREEN_WIDTH_PX) * GXZW_WIDTH_PRCENT);
-                GXZW_ICON_HEIGHT = (int) (((float) SCREEN_HEIGHT_PX) * GXZW_HEIGHT_PRCENT);
+                GXZW_ICON_HEIGHT = (int) (((float) SCREEN_HEIGHT_PX) * prcent);
                 int i4 = (int) (((float) SCREEN_WIDTH_PX) * GXZW_ANIM_WIDTH_PRCENT);
                 GXZW_ANIM_WIDTH = i4;
                 GXZW_ANIM_HEIGHT = i4;
                 int caculateCutoutHeightIfNeed = caculateCutoutHeightIfNeed(context);
-                GXZW_ICON_Y = (int) (((float) GXZW_ICON_Y) * getPrcent(SCREEN_HEIGHT_PHYSICAL, SCREEN_HEIGHT_PHYSICAL - caculateCutoutHeightIfNeed));
-                GXZW_ICON_Y -= caculateCutoutHeightIfNeed;
+                int prcent2 = (int) (((float) GXZW_ICON_Y) * getPrcent(SCREEN_HEIGHT_PHYSICAL, SCREEN_HEIGHT_PHYSICAL - caculateCutoutHeightIfNeed));
+                GXZW_ICON_Y = prcent2;
+                GXZW_ICON_Y = prcent2 - caculateCutoutHeightIfNeed;
             } catch (Exception e) {
                 e.printStackTrace();
                 resetDefaultValue();
@@ -148,10 +135,10 @@ class MiuiGxzwUtils {
 
     private static void screenWhPx(Context context) {
         DisplayMetrics displayMetrics = new DisplayMetrics();
+        boolean z = false;
         ((DisplayManager) context.getSystemService("display")).getDisplay(0).getRealMetrics(displayMetrics);
-        boolean z = true;
-        if (context.getResources().getConfiguration().orientation != 1) {
-            z = false;
+        if (context.getResources().getConfiguration().orientation == 1) {
+            z = true;
         }
         SCREEN_WIDTH_PX = z ? displayMetrics.widthPixels : displayMetrics.heightPixels;
         SCREEN_HEIGHT_PX = z ? displayMetrics.heightPixels : displayMetrics.widthPixels;
@@ -180,7 +167,7 @@ class MiuiGxzwUtils {
     }
 
     public static boolean isFodAodLowlightShowEnable(Context context) {
-        return Settings.Secure.getIntForUser(context.getContentResolver(), "gxzw_icon_aod_lowlight_show_enable", 1, 0) == 1;
+        return Settings.Secure.getIntForUser(context.getContentResolver(), "gxzw_icon_aod_lowlight_show_enable", 0, 0) == 1;
     }
 
     public static void vibrateLight(Context context) {
@@ -268,31 +255,19 @@ class MiuiGxzwUtils {
         GXZW_ICON_HEIGHT = 173;
     }
 
-    public static boolean isSpecialCepheus() {
-        return IS_SPECIAL_CEPHEUS;
+    public static boolean supportHalo(Context context) {
+        return context.getResources().getBoolean(C0010R$bool.config_enableFodCircleHalo);
     }
 
-    public static boolean supportHalo(Context context) {
-        return context.getResources().getBoolean(R.bool.config_enableFodCircleHalo);
+    public static int getHaloRes() {
+        return C0013R$drawable.gxzw_white_halo_light;
     }
 
     public static float getHaloResCircleRadius(Context context) {
-        return (float) context.getResources().getDimensionPixelOffset(R.dimen.gxzw_halo_res_circle_radius);
+        return (float) context.getResources().getDimensionPixelOffset(C0012R$dimen.gxzw_halo_res_circle_radius);
     }
 
-    public static void saveShowTouchesState(Context context) {
-        sPreShowTouchesUser = KeyguardUpdateMonitor.getCurrentUser();
-        sPreShowTouches = Settings.System.getIntForUser(context.getContentResolver(), "show_touches", 0, sPreShowTouchesUser);
-        if (sPreShowTouches != 0) {
-            Settings.System.putIntForUser(context.getContentResolver(), "show_touches", 0, sPreShowTouchesUser);
-        }
-    }
-
-    public static void restoreShowTouchesState(Context context) {
-        if (sPreShowTouches != 0) {
-            Settings.System.putIntForUser(context.getContentResolver(), "show_touches", sPreShowTouches, sPreShowTouchesUser);
-            sPreShowTouches = 0;
-            sPreShowTouchesUser = -10000;
-        }
+    public static int getHealthHaloRes() {
+        return C0013R$drawable.gxzw_green_halo_light;
     }
 }

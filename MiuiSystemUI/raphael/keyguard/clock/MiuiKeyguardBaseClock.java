@@ -9,17 +9,20 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.FrameLayout;
 import com.android.keyguard.KeyguardUpdateMonitor;
-import com.android.keyguard.KeyguardUpdateMonitorCallback;
+import com.android.keyguard.MiuiKeyguardUpdateMonitorCallback;
+import com.android.systemui.Dependency;
 import java.util.Locale;
 
 public class MiuiKeyguardBaseClock extends FrameLayout {
     protected boolean m24HourFormat;
     protected Context mContext = null;
-    protected boolean mDarkMode = false;
+    protected boolean mDarkStyle = false;
     protected int mDensityDpi;
     protected float mFontScale;
-    protected boolean mFontScaleChanged;
-    private KeyguardUpdateMonitorCallback mInfoCallback = new KeyguardUpdateMonitorCallback() {
+    protected String mLanguage;
+    protected LayoutInflater mLayoutInflater;
+    protected Resources mResources = null;
+    private MiuiKeyguardUpdateMonitorCallback mUpdateMonitorCallback = new MiuiKeyguardUpdateMonitorCallback() {
         public void onKeyguardVisibilityChanged(boolean z) {
             if (z) {
                 MiuiKeyguardBaseClock.this.updateHourFormat();
@@ -33,22 +36,18 @@ public class MiuiKeyguardBaseClock extends FrameLayout {
             MiuiKeyguardBaseClock.this.onUserSwitch();
         }
 
-        public void onLockScreenMagazineStatusChanged() {
-            MiuiKeyguardBaseClock.this.updateLockScreenMagazineInfo();
+        public void onMagazineResourceInited() {
+            MiuiKeyguardBaseClock.this.updateClockMagazineInfo();
         }
 
         public void onRegionChanged() {
-            MiuiKeyguardBaseClock.this.updateLockScreenMagazineInfo();
+            MiuiKeyguardBaseClock.this.updateClockMagazineInfo();
         }
 
         public void onUserUnlocked() {
-            MiuiKeyguardBaseClock.this.updateLockScreenMagazineInfo();
+            MiuiKeyguardBaseClock.this.updateClockMagazineInfo();
         }
     };
-    protected String mLanguage;
-    protected LayoutInflater mLayoutInflater;
-    protected Resources mResources = null;
-    protected int mSelectedClockPosition = 0;
     protected int mUserId;
 
     public boolean hasOverlappingRendering() {
@@ -68,15 +67,15 @@ public class MiuiKeyguardBaseClock extends FrameLayout {
     }
 
     /* access modifiers changed from: protected */
-    public void updateClockView(boolean z, boolean z2) {
+    public void updateClockMagazineInfo() {
+    }
+
+    /* access modifiers changed from: protected */
+    public void updateClockView(boolean z) {
     }
 
     /* access modifiers changed from: protected */
     public void updateDrawableResources() {
-    }
-
-    /* access modifiers changed from: protected */
-    public void updateLockScreenMagazineInfo() {
     }
 
     /* access modifiers changed from: protected */
@@ -106,7 +105,7 @@ public class MiuiKeyguardBaseClock extends FrameLayout {
     public MiuiKeyguardBaseClock(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
         this.mContext = context;
-        this.mLayoutInflater = LayoutInflater.from(this.mContext);
+        this.mLayoutInflater = LayoutInflater.from(context);
         this.mResources = this.mContext.getResources();
         this.mUserId = KeyguardUpdateMonitor.getCurrentUser();
         this.mLanguage = Locale.getDefault().getLanguage();
@@ -125,14 +124,14 @@ public class MiuiKeyguardBaseClock extends FrameLayout {
     /* access modifiers changed from: protected */
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
-        setDarkMode(this.mDarkMode);
+        setDarkStyle(this.mDarkStyle);
         updateViewsLayoutParams();
-        KeyguardUpdateMonitor.getInstance(this.mContext).registerCallback(this.mInfoCallback);
+        ((KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class)).registerCallback(this.mUpdateMonitorCallback);
     }
 
     /* access modifiers changed from: protected */
-    public void setDarkMode(boolean z) {
-        this.mDarkMode = z;
+    public void setDarkStyle(boolean z) {
+        this.mDarkStyle = z;
     }
 
     /* access modifiers changed from: protected */
@@ -146,7 +145,7 @@ public class MiuiKeyguardBaseClock extends FrameLayout {
     /* access modifiers changed from: protected */
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        KeyguardUpdateMonitor.getInstance(this.mContext).removeCallback(this.mInfoCallback);
+        ((KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class)).removeCallback(this.mUpdateMonitorCallback);
     }
 
     /* access modifiers changed from: protected */
@@ -154,13 +153,11 @@ public class MiuiKeyguardBaseClock extends FrameLayout {
         super.onConfigurationChanged(configuration);
         float f = configuration.fontScale;
         if (this.mFontScale != f) {
-            this.mFontScaleChanged = true;
             updateViewsTextSize();
             this.mFontScale = f;
         }
         int i = configuration.densityDpi;
         if (this.mDensityDpi != i) {
-            this.mFontScaleChanged = true;
             updateViewsTextSize();
             updateViewsLayoutParams();
             updateDrawableResources();
@@ -168,7 +165,7 @@ public class MiuiKeyguardBaseClock extends FrameLayout {
         }
         String language = configuration.locale.getLanguage();
         if (!TextUtils.isEmpty(language) && !language.equals(this.mLanguage)) {
-            updateLockScreenMagazineInfo();
+            updateClockMagazineInfo();
             this.mLanguage = language;
             updateLunarCalendarInfo();
         }

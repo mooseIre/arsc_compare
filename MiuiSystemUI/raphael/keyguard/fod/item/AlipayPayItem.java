@@ -8,7 +8,8 @@ import android.graphics.Region;
 import android.net.Uri;
 import android.view.View;
 import android.widget.ImageView;
-import com.android.systemui.plugins.R;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0021R$string;
 
 public class AlipayPayItem extends IQuickOpenItem {
     private final ImageView mView;
@@ -19,8 +20,9 @@ public class AlipayPayItem extends IQuickOpenItem {
 
     public AlipayPayItem(RectF rectF, Region region, Context context) {
         super(rectF, region, context);
-        this.mView = new ImageView(context);
-        this.mView.setImageResource(R.drawable.gxzw_quick_open_alipay_pay);
+        ImageView imageView = new ImageView(context);
+        this.mView = imageView;
+        imageView.setImageResource(C0013R$drawable.gxzw_quick_open_alipay_pay);
         this.mView.setScaleType(ImageView.ScaleType.FIT_XY);
     }
 
@@ -38,10 +40,10 @@ public class AlipayPayItem extends IQuickOpenItem {
     }
 
     public String getTitle() {
-        return this.mContext.getString(R.string.gxzw_quick_open_alipay_pay);
+        return this.mContext.getString(C0021R$string.gxzw_quick_open_alipay_pay);
     }
 
     public String getSubTitle() {
-        return this.mContext.getString(R.string.gxzw_quick_open_alipay_pay_sub);
+        return this.mContext.getString(C0021R$string.gxzw_quick_open_alipay_pay_sub);
     }
 }

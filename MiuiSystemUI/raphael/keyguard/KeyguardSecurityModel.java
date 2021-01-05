@@ -2,13 +2,14 @@ package com.android.keyguard;
 
 import android.content.Context;
 import android.telephony.SubscriptionManager;
-import android.util.Log;
-import com.android.internal.telephony.IccCardConstants;
 import com.android.internal.widget.LockPatternUtils;
+import com.android.systemui.DejankUtils;
+import com.android.systemui.Dependency;
+import java.util.function.Supplier;
 
 public class KeyguardSecurityModel {
     private final Context mContext;
-    private final boolean mIsPukScreenAvailable = this.mContext.getResources().getBoolean(17891454);
+    private final boolean mIsPukScreenAvailable = this.mContext.getResources().getBoolean(17891458);
     private LockPatternUtils mLockPatternUtils;
 
     public enum SecurityMode {
@@ -21,7 +22,7 @@ public class KeyguardSecurityModel {
         SimPuk
     }
 
-    public KeyguardSecurityModel(Context context) {
+    KeyguardSecurityModel(Context context) {
         this.mContext = context;
         this.mLockPatternUtils = new LockPatternUtils(context);
     }
@@ -32,27 +33,42 @@ public class KeyguardSecurityModel {
     }
 
     public SecurityMode getSecurityMode(int i) {
-        KeyguardUpdateMonitor instance = KeyguardUpdateMonitor.getInstance(this.mContext);
-        if (this.mIsPukScreenAvailable && SubscriptionManager.isValidSubscriptionId(instance.getNextSubIdForState(IccCardConstants.State.PUK_REQUIRED))) {
+        KeyguardUpdateMonitor keyguardUpdateMonitor = (KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class);
+        if (this.mIsPukScreenAvailable && SubscriptionManager.isValidSubscriptionId(keyguardUpdateMonitor.getNextSubIdForState(3))) {
             return SecurityMode.SimPuk;
         }
-        if (SubscriptionManager.isValidSubscriptionId(instance.getNextSubIdForState(IccCardConstants.State.PIN_REQUIRED))) {
+        if (SubscriptionManager.isValidSubscriptionId(keyguardUpdateMonitor.getUnlockedSubIdForState(2))) {
             return SecurityMode.SimPin;
         }
-        int activePasswordQuality = this.mLockPatternUtils.getActivePasswordQuality(i);
-        Log.v("KeyguardSecurityModel", "getSecurityMode security=" + activePasswordQuality);
-        if (activePasswordQuality == 0) {
+        int intValue = ((Integer) DejankUtils.whitelistIpcs(new Supplier(i) {
+            public final /* synthetic */ int f$1;
+
+            {
+                this.f$1 = r2;
+            }
+
+            public final Object get() {
+                return KeyguardSecurityModel.this.lambda$getSecurityMode$0$KeyguardSecurityModel(this.f$1);
+            }
+        })).intValue();
+        if (intValue == 0) {
             return SecurityMode.None;
         }
-        if (activePasswordQuality == 65536) {
+        if (intValue == 65536) {
             return SecurityMode.Pattern;
         }
-        if (activePasswordQuality == 131072 || activePasswordQuality == 196608) {
+        if (intValue == 131072 || intValue == 196608) {
             return SecurityMode.PIN;
         }
-        if (activePasswordQuality == 262144 || activePasswordQuality == 327680 || activePasswordQuality == 393216 || activePasswordQuality == 524288) {
+        if (intValue == 262144 || intValue == 327680 || intValue == 393216 || intValue == 524288) {
             return SecurityMode.Password;
         }
-        throw new IllegalStateException("Unknown security quality:" + activePasswordQuality);
+        throw new IllegalStateException("Unknown security quality:" + intValue);
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$getSecurityMode$0 */
+    public /* synthetic */ Integer lambda$getSecurityMode$0$KeyguardSecurityModel(int i) {
+        return Integer.valueOf(this.mLockPatternUtils.getActivePasswordQuality(i));
     }
 }

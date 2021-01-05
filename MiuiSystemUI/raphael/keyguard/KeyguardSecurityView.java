@@ -1,15 +1,22 @@
 package com.android.keyguard;
 
+import android.view.MotionEvent;
 import com.android.internal.widget.LockPatternUtils;
 
 public interface KeyguardSecurityView {
     void applyHintAnimation(long j);
+
+    boolean disallowInterceptTouch(MotionEvent motionEvent) {
+        return false;
+    }
 
     boolean needsInput();
 
     void onPause();
 
     void onResume(int i);
+
+    void reset();
 
     void setKeyguardCallback(KeyguardSecurityCallback keyguardSecurityCallback);
 
