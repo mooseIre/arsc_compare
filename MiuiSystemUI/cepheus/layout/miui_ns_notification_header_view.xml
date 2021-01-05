@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.android.systemui.qs.MiuiNotificationHeaderView android:paddingTop="@dimen/qs_control_center_header_paddingTop" android:layout_width="fill_parent" android:layout_height="wrap_content" android:paddingStart="@dimen/qs_control_panel_margin_horizontal" android:paddingEnd="@dimen/qs_control_panel_margin_horizontal"
+  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:systemui="http://schemas.android.com/apk/res/com.android.systemui">
+    <LinearLayout android:gravity="center_vertical" android:orientation="horizontal" android:id="@id/panel_header" android:layout_width="fill_parent" android:layout_height="@dimen/ns_notification_header_statusbar_height" android:layout_above="@id/big_time">
+        <com.android.keyguard.CarrierText android:textAppearance="@style/TextAppearance.StatusBar.Clock" android:ellipsize="marquee" android:gravity="center_vertical" android:layout_gravity="center_vertical" android:id="@id/carrier_text" android:layout_width="wrap_content" android:layout_height="wrap_content" android:maxWidth="@dimen/statusbar_carrier_max_width" android:maxEms="7" android:singleLine="true" android:marqueeRepeatLimit="1" />
+        <com.android.keyguard.AlphaOptimizedLinearLayout android:gravity="end|center" android:orientation="horizontal" android:id="@id/system_icon_area" android:focusable="true" android:focusableInTouchMode="true" android:layout_width="fill_parent" android:layout_height="fill_parent">
+            <include layout="@layout/miui_system_icons" />
+        </com.android.keyguard.AlphaOptimizedLinearLayout>
+    </LinearLayout>
+    <RelativeLayout android:id="@id/time_header" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginTop="@dimen/qs_control_header_tiles_margin_top" android:layout_below="@id/panel_header">
+        <com.android.systemui.statusbar.policy.MiuiClock android:textAppearance="@style/TextAppearance.QSControl.Clock" android:gravity="center_vertical" android:id="@id/big_time" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentStart="true" systemui:MiuiClockMode="time" systemui:MiuiClockShowDark="false" />
+        <com.android.systemui.statusbar.policy.MiuiClock android:textAppearance="@style/TextAppearance.QSControl.Date" android:id="@id/date_time" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignBaseline="@id/big_time" android:layout_marginStart="@dimen/notification_panel_time_date_space" android:layout_marginEnd="@dimen/qs_control_title_margin_end" android:layout_toEndOf="@id/big_time" systemui:MiuiClockMode="date_weekday" systemui:MiuiClockShowDark="false" />
+        <ImageView android:id="@id/notification_shade_shortcut" android:layout_width="@dimen/qs_control_header_button_size" android:layout_height="@dimen/qs_control_header_button_size" android:src="@drawable/notification_panel_manage_icon" android:layout_alignBottom="@id/date_time" android:layout_alignParentEnd="true" />
+    </RelativeLayout>
+</com.android.systemui.qs.MiuiNotificationHeaderView>

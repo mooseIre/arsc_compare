@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:orientation="vertical" android:background="@drawable/rounded_bg_full" android:layout_width="fill_parent" android:layout_height="wrap_content"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <ScrollView android:layout_width="fill_parent" android:layout_height="wrap_content">
+        <LinearLayout android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="wrap_content">
+            <LinearLayout android:gravity="center" android:orientation="vertical" android:padding="@dimen/screenrecord_dialog_padding" android:layout_width="fill_parent" android:layout_height="fill_parent">
+                <ImageView android:layout_width="@dimen/screenrecord_logo_size" android:layout_height="@dimen/screenrecord_logo_size" android:layout_marginBottom="@dimen/screenrecord_dialog_padding" android:src="@drawable/ic_screenrecord" android:tint="@color/GM2_red_500" />
+                <TextView android:textAppearance="?android:textAppearanceLarge" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/screenrecord_start_label" />
+                <TextView android:textAppearance="?android:textAppearanceSmall" android:paddingTop="@dimen/screenrecord_dialog_padding" android:paddingBottom="@dimen/screenrecord_dialog_padding" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/screenrecord_description" />
+                <LinearLayout android:orientation="horizontal" android:layout_width="fill_parent" android:layout_height="wrap_content">
+                    <ImageView android:layout_gravity="center" android:layout_width="@dimen/screenrecord_logo_size" android:layout_height="@dimen/screenrecord_logo_size" android:layout_marginRight="@dimen/screenrecord_dialog_padding" android:src="@drawable/ic_mic_26dp" android:tint="@color/GM2_grey_700" android:layout_weight="0.0" />
+                    <Spinner android:id="@id/screen_recording_options" android:layout_width="0.0dip" android:layout_height="48.0dip" android:prompt="@string/screenrecord_audio_label" android:layout_weight="1.0" />
+                    <Switch android:layout_gravity="end" android:id="@id/screenrecord_audio_switch" android:layout_width="wrap_content" android:layout_height="48.0dip" android:minWidth="48.0dip" android:layout_weight="0.0" android:contentDescription="@string/screenrecord_audio_label" />
+                </LinearLayout>
+                <LinearLayout android:orientation="horizontal" android:layout_width="fill_parent" android:layout_height="wrap_content">
+                    <ImageView android:layout_gravity="center" android:layout_width="@dimen/screenrecord_logo_size" android:layout_height="@dimen/screenrecord_logo_size" android:layout_marginRight="@dimen/screenrecord_dialog_padding" android:src="@drawable/ic_touch" android:tint="@color/GM2_grey_700" />
+                    <Switch android:textAppearance="?android:textAppearanceSmall" android:textColor="?android:textColorPrimary" android:id="@id/screenrecord_taps_switch" android:layout_width="fill_parent" android:layout_height="48.0dip" android:text="@string/screenrecord_taps_label" />
+                </LinearLayout>
+            </LinearLayout>
+            <View android:background="@color/GM2_grey_300" android:layout_width="fill_parent" android:layout_height="1.0dip" />
+            <LinearLayout android:orientation="horizontal" android:padding="@dimen/screenrecord_dialog_padding" android:layout_width="fill_parent" android:layout_height="wrap_content">
+                <Button android:layout_gravity="start" android:id="@id/button_cancel" android:layout_width="wrap_content" android:layout_height="fill_parent" android:text="@string/cancel" android:layout_weight="0.0" style="@android:style/Widget.DeviceDefault.Button.Borderless.Colored" />
+                <Space android:layout_width="0.0dip" android:layout_height="fill_parent" android:layout_weight="1.0" />
+                <Button android:layout_gravity="end" android:id="@id/button_start" android:layout_width="wrap_content" android:layout_height="fill_parent" android:text="@string/screenrecord_start" android:layout_weight="0.0" style="@android:style/Widget.DeviceDefault.Button.Colored" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
