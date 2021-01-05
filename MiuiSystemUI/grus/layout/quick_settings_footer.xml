@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:orientation="vertical" android:clickable="true" android:layout_width="fill_parent" android:layout_height="@dimen/qs_footer_height" android:layout_marginStart="@dimen/qs_divider_margin_horizontal" android:layout_marginEnd="@dimen/qs_divider_margin_horizontal"
+<com.android.systemui.util.NeverExactlyLinearLayout android:gravity="center_vertical" android:layout_gravity="center" android:background="@android:color/transparent" android:paddingTop="@dimen/qs_tile_padding_top" android:paddingBottom="@dimen/qs_tile_padding_top" android:clickable="true" android:layout_width="wrap_content" android:layout_height="wrap_content" android:paddingStart="@dimen/qs_footer_padding_start" android:paddingEnd="@dimen/qs_footer_padding_end"
   xmlns:android="http://schemas.android.com/apk/res/android">
-    <include android:layout_width="fill_parent" android:layout_height="@dimen/qs_divider_size" layout="@layout/qs_divider" />
-    <LinearLayout android:gravity="center_vertical" android:orientation="horizontal" android:layout_width="fill_parent" android:layout_height="fill_parent">
-        <ImageView android:id="@id/footer_icon" android:layout_width="@dimen/qs_footer_icon_size" android:layout_height="@dimen/qs_footer_icon_size" android:src="@drawable/ic_info_outline" android:scaleType="fitXY" android:tint="@color/qs_footer_data_usage_text_color" android:contentDescription="@null" />
-        <TextView android:textSize="@dimen/qs_tile_label_text_size" android:textColor="@color/qs_footer_data_usage_text_color" android:gravity="start" android:id="@id/footer_text" android:layout_width="wrap_content" android:layout_height="wrap_content" android:singleLine="true" android:layout_weight="1.0" android:layout_marginStart="@dimen/qs_footer_line_margin_start" />
-    </LinearLayout>
-</LinearLayout>
+    <com.android.systemui.util.AutoMarqueeTextView android:textAppearance="@style/TextAppearance.QS.TileLabel" android:textColor="?android:textColorPrimary" android:ellipsize="marquee" android:gravity="start" android:id="@id/footer_text" android:layout_width="wrap_content" android:layout_height="wrap_content" android:singleLine="true" android:layout_weight="1.0" android:marqueeRepeatLimit="marquee_forever" />
+    <ImageView android:id="@id/footer_icon" android:layout_width="@dimen/qs_footer_icon_size" android:layout_height="@dimen/qs_footer_icon_size" android:src="@drawable/ic_info_outline" android:tint="?android:textColorPrimary" android:contentDescription="@null" android:layout_marginStart="8.0dip" />
+</com.android.systemui.util.NeverExactlyLinearLayout>

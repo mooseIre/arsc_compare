@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:theme="@style/QSHeaderTheme" android:id="@id/quick_qs_status_icons" android:paddingTop="@dimen/qs_header_top_padding" android:paddingBottom="@dimen/qs_header_bottom_padding" android:focusable="true" android:clickable="false" android:clipChildren="false" android:clipToPadding="false" android:layout_width="fill_parent" android:layout_height="wrap_content" android:minHeight="20.0dip" android:layout_below="@id/quick_status_bar_system_icons"
+  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:systemui="http://schemas.android.com/apk/res-auto">
+    <com.android.systemui.statusbar.policy.DateView android:textAppearance="@style/TextAppearance.QS.Status" android:gravity="center_vertical" android:layout_gravity="start|center" android:id="@id/date" android:layout_width="wrap_content" android:layout_height="wrap_content" android:singleLine="true" systemui:datePattern="@string/abbrev_wday_month_day_no_year_alarm" />
+    <LinearLayout android:gravity="end" android:layout_width="0.0dip" android:layout_height="fill_parent" android:layout_weight="1.0">
+        <com.android.systemui.statusbar.views.NetworkSpeedView android:textAppearance="@style/TextAppearance.StatusBar.Clock" android:gravity="start|center" android:id="@id/fullscreen_network_speed_view" android:layout_width="wrap_content" android:layout_height="fill_parent" android:singleLine="true" />
+        <com.android.systemui.statusbar.phone.MiuiStatusIconContainer android:id="@id/statusIcons" android:layout_width="wrap_content" android:layout_height="fill_parent" />
+        <com.android.systemui.MiuiBatteryMeterView android:id="@id/batteryRemainingIcon" android:layout_width="wrap_content" android:layout_height="fill_parent" systemui:textAppearance="@style/TextAppearance.QS.Status" />
+    </LinearLayout>
+</LinearLayout>

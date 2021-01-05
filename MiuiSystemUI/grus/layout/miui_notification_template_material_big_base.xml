@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout android:orientation="vertical" android:id="@id/status_bar_latest_event_content" android:tag="big" android:clipChildren="false" android:layout_width="fill_parent" android:layout_height="wrap_content"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <include layout="@layout/notification_template_part_app_icon" />
+    <LinearLayout android:orientation="vertical" android:id="@id/notification_action_list_margin_target" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginTop="@dimen/miui_notification_content_margin_top" android:layout_marginBottom="@dimen/miui_notification_content_margin_bottom" android:layout_marginStart="@dimen/miui_notification_content_margin_start" android:layout_marginEnd="@dimen/miui_notification_content_margin_end">
+        <FrameLayout android:layout_gravity="top" android:layout_width="fill_parent" android:layout_height="0.0dip" android:layout_weight="1.0">
+            <LinearLayout android:orientation="vertical" android:id="@id/notification_main_column" android:layout_width="fill_parent" android:layout_height="wrap_content">
+                <include layout="@layout/notification_template_part_line1" />
+                <include layout="@layout/notification_template_text" />
+                <include android:layout_width="fill_parent" android:layout_height="@dimen/notification_progress_bar_height" android:layout_marginTop="@dimen/notification_progress_margin_top" layout="@layout/notification_template_progress" />
+            </LinearLayout>
+            <include android:layout_gravity="end" android:layout_width="@dimen/notification_right_icon_size" android:layout_height="@dimen/notification_right_icon_size" android:layout_marginTop="0.0dip" android:layout_marginEnd="0.0dip" layout="@layout/notification_template_right_icon" />
+        </FrameLayout>
+        <include layout="@layout/notification_material_action_list" />
+    </LinearLayout>
+</FrameLayout>
