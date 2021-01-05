@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout android:layout_gravity="top" android:id="@id/status_bar_latest_event_content" android:tag="oneLine" android:layout_width="fill_parent" android:layout_height="wrap_content" android:minHeight="@dimen/notification_one_line_height"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <include android:layout_width="@dimen/notification_app_icon_size" android:layout_height="@dimen/notification_app_icon_size" android:layout_marginTop="@dimen/miui_notification_content_margin_top" android:layout_marginStart="@dimen/notification_app_icon_margin" layout="@layout/notification_template_part_app_icon" />
+    <LinearLayout android:orientation="horizontal" android:id="@id/notification_main_column" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginTop="@dimen/miui_notification_content_margin_top" android:layout_marginBottom="@dimen/miui_notification_content_margin_bottom" android:layout_marginStart="@dimen/miui_notification_content_margin_start" android:layout_marginEnd="@dimen/miui_notification_content_margin_end">
+        <LinearLayout android:orientation="horizontal" android:layout_width="0.0dip" android:layout_height="wrap_content" android:layout_weight="1.0">
+            <TextView android:textAppearance="@style/Miui.Notification.Title" android:ellipsize="marquee" android:id="@id/title" android:fadingEdge="horizontal" android:layout_width="wrap_content" android:layout_height="wrap_content" android:singleLine="true" android:textAlignment="viewStart" />
+            <TextView android:ellipsize="marquee" android:id="@id/text" android:fadingEdge="horizontal" android:layout_width="wrap_content" android:layout_height="wrap_content" android:singleLine="true" android:layout_marginStart="8.0dip" style="@style/Miui.Notification.Text" />
+        </LinearLayout>
+        <include android:id="@id/miui_action" android:layout_width="wrap_content" android:layout_height="@dimen/notification_action_height" android:layout_marginStart="10.0dip" android:layout_marginEnd="0.0dip" layout="@layout/notification_material_action" />
+    </LinearLayout>
+</FrameLayout>

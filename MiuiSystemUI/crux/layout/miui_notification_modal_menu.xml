@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:gravity="center_horizontal" android:orientation="vertical" android:layout_width="wrap_content" android:layout_height="wrap_content"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <ImageView android:id="@id/modal_menu_icon" android:layout_width="wrap_content" android:layout_height="wrap_content" android:scaleType="center" />
+    <TextView android:textSize="@dimen/miui_notification_modal_menu_text_size" android:textColor="@color/miui_notification_modal_menu_text_color" android:gravity="center_horizontal" android:id="@id/modal_menu_title" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="@dimen/miui_notification_modal_menu_text_padding" />
+</LinearLayout>
