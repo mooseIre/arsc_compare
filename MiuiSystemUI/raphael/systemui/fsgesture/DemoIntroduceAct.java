@@ -5,11 +5,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import com.android.systemui.Dependency;
-import com.android.systemui.Util;
-import com.android.systemui.miui.statusbar.analytics.SystemUIStat;
-import com.android.systemui.plugins.R;
-import java.util.HashMap;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0017R$layout;
 
 public class DemoIntroduceAct extends FsGestureDemoBaseActiivy {
     TextView backBtn;
@@ -19,18 +16,18 @@ public class DemoIntroduceAct extends FsGestureDemoBaseActiivy {
     /* access modifiers changed from: protected */
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        getWindow().addFlags(1024);
-        setContentView(R.layout.demo_intro_layout);
-        Util.hideSystemBars(getWindow().getDecorView());
+        setContentView(C0017R$layout.demo_intro_layout);
         final boolean booleanExtra = getIntent().getBooleanExtra("IS_FROM_PROVISION", false);
-        this.backBtn = (TextView) findViewById(R.id.btn_back);
-        this.backBtn.setOnClickListener(new View.OnClickListener() {
+        TextView textView = (TextView) findViewById(C0015R$id.btn_back);
+        this.backBtn = textView;
+        textView.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 DemoIntroduceAct.this.finish();
             }
         });
-        this.nextBtn = (TextView) findViewById(R.id.btn_next);
-        this.nextBtn.setOnClickListener(new View.OnClickListener() {
+        TextView textView2 = (TextView) findViewById(C0015R$id.btn_next);
+        this.nextBtn = textView2;
+        textView2.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 Intent intent = new Intent();
                 intent.setClass(DemoIntroduceAct.this, HomeDemoAct.class);
@@ -41,10 +38,8 @@ public class DemoIntroduceAct extends FsGestureDemoBaseActiivy {
                 DemoIntroduceAct.this.finish();
             }
         });
-        HashMap hashMap = new HashMap();
-        hashMap.put("source", booleanExtra ? "oobe" : "settings");
-        ((SystemUIStat) Dependency.get(SystemUIStat.class)).reportFullScreenEventAnonymous("show_gestures_learning_page", hashMap);
-        this.mIntroContainer = (RelativeLayout) findViewById(R.id.intro_container);
-        this.mNavigationHandle = GestureLineUtils.createAndaddNavigationHandle(this.mIntroContainer);
+        RelativeLayout relativeLayout = (RelativeLayout) findViewById(C0015R$id.intro_container);
+        this.mIntroContainer = relativeLayout;
+        this.mNavigationHandle = GestureLineUtils.createAndaddNavigationHandle(relativeLayout);
     }
 }

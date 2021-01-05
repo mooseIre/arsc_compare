@@ -1,96 +1,266 @@
 package com.android.systemui.stackdivider;
 
+import android.app.ActivityManager;
+import android.app.ActivityTaskManager;
+import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Rect;
-import android.os.RemoteException;
-import android.util.Log;
-import android.view.IDockedStackListener;
+import android.os.Handler;
+import android.provider.Settings;
+import android.util.Slog;
 import android.view.LayoutInflater;
+import android.view.SurfaceControl;
 import android.view.ViewGroup;
+import android.window.WindowContainerToken;
+import android.window.WindowContainerTransaction;
+import android.window.WindowOrganizer;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0017R$layout;
 import com.android.systemui.SystemUI;
-import com.android.systemui.plugins.R;
+import com.android.systemui.TransactionPool;
 import com.android.systemui.recents.Recents;
-import com.android.systemui.recents.events.RecentsEventBus;
-import com.android.systemui.recents.events.activity.DividerExistChangeEvent;
-import com.android.systemui.recents.events.activity.DividerMinimizedChangeEvent;
+import com.android.systemui.shared.system.ActivityManagerWrapper;
+import com.android.systemui.shared.system.TaskStackChangeListener;
+import com.android.systemui.stackdivider.DividerView;
+import com.android.systemui.stackdivider.SyncTransactionQueue;
+import com.android.systemui.statusbar.policy.KeyguardStateController;
+import com.android.systemui.wm.DisplayChangeController;
+import com.android.systemui.wm.DisplayController;
+import com.android.systemui.wm.DisplayImeController;
+import com.android.systemui.wm.DisplayLayout;
+import com.android.systemui.wm.SystemWindows;
+import dagger.Lazy;
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 
-public class Divider extends SystemUI {
-    /* access modifiers changed from: private */
-    public boolean mAdjustedForIme = false;
+public class Divider extends SystemUI implements DividerView.DividerCallbacks, DisplayController.OnDisplaysChangedListener {
+    private TaskStackChangeListener mActivityRestartListener = new TaskStackChangeListener() {
+        public void onActivityRestartAttempt(ActivityManager.RunningTaskInfo runningTaskInfo, boolean z, boolean z2, boolean z3) {
+            if (z3 && runningTaskInfo.configuration.windowConfiguration.getWindowingMode() == 3 && Divider.this.mSplits.isSplitScreenSupported() && Divider.this.isMinimized()) {
+                Divider.this.onUndockingTask();
+            }
+        }
+    };
+    private boolean mAdjustedForIme = false;
+    private DisplayController mDisplayController;
     private final DividerState mDividerState = new DividerState();
-    private DockDividerVisibilityListener mDockDividerVisibilityListener;
-    private DockedStackExistsChangedListener mDockedStackExistsChangedListener;
-    private boolean mExists;
+    private final ArrayList<WeakReference<Consumer<Boolean>>> mDockedStackExistsListeners = new ArrayList<>();
+    private ForcedResizableInfoActivityController mForcedResizableController;
+    private Handler mHandler;
+    private boolean mHomeStackResizable = false;
+    private DisplayImeController mImeController;
     /* access modifiers changed from: private */
-    public ForcedResizableInfoActivityController mForcedResizableController;
+    public final DividerImeController mImePositionProcessor;
     /* access modifiers changed from: private */
-    public boolean mHomeStackResizable = false;
+    public KeyguardStateController mKeyguardStateController;
+    private boolean mMinimized = false;
+    private final Optional<Lazy<Recents>> mRecentsOptionalLazy;
+    private SplitDisplayLayout mRotateSplitLayout;
+    private DisplayChangeController.OnDisplayChangingListener mRotationController = new DisplayChangeController.OnDisplayChangingListener() {
+        public final void onRotateDisplay(int i, int i2, int i3, WindowContainerTransaction windowContainerTransaction) {
+            Divider.this.lambda$new$0$Divider(i, i2, i3, windowContainerTransaction);
+        }
+    };
+    private SplitDisplayLayout mSplitLayout;
     /* access modifiers changed from: private */
-    public boolean mMinimized = false;
-    /* access modifiers changed from: private */
-    public boolean mNeedUpdate;
+    public SplitScreenTaskOrganizer mSplits = new SplitScreenTaskOrganizer(this);
+    private SystemWindows mSystemWindows;
+    final TransactionPool mTransactionPool;
     /* access modifiers changed from: private */
     public DividerView mView;
-    /* access modifiers changed from: private */
-    public boolean mVisible = false;
+    private boolean mVisible = false;
     private DividerWindowManager mWindowManager;
+    private WindowManagerProxy mWindowManagerProxy;
 
-    public interface DockedStackExistsChangedListener {
-        void onDockedStackMinimizedChanged(boolean z);
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$new$0 */
+    public /* synthetic */ void lambda$new$0$Divider(int i, int i2, int i3, WindowContainerTransaction windowContainerTransaction) {
+        int i4;
+        if (this.mSplits.isSplitScreenSupported() && this.mWindowManagerProxy != null) {
+            WindowContainerTransaction windowContainerTransaction2 = new WindowContainerTransaction();
+            SplitDisplayLayout splitDisplayLayout = new SplitDisplayLayout(this.mContext, new DisplayLayout(this.mDisplayController.getDisplayLayout(i)), this.mSplits);
+            splitDisplayLayout.rotateTo(i3);
+            this.mRotateSplitLayout = splitDisplayLayout;
+            if (!isDividerVisible()) {
+                i4 = splitDisplayLayout.getSnapAlgorithm().getMiddleTarget().position;
+            } else if (this.mMinimized) {
+                i4 = this.mView.mSnapTargetBeforeMinimized.position;
+            } else {
+                i4 = this.mView.getCurrentPosition();
+            }
+            DividerSnapAlgorithm snapAlgorithm = splitDisplayLayout.getSnapAlgorithm();
+            splitDisplayLayout.resizeSplits(DividerInjector.updateSnapTargetIfNeed(snapAlgorithm.calculateNonDismissingSnapTarget(i4), this.mContext, snapAlgorithm).position, windowContainerTransaction2);
+            if (isSplitActive() && this.mHomeStackResizable) {
+                WindowManagerProxy.applyHomeTasksMinimized(splitDisplayLayout, this.mSplits.mSecondary.token, windowContainerTransaction2);
+            }
+            if (this.mWindowManagerProxy.queueSyncTransactionIfWaiting(windowContainerTransaction2)) {
+                Slog.w("Divider", "Screen rotated while other operations were pending, this may result in some graphical artifacts.");
+            } else {
+                windowContainerTransaction.merge(windowContainerTransaction2, true);
+            }
+        }
+    }
+
+    public Divider(Context context, Optional<Lazy<Recents>> optional, DisplayController displayController, SystemWindows systemWindows, DisplayImeController displayImeController, Handler handler, KeyguardStateController keyguardStateController, TransactionPool transactionPool) {
+        super(context);
+        this.mDisplayController = displayController;
+        this.mSystemWindows = systemWindows;
+        this.mImeController = displayImeController;
+        this.mHandler = handler;
+        this.mKeyguardStateController = keyguardStateController;
+        this.mRecentsOptionalLazy = optional;
+        this.mForcedResizableController = new ForcedResizableInfoActivityController(context, this);
+        this.mTransactionPool = transactionPool;
+        this.mWindowManagerProxy = new WindowManagerProxy(this.mTransactionPool, this.mHandler);
+        this.mImePositionProcessor = new DividerImeController(this.mSplits, this.mTransactionPool, this.mHandler);
     }
 
     public void start() {
-        this.mWindowManager = new DividerWindowManager(this.mContext);
-        update(this.mContext.getResources().getConfiguration());
-        putComponent(Divider.class, this);
-        this.mDockDividerVisibilityListener = new DockDividerVisibilityListener();
-        Recents.getSystemServices().registerDockedStackListener(this.mDockDividerVisibilityListener);
-        this.mForcedResizableController = new ForcedResizableInfoActivityController(this.mContext);
+        this.mWindowManager = new DividerWindowManager(this.mSystemWindows);
+        this.mDisplayController.addDisplayWindowListener(this);
+        this.mKeyguardStateController.addCallback(new KeyguardStateController.Callback() {
+            public void onKeyguardFadingAwayChanged() {
+            }
+
+            public void onUnlockedChanged() {
+            }
+
+            public void onKeyguardShowingChanged() {
+                if (Divider.this.isSplitActive() && Divider.this.mView != null) {
+                    Divider.this.mView.setHidden(Divider.this.mKeyguardStateController.isShowing());
+                    if (!Divider.this.mKeyguardStateController.isShowing()) {
+                        Divider.this.mImePositionProcessor.updateAdjustForIme();
+                    }
+                }
+            }
+        });
     }
 
-    /* access modifiers changed from: protected */
-    public void onConfigurationChanged(Configuration configuration) {
-        super.onConfigurationChanged(configuration);
-        if (this.mVisible) {
-            update(configuration);
-        } else {
-            this.mNeedUpdate = true;
+    public void onDisplayAdded(int i) {
+        if (i == 0) {
+            this.mSplitLayout = new SplitDisplayLayout(this.mDisplayController.getDisplayContext(i), this.mDisplayController.getDisplayLayout(i), this.mSplits);
+            this.mImeController.addPositionProcessor(this.mImePositionProcessor);
+            this.mDisplayController.addDisplayChangingController(this.mRotationController);
+            if (!ActivityTaskManager.supportsSplitScreenMultiWindow(this.mContext)) {
+                removeDivider();
+                return;
+            }
+            try {
+                this.mSplits.init();
+                WindowContainerTransaction windowContainerTransaction = new WindowContainerTransaction();
+                this.mSplitLayout.resizeSplits(this.mSplitLayout.getSnapAlgorithm().getMiddleTarget().position, windowContainerTransaction);
+                WindowOrganizer.applyTransaction(windowContainerTransaction);
+                ActivityManagerWrapper.getInstance().registerTaskStackListener(this.mActivityRestartListener);
+                DividerInjector.updateSplitScreenFroceNotResizePkgList(this.mContext);
+            } catch (Exception e) {
+                Slog.e("Divider", "Failed to register docked stack listener", e);
+                removeDivider();
+            }
         }
+    }
+
+    public void onDisplayConfigurationChanged(int i, Configuration configuration) {
+        if (i == 0 && this.mSplits.isSplitScreenSupported()) {
+            SplitDisplayLayout splitDisplayLayout = new SplitDisplayLayout(this.mDisplayController.getDisplayContext(i), this.mDisplayController.getDisplayLayout(i), this.mSplits);
+            this.mSplitLayout = splitDisplayLayout;
+            if (this.mRotateSplitLayout == null) {
+                int i2 = splitDisplayLayout.getSnapAlgorithm().getMiddleTarget().position;
+                WindowContainerTransaction windowContainerTransaction = new WindowContainerTransaction();
+                this.mSplitLayout.resizeSplits(i2, windowContainerTransaction);
+                WindowOrganizer.applyTransaction(windowContainerTransaction);
+            } else if (splitDisplayLayout.mDisplayLayout.rotation() == this.mRotateSplitLayout.mDisplayLayout.rotation()) {
+                this.mSplitLayout.mPrimary = new Rect(this.mRotateSplitLayout.mPrimary);
+                this.mSplitLayout.mSecondary = new Rect(this.mRotateSplitLayout.mSecondary);
+                this.mRotateSplitLayout = null;
+            }
+            if (isSplitActive()) {
+                update(configuration);
+            }
+        }
+    }
+
+    /* access modifiers changed from: package-private */
+    public Handler getHandler() {
+        return this.mHandler;
     }
 
     public DividerView getView() {
         return this.mView;
     }
 
+    public boolean isMinimized() {
+        return this.mMinimized;
+    }
+
     public boolean isHomeStackResizable() {
         return this.mHomeStackResizable;
     }
 
-    public boolean inSplitMode() {
-        return WindowManagerProxy.getInstance().getDockSide() != -1;
+    public boolean isDividerVisible() {
+        DividerView dividerView = this.mView;
+        return dividerView != null && dividerView.getVisibility() == 0;
+    }
+
+    /* access modifiers changed from: private */
+    /* JADX WARNING: Code restructure failed: missing block: B:2:0x0006, code lost:
+        r1 = r1.mSecondary;
+     */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public boolean isSplitActive() {
+        /*
+            r1 = this;
+            com.android.systemui.stackdivider.SplitScreenTaskOrganizer r1 = r1.mSplits
+            android.app.ActivityManager$RunningTaskInfo r0 = r1.mPrimary
+            if (r0 == 0) goto L_0x0014
+            android.app.ActivityManager$RunningTaskInfo r1 = r1.mSecondary
+            if (r1 == 0) goto L_0x0014
+            int r0 = r0.topActivityType
+            if (r0 != 0) goto L_0x0012
+            int r1 = r1.topActivityType
+            if (r1 == 0) goto L_0x0014
+        L_0x0012:
+            r1 = 1
+            goto L_0x0015
+        L_0x0014:
+            r1 = 0
+        L_0x0015:
+            return r1
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.stackdivider.Divider.isSplitActive():boolean");
     }
 
     private void addDivider(Configuration configuration) {
-        this.mView = (DividerView) LayoutInflater.from(this.mContext).inflate(R.layout.docked_stack_divider, (ViewGroup) null);
-        this.mView.injectDependencies(this.mWindowManager, this.mDividerState);
+        int i;
+        Context displayContext = this.mDisplayController.getDisplayContext(this.mContext.getDisplayId());
+        this.mView = (DividerView) LayoutInflater.from(displayContext).inflate(C0017R$layout.docked_stack_divider, (ViewGroup) null);
+        DisplayLayout displayLayout = this.mDisplayController.getDisplayLayout(this.mContext.getDisplayId());
+        this.mView.injectDependencies(this.mWindowManager, this.mDividerState, this, this.mSplits, this.mSplitLayout, this.mImePositionProcessor, this.mWindowManagerProxy);
         boolean z = false;
         this.mView.setVisibility(this.mVisible ? 0 : 4);
-        this.mView.setMinimizedDockStack(this.mMinimized, this.mHomeStackResizable);
-        int dimensionPixelSize = this.mContext.getResources().getDimensionPixelSize(R.dimen.docked_stack_divider_thickness);
+        this.mView.setMinimizedDockStack(this.mMinimized, this.mHomeStackResizable, (SurfaceControl.Transaction) null);
+        int dimensionPixelSize = displayContext.getResources().getDimensionPixelSize(C0012R$dimen.docked_stack_divider_thickness);
         if (configuration.orientation == 2) {
             z = true;
         }
-        int i = -1;
-        int i2 = z ? dimensionPixelSize : -1;
-        if (!z) {
+        boolean orientationIfNeed = DividerInjector.getOrientationIfNeed(configuration, z);
+        if (orientationIfNeed) {
             i = dimensionPixelSize;
+        } else {
+            i = displayLayout.width();
         }
-        this.mWindowManager.add(this.mView, i2, i);
+        if (orientationIfNeed) {
+            dimensionPixelSize = displayLayout.height();
+        }
+        this.mWindowManager.add(this.mView, i, dimensionPixelSize, this.mContext.getDisplayId());
     }
 
-    private void removeDivider() {
+    /* access modifiers changed from: private */
+    public void removeDivider() {
         DividerView dividerView = this.mView;
         if (dividerView != null) {
             dividerView.onDividerRemoved();
@@ -98,96 +268,153 @@ public class Divider extends SystemUI {
         this.mWindowManager.remove();
     }
 
-    /* access modifiers changed from: private */
-    public void update(Configuration configuration) {
+    private void update(Configuration configuration) {
+        boolean z = this.mView != null && this.mKeyguardStateController.isShowing();
         removeDivider();
         addDivider(configuration);
         if (this.mMinimized) {
-            this.mView.setMinimizedDockStack(true, this.mHomeStackResizable);
+            this.mView.setMinimizedDockStack(true, this.mHomeStackResizable, (SurfaceControl.Transaction) null);
             updateTouchable();
         }
-        this.mNeedUpdate = false;
+        this.mView.setHidden(z);
     }
 
-    /* access modifiers changed from: private */
-    public void updateVisibility(final boolean z) {
-        this.mView.post(new Runnable() {
-            public void run() {
-                boolean access$000 = Divider.this.mVisible;
-                boolean z = z;
-                if (access$000 != z) {
-                    boolean unused = Divider.this.mVisible = z;
-                    if (Divider.this.mVisible && Divider.this.mNeedUpdate) {
-                        Divider divider = Divider.this;
-                        divider.update(divider.mContext.getResources().getConfiguration());
-                    }
-                    Divider.this.mView.setVisibility(z ? 0 : 4);
-                    Divider.this.mView.setMinimizedDockStack(Divider.this.mMinimized, Divider.this.mHomeStackResizable);
-                }
+    /* access modifiers changed from: package-private */
+    public void onTaskVanished() {
+        this.mHandler.post(new Runnable() {
+            public final void run() {
+                Divider.this.removeDivider();
             }
         });
     }
 
-    /* access modifiers changed from: private */
-    public void updateMinimizedDockedStack(boolean z, long j, boolean z2) {
-        final boolean z3 = z;
-        final boolean z4 = z2;
-        final long j2 = j;
-        this.mView.post(new Runnable() {
-            public void run() {
-                if (Divider.this.mMinimized != z3) {
-                    boolean unused = Divider.this.mHomeStackResizable = z4;
-                    boolean unused2 = Divider.this.mMinimized = z3;
-                    Divider.this.updateTouchable();
-                    if (j2 > 0) {
-                        Divider.this.mView.setMinimizedDockStack(z3, j2, z4);
-                    } else {
-                        Divider.this.mView.setMinimizedDockStack(z3, z4);
+    private void updateVisibility(boolean z) {
+        if (this.mVisible != z) {
+            this.mVisible = z;
+            this.mView.setVisibility(z ? 0 : 4);
+            if (z) {
+                this.mView.enterSplitMode(this.mHomeStackResizable);
+                this.mWindowManagerProxy.runInSync(new SyncTransactionQueue.TransactionRunnable() {
+                    public final void runWithTransaction(SurfaceControl.Transaction transaction) {
+                        Divider.this.lambda$updateVisibility$1$Divider(transaction);
                     }
-                    RecentsEventBus.getDefault().send(new DividerMinimizedChangeEvent(z3));
-                }
+                });
+            } else {
+                this.mView.exitSplitMode();
+                this.mWindowManagerProxy.runInSync(new SyncTransactionQueue.TransactionRunnable() {
+                    public final void runWithTransaction(SurfaceControl.Transaction transaction) {
+                        Divider.this.lambda$updateVisibility$2$Divider(transaction);
+                    }
+                });
             }
-        });
-        DockedStackExistsChangedListener dockedStackExistsChangedListener = this.mDockedStackExistsChangedListener;
-        if (dockedStackExistsChangedListener != null) {
-            dockedStackExistsChangedListener.onDockedStackMinimizedChanged(z);
+            synchronized (this.mDockedStackExistsListeners) {
+                this.mDockedStackExistsListeners.removeIf(new Predicate(z) {
+                    public final /* synthetic */ boolean f$0;
+
+                    {
+                        this.f$0 = r1;
+                    }
+
+                    public final boolean test(Object obj) {
+                        return Divider.lambda$updateVisibility$3(this.f$0, (WeakReference) obj);
+                    }
+                });
+            }
         }
     }
 
-    public void registerDockedStackExistsChangedListener(DockedStackExistsChangedListener dockedStackExistsChangedListener) {
-        this.mDockedStackExistsChangedListener = dockedStackExistsChangedListener;
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$updateVisibility$1 */
+    public /* synthetic */ void lambda$updateVisibility$1$Divider(SurfaceControl.Transaction transaction) {
+        this.mView.setMinimizedDockStack(this.mMinimized, this.mHomeStackResizable, transaction);
     }
 
     /* access modifiers changed from: private */
-    public void notifyDockedStackExistsChanged(final boolean z) {
-        this.mExists = z;
-        this.mView.post(new Runnable() {
-            public void run() {
-                if (Divider.this.mForcedResizableController != null) {
-                    Divider.this.mForcedResizableController.notifyDockedStackExistsChanged(z);
-                }
-                RecentsEventBus.getDefault().send(new DividerExistChangeEvent(z));
+    /* renamed from: lambda$updateVisibility$2 */
+    public /* synthetic */ void lambda$updateVisibility$2$Divider(SurfaceControl.Transaction transaction) {
+        this.mView.setMinimizedDockStack(false, this.mHomeStackResizable, transaction);
+    }
+
+    static /* synthetic */ boolean lambda$updateVisibility$3(boolean z, WeakReference weakReference) {
+        Consumer consumer = (Consumer) weakReference.get();
+        if (consumer != null) {
+            consumer.accept(Boolean.valueOf(z));
+        }
+        return consumer == null;
+    }
+
+    public void setMinimized(boolean z) {
+        this.mHandler.post(new Runnable(z) {
+            public final /* synthetic */ boolean f$1;
+
+            {
+                this.f$1 = r2;
+            }
+
+            public final void run() {
+                Divider.this.lambda$setMinimized$4$Divider(this.f$1);
             }
         });
     }
 
     /* access modifiers changed from: private */
-    public void updateTouchable() {
-        this.mWindowManager.setTouchable((this.mHomeStackResizable || !this.mMinimized) && !this.mAdjustedForIme);
+    /* renamed from: lambda$setMinimized$4 */
+    public /* synthetic */ void lambda$setMinimized$4$Divider(boolean z) {
+        if (this.mVisible) {
+            setHomeMinimized(z, this.mHomeStackResizable);
+        }
     }
 
-    public void onRecentsActivityStarting() {
+    private void setHomeMinimized(boolean z, boolean z2) {
+        WindowContainerTransaction windowContainerTransaction = new WindowContainerTransaction();
+        boolean z3 = true;
+        int i = 0;
+        boolean z4 = this.mMinimized != z;
+        if (z4) {
+            this.mMinimized = z;
+        }
+        windowContainerTransaction.setFocusable(this.mSplits.mPrimary.token, !this.mMinimized);
+        boolean z5 = this.mHomeStackResizable != z2;
+        if (z5) {
+            this.mHomeStackResizable = z2;
+            if (isDividerVisible()) {
+                WindowManagerProxy.applyHomeTasksMinimized(this.mSplitLayout, this.mSplits.mSecondary.token, windowContainerTransaction);
+                z3 = false;
+            }
+        }
         DividerView dividerView = this.mView;
         if (dividerView != null) {
-            dividerView.onRecentsActivityStarting();
+            if (dividerView.getDisplay() != null) {
+                i = this.mView.getDisplay().getDisplayId();
+            }
+            if (this.mMinimized) {
+                this.mImePositionProcessor.pause(i);
+            }
+            if (z4 || z5) {
+                this.mView.setMinimizedDockStack(z, getAnimDuration(), z2);
+            }
+            if (!this.mMinimized) {
+                this.mImePositionProcessor.resume(i);
+            }
+        }
+        updateTouchable();
+        if (!z3) {
+            this.mWindowManagerProxy.applySyncTransaction(windowContainerTransaction);
+        } else if (!this.mSplits.mDivider.getWmProxy().queueSyncTransactionIfWaiting(windowContainerTransaction)) {
+            WindowOrganizer.applyTransaction(windowContainerTransaction);
         }
     }
 
-    public void onDockedTopTask(int i, Rect rect) {
-        DividerView dividerView = this.mView;
-        if (dividerView != null) {
-            dividerView.onDockedTopTask(i, rect);
+    /* access modifiers changed from: package-private */
+    public void setAdjustedForIme(boolean z) {
+        if (this.mAdjustedForIme != z) {
+            this.mAdjustedForIme = z;
+            updateTouchable();
         }
+    }
+
+    private void updateTouchable() {
+        this.mWindowManager.setTouchable(!this.mAdjustedForIme);
     }
 
     public void onRecentsDrawn() {
@@ -197,10 +424,10 @@ public class Divider extends SystemUI {
         }
     }
 
-    public void onUndockingTask(boolean z) {
+    public void onUndockingTask() {
         DividerView dividerView = this.mView;
         if (dividerView != null) {
-            dividerView.onUndockingTask(z);
+            dividerView.onUndockingTask();
         }
     }
 
@@ -211,11 +438,29 @@ public class Divider extends SystemUI {
         }
     }
 
-    public void onMultiWindowStateChanged(boolean z) {
+    public void onDockedTopTask() {
         DividerView dividerView = this.mView;
         if (dividerView != null) {
-            dividerView.onMultiWindowStateChanged(z);
+            dividerView.onDockedTopTask();
         }
+    }
+
+    public void onAppTransitionFinished() {
+        if (this.mView != null) {
+            this.mForcedResizableController.onAppTransitionFinished();
+        }
+    }
+
+    public void onDraggingStart() {
+        this.mForcedResizableController.onDraggingStart();
+    }
+
+    public void onDraggingEnd() {
+        this.mForcedResizableController.onDraggingEnd();
+    }
+
+    public void growRecents() {
+        this.mRecentsOptionalLazy.ifPresent($$Lambda$Divider$kUReJvdE1s1BPD9HklZGjPX7dM.INSTANCE);
     }
 
     public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
@@ -227,63 +472,65 @@ public class Divider extends SystemUI {
         printWriter.println(this.mAdjustedForIme);
     }
 
-    class DockDividerVisibilityListener extends IDockedStackListener.Stub {
-        DockDividerVisibilityListener() {
-        }
+    /* access modifiers changed from: package-private */
+    public long getAnimDuration() {
+        return (long) (Settings.Global.getFloat(this.mContext.getContentResolver(), "transition_animation_scale", this.mContext.getResources().getFloat(17105053)) * 336.0f);
+    }
 
-        public void onDividerVisibilityChanged(boolean z) throws RemoteException {
-            Log.d("Divider", "onDividerVisibilityChanged visible=" + z);
-            Divider.this.updateVisibility(z);
-        }
-
-        public void onDockedStackExistsChanged(boolean z) throws RemoteException {
-            Log.d("Divider", "onDockedStackExistsChanged exists=" + z);
-            Divider.this.notifyDockedStackExistsChanged(z);
-        }
-
-        public void onDockedStackMinimizedChanged(boolean z, long j, boolean z2) throws RemoteException {
-            Log.d("Divider", "onDockedStackMinimizedChanged minimized=" + z + " animDuration=" + j);
-            boolean unused = Divider.this.mHomeStackResizable = z2;
-            Divider.this.updateMinimizedDockedStack(z, j, z2);
-        }
-
-        public void onAdjustedForImeChanged(final boolean z, final long j) throws RemoteException {
-            Log.d("Divider", "onAdjustedForImeChanged adjustedForIme=" + z + " animDuration=" + j);
-            Divider.this.mView.post(new Runnable() {
-                public void run() {
-                    boolean access$1100 = Divider.this.mAdjustedForIme;
-                    boolean z = z;
-                    if (access$1100 != z) {
-                        boolean unused = Divider.this.mAdjustedForIme = z;
-                        Divider.this.updateTouchable();
-                        if (Divider.this.mMinimized) {
-                            return;
-                        }
-                        if (j > 0) {
-                            Divider.this.mView.setAdjustedForIme(z, j);
-                        } else {
-                            Divider.this.mView.setAdjustedForIme(z);
-                        }
-                    }
-                }
-            });
-        }
-
-        public void onDockSideChanged(final int i) throws RemoteException {
-            Log.d("Divider", "onDockSideChanged newDockSide=" + i);
-            Divider.this.mView.post(new Runnable() {
-                public void run() {
-                    Divider.this.mView.notifyDockSideChanged(i);
-                }
-            });
+    public void registerInSplitScreenListener(Consumer<Boolean> consumer) {
+        consumer.accept(Boolean.valueOf(isDividerVisible()));
+        synchronized (this.mDockedStackExistsListeners) {
+            this.mDockedStackExistsListeners.add(new WeakReference(consumer));
         }
     }
 
-    public boolean isMinimized() {
-        return this.mMinimized;
+    /* access modifiers changed from: package-private */
+    public void startEnterSplit() {
+        update(this.mDisplayController.getDisplayContext(this.mContext.getDisplayId()).getResources().getConfiguration());
+        this.mHomeStackResizable = this.mWindowManagerProxy.applyEnterSplit(this.mSplits, this.mSplitLayout);
     }
 
-    public boolean isExists() {
-        return this.mExists;
+    /* access modifiers changed from: package-private */
+    public void startDismissSplit() {
+        this.mWindowManagerProxy.lambda$dismissOrMaximizeDocked$0(this.mSplits, this.mSplitLayout, true);
+        updateVisibility(false);
+        this.mMinimized = false;
+        removeDivider();
+        this.mImePositionProcessor.reset();
+    }
+
+    /* access modifiers changed from: package-private */
+    public void ensureMinimizedSplit() {
+        setHomeMinimized(true, this.mHomeStackResizable);
+        if (this.mView != null && !isDividerVisible()) {
+            updateVisibility(true);
+        }
+    }
+
+    /* access modifiers changed from: package-private */
+    public void ensureNormalSplit() {
+        setHomeMinimized(false, this.mHomeStackResizable);
+        if (this.mView != null && !isDividerVisible()) {
+            updateVisibility(true);
+        }
+    }
+
+    /* access modifiers changed from: package-private */
+    public SplitDisplayLayout getSplitLayout() {
+        return this.mSplitLayout;
+    }
+
+    /* access modifiers changed from: package-private */
+    public WindowManagerProxy getWmProxy() {
+        return this.mWindowManagerProxy;
+    }
+
+    public WindowContainerToken getSecondaryRoot() {
+        ActivityManager.RunningTaskInfo runningTaskInfo;
+        SplitScreenTaskOrganizer splitScreenTaskOrganizer = this.mSplits;
+        if (splitScreenTaskOrganizer == null || (runningTaskInfo = splitScreenTaskOrganizer.mSecondary) == null) {
+            return null;
+        }
+        return runningTaskInfo.token;
     }
 }

@@ -14,8 +14,9 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.RelativeLayout;
-import com.android.systemui.Util;
-import com.android.systemui.plugins.R;
+import com.android.systemui.C0007R$anim;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0017R$layout;
 import java.util.Locale;
 
 public class FsGestureBackDemoActivity extends FsGestureDemoBaseActiivy {
@@ -218,20 +219,18 @@ public class FsGestureBackDemoActivity extends FsGestureDemoBaseActiivy {
     /* access modifiers changed from: protected */
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        setContentView(R.layout.fs_gesture_back_demo);
-        getWindow().addFlags(1024);
-        Util.hideSystemBars(getWindow().getDecorView());
+        setContentView(C0017R$layout.fs_gesture_back_demo);
         DisplayMetrics displayMetrics = new DisplayMetrics();
         ((WindowManager) getSystemService("window")).getDefaultDisplay().getRealMetrics(displayMetrics);
         this.mDisplayWidth = displayMetrics.widthPixels;
         this.mDisplayHeight = displayMetrics.heightPixels;
         Intent intent = getIntent();
-        this.demoType = intent.getStringExtra("DEMO_TYPE");
-        String str = this.demoType;
-        if (str == null) {
-            str = "DEMO_FULLY_SHOW";
+        String stringExtra = intent.getStringExtra("DEMO_TYPE");
+        this.demoType = stringExtra;
+        if (stringExtra == null) {
+            stringExtra = "DEMO_FULLY_SHOW";
         }
-        this.demoType = str;
+        this.demoType = stringExtra;
         this.mStatus = intent.getIntExtra("DEMO_STEP", 1);
         this.isFromPro = intent.getBooleanExtra("IS_FROM_PROVISION", false);
         initView();
@@ -239,11 +238,12 @@ public class FsGestureBackDemoActivity extends FsGestureDemoBaseActiivy {
     }
 
     private void initView() {
-        RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.root_view);
-        this.mBgView = findViewById(R.id.bg_view);
-        this.mDemoActivityView = findViewById(R.id.demo_activity);
-        this.mDemoActivityView.setOnTouchListener(this.mDemoActivityTouchListener);
-        this.mFsGestureDemoTitleView = (FsGestureDemoTitleView) findViewById(R.id.fsgesture_title_view);
+        RelativeLayout relativeLayout = (RelativeLayout) findViewById(C0015R$id.root_view);
+        this.mBgView = findViewById(C0015R$id.bg_view);
+        View findViewById = findViewById(C0015R$id.demo_activity);
+        this.mDemoActivityView = findViewById;
+        findViewById.setOnTouchListener(this.mDemoActivityTouchListener);
+        this.mFsGestureDemoTitleView = (FsGestureDemoTitleView) findViewById(C0015R$id.fsgesture_title_view);
         if (TextUtils.getLayoutDirectionFromLocale(Locale.getDefault()) == 1) {
             this.mFsGestureDemoTitleView.setRTLParams();
         }
@@ -259,7 +259,7 @@ public class FsGestureBackDemoActivity extends FsGestureDemoBaseActiivy {
             }
         });
         GestureTitleViewUtil.setMargin(this, this.mFsGestureDemoTitleView);
-        this.mFsGestureDemoSwipeView = (FsGestureDemoSwipeView) findViewById(R.id.fsgesture_swipe_view);
+        this.mFsGestureDemoSwipeView = (FsGestureDemoSwipeView) findViewById(C0015R$id.fsgesture_swipe_view);
         if (this.mStatus == 1) {
             startSwipeViewAnimation(0);
         } else {
@@ -268,8 +268,9 @@ public class FsGestureBackDemoActivity extends FsGestureDemoBaseActiivy {
         if (this.mStatus != 1) {
             i = 1;
         }
-        this.mBackArrowView = new GestureBackArrowView(this, i);
-        this.mBackArrowView.setDisplayWidth(this.mDisplayWidth);
+        GestureBackArrowView gestureBackArrowView = new GestureBackArrowView(this, i);
+        this.mBackArrowView = gestureBackArrowView;
+        gestureBackArrowView.setDisplayWidth(this.mDisplayWidth);
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(this.mDisplayWidth, this.mDisplayHeight);
         layoutParams.addRule(12);
         layoutParams.addRule(this.mStatus == 1 ? 9 : 11);
@@ -328,8 +329,8 @@ public class FsGestureBackDemoActivity extends FsGestureDemoBaseActiivy {
     /* access modifiers changed from: private */
     public void showBackAnimation() {
         this.mBgView.setVisibility(0);
-        Animation loadAnimation = AnimationUtils.loadAnimation(this, R.anim.activity_close_enter);
-        Animation loadAnimation2 = AnimationUtils.loadAnimation(this, R.anim.activity_close_exit);
+        Animation loadAnimation = AnimationUtils.loadAnimation(this, C0007R$anim.activity_close_enter);
+        Animation loadAnimation2 = AnimationUtils.loadAnimation(this, C0007R$anim.activity_close_exit);
         loadAnimation.setAnimationListener(new Animation.AnimationListener() {
             public void onAnimationRepeat(Animation animation) {
             }
@@ -361,13 +362,13 @@ public class FsGestureBackDemoActivity extends FsGestureDemoBaseActiivy {
                     intent.putExtra("DEMO_STEP", 2);
                     intent.putExtra("IS_FROM_PROVISION", FsGestureBackDemoActivity.this.isFromPro);
                     FsGestureBackDemoActivity.this.startActivity(intent);
-                    FsGestureBackDemoActivity.this.overridePendingTransition(R.anim.activity_start_enter, R.anim.activity_start_exit);
+                    FsGestureBackDemoActivity.this.overridePendingTransition(C0007R$anim.activity_start_enter, C0007R$anim.activity_start_exit);
                 } else if ("DEMO_FULLY_SHOW".equals(FsGestureBackDemoActivity.this.demoType)) {
                     Intent intent2 = new Intent(FsGestureBackDemoActivity.this, DemoFinishAct.class);
                     intent2.putExtra("DEMO_TYPE", FsGestureBackDemoActivity.this.demoType);
                     intent2.putExtra("IS_FROM_PROVISION", FsGestureBackDemoActivity.this.isFromPro);
                     FsGestureBackDemoActivity.this.startActivity(intent2);
-                    FsGestureBackDemoActivity.this.overridePendingTransition(R.anim.activity_start_enter, R.anim.activity_start_exit);
+                    FsGestureBackDemoActivity.this.overridePendingTransition(C0007R$anim.activity_start_enter, C0007R$anim.activity_start_exit);
                 }
                 FsGestureBackDemoActivity.this.finish();
             }

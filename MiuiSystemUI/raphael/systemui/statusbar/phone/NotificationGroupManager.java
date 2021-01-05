@@ -1,54 +1,82 @@
 package com.android.systemui.statusbar.phone;
 
 import android.service.notification.StatusBarNotification;
-import android.service.notification.StatusBarNotificationCompat;
-import com.android.systemui.Constants;
-import com.android.systemui.miui.statusbar.ExpandedNotification;
-import com.android.systemui.statusbar.ExpandableNotificationRow;
-import com.android.systemui.statusbar.NotificationData;
+import android.util.ArraySet;
+import android.util.Log;
+import com.android.systemui.Dependency;
+import com.android.systemui.bubbles.BubbleController;
+import com.android.systemui.plugins.statusbar.StatusBarStateController;
+import com.android.systemui.statusbar.notification.ExpandedNotification;
+import com.android.systemui.statusbar.notification.collection.NotificationEntry;
+import com.android.systemui.statusbar.notification.people.PeopleNotificationIdentifier;
+import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow;
 import com.android.systemui.statusbar.policy.HeadsUpManager;
 import com.android.systemui.statusbar.policy.OnHeadsUpChangedListener;
+import dagger.Lazy;
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
-import java.util.function.Predicate;
+import java.util.Objects;
 
-public class NotificationGroupManager implements OnHeadsUpChangedListener {
+public class NotificationGroupManager implements OnHeadsUpChangedListener, StatusBarStateController.StateListener {
     private int mBarState = -1;
+    private BubbleController mBubbleController = null;
     private final HashMap<String, NotificationGroup> mGroupMap = new HashMap<>();
     private HeadsUpManager mHeadsUpManager;
     private boolean mIsUpdatingUnchangedGroup;
     private HashMap<String, StatusBarNotification> mIsolatedEntries = new HashMap<>();
-    private OnGroupChangeListener mListener;
+    private final ArraySet<OnGroupChangeListener> mListeners = new ArraySet<>();
+    private final Lazy<PeopleNotificationIdentifier> mPeopleNotificationIdentifier;
 
     public interface OnGroupChangeListener {
-        void onGroupCreatedFromChildren(NotificationGroup notificationGroup);
+        void onGroupCreated(NotificationGroup notificationGroup, String str) {
+        }
 
-        void onGroupExpansionChanged(ExpandableNotificationRow expandableNotificationRow, boolean z);
+        void onGroupCreatedFromChildren(NotificationGroup notificationGroup) {
+        }
 
-        void onGroupsChanged();
+        void onGroupExpansionChanged(ExpandableNotificationRow expandableNotificationRow, boolean z) {
+        }
+
+        void onGroupRemoved(NotificationGroup notificationGroup, String str) {
+        }
+
+        void onGroupSuppressionChanged(NotificationGroup notificationGroup, boolean z) {
+        }
+
+        void onGroupsChanged() {
+        }
     }
 
-    public void onHeadsUpPinned(ExpandableNotificationRow expandableNotificationRow) {
+    public NotificationGroupManager(StatusBarStateController statusBarStateController, Lazy<PeopleNotificationIdentifier> lazy) {
+        statusBarStateController.addCallback(this);
+        this.mPeopleNotificationIdentifier = lazy;
     }
 
-    public void onHeadsUpPinnedModeChanged(boolean z) {
+    private BubbleController getBubbleController() {
+        if (this.mBubbleController == null) {
+            this.mBubbleController = (BubbleController) Dependency.get(BubbleController.class);
+        }
+        return this.mBubbleController;
     }
 
-    public void onHeadsUpUnPinned(ExpandableNotificationRow expandableNotificationRow) {
-    }
-
-    public void setOnGroupChangeListener(OnGroupChangeListener onGroupChangeListener) {
-        this.mListener = onGroupChangeListener;
+    public void addOnGroupChangeListener(OnGroupChangeListener onGroupChangeListener) {
+        this.mListeners.add(onGroupChangeListener);
     }
 
     public boolean isGroupExpanded(StatusBarNotification statusBarNotification) {
         NotificationGroup notificationGroup = this.mGroupMap.get(getGroupKey(statusBarNotification));
+        if (notificationGroup == null) {
+            return false;
+        }
+        return notificationGroup.expanded;
+    }
+
+    public boolean isLogicalGroupExpanded(StatusBarNotification statusBarNotification) {
+        NotificationGroup notificationGroup = this.mGroupMap.get(statusBarNotification.getGroupKey());
         if (notificationGroup == null) {
             return false;
         }
@@ -64,170 +92,186 @@ public class NotificationGroupManager implements OnHeadsUpChangedListener {
 
     private void setGroupExpanded(NotificationGroup notificationGroup, boolean z) {
         notificationGroup.expanded = z;
-        NotificationData.Entry entry = notificationGroup.summary;
-        if (entry != null) {
-            this.mListener.onGroupExpansionChanged(entry.row, z);
+        if (notificationGroup.summary != null) {
+            Iterator<OnGroupChangeListener> it = this.mListeners.iterator();
+            while (it.hasNext()) {
+                it.next().onGroupExpansionChanged(notificationGroup.summary.getRow(), z);
+            }
         }
     }
 
-    public void onEntryRemoved(NotificationData.Entry entry) {
-        onEntryRemovedInternal(entry, entry.notification);
-        this.mIsolatedEntries.remove(entry.key);
+    public void onEntryRemoved(NotificationEntry notificationEntry) {
+        onEntryRemovedInternal(notificationEntry, notificationEntry.getSbn());
+        this.mIsolatedEntries.remove(notificationEntry.getKey());
     }
 
-    private void onEntryRemovedInternal(NotificationData.Entry entry, StatusBarNotification statusBarNotification) {
-        String groupKey = getGroupKey(statusBarNotification);
+    private void onEntryRemovedInternal(NotificationEntry notificationEntry, StatusBarNotification statusBarNotification) {
+        onEntryRemovedInternal(notificationEntry, statusBarNotification.getGroupKey(), statusBarNotification.isGroup(), statusBarNotification.getNotification().isGroupSummary());
+    }
+
+    private void onEntryRemovedInternal(NotificationEntry notificationEntry, String str, boolean z, boolean z2) {
+        String groupKey = getGroupKey(notificationEntry.getKey(), str);
         NotificationGroup notificationGroup = this.mGroupMap.get(groupKey);
         if (notificationGroup != null) {
-            if (isGroupChild(statusBarNotification)) {
-                notificationGroup.children.remove(entry);
+            if (isGroupChild(notificationEntry.getKey(), z, z2)) {
+                notificationGroup.children.remove(notificationEntry.getKey());
             } else {
                 notificationGroup.summary = null;
             }
             updateSuppression(notificationGroup);
             if (notificationGroup.children.isEmpty() && notificationGroup.summary == null) {
                 this.mGroupMap.remove(groupKey);
+                Iterator<OnGroupChangeListener> it = this.mListeners.iterator();
+                while (it.hasNext()) {
+                    it.next().onGroupRemoved(notificationGroup, groupKey);
+                }
             }
         }
     }
 
-    public boolean canRemove(NotificationGroup notificationGroup) {
-        return notificationGroup != null && notificationGroup.summary != null && notificationGroup.children.isEmpty() && notificationGroup.summary.notification.getNotification().isGroupSummary() && !hasIsolatedChildren(notificationGroup);
+    public void onEntryAdded(NotificationEntry notificationEntry) {
+        updateIsolation(notificationEntry);
+        onEntryAddedInternal(notificationEntry);
     }
 
-    public void onEntryAdded(NotificationData.Entry entry) {
-        ExpandedNotification expandedNotification = entry.notification;
-        boolean isGroupChild = isGroupChild(expandedNotification);
-        String groupKey = getGroupKey(expandedNotification);
+    private void onEntryAddedInternal(NotificationEntry notificationEntry) {
+        String str;
+        if (notificationEntry.isRowRemoved()) {
+            notificationEntry.setDebugThrowable(new Throwable());
+        }
+        ExpandedNotification sbn = notificationEntry.getSbn();
+        boolean isGroupChild = isGroupChild(sbn);
+        String groupKey = getGroupKey(sbn);
         NotificationGroup notificationGroup = this.mGroupMap.get(groupKey);
         if (notificationGroup == null) {
             notificationGroup = new NotificationGroup();
             this.mGroupMap.put(groupKey, notificationGroup);
+            Iterator<OnGroupChangeListener> it = this.mListeners.iterator();
+            while (it.hasNext()) {
+                it.next().onGroupCreated(notificationGroup, groupKey);
+            }
         }
         if (isGroupChild) {
-            notificationGroup.children.add(entry);
+            NotificationEntry notificationEntry2 = notificationGroup.children.get(notificationEntry.getKey());
+            if (!(notificationEntry2 == null || notificationEntry2 == notificationEntry)) {
+                Throwable debugThrowable = notificationEntry2.getDebugThrowable();
+                StringBuilder sb = new StringBuilder();
+                sb.append("Inconsistent entries found with the same key ");
+                sb.append(notificationEntry.getKey());
+                sb.append("existing removed: ");
+                sb.append(notificationEntry2.isRowRemoved());
+                if (debugThrowable != null) {
+                    str = Log.getStackTraceString(debugThrowable) + "\n";
+                } else {
+                    str = "";
+                }
+                sb.append(str);
+                sb.append(" added removed");
+                sb.append(notificationEntry.isRowRemoved());
+                Log.wtf("NotificationGroupManager", sb.toString(), new Throwable());
+            }
+            notificationGroup.children.put(notificationEntry.getKey(), notificationEntry);
             updateSuppression(notificationGroup);
             return;
         }
-        notificationGroup.summary = entry;
-        notificationGroup.expanded = entry.row.areChildrenExpanded();
+        notificationGroup.summary = notificationEntry;
+        notificationGroup.expanded = notificationEntry.areChildrenExpanded();
         updateSuppression(notificationGroup);
         if (!notificationGroup.children.isEmpty()) {
-            Iterator it = ((HashSet) notificationGroup.children.clone()).iterator();
-            while (it.hasNext()) {
-                onEntryBecomingChild((NotificationData.Entry) it.next());
+            Iterator it2 = new ArrayList(notificationGroup.children.values()).iterator();
+            while (it2.hasNext()) {
+                onEntryBecomingChild((NotificationEntry) it2.next());
             }
-            this.mListener.onGroupCreatedFromChildren(notificationGroup);
+            Iterator<OnGroupChangeListener> it3 = this.mListeners.iterator();
+            while (it3.hasNext()) {
+                it3.next().onGroupCreatedFromChildren(notificationGroup);
+            }
         }
     }
 
-    private void onEntryBecomingChild(NotificationData.Entry entry) {
-        if (entry.row.isHeadsUp()) {
-            onHeadsUpStateChanged(entry, true);
-        }
+    private void onEntryBecomingChild(NotificationEntry notificationEntry) {
+        updateIsolation(notificationEntry);
     }
 
     private void updateSuppression(NotificationGroup notificationGroup) {
         if (notificationGroup != null) {
-            boolean z = notificationGroup.suppressed;
-            notificationGroup.suppressed = shouldSuppressed(notificationGroup);
-            boolean z2 = notificationGroup.suppressed;
-            if (z != z2) {
-                if (z2) {
-                    handleSuppressedSummaryHeadsUpped(notificationGroup.summary);
+            boolean z = false;
+            int i = 0;
+            boolean z2 = false;
+            for (NotificationEntry isBubbleNotificationSuppressedFromShade : notificationGroup.children.values()) {
+                if (!getBubbleController().isBubbleNotificationSuppressedFromShade(isBubbleNotificationSuppressedFromShade)) {
+                    i++;
+                } else {
+                    z2 = true;
                 }
-                if (!this.mIsUpdatingUnchangedGroup) {
-                    this.mListener.onGroupsChanged();
+            }
+            boolean z3 = notificationGroup.suppressed;
+            NotificationEntry notificationEntry = notificationGroup.summary;
+            if (notificationEntry != null && !notificationGroup.expanded && (i == 1 || (i == 0 && notificationEntry.getSbn().getNotification().isGroupSummary() && (hasIsolatedChildren(notificationGroup) || z2)))) {
+                z = true;
+            }
+            notificationGroup.suppressed = z;
+            boolean shouldSuppressed = z | NotificationGroupManagerInjectorKt.shouldSuppressed(notificationGroup, i);
+            notificationGroup.suppressed = shouldSuppressed;
+            if (z3 != shouldSuppressed) {
+                Iterator<OnGroupChangeListener> it = this.mListeners.iterator();
+                while (it.hasNext()) {
+                    OnGroupChangeListener next = it.next();
+                    if (!this.mIsUpdatingUnchangedGroup) {
+                        next.onGroupSuppressionChanged(notificationGroup, notificationGroup.suppressed);
+                        next.onGroupsChanged();
+                    }
                 }
             }
         }
-    }
-
-    private boolean shouldSuppressed(NotificationGroup notificationGroup) {
-        if (notificationGroup.summary == null || notificationGroup.expanded) {
-            return false;
-        }
-        if (notificationGroup.children.size() == 1) {
-            return true;
-        }
-        if ((notificationGroup.children.size() != 0 || !notificationGroup.summary.notification.getNotification().isGroupSummary() || (!hasIsolatedChildren(notificationGroup) && Constants.IS_INTERNATIONAL)) && !hasMediaOrCustomChildren(notificationGroup.children)) {
-            return false;
-        }
-        return true;
-    }
-
-    private boolean hasMediaOrCustomChildren(Set<NotificationData.Entry> set) {
-        return set.stream().filter($$Lambda$NotificationGroupManager$daLHCAj9OfzXKkD4bVk0C_kYg0.INSTANCE).count() > 0;
-    }
-
-    static /* synthetic */ boolean lambda$hasMediaOrCustomChildren$0(NotificationData.Entry entry) {
-        return entry.isMediaNotification() || entry.isCustomViewNotification();
     }
 
     private boolean hasIsolatedChildren(NotificationGroup notificationGroup) {
-        return getNumberOfIsolatedChildren(notificationGroup.summary.notification.getGroupKey()) != 0;
+        return getNumberOfIsolatedChildren(notificationGroup.summary.getSbn().getGroupKey()) != 0;
     }
 
     private int getNumberOfIsolatedChildren(String str) {
-        return (int) this.mIsolatedEntries.values().stream().filter(new Predicate(str) {
-            private final /* synthetic */ String f$1;
-
-            {
-                this.f$1 = r2;
-            }
-
-            public final boolean test(Object obj) {
-                return NotificationGroupManager.this.lambda$getNumberOfIsolatedChildren$1$NotificationGroupManager(this.f$1, (StatusBarNotification) obj);
-            }
-        }).count();
-    }
-
-    public /* synthetic */ boolean lambda$getNumberOfIsolatedChildren$1$NotificationGroupManager(String str, StatusBarNotification statusBarNotification) {
-        return statusBarNotification.getGroupKey().equals(str) && isIsolated(statusBarNotification);
-    }
-
-    private NotificationData.Entry getIsolatedChild(String str) {
+        int i = 0;
         for (StatusBarNotification next : this.mIsolatedEntries.values()) {
-            if (next.getGroupKey().equals(str) && isIsolated(next)) {
-                return this.mGroupMap.get(next.getKey()).summary;
+            if (next.getGroupKey().equals(str) && isIsolated(next.getKey())) {
+                i++;
             }
         }
-        return null;
+        return i;
     }
 
-    public void onEntryUpdated(NotificationData.Entry entry, StatusBarNotification statusBarNotification) {
-        String groupKey = statusBarNotification.getGroupKey();
-        String groupKey2 = entry.notification.getGroupKey();
-        boolean z = true;
-        boolean z2 = !groupKey.equals(groupKey2);
-        boolean isGroupChild = isGroupChild(statusBarNotification);
-        boolean isGroupChild2 = isGroupChild(entry.notification);
-        if (z2 || isGroupChild != isGroupChild2) {
-            z = false;
+    public void onEntryUpdated(NotificationEntry notificationEntry, StatusBarNotification statusBarNotification) {
+        onEntryUpdated(notificationEntry, statusBarNotification.getGroupKey(), statusBarNotification.isGroup(), statusBarNotification.getNotification().isGroupSummary());
+    }
+
+    public void onEntryUpdated(NotificationEntry notificationEntry, String str, boolean z, boolean z2) {
+        String groupKey = notificationEntry.getSbn().getGroupKey();
+        boolean z3 = true;
+        boolean z4 = !str.equals(groupKey);
+        boolean isGroupChild = isGroupChild(notificationEntry.getKey(), z, z2);
+        boolean isGroupChild2 = isGroupChild(notificationEntry.getSbn());
+        if (z4 || isGroupChild != isGroupChild2) {
+            z3 = false;
         }
-        this.mIsUpdatingUnchangedGroup = z;
-        if (this.mGroupMap.get(getGroupKey(statusBarNotification)) != null) {
-            onEntryRemovedInternal(entry, statusBarNotification);
+        this.mIsUpdatingUnchangedGroup = z3;
+        if (this.mGroupMap.get(getGroupKey(notificationEntry.getKey(), str)) != null) {
+            onEntryRemovedInternal(notificationEntry, str, z, z2);
         }
-        onEntryAdded(entry);
+        onEntryAddedInternal(notificationEntry);
         this.mIsUpdatingUnchangedGroup = false;
-        if (isIsolated(entry.notification)) {
-            this.mIsolatedEntries.put(entry.key, entry.notification);
-            if (z2) {
+        if (isIsolated(notificationEntry.getSbn().getKey())) {
+            this.mIsolatedEntries.put(notificationEntry.getKey(), notificationEntry.getSbn());
+            if (z4) {
+                updateSuppression(this.mGroupMap.get(str));
                 updateSuppression(this.mGroupMap.get(groupKey));
-                updateSuppression(this.mGroupMap.get(groupKey2));
             }
         } else if (!isGroupChild && isGroupChild2) {
-            onEntryBecomingChild(entry);
+            onEntryBecomingChild(notificationEntry);
         }
-    }
-
-    public boolean isSummaryHasChildren(StatusBarNotification statusBarNotification) {
-        return statusBarNotification.getNotification().isGroupSummary() && getTotalNumberOfChildren(statusBarNotification) > 0;
     }
 
     public boolean isSummaryOfSuppressedGroup(StatusBarNotification statusBarNotification) {
-        return statusBarNotification.getNotification().isGroupSummary() && isGroupSuppressed(getGroupKey(statusBarNotification));
+        return isGroupSuppressed(getGroupKey(statusBarNotification)) && statusBarNotification.getNotification().isGroupSummary();
     }
 
     private boolean isOnlyChild(StatusBarNotification statusBarNotification) {
@@ -238,8 +282,8 @@ public class NotificationGroupManager implements OnHeadsUpChangedListener {
     }
 
     public boolean isOnlyChildInGroup(StatusBarNotification statusBarNotification) {
-        ExpandableNotificationRow logicalGroupSummary;
-        if (isOnlyChild(statusBarNotification) && (logicalGroupSummary = getLogicalGroupSummary(statusBarNotification)) != null && !logicalGroupSummary.getStatusBarNotification().equals(statusBarNotification)) {
+        NotificationEntry logicalGroupSummary;
+        if (isOnlyChild(statusBarNotification) && (logicalGroupSummary = getLogicalGroupSummary(statusBarNotification)) != null && !logicalGroupSummary.getSbn().equals(statusBarNotification)) {
             return true;
         }
         return false;
@@ -256,12 +300,10 @@ public class NotificationGroupManager implements OnHeadsUpChangedListener {
         return notificationGroup != null && notificationGroup.suppressed;
     }
 
-    public void setStatusBarState(int i) {
-        if (this.mBarState != i) {
-            this.mBarState = i;
-            if (this.mBarState == 1) {
-                collapseAllGroups();
-            }
+    private void setStatusBarState(int i) {
+        this.mBarState = i;
+        if (i == 1) {
+            collapseAllGroups();
         }
     }
 
@@ -287,31 +329,63 @@ public class NotificationGroupManager implements OnHeadsUpChangedListener {
 
     public boolean isSummaryOfGroup(StatusBarNotification statusBarNotification) {
         NotificationGroup notificationGroup;
-        if (isGroupSummary(statusBarNotification) && (notificationGroup = this.mGroupMap.get(getGroupKey(statusBarNotification))) != null) {
-            return !notificationGroup.children.isEmpty();
+        if (isGroupSummary(statusBarNotification) && (notificationGroup = this.mGroupMap.get(getGroupKey(statusBarNotification))) != null && notificationGroup.summary != null && !notificationGroup.children.isEmpty() && Objects.equals(notificationGroup.summary.getSbn(), statusBarNotification)) {
+            return true;
         }
         return false;
     }
 
-    public ExpandableNotificationRow getGroupSummary(StatusBarNotification statusBarNotification) {
+    public NotificationEntry getGroupSummary(StatusBarNotification statusBarNotification) {
         return getGroupSummary(getGroupKey(statusBarNotification));
     }
 
-    public ExpandableNotificationRow getLogicalGroupSummary(StatusBarNotification statusBarNotification) {
+    public NotificationEntry getLogicalGroupSummary(StatusBarNotification statusBarNotification) {
         return getGroupSummary(statusBarNotification.getGroupKey());
     }
 
-    private ExpandableNotificationRow getGroupSummary(String str) {
-        NotificationData.Entry entry;
+    private NotificationEntry getGroupSummary(String str) {
         NotificationGroup notificationGroup = this.mGroupMap.get(str);
-        if (notificationGroup == null || (entry = notificationGroup.summary) == null) {
+        if (notificationGroup == null) {
             return null;
         }
-        return entry.row;
+        return notificationGroup.summary;
     }
 
-    public NotificationGroup getNotificationGroup(String str) {
-        return this.mGroupMap.get(str);
+    public ArrayList<NotificationEntry> getLogicalChildren(StatusBarNotification statusBarNotification) {
+        NotificationGroup notificationGroup = this.mGroupMap.get(statusBarNotification.getGroupKey());
+        if (notificationGroup == null) {
+            return null;
+        }
+        ArrayList<NotificationEntry> arrayList = new ArrayList<>(notificationGroup.children.values());
+        for (StatusBarNotification next : this.mIsolatedEntries.values()) {
+            if (next.getGroupKey().equals(statusBarNotification.getGroupKey())) {
+                arrayList.add(this.mGroupMap.get(next.getKey()).summary);
+            }
+        }
+        return arrayList;
+    }
+
+    public ArrayList<NotificationEntry> getChildren(StatusBarNotification statusBarNotification) {
+        NotificationGroup notificationGroup = this.mGroupMap.get(statusBarNotification.getGroupKey());
+        if (notificationGroup == null) {
+            return null;
+        }
+        return new ArrayList<>(notificationGroup.children.values());
+    }
+
+    public void updateSuppression(NotificationEntry notificationEntry) {
+        NotificationGroup notificationGroup = this.mGroupMap.get(getGroupKey(notificationEntry.getSbn()));
+        if (notificationGroup != null) {
+            updateSuppression(notificationGroup);
+        }
+    }
+
+    public String getGroupKey(StatusBarNotification statusBarNotification) {
+        return getGroupKey(statusBarNotification.getKey(), statusBarNotification.getGroupKey());
+    }
+
+    private String getGroupKey(String str, String str2) {
+        return isIsolated(str) ? str : str2;
     }
 
     public boolean toggleGroupExpansion(StatusBarNotification statusBarNotification) {
@@ -323,85 +397,87 @@ public class NotificationGroupManager implements OnHeadsUpChangedListener {
         return notificationGroup.expanded;
     }
 
-    private boolean isIsolated(StatusBarNotification statusBarNotification) {
-        return this.mIsolatedEntries.containsKey(statusBarNotification.getKey());
+    private boolean isIsolated(String str) {
+        return this.mIsolatedEntries.containsKey(str);
     }
 
-    private boolean isGroupSummary(StatusBarNotification statusBarNotification) {
-        if (isIsolated(statusBarNotification)) {
+    public boolean isGroupSummary(StatusBarNotification statusBarNotification) {
+        if (isIsolated(statusBarNotification.getKey())) {
             return true;
         }
         return statusBarNotification.getNotification().isGroupSummary();
     }
 
-    private boolean isGroupChild(StatusBarNotification statusBarNotification) {
-        if (!isIsolated(statusBarNotification) && StatusBarNotificationCompat.isGroup(statusBarNotification) && !statusBarNotification.getNotification().isGroupSummary()) {
+    public boolean isGroupChild(StatusBarNotification statusBarNotification) {
+        return isGroupChild(statusBarNotification.getKey(), statusBarNotification.isGroup(), statusBarNotification.getNotification().isGroupSummary());
+    }
+
+    private boolean isGroupChild(String str, boolean z, boolean z2) {
+        return !isIsolated(str) && z && !z2;
+    }
+
+    public void onHeadsUpStateChanged(NotificationEntry notificationEntry, boolean z) {
+        updateIsolation(notificationEntry);
+    }
+
+    private boolean shouldIsolate(NotificationEntry notificationEntry) {
+        ExpandedNotification sbn = notificationEntry.getSbn();
+        if (!sbn.isGroup() || sbn.getNotification().isGroupSummary()) {
+            return false;
+        }
+        if (this.mPeopleNotificationIdentifier.get().getPeopleNotificationType(notificationEntry.getSbn(), notificationEntry.getRanking()) == 3) {
+            return true;
+        }
+        HeadsUpManager headsUpManager = this.mHeadsUpManager;
+        if (headsUpManager != null && !headsUpManager.isAlerting(notificationEntry.getKey())) {
+            return false;
+        }
+        NotificationGroup notificationGroup = this.mGroupMap.get(sbn.getGroupKey());
+        if (sbn.getNotification().fullScreenIntent != null || notificationGroup == null || !notificationGroup.expanded || isGroupNotFullyVisible(notificationGroup)) {
             return true;
         }
         return false;
     }
 
-    private String getGroupKey(StatusBarNotification statusBarNotification) {
-        if (isIsolated(statusBarNotification)) {
-            return statusBarNotification.getKey();
+    private void isolateNotification(NotificationEntry notificationEntry) {
+        ExpandedNotification sbn = notificationEntry.getSbn();
+        onEntryRemovedInternal(notificationEntry, notificationEntry.getSbn());
+        this.mIsolatedEntries.put(sbn.getKey(), sbn);
+        onEntryAddedInternal(notificationEntry);
+        updateSuppression(this.mGroupMap.get(notificationEntry.getSbn().getGroupKey()));
+        Iterator<OnGroupChangeListener> it = this.mListeners.iterator();
+        while (it.hasNext()) {
+            it.next().onGroupsChanged();
         }
-        return statusBarNotification.getGroupKey();
     }
 
-    public void onHeadsUpStateChanged(NotificationData.Entry entry, boolean z) {
-        ExpandedNotification expandedNotification = entry.notification;
-        if (entry.row.isHeadsUp()) {
-            if (shouldIsolate(expandedNotification)) {
-                onEntryRemovedInternal(entry, entry.notification);
-                this.mIsolatedEntries.put(expandedNotification.getKey(), expandedNotification);
-                onEntryAdded(entry);
-                updateSuppression(this.mGroupMap.get(entry.notification.getGroupKey()));
-                this.mListener.onGroupsChanged();
-                return;
+    public void updateIsolation(NotificationEntry notificationEntry) {
+        boolean isIsolated = isIsolated(notificationEntry.getSbn().getKey());
+        if (shouldIsolate(notificationEntry)) {
+            if (!isIsolated) {
+                isolateNotification(notificationEntry);
             }
-            handleSuppressedSummaryHeadsUpped(entry);
-        } else if (this.mIsolatedEntries.containsKey(expandedNotification.getKey())) {
-            onEntryRemovedInternal(entry, entry.notification);
-            this.mIsolatedEntries.remove(expandedNotification.getKey());
-            onEntryAdded(entry);
-            this.mListener.onGroupsChanged();
+        } else if (isIsolated) {
+            stopIsolatingNotification(notificationEntry);
         }
     }
 
-    private void handleSuppressedSummaryHeadsUpped(NotificationData.Entry entry) {
-        ExpandedNotification expandedNotification = entry.notification;
-        if (isGroupSuppressed(expandedNotification.getGroupKey()) && expandedNotification.getNotification().isGroupSummary() && entry.row.isHeadsUp()) {
-            NotificationGroup notificationGroup = this.mGroupMap.get(expandedNotification.getGroupKey());
-            if (notificationGroup != null) {
-                Iterator<NotificationData.Entry> it = notificationGroup.children.iterator();
-                NotificationData.Entry next = it.hasNext() ? it.next() : null;
-                if (next == null) {
-                    next = getIsolatedChild(expandedNotification.getGroupKey());
-                }
-                if (next != null) {
-                    if (!next.row.keepInParent() && !next.row.isRemoved() && !next.row.isDismissed()) {
-                        if (this.mHeadsUpManager.isHeadsUp(next.key)) {
-                            this.mHeadsUpManager.updateNotification(next, true);
-                        } else {
-                            this.mHeadsUpManager.showNotification(next);
-                        }
-                    } else {
-                        return;
-                    }
-                }
+    private void stopIsolatingNotification(NotificationEntry notificationEntry) {
+        ExpandedNotification sbn = notificationEntry.getSbn();
+        if (isIsolated(sbn.getKey())) {
+            onEntryRemovedInternal(notificationEntry, notificationEntry.getSbn());
+            this.mIsolatedEntries.remove(sbn.getKey());
+            onEntryAddedInternal(notificationEntry);
+            Iterator<OnGroupChangeListener> it = this.mListeners.iterator();
+            while (it.hasNext()) {
+                it.next().onGroupsChanged();
             }
-            this.mHeadsUpManager.releaseImmediately(entry.key);
         }
-    }
-
-    private boolean shouldIsolate(StatusBarNotification statusBarNotification) {
-        NotificationGroup notificationGroup = this.mGroupMap.get(statusBarNotification.getGroupKey());
-        return StatusBarNotificationCompat.isGroup(statusBarNotification) && !statusBarNotification.getNotification().isGroupSummary() && (statusBarNotification.getNotification().fullScreenIntent != null || notificationGroup == null || !notificationGroup.expanded || isGroupNotFullyVisible(notificationGroup));
     }
 
     private boolean isGroupNotFullyVisible(NotificationGroup notificationGroup) {
-        NotificationData.Entry entry = notificationGroup.summary;
-        return entry == null || entry.row.getClipTopAmount() > 0 || notificationGroup.summary.row.getTranslationY() < 0.0f;
+        NotificationEntry notificationEntry = notificationGroup.summary;
+        return notificationEntry == null || notificationEntry.isGroupNotFullyVisible();
     }
 
     public void setHeadsUpManager(HeadsUpManager headsUpManager) {
@@ -424,27 +500,45 @@ public class NotificationGroupManager implements OnHeadsUpChangedListener {
         }
     }
 
+    public void onStateChanged(int i) {
+        setStatusBarState(i);
+    }
+
     public static class NotificationGroup {
-        public final HashSet<NotificationData.Entry> children = new HashSet<>();
+        public final HashMap<String, NotificationEntry> children = new HashMap<>();
         public boolean expanded;
-        public NotificationData.Entry summary;
+        public NotificationEntry summary;
         public boolean suppressed;
 
         public String toString() {
+            String str;
+            String str2;
             StringBuilder sb = new StringBuilder();
-            sb.append("    summary expanded=");
-            sb.append(this.expanded);
-            sb.append(" suppressed=");
-            sb.append(this.suppressed);
-            sb.append(":\n      ");
-            NotificationData.Entry entry = this.summary;
-            sb.append(entry != null ? entry.notification : "null");
-            String str = sb.toString() + "\n    children size: " + this.children.size();
-            Iterator<NotificationData.Entry> it = this.children.iterator();
-            while (it.hasNext()) {
-                str = str + "\n      " + it.next().notification;
+            sb.append("    summary:\n      ");
+            NotificationEntry notificationEntry = this.summary;
+            sb.append(notificationEntry != null ? notificationEntry.getSbn() : "null");
+            NotificationEntry notificationEntry2 = this.summary;
+            if (notificationEntry2 == null || notificationEntry2.getDebugThrowable() == null) {
+                str = "";
+            } else {
+                str = Log.getStackTraceString(this.summary.getDebugThrowable());
             }
-            return str;
+            sb.append(str);
+            String str3 = sb.toString() + "\n    children size: " + this.children.size();
+            for (NotificationEntry next : this.children.values()) {
+                StringBuilder sb2 = new StringBuilder();
+                sb2.append(str3);
+                sb2.append("\n      ");
+                sb2.append(next.getSbn());
+                if (next.getDebugThrowable() != null) {
+                    str2 = Log.getStackTraceString(next.getDebugThrowable());
+                } else {
+                    str2 = "";
+                }
+                sb2.append(str2);
+                str3 = sb2.toString();
+            }
+            return str3 + "\n    summary suppressed: " + this.suppressed;
         }
     }
 }

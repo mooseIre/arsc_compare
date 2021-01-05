@@ -5,8 +5,8 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import com.android.systemui.plugins.PluginListener;
-import com.android.systemui.plugins.PluginManager;
 import com.android.systemui.plugins.ViewProvider;
+import com.android.systemui.shared.plugins.PluginManager;
 
 public class PluginInflateContainer extends AutoReinflateContainer implements PluginListener<ViewProvider> {
     private Class<?> mClass;
@@ -14,7 +14,7 @@ public class PluginInflateContainer extends AutoReinflateContainer implements Pl
 
     public PluginInflateContainer(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-        String string = context.obtainStyledAttributes(attributeSet, R$styleable.PluginInflateContainer).getString(0);
+        String string = context.obtainStyledAttributes(attributeSet, R$styleable.PluginInflateContainer).getString(R$styleable.PluginInflateContainer_viewType);
         try {
             this.mClass = Class.forName(string);
         } catch (Exception e) {

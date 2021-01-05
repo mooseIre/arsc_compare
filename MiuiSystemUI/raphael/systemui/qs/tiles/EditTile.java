@@ -2,7 +2,8 @@ package com.android.systemui.qs.tiles;
 
 import android.content.Intent;
 import android.widget.Switch;
-import com.android.systemui.plugins.R;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.plugins.qs.QSTile;
 import com.android.systemui.qs.QSHost;
 import com.android.systemui.qs.tileimpl.QSTileImpl;
@@ -42,14 +43,14 @@ public class EditTile extends QSTileImpl<QSTile.BooleanState> {
     }
 
     public CharSequence getTileLabel() {
-        return this.mContext.getString(R.string.quick_settings_edit_label);
+        return this.mContext.getString(C0021R$string.quick_settings_edit_label);
     }
 
     /* access modifiers changed from: protected */
     public void handleUpdateState(QSTile.BooleanState booleanState, Object obj) {
-        booleanState.label = this.mContext.getString(R.string.quick_settings_edit_label);
+        booleanState.label = this.mContext.getString(C0021R$string.quick_settings_edit_label);
         booleanState.state = 1;
-        booleanState.icon = QSTileImpl.ResourceIcon.get(R.drawable.ic_qs_edit);
+        booleanState.icon = QSTileImpl.ResourceIcon.get(C0013R$drawable.ic_qs_edit);
         booleanState.contentDescription = booleanState.label;
         booleanState.expandedAccessibilityClassName = Switch.class.getName();
     }

@@ -1,151 +1,74 @@
 package com.android.systemui.globalactions;
 
-import android.content.ComponentName;
-import android.graphics.Rect;
-import android.os.Bundle;
-import android.os.IBinder;
+import android.content.Context;
 import android.os.RemoteException;
 import android.os.ServiceManager;
-import com.android.internal.os.SomeArgs;
 import com.android.internal.statusbar.IStatusBarService;
-import com.android.internal.statusbar.StatusBarIcon;
-import com.android.systemui.Dependency;
 import com.android.systemui.SystemUI;
 import com.android.systemui.plugins.GlobalActions;
 import com.android.systemui.statusbar.CommandQueue;
+import com.android.systemui.statusbar.phone.StatusBarKeyguardViewManager;
 import com.android.systemui.statusbar.policy.ExtensionController;
+import java.util.Objects;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
+import javax.inject.Provider;
 
 public class GlobalActionsComponent extends SystemUI implements CommandQueue.Callbacks, GlobalActions.GlobalActionsManager {
     private IStatusBarService mBarService;
+    private final CommandQueue mCommandQueue;
     private ExtensionController.Extension<GlobalActions> mExtension;
+    private final ExtensionController mExtensionController;
+    private final Provider<GlobalActions> mGlobalActionsProvider;
+    private GlobalActions mPlugin;
+    private StatusBarKeyguardViewManager mStatusBarKeyguardViewManager;
 
-    public void addQsTile(ComponentName componentName) {
-    }
-
-    public void animateCollapsePanels(int i) {
-    }
-
-    public void animateExpandNotificationsPanel() {
-    }
-
-    public void animateExpandSettingsPanel(String str) {
-    }
-
-    public void appTransitionCancelled() {
-    }
-
-    public void appTransitionFinished() {
-    }
-
-    public void appTransitionPending(boolean z) {
-    }
-
-    public void appTransitionStarting(long j, long j2, boolean z) {
-    }
-
-    public void cancelPreloadRecentApps() {
-    }
-
-    public void clickTile(ComponentName componentName) {
-    }
-
-    public void disable(int i, int i2, boolean z) {
-    }
-
-    public void dismissKeyboardShortcutsMenu() {
-    }
-
-    public void handleSystemNavigationKey(int i) {
-    }
-
-    public void hideFingerprintDialog() {
-    }
-
-    public void hideRecentApps(boolean z, boolean z2) {
-    }
-
-    public void onFingerprintAuthenticated() {
-    }
-
-    public void onFingerprintError(String str) {
-    }
-
-    public void onFingerprintHelp(String str) {
-    }
-
-    public void preloadRecentApps() {
-    }
-
-    public void remQsTile(ComponentName componentName) {
-    }
-
-    public void removeIcon(String str) {
-    }
-
-    public void setIcon(String str, StatusBarIcon statusBarIcon) {
-    }
-
-    public void setImeWindowStatus(IBinder iBinder, int i, int i2, boolean z) {
-    }
-
-    public void setStatus(int i, String str, Bundle bundle) {
-    }
-
-    public void setSystemUiVisibility(int i, int i2, int i3, int i4, Rect rect, Rect rect2) {
-    }
-
-    public void setWindowState(int i, int i2) {
-    }
-
-    public void showAssistDisclosure() {
-    }
-
-    public void showFingerprintDialog(SomeArgs someArgs) {
-    }
-
-    public void showPictureInPictureMenu() {
-    }
-
-    public void showRecentApps(boolean z, boolean z2) {
-    }
-
-    public void showScreenPinningRequest(int i) {
-    }
-
-    public void startAssist(Bundle bundle) {
-    }
-
-    public void toggleKeyboardShortcutsMenu(int i) {
-    }
-
-    public void toggleRecentApps() {
-    }
-
-    public void toggleSplitScreen() {
-    }
-
-    public void topAppWindowChanged(boolean z) {
+    public GlobalActionsComponent(Context context, CommandQueue commandQueue, ExtensionController extensionController, Provider<GlobalActions> provider, StatusBarKeyguardViewManager statusBarKeyguardViewManager) {
+        super(context);
+        this.mCommandQueue = commandQueue;
+        this.mExtensionController = extensionController;
+        this.mGlobalActionsProvider = provider;
+        this.mStatusBarKeyguardViewManager = statusBarKeyguardViewManager;
     }
 
     public void start() {
+        Class<GlobalActions> cls = GlobalActions.class;
         this.mBarService = IStatusBarService.Stub.asInterface(ServiceManager.getService("statusbar"));
-        ExtensionController.ExtensionBuilder<GlobalActions> newExtension = ((ExtensionController) Dependency.get(ExtensionController.class)).newExtension(GlobalActions.class);
-        newExtension.withPlugin(GlobalActions.class);
+        ExtensionController.ExtensionBuilder<GlobalActions> newExtension = this.mExtensionController.newExtension(cls);
+        newExtension.withPlugin(cls);
+        Provider<GlobalActions> provider = this.mGlobalActionsProvider;
+        Objects.requireNonNull(provider);
         newExtension.withDefault(new Supplier() {
             public final Object get() {
-                return GlobalActionsComponent.this.lambda$start$0$GlobalActionsComponent();
+                return (GlobalActions) Provider.this.get();
             }
         });
-        this.mExtension = newExtension.build();
-        ((CommandQueue) SystemUI.getComponent(this.mContext, CommandQueue.class)).addCallbacks(this);
+        newExtension.withCallback(new Consumer() {
+            public final void accept(Object obj) {
+                GlobalActionsComponent.this.onExtensionCallback((GlobalActions) obj);
+            }
+        });
+        ExtensionController.Extension<GlobalActions> build = newExtension.build();
+        this.mExtension = build;
+        this.mPlugin = build.get();
+        this.mCommandQueue.addCallback((CommandQueue.Callbacks) this);
     }
 
-    public /* synthetic */ GlobalActions lambda$start$0$GlobalActionsComponent() {
-        return new GlobalActionsImpl(this.mContext);
+    /* access modifiers changed from: private */
+    public void onExtensionCallback(GlobalActions globalActions) {
+        GlobalActions globalActions2 = this.mPlugin;
+        if (globalActions2 != null) {
+            globalActions2.destroy();
+        }
+        this.mPlugin = globalActions;
+    }
+
+    public void handleShowShutdownUi(boolean z, String str) {
+        this.mExtension.get().showShutdownUi(z, str);
     }
 
     public void handleShowGlobalActionsMenu() {
+        this.mStatusBarKeyguardViewManager.setGlobalActionsVisible(true);
         this.mExtension.get().showGlobalActions(this);
     }
 
@@ -158,6 +81,7 @@ public class GlobalActionsComponent extends SystemUI implements CommandQueue.Cal
 
     public void onGlobalActionsHidden() {
         try {
+            this.mStatusBarKeyguardViewManager.setGlobalActionsVisible(false);
             this.mBarService.onGlobalActionsHidden();
         } catch (RemoteException unused) {
         }

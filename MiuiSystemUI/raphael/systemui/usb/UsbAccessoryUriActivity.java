@@ -10,7 +10,7 @@ import android.os.UserHandle;
 import android.util.Log;
 import com.android.internal.app.AlertActivity;
 import com.android.internal.app.AlertController;
-import com.android.systemui.plugins.R;
+import com.android.systemui.C0021R$string;
 
 public class UsbAccessoryUriActivity extends AlertActivity implements DialogInterface.OnClickListener {
     private UsbAccessory mAccessory;
@@ -28,22 +28,21 @@ public class UsbAccessoryUriActivity extends AlertActivity implements DialogInte
             uri = Uri.parse(stringExtra);
         }
         this.mUri = uri;
-        Uri uri2 = this.mUri;
-        if (uri2 == null) {
+        if (uri == null) {
             Log.e("UsbAccessoryUriActivity", "could not parse Uri " + stringExtra);
             finish();
             return;
         }
-        String scheme = uri2.getScheme();
+        String scheme = uri.getScheme();
         if ("http".equals(scheme) || "https".equals(scheme)) {
             AlertController.AlertParams alertParams = this.mAlertParams;
-            alertParams.mTitle = this.mAccessory.getDescription();
-            CharSequence charSequence = alertParams.mTitle;
-            if (charSequence == null || charSequence.length() == 0) {
-                alertParams.mTitle = getString(R.string.title_usb_accessory);
+            String description = this.mAccessory.getDescription();
+            alertParams.mTitle = description;
+            if (description == null || description.length() == 0) {
+                alertParams.mTitle = getString(C0021R$string.title_usb_accessory);
             }
-            alertParams.mMessage = getString(R.string.usb_accessory_uri_prompt, new Object[]{this.mUri});
-            alertParams.mPositiveButtonText = getString(R.string.label_view);
+            alertParams.mMessage = getString(C0021R$string.usb_accessory_uri_prompt, new Object[]{this.mUri});
+            alertParams.mPositiveButtonText = getString(C0021R$string.label_view);
             alertParams.mNegativeButtonText = getString(17039360);
             alertParams.mPositiveButtonListener = this;
             alertParams.mNegativeButtonListener = this;

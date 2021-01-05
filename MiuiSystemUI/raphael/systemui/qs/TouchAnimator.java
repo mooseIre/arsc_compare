@@ -5,6 +5,7 @@ import android.util.MathUtils;
 import android.util.Property;
 import android.view.View;
 import android.view.animation.Interpolator;
+import androidx.appcompat.R$styleable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,9 +39,6 @@ public class TouchAnimator {
     }
 
     public static class ListenerAdapter implements Listener {
-        public void onAnimationAtEnd() {
-        }
-
         public void onAnimationAtStart() {
         }
     }
@@ -51,7 +49,7 @@ public class TouchAnimator {
         this.mKeyframeSets = keyframeSetArr;
         this.mStartDelay = f;
         this.mEndDelay = f2;
-        this.mSpan = (1.0f - this.mEndDelay) - this.mStartDelay;
+        this.mSpan = (1.0f - f2) - f;
         this.mInterpolator = interpolator;
         this.mListener = listener;
     }
@@ -146,13 +144,13 @@ public class TouchAnimator {
                             break;
                         }
                         break;
-                    case 120:
+                    case R$styleable.AppCompatTheme_windowFixedHeightMajor:
                         if (str.equals("x")) {
                             c = 5;
                             break;
                         }
                         break;
-                    case 121:
+                    case R$styleable.AppCompatTheme_windowFixedHeightMinor:
                         if (str.equals("y")) {
                             c = 6;
                             break;
@@ -229,11 +227,9 @@ public class TouchAnimator {
 
         /* access modifiers changed from: package-private */
         public void setValue(float f, Object obj) {
-            int i = 1;
-            while (i < this.mSize - 1 && f > this.mFrameWidth) {
-                i++;
-            }
-            interpolate(i, (f / this.mFrameWidth) - ((float) (i - 1)), obj);
+            int constrain = MathUtils.constrain((int) Math.ceil((double) (f / this.mFrameWidth)), 1, this.mSize - 1);
+            float f2 = this.mFrameWidth;
+            interpolate(constrain, (f - (((float) (constrain - 1)) * f2)) / f2, obj);
         }
 
         public static KeyframeSet ofFloat(Property property, float... fArr) {

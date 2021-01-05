@@ -5,11 +5,16 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import java.util.ArrayList;
 
 public class ReverseLinearLayout extends LinearLayout {
     private boolean mIsAlternativeOrder;
     private boolean mIsLayoutReverse;
+
+    public interface Reversable {
+        void reverse(boolean z);
+    }
 
     public ReverseLinearLayout(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
@@ -22,7 +27,7 @@ public class ReverseLinearLayout extends LinearLayout {
     }
 
     public void addView(View view) {
-        reversParams(view.getLayoutParams());
+        reverseParams(view.getLayoutParams(), view, this.mIsLayoutReverse);
         if (this.mIsLayoutReverse) {
             super.addView(view, 0);
         } else {
@@ -31,7 +36,7 @@ public class ReverseLinearLayout extends LinearLayout {
     }
 
     public void addView(View view, ViewGroup.LayoutParams layoutParams) {
-        reversParams(layoutParams);
+        reverseParams(layoutParams, view, this.mIsLayoutReverse);
         if (this.mIsLayoutReverse) {
             super.addView(view, 0, layoutParams);
         } else {
@@ -41,6 +46,11 @@ public class ReverseLinearLayout extends LinearLayout {
 
     public void onRtlPropertiesChanged(int i) {
         super.onRtlPropertiesChanged(i);
+        updateOrder();
+    }
+
+    public void setAlternativeOrder(boolean z) {
+        this.mIsAlternativeOrder = z;
         updateOrder();
     }
 
@@ -60,11 +70,62 @@ public class ReverseLinearLayout extends LinearLayout {
         }
     }
 
-    private void reversParams(ViewGroup.LayoutParams layoutParams) {
+    private static void reverseParams(ViewGroup.LayoutParams layoutParams, View view, boolean z) {
+        if (view instanceof Reversable) {
+            ((Reversable) view).reverse(z);
+        }
+        if (view.getPaddingLeft() == view.getPaddingRight() && view.getPaddingTop() == view.getPaddingBottom()) {
+            view.setPadding(view.getPaddingTop(), view.getPaddingLeft(), view.getPaddingTop(), view.getPaddingLeft());
+        }
         if (layoutParams != null) {
             int i = layoutParams.width;
             layoutParams.width = layoutParams.height;
             layoutParams.height = i;
+        }
+    }
+
+    public static class ReverseRelativeLayout extends RelativeLayout implements Reversable {
+        private int mDefaultGravity = 0;
+
+        public ReverseRelativeLayout(Context context) {
+            super(context);
+        }
+
+        public void reverse(boolean z) {
+            updateGravity(z);
+            ReverseLinearLayout.reverseGroup(this, z);
+        }
+
+        public void setDefaultGravity(int i) {
+            this.mDefaultGravity = i;
+        }
+
+        public void updateGravity(boolean z) {
+            int i = this.mDefaultGravity;
+            int i2 = 80;
+            if (i == 48 || i == 80) {
+                int i3 = this.mDefaultGravity;
+                if (z) {
+                    if (i3 != 48) {
+                        i2 = 48;
+                    }
+                    i3 = i2;
+                }
+                if (getGravity() != i3) {
+                    setGravity(i3);
+                }
+            }
+        }
+    }
+
+    /* access modifiers changed from: private */
+    public static void reverseGroup(ViewGroup viewGroup, boolean z) {
+        for (int i = 0; i < viewGroup.getChildCount(); i++) {
+            View childAt = viewGroup.getChildAt(i);
+            reverseParams(childAt.getLayoutParams(), childAt, z);
+            if (childAt instanceof ViewGroup) {
+                reverseGroup((ViewGroup) childAt, z);
+            }
         }
     }
 }

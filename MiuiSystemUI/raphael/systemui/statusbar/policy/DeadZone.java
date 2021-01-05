@@ -1,24 +1,32 @@
 package com.android.systemui.statusbar.policy;
 
 import android.animation.ObjectAnimator;
-import android.content.Context;
-import android.content.res.TypedArray;
+import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.os.SystemClock;
-import android.util.AttributeSet;
 import android.util.Slog;
 import android.view.MotionEvent;
-import android.view.View;
-import com.android.systemui.R$styleable;
-import com.android.systemui.plugins.R;
+import com.android.systemui.C0010R$bool;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0016R$integer;
+import com.android.systemui.Dependency;
+import com.android.systemui.statusbar.NavigationBarController;
+import com.android.systemui.statusbar.phone.NavigationBarView;
 
-public class DeadZone extends View {
-    private final Runnable mDebugFlash;
+public class DeadZone {
+    private final Runnable mDebugFlash = new Runnable() {
+        public void run() {
+            ObjectAnimator.ofFloat(DeadZone.this, "flash", new float[]{1.0f, 0.0f}).setDuration(150).start();
+        }
+    };
     private int mDecay;
+    private final int mDisplayId;
     private int mDisplayRotation;
-    private float mFlashFrac;
+    private float mFlashFrac = 0.0f;
     private int mHold;
     private long mLastPokeTime;
+    private final NavigationBarController mNavBarController;
+    private final NavigationBarView mNavigationBarView;
     private boolean mShouldFlash;
     private int mSizeMax;
     private int mSizeMin;
@@ -28,26 +36,11 @@ public class DeadZone extends View {
         return ((f2 - f) * f3) + f;
     }
 
-    public DeadZone(Context context, AttributeSet attributeSet) {
-        this(context, attributeSet, 0);
-    }
-
-    public DeadZone(Context context, AttributeSet attributeSet, int i) {
-        super(context, attributeSet);
-        this.mFlashFrac = 0.0f;
-        this.mDebugFlash = new Runnable() {
-            public void run() {
-                ObjectAnimator.ofFloat(DeadZone.this, "flash", new float[]{1.0f, 0.0f}).setDuration(150).start();
-            }
-        };
-        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, R$styleable.DeadZone, i, 0);
-        boolean z = true;
-        this.mHold = obtainStyledAttributes.getInteger(1, 0);
-        this.mDecay = obtainStyledAttributes.getInteger(0, 0);
-        this.mSizeMin = obtainStyledAttributes.getDimensionPixelSize(3, 0);
-        this.mSizeMax = obtainStyledAttributes.getDimensionPixelSize(2, 0);
-        this.mVertical = obtainStyledAttributes.getInt(4, -1) != 1 ? false : z;
-        setFlashOnTouchCapture(context.getResources().getBoolean(R.bool.config_dead_zone_flash));
+    public DeadZone(NavigationBarView navigationBarView) {
+        this.mNavigationBarView = navigationBarView;
+        this.mNavBarController = (NavigationBarController) Dependency.get(NavigationBarController.class);
+        this.mDisplayId = navigationBarView.getContext().getDisplayId();
+        onConfigurationChanged(0);
     }
 
     private float getSize(long j) {
@@ -72,7 +65,22 @@ public class DeadZone extends View {
     public void setFlashOnTouchCapture(boolean z) {
         this.mShouldFlash = z;
         this.mFlashFrac = 0.0f;
-        postInvalidate();
+        this.mNavigationBarView.postInvalidate();
+    }
+
+    public void onConfigurationChanged(int i) {
+        this.mDisplayRotation = i;
+        Resources resources = this.mNavigationBarView.getResources();
+        this.mHold = resources.getInteger(C0016R$integer.navigation_bar_deadzone_hold);
+        this.mDecay = resources.getInteger(C0016R$integer.navigation_bar_deadzone_decay);
+        this.mSizeMin = resources.getDimensionPixelSize(C0012R$dimen.navigation_bar_deadzone_size);
+        this.mSizeMax = resources.getDimensionPixelSize(C0012R$dimen.navigation_bar_deadzone_size_max);
+        boolean z = true;
+        if (resources.getInteger(C0016R$integer.navigation_bar_deadzone_orientation) != 1) {
+            z = false;
+        }
+        this.mVertical = z;
+        setFlashOnTouchCapture(resources.getBoolean(C0010R$bool.config_dead_zone_flash));
     }
 
     public boolean onTouchEvent(MotionEvent motionEvent) {
@@ -85,12 +93,13 @@ public class DeadZone extends View {
             return true;
         }
         if (action == 0) {
+            this.mNavBarController.touchAutoDim(this.mDisplayId);
             int size = (int) getSize(motionEvent.getEventTime());
-            if (!this.mVertical ? motionEvent.getY() < ((float) size) : !(this.mDisplayRotation != 3 ? motionEvent.getX() >= ((float) size) : motionEvent.getX() <= ((float) (getWidth() - size)))) {
+            if (!this.mVertical ? motionEvent.getY() < ((float) size) : !(this.mDisplayRotation != 3 ? motionEvent.getX() >= ((float) size) : motionEvent.getX() <= ((float) (this.mNavigationBarView.getWidth() - size)))) {
                 Slog.v("DeadZone", "consuming errant click: (" + motionEvent.getX() + "," + motionEvent.getY() + ")");
                 if (this.mShouldFlash) {
-                    post(this.mDebugFlash);
-                    postInvalidate();
+                    this.mNavigationBarView.post(this.mDebugFlash);
+                    this.mNavigationBarView.postInvalidate();
                 }
                 return true;
             }
@@ -98,10 +107,10 @@ public class DeadZone extends View {
         return false;
     }
 
-    public void poke(MotionEvent motionEvent) {
+    private void poke(MotionEvent motionEvent) {
         this.mLastPokeTime = motionEvent.getEventTime();
         if (this.mShouldFlash) {
-            postInvalidate();
+            this.mNavigationBarView.postInvalidate();
         }
     }
 

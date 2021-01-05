@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.util.ArrayMap;
 import android.view.View;
 import android.widget.TextView;
+import com.android.settingslib.volume.Util;
 
 public class ConfigurableTexts {
     private final Context mContext;
@@ -37,6 +38,9 @@ public class ConfigurableTexts {
         if (textView == null) {
             return 0;
         }
+        if (this.mTexts.containsKey(textView)) {
+            return this.mTexts.get(textView).intValue();
+        }
         Resources resources = this.mContext.getResources();
         float f = resources.getConfiguration().fontScale;
         final int textSize = (int) ((textView.getTextSize() / f) / resources.getDisplayMetrics().density);
@@ -51,6 +55,11 @@ public class ConfigurableTexts {
         });
         this.mTextLabels.put(textView, Integer.valueOf(i));
         return textSize;
+    }
+
+    public void remove(TextView textView) {
+        this.mTexts.remove(textView);
+        this.mTextLabels.remove(textView);
     }
 
     public void update() {

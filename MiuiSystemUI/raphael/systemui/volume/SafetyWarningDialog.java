@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Resources;
 import android.media.AudioManager;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -15,6 +16,7 @@ public abstract class SafetyWarningDialog extends SystemUIDialog implements Dial
     public static final String TAG = Util.logTag(SafetyWarningDialog.class);
     private final AudioManager mAudioManager;
     private final Context mContext;
+    private boolean mDisableOnVolumeUp;
     private boolean mNewVolumeUp;
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
@@ -36,9 +38,14 @@ public abstract class SafetyWarningDialog extends SystemUIDialog implements Dial
         super(context);
         this.mContext = context;
         this.mAudioManager = audioManager;
+        try {
+            this.mDisableOnVolumeUp = context.getResources().getBoolean(17891515);
+        } catch (Resources.NotFoundException unused) {
+            this.mDisableOnVolumeUp = true;
+        }
         getWindow().setType(2010);
         setShowForAllUsers(true);
-        setMessage(this.mContext.getString(17041056));
+        setMessage(this.mContext.getString(17041277));
         setButton(-1, this.mContext.getString(17039379), this);
         setButton(-2, this.mContext.getString(17039369), (DialogInterface.OnClickListener) null);
         setOnDismissListener(this);
@@ -46,10 +53,21 @@ public abstract class SafetyWarningDialog extends SystemUIDialog implements Dial
     }
 
     public boolean onKeyDown(int i, KeyEvent keyEvent) {
-        if (i == 24 && keyEvent.getRepeatCount() == 0) {
+        if (this.mDisableOnVolumeUp && i == 24 && keyEvent.getRepeatCount() == 0) {
             this.mNewVolumeUp = true;
         }
         return super.onKeyDown(i, keyEvent);
+    }
+
+    public boolean onKeyUp(int i, KeyEvent keyEvent) {
+        if (i == 24 && this.mNewVolumeUp && System.currentTimeMillis() - this.mShowTime > 1000) {
+            if (D.BUG) {
+                Log.d(TAG, "Confirmed warning via VOLUME_UP");
+            }
+            this.mAudioManager.disableSafeMediaVolume();
+            dismiss();
+        }
+        return super.onKeyUp(i, keyEvent);
     }
 
     public void onClick(DialogInterface dialogInterface, int i) {

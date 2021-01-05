@@ -1,36 +1,49 @@
 package com.android.systemui.qs.tiles;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.ConnectivityManager;
-import android.util.Log;
+import android.sysprop.TelephonyProperties;
 import android.widget.Switch;
-import com.android.systemui.plugins.R;
+import com.android.internal.logging.MetricsLogger;
+import com.android.systemui.C0021R$string;
+import com.android.systemui.broadcast.BroadcastDispatcher;
+import com.android.systemui.plugins.ActivityStarter;
 import com.android.systemui.plugins.qs.QSTile;
 import com.android.systemui.qs.GlobalSetting;
 import com.android.systemui.qs.QSHost;
 import com.android.systemui.qs.tileimpl.QSTileImpl;
-import com.android.systemui.statusbar.Icons;
 
 public class AirplaneModeTile extends QSTileImpl<QSTile.BooleanState> {
+    private final ActivityStarter mActivityStarter;
+    private final BroadcastDispatcher mBroadcastDispatcher;
+    private final QSTile.Icon mIcon = QSTileImpl.ResourceIcon.get(17302818);
     private boolean mListening;
-    private final GlobalSetting mSetting = new GlobalSetting(this.mContext, this.mHandler, "airplane_mode_on") {
-        /* access modifiers changed from: protected */
-        public void handleValueChanged(int i) {
-            String access$000 = AirplaneModeTile.this.TAG;
-            Log.d(access$000, "handleValueChanged: value = " + i);
-            int unused = AirplaneModeTile.this.mTargetValue = i;
-            AirplaneModeTile.this.handleRefreshState(Integer.valueOf(i));
+    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        public void onReceive(Context context, Intent intent) {
+            if ("android.intent.action.AIRPLANE_MODE".equals(intent.getAction())) {
+                AirplaneModeTile.this.refreshState();
+            }
         }
     };
-    /* access modifiers changed from: private */
-    public int mTargetValue = this.mSetting.getValue();
+    private final GlobalSetting mSetting;
 
     public int getMetricsCategory() {
-        return R.styleable.AppCompatTheme_tooltipForegroundColor;
+        return 112;
     }
 
-    public AirplaneModeTile(QSHost qSHost) {
+    public AirplaneModeTile(QSHost qSHost, ActivityStarter activityStarter, BroadcastDispatcher broadcastDispatcher) {
         super(qSHost);
+        this.mActivityStarter = activityStarter;
+        this.mBroadcastDispatcher = broadcastDispatcher;
+        this.mSetting = new GlobalSetting(this.mContext, this.mHandler, "airplane_mode_on") {
+            /* access modifiers changed from: protected */
+            public void handleValueChanged(int i) {
+                AirplaneModeTile.this.handleRefreshState(Integer.valueOf(i));
+            }
+        };
     }
 
     public QSTile.BooleanState newTileState() {
@@ -38,18 +51,13 @@ public class AirplaneModeTile extends QSTileImpl<QSTile.BooleanState> {
     }
 
     public void handleClick() {
-        int value = this.mSetting.getValue();
-        if (value != this.mTargetValue) {
-            String str = this.TAG;
-            Log.d(str, "handleClick: mTargetValue = " + this.mTargetValue + ", value = " + value);
-            return;
+        boolean z = ((QSTile.BooleanState) this.mState).value;
+        MetricsLogger.action(this.mContext, getMetricsCategory(), !z);
+        if (z || !((Boolean) TelephonyProperties.in_ecm_mode().orElse(Boolean.FALSE)).booleanValue()) {
+            setEnabled(!z);
+        } else {
+            this.mActivityStarter.postStartActivityDismissingKeyguard(new Intent("android.telephony.action.SHOW_NOTICE_ECM_BLOCK_OTHERS"), 0);
         }
-        boolean z = true;
-        if (value == 1) {
-            z = false;
-        }
-        setEnabled(z);
-        refreshState();
     }
 
     private void setEnabled(boolean z) {
@@ -61,49 +69,48 @@ public class AirplaneModeTile extends QSTileImpl<QSTile.BooleanState> {
     }
 
     public CharSequence getTileLabel() {
-        return this.mContext.getString(R.string.airplane_mode);
+        return this.mContext.getString(C0021R$string.airplane_mode);
     }
 
     /* access modifiers changed from: protected */
     public void handleUpdateState(QSTile.BooleanState booleanState, Object obj) {
-        boolean z = false;
+        checkIfRestrictionEnforcedByAdminOnly(booleanState, "no_airplane_mode");
         int i = 1;
-        boolean z2 = (obj instanceof Integer ? ((Integer) obj).intValue() : this.mSetting.getValue()) == 1;
-        booleanState.value = z2;
-        if (!z2 && this.mTargetValue == 1) {
-            z = true;
+        boolean z = (obj instanceof Integer ? ((Integer) obj).intValue() : this.mSetting.getValue()) != 0;
+        booleanState.value = z;
+        booleanState.label = this.mContext.getString(C0021R$string.airplane_mode);
+        booleanState.icon = this.mIcon;
+        if (booleanState.slash == null) {
+            booleanState.slash = new QSTile.SlashState();
         }
-        booleanState.withAnimation = z;
-        booleanState.label = this.mContext.getString(R.string.airplane_mode);
-        if (z2) {
-            booleanState.icon = QSTileImpl.ResourceIcon.get(Icons.getQSIcons(Integer.valueOf(R.drawable.ic_signal_airplane_enable), this.mInControlCenter));
-        } else {
-            booleanState.icon = QSTileImpl.ResourceIcon.get(Icons.getQSIcons(Integer.valueOf(R.drawable.ic_signal_airplane_disable), this.mInControlCenter));
-        }
-        if (z2) {
+        booleanState.slash.isSlashed = !z;
+        if (z) {
             i = 2;
         }
         booleanState.state = i;
-        StringBuilder sb = new StringBuilder();
-        sb.append(booleanState.label);
-        sb.append(",");
-        sb.append(this.mContext.getString(booleanState.value ? R.string.switch_bar_on : R.string.switch_bar_off));
-        booleanState.contentDescription = sb.toString();
+        booleanState.contentDescription = booleanState.label;
         booleanState.expandedAccessibilityClassName = Switch.class.getName();
     }
 
     /* access modifiers changed from: protected */
     public String composeChangeAnnouncement() {
         if (((QSTile.BooleanState) this.mState).value) {
-            return this.mContext.getString(R.string.accessibility_quick_settings_airplane_changed_on);
+            return this.mContext.getString(C0021R$string.accessibility_quick_settings_airplane_changed_on);
         }
-        return this.mContext.getString(R.string.accessibility_quick_settings_airplane_changed_off);
+        return this.mContext.getString(C0021R$string.accessibility_quick_settings_airplane_changed_off);
     }
 
     public void handleSetListening(boolean z) {
+        super.handleSetListening(z);
         if (this.mListening != z) {
             this.mListening = z;
-            this.mTargetValue = this.mSetting.getValue();
+            if (z) {
+                IntentFilter intentFilter = new IntentFilter();
+                intentFilter.addAction("android.intent.action.AIRPLANE_MODE");
+                this.mBroadcastDispatcher.registerReceiver(this.mReceiver, intentFilter);
+            } else {
+                this.mBroadcastDispatcher.unregisterReceiver(this.mReceiver);
+            }
             this.mSetting.setListening(z);
         }
     }

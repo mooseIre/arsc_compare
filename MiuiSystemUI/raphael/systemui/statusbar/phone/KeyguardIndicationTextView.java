@@ -1,17 +1,12 @@
 package com.android.systemui.statusbar.phone;
 
 import android.content.Context;
-import android.content.res.Configuration;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.widget.TextView;
-import com.android.systemui.plugins.R;
 
 public class KeyguardIndicationTextView extends TextView {
-    private int mDensityDpi;
-    private float mFontScale;
-    private boolean mIsBottomButtonAnimating;
-    private boolean mPowerPluggedIn;
+    private CharSequence mText = "";
 
     public KeyguardIndicationTextView(Context context) {
         super(context);
@@ -30,45 +25,17 @@ public class KeyguardIndicationTextView extends TextView {
     }
 
     public void switchIndication(CharSequence charSequence) {
-        if (TextUtils.isEmpty(charSequence) || this.mIsBottomButtonAnimating) {
+        if (TextUtils.isEmpty(charSequence)) {
+            this.mText = "";
             setVisibility(4);
-        } else {
+        } else if (!TextUtils.equals(charSequence, this.mText)) {
+            this.mText = charSequence;
             setVisibility(0);
+            setText(this.mText);
         }
-        setText(charSequence);
     }
 
     public void switchIndication(int i) {
         switchIndication(getResources().getText(i));
-    }
-
-    /* access modifiers changed from: protected */
-    public void onConfigurationChanged(Configuration configuration) {
-        super.onConfigurationChanged(configuration);
-        float f = configuration.fontScale;
-        int i = configuration.densityDpi;
-        if (this.mFontScale != f) {
-            updateTextSize();
-            this.mFontScale = f;
-        }
-        if (this.mDensityDpi != i) {
-            updateTextSize();
-            this.mDensityDpi = i;
-        }
-    }
-
-    public void updateTextSize() {
-        setTextSize(0, (float) getResources().getDimensionPixelSize(this.mPowerPluggedIn ? R.dimen.miui_charge_lock_screen_unlock_hint_text_size : R.dimen.miui_default_lock_screen_unlock_hint_text_size));
-    }
-
-    public void setBottomAreaButtonClicked(boolean z) {
-        this.mIsBottomButtonAnimating = z;
-    }
-
-    public void setPowerPluggedIn(boolean z) {
-        if (z != this.mPowerPluggedIn) {
-            this.mPowerPluggedIn = z;
-            updateTextSize();
-        }
     }
 }

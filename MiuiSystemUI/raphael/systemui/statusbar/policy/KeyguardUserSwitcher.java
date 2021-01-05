@@ -5,8 +5,8 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.database.DataSetObserver;
-import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -15,12 +15,17 @@ import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.widget.FrameLayout;
 import com.android.settingslib.animation.AppearAnimationUtils;
+import com.android.settingslib.drawable.CircleFramedDrawable;
+import com.android.systemui.C0011R$color;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0017R$layout;
 import com.android.systemui.Dependency;
 import com.android.systemui.Interpolators;
-import com.android.systemui.plugins.R;
 import com.android.systemui.qs.tiles.UserDetailItemView;
 import com.android.systemui.statusbar.phone.KeyguardStatusBarView;
-import com.android.systemui.statusbar.phone.NotificationPanelView;
+import com.android.systemui.statusbar.phone.NotificationPanelViewController;
 import com.android.systemui.statusbar.policy.UserSwitcherController;
 
 public class KeyguardUserSwitcher {
@@ -43,8 +48,8 @@ public class KeyguardUserSwitcher {
     public final Container mUserSwitcherContainer;
     private UserSwitcherController mUserSwitcherController;
 
-    public KeyguardUserSwitcher(Context context, ViewStub viewStub, KeyguardStatusBarView keyguardStatusBarView, NotificationPanelView notificationPanelView) {
-        boolean z = context.getResources().getBoolean(R.bool.config_keyguardUserSwitcher);
+    public KeyguardUserSwitcher(Context context, ViewStub viewStub, KeyguardStatusBarView keyguardStatusBarView, NotificationPanelViewController notificationPanelViewController) {
+        boolean z = context.getResources().getBoolean(17891478);
         UserSwitcherController userSwitcherController = (UserSwitcherController) Dependency.get(UserSwitcherController.class);
         if (userSwitcherController == null || !z) {
             this.mUserSwitcherContainer = null;
@@ -58,9 +63,11 @@ public class KeyguardUserSwitcher {
         this.mBackground = new KeyguardUserSwitcherScrim(context);
         reinflateViews();
         this.mStatusBarView = keyguardStatusBarView;
-        notificationPanelView.setKeyguardUserSwitcher(this);
-        this.mAdapter = new Adapter(context, userSwitcherController, this);
-        this.mAdapter.registerDataSetObserver(this.mDataSetObserver);
+        keyguardStatusBarView.setKeyguardUserSwitcher(this);
+        notificationPanelViewController.setKeyguardUserSwitcher(this);
+        Adapter adapter = new Adapter(context, userSwitcherController, this);
+        this.mAdapter = adapter;
+        adapter.registerDataSetObserver(this.mDataSetObserver);
         this.mUserSwitcherController = userSwitcherController;
         this.mAppearAnimationUtils = new AppearAnimationUtils(context, 400, -0.5f, 0.5f, Interpolators.FAST_OUT_SLOW_IN);
         this.mUserSwitcherContainer.setKeyguardUserSwitcher(this);
@@ -73,9 +80,10 @@ public class KeyguardUserSwitcher {
             this.mUserSwitcher.removeOnLayoutChangeListener(this.mBackground);
         }
         this.mUserSwitcherContainer.removeAllViews();
-        LayoutInflater.from(this.mUserSwitcherContainer.getContext()).inflate(R.layout.keyguard_user_switcher_inner, this.mUserSwitcherContainer);
-        this.mUserSwitcher = (ViewGroup) this.mUserSwitcherContainer.findViewById(R.id.keyguard_user_switcher_inner);
-        this.mUserSwitcher.addOnLayoutChangeListener(this.mBackground);
+        LayoutInflater.from(this.mUserSwitcherContainer.getContext()).inflate(C0017R$layout.keyguard_user_switcher_inner, this.mUserSwitcherContainer);
+        ViewGroup viewGroup2 = (ViewGroup) this.mUserSwitcherContainer.findViewById(C0015R$id.keyguard_user_switcher_inner);
+        this.mUserSwitcher = viewGroup2;
+        viewGroup2.addOnLayoutChangeListener(this.mBackground);
         this.mUserSwitcher.setBackground(this.mBackground);
     }
 
@@ -100,6 +108,7 @@ public class KeyguardUserSwitcher {
             cancelAnimations();
             this.mAdapter.refresh();
             this.mUserSwitcherContainer.setVisibility(0);
+            this.mStatusBarView.setKeyguardUserSwitcherShowing(true, z);
             if (z) {
                 startAppearAnimation();
             }
@@ -113,9 +122,10 @@ public class KeyguardUserSwitcher {
         cancelAnimations();
         if (z) {
             startDisappearAnimation();
-            return true;
+        } else {
+            this.mUserSwitcherContainer.setVisibility(8);
         }
-        this.mUserSwitcherContainer.setVisibility(8);
+        this.mStatusBarView.setKeyguardUserSwitcherShowing(false, z);
         return true;
     }
 
@@ -147,8 +157,9 @@ public class KeyguardUserSwitcher {
             }
         });
         this.mAnimating = true;
-        this.mBgAnimator = ObjectAnimator.ofInt(this.mBackground, "alpha", new int[]{0, 255});
-        this.mBgAnimator.setDuration(400);
+        ObjectAnimator ofInt = ObjectAnimator.ofInt(this.mBackground, "alpha", new int[]{0, 255});
+        this.mBgAnimator = ofInt;
+        ofInt.setDuration(400);
         this.mBgAnimator.setInterpolator(Interpolators.ALPHA_IN);
         this.mBgAnimator.addListener(new AnimatorListenerAdapter() {
             public void onAnimationEnd(Animator animator) {
@@ -215,6 +226,7 @@ public class KeyguardUserSwitcher {
 
     public static class Adapter extends UserSwitcherController.BaseUserAdapter implements View.OnClickListener {
         private Context mContext;
+        private View mCurrentUserView;
         private KeyguardUserSwitcher mKeyguardUserSwitcher;
 
         public Adapter(Context context, UserSwitcherController userSwitcherController, KeyguardUserSwitcher keyguardUserSwitcher) {
@@ -226,21 +238,44 @@ public class KeyguardUserSwitcher {
         public View getView(int i, View view, ViewGroup viewGroup) {
             UserSwitcherController.UserRecord item = getItem(i);
             if (!(view instanceof UserDetailItemView) || !(view.getTag() instanceof UserSwitcherController.UserRecord)) {
-                view = LayoutInflater.from(this.mContext).inflate(R.layout.keyguard_user_switcher_item, viewGroup, false);
+                view = LayoutInflater.from(this.mContext).inflate(C0017R$layout.keyguard_user_switcher_item, viewGroup, false);
                 view.setOnClickListener(this);
             }
             UserDetailItemView userDetailItemView = (UserDetailItemView) view;
             String name = getName(this.mContext, item);
-            Bitmap bitmap = item.picture;
-            if (bitmap == null) {
+            if (item.picture == null) {
                 userDetailItemView.bind(name, getDrawable(this.mContext, item).mutate(), item.resolveId());
             } else {
-                userDetailItemView.bind(name, bitmap, item.info.id);
+                CircleFramedDrawable circleFramedDrawable = new CircleFramedDrawable(item.picture, (int) this.mContext.getResources().getDimension(C0012R$dimen.kg_framed_avatar_size));
+                circleFramedDrawable.setColorFilter(item.isSwitchToEnabled ? null : UserSwitcherController.BaseUserAdapter.getDisabledUserAvatarColorFilter());
+                userDetailItemView.bind(name, circleFramedDrawable, item.info.id);
             }
-            userDetailItemView.setAvatarEnabled(item.isSwitchToEnabled);
-            view.setActivated(item.isCurrent);
-            view.setTag(item);
-            return view;
+            userDetailItemView.setActivated(item.isCurrent);
+            userDetailItemView.setDisabledByAdmin(item.isDisabledByAdmin);
+            userDetailItemView.setEnabled(item.isSwitchToEnabled);
+            userDetailItemView.setAlpha(userDetailItemView.isEnabled() ? 1.0f : 0.38f);
+            if (item.isCurrent) {
+                this.mCurrentUserView = userDetailItemView;
+            }
+            userDetailItemView.setTag(item);
+            return userDetailItemView;
+        }
+
+        private static Drawable getDrawable(Context context, UserSwitcherController.UserRecord userRecord) {
+            int i;
+            Drawable iconDrawable = UserSwitcherController.BaseUserAdapter.getIconDrawable(context, userRecord);
+            if (userRecord.isCurrent) {
+                i = C0011R$color.kg_user_switcher_selected_avatar_icon_color;
+            } else if (!userRecord.isSwitchToEnabled) {
+                i = C0011R$color.GM2_grey_600;
+            } else {
+                i = C0011R$color.kg_user_switcher_avatar_icon_color;
+            }
+            iconDrawable.setTint(context.getResources().getColor(i, context.getTheme()));
+            if (!userRecord.isCurrent) {
+                return iconDrawable;
+            }
+            return new LayerDrawable(new Drawable[]{context.getDrawable(C0013R$drawable.bg_avatar_selected), iconDrawable});
         }
 
         public void onClick(View view) {
@@ -248,6 +283,13 @@ public class KeyguardUserSwitcher {
             if (userRecord.isCurrent && !userRecord.isGuest) {
                 this.mKeyguardUserSwitcher.hideIfNotSimple(true);
             } else if (userRecord.isSwitchToEnabled) {
+                if (!userRecord.isAddUser && !userRecord.isRestricted && !userRecord.isDisabledByAdmin) {
+                    View view2 = this.mCurrentUserView;
+                    if (view2 != null) {
+                        view2.setActivated(false);
+                    }
+                    view.setActivated(true);
+                }
                 switchTo(userRecord);
             }
         }

@@ -1,9 +1,9 @@
 package com.android.systemui.util;
 
 import android.view.View;
-import miui.animation.Folme;
-import miui.animation.ITouchStyle;
-import miui.animation.base.AnimConfig;
+import miuix.animation.Folme;
+import miuix.animation.ITouchStyle;
+import miuix.animation.base.AnimConfig;
 
 public class ViewAnimUtils {
     public static void mouse(View view) {

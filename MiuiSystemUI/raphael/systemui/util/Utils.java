@@ -2,100 +2,87 @@ package com.android.systemui.util;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
-import android.content.res.TypedArray;
-import android.graphics.drawable.Drawable;
-import com.android.keyguard.KeyguardUpdateMonitor;
-import com.android.systemui.Constants;
-import com.android.systemui.SmoothRoundDrawable;
-import com.android.systemui.Util;
-import com.android.systemui.plugins.R;
-import java.util.ArrayList;
-import java.util.Arrays;
+import android.content.pm.PackageManager;
+import android.provider.Settings;
+import android.view.View;
+import com.android.systemui.shared.system.QuickStepContract;
+import com.android.systemui.statusbar.CommandQueue;
 import java.util.List;
 import java.util.function.Consumer;
 
 public class Utils {
-    public static int argb(float f, float f2, float f3, float f4) {
-        return (((int) ((f * 255.0f) + 0.5f)) << 24) | (((int) ((f2 * 255.0f) + 0.5f)) << 16) | (((int) ((f3 * 255.0f) + 0.5f)) << 8) | ((int) ((f4 * 255.0f) + 0.5f));
+    public static boolean useQsMediaPlayer(Context context) {
+        return true;
     }
 
     public static <T> void safeForeach(List<T> list, Consumer<T> consumer) {
-        ArrayList arrayList = new ArrayList(list);
-        for (int size = arrayList.size() - 1; size >= 0; size--) {
-            Object obj = arrayList.get(size);
-            if (obj != null) {
-                consumer.accept(obj);
+        for (int size = list.size() - 1; size >= 0; size--) {
+            T t = list.get(size);
+            if (t != null) {
+                consumer.accept(t);
             }
         }
     }
 
-    public static void updateFsgState(Context context, String str, boolean z) {
-        Intent intent = new Intent();
-        intent.setAction("com.android.systemui.fsgesture");
-        intent.putExtra("typeFrom", str);
-        intent.putExtra("isEnter", z);
-        intent.addFlags(67108864);
-        context.sendBroadcast(intent);
+    public static class DisableStateTracker implements CommandQueue.Callbacks, View.OnAttachStateChangeListener {
+        private final CommandQueue mCommandQueue;
+        private boolean mDisabled;
+        private final int mMask1;
+        private final int mMask2;
+        private View mView;
+
+        public DisableStateTracker(int i, int i2, CommandQueue commandQueue) {
+            this.mMask1 = i;
+            this.mMask2 = i2;
+            this.mCommandQueue = commandQueue;
+        }
+
+        public void onViewAttachedToWindow(View view) {
+            this.mView = view;
+            this.mCommandQueue.addCallback((CommandQueue.Callbacks) this);
+        }
+
+        public void onViewDetachedFromWindow(View view) {
+            this.mCommandQueue.removeCallback((CommandQueue.Callbacks) this);
+            this.mView = null;
+        }
+
+        public void disable(int i, int i2, int i3, boolean z) {
+            if (i == this.mView.getDisplay().getDisplayId()) {
+                int i4 = this.mMask1 & i2;
+                int i5 = 0;
+                boolean z2 = (i4 == 0 && (this.mMask2 & i3) == 0) ? false : true;
+                if (z2 != this.mDisabled) {
+                    this.mDisabled = z2;
+                    View view = this.mView;
+                    if (z2) {
+                        i5 = 8;
+                    }
+                    view.setVisibility(i5);
+                }
+            }
+        }
     }
 
-    public static int getColorAttr(Context context, int i) {
-        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(new int[]{i});
-        int color = obtainStyledAttributes.getColor(0, 0);
-        obtainStyledAttributes.recycle();
-        return color;
+    public static boolean isHeadlessRemoteDisplayProvider(PackageManager packageManager, String str) {
+        if (packageManager.checkPermission("android.permission.REMOTE_DISPLAY_PROVIDER", str) != 0) {
+            return false;
+        }
+        Intent intent = new Intent("android.intent.action.MAIN");
+        intent.addCategory("android.intent.category.LAUNCHER");
+        intent.setPackage(str);
+        return packageManager.queryIntentActivities(intent, 0).isEmpty();
     }
 
-    public static int getColorAccent(Context context) {
-        return getColorAttr(context, 16843829);
+    public static boolean isGesturalModeOnDefaultDisplay(Context context, int i) {
+        return context.getDisplayId() == 0 && QuickStepContract.isGesturalMode(i);
     }
 
-    public static int getColorError(Context context) {
-        return context.getColor(R.color.color_error);
-    }
-
-    public static int getDefaultColor(Context context, int i) {
-        return context.getResources().getColorStateList(i, context.getTheme()).getDefaultColor();
-    }
-
-    public static <T> T[] arrayConcat(T[] tArr, T[] tArr2) {
-        if (tArr == null) {
-            return tArr2;
+    public static boolean useMediaResumption(Context context) {
+        int i = Settings.Secure.getInt(context.getContentResolver(), "qs_media_resumption", 1);
+        if (!useQsMediaPlayer(context) || i <= 0) {
+            return false;
         }
-        if (tArr2 == null) {
-            return tArr;
-        }
-        T[] copyOf = Arrays.copyOf(tArr, tArr.length + tArr2.length);
-        System.arraycopy(tArr2, 0, copyOf, tArr.length, tArr2.length);
-        return copyOf;
-    }
-
-    public static String getCalendarPkg(Context context) {
-        if (!Constants.IS_INTERNATIONAL) {
-            return "com.android.calendar";
-        }
-        if (Util.isAppInstalledForUser(context, "com.xiaomi.calendar", KeyguardUpdateMonitor.getCurrentUser())) {
-            return "com.xiaomi.calendar";
-        }
-        if (Util.isAppInstalledForUser(context, "com.android.calendar", KeyguardUpdateMonitor.getCurrentUser())) {
-            return "com.android.calendar";
-        }
-        return "com.google.android.calendar";
-    }
-
-    public static Drawable getSmoothRoundDrawable(Context context, int i) {
-        if (context == null || i <= 0) {
-            return null;
-        }
-        if (!(context.getDrawable(i) instanceof SmoothRoundDrawable)) {
-            return context.getDrawable(i);
-        }
-        try {
-            Resources resources = context.getResources();
-            return Drawable.createFromXml(resources, resources.getLayout(i));
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
+        return true;
     }
 }

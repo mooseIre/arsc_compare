@@ -2,52 +2,50 @@ package com.android.systemui.statusbar.policy;
 
 import android.app.ActivityManager;
 import android.app.admin.DevicePolicyManager;
-import android.app.admin.DevicePolicyManagerCompat;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.UserInfo;
 import android.net.ConnectivityManager;
 import android.net.IConnectivityManager;
 import android.net.Network;
 import android.net.NetworkRequest;
-import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Handler;
-import android.os.Looper;
 import android.os.RemoteException;
 import android.os.ServiceManager;
 import android.os.UserHandle;
-import android.os.UserHandleCompat;
 import android.os.UserManager;
-import android.os.UserManagerCompat;
 import android.util.ArrayMap;
 import android.util.Log;
-import android.util.Pair;
 import android.util.SparseArray;
 import com.android.internal.annotations.GuardedBy;
 import com.android.internal.net.LegacyVpnInfo;
 import com.android.internal.net.VpnConfig;
-import com.android.systemui.Dependency;
-import com.android.systemui.plugins.R;
+import com.android.systemui.C0021R$string;
+import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.settings.CurrentUserTracker;
 import com.android.systemui.statusbar.policy.SecurityController;
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Set;
+import java.util.concurrent.Executor;
 
 public class SecurityControllerImpl extends CurrentUserTracker implements SecurityController {
     /* access modifiers changed from: private */
     public static final boolean DEBUG = Log.isLoggable("SecurityController", 3);
-    private static final NetworkRequest REQUEST = new NetworkRequest.Builder().removeCapability(15).removeCapability(13).removeCapability(14).build();
+    private static final NetworkRequest REQUEST = new NetworkRequest.Builder().removeCapability(15).removeCapability(13).removeCapability(14).setUids((Set) null).build();
+    private final Executor mBgExecutor;
     private final BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             int intExtra;
             if ("android.security.action.TRUST_STORE_CHANGED".equals(intent.getAction())) {
-                SecurityControllerImpl.this.refreshCACerts();
+                SecurityControllerImpl.this.refreshCACerts(getSendingUserId());
             } else if ("android.intent.action.USER_UNLOCKED".equals(intent.getAction()) && (intExtra = intent.getIntExtra("android.intent.extra.user_handle", -10000)) != -10000) {
                 SecurityControllerImpl.this.refreshCACerts(intExtra);
             }
@@ -57,13 +55,11 @@ public class SecurityControllerImpl extends CurrentUserTracker implements Securi
     private final ArrayList<SecurityController.SecurityControllerCallback> mCallbacks = new ArrayList<>();
     private final ConnectivityManager mConnectivityManager;
     private final IConnectivityManager mConnectivityManagerService;
-    /* access modifiers changed from: private */
-    public final Context mContext;
+    private final Context mContext;
     private int mCurrentUserId;
     private SparseArray<VpnConfig> mCurrentVpns = new SparseArray<>();
     private final DevicePolicyManager mDevicePolicyManager;
-    /* access modifiers changed from: private */
-    public ArrayMap<Integer, Boolean> mHasCACerts = new ArrayMap<>();
+    private ArrayMap<Integer, Boolean> mHasCACerts = new ArrayMap<>();
     private final ConnectivityManager.NetworkCallback mNetworkCallback = new ConnectivityManager.NetworkCallback() {
         public void onAvailable(Network network) {
             if (SecurityControllerImpl.DEBUG) {
@@ -85,20 +81,19 @@ public class SecurityControllerImpl extends CurrentUserTracker implements Securi
     private final UserManager mUserManager;
     private int mVpnUserId;
 
-    public SecurityControllerImpl(Context context) {
-        super(context);
+    public SecurityControllerImpl(Context context, Handler handler, BroadcastDispatcher broadcastDispatcher, Executor executor) {
+        super(broadcastDispatcher);
         this.mContext = context;
         this.mDevicePolicyManager = (DevicePolicyManager) context.getSystemService("device_policy");
         this.mConnectivityManager = (ConnectivityManager) context.getSystemService("connectivity");
         this.mConnectivityManagerService = IConnectivityManager.Stub.asInterface(ServiceManager.getService("connectivity"));
         this.mPackageManager = context.getPackageManager();
         this.mUserManager = (UserManager) context.getSystemService("user");
+        this.mBgExecutor = executor;
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("android.security.action.TRUST_STORE_CHANGED");
-        if (Build.VERSION.SDK_INT > 29) {
-            intentFilter.addAction("android.intent.action.USER_UNLOCKED");
-        }
-        context.registerReceiverAsUser(this.mBroadcastReceiver, UserHandle.ALL, intentFilter, (String) null, new Handler((Looper) Dependency.get(Dependency.BG_LOOPER)));
+        intentFilter.addAction("android.intent.action.USER_UNLOCKED");
+        broadcastDispatcher.registerReceiverWithHandler(this.mBroadcastReceiver, intentFilter, handler, UserHandle.ALL);
         this.mConnectivityManager.registerNetworkCallback(REQUEST, this.mNetworkCallback);
         onUserSwitched(ActivityManager.getCurrentUser());
         startTracking();
@@ -119,11 +114,11 @@ public class SecurityControllerImpl extends CurrentUserTracker implements Securi
     }
 
     public boolean isDeviceManaged() {
-        return DevicePolicyManagerCompat.isDeviceManaged(this.mDevicePolicyManager);
+        return this.mDevicePolicyManager.isDeviceManaged();
     }
 
     public CharSequence getDeviceOwnerOrganizationName() {
-        return DevicePolicyManagerCompat.getDeviceOwnerOrganizationName(this.mDevicePolicyManager);
+        return this.mDevicePolicyManager.getDeviceOwnerOrganizationName();
     }
 
     public CharSequence getWorkProfileOrganizationName() {
@@ -131,7 +126,7 @@ public class SecurityControllerImpl extends CurrentUserTracker implements Securi
         if (workProfileUserId == -10000) {
             return null;
         }
-        return DevicePolicyManagerCompat.getOrganizationNameForUser(this.mDevicePolicyManager, workProfileUserId);
+        return this.mDevicePolicyManager.getOrganizationNameForUser(workProfileUserId);
     }
 
     public String getPrimaryVpnName() {
@@ -155,21 +150,25 @@ public class SecurityControllerImpl extends CurrentUserTracker implements Securi
         return getWorkProfileUserId(this.mCurrentUserId) != -10000;
     }
 
+    public boolean isProfileOwnerOfOrganizationOwnedDevice() {
+        return this.mDevicePolicyManager.isOrganizationOwnedDeviceWithManagedProfile();
+    }
+
     public String getWorkProfileVpnName() {
         VpnConfig vpnConfig;
         int workProfileUserId = getWorkProfileUserId(this.mVpnUserId);
         if (workProfileUserId == -10000 || (vpnConfig = this.mCurrentVpns.get(workProfileUserId)) == null) {
             return null;
         }
-        return getNameForVpnConfig(vpnConfig, UserHandleCompat.of(workProfileUserId));
+        return getNameForVpnConfig(vpnConfig, UserHandle.of(workProfileUserId));
     }
 
     public boolean isNetworkLoggingEnabled() {
-        return DevicePolicyManagerCompat.isNetworkLoggingEnabled(this.mDevicePolicyManager);
+        return this.mDevicePolicyManager.isNetworkLoggingEnabled((ComponentName) null);
     }
 
     public boolean isVpnEnabled() {
-        for (int i : UserManagerCompat.getProfileIdsWithDisabled(this.mUserManager, this.mVpnUserId)) {
+        for (int i : this.mUserManager.getProfileIdsWithDisabled(this.mVpnUserId)) {
             if (this.mCurrentVpns.get(i) != null) {
                 return true;
             }
@@ -179,6 +178,23 @@ public class SecurityControllerImpl extends CurrentUserTracker implements Securi
 
     public boolean isSilentVpnPackage() {
         return "com.miui.vpnsdkmanager".equals(getVpnPackageName());
+    }
+
+    public String getVpnPackageName() {
+        VpnConfig vpnConfig = this.mCurrentVpns.get(this.mVpnUserId);
+        if (vpnConfig != null) {
+            return vpnConfig.user;
+        }
+        return null;
+    }
+
+    public boolean isVpnBranded() {
+        String packageNameForVpnConfig;
+        VpnConfig vpnConfig = this.mCurrentVpns.get(this.mVpnUserId);
+        if (vpnConfig == null || (packageNameForVpnConfig = getPackageNameForVpnConfig(vpnConfig)) == null) {
+            return false;
+        }
+        return isVpnPackageBranded(packageNameForVpnConfig);
     }
 
     public boolean hasCACertInCurrentUser() {
@@ -249,42 +265,151 @@ public class SecurityControllerImpl extends CurrentUserTracker implements Securi
 
     public void onUserSwitched(int i) {
         this.mCurrentUserId = i;
-        if (this.mUserManager.getUserInfo(i).isRestricted()) {
-            this.mVpnUserId = -10000;
+        UserInfo userInfo = this.mUserManager.getUserInfo(i);
+        if (userInfo.isRestricted()) {
+            this.mVpnUserId = userInfo.restrictedProfileParentId;
         } else {
             this.mVpnUserId = this.mCurrentUserId;
-        }
-        if (Build.VERSION.SDK_INT < 30) {
-            refreshCACerts();
         }
         fireCallbacks();
     }
 
-    public String getVpnPackageName() {
-        VpnConfig vpnConfig = this.mCurrentVpns.get(this.mVpnUserId);
-        if (vpnConfig != null) {
-            return vpnConfig.user;
-        }
-        return null;
-    }
-
-    /* access modifiers changed from: private */
-    public void refreshCACerts() {
-        refreshCACerts(this.mCurrentUserId);
-    }
-
     /* access modifiers changed from: private */
     public void refreshCACerts(int i) {
-        new CACertLoader().execute(new Integer[]{Integer.valueOf(i)});
-        int workProfileUserId = getWorkProfileUserId(i);
-        if (workProfileUserId != -10000) {
-            new CACertLoader().execute(new Integer[]{Integer.valueOf(workProfileUserId)});
-        }
+        this.mBgExecutor.execute(new Runnable(i) {
+            public final /* synthetic */ int f$1;
+
+            {
+                this.f$1 = r2;
+            }
+
+            public final void run() {
+                SecurityControllerImpl.this.lambda$refreshCACerts$0$SecurityControllerImpl(this.f$1);
+            }
+        });
+    }
+
+    /* access modifiers changed from: private */
+    /* JADX WARNING: Removed duplicated region for block: B:44:0x00a5  */
+    /* renamed from: lambda$refreshCACerts$0 */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public /* synthetic */ void lambda$refreshCACerts$0$SecurityControllerImpl(int r8) {
+        /*
+            r7 = this;
+            java.lang.String r0 = "Refreshing CA Certs "
+            java.lang.String r1 = "SecurityController"
+            r2 = 0
+            android.content.Context r3 = r7.mContext     // Catch:{ RemoteException | AssertionError | InterruptedException -> 0x0066, all -> 0x0064 }
+            android.os.UserHandle r4 = android.os.UserHandle.of(r8)     // Catch:{ RemoteException | AssertionError | InterruptedException -> 0x0066, all -> 0x0064 }
+            android.security.KeyChain$KeyChainConnection r3 = android.security.KeyChain.bindAsUser(r3, r4)     // Catch:{ RemoteException | AssertionError | InterruptedException -> 0x0066, all -> 0x0064 }
+            android.security.IKeyChainService r4 = r3.getService()     // Catch:{ all -> 0x0058 }
+            android.content.pm.StringParceledListSlice r4 = r4.getUserCaAliases()     // Catch:{ all -> 0x0058 }
+            java.util.List r4 = r4.getList()     // Catch:{ all -> 0x0058 }
+            boolean r4 = r4.isEmpty()     // Catch:{ all -> 0x0058 }
+            if (r4 != 0) goto L_0x0023
+            r4 = 1
+            goto L_0x0024
+        L_0x0023:
+            r4 = 0
+        L_0x0024:
+            android.util.Pair r5 = new android.util.Pair     // Catch:{ all -> 0x0058 }
+            java.lang.Integer r6 = java.lang.Integer.valueOf(r8)     // Catch:{ all -> 0x0058 }
+            java.lang.Boolean r4 = java.lang.Boolean.valueOf(r4)     // Catch:{ all -> 0x0058 }
+            r5.<init>(r6, r4)     // Catch:{ all -> 0x0058 }
+            if (r3 == 0) goto L_0x0039
+            r3.close()     // Catch:{ RemoteException | AssertionError | InterruptedException -> 0x0037 }
+            goto L_0x0039
+        L_0x0037:
+            r3 = move-exception
+            goto L_0x0068
+        L_0x0039:
+            boolean r8 = DEBUG
+            if (r8 == 0) goto L_0x004f
+            java.lang.StringBuilder r8 = new java.lang.StringBuilder
+            r8.<init>()
+            r8.append(r0)
+            r8.append(r5)
+            java.lang.String r8 = r8.toString()
+            android.util.Log.d(r1, r8)
+        L_0x004f:
+            java.lang.Object r8 = r5.second
+            if (r8 == 0) goto L_0x009e
+            android.util.ArrayMap<java.lang.Integer, java.lang.Boolean> r0 = r7.mHasCACerts
+            java.lang.Object r1 = r5.first
+            goto L_0x0094
+        L_0x0058:
+            r4 = move-exception
+            if (r3 == 0) goto L_0x0063
+            r3.close()     // Catch:{ all -> 0x005f }
+            goto L_0x0063
+        L_0x005f:
+            r3 = move-exception
+            r4.addSuppressed(r3)     // Catch:{ RemoteException | AssertionError | InterruptedException -> 0x0066, all -> 0x0064 }
+        L_0x0063:
+            throw r4     // Catch:{ RemoteException | AssertionError | InterruptedException -> 0x0066, all -> 0x0064 }
+        L_0x0064:
+            r8 = move-exception
+            goto L_0x00a1
+        L_0x0066:
+            r3 = move-exception
+            r5 = r2
+        L_0x0068:
+            java.lang.String r4 = "failed to get CA certs"
+            android.util.Log.i(r1, r4, r3)     // Catch:{ all -> 0x009f }
+            android.util.Pair r3 = new android.util.Pair     // Catch:{ all -> 0x009f }
+            java.lang.Integer r8 = java.lang.Integer.valueOf(r8)     // Catch:{ all -> 0x009f }
+            r3.<init>(r8, r2)     // Catch:{ all -> 0x009f }
+            boolean r8 = DEBUG
+            if (r8 == 0) goto L_0x008c
+            java.lang.StringBuilder r8 = new java.lang.StringBuilder
+            r8.<init>()
+            r8.append(r0)
+            r8.append(r3)
+            java.lang.String r8 = r8.toString()
+            android.util.Log.d(r1, r8)
+        L_0x008c:
+            java.lang.Object r8 = r3.second
+            if (r8 == 0) goto L_0x009e
+            android.util.ArrayMap<java.lang.Integer, java.lang.Boolean> r0 = r7.mHasCACerts
+            java.lang.Object r1 = r3.first
+        L_0x0094:
+            java.lang.Integer r1 = (java.lang.Integer) r1
+            java.lang.Boolean r8 = (java.lang.Boolean) r8
+            r0.put(r1, r8)
+            r7.fireCallbacks()
+        L_0x009e:
+            return
+        L_0x009f:
+            r8 = move-exception
+            r2 = r5
+        L_0x00a1:
+            boolean r3 = DEBUG
+            if (r3 == 0) goto L_0x00b7
+            java.lang.StringBuilder r3 = new java.lang.StringBuilder
+            r3.<init>()
+            r3.append(r0)
+            r3.append(r2)
+            java.lang.String r0 = r3.toString()
+            android.util.Log.d(r1, r0)
+        L_0x00b7:
+            if (r2 == 0) goto L_0x00cb
+            java.lang.Object r0 = r2.second
+            if (r0 == 0) goto L_0x00cb
+            android.util.ArrayMap<java.lang.Integer, java.lang.Boolean> r1 = r7.mHasCACerts
+            java.lang.Object r2 = r2.first
+            java.lang.Integer r2 = (java.lang.Integer) r2
+            java.lang.Boolean r0 = (java.lang.Boolean) r0
+            r1.put(r2, r0)
+            r7.fireCallbacks()
+        L_0x00cb:
+            throw r8
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.policy.SecurityControllerImpl.lambda$refreshCACerts$0$SecurityControllerImpl(int):void");
     }
 
     private String getNameForVpnConfig(VpnConfig vpnConfig, UserHandle userHandle) {
         if (vpnConfig.legacy) {
-            return this.mContext.getString(R.string.legacy_vpn_name);
+            return this.mContext.getString(C0021R$string.legacy_vpn_name);
         }
         String str = vpnConfig.user;
         try {
@@ -328,110 +453,23 @@ public class SecurityControllerImpl extends CurrentUserTracker implements Securi
         }
     }
 
-    protected class CACertLoader extends AsyncTask<Integer, Void, Pair<Integer, Boolean>> {
-        protected CACertLoader() {
+    private String getPackageNameForVpnConfig(VpnConfig vpnConfig) {
+        if (vpnConfig.legacy) {
+            return null;
         }
+        return vpnConfig.user;
+    }
 
-        /* access modifiers changed from: protected */
-        /* JADX WARNING: Code restructure failed: missing block: B:20:0x0055, code lost:
-            r4 = move-exception;
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:21:0x0056, code lost:
-            if (r1 != null) goto L_0x0058;
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:23:?, code lost:
-            r1.close();
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:27:0x0060, code lost:
-            throw r4;
-         */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public android.util.Pair<java.lang.Integer, java.lang.Boolean> doInBackground(final java.lang.Integer... r7) {
-            /*
-                r6 = this;
-                r0 = 0
-                r1 = r7[r0]
-                int r1 = r1.intValue()
-                android.os.UserHandle r1 = android.os.UserHandleCompat.of(r1)
-                int r2 = android.os.Build.VERSION.SDK_INT
-                r3 = 0
-                r4 = 29
-                if (r2 <= r4) goto L_0x0023
-                com.android.systemui.statusbar.policy.SecurityControllerImpl r2 = com.android.systemui.statusbar.policy.SecurityControllerImpl.this
-                android.content.Context r2 = r2.mContext
-                android.os.UserManager r2 = android.os.UserManager.get(r2)
-                boolean r2 = r2.isUserUnlocked(r1)
-                if (r2 != 0) goto L_0x0023
-                return r3
-            L_0x0023:
-                com.android.systemui.statusbar.policy.SecurityControllerImpl r2 = com.android.systemui.statusbar.policy.SecurityControllerImpl.this     // Catch:{ RemoteException | AssertionError | InterruptedException -> 0x0061 }
-                android.content.Context r2 = r2.mContext     // Catch:{ RemoteException | AssertionError | InterruptedException -> 0x0061 }
-                android.security.KeyChain$KeyChainConnection r1 = android.security.KeyChain.bindAsUser(r2, r1)     // Catch:{ RemoteException | AssertionError | InterruptedException -> 0x0061 }
-                android.security.IKeyChainService r2 = r1.getService()     // Catch:{ all -> 0x0053 }
-                android.content.pm.StringParceledListSlice r2 = r2.getUserCaAliases()     // Catch:{ all -> 0x0053 }
-                java.util.List r2 = r2.getList()     // Catch:{ all -> 0x0053 }
-                boolean r2 = r2.isEmpty()     // Catch:{ all -> 0x0053 }
-                if (r2 != 0) goto L_0x0041
-                r2 = 1
-                goto L_0x0042
-            L_0x0041:
-                r2 = r0
-            L_0x0042:
-                android.util.Pair r4 = new android.util.Pair     // Catch:{ all -> 0x0053 }
-                r5 = r7[r0]     // Catch:{ all -> 0x0053 }
-                java.lang.Boolean r2 = java.lang.Boolean.valueOf(r2)     // Catch:{ all -> 0x0053 }
-                r4.<init>(r5, r2)     // Catch:{ all -> 0x0053 }
-                if (r1 == 0) goto L_0x0052
-                r1.close()     // Catch:{ RemoteException | AssertionError | InterruptedException -> 0x0061 }
-            L_0x0052:
-                return r4
-            L_0x0053:
-                r2 = move-exception
-                throw r2     // Catch:{ all -> 0x0055 }
-            L_0x0055:
-                r4 = move-exception
-                if (r1 == 0) goto L_0x0060
-                r1.close()     // Catch:{ all -> 0x005c }
-                goto L_0x0060
-            L_0x005c:
-                r1 = move-exception
-                r2.addSuppressed(r1)     // Catch:{ RemoteException | AssertionError | InterruptedException -> 0x0061 }
-            L_0x0060:
-                throw r4     // Catch:{ RemoteException | AssertionError | InterruptedException -> 0x0061 }
-            L_0x0061:
-                r1 = move-exception
-                java.lang.String r2 = r1.getMessage()
-                if (r2 == 0) goto L_0x0071
-                java.lang.String r1 = r1.getMessage()
-                java.lang.String r2 = "SecurityController"
-                android.util.Log.i(r2, r1)
-            L_0x0071:
-                android.os.Handler r1 = new android.os.Handler
-                com.android.systemui.Dependency$DependencyKey<android.os.Looper> r2 = com.android.systemui.Dependency.BG_LOOPER
-                java.lang.Object r2 = com.android.systemui.Dependency.get(r2)
-                android.os.Looper r2 = (android.os.Looper) r2
-                r1.<init>(r2)
-                com.android.systemui.statusbar.policy.SecurityControllerImpl$CACertLoader$1 r2 = new com.android.systemui.statusbar.policy.SecurityControllerImpl$CACertLoader$1
-                r2.<init>(r7)
-                r4 = 30000(0x7530, double:1.4822E-319)
-                r1.postDelayed(r2, r4)
-                android.util.Pair r6 = new android.util.Pair
-                r7 = r7[r0]
-                r6.<init>(r7, r3)
-                return r6
-            */
-            throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.policy.SecurityControllerImpl.CACertLoader.doInBackground(java.lang.Integer[]):android.util.Pair");
-        }
-
-        /* access modifiers changed from: protected */
-        public void onPostExecute(Pair<Integer, Boolean> pair) {
-            if (SecurityControllerImpl.DEBUG) {
-                Log.d("SecurityController", "onPostExecute " + pair);
+    private boolean isVpnPackageBranded(String str) {
+        try {
+            ApplicationInfo applicationInfo = this.mPackageManager.getApplicationInfo(str, 128);
+            if (!(applicationInfo == null || applicationInfo.metaData == null)) {
+                if (applicationInfo.isSystemApp()) {
+                    return applicationInfo.metaData.getBoolean("com.android.systemui.IS_BRANDED", false);
+                }
             }
-            if (pair != null && pair.second != null) {
-                SecurityControllerImpl.this.mHasCACerts.put((Integer) pair.first, (Boolean) pair.second);
-                SecurityControllerImpl.this.fireCallbacks();
-            }
+        } catch (PackageManager.NameNotFoundException unused) {
         }
+        return false;
     }
 }

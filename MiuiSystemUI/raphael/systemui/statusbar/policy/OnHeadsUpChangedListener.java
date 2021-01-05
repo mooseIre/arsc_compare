@@ -1,18 +1,17 @@
 package com.android.systemui.statusbar.policy;
 
-import com.android.systemui.statusbar.ExpandableNotificationRow;
-import com.android.systemui.statusbar.NotificationData;
+import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 
 public interface OnHeadsUpChangedListener {
-    void onHeadsUpPinned(ExpandableNotificationRow expandableNotificationRow) {
+    void onHeadsUpPinned(NotificationEntry notificationEntry) {
     }
 
     void onHeadsUpPinnedModeChanged(boolean z) {
     }
 
-    void onHeadsUpStateChanged(NotificationData.Entry entry, boolean z) {
+    void onHeadsUpStateChanged(NotificationEntry notificationEntry, boolean z) {
     }
 
-    void onHeadsUpUnPinned(ExpandableNotificationRow expandableNotificationRow) {
+    void onHeadsUpUnPinned(NotificationEntry notificationEntry) {
     }
 }

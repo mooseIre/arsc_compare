@@ -3,7 +3,6 @@ package com.android.systemui.classifier;
 import java.util.ArrayList;
 
 public class Stroke {
-    private final float NANOS_TO_SECONDS = 1.0E9f;
     private final float mDpi;
     private long mEndTimeNano;
     private float mLength;
@@ -51,5 +50,13 @@ public class Stroke {
 
     public ArrayList<Point> getPoints() {
         return this.mPoints;
+    }
+
+    public long getLastEventTimeNano() {
+        if (this.mPoints.isEmpty()) {
+            return this.mStartTimeNano;
+        }
+        ArrayList<Point> arrayList = this.mPoints;
+        return arrayList.get(arrayList.size() - 1).timeOffsetNano;
     }
 }

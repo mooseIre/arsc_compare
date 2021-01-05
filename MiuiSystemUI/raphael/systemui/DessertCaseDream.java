@@ -12,8 +12,9 @@ public class DessertCaseDream extends DreamService {
         super.onAttachedToWindow();
         setInteractive(false);
         this.mView = new DessertCaseView(this);
-        this.mContainer = new DessertCaseView.RescalingContainer(this);
-        this.mContainer.setView(this.mView);
+        DessertCaseView.RescalingContainer rescalingContainer = new DessertCaseView.RescalingContainer(this);
+        this.mContainer = rescalingContainer;
+        rescalingContainer.setView(this.mView);
         setContentView(this.mContainer);
     }
 

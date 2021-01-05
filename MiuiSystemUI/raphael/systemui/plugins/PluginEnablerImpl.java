@@ -5,9 +5,10 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import com.android.internal.annotations.VisibleForTesting;
-import com.android.systemui.plugins.PluginEnabler;
+import com.android.systemui.shared.plugins.PluginEnabler;
 
 public class PluginEnablerImpl implements PluginEnabler {
+    private static final String CRASH_DISABLED_PLUGINS_PREF_FILE = "auto_disabled_plugins_prefs";
     private final SharedPreferences mAutoDisabledPrefs;
     private PackageManager mPm;
 
@@ -17,7 +18,7 @@ public class PluginEnablerImpl implements PluginEnabler {
 
     @VisibleForTesting
     public PluginEnablerImpl(Context context, PackageManager packageManager) {
-        this.mAutoDisabledPrefs = context.getSharedPreferences("auto_disabled_plugins_prefs", 0);
+        this.mAutoDisabledPrefs = context.getSharedPreferences(CRASH_DISABLED_PLUGINS_PREF_FILE, 0);
         this.mPm = packageManager;
     }
 
@@ -25,7 +26,7 @@ public class PluginEnablerImpl implements PluginEnabler {
         setDisabled(componentName, 0);
     }
 
-    public void setDisabled(ComponentName componentName, @PluginEnabler.DisableReason int i) {
+    public void setDisabled(ComponentName componentName, int i) {
         boolean z = i == 0;
         this.mPm.setComponentEnabledSetting(componentName, z ? 1 : 2, 1);
         if (z) {
@@ -39,7 +40,6 @@ public class PluginEnablerImpl implements PluginEnabler {
         return this.mPm.getComponentEnabledSetting(componentName) != 2;
     }
 
-    @PluginEnabler.DisableReason
     public int getDisableReason(ComponentName componentName) {
         if (isEnabled(componentName)) {
             return 0;

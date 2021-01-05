@@ -1,127 +1,126 @@
 package com.android.systemui.screenshot;
 
-import android.app.Notification;
-import android.app.NotificationCompat;
-import android.app.NotificationManager;
 import android.app.Service;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
+import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.Handler;
-import android.os.HandlerThread;
 import android.os.IBinder;
+import android.os.Looper;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
-import com.android.systemui.partialscreenshot.PartialScreenshot;
-import com.android.systemui.plugins.R;
-import com.android.systemui.util.NotificationChannels;
-import miui.util.Log;
+import android.os.UserManager;
+import android.util.Log;
+import com.android.internal.logging.UiEventLogger;
+import com.android.internal.util.ScreenshotHelper;
+import com.android.systemui.screenshot.FallbackTakeScreenshotService;
+import com.android.systemui.shared.recents.utilities.BitmapUtil;
+import java.util.function.Consumer;
 
 public class FallbackTakeScreenshotService extends Service {
-    /* access modifiers changed from: private */
-    public static int sRunningCount;
-    /* access modifiers changed from: private */
-    public Handler mGalleryHandler;
-    private Handler mHandler = new Handler() {
-        public void handleMessage(Message message) {
-            PartialScreenshot partialScreenshot;
-            int i = message.what;
-            boolean z = true;
-            if (i == 1) {
-                StatHelper.recordCountEvent(FallbackTakeScreenshotService.this.getApplicationContext(), "all");
-                GlobalScreenshot.beforeTakeScreenshot(FallbackTakeScreenshotService.this);
-                Message obtain = Message.obtain(message);
-                obtain.what = 2;
-                sendMessageDelayed(obtain, 150);
-            } else if (i == 2) {
-                FallbackTakeScreenshotService.access$008();
-                FallbackTakeScreenshotService fallbackTakeScreenshotService = FallbackTakeScreenshotService.this;
-                GlobalScreenshot globalScreenshot = new GlobalScreenshot(fallbackTakeScreenshotService, fallbackTakeScreenshotService.mGalleryHandler);
-                final Messenger messenger = message.replyTo;
-                AnonymousClass1 r3 = new Runnable() {
-                    public void run() {
-                        try {
-                            messenger.send(Message.obtain((Handler) null, 2));
-                        } catch (RemoteException unused) {
-                        }
-                    }
-                };
-                AnonymousClass2 r1 = new Runnable() {
-                    public void run() {
-                        FallbackTakeScreenshotService.access$010();
-                        if (FallbackTakeScreenshotService.sRunningCount <= 0) {
-                            FallbackTakeScreenshotService.this.stopSelf();
-                        }
-                    }
-                };
-                boolean z2 = (message.arg1 & 1) > 0;
-                if (message.arg2 <= 0) {
-                    z = false;
-                }
-                globalScreenshot.takeScreenshot(r3, r1, z2, z);
-            } else if (i == 3) {
-                final Messenger messenger2 = message.replyTo;
-                AnonymousClass3 r12 = new Runnable() {
-                    public void run() {
-                        try {
-                            messenger2.send(Message.obtain((Handler) null, 2));
-                        } catch (RemoteException e) {
-                            Log.d("TakeScreenshotService", e.getMessage());
-                        }
-                    }
-                };
-                FallbackTakeScreenshotService.access$008();
-                AnonymousClass4 r0 = new Runnable() {
-                    public void run() {
-                        FallbackTakeScreenshotService.access$010();
-                        if (FallbackTakeScreenshotService.sRunningCount <= 0) {
-                            FallbackTakeScreenshotService.this.stopSelf();
-                        }
-                    }
-                };
-                Bundle data = message.getData();
-                if (data == null || data.getFloatArray("partial.screenshot.points") == null) {
-                    partialScreenshot = new PartialScreenshot(FallbackTakeScreenshotService.this);
-                } else {
-                    partialScreenshot = new PartialScreenshot(FallbackTakeScreenshotService.this, data.getFloatArray("partial.screenshot.points"));
-                }
-                r12.run();
-                partialScreenshot.takePartialScreenshot(r0);
+    private final BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
+        public void onReceive(Context context, Intent intent) {
+            if ("android.intent.action.CLOSE_SYSTEM_DIALOGS".equals(intent.getAction()) && FallbackTakeScreenshotService.this.mScreenshot != null) {
+                FallbackTakeScreenshotService.this.mScreenshot.dismissScreenshot("close system dialogs", true);
             }
         }
     };
-    private HandlerThread mHandlerThread = new HandlerThread("screen_gallery_thread", 10);
+    private Handler mHandler = new Handler(Looper.myLooper()) {
+        public void handleMessage(Message message) {
+            Messenger messenger = message.replyTo;
+            $$Lambda$FallbackTakeScreenshotService$2$BCZP2BsU_7az9K_C7RZADOY3iZo r8 = new Consumer(messenger) {
+                public final /* synthetic */ Messenger f$0;
 
-    static /* synthetic */ int access$008() {
-        int i = sRunningCount;
-        sRunningCount = i + 1;
-        return i;
-    }
+                {
+                    this.f$0 = r1;
+                }
 
-    static /* synthetic */ int access$010() {
-        int i = sRunningCount;
-        sRunningCount = i - 1;
-        return i;
+                public final void accept(Object obj) {
+                    FallbackTakeScreenshotService.AnonymousClass2.lambda$handleMessage$0(this.f$0, (Uri) obj);
+                }
+            };
+            $$Lambda$FallbackTakeScreenshotService$2$PePM3eE2JSWT2tguvy8VbhRI0Tc r9 = new Runnable(messenger) {
+                public final /* synthetic */ Messenger f$0;
+
+                {
+                    this.f$0 = r1;
+                }
+
+                public final void run() {
+                    FallbackTakeScreenshotService.AnonymousClass2.lambda$handleMessage$1(this.f$0);
+                }
+            };
+            if (!FallbackTakeScreenshotService.this.mUserManager.isUserUnlocked()) {
+                Log.w("TakeScreenshotService", "Skipping screenshot because storage is locked!");
+                post(new Runnable(r8) {
+                    public final /* synthetic */ Consumer f$0;
+
+                    {
+                        this.f$0 = r1;
+                    }
+
+                    public final void run() {
+                        this.f$0.accept((Object) null);
+                    }
+                });
+                post(r9);
+                return;
+            }
+            ScreenshotHelper.ScreenshotRequest screenshotRequest = (ScreenshotHelper.ScreenshotRequest) message.obj;
+            FallbackTakeScreenshotService.this.mUiEventLogger.log(ScreenshotEvent.getScreenshotSource(screenshotRequest.getSource()));
+            int i = message.what;
+            if (i == 1) {
+                FallbackTakeScreenshotService.this.mScreenshot.takeScreenshot((Consumer<Uri>) r8, (Runnable) r9);
+            } else if (i == 2) {
+                FallbackTakeScreenshotService.this.mScreenshot.takeScreenshotPartial(r8, r9);
+            } else if (i != 3) {
+                Log.d("TakeScreenshotService", "Invalid screenshot option: " + message.what);
+            } else {
+                FallbackTakeScreenshotService.this.mScreenshot.handleImageAsScreenshot(BitmapUtil.bundleToHardwareBitmap(screenshotRequest.getBitmapBundle()), screenshotRequest.getBoundsInScreen(), screenshotRequest.getInsets(), screenshotRequest.getTaskId(), screenshotRequest.getUserId(), screenshotRequest.getTopComponent(), r8, r9);
+            }
+        }
+
+        static /* synthetic */ void lambda$handleMessage$0(Messenger messenger, Uri uri) {
+            try {
+                messenger.send(Message.obtain((Handler) null, 1, uri));
+            } catch (RemoteException unused) {
+            }
+        }
+
+        static /* synthetic */ void lambda$handleMessage$1(Messenger messenger) {
+            try {
+                messenger.send(Message.obtain((Handler) null, 2));
+            } catch (RemoteException unused) {
+            }
+        }
+    };
+    /* access modifiers changed from: private */
+    public final GlobalScreenshot mScreenshot;
+    /* access modifiers changed from: private */
+    public final UiEventLogger mUiEventLogger;
+    /* access modifiers changed from: private */
+    public final UserManager mUserManager;
+
+    public FallbackTakeScreenshotService(GlobalScreenshot globalScreenshot, UserManager userManager, UiEventLogger uiEventLogger) {
+        this.mScreenshot = globalScreenshot;
+        this.mUserManager = userManager;
+        this.mUiEventLogger = uiEventLogger;
     }
 
     public IBinder onBind(Intent intent) {
-        startService(new Intent(this, FallbackTakeScreenshotService.class));
-        NotificationManager notificationManager = (NotificationManager) getSystemService("notification");
-        Notification.Builder smallIcon = new Notification.Builder(this).setSmallIcon(R.drawable.fold_tips);
-        NotificationCompat.setChannelId(smallIcon, NotificationChannels.SCREENSHOTS);
-        startForeground(1, smallIcon.build());
+        registerReceiver(this.mBroadcastReceiver, new IntentFilter("android.intent.action.CLOSE_SYSTEM_DIALOGS"));
         return new Messenger(this.mHandler).getBinder();
     }
 
-    public void onCreate() {
-        super.onCreate();
-        this.mHandlerThread.start();
-        this.mGalleryHandler = new Handler(this.mHandlerThread.getLooper());
-    }
-
-    public void onDestroy() {
-        super.onDestroy();
-        this.mHandlerThread.quitSafely();
-        Log.d("TakeScreenshotService", "Screenshot Service onDestroy");
+    public boolean onUnbind(Intent intent) {
+        GlobalScreenshot globalScreenshot = this.mScreenshot;
+        if (globalScreenshot != null) {
+            globalScreenshot.stopScreenshot();
+        }
+        unregisterReceiver(this.mBroadcastReceiver);
+        return true;
     }
 }

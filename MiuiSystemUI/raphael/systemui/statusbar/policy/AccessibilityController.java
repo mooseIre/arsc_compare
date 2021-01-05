@@ -21,6 +21,10 @@ public class AccessibilityController implements AccessibilityManager.Accessibili
         this.mTouchExplorationEnabled = accessibilityManager.isTouchExplorationEnabled();
     }
 
+    public boolean isAccessibilityEnabled() {
+        return this.mAccessibilityEnabled;
+    }
+
     public void addStateChangedCallback(AccessibilityStateChangedCallback accessibilityStateChangedCallback) {
         this.mChangeCallbacks.add(accessibilityStateChangedCallback);
         accessibilityStateChangedCallback.onStateChanged(this.mAccessibilityEnabled, this.mTouchExplorationEnabled);

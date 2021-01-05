@@ -9,15 +9,17 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.widget.Switch;
-import com.android.systemui.Constants;
-import com.android.systemui.plugins.R;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.plugins.qs.QSTile;
 import com.android.systemui.qs.QSHost;
 import com.android.systemui.qs.tileimpl.QSTileImpl;
-import com.xiaomi.stat.MiStat;
+import miui.os.Build;
 import miui.securityspace.CrossUserUtils;
+import miui.util.FeatureParser;
 
 public class PowerSaverExtremeTile extends QSTileImpl<QSTile.BooleanState> {
+    private static final boolean SUPPORT_EXTREME_BATTERY_SAVER = FeatureParser.getBoolean("support_extreme_battery_saver", false);
     private final ContentObserver mObserver = new ContentObserver(this.mHandler) {
         public void onChange(boolean z) {
             PowerSaverExtremeTile.this.refreshState();
@@ -57,15 +59,14 @@ public class PowerSaverExtremeTile extends QSTileImpl<QSTile.BooleanState> {
         if (Settings.Secure.getIntForUser(this.mResolver, "EXTREME_POWER_MODE_ENABLE", 0, -2) != 0) {
             z = true;
         }
-        boolean z2 = !z;
         Bundle bundle = new Bundle();
         bundle.putString("SOURCE", "systemui");
-        bundle.putBoolean("EXTREME_POWER_SAVE_MODE_OPEN", z2);
+        bundle.putBoolean("EXTREME_POWER_SAVE_MODE_OPEN", !z);
         this.mResolver.call(maybeAddUserId(Uri.parse("content://com.miui.powerkeeper.configure"), ActivityManager.getCurrentUser()), "changeExtremePowerMode", (String) null, bundle);
     }
 
     public CharSequence getTileLabel() {
-        return this.mContext.getString(R.string.quick_settings_extreme_batterysaver_label);
+        return this.mContext.getString(C0021R$string.quick_settings_extreme_batterysaver_label);
     }
 
     /* access modifiers changed from: protected */
@@ -75,31 +76,31 @@ public class PowerSaverExtremeTile extends QSTileImpl<QSTile.BooleanState> {
             z = true;
         }
         booleanState.value = z;
-        booleanState.label = this.mContext.getString(R.string.quick_settings_extreme_batterysaver_label);
+        booleanState.label = this.mContext.getString(C0021R$string.quick_settings_extreme_batterysaver_label);
         if (booleanState.value) {
             booleanState.state = 2;
-            booleanState.icon = QSTileImpl.ResourceIcon.get(R.drawable.ic_qs_extreme_battery_saver_on);
+            booleanState.icon = QSTileImpl.ResourceIcon.get(C0013R$drawable.ic_qs_extreme_battery_saver_on);
         } else {
             booleanState.state = 1;
-            booleanState.icon = QSTileImpl.ResourceIcon.get(R.drawable.ic_qs_extreme_battery_saver_off);
+            booleanState.icon = QSTileImpl.ResourceIcon.get(C0013R$drawable.ic_qs_extreme_battery_saver_off);
         }
         StringBuilder sb = new StringBuilder();
         sb.append(booleanState.label);
         sb.append(",");
-        sb.append(this.mContext.getString(booleanState.value ? R.string.switch_bar_on : R.string.switch_bar_off));
+        sb.append(this.mContext.getString(booleanState.value ? C0021R$string.switch_bar_on : C0021R$string.switch_bar_off));
         booleanState.contentDescription = sb.toString();
         booleanState.expandedAccessibilityClassName = Switch.class.getName();
     }
 
     public boolean isAvailable() {
-        return Constants.IS_INTERNATIONAL && Constants.SUPPORT_EXTREME_BATTERY_SAVER && !Constants.IS_TABLET && CrossUserUtils.getCurrentUserId() == 0;
+        return Build.IS_INTERNATIONAL_BUILD && SUPPORT_EXTREME_BATTERY_SAVER && !Build.IS_TABLET && CrossUserUtils.getCurrentUserId() == 0;
     }
 
     private Uri maybeAddUserId(Uri uri, int i) {
         if (uri == null) {
             return null;
         }
-        if (i == -2 || !MiStat.Param.CONTENT.equals(uri.getScheme()) || uriHasUserId(uri)) {
+        if (i == -2 || !"content".equals(uri.getScheme()) || uriHasUserId(uri)) {
             return uri;
         }
         Uri.Builder buildUpon = uri.buildUpon();

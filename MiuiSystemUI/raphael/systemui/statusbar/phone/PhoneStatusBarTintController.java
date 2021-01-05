@@ -1,40 +1,55 @@
 package com.android.systemui.statusbar.phone;
 
+import android.content.res.Resources;
 import android.graphics.Rect;
 import android.os.Handler;
 import android.util.Log;
 import android.view.CompositionSamplingListener;
-import android.view.CompositionSamplingListenerCompat;
 import android.view.View;
+import com.android.systemui.C0012R$dimen;
 import com.android.systemui.Dependency;
+import com.miui.systemui.statusbar.phone.SmartDarkObserver;
 
-public class PhoneStatusBarTintController implements View.OnAttachStateChangeListener, View.OnLayoutChangeListener {
-    private final String TAG = "PhoneStatusBarTintController";
-    private DarkModeCallback mDarkModeCallback = new DarkModeCallback() {
-        public void onDarkModeChanged(boolean z) {
-            boolean unused = PhoneStatusBarTintController.this.mSmartDark = z;
-            PhoneStatusBarTintController.this.requestUpdateSamplingListener();
-        }
-    };
+public class PhoneStatusBarTintController implements View.OnAttachStateChangeListener, View.OnLayoutChangeListener, SmartDarkObserver.Callback {
+    private float mCurrentMedianLuma;
     private final Handler mHandler = new Handler();
-    private LightBarController mLightBarController = ((LightBarController) Dependency.get(LightBarController.class));
+    private final MiuiLightBarController mLightBarController;
+    private final float mLuminanceChangeThreshold;
+    private final float mLuminanceThreshold;
+    private final PhoneStatusBarView mPhoneStatusBarView;
     private final Rect mSamplingBounds = new Rect();
-    private CompositionSamplingListenerCompat mSamplingListener = this.mLightBarController.getCompositionSamplingListener();
+    private final CompositionSamplingListener mSamplingListener;
     private boolean mSamplingListenerRegistered = false;
-    /* access modifiers changed from: private */
-    public boolean mSmartDark;
-    private final PhoneStatusBarView mStatusBarView;
+    private boolean mSmartDarkEnable;
+    private final Rect mTempBounds = new Rect();
     private boolean mUpdateOnNextDraw;
     private final Runnable mUpdateSamplingListener = new Runnable() {
         public final void run() {
             PhoneStatusBarTintController.this.updateSamplingListener();
         }
     };
+    private boolean mWindowVisible = true;
 
-    public PhoneStatusBarTintController(PhoneStatusBarView phoneStatusBarView) {
-        this.mStatusBarView = phoneStatusBarView;
-        this.mStatusBarView.addOnAttachStateChangeListener(this);
-        this.mStatusBarView.addOnLayoutChangeListener(this);
+    public PhoneStatusBarTintController(PhoneStatusBarView phoneStatusBarView, MiuiLightBarController miuiLightBarController) {
+        this.mSamplingListener = new CompositionSamplingListener(phoneStatusBarView.getContext().getMainExecutor()) {
+            public void onSampleCollected(float f) {
+                PhoneStatusBarTintController.this.updateTint(f);
+            }
+        };
+        this.mPhoneStatusBarView = phoneStatusBarView;
+        phoneStatusBarView.addOnAttachStateChangeListener(this);
+        this.mPhoneStatusBarView.addOnLayoutChangeListener(this);
+        this.mPhoneStatusBarView.getBoundsOnScreen(this.mSamplingBounds);
+        this.mLightBarController = miuiLightBarController;
+        Resources resources = this.mPhoneStatusBarView.getResources();
+        this.mLuminanceThreshold = resources.getFloat(C0012R$dimen.phone_status_bar_luminance_threshold);
+        this.mLuminanceChangeThreshold = resources.getFloat(C0012R$dimen.phone_status_bar_luminance_change_threshold);
+        SmartDarkObserver smartDarkObserver = (SmartDarkObserver) Dependency.get(SmartDarkObserver.class);
+        smartDarkObserver.addCallback(this);
+        boolean isSmartDarkEnable = smartDarkObserver.isSmartDarkEnable();
+        this.mSmartDarkEnable = isSmartDarkEnable;
+        miuiLightBarController.setSmartDarkEnable(isSmartDarkEnable);
+        requestUpdateSamplingListener();
     }
 
     /* access modifiers changed from: package-private */
@@ -46,30 +61,28 @@ public class PhoneStatusBarTintController implements View.OnAttachStateChangeLis
     }
 
     public void onViewAttachedToWindow(View view) {
-        this.mLightBarController.registerCallback(this.mDarkModeCallback);
         requestUpdateSamplingListener();
     }
 
     public void onViewDetachedFromWindow(View view) {
-        this.mStatusBarView.removeOnAttachStateChangeListener(this);
-        this.mStatusBarView.removeOnLayoutChangeListener(this);
-        this.mLightBarController.removeCallback(this.mDarkModeCallback);
         requestUpdateSamplingListener();
     }
 
     public void onLayoutChange(View view, int i, int i2, int i3, int i4, int i5, int i6, int i7, int i8) {
-        Rect rect = new Rect();
-        this.mStatusBarView.getBoundsOnScreen(rect);
-        if (!rect.equals(this.mSamplingBounds)) {
-            this.mSamplingBounds.set(rect);
-            if (this.mSmartDark) {
-                requestUpdateSamplingListener();
-            }
+        this.mPhoneStatusBarView.getBoundsOnScreen(this.mTempBounds);
+        if (!this.mTempBounds.equals(this.mSamplingBounds)) {
+            this.mSamplingBounds.set(this.mTempBounds);
+            requestUpdateSamplingListener();
         }
     }
 
-    /* access modifiers changed from: private */
-    public void requestUpdateSamplingListener() {
+    public void onSmartDarkEnableChanged(boolean z) {
+        this.mSmartDarkEnable = z;
+        this.mLightBarController.setSmartDarkEnable(z);
+        requestUpdateSamplingListener();
+    }
+
+    private void requestUpdateSamplingListener() {
         this.mHandler.removeCallbacks(this.mUpdateSamplingListener);
         this.mHandler.post(this.mUpdateSamplingListener);
     }
@@ -79,16 +92,24 @@ public class PhoneStatusBarTintController implements View.OnAttachStateChangeLis
         if (this.mSamplingListenerRegistered) {
             this.mSamplingListenerRegistered = false;
             CompositionSamplingListener.unregister(this.mSamplingListener);
-            Log.d("PhoneStatusBarTintController", "updateSamplingListener unregister ");
         }
-        if (this.mSmartDark && !this.mSamplingBounds.isEmpty() && this.mStatusBarView.isAttachedToWindow()) {
-            if (!CompositionSamplingListenerCompat.isValid(this.mStatusBarView)) {
+        if (this.mSmartDarkEnable && this.mWindowVisible && !this.mSamplingBounds.isEmpty() && this.mPhoneStatusBarView.isAttachedToWindow()) {
+            if (!this.mPhoneStatusBarView.getViewRootImpl().getSurfaceControl().isValid()) {
                 this.mUpdateOnNextDraw = true;
                 return;
             }
             this.mSamplingListenerRegistered = true;
-            CompositionSamplingListenerCompat.register(this.mSamplingListener, 0, this.mStatusBarView, this.mSamplingBounds);
-            Log.d("PhoneStatusBarTintController", "updateSamplingListener register");
+            this.mCurrentMedianLuma = -1.0f;
+            CompositionSamplingListener.register(this.mSamplingListener, 0, this.mPhoneStatusBarView.getViewRootImpl().getSurfaceControl(), this.mSamplingBounds);
+        }
+    }
+
+    /* access modifiers changed from: private */
+    public void updateTint(float f) {
+        Log.d("PhoneStatusBarTintController", "updateTint: medianLuma = " + f);
+        if (Math.abs(this.mCurrentMedianLuma - f) > this.mLuminanceChangeThreshold) {
+            this.mCurrentMedianLuma = f;
+            this.mLightBarController.setSmartDarkLight(f > this.mLuminanceThreshold);
         }
     }
 }

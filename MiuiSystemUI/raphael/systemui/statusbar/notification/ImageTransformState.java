@@ -1,41 +1,41 @@
 package com.android.systemui.statusbar.notification;
 
 import android.graphics.drawable.Icon;
-import android.graphics.drawable.IconCompat;
 import android.util.Pools;
 import android.view.View;
 import android.widget.ImageView;
+import com.android.systemui.C0015R$id;
 import com.android.systemui.Interpolators;
-import com.android.systemui.plugins.R;
 import com.android.systemui.statusbar.CrossFadeHelper;
 import com.android.systemui.statusbar.TransformableView;
+import com.android.systemui.statusbar.notification.TransformState;
+import com.android.systemui.statusbar.notification.row.HybridNotificationView;
 
 public class ImageTransformState extends TransformState {
+    public static final int ICON_TAG = C0015R$id.image_icon_tag;
     private static Pools.SimplePool<ImageTransformState> sInstancePool = new Pools.SimplePool<>(40);
     private Icon mIcon;
 
-    /* access modifiers changed from: protected */
-    public boolean transformScale() {
-        return true;
-    }
-
-    public void initFrom(View view) {
-        super.initFrom(view);
+    public void initFrom(View view, TransformState.TransformInfo transformInfo) {
+        super.initFrom(view, transformInfo);
         if (view instanceof ImageView) {
-            this.mIcon = (Icon) view.getTag(R.id.image_icon_tag);
+            this.mIcon = (Icon) view.getTag(ICON_TAG);
         }
     }
 
     /* access modifiers changed from: protected */
     public boolean sameAs(TransformState transformState) {
-        Icon icon;
-        if (!(transformState instanceof ImageTransformState)) {
-            return super.sameAs(transformState);
+        if (super.sameAs(transformState)) {
+            return true;
         }
-        if (this.mIcon == null || (icon = ((ImageTransformState) transformState).getIcon()) == null) {
+        if (!(transformState instanceof ImageTransformState)) {
             return false;
         }
-        return IconCompat.sameAs(this.mIcon, icon);
+        Icon icon = this.mIcon;
+        if (icon == null || !icon.sameAs(((ImageTransformState) transformState).getIcon())) {
+            return false;
+        }
+        return true;
     }
 
     public void appear(float f, TransformableView transformableView) {
@@ -49,9 +49,6 @@ public class ImageTransformState extends TransformState {
             float mapToDuration = mapToDuration(f);
             CrossFadeHelper.fadeIn(this.mTransformedView, mapToDuration, false);
             float interpolation = Interpolators.LINEAR_OUT_SLOW_IN.getInterpolation(mapToDuration);
-            if (!Float.isFinite(interpolation)) {
-                interpolation = 0.0f;
-            }
             this.mTransformedView.setScaleX(interpolation);
             this.mTransformedView.setScaleY(interpolation);
             return;
@@ -69,9 +66,6 @@ public class ImageTransformState extends TransformState {
             float mapToDuration = mapToDuration(1.0f - f);
             CrossFadeHelper.fadeOut(this.mTransformedView, 1.0f - mapToDuration, false);
             float interpolation = Interpolators.LINEAR_OUT_SLOW_IN.getInterpolation(mapToDuration);
-            if (!Float.isFinite(interpolation)) {
-                interpolation = 0.0f;
-            }
             this.mTransformedView.setScaleX(interpolation);
             this.mTransformedView.setScaleY(interpolation);
             return;
@@ -80,7 +74,7 @@ public class ImageTransformState extends TransformState {
     }
 
     private static float mapToDuration(float f) {
-        return Math.max(Math.min(((f * 360.0f) - 150.0f) / 210.0f, 1.0f), 0.0f);
+        return Math.max(Math.min(((f * 300.0f) - 90.0f) / 210.0f, 1.0f), 0.0f);
     }
 
     public Icon getIcon() {
@@ -97,7 +91,9 @@ public class ImageTransformState extends TransformState {
 
     public void recycle() {
         super.recycle();
-        sInstancePool.release(this);
+        if (getClass() == ImageTransformState.class) {
+            sInstancePool.release(this);
+        }
     }
 
     /* access modifiers changed from: protected */

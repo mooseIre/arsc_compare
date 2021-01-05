@@ -34,26 +34,25 @@ public final class KeyboardShortcutKeysLayout extends ViewGroup {
         } else {
             i3 = View.MeasureSpec.makeMeasureSpec(0, 0);
         }
-        int i5 = paddingLeft;
-        int i6 = 0;
-        for (int i7 = 0; i7 < childCount; i7++) {
-            View childAt = getChildAt(i7);
+        int i5 = 0;
+        for (int i6 = 0; i6 < childCount; i6++) {
+            View childAt = getChildAt(i6);
             if (childAt.getVisibility() != 8) {
                 LayoutParams layoutParams = (LayoutParams) childAt.getLayoutParams();
                 childAt.measure(View.MeasureSpec.makeMeasureSpec(size, Integer.MIN_VALUE), i3);
                 int measuredWidth = childAt.getMeasuredWidth();
-                i6 = Math.max(i6, childAt.getMeasuredHeight() + layoutParams.mVerticalSpacing);
-                if (i5 + measuredWidth > size) {
-                    i5 = getPaddingLeft();
-                    paddingTop += i6;
+                i5 = Math.max(i5, childAt.getMeasuredHeight() + layoutParams.mVerticalSpacing);
+                if (paddingLeft + measuredWidth > size) {
+                    paddingLeft = getPaddingLeft();
+                    paddingTop += i5;
                 }
-                i5 += measuredWidth + layoutParams.mHorizontalSpacing;
+                paddingLeft += measuredWidth + layoutParams.mHorizontalSpacing;
             }
         }
-        this.mLineHeight = i6;
+        this.mLineHeight = i5;
         if (View.MeasureSpec.getMode(i2) == 0) {
-            size2 = paddingTop + i6;
-        } else if (View.MeasureSpec.getMode(i2) == Integer.MIN_VALUE && (i4 = paddingTop + i6) < size2) {
+            size2 = paddingTop + i5;
+        } else if (View.MeasureSpec.getMode(i2) == Integer.MIN_VALUE && (i4 = paddingTop + i5) < size2) {
             size2 = i4;
         }
         setMeasuredDimension(size, size2);
@@ -132,22 +131,21 @@ public final class KeyboardShortcutKeysLayout extends ViewGroup {
         if (!isRTL()) {
             i4 = ((getPaddingLeft() + i3) - i4) + i6;
         }
-        int i7 = i4;
-        int i8 = i;
-        while (i8 < i2) {
-            View childAt = getChildAt(i8);
+        int i7 = i;
+        while (i7 < i2) {
+            View childAt = getChildAt(i7);
             int measuredWidth = childAt.getMeasuredWidth();
             LayoutParams layoutParams = (LayoutParams) childAt.getLayoutParams();
-            if (isRTL() && i8 == i) {
-                i7 = (((i3 - i7) - getPaddingRight()) - measuredWidth) - layoutParams.mHorizontalSpacing;
+            if (isRTL() && i7 == i) {
+                r9 = (((i3 - r9) - getPaddingRight()) - measuredWidth) - layoutParams.mHorizontalSpacing;
             }
-            childAt.layout(i7, i5, i7 + measuredWidth, childAt.getMeasuredHeight() + i5);
+            childAt.layout(r9, i5, r9 + measuredWidth, childAt.getMeasuredHeight() + i5);
             if (isRTL()) {
-                i7 -= (i8 < i2 + -1 ? getChildAt(i8 + 1).getMeasuredWidth() : 0) + layoutParams.mHorizontalSpacing;
+                r9 -= (i7 < i2 + -1 ? getChildAt(i7 + 1).getMeasuredWidth() : 0) + layoutParams.mHorizontalSpacing;
             } else {
-                i7 += measuredWidth + layoutParams.mHorizontalSpacing;
+                r9 += measuredWidth + layoutParams.mHorizontalSpacing;
             }
-            i8++;
+            i7++;
         }
     }
 

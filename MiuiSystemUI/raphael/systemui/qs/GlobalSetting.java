@@ -4,9 +4,8 @@ import android.content.Context;
 import android.database.ContentObserver;
 import android.os.Handler;
 import android.provider.Settings;
-import com.android.systemui.statusbar.policy.Listenable;
 
-public abstract class GlobalSetting extends ContentObserver implements Listenable {
+public abstract class GlobalSetting extends ContentObserver {
     private final Context mContext;
     private final String mSettingName;
 

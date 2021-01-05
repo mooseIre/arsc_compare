@@ -3,6 +3,7 @@ package com.android.systemui.plugins;
 import android.util.ArrayMap;
 import com.android.systemui.Dependency;
 import com.android.systemui.plugins.PluginDependency;
+import com.android.systemui.shared.plugins.PluginManager;
 
 public class PluginDependencyProvider extends PluginDependency.DependencyProvider {
     private final ArrayMap<Class<?>, Object> mDependencies = new ArrayMap<>();

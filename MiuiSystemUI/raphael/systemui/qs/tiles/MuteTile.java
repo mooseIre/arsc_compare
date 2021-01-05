@@ -1,52 +1,29 @@
 package com.android.systemui.qs.tiles;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.database.ContentObserver;
-import android.net.Uri;
-import android.os.Handler;
-import android.os.UserHandle;
+import android.media.RingtoneManager;
 import android.provider.MiuiSettings;
-import android.provider.Settings;
 import android.widget.Switch;
-import com.android.systemui.Dependency;
-import com.android.systemui.Util;
-import com.android.systemui.miui.volume.VolumeUtil;
-import com.android.systemui.plugins.R;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.plugins.qs.QSTile;
 import com.android.systemui.qs.QSHost;
 import com.android.systemui.qs.tileimpl.QSTileImpl;
-import com.android.systemui.statusbar.Icons;
-import com.android.systemui.statusbar.policy.SilentModeObserverController;
-import miui.util.AudioManagerHelper;
+import com.android.systemui.statusbar.policy.ZenModeController;
+import com.miui.systemui.util.CommonUtil;
 
-public class MuteTile extends QSTileImpl<QSTile.BooleanState> implements SilentModeObserverController.SilentModeListener {
-    private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
-        public void onReceive(Context context, Intent intent) {
-            if ("android.media.RINGER_MODE_CHANGED".equals(intent.getAction())) {
-                MuteTile.this.refreshState();
-            }
-        }
-    };
-    private ContentObserver mContentObserver = new ContentObserver(this.mHandler) {
-        public void onChange(boolean z) {
-            MuteTile.this.refreshState();
-        }
-
-        public void onChange(boolean z, Uri uri) {
-            MuteTile.this.refreshState();
-        }
-    };
-    private final SilentModeObserverController mSilentModeObserverController = ((SilentModeObserverController) Dependency.get(SilentModeObserverController.class));
+public class MuteTile extends QSTileImpl<QSTile.BooleanState> implements ZenModeController.Callback {
+    private final ZenModeController mZenModeController;
 
     public int getMetricsCategory() {
         return -1;
     }
 
-    public MuteTile(QSHost qSHost) {
+    public MuteTile(QSHost qSHost, ZenModeController zenModeController) {
         super(qSHost);
+        this.mZenModeController = zenModeController;
+        zenModeController.observe(getLifecycle(), this);
     }
 
     /* access modifiers changed from: protected */
@@ -58,79 +35,52 @@ public class MuteTile extends QSTileImpl<QSTile.BooleanState> implements SilentM
         return new QSTile.BooleanState();
     }
 
-    public void handleSetListening(boolean z) {
-        if (z) {
-            UserHandle userHandle = UserHandle.ALL;
-            IntentFilter intentFilter = new IntentFilter();
-            intentFilter.addAction("android.media.RINGER_MODE_CHANGED");
-            this.mContext.registerReceiverAsUser(this.mBroadcastReceiver, userHandle, intentFilter, (String) null, (Handler) null);
-            this.mSilentModeObserverController.addCallback(this);
-            this.mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor("mute_music_at_silent"), false, this.mContentObserver, -1);
-            return;
-        }
-        this.mContext.getContentResolver().unregisterContentObserver(this.mContentObserver);
-        this.mSilentModeObserverController.removeCallback(this);
-        this.mContext.unregisterReceiver(this.mBroadcastReceiver);
-    }
-
     public Intent getLongClickIntent() {
-        return Util.getSilentModeIntent();
+        Intent intent = new Intent("android.settings.SOUND_SETTINGS");
+        intent.setPackage("com.android.settings");
+        intent.setFlags(335544320);
+        return intent;
     }
 
     /* access modifiers changed from: protected */
     public void handleClick() {
-        Object obj;
-        int i = 4;
-        if (MiuiSettings.SilenceMode.isSupported) {
-            boolean z = VolumeUtil.getZenMode(this.mContext) != 4;
-            if (z) {
-                obj = null;
-            } else {
-                obj = QSTileImpl.ARG_SHOW_TRANSIENT_ENABLING;
-            }
-            refreshState(obj);
+        if (this.mZenModeController.isRingerModeOn()) {
             Context context = this.mContext;
-            if (!z) {
-                i = 0;
-            }
-            VolumeUtil.setSilenceMode(context, i, (Uri) null);
-            return;
+            CommonUtil.playRingtoneAsync(context, RingtoneManager.getActualDefaultRingtoneUri(context, 2), 5);
         }
-        AudioManagerHelper.toggleSilent(this.mContext, 4);
+        this.mZenModeController.toggleSilent();
     }
 
     public CharSequence getTileLabel() {
-        return this.mContext.getString(R.string.quick_settings_mute_label);
+        return this.mContext.getString(C0021R$string.quick_settings_mute_label);
     }
 
     /* access modifiers changed from: protected */
     public void handleUpdateState(QSTile.BooleanState booleanState, Object obj) {
         boolean z = false;
         boolean z2 = obj == QSTileImpl.ARG_SHOW_TRANSIENT_ENABLING;
-        int zenMode = VolumeUtil.getZenMode(this.mContext);
-        if (!z2 && !MiuiSettings.SilenceMode.isSupported) {
-            z = AudioManagerHelper.isSilentEnabled(this.mContext);
-        } else if (zenMode == 4) {
+        MiuiSettings.SilenceMode.getZenMode(this.mContext);
+        if (z2 || this.mZenModeController.isRingerModeOn()) {
             z = true;
         }
         booleanState.value = z;
-        booleanState.label = this.mContext.getString(R.string.quick_settings_mute_label);
+        booleanState.label = this.mContext.getString(C0021R$string.quick_settings_mute_label);
         if (booleanState.value) {
             booleanState.state = 2;
-            booleanState.icon = QSTileImpl.ResourceIcon.get(Icons.getQSIcons(Integer.valueOf(R.drawable.ic_qs_mute_on), this.mInControlCenter));
+            booleanState.icon = QSTileImpl.ResourceIcon.get(C0013R$drawable.ic_qs_mute_on);
         } else {
             booleanState.state = 1;
-            booleanState.icon = QSTileImpl.ResourceIcon.get(Icons.getQSIcons(Integer.valueOf(R.drawable.ic_qs_mute_off), this.mInControlCenter));
+            booleanState.icon = QSTileImpl.ResourceIcon.get(C0013R$drawable.ic_qs_mute_off);
         }
         StringBuilder sb = new StringBuilder();
         sb.append(booleanState.label);
         sb.append(",");
-        sb.append(this.mContext.getString(booleanState.value ? R.string.switch_bar_on : R.string.switch_bar_off));
+        sb.append(this.mContext.getString(booleanState.value ? C0021R$string.switch_bar_on : C0021R$string.switch_bar_off));
         booleanState.contentDescription = sb.toString();
         booleanState.expandedAccessibilityClassName = Switch.class.getName();
     }
 
-    public void onSilentModeChanged(boolean z) {
+    public void onZenOrRingerChanged(boolean z, boolean z2) {
         refreshState();
     }
 }

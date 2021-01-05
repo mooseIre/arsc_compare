@@ -1,22 +1,24 @@
 package com.android.systemui.qs.tiles;
 
+import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.app.UiModeManager;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.ContentObserver;
+import android.os.SystemProperties;
 import android.provider.Settings;
 import android.util.Log;
 import android.widget.Switch;
-import com.android.keyguard.KeyguardUpdateMonitor;
-import com.android.systemui.Constants;
+import com.android.systemui.C0010R$bool;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0021R$string;
+import com.android.systemui.C0022R$style;
 import com.android.systemui.Prefs;
-import com.android.systemui.plugins.R;
 import com.android.systemui.plugins.qs.QSTile;
 import com.android.systemui.qs.QSHost;
 import com.android.systemui.qs.tileimpl.QSTileImpl;
-import com.android.systemui.statusbar.Icons;
 
 public class NightModeTile extends QSTileImpl<QSTile.BooleanState> {
     private ContentObserver mNightModeObserver = new ContentObserver(this.mHandler) {
@@ -41,7 +43,7 @@ public class NightModeTile extends QSTileImpl<QSTile.BooleanState> {
         super(qSHost);
         boolean z = true;
         this.mShowAlert = true;
-        this.mShowAlert = (!Constants.IS_OLED_SCREEN || !Prefs.getBoolean(this.mContext, "QsShowNightAlert", true)) ? false : z;
+        this.mShowAlert = (!"oled".equals(SystemProperties.get("ro.display.type")) || !Prefs.getBoolean(this.mContext, "QsShowNightAlert", true)) ? false : z;
     }
 
     public void handleClick() {
@@ -77,7 +79,7 @@ public class NightModeTile extends QSTileImpl<QSTile.BooleanState> {
 
     /* access modifiers changed from: protected */
     public void handleUpdateState(QSTile.BooleanState booleanState, Object obj) {
-        booleanState.label = this.mContext.getString(R.string.quick_settings_nightmode_label);
+        booleanState.label = this.mContext.getString(C0021R$string.quick_settings_nightmode_label);
         if (obj instanceof Boolean) {
             boolean booleanValue = ((Boolean) obj).booleanValue();
             if (booleanValue != booleanState.value) {
@@ -89,16 +91,16 @@ public class NightModeTile extends QSTileImpl<QSTile.BooleanState> {
             booleanState.value = this.mUiModeManager.getNightMode() == 2;
         }
         if (booleanState.value) {
-            booleanState.icon = QSTileImpl.ResourceIcon.get(Icons.getQSIcons(Integer.valueOf(R.drawable.ic_qs_night_mode_on), this.mInControlCenter));
+            booleanState.icon = QSTileImpl.ResourceIcon.get(C0013R$drawable.ic_qs_night_mode_on);
             booleanState.state = 2;
         } else {
-            booleanState.icon = QSTileImpl.ResourceIcon.get(Icons.getQSIcons(Integer.valueOf(R.drawable.ic_qs_night_mode_off), this.mInControlCenter));
+            booleanState.icon = QSTileImpl.ResourceIcon.get(C0013R$drawable.ic_qs_night_mode_off);
             booleanState.state = 1;
         }
         StringBuilder sb = new StringBuilder();
         sb.append(booleanState.label);
         sb.append(",");
-        sb.append(this.mContext.getString(booleanState.value ? R.string.switch_bar_on : R.string.switch_bar_off));
+        sb.append(this.mContext.getString(booleanState.value ? C0021R$string.switch_bar_on : C0021R$string.switch_bar_off));
         booleanState.contentDescription = sb.toString();
         booleanState.expandedAccessibilityClassName = Switch.class.getName();
     }
@@ -109,7 +111,7 @@ public class NightModeTile extends QSTileImpl<QSTile.BooleanState> {
     }
 
     public boolean isAvailable() {
-        return KeyguardUpdateMonitor.getCurrentUser() == 0 && this.mContext.getResources().getBoolean(R.bool.config_support_night_mode);
+        return ActivityManager.getCurrentUser() == 0 && this.mContext.getResources().getBoolean(C0010R$bool.config_support_night_mode);
     }
 
     public QSTile.BooleanState newTileState() {
@@ -117,7 +119,7 @@ public class NightModeTile extends QSTileImpl<QSTile.BooleanState> {
     }
 
     public CharSequence getTileLabel() {
-        return this.mContext.getString(R.string.quick_settings_nightmode_label);
+        return this.mContext.getString(C0021R$string.quick_settings_nightmode_label);
     }
 
     public Intent getLongClickIntent() {
@@ -129,9 +131,8 @@ public class NightModeTile extends QSTileImpl<QSTile.BooleanState> {
         }
 
         public void run() {
-            AlertDialog create = new AlertDialog.Builder(NightModeTile.this.mContext, R.style.Theme_Dialog_Alert).setMessage(R.string.qs_open_night_mode_alert_summary).setPositiveButton(17039370, (DialogInterface.OnClickListener) null).create();
+            AlertDialog create = new AlertDialog.Builder(NightModeTile.this.mContext, C0022R$style.Theme_Dialog_Alert).setMessage(C0021R$string.qs_open_night_mode_alert_summary).setPositiveButton(17039370, (DialogInterface.OnClickListener) null).create();
             create.getWindow().setType(2010);
-            create.getWindow().addPrivateFlags(16);
             create.show();
         }
     }

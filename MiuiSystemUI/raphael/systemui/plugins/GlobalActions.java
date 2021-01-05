@@ -22,5 +22,11 @@ public interface GlobalActions extends Plugin {
         void shutdown();
     }
 
+    void destroy() {
+    }
+
     void showGlobalActions(GlobalActionsManager globalActionsManager);
+
+    void showShutdownUi(boolean z, String str) {
+    }
 }

@@ -1,11 +1,14 @@
 package com.android.systemui.classifier;
 
+import android.os.Build;
+import android.os.SystemProperties;
 import android.view.MotionEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 public class SpeedAnglesClassifier extends StrokeClassifier {
+    public static final boolean VERBOSE = SystemProperties.getBoolean("debug.falsing_log.spd_ang", Build.IS_DEBUGGABLE);
     private HashMap<Stroke, Data> mStrokeMap = new HashMap<>();
 
     public String getTag() {
@@ -38,9 +41,6 @@ public class SpeedAnglesClassifier extends StrokeClassifier {
     }
 
     private static class Data {
-        private final float ANGLE_DEVIATION = 0.31415927f;
-        private final float DURATION_SCALE = 1.0E8f;
-        private final float LENGTH_SCALE = 1.0f;
         private float mAcceleratingAngles = 0.0f;
         private float mAnglesCount = 0.0f;
         private float mCount = 1.0f;
@@ -84,7 +84,11 @@ public class SpeedAnglesClassifier extends StrokeClassifier {
             float f = this.mSumSquares;
             float f2 = this.mCount;
             float f3 = this.mSum;
-            return (f / f2) - ((f3 / f2) * (f3 / f2));
+            float f4 = (f / f2) - ((f3 / f2) * (f3 / f2));
+            if (SpeedAnglesClassifier.VERBOSE) {
+                FalsingLog.i("SPD_ANG", "getAnglesVariance: sum^2=" + this.mSumSquares + " count=" + this.mCount + " result=" + f4);
+            }
+            return f4;
         }
 
         public float getAnglesPercentage() {
@@ -92,7 +96,11 @@ public class SpeedAnglesClassifier extends StrokeClassifier {
             if (f == 0.0f) {
                 return 1.0f;
             }
-            return this.mAcceleratingAngles / f;
+            float f2 = this.mAcceleratingAngles / f;
+            if (SpeedAnglesClassifier.VERBOSE) {
+                FalsingLog.i("SPD_ANG", "getAnglesPercentage: angles=" + this.mAcceleratingAngles + " count=" + this.mAnglesCount + " result=" + f2);
+            }
+            return f2;
         }
     }
 }

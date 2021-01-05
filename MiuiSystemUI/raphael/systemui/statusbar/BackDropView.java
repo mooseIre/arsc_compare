@@ -36,8 +36,4 @@ public class BackDropView extends FrameLayout {
             runnable.run();
         }
     }
-
-    public void setOnVisibilityChangedRunnable(Runnable runnable) {
-        this.mOnVisibilityChangedRunnable = runnable;
-    }
 }

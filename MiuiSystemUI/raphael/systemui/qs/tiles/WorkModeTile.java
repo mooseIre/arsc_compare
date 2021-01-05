@@ -2,38 +2,30 @@ package com.android.systemui.qs.tiles;
 
 import android.content.Intent;
 import android.widget.Switch;
-import com.android.systemui.Dependency;
-import com.android.systemui.plugins.R;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.plugins.qs.QSTile;
 import com.android.systemui.qs.QSHost;
 import com.android.systemui.qs.tileimpl.QSTileImpl;
 import com.android.systemui.statusbar.phone.ManagedProfileController;
-import miui.os.Build;
+import miuix.os.Build;
 
 public class WorkModeTile extends QSTileImpl<QSTile.BooleanState> implements ManagedProfileController.Callback {
-    private QSTile.Icon mDisable = QSTileImpl.ResourceIcon.get(R.drawable.ic_qs_workmode_disable);
-    private QSTile.Icon mEnable = QSTileImpl.ResourceIcon.get(R.drawable.ic_qs_workmode_enable);
-    private final ManagedProfileController mProfileController = ((ManagedProfileController) Dependency.get(ManagedProfileController.class));
-    private QSTile.Icon mUnavailable = QSTileImpl.ResourceIcon.get(R.drawable.ic_qs_workmode_unavailable);
+    private final QSTile.Icon mIcon = QSTileImpl.ResourceIcon.get(C0013R$drawable.stat_sys_managed_profile_status);
+    private final ManagedProfileController mProfileController;
 
     public int getMetricsCategory() {
         return 257;
     }
 
-    public WorkModeTile(QSHost qSHost) {
+    public WorkModeTile(QSHost qSHost, ManagedProfileController managedProfileController) {
         super(qSHost);
+        this.mProfileController = managedProfileController;
+        managedProfileController.observe(getLifecycle(), this);
     }
 
     public QSTile.BooleanState newTileState() {
         return new QSTile.BooleanState();
-    }
-
-    public void handleSetListening(boolean z) {
-        if (z) {
-            this.mProfileController.addCallback(this);
-        } else {
-            this.mProfileController.removeCallback(this);
-        }
     }
 
     public Intent getLongClickIntent() {
@@ -54,40 +46,48 @@ public class WorkModeTile extends QSTileImpl<QSTile.BooleanState> implements Man
 
     public void onManagedProfileRemoved() {
         this.mHost.removeTile(getTileSpec());
+        this.mHost.unmarkTileAsAutoAdded(getTileSpec());
     }
 
     public CharSequence getTileLabel() {
-        return this.mContext.getString(R.string.quick_settings_work_mode_label);
+        return this.mContext.getString(C0021R$string.quick_settings_work_mode_label);
     }
 
     /* access modifiers changed from: protected */
     public void handleUpdateState(QSTile.BooleanState booleanState, Object obj) {
+        if (!isAvailable()) {
+            onManagedProfileRemoved();
+        }
+        if (booleanState.slash == null) {
+            booleanState.slash = new QSTile.SlashState();
+        }
         if (obj instanceof Boolean) {
             booleanState.value = ((Boolean) obj).booleanValue();
         } else {
             booleanState.value = this.mProfileController.isWorkModeEnabled();
         }
-        booleanState.label = this.mContext.getString(R.string.quick_settings_work_mode_label);
+        booleanState.icon = this.mIcon;
+        int i = 1;
         if (booleanState.value) {
-            booleanState.contentDescription = this.mContext.getString(R.string.accessibility_quick_settings_work_mode_on);
+            booleanState.slash.isSlashed = false;
         } else {
-            booleanState.contentDescription = this.mContext.getString(R.string.accessibility_quick_settings_work_mode_off);
+            booleanState.slash.isSlashed = true;
         }
-        if (!isAvailable()) {
-            booleanState.icon = this.mUnavailable;
-            booleanState.state = 0;
-        } else {
-            booleanState.icon = booleanState.value ? this.mEnable : this.mDisable;
-            booleanState.state = booleanState.value ? 2 : 1;
-        }
+        String string = this.mContext.getString(C0021R$string.quick_settings_work_mode_label);
+        booleanState.label = string;
+        booleanState.contentDescription = string;
         booleanState.expandedAccessibilityClassName = Switch.class.getName();
+        if (booleanState.value) {
+            i = 2;
+        }
+        booleanState.state = i;
     }
 
     /* access modifiers changed from: protected */
     public String composeChangeAnnouncement() {
         if (((QSTile.BooleanState) this.mState).value) {
-            return this.mContext.getString(R.string.accessibility_quick_settings_work_mode_changed_on);
+            return this.mContext.getString(C0021R$string.accessibility_quick_settings_work_mode_changed_on);
         }
-        return this.mContext.getString(R.string.accessibility_quick_settings_work_mode_changed_off);
+        return this.mContext.getString(C0021R$string.accessibility_quick_settings_work_mode_changed_off);
     }
 }

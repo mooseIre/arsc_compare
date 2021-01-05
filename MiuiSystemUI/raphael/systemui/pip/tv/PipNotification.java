@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.content.pm.ParceledListSlice;
 import android.graphics.Bitmap;
 import android.media.MediaMetadata;
@@ -14,21 +15,23 @@ import android.media.session.MediaController;
 import android.media.session.PlaybackState;
 import android.text.TextUtils;
 import android.util.Log;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0021R$string;
+import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.pip.tv.PipManager;
-import com.android.systemui.plugins.R;
 import com.android.systemui.util.NotificationChannels;
 
 public class PipNotification {
     /* access modifiers changed from: private */
     public static final boolean DEBUG = PipManager.DEBUG;
-    private static final String NOTIFICATION_TAG = "com.android.systemui.pip.tv.PipNotification";
+    private static final String NOTIFICATION_TAG = "PipNotification";
     private Bitmap mArt;
     private int mDefaultIconResId;
     private String mDefaultTitle;
     private final BroadcastReceiver mEventReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             if (PipNotification.DEBUG) {
-                Log.d("PipNotification", "Received " + intent.getAction() + " from the notification UI");
+                Log.d(PipNotification.NOTIFICATION_TAG, "Received " + intent.getAction() + " from the notification UI");
             }
             String action = intent.getAction();
             char c = 65535;
@@ -57,10 +60,14 @@ public class PipNotification {
             }
         }
     };
+    private String mMediaTitle;
     private final Notification.Builder mNotificationBuilder;
     private final NotificationManager mNotificationManager;
     /* access modifiers changed from: private */
     public boolean mNotified;
+    private final PackageManager mPackageManager;
+    /* access modifiers changed from: private */
+    public String mPackageName;
     private PipManager.Listener mPipListener = new PipManager.Listener() {
         public void onPipMenuActionsChanged(ParceledListSlice parceledListSlice) {
         }
@@ -71,21 +78,24 @@ public class PipNotification {
         public void onShowPipMenu() {
         }
 
-        public void onPipEntered() {
-            boolean unused = PipNotification.this.updateMediaControllerMetadata();
+        public void onPipEntered(String str) {
+            String unused = PipNotification.this.mPackageName = str;
+            boolean unused2 = PipNotification.this.updateMediaControllerMetadata();
             PipNotification.this.notifyPipNotification();
         }
 
         public void onPipActivityClosed() {
             PipNotification.this.dismissPipNotification();
+            String unused = PipNotification.this.mPackageName = null;
         }
 
         public void onMoveToFullscreen() {
             PipNotification.this.dismissPipNotification();
+            String unused = PipNotification.this.mPackageName = null;
         }
     };
     /* access modifiers changed from: private */
-    public final PipManager mPipManager = PipManager.getInstance();
+    public final PipManager mPipManager;
     private final PipManager.MediaListener mPipMediaListener = new PipManager.MediaListener() {
         public void onMediaControllerChanged() {
             MediaController mediaController = PipNotification.this.mPipManager.getMediaController();
@@ -103,24 +113,25 @@ public class PipNotification {
             }
         }
     };
-    private String mTitle;
 
-    public PipNotification(Context context) {
+    public PipNotification(Context context, BroadcastDispatcher broadcastDispatcher, PipManager pipManager) {
+        this.mPackageManager = context.getPackageManager();
         this.mNotificationManager = (NotificationManager) context.getSystemService("notification");
-        this.mNotificationBuilder = new Notification.Builder(context, NotificationChannels.TVPIP).setLocalOnly(true).setOngoing(false).setCategory("sys").extend(new Notification.TvExtender().setContentIntent(createPendingIntent(context, "PipNotification.menu")).setDeleteIntent(createPendingIntent(context, "PipNotification.close")));
-        this.mPipManager.addListener(this.mPipListener);
+        this.mNotificationBuilder = new Notification.Builder(context, NotificationChannels.TVPIP).setLocalOnly(true).setOngoing(DEBUG).setCategory("sys").extend(new Notification.TvExtender().setContentIntent(createPendingIntent(context, "PipNotification.menu")).setDeleteIntent(createPendingIntent(context, "PipNotification.close")));
+        this.mPipManager = pipManager;
+        pipManager.addListener(this.mPipListener);
         this.mPipManager.addMediaListener(this.mPipMediaListener);
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("PipNotification.menu");
         intentFilter.addAction("PipNotification.close");
-        context.registerReceiver(this.mEventReceiver, intentFilter);
+        broadcastDispatcher.registerReceiver(this.mEventReceiver, intentFilter);
         onConfigurationChanged(context);
     }
 
     /* access modifiers changed from: package-private */
     public void onConfigurationChanged(Context context) {
-        this.mDefaultTitle = context.getResources().getString(R.string.pip_notification_unknown_title);
-        this.mDefaultIconResId = R.drawable.pip_icon;
+        this.mDefaultTitle = context.getResources().getString(C0021R$string.pip_notification_unknown_title);
+        this.mDefaultIconResId = C0013R$drawable.pip_icon;
         if (this.mNotified) {
             notifyPipNotification();
         }
@@ -129,7 +140,7 @@ public class PipNotification {
     /* access modifiers changed from: private */
     public void notifyPipNotification() {
         this.mNotified = true;
-        this.mNotificationBuilder.setShowWhen(true).setWhen(System.currentTimeMillis()).setSmallIcon(this.mDefaultIconResId).setContentTitle(!TextUtils.isEmpty(this.mTitle) ? this.mTitle : this.mDefaultTitle);
+        this.mNotificationBuilder.setShowWhen(true).setWhen(System.currentTimeMillis()).setSmallIcon(this.mDefaultIconResId).setContentTitle(getNotificationTitle());
         if (this.mArt != null) {
             this.mNotificationBuilder.setStyle(new Notification.BigPictureStyle().bigPicture(this.mArt));
         } else {
@@ -140,7 +151,7 @@ public class PipNotification {
 
     /* access modifiers changed from: private */
     public void dismissPipNotification() {
-        this.mNotified = false;
+        this.mNotified = DEBUG;
         this.mNotificationManager.cancel(NOTIFICATION_TAG, 1100);
     }
 
@@ -159,12 +170,31 @@ public class PipNotification {
             Bitmap bitmap2 = metadata.getBitmap("android.media.metadata.ALBUM_ART");
             bitmap = bitmap2 == null ? metadata.getBitmap("android.media.metadata.ART") : bitmap2;
         }
-        if (TextUtils.equals(str, this.mTitle) && bitmap == this.mArt) {
-            return false;
+        if (TextUtils.equals(str, this.mMediaTitle) && bitmap == this.mArt) {
+            return DEBUG;
         }
-        this.mTitle = str;
+        this.mMediaTitle = str;
         this.mArt = bitmap;
         return true;
+    }
+
+    private String getNotificationTitle() {
+        if (!TextUtils.isEmpty(this.mMediaTitle)) {
+            return this.mMediaTitle;
+        }
+        String applicationLabel = getApplicationLabel(this.mPackageName);
+        if (!TextUtils.isEmpty(applicationLabel)) {
+            return applicationLabel;
+        }
+        return this.mDefaultTitle;
+    }
+
+    private String getApplicationLabel(String str) {
+        try {
+            return this.mPackageManager.getApplicationLabel(this.mPackageManager.getApplicationInfo(str, 0)).toString();
+        } catch (PackageManager.NameNotFoundException unused) {
+            return null;
+        }
     }
 
     private static PendingIntent createPendingIntent(Context context, String str) {

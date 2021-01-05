@@ -1,9 +1,8 @@
 package com.android.systemui.statusbar;
 
 import android.animation.Animator;
-import android.content.Context;
+import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.ViewPropertyAnimator;
 import android.view.animation.Interpolator;
 import android.view.animation.PathInterpolator;
 import com.android.systemui.Interpolators;
@@ -21,48 +20,39 @@ public class FlingAnimationUtils {
     private final float mSpeedUpFactor;
     private final float mY2;
 
-    public FlingAnimationUtils(Context context, float f) {
-        this(context, f, 0.0f);
+    public FlingAnimationUtils(DisplayMetrics displayMetrics, float f) {
+        this(displayMetrics, f, 0.0f);
     }
 
-    public FlingAnimationUtils(Context context, float f, float f2) {
-        this(context, f, f2, -1.0f, 1.0f);
+    public FlingAnimationUtils(DisplayMetrics displayMetrics, float f, float f2) {
+        this(displayMetrics, f, f2, -1.0f, 1.0f);
     }
 
-    public FlingAnimationUtils(Context context, float f, float f2, float f3, float f4) {
+    public FlingAnimationUtils(DisplayMetrics displayMetrics, float f, float f2, float f3, float f4) {
         this.mAnimatorProperties = new AnimatorProperties();
         this.mCachedStartGradient = -1.0f;
         this.mCachedVelocityFactor = -1.0f;
         this.mMaxLengthSeconds = f;
         this.mSpeedUpFactor = f2;
         if (f3 < 0.0f) {
-            this.mLinearOutSlowInX2 = NotificationUtils.interpolate(0.35f, 0.68f, this.mSpeedUpFactor);
+            this.mLinearOutSlowInX2 = NotificationUtils.interpolate(0.35f, 0.68f, f2);
         } else {
             this.mLinearOutSlowInX2 = f3;
         }
         this.mY2 = f4;
-        this.mMinVelocityPxPerSecond = context.getResources().getDisplayMetrics().density * 250.0f;
-        this.mHighVelocityPxPerSecond = context.getResources().getDisplayMetrics().density * 3000.0f;
+        float f5 = displayMetrics.density;
+        this.mMinVelocityPxPerSecond = 250.0f * f5;
+        this.mHighVelocityPxPerSecond = f5 * 3000.0f;
     }
 
     public void apply(Animator animator, float f, float f2, float f3) {
         apply(animator, f, f2, f3, Math.abs(f2 - f));
     }
 
-    public void apply(ViewPropertyAnimator viewPropertyAnimator, float f, float f2, float f3) {
-        apply(viewPropertyAnimator, f, f2, f3, Math.abs(f2 - f));
-    }
-
     public void apply(Animator animator, float f, float f2, float f3, float f4) {
         AnimatorProperties properties = getProperties(f, f2, f3, f4);
         animator.setDuration(properties.duration);
         animator.setInterpolator(properties.interpolator);
-    }
-
-    public void apply(ViewPropertyAnimator viewPropertyAnimator, float f, float f2, float f3, float f4) {
-        AnimatorProperties properties = getProperties(f, f2, f3, f4);
-        viewPropertyAnimator.setDuration(properties.duration);
-        viewPropertyAnimator.setInterpolator(properties.interpolator);
     }
 
     private AnimatorProperties getProperties(float f, float f2, float f3, float f4) {
@@ -104,9 +94,8 @@ public class FlingAnimationUtils {
                 this.mInterpolator = new PathInterpolator(f3, f4, f5, f6);
                 this.mCachedStartGradient = f;
                 this.mCachedVelocityFactor = f2;
-            } catch (IllegalArgumentException unused) {
-                Log.e("FlingAnimationUtils", "Illegal path with x1=" + f3 + " y1=" + f4 + " x2=" + f5 + " y2=" + f6);
-                return Interpolators.LINEAR_OUT_SLOW_IN;
+            } catch (IllegalArgumentException e) {
+                throw new IllegalArgumentException("Illegal path with x1=" + f3 + " y1=" + f4 + " x2=" + f5 + " y2=" + f6, e);
             }
         }
         return this.mInterpolator;
@@ -187,6 +176,51 @@ public class FlingAnimationUtils {
         Interpolator interpolator;
 
         private AnimatorProperties() {
+        }
+    }
+
+    public static class Builder {
+        private final DisplayMetrics mDisplayMetrics;
+        float mMaxLengthSeconds;
+        float mSpeedUpFactor;
+        float mX2;
+        float mY2;
+
+        public Builder(DisplayMetrics displayMetrics) {
+            this.mDisplayMetrics = displayMetrics;
+            reset();
+        }
+
+        public Builder setMaxLengthSeconds(float f) {
+            this.mMaxLengthSeconds = f;
+            return this;
+        }
+
+        public Builder setSpeedUpFactor(float f) {
+            this.mSpeedUpFactor = f;
+            return this;
+        }
+
+        public Builder setX2(float f) {
+            this.mX2 = f;
+            return this;
+        }
+
+        public Builder setY2(float f) {
+            this.mY2 = f;
+            return this;
+        }
+
+        public Builder reset() {
+            this.mMaxLengthSeconds = 0.0f;
+            this.mSpeedUpFactor = 0.0f;
+            this.mX2 = -1.0f;
+            this.mY2 = 1.0f;
+            return this;
+        }
+
+        public FlingAnimationUtils build() {
+            return new FlingAnimationUtils(this.mDisplayMetrics, this.mMaxLengthSeconds, this.mSpeedUpFactor, this.mX2, this.mY2);
         }
     }
 }

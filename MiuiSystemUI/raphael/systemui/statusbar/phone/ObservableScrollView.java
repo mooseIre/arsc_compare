@@ -7,7 +7,6 @@ import android.widget.ScrollView;
 
 public class ObservableScrollView extends ScrollView {
     private boolean mBlockFlinging;
-    private boolean mHandlingTouchEvent;
     private int mLastOverscrollAmount;
     private float mLastX;
     private float mLastY;
@@ -33,21 +32,15 @@ public class ObservableScrollView extends ScrollView {
     }
 
     public boolean onTouchEvent(MotionEvent motionEvent) {
-        this.mHandlingTouchEvent = true;
         this.mLastX = motionEvent.getX();
         this.mLastY = motionEvent.getY();
-        boolean onTouchEvent = super.onTouchEvent(motionEvent);
-        this.mHandlingTouchEvent = false;
-        return onTouchEvent;
+        return super.onTouchEvent(motionEvent);
     }
 
     public boolean onInterceptTouchEvent(MotionEvent motionEvent) {
-        this.mHandlingTouchEvent = true;
         this.mLastX = motionEvent.getX();
         this.mLastY = motionEvent.getY();
-        boolean onInterceptTouchEvent = super.onInterceptTouchEvent(motionEvent);
-        this.mHandlingTouchEvent = false;
-        return onInterceptTouchEvent;
+        return super.onInterceptTouchEvent(motionEvent);
     }
 
     public boolean dispatchTouchEvent(MotionEvent motionEvent) {

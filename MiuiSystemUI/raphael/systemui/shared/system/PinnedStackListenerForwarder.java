@@ -1,7 +1,8 @@
 package com.android.systemui.shared.system;
 
+import android.content.ComponentName;
 import android.content.pm.ParceledListSlice;
-import android.graphics.Rect;
+import android.view.DisplayInfo;
 import android.view.IPinnedStackController;
 import android.view.IPinnedStackListener;
 import java.util.ArrayList;
@@ -14,19 +15,25 @@ public class PinnedStackListenerForwarder extends IPinnedStackListener.Stub {
         public void onActionsChanged(ParceledListSlice parceledListSlice) {
         }
 
+        public void onActivityHidden(ComponentName componentName) {
+        }
+
+        public void onAspectRatioChanged(float f) {
+        }
+
+        public void onConfigurationChanged() {
+        }
+
+        public void onDisplayInfoChanged(DisplayInfo displayInfo) {
+        }
+
         public void onImeVisibilityChanged(boolean z, int i) {
         }
 
         public void onListenerRegistered(IPinnedStackController iPinnedStackController) {
         }
 
-        public void onMinimizedStateChanged(boolean z) {
-        }
-
-        public void onMovementBoundsChanged(Rect rect, Rect rect2, Rect rect3, boolean z, boolean z2, int i) {
-        }
-
-        public void onShelfVisibilityChanged(boolean z, int i) {
+        public void onMovementBoundsChanged(boolean z) {
         }
     }
 
@@ -40,9 +47,9 @@ public class PinnedStackListenerForwarder extends IPinnedStackListener.Stub {
         }
     }
 
-    public void onMovementBoundsChanged(Rect rect, Rect rect2, Rect rect3, boolean z, boolean z2, int i) {
+    public void onMovementBoundsChanged(boolean z) {
         for (PinnedStackListener onMovementBoundsChanged : this.mListeners) {
-            onMovementBoundsChanged.onMovementBoundsChanged(rect, rect2, rect3, z, z2, i);
+            onMovementBoundsChanged.onMovementBoundsChanged(z);
         }
     }
 
@@ -52,21 +59,33 @@ public class PinnedStackListenerForwarder extends IPinnedStackListener.Stub {
         }
     }
 
-    public void onShelfVisibilityChanged(boolean z, int i) {
-        for (PinnedStackListener onShelfVisibilityChanged : this.mListeners) {
-            onShelfVisibilityChanged.onShelfVisibilityChanged(z, i);
-        }
-    }
-
-    public void onMinimizedStateChanged(boolean z) {
-        for (PinnedStackListener onMinimizedStateChanged : this.mListeners) {
-            onMinimizedStateChanged.onMinimizedStateChanged(z);
-        }
-    }
-
     public void onActionsChanged(ParceledListSlice parceledListSlice) {
         for (PinnedStackListener onActionsChanged : this.mListeners) {
             onActionsChanged.onActionsChanged(parceledListSlice);
+        }
+    }
+
+    public void onActivityHidden(ComponentName componentName) {
+        for (PinnedStackListener onActivityHidden : this.mListeners) {
+            onActivityHidden.onActivityHidden(componentName);
+        }
+    }
+
+    public void onDisplayInfoChanged(DisplayInfo displayInfo) {
+        for (PinnedStackListener onDisplayInfoChanged : this.mListeners) {
+            onDisplayInfoChanged.onDisplayInfoChanged(displayInfo);
+        }
+    }
+
+    public void onConfigurationChanged() {
+        for (PinnedStackListener onConfigurationChanged : this.mListeners) {
+            onConfigurationChanged.onConfigurationChanged();
+        }
+    }
+
+    public void onAspectRatioChanged(float f) {
+        for (PinnedStackListener onAspectRatioChanged : this.mListeners) {
+            onAspectRatioChanged.onAspectRatioChanged(f);
         }
     }
 }

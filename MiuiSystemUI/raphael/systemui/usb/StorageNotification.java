@@ -1,7 +1,6 @@
 package com.android.systemui.usb;
 
 import android.app.Notification;
-import android.app.NotificationCompat;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -22,11 +21,8 @@ import android.text.format.DateUtils;
 import android.util.Log;
 import android.util.SparseArray;
 import com.android.systemui.SystemUI;
-import com.android.systemui.Util;
-import com.android.systemui.plugins.R;
-import com.android.systemui.statusbar.notification.MiuiNotificationCompat;
 import com.android.systemui.util.NotificationChannels;
-import java.io.File;
+import com.miui.systemui.util.UsbUtils;
 
 public class StorageNotification extends SystemUI {
     private final BroadcastReceiver mFinishReceiver = new BroadcastReceiver() {
@@ -62,7 +58,6 @@ public class StorageNotification extends SystemUI {
         public void onCreated(int i, Bundle bundle) {
             MoveInfo moveInfo = new MoveInfo();
             moveInfo.moveId = i;
-            moveInfo.extras = bundle;
             if (bundle != null) {
                 moveInfo.packageName = bundle.getString("android.intent.extra.PACKAGE_NAME");
                 moveInfo.label = bundle.getString("android.intent.extra.TITLE");
@@ -102,8 +97,11 @@ public class StorageNotification extends SystemUI {
         return null;
     }
 
+    public StorageNotification(Context context) {
+        super(context);
+    }
+
     private static class MoveInfo {
-        public Bundle extras;
         public String label;
         public int moveId;
         public String packageName;
@@ -115,8 +113,9 @@ public class StorageNotification extends SystemUI {
 
     public void start() {
         this.mNotificationManager = (NotificationManager) this.mContext.getSystemService(NotificationManager.class);
-        this.mStorageManager = (StorageManager) this.mContext.getSystemService(StorageManager.class);
-        this.mStorageManager.registerListener(this.mListener);
+        StorageManager storageManager = (StorageManager) this.mContext.getSystemService(StorageManager.class);
+        this.mStorageManager = storageManager;
+        storageManager.registerListener(this.mListener);
         this.mContext.registerReceiver(this.mSnoozeReceiver, new IntentFilter("com.android.systemui.action.SNOOZE_VOLUME"), "android.permission.MOUNT_UNMOUNT_FILESYSTEMS", (Handler) null);
         this.mContext.registerReceiver(this.mFinishReceiver, new IntentFilter("com.android.systemui.action.FINISH_WIZARD"), "android.permission.MOUNT_UNMOUNT_FILESYSTEMS", (Handler) null);
         for (DiskInfo diskInfo : this.mStorageManager.getDisks()) {
@@ -130,17 +129,17 @@ public class StorageNotification extends SystemUI {
     }
 
     private void updateMissingPrivateVolumes() {
-        if (!isTv()) {
+        if (!isTv() && !isAutomotive()) {
             for (VolumeRecord volumeRecord : this.mStorageManager.getVolumeRecords()) {
                 if (volumeRecord.getType() == 1) {
                     String fsUuid = volumeRecord.getFsUuid();
                     VolumeInfo findVolumeByUuid = this.mStorageManager.findVolumeByUuid(fsUuid);
                     if ((findVolumeByUuid == null || !findVolumeByUuid.isMountedWritable()) && !volumeRecord.isSnoozed()) {
-                        String string = this.mContext.getString(17039975, new Object[]{volumeRecord.getNickname()});
-                        String string2 = this.mContext.getString(17039974);
-                        Notification.Builder deleteIntent = NotificationCompat.newBuilder(this.mContext, NotificationChannels.STORAGE).setSmallIcon(17302804).setColor(this.mContext.getColor(17170460)).setContentTitle(string).setContentText(string2).setContentIntent(buildForgetPendingIntent(volumeRecord)).setStyle(new Notification.BigTextStyle().bigText(string2)).setVisibility(1).setLocalOnly(true).setCategory("sys").setDeleteIntent(buildSnoozeIntent(fsUuid));
-                        SystemUI.overrideNotificationAppName(this.mContext, deleteIntent);
-                        this.mNotificationManager.notifyAsUser(fsUuid, 1397772886, deleteIntent.build(), UserHandle.ALL);
+                        String string = this.mContext.getString(17040166, new Object[]{volumeRecord.getNickname()});
+                        String string2 = this.mContext.getString(17040165);
+                        Notification.Builder extend = new Notification.Builder(this.mContext, NotificationChannels.STORAGE).setSmallIcon(17302831).setColor(this.mContext.getColor(17170460)).setContentTitle(string).setContentText(string2).setContentIntent(buildForgetPendingIntent(volumeRecord)).setStyle(new Notification.BigTextStyle().bigText(string2)).setVisibility(1).setLocalOnly(true).setCategory("sys").setDeleteIntent(buildSnoozeIntent(fsUuid)).extend(new Notification.TvExtender());
+                        SystemUI.overrideNotificationAppName(this.mContext, extend, false);
+                        this.mNotificationManager.notifyAsUser(fsUuid, 1397772886, extend.build(), UserHandle.ALL);
                     } else {
                         this.mNotificationManager.cancelAsUser(fsUuid, 1397772886, UserHandle.ALL);
                     }
@@ -155,11 +154,11 @@ public class StorageNotification extends SystemUI {
             this.mNotificationManager.cancelAsUser(diskInfo.getId(), 1396986699, UserHandle.ALL);
             return;
         }
-        String string = this.mContext.getString(17040005, new Object[]{diskInfo.getDescription()});
-        String string2 = this.mContext.getString(17040004, new Object[]{diskInfo.getDescription()});
-        Notification.Builder category = NotificationCompat.newBuilder(this.mContext, NotificationChannels.STORAGE).setSmallIcon(getSmallIcon(diskInfo, 6)).setColor(this.mContext.getColor(17170460)).setContentTitle(string).setContentText(string2).setContentIntent(buildInitPendingIntent(diskInfo)).setStyle(new Notification.BigTextStyle().bigText(string2)).setVisibility(1).setLocalOnly(true).setCategory("err");
-        SystemUI.overrideNotificationAppName(this.mContext, category);
-        this.mNotificationManager.notifyAsUser(diskInfo.getId(), 1396986699, category.build(), UserHandle.ALL);
+        String string = this.mContext.getString(17040196, new Object[]{diskInfo.getDescription()});
+        String string2 = this.mContext.getString(17040195, new Object[]{diskInfo.getDescription()});
+        Notification.Builder extend = new Notification.Builder(this.mContext, NotificationChannels.STORAGE).setSmallIcon(getSmallIcon(diskInfo, 6)).setColor(this.mContext.getColor(17170460)).setContentTitle(string).setContentText(string2).setContentIntent(buildInitPendingIntent(diskInfo)).setStyle(new Notification.BigTextStyle().bigText(string2)).setVisibility(1).setLocalOnly(true).setCategory("err").extend(new Notification.TvExtender());
+        SystemUI.overrideNotificationAppName(this.mContext, extend, false);
+        this.mNotificationManager.notifyAsUser(diskInfo.getId(), 1396986699, extend.build(), UserHandle.ALL);
     }
 
     /* access modifiers changed from: private */
@@ -185,82 +184,84 @@ public class StorageNotification extends SystemUI {
     private void onPublicVolumeStateChangedInternal(VolumeInfo volumeInfo) {
         Notification notification;
         Log.d("StorageNotification", "Notifying about public volume: " + volumeInfo.toString());
-        switch (volumeInfo.getState()) {
-            case 0:
-                notification = onVolumeUnmounted(volumeInfo);
-                break;
-            case 1:
-                notification = onVolumeChecking(volumeInfo);
-                break;
-            case 2:
-            case 3:
-                notification = onVolumeMounted(volumeInfo);
-                break;
-            case 4:
-                notification = onVolumeFormatting(volumeInfo);
-                break;
-            case 5:
-                notification = onVolumeEjecting(volumeInfo);
-                break;
-            case 6:
-                notification = onVolumeUnmountable(volumeInfo);
-                break;
-            case 7:
-                notification = onVolumeRemoved(volumeInfo);
-                break;
-            case 8:
-                notification = onVolumeBadRemoval(volumeInfo);
-                break;
-            default:
-                notification = null;
-                break;
-        }
-        if (notification != null) {
-            this.mNotificationManager.notifyAsUser(volumeInfo.getId(), 1397773634, notification, UserHandle.ALL);
+        if (!isAutomotive() || volumeInfo.getMountUserId() != -10000) {
+            switch (volumeInfo.getState()) {
+                case 0:
+                    notification = onVolumeUnmounted(volumeInfo);
+                    break;
+                case 1:
+                    notification = onVolumeChecking(volumeInfo);
+                    break;
+                case 2:
+                case 3:
+                    notification = onVolumeMounted(volumeInfo);
+                    break;
+                case 4:
+                    notification = onVolumeFormatting(volumeInfo);
+                    break;
+                case 5:
+                    notification = onVolumeEjecting(volumeInfo);
+                    break;
+                case 6:
+                    notification = onVolumeUnmountable(volumeInfo);
+                    break;
+                case 7:
+                    notification = onVolumeRemoved(volumeInfo);
+                    break;
+                case 8:
+                    notification = onVolumeBadRemoval(volumeInfo);
+                    break;
+                default:
+                    notification = null;
+                    break;
+            }
+            if (notification != null) {
+                this.mNotificationManager.notifyAsUser(volumeInfo.getId(), 1397773634, notification, UserHandle.of(volumeInfo.getMountUserId()));
+            } else {
+                this.mNotificationManager.cancelAsUser(volumeInfo.getId(), 1397773634, UserHandle.of(volumeInfo.getMountUserId()));
+            }
         } else {
-            this.mNotificationManager.cancelAsUser(volumeInfo.getId(), 1397773634, UserHandle.ALL);
+            Log.d("StorageNotification", "Ignore public volume state change event of removed user");
         }
     }
 
     private Notification onVolumeChecking(VolumeInfo volumeInfo) {
         DiskInfo disk = volumeInfo.getDisk();
-        return buildNotificationBuilder(volumeInfo, this.mContext.getString(17039972, new Object[]{disk.getDescription()}), this.mContext.getString(17039971, new Object[]{disk.getDescription()})).setCategory("progress").setOngoing(true).build();
+        return buildNotificationBuilder(volumeInfo, this.mContext.getString(17040163, new Object[]{disk.getDescription()}), this.mContext.getString(17040162, new Object[]{disk.getDescription()})).setCategory("progress").setOngoing(true).build();
     }
 
     private Notification onVolumeMounted(VolumeInfo volumeInfo) {
         VolumeRecord findRecordByUuid = this.mStorageManager.findRecordByUuid(volumeInfo.getFsUuid());
         DiskInfo disk = volumeInfo.getDisk();
-        if (findRecordByUuid != null && findRecordByUuid.isSnoozed() && disk.isAdoptable()) {
+        if (findRecordByUuid.isSnoozed() && disk.isAdoptable()) {
             return null;
         }
-        String string = this.mContext.getString(R.string.storage_is_connecting, new Object[]{disk.getDescription()});
-        String string2 = this.mContext.getString(17039986, new Object[]{disk.getDescription()});
-        Notification.Builder priority = buildNotificationBuilder(volumeInfo, string, string2).addAction(new Notification.Action(17302411, this.mContext.getString(17039999), buildUnmountPendingIntent(volumeInfo))).setContentIntent(buildBrowsePendingIntent(volumeInfo)).setCategory("sys").setPriority(-1);
-        Bundle bundle = new Bundle();
-        bundle.putBoolean("miui.showAction", true);
-        priority.setExtras(bundle);
+        String description = disk.getDescription();
+        String string = this.mContext.getString(17040177, new Object[]{disk.getDescription()});
+        PendingIntent buildBrowsePendingIntent = UsbUtils.buildBrowsePendingIntent(this.mContext, volumeInfo);
+        Notification.Builder category = buildNotificationBuilder(volumeInfo, description, string).addAction(new Notification.Action(17302453, this.mContext.getString(17040161), buildBrowsePendingIntent)).addAction(new Notification.Action(17302435, this.mContext.getString(17040190), buildUnmountPendingIntent(volumeInfo))).setContentIntent(buildBrowsePendingIntent).setCategory("sys");
         if (disk.isAdoptable()) {
-            priority.setDeleteIntent(buildSnoozeIntent(volumeInfo.getFsUuid()));
+            category.setDeleteIntent(buildSnoozeIntent(volumeInfo.getFsUuid()));
         }
-        if (disk.isSd()) {
-            priority.setAutoCancel(true);
-        } else {
-            priority.setOngoing(true);
-        }
-        NotificationCompat.setChannelId(priority, NotificationChannels.STORAGE_FLOAT);
-        Notification build = priority.build();
-        MiuiNotificationCompat.setTargetPkg(build, "android");
-        return build;
+        return category.build();
     }
 
     private Notification onVolumeEjecting(VolumeInfo volumeInfo) {
         DiskInfo disk = volumeInfo.getDisk();
-        return buildNotificationBuilder(volumeInfo, this.mContext.getString(17040003, new Object[]{disk.getDescription()}), this.mContext.getString(17040002, new Object[]{disk.getDescription()})).setCategory("progress").setOngoing(true).build();
+        return buildNotificationBuilder(volumeInfo, this.mContext.getString(17040194, new Object[]{disk.getDescription()}), this.mContext.getString(17040193, new Object[]{disk.getDescription()})).setCategory("progress").setOngoing(true).build();
     }
 
     private Notification onVolumeUnmountable(VolumeInfo volumeInfo) {
+        PendingIntent pendingIntent;
         DiskInfo disk = volumeInfo.getDisk();
-        return buildNotificationBuilder(volumeInfo, this.mContext.getString(17040001, new Object[]{disk.getDescription()}), this.mContext.getString(17040000, new Object[]{disk.getDescription()})).setContentIntent(buildInitPendingIntent(volumeInfo)).setCategory("err").build();
+        String string = this.mContext.getString(17040192, new Object[]{disk.getDescription()});
+        String string2 = this.mContext.getString(17040191, new Object[]{disk.getDescription()});
+        if (isAutomotive()) {
+            pendingIntent = buildUnmountPendingIntent(volumeInfo);
+        } else {
+            pendingIntent = buildInitPendingIntent(volumeInfo);
+        }
+        return buildNotificationBuilder(volumeInfo, string, string2).setContentIntent(pendingIntent).setCategory("err").build();
     }
 
     private Notification onVolumeRemoved(VolumeInfo volumeInfo) {
@@ -268,7 +269,7 @@ public class StorageNotification extends SystemUI {
             return null;
         }
         DiskInfo disk = volumeInfo.getDisk();
-        return buildNotificationBuilder(volumeInfo, this.mContext.getString(17039985, new Object[]{disk.getDescription()}), this.mContext.getString(17039984, new Object[]{disk.getDescription()})).setCategory("err").build();
+        return buildNotificationBuilder(volumeInfo, this.mContext.getString(17040176, new Object[]{disk.getDescription()}), this.mContext.getString(17040175, new Object[]{disk.getDescription()})).setCategory("err").build();
     }
 
     private Notification onVolumeBadRemoval(VolumeInfo volumeInfo) {
@@ -276,7 +277,7 @@ public class StorageNotification extends SystemUI {
             return null;
         }
         DiskInfo disk = volumeInfo.getDisk();
-        return buildNotificationBuilder(volumeInfo, this.mContext.getString(17039969, new Object[]{disk.getDescription()}), this.mContext.getString(17039968, new Object[]{disk.getDescription()})).setCategory("err").build();
+        return buildNotificationBuilder(volumeInfo, this.mContext.getString(17040160, new Object[]{disk.getDescription()}), this.mContext.getString(17040159, new Object[]{disk.getDescription()})).setCategory("err").build();
     }
 
     /* access modifiers changed from: private */
@@ -285,9 +286,9 @@ public class StorageNotification extends SystemUI {
         CharSequence charSequence;
         PendingIntent pendingIntent;
         if (!TextUtils.isEmpty(moveInfo.label)) {
-            str = this.mContext.getString(17039978, new Object[]{moveInfo.label});
+            str = this.mContext.getString(17040169, new Object[]{moveInfo.label});
         } else {
-            str = this.mContext.getString(17039981);
+            str = this.mContext.getString(17040172);
         }
         if (j < 0) {
             charSequence = null;
@@ -299,8 +300,8 @@ public class StorageNotification extends SystemUI {
         } else {
             pendingIntent = buildWizardMigratePendingIntent(moveInfo);
         }
-        Notification.Builder ongoing = NotificationCompat.newBuilder(this.mContext, NotificationChannels.STORAGE).setSmallIcon(17302804).setColor(this.mContext.getColor(17170460)).setContentTitle(str).setContentText(charSequence).setContentIntent(pendingIntent).setStyle(new Notification.BigTextStyle().bigText(charSequence)).setVisibility(1).setLocalOnly(true).setCategory("progress").setProgress(100, i, false).setOngoing(true);
-        SystemUI.overrideNotificationAppName(this.mContext, ongoing);
+        Notification.Builder ongoing = new Notification.Builder(this.mContext, NotificationChannels.STORAGE).setSmallIcon(17302831).setColor(this.mContext.getColor(17170460)).setContentTitle(str).setContentText(charSequence).setContentIntent(pendingIntent).setStyle(new Notification.BigTextStyle().bigText(charSequence)).setVisibility(1).setLocalOnly(true).setCategory("progress").setProgress(100, i, false).setOngoing(true);
+        SystemUI.overrideNotificationAppName(this.mContext, ongoing, false);
         this.mNotificationManager.notifyAsUser(moveInfo.packageName, 1397575510, ongoing.build(), UserHandle.ALL);
     }
 
@@ -317,38 +318,33 @@ public class StorageNotification extends SystemUI {
         VolumeInfo primaryStorageCurrentVolume = this.mContext.getPackageManager().getPrimaryStorageCurrentVolume();
         String bestVolumeDescription = this.mStorageManager.getBestVolumeDescription(primaryStorageCurrentVolume);
         if (i == -100) {
-            str = this.mContext.getString(17039980);
-            str2 = this.mContext.getString(17039979, new Object[]{bestVolumeDescription});
+            str = this.mContext.getString(17040171);
+            str2 = this.mContext.getString(17040170, new Object[]{bestVolumeDescription});
         } else {
-            str = this.mContext.getString(17039977);
-            str2 = this.mContext.getString(17039976);
+            str = this.mContext.getString(17040168);
+            str2 = this.mContext.getString(17040167);
         }
         if (primaryStorageCurrentVolume == null || primaryStorageCurrentVolume.getDisk() == null) {
             pendingIntent = primaryStorageCurrentVolume != null ? buildVolumeSettingsPendingIntent(primaryStorageCurrentVolume) : null;
         } else {
             pendingIntent = buildWizardReadyPendingIntent(primaryStorageCurrentVolume.getDisk());
         }
-        Notification.Builder autoCancel = NotificationCompat.newBuilder(this.mContext, NotificationChannels.STORAGE).setSmallIcon(17302804).setColor(this.mContext.getColor(17170460)).setContentTitle(str).setContentText(str2).setContentIntent(pendingIntent).setStyle(new Notification.BigTextStyle().bigText(str2)).setVisibility(1).setLocalOnly(true).setCategory("sys").setAutoCancel(true);
-        SystemUI.overrideNotificationAppName(this.mContext, autoCancel);
+        Notification.Builder autoCancel = new Notification.Builder(this.mContext, NotificationChannels.STORAGE).setSmallIcon(17302831).setColor(this.mContext.getColor(17170460)).setContentTitle(str).setContentText(str2).setContentIntent(pendingIntent).setStyle(new Notification.BigTextStyle().bigText(str2)).setVisibility(1).setLocalOnly(true).setCategory("sys").setAutoCancel(true);
+        SystemUI.overrideNotificationAppName(this.mContext, autoCancel, false);
         this.mNotificationManager.notifyAsUser(moveInfo.packageName, 1397575510, autoCancel.build(), UserHandle.ALL);
     }
 
     private int getSmallIcon(DiskInfo diskInfo, int i) {
-        if (diskInfo.isSd()) {
-            if (i == 1 || i == 5) {
-            }
-            return 17302804;
-        } else if (diskInfo.isUsb()) {
-            return 17302845;
-        } else {
-            return 17302804;
+        if (!diskInfo.isSd() && diskInfo.isUsb()) {
+            return 17302873;
         }
+        return 17302831;
     }
 
     private Notification.Builder buildNotificationBuilder(VolumeInfo volumeInfo, CharSequence charSequence, CharSequence charSequence2) {
-        Notification.Builder localOnly = NotificationCompat.newBuilder(this.mContext, NotificationChannels.STORAGE).setSmallIcon(getSmallIcon(volumeInfo.getDisk(), volumeInfo.getState())).setColor(this.mContext.getColor(17170460)).setContentTitle(charSequence).setContentText(charSequence2).setStyle(new Notification.BigTextStyle().bigText(charSequence2)).setVisibility(1).setLocalOnly(true);
-        SystemUI.overrideNotificationAppName(this.mContext, localOnly);
-        return localOnly;
+        Notification.Builder extend = new Notification.Builder(this.mContext, NotificationChannels.STORAGE).setSmallIcon(getSmallIcon(volumeInfo.getDisk(), volumeInfo.getState())).setColor(this.mContext.getColor(17170460)).setContentTitle(charSequence).setContentText(charSequence2).setStyle(new Notification.BigTextStyle().bigText(charSequence2)).setVisibility(1).setLocalOnly(true).extend(new Notification.TvExtender());
+        SystemUI.overrideNotificationAppName(this.mContext, extend, false);
+        return extend;
     }
 
     private PendingIntent buildInitPendingIntent(DiskInfo diskInfo) {
@@ -356,6 +352,8 @@ public class StorageNotification extends SystemUI {
         if (isTv()) {
             intent.setPackage("com.android.tv.settings");
             intent.setAction("com.android.tv.settings.action.NEW_STORAGE");
+        } else if (isAutomotive()) {
+            return null;
         } else {
             intent.setClassName("com.android.settings", "com.android.settings.deviceinfo.StorageWizardInit");
         }
@@ -368,6 +366,8 @@ public class StorageNotification extends SystemUI {
         if (isTv()) {
             intent.setPackage("com.android.tv.settings");
             intent.setAction("com.android.tv.settings.action.NEW_STORAGE");
+        } else if (isAutomotive()) {
+            return null;
         } else {
             intent.setClassName("com.android.settings", "com.android.settings.deviceinfo.StorageWizardInit");
         }
@@ -382,24 +382,15 @@ public class StorageNotification extends SystemUI {
             intent.setAction("com.android.tv.settings.action.UNMOUNT_STORAGE");
             intent.putExtra("android.os.storage.extra.VOLUME_ID", volumeInfo.getId());
             return PendingIntent.getActivityAsUser(this.mContext, volumeInfo.getId().hashCode(), intent, 268435456, (Bundle) null, UserHandle.CURRENT);
+        } else if (isAutomotive()) {
+            intent.setClassName("com.android.car.settings", "com.android.car.settings.storage.StorageUnmountReceiver");
+            intent.putExtra("android.os.storage.extra.VOLUME_ID", volumeInfo.getId());
+            return PendingIntent.getBroadcastAsUser(this.mContext, volumeInfo.getId().hashCode(), intent, 268435456, UserHandle.CURRENT);
+        } else {
+            intent.setClassName("com.android.settings", "com.android.settings.deviceinfo.StorageUnmountReceiver");
+            intent.putExtra("android.os.storage.extra.VOLUME_ID", volumeInfo.getId());
+            return PendingIntent.getBroadcastAsUser(this.mContext, volumeInfo.getId().hashCode(), intent, 268435456, UserHandle.CURRENT);
         }
-        intent.setClassName("com.android.settings", "com.android.settings.deviceinfo.StorageUnmountReceiver");
-        intent.putExtra("android.os.storage.extra.VOLUME_ID", volumeInfo.getId());
-        return PendingIntent.getBroadcastAsUser(this.mContext, volumeInfo.getId().hashCode(), intent, 268435456, UserHandle.CURRENT);
-    }
-
-    private PendingIntent buildBrowsePendingIntent(VolumeInfo volumeInfo) {
-        File pathForUser = volumeInfo.getPathForUser(UserHandle.myUserId());
-        String path = pathForUser != null ? pathForUser.getPath() : null;
-        Intent intent = new Intent();
-        if (Util.isGlobalFileExplorerExist(this.mContext)) {
-            intent.setClassName("com.mi.android.globalFileexplorer", "com.android.fileexplorer.FileExplorerTabActivity");
-        } else if (Util.isCNFileExplorerExist(this.mContext)) {
-            intent.setClassName("com.android.fileexplorer", "com.android.fileexplorer.FileExplorerTabActivity");
-        }
-        intent.setFlags(268435456);
-        intent.putExtra("current_directory", path);
-        return PendingIntent.getActivityAsUser(this.mContext, volumeInfo.getId().hashCode(), intent, 268435456, (Bundle) null, UserHandle.CURRENT);
     }
 
     private PendingIntent buildVolumeSettingsPendingIntent(VolumeInfo volumeInfo) {
@@ -407,6 +398,8 @@ public class StorageNotification extends SystemUI {
         if (isTv()) {
             intent.setPackage("com.android.tv.settings");
             intent.setAction("android.settings.INTERNAL_STORAGE_SETTINGS");
+        } else if (isAutomotive()) {
+            return null;
         } else {
             int type = volumeInfo.getType();
             if (type == 0) {
@@ -439,6 +432,8 @@ public class StorageNotification extends SystemUI {
         if (isTv()) {
             intent.setPackage("com.android.tv.settings");
             intent.setAction("com.android.tv.settings.action.MIGRATE_STORAGE");
+        } else if (isAutomotive()) {
+            return null;
         } else {
             intent.setClassName("com.android.settings", "com.android.settings.deviceinfo.StorageWizardMigrateProgress");
         }
@@ -455,6 +450,8 @@ public class StorageNotification extends SystemUI {
         if (isTv()) {
             intent.setPackage("com.android.tv.settings");
             intent.setAction("com.android.tv.settings.action.MOVE_APP");
+        } else if (isAutomotive()) {
+            return null;
         } else {
             intent.setClassName("com.android.settings", "com.android.settings.deviceinfo.StorageWizardMoveProgress");
         }
@@ -467,11 +464,17 @@ public class StorageNotification extends SystemUI {
         if (isTv()) {
             intent.setPackage("com.android.tv.settings");
             intent.setAction("android.settings.INTERNAL_STORAGE_SETTINGS");
+        } else if (isAutomotive()) {
+            return null;
         } else {
             intent.setClassName("com.android.settings", "com.android.settings.deviceinfo.StorageWizardReady");
         }
         intent.putExtra("android.os.storage.extra.DISK_ID", diskInfo.getId());
         return PendingIntent.getActivityAsUser(this.mContext, diskInfo.getId().hashCode(), intent, 268435456, (Bundle) null, UserHandle.CURRENT);
+    }
+
+    private boolean isAutomotive() {
+        return this.mContext.getPackageManager().hasSystemFeature("android.hardware.type.automotive");
     }
 
     private boolean isTv() {

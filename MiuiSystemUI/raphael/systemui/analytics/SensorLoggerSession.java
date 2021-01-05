@@ -51,31 +51,33 @@ public class SensorLoggerSession {
 
     public TouchAnalyticsProto$Session toProto() {
         TouchAnalyticsProto$Session touchAnalyticsProto$Session = new TouchAnalyticsProto$Session();
-        touchAnalyticsProto$Session.setStartTimestampMillis(this.mStartTimestampMillis);
-        touchAnalyticsProto$Session.setDurationMillis(this.mEndTimestampMillis - this.mStartTimestampMillis);
-        touchAnalyticsProto$Session.setBuild(Build.FINGERPRINT);
-        touchAnalyticsProto$Session.setResult(this.mResult);
-        touchAnalyticsProto$Session.setType(this.mType);
+        long j = this.mStartTimestampMillis;
+        touchAnalyticsProto$Session.startTimestampMillis = j;
+        touchAnalyticsProto$Session.durationMillis = this.mEndTimestampMillis - j;
+        touchAnalyticsProto$Session.build = Build.FINGERPRINT;
+        touchAnalyticsProto$Session.deviceId = Build.DEVICE;
+        touchAnalyticsProto$Session.result = this.mResult;
+        touchAnalyticsProto$Session.type = this.mType;
         touchAnalyticsProto$Session.sensorEvents = (TouchAnalyticsProto$Session.SensorEvent[]) this.mSensorEvents.toArray(touchAnalyticsProto$Session.sensorEvents);
         touchAnalyticsProto$Session.touchEvents = (TouchAnalyticsProto$Session.TouchEvent[]) this.mMotionEvents.toArray(touchAnalyticsProto$Session.touchEvents);
         touchAnalyticsProto$Session.phoneEvents = (TouchAnalyticsProto$Session.PhoneEvent[]) this.mPhoneEvents.toArray(touchAnalyticsProto$Session.phoneEvents);
-        touchAnalyticsProto$Session.setTouchAreaWidth(this.mTouchAreaWidth);
-        touchAnalyticsProto$Session.setTouchAreaHeight(this.mTouchAreaHeight);
+        touchAnalyticsProto$Session.touchAreaWidth = this.mTouchAreaWidth;
+        touchAnalyticsProto$Session.touchAreaHeight = this.mTouchAreaHeight;
         return touchAnalyticsProto$Session;
     }
 
     private TouchAnalyticsProto$Session.PhoneEvent phoneEventToProto(int i, long j) {
         TouchAnalyticsProto$Session.PhoneEvent phoneEvent = new TouchAnalyticsProto$Session.PhoneEvent();
-        phoneEvent.setType(i);
-        phoneEvent.setTimeOffsetNanos(j - this.mStartSystemTimeNanos);
+        phoneEvent.type = i;
+        phoneEvent.timeOffsetNanos = j - this.mStartSystemTimeNanos;
         return phoneEvent;
     }
 
     private TouchAnalyticsProto$Session.SensorEvent sensorEventToProto(SensorEvent sensorEvent, long j) {
         TouchAnalyticsProto$Session.SensorEvent sensorEvent2 = new TouchAnalyticsProto$Session.SensorEvent();
-        sensorEvent2.setType(sensorEvent.sensor.getType());
-        sensorEvent2.setTimeOffsetNanos(j - this.mStartSystemTimeNanos);
-        sensorEvent2.setTimestamp(sensorEvent.timestamp);
+        sensorEvent2.type = sensorEvent.sensor.getType();
+        sensorEvent2.timeOffsetNanos = j - this.mStartSystemTimeNanos;
+        sensorEvent2.timestamp = sensorEvent.timestamp;
         sensorEvent2.values = (float[]) sensorEvent.values.clone();
         return sensorEvent2;
     }
@@ -83,17 +85,17 @@ public class SensorLoggerSession {
     private TouchAnalyticsProto$Session.TouchEvent motionEventToProto(MotionEvent motionEvent) {
         int pointerCount = motionEvent.getPointerCount();
         TouchAnalyticsProto$Session.TouchEvent touchEvent = new TouchAnalyticsProto$Session.TouchEvent();
-        touchEvent.setTimeOffsetNanos(motionEvent.getEventTimeNano() - this.mStartSystemTimeNanos);
-        touchEvent.setAction(motionEvent.getActionMasked());
-        touchEvent.setActionIndex(motionEvent.getActionIndex());
+        touchEvent.timeOffsetNanos = motionEvent.getEventTimeNano() - this.mStartSystemTimeNanos;
+        touchEvent.action = motionEvent.getActionMasked();
+        touchEvent.actionIndex = motionEvent.getActionIndex();
         touchEvent.pointers = new TouchAnalyticsProto$Session.TouchEvent.Pointer[pointerCount];
         for (int i = 0; i < pointerCount; i++) {
             TouchAnalyticsProto$Session.TouchEvent.Pointer pointer = new TouchAnalyticsProto$Session.TouchEvent.Pointer();
-            pointer.setX(motionEvent.getX(i));
-            pointer.setY(motionEvent.getY(i));
-            pointer.setSize(motionEvent.getSize(i));
-            pointer.setPressure(motionEvent.getPressure(i));
-            pointer.setId(motionEvent.getPointerId(i));
+            pointer.x = motionEvent.getX(i);
+            pointer.y = motionEvent.getY(i);
+            pointer.size = motionEvent.getSize(i);
+            pointer.pressure = motionEvent.getPressure(i);
+            pointer.id = motionEvent.getPointerId(i);
             touchEvent.pointers[i] = pointer;
         }
         return touchEvent;
@@ -106,9 +108,5 @@ public class SensorLoggerSession {
 
     public int getResult() {
         return this.mResult;
-    }
-
-    public long getStartTimestampMillis() {
-        return this.mStartTimestampMillis;
     }
 }

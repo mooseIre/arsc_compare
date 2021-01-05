@@ -1,17 +1,23 @@
 package com.android.systemui.plugins.statusbar;
 
 import android.content.Context;
+import android.graphics.Point;
+import android.service.notification.StatusBarNotification;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import com.android.systemui.plugins.Plugin;
+import com.android.systemui.plugins.annotations.Dependencies;
+import com.android.systemui.plugins.annotations.DependsOn;
 import com.android.systemui.plugins.annotations.ProvidesInterface;
+import com.android.systemui.plugins.statusbar.NotificationSwipeActionHelper;
 import java.util.ArrayList;
 
-@ProvidesInterface(action = "com.android.systemui.action.PLUGIN_NOTIFICATION_MENU_ROW", version = 2)
+@Dependencies({@DependsOn(target = OnMenuEventListener.class), @DependsOn(target = MenuItem.class), @DependsOn(target = NotificationSwipeActionHelper.class), @DependsOn(target = NotificationSwipeActionHelper.SnoozeOption.class)})
+@ProvidesInterface(action = "com.android.systemui.action.PLUGIN_NOTIFICATION_MENU_ROW", version = 5)
 public interface NotificationMenuRowPlugin extends Plugin {
     public static final String ACTION = "com.android.systemui.action.PLUGIN_NOTIFICATION_MENU_ROW";
-    public static final int VERSION = 2;
+    public static final int VERSION = 5;
 
     @ProvidesInterface(version = 1)
     public interface MenuItem {
@@ -22,10 +28,6 @@ public interface NotificationMenuRowPlugin extends Plugin {
         View getGutsView();
 
         View getMenuView();
-
-        void setAppName(String str);
-
-        void setIcon(Context context, int i);
     }
 
     @ProvidesInterface(version = 1)
@@ -39,37 +41,85 @@ public interface NotificationMenuRowPlugin extends Plugin {
         void onMenuShown(View view);
     }
 
-    void createMenu(ViewGroup viewGroup);
+    boolean canBeDismissed();
+
+    void createMenu(ViewGroup viewGroup, StatusBarNotification statusBarNotification);
+
+    MenuItem getAppOpsMenuItem(Context context);
 
     MenuItem getLongpressMenuItem(Context context);
 
     ArrayList<MenuItem> getMenuItems(Context context);
 
+    int getMenuSnapTarget();
+
     View getMenuView();
+
+    MenuItem getSnoozeMenuItem(Context context);
 
     boolean isMenuVisible();
 
-    void onConfigurationChanged();
+    boolean isSnappedAndOnSameSide();
 
-    void onExpansionChanged();
+    boolean isSwipedEnoughToShowMenu();
 
-    void onHeightUpdate();
+    boolean isTowardsMenu(float f);
 
-    void onNotificationUpdated();
+    boolean isWithinSnapMenuThreshold();
 
-    boolean onTouchEvent(View view, MotionEvent motionEvent, float f);
+    MenuItem menuItemToExposeOnSnap() {
+        return null;
+    }
 
-    void onTranslationUpdate(float f);
+    void onConfigurationChanged() {
+    }
+
+    void onDismiss();
+
+    boolean onInterceptTouchEvent(View view, MotionEvent motionEvent) {
+        return false;
+    }
+
+    void onNotificationUpdated(StatusBarNotification statusBarNotification);
+
+    void onParentHeightUpdate();
+
+    void onParentTranslationUpdate(float f);
+
+    void onSnapClosed();
+
+    void onSnapOpen();
+
+    void onTouchEnd();
+
+    void onTouchMove(float f);
+
+    void onTouchStart();
 
     void resetMenu();
 
     void setAppName(String str);
 
+    void setDismissRtl(boolean z) {
+    }
+
     void setMenuClickListener(OnMenuEventListener onMenuEventListener);
 
     void setMenuItems(ArrayList<MenuItem> arrayList);
 
-    void setSwipeActionHelper(NotificationSwipeActionHelper notificationSwipeActionHelper);
+    boolean shouldShowGutsOnSnapOpen() {
+        return false;
+    }
 
-    boolean useDefaultMenuItems();
+    boolean shouldShowMenu();
+
+    boolean shouldSnapBack();
+
+    boolean shouldUseDefaultMenuItems() {
+        return false;
+    }
+
+    Point getRevealAnimationOrigin() {
+        return new Point(0, 0);
+    }
 }

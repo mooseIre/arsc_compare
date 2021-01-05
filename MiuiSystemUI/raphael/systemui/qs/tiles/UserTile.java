@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.util.Pair;
-import com.android.systemui.Dependency;
 import com.android.systemui.plugins.qs.DetailAdapter;
 import com.android.systemui.plugins.qs.QSTile;
 import com.android.systemui.qs.QSHost;
@@ -14,15 +13,18 @@ import com.android.systemui.statusbar.policy.UserSwitcherController;
 
 public class UserTile extends QSTileImpl<QSTile.State> implements UserInfoController.OnUserInfoChangedListener {
     private Pair<String, Drawable> mLastUpdate;
-    private final UserInfoController mUserInfoController = ((UserInfoController) Dependency.get(UserInfoController.class));
-    private final UserSwitcherController mUserSwitcherController = ((UserSwitcherController) Dependency.get(UserSwitcherController.class));
+    private final UserInfoController mUserInfoController;
+    private final UserSwitcherController mUserSwitcherController;
 
     public int getMetricsCategory() {
         return 260;
     }
 
-    public UserTile(QSHost qSHost) {
+    public UserTile(QSHost qSHost, UserSwitcherController userSwitcherController, UserInfoController userInfoController) {
         super(qSHost);
+        this.mUserSwitcherController = userSwitcherController;
+        this.mUserInfoController = userInfoController;
+        userInfoController.observe(getLifecycle(), this);
     }
 
     public QSTile.State newTileState() {
@@ -42,14 +44,6 @@ public class UserTile extends QSTileImpl<QSTile.State> implements UserInfoContro
         return this.mUserSwitcherController.userDetailAdapter;
     }
 
-    public void handleSetListening(boolean z) {
-        if (z) {
-            this.mUserInfoController.addCallback(this);
-        } else {
-            this.mUserInfoController.removeCallback(this);
-        }
-    }
-
     public CharSequence getTileLabel() {
         return getState().label;
     }
@@ -61,7 +55,7 @@ public class UserTile extends QSTileImpl<QSTile.State> implements UserInfoContro
             Object obj2 = pair.first;
             state.label = (CharSequence) obj2;
             state.contentDescription = (CharSequence) obj2;
-            state.icon = new QSTile.Icon() {
+            state.icon = new QSTile.Icon(this) {
                 public Drawable getDrawable(Context context) {
                     return (Drawable) pair.second;
                 }
@@ -70,7 +64,8 @@ public class UserTile extends QSTileImpl<QSTile.State> implements UserInfoContro
     }
 
     public void onUserInfoChanged(String str, Drawable drawable, String str2) {
-        this.mLastUpdate = new Pair<>(str, drawable);
-        refreshState(this.mLastUpdate);
+        Pair<String, Drawable> pair = new Pair<>(str, drawable);
+        this.mLastUpdate = pair;
+        refreshState(pair);
     }
 }

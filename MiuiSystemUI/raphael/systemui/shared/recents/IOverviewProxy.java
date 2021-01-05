@@ -1,5 +1,6 @@
 package com.android.systemui.shared.recents;
 
+import android.graphics.Rect;
 import android.graphics.Region;
 import android.os.Binder;
 import android.os.Bundle;
@@ -11,6 +12,10 @@ import android.os.RemoteException;
 public interface IOverviewProxy extends IInterface {
     void onActiveNavBarRegionChanges(Region region) throws RemoteException;
 
+    void onAssistantAvailable(boolean z) throws RemoteException;
+
+    void onBackAction(boolean z, int i, int i2, boolean z2, boolean z3) throws RemoteException;
+
     void onInitialize(Bundle bundle) throws RemoteException;
 
     void onOverviewHidden(boolean z, boolean z2) throws RemoteException;
@@ -19,7 +24,11 @@ public interface IOverviewProxy extends IInterface {
 
     void onOverviewToggle() throws RemoteException;
 
+    void onSplitScreenSecondaryBoundsChanged(Rect rect, Rect rect2) throws RemoteException;
+
     void onSystemUiStateChanged(int i) throws RemoteException;
+
+    void onTip(int i, int i2) throws RemoteException;
 
     public static abstract class Stub extends Binder implements IOverviewProxy {
         public static IOverviewProxy asInterface(IBinder iBinder) {
@@ -134,6 +143,60 @@ public interface IOverviewProxy extends IInterface {
                 }
             }
 
+            public void onTip(int i, int i2) throws RemoteException {
+                Parcel obtain = Parcel.obtain();
+                try {
+                    obtain.writeInterfaceToken("com.android.systemui.shared.recents.IOverviewProxy");
+                    obtain.writeInt(i);
+                    obtain.writeInt(i2);
+                    if (this.mRemote.transact(11, obtain, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
+                        obtain.recycle();
+                    } else {
+                        Stub.getDefaultImpl().onTip(i, i2);
+                    }
+                } finally {
+                    obtain.recycle();
+                }
+            }
+
+            public void onAssistantAvailable(boolean z) throws RemoteException {
+                Parcel obtain = Parcel.obtain();
+                try {
+                    obtain.writeInterfaceToken("com.android.systemui.shared.recents.IOverviewProxy");
+                    obtain.writeInt(z ? 1 : 0);
+                    if (this.mRemote.transact(14, obtain, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
+                        obtain.recycle();
+                    } else {
+                        Stub.getDefaultImpl().onAssistantAvailable(z);
+                    }
+                } finally {
+                    obtain.recycle();
+                }
+            }
+
+            public void onBackAction(boolean z, int i, int i2, boolean z2, boolean z3) throws RemoteException {
+                Parcel obtain = Parcel.obtain();
+                try {
+                    obtain.writeInterfaceToken("com.android.systemui.shared.recents.IOverviewProxy");
+                    int i3 = 0;
+                    obtain.writeInt(z ? 1 : 0);
+                    obtain.writeInt(i);
+                    obtain.writeInt(i2);
+                    obtain.writeInt(z2 ? 1 : 0);
+                    if (z3) {
+                        i3 = 1;
+                    }
+                    obtain.writeInt(i3);
+                    if (this.mRemote.transact(16, obtain, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
+                        obtain.recycle();
+                    } else {
+                        Stub.getDefaultImpl().onBackAction(z, i, i2, z2, z3);
+                    }
+                } finally {
+                    obtain.recycle();
+                }
+            }
+
             public void onSystemUiStateChanged(int i) throws RemoteException {
                 Parcel obtain = Parcel.obtain();
                 try {
@@ -143,6 +206,32 @@ public interface IOverviewProxy extends IInterface {
                         obtain.recycle();
                     } else {
                         Stub.getDefaultImpl().onSystemUiStateChanged(i);
+                    }
+                } finally {
+                    obtain.recycle();
+                }
+            }
+
+            public void onSplitScreenSecondaryBoundsChanged(Rect rect, Rect rect2) throws RemoteException {
+                Parcel obtain = Parcel.obtain();
+                try {
+                    obtain.writeInterfaceToken("com.android.systemui.shared.recents.IOverviewProxy");
+                    if (rect != null) {
+                        obtain.writeInt(1);
+                        rect.writeToParcel(obtain, 0);
+                    } else {
+                        obtain.writeInt(0);
+                    }
+                    if (rect2 != null) {
+                        obtain.writeInt(1);
+                        rect2.writeToParcel(obtain, 0);
+                    } else {
+                        obtain.writeInt(0);
+                    }
+                    if (this.mRemote.transact(18, obtain, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
+                        obtain.recycle();
+                    } else {
+                        Stub.getDefaultImpl().onSplitScreenSecondaryBoundsChanged(rect, rect2);
                     }
                 } finally {
                     obtain.recycle();

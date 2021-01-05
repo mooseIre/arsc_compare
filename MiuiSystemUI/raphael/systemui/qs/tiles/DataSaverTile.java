@@ -3,43 +3,36 @@ package com.android.systemui.qs.tiles;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.widget.Switch;
-import com.android.systemui.Dependency;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.Prefs;
-import com.android.systemui.plugins.R;
 import com.android.systemui.plugins.qs.QSTile;
 import com.android.systemui.qs.QSHost;
 import com.android.systemui.qs.tileimpl.QSTileImpl;
 import com.android.systemui.statusbar.phone.SystemUIDialog;
 import com.android.systemui.statusbar.policy.DataSaverController;
-import com.miui.systemui.annotation.Inject;
+import com.android.systemui.statusbar.policy.NetworkController;
 
 public class DataSaverTile extends QSTileImpl<QSTile.BooleanState> implements DataSaverController.Listener {
-    @Inject
-    private DataSaverController mDataSaverController;
+    private final DataSaverController mDataSaverController;
 
     public int getMetricsCategory() {
         return 284;
     }
 
-    public DataSaverTile(QSHost qSHost) {
+    public DataSaverTile(QSHost qSHost, NetworkController networkController) {
         super(qSHost);
-        Dependency.inject(this);
+        DataSaverController dataSaverController = networkController.getDataSaverController();
+        this.mDataSaverController = dataSaverController;
+        dataSaverController.observe(getLifecycle(), this);
     }
 
     public QSTile.BooleanState newTileState() {
         return new QSTile.BooleanState();
     }
 
-    public void handleSetListening(boolean z) {
-        if (z) {
-            this.mDataSaverController.addCallback(this);
-        } else {
-            this.mDataSaverController.removeCallback(this);
-        }
-    }
-
     public Intent getLongClickIntent() {
-        return CellularTile.longClickDataIntent();
+        return new Intent("android.settings.DATA_SAVER_SETTINGS");
     }
 
     /* access modifiers changed from: protected */
@@ -49,11 +42,11 @@ public class DataSaverTile extends QSTileImpl<QSTile.BooleanState> implements Da
             return;
         }
         SystemUIDialog systemUIDialog = new SystemUIDialog(this.mContext);
-        systemUIDialog.setTitle(R.string.data_saver_enable_title);
-        systemUIDialog.setMessage(R.string.data_saver_description);
-        systemUIDialog.setPositiveButton(R.string.data_saver_enable_button, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialogInterface, int i) {
-                DataSaverTile.this.toggleDataSaver();
+        systemUIDialog.setTitle(17040023);
+        systemUIDialog.setMessage(17040021);
+        systemUIDialog.setPositiveButton(17040022, new DialogInterface.OnClickListener() {
+            public final void onClick(DialogInterface dialogInterface, int i) {
+                DataSaverTile.this.lambda$handleClick$0$DataSaverTile(dialogInterface, i);
             }
         });
         systemUIDialog.setNegativeButton(17039360, (DialogInterface.OnClickListener) null);
@@ -63,38 +56,50 @@ public class DataSaverTile extends QSTileImpl<QSTile.BooleanState> implements Da
     }
 
     /* access modifiers changed from: private */
-    public void toggleDataSaver() {
+    /* renamed from: lambda$handleClick$0 */
+    public /* synthetic */ void lambda$handleClick$0$DataSaverTile(DialogInterface dialogInterface, int i) {
+        toggleDataSaver();
+    }
+
+    private void toggleDataSaver() {
         ((QSTile.BooleanState) this.mState).value = !this.mDataSaverController.isDataSaverEnabled();
         this.mDataSaverController.setDataSaverEnabled(((QSTile.BooleanState) this.mState).value);
         refreshState(Boolean.valueOf(((QSTile.BooleanState) this.mState).value));
     }
 
     public CharSequence getTileLabel() {
-        return this.mContext.getString(R.string.data_saver);
+        return this.mContext.getString(C0021R$string.data_saver);
     }
 
     /* access modifiers changed from: protected */
     public void handleUpdateState(QSTile.BooleanState booleanState, Object obj) {
         boolean z;
+        int i;
         if (obj instanceof Boolean) {
             z = ((Boolean) obj).booleanValue();
         } else {
             z = this.mDataSaverController.isDataSaverEnabled();
         }
         booleanState.value = z;
-        booleanState.state = booleanState.value ? 2 : 1;
-        booleanState.label = this.mContext.getString(R.string.data_saver);
-        booleanState.contentDescription = booleanState.label;
-        booleanState.icon = QSTileImpl.ResourceIcon.get(booleanState.value ? R.drawable.ic_data_saver : R.drawable.ic_data_saver_off);
+        booleanState.state = z ? 2 : 1;
+        String string = this.mContext.getString(C0021R$string.data_saver);
+        booleanState.label = string;
+        booleanState.contentDescription = string;
+        if (booleanState.value) {
+            i = C0013R$drawable.ic_data_saver;
+        } else {
+            i = C0013R$drawable.ic_data_saver_off;
+        }
+        booleanState.icon = QSTileImpl.ResourceIcon.get(i);
         booleanState.expandedAccessibilityClassName = Switch.class.getName();
     }
 
     /* access modifiers changed from: protected */
     public String composeChangeAnnouncement() {
         if (((QSTile.BooleanState) this.mState).value) {
-            return this.mContext.getString(R.string.accessibility_quick_settings_data_saver_changed_on);
+            return this.mContext.getString(C0021R$string.accessibility_quick_settings_data_saver_changed_on);
         }
-        return this.mContext.getString(R.string.accessibility_quick_settings_data_saver_changed_off);
+        return this.mContext.getString(C0021R$string.accessibility_quick_settings_data_saver_changed_off);
     }
 
     public void onDataSaverChanged(boolean z) {

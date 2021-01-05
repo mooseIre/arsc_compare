@@ -3,14 +3,16 @@ package com.android.systemui.plugins.qs;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.metrics.LogMaker;
+import com.android.internal.logging.InstanceId;
+import com.android.systemui.plugins.annotations.Dependencies;
+import com.android.systemui.plugins.annotations.DependsOn;
 import com.android.systemui.plugins.annotations.ProvidesInterface;
 import java.util.Objects;
+import java.util.function.Supplier;
 
+@Dependencies({@DependsOn(target = QSIconView.class), @DependsOn(target = DetailAdapter.class), @DependsOn(target = Callback.class), @DependsOn(target = Icon.class), @DependsOn(target = State.class)})
 @ProvidesInterface(version = 1)
 public interface QSTile {
-    public static final int STATE_ACTIVE = 2;
-    public static final int STATE_INACTIVE = 1;
-    public static final int STATE_UNAVAILABLE = 0;
     public static final int TILE_ACTIVE_BG_AUTO_BRIGHTNESS = 2;
     public static final int TILE_ACTIVE_BG_BATTERY_RELATED = 1;
     public static final int TILE_ACTIVE_BG_NORMAL = 0;
@@ -18,7 +20,12 @@ public interface QSTile {
 
     @ProvidesInterface(version = 1)
     public interface Callback {
+        public static final int TYPE_NONE = 0;
         public static final int VERSION = 1;
+
+        int getCallbackType() {
+            return 0;
+        }
 
         void onAnnouncementRequested(CharSequence charSequence);
 
@@ -26,7 +33,8 @@ public interface QSTile {
 
         void onShowDetail(boolean z);
 
-        void onShowEdit(boolean z);
+        void onShowEdit(boolean z) {
+        }
 
         void onStateChanged(State state);
 
@@ -35,9 +43,9 @@ public interface QSTile {
 
     void addCallback(Callback callback);
 
-    void clearState();
-
-    void click();
+    @Deprecated
+    void clearState() {
+    }
 
     void click(boolean z);
 
@@ -49,7 +57,7 @@ public interface QSTile {
 
     DetailAdapter getDetailAdapter();
 
-    int getIndex();
+    InstanceId getInstanceId();
 
     int getMetricsCategory();
 
@@ -63,7 +71,9 @@ public interface QSTile {
 
     void longClick();
 
-    LogMaker populate(LogMaker logMaker);
+    LogMaker populate(LogMaker logMaker) {
+        return logMaker;
+    }
 
     void refreshState();
 
@@ -75,15 +85,23 @@ public interface QSTile {
 
     void setDetailListening(boolean z);
 
-    void setInControlCenter(boolean z);
-
-    void setIndex(int i);
-
     void setListening(Object obj, boolean z);
 
     void setTileSpec(String str);
 
     void userSwitch(int i);
+
+    void removeCallbacksByType(int i) {
+        removeCallbacks();
+    }
+
+    void click() {
+        click(false);
+    }
+
+    String getMetricsSpec() {
+        return getClass().getSimpleName();
+    }
 
     @ProvidesInterface(version = 1)
     public static abstract class Icon {
@@ -93,6 +111,10 @@ public interface QSTile {
 
         public int getPadding() {
             return 0;
+        }
+
+        public String toString() {
+            return "Icon";
         }
 
         public Drawable getInvisibleDrawable(Context context) {
@@ -113,30 +135,41 @@ public interface QSTile {
         public CharSequence dualLabelContentDescription;
         public boolean dualTarget = false;
         public String expandedAccessibilityClassName;
+        public boolean handlesLongClick = true;
         public Icon icon;
+        public Supplier<Icon> iconSupplier;
         public boolean isTransient = false;
         public CharSequence label;
         public CharSequence secondaryLabel;
+        public boolean showRippleEffect = true;
+        public SlashState slash;
         public int state = 2;
+        public CharSequence stateDescription;
         public boolean withAnimation;
 
         public boolean copyTo(State state2) {
             if (state2 == null) {
                 throw new IllegalArgumentException();
             } else if (state2.getClass().equals(getClass())) {
-                boolean z = !Objects.equals(state2.icon, this.icon) || !Objects.equals(state2.label, this.label) || !Objects.equals(state2.secondaryLabel, this.secondaryLabel) || !Objects.equals(state2.contentDescription, this.contentDescription) || !Objects.equals(state2.dualLabelContentDescription, this.dualLabelContentDescription) || !Objects.equals(state2.expandedAccessibilityClassName, this.expandedAccessibilityClassName) || !Objects.equals(Boolean.valueOf(state2.disabledByPolicy), Boolean.valueOf(this.disabledByPolicy)) || !Objects.equals(Integer.valueOf(state2.state), Integer.valueOf(this.state)) || !Objects.equals(Boolean.valueOf(state2.isTransient), Boolean.valueOf(this.isTransient)) || !Objects.equals(Boolean.valueOf(state2.dualTarget), Boolean.valueOf(this.dualTarget)) || !Objects.equals(Boolean.valueOf(state2.withAnimation), Boolean.valueOf(this.withAnimation));
+                boolean z = !Objects.equals(state2.icon, this.icon) || !Objects.equals(state2.iconSupplier, this.iconSupplier) || !Objects.equals(state2.label, this.label) || !Objects.equals(state2.secondaryLabel, this.secondaryLabel) || !Objects.equals(state2.contentDescription, this.contentDescription) || !Objects.equals(state2.stateDescription, this.stateDescription) || !Objects.equals(state2.dualLabelContentDescription, this.dualLabelContentDescription) || !Objects.equals(state2.expandedAccessibilityClassName, this.expandedAccessibilityClassName) || !Objects.equals(Boolean.valueOf(state2.disabledByPolicy), Boolean.valueOf(this.disabledByPolicy)) || !Objects.equals(Integer.valueOf(state2.state), Integer.valueOf(this.state)) || !Objects.equals(Boolean.valueOf(state2.isTransient), Boolean.valueOf(this.isTransient)) || !Objects.equals(Boolean.valueOf(state2.dualTarget), Boolean.valueOf(this.dualTarget)) || !Objects.equals(state2.slash, this.slash) || !Objects.equals(Boolean.valueOf(state2.handlesLongClick), Boolean.valueOf(this.handlesLongClick)) || !Objects.equals(Boolean.valueOf(state2.showRippleEffect), Boolean.valueOf(this.showRippleEffect));
                 state2.icon = this.icon;
+                state2.iconSupplier = this.iconSupplier;
                 state2.label = this.label;
                 state2.secondaryLabel = this.secondaryLabel;
                 state2.contentDescription = this.contentDescription;
+                state2.stateDescription = this.stateDescription;
                 state2.dualLabelContentDescription = this.dualLabelContentDescription;
                 state2.expandedAccessibilityClassName = this.expandedAccessibilityClassName;
                 state2.disabledByPolicy = this.disabledByPolicy;
                 state2.state = this.state;
                 state2.dualTarget = this.dualTarget;
                 state2.isTransient = this.isTransient;
-                state2.withAnimation = this.withAnimation;
+                SlashState slashState = this.slash;
+                state2.slash = slashState != null ? slashState.copy() : null;
+                state2.handlesLongClick = this.handlesLongClick;
+                state2.showRippleEffect = this.showRippleEffect;
                 state2.activeBgColor = this.activeBgColor;
+                state2.withAnimation = this.withAnimation;
                 return z;
             } else {
                 throw new IllegalArgumentException();
@@ -153,12 +186,16 @@ public interface QSTile {
             sb.append('[');
             sb.append(",icon=");
             sb.append(this.icon);
+            sb.append(",iconSupplier=");
+            sb.append(this.iconSupplier);
             sb.append(",label=");
             sb.append(this.label);
             sb.append(",secondaryLabel=");
             sb.append(this.secondaryLabel);
             sb.append(",contentDescription=");
             sb.append(this.contentDescription);
+            sb.append(",stateDescription=");
+            sb.append(this.stateDescription);
             sb.append(",dualLabelContentDescription=");
             sb.append(this.dualLabelContentDescription);
             sb.append(",expandedAccessibilityClassName=");
@@ -171,10 +208,13 @@ public interface QSTile {
             sb.append(this.isTransient);
             sb.append(",state=");
             sb.append(this.state);
-            sb.append(",animation=");
-            sb.append(this.withAnimation);
+            sb.append(",slash=\"");
+            sb.append(this.slash);
+            sb.append("\"");
             sb.append(",activeBgColor=");
             sb.append(this.activeBgColor);
+            sb.append(",animation=");
+            sb.append(this.withAnimation);
             sb.append(']');
             return sb;
         }
@@ -248,22 +288,32 @@ public interface QSTile {
         }
     }
 
-    @ProvidesInterface(version = 1)
-    public static class AirplaneBooleanState extends BooleanState {
-        public static final int VERSION = 1;
-        public boolean isAirplaneMode;
+    @ProvidesInterface(version = 2)
+    public static class SlashState {
+        public static final int VERSION = 2;
+        public boolean isSlashed;
+        public float rotation;
 
-        public boolean copyTo(State state) {
-            AirplaneBooleanState airplaneBooleanState = (AirplaneBooleanState) state;
-            boolean z = super.copyTo(state) || airplaneBooleanState.isAirplaneMode != this.isAirplaneMode;
-            airplaneBooleanState.isAirplaneMode = this.isAirplaneMode;
-            return z;
+        public String toString() {
+            return "isSlashed=" + this.isSlashed + ",rotation=" + this.rotation;
         }
 
-        public State copy() {
-            AirplaneBooleanState airplaneBooleanState = new AirplaneBooleanState();
-            copyTo(airplaneBooleanState);
-            return airplaneBooleanState;
+        public boolean equals(Object obj) {
+            if (obj == null) {
+                return false;
+            }
+            try {
+                return ((SlashState) obj).rotation == this.rotation && ((SlashState) obj).isSlashed == this.isSlashed;
+            } catch (ClassCastException unused) {
+                return false;
+            }
+        }
+
+        public SlashState copy() {
+            SlashState slashState = new SlashState();
+            slashState.rotation = this.rotation;
+            slashState.isSlashed = this.isSlashed;
+            return slashState;
         }
     }
 }

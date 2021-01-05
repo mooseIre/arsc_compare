@@ -1,112 +1,112 @@
 package com.android.systemui;
 
 import android.content.Context;
-import android.util.ArrayMap;
+import android.content.res.Resources;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
-import android.view.View;
 import android.view.ViewGroup;
+import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.widget.LockPatternUtils;
+import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.ViewMediatorCallback;
-import com.android.systemui.Dependency;
+import com.android.systemui.bubbles.BubbleController;
+import com.android.systemui.dagger.DaggerSystemUIRootComponent;
+import com.android.systemui.dagger.DependencyProvider;
+import com.android.systemui.dagger.SystemUIRootComponent;
 import com.android.systemui.keyguard.DismissCallbackRegistry;
-import com.android.systemui.miui.ActivityObserver;
-import com.android.systemui.miui.ActivityObserverImpl;
-import com.android.systemui.miui.AppIconsManager;
-import com.android.systemui.miui.ToastOverlayManager;
-import com.android.systemui.miui.controlcenter.QSControlTileHost;
-import com.android.systemui.miui.policy.NotificationsMonitor;
-import com.android.systemui.miui.policy.NotificationsMonitorImpl;
-import com.android.systemui.plugins.R;
-import com.android.systemui.qs.QSTileHost;
-import com.android.systemui.statusbar.KeyguardIndicationController;
-import com.android.systemui.statusbar.ScrimView;
+import com.android.systemui.plugins.FalsingManager;
+import com.android.systemui.plugins.statusbar.StatusBarStateController;
+import com.android.systemui.screenshot.ScreenshotNotificationSmartActionsProvider;
+import com.android.systemui.statusbar.NotificationListener;
+import com.android.systemui.statusbar.NotificationMediaManager;
+import com.android.systemui.statusbar.notification.NotificationWakeUpCoordinator;
+import com.android.systemui.statusbar.phone.DozeParameters;
 import com.android.systemui.statusbar.phone.KeyguardBouncer;
-import com.android.systemui.statusbar.phone.LightBarController;
-import com.android.systemui.statusbar.phone.LockscreenWallpaper;
+import com.android.systemui.statusbar.phone.KeyguardBypassController;
 import com.android.systemui.statusbar.phone.NotificationIconAreaController;
-import com.android.systemui.statusbar.phone.NotificationPanelView;
-import com.android.systemui.statusbar.phone.NotificationPeekingIconAreaController;
-import com.android.systemui.statusbar.phone.ScrimController;
 import com.android.systemui.statusbar.phone.StatusBar;
-import com.android.systemui.statusbar.phone.StatusBarIconController;
-import com.android.systemui.statusbar.phone.StatusBarKeyguardViewManager;
-import com.android.systemui.statusbar.phone.StatusBarTypeController;
+import com.android.systemui.statusbar.policy.KeyguardStateController;
+import java.util.concurrent.Executor;
 
 public class SystemUIFactory {
     static SystemUIFactory mFactory;
+    private SystemUIRootComponent mRootComponent;
 
-    public <T> T createInstance(Class<T> cls) {
-        return null;
-    }
-
-    public static SystemUIFactory getInstance() {
+    public static <T extends SystemUIFactory> T getInstance() {
         return mFactory;
     }
 
     public static void createFromConfig(Context context) {
-        String string = context.getString(R.string.config_systemUIFactoryComponent);
-        if (string == null || string.length() == 0) {
-            throw new RuntimeException("No SystemUIFactory component configured");
+        if (mFactory == null) {
+            String string = context.getString(C0021R$string.config_systemUIFactoryComponent);
+            if (string == null || string.length() == 0) {
+                throw new RuntimeException("No SystemUIFactory component configured");
+            }
+            try {
+                SystemUIFactory systemUIFactory = (SystemUIFactory) context.getClassLoader().loadClass(string).newInstance();
+                mFactory = systemUIFactory;
+                systemUIFactory.init(context);
+            } catch (Throwable th) {
+                Log.w("SystemUIFactory", "Error creating SystemUIFactory component: " + string, th);
+                throw new RuntimeException(th);
+            }
         }
-        try {
-            mFactory = (SystemUIFactory) context.getClassLoader().loadClass(string).newInstance();
-        } catch (Throwable th) {
-            Log.w("SystemUIFactory", "Error creating SystemUIFactory component: " + string, th);
-            throw new RuntimeException(th);
+    }
+
+    @VisibleForTesting
+    static void cleanup() {
+        mFactory = null;
+    }
+
+    private void init(Context context) {
+        this.mRootComponent = buildSystemUIRootComponent(context);
+        Dependency dependency = new Dependency();
+        this.mRootComponent.createDependency().createSystemUI(dependency);
+        dependency.start();
+    }
+
+    /* access modifiers changed from: protected */
+    public SystemUIRootComponent buildSystemUIRootComponent(Context context) {
+        DaggerSystemUIRootComponent.Builder builder = DaggerSystemUIRootComponent.builder();
+        builder.dependencyProvider(new DependencyProvider());
+        builder.contextHolder(new ContextHolder(context));
+        return builder.build();
+    }
+
+    public SystemUIRootComponent getRootComponent() {
+        return this.mRootComponent;
+    }
+
+    public String[] getSystemUIServiceComponents(Resources resources) {
+        return resources.getStringArray(C0008R$array.config_systemUIServiceComponents);
+    }
+
+    public String[] getSystemUIServiceComponentsPerUser(Resources resources) {
+        return resources.getStringArray(C0008R$array.config_systemUIServiceComponentsPerUser);
+    }
+
+    public ScreenshotNotificationSmartActionsProvider createScreenshotNotificationSmartActionsProvider(Context context, Executor executor, Handler handler) {
+        return new ScreenshotNotificationSmartActionsProvider();
+    }
+
+    public KeyguardBouncer createKeyguardBouncer(Context context, ViewMediatorCallback viewMediatorCallback, LockPatternUtils lockPatternUtils, ViewGroup viewGroup, DismissCallbackRegistry dismissCallbackRegistry, KeyguardBouncer.BouncerExpansionCallback bouncerExpansionCallback, KeyguardStateController keyguardStateController, FalsingManager falsingManager, KeyguardBypassController keyguardBypassController) {
+        return new KeyguardBouncer(context, viewMediatorCallback, lockPatternUtils, viewGroup, dismissCallbackRegistry, falsingManager, bouncerExpansionCallback, keyguardStateController, (KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class), keyguardBypassController, new Handler(Looper.getMainLooper()));
+    }
+
+    public NotificationIconAreaController createNotificationIconAreaController(Context context, StatusBar statusBar, NotificationWakeUpCoordinator notificationWakeUpCoordinator, KeyguardBypassController keyguardBypassController, StatusBarStateController statusBarStateController) {
+        return new NotificationIconAreaController(context, statusBar, statusBarStateController, notificationWakeUpCoordinator, keyguardBypassController, (NotificationMediaManager) Dependency.get(NotificationMediaManager.class), (NotificationListener) Dependency.get(NotificationListener.class), (DozeParameters) Dependency.get(DozeParameters.class), (BubbleController) Dependency.get(BubbleController.class));
+    }
+
+    public static class ContextHolder {
+        private Context mContext;
+
+        public ContextHolder(Context context) {
+            this.mContext = context;
         }
-    }
 
-    public StatusBarKeyguardViewManager createStatusBarKeyguardViewManager(Context context, ViewMediatorCallback viewMediatorCallback, LockPatternUtils lockPatternUtils) {
-        return new StatusBarKeyguardViewManager(context, viewMediatorCallback, lockPatternUtils);
-    }
-
-    public KeyguardBouncer createKeyguardBouncer(Context context, ViewMediatorCallback viewMediatorCallback, LockPatternUtils lockPatternUtils, ViewGroup viewGroup, DismissCallbackRegistry dismissCallbackRegistry) {
-        return new KeyguardBouncer(context, viewMediatorCallback, lockPatternUtils, viewGroup, dismissCallbackRegistry);
-    }
-
-    public ScrimController createScrimController(LightBarController lightBarController, ScrimView scrimView, ScrimView scrimView2, View view, LockscreenWallpaper lockscreenWallpaper) {
-        return new ScrimController(lightBarController, scrimView, scrimView2, view);
-    }
-
-    public NotificationIconAreaController createNotificationIconAreaController(Context context, StatusBar statusBar) {
-        if (((StatusBarTypeController) Dependency.get(StatusBarTypeController.class)).getCutoutType() == StatusBarTypeController.CutoutType.NONE || !context.getResources().getBoolean(R.bool.status_bar_notification_icons_notch_peeking_enabled)) {
-            return new NotificationIconAreaController(context, statusBar);
+        public Context provideContext() {
+            return this.mContext;
         }
-        return new NotificationPeekingIconAreaController(context, statusBar);
-    }
-
-    public KeyguardIndicationController createKeyguardIndicationController(Context context, NotificationPanelView notificationPanelView) {
-        return new KeyguardIndicationController(context, notificationPanelView);
-    }
-
-    public QSTileHost createQSTileHost(Context context, StatusBar statusBar, StatusBarIconController statusBarIconController) {
-        return new QSTileHost(context, statusBar, statusBarIconController);
-    }
-
-    public QSControlTileHost createQSControlTileHost(Context context, StatusBar statusBar, StatusBarIconController statusBarIconController) {
-        return new QSControlTileHost(context, statusBar, statusBarIconController);
-    }
-
-    public void injectDependencies(ArrayMap<Object, Dependency.DependencyProvider> arrayMap, final Context context) {
-        arrayMap.put(ToastOverlayManager.class, new Dependency.DependencyProvider() {
-            public Object createDependency() {
-                return new ToastOverlayManager();
-            }
-        });
-        arrayMap.put(AppIconsManager.class, new Dependency.DependencyProvider() {
-            public Object createDependency() {
-                return new AppIconsManager();
-            }
-        });
-        arrayMap.put(NotificationsMonitor.class, new Dependency.DependencyProvider() {
-            public Object createDependency() {
-                return new NotificationsMonitorImpl();
-            }
-        });
-        arrayMap.put(ActivityObserver.class, new Dependency.DependencyProvider() {
-            public Object createDependency() {
-                return new ActivityObserverImpl(context);
-            }
-        });
     }
 }

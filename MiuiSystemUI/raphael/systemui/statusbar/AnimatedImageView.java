@@ -13,6 +13,7 @@ import com.android.systemui.R$styleable;
 
 @RemoteViews.RemoteView
 public class AnimatedImageView extends ImageView {
+    private boolean mAllowAnimation;
     AnimationDrawable mAnim;
     boolean mAttached;
     int mDrawableId;
@@ -24,11 +25,23 @@ public class AnimatedImageView extends ImageView {
 
     public AnimatedImageView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
+        this.mAllowAnimation = true;
         TypedArray obtainStyledAttributes = context.getTheme().obtainStyledAttributes(attributeSet, R$styleable.AnimatedImageView, 0, 0);
         try {
-            this.mHasOverlappingRendering = obtainStyledAttributes.getBoolean(0, true);
+            this.mHasOverlappingRendering = obtainStyledAttributes.getBoolean(R$styleable.AnimatedImageView_hasOverlappingRendering, true);
         } finally {
             obtainStyledAttributes.recycle();
+        }
+    }
+
+    public void setAllowAnimation(boolean z) {
+        AnimationDrawable animationDrawable;
+        if (this.mAllowAnimation != z) {
+            this.mAllowAnimation = z;
+            updateAnim();
+            if (!this.mAllowAnimation && (animationDrawable = this.mAnim) != null) {
+                animationDrawable.setVisible(getVisibility() == 0, true);
+            }
         }
     }
 
@@ -40,7 +53,7 @@ public class AnimatedImageView extends ImageView {
         }
         if (drawable instanceof AnimationDrawable) {
             this.mAnim = (AnimationDrawable) drawable;
-            if (isShown()) {
+            if (isShown() && this.mAllowAnimation) {
                 this.mAnim.start();
                 return;
             }
@@ -91,10 +104,10 @@ public class AnimatedImageView extends ImageView {
         if (this.mAnim == null) {
             return;
         }
-        if (isShown()) {
-            this.mAnim.start();
-        } else {
+        if (!isShown() || !this.mAllowAnimation) {
             this.mAnim.stop();
+        } else {
+            this.mAnim.start();
         }
     }
 

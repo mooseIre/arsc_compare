@@ -2,39 +2,44 @@ package com.android.systemui.vendor;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.PowerManager;
-import android.os.SystemClock;
 import android.os.UserHandle;
 import com.android.systemui.Dependency;
+import kotlin.TypeCastException;
+import kotlin.jvm.internal.Intrinsics;
+import org.jetbrains.annotations.NotNull;
 
-public class HeadsetPolicy {
-    private BroadcastReceiver mIntentReceiver = new BroadcastReceiver() {
-        public void onReceive(Context context, Intent intent) {
-            updateHeadset(intent);
-        }
-
-        private void updateHeadset(Intent intent) {
-            boolean z = false;
-            if (intent.getIntExtra("state", 0) == 1) {
-                z = true;
-            }
-            if (z && !HeadsetPolicy.this.mPowerManager.isScreenOn()) {
-                HeadsetPolicy.this.mPowerManager.wakeUp(SystemClock.uptimeMillis(), "com.android.systemui:HEADSET");
-            }
-        }
-    };
+/* compiled from: HeadsetPolicy.kt */
+public final class HeadsetPolicy {
+    private final Context mContext;
+    private final BroadcastReceiver mIntentReceiver;
     /* access modifiers changed from: private */
     public final PowerManager mPowerManager;
 
-    public HeadsetPolicy(Context context) {
-        this.mPowerManager = (PowerManager) context.getSystemService("power");
-        Handler handler = new Handler((Looper) Dependency.get(Dependency.BG_LOOPER));
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction("android.intent.action.HEADSET_PLUG");
-        context.registerReceiverAsUser(this.mIntentReceiver, UserHandle.ALL, intentFilter, (String) null, handler);
+    public HeadsetPolicy(@NotNull Context context) {
+        Intrinsics.checkParameterIsNotNull(context, "context");
+        this.mContext = context;
+        Object systemService = context.getSystemService("power");
+        if (systemService != null) {
+            this.mPowerManager = (PowerManager) systemService;
+            this.mIntentReceiver = new HeadsetPolicy$mIntentReceiver$1(this);
+            return;
+        }
+        throw new TypeCastException("null cannot be cast to non-null type android.os.PowerManager");
+    }
+
+    public final void start() {
+        Object obj = Dependency.get(Dependency.BG_LOOPER);
+        if (obj != null) {
+            Handler handler = new Handler((Looper) obj);
+            IntentFilter intentFilter = new IntentFilter();
+            intentFilter.addAction("android.intent.action.HEADSET_PLUG");
+            this.mContext.registerReceiverAsUser(this.mIntentReceiver, UserHandle.ALL, intentFilter, (String) null, handler);
+            return;
+        }
+        throw new TypeCastException("null cannot be cast to non-null type android.os.Looper");
     }
 }

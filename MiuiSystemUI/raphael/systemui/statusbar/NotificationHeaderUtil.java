@@ -1,48 +1,23 @@
 package com.android.systemui.statusbar;
 
 import android.app.Notification;
-import android.app.NotificationCompat;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.IconCompat;
 import android.text.TextUtils;
-import android.view.NotificationHeaderView;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.android.systemui.SystemUICompat;
+import com.android.internal.widget.ConversationLayout;
+import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow;
+import com.android.systemui.statusbar.notification.row.NotificationContentView;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
 public class NotificationHeaderUtil {
-    private static final ResultApplicator mGreyApplicator = new ResultApplicator() {
-        public void apply(View view, boolean z) {
-            NotificationHeaderView notificationHeaderView = (NotificationHeaderView) view;
-            applyToChild((ImageView) view.findViewById(16908294), z, notificationHeaderView.getOriginalIconColor());
-            applyToChild((ImageView) view.findViewById(16908906), z, notificationHeaderView.getOriginalNotificationColor());
-        }
-
-        private void applyToChild(View view, boolean z, int i) {
-            Drawable drawable;
-            if (view != null && i != 1 && (drawable = ((ImageView) view).getDrawable()) != null) {
-                drawable.mutate();
-                if (z) {
-                    drawable.setColorFilter(view.getContext().getColor(SystemUICompat.getNotificationDefaultColor()), PorterDuff.Mode.SRC_ATOP);
-                } else {
-                    drawable.setColorFilter(i, PorterDuff.Mode.SRC_ATOP);
-                }
-            }
-        }
-    };
-    private static final IconComparator sGreyComparator = new IconComparator() {
-        public boolean compare(View view, View view2, Object obj, Object obj2) {
-            return !hasSameIcon(obj, obj2) || hasSameColor(obj, obj2);
-        }
-    };
+    private static final VisibilityApplicator sAppNameApplicator = new AppNameApplicator();
     private static final DataExtractor sIconExtractor = new DataExtractor() {
         public Object extractData(ExpandableNotificationRow expandableNotificationRow) {
-            return expandableNotificationRow.getStatusBarNotification().getNotification();
+            return expandableNotificationRow.getEntry().getSbn().getNotification();
         }
     };
     private static final IconComparator sIconVisibilityComparator = new IconComparator() {
@@ -63,7 +38,7 @@ public class NotificationHeaderUtil {
     }
 
     private interface ResultApplicator {
-        void apply(View view, boolean z);
+        void apply(View view, View view2, boolean z, boolean z2);
     }
 
     private interface ViewComparator {
@@ -74,8 +49,8 @@ public class NotificationHeaderUtil {
 
     public NotificationHeaderUtil(ExpandableNotificationRow expandableNotificationRow) {
         this.mRow = expandableNotificationRow;
-        this.mComparators.add(new HeaderProcessor(this.mRow, 16908294, sIconExtractor, sIconVisibilityComparator, sVisibilityApplicator));
-        this.mComparators.add(new HeaderProcessor(this.mRow, 16909276, (DataExtractor) null, new ViewComparator() {
+        this.mComparators.add(new HeaderProcessor(expandableNotificationRow, 16908294, sIconExtractor, sIconVisibilityComparator, sVisibilityApplicator));
+        this.mComparators.add(new HeaderProcessor(this.mRow, 16909335, (DataExtractor) null, new ViewComparator(this) {
             public boolean compare(View view, View view2, Object obj, Object obj2) {
                 return view.getVisibility() != 8;
             }
@@ -87,26 +62,27 @@ public class NotificationHeaderUtil {
                 return true;
             }
         }, sVisibilityApplicator));
-        this.mComparators.add(HeaderProcessor.forTextView(this.mRow, 16908733));
-        this.mComparators.add(HeaderProcessor.forTextView(this.mRow, 16908985));
-        this.mDividers.add(16908986);
-        this.mDividers.add(16909483);
+        this.mComparators.add(new HeaderProcessor(this.mRow, 16908763, (DataExtractor) null, sTextViewComparator, sAppNameApplicator));
+        this.mComparators.add(HeaderProcessor.forTextView(this.mRow, 16909041));
+        this.mDividers.add(16909042);
+        this.mDividers.add(16909044);
+        this.mDividers.add(16909555);
     }
 
     public void updateChildrenHeaderAppearance() {
-        List<ExpandableNotificationRow> notificationChildren = this.mRow.getNotificationChildren();
-        if (notificationChildren != null) {
+        List<ExpandableNotificationRow> attachedChildren = this.mRow.getAttachedChildren();
+        if (attachedChildren != null) {
             for (int i = 0; i < this.mComparators.size(); i++) {
                 this.mComparators.get(i).init();
             }
-            for (int i2 = 0; i2 < notificationChildren.size(); i2++) {
-                ExpandableNotificationRow expandableNotificationRow = notificationChildren.get(i2);
+            for (int i2 = 0; i2 < attachedChildren.size(); i2++) {
+                ExpandableNotificationRow expandableNotificationRow = attachedChildren.get(i2);
                 for (int i3 = 0; i3 < this.mComparators.size(); i3++) {
                     this.mComparators.get(i3).compareToHeader(expandableNotificationRow);
                 }
             }
-            for (int i4 = 0; i4 < notificationChildren.size(); i4++) {
-                ExpandableNotificationRow expandableNotificationRow2 = notificationChildren.get(i4);
+            for (int i4 = 0; i4 < attachedChildren.size(); i4++) {
+                ExpandableNotificationRow expandableNotificationRow2 = attachedChildren.get(i4);
                 for (int i5 = 0; i5 < this.mComparators.size(); i5++) {
                     this.mComparators.get(i5).apply(expandableNotificationRow2);
                 }
@@ -128,66 +104,59 @@ public class NotificationHeaderUtil {
 
     private void sanitizeChild(View view) {
         if (view != null) {
-            sanitizeHeader(view.findViewById(16909178));
+            sanitizeHeader((ViewGroup) view.findViewById(16909237));
         }
     }
 
-    private void sanitizeHeader(NotificationHeaderView notificationHeaderView) {
-        View view;
+    private void sanitizeHeader(ViewGroup viewGroup) {
         boolean z;
+        View view;
         boolean z2;
-        if (notificationHeaderView != null) {
-            int childCount = notificationHeaderView.getChildCount();
-            View findViewById = notificationHeaderView.findViewById(16909479);
-            if (findViewById != null) {
-                int i = 1;
-                while (true) {
-                    if (i >= childCount - 1) {
-                        z2 = false;
-                        break;
-                    }
-                    View childAt = notificationHeaderView.getChildAt(i);
-                    if ((childAt instanceof TextView) && childAt.getVisibility() != 8 && !this.mDividers.contains(Integer.valueOf(childAt.getId())) && childAt != findViewById) {
-                        z2 = true;
-                        break;
-                    }
-                    i++;
-                }
-                findViewById.setVisibility((!z2 || NotificationCompat.showsTime(this.mRow.getStatusBarNotification().getNotification())) ? 0 : 8);
-            }
-            View view2 = null;
-            int i2 = 1;
+        if (viewGroup != null) {
+            int childCount = viewGroup.getChildCount();
+            View findViewById = viewGroup.findViewById(16909551);
+            int i = 0;
             while (true) {
-                int i3 = childCount - 1;
-                if (i2 < i3) {
-                    View childAt2 = notificationHeaderView.getChildAt(i2);
-                    if (this.mDividers.contains(Integer.valueOf(childAt2.getId()))) {
-                        while (true) {
-                            i2++;
-                            if (i2 >= i3) {
-                                break;
-                            }
-                            view = notificationHeaderView.getChildAt(i2);
-                            if (this.mDividers.contains(Integer.valueOf(view.getId()))) {
-                                i2--;
-                                break;
-                            } else if (view.getVisibility() != 8 && (view instanceof TextView)) {
-                                if (view2 != null) {
-                                    z = true;
-                                }
+                if (i >= childCount) {
+                    z = false;
+                    break;
+                }
+                View childAt = viewGroup.getChildAt(i);
+                if ((childAt instanceof TextView) && childAt.getVisibility() != 8 && !this.mDividers.contains(Integer.valueOf(childAt.getId())) && childAt != findViewById) {
+                    z = true;
+                    break;
+                }
+                i++;
+            }
+            findViewById.setVisibility((!z || this.mRow.getEntry().getSbn().getNotification().showsTime()) ? 0 : 8);
+            View view2 = null;
+            int i2 = 0;
+            while (i2 < childCount) {
+                View childAt2 = viewGroup.getChildAt(i2);
+                if (this.mDividers.contains(Integer.valueOf(childAt2.getId()))) {
+                    while (true) {
+                        i2++;
+                        if (i2 >= childCount) {
+                            break;
+                        }
+                        view = viewGroup.getChildAt(i2);
+                        if (this.mDividers.contains(Integer.valueOf(view.getId()))) {
+                            i2--;
+                            break;
+                        } else if (view.getVisibility() != 8 && (view instanceof TextView)) {
+                            if (view2 != null) {
+                                z2 = true;
                             }
                         }
-                        view = view2;
-                        z = false;
-                        childAt2.setVisibility(z ? 0 : 8);
-                        view2 = view;
-                    } else if (childAt2.getVisibility() != 8 && (childAt2 instanceof TextView)) {
-                        view2 = childAt2;
                     }
-                    i2++;
-                } else {
-                    return;
+                    view = view2;
+                    z2 = false;
+                    childAt2.setVisibility(z2 ? 0 : 8);
+                    view2 = view;
+                } else if (childAt2.getVisibility() != 8 && (childAt2 instanceof TextView)) {
+                    view2 = childAt2;
                 }
+                i2++;
             }
         }
     }
@@ -229,14 +198,11 @@ public class NotificationHeaderUtil {
         }
 
         public void compareToHeader(ExpandableNotificationRow expandableNotificationRow) {
-            if (this.mApply) {
-                NotificationHeaderView notificationHeader = expandableNotificationRow.getNotificationHeader();
-                if (this.mParentView == null || notificationHeader == null) {
-                    this.mApply = false;
-                    return;
-                }
+            View contractedChild;
+            View findViewById;
+            if (this.mApply && (contractedChild = expandableNotificationRow.getPrivateLayout().getContractedChild()) != null && (findViewById = contractedChild.findViewById(this.mId)) != null) {
                 DataExtractor dataExtractor = this.mExtractor;
-                this.mApply = this.mComparator.compare(this.mParentView, notificationHeader.findViewById(this.mId), this.mParentData, dataExtractor == null ? null : dataExtractor.extractData(expandableNotificationRow));
+                this.mApply = this.mComparator.compare(this.mParentView, findViewById, this.mParentData, dataExtractor == null ? null : dataExtractor.extractData(expandableNotificationRow));
             }
         }
 
@@ -247,18 +213,18 @@ public class NotificationHeaderUtil {
         public void apply(ExpandableNotificationRow expandableNotificationRow, boolean z) {
             boolean z2 = this.mApply && !z;
             if (expandableNotificationRow.isSummaryWithChildren()) {
-                applyToView(z2, expandableNotificationRow.getNotificationHeader());
+                applyToView(z2, z, expandableNotificationRow.getNotificationHeader());
                 return;
             }
-            applyToView(z2, expandableNotificationRow.getPrivateLayout().getContractedChild());
-            applyToView(z2, expandableNotificationRow.getPrivateLayout().getHeadsUpChild());
-            applyToView(z2, expandableNotificationRow.getPrivateLayout().getExpandedChild());
+            applyToView(z2, z, expandableNotificationRow.getPrivateLayout().getContractedChild());
+            applyToView(z2, z, expandableNotificationRow.getPrivateLayout().getHeadsUpChild());
+            applyToView(z2, z, expandableNotificationRow.getPrivateLayout().getExpandedChild());
         }
 
-        private void applyToView(boolean z, View view) {
+        private void applyToView(boolean z, boolean z2, View view) {
             View findViewById;
             if (view != null && (findViewById = view.findViewById(this.mId)) != null && !this.mComparator.isEmpty(findViewById)) {
-                this.mApplicator.apply(findViewById, z);
+                this.mApplicator.apply(view, findViewById, z, z2);
             }
         }
     }
@@ -286,7 +252,7 @@ public class NotificationHeaderUtil {
 
         /* access modifiers changed from: protected */
         public boolean hasSameIcon(Object obj, Object obj2) {
-            return IconCompat.sameAs(((Notification) obj).getSmallIcon(), ((Notification) obj2).getSmallIcon());
+            return ((Notification) obj).getSmallIcon().sameAs(((Notification) obj2).getSmallIcon());
         }
 
         /* access modifiers changed from: protected */
@@ -299,8 +265,21 @@ public class NotificationHeaderUtil {
         private VisibilityApplicator() {
         }
 
-        public void apply(View view, boolean z) {
-            view.setVisibility(z ? 8 : 0);
+        public void apply(View view, View view2, boolean z, boolean z2) {
+            view2.setVisibility(z ? 8 : 0);
+        }
+    }
+
+    private static class AppNameApplicator extends VisibilityApplicator {
+        private AppNameApplicator() {
+            super();
+        }
+
+        public void apply(View view, View view2, boolean z, boolean z2) {
+            if (z2 && (view instanceof ConversationLayout)) {
+                z = ((ConversationLayout) view).shouldHideAppName();
+            }
+            super.apply(view, view2, z, z2);
         }
     }
 }

@@ -13,20 +13,8 @@ public class DataSaverControllerImpl implements DataSaverController {
     /* access modifiers changed from: private */
     public final Handler mHandler = new Handler(Looper.getMainLooper());
     private final ArrayList<DataSaverController.Listener> mListeners = new ArrayList<>();
-    private final INetworkPolicyListener mPolicyListener = new INetworkPolicyListener.Stub() {
-        public void onMeteredIfacesChanged(String[] strArr) throws RemoteException {
-        }
-
-        public void onSubscriptionOverride(int i, int i2, int i3) {
-        }
-
-        public void onUidPoliciesChanged(int i, int i2) throws RemoteException {
-        }
-
-        public void onUidRulesChanged(int i, int i2) throws RemoteException {
-        }
-
-        public void onRestrictBackgroundChanged(final boolean z) throws RemoteException {
+    private final INetworkPolicyListener mPolicyListener = new NetworkPolicyManager.Listener() {
+        public void onRestrictBackgroundChanged(final boolean z) {
             DataSaverControllerImpl.this.mHandler.post(new Runnable() {
                 public void run() {
                     DataSaverControllerImpl.this.handleRestrictBackgroundChanged(z);

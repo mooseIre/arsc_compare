@@ -1,6 +1,7 @@
 package com.android.systemui.media;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
@@ -16,9 +17,14 @@ import android.text.TextPaint;
 import android.text.TextUtils;
 import android.text.style.StyleSpan;
 import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
-import com.android.systemui.plugins.R;
-import miui.app.AlertDialog;
+import android.widget.TextView;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0017R$layout;
+import com.android.systemui.C0021R$string;
+import com.android.systemui.util.Utils;
 
 public class MediaProjectionPermissionActivity extends Activity implements DialogInterface.OnClickListener, DialogInterface.OnCancelListener {
     private AlertDialog mDialog;
@@ -27,6 +33,8 @@ public class MediaProjectionPermissionActivity extends Activity implements Dialo
     private int mUid;
 
     public void onCreate(Bundle bundle) {
+        CharSequence charSequence;
+        String str;
         super.onCreate(bundle);
         this.mPackageName = getCallingPackage();
         this.mService = IMediaProjectionManager.Stub.asInterface(ServiceManager.getService("media_projection"));
@@ -37,54 +45,58 @@ public class MediaProjectionPermissionActivity extends Activity implements Dialo
         PackageManager packageManager = getPackageManager();
         try {
             ApplicationInfo applicationInfo = packageManager.getApplicationInfo(this.mPackageName, 0);
-            this.mUid = applicationInfo.uid;
+            int i = applicationInfo.uid;
+            this.mUid = i;
             try {
-                if (this.mService.hasProjectionPermission(this.mUid, this.mPackageName)) {
-                    setResult(-1, getMediaProjectionIntent(this.mUid, this.mPackageName, false));
+                if (this.mService.hasProjectionPermission(i, this.mPackageName)) {
+                    setResult(-1, getMediaProjectionIntent(this.mUid, this.mPackageName));
                     finish();
                     return;
                 }
                 TextPaint textPaint = new TextPaint();
                 textPaint.setTextSize(42.0f);
-                String charSequence = applicationInfo.loadLabel(packageManager).toString();
-                int length = charSequence.length();
-                int i = 0;
-                while (true) {
-                    if (i >= length) {
-                        break;
+                if (Utils.isHeadlessRemoteDisplayProvider(packageManager, this.mPackageName)) {
+                    charSequence = getString(C0021R$string.media_projection_dialog_service_text);
+                    str = getString(C0021R$string.media_projection_dialog_service_title);
+                } else {
+                    String charSequence2 = applicationInfo.loadLabel(packageManager).toString();
+                    int length = charSequence2.length();
+                    int i2 = 0;
+                    while (true) {
+                        if (i2 >= length) {
+                            break;
+                        }
+                        int codePointAt = charSequence2.codePointAt(i2);
+                        int type = Character.getType(codePointAt);
+                        if (type == 13 || type == 15 || type == 14) {
+                            charSequence2 = charSequence2.substring(0, i2) + "…";
+                        } else {
+                            i2 += Character.charCount(codePointAt);
+                        }
                     }
-                    int codePointAt = charSequence.codePointAt(i);
-                    int type = Character.getType(codePointAt);
-                    if (type == 13 || type == 15 || type == 14) {
-                        charSequence = charSequence.substring(0, i) + "…";
-                    } else {
-                        i += Character.charCount(codePointAt);
+                    charSequence2 = charSequence2.substring(0, i2) + "…";
+                    if (charSequence2.isEmpty()) {
+                        charSequence2 = this.mPackageName;
                     }
+                    String unicodeWrap = BidiFormatter.getInstance().unicodeWrap(TextUtils.ellipsize(charSequence2, textPaint, 500.0f, TextUtils.TruncateAt.END).toString());
+                    String string = getString(C0021R$string.media_projection_dialog_text, new Object[]{unicodeWrap});
+                    SpannableString spannableString = new SpannableString(string);
+                    int indexOf = string.indexOf(unicodeWrap);
+                    if (indexOf >= 0) {
+                        spannableString.setSpan(new StyleSpan(1), indexOf, unicodeWrap.length() + indexOf, 0);
+                    }
+                    str = getString(C0021R$string.media_projection_dialog_title, new Object[]{unicodeWrap});
+                    charSequence = spannableString;
                 }
-                charSequence = charSequence.substring(0, i) + "…";
-                if (charSequence.isEmpty()) {
-                    charSequence = this.mPackageName;
-                }
-                String unicodeWrap = BidiFormatter.getInstance().unicodeWrap(TextUtils.ellipsize(charSequence, textPaint, 500.0f, TextUtils.TruncateAt.END).toString());
-                String string = getString(R.string.media_projection_dialog_text, new Object[]{unicodeWrap});
-                SpannableString spannableString = new SpannableString(string);
-                int indexOf = string.indexOf(unicodeWrap);
-                if (indexOf >= 0) {
-                    spannableString.setSpan(new StyleSpan(1), indexOf, unicodeWrap.length() + indexOf, 0);
-                }
-                AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Theme_Dialog_Alert);
-                builder.setIcon(applicationInfo.loadIcon(packageManager));
-                builder.setMessage((CharSequence) spannableString);
-                builder.setCheckBox(false, getString(R.string.media_projection_remember_text));
-                builder.setPositiveButton((int) R.string.media_projection_action_text, (DialogInterface.OnClickListener) this);
-                builder.setNegativeButton(17039360, (DialogInterface.OnClickListener) this);
-                builder.setOnCancelListener(this);
-                this.mDialog = builder.create();
-                this.mDialog.create();
+                View inflate = View.inflate(this, C0017R$layout.media_projection_dialog_title, (ViewGroup) null);
+                ((TextView) inflate.findViewById(C0015R$id.dialog_title)).setText(str);
+                AlertDialog create = new AlertDialog.Builder(this).setCustomTitle(inflate).setMessage(charSequence).setPositiveButton(C0021R$string.media_projection_action_text, this).setNegativeButton(17039360, this).setOnCancelListener(this).create();
+                this.mDialog = create;
+                create.create();
                 this.mDialog.getButton(-1).setFilterTouchesWhenObscured(true);
                 Window window = this.mDialog.getWindow();
                 window.setType(2003);
-                window.addPrivateFlags(524288);
+                window.addSystemFlags(524288);
                 this.mDialog.show();
             } catch (RemoteException e) {
                 Log.e("MediaProjectionPermissionActivity", "Error checking projection permissions", e);
@@ -105,68 +117,66 @@ public class MediaProjectionPermissionActivity extends Activity implements Dialo
         }
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:10:0x0025, code lost:
-        if (r3 == null) goto L_0x003a;
+    /* JADX WARNING: Code restructure failed: missing block: B:10:0x001f, code lost:
+        if (r2 == null) goto L_0x0034;
      */
-    /* JADX WARNING: Code restructure failed: missing block: B:17:0x0035, code lost:
-        if (r3 != null) goto L_0x0037;
+    /* JADX WARNING: Code restructure failed: missing block: B:17:0x002f, code lost:
+        if (r2 != null) goto L_0x0031;
      */
-    /* JADX WARNING: Code restructure failed: missing block: B:18:0x0037, code lost:
-        r3.dismiss();
+    /* JADX WARNING: Code restructure failed: missing block: B:18:0x0031, code lost:
+        r2.dismiss();
      */
-    /* JADX WARNING: Code restructure failed: missing block: B:19:0x003a, code lost:
+    /* JADX WARNING: Code restructure failed: missing block: B:19:0x0034, code lost:
         finish();
      */
-    /* JADX WARNING: Code restructure failed: missing block: B:20:0x003d, code lost:
+    /* JADX WARNING: Code restructure failed: missing block: B:20:0x0037, code lost:
         return;
      */
     /* Code decompiled incorrectly, please refer to instructions dump. */
-    public void onClick(android.content.DialogInterface r3, int r4) {
+    public void onClick(android.content.DialogInterface r2, int r3) {
         /*
-            r2 = this;
-            r3 = -1
-            if (r4 != r3) goto L_0x0033
-            int r4 = r2.mUid     // Catch:{ RemoteException -> 0x0017 }
-            java.lang.String r0 = r2.mPackageName     // Catch:{ RemoteException -> 0x0017 }
-            miui.app.AlertDialog r1 = r2.mDialog     // Catch:{ RemoteException -> 0x0017 }
-            boolean r1 = r1.isChecked()     // Catch:{ RemoteException -> 0x0017 }
-            android.content.Intent r4 = r2.getMediaProjectionIntent(r4, r0, r1)     // Catch:{ RemoteException -> 0x0017 }
-            r2.setResult(r3, r4)     // Catch:{ RemoteException -> 0x0017 }
-            goto L_0x0033
-        L_0x0015:
-            r3 = move-exception
-            goto L_0x0028
-        L_0x0017:
-            r3 = move-exception
-            java.lang.String r4 = "MediaProjectionPermissionActivity"
+            r1 = this;
+            r2 = -1
+            if (r3 != r2) goto L_0x002d
+            int r3 = r1.mUid     // Catch:{ RemoteException -> 0x0011 }
+            java.lang.String r0 = r1.mPackageName     // Catch:{ RemoteException -> 0x0011 }
+            android.content.Intent r3 = r1.getMediaProjectionIntent(r3, r0)     // Catch:{ RemoteException -> 0x0011 }
+            r1.setResult(r2, r3)     // Catch:{ RemoteException -> 0x0011 }
+            goto L_0x002d
+        L_0x000f:
+            r2 = move-exception
+            goto L_0x0022
+        L_0x0011:
+            r2 = move-exception
+            java.lang.String r3 = "MediaProjectionPermissionActivity"
             java.lang.String r0 = "Error granting projection permission"
-            android.util.Log.e(r4, r0, r3)     // Catch:{ all -> 0x0015 }
-            r3 = 0
-            r2.setResult(r3)     // Catch:{ all -> 0x0015 }
-            miui.app.AlertDialog r3 = r2.mDialog
-            if (r3 == 0) goto L_0x003a
-            goto L_0x0037
-        L_0x0028:
-            miui.app.AlertDialog r4 = r2.mDialog
-            if (r4 == 0) goto L_0x002f
-            r4.dismiss()
-        L_0x002f:
-            r2.finish()
-            throw r3
-        L_0x0033:
-            miui.app.AlertDialog r3 = r2.mDialog
-            if (r3 == 0) goto L_0x003a
-        L_0x0037:
+            android.util.Log.e(r3, r0, r2)     // Catch:{ all -> 0x000f }
+            r2 = 0
+            r1.setResult(r2)     // Catch:{ all -> 0x000f }
+            android.app.AlertDialog r2 = r1.mDialog
+            if (r2 == 0) goto L_0x0034
+            goto L_0x0031
+        L_0x0022:
+            android.app.AlertDialog r3 = r1.mDialog
+            if (r3 == 0) goto L_0x0029
             r3.dismiss()
-        L_0x003a:
-            r2.finish()
+        L_0x0029:
+            r1.finish()
+            throw r2
+        L_0x002d:
+            android.app.AlertDialog r2 = r1.mDialog
+            if (r2 == 0) goto L_0x0034
+        L_0x0031:
+            r2.dismiss()
+        L_0x0034:
+            r1.finish()
             return
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.media.MediaProjectionPermissionActivity.onClick(android.content.DialogInterface, int):void");
     }
 
-    private Intent getMediaProjectionIntent(int i, String str, boolean z) throws RemoteException {
-        IMediaProjection createProjection = this.mService.createProjection(i, str, 0, z);
+    private Intent getMediaProjectionIntent(int i, String str) throws RemoteException {
+        IMediaProjection createProjection = this.mService.createProjection(i, str, 0, false);
         Intent intent = new Intent();
         intent.putExtra("android.media.projection.extra.EXTRA_MEDIA_PROJECTION", createProjection.asBinder());
         return intent;

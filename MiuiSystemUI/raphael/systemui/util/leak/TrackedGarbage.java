@@ -60,9 +60,9 @@ public class TrackedGarbage {
         Iterator<LeakReference> it = this.mGarbage.iterator();
         while (it.hasNext()) {
             LeakReference next = it.next();
-            arrayMap.put(next.clazz, Integer.valueOf(getOrDefault(arrayMap, next.clazz, 0).intValue() + 1));
+            arrayMap.put(next.clazz, Integer.valueOf(((Integer) arrayMap.getOrDefault(next.clazz, 0)).intValue() + 1));
             if (isOld(next.createdUptimeMillis, uptimeMillis)) {
-                arrayMap2.put(next.clazz, Integer.valueOf(getOrDefault(arrayMap2, next.clazz, 0).intValue() + 1));
+                arrayMap2.put(next.clazz, Integer.valueOf(((Integer) arrayMap2.getOrDefault(next.clazz, 0)).intValue() + 1));
             }
         }
         for (Map.Entry entry : arrayMap.entrySet()) {
@@ -70,14 +70,10 @@ public class TrackedGarbage {
             printWriter.print(": ");
             printWriter.print(entry.getValue());
             printWriter.print(" total, ");
-            printWriter.print(getOrDefault(arrayMap2, entry.getKey(), 0));
+            printWriter.print(arrayMap2.getOrDefault(entry.getKey(), 0));
             printWriter.print(" old");
             printWriter.println();
         }
-    }
-
-    private Integer getOrDefault(Map<Class<?>, Integer> map, Object obj, Integer num) {
-        return map.containsKey(obj) ? map.get(obj) : num;
     }
 
     public synchronized int countOldGarbage() {

@@ -1,31 +1,28 @@
 package com.android.systemui.shortcut;
 
-import android.app.ActivityManager;
-import android.app.ActivityManagerCompat;
-import android.app.IActivityManager;
+import android.content.Context;
+import android.graphics.Rect;
 import android.os.RemoteException;
-import android.util.ArraySet;
-import android.util.Log;
 import android.view.IWindowManager;
 import android.view.WindowManagerGlobal;
 import com.android.systemui.SystemUI;
 import com.android.systemui.recents.Recents;
-import com.android.systemui.recents.misc.SystemServicesProxy;
 import com.android.systemui.shortcut.ShortcutKeyServiceProxy;
 import com.android.systemui.stackdivider.Divider;
+import com.android.systemui.stackdivider.DividerSnapAlgorithm;
 import com.android.systemui.stackdivider.DividerView;
-import java.util.List;
 
 public class ShortcutKeyDispatcher extends SystemUI implements ShortcutKeyServiceProxy.Callbacks {
-    protected final long ALT_MASK = 8589934592L;
-    protected final long CTRL_MASK = 17592186044416L;
-    protected final long META_MASK = 281474976710656L;
-    protected final long SC_DOCK_LEFT = 281474976710727L;
-    protected final long SC_DOCK_RIGHT = 281474976710728L;
-    protected final long SHIFT_MASK = 4294967296L;
-    private IActivityManager mActivityManager = ActivityManagerCompat.getService();
+    private final Divider mDivider;
+    private final Recents mRecents;
     private ShortcutKeyServiceProxy mShortcutKeyServiceProxy = new ShortcutKeyServiceProxy(this);
     private IWindowManager mWindowManagerService = WindowManagerGlobal.getWindowManagerService();
+
+    public ShortcutKeyDispatcher(Context context, Divider divider, Recents recents) {
+        super(context);
+        this.mDivider = divider;
+        this.mRecents = recents;
+    }
 
     public void registerShortcutKey(long j) {
         try {
@@ -47,24 +44,26 @@ public class ShortcutKeyDispatcher extends SystemUI implements ShortcutKeyServic
     }
 
     private void handleDockKey(long j) {
-        try {
-            if (this.mWindowManagerService.getDockedStackSide() == -1) {
-                Recents recents = (Recents) getComponent(Recents.class);
-                int i = j == 281474976710727L ? 0 : 1;
-                List<ActivityManager.RecentTaskInfo> recentTasks = SystemServicesProxy.getInstance(this.mContext).getRecentTasks(1, -2, false, new ArraySet());
-                recents.showRecentApps(false, false);
-                if (!recentTasks.isEmpty()) {
-                    SystemServicesProxy.getInstance(this.mContext).startTaskInDockedMode(recentTasks.get(0).id, i);
-                    return;
-                }
-                return;
+        DividerSnapAlgorithm.SnapTarget snapTarget;
+        Divider divider = this.mDivider;
+        int i = 0;
+        if (divider == null || !divider.isDividerVisible()) {
+            Recents recents = this.mRecents;
+            if (j != 281474976710727L) {
+                i = 1;
             }
-            DividerView view = ((Divider) getComponent(Divider.class)).getView();
-            int positionWhenHandleDockKey = view.getPositionWhenHandleDockKey(j == 281474976710727L);
-            view.startDragging(true, false);
-            view.stopDragging(positionWhenHandleDockKey, 0.0f, false, true);
-        } catch (RemoteException unused) {
-            Log.e("ShortcutKeyDispatcher", "handleDockKey() failed.");
+            recents.splitPrimaryTask(i, (Rect) null, -1);
+            return;
         }
+        DividerView view = this.mDivider.getView();
+        DividerSnapAlgorithm snapAlgorithm = view.getSnapAlgorithm();
+        DividerSnapAlgorithm.SnapTarget calculateNonDismissingSnapTarget = snapAlgorithm.calculateNonDismissingSnapTarget(view.getCurrentPosition());
+        if (j == 281474976710727L) {
+            snapTarget = snapAlgorithm.getPreviousTarget(calculateNonDismissingSnapTarget);
+        } else {
+            snapTarget = snapAlgorithm.getNextTarget(calculateNonDismissingSnapTarget);
+        }
+        view.startDragging(true, false);
+        view.stopDragging(snapTarget.position, 0.0f, false, true);
     }
 }

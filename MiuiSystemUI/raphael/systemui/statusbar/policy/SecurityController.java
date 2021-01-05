@@ -26,7 +26,11 @@ public interface SecurityController extends CallbackController<SecurityControlle
 
     boolean isNetworkLoggingEnabled();
 
+    boolean isProfileOwnerOfOrganizationOwnedDevice();
+
     boolean isSilentVpnPackage();
+
+    boolean isVpnBranded();
 
     boolean isVpnEnabled();
 }

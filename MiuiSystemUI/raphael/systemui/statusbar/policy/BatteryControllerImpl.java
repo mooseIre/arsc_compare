@@ -4,93 +4,82 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.database.ContentObserver;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
-import android.provider.Settings;
 import android.util.Log;
+import com.android.internal.annotations.VisibleForTesting;
+import com.android.settingslib.fuelgauge.BatterySaverUtils;
+import com.android.settingslib.fuelgauge.Estimate;
+import com.android.settingslib.utils.PowerUtil;
+import com.android.systemui.broadcast.BroadcastDispatcher;
+import com.android.systemui.power.EnhancedEstimates;
 import com.android.systemui.statusbar.policy.BatteryController;
-import com.xiaomi.stat.MiStat;
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class BatteryControllerImpl extends BroadcastReceiver implements BatteryController {
     private static final boolean DEBUG = Log.isLoggable("BatteryController", 3);
-    ContentObserver mBatteryExtremeSaveModeChangeObserver = new ContentObserver(new Handler()) {
-        public void onChange(boolean z) {
-            BatteryControllerImpl batteryControllerImpl = BatteryControllerImpl.this;
-            boolean z2 = false;
-            if (Settings.Secure.getIntForUser(batteryControllerImpl.mContext.getContentResolver(), "EXTREME_POWER_MODE_ENABLE", 0, -2) == 1) {
-                z2 = true;
-            }
-            batteryControllerImpl.mIsExtremePowerSaveMode = z2;
-            BatteryControllerImpl.this.fireExtremePowerSaveChanged();
-        }
-    };
-    ContentObserver mBatterySaveModeChangeObserver = new ContentObserver(new Handler()) {
-        public void onChange(boolean z) {
-            BatteryControllerImpl batteryControllerImpl = BatteryControllerImpl.this;
-            boolean z2 = false;
-            if (Settings.System.getIntForUser(batteryControllerImpl.mContext.getContentResolver(), "POWER_SAVE_MODE_OPEN", 0, -2) == 1) {
-                z2 = true;
-            }
-            batteryControllerImpl.mIsPowerSaveMode = z2;
-            BatteryControllerImpl.this.firePowerSaveChanged();
-        }
-    };
-    /* access modifiers changed from: private */
-    public int mBatteryStyle = 1;
-    ContentObserver mBatteryStyleChangeObserver = new ContentObserver(new Handler()) {
-        public void onChange(boolean z) {
-            BatteryControllerImpl batteryControllerImpl = BatteryControllerImpl.this;
-            int unused = batteryControllerImpl.mBatteryStyle = Settings.System.getIntForUser(batteryControllerImpl.mContext.getContentResolver(), "battery_indicator_style", 1, -2);
-            synchronized (BatteryControllerImpl.this.mChangeCallbacks) {
-                int size = BatteryControllerImpl.this.mChangeCallbacks.size();
-                for (int i = 0; i < size; i++) {
-                    ((BatteryController.BatteryStateChangeCallback) BatteryControllerImpl.this.mChangeCallbacks.get(i)).onBatteryStyleChanged(BatteryControllerImpl.this.mBatteryStyle);
-                }
-            }
-        }
-    };
-    /* access modifiers changed from: private */
-    public final ArrayList<BatteryController.BatteryStateChangeCallback> mChangeCallbacks = new ArrayList<>();
-    protected boolean mCharged;
+    private boolean mAodPowerSave;
+    protected int mBatteryStyle = 1;
+    private final Handler mBgHandler;
+    private final BroadcastDispatcher mBroadcastDispatcher;
+    protected final ArrayList<BatteryController.BatteryStateChangeCallback> mChangeCallbacks = new ArrayList<>();
+    private boolean mCharged;
     protected boolean mCharging;
-    /* access modifiers changed from: private */
-    public final Context mContext;
-    private boolean mDemoMode;
-    /* access modifiers changed from: private */
-    public final Handler mHandler;
-    private boolean mHasReceivedBattery = false;
+    protected final Context mContext;
+    protected boolean mDemoMode;
+    private Estimate mEstimate;
+    private final EnhancedEstimates mEstimates;
+    private final ArrayList<BatteryController.EstimateFetchCompletion> mFetchCallbacks = new ArrayList<>();
+    private boolean mFetchingEstimate = false;
+    @VisibleForTesting
+    boolean mHasReceivedBattery = false;
     protected boolean mIsExtremePowerSaveMode;
     protected boolean mIsPowerSaveMode;
     protected int mLevel;
+    /* access modifiers changed from: private */
+    public final Handler mMainHandler;
     protected boolean mPluggedIn;
     private final PowerManager mPowerManager;
+    protected boolean mPowerSave;
     /* access modifiers changed from: private */
     public boolean mTestmode = false;
 
-    public BatteryControllerImpl(Context context) {
-        this.mContext = context;
-        this.mHandler = new Handler();
-        this.mPowerManager = (PowerManager) context.getSystemService("power");
-        registerReceiver();
-        this.mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor("battery_indicator_style"), false, this.mBatteryStyleChangeObserver, -1);
-        this.mBatteryStyleChangeObserver.onChange(false);
-        this.mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor("POWER_SAVE_MODE_OPEN"), false, this.mBatterySaveModeChangeObserver, -1);
-        this.mBatterySaveModeChangeObserver.onChange(false);
-        this.mContext.getContentResolver().registerContentObserver(Settings.Secure.getUriFor("EXTREME_POWER_MODE_ENABLE"), false, this.mBatteryExtremeSaveModeChangeObserver, -1);
-        this.mBatteryExtremeSaveModeChangeObserver.onChange(false);
+    /* access modifiers changed from: protected */
+    public void updateSecondSpace() {
     }
 
-    private void registerReceiver() {
+    @VisibleForTesting
+    public BatteryControllerImpl(Context context, EnhancedEstimates enhancedEstimates, PowerManager powerManager, BroadcastDispatcher broadcastDispatcher, Handler handler, Handler handler2) {
+        this.mContext = context;
+        this.mMainHandler = handler;
+        this.mBgHandler = handler2;
+        this.mPowerManager = powerManager;
+        this.mEstimates = enhancedEstimates;
+        this.mBroadcastDispatcher = broadcastDispatcher;
+    }
+
+    /* access modifiers changed from: protected */
+    public void registerReceiver() {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("android.intent.action.BATTERY_CHANGED");
+        intentFilter.addAction("android.os.action.POWER_SAVE_MODE_CHANGED");
         intentFilter.addAction("android.intent.action.USER_SWITCHED");
         intentFilter.addAction("com.android.systemui.BATTERY_LEVEL_TEST");
-        this.mContext.registerReceiver(this, intentFilter);
+        this.mBroadcastDispatcher.registerReceiver(this, intentFilter);
+    }
+
+    public void init() {
+        Intent registerReceiver;
+        registerReceiver();
+        if (!this.mHasReceivedBattery && (registerReceiver = this.mContext.registerReceiver((BroadcastReceiver) null, new IntentFilter("android.intent.action.BATTERY_CHANGED"))) != null && !this.mHasReceivedBattery) {
+            onReceive(this.mContext, registerReceiver);
+        }
+        updatePowerSave();
+        updateEstimate();
     }
 
     public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
@@ -104,18 +93,20 @@ public class BatteryControllerImpl extends BroadcastReceiver implements BatteryC
         printWriter.print("  mCharged=");
         printWriter.println(this.mCharged);
         printWriter.print("  mPowerSave=");
-        printWriter.println(this.mIsPowerSaveMode);
-        printWriter.print("  mExtremePowerSave=");
-        printWriter.println(this.mIsExtremePowerSaveMode);
+        printWriter.println(this.mPowerSave);
+    }
+
+    public void setPowerSaveMode(boolean z) {
+        BatterySaverUtils.setPowerSaveMode(this.mContext, z, true);
     }
 
     public void addCallback(BatteryController.BatteryStateChangeCallback batteryStateChangeCallback) {
         synchronized (this.mChangeCallbacks) {
             this.mChangeCallbacks.add(batteryStateChangeCallback);
         }
+        batteryStateChangeCallback.onExtremePowerSaveChanged(this.mIsExtremePowerSaveMode);
         batteryStateChangeCallback.onBatteryStyleChanged(this.mBatteryStyle);
         batteryStateChangeCallback.onPowerSaveChanged(this.mIsPowerSaveMode);
-        batteryStateChangeCallback.onExtremePowerSaveChanged(this.mIsExtremePowerSaveMode);
         if (this.mHasReceivedBattery) {
             batteryStateChangeCallback.onBatteryLevelChanged(this.mLevel, this.mPluggedIn, this.mCharging);
         }
@@ -129,27 +120,27 @@ public class BatteryControllerImpl extends BroadcastReceiver implements BatteryC
 
     public void onReceive(final Context context, Intent intent) {
         String action = intent.getAction();
+        Log.d("BatteryController", "onReceive: Intent = " + intent + " action = " + action);
         boolean z = true;
         if (action.equals("android.intent.action.BATTERY_CHANGED")) {
             if (!this.mTestmode || intent.getBooleanExtra("testmode", false)) {
                 this.mHasReceivedBattery = true;
-                this.mLevel = intent.getIntExtra(MiStat.Param.LEVEL, 0);
+                this.mLevel = (int) ((((float) intent.getIntExtra("level", 0)) * 100.0f) / ((float) intent.getIntExtra("scale", 100)));
                 this.mPluggedIn = intent.getIntExtra("plugged", 0) != 0;
-                int intExtra = intent.getIntExtra(MiStat.Param.STATUS, 1);
-                this.mCharged = intExtra == 5;
-                if ((!this.mCharged && intExtra != 2) || !this.mPluggedIn) {
+                int intExtra = intent.getIntExtra("status", 1);
+                boolean z2 = intExtra == 5;
+                this.mCharged = z2;
+                if (!z2 && intExtra != 2) {
                     z = false;
                 }
                 this.mCharging = z;
                 fireBatteryLevelChanged();
             }
-        } else if ("android.intent.action.USER_SWITCHED".equals(action)) {
-            this.mBatteryStyleChangeObserver.onChange(false);
-            this.mBatterySaveModeChangeObserver.onChange(false);
-            this.mBatteryExtremeSaveModeChangeObserver.onChange(false);
+        } else if (action.equals("android.os.action.POWER_SAVE_MODE_CHANGED")) {
+            updatePowerSave();
         } else if (action.equals("com.android.systemui.BATTERY_LEVEL_TEST")) {
             this.mTestmode = true;
-            this.mHandler.post(new Runnable() {
+            this.mMainHandler.post(new Runnable() {
                 int curLevel = 0;
                 Intent dummy;
                 int incr = 1;
@@ -168,11 +159,11 @@ public class BatteryControllerImpl extends BroadcastReceiver implements BatteryC
                     int i2 = 0;
                     if (i < 0) {
                         boolean unused = BatteryControllerImpl.this.mTestmode = false;
-                        this.dummy.putExtra(MiStat.Param.LEVEL, this.saveLevel);
+                        this.dummy.putExtra("level", this.saveLevel);
                         this.dummy.putExtra("plugged", this.savePlugged);
                         this.dummy.putExtra("testmode", false);
                     } else {
-                        this.dummy.putExtra(MiStat.Param.LEVEL, i);
+                        this.dummy.putExtra("level", i);
                         Intent intent = this.dummy;
                         if (this.incr > 0) {
                             i2 = 1;
@@ -184,23 +175,113 @@ public class BatteryControllerImpl extends BroadcastReceiver implements BatteryC
                     if (BatteryControllerImpl.this.mTestmode) {
                         int i3 = this.curLevel;
                         int i4 = this.incr;
-                        this.curLevel = i3 + i4;
-                        if (this.curLevel == 100) {
+                        int i5 = i3 + i4;
+                        this.curLevel = i5;
+                        if (i5 == 100) {
                             this.incr = i4 * -1;
                         }
-                        BatteryControllerImpl.this.mHandler.postDelayed(this, 200);
+                        BatteryControllerImpl.this.mMainHandler.postDelayed(this, 200);
                     }
+                }
+            });
+        } else if ("android.intent.action.USER_SWITCHED".equals(action)) {
+            updateSecondSpace();
+        }
+    }
+
+    public boolean isPowerSave() {
+        return this.mPowerSave;
+    }
+
+    public boolean isAodPowerSave() {
+        return this.mAodPowerSave;
+    }
+
+    public void getEstimatedTimeRemainingString(BatteryController.EstimateFetchCompletion estimateFetchCompletion) {
+        synchronized (this.mFetchCallbacks) {
+            this.mFetchCallbacks.add(estimateFetchCompletion);
+        }
+        updateEstimateInBackground();
+    }
+
+    private String generateTimeRemainingString() {
+        synchronized (this.mFetchCallbacks) {
+            if (this.mEstimate == null) {
+                return null;
+            }
+            String batteryRemainingShortStringFormatted = PowerUtil.getBatteryRemainingShortStringFormatted(this.mContext, this.mEstimate.getEstimateMillis());
+            return batteryRemainingShortStringFormatted;
+        }
+    }
+
+    private void updateEstimateInBackground() {
+        if (!this.mFetchingEstimate) {
+            this.mFetchingEstimate = true;
+            this.mBgHandler.post(new Runnable() {
+                public final void run() {
+                    BatteryControllerImpl.this.lambda$updateEstimateInBackground$0$BatteryControllerImpl();
                 }
             });
         }
     }
 
-    public boolean isPowerSave() {
-        return this.mIsPowerSaveMode;
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$updateEstimateInBackground$0 */
+    public /* synthetic */ void lambda$updateEstimateInBackground$0$BatteryControllerImpl() {
+        synchronized (this.mFetchCallbacks) {
+            this.mEstimate = null;
+            if (this.mEstimates.isHybridNotificationEnabled()) {
+                updateEstimate();
+            }
+        }
+        this.mFetchingEstimate = false;
+        this.mMainHandler.post(new Runnable() {
+            public final void run() {
+                BatteryControllerImpl.this.notifyEstimateFetchCallbacks();
+            }
+        });
     }
 
-    public boolean isExtremePowerSave() {
-        return this.mIsExtremePowerSaveMode;
+    /* access modifiers changed from: private */
+    public void notifyEstimateFetchCallbacks() {
+        synchronized (this.mFetchCallbacks) {
+            String generateTimeRemainingString = generateTimeRemainingString();
+            Iterator<BatteryController.EstimateFetchCompletion> it = this.mFetchCallbacks.iterator();
+            while (it.hasNext()) {
+                it.next().onBatteryRemainingEstimateRetrieved(generateTimeRemainingString);
+            }
+            this.mFetchCallbacks.clear();
+        }
+    }
+
+    private void updateEstimate() {
+        Estimate cachedEstimateIfAvailable = Estimate.getCachedEstimateIfAvailable(this.mContext);
+        this.mEstimate = cachedEstimateIfAvailable;
+        if (cachedEstimateIfAvailable == null) {
+            Estimate estimate = this.mEstimates.getEstimate();
+            this.mEstimate = estimate;
+            if (estimate != null) {
+                Estimate.storeCachedEstimate(this.mContext, estimate);
+            }
+        }
+    }
+
+    private void updatePowerSave() {
+        setPowerSave(this.mPowerManager.isPowerSaveMode());
+    }
+
+    private void setPowerSave(boolean z) {
+        if (z != this.mPowerSave) {
+            this.mPowerSave = z;
+            this.mAodPowerSave = this.mPowerManager.getPowerSaveState(14).batterySaverEnabled;
+            if (DEBUG) {
+                StringBuilder sb = new StringBuilder();
+                sb.append("Power save is ");
+                sb.append(this.mPowerSave ? "on" : "off");
+                Log.d("BatteryController", sb.toString());
+            }
+            firePowerSaveChanged();
+        }
     }
 
     /* access modifiers changed from: protected */
@@ -213,59 +294,34 @@ public class BatteryControllerImpl extends BroadcastReceiver implements BatteryC
         }
     }
 
-    /* access modifiers changed from: private */
-    public void firePowerSaveChanged() {
+    private void firePowerSaveChanged() {
         synchronized (this.mChangeCallbacks) {
-            int size = this.mChangeCallbacks.size();
-            for (int i = 0; i < size; i++) {
-                this.mChangeCallbacks.get(i).onPowerSaveChanged(this.mDemoMode ? false : this.mIsPowerSaveMode);
+            for (int i = 0; i < this.mChangeCallbacks.size(); i++) {
             }
-        }
-    }
-
-    /* access modifiers changed from: private */
-    public void fireExtremePowerSaveChanged() {
-        synchronized (this.mChangeCallbacks) {
-            int size = this.mChangeCallbacks.size();
-            for (int i = 0; i < size; i++) {
-                this.mChangeCallbacks.get(i).onExtremePowerSaveChanged(this.mDemoMode ? false : this.mIsExtremePowerSaveMode);
-            }
-        }
-    }
-
-    private void fireDemoModeChanged(String str, Bundle bundle) {
-        int size = this.mChangeCallbacks.size();
-        for (int i = 0; i < size; i++) {
-            this.mChangeCallbacks.get(i).dispatchDemoCommand(str, bundle);
         }
     }
 
     public void dispatchDemoCommand(String str, Bundle bundle) {
         if (!this.mDemoMode && str.equals("enter")) {
             this.mDemoMode = true;
-            this.mContext.unregisterReceiver(this);
-            this.mLevel = 100;
-            this.mPluggedIn = false;
-            this.mCharging = false;
-            this.mBatterySaveModeChangeObserver.onChange(false);
-            this.mBatteryExtremeSaveModeChangeObserver.onChange(false);
-            fireBatteryLevelChanged();
-            fireDemoModeChanged(str, bundle);
+            this.mBroadcastDispatcher.unregisterReceiver(this);
         } else if (this.mDemoMode && str.equals("exit")) {
             this.mDemoMode = false;
             registerReceiver();
-            this.mBatteryStyleChangeObserver.onChange(false);
-            this.mBatterySaveModeChangeObserver.onChange(false);
-            this.mBatteryExtremeSaveModeChangeObserver.onChange(false);
-            fireDemoModeChanged(str, bundle);
+            updatePowerSave();
         } else if (this.mDemoMode && str.equals("battery")) {
-            String string = bundle.getString(MiStat.Param.LEVEL);
+            String string = bundle.getString("level");
             String string2 = bundle.getString("plugged");
+            String string3 = bundle.getString("powersave");
             if (string != null) {
                 this.mLevel = Math.min(Math.max(Integer.parseInt(string), 0), 100);
             }
             if (string2 != null) {
                 this.mPluggedIn = Boolean.parseBoolean(string2);
+            }
+            if (string3 != null) {
+                this.mPowerSave = string3.equals("true");
+                firePowerSaveChanged();
             }
             fireBatteryLevelChanged();
         }

@@ -1,97 +1,89 @@
 package com.android.systemui.statusbar.phone;
 
-import android.app.ActivityManager;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.database.ContentObserver;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.hardware.biometrics.BiometricSourceType;
 import android.os.AsyncTask;
 import android.os.Handler;
-import android.os.UserHandle;
-import android.os.UserManagerCompat;
-import android.provider.MiuiSettings;
-import android.provider.Settings;
-import android.util.Slog;
+import android.os.UserManager;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.WindowInsets;
 import android.widget.ImageView;
-import android.widget.Toast;
 import com.android.internal.widget.LockPatternUtils;
 import com.android.keyguard.KeyguardHostView;
 import com.android.keyguard.KeyguardSecurityModel;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.KeyguardUpdateMonitorCallback;
 import com.android.keyguard.ViewMediatorCallback;
-import com.android.keyguard.analytics.AnalyticsHelper;
-import com.android.keyguard.faceunlock.FaceUnlockCallback;
-import com.android.keyguard.faceunlock.FaceUnlockManager;
-import com.android.keyguard.magazine.LockScreenMagazineUtils;
+import com.android.keyguard.utils.MiuiKeyguardUtils;
+import com.android.keyguard.wallpaper.IMiuiKeyguardWallpaperController;
 import com.android.keyguard.wallpaper.KeyguardWallpaperUtils;
-import com.android.keyguard.wallpaper.MiuiKeyguardWallpaperController;
+import com.android.keyguard.wallpaper.MiuiWallpaperClient;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0017R$layout;
 import com.android.systemui.DejankUtils;
 import com.android.systemui.Dependency;
-import com.android.systemui.HapticFeedBackImpl;
-import com.android.systemui.classifier.FalsingManager;
 import com.android.systemui.keyguard.DismissCallbackRegistry;
-import com.android.systemui.miui.BitmapUtils;
 import com.android.systemui.plugins.ActivityStarter;
+import com.android.systemui.plugins.FalsingManager;
+import com.android.systemui.shared.system.SysUiStatsLog;
+import com.android.systemui.statusbar.policy.KeyguardStateController;
+import com.miui.systemui.DeviceConfig;
+import com.miui.systemui.graphics.BitmapUtils;
+import com.miui.systemui.util.HapticFeedBackImpl;
+import java.io.PrintWriter;
 import miui.system.R;
-import miui.util.CustomizeUtil;
 
 public class KeyguardBouncer {
+    private boolean isDefaultTheme;
     /* access modifiers changed from: private */
     public ImageView mBgImageView;
     /* access modifiers changed from: private */
     public int mBouncerPromptReason;
-    private final BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
-        public void onReceive(Context context, Intent intent) {
-            if (KeyguardBouncer.this.isAllowUnlockForBle()) {
-                KeyguardBouncer.this.unlockByBle();
-            }
-        }
-    };
     protected final ViewMediatorCallback mCallback;
     protected final ViewGroup mContainer;
     protected final Context mContext;
     private final DismissCallbackRegistry mDismissCallbackRegistry;
     /* access modifiers changed from: private */
+    public float mExpansion = 1.0f;
+    private final BouncerExpansionCallback mExpansionCallback;
+    /* access modifiers changed from: private */
     public boolean mFaceAuthTimeOut;
     /* access modifiers changed from: private */
-    public final Runnable mFaceShakeRunnable = new Runnable() {
+    public final Runnable mFaceShakeRunnable = new Runnable(this) {
         public void run() {
             ((HapticFeedBackImpl) Dependency.get(HapticFeedBackImpl.class)).extHapticFeedback(82, false, 0);
         }
     };
-    private FaceUnlockCallback mFaceUnlockCallBack = new FaceUnlockCallback() {
-        public void onFaceAuthTimeOut(boolean z) {
-            boolean unused = KeyguardBouncer.this.mFaceAuthTimeOut = true;
+    private KeyguardUpdateMonitorCallback mFaceUnlockCallBack = new KeyguardUpdateMonitorCallback() {
+        public void onBiometricError(int i, String str, BiometricSourceType biometricSourceType) {
+            super.onBiometricError(i, str, biometricSourceType);
+            if (biometricSourceType == BiometricSourceType.FACE && i == 3) {
+                boolean unused = KeyguardBouncer.this.mFaceAuthTimeOut = true;
+            }
         }
     };
     private final FalsingManager mFalsingManager;
     /* access modifiers changed from: private */
-    public boolean mForceBlack = false;
-    private ContentObserver mForceBlackObserver;
-    /* access modifiers changed from: private */
     public Drawable mForegroundDrawable;
     /* access modifiers changed from: private */
     public final Handler mHandler;
+    private boolean mIsAnimatingAway;
+    private boolean mIsScrimmed;
     /* access modifiers changed from: private */
-    public boolean mHasUnlockByBle = false;
-    private boolean mIsLegacyKeyguardWallpaper;
+    public final KeyguardUpdateMonitor mKeyguardUpdateMonitor;
     protected KeyguardHostView mKeyguardView;
     protected final LockPatternUtils mLockPatternUtils;
-    /* access modifiers changed from: private */
-    public View mNotchCorner;
     private final Runnable mRemoveViewRunnable = new Runnable() {
-        public void run() {
+        public final void run() {
             KeyguardBouncer.this.removeView();
         }
     };
@@ -102,16 +94,14 @@ public class KeyguardBouncer {
             KeyguardBouncer.this.mKeyguardView.onResume();
             KeyguardBouncer keyguardBouncer = KeyguardBouncer.this;
             keyguardBouncer.showPromptReason(keyguardBouncer.mBouncerPromptReason);
-            if (!KeyguardBouncer.this.isFullscreenBouncer() && KeyguardBouncer.this.mUpdateMonitor.isScreenOn()) {
+            if (!KeyguardBouncer.this.isFullscreenBouncer() && KeyguardBouncer.this.mKeyguardUpdateMonitor.isScreenOn()) {
                 if (KeyguardBouncer.this.mFaceAuthTimeOut) {
                     boolean unused = KeyguardBouncer.this.mFaceAuthTimeOut = false;
                     KeyguardBouncer.this.mHandler.postDelayed(KeyguardBouncer.this.mFaceShakeRunnable, 500);
                 }
                 KeyguardBouncer.this.mKeyguardView.applyHintAnimation(500);
             }
-            if (KeyguardBouncer.this.mKeyguardView.getHeight() != 0) {
-                KeyguardBouncer.this.mKeyguardView.startAppearAnimation();
-            } else {
+            if (KeyguardBouncer.this.mKeyguardView.getHeight() == 0 || KeyguardBouncer.this.mKeyguardView.getHeight() == KeyguardBouncer.this.mStatusBarHeight) {
                 KeyguardBouncer.this.mKeyguardView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
                     public boolean onPreDraw() {
                         KeyguardBouncer.this.mKeyguardView.getViewTreeObserver().removeOnPreDrawListener(this);
@@ -120,19 +110,23 @@ public class KeyguardBouncer {
                     }
                 });
                 KeyguardBouncer.this.mKeyguardView.requestLayout();
+            } else {
+                KeyguardBouncer.this.mKeyguardView.startAppearAnimation();
             }
             boolean unused2 = KeyguardBouncer.this.mShowingSoon = false;
-            KeyguardBouncer.this.mKeyguardView.sendAccessibilityEvent(32);
-            if (KeyguardBouncer.this.isAllowUnlockForBle()) {
-                KeyguardBouncer.this.unlockByBle();
-                boolean unused3 = KeyguardBouncer.this.mHasUnlockByBle = true;
+            if (KeyguardBouncer.this.mExpansion == 0.0f) {
+                KeyguardBouncer.this.mKeyguardView.onResume();
+                KeyguardBouncer.this.mKeyguardView.resetSecurityContainer();
+                KeyguardBouncer keyguardBouncer2 = KeyguardBouncer.this;
+                keyguardBouncer2.showPromptReason(keyguardBouncer2.mBouncerPromptReason);
             }
+            SysUiStatsLog.write(63, 2);
         }
     };
     /* access modifiers changed from: private */
     public boolean mShowingSoon;
     /* access modifiers changed from: private */
-    public KeyguardUpdateMonitor mUpdateMonitor;
+    public int mStatusBarHeight;
     private final KeyguardUpdateMonitorCallback mUpdateMonitorCallback = new KeyguardUpdateMonitorCallback() {
         public void onStrongAuthStateChanged(int i) {
             KeyguardBouncer keyguardBouncer = KeyguardBouncer.this;
@@ -140,132 +134,53 @@ public class KeyguardBouncer {
         }
 
         public void onKeyguardBouncerChanged(boolean z) {
-            if (!KeyguardBouncer.this.mUpdateMonitor.getStrongAuthTracker().hasOwnerUserAuthenticatedSinceBoot() && z) {
+            if (!KeyguardBouncer.this.mKeyguardUpdateMonitor.getStrongAuthTracker().hasOwnerUserAuthenticatedSinceBoot() && z) {
                 KeyguardBouncer keyguardBouncer = KeyguardBouncer.this;
                 int unused = keyguardBouncer.mBouncerPromptReason = keyguardBouncer.mCallback.getBouncerPromptReason();
             }
         }
-
-        public void onStartedWakingUp() {
-            KeyguardHostView keyguardHostView = KeyguardBouncer.this.mKeyguardView;
-            if (keyguardHostView != null && keyguardHostView.getAlpha() != 1.0f) {
-                KeyguardBouncer.this.mKeyguardView.animate().cancel();
-                KeyguardBouncer.this.mKeyguardView.setAlpha(1.0f);
-            }
-        }
-
-        public void onStartedGoingToSleep(int i) {
-            KeyguardBouncer keyguardBouncer = KeyguardBouncer.this;
-            if (keyguardBouncer.mKeyguardView != null && keyguardBouncer.isShowing() && Dependency.getHost() != null && ((MiuiKeyguardWallpaperController) Dependency.get(MiuiKeyguardWallpaperController.class)).isWallpaperSupportsAmbientMode()) {
-                KeyguardBouncer.this.mKeyguardView.animate().cancel();
-                KeyguardBouncer.this.mKeyguardView.animate().alpha(0.0f).setDuration(300).start();
-            }
-        }
     };
-    private final KeyguardUpdateMonitor.WallpaperChangeCallback mWallpaperChangeCallback = new KeyguardUpdateMonitor.WallpaperChangeCallback() {
-        public void onWallpaperChange(boolean z) {
-            if (z) {
-                KeyguardBouncer.this.updateWallpaper();
-            }
+    private final IMiuiKeyguardWallpaperController.IWallpaperChangeCallback mWallpaperChangeCallback = new IMiuiKeyguardWallpaperController.IWallpaperChangeCallback() {
+        public final void onWallpaperChange(boolean z) {
+            KeyguardBouncer.this.lambda$new$1$KeyguardBouncer(z);
         }
     };
 
-    public KeyguardBouncer(Context context, ViewMediatorCallback viewMediatorCallback, LockPatternUtils lockPatternUtils, ViewGroup viewGroup, DismissCallbackRegistry dismissCallbackRegistry) {
+    public interface BouncerExpansionCallback {
+        void onStartingToShow();
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$new$1 */
+    public /* synthetic */ void lambda$new$1$KeyguardBouncer(boolean z) {
+        updateWallpaper();
+    }
+
+    public KeyguardBouncer(Context context, ViewMediatorCallback viewMediatorCallback, LockPatternUtils lockPatternUtils, ViewGroup viewGroup, DismissCallbackRegistry dismissCallbackRegistry, FalsingManager falsingManager, BouncerExpansionCallback bouncerExpansionCallback, KeyguardStateController keyguardStateController, KeyguardUpdateMonitor keyguardUpdateMonitor, KeyguardBypassController keyguardBypassController, Handler handler) {
         this.mContext = context;
         this.mCallback = viewMediatorCallback;
         this.mLockPatternUtils = lockPatternUtils;
         this.mContainer = viewGroup;
-        this.mUpdateMonitor = KeyguardUpdateMonitor.getInstance(this.mContext);
-        this.mUpdateMonitor.registerCallback(this.mUpdateMonitorCallback);
-        this.mUpdateMonitor.registerWallpaperChangeCallback(this.mWallpaperChangeCallback);
-        FaceUnlockManager.getInstance().registerFaceUnlockCallback(this.mFaceUnlockCallBack);
-        this.mFalsingManager = FalsingManager.getInstance(this.mContext);
+        this.mKeyguardUpdateMonitor = keyguardUpdateMonitor;
+        this.mFalsingManager = falsingManager;
         this.mDismissCallbackRegistry = dismissCallbackRegistry;
-        this.mHandler = new Handler();
+        this.mExpansionCallback = bouncerExpansionCallback;
+        this.mHandler = handler;
+        keyguardUpdateMonitor.registerCallback(this.mUpdateMonitorCallback);
+        ((IMiuiKeyguardWallpaperController) Dependency.get(IMiuiKeyguardWallpaperController.class)).registerWallpaperChangeCallback(this.mWallpaperChangeCallback);
         this.mForegroundDrawable = new ColorDrawable(this.mContext.getResources().getColor(R.color.blur_background_mask));
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction("miui_keyguard_ble_unlock_succeed");
-        this.mContext.registerReceiverAsUser(this.mBroadcastReceiver, UserHandle.CURRENT, intentFilter, (String) null, (Handler) null);
-        if (CustomizeUtil.HAS_NOTCH) {
-            this.mForceBlackObserver = new ContentObserver(this.mHandler) {
-                public void onChange(boolean z) {
-                    KeyguardBouncer keyguardBouncer = KeyguardBouncer.this;
-                    boolean unused = keyguardBouncer.mForceBlack = MiuiSettings.Global.getBoolean(keyguardBouncer.mContext.getContentResolver(), "force_black");
-                    if (KeyguardBouncer.this.mNotchCorner != null) {
-                        KeyguardBouncer.this.mNotchCorner.setVisibility(KeyguardBouncer.this.mForceBlack ? 0 : 8);
-                    }
-                }
-            };
-            this.mContext.getContentResolver().registerContentObserver(Settings.Global.getUriFor("force_black"), false, this.mForceBlackObserver, -1);
-            this.mForceBlackObserver.onChange(false);
-        }
+        this.mKeyguardUpdateMonitor.registerCallback(this.mFaceUnlockCallBack);
     }
 
-    /* access modifiers changed from: private */
-    /* JADX WARNING: Code restructure failed: missing block: B:2:0x0008, code lost:
-        r0 = r2.mRoot;
-     */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public boolean isAllowUnlockForBle() {
-        /*
-            r2 = this;
-            com.android.keyguard.KeyguardUpdateMonitor r0 = r2.mUpdateMonitor
-            boolean r0 = r0.isBleUnlockSuccess()
-            if (r0 == 0) goto L_0x0040
-            android.view.ViewGroup r0 = r2.mRoot
-            if (r0 == 0) goto L_0x0040
-            int r0 = r0.getVisibility()
-            if (r0 != 0) goto L_0x0040
-            boolean r0 = r2.mHasUnlockByBle
-            if (r0 != 0) goto L_0x0040
-            com.android.keyguard.KeyguardUpdateMonitor r0 = r2.mUpdateMonitor
-            int r1 = com.android.keyguard.KeyguardUpdateMonitor.getCurrentUser()
-            boolean r0 = r0.isUnlockingWithFingerprintAllowed(r1)
-            if (r0 == 0) goto L_0x0040
-            com.android.keyguard.KeyguardUpdateMonitor r0 = r2.mUpdateMonitor
-            com.android.internal.telephony.IccCardConstants$State r1 = com.android.internal.telephony.IccCardConstants.State.PIN_REQUIRED
-            int r0 = r0.getNextSubIdForState(r1)
-            boolean r0 = android.telephony.SubscriptionManager.isValidSubscriptionId(r0)
-            if (r0 != 0) goto L_0x0040
-            com.android.keyguard.KeyguardUpdateMonitor r2 = r2.mUpdateMonitor
-            com.android.internal.telephony.IccCardConstants$State r0 = com.android.internal.telephony.IccCardConstants.State.PUK_REQUIRED
-            int r2 = r2.getNextSubIdForState(r0)
-            boolean r2 = android.telephony.SubscriptionManager.isValidSubscriptionId(r2)
-            if (r2 != 0) goto L_0x0040
-            r2 = 1
-            goto L_0x0041
-        L_0x0040:
-            r2 = 0
-        L_0x0041:
-            return r2
-        */
-        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.phone.KeyguardBouncer.isAllowUnlockForBle():boolean");
-    }
-
-    /* access modifiers changed from: private */
-    public void unlockByBle() {
-        KeyguardHostView keyguardHostView = this.mKeyguardView;
-        if (keyguardHostView != null) {
-            keyguardHostView.finish(false, KeyguardUpdateMonitor.getCurrentUser());
-            handleBleUnlockSucceed();
-        }
-    }
-
-    private void handleBleUnlockSucceed() {
-        Toast.makeText(this.mContext, com.android.systemui.plugins.R.string.miui_keyguard_ble_unlock_succeed_msg, 0).show();
-        AnalyticsHelper.getInstance(this.mContext).recordUnlockWay("band", true);
-    }
-
-    /* access modifiers changed from: private */
-    public void updateWallpaper() {
+    private void updateWallpaper() {
         if (this.mBgImageView == null) {
             return;
         }
-        if (this.mIsLegacyKeyguardWallpaper || !KeyguardWallpaperUtils.isWallpaperShouldBlur(this.mContext) || !KeyguardWallpaperUtils.hasKeyguardWallpaperEffects(this.mContext)) {
+        if (!this.isDefaultTheme || !KeyguardWallpaperUtils.isWallpaperShouldBlur() || DeviceConfig.isLowGpuDevice()) {
             new AsyncTask<Void, Void, Drawable>() {
                 /* access modifiers changed from: protected */
                 public Drawable doInBackground(Void... voidArr) {
-                    return KeyguardWallpaperUtils.getLockWallpaperPreview(KeyguardBouncer.this.mContext);
+                    return new BitmapDrawable(KeyguardBouncer.this.mContext.getResources(), ((MiuiWallpaperClient) Dependency.get(MiuiWallpaperClient.class)).getLockWallpaperPreview());
                 }
 
                 /* access modifiers changed from: protected */
@@ -276,7 +191,7 @@ public class KeyguardBouncer {
                     if (KeyguardBouncer.this.mBgImageView == null) {
                         return;
                     }
-                    if (!KeyguardWallpaperUtils.isWallpaperShouldBlur(KeyguardBouncer.this.mContext) || !KeyguardWallpaperUtils.hasKeyguardWallpaperEffects(KeyguardBouncer.this.mContext)) {
+                    if (!KeyguardWallpaperUtils.isWallpaperShouldBlur()) {
                         KeyguardBouncer.this.mBgImageView.setForeground(KeyguardBouncer.this.mForegroundDrawable);
                         KeyguardBouncer.this.mBgImageView.setImageDrawable(drawable);
                         return;
@@ -312,37 +227,39 @@ public class KeyguardBouncer {
     }
 
     public void show(boolean z) {
+        show(z, true);
+    }
+
+    public void show(boolean z, boolean z2) {
         int currentUser = KeyguardUpdateMonitor.getCurrentUser();
-        if (currentUser != 0 || !UserManagerCompat.isSplitSystemUser()) {
-            this.mFalsingManager.onBouncerShown();
+        if (currentUser != 0 || !UserManager.isSplitSystemUser()) {
             ensureView();
+            this.mIsScrimmed = z2;
+            this.mFalsingManager.onBouncerShown();
             if (z) {
-                this.mKeyguardView.showPrimarySecurityScreen();
+                showPrimarySecurityScreen();
             }
             if (this.mRoot.getVisibility() != 0 && !this.mShowingSoon) {
-                int currentUser2 = ActivityManager.getCurrentUser();
-                boolean z2 = false;
-                boolean z3 = !(UserManagerCompat.isSplitSystemUser() && currentUser2 == 0) && currentUser2 == currentUser;
-                if (this.mUpdateMonitor.getUserBleAuthenticated(currentUser) && !this.mUpdateMonitor.getUserFingerprintAuthenticated(currentUser) && !this.mUpdateMonitor.getUserFaceAuthenticated(currentUser)) {
-                    z2 = true;
+                int currentUser2 = KeyguardUpdateMonitor.getCurrentUser();
+                boolean z3 = false;
+                if (!(UserManager.isSplitSystemUser() && currentUser2 == 0) && currentUser2 == currentUser) {
+                    z3 = true;
                 }
                 if (!z3 || !this.mKeyguardView.dismiss(currentUser2)) {
                     if (!z3) {
-                        Slog.w("KeyguardBouncer", "User can't dismiss keyguard: " + currentUser2 + " != " + currentUser);
+                        Log.w("KeyguardBouncer", "User can't dismiss keyguard: " + currentUser2 + " != " + currentUser);
                     }
                     this.mShowingSoon = true;
                     DejankUtils.postAfterTraversal(this.mShowRunnable);
                     this.mCallback.onBouncerVisiblityChanged(true);
-                    LockScreenMagazineUtils.sendLockScreenMagazineEventBroadcast(this.mContext, "Wallpaper_Covered");
-                    AnalyticsHelper.getInstance(this.mContext).trackPageEnd("keyguard_view_main_lock_screen", "show_bouncer");
-                    if (this.mUpdateMonitor.isKeyguardOccluded()) {
-                        this.mContext.sendBroadcastAsUser(new Intent("xiaomi.intent.action.SECURE_KEYGUARD_SHOWN"), UserHandle.CURRENT);
-                    }
-                } else if (z2) {
-                    handleBleUnlockSucceed();
+                    this.mExpansionCallback.onStartingToShow();
                 }
             }
         }
+    }
+
+    public boolean isScrimmed() {
+        return this.mIsScrimmed;
     }
 
     public void showPromptReason(int i) {
@@ -375,9 +292,8 @@ public class KeyguardBouncer {
 
     private void cancelShowRunnable() {
         DejankUtils.removeCallbacks(this.mShowRunnable);
+        this.mHandler.removeCallbacks(this.mShowRunnable);
         this.mShowingSoon = false;
-        this.mHandler.removeCallbacks(this.mFaceShakeRunnable);
-        this.mFaceAuthTimeOut = false;
     }
 
     public void showWithDismissAction(ActivityStarter.OnDismissAction onDismissAction, Runnable runnable) {
@@ -388,8 +304,10 @@ public class KeyguardBouncer {
 
     public void hide(boolean z) {
         if (isShowing()) {
+            SysUiStatsLog.write(63, 1);
             this.mDismissCallbackRegistry.notifyDismissCancelled();
         }
+        this.mIsScrimmed = false;
         this.mFalsingManager.onBouncerHidden();
         this.mCallback.onBouncerVisiblityChanged(false);
         cancelShowRunnable();
@@ -398,6 +316,7 @@ public class KeyguardBouncer {
             keyguardHostView.cancelDismissAction();
             this.mKeyguardView.cleanUp();
         }
+        this.mIsAnimatingAway = false;
         ViewGroup viewGroup = this.mRoot;
         if (viewGroup != null) {
             viewGroup.setVisibility(4);
@@ -408,6 +327,7 @@ public class KeyguardBouncer {
     }
 
     public void startPreHideAnimation(Runnable runnable) {
+        this.mIsAnimatingAway = true;
         KeyguardHostView keyguardHostView = this.mKeyguardView;
         if (keyguardHostView != null) {
             keyguardHostView.startDisappearAnimation(runnable);
@@ -416,7 +336,7 @@ public class KeyguardBouncer {
         }
     }
 
-    public void onFinishedGoingToSleep() {
+    public void onScreenTurnedOff() {
         ViewGroup viewGroup;
         if (this.mKeyguardView != null && (viewGroup = this.mRoot) != null && viewGroup.getVisibility() == 0) {
             this.mKeyguardView.onPause();
@@ -424,43 +344,67 @@ public class KeyguardBouncer {
     }
 
     /* JADX WARNING: Code restructure failed: missing block: B:2:0x0004, code lost:
-        r1 = r1.mRoot;
+        r0 = r1.mRoot;
      */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     public boolean isShowing() {
         /*
             r1 = this;
             boolean r0 = r1.mShowingSoon
-            if (r0 != 0) goto L_0x0011
-            android.view.ViewGroup r1 = r1.mRoot
-            if (r1 == 0) goto L_0x000f
-            int r1 = r1.getVisibility()
-            if (r1 != 0) goto L_0x000f
-            goto L_0x0011
-        L_0x000f:
-            r1 = 0
-            goto L_0x0012
-        L_0x0011:
+            if (r0 != 0) goto L_0x000e
+            android.view.ViewGroup r0 = r1.mRoot
+            if (r0 == 0) goto L_0x0016
+            int r0 = r0.getVisibility()
+            if (r0 != 0) goto L_0x0016
+        L_0x000e:
+            boolean r1 = r1.isAnimatingAway()
+            if (r1 != 0) goto L_0x0016
             r1 = 1
-        L_0x0012:
+            goto L_0x0017
+        L_0x0016:
+            r1 = 0
+        L_0x0017:
             return r1
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.phone.KeyguardBouncer.isShowing():boolean");
+    }
+
+    public boolean inTransit() {
+        if (!this.mShowingSoon) {
+            float f = this.mExpansion;
+            if (f == 1.0f || f == 0.0f) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean isAnimatingAway() {
+        return this.mIsAnimatingAway;
     }
 
     public void prepare() {
         boolean z = this.mRoot != null;
         ensureView();
         if (z) {
-            this.mKeyguardView.showPrimarySecurityScreen();
+            showPrimarySecurityScreen();
         }
         this.mBouncerPromptReason = this.mCallback.getBouncerPromptReason();
     }
 
+    private void showPrimarySecurityScreen() {
+        this.mKeyguardView.showPrimarySecurityScreen();
+    }
+
+    public boolean willDismissWithAction() {
+        KeyguardHostView keyguardHostView = this.mKeyguardView;
+        return keyguardHostView != null && keyguardHostView.hasDismissActions();
+    }
+
     /* access modifiers changed from: protected */
     public void ensureView() {
-        this.mHandler.removeCallbacks(this.mRemoveViewRunnable);
-        if (this.mRoot == null) {
+        boolean hasCallbacks = this.mHandler.hasCallbacks(this.mRemoveViewRunnable);
+        if (this.mRoot == null || hasCallbacks) {
             inflateView();
         }
     }
@@ -469,24 +413,24 @@ public class KeyguardBouncer {
     public void inflateView() {
         removeView();
         this.mHandler.removeCallbacks(this.mRemoveViewRunnable);
-        this.mRoot = (ViewGroup) LayoutInflater.from(this.mContext).inflate(com.android.systemui.plugins.R.layout.keyguard_bouncer, (ViewGroup) null);
-        this.mBgImageView = (ImageView) this.mRoot.findViewById(com.android.systemui.plugins.R.id.keyguard_bouncer_bg);
-        this.mNotchCorner = this.mRoot.findViewById(com.android.systemui.plugins.R.id.notch_corner_security);
-        int i = 8;
-        this.mNotchCorner.setVisibility(this.mForceBlack ? 0 : 8);
-        this.mKeyguardView = (KeyguardHostView) this.mRoot.findViewById(com.android.systemui.plugins.R.id.keyguard_host_view);
-        this.mKeyguardView.setLockPatternUtils(this.mLockPatternUtils);
+        ViewGroup viewGroup = (ViewGroup) LayoutInflater.from(this.mContext).inflate(C0017R$layout.keyguard_bouncer, (ViewGroup) null);
+        this.mRoot = viewGroup;
+        KeyguardHostView keyguardHostView = (KeyguardHostView) viewGroup.findViewById(C0015R$id.keyguard_host_view);
+        this.mKeyguardView = keyguardHostView;
+        keyguardHostView.setLockPatternUtils(this.mLockPatternUtils);
         this.mKeyguardView.setViewMediatorCallback(this.mCallback);
-        ViewGroup viewGroup = this.mContainer;
-        viewGroup.addView(this.mRoot, viewGroup.getChildCount());
+        ViewGroup viewGroup2 = this.mContainer;
+        viewGroup2.addView(this.mRoot, viewGroup2.getChildCount());
+        this.mStatusBarHeight = this.mRoot.getResources().getDimensionPixelOffset(C0012R$dimen.status_bar_height);
         this.mRoot.setVisibility(4);
-        this.mHasUnlockByBle = false;
-        this.mIsLegacyKeyguardWallpaper = ((MiuiKeyguardWallpaperController) Dependency.get(MiuiKeyguardWallpaperController.class)).isLegacyKeyguardWallpaper();
-        ImageView imageView = this.mBgImageView;
-        if (this.mIsLegacyKeyguardWallpaper || !KeyguardWallpaperUtils.isWallpaperShouldBlur(this.mContext) || !KeyguardWallpaperUtils.hasKeyguardWallpaperEffects(this.mContext)) {
-            i = 0;
+        WindowInsets rootWindowInsets = this.mRoot.getRootWindowInsets();
+        if (rootWindowInsets != null) {
+            this.mRoot.dispatchApplyWindowInsets(rootWindowInsets);
         }
-        imageView.setVisibility(i);
+        this.mBgImageView = (ImageView) this.mRoot.findViewById(C0015R$id.keyguard_bouncer_bg);
+        boolean isDefaultLockScreenTheme = MiuiKeyguardUtils.isDefaultLockScreenTheme();
+        this.isDefaultTheme = isDefaultLockScreenTheme;
+        this.mBgImageView.setVisibility((!isDefaultLockScreenTheme || !KeyguardWallpaperUtils.isWallpaperShouldBlur()) ? 0 : 8);
         updateWallpaper();
     }
 
@@ -506,16 +450,8 @@ public class KeyguardBouncer {
     }
 
     public boolean needsFullscreenBouncer() {
-        ensureView();
-        KeyguardHostView keyguardHostView = this.mKeyguardView;
-        if (keyguardHostView == null) {
-            return false;
-        }
-        KeyguardSecurityModel.SecurityMode securityMode = keyguardHostView.getSecurityMode();
-        if (securityMode == KeyguardSecurityModel.SecurityMode.SimPin || securityMode == KeyguardSecurityModel.SecurityMode.SimPuk) {
-            return true;
-        }
-        return false;
+        KeyguardSecurityModel.SecurityMode securityMode = ((KeyguardSecurityModel) Dependency.get(KeyguardSecurityModel.class)).getSecurityMode(KeyguardUpdateMonitor.getCurrentUser());
+        return securityMode == KeyguardSecurityModel.SecurityMode.SimPin || securityMode == KeyguardSecurityModel.SecurityMode.SimPuk;
     }
 
     public boolean isFullscreenBouncer() {
@@ -547,5 +483,16 @@ public class KeyguardBouncer {
     public void notifyKeyguardAuthenticated(boolean z) {
         ensureView();
         this.mKeyguardView.finish(z, KeyguardUpdateMonitor.getCurrentUser());
+    }
+
+    public void dump(PrintWriter printWriter) {
+        printWriter.println("KeyguardBouncer");
+        printWriter.println("  isShowing(): " + isShowing());
+        printWriter.println("  mStatusBarHeight: " + this.mStatusBarHeight);
+        printWriter.println("  mExpansion: " + this.mExpansion);
+        printWriter.println("  mKeyguardView; " + this.mKeyguardView);
+        printWriter.println("  mShowingSoon: " + this.mKeyguardView);
+        printWriter.println("  mBouncerPromptReason: " + this.mBouncerPromptReason);
+        printWriter.println("  mIsAnimatingAway: " + this.mIsAnimatingAway);
     }
 }

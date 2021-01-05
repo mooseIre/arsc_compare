@@ -2,18 +2,33 @@ package com.android.systemui.qs;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.TransitionDrawable;
 import android.view.View;
 import android.view.ViewAnimationUtils;
+import com.miui.systemui.util.MiuiInterpolators;
 
 public class QSDetailClipper {
     /* access modifiers changed from: private */
     public Animator mAnimator;
     /* access modifiers changed from: private */
+    public final Drawable mBackground;
+    /* access modifiers changed from: private */
     public final View mDetail;
     private final AnimatorListenerAdapter mGoneOnEnd = new AnimatorListenerAdapter() {
         public void onAnimationEnd(Animator animator) {
             QSDetailClipper.this.mDetail.setVisibility(8);
+            if (QSDetailClipper.this.mBackground instanceof TransitionDrawable) {
+                ((TransitionDrawable) QSDetailClipper.this.mBackground).resetTransition();
+            }
             Animator unused = QSDetailClipper.this.mAnimator = null;
+        }
+    };
+    private final Runnable mReverseBackground = new Runnable() {
+        public void run() {
+            if (QSDetailClipper.this.mAnimator != null && (QSDetailClipper.this.mBackground instanceof TransitionDrawable)) {
+                ((TransitionDrawable) QSDetailClipper.this.mBackground).reverseTransition((int) (((double) QSDetailClipper.this.mAnimator.getDuration()) * 0.35d));
+            }
         }
     };
     private final AnimatorListenerAdapter mVisibleOnStart = new AnimatorListenerAdapter() {
@@ -28,13 +43,13 @@ public class QSDetailClipper {
 
     public QSDetailClipper(View view) {
         this.mDetail = view;
+        this.mBackground = view.getBackground();
     }
 
     public void animateCircularClip(int i, int i2, boolean z, Animator.AnimatorListener animatorListener) {
         Animator animator = this.mAnimator;
         if (animator != null) {
             animator.cancel();
-            this.mAnimator.removeAllListeners();
         }
         int width = this.mDetail.getWidth() - i;
         int height = this.mDetail.getHeight() - i2;
@@ -53,15 +68,34 @@ public class QSDetailClipper {
             this.mAnimator = ViewAnimationUtils.createCircularReveal(this.mDetail, i, i2, (float) max, (float) i3);
         }
         this.mAnimator.setDuration(420);
-        this.mAnimator.setInterpolator(QSAnimation.INTERPOLATOR);
+        this.mAnimator.setInterpolator(MiuiInterpolators.CUBIC_EASE_IN_OUT);
         if (animatorListener != null) {
             this.mAnimator.addListener(animatorListener);
         }
         if (z) {
+            Drawable drawable = this.mBackground;
+            if (drawable instanceof TransitionDrawable) {
+                ((TransitionDrawable) drawable).startTransition((int) (((double) this.mAnimator.getDuration()) * 0.6d));
+            }
             this.mAnimator.addListener(this.mVisibleOnStart);
         } else {
+            this.mDetail.postDelayed(this.mReverseBackground, (long) (((double) this.mAnimator.getDuration()) * 0.65d));
             this.mAnimator.addListener(this.mGoneOnEnd);
         }
         this.mAnimator.start();
+    }
+
+    public void showBackground() {
+        Drawable drawable = this.mBackground;
+        if (drawable instanceof TransitionDrawable) {
+            ((TransitionDrawable) drawable).showSecondLayer();
+        }
+    }
+
+    public void cancelAnimator() {
+        Animator animator = this.mAnimator;
+        if (animator != null) {
+            animator.cancel();
+        }
     }
 }

@@ -5,7 +5,6 @@ import android.graphics.Canvas;
 import android.graphics.Path;
 import android.util.AttributeSet;
 import android.widget.ImageView;
-import com.android.systemui.util.CornerRadiusUtils;
 
 public class RoundCornerImageView extends ImageView {
     private Path mPath;

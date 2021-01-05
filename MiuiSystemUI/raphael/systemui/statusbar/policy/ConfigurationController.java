@@ -10,7 +10,24 @@ public interface ConfigurationController extends CallbackController<Configuratio
 
         void onDensityOrFontScaleChanged() {
         }
+
+        void onLocaleListChanged() {
+        }
+
+        void onMiuiThemeChanged(boolean z) {
+        }
+
+        void onOverlayChanged() {
+        }
+
+        void onThemeChanged() {
+        }
+
+        void onUiModeChanged() {
+        }
     }
 
-    boolean isNightMode();
+    void notifyThemeChanged();
+
+    void onConfigurationChanged(Configuration configuration);
 }

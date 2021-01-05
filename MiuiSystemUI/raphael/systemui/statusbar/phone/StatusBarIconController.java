@@ -1,34 +1,37 @@
 package com.android.systemui.statusbar.phone;
 
 import android.content.Context;
-import android.content.res.ColorStateList;
-import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.ArraySet;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import com.android.internal.statusbar.StatusBarIcon;
+import com.android.systemui.C0008R$array;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.DemoMode;
 import com.android.systemui.Dependency;
-import com.android.systemui.Util;
-import com.android.systemui.miui.statusbar.ExpandedNotification;
-import com.android.systemui.plugins.R;
-import com.android.systemui.statusbar.Icons;
+import com.android.systemui.plugins.DarkIconDispatcher;
+import com.android.systemui.statusbar.CommandQueue;
 import com.android.systemui.statusbar.StatusBarIconView;
-import com.android.systemui.statusbar.policy.DarkIconDispatcher;
-import com.android.systemui.statusbar.policy.DarkIconDispatcherHelper;
-import com.android.systemui.util.DisableStateTracker;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
+import com.android.systemui.statusbar.StatusBarMobileView;
+import com.android.systemui.statusbar.StatusBarWifiView;
+import com.android.systemui.statusbar.StatusIconDisplayable;
+import com.android.systemui.statusbar.notification.ExpandedNotification;
+import com.android.systemui.statusbar.phone.StatusBarSignalPolicy;
+import com.android.systemui.util.Utils;
+import java.util.List;
 
 public interface StatusBarIconController {
     void addIconGroup(IconManager iconManager);
 
-    void dispatchDemoCommand(String str, Bundle bundle);
+    void addIconGroup(IconManager iconManager, List<String> list) {
+    }
 
-    void removeIcon(String str);
+    void removeAllIconsForSlot(String str);
 
     void removeIconGroup(IconManager iconManager);
 
@@ -38,221 +41,208 @@ public interface StatusBarIconController {
 
     void setIcon(String str, StatusBarIcon statusBarIcon);
 
+    void setIconAccessibilityLiveRegion(String str, int i);
+
     void setIconVisibility(String str, boolean z);
 
-    public static class OrderedIconManager extends DarkIconManager {
-        private HashSet<String> mCurrentSlots;
-        private ArrayList<String> mSlots;
+    void setMobileIcons(String str, List<StatusBarSignalPolicy.MobileIconState> list);
 
-        public OrderedIconManager(LinearLayout linearLayout, ArrayList<String> arrayList) {
-            this(linearLayout, arrayList, false);
+    void setSignalIcon(String str, StatusBarSignalPolicy.WifiIconState wifiIconState);
+
+    static ArraySet<String> getIconBlacklist(Context context, String str) {
+        String[] strArr;
+        ArraySet<String> arraySet = new ArraySet<>();
+        if (str == null) {
+            strArr = context.getResources().getStringArray(C0008R$array.config_statusBarIconBlackList);
+        } else {
+            strArr = str.split(",");
         }
-
-        public OrderedIconManager(LinearLayout linearLayout, ArrayList<String> arrayList, boolean z) {
-            super(linearLayout, z);
-            this.mSlots = arrayList;
-            this.mCurrentSlots = new HashSet<>();
-        }
-
-        /* access modifiers changed from: protected */
-        public void onIconAdded(int i, String str, boolean z, StatusBarIcon statusBarIcon) {
-            if (this.mSlots.contains(str)) {
-                this.mCurrentSlots.add(str);
-                int realViewIndex = getRealViewIndex(str);
-                super.onIconAdded(realViewIndex, str, z, statusBarIcon);
-                if (realViewIndex == -1) {
-                    applyDark(getRealViewIndex(str));
-                }
+        for (String str2 : strArr) {
+            if (!TextUtils.isEmpty(str2)) {
+                arraySet.add(str2);
             }
         }
-
-        public void onSetIcon(int i, String str, StatusBarIcon statusBarIcon) {
-            if (this.mCurrentSlots.contains(str)) {
-                super.onSetIcon(getRealViewIndex(str), str, statusBarIcon);
-            }
-        }
-
-        /* access modifiers changed from: protected */
-        public void onRemoveIcon(int i, String str) {
-            if (this.mCurrentSlots.contains(str)) {
-                super.onRemoveIcon(getRealViewIndex(str), str);
-                this.mCurrentSlots.remove(str);
-            }
-        }
-
-        private int getRealViewIndex(String str) {
-            Iterator<String> it = this.mSlots.iterator();
-            int i = 0;
-            while (it.hasNext()) {
-                String next = it.next();
-                if (this.mCurrentSlots.contains(next)) {
-                    if (str.equals(next)) {
-                        break;
-                    }
-                    i++;
-                }
-            }
-            if (i >= this.mGroup.getChildCount()) {
-                return -1;
-            }
-            return i;
-        }
+        return arraySet;
     }
 
     public static class DarkIconManager extends IconManager {
-        /* access modifiers changed from: private */
-        public static int sFilterColor;
-        /* access modifiers changed from: private */
-        public final DarkIconDispatcher mDarkIconDispatcher;
-        /* access modifiers changed from: private */
-        public float mDarkIntensity;
-        private DarkIconDispatcher.DarkReceiver mDarkReceiver;
-        private int mIconHPadding;
-        /* access modifiers changed from: private */
-        public Rect mTintArea;
-        /* access modifiers changed from: private */
-        public int mTintColor;
+        private final DarkIconDispatcher mDarkIconDispatcher = ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class));
+        private int mIconHPadding = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.status_bar_icon_padding);
 
-        public DarkIconManager(LinearLayout linearLayout) {
-            this(linearLayout, false);
-        }
-
-        public DarkIconManager(LinearLayout linearLayout, boolean z) {
-            super(linearLayout);
-            this.mTintArea = new Rect();
-            this.mTintColor = this.mContext.getColor(R.color.light_mode_icon_color_single_tone);
-            this.mIconHPadding = this.mContext.getResources().getDimensionPixelSize(R.dimen.status_bar_icon_padding);
-            this.mDarkIconDispatcher = (DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class);
-            if (!z) {
-                this.mDarkReceiver = new DarkIconDispatcher.DarkReceiver() {
-                    public void onDarkChanged(Rect rect, float f, int i) {
-                        float unused = DarkIconManager.this.mDarkIntensity = f;
-                        int unused2 = DarkIconManager.this.mTintColor = i;
-                        DarkIconManager.this.mTintArea.set(rect);
-                        ViewGroup viewGroup = DarkIconManager.this.mGroup;
-                        if (viewGroup != null && viewGroup.getChildCount() != 0) {
-                            for (int i2 = 0; i2 < DarkIconManager.this.mGroup.getChildCount(); i2++) {
-                                if (DarkIconManager.this.mGroup.getChildAt(i2) instanceof StatusBarIconView) {
-                                    StatusBarIconView statusBarIconView = (StatusBarIconView) DarkIconManager.this.mGroup.getChildAt(i2);
-                                    boolean z = "bluetooth_handsfree_battery".equals(statusBarIconView.getSlot()) && statusBarIconView.getStatusBarIcon().iconLevel <= 2;
-                                    statusBarIconView.setImageTintMode(PorterDuff.Mode.SRC_IN);
-                                    if (Util.showCtsSpecifiedColor() || !DarkIconManager.this.mDarkIconDispatcher.useTint() || z) {
-                                        boolean inDarkMode = DarkIconDispatcherHelper.inDarkMode(DarkIconManager.this.mTintArea, statusBarIconView, DarkIconManager.this.mDarkIntensity);
-                                        statusBarIconView.setImageResource(Icons.get(Integer.valueOf(statusBarIconView.getStatusBarIcon().icon.getResId()), inDarkMode));
-                                        if (!inDarkMode || !Util.showCtsSpecifiedColor()) {
-                                            statusBarIconView.setImageTintList((ColorStateList) null);
-                                        } else {
-                                            if (DarkIconManager.sFilterColor == 0) {
-                                                int unused3 = DarkIconManager.sFilterColor = DarkIconManager.this.mContext.getResources().getColor(R.color.status_bar_icon_text_color_dark_mode_cts);
-                                            }
-                                            statusBarIconView.setImageTintList(ColorStateList.valueOf(DarkIconManager.sFilterColor));
-                                        }
-                                    } else {
-                                        statusBarIconView.setImageResource(Icons.get(Integer.valueOf(statusBarIconView.getStatusBarIcon().icon.getResId()), false));
-                                        statusBarIconView.setImageTintList(ColorStateList.valueOf(DarkIconDispatcherHelper.getTint(rect, statusBarIconView, i)));
-                                    }
-                                }
-                            }
-                        }
-                    }
-                };
-                this.mDarkIconDispatcher.addDarkReceiver(this.mDarkReceiver);
-            }
+        public DarkIconManager(LinearLayout linearLayout, CommandQueue commandQueue) {
+            super(linearLayout, commandQueue);
         }
 
         /* access modifiers changed from: protected */
-        public void onIconAdded(int i, String str, boolean z, StatusBarIcon statusBarIcon) {
-            addIcon(i, str, z, statusBarIcon);
-            applyDark(i);
+        public void onIconAdded(int i, String str, boolean z, StatusBarIconHolder statusBarIconHolder) {
+            this.mDarkIconDispatcher.addDarkReceiver((DarkIconDispatcher.DarkReceiver) addHolder(i, str, z, statusBarIconHolder));
         }
 
         /* access modifiers changed from: protected */
-        public LinearLayout.LayoutParams onCreateLayoutParams(int i) {
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(i, this.mIconSize);
-            int i2 = this.mIconHPadding;
-            layoutParams.setMargins(i2, 0, i2, 0);
+        public LinearLayout.LayoutParams onCreateLayoutParams() {
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(-2, this.mIconSize);
+            int i = this.mIconHPadding;
+            layoutParams.setMargins(i, 0, i, 0);
             return layoutParams;
         }
 
+        /* access modifiers changed from: protected */
         public void destroy() {
-            this.mGroup.removeAllViews();
-            this.mDarkIconDispatcher.removeDarkReceiver(this.mDarkReceiver);
-        }
-
-        public void onSetIcon(int i, String str, StatusBarIcon statusBarIcon) {
-            super.onSetIcon(i, str, statusBarIcon);
-            applyDark(i);
-        }
-
-        public void setDarkIntensity(Rect rect, float f, int i) {
-            this.mDarkIntensity = f;
-            this.mTintArea.set(rect);
-            this.mTintColor = i;
-            int childCount = this.mGroup.getChildCount();
-            for (int i2 = 0; i2 < childCount; i2++) {
-                applyDark(i2);
+            for (int i = 0; i < this.mGroup.getChildCount(); i++) {
+                this.mDarkIconDispatcher.removeDarkReceiver((DarkIconDispatcher.DarkReceiver) this.mGroup.getChildAt(i));
             }
+            this.mGroup.removeAllViews();
         }
 
         /* access modifiers changed from: protected */
-        public void applyDark(int i) {
-            if (i < this.mGroup.getChildCount() && (this.mGroup.getChildAt(i) instanceof StatusBarIconView)) {
-                StatusBarIconView statusBarIconView = (StatusBarIconView) this.mGroup.getChildAt(i);
-                statusBarIconView.setImageTintMode(PorterDuff.Mode.SRC_IN);
-                if (this.mDarkIconDispatcher.useTint()) {
-                    statusBarIconView.setImageTintList(ColorStateList.valueOf(DarkIconDispatcherHelper.getTint(this.mTintArea, statusBarIconView, this.mTintColor)));
-                    return;
+        public void onRemoveIcon(int i) {
+            this.mDarkIconDispatcher.removeDarkReceiver((DarkIconDispatcher.DarkReceiver) this.mGroup.getChildAt(i));
+            super.onRemoveIcon(i);
+        }
+
+        public void onSetIcon(int i, StatusBarIcon statusBarIcon) {
+            super.onSetIcon(i, statusBarIcon);
+            this.mDarkIconDispatcher.applyDark((DarkIconDispatcher.DarkReceiver) this.mGroup.getChildAt(i));
+        }
+    }
+
+    public static class MiuiLightDarkIconManager extends IconManager {
+        private int mColor;
+        private boolean mLight;
+
+        public MiuiLightDarkIconManager(ViewGroup viewGroup, CommandQueue commandQueue, boolean z, int i) {
+            super(viewGroup, commandQueue);
+            this.mLight = z;
+            this.mColor = i;
+        }
+
+        /* access modifiers changed from: protected */
+        public void onIconAdded(int i, String str, boolean z, StatusBarIconHolder statusBarIconHolder) {
+            StatusIconDisplayable addHolder = addHolder(i, str, z, statusBarIconHolder);
+            Rect rect = new Rect();
+            float f = this.mLight ? 0.0f : 1.0f;
+            int i2 = this.mColor;
+            addHolder.onDarkChanged(rect, f, i2, i2, i2, false);
+        }
+
+        public void setLight(boolean z, int i) {
+            this.mLight = z;
+            this.mColor = i;
+            Rect rect = new Rect();
+            for (int i2 = 0; i2 < this.mGroup.getChildCount(); i2++) {
+                View childAt = this.mGroup.getChildAt(i2);
+                if (childAt instanceof StatusIconDisplayable) {
+                    ((StatusIconDisplayable) childAt).onDarkChanged(rect, z ? 0.0f : 1.0f, i, i, i, false);
                 }
-                statusBarIconView.setImageTintList((ColorStateList) null);
-                statusBarIconView.setImageResource(Icons.get(Integer.valueOf(statusBarIconView.getStatusBarIcon().icon.getResId()), DarkIconDispatcherHelper.inDarkMode(this.mTintArea, statusBarIconView, this.mDarkIntensity)));
             }
         }
     }
 
-    public static class IconManager {
+    public static class IconManager implements DemoMode {
         protected final Context mContext;
+        protected DemoStatusIcons mDemoStatusIcons;
+        protected boolean mDemoable = true;
+        protected boolean mDrip;
         protected final ViewGroup mGroup;
-        protected final int mIconSize = this.mContext.getResources().getDimensionPixelSize(17105442);
-        public ArraySet<String> mWhiteList;
+        protected int mIconSize;
+        private boolean mIsInDemoMode;
+        protected boolean mShouldLog = false;
 
-        public IconManager(ViewGroup viewGroup) {
+        public void dispatchDemoCommand(String str, Bundle bundle) {
+        }
+
+        public IconManager(ViewGroup viewGroup, CommandQueue commandQueue) {
             this.mGroup = viewGroup;
-            this.mContext = viewGroup.getContext();
-            if (this.mGroup.getTag(R.id.tag_disable_state_tracker) == null) {
-                DisableStateTracker disableStateTracker = new DisableStateTracker(0, 2);
-                this.mGroup.addOnAttachStateChangeListener(disableStateTracker);
-                this.mGroup.setTag(R.id.tag_disable_state_tracker, disableStateTracker);
-                if (this.mGroup.isAttachedToWindow()) {
-                    disableStateTracker.onViewAttachedToWindow(this.mGroup);
-                }
+            Context context = viewGroup.getContext();
+            this.mContext = context;
+            this.mIconSize = context.getResources().getDimensionPixelSize(C0012R$dimen.status_bar_icon_height);
+            Utils.DisableStateTracker disableStateTracker = new Utils.DisableStateTracker(0, 2, commandQueue);
+            this.mGroup.addOnAttachStateChangeListener(disableStateTracker);
+            if (this.mGroup.isAttachedToWindow()) {
+                disableStateTracker.onViewAttachedToWindow(this.mGroup);
             }
         }
 
+        public boolean isDemoable() {
+            return this.mDemoable;
+        }
+
+        public void setShouldLog(boolean z) {
+            this.mShouldLog = z;
+        }
+
+        public boolean shouldLog() {
+            return this.mShouldLog;
+        }
+
         /* access modifiers changed from: protected */
-        public void onIconAdded(int i, String str, boolean z, StatusBarIcon statusBarIcon) {
-            addIcon(i, str, z, statusBarIcon);
+        public void onIconAdded(int i, String str, boolean z, StatusBarIconHolder statusBarIconHolder) {
+            addHolder(i, str, z, statusBarIconHolder);
+        }
+
+        /* access modifiers changed from: protected */
+        public StatusIconDisplayable addHolder(int i, String str, boolean z, StatusBarIconHolder statusBarIconHolder) {
+            int type = statusBarIconHolder.getType();
+            if (type == 0) {
+                return addIcon(i, str, z, statusBarIconHolder.getIcon());
+            }
+            if (type == 1) {
+                return addSignalIcon(i, str, statusBarIconHolder.getWifiState());
+            }
+            if (type != 2) {
+                return null;
+            }
+            return addMobileIcon(i, str, statusBarIconHolder.getMobileState());
         }
 
         /* access modifiers changed from: protected */
         public StatusBarIconView addIcon(int i, String str, boolean z, StatusBarIcon statusBarIcon) {
-            ArraySet<String> arraySet = this.mWhiteList;
-            if (arraySet != null) {
-                z = !arraySet.contains(str);
-            }
             StatusBarIconView onCreateStatusBarIconView = onCreateStatusBarIconView(str, z);
+            onCreateStatusBarIconView.setAdjustViewBounds(true);
             onCreateStatusBarIconView.set(statusBarIcon);
-            this.mGroup.addView(onCreateStatusBarIconView, i, onCreateLayoutParams(getDrawableWidth(onCreateStatusBarIconView)));
+            this.mGroup.addView(onCreateStatusBarIconView, i, onCreateLayoutParams());
             return onCreateStatusBarIconView;
         }
 
         /* access modifiers changed from: protected */
-        public StatusBarIconView onCreateStatusBarIconView(String str, boolean z) {
-            return new StatusBarIconView(this.mContext, str, (ExpandedNotification) null, z);
+        public StatusBarWifiView addSignalIcon(int i, String str, StatusBarSignalPolicy.WifiIconState wifiIconState) {
+            StatusBarWifiView onCreateStatusBarWifiView = onCreateStatusBarWifiView(str);
+            onCreateStatusBarWifiView.applyWifiState(wifiIconState);
+            this.mGroup.addView(onCreateStatusBarWifiView, i, onCreateLayoutParams());
+            if (this.mIsInDemoMode) {
+                this.mDemoStatusIcons.addDemoWifiView(wifiIconState);
+            }
+            return onCreateStatusBarWifiView;
         }
 
         /* access modifiers changed from: protected */
-        public LinearLayout.LayoutParams onCreateLayoutParams(int i) {
-            return new LinearLayout.LayoutParams(i, this.mIconSize);
+        public StatusBarMobileView addMobileIcon(int i, String str, StatusBarSignalPolicy.MobileIconState mobileIconState) {
+            StatusBarMobileView onCreateStatusBarMobileView = onCreateStatusBarMobileView(str);
+            onCreateStatusBarMobileView.applyMobileState(mobileIconState);
+            this.mGroup.addView(onCreateStatusBarMobileView, i, onCreateLayoutParams());
+            if (this.mIsInDemoMode) {
+                this.mDemoStatusIcons.addMobileView(mobileIconState);
+            }
+            return onCreateStatusBarMobileView;
+        }
+
+        private StatusBarIconView onCreateStatusBarIconView(String str, boolean z) {
+            return new StatusBarIconView(this.mContext, str, (ExpandedNotification) null, z);
+        }
+
+        private StatusBarWifiView onCreateStatusBarWifiView(String str) {
+            return StatusBarWifiView.fromContext(this.mContext, str);
+        }
+
+        private StatusBarMobileView onCreateStatusBarMobileView(String str) {
+            StatusBarMobileView fromContext = StatusBarMobileView.fromContext(this.mContext, str);
+            fromContext.setDrip(this.mDrip);
+            return fromContext;
+        }
+
+        /* access modifiers changed from: protected */
+        public LinearLayout.LayoutParams onCreateLayoutParams() {
+            return new LinearLayout.LayoutParams(-2, this.mIconSize);
         }
 
         /* access modifiers changed from: protected */
@@ -268,6 +258,14 @@ public interface StatusBarIconController {
             setHeightAndCenter(imageView, i2);
         }
 
+        /* access modifiers changed from: protected */
+        public void onDensityOrFontScaleChanged() {
+            this.mIconSize = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.status_bar_icon_height);
+            for (int i = 0; i < this.mGroup.getChildCount(); i++) {
+                this.mGroup.getChildAt(i).setLayoutParams(new LinearLayout.LayoutParams(-2, this.mIconSize));
+            }
+        }
+
         private void setHeightAndCenter(ImageView imageView, int i) {
             ViewGroup.LayoutParams layoutParams = imageView.getLayoutParams();
             layoutParams.height = i;
@@ -278,28 +276,50 @@ public interface StatusBarIconController {
         }
 
         /* access modifiers changed from: protected */
-        public void onRemoveIcon(int i, String str) {
+        public void onRemoveIcon(int i) {
+            if (this.mIsInDemoMode) {
+                this.mDemoStatusIcons.onRemoveIcon((StatusIconDisplayable) this.mGroup.getChildAt(i));
+            }
             this.mGroup.removeViewAt(i);
         }
 
-        public void onSetIcon(int i, String str, StatusBarIcon statusBarIcon) {
+        public void onSetIcon(int i, StatusBarIcon statusBarIcon) {
             ((StatusBarIconView) this.mGroup.getChildAt(i)).set(statusBarIcon);
         }
 
-        public boolean hasView(String str) {
-            for (int i = 0; i < this.mGroup.getChildCount(); i++) {
-                if (((StatusBarIconView) this.mGroup.getChildAt(i)).getSlot().equals(str)) {
-                    return true;
-                }
+        public void onSetIconHolder(int i, StatusBarIconHolder statusBarIconHolder) {
+            int type = statusBarIconHolder.getType();
+            if (type == 0) {
+                onSetIcon(i, statusBarIconHolder.getIcon());
+            } else if (type == 1) {
+                onSetSignalIcon(i, statusBarIconHolder.getWifiState());
+            } else if (type == 2) {
+                onSetMobileIcon(i, statusBarIconHolder.getMobileState());
             }
-            return false;
         }
 
-        public int getDrawableWidth(StatusBarIconView statusBarIconView) {
-            if (statusBarIconView == null || statusBarIconView.getDrawable() == null) {
-                return -2;
+        public void onSetSignalIcon(int i, StatusBarSignalPolicy.WifiIconState wifiIconState) {
+            StatusBarWifiView statusBarWifiView = (StatusBarWifiView) this.mGroup.getChildAt(i);
+            if (statusBarWifiView != null) {
+                statusBarWifiView.applyWifiState(wifiIconState);
             }
-            return statusBarIconView.getDrawable().getIntrinsicWidth();
+            if (this.mIsInDemoMode) {
+                this.mDemoStatusIcons.updateWifiState(wifiIconState);
+            }
+        }
+
+        public void onSetMobileIcon(int i, StatusBarSignalPolicy.MobileIconState mobileIconState) {
+            StatusBarMobileView statusBarMobileView = (StatusBarMobileView) this.mGroup.getChildAt(i);
+            if (statusBarMobileView != null) {
+                statusBarMobileView.applyMobileState(mobileIconState);
+            }
+            if (this.mIsInDemoMode) {
+                this.mDemoStatusIcons.updateMobileState(mobileIconState);
+            }
+        }
+
+        public void setDrip(boolean z) {
+            this.mDrip = z;
         }
     }
 }

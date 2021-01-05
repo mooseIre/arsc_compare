@@ -8,6 +8,10 @@ public class UiOffloadThread {
     private final ExecutorService mHighExecutorService = Executors.newSingleThreadExecutor();
     private final ExecutorService mNormalExecutorService = Executors.newSingleThreadExecutor();
 
+    public Future<?> execute(Runnable runnable) {
+        return this.mNormalExecutorService.submit(runnable);
+    }
+
     public Future<?> submit(Runnable runnable) {
         return submit(runnable, 1);
     }

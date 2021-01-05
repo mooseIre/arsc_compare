@@ -4,33 +4,27 @@ import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.view.View;
-import com.android.systemui.plugins.R;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0015R$id;
 
 public final class PhoneStatusBarTransitions extends BarTransitions {
     private View mBattery;
-    private View mClock;
     private Animator mCurrentAnimation;
-    private final float mIconAlphaWhenOpaque = this.mView.getContext().getResources().getFraction(R.dimen.status_bar_icon_drawing_alpha, 1, 1);
+    private final float mIconAlphaWhenOpaque;
     private View mLeftSide;
-    private View mSignalCluster;
     private View mStatusIcons;
-    private final PhoneStatusBarView mView;
 
     private boolean isOpaque(int i) {
-        return (i == 1 || i == 2 || i == 4 || i == 6) ? false : true;
+        return (i == 1 || i == 2 || i == 0 || i == 6) ? false : true;
     }
 
-    public PhoneStatusBarTransitions(PhoneStatusBarView phoneStatusBarView) {
-        super(phoneStatusBarView, R.drawable.status_background, R.color.system_status_bar_background_opaque);
-        this.mView = phoneStatusBarView;
-    }
-
-    public void init() {
-        this.mLeftSide = this.mView.findViewById(R.id.notification_icon_area);
-        this.mStatusIcons = this.mView.findViewById(R.id.statusIcons);
-        this.mSignalCluster = this.mView.findViewById(R.id.signal_cluster);
-        this.mBattery = this.mView.findViewById(R.id.battery);
-        this.mClock = this.mView.findViewById(R.id.clock);
+    public PhoneStatusBarTransitions(PhoneStatusBarView phoneStatusBarView, View view) {
+        super(view, C0013R$drawable.status_background);
+        this.mIconAlphaWhenOpaque = phoneStatusBarView.getContext().getResources().getFraction(C0012R$dimen.status_bar_icon_drawing_alpha, 1, 1);
+        this.mLeftSide = phoneStatusBarView.findViewById(C0015R$id.status_bar_left_side);
+        this.mStatusIcons = phoneStatusBarView.findViewById(C0015R$id.statusIcons);
+        this.mBattery = phoneStatusBarView.findViewById(C0015R$id.battery);
         applyModeBackground(-1, getMode(), false);
         applyMode(getMode(), false);
     }
@@ -72,7 +66,7 @@ public final class PhoneStatusBarTransitions extends BarTransitions {
             }
             if (z) {
                 AnimatorSet animatorSet = new AnimatorSet();
-                animatorSet.playTogether(new Animator[]{animateTransitionTo(this.mLeftSide, nonBatteryClockAlphaFor), animateTransitionTo(this.mStatusIcons, nonBatteryClockAlphaFor), animateTransitionTo(this.mSignalCluster, nonBatteryClockAlphaFor), animateTransitionTo(this.mBattery, batteryClockAlpha), animateTransitionTo(this.mClock, batteryClockAlpha)});
+                animatorSet.playTogether(new Animator[]{animateTransitionTo(this.mLeftSide, nonBatteryClockAlphaFor), animateTransitionTo(this.mStatusIcons, nonBatteryClockAlphaFor), animateTransitionTo(this.mBattery, batteryClockAlpha)});
                 if (isLightsOut(i)) {
                     animatorSet.setDuration(750);
                 }
@@ -82,9 +76,7 @@ public final class PhoneStatusBarTransitions extends BarTransitions {
             }
             this.mLeftSide.setAlpha(nonBatteryClockAlphaFor);
             this.mStatusIcons.setAlpha(nonBatteryClockAlphaFor);
-            this.mSignalCluster.setAlpha(nonBatteryClockAlphaFor);
             this.mBattery.setAlpha(batteryClockAlpha);
-            this.mClock.setAlpha(batteryClockAlpha);
         }
     }
 }

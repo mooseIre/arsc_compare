@@ -13,6 +13,10 @@ import android.os.Looper;
 import android.provider.Settings;
 import android.view.MotionEvent;
 import android.widget.Toast;
+import com.android.systemui.Dependency;
+import com.android.systemui.plugins.FalsingPlugin;
+import com.android.systemui.plugins.PluginListener;
+import com.android.systemui.shared.plugins.PluginManager;
 import com.google.protobuf.nano.MessageNano;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -27,25 +31,45 @@ public class DataCollector implements SensorEventListener {
     public final Context mContext;
     private boolean mCornerSwiping = false;
     private SensorLoggerSession mCurrentSession = null;
+    /* access modifiers changed from: private */
+    public boolean mDisableUnlocking = false;
     private boolean mEnableCollector = false;
+    /* access modifiers changed from: private */
+    public FalsingPlugin mFalsingPlugin = null;
     private final Handler mHandler = new Handler(Looper.getMainLooper());
+    private final PluginListener mPluginListener = new PluginListener<FalsingPlugin>() {
+        public void onPluginConnected(FalsingPlugin falsingPlugin, Context context) {
+            FalsingPlugin unused = DataCollector.this.mFalsingPlugin = falsingPlugin;
+        }
+
+        public void onPluginDisconnected(FalsingPlugin falsingPlugin) {
+            FalsingPlugin unused = DataCollector.this.mFalsingPlugin = null;
+        }
+    };
     protected final ContentObserver mSettingsObserver = new ContentObserver(this.mHandler) {
         public void onChange(boolean z) {
             DataCollector.this.updateConfiguration();
         }
     };
-    private boolean mTimeoutActive = false;
     private boolean mTrackingStarted = false;
 
     public void onAccuracyChanged(Sensor sensor, int i) {
     }
 
+    public void onExpansionFromPulseStopped() {
+    }
+
+    public void onStartExpandingFromPulse() {
+    }
+
     private DataCollector(Context context) {
         this.mContext = context;
-        this.mContext.getContentResolver().registerContentObserver(Settings.Secure.getUriFor("data_collector_enable"), false, this.mSettingsObserver, -1);
+        context.getContentResolver().registerContentObserver(Settings.Secure.getUriFor("data_collector_enable"), false, this.mSettingsObserver, -1);
         this.mContext.getContentResolver().registerContentObserver(Settings.Secure.getUriFor("data_collector_collect_bad_touches"), false, this.mSettingsObserver, -1);
         this.mContext.getContentResolver().registerContentObserver(Settings.Secure.getUriFor("data_collector_allow_rejected_touch_reports"), false, this.mSettingsObserver, -1);
+        this.mContext.getContentResolver().registerContentObserver(Settings.Secure.getUriFor("data_collector_disable_unlocking"), false, this.mSettingsObserver, -1);
         updateConfiguration();
+        ((PluginManager) Dependency.get(PluginManager.class)).addPluginListener(this.mPluginListener, FalsingPlugin.class);
     }
 
     public static DataCollector getInstance(Context context) {
@@ -58,12 +82,14 @@ public class DataCollector implements SensorEventListener {
     /* access modifiers changed from: private */
     public void updateConfiguration() {
         boolean z = true;
-        this.mEnableCollector = Build.IS_DEBUGGABLE && Settings.Secure.getInt(this.mContext.getContentResolver(), "data_collector_enable", 0) != 0;
-        this.mCollectBadTouches = this.mEnableCollector && Settings.Secure.getInt(this.mContext.getContentResolver(), "data_collector_collect_bad_touches", 0) != 0;
-        if (!Build.IS_DEBUGGABLE || Settings.Secure.getInt(this.mContext.getContentResolver(), "data_collector_allow_rejected_touch_reports", 0) == 0) {
+        boolean z2 = Build.IS_DEBUGGABLE && Settings.Secure.getInt(this.mContext.getContentResolver(), "data_collector_enable", 0) != 0;
+        this.mEnableCollector = z2;
+        this.mCollectBadTouches = z2 && Settings.Secure.getInt(this.mContext.getContentResolver(), "data_collector_collect_bad_touches", 0) != 0;
+        this.mAllowReportRejectedTouch = Build.IS_DEBUGGABLE && Settings.Secure.getInt(this.mContext.getContentResolver(), "data_collector_allow_rejected_touch_reports", 0) != 0;
+        if (!this.mEnableCollector || !Build.IS_DEBUGGABLE || Settings.Secure.getInt(this.mContext.getContentResolver(), "data_collector_disable_unlocking", 0) == 0) {
             z = false;
         }
-        this.mAllowReportRejectedTouch = z;
+        this.mDisableUnlocking = z;
     }
 
     private boolean sessionEntrypoint() {
@@ -89,7 +115,7 @@ public class DataCollector implements SensorEventListener {
     private void onSessionEnd(int i) {
         SensorLoggerSession sensorLoggerSession = this.mCurrentSession;
         this.mCurrentSession = null;
-        if (this.mEnableCollector) {
+        if (this.mEnableCollector || this.mDisableUnlocking) {
             sensorLoggerSession.end(System.currentTimeMillis(), i);
             queueSession(sensorLoggerSession);
         }
@@ -118,17 +144,27 @@ public class DataCollector implements SensorEventListener {
     private void queueSession(final SensorLoggerSession sensorLoggerSession) {
         AsyncTask.execute(new Runnable() {
             public void run() {
-                String str;
                 byte[] byteArray = MessageNano.toByteArray(sensorLoggerSession.toProto());
-                String absolutePath = DataCollector.this.mContext.getFilesDir().getAbsolutePath();
-                if (sensorLoggerSession.getResult() == 1) {
-                    str = absolutePath + "/good_touches";
-                } else if (DataCollector.this.mCollectBadTouches) {
-                    str = absolutePath + "/bad_touches";
-                } else {
+                boolean z = true;
+                if (DataCollector.this.mFalsingPlugin != null) {
+                    FalsingPlugin access$100 = DataCollector.this.mFalsingPlugin;
+                    if (sensorLoggerSession.getResult() != 1) {
+                        z = false;
+                    }
+                    access$100.dataCollected(z, byteArray);
                     return;
                 }
-                File file = new File(str);
+                String absolutePath = DataCollector.this.mContext.getFilesDir().getAbsolutePath();
+                if (sensorLoggerSession.getResult() != 1) {
+                    if (DataCollector.this.mDisableUnlocking || DataCollector.this.mCollectBadTouches) {
+                        absolutePath = absolutePath + "/bad_touches";
+                    } else {
+                        return;
+                    }
+                } else if (!DataCollector.this.mDisableUnlocking) {
+                    absolutePath = absolutePath + "/good_touches";
+                }
+                File file = new File(absolutePath);
                 file.mkdir();
                 try {
                     new FileOutputStream(new File(file, "trace_" + System.currentTimeMillis())).write(byteArray);
@@ -142,18 +178,15 @@ public class DataCollector implements SensorEventListener {
     public synchronized void onSensorChanged(SensorEvent sensorEvent) {
         if (isEnabled() && this.mCurrentSession != null) {
             this.mCurrentSession.addSensorEvent(sensorEvent, System.nanoTime());
-            enforceTimeout();
-        }
-    }
-
-    private void enforceTimeout() {
-        if (this.mTimeoutActive && System.currentTimeMillis() - this.mCurrentSession.getStartTimestampMillis() > 11000) {
-            onSessionEnd(2);
         }
     }
 
     public boolean isEnabled() {
-        return this.mEnableCollector || this.mAllowReportRejectedTouch;
+        return this.mEnableCollector || this.mAllowReportRejectedTouch || this.mDisableUnlocking;
+    }
+
+    public boolean isUnlockingDisabled() {
+        return this.mDisableUnlocking;
     }
 
     public boolean isEnabledFull() {
@@ -254,6 +287,15 @@ public class DataCollector implements SensorEventListener {
         addEvent(25);
     }
 
+    public void onAffordanceSwipingStarted(boolean z) {
+        this.mCornerSwiping = true;
+        if (z) {
+            addEvent(21);
+        } else {
+            addEvent(22);
+        }
+    }
+
     public void onAffordanceSwipingAborted() {
         if (this.mCornerSwiping) {
             this.mCornerSwiping = false;
@@ -261,12 +303,23 @@ public class DataCollector implements SensorEventListener {
         }
     }
 
+    public void onUnlockHintStarted() {
+        addEvent(26);
+    }
+
+    public void onCameraHintStarted() {
+        addEvent(27);
+    }
+
+    public void onLeftAffordanceHintStarted() {
+        addEvent(28);
+    }
+
     public void onTouchEvent(MotionEvent motionEvent, int i, int i2) {
         SensorLoggerSession sensorLoggerSession = this.mCurrentSession;
         if (sensorLoggerSession != null) {
             sensorLoggerSession.addMotionEvent(motionEvent);
             this.mCurrentSession.setTouchArea(i, i2);
-            enforceTimeout();
         }
     }
 
@@ -279,5 +332,9 @@ public class DataCollector implements SensorEventListener {
 
     public boolean isReportingEnabled() {
         return this.mAllowReportRejectedTouch;
+    }
+
+    public void onFalsingSessionStarted() {
+        sessionEntrypoint();
     }
 }

@@ -9,28 +9,30 @@ import android.view.WindowInsets;
 import android.widget.FrameLayout;
 
 public class KeyguardPreviewContainer extends FrameLayout {
-    private Drawable mBlackBarDrawable = new Drawable() {
-        public int getOpacity() {
-            return -1;
-        }
-
-        public void setAlpha(int i) {
-        }
-
-        public void setColorFilter(ColorFilter colorFilter) {
-        }
-
-        public void draw(Canvas canvas) {
-            canvas.save();
-            canvas.clipRect(0, KeyguardPreviewContainer.this.getHeight() - KeyguardPreviewContainer.this.getPaddingBottom(), KeyguardPreviewContainer.this.getWidth(), KeyguardPreviewContainer.this.getHeight());
-            canvas.drawColor(-16777216);
-            canvas.restore();
-        }
-    };
+    private Drawable mBlackBarDrawable;
 
     public KeyguardPreviewContainer(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-        setBackground(this.mBlackBarDrawable);
+        AnonymousClass1 r1 = new Drawable() {
+            public int getOpacity() {
+                return -1;
+            }
+
+            public void setAlpha(int i) {
+            }
+
+            public void setColorFilter(ColorFilter colorFilter) {
+            }
+
+            public void draw(Canvas canvas) {
+                canvas.save();
+                canvas.clipRect(0, KeyguardPreviewContainer.this.getHeight() - KeyguardPreviewContainer.this.getPaddingBottom(), KeyguardPreviewContainer.this.getWidth(), KeyguardPreviewContainer.this.getHeight());
+                canvas.drawColor(-16777216);
+                canvas.restore();
+            }
+        };
+        this.mBlackBarDrawable = r1;
+        setBackground(r1);
     }
 
     public WindowInsets onApplyWindowInsets(WindowInsets windowInsets) {

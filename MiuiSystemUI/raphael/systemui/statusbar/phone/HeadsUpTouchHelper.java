@@ -1,34 +1,39 @@
 package com.android.systemui.statusbar.phone;
 
-import android.util.Log;
+import android.content.Context;
 import android.view.MotionEvent;
 import android.view.ViewConfiguration;
 import com.android.systemui.Gefingerpoken;
-import com.android.systemui.statusbar.ExpandableNotificationRow;
-import com.android.systemui.statusbar.ExpandableView;
-import com.android.systemui.statusbar.policy.HeadsUpManager;
-import com.android.systemui.statusbar.stack.NotificationStackScrollLayout;
+import com.android.systemui.statusbar.notification.collection.NotificationEntry;
+import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow;
+import com.android.systemui.statusbar.notification.row.ExpandableView;
 
 public class HeadsUpTouchHelper implements Gefingerpoken {
+    private Callback mCallback;
     private boolean mCollapseSnoozes;
-    private HeadsUpManager mHeadsUpManager;
+    private HeadsUpManagerPhone mHeadsUpManager;
     private float mInitialTouchX;
     private float mInitialTouchY;
-    private NotificationPanelView mPanel;
+    private NotificationPanelViewController mPanel;
     private ExpandableNotificationRow mPickedChild;
-    private NotificationStackScrollLayout mStackScroller;
-    private StatusBar mStatusBar;
     private float mTouchSlop;
     private boolean mTouchingHeadsUpView;
     private boolean mTrackingHeadsUp;
     private int mTrackingPointer;
 
-    public HeadsUpTouchHelper(HeadsUpManager headsUpManager, NotificationStackScrollLayout notificationStackScrollLayout, NotificationPanelView notificationPanelView, StatusBar statusBar) {
-        this.mHeadsUpManager = headsUpManager;
-        this.mStackScroller = notificationStackScrollLayout;
-        this.mPanel = notificationPanelView;
-        this.mStatusBar = statusBar;
-        this.mTouchSlop = (float) ViewConfiguration.get(notificationStackScrollLayout.getContext()).getScaledTouchSlop();
+    public interface Callback {
+        ExpandableView getChildAtRawPosition(float f, float f2);
+
+        Context getContext();
+
+        boolean isExpanded();
+    }
+
+    public HeadsUpTouchHelper(HeadsUpManagerPhone headsUpManagerPhone, Callback callback, NotificationPanelViewController notificationPanelViewController) {
+        this.mHeadsUpManager = headsUpManagerPhone;
+        this.mCallback = callback;
+        this.mPanel = notificationPanelViewController;
+        this.mTouchSlop = (float) ViewConfiguration.get(callback.getContext()).getScaledTouchSlop();
     }
 
     public boolean isTrackingHeadsUp() {
@@ -36,7 +41,9 @@ public class HeadsUpTouchHelper implements Gefingerpoken {
     }
 
     public boolean onInterceptTouchEvent(MotionEvent motionEvent) {
+        NotificationEntry topEntry;
         int pointerId;
+        boolean z = false;
         if (!this.mTouchingHeadsUpView && motionEvent.getActionMasked() != 0) {
             return false;
         }
@@ -48,32 +55,47 @@ public class HeadsUpTouchHelper implements Gefingerpoken {
         float x = motionEvent.getX(findPointerIndex);
         float y = motionEvent.getY(findPointerIndex);
         int actionMasked = motionEvent.getActionMasked();
-        boolean z = true;
+        boolean z2 = true;
         if (actionMasked != 0) {
             if (actionMasked != 1) {
                 if (actionMasked == 2) {
                     float f = y - this.mInitialTouchY;
-                    if (this.mTouchingHeadsUpView && Math.abs(f) > this.mTouchSlop && Math.abs(f) > Math.abs(x - this.mInitialTouchX) && f < 0.0f) {
-                        this.mTrackingHeadsUp = true;
-                        this.mStatusBar.showReturnToInCallScreenButtonIfNeed();
-                        this.mHeadsUpManager.removeNotification(this.mPickedChild.getEntry().key, true);
-                        this.mTouchingHeadsUpView = false;
-                        this.mHeadsUpManager.unpinAll();
+                    if (this.mTouchingHeadsUpView && Math.abs(f) > this.mTouchSlop && Math.abs(f) > Math.abs(x - this.mInitialTouchX)) {
+                        setTrackingHeadsUp(true);
+                        float f2 = 0.0f;
+                        if (f < 0.0f) {
+                            z = true;
+                        }
+                        this.mCollapseSnoozes = z;
+                        this.mInitialTouchX = x;
+                        this.mInitialTouchY = y;
+                        int actualHeight = (int) (((float) this.mPickedChild.getActualHeight()) + this.mPickedChild.getTranslationY());
+                        float maxPanelHeight = (float) this.mPanel.getMaxPanelHeight();
+                        NotificationPanelViewController notificationPanelViewController = this.mPanel;
+                        if (maxPanelHeight > 0.0f) {
+                            f2 = ((float) actualHeight) / maxPanelHeight;
+                        }
+                        notificationPanelViewController.setPanelScrimMinFraction(f2);
+                        this.mPanel.startExpandMotion(x, y, true, (float) actualHeight);
+                        this.mPanel.startExpandingFromPeek();
+                        this.mHeadsUpManager.unpinAll(true);
+                        this.mPanel.clearNotificationEffects();
+                        endMotion();
                         return true;
                     }
                 } else if (actionMasked != 3) {
                     if (actionMasked == 6 && this.mTrackingPointer == (pointerId = motionEvent.getPointerId(motionEvent.getActionIndex()))) {
                         if (motionEvent.getPointerId(0) != pointerId) {
-                            z = false;
+                            z2 = false;
                         }
-                        this.mTrackingPointer = motionEvent.getPointerId(z ? 1 : 0);
-                        this.mInitialTouchX = motionEvent.getX(z);
-                        this.mInitialTouchY = motionEvent.getY(z);
+                        this.mTrackingPointer = motionEvent.getPointerId(z2 ? 1 : 0);
+                        this.mInitialTouchX = motionEvent.getX(z2);
+                        this.mInitialTouchY = motionEvent.getY(z2);
                     }
                 }
             }
             ExpandableNotificationRow expandableNotificationRow = this.mPickedChild;
-            if (expandableNotificationRow == null || !this.mTouchingHeadsUpView || !this.mHeadsUpManager.shouldSwallowClick(expandableNotificationRow.getStatusBarNotification().getKey())) {
+            if (expandableNotificationRow == null || !this.mTouchingHeadsUpView || !this.mHeadsUpManager.shouldSwallowClick(expandableNotificationRow.getEntry().getSbn().getKey())) {
                 endMotion();
             } else {
                 endMotion();
@@ -83,26 +105,29 @@ public class HeadsUpTouchHelper implements Gefingerpoken {
             this.mInitialTouchY = y;
             this.mInitialTouchX = x;
             setTrackingHeadsUp(false);
-            ExpandableView childAtRawPosition = this.mStackScroller.getChildAtRawPosition(x, y);
+            ExpandableView childAtRawPosition = this.mCallback.getChildAtRawPosition(x, y);
             this.mTouchingHeadsUpView = false;
             if (childAtRawPosition instanceof ExpandableNotificationRow) {
-                this.mPickedChild = (ExpandableNotificationRow) childAtRawPosition;
-                if (this.mStackScroller.isExpanded() || !this.mPickedChild.isHeadsUp() || !this.mPickedChild.isPinned()) {
-                    z = false;
+                ExpandableNotificationRow expandableNotificationRow2 = (ExpandableNotificationRow) childAtRawPosition;
+                if (this.mCallback.isExpanded() || !expandableNotificationRow2.isHeadsUp() || !expandableNotificationRow2.isPinned()) {
+                    z2 = false;
                 }
-                this.mTouchingHeadsUpView = z;
+                this.mTouchingHeadsUpView = z2;
+                if (z2) {
+                    this.mPickedChild = expandableNotificationRow2;
+                }
+            } else if (childAtRawPosition == null && !this.mCallback.isExpanded() && (topEntry = this.mHeadsUpManager.getTopEntry()) != null && topEntry.isRowPinned()) {
+                this.mPickedChild = topEntry.getRow();
+                this.mTouchingHeadsUpView = true;
             }
         }
         return false;
     }
 
-    private void setTrackingHeadsUp(boolean z) {
-        if (this.mTrackingHeadsUp != z) {
-            Log.d("HeadsUpTouchHelper", "setTrackingHeadsUp tracking=" + z);
-        }
+    public void setTrackingHeadsUp(boolean z) {
         this.mTrackingHeadsUp = z;
         this.mHeadsUpManager.setTrackingHeadsUp(z);
-        this.mPanel.setTrackingHeadsUp(z);
+        this.mPanel.setTrackedHeadsUp(z ? this.mPickedChild : null);
     }
 
     public void notifyFling(boolean z) {

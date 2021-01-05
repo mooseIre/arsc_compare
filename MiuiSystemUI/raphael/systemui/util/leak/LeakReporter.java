@@ -1,7 +1,7 @@
 package com.android.systemui.util.leak;
 
-import android.app.NotificationChannelCompat;
-import android.app.NotificationCompat;
+import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.ClipData;
@@ -33,6 +33,7 @@ public class LeakReporter {
     }
 
     public void dumpLeak(int i) {
+        FileOutputStream fileOutputStream;
         Throwable th;
         try {
             File file = new File(this.mContext.getCacheDir(), "leak");
@@ -40,31 +41,28 @@ public class LeakReporter {
             File file2 = new File(file, "leak.hprof");
             Debug.dumpHprofData(file2.getAbsolutePath());
             File file3 = new File(file, "leak.dump");
-            FileOutputStream fileOutputStream = new FileOutputStream(file3);
-            try {
-                PrintWriter printWriter = new PrintWriter(fileOutputStream);
-                printWriter.print("Build: ");
-                printWriter.println(SystemProperties.get("ro.build.description"));
-                printWriter.println();
-                printWriter.flush();
-                this.mLeakDetector.dump(fileOutputStream.getFD(), printWriter, new String[0]);
-                printWriter.close();
-                fileOutputStream.close();
-                NotificationManager notificationManager = (NotificationManager) this.mContext.getSystemService(NotificationManager.class);
-                NotificationChannelCompat notificationChannelCompat = new NotificationChannelCompat("leak", "Leak Alerts", 4);
-                notificationChannelCompat.enableVibration(true);
-                NotificationChannelCompat.createNotificationChannel(notificationManager, notificationChannelCompat);
-                notificationManager.notify("LeakReporter", 0, NotificationCompat.newBuilder(this.mContext, "leak").setAutoCancel(true).setShowWhen(true).setContentTitle("Memory Leak Detected").setContentText(String.format("SystemUI has detected %d leaked objects. Tap to send", new Object[]{Integer.valueOf(i)})).setSmallIcon(17303619).setContentIntent(PendingIntent.getActivityAsUser(this.mContext, 0, getIntent(file2, file3), 134217728, (Bundle) null, UserHandle.CURRENT)).build());
-            } catch (Throwable th2) {
-                Throwable th3 = th2;
-                fileOutputStream.close();
-                throw th3;
-            }
+            fileOutputStream = new FileOutputStream(file3);
+            PrintWriter printWriter = new PrintWriter(fileOutputStream);
+            printWriter.print("Build: ");
+            printWriter.println(SystemProperties.get("ro.build.description"));
+            printWriter.println();
+            printWriter.flush();
+            this.mLeakDetector.dump(fileOutputStream.getFD(), printWriter, new String[0]);
+            printWriter.close();
+            fileOutputStream.close();
+            NotificationManager notificationManager = (NotificationManager) this.mContext.getSystemService(NotificationManager.class);
+            NotificationChannel notificationChannel = new NotificationChannel("leak", "Leak Alerts", 4);
+            notificationChannel.enableVibration(true);
+            notificationManager.createNotificationChannel(notificationChannel);
+            notificationManager.notify("LeakReporter", 0, new Notification.Builder(this.mContext, notificationChannel.getId()).setAutoCancel(true).setShowWhen(true).setContentTitle("Memory Leak Detected").setContentText(String.format("SystemUI has detected %d leaked objects. Tap to send", new Object[]{Integer.valueOf(i)})).setSmallIcon(17303646).setContentIntent(PendingIntent.getActivityAsUser(this.mContext, 0, getIntent(file2, file3), 134217728, (Bundle) null, UserHandle.CURRENT)).build());
+            return;
         } catch (IOException e) {
             Log.e("LeakReporter", "Couldn't dump heap for leak", e);
-        } catch (Throwable th4) {
-            th.addSuppressed(th4);
+            return;
+        } catch (Throwable th2) {
+            th.addSuppressed(th2);
         }
+        throw th;
     }
 
     private Intent getIntent(File file, File file2) {

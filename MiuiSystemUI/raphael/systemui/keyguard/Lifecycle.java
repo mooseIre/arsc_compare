@@ -10,6 +10,10 @@ public class Lifecycle<T> {
         this.mObservers.add(t);
     }
 
+    public void removeObserver(T t) {
+        this.mObservers.remove(t);
+    }
+
     public void dispatch(Consumer<T> consumer) {
         for (int i = 0; i < this.mObservers.size(); i++) {
             consumer.accept(this.mObservers.get(i));

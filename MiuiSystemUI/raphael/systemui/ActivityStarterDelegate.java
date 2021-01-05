@@ -2,82 +2,197 @@ package com.android.systemui;
 
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.view.View;
 import com.android.systemui.plugins.ActivityStarter;
+import com.android.systemui.statusbar.phone.StatusBar;
+import dagger.Lazy;
+import java.util.Optional;
+import java.util.function.Consumer;
 
 public class ActivityStarterDelegate implements ActivityStarter {
-    private ActivityStarter mActualStarter;
+    private Optional<Lazy<StatusBar>> mActualStarter;
 
-    public void startPendingIntentDismissingKeyguard(PendingIntent pendingIntent) {
-        ActivityStarter activityStarter = this.mActualStarter;
-        if (activityStarter != null) {
-            activityStarter.startPendingIntentDismissingKeyguard(pendingIntent);
-        }
+    public ActivityStarterDelegate(Optional<Lazy<StatusBar>> optional) {
+        this.mActualStarter = optional;
     }
 
-    public void startActivity(Intent intent, boolean z) {
-        ActivityStarter activityStarter = this.mActualStarter;
-        if (activityStarter != null) {
-            activityStarter.startActivity(intent, z);
-        }
+    public void startPendingIntentDismissingKeyguard(PendingIntent pendingIntent) {
+        this.mActualStarter.ifPresent(new Consumer(pendingIntent) {
+            public final /* synthetic */ PendingIntent f$0;
+
+            {
+                this.f$0 = r1;
+            }
+
+            public final void accept(Object obj) {
+                ((StatusBar) ((Lazy) obj).get()).lambda$postStartActivityDismissingKeyguard$25(this.f$0);
+            }
+        });
+    }
+
+    public void startPendingIntentDismissingKeyguard(PendingIntent pendingIntent, Runnable runnable) {
+        this.mActualStarter.ifPresent(new Consumer(pendingIntent, runnable) {
+            public final /* synthetic */ PendingIntent f$0;
+            public final /* synthetic */ Runnable f$1;
+
+            {
+                this.f$0 = r1;
+                this.f$1 = r2;
+            }
+
+            public final void accept(Object obj) {
+                ((StatusBar) ((Lazy) obj).get()).startPendingIntentDismissingKeyguard(this.f$0, this.f$1);
+            }
+        });
+    }
+
+    public void startPendingIntentDismissingKeyguard(PendingIntent pendingIntent, Runnable runnable, View view) {
+        this.mActualStarter.ifPresent(new Consumer(pendingIntent, runnable, view) {
+            public final /* synthetic */ PendingIntent f$0;
+            public final /* synthetic */ Runnable f$1;
+            public final /* synthetic */ View f$2;
+
+            {
+                this.f$0 = r1;
+                this.f$1 = r2;
+                this.f$2 = r3;
+            }
+
+            public final void accept(Object obj) {
+                ((StatusBar) ((Lazy) obj).get()).startPendingIntentDismissingKeyguard(this.f$0, this.f$1, this.f$2);
+            }
+        });
     }
 
     public void startActivity(Intent intent, boolean z, boolean z2, int i) {
-        ActivityStarter activityStarter = this.mActualStarter;
-        if (activityStarter != null) {
-            activityStarter.startActivity(intent, z, z2, i);
-        }
+        this.mActualStarter.ifPresent(new Consumer(intent, z, z2, i) {
+            public final /* synthetic */ Intent f$0;
+            public final /* synthetic */ boolean f$1;
+            public final /* synthetic */ boolean f$2;
+            public final /* synthetic */ int f$3;
+
+            {
+                this.f$0 = r1;
+                this.f$1 = r2;
+                this.f$2 = r3;
+                this.f$3 = r4;
+            }
+
+            public final void accept(Object obj) {
+                ((StatusBar) ((Lazy) obj).get()).startActivity(this.f$0, this.f$1, this.f$2, this.f$3);
+            }
+        });
+    }
+
+    public void startActivity(Intent intent, boolean z) {
+        this.mActualStarter.ifPresent(new Consumer(intent, z) {
+            public final /* synthetic */ Intent f$0;
+            public final /* synthetic */ boolean f$1;
+
+            {
+                this.f$0 = r1;
+                this.f$1 = r2;
+            }
+
+            public final void accept(Object obj) {
+                ((StatusBar) ((Lazy) obj).get()).startActivity(this.f$0, this.f$1);
+            }
+        });
     }
 
     public void startActivity(Intent intent, boolean z, boolean z2) {
-        ActivityStarter activityStarter = this.mActualStarter;
-        if (activityStarter != null) {
-            activityStarter.startActivity(intent, z, z2);
-        }
+        this.mActualStarter.ifPresent(new Consumer(intent, z, z2) {
+            public final /* synthetic */ Intent f$0;
+            public final /* synthetic */ boolean f$1;
+            public final /* synthetic */ boolean f$2;
+
+            {
+                this.f$0 = r1;
+                this.f$1 = r2;
+                this.f$2 = r3;
+            }
+
+            public final void accept(Object obj) {
+                ((StatusBar) ((Lazy) obj).get()).startActivity(this.f$0, this.f$1, this.f$2);
+            }
+        });
     }
 
     public void startActivity(Intent intent, boolean z, ActivityStarter.Callback callback) {
-        ActivityStarter activityStarter = this.mActualStarter;
-        if (activityStarter != null) {
-            activityStarter.startActivity(intent, z, callback);
-        }
+        this.mActualStarter.ifPresent(new Consumer(intent, z, callback) {
+            public final /* synthetic */ Intent f$0;
+            public final /* synthetic */ boolean f$1;
+            public final /* synthetic */ ActivityStarter.Callback f$2;
+
+            {
+                this.f$0 = r1;
+                this.f$1 = r2;
+                this.f$2 = r3;
+            }
+
+            public final void accept(Object obj) {
+                ((StatusBar) ((Lazy) obj).get()).startActivity(this.f$0, this.f$1, this.f$2);
+            }
+        });
     }
 
     public void postStartActivityDismissingKeyguard(Intent intent, int i) {
-        ActivityStarter activityStarter = this.mActualStarter;
-        if (activityStarter != null) {
-            activityStarter.postStartActivityDismissingKeyguard(intent, i);
-        }
+        this.mActualStarter.ifPresent(new Consumer(intent, i) {
+            public final /* synthetic */ Intent f$0;
+            public final /* synthetic */ int f$1;
+
+            {
+                this.f$0 = r1;
+                this.f$1 = r2;
+            }
+
+            public final void accept(Object obj) {
+                ((StatusBar) ((Lazy) obj).get()).postStartActivityDismissingKeyguard(this.f$0, this.f$1);
+            }
+        });
     }
 
     public void postStartActivityDismissingKeyguard(PendingIntent pendingIntent) {
-        ActivityStarter activityStarter = this.mActualStarter;
-        if (activityStarter != null) {
-            activityStarter.postStartActivityDismissingKeyguard(pendingIntent);
-        }
+        this.mActualStarter.ifPresent(new Consumer(pendingIntent) {
+            public final /* synthetic */ PendingIntent f$0;
+
+            {
+                this.f$0 = r1;
+            }
+
+            public final void accept(Object obj) {
+                ((StatusBar) ((Lazy) obj).get()).postStartActivityDismissingKeyguard(this.f$0);
+            }
+        });
     }
 
     public void postQSRunnableDismissingKeyguard(Runnable runnable) {
-        ActivityStarter activityStarter = this.mActualStarter;
-        if (activityStarter != null) {
-            activityStarter.postQSRunnableDismissingKeyguard(runnable);
-        }
+        this.mActualStarter.ifPresent(new Consumer(runnable) {
+            public final /* synthetic */ Runnable f$0;
+
+            {
+                this.f$0 = r1;
+            }
+
+            public final void accept(Object obj) {
+                ((StatusBar) ((Lazy) obj).get()).postQSRunnableDismissingKeyguard(this.f$0);
+            }
+        });
     }
 
     public void dismissKeyguardThenExecute(ActivityStarter.OnDismissAction onDismissAction, Runnable runnable, boolean z) {
-        ActivityStarter activityStarter = this.mActualStarter;
-        if (activityStarter != null) {
-            activityStarter.dismissKeyguardThenExecute(onDismissAction, runnable, z);
-        }
-    }
+        this.mActualStarter.ifPresent(new Consumer(runnable, z) {
+            public final /* synthetic */ Runnable f$1;
+            public final /* synthetic */ boolean f$2;
 
-    public void collapsePanels() {
-        ActivityStarter activityStarter = this.mActualStarter;
-        if (activityStarter != null) {
-            activityStarter.collapsePanels();
-        }
-    }
+            {
+                this.f$1 = r2;
+                this.f$2 = r3;
+            }
 
-    public void setActivityStarterImpl(ActivityStarter activityStarter) {
-        this.mActualStarter = activityStarter;
+            public final void accept(Object obj) {
+                ((StatusBar) ((Lazy) obj).get()).dismissKeyguardThenExecute(ActivityStarter.OnDismissAction.this, this.f$1, this.f$2);
+            }
+        });
     }
 }

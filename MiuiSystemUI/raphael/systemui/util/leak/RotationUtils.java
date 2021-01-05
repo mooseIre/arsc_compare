@@ -15,4 +15,19 @@ public class RotationUtils {
         }
         return rotation == 3 ? 2 : 0;
     }
+
+    public static int getExactRotation(Context context) {
+        Configuration configuration = context.getResources().getConfiguration();
+        int rotation = context.getDisplay().getRotation();
+        if (configuration.smallestScreenWidthDp >= 600) {
+            return 0;
+        }
+        if (rotation == 1) {
+            return 1;
+        }
+        if (rotation == 3) {
+            return 2;
+        }
+        return rotation == 2 ? 3 : 0;
+    }
 }

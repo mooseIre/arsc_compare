@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.provider.Settings;
 import android.util.Log;
+import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.settings.CurrentUserTracker;
 import com.android.systemui.statusbar.policy.PaperModeController;
 import java.io.FileDescriptor;
@@ -15,7 +16,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class PaperModeControllerImpl extends CurrentUserTracker implements PaperModeController {
-    private static final boolean DEBUG = Log.isLoggable("PaperModeController", 3);
     private Handler mBgHandler;
     /* access modifiers changed from: private */
     public final ContentObserver mGameModeObserver;
@@ -28,11 +28,14 @@ public class PaperModeControllerImpl extends CurrentUserTracker implements Paper
     public final ContentObserver mPaperModeObserver;
     /* access modifiers changed from: private */
     public ContentResolver mResolver;
-    /* access modifiers changed from: private */
-    public final ContentObserver mVideoModeObserver;
+    private final ContentObserver mVideoModeObserver;
 
-    public PaperModeControllerImpl(Context context, Looper looper) {
-        super(context);
+    static {
+        Log.isLoggable("PaperModeController", 3);
+    }
+
+    public PaperModeControllerImpl(Context context, Looper looper, BroadcastDispatcher broadcastDispatcher) {
+        super(broadcastDispatcher);
         this.mBgHandler = new Handler(looper);
         this.mResolver = context.getContentResolver();
         this.mPaperModeObserver = new ContentObserver(this.mBgHandler) {
@@ -48,20 +51,6 @@ public class PaperModeControllerImpl extends CurrentUserTracker implements Paper
                 paperModeControllerImpl2.dispatchModeChanged(paperModeControllerImpl2.mPaperModeEnabled);
             }
         };
-        this.mResolver.registerContentObserver(Settings.System.getUriFor("screen_paper_mode_enabled"), false, this.mPaperModeObserver, -1);
-        this.mGameModeObserver = new ContentObserver(this.mBgHandler) {
-            public void onChange(boolean z) {
-                boolean z2 = false;
-                int intForUser = Settings.System.getIntForUser(PaperModeControllerImpl.this.mResolver, "screen_game_mode", 0, -2);
-                PaperModeControllerImpl paperModeControllerImpl = PaperModeControllerImpl.this;
-                if ((intForUser & 1) == 0) {
-                    z2 = true;
-                }
-                boolean unused = paperModeControllerImpl.mPaperModeAvailable = z2;
-                PaperModeControllerImpl paperModeControllerImpl2 = PaperModeControllerImpl.this;
-                paperModeControllerImpl2.dispatchAvailabilityChanged(paperModeControllerImpl2.mPaperModeAvailable);
-            }
-        };
         this.mVideoModeObserver = new ContentObserver(this.mBgHandler) {
             public void onChange(boolean z) {
                 boolean z2 = false;
@@ -75,7 +64,21 @@ public class PaperModeControllerImpl extends CurrentUserTracker implements Paper
                 paperModeControllerImpl2.dispatchAvailabilityChanged(paperModeControllerImpl2.mPaperModeAvailable);
             }
         };
-        this.mResolver.registerContentObserver(Settings.System.getUriFor("screen_game_mode"), false, this.mGameModeObserver, -1);
+        this.mResolver.registerContentObserver(Settings.System.getUriFor("screen_paper_mode_enabled"), false, this.mPaperModeObserver, -1);
+        this.mGameModeObserver = new ContentObserver(this.mBgHandler) {
+            public void onChange(boolean z) {
+                boolean z2 = false;
+                int intForUser = Settings.Secure.getIntForUser(PaperModeControllerImpl.this.mResolver, "gb_boosting", 0, -2);
+                PaperModeControllerImpl paperModeControllerImpl = PaperModeControllerImpl.this;
+                if ((intForUser & 1) == 0) {
+                    z2 = true;
+                }
+                boolean unused = paperModeControllerImpl.mPaperModeAvailable = z2;
+                PaperModeControllerImpl paperModeControllerImpl2 = PaperModeControllerImpl.this;
+                paperModeControllerImpl2.dispatchAvailabilityChanged(paperModeControllerImpl2.mPaperModeAvailable);
+            }
+        };
+        this.mResolver.registerContentObserver(Settings.Secure.getUriFor("gb_boosting"), false, this.mGameModeObserver, -1);
         this.mResolver.registerContentObserver(Settings.Secure.getUriFor("vtb_boosting"), false, this.mVideoModeObserver, -1);
         postInitPaperModeState();
         startTracking();
@@ -104,7 +107,6 @@ public class PaperModeControllerImpl extends CurrentUserTracker implements Paper
             public void run() {
                 PaperModeControllerImpl.this.mPaperModeObserver.onChange(false);
                 PaperModeControllerImpl.this.mGameModeObserver.onChange(false);
-                PaperModeControllerImpl.this.mVideoModeObserver.onChange(false);
             }
         });
     }

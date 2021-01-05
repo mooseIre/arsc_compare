@@ -2,18 +2,18 @@ package com.android.systemui.qs.tiles;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Environment;
 import android.os.UserHandle;
 import android.text.TextUtils;
 import android.widget.Switch;
-import com.android.systemui.Util;
-import com.android.systemui.plugins.R;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.plugins.qs.QSTile;
 import com.android.systemui.qs.QSHost;
 import com.android.systemui.qs.tileimpl.QSTileImpl;
-import com.android.systemui.statusbar.Icons;
+import com.android.systemui.qs.tiles.ScreenShotTile;
 import java.io.File;
 import java.io.FilenameFilter;
+import miui.os.Environment;
 
 public class ScreenShotTile extends QSTileImpl<QSTile.BooleanState> {
     public static final Uri HTTPS_AUTHORITY_URI = Uri.parse("https://gallery.i.mi.com");
@@ -48,8 +48,14 @@ public class ScreenShotTile extends QSTileImpl<QSTile.BooleanState> {
 
     public Intent getLongClickIntent() {
         Intent intent = new Intent("android.intent.action.VIEW", HTTPS_AUTHORITY_URI.buildUpon().appendPath("album").appendQueryParameter("local_path", "dcim/screenshots").build());
-        intent.setPackage("com.miui.gallery");
-        if (Util.isIntentActivityExist(this.mContext, intent)) {
+        boolean z = false;
+        try {
+            if (this.mContext.getPackageManager().queryIntentActivities(intent, 786432).size() > 0) {
+                z = true;
+            }
+        } catch (Exception unused) {
+        }
+        if (z) {
             return intent;
         }
         return getLastScreenShotIntent();
@@ -66,13 +72,19 @@ public class ScreenShotTile extends QSTileImpl<QSTile.BooleanState> {
             public void run() {
                 if (ScreenShotTile.this.mHost.isQSFullyCollapsed()) {
                     ScreenShotTile.this.mHandler.postDelayed(new Runnable() {
-                        public void run() {
-                            ScreenShotTile.this.captureScreen();
+                        public final void run() {
+                            ScreenShotTile.AnonymousClass1.this.lambda$run$0$ScreenShotTile$1();
                         }
                     }, 300);
                 } else {
                     ScreenShotTile.this.mHandler.postDelayed(this, 50);
                 }
+            }
+
+            /* access modifiers changed from: private */
+            /* renamed from: lambda$run$0 */
+            public /* synthetic */ void lambda$run$0$ScreenShotTile$1() {
+                ScreenShotTile.this.captureScreen();
             }
         });
     }
@@ -83,16 +95,16 @@ public class ScreenShotTile extends QSTileImpl<QSTile.BooleanState> {
     }
 
     public CharSequence getTileLabel() {
-        return this.mContext.getString(R.string.quick_settings_screenshot_label);
+        return this.mContext.getString(C0021R$string.quick_settings_screenshot_label);
     }
 
     /* access modifiers changed from: protected */
     public void handleUpdateState(QSTile.BooleanState booleanState, Object obj) {
         booleanState.value = false;
         booleanState.state = 1;
-        booleanState.icon = QSTileImpl.ResourceIcon.get(Icons.getQSIcons(Integer.valueOf(R.drawable.ic_qs_screenshot), this.mInControlCenter));
-        booleanState.label = this.mHost.getContext().getString(R.string.quick_settings_screenshot_label);
-        booleanState.contentDescription = this.mContext.getString(R.string.quick_settings_screenshot_label);
+        booleanState.icon = QSTileImpl.ResourceIcon.get(C0013R$drawable.ic_qs_screenshot);
+        booleanState.label = this.mHost.getContext().getString(C0021R$string.quick_settings_screenshot_label);
+        booleanState.contentDescription = this.mContext.getString(C0021R$string.quick_settings_screenshot_label);
         booleanState.expandedAccessibilityClassName = Switch.class.getName();
     }
 
@@ -102,7 +114,7 @@ public class ScreenShotTile extends QSTileImpl<QSTile.BooleanState> {
         if (!file.exists() || !file.isDirectory()) {
             str = null;
         } else {
-            File[] listFiles = file.listFiles(new FilenameFilter() {
+            File[] listFiles = file.listFiles(new FilenameFilter(this) {
                 public boolean accept(File file, String str) {
                     String lowerCase = str.toLowerCase();
                     return lowerCase.endsWith("png") || lowerCase.endsWith("jpg") || lowerCase.endsWith("jpeg");

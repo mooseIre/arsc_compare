@@ -15,8 +15,10 @@ import android.view.animation.Interpolator;
 import android.view.animation.OvershootInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import com.android.systemui.C0011R$color;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0015R$id;
 import com.android.systemui.Interpolators;
-import com.android.systemui.plugins.R;
 
 public class AssistOrbView extends FrameLayout {
     private final Paint mBackgroundPaint;
@@ -98,12 +100,12 @@ public class AssistOrbView extends FrameLayout {
             }
         });
         setWillNotDraw(false);
-        this.mCircleMinSize = context.getResources().getDimensionPixelSize(R.dimen.assist_orb_size);
-        this.mBaseMargin = context.getResources().getDimensionPixelSize(R.dimen.assist_orb_base_margin);
-        this.mStaticOffset = context.getResources().getDimensionPixelSize(R.dimen.assist_orb_travel_distance);
-        this.mMaxElevation = context.getResources().getDimensionPixelSize(R.dimen.assist_orb_elevation);
+        this.mCircleMinSize = context.getResources().getDimensionPixelSize(C0012R$dimen.assist_orb_size);
+        this.mBaseMargin = context.getResources().getDimensionPixelSize(C0012R$dimen.assist_orb_base_margin);
+        this.mStaticOffset = context.getResources().getDimensionPixelSize(C0012R$dimen.assist_orb_travel_distance);
+        this.mMaxElevation = context.getResources().getDimensionPixelSize(C0012R$dimen.assist_orb_elevation);
         this.mBackgroundPaint.setAntiAlias(true);
-        this.mBackgroundPaint.setColor(getResources().getColor(R.color.assist_orb_color));
+        this.mBackgroundPaint.setColor(getResources().getColor(C0011R$color.assist_orb_color));
     }
 
     public ImageView getLogo() {
@@ -123,7 +125,7 @@ public class AssistOrbView extends FrameLayout {
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mLogo = (ImageView) findViewById(R.id.search_logo);
+        this.mLogo = (ImageView) findViewById(C0015R$id.search_logo);
     }
 
     /* access modifiers changed from: protected */
@@ -141,8 +143,9 @@ public class AssistOrbView extends FrameLayout {
             if (valueAnimator != null) {
                 valueAnimator.cancel();
             }
-            this.mCircleAnimator = ValueAnimator.ofFloat(new float[]{this.mCircleSize, f});
-            this.mCircleAnimator.addUpdateListener(this.mCircleUpdateListener);
+            ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{this.mCircleSize, f});
+            this.mCircleAnimator = ofFloat;
+            ofFloat.addUpdateListener(this.mCircleUpdateListener);
             this.mCircleAnimator.addListener(this.mClearAnimatorListener);
             this.mCircleAnimator.setInterpolator(interpolator);
             this.mCircleAnimator.setDuration(j);
@@ -171,8 +174,9 @@ public class AssistOrbView extends FrameLayout {
             valueAnimator.removeAllListeners();
             this.mOffsetAnimator.cancel();
         }
-        this.mOffsetAnimator = ValueAnimator.ofFloat(new float[]{this.mOffset, f});
-        this.mOffsetAnimator.addUpdateListener(this.mOffsetUpdateListener);
+        ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{this.mOffset, f});
+        this.mOffsetAnimator = ofFloat;
+        ofFloat.addUpdateListener(this.mOffsetUpdateListener);
         this.mOffsetAnimator.addListener(new AnimatorListenerAdapter() {
             public void onAnimationEnd(Animator animator) {
                 ValueAnimator unused = AssistOrbView.this.mOffsetAnimator = null;

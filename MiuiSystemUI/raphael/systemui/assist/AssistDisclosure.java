@@ -12,8 +12,8 @@ import android.graphics.PorterDuffXfermode;
 import android.os.Handler;
 import android.view.View;
 import android.view.WindowManager;
+import com.android.systemui.C0012R$dimen;
 import com.android.systemui.Interpolators;
-import com.android.systemui.plugins.R;
 
 public class AssistDisclosure {
     private final Context mContext;
@@ -30,7 +30,7 @@ public class AssistDisclosure {
     public AssistDisclosure(Context context, Handler handler) {
         this.mContext = context;
         this.mHandler = handler;
-        this.mWm = (WindowManager) this.mContext.getSystemService(WindowManager.class);
+        this.mWm = (WindowManager) context.getSystemService(WindowManager.class);
     }
 
     public void postShow() {
@@ -44,8 +44,9 @@ public class AssistDisclosure {
             this.mView = new AssistDisclosureView(this.mContext);
         }
         if (!this.mViewAdded) {
-            WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(2015, 17302792, -3);
+            WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(2015, 525576, -3);
             layoutParams.setTitle("AssistDisclosure");
+            layoutParams.setFitInsetsTypes(0);
             this.mWm.addView(this.mView, layoutParams);
             this.mViewAdded = true;
         }
@@ -61,7 +62,7 @@ public class AssistDisclosure {
 
     private class AssistDisclosureView extends View implements ValueAnimator.AnimatorUpdateListener {
         private int mAlpha = 0;
-        private final ValueAnimator mAlphaInAnimator = ValueAnimator.ofInt(new int[]{0, 222}).setDuration(400);
+        private final ValueAnimator mAlphaInAnimator;
         private final ValueAnimator mAlphaOutAnimator;
         private final AnimatorSet mAnimator;
         private final Paint mPaint = new Paint();
@@ -71,13 +72,17 @@ public class AssistDisclosure {
 
         public AssistDisclosureView(Context context) {
             super(context);
-            this.mAlphaInAnimator.addUpdateListener(this);
+            ValueAnimator duration = ValueAnimator.ofInt(new int[]{0, 222}).setDuration(400);
+            this.mAlphaInAnimator = duration;
+            duration.addUpdateListener(this);
             this.mAlphaInAnimator.setInterpolator(Interpolators.CUSTOM_40_40);
-            this.mAlphaOutAnimator = ValueAnimator.ofInt(new int[]{222, 0}).setDuration(300);
-            this.mAlphaOutAnimator.addUpdateListener(this);
+            ValueAnimator duration2 = ValueAnimator.ofInt(new int[]{222, 0}).setDuration(300);
+            this.mAlphaOutAnimator = duration2;
+            duration2.addUpdateListener(this);
             this.mAlphaOutAnimator.setInterpolator(Interpolators.CUSTOM_40_40);
-            this.mAnimator = new AnimatorSet();
-            this.mAnimator.play(this.mAlphaInAnimator).before(this.mAlphaOutAnimator);
+            AnimatorSet animatorSet = new AnimatorSet();
+            this.mAnimator = animatorSet;
+            animatorSet.play(this.mAlphaInAnimator).before(this.mAlphaOutAnimator);
             this.mAnimator.addListener(new AnimatorListenerAdapter(AssistDisclosure.this) {
                 boolean mCancelled;
 
@@ -100,8 +105,8 @@ public class AssistDisclosure {
             this.mPaint.setXfermode(porterDuffXfermode);
             this.mShadowPaint.setColor(-12303292);
             this.mShadowPaint.setXfermode(porterDuffXfermode);
-            this.mThickness = getResources().getDimension(R.dimen.assist_disclosure_thickness);
-            this.mShadowThickness = getResources().getDimension(R.dimen.assist_disclosure_shadow_thickness);
+            this.mThickness = getResources().getDimension(C0012R$dimen.assist_disclosure_thickness);
+            this.mShadowThickness = getResources().getDimension(C0012R$dimen.assist_disclosure_shadow_thickness);
         }
 
         /* access modifiers changed from: protected */

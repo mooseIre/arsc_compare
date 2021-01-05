@@ -1,8 +1,6 @@
 package com.android.systemui.classifier;
 
 public class SpeedClassifier extends StrokeClassifier {
-    private final float NANOS_TO_SECONDS = 1.0E9f;
-
     public String getTag() {
         return "SPD";
     }

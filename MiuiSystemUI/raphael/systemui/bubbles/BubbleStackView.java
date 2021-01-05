@@ -3,55 +3,88 @@ package com.android.systemui.bubbles;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
+import android.app.ActivityView;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
+import android.content.res.TypedArray;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
+import android.graphics.Matrix;
 import android.graphics.Outline;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.graphics.Region;
+import android.graphics.drawable.TransitionDrawable;
 import android.os.Bundle;
-import android.os.VibrationEffect;
-import android.os.Vibrator;
+import android.os.Handler;
+import android.provider.Settings;
+import android.util.ArrayMap;
 import android.util.Log;
-import android.util.StatsLogInternal;
 import android.view.Choreographer;
+import android.view.DisplayCutout;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
+import android.view.SurfaceControl;
+import android.view.SurfaceView;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewOutlineProvider;
-import android.view.ViewPropertyAnimator;
 import android.view.ViewTreeObserver;
 import android.view.WindowInsets;
 import android.view.WindowManager;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import androidx.dynamicanimation.animation.DynamicAnimation;
 import androidx.dynamicanimation.animation.FloatPropertyCompat;
 import androidx.dynamicanimation.animation.SpringAnimation;
 import androidx.dynamicanimation.animation.SpringForce;
 import com.android.internal.annotations.VisibleForTesting;
-import com.android.internal.widget.ViewClippingUtil;
+import com.android.internal.util.ContrastColorUtil;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0016R$integer;
+import com.android.systemui.C0017R$layout;
+import com.android.systemui.C0021R$string;
+import com.android.systemui.Interpolators;
+import com.android.systemui.Prefs;
+import com.android.systemui.bubbles.BadgedImageView;
+import com.android.systemui.bubbles.Bubble;
 import com.android.systemui.bubbles.BubbleController;
+import com.android.systemui.bubbles.BubbleStackView;
+import com.android.systemui.bubbles.animation.AnimatableScaleMatrix;
 import com.android.systemui.bubbles.animation.ExpandedAnimationController;
 import com.android.systemui.bubbles.animation.PhysicsAnimationLayout;
 import com.android.systemui.bubbles.animation.StackAnimationController;
-import com.android.systemui.miui.statusbar.ExpandedNotification;
-import com.android.systemui.plugins.R;
-import com.android.systemui.statusbar.NotificationData;
+import com.android.systemui.model.SysUiState;
+import com.android.systemui.shared.system.SysUiStatsLog;
+import com.android.systemui.util.DismissCircleView;
+import com.android.systemui.util.FloatingContentCoordinator;
+import com.android.systemui.util.RelativeTouchListener;
+import com.android.systemui.util.animation.PhysicsAnimator;
+import com.android.systemui.util.magnetictarget.MagnetizedObject;
+import java.io.FileDescriptor;
+import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.IntSupplier;
 
-public class BubbleStackView extends FrameLayout {
+public class BubbleStackView extends FrameLayout implements ViewTreeObserver.OnComputeInternalInsetsListener {
     private static final SurfaceSynchronizer DEFAULT_SURFACE_SYNCHRONIZER = new SurfaceSynchronizer() {
         public void syncSurfaceAndRun(final Runnable runnable) {
-            Choreographer.getInstance().postFrameCallback(new Choreographer.FrameCallback() {
+            Choreographer.getInstance().postFrameCallback(new Choreographer.FrameCallback(this) {
                 private int mFrameWait = 2;
 
                 public void doFrame(long j) {
@@ -68,96 +101,317 @@ public class BubbleStackView extends FrameLayout {
     };
     @VisibleForTesting
     static final int FLYOUT_HIDE_AFTER = 5000;
-    private Runnable mAfterFlyoutHides;
+    private static final PhysicsAnimator.SpringConfig FLYOUT_IME_ANIMATION_SPRING_CONFIG = new PhysicsAnimator.SpringConfig(200.0f, 0.9f);
+    private Runnable mAfterFlyoutHidden;
     private final DynamicAnimation.OnAnimationEndListener mAfterFlyoutTransitionSpring = new DynamicAnimation.OnAnimationEndListener() {
         public final void onAnimationEnd(DynamicAnimation dynamicAnimation, boolean z, float f, float f2) {
             BubbleStackView.this.lambda$new$1$BubbleStackView(dynamicAnimation, z, f, f2);
         }
     };
-    private Runnable mAfterMagnet;
-    private boolean mAnimatingMagnet = false;
-    private PhysicsAnimationLayout mBubbleContainer;
-    private final BubbleData mBubbleData;
-    private int mBubblePadding;
-    /* access modifiers changed from: private */
-    public int mBubbleSize;
-    private ViewClippingUtil.ClippingParameters mClippingParameters = new ViewClippingUtil.ClippingParameters() {
-        public boolean shouldFinish(View view) {
-            return false;
-        }
-
-        public boolean isClippingEnablingAllowed(View view) {
-            return !BubbleStackView.this.mIsExpanded;
+    private Runnable mAnimateInFlyout;
+    private final Runnable mAnimateTemporarilyInvisibleImmediate = new Runnable() {
+        public final void run() {
+            BubbleStackView.this.lambda$new$9$BubbleStackView();
         }
     };
+    private boolean mAnimatingEducationAway;
+    private boolean mAnimatingManageEducationAway;
+    private SurfaceControl.ScreenshotGraphicBuffer mAnimatingOutBubbleBuffer;
+    private FrameLayout mAnimatingOutSurfaceContainer;
+    private SurfaceView mAnimatingOutSurfaceView;
+    private View.OnClickListener mBubbleClickListener = new View.OnClickListener() {
+        public void onClick(View view) {
+            Bubble bubbleWithView;
+            boolean unused = BubbleStackView.this.mIsDraggingStack = false;
+            if (!BubbleStackView.this.mIsExpansionAnimating && !BubbleStackView.this.mIsBubbleSwitchAnimating && (bubbleWithView = BubbleStackView.this.mBubbleData.getBubbleWithView(view)) != null) {
+                boolean equals = bubbleWithView.getKey().equals(BubbleStackView.this.mExpandedBubble.getKey());
+                if (BubbleStackView.this.isExpanded()) {
+                    BubbleStackView.this.mExpandedAnimationController.onGestureFinished();
+                }
+                if (!BubbleStackView.this.isExpanded() || equals) {
+                    if (!BubbleStackView.this.maybeShowStackUserEducation()) {
+                        BubbleStackView.this.mBubbleData.setExpanded(!BubbleStackView.this.mBubbleData.isExpanded());
+                    }
+                } else if (bubbleWithView != BubbleStackView.this.mBubbleData.getSelectedBubble()) {
+                    BubbleStackView.this.mBubbleData.setSelectedBubble(bubbleWithView);
+                } else {
+                    BubbleStackView.this.setSelectedBubble(bubbleWithView);
+                }
+            }
+        }
+    };
+    /* access modifiers changed from: private */
+    public PhysicsAnimationLayout mBubbleContainer;
+    /* access modifiers changed from: private */
+    public final BubbleData mBubbleData;
+    private int mBubbleElevation;
+    private BubbleOverflow mBubbleOverflow;
+    private int mBubblePaddingTop;
+    private int mBubbleSize;
+    /* access modifiers changed from: private */
+    public Bubble mBubbleToExpandAfterFlyoutCollapse = null;
+    private RelativeTouchListener mBubbleTouchListener = new RelativeTouchListener() {
+        public boolean onDown(View view, MotionEvent motionEvent) {
+            if (BubbleStackView.this.mIsExpansionAnimating) {
+                return true;
+            }
+            if (BubbleStackView.this.mShowingManage) {
+                BubbleStackView.this.showManageMenu(false);
+            }
+            if (BubbleStackView.this.mBubbleData.isExpanded()) {
+                BubbleStackView.this.maybeShowManageEducation(false);
+                BubbleStackView.this.mExpandedAnimationController.prepareForBubbleDrag(view, BubbleStackView.this.mMagneticTarget, BubbleStackView.this.mIndividualBubbleMagnetListener);
+                BubbleStackView.this.hideCurrentInputMethod();
+                BubbleStackView bubbleStackView = BubbleStackView.this;
+                MagnetizedObject unused = bubbleStackView.mMagnetizedObject = bubbleStackView.mExpandedAnimationController.getMagnetizedBubbleDraggingOut();
+            } else {
+                BubbleStackView.this.mStackAnimationController.cancelStackPositionAnimations();
+                BubbleStackView.this.mBubbleContainer.setActiveController(BubbleStackView.this.mStackAnimationController);
+                BubbleStackView.this.hideFlyoutImmediate();
+                BubbleStackView bubbleStackView2 = BubbleStackView.this;
+                MagnetizedObject unused2 = bubbleStackView2.mMagnetizedObject = bubbleStackView2.mStackAnimationController.getMagnetizedStack(BubbleStackView.this.mMagneticTarget);
+                BubbleStackView.this.mMagnetizedObject.setMagnetListener(BubbleStackView.this.mStackMagnetListener);
+                boolean unused3 = BubbleStackView.this.mIsDraggingStack = true;
+                BubbleStackView.this.updateTemporarilyInvisibleAnimation(false);
+            }
+            boolean unused4 = BubbleStackView.this.passEventToMagnetizedObject(motionEvent);
+            return true;
+        }
+
+        public void onMove(View view, MotionEvent motionEvent, float f, float f2, float f3, float f4) {
+            if (!BubbleStackView.this.mIsExpansionAnimating) {
+                BubbleStackView.this.springInDismissTargetMaybe();
+                if (BubbleStackView.this.passEventToMagnetizedObject(motionEvent)) {
+                    return;
+                }
+                if (BubbleStackView.this.mBubbleData.isExpanded()) {
+                    BubbleStackView.this.mExpandedAnimationController.dragBubbleOut(view, f + f3, f2 + f4);
+                    return;
+                }
+                BubbleStackView.this.hideStackUserEducation(false);
+                BubbleStackView.this.mStackAnimationController.moveStackFromTouch(f + f3, f2 + f4);
+            }
+        }
+
+        public void onUp(View view, MotionEvent motionEvent, float f, float f2, float f3, float f4, float f5, float f6) {
+            if (!BubbleStackView.this.mIsExpansionAnimating) {
+                if (!BubbleStackView.this.passEventToMagnetizedObject(motionEvent)) {
+                    if (BubbleStackView.this.mBubbleData.isExpanded()) {
+                        BubbleStackView.this.mExpandedAnimationController.snapBubbleBack(view, f5, f6);
+                    } else {
+                        BubbleStackView bubbleStackView = BubbleStackView.this;
+                        boolean unused = bubbleStackView.mStackOnLeftOrWillBe = bubbleStackView.mStackAnimationController.flingStackThenSpringToEdge(f + f3, f5, f6) <= 0.0f;
+                        BubbleStackView.this.updateBubbleZOrdersAndDotPosition(true);
+                        BubbleStackView.this.logBubbleEvent((BubbleViewProvider) null, 7);
+                    }
+                    BubbleStackView.this.hideDismissTarget();
+                }
+                boolean unused2 = BubbleStackView.this.mIsDraggingStack = false;
+                BubbleStackView.this.updateTemporarilyInvisibleAnimation(false);
+            }
+        }
+    };
+    private int mBubbleTouchPadding;
+    /* access modifiers changed from: private */
+    public int mCornerRadius;
+    private final Handler mDelayedAnimationHandler = new Handler();
     private final ValueAnimator mDesaturateAndDarkenAnimator;
     private final Paint mDesaturateAndDarkenPaint = new Paint();
     private View mDesaturateAndDarkenTargetView;
-    private BubbleDismissView mDismissContainer;
+    private PhysicsAnimator<View> mDismissTargetAnimator;
+    private View mDismissTargetCircle;
+    /* access modifiers changed from: private */
+    public ViewGroup mDismissTargetContainer;
+    private PhysicsAnimator.SpringConfig mDismissTargetSpring = new PhysicsAnimator.SpringConfig(200.0f, 0.75f);
     private Point mDisplaySize;
-    private boolean mDraggingInDismissTarget = false;
     private BubbleController.BubbleExpandListener mExpandListener;
-    private int mExpandedAnimateXDistance;
-    private int mExpandedAnimateYDistance;
-    private ExpandedAnimationController mExpandedAnimationController;
-    private Bubble mExpandedBubble;
+    /* access modifiers changed from: private */
+    public ExpandedAnimationController mExpandedAnimationController;
+    /* access modifiers changed from: private */
+    public BubbleViewProvider mExpandedBubble;
     private FrameLayout mExpandedViewContainer;
+    private final AnimatableScaleMatrix mExpandedViewContainerMatrix = new AnimatableScaleMatrix();
     private int mExpandedViewPadding;
-    private final SpringAnimation mExpandedViewXAnim;
-    private final SpringAnimation mExpandedViewYAnim;
-    private BubbleFlyoutView mFlyout;
+    /* access modifiers changed from: private */
+    public BubbleFlyoutView mFlyout;
+    private View.OnClickListener mFlyoutClickListener = new View.OnClickListener() {
+        public void onClick(View view) {
+            if (BubbleStackView.this.maybeShowStackUserEducation()) {
+                Bubble unused = BubbleStackView.this.mBubbleToExpandAfterFlyoutCollapse = null;
+            } else {
+                BubbleStackView bubbleStackView = BubbleStackView.this;
+                Bubble unused2 = bubbleStackView.mBubbleToExpandAfterFlyoutCollapse = bubbleStackView.mBubbleData.getSelectedBubble();
+            }
+            BubbleStackView.this.mFlyout.removeCallbacks(BubbleStackView.this.mHideFlyout);
+            BubbleStackView.this.mHideFlyout.run();
+        }
+    };
     private final FloatPropertyCompat mFlyoutCollapseProperty = new FloatPropertyCompat("FlyoutCollapseSpring") {
         public float getValue(Object obj) {
             return BubbleStackView.this.mFlyoutDragDeltaX;
         }
 
         public void setValue(Object obj, float f) {
-            BubbleStackView.this.onFlyoutDragged(f);
+            BubbleStackView.this.setFlyoutStateForDragLength(f);
         }
     };
     /* access modifiers changed from: private */
     public float mFlyoutDragDeltaX = 0.0f;
+    private RelativeTouchListener mFlyoutTouchListener = new RelativeTouchListener() {
+        public boolean onDown(View view, MotionEvent motionEvent) {
+            BubbleStackView.this.mFlyout.removeCallbacks(BubbleStackView.this.mHideFlyout);
+            return true;
+        }
+
+        public void onMove(View view, MotionEvent motionEvent, float f, float f2, float f3, float f4) {
+            BubbleStackView.this.setFlyoutStateForDragLength(f3);
+        }
+
+        public void onUp(View view, MotionEvent motionEvent, float f, float f2, float f3, float f4, float f5, float f6) {
+            boolean isStackOnLeftSide = BubbleStackView.this.mStackAnimationController.isStackOnLeftSide();
+            boolean z = true;
+            boolean z2 = !isStackOnLeftSide ? f5 > 2000.0f : f5 < -2000.0f;
+            boolean z3 = !isStackOnLeftSide ? f3 > ((float) BubbleStackView.this.mFlyout.getWidth()) * 0.25f : f3 < ((float) (-BubbleStackView.this.mFlyout.getWidth())) * 0.25f;
+            boolean z4 = !isStackOnLeftSide ? f5 < 0.0f : f5 > 0.0f;
+            if (!z2 && (!z3 || z4)) {
+                z = false;
+            }
+            BubbleStackView.this.mFlyout.removeCallbacks(BubbleStackView.this.mHideFlyout);
+            BubbleStackView.this.animateFlyoutCollapsed(z, f5);
+            boolean unused = BubbleStackView.this.maybeShowStackUserEducation();
+        }
+    };
     private final SpringAnimation mFlyoutTransitionSpring = new SpringAnimation(this, this.mFlyoutCollapseProperty);
-    private Runnable mHideFlyout = new Runnable() {
+    private final Runnable mHideCurrentInputMethodCallback;
+    /* access modifiers changed from: private */
+    public Runnable mHideFlyout = new Runnable() {
         public final void run() {
             BubbleStackView.this.lambda$new$0$BubbleStackView();
         }
     };
     private int mImeOffset;
-    private boolean mImeVisible;
+    /* access modifiers changed from: private */
+    public final MagnetizedObject.MagnetListener mIndividualBubbleMagnetListener = new MagnetizedObject.MagnetListener() {
+        public void onStuckToTarget(MagnetizedObject.MagneticTarget magneticTarget) {
+            if (BubbleStackView.this.mExpandedAnimationController.getDraggedOutBubble() != null) {
+                BubbleStackView bubbleStackView = BubbleStackView.this;
+                bubbleStackView.animateDesaturateAndDarken(bubbleStackView.mExpandedAnimationController.getDraggedOutBubble(), true);
+            }
+        }
+
+        public void onUnstuckFromTarget(MagnetizedObject.MagneticTarget magneticTarget, float f, float f2, boolean z) {
+            if (BubbleStackView.this.mExpandedAnimationController.getDraggedOutBubble() != null) {
+                BubbleStackView bubbleStackView = BubbleStackView.this;
+                bubbleStackView.animateDesaturateAndDarken(bubbleStackView.mExpandedAnimationController.getDraggedOutBubble(), false);
+                if (z) {
+                    BubbleStackView.this.mExpandedAnimationController.snapBubbleBack(BubbleStackView.this.mExpandedAnimationController.getDraggedOutBubble(), f, f2);
+                    BubbleStackView.this.hideDismissTarget();
+                    return;
+                }
+                BubbleStackView.this.mExpandedAnimationController.onUnstuckFromTarget();
+            }
+        }
+
+        public void onReleasedInTarget(MagnetizedObject.MagneticTarget magneticTarget) {
+            if (BubbleStackView.this.mExpandedAnimationController.getDraggedOutBubble() != null) {
+                BubbleStackView.this.mExpandedAnimationController.dismissDraggedOutBubble(BubbleStackView.this.mExpandedAnimationController.getDraggedOutBubble(), (float) BubbleStackView.this.mDismissTargetContainer.getHeight(), new Runnable() {
+                    public final void run() {
+                        BubbleStackView.this.dismissMagnetizedObject();
+                    }
+                });
+                BubbleStackView.this.hideDismissTarget();
+            }
+        }
+    };
     private LayoutInflater mInflater;
     /* access modifiers changed from: private */
-    public boolean mIsExpanded;
-    private boolean mIsExpansionAnimating = false;
+    public boolean mIsBubbleSwitchAnimating = false;
+    /* access modifiers changed from: private */
+    public boolean mIsDraggingStack = false;
+    private boolean mIsExpanded;
+    /* access modifiers changed from: private */
+    public boolean mIsExpansionAnimating = false;
     private boolean mIsGestureInProgress = false;
-    private View.OnLayoutChangeListener mMoveStackToValidPositionOnLayoutListener;
-    private int mPipDismissHeight;
-    private int mPointerHeight;
+    /* access modifiers changed from: private */
+    public MagnetizedObject.MagneticTarget mMagneticTarget;
+    /* access modifiers changed from: private */
+    public MagnetizedObject<?> mMagnetizedObject;
+    private BubbleManageEducationView mManageEducationView;
+    private ViewGroup mManageMenu;
+    private ImageView mManageSettingsIcon;
+    private TextView mManageSettingsText;
+    private PhysicsAnimator.SpringConfig mManageSpringConfig = new PhysicsAnimator.SpringConfig(1500.0f, 0.75f);
+    private int mMaxBubbles;
+    private int mOrientation = 0;
+    private View.OnLayoutChangeListener mOrientationChangedListener;
+    private int mPointerIndexDown = -1;
+    private final PhysicsAnimator.SpringConfig mScaleInSpringConfig = new PhysicsAnimator.SpringConfig(300.0f, 0.9f);
+    private final PhysicsAnimator.SpringConfig mScaleOutSpringConfig = new PhysicsAnimator.SpringConfig(900.0f, 1.0f);
+    private boolean mShouldShowManageEducation;
+    private boolean mShouldShowUserEducation;
     private boolean mShowingDismiss = false;
-    private StackAnimationController mStackAnimationController;
-    private boolean mStackOnLeftOrWillBe = false;
+    /* access modifiers changed from: private */
+    public boolean mShowingManage = false;
+    /* access modifiers changed from: private */
+    public StackAnimationController mStackAnimationController;
+    /* access modifiers changed from: private */
+    public final MagnetizedObject.MagnetListener mStackMagnetListener = new MagnetizedObject.MagnetListener() {
+        public void onStuckToTarget(MagnetizedObject.MagneticTarget magneticTarget) {
+            BubbleStackView bubbleStackView = BubbleStackView.this;
+            bubbleStackView.animateDesaturateAndDarken(bubbleStackView.mBubbleContainer, true);
+        }
+
+        public void onUnstuckFromTarget(MagnetizedObject.MagneticTarget magneticTarget, float f, float f2, boolean z) {
+            BubbleStackView bubbleStackView = BubbleStackView.this;
+            bubbleStackView.animateDesaturateAndDarken(bubbleStackView.mBubbleContainer, false);
+            if (z) {
+                BubbleStackView.this.mStackAnimationController.flingStackThenSpringToEdge(BubbleStackView.this.mStackAnimationController.getStackPosition().x, f, f2);
+                BubbleStackView.this.hideDismissTarget();
+                return;
+            }
+            BubbleStackView.this.mStackAnimationController.onUnstuckFromTarget();
+        }
+
+        public void onReleasedInTarget(MagnetizedObject.MagneticTarget magneticTarget) {
+            BubbleStackView.this.mStackAnimationController.animateStackDismissal((float) BubbleStackView.this.mDismissTargetContainer.getHeight(), new Runnable() {
+                public final void run() {
+                    BubbleStackView.AnonymousClass5.this.lambda$onReleasedInTarget$0$BubbleStackView$5();
+                }
+            });
+            BubbleStackView.this.hideDismissTarget();
+        }
+
+        /* access modifiers changed from: private */
+        /* renamed from: lambda$onReleasedInTarget$0 */
+        public /* synthetic */ void lambda$onReleasedInTarget$0$BubbleStackView$5() {
+            BubbleStackView.this.resetDesaturationAndDarken();
+            BubbleStackView.this.dismissMagnetizedObject();
+        }
+    };
+    /* access modifiers changed from: private */
+    public boolean mStackOnLeftOrWillBe = true;
     private int mStatusBarHeight;
-    private boolean mSuppressFlyout = false;
-    private boolean mSuppressNewDot = false;
     private final SurfaceSynchronizer mSurfaceSynchronizer;
+    private SysUiState mSysUiState;
     private ViewTreeObserver.OnDrawListener mSystemGestureExcludeUpdater = new ViewTreeObserver.OnDrawListener() {
         public final void onDraw() {
             BubbleStackView.this.updateSystemGestureExcludeRects();
         }
     };
     private final List<Rect> mSystemGestureExclusionRects = Collections.singletonList(new Rect());
-    int[] mTempLoc = new int[2];
-    RectF mTempRect = new RectF();
-    private BubbleTouchHandler mTouchHandler;
+    private Rect mTempRect = new Rect();
+    private boolean mTemporarilyInvisible = false;
+    private final PhysicsAnimator.SpringConfig mTranslateSpringConfig = new PhysicsAnimator.SpringConfig(200.0f, 1.0f);
+    private Consumer<String> mUnbubbleConversationCallback;
+    private View mUserEducationView;
     private float mVerticalPosPercentBeforeRotation = -1.0f;
-    private final Vibrator mVibrator;
     /* access modifiers changed from: private */
     public boolean mViewUpdatedRequested = false;
     /* access modifiers changed from: private */
     public ViewTreeObserver.OnPreDrawListener mViewUpdater = new ViewTreeObserver.OnPreDrawListener() {
         public boolean onPreDraw() {
             BubbleStackView.this.getViewTreeObserver().removeOnPreDrawListener(BubbleStackView.this.mViewUpdater);
-            BubbleStackView.this.applyCurrentState();
+            BubbleStackView.this.updateExpandedView();
             boolean unused = BubbleStackView.this.mViewUpdatedRequested = false;
             return true;
         }
@@ -168,10 +422,53 @@ public class BubbleStackView extends FrameLayout {
         void syncSurfaceAndRun(Runnable runnable);
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$new$0 */
     public /* synthetic */ void lambda$new$0$BubbleStackView() {
         animateFlyoutCollapsed(true, 0.0f);
     }
 
+    public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
+        printWriter.println("Stack view state:");
+        printWriter.print("  gestureInProgress:       ");
+        printWriter.println(this.mIsGestureInProgress);
+        printWriter.print("  showingDismiss:          ");
+        printWriter.println(this.mShowingDismiss);
+        printWriter.print("  isExpansionAnimating:    ");
+        printWriter.println(this.mIsExpansionAnimating);
+        printWriter.print("  expandedContainerVis:    ");
+        printWriter.println(this.mExpandedViewContainer.getVisibility());
+        printWriter.print("  expandedContainerAlpha:  ");
+        printWriter.println(this.mExpandedViewContainer.getAlpha());
+        printWriter.print("  expandedContainerMatrix: ");
+        printWriter.println(this.mExpandedViewContainer.getAnimationMatrix());
+        this.mStackAnimationController.dump(fileDescriptor, printWriter, strArr);
+        this.mExpandedAnimationController.dump(fileDescriptor, printWriter, strArr);
+        if (this.mExpandedBubble != null) {
+            printWriter.println("Expanded bubble state:");
+            printWriter.println("  expandedBubbleKey: " + this.mExpandedBubble.getKey());
+            BubbleExpandedView expandedView = this.mExpandedBubble.getExpandedView();
+            if (expandedView != null) {
+                printWriter.println("  expandedViewVis:    " + expandedView.getVisibility());
+                printWriter.println("  expandedViewAlpha:  " + expandedView.getAlpha());
+                printWriter.println("  expandedViewTaskId: " + expandedView.getTaskId());
+                ActivityView activityView = expandedView.getActivityView();
+                if (activityView != null) {
+                    printWriter.println("  activityViewVis:    " + activityView.getVisibility());
+                    printWriter.println("  activityViewAlpha:  " + activityView.getAlpha());
+                    return;
+                }
+                printWriter.println("  activityView is null");
+                return;
+            }
+            printWriter.println("Expanded bubble view state: expanded bubble view is null");
+            return;
+        }
+        printWriter.println("Expanded bubble state: expanded bubble is null");
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$new$1 */
     public /* synthetic */ void lambda$new$1$BubbleStackView(DynamicAnimation dynamicAnimation, boolean z, float f, float f2) {
         if (this.mFlyoutDragDeltaX == 0.0f) {
             this.mFlyout.postDelayed(this.mHideFlyout, 5000);
@@ -180,96 +477,136 @@ public class BubbleStackView extends FrameLayout {
         }
     }
 
-    public BubbleStackView(Context context, BubbleData bubbleData, SurfaceSynchronizer surfaceSynchronizer) {
+    /* JADX INFO: super call moved to the top of the method (can break code semantics) */
+    @SuppressLint({"ClickableViewAccessibility"})
+    public BubbleStackView(Context context, BubbleData bubbleData, SurfaceSynchronizer surfaceSynchronizer, FloatingContentCoordinator floatingContentCoordinator, SysUiState sysUiState, Runnable runnable, Consumer<Boolean> consumer, Runnable runnable2) {
         super(context);
+        SurfaceSynchronizer surfaceSynchronizer2;
+        Context context2 = context;
         this.mBubbleData = bubbleData;
         this.mInflater = LayoutInflater.from(context);
-        this.mTouchHandler = new BubbleTouchHandler(this, bubbleData, context);
-        setOnTouchListener(this.mTouchHandler);
-        this.mInflater = LayoutInflater.from(context);
+        this.mSysUiState = sysUiState;
         Resources resources = getResources();
-        this.mBubbleSize = resources.getDimensionPixelSize(R.dimen.individual_bubble_size);
-        this.mBubblePadding = resources.getDimensionPixelSize(R.dimen.bubble_padding);
-        this.mExpandedAnimateXDistance = resources.getDimensionPixelSize(R.dimen.bubble_expanded_animate_x_distance);
-        this.mExpandedAnimateYDistance = resources.getDimensionPixelSize(R.dimen.bubble_expanded_animate_y_distance);
-        this.mPointerHeight = resources.getDimensionPixelSize(R.dimen.bubble_pointer_height);
-        this.mStatusBarHeight = resources.getDimensionPixelSize(17105439);
-        this.mPipDismissHeight = this.mContext.getResources().getDimensionPixelSize(R.dimen.pip_dismiss_gradient_height);
-        this.mImeOffset = resources.getDimensionPixelSize(R.dimen.pip_ime_offset);
+        this.mMaxBubbles = resources.getInteger(C0016R$integer.bubbles_max_rendered);
+        this.mBubbleSize = resources.getDimensionPixelSize(C0012R$dimen.individual_bubble_size);
+        this.mBubbleElevation = resources.getDimensionPixelSize(C0012R$dimen.bubble_elevation);
+        this.mBubblePaddingTop = resources.getDimensionPixelSize(C0012R$dimen.bubble_padding_top);
+        this.mBubbleTouchPadding = resources.getDimensionPixelSize(C0012R$dimen.bubble_touch_padding);
+        this.mStatusBarHeight = resources.getDimensionPixelSize(17105489);
+        this.mImeOffset = resources.getDimensionPixelSize(C0012R$dimen.pip_ime_offset);
         this.mDisplaySize = new Point();
-        ((WindowManager) context.getSystemService("window")).getDefaultDisplay().getSize(this.mDisplaySize);
-        this.mVibrator = (Vibrator) context.getSystemService("vibrator");
-        this.mExpandedViewPadding = resources.getDimensionPixelSize(R.dimen.bubble_expanded_view_padding);
-        int dimensionPixelSize = resources.getDimensionPixelSize(R.dimen.bubble_elevation);
-        this.mStackAnimationController = new StackAnimationController();
-        this.mExpandedAnimationController = new ExpandedAnimationController(this.mDisplaySize, this.mExpandedViewPadding);
-        this.mSurfaceSynchronizer = surfaceSynchronizer == null ? DEFAULT_SURFACE_SYNCHRONIZER : surfaceSynchronizer;
-        this.mBubbleContainer = new PhysicsAnimationLayout(context);
-        this.mBubbleContainer.setActiveController(this.mStackAnimationController);
+        ((WindowManager) context.getSystemService("window")).getDefaultDisplay().getRealSize(this.mDisplaySize);
+        this.mExpandedViewPadding = resources.getDimensionPixelSize(C0012R$dimen.bubble_expanded_view_padding);
+        int dimensionPixelSize = resources.getDimensionPixelSize(C0012R$dimen.bubble_elevation);
+        TypedArray obtainStyledAttributes = this.mContext.obtainStyledAttributes(new int[]{16844145});
+        this.mCornerRadius = obtainStyledAttributes.getDimensionPixelSize(0, 0);
+        obtainStyledAttributes.recycle();
+        $$Lambda$BubbleStackView$Hjz7hXc94PYdpndVbPsPbyIpyWU r9 = new Runnable(runnable) {
+            public final /* synthetic */ Runnable f$1;
+
+            {
+                this.f$1 = r2;
+            }
+
+            public final void run() {
+                BubbleStackView.this.lambda$new$2$BubbleStackView(this.f$1);
+            }
+        };
+        this.mStackAnimationController = new StackAnimationController(floatingContentCoordinator, new IntSupplier() {
+            public final int getAsInt() {
+                return BubbleStackView.this.getBubbleCount();
+            }
+        }, r9);
+        this.mExpandedAnimationController = new ExpandedAnimationController(this.mDisplaySize, this.mExpandedViewPadding, resources.getConfiguration().orientation, r9);
+        if (surfaceSynchronizer != null) {
+            surfaceSynchronizer2 = surfaceSynchronizer;
+        } else {
+            surfaceSynchronizer2 = DEFAULT_SURFACE_SYNCHRONIZER;
+        }
+        this.mSurfaceSynchronizer = surfaceSynchronizer2;
+        setUpUserEducation();
+        setLayoutDirection(0);
+        PhysicsAnimationLayout physicsAnimationLayout = new PhysicsAnimationLayout(context);
+        this.mBubbleContainer = physicsAnimationLayout;
+        physicsAnimationLayout.setActiveController(this.mStackAnimationController);
         float f = (float) dimensionPixelSize;
         this.mBubbleContainer.setElevation(f);
         this.mBubbleContainer.setClipChildren(false);
         addView(this.mBubbleContainer, new FrameLayout.LayoutParams(-1, -1));
-        this.mExpandedViewContainer = new FrameLayout(context);
-        this.mExpandedViewContainer.setElevation(f);
-        FrameLayout frameLayout = this.mExpandedViewContainer;
-        int i = this.mExpandedViewPadding;
-        frameLayout.setPadding(i, i, i, i);
+        FrameLayout frameLayout = new FrameLayout(context);
+        this.mExpandedViewContainer = frameLayout;
+        frameLayout.setElevation(f);
         this.mExpandedViewContainer.setClipChildren(false);
         addView(this.mExpandedViewContainer);
-        this.mFlyout = new BubbleFlyoutView(context);
-        this.mFlyout.setVisibility(8);
-        this.mFlyout.animate().setDuration(100).setInterpolator(new AccelerateDecelerateInterpolator());
-        addView(this.mFlyout, new FrameLayout.LayoutParams(-2, -2));
+        FrameLayout frameLayout2 = new FrameLayout(getContext());
+        this.mAnimatingOutSurfaceContainer = frameLayout2;
+        frameLayout2.setLayoutParams(new ViewGroup.LayoutParams(-2, -2));
+        addView(this.mAnimatingOutSurfaceContainer);
+        SurfaceView surfaceView = new SurfaceView(getContext());
+        this.mAnimatingOutSurfaceView = surfaceView;
+        surfaceView.setUseAlpha();
+        this.mAnimatingOutSurfaceView.setZOrderOnTop(true);
+        this.mAnimatingOutSurfaceView.setCornerRadius((float) this.mCornerRadius);
+        this.mAnimatingOutSurfaceView.setLayoutParams(new ViewGroup.LayoutParams(0, 0));
+        this.mAnimatingOutSurfaceContainer.addView(this.mAnimatingOutSurfaceView);
+        FrameLayout frameLayout3 = this.mAnimatingOutSurfaceContainer;
+        int i = this.mExpandedViewPadding;
+        frameLayout3.setPadding(i, i, i, i);
+        setUpManageMenu();
+        setUpFlyout();
         SpringAnimation springAnimation = this.mFlyoutTransitionSpring;
         SpringForce springForce = new SpringForce();
-        springForce.setStiffness(1500.0f);
+        springForce.setStiffness(200.0f);
         springForce.setDampingRatio(0.75f);
         springAnimation.setSpring(springForce);
         this.mFlyoutTransitionSpring.addEndListener(this.mAfterFlyoutTransitionSpring);
-        this.mDismissContainer = new BubbleDismissView(this.mContext);
-        this.mDismissContainer.setLayoutParams(new FrameLayout.LayoutParams(-1, getResources().getDimensionPixelSize(R.dimen.pip_dismiss_gradient_height), 80));
-        addView(this.mDismissContainer);
-        this.mDismissContainer = new BubbleDismissView(this.mContext);
-        this.mDismissContainer.setLayoutParams(new FrameLayout.LayoutParams(-1, getResources().getDimensionPixelSize(R.dimen.pip_dismiss_gradient_height), 80));
-        addView(this.mDismissContainer);
-        this.mExpandedViewXAnim = new SpringAnimation(this.mExpandedViewContainer, DynamicAnimation.TRANSLATION_X);
-        SpringAnimation springAnimation2 = this.mExpandedViewXAnim;
-        SpringForce springForce2 = new SpringForce();
-        springForce2.setStiffness(200.0f);
-        springForce2.setDampingRatio(0.75f);
-        springAnimation2.setSpring(springForce2);
-        this.mExpandedViewYAnim = new SpringAnimation(this.mExpandedViewContainer, DynamicAnimation.TRANSLATION_Y);
-        SpringAnimation springAnimation3 = this.mExpandedViewYAnim;
-        SpringForce springForce3 = new SpringForce();
-        springForce3.setStiffness(200.0f);
-        springForce3.setDampingRatio(0.75f);
-        springAnimation3.setSpring(springForce3);
-        this.mExpandedViewYAnim.addEndListener(new DynamicAnimation.OnAnimationEndListener() {
-            public final void onAnimationEnd(DynamicAnimation dynamicAnimation, boolean z, float f, float f2) {
-                BubbleStackView.this.lambda$new$2$BubbleStackView(dynamicAnimation, z, f, f2);
-            }
-        });
+        int dimensionPixelSize2 = resources.getDimensionPixelSize(C0012R$dimen.dismiss_circle_size);
+        this.mDismissTargetCircle = new DismissCircleView(context);
+        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(dimensionPixelSize2, dimensionPixelSize2);
+        layoutParams.gravity = 81;
+        this.mDismissTargetCircle.setLayoutParams(layoutParams);
+        this.mDismissTargetAnimator = PhysicsAnimator.getInstance(this.mDismissTargetCircle);
+        FrameLayout frameLayout4 = new FrameLayout(context);
+        this.mDismissTargetContainer = frameLayout4;
+        frameLayout4.setLayoutParams(new FrameLayout.LayoutParams(-1, getResources().getDimensionPixelSize(C0012R$dimen.floating_dismiss_gradient_height), 80));
+        this.mDismissTargetContainer.setPadding(0, 0, 0, getResources().getDimensionPixelSize(C0012R$dimen.floating_dismiss_bottom_margin));
+        this.mDismissTargetContainer.setClipToPadding(false);
+        this.mDismissTargetContainer.setClipChildren(false);
+        this.mDismissTargetContainer.addView(this.mDismissTargetCircle);
+        this.mDismissTargetContainer.setVisibility(4);
+        this.mDismissTargetContainer.setBackgroundResource(C0013R$drawable.floating_dismiss_gradient_transition);
+        addView(this.mDismissTargetContainer);
+        this.mDismissTargetCircle.setTranslationY((float) getResources().getDimensionPixelSize(C0012R$dimen.floating_dismiss_gradient_height));
+        this.mMagneticTarget = new MagnetizedObject.MagneticTarget(this.mDismissTargetCircle, Settings.Secure.getInt(getContext().getContentResolver(), "bubble_dismiss_radius", this.mBubbleSize * 2));
         setClipChildren(false);
         setFocusable(true);
         this.mBubbleContainer.bringToFront();
-        setOnApplyWindowInsetsListener(new View.OnApplyWindowInsetsListener() {
+        setUpOverflow();
+        this.mHideCurrentInputMethodCallback = runnable2;
+        setOnApplyWindowInsetsListener(new View.OnApplyWindowInsetsListener(consumer) {
+            public final /* synthetic */ Consumer f$1;
+
+            {
+                this.f$1 = r2;
+            }
+
             public final WindowInsets onApplyWindowInsets(View view, WindowInsets windowInsets) {
-                return BubbleStackView.this.lambda$new$4$BubbleStackView(view, windowInsets);
+                return BubbleStackView.this.lambda$new$4$BubbleStackView(this.f$1, view, windowInsets);
             }
         });
-        this.mMoveStackToValidPositionOnLayoutListener = new View.OnLayoutChangeListener() {
+        this.mOrientationChangedListener = new View.OnLayoutChangeListener() {
             public final void onLayoutChange(View view, int i, int i2, int i3, int i4, int i5, int i6, int i7, int i8) {
-                BubbleStackView.this.lambda$new$5$BubbleStackView(view, i, i2, i3, i4, i5, i6, i7, i8);
+                BubbleStackView.this.lambda$new$6$BubbleStackView(view, i, i2, i3, i4, i5, i6, i7, i8);
             }
         };
         getViewTreeObserver().addOnDrawListener(this.mSystemGestureExcludeUpdater);
         ColorMatrix colorMatrix = new ColorMatrix();
         ColorMatrix colorMatrix2 = new ColorMatrix();
-        this.mDesaturateAndDarkenAnimator = ValueAnimator.ofFloat(new float[]{1.0f, 0.0f});
-        this.mDesaturateAndDarkenAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener(colorMatrix, colorMatrix2) {
-            private final /* synthetic */ ColorMatrix f$1;
-            private final /* synthetic */ ColorMatrix f$2;
+        ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{1.0f, 0.0f});
+        this.mDesaturateAndDarkenAnimator = ofFloat;
+        ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener(colorMatrix, colorMatrix2) {
+            public final /* synthetic */ ColorMatrix f$1;
+            public final /* synthetic */ ColorMatrix f$2;
 
             {
                 this.f$1 = r2;
@@ -277,27 +614,34 @@ public class BubbleStackView extends FrameLayout {
             }
 
             public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-                BubbleStackView.this.lambda$new$6$BubbleStackView(this.f$1, this.f$2, valueAnimator);
+                BubbleStackView.this.lambda$new$7$BubbleStackView(this.f$1, this.f$2, valueAnimator);
             }
         });
+        setOnTouchListener(new View.OnTouchListener() {
+            public final boolean onTouch(View view, MotionEvent motionEvent) {
+                return BubbleStackView.this.lambda$new$8$BubbleStackView(view, motionEvent);
+            }
+        });
+        animate().setInterpolator(Interpolators.PANEL_CLOSE_ACCELERATED).setDuration(320);
     }
 
-    public /* synthetic */ void lambda$new$2$BubbleStackView(DynamicAnimation dynamicAnimation, boolean z, float f, float f2) {
-        Bubble bubble;
-        if (this.mIsExpanded && (bubble = this.mExpandedBubble) != null) {
-            bubble.expandedView.updateView();
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$new$2 */
+    public /* synthetic */ void lambda$new$2$BubbleStackView(Runnable runnable) {
+        if (getBubbleCount() == 0) {
+            runnable.run();
         }
     }
 
-    public /* synthetic */ WindowInsets lambda$new$4$BubbleStackView(View view, WindowInsets windowInsets) {
-        int systemWindowInsetBottom = windowInsets.getSystemWindowInsetBottom() - windowInsets.getStableInsetBottom();
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$new$4 */
+    public /* synthetic */ WindowInsets lambda$new$4$BubbleStackView(Consumer consumer, View view, WindowInsets windowInsets) {
+        consumer.accept(Boolean.valueOf(windowInsets.getInsets(WindowInsets.Type.ime()).bottom > 0));
         if (!this.mIsExpanded || this.mIsExpansionAnimating) {
             return view.onApplyWindowInsets(windowInsets);
         }
-        this.mImeVisible = systemWindowInsetBottom != 0;
-        this.mExpandedViewYAnim.animateToFinalPosition(getYPositionForExpandedView());
         this.mExpandedAnimationController.updateYPosition(new Runnable(windowInsets) {
-            private final /* synthetic */ WindowInsets f$1;
+            public final /* synthetic */ WindowInsets f$1;
 
             {
                 this.f$1 = r2;
@@ -310,70 +654,421 @@ public class BubbleStackView extends FrameLayout {
         return view.onApplyWindowInsets(windowInsets);
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$new$3 */
     public /* synthetic */ void lambda$new$3$BubbleStackView(WindowInsets windowInsets) {
-        this.mExpandedBubble.expandedView.updateInsets(windowInsets);
+        BubbleViewProvider bubbleViewProvider = this.mExpandedBubble;
+        if (bubbleViewProvider != null && bubbleViewProvider.getExpandedView() != null) {
+            this.mExpandedBubble.getExpandedView().updateInsets(windowInsets);
+        }
     }
 
-    public /* synthetic */ void lambda$new$5$BubbleStackView(View view, int i, int i2, int i3, int i4, int i5, int i6, int i7, int i8) {
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$new$6 */
+    public /* synthetic */ void lambda$new$6$BubbleStackView(View view, int i, int i2, int i3, int i4, int i5, int i6, int i7, int i8) {
+        int i9;
+        int i10;
+        this.mExpandedAnimationController.updateResources(this.mOrientation, this.mDisplaySize);
+        this.mStackAnimationController.updateResources(this.mOrientation);
+        this.mBubbleOverflow.updateDimensions();
+        WindowInsets rootWindowInsets = getRootWindowInsets();
+        int i11 = this.mExpandedViewPadding;
+        if (rootWindowInsets != null) {
+            DisplayCutout displayCutout = rootWindowInsets.getDisplayCutout();
+            int i12 = 0;
+            if (displayCutout != null) {
+                i12 = displayCutout.getSafeInsetLeft();
+                i10 = displayCutout.getSafeInsetRight();
+            } else {
+                i10 = 0;
+            }
+            int max = Math.max(i12, rootWindowInsets.getStableInsetLeft()) + i11;
+            i9 = i11 + Math.max(i10, rootWindowInsets.getStableInsetRight());
+            i11 = max;
+        } else {
+            i9 = i11;
+        }
+        FrameLayout frameLayout = this.mExpandedViewContainer;
+        int i13 = this.mExpandedViewPadding;
+        frameLayout.setPadding(i11, i13, i9, i13);
+        if (this.mIsExpanded) {
+            beforeExpandedViewAnimation();
+            updateOverflowVisibility();
+            updatePointerPosition();
+            this.mExpandedAnimationController.expandFromStack(new Runnable() {
+                public final void run() {
+                    BubbleStackView.this.lambda$new$5$BubbleStackView();
+                }
+            });
+            this.mExpandedViewContainer.setTranslationX(0.0f);
+            this.mExpandedViewContainer.setTranslationY(getExpandedViewY());
+            this.mExpandedViewContainer.setAlpha(1.0f);
+        }
         float f = this.mVerticalPosPercentBeforeRotation;
         if (f >= 0.0f) {
             this.mStackAnimationController.moveStackToSimilarPositionAfterRotation(this.mWasOnLeftBeforeRotation, f);
         }
-        removeOnLayoutChangeListener(this.mMoveStackToValidPositionOnLayoutListener);
+        removeOnLayoutChangeListener(this.mOrientationChangedListener);
     }
 
-    public /* synthetic */ void lambda$new$6$BubbleStackView(ColorMatrix colorMatrix, ColorMatrix colorMatrix2, ValueAnimator valueAnimator) {
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$new$7 */
+    public /* synthetic */ void lambda$new$7$BubbleStackView(ColorMatrix colorMatrix, ColorMatrix colorMatrix2, ValueAnimator valueAnimator) {
         float floatValue = ((Float) valueAnimator.getAnimatedValue()).floatValue();
         colorMatrix.setSaturation(floatValue);
         float f = 1.0f - ((1.0f - floatValue) * 0.3f);
         colorMatrix2.setScale(f, f, f, 1.0f);
         colorMatrix.postConcat(colorMatrix2);
         this.mDesaturateAndDarkenPaint.setColorFilter(new ColorMatrixColorFilter(colorMatrix));
-        this.mDesaturateAndDarkenTargetView.setLayerPaint(this.mDesaturateAndDarkenPaint);
-    }
-
-    public void onThemeChanged() {
-        for (Bubble next : this.mBubbleData.getBubbles()) {
-            next.iconView.updateViews();
-            next.expandedView.applyThemeAttrs();
+        View view = this.mDesaturateAndDarkenTargetView;
+        if (view != null) {
+            view.setLayerPaint(this.mDesaturateAndDarkenPaint);
         }
     }
 
-    public void onOrientationChanged() {
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$new$8 */
+    public /* synthetic */ boolean lambda$new$8$BubbleStackView(View view, MotionEvent motionEvent) {
+        if (motionEvent.getAction() != 0) {
+            return true;
+        }
+        if (this.mShowingManage) {
+            showManageMenu(false);
+            return true;
+        } else if (!this.mBubbleData.isExpanded()) {
+            return true;
+        } else {
+            this.mBubbleData.setExpanded(false);
+            return true;
+        }
+    }
+
+    public void setTemporarilyInvisible(boolean z) {
+        this.mTemporarilyInvisible = z;
+        updateTemporarilyInvisibleAnimation(z);
+    }
+
+    /* access modifiers changed from: private */
+    public void updateTemporarilyInvisibleAnimation(boolean z) {
+        removeCallbacks(this.mAnimateTemporarilyInvisibleImmediate);
+        if (!this.mIsDraggingStack) {
+            postDelayed(this.mAnimateTemporarilyInvisibleImmediate, (!(this.mTemporarilyInvisible && this.mFlyout.getVisibility() != 0) || z) ? 0 : 1000);
+        }
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$new$9 */
+    public /* synthetic */ void lambda$new$9$BubbleStackView() {
+        if (!this.mTemporarilyInvisible || this.mFlyout.getVisibility() == 0) {
+            animate().translationX(0.0f).start();
+        } else if (this.mStackAnimationController.isStackOnLeftSide()) {
+            animate().translationX((float) (-this.mBubbleSize)).start();
+        } else {
+            animate().translationX((float) this.mBubbleSize).start();
+        }
+    }
+
+    private void setUpManageMenu() {
+        ViewGroup viewGroup = this.mManageMenu;
+        if (viewGroup != null) {
+            removeView(viewGroup);
+        }
+        ViewGroup viewGroup2 = (ViewGroup) LayoutInflater.from(getContext()).inflate(C0017R$layout.bubble_manage_menu, this, false);
+        this.mManageMenu = viewGroup2;
+        viewGroup2.setVisibility(4);
+        PhysicsAnimator.getInstance(this.mManageMenu).setDefaultSpringConfig(this.mManageSpringConfig);
+        this.mManageMenu.setOutlineProvider(new ViewOutlineProvider() {
+            public void getOutline(View view, Outline outline) {
+                outline.setRoundRect(0, 0, view.getWidth(), view.getHeight(), (float) BubbleStackView.this.mCornerRadius);
+            }
+        });
+        this.mManageMenu.setClipToOutline(true);
+        this.mManageMenu.findViewById(C0015R$id.bubble_manage_menu_dismiss_container).setOnClickListener(new View.OnClickListener() {
+            public final void onClick(View view) {
+                BubbleStackView.this.lambda$setUpManageMenu$10$BubbleStackView(view);
+            }
+        });
+        this.mManageMenu.findViewById(C0015R$id.bubble_manage_menu_dont_bubble_container).setOnClickListener(new View.OnClickListener() {
+            public final void onClick(View view) {
+                BubbleStackView.this.lambda$setUpManageMenu$11$BubbleStackView(view);
+            }
+        });
+        this.mManageMenu.findViewById(C0015R$id.bubble_manage_menu_settings_container).setOnClickListener(new View.OnClickListener() {
+            public final void onClick(View view) {
+                BubbleStackView.this.lambda$setUpManageMenu$13$BubbleStackView(view);
+            }
+        });
+        this.mManageSettingsIcon = (ImageView) this.mManageMenu.findViewById(C0015R$id.bubble_manage_menu_settings_icon);
+        this.mManageSettingsText = (TextView) this.mManageMenu.findViewById(C0015R$id.bubble_manage_menu_settings_name);
+        this.mManageMenu.setLayoutDirection(3);
+        addView(this.mManageMenu);
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$setUpManageMenu$10 */
+    public /* synthetic */ void lambda$setUpManageMenu$10$BubbleStackView(View view) {
+        showManageMenu(false);
+        dismissBubbleIfExists(this.mBubbleData.getSelectedBubble());
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$setUpManageMenu$11 */
+    public /* synthetic */ void lambda$setUpManageMenu$11$BubbleStackView(View view) {
+        showManageMenu(false);
+        this.mUnbubbleConversationCallback.accept(this.mBubbleData.getSelectedBubble().getKey());
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$setUpManageMenu$13 */
+    public /* synthetic */ void lambda$setUpManageMenu$13$BubbleStackView(View view) {
+        showManageMenu(false);
+        Bubble selectedBubble = this.mBubbleData.getSelectedBubble();
+        if (selectedBubble != null && this.mBubbleData.hasBubbleInStackWithKey(selectedBubble.getKey())) {
+            collapseStack(new Runnable(selectedBubble.getSettingsIntent(this.mContext), selectedBubble) {
+                public final /* synthetic */ Intent f$1;
+                public final /* synthetic */ Bubble f$2;
+
+                {
+                    this.f$1 = r2;
+                    this.f$2 = r3;
+                }
+
+                public final void run() {
+                    BubbleStackView.this.lambda$setUpManageMenu$12$BubbleStackView(this.f$1, this.f$2);
+                }
+            });
+        }
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$setUpManageMenu$12 */
+    public /* synthetic */ void lambda$setUpManageMenu$12$BubbleStackView(Intent intent, Bubble bubble) {
+        this.mContext.startActivityAsUser(intent, bubble.getUser());
+        logBubbleEvent(bubble, 9);
+    }
+
+    private void setUpUserEducation() {
+        View view = this.mUserEducationView;
+        if (view != null) {
+            removeView(view);
+        }
+        boolean shouldShowBubblesEducation = shouldShowBubblesEducation();
+        this.mShouldShowUserEducation = shouldShowBubblesEducation;
+        if (shouldShowBubblesEducation) {
+            View inflate = this.mInflater.inflate(C0017R$layout.bubble_stack_user_education, this, false);
+            this.mUserEducationView = inflate;
+            inflate.setVisibility(8);
+            TypedArray obtainStyledAttributes = this.mContext.obtainStyledAttributes(new int[]{16843829, 16842809});
+            int color = obtainStyledAttributes.getColor(0, -16777216);
+            int color2 = obtainStyledAttributes.getColor(1, -1);
+            obtainStyledAttributes.recycle();
+            int ensureTextContrast = ContrastColorUtil.ensureTextContrast(color2, color, true);
+            ((TextView) this.mUserEducationView.findViewById(C0015R$id.user_education_title)).setTextColor(ensureTextContrast);
+            ((TextView) this.mUserEducationView.findViewById(C0015R$id.user_education_description)).setTextColor(ensureTextContrast);
+            updateUserEducationForLayoutDirection();
+            addView(this.mUserEducationView);
+        }
+        BubbleManageEducationView bubbleManageEducationView = this.mManageEducationView;
+        if (bubbleManageEducationView != null) {
+            removeView(bubbleManageEducationView);
+        }
+        boolean shouldShowManageEducation = shouldShowManageEducation();
+        this.mShouldShowManageEducation = shouldShowManageEducation;
+        if (shouldShowManageEducation) {
+            BubbleManageEducationView bubbleManageEducationView2 = (BubbleManageEducationView) this.mInflater.inflate(C0017R$layout.bubbles_manage_button_education, this, false);
+            this.mManageEducationView = bubbleManageEducationView2;
+            bubbleManageEducationView2.setVisibility(8);
+            this.mManageEducationView.setElevation((float) this.mBubbleElevation);
+            this.mManageEducationView.setLayoutDirection(3);
+            addView(this.mManageEducationView);
+        }
+    }
+
+    @SuppressLint({"ClickableViewAccessibility"})
+    private void setUpFlyout() {
+        BubbleFlyoutView bubbleFlyoutView = this.mFlyout;
+        if (bubbleFlyoutView != null) {
+            removeView(bubbleFlyoutView);
+        }
+        BubbleFlyoutView bubbleFlyoutView2 = new BubbleFlyoutView(getContext());
+        this.mFlyout = bubbleFlyoutView2;
+        bubbleFlyoutView2.setVisibility(8);
+        this.mFlyout.animate().setDuration(100).setInterpolator(new AccelerateDecelerateInterpolator());
+        this.mFlyout.setOnClickListener(this.mFlyoutClickListener);
+        this.mFlyout.setOnTouchListener(this.mFlyoutTouchListener);
+        addView(this.mFlyout, new FrameLayout.LayoutParams(-2, -2));
+    }
+
+    private void setUpOverflow() {
+        int i;
+        BubbleOverflow bubbleOverflow = this.mBubbleOverflow;
+        if (bubbleOverflow == null) {
+            BubbleOverflow bubbleOverflow2 = new BubbleOverflow(getContext());
+            this.mBubbleOverflow = bubbleOverflow2;
+            bubbleOverflow2.setUpOverflow(this.mBubbleContainer, this);
+            i = 0;
+        } else {
+            this.mBubbleContainer.removeView(bubbleOverflow.getIconView());
+            this.mBubbleOverflow.setUpOverflow(this.mBubbleContainer, this);
+            i = this.mBubbleContainer.getChildCount();
+        }
+        this.mBubbleContainer.addView(this.mBubbleOverflow.getIconView(), i, new FrameLayout.LayoutParams(-2, -2));
+        this.mBubbleOverflow.getIconView().setOnClickListener(new View.OnClickListener() {
+            public final void onClick(View view) {
+                BubbleStackView.this.lambda$setUpOverflow$14$BubbleStackView(view);
+            }
+        });
+        updateOverflowVisibility();
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$setUpOverflow$14 */
+    public /* synthetic */ void lambda$setUpOverflow$14$BubbleStackView(View view) {
+        setSelectedBubble(this.mBubbleOverflow);
+        showManageMenu(false);
+    }
+
+    public void onThemeChanged() {
+        setUpFlyout();
+        setUpOverflow();
+        setUpUserEducation();
+        setUpManageMenu();
+        updateExpandedViewTheme();
+    }
+
+    public void onOrientationChanged(int i) {
+        this.mOrientation = i;
+        ((WindowManager) getContext().getSystemService("window")).getDefaultDisplay().getRealSize(this.mDisplaySize);
+        Resources resources = getContext().getResources();
+        this.mStatusBarHeight = resources.getDimensionPixelSize(17105489);
+        this.mBubblePaddingTop = resources.getDimensionPixelSize(C0012R$dimen.bubble_padding_top);
         RectF allowableStackPositionRegion = this.mStackAnimationController.getAllowableStackPositionRegion();
         this.mWasOnLeftBeforeRotation = this.mStackAnimationController.isStackOnLeftSide();
         float f = this.mStackAnimationController.getStackPosition().y;
         float f2 = allowableStackPositionRegion.top;
-        this.mVerticalPosPercentBeforeRotation = (f - f2) / (allowableStackPositionRegion.bottom - f2);
-        addOnLayoutChangeListener(this.mMoveStackToValidPositionOnLayoutListener);
+        float f3 = (f - f2) / (allowableStackPositionRegion.bottom - f2);
+        this.mVerticalPosPercentBeforeRotation = f3;
+        this.mVerticalPosPercentBeforeRotation = Math.max(0.0f, Math.min(1.0f, f3));
+        addOnLayoutChangeListener(this.mOrientationChangedListener);
         hideFlyoutImmediate();
+        this.mManageMenu.setVisibility(4);
+        this.mShowingManage = false;
     }
 
-    public void getBoundsOnScreen(Rect rect, boolean z) {
-        getBoundsOnScreen(rect);
+    public void onLayoutDirectionChanged(int i) {
+        this.mManageMenu.setLayoutDirection(i);
+        this.mFlyout.setLayoutDirection(i);
+        View view = this.mUserEducationView;
+        if (view != null) {
+            view.setLayoutDirection(i);
+            updateUserEducationForLayoutDirection();
+        }
+        BubbleManageEducationView bubbleManageEducationView = this.mManageEducationView;
+        if (bubbleManageEducationView != null) {
+            bubbleManageEducationView.setLayoutDirection(i);
+        }
+        updateExpandedViewDirection(i);
+    }
+
+    public void onDisplaySizeChanged() {
+        setUpOverflow();
+        ((WindowManager) getContext().getSystemService("window")).getDefaultDisplay().getRealSize(this.mDisplaySize);
+        Resources resources = getContext().getResources();
+        this.mStatusBarHeight = resources.getDimensionPixelSize(17105489);
+        this.mBubblePaddingTop = resources.getDimensionPixelSize(C0012R$dimen.bubble_padding_top);
+        this.mBubbleSize = getResources().getDimensionPixelSize(C0012R$dimen.individual_bubble_size);
+        for (Bubble next : this.mBubbleData.getBubbles()) {
+            if (next.getIconView() == null) {
+                Log.d("Bubbles", "Display size changed. Icon null: " + next);
+            } else {
+                BadgedImageView iconView = next.getIconView();
+                int i = this.mBubbleSize;
+                iconView.setLayoutParams(new FrameLayout.LayoutParams(i, i));
+            }
+        }
+        this.mExpandedAnimationController.updateResources(this.mOrientation, this.mDisplaySize);
+        this.mStackAnimationController.updateResources(this.mOrientation);
+        int dimensionPixelSize = resources.getDimensionPixelSize(C0012R$dimen.dismiss_circle_size);
+        this.mDismissTargetCircle.getLayoutParams().width = dimensionPixelSize;
+        this.mDismissTargetCircle.getLayoutParams().height = dimensionPixelSize;
+        this.mDismissTargetCircle.requestLayout();
+        this.mMagneticTarget.setMagneticFieldRadiusPx(this.mBubbleSize * 2);
+    }
+
+    public void onComputeInternalInsets(ViewTreeObserver.InternalInsetsInfo internalInsetsInfo) {
+        internalInsetsInfo.setTouchableInsets(3);
+        this.mTempRect.setEmpty();
+        getTouchableRegion(this.mTempRect);
+        internalInsetsInfo.touchableRegion.set(this.mTempRect);
+    }
+
+    /* access modifiers changed from: protected */
+    public void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        getViewTreeObserver().addOnComputeInternalInsetsListener(this);
     }
 
     /* access modifiers changed from: protected */
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         getViewTreeObserver().removeOnPreDrawListener(this.mViewUpdater);
-    }
-
-    public boolean onInterceptTouchEvent(MotionEvent motionEvent) {
-        float rawX = motionEvent.getRawX();
-        float rawY = motionEvent.getRawY();
-        if (!this.mIsExpanded || !isIntersecting(this.mExpandedViewContainer, rawX, rawY)) {
-            return isIntersecting(this.mBubbleContainer, rawX, rawY);
+        getViewTreeObserver().removeOnComputeInternalInsetsListener(this);
+        BubbleOverflow bubbleOverflow = this.mBubbleOverflow;
+        if (bubbleOverflow != null && bubbleOverflow.getExpandedView() != null) {
+            this.mBubbleOverflow.getExpandedView().cleanUpExpandedState();
         }
-        return false;
     }
 
     public void onInitializeAccessibilityNodeInfoInternal(AccessibilityNodeInfo accessibilityNodeInfo) {
         super.onInitializeAccessibilityNodeInfoInternal(accessibilityNodeInfo);
-        accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(R.id.action_move_top_left, getContext().getResources().getString(R.string.bubble_accessibility_action_move_top_left)));
-        accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(R.id.action_move_top_right, getContext().getResources().getString(R.string.bubble_accessibility_action_move_top_right)));
-        accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(R.id.action_move_bottom_left, getContext().getResources().getString(R.string.bubble_accessibility_action_move_bottom_left)));
-        accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(R.id.action_move_bottom_right, getContext().getResources().getString(R.string.bubble_accessibility_action_move_bottom_right)));
+        setupLocalMenu(accessibilityNodeInfo);
+    }
+
+    /* access modifiers changed from: package-private */
+    public void updateExpandedViewTheme() {
+        List<Bubble> bubbles = this.mBubbleData.getBubbles();
+        if (!bubbles.isEmpty()) {
+            bubbles.forEach($$Lambda$BubbleStackView$gtti_QWIhKA2hCHaS7klo4hfz0Y.INSTANCE);
+        }
+    }
+
+    static /* synthetic */ void lambda$updateExpandedViewTheme$15(Bubble bubble) {
+        if (bubble.getExpandedView() != null) {
+            bubble.getExpandedView().applyThemeAttrs();
+        }
+    }
+
+    /* access modifiers changed from: package-private */
+    public void updateExpandedViewDirection(int i) {
+        List<Bubble> bubbles = this.mBubbleData.getBubbles();
+        if (!bubbles.isEmpty()) {
+            bubbles.forEach(new Consumer(i) {
+                public final /* synthetic */ int f$0;
+
+                {
+                    this.f$0 = r1;
+                }
+
+                public final void accept(Object obj) {
+                    BubbleStackView.lambda$updateExpandedViewDirection$16(this.f$0, (Bubble) obj);
+                }
+            });
+        }
+    }
+
+    static /* synthetic */ void lambda$updateExpandedViewDirection$16(int i, Bubble bubble) {
+        if (bubble.getExpandedView() != null) {
+            bubble.getExpandedView().setLayoutDirection(i);
+        }
+    }
+
+    /* access modifiers changed from: package-private */
+    public void setupLocalMenu(AccessibilityNodeInfo accessibilityNodeInfo) {
+        Resources resources = this.mContext.getResources();
+        accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C0015R$id.action_move_top_left, resources.getString(C0021R$string.bubble_accessibility_action_move_top_left)));
+        accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C0015R$id.action_move_top_right, resources.getString(C0021R$string.bubble_accessibility_action_move_top_right)));
+        accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C0015R$id.action_move_bottom_left, resources.getString(C0021R$string.bubble_accessibility_action_move_bottom_left)));
+        accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C0015R$id.action_move_bottom_right, resources.getString(C0021R$string.bubble_accessibility_action_move_bottom_right)));
         accessibilityNodeInfo.addAction(AccessibilityNodeInfo.AccessibilityAction.ACTION_DISMISS);
         if (this.mIsExpanded) {
             accessibilityNodeInfo.addAction(AccessibilityNodeInfo.AccessibilityAction.ACTION_COLLAPSE);
@@ -389,6 +1084,7 @@ public class BubbleStackView extends FrameLayout {
         RectF allowableStackPositionRegion = this.mStackAnimationController.getAllowableStackPositionRegion();
         if (i == 1048576) {
             this.mBubbleData.dismissAll(6);
+            announceForAccessibility(getResources().getString(C0021R$string.accessibility_bubble_dismissed));
             return true;
         } else if (i == 524288) {
             this.mBubbleData.setExpanded(false);
@@ -396,40 +1092,38 @@ public class BubbleStackView extends FrameLayout {
         } else if (i == 262144) {
             this.mBubbleData.setExpanded(true);
             return true;
-        } else if (i == R.id.action_move_top_left) {
-            this.mStackAnimationController.springStack(allowableStackPositionRegion.left, allowableStackPositionRegion.top);
+        } else if (i == C0015R$id.action_move_top_left) {
+            this.mStackAnimationController.springStackAfterFling(allowableStackPositionRegion.left, allowableStackPositionRegion.top);
             return true;
-        } else if (i == R.id.action_move_top_right) {
-            this.mStackAnimationController.springStack(allowableStackPositionRegion.right, allowableStackPositionRegion.top);
+        } else if (i == C0015R$id.action_move_top_right) {
+            this.mStackAnimationController.springStackAfterFling(allowableStackPositionRegion.right, allowableStackPositionRegion.top);
             return true;
-        } else if (i == R.id.action_move_bottom_left) {
-            this.mStackAnimationController.springStack(allowableStackPositionRegion.left, allowableStackPositionRegion.bottom);
+        } else if (i == C0015R$id.action_move_bottom_left) {
+            this.mStackAnimationController.springStackAfterFling(allowableStackPositionRegion.left, allowableStackPositionRegion.bottom);
             return true;
-        } else if (i != R.id.action_move_bottom_right) {
+        } else if (i != C0015R$id.action_move_bottom_right) {
             return false;
         } else {
-            this.mStackAnimationController.springStack(allowableStackPositionRegion.right, allowableStackPositionRegion.bottom);
+            this.mStackAnimationController.springStackAfterFling(allowableStackPositionRegion.right, allowableStackPositionRegion.bottom);
             return true;
         }
     }
 
     public void updateContentDescription() {
         if (!this.mBubbleData.getBubbles().isEmpty()) {
-            Bubble bubble = this.mBubbleData.getBubbles().get(0);
-            String appName = bubble.getAppName();
-            CharSequence charSequence = bubble.entry.notification.getNotification().extras.getCharSequence("android.title");
-            String string = getResources().getString(R.string.stream_notification);
-            if (charSequence != null) {
-                string = charSequence.toString();
-            }
-            int childCount = this.mBubbleContainer.getChildCount() - 1;
-            String string2 = getResources().getString(R.string.bubble_content_description_single, new Object[]{string, appName});
-            String string3 = getResources().getString(R.string.bubble_content_description_stack, new Object[]{string, appName, Integer.valueOf(childCount)});
-            if (!this.mIsExpanded) {
-                if (childCount > 0) {
-                    this.mBubbleContainer.setContentDescription(string3);
-                } else {
-                    this.mBubbleContainer.setContentDescription(string2);
+            for (int i = 0; i < this.mBubbleData.getBubbles().size(); i++) {
+                Bubble bubble = this.mBubbleData.getBubbles().get(i);
+                String appName = bubble.getAppName();
+                String title = bubble.getTitle();
+                if (title == null) {
+                    title = getResources().getString(C0021R$string.notification_bubble_title);
+                }
+                if (bubble.getIconView() != null) {
+                    if (this.mIsExpanded || i > 0) {
+                        bubble.getIconView().setContentDescription(getResources().getString(C0021R$string.bubble_content_description_single, new Object[]{title, appName}));
+                    } else {
+                        bubble.getIconView().setContentDescription(getResources().getString(C0021R$string.bubble_content_description_stack, new Object[]{title, appName, Integer.valueOf(this.mBubbleContainer.getChildCount() - 1)}));
+                    }
                 }
             }
         }
@@ -438,7 +1132,7 @@ public class BubbleStackView extends FrameLayout {
     /* access modifiers changed from: private */
     public void updateSystemGestureExcludeRects() {
         Rect rect = this.mSystemGestureExclusionRects.get(0);
-        if (this.mBubbleContainer.getChildCount() > 0) {
+        if (getBubbleCount() > 0) {
             View childAt = this.mBubbleContainer.getChildAt(0);
             rect.set(childAt.getLeft(), childAt.getTop(), childAt.getRight(), childAt.getBottom());
             rect.offset((int) (childAt.getTranslationX() + 0.5f), (int) (childAt.getTranslationY() + 0.5f));
@@ -449,81 +1143,71 @@ public class BubbleStackView extends FrameLayout {
         this.mBubbleContainer.setSystemGestureExclusionRects(Collections.emptyList());
     }
 
-    public void updateDotVisibility(String str) {
-        Bubble bubbleWithKey = this.mBubbleData.getBubbleWithKey(str);
-        if (bubbleWithKey != null) {
-            bubbleWithKey.updateDotVisibility();
-        }
-    }
-
     public void setExpandListener(BubbleController.BubbleExpandListener bubbleExpandListener) {
         this.mExpandListener = bubbleExpandListener;
+    }
+
+    public void setUnbubbleConversationCallback(Consumer<String> consumer) {
+        this.mUnbubbleConversationCallback = consumer;
     }
 
     public boolean isExpanded() {
         return this.mIsExpanded;
     }
 
-    /* access modifiers changed from: package-private */
-    public BubbleView getExpandedBubbleView() {
-        Bubble bubble = this.mExpandedBubble;
-        if (bubble != null) {
-            return bubble.iconView;
-        }
-        return null;
+    public boolean isExpansionAnimating() {
+        return this.mIsExpansionAnimating;
     }
 
     /* access modifiers changed from: package-private */
-    public Bubble getExpandedBubble() {
+    public BubbleViewProvider getExpandedBubble() {
         return this.mExpandedBubble;
     }
 
     /* access modifiers changed from: package-private */
-    @Deprecated
-    public void setExpandedBubble(String str) {
-        Bubble bubbleWithKey = this.mBubbleData.getBubbleWithKey(str);
-        if (bubbleWithKey != null) {
-            setSelectedBubble(bubbleWithKey);
-            bubbleWithKey.entry.setShowInShadeWhenBubble(false);
-            setExpanded(true);
-        }
-    }
-
-    /* access modifiers changed from: package-private */
-    @VisibleForTesting
-    public void setExpandedBubble(NotificationData.Entry entry) {
-        for (int i = 0; i < this.mBubbleContainer.getChildCount(); i++) {
-            if (entry.equals(((BubbleView) this.mBubbleContainer.getChildAt(i)).getEntry())) {
-                setExpandedBubble(entry.key);
-            }
-        }
-    }
-
-    /* access modifiers changed from: package-private */
+    @SuppressLint({"ClickableViewAccessibility"})
     public void addBubble(Bubble bubble) {
-        bubble.inflate(this.mInflater, this);
-        this.mBubbleContainer.addView(bubble.iconView, 0, new FrameLayout.LayoutParams(-2, -2));
-        ViewClippingUtil.setClippingDeactivated(bubble.iconView, true, this.mClippingParameters);
-        BubbleView bubbleView = bubble.iconView;
-        if (bubbleView != null) {
-            bubbleView.setSuppressDot(this.mSuppressNewDot, false);
+        if (getBubbleCount() == 0 && this.mShouldShowUserEducation) {
+            StackAnimationController stackAnimationController = this.mStackAnimationController;
+            stackAnimationController.setStackPosition(stackAnimationController.getDefaultStartPosition());
         }
-        animateInFlyoutForBubble(bubble);
-        requestUpdate();
-        logBubbleEvent(bubble, 1);
-        updatePointerPosition();
+        if (getBubbleCount() == 0) {
+            this.mStackOnLeftOrWillBe = this.mStackAnimationController.isStackOnLeftSide();
+        }
+        if (bubble.getIconView() != null) {
+            bubble.getIconView().setDotPositionOnLeft(!this.mStackOnLeftOrWillBe, false);
+            bubble.getIconView().setOnClickListener(this.mBubbleClickListener);
+            bubble.getIconView().setOnTouchListener(this.mBubbleTouchListener);
+            this.mBubbleContainer.addView(bubble.getIconView(), 0, new FrameLayout.LayoutParams(-2, -2));
+            animateInFlyoutForBubble(bubble);
+            requestUpdate();
+            logBubbleEvent(bubble, 1);
+        }
     }
 
     /* access modifiers changed from: package-private */
     public void removeBubble(Bubble bubble) {
-        int indexOfChild = this.mBubbleContainer.indexOfChild(bubble.iconView);
-        if (indexOfChild >= 0) {
-            this.mBubbleContainer.removeViewAt(indexOfChild);
-            logBubbleEvent(bubble, 5);
-        } else {
-            Log.d("BubbleStackView", "was asked to remove Bubble, but didn't find the view! " + bubble);
+        int i = 0;
+        while (i < getBubbleCount()) {
+            View childAt = this.mBubbleContainer.getChildAt(i);
+            if (!(childAt instanceof BadgedImageView) || !((BadgedImageView) childAt).getKey().equals(bubble.getKey())) {
+                i++;
+            } else {
+                this.mBubbleContainer.removeViewAt(i);
+                bubble.cleanupViews();
+                updatePointerPosition();
+                logBubbleEvent(bubble, 5);
+                return;
+            }
         }
-        updatePointerPosition();
+        Log.d("Bubbles", "was asked to remove Bubble, but didn't find the view! " + bubble);
+    }
+
+    private void updateOverflowVisibility() {
+        BubbleOverflow bubbleOverflow = this.mBubbleOverflow;
+        if (bubbleOverflow != null) {
+            bubbleOverflow.setVisible(this.mIsExpanded ? 0 : 8);
+        }
     }
 
     /* access modifiers changed from: package-private */
@@ -535,484 +1219,736 @@ public class BubbleStackView extends FrameLayout {
 
     public void updateBubbleOrder(List<Bubble> list) {
         for (int i = 0; i < list.size(); i++) {
-            this.mBubbleContainer.reorderView(list.get(i).iconView, i);
+            this.mBubbleContainer.reorderView(list.get(i).getIconView(), i);
         }
+        updateBubbleZOrdersAndDotPosition(false);
+        updatePointerPosition();
     }
 
-    public void setSelectedBubble(Bubble bubble) {
-        Bubble bubble2 = this.mExpandedBubble;
-        if (bubble2 == null || !bubble2.equals(bubble)) {
-            Bubble bubble3 = this.mExpandedBubble;
-            this.mExpandedBubble = bubble;
-            if (this.mIsExpanded) {
-                this.mExpandedViewContainer.setAlpha(0.0f);
-                this.mSurfaceSynchronizer.syncSurfaceAndRun(new Runnable(bubble3, bubble) {
-                    private final /* synthetic */ Bubble f$1;
-                    private final /* synthetic */ Bubble f$2;
+    public void setSelectedBubble(BubbleViewProvider bubbleViewProvider) {
+        BubbleViewProvider bubbleViewProvider2;
+        if (this.mExpandedBubble != bubbleViewProvider) {
+            if (bubbleViewProvider == null || bubbleViewProvider.getKey() != "Overflow") {
+                this.mBubbleData.setShowingOverflow(false);
+            } else {
+                this.mBubbleData.setShowingOverflow(true);
+            }
+            if (this.mIsExpanded && this.mIsExpansionAnimating) {
+                cancelAllExpandCollapseSwitchAnimations();
+            }
+            if (!this.mIsExpanded || (bubbleViewProvider2 = this.mExpandedBubble) == null || bubbleViewProvider2.getExpandedView() == null) {
+                showNewlySelectedBubble(bubbleViewProvider);
+                return;
+            }
+            BubbleViewProvider bubbleViewProvider3 = this.mExpandedBubble;
+            if (!(bubbleViewProvider3 == null || bubbleViewProvider3.getExpandedView() == null)) {
+                this.mExpandedBubble.getExpandedView().setSurfaceZOrderedOnTop(true);
+            }
+            try {
+                screenshotAnimatingOutBubbleIntoSurface(new Consumer(bubbleViewProvider) {
+                    public final /* synthetic */ BubbleViewProvider f$1;
 
                     {
                         this.f$1 = r2;
-                        this.f$2 = r3;
                     }
 
+                    public final void accept(Object obj) {
+                        BubbleStackView.this.lambda$setSelectedBubble$17$BubbleStackView(this.f$1, (Boolean) obj);
+                    }
+                });
+            } catch (Exception e) {
+                showNewlySelectedBubble(bubbleViewProvider);
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$setSelectedBubble$17 */
+    public /* synthetic */ void lambda$setSelectedBubble$17$BubbleStackView(BubbleViewProvider bubbleViewProvider, Boolean bool) {
+        this.mAnimatingOutSurfaceContainer.setVisibility(bool.booleanValue() ? 0 : 4);
+        showNewlySelectedBubble(bubbleViewProvider);
+    }
+
+    private void showNewlySelectedBubble(BubbleViewProvider bubbleViewProvider) {
+        BubbleViewProvider bubbleViewProvider2 = this.mExpandedBubble;
+        this.mExpandedBubble = bubbleViewProvider;
+        updatePointerPosition();
+        if (this.mIsExpanded) {
+            hideCurrentInputMethod();
+            this.mExpandedViewContainer.setAlpha(0.0f);
+            this.mSurfaceSynchronizer.syncSurfaceAndRun(new Runnable(bubbleViewProvider2, bubbleViewProvider) {
+                public final /* synthetic */ BubbleViewProvider f$1;
+                public final /* synthetic */ BubbleViewProvider f$2;
+
+                {
+                    this.f$1 = r2;
+                    this.f$2 = r3;
+                }
+
+                public final void run() {
+                    BubbleStackView.this.lambda$showNewlySelectedBubble$18$BubbleStackView(this.f$1, this.f$2);
+                }
+            });
+        }
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$showNewlySelectedBubble$18 */
+    public /* synthetic */ void lambda$showNewlySelectedBubble$18$BubbleStackView(BubbleViewProvider bubbleViewProvider, BubbleViewProvider bubbleViewProvider2) {
+        if (bubbleViewProvider != null) {
+            bubbleViewProvider.setContentVisibility(false);
+        }
+        updateExpandedBubble();
+        requestUpdate();
+        logBubbleEvent(bubbleViewProvider, 4);
+        logBubbleEvent(bubbleViewProvider2, 3);
+        notifyExpansionChanged(bubbleViewProvider, false);
+        notifyExpansionChanged(bubbleViewProvider2, true);
+    }
+
+    public void setExpanded(boolean z) {
+        if (!z) {
+            releaseAnimatingOutBubbleBuffer();
+        }
+        if (z != this.mIsExpanded) {
+            hideCurrentInputMethod();
+            SysUiState sysUiState = this.mSysUiState;
+            sysUiState.setFlag(16384, z);
+            sysUiState.commitUpdate(this.mContext.getDisplayId());
+            if (this.mIsExpanded) {
+                animateCollapse();
+                logBubbleEvent(this.mExpandedBubble, 4);
+            } else {
+                animateExpansion();
+                logBubbleEvent(this.mExpandedBubble, 3);
+                logBubbleEvent(this.mExpandedBubble, 15);
+            }
+            notifyExpansionChanged(this.mExpandedBubble, this.mIsExpanded);
+        }
+    }
+
+    /* access modifiers changed from: private */
+    public boolean maybeShowStackUserEducation() {
+        if (!this.mShouldShowUserEducation || this.mUserEducationView.getVisibility() == 0) {
+            return false;
+        }
+        this.mUserEducationView.setAlpha(0.0f);
+        this.mUserEducationView.setVisibility(0);
+        updateUserEducationForLayoutDirection();
+        this.mUserEducationView.post(new Runnable() {
+            public final void run() {
+                BubbleStackView.this.lambda$maybeShowStackUserEducation$19$BubbleStackView();
+            }
+        });
+        Prefs.putBoolean(getContext(), "HasSeenBubblesOnboarding", true);
+        return true;
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$maybeShowStackUserEducation$19 */
+    public /* synthetic */ void lambda$maybeShowStackUserEducation$19$BubbleStackView() {
+        this.mUserEducationView.setTranslationY((this.mStackAnimationController.getDefaultStartPosition().y + ((float) (this.mBubbleSize / 2))) - ((float) (this.mUserEducationView.getHeight() / 2)));
+        this.mUserEducationView.animate().setDuration(200).setInterpolator(Interpolators.FAST_OUT_SLOW_IN).alpha(1.0f);
+    }
+
+    private void updateUserEducationForLayoutDirection() {
+        View view = this.mUserEducationView;
+        if (view != null) {
+            LinearLayout linearLayout = (LinearLayout) view.findViewById(C0015R$id.user_education_view);
+            TextView textView = (TextView) this.mUserEducationView.findViewById(C0015R$id.user_education_title);
+            TextView textView2 = (TextView) this.mUserEducationView.findViewById(C0015R$id.user_education_description);
+            if (getResources().getConfiguration().getLayoutDirection() == 0) {
+                this.mUserEducationView.setLayoutDirection(0);
+                linearLayout.setBackgroundResource(C0013R$drawable.bubble_stack_user_education_bg);
+                textView.setGravity(3);
+                textView2.setGravity(3);
+                return;
+            }
+            this.mUserEducationView.setLayoutDirection(1);
+            linearLayout.setBackgroundResource(C0013R$drawable.bubble_stack_user_education_bg_rtl);
+            textView.setGravity(5);
+            textView2.setGravity(5);
+        }
+    }
+
+    /* access modifiers changed from: package-private */
+    public void hideStackUserEducation(boolean z) {
+        if (this.mShouldShowUserEducation && this.mUserEducationView.getVisibility() == 0 && !this.mAnimatingEducationAway) {
+            this.mAnimatingEducationAway = true;
+            this.mUserEducationView.animate().alpha(0.0f).setDuration(z ? 40 : 200).withEndAction(new Runnable() {
+                public final void run() {
+                    BubbleStackView.this.lambda$hideStackUserEducation$20$BubbleStackView();
+                }
+            });
+        }
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$hideStackUserEducation$20 */
+    public /* synthetic */ void lambda$hideStackUserEducation$20$BubbleStackView() {
+        this.mAnimatingEducationAway = false;
+        this.mShouldShowUserEducation = shouldShowBubblesEducation();
+        this.mUserEducationView.setVisibility(8);
+    }
+
+    /* access modifiers changed from: package-private */
+    public void maybeShowManageEducation(boolean z) {
+        BubbleManageEducationView bubbleManageEducationView = this.mManageEducationView;
+        if (bubbleManageEducationView != null) {
+            if (z && this.mShouldShowManageEducation && bubbleManageEducationView.getVisibility() != 0 && this.mIsExpanded && this.mExpandedBubble.getExpandedView() != null) {
+                this.mManageEducationView.setAlpha(0.0f);
+                this.mManageEducationView.setVisibility(0);
+                this.mManageEducationView.post(new Runnable() {
                     public final void run() {
-                        BubbleStackView.this.lambda$setSelectedBubble$7$BubbleStackView(this.f$1, this.f$2);
+                        BubbleStackView.this.lambda$maybeShowManageEducation$24$BubbleStackView();
+                    }
+                });
+                Prefs.putBoolean(getContext(), "HasSeenBubblesManageOnboarding", true);
+            } else if (!z && this.mManageEducationView.getVisibility() == 0 && !this.mAnimatingManageEducationAway) {
+                this.mManageEducationView.animate().alpha(0.0f).setDuration(this.mIsExpansionAnimating ? 40 : 200).withEndAction(new Runnable() {
+                    public final void run() {
+                        BubbleStackView.this.lambda$maybeShowManageEducation$25$BubbleStackView();
                     }
                 });
             }
         }
     }
 
-    public /* synthetic */ void lambda$setSelectedBubble$7$BubbleStackView(Bubble bubble, Bubble bubble2) {
-        NotificationData.Entry entry;
-        updateExpandedBubble();
-        updatePointerPosition();
-        requestUpdate();
-        logBubbleEvent(bubble, 4);
-        logBubbleEvent(bubble2, 3);
-        notifyExpansionChanged(bubble.entry, false);
-        if (bubble2 == null) {
-            entry = null;
-        } else {
-            entry = bubble2.entry;
-        }
-        notifyExpansionChanged(entry, true);
-    }
-
-    public void setExpanded(boolean z) {
-        boolean z2 = this.mIsExpanded;
-        if (z != z2) {
-            if (z2) {
-                animateExpansion(false);
-                logBubbleEvent(this.mExpandedBubble, 4);
-            } else {
-                animateExpansion(true);
-                logBubbleEvent(this.mExpandedBubble, 3);
-                logBubbleEvent(this.mExpandedBubble, 15);
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$maybeShowManageEducation$24 */
+    public /* synthetic */ void lambda$maybeShowManageEducation$24$BubbleStackView() {
+        this.mExpandedBubble.getExpandedView().getManageButtonBoundsOnScreen(this.mTempRect);
+        int manageViewHeight = this.mManageEducationView.getManageViewHeight();
+        int dimensionPixelSize = getResources().getDimensionPixelSize(C0012R$dimen.bubbles_manage_education_top_inset);
+        this.mManageEducationView.bringToFront();
+        this.mManageEducationView.setManageViewPosition(0, (this.mTempRect.top - manageViewHeight) + dimensionPixelSize);
+        this.mManageEducationView.animate().setDuration(200).setInterpolator(Interpolators.FAST_OUT_SLOW_IN).alpha(1.0f);
+        this.mManageEducationView.findViewById(C0015R$id.manage).setOnClickListener(new View.OnClickListener() {
+            public final void onClick(View view) {
+                BubbleStackView.this.lambda$maybeShowManageEducation$21$BubbleStackView(view);
             }
-            notifyExpansionChanged(this.mExpandedBubble.entry, this.mIsExpanded);
-        }
-    }
-
-    public View getTargetView(MotionEvent motionEvent) {
-        float rawX = motionEvent.getRawX();
-        float rawY = motionEvent.getRawY();
-        if (!this.mIsExpanded) {
-            return (this.mFlyout.getVisibility() != 0 || !isIntersecting(this.mFlyout, rawX, rawY)) ? this : this.mFlyout;
-        }
-        if (isIntersecting(this.mBubbleContainer, rawX, rawY)) {
-            for (int i = 0; i < this.mBubbleContainer.getChildCount(); i++) {
-                BubbleView bubbleView = (BubbleView) this.mBubbleContainer.getChildAt(i);
-                if (isIntersecting(bubbleView, rawX, rawY)) {
-                    return bubbleView;
-                }
+        });
+        this.mManageEducationView.findViewById(C0015R$id.got_it).setOnClickListener(new View.OnClickListener() {
+            public final void onClick(View view) {
+                BubbleStackView.this.lambda$maybeShowManageEducation$22$BubbleStackView(view);
             }
-            return null;
-        } else if (isIntersecting(this.mExpandedViewContainer, rawX, rawY)) {
-            return this.mExpandedViewContainer;
-        } else {
-            return null;
-        }
+        });
+        this.mManageEducationView.setOnClickListener(new View.OnClickListener() {
+            public final void onClick(View view) {
+                BubbleStackView.this.lambda$maybeShowManageEducation$23$BubbleStackView(view);
+            }
+        });
     }
 
-    /* access modifiers changed from: package-private */
-    public View getFlyoutView() {
-        return this.mFlyout;
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$maybeShowManageEducation$21 */
+    public /* synthetic */ void lambda$maybeShowManageEducation$21$BubbleStackView(View view) {
+        this.mExpandedBubble.getExpandedView().findViewById(C0015R$id.settings_button).performClick();
+        maybeShowManageEducation(false);
     }
 
-    /* access modifiers changed from: package-private */
-    @Deprecated
-    public void collapseStack() {
-        this.mBubbleData.setExpanded(false);
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$maybeShowManageEducation$22 */
+    public /* synthetic */ void lambda$maybeShowManageEducation$22$BubbleStackView(View view) {
+        maybeShowManageEducation(false);
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$maybeShowManageEducation$23 */
+    public /* synthetic */ void lambda$maybeShowManageEducation$23$BubbleStackView(View view) {
+        maybeShowManageEducation(false);
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$maybeShowManageEducation$25 */
+    public /* synthetic */ void lambda$maybeShowManageEducation$25$BubbleStackView() {
+        this.mAnimatingManageEducationAway = false;
+        this.mShouldShowManageEducation = shouldShowManageEducation();
+        this.mManageEducationView.setVisibility(8);
     }
 
     /* access modifiers changed from: package-private */
     @Deprecated
     public void collapseStack(Runnable runnable) {
-        collapseStack();
+        this.mBubbleData.setExpanded(false);
         runnable.run();
     }
 
-    private void animateExpansion(boolean z) {
-        int i;
-        if (this.mIsExpanded != z) {
-            hideFlyoutImmediate();
-            this.mIsExpanded = z;
-            updateExpandedBubble();
-            applyCurrentState();
-            this.mIsExpansionAnimating = true;
-            $$Lambda$BubbleStackView$5c3dXYvEqr4qSSbPrW_SOEdPjE r0 = new Runnable() {
-                public final void run() {
-                    BubbleStackView.this.lambda$animateExpansion$8$BubbleStackView();
-                }
-            };
-            if (z) {
-                this.mBubbleContainer.setActiveController(this.mExpandedAnimationController);
-                this.mExpandedAnimationController.expandFromStack(new Runnable(r0) {
-                    private final /* synthetic */ Runnable f$1;
-
-                    {
-                        this.f$1 = r2;
-                    }
-
-                    public final void run() {
-                        BubbleStackView.this.lambda$animateExpansion$9$BubbleStackView(this.f$1);
-                    }
-                });
-            } else {
-                this.mBubbleContainer.cancelAllAnimations();
-                this.mExpandedAnimationController.collapseBackToStack(this.mStackAnimationController.getStackPositionAlongNearestHorizontalEdge(), new Runnable(r0) {
-                    private final /* synthetic */ Runnable f$1;
-
-                    {
-                        this.f$1 = r2;
-                    }
-
-                    public final void run() {
-                        BubbleStackView.this.lambda$animateExpansion$10$BubbleStackView(this.f$1);
-                    }
-                });
-            }
-            if (this.mStackAnimationController.getStackPosition().x < ((float) (getWidth() / 2))) {
-                i = -this.mExpandedAnimateXDistance;
-            } else {
-                i = this.mExpandedAnimateXDistance;
-            }
-            float f = (float) i;
-            float min = Math.min(this.mStackAnimationController.getStackPosition().y, (float) this.mExpandedAnimateYDistance);
-            float yPositionForExpandedView = getYPositionForExpandedView();
-            float f2 = 0.0f;
-            if (z) {
-                this.mExpandedViewContainer.setTranslationX(f);
-                this.mExpandedViewContainer.setTranslationY(min);
-                this.mExpandedViewContainer.setAlpha(0.0f);
-            }
-            SpringAnimation springAnimation = this.mExpandedViewXAnim;
-            if (z) {
-                f = 0.0f;
-            }
-            springAnimation.animateToFinalPosition(f);
-            SpringAnimation springAnimation2 = this.mExpandedViewYAnim;
-            if (z) {
-                min = yPositionForExpandedView;
-            }
-            springAnimation2.animateToFinalPosition(min);
-            ViewPropertyAnimator duration = this.mExpandedViewContainer.animate().setDuration(100);
-            if (z) {
-                f2 = 1.0f;
-            }
-            duration.alpha(f2);
+    /* access modifiers changed from: package-private */
+    public void showExpandedViewContents(int i) {
+        BubbleViewProvider bubbleViewProvider = this.mExpandedBubble;
+        if (bubbleViewProvider != null && bubbleViewProvider.getExpandedView() != null && this.mExpandedBubble.getExpandedView().getVirtualDisplayId() == i) {
+            this.mExpandedBubble.setContentVisibility(true);
         }
     }
 
-    public /* synthetic */ void lambda$animateExpansion$8$BubbleStackView() {
-        applyCurrentState();
+    /* access modifiers changed from: package-private */
+    public void hideCurrentInputMethod() {
+        this.mHideCurrentInputMethodCallback.run();
+    }
+
+    private void beforeExpandedViewAnimation() {
+        this.mIsExpansionAnimating = true;
+        hideFlyoutImmediate();
+        updateExpandedBubble();
+        updateExpandedView();
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: afterExpandedViewAnimation */
+    public void lambda$new$5() {
         this.mIsExpansionAnimating = false;
+        updateExpandedView();
         requestUpdate();
     }
 
-    public /* synthetic */ void lambda$animateExpansion$9$BubbleStackView(Runnable runnable) {
+    private void animateExpansion() {
+        cancelDelayedExpandCollapseSwitchAnimations();
+        this.mIsExpanded = true;
+        hideStackUserEducation(true);
+        beforeExpandedViewAnimation();
+        this.mBubbleContainer.setActiveController(this.mExpandedAnimationController);
+        updateOverflowVisibility();
         updatePointerPosition();
-        runnable.run();
+        this.mExpandedAnimationController.expandFromStack(new Runnable() {
+            public final void run() {
+                BubbleStackView.this.lambda$animateExpansion$26$BubbleStackView();
+            }
+        });
+        this.mExpandedViewContainer.setTranslationX(0.0f);
+        this.mExpandedViewContainer.setTranslationY(getExpandedViewY());
+        this.mExpandedViewContainer.setAlpha(1.0f);
+        float bubbleLeft = this.mExpandedAnimationController.getBubbleLeft(this.mBubbleData.getBubbles().indexOf(this.mExpandedBubble));
+        long abs = getWidth() > 0 ? (long) (((Math.abs(bubbleLeft - this.mStackAnimationController.getStackPosition().x) / ((float) getWidth())) * 30.0f) + 175.0f) : 0;
+        this.mExpandedViewContainerMatrix.setScale(0.0f, 0.0f, (((float) this.mBubbleSize) / 2.0f) + bubbleLeft, getExpandedViewY());
+        this.mExpandedViewContainer.setAnimationMatrix(this.mExpandedViewContainerMatrix);
+        BubbleViewProvider bubbleViewProvider = this.mExpandedBubble;
+        if (!(bubbleViewProvider == null || bubbleViewProvider.getExpandedView() == null)) {
+            this.mExpandedBubble.getExpandedView().setSurfaceZOrderedOnTop(false);
+        }
+        this.mDelayedAnimationHandler.postDelayed(new Runnable(bubbleLeft) {
+            public final /* synthetic */ float f$1;
+
+            {
+                this.f$1 = r2;
+            }
+
+            public final void run() {
+                BubbleStackView.this.lambda$animateExpansion$29$BubbleStackView(this.f$1);
+            }
+        }, abs);
     }
 
-    public /* synthetic */ void lambda$animateExpansion$10$BubbleStackView(Runnable runnable) {
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$animateExpansion$26 */
+    public /* synthetic */ void lambda$animateExpansion$26$BubbleStackView() {
+        lambda$new$5();
+        maybeShowManageEducation(true);
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$animateExpansion$29 */
+    public /* synthetic */ void lambda$animateExpansion$29$BubbleStackView(float f) {
+        PhysicsAnimator.getInstance(this.mExpandedViewContainerMatrix).cancel();
+        PhysicsAnimator instance = PhysicsAnimator.getInstance(this.mExpandedViewContainerMatrix);
+        instance.spring(AnimatableScaleMatrix.SCALE_X, AnimatableScaleMatrix.getAnimatableValueForScaleFactor(1.0f), this.mScaleInSpringConfig);
+        instance.spring(AnimatableScaleMatrix.SCALE_Y, AnimatableScaleMatrix.getAnimatableValueForScaleFactor(1.0f), this.mScaleInSpringConfig);
+        instance.addUpdateListener(new PhysicsAnimator.UpdateListener(f) {
+            public final /* synthetic */ float f$1;
+
+            {
+                this.f$1 = r2;
+            }
+
+            public final void onAnimationUpdateForProperty(Object obj, ArrayMap arrayMap) {
+                BubbleStackView.this.lambda$animateExpansion$27$BubbleStackView(this.f$1, (AnimatableScaleMatrix) obj, arrayMap);
+            }
+        });
+        instance.withEndActions(new Runnable() {
+            public final void run() {
+                BubbleStackView.this.lambda$animateExpansion$28$BubbleStackView();
+            }
+        });
+        instance.start();
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$animateExpansion$27 */
+    public /* synthetic */ void lambda$animateExpansion$27$BubbleStackView(float f, AnimatableScaleMatrix animatableScaleMatrix, ArrayMap arrayMap) {
+        BubbleViewProvider bubbleViewProvider = this.mExpandedBubble;
+        if (bubbleViewProvider != null && bubbleViewProvider.getIconView() != null) {
+            this.mExpandedViewContainerMatrix.postTranslate(this.mExpandedBubble.getIconView().getTranslationX() - f, 0.0f);
+            this.mExpandedViewContainer.setAnimationMatrix(this.mExpandedViewContainerMatrix);
+        }
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$animateExpansion$28 */
+    public /* synthetic */ void lambda$animateExpansion$28$BubbleStackView() {
+        BubbleViewProvider bubbleViewProvider = this.mExpandedBubble;
+        if (bubbleViewProvider != null && bubbleViewProvider.getExpandedView() != null) {
+            this.mExpandedBubble.getExpandedView().setContentVisibility(true);
+            this.mExpandedBubble.getExpandedView().setSurfaceZOrderedOnTop(false);
+        }
+    }
+
+    private void animateCollapse() {
+        cancelDelayedExpandCollapseSwitchAnimations();
+        showManageMenu(false);
+        this.mIsExpanded = false;
+        this.mIsExpansionAnimating = true;
+        this.mBubbleContainer.cancelAllAnimations();
+        PhysicsAnimator.getInstance(this.mAnimatingOutSurfaceContainer).cancel();
+        this.mAnimatingOutSurfaceContainer.setScaleX(0.0f);
+        this.mAnimatingOutSurfaceContainer.setScaleY(0.0f);
+        this.mExpandedAnimationController.notifyPreparingToCollapse();
+        this.mDelayedAnimationHandler.postDelayed(new Runnable() {
+            public final void run() {
+                BubbleStackView.this.lambda$animateCollapse$31$BubbleStackView();
+            }
+        }, 105);
+        View iconView = this.mExpandedBubble.getIconView();
+        float bubbleLeft = this.mExpandedAnimationController.getBubbleLeft(this.mBubbleData.getBubbles().indexOf(this.mExpandedBubble));
+        this.mExpandedViewContainerMatrix.setScale(1.0f, 1.0f, (((float) this.mBubbleSize) / 2.0f) + bubbleLeft, getExpandedViewY());
+        PhysicsAnimator.getInstance(this.mExpandedViewContainerMatrix).cancel();
+        PhysicsAnimator instance = PhysicsAnimator.getInstance(this.mExpandedViewContainerMatrix);
+        instance.spring(AnimatableScaleMatrix.SCALE_X, 0.0f, this.mScaleOutSpringConfig);
+        instance.spring(AnimatableScaleMatrix.SCALE_Y, 0.0f, this.mScaleOutSpringConfig);
+        instance.addUpdateListener(new PhysicsAnimator.UpdateListener(iconView, bubbleLeft) {
+            public final /* synthetic */ View f$1;
+            public final /* synthetic */ float f$2;
+
+            {
+                this.f$1 = r2;
+                this.f$2 = r3;
+            }
+
+            public final void onAnimationUpdateForProperty(Object obj, ArrayMap arrayMap) {
+                BubbleStackView.this.lambda$animateCollapse$32$BubbleStackView(this.f$1, this.f$2, (AnimatableScaleMatrix) obj, arrayMap);
+            }
+        });
+        instance.withEndActions(new Runnable() {
+            public final void run() {
+                BubbleStackView.this.lambda$animateCollapse$33$BubbleStackView();
+            }
+        });
+        instance.start();
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$animateCollapse$31 */
+    public /* synthetic */ void lambda$animateCollapse$31$BubbleStackView() {
+        this.mExpandedAnimationController.collapseBackToStack(this.mStackAnimationController.getStackPositionAlongNearestHorizontalEdge(), new Runnable() {
+            public final void run() {
+                BubbleStackView.this.lambda$animateCollapse$30$BubbleStackView();
+            }
+        });
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$animateCollapse$30 */
+    public /* synthetic */ void lambda$animateCollapse$30$BubbleStackView() {
         this.mBubbleContainer.setActiveController(this.mStackAnimationController);
-        runnable.run();
     }
 
-    private void notifyExpansionChanged(NotificationData.Entry entry, boolean z) {
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$animateCollapse$32 */
+    public /* synthetic */ void lambda$animateCollapse$32$BubbleStackView(View view, float f, AnimatableScaleMatrix animatableScaleMatrix, ArrayMap arrayMap) {
+        if (view != null) {
+            this.mExpandedViewContainerMatrix.postTranslate(view.getTranslationX() - f, 0.0f);
+        }
+        this.mExpandedViewContainer.setAnimationMatrix(this.mExpandedViewContainerMatrix);
+        if (this.mExpandedViewContainerMatrix.getScaleX() < 0.05f) {
+            this.mExpandedViewContainer.setVisibility(4);
+        }
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$animateCollapse$33 */
+    public /* synthetic */ void lambda$animateCollapse$33$BubbleStackView() {
+        BubbleViewProvider bubbleViewProvider = this.mExpandedBubble;
+        beforeExpandedViewAnimation();
+        maybeShowManageEducation(false);
+        updateOverflowVisibility();
+        lambda$new$5();
+        if (bubbleViewProvider != null) {
+            bubbleViewProvider.setContentVisibility(false);
+        }
+    }
+
+    /* access modifiers changed from: private */
+    public void animateSwitchBubbles() {
+        int i;
+        if (this.mIsExpanded) {
+            boolean z = true;
+            this.mIsBubbleSwitchAnimating = true;
+            PhysicsAnimator.getInstance(this.mAnimatingOutSurfaceContainer).cancel();
+            PhysicsAnimator instance = PhysicsAnimator.getInstance(this.mAnimatingOutSurfaceContainer);
+            instance.spring(DynamicAnimation.SCALE_X, 0.0f, this.mScaleOutSpringConfig);
+            instance.spring(DynamicAnimation.SCALE_Y, 0.0f, this.mScaleOutSpringConfig);
+            instance.spring(DynamicAnimation.TRANSLATION_Y, this.mAnimatingOutSurfaceContainer.getTranslationY() - ((float) (this.mBubbleSize * 2)), this.mTranslateSpringConfig);
+            instance.withEndActions(new Runnable() {
+                public final void run() {
+                    BubbleStackView.this.releaseAnimatingOutBubbleBuffer();
+                }
+            });
+            instance.start();
+            BubbleViewProvider bubbleViewProvider = this.mExpandedBubble;
+            if (bubbleViewProvider == null || !bubbleViewProvider.getKey().equals("Overflow")) {
+                z = false;
+            }
+            ExpandedAnimationController expandedAnimationController = this.mExpandedAnimationController;
+            if (z) {
+                i = getBubbleCount();
+            } else {
+                i = this.mBubbleData.getBubbles().indexOf(this.mExpandedBubble);
+            }
+            float bubbleLeft = expandedAnimationController.getBubbleLeft(i);
+            this.mExpandedViewContainer.setAlpha(1.0f);
+            this.mExpandedViewContainer.setVisibility(0);
+            this.mExpandedViewContainerMatrix.setScale(0.0f, 0.0f, bubbleLeft + (((float) this.mBubbleSize) / 2.0f), getExpandedViewY());
+            this.mExpandedViewContainer.setAnimationMatrix(this.mExpandedViewContainerMatrix);
+            this.mDelayedAnimationHandler.postDelayed(new Runnable() {
+                public final void run() {
+                    BubbleStackView.this.lambda$animateSwitchBubbles$36$BubbleStackView();
+                }
+            }, 25);
+        }
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$animateSwitchBubbles$36 */
+    public /* synthetic */ void lambda$animateSwitchBubbles$36$BubbleStackView() {
+        if (!this.mIsExpanded) {
+            this.mIsBubbleSwitchAnimating = false;
+            return;
+        }
+        PhysicsAnimator.getInstance(this.mExpandedViewContainerMatrix).cancel();
+        PhysicsAnimator instance = PhysicsAnimator.getInstance(this.mExpandedViewContainerMatrix);
+        instance.spring(AnimatableScaleMatrix.SCALE_X, AnimatableScaleMatrix.getAnimatableValueForScaleFactor(1.0f), this.mScaleInSpringConfig);
+        instance.spring(AnimatableScaleMatrix.SCALE_Y, AnimatableScaleMatrix.getAnimatableValueForScaleFactor(1.0f), this.mScaleInSpringConfig);
+        instance.addUpdateListener(new PhysicsAnimator.UpdateListener() {
+            public final void onAnimationUpdateForProperty(Object obj, ArrayMap arrayMap) {
+                BubbleStackView.this.lambda$animateSwitchBubbles$34$BubbleStackView((AnimatableScaleMatrix) obj, arrayMap);
+            }
+        });
+        instance.withEndActions(new Runnable() {
+            public final void run() {
+                BubbleStackView.this.lambda$animateSwitchBubbles$35$BubbleStackView();
+            }
+        });
+        instance.start();
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$animateSwitchBubbles$34 */
+    public /* synthetic */ void lambda$animateSwitchBubbles$34$BubbleStackView(AnimatableScaleMatrix animatableScaleMatrix, ArrayMap arrayMap) {
+        this.mExpandedViewContainer.setAnimationMatrix(this.mExpandedViewContainerMatrix);
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$animateSwitchBubbles$35 */
+    public /* synthetic */ void lambda$animateSwitchBubbles$35$BubbleStackView() {
+        BubbleViewProvider bubbleViewProvider = this.mExpandedBubble;
+        if (!(bubbleViewProvider == null || bubbleViewProvider.getExpandedView() == null)) {
+            this.mExpandedBubble.getExpandedView().setContentVisibility(true);
+            this.mExpandedBubble.getExpandedView().setSurfaceZOrderedOnTop(false);
+        }
+        this.mIsBubbleSwitchAnimating = false;
+    }
+
+    private void cancelDelayedExpandCollapseSwitchAnimations() {
+        this.mDelayedAnimationHandler.removeCallbacksAndMessages((Object) null);
+        this.mIsExpansionAnimating = false;
+        this.mIsBubbleSwitchAnimating = false;
+    }
+
+    private void cancelAllExpandCollapseSwitchAnimations() {
+        cancelDelayedExpandCollapseSwitchAnimations();
+        PhysicsAnimator.getInstance(this.mAnimatingOutSurfaceView).cancel();
+        PhysicsAnimator.getInstance(this.mExpandedViewContainerMatrix).cancel();
+        this.mExpandedViewContainer.setAnimationMatrix((Matrix) null);
+    }
+
+    private void notifyExpansionChanged(BubbleViewProvider bubbleViewProvider, boolean z) {
         BubbleController.BubbleExpandListener bubbleExpandListener = this.mExpandListener;
-        if (bubbleExpandListener != null) {
-            bubbleExpandListener.onBubbleExpandChanged(z, entry != null ? entry.key : null);
+        if (bubbleExpandListener != null && bubbleViewProvider != null) {
+            bubbleExpandListener.onBubbleExpandChanged(z, bubbleViewProvider.getKey());
         }
     }
 
     public void onImeVisibilityChanged(boolean z, int i) {
-        this.mStackAnimationController.setImeHeight(i + this.mImeOffset);
-        if (!this.mIsExpanded) {
-            this.mStackAnimationController.animateForImeVisibility(z);
-        }
-    }
-
-    public void onBubbleDragStart(View view) {
-        this.mExpandedAnimationController.prepareForBubbleDrag(view);
-    }
-
-    public void onBubbleDragged(View view, float f, float f2) {
-        if (this.mIsExpanded && !this.mIsExpansionAnimating) {
-            this.mExpandedAnimationController.dragBubbleOut(view, f, f2);
-            springInDismissTarget();
-        }
-    }
-
-    public void onBubbleDragFinish(View view, float f, float f2, float f3, float f4) {
-        if (this.mIsExpanded && !this.mIsExpansionAnimating) {
-            this.mExpandedAnimationController.snapBubbleBack(view, f3, f4);
-            springOutDismissTargetAndHideCircle();
-        }
-    }
-
-    /* access modifiers changed from: package-private */
-    public void onDragStart() {
-        if (!this.mIsExpanded && !this.mIsExpansionAnimating) {
-            this.mStackAnimationController.cancelStackPositionAnimations();
-            this.mBubbleContainer.setActiveController(this.mStackAnimationController);
-            hideFlyoutImmediate();
-            this.mDraggingInDismissTarget = false;
-        }
-    }
-
-    /* access modifiers changed from: package-private */
-    public void onDragged(float f, float f2) {
-        if (!this.mIsExpanded && !this.mIsExpansionAnimating) {
-            springInDismissTarget();
-            this.mStackAnimationController.moveStackFromTouch(f, f2);
-        }
-    }
-
-    /* access modifiers changed from: package-private */
-    public void onDragFinish(float f, float f2, float f3, float f4) {
-        if (!this.mIsExpanded && !this.mIsExpansionAnimating) {
-            float flingStackThenSpringToEdge = this.mStackAnimationController.flingStackThenSpringToEdge(f, f3, f4);
-            logBubbleEvent((Bubble) null, 7);
-            this.mStackOnLeftOrWillBe = flingStackThenSpringToEdge <= 0.0f;
-            updateBubbleShadowsAndDotPosition(true);
-            springOutDismissTargetAndHideCircle();
-        }
-    }
-
-    /* access modifiers changed from: package-private */
-    public void onFlyoutDragStart() {
-        this.mFlyout.removeCallbacks(this.mHideFlyout);
-    }
-
-    /* access modifiers changed from: package-private */
-    public void onFlyoutDragged(float f) {
-        boolean isStackOnLeftSide = this.mStackAnimationController.isStackOnLeftSide();
-        this.mFlyoutDragDeltaX = f;
-        if (isStackOnLeftSide) {
-            f = -f;
-        }
-        float width = f / ((float) this.mFlyout.getWidth());
-        float f2 = 0.0f;
-        this.mFlyout.setCollapsePercent(Math.min(1.0f, Math.max(0.0f, width)));
-        int i = (width > 0.0f ? 1 : (width == 0.0f ? 0 : -1));
-        if (i < 0 || width > 1.0f) {
-            int i2 = (width > 1.0f ? 1 : (width == 1.0f ? 0 : -1));
-            boolean z = false;
-            int i3 = 1;
-            boolean z2 = i2 > 0;
-            if ((isStackOnLeftSide && i2 > 0) || (!isStackOnLeftSide && i < 0)) {
-                z = true;
+        this.mStackAnimationController.setImeHeight(z ? i + this.mImeOffset : 0);
+        if (!this.mIsExpanded && getBubbleCount() > 0) {
+            float animateForImeVisibility = this.mStackAnimationController.animateForImeVisibility(z) - this.mStackAnimationController.getStackPosition().y;
+            if (this.mFlyout.getVisibility() == 0) {
+                PhysicsAnimator instance = PhysicsAnimator.getInstance(this.mFlyout);
+                instance.spring(DynamicAnimation.TRANSLATION_Y, this.mFlyout.getTranslationY() + animateForImeVisibility, FLYOUT_IME_ANIMATION_SPRING_CONFIG);
+                instance.start();
             }
-            float f3 = (z2 ? width - 1.0f : width * -1.0f) * ((float) (z ? -1 : 1));
-            float width2 = (float) this.mFlyout.getWidth();
-            if (z2) {
-                i3 = 2;
+        }
+    }
+
+    public void subtractObscuredTouchableRegion(Region region, View view) {
+        BubbleManageEducationView bubbleManageEducationView;
+        if (!this.mIsExpanded || this.mShowingManage || ((bubbleManageEducationView = this.mManageEducationView) != null && bubbleManageEducationView.getVisibility() == 0)) {
+            region.setEmpty();
+        }
+    }
+
+    public boolean onInterceptTouchEvent(MotionEvent motionEvent) {
+        return super.onInterceptTouchEvent(motionEvent);
+    }
+
+    public boolean dispatchTouchEvent(MotionEvent motionEvent) {
+        boolean z = false;
+        if (motionEvent.getAction() != 0 && motionEvent.getActionIndex() != this.mPointerIndexDown) {
+            return false;
+        }
+        if (motionEvent.getAction() == 0) {
+            this.mPointerIndexDown = motionEvent.getActionIndex();
+        } else if (motionEvent.getAction() == 1 || motionEvent.getAction() == 3) {
+            this.mPointerIndexDown = -1;
+        }
+        boolean dispatchTouchEvent = super.dispatchTouchEvent(motionEvent);
+        if (!dispatchTouchEvent && !this.mIsExpanded && this.mIsGestureInProgress) {
+            dispatchTouchEvent = this.mBubbleTouchListener.onTouch(this, motionEvent);
+        }
+        if (!(motionEvent.getAction() == 1 || motionEvent.getAction() == 3)) {
+            z = true;
+        }
+        this.mIsGestureInProgress = z;
+        return dispatchTouchEvent;
+    }
+
+    /* access modifiers changed from: package-private */
+    public void setFlyoutStateForDragLength(float f) {
+        if (this.mFlyout.getWidth() > 0) {
+            boolean isStackOnLeftSide = this.mStackAnimationController.isStackOnLeftSide();
+            this.mFlyoutDragDeltaX = f;
+            if (isStackOnLeftSide) {
+                f = -f;
             }
-            f2 = f3 * (width2 / (8.0f / ((float) i3)));
+            float width = f / ((float) this.mFlyout.getWidth());
+            float f2 = 0.0f;
+            this.mFlyout.setCollapsePercent(Math.min(1.0f, Math.max(0.0f, width)));
+            int i = (width > 0.0f ? 1 : (width == 0.0f ? 0 : -1));
+            if (i < 0 || width > 1.0f) {
+                int i2 = (width > 1.0f ? 1 : (width == 1.0f ? 0 : -1));
+                boolean z = false;
+                int i3 = 1;
+                boolean z2 = i2 > 0;
+                if ((isStackOnLeftSide && i2 > 0) || (!isStackOnLeftSide && i < 0)) {
+                    z = true;
+                }
+                float f3 = (z2 ? width - 1.0f : width * -1.0f) * ((float) (z ? -1 : 1));
+                float width2 = (float) this.mFlyout.getWidth();
+                if (z2) {
+                    i3 = 2;
+                }
+                f2 = f3 * (width2 / (8.0f / ((float) i3)));
+            }
+            BubbleFlyoutView bubbleFlyoutView = this.mFlyout;
+            bubbleFlyoutView.setTranslationX(bubbleFlyoutView.getRestingTranslationX() + f2);
         }
-        BubbleFlyoutView bubbleFlyoutView = this.mFlyout;
-        bubbleFlyoutView.setTranslationX(bubbleFlyoutView.getRestingTranslationX() + f2);
     }
 
-    /* access modifiers changed from: package-private */
-    public void onFlyoutDragFinished(float f, float f2) {
-        boolean isStackOnLeftSide = this.mStackAnimationController.isStackOnLeftSide();
-        boolean z = true;
-        boolean z2 = !isStackOnLeftSide ? f2 > 2000.0f : f2 < -2000.0f;
-        boolean z3 = !isStackOnLeftSide ? f > ((float) this.mFlyout.getWidth()) * 0.25f : f < ((float) (-this.mFlyout.getWidth())) * 0.25f;
-        boolean z4 = !isStackOnLeftSide ? f2 < 0.0f : f2 > 0.0f;
-        if (!z2 && (!z3 || z4)) {
-            z = false;
-        }
-        this.mFlyout.removeCallbacks(this.mHideFlyout);
-        animateFlyoutCollapsed(z, f2);
+    /* access modifiers changed from: private */
+    public boolean passEventToMagnetizedObject(MotionEvent motionEvent) {
+        MagnetizedObject<?> magnetizedObject = this.mMagnetizedObject;
+        return magnetizedObject != null && magnetizedObject.maybeConsumeMotionEvent(motionEvent);
     }
 
-    /* access modifiers changed from: package-private */
-    public void onGestureStart() {
-        this.mIsGestureInProgress = true;
-    }
-
-    /* access modifiers changed from: package-private */
-    public void onGestureFinished() {
-        this.mIsGestureInProgress = false;
+    /* access modifiers changed from: private */
+    public void dismissMagnetizedObject() {
         if (this.mIsExpanded) {
-            this.mExpandedAnimationController.onGestureFinished();
-        }
-    }
-
-    private void animateDesaturateAndDarken(View view, boolean z) {
-        this.mDesaturateAndDarkenTargetView = view;
-        if (z) {
-            this.mDesaturateAndDarkenTargetView.setLayerType(2, this.mDesaturateAndDarkenPaint);
-            this.mDesaturateAndDarkenAnimator.removeAllListeners();
-            this.mDesaturateAndDarkenAnimator.start();
+            dismissBubbleIfExists(this.mBubbleData.getBubbleWithView((View) this.mMagnetizedObject.getUnderlyingObject()));
             return;
         }
-        this.mDesaturateAndDarkenAnimator.removeAllListeners();
-        this.mDesaturateAndDarkenAnimator.addListener(new AnimatorListenerAdapter() {
-            public void onAnimationEnd(Animator animator) {
-                super.onAnimationEnd(animator);
-                BubbleStackView.this.resetDesaturationAndDarken();
+        this.mBubbleData.dismissAll(1);
+    }
+
+    private void dismissBubbleIfExists(Bubble bubble) {
+        if (bubble != null && this.mBubbleData.hasBubbleInStackWithKey(bubble.getKey())) {
+            this.mBubbleData.dismissBubbleWithKey(bubble.getKey(), 1);
+        }
+    }
+
+    /* access modifiers changed from: private */
+    public void animateDesaturateAndDarken(View view, boolean z) {
+        this.mDesaturateAndDarkenTargetView = view;
+        if (view != null) {
+            if (z) {
+                view.setLayerType(2, this.mDesaturateAndDarkenPaint);
+                this.mDesaturateAndDarkenAnimator.removeAllListeners();
+                this.mDesaturateAndDarkenAnimator.start();
+                return;
             }
-        });
-        this.mDesaturateAndDarkenAnimator.reverse();
+            this.mDesaturateAndDarkenAnimator.removeAllListeners();
+            this.mDesaturateAndDarkenAnimator.addListener(new AnimatorListenerAdapter() {
+                public void onAnimationEnd(Animator animator) {
+                    super.onAnimationEnd(animator);
+                    BubbleStackView.this.resetDesaturationAndDarken();
+                }
+            });
+            this.mDesaturateAndDarkenAnimator.reverse();
+        }
     }
 
     /* access modifiers changed from: private */
     public void resetDesaturationAndDarken() {
         this.mDesaturateAndDarkenAnimator.removeAllListeners();
         this.mDesaturateAndDarkenAnimator.cancel();
-        this.mDesaturateAndDarkenTargetView.setLayerType(0, (Paint) null);
-    }
-
-    /* access modifiers changed from: package-private */
-    public void animateMagnetToDismissTarget(View view, boolean z, float f, float f2, float f3, float f4) {
-        this.mDraggingInDismissTarget = z;
-        int i = 0;
-        if (z) {
-            float dismissTargetCenterY = this.mDismissContainer.getDismissTargetCenterY() - (((float) this.mBubbleSize) / 2.0f);
-            this.mAnimatingMagnet = true;
-            $$Lambda$BubbleStackView$oLhNqxGbPa3FqJeraIwHlBcS7tk r6 = new Runnable() {
-                public final void run() {
-                    BubbleStackView.this.lambda$animateMagnetToDismissTarget$11$BubbleStackView();
-                }
-            };
-            if (view == this) {
-                this.mStackAnimationController.magnetToDismiss(f3, f4, dismissTargetCenterY, r6);
-                animateDesaturateAndDarken(this.mBubbleContainer, true);
-            } else {
-                this.mExpandedAnimationController.magnetBubbleToDismiss(view, f3, f4, dismissTargetCenterY, r6);
-                animateDesaturateAndDarken(view, true);
-            }
-            this.mDismissContainer.animateEncircleCenterWithX(true);
-        } else {
-            this.mAnimatingMagnet = false;
-            if (view == this) {
-                this.mStackAnimationController.demagnetizeFromDismissToPoint(f, f2, f3, f4);
-                animateDesaturateAndDarken(this.mBubbleContainer, false);
-            } else {
-                this.mExpandedAnimationController.demagnetizeBubbleTo(f, f2, f3, f4);
-                animateDesaturateAndDarken(view, false);
-            }
-            this.mDismissContainer.animateEncircleCenterWithX(false);
-        }
-        Vibrator vibrator = this.mVibrator;
-        if (!z) {
-            i = 2;
-        }
-        vibrator.vibrate(VibrationEffect.get(i));
-    }
-
-    public /* synthetic */ void lambda$animateMagnetToDismissTarget$11$BubbleStackView() {
-        this.mAnimatingMagnet = false;
-        Runnable runnable = this.mAfterMagnet;
-        if (runnable != null) {
-            runnable.run();
+        View view = this.mDesaturateAndDarkenTargetView;
+        if (view != null) {
+            view.setLayerType(0, (Paint) null);
+            this.mDesaturateAndDarkenTargetView = null;
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void magnetToStackIfNeededThenAnimateDismissal(View view, float f, float f2, Runnable runnable) {
-        $$Lambda$BubbleStackView$wNBb9TcVorXyGaagZMMDs0nXEJw r1 = new Runnable(view, runnable, this.mExpandedAnimationController.getDraggedOutBubble()) {
-            private final /* synthetic */ View f$1;
-            private final /* synthetic */ Runnable f$2;
-            private final /* synthetic */ View f$3;
-
-            {
-                this.f$1 = r2;
-                this.f$2 = r3;
-                this.f$3 = r4;
-            }
-
-            public final void run() {
-                BubbleStackView.this.lambda$magnetToStackIfNeededThenAnimateDismissal$14$BubbleStackView(this.f$1, this.f$2, this.f$3);
-            }
-        };
-        if (this.mAnimatingMagnet) {
-            this.mAfterMagnet = r1;
-        } else if (this.mDraggingInDismissTarget) {
-            r1.run();
-        } else {
-            animateMagnetToDismissTarget(view, true, -1.0f, -1.0f, f, f2);
-            this.mAfterMagnet = r1;
-        }
-    }
-
-    public /* synthetic */ void lambda$magnetToStackIfNeededThenAnimateDismissal$14$BubbleStackView(View view, Runnable runnable, View view2) {
-        this.mAfterMagnet = null;
-        this.mVibrator.vibrate(VibrationEffect.get(0));
-        this.mDismissContainer.animateEncirclingCircleDisappearance();
-        if (view == this) {
-            this.mStackAnimationController.implodeStack(new Runnable(runnable) {
-                private final /* synthetic */ Runnable f$1;
-
-                {
-                    this.f$1 = r2;
-                }
-
-                public final void run() {
-                    BubbleStackView.this.lambda$magnetToStackIfNeededThenAnimateDismissal$12$BubbleStackView(this.f$1);
-                }
-            });
-        } else {
-            this.mExpandedAnimationController.dismissDraggedOutBubble(view2, new Runnable(runnable) {
-                private final /* synthetic */ Runnable f$1;
-
-                {
-                    this.f$1 = r2;
-                }
-
-                public final void run() {
-                    BubbleStackView.this.lambda$magnetToStackIfNeededThenAnimateDismissal$13$BubbleStackView(this.f$1);
-                }
-            });
-        }
-    }
-
-    public /* synthetic */ void lambda$magnetToStackIfNeededThenAnimateDismissal$12$BubbleStackView(Runnable runnable) {
-        this.mAnimatingMagnet = false;
-        this.mShowingDismiss = false;
-        this.mDraggingInDismissTarget = false;
-        runnable.run();
-        resetDesaturationAndDarken();
-    }
-
-    public /* synthetic */ void lambda$magnetToStackIfNeededThenAnimateDismissal$13$BubbleStackView(Runnable runnable) {
-        this.mAnimatingMagnet = false;
-        this.mShowingDismiss = false;
-        this.mDraggingInDismissTarget = false;
-        resetDesaturationAndDarken();
-        runnable.run();
-    }
-
-    private void springInDismissTarget() {
+    /* access modifiers changed from: private */
+    public void springInDismissTargetMaybe() {
         if (!this.mShowingDismiss) {
             this.mShowingDismiss = true;
-            this.mDismissContainer.springIn();
-            this.mDismissContainer.bringToFront();
-            this.mDismissContainer.setZ(32766.0f);
+            this.mDismissTargetContainer.bringToFront();
+            this.mDismissTargetContainer.setZ(32766.0f);
+            this.mDismissTargetContainer.setVisibility(0);
+            ((TransitionDrawable) this.mDismissTargetContainer.getBackground()).startTransition(200);
+            this.mDismissTargetAnimator.cancel();
+            PhysicsAnimator<View> physicsAnimator = this.mDismissTargetAnimator;
+            physicsAnimator.spring(DynamicAnimation.TRANSLATION_Y, 0.0f, this.mDismissTargetSpring);
+            physicsAnimator.start();
         }
     }
 
-    private void springOutDismissTargetAndHideCircle() {
+    /* access modifiers changed from: private */
+    public void hideDismissTarget() {
         if (this.mShowingDismiss) {
-            this.mDismissContainer.springOut();
             this.mShowingDismiss = false;
+            ((TransitionDrawable) this.mDismissTargetContainer.getBackground()).reverseTransition(200);
+            PhysicsAnimator<View> physicsAnimator = this.mDismissTargetAnimator;
+            physicsAnimator.spring(DynamicAnimation.TRANSLATION_Y, (float) this.mDismissTargetContainer.getHeight(), this.mDismissTargetSpring);
+            physicsAnimator.withEndActions(new Runnable() {
+                public final void run() {
+                    BubbleStackView.this.lambda$hideDismissTarget$37$BubbleStackView();
+                }
+            });
+            physicsAnimator.start();
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public boolean isInDismissTarget(MotionEvent motionEvent) {
-        return isIntersecting(this.mDismissContainer.getDismissTarget(), motionEvent.getRawX(), motionEvent.getRawY());
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$hideDismissTarget$37 */
+    public /* synthetic */ void lambda$hideDismissTarget$37$BubbleStackView() {
+        this.mDismissTargetContainer.setVisibility(4);
     }
 
-    private void animateFlyoutCollapsed(boolean z, float f) {
+    /* access modifiers changed from: private */
+    public void animateFlyoutCollapsed(boolean z, float f) {
         float f2;
         boolean isStackOnLeftSide = this.mStackAnimationController.isStackOnLeftSide();
+        this.mFlyoutTransitionSpring.getSpring().setStiffness(this.mBubbleToExpandAfterFlyoutCollapse != null ? 1500.0f : 200.0f);
         SpringAnimation springAnimation = this.mFlyoutTransitionSpring;
         springAnimation.setStartValue(this.mFlyoutDragDeltaX);
         SpringAnimation springAnimation2 = springAnimation;
@@ -1031,111 +1967,152 @@ public class BubbleStackView extends FrameLayout {
     }
 
     /* access modifiers changed from: package-private */
-    public int getMaxExpandedHeight() {
-        return ((this.mDisplaySize.y - ((int) this.mExpandedAnimationController.getExpandedY())) - this.mBubbleSize) - (this.mPipDismissHeight - getBottomInset());
-    }
-
-    /* access modifiers changed from: package-private */
-    public float getYPositionForExpandedView() {
-        return (float) (getStatusBarHeight() + this.mBubbleSize + this.mBubblePadding + this.mPointerHeight);
-    }
-
-    /* access modifiers changed from: package-private */
-    public void setSuppressNewDot(boolean z) {
-        this.mSuppressNewDot = z;
-        for (int i = 0; i < this.mBubbleContainer.getChildCount(); i++) {
-            ((BubbleView) this.mBubbleContainer.getChildAt(i)).setSuppressDot(z, true);
-        }
-    }
-
-    /* access modifiers changed from: package-private */
-    public void setSuppressFlyout(boolean z) {
-        this.mSuppressFlyout = z;
+    public float getExpandedViewY() {
+        return (float) (getStatusBarHeight() + this.mBubbleSize + this.mBubblePaddingTop);
     }
 
     /* access modifiers changed from: package-private */
     @VisibleForTesting
     public void animateInFlyoutForBubble(Bubble bubble) {
-        CharSequence updateMessage = Utils.getUpdateMessage(getContext(), bubble.entry.notification);
-        if (updateMessage != null && !isExpanded() && !this.mIsExpansionAnimating && !this.mIsGestureInProgress && !this.mSuppressFlyout) {
-            BubbleView bubbleView = bubble.iconView;
-            if (bubbleView != null) {
-                bubbleView.setSuppressDot(true, false);
-                this.mFlyoutDragDeltaX = 0.0f;
-                this.mFlyout.setAlpha(0.0f);
-                Runnable runnable = this.mAfterFlyoutHides;
-                if (runnable != null) {
-                    runnable.run();
+        View view;
+        Bubble.FlyoutMessage flyoutMessage = bubble.getFlyoutMessage();
+        BadgedImageView iconView = bubble.getIconView();
+        if (flyoutMessage != null && flyoutMessage.message != null && bubble.showFlyout() && (((view = this.mUserEducationView) == null || view.getVisibility() != 0) && !isExpanded() && !this.mIsExpansionAnimating && !this.mIsGestureInProgress && this.mBubbleToExpandAfterFlyoutCollapse == null && iconView != null)) {
+            this.mFlyoutDragDeltaX = 0.0f;
+            clearFlyoutOnHide();
+            this.mAfterFlyoutHidden = new Runnable(iconView) {
+                public final /* synthetic */ BadgedImageView f$1;
+
+                {
+                    this.f$1 = r2;
                 }
-                this.mAfterFlyoutHides = new Runnable(bubble) {
-                    private final /* synthetic */ Bubble f$1;
 
-                    {
-                        this.f$1 = r2;
-                    }
+                public final void run() {
+                    BubbleStackView.this.lambda$animateInFlyoutForBubble$38$BubbleStackView(this.f$1);
+                }
+            };
+            this.mFlyout.setVisibility(4);
+            iconView.addDotSuppressionFlag(BadgedImageView.SuppressionFlag.FLYOUT_VISIBLE);
+            post(new Runnable(bubble, flyoutMessage) {
+                public final /* synthetic */ Bubble f$1;
+                public final /* synthetic */ Bubble.FlyoutMessage f$2;
 
-                    public final void run() {
-                        BubbleStackView.this.lambda$animateInFlyoutForBubble$15$BubbleStackView(this.f$1);
-                    }
-                };
-                post(new Runnable(updateMessage, bubble) {
-                    private final /* synthetic */ CharSequence f$1;
-                    private final /* synthetic */ Bubble f$2;
+                {
+                    this.f$1 = r2;
+                    this.f$2 = r3;
+                }
 
-                    {
-                        this.f$1 = r2;
-                        this.f$2 = r3;
-                    }
-
-                    public final void run() {
-                        BubbleStackView.this.lambda$animateInFlyoutForBubble$16$BubbleStackView(this.f$1, this.f$2);
-                    }
-                });
-            }
+                public final void run() {
+                    BubbleStackView.this.lambda$animateInFlyoutForBubble$41$BubbleStackView(this.f$1, this.f$2);
+                }
+            });
             this.mFlyout.removeCallbacks(this.mHideFlyout);
             this.mFlyout.postDelayed(this.mHideFlyout, 5000);
             logBubbleEvent(bubble, 16);
+        } else if (iconView != null) {
+            iconView.removeDotSuppressionFlag(BadgedImageView.SuppressionFlag.FLYOUT_VISIBLE);
         }
     }
 
-    public /* synthetic */ void lambda$animateInFlyoutForBubble$15$BubbleStackView(Bubble bubble) {
-        BubbleView bubbleView = bubble.iconView;
-        if (bubbleView != null) {
-            if (this.mSuppressNewDot) {
-                bubbleView.setSuppressDot(false, false);
-            }
-            BubbleView bubbleView2 = bubble.iconView;
-            boolean z = this.mSuppressNewDot;
-            bubbleView2.setSuppressDot(z, z);
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$animateInFlyoutForBubble$38 */
+    public /* synthetic */ void lambda$animateInFlyoutForBubble$38$BubbleStackView(BadgedImageView badgedImageView) {
+        this.mAfterFlyoutHidden = null;
+        Bubble bubble = this.mBubbleToExpandAfterFlyoutCollapse;
+        if (bubble != null) {
+            this.mBubbleData.setSelectedBubble(bubble);
+            this.mBubbleData.setExpanded(true);
+            this.mBubbleToExpandAfterFlyoutCollapse = null;
         }
+        badgedImageView.removeDotSuppressionFlag(BadgedImageView.SuppressionFlag.FLYOUT_VISIBLE);
+        this.mFlyout.setVisibility(4);
+        updateTemporarilyInvisibleAnimation(false);
     }
 
-    public /* synthetic */ void lambda$animateInFlyoutForBubble$16$BubbleStackView(CharSequence charSequence, Bubble bubble) {
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$animateInFlyoutForBubble$41 */
+    public /* synthetic */ void lambda$animateInFlyoutForBubble$41$BubbleStackView(Bubble bubble, Bubble.FlyoutMessage flyoutMessage) {
         if (!isExpanded()) {
-            this.mFlyout.showFlyout(charSequence, this.mStackAnimationController.getStackPosition(), (float) getWidth(), this.mStackAnimationController.isStackOnLeftSide(), bubble.iconView.getBadgeColor(), this.mAfterFlyoutHides);
+            $$Lambda$BubbleStackView$FdgpI1yIWBqhVrPpLrADoKYyrnw r7 = new Runnable() {
+                public final void run() {
+                    BubbleStackView.this.lambda$animateInFlyoutForBubble$40$BubbleStackView();
+                }
+            };
+            if (bubble.getIconView() != null) {
+                this.mFlyout.setupFlyoutStartingAsDot(flyoutMessage, this.mStackAnimationController.getStackPosition(), (float) getWidth(), this.mStackAnimationController.isStackOnLeftSide(), bubble.getIconView().getDotColor(), r7, this.mAfterFlyoutHidden, bubble.getIconView().getDotCenter(), !bubble.showDot());
+                this.mFlyout.bringToFront();
+            }
         }
     }
 
-    private void hideFlyoutImmediate() {
-        Runnable runnable = this.mAfterFlyoutHides;
-        if (runnable != null) {
-            runnable.run();
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$animateInFlyoutForBubble$40 */
+    public /* synthetic */ void lambda$animateInFlyoutForBubble$40$BubbleStackView() {
+        $$Lambda$BubbleStackView$1wZEYs1bqQVpEdcpI6IEUDdY0OU r0 = new Runnable() {
+            public final void run() {
+                BubbleStackView.this.lambda$animateInFlyoutForBubble$39$BubbleStackView();
+            }
+        };
+        this.mAnimateInFlyout = r0;
+        this.mFlyout.postDelayed(r0, 200);
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$animateInFlyoutForBubble$39 */
+    public /* synthetic */ void lambda$animateInFlyoutForBubble$39$BubbleStackView() {
+        int i;
+        this.mFlyout.setVisibility(0);
+        updateTemporarilyInvisibleAnimation(false);
+        if (this.mStackAnimationController.isStackOnLeftSide()) {
+            i = -this.mFlyout.getWidth();
+        } else {
+            i = this.mFlyout.getWidth();
         }
+        this.mFlyoutDragDeltaX = (float) i;
+        animateFlyoutCollapsed(false, 0.0f);
+        this.mFlyout.postDelayed(this.mHideFlyout, 5000);
+    }
+
+    /* access modifiers changed from: private */
+    public void hideFlyoutImmediate() {
+        clearFlyoutOnHide();
+        this.mFlyout.removeCallbacks(this.mAnimateInFlyout);
         this.mFlyout.removeCallbacks(this.mHideFlyout);
         this.mFlyout.hideFlyout();
     }
 
-    public void getBoundsOnScreen(Rect rect) {
-        if (this.mIsExpanded) {
-            this.mBubbleContainer.getBoundsOnScreen(rect);
-        } else if (this.mBubbleContainer.getChildCount() > 0) {
-            this.mBubbleContainer.getChildAt(0).getBoundsOnScreen(rect);
+    private void clearFlyoutOnHide() {
+        this.mFlyout.removeCallbacks(this.mAnimateInFlyout);
+        Runnable runnable = this.mAfterFlyoutHidden;
+        if (runnable != null) {
+            runnable.run();
+            this.mAfterFlyoutHidden = null;
         }
-        if (this.mFlyout.getVisibility() == 0) {
-            Rect rect2 = new Rect();
-            this.mFlyout.getBoundsOnScreen(rect2);
-            rect.union(rect2);
+    }
+
+    public void getTouchableRegion(Rect rect) {
+        View view = this.mUserEducationView;
+        if (view == null || view.getVisibility() != 0) {
+            if (this.mIsExpanded) {
+                this.mBubbleContainer.getBoundsOnScreen(rect);
+            } else if (getBubbleCount() > 0) {
+                this.mBubbleContainer.getChildAt(0).getBoundsOnScreen(rect);
+                int i = rect.top;
+                int i2 = this.mBubbleTouchPadding;
+                rect.top = i - i2;
+                rect.left -= i2;
+                rect.right += i2;
+                rect.bottom += i2;
+            }
+            if (this.mFlyout.getVisibility() == 0) {
+                Rect rect2 = new Rect();
+                this.mFlyout.getBoundsOnScreen(rect2);
+                rect.union(rect2);
+                return;
+            }
+            return;
         }
+        rect.set(0, 0, getWidth(), getHeight());
     }
 
     private int getStatusBarHeight() {
@@ -1151,21 +2128,6 @@ public class BubbleStackView extends FrameLayout {
         return Math.max(i2, i);
     }
 
-    private int getBottomInset() {
-        if (getRootWindowInsets() != null) {
-            return getRootWindowInsets().getSystemWindowInsetBottom();
-        }
-        return 0;
-    }
-
-    private boolean isIntersecting(View view, float f, float f2) {
-        this.mTempLoc = view.getLocationOnScreen();
-        RectF rectF = this.mTempRect;
-        int[] iArr = this.mTempLoc;
-        rectF.set((float) iArr[0], (float) iArr[1], (float) (iArr[0] + view.getWidth()), (float) (this.mTempLoc[1] + view.getHeight()));
-        return this.mTempRect.contains(f, f2);
-    }
-
     private void requestUpdate() {
         if (!this.mViewUpdatedRequested && !this.mIsExpansionAnimating) {
             this.mViewUpdatedRequested = true;
@@ -1174,71 +2136,259 @@ public class BubbleStackView extends FrameLayout {
         }
     }
 
+    /* access modifiers changed from: private */
+    public void showManageMenu(boolean z) {
+        this.mShowingManage = z;
+        BubbleViewProvider bubbleViewProvider = this.mExpandedBubble;
+        if (bubbleViewProvider == null || bubbleViewProvider.getExpandedView() == null) {
+            this.mManageMenu.setVisibility(4);
+            return;
+        }
+        if (z && this.mBubbleData.hasBubbleInStackWithKey(this.mExpandedBubble.getKey())) {
+            Bubble bubbleInStackWithKey = this.mBubbleData.getBubbleInStackWithKey(this.mExpandedBubble.getKey());
+            this.mManageSettingsIcon.setImageDrawable(bubbleInStackWithKey.getBadgedAppIcon());
+            this.mManageSettingsText.setText(getResources().getString(C0021R$string.bubbles_app_settings, new Object[]{bubbleInStackWithKey.getAppName()}));
+        }
+        this.mExpandedBubble.getExpandedView().getManageButtonBoundsOnScreen(this.mTempRect);
+        boolean z2 = getResources().getConfiguration().getLayoutDirection() == 0;
+        Rect rect = this.mTempRect;
+        float width = (float) (z2 ? rect.left : rect.right - this.mManageMenu.getWidth());
+        float height = (float) (this.mTempRect.bottom - this.mManageMenu.getHeight());
+        float width2 = ((float) ((z2 ? 1 : -1) * this.mManageMenu.getWidth())) / 4.0f;
+        if (z) {
+            this.mManageMenu.setScaleX(0.5f);
+            this.mManageMenu.setScaleY(0.5f);
+            this.mManageMenu.setTranslationX(width - width2);
+            ViewGroup viewGroup = this.mManageMenu;
+            viewGroup.setTranslationY((((float) viewGroup.getHeight()) / 4.0f) + height);
+            this.mManageMenu.setAlpha(0.0f);
+            PhysicsAnimator instance = PhysicsAnimator.getInstance(this.mManageMenu);
+            instance.spring(DynamicAnimation.ALPHA, 1.0f);
+            instance.spring(DynamicAnimation.SCALE_X, 1.0f);
+            instance.spring(DynamicAnimation.SCALE_Y, 1.0f);
+            instance.spring(DynamicAnimation.TRANSLATION_X, width);
+            instance.spring(DynamicAnimation.TRANSLATION_Y, height);
+            instance.withEndActions(new Runnable() {
+                public final void run() {
+                    BubbleStackView.this.lambda$showManageMenu$42$BubbleStackView();
+                }
+            });
+            instance.start();
+            this.mManageMenu.setVisibility(0);
+        } else {
+            PhysicsAnimator instance2 = PhysicsAnimator.getInstance(this.mManageMenu);
+            instance2.spring(DynamicAnimation.ALPHA, 0.0f);
+            instance2.spring(DynamicAnimation.SCALE_X, 0.5f);
+            instance2.spring(DynamicAnimation.SCALE_Y, 0.5f);
+            instance2.spring(DynamicAnimation.TRANSLATION_X, width - width2);
+            instance2.spring(DynamicAnimation.TRANSLATION_Y, height + (((float) this.mManageMenu.getHeight()) / 4.0f));
+            instance2.withEndActions(new Runnable() {
+                public final void run() {
+                    BubbleStackView.this.lambda$showManageMenu$43$BubbleStackView();
+                }
+            });
+            instance2.start();
+        }
+        this.mExpandedBubble.getExpandedView().updateObscuredTouchableRegion();
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$showManageMenu$42 */
+    public /* synthetic */ void lambda$showManageMenu$42$BubbleStackView() {
+        this.mManageMenu.getChildAt(0).requestAccessibilityFocus();
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$showManageMenu$43 */
+    public /* synthetic */ void lambda$showManageMenu$43$BubbleStackView() {
+        this.mManageMenu.setVisibility(4);
+    }
+
     private void updateExpandedBubble() {
+        BubbleViewProvider bubbleViewProvider;
         this.mExpandedViewContainer.removeAllViews();
-        Bubble bubble = this.mExpandedBubble;
-        if (bubble != null && this.mIsExpanded) {
-            this.mExpandedViewContainer.addView(bubble.expandedView);
-            this.mExpandedBubble.expandedView.populateExpandedView();
-            this.mExpandedViewContainer.setVisibility(this.mIsExpanded ? 0 : 8);
-            this.mExpandedViewContainer.setAlpha(1.0f);
+        if (this.mIsExpanded && (bubbleViewProvider = this.mExpandedBubble) != null && bubbleViewProvider.getExpandedView() != null) {
+            BubbleExpandedView expandedView = this.mExpandedBubble.getExpandedView();
+            expandedView.setContentVisibility(false);
+            this.mExpandedViewContainerMatrix.setScaleX(0.0f);
+            this.mExpandedViewContainerMatrix.setScaleY(0.0f);
+            this.mExpandedViewContainerMatrix.setTranslate(0.0f, 0.0f);
+            this.mExpandedViewContainer.setVisibility(4);
+            this.mExpandedViewContainer.setAlpha(0.0f);
+            this.mExpandedViewContainer.addView(expandedView);
+            expandedView.setManageClickListener(new View.OnClickListener() {
+                public final void onClick(View view) {
+                    BubbleStackView.this.lambda$updateExpandedBubble$44$BubbleStackView(view);
+                }
+            });
+            expandedView.populateExpandedView();
+            if (!this.mIsExpansionAnimating) {
+                this.mSurfaceSynchronizer.syncSurfaceAndRun(new Runnable() {
+                    public final void run() {
+                        BubbleStackView.this.lambda$updateExpandedBubble$45$BubbleStackView();
+                    }
+                });
+            }
         }
     }
 
     /* access modifiers changed from: private */
-    public void applyCurrentState() {
-        this.mExpandedViewContainer.setVisibility(this.mIsExpanded ? 0 : 8);
-        if (this.mIsExpanded) {
-            this.mExpandedBubble.expandedView.updateView();
-            float yPositionForExpandedView = getYPositionForExpandedView();
-            if (!this.mExpandedViewYAnim.isRunning()) {
-                this.mExpandedViewContainer.setTranslationY(yPositionForExpandedView);
-                this.mExpandedBubble.expandedView.updateView();
-            } else {
-                this.mExpandedViewYAnim.animateToFinalPosition(yPositionForExpandedView);
-            }
-        }
-        this.mStackOnLeftOrWillBe = this.mStackAnimationController.isStackOnLeftSide();
-        updateBubbleShadowsAndDotPosition(false);
+    /* renamed from: lambda$updateExpandedBubble$44 */
+    public /* synthetic */ void lambda$updateExpandedBubble$44$BubbleStackView(View view) {
+        showManageMenu(!this.mShowingManage);
     }
 
-    private void updateBubbleShadowsAndDotPosition(boolean z) {
-        int childCount = this.mBubbleContainer.getChildCount();
-        for (int i = 0; i < childCount; i++) {
-            BubbleView bubbleView = (BubbleView) this.mBubbleContainer.getChildAt(i);
-            bubbleView.updateDotVisibility(true);
-            bubbleView.setZ((float) ((getResources().getDimensionPixelSize(R.dimen.bubble_elevation) * 5) - i));
-            bubbleView.setOutlineProvider(new ViewOutlineProvider() {
-                public void getOutline(View view, Outline outline) {
-                    outline.setOval(0, 0, BubbleStackView.this.mBubbleSize, BubbleStackView.this.mBubbleSize);
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$updateExpandedBubble$45 */
+    public /* synthetic */ void lambda$updateExpandedBubble$45$BubbleStackView() {
+        post(new Runnable() {
+            public final void run() {
+                BubbleStackView.this.animateSwitchBubbles();
+            }
+        });
+    }
+
+    private void screenshotAnimatingOutBubbleIntoSurface(Consumer<Boolean> consumer) {
+        BubbleViewProvider bubbleViewProvider;
+        Boolean bool = Boolean.FALSE;
+        if (!this.mIsExpanded || (bubbleViewProvider = this.mExpandedBubble) == null || bubbleViewProvider.getExpandedView() == null) {
+            consumer.accept(bool);
+            return;
+        }
+        BubbleExpandedView expandedView = this.mExpandedBubble.getExpandedView();
+        if (this.mAnimatingOutBubbleBuffer != null) {
+            releaseAnimatingOutBubbleBuffer();
+        }
+        try {
+            this.mAnimatingOutBubbleBuffer = expandedView.snapshotActivitySurface();
+        } catch (Exception e) {
+            Log.wtf("Bubbles", e);
+            consumer.accept(bool);
+        }
+        SurfaceControl.ScreenshotGraphicBuffer screenshotGraphicBuffer = this.mAnimatingOutBubbleBuffer;
+        if (screenshotGraphicBuffer == null || screenshotGraphicBuffer.getGraphicBuffer() == null) {
+            consumer.accept(bool);
+            return;
+        }
+        PhysicsAnimator.getInstance(this.mAnimatingOutSurfaceContainer).cancel();
+        this.mAnimatingOutSurfaceContainer.setScaleX(1.0f);
+        this.mAnimatingOutSurfaceContainer.setScaleY(1.0f);
+        this.mAnimatingOutSurfaceContainer.setTranslationX(0.0f);
+        this.mAnimatingOutSurfaceContainer.setTranslationY(0.0f);
+        this.mAnimatingOutSurfaceContainer.setTranslationY((float) (this.mExpandedBubble.getExpandedView().getActivityViewLocationOnScreen()[1] - this.mAnimatingOutSurfaceView.getLocationOnScreen()[1]));
+        this.mAnimatingOutSurfaceView.getLayoutParams().width = this.mAnimatingOutBubbleBuffer.getGraphicBuffer().getWidth();
+        this.mAnimatingOutSurfaceView.getLayoutParams().height = this.mAnimatingOutBubbleBuffer.getGraphicBuffer().getHeight();
+        this.mAnimatingOutSurfaceView.requestLayout();
+        post(new Runnable(consumer) {
+            public final /* synthetic */ Consumer f$1;
+
+            {
+                this.f$1 = r2;
+            }
+
+            public final void run() {
+                BubbleStackView.this.lambda$screenshotAnimatingOutBubbleIntoSurface$48$BubbleStackView(this.f$1);
+            }
+        });
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$screenshotAnimatingOutBubbleIntoSurface$48 */
+    public /* synthetic */ void lambda$screenshotAnimatingOutBubbleIntoSurface$48$BubbleStackView(Consumer consumer) {
+        Boolean bool = Boolean.FALSE;
+        if (this.mAnimatingOutBubbleBuffer.getGraphicBuffer().isDestroyed()) {
+            consumer.accept(bool);
+        } else if (!this.mIsExpanded) {
+            consumer.accept(bool);
+        } else {
+            this.mAnimatingOutSurfaceView.getHolder().getSurface().attachAndQueueBufferWithColorSpace(this.mAnimatingOutBubbleBuffer.getGraphicBuffer(), this.mAnimatingOutBubbleBuffer.getColorSpace());
+            this.mSurfaceSynchronizer.syncSurfaceAndRun(new Runnable(consumer) {
+                public final /* synthetic */ Consumer f$1;
+
+                {
+                    this.f$1 = r2;
+                }
+
+                public final void run() {
+                    BubbleStackView.this.lambda$screenshotAnimatingOutBubbleIntoSurface$47$BubbleStackView(this.f$1);
                 }
             });
-            bubbleView.setClipToOutline(false);
-            boolean dotPositionOnLeft = bubbleView.getDotPositionOnLeft();
+        }
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$screenshotAnimatingOutBubbleIntoSurface$47 */
+    public /* synthetic */ void lambda$screenshotAnimatingOutBubbleIntoSurface$47$BubbleStackView(Consumer consumer) {
+        post(new Runnable(consumer) {
+            public final /* synthetic */ Consumer f$0;
+
+            {
+                this.f$0 = r1;
+            }
+
+            public final void run() {
+                this.f$0.accept(Boolean.TRUE);
+            }
+        });
+    }
+
+    /* access modifiers changed from: private */
+    public void releaseAnimatingOutBubbleBuffer() {
+        SurfaceControl.ScreenshotGraphicBuffer screenshotGraphicBuffer = this.mAnimatingOutBubbleBuffer;
+        if (screenshotGraphicBuffer != null && !screenshotGraphicBuffer.getGraphicBuffer().isDestroyed()) {
+            this.mAnimatingOutBubbleBuffer.getGraphicBuffer().destroy();
+        }
+    }
+
+    /* access modifiers changed from: private */
+    public void updateExpandedView() {
+        this.mExpandedViewContainer.setVisibility(this.mIsExpanded ? 0 : 8);
+        BubbleViewProvider bubbleViewProvider = this.mExpandedBubble;
+        if (!(bubbleViewProvider == null || bubbleViewProvider.getExpandedView() == null)) {
+            this.mExpandedViewContainer.setTranslationY(getExpandedViewY());
+            this.mExpandedBubble.getExpandedView().updateView(this.mExpandedViewContainer.getLocationOnScreen());
+        }
+        this.mStackOnLeftOrWillBe = this.mStackAnimationController.isStackOnLeftSide();
+        updateBubbleZOrdersAndDotPosition(false);
+    }
+
+    /* access modifiers changed from: private */
+    public void updateBubbleZOrdersAndDotPosition(boolean z) {
+        int bubbleCount = getBubbleCount();
+        for (int i = 0; i < bubbleCount; i++) {
+            BadgedImageView badgedImageView = (BadgedImageView) this.mBubbleContainer.getChildAt(i);
+            badgedImageView.setZ((float) ((this.mMaxBubbles * this.mBubbleElevation) - i));
+            boolean dotPositionOnLeft = badgedImageView.getDotPositionOnLeft();
             boolean z2 = this.mStackOnLeftOrWillBe;
             if (dotPositionOnLeft == z2) {
-                bubbleView.setDotPosition(!z2, z);
+                badgedImageView.setDotPositionOnLeft(!z2, z);
+            }
+            if (this.mIsExpanded || i <= 0) {
+                badgedImageView.removeDotSuppressionFlag(BadgedImageView.SuppressionFlag.BEHIND_STACK);
+            } else {
+                badgedImageView.addDotSuppressionFlag(BadgedImageView.SuppressionFlag.BEHIND_STACK);
             }
         }
     }
 
     private void updatePointerPosition() {
-        Bubble expandedBubble = getExpandedBubble();
-        if (expandedBubble != null) {
-            expandedBubble.expandedView.setPointerPosition((this.mExpandedAnimationController.getBubbleLeft(getBubbleIndex(expandedBubble)) + (((float) this.mBubbleSize) / 2.0f)) - ((float) this.mExpandedViewPadding));
+        int bubbleIndex;
+        BubbleViewProvider bubbleViewProvider = this.mExpandedBubble;
+        if (bubbleViewProvider != null && bubbleViewProvider.getExpandedView() != null && (bubbleIndex = getBubbleIndex(this.mExpandedBubble)) != -1) {
+            this.mExpandedBubble.getExpandedView().setPointerPosition((this.mExpandedAnimationController.getBubbleLeft(bubbleIndex) + (((float) this.mBubbleSize) / 2.0f)) - ((float) this.mExpandedViewContainer.getPaddingLeft()));
         }
     }
 
     public int getBubbleCount() {
-        return this.mBubbleContainer.getChildCount();
+        return this.mBubbleContainer.getChildCount() - 1;
     }
 
     /* access modifiers changed from: package-private */
-    public int getBubbleIndex(Bubble bubble) {
-        if (bubble == null) {
+    public int getBubbleIndex(BubbleViewProvider bubbleViewProvider) {
+        if (bubbleViewProvider == null) {
             return 0;
         }
-        return this.mBubbleContainer.indexOfChild(bubble.iconView);
+        return this.mBubbleContainer.indexOfChild(bubbleViewProvider.getIconView());
     }
 
     public float getNormalizedXPosition() {
@@ -1257,22 +2407,40 @@ public class BubbleStackView extends FrameLayout {
         return this.mStackAnimationController.getStackPosition();
     }
 
-    private void logBubbleEvent(Bubble bubble, int i) {
-        NotificationData.Entry entry;
-        ExpandedNotification expandedNotification;
-        Bubble bubble2 = bubble;
-        if (bubble2 == null || (entry = bubble2.entry) == null || (expandedNotification = entry.notification) == null) {
-            StatsLogInternal.write(149, (String) null, (String) null, 0, 0, getBubbleCount(), i, getNormalizedXPosition(), getNormalizedYPosition(), false, false, false);
+    /* access modifiers changed from: private */
+    public void logBubbleEvent(BubbleViewProvider bubbleViewProvider, int i) {
+        String str = "Overflow";
+        if (bubbleViewProvider == null || bubbleViewProvider.getKey().equals(str)) {
+            String str2 = this.mContext.getApplicationInfo().packageName;
+            if (bubbleViewProvider == null) {
+                str = null;
+            }
+            SysUiStatsLog.write(149, str2, str, 0, 0, getBubbleCount(), i, getNormalizedXPosition(), getNormalizedYPosition(), false, false, false);
             return;
         }
-        StatsLogInternal.write(149, expandedNotification.getPackageName(), expandedNotification.getNotification().getChannelId(), expandedNotification.getId(), getBubbleIndex(bubble), getBubbleCount(), i, getNormalizedXPosition(), getNormalizedYPosition(), bubble2.entry.showInShadeWhenBubble(), bubble2.entry.isForegroundService(), BubbleController.isForegroundApp(this.mContext, expandedNotification.getPackageName()));
+        bubbleViewProvider.logUIEvent(getBubbleCount(), i, getNormalizedXPosition(), getNormalizedYPosition(), getBubbleIndex(bubbleViewProvider));
     }
 
     /* access modifiers changed from: package-private */
     public boolean performBackPressIfNeeded() {
-        if (!isExpanded()) {
+        BubbleViewProvider bubbleViewProvider;
+        if (!isExpanded() || (bubbleViewProvider = this.mExpandedBubble) == null || bubbleViewProvider.getExpandedView() == null) {
             return false;
         }
-        return this.mExpandedBubble.expandedView.performBackPressIfNeeded();
+        return this.mExpandedBubble.getExpandedView().performBackPressIfNeeded();
+    }
+
+    private boolean shouldShowBubblesEducation() {
+        if (BubbleDebugConfig.forceShowUserEducation(getContext()) || !Prefs.getBoolean(getContext(), "HasSeenBubblesOnboarding", false)) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean shouldShowManageEducation() {
+        if (BubbleDebugConfig.forceShowUserEducation(getContext()) || !Prefs.getBoolean(getContext(), "HasSeenBubblesManageOnboarding", false)) {
+            return true;
+        }
+        return false;
     }
 }

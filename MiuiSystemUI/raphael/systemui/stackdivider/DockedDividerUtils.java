@@ -1,6 +1,8 @@
 package com.android.systemui.stackdivider;
 
+import android.content.res.Resources;
 import android.graphics.Rect;
+import com.android.systemui.C0012R$dimen;
 
 public class DockedDividerUtils {
     public static int invertDockSide(int i) {
@@ -17,8 +19,8 @@ public class DockedDividerUtils {
     }
 
     public static void calculateBoundsForPosition(int i, int i2, Rect rect, int i3, int i4, int i5) {
+        boolean z = false;
         rect.set(0, 0, i3, i4);
-        boolean z = true;
         if (i2 == 1) {
             rect.right = i;
         } else if (i2 == 2) {
@@ -28,8 +30,8 @@ public class DockedDividerUtils {
         } else if (i2 == 4) {
             rect.top = i + i5;
         }
-        if (!(i2 == 1 || i2 == 2)) {
-            z = false;
+        if (i2 == 1 || i2 == 2) {
+            z = true;
         }
         sanitizeStackBounds(rect, z);
     }
@@ -88,5 +90,13 @@ public class DockedDividerUtils {
             i4 = i - rect.right;
         }
         return (i5 + ((i4 - i5) / 2)) - (i3 / 2);
+    }
+
+    public static int getDividerInsets(Resources resources) {
+        return resources.getDimensionPixelSize(C0012R$dimen.docked_stack_divider_insets);
+    }
+
+    public static int getDividerSize(Resources resources, int i) {
+        return resources.getDimensionPixelSize(C0012R$dimen.docked_stack_divider_thickness) - (i * 2);
     }
 }

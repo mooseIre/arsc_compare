@@ -6,7 +6,6 @@ import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.database.ContentObserver;
-import android.os.Build;
 import android.os.IBinder;
 import android.os.Parcel;
 import android.os.RemoteException;
@@ -15,12 +14,11 @@ import android.provider.Settings;
 import android.util.Log;
 import android.util.Slog;
 import android.widget.Switch;
-import com.android.systemui.Util;
-import com.android.systemui.plugins.R;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.plugins.qs.QSTile;
 import com.android.systemui.qs.QSHost;
 import com.android.systemui.qs.tileimpl.QSTileImpl;
-import com.android.systemui.statusbar.Icons;
 import miui.os.DeviceFeature;
 
 public class AutoBrightnessTile extends QSTileImpl<QSTile.BooleanState> {
@@ -79,9 +77,7 @@ public class AutoBrightnessTile extends QSTileImpl<QSTile.BooleanState> {
     public void handleClick() {
         if (this.mAutoBrightnessMode) {
             this.mAutoBrightnessMode = false;
-            if (Build.VERSION.SDK_INT > 27) {
-                resetAutoBrightnessShortModel();
-            }
+            resetAutoBrightnessShortModel();
         } else {
             this.mAutoBrightnessMode = this.mAutoBrightnessAvailable;
         }
@@ -90,31 +86,28 @@ public class AutoBrightnessTile extends QSTileImpl<QSTile.BooleanState> {
         ContentResolver contentResolver = this.mResolver;
         boolean z = this.mAutoBrightnessMode;
         Settings.System.putIntForUser(contentResolver, "screen_brightness_mode", z ? 1 : 0, this.mCurrentUserId);
-        if (this.mInControlCenter) {
-            this.mUiHandler.post(new ClickRunnable(this.mAutoBrightnessMode));
-        }
     }
 
     public CharSequence getTileLabel() {
-        return this.mContext.getString(R.string.quick_settings_autobrightness_label);
+        return this.mContext.getString(C0021R$string.quick_settings_autobrightness_label);
     }
 
     /* access modifiers changed from: protected */
     public void handleUpdateState(QSTile.BooleanState booleanState, Object obj) {
         queryAutoBrightnessStatus();
         booleanState.value = this.mAutoBrightnessMode;
-        booleanState.label = this.mContext.getString(R.string.quick_settings_autobrightness_label);
+        booleanState.label = this.mContext.getString(C0021R$string.quick_settings_autobrightness_label);
         if (booleanState.value) {
             booleanState.state = 2;
-            booleanState.icon = QSTileImpl.ResourceIcon.get(Icons.getQSIcons(Integer.valueOf(R.drawable.ic_qs_brightness_auto), this.mInControlCenter));
+            booleanState.icon = QSTileImpl.ResourceIcon.get(C0013R$drawable.ic_qs_brightness_auto);
         } else {
             booleanState.state = 1;
-            booleanState.icon = QSTileImpl.ResourceIcon.get(Icons.getQSIcons(Integer.valueOf(R.drawable.ic_qs_brightness_manual), this.mInControlCenter));
+            booleanState.icon = QSTileImpl.ResourceIcon.get(C0013R$drawable.ic_qs_brightness_manual);
         }
         StringBuilder sb = new StringBuilder();
         sb.append(booleanState.label);
         sb.append(",");
-        sb.append(this.mContext.getString(booleanState.value ? R.string.switch_bar_on : R.string.switch_bar_off));
+        sb.append(this.mContext.getString(booleanState.value ? C0021R$string.switch_bar_on : C0021R$string.switch_bar_off));
         booleanState.contentDescription = sb.toString();
         booleanState.expandedAccessibilityClassName = Switch.class.getName();
         booleanState.activeBgColor = 2;
@@ -132,9 +125,9 @@ public class AutoBrightnessTile extends QSTileImpl<QSTile.BooleanState> {
     }
 
     private void queryAutoBrightnessStatus() {
-        boolean z = false;
-        if (this.mAutoBrightnessAvailable && 1 == Settings.System.getIntForUser(this.mResolver, "screen_brightness_mode", 0, this.mCurrentUserId)) {
-            z = true;
+        boolean z = true;
+        if (!this.mAutoBrightnessAvailable || 1 != Settings.System.getIntForUser(this.mResolver, "screen_brightness_mode", 0, this.mCurrentUserId)) {
+            z = false;
         }
         this.mAutoBrightnessMode = z;
     }
@@ -154,17 +147,5 @@ public class AutoBrightnessTile extends QSTileImpl<QSTile.BooleanState> {
         }
         obtain2.recycle();
         obtain.recycle();
-    }
-
-    protected class ClickRunnable implements Runnable {
-        private boolean enabled;
-
-        ClickRunnable(boolean z) {
-            this.enabled = z;
-        }
-
-        public void run() {
-            Util.showSystemOverlayToast(AutoBrightnessTile.this.mContext, this.enabled ? R.string.auto_brightness_on : R.string.auto_brightness_off, 0);
-        }
     }
 }

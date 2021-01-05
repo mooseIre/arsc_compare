@@ -1,98 +1,137 @@
 package com.android.systemui.statusbar.phone;
 
 import android.content.res.Resources;
-import android.graphics.Path;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.PathInterpolator;
-import com.android.systemui.plugins.R;
+import android.util.MathUtils;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.Interpolators;
+import com.android.systemui.doze.util.BurnInHelperKt;
 import com.android.systemui.statusbar.notification.NotificationUtils;
 
 public class KeyguardClockPositionAlgorithm {
-    private static final PathInterpolator sSlowDownInterpolator;
-    private AccelerateInterpolator mAccelerateInterpolator = new AccelerateInterpolator();
-    private int mClockBottom;
-    private float mClockMarginTop;
-    private int mClockNotificationsMarginMax;
-    private int mClockNotificationsMarginMin;
-    private float mClockNotificationsPadding;
-    private float mClockYFractionMax;
-    private float mClockYFractionMin;
-    private float mDarkAmount;
-    private float mDensity;
+    private static float CLOCK_HEIGHT_WEIGHT = 0.7f;
+    private int mBurnInPreventionOffsetX;
+    private int mBurnInPreventionOffsetY;
+    private boolean mBypassEnabled;
+    private int mClockNotificationsMargin;
+    private int mClockPreferredY;
+    private int mContainerTopPadding;
+    protected float mDarkAmount;
     private float mEmptyDragAmount;
-    private float mExpandedHeight;
-    private int mHeight;
+    private boolean mHasCustomClock;
+    private boolean mHasVisibleNotifs;
+    protected int mHeight;
     private int mKeyguardStatusHeight;
-    private float mKeyguardVisibleViewsHeight;
-    private int mMaxKeyguardNotifications;
-    private int mMaxPanelHeight;
-    private float mMoreCardNotificationAmount;
-    private int mNotificationCount;
+    private int mMaxShadeBottom;
+    private int mMinTopMargin;
+    private int mNotificationStackHeight;
+    private float mPanelExpansion;
+    private int mUnlockedStackScrollerPadding;
 
     public static class Result {
         public float clockAlpha;
-        public float clockScale;
+        public int clockX;
         public int clockY;
         public int stackScrollerPadding;
-        public int stackScrollerPaddingAdjustment;
-    }
-
-    static {
-        Path path = new Path();
-        path.moveTo(0.0f, 0.0f);
-        path.cubicTo(0.3f, 0.875f, 0.6f, 1.0f, 1.0f, 1.0f);
-        sSlowDownInterpolator = new PathInterpolator(path);
+        public int stackScrollerPaddingExpanded;
     }
 
     public void loadDimens(Resources resources) {
-        this.mClockNotificationsMarginMin = resources.getDimensionPixelSize(R.dimen.keyguard_clock_notifications_margin_min);
-        this.mClockNotificationsMarginMax = resources.getDimensionPixelSize(R.dimen.keyguard_clock_notifications_margin_max);
-        this.mClockYFractionMin = resources.getFraction(R.fraction.keyguard_clock_y_fraction_min, 1, 1);
-        this.mClockYFractionMax = resources.getFraction(R.fraction.keyguard_clock_y_fraction_max, 1, 1);
-        this.mMoreCardNotificationAmount = ((float) resources.getDimensionPixelSize(R.dimen.notification_shelf_height)) / ((float) resources.getDimensionPixelSize(R.dimen.notification_min_height));
-        this.mDensity = resources.getDisplayMetrics().density;
-        this.mClockMarginTop = (float) resources.getDimensionPixelSize(R.dimen.miui_keyguard_clock_magin_top);
-        this.mClockNotificationsPadding = (float) resources.getDimensionPixelSize(R.dimen.miui_keyguard_clock_stack_scroller_padding_top);
+        this.mClockNotificationsMargin = resources.getDimensionPixelSize(C0012R$dimen.keyguard_clock_notifications_margin);
+        this.mContainerTopPadding = Math.max(resources.getDimensionPixelSize(C0012R$dimen.keyguard_clock_top_margin), resources.getDimensionPixelSize(C0012R$dimen.keyguard_lock_height) + resources.getDimensionPixelSize(C0012R$dimen.keyguard_lock_padding) + resources.getDimensionPixelSize(C0012R$dimen.keyguard_clock_lock_margin));
+        this.mBurnInPreventionOffsetX = resources.getDimensionPixelSize(C0012R$dimen.burn_in_prevention_offset_x);
+        this.mBurnInPreventionOffsetY = resources.getDimensionPixelSize(C0012R$dimen.burn_in_prevention_offset_y);
     }
 
-    public void setup(int i, int i2, float f, int i3, int i4, int i5, float f2, int i6, float f3, float f4, float f5) {
-        this.mMaxKeyguardNotifications = i;
-        this.mMaxPanelHeight = i2;
-        this.mExpandedHeight = f;
-        this.mNotificationCount = i3;
+    public void setup(int i, int i2, int i3, float f, int i4, int i5, int i6, boolean z, boolean z2, float f2, float f3, boolean z3, int i7) {
+        this.mMinTopMargin = i + this.mContainerTopPadding;
+        this.mMaxShadeBottom = i2;
+        this.mNotificationStackHeight = i3;
+        this.mPanelExpansion = f;
         this.mHeight = i4;
         this.mKeyguardStatusHeight = i5;
-        this.mKeyguardVisibleViewsHeight = f4;
-        this.mEmptyDragAmount = f2;
-        this.mClockBottom = i6;
-        this.mDarkAmount = f3;
-        this.mClockMarginTop = f5;
+        this.mClockPreferredY = i6;
+        this.mHasCustomClock = z;
+        this.mHasVisibleNotifs = z2;
+        this.mDarkAmount = f2;
+        this.mEmptyDragAmount = f3;
+        this.mBypassEnabled = z3;
+        this.mUnlockedStackScrollerPadding = i7;
     }
 
     public void run(Result result) {
-        int clockY = getClockY() - (this.mKeyguardStatusHeight / 2);
-        result.stackScrollerPaddingAdjustment = 0;
-        result.clockY = 0;
-        result.stackScrollerPadding = (int) (this.mKeyguardVisibleViewsHeight + ((float) ((int) (this.mClockMarginTop + this.mClockNotificationsPadding))));
-        result.clockScale = 1.0f;
-        result.clockAlpha = 1.0f;
-        result.stackScrollerPadding = (int) NotificationUtils.interpolate((float) result.stackScrollerPadding, (float) (this.mClockBottom + clockY), this.mDarkAmount);
+        int i;
+        int i2;
+        int clockY = getClockY(this.mPanelExpansion);
+        result.clockY = clockY;
+        result.clockAlpha = getClockAlpha(clockY);
+        if (this.mBypassEnabled) {
+            i = this.mUnlockedStackScrollerPadding;
+        } else {
+            i = clockY + this.mKeyguardStatusHeight;
+        }
+        result.stackScrollerPadding = i;
+        if (this.mBypassEnabled) {
+            i2 = this.mUnlockedStackScrollerPadding;
+        } else {
+            i2 = getClockY(1.0f) + this.mKeyguardStatusHeight;
+        }
+        result.stackScrollerPaddingExpanded = i2;
+        result.clockX = (int) NotificationUtils.interpolate(0.0f, burnInPreventionOffsetX(), this.mDarkAmount);
     }
 
-    private float getClockYFraction() {
-        float min = Math.min(getNotificationAmountT(), 1.0f);
-        return ((1.0f - min) * this.mClockYFractionMax) + (min * this.mClockYFractionMin);
+    public float getMinStackScrollerPadding() {
+        if (this.mBypassEnabled) {
+            return (float) this.mUnlockedStackScrollerPadding;
+        }
+        return (float) (this.mMinTopMargin + this.mKeyguardStatusHeight + this.mClockNotificationsMargin);
     }
 
-    private int getClockY() {
-        return (int) NotificationUtils.interpolate(getClockYFraction() * ((float) this.mHeight), ((((float) this.mHeight) * 0.33f) + (((float) this.mKeyguardStatusHeight) / 2.0f)) - ((float) this.mClockBottom), this.mDarkAmount);
+    private int getMaxClockY() {
+        return ((this.mHeight / 2) - this.mKeyguardStatusHeight) - this.mClockNotificationsMargin;
     }
 
-    private float getNotificationAmountT() {
-        return ((float) this.mNotificationCount) / (((float) this.mMaxKeyguardNotifications) + this.mMoreCardNotificationAmount);
+    private int getPreferredClockY() {
+        return this.mClockPreferredY;
     }
 
-    public String toString() {
-        return "{mHeight=" + this.mHeight + ", mKeyguardStatusHeight=" + this.mKeyguardStatusHeight + ", mKeyguardVisibleViewsHeight=" + this.mKeyguardVisibleViewsHeight + ", mClockMarginTop=" + this.mClockMarginTop + ", mClockNotificationsPadding=" + this.mClockNotificationsPadding + ", mClockBottom=" + this.mClockBottom + ", clockY=" + getClockY() + ", mDarkAmount=" + this.mDarkAmount + '}';
+    private int getExpandedPreferredClockY() {
+        if (!this.mHasCustomClock || (this.mHasVisibleNotifs && !this.mBypassEnabled)) {
+            return getExpandedClockPosition();
+        }
+        return getPreferredClockY();
+    }
+
+    public int getExpandedClockPosition() {
+        int i = this.mMaxShadeBottom;
+        int i2 = this.mMinTopMargin;
+        float f = ((((float) (((i - i2) / 2) + i2)) - (((float) this.mKeyguardStatusHeight) * CLOCK_HEIGHT_WEIGHT)) - ((float) this.mClockNotificationsMargin)) - ((float) (this.mNotificationStackHeight / 2));
+        if (f < ((float) i2)) {
+            f = (float) i2;
+        }
+        float maxClockY = (float) getMaxClockY();
+        if (f > maxClockY) {
+            f = maxClockY;
+        }
+        return (int) f;
+    }
+
+    /* access modifiers changed from: protected */
+    public int getClockY(float f) {
+        float max = MathUtils.max(0.0f, ((float) (this.mHasCustomClock ? getPreferredClockY() : getMaxClockY())) + burnInPreventionOffsetY());
+        float f2 = (float) (-this.mKeyguardStatusHeight);
+        float interpolation = Interpolators.FAST_OUT_LINEAR_IN.getInterpolation(f);
+        return (int) (MathUtils.lerp(MathUtils.lerp(f2, (float) getExpandedPreferredClockY(), interpolation), MathUtils.lerp(f2, max, interpolation), (!this.mBypassEnabled || this.mHasCustomClock) ? this.mDarkAmount : 1.0f) + this.mEmptyDragAmount);
+    }
+
+    private float getClockAlpha(int i) {
+        return MathUtils.lerp(Interpolators.ACCELERATE.getInterpolation(Math.max(0.0f, ((float) i) / Math.max(1.0f, (float) getClockY(1.0f)))), 1.0f, this.mDarkAmount);
+    }
+
+    private float burnInPreventionOffsetY() {
+        return (float) (BurnInHelperKt.getBurnInOffset(this.mBurnInPreventionOffsetY * 2, false) - this.mBurnInPreventionOffsetY);
+    }
+
+    private float burnInPreventionOffsetX() {
+        return (float) (BurnInHelperKt.getBurnInOffset(this.mBurnInPreventionOffsetX * 2, true) - this.mBurnInPreventionOffsetX);
     }
 }

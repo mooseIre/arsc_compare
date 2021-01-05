@@ -9,98 +9,72 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.os.UserHandle;
-import android.os.UserHandleCompat;
 import android.os.UserManager;
-import android.text.TextUtils;
-import android.util.ArraySet;
 import android.util.Log;
+import androidx.constraintlayout.widget.R$styleable;
 import com.android.settingslib.bluetooth.BluetoothCallback;
 import com.android.settingslib.bluetooth.CachedBluetoothDevice;
 import com.android.settingslib.bluetooth.LocalBluetoothManager;
+import com.android.settingslib.bluetooth.LocalBluetoothProfile;
 import com.android.settingslib.bluetooth.LocalBluetoothProfileManager;
-import com.android.systemui.Dependency;
-import com.android.systemui.SystemUICompat;
 import com.android.systemui.statusbar.policy.BluetoothController;
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
+import java.util.WeakHashMap;
 
 public class BluetoothControllerImpl implements BluetoothController, BluetoothCallback, CachedBluetoothDevice.Callback, LocalBluetoothProfileManager.ServiceListener {
     private static final boolean DEBUG = Log.isLoggable("BluetoothController", 3);
+    private boolean mAudioProfileOnly;
     private final Handler mBgHandler;
-    private Collection<CachedBluetoothDevice> mCachedDevices;
-    private Map<String, CachedDeviceState> mCachedStates;
+    private final WeakHashMap<CachedBluetoothDevice, ActuallyCachedState> mCachedState = new WeakHashMap<>();
     private final List<CachedBluetoothDevice> mConnectedDevices = new ArrayList();
     private int mConnectionState = 0;
-    private final Context mContext;
     private final int mCurrentUser;
     /* access modifiers changed from: private */
     public boolean mEnabled;
     /* access modifiers changed from: private */
-    public final H mHandler = new H(Looper.getMainLooper());
+    public final H mHandler;
     private BroadcastReceiver mIntentReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
+            Log.d("BluetoothController", "onReceive: action = " + action);
             if ("com.android.bluetooth.opp.BLUETOOTH_OPP_INBOUND_START".equals(action) || "com.android.bluetooth.opp.BLUETOOTH_OPP_INBOUND_END".equals(action) || "com.android.bluetooth.opp.BLUETOOTH_OPP_OUTBOUND_START".equals(action) || "com.android.bluetooth.opp.BLUETOOTH_OPP_OUTBOUND_END".equals(action)) {
                 Message obtainMessage = BluetoothControllerImpl.this.mHandler.obtainMessage();
-                obtainMessage.what = 5;
+                obtainMessage.what = 100;
                 obtainMessage.obj = action;
                 BluetoothControllerImpl.this.mHandler.sendMessage(obtainMessage);
             } else if ("android.intent.action.BLUETOOTH_HANDSFREE_BATTERY_CHANGED".equals(action)) {
+                Message obtainMessage2 = BluetoothControllerImpl.this.mHandler.obtainMessage();
+                obtainMessage2.what = R$styleable.Constraint_layout_goneMarginRight;
+                obtainMessage2.obj = intent;
+                BluetoothControllerImpl.this.mHandler.sendMessage(obtainMessage2);
                 BluetoothControllerImpl.this.onDeviceAttributesChanged();
             }
         }
     };
+    private boolean mIsActive;
     private CachedBluetoothDevice mLastActiveDevice;
-    /* access modifiers changed from: private */
-    public final LocalBluetoothManager mLocalBluetoothManager;
-    private int mPhoneConnectionState = 0;
+    private final LocalBluetoothManager mLocalBluetoothManager;
     private int mState = 10;
     private final UserManager mUserManager;
-
-    public void onActiveDeviceChanged(CachedBluetoothDevice cachedBluetoothDevice, int i) {
-    }
-
-    public void onAudioModeChanged() {
-    }
-
-    public void onConnectionStateChanged(CachedBluetoothDevice cachedBluetoothDevice, int i) {
-    }
-
-    public void onDeviceAdded(CachedBluetoothDevice cachedBluetoothDevice) {
-    }
-
-    public void onDeviceDeleted(CachedBluetoothDevice cachedBluetoothDevice) {
-    }
-
-    public void onScanningStateChanged(boolean z) {
-    }
 
     public void onServiceDisconnected() {
     }
 
-    public BluetoothControllerImpl(Context context, Looper looper) {
-        this.mContext = context;
-        this.mCachedDevices = new ArraySet();
-        this.mCachedStates = new HashMap();
-        this.mLocalBluetoothManager = (LocalBluetoothManager) Dependency.get(LocalBluetoothManager.class);
-        this.mBgHandler = new BH(looper);
-        LocalBluetoothManager localBluetoothManager = this.mLocalBluetoothManager;
-        if (localBluetoothManager != null) {
-            localBluetoothManager.getEventManager();
-            this.mLocalBluetoothManager.getEventManager().registerCallback(this);
-            BluetoothControllerHelper.addServiceListener(this.mLocalBluetoothManager.getProfileManager(), this);
-            this.mBgHandler.post(new Runnable() {
-                public void run() {
-                    BluetoothControllerImpl bluetoothControllerImpl = BluetoothControllerImpl.this;
-                    bluetoothControllerImpl.onBluetoothStateChanged(bluetoothControllerImpl.mLocalBluetoothManager.getBluetoothAdapter().getBluetoothState());
-                }
-            });
+    public BluetoothControllerImpl(Context context, Looper looper, Looper looper2, LocalBluetoothManager localBluetoothManager) {
+        this.mLocalBluetoothManager = localBluetoothManager;
+        this.mBgHandler = new Handler(looper);
+        this.mHandler = new H(looper2);
+        LocalBluetoothManager localBluetoothManager2 = this.mLocalBluetoothManager;
+        if (localBluetoothManager2 != null) {
+            localBluetoothManager2.getEventManager().registerCallback(this);
+            this.mLocalBluetoothManager.getProfileManager().addServiceListener(this);
+            onBluetoothStateChanged(this.mLocalBluetoothManager.getBluetoothAdapter().getBluetoothState());
         }
         this.mUserManager = (UserManager) context.getSystemService("user");
         this.mCurrentUser = ActivityManager.getCurrentUser();
@@ -109,91 +83,69 @@ public class BluetoothControllerImpl implements BluetoothController, BluetoothCa
         intentFilter.addAction("com.android.bluetooth.opp.BLUETOOTH_OPP_INBOUND_END");
         intentFilter.addAction("com.android.bluetooth.opp.BLUETOOTH_OPP_OUTBOUND_START");
         intentFilter.addAction("com.android.bluetooth.opp.BLUETOOTH_OPP_OUTBOUND_END");
-        intentFilter.addAction("android.bluetooth.headset.profile.action.CONNECTION_STATE_CHANGED");
         intentFilter.addAction("android.intent.action.BLUETOOTH_HANDSFREE_BATTERY_CHANGED");
         context.registerReceiverAsUser(this.mIntentReceiver, UserHandle.ALL, intentFilter, (String) null, this.mBgHandler);
     }
 
-    private void addPairedDevices() {
-        Log.d("BluetoothController", "addPairedDevices");
-        int connectionState = this.mLocalBluetoothManager.getBluetoothAdapter().getConnectionState();
-        Collection<CachedBluetoothDevice> cachedDevicesCopy = this.mLocalBluetoothManager.getCachedDeviceManager().getCachedDevicesCopy();
-        CachedBluetoothDevice cachedBluetoothDevice = null;
-        this.mLastActiveDevice = null;
-        for (CachedBluetoothDevice next : cachedDevicesCopy) {
-            int bondState = next.getBondState();
-            if (bondState != 10) {
-                addCachedDevice(next);
-                CachedDeviceState cachedState = getCachedState(next);
-                cachedState.setBondState(bondState);
-                int maxConnectionState = next.getMaxConnectionState();
-                if (maxConnectionState > connectionState) {
-                    connectionState = maxConnectionState;
-                }
-                cachedState.setConnectionState(maxConnectionState);
-                if (SystemUICompat.isDeviceActive(next)) {
-                    Log.d("BluetoothController", "addPairedDevices: last active device: " + next.getName());
-                    this.mLastActiveDevice = next;
-                } else if (next.isConnected()) {
-                    Log.d("BluetoothController", "addPairedDevices: last connected device: " + next.getName());
-                    cachedBluetoothDevice = next;
-                }
-                cachedState.setSummary(SystemUICompat.getConnectionSummary(this.mContext, next));
+    public boolean canConfigBluetooth() {
+        return !this.mUserManager.hasUserRestriction("no_config_bluetooth", UserHandle.of(this.mCurrentUser)) && !this.mUserManager.hasUserRestriction("no_bluetooth", UserHandle.of(this.mCurrentUser));
+    }
+
+    public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
+        printWriter.println("BluetoothController state:");
+        printWriter.print("  mLocalBluetoothManager=");
+        printWriter.println(this.mLocalBluetoothManager);
+        if (this.mLocalBluetoothManager != null) {
+            printWriter.print("  mEnabled=");
+            printWriter.println(this.mEnabled);
+            printWriter.print("  mConnectionState=");
+            printWriter.println(stateToString(this.mConnectionState));
+            printWriter.print("  mAudioProfileOnly=");
+            printWriter.println(this.mAudioProfileOnly);
+            printWriter.print("  mIsActive=");
+            printWriter.println(this.mIsActive);
+            printWriter.print("  mConnectedDevices=");
+            printWriter.println(this.mConnectedDevices);
+            printWriter.print("  mCallbacks.size=");
+            printWriter.println(this.mHandler.mCallbacks.size());
+            printWriter.println("  Bluetooth Devices:");
+            for (CachedBluetoothDevice deviceString : getDevices()) {
+                printWriter.println("    " + getDeviceString(deviceString));
             }
-        }
-        if (this.mLastActiveDevice == null && cachedBluetoothDevice != null) {
-            Log.d("BluetoothController", "addPairedDevices: find last connected device: " + cachedBluetoothDevice.getName());
-            this.mLastActiveDevice = cachedBluetoothDevice;
-        }
-        if (this.mLastActiveDevice == null && connectionState == 2) {
-            connectionState = 0;
-        }
-        if (connectionState != this.mConnectionState) {
-            this.mConnectionState = connectionState;
-            this.mHandler.removeMessages(2);
-            this.mHandler.sendEmptyMessage(2);
         }
     }
 
-    private void removeAllDevices() {
-        Log.d("BluetoothController", "removeAllDevices");
-        synchronized (this.mCachedDevices) {
-            for (CachedBluetoothDevice unregisterCallback : this.mCachedDevices) {
-                unregisterCallback.unregisterCallback(this);
-            }
-            this.mCachedDevices.clear();
-            this.mCachedStates.clear();
+    private static String stateToString(int i) {
+        if (i == 0) {
+            return "DISCONNECTED";
         }
+        if (i == 1) {
+            return "CONNECTING";
+        }
+        if (i == 2) {
+            return "CONNECTED";
+        }
+        if (i == 3) {
+            return "DISCONNECTING";
+        }
+        return "UNKNOWN(" + i + ")";
+    }
+
+    private String getDeviceString(CachedBluetoothDevice cachedBluetoothDevice) {
+        return cachedBluetoothDevice.getName() + " " + cachedBluetoothDevice.getBondState() + " " + cachedBluetoothDevice.isConnected();
+    }
+
+    public int getMaxConnectionState(CachedBluetoothDevice cachedBluetoothDevice) {
+        return getCachedState(cachedBluetoothDevice).mMaxConnectionState;
     }
 
     public void addCallback(BluetoothController.Callback callback) {
         this.mHandler.obtainMessage(3, callback).sendToTarget();
-        this.mHandler.removeMessages(2);
         this.mHandler.sendEmptyMessage(2);
     }
 
     public void removeCallback(BluetoothController.Callback callback) {
         this.mHandler.obtainMessage(4, callback).sendToTarget();
-    }
-
-    private void addCachedDevice(CachedBluetoothDevice cachedBluetoothDevice) {
-        synchronized (this.mCachedDevices) {
-            if (this.mCachedDevices.add(cachedBluetoothDevice)) {
-                cachedBluetoothDevice.registerCallback(this);
-            }
-        }
-    }
-
-    private void removeCachedDevice(CachedBluetoothDevice cachedBluetoothDevice) {
-        synchronized (this.mCachedDevices) {
-            if (this.mCachedDevices.remove(cachedBluetoothDevice)) {
-                cachedBluetoothDevice.unregisterCallback(this);
-            }
-        }
-    }
-
-    public boolean canConfigBluetooth() {
-        return !this.mUserManager.hasUserRestriction("no_config_bluetooth", UserHandleCompat.of(this.mCurrentUser));
     }
 
     public boolean isBluetoothEnabled() {
@@ -235,67 +187,6 @@ public class BluetoothControllerImpl implements BluetoothController, BluetoothCa
         }
     }
 
-    public String getLastDeviceName() {
-        CachedBluetoothDevice cachedBluetoothDevice = this.mLastActiveDevice;
-        if (cachedBluetoothDevice != null) {
-            return cachedBluetoothDevice.getName();
-        }
-        return null;
-    }
-
-    public Collection<CachedBluetoothDevice> getCachedDevicesCopy() {
-        ArrayList arrayList;
-        synchronized (this.mCachedDevices) {
-            arrayList = (this.mCachedDevices == null || this.mCachedDevices.isEmpty()) ? null : new ArrayList(this.mCachedDevices);
-        }
-        return arrayList;
-    }
-
-    public void onBluetoothStateChanged(int i) {
-        Log.d("BluetoothController", "onBluetoothStateChanged: bluetoothState: " + i);
-        this.mState = i;
-        switch (i) {
-            case 10:
-                this.mEnabled = false;
-                break;
-            case 11:
-                removeAllDevices();
-                this.mEnabled = true;
-                break;
-            case 12:
-                this.mEnabled = true;
-                addPairedDevices();
-                break;
-            case 13:
-                this.mEnabled = false;
-                removeAllDevices();
-                this.mLastActiveDevice = null;
-                this.mConnectionState = 0;
-                break;
-        }
-        this.mHandler.removeMessages(2);
-        this.mHandler.sendEmptyMessage(2);
-    }
-
-    public void onDeviceBondStateChanged(CachedBluetoothDevice cachedBluetoothDevice, int i) {
-        Log.d("BluetoothController", "onDeviceBondStateChanged");
-        if (i == 10) {
-            Log.d("BluetoothController", "onDeviceBondStateChanged: " + cachedBluetoothDevice.getDevice() + ": bond none");
-            removeCachedDevice(cachedBluetoothDevice);
-            this.mCachedStates.remove(cachedBluetoothDevice.getDevice().getAddress());
-            onDeviceAttributesChanged();
-        } else if (i == 12) {
-            Log.d("BluetoothController", "onDeviceBondStateChanged: " + cachedBluetoothDevice.getDevice() + ": bonded");
-            addCachedDevice(cachedBluetoothDevice);
-            getCachedState(cachedBluetoothDevice).setBondState(i);
-        }
-    }
-
-    public void onServiceConnected() {
-        updateConnected();
-        this.mHandler.sendEmptyMessage(1);
-    }
-
     public Collection<CachedBluetoothDevice> getDevices() {
         LocalBluetoothManager localBluetoothManager = this.mLocalBluetoothManager;
         if (localBluetoothManager != null) {
@@ -323,134 +214,169 @@ public class BluetoothControllerImpl implements BluetoothController, BluetoothCa
             this.mConnectionState = connectionState;
             this.mHandler.sendEmptyMessage(2);
         }
+        updateAudioProfile();
+    }
+
+    private void updateActive() {
+        boolean z = false;
+        for (CachedBluetoothDevice next : getDevices()) {
+            boolean z2 = true;
+            if (!next.isActiveDevice(1) && !next.isActiveDevice(2) && !next.isActiveDevice(21)) {
+                z2 = false;
+            }
+            z |= z2;
+        }
+        if (this.mIsActive != z) {
+            this.mIsActive = z;
+            this.mHandler.sendEmptyMessage(2);
+        }
+    }
+
+    private void updateAudioProfile() {
+        boolean z = false;
+        boolean z2 = false;
+        boolean z3 = false;
+        for (CachedBluetoothDevice next : getDevices()) {
+            for (LocalBluetoothProfile next2 : next.getProfiles()) {
+                int profileId = next2.getProfileId();
+                boolean isConnectedProfile = next.isConnectedProfile(next2);
+                if (profileId == 1 || profileId == 2 || profileId == 21) {
+                    z2 |= isConnectedProfile;
+                } else {
+                    z3 |= isConnectedProfile;
+                }
+            }
+        }
+        if (z2 && !z3) {
+            z = true;
+        }
+        if (z != this.mAudioProfileOnly) {
+            this.mAudioProfileOnly = z;
+            this.mHandler.sendEmptyMessage(2);
+        }
+    }
+
+    public void onBluetoothStateChanged(int i) {
+        if (DEBUG) {
+            Log.d("BluetoothController", "BluetoothStateChanged=" + stateToString(i));
+        }
+        this.mEnabled = i == 12 || i == 11;
+        this.mState = i;
+        updateConnected();
+        this.mHandler.sendEmptyMessage(2);
+    }
+
+    public void onDeviceAdded(CachedBluetoothDevice cachedBluetoothDevice) {
+        if (DEBUG) {
+            Log.d("BluetoothController", "DeviceAdded=" + cachedBluetoothDevice.getAddress());
+        }
+        cachedBluetoothDevice.registerCallback(this);
+        updateConnected();
+        this.mHandler.sendEmptyMessage(1);
+    }
+
+    public void onDeviceDeleted(CachedBluetoothDevice cachedBluetoothDevice) {
+        if (DEBUG) {
+            Log.d("BluetoothController", "DeviceDeleted=" + cachedBluetoothDevice.getAddress());
+        }
+        this.mCachedState.remove(cachedBluetoothDevice);
+        updateConnected();
+        this.mHandler.sendEmptyMessage(1);
+    }
+
+    public void onDeviceBondStateChanged(CachedBluetoothDevice cachedBluetoothDevice, int i) {
+        if (DEBUG) {
+            Log.d("BluetoothController", "DeviceBondStateChanged=" + cachedBluetoothDevice.getAddress());
+        }
+        this.mCachedState.remove(cachedBluetoothDevice);
+        updateConnected();
+        this.mHandler.sendEmptyMessage(1);
     }
 
     public void onDeviceAttributesChanged() {
-        Log.d("BluetoothController", "onDeviceAttributesChanged");
-        this.mBgHandler.removeMessages(1);
-        this.mBgHandler.sendEmptyMessage(1);
+        if (DEBUG) {
+            Log.d("BluetoothController", "DeviceAttributesChanged");
+        }
+        updateConnected();
+        this.mHandler.sendEmptyMessage(1);
     }
 
-    public void handleDeviceAttributesChanged() {
-        Log.d("BluetoothController", "handleDeviceAttributesChanged");
-        updateConnectionState();
-        updateSummary();
+    public void onConnectionStateChanged(CachedBluetoothDevice cachedBluetoothDevice, int i) {
+        if (DEBUG) {
+            Log.d("BluetoothController", "ConnectionStateChanged=" + cachedBluetoothDevice.getAddress() + " " + stateToString(i));
+        }
+        this.mCachedState.remove(cachedBluetoothDevice);
+        updateConnected();
+        this.mHandler.sendEmptyMessage(2);
     }
 
-    private void updateConnectionState() {
-        CachedBluetoothDevice cachedBluetoothDevice;
-        int i;
-        CachedBluetoothDevice cachedBluetoothDevice2;
-        Log.d("BluetoothController", "updateConnectionState");
-        synchronized (this.mCachedDevices) {
-            cachedBluetoothDevice = null;
-            i = 0;
-            cachedBluetoothDevice2 = null;
-            for (CachedBluetoothDevice next : this.mCachedDevices) {
-                int maxConnectionState = next.getMaxConnectionState();
-                if (maxConnectionState > i) {
-                    i = maxConnectionState;
-                }
-                if (SystemUICompat.isDeviceActive(next)) {
-                    Log.d("BluetoothController", "updateConnectionState: last active device: " + next.getName());
-                    cachedBluetoothDevice = next;
-                } else if (next.isConnected()) {
-                    Log.d("BluetoothController", "updateConnectionState: last connected device: " + next.getName());
-                    cachedBluetoothDevice2 = next;
-                }
-                getCachedState(next).setConnectionState(maxConnectionState);
-            }
+    public void onProfileConnectionStateChanged(CachedBluetoothDevice cachedBluetoothDevice, int i, int i2) {
+        if (DEBUG) {
+            Log.d("BluetoothController", "ProfileConnectionStateChanged=" + cachedBluetoothDevice.getAddress() + " " + stateToString(i) + " profileId=" + i2);
         }
-        if (cachedBluetoothDevice == null && cachedBluetoothDevice2 != null) {
-            Log.d("BluetoothController", "updateConnectionState: find last connected device: " + cachedBluetoothDevice2.getName());
-            cachedBluetoothDevice = cachedBluetoothDevice2;
+        this.mCachedState.remove(cachedBluetoothDevice);
+        updateConnected();
+        this.mHandler.sendEmptyMessage(2);
+    }
+
+    public void onActiveDeviceChanged(CachedBluetoothDevice cachedBluetoothDevice, int i) {
+        if (DEBUG) {
+            Log.d("BluetoothController", "ActiveDeviceChanged=" + cachedBluetoothDevice.getAddress() + " profileId=" + i);
         }
-        if (this.mConnectionState != i || this.mLastActiveDevice != cachedBluetoothDevice) {
-            this.mConnectionState = i;
+        updateActive();
+        if (!this.mIsActive || cachedBluetoothDevice == null) {
+            this.mLastActiveDevice = null;
+        } else {
             this.mLastActiveDevice = cachedBluetoothDevice;
-            this.mHandler.removeMessages(2);
-            this.mHandler.sendEmptyMessage(2);
-            Log.d("BluetoothController", "updateConnectionState: " + this.mConnectionState);
         }
+        this.mHandler.sendEmptyMessage(2);
     }
 
-    private void updateSummary() {
-        synchronized (this.mCachedDevices) {
-            for (CachedBluetoothDevice next : this.mCachedDevices) {
-                getCachedState(next).setSummary(SystemUICompat.getConnectionSummary(this.mContext, next));
-            }
+    public void onAclConnectionStateChanged(CachedBluetoothDevice cachedBluetoothDevice, int i) {
+        if (DEBUG) {
+            Log.d("BluetoothController", "ACLConnectionStateChanged=" + cachedBluetoothDevice.getAddress() + " " + stateToString(i));
         }
+        this.mLastActiveDevice = null;
+        this.mCachedState.remove(cachedBluetoothDevice);
+        updateConnected();
+        this.mHandler.sendEmptyMessage(2);
     }
 
-    public CachedDeviceState getCachedState(CachedBluetoothDevice cachedBluetoothDevice) {
-        CachedDeviceState cachedDeviceState;
-        synchronized (this.mCachedDevices) {
-            String address = cachedBluetoothDevice.getDevice().getAddress();
-            cachedDeviceState = this.mCachedStates.get(address);
-            if (cachedDeviceState == null) {
-                cachedDeviceState = new CachedDeviceState(this.mHandler);
-                this.mCachedStates.put(address, cachedDeviceState);
-            }
+    private ActuallyCachedState getCachedState(CachedBluetoothDevice cachedBluetoothDevice) {
+        ActuallyCachedState actuallyCachedState = this.mCachedState.get(cachedBluetoothDevice);
+        if (actuallyCachedState != null) {
+            return actuallyCachedState;
         }
-        return cachedDeviceState;
+        ActuallyCachedState actuallyCachedState2 = new ActuallyCachedState(cachedBluetoothDevice, this.mHandler);
+        this.mBgHandler.post(actuallyCachedState2);
+        this.mCachedState.put(cachedBluetoothDevice, actuallyCachedState2);
+        return actuallyCachedState2;
     }
 
-    public int getMaxConnectionState(CachedBluetoothDevice cachedBluetoothDevice) {
-        return getCachedState(cachedBluetoothDevice).mMaxConnectionState;
+    public void onServiceConnected() {
+        updateConnected();
+        this.mHandler.sendEmptyMessage(1);
     }
 
-    public String getSummary(CachedBluetoothDevice cachedBluetoothDevice) {
-        return getCachedState(cachedBluetoothDevice).mSummary;
-    }
-
-    private static class CachedDeviceState {
-        private int mBondState;
+    private static class ActuallyCachedState implements Runnable {
+        private final WeakReference<CachedBluetoothDevice> mDevice;
         /* access modifiers changed from: private */
         public int mMaxConnectionState;
-        /* access modifiers changed from: private */
-        public String mSummary;
         private final Handler mUiHandler;
 
-        private CachedDeviceState(Handler handler) {
-            this.mBondState = 10;
+        private ActuallyCachedState(CachedBluetoothDevice cachedBluetoothDevice, Handler handler) {
             this.mMaxConnectionState = 0;
-            this.mSummary = "";
+            this.mDevice = new WeakReference<>(cachedBluetoothDevice);
             this.mUiHandler = handler;
         }
 
-        public void setBondState(int i) {
-            if (this.mBondState != i) {
-                this.mBondState = i;
+        public void run() {
+            CachedBluetoothDevice cachedBluetoothDevice = (CachedBluetoothDevice) this.mDevice.get();
+            if (cachedBluetoothDevice != null) {
+                cachedBluetoothDevice.getBondState();
+                this.mMaxConnectionState = cachedBluetoothDevice.getMaxConnectionState();
                 this.mUiHandler.removeMessages(1);
                 this.mUiHandler.sendEmptyMessage(1);
-            }
-        }
-
-        public void setConnectionState(int i) {
-            if (this.mMaxConnectionState != i) {
-                this.mMaxConnectionState = i;
-                this.mUiHandler.removeMessages(2);
-                this.mUiHandler.sendEmptyMessage(2);
-            }
-        }
-
-        public void setSummary(String str) {
-            if (!TextUtils.equals(this.mSummary, str)) {
-                this.mSummary = str;
-                this.mUiHandler.removeMessages(2);
-                this.mUiHandler.sendEmptyMessage(2);
-            }
-        }
-    }
-
-    private final class BH extends Handler {
-        public BH(Looper looper) {
-            super(looper);
-        }
-
-        public void handleMessage(Message message) {
-            if (message.what == 1) {
-                BluetoothControllerImpl.this.handleDeviceAttributesChanged();
             }
         }
     }
@@ -468,14 +394,15 @@ public class BluetoothControllerImpl implements BluetoothController, BluetoothCa
             if (i == 1) {
                 firePairedDevicesChanged();
             } else if (i == 2) {
-                Log.d("BluetoothController", "fireStateChange");
                 fireStateChange();
             } else if (i == 3) {
                 this.mCallbacks.add((BluetoothController.Callback) message.obj);
             } else if (i == 4) {
                 this.mCallbacks.remove((BluetoothController.Callback) message.obj);
-            } else if (i == 5) {
+            } else if (i == 100) {
                 fireInoutStateChange((String) message.obj);
+            } else if (i == 101) {
+                fireHandsreeBatteryStateChange((Intent) message.obj);
             }
         }
 
@@ -493,63 +420,42 @@ public class BluetoothControllerImpl implements BluetoothController, BluetoothCa
             }
         }
 
-        private void fireInoutStateChange(String str) {
-            Iterator<BluetoothController.Callback> it = this.mCallbacks.iterator();
-            while (it.hasNext()) {
-                fireInoutStateChange(it.next(), str);
-            }
-        }
-
         private void fireStateChange(BluetoothController.Callback callback) {
             callback.onBluetoothStateChange(BluetoothControllerImpl.this.mEnabled);
         }
 
-        private void fireInoutStateChange(BluetoothController.Callback callback, String str) {
-            callback.onBluetoothInoutStateChange(str);
+        private void fireInoutStateChange(String str) {
+            Iterator<BluetoothController.Callback> it = this.mCallbacks.iterator();
+            while (it.hasNext()) {
+                it.next().onBluetoothInoutStateChange(str);
+            }
         }
-    }
 
-    public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
-        printWriter.println("BluetoothController state:");
-        printWriter.print("  mLocalBluetoothManager=");
-        printWriter.println(this.mLocalBluetoothManager);
-        if (this.mLocalBluetoothManager != null) {
-            printWriter.print("  mEnabled=");
-            printWriter.println(this.mEnabled);
-            printWriter.print("  mState=");
-            printWriter.println(this.mState);
-            printWriter.print("  mConnectionState=");
-            printWriter.println(stateToString(this.mConnectionState));
-            printWriter.print("  mLastActiveDevice=");
-            printWriter.println(this.mLastActiveDevice);
-            printWriter.print("  mCallbacks.size=");
-            printWriter.println(this.mHandler.mCallbacks.size());
-            printWriter.println("  Bluetooth Devices:");
-            synchronized (this.mCachedDevices) {
-                for (CachedBluetoothDevice deviceString : this.mCachedDevices) {
-                    printWriter.println("    " + getDeviceString(deviceString));
-                }
+        private void fireHandsreeBatteryStateChange(Intent intent) {
+            Iterator<BluetoothController.Callback> it = this.mCallbacks.iterator();
+            while (it.hasNext()) {
+                it.next().onBluetoothBatteryChange(intent);
             }
         }
     }
 
-    private static String stateToString(int i) {
-        if (i == 0) {
-            return "DISCONNECTED";
-        }
-        if (i == 1) {
-            return "CONNECTING";
-        }
-        if (i == 2) {
-            return "CONNECTED";
-        }
-        if (i == 3) {
-            return "DISCONNECTING";
-        }
-        return "UNKNOWN(" + i + ")";
+    public boolean isBluetoothReady() {
+        int i = this.mState;
+        return i == 12 || i == 10 || i == 15;
     }
 
-    private String getDeviceString(CachedBluetoothDevice cachedBluetoothDevice) {
-        return cachedBluetoothDevice.getName() + " " + cachedBluetoothDevice.getBondState() + " " + cachedBluetoothDevice.isConnected();
+    public String getLastDeviceName() {
+        if (this.mConnectedDevices.isEmpty()) {
+            return "";
+        }
+        CachedBluetoothDevice cachedBluetoothDevice = this.mLastActiveDevice;
+        if (cachedBluetoothDevice != null) {
+            return cachedBluetoothDevice.getName();
+        }
+        CachedBluetoothDevice cachedBluetoothDevice2 = this.mConnectedDevices.get(0);
+        if (cachedBluetoothDevice2 == null) {
+            return "";
+        }
+        return cachedBluetoothDevice2.getName();
     }
 }

@@ -23,7 +23,7 @@ public class EthernetSignalController extends SignalController<SignalController.
     }
 
     public void notifyListeners(NetworkController.SignalCallback signalCallback) {
-        signalCallback.setEthernetIndicators(new NetworkController.IconState(this.mCurrentState.connected, getCurrentIconId(), getStringIfExists(getContentDescription())));
+        signalCallback.setEthernetIndicators(new NetworkController.IconState(this.mCurrentState.connected, getCurrentIconId(), getTextIfExists(getContentDescription()).toString()));
     }
 
     public SignalController.State cleanState() {

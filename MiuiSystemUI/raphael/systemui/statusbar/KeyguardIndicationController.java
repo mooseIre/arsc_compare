@@ -1,295 +1,321 @@
 package com.android.systemui.statusbar;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.ObjectAnimator;
 import android.app.admin.DevicePolicyManager;
-import android.app.admin.DevicePolicyManagerCompat;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.UserInfo;
+import android.content.res.ColorStateList;
 import android.content.res.Resources;
-import android.os.AsyncTask;
+import android.hardware.biometrics.BiometricSourceType;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
-import android.os.ServiceManager;
-import android.os.UserHandleCompat;
+import android.os.RemoteException;
+import android.os.UserHandle;
 import android.os.UserManager;
 import android.text.TextUtils;
+import android.text.format.Formatter;
 import android.util.Log;
 import android.view.MotionEvent;
-import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
-import android.view.animation.AnimationUtils;
-import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.app.IBatteryStats;
-import com.android.keyguard.Ease$Cubic;
-import com.android.keyguard.Ease$Quint;
-import com.android.keyguard.EmergencyButton;
+import com.android.internal.widget.ViewClippingUtil;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.KeyguardUpdateMonitorCallback;
 import com.android.keyguard.MiuiKeyguardFingerprintUtils$FingerprintIdentificationState;
-import com.android.keyguard.MiuiKeyguardUtils;
-import com.android.keyguard.charge.BatteryStatus;
-import com.android.keyguard.charge.ChargeUtils;
-import com.android.keyguard.charge.MiuiChargeController;
-import com.android.keyguard.faceunlock.FaceUnlockCallback;
-import com.android.keyguard.faceunlock.FaceUnlockManager;
-import com.android.keyguard.faceunlock.MiuiFaceUnlockUtils;
-import com.android.keyguard.utils.DeviceLevelUtils;
+import com.android.keyguard.MiuiKeyguardIndicationTextView;
+import com.android.keyguard.MiuiKeyguardUpdateMonitorCallback;
+import com.android.keyguard.charge.MiuiBatteryStatus;
+import com.android.keyguard.faceunlock.MiuiFaceUnlockManager;
+import com.android.keyguard.injector.KeyguardIndicationInjector;
+import com.android.keyguard.injector.KeyguardUpdateMonitorInjector;
+import com.android.keyguard.utils.MiuiKeyguardUtils;
 import com.android.keyguard.utils.PhoneUtils;
+import com.android.settingslib.Utils;
+import com.android.systemui.C0011R$color;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0021R$string;
+import com.android.systemui.DejankUtils;
 import com.android.systemui.Dependency;
-import com.android.systemui.plugins.R;
-import com.android.systemui.statusbar.phone.KeyguardBottomAreaView;
+import com.android.systemui.broadcast.BroadcastDispatcher;
+import com.android.systemui.dock.DockManager;
+import com.android.systemui.plugins.statusbar.StatusBarStateController;
 import com.android.systemui.statusbar.phone.KeyguardIndicationTextView;
-import com.android.systemui.statusbar.phone.NotificationPanelView;
+import com.android.systemui.statusbar.phone.LockscreenLockIconController;
 import com.android.systemui.statusbar.phone.StatusBarKeyguardViewManager;
-import com.android.systemui.statusbar.policy.UserInfoController;
+import com.android.systemui.statusbar.policy.KeyguardStateController;
 import com.android.systemui.util.wakelock.SettableWakeLock;
 import com.android.systemui.util.wakelock.WakeLock;
-import com.android.systemui.util.wakelock.WakeLockHelper;
-import miui.util.FeatureParser;
+import com.miui.systemui.DebugConfig;
+import com.miui.systemui.util.MiuiTextUtils;
+import java.io.FileDescriptor;
+import java.io.PrintWriter;
+import java.text.NumberFormat;
+import java.util.IllegalFormatConversionException;
+import java.util.function.Supplier;
+import org.jetbrains.annotations.NotNull;
 
-public class KeyguardIndicationController {
-    private final IBatteryStats mBatteryInfo;
+public class KeyguardIndicationController implements StatusBarStateController.StateListener, KeyguardStateController.Callback {
+    private String mAlignmentIndication;
+    /* access modifiers changed from: private */
+    public final IBatteryStats mBatteryInfo;
     /* access modifiers changed from: private */
     public int mBatteryLevel;
-    private ObjectAnimator mBottomButtonClickAnimator;
-    /* access modifiers changed from: private */
-    public AsyncTask<?, ?, ?> mChargeAsyncTask;
-    /* access modifiers changed from: private */
-    public int mChargeClickCount;
-    /* access modifiers changed from: private */
-    public long mChargeTextClickTime;
-    /* access modifiers changed from: private */
-    public boolean mChargeUIEntering;
+    private final BroadcastDispatcher mBroadcastDispatcher;
+    private BroadcastReceiver mBroadcastReceiver;
+    private boolean mChargeUIEntering;
     /* access modifiers changed from: private */
     public int mChargingSpeed;
     /* access modifiers changed from: private */
-    public final Context mContext;
-    private boolean mDarkMode;
+    public long mChargingTimeRemaining;
+    /* access modifiers changed from: private */
+    public int mChargingWattage;
+    private String mComputePowerIndication;
+    private final Context mContext;
+    private boolean mDarkStyle;
     private final DevicePolicyManager mDevicePolicyManager;
-    private final KeyguardIndicationTextView mDisclosure;
+    private KeyguardIndicationTextView mDisclosure;
+    private float mDisclosureMaxAlpha;
+    private final DockManager mDockManager;
     /* access modifiers changed from: private */
     public boolean mDozing;
-    private final FaceUnlockCallback mFaceUnlockCallback;
-    private final int mFastThreshold;
     /* access modifiers changed from: private */
-    public final Handler mHandler;
-    private final ViewGroup mIndicationArea;
+    public int mFingerprintAuthUserId;
     /* access modifiers changed from: private */
-    public boolean mIsOCTSingleClicking;
-    private final KeyguardBottomAreaView mKeyguardBottomAreaView;
+    public int mFingerprintErrorMsgId;
     /* access modifiers changed from: private */
-    public boolean mLockScreenMagazinePreViewVisibility;
+    public MiuiKeyguardFingerprintUtils$FingerprintIdentificationState mFpiState;
+    /* access modifiers changed from: private */
+    public final Handler mHandler = new Handler(Looper.getMainLooper()) {
+        public void handleMessage(Message message) {
+            int i = message.what;
+            if (i == 1) {
+                KeyguardIndicationController.this.hideTransientIndication();
+            } else if (i == 2) {
+                if (KeyguardIndicationController.this.mLockIconController != null) {
+                    KeyguardIndicationController.this.mLockIconController.setTransientBiometricsError(false);
+                }
+            } else if (i == 3) {
+                KeyguardIndicationController.this.showSwipeUpToUnlock();
+            } else if (i == Integer.MAX_VALUE) {
+                ((KeyguardIndicationInjector) Dependency.get(KeyguardIndicationInjector.class)).handleExitArrowAndTextAnimation(KeyguardIndicationController.this.mUpArrow, KeyguardIndicationController.this.mTextView, new Animation.AnimationListener() {
+                    public void onAnimationRepeat(Animation animation) {
+                    }
+
+                    public void onAnimationStart(Animation animation) {
+                        boolean unused = KeyguardIndicationController.this.mUpArrowEntering = false;
+                        KeyguardIndicationController.this.updateIndication(false);
+                    }
+
+                    public void onAnimationEnd(Animation animation) {
+                        KeyguardIndicationController.this.updateIndication(false);
+                        KeyguardIndicationController.this.mTextView.setVisibility(0);
+                    }
+                });
+            }
+        }
+    };
+    private boolean mHideTransientMessageOnScreenOff;
+    private ViewGroup mIndicationArea;
+    private ColorStateList mInitialTextColorState;
+    private final KeyguardStateController mKeyguardStateController;
+    /* access modifiers changed from: private */
+    public final KeyguardUpdateMonitor mKeyguardUpdateMonitor;
+    private MiuiKeyguardFingerprintUtils$FingerprintIdentificationState mLastFpiState;
+    /* access modifiers changed from: private */
+    public LockscreenLockIconController mLockIconController;
     /* access modifiers changed from: private */
     public String mMessageToShowOnScreenOn;
-    /* access modifiers changed from: private */
-    public MiuiChargeController mMiuiChargeController;
-    private final NotificationPanelView mNotificationPanelView;
     /* access modifiers changed from: private */
     public boolean mPowerCharged;
     /* access modifiers changed from: private */
     public boolean mPowerPluggedIn;
     /* access modifiers changed from: private */
+    public boolean mPowerPluggedInWired;
+    /* access modifiers changed from: private */
     public final Resources mResources;
     private String mRestingIndication;
     /* access modifiers changed from: private */
-    public boolean mShowChargeAnimation;
-    /* access modifiers changed from: private */
-    public boolean mSignalAvailable;
-    private final int mSlowThreshold;
-    /* access modifiers changed from: private */
     public StatusBarKeyguardViewManager mStatusBarKeyguardViewManager;
-    private KeyguardUpdateMonitor.StrongAuthTracker mStrongAuthTracker;
+    private final StatusBarStateController mStatusBarStateController;
     /* access modifiers changed from: private */
-    public final KeyguardIndicationTextView mTextView;
-    private View.OnClickListener mTextViewOnClickListener;
-    private final BroadcastReceiver mTickReceiver;
-    private String mTransientIndication;
-    private int mTransientTextColor;
+    public MiuiKeyguardIndicationTextView mTextView;
+    private final KeyguardUpdateMonitorCallback mTickReceiver = new KeyguardUpdateMonitorCallback() {
+        public void onTimeChanged() {
+            if (KeyguardIndicationController.this.mVisible) {
+                KeyguardIndicationController.this.updateIndication(false);
+            }
+        }
+    };
+    private CharSequence mTransientIndication;
+    private boolean mTransientTextIsError;
     /* access modifiers changed from: private */
-    public final ImageView mUpArrow;
+    public ImageView mUpArrow;
     /* access modifiers changed from: private */
     public boolean mUpArrowEntering;
     /* access modifiers changed from: private */
     public String mUpArrowIndication;
-    /* access modifiers changed from: private */
-    public KeyguardUpdateMonitor mUpdateMonitor;
-    private KeyguardUpdateMonitorCallback mUpdateMonitorCallback;
+    private MiuiKeyguardUpdateMonitorCallback mUpdateMonitorCallback;
     private final UserManager mUserManager;
-    private ViewConfiguration mViewConfiguration;
     /* access modifiers changed from: private */
     public boolean mVisible;
     private final SettableWakeLock mWakeLock;
+    boolean mWasPluggedIn = false;
 
-    public void setUserInfoController(UserInfoController userInfoController) {
+    /* renamed from: com.android.systemui.statusbar.KeyguardIndicationController$1  reason: invalid class name */
+    class AnonymousClass1 implements ViewClippingUtil.ClippingParameters {
     }
 
-    static /* synthetic */ int access$208(KeyguardIndicationController keyguardIndicationController) {
-        int i = keyguardIndicationController.mChargeClickCount;
-        keyguardIndicationController.mChargeClickCount = i + 1;
-        return i;
+    private String getTrustManagedIndication() {
+        return null;
     }
 
-    public KeyguardIndicationController(Context context, NotificationPanelView notificationPanelView) {
-        this(context, WakeLockHelper.createPartial(context, "Doze:KeyguardIndication"), notificationPanelView);
-        registerCallbacks(this.mUpdateMonitor);
-        FaceUnlockManager.getInstance().registerFaceUnlockCallback(this.mFaceUnlockCallback);
+    public void onStateChanged(int i) {
     }
 
-    @VisibleForTesting
-    KeyguardIndicationController(Context context, WakeLock wakeLock, NotificationPanelView notificationPanelView) {
-        this.mChargeClickCount = 0;
-        this.mTextViewOnClickListener = new View.OnClickListener() {
-            public void onClick(View view) {
-                Log.i("KeyguardIndication", "onClick: mPowerPluggedIn " + KeyguardIndicationController.this.mPowerPluggedIn + ";mLockScreenMagazinePreViewVisibility=" + KeyguardIndicationController.this.mLockScreenMagazinePreViewVisibility);
-                if (KeyguardIndicationController.this.mPowerPluggedIn && !KeyguardIndicationController.this.mLockScreenMagazinePreViewVisibility) {
-                    if (KeyguardIndicationController.this.mChargeClickCount == 0) {
-                        long unused = KeyguardIndicationController.this.mChargeTextClickTime = System.currentTimeMillis();
-                    }
-                    KeyguardIndicationController.access$208(KeyguardIndicationController.this);
-                    Log.i("KeyguardIndication", "onClick: mChargeClickCount " + KeyguardIndicationController.this.mChargeClickCount + ";time=" + (System.currentTimeMillis() - KeyguardIndicationController.this.mChargeTextClickTime));
-                    if (KeyguardIndicationController.this.mChargeClickCount >= 2) {
-                        if (System.currentTimeMillis() - KeyguardIndicationController.this.mChargeTextClickTime > 150 && System.currentTimeMillis() - KeyguardIndicationController.this.mChargeTextClickTime < 500) {
-                            int unused2 = KeyguardIndicationController.this.mChargeClickCount = 0;
-                            long unused3 = KeyguardIndicationController.this.mChargeTextClickTime = System.currentTimeMillis();
-                            KeyguardIndicationController.this.mMiuiChargeController.checkBatteryStatus(true);
-                            KeyguardIndicationController.this.mTextView.setVisibility(4);
-                        } else if (System.currentTimeMillis() - KeyguardIndicationController.this.mChargeTextClickTime > 500) {
-                            int unused4 = KeyguardIndicationController.this.mChargeClickCount = 1;
-                            long unused5 = KeyguardIndicationController.this.mChargeTextClickTime = System.currentTimeMillis();
-                        } else {
-                            int unused6 = KeyguardIndicationController.this.mChargeClickCount = 0;
-                        }
-                    }
-                }
-                if (MiuiKeyguardUtils.IS_OPERATOR_CUSTOMIZATION_TEST && KeyguardIndicationController.this.mSignalAvailable && !KeyguardIndicationController.this.mIsOCTSingleClicking && !KeyguardIndicationController.this.mPowerPluggedIn) {
-                    KeyguardIndicationController.this.takeEmergencyCallAction();
-                }
-            }
-        };
-        this.mTickReceiver = new BroadcastReceiver() {
-            public void onReceive(Context context, Intent intent) {
-                KeyguardIndicationController.this.mHandler.sendEmptyMessage(3);
-            }
-        };
-        this.mHandler = new Handler() {
-            public void handleMessage(Message message) {
-                switch (message.what) {
-                    case 1:
-                        KeyguardIndicationController.this.hideTransientIndication();
-                        return;
-                    case 2:
-                        KeyguardIndicationController.this.hideTransientIndication();
-                        return;
-                    case 3:
-                        KeyguardIndicationController.this.handleTickReceived();
-                        return;
-                    case 4:
-                        KeyguardIndicationController.this.handleExitArrowAndTextAnimation();
-                        return;
-                    case 5:
-                        KeyguardIndicationController.this.updateChargingInfoIndication();
-                        return;
-                    case 6:
-                        KeyguardIndicationController.this.handleShowOCTEmergency();
-                        return;
-                    default:
-                        return;
-                }
-            }
-        };
-        this.mFaceUnlockCallback = new FaceUnlockCallback() {
-            public void onFaceAuthHelp(int i) {
-                KeyguardIndicationController keyguardIndicationController = KeyguardIndicationController.this;
-                keyguardIndicationController.handleFaceUnlockBouncerMessage(MiuiFaceUnlockUtils.getFaceHelpInfo(keyguardIndicationController.mContext, i));
-            }
-
-            public void onFaceAuthFailed() {
-                KeyguardIndicationController.this.handleFaceUnlockBouncerMessage("");
-            }
-
-            public void onFaceAuthTimeOut(boolean z) {
-                KeyguardIndicationController.this.handleFaceUnlockBouncerMessage("");
-            }
-
-            public void onFaceAuthLocked() {
-                KeyguardIndicationController.this.handleFaceUnlockBouncerMessage("");
-            }
-        };
+    KeyguardIndicationController(Context context, WakeLock.Builder builder, KeyguardStateController keyguardStateController, StatusBarStateController statusBarStateController, KeyguardUpdateMonitor keyguardUpdateMonitor, DockManager dockManager, BroadcastDispatcher broadcastDispatcher, DevicePolicyManager devicePolicyManager, IBatteryStats iBatteryStats, UserManager userManager) {
         this.mContext = context;
-        this.mResources = this.mContext.getResources();
-        this.mWakeLock = new SettableWakeLock(wakeLock);
-        this.mNotificationPanelView = notificationPanelView;
-        this.mKeyguardBottomAreaView = (KeyguardBottomAreaView) notificationPanelView.findViewById(R.id.keyguard_bottom_area);
-        this.mIndicationArea = (LinearLayout) this.mKeyguardBottomAreaView.findViewById(R.id.keyguard_indication_area);
-        this.mTextView = (KeyguardIndicationTextView) this.mKeyguardBottomAreaView.findViewById(R.id.keyguard_indication_text);
-        this.mTextView.setOnClickListener(this.mTextViewOnClickListener);
-        this.mDisclosure = (KeyguardIndicationTextView) this.mKeyguardBottomAreaView.findViewById(R.id.keyguard_indication_enterprise_disclosure);
-        this.mUpArrow = (ImageView) this.mKeyguardBottomAreaView.findViewById(R.id.keyguard_up_arrow);
-        this.mSlowThreshold = this.mResources.getInteger(R.integer.config_chargingSlowlyThreshold);
-        this.mFastThreshold = this.mResources.getInteger(R.integer.config_chargingFastThreshold);
-        this.mUserManager = (UserManager) context.getSystemService(UserManager.class);
-        this.mBatteryInfo = IBatteryStats.Stub.asInterface(ServiceManager.getService("batterystats"));
-        this.mDevicePolicyManager = (DevicePolicyManager) context.getSystemService("device_policy");
-        this.mUpdateMonitor = KeyguardUpdateMonitor.getInstance(context);
-        this.mStrongAuthTracker = this.mUpdateMonitor.getStrongAuthTracker();
-        this.mViewConfiguration = ViewConfiguration.get(context);
+        Resources resources = context.getResources();
+        this.mResources = resources;
+        this.mUpArrowIndication = resources.getString(C0021R$string.default_lockscreen_unlock_hint_text);
+        this.mBroadcastDispatcher = broadcastDispatcher;
+        this.mDevicePolicyManager = devicePolicyManager;
+        this.mKeyguardStateController = keyguardStateController;
+        this.mStatusBarStateController = statusBarStateController;
+        this.mKeyguardUpdateMonitor = keyguardUpdateMonitor;
+        this.mDockManager = dockManager;
+        dockManager.addAlignmentStateListener(new DockManager.AlignmentStateListener() {
+        });
+        builder.setTag("Doze:KeyguardIndication");
+        this.mWakeLock = new SettableWakeLock(builder.build(), "KeyguardIndication");
+        this.mBatteryInfo = iBatteryStats;
+        this.mUserManager = userManager;
+        this.mKeyguardUpdateMonitor.registerCallback(getKeyguardCallback());
+        this.mKeyguardUpdateMonitor.registerCallback(this.mTickReceiver);
+        this.mStatusBarStateController.addCallback(this);
+        this.mKeyguardStateController.addCallback(this);
+    }
+
+    public void setIndicationArea(ViewGroup viewGroup) {
+        this.mIndicationArea = viewGroup;
+        MiuiKeyguardIndicationTextView miuiKeyguardIndicationTextView = (MiuiKeyguardIndicationTextView) viewGroup.findViewById(C0015R$id.keyguard_indication_text);
+        this.mTextView = miuiKeyguardIndicationTextView;
+        miuiKeyguardIndicationTextView.setTextColor(getTextColor());
+        this.mUpArrow = (ImageView) viewGroup.getRootView().findViewById(C0015R$id.keyguard_up_arrow);
+        ((KeyguardIndicationInjector) Dependency.get(KeyguardIndicationInjector.class)).setDoubleClickListener(this.mTextView);
+        MiuiKeyguardIndicationTextView miuiKeyguardIndicationTextView2 = this.mTextView;
+        this.mInitialTextColorState = miuiKeyguardIndicationTextView2 != null ? miuiKeyguardIndicationTextView2.getTextColors() : ColorStateList.valueOf(-1);
+        KeyguardIndicationTextView keyguardIndicationTextView = (KeyguardIndicationTextView) viewGroup.findViewById(C0015R$id.keyguard_indication_enterprise_disclosure);
+        this.mDisclosure = keyguardIndicationTextView;
+        this.mDisclosureMaxAlpha = keyguardIndicationTextView.getAlpha();
+        updateIndication(false);
         updateDisclosure();
-        MiuiKeyguardUtils.setViewTouchDelegate(this.mTextView, 50);
+        if (this.mBroadcastReceiver == null) {
+            this.mBroadcastReceiver = new BroadcastReceiver() {
+                public void onReceive(Context context, Intent intent) {
+                    KeyguardIndicationController.this.updateDisclosure();
+                }
+            };
+            IntentFilter intentFilter = new IntentFilter();
+            intentFilter.addAction("android.app.action.DEVICE_POLICY_MANAGER_STATE_CHANGED");
+            intentFilter.addAction("android.intent.action.USER_REMOVED");
+            this.mBroadcastDispatcher.registerReceiver(this.mBroadcastReceiver, intentFilter);
+        }
     }
 
-    /* access modifiers changed from: private */
-    public void takeEmergencyCallAction() {
-        PhoneUtils.takeEmergencyCallAction(this.mContext, (EmergencyButton.EmergencyButtonCallback) null);
-    }
-
-    private void registerCallbacks(KeyguardUpdateMonitor keyguardUpdateMonitor) {
-        keyguardUpdateMonitor.registerCallback(getKeyguardCallback());
-        this.mContext.registerReceiverAsUser(this.mTickReceiver, UserHandleCompat.SYSTEM, new IntentFilter("android.intent.action.TIME_TICK"), (String) null, (Handler) Dependency.get(Dependency.TIME_TICK_HANDLER));
+    public void setLockIconController(LockscreenLockIconController lockscreenLockIconController) {
+        this.mLockIconController = lockscreenLockIconController;
     }
 
     /* access modifiers changed from: protected */
     public KeyguardUpdateMonitorCallback getKeyguardCallback() {
         if (this.mUpdateMonitorCallback == null) {
-            this.mUpdateMonitorCallback = new BaseKeyguardCallback();
+            this.mUpdateMonitorCallback = new MiuiBaseKeyguardCallback(this, (AnonymousClass1) null);
         }
         return this.mUpdateMonitorCallback;
     }
 
     /* access modifiers changed from: private */
     public void updateDisclosure() {
-        DevicePolicyManager devicePolicyManager = this.mDevicePolicyManager;
-        if (devicePolicyManager != null) {
-            if (this.mDozing || !DevicePolicyManagerCompat.isDeviceManaged(devicePolicyManager)) {
-                this.mDisclosure.setVisibility(8);
-                return;
+        if (((Boolean) DejankUtils.whitelistIpcs(new Supplier() {
+            public final Object get() {
+                return Boolean.valueOf(KeyguardIndicationController.this.isOrganizationOwnedDevice());
             }
-            CharSequence deviceOwnerOrganizationName = DevicePolicyManagerCompat.getDeviceOwnerOrganizationName(this.mDevicePolicyManager);
-            if (deviceOwnerOrganizationName != null) {
-                this.mDisclosure.switchIndication((CharSequence) this.mResources.getString(R.string.do_disclosure_with_name, new Object[]{deviceOwnerOrganizationName}));
+        })).booleanValue()) {
+            CharSequence organizationOwnedDeviceOrganizationName = getOrganizationOwnedDeviceOrganizationName();
+            if (organizationOwnedDeviceOrganizationName != null) {
+                this.mDisclosure.switchIndication((CharSequence) this.mContext.getResources().getString(C0021R$string.do_disclosure_with_name, new Object[]{organizationOwnedDeviceOrganizationName}));
             } else {
-                this.mDisclosure.switchIndication((int) R.string.do_disclosure_generic);
+                this.mDisclosure.switchIndication(C0021R$string.do_disclosure_generic);
             }
             this.mDisclosure.setVisibility(0);
+            return;
         }
+        this.mDisclosure.setVisibility(8);
+    }
+
+    /* access modifiers changed from: private */
+    public boolean isOrganizationOwnedDevice() {
+        return this.mDevicePolicyManager.isDeviceManaged() || this.mDevicePolicyManager.isOrganizationOwnedDeviceWithManagedProfile();
+    }
+
+    private CharSequence getOrganizationOwnedDeviceOrganizationName() {
+        if (this.mDevicePolicyManager.isDeviceManaged()) {
+            return this.mDevicePolicyManager.getDeviceOwnerOrganizationName();
+        }
+        if (this.mDevicePolicyManager.isOrganizationOwnedDeviceWithManagedProfile()) {
+            return getWorkProfileOrganizationName();
+        }
+        return null;
+    }
+
+    private CharSequence getWorkProfileOrganizationName() {
+        int workProfileUserId = getWorkProfileUserId(UserHandle.myUserId());
+        if (workProfileUserId == -10000) {
+            return null;
+        }
+        return this.mDevicePolicyManager.getOrganizationNameForUser(workProfileUserId);
+    }
+
+    private int getWorkProfileUserId(int i) {
+        for (UserInfo userInfo : this.mUserManager.getProfiles(i)) {
+            if (userInfo.isManagedProfile()) {
+                return userInfo.id;
+            }
+        }
+        return -10000;
     }
 
     public void setVisible(boolean z) {
         this.mVisible = z;
         this.mIndicationArea.setVisibility(z ? 0 : 8);
         if (z) {
+            if (!this.mHandler.hasMessages(1)) {
+                hideTransientIndication();
+            }
+            updateIndication(false);
+        } else if (!z) {
             hideTransientIndication();
-            updateIndication();
         }
+    }
+
+    /* access modifiers changed from: package-private */
+    @VisibleForTesting
+    public String getTrustGrantedIndication() {
+        return this.mContext.getString(C0021R$string.keyguard_indication_trust_unlocked);
+    }
+
+    /* access modifiers changed from: package-private */
+    @VisibleForTesting
+    public void setPowerPluggedIn(boolean z) {
+        this.mPowerPluggedIn = z;
     }
 
     public void hideTransientIndicationDelayed(long j) {
@@ -298,98 +324,145 @@ public class KeyguardIndicationController {
     }
 
     public void showTransientIndication(int i) {
-        showTransientIndication(this.mResources.getString(i));
+        showTransientIndication((CharSequence) this.mContext.getResources().getString(i));
+    }
+
+    public void showTransientIndication(CharSequence charSequence) {
+        showTransientIndication(charSequence, false, false);
     }
 
     /* access modifiers changed from: private */
-    public void showTransientIndication(String str) {
-        showTransientIndication(str, getTextColor());
-    }
-
-    /* access modifiers changed from: private */
-    public void showTransientIndication(String str, int i) {
-        this.mTransientIndication = str;
-        this.mTransientTextColor = i;
+    public void showTransientIndication(CharSequence charSequence, boolean z, boolean z2) {
+        this.mTransientIndication = charSequence;
+        this.mHideTransientMessageOnScreenOff = z2 && charSequence != null;
+        this.mTransientTextIsError = z;
         this.mHandler.removeMessages(1);
+        this.mHandler.removeMessages(3);
         if (this.mDozing && !TextUtils.isEmpty(this.mTransientIndication)) {
             this.mWakeLock.setAcquired(true);
             hideTransientIndicationDelayed(5000);
         }
-        updateIndication();
+        updateIndication(false);
     }
 
     public void hideTransientIndication() {
         if (this.mTransientIndication != null) {
             this.mTransientIndication = null;
+            this.mHideTransientMessageOnScreenOff = false;
             this.mHandler.removeMessages(1);
-            updateIndication();
+            updateIndication(false);
         }
     }
 
-    /* access modifiers changed from: private */
-    public void updateIndication() {
+    /* access modifiers changed from: protected */
+    public final void updateIndication(boolean z) {
+        ColorStateList colorStateList;
+        int i;
+        boolean z2 = false;
         if (TextUtils.isEmpty(this.mTransientIndication)) {
             this.mWakeLock.setAcquired(false);
         }
-        Log.i("KeyguardIndication", "updateIndication: mVisible " + this.mVisible + " mDozing " + this.mDozing + " mTransientIndication " + this.mTransientIndication + " mPowerPluggedIn " + this.mPowerPluggedIn + " mUpArrowIndication " + this.mUpArrowIndication);
-        if (!this.mVisible) {
-            return;
+        if (DebugConfig.DEBUG_KEYGUARD) {
+            Log.i("KeyguardIndication", "-----updateIndication: mVisible " + this.mVisible + " mDozing " + this.mDozing + " mTransientIndication " + this.mTransientIndication + " mPowerPluggedIn " + this.mPowerPluggedIn + " mComputePowerIndication " + this.mComputePowerIndication + " mUpArrowIndication " + this.mUpArrowIndication + " mChargeUIEntering " + this.mChargeUIEntering + " animate: " + z);
         }
-        if (this.mDozing) {
-            if (!TextUtils.isEmpty(this.mTransientIndication)) {
-                this.mTextView.switchIndication((CharSequence) this.mTransientIndication);
-                this.mTextView.setTextColor(this.mTransientTextColor);
-                return;
+        if (this.mVisible) {
+            String trustGrantedIndication = getTrustGrantedIndication();
+            String trustManagedIndication = getTrustManagedIndication();
+            String str = null;
+            if (this.mPowerPluggedIn) {
+                str = miuiComputePowerIndication();
             }
-            this.mTextView.switchIndication((CharSequence) null);
-        } else if (!TextUtils.isEmpty(this.mTransientIndication)) {
-            this.mTextView.switchIndication((CharSequence) this.mTransientIndication);
-            this.mTextView.setTextColor(this.mTransientTextColor);
-        } else if (this.mPowerPluggedIn && !this.mChargeUIEntering) {
-            this.mHandler.removeMessages(5);
-            this.mHandler.sendEmptyMessageDelayed(5, 500);
-        } else if (MiuiKeyguardUtils.IS_OPERATOR_CUSTOMIZATION_TEST && this.mSignalAvailable && !this.mIsOCTSingleClicking) {
-            this.mTextView.switchIndication((int) R.string.emergency_call_string);
-            this.mTextView.setTextColor(getTextColor());
-        } else if (!TextUtils.isEmpty(this.mUpArrowIndication) && !this.mChargeUIEntering) {
-            this.mTextView.switchIndication((CharSequence) this.mUpArrowEntering ? "" : this.mUpArrowIndication);
-            this.mTextView.setTextColor(getTextColor());
-            this.mUpArrow.setImageResource(this.mDarkMode ? R.drawable.miui_default_lock_screen_up_arrow_dark : R.drawable.miui_default_lock_screen_up_arrow);
-        } else if (!this.mChargeUIEntering) {
-            this.mTextView.switchIndication((CharSequence) this.mRestingIndication);
-            this.mTextView.setTextColor(getTextColor());
+            int currentUser = KeyguardUpdateMonitor.getCurrentUser();
+            if (!TextUtils.isEmpty(this.mTransientIndication)) {
+                this.mTextView.switchIndication(this.mTransientIndication);
+                z2 = this.mTransientTextIsError;
+            } else if (TextUtils.isEmpty(trustGrantedIndication) || !this.mKeyguardUpdateMonitor.getUserHasTrust(currentUser)) {
+                if (!TextUtils.isEmpty(this.mAlignmentIndication)) {
+                    this.mTextView.switchIndication(this.mAlignmentIndication);
+                    z2 = true;
+                } else if (!this.mPowerPluggedIn || this.mChargeUIEntering) {
+                    if (!TextUtils.isEmpty(trustManagedIndication) && this.mKeyguardUpdateMonitor.getUserTrustIsManaged(currentUser) && !this.mKeyguardUpdateMonitor.getUserHasTrust(currentUser)) {
+                        this.mTextView.switchIndication(trustManagedIndication);
+                    } else if (TextUtils.isEmpty(this.mUpArrowIndication) || this.mChargeUIEntering) {
+                        this.mTextView.switchIndication(this.mRestingIndication);
+                    } else {
+                        this.mTextView.switchIndication(this.mUpArrowEntering ? "" : this.mUpArrowIndication);
+                        ImageView imageView = this.mUpArrow;
+                        if (imageView != null) {
+                            if (this.mDarkStyle) {
+                                i = C0013R$drawable.miui_default_lock_screen_up_arrow_dark;
+                            } else {
+                                i = C0013R$drawable.miui_default_lock_screen_up_arrow;
+                            }
+                            imageView.setImageResource(i);
+                        }
+                    }
+                } else if (MiuiTextUtils.isEmpty(str)) {
+                    updatePowerIndication(z);
+                } else {
+                    this.mTextView.switchIndication(str);
+                }
+            } else if (str != null) {
+                this.mTextView.switchIndication(this.mContext.getResources().getString(C0021R$string.keyguard_indication_trust_unlocked_plugged_in, new Object[]{trustGrantedIndication, str}));
+            } else {
+                this.mTextView.switchIndication(trustGrantedIndication);
+            }
+            MiuiKeyguardIndicationTextView miuiKeyguardIndicationTextView = this.mTextView;
+            if (z2) {
+                colorStateList = Utils.getColorError(this.mContext);
+            } else {
+                colorStateList = this.mInitialTextColorState;
+            }
+            miuiKeyguardIndicationTextView.setTextColor(colorStateList);
         }
     }
 
-    /* access modifiers changed from: private */
-    public void updateChargingInfoIndication() {
-        if (this.mChargeAsyncTask == null && this.mPowerPluggedIn) {
-            this.mChargeAsyncTask = new AsyncTask<Void, Void, String>() {
-                /* access modifiers changed from: protected */
-                public String doInBackground(Void... voidArr) {
-                    return ChargeUtils.getChargingHintText(KeyguardIndicationController.this.mContext, KeyguardIndicationController.this.mPowerPluggedIn, KeyguardIndicationController.this.mBatteryLevel);
-                }
-
-                /* access modifiers changed from: protected */
-                public void onPostExecute(String str) {
-                    super.onPostExecute(str);
-                    if (KeyguardIndicationController.this.mPowerPluggedIn) {
-                        if (KeyguardIndicationController.this.mShowChargeAnimation) {
-                            KeyguardIndicationController.this.mTextView.setVisibility(4);
-                        } else {
-                            KeyguardIndicationController.this.mTextView.switchIndication((CharSequence) str);
-                            KeyguardIndicationController.this.mTextView.setTextColor(KeyguardIndicationController.this.getTextColor());
-                        }
+    /* access modifiers changed from: package-private */
+    @VisibleForTesting
+    public String computePowerIndication() {
+        int i;
+        if (this.mPowerCharged) {
+            return this.mContext.getResources().getString(C0021R$string.keyguard_charged);
+        }
+        boolean z = this.mChargingTimeRemaining > 0;
+        if (this.mPowerPluggedInWired) {
+            int i2 = this.mChargingSpeed;
+            if (i2 != 0) {
+                if (i2 != 2) {
+                    if (z) {
+                        i = C0021R$string.keyguard_indication_charging_time;
+                    } else {
+                        i = C0021R$string.keyguard_plugged_in;
                     }
-                    AsyncTask unused = KeyguardIndicationController.this.mChargeAsyncTask = null;
+                } else if (z) {
+                    i = C0021R$string.keyguard_indication_charging_time_fast;
+                } else {
+                    i = C0021R$string.keyguard_plugged_in_charging_fast;
                 }
-
-                /* access modifiers changed from: protected */
-                public void onCancelled() {
-                    super.onCancelled();
-                    AsyncTask unused = KeyguardIndicationController.this.mChargeAsyncTask = null;
-                }
-            }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new Void[0]);
+            } else if (z) {
+                i = C0021R$string.keyguard_indication_charging_time_slowly;
+            } else {
+                i = C0021R$string.keyguard_plugged_in_charging_slowly;
+            }
+        } else if (z) {
+            i = C0021R$string.keyguard_indication_charging_time_wireless;
+        } else {
+            i = C0021R$string.keyguard_plugged_in_wireless;
+        }
+        String format = NumberFormat.getPercentInstance().format((double) (((float) this.mBatteryLevel) / 100.0f));
+        if (z) {
+            String formatShortElapsedTimeRoundingUpToMinutes = Formatter.formatShortElapsedTimeRoundingUpToMinutes(this.mContext, this.mChargingTimeRemaining);
+            try {
+                return this.mContext.getResources().getString(i, new Object[]{formatShortElapsedTimeRoundingUpToMinutes, format});
+            } catch (IllegalFormatConversionException unused) {
+                return this.mContext.getResources().getString(i, new Object[]{formatShortElapsedTimeRoundingUpToMinutes});
+            }
+        } else {
+            try {
+                return this.mContext.getResources().getString(i, new Object[]{format});
+            } catch (IllegalFormatConversionException unused2) {
+                return this.mContext.getResources().getString(i);
+            }
         }
     }
 
@@ -397,464 +470,474 @@ public class KeyguardIndicationController {
         this.mStatusBarKeyguardViewManager = statusBarKeyguardViewManager;
     }
 
-    public void onTouchEvent(MotionEvent motionEvent, int i, float f, float f2) {
+    /* access modifiers changed from: private */
+    public void showSwipeUpToUnlock() {
+        if (!this.mDozing && this.mStatusBarKeyguardViewManager.isBouncerShowing()) {
+            this.mStatusBarKeyguardViewManager.showBouncerMessage(this.mContext.getString(C0021R$string.face_unlock_fail_retry), this.mResources.getColor(C0011R$color.secure_keyguard_bouncer_message_content_text_color));
+        }
+    }
+
+    public void setDozing(boolean z) {
+        if (this.mDozing != z) {
+            this.mDozing = z;
+            if (!this.mHideTransientMessageOnScreenOff || !z) {
+                updateIndication(false);
+            } else {
+                hideTransientIndication();
+            }
+        }
+    }
+
+    public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
+        printWriter.println("KeyguardIndicationController:");
+        printWriter.println("  mTransientTextIsError: " + this.mTransientTextIsError);
+        printWriter.println("  mInitialTextColorState: " + this.mInitialTextColorState);
+        printWriter.println("  mPowerPluggedInWired: " + this.mPowerPluggedInWired);
+        printWriter.println("  mPowerPluggedIn: " + this.mPowerPluggedIn);
+        printWriter.println("  mPowerCharged: " + this.mPowerCharged);
+        printWriter.println("  mChargingSpeed: " + this.mChargingSpeed);
+        printWriter.println("  mChargingWattage: " + this.mChargingWattage);
+        printWriter.println("  mMessageToShowOnScreenOn: " + this.mMessageToShowOnScreenOn);
+        printWriter.println("  mDozing: " + this.mDozing);
+        printWriter.println("  mBatteryLevel: " + this.mBatteryLevel);
+        StringBuilder sb = new StringBuilder();
+        sb.append("  mTextView.getText(): ");
+        MiuiKeyguardIndicationTextView miuiKeyguardIndicationTextView = this.mTextView;
+        sb.append(miuiKeyguardIndicationTextView == null ? null : miuiKeyguardIndicationTextView.getText());
+        printWriter.println(sb.toString());
+        printWriter.println("  computePowerIndication(): " + computePowerIndication());
+    }
+
+    public void onDozingChanged(boolean z) {
+        setDozing(z);
+    }
+
+    public void onDozeAmountChanged(float f, float f2) {
+        this.mDisclosure.setAlpha((1.0f - f) * this.mDisclosureMaxAlpha);
+    }
+
+    public void onUnlockedChanged() {
+        updateIndication(!this.mDozing);
+    }
+
+    private class MiuiBaseKeyguardCallback extends BaseKeyguardCallback {
+        private MiuiBaseKeyguardCallback() {
+            super();
+        }
+
+        /* synthetic */ MiuiBaseKeyguardCallback(KeyguardIndicationController keyguardIndicationController, AnonymousClass1 r2) {
+            this();
+        }
+
+        public void onRefreshBatteryInfo(MiuiBatteryStatus miuiBatteryStatus) {
+            super.onRefreshBatteryInfo(miuiBatteryStatus);
+            if (KeyguardIndicationController.this.mPowerPluggedIn) {
+                KeyguardIndicationController keyguardIndicationController = KeyguardIndicationController.this;
+                if (!keyguardIndicationController.mWasPluggedIn) {
+                    keyguardIndicationController.clearUpArrowAnimation();
+                }
+            }
+            if (!KeyguardIndicationController.this.mPowerPluggedIn) {
+                KeyguardIndicationController keyguardIndicationController2 = KeyguardIndicationController.this;
+                if (keyguardIndicationController2.mWasPluggedIn) {
+                    keyguardIndicationController2.clearPowerIndication();
+                    KeyguardIndicationController keyguardIndicationController3 = KeyguardIndicationController.this;
+                    String unused = keyguardIndicationController3.mUpArrowIndication = keyguardIndicationController3.mResources.getString(C0021R$string.default_lockscreen_unlock_hint_text);
+                    if (KeyguardIndicationController.this.mTextView != null) {
+                        KeyguardIndicationController.this.mTextView.clearAnimation();
+                        KeyguardIndicationController.this.updateIndication(false);
+                    }
+                }
+            }
+        }
+    }
+
+    public void updatePowerIndication(boolean z) {
+        this.mChargeUIEntering = z;
+        ((KeyguardIndicationInjector) Dependency.get(KeyguardIndicationInjector.class)).updatePowerIndication(z, this.mTextView);
+    }
+
+    /* access modifiers changed from: private */
+    public void clearPowerIndication() {
+        this.mComputePowerIndication = null;
+        this.mChargeUIEntering = false;
+    }
+
+    public void showMiuiPowerIndication(String str) {
+        this.mComputePowerIndication = str;
+        updateIndication(false);
+    }
+
+    /* access modifiers changed from: package-private */
+    public String miuiComputePowerIndication() {
+        return this.mComputePowerIndication;
+    }
+
+    public boolean isPowerPluggedIn() {
+        return this.mPowerPluggedIn;
+    }
+
+    public int getBatteryLevel() {
+        return this.mBatteryLevel;
+    }
+
+    protected class BaseKeyguardCallback extends MiuiKeyguardUpdateMonitorCallback {
+        protected BaseKeyguardCallback() {
+        }
+
+        public void onRefreshBatteryInfo(MiuiBatteryStatus miuiBatteryStatus) {
+            int i = miuiBatteryStatus.status;
+            boolean z = false;
+            boolean z2 = i == 2 || i == 5;
+            KeyguardIndicationController keyguardIndicationController = KeyguardIndicationController.this;
+            keyguardIndicationController.mWasPluggedIn = keyguardIndicationController.mPowerPluggedIn;
+            boolean unused = KeyguardIndicationController.this.mPowerPluggedInWired = miuiBatteryStatus.isPluggedInWired() && z2;
+            boolean unused2 = KeyguardIndicationController.this.mPowerPluggedIn = miuiBatteryStatus.isPluggedIn() && z2;
+            boolean unused3 = KeyguardIndicationController.this.mPowerCharged = miuiBatteryStatus.isCharged();
+            int unused4 = KeyguardIndicationController.this.mChargingWattage = miuiBatteryStatus.maxChargingWattage;
+            int unused5 = KeyguardIndicationController.this.mChargingSpeed = miuiBatteryStatus.chargeSpeed;
+            int unused6 = KeyguardIndicationController.this.mBatteryLevel = miuiBatteryStatus.level;
+            try {
+                long unused7 = KeyguardIndicationController.this.mChargingTimeRemaining = KeyguardIndicationController.this.mPowerPluggedIn ? KeyguardIndicationController.this.mBatteryInfo.computeChargeTimeRemaining() : -1;
+            } catch (RemoteException e) {
+                Log.e("KeyguardIndication", "Error calling IBatteryStats: ", e);
+                long unused8 = KeyguardIndicationController.this.mChargingTimeRemaining = -1;
+            }
+            KeyguardIndicationController keyguardIndicationController2 = KeyguardIndicationController.this;
+            if (!keyguardIndicationController2.mWasPluggedIn && keyguardIndicationController2.mPowerPluggedInWired) {
+                z = true;
+            }
+            keyguardIndicationController2.updateIndication(z);
+            if (KeyguardIndicationController.this.mDozing) {
+                KeyguardIndicationController keyguardIndicationController3 = KeyguardIndicationController.this;
+                if (keyguardIndicationController3.mWasPluggedIn || !keyguardIndicationController3.mPowerPluggedIn) {
+                    KeyguardIndicationController keyguardIndicationController4 = KeyguardIndicationController.this;
+                    if (keyguardIndicationController4.mWasPluggedIn && !keyguardIndicationController4.mPowerPluggedIn) {
+                        KeyguardIndicationController.this.hideTransientIndication();
+                        return;
+                    }
+                    return;
+                }
+                KeyguardIndicationController keyguardIndicationController5 = KeyguardIndicationController.this;
+                keyguardIndicationController5.showTransientIndication((CharSequence) keyguardIndicationController5.miuiComputePowerIndication());
+                KeyguardIndicationController.this.hideTransientIndicationDelayed(5000);
+            }
+        }
+
+        public void onBiometricHelp(int i, String str, BiometricSourceType biometricSourceType) {
+            if (KeyguardIndicationController.this.mKeyguardUpdateMonitor.isUnlockingWithBiometricAllowed(true)) {
+                if (biometricSourceType == BiometricSourceType.FACE) {
+                    KeyguardIndicationController.this.handleFaceUnlockBouncerMessage(str);
+                }
+                if (biometricSourceType != BiometricSourceType.FINGERPRINT) {
+                    return;
+                }
+                if (KeyguardIndicationController.this.mStatusBarKeyguardViewManager.isBouncerShowing()) {
+                    if (!TextUtils.isEmpty(str) && !MiuiKeyguardUtils.isGxzwSensor()) {
+                        KeyguardIndicationController.this.mStatusBarKeyguardViewManager.showBouncerMessage(str, KeyguardIndicationController.this.mResources.getColor(C0011R$color.secure_keyguard_bouncer_message_content_text_color));
+                    }
+                } else if (KeyguardIndicationController.this.mKeyguardUpdateMonitor.isDeviceInteractive() || (KeyguardIndicationController.this.mDozing && KeyguardIndicationController.this.mKeyguardUpdateMonitor.isScreenOn())) {
+                    KeyguardIndicationController.this.showTransientIndication(str, false, false);
+                    KeyguardIndicationController.this.hideTransientIndicationDelayed(1300);
+                }
+            }
+        }
+
+        public void onBiometricError(int i, String str, BiometricSourceType biometricSourceType) {
+            if (!shouldSuppressBiometricError(i, biometricSourceType, KeyguardIndicationController.this.mKeyguardUpdateMonitor)) {
+                if (biometricSourceType == BiometricSourceType.FACE) {
+                    KeyguardIndicationController.this.handleFaceUnlockBouncerMessage("");
+                    return;
+                }
+                int unused = KeyguardIndicationController.this.mFingerprintErrorMsgId = i;
+                MiuiKeyguardFingerprintUtils$FingerprintIdentificationState unused2 = KeyguardIndicationController.this.mFpiState = MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.ERROR;
+                KeyguardIndicationController.this.handleFingerprintStateChanged();
+            }
+        }
+
+        private boolean shouldSuppressBiometricError(int i, BiometricSourceType biometricSourceType, KeyguardUpdateMonitor keyguardUpdateMonitor) {
+            if (biometricSourceType == BiometricSourceType.FINGERPRINT) {
+                return shouldSuppressFingerprintError(i, keyguardUpdateMonitor);
+            }
+            if (biometricSourceType == BiometricSourceType.FACE) {
+                return shouldSuppressFaceError(i, keyguardUpdateMonitor);
+            }
+            return false;
+        }
+
+        private boolean shouldSuppressFingerprintError(int i, KeyguardUpdateMonitor keyguardUpdateMonitor) {
+            return (!keyguardUpdateMonitor.isUnlockingWithBiometricAllowed(true) && i != 9) || i == 5;
+        }
+
+        private boolean shouldSuppressFaceError(int i, KeyguardUpdateMonitor keyguardUpdateMonitor) {
+            return (!keyguardUpdateMonitor.isUnlockingWithBiometricAllowed(true) && i != 9) || i == 5;
+        }
+
+        public void onTrustAgentErrorMessage(CharSequence charSequence) {
+            KeyguardIndicationController.this.showTransientIndication(charSequence, true, false);
+        }
+
+        public void onScreenTurnedOn() {
+            if (KeyguardIndicationController.this.mMessageToShowOnScreenOn != null) {
+                KeyguardIndicationController keyguardIndicationController = KeyguardIndicationController.this;
+                keyguardIndicationController.showTransientIndication(keyguardIndicationController.mMessageToShowOnScreenOn, true, false);
+                KeyguardIndicationController.this.hideTransientIndicationDelayed(5000);
+                String unused = KeyguardIndicationController.this.mMessageToShowOnScreenOn = null;
+            }
+        }
+
+        public void onBiometricRunningStateChanged(boolean z, BiometricSourceType biometricSourceType) {
+            if (z) {
+                KeyguardIndicationController.this.hideTransientIndication();
+                String unused = KeyguardIndicationController.this.mMessageToShowOnScreenOn = null;
+            }
+        }
+
+        public void onBiometricAuthenticated(int i, BiometricSourceType biometricSourceType, boolean z) {
+            super.onBiometricAuthenticated(i, biometricSourceType, z);
+            if (biometricSourceType != BiometricSourceType.FACE && biometricSourceType == BiometricSourceType.FINGERPRINT) {
+                int unused = KeyguardIndicationController.this.mFingerprintAuthUserId = i;
+                MiuiKeyguardFingerprintUtils$FingerprintIdentificationState unused2 = KeyguardIndicationController.this.mFpiState = MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.SUCCEEDED;
+                KeyguardIndicationController.this.handleFingerprintStateChanged();
+            }
+            KeyguardIndicationController.this.mHandler.sendEmptyMessage(1);
+        }
+
+        public void onBiometricAuthFailed(BiometricSourceType biometricSourceType) {
+            super.onBiometricAuthFailed(biometricSourceType);
+            MiuiKeyguardFingerprintUtils$FingerprintIdentificationState unused = KeyguardIndicationController.this.mFpiState = MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.FAILED;
+            KeyguardIndicationController.this.handleFingerprintStateChanged();
+        }
+
+        public void onFingerprintLockoutReset() {
+            super.onFingerprintLockoutReset();
+            if (KeyguardIndicationController.this.mFpiState == MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.ERROR || KeyguardIndicationController.this.mFpiState == MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.FAILED) {
+                MiuiKeyguardFingerprintUtils$FingerprintIdentificationState unused = KeyguardIndicationController.this.mFpiState = MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.RESET;
+                KeyguardIndicationController.this.handleFingerprintStateChanged();
+            }
+        }
+
+        public void onUserSwitchComplete(int i) {
+            if (KeyguardIndicationController.this.mVisible) {
+                KeyguardIndicationController.this.updateIndication(false);
+            }
+        }
+
+        public void onUserUnlocked() {
+            if (KeyguardIndicationController.this.mVisible) {
+                KeyguardIndicationController.this.updateIndication(false);
+            }
+        }
+
+        public void onKeyguardBouncerChanged(boolean z) {
+            if (z) {
+                KeyguardIndicationController.this.handleShowBouncerMessage();
+            }
+        }
+    }
+
+    public void clearUpArrowAnimation() {
+        Log.d("KeyguardIndication", " clearUpArrowAnimation mUpArrow:" + this.mUpArrow + "  mTextView:" + this.mTextView);
+        this.mHandler.removeMessages(Integer.MAX_VALUE);
+        ImageView imageView = this.mUpArrow;
+        if (imageView != null) {
+            imageView.clearAnimation();
+            this.mUpArrow.setVisibility(4);
+        }
+        MiuiKeyguardIndicationTextView miuiKeyguardIndicationTextView = this.mTextView;
+        if (miuiKeyguardIndicationTextView != null) {
+            miuiKeyguardIndicationTextView.clearAnimation();
+            updateIndication(false);
+        }
+    }
+
+    public void handleSingleClickEvent() {
+        if (MiuiKeyguardUtils.IS_OPERATOR_CUSTOMIZATION_TEST && !this.mPowerPluggedIn) {
+            updateIndication(false);
+            this.mHandler.removeMessages(2147483646);
+            this.mHandler.sendEmptyMessageDelayed(2147483646, 2000);
+        }
+    }
+
+    public void onTouchEvent(@NotNull MotionEvent motionEvent, int i, float f, float f2) {
+        ViewConfiguration viewConfiguration = ViewConfiguration.get(this.mContext);
         if (motionEvent.getAction() == 0) {
             clearUpArrowAnimation();
-        } else if (motionEvent.getAction() == 1 && i == 1 && this.mNotificationPanelView.isQSFullyCollapsed()) {
-            float scaledTouchSlop = (float) this.mViewConfiguration.getScaledTouchSlop();
+        } else if (motionEvent.getAction() == 1 && i == 1) {
+            float scaledTouchSlop = (float) viewConfiguration.getScaledTouchSlop();
             if (Math.abs(f - motionEvent.getRawX()) < scaledTouchSlop && Math.abs(f2 - motionEvent.getRawY()) < scaledTouchSlop) {
                 handleSingleClickEvent();
             }
         }
     }
 
-    private void handleSingleClickEvent() {
-        if (MiuiKeyguardUtils.IS_OPERATOR_CUSTOMIZATION_TEST && !this.mPowerPluggedIn) {
-            this.mIsOCTSingleClicking = true;
-            updateIndication();
-            this.mHandler.removeMessages(6);
-            this.mHandler.sendEmptyMessageDelayed(6, 2000);
+    private int getTextColor() {
+        int i;
+        if (this.mDarkStyle) {
+            if (this.mPowerPluggedIn) {
+                i = C0011R$color.miui_common_unlock_screen_charge_dark_text_color;
+            } else {
+                i = C0011R$color.miui_common_unlock_screen_common_dark_text_color;
+            }
+        } else if (this.mPowerPluggedIn) {
+            i = C0011R$color.miui_charge_lock_screen_unlock_hint_text_color;
+        } else {
+            i = C0011R$color.miui_default_lock_screen_unlock_hint_text_color;
         }
+        return this.mResources.getColor(i);
     }
 
-    /* access modifiers changed from: private */
-    public void handleShowOCTEmergency() {
-        this.mIsOCTSingleClicking = false;
-        updateIndication();
-    }
-
-    /* access modifiers changed from: private */
-    public void clearUpArrowAnimation() {
-        this.mHandler.removeMessages(4);
-        this.mUpArrow.clearAnimation();
-        this.mTextView.clearAnimation();
-        this.mUpArrow.setVisibility(4);
-        updateIndication();
-    }
-
-    /* access modifiers changed from: private */
-    public void handleTickReceived() {
-        if (this.mVisible) {
-            updateIndication();
-        }
-    }
-
-    /* access modifiers changed from: private */
-    public void handleExitArrowAndTextAnimation() {
-        Animation loadAnimation = AnimationUtils.loadAnimation(this.mContext, 17432577);
-        Animation loadAnimation2 = AnimationUtils.loadAnimation(this.mContext, 17432576);
-        TranslateAnimation translateAnimation = new TranslateAnimation(1, 0.0f, 1, 0.0f, 1, 0.0f, 1, -2.0f);
-        TranslateAnimation translateAnimation2 = new TranslateAnimation(1, 0.0f, 1, 0.0f, 1, 2.0f, 1, 0.0f);
-        AnimationSet animationSet = new AnimationSet(true);
-        AnimationSet animationSet2 = new AnimationSet(true);
-        animationSet.addAnimation(loadAnimation);
-        animationSet.addAnimation(translateAnimation);
-        long j = (long) 500;
-        animationSet.setDuration(j);
-        animationSet2.addAnimation(loadAnimation2);
-        animationSet2.addAnimation(translateAnimation2);
-        animationSet2.setDuration(j);
-        animationSet2.setStartOffset(100);
-        animationSet.setAnimationListener(new Animation.AnimationListener() {
-            public void onAnimationRepeat(Animation animation) {
-            }
-
-            public void onAnimationStart(Animation animation) {
-            }
-
-            public void onAnimationEnd(Animation animation) {
-                KeyguardIndicationController.this.mUpArrow.setVisibility(4);
-            }
-        });
-        animationSet2.setAnimationListener(new Animation.AnimationListener() {
-            public void onAnimationRepeat(Animation animation) {
-            }
-
-            public void onAnimationStart(Animation animation) {
-                boolean unused = KeyguardIndicationController.this.mUpArrowEntering = false;
-                KeyguardIndicationController.this.updateIndication();
-            }
-
-            public void onAnimationEnd(Animation animation) {
-                KeyguardIndicationController.this.updateIndication();
-                KeyguardIndicationController.this.mTextView.setVisibility(0);
-            }
-        });
-        this.mUpArrow.startAnimation(animationSet);
-        this.mTextView.startAnimation(animationSet2);
-    }
-
-    public void setDozing(boolean z) {
-        if (this.mDozing != z) {
-            this.mDozing = z;
-            updateIndication();
-            updateDisclosure();
+    public void setDarkStyle(boolean z) {
+        if (this.mDarkStyle != z) {
+            this.mDarkStyle = z;
+            this.mInitialTextColorState = ColorStateList.valueOf(this.mTextView != null ? getTextColor() : -1);
+            updateIndication(!this.mDozing);
         }
     }
 
     /* access modifiers changed from: private */
     public void handleFaceUnlockBouncerMessage(String str) {
         String str2;
-        if (this.mUpdateMonitor.isUnlockWithFingerprintPossible(KeyguardUpdateMonitor.getCurrentUser()) && this.mUpdateMonitor.shouldListenForFingerprint() && !this.mUpdateMonitor.isFingerprintTemporarilyLockout()) {
-            str2 = this.mResources.getString(R.string.face_unlock_passwork_and_fingerprint);
+        Class cls = MiuiFaceUnlockManager.class;
+        if (this.mKeyguardUpdateMonitor.isUnlockWithFingerprintPossible(KeyguardUpdateMonitor.getCurrentUser()) && this.mKeyguardUpdateMonitor.shouldListenForFingerprint() && !this.mKeyguardUpdateMonitor.isFingerprintTemporarilyLockout() && !this.mKeyguardUpdateMonitor.userNeedsStrongAuth()) {
+            str2 = this.mResources.getString(C0021R$string.face_unlock_passwork_and_fingerprint);
         } else {
-            str2 = this.mResources.getString(R.string.input_password_hint_text);
+            str2 = this.mResources.getString(C0021R$string.input_password_hint_text);
         }
-        if (!FaceUnlockManager.getInstance().isFaceUnlockStarted()) {
-            if (FaceUnlockManager.getInstance().shouldShowFaceUnlockRetryMessageInBouncer()) {
-                str = this.mResources.getString(R.string.face_unlock_fail_retry_global);
-            } else if (FaceUnlockManager.getInstance().isFaceLocked()) {
-                str = this.mResources.getString(R.string.face_unlock_fail);
+        if (!this.mKeyguardUpdateMonitor.isFaceDetectionRunning()) {
+            if (((MiuiFaceUnlockManager) Dependency.get(cls)).isFaceUnlockLocked()) {
+                str = this.mResources.getString(C0021R$string.face_unlock_fail);
+            } else if (((MiuiFaceUnlockManager) Dependency.get(cls)).shouldShowFaceUnlockRetryMessageInBouncer()) {
+                str = this.mResources.getString(C0021R$string.face_unlock_fail_retry_global);
             }
         }
-        this.mStatusBarKeyguardViewManager.showBouncerMessage(str2, str, this.mResources.getColor(R.color.secure_keyguard_bouncer_message_content_text_color));
+        this.mStatusBarKeyguardViewManager.showBouncerMessage(str2, str, this.mResources.getColor(C0011R$color.secure_keyguard_bouncer_message_content_text_color));
     }
 
-    protected class BaseKeyguardCallback extends KeyguardUpdateMonitorCallback {
-        private final int FINGERPRINT_ERROR_LOCKOUT_PERMANENT_FOR_O = 9;
-        private int mFingerprintAuthUserId;
-        private int mFingerprintErrorMsgId;
-        private MiuiKeyguardFingerprintUtils$FingerprintIdentificationState mFpiState;
-        private MiuiKeyguardFingerprintUtils$FingerprintIdentificationState mLastFpiState;
-
-        protected BaseKeyguardCallback() {
-        }
-
-        public void onRefreshBatteryInfo(BatteryStatus batteryStatus) {
-            if (!FeatureParser.getBoolean("is_pad", false)) {
-                boolean access$000 = KeyguardIndicationController.this.mPowerPluggedIn;
-                boolean unused = KeyguardIndicationController.this.mPowerPluggedIn = batteryStatus.isPluggedIn() && batteryStatus.isChargingOrFull();
-                boolean unused2 = KeyguardIndicationController.this.mPowerCharged = batteryStatus.isCharged();
-                int unused3 = KeyguardIndicationController.this.mChargingSpeed = batteryStatus.getChargeSpeed();
-                int unused4 = KeyguardIndicationController.this.mBatteryLevel = batteryStatus.getLevel();
-                if (KeyguardIndicationController.this.mPowerPluggedIn && !access$000) {
-                    KeyguardIndicationController.this.clearUpArrowAnimation();
-                }
-                if (!KeyguardIndicationController.this.mPowerPluggedIn && access$000) {
-                    KeyguardIndicationController.this.mTextView.clearAnimation();
-                    KeyguardIndicationController keyguardIndicationController = KeyguardIndicationController.this;
-                    String unused5 = keyguardIndicationController.mUpArrowIndication = keyguardIndicationController.mResources.getString(R.string.default_lockscreen_unlock_hint_text);
-                    boolean unused6 = KeyguardIndicationController.this.mChargeUIEntering = false;
-                    boolean unused7 = KeyguardIndicationController.this.mUpArrowEntering = false;
-                    KeyguardIndicationController.this.hideTransientIndication();
-                }
-                KeyguardIndicationController.this.updateIndication();
-                KeyguardIndicationController.this.mTextView.setPowerPluggedIn(KeyguardIndicationController.this.mPowerPluggedIn);
-                if (!KeyguardIndicationController.this.mDozing) {
-                    return;
-                }
-                if (!access$000 && KeyguardIndicationController.this.mPowerPluggedIn) {
-                    showChargingTransientIndication();
-                } else if (access$000 && !KeyguardIndicationController.this.mPowerPluggedIn) {
-                    KeyguardIndicationController.this.hideTransientIndication();
-                }
-            }
-        }
-
-        private void showChargingTransientIndication() {
-            new AsyncTask<Void, Void, String>() {
-                /* access modifiers changed from: protected */
-                public String doInBackground(Void... voidArr) {
-                    return ChargeUtils.getChargingHintText(KeyguardIndicationController.this.mContext, KeyguardIndicationController.this.mPowerPluggedIn, KeyguardIndicationController.this.mBatteryLevel);
-                }
-
-                /* access modifiers changed from: protected */
-                public void onPostExecute(String str) {
-                    super.onPostExecute(str);
-                    KeyguardIndicationController.this.showTransientIndication(str);
-                    KeyguardIndicationController.this.hideTransientIndicationDelayed(5000);
-                }
-            }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new Void[0]);
-        }
-
-        public void onKeyguardVisibilityChanged(boolean z) {
-            if (z) {
-                KeyguardIndicationController.this.updateDisclosure();
-            } else {
-                KeyguardIndicationController.this.clearUpArrowAnimation();
-            }
-        }
-
-        public void onKeyguardBouncerChanged(boolean z) {
-            if (z) {
-                KeyguardIndicationController.this.clearUpArrowAnimation();
-                KeyguardIndicationController.this.handleFaceUnlockBouncerMessage("");
-            }
-        }
-
-        public void onFingerprintHelp(int i, String str) {
-            if (KeyguardIndicationController.this.mUpdateMonitor.isUnlockingWithFingerprintAllowed()) {
-                int access$1200 = KeyguardIndicationController.this.getTextColor();
-                if (KeyguardIndicationController.this.mStatusBarKeyguardViewManager.isBouncerShowing()) {
-                    if (!TextUtils.isEmpty(str) && !MiuiKeyguardUtils.isGxzwSensor()) {
-                        KeyguardIndicationController.this.mStatusBarKeyguardViewManager.showBouncerMessage(str, KeyguardIndicationController.this.mResources.getColor(R.color.secure_keyguard_bouncer_message_content_text_color));
-                    }
-                } else if (KeyguardIndicationController.this.mUpdateMonitor.isDeviceInteractive() || (KeyguardIndicationController.this.mDozing && KeyguardIndicationController.this.mUpdateMonitor.isScreenOn())) {
-                    KeyguardIndicationController.this.showTransientIndication(str, access$1200);
-                    KeyguardIndicationController.this.mHandler.removeMessages(2);
-                    KeyguardIndicationController.this.mHandler.sendMessageDelayed(KeyguardIndicationController.this.mHandler.obtainMessage(2), 1300);
-                }
-            }
-        }
-
-        public void onFingerprintError(int i, String str) {
-            if (KeyguardIndicationController.this.mUpdateMonitor.isUnlockingWithFingerprintAllowed() && i != 5) {
-                this.mFingerprintErrorMsgId = i;
-                this.mFpiState = MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.ERROR;
-                handleFingerprintStateChanged();
-            }
-        }
-
-        public void onStartedWakingUp() {
-            if (KeyguardIndicationController.this.mMessageToShowOnScreenOn != null) {
-                int access$1200 = KeyguardIndicationController.this.getTextColor();
-                KeyguardIndicationController keyguardIndicationController = KeyguardIndicationController.this;
-                keyguardIndicationController.showTransientIndication(keyguardIndicationController.mMessageToShowOnScreenOn, access$1200);
-                KeyguardIndicationController.this.hideTransientIndicationDelayed(5000);
-                String unused = KeyguardIndicationController.this.mMessageToShowOnScreenOn = null;
-            }
-            if (!KeyguardIndicationController.this.mVisible) {
-                boolean unused2 = KeyguardIndicationController.this.mChargeUIEntering = false;
-                boolean unused3 = KeyguardIndicationController.this.mUpArrowEntering = false;
-                KeyguardIndicationController.this.updateIndication();
-            } else if (KeyguardIndicationController.this.mPowerPluggedIn) {
-                String unused4 = KeyguardIndicationController.this.mUpArrowIndication = null;
-                KeyguardIndicationController.this.handleChargeTextAnimation(false);
-            } else {
-                KeyguardIndicationController keyguardIndicationController2 = KeyguardIndicationController.this;
-                String unused5 = keyguardIndicationController2.mUpArrowIndication = keyguardIndicationController2.mResources.getString(R.string.default_lockscreen_unlock_hint_text);
-                handleEnterArrowAnimation();
-            }
-        }
-
-        private void handleEnterArrowAnimation() {
-            boolean unused = KeyguardIndicationController.this.mUpArrowEntering = true;
-            TranslateAnimation translateAnimation = new TranslateAnimation(1, 0.0f, 1, 0.0f, 1, 2.0f, 1, 0.0f);
-            Animation loadAnimation = AnimationUtils.loadAnimation(KeyguardIndicationController.this.mContext, 17432576);
-            AnimationSet animationSet = new AnimationSet(true);
-            animationSet.addAnimation(translateAnimation);
-            animationSet.addAnimation(loadAnimation);
-            animationSet.setDuration((long) (DeviceLevelUtils.getAnimationDurationRatio() * 500.0f));
-            animationSet.setStartOffset(30);
-            KeyguardIndicationController.this.mUpArrow.setVisibility(0);
-            KeyguardIndicationController.this.mUpArrow.startAnimation(animationSet);
-            KeyguardIndicationController.this.mHandler.sendEmptyMessageDelayed(4, 100);
-        }
-
-        public void onStartedGoingToSleep(int i) {
-            KeyguardIndicationController.this.clearUpArrowAnimation();
-            if (KeyguardIndicationController.this.mUpArrowIndication != null) {
-                String unused = KeyguardIndicationController.this.mUpArrowIndication = null;
-                KeyguardIndicationController.this.updateIndication();
-            }
-            KeyguardIndicationController.this.hideTransientIndication();
-        }
-
-        public void onFingerprintRunningStateChanged(boolean z) {
-            if (z) {
-                String unused = KeyguardIndicationController.this.mMessageToShowOnScreenOn = null;
-            }
-        }
-
-        public void onFingerprintAuthenticated(int i) {
-            super.onFingerprintAuthenticated(i);
-            this.mFpiState = MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.SUCCEEDED;
-            this.mFingerprintAuthUserId = i;
-            handleFingerprintStateChanged();
-        }
-
-        public void onFingerprintAuthFailed() {
-            super.onFingerprintAuthFailed();
-            this.mFpiState = MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.FAILED;
-            handleFingerprintStateChanged();
-        }
-
-        public void onFingerprintLockoutReset() {
-            super.onFingerprintLockoutReset();
-            this.mFpiState = MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.RESET;
-            handleFingerprintStateChanged();
-        }
-
-        private void handleFingerprintStateChanged() {
-            String str;
-            String string;
-            if (!KeyguardIndicationController.this.mUpdateMonitor.isUnlockingWithFingerprintAllowed(KeyguardUpdateMonitor.getCurrentUser()) || KeyguardIndicationController.this.mUpdateMonitor.shouldListenForFingerprintWhenUnlocked()) {
-                this.mLastFpiState = this.mFpiState;
-                return;
-            }
-            MiuiKeyguardFingerprintUtils$FingerprintIdentificationState miuiKeyguardFingerprintUtils$FingerprintIdentificationState = this.mFpiState;
-            String str2 = "";
-            if (miuiKeyguardFingerprintUtils$FingerprintIdentificationState == MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.FAILED) {
-                str2 = KeyguardIndicationController.this.mResources.getString(R.string.fingerprint_try_again_text);
-                str = KeyguardIndicationController.this.mResources.getString(R.string.fingerprint_try_again_msg);
-            } else if (miuiKeyguardFingerprintUtils$FingerprintIdentificationState == MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.ERROR) {
-                str2 = KeyguardIndicationController.this.mResources.getString(R.string.fingerprint_not_identified_title);
-                str = KeyguardIndicationController.this.mResources.getString(R.string.fingerprint_not_identified_msg);
-                if (this.mFingerprintErrorMsgId == 9) {
-                    str = KeyguardIndicationController.this.mResources.getString(R.string.fingerprint_not_identified_msg_lock);
-                }
-            } else {
-                if (miuiKeyguardFingerprintUtils$FingerprintIdentificationState == MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.SUCCEEDED) {
-                    if (this.mFingerprintAuthUserId != KeyguardUpdateMonitor.getCurrentUser()) {
-                        if (MiuiKeyguardUtils.isGreenKidActive(KeyguardIndicationController.this.mContext)) {
-                            string = KeyguardIndicationController.this.mResources.getString(R.string.input_password_after_boot_msg_can_not_switch_when_greenkid_active);
-                        } else if (PhoneUtils.isInCall(KeyguardIndicationController.this.mContext)) {
-                            string = KeyguardIndicationController.this.mResources.getString(R.string.input_password_after_boot_msg_can_not_switch_when_calling);
-                        } else if (MiuiKeyguardUtils.isSuperPowerActive(KeyguardIndicationController.this.mContext)) {
-                            string = KeyguardIndicationController.this.mResources.getString(R.string.input_password_after_boot_msg_can_not_switch_when_superpower_active);
-                        } else if (!KeyguardIndicationController.this.mUpdateMonitor.getStrongAuthTracker().hasUserAuthenticatedSinceBoot(this.mFingerprintAuthUserId)) {
-                            str2 = KeyguardIndicationController.this.mResources.getString(R.string.fingerprint_enter_second_psw_title);
-                            str = KeyguardIndicationController.this.mResources.getString(R.string.fingerprint_enter_second_psw_msg);
-                        }
-                        String str3 = str2;
-                        str2 = string;
-                        str = str3;
-                    }
-                } else if (this.mLastFpiState == MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.ERROR && miuiKeyguardFingerprintUtils$FingerprintIdentificationState == MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.RESET) {
-                    str2 = KeyguardIndicationController.this.mResources.getString(R.string.fingerprint_not_identified_title);
-                    str = KeyguardIndicationController.this.mResources.getString(R.string.fingerprint_again_identified_msg);
-                }
-                str = str2;
-            }
-            int access$1200 = KeyguardIndicationController.this.getTextColor();
-            KeyguardIndicationController.this.mStatusBarKeyguardViewManager.showBouncerMessage(str2, str, KeyguardIndicationController.this.mResources.getColor(R.color.secure_keyguard_bouncer_message_content_text_color));
-            MiuiKeyguardFingerprintUtils$FingerprintIdentificationState miuiKeyguardFingerprintUtils$FingerprintIdentificationState2 = this.mFpiState;
-            MiuiKeyguardFingerprintUtils$FingerprintIdentificationState miuiKeyguardFingerprintUtils$FingerprintIdentificationState3 = MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.ERROR;
-            if (miuiKeyguardFingerprintUtils$FingerprintIdentificationState2 == miuiKeyguardFingerprintUtils$FingerprintIdentificationState3 && this.mLastFpiState != miuiKeyguardFingerprintUtils$FingerprintIdentificationState3 && KeyguardIndicationController.this.mStatusBarKeyguardViewManager.isBouncerShowing()) {
-                KeyguardIndicationController.this.mStatusBarKeyguardViewManager.applyHintAnimation(500);
-            }
-            if (this.mFpiState == MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.FAILED && MiuiKeyguardUtils.isGxzwSensor() && KeyguardIndicationController.this.mStatusBarKeyguardViewManager.isBouncerShowing()) {
-                KeyguardIndicationController.this.mStatusBarKeyguardViewManager.applyHintAnimation(500);
-            }
-            if (this.mFpiState == MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.FAILED && KeyguardIndicationController.this.mUpdateMonitor.isDeviceInteractive()) {
-                KeyguardIndicationController.this.mHandler.removeMessages(1);
-                KeyguardIndicationController keyguardIndicationController = KeyguardIndicationController.this;
-                keyguardIndicationController.showTransientIndication(keyguardIndicationController.mContext.getString(R.string.fingerprint_try_again_text), access$1200);
-                KeyguardIndicationController.this.hideTransientIndicationDelayed(5000);
-            }
-            String unused = KeyguardIndicationController.this.mMessageToShowOnScreenOn = str2;
+    /* access modifiers changed from: private */
+    public void handleFingerprintStateChanged() {
+        String str;
+        String string;
+        if (!this.mKeyguardUpdateMonitor.isUnlockingWithBiometricAllowed(true) || ((KeyguardUpdateMonitorInjector) Dependency.get(KeyguardUpdateMonitorInjector.class)).shouldListenForFingerprintWhenUnlocked()) {
             this.mLastFpiState = this.mFpiState;
+            return;
         }
-
-        public void onUserUnlocked() {
-            if (KeyguardIndicationController.this.mVisible) {
-                KeyguardIndicationController.this.updateIndication();
-            }
-        }
-
-        public void onBottomAreaButtonClicked(boolean z) {
-            KeyguardIndicationController.this.handleBottomButtonClicked(z);
-        }
-
-        public void onPhoneSignalChanged(boolean z) {
-            boolean unused = KeyguardIndicationController.this.mSignalAvailable = z;
-            KeyguardIndicationController.this.updateIndication();
-        }
-
-        public void onLockScreenMagazinePreViewVisibilityChanged(boolean z) {
-            boolean unused = KeyguardIndicationController.this.mLockScreenMagazinePreViewVisibility = z;
-        }
-    }
-
-    /* access modifiers changed from: private */
-    public void handleBottomButtonClicked(boolean z) {
-        this.mTextView.setBottomAreaButtonClicked(z);
-        startBottomButtonClickAnim(z);
-    }
-
-    private void startBottomButtonClickAnim(boolean z) {
-        ObjectAnimator objectAnimator = this.mBottomButtonClickAnimator;
-        if (objectAnimator != null && objectAnimator.isRunning()) {
-            if (z) {
-                this.mBottomButtonClickAnimator.cancel();
-            } else {
-                return;
-            }
-        }
-        if (z) {
-            this.mBottomButtonClickAnimator = ObjectAnimator.ofFloat(this.mTextView, View.ALPHA, new float[]{1.0f, 0.0f});
-            this.mBottomButtonClickAnimator.setInterpolator(Ease$Quint.easeOut);
-            this.mBottomButtonClickAnimator.addListener(new AnimatorListenerAdapter() {
-                public void onAnimationEnd(Animator animator) {
-                    KeyguardIndicationController.this.mTextView.setVisibility(8);
-                }
-            });
-            this.mBottomButtonClickAnimator.setDuration(0);
+        MiuiKeyguardFingerprintUtils$FingerprintIdentificationState miuiKeyguardFingerprintUtils$FingerprintIdentificationState = this.mFpiState;
+        String str2 = "";
+        if (miuiKeyguardFingerprintUtils$FingerprintIdentificationState == MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.FAILED) {
+            str2 = this.mResources.getString(C0021R$string.fingerprint_try_again_text);
+            str = this.mResources.getString(C0021R$string.fingerprint_try_again_msg);
+        } else if (miuiKeyguardFingerprintUtils$FingerprintIdentificationState == MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.ERROR) {
+            str2 = this.mResources.getString(C0021R$string.fingerprint_not_identified_title);
+            str = this.mResources.getString(C0021R$string.fingerprint_not_identified_msg);
         } else {
-            this.mBottomButtonClickAnimator = ObjectAnimator.ofFloat(this.mTextView, View.ALPHA, new float[]{0.0f, 1.0f});
-            this.mBottomButtonClickAnimator.setInterpolator(Ease$Cubic.easeInOut);
-            this.mBottomButtonClickAnimator.addListener(new AnimatorListenerAdapter() {
-                public void onAnimationStart(Animator animator) {
-                    KeyguardIndicationController.this.mTextView.setVisibility(0);
-                }
-
-                public void onAnimationEnd(Animator animator) {
-                    KeyguardIndicationController.this.mTextView.setVisibility(0);
-                    KeyguardIndicationController.this.mTextView.setAlpha(1.0f);
-                }
-            });
-            this.mBottomButtonClickAnimator.setDuration(800);
-        }
-        this.mBottomButtonClickAnimator.start();
-    }
-
-    public void setDarkMode(boolean z) {
-        if (this.mDarkMode != z) {
-            this.mDarkMode = z;
-            updateIndication();
-        }
-    }
-
-    /* access modifiers changed from: private */
-    public int getTextColor() {
-        int i;
-        if (this.mDarkMode) {
-            i = this.mPowerPluggedIn ? R.color.miui_common_unlock_screen_charge_dark_text_color : R.color.miui_common_unlock_screen_common_dark_text_color;
-        } else {
-            i = this.mPowerPluggedIn ? R.color.miui_charge_lock_screen_unlock_hint_text_color : R.color.miui_default_lock_screen_unlock_hint_text_color;
-        }
-        return this.mResources.getColor(i);
-    }
-
-    public void handleChargeTextAnimation(boolean z) {
-        this.mShowChargeAnimation = z;
-        this.mHandler.removeMessages(5);
-        Log.i("KeyguardIndication", "handleChargeTextAnimation: " + z + ";mPowerPluggedIn=" + this.mPowerPluggedIn);
-        this.mTextView.setVisibility(0);
-        if (!this.mShowChargeAnimation && this.mPowerPluggedIn) {
-            this.mChargeUIEntering = true;
-            Animation loadAnimation = AnimationUtils.loadAnimation(this.mContext, 17432576);
-            TranslateAnimation translateAnimation = new TranslateAnimation(1, 0.0f, 1, 0.0f, 1, 2.0f, 1, 0.0f);
-            AnimationSet animationSet = new AnimationSet(true);
-            animationSet.addAnimation(loadAnimation);
-            animationSet.addAnimation(translateAnimation);
-            animationSet.setDuration(500);
-            animationSet.setAnimationListener(new Animation.AnimationListener() {
-                public void onAnimationRepeat(Animation animation) {
-                }
-
-                public void onAnimationStart(Animation animation) {
-                    Log.i("KeyguardIndication", "handleChargeTextAnimation: onAnimationStart");
-                    KeyguardIndicationController.this.mTextView.setVisibility(0);
-                    KeyguardIndicationController.this.updateChargingInfoIndication();
-                }
-
-                public void onAnimationEnd(Animation animation) {
-                    Log.i("KeyguardIndication", "handleChargeTextAnimation: onAnimationEnd");
-                    boolean unused = KeyguardIndicationController.this.mChargeUIEntering = false;
-                    if (KeyguardIndicationController.this.mPowerPluggedIn) {
-                        KeyguardIndicationController.this.updateChargingInfoIndication();
-                    } else {
-                        KeyguardIndicationController.this.updateIndication();
+            if (miuiKeyguardFingerprintUtils$FingerprintIdentificationState == MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.SUCCEEDED) {
+                if (this.mFingerprintAuthUserId != KeyguardUpdateMonitor.getCurrentUser()) {
+                    if (MiuiKeyguardUtils.isGreenKidActive(this.mContext)) {
+                        string = this.mResources.getString(C0021R$string.input_password_after_boot_msg_can_not_switch_when_greenkid_active);
+                    } else if (PhoneUtils.isInCall(this.mContext)) {
+                        string = this.mResources.getString(C0021R$string.input_password_after_boot_msg_can_not_switch_when_calling);
+                    } else if (MiuiKeyguardUtils.isSuperPowerActive(this.mContext)) {
+                        string = this.mResources.getString(C0021R$string.input_password_after_boot_msg_can_not_switch_when_superpower_active);
+                    } else if (!this.mKeyguardUpdateMonitor.getStrongAuthTracker().hasUserAuthenticatedSinceBoot(this.mFingerprintAuthUserId)) {
+                        str2 = this.mResources.getString(C0021R$string.fingerprint_enter_second_psw_title);
+                        str = this.mResources.getString(C0021R$string.fingerprint_enter_second_psw_msg);
                     }
-                    KeyguardIndicationController.this.mTextView.setVisibility(0);
+                    String str3 = str2;
+                    str2 = string;
+                    str = str3;
                 }
-            });
-            this.mTextView.startAnimation(animationSet);
+            } else if (this.mLastFpiState == MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.ERROR && miuiKeyguardFingerprintUtils$FingerprintIdentificationState == MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.RESET) {
+                str2 = this.mResources.getString(C0021R$string.fingerprint_not_identified_title);
+                str = this.mResources.getString(C0021R$string.fingerprint_again_identified_msg);
+            }
+            str = str2;
+        }
+        getTextColor();
+        this.mStatusBarKeyguardViewManager.showBouncerMessage(str2, str, this.mResources.getColor(C0011R$color.secure_keyguard_bouncer_message_content_text_color));
+        MiuiKeyguardFingerprintUtils$FingerprintIdentificationState miuiKeyguardFingerprintUtils$FingerprintIdentificationState2 = this.mFpiState;
+        MiuiKeyguardFingerprintUtils$FingerprintIdentificationState miuiKeyguardFingerprintUtils$FingerprintIdentificationState3 = MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.ERROR;
+        if (miuiKeyguardFingerprintUtils$FingerprintIdentificationState2 == miuiKeyguardFingerprintUtils$FingerprintIdentificationState3 && this.mLastFpiState != miuiKeyguardFingerprintUtils$FingerprintIdentificationState3 && this.mStatusBarKeyguardViewManager.isBouncerShowing()) {
+            this.mStatusBarKeyguardViewManager.applyHintAnimation(500);
+        }
+        if (this.mFpiState == MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.FAILED && MiuiKeyguardUtils.isGxzwSensor() && this.mStatusBarKeyguardViewManager.isBouncerShowing()) {
+            this.mStatusBarKeyguardViewManager.applyHintAnimation(500);
+        }
+        if (this.mFpiState == MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.FAILED && this.mKeyguardUpdateMonitor.isDeviceInteractive() && !MiuiKeyguardUtils.isGxzwSensor()) {
+            this.mHandler.removeMessages(1);
+            showTransientIndication(this.mContext.getString(C0021R$string.fingerprint_try_again_text), false, false);
+            hideTransientIndicationDelayed(5000);
+        }
+        this.mMessageToShowOnScreenOn = str2;
+        this.mLastFpiState = this.mFpiState;
+    }
+
+    /* access modifiers changed from: private */
+    public void handleShowBouncerMessage() {
+        String str;
+        String str2;
+        Class cls = MiuiFaceUnlockManager.class;
+        if (this.mKeyguardUpdateMonitor.isUnlockWithFingerprintPossible(KeyguardUpdateMonitor.getCurrentUser()) && this.mKeyguardUpdateMonitor.shouldListenForFingerprint() && !this.mKeyguardUpdateMonitor.isFingerprintTemporarilyLockout() && !this.mKeyguardUpdateMonitor.userNeedsStrongAuth()) {
+            str = this.mResources.getString(C0021R$string.face_unlock_passwork_and_fingerprint);
+        } else {
+            str = this.mResources.getString(C0021R$string.input_password_hint_text);
+        }
+        if (this.mKeyguardUpdateMonitor.isFingerprintTemporarilyLockout()) {
+            str2 = this.mResources.getString(C0021R$string.fingerprint_not_identified_msg);
+        } else {
+            if (!this.mKeyguardUpdateMonitor.isFaceDetectionRunning()) {
+                if (((MiuiFaceUnlockManager) Dependency.get(cls)).isFaceUnlockLocked()) {
+                    str2 = this.mResources.getString(C0021R$string.face_unlock_fail);
+                } else if (((MiuiFaceUnlockManager) Dependency.get(cls)).shouldShowFaceUnlockRetryMessageInBouncer()) {
+                    str2 = this.mResources.getString(C0021R$string.face_unlock_fail_retry_global);
+                }
+            }
+            str2 = "";
+        }
+        this.mStatusBarKeyguardViewManager.showBouncerMessage(str, str2, this.mResources.getColor(C0011R$color.secure_keyguard_bouncer_message_content_text_color));
+    }
+
+    public void onStartedWakingUp() {
+        if (DebugConfig.DEBUG_KEYGUARD) {
+            Log.d("KeyguardIndication", "--------onStartedWakingUp keyguard Visible:" + this.mVisible + " indication_visible:" + this.mTextView.getVisibility() + " mPowerPluggedIn:" + this.mPowerPluggedIn + " isUserUnlocked:" + this.mKeyguardUpdateMonitor.isUserUnlocked(KeyguardUpdateMonitor.getCurrentUser()));
+        }
+        String str = this.mMessageToShowOnScreenOn;
+        if (str != null) {
+            showTransientIndication((CharSequence) str);
+            hideTransientIndicationDelayed(5000);
+            this.mMessageToShowOnScreenOn = null;
+        }
+        if (!this.mVisible) {
+            this.mChargeUIEntering = false;
+            this.mUpArrowEntering = false;
+            updateIndication(false);
+        } else if (this.mPowerPluggedIn) {
+            this.mUpArrowIndication = null;
+            updatePowerIndication(false);
+        } else {
+            this.mUpArrowIndication = this.mResources.getString(C0021R$string.default_lockscreen_unlock_hint_text);
+            this.mUpArrowEntering = true;
+            this.mHandler.postDelayed(new Runnable() {
+                public final void run() {
+                    KeyguardIndicationController.this.lambda$onStartedWakingUp$2$KeyguardIndicationController();
+                }
+            }, 200);
         }
     }
 
-    public void setChargeController(MiuiChargeController miuiChargeController) {
-        this.mMiuiChargeController = miuiChargeController;
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$onStartedWakingUp$2 */
+    public /* synthetic */ void lambda$onStartedWakingUp$2$KeyguardIndicationController() {
+        ((KeyguardIndicationInjector) Dependency.get(KeyguardIndicationInjector.class)).handleEnterArrowAnimation(this.mUpArrow, this.mHandler);
+    }
+
+    public void onFinishedGoingToSleep() {
+        clearPowerIndication();
+        clearUpArrowAnimation();
+        if (this.mUpArrowIndication != null) {
+            this.mUpArrowIndication = null;
+            updateIndication(false);
+        }
+        hideTransientIndication();
     }
 }

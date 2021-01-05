@@ -1,13 +1,17 @@
 package com.android.systemui.keyguard;
 
 import com.android.internal.policy.IKeyguardDismissCallback;
-import com.android.systemui.Dependency;
-import com.android.systemui.UiOffloadThread;
 import java.util.ArrayList;
+import java.util.Objects;
+import java.util.concurrent.Executor;
 
 public class DismissCallbackRegistry {
     private final ArrayList<DismissCallbackWrapper> mDismissCallbacks = new ArrayList<>();
-    private final UiOffloadThread mUiOffloadThread = ((UiOffloadThread) Dependency.get(UiOffloadThread.class));
+    private final Executor mUiBgExecutor;
+
+    public DismissCallbackRegistry(Executor executor) {
+        this.mUiBgExecutor = executor;
+    }
 
     public void addCallback(IKeyguardDismissCallback iKeyguardDismissCallback) {
         this.mDismissCallbacks.add(new DismissCallbackWrapper(iKeyguardDismissCallback));
@@ -15,10 +19,12 @@ public class DismissCallbackRegistry {
 
     public void notifyDismissCancelled() {
         for (int size = this.mDismissCallbacks.size() - 1; size >= 0; size--) {
-            final DismissCallbackWrapper dismissCallbackWrapper = this.mDismissCallbacks.get(size);
-            this.mUiOffloadThread.submit(new Runnable() {
-                public void run() {
-                    dismissCallbackWrapper.notifyDismissCancelled();
+            DismissCallbackWrapper dismissCallbackWrapper = this.mDismissCallbacks.get(size);
+            Executor executor = this.mUiBgExecutor;
+            Objects.requireNonNull(dismissCallbackWrapper);
+            executor.execute(new Runnable() {
+                public final void run() {
+                    DismissCallbackWrapper.this.notifyDismissCancelled();
                 }
             });
         }
@@ -27,10 +33,12 @@ public class DismissCallbackRegistry {
 
     public void notifyDismissSucceeded() {
         for (int size = this.mDismissCallbacks.size() - 1; size >= 0; size--) {
-            final DismissCallbackWrapper dismissCallbackWrapper = this.mDismissCallbacks.get(size);
-            this.mUiOffloadThread.submit(new Runnable() {
-                public void run() {
-                    dismissCallbackWrapper.notifyDismissSucceeded();
+            DismissCallbackWrapper dismissCallbackWrapper = this.mDismissCallbacks.get(size);
+            Executor executor = this.mUiBgExecutor;
+            Objects.requireNonNull(dismissCallbackWrapper);
+            executor.execute(new Runnable() {
+                public final void run() {
+                    DismissCallbackWrapper.this.notifyDismissSucceeded();
                 }
             });
         }

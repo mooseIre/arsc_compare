@@ -11,12 +11,12 @@ import android.graphics.drawable.Drawable;
 import android.os.UserHandle;
 import android.text.TextUtils;
 import android.util.Log;
+import androidx.appcompat.R$styleable;
 import com.android.systemui.Dependency;
 import com.android.systemui.plugins.ActivityStarter;
 import com.android.systemui.plugins.qs.QSTile;
 import com.android.systemui.qs.QSHost;
 import com.android.systemui.qs.tileimpl.QSTileImpl;
-import com.xiaomi.stat.MiStat;
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -28,18 +28,14 @@ public class IntentTile extends QSTileImpl<QSTile.State> {
     private String mOnClickUri;
     private PendingIntent mOnLongClick;
     private String mOnLongClickUri;
-    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
-        public void onReceive(Context context, Intent intent) {
-            IntentTile.this.refreshState(intent);
-        }
-    };
+    private final BroadcastReceiver mReceiver;
 
     public Intent getLongClickIntent() {
         return null;
     }
 
     public int getMetricsCategory() {
-        return 121;
+        return R$styleable.AppCompatTheme_windowFixedHeightMinor;
     }
 
     public void handleSetListening(boolean z) {
@@ -47,7 +43,13 @@ public class IntentTile extends QSTileImpl<QSTile.State> {
 
     private IntentTile(QSHost qSHost, String str) {
         super(qSHost);
-        this.mContext.registerReceiver(this.mReceiver, new IntentFilter(str));
+        AnonymousClass1 r2 = new BroadcastReceiver() {
+            public void onReceive(Context context, Intent intent) {
+                IntentTile.this.refreshState(intent);
+            }
+        };
+        this.mReceiver = r2;
+        this.mContext.registerReceiver(r2, new IntentFilter(str));
     }
 
     /* access modifiers changed from: protected */
@@ -79,7 +81,7 @@ public class IntentTile extends QSTileImpl<QSTile.State> {
 
     /* access modifiers changed from: protected */
     public void handleClick() {
-        sendIntent(MiStat.Event.CLICK, this.mOnClick, this.mOnClickUri);
+        sendIntent("click", this.mOnClick, this.mOnClickUri);
     }
 
     /* access modifiers changed from: protected */
@@ -139,12 +141,12 @@ public class IntentTile extends QSTileImpl<QSTile.State> {
             this.mOnClickUri = intent.getStringExtra("onClickUri");
             this.mOnLongClick = (PendingIntent) intent.getParcelableExtra("onLongClick");
             this.mOnLongClickUri = intent.getStringExtra("onLongClickUri");
-            this.mIntentPackage = intent.getStringExtra("package");
-            String str2 = this.mIntentPackage;
-            if (str2 == null) {
-                str2 = "";
+            String stringExtra2 = intent.getStringExtra("package");
+            this.mIntentPackage = stringExtra2;
+            if (stringExtra2 == null) {
+                stringExtra2 = "";
             }
-            this.mIntentPackage = str2;
+            this.mIntentPackage = stringExtra2;
         }
     }
 

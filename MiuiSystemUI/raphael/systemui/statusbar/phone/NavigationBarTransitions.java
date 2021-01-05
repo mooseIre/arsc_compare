@@ -1,111 +1,183 @@
 package com.android.systemui.statusbar.phone;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
+import android.graphics.Rect;
+import android.os.Handler;
 import android.os.RemoteException;
-import android.os.ServiceManager;
-import android.util.Log;
-import android.view.MotionEvent;
+import android.util.SparseArray;
+import android.view.IWallpaperVisibilityListener;
+import android.view.IWindowManager;
 import android.view.View;
-import android.view.ViewPropertyAnimator;
-import android.view.animation.AccelerateInterpolator;
-import com.android.internal.statusbar.IStatusBarService;
-import com.android.internal.statusbar.StatusBarServiceCompat;
-import com.android.systemui.plugins.R;
+import androidx.appcompat.R$styleable;
+import com.android.systemui.C0010R$bool;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.Dependency;
+import com.android.systemui.statusbar.CommandQueue;
 import com.android.systemui.statusbar.phone.LightBarTransitionsController;
+import com.android.systemui.statusbar.phone.NavigationBarTransitions;
+import com.android.systemui.util.Utils;
+import java.util.ArrayList;
+import java.util.List;
 
 public final class NavigationBarTransitions extends BarTransitions implements LightBarTransitionsController.DarkIntensityApplier {
+    private final boolean mAllowAutoDimWallpaperNotVisible;
+    private boolean mAutoDim;
+    private List<DarkIntensityListener> mDarkIntensityListeners;
     /* access modifiers changed from: private */
-    public final IStatusBarService mBarService;
+    public final Handler mHandler = Handler.getMain();
     private final LightBarTransitionsController mLightTransitionsController;
     private boolean mLightsOut;
-    private final View.OnTouchListener mLightsOutListener = new View.OnTouchListener() {
-        public boolean onTouch(View view, MotionEvent motionEvent) {
-            if (motionEvent.getAction() == 0) {
-                NavigationBarTransitions.this.applyLightsOut(false, false, false);
-                try {
-                    StatusBarServiceCompat.setSystemUiVisibility(NavigationBarTransitions.this.mBarService, 0, 1, 0, "LightsOutListener");
-                } catch (RemoteException unused) {
+    private int mNavBarMode = 0;
+    private View mNavButtons;
+    private final NavigationBarView mView;
+    private final IWallpaperVisibilityListener mWallpaperVisibilityListener = new IWallpaperVisibilityListener.Stub() {
+        public void onWallpaperVisibilityChanged(boolean z, int i) throws RemoteException {
+            boolean unused = NavigationBarTransitions.this.mWallpaperVisible = z;
+            NavigationBarTransitions.this.mHandler.post(new Runnable() {
+                public final void run() {
+                    NavigationBarTransitions.AnonymousClass1.this.lambda$onWallpaperVisibilityChanged$0$NavigationBarTransitions$1();
                 }
-            }
-            return false;
+            });
+        }
+
+        /* access modifiers changed from: private */
+        /* renamed from: lambda$onWallpaperVisibilityChanged$0 */
+        public /* synthetic */ void lambda$onWallpaperVisibilityChanged$0$NavigationBarTransitions$1() {
+            NavigationBarTransitions.this.applyLightsOut(true, false);
         }
     };
-    private final NavigationBarView mView;
+    /* access modifiers changed from: private */
+    public boolean mWallpaperVisible;
 
-    public NavigationBarTransitions(NavigationBarView navigationBarView) {
-        super(navigationBarView, R.drawable.nav_background, R.color.system_nav_bar_background_opaque);
+    public interface DarkIntensityListener {
+        void onDarkIntensity(float f);
+    }
+
+    public NavigationBarTransitions(NavigationBarView navigationBarView, CommandQueue commandQueue) {
+        super(navigationBarView, C0013R$drawable.nav_background);
         this.mView = navigationBarView;
-        this.mBarService = IStatusBarService.Stub.asInterface(ServiceManager.getService("statusbar"));
-        this.mLightTransitionsController = new LightBarTransitionsController(navigationBarView.getContext(), this);
+        this.mLightTransitionsController = new LightBarTransitionsController(navigationBarView.getContext(), this, commandQueue);
+        this.mAllowAutoDimWallpaperNotVisible = navigationBarView.getContext().getResources().getBoolean(C0010R$bool.config_navigation_bar_enable_auto_dim_no_visible_wallpaper);
+        this.mDarkIntensityListeners = new ArrayList();
+        try {
+            this.mWallpaperVisible = ((IWindowManager) Dependency.get(IWindowManager.class)).registerWallpaperVisibilityListener(this.mWallpaperVisibilityListener, 0);
+        } catch (RemoteException unused) {
+        }
+        this.mView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            public final void onLayoutChange(View view, int i, int i2, int i3, int i4, int i5, int i6, int i7, int i8) {
+                NavigationBarTransitions.this.lambda$new$0$NavigationBarTransitions(view, i, i2, i3, i4, i5, i6, i7, i8);
+            }
+        });
+        View currentView = this.mView.getCurrentView();
+        if (currentView != null) {
+            this.mNavButtons = currentView.findViewById(C0015R$id.nav_buttons);
+        }
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$new$0 */
+    public /* synthetic */ void lambda$new$0$NavigationBarTransitions(View view, int i, int i2, int i3, int i4, int i5, int i6, int i7, int i8) {
+        View currentView = this.mView.getCurrentView();
+        if (currentView != null) {
+            this.mNavButtons = currentView.findViewById(C0015R$id.nav_buttons);
+            applyLightsOut(false, true);
+        }
     }
 
     public void init() {
         applyModeBackground(-1, getMode(), false);
-        applyMode(getMode(), false, true);
+        applyLightsOut(false, true);
+    }
+
+    public void destroy() {
+        try {
+            ((IWindowManager) Dependency.get(IWindowManager.class)).unregisterWallpaperVisibilityListener(this.mWallpaperVisibilityListener, 0);
+        } catch (RemoteException unused) {
+        }
+    }
+
+    public void setAutoDim(boolean z) {
+        if ((!z || !Utils.isGesturalModeOnDefaultDisplay(this.mView.getContext(), this.mNavBarMode)) && this.mAutoDim != z) {
+            this.mAutoDim = z;
+            applyLightsOut(true, false);
+        }
+    }
+
+    /* access modifiers changed from: package-private */
+    public void setBackgroundFrame(Rect rect) {
+        this.mBarBackground.setFrame(rect);
     }
 
     /* access modifiers changed from: protected */
-    public void onTransition(int i, int i2, boolean z) {
-        super.onTransition(i, i2, z);
-        applyMode(i2, z, false);
-    }
-
-    private void applyMode(int i, boolean z, boolean z2) {
-        applyLightsOut(isLightsOut(i), z, z2);
-    }
-
-    /* access modifiers changed from: private */
-    public void applyLightsOut(boolean z, boolean z2, boolean z3) {
-        AnonymousClass1 r8;
-        if (z3 || z != this.mLightsOut) {
-            this.mLightsOut = z;
-            View findViewById = this.mView.getCurrentView().findViewById(R.id.nav_buttons);
-            final View findViewById2 = this.mView.getCurrentView().findViewById(R.id.lights_out);
-            findViewById.animate().cancel();
-            findViewById2.animate().cancel();
-            float f = 1.0f;
-            float f2 = z ? 0.0f : 1.0f;
-            if (!z) {
-                f = 0.0f;
-            }
-            int i = 0;
-            if (!z2) {
-                findViewById.setAlpha(f2);
-                findViewById2.setAlpha(f);
-                if (!z) {
-                    i = 8;
-                }
-                findViewById2.setVisibility(i);
-                return;
-            }
-            long j = (long) (z ? 750 : 250);
-            findViewById.animate().alpha(f2).setDuration(j).start();
-            findViewById2.setOnTouchListener(this.mLightsOutListener);
-            if (findViewById2.getVisibility() == 8) {
-                findViewById2.setAlpha(0.0f);
-                findViewById2.setVisibility(0);
-            }
-            ViewPropertyAnimator interpolator = findViewById2.animate().alpha(f).setDuration(j).setInterpolator(new AccelerateInterpolator(2.0f));
-            if (z) {
-                r8 = null;
-            } else {
-                r8 = new AnimatorListenerAdapter() {
-                    public void onAnimationEnd(Animator animator) {
-                        findViewById2.setVisibility(8);
-                    }
-                };
-            }
-            interpolator.setListener(r8).start();
-        }
+    public boolean isLightsOut(int i) {
+        return super.isLightsOut(i) || (this.mAllowAutoDimWallpaperNotVisible && this.mAutoDim && !this.mWallpaperVisible && i != 5);
     }
 
     public LightBarTransitionsController getLightTransitionsController() {
         return this.mLightTransitionsController;
     }
 
+    /* access modifiers changed from: protected */
+    public void onTransition(int i, int i2, boolean z) {
+        super.onTransition(i, i2, z);
+        applyLightsOut(z, false);
+        this.mView.onBarTransition(i2);
+    }
+
+    /* access modifiers changed from: private */
+    public void applyLightsOut(boolean z, boolean z2) {
+        applyLightsOut(isLightsOut(getMode()), z, z2);
+    }
+
+    private void applyLightsOut(boolean z, boolean z2, boolean z3) {
+        if (z3 || z != this.mLightsOut) {
+            this.mLightsOut = z;
+            View view = this.mNavButtons;
+            if (view != null) {
+                view.animate().cancel();
+                float currentDarkIntensity = z ? (this.mLightTransitionsController.getCurrentDarkIntensity() / 10.0f) + 0.6f : 1.0f;
+                if (!z2) {
+                    this.mNavButtons.setAlpha(currentDarkIntensity);
+                } else {
+                    this.mNavButtons.animate().alpha(currentDarkIntensity).setDuration((long) (z ? 750 : 250)).start();
+                }
+            }
+        }
+    }
+
+    public void reapplyDarkIntensity() {
+        applyDarkIntensity(this.mLightTransitionsController.getCurrentDarkIntensity());
+    }
+
     public void applyDarkIntensity(float f) {
-        Log.d("NavigationBarTransitions", "applyDarkIntensity ".concat(String.valueOf(f)));
-        this.mView.getNavigationHandle().setDarkIntensity(f);
+        this.mView.applyDarkIntensity(f);
+        SparseArray<ButtonDispatcher> buttonDispatchers = this.mView.getButtonDispatchers();
+        for (int size = buttonDispatchers.size() - 1; size >= 0; size--) {
+            buttonDispatchers.valueAt(size).setDarkIntensity(f);
+        }
+        this.mView.getRotationButtonController().setDarkIntensity(f);
+        for (DarkIntensityListener onDarkIntensity : this.mDarkIntensityListeners) {
+            onDarkIntensity.onDarkIntensity(f);
+        }
+        if (this.mAutoDim) {
+            applyLightsOut(false, true);
+        }
+    }
+
+    public int getTintAnimationDuration() {
+        return Utils.isGesturalModeOnDefaultDisplay(this.mView.getContext(), this.mNavBarMode) ? Math.max(750, 400) : R$styleable.AppCompatTheme_windowFixedHeightMajor;
+    }
+
+    public void onNavigationModeChanged(int i) {
+        this.mNavBarMode = i;
+    }
+
+    public float addDarkIntensityListener(DarkIntensityListener darkIntensityListener) {
+        this.mDarkIntensityListeners.add(darkIntensityListener);
+        return this.mLightTransitionsController.getCurrentDarkIntensity();
+    }
+
+    public void removeDarkIntensityListener(DarkIntensityListener darkIntensityListener) {
+        this.mDarkIntensityListeners.remove(darkIntensityListener);
     }
 }

@@ -21,6 +21,10 @@ public class NavigationBarFrame extends FrameLayout {
         super(context, attributeSet, i);
     }
 
+    public void setDeadZone(DeadZone deadZone) {
+        this.mDeadZone = deadZone;
+    }
+
     public boolean dispatchTouchEvent(MotionEvent motionEvent) {
         DeadZone deadZone;
         if (motionEvent.getAction() != 4 || (deadZone = this.mDeadZone) == null) {

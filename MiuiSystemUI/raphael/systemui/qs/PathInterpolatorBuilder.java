@@ -23,17 +23,17 @@ public class PathInterpolatorBuilder {
     private void initPath(Path path) {
         float[] approximate = path.approximate(0.002f);
         int length = approximate.length / 3;
+        float f = 0.0f;
         if (approximate[1] == 0.0f && approximate[2] == 0.0f && approximate[approximate.length - 2] == 1.0f && approximate[approximate.length - 1] == 1.0f) {
             this.mX = new float[length];
             this.mY = new float[length];
             this.mDist = new float[length];
             int i = 0;
-            float f = 0.0f;
-            float f2 = 0.0f;
             int i2 = 0;
-            while (i2 < length) {
-                int i3 = i + 1;
-                float f3 = approximate[i];
+            float f2 = 0.0f;
+            while (i < length) {
+                int i3 = i2 + 1;
+                float f3 = approximate[i2];
                 int i4 = i3 + 1;
                 float f4 = approximate[i3];
                 int i5 = i4 + 1;
@@ -42,20 +42,20 @@ public class PathInterpolatorBuilder {
                     throw new IllegalArgumentException("The Path cannot have discontinuity in the X axis.");
                 } else if (f4 >= f2) {
                     float[] fArr = this.mX;
-                    fArr[i2] = f4;
+                    fArr[i] = f4;
                     float[] fArr2 = this.mY;
-                    fArr2[i2] = f5;
-                    if (i2 > 0) {
-                        int i6 = i2 - 1;
-                        float f6 = fArr[i2] - fArr[i6];
-                        float f7 = fArr2[i2] - fArr2[i6];
+                    fArr2[i] = f5;
+                    if (i > 0) {
+                        int i6 = i - 1;
+                        float f6 = fArr[i] - fArr[i6];
+                        float f7 = fArr2[i] - fArr2[i6];
                         float[] fArr3 = this.mDist;
-                        fArr3[i2] = fArr3[i6] + ((float) Math.sqrt((double) ((f6 * f6) + (f7 * f7))));
+                        fArr3[i] = fArr3[i6] + ((float) Math.sqrt((double) ((f6 * f6) + (f7 * f7))));
                     }
-                    i2++;
+                    i++;
                     f = f3;
                     f2 = f4;
-                    i = i5;
+                    i2 = i5;
                 } else {
                     throw new IllegalArgumentException("The Path cannot loop back on itself.");
                 }

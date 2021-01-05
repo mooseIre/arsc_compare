@@ -7,8 +7,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Handler;
 import android.os.UserHandle;
-import android.provider.MiuiSettings;
-import android.text.TextUtils;
 import com.android.systemui.statusbar.policy.NextAlarmController;
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
@@ -17,53 +15,52 @@ import java.util.ArrayList;
 public class NextAlarmControllerImpl extends BroadcastReceiver implements NextAlarmController {
     private AlarmManager mAlarmManager;
     private final ArrayList<NextAlarmController.NextAlarmChangeCallback> mChangeCallbacks = new ArrayList<>();
-    private boolean mHasSystemAlarm;
-    private boolean mHasThirdPartyAlarm;
+    private AlarmManager.AlarmClockInfo mNextAlarm;
 
     public NextAlarmControllerImpl(Context context) {
         this.mAlarmManager = (AlarmManager) context.getSystemService("alarm");
         IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction("android.intent.action.ALARM_CHANGED");
         intentFilter.addAction("android.intent.action.USER_SWITCHED");
+        intentFilter.addAction("android.app.action.NEXT_ALARM_CLOCK_CHANGED");
         context.registerReceiverAsUser(this, UserHandle.ALL, intentFilter, (String) null, (Handler) null);
-        fireAlarmChanged();
+        updateNextAlarm();
     }
 
     public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
         printWriter.println("NextAlarmController state:");
-        printWriter.print("  mHasNextAlarm=");
-        printWriter.println(this.mHasSystemAlarm || this.mHasThirdPartyAlarm);
+        printWriter.print("  mNextAlarm=");
+        printWriter.println(this.mNextAlarm);
     }
 
     public void addCallback(NextAlarmController.NextAlarmChangeCallback nextAlarmChangeCallback) {
         this.mChangeCallbacks.add(nextAlarmChangeCallback);
-        nextAlarmChangeCallback.onNextAlarmChanged(this.mHasSystemAlarm || this.mHasThirdPartyAlarm);
+        nextAlarmChangeCallback.onNextAlarmChanged(this.mNextAlarm);
+    }
+
+    public void removeCallback(NextAlarmController.NextAlarmChangeCallback nextAlarmChangeCallback) {
+        this.mChangeCallbacks.remove(nextAlarmChangeCallback);
     }
 
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
-        if (action.equals("android.intent.action.ALARM_CHANGED")) {
-            boolean booleanExtra = intent.getBooleanExtra("alarmSet", false);
-            if (intent.getBooleanExtra("alarmSystem", false)) {
-                this.mHasSystemAlarm = booleanExtra;
-            } else {
-                this.mHasThirdPartyAlarm = booleanExtra;
-            }
-            fireAlarmChanged();
-        } else if (action.equals("android.intent.action.USER_SWITCHED")) {
-            this.mHasSystemAlarm = !TextUtils.isEmpty(MiuiSettings.System.getStringForUser(context.getContentResolver(), "next_alarm_clock_formatted", -2));
-            fireAlarmChanged();
+        if (action.equals("android.intent.action.USER_SWITCHED") || action.equals("android.app.action.NEXT_ALARM_CLOCK_CHANGED")) {
+            updateNextAlarm();
+        }
+    }
+
+    private void updateNextAlarm() {
+        this.mNextAlarm = this.mAlarmManager.getNextAlarmClock(-2);
+        fireNextAlarmChanged();
+    }
+
+    private void fireNextAlarmChanged() {
+        int size = this.mChangeCallbacks.size();
+        for (int i = 0; i < size; i++) {
+            this.mChangeCallbacks.get(i).onNextAlarmChanged(this.mNextAlarm);
         }
     }
 
     public boolean hasAlarm() {
-        return this.mHasSystemAlarm || this.mHasThirdPartyAlarm;
-    }
-
-    private void fireAlarmChanged() {
-        int size = this.mChangeCallbacks.size();
-        for (int i = 0; i < size; i++) {
-            this.mChangeCallbacks.get(i).onNextAlarmChanged(this.mHasSystemAlarm || this.mHasThirdPartyAlarm);
-        }
+        return this.mNextAlarm != null;
     }
 }
