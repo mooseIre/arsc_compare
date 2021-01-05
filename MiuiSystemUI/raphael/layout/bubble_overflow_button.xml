@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.android.systemui.bubbles.BadgedImageView android:id="@id/bubble_overflow_button" android:layout_width="@dimen/individual_bubble_size" android:layout_height="@dimen/individual_bubble_size" android:src="@drawable/ic_bubble_overflow_button"
+  xmlns:android="http://schemas.android.com/apk/res/android" />

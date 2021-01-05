@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.android.systemui.statusbar.AlphaOptimizedFrameLayout android:id="@id/operator_name_frame" android:layout_width="wrap_content" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <com.android.systemui.statusbar.views.DarkCarrierText android:textAppearance="@style/TextAppearance.StatusBar.Clock" android:ellipsize="marquee" android:gravity="start|center" android:id="@id/status_bar_carrier_text" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="fill_parent" android:maxEms="3" android:singleLine="true" android:marqueeRepeatLimit="1" android:textDirection="locale" android:paddingEnd="5.0dip" />
+</com.android.systemui.statusbar.AlphaOptimizedFrameLayout>

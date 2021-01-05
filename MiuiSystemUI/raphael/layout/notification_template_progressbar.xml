@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="utf-8"?>
+<miui.widget.ProgressBar android:id="@id/progress" android:layout_width="fill_parent" android:layout_height="@dimen/notification_progress_bar_height" android:indeterminateDrawable="@drawable/notification_progress_indeterminate_horizontal_material" android:progressDrawable="@drawable/notification_progress_horizontal_material" style="?android:progressBarStyleHorizontal"
+  xmlns:android="http://schemas.android.com/apk/res/android" />

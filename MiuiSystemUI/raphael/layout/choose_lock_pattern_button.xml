@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:orientation="horizontal" android:id="@id/footerLayout" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginBottom="@dimen/choose_unlock_password_footer_margin" android:baselineAligned="false" android:measureWithLargestChild="true" android:layout_marginStart="@dimen/choose_unlock_password_footer_margin" android:layout_marginEnd="@dimen/choose_unlock_password_footer_margin" style="?android:buttonBarStyle"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <Button android:id="@id/footerLeftButton" android:layout_width="0.0dip" android:layout_height="fill_parent" android:text="@string/cancel" android:maxLines="2" android:layout_weight="1.0" style="?android:buttonBarButtonStyle" />
+    <Button android:layout_gravity="right" android:id="@id/footerRightButton" android:layout_width="0.0dip" android:layout_height="fill_parent" android:text="@string/biometric_dialog_confirm" android:maxLines="2" android:layout_weight="1.0" android:layout_marginStart="@dimen/choose_unlock_password_footer_divider_width" style="?android:buttonBarButtonStyle" />
+</LinearLayout>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.android.systemui.bubbles.BubbleMenuView android:id="@id/bubble_menu_container" android:background="#66000000" android:visibility="gone" android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <FrameLayout android:id="@id/bubble_menu_view" android:background="#ffffffff" android:layout_width="wrap_content" android:layout_height="@dimen/individual_bubble_size">
+        <ImageView android:id="@android:id/icon" android:layout_width="@dimen/global_actions_grid_item_icon_width" android:layout_height="@dimen/global_actions_grid_item_icon_height" android:layout_marginLeft="@dimen/global_actions_grid_item_icon_side_margin" android:layout_marginTop="@dimen/global_actions_grid_item_icon_top_margin" android:layout_marginRight="@dimen/global_actions_grid_item_icon_side_margin" android:layout_marginBottom="@dimen/global_actions_grid_item_icon_bottom_margin" android:scaleType="centerInside" android:tint="@color/global_actions_text" />
+    </FrameLayout>
+</com.android.systemui.bubbles.BubbleMenuView>
