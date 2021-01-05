@@ -3,11 +3,13 @@ package com.android.keyguard.charge;
 import android.content.Context;
 import android.content.res.Resources;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.Toast;
+import com.android.systemui.C0008R$array;
 import com.android.systemui.C0016R$integer;
 import com.android.systemui.C0019R$plurals;
 import com.android.systemui.C0021R$string;
@@ -15,6 +17,9 @@ import com.android.systemui.Dependency;
 import com.android.systemui.statusbar.phone.StatusBar;
 import com.android.systemui.statusbar.policy.UserSwitcherController;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import miui.util.FeatureParser;
 
 public class ChargeUtils {
@@ -23,6 +28,7 @@ public class ChargeUtils {
     public static String PROVIDER_POWER_CENTER = "content://com.miui.powercenter.provider";
     private static final boolean SUPPORT_WIRELESS_CHARGE = new File("/sys/class/power_supply/wireless/signal_strength").exists();
     private static int WAVE_DELAY_TIME = 1000;
+    private static List<String> mIsSupportStrongSuperRapidChargeList = new ArrayList();
     public static MiuiBatteryStatus sBatteryStatus = null;
     private static boolean sChargeAnimationDisabled = false;
     private static boolean sNeedRepositionDevice = SUPPORT_WIRELESS_CHARGE;
@@ -188,6 +194,14 @@ public class ChargeUtils {
         sBatteryStatus = miuiBatteryStatus;
     }
 
+    private static boolean supportStrongSuperRapidCharge() {
+        Context contextForUser = ((UserSwitcherController) Dependency.get(UserSwitcherController.class)).getContextForUser();
+        if (mIsSupportStrongSuperRapidChargeList.isEmpty() && contextForUser != null) {
+            mIsSupportStrongSuperRapidChargeList = Arrays.asList(contextForUser.getResources().getStringArray(C0008R$array.config_charge_supportWirelessStrongSuper));
+        }
+        return mIsSupportStrongSuperRapidChargeList.contains(Build.DEVICE);
+    }
+
     public static int getSwitchChargeSpeed(int i, int i2) {
         if (i != 10) {
             if (i == 11) {
@@ -203,7 +217,9 @@ public class ChargeUtils {
             return 0;
         } else if (!isWirelessSuperRapidCharge(i2)) {
             if (isWirelessStrongSuperRapidCharge(i2)) {
-                return 3;
+                if (supportStrongSuperRapidCharge()) {
+                    return 3;
+                }
             }
             return 0;
         }

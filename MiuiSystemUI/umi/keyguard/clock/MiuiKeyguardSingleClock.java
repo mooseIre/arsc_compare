@@ -66,6 +66,7 @@ public class MiuiKeyguardSingleClock extends MiuiKeyguardBaseClock implements Re
     protected boolean mOldHasNotification = false;
     protected TextView mOwnerInfo;
     protected String mOwnerInfoString = null;
+    protected int mSelectedClockPosition;
     /* access modifiers changed from: private */
     public boolean mShowCarrier;
     private ContentObserver mShowCarrierObserver = new ContentObserver((Handler) Dependency.get(Dependency.MAIN_HANDLER)) {
@@ -80,6 +81,7 @@ public class MiuiKeyguardSingleClock extends MiuiKeyguardBaseClock implements Re
             MiuiKeyguardSingleClock.this.updateSimCardInfoVisibility();
         }
     };
+    private boolean mShowCarrierUnderLeftHoleKeyguard;
     protected boolean mShowLunarCalendar = false;
     protected boolean mShowOwnerInfo = false;
     protected CarrierText mSimCardInfo;
@@ -127,6 +129,7 @@ public class MiuiKeyguardSingleClock extends MiuiKeyguardBaseClock implements Re
         this.mClockExtraInfo = (LinearLayout) inflate.findViewById(C0015R$id.miui_keyguard_clock_extra_info);
         this.mSimCardInfo = (CarrierText) inflate.findViewById(C0015R$id.unlock_screen_sim_info);
         this.mLeftHoleDevice = this.mResources.getBoolean(C0010R$bool.left_hole_device);
+        this.mShowCarrierUnderLeftHoleKeyguard = this.mResources.getBoolean(C0010R$bool.show_carrier_under_left_hole_keyguard);
         this.mOwnerInfo = (TextView) inflate.findViewById(C0015R$id.unlock_screen_owner_info);
         this.mMagazineClockView = (LockScreenMagazineClockView) inflate.findViewById(C0015R$id.unlock_screen_lock_screen_magazine_info);
         addView(inflate);
@@ -272,7 +275,7 @@ public class MiuiKeyguardSingleClock extends MiuiKeyguardBaseClock implements Re
         int i4 = this.mSelectedClockPosition;
         boolean z = true;
         int i5 = 0;
-        if (!(i4 == 1 || i4 == 3 || i4 == 0)) {
+        if (i4 != 1 && !MiuiKeyguardUtils.isSupportVerticalClock(i4, this.mContext)) {
             z = false;
         }
         LinearLayout linearLayout = this.mClockExtraInfo;
@@ -454,6 +457,6 @@ public class MiuiKeyguardSingleClock extends MiuiKeyguardBaseClock implements Re
 
     /* access modifiers changed from: protected */
     public void updateSimCardInfoVisibility() {
-        this.mSimCardInfo.setVisibility((!this.mShowCarrier || !this.mLeftHoleDevice || this.mTWRegion) ? 8 : 0);
+        this.mSimCardInfo.setVisibility((!this.mShowCarrier || !this.mLeftHoleDevice || this.mTWRegion || this.mShowCarrierUnderLeftHoleKeyguard) ? 8 : 0);
     }
 }

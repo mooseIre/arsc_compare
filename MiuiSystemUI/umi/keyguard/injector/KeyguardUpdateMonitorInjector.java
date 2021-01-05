@@ -9,6 +9,7 @@ import android.os.RemoteException;
 import android.os.Trace;
 import android.os.UserHandle;
 import android.util.Log;
+import android.util.Slog;
 import com.android.internal.policy.IKeyguardDrawnCallback;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.KeyguardUpdateMonitorCallback;
@@ -38,6 +39,7 @@ public final class KeyguardUpdateMonitorInjector implements SuperSaveModeControl
     private boolean mChargeAnimationShowing;
     @NotNull
     private final Context mContext;
+    private boolean mDisableFingerprintListenState;
     private int mFaceUnlockMode;
     private int mFingerprintMode;
     private boolean mKeyguardOccluded;
@@ -45,6 +47,7 @@ public final class KeyguardUpdateMonitorInjector implements SuperSaveModeControl
     private boolean mKeyguardShowingAndOccluded;
     private boolean mSimLocked;
     private final SuperSaveModeController mSuperSaveModeController;
+    private String mUnlockWay;
 
     public KeyguardUpdateMonitorInjector(@NotNull Context context, @NotNull SuperSaveModeController superSaveModeController) {
         Intrinsics.checkParameterIsNotNull(context, "mContext");
@@ -54,6 +57,7 @@ public final class KeyguardUpdateMonitorInjector implements SuperSaveModeControl
         if (superSaveModeController != null) {
             superSaveModeController.addCallback((SuperSaveModeController.SuperSaveModeChangeListener) this);
             this.mBiometricManager = (BiometricManager) this.mContext.getSystemService(BiometricManager.class);
+            this.mUnlockWay = "none";
             return;
         }
         Intrinsics.throwNpe();
@@ -294,5 +298,23 @@ public final class KeyguardUpdateMonitorInjector implements SuperSaveModeControl
 
     public final void handleFingerprintLockoutReset() {
         forEachCallback(KeyguardUpdateMonitorInjector$handleFingerprintLockoutReset$1.INSTANCE);
+    }
+
+    public final void sendKeyguardScreenOnBroadcast() {
+        Intent intent = new Intent("com.android.systemui.SCREEN_ON");
+        intent.putExtra("wakeupWay", this.mUnlockWay);
+        this.mContext.sendBroadcast(intent);
+    }
+
+    public final void setKeyguardUnlockWay(@NotNull String str, boolean z) {
+        Intrinsics.checkParameterIsNotNull(str, "way");
+        if (z) {
+            Slog.w("miui_keyguard", "unlock keyguard by " + str);
+        }
+        this.mUnlockWay = str;
+    }
+
+    public final boolean getDisableFingerprintListenState() {
+        return this.mDisableFingerprintListenState;
     }
 }

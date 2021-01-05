@@ -10,7 +10,6 @@ import android.os.Handler;
 import android.os.UserHandle;
 import android.provider.Settings;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
 import android.widget.FrameLayout;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.MiuiKeyguardUpdateMonitorCallback;
@@ -66,6 +65,7 @@ public class KeyguardClockContainer extends FrameLayout {
         this.mShowDualClock = false;
         this.mSelectedClockPosition = 0;
         this.mLastSelectedClockPosition = 0;
+        this.mShowVerticalClock = false;
         this.mHandler = new Handler();
         this.mUpdateTimeRunnable = new Runnable() {
             public void run() {
@@ -134,7 +134,7 @@ public class KeyguardClockContainer extends FrameLayout {
             z = true;
         }
         this.mShowDualClock = z;
-        MiuiKeyguardUtils.isSupportVerticalClock(this.mSelectedClockPosition, this.mContext);
+        this.mShowVerticalClock = MiuiKeyguardUtils.isSupportVerticalClock(this.mSelectedClockPosition, this.mContext);
         this.mUpdateMonitorCallback = new MiuiKeyguardUpdateMonitorCallback() {
             public void onUserSwitchComplete(int i) {
                 KeyguardClockContainer.this.onUserChanged();
@@ -197,17 +197,16 @@ public class KeyguardClockContainer extends FrameLayout {
 
     private void addClockView() {
         MiuiKeyguardBaseClock miuiKeyguardBaseClock;
-        LayoutInflater.from(this.mContext);
         if (this.mShowDualClock) {
             miuiKeyguardBaseClock = new MiuiKeyguardDualClock(this.mContext);
+        } else if (this.mShowVerticalClock) {
+            miuiKeyguardBaseClock = new MiuiKeyguardCenterVerticalClock(this.mContext);
         } else {
             int i = this.mSelectedClockPosition;
-            if (i == 2) {
-                miuiKeyguardBaseClock = new MiuiKeyguardLeftTopClock(this.mContext);
-            } else if (i != 3) {
-                miuiKeyguardBaseClock = i != 4 ? new MiuiKeyguardCenterHorizontalClock(this.mContext) : new MiuiKeyguardLeftTopLargeClock(this.mContext);
+            if (i != 1) {
+                miuiKeyguardBaseClock = i != 2 ? new MiuiKeyguardLeftTopLargeClock(this.mContext) : new MiuiKeyguardLeftTopClock(this.mContext);
             } else {
-                miuiKeyguardBaseClock = new MiuiKeyguardCenterVerticalClock(this.mContext);
+                miuiKeyguardBaseClock = new MiuiKeyguardCenterHorizontalClock(this.mContext);
             }
         }
         addView(miuiKeyguardBaseClock);

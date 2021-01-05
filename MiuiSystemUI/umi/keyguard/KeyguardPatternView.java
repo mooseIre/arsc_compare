@@ -24,6 +24,7 @@ import com.android.internal.widget.LockPatternView;
 import com.android.internal.widget.LockscreenCredential;
 import com.android.keyguard.MiuiLockPatternView;
 import com.android.keyguard.fod.MiuiGxzwManager;
+import com.android.keyguard.injector.KeyguardUpdateMonitorInjector;
 import com.android.keyguard.utils.MiuiKeyguardUtils;
 import com.android.settingslib.animation.AppearAnimationCreator;
 import com.android.settingslib.animation.AppearAnimationUtils;
@@ -265,7 +266,10 @@ public class KeyguardPatternView extends MiuiKeyguardPasswordView implements Key
                 KeyguardPatternView.this.mCallback.reportUnlockAttempt(i, true, 0);
                 KeyguardPatternView.this.mLockPatternView.setDisplayMode(MiuiLockPatternView.DisplayMode.CORRECT);
                 KeyguardPatternView.this.mCallback.dismiss(true, i);
+            } else {
+                return;
             }
+            ((KeyguardUpdateMonitorInjector) Dependency.get(KeyguardUpdateMonitorInjector.class)).setKeyguardUnlockWay("pw", z);
         }
     }
 

@@ -417,6 +417,13 @@ public class PasswordTextViewForPIN extends PasswordTextView {
             this.isVisible = false;
         }
 
+        /* access modifiers changed from: package-private */
+        public void clean() {
+            Folme.clean(this.mScaleTarget);
+            Folme.clean(this.mAlphaTarget);
+            Folme.clean(this.mYTarget);
+        }
+
         /* access modifiers changed from: private */
         public void startResetAnimation(boolean z, long j) {
             startRemoveAnimation(j);
@@ -482,6 +489,14 @@ public class PasswordTextViewForPIN extends PasswordTextView {
             }
             canvas.restore();
             return f3 + ((float) PasswordTextViewForPIN.this.mCharPadding);
+        }
+    }
+
+    /* access modifiers changed from: protected */
+    public void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        for (int i = 0; i < this.mPasswordLength; i++) {
+            this.mTextChars.get(i).clean();
         }
     }
 }

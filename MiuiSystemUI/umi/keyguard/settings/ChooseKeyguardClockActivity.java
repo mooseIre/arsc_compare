@@ -36,6 +36,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.android.internal.widget.LockPatternUtils;
 import com.android.keyguard.clock.MiuiClockView;
+import com.android.keyguard.settings.ChooseKeyguardClockActivity;
 import com.android.keyguard.utils.MiuiKeyguardUtils;
 import com.android.keyguard.wallpaper.KeyguardWallpaperUtils;
 import com.android.keyguard.wallpaper.WallpaperAuthorityUtils;
@@ -88,7 +89,9 @@ public class ChooseKeyguardClockActivity extends Activity {
     private FrameLayout mOwnerInfoLayout;
     private LinearLayout mPanelView;
     /* access modifiers changed from: private */
-    public int mSelectedClockPosition = 0;
+    public int mSelectedClockStyle = 0;
+    /* access modifiers changed from: private */
+    public int[] mStyles = {4, 1, 2, 3};
     /* access modifiers changed from: private */
     public int mUserId;
     /* access modifiers changed from: private */
@@ -113,7 +116,7 @@ public class ChooseKeyguardClockActivity extends Activity {
         this.mLockPatternUtils = new LockPatternUtils(this);
         this.mUserId = getIntent().getIntExtra("extra_user_id", UserHandle.myUserId());
         this.mOwnerAdmin = RestrictedLockUtilsInternal.getDeviceOwner(this);
-        this.mSelectedClockPosition = Settings.System.getIntForUser(getContentResolver(), "selected_keyguard_clock_position", MiuiKeyguardUtils.getDefaultKeyguardClockPosition(this), this.mUserId);
+        this.mSelectedClockStyle = Settings.System.getIntForUser(getContentResolver(), "selected_keyguard_clock_position", getClockStyleByConfiguration(MiuiKeyguardUtils.getDefaultKeyguardClockPosition(this)), this.mUserId);
         initView();
         WallpaperInfo wallpaperInfo = ((WallpaperManager) getSystemService("wallpaper")).getWallpaperInfo();
         if (wallpaperInfo != null && wallpaperInfo.getServiceInfo() != null) {
@@ -147,7 +150,7 @@ public class ChooseKeyguardClockActivity extends Activity {
         }
         MiuiClockView miuiClockView = (MiuiClockView) findViewById(C0015R$id.main_clock_view);
         this.mClockView = miuiClockView;
-        miuiClockView.setClockStyle(this.mSelectedClockPosition);
+        miuiClockView.setClockStyle(this.mSelectedClockStyle);
         this.mClockView.setOwnerInfo(getOwnerInfo());
         LinearLayout linearLayout = (LinearLayout) findViewById(C0015R$id.choose_clock_scroll_view);
         this.mPanelView = linearLayout;
@@ -363,7 +366,7 @@ public class ChooseKeyguardClockActivity extends Activity {
 
     /* access modifiers changed from: private */
     public void setMainClockTextColor() {
-        int i = this.mSelectedClockPosition;
+        int i = this.mSelectedClockStyle;
         if (i == 2 || i == 4) {
             this.mClockView.setTextColorDark(!this.mLeftClockViewLight);
         } else {
@@ -434,10 +437,6 @@ public class ChooseKeyguardClockActivity extends Activity {
     public class ClockAdapter extends RecyclerView.Adapter<MyViewHolder> {
         Context context;
 
-        public int getItemCount() {
-            return 4;
-        }
-
         public ClockAdapter(Context context2) {
             this.context = context2;
         }
@@ -448,22 +447,40 @@ public class ChooseKeyguardClockActivity extends Activity {
             return new MyViewHolder(this, inflate);
         }
 
-        public void onBindViewHolder(MyViewHolder myViewHolder, final int i) {
-            myViewHolder.clockView.setClockStyle(i + 1);
-            myViewHolder.itemRootView.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View view) {
-                    int unused = ChooseKeyguardClockActivity.this.mSelectedClockPosition = i + 1;
-                    ChooseKeyguardClockActivity.this.mClockView.setClockStyle(i + 1);
-                    Settings.System.putIntForUser(ClockAdapter.this.context.getContentResolver(), "selected_keyguard_clock_position", ChooseKeyguardClockActivity.this.mSelectedClockPosition, ChooseKeyguardClockActivity.this.mUserId);
-                    ClockAdapter.this.notifyDataSetChanged();
-                    ChooseKeyguardClockActivity.this.setMainClockTextColor();
+        public void onBindViewHolder(MyViewHolder myViewHolder, int i) {
+            myViewHolder.clockView.setClockStyle(ChooseKeyguardClockActivity.this.mStyles[i]);
+            myViewHolder.itemRootView.setOnClickListener(new View.OnClickListener(i) {
+                public final /* synthetic */ int f$1;
+
+                {
+                    this.f$1 = r2;
+                }
+
+                public final void onClick(View view) {
+                    ChooseKeyguardClockActivity.ClockAdapter.this.lambda$onBindViewHolder$0$ChooseKeyguardClockActivity$ClockAdapter(this.f$1, view);
                 }
             });
-            if (i == Math.max(ChooseKeyguardClockActivity.this.mSelectedClockPosition - 1, 0)) {
+            if (ChooseKeyguardClockActivity.this.mSelectedClockStyle == ChooseKeyguardClockActivity.this.mStyles[i]) {
                 myViewHolder.itemRootView.setSelected(true);
             } else {
                 myViewHolder.itemRootView.setSelected(false);
             }
+        }
+
+        /* access modifiers changed from: private */
+        /* renamed from: lambda$onBindViewHolder$0 */
+        public /* synthetic */ void lambda$onBindViewHolder$0$ChooseKeyguardClockActivity$ClockAdapter(int i, View view) {
+            ChooseKeyguardClockActivity chooseKeyguardClockActivity = ChooseKeyguardClockActivity.this;
+            int unused = chooseKeyguardClockActivity.mSelectedClockStyle = chooseKeyguardClockActivity.mStyles[i];
+            ChooseKeyguardClockActivity chooseKeyguardClockActivity2 = ChooseKeyguardClockActivity.this;
+            chooseKeyguardClockActivity2.mClockView.setClockStyle(chooseKeyguardClockActivity2.mSelectedClockStyle);
+            Settings.System.putIntForUser(this.context.getContentResolver(), "selected_keyguard_clock_position", ChooseKeyguardClockActivity.this.mSelectedClockStyle, ChooseKeyguardClockActivity.this.mUserId);
+            notifyDataSetChanged();
+            ChooseKeyguardClockActivity.this.setMainClockTextColor();
+        }
+
+        public int getItemCount() {
+            return ChooseKeyguardClockActivity.this.mStyles.length;
         }
 
         class MyViewHolder extends RecyclerView.ViewHolder {
@@ -482,5 +499,12 @@ public class ChooseKeyguardClockActivity extends Activity {
                 this.itemRootView = (FrameLayout) view.findViewById(C0015R$id.item_root_view);
             }
         }
+    }
+
+    private int getClockStyleByConfiguration(int i) {
+        if (i == 0) {
+            return MiuiKeyguardUtils.isBlackGoldenTheme(this) ? 3 : 4;
+        }
+        return i;
     }
 }

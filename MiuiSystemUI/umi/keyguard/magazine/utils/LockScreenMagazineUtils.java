@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.analytics.AnalyticsHelper;
 import com.android.keyguard.magazine.LockScreenMagazineController;
 import com.android.keyguard.utils.ContentProviderUtils;
@@ -43,7 +44,7 @@ public class LockScreenMagazineUtils {
     }
 
     public static boolean isLockScreenMagazineAvailable() {
-        return MiuiKeyguardUtils.isUserUnlocked();
+        return ((KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class)).isUserUnlocked(KeyguardUpdateMonitor.getCurrentUser()) && MiuiKeyguardUtils.isDefaultLockScreenTheme();
     }
 
     public static void sendLockScreenMagazineEventBroadcast(Context context, String str) {

@@ -18,6 +18,7 @@ import android.util.Property;
 import android.view.KeyEvent;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.WindowManagerGlobal;
 import android.view.animation.Interpolator;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
@@ -50,6 +51,7 @@ public class MiuiChargeAnimationView extends FrameLayout {
     public ViewGroup mParentContainer;
     private Interpolator mQuartOutInterpolator;
     private Point mScreenSize;
+    private boolean mShowChargingInNonLockscreen;
     private boolean mStartingDismissAnim;
     private Runnable mTimeoutDismissJob;
     private WindowManager mWindowManager;
@@ -165,19 +167,6 @@ public class MiuiChargeAnimationView extends FrameLayout {
         this.animationListener = iChargeAnimationListener;
     }
 
-    public void addToWindow(String str) {
-        if (!isAttachedToWindow() && getParent() == null) {
-            try {
-                Log.d("MiuiChargeAnimationView", "addToWindow: reason " + str);
-                setComponentTransparent(true);
-                ChargeUtils.getParentView().addView(this);
-            } catch (Exception e) {
-                Log.d("MiuiChargeAnimationView", "addToWindow: Exception " + e);
-                e.printStackTrace();
-            }
-        }
-    }
-
     /* access modifiers changed from: protected */
     public void setComponentTransparent(boolean z) {
         if (z) {
@@ -195,7 +184,7 @@ public class MiuiChargeAnimationView extends FrameLayout {
     public void startValueAnimation(float f, float f2) {
         this.mChargePercentView.startValueAnimation(f, f2);
         this.mHandler.removeCallbacks(this.mTimeoutDismissJob);
-        this.mHandler.postDelayed(this.mTimeoutDismissJob, 9400);
+        this.mHandler.postDelayed(this.mTimeoutDismissJob, this.mShowChargingInNonLockscreen ? 5800 : 9400);
     }
 
     public void startChargeAnimation(boolean z, boolean z2) {
@@ -320,7 +309,7 @@ public class MiuiChargeAnimationView extends FrameLayout {
 
     /* access modifiers changed from: protected */
     public void dismissView() {
-        removeFromWindow("dismiss");
+        removeChargeView("dismiss");
     }
 
     /* access modifiers changed from: protected */
@@ -328,11 +317,46 @@ public class MiuiChargeAnimationView extends FrameLayout {
         this.mChargePercentView.stopValueAnimation();
     }
 
-    public void removeFromWindow(String str) {
+    private WindowManager.LayoutParams getWindowParam() {
+        this.mWindowManager.getDefaultDisplay().getRealSize(this.mScreenSize);
+        WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(-1, -1, 2026, 92275712, -3);
+        layoutParams.windowAnimations = 0;
+        layoutParams.systemUiVisibility = 4864;
+        layoutParams.screenOrientation = 1;
+        layoutParams.extraFlags = 32768;
+        layoutParams.layoutInDisplayCutoutMode = 3;
+        layoutParams.setTitle("charge_animation_view");
+        return layoutParams;
+    }
+
+    public void addChargeView(String str, boolean z) {
+        if (!isAttachedToWindow() && getParent() == null) {
+            this.mShowChargingInNonLockscreen = z;
+            try {
+                Log.d("MiuiChargeAnimationView", "addToWindow: reason " + str);
+                setComponentTransparent(true);
+                if (this.mShowChargingInNonLockscreen) {
+                    this.mWindowManager.addView(this, getWindowParam());
+                } else {
+                    ChargeUtils.getParentView().addView(this);
+                }
+            } catch (Exception e) {
+                Log.d("MiuiChargeAnimationView", "addToWindow: Exception " + e);
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void removeChargeView(String str) {
         if (isAttachedToWindow()) {
             Log.d("MiuiChargeAnimationView", "removeFromWindow: " + str);
             try {
-                ChargeUtils.getParentView().removeView(this);
+                if (this.mShowChargingInNonLockscreen) {
+                    this.mWindowManager.removeViewImmediate(this);
+                } else {
+                    ChargeUtils.getParentView().removeView(this);
+                }
+                WindowManagerGlobal.getInstance().trimMemory(20);
             } catch (Exception e) {
                 Log.e("MiuiChargeAnimationView", "remove from window exception:", e);
             }
@@ -340,7 +364,10 @@ public class MiuiChargeAnimationView extends FrameLayout {
     }
 
     public int getAnimationDuration() {
-        return (!((MiuiChargeManager) Dependency.get(MiuiChargeManager.class)).isUsbCharging() || ((KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class)).getStrongAuthTracker().hasUserAuthenticatedSinceBoot()) ? 20000 : 5000;
+        if (!((MiuiChargeManager) Dependency.get(MiuiChargeManager.class)).isUsbCharging() || ((KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class)).getStrongAuthTracker().hasUserAuthenticatedSinceBoot()) {
+            return this.mShowChargingInNonLockscreen ? 6400 : 20000;
+        }
+        return 5000;
     }
 
     public boolean dispatchKeyEvent(KeyEvent keyEvent) {

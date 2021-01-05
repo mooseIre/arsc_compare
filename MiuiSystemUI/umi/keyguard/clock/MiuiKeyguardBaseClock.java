@@ -22,7 +22,6 @@ public class MiuiKeyguardBaseClock extends FrameLayout {
     protected String mLanguage;
     protected LayoutInflater mLayoutInflater;
     protected Resources mResources = null;
-    protected int mSelectedClockPosition = 0;
     private MiuiKeyguardUpdateMonitorCallback mUpdateMonitorCallback = new MiuiKeyguardUpdateMonitorCallback() {
         public void onKeyguardVisibilityChanged(boolean z) {
             if (z) {

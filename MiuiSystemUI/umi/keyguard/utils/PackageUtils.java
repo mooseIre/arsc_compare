@@ -10,7 +10,6 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.util.Log;
 import com.android.keyguard.KeyguardUpdateMonitor;
-import com.android.keyguard.magazine.utils.LockScreenMagazineUtils;
 import miui.os.Build;
 
 public class PackageUtils {
@@ -19,7 +18,6 @@ public class PackageUtils {
     public static final String PACKAGE_NAME_CAMERA = ("vela".equals(Build.DEVICE) ? "com.mlab.cam" : "com.android.camera");
 
     static {
-        String str = LockScreenMagazineUtils.LOCK_SCREEN_MAGAZINE_PACKAGE_NAME;
         boolean equals = "vela".equals(Build.DEVICE);
         IS_VELA_CAMERA = equals;
         CLASS_NAME_CAMERA = equals ? "com.mtlab.camera.CameraActivity" : "com.android.camera.Camera";

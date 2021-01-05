@@ -15,7 +15,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.util.Slog;
 import android.widget.Toast;
-import com.android.keyguard.analytics.AnalyticsHelper;
 import com.android.keyguard.injector.KeyguardUpdateMonitorInjector;
 import com.android.systemui.C0013R$drawable;
 import com.android.systemui.C0021R$string;
@@ -43,16 +42,15 @@ public class MiuiBleUnlockHelper {
             if (b == 2) {
                 MiuiBleUnlockHelper.this.setBLEUnlockState(BLEUnlockState.SUCCEED);
             } else {
-                AnalyticsHelper.getInstance(MiuiBleUnlockHelper.this.mContext).recordUnlockWay("band", false);
                 MiuiBleUnlockHelper.this.setBLEUnlockState(BLEUnlockState.FAILED);
             }
+            ((KeyguardUpdateMonitorInjector) Dependency.get(KeyguardUpdateMonitorInjector.class)).setKeyguardUnlockWay("band", b == 2);
             MiuiBleUnlockHelper.this.setBLEStatusBarIcon(b);
         }
     };
     /* access modifiers changed from: private */
     public boolean mBouncerVisible = false;
-    /* access modifiers changed from: private */
-    public Context mContext;
+    private Context mContext;
     private final BroadcastReceiver mGlobalBluetoothBroadcastReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             Log.d("MiuiBleUnlockHelper", "ble action name: " + intent.getAction());

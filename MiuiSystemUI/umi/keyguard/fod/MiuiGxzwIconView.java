@@ -226,6 +226,13 @@ class MiuiGxzwIconView extends GxzwNoRotateFrameLayout implements View.OnTouchLi
         }
     }
 
+    public void preHideIconView() {
+        this.mHighlightView.setVisibility(8);
+        if (!this.mTouchDown) {
+            this.mMiuiGxzwAnimView.setVisibility(8);
+        }
+    }
+
     public void dismiss() {
         this.mPendingShow = false;
         this.mPendingShowLightIcon = false;
@@ -238,7 +245,7 @@ class MiuiGxzwIconView extends GxzwNoRotateFrameLayout implements View.OnTouchLi
                 unscheduleSetIconTransparen();
                 this.mMiuiGxzwTransparentTimer.onPause();
             }
-            if (!this.mTouchDown || ((!MiuiGxzwManager.getInstance().isUnlockByGxzw() && !((KeyguardUpdateMonitorInjector) Dependency.get(KeyguardUpdateMonitorInjector.class)).shouldListenForFingerprintWhenUnlocked()) || !MiuiGxzwQuickOpenUtil.isQuickOpenEnable(getContext()))) {
+            if (!this.mTouchDown || !MiuiGxzwManager.getInstance().isUnlockByGxzw() || !MiuiGxzwQuickOpenUtil.isQuickOpenEnable(getContext())) {
                 this.mMiuiGxzwQuickOpenView.dismiss();
             } else {
                 this.mMiuiGxzwQuickOpenView.show(MiuiGxzwManager.getInstance().getGxzwAuthFingerprintID());

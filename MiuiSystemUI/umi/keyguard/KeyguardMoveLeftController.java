@@ -73,7 +73,7 @@ public class KeyguardMoveLeftController extends BaseKeyguardMoveController {
             if (!z) {
                 KeyguardMoveLeftController.this.mLockScreenMagazineClient.hideOverlay(true);
                 KeyguardMoveLeftController.this.mHandler.removeMessages(0);
-                KeyguardMoveLeftController.this.mHandler.sendEmptyMessageDelayed(0, 5000);
+                KeyguardMoveLeftController.this.mHandler.sendEmptyMessage(0);
             }
         }
     };

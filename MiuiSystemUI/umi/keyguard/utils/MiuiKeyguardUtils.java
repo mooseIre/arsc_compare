@@ -1,10 +1,10 @@
 package com.android.keyguard.utils;
 
+import android.app.ActivityManager;
 import android.app.UiModeManager;
 import android.app.WallpaperColors;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
@@ -13,7 +13,6 @@ import android.os.Build;
 import android.os.Process;
 import android.os.ServiceManager;
 import android.os.SystemProperties;
-import android.os.UserManager;
 import android.provider.MiuiSettings;
 import android.provider.Settings;
 import android.security.FingerprintIdUtils;
@@ -28,7 +27,6 @@ import com.android.systemui.C0008R$array;
 import com.android.systemui.C0010R$bool;
 import com.android.systemui.C0016R$integer;
 import com.android.systemui.Dependency;
-import com.android.systemui.SystemUIApplication;
 import com.android.systemui.statusbar.notification.NotificationEntryManager;
 import com.miui.systemui.DeviceConfig;
 import com.miui.systemui.util.CommonUtil;
@@ -43,16 +41,20 @@ import miui.util.HapticFeedbackUtil;
 public class MiuiKeyguardUtils {
     public static final String AOD_MODE = (Build.VERSION.SDK_INT >= 28 ? "doze_always_on" : "aod_mode");
     private static final boolean FINGERPRINT_SIDE_CAP = SystemProperties.getBoolean("ro.hardware.fp.sideCap", false);
+    public static final String HOME_LAUCNHER_PACKAGE_NAME = SystemProperties.get("ro.miui.product.home", "com.miui.home");
     public static final boolean IS_OPERATOR_CUSTOMIZATION_TEST = (miui.os.Build.IS_CM_CUSTOMIZATION_TEST || miui.os.Build.IS_CT_CUSTOMIZATION_TEST);
     private static final int PROCESS_USER_ID = Process.myUid();
     public static final boolean SUPPORT_LINEAR_MOTOR_VIBRATE = HapticFeedbackUtil.isSupportLinearMotorVibrate();
     private static boolean sExpandableUnderKeyguard;
     private static boolean sHasNavigationBar;
-    private static boolean sIsUserUnlocked = false;
     private static List<String> sKeepScreenOnWhenLargeAreaTouchList = new ArrayList();
     private static boolean sOpenDoubleTapSleep;
     private static List<String> sRegionSupportMiHomeList = new ArrayList();
     private static IWindowManager sWindowManager;
+
+    public static boolean isWeakenAimationEnable(Context context) {
+        return false;
+    }
 
     public static boolean isNonUI() {
         return SystemProperties.getBoolean("sys.power.nonui", false);
@@ -67,7 +69,7 @@ public class MiuiKeyguardUtils {
         return !ThemeResources.getSystem().containsAwesomeLockscreenEntry("manifest.xml") && !ThemeResources.getSystem().containsSuperWallpaperLockscreenEntry("manifest.xml");
     }
 
-    public static boolean isIndianRegion(Context context) {
+    public static boolean isIndianRegion() {
         return "IN".equals(CommonUtil.getCurrentRegion()) && miui.os.Build.IS_INTERNATIONAL_BUILD;
     }
 
@@ -103,8 +105,15 @@ public class MiuiKeyguardUtils {
         return sHasNavigationBar;
     }
 
+    public static boolean isBlackGoldenTheme(Context context) {
+        if (context == null) {
+            return false;
+        }
+        return context.getResources().getBoolean(C0010R$bool.keyguard_show_vertical_time);
+    }
+
     public static boolean isSupportVerticalClock(int i, Context context) {
-        return (i == 0 && context.getResources().getBoolean(C0010R$bool.keyguard_show_vertical_time)) || i == 3;
+        return (i == 0 && isBlackGoldenTheme(context)) || i == 3;
     }
 
     public static int getDefaultKeyguardClockPosition(Context context) {
@@ -170,13 +179,6 @@ public class MiuiKeyguardUtils {
         return FeatureParser.getBoolean("support_gesture_wakeup", false);
     }
 
-    public static boolean isUserUnlocked() {
-        if (!sIsUserUnlocked) {
-            sIsUserUnlocked = ((UserManager) SystemUIApplication.getContext().getSystemService(UserManager.class)).isUserUnlocked();
-        }
-        return sIsUserUnlocked;
-    }
-
     public static boolean hasActiveNotificationsOnKeyguard(int i) {
         return i == 1 && ((NotificationEntryManager) Dependency.get(NotificationEntryManager.class)).hasActiveNotifications();
     }
@@ -193,11 +195,8 @@ public class MiuiKeyguardUtils {
     }
 
     public static boolean isTopActivityPkgInList(Context context, List<String> list) {
-        String topActivityPkg = CommonUtil.getTopActivityPkg(context, true);
-        if (TextUtils.isEmpty(topActivityPkg) || !list.contains(topActivityPkg)) {
-            return false;
-        }
-        return true;
+        String topActivityPkg = CommonUtil.getTopActivityPkg(context);
+        return !TextUtils.isEmpty(topActivityPkg) && list.contains(topActivityPkg);
     }
 
     public static void setExpandableStatusbarUnderKeyguard(boolean z) {
@@ -216,27 +215,15 @@ public class MiuiKeyguardUtils {
         return sOpenDoubleTapSleep;
     }
 
-    public static boolean isTopActivitySystemApp(Context context) {
-        String topActivityPkg = CommonUtil.getTopActivityPkg(context, true);
+    public static boolean isTopActivityMiPay(Context context) {
+        String topActivityPkg = CommonUtil.getTopActivityPkg(context, false);
         if (TextUtils.isEmpty(topActivityPkg)) {
             return false;
         }
         if ("com.miui.tsmclient".equalsIgnoreCase(topActivityPkg) || "com.miui.nextpay.global.app".equalsIgnoreCase(topActivityPkg)) {
             return true;
         }
-        try {
-            if ((context.getPackageManager().getPackageInfo(topActivityPkg, 0).applicationInfo.flags & 1) > 0) {
-                return true;
-            }
-            return false;
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    public static boolean isTopActivityMiAudioVisual(Context context) {
-        return "com.xiaomi.miaudiovisual".equalsIgnoreCase(CommonUtil.getTopActivityPkg(context, true));
+        return false;
     }
 
     public static boolean isTopActivityCameraApp(Context context) {
@@ -324,5 +311,17 @@ public class MiuiKeyguardUtils {
 
     public static boolean isLargeScreen(Context context) {
         return miui.os.Build.DEVICE.equals("cetus") && (context.getResources().getConfiguration().screenLayout & 15) >= 3;
+    }
+
+    public static boolean isTopActivityLauncher(Context context) {
+        try {
+            List<ActivityManager.RunningTaskInfo> runningTasks = ((ActivityManager) context.getSystemService("activity")).getRunningTasks(1);
+            if (runningTasks != null && !runningTasks.isEmpty()) {
+                return TextUtils.equals(HOME_LAUCNHER_PACKAGE_NAME, runningTasks.get(0).topActivity.getPackageName());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }

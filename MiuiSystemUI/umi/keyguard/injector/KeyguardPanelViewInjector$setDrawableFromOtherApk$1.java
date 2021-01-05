@@ -3,9 +3,9 @@ package com.android.keyguard.injector;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.widget.ImageView;
+import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.magazine.utils.LockScreenMagazineUtils;
 import com.android.keyguard.negative.MiuiKeyguardMoveLeftViewContainer;
-import com.android.keyguard.utils.MiuiKeyguardUtils;
 import com.android.keyguard.utils.PackageUtils;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
@@ -23,7 +23,7 @@ public final class KeyguardPanelViewInjector$setDrawableFromOtherApk$1 extends A
     @Nullable
     public Drawable doInBackground(@NotNull Void... voidArr) {
         Intrinsics.checkParameterIsNotNull(voidArr, "params");
-        if (!MiuiKeyguardUtils.isUserUnlocked()) {
+        if (!KeyguardPanelViewInjector.access$getMKeyguardUpdateMonitor$p(this.this$0).isUserUnlocked(KeyguardUpdateMonitor.getCurrentUser())) {
             return null;
         }
         KeyguardPanelViewInjector keyguardPanelViewInjector = this.this$0;

@@ -8,7 +8,6 @@ import android.view.animation.DecelerateInterpolator;
 import com.android.keyguard.faceunlock.MiuiKeyguardFaceUnlockView;
 import com.android.keyguard.injector.KeyguardPanelViewInjector;
 import com.android.keyguard.injector.KeyguardUpdateMonitorInjector;
-import com.android.keyguard.magazine.LockScreenMagazineController;
 import com.android.keyguard.wallpaper.KeyguardWallpaperUtils;
 import com.android.keyguard.wallpaper.WallpaperCommandSender;
 import com.android.systemui.Dependency;
@@ -32,7 +31,7 @@ public class KeyguardVerticalMoveHelper {
         int actionMasked = motionEvent.getActionMasked();
         float y = motionEvent.getY();
         float x = motionEvent.getX();
-        if ((actionMasked == 0 || this.mIsPerformingTouchEvent) && !((LockScreenMagazineController) Dependency.get(LockScreenMagazineController.class)).isPreViewVisible()) {
+        if (actionMasked == 0 || this.mIsPerformingTouchEvent) {
             if (actionMasked != 0) {
                 if (actionMasked != 1) {
                     if (actionMasked == 2) {

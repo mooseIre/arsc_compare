@@ -230,6 +230,17 @@ public class MiuiDozeServiceHost extends DozeServiceHost {
         }
     }
 
+    public void onKeyguardTransparent() {
+        IMiuiAodService iMiuiAodService;
+        if (this.mSupportAod && (iMiuiAodService = this.mAodService) != null) {
+            try {
+                iMiuiAodService.onKeyguardTransparent();
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     public void sendCommand(String str, int i, Bundle bundle) {
         if (this.mSupportAod) {
             checkAodService();

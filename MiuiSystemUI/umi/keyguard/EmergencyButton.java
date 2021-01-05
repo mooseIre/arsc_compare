@@ -21,6 +21,7 @@ import android.widget.Button;
 import com.android.internal.logging.MetricsLogger;
 import com.android.internal.util.EmergencyAffordanceManager;
 import com.android.internal.widget.LockPatternUtils;
+import com.android.keyguard.utils.MiuiKeyguardUtils;
 import com.android.keyguard.utils.PhoneUtils;
 import com.android.systemui.DejankUtils;
 import com.android.systemui.Dependency;
@@ -91,13 +92,11 @@ public class EmergencyButton extends Button {
                 EmergencyButton.this.lambda$onFinishInflate$0$EmergencyButton(view);
             }
         });
-        if (this.mEmergencyAffordanceManager.needsEmergencyAffordance()) {
-            setOnLongClickListener(new View.OnLongClickListener() {
-                public final boolean onLongClick(View view) {
-                    return EmergencyButton.this.lambda$onFinishInflate$1$EmergencyButton(view);
-                }
-            });
-        }
+        setOnLongClickListener(new View.OnLongClickListener() {
+            public final boolean onLongClick(View view) {
+                return EmergencyButton.this.lambda$onFinishInflate$1$EmergencyButton(view);
+            }
+        });
         DejankUtils.whitelistIpcs((Runnable) new Runnable() {
             public final void run() {
                 EmergencyButton.this.updateEmergencyCallButton();
@@ -114,7 +113,10 @@ public class EmergencyButton extends Button {
     /* access modifiers changed from: private */
     /* renamed from: lambda$onFinishInflate$1 */
     public /* synthetic */ boolean lambda$onFinishInflate$1$EmergencyButton(View view) {
-        if (this.mLongPressWasDragged || !this.mEmergencyAffordanceManager.needsEmergencyAffordance()) {
+        if (this.mLongPressWasDragged) {
+            return false;
+        }
+        if (!this.mEmergencyAffordanceManager.needsEmergencyAffordance() && !MiuiKeyguardUtils.isIndianRegion()) {
             return false;
         }
         this.mEmergencyAffordanceManager.performEmergencyCall();

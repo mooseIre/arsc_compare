@@ -14,6 +14,7 @@ import com.android.internal.util.LatencyTracker;
 import com.android.internal.widget.LockPatternUtils;
 import com.android.internal.widget.LockscreenCredential;
 import com.android.keyguard.EmergencyButton;
+import com.android.keyguard.injector.KeyguardUpdateMonitorInjector;
 import com.android.systemui.C0019R$plurals;
 import com.android.systemui.C0021R$string;
 import com.android.systemui.Dependency;
@@ -188,6 +189,7 @@ public abstract class KeyguardAbsKeyInputView extends MiuiKeyguardPasswordView i
             this.mDismissing = true;
             this.mCallback.dismiss(true, i);
         }
+        ((KeyguardUpdateMonitorInjector) Dependency.get(KeyguardUpdateMonitorInjector.class)).setKeyguardUnlockWay("pw", z);
         resetPasswordText(true, !z);
     }
 

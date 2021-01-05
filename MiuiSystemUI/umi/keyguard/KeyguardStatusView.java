@@ -1,6 +1,7 @@
 package com.android.keyguard;
 
 import android.app.ActivityManager;
+import android.app.AlarmManager;
 import android.app.IActivityManager;
 import android.app.IStopUserCallback;
 import android.content.Context;
@@ -19,19 +20,24 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.core.graphics.ColorUtils;
 import com.android.internal.widget.LockPatternUtils;
+import com.android.systemui.C0010R$bool;
 import com.android.systemui.C0012R$dimen;
 import com.android.systemui.C0015R$id;
 import com.android.systemui.C0021R$string;
 import com.android.systemui.Dependency;
 import com.android.systemui.statusbar.policy.ConfigurationController;
+import com.android.systemui.statusbar.policy.DateView;
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
 import java.util.Locale;
 import java.util.TimeZone;
 
 public class KeyguardStatusView extends GridLayout implements ConfigurationController.ConfigurationListener {
+    private final AlarmManager mAlarmManager;
     private KeyguardClockSwitch mClockView;
     private float mDarkAmount;
+    private DateView mDateView;
+    private float mDateViewTextSize;
     private Handler mHandler;
     private final IActivityManager mIActivityManager;
     private int mIconTopMargin;
@@ -95,6 +101,7 @@ public class KeyguardStatusView extends GridLayout implements ConfigurationContr
             }
         };
         this.mIActivityManager = ActivityManager.getService();
+        this.mAlarmManager = (AlarmManager) context.getSystemService("alarm");
         this.mLockPatternUtils = new LockPatternUtils(getContext());
         this.mHandler = new Handler();
         onDensityOrFontScaleChanged();
@@ -173,6 +180,7 @@ public class KeyguardStatusView extends GridLayout implements ConfigurationContr
         this.mOwnerInfo = (TextView) findViewById(C0015R$id.owner_info);
         this.mKeyguardSlice = (KeyguardSliceView) findViewById(C0015R$id.keyguard_status_area);
         this.mTextColor = this.mClockView.getCurrentTextColor();
+        this.mDateView = (DateView) findViewById(C0015R$id.date_view);
         this.mKeyguardSlice.setContentChangeListener(new Runnable() {
             public final void run() {
                 KeyguardStatusView.this.onSliceContentChanged();
@@ -212,6 +220,11 @@ public class KeyguardStatusView extends GridLayout implements ConfigurationContr
         if (keyguardClockSwitch != null) {
             keyguardClockSwitch.setTextSize(0, (float) getResources().getDimensionPixelSize(C0012R$dimen.widget_big_font_size));
         }
+        if (this.mDateView != null) {
+            float dimensionPixelSize = (float) getResources().getDimensionPixelSize(C0012R$dimen.widget_label_font_size);
+            this.mDateViewTextSize = dimensionPixelSize;
+            this.mDateView.setTextSize(0, dimensionPixelSize);
+        }
         TextView textView = this.mOwnerInfo;
         if (textView != null) {
             textView.setTextSize(0, (float) getResources().getDimensionPixelSize(C0012R$dimen.widget_label_font_size));
@@ -224,7 +237,6 @@ public class KeyguardStatusView extends GridLayout implements ConfigurationContr
         this.mKeyguardSlice.refresh();
     }
 
-    /* access modifiers changed from: private */
     public void refreshTime() {
         this.mClockView.refresh();
     }
@@ -236,7 +248,8 @@ public class KeyguardStatusView extends GridLayout implements ConfigurationContr
 
     /* access modifiers changed from: private */
     public void refreshFormat() {
-        Patterns.update(this.mContext);
+        Patterns.update(this.mContext, this.mAlarmManager.getNextAlarmClock(-2) != null);
+        this.mDateView.setDatePattern(Patterns.dateViewSkel);
         this.mClockView.setFormat12Hour(Patterns.clockView12);
         this.mClockView.setFormat24Hour(Patterns.clockView24);
     }
@@ -341,16 +354,24 @@ public class KeyguardStatusView extends GridLayout implements ConfigurationContr
         static String cacheKey;
         static String clockView12;
         static String clockView24;
+        static String dateViewSkel;
 
-        static void update(Context context) {
+        static void update(Context context, boolean z) {
+            int i;
             Locale locale = Locale.getDefault();
             Resources resources = context.getResources();
+            if (z) {
+                i = C0021R$string.abbrev_wday_month_day_no_year_alarm;
+            } else {
+                i = C0021R$string.abbrev_wday_month_day_no_year;
+            }
+            dateViewSkel = resources.getString(i);
             String string = resources.getString(C0021R$string.clock_12hr_format);
             String string2 = resources.getString(C0021R$string.clock_24hr_format);
             String str = locale.toString() + string + string2;
             if (!str.equals(cacheKey)) {
                 clockView12 = DateFormat.getBestDateTimePattern(locale, string);
-                if (!string.contains("a")) {
+                if (!context.getResources().getBoolean(C0010R$bool.config_showAmpm) && !string.contains("a")) {
                     clockView12 = clockView12.replaceAll("a", "").trim();
                 }
                 String bestDateTimePattern = DateFormat.getBestDateTimePattern(locale, string2);

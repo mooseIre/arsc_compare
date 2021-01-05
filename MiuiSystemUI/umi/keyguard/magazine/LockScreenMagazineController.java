@@ -332,7 +332,11 @@ public class LockScreenMagazineController implements SettingsObserver.Callback {
             }
             if (!TextUtils.equals(this.mMagazineWallpaperAuthority, str2)) {
                 this.mMagazineWallpaperAuthority = str2;
-                this.mUpdateMonitorInjector.handleLockWallpaperProviderChanged();
+                if (!Build.IS_INTERNATIONAL_BUILD || !WallpaperAuthorityUtils.isHomeDefaultWallpaper()) {
+                    this.mUpdateMonitorInjector.handleLockWallpaperProviderChanged();
+                } else {
+                    onRemoteViewChange((RemoteViews) null, (RemoteViews) null);
+                }
             }
         }
     }
@@ -344,6 +348,7 @@ public class LockScreenMagazineController implements SettingsObserver.Callback {
         if (this.mFullScreenRemoteView != remoteViews2) {
             this.mFullScreenRemoteView = remoteViews2;
         }
+        this.mUpdateMonitorInjector.handleLockWallpaperProviderChanged();
     }
 
     public LockScreenMagazineController initAndUpdateParams(NotificationStackScrollLayout notificationStackScrollLayout) {
@@ -415,7 +420,7 @@ public class LockScreenMagazineController implements SettingsObserver.Callback {
         } else {
             this.mLockScreenMagazinePre.setVisibility(0);
             this.mLockScreenMagazinePre.setAlpha(1.0f);
-            if (Build.IS_INTERNATIONAL_BUILD && isSupportLockScreenMagazineLeft() && !MiuiKeyguardUtils.isGxzwSensor()) {
+            if (Build.IS_INTERNATIONAL_BUILD && isSupportLockScreenMagazineLeft() && !MiuiKeyguardUtils.isGxzwSensor() && !this.mUpdateMonitor.isBouncerShowing()) {
                 this.mLockScreenMagazinePre.setMainLayoutVisible(0);
                 this.mLockScreenMagazinePre.setMainLayoutAlpha(1.0f);
             }
@@ -573,8 +578,11 @@ public class LockScreenMagazineController implements SettingsObserver.Callback {
     }
 
     public boolean onTouchEvent(MotionEvent motionEvent) {
-        if (!this.mLockScreenMagazineAvailable || isMisOperation(motionEvent)) {
+        if (!this.mLockScreenMagazineAvailable) {
             return false;
+        }
+        if (isMisOperation(motionEvent)) {
+            return isPreViewVisible();
         }
         if (!this.mSupportGestureWakeup || !MiuiKeyguardUtils.supportDoubleTapSleep()) {
             return handleSingleClickEvent();
@@ -614,15 +622,16 @@ public class LockScreenMagazineController implements SettingsObserver.Callback {
 
     /* access modifiers changed from: private */
     public boolean handleSingleClickEvent() {
-        if (this.mLockScreenMagazineAvailable && !TextUtils.isEmpty(((IMiuiKeyguardWallpaperController) Dependency.get(IMiuiKeyguardWallpaperController.class)).getCurrentWallpaperString())) {
-            if (shouldShowPreView()) {
-                return handleSwitchAnimator();
-            }
-            if (!WallpaperAuthorityUtils.isLockScreenMagazineOpenedWallpaper() && isSupportLockScreenMagazineLeft()) {
-                this.mKeyguardBottomArea.startButtonLayoutAnimate(true);
-            }
-            AnalyticsHelper.getInstance(this.mContext).record("action_main_screen_click");
+        if (!this.mLockScreenMagazineAvailable) {
+            return false;
         }
+        if (shouldShowPreView()) {
+            return handleSwitchAnimator();
+        }
+        if (!WallpaperAuthorityUtils.isLockScreenMagazineOpenedWallpaper() && isSupportLockScreenMagazineLeft()) {
+            this.mKeyguardBottomArea.startButtonLayoutAnimate(true);
+        }
+        AnalyticsHelper.getInstance(this.mContext).record("action_main_screen_click");
         return false;
     }
 
@@ -666,7 +675,7 @@ public class LockScreenMagazineController implements SettingsObserver.Callback {
 
     /* access modifiers changed from: private */
     public void initLockScreenMagazinePreRes() {
-        if (MiuiKeyguardUtils.isUserUnlocked() && MiuiKeyguardUtils.isDeviceProvisionedInSettingsDb(this.mContext)) {
+        if (this.mUpdateMonitor.isUserUnlocked(KeyguardUpdateMonitor.getCurrentUser()) && MiuiKeyguardUtils.isDeviceProvisionedInSettingsDb(this.mContext)) {
             Log.d("LockScreenMagazineController", "initLockScreenMagazinePreRes");
             new AsyncTask<Void, Void, Void>() {
                 /* access modifiers changed from: protected */

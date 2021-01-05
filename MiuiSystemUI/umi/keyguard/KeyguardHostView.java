@@ -14,6 +14,7 @@ import com.android.internal.widget.LockPatternUtils;
 import com.android.keyguard.KeyguardSecurityContainer;
 import com.android.keyguard.KeyguardSecurityModel;
 import com.android.keyguard.fod.MiuiGxzwManager;
+import com.android.keyguard.injector.KeyguardUpdateMonitorInjector;
 import com.android.keyguard.magazine.utils.LockScreenMagazineUtils;
 import com.android.keyguard.utils.MiuiKeyguardUtils;
 import com.android.keyguard.utils.PhoneUtils;
@@ -46,21 +47,19 @@ public class KeyguardHostView extends FrameLayout implements KeyguardSecurityCon
             public void onTrustGrantedWithFlags(int i, int i2) {
                 if (i2 == KeyguardUpdateMonitor.getCurrentUser() && KeyguardHostView.this.isAttachedToWindow()) {
                     boolean isVisibleToUser = KeyguardHostView.this.isVisibleToUser();
-                    boolean z = true;
-                    boolean z2 = (i & 1) != 0;
-                    if ((i & 2) == 0) {
-                        z = false;
-                    }
-                    if (!z2 && !z) {
+                    boolean z = (i & 1) != 0;
+                    boolean z2 = (i & 2) != 0;
+                    if (!z && !z2) {
                         return;
                     }
-                    if (!KeyguardHostView.this.mViewMediatorCallback.isScreenOn() || (!isVisibleToUser && !z)) {
+                    if (!KeyguardHostView.this.mViewMediatorCallback.isScreenOn() || (!isVisibleToUser && !z2)) {
                         KeyguardHostView.this.mViewMediatorCallback.playTrustedSound();
                         return;
                     }
                     if (!isVisibleToUser) {
                         Log.i("KeyguardViewBase", "TrustAgent dismissed Keyguard.");
                     }
+                    ((KeyguardUpdateMonitorInjector) Dependency.get(KeyguardUpdateMonitorInjector.class)).setKeyguardUnlockWay("smart_lock", true);
                     KeyguardHostView.this.dismiss(false, i2, false);
                 }
             }

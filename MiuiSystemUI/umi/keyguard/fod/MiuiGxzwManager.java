@@ -78,7 +78,20 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
     private boolean mDozing = false;
     private PowerManager.WakeLock mDrawWakeLock;
     public int mDrawWakeLockStatus = -1;
-    private MiuiFastUnlockController.FastUnlockCallback mFastUnlockCallback = new MiuiFastUnlockController.FastUnlockCallback(this) {
+    private MiuiFastUnlockController.FastUnlockCallback mFastUnlockCallback = new MiuiFastUnlockController.FastUnlockCallback() {
+        public void onStartFastUnlock() {
+            if (MiuiGxzwManager.this.isUnlockByGxzw()) {
+                Log.i("MiuiGxzwManager", "onStartFastUnlock");
+                MiuiGxzwManager.this.mMiuiGxzwOverlayView.restoreScreenEffect();
+            }
+        }
+
+        public void onFinishFastUnlock() {
+            if (MiuiGxzwManager.this.isUnlockByGxzw()) {
+                MiuiGxzwManager.this.mMiuiGxzwIconView.preHideIconView();
+                Log.i("MiuiGxzwManager", "onFinishFastUnlock");
+            }
+        }
     };
     /* access modifiers changed from: private */
     public boolean mFingerprintLockout = false;
@@ -701,11 +714,11 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
         } else if (getKeyguardAuthen()) {
             int authUserId = MiuiKeyguardUtils.getAuthUserId(this.mContext, i);
             int i2 = 1;
-            boolean isUnlockingWithBiometricAllowed = ((KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class)).isUnlockingWithBiometricAllowed(true);
-            if (isUnlockingWithBiometricAllowed && KeyguardUpdateMonitor.getCurrentUser() != authUserId && !MiuiKeyguardUtils.canSwitchUser(this.mContext, authUserId)) {
-                isUnlockingWithBiometricAllowed = false;
+            boolean isBiometricAllowedForUser = ((KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class)).getStrongAuthTracker().isBiometricAllowedForUser(true, authUserId);
+            if (isBiometricAllowedForUser && KeyguardUpdateMonitor.getCurrentUser() != authUserId && !MiuiKeyguardUtils.canSwitchUser(this.mContext, authUserId)) {
+                isBiometricAllowedForUser = false;
             }
-            if (isUnlockingWithBiometricAllowed) {
+            if (isBiometricAllowedForUser) {
                 Log.i("MiuiGxzwManager", "onAuthenticated:start to unlock");
                 if (!isDozing()) {
                     i2 = 2;

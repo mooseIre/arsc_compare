@@ -73,6 +73,7 @@ public final class KeyguardPanelViewInjector extends MiuiKeyguardUpdateMonitorCa
     /* access modifiers changed from: private */
     public KeyguardMoveHelper mKeyguardMoveHelper;
     private KeyguardStatusBarView mKeyguardStatusBarView;
+    private KeyguardUpdateMonitor mKeyguardUpdateMonitor;
     private KeyguardUpdateMonitorInjector mKeyguardUpdateMonitorInjector;
     private KeyguardVerticalMoveHelper mKeyguardVerticalMoveHelper;
     private int mLastDensityDpi = -1;
@@ -120,6 +121,15 @@ public final class KeyguardPanelViewInjector extends MiuiKeyguardUpdateMonitorCa
             return keyguardStatusBarView;
         }
         Intrinsics.throwUninitializedPropertyAccessException("mKeyguardStatusBarView");
+        throw null;
+    }
+
+    public static final /* synthetic */ KeyguardUpdateMonitor access$getMKeyguardUpdateMonitor$p(KeyguardPanelViewInjector keyguardPanelViewInjector) {
+        KeyguardUpdateMonitor keyguardUpdateMonitor = keyguardPanelViewInjector.mKeyguardUpdateMonitor;
+        if (keyguardUpdateMonitor != null) {
+            return keyguardUpdateMonitor;
+        }
+        Intrinsics.throwUninitializedPropertyAccessException("mKeyguardUpdateMonitor");
         throw null;
     }
 
@@ -220,18 +230,21 @@ public final class KeyguardPanelViewInjector extends MiuiKeyguardUpdateMonitorCa
                     Object obj2 = Dependency.get(KeyguardUpdateMonitorInjector.class);
                     Intrinsics.checkExpressionValueIsNotNull(obj2, "Dependency.get(KeyguardU…itorInjector::class.java)");
                     this.mKeyguardUpdateMonitorInjector = (KeyguardUpdateMonitorInjector) obj2;
-                    Object obj3 = Dependency.get(SettingsObserver.class);
-                    Intrinsics.checkExpressionValueIsNotNull(obj3, "Dependency.get(SettingsObserver::class.java)");
-                    this.mSettingsObserver = (SettingsObserver) obj3;
-                    Object obj4 = Dependency.get(ForceBlackObserver.class);
-                    Intrinsics.checkExpressionValueIsNotNull(obj4, "Dependency.get(ForceBlackObserver::class.java)");
-                    this.mForceBlackObserver = (ForceBlackObserver) obj4;
-                    Object obj5 = Dependency.get(IMiuiKeyguardWallpaperController.class);
-                    Intrinsics.checkExpressionValueIsNotNull(obj5, "Dependency.get(IMiuiKeyg…erController::class.java)");
-                    this.mWallpaperController = (IMiuiKeyguardWallpaperController) obj5;
-                    Object obj6 = Dependency.get(UserSwitcherController.class);
-                    Intrinsics.checkExpressionValueIsNotNull(obj6, "Dependency.get(UserSwitcherController::class.java)");
-                    this.mUserContextController = (UserSwitcherController) obj6;
+                    Object obj3 = Dependency.get(KeyguardUpdateMonitor.class);
+                    Intrinsics.checkExpressionValueIsNotNull(obj3, "Dependency.get(KeyguardUpdateMonitor::class.java)");
+                    this.mKeyguardUpdateMonitor = (KeyguardUpdateMonitor) obj3;
+                    Object obj4 = Dependency.get(SettingsObserver.class);
+                    Intrinsics.checkExpressionValueIsNotNull(obj4, "Dependency.get(SettingsObserver::class.java)");
+                    this.mSettingsObserver = (SettingsObserver) obj4;
+                    Object obj5 = Dependency.get(ForceBlackObserver.class);
+                    Intrinsics.checkExpressionValueIsNotNull(obj5, "Dependency.get(ForceBlackObserver::class.java)");
+                    this.mForceBlackObserver = (ForceBlackObserver) obj5;
+                    Object obj6 = Dependency.get(IMiuiKeyguardWallpaperController.class);
+                    Intrinsics.checkExpressionValueIsNotNull(obj6, "Dependency.get(IMiuiKeyg…erController::class.java)");
+                    this.mWallpaperController = (IMiuiKeyguardWallpaperController) obj6;
+                    Object obj7 = Dependency.get(UserSwitcherController.class);
+                    Intrinsics.checkExpressionValueIsNotNull(obj7, "Dependency.get(UserSwitcherController::class.java)");
+                    this.mUserContextController = (UserSwitcherController) obj7;
                     this.mLeftView = ((KeyguardNegative1PageInjector) Dependency.get(cls)).getLeftView();
                     this.mLeftViewBackgroundView = ((KeyguardNegative1PageInjector) Dependency.get(cls)).getLeftBackgroundView();
                     initSplitUserSpace();
@@ -339,9 +352,14 @@ public final class KeyguardPanelViewInjector extends MiuiKeyguardUpdateMonitorCa
                 IMiuiKeyguardWallpaperController iMiuiKeyguardWallpaperController = this.mWallpaperController;
                 if (iMiuiKeyguardWallpaperController != null) {
                     iMiuiKeyguardWallpaperController.registerWallpaperChangeCallback(this);
-                    ((KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class)).registerCallback(this);
-                    this.wakefulnessLifecycle.addObserver(this.mWakeObserver);
-                    return;
+                    KeyguardUpdateMonitor keyguardUpdateMonitor = this.mKeyguardUpdateMonitor;
+                    if (keyguardUpdateMonitor != null) {
+                        keyguardUpdateMonitor.registerCallback(this);
+                        this.wakefulnessLifecycle.addObserver(this.mWakeObserver);
+                        return;
+                    }
+                    Intrinsics.throwUninitializedPropertyAccessException("mKeyguardUpdateMonitor");
+                    throw null;
                 }
                 Intrinsics.throwUninitializedPropertyAccessException("mWallpaperController");
                 throw null;
@@ -370,9 +388,14 @@ public final class KeyguardPanelViewInjector extends MiuiKeyguardUpdateMonitorCa
                 IMiuiKeyguardWallpaperController iMiuiKeyguardWallpaperController = this.mWallpaperController;
                 if (iMiuiKeyguardWallpaperController != null) {
                     iMiuiKeyguardWallpaperController.unregisterWallpaperChangeCallback(this);
-                    ((KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class)).removeCallback(this);
-                    this.wakefulnessLifecycle.removeObserver(this.mWakeObserver);
-                    return;
+                    KeyguardUpdateMonitor keyguardUpdateMonitor = this.mKeyguardUpdateMonitor;
+                    if (keyguardUpdateMonitor != null) {
+                        keyguardUpdateMonitor.removeCallback(this);
+                        this.wakefulnessLifecycle.removeObserver(this.mWakeObserver);
+                        return;
+                    }
+                    Intrinsics.throwUninitializedPropertyAccessException("mKeyguardUpdateMonitor");
+                    throw null;
                 }
                 Intrinsics.throwUninitializedPropertyAccessException("mWallpaperController");
                 throw null;
@@ -411,25 +434,25 @@ public final class KeyguardPanelViewInjector extends MiuiKeyguardUpdateMonitorCa
         throw null;
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:49:0x008a, code lost:
-        if (r3.isQsExpanded() != false) goto L_0x0095;
+    /* JADX WARNING: Code restructure failed: missing block: B:53:0x0096, code lost:
+        if (r3.isQsExpanded() != false) goto L_0x00a1;
      */
-    /* JADX WARNING: Code restructure failed: missing block: B:60:0x00a5, code lost:
-        if (r3.isFullyCollapsed() == false) goto L_0x00a7;
+    /* JADX WARNING: Code restructure failed: missing block: B:64:0x00b1, code lost:
+        if (r3.isFullyCollapsed() == false) goto L_0x00b3;
      */
-    /* JADX WARNING: Code restructure failed: missing block: B:61:0x00a7, code lost:
+    /* JADX WARNING: Code restructure failed: missing block: B:65:0x00b3, code lost:
         r1 = r1.mKeyguardVerticalMoveHelper;
      */
-    /* JADX WARNING: Code restructure failed: missing block: B:62:0x00a9, code lost:
-        if (r1 == null) goto L_0x00af;
+    /* JADX WARNING: Code restructure failed: missing block: B:66:0x00b5, code lost:
+        if (r1 == null) goto L_0x00bb;
      */
-    /* JADX WARNING: Code restructure failed: missing block: B:63:0x00ab, code lost:
+    /* JADX WARNING: Code restructure failed: missing block: B:67:0x00b7, code lost:
         r1.onTouchEvent(r2);
      */
-    /* JADX WARNING: Code restructure failed: missing block: B:64:0x00af, code lost:
+    /* JADX WARNING: Code restructure failed: missing block: B:68:0x00bb, code lost:
         kotlin.jvm.internal.Intrinsics.throwUninitializedPropertyAccessException("mKeyguardVerticalMoveHelper");
      */
-    /* JADX WARNING: Code restructure failed: missing block: B:65:0x00b4, code lost:
+    /* JADX WARNING: Code restructure failed: missing block: B:69:0x00c0, code lost:
         throw null;
      */
     /* Code decompiled incorrectly, please refer to instructions dump. */
@@ -457,7 +480,7 @@ public final class KeyguardPanelViewInjector extends MiuiKeyguardUpdateMonitorCa
         L_0x001f:
             boolean r7 = r1.mIsBottomButtonMoving
             r8 = 1
-            if (r7 != 0) goto L_0x00ca
+            if (r7 != 0) goto L_0x00d8
             com.android.keyguard.KeyguardMoveHelper r7 = r1.mKeyguardMoveHelper
             if (r7 == 0) goto L_0x0031
             boolean r7 = r7.isInLeftView()
@@ -466,10 +489,10 @@ public final class KeyguardPanelViewInjector extends MiuiKeyguardUpdateMonitorCa
         L_0x0031:
             r7 = r0
         L_0x0032:
-            if (r7 == 0) goto L_0x00c6
+            if (r7 == 0) goto L_0x00d4
             boolean r7 = r7.booleanValue()
             if (r7 == 0) goto L_0x003c
-            goto L_0x00ca
+            goto L_0x00d8
         L_0x003c:
             boolean r7 = r1.mSupportGestureWakeup
             if (r7 == 0) goto L_0x005a
@@ -487,68 +510,75 @@ public final class KeyguardPanelViewInjector extends MiuiKeyguardUpdateMonitorCa
             throw r0
         L_0x005a:
             com.android.keyguard.magazine.LockScreenMagazineController r7 = r1.mLockScreenMagazineController
-            if (r7 == 0) goto L_0x00c0
+            java.lang.String r9 = "mLockScreenMagazineController"
+            if (r7 == 0) goto L_0x00d0
             boolean r7 = r7.onTouchEvent(r2)
-            if (r7 == 0) goto L_0x0065
+            if (r7 == 0) goto L_0x0067
             return r8
-        L_0x0065:
+        L_0x0067:
             com.android.systemui.statusbar.KeyguardIndicationController r7 = r1.mIndicationController
-            if (r7 == 0) goto L_0x00ba
+            if (r7 == 0) goto L_0x00ca
             r7.onTouchEvent(r2, r3, r4, r5)
+            com.android.keyguard.magazine.LockScreenMagazineController r3 = r1.mLockScreenMagazineController
+            if (r3 == 0) goto L_0x00c6
+            boolean r3 = r3.isPreViewVisible()
+            if (r3 != 0) goto L_0x00c5
             int r3 = r2.getActionMasked()
             java.lang.String r4 = "mPanelViewController"
-            if (r3 != 0) goto L_0x0095
+            if (r3 != 0) goto L_0x00a1
             com.android.systemui.statusbar.phone.MiuiNotificationPanelViewController r3 = r1.mPanelViewController
-            if (r3 == 0) goto L_0x0091
+            if (r3 == 0) goto L_0x009d
             boolean r3 = r3.isFullyExpanded()
-            if (r3 == 0) goto L_0x0095
-            if (r10 != 0) goto L_0x0095
-            if (r11 != 0) goto L_0x0095
+            if (r3 == 0) goto L_0x00a1
+            if (r10 != 0) goto L_0x00a1
+            if (r11 != 0) goto L_0x00a1
             com.android.systemui.statusbar.phone.MiuiNotificationPanelViewController r3 = r1.mPanelViewController
-            if (r3 == 0) goto L_0x008d
+            if (r3 == 0) goto L_0x0099
             boolean r3 = r3.isQsExpanded()
-            if (r3 == 0) goto L_0x00a7
-            goto L_0x0095
-        L_0x008d:
+            if (r3 == 0) goto L_0x00b3
+            goto L_0x00a1
+        L_0x0099:
             kotlin.jvm.internal.Intrinsics.throwUninitializedPropertyAccessException(r4)
             throw r0
-        L_0x0091:
+        L_0x009d:
             kotlin.jvm.internal.Intrinsics.throwUninitializedPropertyAccessException(r4)
             throw r0
-        L_0x0095:
-            if (r6 != 0) goto L_0x00b9
+        L_0x00a1:
+            if (r6 != 0) goto L_0x00c5
             int r3 = r2.getActionMasked()
-            if (r3 == 0) goto L_0x00b9
+            if (r3 == 0) goto L_0x00c5
             com.android.systemui.statusbar.phone.MiuiNotificationPanelViewController r3 = r1.mPanelViewController
-            if (r3 == 0) goto L_0x00b5
+            if (r3 == 0) goto L_0x00c1
             boolean r3 = r3.isFullyCollapsed()
-            if (r3 != 0) goto L_0x00b9
-        L_0x00a7:
+            if (r3 != 0) goto L_0x00c5
+        L_0x00b3:
             com.android.keyguard.KeyguardVerticalMoveHelper r1 = r1.mKeyguardVerticalMoveHelper
-            if (r1 == 0) goto L_0x00af
+            if (r1 == 0) goto L_0x00bb
             r1.onTouchEvent(r2)
-            goto L_0x00b9
-        L_0x00af:
+            goto L_0x00c5
+        L_0x00bb:
             java.lang.String r1 = "mKeyguardVerticalMoveHelper"
             kotlin.jvm.internal.Intrinsics.throwUninitializedPropertyAccessException(r1)
             throw r0
-        L_0x00b5:
+        L_0x00c1:
             kotlin.jvm.internal.Intrinsics.throwUninitializedPropertyAccessException(r4)
             throw r0
-        L_0x00b9:
+        L_0x00c5:
             return r6
-        L_0x00ba:
+        L_0x00c6:
+            kotlin.jvm.internal.Intrinsics.throwUninitializedPropertyAccessException(r9)
+            throw r0
+        L_0x00ca:
             java.lang.String r1 = "mIndicationController"
             kotlin.jvm.internal.Intrinsics.throwUninitializedPropertyAccessException(r1)
             throw r0
-        L_0x00c0:
-            java.lang.String r1 = "mLockScreenMagazineController"
-            kotlin.jvm.internal.Intrinsics.throwUninitializedPropertyAccessException(r1)
+        L_0x00d0:
+            kotlin.jvm.internal.Intrinsics.throwUninitializedPropertyAccessException(r9)
             throw r0
-        L_0x00c6:
+        L_0x00d4:
             kotlin.jvm.internal.Intrinsics.throwNpe()
             throw r0
-        L_0x00ca:
+        L_0x00d8:
             return r8
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.keyguard.injector.KeyguardPanelViewInjector.onTouchEvent(android.view.MotionEvent, int, float, float, boolean, boolean, boolean, boolean, boolean, boolean):boolean");
@@ -814,9 +844,7 @@ public final class KeyguardPanelViewInjector extends MiuiKeyguardUpdateMonitorCa
     }
 
     public void onKeyguardShowingChanged(boolean z) {
-        if (z) {
-            ((KeyguardSensorInjector) Dependency.get(KeyguardSensorInjector.class)).disableFullScreenGesture();
-        }
+        ((KeyguardSensorInjector) Dependency.get(KeyguardSensorInjector.class)).disableFullScreenGesture();
     }
 
     public void onAnimationToSideEnded() {
@@ -1187,11 +1215,15 @@ public final class KeyguardPanelViewInjector extends MiuiKeyguardUpdateMonitorCa
     }
 
     public final void updateBottomView(@NotNull KeyguardBottomAreaView keyguardBottomAreaView) {
-        Intrinsics.checkParameterIsNotNull(keyguardBottomAreaView, "keyguardBottomAreaView");
+        Intrinsics.checkParameterIsNotNull(keyguardBottomAreaView, "newBottomArea");
         KeyguardMoveHelper keyguardMoveHelper = this.mKeyguardMoveHelper;
         if (keyguardMoveHelper != null) {
             keyguardMoveHelper.updateBottomIcons(keyguardBottomAreaView);
         }
         this.mBottomAreaView = keyguardBottomAreaView;
+        if (this.mMobileKeyGuardViews.size() > 0) {
+            this.mMobileKeyGuardViews.clear();
+            initKeyguardViewCollection();
+        }
     }
 }

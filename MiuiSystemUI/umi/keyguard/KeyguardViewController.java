@@ -14,11 +14,7 @@ public interface KeyguardViewController {
 
     boolean isBouncerShowing();
 
-    boolean isGoingToNotificationShade();
-
     boolean isShowing();
-
-    boolean isUnlockWithWallpaper();
 
     void keyguardGoingAway();
 
@@ -46,10 +42,6 @@ public interface KeyguardViewController {
     void setNeedsInput(boolean z);
 
     void setOccluded(boolean z, boolean z2);
-
-    boolean shouldDisableWindowAnimationsForUnlock();
-
-    boolean shouldSubtleWindowAnimationsForUnlock();
 
     void show(Bundle bundle);
 

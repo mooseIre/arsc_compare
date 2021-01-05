@@ -11,7 +11,7 @@ import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
 import com.android.keyguard.KeyguardUpdateMonitor;
-import com.android.keyguard.KeyguardUpdateMonitorCallback;
+import com.android.keyguard.MiuiKeyguardUpdateMonitorCallback;
 import com.android.keyguard.utils.MiuiKeyguardUtils;
 import com.android.systemui.C0008R$array;
 import com.android.systemui.Dependency;
@@ -52,7 +52,7 @@ public final class KeyguardSensorInjector implements SettingsObserver.Callback, 
     private boolean mIsDeviceSupportLargeAreaTouch;
     @NotNull
     private final KeyguardUpdateMonitor mKeyguardUpdateMonitor;
-    private final KeyguardUpdateMonitorCallback mKeyguardUpdateMonitorCallback;
+    private final MiuiKeyguardUpdateMonitorCallback mKeyguardUpdateMonitorCallback;
     @NotNull
     private final KeyguardViewMediator mKeyguardViewMediator;
     /* access modifiers changed from: private */
@@ -133,11 +133,6 @@ public final class KeyguardSensorInjector implements SettingsObserver.Callback, 
     @NotNull
     public final PowerManager getMPowerManager() {
         return this.mPowerManager;
-    }
-
-    @NotNull
-    public final KeyguardUpdateMonitor getMKeyguardUpdateMonitor() {
-        return this.mKeyguardUpdateMonitor;
     }
 
     @NotNull
@@ -351,7 +346,7 @@ public final class KeyguardSensorInjector implements SettingsObserver.Callback, 
 
     public final void disableFullScreenGesture() {
         if (MiuiKeyguardUtils.isFullScreenGestureOpened()) {
-            CommonUtil.updateFsgState(this.mContext, "typefrom_keyguard", !this.mKeyguardViewMediator.isOccluded() && !this.mKeyguardUpdateMonitor.isBouncerShowing());
+            CommonUtil.updateFsgState(this.mContext, "typefrom_keyguard", this.mKeyguardViewMediator.isShowing() && !this.mKeyguardViewMediator.isOccluded() && !this.mKeyguardUpdateMonitor.isBouncerShowing());
         }
     }
 }

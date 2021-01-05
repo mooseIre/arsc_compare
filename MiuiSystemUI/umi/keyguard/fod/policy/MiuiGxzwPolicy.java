@@ -19,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
 public final class MiuiGxzwPolicy implements NotificationPanelExpansionListener, StatusBarStateController.StateListener {
     static final /* synthetic */ KProperty[] $$delegatedProperties;
     private final Lazy mStatusBar$delegate;
-    private int mStatusBarState = 1;
+    private int mStatusBarState;
     private final SysuiStatusBarStateController mStatusBarStateController;
     private final PanelExpansionObserver panelExpansionObserver;
     private final StatusBarStateController statusBarStateController;

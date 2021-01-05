@@ -23,9 +23,13 @@ import com.android.systemui.C0021R$string;
 import com.android.systemui.Dependency;
 import com.android.systemui.keyguard.WakefulnessLifecycle;
 import com.android.systemui.statusbar.KeyguardIndicationController;
+import com.android.systemui.statusbar.phone.StatusBar;
+import com.miui.systemui.SettingsObserver;
+import com.miui.systemui.util.MiuiTextUtils;
 import miui.os.Build;
+import org.jetbrains.annotations.Nullable;
 
-public class MiuiChargeController implements IChargeAnimationListener, WakefulnessLifecycle.Observer {
+public class MiuiChargeController implements IChargeAnimationListener, WakefulnessLifecycle.Observer, SettingsObserver.Callback {
     private final boolean SUPPORT_NEW_ANIMATION = ChargeUtils.supportNewChargeAnimation();
     /* access modifiers changed from: private */
     public MiuiBatteryStatus mBatteryStatus;
@@ -76,6 +80,8 @@ public class MiuiChargeController implements IChargeAnimationListener, Wakefulne
     };
     private boolean mScreenOn = false;
     private PowerManager.WakeLock mScreenOnWakeLock;
+    private boolean mShowChargingFromSetting;
+    private boolean mShowChargingInNonLockscreen;
     private final Runnable mShowSlowlyRunnable = new Runnable() {
         public void run() {
             MiuiChargeController.this.showMissedTip(true);
@@ -101,6 +107,7 @@ public class MiuiChargeController implements IChargeAnimationListener, Wakefulne
         this.mUpdateMonitor.registerCallback(this.mKeyguardUpdateMonitorCallback);
         wakefulnessLifecycle.addObserver(this);
         this.mKeyguardIndicationController = (KeyguardIndicationController) Dependency.get(KeyguardIndicationController.class);
+        ((SettingsObserver) Dependency.get(SettingsObserver.class)).addCallback(this, "show_charging_in_non_lockscreen");
         this.mBatteryStatus = new MiuiBatteryStatus(1, 0, 0, 0, 0, -1, 1, -1);
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("android.intent.action.USER_PRESENT");
@@ -164,7 +171,8 @@ public class MiuiChargeController implements IChargeAnimationListener, Wakefulne
             boolean z5 = false;
             boolean z6 = miuiBatteryStatus.wireState == 10;
             int checkChargeState = checkChargeState(miuiBatteryStatus);
-            if (checkChargeState != this.mWireState) {
+            int i2 = this.mWireState;
+            if (!(i2 == -1 || checkChargeState == i2)) {
                 this.mChargeDeviceType = -1;
             }
             boolean isWirelessCarMode = ChargeUtils.isWirelessCarMode(this.mChargeDeviceType);
@@ -242,13 +250,35 @@ public class MiuiChargeController implements IChargeAnimationListener, Wakefulne
             }
             boolean isKeyguardShowing = this.mUpdateMonitorInjector.isKeyguardShowing();
             boolean isKeyguardOccluded = this.mUpdateMonitorInjector.isKeyguardOccluded();
-            if (i == -1 || !isKeyguardShowing || isKeyguardOccluded) {
+            if (i == -1) {
                 this.mPendingChargeAnimation = false;
                 this.mHandler.removeCallbacks(this.mScreenOffRunnable);
                 dismissChargeAnimation("dealWithAnimationShow");
-                return;
+            } else if (!isKeyguardShowing) {
+                boolean isShowChargingInNonLockscreen = isShowChargingInNonLockscreen();
+                this.mShowChargingInNonLockscreen = isShowChargingInNonLockscreen;
+                if (isShowChargingInNonLockscreen) {
+                    showChargeAnimation(i);
+                }
+            } else if (!isKeyguardOccluded) {
+                showChargeAnimation(i);
             }
-            showChargeAnimation(i);
+        }
+    }
+
+    private boolean isShowChargingInNonLockscreen() {
+        boolean z = !((StatusBar) Dependency.get(StatusBar.class)).inFullscreenMode();
+        Log.d("MiuiChargeController", "isAddToWindow：notFullScreen=" + z + ",mShowChargingFromSetting=" + this.mShowChargingFromSetting);
+        if (!z || !this.mShowChargingFromSetting) {
+            return false;
+        }
+        return true;
+    }
+
+    public void onContentChanged(@Nullable String str, @Nullable String str2) {
+        if ("show_charging_in_non_lockscreen".equals(str)) {
+            this.mShowChargingFromSetting = MiuiTextUtils.parseBoolean(str2, true);
+            Log.d("MiuiChargeController", "onContentChanged：mShowChargingFromSetting: " + this.mShowChargingFromSetting);
         }
     }
 
@@ -314,7 +344,7 @@ public class MiuiChargeController implements IChargeAnimationListener, Wakefulne
             }
             this.mChargeAnimationView.setProgress(this.mBatteryStatus.level);
             switchChargeItemViewAnimation(this.mBatteryStatus, this.mClickShowChargeUI);
-            this.mChargeAnimationView.addToWindow("prepareChargeAnimation");
+            this.mChargeAnimationView.addChargeView("prepareChargeAnimation", this.mShowChargingInNonLockscreen);
         }
     }
 
@@ -376,6 +406,7 @@ public class MiuiChargeController implements IChargeAnimationListener, Wakefulne
     public void onChargeAnimationDismiss(int i, String str) {
         Log.i("MiuiChargeController", " onChargeAnimationDismiss: wireState " + i + " reason :" + str);
         this.mChargeAnimationShowing = false;
+        this.mShowChargingInNonLockscreen = false;
         if (shouldShowChargeAnim() && this.mPendingChargeAnimation) {
             Log.d("MiuiChargeController", " onChargeAnimationDismiss: 切换动画 mWireState=" + this.mWireState);
             this.mPendingChargeAnimation = false;
@@ -520,7 +551,7 @@ public class MiuiChargeController implements IChargeAnimationListener, Wakefulne
     public /* synthetic */ void lambda$onStartedWakingUp$0$MiuiChargeController() {
         MiuiChargeAnimationView miuiChargeAnimationView = this.mChargeAnimationView;
         if (miuiChargeAnimationView != null && !this.mChargeAnimationShowing) {
-            miuiChargeAnimationView.removeFromWindow("onStartedWakingUp");
+            miuiChargeAnimationView.removeChargeView("onStartedWakingUp");
         }
     }
 

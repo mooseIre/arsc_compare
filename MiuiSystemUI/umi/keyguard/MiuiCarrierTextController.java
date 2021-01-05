@@ -12,11 +12,13 @@ import com.android.systemui.MCCUtils;
 import com.android.systemui.keyguard.WakefulnessLifecycle;
 import com.android.systemui.statusbar.policy.CarrierObserver;
 import com.android.systemui.statusbar.policy.CustomCarrierObserver;
+import com.android.systemui.statusbar.policy.MobileSignalController;
 import com.android.systemui.statusbar.policy.NetworkController;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import miui.os.Build;
 import miui.telephony.SubscriptionInfo;
 import miui.telephony.SubscriptionManager;
 
@@ -58,6 +60,7 @@ public class MiuiCarrierTextController implements CustomCarrierObserver.Callback
     protected boolean mEmergencyOnly;
     protected KeyguardUpdateMonitor mKeyguardUpdateMonitor;
     protected Handler mMainHandler;
+    protected String[] mMiuiMobileTypeName;
     protected TelephonyManager mPhone;
     protected final int mPhoneCount;
     protected boolean[] mSimError;
@@ -104,6 +107,7 @@ public class MiuiCarrierTextController implements CustomCarrierObserver.Callback
         this.mPhoneCount = telephonyManager.getActiveModemCount();
         Log.d("MiuiCarrierTextController", "MiuiCarrierTextController: " + this.mPhoneCount);
         int i = this.mPhoneCount;
+        this.mMiuiMobileTypeName = new String[i];
         this.mSimError = new boolean[i];
         this.mVowifi = new boolean[i];
         this.mSubscriptionManager = SubscriptionManager.getDefault();
@@ -111,7 +115,7 @@ public class MiuiCarrierTextController implements CustomCarrierObserver.Callback
         this.mCarrierObserver = (CarrierObserver) Dependency.get(CarrierObserver.class);
         this.mKeyguardUpdateMonitor = (KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class);
         NetworkController networkController = (NetworkController) Dependency.get(NetworkController.class);
-        networkController.addCallback((NetworkController.SignalCallback) this);
+        networkController.addCallback(this);
         networkController.addEmergencyListener(this);
         this.mKeyguardUpdateMonitor.registerCallback(this.mCallback);
         this.mCustomCarrierObserver.addCallback(this);
@@ -129,6 +133,19 @@ public class MiuiCarrierTextController implements CustomCarrierObserver.Callback
         this.updateCarrierTextRunnable.run();
     }
 
+    public void setMobileDataIndicators(NetworkController.IconState iconState, NetworkController.IconState iconState2, int i, int i2, boolean z, boolean z2, int i3, CharSequence charSequence, CharSequence charSequence2, CharSequence charSequence3, boolean z3, int i4, boolean z4, MobileSignalController.MiuiMobileState miuiMobileState) {
+        if (isCustomizationTest()) {
+            int i5 = miuiMobileState.slotId;
+            if (i5 >= 0) {
+                String[] strArr = this.mMiuiMobileTypeName;
+                if (i5 < strArr.length) {
+                    strArr[i5] = miuiMobileState.showName;
+                }
+            }
+            this.updateCarrierTextRunnable.run();
+        }
+    }
+
     /* access modifiers changed from: protected */
     public void updateCarrierText() {
         String str;
@@ -144,6 +161,9 @@ public class MiuiCarrierTextController implements CustomCarrierObserver.Callback
                 strArr[i] = str;
             } else {
                 strArr[i] = getSimCarrier(i);
+                if (!TextUtils.isEmpty(strArr[i]) && !TextUtils.isEmpty(this.mMiuiMobileTypeName[i]) && isCustomizationTest()) {
+                    strArr[i] = strArr[i] + this.mMiuiMobileTypeName[i];
+                }
             }
             i++;
         }
@@ -234,10 +254,12 @@ public class MiuiCarrierTextController implements CustomCarrierObserver.Callback
     }
 
     public void fireCarrierTextChanged(String str) {
-        this.mCurrentCarrier = str;
-        int size = this.listeners.size();
-        for (int i = 0; i < size; i++) {
-            this.listeners.get(i).onCarrierTextChanged(str);
+        if (!TextUtils.equals(this.mCurrentCarrier, str)) {
+            this.mCurrentCarrier = str;
+            int size = this.listeners.size();
+            for (int i = 0; i < size; i++) {
+                this.listeners.get(i).onCarrierTextChanged(str);
+            }
         }
     }
 
@@ -267,6 +289,10 @@ public class MiuiCarrierTextController implements CustomCarrierObserver.Callback
             return false;
         }
         return true;
+    }
+
+    private boolean isCustomizationTest() {
+        return Build.IS_CM_CUSTOMIZATION_TEST || Build.IS_CU_CUSTOMIZATION_TEST || Build.IS_CT_CUSTOMIZATION_TEST;
     }
 
     public void setIsAirplaneMode(NetworkController.IconState iconState) {

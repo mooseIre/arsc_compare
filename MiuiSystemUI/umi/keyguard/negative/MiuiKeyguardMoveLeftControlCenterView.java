@@ -24,6 +24,7 @@ import com.android.keyguard.KeyguardUpdateMonitorCallback;
 import com.android.keyguard.magazine.utils.LockScreenMagazineUtils;
 import com.android.keyguard.utils.MiuiKeyguardUtils;
 import com.android.keyguard.utils.PackageUtils;
+import com.android.systemui.C0010R$bool;
 import com.android.systemui.C0012R$dimen;
 import com.android.systemui.C0013R$drawable;
 import com.android.systemui.C0015R$id;
@@ -50,6 +51,7 @@ public class MiuiKeyguardMoveLeftControlCenterView extends MiuiKeyguardMoveLeftB
     public int mFourOrThreeItemTopMargin;
     /* access modifiers changed from: private */
     public boolean mHasIrEmitter;
+    private boolean mIsForceDisableMagazine = false;
     /* access modifiers changed from: private */
     public int mItemNums = 0;
     private final KeyguardUpdateMonitorCallback mKeyguardUpdateMonitorCallback = new KeyguardUpdateMonitorCallback() {
@@ -169,6 +171,7 @@ public class MiuiKeyguardMoveLeftControlCenterView extends MiuiKeyguardMoveLeftB
         this.mTwoOrOneItemLeftMargin = getResources().getDimensionPixelSize(C0012R$dimen.keyguard_move_left_layout_left_margint_twoorone);
         this.mTwoOrOneItemRightMargin = getResources().getDimensionPixelSize(C0012R$dimen.keyguard_move_left_layout_right_margint_twoorone);
         this.mFourOrThreeItemTopMargin = getResources().getDimensionPixelOffset(C0012R$dimen.keyguard_move_left_layout_top_margint_fourorthree);
+        this.mIsForceDisableMagazine = getResources().getBoolean(C0010R$bool.config_disableLockScreenMagazine);
         initKeyguardLeftItemInfos();
         initLeftView();
     }
@@ -320,7 +323,13 @@ public class MiuiKeyguardMoveLeftControlCenterView extends MiuiKeyguardMoveLeftB
 
     /* access modifiers changed from: private */
     public boolean supportLockScreenMagazine() {
-        return !Build.IS_INTERNATIONAL_BUILD || MiuiKeyguardUtils.isIndianRegion(this.mContext);
+        if (this.mIsForceDisableMagazine) {
+            return false;
+        }
+        if (!Build.IS_INTERNATIONAL_BUILD || MiuiKeyguardUtils.isIndianRegion()) {
+            return true;
+        }
+        return false;
     }
 
     public void setCustomBackground(Drawable drawable) {

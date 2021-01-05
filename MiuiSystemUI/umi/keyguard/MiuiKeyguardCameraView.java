@@ -32,6 +32,7 @@ import android.view.Display;
 import android.view.View;
 import android.view.ViewOutlineProvider;
 import android.view.WindowManager;
+import android.view.WindowManagerGlobal;
 import android.view.animation.Interpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -148,19 +149,13 @@ public class MiuiKeyguardCameraView extends FrameLayout implements IMiuiKeyguard
             if (MiuiKeyguardCameraView.this.mIsPendingStartCamera) {
                 boolean unused = MiuiKeyguardCameraView.this.mIsPendingStartCamera = false;
                 boolean unused2 = MiuiKeyguardCameraView.this.mIsCameraShowing = true;
-                if ("venus".equals(Build.DEVICE)) {
-                    synchronized (MiuiKeyguardCameraView.this.mBackgroundAnimatorSet) {
-                        if (MiuiKeyguardCameraView.this.mBackgroundAnimatorSet != null && !MiuiKeyguardCameraView.this.mBackgroundAnimatorSet.isRunning()) {
-                            MiuiKeyguardCameraView.this.setAlpha(0.0f);
-                            MiuiKeyguardCameraView.this.applyBlurRatio(0.0f);
-                            AnimatorSet unused3 = MiuiKeyguardCameraView.this.mBackgroundAnimatorSet = null;
-                        }
-                    }
-                } else {
+                if (MiuiKeyguardCameraView.this.mBackgroundAnimatorSet != null && !MiuiKeyguardCameraView.this.mBackgroundAnimatorSet.isRunning()) {
                     MiuiKeyguardCameraView.this.setAlpha(0.0f);
                     MiuiKeyguardCameraView.this.applyBlurRatio(0.0f);
+                    MiuiKeyguardCameraView.this.updateKeepScreenOnFlag(false);
+                    AnimatorSet unused3 = MiuiKeyguardCameraView.this.mBackgroundAnimatorSet = null;
+                    return;
                 }
-                MiuiKeyguardCameraView.this.updateKeepScreenOnFlag(false);
                 return;
             }
             MiuiKeyguardCameraView.this.reset();
@@ -197,8 +192,7 @@ public class MiuiKeyguardCameraView extends FrameLayout implements IMiuiKeyguard
     /* access modifiers changed from: private */
     public int mScreenWidth;
     private boolean mShowing = false;
-    /* access modifiers changed from: private */
-    public final TaskStackChangeListener mTaskStackListener = new TaskStackChangeListener() {
+    private final TaskStackChangeListener mTaskStackListener = new TaskStackChangeListener() {
         public void onTaskMovedToFront(ActivityManager.RunningTaskInfo runningTaskInfo) {
             Log.d("KeyguardCameraView", "xxxxxxxxonTaskMovedToFront");
             if (MiuiKeyguardCameraView.this.mIsCameraShowing && MiuiKeyguardCameraView.this.isNotCameraActivity(runningTaskInfo)) {
@@ -310,10 +304,6 @@ public class MiuiKeyguardCameraView extends FrameLayout implements IMiuiKeyguard
         Point point = new Point();
         this.mScreenSizePoint = point;
         display.getRealSize(point);
-        Point point2 = this.mScreenSizePoint;
-        this.mScreenHeight = Math.max(point2.y, point2.x);
-        Point point3 = this.mScreenSizePoint;
-        this.mScreenWidth = Math.min(point3.y, point3.x);
         View view = new View(getContext());
         this.mBackgroundView = view;
         view.setBackgroundColor(-16777216);
@@ -335,19 +325,10 @@ public class MiuiKeyguardCameraView extends FrameLayout implements IMiuiKeyguard
         ImageView imageView = new ImageView(getContext());
         this.mPreView = imageView;
         this.mPreViewContainer.addView(imageView, new FrameLayout.LayoutParams(-1, -1, 17));
-        this.mIconView = new ImageView(getContext());
-        this.mIconWidth = this.mContext.getResources().getDimensionPixelOffset(C0012R$dimen.keyguard_affordance_width);
-        this.mIconHeight = this.mContext.getResources().getDimensionPixelOffset(C0012R$dimen.keyguard_affordance_height);
-        this.mIconView.setScaleType(ImageView.ScaleType.CENTER);
-        this.mIconView.setImageDrawable(this.mContext.getDrawable(C0013R$drawable.keyguard_bottom_camera_img));
-        addView(this.mIconView, new FrameLayout.LayoutParams(this.mIconWidth, this.mIconHeight, 8388693));
-        int i = this.mScreenWidth;
-        this.mIconInitCenterX = (float) (i - (this.mIconWidth / 2));
-        int i2 = this.mScreenHeight;
-        this.mIconInitCenterY = (float) (i2 - (this.mIconHeight / 2));
-        this.mIconActiveCenterX = ((float) i) * 0.55f;
-        this.mIconActiveCenterY = ((float) i2) * 0.8f;
-        this.mIconActiveWidth = ((float) i) * 0.74f;
+        ImageView imageView2 = new ImageView(getContext());
+        this.mIconView = imageView2;
+        imageView2.setScaleType(ImageView.ScaleType.CENTER);
+        addView(this.mIconView);
         WindowManager.LayoutParams layoutParams2 = new WindowManager.LayoutParams(-1, -1, Build.VERSION.SDK_INT > 29 ? 2017 : 2014, 218171160, -2);
         this.mLayoutParams = layoutParams2;
         layoutParams2.x = 0;
@@ -357,6 +338,7 @@ public class MiuiKeyguardCameraView extends FrameLayout implements IMiuiKeyguard
         this.mLpChanged = layoutParams3;
         layoutParams3.copyFrom(this.mLayoutParams);
         setVisibility(8);
+        updateSizeForScreenSizeChange();
     }
 
     /* access modifiers changed from: protected */
@@ -393,22 +375,27 @@ public class MiuiKeyguardCameraView extends FrameLayout implements IMiuiKeyguard
         Point point2 = this.mScreenSizePoint;
         this.mScreenWidth = Math.min(point2.y, point2.x);
         this.mIconWidth = this.mContext.getResources().getDimensionPixelOffset(C0012R$dimen.keyguard_affordance_width);
-        this.mIconHeight = this.mContext.getResources().getDimensionPixelOffset(C0012R$dimen.keyguard_affordance_height);
-        this.mIconView.setImageDrawable(this.mContext.getDrawable(C0013R$drawable.keyguard_bottom_camera_img));
-        updateLayoutParams();
+        int dimensionPixelOffset = this.mContext.getResources().getDimensionPixelOffset(C0012R$dimen.keyguard_affordance_height);
+        this.mIconHeight = dimensionPixelOffset;
         int i = this.mScreenWidth;
         this.mIconInitCenterX = (float) (i - (this.mIconWidth / 2));
         int i2 = this.mScreenHeight;
-        this.mIconInitCenterY = (float) (i2 - (this.mIconHeight / 2));
+        this.mIconInitCenterY = (float) (i2 - (dimensionPixelOffset / 2));
         this.mIconActiveCenterX = ((float) i) * 0.55f;
         this.mIconActiveCenterY = ((float) i2) * 0.8f;
         this.mIconActiveWidth = ((float) i) * 0.74f;
+        this.mIconView.setImageDrawable(this.mContext.getDrawable(C0013R$drawable.keyguard_bottom_camera_img));
+        updateLayoutParams();
     }
 
     private void updateLayoutParams() {
         FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) this.mIconView.getLayoutParams();
-        layoutParams.width = this.mIconWidth;
-        layoutParams.height = this.mIconHeight;
+        if (layoutParams == null) {
+            layoutParams = new FrameLayout.LayoutParams(this.mIconWidth, this.mIconHeight, 8388693);
+        } else {
+            layoutParams.width = this.mIconWidth;
+            layoutParams.height = this.mIconHeight;
+        }
         this.mIconView.setLayoutParams(layoutParams);
     }
 
@@ -543,7 +530,7 @@ public class MiuiKeyguardCameraView extends FrameLayout implements IMiuiKeyguard
     }
 
     private void handleMoveDistanceChanged() {
-        if (!"venus".equals(Build.DEVICE) || (!this.mIsCameraShowing && !this.mIsPendingStartCamera)) {
+        if (!this.mIsCameraShowing && !this.mIsPendingStartCamera) {
             this.mMovePer = perFromVal(this.mMoveDistance, 0.0f, (float) (this.mScreenWidth / 3));
             notifyAnimUpdate();
             if (DeviceConfig.isLowGpuDevice()) {
@@ -731,10 +718,7 @@ public class MiuiKeyguardCameraView extends FrameLayout implements IMiuiKeyguard
         fullScreenAnim.setInterpolator(new PhysicBasedInterpolator(this, 0.9f, 0.85f));
         this.mAnimatorSet.setDuration(350);
         this.mAnimatorSet.addListener(new AnimatorListenerAdapter() {
-            private boolean mCancelled;
-
             public void onAnimationCancel(Animator animator) {
-                this.mCancelled = true;
             }
 
             public void onAnimationEnd(Animator animator) {
@@ -746,30 +730,20 @@ public class MiuiKeyguardCameraView extends FrameLayout implements IMiuiKeyguard
                     MiuiKeyguardCameraView.this.mBackgroundAnimator.cancel();
                     ValueAnimator unused = MiuiKeyguardCameraView.this.mBackgroundAnimator = null;
                 }
-                if ("venus".equals(Build.DEVICE)) {
-                    synchronized (MiuiKeyguardCameraView.this.mBackgroundAnimatorSet) {
-                        if (MiuiKeyguardCameraView.this.mBackgroundAnimatorSet != null && MiuiKeyguardCameraView.this.mIsCameraShowing) {
-                            MiuiKeyguardCameraView.this.setAlpha(0.0f);
-                            MiuiKeyguardCameraView.this.applyBlurRatio(0.0f);
-                            AnimatorSet unused2 = MiuiKeyguardCameraView.this.mBackgroundAnimatorSet = null;
-                        }
-                    }
-                } else if (!this.mCancelled) {
-                    ActivityManagerWrapper.getInstance().registerTaskStackListener(MiuiKeyguardCameraView.this.mTaskStackListener);
-                    AnalyticsHelper.getInstance(MiuiKeyguardCameraView.this.mContext).recordKeyguardAction("action_enter_camera_view");
-                    AnalyticsHelper.getInstance(MiuiKeyguardCameraView.this.mContext).trackPageStart("action_enter_camera_view");
-                    MiuiKeyguardCameraView.this.mContext.startActivityAsUser(PackageUtils.getCameraIntent(), UserHandle.CURRENT);
+                if (MiuiKeyguardCameraView.this.mBackgroundAnimatorSet != null && MiuiKeyguardCameraView.this.mIsCameraShowing) {
+                    MiuiKeyguardCameraView.this.setAlpha(0.0f);
+                    MiuiKeyguardCameraView.this.applyBlurRatio(0.0f);
+                    MiuiKeyguardCameraView.this.updateKeepScreenOnFlag(false);
+                    AnimatorSet unused2 = MiuiKeyguardCameraView.this.mBackgroundAnimatorSet = null;
                 }
             }
         });
         this.mAnimatorSet.start();
-        if ("venus".equals(Build.DEVICE)) {
-            this.mBackgroundAnimatorSet = this.mAnimatorSet;
-            ActivityManagerWrapper.getInstance().registerTaskStackListener(this.mTaskStackListener);
-            AnalyticsHelper.getInstance(this.mContext).recordKeyguardAction("action_enter_camera_view");
-            AnalyticsHelper.getInstance(this.mContext).trackPageStart("action_enter_camera_view");
-            this.mContext.startActivityAsUser(PackageUtils.getCameraIntent(), UserHandle.CURRENT);
-        }
+        this.mBackgroundAnimatorSet = this.mAnimatorSet;
+        ActivityManagerWrapper.getInstance().registerTaskStackListener(this.mTaskStackListener);
+        AnalyticsHelper.getInstance(this.mContext).recordKeyguardAction("action_enter_camera_view");
+        AnalyticsHelper.getInstance(this.mContext).trackPageStart("action_enter_camera_view");
+        this.mContext.startActivityAsUser(PackageUtils.getCameraIntent(), UserHandle.CURRENT);
         ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{0.0f, 1.0f});
         this.mBackgroundAnimator = ofFloat;
         ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -1007,6 +981,7 @@ public class MiuiKeyguardCameraView extends FrameLayout implements IMiuiKeyguard
                 if (MiuiKeyguardCameraView.this.mCallBack != null) {
                     MiuiKeyguardCameraView.this.mCallBack.onBackAnimationEnd();
                 }
+                WindowManagerGlobal.getInstance().trimMemory(20);
             }
         });
         this.mAnimatorSet.start();
@@ -1214,9 +1189,9 @@ public class MiuiKeyguardCameraView extends FrameLayout implements IMiuiKeyguard
                 }
 
                 private Drawable getOtherDrawable() {
-                    Context access$1500 = MiuiKeyguardCameraView.this.mContext;
+                    Context access$2200 = MiuiKeyguardCameraView.this.mContext;
                     Drawable drawable = null;
-                    Bundle resultFromProvider = ContentProviderUtils.getResultFromProvider(access$1500, "content://" + PackageUtils.PACKAGE_NAME_CAMERA + ".splashProvider", "getCameraSplash", (String) null, (Bundle) null);
+                    Bundle resultFromProvider = ContentProviderUtils.getResultFromProvider(access$2200, "content://" + PackageUtils.PACKAGE_NAME_CAMERA + ".splashProvider", "getCameraSplash", (String) null, (Bundle) null);
                     if (resultFromProvider != null) {
                         String valueOf = String.valueOf(resultFromProvider.get("getCameraSplash"));
                         if (!TextUtils.isEmpty(valueOf)) {

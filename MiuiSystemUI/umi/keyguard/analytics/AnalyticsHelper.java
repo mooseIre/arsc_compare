@@ -6,7 +6,6 @@ import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
-import android.util.Slog;
 import com.android.internal.os.SomeArgs;
 import com.android.systemui.Dependency;
 import com.android.systemui.statusbar.phone.StatusBar;
@@ -74,17 +73,6 @@ public class AnalyticsHelper {
 
     public void trackPageEnd(String str, String str2) {
         this.mTrackPageEvents.get(str).onPageEnd(str2);
-    }
-
-    public void recordUnlockWay(String str, boolean z) {
-        if (z) {
-            Slog.w("miui_keyguard", "unlock keyguard by " + str);
-        }
-        HashMap hashMap = new HashMap();
-        hashMap.put("unlock_way", str);
-        booleanToInt(z);
-        hashMap.put("unlock_result", Integer.valueOf(z ? 1 : 0));
-        track("keyguard_unlock_way", hashMap);
     }
 
     public void recordKeyguardAction(String str) {

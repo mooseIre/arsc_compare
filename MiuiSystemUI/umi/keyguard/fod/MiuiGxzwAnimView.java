@@ -372,6 +372,26 @@ class MiuiGxzwAnimView {
     }
 
     /* access modifiers changed from: private */
+    /* renamed from: lambda$setVisibility$19 */
+    public /* synthetic */ void lambda$setVisibility$19$MiuiGxzwAnimView(int i) {
+        this.mMiuiGxzwAnimView.setVisibility(i);
+    }
+
+    public void setVisibility(int i) {
+        this.mMainHandler.post(new Runnable(i) {
+            public final /* synthetic */ int f$1;
+
+            {
+                this.f$1 = r2;
+            }
+
+            public final void run() {
+                MiuiGxzwAnimView.this.lambda$setVisibility$19$MiuiGxzwAnimView(this.f$1);
+            }
+        });
+    }
+
+    /* access modifiers changed from: private */
     /* renamed from: lambda$setVisibilityAnim$20 */
     public /* synthetic */ void lambda$setVisibilityAnim$20$MiuiGxzwAnimView(int i) {
         this.mMiuiGxzwAnimView.setVisibilityAnim(i);
