@@ -1889,6 +1889,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
     public void disable(int i, int i2, int i3, boolean z) {
         int i4 = i2;
         if (i == this.mDisplayId) {
+            EventLog.writeEvent(30099, i4);
             int adjustDisableFlags = this.mRemoteInputQuickSettingsDisabler.adjustDisableFlags(i3);
             int i5 = this.mStatusBarWindowState;
             int i6 = this.mDisabled1 ^ i4;

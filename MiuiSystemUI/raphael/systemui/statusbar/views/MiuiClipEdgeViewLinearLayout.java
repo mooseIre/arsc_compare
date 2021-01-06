@@ -25,25 +25,23 @@ public class MiuiClipEdgeViewLinearLayout extends LinearLayout {
 
     /* access modifiers changed from: protected */
     public boolean setFrame(int i, int i2, int i3, int i4) {
-        if (i < 0) {
-            i = 0;
-        }
+        int i5;
         if (getParent() instanceof View) {
-            i3 = Math.max(0, Math.min(i3, ((View) getParent()).getWidth()));
+            View view = (View) getParent();
+            i5 = Math.max(i, Math.max(view.getPaddingLeft(), 0));
+            i3 = Math.max(0, Math.min(i3, view.getWidth() - view.getPaddingRight()));
+        } else {
+            i5 = Math.max(i, 0);
         }
-        return super.setFrame(i, i2, i3, i4);
+        return super.setFrame(i5, i2, i3, i4);
     }
 
     /* access modifiers changed from: protected */
     public void onLayout(boolean z, int i, int i2, int i3, int i4) {
         if (getParent() instanceof View) {
             View view = (View) getParent();
-            if (view.getWidth() < i3) {
-                i3 = view.getWidth();
-            }
-            if (i <= 0) {
-                i = 0;
-            }
+            i3 = Math.max(0, Math.min(i3, view.getWidth() - view.getPaddingRight()));
+            i = Math.max(i, Math.max(view.getPaddingLeft(), 0));
         }
         super.onLayout(z, i, i2, i3, i4);
         updateClipRect();

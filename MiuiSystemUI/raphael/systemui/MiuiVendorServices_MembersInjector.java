@@ -11,6 +11,7 @@ import com.android.systemui.statusbar.policy.MiuiHeadsUpPolicy;
 import com.android.systemui.statusbar.policy.MiuiNotificationShadePolicy;
 import com.android.systemui.vendor.HeadsetPolicy;
 import com.android.systemui.vendor.OrientationPolicy;
+import com.miui.systemui.display.OLEDScreenHelper;
 
 public final class MiuiVendorServices_MembersInjector {
     public static void injectMWallpaperZoomOutService(MiuiVendorServices miuiVendorServices, MiuiWallpaperZoomOutService miuiWallpaperZoomOutService) {
@@ -59,5 +60,9 @@ public final class MiuiVendorServices_MembersInjector {
 
     public static void injectMMiuiFullScreenGestureProxy(MiuiVendorServices miuiVendorServices, MiuiFullScreenGestureProxy miuiFullScreenGestureProxy) {
         miuiVendorServices.mMiuiFullScreenGestureProxy = miuiFullScreenGestureProxy;
+    }
+
+    public static void injectMOledScreenHelper(MiuiVendorServices miuiVendorServices, OLEDScreenHelper oLEDScreenHelper) {
+        miuiVendorServices.mOledScreenHelper = oLEDScreenHelper;
     }
 }

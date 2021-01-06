@@ -9,10 +9,15 @@ import com.android.systemui.statusbar.policy.ConfigurationController;
 import com.miui.systemui.statusbar.phone.ForceBlackObserver;
 
 public class MiuiLightBarController extends LightBarController implements ForceBlackObserver.Callback, ConfigurationController.ConfigurationListener {
+    private BarModeChangeListener mBarModeChangeListener;
     private boolean mForceBlack;
     private int mOrientation;
     protected boolean mSmartDarkEnable;
     protected boolean mSmartDarkLight;
+
+    public interface BarModeChangeListener {
+        void onBarModeChanged(int i);
+    }
 
     /* JADX INFO: super call moved to the top of the method (can break code semantics) */
     public MiuiLightBarController(Context context, DarkIconDispatcher darkIconDispatcher, BatteryController batteryController, NavigationModeController navigationModeController) {
@@ -54,6 +59,19 @@ public class MiuiLightBarController extends LightBarController implements ForceB
             this.mStatusBarIconController.getTransitionsController().setIconsDark(this.mSmartDarkLight, animateChange());
         } else {
             super.updateStatus();
+        }
+    }
+
+    public void setBarModeChangeListener(BarModeChangeListener barModeChangeListener) {
+        this.mBarModeChangeListener = barModeChangeListener;
+    }
+
+    /* access modifiers changed from: package-private */
+    public void onStatusBarModeChanged(int i) {
+        super.onStatusBarModeChanged(i);
+        BarModeChangeListener barModeChangeListener = this.mBarModeChangeListener;
+        if (barModeChangeListener != null) {
+            barModeChangeListener.onBarModeChanged(i);
         }
     }
 }

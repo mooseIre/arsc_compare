@@ -14,6 +14,7 @@ import com.android.systemui.statusbar.policy.MiuiHeadsUpPolicy;
 import com.android.systemui.statusbar.policy.MiuiNotificationShadePolicy;
 import com.android.systemui.vendor.HeadsetPolicy;
 import com.android.systemui.vendor.OrientationPolicy;
+import com.miui.systemui.display.OLEDScreenHelper;
 
 public class MiuiVendorServices extends SystemUI {
     HeadsetPolicy mHeadsetPolicy;
@@ -26,6 +27,7 @@ public class MiuiVendorServices extends SystemUI {
     NotificationCountLimitPolicy mNotifCountLimitPolicy;
     NotificationDynamicFpsController mNotifDynamicFpsController;
     NotificationPanelNavigationBarCoordinator mNotificationNavigationCoordinator;
+    OLEDScreenHelper mOledScreenHelper;
     OrientationPolicy mOrientationPolicy;
     MiuiWallpaperZoomOutService mWallpaperZoomOutService;
 
@@ -47,6 +49,7 @@ public class MiuiVendorServices extends SystemUI {
         this.mNotificationNavigationCoordinator.start();
         this.mHeadsetPolicy.start();
         this.mMiuiFullScreenGestureProxy.start();
+        this.mOledScreenHelper.start();
     }
 
     private void setSettingsDefault() {

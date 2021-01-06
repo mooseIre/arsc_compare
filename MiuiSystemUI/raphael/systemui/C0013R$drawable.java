@@ -11327,6 +11327,7 @@ public final class R {
         public static final int gxzw_use_password_to_unlock;
         public static final int hdcp_checking_dialog_title;
         public static final int hdcp_checking_title;
+        public static final int heads_up_snooze_toast;
         public static final int headset;
         public static final int heap_dump_tile_name;
         public static final int help_feedback_label;

@@ -885,6 +885,8 @@ import com.miui.systemui.SettingsObserverImpl;
 import com.miui.systemui.SettingsObserverImpl_Factory;
 import com.miui.systemui.analytics.SystemUIStat;
 import com.miui.systemui.analytics.SystemUIStat_Factory;
+import com.miui.systemui.display.OLEDScreenHelper;
+import com.miui.systemui.display.OLEDScreenHelper_Factory;
 import com.miui.systemui.graphics.AppIconsManager;
 import com.miui.systemui.graphics.AppIconsManager_Factory;
 import com.miui.systemui.statusbar.PanelExpansionObserver;
@@ -1291,6 +1293,7 @@ public final class DaggerSystemUIRootComponent implements SystemUIRootComponent 
     public Provider<NotificationWakeUpCoordinator> notificationWakeUpCoordinatorProvider;
     private Provider<NotificationsControllerImpl> notificationsControllerImplProvider;
     private NotificationsControllerStub_Factory notificationsControllerStubProvider;
+    private Provider<OLEDScreenHelper> oLEDScreenHelperProvider;
     private Provider<OldModeController> oldModeControllerProvider;
     private Provider<Optional<ControlsFavoritePersistenceWrapper>> optionalOfControlsFavoritePersistenceWrapperProvider;
     private Provider<Optional<Divider>> optionalOfDividerProvider;
@@ -2322,9 +2325,10 @@ public final class DaggerSystemUIRootComponent implements SystemUIRootComponent 
         this.orientationPolicyProvider = DoubleCheck.provider(OrientationPolicy_Factory.create(this.provideContextProvider));
         this.notificationPanelNavigationBarCoordinatorProvider = DoubleCheck.provider(NotificationPanelNavigationBarCoordinator_Factory.create(this.provideCommandQueueProvider, this.provideConfigurationControllerProvider, this.provideLightBarControllerProvider));
         this.headsetPolicyProvider = DoubleCheck.provider(HeadsetPolicy_Factory.create(this.provideContextProvider));
-        Provider<MiuiFullScreenGestureProxy> provider10 = DoubleCheck.provider(MiuiFullScreenGestureProxy_Factory.create(this.provideContextProvider, this.provideCommandQueueProvider));
-        this.miuiFullScreenGestureProxyProvider = provider10;
-        this.miuiVendorServicesProvider = DoubleCheck.provider(MiuiVendorServices_Factory.create(this.provideContextProvider, this.miuiWallpaperZoomOutServiceProvider, this.miuiHeadsUpPolicyProvider, this.miuiGxzwPolicyProvider, this.notificationAlertControllerProvider, this.notificationDynamicFpsControllerProvider, this.notificationCountLimitPolicyProvider, this.miuiNotificationShadePolicyProvider, this.miuiRecentProxyProvider, this.orientationPolicyProvider, this.notificationPanelNavigationBarCoordinatorProvider, this.headsetPolicyProvider, provider10));
+        this.miuiFullScreenGestureProxyProvider = DoubleCheck.provider(MiuiFullScreenGestureProxy_Factory.create(this.provideContextProvider, this.provideCommandQueueProvider));
+        Provider<OLEDScreenHelper> provider10 = DoubleCheck.provider(OLEDScreenHelper_Factory.create(this.provideContextProvider, this.screenLifecycleProvider, this.provideConfigurationControllerProvider, this.dumpManagerProvider, this.provideNavigationBarControllerProvider, this.superStatusBarViewFactoryProvider));
+        this.oLEDScreenHelperProvider = provider10;
+        this.miuiVendorServicesProvider = DoubleCheck.provider(MiuiVendorServices_Factory.create(this.provideContextProvider, this.miuiWallpaperZoomOutServiceProvider, this.miuiHeadsUpPolicyProvider, this.miuiGxzwPolicyProvider, this.notificationAlertControllerProvider, this.notificationDynamicFpsControllerProvider, this.notificationCountLimitPolicyProvider, this.miuiNotificationShadePolicyProvider, this.miuiRecentProxyProvider, this.orientationPolicyProvider, this.notificationPanelNavigationBarCoordinatorProvider, this.headsetPolicyProvider, this.miuiFullScreenGestureProxyProvider, provider10));
         MapProviderFactory.Builder builder2 = MapProviderFactory.builder(23);
         builder2.put(AuthController.class, this.authControllerProvider);
         builder2.put(Divider.class, this.provideDividerProvider);
@@ -2420,10 +2424,10 @@ public final class DaggerSystemUIRootComponent implements SystemUIRootComponent 
         this.callStateControllerImplProvider = DoubleCheck.provider(CallStateControllerImpl_Factory.create());
         this.regionControllerProvider = DoubleCheck.provider(RegionController_Factory.create(this.provideContextProvider));
         this.customCarrierObserverProvider = DoubleCheck.provider(CustomCarrierObserver_Factory.create(this.provideContextProvider, this.provideMainHandlerProvider, this.provideBgHandlerProvider));
-        this.toggleManagerControllerProvider = DoubleCheck.provider(ToggleManagerController_Factory.create(this.provideContextProvider, this.providesBroadcastDispatcherProvider, this.provideBgHandlerProvider));
     }
 
     private void initialize6(Builder builder) {
+        this.toggleManagerControllerProvider = DoubleCheck.provider(ToggleManagerController_Factory.create(this.provideContextProvider, this.providesBroadcastDispatcherProvider, this.provideBgHandlerProvider));
         this.demoModeControllerProvider = DoubleCheck.provider(DemoModeController_Factory.create(this.providesBroadcastDispatcherProvider));
         this.slaveWifiSignalControllerProvider = DoubleCheck.provider(SlaveWifiSignalController_Factory.create(this.provideContextProvider, this.provideBgHandlerProvider, this.statusBarIconControllerImplProvider, this.provideMainHandlerProvider, this.providesBroadcastDispatcherProvider));
         this.miuiAlarmControllerImplProvider = DoubleCheck.provider(MiuiAlarmControllerImpl_Factory.create(this.provideContextProvider));
@@ -2891,7 +2895,7 @@ public final class DaggerSystemUIRootComponent implements SystemUIRootComponent 
             }
 
             public QSContainerImpl createQSContainerImpl() {
-                return new QSContainerImpl(SystemUIFactory_ContextHolder_ProvideContextFactory.proxyProvideContext(DaggerSystemUIRootComponent.this.contextHolder), InjectionInflationController_ViewAttributeProvider_ProvideAttributeSetFactory.proxyProvideAttributeSet(this.viewAttributeProvider), (BroadcastDispatcher) DaggerSystemUIRootComponent.this.providesBroadcastDispatcherProvider.get(), (InjectionInflationController) DaggerSystemUIRootComponent.this.injectionInflationControllerProvider.get());
+                return new QSContainerImpl(SystemUIFactory_ContextHolder_ProvideContextFactory.proxyProvideContext(DaggerSystemUIRootComponent.this.contextHolder), InjectionInflationController_ViewAttributeProvider_ProvideAttributeSetFactory.proxyProvideAttributeSet(this.viewAttributeProvider), (BroadcastDispatcher) DaggerSystemUIRootComponent.this.providesBroadcastDispatcherProvider.get(), (InjectionInflationController) DaggerSystemUIRootComponent.this.injectionInflationControllerProvider.get(), (TunerService) DaggerSystemUIRootComponent.this.tunerServiceImplProvider.get());
             }
 
             public QSFooterDataUsage createQSFooterDataUsage() {
