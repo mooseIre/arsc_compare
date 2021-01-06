@@ -17,7 +17,6 @@ import com.android.systemui.C0012R$dimen;
 import com.android.systemui.C0015R$id;
 import com.android.systemui.C0017R$layout;
 import com.android.systemui.C0022R$style;
-import com.android.systemui.Dependency;
 import com.android.systemui.Interpolators;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.qs.customize.MiuiQSCustomizer;
@@ -76,15 +75,17 @@ public class QSContainerImpl extends FrameLayout implements TunerService.Tunable
     private int mSideMargins;
     private final Point mSizePoint = new Point();
     private View mStatusBarBackground;
+    private final TunerService mTunerService;
 
     public boolean performClick() {
         return true;
     }
 
-    public QSContainerImpl(Context context, AttributeSet attributeSet, BroadcastDispatcher broadcastDispatcher, InjectionInflationController injectionInflationController) {
+    public QSContainerImpl(Context context, AttributeSet attributeSet, BroadcastDispatcher broadcastDispatcher, InjectionInflationController injectionInflationController, TunerService tunerService) {
         super(context, attributeSet);
         this.mBroadcastDispatcher = broadcastDispatcher;
         this.mInjectionInflater = injectionInflationController;
+        this.mTunerService = tunerService;
     }
 
     /* access modifiers changed from: protected */
@@ -384,7 +385,7 @@ public class QSContainerImpl extends FrameLayout implements TunerService.Tunable
     /* access modifiers changed from: protected */
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
-        ((TunerService) Dependency.get(TunerService.class)).addTunable(this, "qs_show_brightness");
+        this.mTunerService.addTunable(this, "qs_show_brightness");
         BrightnessMirrorController brightnessMirrorController = this.mBrightnessMirrorController;
         if (brightnessMirrorController != null) {
             brightnessMirrorController.addCallback((BrightnessMirrorController.BrightnessMirrorListener) this);
@@ -394,6 +395,7 @@ public class QSContainerImpl extends FrameLayout implements TunerService.Tunable
     /* access modifiers changed from: protected */
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
+        this.mTunerService.removeTunable(this);
         BrightnessMirrorController brightnessMirrorController = this.mBrightnessMirrorController;
         if (brightnessMirrorController != null) {
             brightnessMirrorController.removeCallback((BrightnessMirrorController.BrightnessMirrorListener) this);

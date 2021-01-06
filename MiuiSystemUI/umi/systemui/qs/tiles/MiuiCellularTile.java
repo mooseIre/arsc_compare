@@ -78,7 +78,12 @@ public class MiuiCellularTile extends QSTileImpl<QSTile.BooleanState> {
     }
 
     public Intent getLongClickIntent() {
-        return longClickDataIntent();
+        if (!((QSTile.BooleanState) this.mState).disabledByPolicy) {
+            return longClickDataIntent();
+        }
+        Intent intent = new Intent("android.settings.SETTINGS");
+        intent.setFlags(335544320);
+        return intent;
     }
 
     public void click() {
@@ -133,6 +138,7 @@ public class MiuiCellularTile extends QSTileImpl<QSTile.BooleanState> {
         if (callbackInfo == null) {
             callbackInfo = this.mSignalCallback.mInfo;
         }
+        checkIfRestrictionEnforcedByAdminOnly(booleanState, "no_config_mobile_networks");
         Resources resources = this.mContext.getResources();
         booleanState.label = resources.getString(C0021R$string.mobile_data);
         boolean z = false;

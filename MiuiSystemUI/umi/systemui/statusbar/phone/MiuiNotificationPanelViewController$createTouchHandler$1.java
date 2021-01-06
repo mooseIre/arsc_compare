@@ -70,10 +70,12 @@ public final class MiuiNotificationPanelViewController$createTouchHandler$1 exte
         if (handleMiniWindowTracking(motionEvent)) {
             return true;
         }
-        if (this.this$0.isOnKeyguard() || ((!this.isFullyCollapsedOnDown && !this.isFullyExpandedOnDown) || !handlePanelTouch(motionEvent))) {
-            return z;
+        if (this.this$0.isOnKeyguard()) {
+            resetPanelTouchState();
+        } else if ((this.isFullyCollapsedOnDown || this.isFullyExpandedOnDown) && handlePanelTouch(motionEvent)) {
+            return true;
         }
-        return true;
+        return z;
     }
 
     private final boolean handleMiniWindowTracking(MotionEvent motionEvent) {
@@ -328,5 +330,13 @@ public final class MiuiNotificationPanelViewController$createTouchHandler$1 exte
             this.this$0.mPanelIntercepting = false;
         }
         return this.this$0.mPanelIntercepting;
+    }
+
+    public final void resetPanelTouchState() {
+        this.this$0.mPanelOpening = false;
+        this.this$0.setMPanelStretching(false);
+        this.this$0.mPanelCollapsing = false;
+        this.this$0.mPanelIntercepting = false;
+        this.this$0.setMStretchLength(0.0f);
     }
 }

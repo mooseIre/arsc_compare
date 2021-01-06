@@ -766,6 +766,7 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
         super.onExpandingFinished();
         this.mExpandingFromHeadsUp = false;
         setMStretchingFromHeadsUp(false);
+        setMPanelAppeared(this.mExpandedHeight > 0.0f);
         requestNCSwitching(false);
     }
 

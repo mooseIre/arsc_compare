@@ -39,7 +39,7 @@ public class MiuiNotificationViewWrapper extends NotificationViewWrapper {
     }
 
     public void setVisible(boolean z) {
-        if (z && this.mView.getAlpha() == 0.0f) {
+        if (z && this.mView.getAlpha() != 1.0f) {
             this.mView.setAlpha(1.0f);
         }
         super.setVisible(z);

@@ -2383,13 +2383,13 @@ public class ExpandableNotificationRow extends ActivatableNotificationView imple
         if (!z && (notificationGuts = this.mGuts) != null && notificationGuts.isExposed()) {
             return this.mGuts.getIntrinsicHeight();
         }
-        if (!z && canShowHeadsUp() && this.mIsHeadsUp && this.mHeadsUpManager.isTrackingHeadsUp()) {
+        if (!z && canShowHeadsUp() && isHeadsUpState() && this.mHeadsUpManager.isTrackingHeadsUp()) {
             return getPinnedHeadsUpHeight(false);
         }
         if (this.mIsSummaryWithChildren && !isGroupExpanded() && !shouldShowPublic()) {
             return this.mChildrenContainer.getMinHeight();
         }
-        if (z || !canShowHeadsUp() || !this.mIsHeadsUp) {
+        if (z || !canShowHeadsUp() || !isHeadsUpState()) {
             return getShowingLayout().getMinHeight();
         }
         return getHeadsUpHeight();

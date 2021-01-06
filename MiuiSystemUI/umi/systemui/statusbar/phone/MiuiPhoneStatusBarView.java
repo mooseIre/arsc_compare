@@ -6,6 +6,7 @@ import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.util.Pair;
 import android.view.DisplayCutout;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -13,6 +14,7 @@ import android.widget.LinearLayout;
 import com.android.systemui.C0015R$id;
 import com.android.systemui.Dependency;
 import com.android.systemui.ScreenDecorations;
+import com.android.systemui.controlcenter.phone.ControlPanelWindowManager;
 import com.android.systemui.plugins.DarkIconDispatcher;
 import com.android.systemui.statusbar.policy.MiuiClock;
 import com.android.systemui.statusbar.views.NetworkSpeedSplitter;
@@ -156,5 +158,12 @@ public class MiuiPhoneStatusBarView extends PhoneStatusBarView {
     public void dispatchDraw(Canvas canvas) {
         super.dispatchDraw(canvas);
         this.mPhoneStatusBarTintController.onDraw();
+    }
+
+    public boolean dispatchTouchEvent(MotionEvent motionEvent) {
+        if (!((ControlPanelWindowManager) Dependency.get(ControlPanelWindowManager.class)).dispatchToControlPanel(motionEvent, (float) getWidth())) {
+            return super.dispatchTouchEvent(motionEvent);
+        }
+        return false;
     }
 }

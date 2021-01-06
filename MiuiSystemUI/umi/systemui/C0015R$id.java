@@ -11327,6 +11327,7 @@ public final class R {
         public static final int gxzw_use_password_to_unlock;
         public static final int hdcp_checking_dialog_title;
         public static final int hdcp_checking_title;
+        public static final int heads_up_snooze_toast;
         public static final int headset;
         public static final int heap_dump_tile_name;
         public static final int help_feedback_label;
@@ -12659,6 +12660,10 @@ public final class R {
         public static final int zen_mode_forever;
         public static final int zen_mode_settings_summary_off;
         public static final int zen_mode_settings_turn_on_dialog_title;
+        public static final int zen_mode_warnings_all_time_content;
+        public static final int zen_mode_warnings_keyguard_content;
+        public static final int zen_mode_warnings_quit_immediately;
+        public static final int zen_mode_warnings_title;
         public static final int zen_priority_customize_button;
         public static final int zen_priority_introduction;
         public static final int zen_silence_introduction;

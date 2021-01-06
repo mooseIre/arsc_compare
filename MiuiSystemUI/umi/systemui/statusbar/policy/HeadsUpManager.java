@@ -162,7 +162,7 @@ public abstract class HeadsUpManager extends AlertingNotificationManager {
         for (String headsUpEntry : this.mAlertEntries.keySet()) {
             HeadsUpEntry headsUpEntry2 = getHeadsUpEntry(headsUpEntry);
             String packageName = headsUpEntry2.mEntry.getSbn().getPackageName();
-            if (!HeadsUpManagerInjector.skipSnooze(headsUpEntry2.mEntry)) {
+            if (!HeadsUpManagerInjector.injectSnooze(this.mContext, headsUpEntry2.mEntry)) {
                 this.mSnoozedPackages.put(snoozeKey(packageName, this.mUser), Long.valueOf(this.mClock.currentTimeMillis() + ((long) this.mSnoozeLengthMs)));
             }
         }

@@ -258,6 +258,7 @@ public class MiuiQSCustomizer extends LinearLayout {
     private void save() {
         if (this.mTileQueryHelper.isFinished()) {
             this.mTileAdapter.saveSpecs(this.mHost);
+            this.mHost.getHostInjector().setMiuiQSTilesEdited();
         }
     }
 
