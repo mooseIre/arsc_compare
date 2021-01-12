@@ -66,6 +66,7 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
     final Map<String, MobileIconGroup> mNetworkToIconLookup = new HashMap();
     private final ContentObserver mObserver;
     private final android.telephony.TelephonyManager mPhone;
+    protected int mPhoneCount;
     @VisibleForTesting
     final PhoneStateListener mPhoneStateListener;
     /* access modifiers changed from: private */
@@ -153,6 +154,7 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
                 MobileSignalController.this.updateTelephony();
             }
         };
+        this.mPhoneCount = this.mPhone.getActiveModemCount();
     }
 
     public void setConfiguration(NetworkControllerImpl.Config config) {
@@ -388,6 +390,9 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
             return toDisplayIconKey(this.mTelephonyDisplayInfo.getOverrideNetworkType());
         }
         int networkType = this.mTelephonyDisplayInfo.getNetworkType();
+        if (networkType == 0) {
+            networkType = getDataNetworkType();
+        }
         if (networkType == 13 && (serviceState = this.mServiceState) != null && (serviceState.isUsingCarrierAggregation() || (FeatureParser.getBoolean("support_ca", false) && Build.IS_CT_CUSTOMIZATION_TEST))) {
             networkType = 19;
         }
@@ -965,7 +970,6 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
         }
         ((MobileState) this.mCurrentState).mobileDataEnabled = this.mPhone.isDataEnabled();
         ((MobileState) this.mCurrentState).roamingDataEnabled = this.mPhone.isDataRoamingEnabled();
-        int dataNetworkType = getDataNetworkType();
         int voiceNetworkType = getVoiceNetworkType();
         T t3 = this.mCurrentState;
         if (((MobileState) t3).fiveGConnected) {
@@ -976,7 +980,7 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
         }
         T t4 = this.mCurrentState;
         ((MobileState) t4).miuiVoiceType = voiceNetworkType;
-        if ((dataNetworkType == 0 && !((MobileState) t4).fiveGConnected) || (isCdma() && !isCallIdle())) {
+        if ((((MobileIconGroup) ((MobileState) t4).iconGroup).mMiuiDataType == 0 && !((MobileState) t4).fiveGConnected) || (isCdma() && !isCallIdle())) {
             T t5 = this.mCurrentState;
             ((MobileState) t5).showType = ((MobileState) t5).miuiVoiceType;
             ((MobileState) t5).showName = transformVoiceTypeToName(((MobileState) t5).showType);
@@ -1200,6 +1204,9 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
             return "";
         }
         long networkClass = (long) ((int) TelephonyManagerEx.getDefault().getNetworkClass(i));
+        if (networkClass == 524288) {
+            return getMobileTypeName(10);
+        }
         if (networkClass == 397312) {
             if (!Build.IS_CT_CUSTOMIZATION_TEST || !SUPPORT_CA || !isCdma()) {
                 return getMobileTypeName(6);
@@ -1238,11 +1245,15 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
         }
 
         public void onServiceStateChanged(ServiceState serviceState) {
-            String str = MobileSignalController.this.mTag;
-            Log.d(str, "onServiceStateChanged voiceState=" + serviceState);
-            ServiceState unused = MobileSignalController.this.mServiceState = serviceState;
-            MobileSignalController.this.update5GConnectState();
-            MobileSignalController.this.updateTelephony();
+            int i;
+            MobileSignalController mobileSignalController = MobileSignalController.this;
+            if (mobileSignalController.mPhoneCount != 2 || (i = mobileSignalController.mSlotId) < 0 || i >= 2 || MobileSignalController.getOtherSlotId(i) == -1 || !MobileSignalController.isCalling(MobileSignalController.getOtherSlotId(MobileSignalController.this.mSlotId)) || Utils.isInService(serviceState)) {
+                String str = MobileSignalController.this.mTag;
+                Log.d(str, "onServiceStateChanged voiceState=" + serviceState);
+                ServiceState unused = MobileSignalController.this.mServiceState = serviceState;
+                MobileSignalController.this.update5GConnectState();
+                MobileSignalController.this.updateTelephony();
+            }
         }
 
         public void onDataConnectionStateChanged(int i, int i2) {

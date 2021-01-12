@@ -17,9 +17,9 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.DateTimeView;
 import com.android.systemui.Dependency;
+import com.android.systemui.statusbar.NotificationLockscreenUserManager;
 import com.android.systemui.statusbar.notification.MiuiNotificationCompat;
 import com.android.systemui.statusbar.notification.NotificationEntryManager;
-import com.android.systemui.statusbar.notification.NotificationFilterInjector;
 import com.android.systemui.statusbar.notification.NotificationUtil;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import com.android.systemui.statusbar.phone.NotificationGroupManager;
@@ -39,13 +39,15 @@ public class KeyguardNotificationController {
     private NotificationEntryManager mEntryManager;
     private NotificationGroupManager mGroupManager;
     private KeyguardStateController mKeyguardStateController;
+    private NotificationLockscreenUserManager mLockscreenUserManager;
     private final ArrayList<String> mSortedKeys = new ArrayList<>();
 
-    public KeyguardNotificationController(Context context, NotificationEntryManager notificationEntryManager, NotificationGroupManager notificationGroupManager, KeyguardStateController keyguardStateController) {
+    public KeyguardNotificationController(Context context, NotificationEntryManager notificationEntryManager, NotificationGroupManager notificationGroupManager, KeyguardStateController keyguardStateController, NotificationLockscreenUserManager notificationLockscreenUserManager) {
         this.mContext = context;
         this.mEntryManager = notificationEntryManager;
         this.mGroupManager = notificationGroupManager;
         this.mKeyguardStateController = keyguardStateController;
+        this.mLockscreenUserManager = notificationLockscreenUserManager;
         initBgHandler();
     }
 
@@ -85,8 +87,8 @@ public class KeyguardNotificationController {
     }
 
     private boolean needUpdateNotificationProvider(NotificationEntry notificationEntry) {
-        if (this.mKeyguardStateController.isShowing() && notificationEntry.getSbn().canShowOnKeyguard() && !NotificationUtil.isMediaNotification(notificationEntry.getSbn()) && !NotificationUtil.isCustomViewNotification(notificationEntry.getSbn()) && !NotificationFilterInjector.shouldFilterOut(notificationEntry)) {
-            return true;
+        if (this.mKeyguardStateController.isShowing() && !NotificationUtil.isMediaNotification(notificationEntry.getSbn()) && !NotificationUtil.isCustomViewNotification(notificationEntry.getSbn())) {
+            return this.mLockscreenUserManager.shouldShowOnKeyguard(notificationEntry);
         }
         return false;
     }
@@ -311,7 +313,8 @@ public class KeyguardNotificationController {
 
     private String getTimeText(NotificationEntry notificationEntry) {
         DateTimeView dateTimeView = new DateTimeView(this.mContext);
-        if (notificationEntry.getSbn().getNotification().when != 0) {
+        long j = notificationEntry.getSbn().getNotification().when;
+        if (j != 0 && j < System.currentTimeMillis() + 31449600000L) {
             dateTimeView.setTime(notificationEntry.getSbn().getNotification().when);
         }
         return dateTimeView.getText().toString();

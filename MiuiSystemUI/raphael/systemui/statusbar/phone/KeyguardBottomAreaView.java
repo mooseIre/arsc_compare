@@ -28,7 +28,6 @@ import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
 import android.os.UserHandle;
-import android.telecom.TelecomManager;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -124,7 +123,6 @@ public class KeyguardBottomAreaView extends FrameLayout implements View.OnClickL
     private TextView mLeftAffordanceViewTips;
     private IntentButtonProvider.IntentButton mLeftButton;
     private AnimatorSet mLeftButtonLayoutAnimatorSet;
-    private String mLeftButtonStr;
     private ExtensionController.Extension<IntentButtonProvider.IntentButton> mLeftExtension;
     /* access modifiers changed from: private */
     public boolean mLeftIntentAvailable;
@@ -222,7 +220,6 @@ public class KeyguardBottomAreaView extends FrameLayout implements View.OnClickL
                         KeyguardBottomAreaView.this.launchCamera("lockscreen_affordance");
                         return true;
                     } else if (view == KeyguardBottomAreaView.this.mLeftAffordanceView) {
-                        KeyguardBottomAreaView.this.launchLeftAffordance();
                         if (((LockScreenMagazineController) Dependency.get(LockScreenMagazineController.class)).isSupportLockScreenMagazineLeft()) {
                             KeyguardBottomAreaView.this.launchMagazineLeftActivity();
                         }
@@ -812,14 +809,6 @@ public class KeyguardBottomAreaView extends FrameLayout implements View.OnClickL
         }
     }
 
-    public void launchLeftAffordance() {
-        if (this.mLeftIsVoiceAssist) {
-            launchVoiceAssist();
-        } else {
-            launchPhone();
-        }
-    }
-
     /* access modifiers changed from: package-private */
     @VisibleForTesting
     public void launchVoiceAssist() {
@@ -833,23 +822,6 @@ public class KeyguardBottomAreaView extends FrameLayout implements View.OnClickL
         } else {
             this.mStatusBar.executeRunnableDismissingKeyguard(r1, (Runnable) null, !TextUtils.isEmpty(this.mRightButtonStr) && ((TunerService) Dependency.get(TunerService.class)).getValue("sysui_keyguard_right_unlock", 1) != 0, false, true);
         }
-    }
-
-    private void launchPhone() {
-        final TelecomManager from = TelecomManager.from(this.mContext);
-        if (from.isInCall()) {
-            AsyncTask.execute(new Runnable(this) {
-                public void run() {
-                    from.showInCallScreen(false);
-                }
-            });
-            return;
-        }
-        boolean z = true;
-        if (TextUtils.isEmpty(this.mLeftButtonStr) || ((TunerService) Dependency.get(TunerService.class)).getValue("sysui_keyguard_left_unlock", 1) == 0) {
-            z = false;
-        }
-        this.mActivityStarter.startActivity(this.mLeftButton.getIntent(), z);
     }
 
     /* access modifiers changed from: protected */

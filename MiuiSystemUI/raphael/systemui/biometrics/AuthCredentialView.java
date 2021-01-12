@@ -55,6 +55,7 @@ public abstract class AuthCredentialView extends LinearLayout {
     private boolean mShouldAnimatePanel;
     private TextView mSubtitleView;
     private TextView mTitleView;
+    private TextView mTopTitleView;
     protected int mUserId;
     private final UserManager mUserManager = ((UserManager) this.mContext.getSystemService(UserManager.class));
 
@@ -169,8 +170,10 @@ public abstract class AuthCredentialView extends LinearLayout {
         if (this.mIconView != null) {
             if (Utils.isManagedProfile(this.mContext, this.mEffectiveUserId)) {
                 drawable = getResources().getDrawable(C0013R$drawable.auth_dialog_enterprise, this.mContext.getTheme());
+                setText(this.mTopTitleView, "CtsVerifier");
             } else {
                 drawable = getResources().getDrawable(C0013R$drawable.auth_dialog_lock, this.mContext.getTheme());
+                this.mTopTitleView.setVisibility(8);
             }
             this.mIconView.setImageDrawable(drawable);
         }
@@ -203,6 +206,7 @@ public abstract class AuthCredentialView extends LinearLayout {
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
+        this.mTopTitleView = (TextView) findViewById(C0015R$id.top_title);
         this.mTitleView = (TextView) findViewById(C0015R$id.title);
         this.mSubtitleView = (TextView) findViewById(C0015R$id.subtitle);
         this.mDescriptionView = (TextView) findViewById(C0015R$id.description);

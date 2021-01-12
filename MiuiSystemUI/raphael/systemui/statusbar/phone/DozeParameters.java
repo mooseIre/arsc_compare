@@ -12,13 +12,16 @@ import com.android.systemui.tuner.TunerService;
 
 public class DozeParameters implements TunerService.Tunable, com.android.systemui.plugins.statusbar.DozeParameters {
     public static final boolean FORCE_BLANKING = SystemProperties.getBoolean("debug.force_blanking", false);
-    public static final boolean FORCE_NO_BLANKING = SystemProperties.getBoolean("debug.force_no_blanking", false);
     private final AlwaysOnDisplayPolicy mAlwaysOnPolicy;
     private final AmbientDisplayConfiguration mAmbientDisplayConfiguration;
     private boolean mControlScreenOffAnimation;
     private boolean mDozeAlwaysOn;
     private final PowerManager mPowerManager;
     private final Resources mResources;
+
+    static {
+        SystemProperties.getBoolean("debug.force_no_blanking", false);
+    }
 
     protected DozeParameters(Resources resources, AmbientDisplayConfiguration ambientDisplayConfiguration, AlwaysOnDisplayPolicy alwaysOnDisplayPolicy, PowerManager powerManager, TunerService tunerService) {
         this.mResources = resources;
@@ -75,7 +78,7 @@ public class DozeParameters implements TunerService.Tunable, com.android.systemu
     }
 
     public boolean getDisplayNeedsBlanking() {
-        return FORCE_BLANKING || (!FORCE_NO_BLANKING && this.mResources.getBoolean(17891416));
+        return FORCE_BLANKING;
     }
 
     public boolean shouldControlScreenOff() {

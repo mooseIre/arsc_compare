@@ -58,8 +58,10 @@ public class NotificationStat {
 
     public void onExpansionChanged(String str, boolean z, boolean z2) {
         NotificationEntry notifEntry = getNotifEntry(str);
-        if ("com.miui.systemAdSolution".equals(notifEntry.getSbn().getOpPkg()) || "com.miui.msa.global".equals(notifEntry.getSbn().getOpPkg())) {
-            handleExpansionChangedEvent(notifEntry, z, z2);
+        if (notifEntry != null) {
+            if ("com.miui.systemAdSolution".equals(notifEntry.getSbn().getOpPkg()) || "com.miui.msa.global".equals(notifEntry.getSbn().getOpPkg())) {
+                handleExpansionChangedEvent(notifEntry, z, z2);
+            }
         }
     }
 

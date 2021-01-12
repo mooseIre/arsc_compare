@@ -54,7 +54,7 @@ public class LeakReporter {
             NotificationChannel notificationChannel = new NotificationChannel("leak", "Leak Alerts", 4);
             notificationChannel.enableVibration(true);
             notificationManager.createNotificationChannel(notificationChannel);
-            notificationManager.notify("LeakReporter", 0, new Notification.Builder(this.mContext, notificationChannel.getId()).setAutoCancel(true).setShowWhen(true).setContentTitle("Memory Leak Detected").setContentText(String.format("SystemUI has detected %d leaked objects. Tap to send", new Object[]{Integer.valueOf(i)})).setSmallIcon(17303646).setContentIntent(PendingIntent.getActivityAsUser(this.mContext, 0, getIntent(file2, file3), 134217728, (Bundle) null, UserHandle.CURRENT)).build());
+            notificationManager.notify("LeakReporter", 0, new Notification.Builder(this.mContext, notificationChannel.getId()).setAutoCancel(true).setShowWhen(true).setContentTitle("Memory Leak Detected").setContentText(String.format("SystemUI has detected %d leaked objects. Tap to send", new Object[]{Integer.valueOf(i)})).setSmallIcon(17303647).setContentIntent(PendingIntent.getActivityAsUser(this.mContext, 0, getIntent(file2, file3), 134217728, (Bundle) null, UserHandle.CURRENT)).build());
             return;
         } catch (IOException e) {
             Log.e("LeakReporter", "Couldn't dump heap for leak", e);

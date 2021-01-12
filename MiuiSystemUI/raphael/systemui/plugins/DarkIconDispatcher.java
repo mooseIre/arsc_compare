@@ -31,6 +31,9 @@ public interface DarkIconDispatcher {
 
     int getLightModeIconColorSingleTone();
 
+    void reapply() {
+    }
+
     void removeDarkReceiver(ImageView imageView);
 
     void removeDarkReceiver(DarkReceiver darkReceiver);

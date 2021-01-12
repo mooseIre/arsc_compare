@@ -49,7 +49,8 @@ public class DefaultUiController implements AssistManager.UiController {
         this.mLayoutParams.setTitle("Assist");
         InvocationLightsView invocationLightsView = (InvocationLightsView) LayoutInflater.from(context).inflate(C0017R$layout.invocation_lights, this.mRoot, false);
         this.mInvocationLightsView = invocationLightsView;
-        this.mRoot.addView(invocationLightsView);
+        invocationLightsView.setColors(-16776961, -65536, -256, -16711936);
+        this.mRoot.addView(this.mInvocationLightsView);
     }
 
     public void onInvocationProgress(int i, float f) {

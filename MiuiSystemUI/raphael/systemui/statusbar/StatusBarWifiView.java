@@ -11,6 +11,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0013R$drawable;
 import com.android.systemui.C0015R$id;
 import com.android.systemui.C0017R$layout;
 import com.android.systemui.DemoMode;
@@ -22,13 +23,10 @@ import com.android.systemui.statusbar.policy.DemoModeController;
 
 public class StatusBarWifiView extends FrameLayout implements DarkIconDispatcher.DarkReceiver, StatusIconDisplayable, DemoMode {
     private int mColor;
-    private int mDarkColor;
-    private float mDarkIntensity;
     private StatusBarIconView mDotView;
     private boolean mForceUpdate;
     private boolean mInDemoMode;
     private boolean mLight = true;
-    private int mLightColor;
     private Rect mRect = new Rect();
     private String mSlot;
     private StatusBarSignalPolicy.WifiIconState mState;
@@ -143,103 +141,123 @@ public class StatusBarWifiView extends FrameLayout implements DarkIconDispatcher
     }
 
     public void applyWifiState(StatusBarSignalPolicy.WifiIconState wifiIconState) {
-        boolean z = true;
         if (wifiIconState == null) {
-            if (getVisibility() == 8) {
-                z = false;
-            }
             setVisibility(8);
             this.mState = null;
         } else {
             StatusBarSignalPolicy.WifiIconState wifiIconState2 = this.mState;
             if (wifiIconState2 == null) {
-                this.mState = wifiIconState.copy();
-                updateState(wifiIconState, true);
-            } else {
-                z = !wifiIconState2.equals(wifiIconState) ? updateState(wifiIconState.copy(), false) : false;
+                StatusBarSignalPolicy.WifiIconState copy = wifiIconState.copy();
+                this.mState = copy;
+                updateState(copy);
+            } else if (!wifiIconState2.equals(wifiIconState)) {
+                StatusBarSignalPolicy.WifiIconState copy2 = wifiIconState.copy();
+                this.mState = copy2;
+                updateState(copy2);
             }
         }
-        if (z) {
-            requestLayout();
-        }
+        requestLayout();
     }
 
-    private boolean updateState(StatusBarSignalPolicy.WifiIconState wifiIconState, boolean z) {
-        boolean z2;
-        int i;
-        int i2;
+    private void updateState(StatusBarSignalPolicy.WifiIconState wifiIconState) {
         setContentDescription(wifiIconState.contentDescription);
-        if ((this.mState.resId != wifiIconState.resId || z) && (i2 = wifiIconState.resId) > 0) {
-            this.mWifiIcon.setImageDrawable(this.mContext.getDrawable(MiuiStatusBarIconViewHelper.transformResId(i2, this.mUseTint, this.mLight)));
-        }
-        if ((this.mState.activityResId != wifiIconState.activityResId || z) && (i = wifiIconState.activityResId) > 0) {
-            this.mWifiActivityView.setImageDrawable(this.mContext.getDrawable(MiuiStatusBarIconViewHelper.transformResId(i, this.mUseTint, this.mLight)));
-        }
-        int i3 = 8;
-        if (this.mState.activityVisible != wifiIconState.activityVisible || z) {
-            this.mWifiActivityView.setVisibility(wifiIconState.activityVisible ? 0 : 8);
-            z2 = true;
+        if (wifiIconState.wifiNoNetwork) {
+            this.mWifiIcon.setImageDrawable(this.mContext.getDrawable(MiuiStatusBarIconViewHelper.transformResId(C0013R$drawable.stat_sys_wifi_signal_null, this.mUseTint, this.mLight)));
         } else {
-            z2 = false;
-        }
-        if (wifiIconState.showWifiStandard != this.mState.showWifiStandard || z) {
-            z2 |= true;
-            FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) this.mWifiActivityView.getLayoutParams();
-            if (wifiIconState.showWifiStandard) {
-                this.mWifiStandardView.setText(String.valueOf(wifiIconState.wifiStandard));
-                this.mWifiStandardView.setVisibility(0);
-                layoutParams.gravity = 83;
-            } else {
-                this.mWifiStandardView.setVisibility(8);
-                layoutParams.gravity = 85;
+            int i = wifiIconState.resId;
+            if (i > 0) {
+                this.mWifiIcon.setImageDrawable(this.mContext.getDrawable(MiuiStatusBarIconViewHelper.transformResId(i, this.mUseTint, this.mLight)));
             }
-            this.mWifiActivityView.setLayoutParams(layoutParams);
         }
-        if (this.mState.visible != wifiIconState.visible || z) {
-            z2 |= true;
-            if (wifiIconState.visible) {
-                i3 = 0;
-            }
-            setVisibility(i3);
+        int i2 = wifiIconState.activityResId;
+        if (i2 > 0) {
+            this.mWifiActivityView.setImageDrawable(this.mContext.getDrawable(MiuiStatusBarIconViewHelper.transformResId(i2, this.mUseTint, this.mLight)));
         }
-        this.mState = wifiIconState;
-        onDarkChanged(this.mRect, this.mDarkIntensity, this.mTint, this.mLightColor, this.mDarkColor, this.mUseTint);
-        return z2;
+        FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) this.mWifiActivityView.getLayoutParams();
+        int i3 = 0;
+        if (wifiIconState.showWifiStandard) {
+            this.mWifiStandardView.setText(String.valueOf(wifiIconState.wifiStandard));
+            this.mWifiStandardView.setVisibility(0);
+            layoutParams.gravity = 83;
+        } else {
+            this.mWifiStandardView.setVisibility(8);
+            layoutParams.gravity = 85;
+        }
+        this.mWifiActivityView.setLayoutParams(layoutParams);
+        this.mWifiActivityView.setVisibility(wifiIconState.activityVisible ? 0 : 8);
+        if (!wifiIconState.visible) {
+            i3 = 8;
+        }
+        setVisibility(i3);
+        applyDarknessInternal();
     }
 
-    public void onDarkChanged(Rect rect, float f, int i, int i2, int i3, boolean z) {
-        boolean z2;
-        this.mRect.set(rect);
-        this.mDarkIntensity = f;
-        this.mTint = i;
-        this.mLightColor = i2;
-        this.mDarkColor = i3;
-        if (this.mUseTint != z) {
-            this.mUseTint = z;
-            if (!z) {
-                this.mWifiIcon.setImageTintList((ColorStateList) null);
-                this.mWifiActivityView.setImageTintList((ColorStateList) null);
-            }
-            z2 = true;
-        } else {
-            z2 = false;
-        }
-        if (!this.mUseTint) {
-            boolean z3 = DarkIconDispatcher.getDarkIntensity(rect, this, f) == 0.0f;
-            if (!z3) {
-                i2 = i3;
-            }
-            if (!(this.mLight == z3 && this.mColor == i2)) {
-                this.mLight = z3;
-                this.mColor = i2;
-                z2 = true;
-            }
-        }
-        if (z2) {
-            updateState(this.mState, true);
-        }
+    /* JADX WARNING: Removed duplicated region for block: B:21:0x0041  */
+    /* JADX WARNING: Removed duplicated region for block: B:22:0x0047  */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public void onDarkChanged(android.graphics.Rect r3, float r4, int r5, int r6, int r7, boolean r8) {
+        /*
+            r2 = this;
+            android.graphics.Rect r0 = r2.mRect
+            r0.set(r3)
+            r2.mTint = r5
+            boolean r5 = r2.mUseTint
+            r0 = 0
+            r1 = 1
+            if (r5 == r8) goto L_0x001e
+            r2.mUseTint = r8
+            if (r8 != 0) goto L_0x001c
+            android.widget.ImageView r5 = r2.mWifiIcon
+            r8 = 0
+            r5.setImageTintList(r8)
+            android.widget.ImageView r5 = r2.mWifiActivityView
+            r5.setImageTintList(r8)
+        L_0x001c:
+            r5 = r1
+            goto L_0x001f
+        L_0x001e:
+            r5 = r0
+        L_0x001f:
+            boolean r8 = r2.mUseTint
+            if (r8 != 0) goto L_0x003e
+            float r3 = com.android.systemui.plugins.DarkIconDispatcher.getDarkIntensity(r3, r2, r4)
+            r4 = 0
+            int r3 = (r3 > r4 ? 1 : (r3 == r4 ? 0 : -1))
+            if (r3 != 0) goto L_0x002d
+            r0 = r1
+        L_0x002d:
+            if (r0 == 0) goto L_0x0030
+            goto L_0x0031
+        L_0x0030:
+            r6 = r7
+        L_0x0031:
+            boolean r3 = r2.mLight
+            if (r3 != r0) goto L_0x0039
+            int r3 = r2.mColor
+            if (r3 == r6) goto L_0x003e
+        L_0x0039:
+            r2.mLight = r0
+            r2.mColor = r6
+            goto L_0x003f
+        L_0x003e:
+            r1 = r5
+        L_0x003f:
+            if (r1 == 0) goto L_0x0047
+            com.android.systemui.statusbar.phone.StatusBarSignalPolicy$WifiIconState r3 = r2.mState
+            r2.updateState(r3)
+            goto L_0x004a
+        L_0x0047:
+            r2.applyDarknessInternal()
+        L_0x004a:
+            return
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.StatusBarWifiView.onDarkChanged(android.graphics.Rect, float, int, int, int, boolean):void");
+    }
+
+    /* access modifiers changed from: protected */
+    public void applyDarknessInternal() {
         if (this.mUseTint) {
-            int tint = DarkIconDispatcher.getTint(rect, this, i);
+            int tint = DarkIconDispatcher.getTint(this.mRect, this, this.mTint);
             ColorStateList valueOf = ColorStateList.valueOf(tint);
             this.mWifiIcon.setImageTintList(valueOf);
             this.mWifiActivityView.setImageTintList(valueOf);

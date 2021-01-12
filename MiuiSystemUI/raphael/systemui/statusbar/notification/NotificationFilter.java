@@ -13,6 +13,7 @@ import com.android.systemui.plugins.statusbar.StatusBarStateController;
 import com.android.systemui.statusbar.NotificationLockscreenUserManager;
 import com.android.systemui.statusbar.notification.NotificationEntryManager;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
+import com.android.systemui.statusbar.notification.policy.NotificationFilterController;
 import com.android.systemui.statusbar.phone.NotificationGroupManager;
 
 public class NotificationFilter {
@@ -71,7 +72,7 @@ public class NotificationFilter {
             return true;
         }
         if (!this.mIsMediaFlagEnabled.booleanValue() || !MediaDataManagerKt.isMediaNotification(sbn)) {
-            return NotificationFilterInjector.shouldFilterOut(notificationEntry);
+            return NotificationFilterController.shouldFilterOut(notificationEntry);
         }
         return true;
     }

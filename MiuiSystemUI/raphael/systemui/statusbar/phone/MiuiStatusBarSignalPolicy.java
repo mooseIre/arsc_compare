@@ -58,7 +58,7 @@ public class MiuiStatusBarSignalPolicy extends StatusBarSignalPolicy implements 
         copy.activityIn = z7;
         copy.activityOut = z8;
         copy.wifiStandard = i;
-        copy.showWifiStandard = i == 6;
+        copy.showWifiStandard = i == 6 && !z5;
         copy.slot = this.mSlotWifi;
         copy.airplaneSpacerVisible = this.mIsAirplaneMode;
         copy.contentDescription = iconState.contentDescription;

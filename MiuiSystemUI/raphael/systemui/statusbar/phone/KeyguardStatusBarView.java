@@ -216,9 +216,10 @@ public class KeyguardStatusBarView extends RelativeLayout implements BatteryCont
     private void updatePadding(Pair<Integer, Integer> pair) {
         DisplayCutout displayCutout = this.mDisplayCutout;
         int i = displayCutout == null ? 0 : displayCutout.getWaterfallInsets().top;
-        Pair<Integer, Integer> paddingNeededForCutoutAndRoundedCorner = StatusBarWindowView.paddingNeededForCutoutAndRoundedCorner(this.mDisplayCutout, pair, this.mRoundedCornerPadding);
-        this.mPadding = paddingNeededForCutoutAndRoundedCorner;
-        setPadding(((Integer) paddingNeededForCutoutAndRoundedCorner.first).intValue(), i, ((Integer) this.mPadding.second).intValue(), 0);
+        this.mPadding = StatusBarWindowView.paddingNeededForCutoutAndRoundedCorner(this.mDisplayCutout, pair, this.mRoundedCornerPadding);
+        Pair<Integer, Integer> pair2 = new Pair<>(Integer.valueOf(((Integer) this.mPadding.first).intValue() + getResources().getDimensionPixelOffset(C0012R$dimen.status_bar_padding_start)), Integer.valueOf(((Integer) this.mPadding.second).intValue() + getResources().getDimensionPixelOffset(C0012R$dimen.status_bar_padding_end)));
+        this.mPadding = pair2;
+        setPadding(((Integer) pair2.first).intValue(), i, ((Integer) this.mPadding.second).intValue(), 0);
     }
 
     private boolean updateLayoutParamsNoCutout() {

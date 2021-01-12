@@ -14,6 +14,7 @@ import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.logging.MetricsLogger;
 import com.android.internal.statusbar.IStatusBarService;
 import com.android.internal.util.Preconditions;
+import com.android.keyguard.IPhoneSignalController;
 import com.android.keyguard.KeyguardSecurityModel;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.MiuiCarrierTextController;
@@ -307,6 +308,7 @@ public class Dependency {
     Lazy<OverviewProxyService> mOverviewProxyService;
     Lazy<PackageManagerWrapper> mPackageManagerWrapper;
     Lazy<PanelExpansionObserver> mPanelExpansionObserver;
+    Lazy<IPhoneSignalController> mPhoneSignalController;
     Lazy<PluginDependencyProvider> mPluginDependencyProvider;
     Lazy<PluginManager> mPluginManager;
     Lazy<ProtoTracer> mProtoTracer;
@@ -1572,6 +1574,13 @@ public class Dependency {
         Lazy<SystemUIStat> lazy171 = this.mSystemUIStat;
         Objects.requireNonNull(lazy171);
         this.mProviders.put(SystemUIStat.class, new LazyDependencyCreator() {
+            public final Object createDependency() {
+                return Lazy.this.get();
+            }
+        });
+        Lazy<IPhoneSignalController> lazy172 = this.mPhoneSignalController;
+        Objects.requireNonNull(lazy172);
+        this.mProviders.put(IPhoneSignalController.class, new LazyDependencyCreator() {
             public final Object createDependency() {
                 return Lazy.this.get();
             }

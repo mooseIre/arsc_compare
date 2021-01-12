@@ -28,6 +28,7 @@ import com.android.systemui.statusbar.NotificationLockscreenUserManager;
 import com.android.systemui.statusbar.notification.NotificationEntryManager;
 import com.android.systemui.statusbar.notification.NotificationUtils;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
+import com.android.systemui.statusbar.notification.policy.NotificationFilterController;
 import com.android.systemui.statusbar.policy.DeviceProvisionedController;
 import com.android.systemui.statusbar.policy.KeyguardStateController;
 import java.io.FileDescriptor;
@@ -383,16 +384,19 @@ public class NotificationLockscreenUserManagerImpl implements Dumpable, Notifica
         if (getEntryManager() == null) {
             Log.wtf("LockscreenUserManager", "mEntryManager was null!", new Throwable());
             return false;
-        }
-        if (!NotificationUtils.useNewInterruptionModel(this.mContext) || !hideSilentNotificationsOnLockscreen()) {
-            z = !notificationEntry.getRanking().isAmbient();
-        } else {
-            z = notificationEntry.getBucket() == 1 || (notificationEntry.getBucket() != 6 && notificationEntry.getImportance() >= 3);
-        }
-        if (!this.mShowLockscreenNotifications || !z) {
+        } else if (!NotificationFilterController.shouldShowOnKeyguard(notificationEntry)) {
             return false;
+        } else {
+            if (!NotificationUtils.useNewInterruptionModel(this.mContext) || !hideSilentNotificationsOnLockscreen()) {
+                z = !notificationEntry.getRanking().isAmbient();
+            } else {
+                z = notificationEntry.getBucket() == 1 || (notificationEntry.getBucket() != 6 && notificationEntry.getImportance() >= 3);
+            }
+            if (!this.mShowLockscreenNotifications || !z) {
+                return false;
+            }
+            return true;
         }
-        return true;
     }
 
     private boolean hideSilentNotificationsOnLockscreen() {

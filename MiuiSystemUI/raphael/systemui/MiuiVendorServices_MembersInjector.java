@@ -1,5 +1,6 @@
 package com.android.systemui;
 
+import com.android.keyguard.charge.MiuiChargeManager;
 import com.android.keyguard.fod.policy.MiuiGxzwPolicy;
 import com.android.systemui.recents.MiuiFullScreenGestureProxy;
 import com.android.systemui.recents.MiuiRecentProxy;
@@ -7,6 +8,7 @@ import com.android.systemui.statusbar.notification.NotificationPanelNavigationBa
 import com.android.systemui.statusbar.notification.policy.NotificationAlertController;
 import com.android.systemui.statusbar.notification.policy.NotificationCountLimitPolicy;
 import com.android.systemui.statusbar.notification.policy.NotificationDynamicFpsController;
+import com.android.systemui.statusbar.notification.policy.NotificationFilterController;
 import com.android.systemui.statusbar.policy.MiuiHeadsUpPolicy;
 import com.android.systemui.statusbar.policy.MiuiNotificationShadePolicy;
 import com.android.systemui.vendor.HeadsetPolicy;
@@ -24,6 +26,10 @@ public final class MiuiVendorServices_MembersInjector {
 
     public static void injectMMiuiGxzwPolicy(MiuiVendorServices miuiVendorServices, MiuiGxzwPolicy miuiGxzwPolicy) {
         miuiVendorServices.mMiuiGxzwPolicy = miuiGxzwPolicy;
+    }
+
+    public static void injectMNotificationFilterController(MiuiVendorServices miuiVendorServices, NotificationFilterController notificationFilterController) {
+        miuiVendorServices.mNotificationFilterController = notificationFilterController;
     }
 
     public static void injectMNotifAlertController(MiuiVendorServices miuiVendorServices, NotificationAlertController notificationAlertController) {
@@ -50,6 +56,10 @@ public final class MiuiVendorServices_MembersInjector {
         miuiVendorServices.mOrientationPolicy = orientationPolicy;
     }
 
+    public static void injectMPerformanceTools(MiuiVendorServices miuiVendorServices, PerformanceTools performanceTools) {
+        miuiVendorServices.mPerformanceTools = performanceTools;
+    }
+
     public static void injectMNotificationNavigationCoordinator(MiuiVendorServices miuiVendorServices, NotificationPanelNavigationBarCoordinator notificationPanelNavigationBarCoordinator) {
         miuiVendorServices.mNotificationNavigationCoordinator = notificationPanelNavigationBarCoordinator;
     }
@@ -64,5 +74,9 @@ public final class MiuiVendorServices_MembersInjector {
 
     public static void injectMOledScreenHelper(MiuiVendorServices miuiVendorServices, OLEDScreenHelper oLEDScreenHelper) {
         miuiVendorServices.mOledScreenHelper = oLEDScreenHelper;
+    }
+
+    public static void injectMMiuiChargeManager(MiuiVendorServices miuiVendorServices, MiuiChargeManager miuiChargeManager) {
+        miuiVendorServices.mMiuiChargeManager = miuiChargeManager;
     }
 }

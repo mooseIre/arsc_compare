@@ -9415,6 +9415,7 @@ public final class R {
         public static final int top_roundess_animator_end_tag;
         public static final int top_roundess_animator_start_tag;
         public static final int top_roundess_animator_tag;
+        public static final int top_title;
         public static final int total_time;
         public static final int touch_outside;
         public static final int tracking_progress;
@@ -11278,6 +11279,7 @@ public final class R {
         public static final int fs_gesture_switch_recents_summary;
         public static final int fsg_demo_back;
         public static final int fsg_demo_go_on;
+        public static final int garbage_count;
         public static final int global_action_lock_message;
         public static final int global_action_screenshot;
         public static final int go_to_web;
@@ -11679,6 +11681,7 @@ public final class R {
         public static final int media_transfer_wired_device_name;
         public static final int media_transfer_wired_usb_device_name;
         public static final int megabyte_per_second;
+        public static final int memory_leak;
         public static final int menu_ime;
         public static final int mic_active;
         public static final int miui_keyguard_ble_unlock_succeed_msg;
@@ -12660,6 +12663,10 @@ public final class R {
         public static final int zen_mode_forever;
         public static final int zen_mode_settings_summary_off;
         public static final int zen_mode_settings_turn_on_dialog_title;
+        public static final int zen_mode_warnings_all_time_content;
+        public static final int zen_mode_warnings_keyguard_content;
+        public static final int zen_mode_warnings_quit_immediately;
+        public static final int zen_mode_warnings_title;
         public static final int zen_priority_customize_button;
         public static final int zen_priority_introduction;
         public static final int zen_silence_introduction;

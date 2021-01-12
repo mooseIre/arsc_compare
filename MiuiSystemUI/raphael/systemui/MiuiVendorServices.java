@@ -3,6 +3,7 @@ package com.android.systemui;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.provider.Settings;
+import com.android.keyguard.charge.MiuiChargeManager;
 import com.android.keyguard.fod.policy.MiuiGxzwPolicy;
 import com.android.systemui.recents.MiuiFullScreenGestureProxy;
 import com.android.systemui.recents.MiuiRecentProxy;
@@ -10,6 +11,7 @@ import com.android.systemui.statusbar.notification.NotificationPanelNavigationBa
 import com.android.systemui.statusbar.notification.policy.NotificationAlertController;
 import com.android.systemui.statusbar.notification.policy.NotificationCountLimitPolicy;
 import com.android.systemui.statusbar.notification.policy.NotificationDynamicFpsController;
+import com.android.systemui.statusbar.notification.policy.NotificationFilterController;
 import com.android.systemui.statusbar.policy.MiuiHeadsUpPolicy;
 import com.android.systemui.statusbar.policy.MiuiNotificationShadePolicy;
 import com.android.systemui.vendor.HeadsetPolicy;
@@ -18,6 +20,7 @@ import com.miui.systemui.display.OLEDScreenHelper;
 
 public class MiuiVendorServices extends SystemUI {
     HeadsetPolicy mHeadsetPolicy;
+    MiuiChargeManager mMiuiChargeManager;
     MiuiFullScreenGestureProxy mMiuiFullScreenGestureProxy;
     MiuiGxzwPolicy mMiuiGxzwPolicy;
     MiuiHeadsUpPolicy mMiuiHeadsUpPolicy;
@@ -26,9 +29,11 @@ public class MiuiVendorServices extends SystemUI {
     NotificationAlertController mNotifAlertController;
     NotificationCountLimitPolicy mNotifCountLimitPolicy;
     NotificationDynamicFpsController mNotifDynamicFpsController;
+    NotificationFilterController mNotificationFilterController;
     NotificationPanelNavigationBarCoordinator mNotificationNavigationCoordinator;
     OLEDScreenHelper mOledScreenHelper;
     OrientationPolicy mOrientationPolicy;
+    PerformanceTools mPerformanceTools;
     MiuiWallpaperZoomOutService mWallpaperZoomOutService;
 
     public MiuiVendorServices(Context context) {
@@ -40,16 +45,19 @@ public class MiuiVendorServices extends SystemUI {
         this.mWallpaperZoomOutService.start();
         this.mMiuiHeadsUpPolicy.start();
         this.mMiuiGxzwPolicy.start();
+        this.mNotificationFilterController.start();
         this.mNotifAlertController.start();
         this.mNotifDynamicFpsController.start();
         this.mNotifCountLimitPolicy.start();
         this.mMiuiNotificationShadePolicy.start();
         this.mMiuiRecentProxy.start();
         this.mOrientationPolicy.start();
+        this.mPerformanceTools.start();
         this.mNotificationNavigationCoordinator.start();
         this.mHeadsetPolicy.start();
         this.mMiuiFullScreenGestureProxy.start();
         this.mOledScreenHelper.start();
+        this.mMiuiChargeManager.start();
     }
 
     private void setSettingsDefault() {

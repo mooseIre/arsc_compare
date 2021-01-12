@@ -51,7 +51,6 @@ import com.android.systemui.statusbar.CommandQueue;
 import com.android.systemui.statusbar.FlingAnimationUtils;
 import com.android.systemui.statusbar.NotificationLockscreenUserManager;
 import com.android.systemui.statusbar.PulseExpansionHandler;
-import com.android.systemui.statusbar.SysuiStatusBarStateController;
 import com.android.systemui.statusbar.VibratorHelper;
 import com.android.systemui.statusbar.notification.ConversationNotificationManager;
 import com.android.systemui.statusbar.notification.DynamicPrivacyController;
@@ -122,6 +121,7 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
     private boolean mIsInteractive;
     private float mKeyguardBouncerFraction;
     private boolean mKeyguardBouncerShowing;
+    private final KeyguardClockInjector mKeyguardClockInjector;
     /* access modifiers changed from: private */
     public final KeyguardPanelViewInjector mKeyguardPanelViewInjector;
     private final KeyguardUpdateMonitorCallback mKeyguardUpdateMonitorCallback;
@@ -210,6 +210,9 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
         Object obj = Dependency.get(KeyguardPanelViewInjector.class);
         Intrinsics.checkExpressionValueIsNotNull(obj, "Dependency.get(KeyguardP…ViewInjector::class.java)");
         this.mKeyguardPanelViewInjector = (KeyguardPanelViewInjector) obj;
+        Object obj2 = Dependency.get(KeyguardClockInjector.class);
+        Intrinsics.checkExpressionValueIsNotNull(obj2, "Dependency.get(KeyguardClockInjector::class.java)");
+        this.mKeyguardClockInjector = (KeyguardClockInjector) obj2;
         this.mKeyguardUpdateMonitorCallback = new MiuiNotificationPanelViewController$mKeyguardUpdateMonitorCallback$1(this);
         this.mIsDefaultTheme = true;
         this.mKeyguardPanelViewInjector.init(this);
@@ -890,13 +893,7 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
                 this.mKeyguardStatusViewAnimating = true;
                 ((KeyguardClockContainer) ref$ObjectRef.element).setAlpha(0.0f);
                 ((KeyguardClockContainer) ref$ObjectRef.element).animate().alpha(1.0f).setStartDelay(0).setDuration(320).setInterpolator(Interpolators.ALPHA_IN).withEndAction(this.mAnimateKeyguardStatusViewVisibleEndRunnable);
-            } else if (i != 1 || !this.mIsInteractive) {
-                removeAwesomeLockScreen();
-                ((KeyguardClockContainer) ref$ObjectRef.element).animate().cancel();
-                this.mKeyguardStatusViewAnimating = false;
-                ((KeyguardClockContainer) ref$ObjectRef.element).setVisibility(8);
-                ((KeyguardClockContainer) ref$ObjectRef.element).setAlpha(1.0f);
-            } else {
+            } else if (i == 1) {
                 addAwesomeLockScreenIfNeed();
                 ((KeyguardClockContainer) ref$ObjectRef.element).animate().cancel();
                 this.mKeyguardStatusViewAnimating = false;
@@ -905,6 +902,12 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
                     i2 = 0;
                 }
                 keyguardClockContainer2.setVisibility(i2);
+                ((KeyguardClockContainer) ref$ObjectRef.element).setAlpha(1.0f);
+            } else {
+                removeAwesomeLockScreen();
+                ((KeyguardClockContainer) ref$ObjectRef.element).animate().cancel();
+                this.mKeyguardStatusViewAnimating = false;
+                ((KeyguardClockContainer) ref$ObjectRef.element).setVisibility(8);
                 ((KeyguardClockContainer) ref$ObjectRef.element).setAlpha(1.0f);
             }
         } else {
@@ -1199,14 +1202,14 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
 
     public void onStartedWakingUp() {
         this.mIsInteractive = true;
-        int i = 0;
-        setKeyguardStatusViewVisibility(this.mBarState, false, false);
         AwesomeLockScreen awesomeLockScreen = this.mAwesomeLockScreen;
         if (awesomeLockScreen != null) {
-            awesomeLockScreen.setIsInteractive(this.mIsInteractive);
+            awesomeLockScreen.setIsInteractive(true);
         }
         if (this.mBarState == 1) {
-            KeyguardClockContainer view = ((KeyguardClockInjector) Dependency.get(KeyguardClockInjector.class)).getView();
+            KeyguardClockContainer view = this.mKeyguardClockInjector.getView();
+            int i = 0;
+            this.mKeyguardClockInjector.setVisibility(0);
             if (this.mIsDefaultTheme) {
                 Context context = this.panelView.getContext();
                 Intrinsics.checkExpressionValueIsNotNull(context, "panelView.context");
@@ -1274,8 +1277,10 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
             super.setQsExpansion(f);
             int i = this.mBarState;
             if (i == 2 || i == 1) {
-                updateKeyguardElementAlpha();
                 updateAweQsExpandHeight();
+            }
+            if (this.mBarState == 1) {
+                updateKeyguardElementAlpha();
             }
         }
     }
@@ -1289,8 +1294,7 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
     /* access modifiers changed from: protected */
     public void updateExpandedHeight(float f) {
         super.updateExpandedHeight(f);
-        int i = this.mBarState;
-        if (i == 2 || i == 1) {
+        if (this.mBarState == 1) {
             updateKeyguardElementAlpha();
         }
     }
@@ -1304,7 +1308,9 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
         KeyguardBottomAreaView keyguardBottomAreaView2 = this.mKeyguardBottomArea;
         Intrinsics.checkExpressionValueIsNotNull(keyguardBottomAreaView2, "mKeyguardBottomArea");
         keyguardBottomAreaView2.setAlpha(min);
-        ((KeyguardClockInjector) Dependency.get(KeyguardClockInjector.class)).getView().updateClock(min, i);
+        if (!this.mKeyguardStatusViewAnimating) {
+            ((KeyguardClockInjector) Dependency.get(KeyguardClockInjector.class)).getView().updateClock(min, i);
+        }
         MiuiKeyguardFaceUnlockView miuiKeyguardFaceUnlockView = this.mMiuiKeyguardFaceUnlockView;
         Intrinsics.checkExpressionValueIsNotNull(miuiKeyguardFaceUnlockView, "mMiuiKeyguardFaceUnlockView");
         miuiKeyguardFaceUnlockView.setAlpha(min);
@@ -1322,6 +1328,9 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
         AwesomeLockScreen awesomeLockScreen = this.mAwesomeLockScreen;
         if (awesomeLockScreen != null) {
             awesomeLockScreen.setIsInteractive(false);
+        }
+        if (this.mBarState == 1) {
+            this.mKeyguardClockInjector.setVisibility(4);
         }
         if (((MiuiKeyguardWallpaperControllerImpl) Dependency.get(MiuiKeyguardWallpaperControllerImpl.class)).isAodUsingSuperWallpaper()) {
             this.mView.animate().cancel();
@@ -1597,45 +1606,125 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
         }
     }
 
+    /* JADX WARNING: Code restructure failed: missing block: B:20:0x0044, code lost:
+        if (getMPanelAppeared() == false) goto L_0x00c7;
+     */
+    /* JADX WARNING: Code restructure failed: missing block: B:36:0x00c3, code lost:
+        if (r0 == 2) goto L_0x00c5;
+     */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
     private final void updateBlur() {
-        float f;
-        if (this.mIsInteractive) {
-            SysuiStatusBarStateController sysuiStatusBarStateController = this.mStatusBarStateController;
-            Intrinsics.checkExpressionValueIsNotNull(sysuiStatusBarStateController, "mStatusBarStateController");
-            int state = sysuiStatusBarStateController.getState();
-            if (state == 0) {
-                if (this.mPanelOpening || this.mPanelCollapsing) {
-                    float coerceIn = RangesKt___RangesKt.coerceIn((this.mPanelOpening ? 0.0f : 2.0f) + (this.mStretchLength / 80.0f), 0.0f, 1.0f);
-                    if (this.mBlurRatio != coerceIn) {
-                        Folme.useValue("PanelBlur").setTo((Object) Float.valueOf(this.mBlurRatio)).to(Float.valueOf(coerceIn), MiuiNotificationPanelViewControllerKt.BLUR_ANIM_CONFIG);
-                        return;
-                    }
-                    return;
-                }
-                float f2 = getMPanelAppeared() ? 1.0f : 0.0f;
-                if (this.mNCSwitching) {
-                    f = (!isFullyCollapsed() || getMPanelAppeared()) ? 1.0f : 0.0f;
-                    if (this.mKeyguardBouncerShowing) {
-                        f = Math.max(this.mKeyguardBouncerFraction, f);
-                    }
-                } else if (this.mBlurRatio != f2) {
-                    Folme.useValue("PanelBlur").cancel();
-                    Folme.useValue("PanelBlur").setTo((Object) Float.valueOf(this.mBlurRatio)).to(Float.valueOf(f2), MiuiNotificationPanelViewControllerKt.BLUR_ANIM_CONFIG);
-                    return;
-                } else {
-                    return;
-                }
-            } else if (state == 1) {
-                if (this.mKeyguardBouncerShowing) {
-                    f = Math.max(this.mKeyguardBouncerFraction, 0.0f);
-                }
-            } else if (state == 2) {
-                f = 1.0f;
-            }
-            setMBlurRatio(RangesKt___RangesKt.coerceIn(f, 0.0f, 1.0f));
-        }
-        f = 0.0f;
-        setMBlurRatio(RangesKt___RangesKt.coerceIn(f, 0.0f, 1.0f));
+        /*
+            r8 = this;
+            boolean r0 = r8.mIsInteractive
+            r1 = 1065353216(0x3f800000, float:1.0)
+            r2 = 0
+            if (r0 == 0) goto L_0x00c7
+            com.android.systemui.statusbar.SysuiStatusBarStateController r0 = r8.mStatusBarStateController
+            java.lang.String r3 = "mStatusBarStateController"
+            kotlin.jvm.internal.Intrinsics.checkExpressionValueIsNotNull(r0, r3)
+            int r0 = r0.getState()
+            r3 = 1
+            if (r0 != 0) goto L_0x00b5
+            boolean r0 = r8.mKeyguardBouncerShowing
+            if (r0 == 0) goto L_0x0021
+            float r0 = r8.mKeyguardBouncerFraction
+            float r0 = java.lang.Math.max(r0, r2)
+            goto L_0x00c8
+        L_0x0021:
+            boolean r0 = r8.mPanelOpening
+            java.lang.String r4 = "PanelBlur"
+            r5 = 0
+            if (r0 != 0) goto L_0x007b
+            boolean r0 = r8.mPanelCollapsing
+            if (r0 == 0) goto L_0x002d
+            goto L_0x007b
+        L_0x002d:
+            boolean r0 = r8.getMPanelAppeared()
+            if (r0 == 0) goto L_0x0035
+            r0 = r1
+            goto L_0x0036
+        L_0x0035:
+            r0 = r2
+        L_0x0036:
+            boolean r6 = r8.mNCSwitching
+            if (r6 == 0) goto L_0x0048
+            boolean r0 = r8.isFullyCollapsed()
+            if (r0 == 0) goto L_0x00c5
+            boolean r0 = r8.getMPanelAppeared()
+            if (r0 != 0) goto L_0x00c5
+            goto L_0x00c7
+        L_0x0048:
+            float r1 = r8.mBlurRatio
+            int r1 = (r1 > r0 ? 1 : (r1 == r0 ? 0 : -1))
+            if (r1 == 0) goto L_0x007a
+            java.lang.Object[] r1 = new java.lang.Object[r3]
+            r1[r5] = r4
+            miuix.animation.IStateStyle r1 = miuix.animation.Folme.useValue(r1)
+            r1.cancel()
+            java.lang.Object[] r1 = new java.lang.Object[r3]
+            r1[r5] = r4
+            miuix.animation.IStateStyle r1 = miuix.animation.Folme.useValue(r1)
+            float r8 = r8.mBlurRatio
+            java.lang.Float r8 = java.lang.Float.valueOf(r8)
+            miuix.animation.IStateStyle r8 = r1.setTo((java.lang.Object) r8)
+            java.lang.Float r0 = java.lang.Float.valueOf(r0)
+            miuix.animation.base.AnimConfig[] r1 = new miuix.animation.base.AnimConfig[r3]
+            miuix.animation.base.AnimConfig r2 = com.android.systemui.statusbar.phone.MiuiNotificationPanelViewControllerKt.BLUR_ANIM_CONFIG
+            r1[r5] = r2
+            r8.to(r0, r1)
+        L_0x007a:
+            return
+        L_0x007b:
+            boolean r0 = r8.mPanelOpening
+            if (r0 == 0) goto L_0x0081
+            r0 = r2
+            goto L_0x0083
+        L_0x0081:
+            r0 = 1073741824(0x40000000, float:2.0)
+        L_0x0083:
+            float r6 = r8.mStretchLength
+            r7 = 1117782016(0x42a00000, float:80.0)
+            float r6 = r6 / r7
+            float r0 = r0 + r6
+            float r0 = kotlin.ranges.RangesKt___RangesKt.coerceIn((float) r0, (float) r2, (float) r1)
+            float r1 = r8.mBlurRatio
+            int r1 = (r1 > r0 ? 1 : (r1 == r0 ? 0 : -1))
+            if (r1 == 0) goto L_0x00b4
+            java.lang.Object[] r1 = new java.lang.Object[r3]
+            r1[r5] = r4
+            miuix.animation.IStateStyle r1 = miuix.animation.Folme.useValue(r1)
+            float r8 = r8.mBlurRatio
+            java.lang.Float r8 = java.lang.Float.valueOf(r8)
+            miuix.animation.IStateStyle r8 = r1.setTo((java.lang.Object) r8)
+            java.lang.Float r0 = java.lang.Float.valueOf(r0)
+            miuix.animation.base.AnimConfig[] r1 = new miuix.animation.base.AnimConfig[r3]
+            miuix.animation.base.AnimConfig r2 = com.android.systemui.statusbar.phone.MiuiNotificationPanelViewControllerKt.BLUR_ANIM_CONFIG
+            r1[r5] = r2
+            r8.to(r0, r1)
+        L_0x00b4:
+            return
+        L_0x00b5:
+            if (r0 != r3) goto L_0x00c2
+            boolean r0 = r8.mKeyguardBouncerShowing
+            if (r0 == 0) goto L_0x00c7
+            float r0 = r8.mKeyguardBouncerFraction
+            float r0 = java.lang.Math.max(r0, r2)
+            goto L_0x00c8
+        L_0x00c2:
+            r3 = 2
+            if (r0 != r3) goto L_0x00c7
+        L_0x00c5:
+            r0 = r1
+            goto L_0x00c8
+        L_0x00c7:
+            r0 = r2
+        L_0x00c8:
+            float r0 = kotlin.ranges.RangesKt___RangesKt.coerceIn((float) r0, (float) r2, (float) r1)
+            r8.setMBlurRatio(r0)
+            return
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.phone.MiuiNotificationPanelViewController.updateBlur():void");
     }
 
     /* access modifiers changed from: private */
