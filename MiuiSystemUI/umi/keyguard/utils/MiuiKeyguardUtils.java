@@ -52,10 +52,6 @@ public class MiuiKeyguardUtils {
     private static List<String> sRegionSupportMiHomeList = new ArrayList();
     private static IWindowManager sWindowManager;
 
-    public static boolean isWeakenAimationEnable(Context context) {
-        return false;
-    }
-
     public static boolean isNonUI() {
         return SystemProperties.getBoolean("sys.power.nonui", false);
     }

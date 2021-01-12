@@ -48,7 +48,6 @@ import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.widget.LockPatternUtils;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.charge.MiuiBatteryStatus;
-import com.android.keyguard.charge.MiuiChargeManager;
 import com.android.keyguard.faceunlock.FaceUnlockCallback;
 import com.android.keyguard.faceunlock.MiuiFaceUnlockManager;
 import com.android.keyguard.faceunlock.MiuiFaceUnlockUtils;
@@ -1543,7 +1542,6 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
             watchForDeviceProvisioning();
         }
         this.mBatteryStatus = new MiuiBatteryStatus(1, 0, 0, 0, 0, -1, 1, -1);
-        Dependency.get(MiuiChargeManager.class);
         int i = Settings.Secure.getInt(context.getContentResolver(), "sim_lock_enable", 0);
         this.mUpdateMonitorInjector = (KeyguardUpdateMonitorInjector) Dependency.get(KeyguardUpdateMonitorInjector.class);
         IntentFilter intentFilter = new IntentFilter();
@@ -1579,6 +1577,7 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
         intentFilter2.addAction("android.intent.action.USER_UNLOCKED");
         intentFilter2.addAction("android.intent.action.USER_STOPPED");
         intentFilter2.addAction("android.intent.action.USER_REMOVED");
+        intentFilter2.addAction("miui.intent.action.MIUI_REGION_CHANGED");
         this.mBroadcastDispatcher.registerReceiverWithHandler(this.mBroadcastAllReceiver, intentFilter2, this.mHandler, UserHandle.ALL);
         if (i == 0) {
             this.mSubscriptionManager.addOnSubscriptionsChangedListener(this.mSubscriptionListener);
@@ -2208,7 +2207,7 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
             return false;
         }
         ResolveInfo resolveActivity = this.mContext.getPackageManager().resolveActivity(new Intent("android.intent.action.MAIN").addCategory("android.intent.category.HOME"), 0);
-        if (resolveActivity != null || !this.mIsAutomotive) {
+        if (resolveActivity != null) {
             return FALLBACK_HOME_COMPONENT.equals(resolveActivity.getComponentInfo().getComponentName());
         }
         Log.w("KeyguardUpdateMonitor", "resolveNeedsSlowUnlockTransition: returning false since activity could not be resolved.");

@@ -546,7 +546,7 @@ public class KeyguardMoveHelper {
             AnalyticsHelper.getInstance(this.mContext).trackPageEnd("keyguard_view_main_lock_screen", "enter_right_view");
         } else if (this.mCurrentScreen == 1 && f4 == getScreenWidth()) {
             this.mCurrentScreen = 0;
-            MiuiGxzwManager.getInstance().setCanShowGxzw(true);
+            MiuiGxzwManager.getInstance().setCanShowGxzw(false);
             this.mKeyguardUpdateMonitor.cancelFaceAuth();
             AnalyticsHelper.getInstance(this.mContext).trackPageEnd("keyguard_view_main_lock_screen", "enter_left_view");
             AnalyticsHelper.getInstance(this.mContext).recordKeyguardAction("action_enter_left_view");

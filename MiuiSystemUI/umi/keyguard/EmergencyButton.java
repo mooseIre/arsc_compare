@@ -32,11 +32,13 @@ public class EmergencyButton extends Button {
     private final EmergencyAffordanceManager mEmergencyAffordanceManager;
     private EmergencyButtonCallback mEmergencyButtonCallback;
     private final boolean mEnableEmergencyCallWhileSimLocked;
-    KeyguardUpdateMonitorCallback mInfoCallback;
+    MiuiKeyguardUpdateMonitorCallback mInfoCallback;
     private final boolean mIsVoiceCapable;
     private LockPatternUtils mLockPatternUtils;
     private boolean mLongPressWasDragged;
     private PowerManager mPowerManager;
+    /* access modifiers changed from: private */
+    public boolean mSignalAvailable;
 
     public interface EmergencyButtonCallback {
         void onEmergencyButtonClickedWhenInCall();
@@ -48,7 +50,7 @@ public class EmergencyButton extends Button {
 
     public EmergencyButton(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-        this.mInfoCallback = new KeyguardUpdateMonitorCallback() {
+        this.mInfoCallback = new MiuiKeyguardUpdateMonitorCallback() {
             public void onSimStateChanged(int i, int i2, int i3) {
                 EmergencyButton.this.updateEmergencyCallButton();
             }
@@ -58,6 +60,11 @@ public class EmergencyButton extends Button {
             }
 
             public void onServiceStateChanged(int i, ServiceState serviceState) {
+                EmergencyButton.this.updateEmergencyCallButton();
+            }
+
+            public void onPhoneSignalChanged(boolean z) {
+                boolean unused = EmergencyButton.this.mSignalAvailable = z;
                 EmergencyButton.this.updateEmergencyCallButton();
             }
         };
@@ -185,11 +192,11 @@ public class EmergencyButton extends Button {
         getContext().startActivityAsUser(telecommManager.createLaunchEmergencyDialerIntent((String) null).setFlags(343932928).putExtra("com.android.phone.EmergencyDialer.extra.ENTRY_TYPE", 1), ActivityOptions.makeCustomAnimation(getContext(), 0, 0).toBundle(), new UserHandle(KeyguardUpdateMonitor.getCurrentUser()));
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:18:0x005a, code lost:
-        if (r3.isOOS() == false) goto L_0x0060;
+    /* JADX WARNING: Code restructure failed: missing block: B:25:0x0068, code lost:
+        if (r5.mSignalAvailable != false) goto L_0x006e;
      */
-    /* JADX WARNING: Removed duplicated region for block: B:22:0x0062  */
-    /* JADX WARNING: Removed duplicated region for block: B:27:0x0077  */
+    /* JADX WARNING: Removed duplicated region for block: B:29:0x0070  */
+    /* JADX WARNING: Removed duplicated region for block: B:34:0x0085  */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     public void updateEmergencyCallButton() {
         /*
@@ -197,70 +204,80 @@ public class EmergencyButton extends Button {
             boolean r0 = r5.mIsVoiceCapable
             r1 = 1
             r2 = 0
-            if (r0 == 0) goto L_0x005f
+            if (r0 == 0) goto L_0x006d
             android.content.Context r0 = r5.mContext
             boolean r0 = com.android.keyguard.utils.PhoneUtils.isInCall(r0)
-            if (r0 == 0) goto L_0x000f
-            goto L_0x0060
-        L_0x000f:
+            if (r0 == 0) goto L_0x0010
+            goto L_0x006e
+        L_0x0010:
             java.lang.Class<com.android.keyguard.KeyguardUpdateMonitor> r0 = com.android.keyguard.KeyguardUpdateMonitor.class
             java.lang.Object r0 = com.android.systemui.Dependency.get(r0)
             com.android.keyguard.KeyguardUpdateMonitor r0 = (com.android.keyguard.KeyguardUpdateMonitor) r0
             boolean r0 = r0.isSimPinVoiceSecure()
-            if (r0 == 0) goto L_0x0020
+            if (r0 == 0) goto L_0x0021
             boolean r0 = r5.mEnableEmergencyCallWhileSimLocked
-            goto L_0x003e
-        L_0x0020:
+            goto L_0x003f
+        L_0x0021:
             com.android.internal.widget.LockPatternUtils r0 = r5.mLockPatternUtils
             int r3 = com.android.keyguard.KeyguardUpdateMonitor.getCurrentUser()
             boolean r0 = r0.isSecure(r3)
-            if (r0 != 0) goto L_0x003d
+            if (r0 != 0) goto L_0x003e
             android.content.Context r0 = r5.mContext
             android.content.res.Resources r0 = r0.getResources()
             int r3 = com.android.systemui.C0010R$bool.config_showEmergencyButton
             boolean r0 = r0.getBoolean(r3)
-            if (r0 == 0) goto L_0x003b
-            goto L_0x003d
-        L_0x003b:
-            r0 = r2
+            if (r0 == 0) goto L_0x003c
             goto L_0x003e
-        L_0x003d:
-            r0 = r1
+        L_0x003c:
+            r0 = r2
+            goto L_0x003f
         L_0x003e:
+            r0 = r1
+        L_0x003f:
             android.content.Context r3 = r5.mContext
             android.content.res.Resources r3 = r3.getResources()
             int r4 = com.android.systemui.C0010R$bool.kg_hide_emgcy_btn_when_oos
             boolean r3 = r3.getBoolean(r4)
-            if (r3 == 0) goto L_0x005d
+            if (r3 == 0) goto L_0x0060
             java.lang.Class<com.android.keyguard.KeyguardUpdateMonitor> r3 = com.android.keyguard.KeyguardUpdateMonitor.class
             java.lang.Object r3 = com.android.systemui.Dependency.get(r3)
             com.android.keyguard.KeyguardUpdateMonitor r3 = (com.android.keyguard.KeyguardUpdateMonitor) r3
             if (r0 == 0) goto L_0x005f
             boolean r0 = r3.isOOS()
             if (r0 != 0) goto L_0x005f
-            goto L_0x0060
-        L_0x005d:
-            r1 = r0
+            r0 = r1
             goto L_0x0060
         L_0x005f:
-            r1 = r2
+            r0 = r2
         L_0x0060:
-            if (r1 == 0) goto L_0x0077
+            boolean r3 = com.android.keyguard.utils.MiuiKeyguardUtils.IS_OPERATOR_CUSTOMIZATION_TEST
+            if (r3 == 0) goto L_0x006b
+            if (r0 == 0) goto L_0x006d
+            boolean r0 = r5.mSignalAvailable
+            if (r0 == 0) goto L_0x006d
+            goto L_0x006e
+        L_0x006b:
+            r1 = r0
+            goto L_0x006e
+        L_0x006d:
+            r1 = r2
+        L_0x006e:
+            if (r1 == 0) goto L_0x0085
             r5.setVisibility(r2)
             android.content.Context r0 = r5.mContext
             boolean r0 = com.android.keyguard.utils.PhoneUtils.isInCall(r0)
-            if (r0 == 0) goto L_0x0071
+            if (r0 == 0) goto L_0x007f
             r0 = 17040538(0x104049a, float:2.4247872E-38)
-            goto L_0x0073
-        L_0x0071:
+            goto L_0x0081
+        L_0x007f:
             int r0 = com.android.systemui.C0021R$string.emergency_call_string
-        L_0x0073:
+        L_0x0081:
             r5.setText(r0)
-            goto L_0x007c
-        L_0x0077:
+            goto L_0x008a
+        L_0x0085:
             r0 = 8
             r5.setVisibility(r0)
-        L_0x007c:
+        L_0x008a:
             return
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.keyguard.EmergencyButton.updateEmergencyCallButton():void");

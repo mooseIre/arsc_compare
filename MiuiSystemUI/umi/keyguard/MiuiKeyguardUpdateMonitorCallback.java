@@ -22,6 +22,9 @@ public class MiuiKeyguardUpdateMonitorCallback extends KeyguardUpdateMonitorCall
     public void onMagazineResourceInited() {
     }
 
+    public void onPhoneSignalChanged(boolean z) {
+    }
+
     public void onPreBiometricAuthenticated(int i) {
     }
 

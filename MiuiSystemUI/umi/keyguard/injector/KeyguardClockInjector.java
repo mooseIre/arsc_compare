@@ -53,25 +53,24 @@ public final class KeyguardClockInjector extends MiuiKeyguardUpdateMonitorCallba
     }
 
     public void onKeyguardBouncerChanged(boolean z) {
+        if (!((KeyguardUpdateMonitorInjector) Dependency.get(KeyguardUpdateMonitorInjector.class)).isKeyguardShowing()) {
+            return;
+        }
         if (z) {
+            setVisibility(4);
+        } else {
+            setVisibility(0);
+        }
+    }
+
+    public final void setVisibility(int i) {
+        if (((KeyguardUpdateMonitorInjector) Dependency.get(KeyguardUpdateMonitorInjector.class)).isKeyguardShowing()) {
             KeyguardClockContainer keyguardClockContainer = this.mKeyguardClockView;
-            if (keyguardClockContainer != null) {
-                keyguardClockContainer.setVisibility(4);
-            } else {
+            if (keyguardClockContainer == null) {
                 Intrinsics.throwUninitializedPropertyAccessException("mKeyguardClockView");
                 throw null;
-            }
-        } else {
-            Object obj = Dependency.get(KeyguardUpdateMonitor.class);
-            Intrinsics.checkExpressionValueIsNotNull(obj, "Dependency.get(KeyguardUpdateMonitor::class.java)");
-            if (((KeyguardUpdateMonitor) obj).isKeyguardVisible()) {
-                KeyguardClockContainer keyguardClockContainer2 = this.mKeyguardClockView;
-                if (keyguardClockContainer2 != null) {
-                    keyguardClockContainer2.setVisibility(0);
-                } else {
-                    Intrinsics.throwUninitializedPropertyAccessException("mKeyguardClockView");
-                    throw null;
-                }
+            } else if (keyguardClockContainer != null) {
+                keyguardClockContainer.setVisibility(i);
             }
         }
     }

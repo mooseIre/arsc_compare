@@ -108,6 +108,6 @@ public class MiuiFastUnlockController {
     }
 
     private boolean supportFastUnlock() {
-        return (MiuiKeyguardUtils.isGxzwSensor() || MiuiKeyguardUtils.isBroadSideFingerprint()) && (MiuiKeyguardUtils.isWeakenAimationEnable(this.mContext) || (!((KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class)).isDeviceInteractive() && MiuiKeyguardUtils.isTopActivityLauncher(this.mContext)));
+        return MiuiKeyguardUtils.isGxzwSensor() || MiuiKeyguardUtils.isBroadSideFingerprint();
     }
 }

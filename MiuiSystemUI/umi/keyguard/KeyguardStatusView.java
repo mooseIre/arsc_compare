@@ -237,6 +237,7 @@ public class KeyguardStatusView extends GridLayout implements ConfigurationContr
         this.mKeyguardSlice.refresh();
     }
 
+    /* access modifiers changed from: private */
     public void refreshTime() {
         this.mClockView.refresh();
     }

@@ -11,6 +11,7 @@ import android.os.UserHandle;
 import android.util.Log;
 import android.util.Slog;
 import com.android.internal.policy.IKeyguardDrawnCallback;
+import com.android.keyguard.IPhoneSignalController;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.KeyguardUpdateMonitorCallback;
 import com.android.keyguard.MiuiBleUnlockHelper;
@@ -19,6 +20,7 @@ import com.android.keyguard.MiuiKeyguardUpdateMonitorCallback;
 import com.android.keyguard.faceunlock.MiuiFaceUnlockManager;
 import com.android.keyguard.fod.MiuiGxzwManager;
 import com.android.keyguard.utils.MiuiKeyguardUtils;
+import com.android.keyguard.wallpaper.IMiuiKeyguardWallpaperController;
 import com.android.keyguard.wallpaper.MiuiKeyguardWallpaperControllerImpl;
 import com.android.systemui.C0010R$bool;
 import com.android.systemui.Dependency;
@@ -48,6 +50,7 @@ public final class KeyguardUpdateMonitorInjector implements SuperSaveModeControl
     private boolean mSimLocked;
     private final SuperSaveModeController mSuperSaveModeController;
     private String mUnlockWay;
+    private String mWakeupReason;
 
     public KeyguardUpdateMonitorInjector(@NotNull Context context, @NotNull SuperSaveModeController superSaveModeController) {
         Intrinsics.checkParameterIsNotNull(context, "mContext");
@@ -57,6 +60,7 @@ public final class KeyguardUpdateMonitorInjector implements SuperSaveModeControl
         if (superSaveModeController != null) {
             superSaveModeController.addCallback((SuperSaveModeController.SuperSaveModeChangeListener) this);
             this.mBiometricManager = (BiometricManager) this.mContext.getSystemService(BiometricManager.class);
+            this.mWakeupReason = "none";
             this.mUnlockWay = "none";
             return;
         }
@@ -184,6 +188,11 @@ public final class KeyguardUpdateMonitorInjector implements SuperSaveModeControl
             miuiKeyguardUpdateMonitorCallback.onKeyguardOccludedChanged(z);
             miuiKeyguardUpdateMonitorCallback.onKeyguardShowingChanged(this.mKeyguardShowing);
             miuiKeyguardUpdateMonitorCallback.onLockWallpaperProviderChanged();
+            if (MiuiKeyguardUtils.IS_OPERATOR_CUSTOMIZATION_TEST) {
+                Object obj = Dependency.get(IPhoneSignalController.class);
+                Intrinsics.checkExpressionValueIsNotNull(obj, "Dependency.get(IPhoneSignalController::class.java)");
+                miuiKeyguardUpdateMonitorCallback.onPhoneSignalChanged(((IPhoneSignalController) obj).isSignalAvailable());
+            }
         }
     }
 
@@ -293,6 +302,7 @@ public final class KeyguardUpdateMonitorInjector implements SuperSaveModeControl
 
     public final void handleStartedWakingUpWithReason(@NotNull String str) {
         Intrinsics.checkParameterIsNotNull(str, "reason");
+        this.mWakeupReason = str;
         forEachCallback(new KeyguardUpdateMonitorInjector$handleStartedWakingUpWithReason$1(str));
     }
 
@@ -300,10 +310,14 @@ public final class KeyguardUpdateMonitorInjector implements SuperSaveModeControl
         forEachCallback(KeyguardUpdateMonitorInjector$handleFingerprintLockoutReset$1.INSTANCE);
     }
 
-    public final void sendKeyguardScreenOnBroadcast() {
-        Intent intent = new Intent("com.android.systemui.SCREEN_ON");
-        intent.putExtra("wakeupWay", this.mUnlockWay);
-        this.mContext.sendBroadcast(intent);
+    public final void sendScreenOnBroadcast2SuperWallpaper() {
+        if (((IMiuiKeyguardWallpaperController) Dependency.get(IMiuiKeyguardWallpaperController.class)).isSuperWallpaper()) {
+            Log.d("KeyguardViewMediator", "is_super_wallpaper==true wakeupReason:" + this.mWakeupReason + " UnlockWay:" + this.mUnlockWay);
+            Intent intent = new Intent("com.android.systemui.SCREEN_ON");
+            intent.putExtra("wakeupReason", this.mWakeupReason);
+            intent.putExtra("wakeupWay", this.mUnlockWay);
+            this.mContext.sendBroadcast(intent);
+        }
     }
 
     public final void setKeyguardUnlockWay(@NotNull String str, boolean z) {

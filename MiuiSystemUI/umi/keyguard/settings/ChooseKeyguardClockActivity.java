@@ -2,8 +2,6 @@ package com.android.keyguard.settings;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.WallpaperInfo;
-import android.app.WallpaperManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -15,6 +13,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.os.UserHandle;
 import android.provider.Settings;
 import android.util.Log;
@@ -23,6 +22,7 @@ import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -38,6 +38,7 @@ import com.android.internal.widget.LockPatternUtils;
 import com.android.keyguard.clock.MiuiClockView;
 import com.android.keyguard.settings.ChooseKeyguardClockActivity;
 import com.android.keyguard.utils.MiuiKeyguardUtils;
+import com.android.keyguard.wallpaper.IMiuiKeyguardWallpaperController;
 import com.android.keyguard.wallpaper.KeyguardWallpaperUtils;
 import com.android.keyguard.wallpaper.WallpaperAuthorityUtils;
 import com.android.settingslib.RestrictedLockUtils;
@@ -45,6 +46,7 @@ import com.android.settingslib.RestrictedLockUtilsInternal;
 import com.android.systemui.C0015R$id;
 import com.android.systemui.C0017R$layout;
 import com.android.systemui.C0021R$string;
+import com.android.systemui.Dependency;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import java.io.File;
 import java.util.Locale;
@@ -65,12 +67,10 @@ public class ChooseKeyguardClockActivity extends Activity {
     public boolean mCenterClockViewLight = true;
     private RecyclerView mClockList;
     protected MiuiClockView mClockView;
-    /* access modifiers changed from: private */
-    public InputMethodManager mInputMethodManager;
+    private InputMethodManager mInputMethodManager;
     private boolean mIsMiWallpaper = false;
     /* access modifiers changed from: private */
     public boolean mIsNightMode = false;
-    private boolean mIsSuperWallpaper = false;
     private boolean mIsThemeLiveWallpaper = false;
     /* access modifiers changed from: private */
     public boolean mLeftClockViewLight = true;
@@ -88,6 +88,10 @@ public class ChooseKeyguardClockActivity extends Activity {
     public AlertDialog mOwnerInfoDialog = null;
     private FrameLayout mOwnerInfoLayout;
     private LinearLayout mPanelView;
+    /* access modifiers changed from: private */
+    public View mRootView;
+    /* access modifiers changed from: private */
+    public int mRootViewInitHeight;
     /* access modifiers changed from: private */
     public int mSelectedClockStyle = 0;
     /* access modifiers changed from: private */
@@ -118,13 +122,6 @@ public class ChooseKeyguardClockActivity extends Activity {
         this.mOwnerAdmin = RestrictedLockUtilsInternal.getDeviceOwner(this);
         this.mSelectedClockStyle = Settings.System.getIntForUser(getContentResolver(), "selected_keyguard_clock_position", getClockStyleByConfiguration(MiuiKeyguardUtils.getDefaultKeyguardClockPosition(this)), this.mUserId);
         initView();
-        WallpaperInfo wallpaperInfo = ((WallpaperManager) getSystemService("wallpaper")).getWallpaperInfo();
-        if (wallpaperInfo != null && wallpaperInfo.getServiceInfo() != null) {
-            try {
-                this.mIsSuperWallpaper = wallpaperInfo.getServiceInfo().metaData.getBoolean("is_super_wallpaper");
-            } catch (Exception unused) {
-            }
-        }
     }
 
     public void initView() {
@@ -152,6 +149,7 @@ public class ChooseKeyguardClockActivity extends Activity {
         this.mClockView = miuiClockView;
         miuiClockView.setClockStyle(this.mSelectedClockStyle);
         this.mClockView.setOwnerInfo(getOwnerInfo());
+        this.mRootView = findViewById(C0015R$id.root_view);
         LinearLayout linearLayout = (LinearLayout) findViewById(C0015R$id.choose_clock_scroll_view);
         this.mPanelView = linearLayout;
         BottomSheetBehavior from = BottomSheetBehavior.from(linearLayout);
@@ -218,7 +216,7 @@ public class ChooseKeyguardClockActivity extends Activity {
     }
 
     private void sendSuperWallpaperBroadcast(boolean z) {
-        if (this.mIsSuperWallpaper) {
+        if (((IMiuiKeyguardWallpaperController) Dependency.get(IMiuiKeyguardWallpaperController.class)).isSuperWallpaper()) {
             Intent intent = new Intent("miui.miwallpaper.action.LOCK_SCREEN_PREVIEW");
             intent.putExtra("isPreview", z);
             sendBroadcast(intent);
@@ -229,6 +227,12 @@ public class ChooseKeyguardClockActivity extends Activity {
     public void onResume() {
         super.onResume();
         sendSuperWallpaperBroadcast(true);
+    }
+
+    public void onWindowFocusChanged(boolean z) {
+        if (this.mRootViewInitHeight == 0) {
+            this.mRootViewInitHeight = this.mRootView.getMeasuredHeight();
+        }
     }
 
     /* access modifiers changed from: private */
@@ -281,8 +285,7 @@ public class ChooseKeyguardClockActivity extends Activity {
         builder.setTitle(C0021R$string.lock_screen_signature_title);
         builder.setPositiveButton(C0021R$string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialogInterface, int i) {
-                ChooseKeyguardClockActivity.this.mBottomSheetBehavior.setState(3);
-                ChooseKeyguardClockActivity.this.mInputMethodManager.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+                ChooseKeyguardClockActivity.this.expandBottomSheet(editText.getWindowToken());
                 ChooseKeyguardClockActivity.this.mLockPatternUtils.setOwnerInfo(editText.getText().toString(), ChooseKeyguardClockActivity.this.mUserId);
                 ChooseKeyguardClockActivity.this.mLockPatternUtils.setOwnerInfoEnabled(findViewById.isChecked(), ChooseKeyguardClockActivity.this.mUserId);
                 ChooseKeyguardClockActivity.this.sendBroadcast(new Intent("owner_info_changed"));
@@ -292,8 +295,7 @@ public class ChooseKeyguardClockActivity extends Activity {
         });
         builder.setNegativeButton(C0021R$string.cancel, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialogInterface, int i) {
-                ChooseKeyguardClockActivity.this.mBottomSheetBehavior.setState(3);
-                ChooseKeyguardClockActivity.this.mInputMethodManager.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+                ChooseKeyguardClockActivity.this.expandBottomSheet(editText.getWindowToken());
                 dialogInterface.dismiss();
             }
         });
@@ -301,6 +303,23 @@ public class ChooseKeyguardClockActivity extends Activity {
         create.setView(inflate);
         create.show();
         return create;
+    }
+
+    /* access modifiers changed from: private */
+    public void expandBottomSheet(IBinder iBinder) {
+        if (this.mRootView.getMeasuredHeight() < this.mRootViewInitHeight) {
+            this.mInputMethodManager.hideSoftInputFromWindow(iBinder, 0);
+            this.mRootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                public void onGlobalLayout() {
+                    if (ChooseKeyguardClockActivity.this.mRootViewInitHeight == ChooseKeyguardClockActivity.this.mRootView.getMeasuredHeight()) {
+                        ChooseKeyguardClockActivity.this.mBottomSheetBehavior.setState(3);
+                        ChooseKeyguardClockActivity.this.mRootView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    }
+                }
+            });
+            return;
+        }
+        this.mBottomSheetBehavior.setState(3);
     }
 
     /* access modifiers changed from: private */
@@ -352,13 +371,13 @@ public class ChooseKeyguardClockActivity extends Activity {
             public void onPostExecute(Drawable drawable) {
                 int i;
                 ChooseKeyguardClockActivity.this.mWallPaper.setImageDrawable(drawable);
-                ImageView access$1400 = ChooseKeyguardClockActivity.this.mBackImage;
+                ImageView access$1600 = ChooseKeyguardClockActivity.this.mBackImage;
                 if (ChooseKeyguardClockActivity.this.mBackImageLight) {
                     i = R.drawable.action_bar_back_light;
                 } else {
                     i = R.drawable.action_bar_back_dark;
                 }
-                access$1400.setImageResource(i);
+                access$1600.setImageResource(i);
                 ChooseKeyguardClockActivity.this.setMainClockTextColor();
             }
         }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new Void[0]);

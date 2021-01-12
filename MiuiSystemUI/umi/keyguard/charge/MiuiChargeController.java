@@ -25,6 +25,7 @@ import com.android.systemui.keyguard.WakefulnessLifecycle;
 import com.android.systemui.statusbar.KeyguardIndicationController;
 import com.android.systemui.statusbar.phone.StatusBar;
 import com.miui.systemui.SettingsObserver;
+import com.miui.systemui.util.HapticFeedBackImpl;
 import com.miui.systemui.util.MiuiTextUtils;
 import miui.os.Build;
 import org.jetbrains.annotations.Nullable;
@@ -238,6 +239,7 @@ public class MiuiChargeController implements IChargeAnimationListener, Wakefulne
     }
 
     private void dealWithAnimationShow(int i) {
+        Class cls = HapticFeedBackImpl.class;
         if (shouldShowChargeAnim()) {
             Log.i("MiuiChargeController", "dealWithAnimationShow mWireState=" + this.mWireState + ",wireState=" + i);
             if (this.mClickShowChargeUI) {
@@ -260,8 +262,10 @@ public class MiuiChargeController implements IChargeAnimationListener, Wakefulne
                 if (isShowChargingInNonLockscreen) {
                     showChargeAnimation(i);
                 }
+                ((HapticFeedBackImpl) Dependency.get(cls)).getHapticFeedbackUtil().performHapticFeedback(0, false);
             } else if (!isKeyguardOccluded) {
                 showChargeAnimation(i);
+                ((HapticFeedBackImpl) Dependency.get(cls)).extHapticFeedback(74, true, 0);
             }
         }
     }
@@ -345,6 +349,9 @@ public class MiuiChargeController implements IChargeAnimationListener, Wakefulne
             this.mChargeAnimationView.setProgress(this.mBatteryStatus.level);
             switchChargeItemViewAnimation(this.mBatteryStatus, this.mClickShowChargeUI);
             this.mChargeAnimationView.addChargeView("prepareChargeAnimation", this.mShowChargingInNonLockscreen);
+            this.mChargeAnimationView.setFocusable(true);
+            this.mChargeAnimationView.setFocusableInTouchMode(true);
+            this.mChargeAnimationView.requestFocus();
         }
     }
 

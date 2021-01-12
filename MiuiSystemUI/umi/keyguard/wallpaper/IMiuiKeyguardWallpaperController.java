@@ -16,6 +16,8 @@ public interface IMiuiKeyguardWallpaperController {
 
     int getWallpaperBlurColor();
 
+    boolean isSuperWallpaper();
+
     boolean isWallpaperColorLight();
 
     void registerWallpaperChangeCallback(@NotNull IWallpaperChangeCallback iWallpaperChangeCallback);
