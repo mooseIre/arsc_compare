@@ -13,6 +13,7 @@ import android.util.SparseArray;
 import android.view.Display;
 import android.view.DisplayInfo;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import com.android.internal.annotations.VisibleForTesting;
@@ -23,7 +24,6 @@ import com.android.systemui.Dependency;
 import com.android.systemui.statusbar.NavigationBarController;
 import com.android.systemui.statusbar.phone.NavigationBarView;
 import com.android.systemui.util.InjectionInflationController;
-import com.android.systemui.util.wakelock.WakeLock;
 
 public class KeyguardDisplayManager {
     /* access modifiers changed from: private */
@@ -235,7 +235,7 @@ public class KeyguardDisplayManager {
     @VisibleForTesting
     static final class KeyguardPresentation extends Presentation {
         /* access modifiers changed from: private */
-        public KeyguardStatusView mClock;
+        public View mClock;
         private final LayoutInflater mInjectableLayoutInflater;
         /* access modifiers changed from: private */
         public int mMarginLeft;
@@ -247,7 +247,6 @@ public class KeyguardDisplayManager {
                 int access$1000 = KeyguardPresentation.this.mMarginTop + ((int) (Math.random() * ((double) (KeyguardPresentation.this.mUsableHeight - KeyguardPresentation.this.mClock.getHeight()))));
                 KeyguardPresentation.this.mClock.setTranslationX((float) access$700);
                 KeyguardPresentation.this.mClock.setTranslationY((float) access$1000);
-                KeyguardPresentation.this.mClock.refreshTime();
                 KeyguardPresentation.this.mClock.postDelayed(KeyguardPresentation.this.mMoveTextRunnable, 30000);
             }
         };
@@ -255,7 +254,6 @@ public class KeyguardDisplayManager {
         public int mUsableHeight;
         /* access modifiers changed from: private */
         public int mUsableWidth;
-        private WakeLock wakeLock;
 
         public void cancel() {
         }
@@ -268,8 +266,6 @@ public class KeyguardDisplayManager {
         }
 
         public void onDetachedFromWindow() {
-            this.wakeLock.release("screenlock");
-            this.wakeLock = null;
             this.mClock.removeCallbacks(this.mMoveTextRunnable);
         }
 
@@ -289,11 +285,9 @@ public class KeyguardDisplayManager {
             getWindow().getAttributes().setFitInsetsTypes(0);
             getWindow().setNavigationBarContrastEnforced(false);
             getWindow().setNavigationBarColor(0);
-            this.mClock = (KeyguardStatusView) findViewById(C0015R$id.clock);
-            WakeLock createPartial = WakeLock.createPartial(getContext(), "KeyguardDisplayManager");
-            this.wakeLock = createPartial;
-            createPartial.acquire("screenlock");
-            this.mClock.post(this.mMoveTextRunnable);
+            View findViewById = findViewById(C0015R$id.clock);
+            this.mClock = findViewById;
+            findViewById.post(this.mMoveTextRunnable);
         }
     }
 }

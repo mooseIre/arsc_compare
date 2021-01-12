@@ -16,9 +16,11 @@ import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.android.keyguard.IPhoneSignalController;
 import com.android.keyguard.KeyguardMoveHelper;
 import com.android.keyguard.KeyguardMoveLeftController;
 import com.android.keyguard.KeyguardUpdateMonitor;
+import com.android.keyguard.KeyguardUpdateMonitorCallback;
 import com.android.keyguard.KeyguardVerticalMoveHelper;
 import com.android.keyguard.MiuiKeyguardUpdateMonitorCallback;
 import com.android.keyguard.magazine.LockScreenMagazineController;
@@ -45,6 +47,7 @@ import com.android.systemui.statusbar.policy.UserSwitcherController;
 import com.miui.systemui.SettingsObserver;
 import com.miui.systemui.statusbar.phone.ForceBlackObserver;
 import com.miui.systemui.util.MiuiTextUtils;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -55,7 +58,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /* compiled from: KeyguardPanelViewInjector.kt */
-public final class KeyguardPanelViewInjector extends MiuiKeyguardUpdateMonitorCallback implements KeyguardMoveHelper.Callback, SettingsObserver.Callback, ForceBlackObserver.Callback, IMiuiKeyguardWallpaperController.IWallpaperChangeCallback {
+public final class KeyguardPanelViewInjector extends MiuiKeyguardUpdateMonitorCallback implements KeyguardMoveHelper.Callback, SettingsObserver.Callback, ForceBlackObserver.Callback, IMiuiKeyguardWallpaperController.IWallpaperChangeCallback, IPhoneSignalController.PhoneSignalChangeCallback {
     private KeyguardBottomAreaView mBottomAreaView;
     @NotNull
     private final Context mContext;
@@ -87,6 +90,7 @@ public final class KeyguardPanelViewInjector extends MiuiKeyguardUpdateMonitorCa
     private final List<View> mMobileKeyGuardViews = new ArrayList();
     private NotificationPanelView mPanelView;
     private MiuiNotificationPanelViewController mPanelViewController;
+    private IPhoneSignalController mPhoneSignalController;
     private PowerManager mPowerManager;
     private int mScreenHeight;
     private int mScreenWidth;
@@ -242,6 +246,9 @@ public final class KeyguardPanelViewInjector extends MiuiKeyguardUpdateMonitorCa
                     Object obj6 = Dependency.get(IMiuiKeyguardWallpaperController.class);
                     Intrinsics.checkExpressionValueIsNotNull(obj6, "Dependency.get(IMiuiKeyg…erController::class.java)");
                     this.mWallpaperController = (IMiuiKeyguardWallpaperController) obj6;
+                    if (MiuiKeyguardUtils.IS_OPERATOR_CUSTOMIZATION_TEST) {
+                        this.mPhoneSignalController = (IPhoneSignalController) Dependency.get(IPhoneSignalController.class);
+                    }
                     Object obj7 = Dependency.get(UserSwitcherController.class);
                     Intrinsics.checkExpressionValueIsNotNull(obj7, "Dependency.get(UserSwitcherController::class.java)");
                     this.mUserContextController = (UserSwitcherController) obj7;
@@ -352,6 +359,10 @@ public final class KeyguardPanelViewInjector extends MiuiKeyguardUpdateMonitorCa
                 IMiuiKeyguardWallpaperController iMiuiKeyguardWallpaperController = this.mWallpaperController;
                 if (iMiuiKeyguardWallpaperController != null) {
                     iMiuiKeyguardWallpaperController.registerWallpaperChangeCallback(this);
+                    IPhoneSignalController iPhoneSignalController = this.mPhoneSignalController;
+                    if (iPhoneSignalController != null) {
+                        iPhoneSignalController.registerPhoneSignalChangeCallback(this);
+                    }
                     KeyguardUpdateMonitor keyguardUpdateMonitor = this.mKeyguardUpdateMonitor;
                     if (keyguardUpdateMonitor != null) {
                         keyguardUpdateMonitor.registerCallback(this);
@@ -388,6 +399,10 @@ public final class KeyguardPanelViewInjector extends MiuiKeyguardUpdateMonitorCa
                 IMiuiKeyguardWallpaperController iMiuiKeyguardWallpaperController = this.mWallpaperController;
                 if (iMiuiKeyguardWallpaperController != null) {
                     iMiuiKeyguardWallpaperController.unregisterWallpaperChangeCallback(this);
+                    IPhoneSignalController iPhoneSignalController = this.mPhoneSignalController;
+                    if (iPhoneSignalController != null) {
+                        iPhoneSignalController.removePhoneSignalChangeCallback(this);
+                    }
                     KeyguardUpdateMonitor keyguardUpdateMonitor = this.mKeyguardUpdateMonitor;
                     if (keyguardUpdateMonitor != null) {
                         keyguardUpdateMonitor.removeCallback(this);
@@ -815,32 +830,65 @@ public final class KeyguardPanelViewInjector extends MiuiKeyguardUpdateMonitorCa
         }
     }
 
-    public void onKeyguardOccludedChanged(boolean z) {
-        ((KeyguardSensorInjector) Dependency.get(KeyguardSensorInjector.class)).disableFullScreenGesture();
-        if (!z) {
-            MiuiNotificationPanelViewController miuiNotificationPanelViewController = this.mPanelViewController;
-            if (miuiNotificationPanelViewController != null) {
-                if (!miuiNotificationPanelViewController.isOnKeyguard()) {
-                    MiuiNotificationPanelViewController miuiNotificationPanelViewController2 = this.mPanelViewController;
-                    if (miuiNotificationPanelViewController2 == null) {
-                        Intrinsics.throwUninitializedPropertyAccessException("mPanelViewController");
-                        throw null;
-                    } else if (!miuiNotificationPanelViewController2.isOnShade()) {
-                        return;
-                    }
-                }
-                MiuiNotificationPanelViewController miuiNotificationPanelViewController3 = this.mPanelViewController;
-                if (miuiNotificationPanelViewController3 != null) {
-                    miuiNotificationPanelViewController3.resetViews(z);
-                } else {
-                    Intrinsics.throwUninitializedPropertyAccessException("mPanelViewController");
-                    throw null;
-                }
-            } else {
-                Intrinsics.throwUninitializedPropertyAccessException("mPanelViewController");
-                throw null;
-            }
-        }
+    /* JADX WARNING: Code restructure failed: missing block: B:9:0x0022, code lost:
+        if (r2.isOnShade() != false) goto L_0x0029;
+     */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public void onKeyguardOccludedChanged(boolean r4) {
+        /*
+            r3 = this;
+            java.lang.Class<com.android.keyguard.injector.KeyguardSensorInjector> r0 = com.android.keyguard.injector.KeyguardSensorInjector.class
+            java.lang.Object r0 = com.android.systemui.Dependency.get(r0)
+            com.android.keyguard.injector.KeyguardSensorInjector r0 = (com.android.keyguard.injector.KeyguardSensorInjector) r0
+            r0.disableFullScreenGesture()
+            r0 = 0
+            java.lang.String r1 = "mPanelViewController"
+            if (r4 != 0) goto L_0x0039
+            com.android.systemui.statusbar.phone.MiuiNotificationPanelViewController r2 = r3.mPanelViewController
+            if (r2 == 0) goto L_0x0035
+            boolean r2 = r2.isOnKeyguard()
+            if (r2 != 0) goto L_0x0029
+            com.android.systemui.statusbar.phone.MiuiNotificationPanelViewController r2 = r3.mPanelViewController
+            if (r2 == 0) goto L_0x0025
+            boolean r2 = r2.isOnShade()
+            if (r2 == 0) goto L_0x0039
+            goto L_0x0029
+        L_0x0025:
+            kotlin.jvm.internal.Intrinsics.throwUninitializedPropertyAccessException(r1)
+            throw r0
+        L_0x0029:
+            com.android.systemui.statusbar.phone.MiuiNotificationPanelViewController r2 = r3.mPanelViewController
+            if (r2 == 0) goto L_0x0031
+            r2.resetViews(r4)
+            goto L_0x0039
+        L_0x0031:
+            kotlin.jvm.internal.Intrinsics.throwUninitializedPropertyAccessException(r1)
+            throw r0
+        L_0x0035:
+            kotlin.jvm.internal.Intrinsics.throwUninitializedPropertyAccessException(r1)
+            throw r0
+        L_0x0039:
+            java.lang.Class<com.android.keyguard.wallpaper.MiuiKeyguardWallpaperControllerImpl> r2 = com.android.keyguard.wallpaper.MiuiKeyguardWallpaperControllerImpl.class
+            java.lang.Object r2 = com.android.systemui.Dependency.get(r2)
+            com.android.keyguard.wallpaper.MiuiKeyguardWallpaperControllerImpl r2 = (com.android.keyguard.wallpaper.MiuiKeyguardWallpaperControllerImpl) r2
+            boolean r2 = r2.isAodUsingSuperWallpaper()
+            if (r2 == 0) goto L_0x005e
+            com.android.systemui.keyguard.WakefulnessLifecycle r2 = r3.wakefulnessLifecycle
+            int r2 = r2.getWakefulness()
+            if (r2 != 0) goto L_0x005e
+            if (r4 != 0) goto L_0x005e
+            com.android.systemui.statusbar.phone.MiuiNotificationPanelViewController r3 = r3.mPanelViewController
+            if (r3 == 0) goto L_0x005a
+            r4 = 0
+            r3.setAlpha(r4)
+            goto L_0x005e
+        L_0x005a:
+            kotlin.jvm.internal.Intrinsics.throwUninitializedPropertyAccessException(r1)
+            throw r0
+        L_0x005e:
+            return
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.keyguard.injector.KeyguardPanelViewInjector.onKeyguardOccludedChanged(boolean):void");
     }
 
     public void onKeyguardShowingChanged(boolean z) {
@@ -1225,5 +1273,23 @@ public final class KeyguardPanelViewInjector extends MiuiKeyguardUpdateMonitorCa
             this.mMobileKeyGuardViews.clear();
             initKeyguardViewCollection();
         }
+    }
+
+    public void onSignalChange(boolean z) {
+        KeyguardUpdateMonitor keyguardUpdateMonitor = this.mKeyguardUpdateMonitor;
+        if (keyguardUpdateMonitor != null) {
+            ArrayList<WeakReference<KeyguardUpdateMonitorCallback>> callbacks = keyguardUpdateMonitor.getCallbacks();
+            Intrinsics.checkExpressionValueIsNotNull(callbacks, "mCallbacks");
+            int size = callbacks.size();
+            for (int i = 0; i < size; i++) {
+                KeyguardUpdateMonitorCallback keyguardUpdateMonitorCallback = (KeyguardUpdateMonitorCallback) callbacks.get(i).get();
+                if (keyguardUpdateMonitorCallback != null && (keyguardUpdateMonitorCallback instanceof MiuiKeyguardUpdateMonitorCallback)) {
+                    ((MiuiKeyguardUpdateMonitorCallback) keyguardUpdateMonitorCallback).onPhoneSignalChanged(z);
+                }
+            }
+            return;
+        }
+        Intrinsics.throwUninitializedPropertyAccessException("mKeyguardUpdateMonitor");
+        throw null;
     }
 }

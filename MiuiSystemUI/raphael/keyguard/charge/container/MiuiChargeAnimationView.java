@@ -10,7 +10,6 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Point;
-import android.hardware.input.InputManager;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -372,7 +371,6 @@ public class MiuiChargeAnimationView extends FrameLayout {
 
     public boolean dispatchKeyEvent(KeyEvent keyEvent) {
         startDismiss("dismiss_for_key_event");
-        InputManager.getInstance().injectInputEvent(keyEvent, 0);
         return false;
     }
 }

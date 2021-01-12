@@ -35,6 +35,8 @@ public final class MiuiKeyguardWallpaperControllerImpl implements IMiuiKeyguardW
     @NotNull
     private final Context mContext;
     /* access modifiers changed from: private */
+    public boolean mIsSuperWallpaper;
+    /* access modifiers changed from: private */
     public boolean mIsWallpaperColorLight;
     private boolean mSupportsAmbientMode;
     /* access modifiers changed from: private */
@@ -96,6 +98,10 @@ public final class MiuiKeyguardWallpaperControllerImpl implements IMiuiKeyguardW
 
     public boolean isWallpaperSupportsAmbientMode() {
         return this.mSupportsAmbientMode;
+    }
+
+    public boolean isSuperWallpaper() {
+        return this.mIsSuperWallpaper;
     }
 
     public final boolean isAodUsingSuperWallpaper() {

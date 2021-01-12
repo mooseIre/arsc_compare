@@ -12,6 +12,7 @@ import android.util.Log;
 import android.util.Slog;
 import com.android.internal.policy.IKeyguardStateCallback;
 import com.android.keyguard.MiuiFastUnlockController;
+import com.android.keyguard.fod.MiuiGxzwManager;
 import com.android.keyguard.utils.MiuiKeyguardUtils;
 import com.android.keyguard.wallpaper.MiuiWallpaperClient;
 import com.android.systemui.Dependency;
@@ -91,6 +92,7 @@ public final class KeyguardViewMediatorInjector {
     }
 
     public final void preHideKeyguard() {
+        ((MiuiGxzwManager) Dependency.get(MiuiGxzwManager.class)).setWallpaperAsTarget(true);
         ((MiuiWallpaperClient) Dependency.get(MiuiWallpaperClient.class)).onKeyguardGoingAway(true, true);
         this.mContext.sendBroadcastAsUser(this.FINGER_FAST_UNLOCK_INTENT, UserHandle.CURRENT);
         keyguardGoingAway();

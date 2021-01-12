@@ -16,8 +16,6 @@ import android.widget.RelativeLayout;
 import com.android.keyguard.charge.ChargeUtils;
 import com.android.keyguard.charge.MiuiBatteryStatus;
 import com.android.systemui.C0010R$bool;
-import com.android.systemui.Dependency;
-import com.miui.systemui.util.HapticFeedBackImpl;
 import miui.maml.animation.interpolater.QuartEaseOutInterpolater;
 
 public class IChargeView extends FrameLayout implements ValueAnimator.AnimatorUpdateListener {
@@ -140,7 +138,6 @@ public class IChargeView extends FrameLayout implements ValueAnimator.AnimatorUp
         }
         this.mEnterAnimatorSet.start();
         startAnimationOnChildView();
-        ((HapticFeedBackImpl) Dependency.get(HapticFeedBackImpl.class)).extHapticFeedback(74, false, 0);
     }
 
     public void startDismiss(String str) {

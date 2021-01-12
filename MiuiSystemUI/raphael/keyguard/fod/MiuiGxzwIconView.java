@@ -36,8 +36,6 @@ class MiuiGxzwIconView extends GxzwNoRotateFrameLayout implements View.OnTouchLi
     private boolean mDozeShowIconTimeout = false;
     /* access modifiers changed from: private */
     public boolean mDozing = false;
-    /* access modifiers changed from: private */
-    public boolean mFingerprintLockout = false;
     private Runnable mGotoUnlockRunnable = new Runnable() {
         public void run() {
             if (MiuiGxzwIconView.this.mDozing) {
@@ -72,27 +70,6 @@ class MiuiGxzwIconView extends GxzwNoRotateFrameLayout implements View.OnTouchLi
             super.onBiometricAuthenticated(i, biometricSourceType, z);
             if (biometricSourceType == BiometricSourceType.FINGERPRINT) {
                 MiuiGxzwIconView.this.mMiuiGxzwAnimView.performSuccessFeedback();
-            }
-        }
-
-        public void onBiometricError(int i, String str, BiometricSourceType biometricSourceType) {
-            super.onBiometricError(i, str, biometricSourceType);
-            Log.i("MiuiGxzwViewIcon", "onFingerprintError: msgId = " + i + ", errString = " + str);
-            if (biometricSourceType != BiometricSourceType.FINGERPRINT) {
-                return;
-            }
-            if (i == 7 || i == 9) {
-                boolean unused = MiuiGxzwIconView.this.mFingerprintLockout = true;
-            }
-        }
-
-        public void onBiometricRunningStateChanged(boolean z, BiometricSourceType biometricSourceType) {
-            super.onBiometricRunningStateChanged(z, biometricSourceType);
-            if (biometricSourceType == BiometricSourceType.FINGERPRINT) {
-                Log.i("MiuiGxzwViewIcon", "onFingerprintRunningStateChanged: running = " + z);
-                if (z) {
-                    boolean unused = MiuiGxzwIconView.this.mFingerprintLockout = false;
-                }
             }
         }
     };
@@ -358,7 +335,7 @@ class MiuiGxzwIconView extends GxzwNoRotateFrameLayout implements View.OnTouchLi
         if (!z) {
             i = 0;
         }
-        miuiGxzwAnimView.setVisibilityAnim(i);
+        miuiGxzwAnimView.setVisibility(i);
         this.mMiuiGxzwAnimView.stopAnim();
     }
 
@@ -413,7 +390,7 @@ class MiuiGxzwIconView extends GxzwNoRotateFrameLayout implements View.OnTouchLi
             }
             if (((KeyguardUpdateMonitorInjector) Dependency.get(KeyguardUpdateMonitorInjector.class)).shouldListenForFingerprintWhenUnlocked()) {
                 this.mHandler.post(this.mGotoUnlockRunnable);
-            } else if (this.mFingerprintLockout || this.mKeyguardUpdateMonitor.userNeedsStrongAuth()) {
+            } else if (this.mKeyguardUpdateMonitor.isFingerprintTemporarilyLockout() || this.mKeyguardUpdateMonitor.userNeedsStrongAuth()) {
                 this.mHandler.postDelayed(this.mGotoUnlockRunnable, 400);
             }
             this.mTouchDown = true;
@@ -545,7 +522,7 @@ class MiuiGxzwIconView extends GxzwNoRotateFrameLayout implements View.OnTouchLi
 
     /* access modifiers changed from: private */
     public void showBouncer() {
-        ((StatusBar) Dependency.get(StatusBar.class)).showBouncerIfKeyguard();
+        ((StatusBar) Dependency.get(StatusBar.class)).collapsePanels();
     }
 
     public void onDeviceMove() {
