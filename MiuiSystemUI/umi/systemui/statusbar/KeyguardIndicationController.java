@@ -37,7 +37,6 @@ import com.android.keyguard.injector.KeyguardIndicationInjector;
 import com.android.keyguard.injector.KeyguardUpdateMonitorInjector;
 import com.android.keyguard.utils.MiuiKeyguardUtils;
 import com.android.keyguard.utils.PhoneUtils;
-import com.android.settingslib.Utils;
 import com.android.systemui.C0011R$color;
 import com.android.systemui.C0013R$drawable;
 import com.android.systemui.C0015R$id;
@@ -356,9 +355,7 @@ public class KeyguardIndicationController implements StatusBarStateController.St
 
     /* access modifiers changed from: protected */
     public final void updateIndication(boolean z) {
-        ColorStateList colorStateList;
         int i;
-        boolean z2 = false;
         if (TextUtils.isEmpty(this.mTransientIndication)) {
             this.mWakeLock.setAcquired(false);
         }
@@ -375,11 +372,9 @@ public class KeyguardIndicationController implements StatusBarStateController.St
             int currentUser = KeyguardUpdateMonitor.getCurrentUser();
             if (!TextUtils.isEmpty(this.mTransientIndication)) {
                 this.mTextView.switchIndication(this.mTransientIndication);
-                z2 = this.mTransientTextIsError;
             } else if (TextUtils.isEmpty(trustGrantedIndication) || !this.mKeyguardUpdateMonitor.getUserHasTrust(currentUser)) {
                 if (!TextUtils.isEmpty(this.mAlignmentIndication)) {
                     this.mTextView.switchIndication(this.mAlignmentIndication);
-                    z2 = true;
                 } else if (!this.mPowerPluggedIn || this.mChargeUIEntering) {
                     if (!TextUtils.isEmpty(trustManagedIndication) && this.mKeyguardUpdateMonitor.getUserTrustIsManaged(currentUser) && !this.mKeyguardUpdateMonitor.getUserHasTrust(currentUser)) {
                         this.mTextView.switchIndication(trustManagedIndication);
@@ -407,13 +402,6 @@ public class KeyguardIndicationController implements StatusBarStateController.St
             } else {
                 this.mTextView.switchIndication(trustGrantedIndication);
             }
-            MiuiKeyguardIndicationTextView miuiKeyguardIndicationTextView = this.mTextView;
-            if (z2) {
-                colorStateList = Utils.getColorError(this.mContext);
-            } else {
-                colorStateList = this.mInitialTextColorState;
-            }
-            miuiKeyguardIndicationTextView.setTextColor(colorStateList);
         }
     }
 
@@ -675,15 +663,6 @@ public class KeyguardIndicationController implements StatusBarStateController.St
 
         public void onTrustAgentErrorMessage(CharSequence charSequence) {
             KeyguardIndicationController.this.showTransientIndication(charSequence, true, false);
-        }
-
-        public void onScreenTurnedOn() {
-            if (KeyguardIndicationController.this.mMessageToShowOnScreenOn != null) {
-                KeyguardIndicationController keyguardIndicationController = KeyguardIndicationController.this;
-                keyguardIndicationController.showTransientIndication(keyguardIndicationController.mMessageToShowOnScreenOn, true, false);
-                KeyguardIndicationController.this.hideTransientIndicationDelayed(5000);
-                String unused = KeyguardIndicationController.this.mMessageToShowOnScreenOn = null;
-            }
         }
 
         public void onBiometricRunningStateChanged(boolean z, BiometricSourceType biometricSourceType) {

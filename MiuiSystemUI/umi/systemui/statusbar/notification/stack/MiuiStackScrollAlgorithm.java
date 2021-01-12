@@ -246,23 +246,17 @@ public final class MiuiStackScrollAlgorithm extends StackScrollAlgorithm {
     public void updateZValuesForState(@NotNull StackScrollAlgorithm.StackScrollAlgorithmState stackScrollAlgorithmState, @NotNull AmbientState ambientState) {
         Intrinsics.checkParameterIsNotNull(stackScrollAlgorithmState, "algorithmState");
         Intrinsics.checkParameterIsNotNull(ambientState, "ambientState");
-        ArrayList<ExpandableView> arrayList = stackScrollAlgorithmState.visibleChildren;
-        Intrinsics.checkExpressionValueIsNotNull(arrayList, "algorithmState.visibleChildren");
-        for (ExpandableView expandableView : arrayList) {
-            if (!getMGameModeEnabled() && (expandableView instanceof ExpandableNotificationRow)) {
-                ExpandableNotificationRow expandableNotificationRow = (ExpandableNotificationRow) expandableView;
-                if (expandableNotificationRow.isPinned()) {
-                    int baseZHeight = ambientState.getBaseZHeight();
-                    ExpandableViewState viewState = expandableNotificationRow.getViewState();
-                    if (viewState != null) {
-                        viewState.zTranslation = ((float) baseZHeight) + ((1.0f - expandableNotificationRow.getHeaderVisibleAmount()) * ((float) this.mPinnedZTranslationExtra));
-                    }
+        float f = 0.0f;
+        for (int size = stackScrollAlgorithmState.visibleChildren.size() - 1; size >= 0; size--) {
+            ExpandableView expandableView = stackScrollAlgorithmState.visibleChildren.get(size);
+            if (getMGameModeEnabled() || !(expandableView instanceof ExpandableNotificationRow) || !((ExpandableNotificationRow) expandableView).isPinned()) {
+                Intrinsics.checkExpressionValueIsNotNull(expandableView, "child");
+                ExpandableViewState viewState = expandableView.getViewState();
+                if (viewState != null) {
+                    viewState.zTranslation = 0.0f;
                 }
-            }
-            Intrinsics.checkExpressionValueIsNotNull(expandableView, "it");
-            ExpandableViewState viewState2 = expandableView.getViewState();
-            if (viewState2 != null) {
-                viewState2.zTranslation = 0.0f;
+            } else {
+                f = updateChildZValue(size, f, stackScrollAlgorithmState, ambientState);
             }
         }
     }

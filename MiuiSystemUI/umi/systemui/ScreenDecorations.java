@@ -511,7 +511,7 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
 
     /* access modifiers changed from: package-private */
     public WindowManager.LayoutParams getWindowLayoutParams(int i, boolean z) {
-        WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(getWidthLayoutParamByPos(i), getHeightLayoutParamByPos(i), z ? 2041 : 2024, 562037048, -3);
+        WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(getWidthLayoutParamByPos(i), getHeightLayoutParamByPos(i), z ? 2042 : 2024, 562037048, -3);
         int i2 = layoutParams.privateFlags | 80;
         layoutParams.privateFlags = i2;
         if (!DEBUG_SCREENSHOT_ROUNDED_CORNERS && !z) {

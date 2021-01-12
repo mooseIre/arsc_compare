@@ -11,6 +11,7 @@ import android.util.DisplayMetrics;
 import android.view.IWindowManager;
 import com.android.internal.logging.MetricsLogger;
 import com.android.internal.statusbar.IStatusBarService;
+import com.android.keyguard.IPhoneSignalController;
 import com.android.keyguard.KeyguardSecurityModel;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.MiuiCarrierTextController;
@@ -856,5 +857,9 @@ public final class Dependency_MembersInjector {
 
     public static void injectMSystemUIStat(Dependency dependency, Lazy<SystemUIStat> lazy) {
         dependency.mSystemUIStat = lazy;
+    }
+
+    public static void injectMPhoneSignalController(Dependency dependency, Lazy<IPhoneSignalController> lazy) {
+        dependency.mPhoneSignalController = lazy;
     }
 }

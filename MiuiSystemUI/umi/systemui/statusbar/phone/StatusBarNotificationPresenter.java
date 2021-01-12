@@ -1,13 +1,9 @@
 package com.android.systemui.statusbar.phone;
 
 import android.app.KeyguardManager;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.RemoteException;
 import android.os.ServiceManager;
-import android.os.UserHandle;
 import android.service.notification.StatusBarNotification;
 import android.service.vr.IVrManager;
 import android.service.vr.IVrStateCallbacks;
@@ -25,7 +21,6 @@ import com.android.systemui.C0021R$string;
 import com.android.systemui.Dependency;
 import com.android.systemui.ForegroundServiceNotificationListener;
 import com.android.systemui.InitController;
-import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.plugins.ActivityStarter;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
 import com.android.systemui.statusbar.CommandQueue;
@@ -43,7 +38,6 @@ import com.android.systemui.statusbar.notification.DynamicPrivacyController;
 import com.android.systemui.statusbar.notification.ExpandedNotification;
 import com.android.systemui.statusbar.notification.NotificationEntryListener;
 import com.android.systemui.statusbar.notification.NotificationEntryManager;
-import com.android.systemui.statusbar.notification.NotificationFilterInjector;
 import com.android.systemui.statusbar.notification.VisualStabilityManager;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import com.android.systemui.statusbar.notification.collection.inflation.NotificationRowBinderImpl;
@@ -61,7 +55,6 @@ import com.miui.systemui.NotificationSettings;
 import com.miui.systemui.SettingsManager;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.Executor;
 import java.util.function.BooleanSupplier;
 
 public class StatusBarNotificationPresenter implements NotificationPresenter, ConfigurationController.ConfigurationListener, NotificationRowBinderImpl.BindRowCallback, CommandQueue.Callbacks {
@@ -79,8 +72,7 @@ public class StatusBarNotificationPresenter implements NotificationPresenter, Co
     private boolean mDispatchUiModeChangeOnUserSwitched;
     private final DozeScrimController mDozeScrimController;
     private final DynamicPrivacyController mDynamicPrivacyController;
-    /* access modifiers changed from: private */
-    public final NotificationEntryManager mEntryManager = ((NotificationEntryManager) Dependency.get(NotificationEntryManager.class));
+    private final NotificationEntryManager mEntryManager = ((NotificationEntryManager) Dependency.get(NotificationEntryManager.class));
     private final NotificationGutsManager mGutsManager = ((NotificationGutsManager) Dependency.get(NotificationGutsManager.class));
     private final HeadsUpManagerPhone mHeadsUpManager;
     private final NotificationInterruptSuppressor mInterruptSuppressor = new NotificationInterruptSuppressor() {
@@ -213,16 +205,6 @@ public class StatusBarNotificationPresenter implements NotificationPresenter, Co
                 StatusBarNotificationPresenter.this.lambda$new$3$StatusBarNotificationPresenter(z);
             }
         });
-        ((BroadcastDispatcher) Dependency.get(BroadcastDispatcher.class)).registerReceiver(new BroadcastReceiver() {
-            public void onReceive(Context context, Intent intent) {
-                NotificationFilterInjector.handleRefreshRequest(context, intent, StatusBarNotificationPresenter.this.mEntryManager);
-            }
-        }, new IntentFilter("com.miui.app.ExtraStatusBarManager.action_refresh_notification"), (Executor) null, UserHandle.ALL);
-        ((BroadcastDispatcher) Dependency.get(BroadcastDispatcher.class)).registerReceiver(new BroadcastReceiver() {
-            public void onReceive(Context context, Intent intent) {
-                NotificationFilterInjector.handleRemoveNotificationRequest(intent, StatusBarNotificationPresenter.this.mEntryManager);
-            }
-        }, new IntentFilter("com.miui.app.ExtraStatusBarManager.action_remove_keyguard_notification"), (Executor) null, UserHandle.ALL);
     }
 
     /* access modifiers changed from: private */

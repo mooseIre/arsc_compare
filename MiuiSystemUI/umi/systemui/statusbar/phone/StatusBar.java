@@ -4165,6 +4165,10 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         return this.mNotificationPanelViewController.isFullyCollapsed();
     }
 
+    public void collapsePanels() {
+        makeExpandedInvisible();
+    }
+
     public static boolean isBootCompleted() {
         return sBootCompleted;
     }

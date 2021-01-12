@@ -3,7 +3,6 @@ package com.android.systemui.statusbar.phone;
 import android.animation.ArgbEvaluator;
 import android.content.Context;
 import android.content.res.ColorStateList;
-import android.content.res.Configuration;
 import android.graphics.Rect;
 import android.util.ArrayMap;
 import android.widget.ImageView;
@@ -17,7 +16,6 @@ import com.android.systemui.statusbar.phone.LightBarTransitionsController;
 import com.android.systemui.statusbar.policy.ConfigurationController;
 import com.miui.systemui.DeveloperSettings;
 import com.miui.systemui.SettingsManager;
-import com.miui.systemui.util.CommonUtil;
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
 
@@ -26,7 +24,6 @@ public class DarkIconDispatcherImpl implements SysuiDarkIconDispatcher, LightBar
     private float mDarkIntensity;
     private int mDarkModeIconColorSingleTone;
     private int mIconTint = -1;
-    private Configuration mLastConfiguration;
     private int mLightModeIconColorSingleTone;
     private final ArrayMap<Object, DarkIconDispatcher.DarkReceiver> mReceivers = new ArrayMap<>();
     private final Rect mTintArea = new Rect();
@@ -38,22 +35,17 @@ public class DarkIconDispatcherImpl implements SysuiDarkIconDispatcher, LightBar
     }
 
     public DarkIconDispatcherImpl(Context context, CommandQueue commandQueue) {
-        Class cls = SettingsManager.class;
         this.mDarkModeIconColorSingleTone = context.getColor(C0011R$color.dark_mode_icon_color_single_tone);
         this.mLightModeIconColorSingleTone = context.getColor(C0011R$color.light_mode_icon_color_single_tone);
         this.mTransitionsController = new LightBarTransitionsController(context, this, commandQueue);
         this.mContext = context;
-        this.mUseTint = context.getResources().getBoolean(C0010R$bool.use_status_bar_tint);
-        this.mLastConfiguration = new Configuration(context.getResources().getConfiguration());
         ((ConfigurationController) Dependency.get(ConfigurationController.class)).addCallback(this);
-        ((SettingsManager) Dependency.get(cls)).registerMiuiOptimizationListener(new DeveloperSettings.MiuiOptimizationListener() {
+        ((SettingsManager) Dependency.get(SettingsManager.class)).registerMiuiOptimizationListener(new DeveloperSettings.MiuiOptimizationListener() {
             public final void onChanged(boolean z) {
                 DarkIconDispatcherImpl.this.lambda$new$0$DarkIconDispatcherImpl(z);
             }
         });
-        if (!((SettingsManager) Dependency.get(cls)).getMiuiOptimizationEnabled()) {
-            this.mDarkModeIconColorSingleTone = -1728053248;
-        }
+        updateResource();
     }
 
     /* access modifiers changed from: private */
@@ -62,10 +54,8 @@ public class DarkIconDispatcherImpl implements SysuiDarkIconDispatcher, LightBar
         updateResource();
     }
 
-    public void onConfigChanged(Configuration configuration) {
-        if (CommonUtil.isThemeResourcesChanged(this.mLastConfiguration.updateFrom(configuration), configuration.extraConfig.themeChangedFlags)) {
-            updateResource();
-        }
+    public void onMiuiThemeChanged(boolean z) {
+        updateResource();
     }
 
     /* access modifiers changed from: protected */
@@ -92,6 +82,10 @@ public class DarkIconDispatcherImpl implements SysuiDarkIconDispatcher, LightBar
 
     public int getDarkModeIconColorSingleTone() {
         return this.mDarkModeIconColorSingleTone;
+    }
+
+    public void reapply() {
+        applyIconTint();
     }
 
     public LightBarTransitionsController getTransitionsController() {

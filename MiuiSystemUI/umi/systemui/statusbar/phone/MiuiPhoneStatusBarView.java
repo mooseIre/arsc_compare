@@ -37,6 +37,13 @@ public class MiuiPhoneStatusBarView extends PhoneStatusBarView {
 
     public MiuiPhoneStatusBarView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
+        addOnLayoutChangeListener(new View.OnLayoutChangeListener(this) {
+            public void onLayoutChange(View view, int i, int i2, int i3, int i4, int i5, int i6, int i7, int i8) {
+                if (i3 - i != i7 - i5) {
+                    ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).reapply();
+                }
+            }
+        });
     }
 
     public void initMiuiViews() {

@@ -103,6 +103,15 @@ public class InvocationLightsView extends View implements NavigationBarTransitio
         attemptUnregisterNavBarListener();
     }
 
+    public void setColors(int i, int i2, int i3, int i4) {
+        this.mUseNavBarColor = false;
+        attemptUnregisterNavBarListener();
+        this.mAssistInvocationLights.get(0).setColor(i);
+        this.mAssistInvocationLights.get(1).setColor(i2);
+        this.mAssistInvocationLights.get(2).setColor(i3);
+        this.mAssistInvocationLights.get(3).setColor(i4);
+    }
+
     public void onDarkIntensity(float f) {
         updateDarkness(f);
     }

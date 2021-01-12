@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import com.android.keyguard.fod.MiuiGxzwManager;
 import com.android.keyguard.utils.MiuiKeyguardUtils;
+import com.android.keyguard.wallpaper.WallpaperAuthorityUtils;
 import com.android.systemui.C0010R$bool;
 import com.android.systemui.C0016R$integer;
 import com.android.systemui.DejankUtils;
@@ -183,6 +184,7 @@ public class NotificationShadeWindowController implements RemoteInputController.
 
     private void applyKeyguardFlags(State state) {
         boolean isDefaultLockScreenTheme = MiuiKeyguardUtils.isDefaultLockScreenTheme();
+        boolean isThemeLockLiveWallpaper = WallpaperAuthorityUtils.isThemeLockLiveWallpaper();
         if (!state.mKeyguardShowing || (!isDefaultLockScreenTheme && !state.mWallpaperSupportsAmbientMode)) {
             this.mLpChanged.flags &= -1048577;
         } else {
@@ -203,6 +205,9 @@ public class NotificationShadeWindowController implements RemoteInputController.
             Trace.setCounter("display_mode_id", (long) this.mLpChanged.preferredDisplayModeId);
         }
         if ((state.isKeyguardShowingAndNotOccluded() || state.mKeyguardFadingAway) && state.keygaurdTransparent) {
+            if (!isThemeLockLiveWallpaper) {
+                this.mLpChanged.flags &= -1048577;
+            }
             WindowManager.LayoutParams layoutParams = this.mLpChanged;
             layoutParams.alpha = 0.0f;
             layoutParams.flags |= 16;
