@@ -701,6 +701,13 @@ public final class KeyguardPanelViewInjector extends MiuiKeyguardUpdateMonitorCa
         }
     }
 
+    public final void updateKeyguardMoveForScreenSizeChange() {
+        KeyguardMoveHelper keyguardMoveHelper = this.mKeyguardMoveHelper;
+        if (keyguardMoveHelper != null) {
+            keyguardMoveHelper.updateTranslationForScreenSizeChange();
+        }
+    }
+
     public final void resetKeyguardVerticalMoveHelper() {
         KeyguardVerticalMoveHelper keyguardVerticalMoveHelper = this.mKeyguardVerticalMoveHelper;
         if (keyguardVerticalMoveHelper != null) {
