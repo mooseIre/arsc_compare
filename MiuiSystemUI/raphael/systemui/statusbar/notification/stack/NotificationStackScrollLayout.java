@@ -766,7 +766,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
             }
 
             public boolean isDragDownAnywhereEnabled() {
-                if (NotificationStackScrollLayout.this.mStatusbarStateController.getState() != 1 || NotificationStackScrollLayout.this.mKeyguardBypassController.getBypassEnabled()) {
+                if (NotificationStackScrollLayout.this.mStatusbarStateController.getState() != 1 || NotificationStackScrollLayout.this.mKeyguardBypassController.getBypassEnabled() || !MiuiKeyguardUtils.isDefaultLockScreenTheme()) {
                     return false;
                 }
                 return true;

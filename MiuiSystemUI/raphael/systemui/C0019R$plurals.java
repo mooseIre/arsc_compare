@@ -2382,6 +2382,7 @@ public final class R {
         public static final int meter_background_color;
         public static final int meter_consumed_color;
         public static final int mini_window_bar_color;
+        public static final int mini_window_bar_color_gamemode;
         public static final int minimize_dock_shadow_end;
         public static final int minimize_dock_shadow_start;
         public static final int misalignment_text_color;
@@ -4187,6 +4188,7 @@ public final class R {
         public static final int notification_heads_up_bg_radius;
         public static final int notification_heads_up_bg_stroke_width;
         public static final int notification_heads_up_z_translation;
+        public static final int notification_hybrid_icon_margin_start;
         public static final int notification_icon_appear_padding;
         public static final int notification_importance_button_description_top_margin;
         public static final int notification_importance_button_horiz_padding;

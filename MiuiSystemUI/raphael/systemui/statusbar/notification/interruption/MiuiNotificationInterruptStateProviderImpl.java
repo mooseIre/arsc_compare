@@ -18,6 +18,7 @@ import com.android.systemui.statusbar.notification.NotificationFilter;
 import com.android.systemui.statusbar.notification.NotificationSettingsManager;
 import com.android.systemui.statusbar.notification.NotificationUtil;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
+import com.android.systemui.statusbar.phone.StatusBar;
 import com.android.systemui.statusbar.phone.StatusBarKeyguardViewManager;
 import com.android.systemui.statusbar.policy.BatteryController;
 import com.android.systemui.statusbar.policy.DeviceProvisionedController;
@@ -110,10 +111,13 @@ public class MiuiNotificationInterruptStateProviderImpl extends NotificationInte
         } else if (!expandedNotification.canFloat()) {
             Log.d("InterruptionStateProvider", "no peek require miui permission " + notificationEntry.getKey());
             return false;
-        } else if (!NotificationUtil.hasProgressbar(expandedNotification)) {
+        } else if (NotificationUtil.hasProgressbar(expandedNotification)) {
+            Log.d("InterruptionStateProvider", "no peek has progress " + notificationEntry.getKey());
+            return false;
+        } else if (!((StatusBar) Dependency.get(StatusBar.class)).isPanelExpanded()) {
             return true;
         } else {
-            Log.d("InterruptionStateProvider", "no peek has progress " + notificationEntry.getKey());
+            Log.d("InterruptionStateProvider", "No peeking: status bar panel expanded  " + expandedNotification.getKey());
             return false;
         }
     }

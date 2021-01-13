@@ -526,6 +526,7 @@ public class MiuiFiveGServiceClient {
         } else {
             MobileSignalController.MobileIconGroup unused4 = fiveGServiceState.mIconGroup = TelephonyIcons.UNKNOWN;
         }
+        setFiveGIndicatorProperties(fiveGServiceState.mIconGroup, i);
         localLog("update5GIcon slotId=" + i, "update5GIcon FiveGServiceState: " + fiveGServiceState + ", mIsUserFiveGEnabled=" + this.mIsUserFiveGEnabled + ", mIsDualNrEnabled=" + this.mIsDualNrEnabled + ", cmccSim=" + isCmccSimCard(i));
     }
 
@@ -545,7 +546,7 @@ public class MiuiFiveGServiceClient {
             return getConfigDIconGroup(fiveGServiceState);
         }
         if (!Build.IS_INTERNATIONAL_BUILD) {
-            if (!isCmccSimCard(i) || !Build.IS_CM_CUSTOMIZATION) {
+            if ((!isCmccSimCard(i) || !Build.IS_CM_CUSTOMIZATION) && !Build.IS_CT_CUSTOMIZATION_TEST) {
                 return getConfigDIconGroup(fiveGServiceState);
             }
             return getNrIconTypeIconGroup(fiveGServiceState);
@@ -554,6 +555,14 @@ public class MiuiFiveGServiceClient {
         } else {
             return getNrIconTypeIconGroup(fiveGServiceState);
         }
+    }
+
+    private void setFiveGIndicatorProperties(MobileSignalController.MobileIconGroup mobileIconGroup, int i) {
+        if (mobileIconGroup == TelephonyIcons.FIVE_G_BASIC || mobileIconGroup == TelephonyIcons.FIVE_G_UWB) {
+            SystemProperties.set("persist.sys.5g.indicator" + i, 20);
+            return;
+        }
+        SystemProperties.set("persist.sys.5g.indicator" + i, 13);
     }
 
     private void dualNrIconGroupOptimization() {

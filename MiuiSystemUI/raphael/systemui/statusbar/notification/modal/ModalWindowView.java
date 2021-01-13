@@ -3,13 +3,16 @@ package com.android.systemui.statusbar.notification.modal;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.Insets;
 import android.util.AttributeSet;
 import android.util.Property;
+import android.view.DisplayCutout;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.WindowInsets;
 import android.widget.FrameLayout;
 import com.android.systemui.C0012R$dimen;
 import com.android.systemui.Dependency;
@@ -39,6 +42,7 @@ public class ModalWindowView extends FrameLayout implements AppMiniWindowRowTouc
     public boolean mFirstAddUpdateRequested = false;
     private final ViewTreeObserver.OnPreDrawListener mFirstAddUpdater;
     private int mLayoutWidth;
+    private int mLeftInset = 0;
     private int mMaxModalBottom;
     /* access modifiers changed from: private */
     public View mMenuView;
@@ -48,6 +52,8 @@ public class ModalWindowView extends FrameLayout implements AppMiniWindowRowTouc
     /* access modifiers changed from: private */
     public ExpandableNotificationRow mModalRow;
     private ExpandableView.OnHeightChangedListener mOnHeightChangedListener;
+    private int mRightInset = 0;
+    private int mSidePaddings;
     private final int[] mTmpLoc = new int[2];
     private final AppMiniWindowRowTouchHelper mTouchHelper = new AppMiniWindowRowTouchHelper(this, (NotificationEntryManager) Dependency.get(NotificationEntryManager.class), (EventTracker) Dependency.get(EventTracker.class), MiniWindowEventSource.MODAL_NOTIFICATION);
 
@@ -294,6 +300,9 @@ public class ModalWindowView extends FrameLayout implements AppMiniWindowRowTouc
         this.mModalMenuMarginTop = resources.getDimensionPixelOffset(C0012R$dimen.notification_modal_menu_margin_top);
         this.mLayoutWidth = resources.getDimensionPixelOffset(C0012R$dimen.notification_panel_width);
         this.mMaxModalBottom = resources.getDisplayMetrics().heightPixels - resources.getDimensionPixelOffset(C0012R$dimen.notification_modal_menu_bottom_max);
+        int dimensionPixelSize = resources.getDimensionPixelSize(C0012R$dimen.notification_side_paddings);
+        this.mSidePaddings = dimensionPixelSize;
+        setPadding(dimensionPixelSize, 0, dimensionPixelSize, 0);
     }
 
     /* access modifiers changed from: private */
@@ -514,5 +523,48 @@ public class ModalWindowView extends FrameLayout implements AppMiniWindowRowTouc
             return null;
         }
         return expandableNotificationRow;
+    }
+
+    public WindowInsets onApplyWindowInsets(WindowInsets windowInsets) {
+        Insets insetsIgnoringVisibility = windowInsets.getInsetsIgnoringVisibility(WindowInsets.Type.systemBars());
+        boolean z = true;
+        if (getFitsSystemWindows()) {
+            if (insetsIgnoringVisibility.top == getPaddingTop() && insetsIgnoringVisibility.bottom == getPaddingBottom()) {
+                z = false;
+            }
+            if (z) {
+                setPadding(0, 0, 0, 0);
+            }
+        } else {
+            if (getPaddingLeft() == this.mSidePaddings && getPaddingRight() == this.mSidePaddings && getPaddingTop() == 0 && getPaddingBottom() == 0) {
+                z = false;
+            }
+            if (z) {
+                int i = this.mSidePaddings;
+                setPadding(i, 0, i, 0);
+            }
+        }
+        this.mLeftInset = 0;
+        this.mRightInset = 0;
+        DisplayCutout displayCutout = getRootWindowInsets().getDisplayCutout();
+        if (displayCutout != null) {
+            this.mLeftInset = displayCutout.getSafeInsetLeft();
+            this.mRightInset = displayCutout.getSafeInsetRight();
+        }
+        this.mLeftInset = Math.max(insetsIgnoringVisibility.left, this.mLeftInset);
+        this.mRightInset = Math.max(insetsIgnoringVisibility.right, this.mRightInset);
+        applyMargins();
+        return windowInsets;
+    }
+
+    private void applyMargins() {
+        if (getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
+            ViewGroup.MarginLayoutParams marginLayoutParams = (ViewGroup.MarginLayoutParams) getLayoutParams();
+            if (marginLayoutParams.rightMargin != this.mRightInset || marginLayoutParams.leftMargin != this.mLeftInset) {
+                marginLayoutParams.rightMargin = this.mRightInset / 2;
+                marginLayoutParams.leftMargin = this.mLeftInset / 2;
+                setLayoutParams(marginLayoutParams);
+            }
+        }
     }
 }
