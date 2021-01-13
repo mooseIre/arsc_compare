@@ -162,6 +162,11 @@ public class MiuiDozeServiceHost extends DozeServiceHost {
     }
 
     public void stopDozing() {
+        if (this.mDozingRequested) {
+            this.mDozingRequested = false;
+            this.mHandler.removeCallbacks(this.mDozingChanged);
+            this.mHandler.postAtFrontOfQueue(this.mDozingChanged);
+        }
         checkAodService();
         IMiuiAodService iMiuiAodService = this.mAodService;
         if (iMiuiAodService != null) {

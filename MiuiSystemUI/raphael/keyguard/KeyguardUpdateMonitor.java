@@ -552,10 +552,11 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
     }
 
     public void setKeyguardGoingAway(boolean z) {
+        Class cls = MiuiFastUnlockController.class;
         this.mKeyguardGoingAway = z;
         updateBiometricListeningState();
-        if (!((MiuiFastUnlockController) Dependency.get(MiuiFastUnlockController.class)).isFastUnlock()) {
-            ((MiuiWallpaperClient) Dependency.get(MiuiWallpaperClient.class)).onKeyguardGoingAway(z, false);
+        if (!((MiuiFastUnlockController) Dependency.get(cls)).isFastUnlock() || !MiuiKeyguardUtils.isTopActivityLauncher(this.mContext)) {
+            ((MiuiWallpaperClient) Dependency.get(MiuiWallpaperClient.class)).onKeyguardGoingAway(z, ((MiuiFastUnlockController) Dependency.get(cls)).isFastUnlock());
         }
     }
 

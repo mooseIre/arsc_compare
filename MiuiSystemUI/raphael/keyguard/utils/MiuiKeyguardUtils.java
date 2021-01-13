@@ -27,7 +27,6 @@ import com.android.systemui.C0008R$array;
 import com.android.systemui.C0010R$bool;
 import com.android.systemui.C0016R$integer;
 import com.android.systemui.Dependency;
-import com.android.systemui.statusbar.notification.NotificationEntryManager;
 import com.miui.systemui.DeviceConfig;
 import com.miui.systemui.util.CommonUtil;
 import java.util.ArrayList;
@@ -173,10 +172,6 @@ public class MiuiKeyguardUtils {
 
     public static boolean isSupportGestureWakeup() {
         return FeatureParser.getBoolean("support_gesture_wakeup", false);
-    }
-
-    public static boolean hasActiveNotificationsOnKeyguard(int i) {
-        return i == 1 && ((NotificationEntryManager) Dependency.get(NotificationEntryManager.class)).hasActiveNotifications();
     }
 
     public static int getBitmapColorMode(Bitmap bitmap) {

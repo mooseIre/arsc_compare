@@ -443,6 +443,15 @@ public class KeyguardMoveHelper {
         }
     }
 
+    public void updateTranslationForScreenSizeChange() {
+        int i = this.mCurrentScreen;
+        if (i == 0) {
+            reset(false);
+        } else if (i == 1) {
+            resetImmediately();
+        }
+    }
+
     private void setTranslation(float f, boolean z, boolean z2, boolean z3) {
         setTranslation(f, z, z2, z3, false);
     }
@@ -635,6 +644,7 @@ public class KeyguardMoveHelper {
 
     private void reset(boolean z, boolean z2, boolean z3) {
         cancelAnimation();
+        cancelResetAnimation();
         setTranslation(0.0f, true, z, z2, z3);
         this.mMotionCancelled = false;
         if (this.mSwipingInProgress) {

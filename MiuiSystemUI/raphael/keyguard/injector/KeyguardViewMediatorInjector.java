@@ -93,7 +93,9 @@ public final class KeyguardViewMediatorInjector {
 
     public final void preHideKeyguard() {
         ((MiuiGxzwManager) Dependency.get(MiuiGxzwManager.class)).setWallpaperAsTarget(true);
-        ((MiuiWallpaperClient) Dependency.get(MiuiWallpaperClient.class)).onKeyguardGoingAway(true, true);
+        if (MiuiKeyguardUtils.isTopActivityLauncher(this.mContext)) {
+            ((MiuiWallpaperClient) Dependency.get(MiuiWallpaperClient.class)).onKeyguardGoingAway(true, true);
+        }
         this.mContext.sendBroadcastAsUser(this.FINGER_FAST_UNLOCK_INTENT, UserHandle.CURRENT);
         keyguardGoingAway();
         ((StatusBar) Dependency.get(StatusBar.class)).setKeyguardTransparent();
