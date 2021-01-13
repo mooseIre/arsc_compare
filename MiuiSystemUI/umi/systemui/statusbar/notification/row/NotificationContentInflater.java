@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.RemoteViews;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.widget.ImageMessageConsumer;
-import com.android.systemui.Dependency;
 import com.android.systemui.SystemUIApplication;
 import com.android.systemui.statusbar.InflationTask;
 import com.android.systemui.statusbar.NotificationRemoteInputManager;
@@ -27,7 +26,6 @@ import com.android.systemui.statusbar.policy.HeadsUpManager;
 import com.android.systemui.statusbar.policy.InflatedSmartReplies;
 import com.android.systemui.statusbar.policy.SmartReplyConstants;
 import com.android.systemui.util.Assert;
-import com.miui.systemui.SettingsManager;
 import dagger.Lazy;
 import java.util.HashMap;
 import java.util.concurrent.Executor;
@@ -223,16 +221,12 @@ public class NotificationContentInflater implements NotificationRowContentBinder
         }
         if ((i & 4) != 0) {
             Context context2 = SystemUIApplication.getContext();
-            boolean gameModeEnabled = ((SettingsManager) Dependency.get(SettingsManager.class)).getGameModeEnabled();
-            boolean isLandscape = NotificationContentInflaterInjector.isLandscape(context2);
-            if (gameModeEnabled || isLandscape) {
-                Notification buildUnstyled = builder.buildUnstyled();
-                RemoteViews remoteViews = buildUnstyled.headsUpContentView;
-                if (remoteViews != null) {
-                    inflationProgress.newHeadsUpView = remoteViews;
-                } else {
-                    inflationProgress.newHeadsUpView = NotificationContentInflaterInjector.buildOneLineContent(buildUnstyled, true, context2);
-                }
+            Notification buildUnstyled = builder.buildUnstyled();
+            RemoteViews remoteViews = buildUnstyled.headsUpContentView;
+            if (remoteViews != null) {
+                inflationProgress.newHeadsUpView = remoteViews;
+            } else if (NotificationContentInflaterInjector.useOneLine(context2, context, buildUnstyled)) {
+                inflationProgress.newHeadsUpView = NotificationContentInflaterInjector.buildOneLineContent(buildUnstyled, true, context2);
             } else {
                 inflationProgress.newHeadsUpView = builder.createHeadsUpContentView(z3);
             }

@@ -2,10 +2,13 @@ package com.android.systemui.statusbar.notification.row;
 
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
+import com.android.systemui.C0011R$color;
 import com.android.systemui.C0013R$drawable;
 import com.android.systemui.Dependency;
 import com.android.systemui.statusbar.notification.ExpandedNotification;
@@ -19,6 +22,7 @@ import com.android.systemui.statusbar.notification.stack.ExpandableViewState;
 import com.miui.systemui.SettingsManager;
 import com.miui.systemui.util.CommonExtensionsKt;
 import kotlin.Lazy;
+import kotlin.TypeCastException;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.jvm.internal.PropertyReference1Impl;
 import kotlin.jvm.internal.Reflection;
@@ -136,6 +140,18 @@ public final class MiuiExpandableNotificationRow extends MiuiAnimatedNotificatio
             }
             this.mBackgroundNormal.setCustomBackground(C0013R$drawable.optimized_game_heads_up_notification_bg);
             this.mBackgroundNormal.setGameModeHint(true);
+            View mMiniBar = getMMiniBar();
+            Intrinsics.checkExpressionValueIsNotNull(mMiniBar, "mMiniBar");
+            if (mMiniBar.getBackground() instanceof GradientDrawable) {
+                View mMiniBar2 = getMMiniBar();
+                Intrinsics.checkExpressionValueIsNotNull(mMiniBar2, "mMiniBar");
+                Drawable background = mMiniBar2.getBackground();
+                if (background != null) {
+                    ((GradientDrawable) background).setColor(getResources().getColor(C0011R$color.mini_window_bar_color_gamemode, (Resources.Theme) null));
+                    return;
+                }
+                throw new TypeCastException("null cannot be cast to non-null type android.graphics.drawable.GradientDrawable");
+            }
             return;
         }
         this.mBackgroundNormal.setCustomBackground(C0013R$drawable.notification_item_bg);

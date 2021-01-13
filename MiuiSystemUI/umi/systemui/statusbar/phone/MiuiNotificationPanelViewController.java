@@ -835,7 +835,7 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
     public void updateNotificationViews(@Nullable String str) {
         super.updateNotificationViews(str);
         if (isOnKeyguard()) {
-            ((KeyguardClockInjector) Dependency.get(KeyguardClockInjector.class)).getView().updateClockView(MiuiKeyguardUtils.hasActiveNotificationsOnKeyguard(this.mBarState));
+            ((KeyguardClockInjector) Dependency.get(KeyguardClockInjector.class)).getView().updateClockView(this.mNotificationStackScroller.getVisibleNotificationCount() != 0);
         }
         updateDismissView();
     }
@@ -1165,6 +1165,7 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
                 if (z2 || z) {
                     MiuiNotificationPanelViewController.this.mKeyguardPanelViewInjector.resetLockScreenMagazine();
                     MiuiNotificationPanelViewController.this.mKeyguardPanelViewInjector.initScreenSize();
+                    MiuiNotificationPanelViewController.this.mKeyguardPanelViewInjector.updateKeyguardMoveForScreenSizeChange();
                     MiuiNotificationPanelViewController.this.refreshNssCoveringQs();
                     return;
                 }

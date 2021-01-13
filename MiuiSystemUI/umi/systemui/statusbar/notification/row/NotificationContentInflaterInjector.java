@@ -18,6 +18,7 @@ import com.android.systemui.C0017R$layout;
 import com.android.systemui.C0021R$string;
 import com.android.systemui.Dependency;
 import com.android.systemui.statusbar.notification.ExpandedNotification;
+import com.android.systemui.statusbar.notification.InCallUtils;
 import com.android.systemui.statusbar.notification.MiuiNotificationCompat;
 import com.android.systemui.statusbar.notification.NotificationSettingsHelper;
 import com.android.systemui.statusbar.notification.NotificationUtil;
@@ -48,7 +49,7 @@ public class NotificationContentInflaterInjector {
 
     public static NotificationContentInflater.InflationProgress createRemoteViews(int i, Notification.Builder builder, boolean z, boolean z2, boolean z3, Context context, Context context2) {
         if (shouldInject(builder)) {
-            return createMiuiRemoteViews(i, builder, z, z2, z3, context2);
+            return createMiuiRemoteViews(i, builder, z, z2, z3, context, context2);
         }
         return NotificationContentInflater.createRemoteViews(i, builder, z, z2, z3, context);
     }
@@ -61,21 +62,21 @@ public class NotificationContentInflaterInjector {
         return style == null || (style instanceof Notification.BigPictureStyle) || (style instanceof Notification.BigTextStyle) || (style instanceof Notification.InboxStyle);
     }
 
-    static NotificationContentInflater.InflationProgress createMiuiRemoteViews(int i, Notification.Builder builder, boolean z, boolean z2, boolean z3, Context context) {
+    static NotificationContentInflater.InflationProgress createMiuiRemoteViews(int i, Notification.Builder builder, boolean z, boolean z2, boolean z3, Context context, Context context2) {
         NotificationContentInflater.InflationProgress inflationProgress = new NotificationContentInflater.InflationProgress();
         if ((i & 1) != 0) {
-            inflationProgress.newContentView = createMiuiContentView(builder, z2, context);
+            inflationProgress.newContentView = createMiuiContentView(builder, z2, context2);
         }
         if ((i & 2) != 0) {
-            inflationProgress.newExpandedView = createMiuiExpandedView(builder, context);
+            inflationProgress.newExpandedView = createMiuiExpandedView(builder, context2);
         }
         if ((i & 4) != 0) {
-            inflationProgress.newHeadsUpView = createMiuiHeadsUpView(builder, z3, context);
+            inflationProgress.newHeadsUpView = createMiuiHeadsUpView(builder, z3, context, context2);
         }
         if ((i & 8) != 0) {
-            inflationProgress.newPublicView = createMiuiPublicView(builder, context);
+            inflationProgress.newPublicView = createMiuiPublicView(builder, context2);
         }
-        inflationProgress.packageContext = context;
+        inflationProgress.packageContext = context2;
         inflationProgress.headsUpStatusBarText = builder.getHeadsUpStatusBarText(false);
         inflationProgress.headsUpStatusBarTextPublic = builder.getHeadsUpStatusBarText(true);
         return inflationProgress;
@@ -135,7 +136,7 @@ public class NotificationContentInflaterInjector {
         return buildBigBaseContent(buildUnstyled, true, false, context);
     }
 
-    static RemoteViews createMiuiHeadsUpView(Notification.Builder builder, boolean z, Context context) {
+    static RemoteViews createMiuiHeadsUpView(Notification.Builder builder, boolean z, Context context, Context context2) {
         Notification buildUnstyled = builder.buildUnstyled();
         Notification.Action[] actionArr = buildUnstyled.actions;
         boolean z2 = actionArr != null && actionArr.length > 0;
@@ -143,16 +144,16 @@ public class NotificationContentInflaterInjector {
         if (remoteViews != null) {
             return remoteViews;
         }
-        if (isLandscape(context) || ((SettingsManager) Dependency.get(SettingsManager.class)).getGameModeEnabled()) {
-            return buildOneLineContent(buildUnstyled, true, context);
+        if (useOneLine(context2, context, buildUnstyled)) {
+            return buildOneLineContent(buildUnstyled, true, context2);
         }
         if (builder.getStyle() != null) {
             if (!(builder.getStyle() instanceof Notification.BigTextStyle) || !z || !z2) {
-                return buildBigBaseContent(buildUnstyled, z, true, context);
+                return buildBigBaseContent(buildUnstyled, z, true, context2);
             }
-            return buildBigTextContent(buildUnstyled, true, context);
+            return buildBigTextContent(buildUnstyled, true, context2);
         } else if (z2) {
-            return buildBigBaseContent(buildUnstyled, z, true, context);
+            return buildBigBaseContent(buildUnstyled, z, true, context2);
         } else {
             return null;
         }
@@ -489,5 +490,9 @@ public class NotificationContentInflaterInjector {
             obtain.recycle();
             return builderRemoteViews;
         }
+    }
+
+    public static boolean useOneLine(Context context, Context context2, Notification notification) {
+        return (((SettingsManager) Dependency.get(SettingsManager.class)).getGameModeEnabled() || isLandscape(context)) && !InCallUtils.isGlobalInCallNotification(context, context2.getPackageName(), notification);
     }
 }

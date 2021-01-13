@@ -133,8 +133,10 @@ public class EdgeBackGestureHandler extends CurrentUserTracker implements Displa
     private int mRightInset;
     /* access modifiers changed from: private */
     public int mStartingQuickstepRotation = -1;
+    private SysUiState.SysUiStateCallback mStateCallback;
     private final Runnable mStateChangeCallback;
-    private int mSysUiFlags;
+    /* access modifiers changed from: private */
+    public int mSysUiFlags;
     private TaskStackChangeListener mTaskStackListener = new TaskStackChangeListener() {
         public void onTaskStackChanged() {
             EdgeBackGestureHandler edgeBackGestureHandler = EdgeBackGestureHandler.this;
@@ -176,6 +178,11 @@ public class EdgeBackGestureHandler extends CurrentUserTracker implements Displa
                 EdgeBackGestureHandler.this.mOverviewProxyService.notifyBackAction(false, (int) EdgeBackGestureHandler.this.mDownPoint.x, (int) EdgeBackGestureHandler.this.mDownPoint.y, false, !EdgeBackGestureHandler.this.mIsOnLeftEdge);
             }
         };
+        this.mStateCallback = new SysUiState.SysUiStateCallback() {
+            public void onSystemUiStateChanged(int i) {
+                int unused = EdgeBackGestureHandler.this.mSysUiFlags = i;
+            }
+        };
         this.mContext = context;
         this.mDisplayId = context.getDisplayId();
         this.mMainExecutor = context.getMainExecutor();
@@ -207,17 +214,7 @@ public class EdgeBackGestureHandler extends CurrentUserTracker implements Displa
             }
         });
         updateCurrentUserResources();
-        sysUiState.addCallback(new SysUiState.SysUiStateCallback() {
-            public final void onSystemUiStateChanged(int i) {
-                EdgeBackGestureHandler.this.lambda$new$0$EdgeBackGestureHandler(i);
-            }
-        });
-    }
-
-    /* access modifiers changed from: private */
-    /* renamed from: lambda$new$0 */
-    public /* synthetic */ void lambda$new$0$EdgeBackGestureHandler(int i) {
-        this.mSysUiFlags = i;
+        sysUiState.addCallback(this.mStateCallback);
     }
 
     public void updateCurrentUserResources() {
@@ -569,5 +566,6 @@ public class EdgeBackGestureHandler extends CurrentUserTracker implements Displa
 
     public void onDestroy() {
         ((ProtoTracer) Dependency.get(ProtoTracer.class)).remove(this);
+        ((SysUiState) Dependency.get(SysUiState.class)).removeCallback(this.mStateCallback);
     }
 }

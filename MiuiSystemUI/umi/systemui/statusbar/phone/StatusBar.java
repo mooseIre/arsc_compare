@@ -2360,6 +2360,10 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         return this.mExpandedVisible;
     }
 
+    public boolean isPanelExpanded() {
+        return this.mPanelExpanded;
+    }
+
     public void onInputFocusTransfer(boolean z, boolean z2, float f) {
         if (this.mCommandQueue.panelsEnabled()) {
             if (z) {

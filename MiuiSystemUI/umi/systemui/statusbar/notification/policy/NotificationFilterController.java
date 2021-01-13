@@ -10,6 +10,7 @@ import android.service.notification.StatusBarNotification;
 import android.text.TextUtils;
 import android.util.Log;
 import com.android.systemui.Dependency;
+import com.android.systemui.SystemUIApplication;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.media.MediaDataManagerKt;
 import com.android.systemui.plugins.NotificationListenerController;
@@ -86,9 +87,18 @@ public class NotificationFilterController {
                 Log.d("NotificationFilterController", "filter out usb notification.");
             }
             return true;
-        } else if (!DEBUG || !NotificationUtil.isSystemNotification(notificationEntry.getSbn())) {
-            return shouldFilterOutKeyguard(notificationEntry);
+        } else if (DEBUG && NotificationUtil.isSystemNotification(notificationEntry.getSbn())) {
+            return true;
         } else {
+            Context context = SystemUIApplication.getContext();
+            String packageName = notificationEntry.getSbn().getPackageName();
+            boolean isSubstituteNotification = notificationEntry.getSbn().isSubstituteNotification();
+            boolean isNotificationsBanned = NotificationSettingsHelper.isNotificationsBanned(context, packageName);
+            if (!isSubstituteNotification || !isNotificationsBanned) {
+                return shouldFilterOutKeyguard(notificationEntry);
+            }
+            ((NotificationEntryManager) Dependency.get(NotificationEntryManager.class)).performRemoveNotification(notificationEntry.getSbn(), 7);
+            Log.d("NotificationFilterController", String.format("filter Notification banned substitute key=%s", new Object[]{notificationEntry.getKey()}));
             return true;
         }
     }

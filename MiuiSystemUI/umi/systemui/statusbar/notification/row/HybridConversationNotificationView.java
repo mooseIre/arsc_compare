@@ -47,6 +47,7 @@ public class HybridConversationNotificationView extends HybridNotificationView {
         this.mFacePileProtectionWidth = getResources().getDimensionPixelSize(C0012R$dimen.conversation_single_line_face_pile_protection_width);
         this.mTransformationHelper.addViewTransformingToSimilar(this.mConversationIconView);
         this.mTransformationHelper.addTransformedView(this.mConversationSenderName);
+        MiuiStyleInjector.INSTANCE.alignConversationIcon(this.mConversationIconView, getResources());
     }
 
     public void bind(CharSequence charSequence, CharSequence charSequence2, View view) {

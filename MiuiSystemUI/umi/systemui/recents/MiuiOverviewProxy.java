@@ -93,13 +93,6 @@ public final class MiuiOverviewProxy extends IMiuiSystemUiProxy.Stub {
 
     /* access modifiers changed from: private */
     public final void notifyCompleteAssistant() {
-        if (verifyCaller("notifyCompleteAssistant")) {
-            long clearCallingIdentity = Binder.clearCallingIdentity();
-            try {
-                this.proxyService.notifyAssistantGestureCompletion(0.0f);
-            } finally {
-                Binder.restoreCallingIdentity(clearCallingIdentity);
-            }
-        }
+        this.proxyService.notifyAssistantGestureCompletion(0.0f);
     }
 }
