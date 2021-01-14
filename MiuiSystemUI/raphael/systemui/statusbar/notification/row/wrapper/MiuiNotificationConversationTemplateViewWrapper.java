@@ -3,16 +3,20 @@ package com.android.systemui.statusbar.notification.row.wrapper;
 import android.content.Context;
 import android.view.View;
 import com.android.internal.widget.ConversationLayout;
+import com.android.systemui.C0015R$id;
 import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /* compiled from: MiuiNotificationConversationTemplateViewWrapper.kt */
-public final class MiuiNotificationConversationTemplateViewWrapper extends MiuiNotificationCustomViewWrapper {
+public final class MiuiNotificationConversationTemplateViewWrapper extends NotificationViewWrapper {
+    private View actionsContainer;
     private final ConversationLayout conversationLayout;
     private View expandButtonContainer;
     private View expandButtonInnerContainer;
+    private int mContentHeight;
+    private int mMinHeightHint;
 
     /* JADX INFO: super call moved to the top of the method (can break code semantics) */
     public MiuiNotificationConversationTemplateViewWrapper(@NotNull Context context, @NotNull View view, @NotNull ExpandableNotificationRow expandableNotificationRow) {
@@ -32,6 +36,36 @@ public final class MiuiNotificationConversationTemplateViewWrapper extends MiuiN
         View requireViewById2 = conversationLayout2.requireViewById(16908960);
         Intrinsics.checkExpressionValueIsNotNull(requireViewById2, "requireViewById(com.andr…d_button_inner_container)");
         this.expandButtonInnerContainer = requireViewById2;
+        View findViewById = this.mView.findViewById(16908724);
+        this.actionsContainer = findViewById;
+        if (findViewById == null) {
+            this.actionsContainer = this.mView.findViewById(C0015R$id.actions_container);
+        }
+    }
+
+    public void setVisible(boolean z) {
+        super.setVisible(z);
+        View view = this.mView;
+        Intrinsics.checkExpressionValueIsNotNull(view, "mView");
+        view.setAlpha(z ? 1.0f : 0.0f);
+    }
+
+    public void setContentHeight(int i, int i2) {
+        super.setContentHeight(i, i2);
+        this.mContentHeight = i;
+        this.mMinHeightHint = i2;
+        updateActionOffset();
+    }
+
+    public boolean shouldClipToRounding(boolean z, boolean z2) {
+        View view;
+        if (super.shouldClipToRounding(z, z2)) {
+            return true;
+        }
+        if (!z2 || ((view = this.actionsContainer) != null && view.getVisibility() == 8)) {
+            return false;
+        }
+        return true;
     }
 
     public void onContentUpdated(@NotNull ExpandableNotificationRow expandableNotificationRow) {
@@ -93,5 +127,17 @@ public final class MiuiNotificationConversationTemplateViewWrapper extends MiuiN
             throw r1
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.notification.row.wrapper.MiuiNotificationConversationTemplateViewWrapper.disallowSingleClick(float, float):boolean");
+    }
+
+    private final void updateActionOffset() {
+        if (this.actionsContainer != null) {
+            int max = Math.max(this.mContentHeight, this.mMinHeightHint);
+            View view = this.actionsContainer;
+            if (view != null) {
+                View view2 = this.mView;
+                Intrinsics.checkExpressionValueIsNotNull(view2, "mView");
+                view.setTranslationY((float) (max - view2.getHeight()));
+            }
+        }
     }
 }
