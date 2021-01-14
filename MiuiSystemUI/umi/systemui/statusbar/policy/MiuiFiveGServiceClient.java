@@ -13,7 +13,6 @@ import android.os.Message;
 import android.os.RemoteException;
 import android.provider.Settings;
 import android.telephony.CellIdentityLte;
-import android.text.TextUtils;
 import android.util.LocalLog;
 import android.util.Log;
 import android.util.SparseArray;
@@ -566,20 +565,18 @@ public class MiuiFiveGServiceClient {
     }
 
     private void dualNrIconGroupOptimization() {
-        if (!Build.IS_INTERNATIONAL_BUILD) {
-            int otherSlotId = getOtherSlotId(this.mDefaultDataSlotId);
-            FiveGServiceState currentServiceState = getCurrentServiceState(this.mDefaultDataSlotId);
-            FiveGServiceState currentServiceState2 = getCurrentServiceState(otherSlotId);
-            if (this.mIsDualNrEnabled && currentServiceState.mIconGroup == TelephonyIcons.FIVE_G_BASIC && currentServiceState2.mIconGroup != TelephonyIcons.FIVE_G_BASIC) {
-                if (currentServiceState2.mUpperLayerInd != 1 || currentServiceState2.mPlmn != 1) {
-                    boolean isSameOperatorCard = isSameOperatorCard(this.mDefaultDataSlotId, otherSlotId);
-                    boolean isSameCell = isSameCell(this.mDefaultDataSlotId, otherSlotId);
-                    if (isSameOperatorCard && isSameCell) {
-                        MobileSignalController.MobileIconGroup unused = currentServiceState2.mIconGroup = TelephonyIcons.FIVE_G_BASIC;
-                        notifyListenersIfNecessary(otherSlotId);
-                    }
-                    localLog("dualNrIconGroupOptimization", "isSameOperatorCard = " + isSameOperatorCard + ", isSameCell = " + isSameCell + ", dataSlotIdState = " + currentServiceState + ", viceSlotIdState = " + currentServiceState2 + ", mIsDualNrEnabled = " + this.mIsDualNrEnabled + ", mDefaultDataSlotId = " + this.mDefaultDataSlotId);
+        int otherSlotId = getOtherSlotId(this.mDefaultDataSlotId);
+        FiveGServiceState currentServiceState = getCurrentServiceState(this.mDefaultDataSlotId);
+        FiveGServiceState currentServiceState2 = getCurrentServiceState(otherSlotId);
+        if (this.mIsDualNrEnabled && currentServiceState.mIconGroup == TelephonyIcons.FIVE_G_BASIC && currentServiceState2.mIconGroup != TelephonyIcons.FIVE_G_BASIC) {
+            if (currentServiceState2.mUpperLayerInd != 1 || currentServiceState2.mPlmn != 1) {
+                boolean isSameOperatorCard = isSameOperatorCard(this.mDefaultDataSlotId, otherSlotId);
+                boolean isSameCell = isSameCell(this.mDefaultDataSlotId, otherSlotId);
+                if (isSameOperatorCard && isSameCell) {
+                    MobileSignalController.MobileIconGroup unused = currentServiceState2.mIconGroup = TelephonyIcons.FIVE_G_BASIC;
+                    notifyListenersIfNecessary(otherSlotId);
                 }
+                localLog("dualNrIconGroupOptimization", "isSameOperatorCard = " + isSameOperatorCard + ", isSameCell = " + isSameCell + ", dataSlotIdState = " + currentServiceState + ", viceSlotIdState = " + currentServiceState2 + ", mIsDualNrEnabled = " + this.mIsDualNrEnabled + ", mDefaultDataSlotId = " + this.mDefaultDataSlotId);
             }
         }
     }
@@ -650,13 +647,7 @@ public class MiuiFiveGServiceClient {
     }
 
     private boolean isSameOperatorCard(int i, int i2) {
-        String simOperatorForSlot = TelephonyManager.getDefault().getSimOperatorForSlot(i);
-        String simOperatorForSlot2 = TelephonyManager.getDefault().getSimOperatorForSlot(i2);
-        return isChinaOperator(simOperatorForSlot) && isChinaOperator(simOperatorForSlot2) && TelephonyManager.getDefault().isSameOperator(simOperatorForSlot, simOperatorForSlot2);
-    }
-
-    private boolean isChinaOperator(String str) {
-        return !TextUtils.isEmpty(str) && str.startsWith("460");
+        return TelephonyManager.getDefault().isSameOperator(TelephonyManager.getDefault().getSimOperatorForSlot(i), TelephonyManager.getDefault().getSimOperatorForSlot(i2));
     }
 
     public int getOtherSlotId(int i) {

@@ -4870,15 +4870,16 @@ public final class R {
         public static final int zen_mode_condition_detail_button_padding;
         public static final int zen_mode_condition_detail_item_interline_spacing;
         public static final int zen_mode_condition_detail_item_spacing;
-        public static final int zen_mode_icon_bottom_margin;
+        public static final int zen_mode_content_size;
+        public static final int zen_mode_content_top_margin;
         public static final int zen_mode_icon_size;
         public static final int zen_mode_icon_start_margin;
         public static final int zen_mode_icon_top_margin;
-        public static final int zen_mode_text_bottom_margin;
-        public static final int zen_mode_text_end_margin;
-        public static final int zen_mode_text_size;
-        public static final int zen_mode_text_start_margin;
-        public static final int zen_mode_text_top_margin;
+        public static final int zen_mode_quit_size;
+        public static final int zen_mode_quit_top_margin;
+        public static final int zen_mode_title_end_margin;
+        public static final int zen_mode_title_size;
+        public static final int zen_mode_title_start_margin;
     }
 
     /* renamed from: com.android.systemui.R$drawable */
@@ -9563,8 +9564,10 @@ public final class R {
         public static final int zen_introduction_customize;
         public static final int zen_introduction_message;
         public static final int zen_mode_panel;
+        public static final int zen_quit;
         public static final int zen_radio_buttons;
         public static final int zen_radio_buttons_content;
+        public static final int zen_title;
     }
 
     /* renamed from: com.android.systemui.R$integer */
@@ -10878,6 +10881,8 @@ public final class R {
         public static final int bluetooth_dun_profile_summary_use_for;
         public static final int bluetooth_enable_gabeldorsche;
         public static final int bluetooth_enable_gabeldorsche_summary;
+        public static final int bluetooth_enable_page_scan;
+        public static final int bluetooth_enable_page_scan_summary;
         public static final int bluetooth_headset_profile_summary_connected;
         public static final int bluetooth_headset_profile_summary_use_for;
         public static final int bluetooth_hearing_aid_profile_summary_connected;

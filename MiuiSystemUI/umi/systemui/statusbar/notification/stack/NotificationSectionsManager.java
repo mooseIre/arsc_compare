@@ -137,7 +137,7 @@ public class NotificationSectionsManager implements StackScrollAlgorithm.Section
         return this.mediaControlsView;
     }
 
-    public final void initialize(@NotNull NotificationStackScrollLayout notificationStackScrollLayout, @NotNull LayoutInflater layoutInflater) {
+    public void initialize(@NotNull NotificationStackScrollLayout notificationStackScrollLayout, @NotNull LayoutInflater layoutInflater) {
         Intrinsics.checkParameterIsNotNull(notificationStackScrollLayout, "parent");
         Intrinsics.checkParameterIsNotNull(layoutInflater, "layoutInflater");
         if (!this.initialized) {
