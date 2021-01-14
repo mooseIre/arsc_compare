@@ -3,6 +3,6 @@
   xmlns:android="http://schemas.android.com/apk/res/android">
     <com.android.systemui.statusbar.notification.row.NotificationBackgroundView android:id="@id/backgroundNormal" android:layout_width="fill_parent" android:layout_height="fill_parent" />
     <com.android.systemui.statusbar.notification.row.NotificationBackgroundView android:id="@id/backgroundDimmed" android:layout_width="fill_parent" android:layout_height="fill_parent" />
-    <include android:id="@id/content" android:focusable="true" android:clickable="true" android:layout_width="fill_parent" android:layout_height="wrap_content" layout="@layout/item_zen_mode" />
+    <FrameLayout android:id="@id/content" android:focusable="true" android:clickable="true" android:layout_width="fill_parent" android:layout_height="wrap_content" />
     <com.android.systemui.statusbar.notification.FakeShadowView android:id="@id/fake_shadow" android:layout_width="fill_parent" android:layout_height="fill_parent" />
 </com.android.systemui.statusbar.notification.zen.ZenModeView>
