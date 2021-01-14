@@ -12,10 +12,6 @@ public class MiuiBatteryStatus {
     public int status;
     public int wireState;
 
-    public static boolean isChargingOrFull(int i) {
-        return i == 2 || i == 5;
-    }
-
     public static boolean isPluggedIn(int i) {
         return i == 1 || i == 2 || i == 4;
     }
