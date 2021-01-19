@@ -24,6 +24,7 @@ import android.view.WindowManager;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.statusbar.IStatusBarService;
 import com.android.internal.statusbar.NotificationVisibility;
+import com.android.systemui.Dependency;
 import com.android.systemui.Dumpable;
 import com.android.systemui.bubbles.BubbleController;
 import com.android.systemui.bubbles.BubbleData;
@@ -48,6 +49,7 @@ import com.android.systemui.statusbar.notification.collection.NotifPipeline;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import com.android.systemui.statusbar.notification.collection.notifcollection.NotifCollectionListener;
 import com.android.systemui.statusbar.notification.interruption.NotificationInterruptStateProvider;
+import com.android.systemui.statusbar.notification.modal.ModalController;
 import com.android.systemui.statusbar.phone.NotificationGroupManager;
 import com.android.systemui.statusbar.phone.NotificationShadeWindowController;
 import com.android.systemui.statusbar.phone.ShadeController;
@@ -932,6 +934,7 @@ public class BubbleController implements ConfigurationController.ConfigurationLi
             }
             if (z) {
                 this.mShadeController.collapsePanel(true);
+                ((ModalController) Dependency.get(ModalController.class)).animExitModal(150, true);
                 if (notificationEntry.getRow() != null) {
                     notificationEntry.getRow().updateBubbleButton();
                 }

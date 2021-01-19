@@ -33,13 +33,6 @@ public class ControlCenterUtils extends Utils {
         return Math.max(0.0f, Math.max(0.0f, (afterFriction(f - 0.0f, f2) * (((1.0f - (f3 * f3)) * 0.15f) + 0.5f)) + 0.0f) - 0.0f);
     }
 
-    public static float getTranslationY(float f, float f2) {
-        if (f < 0.0f) {
-            return afterFriction(-f, f2) * -1.0f;
-        }
-        return afterFriction(f, f2);
-    }
-
     public static void createButtonFolmeTouchStyle(View view) {
         ITouchStyle iTouchStyle = Folme.useAt(view).touch();
         iTouchStyle.setScale(1.0f, ITouchStyle.TouchType.DOWN);

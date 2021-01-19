@@ -153,8 +153,7 @@ public class ControlPanelWindowManager implements OnHeadsUpChangedListener {
     private void applyBlurRatio(float f) {
         if (hasAdded()) {
             Log.d("ControlPanelWindowManager", "setBlurRatio: " + f);
-            BlurUtil.setBlurWithWindowManager(this.mControlPanel.getViewRootImpl(), f, 0, this.mLpChanged);
-            apply();
+            BlurUtil.setBlur(this.mControlPanel.getViewRootImpl(), f, 0);
         }
     }
 

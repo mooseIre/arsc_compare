@@ -4,6 +4,7 @@ import com.android.keyguard.charge.MiuiChargeManager;
 import com.android.keyguard.fod.policy.MiuiGxzwPolicy;
 import com.android.systemui.recents.MiuiFullScreenGestureProxy;
 import com.android.systemui.recents.MiuiRecentProxy;
+import com.android.systemui.statusbar.notification.NotificationEntryManager;
 import com.android.systemui.statusbar.notification.NotificationPanelNavigationBarCoordinator;
 import com.android.systemui.statusbar.notification.policy.NotificationAlertController;
 import com.android.systemui.statusbar.notification.policy.NotificationCountLimitPolicy;
@@ -78,5 +79,9 @@ public final class MiuiVendorServices_MembersInjector {
 
     public static void injectMMiuiChargeManager(MiuiVendorServices miuiVendorServices, MiuiChargeManager miuiChargeManager) {
         miuiVendorServices.mMiuiChargeManager = miuiChargeManager;
+    }
+
+    public static void injectMNotificationEntryManager(MiuiVendorServices miuiVendorServices, NotificationEntryManager notificationEntryManager) {
+        miuiVendorServices.mNotificationEntryManager = notificationEntryManager;
     }
 }

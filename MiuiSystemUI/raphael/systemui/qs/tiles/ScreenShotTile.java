@@ -63,30 +63,30 @@ public class ScreenShotTile extends QSTileImpl<QSTile.BooleanState> {
 
     /* access modifiers changed from: protected */
     public void handleClick() {
-        if (this.mHost.getBarState() == 2) {
-            captureScreen();
+        if (QSTileImpl.mInControlCenter || !(this.mHost.getBarState() == 2 || this.mHost.getBarState() == 1)) {
+            this.mHost.collapsePanels();
+            this.mHandler.post(new Runnable() {
+                public void run() {
+                    if (ScreenShotTile.this.mHost.isQSFullyCollapsed()) {
+                        ScreenShotTile.this.mHandler.postDelayed(new Runnable() {
+                            public final void run() {
+                                ScreenShotTile.AnonymousClass1.this.lambda$run$0$ScreenShotTile$1();
+                            }
+                        }, 300);
+                    } else {
+                        ScreenShotTile.this.mHandler.postDelayed(this, 50);
+                    }
+                }
+
+                /* access modifiers changed from: private */
+                /* renamed from: lambda$run$0 */
+                public /* synthetic */ void lambda$run$0$ScreenShotTile$1() {
+                    ScreenShotTile.this.captureScreen();
+                }
+            });
             return;
         }
-        this.mHost.collapsePanels();
-        this.mHandler.post(new Runnable() {
-            public void run() {
-                if (ScreenShotTile.this.mHost.isQSFullyCollapsed()) {
-                    ScreenShotTile.this.mHandler.postDelayed(new Runnable() {
-                        public final void run() {
-                            ScreenShotTile.AnonymousClass1.this.lambda$run$0$ScreenShotTile$1();
-                        }
-                    }, 300);
-                } else {
-                    ScreenShotTile.this.mHandler.postDelayed(this, 50);
-                }
-            }
-
-            /* access modifiers changed from: private */
-            /* renamed from: lambda$run$0 */
-            public /* synthetic */ void lambda$run$0$ScreenShotTile$1() {
-                ScreenShotTile.this.captureScreen();
-            }
-        });
+        captureScreen();
     }
 
     /* access modifiers changed from: private */

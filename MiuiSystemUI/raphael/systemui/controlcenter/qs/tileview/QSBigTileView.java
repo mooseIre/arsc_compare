@@ -29,8 +29,8 @@ import com.android.systemui.C0021R$string;
 import com.android.systemui.C0022R$style;
 import com.android.systemui.Dependency;
 import com.android.systemui.Interpolators;
+import com.android.systemui.controlcenter.phone.ControlCenterPanelView;
 import com.android.systemui.controlcenter.phone.ControlPanelController;
-import com.android.systemui.controlcenter.phone.QSControlCenterPanel;
 import com.android.systemui.controlcenter.phone.widget.MiuiQSPanel$MiuiTileRecord;
 import com.android.systemui.controlcenter.utils.ControlCenterUtils;
 import com.android.systemui.plugins.qs.QSIconView;
@@ -64,6 +64,8 @@ public class QSBigTileView extends QSTileView {
     /* access modifiers changed from: private */
     public Context mContext;
     /* access modifiers changed from: private */
+    public ControlCenterPanelView mControlCenterPanelView;
+    /* access modifiers changed from: private */
     public ImageView mExpandIndicator;
     private final H mHandler;
     private QSTileHost mHost;
@@ -71,8 +73,6 @@ public class QSBigTileView extends QSTileView {
     private int mLayoutDirection;
     private String mOpeningString;
     private ControlPanelController mPanelController;
-    /* access modifiers changed from: private */
-    public QSControlCenterPanel mQSControlCenterPanel;
     private QSTile mQSTile;
     private QSTile.State mQSTileState;
     private int mState;
@@ -202,8 +202,8 @@ public class QSBigTileView extends QSTileView {
         }
     }
 
-    public void init(QSControlCenterPanel qSControlCenterPanel, String str, int i) {
-        this.mQSControlCenterPanel = qSControlCenterPanel;
+    public void init(ControlCenterPanelView controlCenterPanelView, String str, int i) {
+        this.mControlCenterPanelView = controlCenterPanelView;
         this.mTag = str;
         updateBackground();
         QSTile.State state = this.mQSTileState;
@@ -275,15 +275,15 @@ public class QSBigTileView extends QSTileView {
             }
 
             public void onShowDetail(boolean z) {
-                QSBigTileView.this.mQSControlCenterPanel.showDetail(z, QSBigTileView.this.mTileRecord);
+                QSBigTileView.this.mControlCenterPanelView.showDetail(z, QSBigTileView.this.mTileRecord);
             }
 
             public void onToggleStateChanged(boolean z) {
-                QSBigTileView.this.mQSControlCenterPanel.fireToggleStateChanged(z);
+                QSBigTileView.this.mControlCenterPanelView.fireToggleStateChanged(z);
             }
 
             public void onScanStateChanged(boolean z) {
-                QSBigTileView.this.mQSControlCenterPanel.fireScanStateChanged(z);
+                QSBigTileView.this.mControlCenterPanelView.fireScanStateChanged(z);
             }
         };
         this.mQSTile.addCallback(this.mTileRecord.callback);
@@ -435,10 +435,6 @@ public class QSBigTileView extends QSTileView {
                 return true;
             }
         });
-    }
-
-    public boolean isClicked() {
-        return this.mClicked;
     }
 
     public boolean onTouchEvent(MotionEvent motionEvent) {

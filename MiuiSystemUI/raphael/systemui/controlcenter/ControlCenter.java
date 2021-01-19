@@ -18,12 +18,12 @@ import com.android.systemui.C0015R$id;
 import com.android.systemui.C0017R$layout;
 import com.android.systemui.SystemUI;
 import com.android.systemui.broadcast.BroadcastDispatcher;
+import com.android.systemui.controlcenter.phone.ControlCenterPanelView;
 import com.android.systemui.controlcenter.phone.ControlPanelContentView;
 import com.android.systemui.controlcenter.phone.ControlPanelController;
 import com.android.systemui.controlcenter.phone.ControlPanelWindowManager;
 import com.android.systemui.controlcenter.phone.ControlPanelWindowView;
 import com.android.systemui.controlcenter.phone.ExpandInfoController;
-import com.android.systemui.controlcenter.phone.QSControlCenterPanel;
 import com.android.systemui.controlcenter.phone.controls.ControlsPluginManager;
 import com.android.systemui.controlcenter.policy.ControlCenterActivityStarter;
 import com.android.systemui.controlcenter.policy.SuperSaveModeController;
@@ -158,7 +158,7 @@ public class ControlCenter extends SystemUI implements ControlPanelController.Us
     public void clickTile(ComponentName componentName) {
         ControlPanelContentView controlPanelContentView = this.mControlPanelContentView;
         if (controlPanelContentView != null && controlPanelContentView.getControlCenterPanel() != null) {
-            ((QSControlCenterPanel) this.mControlPanelContentView.getControlCenterPanel()).clickTile(componentName);
+            ((ControlCenterPanelView) this.mControlPanelContentView.getControlCenterPanel()).clickTile(componentName);
         }
     }
 

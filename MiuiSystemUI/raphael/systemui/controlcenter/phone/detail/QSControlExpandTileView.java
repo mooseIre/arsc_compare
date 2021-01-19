@@ -169,10 +169,6 @@ public class QSControlExpandTileView extends LinearLayout implements ExpandInfoC
         });
     }
 
-    public boolean isClicked() {
-        return this.mClicked;
-    }
-
     public boolean onTouchEvent(MotionEvent motionEvent) {
         int actionMasked = motionEvent.getActionMasked();
         if (actionMasked == 0) {
@@ -283,6 +279,9 @@ public class QSControlExpandTileView extends LinearLayout implements ExpandInfoC
                 spannableString.setSpan(new TextAppearanceSpan(this.mContext, C0022R$style.TextAppearance_QSControl_ExpandTileUnit), this.mInfo.status.length(), spannableString.length(), 18);
                 this.mStatus.setText(spannableString);
             }
+            StringBuilder sb = new StringBuilder(this.mTitle.getText());
+            sb.append(this.mStatus.getText());
+            setContentDescription(sb);
             Log.d("QSControlExpandTileView", "updateViews" + this.mInfo.toString());
         }
     }

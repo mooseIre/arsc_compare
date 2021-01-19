@@ -92,6 +92,14 @@ public class QSControlFooter extends LinearLayout implements View.OnClickListene
         init();
     }
 
+    public View getFooterText() {
+        return this.mFooterText;
+    }
+
+    public View getFooterIcon() {
+        return this.mFooterIcon;
+    }
+
     public void init() {
         setOnClickListener(this);
         this.mFooterIconId = C0013R$drawable.ic_info_outline;
@@ -108,19 +116,6 @@ public class QSControlFooter extends LinearLayout implements View.OnClickListene
 
     public void setHostEnvironment(QSTileHost qSTileHost) {
         this.mHost = qSTileHost;
-    }
-
-    public void setForceHide(boolean z) {
-        this.mForceHide = z;
-    }
-
-    public void resetViews() {
-        this.mFooterIcon.setAlpha(1.0f);
-        this.mFooterText.setAlpha(1.0f);
-        this.mFooterIcon.setScaleX(1.0f);
-        this.mFooterIcon.setScaleY(1.0f);
-        this.mFooterText.setScaleX(1.0f);
-        this.mFooterText.setScaleY(1.0f);
     }
 
     public void setListening(boolean z) {

@@ -8,6 +8,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,7 +46,8 @@ import miui.app.AlertDialog;
 
 public class CCTileAdapter extends RecyclerView.Adapter<Holder> implements TileQueryHelper.TileStateListener {
     private int mAccessibilityFromIndex;
-    private final AccessibilityManager mAccessibilityManager;
+    /* access modifiers changed from: private */
+    public final AccessibilityManager mAccessibilityManager;
     /* access modifiers changed from: private */
     public boolean mAccessibilityMoving;
     /* access modifiers changed from: private */
@@ -113,11 +115,14 @@ public class CCTileAdapter extends RecyclerView.Adapter<Holder> implements TileQ
     public int mEditIndex;
     /* access modifiers changed from: private */
     public QSTileHost mHost;
+    /* access modifiers changed from: private */
+    public boolean mIsAccessibility = false;
     private final ItemTouchHelper mItemTouchHelper;
     private boolean mNeedsFocus;
     /* access modifiers changed from: private */
     public List<TileQueryHelper.TileInfo> mOtherTiles = new ArrayList();
-    private RecyclerView mParent;
+    /* access modifiers changed from: private */
+    public RecyclerView mParent;
     private QSControlCustomizer mQSControlCustomizer;
     private final GridLayoutManager.SpanSizeLookup mSizeLookup = new GridLayoutManager.SpanSizeLookup() {
         public int getSpanSize(int i) {
@@ -150,6 +155,16 @@ public class CCTileAdapter extends RecyclerView.Adapter<Holder> implements TileQ
         this.mItemTouchHelper = new ItemTouchHelper(this.mCallback);
         this.mDecoration = new TileItemDecoration(context);
         this.mParent = recyclerView;
+        registerAdapterDataObserver(new CCTileAdapterDataObserver());
+        this.mAccessibilityManager.addAccessibilityStateChangeListener(new AccessibilityManager.AccessibilityStateChangeListener() {
+            public void onAccessibilityStateChanged(boolean z) {
+                if (CCTileAdapter.this.mIsAccessibility != z) {
+                    boolean unused = CCTileAdapter.this.mIsAccessibility = z;
+                    Log.d("CCTileAdapter", "onAccessibilityStateChanged:" + z);
+                    CCTileAdapter.this.recalcSpecs();
+                }
+            }
+        });
     }
 
     public void setQsControlCustomizer(QSControlCustomizer qSControlCustomizer) {
@@ -223,6 +238,25 @@ public class CCTileAdapter extends RecyclerView.Adapter<Holder> implements TileQ
         }
     }
 
+    /* access modifiers changed from: private */
+    public void recalcSpecs() {
+        if (this.mCurrentSpecs != null && this.mAllTiles != null) {
+            this.mTiles.clear();
+            this.mOtherTiles.clear();
+            ArrayList arrayList = new ArrayList(this.mAllTiles);
+            for (int i = 0; i < this.mCurrentSpecs.size(); i++) {
+                TileQueryHelper.TileInfo andRemoveOther = getAndRemoveOther(this.mCurrentSpecs.get(i), arrayList);
+                if (andRemoveOther != null) {
+                    this.mTiles.add(andRemoveOther);
+                }
+            }
+            this.mTileDividerIndex = this.mTiles.size();
+            this.mOtherTiles.addAll(arrayList);
+            this.mEditIndex = this.mTiles.size();
+            notifyDataSetChanged();
+        }
+    }
+
     private void recalcSpecs(boolean z) {
         if (this.mCurrentSpecs != null && this.mAllTiles != null) {
             ArrayList arrayList = new ArrayList(this.mAllTiles);
@@ -246,9 +280,9 @@ public class CCTileAdapter extends RecyclerView.Adapter<Holder> implements TileQ
                     }
 
                     public int getNewListSize() {
-                        boolean access$200 = CCTileAdapter.this.mAddedAdpater;
+                        boolean access$500 = CCTileAdapter.this.mAddedAdpater;
                         CCTileAdapter cCTileAdapter = CCTileAdapter.this;
-                        return (access$200 ? cCTileAdapter.mTiles : cCTileAdapter.mOtherTiles).size();
+                        return (access$500 ? cCTileAdapter.mTiles : cCTileAdapter.mOtherTiles).size();
                     }
 
                     public boolean areItemsTheSame(int i, int i2) {
@@ -366,50 +400,55 @@ public class CCTileAdapter extends RecyclerView.Adapter<Holder> implements TileQ
                 }
                 return;
             }
-            TileQueryHelper.TileInfo tileInfo = (this.mAddedAdpater ? this.mTiles : this.mOtherTiles).get(i);
-            if (tileInfo != null) {
-                holder.mTileView.getIcon().setIsCustomTile(!tileInfo.isSystem);
-                if (i > this.mEditIndex) {
-                    QSTile.State state = tileInfo.state;
-                    state.contentDescription = this.mContext.getString(C0021R$string.accessibility_qs_edit_add_tile_label, new Object[]{state.label});
-                } else if (this.mAccessibilityMoving) {
-                    tileInfo.state.contentDescription = this.mContext.getString(C0021R$string.accessibility_qs_edit_position_label, new Object[]{Integer.valueOf(i + 1)});
-                } else {
-                    tileInfo.state.contentDescription = this.mContext.getString(C0021R$string.accessibility_qs_edit_tile_label, new Object[]{Integer.valueOf(i + 1), tileInfo.state.label});
+            bindContentDescription(holder, i);
+            if (this.mAccessibilityManager.isTouchExplorationEnabled()) {
+                if (!this.mAccessibilityMoving || i < this.mEditIndex) {
+                    z = true;
                 }
-                tileInfo.state.state = 1;
-                holder.mTileView.onStateChanged(tileInfo.state);
-                if (this.mAccessibilityManager.isTouchExplorationEnabled()) {
-                    if (!this.mAccessibilityMoving || i < this.mEditIndex) {
-                        z = true;
-                    }
-                    holder.mTileView.setClickable(z);
-                    holder.mTileView.setFocusable(z);
-                    CCCustomizeTileView access$100 = holder.mTileView;
-                    if (!z) {
-                        i2 = 4;
-                    }
-                    access$100.setImportantForAccessibility(i2);
-                    if (z) {
-                        holder.mTileView.setOnClickListener(new View.OnClickListener() {
-                            public void onClick(View view) {
-                                int adapterPosition = holder.getAdapterPosition();
-                                if (adapterPosition >= 0) {
-                                    if (CCTileAdapter.this.mAccessibilityMoving) {
-                                        CCTileAdapter.this.selectPosition(adapterPosition, view);
-                                    } else if (!CCTileAdapter.this.mAddedAdpater) {
-                                        CCTileAdapter.this.addTileItemFromOther(adapterPosition);
-                                    } else if (adapterPosition >= CCTileAdapter.this.mEditIndex || !CCTileAdapter.this.canRemoveTiles()) {
-                                        CCTileAdapter.this.startAccessibleDrag(adapterPosition);
-                                    } else {
-                                        CCTileAdapter.this.showAccessibilityDialog(adapterPosition, view);
-                                    }
+                holder.mTileView.setClickable(z);
+                holder.mTileView.setFocusable(z);
+                CCCustomizeTileView access$400 = holder.mTileView;
+                if (!z) {
+                    i2 = 4;
+                }
+                access$400.setImportantForAccessibility(i2);
+                if (z) {
+                    holder.mTileView.setOnClickListener(new View.OnClickListener() {
+                        public void onClick(View view) {
+                            int adapterPosition = holder.getAdapterPosition();
+                            if (adapterPosition >= 0) {
+                                if (CCTileAdapter.this.mAccessibilityMoving) {
+                                    CCTileAdapter.this.selectPosition(adapterPosition, view);
+                                } else if (!CCTileAdapter.this.mAddedAdpater) {
+                                    CCTileAdapter.this.addTileItemFromOther(adapterPosition);
+                                } else if (adapterPosition >= CCTileAdapter.this.mEditIndex || !CCTileAdapter.this.canRemoveTiles()) {
+                                    CCTileAdapter.this.startAccessibleDrag(adapterPosition);
+                                } else {
+                                    CCTileAdapter.this.showAccessibilityDialog(adapterPosition, view);
                                 }
                             }
-                        });
-                    }
+                        }
+                    });
                 }
             }
+        }
+    }
+
+    /* access modifiers changed from: private */
+    public void bindContentDescription(Holder holder, int i) {
+        TileQueryHelper.TileInfo tileInfo = (this.mAddedAdpater ? this.mTiles : this.mOtherTiles).get(i);
+        if (tileInfo != null) {
+            holder.mTileView.getIcon().setIsCustomTile(!tileInfo.isSystem);
+            if (i > this.mEditIndex) {
+                QSTile.State state = tileInfo.state;
+                state.contentDescription = this.mContext.getString(C0021R$string.accessibility_qs_edit_add_tile_label, new Object[]{state.label});
+            } else if (this.mAccessibilityMoving) {
+                tileInfo.state.contentDescription = this.mContext.getString(C0021R$string.accessibility_qs_edit_position_label, new Object[]{Integer.valueOf(i + 1)});
+            } else {
+                tileInfo.state.contentDescription = this.mContext.getString(C0021R$string.accessibility_qs_edit_tile_label, new Object[]{Integer.valueOf(i + 1), tileInfo.state.label});
+            }
+            tileInfo.state.state = 1;
+            holder.mTileView.onStateChanged(tileInfo.state);
         }
     }
 
@@ -622,12 +661,12 @@ public class CCTileAdapter extends RecyclerView.Adapter<Holder> implements TileQ
             super.getItemOffsets(rect, i, recyclerView);
             int measuredWidth = recyclerView.getMeasuredWidth();
             boolean z = recyclerView.getLayoutDirection() == 1;
-            float access$1700 = ((float) (measuredWidth - (CCTileAdapter.this.mTileWidth * CCTileAdapter.this.mSpanCount))) / ((float) (CCTileAdapter.this.mSpanCount - 1));
+            float access$2000 = ((float) (measuredWidth - (CCTileAdapter.this.mTileWidth * CCTileAdapter.this.mSpanCount))) / ((float) (CCTileAdapter.this.mSpanCount - 1));
             if (i % CCTileAdapter.this.mSpanCount < CCTileAdapter.this.mSpanCount - 1) {
                 if (z) {
-                    rect.left = Math.round(access$1700);
+                    rect.left = Math.round(access$2000);
                 } else {
-                    rect.right = Math.round(access$1700);
+                    rect.right = Math.round(access$2000);
                 }
             }
             rect.bottom = CCTileAdapter.this.mTileBottom;
@@ -652,6 +691,52 @@ public class CCTileAdapter extends RecyclerView.Adapter<Holder> implements TileQ
             int bottom = recyclerView.getBottom();
             this.mDrawable.setBounds(0, childAt.getTop() + ((RecyclerView.LayoutParams) childAt.getLayoutParams()).topMargin + Math.round(ViewCompat.getTranslationY(childAt)), width, bottom);
             this.mDrawable.draw(canvas);
+        }
+    }
+
+    private class CCTileAdapterDataObserver extends RecyclerView.AdapterDataObserver {
+        private CCTileAdapterDataObserver() {
+        }
+
+        private void rebindContentDescription(int i) {
+            Log.d("CCTileAdapter", "mAccessibilityManager.isEnabled()");
+            Holder holder = (Holder) CCTileAdapter.this.mParent.findViewHolderForAdapterPosition(i);
+            if (holder != null) {
+                CCTileAdapter.this.bindContentDescription(holder, i);
+            }
+        }
+
+        public void onItemRangeInserted(int i, int i2) {
+            super.onItemRangeInserted(i, i2);
+            if (CCTileAdapter.this.mAccessibilityManager.isEnabled() && i2 == 1) {
+                rebindContentDescription(i);
+            }
+        }
+
+        public void onItemRangeRemoved(int i, int i2) {
+            super.onItemRangeRemoved(i, i2);
+            if (!CCTileAdapter.this.mAccessibilityManager.isEnabled() || i2 != 1) {
+                return;
+            }
+            if (CCTileAdapter.this.mAddedAdpater && i + 1 < CCTileAdapter.this.mTiles.size()) {
+                while (i < CCTileAdapter.this.mTiles.size()) {
+                    rebindContentDescription(i);
+                    i++;
+                }
+            } else if (!CCTileAdapter.this.mAddedAdpater) {
+                while (i < CCTileAdapter.this.mOtherTiles.size()) {
+                    rebindContentDescription(i);
+                    i++;
+                }
+            }
+        }
+
+        public void onItemRangeMoved(int i, int i2, int i3) {
+            super.onItemRangeMoved(i, i2, i3);
+            if (CCTileAdapter.this.mAccessibilityManager.isEnabled() && i3 == 1) {
+                rebindContentDescription(i);
+                rebindContentDescription(i2);
+            }
         }
     }
 }

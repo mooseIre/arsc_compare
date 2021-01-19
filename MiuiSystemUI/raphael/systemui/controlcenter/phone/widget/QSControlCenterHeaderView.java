@@ -112,6 +112,7 @@ public class QSControlCenterHeaderView extends LinearLayout {
     };
     private int mOrientation;
     private ControlPanelController mPanelController;
+    private ViewGroup mPanelHeader;
     /* access modifiers changed from: private */
     public ImageView mShortcut;
     private LinearLayout mStatusIcons;
@@ -125,6 +126,30 @@ public class QSControlCenterHeaderView extends LinearLayout {
         this.mLastConfiguration = new Configuration(context.getResources().getConfiguration());
     }
 
+    public ViewGroup getTilesHeader() {
+        return this.mTilesHeader;
+    }
+
+    public ViewGroup getPanelHeader() {
+        return this.mPanelHeader;
+    }
+
+    public View getShortCut() {
+        return this.mShortcut;
+    }
+
+    public View getDateTime() {
+        return this.mDateView;
+    }
+
+    public View getBigTime() {
+        return this.mBigTime;
+    }
+
+    public View getEditTile() {
+        return this.mTilesEdit;
+    }
+
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
@@ -133,6 +158,7 @@ public class QSControlCenterHeaderView extends LinearLayout {
         networkSpeedView.setVisibilityByStatusBar(true);
         this.mBattery = (MiuiBatteryMeterView) findViewById(C0015R$id.battery);
         this.mTilesHeader = (ViewGroup) findViewById(C0015R$id.tiles_header);
+        this.mPanelHeader = (ViewGroup) findViewById(C0015R$id.panel_header);
         this.mCarrierText = (CarrierText) findViewById(C0015R$id.carrier_text);
         LinearLayout linearLayout = (LinearLayout) findViewById(C0015R$id.statusIcons);
         this.mStatusIcons = linearLayout;
