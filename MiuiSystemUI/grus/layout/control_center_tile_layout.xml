@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.android.systemui.controlcenter.phone.widget.ControlCenterTilesContainer android:id="@id/tiles_springer" android:clipChildren="false" android:clipToPadding="false" android:layout_width="fill_parent" android:layout_height="wrap_content" app:scrollOrientation="vertical" app:scrollableView="@id/tiles_scroller" app:springBackMode="bottom|top"
+  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <miuix.core.widget.NestedScrollView android:id="@id/tiles_scroller" android:clipChildren="false" android:clipToPadding="false" android:layout_width="fill_parent" android:layout_height="fill_parent" android:overScrollMode="never">
+        <LinearLayout android:orientation="vertical" android:id="@id/tiles_container" android:clipChildren="false" android:clipToPadding="false" android:layout_width="fill_parent" android:layout_height="wrap_content">
+            <include layout="@layout/control_center_big_tiles_layout" />
+            <com.android.systemui.controlcenter.phone.QSControlCenterTileLayout android:id="@id/tile_layout" android:clipChildren="false" android:clipToPadding="false" android:layout_width="fill_parent" android:layout_height="fill_parent" />
+        </LinearLayout>
+    </miuix.core.widget.NestedScrollView>
+</com.android.systemui.controlcenter.phone.widget.ControlCenterTilesContainer>
