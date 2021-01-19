@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.android.systemui.controlcenter.phone.ControlCenterPanelView android:layout_gravity="center_horizontal" android:orientation="vertical" android:id="@id/control_center_panel" android:clipChildren="false" android:clipToPadding="false" android:layout_width="fill_parent" android:layout_height="fill_parent" android:splitMotionEvents="false"
+  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <include layout="@layout/qs_control_center_header" />
+    <LinearLayout android:orientation="vertical" android:id="@id/cc_content" android:clipChildren="false" android:clipToPadding="false" android:layout_width="fill_parent" android:layout_height="fill_parent">
+        <com.android.systemui.controlcenter.phone.widget.ControlCenterContentContainer android:layout_gravity="center_horizontal" android:id="@id/content_springer" android:clipChildren="false" android:clipToPadding="false" android:layout_width="fill_parent" android:layout_height="fill_parent" app:scrollOrientation="vertical" app:scrollableView="@id/content_scroller" app:springBackMode="bottom|top">
+            <miuix.core.widget.NestedScrollView android:id="@id/content_scroller" android:clipChildren="false" android:clipToPadding="false" android:layout_width="fill_parent" android:layout_height="fill_parent" android:overScrollMode="never">
+                <LinearLayout android:orientation="vertical" android:id="@id/content_container" android:clipChildren="false" android:clipToPadding="false" android:layout_width="fill_parent" android:layout_height="wrap_content">
+                    <include layout="@layout/control_center_tile_layout" />
+                    <include layout="@layout/control_center_footer_panel_layout" />
+                    <Space android:id="@id/navigation_bar_space" android:layout_width="fill_parent" android:layout_height="wrap_content" />
+                </LinearLayout>
+            </miuix.core.widget.NestedScrollView>
+        </com.android.systemui.controlcenter.phone.widget.ControlCenterContentContainer>
+    </LinearLayout>
+</com.android.systemui.controlcenter.phone.ControlCenterPanelView>
