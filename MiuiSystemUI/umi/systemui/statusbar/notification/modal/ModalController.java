@@ -231,7 +231,7 @@ public final class ModalController {
     }
 
     private final boolean canEnterModal(ExpandableNotificationRow expandableNotificationRow) {
-        return !expandableNotificationRow.isPinned();
+        return !expandableNotificationRow.isPinned() && (Intrinsics.areEqual((Object) expandableNotificationRow.getShowingLayout(), (Object) expandableNotificationRow.getPublicLayout()) ^ true);
     }
 
     static {

@@ -151,8 +151,11 @@ public class StackScrollAlgorithm {
             ExpandableView expandableView = stackScrollAlgorithmState.visibleChildren.get(i);
             ExpandableViewState viewState = expandableView.getViewState();
             viewState.dimmed = isDimmed;
-            viewState.hideSensitive = isHideSensitive;
-            boolean z = activatedChild == expandableView;
+            boolean z = true;
+            viewState.hideSensitive = (expandableView instanceof ExpandableNotificationRow ? ((ExpandableNotificationRow) expandableView).getEntry().hideSensitiveByAppLock : false) || isHideSensitive;
+            if (activatedChild != expandableView) {
+                z = false;
+            }
             if (isDimmed && z) {
                 viewState.zTranslation += ((float) ambientState.getZDistanceBetweenElements()) * 2.0f;
             }
@@ -421,7 +424,7 @@ public class StackScrollAlgorithm {
             boolean z = trackedHeadsUpRow != null && this.mHostView.indexOfChild(expandableView) < this.mHostView.indexOfChild(trackedHeadsUpRow);
             int innerHeight = ambientState.getInnerHeight() - ambientState.getShelf().getIntrinsicHeight();
             if (!expandableView.isPinned() && !expandableView.isHeadsUpAnimatingAway()) {
-                innerHeight = (int) (((float) ambientState.getInnerHeight()) + ambientState.getTopPadding());
+                innerHeight = ambientState.isOnKeyguard() ? (innerHeight + ((int) ambientState.getTopPadding())) - ambientState.getStaticTopPadding() : (int) (((float) ambientState.getInnerHeight()) + ambientState.getTopPadding());
             }
             if (ambientState.isAppearing() && !expandableView.isAboveShelf() && !z && !ambientState.isNCSwitching()) {
                 expandableViewState.yTranslation = Math.max(expandableViewState.yTranslation, (float) innerHeight);

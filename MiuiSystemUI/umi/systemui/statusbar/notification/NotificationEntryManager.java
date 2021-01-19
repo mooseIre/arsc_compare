@@ -26,6 +26,7 @@ import com.android.systemui.statusbar.notification.collection.notifcollection.No
 import com.android.systemui.statusbar.notification.logging.NotificationLogger;
 import com.android.systemui.statusbar.notification.policy.KeyguardNotificationController;
 import com.android.systemui.statusbar.notification.policy.NotificationBadgeController;
+import com.android.systemui.statusbar.notification.policy.NotificationSensitiveController;
 import com.android.systemui.statusbar.notification.row.NotificationRowContentBinder;
 import com.android.systemui.statusbar.phone.NotificationGroupManager;
 import com.android.systemui.util.Assert;
@@ -470,6 +471,7 @@ public class NotificationEntryManager implements CommonNotifCollection, Dumpable
                 onEntryInit.onEntryInit(notificationEntry);
             }
         }
+        notificationEntry.hideSensitiveByAppLock = ((NotificationSensitiveController) Dependency.get(NotificationSensitiveController.class)).showSensitiveByAppLock(notificationEntry);
         for (NotifCollectionListener onEntryBind : this.mNotifCollectionListeners) {
             onEntryBind.onEntryBind(notificationEntry, statusBarNotification);
         }
@@ -525,6 +527,7 @@ public class NotificationEntryManager implements CommonNotifCollection, Dumpable
             updateRankingAndSort(rankingMap, "updateNotificationInternal");
             ExpandedNotification sbn = activeNotificationUnfiltered.getSbn();
             activeNotificationUnfiltered.setSbn(statusBarNotification);
+            activeNotificationUnfiltered.hideSensitiveByAppLock = ((NotificationSensitiveController) Dependency.get(NotificationSensitiveController.class)).showSensitiveByAppLock(activeNotificationUnfiltered);
             for (NotifCollectionListener onEntryBind : this.mNotifCollectionListeners) {
                 onEntryBind.onEntryBind(activeNotificationUnfiltered, statusBarNotification);
             }

@@ -9,7 +9,9 @@ import android.view.View;
 import com.android.keyguard.KeyguardClockSwitch;
 import com.android.keyguard.KeyguardMessageArea;
 import com.android.keyguard.KeyguardSliceView;
+import com.android.systemui.controlcenter.phone.ControlCenterPanelView;
 import com.android.systemui.controlcenter.phone.customize.QSControlCustomizer;
+import com.android.systemui.controlcenter.phone.widget.ControlCenterBrightnessView;
 import com.android.systemui.dagger.SystemUIRootComponent;
 import com.android.systemui.qs.QSContainerImpl;
 import com.android.systemui.qs.QSFooterDataUsage;
@@ -36,6 +38,10 @@ public class InjectionInflationController {
 
     public interface ViewInstanceCreator {
         NotificationShelf creatNotificationShelf();
+
+        ControlCenterBrightnessView createControlCenterBrightnessView();
+
+        ControlCenterPanelView createControlCenterPanelView();
 
         KeyguardClockSwitch createKeyguardClockSwitch();
 

@@ -3,8 +3,8 @@ package com.android.systemui.controlcenter.phone.controls;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
+import com.android.systemui.controlcenter.phone.ControlCenterPanelView;
 import com.android.systemui.controlcenter.phone.ControlPanelContentView;
-import com.android.systemui.controlcenter.phone.QSControlCenterPanel;
 import com.android.systemui.plugins.miui.controls.ControlsEditCallback;
 import miuix.animation.Folme;
 import miuix.animation.IStateStyle;
@@ -26,6 +26,7 @@ public class ControlsEditController {
             ControlsEditController.this.startAnim(false);
         }
     };
+    private ControlCenterPanelView mControlCenterPanelView;
     private ControlPanelContentView mControlPanelContentView;
     private View mControlsEditView;
     /* access modifiers changed from: private */
@@ -34,13 +35,12 @@ public class ControlsEditController {
     private IStateStyle mPanelAnim;
     private AnimState mPanelHideAnim;
     private AnimState mPanelShowAnim;
-    private QSControlCenterPanel mQSControlCenterPanel;
     private AnimState mShowAnim;
 
-    public ControlsEditController(ControlsPluginManager controlsPluginManager, ControlPanelContentView controlPanelContentView, QSControlCenterPanel qSControlCenterPanel) {
+    public ControlsEditController(ControlsPluginManager controlsPluginManager, ControlPanelContentView controlPanelContentView, ControlCenterPanelView controlCenterPanelView) {
         this.mControlsPluginManager = controlsPluginManager;
         this.mControlPanelContentView = controlPanelContentView;
-        this.mQSControlCenterPanel = qSControlCenterPanel;
+        this.mControlCenterPanelView = controlCenterPanelView;
     }
 
     public boolean isShown() {
@@ -85,7 +85,7 @@ public class ControlsEditController {
         animState2.add(ViewProperty.AUTO_ALPHA, 0.0f, new long[0]);
         animState2.add(ViewProperty.TRANSLATION_Y, 100, new long[0]);
         this.mHideAnim = animState2;
-        this.mPanelAnim = Folme.useAt(this.mQSControlCenterPanel).state();
+        this.mPanelAnim = Folme.useAt(this.mControlCenterPanelView).state();
         AnimState animState3 = new AnimState("qs_control_customizer_show_panel");
         animState3.add(ViewProperty.AUTO_ALPHA, 1.0f, new long[0]);
         this.mPanelShowAnim = animState3;

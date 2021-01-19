@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -347,7 +348,8 @@ public class QSFragment extends LifecycleFragment implements QS, CommandQueue.Ca
     }
 
     public void setListening(boolean z) {
-        this.mListening = z;
+        Log.d(QS.TAG, "setListening " + z);
+        this.mListening = !this.mControlPanelController.isUseControlCenter() && z;
         this.mFooter.setListening(z);
         this.mQSPanel.setListening(this.mListening, this.mQsExpanded);
         this.mContainer.setBrightnessListening(z);
@@ -539,6 +541,9 @@ public class QSFragment extends LifecycleFragment implements QS, CommandQueue.Ca
     public void animateAppearDisappear(final boolean z) {
         AnonymousClass5 r4;
         this.mAppeared = z;
+        if (z) {
+            setListening(true);
+        }
         float f = 1.0f;
         ViewPropertyAnimator scaleX = getView().animate().setInterpolator(PanelAppearDisappearEvent.Companion.getINTERPOLATOR()).setDuration(450).alpha(this.mAppeared ? 1.0f : 0.0f).scaleX(this.mAppeared ? 1.0f : 0.8f);
         if (!this.mAppeared) {
@@ -550,7 +555,9 @@ public class QSFragment extends LifecycleFragment implements QS, CommandQueue.Ca
         } else {
             r4 = new AnimatorListenerAdapter() {
                 public void onAnimationEnd(Animator animator) {
-                    QSFragment.this.setListening(z);
+                    if (!z) {
+                        QSFragment.this.setListening(false);
+                    }
                     boolean unused = QSFragment.this.mHeaderAnimating = false;
                 }
             };

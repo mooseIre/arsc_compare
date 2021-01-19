@@ -91,4 +91,9 @@ public final class NotificationStackScrollLayoutExtKt {
         Intrinsics.checkParameterIsNotNull(notificationStackScrollLayout, "$this$setNCSwitching");
         notificationStackScrollLayout.getAmbientState().setNCSwitching(z);
     }
+
+    public static final void setStaticTopPadding(@NotNull NotificationStackScrollLayout notificationStackScrollLayout, int i) {
+        Intrinsics.checkParameterIsNotNull(notificationStackScrollLayout, "$this$setStaticTopPadding");
+        notificationStackScrollLayout.getAmbientState().setStaticTopPadding(i);
+    }
 }

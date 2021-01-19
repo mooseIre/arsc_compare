@@ -25,8 +25,8 @@ import com.android.systemui.C0017R$layout;
 import com.android.systemui.C0021R$string;
 import com.android.systemui.C0022R$style;
 import com.android.systemui.Dependency;
+import com.android.systemui.controlcenter.phone.ControlCenterPanelView;
 import com.android.systemui.controlcenter.phone.ControlPanelContentView;
-import com.android.systemui.controlcenter.phone.QSControlCenterPanel;
 import com.android.systemui.controlcenter.utils.ControlCenterUtils;
 import com.android.systemui.plugins.qs.QSTile;
 import com.android.systemui.qs.QSTileHost;
@@ -105,7 +105,7 @@ public class QSControlCustomizer extends FrameLayout implements TileQueryHelper.
     public CCTileAdapter mOtherTilesAdapter;
     /* access modifiers changed from: private */
     public RecyclerView mOthersRecyclerView;
-    protected QSControlCenterPanel mQSCenterPanel;
+    protected ControlCenterPanelView mQSCenterPanel;
     protected QSControlPanelCallback mQsPanelCallback = new QSControlPanelCallback() {
         public void show() {
             if (!QSControlCustomizer.this.isShown) {
@@ -369,7 +369,7 @@ public class QSControlCustomizer extends FrameLayout implements TileQueryHelper.
 
     public void setQSControlCenterPanel(ControlPanelContentView controlPanelContentView) {
         controlPanelContentView.setQSCustomizerCallback(this.mQsPanelCallback);
-        this.mQSCenterPanel = (QSControlCenterPanel) controlPanelContentView.getControlCenterPanel();
+        this.mQSCenterPanel = (ControlCenterPanelView) controlPanelContentView.getControlCenterPanel();
     }
 
     public boolean isShown() {
@@ -433,6 +433,7 @@ public class QSControlCustomizer extends FrameLayout implements TileQueryHelper.
                     QSControlCustomizer.this.mQSCenterPanel.setLayerType(0, (Paint) null);
                     QSControlCustomizer.this.mRecyclerView.suppressLayout(false);
                     QSControlCustomizer.this.mOthersRecyclerView.suppressLayout(false);
+                    QSControlCustomizer.this.mQSCenterPanel.setVisibility(8);
                 }
             });
             iStateStyle.fromTo(animState, animState2, animConfig);
@@ -446,6 +447,7 @@ public class QSControlCustomizer extends FrameLayout implements TileQueryHelper.
         animConfig2.addListeners(new TransitionListener() {
             public void onBegin(Object obj) {
                 super.onBegin(obj);
+                QSControlCustomizer.this.mQSCenterPanel.setVisibility(0);
                 QSControlCustomizer.this.setLayerType(2, (Paint) null);
                 QSControlCustomizer.this.mQSCenterPanel.setLayerType(2, (Paint) null);
             }

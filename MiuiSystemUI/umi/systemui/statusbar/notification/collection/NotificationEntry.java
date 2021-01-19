@@ -33,6 +33,7 @@ public final class NotificationEntry extends ListEntry {
     private boolean hasSentReply;
     public CharSequence headsUpStatusBarText;
     public CharSequence headsUpStatusBarTextPublic;
+    public boolean hideSensitiveByAppLock;
     private long initializationTime;
     private boolean interruption;
     private long lastFullScreenIntentLaunchTime;

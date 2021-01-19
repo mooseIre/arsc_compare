@@ -76,7 +76,10 @@ public class ExpandDetailItems extends MiuiQSDetailItems {
         }
 
         public MiuiQSDetailItems.ItemHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-            return new CompleteItemHolder(LayoutInflater.from(ExpandDetailItems.this.mContext).inflate(C0017R$layout.qs_control_expand_detail_item, viewGroup, false));
+            if (i != 2) {
+                return new CompleteItemHolder(LayoutInflater.from(ExpandDetailItems.this.mContext).inflate(C0017R$layout.qs_control_expand_detail_item, viewGroup, false));
+            }
+            return new MiuiQSDetailItems.LineItemHolder(LayoutInflater.from(ExpandDetailItems.this.mContext).inflate(C0017R$layout.qs_detail_line_item, viewGroup, false));
         }
 
         public void onBindViewHolder(MiuiQSDetailItems.ItemHolder itemHolder, int i) {

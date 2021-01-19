@@ -76,12 +76,15 @@ public class MiuiNotificationInterruptStateProviderImpl extends NotificationInte
     }
 
     private boolean shouldPeek(NotificationEntry notificationEntry, ExpandedNotification expandedNotification) {
+        boolean z = false;
         if (!this.mDeviceProvisionedController.isDeviceProvisioned() || this.mStatusBarKeyguardViewManager.isShowing() || ((InCallUtils.isInCallNotificationHeadsUp(this.mHeadsUpManager.getTopEntry()) && !InCallUtils.isInCallNotification(expandedNotification)) || (InCallUtils.isInCallScreenShowing() && !InCallUtils.isInCallNotificationHasVideoCall(expandedNotification)))) {
             Log.d("InterruptionStateProvider", "no peek: miui smart intercept: " + expandedNotification.getKey());
             return false;
         } else if (expandedNotification.getNotification().fullScreenIntent != null) {
             if (NotificationUtil.isInCallNotification(expandedNotification)) {
-                boolean z = !this.mStatusBarKeyguardViewManager.isShowing();
+                if (!this.mStatusBarKeyguardViewManager.isShowing() && !((StatusBar) Dependency.get(StatusBar.class)).isPanelExpanded()) {
+                    z = true;
+                }
                 Log.d("InterruptionStateProvider", "in call notification should peek: " + z);
                 return z;
             } else if (BuildConfig.IS_INTERNATIONAL) {

@@ -11,7 +11,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
-import android.widget.FrameLayout;
 import com.android.systemui.C0012R$dimen;
 import com.android.systemui.C0015R$id;
 import com.android.systemui.Dependency;
@@ -46,6 +45,7 @@ public class QSControlCenterTileLayout extends ViewGroup implements QSPanel.QSTi
     /* access modifiers changed from: private */
     public final H mHandler = new H();
     private QSTileHost mHost;
+    private int mLastCellPaddingBottom;
     private float mLastHeight = -1.0f;
     private boolean mListening;
     private int mMaxHeight;
@@ -58,7 +58,6 @@ public class QSControlCenterTileLayout extends ViewGroup implements QSPanel.QSTi
     private ControlPanelController mPanelController;
     private float mPanelLandWidth;
     private float mPanelPaddingHorizontal;
-    private QSControlCenterPanel mQSControlCenterPanel;
     protected final ArrayList<QSPanel.TileRecord> mRecords = new ArrayList<>();
     private int mRowMarginStart;
     private int mShowLines;
@@ -69,6 +68,9 @@ public class QSControlCenterTileLayout extends ViewGroup implements QSPanel.QSTi
 
     public int getOffsetTop(QSPanel.TileRecord tileRecord) {
         return 0;
+    }
+
+    public void onExpandChange(boolean z) {
     }
 
     public QSControlCenterTileLayout(Context context) {
@@ -82,31 +84,24 @@ public class QSControlCenterTileLayout extends ViewGroup implements QSPanel.QSTi
         updateResources();
     }
 
-    public void setQSControlCenterPanel(QSControlCenterPanel qSControlCenterPanel) {
-        this.mQSControlCenterPanel = qSControlCenterPanel;
-    }
-
-    /* access modifiers changed from: protected */
-    public void onAttachedToWindow() {
-        super.onAttachedToWindow();
+    public void performAttachedToWindow() {
         ((ControlPanelWindowManager) Dependency.get(ControlPanelWindowManager.class)).addExpandChangeListener(this);
         if (this.mHost != null) {
             this.mHandler.post(new Runnable() {
                 public final void run() {
-                    QSControlCenterTileLayout.this.lambda$onAttachedToWindow$0$QSControlCenterTileLayout();
+                    QSControlCenterTileLayout.this.lambda$performAttachedToWindow$0$QSControlCenterTileLayout();
                 }
             });
         }
     }
 
     /* access modifiers changed from: private */
-    /* renamed from: lambda$onAttachedToWindow$0 */
-    public /* synthetic */ void lambda$onAttachedToWindow$0$QSControlCenterTileLayout() {
+    /* renamed from: lambda$performAttachedToWindow$0 */
+    public /* synthetic */ void lambda$performAttachedToWindow$0$QSControlCenterTileLayout() {
         setTiles(this.mHost.getTiles());
     }
 
-    /* access modifiers changed from: protected */
-    public void onDetachedFromWindow() {
+    public void performDetachedFromWindow() {
         QSTileHost qSTileHost = this.mHost;
         if (qSTileHost != null) {
             qSTileHost.removeCallback(this);
@@ -116,7 +111,6 @@ public class QSControlCenterTileLayout extends ViewGroup implements QSPanel.QSTi
         while (it.hasNext()) {
             it.next().tile.removeCallbacksByType(3);
         }
-        super.onDetachedFromWindow();
     }
 
     /* access modifiers changed from: protected */
@@ -163,6 +157,7 @@ public class QSControlCenterTileLayout extends ViewGroup implements QSPanel.QSTi
     public boolean updateResources() {
         this.mPanelPaddingHorizontal = (float) this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_panel_margin_horizontal);
         this.mPanelLandWidth = (float) this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_width_land);
+        this.mLastCellPaddingBottom = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.qs_tile_label_padding_top);
         int integer = this.mContext.getResources().getInteger(C0012R$dimen.qs_control_tiles_columns);
         if (this.mColumns != integer) {
             this.mColumns = integer;
@@ -175,8 +170,10 @@ public class QSControlCenterTileLayout extends ViewGroup implements QSPanel.QSTi
             int i = this.mMinCellHeight;
             int i2 = this.mMinShowRows;
             int i3 = this.mColumnMarginTop;
-            this.mMinHeight = (i * i2) + ((i2 - 1) * i3);
-            this.mMaxHeight = (this.mCellHeight * ceil) + ((ceil - 1) * i3);
+            int i4 = (i * i2) + ((i2 - 1) * i3);
+            int i5 = this.mLastCellPaddingBottom;
+            this.mMinHeight = i4 + i5;
+            this.mMaxHeight = (this.mCellHeight * ceil) + ((ceil - 1) * i3) + i5;
         }
         this.mMinShowRows = this.mPanelController.isSuperPowerMode() ? 1 : this.mContext.getResources().getInteger(C0012R$dimen.qs_control_tiles_min_rows);
         this.mColumnMarginTop = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_center_tile_margin_top);
@@ -184,11 +181,11 @@ public class QSControlCenterTileLayout extends ViewGroup implements QSPanel.QSTi
         this.mCellHeight = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_center_tile_height) + CCQSTileView.getTextHeight(getContext());
         int dimensionPixelSize = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_tile_icon_bg_size);
         this.mMinCellHeight = dimensionPixelSize;
-        int i4 = this.mMinShowRows;
-        int i5 = (dimensionPixelSize * i4) + ((i4 - 1) * this.mColumnMarginTop);
-        this.mMinHeight = i5;
-        if (i5 < 0) {
-            float f = (float) i5;
+        int i6 = this.mMinShowRows;
+        int i7 = (dimensionPixelSize * i6) + ((i6 - 1) * this.mColumnMarginTop) + this.mLastCellPaddingBottom;
+        this.mMinHeight = i7;
+        if (i7 < 0) {
+            float f = (float) i7;
             this.mLastHeight = f;
             this.mNewHeight = f;
         }
@@ -325,10 +322,10 @@ public class QSControlCenterTileLayout extends ViewGroup implements QSPanel.QSTi
         int i = this.mMinCellHeight;
         int i2 = this.mMinShowRows;
         int i3 = this.mColumnMarginTop;
-        this.mMinHeight = (i * i2) + ((i2 - 1) * i3);
-        this.mMaxHeight = (this.mCellHeight * ceil) + ((ceil - 1) * i3);
-        this.mQSControlCenterPanel.updateExpandHeightThres();
-        this.mQSControlCenterPanel.updateFootPanelLayoutBtRatio(isCollapsed() ? 0.0f : 1.0f);
+        int i4 = (i * i2) + ((i2 - 1) * i3);
+        int i5 = this.mLastCellPaddingBottom;
+        this.mMinHeight = i4 + i5;
+        this.mMaxHeight = (this.mCellHeight * ceil) + ((ceil - 1) * i3) + i5;
     }
 
     public void setHost(QSTileHost qSTileHost) {
@@ -413,28 +410,15 @@ public class QSControlCenterTileLayout extends ViewGroup implements QSPanel.QSTi
         }
     }
 
-    public void startMove() {
-        this.mLastHeight = (float) getHeight();
-    }
-
-    public void setExpandHeightThres(int i) {
-        if (i <= 0) {
-            this.mExpandHeightThres = 1;
-        } else {
-            this.mExpandHeightThres = i;
-        }
-    }
-
     private void endExpanding() {
         this.mExpanding = false;
     }
 
     public void setExpandRatio(float f) {
-        float f2 = ((float) this.mExpandHeightThres) * f;
         this.mExpanded = false;
         this.mExpanding = true;
-        this.mOffset = f2;
-        this.mNewHeight = Math.max(Math.min(this.mLastHeight + ((float) ((int) f2)), (float) this.mMaxHeight), (float) this.mMinHeight);
+        this.mOffset = ((float) this.mExpandHeightThres) * f;
+        this.mNewHeight = Math.max(Math.min(this.mLastHeight + ((float) ((int) (((float) calculateExpandHeight()) * f))), (float) this.mMaxHeight), (float) this.mMinHeight);
         Iterator<QSPanel.TileRecord> it = this.mRecords.iterator();
         while (it.hasNext()) {
             QSPanel.TileRecord next = it.next();
@@ -451,7 +435,7 @@ public class QSControlCenterTileLayout extends ViewGroup implements QSPanel.QSTi
                 cCQSTileView.setLabelAlpha(Math.min(1.0f, (float) Math.pow(d, (double) ((((intValue - this.mMinShowRows) * 2) + 2) * 2))));
             }
         }
-        FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) getLayoutParams();
+        ViewGroup.LayoutParams layoutParams = getLayoutParams();
         layoutParams.height = (int) this.mNewHeight;
         setLayoutParams(layoutParams);
     }
@@ -467,22 +451,6 @@ public class QSControlCenterTileLayout extends ViewGroup implements QSPanel.QSTi
         super.requestLayout();
     }
 
-    public boolean isExpanded() {
-        return this.mExpanded;
-    }
-
-    public boolean isExpanding() {
-        return this.mExpanding;
-    }
-
-    public boolean canScroll() {
-        return getMaxHeight() - getMinHeight() > this.mExpandHeightThres;
-    }
-
-    public boolean isCollapsed() {
-        return getHeight() == this.mMinHeight;
-    }
-
     public int getMinHeight() {
         return this.mMinHeight;
     }
@@ -491,7 +459,7 @@ public class QSControlCenterTileLayout extends ViewGroup implements QSPanel.QSTi
         return this.mMaxHeight;
     }
 
-    public int caculateExpandHeight() {
+    public int calculateExpandHeight() {
         return getMaxHeight() - getMinHeight();
     }
 
@@ -606,10 +574,6 @@ public class QSControlCenterTileLayout extends ViewGroup implements QSPanel.QSTi
                 return;
             }
         }
-    }
-
-    public void onExpandChange(boolean z) {
-        setListening(z);
     }
 
     private class H extends Handler {

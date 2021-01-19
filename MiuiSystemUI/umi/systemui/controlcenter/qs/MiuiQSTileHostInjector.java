@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Build;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
 import com.android.keyguard.KeyguardUpdateMonitor;
@@ -43,7 +44,12 @@ public class MiuiQSTileHostInjector implements SuperSaveModeController.SuperSave
     private final DeviceProvisionedController.DeviceProvisionedListener mDeviceProvisionedListener = new DeviceProvisionedController.DeviceProvisionedListener() {
         public void onDeviceProvisionedChanged() {
             if (MiuiQSTileHostInjector.this.mDeviceProvisionedController.isDeviceProvisioned() && !MiuiQSTileHostInjector.this.mMiuiUpdateVersionSharedPreferences.getBoolean("deviceProvisionUpdateTiles", false)) {
-                MiuiQSTileHostInjector.this.resetTiles();
+                if (MiuiQSTileHostInjector.this.checkHuanjiFinish()) {
+                    MiuiQSTileHostInjector.this.setMiuiQSTilesEdited();
+                    MiuiQSTileHostInjector.this.onTuningChanged();
+                } else {
+                    MiuiQSTileHostInjector.this.resetTiles();
+                }
                 SharedPreferences.Editor edit = MiuiQSTileHostInjector.this.mMiuiUpdateVersionSharedPreferences.edit();
                 edit.putBoolean("deviceProvisionUpdateTiles", true);
                 edit.apply();
@@ -338,5 +344,10 @@ public class MiuiQSTileHostInjector implements SuperSaveModeController.SuperSave
         if (!TextUtils.equals(str, this.mTileListKey)) {
             onTuningChanged();
         }
+    }
+
+    /* access modifiers changed from: private */
+    public boolean checkHuanjiFinish() {
+        return Settings.Secure.getInt(this.mContext.getContentResolver(), "huanji_finished", 0) == 1;
     }
 }

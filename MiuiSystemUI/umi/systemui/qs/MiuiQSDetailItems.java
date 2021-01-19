@@ -64,6 +64,8 @@ public class MiuiQSDetailItems extends FrameLayout {
     private final H mHandler = new H();
     /* access modifiers changed from: private */
     public int mIconId;
+    protected boolean mIsDetailShowing = false;
+    protected boolean mIsExpanding = false;
     private boolean mItemClicked;
     private RecyclerView mItemList;
     /* access modifiers changed from: protected */
@@ -198,7 +200,25 @@ public class MiuiQSDetailItems extends FrameLayout {
         }
         recyclerView.setVisibility(i);
         this.mItems = itemArr;
+        if ((this.mIsExpanding || !this.mIsDetailShowing) && this.mControlPanelController.isUseControlCenter()) {
+            Log.d("MiuiQSDetailItems", "ignore refresh items:" + this.mIsExpanding + this.mIsDetailShowing);
+            return;
+        }
+        Log.d("MiuiQSDetailItems", "refresh detail items");
         this.mAdapter.notifyDataSetChanged();
+    }
+
+    public void notifyData() {
+        this.mAdapter.notifyDataSetChanged();
+    }
+
+    public void setDetailShowing(boolean z) {
+        this.mIsDetailShowing = z;
+    }
+
+    public void suppressLayout(boolean z) {
+        super.suppressLayout(z);
+        this.mIsExpanding = z;
     }
 
     /* access modifiers changed from: private */
@@ -230,6 +250,9 @@ public class MiuiQSDetailItems extends FrameLayout {
 
         public ItemHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
             int i2;
+            if (i == 2) {
+                return new LineItemHolder(LayoutInflater.from(MiuiQSDetailItems.this.mContext).inflate(C0017R$layout.qs_detail_line_item, viewGroup, false));
+            }
             LayoutInflater from = LayoutInflater.from(MiuiQSDetailItems.this.mContext);
             if (MiuiQSDetailItems.this.mControlPanelController.isUseControlCenter()) {
                 i2 = C0017R$layout.qs_control_detail_item;
@@ -241,53 +264,56 @@ public class MiuiQSDetailItems extends FrameLayout {
 
         public void onBindViewHolder(ItemHolder itemHolder, int i) {
             MiuiQSDetailItems miuiQSDetailItems = MiuiQSDetailItems.this;
-            final Item item = miuiQSDetailItems.mItems[i];
-            CompleteItemHolder completeItemHolder = (CompleteItemHolder) itemHolder;
-            completeItemHolder.itemView.setVisibility(miuiQSDetailItems.mItemsVisible ? 0 : 4);
-            completeItemHolder.icon.setImageResource(item.icon);
-            completeItemHolder.icon.getOverlay().clear();
-            Drawable drawable = item.overlay;
-            if (drawable != null) {
-                drawable.setBounds(0, 0, MiuiQSDetailItems.this.mQsDetailIconOverlaySize, MiuiQSDetailItems.this.mQsDetailIconOverlaySize);
-                completeItemHolder.icon.getOverlay().add(item.overlay);
-            }
-            completeItemHolder.itemView.setActivated(item.activated);
-            completeItemHolder.itemView.setSelected(item.selected);
-            completeItemHolder.title.setText(item.line1);
-            boolean z = !TextUtils.isEmpty(item.line2);
-            completeItemHolder.title.setMaxLines(z ? 1 : 2);
-            completeItemHolder.summary.setVisibility(z ? 0 : 8);
-            completeItemHolder.summary.setText(z ? item.line2 : null);
-            if (item.activated) {
-                completeItemHolder.itemView.setOnClickListener(new View.OnClickListener() {
-                    public void onClick(View view) {
-                        Callback callback = MiuiQSDetailItems.this.mCallback;
-                        if (callback != null) {
-                            callback.onDetailItemClick(item);
+            Item[] itemArr = miuiQSDetailItems.mItems;
+            if (itemArr[i].type == 1) {
+                final Item item = itemArr[i];
+                CompleteItemHolder completeItemHolder = (CompleteItemHolder) itemHolder;
+                completeItemHolder.itemView.setVisibility(miuiQSDetailItems.mItemsVisible ? 0 : 4);
+                completeItemHolder.icon.setImageResource(item.icon);
+                completeItemHolder.icon.getOverlay().clear();
+                Drawable drawable = item.overlay;
+                if (drawable != null) {
+                    drawable.setBounds(0, 0, MiuiQSDetailItems.this.mQsDetailIconOverlaySize, MiuiQSDetailItems.this.mQsDetailIconOverlaySize);
+                    completeItemHolder.icon.getOverlay().add(item.overlay);
+                }
+                completeItemHolder.itemView.setActivated(item.activated);
+                completeItemHolder.itemView.setSelected(item.selected);
+                completeItemHolder.title.setText(item.line1);
+                boolean z = !TextUtils.isEmpty(item.line2);
+                completeItemHolder.title.setMaxLines(z ? 1 : 2);
+                completeItemHolder.summary.setVisibility(z ? 0 : 8);
+                completeItemHolder.summary.setText(z ? item.line2 : null);
+                if (item.activated) {
+                    completeItemHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                        public void onClick(View view) {
+                            Callback callback = MiuiQSDetailItems.this.mCallback;
+                            if (callback != null) {
+                                callback.onDetailItemClick(item);
+                            }
                         }
-                    }
-                });
-            } else {
-                completeItemHolder.itemView.setOnClickListener((View.OnClickListener) null);
-            }
-            if (item.canDisconnect) {
-                completeItemHolder.button.setImageResource(C0013R$drawable.ic_qs_cancel);
-                completeItemHolder.button.setVisibility(0);
-                completeItemHolder.button.setClickable(true);
-                completeItemHolder.button.setOnClickListener(new View.OnClickListener() {
-                    public void onClick(View view) {
-                        Callback callback = MiuiQSDetailItems.this.mCallback;
-                        if (callback != null) {
-                            callback.onDetailItemDisconnect(item);
+                    });
+                } else {
+                    completeItemHolder.itemView.setOnClickListener((View.OnClickListener) null);
+                }
+                if (item.canDisconnect) {
+                    completeItemHolder.button.setImageResource(C0013R$drawable.ic_qs_cancel);
+                    completeItemHolder.button.setVisibility(0);
+                    completeItemHolder.button.setClickable(true);
+                    completeItemHolder.button.setOnClickListener(new View.OnClickListener() {
+                        public void onClick(View view) {
+                            Callback callback = MiuiQSDetailItems.this.mCallback;
+                            if (callback != null) {
+                                callback.onDetailItemDisconnect(item);
+                            }
                         }
-                    }
-                });
-            } else if (item.icon2 != -1) {
-                completeItemHolder.button.setVisibility(0);
-                completeItemHolder.button.setImageResource(item.icon2);
-                completeItemHolder.button.setClickable(false);
-            } else {
-                completeItemHolder.button.setVisibility(8);
+                    });
+                } else if (item.icon2 != -1) {
+                    completeItemHolder.button.setVisibility(0);
+                    completeItemHolder.button.setImageResource(item.icon2);
+                    completeItemHolder.button.setClickable(false);
+                } else {
+                    completeItemHolder.button.setVisibility(8);
+                }
             }
         }
 
@@ -329,6 +355,12 @@ public class MiuiQSDetailItems extends FrameLayout {
             this.title = (TextView) view.findViewById(16908310);
             this.summary = (TextView) view.findViewById(16908304);
             this.button = (ImageView) view.findViewById(16908296);
+        }
+    }
+
+    protected static class LineItemHolder extends ItemHolder {
+        public LineItemHolder(View view) {
+            super(view);
         }
     }
 

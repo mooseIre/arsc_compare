@@ -2856,7 +2856,11 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
     }
 
     private void updateHideSensitiveForChild(ExpandableView expandableView) {
-        expandableView.setHideSensitiveForIntrinsicHeight(this.mAmbientState.isHideSensitive());
+        if (!(expandableView instanceof ExpandableNotificationRow) || !((ExpandableNotificationRow) expandableView).getEntry().hideSensitiveByAppLock) {
+            expandableView.setHideSensitiveForIntrinsicHeight(this.mAmbientState.isHideSensitive());
+        } else {
+            expandableView.setHideSensitiveForIntrinsicHeight(true);
+        }
     }
 
     public void notifyGroupChildRemoved(ExpandableView expandableView, ViewGroup viewGroup) {

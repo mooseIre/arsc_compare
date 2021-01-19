@@ -674,6 +674,7 @@ public final class R {
         public static final int locale_carrier_names;
         public static final int lockscreen_num_pad_klondike;
         public static final int lockscreen_sc_slide_not_open_camera;
+        public static final int miui_config_hideKeyguardPresentationDisplayIds;
         public static final int miui_notification_aggregate_category;
         public static final int nav_bar_button_values;
         public static final int nav_bar_buttons;
@@ -2210,6 +2211,7 @@ public final class R {
         public static final int dim_foreground_material_dark;
         public static final int dim_foreground_material_light;
         public static final int disabled_text_color;
+        public static final int dividing_line_color;
         public static final int docked_divider_background;
         public static final int docked_divider_handle;
         public static final int empty_shade_text_color;
@@ -3193,6 +3195,8 @@ public final class R {
         public static final int dismiss_circle_size;
         public static final int dismiss_target_x_size;
         public static final int display_cutout_margin_consumption;
+        public static final int dividing_line_height;
+        public static final int dividing_line_margin;
         public static final int docked_divider_handle_height;
         public static final int docked_divider_handle_width;
         public static final int docked_stack_divider_insets;
@@ -5861,7 +5865,7 @@ public final class R {
         public static final int analog_thumbnail;
 
         /* renamed from: android */
-        public static final int f17android;
+        public static final int f16android;
         public static final int android_11_dial;
         public static final int app_note;
         public static final int arrow_drop_down_24dp;
@@ -5950,6 +5954,7 @@ public final class R {
         public static final int camera_icon;
         public static final int camera_preview;
         public static final int car_stat_sys_data_bluetooth_indicator;
+        public static final int cc_header_background;
         public static final int charge_animation_bottom_light_icon;
         public static final int charge_animation_car_mode_icon;
         public static final int charge_animation_charge_icon;
@@ -8053,7 +8058,6 @@ public final class R {
         public static final int autoCompleteToEnd;
         public static final int autoCompleteToStart;
         public static final int auto_brightness;
-        public static final int auto_brightness_land;
         public static final int auto_rule;
         public static final int awesome_lock_screen_container;
         public static final int back;
@@ -8114,6 +8118,7 @@ public final class R {
         public static final int bottom_spacer;
         public static final int bounce;
         public static final int bouncer_force_black_view;
+        public static final int brightness_container;
         public static final int brightness_mirror;
         public static final int brightness_slider;
         public static final int browse_container_dock;
@@ -8188,6 +8193,7 @@ public final class R {
         public static final int carrier3;
         public static final int carrier_group;
         public static final int carrier_text;
+        public static final int cc_content;
         public static final int center;
         public static final int center_group;
         public static final int center_horizontal;
@@ -8240,12 +8246,15 @@ public final class R {
         public static final int content_frame;
         public static final int content_header_container;
         public static final int content_parent;
+        public static final int content_scroller;
+        public static final int content_springer;
         public static final int content_text;
         public static final int contents;
         public static final int continuous_clipping_tag;
         public static final int control;
         public static final int control_bar;
         public static final int control_center_bottom_area;
+        public static final int control_center_panel;
         public static final int control_center_shortcut;
         public static final int control_detail_close;
         public static final int control_detail_open_in_app;
@@ -8426,11 +8435,11 @@ public final class R {
         public static final int flip;
         public static final int foget_password;
         public static final int foot_panel;
-        public static final int foot_panel_land;
         public static final int footer;
         public static final int footerLayout;
         public static final int footerLeftButton;
         public static final int footerRightButton;
+        public static final int footer_divider;
         public static final int footer_icon;
         public static final int footer_page_indicator;
         public static final int footer_text;
@@ -8692,8 +8701,6 @@ public final class R {
         public static final int label_start;
         public static final int label_top;
         public static final int labeled;
-        public static final int land_footer;
-        public static final int land_tiles;
         public static final int largeLabel;
         public static final int last_updated;
         public static final int layout;
@@ -8749,8 +8756,6 @@ public final class R {
         public static final int list_added;
         public static final int list_item;
         public static final int list_others;
-        public static final int ll_smart_controls;
-        public static final int ll_smart_controls_land;
         public static final int loading_progress;
         public static final int loading_progress_up;
         public static final int lockPassword;
@@ -8938,6 +8943,7 @@ public final class R {
         public static final int nav_bar_background;
         public static final int nav_buttons;
         public static final int navigation_bar_frame;
+        public static final int navigation_bar_space;
         public static final int navigation_header_container;
         public static final int navigation_inflater;
         public static final int navigator_container;
@@ -9080,14 +9086,10 @@ public final class R {
         public static final int pukEntry;
         public static final int pulsating_circle;
         public static final int qs_brightness;
-        public static final int qs_brightness_container;
-        public static final int qs_brightness_land;
         public static final int qs_carrier_divider1;
         public static final int qs_carrier_divider2;
         public static final int qs_carrier_text;
-        public static final int qs_container;
         public static final int qs_content;
-        public static final int qs_control_center_panel;
         public static final int qs_control_detail_header;
         public static final int qs_customize;
         public static final int qs_detail;
@@ -9096,7 +9098,6 @@ public final class R {
         public static final int qs_detail_header_progress;
         public static final int qs_drag_handle_view;
         public static final int qs_expand_indicator;
-        public static final int qs_expand_indicator_bottom;
         public static final int qs_footer;
         public static final int qs_footer_actions_container;
         public static final int qs_footer_actions_edit_container;
@@ -9119,7 +9120,6 @@ public final class R {
         public static final int quick_settings_panel;
         public static final int quick_settings_status_bar_background;
         public static final int quick_status_bar_system_icons;
-        public static final int quick_tile_layout;
         public static final int radio;
         public static final int radio_button;
         public static final int ratio;
@@ -9224,8 +9224,6 @@ public final class R {
         public static final int scrollIndicatorDown;
         public static final int scrollIndicatorUp;
         public static final int scrollView;
-        public static final int scroll_container;
-        public static final int scroll_container_big_tiles;
         public static final int scrollable;
         public static final int search_badge;
         public static final int search_bar;
@@ -9284,6 +9282,7 @@ public final class R {
         public static final int small;
         public static final int smallLabel;
         public static final int smart_cover_layout_id;
+        public static final int smart_home_container;
         public static final int smart_reply_view;
         public static final int snackbar_action;
         public static final int snackbar_text;
@@ -9385,10 +9384,13 @@ public final class R {
         public static final int thumbs_row;
         public static final int tile_item;
         public static final int tile_label;
+        public static final int tile_layout;
         public static final int tile_page;
         public static final int tiles_container;
         public static final int tiles_edit;
         public static final int tiles_header;
+        public static final int tiles_scroller;
+        public static final int tiles_springer;
         public static final int time;
         public static final int time_date;
         public static final int time_header;
@@ -9868,6 +9870,10 @@ public final class R {
         public static final int connected_device_signal;
         public static final int contaminant_dialog;
         public static final int contextual;
+        public static final int control_center_big_tiles_layout;
+        public static final int control_center_footer_panel_layout;
+        public static final int control_center_panel;
+        public static final int control_center_tile_layout;
         public static final int control_panel;
         public static final int controls_app_item;
         public static final int controls_base_item;
@@ -10229,7 +10235,6 @@ public final class R {
         public static final int qs_control_brightness_mirror;
         public static final int qs_control_center_customize_panel;
         public static final int qs_control_center_header;
-        public static final int qs_control_center_panel;
         public static final int qs_control_customize_panel_content;
         public static final int qs_control_customize_tile_frame;
         public static final int qs_control_customize_unadded_tiles_layout;
@@ -10253,6 +10258,7 @@ public final class R {
         public static final int qs_detail_header;
         public static final int qs_detail_item;
         public static final int qs_detail_items;
+        public static final int qs_detail_line_item;
         public static final int qs_detail_switch;
         public static final int qs_divider;
         public static final int qs_footer_data_usage;
@@ -12137,6 +12143,12 @@ public final class R {
         public static final int quick_settings_user_new_user;
         public static final int quick_settings_user_title;
         public static final int quick_settings_vibrate_label;
+        public static final int quick_settings_wifi_detail_dual_wifi_accelerated;
+        public static final int quick_settings_wifi_detail_dual_wifi_switching_cancel;
+        public static final int quick_settings_wifi_detail_dual_wifi_switching_confirm;
+        public static final int quick_settings_wifi_detail_dual_wifi_switching_not_remind;
+        public static final int quick_settings_wifi_detail_dual_wifi_switching_prompt;
+        public static final int quick_settings_wifi_detail_dual_wifi_switching_summary;
         public static final int quick_settings_wifi_detail_empty_text;
         public static final int quick_settings_wifi_label;
         public static final int quick_settings_wifi_no_network;

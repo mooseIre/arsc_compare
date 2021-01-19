@@ -190,6 +190,7 @@ import com.android.systemui.colorextraction.SysuiColorExtractor_Factory;
 import com.android.systemui.controlcenter.ControlCenter;
 import com.android.systemui.controlcenter.dagger.ControlCenterDependenciesModule_ProvideExpandInfoControllerFactory;
 import com.android.systemui.controlcenter.dagger.ControlCenterModule_ProvideControlCenterFactory;
+import com.android.systemui.controlcenter.phone.ControlCenterPanelView;
 import com.android.systemui.controlcenter.phone.ControlPanelController;
 import com.android.systemui.controlcenter.phone.ControlPanelController_Factory;
 import com.android.systemui.controlcenter.phone.ControlPanelWindowManager;
@@ -199,13 +200,17 @@ import com.android.systemui.controlcenter.phone.controls.ControlsPluginManager;
 import com.android.systemui.controlcenter.phone.controls.ControlsPluginManager_Factory;
 import com.android.systemui.controlcenter.phone.customize.CCTileQueryHelper;
 import com.android.systemui.controlcenter.phone.customize.QSControlCustomizer;
+import com.android.systemui.controlcenter.phone.widget.ControlCenterBrightnessView;
 import com.android.systemui.controlcenter.policy.ControlCenterActivityStarter;
 import com.android.systemui.controlcenter.policy.ControlCenterActivityStarter_Factory;
 import com.android.systemui.controlcenter.policy.MiuiFlashlightHelper;
 import com.android.systemui.controlcenter.policy.MiuiFlashlightHelper_Factory;
+import com.android.systemui.controlcenter.policy.NCSwitchController;
 import com.android.systemui.controlcenter.policy.NCSwitchController_Factory;
 import com.android.systemui.controlcenter.policy.OldModeController;
 import com.android.systemui.controlcenter.policy.OldModeController_Factory;
+import com.android.systemui.controlcenter.policy.SlaveWifiHelper;
+import com.android.systemui.controlcenter.policy.SlaveWifiHelper_Factory;
 import com.android.systemui.controlcenter.policy.SuperSaveModeController;
 import com.android.systemui.controlcenter.policy.SuperSaveModeController_Factory;
 import com.android.systemui.controlcenter.qs.MiuiQSTileHostInjector;
@@ -1572,6 +1577,7 @@ public final class DaggerSystemUIRootComponent implements SystemUIRootComponent 
     private SharedCoordinatorLogger_Factory sharedCoordinatorLoggerProvider;
     private Provider<ShortcutKeyDispatcher> shortcutKeyDispatcherProvider;
     private Provider<SizeCompatModeActivityController> sizeCompatModeActivityControllerProvider;
+    private Provider<SlaveWifiHelper> slaveWifiHelperProvider;
     /* access modifiers changed from: private */
     public Provider<SlaveWifiSignalController> slaveWifiSignalControllerProvider;
     private Provider<SliceBroadcastRelayHandler> sliceBroadcastRelayHandlerProvider;
@@ -2248,23 +2254,24 @@ public final class DaggerSystemUIRootComponent implements SystemUIRootComponent 
         this.provideExpandInfoControllerProvider = DoubleCheck.provider(ControlCenterDependenciesModule_ProvideExpandInfoControllerFactory.create(this.provideContextProvider));
         this.superSaveModeControllerProvider = DoubleCheck.provider(SuperSaveModeController_Factory.create(this.provideContextProvider, this.settingsObserverImplProvider));
         this.controlCenterActivityStarterProvider = DoubleCheck.provider(ControlCenterActivityStarter_Factory.create(this.provideContextProvider));
-        DelegateFactory delegateFactory2 = new DelegateFactory();
-        this.qSTileHostProvider = delegateFactory2;
-        this.wifiTileProvider = WifiTile_Factory.create(delegateFactory2, this.networkControllerImplProvider, this.activityStarterDelegateProvider);
+        this.qSTileHostProvider = new DelegateFactory();
+        Provider<SlaveWifiHelper> provider15 = DoubleCheck.provider(SlaveWifiHelper_Factory.create(this.provideContextProvider));
+        this.slaveWifiHelperProvider = provider15;
+        this.wifiTileProvider = WifiTile_Factory.create(this.qSTileHostProvider, this.networkControllerImplProvider, this.activityStarterDelegateProvider, provider15);
         this.bluetoothTileProvider = BluetoothTile_Factory.create(this.qSTileHostProvider, this.bluetoothControllerImplProvider, this.activityStarterDelegateProvider);
         this.cellularTileProvider = CellularTile_Factory.create(this.qSTileHostProvider, this.networkControllerImplProvider, this.activityStarterDelegateProvider);
         this.dndTileProvider = DndTile_Factory.create(this.qSTileHostProvider, this.zenModeControllerImplProvider, this.activityStarterDelegateProvider, this.providesBroadcastDispatcherProvider, this.provideSharePreferencesProvider);
         this.colorInversionTileProvider = ColorInversionTile_Factory.create(this.qSTileHostProvider);
         this.airplaneModeTileProvider = AirplaneModeTile_Factory.create(this.qSTileHostProvider, this.activityStarterDelegateProvider, this.providesBroadcastDispatcherProvider);
-        Provider<ManagedProfileControllerImpl> provider15 = DoubleCheck.provider(ManagedProfileControllerImpl_Factory.create(this.provideContextProvider, this.providesBroadcastDispatcherProvider));
-        this.managedProfileControllerImplProvider = provider15;
-        this.workModeTileProvider = WorkModeTile_Factory.create(this.qSTileHostProvider, provider15);
+        Provider<ManagedProfileControllerImpl> provider16 = DoubleCheck.provider(ManagedProfileControllerImpl_Factory.create(this.provideContextProvider, this.providesBroadcastDispatcherProvider));
+        this.managedProfileControllerImplProvider = provider16;
+        this.workModeTileProvider = WorkModeTile_Factory.create(this.qSTileHostProvider, provider16);
         this.rotationLockTileProvider = RotationLockTile_Factory.create(this.qSTileHostProvider, this.rotationLockControllerImplProvider);
-        Provider<MiuiFlashlightHelper> provider16 = DoubleCheck.provider(MiuiFlashlightHelper_Factory.create(this.provideContextProvider));
-        this.miuiFlashlightHelperProvider = provider16;
-        Provider<FlashlightControllerImpl> provider17 = DoubleCheck.provider(FlashlightControllerImpl_Factory.create(this.provideContextProvider, provider16));
-        this.flashlightControllerImplProvider = provider17;
-        this.flashlightTileProvider = FlashlightTile_Factory.create(this.qSTileHostProvider, provider17);
+        Provider<MiuiFlashlightHelper> provider17 = DoubleCheck.provider(MiuiFlashlightHelper_Factory.create(this.provideContextProvider));
+        this.miuiFlashlightHelperProvider = provider17;
+        Provider<FlashlightControllerImpl> provider18 = DoubleCheck.provider(FlashlightControllerImpl_Factory.create(this.provideContextProvider, provider17));
+        this.flashlightControllerImplProvider = provider18;
+        this.flashlightTileProvider = FlashlightTile_Factory.create(this.qSTileHostProvider, provider18);
         this.locationTileProvider = LocationTile_Factory.create(this.qSTileHostProvider, this.locationControllerImplProvider, this.keyguardStateControllerImplProvider, this.activityStarterDelegateProvider);
         this.castTileProvider = CastTile_Factory.create(this.qSTileHostProvider, this.castControllerImplProvider, this.keyguardStateControllerImplProvider, this.networkControllerImplProvider, this.activityStarterDelegateProvider);
         this.hotspotTileProvider = HotspotTile_Factory.create(this.qSTileHostProvider, this.hotspotControllerImplProvider, this.provideDataSaverControllerProvider);
@@ -2288,10 +2295,10 @@ public final class DaggerSystemUIRootComponent implements SystemUIRootComponent 
         PaperModeControllerImpl_Factory create7 = PaperModeControllerImpl_Factory.create(this.provideContextProvider, this.provideBgLooperProvider, this.providesBroadcastDispatcherProvider);
         this.paperModeControllerImplProvider = create7;
         this.paperModeTileProvider = PaperModeTile_Factory.create(this.qSTileHostProvider, create7);
-        this.powerModeTileProvider = PowerModeTile_Factory.create(this.qSTileHostProvider);
     }
 
     private void initialize5(Builder builder) {
+        this.powerModeTileProvider = PowerModeTile_Factory.create(this.qSTileHostProvider);
         this.powerSaverExtremeTileProvider = PowerSaverExtremeTile_Factory.create(this.qSTileHostProvider);
         this.powerSaverTileProvider = PowerSaverTile_Factory.create(this.qSTileHostProvider);
         this.quietModeTileProvider = QuietModeTile_Factory.create(this.qSTileHostProvider, this.zenModeControllerImplProvider);
@@ -2352,7 +2359,7 @@ public final class DaggerSystemUIRootComponent implements SystemUIRootComponent 
         this.oLEDScreenHelperProvider = DoubleCheck.provider(OLEDScreenHelper_Factory.create(this.provideContextProvider, this.screenLifecycleProvider, this.provideConfigurationControllerProvider, this.dumpManagerProvider, this.provideNavigationBarControllerProvider, this.superStatusBarViewFactoryProvider));
         Provider<MiuiChargeManager> provider13 = DoubleCheck.provider(MiuiChargeManager_Factory.create(this.provideContextProvider));
         this.miuiChargeManagerProvider = provider13;
-        this.miuiVendorServicesProvider = DoubleCheck.provider(MiuiVendorServices_Factory.create(this.provideContextProvider, this.miuiWallpaperZoomOutServiceProvider, this.miuiHeadsUpPolicyProvider, this.miuiGxzwPolicyProvider, this.notificationFilterControllerProvider, this.notificationAlertControllerProvider, this.notificationDynamicFpsControllerProvider, this.notificationCountLimitPolicyProvider, this.miuiNotificationShadePolicyProvider, this.miuiRecentProxyProvider, this.orientationPolicyProvider, this.performanceToolsProvider, this.notificationPanelNavigationBarCoordinatorProvider, this.headsetPolicyProvider, this.miuiFullScreenGestureProxyProvider, this.oLEDScreenHelperProvider, provider13));
+        this.miuiVendorServicesProvider = DoubleCheck.provider(MiuiVendorServices_Factory.create(this.provideContextProvider, this.miuiWallpaperZoomOutServiceProvider, this.miuiHeadsUpPolicyProvider, this.miuiGxzwPolicyProvider, this.notificationFilterControllerProvider, this.notificationAlertControllerProvider, this.notificationDynamicFpsControllerProvider, this.notificationCountLimitPolicyProvider, this.miuiNotificationShadePolicyProvider, this.miuiRecentProxyProvider, this.orientationPolicyProvider, this.performanceToolsProvider, this.notificationPanelNavigationBarCoordinatorProvider, this.headsetPolicyProvider, this.miuiFullScreenGestureProxyProvider, this.oLEDScreenHelperProvider, provider13, this.provideNotificationEntryManagerProvider));
         MapProviderFactory.Builder builder2 = MapProviderFactory.builder(23);
         builder2.put(AuthController.class, this.authControllerProvider);
         builder2.put(Divider.class, this.provideDividerProvider);
@@ -2441,10 +2448,10 @@ public final class DaggerSystemUIRootComponent implements SystemUIRootComponent 
         Provider<ModalController> provider17 = DoubleCheck.provider(ModalController_Factory.create(this.provideContextProvider, this.provideStatusBarProvider, provider16));
         this.modalControllerProvider = provider17;
         this.appMiniWindowManagerProvider = DoubleCheck.provider(AppMiniWindowManager_Factory.create(this.provideContextProvider, this.provideDividerProvider, this.provideHeadsUpManagerPhoneProvider, this.provideMainHandlerProvider, provider17, this.notificationSettingsManagerProvider));
-        this.fiveGControllerImplProvider = DoubleCheck.provider(FiveGControllerImpl_Factory.create(this.provideContextProvider));
     }
 
     private void initialize6(Builder builder) {
+        this.fiveGControllerImplProvider = DoubleCheck.provider(FiveGControllerImpl_Factory.create(this.provideContextProvider));
         this.callStateControllerImplProvider = DoubleCheck.provider(CallStateControllerImpl_Factory.create());
         this.regionControllerProvider = DoubleCheck.provider(RegionController_Factory.create(this.provideContextProvider));
         this.customCarrierObserverProvider = DoubleCheck.provider(CustomCarrierObserver_Factory.create(this.provideContextProvider, this.provideMainHandlerProvider, this.provideBgHandlerProvider));
@@ -2868,6 +2875,10 @@ public final class DaggerSystemUIRootComponent implements SystemUIRootComponent 
                 return new CCTileQueryHelper(SystemUIFactory_ContextHolder_ProvideContextFactory.proxyProvideContext(DaggerSystemUIRootComponent.this.contextHolder), DaggerSystemUIRootComponent.this.getMainExecutor(), (Executor) DaggerSystemUIRootComponent.this.provideBackgroundExecutorProvider.get());
             }
 
+            private NCSwitchController getNCSwitchController() {
+                return new NCSwitchController(SystemUIFactory_ContextHolder_ProvideContextFactory.proxyProvideContext(DaggerSystemUIRootComponent.this.contextHolder), (SysuiStatusBarStateController) DaggerSystemUIRootComponent.this.statusBarStateControllerImplProvider.get(), (ControlPanelController) DaggerSystemUIRootComponent.this.controlPanelControllerProvider.get(), (NotificationShadeWindowController) DaggerSystemUIRootComponent.this.notificationShadeWindowControllerProvider.get(), (SystemUIStat) DaggerSystemUIRootComponent.this.systemUIStatProvider.get());
+            }
+
             private void initialize(InjectionInflationController.ViewAttributeProvider viewAttributeProvider2) {
                 Preconditions.checkNotNull(viewAttributeProvider2);
                 this.viewAttributeProvider = viewAttributeProvider2;
@@ -2923,6 +2934,14 @@ public final class DaggerSystemUIRootComponent implements SystemUIRootComponent 
 
             public QSFooterDataUsage createQSFooterDataUsage() {
                 return new QSFooterDataUsage(SystemUIFactory_ContextHolder_ProvideContextFactory.proxyProvideContext(DaggerSystemUIRootComponent.this.contextHolder), InjectionInflationController_ViewAttributeProvider_ProvideAttributeSetFactory.proxyProvideAttributeSet(this.viewAttributeProvider), (ActivityStarter) DaggerSystemUIRootComponent.this.activityStarterDelegateProvider.get(), ConcurrencyModule_ProvideMainLooperFactory.proxyProvideMainLooper(), (Looper) DaggerSystemUIRootComponent.this.provideBgLooperProvider.get());
+            }
+
+            public ControlCenterPanelView createControlCenterPanelView() {
+                return new ControlCenterPanelView(InjectionInflationController_ViewAttributeProvider_ProvideContextFactory.proxyProvideContext(this.viewAttributeProvider), InjectionInflationController_ViewAttributeProvider_ProvideAttributeSetFactory.proxyProvideAttributeSet(this.viewAttributeProvider), ConcurrencyModule_ProvideMainLooperFactory.proxyProvideMainLooper(), (ConfigurationController) DaggerSystemUIRootComponent.this.provideConfigurationControllerProvider.get(), (ControlsPluginManager) DaggerSystemUIRootComponent.this.controlsPluginManagerProvider.get(), (ControlPanelController) DaggerSystemUIRootComponent.this.controlPanelControllerProvider.get(), getNCSwitchController(), (StatusBarStateController) DaggerSystemUIRootComponent.this.statusBarStateControllerImplProvider.get());
+            }
+
+            public ControlCenterBrightnessView createControlCenterBrightnessView() {
+                return new ControlCenterBrightnessView(InjectionInflationController_ViewAttributeProvider_ProvideContextFactory.proxyProvideContext(this.viewAttributeProvider), InjectionInflationController_ViewAttributeProvider_ProvideAttributeSetFactory.proxyProvideAttributeSet(this.viewAttributeProvider), (BroadcastDispatcher) DaggerSystemUIRootComponent.this.providesBroadcastDispatcherProvider.get());
             }
         }
     }

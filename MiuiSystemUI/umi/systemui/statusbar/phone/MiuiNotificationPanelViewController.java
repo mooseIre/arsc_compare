@@ -5,6 +5,8 @@ import android.animation.ValueAnimator;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.res.Configuration;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.PowerManager;
 import android.os.SystemClock;
 import android.util.Log;
@@ -563,14 +565,8 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
         ValueAnimator valueAnimator = this.mQsTopPaddingAnimator;
         if (valueAnimator != null) {
             valueAnimator.end();
-        } else if (this.mNssCoveredQs) {
-            QS qs = this.mQs;
-            Intrinsics.checkExpressionValueIsNotNull(qs, "mQs");
-            View header = qs.getHeader();
-            Intrinsics.checkExpressionValueIsNotNull(header, "mQs.header");
-            updateScrollerTopPadding((float) header.getHeight());
         } else {
-            updateScrollerTopPadding(super.calculateQsTopPadding());
+            new Handler(Looper.getMainLooper()).post(new MiuiNotificationPanelViewController$refreshNssCoveringQs$2(this));
         }
     }
 
@@ -592,6 +588,13 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
             i = this.mStickyHeaderHeight;
         }
         return calculateQsTopPadding + ((float) i);
+    }
+
+    /* access modifiers changed from: protected */
+    public int getKeyguardNotificationStaticPadding() {
+        int keyguardNotificationStaticPadding = super.getKeyguardNotificationStaticPadding();
+        NotificationStackScrollLayoutExtKt.setStaticTopPadding(this.mNotificationStackScroller, keyguardNotificationStaticPadding);
+        return keyguardNotificationStaticPadding;
     }
 
     /* access modifiers changed from: protected */

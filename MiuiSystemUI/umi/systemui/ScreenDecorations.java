@@ -67,8 +67,7 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
     public ContentObserver mForceBlackObserver;
     protected int[] mForceBlackTopDrawables = {C0013R$drawable.force_black_screen_round_corner_top_rot90, C0013R$drawable.force_black_screen_round_corner_top, C0013R$drawable.force_black_screen_round_corner_top_rot270, C0013R$drawable.force_black_screen_round_corner_top_rot180};
     protected View mForceBlackTopOverlay;
-    /* access modifiers changed from: private */
-    public boolean mForceBlackV2;
+    private boolean mForceBlackV2;
     /* access modifiers changed from: private */
     public ContentObserver mForceBlackV2Observer;
     protected int[] mForceBlackV2TopDrawables = {C0013R$drawable.force_black_top_corner_rot90, C0013R$drawable.force_black_top_corner, C0013R$drawable.force_black_top_corner_rot270, C0013R$drawable.force_black_top_corner_rot180};
@@ -82,8 +81,7 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
     /* access modifiers changed from: private */
     public boolean mOverlayDrip;
     private ContentObserver mOverlayDripObserver;
-    /* access modifiers changed from: private */
-    public OverlayManagerWrapper mOverlayManager;
+    private OverlayManagerWrapper mOverlayManager;
     protected View[] mOverlays;
     /* access modifiers changed from: private */
     public boolean mPendingRotationChange;
@@ -216,25 +214,10 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
 
     private void register() {
         if (CustomizeUtil.HAS_NOTCH) {
-            this.mForceBlackV2Observer = new ContentObserver(this.mHandler) {
-                public void onChange(boolean z) {
-                    ScreenDecorations screenDecorations = ScreenDecorations.this;
-                    boolean unused = screenDecorations.mForceBlackV2 = MiuiSettings.Global.getBoolean(screenDecorations.mContext.getContentResolver(), "force_black_v2");
-                    if (CustomizeUtil.HAS_NOTCH && ScreenDecorations.this.mOverlayManager != null) {
-                        boolean isOverlayEnable = ScreenDecorations.this.mOverlayManager.isOverlayEnable("com.android.systemui.notch.overlay", ScreenDecorations.this.mCurrentUserId);
-                        boolean access$400 = ScreenDecorations.this.mForceBlackV2;
-                        if (access$400 != isOverlayEnable) {
-                            ScreenDecorations.this.mOverlayManager.setEnabled("com.android.systemui.notch.overlay", access$400, ScreenDecorations.this.mCurrentUserId);
-                        }
-                        if (!(ScreenDecorations.this.mCurrentUserId == 0 || access$400 == ScreenDecorations.this.mOverlayManager.isOverlayEnable("com.android.systemui.notch.overlay", 0))) {
-                            ScreenDecorations.this.mOverlayManager.setEnabled("com.android.systemui.notch.overlay", access$400, 0);
-                        }
-                    }
-                    ScreenDecorations.this.postUpdateScreenDecorationsFront();
-                }
-            };
-            this.mContext.getContentResolver().registerContentObserver(Settings.Global.getUriFor("force_black_v2"), false, this.mForceBlackV2Observer, -1);
-            this.mForceBlackV2Observer.onChange(false);
+            OverlayManagerWrapper overlayManagerWrapper = this.mOverlayManager;
+            if (overlayManagerWrapper != null && overlayManagerWrapper.isOverlayEnable("com.android.systemui.notch.overlay", this.mCurrentUserId)) {
+                this.mOverlayManager.setEnabled("com.android.systemui.notch.overlay", false, this.mCurrentUserId);
+            }
             this.mForceBlackObserver = new ContentObserver(this.mHandler) {
                 public void onChange(boolean z) {
                     ScreenDecorations screenDecorations = ScreenDecorations.this;
@@ -300,7 +283,7 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
                 }
             });
             if (this.mColorInversionSetting == null) {
-                AnonymousClass6 r0 = new SecureSetting(this.mContext, this.mHandler, "accessibility_display_inversion_enabled") {
+                AnonymousClass5 r0 = new SecureSetting(this.mContext, this.mHandler, "accessibility_display_inversion_enabled") {
                     /* access modifiers changed from: protected */
                     public void handleValueChanged(int i, boolean z) {
                         ScreenDecorations.this.updateColorInversion(i);

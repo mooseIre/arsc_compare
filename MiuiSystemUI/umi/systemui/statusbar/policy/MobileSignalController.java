@@ -29,6 +29,7 @@ import com.android.systemui.C0013R$drawable;
 import com.android.systemui.C0016R$integer;
 import com.android.systemui.C0021R$string;
 import com.android.systemui.Dependency;
+import com.android.systemui.controlcenter.phone.ControlPanelController;
 import com.android.systemui.statusbar.policy.FiveGControllerImpl;
 import com.android.systemui.statusbar.policy.NetworkControllerImpl;
 import com.android.systemui.statusbar.policy.SignalController;
@@ -1297,6 +1298,7 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
             int unused = MobileSignalController.this.mCallState = i;
             ((MobileState) MobileSignalController.this.mCurrentState).callState = i;
             ((CallStateControllerImpl) Dependency.get(CallStateControllerImpl.class)).setCallState(MobileSignalController.this.mSlotId, i);
+            ((ControlPanelController) Dependency.get(ControlPanelController.class)).collapseControlCenter(true);
             MobileSignalController.this.updateTelephony();
         }
     }

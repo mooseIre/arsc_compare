@@ -8,6 +8,7 @@ public class MiuiAmbientStateBase {
     private boolean panelStretchingFromHeadsUp;
     private float springLength;
     private int stackScrollLayoutHeight;
+    private int staticTopPadding;
 
     public final void setQsExpansionEnabled(boolean z) {
     }
@@ -58,5 +59,13 @@ public class MiuiAmbientStateBase {
 
     public final void setNCSwitching(boolean z) {
         this.isNCSwitching = z;
+    }
+
+    public final int getStaticTopPadding() {
+        return this.staticTopPadding;
+    }
+
+    public final void setStaticTopPadding(int i) {
+        this.staticTopPadding = i;
     }
 }

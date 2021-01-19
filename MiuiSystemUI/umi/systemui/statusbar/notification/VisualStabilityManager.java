@@ -91,16 +91,16 @@ public class VisualStabilityManager implements OnHeadsUpChangedListener, Dumpabl
     }
 
     private void updateAllowedStates() {
-        boolean z = true;
+        boolean z = false;
         boolean z2 = (!this.mScreenOn || !this.mPanelExpanded || this.mIsTemporaryReorderingAllowed) && !this.mPulsing;
         boolean z3 = z2 && !this.mReorderingAllowed;
         this.mReorderingAllowed = z2;
         if (z3) {
             notifyChangeAllowed(this.mReorderingAllowedCallbacks, this.mPersistentReorderingCallbacks);
         }
-        boolean z4 = (!this.mScreenOn || !this.mPanelExpanded) && !this.mPulsing;
-        if (!z4 || this.mGroupChangedAllowed) {
-            z = false;
+        boolean z4 = !this.mPulsing;
+        if (z4 && !this.mGroupChangedAllowed) {
+            z = true;
         }
         this.mGroupChangedAllowed = z4;
         if (z) {

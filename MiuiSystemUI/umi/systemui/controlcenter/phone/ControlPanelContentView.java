@@ -20,6 +20,7 @@ import com.miui.systemui.events.QuickTilesEditEvent;
 
 public class ControlPanelContentView extends FrameLayout {
     private Context mContext;
+    private ControlCenterPanelView mControlCenterPanelView;
     private ControlPanelWindowManager mControlPanelWindowManager;
     private ControlsEditController mControlsEditController;
     private QSControlCustomizer.QSControlPanelCallback mCustomizerCallback = null;
@@ -27,7 +28,6 @@ public class ControlPanelContentView extends FrameLayout {
     private ExpandInfoController mExpandInfoController;
     private int mOrientation;
     private QSControlCustomizer mQSCustomizer;
-    private QSControlCenterPanel mQsControlCenterPanel;
     private ImageView mTilesEdit;
 
     public ControlPanelContentView(Context context) {
@@ -46,9 +46,9 @@ public class ControlPanelContentView extends FrameLayout {
         this.mExpandInfoController = expandInfoController;
         expandInfoController.setContentView(this);
         this.mDetail = (QSControlDetail) findViewById(C0015R$id.qs_detail);
-        QSControlCenterPanel qSControlCenterPanel = (QSControlCenterPanel) findViewById(C0015R$id.qs_control_center_panel);
-        this.mQsControlCenterPanel = qSControlCenterPanel;
-        qSControlCenterPanel.setControlPanelContentView(this);
+        ControlCenterPanelView controlCenterPanelView = (ControlCenterPanelView) findViewById(C0015R$id.control_center_panel);
+        this.mControlCenterPanelView = controlCenterPanelView;
+        controlCenterPanelView.setControlPanelContentView(this);
         QSControlCustomizer qSControlCustomizer = (QSControlCustomizer) findViewById(C0015R$id.qs_customize);
         this.mQSCustomizer = qSControlCustomizer;
         qSControlCustomizer.setQSControlCenterPanel(this);
@@ -83,11 +83,10 @@ public class ControlPanelContentView extends FrameLayout {
         if (controlsEditController != null && controlsEditController.isShown() && this.mOrientation == 2) {
             hideControlEdit();
         }
-        this.mQsControlCenterPanel.onOrientationChanged(this.mOrientation, false);
     }
 
     public void updateResources() {
-        this.mQsControlCenterPanel.updateResources();
+        this.mControlCenterPanelView.updateResources();
         this.mDetail.updateResources();
         this.mQSCustomizer.updateResources();
     }
@@ -101,7 +100,7 @@ public class ControlPanelContentView extends FrameLayout {
     }
 
     public void showExpandDetail(boolean z, MiuiQSPanel$MiuiRecord miuiQSPanel$MiuiRecord) {
-        this.mQsControlCenterPanel.showDetail(z, miuiQSPanel$MiuiRecord);
+        this.mControlCenterPanelView.showDetail(z, miuiQSPanel$MiuiRecord);
     }
 
     public boolean isDetailShowing() {
@@ -123,29 +122,28 @@ public class ControlPanelContentView extends FrameLayout {
 
     public void setHost(QSTileHost qSTileHost) {
         this.mQSCustomizer.setHost(qSTileHost);
-        this.mQsControlCenterPanel.setHost(qSTileHost);
+        this.mControlCenterPanelView.setHost(qSTileHost);
     }
 
     public void showContent() {
         ((SystemUIStat) Dependency.get(SystemUIStat.class)).handleControlCenterEvent(new ExpandPanelEvent());
         setVisibility(0);
         this.mExpandInfoController.requestData();
-        QSControlCenterPanel qSControlCenterPanel = this.mQsControlCenterPanel;
-        if (qSControlCenterPanel != null) {
-            qSControlCenterPanel.setExpand(true, true);
-            this.mQsControlCenterPanel.addControlsPlugin();
+        ControlCenterPanelView controlCenterPanelView = this.mControlCenterPanelView;
+        if (controlCenterPanelView != null) {
+            controlCenterPanelView.showPanel(true, true);
+            this.mControlCenterPanelView.addControlsPlugin();
         }
         if (this.mControlsEditController == null) {
-            this.mControlsEditController = new ControlsEditController((ControlsPluginManager) Dependency.get(ControlsPluginManager.class), this, this.mQsControlCenterPanel);
+            this.mControlsEditController = new ControlsEditController((ControlsPluginManager) Dependency.get(ControlsPluginManager.class), this, this.mControlCenterPanelView);
         }
         this.mControlsEditController.addControlsEditView();
     }
 
     public void hideContent() {
-        QSControlCenterPanel qSControlCenterPanel = this.mQsControlCenterPanel;
-        if (qSControlCenterPanel != null) {
-            qSControlCenterPanel.setExpand(false, true);
-            this.mQsControlCenterPanel.removeControlsPlugin();
+        ControlCenterPanelView controlCenterPanelView = this.mControlCenterPanelView;
+        if (controlCenterPanelView != null) {
+            controlCenterPanelView.showPanel(false, true);
         }
         ControlsEditController controlsEditController = this.mControlsEditController;
         if (controlsEditController != null) {
@@ -161,7 +159,7 @@ public class ControlPanelContentView extends FrameLayout {
     }
 
     public void updateTransHeight(float f) {
-        this.mQsControlCenterPanel.updateTransHeight(f);
+        this.mControlCenterPanelView.updateTransHeight(f);
     }
 
     public void hideEdit() {
@@ -179,7 +177,7 @@ public class ControlPanelContentView extends FrameLayout {
     }
 
     public View getControlCenterPanel() {
-        return this.mQsControlCenterPanel;
+        return this.mControlCenterPanelView;
     }
 
     public void setQSCustomizerCallback(QSControlCustomizer.QSControlPanelCallback qSControlPanelCallback) {

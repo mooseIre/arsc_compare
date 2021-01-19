@@ -1,6 +1,7 @@
 package com.android.systemui.controlcenter.policy;
 
 import android.content.Context;
+import android.view.MotionEvent;
 import android.view.ViewConfiguration;
 import com.android.systemui.controlcenter.phone.ControlPanelController;
 import com.android.systemui.statusbar.SysuiStatusBarStateController;
@@ -12,6 +13,16 @@ import org.jetbrains.annotations.NotNull;
 /* compiled from: NCSwitchController.kt */
 public final class NCSwitchController {
     private final Context mContext;
+
+    public final boolean handleCNSwitchTouch(@NotNull MotionEvent motionEvent, boolean z) {
+        Intrinsics.checkParameterIsNotNull(motionEvent, "ev");
+        return false;
+    }
+
+    public final boolean onCNSwitchIntercept(@NotNull MotionEvent motionEvent) {
+        Intrinsics.checkParameterIsNotNull(motionEvent, "ev");
+        return false;
+    }
 
     public NCSwitchController(@NotNull Context context, @NotNull SysuiStatusBarStateController sysuiStatusBarStateController, @NotNull ControlPanelController controlPanelController, @NotNull NotificationShadeWindowController notificationShadeWindowController, @NotNull SystemUIStat systemUIStat) {
         Intrinsics.checkParameterIsNotNull(context, "mContext");

@@ -1,5 +1,8 @@
 package com.android.systemui.controlcenter.phone.detail;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -26,13 +29,15 @@ import com.android.systemui.C0015R$id;
 import com.android.systemui.C0021R$string;
 import com.android.systemui.C0022R$style;
 import com.android.systemui.Dependency;
-import com.android.systemui.controlcenter.phone.QSControlCenterPanel;
+import com.android.systemui.controlcenter.phone.ControlCenterPanelView;
 import com.android.systemui.controlcenter.policy.ControlCenterActivityStarter;
 import com.android.systemui.controlcenter.qs.tileview.QSBigTileView;
 import com.android.systemui.controlcenter.utils.ControlCenterUtils;
 import com.android.systemui.plugins.qs.DetailAdapter;
 import com.android.systemui.qs.MiuiQSDetailItems;
+import com.miui.systemui.DeviceConfig;
 import com.miui.systemui.analytics.SystemUIStat;
+import com.miui.systemui.anim.PhysicBasedInterpolator;
 import java.util.Collection;
 import miui.widget.SlidingButton;
 import miuix.animation.Folme;
@@ -49,23 +54,35 @@ public class QSControlDetail extends FrameLayout {
     protected IStateStyle mAnim;
     protected Runnable mAnimateHideRunnable = new Runnable() {
         public void run() {
-            QSControlDetail.this.animateHideDetailAndTile();
+            if (DeviceConfig.isLowGpuDevice()) {
+                QSControlDetail.this.animateHideDetailAndTileOnLowEnd();
+            } else {
+                QSControlDetail.this.animateHideDetailAndTile();
+            }
         }
     };
     protected Runnable mAnimateShowRunnable = new Runnable() {
         public void run() {
+            if (DeviceConfig.isLowGpuDevice()) {
+                Log.d("QSDetail", "showing on low end");
+                QSControlDetail.this.animateShowDetailAndTileOnLowEnd();
+                return;
+            }
             QSControlDetail.this.animateShowDetailAndTile();
         }
     };
     /* access modifiers changed from: private */
     public Context mContext;
     /* access modifiers changed from: private */
+    public int mCurrentDetailIndex;
+    /* access modifiers changed from: private */
     public DetailAdapter mDetailAdapter;
     /* access modifiers changed from: private */
     public View mDetailContainer;
     private ViewGroup mDetailContent;
     protected TextView mDetailSettingsButton;
-    private final SparseArray<View> mDetailViews = new SparseArray<>();
+    /* access modifiers changed from: private */
+    public final SparseArray<View> mDetailViews = new SparseArray<>();
     /* access modifiers changed from: private */
     public boolean mDonedClicked;
     protected View mFromView;
@@ -77,7 +94,7 @@ public class QSControlDetail extends FrameLayout {
     protected SlidingButton mQsDetailHeaderSwitch;
     protected TextView mQsDetailHeaderTitle;
     /* access modifiers changed from: private */
-    public QSControlCenterPanel mQsPanel;
+    public ControlCenterPanelView mQsPanel;
     protected QSPanelCallback mQsPanelCallback = new QSPanelCallback() {
         public void onToggleStateChanged(final boolean z) {
             QSControlDetail.this.post(new Runnable() {
@@ -213,9 +230,9 @@ public class QSControlDetail extends FrameLayout {
         this.mAnim = Folme.useValue(this.mDetailContent);
     }
 
-    public void setQsPanel(QSControlCenterPanel qSControlCenterPanel) {
-        this.mQsPanel = qSControlCenterPanel;
-        qSControlCenterPanel.setQSDetailCallback(this.mQsPanelCallback);
+    public void setQsPanel(ControlCenterPanelView controlCenterPanelView) {
+        this.mQsPanel = controlCenterPanelView;
+        controlCenterPanelView.setQSDetailCallback(this.mQsPanelCallback);
     }
 
     public boolean isShowingDetail() {
@@ -273,14 +290,18 @@ public class QSControlDetail extends FrameLayout {
                 setupDetailFooter(this.mDetailAdapter);
                 int metricsCategory = this.mDetailAdapter.getMetricsCategory();
                 View createDetailView = this.mDetailAdapter.createDetailView(this.mContext, this.mDetailViews.get(metricsCategory), this.mDetailContent);
-                if (createDetailView == null || !(createDetailView instanceof MiuiQSDetailItems)) {
-                    this.mDetailContainer.getLayoutParams().height = this.mDetailAdapter.getContainerHeight();
+                if (createDetailView instanceof MiuiQSDetailItems) {
+                    MiuiQSDetailItems miuiQSDetailItems = (MiuiQSDetailItems) createDetailView;
+                    String suffix = miuiQSDetailItems.getSuffix();
+                    miuiQSDetailItems.setDetailShowing(true);
+                    updateContainerHeight(suffix);
                 } else {
-                    updateContainerHeight(((MiuiQSDetailItems) createDetailView).getSuffix());
+                    this.mDetailContainer.getLayoutParams().height = this.mDetailAdapter.getContainerHeight();
                 }
                 if (createDetailView != null) {
                     this.mDetailContent.removeAllViews();
                     this.mDetailContent.addView(createDetailView);
+                    this.mCurrentDetailIndex = metricsCategory;
                     this.mDetailViews.put(metricsCategory, createDetailView);
                     MetricsLogger.visible(this.mContext, this.mDetailAdapter.getMetricsCategory());
                     announceForAccessibility(this.mContext.getString(C0021R$string.accessibility_quick_settings_detail, new Object[]{this.mDetailAdapter.getTitle()}));
@@ -291,14 +312,15 @@ public class QSControlDetail extends FrameLayout {
                 DetailAdapter detailAdapter2 = this.mDetailAdapter;
                 if (detailAdapter2 != null) {
                     View view3 = this.mDetailViews.get(detailAdapter2.getMetricsCategory());
-                    if (view3 == null || !(view3 instanceof MiuiQSDetailItems)) {
+                    if (view3 instanceof MiuiQSDetailItems) {
+                        MiuiQSDetailItems miuiQSDetailItems2 = (MiuiQSDetailItems) view3;
+                        z = miuiQSDetailItems2.isItemClicked();
+                        miuiQSDetailItems2.setItemClicked(false);
+                        miuiQSDetailItems2.setDetailShowing(false);
+                        str = miuiQSDetailItems2.getSuffix();
+                    } else {
                         str = "";
                         z = false;
-                    } else {
-                        MiuiQSDetailItems miuiQSDetailItems = (MiuiQSDetailItems) view3;
-                        z = miuiQSDetailItems.isItemClicked();
-                        miuiQSDetailItems.setItemClicked(false);
-                        str = miuiQSDetailItems.getSuffix();
                     }
                     if (!TextUtils.isEmpty(str)) {
                         updateContainerHeight(str);
@@ -333,7 +355,9 @@ public class QSControlDetail extends FrameLayout {
     public void animateDetailVisibleDiff(boolean z, View view, View view2) {
         Log.d("QSDetail", "animateDetailVisibleDiff: show = " + z + ", tileView = " + view);
         if (!z) {
-            animateDetailAlphaWithRotation(false, this.mFromView);
+            if (!DeviceConfig.isLowGpuDevice()) {
+                animateDetailAlphaWithRotation(false, this.mFromView);
+            }
             if (this.mFromView != null) {
                 post(this.mAnimateHideRunnable);
             } else {
@@ -347,7 +371,11 @@ public class QSControlDetail extends FrameLayout {
             this.mFromView = view;
             this.mToView = this.mDetailContainer;
             this.mTranslateView = view2;
-            animateDetailAlphaWithRotation(true, view);
+            if (DeviceConfig.isLowGpuDevice()) {
+                this.mDetailContainer.setAlpha(1.0f);
+            } else {
+                animateDetailAlphaWithRotation(true, this.mFromView);
+            }
             post(this.mAnimateShowRunnable);
         }
     }
@@ -521,10 +549,14 @@ public class QSControlDetail extends FrameLayout {
                 QSControlDetail.this.setVisibility(0);
                 ((ViewGroup) QSControlDetail.this.mFromView.getParent()).suppressLayout(true);
                 ((ViewGroup) QSControlDetail.this.mToView.getParent()).suppressLayout(true);
-                View view = QSControlDetail.this.mFromView;
-                view.setElevation(view.getElevation() + 0.01f);
-                View view2 = QSControlDetail.this.mToView;
+                View view = (View) QSControlDetail.this.mDetailViews.get(QSControlDetail.this.mCurrentDetailIndex);
+                if (view instanceof ViewGroup) {
+                    ((ViewGroup) view).suppressLayout(true);
+                }
+                View view2 = QSControlDetail.this.mFromView;
                 view2.setElevation(view2.getElevation() + 0.01f);
+                View view3 = QSControlDetail.this.mToView;
+                view3.setElevation(view3.getElevation() + 0.01f);
             }
 
             public void onComplete(Object obj) {
@@ -535,9 +567,43 @@ public class QSControlDetail extends FrameLayout {
                 view.setLeftTopRightBottom(iArr[0], iArr[1], iArr[2], iArr[3]);
                 ((ViewGroup) QSControlDetail.this.mFromView.getParent()).suppressLayout(false);
                 ((ViewGroup) QSControlDetail.this.mToView.getParent()).suppressLayout(false);
+                View view2 = (View) QSControlDetail.this.mDetailViews.get(QSControlDetail.this.mCurrentDetailIndex);
+                if (view2 instanceof MiuiQSDetailItems) {
+                    ((ViewGroup) view2).suppressLayout(false);
+                    ((MiuiQSDetailItems) view2).notifyData();
+                }
             }
         });
         to.to("fromLeft", Integer.valueOf((this.mFromViewFrame[0] + this.mToViewLocation[0]) - this.mFromViewLocation[0]), "fromTop", Integer.valueOf((this.mFromViewFrame[1] + this.mToViewLocation[1]) - this.mFromViewLocation[1]), "fromRight", Integer.valueOf((this.mFromViewFrame[2] + this.mToViewLocation[2]) - this.mFromViewLocation[2]), "fromBottom", Integer.valueOf((this.mFromViewFrame[3] + this.mToViewLocation[3]) - this.mFromViewLocation[3]), "toLeft", Integer.valueOf(this.mToViewFrame[0]), "toTop", Integer.valueOf(this.mToViewFrame[1]), "toRight", Integer.valueOf(this.mToViewFrame[2]), "toBottom", Integer.valueOf(this.mToViewFrame[3]), animConfig);
+    }
+
+    /* access modifiers changed from: protected */
+    public void animateShowDetailAndTileOnLowEnd() {
+        PhysicBasedInterpolator physicBasedInterpolator = new PhysicBasedInterpolator(0.9f, 0.35f);
+        ValueAnimator duration = ValueAnimator.ofFloat(new float[]{1.0f, 0.0f}).setDuration(300);
+        duration.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                float floatValue = ((Float) valueAnimator.getAnimatedValue()).floatValue();
+                float f = 1.0f - (0.1f * floatValue);
+                QSControlDetail.this.mToView.setScaleX(f);
+                QSControlDetail.this.mToView.setScaleY(f);
+                QSControlDetail.this.mToView.setAlpha(1.0f - floatValue);
+            }
+        });
+        duration.addListener(new AnimatorListenerAdapter() {
+            public void onAnimationStart(Animator animator) {
+                QSControlDetail.this.setVisibility(0);
+                ((ViewGroup) QSControlDetail.this.mFromView.getParent()).suppressLayout(true);
+                ((ViewGroup) QSControlDetail.this.mToView.getParent()).suppressLayout(true);
+            }
+
+            public void onAnimationEnd(Animator animator) {
+                ((ViewGroup) QSControlDetail.this.mFromView.getParent()).suppressLayout(false);
+                ((ViewGroup) QSControlDetail.this.mToView.getParent()).suppressLayout(false);
+            }
+        });
+        duration.setInterpolator(physicBasedInterpolator);
+        duration.start();
     }
 
     /* access modifiers changed from: protected */
@@ -568,6 +634,10 @@ public class QSControlDetail extends FrameLayout {
                 super.onBegin(obj);
                 ((ViewGroup) QSControlDetail.this.mFromView.getParent()).suppressLayout(true);
                 ((ViewGroup) QSControlDetail.this.mToView.getParent()).suppressLayout(true);
+                View view = (View) QSControlDetail.this.mDetailViews.get(QSControlDetail.this.mCurrentDetailIndex);
+                if (view instanceof ViewGroup) {
+                    ((ViewGroup) view).suppressLayout(true);
+                }
             }
 
             public void onUpdate(Object obj, Collection<UpdateInfo> collection) {
@@ -629,14 +699,46 @@ public class QSControlDetail extends FrameLayout {
                 view2.setElevation(view2.getElevation() - 0.01f);
                 ((ViewGroup) QSControlDetail.this.mFromView.getParent()).suppressLayout(false);
                 ((ViewGroup) QSControlDetail.this.mToView.getParent()).suppressLayout(false);
+                View view3 = (View) QSControlDetail.this.mDetailViews.get(QSControlDetail.this.mCurrentDetailIndex);
+                if (view3 instanceof ViewGroup) {
+                    ((ViewGroup) view3).suppressLayout(false);
+                }
                 QSControlDetail.this.setVisibility(8);
-                View view3 = QSControlDetail.this.mFromView;
-                if (view3 instanceof QSBigTileView) {
-                    ((QSBigTileView) view3).updateIndicatorTouch();
+                View view4 = QSControlDetail.this.mFromView;
+                if (view4 instanceof QSBigTileView) {
+                    ((QSBigTileView) view4).updateIndicatorTouch();
                 }
             }
         });
         to.to("fromLeft", Integer.valueOf(this.mFromViewFrame[0]), "fromTop", Integer.valueOf(this.mFromViewFrame[1]), "fromRight", Integer.valueOf(this.mFromViewFrame[2]), "fromBottom", Integer.valueOf(this.mFromViewFrame[3]), "toLeft", Integer.valueOf((this.mToViewFrame[0] + this.mFromViewLocation[0]) - this.mToViewLocation[0]), "toTop", Integer.valueOf((this.mToViewFrame[1] + this.mFromViewLocation[1]) - this.mToViewLocation[1]), "toRight", Integer.valueOf((this.mToViewFrame[2] + this.mFromViewLocation[2]) - this.mToViewLocation[2]), "toBottom", Integer.valueOf((this.mToViewFrame[3] + this.mFromViewLocation[3]) - this.mToViewLocation[3]), animConfig);
+    }
+
+    /* access modifiers changed from: protected */
+    public void animateHideDetailAndTileOnLowEnd() {
+        PhysicBasedInterpolator physicBasedInterpolator = new PhysicBasedInterpolator(0.9f, 0.35f);
+        ValueAnimator duration = ValueAnimator.ofFloat(new float[]{1.0f, 0.0f}).setDuration(300);
+        duration.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                float floatValue = ((Float) valueAnimator.getAnimatedValue()).floatValue();
+                float f = (0.1f * floatValue) + 0.9f;
+                QSControlDetail.this.mToView.setScaleX(f);
+                QSControlDetail.this.mToView.setScaleY(f);
+                QSControlDetail.this.mToView.setAlpha(floatValue);
+            }
+        });
+        duration.addListener(new AnimatorListenerAdapter() {
+            public void onAnimationStart(Animator animator) {
+                ((ViewGroup) QSControlDetail.this.mToView.getParent()).suppressLayout(true);
+            }
+
+            public void onAnimationEnd(Animator animator) {
+                ((ViewGroup) QSControlDetail.this.mToView.getParent()).suppressLayout(false);
+                QSControlDetail.this.setVisibility(8);
+                QSControlDetail.this.mDetailContainer.setAlpha(0.0f);
+            }
+        });
+        duration.setInterpolator(physicBasedInterpolator);
+        duration.start();
     }
 
     /* access modifiers changed from: protected */
