@@ -17,6 +17,7 @@ public class AnalyticsHelper {
     private static volatile AnalyticsHelper sInstance;
     private Handler mHandler;
     private HashMap<String, TrackPageEvent> mTrackPageEvents = new HashMap<>();
+    private String mUnlockWay = "none";
 
     public static int booleanToInt(boolean z) {
         return z ? 1 : 0;
@@ -73,6 +74,10 @@ public class AnalyticsHelper {
 
     public void trackPageEnd(String str, String str2) {
         this.mTrackPageEvents.get(str).onPageEnd(str2);
+    }
+
+    public String getUnlockWay() {
+        return this.mUnlockWay;
     }
 
     public void recordKeyguardAction(String str) {

@@ -69,7 +69,7 @@ public class MiuiDozeServiceHost extends DozeServiceHost {
     /* access modifiers changed from: private */
     public final Handler mHandler = new Handler(Looper.getMainLooper());
     private KeyguardUpdateMonitorCallback mKeyguardUpdateMonitorCallback;
-    Runnable mNotifyKeycodeGoto = $$Lambda$MiuiDozeServiceHost$lo2VTvaOLCM7yAae_Klyzmiik.INSTANCE;
+    Runnable mNotifyKeycodeGoto = $$Lambda$MiuiDozeServiceHost$dJI1FLLD1uCJOZIbgk7HpTtrZxI.INSTANCE;
     private final PowerManager mPowerManager;
     private final boolean mSupportAod;
     private final ServiceConnection serviceConnection = new ServiceConnection() {
@@ -271,19 +271,39 @@ public class MiuiDozeServiceHost extends DozeServiceHost {
         if (this.mSupportAod) {
             this.mHandler.post(new Runnable() {
                 public final void run() {
-                    MiuiDozeServiceHost.this.lambda$startAndBindAodService$1$MiuiDozeServiceHost();
+                    MiuiDozeServiceHost.this.lambda$startAndBindAodService$2$MiuiDozeServiceHost();
                 }
             });
         }
     }
 
     /* access modifiers changed from: private */
-    /* renamed from: lambda$startAndBindAodService$1 */
-    public /* synthetic */ void lambda$startAndBindAodService$1$MiuiDozeServiceHost() {
+    /* renamed from: lambda$startAndBindAodService$2 */
+    public /* synthetic */ void lambda$startAndBindAodService$2$MiuiDozeServiceHost() {
         Intent intent = new Intent("com.miui.aod.MiuiAodService");
         intent.setPackage("com.miui.aod");
         this.mAodServiceBinded = this.mContext.bindServiceAsUser(intent, this.serviceConnection, 1, UserHandle.CURRENT);
         Log.d("MiuiDozeServiceHost", "is service connected: " + this.mAodServiceBinded);
+        if (!this.mAodServiceBinded) {
+            this.mHandler.postDelayed(new Runnable(intent) {
+                public final /* synthetic */ Intent f$1;
+
+                {
+                    this.f$1 = r2;
+                }
+
+                public final void run() {
+                    MiuiDozeServiceHost.this.lambda$startAndBindAodService$1$MiuiDozeServiceHost(this.f$1);
+                }
+            }, 500);
+        }
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$startAndBindAodService$1 */
+    public /* synthetic */ void lambda$startAndBindAodService$1$MiuiDozeServiceHost(Intent intent) {
+        this.mAodServiceBinded = this.mContext.bindServiceAsUser(intent, this.serviceConnection, 1, UserHandle.CURRENT);
+        Log.d("MiuiDozeServiceHost", "is service retry connected: " + this.mAodServiceBinded);
     }
 
     /* access modifiers changed from: private */
@@ -332,7 +352,7 @@ public class MiuiDozeServiceHost extends DozeServiceHost {
         }
     }
 
-    static /* synthetic */ void lambda$new$2() {
+    static /* synthetic */ void lambda$new$3() {
         if (MiuiKeyguardUtils.isGxzwSensor()) {
             MiuiGxzwManager.getInstance().notifyKeycodeGoto();
         }

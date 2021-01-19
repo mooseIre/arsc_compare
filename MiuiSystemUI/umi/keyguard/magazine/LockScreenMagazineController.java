@@ -118,6 +118,7 @@ public class LockScreenMagazineController implements SettingsObserver.Callback {
     public boolean mIsSwitchAnimating;
     /* access modifiers changed from: private */
     public KeyguardBottomAreaView mKeyguardBottomArea;
+    private KeyguardSecurityModel mKeyguardSecurityModel;
     /* access modifiers changed from: private */
     public boolean mKeyguardShowing;
     private final MiuiKeyguardUpdateMonitorCallback mKeyguardUpdateMonitorCallback = new MiuiKeyguardUpdateMonitorCallback() {
@@ -270,7 +271,7 @@ public class LockScreenMagazineController implements SettingsObserver.Callback {
     public LockScreenMagazineController(Context context) {
         this.mContext = context;
         this.mMagazineWallpaperAuthority = WallpaperAuthorityUtils.getWallpaperAuthority();
-        KeyguardSecurityModel keyguardSecurityModel = (KeyguardSecurityModel) Dependency.get(KeyguardSecurityModel.class);
+        this.mKeyguardSecurityModel = (KeyguardSecurityModel) Dependency.get(KeyguardSecurityModel.class);
         this.mClockContainerView = ((KeyguardClockInjector) Dependency.get(KeyguardClockInjector.class)).getView();
         this.mUpdateMonitor = (KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class);
         this.mUpdateMonitorInjector = (KeyguardUpdateMonitorInjector) Dependency.get(KeyguardUpdateMonitorInjector.class);
@@ -825,6 +826,10 @@ public class LockScreenMagazineController implements SettingsObserver.Callback {
         }
     }
 
+    public KeyguardSecurityModel.SecurityMode getSecurityMode() {
+        return this.mKeyguardSecurityModel.getSecurityMode(KeyguardUpdateMonitor.getCurrentUser());
+    }
+
     public boolean isLockScreenMagazinePkgExist() {
         return this.mIsLockScreenMagazinePkgExist;
     }
@@ -1018,9 +1023,17 @@ public class LockScreenMagazineController implements SettingsObserver.Callback {
 
     public void onStartedWakingUp() {
         this.mStartedWakingUp = true;
+        LockScreenMagazineUtils.sendLockScreenMagazineScreenOnBroadcast(this.mContext);
     }
 
     public void onFinishedGoingToSleep() {
         this.mStartedWakingUp = false;
+        LockScreenMagazineUtils.sendLockScreenMagazineEventBroadcast(this.mContext, "Screen_OFF");
+    }
+
+    public void onKeyguardShowingChanged(boolean z) {
+        if (!z) {
+            LockScreenMagazineUtils.sendLockScreenMagazineUnlockBroadcast(this.mContext);
+        }
     }
 }
