@@ -900,6 +900,13 @@ public final class KeyguardPanelViewInjector extends MiuiKeyguardUpdateMonitorCa
 
     public void onKeyguardShowingChanged(boolean z) {
         ((KeyguardSensorInjector) Dependency.get(KeyguardSensorInjector.class)).disableFullScreenGesture();
+        LockScreenMagazineController lockScreenMagazineController = this.mLockScreenMagazineController;
+        if (lockScreenMagazineController != null) {
+            lockScreenMagazineController.onKeyguardShowingChanged(z);
+        } else {
+            Intrinsics.throwUninitializedPropertyAccessException("mLockScreenMagazineController");
+            throw null;
+        }
     }
 
     public void onAnimationToSideEnded() {

@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import com.android.internal.annotations.VisibleForTesting;
+import com.android.systemui.C0008R$array;
 import com.android.systemui.C0015R$id;
 import com.android.systemui.C0017R$layout;
 import com.android.systemui.C0022R$style;
@@ -24,11 +25,15 @@ import com.android.systemui.Dependency;
 import com.android.systemui.statusbar.NavigationBarController;
 import com.android.systemui.statusbar.phone.NavigationBarView;
 import com.android.systemui.util.InjectionInflationController;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class KeyguardDisplayManager {
     /* access modifiers changed from: private */
     public static boolean DEBUG = true;
     private final Context mContext;
+    List<Integer> mDeviceHidePresentationIds;
     private final DisplayManager.DisplayListener mDisplayListener = new DisplayManager.DisplayListener() {
         public void onDisplayAdded(int i) {
             Display display = KeyguardDisplayManager.this.mDisplayService.getDisplay(i);
@@ -95,6 +100,7 @@ public class KeyguardDisplayManager {
         DisplayManager displayManager = (DisplayManager) this.mContext.getSystemService(DisplayManager.class);
         this.mDisplayService = displayManager;
         displayManager.registerDisplayListener(this.mDisplayListener, (Handler) null);
+        this.mDeviceHidePresentationIds = (List) Arrays.stream(this.mContext.getResources().getIntArray(C0008R$array.miui_config_hideKeyguardPresentationDisplayIds)).boxed().collect(Collectors.toList());
     }
 
     private boolean isKeyguardShowable(Display display) {
@@ -110,13 +116,19 @@ public class KeyguardDisplayManager {
             return false;
         } else {
             display.getDisplayInfo(this.mTmpDisplayInfo);
-            if ((this.mTmpDisplayInfo.flags & 4) == 0) {
+            if ((this.mTmpDisplayInfo.flags & 4) != 0) {
+                if (DEBUG) {
+                    Log.i("KeyguardDisplayManager", "Do not show KeyguardPresentation on a private display");
+                }
+                return false;
+            } else if (!this.mDeviceHidePresentationIds.contains(Integer.valueOf(display.getDisplayId()))) {
                 return true;
+            } else {
+                if (DEBUG) {
+                    Log.i("KeyguardDisplayManager", "Do not show KeyguardPresentation on a specific display");
+                }
+                return false;
             }
-            if (DEBUG) {
-                Log.i("KeyguardDisplayManager", "Do not show KeyguardPresentation on a private display");
-            }
-            return false;
         }
     }
 
