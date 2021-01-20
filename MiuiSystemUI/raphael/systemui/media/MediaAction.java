@@ -1,5 +1,6 @@
 package com.android.systemui.media;
 
+import android.app.Notification;
 import android.graphics.drawable.Drawable;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
@@ -13,6 +14,8 @@ public final class MediaAction {
     private final CharSequence contentDescription;
     @Nullable
     private final Drawable drawable;
+    @Nullable
+    private final Notification.Action notificationAction;
 
     public boolean equals(@Nullable Object obj) {
         if (this == obj) {
@@ -22,7 +25,7 @@ public final class MediaAction {
             return false;
         }
         MediaAction mediaAction = (MediaAction) obj;
-        return Intrinsics.areEqual((Object) this.drawable, (Object) mediaAction.drawable) && Intrinsics.areEqual((Object) this.action, (Object) mediaAction.action) && Intrinsics.areEqual((Object) this.contentDescription, (Object) mediaAction.contentDescription);
+        return Intrinsics.areEqual((Object) this.drawable, (Object) mediaAction.drawable) && Intrinsics.areEqual((Object) this.action, (Object) mediaAction.action) && Intrinsics.areEqual((Object) this.contentDescription, (Object) mediaAction.contentDescription) && Intrinsics.areEqual((Object) this.notificationAction, (Object) mediaAction.notificationAction);
     }
 
     public int hashCode() {
@@ -32,21 +35,24 @@ public final class MediaAction {
         Runnable runnable = this.action;
         int hashCode2 = (hashCode + (runnable != null ? runnable.hashCode() : 0)) * 31;
         CharSequence charSequence = this.contentDescription;
-        if (charSequence != null) {
-            i = charSequence.hashCode();
+        int hashCode3 = (hashCode2 + (charSequence != null ? charSequence.hashCode() : 0)) * 31;
+        Notification.Action action2 = this.notificationAction;
+        if (action2 != null) {
+            i = action2.hashCode();
         }
-        return hashCode2 + i;
+        return hashCode3 + i;
     }
 
     @NotNull
     public String toString() {
-        return "MediaAction(drawable=" + this.drawable + ", action=" + this.action + ", contentDescription=" + this.contentDescription + ")";
+        return "MediaAction(drawable=" + this.drawable + ", action=" + this.action + ", contentDescription=" + this.contentDescription + ", notificationAction=" + this.notificationAction + ")";
     }
 
-    public MediaAction(@Nullable Drawable drawable2, @Nullable Runnable runnable, @Nullable CharSequence charSequence) {
+    public MediaAction(@Nullable Drawable drawable2, @Nullable Runnable runnable, @Nullable CharSequence charSequence, @Nullable Notification.Action action2) {
         this.drawable = drawable2;
         this.action = runnable;
         this.contentDescription = charSequence;
+        this.notificationAction = action2;
     }
 
     @Nullable
@@ -62,5 +68,15 @@ public final class MediaAction {
     @Nullable
     public final CharSequence getContentDescription() {
         return this.contentDescription;
+    }
+
+    /* JADX INFO: this call moved to the top of the method (can break code semantics) */
+    public /* synthetic */ MediaAction(Drawable drawable2, Runnable runnable, CharSequence charSequence, Notification.Action action2, int i, DefaultConstructorMarker defaultConstructorMarker) {
+        this(drawable2, runnable, charSequence, (i & 8) != 0 ? null : action2);
+    }
+
+    @Nullable
+    public final Notification.Action getNotificationAction() {
+        return this.notificationAction;
     }
 }

@@ -1,5 +1,6 @@
 package com.android.systemui.statusbar.notification.mediacontrol;
 
+import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.res.ColorStateList;
@@ -10,9 +11,11 @@ import android.os.AsyncTask;
 import android.util.ArraySet;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.RemoteViews;
 import androidx.constraintlayout.widget.ConstraintSet;
 import com.android.systemui.C0012R$dimen;
 import com.android.systemui.C0015R$id;
+import com.android.systemui.Dependency;
 import com.android.systemui.media.MediaAction;
 import com.android.systemui.media.MediaControlPanel;
 import com.android.systemui.media.MediaData;
@@ -20,6 +23,7 @@ import com.android.systemui.media.MediaViewController;
 import com.android.systemui.media.PlayerViewHolder;
 import com.android.systemui.media.SeekBarViewModel;
 import com.android.systemui.plugins.ActivityStarter;
+import com.android.systemui.statusbar.NotificationRemoteInputManager;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Executor;
@@ -43,120 +47,173 @@ public class MiuiMediaControlPanel extends MediaControlPanel {
     }
 
     public void bind(MediaData mediaData) {
-        int[] iArr = MediaControlPanel.ACTION_IDS;
         PlayerViewHolder view = getView();
         if (view != null) {
-            for (AsyncTask<?, ?, ?> cancel : this.mProcessArtworkTasks) {
-                cancel.cancel(true);
-            }
-            this.mProcessArtworkTasks.clear();
-            MediaSession.Token token = mediaData.getToken();
-            this.mBackgroundColor = mediaData.getBackgroundColor();
-            MediaSession.Token token2 = this.mToken;
-            if (token2 == null || !token2.equals(token)) {
-                this.mToken = token;
-            }
-            if (this.mToken != null) {
-                this.mController = new MediaController(this.mContext, this.mToken);
-            } else {
-                this.mController = null;
-            }
+            clearProcessArtworkTasks();
+            refreshTokenAndController(mediaData);
             ConstraintSet expandedLayout = this.mMediaViewController.getExpandedLayout();
             ConstraintSet collapsedLayout = this.mMediaViewController.getCollapsedLayout();
-            PendingIntent clickIntent = mediaData.getClickIntent();
-            if (clickIntent != null) {
-                view.getPlayer().setOnClickListener(new View.OnClickListener(clickIntent) {
-                    public final /* synthetic */ PendingIntent f$1;
+            setClickAction(mediaData, view);
+            setArtwork(mediaData);
+            setInfoText(mediaData, view);
+            setSeamless(mediaData, view, expandedLayout, collapsedLayout);
+            setMediaActions(mediaData, view, expandedLayout, collapsedLayout);
+            setSeekBar();
+        }
+    }
 
-                    {
-                        this.f$1 = r2;
-                    }
+    private void clearProcessArtworkTasks() {
+        for (AsyncTask<?, ?, ?> cancel : this.mProcessArtworkTasks) {
+            cancel.cancel(true);
+        }
+        this.mProcessArtworkTasks.clear();
+    }
 
-                    public final void onClick(View view) {
-                        MiuiMediaControlPanel.this.lambda$bind$0$MiuiMediaControlPanel(this.f$1, view);
-                    }
-                });
-            }
-            if (mediaData.getArtwork() != null) {
-                this.mProcessArtworkTasks.add(new ProcessArtworkTask(this.direction, this).executeOnExecutor(this.mBackgroundExecutor, new Drawable[]{mediaData.getArtwork().loadDrawable(this.mContext)}));
-            }
-            view.getTitleText().setText(mediaData.getSong());
-            view.getAppName().setText(mediaData.getApp());
-            view.getArtistText().setText(mediaData.getArtist());
-            view.getSeamless().setVisibility(0);
-            setVisibleAndAlpha(collapsedLayout, C0015R$id.media_seamless, true);
-            setVisibleAndAlpha(expandedLayout, C0015R$id.media_seamless, true);
-            int id = view.getSeamless().getId();
-            float f = mediaData.getResumption() ? 0.38f : 1.0f;
-            expandedLayout.setAlpha(id, f);
-            collapsedLayout.setAlpha(id, f);
-            view.getSeamless().setEnabled(!mediaData.getResumption());
-            List<Integer> actionsToShowInCompact = mediaData.getActionsToShowInCompact();
-            List<MediaAction> actions = mediaData.getActions();
-            int i = 0;
-            int i2 = 0;
-            while (i < actions.size() && i < iArr.length) {
-                int i3 = iArr[i];
-                ImageButton action = view.getAction(i3);
-                MediaAction mediaAction = actions.get(i);
-                action.setImageDrawable(mediaAction.getDrawable());
-                action.setContentDescription(mediaAction.getContentDescription());
-                Runnable action2 = mediaAction.getAction();
-                if (action2 == null) {
-                    action.setEnabled(false);
-                } else {
-                    action.setEnabled(true);
-                    action.setOnClickListener(new View.OnClickListener(action2) {
-                        public final /* synthetic */ Runnable f$0;
+    private void refreshTokenAndController(MediaData mediaData) {
+        MediaSession.Token token = mediaData.getToken();
+        this.mBackgroundColor = mediaData.getBackgroundColor();
+        MediaSession.Token token2 = this.mToken;
+        if (token2 == null || !token2.equals(token)) {
+            this.mToken = token;
+        }
+        if (this.mToken != null) {
+            this.mController = new MediaController(this.mContext, this.mToken);
+        } else {
+            this.mController = null;
+        }
+    }
 
-                        {
-                            this.f$0 = r1;
-                        }
-
-                        public final void onClick(View view) {
-                            this.f$0.run();
-                        }
-                    });
-                    Folme.useAt(action).touch().handleTouchOf(action, new AnimConfig[0]);
-                }
-                boolean contains = actionsToShowInCompact.contains(Integer.valueOf(i));
-                if (contains) {
-                    i2++;
-                }
-                setVisibleAndAlpha(collapsedLayout, i3, contains);
-                setVisibleAndAlpha(expandedLayout, i3, true);
-                i++;
-            }
-            collapsedLayout.constrainWidth(C0015R$id.actions, this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.media_control_collapsed_gap) * i2);
-            expandedLayout.constrainWidth(C0015R$id.actions, this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.media_control_expanded_gap) * i);
-            while (i < iArr.length) {
-                setVisibleAndAlpha(expandedLayout, iArr[i], false);
-                setVisibleAndAlpha(collapsedLayout, iArr[i], false);
-                i++;
-            }
-            this.mBackgroundExecutor.execute(new Runnable(getController()) {
-                public final /* synthetic */ MediaController f$1;
+    private void setClickAction(MediaData mediaData, PlayerViewHolder playerViewHolder) {
+        PendingIntent clickIntent = mediaData.getClickIntent();
+        if (clickIntent != null) {
+            playerViewHolder.getPlayer().setOnClickListener(new View.OnClickListener(clickIntent) {
+                public final /* synthetic */ PendingIntent f$1;
 
                 {
                     this.f$1 = r2;
                 }
 
-                public final void run() {
-                    MiuiMediaControlPanel.this.lambda$bind$2$MiuiMediaControlPanel(this.f$1);
+                public final void onClick(View view) {
+                    MiuiMediaControlPanel.this.lambda$setClickAction$0$MiuiMediaControlPanel(this.f$1, view);
                 }
             });
         }
     }
 
     /* access modifiers changed from: private */
-    /* renamed from: lambda$bind$0 */
-    public /* synthetic */ void lambda$bind$0$MiuiMediaControlPanel(PendingIntent pendingIntent, View view) {
+    /* renamed from: lambda$setClickAction$0 */
+    public /* synthetic */ void lambda$setClickAction$0$MiuiMediaControlPanel(PendingIntent pendingIntent, View view) {
         this.mActivityStarter.postStartActivityDismissingKeyguard(pendingIntent);
     }
 
+    private void setArtwork(MediaData mediaData) {
+        if (mediaData.getArtwork() != null) {
+            this.mProcessArtworkTasks.add(new ProcessArtworkTask(this.direction, this).executeOnExecutor(this.mBackgroundExecutor, new Drawable[]{mediaData.getArtwork().loadDrawable(this.mContext)}));
+        }
+    }
+
+    private void setInfoText(MediaData mediaData, PlayerViewHolder playerViewHolder) {
+        playerViewHolder.getTitleText().setText(mediaData.getSong());
+        playerViewHolder.getAppName().setText(mediaData.getApp());
+        playerViewHolder.getArtistText().setText(mediaData.getArtist());
+    }
+
+    private void setSeamless(MediaData mediaData, PlayerViewHolder playerViewHolder, ConstraintSet constraintSet, ConstraintSet constraintSet2) {
+        playerViewHolder.getSeamless().setVisibility(0);
+        setVisibleAndAlpha(constraintSet2, C0015R$id.media_seamless, true);
+        setVisibleAndAlpha(constraintSet, C0015R$id.media_seamless, true);
+        int id = playerViewHolder.getSeamless().getId();
+        float f = mediaData.getResumption() ? 0.38f : 1.0f;
+        constraintSet.setAlpha(id, f);
+        constraintSet2.setAlpha(id, f);
+        playerViewHolder.getSeamless().setEnabled(!mediaData.getResumption());
+    }
+
+    private void setMediaActions(MediaData mediaData, PlayerViewHolder playerViewHolder, ConstraintSet constraintSet, ConstraintSet constraintSet2) {
+        int[] iArr = MediaControlPanel.ACTION_IDS;
+        List<Integer> actionsToShowInCompact = mediaData.getActionsToShowInCompact();
+        List<MediaAction> actions = mediaData.getActions();
+        int i = 0;
+        int i2 = 0;
+        while (i < actions.size() && i < iArr.length) {
+            int i3 = iArr[i];
+            ImageButton action = playerViewHolder.getAction(i3);
+            MediaAction mediaAction = actions.get(i);
+            action.setImageDrawable(mediaAction.getDrawable());
+            action.setContentDescription(mediaAction.getContentDescription());
+            Notification.Action notificationAction = mediaAction.getNotificationAction();
+            Runnable action2 = mediaAction.getAction();
+            if (notificationAction != null) {
+                enableActionButton(action, new View.OnClickListener(notificationAction, action) {
+                    public final /* synthetic */ Notification.Action f$0;
+                    public final /* synthetic */ ImageButton f$1;
+
+                    {
+                        this.f$0 = r1;
+                        this.f$1 = r2;
+                    }
+
+                    public final void onClick(View view) {
+                        ((NotificationRemoteInputManager) Dependency.get(NotificationRemoteInputManager.class)).getRemoteViewsOnClickHandler().onClickHandler(this.f$1, this.f$0.actionIntent, RemoteViews.RemoteResponse.fromPendingIntent(this.f$0.actionIntent));
+                    }
+                });
+            } else if (action2 != null) {
+                enableActionButton(action, new View.OnClickListener(action2) {
+                    public final /* synthetic */ Runnable f$0;
+
+                    {
+                        this.f$0 = r1;
+                    }
+
+                    public final void onClick(View view) {
+                        this.f$0.run();
+                    }
+                });
+            } else {
+                action.setEnabled(false);
+            }
+            boolean contains = actionsToShowInCompact.contains(Integer.valueOf(i));
+            if (contains) {
+                i2++;
+            }
+            setVisibleAndAlpha(constraintSet2, i3, contains);
+            setVisibleAndAlpha(constraintSet, i3, true);
+            i++;
+        }
+        constraintSet2.constrainWidth(C0015R$id.actions, this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.media_control_collapsed_gap) * i2);
+        constraintSet.constrainWidth(C0015R$id.actions, this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.media_control_expanded_gap) * i);
+        while (i < iArr.length) {
+            setVisibleAndAlpha(constraintSet, iArr[i], false);
+            setVisibleAndAlpha(constraintSet2, iArr[i], false);
+            i++;
+        }
+    }
+
+    private void enableActionButton(ImageButton imageButton, View.OnClickListener onClickListener) {
+        if (imageButton != null && onClickListener != null) {
+            imageButton.setEnabled(true);
+            imageButton.setOnClickListener(onClickListener);
+            Folme.useAt(imageButton).touch().handleTouchOf(imageButton, new AnimConfig[0]);
+        }
+    }
+
+    private void setSeekBar() {
+        this.mBackgroundExecutor.execute(new Runnable(getController()) {
+            public final /* synthetic */ MediaController f$1;
+
+            {
+                this.f$1 = r2;
+            }
+
+            public final void run() {
+                MiuiMediaControlPanel.this.lambda$setSeekBar$3$MiuiMediaControlPanel(this.f$1);
+            }
+        });
+    }
+
     /* access modifiers changed from: private */
-    /* renamed from: lambda$bind$2 */
-    public /* synthetic */ void lambda$bind$2$MiuiMediaControlPanel(MediaController mediaController) {
+    /* renamed from: lambda$setSeekBar$3 */
+    public /* synthetic */ void lambda$setSeekBar$3$MiuiMediaControlPanel(MediaController mediaController) {
         this.mSeekBarViewModel.updateController(mediaController);
     }
 

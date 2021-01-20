@@ -167,27 +167,22 @@ public final class AppMiniWindowManager implements OnHeadsUpChangedListener {
         }
     }
 
-    public final boolean canNotificationSlide(@Nullable PendingIntent pendingIntent) {
-        if (!HAS_MINI_WINDOW_FEATURE || this.mInDockedStackMode || pendingIntent == null || !pendingIntent.isActivity()) {
+    public final boolean canNotificationSlide(@Nullable String str, @Nullable PendingIntent pendingIntent) {
+        if (!HAS_MINI_WINDOW_FEATURE || this.mInDockedStackMode || pendingIntent == null || !pendingIntent.isActivity() || !this.notificationSettingsManager.canSlide(str)) {
             return false;
         }
-        String creatorPackage = pendingIntent.getCreatorPackage();
-        if (!this.notificationSettingsManager.canSlide(creatorPackage)) {
-            return false;
-        }
-        return MiniWindowPolicy.INSTANCE.canSlidePackage(creatorPackage, pendingIntent.getIntent(), this.mTopWindowPackage, this.mTopActivity, this.mHasSmallWindow);
+        return MiniWindowPolicy.INSTANCE.canSlidePackage(str, pendingIntent.getIntent(), this.mTopWindowPackage, this.mTopActivity, this.mHasSmallWindow);
     }
 
-    public final void launchMiniWindowActivity(@Nullable PendingIntent pendingIntent) {
-        String creatorPackage = pendingIntent != null ? pendingIntent.getCreatorPackage() : null;
-        if (creatorPackage != null) {
-            ActivityOptions activityOptions = MiuiMultiWindowUtils.getActivityOptions(this.context, creatorPackage, true, false);
+    public final void launchMiniWindowActivity(@Nullable String str, @Nullable PendingIntent pendingIntent) {
+        if (str != null && pendingIntent != null) {
+            ActivityOptions activityOptions = MiuiMultiWindowUtils.getActivityOptions(this.context, str, true, false);
             Intrinsics.checkExpressionValueIsNotNull(activityOptions, "activityOptions");
             ActivityOptionsInjector activityOptionsInjector = activityOptions.getActivityOptionsInjector();
             Intrinsics.checkExpressionValueIsNotNull(activityOptionsInjector, "activityOptions.activityOptionsInjector");
             activityOptionsInjector.setFreeformAnimation(false);
             Intent intent = new Intent();
-            MiniWindowPolicy.INSTANCE.initializeMiniWindowIntent(creatorPackage, intent);
+            MiniWindowPolicy.INSTANCE.initializeMiniWindowIntent(str, intent);
             try {
                 pendingIntent.send(this.context, 0, intent, (PendingIntent.OnFinished) null, (Handler) null, (String) null, activityOptions.toBundle());
             } catch (Exception e) {

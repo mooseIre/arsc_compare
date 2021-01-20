@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import com.android.systemui.C0015R$id;
 import com.android.systemui.C0017R$layout;
 import com.android.systemui.Dependency;
+import com.android.systemui.plugins.statusbar.StatusBarStateController;
 import com.android.systemui.statusbar.notification.NotificationEntryManager;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow;
@@ -35,6 +36,8 @@ public final class ModalController {
     public boolean isAnimating;
     private boolean isModal;
     private boolean mDownEventInjected;
+    @NotNull
+    private final StatusBarStateController mStatusBarStateController;
     private ExpandableNotificationRow modalRow;
     @NotNull
     public ModalRowInflater modalRowInflater;
@@ -50,14 +53,29 @@ public final class ModalController {
         void onChange(boolean z);
     }
 
-    public ModalController(@NotNull Context context2, @NotNull StatusBar statusBar2) {
+    public ModalController(@NotNull Context context2, @NotNull StatusBar statusBar2, @NotNull StatusBarStateController statusBarStateController) {
         Intrinsics.checkParameterIsNotNull(context2, "context");
         Intrinsics.checkParameterIsNotNull(statusBar2, "statusBar");
+        Intrinsics.checkParameterIsNotNull(statusBarStateController, "mStatusBarStateController");
         this.context = context2;
         this.statusBar = statusBar2;
+        this.mStatusBarStateController = statusBarStateController;
         this.modalWindowManager = new ModalWindowManager(context2);
         addModalWindow();
         ((NotificationEntryManager) Dependency.get(NotificationEntryManager.class)).addNotificationLifetimeExtender(new ModalLifetimeExtender(this));
+        this.mStatusBarStateController.addCallback(new StatusBarStateController.StateListener(this) {
+            final /* synthetic */ ModalController this$0;
+
+            {
+                this.this$0 = r1;
+            }
+
+            public void onStateChanged(int i) {
+                if (i == 1) {
+                    this.this$0.animExitModal();
+                }
+            }
+        });
     }
 
     @NotNull

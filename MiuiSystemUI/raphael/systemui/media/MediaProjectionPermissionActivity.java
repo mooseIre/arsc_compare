@@ -1,7 +1,6 @@
 package com.android.systemui.media;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
@@ -25,6 +24,7 @@ import com.android.systemui.C0015R$id;
 import com.android.systemui.C0017R$layout;
 import com.android.systemui.C0021R$string;
 import com.android.systemui.util.Utils;
+import miui.app.AlertDialog;
 
 public class MediaProjectionPermissionActivity extends Activity implements DialogInterface.OnClickListener, DialogInterface.OnCancelListener {
     private AlertDialog mDialog;
@@ -90,7 +90,7 @@ public class MediaProjectionPermissionActivity extends Activity implements Dialo
                 }
                 View inflate = View.inflate(this, C0017R$layout.media_projection_dialog_title, (ViewGroup) null);
                 ((TextView) inflate.findViewById(C0015R$id.dialog_title)).setText(str);
-                AlertDialog create = new AlertDialog.Builder(this).setCustomTitle(inflate).setMessage(charSequence).setPositiveButton(C0021R$string.media_projection_action_text, this).setNegativeButton(17039360, this).setOnCancelListener(this).create();
+                AlertDialog create = new AlertDialog.Builder(this, 8).setCustomTitle(inflate).setMessage(charSequence).setPositiveButton(C0021R$string.media_projection_action_text, this).setNegativeButton(17039360, this).setOnCancelListener(this).create();
                 this.mDialog = create;
                 create.create();
                 this.mDialog.getButton(-1).setFilterTouchesWhenObscured(true);
@@ -153,18 +153,18 @@ public class MediaProjectionPermissionActivity extends Activity implements Dialo
             android.util.Log.e(r3, r0, r2)     // Catch:{ all -> 0x000f }
             r2 = 0
             r1.setResult(r2)     // Catch:{ all -> 0x000f }
-            android.app.AlertDialog r2 = r1.mDialog
+            miui.app.AlertDialog r2 = r1.mDialog
             if (r2 == 0) goto L_0x0034
             goto L_0x0031
         L_0x0022:
-            android.app.AlertDialog r3 = r1.mDialog
+            miui.app.AlertDialog r3 = r1.mDialog
             if (r3 == 0) goto L_0x0029
             r3.dismiss()
         L_0x0029:
             r1.finish()
             throw r2
         L_0x002d:
-            android.app.AlertDialog r2 = r1.mDialog
+            miui.app.AlertDialog r2 = r1.mDialog
             if (r2 == 0) goto L_0x0034
         L_0x0031:
             r2.dismiss()

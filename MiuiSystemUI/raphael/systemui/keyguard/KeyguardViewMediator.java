@@ -1911,10 +1911,10 @@ public class KeyguardViewMediator extends SystemUI implements Dumpable {
     }
 
     /* access modifiers changed from: private */
-    /* JADX WARNING: Code restructure failed: missing block: B:22:0x00a5, code lost:
+    /* JADX WARNING: Code restructure failed: missing block: B:22:0x00a3, code lost:
         android.os.Trace.endSection();
      */
-    /* JADX WARNING: Code restructure failed: missing block: B:23:0x00a8, code lost:
+    /* JADX WARNING: Code restructure failed: missing block: B:23:0x00a6, code lost:
         return;
      */
     /* JADX WARNING: Code restructure failed: missing block: B:9:0x003d, code lost:
@@ -1939,68 +1939,67 @@ public class KeyguardViewMediator extends SystemUI implements Dumpable {
             java.lang.String r2 = "KeyguardViewMediator"
             android.util.Log.d(r2, r1)
             monitor-enter(r4)
-            boolean r1 = r4.mHiding     // Catch:{ all -> 0x00a9 }
+            boolean r1 = r4.mHiding     // Catch:{ all -> 0x00a7 }
             if (r1 != 0) goto L_0x003e
-            java.lang.Object r5 = com.android.systemui.Dependency.get(r0)     // Catch:{ all -> 0x00a9 }
-            com.android.keyguard.MiuiFastUnlockController r5 = (com.android.keyguard.MiuiFastUnlockController) r5     // Catch:{ all -> 0x00a9 }
-            boolean r5 = r5.isFastUnlock()     // Catch:{ all -> 0x00a9 }
+            java.lang.Object r5 = com.android.systemui.Dependency.get(r0)     // Catch:{ all -> 0x00a7 }
+            com.android.keyguard.MiuiFastUnlockController r5 = (com.android.keyguard.MiuiFastUnlockController) r5     // Catch:{ all -> 0x00a7 }
+            boolean r5 = r5.isFastUnlock()     // Catch:{ all -> 0x00a7 }
             if (r5 != 0) goto L_0x003c
-            boolean r5 = r4.mShowing     // Catch:{ all -> 0x00a9 }
+            boolean r5 = r4.mShowing     // Catch:{ all -> 0x00a7 }
             r6 = 1
-            r4.setShowingLocked(r5, r6)     // Catch:{ all -> 0x00a9 }
+            r4.setShowingLocked(r5, r6)     // Catch:{ all -> 0x00a7 }
         L_0x003c:
-            monitor-exit(r4)     // Catch:{ all -> 0x00a9 }
+            monitor-exit(r4)     // Catch:{ all -> 0x00a7 }
             return
         L_0x003e:
             r1 = 0
-            r4.mHiding = r1     // Catch:{ all -> 0x00a9 }
-            boolean r2 = r4.mWakeAndUnlocking     // Catch:{ all -> 0x00a9 }
+            r4.mHiding = r1     // Catch:{ all -> 0x00a7 }
+            boolean r2 = r4.mWakeAndUnlocking     // Catch:{ all -> 0x00a7 }
             if (r2 == 0) goto L_0x0060
-            com.android.internal.policy.IKeyguardDrawnCallback r2 = r4.mDrawnCallback     // Catch:{ all -> 0x00a9 }
+            com.android.internal.policy.IKeyguardDrawnCallback r2 = r4.mDrawnCallback     // Catch:{ all -> 0x00a7 }
             if (r2 == 0) goto L_0x0060
-            dagger.Lazy<com.android.keyguard.KeyguardViewController> r2 = r4.mKeyguardViewControllerLazy     // Catch:{ all -> 0x00a9 }
-            java.lang.Object r2 = r2.get()     // Catch:{ all -> 0x00a9 }
-            com.android.keyguard.KeyguardViewController r2 = (com.android.keyguard.KeyguardViewController) r2     // Catch:{ all -> 0x00a9 }
-            android.view.ViewRootImpl r2 = r2.getViewRootImpl()     // Catch:{ all -> 0x00a9 }
-            r2.setReportNextDraw()     // Catch:{ all -> 0x00a9 }
-            com.android.internal.policy.IKeyguardDrawnCallback r2 = r4.mDrawnCallback     // Catch:{ all -> 0x00a9 }
-            r4.notifyDrawn(r2)     // Catch:{ all -> 0x00a9 }
+            dagger.Lazy<com.android.keyguard.KeyguardViewController> r2 = r4.mKeyguardViewControllerLazy     // Catch:{ all -> 0x00a7 }
+            java.lang.Object r2 = r2.get()     // Catch:{ all -> 0x00a7 }
+            com.android.keyguard.KeyguardViewController r2 = (com.android.keyguard.KeyguardViewController) r2     // Catch:{ all -> 0x00a7 }
+            android.view.ViewRootImpl r2 = r2.getViewRootImpl()     // Catch:{ all -> 0x00a7 }
+            r2.setReportNextDraw()     // Catch:{ all -> 0x00a7 }
+            com.android.internal.policy.IKeyguardDrawnCallback r2 = r4.mDrawnCallback     // Catch:{ all -> 0x00a7 }
+            r4.notifyDrawn(r2)     // Catch:{ all -> 0x00a7 }
             r2 = 0
-            r4.mDrawnCallback = r2     // Catch:{ all -> 0x00a9 }
+            r4.mDrawnCallback = r2     // Catch:{ all -> 0x00a7 }
         L_0x0060:
-            java.lang.String r2 = android.telephony.TelephonyManager.EXTRA_STATE_IDLE     // Catch:{ all -> 0x00a9 }
-            java.lang.String r3 = r4.mPhoneState     // Catch:{ all -> 0x00a9 }
-            boolean r2 = r2.equals(r3)     // Catch:{ all -> 0x00a9 }
+            java.lang.String r2 = android.telephony.TelephonyManager.EXTRA_STATE_IDLE     // Catch:{ all -> 0x00a7 }
+            java.lang.String r3 = r4.mPhoneState     // Catch:{ all -> 0x00a7 }
+            boolean r2 = r2.equals(r3)     // Catch:{ all -> 0x00a7 }
             if (r2 == 0) goto L_0x006d
-            r4.playSounds(r1)     // Catch:{ all -> 0x00a9 }
+            r4.playSounds(r1)     // Catch:{ all -> 0x00a7 }
         L_0x006d:
-            r4.setShowingLocked(r1)     // Catch:{ all -> 0x00a9 }
-            r4.mWakeAndUnlocking = r1     // Catch:{ all -> 0x00a9 }
-            com.android.systemui.keyguard.DismissCallbackRegistry r2 = r4.mDismissCallbackRegistry     // Catch:{ all -> 0x00a9 }
-            r2.notifyDismissSucceeded()     // Catch:{ all -> 0x00a9 }
-            dagger.Lazy<com.android.keyguard.KeyguardViewController> r2 = r4.mKeyguardViewControllerLazy     // Catch:{ all -> 0x00a9 }
-            java.lang.Object r2 = r2.get()     // Catch:{ all -> 0x00a9 }
-            com.android.keyguard.KeyguardViewController r2 = (com.android.keyguard.KeyguardViewController) r2     // Catch:{ all -> 0x00a9 }
-            r2.hide(r5, r7)     // Catch:{ all -> 0x00a9 }
-            r4.resetKeyguardDonePendingLocked()     // Catch:{ all -> 0x00a9 }
-            r4.mHideAnimationRun = r1     // Catch:{ all -> 0x00a9 }
-            r4.adjustStatusBarLocked()     // Catch:{ all -> 0x00a9 }
-            r4.sendUserPresentBroadcast()     // Catch:{ all -> 0x00a9 }
-            java.lang.Object r5 = com.android.systemui.Dependency.get(r0)     // Catch:{ all -> 0x00a9 }
-            com.android.keyguard.MiuiFastUnlockController r5 = (com.android.keyguard.MiuiFastUnlockController) r5     // Catch:{ all -> 0x00a9 }
-            boolean r5 = r5.isFastUnlock()     // Catch:{ all -> 0x00a9 }
-            if (r5 == 0) goto L_0x00a4
-            java.lang.Class<com.android.keyguard.fod.MiuiGxzwManager> r5 = com.android.keyguard.fod.MiuiGxzwManager.class
-            java.lang.Object r5 = com.android.systemui.Dependency.get(r5)     // Catch:{ all -> 0x00a9 }
-            com.android.keyguard.fod.MiuiGxzwManager r5 = (com.android.keyguard.fod.MiuiGxzwManager) r5     // Catch:{ all -> 0x00a9 }
-            r5.setWallpaperAsTarget(r1)     // Catch:{ all -> 0x00a9 }
-        L_0x00a4:
-            monitor-exit(r4)     // Catch:{ all -> 0x00a9 }
+            r4.setShowingLocked(r1)     // Catch:{ all -> 0x00a7 }
+            r4.mWakeAndUnlocking = r1     // Catch:{ all -> 0x00a7 }
+            com.android.systemui.keyguard.DismissCallbackRegistry r2 = r4.mDismissCallbackRegistry     // Catch:{ all -> 0x00a7 }
+            r2.notifyDismissSucceeded()     // Catch:{ all -> 0x00a7 }
+            dagger.Lazy<com.android.keyguard.KeyguardViewController> r2 = r4.mKeyguardViewControllerLazy     // Catch:{ all -> 0x00a7 }
+            java.lang.Object r2 = r2.get()     // Catch:{ all -> 0x00a7 }
+            com.android.keyguard.KeyguardViewController r2 = (com.android.keyguard.KeyguardViewController) r2     // Catch:{ all -> 0x00a7 }
+            r2.hide(r5, r7)     // Catch:{ all -> 0x00a7 }
+            r4.resetKeyguardDonePendingLocked()     // Catch:{ all -> 0x00a7 }
+            r4.mHideAnimationRun = r1     // Catch:{ all -> 0x00a7 }
+            r4.adjustStatusBarLocked()     // Catch:{ all -> 0x00a7 }
+            r4.sendUserPresentBroadcast()     // Catch:{ all -> 0x00a7 }
+            java.lang.Object r5 = com.android.systemui.Dependency.get(r0)     // Catch:{ all -> 0x00a7 }
+            com.android.keyguard.MiuiFastUnlockController r5 = (com.android.keyguard.MiuiFastUnlockController) r5     // Catch:{ all -> 0x00a7 }
+            boolean r5 = r5.isFastUnlock()     // Catch:{ all -> 0x00a7 }
+            if (r5 == 0) goto L_0x00a2
+            java.lang.Object r5 = com.android.systemui.Dependency.get(r0)     // Catch:{ all -> 0x00a7 }
+            com.android.keyguard.MiuiFastUnlockController r5 = (com.android.keyguard.MiuiFastUnlockController) r5     // Catch:{ all -> 0x00a7 }
+            r5.setWallpaperAsTarget(r1)     // Catch:{ all -> 0x00a7 }
+        L_0x00a2:
+            monitor-exit(r4)     // Catch:{ all -> 0x00a7 }
             android.os.Trace.endSection()
             return
-        L_0x00a9:
+        L_0x00a7:
             r5 = move-exception
-            monitor-exit(r4)     // Catch:{ all -> 0x00a9 }
+            monitor-exit(r4)     // Catch:{ all -> 0x00a7 }
             throw r5
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.keyguard.KeyguardViewMediator.handleStartKeyguardExitAnimation(long, long):void");

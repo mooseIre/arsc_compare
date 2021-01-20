@@ -304,6 +304,7 @@ public final class MediaDataManager implements Dumpable {
     public final void loadMediaDataInBg(String str, StatusBarNotification statusBarNotification, String str2) {
         Icon icon;
         List list;
+        Context context2;
         Notification notification;
         Notification.Action[] actionArr;
         MediaSession.Token token = (MediaSession.Token) statusBarNotification.getNotification().extras.getParcelable("android.mediaSession");
@@ -379,17 +380,20 @@ public final class MediaDataManager implements Dumpable {
                         actionArr = actionArr2;
                         Log.i("MediaDataManager", "No icon for action " + i + ' ' + action.title);
                         list2.remove(Integer.valueOf(i));
+                        context2 = packageContext;
                         notification = notification2;
                     } else {
                         actionArr = actionArr2;
                         notification = notification2;
-                        arrayList.add(new MediaAction(action.getIcon().loadDrawable(packageContext), action.actionIntent != null ? new MediaDataManager$loadMediaDataInBg$runnable$1(action) : null, action.title));
+                        context2 = packageContext;
+                        arrayList.add(new MediaAction(action.getIcon().loadDrawable(packageContext), action.actionIntent != null ? new MediaDataManager$loadMediaDataInBg$runnable$1(action) : null, action.title, action));
                     }
                     i++;
                     StatusBarNotification statusBarNotification2 = statusBarNotification;
                     length = i2;
                     actionArr2 = actionArr;
                     notification2 = notification;
+                    packageContext = context2;
                 }
             }
             Executor executor = this.foregroundExecutor;
@@ -453,7 +457,7 @@ public final class MediaDataManager implements Dumpable {
     }
 
     private final MediaAction getResumeMediaAction(Runnable runnable) {
-        return new MediaAction(this.context.getDrawable(C0013R$drawable.lb_ic_play), runnable, this.context.getString(C0021R$string.controls_media_resume));
+        return new MediaAction(this.context.getDrawable(C0013R$drawable.lb_ic_play), runnable, this.context.getString(C0021R$string.controls_media_resume), (Notification.Action) null, 8, (DefaultConstructorMarker) null);
     }
 
     public final void onMediaDataLoaded(@NotNull String str, @Nullable String str2, @NotNull MediaData mediaData) {

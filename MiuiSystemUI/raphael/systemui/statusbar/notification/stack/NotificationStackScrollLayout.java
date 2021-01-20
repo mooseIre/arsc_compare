@@ -1678,10 +1678,17 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
     }
 
     private float getAppearStartPosition() {
+        int minExpansionHeight;
         if (isHeadsUpTransition()) {
-            return (float) (this.mHeadsUpInset + getFirstVisibleSection().getFirstVisibleChild().getPinnedHeadsUpHeight());
+            int i = 0;
+            if (!(getFirstVisibleSection() == null || getFirstVisibleSection().getFirstVisibleChild() == null)) {
+                i = getFirstVisibleSection().getFirstVisibleChild().getPinnedHeadsUpHeight();
+            }
+            minExpansionHeight = this.mHeadsUpInset + i;
+        } else {
+            minExpansionHeight = getMinExpansionHeight();
         }
-        return (float) getMinExpansionHeight();
+        return (float) minExpansionHeight;
     }
 
     private int getTopHeadsUpPinnedHeight() {
