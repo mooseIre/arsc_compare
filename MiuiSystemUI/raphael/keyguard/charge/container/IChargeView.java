@@ -137,6 +137,7 @@ public class IChargeView extends FrameLayout implements ValueAnimator.AnimatorUp
             this.mEnterAnimatorSet.cancel();
         }
         this.mEnterAnimatorSet.start();
+        setComponentTransparent(false);
         startAnimationOnChildView();
     }
 
@@ -157,8 +158,10 @@ public class IChargeView extends FrameLayout implements ValueAnimator.AnimatorUp
                 }
 
                 public void onAnimationEnd(Animator animator) {
+                    if (IChargeView.this.mStartingDismissAnim) {
+                        IChargeView.this.dismiss();
+                    }
                     boolean unused = IChargeView.this.mStartingDismissAnim = false;
-                    IChargeView.this.dismiss();
                 }
 
                 public void onAnimationCancel(Animator animator) {

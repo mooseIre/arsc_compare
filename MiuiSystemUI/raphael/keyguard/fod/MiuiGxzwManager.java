@@ -20,7 +20,6 @@ import android.os.ServiceManager;
 import android.provider.Settings;
 import android.util.Log;
 import android.util.Slog;
-import android.view.IWindowManager;
 import com.android.internal.util.DumpUtils;
 import com.android.keyguard.KeyguardSecurityModel;
 import com.android.keyguard.KeyguardUpdateMonitor;
@@ -36,7 +35,6 @@ import com.android.systemui.statusbar.CommandQueue;
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
 import java.lang.ref.WeakReference;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -74,7 +72,6 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
     };
     /* access modifiers changed from: private */
     public Context mContext;
-    private Method mDeclaredMethod;
     private boolean mDisableFingerprintIcon = false;
     private volatile boolean mDisableLockScreenFod = false;
     private boolean mDisableLockScreenFodAnim = false;
@@ -325,7 +322,6 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
             MiuiGxzwManager.this.mMiuiGxzwOverlayView.onFinishedGoingToSleep();
         }
     };
-    private IWindowManager mWindowManager;
     private boolean moveHelperCanShow;
 
     public static boolean isGxzwSensor() {
@@ -1040,21 +1036,5 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
                 break;
         }
         return BitmapFactory.decodeResource(this.mContext.getResources(), i);
-    }
-
-    public void setWallpaperAsTarget(boolean z) {
-        try {
-            Log.d("MiuiGxzwManager", "setWallPaperAsTarget asTarget=" + z);
-            if (this.mWindowManager == null) {
-                IWindowManager asInterface = IWindowManager.Stub.asInterface(ServiceManager.getService("window"));
-                this.mWindowManager = asInterface;
-                Method declaredMethod = asInterface.getClass().getDeclaredMethod("setWallpaperAsTarget", new Class[]{Boolean.TYPE});
-                this.mDeclaredMethod = declaredMethod;
-                declaredMethod.setAccessible(true);
-            }
-            this.mDeclaredMethod.invoke(this.mWindowManager, new Object[]{Boolean.valueOf(z)});
-        } catch (Exception unused) {
-            Log.e("MiuiGxzwManager", "no window manager to set wallpaper target");
-        }
     }
 }

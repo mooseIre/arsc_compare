@@ -337,6 +337,7 @@ public class LockScreenMagazinePreView extends RelativeLayout {
     public void updateSettingButton(final Intent intent) {
         if (intent != null) {
             this.mFullScreenSettingButton.setVisibility(0);
+            this.mFullScreenSettingButton.setContentDescription(this.mResources.getText(C0021R$string.accessibility_enter_lock_setting));
             this.mFullScreenSettingButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View view) {
                     if (LockScreenMagazinePreView.this.mPreViewClickListener != null) {

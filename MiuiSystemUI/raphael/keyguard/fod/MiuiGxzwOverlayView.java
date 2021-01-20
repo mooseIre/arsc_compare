@@ -167,6 +167,9 @@ class MiuiGxzwOverlayView extends GxzwWindowFrameLayout implements MiuiGxzwIconV
         Log.d("MiuiGxzwOverlayView", "onFinishedGoingToSleep");
         this.mDisableReadingModeAction.run();
         this.mGoingToSleep = false;
+        if (this.mScreenEffectNone && !this.mShowed) {
+            restoreScreenEffect();
+        }
     }
 
     public void onKeyguardAuthen(boolean z) {
@@ -178,7 +181,7 @@ class MiuiGxzwOverlayView extends GxzwWindowFrameLayout implements MiuiGxzwIconV
     }
 
     public void restoreScreenEffect() {
-        if (this.mScreenEffectNone) {
+        if (this.mScreenEffectNone && !this.mGoingToSleep) {
             this.mExecutor.execute(new Runnable(isAttachedToWindow()) {
                 public final /* synthetic */ boolean f$1;
 

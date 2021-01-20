@@ -10,7 +10,8 @@ import com.miui.systemui.DebugConfig;
 public class KeyguardMoveRightController extends BaseKeyguardMoveController {
     /* access modifiers changed from: private */
     public boolean mCameraViewShowing;
-    private boolean mIsOnIconTouchDown;
+    /* access modifiers changed from: private */
+    public boolean mIsOnIconTouchDown;
     private MiuiKeyguardCameraView mKeyguardCameraView;
     private MiuiKeyguardCameraView.CallBack mKeyguardCameraViewCallBack = new MiuiKeyguardCameraView.CallBack() {
         public void onAnimUpdate(float f) {
@@ -35,6 +36,10 @@ public class KeyguardMoveRightController extends BaseKeyguardMoveController {
         public void onVisibilityChanged(boolean z) {
             boolean unused = KeyguardMoveRightController.this.mCameraViewShowing = z;
             KeyguardMoveRightController.this.mCallBack.getMoveIconLayout(true).setVisibility(KeyguardMoveRightController.this.mCameraViewShowing ? 8 : 0);
+            if (KeyguardMoveRightController.this.mIsOnIconTouchDown) {
+                KeyguardMoveRightController keyguardMoveRightController = KeyguardMoveRightController.this;
+                keyguardMoveRightController.mCallBack.updateCanShowGxzw(!keyguardMoveRightController.mCameraViewShowing);
+            }
         }
     };
     private KeyguardUpdateMonitor mKeyguardUpdateMonitor;
@@ -109,15 +114,14 @@ public class KeyguardMoveRightController extends BaseKeyguardMoveController {
             this.mTouchDownInitial = false;
             this.mKeyguardCameraView.onTouchUp(f, f2);
             this.mCallBack.updateSwipingInProgress(false);
-            if (this.mIsOnIconTouchDown) {
-                this.mCallBack.updateCanShowGxzw(true);
-            }
         }
     }
 
     public void reset() {
         this.mKeyguardCameraView.reset();
-        this.mCallBack.updateCanShowGxzw(true);
+        if (this.mCallBack.isMoveInCenterScreen()) {
+            this.mCallBack.updateCanShowGxzw(true);
+        }
         this.mCallBack.getMoveIconLayout(true).setVisibility(0);
     }
 }
