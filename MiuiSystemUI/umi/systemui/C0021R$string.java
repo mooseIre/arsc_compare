@@ -10553,6 +10553,7 @@ public final class R {
         public static final int accessibility_display_daltonizer_preference_subtitle;
         public static final int accessibility_display_daltonizer_preference_title;
         public static final int accessibility_divider;
+        public static final int accessibility_enter_lock_setting;
         public static final int accessibility_enter_lock_wallpaper;
         public static final int accessibility_ethernet_connected;
         public static final int accessibility_ethernet_disconnected;
@@ -10564,6 +10565,14 @@ public final class R {
         public static final int accessibility_home;
         public static final int accessibility_ime_switch_button;
         public static final int accessibility_key;
+        public static final int accessibility_keyboard_delete_button;
+        public static final int accessibility_keyboard_letter_board_caps_lock_button;
+        public static final int accessibility_keyboard_letter_board_shift2number_button;
+        public static final int accessibility_keyboard_letter_board_shift2symbol_button;
+        public static final int accessibility_keyboard_ok_button;
+        public static final int accessibility_keyboard_symbol_board_shift2letter_button;
+        public static final int accessibility_keyboard_symbol_board_symbol_lock_button;
+        public static final int accessibility_keyguard_face_unlock_view;
         public static final int accessibility_left_control_center_button;
         public static final int accessibility_left_lock_screen_magazine_button;
         public static final int accessibility_location_active;

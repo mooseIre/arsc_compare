@@ -253,7 +253,7 @@ public final class MiuiExpandableNotificationRow extends MiuiAnimatedNotificatio
     }
 
     public final void updateMiniWindowBar() {
-        this.mCanSlide = getMAppMiniWindowManager().canNotificationSlide(getPendingIntent());
+        this.mCanSlide = getMAppMiniWindowManager().canNotificationSlide(getMiniWindowTargetPkg(), getPendingIntent());
         boolean z = false;
         boolean z2 = isPinned() || this.mIsInModal;
         if (this.mCanSlide && z2) {
@@ -311,6 +311,22 @@ public final class MiuiExpandableNotificationRow extends MiuiAnimatedNotificatio
         ExpandedNotification sbn = entry.getSbn();
         Intrinsics.checkExpressionValueIsNotNull(sbn, "entry.sbn");
         return MiuiExpandableNotificationRowKt.getPendingIntent(sbn.getNotification());
+    }
+
+    @Nullable
+    public final String getMiniWindowTargetPkg() {
+        NotificationEntry entry = getEntry();
+        Intrinsics.checkExpressionValueIsNotNull(entry, "entry");
+        ExpandedNotification sbn = entry.getSbn();
+        Intrinsics.checkExpressionValueIsNotNull(sbn, "entry.sbn");
+        if (sbn.isSubstituteNotification()) {
+            return sbn.getPackageName();
+        }
+        PendingIntent pendingIntent = getPendingIntent();
+        if (pendingIntent != null) {
+            return pendingIntent.getCreatorPackage();
+        }
+        return null;
     }
 
     /* access modifiers changed from: protected */

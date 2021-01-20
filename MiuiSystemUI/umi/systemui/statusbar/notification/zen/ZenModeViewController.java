@@ -1,6 +1,5 @@
 package com.android.systemui.statusbar.notification.zen;
 
-import android.content.ComponentName;
 import android.content.Intent;
 import android.net.Uri;
 import android.service.notification.ZenModeConfig;
@@ -146,12 +145,6 @@ public final class ZenModeViewController implements ZenModeController.Callback {
     }
 
     public final void jump2Settings() {
-        ((ActivityStarter) Dependency.get(ActivityStarter.class)).postStartActivityDismissingKeyguard(generateSilentModeIntent(), 0);
-    }
-
-    private final Intent generateSilentModeIntent() {
-        Intent intent = new Intent("android.intent.action.MAIN");
-        intent.setComponent(ComponentName.unflattenFromString("com.android.settings/com.android.settings.Settings$MiuiSilentModeAcivity"));
-        return intent;
+        ((ActivityStarter) Dependency.get(ActivityStarter.class)).postStartActivityDismissingKeyguard(new Intent("android.settings.SOUND_SETTINGS"), 0);
     }
 }

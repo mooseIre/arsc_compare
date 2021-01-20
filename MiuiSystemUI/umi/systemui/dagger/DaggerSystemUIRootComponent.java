@@ -2445,7 +2445,7 @@ public final class DaggerSystemUIRootComponent implements SystemUIRootComponent 
         this.miuiWallpaperClientProvider = DoubleCheck.provider(MiuiWallpaperClient_Factory.create(this.provideContextProvider, this.wakefulnessLifecycleProvider));
         Provider<ModalRowInflater> provider16 = DoubleCheck.provider(ModalRowInflater_Factory.create(this.notificationContentInflaterProvider, this.provideNotificationRemoteInputManagerProvider));
         this.modalRowInflaterProvider = provider16;
-        Provider<ModalController> provider17 = DoubleCheck.provider(ModalController_Factory.create(this.provideContextProvider, this.provideStatusBarProvider, provider16));
+        Provider<ModalController> provider17 = DoubleCheck.provider(ModalController_Factory.create(this.provideContextProvider, this.provideStatusBarProvider, this.statusBarStateControllerImplProvider, provider16));
         this.modalControllerProvider = provider17;
         this.appMiniWindowManagerProvider = DoubleCheck.provider(AppMiniWindowManager_Factory.create(this.provideContextProvider, this.provideDividerProvider, this.provideHeadsUpManagerPhoneProvider, this.provideMainHandlerProvider, provider17, this.notificationSettingsManagerProvider));
     }

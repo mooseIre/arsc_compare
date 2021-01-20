@@ -2536,7 +2536,7 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
     }
 
     private void initialize6(Builder builder) {
-        Provider<ModalController> provider = DoubleCheck.provider(ModalController_Factory.create(this.contextProvider, this.provideStatusBarProvider, this.modalRowInflaterProvider));
+        Provider<ModalController> provider = DoubleCheck.provider(ModalController_Factory.create(this.contextProvider, this.provideStatusBarProvider, this.statusBarStateControllerImplProvider, this.modalRowInflaterProvider));
         this.modalControllerProvider = provider;
         this.appMiniWindowManagerProvider = DoubleCheck.provider(AppMiniWindowManager_Factory.create(this.contextProvider, this.provideDividerProvider, this.provideHeadsUpManagerPhoneProvider, this.provideMainHandlerProvider, provider, this.notificationSettingsManagerProvider));
         this.fiveGControllerImplProvider = DoubleCheck.provider(FiveGControllerImpl_Factory.create(this.contextProvider));

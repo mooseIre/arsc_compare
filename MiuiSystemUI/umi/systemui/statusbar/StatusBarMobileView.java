@@ -179,11 +179,20 @@ public class StatusBarMobileView extends LinearLayout implements DarkIconDispatc
     }
 
     private boolean updateState(StatusBarSignalPolicy.MobileIconState mobileIconState, boolean z) {
+        String str;
         boolean z2;
         char c;
         int i = 0;
         this.mMobileGroup.setVisibility((!mobileIconState.visible || mobileIconState.airplane) ? 8 : 0);
-        setContentDescription(mobileIconState.contentDescription);
+        StringBuilder sb = new StringBuilder();
+        if (mobileIconState.networkName != null) {
+            str = mobileIconState.networkName + " ";
+        } else {
+            str = "";
+        }
+        sb.append(str);
+        sb.append(mobileIconState.contentDescription);
+        setContentDescription(sb.toString());
         int i2 = mobileIconState.vowifiId;
         if (i2 > 0 && (this.mState.vowifiId != i2 || z)) {
             this.mVowifi.setImageResource(MiuiStatusBarIconViewHelper.transformResId(mobileIconState.vowifiId, this.mUseTint, this.mLight));

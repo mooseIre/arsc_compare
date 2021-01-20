@@ -46,6 +46,10 @@ public final class MiuiNotificationChildrenContainer extends NotificationChildre
     public MiuiNotificationChildrenContainer(@NotNull Context context, @Nullable AttributeSet attributeSet) {
         super(context, attributeSet);
         Intrinsics.checkParameterIsNotNull(context, "context");
+        initResources();
+    }
+
+    private final void initResources() {
         Resources resources = getResources();
         this.mMiuiAppIconSize = resources.getDimensionPixelSize(C0012R$dimen.notification_app_icon_size);
         this.mMiuiAppIconMargin = resources.getDimensionPixelSize(C0012R$dimen.notification_app_icon_margin);
@@ -208,16 +212,16 @@ public final class MiuiNotificationChildrenContainer extends NotificationChildre
         if (NotificationSettingsHelper.showGoogleStyle()) {
             super.updateChildrenHeaderAppearance();
         }
-        updateMiuiHeader();
+        updateMiuiHeader(false);
     }
 
-    private final void updateMiuiHeader() {
+    private final void updateMiuiHeader(boolean z) {
         if (NotificationSettingsHelper.showGoogleStyle()) {
             View view = this.mGroupHeader;
             if (view != null) {
                 removeView(view);
                 this.mGroupHeader = null;
-                updateAppIcon();
+                updateAppIcon(z);
                 return;
             }
             return;
@@ -225,15 +229,20 @@ public final class MiuiNotificationChildrenContainer extends NotificationChildre
         NotificationHeaderView notificationHeaderView = this.mNotificationHeader;
         Intrinsics.checkExpressionValueIsNotNull(notificationHeaderView, "mNotificationHeader");
         notificationHeaderView.setVisibility(8);
-        updateAppIcon();
-        if (this.mGroupHeader == null) {
+        updateAppIcon(z);
+        if (this.mGroupHeader == null || z) {
+            View view2 = this.mGroupHeader;
+            if (view2 != null) {
+                removeView(view2);
+                this.mGroupHeader = null;
+            }
             View inflate = LayoutInflater.from(getContext()).inflate(C0017R$layout.notification_group_header, this, false);
             this.mGroupHeader = inflate;
             if (inflate != null) {
                 this.mCollapsedButton = (ImageView) inflate.findViewById(C0015R$id.collapse_button);
-                View view2 = this.mGroupHeader;
-                if (view2 != null) {
-                    this.mGroupInfo = (TextView) view2.findViewById(C0015R$id.group_info);
+                View view3 = this.mGroupHeader;
+                if (view3 != null) {
+                    this.mGroupInfo = (TextView) view3.findViewById(C0015R$id.group_info);
                     ImageView imageView = this.mCollapsedButton;
                     if (imageView != null) {
                         imageView.setOnClickListener(this.mHeaderClickListener);
@@ -464,17 +473,23 @@ public final class MiuiNotificationChildrenContainer extends NotificationChildre
         Intrinsics.checkParameterIsNotNull(onClickListener, "listener");
         Intrinsics.checkParameterIsNotNull(statusBarNotification, "notification");
         super.reInflateViews(onClickListener, statusBarNotification);
-        updateAppIcon();
+        initResources();
+        updateMiuiHeader(true);
     }
 
-    private final void updateAppIcon() {
+    private final void updateAppIcon(boolean z) {
         if (NotificationSettingsHelper.showGoogleStyle()) {
             ImageView imageView = this.mAppIcon;
             if (imageView != null) {
                 removeView(imageView);
                 this.mAppIcon = null;
             }
-        } else if (this.mAppIcon == null) {
+        } else if (this.mAppIcon == null || z) {
+            ImageView imageView2 = this.mAppIcon;
+            if (imageView2 != null) {
+                removeView(imageView2);
+                this.mAppIcon = null;
+            }
             View inflate = LayoutInflater.from(getContext()).inflate(C0017R$layout.notification_template_part_app_icon, this, false);
             if (inflate != null) {
                 this.mAppIcon = (ImageView) inflate;

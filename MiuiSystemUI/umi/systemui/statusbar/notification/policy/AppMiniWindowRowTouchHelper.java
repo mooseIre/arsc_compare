@@ -251,40 +251,15 @@ public final class AppMiniWindowRowTouchHelper {
         ofInt.start();
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:2:0x0004, code lost:
-        r0 = r0.getPendingIntent();
-     */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    private final void startEnterAndLaunchMiniWindow(com.miui.systemui.events.MiniWindowEventReason r5) {
-        /*
-            r4 = this;
-            com.android.systemui.statusbar.notification.row.MiuiExpandableNotificationRow r0 = r4.mPickedMiniWindowChild
-            if (r0 == 0) goto L_0x000f
-            android.app.PendingIntent r0 = r0.getPendingIntent()
-            if (r0 == 0) goto L_0x000f
-            java.lang.String r0 = r0.getCreatorPackage()
-            goto L_0x0010
-        L_0x000f:
-            r0 = 0
-        L_0x0010:
-            if (r0 != 0) goto L_0x0013
-            return
-        L_0x0013:
-            r4.startEnterMiniWindowAnimation()
-            r4.launchMiniWindowActivity(r5)
-            com.android.systemui.statusbar.notification.policy.AppMiniWindowRowTouchHelper$mHandler$1 r5 = r4.mHandler
-            r1 = 1
-            r2 = 3000(0xbb8, double:1.482E-320)
-            r5.sendEmptyMessageDelayed(r1, r2)
-            java.lang.Class<com.android.systemui.statusbar.notification.policy.AppMiniWindowManager> r5 = com.android.systemui.statusbar.notification.policy.AppMiniWindowManager.class
-            java.lang.Object r5 = com.android.systemui.Dependency.get(r5)
-            com.android.systemui.statusbar.notification.policy.AppMiniWindowManager r5 = (com.android.systemui.statusbar.notification.policy.AppMiniWindowManager) r5
-            com.android.systemui.statusbar.notification.policy.AppMiniWindowRowTouchHelper$startEnterAndLaunchMiniWindow$1 r1 = new com.android.systemui.statusbar.notification.policy.AppMiniWindowRowTouchHelper$startEnterAndLaunchMiniWindow$1
-            r1.<init>(r4)
-            r5.registerOneshotForegroundWindowListener(r0, r1)
-            return
-        */
-        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.notification.policy.AppMiniWindowRowTouchHelper.startEnterAndLaunchMiniWindow(com.miui.systemui.events.MiniWindowEventReason):void");
+    private final void startEnterAndLaunchMiniWindow(MiniWindowEventReason miniWindowEventReason) {
+        MiuiExpandableNotificationRow miuiExpandableNotificationRow = this.mPickedMiniWindowChild;
+        String miniWindowTargetPkg = miuiExpandableNotificationRow != null ? miuiExpandableNotificationRow.getMiniWindowTargetPkg() : null;
+        if (miniWindowTargetPkg != null) {
+            startEnterMiniWindowAnimation();
+            launchMiniWindowActivity(miniWindowEventReason);
+            this.mHandler.sendEmptyMessageDelayed(1, 3000);
+            ((AppMiniWindowManager) Dependency.get(AppMiniWindowManager.class)).registerOneshotForegroundWindowListener(miniWindowTargetPkg, new AppMiniWindowRowTouchHelper$startEnterAndLaunchMiniWindow$1(this));
+        }
     }
 
     private final void startEnterMiniWindowAnimation() {
@@ -307,7 +282,7 @@ public final class AppMiniWindowRowTouchHelper {
         MiuiExpandableNotificationRow miuiExpandableNotificationRow = this.mPickedMiniWindowChild;
         if (miuiExpandableNotificationRow != null) {
             this.mEventTracker.track(MiniWindowEvents.INSTANCE.makeMiniWindowEvent(this.source, miniWindowEventReason));
-            ((AppMiniWindowManager) Dependency.get(AppMiniWindowManager.class)).launchMiniWindowActivity(miuiExpandableNotificationRow.getPendingIntent());
+            ((AppMiniWindowManager) Dependency.get(AppMiniWindowManager.class)).launchMiniWindowActivity(miuiExpandableNotificationRow.getMiniWindowTargetPkg(), miuiExpandableNotificationRow.getPendingIntent());
         }
     }
 
