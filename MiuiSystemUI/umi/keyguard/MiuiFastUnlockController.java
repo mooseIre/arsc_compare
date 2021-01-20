@@ -2,21 +2,28 @@ package com.android.keyguard;
 
 import android.content.Context;
 import android.os.PowerManager;
+import android.os.ServiceManager;
 import android.os.SystemClock;
+import android.util.Log;
+import android.util.Slog;
+import android.view.IWindowManager;
 import com.android.keyguard.injector.KeyguardUpdateMonitorInjector;
 import com.android.keyguard.injector.KeyguardViewMediatorInjector;
 import com.android.keyguard.utils.MiuiKeyguardUtils;
 import com.android.systemui.Dependency;
 import com.android.systemui.keyguard.KeyguardViewMediator;
 import java.lang.ref.WeakReference;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 public class MiuiFastUnlockController {
     private final ArrayList<WeakReference<FastUnlockCallback>> mCallbacks = new ArrayList<>();
     private Context mContext;
+    private Method mDeclaredMethod;
     private volatile boolean mFastUnlock = false;
     private KeyguardViewMediator mKeyguardViewMediator;
     private PowerManager mPowerManager;
+    private IWindowManager mWindowManager;
 
     public interface FastUnlockCallback {
         void onFinishFastUnlock() {
@@ -109,5 +116,21 @@ public class MiuiFastUnlockController {
 
     private boolean supportFastUnlock() {
         return MiuiKeyguardUtils.isGxzwSensor() || MiuiKeyguardUtils.isBroadSideFingerprint();
+    }
+
+    public void setWallpaperAsTarget(boolean z) {
+        try {
+            Slog.d("MiuiFastUnlockController", "setWallPaperAsTarget asTarget=" + z);
+            if (this.mWindowManager == null) {
+                IWindowManager asInterface = IWindowManager.Stub.asInterface(ServiceManager.getService("window"));
+                this.mWindowManager = asInterface;
+                Method declaredMethod = asInterface.getClass().getDeclaredMethod("setWallpaperAsTarget", new Class[]{Boolean.TYPE});
+                this.mDeclaredMethod = declaredMethod;
+                declaredMethod.setAccessible(true);
+            }
+            this.mDeclaredMethod.invoke(this.mWindowManager, new Object[]{Boolean.valueOf(z)});
+        } catch (Exception unused) {
+            Log.e("MiuiFastUnlockController", "no window manager to set wallpaper target");
+        }
     }
 }

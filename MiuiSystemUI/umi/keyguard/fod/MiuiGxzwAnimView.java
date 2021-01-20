@@ -906,6 +906,7 @@ class MiuiGxzwAnimView {
         /* access modifiers changed from: private */
         /* renamed from: lambda$unregisterCallback$1 */
         public /* synthetic */ void lambda$unregisterCallback$1$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal() {
+            ((IMiuiKeyguardWallpaperController) Dependency.get(IMiuiKeyguardWallpaperController.class)).unregisterWallpaperChangeCallback(this.mWallpaperChangeCallback);
             ((KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class)).removeCallback(this.mKeyguardUpdateMonitorCallback);
         }
 

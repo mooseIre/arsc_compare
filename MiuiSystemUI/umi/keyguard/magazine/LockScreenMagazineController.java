@@ -290,6 +290,10 @@ public class LockScreenMagazineController implements SettingsObserver.Callback {
 
     public void setBottomAreaView(KeyguardBottomAreaView keyguardBottomAreaView) {
         this.mKeyguardBottomArea = keyguardBottomAreaView;
+        LockScreenMagazinePreView lockScreenMagazinePreView = this.mLockScreenMagazinePre;
+        if (lockScreenMagazinePreView != null && keyguardBottomAreaView != null) {
+            lockScreenMagazinePreView.setElevation(keyguardBottomAreaView.getElevation() + 1.0f);
+        }
     }
 
     public LockScreenMagazinePreView getView() {
@@ -489,20 +493,14 @@ public class LockScreenMagazineController implements SettingsObserver.Callback {
                 super.onAnimationEnd(animator);
                 int i = 0;
                 boolean unused = LockScreenMagazineController.this.mIsSwitchAnimating = false;
-                int i2 = 4;
                 if (LockScreenMagazineController.this.needGlobalSwitchAnimate()) {
                     LockScreenMagazineController.this.mLockScreenMagazinePre.setMainLayoutVisible(z ? 4 : 0);
                 }
                 LockScreenMagazinePreView access$600 = LockScreenMagazineController.this.mLockScreenMagazinePre;
-                if (z) {
-                    i2 = 0;
+                if (!z) {
+                    i = 4;
                 }
-                access$600.setFullScreenLayoutVisible(i2);
-                KeyguardBottomAreaView access$700 = LockScreenMagazineController.this.mKeyguardBottomArea;
-                if (z) {
-                    i = 8;
-                }
-                access$700.setVisibility(i);
+                access$600.setFullScreenLayoutVisible(i);
             }
 
             public void onAnimationStart(Animator animator) {
@@ -1026,7 +1024,7 @@ public class LockScreenMagazineController implements SettingsObserver.Callback {
         LockScreenMagazineUtils.sendLockScreenMagazineScreenOnBroadcast(this.mContext);
     }
 
-    public void onFinishedGoingToSleep() {
+    public void onStartedGoingToSleep() {
         this.mStartedWakingUp = false;
         LockScreenMagazineUtils.sendLockScreenMagazineEventBroadcast(this.mContext, "Screen_OFF");
     }

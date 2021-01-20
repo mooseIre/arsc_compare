@@ -37,6 +37,8 @@ public class KeyguardIndicationInjector {
     public long mChargeTextClickTime;
     /* access modifiers changed from: private */
     public final Context mContext;
+    private Animation mIndicationFromBottomAni;
+    private ValueAnimator mIndicationTVAlphaAni;
 
     static /* synthetic */ int access$008(KeyguardIndicationInjector keyguardIndicationInjector) {
         int i = keyguardIndicationInjector.mChargeClickCount;
@@ -117,7 +119,7 @@ public class KeyguardIndicationInjector {
                         int unused2 = KeyguardIndicationInjector.this.mChargeClickCount = 0;
                         long unused3 = KeyguardIndicationInjector.this.mChargeTextClickTime = System.currentTimeMillis();
                         ((MiuiChargeController) Dependency.get(MiuiChargeController.class)).checkBatteryStatus(true);
-                        keyguardIndicationTextView.setVisibility(4);
+                        keyguardIndicationTextView.setAlpha(0.0f);
                     } else if (System.currentTimeMillis() - KeyguardIndicationInjector.this.mChargeTextClickTime > 500) {
                         int unused4 = KeyguardIndicationInjector.this.mChargeClickCount = 1;
                         long unused5 = KeyguardIndicationInjector.this.mChargeTextClickTime = System.currentTimeMillis();
@@ -170,17 +172,27 @@ public class KeyguardIndicationInjector {
     }
 
     public void handlePowerIndicationAnimation(KeyguardIndicationTextView keyguardIndicationTextView) {
+        ValueAnimator valueAnimator = this.mIndicationTVAlphaAni;
+        if (valueAnimator != null && valueAnimator.isRunning()) {
+            this.mIndicationTVAlphaAni.cancel();
+        }
+        Animation animation = this.mIndicationFromBottomAni;
+        if (animation != null && animation.hasStarted()) {
+            this.mIndicationFromBottomAni.cancel();
+        }
         ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{0.0f, 1.0f});
+        this.mIndicationTVAlphaAni = ofFloat;
         ofFloat.setInterpolator(new DecelerateInterpolator());
-        ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+        this.mIndicationTVAlphaAni.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             public final void onAnimationUpdate(ValueAnimator valueAnimator) {
                 KeyguardIndicationTextView.this.setAlpha(((Float) valueAnimator.getAnimatedValue()).floatValue());
             }
         });
-        ofFloat.setDuration(500).start();
+        this.mIndicationTVAlphaAni.setDuration(500).start();
         TranslateAnimation translateAnimation = new TranslateAnimation(1, 0.0f, 1, 0.0f, 1, 2.0f, 1, 0.0f);
+        this.mIndicationFromBottomAni = translateAnimation;
         translateAnimation.setDuration(500);
-        keyguardIndicationTextView.startAnimation(translateAnimation);
+        keyguardIndicationTextView.startAnimation(this.mIndicationFromBottomAni);
     }
 
     public void doIndicatorAnimation(boolean z, final TextView textView) {

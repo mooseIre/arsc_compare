@@ -10,6 +10,7 @@ import android.graphics.PorterDuff;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.util.Log;
+import android.util.Slog;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -90,9 +91,8 @@ class MiuiGxzwFrameAnimation {
         DrawRunnable drawRunnable = this.mDrawRunnable;
         if (drawRunnable != null) {
             this.mDrawHandler.removeCallbacks(drawRunnable);
-            if (this.mDrawRunnable.getDrawing()) {
-                this.mDrawRunnable.stopDraw();
-            }
+            Slog.d("MiuiGxzwFrameAnimation", "stopAnimation mDrawing=" + this.mDrawRunnable.getDrawing());
+            this.mDrawRunnable.stopDraw();
         }
         this.mDrawRunnable = null;
     }
@@ -285,9 +285,11 @@ class MiuiGxzwFrameAnimation {
         }
 
         public void stopDraw() {
+            if (this.mDrawing) {
+                MiuiGxzwFrameAnimation.this.mDrawThread.interrupt();
+                MiuiGxzwFrameAnimation.this.mRecycleBitmapQueue.clear();
+            }
             setDrawing(false);
-            MiuiGxzwFrameAnimation.this.mDrawThread.interrupt();
-            MiuiGxzwFrameAnimation.this.mRecycleBitmapQueue.clear();
         }
 
         public void run() {

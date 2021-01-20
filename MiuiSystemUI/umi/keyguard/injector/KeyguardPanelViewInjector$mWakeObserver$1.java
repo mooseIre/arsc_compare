@@ -20,12 +20,15 @@ public final class KeyguardPanelViewInjector$mWakeObserver$1 implements Wakefuln
         KeyguardPanelViewInjector.access$getMIndicationController$p(this.this$0).onStartedWakingUp();
     }
 
+    public void onStartedGoingToSleep() {
+        KeyguardPanelViewInjector.access$getMLockScreenMagazineController$p(this.this$0).onStartedGoingToSleep();
+    }
+
     public void onFinishedGoingToSleep() {
         KeyguardMoveHelper access$getMKeyguardMoveHelper$p = this.this$0.mKeyguardMoveHelper;
         if (access$getMKeyguardMoveHelper$p != null) {
             access$getMKeyguardMoveHelper$p.onFinishedGoingToSleep();
         }
-        KeyguardPanelViewInjector.access$getMLockScreenMagazineController$p(this.this$0).onFinishedGoingToSleep();
         KeyguardPanelViewInjector.access$getMIndicationController$p(this.this$0).onFinishedGoingToSleep();
     }
 }

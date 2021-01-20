@@ -239,12 +239,16 @@ public class KeyguardStatusView extends GridLayout implements ConfigurationContr
 
     /* access modifiers changed from: private */
     public void refreshTime() {
-        this.mClockView.refresh();
+        if (getVisibility() == 0) {
+            this.mClockView.refresh();
+        }
     }
 
     /* access modifiers changed from: private */
     public void updateTimeZone(TimeZone timeZone) {
-        this.mClockView.onTimeZoneChanged(timeZone);
+        if (getVisibility() == 0) {
+            this.mClockView.onTimeZoneChanged(timeZone);
+        }
     }
 
     /* access modifiers changed from: private */

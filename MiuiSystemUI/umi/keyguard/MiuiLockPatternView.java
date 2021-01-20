@@ -29,6 +29,7 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.Interpolator;
 import com.android.internal.widget.ExploreByTouchHelper;
 import com.android.internal.widget.LockPatternView;
+import com.android.keyguard.utils.MiuiKeyguardUtils;
 import com.android.systemui.C0011R$color;
 import com.android.systemui.C0021R$string;
 import java.lang.reflect.Array;
@@ -416,22 +417,23 @@ public class MiuiLockPatternView extends View {
             return null;
         }
         ArrayList<LockPatternView.Cell> arrayList = this.mPattern;
+        int i = 1;
         if (!arrayList.isEmpty()) {
-            int i = 1;
             LockPatternView.Cell cell2 = arrayList.get(arrayList.size() - 1);
             int row = checkForNewHit.getRow() - cell2.getRow();
             int column = checkForNewHit.getColumn() - cell2.getColumn();
             int row2 = cell2.getRow();
             int column2 = cell2.getColumn();
+            int i2 = -1;
             if (Math.abs(row) == 2 && Math.abs(column) != 1) {
                 row2 = cell2.getRow() + (row > 0 ? 1 : -1);
             }
             if (Math.abs(column) == 2 && Math.abs(row) != 1) {
                 int column3 = cell2.getColumn();
-                if (column <= 0) {
-                    i = -1;
+                if (column > 0) {
+                    i2 = 1;
                 }
-                column2 = column3 + i;
+                column2 = column3 + i2;
             }
             cell = LockPatternView.Cell.of(row2, column2);
         }
@@ -439,6 +441,12 @@ public class MiuiLockPatternView extends View {
             addCellToPattern(cell);
         }
         addCellToPattern(checkForNewHit);
+        if (this.mEnableHapticFeedback) {
+            if (MiuiKeyguardUtils.SUPPORT_LINEAR_MOTOR_VIBRATE) {
+                i = 268435461;
+            }
+            performHapticFeedback(i, 3);
+        }
         return checkForNewHit;
     }
 

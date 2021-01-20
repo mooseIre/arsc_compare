@@ -11,6 +11,7 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.Property;
@@ -41,6 +42,7 @@ public class MiuiChargeAnimationView extends FrameLayout {
     private MiuiChargeLogoView mChargeLogoView;
     private MiuiChargePercentCountView mChargePercentView;
     private Configuration mConfiguration;
+    private AnimatorSet mDismissAnimatorSet;
     private String mDismissReason;
     private final Runnable mDismissRunnable;
     private Handler mHandler;
@@ -51,8 +53,11 @@ public class MiuiChargeAnimationView extends FrameLayout {
     private Interpolator mQuartOutInterpolator;
     private Point mScreenSize;
     private boolean mShowChargingInNonLockscreen;
-    private boolean mStartingDismissAnim;
+    private AnimatorSet mShowingAnimatorSet;
+    /* access modifiers changed from: private */
+    public boolean mStartingDismissAnim;
     private Runnable mTimeoutDismissJob;
+    private KeyguardUpdateMonitorInjector mUpdateMonitorInjector;
     private WindowManager mWindowManager;
     private int mWireState;
 
@@ -125,6 +130,7 @@ public class MiuiChargeAnimationView extends FrameLayout {
             this.itemContainer.setTranslationY(this.mChargeContainerView.getVideoTranslationY());
         }
         setElevation(30.0f);
+        this.mUpdateMonitorInjector = (KeyguardUpdateMonitorInjector) Dependency.get(KeyguardUpdateMonitorInjector.class);
     }
 
     /* access modifiers changed from: protected */
@@ -187,7 +193,11 @@ public class MiuiChargeAnimationView extends FrameLayout {
     }
 
     public void startChargeAnimation(boolean z, boolean z2) {
+        AnimatorSet animatorSet;
         Log.d("MiuiChargeAnimationView", "startChargeAnimation: mInitScreenOn " + z + ", clickShow=" + z2);
+        if (this.mStartingDismissAnim && (animatorSet = this.mDismissAnimatorSet) != null) {
+            animatorSet.cancel();
+        }
         setComponentTransparent(false);
         this.mWireState = ChargeUtils.sBatteryStatus.wireState;
         ValueAnimator ofInt = ValueAnimator.ofInt(new int[]{0, 1});
@@ -203,17 +213,18 @@ public class MiuiChargeAnimationView extends FrameLayout {
                 MiuiChargeAnimationView.this.itemContainer.setAlpha(valueAnimator.getAnimatedFraction());
             }
         });
-        AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.setDuration(800);
-        animatorSet.setInterpolator(this.mQuartOutInterpolator);
-        animatorSet.addListener(new AnimatorListenerAdapter() {
+        AnimatorSet animatorSet2 = new AnimatorSet();
+        this.mShowingAnimatorSet = animatorSet2;
+        animatorSet2.setDuration(800);
+        this.mShowingAnimatorSet.setInterpolator(this.mQuartOutInterpolator);
+        this.mShowingAnimatorSet.addListener(new AnimatorListenerAdapter() {
             public void onAnimationStart(Animator animator) {
                 super.onAnimationStart(animator);
                 MiuiChargeAnimationView.this.onChargeAnimationStart();
             }
         });
-        animatorSet.playTogether(new Animator[]{ofInt, ofInt2});
-        animatorSet.start();
+        this.mShowingAnimatorSet.playTogether(new Animator[]{ofInt, ofInt2});
+        this.mShowingAnimatorSet.start();
         this.mChargeContainerView.startContainerAnimation(z);
         this.mChargePercentView.startPercentViewAnimation(z2);
         this.mChargeLogoView.startLogoAnimation(z2);
@@ -230,10 +241,14 @@ public class MiuiChargeAnimationView extends FrameLayout {
 
     public void startDismiss(final String str) {
         Property property = FrameLayout.ALPHA;
-        if (str != "dismiss_for_timeout") {
+        if (TextUtils.equals(str, "dismiss_for_timeout")) {
             ((KeyguardUpdateMonitorInjector) Dependency.get(KeyguardUpdateMonitorInjector.class)).handleChargeAnimationShowingChanged(false);
         }
         if (!this.mStartingDismissAnim) {
+            AnimatorSet animatorSet = this.mShowingAnimatorSet;
+            if (animatorSet != null && animatorSet.isStarted()) {
+                this.mShowingAnimatorSet.cancel();
+            }
             Log.i("MiuiChargeAnimationView", "startDismiss: reason: " + str);
             this.mDismissReason = str;
             this.mHandler.removeCallbacks(this.mTimeoutDismissJob);
@@ -244,10 +259,11 @@ public class MiuiChargeAnimationView extends FrameLayout {
             ObjectAnimator ofPropertyValuesHolder = ObjectAnimator.ofPropertyValuesHolder(this.mParentContainer, new PropertyValuesHolder[]{ofFloat});
             PropertyValuesHolder ofFloat4 = PropertyValuesHolder.ofFloat(property, new float[]{this.itemContainer.getAlpha(), 0.0f});
             ObjectAnimator ofPropertyValuesHolder2 = ObjectAnimator.ofPropertyValuesHolder(this.itemContainer, new PropertyValuesHolder[]{ofFloat2, ofFloat3, ofFloat4});
-            AnimatorSet animatorSet = new AnimatorSet();
-            animatorSet.setDuration(600);
-            animatorSet.setInterpolator(this.mQuartOutInterpolator);
-            animatorSet.addListener(new Animator.AnimatorListener() {
+            AnimatorSet animatorSet2 = new AnimatorSet();
+            this.mDismissAnimatorSet = animatorSet2;
+            animatorSet2.setDuration(600);
+            this.mDismissAnimatorSet.setInterpolator(this.mQuartOutInterpolator);
+            this.mDismissAnimatorSet.addListener(new Animator.AnimatorListener() {
                 public void onAnimationRepeat(Animator animator) {
                 }
 
@@ -256,18 +272,25 @@ public class MiuiChargeAnimationView extends FrameLayout {
                 }
 
                 public void onAnimationEnd(Animator animator) {
-                    MiuiChargeAnimationView.this.onDismissAnimationEnd();
-                    MiuiChargeAnimationView.this.itemContainer.setScaleX(1.0f);
-                    MiuiChargeAnimationView.this.itemContainer.setScaleY(1.0f);
-                    MiuiChargeAnimationView.this.itemContainer.setAlpha(0.0f);
+                    if (MiuiChargeAnimationView.this.mStartingDismissAnim) {
+                        MiuiChargeAnimationView.this.onDismissAnimationEnd();
+                        MiuiChargeAnimationView.this.itemContainer.setScaleX(1.0f);
+                        MiuiChargeAnimationView.this.itemContainer.setScaleY(1.0f);
+                        MiuiChargeAnimationView.this.itemContainer.setAlpha(0.0f);
+                    }
+                    boolean unused = MiuiChargeAnimationView.this.mStartingDismissAnim = false;
                 }
 
                 public void onAnimationCancel(Animator animator) {
                     MiuiChargeAnimationView.this.onDismissAnimationCancel();
                 }
             });
-            animatorSet.playTogether(new Animator[]{ofPropertyValuesHolder, ofPropertyValuesHolder2});
-            animatorSet.start();
+            if (!this.mUpdateMonitorInjector.isKeyguardShowing() || !TextUtils.equals(str, "dismiss_for_timeout")) {
+                this.mDismissAnimatorSet.playTogether(new Animator[]{ofPropertyValuesHolder, ofPropertyValuesHolder2});
+            } else {
+                this.mDismissAnimatorSet.play(ofPropertyValuesHolder2);
+            }
+            this.mDismissAnimatorSet.start();
             this.mStartingDismissAnim = true;
         }
     }
