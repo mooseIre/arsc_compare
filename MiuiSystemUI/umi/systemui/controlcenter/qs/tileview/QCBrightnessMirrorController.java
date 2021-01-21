@@ -1,5 +1,6 @@
 package com.android.systemui.controlcenter.qs.tileview;
 
+import android.animation.ValueAnimator;
 import android.view.View;
 import android.view.ViewPropertyAnimator;
 import android.widget.FrameLayout;
@@ -35,23 +36,38 @@ public class QCBrightnessMirrorController {
         }
         this.mQSBrightness.setVisibility(4);
         this.mBrightnessMirror.setVisibility(0);
-        outAnimation(this.mContent.animate()).withLayer().withEndAction(new Runnable() {
-            public void run() {
-                QCBrightnessMirrorController.this.mControlPanelContentView.setControlPanelWindowBlurRatio(0.0f);
+        outAnimation(this.mContent.animate()).withLayer().setUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                QCBrightnessMirrorController.this.mControlPanelContentView.setControlPanelWindowBlurRatio(1.0f - valueAnimator.getAnimatedFraction());
             }
         });
         ((ControlCenterPanelView) this.mControlPanelContentView.findViewById(C0015R$id.control_center_panel)).setTouchable(false);
     }
 
     public void hideMirror() {
-        inAnimation(this.mContent.animate()).withLayer().withEndAction(new Runnable() {
+        inAnimation(this.mContent.animate()).withLayer().withStartAction(new Runnable() {
+            public final void run() {
+                QCBrightnessMirrorController.this.lambda$hideMirror$0$QCBrightnessMirrorController();
+            }
+        }).setUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                QCBrightnessMirrorController.this.mControlPanelContentView.setControlPanelWindowBlurRatio(valueAnimator.getAnimatedFraction());
+                QCBrightnessMirrorController.this.mBrightnessMirror.setAlpha(1.0f - valueAnimator.getAnimatedFraction());
+                QCBrightnessMirrorController.this.mQSBrightness.setAlpha(valueAnimator.getAnimatedFraction());
+            }
+        }).withEndAction(new Runnable() {
             public void run() {
-                QCBrightnessMirrorController.this.mQSBrightness.setVisibility(0);
+                QCBrightnessMirrorController.this.mBrightnessMirror.setAlpha(1.0f);
                 QCBrightnessMirrorController.this.mBrightnessMirror.setVisibility(4);
             }
         });
-        this.mControlPanelContentView.setControlPanelWindowBlurRatio(1.0f);
         ((ControlCenterPanelView) this.mControlPanelContentView.findViewById(C0015R$id.control_center_panel)).setTouchable(true);
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$hideMirror$0 */
+    public /* synthetic */ void lambda$hideMirror$0$QCBrightnessMirrorController() {
+        this.mQSBrightness.setVisibility(0);
     }
 
     private ViewPropertyAnimator outAnimation(ViewPropertyAnimator viewPropertyAnimator) {

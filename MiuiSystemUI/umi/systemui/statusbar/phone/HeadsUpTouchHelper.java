@@ -3,20 +3,24 @@ package com.android.systemui.statusbar.phone;
 import android.content.Context;
 import android.view.MotionEvent;
 import android.view.ViewConfiguration;
+import com.android.systemui.Dependency;
 import com.android.systemui.Gefingerpoken;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow;
 import com.android.systemui.statusbar.notification.row.ExpandableView;
+import com.android.systemui.statusbar.policy.ConfigurationController;
 
 public class HeadsUpTouchHelper implements Gefingerpoken {
-    private Callback mCallback;
+    /* access modifiers changed from: private */
+    public Callback mCallback;
     private boolean mCollapseSnoozes;
     private HeadsUpManagerPhone mHeadsUpManager;
     private float mInitialTouchX;
     private float mInitialTouchY;
     private NotificationPanelViewController mPanel;
     private ExpandableNotificationRow mPickedChild;
-    private float mTouchSlop;
+    /* access modifiers changed from: private */
+    public float mTouchSlop;
     private boolean mTouchingHeadsUpView;
     private boolean mTrackingHeadsUp;
     private int mTrackingPointer;
@@ -34,6 +38,14 @@ public class HeadsUpTouchHelper implements Gefingerpoken {
         this.mCallback = callback;
         this.mPanel = notificationPanelViewController;
         this.mTouchSlop = (float) ViewConfiguration.get(callback.getContext()).getScaledTouchSlop();
+        ((ConfigurationController) Dependency.get(ConfigurationController.class)).addCallback(new ConfigurationController.ConfigurationListener() {
+            public void onDensityOrFontScaleChanged() {
+                Context context = HeadsUpTouchHelper.this.mCallback.getContext();
+                if (context != null) {
+                    float unused = HeadsUpTouchHelper.this.mTouchSlop = (float) ViewConfiguration.get(context).getScaledTouchSlop();
+                }
+            }
+        });
     }
 
     public boolean isTrackingHeadsUp() {

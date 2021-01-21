@@ -1,6 +1,8 @@
 package com.android.systemui.statusbar.notification;
 
 import android.util.ArraySet;
+import com.android.keyguard.faceunlock.MiuiFaceUnlockManager;
+import com.android.systemui.Dependency;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
 import com.android.systemui.statusbar.NotificationLockscreenUserManager;
 import com.android.systemui.statusbar.phone.StatusBarKeyguardViewManager;
@@ -12,7 +14,6 @@ public class DynamicPrivacyController implements KeyguardStateController.Callbac
     private final KeyguardStateController mKeyguardStateController;
     private boolean mLastDynamicUnlocked;
     private ArraySet<Listener> mListeners = new ArraySet<>();
-    private final NotificationLockscreenUserManager mLockscreenUserManager;
     private final StatusBarStateController mStateController;
     private StatusBarKeyguardViewManager mStatusBarKeyguardViewManager;
 
@@ -21,7 +22,6 @@ public class DynamicPrivacyController implements KeyguardStateController.Callbac
     }
 
     DynamicPrivacyController(NotificationLockscreenUserManager notificationLockscreenUserManager, KeyguardStateController keyguardStateController, StatusBarStateController statusBarStateController) {
-        this.mLockscreenUserManager = notificationLockscreenUserManager;
         this.mStateController = statusBarStateController;
         this.mKeyguardStateController = keyguardStateController;
         keyguardStateController.addCallback(this);
@@ -49,8 +49,7 @@ public class DynamicPrivacyController implements KeyguardStateController.Callbac
     }
 
     private boolean isDynamicPrivacyEnabled() {
-        NotificationLockscreenUserManager notificationLockscreenUserManager = this.mLockscreenUserManager;
-        return !notificationLockscreenUserManager.shouldHideNotifications(notificationLockscreenUserManager.getCurrentUserId());
+        return ((MiuiFaceUnlockManager) Dependency.get(MiuiFaceUnlockManager.class)).isShowMessageWhenFaceUnlockSuccess();
     }
 
     public boolean isDynamicallyUnlocked() {

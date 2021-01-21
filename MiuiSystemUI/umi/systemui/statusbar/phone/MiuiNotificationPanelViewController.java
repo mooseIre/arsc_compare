@@ -25,7 +25,7 @@ import com.android.internal.logging.MetricsLogger;
 import com.android.internal.util.LatencyTracker;
 import com.android.keyguard.AwesomeLockScreen;
 import com.android.keyguard.KeyguardUpdateMonitor;
-import com.android.keyguard.KeyguardUpdateMonitorCallback;
+import com.android.keyguard.MiuiKeyguardUpdateMonitorCallback;
 import com.android.keyguard.charge.ChargeUtils;
 import com.android.keyguard.clock.KeyguardClockContainer;
 import com.android.keyguard.faceunlock.MiuiKeyguardFaceUnlockView;
@@ -126,7 +126,7 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
     private final KeyguardClockInjector mKeyguardClockInjector;
     /* access modifiers changed from: private */
     public final KeyguardPanelViewInjector mKeyguardPanelViewInjector;
-    private final KeyguardUpdateMonitorCallback mKeyguardUpdateMonitorCallback;
+    private final MiuiKeyguardUpdateMonitorCallback mKeyguardUpdateMonitorCallback;
     private boolean mNCSwitching;
     private final NotificationEntryManager mNotificationEntryManager;
     @NotNull
@@ -886,7 +886,6 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
         if ((z || !isOnKeyguard() || i == 1) && !z2) {
             int i2 = 4;
             if (this.mBarState == 2 && i == 1) {
-                addAwesomeLockScreenIfNeed();
                 ((KeyguardClockContainer) ref$ObjectRef.element).animate().cancel();
                 KeyguardClockContainer keyguardClockContainer = (KeyguardClockContainer) ref$ObjectRef.element;
                 if (this.mIsDefaultTheme) {
@@ -897,7 +896,6 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
                 ((KeyguardClockContainer) ref$ObjectRef.element).setAlpha(0.0f);
                 ((KeyguardClockContainer) ref$ObjectRef.element).animate().alpha(1.0f).setStartDelay(0).setDuration(320).setInterpolator(Interpolators.ALPHA_IN).withEndAction(this.mAnimateKeyguardStatusViewVisibleEndRunnable);
             } else if (i == 1) {
-                addAwesomeLockScreenIfNeed();
                 ((KeyguardClockContainer) ref$ObjectRef.element).animate().cancel();
                 this.mKeyguardStatusViewAnimating = false;
                 KeyguardClockContainer keyguardClockContainer2 = (KeyguardClockContainer) ref$ObjectRef.element;
@@ -907,7 +905,6 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
                 keyguardClockContainer2.setVisibility(i2);
                 ((KeyguardClockContainer) ref$ObjectRef.element).setAlpha(1.0f);
             } else {
-                removeAwesomeLockScreen();
                 ((KeyguardClockContainer) ref$ObjectRef.element).animate().cancel();
                 this.mKeyguardStatusViewAnimating = false;
                 ((KeyguardClockContainer) ref$ObjectRef.element).setVisibility(8);
@@ -1072,6 +1069,8 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
     public final void addAwesomeLockScreenIfNeed(boolean z) {
         FrameLayout frameLayout;
         if ((this.mAwesomeLockScreen == null && !this.mIsDefaultTheme) || z) {
+            String str = PanelViewController.TAG;
+            Log.d(str, "addAwesomeLockScreenIfNeed: " + z);
             this.mAwesomeLockScreen = new AwesomeLockScreen(this.panelView.getContext(), this.mStatusBar, this.statusBarStateController, this, this.mBar, this.mKeyguardStateController);
             FrameLayout frameLayout2 = this.mAwesomeLockScreenContainer;
             if (frameLayout2 != null) {
@@ -1092,8 +1091,9 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
     }
 
     public final void removeAwesomeLockScreen() {
-        AwesomeLockScreen awesomeLockScreen = this.mAwesomeLockScreen;
-        if (awesomeLockScreen != null) {
+        if (this.mAwesomeLockScreen != null) {
+            Log.d(PanelViewController.TAG, "removeAwesomeLockScreen");
+            AwesomeLockScreen awesomeLockScreen = this.mAwesomeLockScreen;
             if (awesomeLockScreen != null) {
                 awesomeLockScreen.setIsInteractive(false);
             }

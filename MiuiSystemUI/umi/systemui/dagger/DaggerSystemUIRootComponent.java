@@ -2419,17 +2419,16 @@ public final class DaggerSystemUIRootComponent implements SystemUIRootComponent 
         this.usbNotificationControllerProvider = DoubleCheck.provider(UsbNotificationController_Factory.create(this.provideContextProvider));
         this.keyguardNotificationControllerProvider = DoubleCheck.provider(KeyguardNotificationController_Factory.create(this.provideContextProvider, this.provideNotificationEntryManagerProvider, this.notificationGroupManagerProvider, this.keyguardStateControllerImplProvider, this.notificationLockscreenUserManagerImplProvider));
         this.notificationBadgeControllerProvider = DoubleCheck.provider(NotificationBadgeController_Factory.create(this.provideContextProvider, this.provideNotificationEntryManagerProvider, this.notificationGroupManagerProvider));
-        this.miuiFaceUnlockManagerProvider = DoubleCheck.provider(MiuiFaceUnlockManager_Factory.create(this.provideContextProvider));
-        Provider<KeyguardUpdateMonitorInjector> provider15 = DoubleCheck.provider(KeyguardUpdateMonitorInjector_Factory.create(this.provideContextProvider, this.superSaveModeControllerProvider));
-        this.keyguardUpdateMonitorInjectorProvider = provider15;
-        this.notificationSensitiveControllerProvider = DoubleCheck.provider(NotificationSensitiveController_Factory.create(this.provideContextProvider, this.miuiFaceUnlockManagerProvider, this.keyguardUpdateMonitorProvider, provider15, this.userSwitcherControllerProvider, this.provideNotificationViewHierarchyManagerProvider));
+        this.notificationSensitiveControllerProvider = DoubleCheck.provider(NotificationSensitiveController_Factory.create(this.provideContextProvider, this.userSwitcherControllerProvider));
         this.miuiChargeControllerProvider = DoubleCheck.provider(MiuiChargeController_Factory.create(this.provideContextProvider, this.wakefulnessLifecycleProvider));
         this.hapticFeedBackImplProvider = DoubleCheck.provider(HapticFeedBackImpl_Factory.create(this.provideContextProvider));
         this.lockScreenMagazineControllerProvider = DoubleCheck.provider(LockScreenMagazineController_Factory.create(this.provideContextProvider));
+        this.miuiFaceUnlockManagerProvider = DoubleCheck.provider(MiuiFaceUnlockManager_Factory.create(this.provideContextProvider));
         this.miuiGxzwManagerProvider = DoubleCheck.provider(MiuiGxzwManager_Factory.create(this.provideContextProvider, this.wakefulnessLifecycleProvider));
         this.miuiFastUnlockControllerProvider = DoubleCheck.provider(MiuiFastUnlockController_Factory.create(this.provideContextProvider, this.newKeyguardViewMediatorProvider));
         this.keyguardIndicationInjectorProvider = DoubleCheck.provider(KeyguardIndicationInjector_Factory.create(this.provideContextProvider));
         this.keyguardPanelViewInjectorProvider = DoubleCheck.provider(KeyguardPanelViewInjector_Factory.create(this.provideContextProvider, this.provideStatusBarProvider, this.wakefulnessLifecycleProvider));
+        this.keyguardUpdateMonitorInjectorProvider = DoubleCheck.provider(KeyguardUpdateMonitorInjector_Factory.create(this.provideContextProvider, this.superSaveModeControllerProvider));
         this.forceBlackObserverProvider = DoubleCheck.provider(ForceBlackObserver_Factory.create(this.provideContextProvider, this.provideMainHandlerProvider, this.provideBgHandlerProvider));
         this.keyguardClockInjectorProvider = DoubleCheck.provider(KeyguardClockInjector_Factory.create(this.provideContextProvider));
         this.keyguardBottomAreaInjectorProvider = DoubleCheck.provider(KeyguardBottomAreaInjector_Factory.create(this.provideContextProvider));
@@ -2443,11 +2442,11 @@ public final class DaggerSystemUIRootComponent implements SystemUIRootComponent 
         this.miuiKeyguardWallpaperControllerImplProvider = DoubleCheck.provider(MiuiKeyguardWallpaperControllerImpl_Factory.create(this.provideContextProvider, this.providesBroadcastDispatcherProvider));
         this.wallpaperCommandSenderProvider = DoubleCheck.provider(WallpaperCommandSender_Factory.create());
         this.miuiWallpaperClientProvider = DoubleCheck.provider(MiuiWallpaperClient_Factory.create(this.provideContextProvider, this.wakefulnessLifecycleProvider));
-        Provider<ModalRowInflater> provider16 = DoubleCheck.provider(ModalRowInflater_Factory.create(this.notificationContentInflaterProvider, this.provideNotificationRemoteInputManagerProvider));
-        this.modalRowInflaterProvider = provider16;
-        Provider<ModalController> provider17 = DoubleCheck.provider(ModalController_Factory.create(this.provideContextProvider, this.provideStatusBarProvider, this.statusBarStateControllerImplProvider, provider16));
-        this.modalControllerProvider = provider17;
-        this.appMiniWindowManagerProvider = DoubleCheck.provider(AppMiniWindowManager_Factory.create(this.provideContextProvider, this.provideDividerProvider, this.provideHeadsUpManagerPhoneProvider, this.provideMainHandlerProvider, provider17, this.notificationSettingsManagerProvider));
+        Provider<ModalRowInflater> provider15 = DoubleCheck.provider(ModalRowInflater_Factory.create(this.notificationContentInflaterProvider, this.provideNotificationRemoteInputManagerProvider));
+        this.modalRowInflaterProvider = provider15;
+        Provider<ModalController> provider16 = DoubleCheck.provider(ModalController_Factory.create(this.provideContextProvider, this.provideStatusBarProvider, this.statusBarStateControllerImplProvider, provider15));
+        this.modalControllerProvider = provider16;
+        this.appMiniWindowManagerProvider = DoubleCheck.provider(AppMiniWindowManager_Factory.create(this.provideContextProvider, this.provideDividerProvider, this.provideHeadsUpManagerPhoneProvider, this.provideMainHandlerProvider, provider16, this.notificationSettingsManagerProvider));
     }
 
     private void initialize6(Builder builder) {

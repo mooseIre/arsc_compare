@@ -1,9 +1,9 @@
 package com.android.systemui.statusbar.phone;
 
-import com.android.keyguard.KeyguardUpdateMonitorCallback;
+import com.android.keyguard.MiuiKeyguardUpdateMonitorCallback;
 
 /* compiled from: MiuiNotificationPanelViewController.kt */
-public final class MiuiNotificationPanelViewController$mKeyguardUpdateMonitorCallback$1 extends KeyguardUpdateMonitorCallback {
+public final class MiuiNotificationPanelViewController$mKeyguardUpdateMonitorCallback$1 extends MiuiKeyguardUpdateMonitorCallback {
     final /* synthetic */ MiuiNotificationPanelViewController this$0;
 
     MiuiNotificationPanelViewController$mKeyguardUpdateMonitorCallback$1(MiuiNotificationPanelViewController miuiNotificationPanelViewController) {
@@ -12,5 +12,13 @@ public final class MiuiNotificationPanelViewController$mKeyguardUpdateMonitorCal
 
     public void onKeyguardBouncerChanged(boolean z) {
         this.this$0.onBouncerShowingChanged(z);
+    }
+
+    public void onKeyguardShowingChanged(boolean z) {
+        if (z) {
+            this.this$0.addAwesomeLockScreenIfNeed();
+        } else {
+            this.this$0.removeAwesomeLockScreen();
+        }
     }
 }

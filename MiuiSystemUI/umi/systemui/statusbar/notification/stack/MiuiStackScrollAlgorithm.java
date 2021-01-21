@@ -13,6 +13,7 @@ import com.android.systemui.statusbar.notification.row.ExpandableView;
 import com.android.systemui.statusbar.notification.row.MiuiExpandableNotificationRow;
 import com.android.systemui.statusbar.notification.stack.StackScrollAlgorithm;
 import com.android.systemui.statusbar.notification.zen.ZenModeView;
+import com.android.systemui.statusbar.policy.ConfigurationController;
 import com.android.systemui.util.ConvenienceExtensionsKt;
 import com.miui.systemui.SettingsManager;
 import java.util.ArrayList;
@@ -24,12 +25,13 @@ import org.jetbrains.annotations.Nullable;
 
 /* compiled from: MiuiStackScrollAlgorithm.kt */
 public final class MiuiStackScrollAlgorithm extends StackScrollAlgorithm {
-    private final Context mContext;
-    private final int mGroupMinusBottom;
-    private final int mGroupMinusTop;
-    private final int mHeadsUpMarginTop;
+    /* access modifiers changed from: private */
+    public final Context mContext;
+    private int mGroupMinusBottom;
+    private int mGroupMinusTop;
+    private int mHeadsUpMarginTop;
     private int mLatestVisibleChildrenCount;
-    private final int mStatusBarHeight;
+    private int mStatusBarHeight;
 
     /* JADX INFO: super call moved to the top of the method (can break code semantics) */
     public MiuiStackScrollAlgorithm(@NotNull Context context, @NotNull ViewGroup viewGroup) {
@@ -37,14 +39,31 @@ public final class MiuiStackScrollAlgorithm extends StackScrollAlgorithm {
         Intrinsics.checkParameterIsNotNull(context, "context");
         Intrinsics.checkParameterIsNotNull(viewGroup, "hostView");
         this.mContext = context;
-        this.mGroupMinusTop = context.getResources().getDimensionPixelSize(C0012R$dimen.notification_section_group_divider_top_minus);
-        this.mGroupMinusBottom = context.getResources().getDimensionPixelSize(C0012R$dimen.notification_section_group_divider_bottom_minus);
-        this.mStatusBarHeight = context.getResources().getDimensionPixelSize(C0012R$dimen.status_bar_height);
-        this.mHeadsUpMarginTop = context.getResources().getDimensionPixelSize(C0012R$dimen.heads_up_status_bar_padding);
+        updateResources();
+        ((ConfigurationController) Dependency.get(ConfigurationController.class)).addCallback(new ConfigurationController.ConfigurationListener(this) {
+            final /* synthetic */ MiuiStackScrollAlgorithm this$0;
+
+            {
+                this.this$0 = r1;
+            }
+
+            public void onDensityOrFontScaleChanged() {
+                MiuiStackScrollAlgorithm miuiStackScrollAlgorithm = this.this$0;
+                miuiStackScrollAlgorithm.initView(miuiStackScrollAlgorithm.mContext);
+                this.this$0.updateResources();
+            }
+        });
     }
 
     private final boolean getMGameModeEnabled() {
         return ((SettingsManager) Dependency.get(SettingsManager.class)).getGameModeEnabled();
+    }
+
+    public final void updateResources() {
+        this.mGroupMinusTop = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.notification_section_group_divider_top_minus);
+        this.mGroupMinusBottom = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.notification_section_group_divider_bottom_minus);
+        this.mStatusBarHeight = this.mContext.getResources().getDimensionPixelSize(17105489);
+        this.mHeadsUpMarginTop = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.heads_up_status_bar_padding);
     }
 
     /* access modifiers changed from: protected */
