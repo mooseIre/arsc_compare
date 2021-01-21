@@ -38,6 +38,7 @@ public final class AppMiniWindowManager implements OnHeadsUpChangedListener {
     public final Context context;
     /* access modifiers changed from: private */
     public final ActivityManagerWrapper mActivityManager = ActivityManagerWrapper.getInstance();
+    private final Consumer<Boolean> mDockedStackExistsListener;
     /* access modifiers changed from: private */
     public boolean mExpectingTaskStackChanged;
     /* access modifiers changed from: private */
@@ -69,6 +70,7 @@ public final class AppMiniWindowManager implements OnHeadsUpChangedListener {
         this.notificationSettingsManager = notificationSettingsManager2;
         this.mHeadsUpManager = headsUpManagerPhone;
         this.mOneshotForegroundListeners = new ArrayList<>();
+        this.mDockedStackExistsListener = new AppMiniWindowManager$mDockedStackExistsListener$1(this);
         ActivityManagerWrapper activityManagerWrapper = this.mActivityManager;
         Intrinsics.checkExpressionValueIsNotNull(activityManagerWrapper, "mActivityManager");
         ActivityManager.RunningTaskInfo runningTask = activityManagerWrapper.getRunningTask();
@@ -123,19 +125,7 @@ public final class AppMiniWindowManager implements OnHeadsUpChangedListener {
                 this.this$0.mHasSmallWindow = isSmallWindowActivated;
             }
         });
-        divider.registerInSplitScreenListener(new Consumer<Boolean>(this) {
-            final /* synthetic */ AppMiniWindowManager this$0;
-
-            {
-                this.this$0 = r1;
-            }
-
-            public final void accept(Boolean bool) {
-                AppMiniWindowManager appMiniWindowManager = this.this$0;
-                Intrinsics.checkExpressionValueIsNotNull(bool, "it");
-                appMiniWindowManager.mInDockedStackMode = bool.booleanValue();
-            }
-        });
+        divider.registerInSplitScreenListener(this.mDockedStackExistsListener);
         headsUpManagerPhone.addListener(this);
         modalController.addOnModalChangeListener(new ModalController.OnModalChangeListener(this) {
             final /* synthetic */ AppMiniWindowManager this$0;

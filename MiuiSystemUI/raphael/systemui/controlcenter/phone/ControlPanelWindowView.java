@@ -107,6 +107,7 @@ public class ControlPanelWindowView extends FrameLayout {
                 ControlPanelWindowView.this.hideControlCenterWindow();
                 ControlPanelWindowView.this.mControlCenterPanel.finishCollapse();
                 ControlPanelWindowView.this.mControlPanelWindowManager.trimMemory();
+                ControlPanelWindowView.this.onControlPanelHide();
                 boolean unused2 = ControlPanelWindowView.this.mCollapsingAnim = false;
             }
         };
@@ -227,6 +228,7 @@ public class ControlPanelWindowView extends FrameLayout {
     private void verifyState() {
         if (this.mContent.getHeight() == 0) {
             this.mExpandState = 0;
+            this.mIsGetSelfEvent = false;
         }
     }
 
@@ -408,7 +410,6 @@ public class ControlPanelWindowView extends FrameLayout {
         } else {
             collapsePanelImmediately();
         }
-        onControlPanelHide();
     }
 
     private void collapsePanelImmediately() {

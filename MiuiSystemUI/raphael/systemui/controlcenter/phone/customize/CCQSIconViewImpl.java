@@ -74,7 +74,7 @@ public class CCQSIconViewImpl extends QSIconView {
         this.mIconColorOff = getResources().getColor(C0011R$color.cc_qs_tile_icon_color_off);
         this.mIconColorUnavailable = getResources().getColor(C0011R$color.qs_control_tile_icon_unavailable_color);
         this.mCustomTileSize = (int) getResources().getDimension(C0012R$dimen.qs_control_custom_tile_icon_inner_size);
-        setIcon(this.mState, false);
+        updateIcon((ImageView) this.mIcon, this.mState, true);
     }
 
     public void setIcon(QSTile.State state, boolean z) {
@@ -89,6 +89,10 @@ public class CCQSIconViewImpl extends QSIconView {
 
     /* access modifiers changed from: protected */
     public void updateIcon(ImageView imageView, QSTile.State state) {
+        updateIcon(imageView, state, false);
+    }
+
+    private void updateIcon(ImageView imageView, QSTile.State state, boolean z) {
         int i;
         Drawable drawable;
         int i2;
@@ -97,7 +101,7 @@ public class CCQSIconViewImpl extends QSIconView {
         Drawable drawable2 = icon != null ? icon.getDrawable(this.mContext) : null;
         if (drawable2 != null) {
             Integer num = (Integer) imageView.getTag(C0015R$id.qs_icon_state_tag);
-            if (num == null || num.intValue() != state.state || !Objects.equals(icon, imageView.getTag(C0015R$id.qs_icon_tag))) {
+            if (z || num == null || num.intValue() != state.state || !Objects.equals(icon, imageView.getTag(C0015R$id.qs_icon_tag))) {
                 drawable2.mutate();
                 drawable2.setAutoMirrored(false);
                 if (state.activeBgColor != 2) {
