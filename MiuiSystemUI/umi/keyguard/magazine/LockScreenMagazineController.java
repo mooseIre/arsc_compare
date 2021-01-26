@@ -110,8 +110,6 @@ public class LockScreenMagazineController implements SettingsObserver.Callback {
     public boolean mIsLockScreenMagazineOpenedWallpaper;
     /* access modifiers changed from: private */
     public boolean mIsLockScreenMagazinePkgExist = true;
-    /* access modifiers changed from: private */
-    public boolean mIsSupportLeftOverlay;
     private boolean mIsSupportLockScreenMagazineLeft;
     private boolean mIsSupportLockScreenMagazineLeftOverlay;
     /* access modifiers changed from: private */
@@ -194,8 +192,10 @@ public class LockScreenMagazineController implements SettingsObserver.Callback {
     public String mPreLeftScreenActivityName;
     /* access modifiers changed from: private */
     public String mPreLeftScreenDrawableResName;
-    private Drawable mPreMainEntryDarkIcon;
-    private Drawable mPreMainEntryLightIcon;
+    /* access modifiers changed from: private */
+    public Drawable mPreMainEntryDarkIcon;
+    /* access modifiers changed from: private */
+    public Drawable mPreMainEntryLightIcon;
     /* access modifiers changed from: private */
     public String mPreMainEntryResDarkIconName;
     /* access modifiers changed from: private */
@@ -672,51 +672,67 @@ public class LockScreenMagazineController implements SettingsObserver.Callback {
         }
     }
 
+    class MagazineResourceEntity {
+        public boolean mIsLockScreenMagazinePkgExist = true;
+        public boolean mIsSupportLeftOverlay;
+        public String mPreLeftScreenActivityName;
+        public String mPreLeftScreenDrawableResName;
+        public Drawable mPreMainEntryDarkIcon;
+        public Drawable mPreMainEntryLightIcon;
+        public String mPreMainEntryResDarkIconName;
+        public String mPreMainEntryResLightIconName;
+        public String mPreTransToLeftScreenDrawableResName;
+
+        MagazineResourceEntity(LockScreenMagazineController lockScreenMagazineController) {
+        }
+    }
+
     /* access modifiers changed from: private */
     public void initLockScreenMagazinePreRes() {
         if (this.mUpdateMonitor.isUserUnlocked(KeyguardUpdateMonitor.getCurrentUser()) && MiuiKeyguardUtils.isDeviceProvisionedInSettingsDb(this.mContext)) {
             Log.d("LockScreenMagazineController", "initLockScreenMagazinePreRes");
-            new AsyncTask<Void, Void, Void>() {
+            new AsyncTask<Void, Void, MagazineResourceEntity>() {
                 /* access modifiers changed from: protected */
-                public Void doInBackground(Void... voidArr) {
+                public MagazineResourceEntity doInBackground(Void... voidArr) {
                     Bundle lockScreenMagazinePreContent = LockScreenMagazineUtils.getLockScreenMagazinePreContent(LockScreenMagazineController.this.mContext);
                     String string = lockScreenMagazinePreContent != null ? lockScreenMagazinePreContent.getString("result_json") : null;
                     Log.d("LockScreenMagazineController", "initLockScreenMagazinePreRes resultJson = " + string);
+                    MagazineResourceEntity magazineResourceEntity = new MagazineResourceEntity(LockScreenMagazineController.this);
+                    magazineResourceEntity.mIsLockScreenMagazinePkgExist = PackageUtils.isAppInstalledForUser(LockScreenMagazineController.this.mContext, LockScreenMagazineUtils.LOCK_SCREEN_MAGAZINE_PACKAGE_NAME, KeyguardUpdateMonitor.getCurrentUser());
                     if (!TextUtils.isEmpty(string)) {
                         try {
                             JSONObject jSONObject = new JSONObject(string);
-                            String unused = LockScreenMagazineController.this.mPreLeftScreenActivityName = jSONObject.optString("leftscreen_activity");
-                            boolean unused2 = LockScreenMagazineController.this.mIsSupportLeftOverlay = jSONObject.optBoolean("is_support_overlay");
-                            String unused3 = LockScreenMagazineController.this.mPreMainEntryResDarkIconName = jSONObject.optString("main_entry_res_icon_dark_svg");
-                            String unused4 = LockScreenMagazineController.this.mPreMainEntryResLightIconName = jSONObject.optString("main_entry_res_icon_light_svg");
-                            String unused5 = LockScreenMagazineController.this.mPreTransToLeftScreenDrawableResName = jSONObject.optString("trans_to_leftscreen_res_drawable");
-                            String unused6 = LockScreenMagazineController.this.mPreLeftScreenDrawableResName = jSONObject.optString("leftscreen_res_drawable_preview");
+                            magazineResourceEntity.mPreLeftScreenActivityName = LockScreenMagazineController.this.checkLeftScreenActivityExist(jSONObject.optString("leftscreen_activity"));
+                            magazineResourceEntity.mIsSupportLeftOverlay = jSONObject.optBoolean("is_support_overlay");
+                            magazineResourceEntity.mPreMainEntryResDarkIconName = jSONObject.optString("main_entry_res_icon_dark_svg");
+                            magazineResourceEntity.mPreMainEntryResLightIconName = jSONObject.optString("main_entry_res_icon_light_svg");
+                            magazineResourceEntity.mPreTransToLeftScreenDrawableResName = jSONObject.optString("trans_to_leftscreen_res_drawable");
+                            magazineResourceEntity.mPreLeftScreenDrawableResName = jSONObject.optString("leftscreen_res_drawable_preview");
                         } catch (Exception e) {
                             Log.e("LockScreenMagazineController", "initLockScreenMagazinePreRes", e);
                         }
-                        LockScreenMagazineController.this.initPreMainEntryIcon();
-                    } else {
-                        String unused7 = LockScreenMagazineController.this.mPreLeftScreenActivityName = null;
-                        String unused8 = LockScreenMagazineController.this.mPreMainEntryResDarkIconName = null;
-                        String unused9 = LockScreenMagazineController.this.mPreMainEntryResLightIconName = null;
-                        String unused10 = LockScreenMagazineController.this.mPreTransToLeftScreenDrawableResName = null;
-                        String unused11 = LockScreenMagazineController.this.mPreLeftScreenDrawableResName = null;
-                        boolean unused12 = LockScreenMagazineController.this.mIsSupportLeftOverlay = false;
+                        magazineResourceEntity.mPreMainEntryDarkIcon = PackageUtils.getDrawableFromPackage(LockScreenMagazineController.this.mContext, LockScreenMagazineUtils.LOCK_SCREEN_MAGAZINE_PACKAGE_NAME, magazineResourceEntity.mPreMainEntryResDarkIconName);
+                        magazineResourceEntity.mPreMainEntryLightIcon = PackageUtils.getDrawableFromPackage(LockScreenMagazineController.this.mContext, LockScreenMagazineUtils.LOCK_SCREEN_MAGAZINE_PACKAGE_NAME, magazineResourceEntity.mPreMainEntryResLightIconName);
                     }
-                    LockScreenMagazineController.this.handlePreLeftScreenActivityName();
-                    LockScreenMagazineController.this.initLockScreenMagazinePkgExist();
-                    return null;
+                    return magazineResourceEntity;
                 }
 
                 /* access modifiers changed from: protected */
-                public void onPostExecute(Void voidR) {
-                    LockScreenMagazineController lockScreenMagazineController = LockScreenMagazineController.this;
-                    lockScreenMagazineController.setSupportLockScreenMagazineOverlay(lockScreenMagazineController.mIsSupportLeftOverlay);
-                    if (!TextUtils.isEmpty(LockScreenMagazineController.this.mPreLeftScreenActivityName)) {
+                public void onPostExecute(MagazineResourceEntity magazineResourceEntity) {
+                    String unused = LockScreenMagazineController.this.mPreMainEntryResDarkIconName = magazineResourceEntity.mPreMainEntryResDarkIconName;
+                    String unused2 = LockScreenMagazineController.this.mPreMainEntryResLightIconName = magazineResourceEntity.mPreMainEntryResLightIconName;
+                    String unused3 = LockScreenMagazineController.this.mPreTransToLeftScreenDrawableResName = magazineResourceEntity.mPreTransToLeftScreenDrawableResName;
+                    String unused4 = LockScreenMagazineController.this.mPreLeftScreenDrawableResName = magazineResourceEntity.mPreLeftScreenDrawableResName;
+                    boolean unused5 = LockScreenMagazineController.this.mIsLockScreenMagazinePkgExist = magazineResourceEntity.mIsLockScreenMagazinePkgExist;
+                    Drawable unused6 = LockScreenMagazineController.this.mPreMainEntryDarkIcon = magazineResourceEntity.mPreMainEntryDarkIcon;
+                    Drawable unused7 = LockScreenMagazineController.this.mPreMainEntryLightIcon = magazineResourceEntity.mPreMainEntryLightIcon;
+                    String unused8 = LockScreenMagazineController.this.mPreLeftScreenActivityName = magazineResourceEntity.mPreLeftScreenActivityName;
+                    if (!TextUtils.isEmpty(magazineResourceEntity.mPreLeftScreenActivityName)) {
                         LockScreenMagazineController.this.setSupportLockScreenMagazineLeft(true);
                     } else {
                         LockScreenMagazineController.this.setSupportLockScreenMagazineLeft(false);
                     }
+                    LockScreenMagazineController.this.setSupportLockScreenMagazineOverlay(magazineResourceEntity.mIsSupportLeftOverlay);
                     LockScreenMagazineController.this.mUpdateMonitorInjector.onMagazineResourceInited();
                 }
             }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new Void[0]);
@@ -724,33 +740,30 @@ public class LockScreenMagazineController implements SettingsObserver.Callback {
     }
 
     /* access modifiers changed from: private */
-    public void handlePreLeftScreenActivityName() {
-        if (!TextUtils.isEmpty(this.mPreLeftScreenActivityName)) {
+    public String checkLeftScreenActivityExist(String str) {
+        String str2 = "";
+        if (!TextUtils.isEmpty(str)) {
             try {
-                String[] split = this.mPreLeftScreenActivityName.split("/");
+                String[] split = str.split("/");
                 if (split != null && split.length > 1) {
-                    this.mPreLeftScreenActivityName = split[1];
+                    str2 = split[1];
                 }
                 Intent intent = new Intent();
-                intent.setComponent(new ComponentName(LockScreenMagazineUtils.LOCK_SCREEN_MAGAZINE_PACKAGE_NAME, this.mPreLeftScreenActivityName));
+                intent.setComponent(new ComponentName(LockScreenMagazineUtils.LOCK_SCREEN_MAGAZINE_PACKAGE_NAME, str2));
                 if (PackageUtils.resolveIntent(this.mContext, intent) == null) {
-                    this.mPreLeftScreenActivityName = null;
+                    return null;
                 }
             } catch (Exception e) {
                 Log.e("LockScreenMagazineController", "handlePreLeftScreenActivityName failed", e);
-                this.mPreLeftScreenActivityName = null;
+                return null;
             }
         }
+        return str2;
     }
 
     public void initPreMainEntryIcon() {
         this.mPreMainEntryDarkIcon = PackageUtils.getDrawableFromPackage(this.mContext, LockScreenMagazineUtils.LOCK_SCREEN_MAGAZINE_PACKAGE_NAME, this.mPreMainEntryResDarkIconName);
         this.mPreMainEntryLightIcon = PackageUtils.getDrawableFromPackage(this.mContext, LockScreenMagazineUtils.LOCK_SCREEN_MAGAZINE_PACKAGE_NAME, this.mPreMainEntryResLightIconName);
-    }
-
-    /* access modifiers changed from: private */
-    public void initLockScreenMagazinePkgExist() {
-        this.mIsLockScreenMagazinePkgExist = PackageUtils.isAppInstalledForUser(this.mContext, LockScreenMagazineUtils.LOCK_SCREEN_MAGAZINE_PACKAGE_NAME, KeyguardUpdateMonitor.getCurrentUser());
     }
 
     private String getPreLeftScreenActivityName() {
@@ -1033,5 +1046,9 @@ public class LockScreenMagazineController implements SettingsObserver.Callback {
         if (!z) {
             LockScreenMagazineUtils.sendLockScreenMagazineUnlockBroadcast(this.mContext);
         }
+    }
+
+    public void onFinishedGoingToSleep() {
+        reset();
     }
 }

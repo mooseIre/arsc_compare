@@ -110,22 +110,20 @@ public class MiuiChargeManager implements Dumpable {
                         MiuiBatteryStatus access$200 = MiuiChargeManager.this.mBatteryStatus;
                         MiuiChargeManager miuiChargeManager = MiuiChargeManager.this;
                         access$200.chargeDeviceType = miuiChargeManager.getCurrentChargeDeviceType(miuiChargeManager.mBatteryStatus.wireState, MiuiChargeManager.this.mBatteryStatus.chargeDeviceType);
-                        MiuiBatteryStatus access$2002 = MiuiChargeManager.this.mBatteryStatus;
-                        MiuiChargeManager miuiChargeManager2 = MiuiChargeManager.this;
-                        access$2002.chargeSpeed = miuiChargeManager2.getChargeSpeed(miuiChargeManager2.mBatteryStatus.wireState, MiuiChargeManager.this.mBatteryStatus.chargeDeviceType);
+                        MiuiChargeManager.this.mBatteryStatus.chargeSpeed = ChargeUtils.getChargeSpeed(MiuiChargeManager.this.mBatteryStatus.wireState, MiuiChargeManager.this.mBatteryStatus.chargeDeviceType);
                         MiuiChargeManager.this.notifyBatteryStatusChanged();
                     }
                 } else if ("miui.intent.action.ACTION_QUICK_CHARGE_TYPE".equals(intent.getAction())) {
                     int unused4 = MiuiChargeManager.this.mWiredChargeType = intent.getIntExtra("miui.intent.extra.quick_charge_type", -1);
                     if (MiuiChargeManager.this.mBatteryStatus.wireState == 11) {
-                        MiuiChargeManager miuiChargeManager3 = MiuiChargeManager.this;
-                        miuiChargeManager3.onChargeDeviceTypeChanged(miuiChargeManager3.mWiredChargeType);
+                        MiuiChargeManager miuiChargeManager2 = MiuiChargeManager.this;
+                        miuiChargeManager2.onChargeDeviceTypeChanged(miuiChargeManager2.mWiredChargeType);
                     }
                 } else if ("miui.intent.action.ACTION_WIRELESS_TX_TYPE".equals(intent.getAction())) {
                     int unused5 = MiuiChargeManager.this.mWirelessChargeType = intent.getIntExtra("miui.intent.extra.wireless_tx_type", -1);
                     if (MiuiChargeManager.this.mBatteryStatus.wireState == 10) {
-                        MiuiChargeManager miuiChargeManager4 = MiuiChargeManager.this;
-                        miuiChargeManager4.onChargeDeviceTypeChanged(miuiChargeManager4.mWirelessChargeType);
+                        MiuiChargeManager miuiChargeManager3 = MiuiChargeManager.this;
+                        miuiChargeManager3.onChargeDeviceTypeChanged(miuiChargeManager3.mWirelessChargeType);
                     }
                 }
             }
@@ -149,7 +147,7 @@ public class MiuiChargeManager implements Dumpable {
     public void onChargeDeviceTypeChanged(int i) {
         MiuiBatteryStatus miuiBatteryStatus = this.mBatteryStatus;
         if (miuiBatteryStatus != null && i >= 0) {
-            int chargeSpeed = getChargeSpeed(miuiBatteryStatus.wireState, i);
+            int chargeSpeed = ChargeUtils.getChargeSpeed(miuiBatteryStatus.wireState, i);
             MiuiBatteryStatus miuiBatteryStatus2 = this.mBatteryStatus;
             miuiBatteryStatus2.chargeSpeed = chargeSpeed;
             int currentChargeDeviceType = getCurrentChargeDeviceType(miuiBatteryStatus2.wireState, i);
@@ -190,29 +188,6 @@ public class MiuiChargeManager implements Dumpable {
             return this.mWiredChargeType;
         }
         return -1;
-    }
-
-    /* access modifiers changed from: private */
-    public int getChargeSpeed(int i, int i2) {
-        if (i != 10) {
-            if (i == 11) {
-                if (!ChargeUtils.isStrongSuperRapidCharge(i2)) {
-                    if (ChargeUtils.isSuperRapidCharge(i2)) {
-                        return 2;
-                    }
-                    if (ChargeUtils.isRapidCharge(i2)) {
-                        return 1;
-                    }
-                }
-            }
-            return 0;
-        } else if (!ChargeUtils.isWirelessStrongSuperRapidCharge(i2)) {
-            if (ChargeUtils.isWirelessSuperRapidCharge(i2)) {
-                return 2;
-            }
-            return 0;
-        }
-        return 3;
     }
 
     public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {

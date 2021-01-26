@@ -16,6 +16,7 @@ import com.android.keyguard.MiuiKeyguardUpdateMonitorCallback;
 import com.android.keyguard.injector.KeyguardClockInjector;
 import com.android.keyguard.utils.MiuiKeyguardUtils;
 import com.android.systemui.Dependency;
+import com.android.systemui.statusbar.policy.DualClockObserver;
 import java.util.TimeZone;
 
 public class KeyguardClockContainer extends FrameLayout {
@@ -24,6 +25,7 @@ public class KeyguardClockContainer extends FrameLayout {
     public MiuiKeyguardBaseClock mClockView;
     /* access modifiers changed from: private */
     public String mCurrentTimezone;
+    private DualClockObserver mDualClockObserver;
     /* access modifiers changed from: private */
     public boolean mDualClockOpen;
     ContentObserver mDualClockOpenObserver;
@@ -126,6 +128,7 @@ public class KeyguardClockContainer extends FrameLayout {
             }
         };
         this.mUpdateMonitor = (KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class);
+        this.mDualClockObserver = (DualClockObserver) Dependency.get(DualClockObserver.class);
         this.mSelectedClockPosition = Settings.System.getIntForUser(this.mContext.getContentResolver(), "selected_keyguard_clock_position", MiuiKeyguardUtils.getDefaultKeyguardClockPosition(this.mContext), KeyguardUpdateMonitor.getCurrentUser());
         this.mDualClockOpen = Settings.System.getIntForUser(this.mContext.getContentResolver(), "auto_dual_clock", 0, KeyguardUpdateMonitor.getCurrentUser()) != 0;
         String stringForUser = Settings.System.getStringForUser(this.mContext.getContentResolver(), "resident_timezone", KeyguardUpdateMonitor.getCurrentUser());
@@ -134,6 +137,7 @@ public class KeyguardClockContainer extends FrameLayout {
             z = true;
         }
         this.mShowDualClock = z;
+        this.mDualClockObserver.setShowDualClock(z);
         this.mShowVerticalClock = MiuiKeyguardUtils.isSupportVerticalClock(this.mSelectedClockPosition, this.mContext);
         this.mUpdateMonitorCallback = new MiuiKeyguardUpdateMonitorCallback() {
             public void onUserSwitchComplete(int i) {
@@ -232,20 +236,22 @@ public class KeyguardClockContainer extends FrameLayout {
         L_0x0012:
             r0 = 0
         L_0x0013:
+            com.android.systemui.statusbar.policy.DualClockObserver r1 = r3.mDualClockObserver
+            r1.setShowDualClock(r0)
             boolean r1 = r3.mShowDualClock
-            if (r1 != r0) goto L_0x001d
+            if (r1 != r0) goto L_0x0022
             int r1 = r3.mSelectedClockPosition
             int r2 = r3.mLastSelectedClockPosition
-            if (r1 == r2) goto L_0x0029
-        L_0x001d:
+            if (r1 == r2) goto L_0x002e
+        L_0x0022:
             r3.mShowDualClock = r0
             int r0 = r3.mSelectedClockPosition
             r3.mLastSelectedClockPosition = r0
             r3.removeAllViews()
             r3.addClockView()
-        L_0x0029:
+        L_0x002e:
             com.android.keyguard.clock.MiuiKeyguardBaseClock r0 = r3.mClockView
-            if (r0 == 0) goto L_0x0040
+            if (r0 == 0) goto L_0x0045
             java.lang.String r1 = r3.mResidentTimezone
             r0.updateResidentTimeZone(r1)
             com.android.keyguard.clock.MiuiKeyguardBaseClock r0 = r3.mClockView
@@ -254,7 +260,7 @@ public class KeyguardClockContainer extends FrameLayout {
             com.android.keyguard.clock.MiuiKeyguardBaseClock r0 = r3.mClockView
             int r3 = r3.mSelectedClockPosition
             r0.setSelectedClockPosition(r3)
-        L_0x0040:
+        L_0x0045:
             return
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.keyguard.clock.KeyguardClockContainer.updateKeyguardClock():void");

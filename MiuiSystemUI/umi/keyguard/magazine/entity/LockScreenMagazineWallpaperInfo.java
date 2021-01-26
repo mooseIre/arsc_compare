@@ -193,10 +193,10 @@ public class LockScreenMagazineWallpaperInfo extends MiuiWallpaperInfo {
             java.lang.String r0 = r0.toString()
             android.util.Log.e(r1, r0)
         L_0x0082:
-            if (r4 == 0) goto L_0x010f
+            if (r4 == 0) goto L_0x0110
             java.lang.String r0 = r6.authority
             boolean r0 = android.text.TextUtils.isEmpty(r0)
-            if (r0 != 0) goto L_0x010f
+            if (r0 != 0) goto L_0x0110
             android.content.ContentResolver r0 = r7.getContentResolver()
             java.lang.StringBuilder r2 = new java.lang.StringBuilder
             r2.<init>()
@@ -207,7 +207,7 @@ public class LockScreenMagazineWallpaperInfo extends MiuiWallpaperInfo {
             java.lang.String r2 = r2.toString()
             android.net.Uri r2 = android.net.Uri.parse(r2)
             android.content.IContentProvider r0 = r0.acquireProvider(r2)
-            if (r0 == 0) goto L_0x010f
+            if (r0 == 0) goto L_0x0110
             java.lang.StringBuilder r2 = new java.lang.StringBuilder
             r2.<init>()
             java.lang.String r3 = "tarck ad key="
@@ -220,39 +220,39 @@ public class LockScreenMagazineWallpaperInfo extends MiuiWallpaperInfo {
             r2.append(r3)
             java.lang.String r2 = r2.toString()
             android.util.Log.d(r1, r2)
-            org.json.JSONObject r1 = new org.json.JSONObject     // Catch:{ Exception -> 0x00fb }
-            r1.<init>()     // Catch:{ Exception -> 0x00fb }
+            org.json.JSONObject r1 = new org.json.JSONObject     // Catch:{ Exception -> 0x00fc }
+            r1.<init>()     // Catch:{ Exception -> 0x00fc }
             java.lang.String r2 = "key"
-            java.lang.String r3 = r6.key     // Catch:{ Exception -> 0x00fb }
-            r1.put(r2, r3)     // Catch:{ Exception -> 0x00fb }
+            java.lang.String r3 = r6.key     // Catch:{ Exception -> 0x00fc }
+            r1.put(r2, r3)     // Catch:{ Exception -> 0x00fc }
             java.lang.String r2 = "event"
             r3 = 2
-            r1.put(r2, r3)     // Catch:{ Exception -> 0x00fb }
-            android.os.Bundle r2 = new android.os.Bundle     // Catch:{ Exception -> 0x00fb }
-            r2.<init>()     // Catch:{ Exception -> 0x00fb }
+            r1.put(r2, r3)     // Catch:{ Exception -> 0x00fc }
+            android.os.Bundle r2 = new android.os.Bundle     // Catch:{ Exception -> 0x00fc }
+            r2.<init>()     // Catch:{ Exception -> 0x00fc }
             java.lang.String r3 = "request_json"
-            java.lang.String r1 = r1.toString()     // Catch:{ Exception -> 0x00fb }
-            r2.putString(r3, r1)     // Catch:{ Exception -> 0x00fb }
-            java.lang.String r1 = r7.getPackageName()     // Catch:{ Exception -> 0x00fb }
-            java.lang.String r6 = r6.authority     // Catch:{ Exception -> 0x00fb }
+            java.lang.String r1 = r1.toString()     // Catch:{ Exception -> 0x00fc }
+            r2.putString(r3, r1)     // Catch:{ Exception -> 0x00fc }
+            java.lang.String r1 = r7.getPackageName()     // Catch:{ Exception -> 0x00fc }
+            java.lang.String r6 = r6.authority     // Catch:{ Exception -> 0x00fc }
             java.lang.String r3 = "recordEvent"
-            r0.call(r1, r6, r3, r2)     // Catch:{ Exception -> 0x00fb }
-            goto L_0x00ff
-        L_0x00f9:
+            r0.call(r1, r6, r3, r2)     // Catch:{ Exception -> 0x00fc }
+            goto L_0x0100
+        L_0x00fa:
             r6 = move-exception
-            goto L_0x0107
-        L_0x00fb:
+            goto L_0x0108
+        L_0x00fc:
             r6 = move-exception
-            r6.printStackTrace()     // Catch:{ all -> 0x00f9 }
-        L_0x00ff:
+            r6.printStackTrace()     // Catch:{ all -> 0x00fa }
+        L_0x0100:
             android.content.ContentResolver r6 = r7.getContentResolver()
             r6.releaseProvider(r0)
-            goto L_0x010f
-        L_0x0107:
+            goto L_0x0110
+        L_0x0108:
             android.content.ContentResolver r7 = r7.getContentResolver()
             r7.releaseProvider(r0)
             throw r6
-        L_0x010f:
+        L_0x0110:
             return r4
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.keyguard.magazine.entity.LockScreenMagazineWallpaperInfo.opendAd(android.content.Context):boolean");
