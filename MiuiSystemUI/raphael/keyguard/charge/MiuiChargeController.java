@@ -41,7 +41,7 @@ public class MiuiChargeController implements IChargeAnimationListener, Wakefulne
     private int mChargeDeviceForAnalytic;
     /* access modifiers changed from: private */
     public int mChargeDeviceType;
-    private int mChargeSpeed;
+    private int mChargeSpeed = -1;
     private boolean mClickShowChargeUI;
     /* access modifiers changed from: private */
     public Context mContext;
@@ -210,15 +210,18 @@ public class MiuiChargeController implements IChargeAnimationListener, Wakefulne
             this.mWirelessCharging = z5;
             this.mWireState = checkChargeState;
             this.mStateInitialized = true;
+            if (!miuiBatteryStatus.isPluggedIn()) {
+                this.mChargeSpeed = -1;
+            }
         }
     }
 
     private void switchChargeItemViewAnimation(MiuiBatteryStatus miuiBatteryStatus, boolean z) {
-        int switchChargeSpeed = ChargeUtils.getSwitchChargeSpeed(miuiBatteryStatus.wireState, miuiBatteryStatus.chargeDeviceType);
-        if (this.mChargeSpeed != switchChargeSpeed && this.mChargeAnimationView != null) {
-            Log.d("MiuiChargeController", "switchChargeItemViewAnimation: " + switchChargeSpeed + ",chargeDeviceType=" + miuiBatteryStatus.chargeDeviceType);
-            this.mChargeSpeed = switchChargeSpeed;
-            this.mChargeAnimationView.switchChargeItemViewAnimation(z, switchChargeSpeed);
+        int chargeSpeed = ChargeUtils.getChargeSpeed(miuiBatteryStatus.wireState, miuiBatteryStatus.chargeDeviceType);
+        if (this.mChargeSpeed != chargeSpeed && this.mChargeAnimationView != null) {
+            Log.d("MiuiChargeController", "switchChargeItemViewAnimation: " + chargeSpeed + ",chargeDeviceType=" + miuiBatteryStatus.chargeDeviceType);
+            this.mChargeSpeed = chargeSpeed;
+            this.mChargeAnimationView.switchChargeItemViewAnimation(z, chargeSpeed);
         }
     }
 

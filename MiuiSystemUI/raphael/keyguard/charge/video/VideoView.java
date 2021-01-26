@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Point;
 import android.graphics.SurfaceTexture;
+import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.util.AttributeSet;
@@ -600,5 +601,11 @@ public class VideoView extends RelativeLayout {
             removeView(textureView);
             this.mStrongRapidChargeView = null;
         }
+    }
+
+    /* access modifiers changed from: protected */
+    public void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        this.mBackImage.setBackground((Drawable) null);
     }
 }

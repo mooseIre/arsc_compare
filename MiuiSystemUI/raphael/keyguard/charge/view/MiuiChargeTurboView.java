@@ -232,13 +232,9 @@ public class MiuiChargeTurboView extends RelativeLayout {
 
     private void updateSizeForScreenSizeChange() {
         Point point = this.mScreenSize;
-        float f = 1.0f;
         float min = (((float) Math.min(point.x, point.y)) * 1.0f) / 1080.0f;
         if (this.mIsFoldChargeVideo) {
-            if (min <= 1.0f) {
-                f = min;
-            }
-            min = f;
+            min = Math.min(min, 1.0f);
         }
         Drawable drawable = this.mChargeIconDrawable;
         if (drawable != null) {

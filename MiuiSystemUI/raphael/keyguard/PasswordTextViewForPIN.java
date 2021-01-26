@@ -365,6 +365,8 @@ public class PasswordTextViewForPIN extends PasswordTextView {
         private final float mMaxYOffset;
         private final String mScaleTarget = ("char_scale_" + hashCode());
         private final String mYTarget = ("char_y_" + hashCode());
+        /* access modifiers changed from: private */
+        public int tag = 0;
         float yOffset;
 
         CharState() {
@@ -386,19 +388,7 @@ public class PasswordTextViewForPIN extends PasswordTextView {
                     PasswordTextViewForPIN.this.postInvalidateOnAnimation();
                 }
             });
-            Folme.useValue(this.mAlphaTarget).addListener(new TransitionListener() {
-                public void onUpdate(Object obj, FloatProperty floatProperty, float f, float f2, boolean z) {
-                    CharState charState = CharState.this;
-                    charState.alpha = f;
-                    PasswordTextViewForPIN.this.postInvalidateOnAnimation();
-                }
-
-                public void onComplete(Object obj) {
-                    if (PasswordTextViewForPIN.this.mIsResetAnimating && PasswordTextViewForPIN.this.getVisibleTextCharSize() == 0) {
-                        boolean unused = PasswordTextViewForPIN.this.mIsResetAnimating = false;
-                    }
-                }
-            });
+            setupAlphaFolmeAnimations();
             Folme.useValue(this.mYTarget).addListener(new TransitionListener() {
                 public void onUpdate(Object obj, FloatProperty floatProperty, float f, float f2, boolean z) {
                     CharState charState = CharState.this;
@@ -408,10 +398,31 @@ public class PasswordTextViewForPIN extends PasswordTextView {
             });
         }
 
+        private void setupAlphaFolmeAnimations() {
+            Folme.useValue(this.mAlphaTarget).setup(Integer.valueOf(this.tag)).addListener(new TransitionListener() {
+                public void onUpdate(Object obj, FloatProperty floatProperty, float f, float f2, boolean z) {
+                    if (((Integer) obj).intValue() == CharState.this.tag) {
+                        CharState charState = CharState.this;
+                        charState.alpha = f;
+                        PasswordTextViewForPIN.this.postInvalidateOnAnimation();
+                    }
+                }
+
+                public void onComplete(Object obj) {
+                    if (((Integer) obj).intValue() == CharState.this.tag && PasswordTextViewForPIN.this.mIsResetAnimating && PasswordTextViewForPIN.this.getVisibleTextCharSize() == 0) {
+                        boolean unused = PasswordTextViewForPIN.this.mIsResetAnimating = false;
+                    }
+                }
+            });
+        }
+
         /* access modifiers changed from: package-private */
         public void reset() {
             Folme.useValue(this.mAlphaTarget).cancel();
-            Folme.useValue(this.mAlphaTarget).to(Float.valueOf(0.0f), new AnimConfig[0]);
+            Folme.useValue(this.mAlphaTarget).setup(Integer.valueOf(this.tag)).clean();
+            this.tag++;
+            Folme.useValue(this.mAlphaTarget).setup(Integer.valueOf(this.tag)).to(Float.valueOf(0.0f), new AnimConfig[0]);
+            setupAlphaFolmeAnimations();
             Folme.useValue(this.mScaleTarget).cancel();
             Folme.useValue(this.mScaleTarget).to(Float.valueOf(1.0f), new AnimConfig[0]);
             this.isVisible = false;
@@ -472,11 +483,11 @@ public class PasswordTextViewForPIN extends PasswordTextView {
 
         private void startDotAlphaAnimation(float f, long j) {
             Folme.useValue(this.mAlphaTarget).cancel();
-            IStateStyle useValue = Folme.useValue(this.mAlphaTarget);
+            IStateStyle upVar = Folme.useValue(this.mAlphaTarget).setup(Integer.valueOf(this.tag));
             Float valueOf = Float.valueOf(f);
             AnimConfig animConfig = new AnimConfig(this.CONFIG);
             animConfig.setDelay(j);
-            useValue.to(valueOf, animConfig);
+            upVar.to(valueOf, animConfig);
         }
 
         public float draw(Canvas canvas, float f, int i, float f2, float f3) {

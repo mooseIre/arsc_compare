@@ -202,7 +202,7 @@ public class ChargeUtils {
         return mIsSupportStrongSuperRapidChargeList.contains(Build.DEVICE);
     }
 
-    public static int getSwitchChargeSpeed(int i, int i2) {
+    public static int getChargeSpeed(int i, int i2) {
         if (i != 10) {
             if (i == 11) {
                 if (isStrongSuperRapidCharge(i2)) {

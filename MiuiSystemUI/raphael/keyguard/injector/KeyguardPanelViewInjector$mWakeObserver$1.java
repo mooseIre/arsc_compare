@@ -29,6 +29,7 @@ public final class KeyguardPanelViewInjector$mWakeObserver$1 implements Wakefuln
         if (access$getMKeyguardMoveHelper$p != null) {
             access$getMKeyguardMoveHelper$p.onFinishedGoingToSleep();
         }
+        KeyguardPanelViewInjector.access$getMLockScreenMagazineController$p(this.this$0).onFinishedGoingToSleep();
         KeyguardPanelViewInjector.access$getMIndicationController$p(this.this$0).onFinishedGoingToSleep();
     }
 }

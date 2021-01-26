@@ -351,6 +351,10 @@ public class MiuiChargeAnimationView extends FrameLayout {
         return layoutParams;
     }
 
+    private ViewGroup.LayoutParams getParentViewParams() {
+        return new ViewGroup.LayoutParams(-1, -1);
+    }
+
     public void addChargeView(String str, boolean z) {
         if (!isAttachedToWindow() && getParent() == null) {
             this.mShowChargingInNonLockscreen = z;
@@ -360,7 +364,7 @@ public class MiuiChargeAnimationView extends FrameLayout {
                 if (this.mShowChargingInNonLockscreen) {
                     this.mWindowManager.addView(this, getWindowParam());
                 } else {
-                    ChargeUtils.getParentView().addView(this);
+                    ChargeUtils.getParentView().addView(this, getParentViewParams());
                 }
             } catch (Exception e) {
                 Log.d("MiuiChargeAnimationView", "addToWindow: Exception " + e);

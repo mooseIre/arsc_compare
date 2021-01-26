@@ -261,9 +261,6 @@ public class KeyguardMoveHelper {
             trackMovement(motionEvent);
             this.mMotionCancelled = false;
             this.mIsTouchRightIcon = isOnIcon(this.mRightIcon, x, y);
-            if (isInCenterScreen() && !this.mIsTouchRightIcon) {
-                cancelResetAnimation();
-            }
             return false;
         }
         if (DebugConfig.DEBUG_KEYGUARD) {
