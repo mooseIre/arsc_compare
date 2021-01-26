@@ -75,8 +75,10 @@ public class MiuiStatusBarPromptController implements CommandQueue.Callbacks {
     }
 
     public void removePromptContainer(FrameLayout frameLayout) {
-        frameLayout.removeAllViews();
-        this.mPromptContainers.remove(frameLayout);
+        if (frameLayout != null) {
+            frameLayout.removeAllViews();
+            this.mPromptContainers.remove(frameLayout);
+        }
     }
 
     /* access modifiers changed from: protected */

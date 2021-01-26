@@ -502,6 +502,8 @@ import com.android.systemui.statusbar.notification.NotificationSettingsManager_F
 import com.android.systemui.statusbar.notification.NotificationWakeUpCoordinator;
 import com.android.systemui.statusbar.notification.NotificationWakeUpCoordinator_Factory;
 import com.android.systemui.statusbar.notification.VisualStabilityManager;
+import com.android.systemui.statusbar.notification.analytics.NotificationPanelStat;
+import com.android.systemui.statusbar.notification.analytics.NotificationPanelStat_Factory;
 import com.android.systemui.statusbar.notification.analytics.NotificationStat;
 import com.android.systemui.statusbar.notification.analytics.NotificationStat_Factory;
 import com.android.systemui.statusbar.notification.collection.NotifCollection;
@@ -756,6 +758,8 @@ import com.android.systemui.statusbar.policy.DeviceProvisionedController;
 import com.android.systemui.statusbar.policy.DeviceProvisionedControllerImpl;
 import com.android.systemui.statusbar.policy.DeviceProvisionedControllerImpl_Factory;
 import com.android.systemui.statusbar.policy.DriveModeControllerImpl_Factory;
+import com.android.systemui.statusbar.policy.DualClockObserver;
+import com.android.systemui.statusbar.policy.DualClockObserver_Factory;
 import com.android.systemui.statusbar.policy.ExtensionControllerImpl;
 import com.android.systemui.statusbar.policy.ExtensionControllerImpl_Factory;
 import com.android.systemui.statusbar.policy.FiveGControllerImpl;
@@ -1051,6 +1055,8 @@ public final class DaggerSystemUIRootComponent implements SystemUIRootComponent 
     private DozeService_Factory dozeServiceProvider;
     private DriveModeControllerImpl_Factory driveModeControllerImplProvider;
     private DriveModeTile_Factory driveModeTileProvider;
+    /* access modifiers changed from: private */
+    public Provider<DualClockObserver> dualClockObserverProvider;
     private DumpHandler_Factory dumpHandlerProvider;
     /* access modifiers changed from: private */
     public Provider<DumpManager> dumpManagerProvider;
@@ -1288,6 +1294,7 @@ public final class DaggerSystemUIRootComponent implements SystemUIRootComponent 
     public Provider<NotificationLockscreenUserManagerImpl> notificationLockscreenUserManagerImplProvider;
     /* access modifiers changed from: private */
     public Provider<NotificationPanelNavigationBarCoordinator> notificationPanelNavigationBarCoordinatorProvider;
+    private Provider<NotificationPanelStat> notificationPanelStatProvider;
     private Provider<NotificationPersonExtractorPluginBoundary> notificationPersonExtractorPluginBoundaryProvider;
     private NotificationRankingManager_Factory notificationRankingManagerProvider;
     /* access modifiers changed from: private */
@@ -2415,7 +2422,9 @@ public final class DaggerSystemUIRootComponent implements SystemUIRootComponent 
         this.keyguardSecurityModelProvider = DoubleCheck.provider(KeyguardSecurityModel_Factory.create(this.provideContextProvider));
         this.eventTrackerProvider = DoubleCheck.provider(EventTracker_Factory.create(this.provideContextProvider));
         this.appIconsManagerProvider = DoubleCheck.provider(AppIconsManager_Factory.create(this.provideContextProvider));
-        this.notificationStatProvider = DoubleCheck.provider(NotificationStat_Factory.create(this.provideContextProvider, this.provideNotificationEntryManagerProvider, this.notificationGroupManagerProvider, this.provideHeadsUpManagerPhoneProvider, this.statusBarStateControllerImplProvider, this.keyguardStateControllerImplProvider, this.eventTrackerProvider));
+        Provider<NotificationPanelStat> provider15 = DoubleCheck.provider(NotificationPanelStat_Factory.create(this.provideContextProvider, this.eventTrackerProvider));
+        this.notificationPanelStatProvider = provider15;
+        this.notificationStatProvider = DoubleCheck.provider(NotificationStat_Factory.create(this.provideContextProvider, this.provideNotificationEntryManagerProvider, this.notificationGroupManagerProvider, this.provideHeadsUpManagerPhoneProvider, this.statusBarStateControllerImplProvider, this.keyguardStateControllerImplProvider, this.eventTrackerProvider, provider15));
         this.usbNotificationControllerProvider = DoubleCheck.provider(UsbNotificationController_Factory.create(this.provideContextProvider));
         this.keyguardNotificationControllerProvider = DoubleCheck.provider(KeyguardNotificationController_Factory.create(this.provideContextProvider, this.provideNotificationEntryManagerProvider, this.notificationGroupManagerProvider, this.keyguardStateControllerImplProvider, this.notificationLockscreenUserManagerImplProvider));
         this.notificationBadgeControllerProvider = DoubleCheck.provider(NotificationBadgeController_Factory.create(this.provideContextProvider, this.provideNotificationEntryManagerProvider, this.notificationGroupManagerProvider));
@@ -2442,18 +2451,18 @@ public final class DaggerSystemUIRootComponent implements SystemUIRootComponent 
         this.miuiKeyguardWallpaperControllerImplProvider = DoubleCheck.provider(MiuiKeyguardWallpaperControllerImpl_Factory.create(this.provideContextProvider, this.providesBroadcastDispatcherProvider));
         this.wallpaperCommandSenderProvider = DoubleCheck.provider(WallpaperCommandSender_Factory.create());
         this.miuiWallpaperClientProvider = DoubleCheck.provider(MiuiWallpaperClient_Factory.create(this.provideContextProvider, this.wakefulnessLifecycleProvider));
-        Provider<ModalRowInflater> provider15 = DoubleCheck.provider(ModalRowInflater_Factory.create(this.notificationContentInflaterProvider, this.provideNotificationRemoteInputManagerProvider));
-        this.modalRowInflaterProvider = provider15;
-        Provider<ModalController> provider16 = DoubleCheck.provider(ModalController_Factory.create(this.provideContextProvider, this.provideStatusBarProvider, this.statusBarStateControllerImplProvider, provider15));
-        this.modalControllerProvider = provider16;
-        this.appMiniWindowManagerProvider = DoubleCheck.provider(AppMiniWindowManager_Factory.create(this.provideContextProvider, this.provideDividerProvider, this.provideHeadsUpManagerPhoneProvider, this.provideMainHandlerProvider, provider16, this.notificationSettingsManagerProvider));
+        Provider<ModalRowInflater> provider16 = DoubleCheck.provider(ModalRowInflater_Factory.create(this.notificationContentInflaterProvider, this.provideNotificationRemoteInputManagerProvider));
+        this.modalRowInflaterProvider = provider16;
+        this.modalControllerProvider = DoubleCheck.provider(ModalController_Factory.create(this.provideContextProvider, this.provideStatusBarProvider, this.statusBarStateControllerImplProvider, provider16));
     }
 
     private void initialize6(Builder builder) {
+        this.appMiniWindowManagerProvider = DoubleCheck.provider(AppMiniWindowManager_Factory.create(this.provideContextProvider, this.provideDividerProvider, this.provideHeadsUpManagerPhoneProvider, this.provideMainHandlerProvider, this.modalControllerProvider, this.notificationSettingsManagerProvider));
         this.fiveGControllerImplProvider = DoubleCheck.provider(FiveGControllerImpl_Factory.create(this.provideContextProvider));
         this.callStateControllerImplProvider = DoubleCheck.provider(CallStateControllerImpl_Factory.create());
         this.regionControllerProvider = DoubleCheck.provider(RegionController_Factory.create(this.provideContextProvider));
         this.customCarrierObserverProvider = DoubleCheck.provider(CustomCarrierObserver_Factory.create(this.provideContextProvider, this.provideMainHandlerProvider, this.provideBgHandlerProvider));
+        this.dualClockObserverProvider = DoubleCheck.provider(DualClockObserver_Factory.create());
         this.toggleManagerControllerProvider = DoubleCheck.provider(ToggleManagerController_Factory.create(this.provideContextProvider, this.providesBroadcastDispatcherProvider, this.provideBgHandlerProvider));
         this.demoModeControllerProvider = DoubleCheck.provider(DemoModeController_Factory.create(this.providesBroadcastDispatcherProvider));
         this.slaveWifiSignalControllerProvider = DoubleCheck.provider(SlaveWifiSignalController_Factory.create(this.provideContextProvider, this.provideBgHandlerProvider, this.statusBarIconControllerImplProvider, this.provideMainHandlerProvider, this.providesBroadcastDispatcherProvider));
@@ -2819,6 +2828,7 @@ public final class DaggerSystemUIRootComponent implements SystemUIRootComponent 
             Dependency_MembersInjector.injectMCarrierObserver(dependency, DoubleCheck.lazy(this.carrierObserverProvider));
             Dependency_MembersInjector.injectMMiuiCarrierTextController(dependency, DoubleCheck.lazy(this.miuiCarrierTextControllerProvider));
             Dependency_MembersInjector.injectMNotificationIconObserver(dependency, DoubleCheck.lazy(this.notificationIconObserverProvider));
+            Dependency_MembersInjector.injectMDualClockObserver(dependency, DoubleCheck.lazy(DaggerSystemUIRootComponent.this.dualClockObserverProvider));
             Dependency_MembersInjector.injectMToggleManagerController(dependency, DoubleCheck.lazy(DaggerSystemUIRootComponent.this.toggleManagerControllerProvider));
             Dependency_MembersInjector.injectMWallPaperController(dependency, DoubleCheck.lazy(DaggerSystemUIRootComponent.this.miuiKeyguardWallpaperControllerImplProvider));
             Dependency_MembersInjector.injectMPanelExpansionObserver(dependency, DoubleCheck.lazy(DaggerSystemUIRootComponent.this.panelExpansionObserverProvider));

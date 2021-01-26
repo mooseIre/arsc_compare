@@ -6,10 +6,10 @@ import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
 
 /* compiled from: MiuiNotificationPanelViewController.kt */
-public final class MiuiNotificationPanelViewController$onStartedWakingUp$2 extends AnimatorListenerAdapter {
+public final class MiuiNotificationPanelViewController$startWakeupAnimation$2 extends AnimatorListenerAdapter {
     final /* synthetic */ MiuiNotificationPanelViewController this$0;
 
-    MiuiNotificationPanelViewController$onStartedWakingUp$2(MiuiNotificationPanelViewController miuiNotificationPanelViewController) {
+    MiuiNotificationPanelViewController$startWakeupAnimation$2(MiuiNotificationPanelViewController miuiNotificationPanelViewController) {
         this.this$0 = miuiNotificationPanelViewController;
     }
 

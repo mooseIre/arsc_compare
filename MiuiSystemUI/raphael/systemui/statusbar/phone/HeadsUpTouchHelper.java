@@ -5,10 +5,12 @@ import android.view.MotionEvent;
 import android.view.ViewConfiguration;
 import com.android.systemui.Dependency;
 import com.android.systemui.Gefingerpoken;
+import com.android.systemui.statusbar.notification.analytics.NotificationStat;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow;
 import com.android.systemui.statusbar.notification.row.ExpandableView;
 import com.android.systemui.statusbar.policy.ConfigurationController;
+import com.android.systemui.statusbar.policy.HeadsUpManagerInjector;
 
 public class HeadsUpTouchHelper implements Gefingerpoken {
     /* access modifiers changed from: private */
@@ -144,6 +146,7 @@ public class HeadsUpTouchHelper implements Gefingerpoken {
 
     public void notifyFling(boolean z) {
         if (z && this.mCollapseSnoozes) {
+            ((NotificationStat) Dependency.get(NotificationStat.class)).onFloatManualCollapse(this.mHeadsUpManager.getTopEntry(), HeadsUpManagerInjector.getSnoozeNotify());
             this.mHeadsUpManager.snooze();
         }
         this.mCollapseSnoozes = false;

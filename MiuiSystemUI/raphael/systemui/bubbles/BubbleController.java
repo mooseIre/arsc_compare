@@ -57,6 +57,7 @@ import com.android.systemui.statusbar.phone.StatusBar;
 import com.android.systemui.statusbar.policy.ConfigurationController;
 import com.android.systemui.statusbar.policy.ZenModeController;
 import com.android.systemui.util.FloatingContentCoordinator;
+import com.miui.systemui.events.ModalExitMode;
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -934,7 +935,7 @@ public class BubbleController implements ConfigurationController.ConfigurationLi
             }
             if (z) {
                 this.mShadeController.collapsePanel(true);
-                ((ModalController) Dependency.get(ModalController.class)).animExitModal(150, true);
+                ((ModalController) Dependency.get(ModalController.class)).animExitModal(150, true, ModalExitMode.OTHER.name());
                 if (notificationEntry.getRow() != null) {
                     notificationEntry.getRow().updateBubbleButton();
                 }

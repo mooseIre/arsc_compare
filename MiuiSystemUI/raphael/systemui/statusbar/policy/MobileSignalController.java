@@ -387,9 +387,6 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
 
     private String getIconKey() {
         ServiceState serviceState;
-        if (this.mTelephonyDisplayInfo.getOverrideNetworkType() != 0) {
-            return toDisplayIconKey(this.mTelephonyDisplayInfo.getOverrideNetworkType());
-        }
         int networkType = this.mTelephonyDisplayInfo.getNetworkType();
         if (networkType == 0) {
             networkType = getDataNetworkType();

@@ -124,6 +124,7 @@ import com.android.systemui.statusbar.policy.CustomCarrierObserver;
 import com.android.systemui.statusbar.policy.DataSaverController;
 import com.android.systemui.statusbar.policy.DemoModeController;
 import com.android.systemui.statusbar.policy.DeviceProvisionedController;
+import com.android.systemui.statusbar.policy.DualClockObserver;
 import com.android.systemui.statusbar.policy.ExtensionController;
 import com.android.systemui.statusbar.policy.FiveGControllerImpl;
 import com.android.systemui.statusbar.policy.FlashlightController;
@@ -817,6 +818,10 @@ public final class Dependency_MembersInjector {
 
     public static void injectMNotificationIconObserver(Dependency dependency, Lazy<NotificationIconObserver> lazy) {
         dependency.mNotificationIconObserver = lazy;
+    }
+
+    public static void injectMDualClockObserver(Dependency dependency, Lazy<DualClockObserver> lazy) {
+        dependency.mDualClockObserver = lazy;
     }
 
     public static void injectMToggleManagerController(Dependency dependency, Lazy<ToggleManagerController> lazy) {

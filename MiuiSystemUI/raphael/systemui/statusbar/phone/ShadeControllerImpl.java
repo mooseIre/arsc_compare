@@ -11,6 +11,7 @@ import com.android.systemui.plugins.statusbar.StatusBarStateController;
 import com.android.systemui.statusbar.CommandQueue;
 import com.android.systemui.statusbar.NotificationPresenter;
 import com.android.systemui.statusbar.notification.modal.ModalController;
+import com.miui.systemui.events.ModalExitMode;
 import dagger.Lazy;
 import java.util.ArrayList;
 
@@ -81,7 +82,7 @@ public class ShadeControllerImpl implements ShadeController {
             this.mCommandQueue.animateCollapsePanels(2, true);
             getStatusBar().visibilityChanged(false);
             this.mAssistManagerLazy.get().hideAssist();
-            ((ModalController) Dependency.get(ModalController.class)).animExitModal();
+            ((ModalController) Dependency.get(ModalController.class)).animExitModal(ModalExitMode.OTHER.name());
         }
         return false;
     }

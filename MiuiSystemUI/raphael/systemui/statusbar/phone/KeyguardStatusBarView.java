@@ -169,16 +169,14 @@ public class KeyguardStatusBarView extends RelativeLayout implements BatteryCont
             ViewGroup viewGroup = this.mStatusIconArea;
             if (parent == viewGroup && this.mKeyguardUserSwitcherShowing) {
                 viewGroup.removeView(this.mMultiUserSwitch);
+                return;
             }
-        } else {
-            if (this.mMultiUserSwitch.getParent() != null) {
-                getOverlay().remove(this.mMultiUserSwitch);
-            }
-            this.mStatusIconArea.addView(this.mMultiUserSwitch, 0);
+            return;
         }
-        if (this.mKeyguardUserSwitcher == null) {
-            this.mMultiUserSwitch.setVisibility(8);
+        if (this.mMultiUserSwitch.getParent() != null) {
+            getOverlay().remove(this.mMultiUserSwitch);
         }
+        this.mStatusIconArea.addView(this.mMultiUserSwitch, 0);
     }
 
     private void updateSystemIconsLayoutParams() {

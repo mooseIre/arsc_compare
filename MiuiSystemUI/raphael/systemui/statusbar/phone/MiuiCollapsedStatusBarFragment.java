@@ -38,7 +38,10 @@ public class MiuiCollapsedStatusBarFragment extends CollapsedStatusBarFragment i
     public void initNotificationIconArea(NotificationIconAreaController notificationIconAreaController) {
         View notificationInnerAreaView = notificationIconAreaController.getNotificationInnerAreaView();
         this.mNotificationIconAreaInner = notificationInnerAreaView;
-        this.mStatusBar.setNotificationIconAreaInnner(notificationInnerAreaView);
+        PhoneStatusBarView phoneStatusBarView = this.mStatusBar;
+        if (phoneStatusBarView instanceof MiuiPhoneStatusBarView) {
+            ((MiuiPhoneStatusBarView) phoneStatusBarView).setNotificationIconAreaInnner(notificationInnerAreaView);
+        }
         ViewGroup viewGroup = (ViewGroup) this.mStatusBar.findViewById(C0015R$id.centered_icon_area);
         View centeredNotificationAreaView = notificationIconAreaController.getCenteredNotificationAreaView();
         this.mCenteredIconArea = centeredNotificationAreaView;

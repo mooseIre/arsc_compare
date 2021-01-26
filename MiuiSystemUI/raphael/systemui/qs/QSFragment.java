@@ -539,7 +539,6 @@ public class QSFragment extends LifecycleFragment implements QS, CommandQueue.Ca
     }
 
     public void animateAppearDisappear(final boolean z) {
-        AnonymousClass5 r4;
         this.mAppeared = z;
         if (z) {
             setListening(true);
@@ -549,20 +548,14 @@ public class QSFragment extends LifecycleFragment implements QS, CommandQueue.Ca
         if (!this.mAppeared) {
             f = 0.8f;
         }
-        ViewPropertyAnimator scaleY = scaleX.scaleY(f);
-        if (this.mControlPanelController.isUseControlCenter()) {
-            r4 = null;
-        } else {
-            r4 = new AnimatorListenerAdapter() {
-                public void onAnimationEnd(Animator animator) {
-                    if (!z) {
-                        QSFragment.this.setListening(false);
-                    }
-                    boolean unused = QSFragment.this.mHeaderAnimating = false;
+        scaleX.scaleY(f).setListener(new AnimatorListenerAdapter() {
+            public void onAnimationEnd(Animator animator) {
+                if (!z) {
+                    QSFragment.this.setListening(false);
                 }
-            };
-        }
-        scaleY.setListener(r4).start();
+                boolean unused = QSFragment.this.mHeaderAnimating = false;
+            }
+        }).start();
     }
 
     private void finishAppearAnimation() {

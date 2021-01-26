@@ -18,17 +18,19 @@ import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.plugins.DarkIconDispatcher;
 import com.android.systemui.settings.CurrentUserTracker;
 import com.android.systemui.statusbar.phone.StatusBarIconController;
+import com.android.systemui.statusbar.policy.DualClockObserver;
 import com.android.systemui.statusbar.policy.RegionController;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class MiuiKeyguardStatusBarView extends KeyguardStatusBarView implements RegionController.Callback {
+public class MiuiKeyguardStatusBarView extends KeyguardStatusBarView implements RegionController.Callback, DualClockObserver.Callback {
     private CurrentUserTracker mCurrentUserTracker = new CurrentUserTracker((BroadcastDispatcher) Dependency.get(BroadcastDispatcher.class)) {
         public void onUserSwitched(int i) {
             MiuiKeyguardStatusBarView.this.mShowCarrierObserver.onChange(false);
         }
     };
     private boolean mDark = false;
+    private boolean mIsShowDualClock = false;
     private boolean mLeftHoleDevice;
     /* access modifiers changed from: private */
     public boolean mShowCarrier;
@@ -102,6 +104,7 @@ public class MiuiKeyguardStatusBarView extends KeyguardStatusBarView implements 
         super.onAttachedToWindow();
         this.mCurrentUserTracker.startTracking();
         ((RegionController) Dependency.get(RegionController.class)).addCallback(this);
+        ((DualClockObserver) Dependency.get(DualClockObserver.class)).addCallback(this);
         this.mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor("status_bar_show_carrier_under_keyguard"), false, this.mShowCarrierObserver, -1);
         this.mShowCarrierObserver.onChange(false);
     }
@@ -111,6 +114,7 @@ public class MiuiKeyguardStatusBarView extends KeyguardStatusBarView implements 
         super.onDetachedFromWindow();
         this.mContext.getContentResolver().unregisterContentObserver(this.mShowCarrierObserver);
         ((RegionController) Dependency.get(RegionController.class)).removeCallback(this);
+        ((DualClockObserver) Dependency.get(DualClockObserver.class)).removeCallback(this);
         this.mCurrentUserTracker.stopTracking();
     }
 
@@ -146,8 +150,35 @@ public class MiuiKeyguardStatusBarView extends KeyguardStatusBarView implements 
     }
 
     /* access modifiers changed from: private */
+    /* JADX WARNING: Code restructure failed: missing block: B:2:0x0006, code lost:
+        r1 = r3.mLeftHoleDevice;
+     */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
     public void updateCarrierVisibility() {
-        this.mCarrierLabel.setVisibility(((this.mTWRegion || !this.mLeftHoleDevice || this.mShowCarrierUnderLeftHoleKeyguard) && this.mShowCarrier) ? 0 : 8);
+        /*
+            r3 = this;
+            android.widget.TextView r0 = r3.mCarrierLabel
+            boolean r1 = r3.mTWRegion
+            if (r1 != 0) goto L_0x0014
+            boolean r1 = r3.mLeftHoleDevice
+            if (r1 == 0) goto L_0x0014
+            boolean r2 = r3.mShowCarrierUnderLeftHoleKeyguard
+            if (r2 != 0) goto L_0x0014
+            if (r1 == 0) goto L_0x001a
+            boolean r1 = r3.mIsShowDualClock
+            if (r1 == 0) goto L_0x001a
+        L_0x0014:
+            boolean r3 = r3.mShowCarrier
+            if (r3 == 0) goto L_0x001a
+            r3 = 0
+            goto L_0x001c
+        L_0x001a:
+            r3 = 8
+        L_0x001c:
+            r0.setVisibility(r3)
+            return
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.phone.MiuiKeyguardStatusBarView.updateCarrierVisibility():void");
     }
 
     private void applyDarkness(int i, Rect rect, float f, int i2, int i3, int i4) {
@@ -165,6 +196,11 @@ public class MiuiKeyguardStatusBarView extends KeyguardStatusBarView implements 
 
     public void onRegionChanged(String str) {
         this.mTWRegion = "TW".equals(str);
+        updateCarrierVisibility();
+    }
+
+    public void onDualShowClockChanged(boolean z) {
+        this.mIsShowDualClock = z;
         updateCarrierVisibility();
     }
 }

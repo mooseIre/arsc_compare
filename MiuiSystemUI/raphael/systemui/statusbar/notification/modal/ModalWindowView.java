@@ -28,6 +28,7 @@ import com.android.systemui.statusbar.notification.stack.AnimationProperties;
 import com.android.systemui.statusbar.notification.stack.ViewState;
 import com.miui.systemui.EventTracker;
 import com.miui.systemui.events.MiniWindowEventSource;
+import com.miui.systemui.events.ModalExitMode;
 import java.util.function.Consumer;
 
 public class ModalWindowView extends FrameLayout implements AppMiniWindowRowTouchCallback {
@@ -448,7 +449,7 @@ public class ModalWindowView extends FrameLayout implements AppMiniWindowRowTouc
         if (keyEvent.getAction() != 1 || keyEvent.getKeyCode() != 4) {
             return false;
         }
-        ((ModalController) Dependency.get(ModalController.class)).animExitModal();
+        ((ModalController) Dependency.get(ModalController.class)).animExitModal(ModalExitMode.OTHER.name());
         return true;
     }
 
@@ -500,7 +501,7 @@ public class ModalWindowView extends FrameLayout implements AppMiniWindowRowTouc
     }
 
     public void onStartMiniWindowExpandAnimation() {
-        ((ModalController) Dependency.get(ModalController.class)).animExitModal(500, false);
+        ((ModalController) Dependency.get(ModalController.class)).animExitModal(500, false, ModalExitMode.DOWNPULL.name());
         ((CommandQueue) Dependency.get(CommandQueue.class)).animateCollapsePanels(0, false);
     }
 
