@@ -9009,7 +9009,6 @@ public final class R {
         public static final int other_apps;
         public static final int others_title;
         public static final int outline;
-        public static final int overlay_container;
         public static final int owner_info;
         public static final int owner_info_arrow_right;
         public static final int owner_info_button;
@@ -9070,7 +9069,6 @@ public final class R {
         public static final int position;
         public static final int postLayout;
         public static final int presentation;
-        public static final int preview_container;
         public static final int preview_text;
         public static final int priority;
         public static final int priority_icon;

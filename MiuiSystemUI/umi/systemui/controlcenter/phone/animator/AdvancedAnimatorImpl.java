@@ -70,7 +70,9 @@ public final class AdvancedAnimatorImpl extends ControlCenterPanelAnimator {
         addAnimateView(getPanelView().getHeader().findViewById(C0015R$id.carrier_text), 0);
         addAnimateView(getPanelView().getHeader().findViewById(C0015R$id.system_icon_area), 0);
         if (!this.controller.isSuperPowerMode()) {
-            addAnimateView(getPanelView().getHeader().getShortCut(), 1);
+            View shortCut = getPanelView().getHeader().getShortCut();
+            addAnimateView(shortCut, 1);
+            Folme.useAt(shortCut).state().setTo((Object) FolmeAnimState.mPanelShowAnim);
         }
         addAnimateView(getPanelView().getHeader().getBigTime(), 1);
         addAnimateView(getPanelView().getHeader().getDateTime(), 1);
@@ -83,7 +85,10 @@ public final class AdvancedAnimatorImpl extends ControlCenterPanelAnimator {
         addAnimateView(getPanelView().getFooter().getSettingsFooter().getFooterIcon(), this.footerPanelBaseIndex);
         addAnimateView(getPanelView().getFooter().getSettingsFooter().getFooterText(), this.footerPanelBaseIndex);
         if (this.controller.isPortrait() && !this.controller.isSuperPowerMode()) {
-            addAnimateView(getPanelView().getHeader().getEditTile(), 1);
+            View editTile = getPanelView().getHeader().getEditTile();
+            addAnimateView(editTile, 1);
+            Folme.useAt(editTile).state().setTo((Object) FolmeAnimState.mPanelShowAnim);
+            Folme.useAt(getPanelView().getFooter().getIndicator()).state().setTo((Object) FolmeAnimState.mPanelShowAnim);
         }
         if (this.controller.isPortrait()) {
             addTransAnimateView(getPanelView().getHeader().getPanelHeader(), 0);

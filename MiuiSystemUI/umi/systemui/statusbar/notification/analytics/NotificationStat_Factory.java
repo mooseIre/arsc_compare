@@ -18,8 +18,9 @@ public final class NotificationStat_Factory implements Factory<NotificationStat>
     private final Provider<NotificationGroupManager> groupManagerProvider;
     private final Provider<HeadsUpManagerPhone> headsUpManagerProvider;
     private final Provider<KeyguardStateController> keyguardStateControllerProvider;
+    private final Provider<NotificationPanelStat> panelStatProvider;
 
-    public NotificationStat_Factory(Provider<Context> provider, Provider<NotificationEntryManager> provider2, Provider<NotificationGroupManager> provider3, Provider<HeadsUpManagerPhone> provider4, Provider<StatusBarStateController> provider5, Provider<KeyguardStateController> provider6, Provider<EventTracker> provider7) {
+    public NotificationStat_Factory(Provider<Context> provider, Provider<NotificationEntryManager> provider2, Provider<NotificationGroupManager> provider3, Provider<HeadsUpManagerPhone> provider4, Provider<StatusBarStateController> provider5, Provider<KeyguardStateController> provider6, Provider<EventTracker> provider7, Provider<NotificationPanelStat> provider8) {
         this.contextProvider = provider;
         this.entryManagerProvider = provider2;
         this.groupManagerProvider = provider3;
@@ -27,17 +28,18 @@ public final class NotificationStat_Factory implements Factory<NotificationStat>
         this.barStateControllerProvider = provider5;
         this.keyguardStateControllerProvider = provider6;
         this.eventTrackerProvider = provider7;
+        this.panelStatProvider = provider8;
     }
 
     public NotificationStat get() {
-        return provideInstance(this.contextProvider, this.entryManagerProvider, this.groupManagerProvider, this.headsUpManagerProvider, this.barStateControllerProvider, this.keyguardStateControllerProvider, this.eventTrackerProvider);
+        return provideInstance(this.contextProvider, this.entryManagerProvider, this.groupManagerProvider, this.headsUpManagerProvider, this.barStateControllerProvider, this.keyguardStateControllerProvider, this.eventTrackerProvider, this.panelStatProvider);
     }
 
-    public static NotificationStat provideInstance(Provider<Context> provider, Provider<NotificationEntryManager> provider2, Provider<NotificationGroupManager> provider3, Provider<HeadsUpManagerPhone> provider4, Provider<StatusBarStateController> provider5, Provider<KeyguardStateController> provider6, Provider<EventTracker> provider7) {
-        return new NotificationStat(provider.get(), provider2.get(), provider3.get(), provider4.get(), provider5.get(), provider6.get(), provider7.get());
+    public static NotificationStat provideInstance(Provider<Context> provider, Provider<NotificationEntryManager> provider2, Provider<NotificationGroupManager> provider3, Provider<HeadsUpManagerPhone> provider4, Provider<StatusBarStateController> provider5, Provider<KeyguardStateController> provider6, Provider<EventTracker> provider7, Provider<NotificationPanelStat> provider8) {
+        return new NotificationStat(provider.get(), provider2.get(), provider3.get(), provider4.get(), provider5.get(), provider6.get(), provider7.get(), provider8.get());
     }
 
-    public static NotificationStat_Factory create(Provider<Context> provider, Provider<NotificationEntryManager> provider2, Provider<NotificationGroupManager> provider3, Provider<HeadsUpManagerPhone> provider4, Provider<StatusBarStateController> provider5, Provider<KeyguardStateController> provider6, Provider<EventTracker> provider7) {
-        return new NotificationStat_Factory(provider, provider2, provider3, provider4, provider5, provider6, provider7);
+    public static NotificationStat_Factory create(Provider<Context> provider, Provider<NotificationEntryManager> provider2, Provider<NotificationGroupManager> provider3, Provider<HeadsUpManagerPhone> provider4, Provider<StatusBarStateController> provider5, Provider<KeyguardStateController> provider6, Provider<EventTracker> provider7, Provider<NotificationPanelStat> provider8) {
+        return new NotificationStat_Factory(provider, provider2, provider3, provider4, provider5, provider6, provider7, provider8);
     }
 }

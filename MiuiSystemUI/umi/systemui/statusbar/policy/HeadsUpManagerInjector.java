@@ -42,4 +42,8 @@ public class HeadsUpManagerInjector {
         }
         return floatTime;
     }
+
+    public static boolean getSnoozeNotify() {
+        return sSnoozeNotify;
+    }
 }

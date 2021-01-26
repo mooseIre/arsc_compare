@@ -316,8 +316,6 @@ public class KeyguardViewMediator extends SystemUI implements Dumpable {
                 KeyguardViewMediator.this.resetKeyguardDonePendingLocked();
                 if (KeyguardViewMediator.this.mLockPatternUtils.isLockScreenDisabled(i)) {
                     KeyguardViewMediator.this.dismiss((IKeyguardDismissCallback) null, (CharSequence) null);
-                } else {
-                    KeyguardViewMediator.this.resetStateLocked();
                 }
                 KeyguardViewMediator.this.adjustStatusBarLocked();
             }
@@ -388,15 +386,15 @@ public class KeyguardViewMediator extends SystemUI implements Dumpable {
             monitor-enter(r8);
          */
         /* JADX WARNING: Code restructure failed: missing block: B:43:0x00e3, code lost:
-            if (com.android.systemui.keyguard.KeyguardViewMediator.access$1300(r6.this$0) != false) goto L_0x00f2;
+            if (com.android.systemui.keyguard.KeyguardViewMediator.access$1200(r6.this$0) != false) goto L_0x00f2;
          */
         /* JADX WARNING: Code restructure failed: missing block: B:44:0x00e5, code lost:
             android.util.Log.d("KeyguardViewMediator", "PERM_DISABLED and keygaurd isn't showing.");
-            com.android.systemui.keyguard.KeyguardViewMediator.access$700(r6.this$0, (android.os.Bundle) null);
+            com.android.systemui.keyguard.KeyguardViewMediator.access$600(r6.this$0, (android.os.Bundle) null);
          */
         /* JADX WARNING: Code restructure failed: missing block: B:45:0x00f2, code lost:
             android.util.Log.d("KeyguardViewMediator", "PERM_DISABLED, resetStateLocked toshow permanently disabled message in lockscreen.");
-            com.android.systemui.keyguard.KeyguardViewMediator.access$300(r6.this$0);
+            com.android.systemui.keyguard.KeyguardViewMediator.access$1300(r6.this$0);
          */
         /* JADX WARNING: Code restructure failed: missing block: B:46:0x00fe, code lost:
             monitor-exit(r8);
@@ -408,17 +406,17 @@ public class KeyguardViewMediator extends SystemUI implements Dumpable {
             monitor-enter(r8);
          */
         /* JADX WARNING: Code restructure failed: missing block: B:55:?, code lost:
-            android.util.Log.d("KeyguardViewMediator", "READY, reset state? " + com.android.systemui.keyguard.KeyguardViewMediator.access$1300(r6.this$0));
+            android.util.Log.d("KeyguardViewMediator", "READY, reset state? " + com.android.systemui.keyguard.KeyguardViewMediator.access$1200(r6.this$0));
          */
         /* JADX WARNING: Code restructure failed: missing block: B:56:0x0129, code lost:
-            if (com.android.systemui.keyguard.KeyguardViewMediator.access$1300(r6.this$0) == false) goto L_0x0139;
+            if (com.android.systemui.keyguard.KeyguardViewMediator.access$1200(r6.this$0) == false) goto L_0x0139;
          */
         /* JADX WARNING: Code restructure failed: missing block: B:57:0x012b, code lost:
             if (r0 == false) goto L_0x0139;
          */
         /* JADX WARNING: Code restructure failed: missing block: B:58:0x012d, code lost:
             android.util.Log.d("KeyguardViewMediator", "SIM moved to READY when the previous state was locked. Reset the state.");
-            com.android.systemui.keyguard.KeyguardViewMediator.access$300(r6.this$0);
+            com.android.systemui.keyguard.KeyguardViewMediator.access$1300(r6.this$0);
          */
         /* JADX WARNING: Code restructure failed: missing block: B:59:0x0139, code lost:
             monitor-exit(r8);
@@ -430,14 +428,14 @@ public class KeyguardViewMediator extends SystemUI implements Dumpable {
             monitor-enter(r8);
          */
         /* JADX WARNING: Code restructure failed: missing block: B:68:0x0147, code lost:
-            if (com.android.systemui.keyguard.KeyguardViewMediator.access$1300(r6.this$0) != false) goto L_0x0156;
+            if (com.android.systemui.keyguard.KeyguardViewMediator.access$1200(r6.this$0) != false) goto L_0x0156;
          */
         /* JADX WARNING: Code restructure failed: missing block: B:69:0x0149, code lost:
             android.util.Log.d("KeyguardViewMediator", "INTENT_VALUE_ICC_LOCKED and keygaurd isn't showing; need to show keyguard so user can enter sim pin");
-            com.android.systemui.keyguard.KeyguardViewMediator.access$700(r6.this$0, (android.os.Bundle) null);
+            com.android.systemui.keyguard.KeyguardViewMediator.access$600(r6.this$0, (android.os.Bundle) null);
          */
         /* JADX WARNING: Code restructure failed: missing block: B:70:0x0156, code lost:
-            com.android.systemui.keyguard.KeyguardViewMediator.access$300(r6.this$0);
+            com.android.systemui.keyguard.KeyguardViewMediator.access$1300(r6.this$0);
          */
         /* JADX WARNING: Code restructure failed: missing block: B:71:0x015b, code lost:
             monitor-exit(r8);
@@ -449,17 +447,17 @@ public class KeyguardViewMediator extends SystemUI implements Dumpable {
             monitor-enter(r8);
          */
         /* JADX WARNING: Code restructure failed: missing block: B:80:0x0169, code lost:
-            if (com.android.systemui.keyguard.KeyguardViewMediator.access$1200(r6.this$0) == false) goto L_0x0185;
+            if (com.android.systemui.keyguard.KeyguardViewMediator.access$1100(r6.this$0) == false) goto L_0x0185;
          */
         /* JADX WARNING: Code restructure failed: missing block: B:82:0x0171, code lost:
-            if (com.android.systemui.keyguard.KeyguardViewMediator.access$1300(r6.this$0) != false) goto L_0x0180;
+            if (com.android.systemui.keyguard.KeyguardViewMediator.access$1200(r6.this$0) != false) goto L_0x0180;
          */
         /* JADX WARNING: Code restructure failed: missing block: B:83:0x0173, code lost:
             android.util.Log.d("KeyguardViewMediator", "ICC_ABSENT isn't showing, we need to show the keyguard since the device isn't provisioned yet.");
-            com.android.systemui.keyguard.KeyguardViewMediator.access$700(r6.this$0, (android.os.Bundle) null);
+            com.android.systemui.keyguard.KeyguardViewMediator.access$600(r6.this$0, (android.os.Bundle) null);
          */
         /* JADX WARNING: Code restructure failed: missing block: B:84:0x0180, code lost:
-            com.android.systemui.keyguard.KeyguardViewMediator.access$300(r6.this$0);
+            com.android.systemui.keyguard.KeyguardViewMediator.access$1300(r6.this$0);
          */
         /* JADX WARNING: Code restructure failed: missing block: B:85:0x0185, code lost:
             if (r9 != 1) goto L_0x0195;
@@ -469,7 +467,7 @@ public class KeyguardViewMediator extends SystemUI implements Dumpable {
          */
         /* JADX WARNING: Code restructure failed: missing block: B:87:0x0189, code lost:
             android.util.Log.d("KeyguardViewMediator", "SIM moved to ABSENT when the previous state was locked. Reset the state.");
-            com.android.systemui.keyguard.KeyguardViewMediator.access$300(r6.this$0);
+            com.android.systemui.keyguard.KeyguardViewMediator.access$1300(r6.this$0);
          */
         /* JADX WARNING: Code restructure failed: missing block: B:88:0x0195, code lost:
             monitor-exit(r8);

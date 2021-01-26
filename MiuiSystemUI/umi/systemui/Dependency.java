@@ -127,6 +127,7 @@ import com.android.systemui.statusbar.policy.CustomCarrierObserver;
 import com.android.systemui.statusbar.policy.DataSaverController;
 import com.android.systemui.statusbar.policy.DemoModeController;
 import com.android.systemui.statusbar.policy.DeviceProvisionedController;
+import com.android.systemui.statusbar.policy.DualClockObserver;
 import com.android.systemui.statusbar.policy.ExtensionController;
 import com.android.systemui.statusbar.policy.FiveGControllerImpl;
 import com.android.systemui.statusbar.policy.FlashlightController;
@@ -222,6 +223,7 @@ public class Dependency {
     Lazy<DozeParameters> mDozeParameters;
     Lazy<MiuiDozeServiceHost> mDozeServiceHost;
     Lazy<DriveModeObserver> mDriveModeObserver;
+    Lazy<DualClockObserver> mDualClockObserver;
     DumpManager mDumpManager;
     Lazy<EnhancedEstimates> mEnhancedEstimates;
     Lazy<EventTracker> mEventTracker;
@@ -1375,211 +1377,218 @@ public class Dependency {
                 return Lazy.this.get();
             }
         });
-        Lazy<DriveModeObserver> lazy143 = this.mDriveModeObserver;
+        Lazy<DualClockObserver> lazy143 = this.mDualClockObserver;
         Objects.requireNonNull(lazy143);
+        this.mProviders.put(DualClockObserver.class, new LazyDependencyCreator() {
+            public final Object createDependency() {
+                return Lazy.this.get();
+            }
+        });
+        Lazy<DriveModeObserver> lazy144 = this.mDriveModeObserver;
+        Objects.requireNonNull(lazy144);
         this.mProviders.put(DriveModeObserver.class, new LazyDependencyCreator() {
             public final Object createDependency() {
                 return Lazy.this.get();
             }
         });
-        Lazy<MiuiDripLeftStatusBarIconControllerImpl> lazy144 = this.mMiuiDripLeftStatusBarIconControllerImpl;
-        Objects.requireNonNull(lazy144);
+        Lazy<MiuiDripLeftStatusBarIconControllerImpl> lazy145 = this.mMiuiDripLeftStatusBarIconControllerImpl;
+        Objects.requireNonNull(lazy145);
         this.mProviders.put(MiuiDripLeftStatusBarIconControllerImpl.class, new LazyDependencyCreator() {
             public final Object createDependency() {
                 return Lazy.this.get();
             }
         });
-        Lazy<WallpaperCommandSender> lazy145 = this.mUpdateWallpaperCommand;
-        Objects.requireNonNull(lazy145);
+        Lazy<WallpaperCommandSender> lazy146 = this.mUpdateWallpaperCommand;
+        Objects.requireNonNull(lazy146);
         this.mProviders.put(WallpaperCommandSender.class, new LazyDependencyCreator() {
             public final Object createDependency() {
                 return Lazy.this.get();
             }
         });
-        Lazy<MiuiKeyguardWallpaperControllerImpl> lazy146 = this.mMiuiKeyguardWallpaperControllerImpl;
-        Objects.requireNonNull(lazy146);
+        Lazy<MiuiKeyguardWallpaperControllerImpl> lazy147 = this.mMiuiKeyguardWallpaperControllerImpl;
+        Objects.requireNonNull(lazy147);
         this.mProviders.put(MiuiKeyguardWallpaperControllerImpl.class, new LazyDependencyCreator() {
             public final Object createDependency() {
                 return Lazy.this.get();
             }
         });
-        Lazy<MiuiWallpaperClient> lazy147 = this.mMiuiWallpaperClient;
-        Objects.requireNonNull(lazy147);
+        Lazy<MiuiWallpaperClient> lazy148 = this.mMiuiWallpaperClient;
+        Objects.requireNonNull(lazy148);
         this.mProviders.put(MiuiWallpaperClient.class, new LazyDependencyCreator() {
             public final Object createDependency() {
                 return Lazy.this.get();
             }
         });
-        Lazy<ControlPanelController> lazy148 = this.mControlPanelController;
-        Objects.requireNonNull(lazy148);
+        Lazy<ControlPanelController> lazy149 = this.mControlPanelController;
+        Objects.requireNonNull(lazy149);
         this.mProviders.put(ControlPanelController.class, new LazyDependencyCreator() {
             public final Object createDependency() {
                 return Lazy.this.get();
             }
         });
-        Lazy<ControlPanelWindowManager> lazy149 = this.mControlPanelWindowManager;
-        Objects.requireNonNull(lazy149);
+        Lazy<ControlPanelWindowManager> lazy150 = this.mControlPanelWindowManager;
+        Objects.requireNonNull(lazy150);
         this.mProviders.put(ControlPanelWindowManager.class, new LazyDependencyCreator() {
             public final Object createDependency() {
                 return Lazy.this.get();
             }
         });
-        Lazy<NetworkSpeedController> lazy150 = this.mNetworkSpeedController;
-        Objects.requireNonNull(lazy150);
+        Lazy<NetworkSpeedController> lazy151 = this.mNetworkSpeedController;
+        Objects.requireNonNull(lazy151);
         this.mProviders.put(NetworkSpeedController.class, new LazyDependencyCreator() {
             public final Object createDependency() {
                 return Lazy.this.get();
             }
         });
-        Lazy<ControlCenterActivityStarter> lazy151 = this.mControlCenterActivityStarter;
-        Objects.requireNonNull(lazy151);
+        Lazy<ControlCenterActivityStarter> lazy152 = this.mControlCenterActivityStarter;
+        Objects.requireNonNull(lazy152);
         this.mProviders.put(ControlCenterActivityStarter.class, new LazyDependencyCreator() {
             public final Object createDependency() {
                 return Lazy.this.get();
             }
         });
-        Lazy<ExpandInfoController> lazy152 = this.mExpandInfoController;
-        Objects.requireNonNull(lazy152);
+        Lazy<ExpandInfoController> lazy153 = this.mExpandInfoController;
+        Objects.requireNonNull(lazy153);
         this.mProviders.put(ExpandInfoController.class, new LazyDependencyCreator() {
             public final Object createDependency() {
                 return Lazy.this.get();
             }
         });
-        Lazy<ControlsPluginManager> lazy153 = this.mControlsPluginManager;
-        Objects.requireNonNull(lazy153);
+        Lazy<ControlsPluginManager> lazy154 = this.mControlsPluginManager;
+        Objects.requireNonNull(lazy154);
         this.mProviders.put(ControlsPluginManager.class, new LazyDependencyCreator() {
             public final Object createDependency() {
                 return Lazy.this.get();
             }
         });
-        Lazy<AppMiniWindowManager> lazy154 = this.mAppMiniWindowManager;
-        Objects.requireNonNull(lazy154);
+        Lazy<AppMiniWindowManager> lazy155 = this.mAppMiniWindowManager;
+        Objects.requireNonNull(lazy155);
         this.mProviders.put(AppMiniWindowManager.class, new LazyDependencyCreator() {
             public final Object createDependency() {
                 return Lazy.this.get();
             }
         });
-        Lazy<ModalController> lazy155 = this.mModalController;
-        Objects.requireNonNull(lazy155);
+        Lazy<ModalController> lazy156 = this.mModalController;
+        Objects.requireNonNull(lazy156);
         this.mProviders.put(ModalController.class, new LazyDependencyCreator() {
             public final Object createDependency() {
                 return Lazy.this.get();
             }
         });
-        Lazy<FiveGControllerImpl> lazy156 = this.mFiveGControllerImpl;
-        Objects.requireNonNull(lazy156);
+        Lazy<FiveGControllerImpl> lazy157 = this.mFiveGControllerImpl;
+        Objects.requireNonNull(lazy157);
         this.mProviders.put(FiveGControllerImpl.class, new LazyDependencyCreator() {
             public final Object createDependency() {
                 return Lazy.this.get();
             }
         });
-        Lazy<CallStateControllerImpl> lazy157 = this.mCallStateController;
-        Objects.requireNonNull(lazy157);
+        Lazy<CallStateControllerImpl> lazy158 = this.mCallStateController;
+        Objects.requireNonNull(lazy158);
         this.mProviders.put(CallStateControllerImpl.class, new LazyDependencyCreator() {
             public final Object createDependency() {
                 return Lazy.this.get();
             }
         });
-        Lazy<RegionController> lazy158 = this.mRegionController;
-        Objects.requireNonNull(lazy158);
+        Lazy<RegionController> lazy159 = this.mRegionController;
+        Objects.requireNonNull(lazy159);
         this.mProviders.put(RegionController.class, new LazyDependencyCreator() {
             public final Object createDependency() {
                 return Lazy.this.get();
             }
         });
-        Lazy<CustomCarrierObserver> lazy159 = this.mCustomCarrierObserver;
-        Objects.requireNonNull(lazy159);
+        Lazy<CustomCarrierObserver> lazy160 = this.mCustomCarrierObserver;
+        Objects.requireNonNull(lazy160);
         this.mProviders.put(CustomCarrierObserver.class, new LazyDependencyCreator() {
             public final Object createDependency() {
                 return Lazy.this.get();
             }
         });
-        Lazy<CarrierObserver> lazy160 = this.mCarrierObserver;
-        Objects.requireNonNull(lazy160);
+        Lazy<CarrierObserver> lazy161 = this.mCarrierObserver;
+        Objects.requireNonNull(lazy161);
         this.mProviders.put(CarrierObserver.class, new LazyDependencyCreator() {
             public final Object createDependency() {
                 return Lazy.this.get();
             }
         });
-        Lazy<MiuiCarrierTextController> lazy161 = this.mMiuiCarrierTextController;
-        Objects.requireNonNull(lazy161);
+        Lazy<MiuiCarrierTextController> lazy162 = this.mMiuiCarrierTextController;
+        Objects.requireNonNull(lazy162);
         this.mProviders.put(MiuiCarrierTextController.class, new LazyDependencyCreator() {
             public final Object createDependency() {
                 return Lazy.this.get();
             }
         });
-        Lazy<ToggleManagerController> lazy162 = this.mToggleManagerController;
-        Objects.requireNonNull(lazy162);
+        Lazy<ToggleManagerController> lazy163 = this.mToggleManagerController;
+        Objects.requireNonNull(lazy163);
         this.mProviders.put(ToggleManagerController.class, new LazyDependencyCreator() {
             public final Object createDependency() {
                 return Lazy.this.get();
             }
         });
-        Lazy<IMiuiKeyguardWallpaperController> lazy163 = this.mWallPaperController;
-        Objects.requireNonNull(lazy163);
+        Lazy<IMiuiKeyguardWallpaperController> lazy164 = this.mWallPaperController;
+        Objects.requireNonNull(lazy164);
         this.mProviders.put(IMiuiKeyguardWallpaperController.class, new LazyDependencyCreator() {
             public final Object createDependency() {
                 return Lazy.this.get();
             }
         });
-        Lazy<PanelExpansionObserver> lazy164 = this.mPanelExpansionObserver;
-        Objects.requireNonNull(lazy164);
+        Lazy<PanelExpansionObserver> lazy165 = this.mPanelExpansionObserver;
+        Objects.requireNonNull(lazy165);
         this.mProviders.put(PanelExpansionObserver.class, new LazyDependencyCreator() {
             public final Object createDependency() {
                 return Lazy.this.get();
             }
         });
-        Lazy<SuperSaveModeController> lazy165 = this.mSuperSaveModeController;
-        Objects.requireNonNull(lazy165);
+        Lazy<SuperSaveModeController> lazy166 = this.mSuperSaveModeController;
+        Objects.requireNonNull(lazy166);
         this.mProviders.put(SuperSaveModeController.class, new LazyDependencyCreator() {
             public final Object createDependency() {
                 return Lazy.this.get();
             }
         });
-        Lazy<DemoModeController> lazy166 = this.mDemoModeController;
-        Objects.requireNonNull(lazy166);
+        Lazy<DemoModeController> lazy167 = this.mDemoModeController;
+        Objects.requireNonNull(lazy167);
         this.mProviders.put(DemoModeController.class, new LazyDependencyCreator() {
             public final Object createDependency() {
                 return Lazy.this.get();
             }
         });
-        Lazy<SlaveWifiSignalController> lazy167 = this.mSlaveWifiSignalController;
-        Objects.requireNonNull(lazy167);
+        Lazy<SlaveWifiSignalController> lazy168 = this.mSlaveWifiSignalController;
+        Objects.requireNonNull(lazy168);
         this.mProviders.put(SlaveWifiSignalController.class, new LazyDependencyCreator() {
             public final Object createDependency() {
                 return Lazy.this.get();
             }
         });
-        Lazy<MiuiAlarmControllerImpl> lazy168 = this.mMiuiAlarmControllerImpl;
-        Objects.requireNonNull(lazy168);
+        Lazy<MiuiAlarmControllerImpl> lazy169 = this.mMiuiAlarmControllerImpl;
+        Objects.requireNonNull(lazy169);
         this.mProviders.put(MiuiAlarmControllerImpl.class, new LazyDependencyCreator() {
             public final Object createDependency() {
                 return Lazy.this.get();
             }
         });
-        Lazy<NotificationPanelNavigationBarCoordinator> lazy169 = this.mNotificationNavigationCoordinator;
-        Objects.requireNonNull(lazy169);
+        Lazy<NotificationPanelNavigationBarCoordinator> lazy170 = this.mNotificationNavigationCoordinator;
+        Objects.requireNonNull(lazy170);
         this.mProviders.put(NotificationPanelNavigationBarCoordinator.class, new LazyDependencyCreator() {
             public final Object createDependency() {
                 return Lazy.this.get();
             }
         });
-        Lazy<NCSwitchController> lazy170 = this.mNCSwitchController;
-        Objects.requireNonNull(lazy170);
+        Lazy<NCSwitchController> lazy171 = this.mNCSwitchController;
+        Objects.requireNonNull(lazy171);
         this.mProviders.put(NCSwitchController.class, new LazyDependencyCreator() {
             public final Object createDependency() {
                 return Lazy.this.get();
             }
         });
-        Lazy<SystemUIStat> lazy171 = this.mSystemUIStat;
-        Objects.requireNonNull(lazy171);
+        Lazy<SystemUIStat> lazy172 = this.mSystemUIStat;
+        Objects.requireNonNull(lazy172);
         this.mProviders.put(SystemUIStat.class, new LazyDependencyCreator() {
             public final Object createDependency() {
                 return Lazy.this.get();
             }
         });
-        Lazy<IPhoneSignalController> lazy172 = this.mPhoneSignalController;
-        Objects.requireNonNull(lazy172);
+        Lazy<IPhoneSignalController> lazy173 = this.mPhoneSignalController;
+        Objects.requireNonNull(lazy173);
         this.mProviders.put(IPhoneSignalController.class, new LazyDependencyCreator() {
             public final Object createDependency() {
                 return Lazy.this.get();

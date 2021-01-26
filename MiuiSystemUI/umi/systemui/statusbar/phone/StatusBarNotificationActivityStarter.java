@@ -553,7 +553,9 @@ public class StatusBarNotificationActivityStarter implements NotificationActivit
                 pendingIntent.send();
                 notificationEntry.notifyFullScreenIntentLaunched();
                 this.mMetricsLogger.count("note_fullscreen", 1);
-                this.mShadeController.collapsePanel();
+                if (this.mStatusBarStateController.getState() == 0) {
+                    this.mShadeController.collapsePanel();
+                }
             } catch (PendingIntent.CanceledException unused) {
             }
         }

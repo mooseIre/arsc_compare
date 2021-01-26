@@ -49,6 +49,7 @@ import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow
 import com.android.systemui.statusbar.phone.StatusBar;
 import com.android.systemui.statusbar.policy.RemoteInputUriController;
 import com.android.systemui.statusbar.policy.RemoteInputView;
+import com.miui.systemui.events.ModalExitMode;
 import dagger.Lazy;
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
@@ -86,7 +87,7 @@ public class NotificationRemoteInputManager implements Dumpable {
                 return true;
             }
             logActionClick(view, notificationForParent, pendingIntent);
-            ((ModalController) Dependency.get(ModalController.class)).animExitModal();
+            ((ModalController) Dependency.get(ModalController.class)).animExitModal(ModalExitMode.MANUAL.name());
             try {
                 ActivityManager.getService().resumeAppSwitches();
             } catch (RemoteException unused) {

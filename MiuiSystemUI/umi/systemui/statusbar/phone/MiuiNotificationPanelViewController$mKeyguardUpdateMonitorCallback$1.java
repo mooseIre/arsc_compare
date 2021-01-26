@@ -21,4 +21,8 @@ public final class MiuiNotificationPanelViewController$mKeyguardUpdateMonitorCal
             this.this$0.removeAwesomeLockScreen();
         }
     }
+
+    public void onKeyguardOccludedChanged(boolean z) {
+        this.this$0.mIsKeyguardOccluded = z;
+    }
 }

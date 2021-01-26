@@ -376,19 +376,21 @@ public class MiuiCellularTile extends QSTileImpl<QSTile.BooleanState> {
 
         /* access modifiers changed from: private */
         public void updateItems() {
-            int size = MiuiCellularTile.this.mSimInfoRecordList != null ? MiuiCellularTile.this.mSimInfoRecordList.size() : 0;
-            if (size > 0) {
-                ArrayList arrayList = new ArrayList();
-                for (int i = 0; i < size; i++) {
-                    SubscriptionInfo subscriptionInfo = (SubscriptionInfo) MiuiCellularTile.this.mSimInfoRecordList.get(i);
-                    if (subscriptionInfo != null) {
-                        arrayList.add(generateItem(subscriptionInfo, i));
+            if (this.mItems != null) {
+                int size = MiuiCellularTile.this.mSimInfoRecordList != null ? MiuiCellularTile.this.mSimInfoRecordList.size() : 0;
+                if (size > 0) {
+                    ArrayList arrayList = new ArrayList();
+                    for (int i = 0; i < size; i++) {
+                        SubscriptionInfo subscriptionInfo = (SubscriptionInfo) MiuiCellularTile.this.mSimInfoRecordList.get(i);
+                        if (subscriptionInfo != null) {
+                            arrayList.add(generateItem(subscriptionInfo, i));
+                        }
                     }
+                    this.mItems.setItems((MiuiQSDetailItems.Item[]) arrayList.toArray(new MiuiQSDetailItems.Item[0]));
+                    return;
                 }
-                this.mItems.setItems((MiuiQSDetailItems.Item[]) arrayList.toArray(new MiuiQSDetailItems.Item[0]));
-                return;
+                this.mItems.setItems((MiuiQSDetailItems.Item[]) null);
             }
-            this.mItems.setItems((MiuiQSDetailItems.Item[]) null);
         }
 
         private MiuiQSDetailItems.Item generateItem(SubscriptionInfo subscriptionInfo, int i) {

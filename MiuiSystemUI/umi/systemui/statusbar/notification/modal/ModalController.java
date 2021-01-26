@@ -13,12 +13,14 @@ import com.android.systemui.C0017R$layout;
 import com.android.systemui.Dependency;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
 import com.android.systemui.statusbar.notification.NotificationEntryManager;
+import com.android.systemui.statusbar.notification.analytics.NotificationStat;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow;
 import com.android.systemui.statusbar.notification.row.MiuiExpandableNotificationRow;
 import com.android.systemui.statusbar.notification.row.NotificationBackgroundView;
 import com.android.systemui.statusbar.phone.StatusBar;
 import com.miui.systemui.DebugConfig;
+import com.miui.systemui.events.ModalExitMode;
 import com.miui.systemui.util.HapticFeedBackImpl;
 import java.util.ArrayList;
 import kotlin.jvm.internal.Intrinsics;
@@ -72,7 +74,7 @@ public final class ModalController {
 
             public void onStateChanged(int i) {
                 if (i == 1) {
-                    this.this$0.animExitModal();
+                    ModalController.animExitModal$default(this.this$0, (String) null, 1, (Object) null);
                 }
             }
         });
@@ -168,15 +170,24 @@ public final class ModalController {
     }
 
     public final void animExitModelCollapsePanels() {
-        animExitModal();
+        animExitModal(ModalExitMode.MORE.name());
         this.statusBar.animateCollapsePanels(0, false);
     }
 
-    public final void animExitModal() {
-        animExitModal(this.defaultDuration, true);
+    public static /* synthetic */ void animExitModal$default(ModalController modalController, String str, int i, Object obj) {
+        if ((i & 1) != 0) {
+            str = ModalExitMode.OTHER.name();
+        }
+        modalController.animExitModal(str);
     }
 
-    public final void animExitModal(long j, boolean z) {
+    public final void animExitModal(@NotNull String str) {
+        Intrinsics.checkParameterIsNotNull(str, "exitMode");
+        animExitModal(this.defaultDuration, true, str);
+    }
+
+    public final void animExitModal(long j, boolean z, @NotNull String str) {
+        Intrinsics.checkParameterIsNotNull(str, "exitMode");
         if (this.isModal && !this.isAnimating) {
             ModalController$animExitModal$animatorListener$1 modalController$animExitModal$animatorListener$1 = null;
             if (z) {
@@ -190,7 +201,7 @@ public final class ModalController {
             }
             this.modalWindowManager.clearFocus();
             ModalController$animExitModal$updateListener$1 modalController$animExitModal$updateListener$1 = new ModalController$animExitModal$updateListener$1(this);
-            ModalController$animExitModal$animatorListener$1 modalController$animExitModal$animatorListener$12 = new ModalController$animExitModal$animatorListener$1(this);
+            ModalController$animExitModal$animatorListener$1 modalController$animExitModal$animatorListener$12 = new ModalController$animExitModal$animatorListener$1(this, str);
             if (z) {
                 modalController$animExitModal$animatorListener$1 = modalController$animExitModal$animatorListener$12;
             }
@@ -203,7 +214,7 @@ public final class ModalController {
         ModalWindowView modalWindowView2 = this.modalWindowView;
         if (modalWindowView2 != null) {
             modalWindowView2.exitModal(this.entry);
-            exitModal();
+            exitModal(ModalExitMode.DOWNPULL.name());
             this.isAnimating = false;
             return;
         }
@@ -212,7 +223,8 @@ public final class ModalController {
     }
 
     /* access modifiers changed from: private */
-    public final void exitModal() {
+    public final void exitModal(String str) {
+        ((NotificationStat) Dependency.get(NotificationStat.class)).onExitModal(this.entry, str);
         this.isModal = false;
         this.modalWindowManager.hide();
         this.modalRow = null;

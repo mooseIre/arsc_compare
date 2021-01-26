@@ -9,10 +9,12 @@ import androidx.collection.ArraySet;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.systemui.C0012R$dimen;
 import com.android.systemui.C0016R$integer;
+import com.android.systemui.Dependency;
 import com.android.systemui.Dumpable;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
 import com.android.systemui.statusbar.AlertingNotificationManager;
 import com.android.systemui.statusbar.notification.VisualStabilityManager;
+import com.android.systemui.statusbar.notification.analytics.NotificationStat;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow;
 import com.android.systemui.statusbar.phone.HeadsUpManagerPhone;
@@ -388,6 +390,7 @@ public class HeadsUpManagerPhone extends HeadsUpManager implements Dumpable, Vis
             } else {
                 HeadsUpManagerPhone.this.mKeysToRemoveWhenLeavingKeyguard.add(notificationEntry.getKey());
             }
+            ((NotificationStat) Dependency.get(NotificationStat.class)).onFloatAutoCollapse(notificationEntry);
         }
 
         public void updateEntry(boolean z) {

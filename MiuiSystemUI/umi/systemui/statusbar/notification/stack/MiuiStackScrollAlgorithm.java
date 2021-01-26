@@ -293,7 +293,7 @@ public final class MiuiStackScrollAlgorithm extends StackScrollAlgorithm {
         Intrinsics.checkExpressionValueIsNotNull(arrayList, "algorithmState.visibleChildren");
         ExpandableView expandableView = (ExpandableView) CollectionsKt___CollectionsKt.firstOrNull(arrayList);
         if (expandableView != null && (viewState = expandableView.getViewState()) != null && viewState.getSpringYOffset() < 0) {
-            viewState.clipTopAmount = 0;
+            viewState.setSpringYOffset(0);
         }
     }
 

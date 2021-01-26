@@ -72,7 +72,6 @@ import com.android.systemui.statusbar.policy.AccessibilityController;
 import com.android.systemui.statusbar.policy.ExtensionController;
 import com.android.systemui.statusbar.policy.FlashlightController;
 import com.android.systemui.statusbar.policy.KeyguardStateController;
-import com.android.systemui.statusbar.policy.PreviewInflater;
 import com.android.systemui.tuner.LockscreenFragment;
 import com.android.systemui.tuner.TunerService;
 import java.util.concurrent.Executor;
@@ -84,15 +83,13 @@ import miui.util.FeatureParser;
 
 public class KeyguardBottomAreaView extends FrameLayout implements View.OnClickListener, View.OnLongClickListener, KeyguardStateController.Callback, AccessibilityController.AccessibilityStateChangedCallback {
     public static final Intent INSECURE_CAMERA_INTENT = new Intent("android.media.action.STILL_IMAGE_CAMERA");
-    /* access modifiers changed from: private */
-    public static final Intent PHONE_INTENT = new Intent("android.intent.action.DIAL");
+    private static final Intent PHONE_INTENT = new Intent("android.intent.action.DIAL");
     /* access modifiers changed from: private */
     public static final Intent SECURE_CAMERA_INTENT = new Intent("android.media.action.STILL_IMAGE_CAMERA_SECURE").addFlags(8388608);
     private AccessibilityController mAccessibilityController;
     private View.AccessibilityDelegate mAccessibilityDelegate;
     private ActivityIntentHelper mActivityIntentHelper;
     private ActivityStarter mActivityStarter;
-    private KeyguardAffordanceHelper mAffordanceHelper;
     private int mBurnInXOffset;
     private int mBurnInYOffset;
     private View mCameraPreview;
@@ -128,15 +125,11 @@ public class KeyguardBottomAreaView extends FrameLayout implements View.OnClickL
     public boolean mLeftIntentAvailable;
     /* access modifiers changed from: private */
     public boolean mLeftIsVoiceAssist;
-    private View mLeftPreview;
     private LockPatternUtils mLockPatternUtils;
     /* access modifiers changed from: private */
     public LockScreenMagazineController mLockScreenMagazineController;
     private LockscreenGestureLogger mLockscreenGestureLogger;
     private int mOrientation;
-    private ViewGroup mOverlayContainer;
-    private ViewGroup mPreviewContainer;
-    private PreviewInflater mPreviewInflater;
     private boolean mPrewarmBound;
     private final ServiceConnection mPrewarmConnection;
     /* access modifiers changed from: private */
@@ -170,6 +163,9 @@ public class KeyguardBottomAreaView extends FrameLayout implements View.OnClickL
     }
 
     public void onStateChanged(boolean z, boolean z2) {
+    }
+
+    public void setAffordanceHelper(KeyguardAffordanceHelper keyguardAffordanceHelper) {
     }
 
     public KeyguardBottomAreaView(Context context) {
@@ -244,7 +240,6 @@ public class KeyguardBottomAreaView extends FrameLayout implements View.OnClickL
             }
 
             public void onUserUnlocked() {
-                KeyguardBottomAreaView.this.inflateCameraPreview();
                 KeyguardBottomAreaView.this.updateCameraVisibility();
                 KeyguardBottomAreaView.this.updateLeftAffordance();
                 KeyguardBottomAreaView.this.handleIntentAvailable();
@@ -276,10 +271,8 @@ public class KeyguardBottomAreaView extends FrameLayout implements View.OnClickL
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mPreviewInflater = new PreviewInflater(this.mContext, new LockPatternUtils(this.mContext), new ActivityIntentHelper(this.mContext));
-        this.mPreviewContainer = (ViewGroup) findViewById(C0015R$id.preview_container);
+        new LockPatternUtils(this.mContext);
         this.mEmergencyCarrierArea = (EmergencyCarrierArea) findViewById(C0015R$id.keyguard_selector_fade_container);
-        this.mOverlayContainer = (ViewGroup) findViewById(C0015R$id.overlay_container);
         this.mRightAffordanceView = (KeyguardAffordanceView) findViewById(C0015R$id.right_button);
         this.mLeftAffordanceView = (KeyguardAffordanceView) findViewById(C0015R$id.left_button);
         this.mIndicationArea = (ViewGroup) findViewById(C0015R$id.keyguard_indication_area);
@@ -292,7 +285,6 @@ public class KeyguardBottomAreaView extends FrameLayout implements View.OnClickL
         keyguardStateController.addCallback(this);
         setClipChildren(false);
         setClipToPadding(false);
-        inflateCameraPreview();
         this.mRightAffordanceView.setOnClickListener(this);
         this.mLeftAffordanceView.setOnClickListener(this);
         this.mIndicationArea.setOnClickListener(this);
@@ -387,11 +379,7 @@ public class KeyguardBottomAreaView extends FrameLayout implements View.OnClickL
 
     /* access modifiers changed from: protected */
     public ResolveInfo resolveLockScreenMagazineIntent() {
-        return PackageUtils.resolveIntent(this.mContext, getLockScreenMagazineIntent());
-    }
-
-    private Intent getLockScreenMagazineIntent() {
-        return this.mLeftButton.getIntent();
+        return PackageUtils.resolveIntent(this.mContext, this.mLeftButton.getIntent());
     }
 
     /* access modifiers changed from: private */
@@ -573,10 +561,6 @@ public class KeyguardBottomAreaView extends FrameLayout implements View.OnClickL
     public void setStatusBar(StatusBar statusBar) {
         this.mStatusBar = statusBar;
         updateCameraVisibility();
-    }
-
-    public void setAffordanceHelper(KeyguardAffordanceHelper keyguardAffordanceHelper) {
-        this.mAffordanceHelper = keyguardAffordanceHelper;
     }
 
     public void setUserSetupComplete(boolean z) {
@@ -848,72 +832,6 @@ public class KeyguardBottomAreaView extends FrameLayout implements View.OnClickL
         updateCameraVisibility();
     }
 
-    /* access modifiers changed from: private */
-    /* JADX WARNING: Removed duplicated region for block: B:14:0x0033  */
-    /* JADX WARNING: Removed duplicated region for block: B:16:? A[RETURN, SYNTHETIC] */
-    /* JADX WARNING: Removed duplicated region for block: B:8:0x0021  */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public void inflateCameraPreview() {
-        /*
-            r4 = this;
-            android.view.View r0 = r4.mCameraPreview
-            r1 = 0
-            if (r0 == 0) goto L_0x0012
-            android.view.ViewGroup r2 = r4.mPreviewContainer
-            r2.removeView(r0)
-            int r0 = r0.getVisibility()
-            if (r0 != 0) goto L_0x0012
-            r0 = 1
-            goto L_0x0013
-        L_0x0012:
-            r0 = r1
-        L_0x0013:
-            com.android.systemui.statusbar.policy.PreviewInflater r2 = r4.mPreviewInflater
-            android.content.Intent r3 = r4.getCameraIntent()
-            android.view.View r2 = r2.inflatePreview((android.content.Intent) r3)
-            r4.mCameraPreview = r2
-            if (r2 == 0) goto L_0x002f
-            android.view.ViewGroup r3 = r4.mPreviewContainer
-            r3.addView(r2)
-            android.view.View r2 = r4.mCameraPreview
-            if (r0 == 0) goto L_0x002b
-            goto L_0x002c
-        L_0x002b:
-            r1 = 4
-        L_0x002c:
-            r2.setVisibility(r1)
-        L_0x002f:
-            com.android.systemui.statusbar.phone.KeyguardAffordanceHelper r4 = r4.mAffordanceHelper
-            if (r4 == 0) goto L_0x0036
-            r4.updatePreviews()
-        L_0x0036:
-            return
-        */
-        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.phone.KeyguardBottomAreaView.inflateCameraPreview():void");
-    }
-
-    private void updateLeftPreview() {
-        Class cls = AssistManager.class;
-        View view = this.mLeftPreview;
-        if (view != null) {
-            this.mPreviewContainer.removeView(view);
-        }
-        if (!this.mLeftIsVoiceAssist) {
-            this.mLeftPreview = this.mPreviewInflater.inflatePreview(this.mLeftButton.getIntent());
-        } else if (((AssistManager) Dependency.get(cls)).getVoiceInteractorComponentName() != null) {
-            this.mLeftPreview = this.mPreviewInflater.inflatePreviewFromService(((AssistManager) Dependency.get(cls)).getVoiceInteractorComponentName());
-        }
-        View view2 = this.mLeftPreview;
-        if (view2 != null) {
-            this.mPreviewContainer.addView(view2);
-            this.mLeftPreview.setVisibility(4);
-        }
-        KeyguardAffordanceHelper keyguardAffordanceHelper = this.mAffordanceHelper;
-        if (keyguardAffordanceHelper != null) {
-            keyguardAffordanceHelper.updatePreviews();
-        }
-    }
-
     public void startFinishDozeAnimation() {
         long j = 0;
         if (this.mLeftAffordanceView.getVisibility() == 0) {
@@ -935,7 +853,6 @@ public class KeyguardBottomAreaView extends FrameLayout implements View.OnClickL
 
     public void updateLeftAffordance() {
         updateLeftAffordanceIcon();
-        updateLeftPreview();
     }
 
     /* access modifiers changed from: private */
@@ -944,7 +861,6 @@ public class KeyguardBottomAreaView extends FrameLayout implements View.OnClickL
         this.mRightButton = intentButton;
         updateRightAffordanceIcon();
         updateCameraVisibility();
-        inflateCameraPreview();
     }
 
     /* access modifiers changed from: private */
@@ -963,12 +879,8 @@ public class KeyguardBottomAreaView extends FrameLayout implements View.OnClickL
             updateCameraVisibility();
             updateLeftAffordanceIcon();
             if (z) {
-                this.mOverlayContainer.setVisibility(4);
                 this.mEmergencyCarrierArea.setVisibility(4);
-                return;
-            }
-            this.mOverlayContainer.setVisibility(0);
-            if (z2) {
+            } else if (z2) {
                 startFinishDozeAnimation();
             }
         }
@@ -1037,8 +949,8 @@ public class KeyguardBottomAreaView extends FrameLayout implements View.OnClickL
         }
 
         public Intent getIntent() {
-            if (!((LockScreenMagazineController) Dependency.get(LockScreenMagazineController.class)).isSupportLockScreenMagazineLeft()) {
-                return KeyguardBottomAreaView.PHONE_INTENT;
+            if (KeyguardBottomAreaView.this.mLockScreenMagazineController == null) {
+                return null;
             }
             Intent preLeftScreenIntent = KeyguardBottomAreaView.this.mLockScreenMagazineController.getPreLeftScreenIntent();
             if (Build.IS_INTERNATIONAL_BUILD && preLeftScreenIntent != null) {

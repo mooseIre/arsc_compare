@@ -1,6 +1,7 @@
 package com.android.systemui.statusbar.notification.modal;
 
 import android.view.View;
+import com.miui.systemui.events.ModalExitMode;
 
 /* compiled from: ModalController.kt */
 final class ModalController$addModalWindow$1 implements View.OnClickListener {
@@ -11,6 +12,6 @@ final class ModalController$addModalWindow$1 implements View.OnClickListener {
     }
 
     public final void onClick(View view) {
-        this.this$0.animExitModal();
+        this.this$0.animExitModal(ModalExitMode.MANUAL.name());
     }
 }

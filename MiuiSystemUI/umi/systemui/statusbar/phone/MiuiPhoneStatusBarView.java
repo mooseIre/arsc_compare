@@ -46,8 +46,7 @@ public class MiuiPhoneStatusBarView extends PhoneStatusBarView {
         });
     }
 
-    public void initMiuiViews() {
-        super.initMiuiViews();
+    public void onFinishInflate() {
         this.mStatusBarLeftContainer = findViewById(C0015R$id.phone_status_bar_left_container);
         this.mDripStatusBarNotificationIconArea = findViewById(C0015R$id.drip_notification_icon_area);
         this.mDripStatusBarLeftStatusIconArea = findViewById(C0015R$id.drip_left_status_icon_area);
@@ -60,27 +59,30 @@ public class MiuiPhoneStatusBarView extends PhoneStatusBarView {
         this.mFullScreenNetworkSpeedView = (NetworkSpeedView) findViewById(C0015R$id.fullscreen_network_speed_view);
         this.mDripNetworkSpeedView.addVisibilityListener(this.mDripNetworkSpeedSplitter);
         ((MiuiClock) findViewById(C0015R$id.clock)).addVisibilityListener(this.mDripNetworkSpeedSplitter);
-        ((MiuiStatusBarPromptController) Dependency.get(MiuiStatusBarPromptController.class)).addPromptContainer((FrameLayout) findViewById(C0015R$id.prompt_container), 0);
+        super.onFinishInflate();
     }
 
-    public void onMiuiAttachedToWindow() {
+    /* access modifiers changed from: protected */
+    public void onAttachedToWindow() {
         Class cls = DarkIconDispatcher.class;
-        super.onMiuiAttachedToWindow();
         ((DarkIconDispatcher) Dependency.get(cls)).addDarkReceiver((DarkIconDispatcher.DarkReceiver) this.mDripNetworkSpeedView);
         ((DarkIconDispatcher) Dependency.get(cls)).addDarkReceiver((DarkIconDispatcher.DarkReceiver) this.mDripNetworkSpeedSplitter);
         ((DarkIconDispatcher) Dependency.get(cls)).addDarkReceiver((DarkIconDispatcher.DarkReceiver) this.mFullScreenNetworkSpeedView);
+        ((MiuiStatusBarPromptController) Dependency.get(MiuiStatusBarPromptController.class)).addPromptContainer((FrameLayout) findViewById(C0015R$id.prompt_container), 0);
+        super.onAttachedToWindow();
     }
 
-    public void onMiuiDetachedToWindow() {
+    /* access modifiers changed from: protected */
+    public void onDetachedFromWindow() {
         Class cls = DarkIconDispatcher.class;
-        super.onMiuiDetachedToWindow();
+        ((MiuiStatusBarPromptController) Dependency.get(MiuiStatusBarPromptController.class)).removePromptContainer((FrameLayout) findViewById(C0015R$id.prompt_container));
         ((DarkIconDispatcher) Dependency.get(cls)).removeDarkReceiver((DarkIconDispatcher.DarkReceiver) this.mDripNetworkSpeedView);
         ((DarkIconDispatcher) Dependency.get(cls)).removeDarkReceiver((DarkIconDispatcher.DarkReceiver) this.mDripNetworkSpeedSplitter);
         ((DarkIconDispatcher) Dependency.get(cls)).removeDarkReceiver((DarkIconDispatcher.DarkReceiver) this.mFullScreenNetworkSpeedView);
+        super.onDetachedFromWindow();
     }
 
     public void setStatusBarType(int i) {
-        super.setStatusBarType(i);
         if (this.mCurrentStatusBarType != i) {
             this.mCurrentStatusBarType = i;
             updateNotificationIconAreaInnnerParent();
@@ -88,7 +90,6 @@ public class MiuiPhoneStatusBarView extends PhoneStatusBarView {
     }
 
     public void setNotificationIconAreaInnner(View view) {
-        super.setNotificationIconAreaInnner(view);
         View view2 = this.mNotificationIconAreaInner;
         if (view2 != null) {
             ((ViewGroup) view2.getParent()).removeView(this.mNotificationIconAreaInner);

@@ -9,6 +9,7 @@ import com.android.systemui.statusbar.notification.NotificationEntryManager;
 import com.android.systemui.statusbar.notification.NotificationUtil;
 import com.android.systemui.statusbar.notification.PushEvents;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
+import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow;
 import com.android.systemui.statusbar.phone.HeadsUpManagerPhone;
 import com.android.systemui.statusbar.phone.NotificationGroupManager;
 import com.android.systemui.statusbar.policy.KeyguardStateController;
@@ -17,12 +18,23 @@ import com.miui.systemui.events.BlockEvent;
 import com.miui.systemui.events.CancelAllEvent;
 import com.miui.systemui.events.CancelEvent;
 import com.miui.systemui.events.ClearAllMode;
+import com.miui.systemui.events.ClickAllowNotificationEvent;
 import com.miui.systemui.events.ClickEvent;
+import com.miui.systemui.events.ClickMoreEvent;
+import com.miui.systemui.events.ClickSetUnimportant;
+import com.miui.systemui.events.ExitModalEvent;
 import com.miui.systemui.events.ExpansionEvent;
+import com.miui.systemui.events.FloatAutoCollapseEvent;
+import com.miui.systemui.events.FloatManualCollapseEvent;
+import com.miui.systemui.events.GroupCollapseEvent;
+import com.miui.systemui.events.GroupExpandEvent;
 import com.miui.systemui.events.MenuOpenEvent;
+import com.miui.systemui.events.ModalDialogCancelEvent;
+import com.miui.systemui.events.ModalDialogConfirmEvent;
 import com.miui.systemui.events.NotifSource;
 import com.miui.systemui.events.SetConfigEvent;
 import com.miui.systemui.events.VisibleEvent;
+import com.miui.systemui.util.CommonUtil;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -38,17 +50,50 @@ public class NotificationStat {
     private Context mContext;
     private NotificationEntryManager mEntryManager;
     private EventTracker mEventTracker;
-    private NotificationGroupManager mGroupManager;
+    /* access modifiers changed from: private */
+    public NotificationGroupManager mGroupManager;
     private HeadsUpManagerPhone mHeadsUpManager;
     private KeyguardStateController mKeyguardStateController;
+    private NotificationPanelStat mPanelStat;
 
-    public NotificationStat(Context context, NotificationEntryManager notificationEntryManager, NotificationGroupManager notificationGroupManager, HeadsUpManagerPhone headsUpManagerPhone, StatusBarStateController statusBarStateController, KeyguardStateController keyguardStateController, EventTracker eventTracker) {
+    public NotificationStat(Context context, NotificationEntryManager notificationEntryManager, NotificationGroupManager notificationGroupManager, HeadsUpManagerPhone headsUpManagerPhone, StatusBarStateController statusBarStateController, KeyguardStateController keyguardStateController, EventTracker eventTracker, NotificationPanelStat notificationPanelStat) {
         this.mContext = context;
         this.mEntryManager = notificationEntryManager;
         this.mGroupManager = notificationGroupManager;
         this.mHeadsUpManager = headsUpManagerPhone;
         this.mKeyguardStateController = keyguardStateController;
         this.mEventTracker = eventTracker;
+        this.mPanelStat = notificationPanelStat;
+        notificationGroupManager.addOnGroupChangeListener(new NotificationGroupManager.OnGroupChangeListener() {
+            public void onGroupExpansionChanged(ExpandableNotificationRow expandableNotificationRow, boolean z) {
+                if (z) {
+                    NotificationStat.this.onGroupExpand(expandableNotificationRow.getEntry(), NotificationStat.this.mGroupManager.getChildren(expandableNotificationRow.getEntry().getSbn()).size());
+                } else {
+                    NotificationStat.this.onGroupCollapse(expandableNotificationRow.getEntry(), NotificationStat.this.mGroupManager.getChildren(expandableNotificationRow.getEntry().getSbn()).size());
+                }
+            }
+        });
+    }
+
+    public void onPanelExpanded(boolean z, boolean z2, int i) {
+        String str;
+        if (this.mPanelStat == null) {
+            this.mPanelStat = new NotificationPanelStat(this.mContext, this.mEventTracker);
+            if (z) {
+                str = "lockscreen";
+            } else {
+                str = CommonUtil.getTopActivityPkg(this.mContext);
+            }
+            this.mPanelStat.start(str, z2, i);
+        }
+    }
+
+    public void onPanelCollapsed(boolean z, int i) {
+        NotificationPanelStat notificationPanelStat = this.mPanelStat;
+        if (notificationPanelStat != null) {
+            notificationPanelStat.end(z, i);
+            this.mPanelStat = null;
+        }
     }
 
     public void onClick(NotificationEntry notificationEntry) {
@@ -67,6 +112,10 @@ public class NotificationStat {
 
     public void onRemove(NotificationEntry notificationEntry) {
         ArrayList<NotificationEntry> children;
+        NotificationPanelStat notificationPanelStat = this.mPanelStat;
+        if (notificationPanelStat != null) {
+            notificationPanelStat.markRemove();
+        }
         int notifIndex = getNotifIndex(notificationEntry);
         onRemoveSingle(notificationEntry, notifIndex);
         if (this.mGroupManager.isSummaryOfGroup(notificationEntry.getSbn()) && (children = this.mGroupManager.getChildren(notificationEntry.getSbn())) != null) {
@@ -84,6 +133,11 @@ public class NotificationStat {
     }
 
     public void onRemoveAll(int i) {
+        NotificationPanelStat notificationPanelStat = this.mPanelStat;
+        if (notificationPanelStat != null) {
+            notificationPanelStat.markRemoveAll();
+            this.mPanelStat.markRemove();
+        }
         handleCancelAllEvent(i);
     }
 
@@ -106,6 +160,67 @@ public class NotificationStat {
 
     public void onSetConfig(NotificationEntry notificationEntry) {
         handleSetConfigEvent(notificationEntry);
+    }
+
+    public void onOpenQSPanel() {
+        NotificationPanelStat notificationPanelStat = this.mPanelStat;
+        if (notificationPanelStat != null) {
+            notificationPanelStat.markOpenQSPanel();
+        }
+    }
+
+    public void onClickQSTitle() {
+        NotificationPanelStat notificationPanelStat = this.mPanelStat;
+        if (notificationPanelStat != null) {
+            notificationPanelStat.markClickQS();
+        }
+    }
+
+    public void onSlideBrightnessBar() {
+        NotificationPanelStat notificationPanelStat = this.mPanelStat;
+        if (notificationPanelStat != null) {
+            notificationPanelStat.markChangeBrightness();
+        }
+    }
+
+    public void onGroupExpand(NotificationEntry notificationEntry, int i) {
+        handleGroupExpandEvent(notificationEntry, i);
+    }
+
+    public void onGroupCollapse(NotificationEntry notificationEntry, int i) {
+        handleGroupCollapseEvent(notificationEntry, i);
+    }
+
+    public void onFloatAutoCollapse(NotificationEntry notificationEntry) {
+        handleFloatAutoCollapseEvent(notificationEntry);
+    }
+
+    public void onFloatManualCollapse(NotificationEntry notificationEntry, boolean z) {
+        handleFloatManualCollapse(notificationEntry, z ^ true ? 1 : 0);
+    }
+
+    public void onClickAllowNotification(NotificationEntry notificationEntry) {
+        handleClickAllowNotificationEvent(notificationEntry);
+    }
+
+    public void onClickSetUnimportant(NotificationEntry notificationEntry) {
+        handleClickSetUnimportantEvent(notificationEntry);
+    }
+
+    public void onClickMore(NotificationEntry notificationEntry) {
+        handleClickMoreEvent(notificationEntry);
+    }
+
+    public void onExitModal(NotificationEntry notificationEntry, String str) {
+        handleExitModalEvent(notificationEntry, str);
+    }
+
+    public void onModalDialogConfirm(NotificationEntry notificationEntry, String str) {
+        handleModalDialogConfirmEvent(notificationEntry, str);
+    }
+
+    public void onModalDialogCancel(NotificationEntry notificationEntry, String str, String str2) {
+        handleModalDialogCancelEvent(notificationEntry, str, str2);
     }
 
     public void logVisibilityChanges(List<String> list, List<String> list2, boolean z, boolean z2) {
@@ -180,6 +295,7 @@ public class NotificationStat {
             }
         }
         notificationEntry.getSbn().seeTime = 0;
+        hashMap.put("is_group", Integer.valueOf(getIsNotificationGrouped(notificationEntry)));
         return hashMap;
     }
 
@@ -203,7 +319,7 @@ public class NotificationStat {
     }
 
     private void handleClickEvent(NotificationEntry notificationEntry) {
-        this.mEventTracker.track(new ClickEvent(getNotifPkg(notificationEntry), getNotifTargetPkg(notificationEntry), getNotifTsId(notificationEntry), getNotifIndex(notificationEntry), getNotifClearable(notificationEntry), getNotifSource(notificationEntry), getNotifIndex(notificationEntry), "com.miui.notification".equals(notificationEntry.getSbn().getOpPkg()) ? notificationEntry.getSbn().getTag() : ""));
+        this.mEventTracker.track(new ClickEvent(getNotifPkg(notificationEntry), getNotifTargetPkg(notificationEntry), getNotifTsId(notificationEntry), getNotifIndex(notificationEntry), getNotifClearable(notificationEntry), getNotifSource(notificationEntry), getNotifIndex(notificationEntry), "com.miui.notification".equals(notificationEntry.getSbn().getOpPkg()) ? notificationEntry.getSbn().getTag() : "", getIsNotificationGrouped(notificationEntry)));
     }
 
     private void handleExpansionChangedEvent(NotificationEntry notificationEntry, boolean z, boolean z2) {
@@ -219,7 +335,7 @@ public class NotificationStat {
     }
 
     private void handleCancelEvent(NotificationEntry notificationEntry, int i) {
-        this.mEventTracker.track(new CancelEvent(getNotifPkg(notificationEntry), getNotifTargetPkg(notificationEntry), getNotifTsId(notificationEntry), i, getNotifClearable(notificationEntry), getNotifSource(notificationEntry), getNotifIndex(notificationEntry)));
+        this.mEventTracker.track(new CancelEvent(getNotifPkg(notificationEntry), getNotifTargetPkg(notificationEntry), getNotifTsId(notificationEntry), i, getNotifClearable(notificationEntry), getNotifSource(notificationEntry), getNotifIndex(notificationEntry), getIsNotificationGrouped(notificationEntry)));
     }
 
     private void handleCancelAllEvent(int i) {
@@ -227,11 +343,51 @@ public class NotificationStat {
     }
 
     private void handleMenuOpenEvent(NotificationEntry notificationEntry) {
-        this.mEventTracker.track(new MenuOpenEvent(getNotifPkg(notificationEntry), getNotifTargetPkg(notificationEntry), getNotifTsId(notificationEntry), getNotifStyle(notificationEntry), getNotifClearable(notificationEntry), getNotifSource(notificationEntry), getNotifIndex(notificationEntry)));
+        this.mEventTracker.track(new MenuOpenEvent(getNotifPkg(notificationEntry), getNotifTargetPkg(notificationEntry), getNotifTsId(notificationEntry), getNotifStyle(notificationEntry), getNotifClearable(notificationEntry), getNotifSource(notificationEntry), getNotifIndex(notificationEntry), getIsNotificationGrouped(notificationEntry)));
     }
 
     private void handleSetConfigEvent(NotificationEntry notificationEntry) {
         this.mEventTracker.track(new SetConfigEvent(getNotifPkg(notificationEntry), getNotifTargetPkg(notificationEntry), getNotifTsId(notificationEntry), getNotifStyle(notificationEntry), getNotifClearable(notificationEntry), -1, NotificationUtil.getBucket(), "panel"));
+    }
+
+    private void handleGroupExpandEvent(NotificationEntry notificationEntry, int i) {
+        this.mEventTracker.track(new GroupExpandEvent(getNotifPkg(notificationEntry), getNotifTargetPkg(notificationEntry), i));
+    }
+
+    private void handleGroupCollapseEvent(NotificationEntry notificationEntry, int i) {
+        this.mEventTracker.track(new GroupCollapseEvent(getNotifPkg(notificationEntry), getNotifTargetPkg(notificationEntry), i));
+    }
+
+    private void handleFloatAutoCollapseEvent(NotificationEntry notificationEntry) {
+        this.mEventTracker.track(new FloatAutoCollapseEvent(getNotifPkg(notificationEntry), getNotifTargetPkg(notificationEntry), getNotifStyle(notificationEntry), getScreenOrientation()));
+    }
+
+    private void handleFloatManualCollapse(NotificationEntry notificationEntry, int i) {
+        this.mEventTracker.track(new FloatManualCollapseEvent(getNotifPkg(notificationEntry), getNotifTargetPkg(notificationEntry), getNotifStyle(notificationEntry), i, getScreenOrientation()));
+    }
+
+    private void handleClickAllowNotificationEvent(NotificationEntry notificationEntry) {
+        this.mEventTracker.track(new ClickAllowNotificationEvent(getNotifPkg(notificationEntry), getNotifTargetPkg(notificationEntry), getNotifStyle(notificationEntry)));
+    }
+
+    private void handleClickSetUnimportantEvent(NotificationEntry notificationEntry) {
+        this.mEventTracker.track(new ClickSetUnimportant(getNotifPkg(notificationEntry), getNotifTargetPkg(notificationEntry), getNotifStyle(notificationEntry)));
+    }
+
+    private void handleClickMoreEvent(NotificationEntry notificationEntry) {
+        this.mEventTracker.track(new ClickMoreEvent(getNotifPkg(notificationEntry), getNotifTargetPkg(notificationEntry), getNotifStyle(notificationEntry)));
+    }
+
+    private void handleExitModalEvent(NotificationEntry notificationEntry, String str) {
+        this.mEventTracker.track(new ExitModalEvent(getNotifPkg(notificationEntry), getNotifTargetPkg(notificationEntry), getNotifStyle(notificationEntry), str));
+    }
+
+    private void handleModalDialogConfirmEvent(NotificationEntry notificationEntry, String str) {
+        this.mEventTracker.track(new ModalDialogConfirmEvent(getNotifPkg(notificationEntry), getNotifTargetPkg(notificationEntry), getNotifStyle(notificationEntry), str));
+    }
+
+    private void handleModalDialogCancelEvent(NotificationEntry notificationEntry, String str, String str2) {
+        this.mEventTracker.track(new ModalDialogCancelEvent(getNotifPkg(notificationEntry), getNotifTargetPkg(notificationEntry), getNotifStyle(notificationEntry), str, str2));
     }
 
     private String getNotifPkg(NotificationEntry notificationEntry) {
@@ -277,7 +433,15 @@ public class NotificationStat {
         return NotifSource.PANEL.name();
     }
 
+    private int getIsNotificationGrouped(NotificationEntry notificationEntry) {
+        return (notificationEntry.isChildInGroup() || notificationEntry.getSbn().getNotification().isGroupSummary()) ? 1 : 0;
+    }
+
     private NotificationEntry getNotifEntry(String str) {
         return this.mEntryManager.getActiveNotificationUnfiltered(str);
+    }
+
+    private int getScreenOrientation() {
+        return this.mContext.getResources().getConfiguration().orientation;
     }
 }

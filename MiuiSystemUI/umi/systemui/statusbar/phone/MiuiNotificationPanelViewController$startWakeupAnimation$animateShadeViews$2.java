@@ -5,10 +5,10 @@ import kotlin.jvm.functions.Function1;
 import kotlin.jvm.internal.Lambda;
 
 /* compiled from: MiuiNotificationPanelViewController.kt */
-final class MiuiNotificationPanelViewController$onStartedWakingUp$animateShadeViews$2 extends Lambda implements Function1<View, Boolean> {
-    public static final MiuiNotificationPanelViewController$onStartedWakingUp$animateShadeViews$2 INSTANCE = new MiuiNotificationPanelViewController$onStartedWakingUp$animateShadeViews$2();
+final class MiuiNotificationPanelViewController$startWakeupAnimation$animateShadeViews$2 extends Lambda implements Function1<View, Boolean> {
+    public static final MiuiNotificationPanelViewController$startWakeupAnimation$animateShadeViews$2 INSTANCE = new MiuiNotificationPanelViewController$startWakeupAnimation$animateShadeViews$2();
 
-    MiuiNotificationPanelViewController$onStartedWakingUp$animateShadeViews$2() {
+    MiuiNotificationPanelViewController$startWakeupAnimation$animateShadeViews$2() {
         super(1);
     }
 
@@ -37,6 +37,6 @@ final class MiuiNotificationPanelViewController$onStartedWakingUp$animateShadeVi
         L_0x0013:
             return r0
         */
-        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.phone.MiuiNotificationPanelViewController$onStartedWakingUp$animateShadeViews$2.invoke(android.view.View):boolean");
+        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.phone.MiuiNotificationPanelViewController$startWakeupAnimation$animateShadeViews$2.invoke(android.view.View):boolean");
     }
 }

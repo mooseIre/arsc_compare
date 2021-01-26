@@ -45,21 +45,6 @@ public class PhoneStatusBarView extends PanelBar {
     private ScrimController mScrimController;
     private int mStatusBarHeight;
 
-    public void initMiuiViews() {
-    }
-
-    public void onMiuiAttachedToWindow() {
-    }
-
-    public void onMiuiDetachedToWindow() {
-    }
-
-    public void setNotificationIconAreaInnner(View view) {
-    }
-
-    public void setStatusBarType(int i) {
-    }
-
     public PhoneStatusBarView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
     }
@@ -76,7 +61,6 @@ public class PhoneStatusBarView extends PanelBar {
         this.mBattery = (DarkIconDispatcher.DarkReceiver) findViewById(C0015R$id.battery);
         this.mCutoutSpace = findViewById(C0015R$id.cutout_space_view);
         this.mCenterIconSpace = findViewById(C0015R$id.centered_icon_area);
-        initMiuiViews();
         updateResources();
     }
 
@@ -84,7 +68,6 @@ public class PhoneStatusBarView extends PanelBar {
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
         ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).addDarkReceiver(this.mBattery);
-        onMiuiAttachedToWindow();
         if (updateOrientationAndCutout()) {
             updateLayoutForCutout();
         }
@@ -93,7 +76,6 @@ public class PhoneStatusBarView extends PanelBar {
     /* access modifiers changed from: protected */
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        onMiuiDetachedToWindow();
         ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).removeDarkReceiver(this.mBattery);
         this.mDisplayCutout = null;
     }

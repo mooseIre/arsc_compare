@@ -160,6 +160,7 @@ import com.android.systemui.statusbar.notification.MiuiActivityLaunchAnimator;
 import com.android.systemui.statusbar.notification.NotificationActivityStarter;
 import com.android.systemui.statusbar.notification.NotificationWakeUpCoordinator;
 import com.android.systemui.statusbar.notification.VisualStabilityManager;
+import com.android.systemui.statusbar.notification.analytics.NotificationStat;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import com.android.systemui.statusbar.notification.init.NotificationsController;
 import com.android.systemui.statusbar.notification.interruption.BypassHeadsUpNotifier;
@@ -188,6 +189,7 @@ import com.android.systemui.statusbar.policy.UserInfoControllerImpl;
 import com.android.systemui.statusbar.policy.UserSwitcherController;
 import com.android.systemui.volume.VolumeComponent;
 import com.miui.systemui.analytics.SettingsJobSchedulerService;
+import com.miui.systemui.events.ModalExitMode;
 import com.miui.systemui.util.CommonUtil;
 import dagger.Lazy;
 import java.io.FileDescriptor;
@@ -248,7 +250,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
                 if (StatusBar.this.mBubbleController.isStackExpanded()) {
                     StatusBar.this.mBubbleController.collapseStack();
                 }
-                ((ModalController) Dependency.get(ModalController.class)).animExitModal(150, true);
+                ((ModalController) Dependency.get(ModalController.class)).animExitModal(150, true, ModalExitMode.OTHER.name());
                 if (StatusBar.this.mLockscreenUserManager.isCurrentProfile(getSendingUserId())) {
                     String stringExtra = intent.getStringExtra("reason");
                     if (stringExtra != null && stringExtra.equals("recentapps")) {
@@ -2346,6 +2348,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
 
     public void animateCollapsePanels(int i, boolean z) {
         this.mShadeController.animateCollapsePanels(i, z, false, 1.0f);
+        ((NotificationStat) Dependency.get(NotificationStat.class)).onPanelCollapsed(true, this.mNotificationPanelViewController.getActiveNotificationsCount());
     }
 
     /* access modifiers changed from: package-private */
@@ -2398,6 +2401,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
     /* access modifiers changed from: package-private */
     public void makeExpandedInvisible() {
         if (this.mExpandedVisible && this.mNotificationShadeWindowView != null) {
+            ((NotificationStat) Dependency.get(NotificationStat.class)).onPanelCollapsed(true, this.mNotificationPanelViewController.getActiveNotificationsCount());
             this.mStatusBarView.collapsePanel(false, false, 1.0f);
             this.mNotificationPanelViewController.closeQs();
             this.mExpandedVisible = false;
@@ -3662,6 +3666,9 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         this.mShadeController.runPostCollapseRunnables();
         if (!this.mPresenter.isPresenterFullyCollapsed()) {
             this.mNotificationShadeWindowController.setNotificationShadeFocusable(true);
+        }
+        if (!isKeyguardShowing()) {
+            ((NotificationStat) Dependency.get(NotificationStat.class)).onPanelCollapsed(true, this.mNotificationPanelViewController.getActiveNotificationsCount());
         }
     }
 
