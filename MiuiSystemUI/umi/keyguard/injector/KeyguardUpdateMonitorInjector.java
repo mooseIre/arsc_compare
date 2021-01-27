@@ -278,7 +278,7 @@ public final class KeyguardUpdateMonitorInjector implements SuperSaveModeControl
         if (this.mSimLocked != z) {
             this.mSimLocked = z;
             if (z) {
-                ((MiuiFaceUnlockManager) Dependency.get(MiuiFaceUnlockManager.class)).stopFaceUnlock();
+                ((KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class)).cancelFaceAuth();
                 ((KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class)).updateFingerprintListeningState();
             }
             forEachCallback(new KeyguardUpdateMonitorInjector$handleSimLockedStateChange$1(z));

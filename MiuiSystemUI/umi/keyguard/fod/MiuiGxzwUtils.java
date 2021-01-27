@@ -70,6 +70,10 @@ class MiuiGxzwUtils {
         return GXZW_LOWLIGHT_SENSOR;
     }
 
+    public static boolean isSupportNonuiSensor() {
+        return (SystemProperties.getInt("ro.vendor.touchfeature.type", 0) & 128) != 0;
+    }
+
     public static void caculateGxzwIconSize(Context context) {
         int i = context.getResources().getConfiguration().densityDpi;
         int i2 = context.getResources().getConfiguration().screenWidthDp;

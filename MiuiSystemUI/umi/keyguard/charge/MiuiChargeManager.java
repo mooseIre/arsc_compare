@@ -179,6 +179,15 @@ public class MiuiChargeManager implements Dumpable {
         }
     }
 
+    public int getCurrentChargeDeviceType() {
+        MiuiBatteryStatus miuiBatteryStatus = this.mBatteryStatus;
+        if (miuiBatteryStatus == null || !miuiBatteryStatus.isPluggedIn()) {
+            return -1;
+        }
+        MiuiBatteryStatus miuiBatteryStatus2 = this.mBatteryStatus;
+        return getCurrentChargeDeviceType(miuiBatteryStatus2.wireState, miuiBatteryStatus2.chargeDeviceType);
+    }
+
     /* access modifiers changed from: private */
     public int getCurrentChargeDeviceType(int i, int i2) {
         if (i == 10) {

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Rect;
+import android.hardware.biometrics.BiometricSourceType;
 import android.media.AudioManager;
 import android.provider.Settings;
 import android.security.MiuiLockPatternUtils;
@@ -57,7 +58,7 @@ public class AwesomeLockScreen extends FrameLayout implements LockScreenRoot.Loc
     private StatusBar mStatusBar;
     private StatusBarStateController mStatusBarStateController;
     private KeyguardUpdateMonitor mUpdateMonitor;
-    KeyguardUpdateMonitorCallback mUpdateMonitorCallback;
+    MiuiKeyguardUpdateMonitorCallback mUpdateMonitorCallback;
     private long mWakeStartTime;
 
     private void updateStatusBarColormode() {
@@ -86,7 +87,7 @@ public class AwesomeLockScreen extends FrameLayout implements LockScreenRoot.Loc
         this.mIsPaused = false;
         this.mIsFocus = true;
         this.mKeyguardBouncerShowing = false;
-        this.mUpdateMonitorCallback = new KeyguardUpdateMonitorCallback() {
+        this.mUpdateMonitorCallback = new MiuiKeyguardUpdateMonitorCallback() {
             public void onRefreshBatteryInfo(MiuiBatteryStatus miuiBatteryStatus) {
                 super.onRefreshBatteryInfo(miuiBatteryStatus);
                 Log.d("AwesomeLockScreen", "onRefreshBatteryInfo: isBatteryLow = " + miuiBatteryStatus.isBatteryLow() + " isPluggedIn = " + miuiBatteryStatus.isPluggedIn() + " level = " + miuiBatteryStatus.getLevel());
@@ -99,31 +100,38 @@ public class AwesomeLockScreen extends FrameLayout implements LockScreenRoot.Loc
                 boolean unused = AwesomeLockScreen.this.mKeyguardBouncerShowing = z;
                 AwesomeLockScreen.this.updatePauseResumeStatus();
             }
-        };
-        this.mFaceUnlockCallback = new FaceUnlockCallback(this) {
-            public void onFaceAuthHelp(int i) {
+
+            public void onBiometricHelp(int i, String str, BiometricSourceType biometricSourceType) {
+                if (biometricSourceType != BiometricSourceType.FACE) {
+                    return;
+                }
+                if (i == 3) {
+                    Log.i("AwesomeLockScreen", "onFaceAuthTimeOut");
+                    Utils.putVariableNumber("face_detect_state_msg", AwesomeLockScreen.mRootHolder.getContext().mVariables, 3.0d);
+                    return;
+                }
                 Log.i("AwesomeLockScreen", "onFaceAuthHelp");
                 Utils.putVariableNumber("face_detect_help_msg", AwesomeLockScreen.mRootHolder.getContext().mVariables, (double) i);
             }
 
-            public void onFaceAuthenticated() {
-                Log.i("AwesomeLockScreen", "onFaceAuthenticated");
-                Utils.putVariableNumber("face_detect_state_msg", AwesomeLockScreen.mRootHolder.getContext().mVariables, 2.0d);
+            public void onBiometricAuthenticated(int i, BiometricSourceType biometricSourceType, boolean z) {
+                if (biometricSourceType == BiometricSourceType.FACE) {
+                    Log.i("AwesomeLockScreen", "onFaceAuthenticated");
+                    Utils.putVariableNumber("face_detect_state_msg", AwesomeLockScreen.mRootHolder.getContext().mVariables, 2.0d);
+                }
             }
 
-            public void onFaceAuthFailed() {
-                Log.i("AwesomeLockScreen", "onFaceAuthFailed");
-                Utils.putVariableNumber("face_detect_state_msg", AwesomeLockScreen.mRootHolder.getContext().mVariables, 4.0d);
+            public void onBiometricAuthFailed(BiometricSourceType biometricSourceType) {
+                if (biometricSourceType == BiometricSourceType.FACE) {
+                    Log.i("AwesomeLockScreen", "onFaceAuthFailed");
+                    Utils.putVariableNumber("face_detect_state_msg", AwesomeLockScreen.mRootHolder.getContext().mVariables, 4.0d);
+                }
             }
-
+        };
+        this.mFaceUnlockCallback = new FaceUnlockCallback(this) {
             public void onFaceAuthLocked() {
                 Log.i("AwesomeLockScreen", "onFaceAuthLocked");
                 Utils.putVariableNumber("face_detect_state_msg", AwesomeLockScreen.mRootHolder.getContext().mVariables, 5.0d);
-            }
-
-            public void onFaceAuthTimeOut(boolean z) {
-                Log.i("AwesomeLockScreen", "onFaceAuthTimeOut");
-                Utils.putVariableNumber("face_detect_state_msg", AwesomeLockScreen.mRootHolder.getContext().mVariables, 3.0d);
             }
 
             public void onFaceEnableChange(boolean z, boolean z2) {
@@ -377,7 +385,7 @@ public class AwesomeLockScreen extends FrameLayout implements LockScreenRoot.Loc
     }
 
     public void stopLockScreenFaceUnlock() {
-        ((MiuiFaceUnlockManager) Dependency.get(MiuiFaceUnlockManager.class)).stopFaceUnlock();
+        ((KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class)).cancelFaceAuth();
     }
 
     public void disableLockScreenFaceUnlockAnim(boolean z) {

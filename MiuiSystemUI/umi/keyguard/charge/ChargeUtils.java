@@ -29,6 +29,7 @@ public class ChargeUtils {
     private static final boolean SUPPORT_WIRELESS_CHARGE = new File("/sys/class/power_supply/wireless/signal_strength").exists();
     private static int WAVE_DELAY_TIME = 1000;
     private static List<String> mIsSupportStrongSuperRapidChargeList = new ArrayList();
+    private static List<String> mSupportWireless67Charge = new ArrayList();
     public static MiuiBatteryStatus sBatteryStatus = null;
     private static boolean sChargeAnimationDisabled = false;
     private static boolean sNeedRepositionDevice = SUPPORT_WIRELESS_CHARGE;
@@ -62,14 +63,14 @@ public class ChargeUtils {
     }
 
     public static boolean isWirelessStrongSuperRapidCharge(int i) {
-        if (i == 14) {
+        if (i == 14 || i == 15) {
             return true;
         }
         return SUPPORT_WIRELESS_CHARGE;
     }
 
     public static boolean isWirelessSuperRapidCharge(int i) {
-        if (i < 9 || i == 14) {
+        if (i < 9 || i == 14 || i == 15) {
             return SUPPORT_WIRELESS_CHARGE;
         }
         return true;
@@ -180,6 +181,17 @@ public class ChargeUtils {
 
     public static boolean isStrongSuperQuickCharging() {
         return ((MiuiChargeManager) Dependency.get(MiuiChargeManager.class)).isStrongSuperQuickCharging();
+    }
+
+    public static boolean isSupport67WWirelessStrongCharge() {
+        Context contextForUser = ((UserSwitcherController) Dependency.get(UserSwitcherController.class)).getContextForUser();
+        if (mSupportWireless67Charge.isEmpty() && contextForUser != null) {
+            mSupportWireless67Charge = Arrays.asList(contextForUser.getResources().getStringArray(C0008R$array.keyguard_wireless_strong_charge_67w));
+        }
+        if (((MiuiChargeManager) Dependency.get(MiuiChargeManager.class)).getCurrentChargeDeviceType() != 15 || !mSupportWireless67Charge.contains(Build.DEVICE)) {
+            return SUPPORT_WIRELESS_CHARGE;
+        }
+        return true;
     }
 
     public static long getHours(long j) {

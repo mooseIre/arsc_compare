@@ -72,7 +72,7 @@ class MiuiGxzwSensor {
     MiuiGxzwSensor(Context context) {
         this.mContext = context;
         this.mSensorManager = (SensorManager) context.getSystemService("sensor");
-        this.mSupportNonuiSensor = context.getResources().getBoolean(C0010R$bool.config_enableFodNonuiSensor);
+        this.mSupportNonuiSensor = isSupportNonuiSensor();
     }
 
     public void registerDozeSensor(MiuiGxzwSensorListener miuiGxzwSensorListener) {
@@ -87,6 +87,21 @@ class MiuiGxzwSensor {
                     MiuiGxzwSensor.this.doRegisterDozeSensor();
                 }
             });
+        }
+    }
+
+    private boolean isSupportNonuiSensor() {
+        SensorManager sensorManager = this.mSensorManager;
+        if (sensorManager == null) {
+            Log.e("MiuiGxzwSensor", "sensor not supported");
+            return false;
+        } else if (sensorManager.getDefaultSensor(TYPE_NONUI_SENSOR) == null) {
+            return false;
+        } else {
+            if (this.mContext.getResources().getBoolean(C0010R$bool.config_enableFodNonuiSensor) || MiuiGxzwUtils.isSupportNonuiSensor()) {
+                return true;
+            }
+            return false;
         }
     }
 

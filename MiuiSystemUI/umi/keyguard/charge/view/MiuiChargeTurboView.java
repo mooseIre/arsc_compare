@@ -15,6 +15,7 @@ import android.view.WindowManager;
 import android.view.animation.Interpolator;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import com.android.keyguard.charge.ChargeUtils;
 import com.android.systemui.C0010R$bool;
 import com.android.systemui.C0013R$drawable;
 import miui.maml.animation.interpolater.CubicEaseOutInterpolater;
@@ -22,6 +23,7 @@ import miui.maml.animation.interpolater.CubicEaseOutInterpolater;
 public class MiuiChargeTurboView extends RelativeLayout {
     private AnimatorSet animatorSet;
     private Interpolator cubicEaseOutInterpolator;
+    private Drawable m67WWirelessStrongChargeIconDrawable;
     private ImageView mChargeIcon;
     private Drawable mChargeIconDrawable;
     private int mChargeIconHeight;
@@ -70,6 +72,7 @@ public class MiuiChargeTurboView extends RelativeLayout {
         this.mTurboTailIconDrawable = context.getDrawable(C0013R$drawable.charge_animation_turbo_tail_icon);
         this.mWiredStrongChargeIconDrawable = context.getDrawable(C0013R$drawable.charge_animation_wired_strong_charge_icon);
         this.mWirelessStrongChargeIconDrawable = context.getDrawable(C0013R$drawable.charge_animation_wireless_strong_charge_icon);
+        this.m67WWirelessStrongChargeIconDrawable = context.getDrawable(C0013R$drawable.charge_animation_wireless_strong_67_charge_icon);
         this.mWindowManager = (WindowManager) context.getSystemService("window");
         this.mScreenSize = new Point();
         this.mWindowManager.getDefaultDisplay().getRealSize(this.mScreenSize);
@@ -176,6 +179,7 @@ public class MiuiChargeTurboView extends RelativeLayout {
     }
 
     public void setWirelessStrongViewShowState() {
+        updateWirelessStrongChargeIcon();
         this.mChargeIcon.setAlpha(0.0f);
         this.mTailIcon.setAlpha(0.0f);
         this.mTurboIcon.setAlpha(0.0f);
@@ -184,11 +188,20 @@ public class MiuiChargeTurboView extends RelativeLayout {
     }
 
     public void setStrongViewInitState() {
+        updateWirelessStrongChargeIcon();
         this.mChargeIcon.setAlpha(0.0f);
         this.mTailIcon.setAlpha(0.0f);
         this.mTurboIcon.setAlpha(0.0f);
         this.mWiredStrongChargeIcon.setAlpha(0.0f);
         this.mWirelessStrongChargeIcon.setAlpha(0.0f);
+    }
+
+    private void updateWirelessStrongChargeIcon() {
+        if (ChargeUtils.isSupport67WWirelessStrongCharge()) {
+            this.mWirelessStrongChargeIcon.setImageDrawable(this.m67WWirelessStrongChargeIconDrawable);
+        } else {
+            this.mWirelessStrongChargeIcon.setImageDrawable(this.mWirelessStrongChargeIconDrawable);
+        }
     }
 
     public void animationWiredStrongToShow() {
