@@ -12,6 +12,7 @@ import android.os.Handler;
 import android.os.PowerManager;
 import android.os.SystemClock;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -270,8 +271,8 @@ public class MiuiKeyguardFaceUnlockView extends LinearLayout {
     }
 
     public void updateFaceUnlockIconStatus() {
-        if (MiuiFaceUnlockUtils.isSupportFaceUnlock(this.mContext)) {
-            if (!shouldFaceUnlockViewExecuteAnimation() || this.mFaceUnlockManager.isDisableLockScreenFaceUnlockAnim() || !shouldShowFaceUnlockImage()) {
+        if (MiuiFaceUnlockUtils.isHardwareDetected(this.mContext)) {
+            if (!shouldFaceUnlockViewExecuteAnimation() || !shouldShowFaceUnlockImage()) {
                 setVisibility(4);
             } else {
                 setVisibility(0);
@@ -287,14 +288,15 @@ public class MiuiKeyguardFaceUnlockView extends LinearLayout {
 
     private boolean shouldShowFaceUnlockImage() {
         Class cls = KeyguardUpdateMonitorInjector.class;
-        boolean z = this.mFaceUnlockManager.isFaceAuthEnabled() && !this.mUpdateMonitor.userNeedsStrongAuth() && ((KeyguardUpdateMonitorInjector) Dependency.get(cls)).isKeyguardShowing() && !this.mFaceUnlockManager.isFaceUnlockLocked() && !this.mUpdateMonitor.isSimPinSecure();
+        boolean z = this.mFaceUnlockManager.isFaceAuthEnabled() && !this.mUpdateMonitor.userNeedsStrongAuth() && ((KeyguardUpdateMonitorInjector) Dependency.get(cls)).isKeyguardShowing() && !this.mFaceUnlockManager.isFaceTemporarilyLockout() && !this.mUpdateMonitor.isSimPinSecure() && !this.mFaceUnlockManager.isDisableLockScreenFaceUnlockAnim();
         boolean isKeyguardOccluded = ((KeyguardUpdateMonitorInjector) Dependency.get(cls)).isKeyguardOccluded();
-        if (this.mUpdateMonitor.isBouncerShowing()) {
-            if (!z || (isKeyguardOccluded && MiuiKeyguardUtils.isTopActivityCameraApp(this.mContext))) {
+        if (!this.mUpdateMonitor.isBouncerShowing()) {
+            Log.d("changyudong", "should=" + z + ";KeyguardOccluded=" + isKeyguardOccluded + ";isFaceDetectionRunning=" + this.mUpdateMonitor.isFaceDetectionRunning() + ";mLockScreenMagazinePreViewVisibility=" + this.mLockScreenMagazinePreViewVisibility);
+            if (!z || isKeyguardOccluded || MiuiFaceUnlockUtils.isSupportLiftingCamera(this.mContext) || ((!this.mUpdateMonitor.isFaceDetectionRunning() && !((KeyguardUpdateMonitorInjector) Dependency.get(cls)).isFaceUnlock()) || this.mLockScreenMagazinePreViewVisibility)) {
                 return false;
             }
             return true;
-        } else if (!z || isKeyguardOccluded || MiuiFaceUnlockUtils.isSupportLiftingCamera(this.mContext) || ((!this.mUpdateMonitor.isFaceDetectionRunning() && !((KeyguardUpdateMonitorInjector) Dependency.get(cls)).isFaceUnlock()) || this.mLockScreenMagazinePreViewVisibility)) {
+        } else if (!z || (isKeyguardOccluded && MiuiKeyguardUtils.isTopActivityCameraApp(this.mContext))) {
             return false;
         } else {
             return true;

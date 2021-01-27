@@ -20,6 +20,7 @@ import android.hardware.biometrics.CryptoObject;
 import android.hardware.biometrics.IBiometricEnabledOnKeyguardCallback;
 import android.hardware.face.FaceManager;
 import android.hardware.fingerprint.FingerprintManager;
+import android.hardware.miuiface.BaseMiuiFaceManager;
 import android.os.Bundle;
 import android.os.CancellationSignal;
 import android.os.Handler;
@@ -41,6 +42,7 @@ import android.telephony.SubscriptionManager;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.Slog;
 import android.util.SparseArray;
 import android.util.SparseBooleanArray;
 import androidx.lifecycle.Observer;
@@ -48,7 +50,6 @@ import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.widget.LockPatternUtils;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.charge.MiuiBatteryStatus;
-import com.android.keyguard.faceunlock.FaceUnlockCallback;
 import com.android.keyguard.faceunlock.MiuiFaceUnlockManager;
 import com.android.keyguard.faceunlock.MiuiFaceUnlockUtils;
 import com.android.keyguard.injector.KeyguardUpdateMonitorInjector;
@@ -186,6 +187,34 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
     public boolean mDeviceProvisioned;
     private ContentObserver mDeviceProvisionedObserver;
     private final IDreamManager mDreamManager;
+    BaseMiuiFaceManager.AuthenticationCallback mFaceAuthenticationCallback = new BaseMiuiFaceManager.AuthenticationCallback() {
+        public void onAuthenticationFailed() {
+            Slog.d("miui_face", "onAuthenticationFailed");
+            KeyguardUpdateMonitor.this.handleFaceAuthFailed();
+        }
+
+        public void onAuthenticationSucceeded(FaceManager.AuthenticationResult authenticationResult) {
+            Slog.d("miui_face", "onAuthenticationSucceeded result.getUserId()=" + authenticationResult.getUserId());
+            Trace.beginSection("KeyguardUpdateMonitor#onAuthenticationSucceeded");
+            KeyguardUpdateMonitor.this.handleFaceAuthenticated(authenticationResult.getUserId(), authenticationResult.isStrongBiometric());
+            Trace.endSection();
+        }
+
+        public void onAuthenticationHelp(int i, CharSequence charSequence) {
+            Slog.d("miui_face", "onAuthenticationHelp helpMsgId=" + i + ";helpString=" + charSequence);
+            KeyguardUpdateMonitor.this.handleFaceHelp(i, TextUtils.isEmpty(charSequence) ? "" : charSequence.toString());
+        }
+
+        public void onAuthenticationError(int i, CharSequence charSequence) {
+            Slog.d("miui_face", "onAuthenticationError errMsgId=" + i + ";errString=" + charSequence);
+            KeyguardUpdateMonitor.this.handleFaceError(i, TextUtils.isEmpty(charSequence) ? "" : charSequence.toString());
+        }
+
+        public void onAuthenticationAcquired(int i) {
+            Slog.d("miui_face", "onAuthenticationAcquired acquireInfo=" + i);
+            KeyguardUpdateMonitor.this.handleFaceAcquired(i);
+        }
+    };
     private CancellationSignal mFaceCancelSignal;
     private ArrayDeque<KeyguardFaceListenModel> mFaceListenModels;
     private final FaceManager.LockoutResetCallback mFaceLockoutResetCallback = new FaceManager.LockoutResetCallback() {
@@ -193,7 +222,7 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
             KeyguardUpdateMonitor.this.handleFaceLockoutReset();
         }
     };
-    private FaceManager mFaceManager;
+    private BaseMiuiFaceManager mFaceManager;
     private int mFaceRunningState = 0;
     /* access modifiers changed from: private */
     public SparseBooleanArray mFaceSettingEnabledForUser = new SparseBooleanArray();
@@ -271,30 +300,6 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
     /* access modifiers changed from: private */
     public LockPatternUtils mLockPatternUtils;
     private boolean mLogoutEnabled;
-    FaceUnlockCallback mMiuiFaceAuthenticationCallback = new FaceUnlockCallback() {
-        public void onFaceAuthHelp(int i) {
-            KeyguardUpdateMonitor keyguardUpdateMonitor = KeyguardUpdateMonitor.this;
-            keyguardUpdateMonitor.handleFaceHelp(i, MiuiFaceUnlockUtils.getFaceHelpInfo(keyguardUpdateMonitor.mContext, i));
-        }
-
-        public void onFaceAuthenticated() {
-            Trace.beginSection("KeyguardUpdateMonitor#onAuthenticationSucceeded");
-            KeyguardUpdateMonitor.this.handleFaceAuthenticated(KeyguardUpdateMonitor.getCurrentUser(), false);
-            Trace.endSection();
-        }
-
-        public void onFaceAuthFailed() {
-            KeyguardUpdateMonitor.this.handleFaceAuthFailed();
-        }
-
-        public void onFaceAuthTimeOut(boolean z) {
-            KeyguardUpdateMonitor.this.handleFaceError(3, (String) null);
-        }
-
-        public void onFaceAuthLocked() {
-            KeyguardUpdateMonitor.this.handleFaceError(9, (String) null);
-        }
-    };
     private MiuiFaceUnlockManager mMiuiFaceUnlockManager;
     private boolean mNeedsSlowUnlockTransition;
     private int mPhoneState;
@@ -760,6 +765,22 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
     }
 
     /* access modifiers changed from: private */
+    public void handleFaceAcquired(int i) {
+        Assert.isMainThread();
+        if (i == 0) {
+            if (DEBUG_FACE) {
+                Log.d("KeyguardUpdateMonitor", "Face acquired");
+            }
+            for (int i2 = 0; i2 < this.mCallbacks.size(); i2++) {
+                KeyguardUpdateMonitorCallback keyguardUpdateMonitorCallback = (KeyguardUpdateMonitorCallback) this.mCallbacks.get(i2).get();
+                if (keyguardUpdateMonitorCallback != null) {
+                    keyguardUpdateMonitorCallback.onBiometricAcquired(BiometricSourceType.FACE);
+                }
+            }
+        }
+    }
+
+    /* access modifiers changed from: private */
     public void handleFaceAuthenticated(int i, boolean z) {
         Trace.beginSection("KeyGuardUpdateMonitor#handlerFaceAuthenticated");
         try {
@@ -797,7 +818,7 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
         for (int i2 = 0; i2 < this.mCallbacks.size(); i2++) {
             KeyguardUpdateMonitorCallback keyguardUpdateMonitorCallback = (KeyguardUpdateMonitorCallback) this.mCallbacks.get(i2).get();
             if (keyguardUpdateMonitorCallback != null) {
-                keyguardUpdateMonitorCallback.onBiometricHelp(i, str, BiometricSourceType.FACE);
+                keyguardUpdateMonitorCallback.onBiometricHelp(i, MiuiFaceUnlockUtils.getFaceHelpInfo(this.mContext, i), BiometricSourceType.FACE);
             }
         }
     }
@@ -817,6 +838,7 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
             updateFaceListeningState();
         } else {
             setFaceRunningState(0);
+            this.mFaceCancelSignal = null;
         }
         if ((i == 1 || i == 2) && (i2 = this.mHardwareFaceUnavailableRetryCount) < 10) {
             this.mHardwareFaceUnavailableRetryCount = i2 + 1;
@@ -914,7 +936,7 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
     }
 
     public boolean getUserCanSkipBouncer(int i) {
-        return getUserHasTrust(i) || ((getUserUnlockedWithBiometric(i) || this.mUserBleAuthenticated.get(i)) && !isSimPinSecure());
+        return getUserHasTrust(i) || getUserUnlockedWithBiometric(i) || getUserUnlockedWithBle(i);
     }
 
     public boolean getUserHasTrust(int i) {
@@ -926,10 +948,10 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
         BiometricAuthenticated biometricAuthenticated2 = this.mUserFaceAuthenticated.get(i);
         boolean z = biometricAuthenticated != null && biometricAuthenticated.mAuthenticated && isUnlockingWithBiometricAllowed(biometricAuthenticated.mIsStrongBiometric);
         boolean z2 = biometricAuthenticated2 != null && biometricAuthenticated2.mAuthenticated && isUnlockingWithBiometricAllowed(biometricAuthenticated2.mIsStrongBiometric);
-        if (z || z2) {
-            return true;
+        if (isTrustDisabled(i) || (!z && !z2)) {
+            return false;
         }
-        return false;
+        return true;
     }
 
     public void putUserBleAuthenticated(int i, boolean z) {
@@ -938,6 +960,10 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
 
     public boolean getUserBleAuthenticated(int i) {
         return this.mUserBleAuthenticated.get(i);
+    }
+
+    public boolean getUserUnlockedWithBle(int i) {
+        return !isTrustDisabled(i) && this.mUserBleAuthenticated.get(i);
     }
 
     public boolean getUserTrustIsManaged(int i) {
@@ -1234,11 +1260,6 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
     /* access modifiers changed from: protected */
     public void handleStartedWakingUp() {
         Trace.beginSection("KeyguardUpdateMonitor#handleStartedWakingUp");
-        if (this.mMiuiFaceUnlockManager.isWakeupByNotification()) {
-            ((NotificationShadeWindowController) Dependency.get(NotificationShadeWindowController.class)).setUserActivityTime(6000);
-        }
-        updateBiometricListeningState();
-        this.mMiuiFaceUnlockManager.setWakeupByNotification(false);
         Assert.isMainThread();
         for (int i = 0; i < this.mCallbacks.size(); i++) {
             KeyguardUpdateMonitorCallback keyguardUpdateMonitorCallback = (KeyguardUpdateMonitorCallback) this.mCallbacks.get(i).get();
@@ -1251,7 +1272,11 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
 
     /* access modifiers changed from: protected */
     public void handleStartedWakingUpWithReason(String str) {
-        Log.d("miui_face", "onStartedWakingUpWithReason handleStartedWakingUpWithReason");
+        if (this.mMiuiFaceUnlockManager.isWakeupByNotification()) {
+            ((NotificationShadeWindowController) Dependency.get(NotificationShadeWindowController.class)).setUserActivityTime(6000);
+        }
+        updateBiometricListeningState();
+        this.mMiuiFaceUnlockManager.setWakeupByNotification(false);
         this.mUpdateMonitorInjector.handleStartedWakingUpWithReason(str);
     }
 
@@ -1594,23 +1619,22 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
         if (this.mContext.getPackageManager().hasSystemFeature("android.hardware.fingerprint")) {
             this.mFpm = (FingerprintManager) context.getSystemService("fingerprint");
         }
-        if (this.mContext.getPackageManager().hasSystemFeature("android.hardware.biometrics.face")) {
-            this.mFaceManager = (FaceManager) context.getSystemService("face");
-        }
-        if (!(this.mFpm == null && this.mFaceManager == null)) {
+        BaseMiuiFaceManager baseMiuiFaceManager = (BaseMiuiFaceManager) context.getSystemService("miui_face");
+        this.mFaceManager = baseMiuiFaceManager;
+        if (!(this.mFpm == null && baseMiuiFaceManager == null)) {
             BiometricManager biometricManager = (BiometricManager) context.getSystemService(BiometricManager.class);
             this.mBiometricManager = biometricManager;
             biometricManager.registerEnabledOnKeyguardCallback(this.mBiometricEnabledCallback);
         }
         this.mMiuiFaceUnlockManager = (MiuiFaceUnlockManager) Dependency.get(MiuiFaceUnlockManager.class);
-        updateBiometricListeningState();
+        updateFingerprintListeningState();
         FingerprintManager fingerprintManager = this.mFpm;
         if (fingerprintManager != null) {
             fingerprintManager.addLockoutResetCallback(this.mFingerprintLockoutResetCallback);
         }
-        FaceManager faceManager = this.mFaceManager;
-        if (faceManager != null) {
-            faceManager.addLockoutResetCallback(this.mFaceLockoutResetCallback);
+        BaseMiuiFaceManager baseMiuiFaceManager2 = this.mFaceManager;
+        if (baseMiuiFaceManager2 != null) {
+            baseMiuiFaceManager2.addLockoutResetCallback(this.mFaceLockoutResetCallback);
         }
         this.mIsAutomotive = isAutomotive();
         ActivityManagerWrapper.getInstance().registerTaskStackListener(this.mTaskStackListener);
@@ -1745,9 +1769,9 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
     }
 
     public boolean shouldListenForFace() {
-        boolean z = this.mUpdateMonitorInjector.isKeyguardShowing() && this.mDeviceInteractive && !this.mGoingToSleep;
         int currentUser = getCurrentUser();
         int strongAuthForUser = this.mStrongAuthTracker.getStrongAuthForUser(currentUser);
+        boolean z = false;
         boolean z2 = containsFlag(strongAuthForUser, 2) || containsFlag(strongAuthForUser, 32);
         boolean z3 = containsFlag(strongAuthForUser, 1) || containsFlag(strongAuthForUser, 16);
         KeyguardBypassController keyguardBypassController = this.mKeyguardBypassController;
@@ -1755,16 +1779,13 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
         boolean z5 = !getUserCanSkipBouncer(currentUser) || z4;
         boolean z6 = (!z3 || (z4 && !this.mBouncer)) && !z2;
         boolean isLargeScreen = MiuiKeyguardUtils.isLargeScreen(this.mContext);
-        if (this.mSwitchingUser || isFaceDisabled(currentUser) || !z5 || isLargeScreen || this.mKeyguardGoingAway || !z6 || !this.mIsPrimaryUser) {
-            return false;
+        if ((this.mUpdateMonitorInjector.isKeyguardShowing() && this.mDeviceInteractive && !this.mGoingToSleep && !this.mSwitchingUser && !this.mKeyguardGoingAway) && z5 && z6 && ((!this.mMiuiFaceUnlockManager.isWakeupByNotification() || this.mMiuiFaceUnlockManager.isFaceUnlockStartByNotificationScreenOn()) && !this.mUpdateMonitorInjector.isChargeAnimationShowing() && ((!this.mKeyguardOccluded || (this.mBouncer && !MiuiKeyguardUtils.isTopActivityCameraApp(this.mContext))) && !this.mMiuiFaceUnlockManager.isFaceTemporarilyLockout() && !isFaceDetectionRunning() && this.mIsPrimaryUser && !userNeedsStrongAuth() && !this.mUpdateMonitorInjector.isSimLocked() && !isSimPinSecure() && !isLargeScreen && this.mMiuiFaceUnlockManager.shouldStartFaceDetectForCamera()))) {
+            z = true;
         }
-        if ((this.mMiuiFaceUnlockManager.isWakeupByNotification() && !this.mMiuiFaceUnlockManager.isFaceUnlockStartByNotificationScreenOn()) || this.mUpdateMonitorInjector.isChargeAnimationShowing()) {
-            return false;
+        if (!z) {
+            this.mMiuiFaceUnlockManager.printCannotListenFaceLog(z6, this.mKeyguardGoingAway);
         }
-        if ((!this.mKeyguardOccluded || (this.mBouncer && !MiuiKeyguardUtils.isTopActivityCameraApp(this.mContext))) && !isSimPinSecure() && !this.mMiuiFaceUnlockManager.isFaceUnlockLocked() && this.mMiuiFaceUnlockManager.shouldStartFaceDetectForCamera() && !userNeedsStrongAuth() && !((KeyguardUpdateMonitorInjector) Dependency.get(KeyguardUpdateMonitorInjector.class)).isSimLocked() && z && !this.mUpdateMonitorInjector.isFaceUnlock()) {
-            return true;
-        }
-        return false;
+        return z;
     }
 
     public void onLockIconPressed() {
@@ -1801,16 +1822,19 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
         }
         Log.v("KeyguardUpdateMonitor", "startListeningForFace()");
         int currentUser = getCurrentUser();
-        if (isUnlockWithFacePossible(currentUser) && !isFaceDetectionRunning()) {
+        if (isUnlockWithFacePossible(currentUser)) {
             CancellationSignal cancellationSignal = this.mFaceCancelSignal;
             if (cancellationSignal != null) {
                 cancellationSignal.cancel();
             }
-            CancellationSignal cancellationSignal2 = new CancellationSignal();
-            this.mFaceCancelSignal = cancellationSignal2;
-            this.mMiuiFaceUnlockManager.authenticate((CryptoObject) null, cancellationSignal2, 0, this.mMiuiFaceAuthenticationCallback, (Handler) null, currentUser);
+            this.mFaceCancelSignal = new CancellationSignal();
+            Slog.v("miui_face", "start face detect");
+            this.mFaceManager.authenticate((CryptoObject) null, this.mFaceCancelSignal, 0, this.mFaceAuthenticationCallback, (Handler) null, currentUser);
             setFaceRunningState(1);
+            handleFaceHelp(10001, "");
+            return;
         }
+        this.mMiuiFaceUnlockManager.printUnlockWithFaceImPossibleLog();
     }
 
     public boolean isUnlockingWithBiometricsPossible(int i) {
@@ -1822,12 +1846,29 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
         return fingerprintManager != null && fingerprintManager.isHardwareDetected() && !isFingerprintDisabled(i) && this.mFpm.getEnrolledFingerprints(i).size() > 0;
     }
 
-    private boolean isUnlockWithFacePossible(int i) {
+    public boolean isUnlockWithFacePossible(int i) {
         return isFaceAuthEnabledForUser(i) && !isFaceDisabled(i);
     }
 
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$isFaceAuthEnabledForUser$2 */
+    public /* synthetic */ Boolean lambda$isFaceAuthEnabledForUser$2$KeyguardUpdateMonitor(int i) {
+        BaseMiuiFaceManager baseMiuiFaceManager = this.mFaceManager;
+        return Boolean.valueOf(baseMiuiFaceManager != null && baseMiuiFaceManager.isHardwareDetected() && this.mFaceManager.isFaceFeatureEnabled() && this.mFaceManager.hasEnrolledTemplates(i) && this.mMiuiFaceUnlockManager.isFaceUnlockApplyForKeyguard() && this.mIsPrimaryUser);
+    }
+
     public boolean isFaceAuthEnabledForUser(int i) {
-        return this.mMiuiFaceUnlockManager.isFaceAuthEnabled();
+        return ((Boolean) DejankUtils.whitelistIpcs(new Supplier(i) {
+            public final /* synthetic */ int f$1;
+
+            {
+                this.f$1 = r2;
+            }
+
+            public final Object get() {
+                return KeyguardUpdateMonitor.this.lambda$isFaceAuthEnabledForUser$2$KeyguardUpdateMonitor(this.f$1);
+            }
+        })).booleanValue();
     }
 
     private void stopListeningForFingerprint() {
@@ -1855,7 +1896,6 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
             if (cancellationSignal != null) {
                 cancellationSignal.cancel();
                 this.mFaceCancelSignal = null;
-                this.mMiuiFaceUnlockManager.stopFaceUnlock();
                 if (!this.mHandler.hasCallbacks(this.mCancelNotReceived)) {
                     this.mHandler.postDelayed(this.mCancelNotReceived, 3000);
                 }
@@ -2265,12 +2305,12 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
         Log.v("KeyguardUpdateMonitor", "*** unregister callback for " + keyguardUpdateMonitorCallback);
         this.mCallbacks.removeIf(new Predicate() {
             public final boolean test(Object obj) {
-                return KeyguardUpdateMonitor.lambda$removeCallback$2(KeyguardUpdateMonitorCallback.this, (WeakReference) obj);
+                return KeyguardUpdateMonitor.lambda$removeCallback$3(KeyguardUpdateMonitorCallback.this, (WeakReference) obj);
             }
         });
     }
 
-    static /* synthetic */ boolean lambda$removeCallback$2(KeyguardUpdateMonitorCallback keyguardUpdateMonitorCallback, WeakReference weakReference) {
+    static /* synthetic */ boolean lambda$removeCallback$3(KeyguardUpdateMonitorCallback keyguardUpdateMonitorCallback, WeakReference weakReference) {
         return weakReference.get() == keyguardUpdateMonitorCallback;
     }
 
@@ -2443,7 +2483,9 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
     }
 
     public void dispatchStartedWakingUpWithReason(String str) {
-        Log.d("miui_face", "onStartedWakingUpWithReason dispatchStartedWakingUpWithReason");
+        synchronized (this) {
+            this.mDeviceInteractive = true;
+        }
         Handler handler = this.mHandler;
         handler.sendMessage(handler.obtainMessage(343, str));
     }
@@ -2495,6 +2537,10 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
 
     public boolean isDeviceInteractive() {
         return this.mDeviceInteractive;
+    }
+
+    public boolean isGoingToSleep() {
+        return this.mGoingToSleep;
     }
 
     public int getNextSubIdForState(int i) {
@@ -2597,8 +2643,8 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
             printWriter2.println(sb3.toString());
             printWriter2.println("    trustManaged=" + getUserTrustIsManaged(currentUser));
         }
-        FaceManager faceManager = this.mFaceManager;
-        if (faceManager != null && faceManager.isHardwareDetected()) {
+        BaseMiuiFaceManager baseMiuiFaceManager = this.mFaceManager;
+        if (baseMiuiFaceManager != null && baseMiuiFaceManager.isHardwareDetected()) {
             int currentUser2 = ActivityManager.getCurrentUser();
             int strongAuthForUser2 = this.mStrongAuthTracker.getStrongAuthForUser(currentUser2);
             BiometricAuthenticated biometricAuthenticated2 = this.mUserFaceAuthenticated.get(currentUser2);
@@ -2671,5 +2717,9 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
 
     public boolean isFingerprintTemporarilyLockout() {
         return this.mFingerprintLockedOut;
+    }
+
+    public void handleReeFaceLockout() {
+        this.mFaceAuthenticationCallback.onAuthenticationError(7, (CharSequence) null);
     }
 }

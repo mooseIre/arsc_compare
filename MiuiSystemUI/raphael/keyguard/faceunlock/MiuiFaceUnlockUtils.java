@@ -1,8 +1,7 @@
 package com.android.keyguard.faceunlock;
 
 import android.content.Context;
-import android.hardware.miuiface.IMiuiFaceManager;
-import android.hardware.miuiface.MiuiFaceFactory;
+import android.hardware.miuiface.BaseMiuiFaceManager;
 import android.miui.Shell;
 import android.os.UserHandle;
 import android.provider.Settings;
@@ -10,31 +9,29 @@ import android.util.Log;
 import com.android.keyguard.wallpaper.MiuiKeyguardWallpaperControllerImpl;
 import com.android.systemui.C0021R$string;
 import com.android.systemui.Dependency;
+import miui.util.FeatureParser;
 
 public class MiuiFaceUnlockUtils {
-    private static IMiuiFaceManager mFaceManager = null;
+    private static BaseMiuiFaceManager mFaceManager = null;
     protected static int mHelpStringResId = 0;
     private static boolean sIsScreenTurnOnDelayed = false;
 
-    public static boolean isSupportFaceUnlock(Context context) {
-        IMiuiFaceManager faceManager = MiuiFaceFactory.getFaceManager(context, 0);
-        mFaceManager = faceManager;
-        return faceManager.isFaceFeatureSupport();
+    public static boolean isHardwareDetected(Context context) {
+        BaseMiuiFaceManager baseMiuiFaceManager = (BaseMiuiFaceManager) context.getSystemService("miui_face");
+        mFaceManager = baseMiuiFaceManager;
+        return baseMiuiFaceManager.isHardwareDetected();
     }
 
     public static boolean isFaceFeatureEnabled(Context context) {
-        IMiuiFaceManager faceManager = MiuiFaceFactory.getFaceManager(context, 0);
-        mFaceManager = faceManager;
-        return faceManager.isFaceFeatureEnabled();
+        BaseMiuiFaceManager baseMiuiFaceManager = (BaseMiuiFaceManager) context.getSystemService("miui_face");
+        mFaceManager = baseMiuiFaceManager;
+        return baseMiuiFaceManager.isFaceFeatureEnabled();
     }
 
-    public static boolean hasEnrolledFaces(Context context) {
-        IMiuiFaceManager faceManager = MiuiFaceFactory.getFaceManager(context, 0);
-        mFaceManager = faceManager;
-        if (faceManager.hasEnrolledFaces() > 0) {
-            return true;
-        }
-        return false;
+    public static boolean hasEnrolledTemplates(Context context) {
+        BaseMiuiFaceManager baseMiuiFaceManager = (BaseMiuiFaceManager) context.getSystemService("miui_face");
+        mFaceManager = baseMiuiFaceManager;
+        return baseMiuiFaceManager.hasEnrolledTemplates();
     }
 
     public static boolean isSupportLiftingCamera(Context context) {
@@ -48,12 +45,13 @@ public class MiuiFaceUnlockUtils {
     }
 
     public static boolean isSupportScreenOnDelayed(Context context) {
-        IMiuiFaceManager faceManager = MiuiFaceFactory.getFaceManager(context, 0);
-        mFaceManager = faceManager;
-        if (!faceManager.isSupportScreenOnDelayed() || ((MiuiKeyguardWallpaperControllerImpl) Dependency.get(MiuiKeyguardWallpaperControllerImpl.class)).isAodUsingSuperWallpaper()) {
-            return false;
-        }
-        return true;
+        BaseMiuiFaceManager baseMiuiFaceManager = (BaseMiuiFaceManager) context.getSystemService("miui_face");
+        mFaceManager = baseMiuiFaceManager;
+        return baseMiuiFaceManager.isSupportScreenOnDelayed() && !((MiuiKeyguardWallpaperControllerImpl) Dependency.get(MiuiKeyguardWallpaperControllerImpl.class)).isAodUsingSuperWallpaper();
+    }
+
+    public static boolean isSupportTeeFaceunlock() {
+        return FeatureParser.getBoolean("support_tee_face_unlock", false);
     }
 
     public static void setScreenTurnOnDelayed(boolean z) {
@@ -66,7 +64,7 @@ public class MiuiFaceUnlockUtils {
     }
 
     public static void resetFaceUnlockSettingValues(Context context) {
-        if (!hasEnrolledFaces(context)) {
+        if (!hasEnrolledTemplates(context)) {
             Settings.Secure.putIntForUser(context.getContentResolver(), "face_unlcok_apply_for_lock", 0, UserHandle.myUserId());
             Settings.Secure.putIntForUser(context.getContentResolver(), "face_unlock_success_stay_screen", 0, UserHandle.myUserId());
             Settings.Secure.putIntForUser(context.getContentResolver(), "face_unlock_success_show_message", 0, UserHandle.myUserId());
