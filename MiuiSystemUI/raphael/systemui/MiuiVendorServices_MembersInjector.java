@@ -1,6 +1,7 @@
 package com.android.systemui;
 
 import com.android.keyguard.charge.MiuiChargeManager;
+import com.android.keyguard.faceunlock.MiuiFaceUnlockManager;
 import com.android.keyguard.fod.policy.MiuiGxzwPolicy;
 import com.android.systemui.recents.MiuiFullScreenGestureProxy;
 import com.android.systemui.recents.MiuiRecentProxy;
@@ -83,5 +84,9 @@ public final class MiuiVendorServices_MembersInjector {
 
     public static void injectMNotificationEntryManager(MiuiVendorServices miuiVendorServices, NotificationEntryManager notificationEntryManager) {
         miuiVendorServices.mNotificationEntryManager = notificationEntryManager;
+    }
+
+    public static void injectMMiuiFaceUnlockManager(MiuiVendorServices miuiVendorServices, MiuiFaceUnlockManager miuiFaceUnlockManager) {
+        miuiVendorServices.mMiuiFaceUnlockManager = miuiFaceUnlockManager;
     }
 }

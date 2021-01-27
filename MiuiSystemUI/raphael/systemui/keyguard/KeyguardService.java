@@ -10,6 +10,7 @@ import android.os.Parcel;
 import android.os.RemoteException;
 import android.os.Trace;
 import android.util.Log;
+import android.util.Slog;
 import com.android.internal.policy.IKeyguardDismissCallback;
 import com.android.internal.policy.IKeyguardDrawnCallback;
 import com.android.internal.policy.IKeyguardExitCallback;
@@ -77,7 +78,8 @@ public class KeyguardService extends Service {
         }
 
         public void onStartedWakingUp(String str) {
-            Trace.beginSection("KeyguardService.mBinder#onStartedWakingUp");
+            Trace.beginSection("KeyguardService.mBinder#onStartedWakingUpWithReason");
+            Slog.d("miui_face", "receive waking up with reason");
             KeyguardService.this.checkPermission();
             KeyguardService.this.mKeyguardViewMediator.onStartedWakingUp(str);
             Trace.endSection();

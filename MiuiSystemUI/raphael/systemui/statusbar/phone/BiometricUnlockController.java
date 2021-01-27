@@ -182,7 +182,9 @@ public class BiometricUnlockController extends MiuiKeyguardUpdateMonitorCallback
 
     public void onBiometricAcquired(BiometricSourceType biometricSourceType) {
         Trace.beginSection("BiometricUnlockController#onBiometricAcquired");
-        this.mFpiState = MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.ACQUIRED;
+        if (biometricSourceType == BiometricSourceType.FINGERPRINT) {
+            this.mFpiState = MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.ACQUIRED;
+        }
         releaseBiometricWakeLock();
         if (!this.mUpdateMonitor.isDeviceInteractive()) {
             if (LatencyTracker.isEnabled(this.mContext)) {
@@ -440,7 +442,7 @@ public class BiometricUnlockController extends MiuiKeyguardUpdateMonitorCallback
 
     private int calculateMode(BiometricSourceType biometricSourceType, boolean z) {
         if (biometricSourceType == BiometricSourceType.FACE || biometricSourceType == BiometricSourceType.IRIS) {
-            return calculateModeForPassiveAuth(z);
+            return calculateModeForPassiveAuth(true);
         }
         return calculateModeForFingerprint(z);
     }
@@ -512,11 +514,15 @@ public class BiometricUnlockController extends MiuiKeyguardUpdateMonitorCallback
     }
 
     public void onBiometricHelp(int i, String str, BiometricSourceType biometricSourceType) {
-        this.mFpiState = MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.HELP;
+        if (biometricSourceType == BiometricSourceType.FINGERPRINT) {
+            this.mFpiState = MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.HELP;
+        }
     }
 
     public void onBiometricAuthFailed(BiometricSourceType biometricSourceType) {
-        this.mFpiState = MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.FAILED;
+        if (biometricSourceType == BiometricSourceType.FINGERPRINT) {
+            this.mFpiState = MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.FAILED;
+        }
         this.mMetricsLogger.write(new LogMaker(1697).setType(11).setSubtype(toSubtype(biometricSourceType)));
         Optional ofNullable = Optional.ofNullable(BiometricUiEvent.FAILURE_EVENT_BY_SOURCE_TYPE.get(biometricSourceType));
         UiEventLogger uiEventLogger = UI_EVENT_LOGGER;
@@ -563,7 +569,9 @@ public class BiometricUnlockController extends MiuiKeyguardUpdateMonitorCallback
             }
             this.mWakingUpReason = null;
         }
-        this.mFpiState = MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.ERROR;
+        if (biometricSourceType == BiometricSourceType.FINGERPRINT) {
+            this.mFpiState = MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.ERROR;
+        }
         if (biometricSourceType == BiometricSourceType.FACE && i == 3) {
             showBouncer();
         }
@@ -571,7 +579,7 @@ public class BiometricUnlockController extends MiuiKeyguardUpdateMonitorCallback
 
     public void onBiometricRunningStateChanged(boolean z, BiometricSourceType biometricSourceType) {
         Log.d("BiometricUnlockCtrl", "onBiometricRunningStateChanged running=" + z);
-        if (z) {
+        if (z && biometricSourceType == BiometricSourceType.FINGERPRINT) {
             this.mFpiState = MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.NONE;
         }
     }
@@ -708,20 +716,7 @@ public class BiometricUnlockController extends MiuiKeyguardUpdateMonitorCallback
         }
     }
 
-    public void onKeyguardOccludedChanged(boolean z) {
-        ((MiuiFaceUnlockManager) Dependency.get(MiuiFaceUnlockManager.class)).keyguardOccludedChanged(z);
-    }
-
-    public void onRegionChanged() {
-        ((MiuiFaceUnlockManager) Dependency.get(MiuiFaceUnlockManager.class)).regionChanged();
-    }
-
-    public void onChargeAnimationShowingChanged(boolean z) {
-        ((KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class)).requestFaceAuth();
-    }
-
     public void onStartedWakingUpWithReason(String str) {
-        ((MiuiFaceUnlockManager) Dependency.get(MiuiFaceUnlockManager.class)).updateScreenOnDelyTime(str);
         this.mWakingUpReason = str;
     }
 

@@ -784,7 +784,7 @@ public class KeyguardIndicationController implements StatusBarStateController.St
             str2 = this.mResources.getString(C0021R$string.input_password_hint_text);
         }
         if (!this.mKeyguardUpdateMonitor.isFaceDetectionRunning()) {
-            if (((MiuiFaceUnlockManager) Dependency.get(cls)).isFaceUnlockLocked()) {
+            if (((MiuiFaceUnlockManager) Dependency.get(cls)).isFaceTemporarilyLockout()) {
                 str = this.mResources.getString(C0021R$string.face_unlock_fail);
             } else if (((MiuiFaceUnlockManager) Dependency.get(cls)).shouldShowFaceUnlockRetryMessageInBouncer()) {
                 str = this.mResources.getString(C0021R$string.face_unlock_fail_retry_global);
@@ -865,7 +865,7 @@ public class KeyguardIndicationController implements StatusBarStateController.St
             str2 = this.mResources.getString(C0021R$string.fingerprint_not_identified_msg);
         } else {
             if (!this.mKeyguardUpdateMonitor.isFaceDetectionRunning()) {
-                if (((MiuiFaceUnlockManager) Dependency.get(cls)).isFaceUnlockLocked()) {
+                if (((MiuiFaceUnlockManager) Dependency.get(cls)).isFaceTemporarilyLockout()) {
                     str2 = this.mResources.getString(C0021R$string.face_unlock_fail);
                 } else if (((MiuiFaceUnlockManager) Dependency.get(cls)).shouldShowFaceUnlockRetryMessageInBouncer()) {
                     str2 = this.mResources.getString(C0021R$string.face_unlock_fail_retry_global);

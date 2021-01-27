@@ -670,6 +670,7 @@ public final class R {
         public static final int hdcp_checking_titles;
         public static final int hdcp_checking_values;
         public static final int keep_screen_on_when_large_area_touch;
+        public static final int keyguard_wireless_strong_charge_67w;
         public static final int kg_wrong_puk_code_message_list;
         public static final int locale_carrier_names;
         public static final int lockscreen_num_pad_klondike;
@@ -5967,6 +5968,7 @@ public final class R {
         public static final int charge_animation_turbo_tail_icon;
         public static final int charge_animation_wired_rotate_circle_icon;
         public static final int charge_animation_wired_strong_charge_icon;
+        public static final int charge_animation_wireless_strong_67_charge_icon;
         public static final int charge_animation_wireless_strong_charge_icon;
         public static final int choose_clock_panel_bar;
         public static final int choose_clock_panel_bg;

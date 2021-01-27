@@ -1523,6 +1523,10 @@ public class KeyguardViewMediator extends SystemUI implements Dumpable {
                     return;
                 }
             }
+            if (this.mUpdateMonitor.getUserUnlockedWithBiometric(KeyguardUpdateMonitor.getCurrentUser())) {
+                Slog.w("KeyguardViewMediator", "doKeyguard: not showing because canceling pending lock");
+                return;
+            }
             Log.d("KeyguardViewMediator", "doKeyguard: showing the lock screen");
             showLocked(bundle);
         }

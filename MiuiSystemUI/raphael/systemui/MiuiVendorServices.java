@@ -5,6 +5,7 @@ import android.content.Context;
 import android.provider.Settings;
 import android.service.notification.StatusBarNotification;
 import com.android.keyguard.charge.MiuiChargeManager;
+import com.android.keyguard.faceunlock.MiuiFaceUnlockManager;
 import com.android.keyguard.fod.policy.MiuiGxzwPolicy;
 import com.android.systemui.recents.MiuiFullScreenGestureProxy;
 import com.android.systemui.recents.MiuiRecentProxy;
@@ -25,6 +26,7 @@ import com.miui.systemui.display.OLEDScreenHelper;
 public class MiuiVendorServices extends SystemUI {
     HeadsetPolicy mHeadsetPolicy;
     MiuiChargeManager mMiuiChargeManager;
+    MiuiFaceUnlockManager mMiuiFaceUnlockManager;
     MiuiFullScreenGestureProxy mMiuiFullScreenGestureProxy;
     MiuiGxzwPolicy mMiuiGxzwPolicy;
     MiuiHeadsUpPolicy mMiuiHeadsUpPolicy;
@@ -68,6 +70,7 @@ public class MiuiVendorServices extends SystemUI {
                 statusBarNotification.getNotification().extras.putBoolean("android.colorized", false);
             }
         });
+        this.mMiuiFaceUnlockManager.start();
     }
 
     private void setSettingsDefault() {
