@@ -2364,9 +2364,10 @@ public final class DaggerSystemUIRootComponent implements SystemUIRootComponent 
         this.headsetPolicyProvider = DoubleCheck.provider(HeadsetPolicy_Factory.create(this.provideContextProvider));
         this.miuiFullScreenGestureProxyProvider = DoubleCheck.provider(MiuiFullScreenGestureProxy_Factory.create(this.provideContextProvider, this.provideCommandQueueProvider));
         this.oLEDScreenHelperProvider = DoubleCheck.provider(OLEDScreenHelper_Factory.create(this.provideContextProvider, this.screenLifecycleProvider, this.provideConfigurationControllerProvider, this.dumpManagerProvider, this.provideNavigationBarControllerProvider, this.superStatusBarViewFactoryProvider));
-        Provider<MiuiChargeManager> provider13 = DoubleCheck.provider(MiuiChargeManager_Factory.create(this.provideContextProvider));
-        this.miuiChargeManagerProvider = provider13;
-        this.miuiVendorServicesProvider = DoubleCheck.provider(MiuiVendorServices_Factory.create(this.provideContextProvider, this.miuiWallpaperZoomOutServiceProvider, this.miuiHeadsUpPolicyProvider, this.miuiGxzwPolicyProvider, this.notificationFilterControllerProvider, this.notificationAlertControllerProvider, this.notificationDynamicFpsControllerProvider, this.notificationCountLimitPolicyProvider, this.miuiNotificationShadePolicyProvider, this.miuiRecentProxyProvider, this.orientationPolicyProvider, this.performanceToolsProvider, this.notificationPanelNavigationBarCoordinatorProvider, this.headsetPolicyProvider, this.miuiFullScreenGestureProxyProvider, this.oLEDScreenHelperProvider, provider13, this.provideNotificationEntryManagerProvider));
+        this.miuiChargeManagerProvider = DoubleCheck.provider(MiuiChargeManager_Factory.create(this.provideContextProvider));
+        Provider<MiuiFaceUnlockManager> provider13 = DoubleCheck.provider(MiuiFaceUnlockManager_Factory.create(this.provideContextProvider));
+        this.miuiFaceUnlockManagerProvider = provider13;
+        this.miuiVendorServicesProvider = DoubleCheck.provider(MiuiVendorServices_Factory.create(this.provideContextProvider, this.miuiWallpaperZoomOutServiceProvider, this.miuiHeadsUpPolicyProvider, this.miuiGxzwPolicyProvider, this.notificationFilterControllerProvider, this.notificationAlertControllerProvider, this.notificationDynamicFpsControllerProvider, this.notificationCountLimitPolicyProvider, this.miuiNotificationShadePolicyProvider, this.miuiRecentProxyProvider, this.orientationPolicyProvider, this.performanceToolsProvider, this.notificationPanelNavigationBarCoordinatorProvider, this.headsetPolicyProvider, this.miuiFullScreenGestureProxyProvider, this.oLEDScreenHelperProvider, this.miuiChargeManagerProvider, this.provideNotificationEntryManagerProvider, provider13));
         MapProviderFactory.Builder builder2 = MapProviderFactory.builder(23);
         builder2.put(AuthController.class, this.authControllerProvider);
         builder2.put(Divider.class, this.provideDividerProvider);
@@ -2432,7 +2433,6 @@ public final class DaggerSystemUIRootComponent implements SystemUIRootComponent 
         this.miuiChargeControllerProvider = DoubleCheck.provider(MiuiChargeController_Factory.create(this.provideContextProvider, this.wakefulnessLifecycleProvider));
         this.hapticFeedBackImplProvider = DoubleCheck.provider(HapticFeedBackImpl_Factory.create(this.provideContextProvider));
         this.lockScreenMagazineControllerProvider = DoubleCheck.provider(LockScreenMagazineController_Factory.create(this.provideContextProvider));
-        this.miuiFaceUnlockManagerProvider = DoubleCheck.provider(MiuiFaceUnlockManager_Factory.create(this.provideContextProvider));
         this.miuiGxzwManagerProvider = DoubleCheck.provider(MiuiGxzwManager_Factory.create(this.provideContextProvider, this.wakefulnessLifecycleProvider));
         this.miuiFastUnlockControllerProvider = DoubleCheck.provider(MiuiFastUnlockController_Factory.create(this.provideContextProvider, this.newKeyguardViewMediatorProvider));
         this.keyguardIndicationInjectorProvider = DoubleCheck.provider(KeyguardIndicationInjector_Factory.create(this.provideContextProvider));

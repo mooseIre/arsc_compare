@@ -1523,7 +1523,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
         int i = 0;
         for (int i2 = 0; i2 < getChildCount(); i2++) {
             View childAt = getChildAt(i2);
-            if (childAt.getVisibility() != 8 && (childAt instanceof ExpandableNotificationRow)) {
+            if (childAt.getVisibility() == 0 && (childAt instanceof ExpandableNotificationRow)) {
                 i++;
             }
         }

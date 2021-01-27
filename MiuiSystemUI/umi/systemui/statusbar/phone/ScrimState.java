@@ -141,7 +141,7 @@ public enum ScrimState {
             this.mBehindTint = 0;
             this.mBubbleTint = 0;
             this.mFrontAlpha = 0.0f;
-            this.mBehindAlpha = this.mDefaultScrimAlpha;
+            this.mBehindAlpha = 0.0f;
             this.mBubbleAlpha = 0.6f;
             this.mAnimationDuration = 220;
             this.mBlankScreen = false;
