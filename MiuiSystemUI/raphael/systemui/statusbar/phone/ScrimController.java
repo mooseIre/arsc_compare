@@ -329,7 +329,7 @@ public class ScrimController implements ViewTreeObserver.OnPreDrawListener, Colo
     }
 
     private void applyExpansionToAlpha() {
-        if (this.mExpansionAffectsAlpha || this.mState == ScrimState.BUBBLE_EXPANDED) {
+        if (this.mExpansionAffectsAlpha) {
             ScrimState scrimState = this.mState;
             if (scrimState == ScrimState.UNLOCKED || scrimState == ScrimState.BUBBLE_EXPANDED) {
                 this.mBehindAlpha = ((float) Math.pow((double) getInterpolatedFraction(), 0.800000011920929d)) * this.mDefaultScrimAlpha;
