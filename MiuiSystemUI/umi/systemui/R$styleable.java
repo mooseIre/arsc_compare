@@ -21,6 +21,8 @@ public final class R$styleable {
     public static final int[] Clock = {2130968635, 2130969519};
     public static final int Clock_amPmStyle = 0;
     public static final int Clock_showDark = 1;
+    public static final int[] CornerVideoView = {2130968843};
+    public static final int CornerVideoView_cornerRadius = 0;
     public static final int[] DateView = {2130968868};
     public static final int DateView_datePattern = 0;
     public static final int[] IlluminationDrawable = {2130968843, 2130969103, 2130969466, 2130969467};

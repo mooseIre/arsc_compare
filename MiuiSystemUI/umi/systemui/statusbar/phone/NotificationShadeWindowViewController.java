@@ -12,6 +12,7 @@ import com.android.internal.annotations.VisibleForTesting;
 import com.android.systemui.C0015R$id;
 import com.android.systemui.Dependency;
 import com.android.systemui.controlcenter.phone.ControlPanelWindowManager;
+import com.android.systemui.controlcenter.policy.NCSwitchController;
 import com.android.systemui.dock.DockManager;
 import com.android.systemui.doze.DozeLog;
 import com.android.systemui.plugins.FalsingManager;
@@ -26,6 +27,7 @@ import com.android.systemui.statusbar.SysuiStatusBarStateController;
 import com.android.systemui.statusbar.notification.DynamicPrivacyController;
 import com.android.systemui.statusbar.notification.NotificationEntryManager;
 import com.android.systemui.statusbar.notification.NotificationWakeUpCoordinator;
+import com.android.systemui.statusbar.notification.mediacontrol.MiuiKeyguardMediaController;
 import com.android.systemui.statusbar.notification.stack.NotificationStackScrollLayout;
 import com.android.systemui.statusbar.phone.NotificationShadeWindowView;
 import com.android.systemui.statusbar.policy.KeyguardStateController;
@@ -60,6 +62,10 @@ public class NotificationShadeWindowViewController {
     /* access modifiers changed from: private */
     public boolean mIsTrackingBarGesture = false;
     /* access modifiers changed from: private */
+    public MiuiKeyguardMediaController mKeyguardMediaController;
+    /* access modifiers changed from: private */
+    public NCSwitchController mNCSwitchController;
+    /* access modifiers changed from: private */
     public final NotificationPanelViewController mNotificationPanelViewController;
     private NotificationShadeWindowController mNotificationShadeWindowController;
     /* access modifiers changed from: private */
@@ -82,7 +88,7 @@ public class NotificationShadeWindowViewController {
     /* access modifiers changed from: private */
     public final NotificationShadeWindowView mView;
 
-    public NotificationShadeWindowViewController(InjectionInflationController injectionInflationController, NotificationWakeUpCoordinator notificationWakeUpCoordinator, PulseExpansionHandler pulseExpansionHandler, DynamicPrivacyController dynamicPrivacyController, KeyguardBypassController keyguardBypassController, FalsingManager falsingManager, PluginManager pluginManager, TunerService tunerService, NotificationLockscreenUserManager notificationLockscreenUserManager, NotificationEntryManager notificationEntryManager, KeyguardStateController keyguardStateController, SysuiStatusBarStateController sysuiStatusBarStateController, DozeLog dozeLog, DozeParameters dozeParameters, CommandQueue commandQueue, ShadeController shadeController, DockManager dockManager, NotificationShadeDepthController notificationShadeDepthController, NotificationShadeWindowView notificationShadeWindowView, MiuiNotificationPanelViewController miuiNotificationPanelViewController, SuperStatusBarViewFactory superStatusBarViewFactory, ControlPanelWindowManager controlPanelWindowManager) {
+    public NotificationShadeWindowViewController(InjectionInflationController injectionInflationController, NotificationWakeUpCoordinator notificationWakeUpCoordinator, PulseExpansionHandler pulseExpansionHandler, DynamicPrivacyController dynamicPrivacyController, KeyguardBypassController keyguardBypassController, FalsingManager falsingManager, PluginManager pluginManager, TunerService tunerService, NotificationLockscreenUserManager notificationLockscreenUserManager, NotificationEntryManager notificationEntryManager, KeyguardStateController keyguardStateController, SysuiStatusBarStateController sysuiStatusBarStateController, DozeLog dozeLog, DozeParameters dozeParameters, CommandQueue commandQueue, ShadeController shadeController, DockManager dockManager, NotificationShadeDepthController notificationShadeDepthController, NotificationShadeWindowView notificationShadeWindowView, MiuiNotificationPanelViewController miuiNotificationPanelViewController, SuperStatusBarViewFactory superStatusBarViewFactory, ControlPanelWindowManager controlPanelWindowManager, NCSwitchController nCSwitchController, MiuiKeyguardMediaController miuiKeyguardMediaController) {
         NotificationShadeWindowView notificationShadeWindowView2 = notificationShadeWindowView;
         this.mFalsingManager = falsingManager;
         this.mTunerService = tunerService;
@@ -94,6 +100,8 @@ public class NotificationShadeWindowViewController {
         this.mStatusBarViewFactory = superStatusBarViewFactory;
         this.mBrightnessMirror = notificationShadeWindowView2.findViewById(C0015R$id.brightness_mirror);
         this.mControlPanelWindowManager = controlPanelWindowManager;
+        this.mNCSwitchController = nCSwitchController;
+        this.mKeyguardMediaController = miuiKeyguardMediaController;
     }
 
     public void setupExpandedStatusBar() {
@@ -197,6 +205,9 @@ public class NotificationShadeWindowViewController {
                 if (NotificationShadeWindowViewController.this.mStatusBarStateController.isDozing() && !NotificationShadeWindowViewController.this.mService.isPulsing() && !NotificationShadeWindowViewController.this.mDockManager.isDocked()) {
                     return true;
                 }
+                if (NotificationShadeWindowViewController.this.mNCSwitchController.onNCSwitchIntercept(motionEvent, !NotificationShadeWindowViewController.this.mKeyguardMediaController.onMediaControlIntercept(motionEvent) && (NotificationShadeWindowViewController.this.mNotificationPanelViewController.mIsExpanding || NotificationShadeWindowViewController.this.mNotificationPanelViewController.isFullyExpanded()))) {
+                    return true;
+                }
                 if (!NotificationShadeWindowViewController.this.mNotificationPanelViewController.isFullyExpanded() || !NotificationShadeWindowViewController.this.mDragDownHelper.isDragDownEnabled() || NotificationShadeWindowViewController.this.mService.isBouncerShowing() || NotificationShadeWindowViewController.this.mStatusBarStateController.isDozing()) {
                     return false;
                 }
@@ -212,7 +223,13 @@ public class NotificationShadeWindowViewController {
             }
 
             public boolean handleTouchEvent(MotionEvent motionEvent) {
-                boolean z = NotificationShadeWindowViewController.this.mStatusBarStateController.isDozing() ? !NotificationShadeWindowViewController.this.mService.isPulsing() : false;
+                if (NotificationShadeWindowViewController.this.mNCSwitchController.handleNCSwitchTouch(motionEvent)) {
+                    return true;
+                }
+                boolean z = false;
+                if (NotificationShadeWindowViewController.this.mStatusBarStateController.isDozing()) {
+                    z = !NotificationShadeWindowViewController.this.mService.isPulsing();
+                }
                 return ((!NotificationShadeWindowViewController.this.mDragDownHelper.isDragDownEnabled() || z) && !NotificationShadeWindowViewController.this.mDragDownHelper.isDraggingDown()) ? z : NotificationShadeWindowViewController.this.mDragDownHelper.onTouchEvent(motionEvent);
             }
 

@@ -86,9 +86,16 @@ public class FlashlightControllerImpl implements FlashlightController {
         this.mCameraManager = (CameraManager) context.getSystemService("camera");
         this.mMiuiFlashHelper = miuiFlashlightHelper;
         miuiFlashlightHelper.setFlashlightController(this);
+        ensureHandler();
+        this.mHandler.post(new Runnable() {
+            public final void run() {
+                FlashlightControllerImpl.this.tryInitCamera();
+            }
+        });
     }
 
-    private void tryInitCamera() {
+    /* access modifiers changed from: private */
+    public void tryInitCamera() {
         try {
             String cameraId = getCameraId();
             this.mCameraId = cameraId;
@@ -149,7 +156,13 @@ public class FlashlightControllerImpl implements FlashlightController {
     }
 
     public synchronized boolean isAvailable() {
-        return Constants.SUPPORT_ANDROID_FLASHLIGHT ? this.mTorchAvailable : true;
+        boolean z;
+        z = true;
+        boolean z2 = Constants.SUPPORT_ANDROID_FLASHLIGHT ? this.mTorchAvailable : true;
+        if (this.mMiuiFlashHelper.isForceOff() || !z2) {
+            z = false;
+        }
+        return z;
     }
 
     public void addCallback(FlashlightController.FlashlightListener flashlightListener) {

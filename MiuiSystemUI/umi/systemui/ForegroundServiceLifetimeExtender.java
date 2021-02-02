@@ -11,7 +11,7 @@ import com.android.systemui.util.time.SystemClock;
 
 public class ForegroundServiceLifetimeExtender implements NotificationLifetimeExtender {
     @VisibleForTesting
-    static final int MIN_FGS_TIME_MS = 5000;
+    static final int MIN_FGS_TIME_MS = 1000;
     private Handler mHandler = new Handler(Looper.getMainLooper());
     private final NotificationInteractionTracker mInteractionTracker;
     private ArraySet<NotificationEntry> mManagedEntries = new ArraySet<>();
@@ -32,7 +32,7 @@ public class ForegroundServiceLifetimeExtender implements NotificationLifetimeEx
             return false;
         }
         boolean hasUserInteractedWith = this.mInteractionTracker.hasUserInteractedWith(notificationEntry.getKey());
-        if (this.mSystemClock.uptimeMillis() - notificationEntry.getCreationTime() >= 5000 || hasUserInteractedWith) {
+        if (this.mSystemClock.uptimeMillis() - notificationEntry.getCreationTime() >= 1000 || hasUserInteractedWith) {
             return false;
         }
         return true;
@@ -58,7 +58,7 @@ public class ForegroundServiceLifetimeExtender implements NotificationLifetimeEx
             public final void run() {
                 ForegroundServiceLifetimeExtender.this.lambda$setShouldManageLifetime$0$ForegroundServiceLifetimeExtender(this.f$1);
             }
-        }, 5000 - (this.mSystemClock.uptimeMillis() - notificationEntry.getCreationTime()));
+        }, 1000 - (this.mSystemClock.uptimeMillis() - notificationEntry.getCreationTime()));
     }
 
     /* access modifiers changed from: private */

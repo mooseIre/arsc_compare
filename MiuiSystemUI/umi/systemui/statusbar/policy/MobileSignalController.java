@@ -58,6 +58,7 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
     private FiveGControllerImpl mFiveGController;
     @VisibleForTesting
     boolean mInflateSignalStrengths = false;
+    private boolean mIsLast5GConnected = false;
     private boolean mIsSupportDoubleFiveG;
     private PhoneConstants.DataState mMMSDataState = PhoneConstants.DataState.DISCONNECTED;
     protected String[] mMiuiMobileTypeNameArray;
@@ -207,6 +208,8 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
         this.mPhone.listen(this.mPhoneStateListener, 0);
         this.mContext.getContentResolver().unregisterContentObserver(this.mObserver);
         this.mContext.unregisterReceiver(this.mVolteSwitchObserver);
+        ContentResolver contentResolver = this.mContext.getContentResolver();
+        Settings.Global.putInt(contentResolver, "5g_icon_group_mode" + this.mSlotId, -1);
     }
 
     /* JADX WARNING: Removed duplicated region for block: B:17:0x0124  */
@@ -992,7 +995,7 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
             boolean z2 = (serviceState3 == null || (rilVoiceRadioTechnology = serviceState3.getRilVoiceRadioTechnology()) == 6 || rilVoiceRadioTechnology == 4 || rilVoiceRadioTechnology == 5) ? false : true;
             T t7 = this.mCurrentState;
             MobileState mobileState = (MobileState) t7;
-            if (!z2 || !this.mEnableVolteForSlot || ((MobileState) t7).volte || ((MobileState) t7).airplaneMode) {
+            if (!z2 || !this.mEnableVolteForSlot || ((MobileState) t7).volte || ((MobileState) t7).airplaneMode || ((MobileState) t7).roaming) {
                 z = false;
             }
             mobileState.volteNoService = z;
@@ -1179,6 +1182,19 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
         }
         String str = this.mTag;
         Log.d(str, "update5GConnectState: " + ((MobileState) this.mCurrentState).fiveGConnected);
+        update5GStatusDatabase();
+    }
+
+    private void update5GStatusDatabase() {
+        if (((MobileState) this.mCurrentState).fiveGConnected != this.mIsLast5GConnected) {
+            String str = this.mTag;
+            Log.d(str, "mCurrentState.fiveGConnected:" + ((MobileState) this.mCurrentState).fiveGConnected + ", mSlotId:" + this.mSlotId);
+            this.mIsLast5GConnected = ((MobileState) this.mCurrentState).fiveGConnected;
+            if (miui.telephony.SubscriptionManager.isValidSlotId(this.mSlotId)) {
+                ContentResolver contentResolver = this.mContext.getContentResolver();
+                Settings.Global.putInt(contentResolver, "5g_icon_group_mode" + this.mSlotId, ((MobileState) this.mCurrentState).fiveGConnected ? 1 : 0);
+            }
+        }
     }
 
     private void updateSignalStrength() {

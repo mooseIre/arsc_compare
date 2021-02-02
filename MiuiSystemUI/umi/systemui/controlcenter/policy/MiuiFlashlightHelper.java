@@ -68,6 +68,7 @@ public class MiuiFlashlightHelper {
 
     public void setFlashlightController(FlashlightController flashlightController) {
         this.mFlashlightController = flashlightController;
+        this.mWaringToastString = this.mContext.getResources().getString(C0021R$string.torch_high_temperature_warning);
     }
 
     /* access modifiers changed from: private */
@@ -81,6 +82,10 @@ public class MiuiFlashlightHelper {
         }
     }
 
+    public boolean isForceOff() {
+        return this.mForceOff;
+    }
+
     public void tryInitCamera() {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("miui.intent.action.TOGGLE_TORCH");
@@ -91,7 +96,6 @@ public class MiuiFlashlightHelper {
 
     public void initMiuiFlash() {
         Resources resources = this.mContext.getResources();
-        this.mWaringToastString = resources.getString(C0021R$string.torch_high_temperature_warning);
         this.mValueOn = resources.getInteger(C0016R$integer.flash_on_value);
         this.mFlashDevice = resources.getString(C0021R$string.flash_device);
         int i = 0;
@@ -115,11 +119,11 @@ public class MiuiFlashlightHelper {
         if (!this.mFlashlightController.hasFlashlight()) {
             return false;
         }
+        if (TextUtils.isEmpty(this.mFlashDevice)) {
+            Slog.d("FlashlightController", "setFlashModeInternal: no device node");
+            return false;
+        }
         try {
-            if (TextUtils.isEmpty(this.mFlashDevice)) {
-                this.mFlashlightController.setFlashlight(z);
-                return true;
-            }
             if (this.mStatusDetecting == null) {
                 this.mStatusDetecting = new Runnable() {
                     /* JADX WARNING: Removed duplicated region for block: B:19:0x002e A[SYNTHETIC, Splitter:B:19:0x002e] */
@@ -219,7 +223,7 @@ public class MiuiFlashlightHelper {
                         java.lang.String r0 = "FlashlightController"
                         com.android.systemui.controlcenter.policy.MiuiFlashlightHelper r1 = com.android.systemui.controlcenter.policy.MiuiFlashlightHelper.this
                         java.lang.String r1 = r1.mFlashDevice
-                        boolean r2 = r6
+                        boolean r2 = r5
                         r3 = 0
                         if (r2 == 0) goto L_0x0014
                         com.android.systemui.controlcenter.policy.MiuiFlashlightHelper r2 = com.android.systemui.controlcenter.policy.MiuiFlashlightHelper.this
@@ -240,11 +244,11 @@ public class MiuiFlashlightHelper {
                         r1.<init>()     // Catch:{ Exception -> 0x0059, all -> 0x0056 }
                         java.lang.String r4 = "setFlashModeInternal: file writer write: "
                         r1.append(r4)     // Catch:{ Exception -> 0x0059, all -> 0x0056 }
-                        boolean r4 = r6     // Catch:{ Exception -> 0x0059, all -> 0x0056 }
+                        boolean r4 = r5     // Catch:{ Exception -> 0x0059, all -> 0x0056 }
                         r1.append(r4)     // Catch:{ Exception -> 0x0059, all -> 0x0056 }
                         java.lang.String r1 = r1.toString()     // Catch:{ Exception -> 0x0059, all -> 0x0056 }
                         android.util.Slog.d(r0, r1)     // Catch:{ Exception -> 0x0059, all -> 0x0056 }
-                        boolean r1 = r6     // Catch:{ Exception -> 0x0059, all -> 0x0056 }
+                        boolean r1 = r5     // Catch:{ Exception -> 0x0059, all -> 0x0056 }
                         if (r1 == 0) goto L_0x004b
                         com.android.systemui.controlcenter.policy.MiuiFlashlightHelper r5 = com.android.systemui.controlcenter.policy.MiuiFlashlightHelper.this     // Catch:{ Exception -> 0x0059, all -> 0x0056 }
                         int r3 = r5.mValueOn     // Catch:{ Exception -> 0x0059, all -> 0x0056 }

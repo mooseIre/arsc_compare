@@ -232,7 +232,7 @@ public final class MiuiNotificationPanelViewController$createTouchHandler$1 exte
         } else {
             this.mInitialTouchX = x;
             this.mInitialTouchY = y;
-            this.this$0.mPanelOpening = false;
+            this.this$0.setMPanelOpening(false);
             this.this$0.setMPanelStretching(false);
             this.this$0.mPanelCollapsing = false;
             this.this$0.mPanelIntercepting = false;
@@ -266,7 +266,7 @@ public final class MiuiNotificationPanelViewController$createTouchHandler$1 exte
                     }
                     if (this.isFullyCollapsedOnDown) {
                         MiuiNotificationPanelViewController miuiNotificationPanelViewController = this.this$0;
-                        miuiNotificationPanelViewController.mPanelOpening = !miuiNotificationPanelViewController.mPanelOpening ? handleStretchState : true;
+                        miuiNotificationPanelViewController.setMPanelOpening(!miuiNotificationPanelViewController.mPanelOpening ? handleStretchState : true);
                     } else if (this.isFullyExpandedOnDown) {
                         MiuiNotificationPanelViewController miuiNotificationPanelViewController2 = this.this$0;
                         if (miuiNotificationPanelViewController2.mNssCoveringQs) {
@@ -312,7 +312,7 @@ public final class MiuiNotificationPanelViewController$createTouchHandler$1 exte
                 miuiNotificationPanelViewController5.endNssCoveringQsMotion(miuiNotificationPanelViewController5.getCurrentQSVelocity());
                 this.this$0.recycleVelocityTracker();
             }
-            this.this$0.mPanelOpening = false;
+            this.this$0.setMPanelOpening(false);
             this.this$0.setMPanelStretching(false);
             this.this$0.mPanelCollapsing = false;
             this.this$0.mPanelIntercepting = false;
@@ -324,7 +324,7 @@ public final class MiuiNotificationPanelViewController$createTouchHandler$1 exte
             this.mInitialTouchX = x;
             this.mInitialTouchY = y;
             this.mLastTouchY = y;
-            this.this$0.mPanelOpening = false;
+            this.this$0.setMPanelOpening(false);
             this.this$0.setMPanelStretching(false);
             this.this$0.mPanelCollapsing = false;
             this.this$0.mPanelIntercepting = false;
@@ -333,7 +333,7 @@ public final class MiuiNotificationPanelViewController$createTouchHandler$1 exte
     }
 
     public final void resetPanelTouchState() {
-        this.this$0.mPanelOpening = false;
+        this.this$0.setMPanelOpening(false);
         this.this$0.setMPanelStretching(false);
         this.this$0.mPanelCollapsing = false;
         this.this$0.mPanelIntercepting = false;

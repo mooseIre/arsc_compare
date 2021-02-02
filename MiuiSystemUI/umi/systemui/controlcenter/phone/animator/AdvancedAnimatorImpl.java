@@ -5,10 +5,10 @@ import android.widget.ImageView;
 import com.android.systemui.C0015R$id;
 import com.android.systemui.controlcenter.phone.ControlCenterPanelView;
 import com.android.systemui.controlcenter.phone.ControlCenterPanelViewController;
+import com.android.systemui.controlcenter.phone.ControlPanelController;
 import com.android.systemui.controlcenter.utils.ControlCenterUtils;
 import com.android.systemui.controlcenter.utils.FolmeAnimState;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import kotlin.TypeCastException;
@@ -23,19 +23,21 @@ import org.jetbrains.annotations.NotNull;
 
 /* compiled from: AdvancedAnimatorImpl.kt */
 public final class AdvancedAnimatorImpl extends ControlCenterPanelAnimator {
+    private final ControlPanelController ccController;
     private final ControlCenterPanelViewController controller;
     private int footerPanelBaseIndex;
     private final ArrayList<View> mTransViews = new ArrayList<>();
     private final ArrayList<View> mViews = new ArrayList<>();
-    /* access modifiers changed from: private */
-    public int overFlingLines;
+    private int overFlingLines;
 
     /* JADX INFO: super call moved to the top of the method (can break code semantics) */
-    public AdvancedAnimatorImpl(@NotNull ControlCenterPanelView controlCenterPanelView, @NotNull ControlCenterPanelViewController controlCenterPanelViewController) {
+    public AdvancedAnimatorImpl(@NotNull ControlCenterPanelView controlCenterPanelView, @NotNull ControlCenterPanelViewController controlCenterPanelViewController, @NotNull ControlPanelController controlPanelController) {
         super(controlCenterPanelView);
         Intrinsics.checkParameterIsNotNull(controlCenterPanelView, "panelView");
         Intrinsics.checkParameterIsNotNull(controlCenterPanelViewController, "controller");
+        Intrinsics.checkParameterIsNotNull(controlPanelController, "ccController");
         this.controller = controlCenterPanelViewController;
+        this.ccController = controlPanelController;
     }
 
     public void onFinishInflate() {
@@ -53,7 +55,6 @@ public final class AdvancedAnimatorImpl extends ControlCenterPanelAnimator {
         AnimConfig animConfig = new AnimConfig();
         animConfig.setEase(EaseManager.getStyle(-2, 300.0f, 0.99f, 0.6666f));
         Intrinsics.checkExpressionValueIsNotNull(animConfig, "AnimConfig().setEase(Eas…Y, 300f, 0.99f, 0.6666f))");
-        updateViews();
     }
 
     private final void updateViews() {
@@ -135,20 +136,44 @@ public final class AdvancedAnimatorImpl extends ControlCenterPanelAnimator {
     }
 
     public void animateShowPanel(boolean z) {
-        getPanelView().getTileLayout().visAnimOn(z);
-        Object[] array = this.mViews.toArray(new View[0]);
-        if (array != null) {
-            View[] viewArr = (View[]) array;
-            IStateStyle state = Folme.useAt((View[]) Arrays.copyOf(viewArr, viewArr.length)).state();
-            if (z) {
-                state.fromTo(FolmeAnimState.mPanelHideAnim, FolmeAnimState.mPanelShowAnim, FolmeAnimState.mPanelAnimConfig);
-            } else {
-                state.fromTo(FolmeAnimState.mPanelShowAnim, FolmeAnimState.mPanelHideAnim, FolmeAnimState.mPanelAnimConfig);
-            }
-            animateExtraViewShow(z);
-            return;
+        for (View animateShow : this.mViews) {
+            animateShow(animateShow, z);
         }
-        throw new TypeCastException("null cannot be cast to non-null type kotlin.Array<T>");
+        View[] visAnimViews = getPanelView().getTileLayout().getVisAnimViews();
+        Intrinsics.checkExpressionValueIsNotNull(visAnimViews, "panelView.tileLayout.visAnimViews");
+        for (View view : visAnimViews) {
+            Intrinsics.checkExpressionValueIsNotNull(view, "it");
+            animateShow(view, z);
+        }
+        animateExtraViewShow(z);
+    }
+
+    private final void animateShow(View view, boolean z) {
+        IStateStyle state = Folme.useAt(view).state();
+        state.cancel();
+        state.to(z ? FolmeAnimState.mPanelShowAnim : FolmeAnimState.mPanelHideAnim, FolmeAnimState.mPanelAnimConfig);
+    }
+
+    private final void resetAnimViewState() {
+        if (this.ccController.isCCFullyCollapsed()) {
+            View[] visAnimViews = getPanelView().getTileLayout().getVisAnimViews();
+            Intrinsics.checkExpressionValueIsNotNull(visAnimViews, "panelView.tileLayout.visAnimViews");
+            for (View view : visAnimViews) {
+                Intrinsics.checkExpressionValueIsNotNull(view, "it");
+                resetShowAnim(view);
+            }
+            for (View resetShowAnim : this.mViews) {
+                resetShowAnim(resetShowAnim);
+            }
+        }
+    }
+
+    private final void resetShowAnim(View view) {
+        Folme.useAt(view).state().setTo((Object) FolmeAnimState.mPanelHideAnim);
+    }
+
+    public void notifyTileChanged() {
+        resetAnimViewState();
     }
 
     private final void animateExtraViewShow(boolean z) {
@@ -194,15 +219,21 @@ public final class AdvancedAnimatorImpl extends ControlCenterPanelAnimator {
                 }
                 return;
             }
-            int screenHeight = this.controller.getScreenHeight();
-            float f2 = (float) screenHeight;
-            float coerceIn = RangesKt___RangesKt.coerceIn(f, 0.0f, f2);
-            this.mTransViews.forEach(new AdvancedAnimatorImpl$updateOverExpandHeight$1(this, coerceIn, screenHeight));
+            float screenHeight = (float) this.controller.getScreenHeight();
+            float coerceIn = RangesKt___RangesKt.coerceIn(f, 0.0f, screenHeight);
+            for (View view : this.mTransViews) {
+                Object tag = view.getTag(C0015R$id.tag_control_center_trans);
+                if (tag != null) {
+                    view.setTranslationY(ControlCenterUtils.getTranslationY(((Integer) tag).intValue(), this.overFlingLines, coerceIn, screenHeight));
+                } else {
+                    throw new TypeCastException("null cannot be cast to non-null type kotlin.Int");
+                }
+            }
             ImageView indicator = getPanelView().getFooter().getIndicator();
             int i = this.overFlingLines;
-            indicator.setTranslationY(ControlCenterUtils.getTranslationY(i - 1, i, coerceIn, f2));
+            indicator.setTranslationY(ControlCenterUtils.getTranslationY(i - 1, i, coerceIn, screenHeight));
             int i2 = this.overFlingLines;
-            getPanelView().getSmartHomeContainer().setTranslationY(ControlCenterUtils.getTranslationY(i2 - 2, i2, coerceIn, f2));
+            getPanelView().getSmartHomeContainer().setTranslationY(ControlCenterUtils.getTranslationY(i2 - 2, i2, coerceIn, screenHeight));
             getPanelView().getTileLayout().updateTransHeight((List<View>) null, f, this.controller.getScreenHeight(), this.overFlingLines);
         }
     }

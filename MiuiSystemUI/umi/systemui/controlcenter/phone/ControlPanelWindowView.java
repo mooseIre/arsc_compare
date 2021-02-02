@@ -13,8 +13,11 @@ import android.view.View;
 import android.view.WindowInsets;
 import android.widget.FrameLayout;
 import com.android.systemui.C0015R$id;
+import com.android.systemui.Dependency;
 import com.android.systemui.controlcenter.ControlCenter;
 import com.android.systemui.controlcenter.policy.BoostHelper;
+import com.android.systemui.controlcenter.policy.NCSwitchController;
+import com.android.systemui.statusbar.phone.StatusBar;
 import com.miui.systemui.util.AccessibilityUtils;
 import miuix.animation.Folme;
 import miuix.animation.IStateStyle;
@@ -24,6 +27,7 @@ import miuix.animation.property.FloatProperty;
 public class ControlPanelWindowView extends FrameLayout {
     /* access modifiers changed from: private */
     public boolean mAnimating;
+    private boolean mAttached;
     private IStateStyle mBlurAmin;
     /* access modifiers changed from: private */
     public float mBlurRatio;
@@ -39,13 +43,16 @@ public class ControlPanelWindowView extends FrameLayout {
     public ControlCenterPanelView mControlCenterPanel;
     private QSControlCenterTileLayout mControlCenterTileLayout;
     /* access modifiers changed from: private */
+    public ControlPanelController mControlPanelController;
+    /* access modifiers changed from: private */
     public ControlPanelWindowManager mControlPanelWindowManager;
     private float mDownExpandHeight;
     private float mDownX;
     private float mDownY;
     private float mExpandHeight;
     private AnimatorListenerAdapter mExpandListener;
-    private int mExpandState;
+    /* access modifiers changed from: private */
+    public int mExpandState;
     private ValueAnimator mHeightChangeAnimator;
     private boolean mInterceptTouchEvent;
     private boolean mIsCancel;
@@ -56,6 +63,8 @@ public class ControlPanelWindowView extends FrameLayout {
     private boolean mIsMoveY;
     private boolean mIsUp;
     private int[] mLocation;
+    private boolean mNCAnimSwitched;
+    private boolean mNCBlurSwitched;
 
     public ControlPanelWindowView(Context context) {
         this(context, (AttributeSet) null);
@@ -71,17 +80,29 @@ public class ControlPanelWindowView extends FrameLayout {
         this.mInterceptTouchEvent = false;
         this.mCollapsingAnim = false;
         this.mExpandState = 0;
+        this.mAttached = false;
         this.mDownY = 0.0f;
         this.mDownX = 0.0f;
         this.mDownExpandHeight = 0.0f;
         this.mLocation = new int[2];
+        this.mNCBlurSwitched = false;
+        this.mNCAnimSwitched = false;
         this.mBlurRatioListener = new TransitionListener() {
             public void onUpdate(Object obj, FloatProperty floatProperty, float f, float f2, boolean z) {
                 float unused = ControlPanelWindowView.this.mBlurRatio = f;
-                if (ControlPanelWindowView.this.mControlPanelWindowManager != null) {
-                    ControlPanelWindowView controlPanelWindowView = ControlPanelWindowView.this;
-                    controlPanelWindowView.setAlpha(controlPanelWindowView.mBlurRatio);
+                ControlPanelWindowView.this.setAlpha(f);
+                if (ControlPanelWindowView.this.mControlPanelWindowManager != null && !ControlPanelWindowView.this.mControlPanelController.isNCSwitching()) {
                     ControlPanelWindowView.this.mControlPanelWindowManager.setBlurRatio(ControlPanelWindowView.this.mBlurRatio);
+                }
+            }
+
+            public void onComplete(Object obj) {
+                super.onComplete(obj);
+                if (ControlCenter.DEBUG) {
+                    Log.d("ControllerPanelWindowView", "onComplete mBlurRatio:" + ControlPanelWindowView.this.mBlurRatio + " state:" + ControlPanelWindowView.this.mExpandState);
+                }
+                if (ControlPanelWindowView.this.mBlurRatio == 0.0f || (ControlPanelWindowView.this.mBlurRatio == 1.0f && !ControlPanelWindowView.this.isCollapsed())) {
+                    ControlPanelWindowView.this.mControlPanelController.requestNCSwitching(false);
                 }
             }
         };
@@ -128,8 +149,23 @@ public class ControlPanelWindowView extends FrameLayout {
         controlCenterPanelView.setControlPanelWindowView(this);
         this.mControlCenterTileLayout = (QSControlCenterTileLayout) findViewById(C0015R$id.tile_layout);
         this.mBottomArea = findViewById(C0015R$id.control_center_bottom_area);
+    }
+
+    /* access modifiers changed from: protected */
+    public void onAttachedToWindow() {
+        super.onAttachedToWindow();
         Folme.getValueTarget("ControlPanelViewBlur").setMinVisibleChange(0.01f, "blurRatio");
         this.mBlurAmin = Folme.useValue("ControlPanelViewBlur").addListener(this.mBlurRatioListener);
+        this.mControlCenterPanel.setListening(false);
+        this.mAttached = true;
+    }
+
+    /* access modifiers changed from: protected */
+    public void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        this.mBlurAmin.removeListener(this.mBlurRatioListener);
+        this.mBlurAmin.clean();
+        this.mAttached = false;
     }
 
     /* access modifiers changed from: protected */
@@ -195,14 +231,11 @@ public class ControlPanelWindowView extends FrameLayout {
     }
 
     public boolean onInterceptTouchEvent(MotionEvent motionEvent) {
-        boolean z = false;
         this.mIsIntercept = this.mInterceptTouchEvent || !isExpanded() || super.onInterceptTouchEvent(motionEvent);
         this.mIsDown = motionEvent.getAction() == 0;
         this.mIsMove = motionEvent.getAction() == 2;
-        if (Math.abs(motionEvent.getRawY() - this.mDownY) > Math.abs(motionEvent.getRawX() - this.mDownX)) {
-            z = true;
-        }
-        this.mIsMoveY = z;
+        this.mIsMoveY = Math.abs(motionEvent.getRawY() - this.mDownY) > Math.abs(motionEvent.getRawX() - this.mDownX);
+        ((NCSwitchController) Dependency.get(NCSwitchController.class)).handleCNSwitchTouch(motionEvent, false);
         if (this.mIsDown) {
             this.mDownY = motionEvent.getRawY();
             this.mDownX = motionEvent.getRawX();
@@ -244,14 +277,19 @@ public class ControlPanelWindowView extends FrameLayout {
         if (controlCenter != null && !controlCenter.panelEnabled()) {
             return false;
         }
+        if (((NCSwitchController) Dependency.get(NCSwitchController.class)).handleCNSwitchTouch(motionEvent, this.mExpandState == 2 && !this.mControlPanelController.isNCSwitching())) {
+            return true;
+        }
         this.mIsDown = motionEvent.getAction() == 0;
         this.mIsMove = motionEvent.getAction() == 2;
         this.mIsUp = motionEvent.getAction() == 1;
         this.mIsCancel = motionEvent.getAction() == 3;
+        this.mIsMoveY = Math.abs(motionEvent.getRawY() - this.mDownY) > Math.abs(motionEvent.getRawX() - this.mDownX);
         boolean z3 = !z || !this.mIsGetSelfEvent;
         if (this.mIsDown) {
             verifyState();
             this.mDownY = motionEvent.getRawY();
+            this.mDownX = motionEvent.getRawX();
             if (!isExpanded()) {
                 this.mContent.setVisibility(4);
                 showControlCenterWindow();
@@ -263,7 +301,7 @@ public class ControlPanelWindowView extends FrameLayout {
         } else if (this.mContent.isDetailShowing() || this.mContent.isEditShowing() || this.mContent.isControlEditShowing()) {
             return false;
         } else {
-            if (this.mIsMove && z3) {
+            if (this.mIsMove && z3 && this.mIsMoveY) {
                 float rawY = motionEvent.getRawY();
                 float f = this.mDownY;
                 if (rawY >= f) {
@@ -290,7 +328,9 @@ public class ControlPanelWindowView extends FrameLayout {
 
     /* access modifiers changed from: private */
     public void updateExpandHeight(float f) {
-        if ((this.mControlCenter.isExpandable() || f == 0.0f) && this.mExpandHeight != f) {
+        if (!this.mAttached) {
+            Log.d("ControllerPanelWindowView", "updateExpandHeight: not attached");
+        } else if ((this.mControlCenter.isExpandable() || f == 0.0f) && this.mExpandHeight != f) {
             float max = Math.max(Math.min(1.0f, f / 80.0f), 0.0f);
             float f2 = this.mBlurRatio;
             if (f2 != max) {
@@ -325,11 +365,34 @@ public class ControlPanelWindowView extends FrameLayout {
         startHeightChangeAnimator();
     }
 
-    private void createHeightChangeAnimator(int i, AnimatorListenerAdapter animatorListenerAdapter) {
+    /* access modifiers changed from: private */
+    public void handleSwitchNotification(ValueAnimator valueAnimator) {
+        if (!this.mNCAnimSwitched && valueAnimator.getAnimatedFraction() > 0.3f) {
+            if (ControlCenter.DEBUG) {
+                Log.d("ControllerPanelWindowView", "switch anim to notification");
+            }
+            ((StatusBar) Dependency.get(StatusBar.class)).animateExpandNotificationsPanel();
+            this.mNCAnimSwitched = true;
+        }
+        if (!this.mNCBlurSwitched && valueAnimator.getAnimatedFraction() > 0.5f) {
+            if (ControlCenter.DEBUG) {
+                Log.d("ControllerPanelWindowView", "switch blur to notification");
+            }
+            ((NCSwitchController) Dependency.get(NCSwitchController.class)).switchBlur(false);
+            this.mNCBlurSwitched = true;
+        }
+    }
+
+    private void createHeightChangeAnimator(final int i, AnimatorListenerAdapter animatorListenerAdapter) {
         ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{this.mExpandHeight, (float) i});
         this.mHeightChangeAnimator = ofFloat;
+        this.mNCBlurSwitched = false;
+        this.mNCAnimSwitched = false;
         ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                if (ControlPanelWindowView.this.mControlPanelController.isNCSwitching() && i == 0) {
+                    ControlPanelWindowView.this.handleSwitchNotification(valueAnimator);
+                }
                 ControlPanelWindowView.this.updateExpandHeight(((Float) valueAnimator.getAnimatedValue()).floatValue());
             }
         });
@@ -346,6 +409,7 @@ public class ControlPanelWindowView extends FrameLayout {
     private void endWithCurrentExpandHeight() {
         Log.d("ControllerPanelWindowView", "endWithCurrentExpandHeight");
         if (!this.mCollapsingAnim) {
+            this.mControlPanelController.requestNCSwitching(false);
             createAndStartAnimator(0, this.mCollapseListener);
         }
     }
@@ -353,6 +417,10 @@ public class ControlPanelWindowView extends FrameLayout {
     public void setControlPanelWindowManager(ControlPanelWindowManager controlPanelWindowManager) {
         this.mControlPanelWindowManager = controlPanelWindowManager;
         this.mContent.setControlPanelWindowManager(controlPanelWindowManager);
+    }
+
+    public void setControlPanelController(ControlPanelController controlPanelController) {
+        this.mControlPanelController = controlPanelController;
     }
 
     public boolean isCollapsed() {
@@ -378,6 +446,9 @@ public class ControlPanelWindowView extends FrameLayout {
     public void onControlPanelFinishExpand() {
         this.mExpandState = 2;
         AccessibilityUtils.hapticAccessibilityTransitionIfNeeded(getContext(), 191);
+        if (this.mControlPanelController.isNCSwitching()) {
+            ((NCSwitchController) Dependency.get(NCSwitchController.class)).switchBlur(true);
+        }
         this.mControlPanelWindowManager.updateNavigationBarSlippery();
     }
 
@@ -392,10 +463,13 @@ public class ControlPanelWindowView extends FrameLayout {
     }
 
     public void collapsePanel(boolean z) {
-        collapsePanel(z, 0);
+        collapsePanel(z, false);
     }
 
-    public void collapsePanel(boolean z, int i) {
+    public void collapsePanel(boolean z, boolean z2) {
+        if (!z2) {
+            this.mControlPanelController.requestNCSwitching(false);
+        }
         if (this.mContent.isDetailShowing()) {
             this.mControlCenterPanel.closeDetail(false);
         }
@@ -424,12 +498,6 @@ public class ControlPanelWindowView extends FrameLayout {
         createAndStartAnimator(80, this.mExpandListener);
     }
 
-    public void expandPanelImmediately() {
-        showControlCenterWindow();
-        this.mBlurRatio = 1.0f;
-        updateExpandHeight(80.0f);
-    }
-
     private void startHeightChangeAnimator() {
         if (!this.mAnimating) {
             this.mAnimating = true;
@@ -439,9 +507,9 @@ public class ControlPanelWindowView extends FrameLayout {
 
     private void cancelHeightChangeAnimator() {
         if (this.mAnimating) {
+            this.mHeightChangeAnimator.cancel();
             this.mHeightChangeAnimator.removeAllListeners();
             this.mHeightChangeAnimator.removeAllUpdateListeners();
-            this.mHeightChangeAnimator.cancel();
             this.mAnimating = false;
         }
     }

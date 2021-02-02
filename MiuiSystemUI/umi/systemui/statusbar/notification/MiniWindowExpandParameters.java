@@ -39,11 +39,6 @@ public final class MiniWindowExpandParameters extends ActivityLaunchAnimator.Exp
         this.startHeight = i;
     }
 
-    @Nullable
-    public final int[] getStartPosition() {
-        return this.startPosition;
-    }
-
     public final void setStartPosition(@Nullable int[] iArr) {
         this.startPosition = iArr;
     }

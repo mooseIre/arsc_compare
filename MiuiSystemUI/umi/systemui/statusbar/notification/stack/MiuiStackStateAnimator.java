@@ -141,7 +141,7 @@ public final class MiuiStackStateAnimator extends StackStateAnimator {
 
     /* access modifiers changed from: protected */
     public boolean applyWithAnimation(@Nullable View view) {
-        return CollectionsKt___CollectionsKt.contains(this.mHeadsUpAppearView, view) || CollectionsKt___CollectionsKt.contains(this.mHeadsUpDisappearView, view);
+        return CollectionsKt___CollectionsKt.contains(this.mHeadsUpAppearView, view) || CollectionsKt___CollectionsKt.contains(this.mHeadsUpDisappearView, view) || this.mHasPanelAppearDisappearEvent;
     }
 
     /* access modifiers changed from: protected */

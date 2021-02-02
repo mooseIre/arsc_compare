@@ -278,7 +278,10 @@ public class ControlCenter extends SystemUI implements ControlPanelController.Us
         }
     }
 
-    /* access modifiers changed from: private */
+    public void openPanelImmediately() {
+        handleOpenPanel();
+    }
+
     public void handleCollapsePanel(boolean z) {
         ControlPanelWindowManager controlPanelWindowManager = this.mControlPanelWindowManager;
         if (controlPanelWindowManager != null) {
@@ -286,17 +289,17 @@ public class ControlCenter extends SystemUI implements ControlPanelController.Us
         }
     }
 
-    /* access modifiers changed from: private */
-    public void handleOpenPanel() {
-        if (this.mControlPanelWindowView != null && panelEnabled()) {
-            this.mControlPanelWindowView.expandPanel();
+    public void handleCollapsePanel(boolean z, boolean z2) {
+        ControlPanelWindowManager controlPanelWindowManager = this.mControlPanelWindowManager;
+        if (controlPanelWindowManager != null) {
+            controlPanelWindowManager.collapsePanel(z, z2);
         }
     }
 
     /* access modifiers changed from: private */
-    public void handleExpandPanelImmediately() {
+    public void handleOpenPanel() {
         if (this.mControlPanelWindowView != null && panelEnabled()) {
-            this.mControlPanelWindowView.expandPanelImmediately();
+            this.mControlPanelWindowView.expandPanel();
         }
     }
 
@@ -345,8 +348,6 @@ public class ControlCenter extends SystemUI implements ControlPanelController.Us
                 ControlCenter.this.handleCollapsePanel(((Boolean) message.obj).booleanValue());
             } else if (i == 2) {
                 ControlCenter.this.handleOpenPanel();
-            } else if (i == 3) {
-                ControlCenter.this.handleExpandPanelImmediately();
             }
         }
     }

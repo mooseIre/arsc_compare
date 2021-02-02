@@ -49,7 +49,8 @@ import org.jetbrains.annotations.Nullable;
 public final class ControlCenterPanelViewController implements ConfigurationController.ConfigurationListener {
     /* access modifiers changed from: private */
     public boolean animatingToCollapse;
-    private final ControlPanelController ccController;
+    /* access modifiers changed from: private */
+    public final ControlPanelController ccController;
     /* access modifiers changed from: private */
     public final ConfigurationController configurationController;
     private final Context context;
@@ -164,7 +165,7 @@ public final class ControlCenterPanelViewController implements ConfigurationCont
         if (DeviceConfig.isLowGpuDevice()) {
             return new PrimaryAnimatorImpl(this.panelView, this);
         }
-        return new AdvancedAnimatorImpl(this.panelView, this);
+        return new AdvancedAnimatorImpl(this.panelView, this, this.ccController);
     }
 
     public final void resetTransRatio() {
@@ -376,6 +377,9 @@ public final class ControlCenterPanelViewController implements ConfigurationCont
         Intrinsics.checkParameterIsNotNull(configuration, "newConfig");
         this.panelView.updateResources();
         onOrientationChanged(configuration.orientation, false);
+        if (!isPortrait()) {
+            this.ccController.showDialog(false);
+        }
     }
 
     public final void onApplyWindowInsets(@NotNull WindowInsets windowInsets) {
@@ -635,7 +639,8 @@ public final class ControlCenterPanelViewController implements ConfigurationCont
         public boolean onTouch(@NotNull View view, @NotNull MotionEvent motionEvent) {
             Intrinsics.checkParameterIsNotNull(view, "v");
             Intrinsics.checkParameterIsNotNull(motionEvent, "event");
-            if (!this.startOnBrightness && ControlCenterPanelViewController.this.ncSwitchController.handleCNSwitchTouch(motionEvent, true)) {
+            boolean z = ControlCenterPanelViewController.this.panelView.isExpanded() && !ControlCenterPanelViewController.this.ccController.isNCSwitching();
+            if (!this.startOnBrightness && ControlCenterPanelViewController.this.ncSwitchController.handleCNSwitchTouch(motionEvent, z)) {
                 return true;
             }
             if (!ControlCenterPanelViewController.this.isPortrait()) {

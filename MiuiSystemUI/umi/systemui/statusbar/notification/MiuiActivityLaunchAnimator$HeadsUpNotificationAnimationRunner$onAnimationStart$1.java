@@ -158,7 +158,7 @@ final class MiuiActivityLaunchAnimator$HeadsUpNotificationAnimationRunner$onAnim
             int r3 = (int) r5
             r4.startClipTopAmount = r3
         L_0x0133:
-            if (r1 == 0) goto L_0x0299
+            if (r1 == 0) goto L_0x0297
             android.graphics.Rect r3 = r1.screenSpaceBounds
             int r13 = r3.width()
             android.graphics.Rect r3 = r1.screenSpaceBounds
@@ -274,14 +274,14 @@ final class MiuiActivityLaunchAnimator$HeadsUpNotificationAnimationRunner$onAnim
             java.lang.Object[] r4 = new java.lang.Object[r3]
             java.lang.String r8 = "closingX"
             r4[r11] = r8
-            if (r2 != 0) goto L_0x025e
+            if (r2 != 0) goto L_0x025c
             r2 = r11
-            goto L_0x0265
-        L_0x025e:
+            goto L_0x0263
+        L_0x025c:
             android.graphics.Rect r2 = r2.screenSpaceBounds
             int r2 = r2.width()
             int r2 = -r2
-        L_0x0265:
+        L_0x0263:
             java.lang.Integer r2 = java.lang.Integer.valueOf(r2)
             r4[r10] = r2
             miuix.animation.base.AnimConfig r2 = com.android.systemui.statusbar.notification.MiuiActivityLaunchAnimatorKt.springEase(r5, r7)
@@ -293,11 +293,11 @@ final class MiuiActivityLaunchAnimator$HeadsUpNotificationAnimationRunner$onAnim
             r3 = 1063675494(0x3f666666, float:0.9)
             java.lang.Float r3 = java.lang.Float.valueOf(r3)
             r2[r10] = r3
-            if (r16 == 0) goto L_0x0287
-            goto L_0x0288
-        L_0x0287:
+            if (r16 == 0) goto L_0x0285
+            goto L_0x0286
+        L_0x0285:
             r6 = r7
-        L_0x0288:
+        L_0x0286:
             miuix.animation.base.AnimConfig r3 = com.android.systemui.statusbar.notification.MiuiActivityLaunchAnimatorKt.springEase(r5, r6)
             r2[r17] = r3
             r1.to(r2)
@@ -305,7 +305,7 @@ final class MiuiActivityLaunchAnimator$HeadsUpNotificationAnimationRunner$onAnim
             com.android.systemui.statusbar.notification.MiuiActivityLaunchAnimator r0 = r0.this$0
             r0.setAnimationPending(r11)
             return
-        L_0x0299:
+        L_0x0297:
             kotlin.jvm.internal.Intrinsics.throwNpe()
             r0 = 0
             throw r0

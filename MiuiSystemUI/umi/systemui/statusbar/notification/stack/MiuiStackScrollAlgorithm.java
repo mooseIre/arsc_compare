@@ -183,7 +183,7 @@ public final class MiuiStackScrollAlgorithm extends StackScrollAlgorithm {
             r4 = 0
         L_0x0060:
             r1.alpha = r4
-            boolean r4 = r1.getAnimatingAddRemove()
+            boolean r4 = r1.isAnimating()
             if (r4 != 0) goto L_0x0078
             r4 = 1061997773(0x3f4ccccd, float:0.8)
             if (r5 == 0) goto L_0x006f
@@ -265,19 +265,36 @@ public final class MiuiStackScrollAlgorithm extends StackScrollAlgorithm {
     public void updateZValuesForState(@NotNull StackScrollAlgorithm.StackScrollAlgorithmState stackScrollAlgorithmState, @NotNull AmbientState ambientState) {
         Intrinsics.checkParameterIsNotNull(stackScrollAlgorithmState, "algorithmState");
         Intrinsics.checkParameterIsNotNull(ambientState, "ambientState");
-        float f = 0.0f;
-        for (int size = stackScrollAlgorithmState.visibleChildren.size() - 1; size >= 0; size--) {
-            ExpandableView expandableView = stackScrollAlgorithmState.visibleChildren.get(size);
-            if (getMGameModeEnabled() || !(expandableView instanceof ExpandableNotificationRow) || !((ExpandableNotificationRow) expandableView).isPinned()) {
-                Intrinsics.checkExpressionValueIsNotNull(expandableView, "child");
-                ExpandableViewState viewState = expandableView.getViewState();
-                if (viewState != null) {
-                    viewState.zTranslation = 0.0f;
+        float f = (float) 2;
+        ArrayList<ExpandableView> arrayList = stackScrollAlgorithmState.visibleChildren;
+        Intrinsics.checkExpressionValueIsNotNull(arrayList, "algorithmState.visibleChildren");
+        for (ExpandableView expandableView : arrayList) {
+            if (!getMGameModeEnabled() && (expandableView instanceof ExpandableNotificationRow)) {
+                ExpandableNotificationRow expandableNotificationRow = (ExpandableNotificationRow) expandableView;
+                if (expandableNotificationRow.isPinned()) {
+                    f = updateChildZValue(expandableNotificationRow, f, ambientState);
                 }
-            } else {
-                f = updateChildZValue(size, f, stackScrollAlgorithmState, ambientState);
+            }
+            Intrinsics.checkExpressionValueIsNotNull(expandableView, "it");
+            ExpandableViewState viewState = expandableView.getViewState();
+            if (viewState != null) {
+                viewState.zTranslation = 0.0f;
             }
         }
+    }
+
+    private final float updateChildZValue(ExpandableNotificationRow expandableNotificationRow, float f, AmbientState ambientState) {
+        ExpandableViewState viewState = expandableNotificationRow.getViewState();
+        int zDistanceBetweenElements = ambientState.getZDistanceBetweenElements();
+        float baseZHeight = (float) ambientState.getBaseZHeight();
+        float f2 = 0.0f;
+        if (f > 0.0f) {
+            f2 = f * ((float) zDistanceBetweenElements);
+        }
+        if (viewState != null) {
+            viewState.zTranslation = baseZHeight + f2 + ((1.0f - expandableNotificationRow.getHeaderVisibleAmount()) * ((float) this.mPinnedZTranslationExtra));
+        }
+        return f - ((float) 1);
     }
 
     /* access modifiers changed from: protected */

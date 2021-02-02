@@ -1,24 +1,32 @@
 package com.android.systemui.statusbar.notification.row;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.util.AttributeSet;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.Interpolator;
 import android.widget.ImageView;
 import com.android.systemui.C0011R$color;
 import com.android.systemui.C0013R$drawable;
 import com.android.systemui.Dependency;
+import com.android.systemui.Interpolators;
 import com.android.systemui.statusbar.notification.ExpandedNotification;
 import com.android.systemui.statusbar.notification.FakeShadowView;
 import com.android.systemui.statusbar.notification.MiniWindowExpandParameters;
 import com.android.systemui.statusbar.notification.NotificationSettingsHelper;
+import com.android.systemui.statusbar.notification.RowAnimationUtils;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import com.android.systemui.statusbar.notification.policy.AppMiniWindowManager;
 import com.android.systemui.statusbar.notification.row.wrapper.MiuiNotificationOneLineViewWrapper;
 import com.android.systemui.statusbar.notification.stack.ExpandableViewState;
+import com.miui.systemui.DebugConfig;
 import com.miui.systemui.SettingsManager;
 import com.miui.systemui.util.CommonExtensionsKt;
 import kotlin.Lazy;
@@ -33,6 +41,7 @@ import org.jetbrains.annotations.Nullable;
 /* compiled from: MiuiExpandableNotificationRow.kt */
 public final class MiuiExpandableNotificationRow extends MiuiAnimatedNotificationRowBase {
     static final /* synthetic */ KProperty[] $$delegatedProperties;
+    private final String TAG = "MiuiExpandableNotificationRow";
     private final Lazy mAppMiniWindowManager$delegate = LazyKt__LazyJVMKt.lazy(MiuiExpandableNotificationRow$mAppMiniWindowManager$2.INSTANCE);
     private final Lazy mBackgroundDimmed$delegate = LazyKt__LazyJVMKt.lazy(new MiuiExpandableNotificationRow$mBackgroundDimmed$2(this));
     private boolean mCanSlide;
@@ -112,7 +121,6 @@ public final class MiuiExpandableNotificationRow extends MiuiAnimatedNotificatio
         updateBackgroundBg();
     }
 
-    /* access modifiers changed from: protected */
     public void updateBackground() {
         super.updateBackground();
         updateBackgroundBg();
@@ -225,6 +233,15 @@ public final class MiuiExpandableNotificationRow extends MiuiAnimatedNotificatio
     }
 
     private final float evaluateRowTranslationForMiniWindow(int i, int i2) {
+        if (getViewState() != null) {
+            ExpandableViewState viewState = getViewState();
+            if (viewState == null) {
+                Intrinsics.throwNpe();
+                throw null;
+            } else if (viewState.getTouchAnimating()) {
+                return 0.0f;
+            }
+        }
         getLocationInWindow(this.mTmpPosition);
         return ((float) (i + ((i2 - i) / 2))) - ((((float) this.mTmpPosition[0]) - getTranslationX()) + (((float) getWidth()) / 2.0f));
     }
@@ -402,6 +419,113 @@ public final class MiuiExpandableNotificationRow extends MiuiAnimatedNotificatio
             if (mBackgroundDimmed.getVisibility() == 0) {
                 getMBackgroundDimmed().invalidate();
             }
+        }
+    }
+
+    public boolean onTouchEvent(@Nullable MotionEvent motionEvent) {
+        startTouchAnimateIfNeed(motionEvent);
+        if (needInterceptTouch()) {
+            return true;
+        }
+        return super.onTouchEvent(motionEvent);
+    }
+
+    private final boolean needInterceptTouch() {
+        return isDimmed() && !isActive();
+    }
+
+    private final void startTouchAnimateIfNeed(MotionEvent motionEvent) {
+        if (motionEvent != null) {
+            if (!isChildInGroup() || isGroupExpanded()) {
+                if (!isClickable()) {
+                    setClickable(true);
+                }
+                int actionMasked = motionEvent.getActionMasked();
+                if (actionMasked == 0) {
+                    ExpandableViewState viewState = getViewState();
+                    if (viewState == null) {
+                        Intrinsics.throwNpe();
+                        throw null;
+                    } else if (0.95f != viewState.scaleX) {
+                        ExpandableViewState viewState2 = getViewState();
+                        if (viewState2 == null) {
+                            Intrinsics.throwNpe();
+                            throw null;
+                        } else if (!viewState2.getTouchAnimating()) {
+                            startTouchScaleAnimateIfNeed(0.95f);
+                        }
+                    }
+                } else if (actionMasked == 1 || actionMasked == 3) {
+                    postDelayed(new MiuiExpandableNotificationRow$startTouchAnimateIfNeed$1(this), isPinned() ? 120 : 0);
+                }
+            }
+        }
+    }
+
+    /* access modifiers changed from: private */
+    public final void startTouchScaleAnimateIfNeed(float f) {
+        if (DebugConfig.DEBUG) {
+            String str = this.TAG;
+            Log.d(str, "animateTouchScale scale=" + f + ", changing=" + isGroupExpansionChanging());
+        }
+        RowAnimationUtils.INSTANCE.startTouchAnimationIfNeed(this, f);
+    }
+
+    /* access modifiers changed from: protected */
+    public void startActivateAnimation(boolean z) {
+        Interpolator interpolator;
+        if (isAttachedToWindow() && isDimmable()) {
+            float f = z ? 1.0f : 1.05f;
+            ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this, "scaleX", new float[]{f});
+            ObjectAnimator ofFloat2 = ObjectAnimator.ofFloat(this, "scaleY", new float[]{f});
+            AnimatorSet animatorSet = new AnimatorSet();
+            animatorSet.play(ofFloat).with(ofFloat2);
+            if (!z) {
+                interpolator = Interpolators.ALPHA_IN;
+                Intrinsics.checkExpressionValueIsNotNull(interpolator, "Interpolators.ALPHA_IN");
+            } else {
+                interpolator = Interpolators.ALPHA_OUT;
+                Intrinsics.checkExpressionValueIsNotNull(interpolator, "Interpolators.ALPHA_OUT");
+            }
+            animatorSet.setInterpolator(interpolator);
+            animatorSet.setDuration((long) 220);
+            if (z) {
+                animatorSet.addListener(new MiuiExpandableNotificationRow$startActivateAnimation$1(this));
+                animatorSet.start();
+                return;
+            }
+            animatorSet.start();
+            setTouchAnimatingState(true);
+        }
+    }
+
+    public void makeInactive(boolean z) {
+        if (isActive() && !z) {
+            resetActivateAnimationIfNeed();
+        }
+        super.makeInactive(z);
+    }
+
+    private final void resetActivateAnimationIfNeed() {
+        if (getScaleX() != 1.0f || getScaleY() != 1.0f) {
+            if (isDimmed()) {
+                setScaleX(1.0f);
+                setScaleY(1.0f);
+                setTouchAnimatingState(false);
+                return;
+            }
+            startActivateAnimation(true);
+        }
+    }
+
+    /* access modifiers changed from: private */
+    public final void setTouchAnimatingState(boolean z) {
+        ExpandableViewState viewState = getViewState();
+        if (viewState != null) {
+            viewState.setTouchAnimating(z);
+        } else {
+            Intrinsics.throwNpe();
+            throw null;
         }
     }
 }

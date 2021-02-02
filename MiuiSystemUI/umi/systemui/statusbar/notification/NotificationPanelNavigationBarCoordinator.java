@@ -105,16 +105,16 @@ public final class NotificationPanelNavigationBarCoordinator implements CommandQ
                     z = true;
                 }
                 if (z != this.navBarDarkMode) {
-                    m19switch(z);
+                    m21switch(z);
                 }
             } else if (this.lastNavigationBarMode != -1) {
-                m19switch(false);
+                m21switch(false);
             }
         }
     }
 
     /* renamed from: switch  reason: not valid java name */
-    private final void m19switch(boolean z) {
+    private final void m21switch(boolean z) {
         if (z) {
             updateNavigationBarMode(1);
             this.lastNavigationBarMode = this.lightBarController.getNavigationBarMode();

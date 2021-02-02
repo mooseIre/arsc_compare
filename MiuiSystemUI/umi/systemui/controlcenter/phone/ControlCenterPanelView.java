@@ -56,6 +56,7 @@ public final class ControlCenterPanelView extends LinearLayout {
     private final H handler;
     @NotNull
     private QSControlCenterHeaderView header;
+    private MotionEvent lastEvent;
     private boolean listening;
     private final ControlPanelController panelController;
     private final ControlCenterPanelViewController panelViewController;
@@ -269,6 +270,15 @@ public final class ControlCenterPanelView extends LinearLayout {
         this.controlPanelWindowView = controlPanelWindowView2;
     }
 
+    public final boolean isExpanded() {
+        ControlPanelWindowView controlPanelWindowView2 = this.controlPanelWindowView;
+        if (controlPanelWindowView2 != null) {
+            return controlPanelWindowView2.isExpanded();
+        }
+        Intrinsics.throwNpe();
+        throw null;
+    }
+
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
@@ -300,11 +310,18 @@ public final class ControlCenterPanelView extends LinearLayout {
         Intrinsics.checkExpressionValueIsNotNull(requireViewById9, "requireViewById(R.id.smart_home_container)");
         this.smartHomeContainer = (LinearLayout) requireViewById9;
         this.panelViewController.onFinishInflate();
-        ControlCenterBigTileGroup controlCenterBigTileGroup = this.bigTileLayout;
-        if (controlCenterBigTileGroup != null) {
-            controlCenterBigTileGroup.init(this);
+        QSControlCenterTileLayout qSControlCenterTileLayout = this.tileLayout;
+        if (qSControlCenterTileLayout != null) {
+            qSControlCenterTileLayout.setPanelView(this);
+            ControlCenterBigTileGroup controlCenterBigTileGroup = this.bigTileLayout;
+            if (controlCenterBigTileGroup != null) {
+                controlCenterBigTileGroup.init(this);
+            } else {
+                Intrinsics.throwUninitializedPropertyAccessException("bigTileLayout");
+                throw null;
+            }
         } else {
-            Intrinsics.throwUninitializedPropertyAccessException("bigTileLayout");
+            Intrinsics.throwUninitializedPropertyAccessException("tileLayout");
             throw null;
         }
     }
@@ -374,14 +391,25 @@ public final class ControlCenterPanelView extends LinearLayout {
     }
 
     public final void showPanel(boolean z, boolean z2) {
+        MotionEvent motionEvent;
         this.panelViewController.cancelTransAnim();
+        if (this.panelViewController.isPortrait()) {
+            this.panelController.showDialog(z);
+        }
         this.panelViewController.getPanelAnimator().animateShowPanel(z);
+        if (!z && (motionEvent = this.lastEvent) != null) {
+            super.dispatchTouchEvent(motionEvent);
+        }
         setListening(z);
     }
 
     public final void finishCollapse() {
         removeControlsPlugin();
         this.panelViewController.resetTransRatio();
+    }
+
+    public final void notifyTileChanged() {
+        this.panelViewController.getPanelAnimator().notifyTileChanged();
     }
 
     public final void updateTransHeight(float f) {
@@ -550,15 +578,24 @@ public final class ControlCenterPanelView extends LinearLayout {
         Intrinsics.checkParameterIsNotNull(motionEvent, "ev");
         ControlCenterPanelViewController.TouchHandler touchHandler2 = this.touchHandler;
         if (touchHandler2 == null || (dispatchTouchEvent = touchHandler2.dispatchTouchEvent(motionEvent)) == null) {
+            if (motionEvent.getActionMasked() == 3 || motionEvent.getActionMasked() == 1) {
+                this.lastEvent = null;
+            } else {
+                MotionEvent obtain = MotionEvent.obtain(motionEvent);
+                this.lastEvent = obtain;
+                if (obtain != null) {
+                    obtain.setAction(3);
+                }
+            }
             return super.dispatchTouchEvent(motionEvent);
         }
         dispatchTouchEvent.booleanValue();
         if (!dispatchTouchEvent.booleanValue()) {
-            MotionEvent obtain = MotionEvent.obtain(motionEvent);
-            Intrinsics.checkExpressionValueIsNotNull(obtain, "copy");
-            obtain.setAction(3);
-            super.dispatchTouchEvent(obtain);
-            obtain.recycle();
+            MotionEvent obtain2 = MotionEvent.obtain(motionEvent);
+            Intrinsics.checkExpressionValueIsNotNull(obtain2, "copy");
+            obtain2.setAction(3);
+            super.dispatchTouchEvent(obtain2);
+            obtain2.recycle();
         }
         return dispatchTouchEvent.booleanValue();
     }

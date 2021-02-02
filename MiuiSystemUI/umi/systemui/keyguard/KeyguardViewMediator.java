@@ -1250,64 +1250,64 @@ public class KeyguardViewMediator extends SystemUI implements Dumpable {
     }
 
     /* JADX WARNING: Can't wrap try/catch for region: R(7:29|30|31|32|42|39|27) */
-    /* JADX WARNING: Code restructure failed: missing block: B:35:0x00a3, code lost:
+    /* JADX WARNING: Code restructure failed: missing block: B:35:0x00a2, code lost:
         return;
      */
-    /* JADX WARNING: Code restructure failed: missing block: B:41:0x008b, code lost:
+    /* JADX WARNING: Code restructure failed: missing block: B:41:0x008a, code lost:
         continue;
      */
-    /* JADX WARNING: Missing exception handler attribute for start block: B:31:0x0093 */
+    /* JADX WARNING: Missing exception handler attribute for start block: B:31:0x0092 */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     public void setKeyguardEnabled(boolean r4) {
         /*
             r3 = this;
             monitor-enter(r3)
             java.lang.String r0 = "KeyguardViewMediator"
-            java.lang.StringBuilder r1 = new java.lang.StringBuilder     // Catch:{ all -> 0x00a4 }
-            r1.<init>()     // Catch:{ all -> 0x00a4 }
+            java.lang.StringBuilder r1 = new java.lang.StringBuilder     // Catch:{ all -> 0x00a3 }
+            r1.<init>()     // Catch:{ all -> 0x00a3 }
             java.lang.String r2 = "setKeyguardEnabled("
-            r1.append(r2)     // Catch:{ all -> 0x00a4 }
-            r1.append(r4)     // Catch:{ all -> 0x00a4 }
+            r1.append(r2)     // Catch:{ all -> 0x00a3 }
+            r1.append(r4)     // Catch:{ all -> 0x00a3 }
             java.lang.String r2 = ")"
-            r1.append(r2)     // Catch:{ all -> 0x00a4 }
-            java.lang.String r1 = r1.toString()     // Catch:{ all -> 0x00a4 }
-            android.util.Log.d(r0, r1)     // Catch:{ all -> 0x00a4 }
-            r3.mExternallyEnabled = r4     // Catch:{ all -> 0x00a4 }
+            r1.append(r2)     // Catch:{ all -> 0x00a3 }
+            java.lang.String r1 = r1.toString()     // Catch:{ all -> 0x00a3 }
+            android.util.Log.d(r0, r1)     // Catch:{ all -> 0x00a3 }
+            r3.mExternallyEnabled = r4     // Catch:{ all -> 0x00a3 }
             r0 = 1
             if (r4 != 0) goto L_0x0042
-            boolean r1 = r3.mShowing     // Catch:{ all -> 0x00a4 }
+            boolean r1 = r3.mShowing     // Catch:{ all -> 0x00a3 }
             if (r1 == 0) goto L_0x0042
-            com.android.internal.policy.IKeyguardExitCallback r4 = r3.mExitSecureCallback     // Catch:{ all -> 0x00a4 }
+            com.android.internal.policy.IKeyguardExitCallback r4 = r3.mExitSecureCallback     // Catch:{ all -> 0x00a3 }
             if (r4 == 0) goto L_0x0032
             java.lang.String r4 = "KeyguardViewMediator"
             java.lang.String r0 = "in process of verifyUnlock request, ignoring"
-            android.util.Log.d(r4, r0)     // Catch:{ all -> 0x00a4 }
-            monitor-exit(r3)     // Catch:{ all -> 0x00a4 }
+            android.util.Log.d(r4, r0)     // Catch:{ all -> 0x00a3 }
+            monitor-exit(r3)     // Catch:{ all -> 0x00a3 }
             return
         L_0x0032:
             java.lang.String r4 = "KeyguardViewMediator"
             java.lang.String r1 = "remembering to reshow, hiding keyguard, disabling status bar expansion"
-            android.util.Log.d(r4, r1)     // Catch:{ all -> 0x00a4 }
-            r3.mNeedToReshowWhenReenabled = r0     // Catch:{ all -> 0x00a4 }
-            r3.updateInputRestrictedLocked()     // Catch:{ all -> 0x00a4 }
-            r3.hideLocked()     // Catch:{ all -> 0x00a4 }
-            goto L_0x00a2
+            android.util.Log.d(r4, r1)     // Catch:{ all -> 0x00a3 }
+            r3.mNeedToReshowWhenReenabled = r0     // Catch:{ all -> 0x00a3 }
+            r3.updateInputRestrictedLocked()     // Catch:{ all -> 0x00a3 }
+            r3.hideLocked()     // Catch:{ all -> 0x00a3 }
+            goto L_0x00a1
         L_0x0042:
-            if (r4 == 0) goto L_0x00a2
-            boolean r4 = r3.mNeedToReshowWhenReenabled     // Catch:{ all -> 0x00a4 }
-            if (r4 == 0) goto L_0x00a2
+            if (r4 == 0) goto L_0x00a1
+            boolean r4 = r3.mNeedToReshowWhenReenabled     // Catch:{ all -> 0x00a3 }
+            if (r4 == 0) goto L_0x00a1
             java.lang.String r4 = "KeyguardViewMediator"
             java.lang.String r1 = "previously hidden, reshowing, reenabling status bar expansion"
-            android.util.Log.d(r4, r1)     // Catch:{ all -> 0x00a4 }
+            android.util.Log.d(r4, r1)     // Catch:{ all -> 0x00a3 }
             r4 = 0
-            r3.mNeedToReshowWhenReenabled = r4     // Catch:{ all -> 0x00a4 }
-            r3.updateInputRestrictedLocked()     // Catch:{ all -> 0x00a4 }
-            com.android.internal.policy.IKeyguardExitCallback r1 = r3.mExitSecureCallback     // Catch:{ all -> 0x00a4 }
+            r3.mNeedToReshowWhenReenabled = r4     // Catch:{ all -> 0x00a3 }
+            r3.updateInputRestrictedLocked()     // Catch:{ all -> 0x00a3 }
+            com.android.internal.policy.IKeyguardExitCallback r1 = r3.mExitSecureCallback     // Catch:{ all -> 0x00a3 }
             r2 = 0
             if (r1 == 0) goto L_0x0075
             java.lang.String r0 = "KeyguardViewMediator"
             java.lang.String r1 = "onKeyguardExitResult(false), resetting"
-            android.util.Log.d(r0, r1)     // Catch:{ all -> 0x00a4 }
+            android.util.Log.d(r0, r1)     // Catch:{ all -> 0x00a3 }
             com.android.internal.policy.IKeyguardExitCallback r0 = r3.mExitSecureCallback     // Catch:{ RemoteException -> 0x0067 }
             r0.onKeyguardExitResult(r4)     // Catch:{ RemoteException -> 0x0067 }
             goto L_0x006f
@@ -1315,40 +1315,40 @@ public class KeyguardViewMediator extends SystemUI implements Dumpable {
             r4 = move-exception
             java.lang.String r0 = "KeyguardViewMediator"
             java.lang.String r1 = "Failed to call onKeyguardExitResult(false)"
-            android.util.Slog.w(r0, r1, r4)     // Catch:{ all -> 0x00a4 }
+            android.util.Slog.w(r0, r1, r4)     // Catch:{ all -> 0x00a3 }
         L_0x006f:
-            r3.mExitSecureCallback = r2     // Catch:{ all -> 0x00a4 }
-            r3.resetStateLocked()     // Catch:{ all -> 0x00a4 }
-            goto L_0x00a2
+            r3.mExitSecureCallback = r2     // Catch:{ all -> 0x00a3 }
+            r3.resetStateLocked()     // Catch:{ all -> 0x00a3 }
+            goto L_0x00a1
         L_0x0075:
-            r3.showLocked(r2)     // Catch:{ all -> 0x00a4 }
-            r3.mWaitingUntilKeyguardVisible = r0     // Catch:{ all -> 0x00a4 }
-            android.os.Handler r4 = r3.mHandler     // Catch:{ all -> 0x00a4 }
+            r3.showLocked(r2)     // Catch:{ all -> 0x00a3 }
+            r3.mWaitingUntilKeyguardVisible = r0     // Catch:{ all -> 0x00a3 }
+            android.os.Handler r4 = r3.mHandler     // Catch:{ all -> 0x00a3 }
             r0 = 8
             r1 = 2000(0x7d0, double:9.88E-321)
-            r4.sendEmptyMessageDelayed(r0, r1)     // Catch:{ all -> 0x00a4 }
+            r4.sendEmptyMessageDelayed(r0, r1)     // Catch:{ all -> 0x00a3 }
             java.lang.String r4 = "KeyguardViewMediator"
             java.lang.String r0 = "waiting until mWaitingUntilKeyguardVisible is false"
-            android.util.Log.d(r4, r0)     // Catch:{ all -> 0x00a4 }
-        L_0x008b:
-            boolean r4 = r3.mWaitingUntilKeyguardVisible     // Catch:{ all -> 0x00a4 }
-            if (r4 == 0) goto L_0x009b
-            r3.wait()     // Catch:{ InterruptedException -> 0x0093 }
-            goto L_0x008b
-        L_0x0093:
-            java.lang.Thread r4 = java.lang.Thread.currentThread()     // Catch:{ all -> 0x00a4 }
-            r4.interrupt()     // Catch:{ all -> 0x00a4 }
-            goto L_0x008b
-        L_0x009b:
+            android.util.Log.d(r4, r0)     // Catch:{ all -> 0x00a3 }
+        L_0x008a:
+            boolean r4 = r3.mWaitingUntilKeyguardVisible     // Catch:{ all -> 0x00a3 }
+            if (r4 == 0) goto L_0x009a
+            r3.wait()     // Catch:{ InterruptedException -> 0x0092 }
+            goto L_0x008a
+        L_0x0092:
+            java.lang.Thread r4 = java.lang.Thread.currentThread()     // Catch:{ all -> 0x00a3 }
+            r4.interrupt()     // Catch:{ all -> 0x00a3 }
+            goto L_0x008a
+        L_0x009a:
             java.lang.String r4 = "KeyguardViewMediator"
             java.lang.String r0 = "done waiting for mWaitingUntilKeyguardVisible"
-            android.util.Log.d(r4, r0)     // Catch:{ all -> 0x00a4 }
-        L_0x00a2:
-            monitor-exit(r3)     // Catch:{ all -> 0x00a4 }
+            android.util.Log.d(r4, r0)     // Catch:{ all -> 0x00a3 }
+        L_0x00a1:
+            monitor-exit(r3)     // Catch:{ all -> 0x00a3 }
             return
-        L_0x00a4:
+        L_0x00a3:
             r4 = move-exception
-            monitor-exit(r3)     // Catch:{ all -> 0x00a4 }
+            monitor-exit(r3)     // Catch:{ all -> 0x00a3 }
             throw r4
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.keyguard.KeyguardViewMediator.setKeyguardEnabled(boolean):void");
@@ -2250,8 +2250,8 @@ public class KeyguardViewMediator extends SystemUI implements Dumpable {
         this.mUpdateMonitor.setKeyguardShowingAndOccluded(z, this.mOccluded);
         this.mUpdateMonitor.updateShowingState(this.mShowing);
         if (z3) {
-            notifyDefaultDisplayCallbacks(z);
             updateActivityLockScreenState(z, z4);
+            notifyDefaultDisplayCallbacks(z);
         }
     }
 

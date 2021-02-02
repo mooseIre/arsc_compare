@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /* compiled from: KeyguardMediaController.kt */
-public final class KeyguardMediaController {
+public class KeyguardMediaController {
     private final KeyguardBypassController bypassController;
     private final MediaHost mediaHost;
     private final NotificationLockscreenUserManager notifLockscreenUserManager;

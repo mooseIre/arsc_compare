@@ -35,6 +35,7 @@ public final class PlayerViewHolder {
     private final TextView elapsedTimeView;
     @NotNull
     private final TransitionLayout player;
+    private final ViewGroup progressTimes;
     private final ViewGroup seamless;
     private final ImageView seamlessFallback;
     private final ImageView seamlessIcon;
@@ -57,7 +58,7 @@ public final class PlayerViewHolder {
             this.seamlessText = (TextView) view.requireViewById(C0015R$id.media_seamless_text);
             this.seamlessFallback = (ImageView) view.requireViewById(C0015R$id.media_seamless_fallback);
             this.seekBar = (SeekBar) view.requireViewById(C0015R$id.media_progress_bar);
-            ViewGroup viewGroup = (ViewGroup) view.requireViewById(C0015R$id.notification_media_progress_time);
+            this.progressTimes = (ViewGroup) view.requireViewById(C0015R$id.notification_media_progress_time);
             this.elapsedTimeView = (TextView) view.requireViewById(C0015R$id.media_elapsed_time);
             this.totalTimeView = (TextView) view.requireViewById(C0015R$id.media_total_time);
             FrameLayout frameLayout = (FrameLayout) view.requireViewById(C0015R$id.actions);
@@ -119,6 +120,10 @@ public final class PlayerViewHolder {
 
     public final SeekBar getSeekBar() {
         return this.seekBar;
+    }
+
+    public final ViewGroup getProgressTimes() {
+        return this.progressTimes;
     }
 
     public final TextView getElapsedTimeView() {
@@ -201,7 +206,14 @@ public final class PlayerViewHolder {
             View inflate = layoutInflater.inflate(C0017R$layout.media_view, viewGroup, false);
             Intrinsics.checkExpressionValueIsNotNull(inflate, "mediaView");
             inflate.setLayoutDirection(3);
-            return new PlayerViewHolder(inflate, (DefaultConstructorMarker) null);
+            PlayerViewHolder playerViewHolder = new PlayerViewHolder(inflate, (DefaultConstructorMarker) null);
+            SeekBar seekBar = playerViewHolder.getSeekBar();
+            Intrinsics.checkExpressionValueIsNotNull(seekBar, "seekBar");
+            seekBar.setLayoutDirection(0);
+            ViewGroup progressTimes = playerViewHolder.getProgressTimes();
+            Intrinsics.checkExpressionValueIsNotNull(progressTimes, "progressTimes");
+            progressTimes.setLayoutDirection(0);
+            return playerViewHolder;
         }
     }
 }

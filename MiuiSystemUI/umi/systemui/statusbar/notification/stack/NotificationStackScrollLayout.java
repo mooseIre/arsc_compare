@@ -97,6 +97,7 @@ import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import com.android.systemui.statusbar.notification.collection.notifcollection.DismissedByUserStats;
 import com.android.systemui.statusbar.notification.collection.notifcollection.NotifCollectionListener;
 import com.android.systemui.statusbar.notification.logging.NotificationLogger;
+import com.android.systemui.statusbar.notification.mediacontrol.MiuiKeyguardMediaController;
 import com.android.systemui.statusbar.notification.row.ActivatableNotificationView;
 import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow;
 import com.android.systemui.statusbar.notification.row.ExpandableView;
@@ -127,6 +128,7 @@ import com.android.systemui.statusbar.policy.ScrollAdapter;
 import com.android.systemui.statusbar.policy.ZenModeController;
 import com.android.systemui.tuner.TunerService;
 import com.android.systemui.util.Assert;
+import com.miui.systemui.events.PanelSlidingDirection;
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -291,6 +293,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
     /* access modifiers changed from: private */
     public boolean mIsExpanded = true;
     private boolean mIsExpansionChanging;
+    private boolean mIsTrackingSliding;
     /* access modifiers changed from: private */
     public final KeyguardBypassController mKeyguardBypassController;
     /* access modifiers changed from: private */
@@ -478,13 +481,13 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
     }
 
     /* JADX INFO: super call moved to the top of the method (can break code semantics) */
-    public NotificationStackScrollLayout(Context context, AttributeSet attributeSet, boolean z, NotificationRoundnessManager notificationRoundnessManager, DynamicPrivacyController dynamicPrivacyController, SysuiStatusBarStateController sysuiStatusBarStateController, HeadsUpManagerPhone headsUpManagerPhone, KeyguardBypassController keyguardBypassController, KeyguardMediaController keyguardMediaController, ZenModeViewController zenModeViewController, FalsingManager falsingManager, NotificationLockscreenUserManager notificationLockscreenUserManager, NotificationGutsManager notificationGutsManager, ZenModeController zenModeController, MiuiNotificationSectionsManager miuiNotificationSectionsManager, ForegroundServiceSectionController foregroundServiceSectionController, ForegroundServiceDismissalFeatureController foregroundServiceDismissalFeatureController, FeatureFlags featureFlags, NotifPipeline notifPipeline, NotificationEntryManager notificationEntryManager, NotifCollection notifCollection, UiEventLogger uiEventLogger, MediaTimeoutListener mediaTimeoutListener, MediaDataFilter mediaDataFilter) {
+    public NotificationStackScrollLayout(Context context, AttributeSet attributeSet, boolean z, NotificationRoundnessManager notificationRoundnessManager, DynamicPrivacyController dynamicPrivacyController, SysuiStatusBarStateController sysuiStatusBarStateController, HeadsUpManagerPhone headsUpManagerPhone, KeyguardBypassController keyguardBypassController, MiuiKeyguardMediaController miuiKeyguardMediaController, ZenModeViewController zenModeViewController, FalsingManager falsingManager, NotificationLockscreenUserManager notificationLockscreenUserManager, NotificationGutsManager notificationGutsManager, ZenModeController zenModeController, MiuiNotificationSectionsManager miuiNotificationSectionsManager, ForegroundServiceSectionController foregroundServiceSectionController, ForegroundServiceDismissalFeatureController foregroundServiceDismissalFeatureController, FeatureFlags featureFlags, NotifPipeline notifPipeline, NotificationEntryManager notificationEntryManager, NotifCollection notifCollection, UiEventLogger uiEventLogger, MediaTimeoutListener mediaTimeoutListener, MediaDataFilter mediaDataFilter) {
         super(context, attributeSet, 0, 0);
         Context context2 = context;
         NotificationRoundnessManager notificationRoundnessManager2 = notificationRoundnessManager;
         DynamicPrivacyController dynamicPrivacyController2 = dynamicPrivacyController;
         HeadsUpManagerPhone headsUpManagerPhone2 = headsUpManagerPhone;
-        KeyguardMediaController keyguardMediaController2 = keyguardMediaController;
+        MiuiKeyguardMediaController miuiKeyguardMediaController2 = miuiKeyguardMediaController;
         ZenModeViewController zenModeViewController2 = zenModeViewController;
         MiuiNotificationSectionsManager miuiNotificationSectionsManager2 = miuiNotificationSectionsManager;
         boolean z2 = false;
@@ -516,6 +519,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
                 NotificationStackScrollLayout.this.lambda$new$2$NotificationStackScrollLayout(colorExtractor, i);
             }
         };
+        this.mIsTrackingSliding = false;
         this.mReclamp = new Runnable() {
             public void run() {
                 NotificationStackScrollLayout.this.mScroller.startScroll(NotificationStackScrollLayout.this.mScrollX, NotificationStackScrollLayout.this.mOwnScrollY, 0, NotificationStackScrollLayout.this.getScrollRange() - NotificationStackScrollLayout.this.mOwnScrollY);
@@ -955,9 +959,9 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
         initializeForegroundServiceSection(foregroundServiceDismissalFeatureController);
         this.mUiEventLogger = uiEventLogger;
         this.mColorExtractor.addOnColorsChangedListener(this.mOnColorsChangedListener);
-        this.mKeyguardMediaController = keyguardMediaController2;
-        keyguardMediaController2.setVisibilityChangedListener(new Function1(keyguardMediaController2) {
-            public final /* synthetic */ KeyguardMediaController f$1;
+        this.mKeyguardMediaController = miuiKeyguardMediaController2;
+        miuiKeyguardMediaController2.setVisibilityChangedListener(new Function1(miuiKeyguardMediaController2) {
+            public final /* synthetic */ MiuiKeyguardMediaController f$1;
 
             {
                 this.f$1 = r2;
@@ -1000,11 +1004,11 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
 
     /* access modifiers changed from: private */
     /* renamed from: lambda$new$6 */
-    public /* synthetic */ Unit lambda$new$6$NotificationStackScrollLayout(KeyguardMediaController keyguardMediaController, Boolean bool) {
+    public /* synthetic */ Unit lambda$new$6$NotificationStackScrollLayout(MiuiKeyguardMediaController miuiKeyguardMediaController, Boolean bool) {
         if (bool.booleanValue()) {
-            generateAddAnimation(keyguardMediaController.getView(), false);
+            generateAddAnimation(miuiKeyguardMediaController.getView(), false);
         } else {
-            generateRemoveAnimation(keyguardMediaController.getView());
+            generateRemoveAnimation(miuiKeyguardMediaController.getView());
         }
         requestChildrenUpdate();
         return null;
@@ -1523,7 +1527,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
         int i = 0;
         for (int i2 = 0; i2 < getChildCount(); i2++) {
             View childAt = getChildAt(i2);
-            if (childAt.getVisibility() == 0 && (childAt instanceof ExpandableNotificationRow)) {
+            if (childAt.getVisibility() != 8 && (childAt instanceof ExpandableNotificationRow)) {
                 i++;
             }
         }
@@ -3395,6 +3399,13 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
                                     customOverScrollBy((int) f, this.mOwnScrollY, scrollRange, getHeight() / 2);
                                     checkSnoozeLeavebehind();
                                 }
+                                if (this.mIsTrackingSliding) {
+                                    if (i < 0) {
+                                        trackPanelSliding(PanelSlidingDirection.DOWN);
+                                    } else {
+                                        trackPanelSliding(PanelSlidingDirection.UP);
+                                    }
+                                }
                             }
                         }
                     } else if (actionMasked != 3) {
@@ -3450,6 +3461,19 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
         }
         Log.e("StackScroller", "Invalid pointerId=" + this.mActivePointerId + " in onTouchEvent " + MotionEvent.actionToString(motionEvent.getActionMasked()));
         return true;
+    }
+
+    private void trackPanelSliding(PanelSlidingDirection panelSlidingDirection) {
+        ((NotificationStat) Dependency.get(NotificationStat.class)).onNotificationPanelSliding(panelSlidingDirection.name(), "panel");
+        stopTrackingScrolling();
+    }
+
+    private void startTrackingScrolling() {
+        this.mIsTrackingSliding = true;
+    }
+
+    private void stopTrackingScrolling() {
+        this.mIsTrackingSliding = false;
     }
 
     /* access modifiers changed from: protected */
@@ -3621,7 +3645,9 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
             requestDisallowInterceptTouchEvent(true);
             cancelLongPress();
             resetExposedMenuView(true, true);
+            return;
         }
+        startTrackingScrolling();
     }
 
     public void requestDisallowLongPress() {
@@ -5258,6 +5284,9 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
     public void onEntryUpdated(NotificationEntry notificationEntry) {
         if (notificationEntry.rowExists() && !notificationEntry.getSbn().isClearable()) {
             snapViewIfNeeded(notificationEntry);
+        }
+        if (notificationEntry.rowExists()) {
+            updateHideSensitiveForChild(notificationEntry.getRow());
         }
     }
 

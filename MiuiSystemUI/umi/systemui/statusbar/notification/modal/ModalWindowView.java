@@ -18,6 +18,7 @@ import com.android.systemui.C0012R$dimen;
 import com.android.systemui.Dependency;
 import com.android.systemui.statusbar.CommandQueue;
 import com.android.systemui.statusbar.notification.NotificationEntryManager;
+import com.android.systemui.statusbar.notification.RowAnimationUtils;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import com.android.systemui.statusbar.notification.policy.AppMiniWindowRowTouchCallback;
 import com.android.systemui.statusbar.notification.policy.AppMiniWindowRowTouchHelper;
@@ -470,17 +471,26 @@ public class ModalWindowView extends FrameLayout implements AppMiniWindowRowTouc
     }
 
     public boolean onInterceptTouchEvent(MotionEvent motionEvent) {
-        if (!this.mTouchHelper.onInterceptTouchEvent(motionEvent)) {
-            return super.onInterceptTouchEvent(motionEvent);
+        if (this.mTouchHelper.onInterceptTouchEvent(motionEvent)) {
+            return true;
         }
-        return true;
+        resetAnimIfNeed(motionEvent);
+        return super.onInterceptTouchEvent(motionEvent);
+    }
+
+    private void resetAnimIfNeed(MotionEvent motionEvent) {
+        int actionMasked = motionEvent.getActionMasked();
+        if (actionMasked == 1 || actionMasked == 3) {
+            RowAnimationUtils.INSTANCE.startTouchAnimationIfNeed(this.mModalRow, 1.0f);
+        }
     }
 
     public boolean onTouchEvent(MotionEvent motionEvent) {
-        if (!this.mTouchHelper.onTouchEvent(motionEvent)) {
-            return super.onTouchEvent(motionEvent);
+        if (this.mTouchHelper.onTouchEvent(motionEvent)) {
+            return true;
         }
-        return true;
+        resetAnimIfNeed(motionEvent);
+        return super.onTouchEvent(motionEvent);
     }
 
     public void onMiniWindowTrackingUpdate(float f) {

@@ -63,6 +63,12 @@ public class AutoBrightnessView extends FrameLayout {
         }
     }
 
+    /* access modifiers changed from: protected */
+    public void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        this.mAutoBrightnessTile.removeCallbacks();
+    }
+
     public void updateResources() {
         ((CCQSTileView) this.mAutoBrightnessView).getIcon().updateResources();
     }

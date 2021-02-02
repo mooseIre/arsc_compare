@@ -420,6 +420,7 @@ public class MiuiFiveGServiceClient {
             this.mHandler.sendEmptyMessageDelayed(1024, (long) ((this.mBindRetryTimes * 2000) + 3000));
             this.mBindRetryTimes++;
         }
+        update5GIcon();
     }
 
     public boolean isServiceConnected() {

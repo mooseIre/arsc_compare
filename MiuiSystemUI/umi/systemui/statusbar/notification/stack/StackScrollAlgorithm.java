@@ -124,17 +124,18 @@ public class StackScrollAlgorithm {
             }
             float f2 = viewState.yTranslation;
             float f3 = ((float) viewState.height) + f2;
-            boolean z2 = (expandableView instanceof ExpandableNotificationRow) && ((ExpandableNotificationRow) expandableView).isPinned();
-            if (!this.mClipNotificationScrollToTop || ((viewState.inShelf && (!z2 || z)) || f2 >= f)) {
+            boolean z2 = expandableView instanceof ExpandableNotificationRow;
+            boolean z3 = z2 && ((ExpandableNotificationRow) expandableView).isPinned();
+            if (!this.mClipNotificationScrollToTop || ((viewState.inShelf && (!z3 || z)) || f2 >= f)) {
                 viewState.clipTopAmount = 0;
             } else {
                 viewState.clipTopAmount = (int) (f - f2);
             }
-            if (z2) {
+            if (z3) {
                 z = false;
             }
-            if (!expandableView.isTransparent()) {
-                if (!z2) {
+            if (z2 && !expandableView.isTransparent()) {
+                if (!z3) {
                     f2 = f3;
                 }
                 f = Math.max(f, f2);
@@ -356,22 +357,25 @@ public class StackScrollAlgorithm {
             viewState.yTranslation = MathUtils.lerp(this.mHeadsUpInset, viewState.yTranslation - ambientState.getStackTranslation(), ambientState.getAppearFraction());
         }
         ExpandableNotificationRow expandableNotificationRow = null;
-        boolean z = false;
-        for (int i = 0; i < size; i++) {
-            View view = stackScrollAlgorithmState.visibleChildren.get(i);
+        int i = 0;
+        for (int i2 = 0; i2 < size; i2++) {
+            View view = stackScrollAlgorithmState.visibleChildren.get(i2);
             if (view instanceof ExpandableNotificationRow) {
                 ExpandableNotificationRow expandableNotificationRow2 = (ExpandableNotificationRow) view;
                 if (expandableNotificationRow2.isHeadsUp()) {
                     ExpandableViewState viewState2 = expandableNotificationRow2.getViewState();
+                    boolean z = true;
                     if (expandableNotificationRow == null && expandableNotificationRow2.mustStayOnScreen() && !viewState2.headsUpIsVisible) {
                         viewState2.location = 1;
                         expandableNotificationRow = expandableNotificationRow2;
                     }
-                    boolean z2 = expandableNotificationRow == expandableNotificationRow2;
+                    if (expandableNotificationRow != expandableNotificationRow2) {
+                        z = false;
+                    }
                     float f = viewState2.yTranslation + ((float) viewState2.height);
                     if (this.mIsExpanded && expandableNotificationRow2.mustStayOnScreen() && !viewState2.headsUpIsVisible && !expandableNotificationRow2.showingPulsing()) {
                         clampHunToTop(ambientState, expandableNotificationRow2, viewState2);
-                        if (z2 && expandableNotificationRow2.isAboveShelf()) {
+                        if (z && expandableNotificationRow2.isAboveShelf()) {
                             clampHunToMaxTranslation(ambientState, expandableNotificationRow2, viewState2);
                             viewState2.hidden = false;
                         }
@@ -379,21 +383,21 @@ public class StackScrollAlgorithm {
                     if (expandableNotificationRow2.isPinned()) {
                         viewState2.yTranslation = Math.max(viewState2.yTranslation, this.mHeadsUpInset);
                         viewState2.height = Math.max(expandableNotificationRow2.getIntrinsicHeight(), viewState2.height);
-                        if (!z) {
+                        if (i < 2) {
                             viewState2.hidden = false;
-                            z = true;
+                            i++;
                         }
                         if (expandableNotificationRow == null) {
                             expandableViewState = null;
                         } else {
                             expandableViewState = expandableNotificationRow.getViewState();
                         }
-                        if (expandableViewState != null && !z2 && (!this.mIsExpanded || f > expandableViewState.yTranslation + ((float) expandableViewState.height))) {
+                        if (expandableViewState != null && !z && (!this.mIsExpanded || f > expandableViewState.yTranslation + ((float) expandableViewState.height))) {
                             int intrinsicHeight = expandableNotificationRow2.getIntrinsicHeight();
                             viewState2.height = intrinsicHeight;
                             viewState2.yTranslation = Math.min((expandableViewState.yTranslation + ((float) expandableViewState.height)) - ((float) intrinsicHeight), viewState2.yTranslation);
                         }
-                        if (!this.mIsExpanded && z2 && ambientState.getScrollY() > 0) {
+                        if (!this.mIsExpanded && z && ambientState.getScrollY() > 0) {
                             viewState2.yTranslation -= (float) ambientState.getScrollY();
                         }
                     }
@@ -446,40 +450,6 @@ public class StackScrollAlgorithm {
             return ((ExpandableView) view).getIntrinsicHeight();
         }
         return view == null ? this.mCollapsedSize : view.getHeight();
-    }
-
-    /* access modifiers changed from: protected */
-    public float updateChildZValue(int i, float f, StackScrollAlgorithmState stackScrollAlgorithmState, AmbientState ambientState) {
-        int i2;
-        ExpandableView expandableView = stackScrollAlgorithmState.visibleChildren.get(i);
-        ExpandableViewState viewState = expandableView.getViewState();
-        int zDistanceBetweenElements = ambientState.getZDistanceBetweenElements();
-        float baseZHeight = (float) ambientState.getBaseZHeight();
-        if (expandableView.mustStayOnScreen() && !viewState.headsUpIsVisible && !ambientState.isDozingAndNotPulsing(expandableView) && viewState.yTranslation < ambientState.getTopPadding() + ambientState.getStackTranslation()) {
-            if (f != 0.0f) {
-                f += 1.0f;
-            } else {
-                f += Math.min(1.0f, ((ambientState.getTopPadding() + ambientState.getStackTranslation()) - viewState.yTranslation) / ((float) viewState.height));
-            }
-            viewState.zTranslation = baseZHeight + (((float) zDistanceBetweenElements) * f);
-        } else if (expandableView == ambientState.getTrackedHeadsUpRow() || (i == 0 && (expandableView.isAboveShelf() || expandableView.showingPulsing()))) {
-            if (ambientState.getShelf() == null) {
-                i2 = 0;
-            } else {
-                i2 = ambientState.getShelf().getIntrinsicHeight();
-            }
-            float innerHeight = ((float) (ambientState.getInnerHeight() - i2)) + ambientState.getTopPadding() + ambientState.getStackTranslation();
-            float intrinsicHeight = viewState.yTranslation + ((float) expandableView.getIntrinsicHeight()) + ((float) this.mPaddingBetweenElements);
-            if (innerHeight > intrinsicHeight) {
-                viewState.zTranslation = baseZHeight;
-            } else {
-                viewState.zTranslation = baseZHeight + (Math.min((intrinsicHeight - innerHeight) / ((float) i2), 1.0f) * ((float) zDistanceBetweenElements));
-            }
-        } else {
-            viewState.zTranslation = baseZHeight;
-        }
-        viewState.zTranslation += (1.0f - expandableView.getHeaderVisibleAmount()) * ((float) this.mPinnedZTranslationExtra);
-        return f;
     }
 
     public void setIsExpanded(boolean z) {

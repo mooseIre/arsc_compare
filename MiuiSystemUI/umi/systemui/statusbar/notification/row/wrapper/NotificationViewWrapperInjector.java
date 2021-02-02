@@ -16,10 +16,19 @@ public class NotificationViewWrapperInjector {
             return new MiuiNotificationOneLineViewWrapper(context, view, expandableNotificationRow);
         }
         if (NotificationSettingsHelper.showMiuiStyle()) {
-            if (view.getId() == C0015R$id.status_bar_latest_event_content) {
-                if ("oneLine".equals(view.getTag())) {
-                    return new MiuiNotificationOneLineViewWrapper(context, view, expandableNotificationRow);
+            if (view.getId() != C0015R$id.status_bar_latest_event_content) {
+                if (view.getId() == 16909500) {
+                    if ("conversation".equals(view.getTag())) {
+                        return new MiuiNotificationConversationTemplateViewWrapper(context, (ConversationLayout) view, expandableNotificationRow);
+                    }
+                    if ("media".equals(view.getTag()) || "bigMediaNarrow".equals(view.getTag())) {
+                        return null;
+                    }
                 }
+                return getMiuiCustomViewWrapper(context, view, expandableNotificationRow);
+            } else if ("oneLine".equals(view.getTag())) {
+                return new MiuiNotificationOneLineViewWrapper(context, view, expandableNotificationRow);
+            } else {
                 if ("base".equals(view.getTag()) || "big".equals(view.getTag())) {
                     return new MiuiNotificationTemplateViewWrapper(context, view, expandableNotificationRow);
                 }
@@ -33,10 +42,6 @@ public class NotificationViewWrapperInjector {
                     return new MiuiNotificationInboxViewWrapper(context, view, expandableNotificationRow);
                 }
                 return null;
-            } else if (view.getId() != 16909500 || !"conversation".equals(view.getTag())) {
-                return getMiuiCustomViewWrapper(context, view, expandableNotificationRow);
-            } else {
-                return new MiuiNotificationConversationTemplateViewWrapper(context, (ConversationLayout) view, expandableNotificationRow);
             }
         } else if (view.getId() != 16909500 && !(view instanceof NotificationHeaderView)) {
             return getMiuiCustomViewWrapper(context, view, expandableNotificationRow);

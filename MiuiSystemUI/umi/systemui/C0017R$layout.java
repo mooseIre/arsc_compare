@@ -4137,6 +4137,9 @@ public final class R {
         public static final int navigation_luminance_change_threshold;
         public static final int navigation_luminance_threshold;
         public static final int navigation_side_padding;
+        public static final int nc_switch_guide_video_corner_radius;
+        public static final int nc_switch_guide_video_height;
+        public static final int nc_switch_guide_video_width;
         public static final int new_qs_vertical_margin;
         public static final int no_signal_cluster_battery_padding;
         public static final int notch_expanded_header_carrier_margin;
@@ -7399,6 +7402,7 @@ public final class R {
         public static final int nav_background;
         public static final int navigation_black_gesture_line_bg;
         public static final int navigation_empty_icon;
+        public static final int nc_switch_guide_video_bg;
         public static final int notch_settings;
         public static final int notch_settings_n;
         public static final int notch_settings_p;
@@ -8520,6 +8524,8 @@ public final class R {
         public static final int guidance_description;
         public static final int guidance_icon;
         public static final int guidance_title;
+        public static final int guide_content;
+        public static final int guide_video;
         public static final int guidedactions_activator_item;
         public static final int guidedactions_content;
         public static final int guidedactions_content2;
@@ -10154,6 +10160,7 @@ public final class R {
         public static final int navigation_bar_window;
         public static final int navigation_layout;
         public static final int navigation_layout_vertical;
+        public static final int nc_switch_guide_dialog_content;
         public static final int notif_half_shelf;
         public static final int notif_half_shelf_row;
         public static final int notification_action;
@@ -10418,6 +10425,7 @@ public final class R {
         public static final int lb_voice_success;
         public static final int miui_face_input_suggestion_video;
         public static final int miui_facea_input_success;
+        public static final int nc_switch_guide_video;
         public static final int stat_sys_battery;
         public static final int stat_sys_battery_charge;
         public static final int stat_sys_battery_charge_darkmode;
@@ -11068,6 +11076,7 @@ public final class R {
         public static final int connected_via_network_scorer_default;
         public static final int connected_via_passpoint;
         public static final int content_description_menu_button;
+        public static final int control_center_notification_switch_guide;
         public static final int control_quick_settings_tiles_super_save;
         public static final int controls_added_tooltip;
         public static final int controls_confirmation_confirming;
