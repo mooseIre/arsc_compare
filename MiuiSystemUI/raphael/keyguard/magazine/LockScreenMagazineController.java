@@ -913,7 +913,7 @@ public class LockScreenMagazineController implements SettingsObserver.Callback {
     }
 
     /* access modifiers changed from: private */
-    /* JADX WARNING: Removed duplicated region for block: B:23:0x00c1  */
+    /* JADX WARNING: Removed duplicated region for block: B:23:0x00c0  */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     public android.os.Bundle getMagazineActivityExtras(long r10) {
         /*
@@ -1007,11 +1007,11 @@ public class LockScreenMagazineController implements SettingsObserver.Callback {
             java.lang.String r10 = "dialogComponent"
             r1.putString(r10, r9)
             boolean r9 = miui.os.Build.IS_INTERNATIONAL_BUILD
-            if (r9 == 0) goto L_0x00c8
+            if (r9 == 0) goto L_0x00c7
             java.lang.String r9 = "entry_source"
             java.lang.String r10 = "cta"
             r1.putString(r9, r10)
-        L_0x00c8:
+        L_0x00c7:
             return r1
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.keyguard.magazine.LockScreenMagazineController.getMagazineActivityExtras(long):android.os.Bundle");

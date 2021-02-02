@@ -384,8 +384,6 @@ public class MiuiFaceUnlockManager {
                 Slog.e("miui_face", "start face unlock fail, isBouncerShowing=" + this.mUpdateMonitor.isBouncerShowing() + ";isTopActivityCameraApp=" + MiuiKeyguardUtils.isTopActivityCameraApp(this.mContext));
             } else if (this.mFaceLockedOut) {
                 Slog.e("miui_face", "start face unlock fail because is locked");
-            } else if (this.mUpdateMonitor.isFaceDetectionRunning()) {
-                Slog.e("miui_face", "start face unlock fail because face detec is running");
             } else if (KeyguardUpdateMonitor.getCurrentUser() != 0) {
                 Slog.e("miui_face", "start face unlock fail because is not PrimaryUser");
             } else if (this.mUpdateMonitor.userNeedsStrongAuth()) {
