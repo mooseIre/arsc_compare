@@ -28,6 +28,9 @@ public abstract class ControlCenterPanelAnimator {
     public void notifyOrientationChanged() {
     }
 
+    public void notifyTileChanged() {
+    }
+
     public ControlCenterPanelAnimator(@NotNull ControlCenterPanelView controlCenterPanelView) {
         Intrinsics.checkParameterIsNotNull(controlCenterPanelView, "panelView");
         this.panelView = controlCenterPanelView;

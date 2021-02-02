@@ -48,7 +48,6 @@ import miuix.animation.IStateStyle;
 import miuix.animation.ITouchStyle;
 import miuix.animation.base.AnimConfig;
 import miuix.animation.controller.AnimState;
-import miuix.animation.listener.TransitionListener;
 import miuix.animation.property.ViewProperty;
 import miuix.animation.utils.EaseManager;
 
@@ -79,6 +78,7 @@ public class QSBigTileView extends QSTileView {
     private QSIconView mStatusIconView;
     private TextView mStatusView;
     protected String mTag;
+    private final QSTile.Callback mTileCallBack;
     /* access modifiers changed from: private */
     public MiuiQSPanel$MiuiTileRecord mTileRecord;
     private boolean mTileState;
@@ -115,6 +115,7 @@ public class QSBigTileView extends QSTileView {
         this.mActiveString = "";
         this.mInActiveString = "";
         this.mUnavailableString = "";
+        this.mTileCallBack = new QSTileCallback();
         this.mContext = context;
         this.mPanelController = (ControlPanelController) Dependency.get(ControlPanelController.class);
         context.getResources().getColor(C0011R$color.qs_control_tile_icon_disabled_color);
@@ -266,27 +267,7 @@ public class QSBigTileView extends QSTileView {
         this.mQSTile = createTile;
         createTile.setTileSpec(this.mTag);
         this.mQSTile.userSwitch(KeyguardUpdateMonitor.getCurrentUser());
-        this.mTileRecord.callback = new QSTile.Callback() {
-            public void onAnnouncementRequested(CharSequence charSequence) {
-            }
-
-            public void onStateChanged(QSTile.State state) {
-                QSBigTileView.this.onStateChanged(state);
-            }
-
-            public void onShowDetail(boolean z) {
-                QSBigTileView.this.mControlCenterPanelView.showDetail(z, QSBigTileView.this.mTileRecord);
-            }
-
-            public void onToggleStateChanged(boolean z) {
-                QSBigTileView.this.mControlCenterPanelView.fireToggleStateChanged(z);
-            }
-
-            public void onScanStateChanged(boolean z) {
-                QSBigTileView.this.mControlCenterPanelView.fireScanStateChanged(z);
-            }
-        };
-        this.mQSTile.addCallback(this.mTileRecord.callback);
+        this.mTileRecord.callback = this.mTileCallBack;
         init(this.mQSTile);
         this.mQSTile.refreshState();
         MiuiQSPanel$MiuiTileRecord miuiQSPanel$MiuiTileRecord = this.mTileRecord;
@@ -303,10 +284,18 @@ public class QSBigTileView extends QSTileView {
     /* access modifiers changed from: protected */
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
+        QSTile qSTile = this.mQSTile;
+        if (qSTile != null) {
+            qSTile.addCallback(this.mTileCallBack);
+        }
     }
 
     /* access modifiers changed from: protected */
     public void onDetachedFromWindow() {
+        QSTile qSTile = this.mQSTile;
+        if (qSTile != null) {
+            qSTile.removeCallbacks();
+        }
         super.onDetachedFromWindow();
     }
 
@@ -388,12 +377,12 @@ public class QSBigTileView extends QSTileView {
     }
 
     public void init(final QSTile qSTile) {
-        AnonymousClass4 r0 = new View.OnClickListener(this) {
+        AnonymousClass3 r0 = new View.OnClickListener(this) {
             public void onClick(View view) {
                 qSTile.click();
             }
         };
-        AnonymousClass5 r1 = new View.OnClickListener() {
+        AnonymousClass4 r1 = new View.OnClickListener() {
             public void onClick(View view) {
                 Object obj;
                 if (QSBigTileView.this.mTag.equals("cell")) {
@@ -409,7 +398,7 @@ public class QSBigTileView extends QSTileView {
                 qSTile.secondaryClick();
             }
         };
-        AnonymousClass6 r2 = new View.OnLongClickListener(this) {
+        AnonymousClass5 r2 = new View.OnLongClickListener(this) {
             public boolean onLongClick(View view) {
                 qSTile.longClick();
                 return true;
@@ -438,18 +427,7 @@ public class QSBigTileView extends QSTileView {
     }
 
     public boolean onTouchEvent(MotionEvent motionEvent) {
-        if (motionEvent.getActionMasked() == 0) {
-            Folme.clean(this);
-        }
         AnimConfig animConfig = new AnimConfig();
-        animConfig.addListeners(new TransitionListener(this) {
-            public void onComplete(Object obj) {
-                super.onComplete(obj);
-                if (obj == ITouchStyle.TouchType.UP) {
-                    Folme.clean(this);
-                }
-            }
-        });
         ITouchStyle iTouchStyle = Folme.useAt(this).touch();
         iTouchStyle.setTint(0.0f, 0.0f, 0.0f, 0.0f);
         iTouchStyle.onMotionEventEx(this, motionEvent, animConfig);
@@ -561,6 +539,30 @@ public class QSBigTileView extends QSTileView {
             this.mBigQSTile.setRotationX(f5);
             this.mBigQSTile.setRotationY(f6);
             this.mBigQSTile.setTranslationZ(sqrt);
+        }
+    }
+
+    private class QSTileCallback implements QSTile.Callback {
+        public void onAnnouncementRequested(CharSequence charSequence) {
+        }
+
+        private QSTileCallback() {
+        }
+
+        public void onStateChanged(QSTile.State state) {
+            QSBigTileView.this.onStateChanged(state);
+        }
+
+        public void onShowDetail(boolean z) {
+            QSBigTileView.this.mControlCenterPanelView.showDetail(z, QSBigTileView.this.mTileRecord);
+        }
+
+        public void onToggleStateChanged(boolean z) {
+            QSBigTileView.this.mControlCenterPanelView.fireToggleStateChanged(z);
+        }
+
+        public void onScanStateChanged(boolean z) {
+            QSBigTileView.this.mControlCenterPanelView.fireScanStateChanged(z);
         }
     }
 }

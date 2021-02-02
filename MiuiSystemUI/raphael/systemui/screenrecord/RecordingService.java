@@ -128,16 +128,16 @@ public class RecordingService extends Service implements MediaRecorder.OnInfoLis
         L_0x006c:
             r3 = r7
         L_0x006d:
-            if (r3 == 0) goto L_0x0146
-            if (r3 == r9) goto L_0x00fd
-            if (r3 == r12) goto L_0x00fd
+            if (r3 == 0) goto L_0x0145
+            if (r3 == r9) goto L_0x00fc
+            if (r3 == r12) goto L_0x00fc
             r12 = 4273(0x10b1, float:5.988E-42)
             java.lang.String r13 = "android.intent.action.CLOSE_SYSTEM_DIALOGS"
             java.lang.String r0 = "extra_path"
             r4 = 0
             if (r3 == r6) goto L_0x00bb
             if (r3 == r5) goto L_0x0080
-            goto L_0x019c
+            goto L_0x019b
         L_0x0080:
             android.content.Intent r3 = new android.content.Intent
             r3.<init>(r13)
@@ -158,7 +158,7 @@ public class RecordingService extends Service implements MediaRecorder.OnInfoLis
             r10.append(r11)
             java.lang.String r10 = r10.toString()
             android.util.Log.d(r1, r10)
-            goto L_0x019c
+            goto L_0x019b
         L_0x00bb:
             java.lang.String r11 = r11.getStringExtra(r0)
             android.net.Uri r11 = android.net.Uri.parse(r11)
@@ -181,26 +181,26 @@ public class RecordingService extends Service implements MediaRecorder.OnInfoLis
             r12 = 268435456(0x10000000, float:2.5243549E-29)
             android.content.Intent r11 = r11.setFlags(r12)
             r10.startActivity(r11)
-            goto L_0x019c
-        L_0x00fd:
+            goto L_0x019b
+        L_0x00fc:
             boolean r12 = r4.equals(r13)
-            if (r12 == 0) goto L_0x010b
+            if (r12 == 0) goto L_0x010a
             com.android.internal.logging.UiEventLogger r12 = r10.mUiEventLogger
             com.android.systemui.screenrecord.Events$ScreenRecordEvent r13 = com.android.systemui.screenrecord.Events$ScreenRecordEvent.SCREEN_RECORD_END_NOTIFICATION
             r12.log(r13)
-            goto L_0x0112
-        L_0x010b:
+            goto L_0x0111
+        L_0x010a:
             com.android.internal.logging.UiEventLogger r12 = r10.mUiEventLogger
             com.android.systemui.screenrecord.Events$ScreenRecordEvent r13 = com.android.systemui.screenrecord.Events$ScreenRecordEvent.SCREEN_RECORD_END_QS_TILE
             r12.log(r13)
-        L_0x0112:
+        L_0x0111:
             java.lang.String r12 = "android.intent.extra.user_handle"
             int r11 = r11.getIntExtra(r12, r7)
-            if (r11 != r7) goto L_0x0124
+            if (r11 != r7) goto L_0x0123
             com.android.systemui.settings.CurrentUserContextTracker r11 = r10.mUserContextTracker
             android.content.Context r11 = r11.getCurrentUserContext()
             int r11 = r11.getUserId()
-        L_0x0124:
+        L_0x0123:
             java.lang.StringBuilder r12 = new java.lang.StringBuilder
             r12.<init>()
             java.lang.String r13 = "notifying for user "
@@ -213,8 +213,8 @@ public class RecordingService extends Service implements MediaRecorder.OnInfoLis
             r12 = 4274(0x10b2, float:5.989E-42)
             r11.cancel(r12)
             r10.stopSelf()
-            goto L_0x019c
-        L_0x0146:
+            goto L_0x019b
+        L_0x0145:
             com.android.systemui.screenrecord.ScreenRecordingAudioSource[] r12 = com.android.systemui.screenrecord.ScreenRecordingAudioSource.values()
             java.lang.String r13 = "extra_useAudio"
             int r13 = r11.getIntExtra(r13, r8)
@@ -235,9 +235,9 @@ public class RecordingService extends Service implements MediaRecorder.OnInfoLis
             android.content.ContentResolver r11 = r11.getContentResolver()
             java.lang.String r12 = "show_touches"
             int r11 = android.provider.Settings.System.getInt(r11, r12, r8)
-            if (r11 == 0) goto L_0x0183
+            if (r11 == 0) goto L_0x0182
             r8 = r9
-        L_0x0183:
+        L_0x0182:
             r10.mOriginalShowTaps = r8
             boolean r11 = r10.mShowTaps
             r10.setTapsVisible(r11)
@@ -248,7 +248,7 @@ public class RecordingService extends Service implements MediaRecorder.OnInfoLis
             r11.<init>(r12, r0, r13, r10)
             r10.mRecorder = r11
             r10.startRecording()
-        L_0x019c:
+        L_0x019b:
             return r9
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.screenrecord.RecordingService.onStartCommand(android.content.Intent, int, int):int");

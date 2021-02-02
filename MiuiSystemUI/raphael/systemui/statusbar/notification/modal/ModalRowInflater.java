@@ -32,7 +32,16 @@ public final class ModalRowInflater {
         if (notificationEntry.getModalRow() != null) {
             ExpandableNotificationRow modalRow = notificationEntry.getModalRow();
             Intrinsics.checkExpressionValueIsNotNull(modalRow, "entry.modalRow");
-            return modalRow;
+            ExpandableViewState viewState = modalRow.getViewState();
+            if (viewState != null) {
+                ExpandableNotificationRow row = notificationEntry.getRow();
+                Intrinsics.checkExpressionValueIsNotNull(row, "entry.row");
+                viewState.copyFrom(row.getViewState());
+            }
+            notificationEntry.getModalRow().applyViewState();
+            ExpandableNotificationRow modalRow2 = notificationEntry.getModalRow();
+            Intrinsics.checkExpressionValueIsNotNull(modalRow2, "entry.modalRow");
+            return modalRow2;
         }
         View inflate = LayoutInflater.from(context).inflate(C0017R$layout.status_bar_notification_row, viewGroup, false);
         if (inflate != null) {
@@ -51,15 +60,15 @@ public final class ModalRowInflater {
                 if (notificationContentInflater != null) {
                     notificationContentInflater.inflateNotificationViews(notificationEntry, expandableNotificationRow, bindParams, true, 15, recoverBuilder, context);
                     expandableNotificationRow.onNotificationUpdated();
-                    ExpandableViewState viewState = expandableNotificationRow.getViewState();
-                    if (viewState != null) {
-                        ExpandableNotificationRow row = notificationEntry.getRow();
-                        Intrinsics.checkExpressionValueIsNotNull(row, "entry.row");
-                        viewState.copyFrom(row.getViewState());
-                    }
                     ExpandableViewState viewState2 = expandableNotificationRow.getViewState();
                     if (viewState2 != null) {
-                        viewState2.height = 0;
+                        ExpandableNotificationRow row2 = notificationEntry.getRow();
+                        Intrinsics.checkExpressionValueIsNotNull(row2, "entry.row");
+                        viewState2.copyFrom(row2.getViewState());
+                    }
+                    ExpandableViewState viewState3 = expandableNotificationRow.getViewState();
+                    if (viewState3 != null) {
+                        viewState3.height = 0;
                     }
                     expandableNotificationRow.applyViewState();
                     return expandableNotificationRow;

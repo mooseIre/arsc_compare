@@ -934,7 +934,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
                           (wrap: com.android.systemui.statusbar.phone.-$$Lambda$StatusBar$5$Callback$U2F2-aeucZtrnZrV13H_iSFQwOM : 0x0029: CONSTRUCTOR  (r1v0 com.android.systemui.statusbar.phone.-$$Lambda$StatusBar$5$Callback$U2F2-aeucZtrnZrV13H_iSFQwOM) = 
                           (r2v0 'this' com.android.systemui.statusbar.phone.StatusBar$5$Callback A[THIS])
                          call: com.android.systemui.statusbar.phone.-$$Lambda$StatusBar$5$Callback$U2F2-aeucZtrnZrV13H_iSFQwOM.<init>(com.android.systemui.statusbar.phone.StatusBar$5$Callback):void type: CONSTRUCTOR)
-                         android.os.Handler.post(java.lang.Runnable):boolean type: VIRTUAL in method: com.android.systemui.statusbar.phone.StatusBar.5.Callback.onHoldStatusBarOpenChange():void, dex: classes.dex
+                         android.os.Handler.post(java.lang.Runnable):boolean type: VIRTUAL in method: com.android.systemui.statusbar.phone.StatusBar.5.Callback.onHoldStatusBarOpenChange():void, dex: classes2.dex
                         	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:256)
                         	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:221)
                         	at jadx.core.codegen.RegionGen.makeSimpleBlock(RegionGen.java:109)
@@ -1014,7 +1014,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
                         	at jadx.core.dex.nodes.ClassNode.decompile(ClassNode.java:273)
                         Caused by: jadx.core.utils.exceptions.CodegenException: Error generate insn: 0x0029: CONSTRUCTOR  (r1v0 com.android.systemui.statusbar.phone.-$$Lambda$StatusBar$5$Callback$U2F2-aeucZtrnZrV13H_iSFQwOM) = 
                           (r2v0 'this' com.android.systemui.statusbar.phone.StatusBar$5$Callback A[THIS])
-                         call: com.android.systemui.statusbar.phone.-$$Lambda$StatusBar$5$Callback$U2F2-aeucZtrnZrV13H_iSFQwOM.<init>(com.android.systemui.statusbar.phone.StatusBar$5$Callback):void type: CONSTRUCTOR in method: com.android.systemui.statusbar.phone.StatusBar.5.Callback.onHoldStatusBarOpenChange():void, dex: classes.dex
+                         call: com.android.systemui.statusbar.phone.-$$Lambda$StatusBar$5$Callback$U2F2-aeucZtrnZrV13H_iSFQwOM.<init>(com.android.systemui.statusbar.phone.StatusBar$5$Callback):void type: CONSTRUCTOR in method: com.android.systemui.statusbar.phone.StatusBar.5.Callback.onHoldStatusBarOpenChange():void, dex: classes2.dex
                         	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:256)
                         	at jadx.core.codegen.InsnGen.addWrappedArg(InsnGen.java:123)
                         	at jadx.core.codegen.InsnGen.addArg(InsnGen.java:107)
@@ -1073,7 +1073,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
                           (wrap: com.android.systemui.statusbar.phone.-$$Lambda$StatusBar$5$Callback$99-TTdt0m5NBU3m1uv-R7PLiNeQ : 0x0008: CONSTRUCTOR  (r1v0 com.android.systemui.statusbar.phone.-$$Lambda$StatusBar$5$Callback$99-TTdt0m5NBU3m1uv-R7PLiNeQ) = 
                           (r2v0 'this' com.android.systemui.statusbar.phone.StatusBar$5$Callback A[THIS])
                          call: com.android.systemui.statusbar.phone.-$$Lambda$StatusBar$5$Callback$99-TTdt0m5NBU3m1uv-R7PLiNeQ.<init>(com.android.systemui.statusbar.phone.StatusBar$5$Callback):void type: CONSTRUCTOR)
-                         com.android.systemui.statusbar.phone.NotificationShadeWindowController.setStateListener(com.android.systemui.statusbar.phone.NotificationShadeWindowController$OtherwisedCollapsedListener):void type: VIRTUAL in method: com.android.systemui.statusbar.phone.StatusBar.5.Callback.lambda$onHoldStatusBarOpenChange$2():void, dex: classes.dex
+                         com.android.systemui.statusbar.phone.NotificationShadeWindowController.setStateListener(com.android.systemui.statusbar.phone.NotificationShadeWindowController$OtherwisedCollapsedListener):void type: VIRTUAL in method: com.android.systemui.statusbar.phone.StatusBar.5.Callback.lambda$onHoldStatusBarOpenChange$2():void, dex: classes2.dex
                         	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:256)
                         	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:221)
                         	at jadx.core.codegen.RegionGen.makeSimpleBlock(RegionGen.java:109)
@@ -1153,7 +1153,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
                         	at jadx.core.dex.nodes.ClassNode.decompile(ClassNode.java:273)
                         Caused by: jadx.core.utils.exceptions.CodegenException: Error generate insn: 0x0008: CONSTRUCTOR  (r1v0 com.android.systemui.statusbar.phone.-$$Lambda$StatusBar$5$Callback$99-TTdt0m5NBU3m1uv-R7PLiNeQ) = 
                           (r2v0 'this' com.android.systemui.statusbar.phone.StatusBar$5$Callback A[THIS])
-                         call: com.android.systemui.statusbar.phone.-$$Lambda$StatusBar$5$Callback$99-TTdt0m5NBU3m1uv-R7PLiNeQ.<init>(com.android.systemui.statusbar.phone.StatusBar$5$Callback):void type: CONSTRUCTOR in method: com.android.systemui.statusbar.phone.StatusBar.5.Callback.lambda$onHoldStatusBarOpenChange$2():void, dex: classes.dex
+                         call: com.android.systemui.statusbar.phone.-$$Lambda$StatusBar$5$Callback$99-TTdt0m5NBU3m1uv-R7PLiNeQ.<init>(com.android.systemui.statusbar.phone.StatusBar$5$Callback):void type: CONSTRUCTOR in method: com.android.systemui.statusbar.phone.StatusBar.5.Callback.lambda$onHoldStatusBarOpenChange$2():void, dex: classes2.dex
                         	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:256)
                         	at jadx.core.codegen.InsnGen.addWrappedArg(InsnGen.java:123)
                         	at jadx.core.codegen.InsnGen.addArg(InsnGen.java:107)
@@ -1206,7 +1206,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
                          com.android.systemui.statusbar.phone.StatusBar.5.Callback.this$1 com.android.systemui.statusbar.phone.StatusBar$5)
                          com.android.systemui.statusbar.phone.StatusBar.5.access$1100(com.android.systemui.statusbar.phone.StatusBar$5):android.util.ArraySet type: STATIC)
                           (wrap: com.android.systemui.statusbar.phone.-$$Lambda$StatusBar$5$Callback$X8h8BtL5sx95G3VYQ-SR0g_MCXg : 0x0008: CONSTRUCTOR  (r0v0 com.android.systemui.statusbar.phone.-$$Lambda$StatusBar$5$Callback$X8h8BtL5sx95G3VYQ-SR0g_MCXg) = (r2v0 'z' boolean) call: com.android.systemui.statusbar.phone.-$$Lambda$StatusBar$5$Callback$X8h8BtL5sx95G3VYQ-SR0g_MCXg.<init>(boolean):void type: CONSTRUCTOR)
-                         android.util.ArraySet.forEach(java.util.function.Consumer):void type: VIRTUAL in method: com.android.systemui.statusbar.phone.StatusBar.5.Callback.lambda$onHoldStatusBarOpenChange$1(boolean):void, dex: classes.dex
+                         android.util.ArraySet.forEach(java.util.function.Consumer):void type: VIRTUAL in method: com.android.systemui.statusbar.phone.StatusBar.5.Callback.lambda$onHoldStatusBarOpenChange$1(boolean):void, dex: classes2.dex
                         	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:256)
                         	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:221)
                         	at jadx.core.codegen.RegionGen.makeSimpleBlock(RegionGen.java:109)
@@ -1284,7 +1284,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
                         	at jadx.core.codegen.CodeGen.generate(CodeGen.java:21)
                         	at jadx.core.ProcessClass.generateCode(ProcessClass.java:61)
                         	at jadx.core.dex.nodes.ClassNode.decompile(ClassNode.java:273)
-                        Caused by: jadx.core.utils.exceptions.CodegenException: Error generate insn: 0x0008: CONSTRUCTOR  (r0v0 com.android.systemui.statusbar.phone.-$$Lambda$StatusBar$5$Callback$X8h8BtL5sx95G3VYQ-SR0g_MCXg) = (r2v0 'z' boolean) call: com.android.systemui.statusbar.phone.-$$Lambda$StatusBar$5$Callback$X8h8BtL5sx95G3VYQ-SR0g_MCXg.<init>(boolean):void type: CONSTRUCTOR in method: com.android.systemui.statusbar.phone.StatusBar.5.Callback.lambda$onHoldStatusBarOpenChange$1(boolean):void, dex: classes.dex
+                        Caused by: jadx.core.utils.exceptions.CodegenException: Error generate insn: 0x0008: CONSTRUCTOR  (r0v0 com.android.systemui.statusbar.phone.-$$Lambda$StatusBar$5$Callback$X8h8BtL5sx95G3VYQ-SR0g_MCXg) = (r2v0 'z' boolean) call: com.android.systemui.statusbar.phone.-$$Lambda$StatusBar$5$Callback$X8h8BtL5sx95G3VYQ-SR0g_MCXg.<init>(boolean):void type: CONSTRUCTOR in method: com.android.systemui.statusbar.phone.StatusBar.5.Callback.lambda$onHoldStatusBarOpenChange$1(boolean):void, dex: classes2.dex
                         	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:256)
                         	at jadx.core.codegen.InsnGen.addWrappedArg(InsnGen.java:123)
                         	at jadx.core.codegen.InsnGen.addArg(InsnGen.java:107)

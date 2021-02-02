@@ -58,6 +58,7 @@ public class QSControlCenterTileLayout extends ViewGroup implements QSPanel.QSTi
     private ControlPanelController mPanelController;
     private float mPanelLandWidth;
     private float mPanelPaddingHorizontal;
+    private ControlCenterPanelView mPanelView;
     protected final ArrayList<QSPanel.TileRecord> mRecords = new ArrayList<>();
     private int mRowMarginStart;
     private int mShowLines;
@@ -82,6 +83,10 @@ public class QSControlCenterTileLayout extends ViewGroup implements QSPanel.QSTi
         this.mContext = context;
         this.mPanelController = (ControlPanelController) Dependency.get(ControlPanelController.class);
         updateResources();
+    }
+
+    public void setPanelView(ControlCenterPanelView controlCenterPanelView) {
+        this.mPanelView = controlCenterPanelView;
     }
 
     public void performAttachedToWindow() {
@@ -345,6 +350,10 @@ public class QSControlCenterTileLayout extends ViewGroup implements QSPanel.QSTi
             visStartInit();
             Log.d("QSControlCenterTileLayout", "setExpanded:" + z);
             requestLayout();
+            ControlCenterPanelView controlCenterPanelView = this.mPanelView;
+            if (controlCenterPanelView != null) {
+                controlCenterPanelView.notifyTileChanged();
+            }
         }
     }
 
@@ -372,19 +381,12 @@ public class QSControlCenterTileLayout extends ViewGroup implements QSPanel.QSTi
         }
     }
 
-    public void visAnimOn(boolean z) {
-        int size = this.mRecords.size();
-        View[] viewArr = new View[size];
+    public View[] getVisAnimViews() {
+        View[] viewArr = new View[this.mRecords.size()];
         for (int i = 0; i < this.mRecords.size(); i++) {
             viewArr[i] = this.mRecords.get(i).tileView;
         }
-        if (size > 0) {
-            if (z) {
-                Folme.useAt(viewArr).state().fromTo(FolmeAnimState.mPanelHideAnim, FolmeAnimState.mPanelShowAnim, FolmeAnimState.mPanelAnimConfig);
-                return;
-            }
-            Folme.useAt(viewArr).state().fromTo(FolmeAnimState.mPanelShowAnim, FolmeAnimState.mPanelHideAnim, FolmeAnimState.mPanelAnimConfig);
-        }
+        return viewArr;
     }
 
     public void updateTransHeight(List<View> list, float f, int i, int i2) {
@@ -397,7 +399,9 @@ public class QSControlCenterTileLayout extends ViewGroup implements QSPanel.QSTi
             for (int size2 = this.mRecords.size(); size2 < size; size2++) {
                 viewArr[size2] = list.get(size2 - this.mRecords.size());
             }
-            Folme.useAt(viewArr).state().to(FolmeAnimState.mSpringBackAnim, FolmeAnimState.mSpringBackConfig);
+            for (int i4 = 0; i4 < size; i4++) {
+                Folme.useAt(viewArr[i4]).state().to(FolmeAnimState.mSpringBackAnim, FolmeAnimState.mSpringBackConfig);
+            }
             endExpanding();
             return;
         }

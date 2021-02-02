@@ -64,10 +64,6 @@ public abstract class ExpandableView extends FrameLayout implements Dumpable {
         return 0;
     }
 
-    public float getHeaderVisibleAmount() {
-        return 1.0f;
-    }
-
     public float getIncreasedPaddingAmount() {
         return 0.0f;
     }

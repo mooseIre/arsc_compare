@@ -4,11 +4,13 @@ import android.content.Context;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.WindowManager;
+import com.android.systemui.controlcenter.ControlCenter;
 import com.android.systemui.controlcenter.utils.ControlCenterUtils;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import com.android.systemui.statusbar.phone.HeadsUpManagerPhone;
 import com.android.systemui.statusbar.phone.StatusBar;
+import com.android.systemui.statusbar.policy.MiuiNotificationShadePolicy;
 import com.android.systemui.statusbar.policy.OnHeadsUpChangedListener;
 import com.miui.systemui.util.BlurUtil;
 import java.util.HashSet;
@@ -26,6 +28,7 @@ public class ControlPanelWindowManager implements OnHeadsUpChangedListener {
     private boolean mIsRowPinned = false;
     private WindowManager.LayoutParams mLp;
     private WindowManager.LayoutParams mLpChanged;
+    private MiuiNotificationShadePolicy mMiuiNotificationShadePolicy;
     private HashSet<OnExpandChangeListener> mOnExpandChangeListeners;
     private StatusBar mStatusBar;
     private StatusBarStateController mStatusBarStateController;
@@ -36,7 +39,7 @@ public class ControlPanelWindowManager implements OnHeadsUpChangedListener {
         void onExpandChange(boolean z);
     }
 
-    public ControlPanelWindowManager(Context context, StatusBar statusBar, ControlPanelController controlPanelController, HeadsUpManagerPhone headsUpManagerPhone, StatusBarStateController statusBarStateController) {
+    public ControlPanelWindowManager(Context context, StatusBar statusBar, ControlPanelController controlPanelController, HeadsUpManagerPhone headsUpManagerPhone, StatusBarStateController statusBarStateController, MiuiNotificationShadePolicy miuiNotificationShadePolicy) {
         this.mContext = context;
         this.mStatusBar = statusBar;
         this.mHeadsUpManager = headsUpManagerPhone;
@@ -44,6 +47,7 @@ public class ControlPanelWindowManager implements OnHeadsUpChangedListener {
         this.mStatusBarStateController = statusBarStateController;
         this.mWindowManager = (WindowManager) context.getSystemService("window");
         this.mOnExpandChangeListeners = new HashSet<>();
+        this.mMiuiNotificationShadePolicy = miuiNotificationShadePolicy;
     }
 
     public void addControlPanel(ControlPanelWindowView controlPanelWindowView) {
@@ -67,6 +71,7 @@ public class ControlPanelWindowManager implements OnHeadsUpChangedListener {
             layoutParams4.copyFrom(this.mLp);
             this.mControlPanel = controlPanelWindowView;
             controlPanelWindowView.setControlPanelWindowManager(this);
+            this.mControlPanel.setControlPanelController(this.mControlPanelController);
             this.added = true;
             this.mHeadsUpManager.addListener(this);
         }
@@ -88,6 +93,12 @@ public class ControlPanelWindowManager implements OnHeadsUpChangedListener {
     public void collapsePanel(boolean z) {
         if (hasAdded()) {
             this.mControlPanel.collapsePanel(z);
+        }
+    }
+
+    public void collapsePanel(boolean z, boolean z2) {
+        if (hasAdded()) {
+            this.mControlPanel.collapsePanel(z, z2);
         }
     }
 
@@ -116,13 +127,19 @@ public class ControlPanelWindowManager implements OnHeadsUpChangedListener {
     }
 
     public void updateFsgState(boolean z) {
-        boolean z2 = false;
+        boolean z2 = true;
         boolean z3 = this.mStatusBarStateController.getState() == 0;
-        boolean isFullyCollapsed = this.mStatusBar.getPanelController() == null ? true : this.mStatusBar.getPanelController().isFullyCollapsed();
-        if (z || (z3 && !isFullyCollapsed)) {
-            z2 = true;
+        boolean z4 = this.mStatusBar.getPanelController() == null || (!this.mStatusBar.getPanelController().isExpanding() && !this.mStatusBar.getPanelController().isFullyExpanded());
+        if (!z && (!z3 || z4)) {
+            z2 = false;
+        }
+        if (ControlCenter.DEBUG) {
+            Log.d("ControlPanelWindowManager", "Fsg state disable:" + z2);
         }
         ControlCenterUtils.updateFsgState(this.mContext, "typefrom_status_bar_expansion", z2);
+        if (!z2) {
+            this.mMiuiNotificationShadePolicy.notifyFsgChanged(false);
+        }
     }
 
     public boolean hasAdded() {

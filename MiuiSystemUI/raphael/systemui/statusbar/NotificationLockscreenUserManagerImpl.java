@@ -19,6 +19,7 @@ import android.util.SparseArray;
 import android.util.SparseBooleanArray;
 import com.android.internal.widget.LockPatternUtils;
 import com.android.keyguard.KeyguardUpdateMonitor;
+import com.android.keyguard.faceunlock.MiuiFaceUnlockManager;
 import com.android.systemui.DejankUtils;
 import com.android.systemui.Dependency;
 import com.android.systemui.Dumpable;
@@ -122,7 +123,7 @@ public class NotificationLockscreenUserManagerImpl implements Dumpable, Notifica
                 if (r2 == r7) goto L_0x00be
                 if (r2 == r6) goto L_0x00b2
                 if (r2 == r5) goto L_0x0062
-                goto L_0x0130
+                goto L_0x012e
             L_0x0062:
                 java.lang.String r2 = "android.intent.extra.INTENT"
                 android.os.Parcelable r2 = r1.getParcelableExtra(r2)
@@ -139,7 +140,7 @@ public class NotificationLockscreenUserManagerImpl implements Dumpable, Notifica
                 r16 = 0
                 r11.startIntentSender(r12, r13, r14, r15, r16)     // Catch:{ SendIntentException -> 0x007f }
             L_0x007f:
-                if (r1 == 0) goto L_0x0130
+                if (r1 == 0) goto L_0x012e
                 com.android.systemui.statusbar.NotificationLockscreenUserManagerImpl r2 = com.android.systemui.statusbar.NotificationLockscreenUserManagerImpl.this
                 com.android.systemui.statusbar.notification.NotificationEntryManager r2 = r2.getEntryManager()
                 com.android.systemui.statusbar.notification.collection.NotificationEntry r2 = r2.getActiveNotificationUnfiltered(r1)
@@ -155,17 +156,17 @@ public class NotificationLockscreenUserManagerImpl implements Dumpable, Notifica
                 com.android.systemui.statusbar.NotificationLockscreenUserManagerImpl r0 = com.android.systemui.statusbar.NotificationLockscreenUserManagerImpl.this
                 com.android.systemui.statusbar.NotificationClickNotifier r0 = r0.mClickNotifier
                 r0.onNotificationClick(r1, r2)
-                goto L_0x0130
+                goto L_0x012e
             L_0x00b2:
                 java.lang.Class<com.android.systemui.recents.OverviewProxyService> r0 = com.android.systemui.recents.OverviewProxyService.class
                 java.lang.Object r0 = com.android.systemui.Dependency.get(r0)
                 com.android.systemui.recents.OverviewProxyService r0 = (com.android.systemui.recents.OverviewProxyService) r0
                 r0.startConnectionToCurrentUser()
-                goto L_0x0130
+                goto L_0x012e
             L_0x00be:
                 com.android.systemui.statusbar.NotificationLockscreenUserManagerImpl r0 = com.android.systemui.statusbar.NotificationLockscreenUserManagerImpl.this
                 r0.updateCurrentProfilesCache()
-                goto L_0x0130
+                goto L_0x012e
             L_0x00c4:
                 com.android.systemui.statusbar.NotificationLockscreenUserManagerImpl r2 = com.android.systemui.statusbar.NotificationLockscreenUserManagerImpl.this
                 java.lang.String r3 = "android.intent.extra.user_handle"
@@ -200,16 +201,16 @@ public class NotificationLockscreenUserManagerImpl implements Dumpable, Notifica
                 com.android.systemui.statusbar.NotificationLockscreenUserManagerImpl r1 = com.android.systemui.statusbar.NotificationLockscreenUserManagerImpl.this
                 java.util.List r1 = r1.mListeners
                 java.util.Iterator r1 = r1.iterator()
-            L_0x011c:
+            L_0x011a:
                 boolean r2 = r1.hasNext()
-                if (r2 == 0) goto L_0x0130
+                if (r2 == 0) goto L_0x012e
                 java.lang.Object r2 = r1.next()
                 com.android.systemui.statusbar.NotificationLockscreenUserManager$UserChangedListener r2 = (com.android.systemui.statusbar.NotificationLockscreenUserManager.UserChangedListener) r2
                 com.android.systemui.statusbar.NotificationLockscreenUserManagerImpl r3 = com.android.systemui.statusbar.NotificationLockscreenUserManagerImpl.this
                 int r3 = r3.mCurrentUserId
                 r2.onUserChanged(r3)
-                goto L_0x011c
-            L_0x0130:
+                goto L_0x011a
+            L_0x012e:
                 return
             */
             throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.NotificationLockscreenUserManagerImpl.AnonymousClass2.onReceive(android.content.Context, android.content.Intent):void");
@@ -498,7 +499,8 @@ public class NotificationLockscreenUserManagerImpl implements Dumpable, Notifica
         int userId = notificationEntry.getSbn().getUserId();
         boolean z = (!this.mCurrentManagedProfiles.contains(userId) && (userAllowsPrivateNotificationsInPublic(this.mCurrentUserId) ^ true)) || (userAllowsPrivateNotificationsInPublic(userId) ^ true);
         boolean z2 = notificationEntry.getSbn().getNotification().visibility == 0;
-        if (packageHasVisibilityOverride(notificationEntry.getSbn().getKey())) {
+        boolean packageHasVisibilityOverride = packageHasVisibilityOverride(notificationEntry.getSbn().getKey());
+        if (((MiuiFaceUnlockManager) Dependency.get(MiuiFaceUnlockManager.class)).isShowMessageWhenFaceUnlockSuccess() || packageHasVisibilityOverride) {
             return true;
         }
         if (!z2 || !z) {

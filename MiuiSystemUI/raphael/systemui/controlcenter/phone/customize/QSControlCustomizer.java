@@ -289,6 +289,18 @@ public class QSControlCustomizer extends FrameLayout implements TileQueryHelper.
         }
     }
 
+    /* access modifiers changed from: protected */
+    public void onAttachedToWindow() {
+        super.onAttachedToWindow();
+    }
+
+    /* access modifiers changed from: protected */
+    public void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        this.mTileAdapter.removeAccessibilityListener();
+        this.mOtherTilesAdapter.removeAccessibilityListener();
+    }
+
     public void updateResources() {
         this.mTitle.setTextAppearance(C0022R$style.TextAppearance_QSControl_CustomizeTitle);
         this.mSubTitle.setTextAppearance(C0022R$style.TextAppearance_QSControl_CustomizeSubTitle);

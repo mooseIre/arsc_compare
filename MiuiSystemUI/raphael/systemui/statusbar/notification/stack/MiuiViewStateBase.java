@@ -13,6 +13,7 @@ import org.jetbrains.annotations.Nullable;
 public class MiuiViewStateBase {
     private boolean animatingAddRemove;
     private int springYOffset;
+    private boolean touchAnimating;
 
     public final int getSpringYOffset() {
         return this.springYOffset;
@@ -22,12 +23,16 @@ public class MiuiViewStateBase {
         this.springYOffset = i;
     }
 
-    public final boolean getAnimatingAddRemove() {
-        return this.animatingAddRemove;
-    }
-
     public final void setAnimatingAddRemove(boolean z) {
         this.animatingAddRemove = z;
+    }
+
+    public final boolean getTouchAnimating() {
+        return this.touchAnimating;
+    }
+
+    public final void setTouchAnimating(boolean z) {
+        this.touchAnimating = z;
     }
 
     private final void animateSpringYOffset(View view, AnimationProperties animationProperties) {
@@ -58,5 +63,9 @@ public class MiuiViewStateBase {
 
     public void animateTo(@Nullable View view, @Nullable AnimationProperties animationProperties) {
         animateSpringYOffset(view, animationProperties);
+    }
+
+    public final boolean isAnimating() {
+        return this.animatingAddRemove || this.touchAnimating;
     }
 }

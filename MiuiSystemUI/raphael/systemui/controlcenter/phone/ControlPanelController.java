@@ -2,31 +2,46 @@ package com.android.systemui.controlcenter.phone;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Handler;
 import android.os.Message;
 import android.os.UserHandle;
 import android.provider.Settings;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import com.android.systemui.C0015R$id;
 import com.android.systemui.C0016R$integer;
+import com.android.systemui.C0017R$layout;
+import com.android.systemui.C0020R$raw;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.controlcenter.ControlCenter;
+import com.android.systemui.controlcenter.phone.widget.CornerVideoView;
 import com.android.systemui.keyguard.KeyguardViewMediator;
 import com.android.systemui.statusbar.phone.StatusBar;
 import com.android.systemui.statusbar.policy.CallbackController;
 import com.miui.systemui.SettingsObserver;
+import com.miui.systemui.statusbar.phone.MiuiSystemUIDialog;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;
+import miui.app.AlertDialog;
 
 public class ControlPanelController implements CallbackController<UseControlPanelChangeListener>, SettingsObserver.Callback {
     private BroadcastDispatcher mBroadcastDispatcher;
     private Context mContext;
     private ControlCenter mControlCenter;
+    private AlertDialog mDialog;
     private boolean mExpandableInKeyguard;
     private Handler mHandler = new H();
+    private boolean mIsNCSwitching;
     private KeyguardViewMediator mKeyguardViewMediator;
     private final List<UseControlPanelChangeListener> mListeners;
+    private boolean mNcSwitchGuideShown;
     private BroadcastReceiver mRemoteOperationReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
@@ -86,6 +101,7 @@ public class ControlPanelController implements CallbackController<UseControlPane
         this.mKeyguardViewMediator = keyguardViewMediator;
         this.mBroadcastDispatcher = broadcastDispatcher;
         this.mSettingsObserver = settingsObserver;
+        this.mNcSwitchGuideShown = Settings.System.getIntForUser(this.mContext.getContentResolver(), "nc_switch_guide_shown", 0, 0) != 0;
     }
 
     public void setControlCenter(ControlCenter controlCenter) {
@@ -104,7 +120,17 @@ public class ControlPanelController implements CallbackController<UseControlPane
 
     public void collapseControlCenter(boolean z) {
         if (this.mControlCenter != null && !isCCFullyCollapsed()) {
-            this.mControlCenter.collapseControlCenter(z);
+            collapseControlCenter(z, false);
+        }
+    }
+
+    public void collapseControlCenter(boolean z, boolean z2) {
+        if (this.mControlCenter != null && !isCCFullyCollapsed()) {
+            if (!z2) {
+                this.mControlCenter.collapseControlCenter(z);
+            } else {
+                this.mControlCenter.handleCollapsePanel(z, true);
+            }
         }
     }
 
@@ -128,6 +154,13 @@ public class ControlPanelController implements CallbackController<UseControlPane
         ControlCenter controlCenter = this.mControlCenter;
         if (controlCenter != null) {
             controlCenter.openPanel();
+        }
+    }
+
+    public void openPanelImmediately() {
+        ControlCenter controlCenter = this.mControlCenter;
+        if (controlCenter != null) {
+            controlCenter.openPanelImmediately();
         }
     }
 
@@ -156,8 +189,8 @@ public class ControlPanelController implements CallbackController<UseControlPane
         }
     }
 
-    /* JADX WARNING: Removed duplicated region for block: B:13:0x002b  */
-    /* JADX WARNING: Removed duplicated region for block: B:21:0x0057  */
+    /* JADX WARNING: Removed duplicated region for block: B:13:0x002a  */
+    /* JADX WARNING: Removed duplicated region for block: B:21:0x0056  */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     public void onContentChanged(@org.jetbrains.annotations.Nullable java.lang.String r5, @org.jetbrains.annotations.Nullable java.lang.String r6) {
         /*
@@ -166,39 +199,39 @@ public class ControlPanelController implements CallbackController<UseControlPane
             r1 = -1630983538(0xffffffff9ec92a8e, float:-2.1299303E-20)
             r2 = 0
             r3 = 1
-            if (r0 == r1) goto L_0x001c
+            if (r0 == r1) goto L_0x001b
             r1 = -1074300950(0xffffffffbff777ea, float:-1.933347)
             if (r0 == r1) goto L_0x0011
-            goto L_0x0026
+            goto L_0x0025
         L_0x0011:
             java.lang.String r0 = "use_control_panel"
             boolean r5 = r5.equals(r0)
-            if (r5 == 0) goto L_0x0026
+            if (r5 == 0) goto L_0x0025
             r5 = r2
-            goto L_0x0027
-        L_0x001c:
+            goto L_0x0026
+        L_0x001b:
             java.lang.String r0 = "expandable_under_lock_screen"
             boolean r5 = r5.equals(r0)
-            if (r5 == 0) goto L_0x0026
+            if (r5 == 0) goto L_0x0025
             r5 = r3
-            goto L_0x0027
-        L_0x0026:
+            goto L_0x0026
+        L_0x0025:
             r5 = -1
-        L_0x0027:
+        L_0x0026:
             java.lang.String r0 = "ControlPanelController"
-            if (r5 == 0) goto L_0x0057
-            if (r5 == r3) goto L_0x002e
-            goto L_0x007b
-        L_0x002e:
+            if (r5 == 0) goto L_0x0056
+            if (r5 == r3) goto L_0x002d
+            goto L_0x007a
+        L_0x002d:
             int r5 = com.miui.systemui.util.MiuiTextUtils.parseInt(r6, r3)
-            if (r5 == 0) goto L_0x0035
+            if (r5 == 0) goto L_0x0034
             r2 = r3
-        L_0x0035:
+        L_0x0034:
             r4.mExpandableInKeyguard = r2
             boolean r5 = r4.isExpandable()
-            if (r5 != 0) goto L_0x0040
+            if (r5 != 0) goto L_0x003f
             r4.collapsePanel(r3)
-        L_0x0040:
+        L_0x003f:
             java.lang.StringBuilder r5 = new java.lang.StringBuilder
             r5.<init>()
             java.lang.String r6 = "onChange: mExpandableInKeyguard = "
@@ -207,13 +240,13 @@ public class ControlPanelController implements CallbackController<UseControlPane
             r5.append(r4)
             java.lang.String r4 = r5.toString()
             android.util.Log.d(r0, r4)
-            goto L_0x007b
-        L_0x0057:
+            goto L_0x007a
+        L_0x0056:
             int r5 = r4.mUseControlPanelSettingDefault
             int r5 = com.miui.systemui.util.MiuiTextUtils.parseInt(r6, r5)
-            if (r5 == 0) goto L_0x0060
+            if (r5 == 0) goto L_0x005f
             r2 = r3
-        L_0x0060:
+        L_0x005f:
             r4.mUseControlPanel = r2
             java.lang.StringBuilder r5 = new java.lang.StringBuilder
             r5.<init>()
@@ -224,7 +257,7 @@ public class ControlPanelController implements CallbackController<UseControlPane
             java.lang.String r5 = r5.toString()
             android.util.Log.d(r0, r5)
             r4.notifyAllListeners()
-        L_0x007b:
+        L_0x007a:
             return
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.controlcenter.phone.ControlPanelController.onContentChanged(java.lang.String, java.lang.String):void");
@@ -276,6 +309,14 @@ public class ControlPanelController implements CallbackController<UseControlPane
         return this.mSuperPowerModeOn;
     }
 
+    public void requestNCSwitching(boolean z) {
+        this.mIsNCSwitching = z;
+    }
+
+    public boolean isNCSwitching() {
+        return this.mIsNCSwitching;
+    }
+
     private class H extends Handler {
         private H() {
         }
@@ -296,6 +337,67 @@ public class ControlPanelController implements CallbackController<UseControlPane
         ControlCenter controlCenter = this.mControlCenter;
         if (controlCenter != null) {
             controlCenter.refreshAllTiles();
+        }
+    }
+
+    public void showDialog(boolean z) {
+        if (this.mDialog != null || !z) {
+            dismissDialog(false);
+        } else {
+            showDialog();
+        }
+    }
+
+    private void showDialog() {
+        if (!this.mNcSwitchGuideShown && isUseControlCenter()) {
+            FrameLayout frameLayout = (FrameLayout) LayoutInflater.from(this.mContext).inflate(C0017R$layout.nc_switch_guide_dialog_content, (ViewGroup) null);
+            ((CornerVideoView) frameLayout.findViewById(C0015R$id.guide_video)).play(C0020R$raw.nc_switch_guide_video, 0);
+            AlertDialog create = new AlertDialog.Builder(this.mContext, 8).setTitle(C0021R$string.control_center_notification_switch_guide).setPositiveButton(C0021R$string.bubbles_user_education_got_it, (DialogInterface.OnClickListener) null).setView(frameLayout).setCancelable(false).create();
+            this.mDialog = create;
+            MiuiSystemUIDialog.applyFlags(create);
+            MiuiSystemUIDialog.setShowForAllUsers(this.mDialog, true);
+            this.mDialog.show();
+            this.mDialog.getButton(-1).setOnClickListener(new View.OnClickListener() {
+                public final void onClick(View view) {
+                    ControlPanelController.this.lambda$showDialog$0$ControlPanelController(view);
+                }
+            });
+        }
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$showDialog$0 */
+    public /* synthetic */ void lambda$showDialog$0$ControlPanelController(View view) {
+        dismissDialog(true);
+    }
+
+    private void dismissDialog(boolean z) {
+        View findViewById;
+        if (z) {
+            Settings.System.putIntForUser(this.mContext.getContentResolver(), "nc_switch_guide_shown", 1, 0);
+            this.mNcSwitchGuideShown = true;
+        }
+        AlertDialog alertDialog = this.mDialog;
+        if (alertDialog != null) {
+            FrameLayout frameLayout = (FrameLayout) alertDialog.findViewById(C0015R$id.guide_content);
+            if (!(frameLayout == null || (findViewById = frameLayout.findViewById(C0015R$id.guide_video)) == null)) {
+                frameLayout.removeView(findViewById);
+            }
+            frameLayout.postDelayed(new Runnable() {
+                public final void run() {
+                    ControlPanelController.this.lambda$dismissDialog$1$ControlPanelController();
+                }
+            }, 1);
+        }
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$dismissDialog$1 */
+    public /* synthetic */ void lambda$dismissDialog$1$ControlPanelController() {
+        AlertDialog alertDialog = this.mDialog;
+        if (alertDialog != null) {
+            alertDialog.dismiss();
+            this.mDialog = null;
         }
     }
 }

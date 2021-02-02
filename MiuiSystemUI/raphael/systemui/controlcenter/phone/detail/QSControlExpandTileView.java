@@ -37,7 +37,6 @@ import com.miui.systemui.util.HapticFeedBackImpl;
 import miuix.animation.Folme;
 import miuix.animation.ITouchStyle;
 import miuix.animation.base.AnimConfig;
-import miuix.animation.listener.TransitionListener;
 
 public class QSControlExpandTileView extends LinearLayout implements ExpandInfoController.Callback {
     /* access modifiers changed from: private */
@@ -171,17 +170,7 @@ public class QSControlExpandTileView extends LinearLayout implements ExpandInfoC
 
     public boolean onTouchEvent(MotionEvent motionEvent) {
         int actionMasked = motionEvent.getActionMasked();
-        if (actionMasked == 0) {
-            Folme.clean(this);
-        }
-        new AnimConfig().addListeners(new TransitionListener(this) {
-            public void onComplete(Object obj) {
-                super.onComplete(obj);
-                if (obj == ITouchStyle.TouchType.UP) {
-                    Folme.clean(this);
-                }
-            }
-        });
+        new AnimConfig();
         ITouchStyle iTouchStyle = Folme.useAt(this).touch();
         iTouchStyle.setTint(0.0f, 0.0f, 0.0f, 0.0f);
         iTouchStyle.onMotionEventEx(this, motionEvent, new AnimConfig[0]);

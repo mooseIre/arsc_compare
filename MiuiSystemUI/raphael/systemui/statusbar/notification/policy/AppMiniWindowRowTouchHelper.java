@@ -15,6 +15,7 @@ import com.android.systemui.statusbar.notification.MiniWindowExpandParameters;
 import com.android.systemui.statusbar.notification.NotificationEntryManager;
 import com.android.systemui.statusbar.notification.row.ExpandableView;
 import com.android.systemui.statusbar.notification.row.MiuiExpandableNotificationRow;
+import com.android.systemui.statusbar.notification.stack.ExpandableViewState;
 import com.miui.systemui.EventTracker;
 import com.miui.systemui.events.MiniWindowEventReason;
 import com.miui.systemui.events.MiniWindowEventSource;
@@ -40,6 +41,9 @@ public final class AppMiniWindowRowTouchHelper {
     /* access modifiers changed from: private */
     public final NotificationEntryManager mNotificationEntryManager;
     private int mPickedChildHeight;
+    private int mPickedChildLeft;
+    private int mPickedChildRight;
+    private int mPickedChildTop;
     private int mPickedChildWidth;
     /* access modifiers changed from: private */
     public MiuiExpandableNotificationRow mPickedMiniWindowChild;
@@ -145,6 +149,12 @@ public final class AppMiniWindowRowTouchHelper {
         this.mPickedMiniWindowChild = miuiExpandableNotificationRow;
         this.mPickedChildWidth = miuiExpandableNotificationRow.getWidth();
         this.mPickedChildHeight = Math.max(miuiExpandableNotificationRow.getActualHeight() - miuiExpandableNotificationRow.getClipBottomAmount(), 0);
+        int[] iArr = {0, 0};
+        miuiExpandableNotificationRow.getLocationOnScreen(iArr);
+        this.mPickedChildTop = iArr[1];
+        int i = iArr[0];
+        this.mPickedChildLeft = i;
+        this.mPickedChildRight = i + this.mPickedChildWidth;
         this.mTouchCallback.onMiniWindowChildPicked(miuiExpandableNotificationRow);
     }
 
@@ -162,18 +172,9 @@ public final class AppMiniWindowRowTouchHelper {
                 this.mExpandedParams.setStartClipTopAmount(miuiExpandableNotificationRow2.getClipTopAmount());
                 this.mExpandedParams.setStartWidth(this.mPickedChildWidth);
                 this.mExpandedParams.setStartHeight(this.mPickedChildHeight);
-                MiniWindowExpandParameters miniWindowExpandParameters = this.mExpandedParams;
-                int[] startPosition = miniWindowExpandParameters.getStartPosition();
-                int i = 0;
-                miniWindowExpandParameters.setLeft(startPosition != null ? startPosition[0] : 0);
-                MiniWindowExpandParameters miniWindowExpandParameters2 = this.mExpandedParams;
-                int[] startPosition2 = miniWindowExpandParameters2.getStartPosition();
-                if (startPosition2 != null) {
-                    i = startPosition2[1];
-                }
-                miniWindowExpandParameters2.setTop(i);
-                MiniWindowExpandParameters miniWindowExpandParameters3 = this.mExpandedParams;
-                miniWindowExpandParameters3.setRight(miniWindowExpandParameters3.getLeft() + this.mPickedChildWidth);
+                this.mExpandedParams.setLeft(this.mPickedChildLeft);
+                this.mExpandedParams.setTop(this.mPickedChildTop);
+                this.mExpandedParams.setRight(this.mPickedChildRight);
                 this.mExpandedParams.setBackgroundAlpha(1.0f);
                 this.mExpandedParams.setIconAlpha(0.0f);
                 this.mTouchCallback.onMiniWindowTrackingStart();
@@ -264,6 +265,7 @@ public final class AppMiniWindowRowTouchHelper {
 
     private final void startEnterMiniWindowAnimation() {
         this.mExpandedParams.setAlpha(0.0f);
+        resetPickedChildAnimIfNeed();
         Rect rect = new Rect(this.mExpandedParams.getLeft(), this.mExpandedParams.getTop(), this.mExpandedParams.getRight(), this.mExpandedParams.getBottom());
         Rect freeformRect = MiuiMultiWindowUtils.getFreeformRect(this.mContext);
         freeformRect.right = freeformRect.left + ((int) (((float) freeformRect.width()) * MiuiMultiWindowUtils.sScale));
@@ -276,6 +278,47 @@ public final class AppMiniWindowRowTouchHelper {
         this.mEnterAnimationRunning = true;
         this.mTouchCallback.onStartMiniWindowExpandAnimation();
         ((HapticFeedBackImpl) Dependency.get(HapticFeedBackImpl.class)).meshNormal();
+    }
+
+    private final void resetPickedChildAnimIfNeed() {
+        ExpandableViewState viewState;
+        MiuiExpandableNotificationRow miuiExpandableNotificationRow = this.mPickedMiniWindowChild;
+        if ((miuiExpandableNotificationRow != null ? miuiExpandableNotificationRow.getScaleX() : 1.0f) == 1.0f) {
+            MiuiExpandableNotificationRow miuiExpandableNotificationRow2 = this.mPickedMiniWindowChild;
+            if ((miuiExpandableNotificationRow2 != null ? miuiExpandableNotificationRow2.getScaleY() : 1.0f) == 1.0f) {
+                return;
+            }
+        }
+        MiuiExpandableNotificationRow miuiExpandableNotificationRow3 = this.mPickedMiniWindowChild;
+        if (miuiExpandableNotificationRow3 != null) {
+            miuiExpandableNotificationRow3.setScaleX(1.0f);
+            MiuiExpandableNotificationRow miuiExpandableNotificationRow4 = this.mPickedMiniWindowChild;
+            if (miuiExpandableNotificationRow4 != null) {
+                miuiExpandableNotificationRow4.setScaleY(1.0f);
+                MiuiExpandableNotificationRow miuiExpandableNotificationRow5 = this.mPickedMiniWindowChild;
+                if (miuiExpandableNotificationRow5 != null && (viewState = miuiExpandableNotificationRow5.getViewState()) != null && viewState.getTouchAnimating()) {
+                    MiuiExpandableNotificationRow miuiExpandableNotificationRow6 = this.mPickedMiniWindowChild;
+                    if (miuiExpandableNotificationRow6 != null) {
+                        ExpandableViewState viewState2 = miuiExpandableNotificationRow6.getViewState();
+                        if (viewState2 != null) {
+                            viewState2.setTouchAnimating(false);
+                        } else {
+                            Intrinsics.throwNpe();
+                            throw null;
+                        }
+                    } else {
+                        Intrinsics.throwNpe();
+                        throw null;
+                    }
+                }
+            } else {
+                Intrinsics.throwNpe();
+                throw null;
+            }
+        } else {
+            Intrinsics.throwNpe();
+            throw null;
+        }
     }
 
     private final void launchMiniWindowActivity(MiniWindowEventReason miniWindowEventReason) {

@@ -86,7 +86,6 @@ public class ControlPanelContentView extends FrameLayout {
     }
 
     public void updateResources() {
-        this.mControlCenterPanelView.updateResources();
         this.mDetail.updateResources();
         this.mQSCustomizer.updateResources();
     }

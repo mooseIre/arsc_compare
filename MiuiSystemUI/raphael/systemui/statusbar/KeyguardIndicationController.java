@@ -355,12 +355,17 @@ public class KeyguardIndicationController implements StatusBarStateController.St
 
     /* access modifiers changed from: protected */
     public final void updateIndication(boolean z) {
+        updateIndication(z, false);
+    }
+
+    /* access modifiers changed from: protected */
+    public final void updateIndication(boolean z, boolean z2) {
         int i;
         if (TextUtils.isEmpty(this.mTransientIndication)) {
             this.mWakeLock.setAcquired(false);
         }
         if (DebugConfig.DEBUG_KEYGUARD) {
-            Log.i("KeyguardIndication", "-----updateIndication: mVisible " + this.mVisible + " mDozing " + this.mDozing + " mTransientIndication " + this.mTransientIndication + " mPowerPluggedIn " + this.mPowerPluggedIn + " mComputePowerIndication " + this.mComputePowerIndication + " mUpArrowIndication " + this.mUpArrowIndication + " mChargeUIEntering " + this.mChargeUIEntering + " animate: " + z);
+            Log.i("KeyguardIndication", "-----updateIndication: mVisible " + this.mVisible + " mDozing " + this.mDozing + " mTransientIndication " + this.mTransientIndication + " mPowerPluggedIn " + this.mPowerPluggedIn + " mComputePowerIndication " + this.mComputePowerIndication + " chargeSpeedChanged" + z2 + " mUpArrowIndication " + this.mUpArrowIndication + " mChargeUIEntering " + this.mChargeUIEntering + " animate: " + z);
         }
         if (this.mVisible) {
             String trustGrantedIndication = getTrustGrantedIndication();
@@ -392,7 +397,7 @@ public class KeyguardIndicationController implements StatusBarStateController.St
                             imageView.setImageResource(i);
                         }
                     }
-                } else if (MiuiTextUtils.isEmpty(str)) {
+                } else if (MiuiTextUtils.isEmpty(str) || z2) {
                     updatePowerIndication(z);
                 } else {
                     this.mTextView.switchIndication(str);
@@ -583,6 +588,7 @@ public class KeyguardIndicationController implements StatusBarStateController.St
             boolean unused2 = KeyguardIndicationController.this.mPowerPluggedIn = miuiBatteryStatus.isPluggedIn() && z2;
             boolean unused3 = KeyguardIndicationController.this.mPowerCharged = miuiBatteryStatus.isCharged();
             int unused4 = KeyguardIndicationController.this.mChargingWattage = miuiBatteryStatus.maxChargingWattage;
+            boolean z3 = KeyguardIndicationController.this.mChargingSpeed != miuiBatteryStatus.chargeSpeed;
             int unused5 = KeyguardIndicationController.this.mChargingSpeed = miuiBatteryStatus.chargeSpeed;
             int unused6 = KeyguardIndicationController.this.mBatteryLevel = miuiBatteryStatus.level;
             try {
@@ -595,7 +601,7 @@ public class KeyguardIndicationController implements StatusBarStateController.St
             if (!keyguardIndicationController2.mWasPluggedIn && keyguardIndicationController2.mPowerPluggedInWired) {
                 z = true;
             }
-            keyguardIndicationController2.updateIndication(z);
+            keyguardIndicationController2.updateIndication(z, z3);
             if (KeyguardIndicationController.this.mDozing) {
                 KeyguardIndicationController keyguardIndicationController3 = KeyguardIndicationController.this;
                 if (keyguardIndicationController3.mWasPluggedIn || !keyguardIndicationController3.mPowerPluggedIn) {

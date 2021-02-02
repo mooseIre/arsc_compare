@@ -28,10 +28,12 @@ import com.miui.systemui.events.FloatAutoCollapseEvent;
 import com.miui.systemui.events.FloatManualCollapseEvent;
 import com.miui.systemui.events.GroupCollapseEvent;
 import com.miui.systemui.events.GroupExpandEvent;
+import com.miui.systemui.events.MediaStrokeEvent;
 import com.miui.systemui.events.MenuOpenEvent;
 import com.miui.systemui.events.ModalDialogCancelEvent;
 import com.miui.systemui.events.ModalDialogConfirmEvent;
 import com.miui.systemui.events.NotifSource;
+import com.miui.systemui.events.NotificationPanelSlideEvent;
 import com.miui.systemui.events.SetConfigEvent;
 import com.miui.systemui.events.VisibleEvent;
 import com.miui.systemui.util.CommonUtil;
@@ -183,6 +185,10 @@ public class NotificationStat {
         }
     }
 
+    public void onMediaStroke(String str) {
+        handleMediaStrokeEvent(str);
+    }
+
     public void onGroupExpand(NotificationEntry notificationEntry, int i) {
         handleGroupExpandEvent(notificationEntry, i);
     }
@@ -221,6 +227,10 @@ public class NotificationStat {
 
     public void onModalDialogCancel(NotificationEntry notificationEntry, String str, String str2) {
         handleModalDialogCancelEvent(notificationEntry, str, str2);
+    }
+
+    public void onNotificationPanelSliding(String str, String str2) {
+        handleNotificationPanelSlidingEvent(str, str2);
     }
 
     public void logVisibilityChanges(List<String> list, List<String> list2, boolean z, boolean z2) {
@@ -275,7 +285,7 @@ public class NotificationStat {
             }
         }).collect(Collectors.toList());
         if (list2.size() > 0) {
-            this.mEventTracker.track(new VisibleEvent(str, list2));
+            this.mEventTracker.track(new VisibleEvent(str, list2, getScreenOrientation()));
         }
     }
 
@@ -378,6 +388,10 @@ public class NotificationStat {
         this.mEventTracker.track(new ClickMoreEvent(getNotifPkg(notificationEntry), getNotifTargetPkg(notificationEntry), getNotifStyle(notificationEntry)));
     }
 
+    private void handleMediaStrokeEvent(String str) {
+        this.mEventTracker.track(new MediaStrokeEvent(str));
+    }
+
     private void handleExitModalEvent(NotificationEntry notificationEntry, String str) {
         this.mEventTracker.track(new ExitModalEvent(getNotifPkg(notificationEntry), getNotifTargetPkg(notificationEntry), getNotifStyle(notificationEntry), str));
     }
@@ -388,6 +402,10 @@ public class NotificationStat {
 
     private void handleModalDialogCancelEvent(NotificationEntry notificationEntry, String str, String str2) {
         this.mEventTracker.track(new ModalDialogCancelEvent(getNotifPkg(notificationEntry), getNotifTargetPkg(notificationEntry), getNotifStyle(notificationEntry), str, str2));
+    }
+
+    private void handleNotificationPanelSlidingEvent(String str, String str2) {
+        this.mEventTracker.track(new NotificationPanelSlideEvent(str, str2));
     }
 
     private String getNotifPkg(NotificationEntry notificationEntry) {

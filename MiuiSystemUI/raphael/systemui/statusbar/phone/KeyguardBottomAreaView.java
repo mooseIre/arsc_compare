@@ -93,6 +93,7 @@ public class KeyguardBottomAreaView extends FrameLayout implements View.OnClickL
     private int mBurnInXOffset;
     private int mBurnInYOffset;
     private View mCameraPreview;
+    private Configuration mConfiguration;
     private float mDarkAmount;
     /* access modifiers changed from: private */
     public boolean mDarkStyle;
@@ -194,6 +195,7 @@ public class KeyguardBottomAreaView extends FrameLayout implements View.OnClickL
         this.mRightButton = new MiuiDefaultRightButton();
         this.mLeftButton = new MiuiDefaultLeftButton();
         this.mLockscreenGestureLogger = new LockscreenGestureLogger();
+        this.mConfiguration = new Configuration();
         this.mAccessibilityDelegate = new View.AccessibilityDelegate() {
             public void onInitializeAccessibilityNodeInfo(View view, AccessibilityNodeInfo accessibilityNodeInfo) {
                 String str;
@@ -483,6 +485,9 @@ public class KeyguardBottomAreaView extends FrameLayout implements View.OnClickL
         this.mEnterpriseDisclosure.setTextSize(0, (float) getResources().getDimensionPixelSize(17105518));
         this.mIndicationText.setTextSize(0, (float) getResources().getDimensionPixelSize(17105518));
         updateEmergencyButton();
+        if ((this.mConfiguration.updateFrom(configuration) & 2048) != 0) {
+            updateViewsLayoutParams();
+        }
         int i = configuration.densityDpi;
         float f = configuration.fontScale;
         if (!(this.mFontScale == f && this.mDensityDpi == i)) {

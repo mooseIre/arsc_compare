@@ -53,6 +53,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
 public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpable {
@@ -860,7 +861,7 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
     }
 
     class C implements VolumeDialogController.Callbacks {
-        private final HashMap<VolumeDialogController.Callbacks, Handler> mCallbackMap = new HashMap<>();
+        private final Map<VolumeDialogController.Callbacks, Handler> mCallbackMap = new ConcurrentHashMap();
 
         C(VolumeDialogControllerImpl volumeDialogControllerImpl) {
         }
