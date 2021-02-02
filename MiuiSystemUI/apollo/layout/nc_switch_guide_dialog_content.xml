@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout android:id="@id/guide_content" android:layout_width="fill_parent" android:layout_height="wrap_content" android:importantForAccessibility="no"
+  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <Space android:layout_gravity="center" android:focusable="false" android:layout_width="@dimen/nc_switch_guide_video_width" android:layout_height="@dimen/nc_switch_guide_video_height" android:importantForAccessibility="no" />
+    <com.android.systemui.controlcenter.phone.widget.CornerVideoView android:layout_gravity="center" android:id="@id/guide_video" android:layout_width="@dimen/nc_switch_guide_video_width" android:layout_height="@dimen/nc_switch_guide_video_height" android:contentDescription="@string/control_center_notification_switch_guide" app:cornerRadius="@dimen/nc_switch_guide_video_corner_radius" />
+</FrameLayout>
