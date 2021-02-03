@@ -227,6 +227,10 @@ public class KeyguardViewMediator extends SystemUI implements Dumpable {
                 case 18:
                     KeyguardViewMediator.this.handleSystemReady();
                     return;
+                case 19:
+                    Slog.w("KeyguardViewMediator", "fw call startKeyguardExitAnimation timeout");
+                    KeyguardViewMediator.this.startKeyguardExitAnimation(SystemClock.uptimeMillis(), 0);
+                    return;
                 default:
                     return;
             }
@@ -236,7 +240,7 @@ public class KeyguardViewMediator extends SystemUI implements Dumpable {
     /* access modifiers changed from: private */
     public final Runnable mHideAnimationFinishedRunnable = new Runnable() {
         public final void run() {
-            KeyguardViewMediator.this.lambda$new$6$KeyguardViewMediator();
+            KeyguardViewMediator.this.lambda$new$5$KeyguardViewMediator();
         }
     };
     /* access modifiers changed from: private */
@@ -257,6 +261,8 @@ public class KeyguardViewMediator extends SystemUI implements Dumpable {
             ((KeyguardViewController) KeyguardViewMediator.this.mKeyguardViewControllerLazy.get()).keyguardGoingAway();
             KeyguardViewMediator.this.mUpdateMonitor.setKeyguardGoingAway(true);
             ((KeyguardViewController) KeyguardViewMediator.this.mKeyguardViewControllerLazy.get()).setKeyguardGoingAwayState(true);
+            KeyguardViewMediator.this.mHandler.removeMessages(19);
+            KeyguardViewMediator.this.mHandler.sendEmptyMessageDelayed(19, 1000);
             if (((MiuiFastUnlockController) Dependency.get(MiuiFastUnlockController.class)).isFastUnlock()) {
                 KeyguardViewMediator.this.startKeyguardExitAnimation(SystemClock.uptimeMillis(), 0);
             } else {
@@ -1802,22 +1808,6 @@ public class KeyguardViewMediator extends SystemUI implements Dumpable {
     }
 
     private void updateActivityLockScreenState(boolean z, boolean z2) {
-        this.mUiBgExecutor.execute(new Runnable(z, z2) {
-            public final /* synthetic */ boolean f$0;
-            public final /* synthetic */ boolean f$1;
-
-            {
-                this.f$0 = r1;
-                this.f$1 = r2;
-            }
-
-            public final void run() {
-                KeyguardViewMediator.lambda$updateActivityLockScreenState$5(this.f$0, this.f$1);
-            }
-        });
-    }
-
-    static /* synthetic */ void lambda$updateActivityLockScreenState$5(boolean z, boolean z2) {
         Log.d("KeyguardViewMediator", "updateActivityLockScreenState(" + z + ", " + z2 + ")");
         try {
             ActivityTaskManager.getService().setLockScreenShown(z, z2);
@@ -1877,8 +1867,8 @@ public class KeyguardViewMediator extends SystemUI implements Dumpable {
     }
 
     /* access modifiers changed from: private */
-    /* renamed from: lambda$new$6 */
-    public /* synthetic */ void lambda$new$6$KeyguardViewMediator() {
+    /* renamed from: lambda$new$5 */
+    public /* synthetic */ void lambda$new$5$KeyguardViewMediator() {
         Log.e("KeyguardViewMediator", "mHideAnimationFinishedRunnable#run");
         this.mHideAnimationRunning = false;
         tryKeyguardDone();
@@ -2264,20 +2254,20 @@ public class KeyguardViewMediator extends SystemUI implements Dumpable {
             }
 
             public final void run() {
-                KeyguardViewMediator.this.lambda$notifyDefaultDisplayCallbacks$7$KeyguardViewMediator(this.f$1);
+                KeyguardViewMediator.this.lambda$notifyDefaultDisplayCallbacks$6$KeyguardViewMediator(this.f$1);
             }
         });
         updateInputRestrictedLocked();
         this.mUiBgExecutor.execute(new Runnable() {
             public final void run() {
-                KeyguardViewMediator.this.lambda$notifyDefaultDisplayCallbacks$8$KeyguardViewMediator();
+                KeyguardViewMediator.this.lambda$notifyDefaultDisplayCallbacks$7$KeyguardViewMediator();
             }
         });
     }
 
     /* access modifiers changed from: private */
-    /* renamed from: lambda$notifyDefaultDisplayCallbacks$7 */
-    public /* synthetic */ void lambda$notifyDefaultDisplayCallbacks$7$KeyguardViewMediator(boolean z) {
+    /* renamed from: lambda$notifyDefaultDisplayCallbacks$6 */
+    public /* synthetic */ void lambda$notifyDefaultDisplayCallbacks$6$KeyguardViewMediator(boolean z) {
         for (int size = this.mKeyguardStateCallbacks.size() - 1; size >= 0; size--) {
             IKeyguardStateCallback iKeyguardStateCallback = this.mKeyguardStateCallbacks.get(size);
             try {
@@ -2292,8 +2282,8 @@ public class KeyguardViewMediator extends SystemUI implements Dumpable {
     }
 
     /* access modifiers changed from: private */
-    /* renamed from: lambda$notifyDefaultDisplayCallbacks$8 */
-    public /* synthetic */ void lambda$notifyDefaultDisplayCallbacks$8$KeyguardViewMediator() {
+    /* renamed from: lambda$notifyDefaultDisplayCallbacks$7 */
+    public /* synthetic */ void lambda$notifyDefaultDisplayCallbacks$7$KeyguardViewMediator() {
         this.mTrustManager.reportKeyguardShowingChanged();
     }
 
