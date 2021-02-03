@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.Toast;
 import com.android.systemui.C0008R$array;
+import com.android.systemui.C0010R$bool;
 import com.android.systemui.C0016R$integer;
 import com.android.systemui.C0019R$plurals;
 import com.android.systemui.C0021R$string;
@@ -29,7 +30,6 @@ public class ChargeUtils {
     private static final boolean SUPPORT_WIRELESS_CHARGE = new File("/sys/class/power_supply/wireless/signal_strength").exists();
     private static int WAVE_DELAY_TIME = 1000;
     private static List<String> mIsSupportStrongSuperRapidChargeList = new ArrayList();
-    private static List<String> mSupportWireless67Charge = new ArrayList();
     public static MiuiBatteryStatus sBatteryStatus = null;
     private static boolean sChargeAnimationDisabled = false;
     private static boolean sNeedRepositionDevice = SUPPORT_WIRELESS_CHARGE;
@@ -183,12 +183,10 @@ public class ChargeUtils {
         return ((MiuiChargeManager) Dependency.get(MiuiChargeManager.class)).isStrongSuperQuickCharging();
     }
 
-    public static boolean isSupport67WWirelessStrongCharge() {
+    public static boolean isSupportWirelessStrongChargeSsw() {
         Context contextForUser = ((UserSwitcherController) Dependency.get(UserSwitcherController.class)).getContextForUser();
-        if (mSupportWireless67Charge.isEmpty() && contextForUser != null) {
-            mSupportWireless67Charge = Arrays.asList(contextForUser.getResources().getStringArray(C0008R$array.keyguard_wireless_strong_charge_67w));
-        }
-        if (((MiuiChargeManager) Dependency.get(MiuiChargeManager.class)).getCurrentChargeDeviceType() != 15 || !mSupportWireless67Charge.contains(Build.DEVICE)) {
+        boolean z = contextForUser != null ? contextForUser.getResources().getBoolean(C0010R$bool.keyguard_wireless_strong_charge_ssw) : false;
+        if (((MiuiChargeManager) Dependency.get(MiuiChargeManager.class)).getCurrentChargeDeviceType() != 15 || !z) {
             return SUPPORT_WIRELESS_CHARGE;
         }
         return true;
