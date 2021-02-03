@@ -388,18 +388,7 @@ public class PasswordTextViewForPIN extends PasswordTextView {
                     PasswordTextViewForPIN.this.postInvalidateOnAnimation();
                 }
             });
-            setupAlphaFolmeAnimations();
-            Folme.useValue(this.mYTarget).addListener(new TransitionListener() {
-                public void onUpdate(Object obj, FloatProperty floatProperty, float f, float f2, boolean z) {
-                    CharState charState = CharState.this;
-                    charState.yOffset = f;
-                    PasswordTextViewForPIN.this.postInvalidateOnAnimation();
-                }
-            });
-        }
-
-        private void setupAlphaFolmeAnimations() {
-            Folme.useValue(this.mAlphaTarget).setup(Integer.valueOf(this.tag)).addListener(new TransitionListener() {
+            Folme.useValue(this.mAlphaTarget).addListener(new TransitionListener() {
                 public void onUpdate(Object obj, FloatProperty floatProperty, float f, float f2, boolean z) {
                     if (((Integer) obj).intValue() == CharState.this.tag) {
                         CharState charState = CharState.this;
@@ -414,6 +403,13 @@ public class PasswordTextViewForPIN extends PasswordTextView {
                     }
                 }
             });
+            Folme.useValue(this.mYTarget).addListener(new TransitionListener() {
+                public void onUpdate(Object obj, FloatProperty floatProperty, float f, float f2, boolean z) {
+                    CharState charState = CharState.this;
+                    charState.yOffset = f;
+                    PasswordTextViewForPIN.this.postInvalidateOnAnimation();
+                }
+            });
         }
 
         /* access modifiers changed from: package-private */
@@ -422,7 +418,6 @@ public class PasswordTextViewForPIN extends PasswordTextView {
             Folme.useValue(this.mAlphaTarget).setup(Integer.valueOf(this.tag)).clean();
             this.tag++;
             Folme.useValue(this.mAlphaTarget).setup(Integer.valueOf(this.tag)).to(Float.valueOf(0.0f), new AnimConfig[0]);
-            setupAlphaFolmeAnimations();
             Folme.useValue(this.mScaleTarget).cancel();
             Folme.useValue(this.mScaleTarget).to(Float.valueOf(1.0f), new AnimConfig[0]);
             this.isVisible = false;

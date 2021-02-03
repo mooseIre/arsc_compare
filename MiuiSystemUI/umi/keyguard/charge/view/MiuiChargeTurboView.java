@@ -23,7 +23,6 @@ import miui.maml.animation.interpolater.CubicEaseOutInterpolater;
 public class MiuiChargeTurboView extends RelativeLayout {
     private AnimatorSet animatorSet;
     private Interpolator cubicEaseOutInterpolator;
-    private Drawable m67WWirelessStrongChargeIconDrawable;
     private ImageView mChargeIcon;
     private Drawable mChargeIconDrawable;
     private int mChargeIconHeight;
@@ -47,6 +46,7 @@ public class MiuiChargeTurboView extends RelativeLayout {
     protected ImageView mWirelessStrongChargeIcon;
     private Drawable mWirelessStrongChargeIconDrawable;
     private int mWirelessStrongChargeIconHeight;
+    private Drawable mWirelessStrongChargeIconSswDrawable;
     private int mWirelessStrongChargeIconWidth;
 
     public MiuiChargeTurboView(Context context) {
@@ -72,7 +72,7 @@ public class MiuiChargeTurboView extends RelativeLayout {
         this.mTurboTailIconDrawable = context.getDrawable(C0013R$drawable.charge_animation_turbo_tail_icon);
         this.mWiredStrongChargeIconDrawable = context.getDrawable(C0013R$drawable.charge_animation_wired_strong_charge_icon);
         this.mWirelessStrongChargeIconDrawable = context.getDrawable(C0013R$drawable.charge_animation_wireless_strong_charge_icon);
-        this.m67WWirelessStrongChargeIconDrawable = context.getDrawable(C0013R$drawable.charge_animation_wireless_strong_67_charge_icon);
+        this.mWirelessStrongChargeIconSswDrawable = context.getDrawable(C0013R$drawable.charge_animation_wireless_strong_charge_ssw_icon);
         this.mWindowManager = (WindowManager) context.getSystemService("window");
         this.mScreenSize = new Point();
         this.mWindowManager.getDefaultDisplay().getRealSize(this.mScreenSize);
@@ -197,8 +197,8 @@ public class MiuiChargeTurboView extends RelativeLayout {
     }
 
     private void updateWirelessStrongChargeIcon() {
-        if (ChargeUtils.isSupport67WWirelessStrongCharge()) {
-            this.mWirelessStrongChargeIcon.setImageDrawable(this.m67WWirelessStrongChargeIconDrawable);
+        if (ChargeUtils.isSupportWirelessStrongChargeSsw()) {
+            this.mWirelessStrongChargeIcon.setImageDrawable(this.mWirelessStrongChargeIconSswDrawable);
         } else {
             this.mWirelessStrongChargeIcon.setImageDrawable(this.mWirelessStrongChargeIconDrawable);
         }
