@@ -4,7 +4,6 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -274,14 +273,8 @@ public class QSControlCustomizer extends FrameLayout implements TileQueryHelper.
         this.mTitle.setText(C0021R$string.qs_control_customize_title);
         this.mSubTitle.setText(C0021R$string.qs_control_customize_sub_title);
         this.mDoneButton.setText(C0021R$string.qs_control_customize_save_text);
-        Resources resources = this.mContext.getResources();
-        int max = Math.max(1, resources.getInteger(C0012R$dimen.qs_control_tiles_columns));
+        int max = Math.max(1, this.mContext.getResources().getInteger(C0012R$dimen.qs_control_tiles_columns));
         if (this.mSpanCount != max) {
-            if (resources.getConfiguration().orientation == 1) {
-                this.mHeader.setVisibility(0);
-            } else {
-                this.mHeader.setVisibility(8);
-            }
             this.mSpanCount = max;
             this.mTileAdapter.setSpanCount(max);
             this.mOtherTilesAdapter.setSpanCount(this.mSpanCount);
