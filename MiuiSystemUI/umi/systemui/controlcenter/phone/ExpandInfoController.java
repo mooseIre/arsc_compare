@@ -28,6 +28,8 @@ public interface ExpandInfoController {
 
     UserHandle getUserHandle();
 
+    void onUserSwitched();
+
     void register();
 
     void removeCallback(Callback callback);

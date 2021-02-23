@@ -14,6 +14,7 @@ import com.android.systemui.statusbar.notification.policy.NotificationDynamicFps
 import com.android.systemui.statusbar.notification.policy.NotificationFilterController;
 import com.android.systemui.statusbar.policy.MiuiHeadsUpPolicy;
 import com.android.systemui.statusbar.policy.MiuiNotificationShadePolicy;
+import com.android.systemui.statusbar.policy.MiuiStatusBarConfigurationListener;
 import com.android.systemui.vendor.HeadsetPolicy;
 import com.android.systemui.vendor.OrientationPolicy;
 import com.miui.systemui.display.OLEDScreenHelper;
@@ -30,6 +31,7 @@ public final class MiuiVendorServices_Factory implements Factory<MiuiVendorServi
     private final Provider<MiuiHeadsUpPolicy> mMiuiHeadsUpPolicyProvider;
     private final Provider<MiuiNotificationShadePolicy> mMiuiNotificationShadePolicyProvider;
     private final Provider<MiuiRecentProxy> mMiuiRecentProxyProvider;
+    private final Provider<MiuiStatusBarConfigurationListener> mMiuiStatusBarConfigurationListenerProvider;
     private final Provider<NotificationAlertController> mNotifAlertControllerProvider;
     private final Provider<NotificationCountLimitPolicy> mNotifCountLimitPolicyProvider;
     private final Provider<NotificationDynamicFpsController> mNotifDynamicFpsControllerProvider;
@@ -41,7 +43,7 @@ public final class MiuiVendorServices_Factory implements Factory<MiuiVendorServi
     private final Provider<PerformanceTools> mPerformanceToolsProvider;
     private final Provider<MiuiWallpaperZoomOutService> mWallpaperZoomOutServiceProvider;
 
-    public MiuiVendorServices_Factory(Provider<Context> provider, Provider<MiuiWallpaperZoomOutService> provider2, Provider<MiuiHeadsUpPolicy> provider3, Provider<MiuiGxzwPolicy> provider4, Provider<NotificationFilterController> provider5, Provider<NotificationAlertController> provider6, Provider<NotificationDynamicFpsController> provider7, Provider<NotificationCountLimitPolicy> provider8, Provider<MiuiNotificationShadePolicy> provider9, Provider<MiuiRecentProxy> provider10, Provider<OrientationPolicy> provider11, Provider<PerformanceTools> provider12, Provider<NotificationPanelNavigationBarCoordinator> provider13, Provider<HeadsetPolicy> provider14, Provider<MiuiFullScreenGestureProxy> provider15, Provider<OLEDScreenHelper> provider16, Provider<MiuiChargeManager> provider17, Provider<NotificationEntryManager> provider18, Provider<MiuiFaceUnlockManager> provider19) {
+    public MiuiVendorServices_Factory(Provider<Context> provider, Provider<MiuiWallpaperZoomOutService> provider2, Provider<MiuiHeadsUpPolicy> provider3, Provider<MiuiGxzwPolicy> provider4, Provider<NotificationFilterController> provider5, Provider<NotificationAlertController> provider6, Provider<NotificationDynamicFpsController> provider7, Provider<NotificationCountLimitPolicy> provider8, Provider<MiuiNotificationShadePolicy> provider9, Provider<MiuiRecentProxy> provider10, Provider<OrientationPolicy> provider11, Provider<PerformanceTools> provider12, Provider<NotificationPanelNavigationBarCoordinator> provider13, Provider<HeadsetPolicy> provider14, Provider<MiuiFullScreenGestureProxy> provider15, Provider<OLEDScreenHelper> provider16, Provider<MiuiChargeManager> provider17, Provider<NotificationEntryManager> provider18, Provider<MiuiFaceUnlockManager> provider19, Provider<MiuiStatusBarConfigurationListener> provider20) {
         this.contextProvider = provider;
         this.mWallpaperZoomOutServiceProvider = provider2;
         this.mMiuiHeadsUpPolicyProvider = provider3;
@@ -61,13 +63,14 @@ public final class MiuiVendorServices_Factory implements Factory<MiuiVendorServi
         this.mMiuiChargeManagerProvider = provider17;
         this.mNotificationEntryManagerProvider = provider18;
         this.mMiuiFaceUnlockManagerProvider = provider19;
+        this.mMiuiStatusBarConfigurationListenerProvider = provider20;
     }
 
     public MiuiVendorServices get() {
-        return provideInstance(this.contextProvider, this.mWallpaperZoomOutServiceProvider, this.mMiuiHeadsUpPolicyProvider, this.mMiuiGxzwPolicyProvider, this.mNotificationFilterControllerProvider, this.mNotifAlertControllerProvider, this.mNotifDynamicFpsControllerProvider, this.mNotifCountLimitPolicyProvider, this.mMiuiNotificationShadePolicyProvider, this.mMiuiRecentProxyProvider, this.mOrientationPolicyProvider, this.mPerformanceToolsProvider, this.mNotificationNavigationCoordinatorProvider, this.mHeadsetPolicyProvider, this.mMiuiFullScreenGestureProxyProvider, this.mOledScreenHelperProvider, this.mMiuiChargeManagerProvider, this.mNotificationEntryManagerProvider, this.mMiuiFaceUnlockManagerProvider);
+        return provideInstance(this.contextProvider, this.mWallpaperZoomOutServiceProvider, this.mMiuiHeadsUpPolicyProvider, this.mMiuiGxzwPolicyProvider, this.mNotificationFilterControllerProvider, this.mNotifAlertControllerProvider, this.mNotifDynamicFpsControllerProvider, this.mNotifCountLimitPolicyProvider, this.mMiuiNotificationShadePolicyProvider, this.mMiuiRecentProxyProvider, this.mOrientationPolicyProvider, this.mPerformanceToolsProvider, this.mNotificationNavigationCoordinatorProvider, this.mHeadsetPolicyProvider, this.mMiuiFullScreenGestureProxyProvider, this.mOledScreenHelperProvider, this.mMiuiChargeManagerProvider, this.mNotificationEntryManagerProvider, this.mMiuiFaceUnlockManagerProvider, this.mMiuiStatusBarConfigurationListenerProvider);
     }
 
-    public static MiuiVendorServices provideInstance(Provider<Context> provider, Provider<MiuiWallpaperZoomOutService> provider2, Provider<MiuiHeadsUpPolicy> provider3, Provider<MiuiGxzwPolicy> provider4, Provider<NotificationFilterController> provider5, Provider<NotificationAlertController> provider6, Provider<NotificationDynamicFpsController> provider7, Provider<NotificationCountLimitPolicy> provider8, Provider<MiuiNotificationShadePolicy> provider9, Provider<MiuiRecentProxy> provider10, Provider<OrientationPolicy> provider11, Provider<PerformanceTools> provider12, Provider<NotificationPanelNavigationBarCoordinator> provider13, Provider<HeadsetPolicy> provider14, Provider<MiuiFullScreenGestureProxy> provider15, Provider<OLEDScreenHelper> provider16, Provider<MiuiChargeManager> provider17, Provider<NotificationEntryManager> provider18, Provider<MiuiFaceUnlockManager> provider19) {
+    public static MiuiVendorServices provideInstance(Provider<Context> provider, Provider<MiuiWallpaperZoomOutService> provider2, Provider<MiuiHeadsUpPolicy> provider3, Provider<MiuiGxzwPolicy> provider4, Provider<NotificationFilterController> provider5, Provider<NotificationAlertController> provider6, Provider<NotificationDynamicFpsController> provider7, Provider<NotificationCountLimitPolicy> provider8, Provider<MiuiNotificationShadePolicy> provider9, Provider<MiuiRecentProxy> provider10, Provider<OrientationPolicy> provider11, Provider<PerformanceTools> provider12, Provider<NotificationPanelNavigationBarCoordinator> provider13, Provider<HeadsetPolicy> provider14, Provider<MiuiFullScreenGestureProxy> provider15, Provider<OLEDScreenHelper> provider16, Provider<MiuiChargeManager> provider17, Provider<NotificationEntryManager> provider18, Provider<MiuiFaceUnlockManager> provider19, Provider<MiuiStatusBarConfigurationListener> provider20) {
         MiuiVendorServices miuiVendorServices = new MiuiVendorServices(provider.get());
         MiuiVendorServices_MembersInjector.injectMWallpaperZoomOutService(miuiVendorServices, provider2.get());
         MiuiVendorServices_MembersInjector.injectMMiuiHeadsUpPolicy(miuiVendorServices, provider3.get());
@@ -87,10 +90,11 @@ public final class MiuiVendorServices_Factory implements Factory<MiuiVendorServi
         MiuiVendorServices_MembersInjector.injectMMiuiChargeManager(miuiVendorServices, provider17.get());
         MiuiVendorServices_MembersInjector.injectMNotificationEntryManager(miuiVendorServices, provider18.get());
         MiuiVendorServices_MembersInjector.injectMMiuiFaceUnlockManager(miuiVendorServices, provider19.get());
+        MiuiVendorServices_MembersInjector.injectMMiuiStatusBarConfigurationListener(miuiVendorServices, provider20.get());
         return miuiVendorServices;
     }
 
-    public static MiuiVendorServices_Factory create(Provider<Context> provider, Provider<MiuiWallpaperZoomOutService> provider2, Provider<MiuiHeadsUpPolicy> provider3, Provider<MiuiGxzwPolicy> provider4, Provider<NotificationFilterController> provider5, Provider<NotificationAlertController> provider6, Provider<NotificationDynamicFpsController> provider7, Provider<NotificationCountLimitPolicy> provider8, Provider<MiuiNotificationShadePolicy> provider9, Provider<MiuiRecentProxy> provider10, Provider<OrientationPolicy> provider11, Provider<PerformanceTools> provider12, Provider<NotificationPanelNavigationBarCoordinator> provider13, Provider<HeadsetPolicy> provider14, Provider<MiuiFullScreenGestureProxy> provider15, Provider<OLEDScreenHelper> provider16, Provider<MiuiChargeManager> provider17, Provider<NotificationEntryManager> provider18, Provider<MiuiFaceUnlockManager> provider19) {
-        return new MiuiVendorServices_Factory(provider, provider2, provider3, provider4, provider5, provider6, provider7, provider8, provider9, provider10, provider11, provider12, provider13, provider14, provider15, provider16, provider17, provider18, provider19);
+    public static MiuiVendorServices_Factory create(Provider<Context> provider, Provider<MiuiWallpaperZoomOutService> provider2, Provider<MiuiHeadsUpPolicy> provider3, Provider<MiuiGxzwPolicy> provider4, Provider<NotificationFilterController> provider5, Provider<NotificationAlertController> provider6, Provider<NotificationDynamicFpsController> provider7, Provider<NotificationCountLimitPolicy> provider8, Provider<MiuiNotificationShadePolicy> provider9, Provider<MiuiRecentProxy> provider10, Provider<OrientationPolicy> provider11, Provider<PerformanceTools> provider12, Provider<NotificationPanelNavigationBarCoordinator> provider13, Provider<HeadsetPolicy> provider14, Provider<MiuiFullScreenGestureProxy> provider15, Provider<OLEDScreenHelper> provider16, Provider<MiuiChargeManager> provider17, Provider<NotificationEntryManager> provider18, Provider<MiuiFaceUnlockManager> provider19, Provider<MiuiStatusBarConfigurationListener> provider20) {
+        return new MiuiVendorServices_Factory(provider, provider2, provider3, provider4, provider5, provider6, provider7, provider8, provider9, provider10, provider11, provider12, provider13, provider14, provider15, provider16, provider17, provider18, provider19, provider20);
     }
 }

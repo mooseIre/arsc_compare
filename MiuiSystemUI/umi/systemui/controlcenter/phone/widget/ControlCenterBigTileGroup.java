@@ -154,6 +154,25 @@ public final class ControlCenterBigTileGroup extends RelativeLayout {
         }
     }
 
+    public final void onUserSwitched(int i) {
+        QSBigTileView qSBigTileView = this.bigTile0;
+        if (qSBigTileView != null) {
+            qSBigTileView.onUserSwitched(i);
+        }
+        QSBigTileView qSBigTileView2 = this.bigTile1;
+        if (qSBigTileView2 != null) {
+            qSBigTileView2.onUserSwitched(i);
+        }
+        QSBigTileView qSBigTileView3 = this.bigTile2;
+        if (qSBigTileView3 != null) {
+            qSBigTileView3.onUserSwitched(i);
+        }
+        QSBigTileView qSBigTileView4 = this.bigTile3;
+        if (qSBigTileView4 != null) {
+            qSBigTileView4.onUserSwitched(i);
+        }
+    }
+
     public final void updateResources() {
         QSControlExpandTileView qSControlExpandTileView = this.expandTileView;
         if (qSControlExpandTileView != null) {

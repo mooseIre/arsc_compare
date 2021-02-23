@@ -326,6 +326,23 @@ public final class ControlCenterPanelView extends LinearLayout {
         }
     }
 
+    public final void onUserSwitched(int i) {
+        ControlCenterBigTileGroup controlCenterBigTileGroup = this.bigTileLayout;
+        if (controlCenterBigTileGroup != null) {
+            controlCenterBigTileGroup.onUserSwitched(i);
+            ControlCenterBrightnessView controlCenterBrightnessView = this.brightnessView;
+            if (controlCenterBrightnessView != null) {
+                controlCenterBrightnessView.onUserSwitched(i);
+            } else {
+                Intrinsics.throwUninitializedPropertyAccessException("brightnessView");
+                throw null;
+            }
+        } else {
+            Intrinsics.throwUninitializedPropertyAccessException("bigTileLayout");
+            throw null;
+        }
+    }
+
     public final void addControlsPlugin() {
         ControlsPluginManager controlsPluginManager2 = this.controlsPluginManager;
         if (!this.panelController.isSuperPowerMode()) {

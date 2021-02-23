@@ -22,6 +22,7 @@ import com.android.systemui.util.UserAwareController;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Objects;
+import org.apache.miui.commons.lang3.ArrayUtils;
 
 public class AutoTileManager implements UserAwareController {
     private final ArrayList<AutoAddSetting> mAutoAddSettingList = new ArrayList<>();
@@ -225,7 +226,7 @@ public class AutoTileManager implements UserAwareController {
 
     private void populateSettingsList() {
         try {
-            for (String str : this.mContext.getResources().getStringArray(C0008R$array.config_quickSettingsAutoAdd)) {
+            for (String str : addMiuiSettings(this.mContext.getResources().getStringArray(C0008R$array.config_quickSettingsAutoAdd))) {
                 String[] split = str.split(":");
                 if (split.length == 2) {
                     this.mAutoAddSettingList.add(new AutoAddSetting(this.mContext, this.mHandler, split[0], split[1]));
@@ -235,6 +236,15 @@ public class AutoTileManager implements UserAwareController {
             }
         } catch (Resources.NotFoundException unused) {
             Log.w("AutoTileManager", "Missing config resource");
+        }
+    }
+
+    private String[] addMiuiSettings(String[] strArr) {
+        try {
+            return (String[]) ArrayUtils.addAll(strArr, this.mContext.getResources().getStringArray(C0008R$array.miui_config_quickSettingsAutoAdd));
+        } catch (Resources.NotFoundException unused) {
+            Log.w("AutoTileManager", "Missing MIUI config resource");
+            return strArr;
         }
     }
 

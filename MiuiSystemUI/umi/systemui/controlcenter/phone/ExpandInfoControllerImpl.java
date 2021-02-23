@@ -62,6 +62,15 @@ public class ExpandInfoControllerImpl implements ExpandInfoController {
         }
     }
 
+    public void onUserSwitched() {
+        this.mUserHandler = new UserHandle(KeyguardUpdateMonitor.getCurrentUser());
+        requestData();
+        int intForUser = Settings.System.getIntForUser(this.mContext.getContentResolver(), "control_center_expand_info_type", 0, KeyguardUpdateMonitor.getCurrentUser());
+        if (intForUser != this.mSelectedType) {
+            setSelectedType(intForUser);
+        }
+    }
+
     public UserHandle getUserHandle() {
         return this.mUserHandler;
     }

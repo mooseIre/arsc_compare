@@ -67,6 +67,7 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
     private final String mNetworkNameSeparator;
     final Map<String, MobileIconGroup> mNetworkToIconLookup = new HashMap();
     private final ContentObserver mObserver;
+    protected String mOperator;
     private final android.telephony.TelephonyManager mPhone;
     protected int mPhoneCount;
     @VisibleForTesting
@@ -1124,6 +1125,7 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
         printWriter.println("  mDataState=" + this.mDataState + ",");
         printWriter.println("  mInflateSignalStrengths=" + this.mInflateSignalStrengths + ",");
         printWriter.println("  isDataDisabled=" + isDataDisabled() + ",");
+        printWriter.println("  mOperator=" + this.mOperator + ",");
     }
 
     public int getSlot() {
@@ -1584,36 +1586,56 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
     }
 
     public void updateMiuiConfig() {
-        int i;
-        String simOperatorNumericForPhone = this.mPhone.getSimOperatorNumericForPhone(this.mSlotId);
+        String str;
+        SubscriptionInfo subscriptionInfo = this.mSubscriptionInfo;
+        if (subscriptionInfo == null || subscriptionInfo.getMccString() == null || this.mSubscriptionInfo.getMccString().length() != 3 || this.mSubscriptionInfo.getMncString() == null) {
+            str = this.mPhone.getSimOperatorNumericForPhone(this.mSlotId);
+        } else {
+            str = this.mSubscriptionInfo.getMccString() + this.mSubscriptionInfo.getMncString();
+        }
+        Log.e(this.mTag, "updateMiuiConfig: " + str);
+        this.mOperator = str;
         boolean z = true;
-        Resources resourcesForOperation = getResourcesForOperation(this.mContext, simOperatorNumericForPhone, true);
+        Resources resourcesForOperation = getResourcesForOperation(this.mContext, str, true);
         Resources resourcesForOperation2 = getResourcesForOperation(this.mContext, "00000", true);
-        ((MobileState) this.mCurrentState).CTSim = isCTSim(simOperatorNumericForPhone);
+        ((MobileState) this.mCurrentState).CTSim = isCTSim(str);
         ((MobileState) this.mCurrentState).hideVolte = resourcesForOperation.getBoolean(C0010R$bool.status_bar_hide_volte) || resourcesForOperation2.getBoolean(C0010R$bool.status_bar_hide_volte);
         ((MobileState) this.mCurrentState).hideVowifi = resourcesForOperation.getBoolean(C0010R$bool.status_bar_hide_vowifi_mcc_mnc);
-        MobileState mobileState = (MobileState) this.mCurrentState;
-        if (Build.IS_INTERNATIONAL_BUILD) {
-            i = transformVolteDrawableId(resourcesForOperation.getInteger(C0016R$integer.status_bar_volte_drawable_type));
-        } else {
-            i = C0013R$drawable.stat_sys_signal_hd_big;
-        }
-        mobileState.volteResId = i;
-        ((MobileState) this.mCurrentState).vowifiResId = transformVowifiDrawableId(resourcesForOperation.getInteger(C0016R$integer.status_bar_vowifi_drawable_type), resourcesForOperation.getBoolean(C0010R$bool.status_bar_show_dual_vowifi_icons), this.mSlotId, this.mNetworkController);
+        ((MobileState) this.mCurrentState).volteResId = getVolteResId(resourcesForOperation2, resourcesForOperation);
+        ((MobileState) this.mCurrentState).vowifiResId = getVowifiResId(resourcesForOperation2, resourcesForOperation, this.mSlotId, this.mNetworkController);
         this.mIsSupportDoubleFiveG = TelephonyManagerEx.getDefault().isDualNrSupported();
         ((MobileState) this.mCurrentState).showDataTypeWhenWifiOn = resourcesForOperation.getBoolean(C0010R$bool.status_bar_show_mobile_type_when_wifi_on);
-        ((MobileState) this.mCurrentState).showDataTypeDataDisconnected = this.mIsSupportDoubleFiveG || !Build.IS_INTERNATIONAL_BUILD;
-        MobileState mobileState2 = (MobileState) this.mCurrentState;
+        ((MobileState) this.mCurrentState).showDataTypeDataDisconnected = (this.mIsSupportDoubleFiveG && Build.IS_DEVELOPMENT_VERSION) || !Build.IS_INTERNATIONAL_BUILD;
+        MobileState mobileState = (MobileState) this.mCurrentState;
         if (!resourcesForOperation.getBoolean(C0010R$bool.status_bar_show_mobile_type_in_mms) && !resourcesForOperation2.getBoolean(C0010R$bool.status_bar_show_mobile_type_in_mms)) {
             z = false;
         }
-        mobileState2.showMobileDataTypeInMMS = z;
+        mobileState.showMobileDataTypeInMMS = z;
         this.mMiuiMobileTypeNameArray = getMiuiMobileTypeNameArray(resourcesForOperation);
     }
 
     public String getMobileTypeName(int i) {
         String[] strArr = this.mMiuiMobileTypeNameArray;
         return (strArr == null || i < 0 || i >= strArr.length) ? "" : strArr[i];
+    }
+
+    public static int getVolteResId(Resources resources, Resources resources2) {
+        if (!Build.IS_INTERNATIONAL_BUILD) {
+            return C0013R$drawable.stat_sys_signal_hd_big;
+        }
+        int integer = resources.getInteger(C0016R$integer.customized_status_bar_volte_drawable_type);
+        if (integer == -1) {
+            integer = resources2.getInteger(C0016R$integer.status_bar_volte_drawable_type);
+        }
+        return transformVolteDrawableId(integer);
+    }
+
+    public static int getVowifiResId(Resources resources, Resources resources2, int i, NetworkController networkController) {
+        int integer = resources.getInteger(C0016R$integer.customized_status_bar_vowifi_drawable_type);
+        if (integer == -1) {
+            integer = resources2.getInteger(C0016R$integer.status_bar_vowifi_drawable_type);
+        }
+        return transformVowifiDrawableId(integer, resources.getBoolean(C0010R$bool.status_bar_show_dual_vowifi_icons), i, networkController);
     }
 
     public static Resources getResourcesForOperation(Context context, String str, boolean z) {

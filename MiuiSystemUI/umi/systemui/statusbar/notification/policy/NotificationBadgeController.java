@@ -28,47 +28,41 @@ public class NotificationBadgeController {
     }
 
     public void updateAppBadgeNum(ExpandedNotification expandedNotification) {
-        updateAppBadgeNum(expandedNotification, (ExpandedNotification) null);
-    }
-
-    public void updateAppBadgeNum(ExpandedNotification expandedNotification, ExpandedNotification expandedNotification2) {
         int i;
         CharSequence charSequence;
         String str;
-        if (expandedNotification2 == null || needRestatBadgeNum(expandedNotification, expandedNotification2)) {
-            int i2 = 0;
-            int identifier = expandedNotification.getUser().getIdentifier();
-            String packageName = expandedNotification.getPackageName();
-            CharSequence messageClassName = getMessageClassName(expandedNotification);
-            boolean canShowBadge = NotificationSettingsHelper.canShowBadge(expandedNotification);
-            if (canShowBadge) {
-                List<NotificationEntry> list = (List) this.mEntryManager.getVisibleNotifications().stream().filter(new Predicate() {
-                    public final boolean test(Object obj) {
-                        return NotificationBadgeController.lambda$updateAppBadgeNum$0(ExpandedNotification.this, (NotificationEntry) obj);
-                    }
-                }).collect(Collectors.toList());
-                if (NotificationUtil.isMissedCallNotification(expandedNotification)) {
-                    for (NotificationEntry notificationEntry : list) {
-                        if (NotificationUtil.isMissedCallNotification(notificationEntry.getSbn()) && needStatBadgeNum(notificationEntry.getSbn())) {
-                            i2 += notificationEntry.getSbn().getMessageCount();
-                        }
-                    }
-                    str = "com.android.contacts";
-                    i = i2;
-                    charSequence = ".activities.TwelveKeyDialer";
-                    updateAppBadgeNum(str, charSequence, i, identifier, canShowBadge);
+        int identifier = expandedNotification.getUser().getIdentifier();
+        String packageName = expandedNotification.getPackageName();
+        CharSequence messageClassName = getMessageClassName(expandedNotification);
+        boolean canShowBadge = NotificationSettingsHelper.canShowBadge(expandedNotification);
+        int i2 = 0;
+        if (canShowBadge) {
+            List<NotificationEntry> list = (List) this.mEntryManager.getVisibleNotifications().stream().filter(new Predicate() {
+                public final boolean test(Object obj) {
+                    return NotificationBadgeController.lambda$updateAppBadgeNum$0(ExpandedNotification.this, (NotificationEntry) obj);
                 }
-                for (NotificationEntry notificationEntry2 : list) {
-                    if (notificationEntry2.getSbn().getPackageName().equals(packageName) && TextUtils.equals(getMessageClassName(notificationEntry2.getSbn()), messageClassName) && needStatBadgeNum(notificationEntry2.getSbn())) {
-                        i2 += notificationEntry2.getSbn().getMessageCount();
+            }).collect(Collectors.toList());
+            if (NotificationUtil.isMissedCallNotification(expandedNotification)) {
+                for (NotificationEntry notificationEntry : list) {
+                    if (NotificationUtil.isMissedCallNotification(notificationEntry.getSbn()) && needStatBadgeNum(notificationEntry.getSbn())) {
+                        i2 += notificationEntry.getSbn().getMessageCount();
                     }
+                }
+                charSequence = ".activities.TwelveKeyDialer";
+                i = i2;
+                str = "com.android.contacts";
+                updateAppBadgeNum(str, charSequence, i, identifier, canShowBadge);
+            }
+            for (NotificationEntry notificationEntry2 : list) {
+                if (notificationEntry2.getSbn().getPackageName().equals(packageName) && TextUtils.equals(getMessageClassName(notificationEntry2.getSbn()), messageClassName) && needStatBadgeNum(notificationEntry2.getSbn())) {
+                    i2 += notificationEntry2.getSbn().getMessageCount();
                 }
             }
-            i = i2;
-            str = packageName;
-            charSequence = messageClassName;
-            updateAppBadgeNum(str, charSequence, i, identifier, canShowBadge);
         }
+        charSequence = messageClassName;
+        i = i2;
+        str = packageName;
+        updateAppBadgeNum(str, charSequence, i, identifier, canShowBadge);
     }
 
     static /* synthetic */ boolean lambda$updateAppBadgeNum$0(ExpandedNotification expandedNotification, NotificationEntry notificationEntry) {
@@ -109,7 +103,10 @@ public class NotificationBadgeController {
         return false;
     }
 
-    private boolean needRestatBadgeNum(ExpandedNotification expandedNotification, ExpandedNotification expandedNotification2) {
+    public boolean needRestatBadgeNum(ExpandedNotification expandedNotification, ExpandedNotification expandedNotification2) {
+        if (expandedNotification == null || expandedNotification2 == null) {
+            return false;
+        }
         if ((expandedNotification.getMessageCount() != expandedNotification2.getMessageCount()) || needStatBadgeNum(expandedNotification) != needStatBadgeNum(expandedNotification2) || !TextUtils.equals(expandedNotification.getTargetPackageName(), expandedNotification2.getTargetPackageName())) {
             return true;
         }

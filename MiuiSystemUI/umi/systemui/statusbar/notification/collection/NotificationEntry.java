@@ -64,6 +64,7 @@ public final class NotificationEntry extends ListEntry {
     private boolean mSensitive;
     private boolean mShelfIconVisible;
     private ExpandableNotificationRow modalRow;
+    public boolean needUpdateBadgeNum;
     public String remoteInputMimeType;
     public CharSequence remoteInputText;
     public CharSequence remoteInputTextWhenReset;

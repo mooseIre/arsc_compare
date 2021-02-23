@@ -408,6 +408,7 @@ public class QSControlCustomizer extends FrameLayout implements TileQueryHelper.
     /* access modifiers changed from: private */
     public void startAnimation(boolean z) {
         this.mUnAddedTilesLayout.init();
+        this.mAnim.cancel();
         if (z) {
             IStateStyle iStateStyle = this.mAnim;
             AnimState animState = this.mHideAnim;

@@ -60,7 +60,7 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
     private DisplayManager.DisplayListener mDisplayListener;
     private DisplayManager mDisplayManager;
     protected int[] mDripOverlayTopDrawables = {C0013R$drawable.overlay_screen_round_corner_top_rot90, C0013R$drawable.overlay_screen_round_corner_top, C0013R$drawable.overlay_screen_round_corner_top_rot270, C0013R$drawable.overlay_screen_round_corner_top_rot180};
-    private boolean mEnableForceBlack;
+    private volatile boolean mEnableForceBlack;
     /* access modifiers changed from: private */
     public boolean mForceBlack;
     /* access modifiers changed from: private */
@@ -154,6 +154,9 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
     }
 
     public void start() {
+        if (CustomizeUtil.HAS_NOTCH) {
+            this.mCommandQueue.addCallback((CommandQueue.Callbacks) this);
+        }
         Handler startHandlerThread = startHandlerThread();
         this.mHandler = startHandlerThread;
         startHandlerThread.post(new Runnable() {
@@ -177,9 +180,6 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
         this.mWindowManager = (WindowManager) this.mContext.getSystemService(WindowManager.class);
         this.mDisplayManager = (DisplayManager) this.mContext.getSystemService(DisplayManager.class);
         this.mOverlayManager = new OverlayManagerWrapper();
-        if (CustomizeUtil.HAS_NOTCH) {
-            this.mCommandQueue.addCallback((CommandQueue.Callbacks) this);
-        }
         register();
         setupDecorations();
         setupCameraListener();

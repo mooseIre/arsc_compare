@@ -186,6 +186,10 @@ public class QSBigTileView extends QSTileView {
         });
     }
 
+    public void onUserSwitched(int i) {
+        this.mQSTile.userSwitch(i);
+    }
+
     public void updateResources() {
         int dimensionPixelSize = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_big_tile_width);
         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) getLayoutParams();

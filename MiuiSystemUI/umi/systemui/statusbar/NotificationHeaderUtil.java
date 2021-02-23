@@ -191,10 +191,12 @@ public class NotificationHeaderUtil {
         }
 
         public void init() {
-            this.mParentView = this.mParentRow.getNotificationHeader().findViewById(this.mId);
-            DataExtractor dataExtractor = this.mExtractor;
-            this.mParentData = dataExtractor == null ? null : dataExtractor.extractData(this.mParentRow);
-            this.mApply = !this.mComparator.isEmpty(this.mParentView);
+            if (this.mParentRow.getNotificationHeader() != null) {
+                this.mParentView = this.mParentRow.getNotificationHeader().findViewById(this.mId);
+                DataExtractor dataExtractor = this.mExtractor;
+                this.mParentData = dataExtractor == null ? null : dataExtractor.extractData(this.mParentRow);
+                this.mApply = !this.mComparator.isEmpty(this.mParentView);
+            }
         }
 
         public void compareToHeader(ExpandableNotificationRow expandableNotificationRow) {

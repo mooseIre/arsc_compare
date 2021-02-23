@@ -139,8 +139,8 @@ public class ScreenInternalAudioRecorder {
 
     /* JADX WARNING: type inference failed for: r6v0, types: [short[]] */
     /* JADX WARNING: type inference failed for: r8v0, types: [short[]] */
-    /* JADX WARNING: type inference failed for: r2v8, types: [short, int] */
-    /* JADX WARNING: type inference failed for: r3v4, types: [short, int] */
+    /* JADX WARNING: type inference failed for: r2v8, types: [int, short] */
+    /* JADX WARNING: type inference failed for: r3v4, types: [int, short] */
     /* JADX WARNING: type inference failed for: r2v10, types: [short] */
     /* JADX WARNING: type inference failed for: r2v11, types: [short] */
     /* JADX WARNING: Incorrect type for immutable var: ssa=short, code=int, for r2v10, types: [short] */

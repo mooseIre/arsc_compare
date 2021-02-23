@@ -55,6 +55,7 @@ public class BiometricUnlockController extends MiuiKeyguardUpdateMonitorCallback
     private boolean mFadedAwayAfterWakeAndUnlock;
     private MiuiKeyguardFingerprintUtils$FingerprintIdentificationState mFpiState;
     private final Handler mHandler;
+    protected boolean mHasFace;
     /* access modifiers changed from: private */
     public boolean mHasScreenTurnedOnSinceAuthenticating;
     private final KeyguardBypassController mKeyguardBypassController;
@@ -517,6 +518,9 @@ public class BiometricUnlockController extends MiuiKeyguardUpdateMonitorCallback
         if (biometricSourceType == BiometricSourceType.FINGERPRINT) {
             this.mFpiState = MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.HELP;
         }
+        if (i != 5 && i != 10001) {
+            this.mHasFace = true;
+        }
     }
 
     public void onBiometricAuthFailed(BiometricSourceType biometricSourceType) {
@@ -572,8 +576,9 @@ public class BiometricUnlockController extends MiuiKeyguardUpdateMonitorCallback
         if (biometricSourceType == BiometricSourceType.FINGERPRINT) {
             this.mFpiState = MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.ERROR;
         }
-        if (biometricSourceType == BiometricSourceType.FACE && i == 3) {
+        if (biometricSourceType == BiometricSourceType.FACE && i == 3 && this.mHasFace) {
             showBouncer();
+            this.mHasFace = false;
         }
     }
 

@@ -10,10 +10,19 @@ import com.android.systemui.statusbar.notification.MediaNotificationProcessor;
 import java.lang.ref.WeakReference;
 
 public class ProcessArtworkTask extends AsyncTask<Drawable, Void, Result> {
-    private int direction;
+    private final int direction;
     private final Palette.Filter mBlackWhiteFilter = $$Lambda$ProcessArtworkTask$5NgxIsban__ilCnG4_czslaOjX0.INSTANCE;
-    private ImageGradientColorizer mColorizer;
-    private WeakReference<MiuiMediaControlPanel> mPanel;
+    private final ImageGradientColorizer mColorizer;
+    private float[] mFilteredBackgroundHsl = null;
+    private final WeakReference<MiuiMediaControlPanel> mPanel;
+
+    public static final class Result {
+        int backgroundColor;
+        Bitmap bitmap;
+        int foregroundColor;
+        int primaryTextColor;
+        int secondaryTextColor;
+    }
 
     static /* synthetic */ boolean lambda$new$0(int i, float[] fArr) {
         return !MediaNotificationProcessor.isWhiteOrBlack(fArr);
@@ -28,7 +37,7 @@ public class ProcessArtworkTask extends AsyncTask<Drawable, Void, Result> {
     /* access modifiers changed from: protected */
     public void onPostExecute(Result result) {
         if (this.mPanel.get() != null) {
-            ((MiuiMediaControlPanel) this.mPanel.get()).setForegroundColor(result.foregroundColor);
+            ((MiuiMediaControlPanel) this.mPanel.get()).setForegroundColors(result);
             if (((MiuiMediaControlPanel) this.mPanel.get()).getView() != null) {
                 ((MiuiMediaControlPanel) this.mPanel.get()).getView().setBackground(result.bitmap, result.backgroundColor);
             }
@@ -61,8 +70,8 @@ public class ProcessArtworkTask extends AsyncTask<Drawable, Void, Result> {
         int intrinsicWidth = drawable.getIntrinsicWidth();
         int intrinsicHeight = drawable.getIntrinsicHeight();
         int i = intrinsicWidth * intrinsicHeight;
-        if (i > 22500) {
-            double sqrt = Math.sqrt((double) (22500.0f / ((float) i)));
+        if (i > 62500) {
+            double sqrt = Math.sqrt((double) (62500.0f / ((float) i)));
             intrinsicWidth = (int) (((double) intrinsicWidth) * sqrt);
             intrinsicHeight = (int) (sqrt * ((double) intrinsicHeight));
         }
@@ -72,47 +81,63 @@ public class ProcessArtworkTask extends AsyncTask<Drawable, Void, Result> {
         drawable.setBounds(0, 0, intrinsicWidth, intrinsicHeight);
         drawable.draw(canvas);
         Palette.Builder generateArtworkPaletteBuilder = MediaNotificationProcessor.generateArtworkPaletteBuilder(createBitmap);
-        Palette.Swatch findBackgroundSwatch = MediaNotificationProcessor.findBackgroundSwatch(generateArtworkPaletteBuilder.generate());
-        int computeBackgroundColor = MediaNotificationProcessorExt.computeBackgroundColor(findBackgroundSwatch);
+        int findBackgroundColorAndFilter = findBackgroundColorAndFilter(generateArtworkPaletteBuilder.generate());
         generateArtworkPaletteBuilder.setRegion((int) (((float) createBitmap.getWidth()) * 0.4f), 0, createBitmap.getWidth(), createBitmap.getHeight());
-        if (!MediaNotificationProcessor.isWhiteOrBlack(findBackgroundSwatch.getHsl())) {
-            generateArtworkPaletteBuilder.addFilter(new Palette.Filter(findBackgroundSwatch.getHsl()[0]) {
-                public final /* synthetic */ float f$0;
-
-                {
-                    this.f$0 = r1;
-                }
-
+        if (this.mFilteredBackgroundHsl != null) {
+            generateArtworkPaletteBuilder.addFilter(new Palette.Filter() {
                 public final boolean isAllowed(int i, float[] fArr) {
-                    return ProcessArtworkTask.lambda$processArtwork$1(this.f$0, i, fArr);
+                    return ProcessArtworkTask.this.lambda$processArtwork$1$ProcessArtworkTask(i, fArr);
                 }
             });
         }
         generateArtworkPaletteBuilder.addFilter(this.mBlackWhiteFilter);
-        int selectForegroundColor = MediaNotificationProcessor.selectForegroundColor(computeBackgroundColor, generateArtworkPaletteBuilder.generate());
+        int selectForegroundColor = MediaNotificationProcessor.selectForegroundColor(findBackgroundColorAndFilter, generateArtworkPaletteBuilder.generate());
         ImageGradientColorizer imageGradientColorizer = this.mColorizer;
         if (this.direction == 1) {
             z = true;
         }
-        Bitmap colorize = imageGradientColorizer.colorize(drawable, computeBackgroundColor, z);
+        Bitmap colorize = imageGradientColorizer.colorize(drawable, findBackgroundColorAndFilter, z);
         Result result = new Result();
         result.bitmap = colorize;
-        result.backgroundColor = computeBackgroundColor;
+        result.backgroundColor = findBackgroundColorAndFilter;
         result.foregroundColor = selectForegroundColor;
-        return result;
+        return MediaNotificationProcessorExt.recalculateColors(result);
     }
 
-    static /* synthetic */ boolean lambda$processArtwork$1(float f, int i, float[] fArr) {
-        float abs = Math.abs(fArr[0] - f);
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$processArtwork$1 */
+    public /* synthetic */ boolean lambda$processArtwork$1$ProcessArtworkTask(int i, float[] fArr) {
+        float abs = Math.abs(fArr[0] - this.mFilteredBackgroundHsl[0]);
         return abs > 10.0f && abs < 350.0f;
     }
 
-    static final class Result {
-        int backgroundColor;
-        Bitmap bitmap;
-        int foregroundColor;
-
-        Result() {
+    private int findBackgroundColorAndFilter(Palette palette) {
+        Palette.Swatch dominantSwatch = palette.getDominantSwatch();
+        if (dominantSwatch == null) {
+            this.mFilteredBackgroundHsl = null;
+            return -1;
+        } else if (!MediaNotificationProcessor.isWhiteOrBlack(dominantSwatch.getHsl())) {
+            this.mFilteredBackgroundHsl = dominantSwatch.getHsl();
+            return dominantSwatch.getRgb();
+        } else {
+            float f = -1.0f;
+            Palette.Swatch swatch = null;
+            for (Palette.Swatch next : palette.getSwatches()) {
+                if (next != dominantSwatch && ((float) next.getPopulation()) > f && !MediaNotificationProcessor.isWhiteOrBlack(next.getHsl())) {
+                    f = (float) next.getPopulation();
+                    swatch = next;
+                }
+            }
+            if (swatch == null) {
+                this.mFilteredBackgroundHsl = null;
+                return dominantSwatch.getRgb();
+            } else if (((float) dominantSwatch.getPopulation()) / f > 2.5f) {
+                this.mFilteredBackgroundHsl = null;
+                return dominantSwatch.getRgb();
+            } else {
+                this.mFilteredBackgroundHsl = swatch.getHsl();
+                return swatch.getRgb();
+            }
         }
     }
 }

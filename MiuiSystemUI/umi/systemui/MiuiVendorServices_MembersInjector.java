@@ -13,6 +13,7 @@ import com.android.systemui.statusbar.notification.policy.NotificationDynamicFps
 import com.android.systemui.statusbar.notification.policy.NotificationFilterController;
 import com.android.systemui.statusbar.policy.MiuiHeadsUpPolicy;
 import com.android.systemui.statusbar.policy.MiuiNotificationShadePolicy;
+import com.android.systemui.statusbar.policy.MiuiStatusBarConfigurationListener;
 import com.android.systemui.vendor.HeadsetPolicy;
 import com.android.systemui.vendor.OrientationPolicy;
 import com.miui.systemui.display.OLEDScreenHelper;
@@ -88,5 +89,9 @@ public final class MiuiVendorServices_MembersInjector {
 
     public static void injectMMiuiFaceUnlockManager(MiuiVendorServices miuiVendorServices, MiuiFaceUnlockManager miuiFaceUnlockManager) {
         miuiVendorServices.mMiuiFaceUnlockManager = miuiFaceUnlockManager;
+    }
+
+    public static void injectMMiuiStatusBarConfigurationListener(MiuiVendorServices miuiVendorServices, MiuiStatusBarConfigurationListener miuiStatusBarConfigurationListener) {
+        miuiVendorServices.mMiuiStatusBarConfigurationListener = miuiStatusBarConfigurationListener;
     }
 }

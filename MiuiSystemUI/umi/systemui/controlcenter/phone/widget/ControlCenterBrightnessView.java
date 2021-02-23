@@ -155,4 +155,14 @@ public final class ControlCenterBrightnessView extends LinearLayout {
             throw null;
         }
     }
+
+    public final void onUserSwitched(int i) {
+        AutoBrightnessView autoBrightnessView = this.autoBrightness;
+        if (autoBrightnessView != null) {
+            autoBrightnessView.onUserSwitched(i);
+        } else {
+            Intrinsics.throwUninitializedPropertyAccessException("autoBrightness");
+            throw null;
+        }
+    }
 }

@@ -314,6 +314,7 @@ public class MiuiCellularTile extends QSTileImpl<QSTile.BooleanState> {
     }
 
     private final class CellularDetailAdapter implements DetailAdapter, MiuiQSDetailItems.Callback {
+        private final int[] SIM_SLOT_DISABLED_ICON;
         private final int[] SIM_SLOT_ICON;
         private int mDefaultDataSlot;
         private MiuiQSDetailItems mItems;
@@ -335,6 +336,7 @@ public class MiuiCellularTile extends QSTileImpl<QSTile.BooleanState> {
 
         private CellularDetailAdapter() {
             this.SIM_SLOT_ICON = new int[]{C0013R$drawable.ic_qs_sim_card1, C0013R$drawable.ic_qs_sim_card2};
+            this.SIM_SLOT_DISABLED_ICON = new int[]{C0013R$drawable.ic_qs_sim_card1_disable, C0013R$drawable.ic_qs_sim_card2_disable};
         }
 
         public CharSequence getTitle() {
@@ -395,18 +397,27 @@ public class MiuiCellularTile extends QSTileImpl<QSTile.BooleanState> {
 
         private MiuiQSDetailItems.Item generateItem(SubscriptionInfo subscriptionInfo, int i) {
             MiuiQSDetailItems.Item acquireItem = this.mItems.acquireItem();
-            int[] iArr = this.SIM_SLOT_ICON;
-            if (i < iArr.length) {
-                acquireItem.icon = iArr[i];
+            boolean z = true;
+            if (subscriptionInfo.isActivated()) {
+                int[] iArr = this.SIM_SLOT_ICON;
+                if (i < iArr.length) {
+                    acquireItem.icon = iArr[i];
+                }
+                acquireItem.line1 = VirtualSimUtils.isVirtualSim(MiuiCellularTile.this.mContext, subscriptionInfo.getSlotId()) ? VirtualSimUtils.getVirtualSimCarrierName(MiuiCellularTile.this.mContext) : subscriptionInfo.getDisplayName();
+                acquireItem.activated = true;
+            } else {
+                if (i < this.SIM_SLOT_ICON.length) {
+                    acquireItem.icon = this.SIM_SLOT_DISABLED_ICON[i];
+                }
+                acquireItem.line1 = subscriptionInfo.getDisplayName() + MiuiCellularTile.this.mContext.getResources().getString(C0021R$string.quick_settings_sim_disabled);
+                acquireItem.activated = false;
             }
-            boolean z = this.mDefaultDataSlot == i;
+            if (this.mDefaultDataSlot != i) {
+                z = false;
+            }
             acquireItem.selected = z;
             acquireItem.icon2 = z ? C0013R$drawable.ic_qs_detail_item_selected : -1;
-            if (VirtualSimUtils.isVirtualSim(MiuiCellularTile.this.mContext, subscriptionInfo.getSlotId())) {
-                acquireItem.line1 = VirtualSimUtils.getVirtualSimCarrierName(MiuiCellularTile.this.mContext);
-            } else {
-                acquireItem.line1 = subscriptionInfo.getDisplayName();
-            }
+            acquireItem.line2 = subscriptionInfo.getDisplayNumber();
             acquireItem.tag = Integer.valueOf(i);
             return acquireItem;
         }

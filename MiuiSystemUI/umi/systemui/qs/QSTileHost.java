@@ -364,7 +364,12 @@ public class QSTileHost implements QSHost, TunerService.Tunable, PluginListener<
         if (!this.mTileSpecs.contains(spec)) {
             ArrayList arrayList = new ArrayList(this.mTileSpecs);
             if (z) {
-                arrayList.add(spec);
+                int indexOf = arrayList.indexOf("edit");
+                if (indexOf != -1) {
+                    arrayList.add(indexOf, spec);
+                } else {
+                    arrayList.add(spec);
+                }
             } else {
                 arrayList.add(0, spec);
             }

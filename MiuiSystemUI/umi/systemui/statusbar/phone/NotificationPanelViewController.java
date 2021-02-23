@@ -36,6 +36,7 @@ import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.KeyguardUpdateMonitorCallback;
 import com.android.keyguard.MiuiKeyguardAffordanceHelperNoOp;
 import com.android.keyguard.faceunlock.MiuiKeyguardFaceUnlockView;
+import com.android.keyguard.injector.KeyguardBottomAreaInjector;
 import com.android.keyguard.magazine.LockScreenMagazineController;
 import com.android.keyguard.wallpaper.MiuiWallpaperClient;
 import com.android.systemui.C0012R$dimen;
@@ -1438,7 +1439,7 @@ public class NotificationPanelViewController extends PanelViewController {
             this.mKeyguardBottomArea.animate().alpha(0.0f).setStartDelay(this.mKeyguardStateController.getKeyguardFadingAwayDelay()).setDuration(this.mKeyguardStateController.getShortenedFadingAwayDuration()).setInterpolator(Interpolators.ALPHA_OUT).withEndAction(this.mAnimateKeyguardBottomAreaInvisibleEndRunnable).start();
         } else if (i == 1 || i == 2) {
             this.mKeyguardBottomArea.setVisibility(0);
-            this.mKeyguardBottomArea.setAlpha(1.0f);
+            ((KeyguardBottomAreaInjector) Dependency.get(KeyguardBottomAreaInjector.class)).setAlpha(1.0f);
         } else {
             this.mKeyguardBottomArea.setVisibility(8);
         }
@@ -1994,7 +1995,7 @@ public class NotificationPanelViewController extends PanelViewController {
 
     private void updateKeyguardBottomAreaAlpha() {
         float min = Math.min(MathUtils.map(isUnlockHintRunning() ? 0.0f : 0.95f, 1.0f, 0.0f, 1.0f, getExpandedFraction()), 1.0f - getQsExpansionFraction()) * this.mBottomAreaShadeAlpha;
-        this.mKeyguardBottomArea.setAlpha(min);
+        ((KeyguardBottomAreaInjector) Dependency.get(KeyguardBottomAreaInjector.class)).setAlpha(1.0f);
         this.mKeyguardBottomArea.setImportantForAccessibility(min == 0.0f ? 4 : 0);
         View ambientIndicationContainer = this.mStatusBar.getAmbientIndicationContainer();
         if (ambientIndicationContainer != null) {
