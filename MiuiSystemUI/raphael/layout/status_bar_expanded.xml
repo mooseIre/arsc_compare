@@ -5,7 +5,7 @@
     <ImageView android:id="@id/left_view_bg" android:layout_width="fill_parent" android:layout_height="fill_parent" android:scaleType="centerCrop" />
     <com.android.keyguard.MiuiGoneFrameLayout android:id="@id/big_clock_container" android:visibility="gone" android:layout_width="fill_parent" android:layout_height="fill_parent" />
     <include android:visibility="gone" layout="@layout/keyguard_status_view" />
-    <com.android.keyguard.clock.KeyguardClockContainer android:id="@id/miui_keyguard_clock_container" android:layout_width="fill_parent" android:layout_height="wrap_content" android:importantForAccessibility="no" />
+    <com.android.keyguard.clock.KeyguardClockContainer android:id="@id/miui_keyguard_clock_container" android:visibility="invisible" android:layout_width="fill_parent" android:layout_height="wrap_content" android:importantForAccessibility="no" />
     <FrameLayout android:id="@id/awesome_lock_screen_container" android:visibility="gone" android:layout_width="fill_parent" android:layout_height="fill_parent" />
     <include layout="@layout/miui_keyguard_lock_screen_magazine_pre_layout" />
     <include layout="@layout/miui_keyguard_face_unlock_view" />
