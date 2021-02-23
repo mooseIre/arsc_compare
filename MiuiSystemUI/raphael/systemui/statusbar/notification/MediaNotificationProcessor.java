@@ -9,7 +9,6 @@ import android.graphics.drawable.Icon;
 import androidx.palette.graphics.Palette;
 import com.android.internal.util.ContrastColorUtil;
 import com.android.systemui.C0011R$color;
-import com.android.systemui.statusbar.notification.mediacontrol.MediaNotificationProcessorExt;
 
 public class MediaNotificationProcessor {
     private final Palette.Filter mBlackWhiteFilter;
@@ -54,7 +53,7 @@ public class MediaNotificationProcessor {
                 loadDrawable.draw(canvas);
                 Palette.Builder generateArtworkPaletteBuilder = generateArtworkPaletteBuilder(createBitmap);
                 Palette.Swatch findBackgroundSwatch = findBackgroundSwatch(generateArtworkPaletteBuilder.generate());
-                i = MediaNotificationProcessorExt.computeBackgroundColor(findBackgroundSwatch);
+                i = findBackgroundSwatch.getRgb();
                 generateArtworkPaletteBuilder.setRegion((int) (((float) createBitmap.getWidth()) * 0.4f), 0, createBitmap.getWidth(), createBitmap.getHeight());
                 if (!isWhiteOrBlack(findBackgroundSwatch.getHsl())) {
                     generateArtworkPaletteBuilder.addFilter(new Palette.Filter(findBackgroundSwatch.getHsl()[0]) {

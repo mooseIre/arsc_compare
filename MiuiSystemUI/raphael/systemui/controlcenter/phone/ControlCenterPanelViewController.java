@@ -82,6 +82,8 @@ public final class ControlCenterPanelViewController implements ConfigurationCont
     private float tileLayoutLastScrollY;
     /* access modifiers changed from: private */
     public int tileLayoutMinHeight;
+    /* access modifiers changed from: private */
+    public int touchSlop;
     private boolean touchable = true;
     private float transRatio;
     private final VelocityMonitor velocityMonitor = new VelocityMonitor();
@@ -158,7 +160,7 @@ public final class ControlCenterPanelViewController implements ConfigurationCont
         ViewConfiguration viewConfiguration = ViewConfiguration.get(this.context);
         Intrinsics.checkExpressionValueIsNotNull(viewConfiguration, "it");
         this.maxVelocity = viewConfiguration.getScaledMaximumFlingVelocity();
-        viewConfiguration.getScaledTouchSlop();
+        this.touchSlop = viewConfiguration.getScaledTouchSlop();
     }
 
     private final ControlCenterPanelAnimator createPanelAnimator() {
@@ -478,7 +480,7 @@ public final class ControlCenterPanelViewController implements ConfigurationCont
         }
 
         /* JADX WARNING: Code restructure failed: missing block: B:18:0x0049, code lost:
-            if (r4 != 3) goto L_0x0129;
+            if (r4 != 3) goto L_0x013a;
          */
         @org.jetbrains.annotations.Nullable
         /* Code decompiled incorrectly, please refer to instructions dump. */
@@ -513,13 +515,13 @@ public final class ControlCenterPanelViewController implements ConfigurationCont
                 return r8
             L_0x003d:
                 int r4 = r9.getActionMasked()
-                if (r4 == 0) goto L_0x00ea
-                if (r4 == r6) goto L_0x00c9
+                if (r4 == 0) goto L_0x00fb
+                if (r4 == r6) goto L_0x00da
                 r7 = 2
                 if (r4 == r7) goto L_0x004d
                 r2 = 3
-                if (r4 == r2) goto L_0x00c9
-                goto L_0x0129
+                if (r4 == r2) goto L_0x00da
+                goto L_0x013a
             L_0x004d:
                 r8.moved = r6
                 java.lang.Boolean r4 = r8.interceptedThisTouch
@@ -579,33 +581,40 @@ public final class ControlCenterPanelViewController implements ConfigurationCont
                 return r1
             L_0x00b2:
                 int r9 = r8.initialScrollY
-                if (r9 != 0) goto L_0x0129
+                if (r9 != 0) goto L_0x013a
                 boolean r9 = r8.startOnFooter
                 if (r9 != 0) goto L_0x00c6
                 float r9 = r8.initialTransRatio
                 r2 = 1065353216(0x3f800000, float:1.0)
                 int r9 = (r9 > r2 ? 1 : (r9 == r2 ? 0 : -1))
-                if (r9 >= 0) goto L_0x0129
+                if (r9 >= 0) goto L_0x013a
                 boolean r9 = r8.startOnTile
-                if (r9 == 0) goto L_0x0129
+                if (r9 == 0) goto L_0x013a
             L_0x00c6:
+                float r9 = r8.transY
+                float r9 = java.lang.Math.abs(r9)
+                com.android.systemui.controlcenter.phone.ControlCenterPanelViewController r2 = com.android.systemui.controlcenter.phone.ControlCenterPanelViewController.this
+                int r2 = r2.touchSlop
+                float r2 = (float) r2
+                int r9 = (r9 > r2 ? 1 : (r9 == r2 ? 0 : -1))
+                if (r9 <= 0) goto L_0x013a
                 r8.interceptedThisTouch = r0
                 return r0
-            L_0x00c9:
+            L_0x00da:
                 com.android.systemui.controlcenter.phone.ControlCenterPanelViewController r2 = com.android.systemui.controlcenter.phone.ControlCenterPanelViewController.this
                 com.android.systemui.controlcenter.policy.NCSwitchController r2 = r2.ncSwitchController
                 r2.onCNSwitchIntercept(r9)
                 boolean r9 = r8.moved
-                if (r9 != 0) goto L_0x0129
+                if (r9 != 0) goto L_0x013a
                 float r9 = r8.initialTouchX
                 float r2 = r8.initialTouchY
                 boolean r9 = r8.shouldCollapseByClick(r9, r2)
-                if (r9 == 0) goto L_0x0129
+                if (r9 == 0) goto L_0x013a
                 com.android.systemui.controlcenter.phone.ControlCenterPanelViewController r8 = com.android.systemui.controlcenter.phone.ControlCenterPanelViewController.this
                 com.android.systemui.controlcenter.phone.ControlCenterPanelView r8 = r8.panelView
                 r8.performCollapseByClick()
                 return r0
-            L_0x00ea:
+            L_0x00fb:
                 r8.moved = r5
                 com.android.systemui.controlcenter.phone.ControlCenterPanelViewController r0 = com.android.systemui.controlcenter.phone.ControlCenterPanelViewController.this
                 r0.calculateTransitionValues()
@@ -629,7 +638,7 @@ public final class ControlCenterPanelViewController implements ConfigurationCont
                 com.android.systemui.controlcenter.phone.ControlCenterPanelViewController r8 = com.android.systemui.controlcenter.phone.ControlCenterPanelViewController.this
                 com.android.systemui.controlcenter.policy.NCSwitchController r8 = r8.ncSwitchController
                 r8.onCNSwitchIntercept(r9)
-            L_0x0129:
+            L_0x013a:
                 return r1
             */
             throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.controlcenter.phone.ControlCenterPanelViewController.TouchHandler.onInterceptTouchEvent(android.view.MotionEvent):java.lang.Boolean");

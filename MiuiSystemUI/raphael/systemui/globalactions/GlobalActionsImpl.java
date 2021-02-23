@@ -92,7 +92,7 @@ public class GlobalActionsImpl implements GlobalActions, CommandQueue.Callbacks 
         window.addFlags(17629472);
         window.setBackgroundDrawable(scrimDrawable);
         window.setWindowAnimations(C0022R$style.Animation_ShutdownUi);
-        dialog.setContentView(17367302);
+        dialog.setContentView(17367303);
         dialog.setCancelable(false);
         int colorAttrDefaultColor = Utils.getColorAttrDefaultColor(this.mContext, C0009R$attr.wallpaperTextColor);
         ((ProgressBar) dialog.findViewById(16908301)).getIndeterminateDrawable().setTint(colorAttrDefaultColor);

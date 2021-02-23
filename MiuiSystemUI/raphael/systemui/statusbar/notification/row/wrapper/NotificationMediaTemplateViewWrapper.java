@@ -208,7 +208,7 @@ public class NotificationMediaTemplateViewWrapper extends NotificationTemplateVi
         ViewStub viewStub = (ViewStub) this.mView.findViewById(16909250);
         if (viewStub instanceof ViewStub) {
             viewStub.setLayoutInflater(LayoutInflater.from(viewStub.getContext()));
-            viewStub.setLayoutResource(17367205);
+            viewStub.setLayoutResource(17367206);
             this.mSeekBarView = viewStub.inflate();
             this.mMetricsLogger.write(newLog(1));
             SeekBar seekBar = (SeekBar) this.mSeekBarView.findViewById(16909248);

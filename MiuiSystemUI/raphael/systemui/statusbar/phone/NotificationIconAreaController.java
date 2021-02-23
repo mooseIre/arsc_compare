@@ -30,11 +30,13 @@ import com.android.systemui.statusbar.notification.NotificationWakeUpCoordinator
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow;
 import com.android.systemui.statusbar.phone.NotificationIconObserver;
+import com.miui.systemui.NotificationSettings;
+import com.miui.systemui.SettingsManager;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.function.Function;
 
-public class NotificationIconAreaController implements DarkIconDispatcher.DarkReceiver, StatusBarStateController.StateListener, NotificationWakeUpCoordinator.WakeUpListener, NotificationIconObserver.Callback {
+public class NotificationIconAreaController implements DarkIconDispatcher.DarkReceiver, StatusBarStateController.StateListener, NotificationWakeUpCoordinator.WakeUpListener, NotificationIconObserver.Callback, NotificationSettings.StyleListener {
     private boolean mAnimationsEnabled;
     private int mAodIconAppearTranslation;
     private int mAodIconTint;
@@ -111,6 +113,7 @@ public class NotificationIconAreaController implements DarkIconDispatcher.DarkRe
         NotificationIconObserver notificationIconObserver = (NotificationIconObserver) Dependency.get(NotificationIconObserver.class);
         this.mNotificationIconObserver = notificationIconObserver;
         notificationIconObserver.addCallback(this);
+        ((SettingsManager) Dependency.get(SettingsManager.class)).registerNotifStyleListener(this);
         this.mNotificationScrollLayout = this.mStatusBar.getNotificationScrollLayout();
         View inflate = from.inflate(C0017R$layout.center_icon_area, (ViewGroup) null);
         this.mCenteredIconArea = inflate;
@@ -574,5 +577,9 @@ public class NotificationIconAreaController implements DarkIconDispatcher.DarkRe
         this.mNotificationIcons.setMaxVisibleIconsOnLock(3);
         this.mNotificationIcons.setMaxDots(3);
         this.mNotificationIcons.setMaxStaticIcons(3);
+    }
+
+    public void onChanged(int i) {
+        updateNotificationIcons();
     }
 }

@@ -19,6 +19,7 @@ import com.android.systemui.statusbar.notification.policy.NotificationDynamicFps
 import com.android.systemui.statusbar.notification.policy.NotificationFilterController;
 import com.android.systemui.statusbar.policy.MiuiHeadsUpPolicy;
 import com.android.systemui.statusbar.policy.MiuiNotificationShadePolicy;
+import com.android.systemui.statusbar.policy.MiuiStatusBarConfigurationListener;
 import com.android.systemui.vendor.HeadsetPolicy;
 import com.android.systemui.vendor.OrientationPolicy;
 import com.miui.systemui.display.OLEDScreenHelper;
@@ -32,6 +33,7 @@ public class MiuiVendorServices extends SystemUI {
     MiuiHeadsUpPolicy mMiuiHeadsUpPolicy;
     MiuiNotificationShadePolicy mMiuiNotificationShadePolicy;
     MiuiRecentProxy mMiuiRecentProxy;
+    MiuiStatusBarConfigurationListener mMiuiStatusBarConfigurationListener;
     NotificationAlertController mNotifAlertController;
     NotificationCountLimitPolicy mNotifCountLimitPolicy;
     NotificationDynamicFpsController mNotifDynamicFpsController;
@@ -65,6 +67,7 @@ public class MiuiVendorServices extends SystemUI {
         this.mMiuiFullScreenGestureProxy.start();
         this.mOledScreenHelper.start();
         this.mMiuiChargeManager.start();
+        this.mMiuiStatusBarConfigurationListener.start();
         this.mNotificationEntryManager.addCollectionListener(new NotifCollectionListener(this) {
             public void onEntryBind(NotificationEntry notificationEntry, StatusBarNotification statusBarNotification) {
                 statusBarNotification.getNotification().extras.putBoolean("android.colorized", false);

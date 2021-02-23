@@ -296,13 +296,16 @@ public class MiuiClock extends TextView implements DemoMode, TunerService.Tunabl
 
     /* access modifiers changed from: package-private */
     public final void updateClock() {
-        if (this.mDemoMode) {
-            this.mCalendar.set(18, 8);
-            this.mCalendar.set(20, 16);
-        } else {
-            this.mCalendar.setTimeInMillis(System.currentTimeMillis());
+        Calendar calendar = this.mCalendar;
+        if (calendar != null) {
+            if (this.mDemoMode) {
+                calendar.set(18, 8);
+                this.mCalendar.set(20, 16);
+            } else {
+                calendar.setTimeInMillis(System.currentTimeMillis());
+            }
+            updateTime();
         }
-        updateTime();
     }
 
     public void onTuningChanged(String str, String str2) {
@@ -378,37 +381,39 @@ public class MiuiClock extends TextView implements DemoMode, TunerService.Tunabl
     private final void updateTime() {
         int i;
         int i2;
-        Context context = getContext();
-        int i3 = DateFormat.is24HourFormat(context, this.mCurrentUserId) ? 32 : 16;
-        int i4 = this.mClockMode;
-        if (i4 == 2) {
-            if (i3 == 16) {
-                i = C0021R$string.status_bar_clock_date_time_format_12;
+        if (this.mCalendar != null) {
+            Context context = getContext();
+            int i3 = DateFormat.is24HourFormat(context, this.mCurrentUserId) ? 32 : 16;
+            int i4 = this.mClockMode;
+            if (i4 == 2) {
+                if (i3 == 16) {
+                    i = C0021R$string.status_bar_clock_date_time_format_12;
+                } else {
+                    i = C0021R$string.status_bar_clock_date_time_format;
+                }
+            } else if (i4 == 1) {
+                if (i3 == 16) {
+                    i = C0021R$string.status_bar_clock_date_format_12;
+                } else {
+                    i = C0021R$string.status_bar_clock_date_format;
+                }
+            } else if (i4 == 3) {
+                if (i3 == 16) {
+                    i2 = C0021R$string.status_bar_clock_date_weekday_format_12;
+                } else {
+                    i2 = C0021R$string.status_bar_clock_date_weekday_format;
+                }
+                setContentDescription(this.mCalendar.format(context.getString(i3 == 16 ? C0021R$string.status_bar_clock_date_format_12 : C0021R$string.status_bar_clock_date_format)));
+                i = i2;
+            } else if (this.mAmPmStyle == 0) {
+                setText(DateUtils.formatDateTime(this.mCalendar.getTimeInMillis(), i3 | 12));
+                return;
             } else {
-                i = C0021R$string.status_bar_clock_date_time_format;
+                setText(DateUtils.formatDateTime(this.mCalendar.getTimeInMillis(), i3 | 12 | 64));
+                return;
             }
-        } else if (i4 == 1) {
-            if (i3 == 16) {
-                i = C0021R$string.status_bar_clock_date_format_12;
-            } else {
-                i = C0021R$string.status_bar_clock_date_format;
-            }
-        } else if (i4 == 3) {
-            if (i3 == 16) {
-                i2 = C0021R$string.status_bar_clock_date_weekday_format_12;
-            } else {
-                i2 = C0021R$string.status_bar_clock_date_weekday_format;
-            }
-            setContentDescription(this.mCalendar.format(context.getString(i3 == 16 ? C0021R$string.status_bar_clock_date_format_12 : C0021R$string.status_bar_clock_date_format)));
-            i = i2;
-        } else if (this.mAmPmStyle == 0) {
-            setText(DateUtils.formatDateTime(this.mCalendar.getTimeInMillis(), i3 | 12));
-            return;
-        } else {
-            setText(DateUtils.formatDateTime(this.mCalendar.getTimeInMillis(), i3 | 12 | 64));
-            return;
+            setText(this.mCalendar.format(context.getString(i)));
         }
-        setText(this.mCalendar.format(context.getString(i)));
     }
 
     public void dispatchDemoCommand(String str, Bundle bundle) {
@@ -421,13 +426,16 @@ public class MiuiClock extends TextView implements DemoMode, TunerService.Tunabl
         } else if (this.mDemoMode && str.equals("clock")) {
             String string = bundle.getString("millis");
             String string2 = bundle.getString("hhmm");
-            if (string != null) {
-                this.mCalendar.setTimeInMillis(Long.parseLong(string));
-            } else if (string2 != null && string2.length() == 4) {
-                int parseInt = Integer.parseInt(string2.substring(0, 2));
-                int parseInt2 = Integer.parseInt(string2.substring(2));
-                this.mCalendar.set(18, parseInt);
-                this.mCalendar.set(20, parseInt2);
+            Calendar calendar = this.mCalendar;
+            if (calendar != null) {
+                if (string != null) {
+                    calendar.setTimeInMillis(Long.parseLong(string));
+                } else if (string2 != null && string2.length() == 4) {
+                    int parseInt = Integer.parseInt(string2.substring(0, 2));
+                    int parseInt2 = Integer.parseInt(string2.substring(2));
+                    this.mCalendar.set(18, parseInt);
+                    this.mCalendar.set(20, parseInt2);
+                }
             }
             updateTime();
         }

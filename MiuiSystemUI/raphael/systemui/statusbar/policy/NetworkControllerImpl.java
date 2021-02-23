@@ -87,7 +87,7 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
     private boolean mInetCondition;
     private boolean mIsEmergency;
     @VisibleForTesting
-    ServiceState mLastServiceState;
+    ServiceState[] mLastServiceState;
     @VisibleForTesting
     boolean mListening;
     private Locale mLocale;
@@ -190,6 +190,7 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
         this.mVolte = new boolean[activeModemCount];
         this.mVowifi = new boolean[activeModemCount];
         this.mSpeechHd = new boolean[activeModemCount];
+        this.mLastServiceState = new ServiceState[activeModemCount];
         this.mWifiManager = wifiManager;
         this.mLocale = this.mContext.getResources().getConfiguration().locale;
         this.mAccessPoints = accessPointControllerImpl;
@@ -338,28 +339,12 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
                 MiuiWifiSignalController.this.fetchInitialState();
             }
         });
-        this.mReceiverHandler.post(new Runnable() {
-            public final void run() {
-                NetworkControllerImpl.this.lambda$registerListeners$1$NetworkControllerImpl();
-            }
-        });
         updateMobileControllers();
         this.mReceiverHandler.post(new Runnable() {
             public final void run() {
                 NetworkControllerImpl.this.recalculateEmergency();
             }
         });
-    }
-
-    /* access modifiers changed from: private */
-    /* renamed from: lambda$registerListeners$1 */
-    public /* synthetic */ void lambda$registerListeners$1$NetworkControllerImpl() {
-        if (this.mLastServiceState == null) {
-            this.mLastServiceState = this.mPhone.getServiceState();
-            if (this.mMobileSignalControllers.size() == 0) {
-                recalculateEmergency();
-            }
-        }
     }
 
     private void unregisterListeners() {
@@ -437,16 +422,25 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
     public boolean isEmergencyOnly() {
         if (this.mMobileSignalControllers.size() == 0) {
             this.mEmergencySource = 0;
-            ServiceState serviceState = this.mLastServiceState;
-            if (serviceState == null || !serviceState.isEmergencyOnly()) {
-                return false;
+            if (this.mLastServiceState != null) {
+                int i = 0;
+                while (true) {
+                    ServiceState[] serviceStateArr = this.mLastServiceState;
+                    if (i >= serviceStateArr.length) {
+                        break;
+                    } else if (serviceStateArr[i] != null && serviceStateArr[i].isEmergencyOnly()) {
+                        return true;
+                    } else {
+                        i++;
+                    }
+                }
             }
-            return true;
+            return false;
         }
         int defaultVoiceSubId = this.mSubDefaults.getDefaultVoiceSubId();
         if (!SubscriptionManager.isValidSubscriptionId(defaultVoiceSubId)) {
-            for (int i = 0; i < this.mMobileSignalControllers.size(); i++) {
-                MobileSignalController valueAt = this.mMobileSignalControllers.valueAt(i);
+            for (int i2 = 0; i2 < this.mMobileSignalControllers.size(); i2++) {
+                MobileSignalController valueAt = this.mMobileSignalControllers.valueAt(i2);
                 if (!((MobileSignalController.MobileState) valueAt.getState()).isEmergency) {
                     this.mEmergencySource = valueAt.mSubscriptionInfo.getSubscriptionId() + 100;
                     if (DEBUG) {
@@ -532,8 +526,8 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
             android.util.Log.d(r0, r5)
             java.lang.String r5 = r6.getAction()
             int r0 = r5.hashCode()
-            r1 = -1
-            r2 = 0
+            r1 = 0
+            r2 = -1
             switch(r0) {
                 case -2104353374: goto L_0x00a6;
                 case -2064771159: goto L_0x009b;
@@ -592,7 +586,7 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
             java.lang.String r0 = "android.net.conn.CONNECTIVITY_CHANGE"
             boolean r5 = r5.equals(r0)
             if (r5 == 0) goto L_0x00b0
-            r5 = r2
+            r5 = r1
             goto L_0x00b1
         L_0x0070:
             java.lang.String r0 = "android.intent.action.ACTION_DEFAULT_VOICE_SUBSCRIPTION_CHANGED"
@@ -631,40 +625,40 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
             r5 = 6
             goto L_0x00b1
         L_0x00b0:
-            r5 = r1
+            r5 = r2
         L_0x00b1:
             java.lang.String r0 = "phone"
             java.lang.String r3 = "android.telephony.extra.SUBSCRIPTION_INDEX"
             switch(r5) {
-                case 0: goto L_0x01c6;
-                case 1: goto L_0x01c6;
-                case 2: goto L_0x01bf;
-                case 3: goto L_0x01bb;
-                case 4: goto L_0x0192;
-                case 5: goto L_0x0185;
-                case 6: goto L_0x016f;
+                case 0: goto L_0x01d2;
+                case 1: goto L_0x01d2;
+                case 2: goto L_0x01cb;
+                case 3: goto L_0x01c7;
+                case 4: goto L_0x019e;
+                case 5: goto L_0x0191;
+                case 6: goto L_0x0170;
                 case 7: goto L_0x015c;
                 case 8: goto L_0x0110;
                 case 9: goto L_0x00d7;
                 default: goto L_0x00b8;
             }
         L_0x00b8:
-            int r5 = r6.getIntExtra(r3, r1)
+            int r5 = r6.getIntExtra(r3, r2)
             boolean r0 = android.telephony.SubscriptionManager.isValidSubscriptionId(r5)
-            if (r0 == 0) goto L_0x01ce
+            if (r0 == 0) goto L_0x01da
             android.util.SparseArray<com.android.systemui.statusbar.policy.MobileSignalController> r0 = r4.mMobileSignalControllers
             int r0 = r0.indexOfKey(r5)
-            if (r0 < 0) goto L_0x01ca
+            if (r0 < 0) goto L_0x01d6
             android.util.SparseArray<com.android.systemui.statusbar.policy.MobileSignalController> r4 = r4.mMobileSignalControllers
             java.lang.Object r4 = r4.get(r5)
             com.android.systemui.statusbar.policy.MobileSignalController r4 = (com.android.systemui.statusbar.policy.MobileSignalController) r4
             r4.handleBroadcast(r6)
-            goto L_0x01d3
+            goto L_0x01df
         L_0x00d7:
-            int r5 = r6.getIntExtra(r0, r1)
-            int r0 = r6.getIntExtra(r3, r1)
-            java.lang.String r1 = "is_hd"
-            boolean r6 = r6.getBooleanExtra(r1, r2)
+            int r5 = r6.getIntExtra(r0, r2)
+            int r0 = r6.getIntExtra(r3, r2)
+            java.lang.String r2 = "is_hd"
+            boolean r6 = r6.getBooleanExtra(r2, r1)
             if (r5 < 0) goto L_0x00f0
             boolean[] r1 = r4.mVolte
             int r1 = r1.length
@@ -673,7 +667,7 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
             r1[r5] = r6
         L_0x00f0:
             boolean r5 = android.telephony.SubscriptionManager.isValidSubscriptionId(r0)
-            if (r5 == 0) goto L_0x01d3
+            if (r5 == 0) goto L_0x01df
             android.util.SparseArray<com.android.systemui.statusbar.policy.MobileSignalController> r5 = r4.mMobileSignalControllers
             int r5 = r5.indexOfKey(r0)
             if (r5 < 0) goto L_0x010b
@@ -681,42 +675,42 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
             java.lang.Object r4 = r4.get(r0)
             com.android.systemui.statusbar.policy.MobileSignalController r4 = (com.android.systemui.statusbar.policy.MobileSignalController) r4
             r4.setSpeechHd(r6)
-            goto L_0x01d3
+            goto L_0x01df
         L_0x010b:
             r4.updateMobileControllers()
-            goto L_0x01d3
+            goto L_0x01df
         L_0x0110:
-            int r5 = r6.getIntExtra(r0, r1)
-            int r0 = r6.getIntExtra(r3, r1)
-            java.lang.String r1 = "state"
-            boolean r1 = r6.getBooleanExtra(r1, r2)
+            int r5 = r6.getIntExtra(r0, r2)
+            int r0 = r6.getIntExtra(r3, r2)
+            java.lang.String r2 = "state"
+            boolean r2 = r6.getBooleanExtra(r2, r1)
             java.lang.String r3 = "wfc_state"
-            boolean r6 = r6.getBooleanExtra(r3, r2)
+            boolean r6 = r6.getBooleanExtra(r3, r1)
             if (r5 < 0) goto L_0x0131
-            boolean[] r2 = r4.mVolte
-            int r3 = r2.length
+            boolean[] r1 = r4.mVolte
+            int r3 = r1.length
             if (r5 >= r3) goto L_0x0131
-            r2[r5] = r1
-            boolean[] r2 = r4.mVowifi
-            r2[r5] = r6
+            r1[r5] = r2
+            boolean[] r1 = r4.mVowifi
+            r1[r5] = r6
         L_0x0131:
             boolean r5 = android.telephony.SubscriptionManager.isValidSubscriptionId(r0)
-            if (r5 == 0) goto L_0x01d3
+            if (r5 == 0) goto L_0x01df
             android.util.SparseArray<com.android.systemui.statusbar.policy.MobileSignalController> r5 = r4.mMobileSignalControllers
             int r5 = r5.indexOfKey(r0)
             if (r5 < 0) goto L_0x0157
             android.util.SparseArray<com.android.systemui.statusbar.policy.MobileSignalController> r5 = r4.mMobileSignalControllers
             java.lang.Object r5 = r5.get(r0)
             com.android.systemui.statusbar.policy.MobileSignalController r5 = (com.android.systemui.statusbar.policy.MobileSignalController) r5
-            r5.setVolte(r1)
+            r5.setVolte(r2)
             android.util.SparseArray<com.android.systemui.statusbar.policy.MobileSignalController> r4 = r4.mMobileSignalControllers
             java.lang.Object r4 = r4.get(r0)
             com.android.systemui.statusbar.policy.MobileSignalController r4 = (com.android.systemui.statusbar.policy.MobileSignalController) r4
             r4.setVowifi(r6)
-            goto L_0x01d3
+            goto L_0x01df
         L_0x0157:
             r4.updateMobileControllers()
-            goto L_0x01d3
+            goto L_0x01df
         L_0x015c:
             android.content.Context r5 = r4.mContext
             com.android.systemui.statusbar.policy.NetworkControllerImpl$Config r5 = com.android.systemui.statusbar.policy.NetworkControllerImpl.Config.readConfig(r5)
@@ -725,35 +719,41 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
             com.android.systemui.statusbar.policy.-$$Lambda$ybM43k5QVX_SxWbQACu1XwL3Knk r6 = new com.android.systemui.statusbar.policy.-$$Lambda$ybM43k5QVX_SxWbQACu1XwL3Knk
             r6.<init>()
             r5.post(r6)
-            goto L_0x01d3
-        L_0x016f:
-            android.os.Bundle r5 = r6.getExtras()
-            android.telephony.ServiceState r5 = android.telephony.ServiceState.newFromBundle(r5)
-            r4.mLastServiceState = r5
+            goto L_0x01df
+        L_0x0170:
+            java.lang.String r5 = "android.telephony.extra.SLOT_INDEX"
+            int r5 = r6.getIntExtra(r5, r2)
+            if (r5 != r2) goto L_0x0179
+            goto L_0x01df
+        L_0x0179:
+            android.telephony.ServiceState[] r0 = r4.mLastServiceState
+            android.os.Bundle r6 = r6.getExtras()
+            android.telephony.ServiceState r6 = android.telephony.ServiceState.newFromBundle(r6)
+            r0[r5] = r6
             android.util.SparseArray<com.android.systemui.statusbar.policy.MobileSignalController> r5 = r4.mMobileSignalControllers
             int r5 = r5.size()
-            if (r5 != 0) goto L_0x01d3
+            if (r5 != 0) goto L_0x01df
             r4.recalculateEmergency()
-            goto L_0x01d3
-        L_0x0185:
+            goto L_0x01df
+        L_0x0191:
             java.lang.String r5 = "rebroadcastOnUnlock"
-            boolean r5 = r6.getBooleanExtra(r5, r2)
-            if (r5 == 0) goto L_0x018e
-            goto L_0x01d3
-        L_0x018e:
+            boolean r5 = r6.getBooleanExtra(r5, r1)
+            if (r5 == 0) goto L_0x019a
+            goto L_0x01df
+        L_0x019a:
             r4.updateMobileControllers()
-            goto L_0x01d3
-        L_0x0192:
+            goto L_0x01df
+        L_0x019e:
             android.util.SparseArray<com.android.systemui.statusbar.policy.MobileSignalController> r5 = r4.mMobileSignalControllers
             int r5 = r5.size()
-            if (r2 >= r5) goto L_0x01a8
+            if (r1 >= r5) goto L_0x01b4
             android.util.SparseArray<com.android.systemui.statusbar.policy.MobileSignalController> r5 = r4.mMobileSignalControllers
-            java.lang.Object r5 = r5.valueAt(r2)
+            java.lang.Object r5 = r5.valueAt(r1)
             com.android.systemui.statusbar.policy.MobileSignalController r5 = (com.android.systemui.statusbar.policy.MobileSignalController) r5
             r5.handleBroadcast(r6)
-            int r2 = r2 + 1
-            goto L_0x0192
-        L_0x01a8:
+            int r1 = r1 + 1
+            goto L_0x019e
+        L_0x01b4:
             android.content.Context r5 = r4.mContext
             com.android.systemui.statusbar.policy.NetworkControllerImpl$Config r5 = com.android.systemui.statusbar.policy.NetworkControllerImpl.Config.readConfig(r5)
             r4.mConfig = r5
@@ -761,24 +761,24 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
             com.android.systemui.statusbar.policy.-$$Lambda$ybM43k5QVX_SxWbQACu1XwL3Knk r6 = new com.android.systemui.statusbar.policy.-$$Lambda$ybM43k5QVX_SxWbQACu1XwL3Knk
             r6.<init>()
             r5.post(r6)
-            goto L_0x01d3
-        L_0x01bb:
+            goto L_0x01df
+        L_0x01c7:
             r4.recalculateEmergency()
-            goto L_0x01d3
-        L_0x01bf:
+            goto L_0x01df
+        L_0x01cb:
             r4.refreshLocale()
-            r4.updateAirplaneMode(r2)
-            goto L_0x01d3
-        L_0x01c6:
+            r4.updateAirplaneMode(r1)
+            goto L_0x01df
+        L_0x01d2:
             r4.updateConnectivity()
-            goto L_0x01d3
-        L_0x01ca:
+            goto L_0x01df
+        L_0x01d6:
             r4.updateMobileControllers()
-            goto L_0x01d3
-        L_0x01ce:
+            goto L_0x01df
+        L_0x01da:
             com.android.systemui.statusbar.policy.MiuiWifiSignalController r4 = r4.mWifiSignalController
             r4.handleBroadcast(r6)
-        L_0x01d3:
+        L_0x01df:
             return
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.policy.NetworkControllerImpl.onReceive(android.content.Context, android.content.Intent):void");
@@ -959,14 +959,14 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
             }
 
             public final void run() {
-                NetworkControllerImpl.this.lambda$setUserSetupComplete$2$NetworkControllerImpl(this.f$1);
+                NetworkControllerImpl.this.lambda$setUserSetupComplete$1$NetworkControllerImpl(this.f$1);
             }
         });
     }
 
     /* access modifiers changed from: private */
     /* renamed from: handleSetUserSetupComplete */
-    public void lambda$setUserSetupComplete$2(boolean z) {
+    public void lambda$setUserSetupComplete$1(boolean z) {
         this.mUserSetup = z;
         for (int i = 0; i < this.mMobileSignalControllers.size(); i++) {
             this.mMobileSignalControllers.valueAt(i).setUserSetupComplete(this.mUserSetup);
@@ -1081,14 +1081,28 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
         printWriter.print("  mEmergencySource=");
         printWriter.println(emergencyToString(this.mEmergencySource));
         printWriter.println("  - config ------");
-        for (int i = 0; i < this.mMobileSignalControllers.size(); i++) {
-            this.mMobileSignalControllers.valueAt(i).dump(printWriter);
+        int i = 0;
+        for (int i2 = 0; i2 < this.mMobileSignalControllers.size(); i2++) {
+            this.mMobileSignalControllers.valueAt(i2).dump(printWriter);
         }
         this.mWifiSignalController.dump(printWriter);
         this.mEthernetSignalController.dump(printWriter);
         this.mAccessPoints.dump(printWriter);
         if (Dependency.get(cls) != null) {
             ((FiveGControllerImpl) Dependency.get(cls)).dump(printWriter);
+        }
+        if (this.mLastServiceState != null) {
+            while (true) {
+                ServiceState[] serviceStateArr = this.mLastServiceState;
+                if (i < serviceStateArr.length) {
+                    if (serviceStateArr[i] != null) {
+                        printWriter.println("  mLastServiceState[" + i + "]: " + this.mLastServiceState[i].toString());
+                    }
+                    i++;
+                } else {
+                    return;
+                }
+            }
         }
     }
 

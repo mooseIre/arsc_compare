@@ -25,6 +25,13 @@ public class AutoBrightnessView extends FrameLayout {
         super(context, attributeSet);
     }
 
+    public void onUserSwitched(int i) {
+        AutoBrightnessTile autoBrightnessTile = this.mAutoBrightnessTile;
+        if (autoBrightnessTile != null) {
+            autoBrightnessTile.userSwitch(i);
+        }
+    }
+
     public void setHost(QSTileHost qSTileHost) {
         this.mHost = qSTileHost;
         AutoBrightnessTile autoBrightnessTile = (AutoBrightnessTile) qSTileHost.createTile("autobrightness");

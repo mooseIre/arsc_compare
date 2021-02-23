@@ -27,6 +27,7 @@ import com.android.systemui.statusbar.notification.logging.NotificationLogger;
 import com.android.systemui.statusbar.notification.policy.KeyguardNotificationController;
 import com.android.systemui.statusbar.notification.policy.NotificationBadgeController;
 import com.android.systemui.statusbar.notification.policy.NotificationSensitiveController;
+import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow;
 import com.android.systemui.statusbar.notification.row.NotificationRowContentBinder;
 import com.android.systemui.statusbar.phone.NotificationGroupManager;
 import com.android.systemui.util.Assert;
@@ -141,8 +142,7 @@ public class NotificationEntryManager implements CommonNotifCollection, Dumpable
             public void onAsyncInflationFinished(NotificationEntry notificationEntry) {
                 NotificationEntryManager.this.mPendingNotifications.remove(notificationEntry.getKey());
                 if (!notificationEntry.isRowRemoved()) {
-                    NotificationEntry activeNotificationUnfiltered = NotificationEntryManager.this.getActiveNotificationUnfiltered(notificationEntry.getKey());
-                    boolean z = activeNotificationUnfiltered == null;
+                    boolean z = NotificationEntryManager.this.getActiveNotificationUnfiltered(notificationEntry.getKey()) == null;
                     NotificationEntryManager.this.mLogger.logNotifInflated(notificationEntry.getKey(), z);
                     if (z) {
                         for (NotificationEntryListener onEntryInflated : NotificationEntryManager.this.mNotificationEntryListeners) {
@@ -159,7 +159,9 @@ public class NotificationEntryManager implements CommonNotifCollection, Dumpable
                         }
                     }
                     ((KeyguardNotificationController) Dependency.get(KeyguardNotificationController.class)).addOrUpdate(notificationEntry, z);
-                    ((NotificationBadgeController) Dependency.get(NotificationBadgeController.class)).updateAppBadgeNum(notificationEntry.getSbn(), z ? null : activeNotificationUnfiltered.getSbn());
+                    if (notificationEntry.needUpdateBadgeNum || z) {
+                        ((NotificationBadgeController) Dependency.get(NotificationBadgeController.class)).updateAppBadgeNum(notificationEntry.getSbn());
+                    }
                 }
             }
         };
@@ -528,6 +530,8 @@ public class NotificationEntryManager implements CommonNotifCollection, Dumpable
             ExpandedNotification sbn = activeNotificationUnfiltered.getSbn();
             activeNotificationUnfiltered.setSbn(statusBarNotification);
             activeNotificationUnfiltered.hideSensitiveByAppLock = ((NotificationSensitiveController) Dependency.get(NotificationSensitiveController.class)).showSensitiveByAppLock(activeNotificationUnfiltered);
+            activeNotificationUnfiltered.setModalRow((ExpandableNotificationRow) null);
+            activeNotificationUnfiltered.needUpdateBadgeNum = ((NotificationBadgeController) Dependency.get(NotificationBadgeController.class)).needRestatBadgeNum(activeNotificationUnfiltered.getSbn(), sbn);
             for (NotifCollectionListener onEntryBind : this.mNotifCollectionListeners) {
                 onEntryBind.onEntryBind(activeNotificationUnfiltered, statusBarNotification);
             }

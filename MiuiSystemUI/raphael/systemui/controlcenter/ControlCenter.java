@@ -184,6 +184,11 @@ public class ControlCenter extends SystemUI implements ControlPanelController.Us
         return (this.mDisabled1 & 65536) == 0 && (this.mDisabled2 & 4) == 0 && !ONLY_CORE_APPS;
     }
 
+    public void onUserSwitched(int i) {
+        this.mExpandInfoController.onUserSwitched();
+        this.mControlPanelWindowView.onUserSwitched(i);
+    }
+
     private void reCreateWindow() {
         if (this.mUseControlCenter) {
             if (!isCollapsed()) {

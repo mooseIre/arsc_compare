@@ -675,6 +675,7 @@ public final class R {
         public static final int lockscreen_num_pad_klondike;
         public static final int lockscreen_sc_slide_not_open_camera;
         public static final int miui_config_hideKeyguardPresentationDisplayIds;
+        public static final int miui_config_quickSettingsAutoAdd;
         public static final int miui_notification_aggregate_category;
         public static final int nav_bar_button_values;
         public static final int nav_bar_buttons;
@@ -1934,6 +1935,7 @@ public final class R {
         public static final int config_hspa_data_distinguishable;
         public static final int config_keyguardShowCameraAffordance;
         public static final int config_keyguardShowLeftAffordance;
+        public static final int config_keyguard_clock_notification_center;
         public static final int config_lockscreenAntiFalsingClassifierEnabled;
         public static final int config_materialPreferenceIconSpaceReserved;
         public static final int config_navigation_bar_enable_auto_dim_no_visible_wallpaper;
@@ -2403,6 +2405,7 @@ public final class R {
         public static final int miui_default_lock_screen_unlock_hint_text_color;
         public static final int miui_face_input_button_message_color;
         public static final int miui_ic_bg_active_color;
+        public static final int miui_ic_bg_inactive_color;
         public static final int miui_keyguard_ble_unlock_text_color;
         public static final int miui_keyguard_ble_unlock_view_background;
         public static final int miui_keyguard_error_text_color;
@@ -2410,6 +2413,7 @@ public final class R {
         public static final int miui_keyguard_password_view_password_entry_bg_stroke_color;
         public static final int miui_keyguard_pin_num_pad_key_bg_color;
         public static final int miui_keyguard_view_eca_text_color;
+        public static final int miui_notification_modal_menu_ic_color;
         public static final int miui_notification_modal_menu_text_color;
         public static final int miui_numeric_keyboard_emergency_button_normal_bg;
         public static final int miui_numeric_keyboard_emergency_button_pressed_bg;
@@ -2584,6 +2588,7 @@ public final class R {
         public static final int qs_big_tile_expand_indicator_dark_color;
         public static final int qs_brightness_background_color;
         public static final int qs_brightness_progress_color;
+        public static final int qs_cellular_detail_item_disable_icon_color;
         public static final int qs_control_big_tile_0_bg;
         public static final int qs_control_big_tile_0_bg_inactive;
         public static final int qs_control_big_tile_0_bg_unavailable;
@@ -4874,6 +4879,7 @@ public final class R {
         public static final int wireless_charging_dots_radius_end;
         public static final int wireless_charging_dots_radius_start;
         public static final int z_distance_between_notifications;
+        public static final int zen_mode_bg_radius;
         public static final int zen_mode_condition_detail_bottom_padding;
         public static final int zen_mode_condition_detail_button_padding;
         public static final int zen_mode_condition_detail_item_interline_spacing;
@@ -4884,7 +4890,7 @@ public final class R {
         public static final int zen_mode_icon_start_margin;
         public static final int zen_mode_icon_top_margin;
         public static final int zen_mode_quit_size;
-        public static final int zen_mode_quit_top_margin;
+        public static final int zen_mode_quit_start_margin;
         public static final int zen_mode_title_end_margin;
         public static final int zen_mode_title_size;
         public static final int zen_mode_title_start_margin;
@@ -6467,6 +6473,7 @@ public final class R {
         public static final int ic_bt_keyboard_hid_bonded;
         public static final int ic_bt_laptop;
         public static final int ic_bt_laptop_bonded;
+        public static final int ic_bt_le_audio;
         public static final int ic_bt_misc_hid;
         public static final int ic_bt_misc_hid_bonded;
         public static final int ic_bt_network_pan;
@@ -7007,7 +7014,9 @@ public final class R {
         public static final int ic_qs_signal_in;
         public static final int ic_qs_signal_out;
         public static final int ic_qs_sim_card1;
+        public static final int ic_qs_sim_card1_disable;
         public static final int ic_qs_sim_card2;
+        public static final int ic_qs_sim_card2_disable;
         public static final int ic_qs_sync_off;
         public static final int ic_qs_sync_on;
         public static final int ic_qs_vibrate_off;
@@ -7867,6 +7876,7 @@ public final class R {
         public static final int work_challenge_background;
         public static final int yidian_icon;
         public static final int zen_introduction_message_background;
+        public static final int zen_mode_bg;
     }
 
     /* renamed from: com.android.systemui.R$fraction */
@@ -9618,6 +9628,8 @@ public final class R {
         public static final int config_vibration_duration;
         public static final int controls_max_columns;
         public static final int controls_max_columns_adjust_below_width_dp;
+        public static final int customized_status_bar_volte_drawable_type;
+        public static final int customized_status_bar_vowifi_drawable_type;
         public static final int days_to_show_color_inversion_tile;
         public static final int days_to_show_hotspot_tile;
         public static final int default_keyguard_clock_position;
@@ -10916,6 +10928,8 @@ public final class R {
         public static final int bluetooth_hearingaid_right_pairing_message;
         public static final int bluetooth_hid_profile_summary_connected;
         public static final int bluetooth_hid_profile_summary_use_for;
+        public static final int bluetooth_le_audio_profile_summary_connected;
+        public static final int bluetooth_le_audio_profile_summary_use_for;
         public static final int bluetooth_map_profile_summary_connected;
         public static final int bluetooth_map_profile_summary_use_for;
         public static final int bluetooth_opp_profile_summary_connected;
@@ -10941,6 +10955,7 @@ public final class R {
         public static final int bluetooth_profile_headset;
         public static final int bluetooth_profile_hearing_aid;
         public static final int bluetooth_profile_hid;
+        public static final int bluetooth_profile_le_audio;
         public static final int bluetooth_profile_map;
         public static final int bluetooth_profile_opp;
         public static final int bluetooth_profile_pan;
@@ -12146,6 +12161,7 @@ public final class R {
         public static final int quick_settings_screenshot_label;
         public static final int quick_settings_secondary_label_until;
         public static final int quick_settings_settings_label;
+        public static final int quick_settings_sim_disabled;
         public static final int quick_settings_sync_label;
         public static final int quick_settings_tethering_label;
         public static final int quick_settings_tiles;

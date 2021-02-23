@@ -280,10 +280,12 @@ public class StatusBarNotificationPresenter implements NotificationPresenter, Co
     private void updateNotificationOnUiModeChanged() {
         List<NotificationEntry> activeNotificationsForCurrentUser = this.mEntryManager.getActiveNotificationsForCurrentUser();
         for (int i = 0; i < activeNotificationsForCurrentUser.size(); i++) {
-            ExpandableNotificationRow row = activeNotificationsForCurrentUser.get(i).getRow();
+            NotificationEntry notificationEntry = activeNotificationsForCurrentUser.get(i);
+            ExpandableNotificationRow row = notificationEntry.getRow();
             if (row != null) {
                 row.onUiModeChanged();
             }
+            notificationEntry.setModalRow((ExpandableNotificationRow) null);
         }
     }
 

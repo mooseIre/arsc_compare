@@ -1736,7 +1736,7 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
         }
 
         public View create(Context context, View view, ViewGroup viewGroup, LayoutInflater layoutInflater) {
-            View inflate = layoutInflater.inflate(17367169, viewGroup, false);
+            View inflate = layoutInflater.inflate(17367170, viewGroup, false);
             int ringerMode = this.mAudioManager.getRingerMode();
             ringerModeToIndex(ringerMode);
             int i = 0;

@@ -22,6 +22,7 @@ import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.controlcenter.ControlCenter;
 import com.android.systemui.controlcenter.phone.widget.CornerVideoView;
 import com.android.systemui.keyguard.KeyguardViewMediator;
+import com.android.systemui.settings.CurrentUserTracker;
 import com.android.systemui.statusbar.phone.StatusBar;
 import com.android.systemui.statusbar.policy.CallbackController;
 import com.miui.systemui.SettingsObserver;
@@ -34,7 +35,9 @@ import miui.app.AlertDialog;
 public class ControlPanelController implements CallbackController<UseControlPanelChangeListener>, SettingsObserver.Callback {
     private BroadcastDispatcher mBroadcastDispatcher;
     private Context mContext;
-    private ControlCenter mControlCenter;
+    /* access modifiers changed from: private */
+    public ControlCenter mControlCenter;
+    private CurrentUserTracker mCurrentUserTracker;
     private AlertDialog mDialog;
     private boolean mExpandableInKeyguard;
     private Handler mHandler = new H();
@@ -82,13 +85,15 @@ public class ControlPanelController implements CallbackController<UseControlPane
             }
         }
     };
-    private SettingsObserver mSettingsObserver;
+    /* access modifiers changed from: private */
+    public SettingsObserver mSettingsObserver;
     /* access modifiers changed from: private */
     public StatusBar mStatusBar;
     private boolean mSuperPowerModeOn;
     /* access modifiers changed from: private */
     public boolean mUseControlPanel;
-    private int mUseControlPanelSettingDefault;
+    /* access modifiers changed from: private */
+    public int mUseControlPanelSettingDefault;
 
     public interface UseControlPanelChangeListener {
         void onUseControlPanelChange(boolean z);
@@ -102,6 +107,17 @@ public class ControlPanelController implements CallbackController<UseControlPane
         this.mBroadcastDispatcher = broadcastDispatcher;
         this.mSettingsObserver = settingsObserver;
         this.mNcSwitchGuideShown = Settings.System.getIntForUser(this.mContext.getContentResolver(), "nc_switch_guide_shown", 0, 0) != 0;
+        this.mCurrentUserTracker = new CurrentUserTracker(this.mBroadcastDispatcher) {
+            public void onUserSwitched(int i) {
+                ControlPanelController controlPanelController = ControlPanelController.this;
+                controlPanelController.onContentChanged("use_control_panel", controlPanelController.mSettingsObserver.getValue("use_control_panel", 0, String.valueOf(ControlPanelController.this.mUseControlPanelSettingDefault)));
+                ControlPanelController controlPanelController2 = ControlPanelController.this;
+                controlPanelController2.onContentChanged("expandable_under_lock_screen", controlPanelController2.mSettingsObserver.getValue("expandable_under_lock_screen", 0, "1"));
+                if (ControlPanelController.this.mUseControlPanel && ControlPanelController.this.mControlCenter != null) {
+                    ControlPanelController.this.mControlCenter.onUserSwitched(i);
+                }
+            }
+        };
     }
 
     public void setControlCenter(ControlCenter controlCenter) {
@@ -165,6 +181,7 @@ public class ControlPanelController implements CallbackController<UseControlPane
     }
 
     private void register() {
+        this.mCurrentUserTracker.startTracking();
         this.mSettingsObserver.addCallbackForSingleUser(this, 0, "use_control_panel");
         this.mSettingsObserver.addCallback(this, "expandable_under_lock_screen");
         IntentFilter intentFilter = new IntentFilter();
@@ -177,6 +194,7 @@ public class ControlPanelController implements CallbackController<UseControlPane
     }
 
     private void unRegister() {
+        this.mCurrentUserTracker.stopTracking();
         this.mSettingsObserver.removeCallback(this);
         this.mBroadcastDispatcher.unregisterReceiver(this.mRemoteOperationReceiver);
         this.mBroadcastDispatcher.unregisterReceiver(this.mScreenOffReceiver);

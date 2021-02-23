@@ -12,6 +12,7 @@ import android.util.Log;
 import com.android.systemui.Dependency;
 import com.android.systemui.SystemUIApplication;
 import com.android.systemui.broadcast.BroadcastDispatcher;
+import com.android.systemui.controlcenter.policy.SuperSaveModeController;
 import com.android.systemui.media.MediaDataManagerKt;
 import com.android.systemui.plugins.NotificationListenerController;
 import com.android.systemui.statusbar.NotificationListener;
@@ -82,6 +83,9 @@ public class NotificationFilterController {
     }
 
     public static boolean shouldFilterOut(NotificationEntry notificationEntry) {
+        if (((SuperSaveModeController) Dependency.get(SuperSaveModeController.class)).isActive()) {
+            return true;
+        }
         if (((UsbNotificationController) Dependency.get(UsbNotificationController.class)).needDisableUsbNotification(notificationEntry.getSbn())) {
             if (DEBUG) {
                 Log.d("NotificationFilterController", "filter out usb notification.");

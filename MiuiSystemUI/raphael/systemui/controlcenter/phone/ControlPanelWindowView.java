@@ -258,6 +258,10 @@ public class ControlPanelWindowView extends FrameLayout {
         this.mControlCenter = controlCenter;
     }
 
+    public void onUserSwitched(int i) {
+        this.mControlCenterPanel.onUserSwitched(i);
+    }
+
     private void verifyState() {
         if (this.mContent.getHeight() == 0) {
             this.mExpandState = 0;
@@ -366,19 +370,26 @@ public class ControlPanelWindowView extends FrameLayout {
     }
 
     /* access modifiers changed from: private */
-    public void handleSwitchNotification(ValueAnimator valueAnimator) {
+    public void handleSwitchNotification(ValueAnimator valueAnimator, int i) {
+        Class cls = NCSwitchController.class;
         if (!this.mNCAnimSwitched && valueAnimator.getAnimatedFraction() > 0.3f) {
-            if (ControlCenter.DEBUG) {
-                Log.d("ControllerPanelWindowView", "switch anim to notification");
+            if (i == 0) {
+                if (ControlCenter.DEBUG) {
+                    Log.d("ControllerPanelWindowView", "switch anim to notification");
+                }
+                ((StatusBar) Dependency.get(StatusBar.class)).animateExpandNotificationsPanel();
             }
-            ((StatusBar) Dependency.get(StatusBar.class)).animateExpandNotificationsPanel();
             this.mNCAnimSwitched = true;
         }
         if (!this.mNCBlurSwitched && valueAnimator.getAnimatedFraction() > 0.5f) {
-            if (ControlCenter.DEBUG) {
-                Log.d("ControllerPanelWindowView", "switch blur to notification");
+            if (i == 0) {
+                if (ControlCenter.DEBUG) {
+                    Log.d("ControllerPanelWindowView", "switch blur to notification");
+                }
+                ((NCSwitchController) Dependency.get(cls)).switchBlur(false);
+            } else if (((float) i) == 80.0f) {
+                ((NCSwitchController) Dependency.get(cls)).switchBlur(true);
             }
-            ((NCSwitchController) Dependency.get(NCSwitchController.class)).switchBlur(false);
             this.mNCBlurSwitched = true;
         }
     }
@@ -390,8 +401,8 @@ public class ControlPanelWindowView extends FrameLayout {
         this.mNCAnimSwitched = false;
         ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                if (ControlPanelWindowView.this.mControlPanelController.isNCSwitching() && i == 0) {
-                    ControlPanelWindowView.this.handleSwitchNotification(valueAnimator);
+                if (ControlPanelWindowView.this.mControlPanelController.isNCSwitching()) {
+                    ControlPanelWindowView.this.handleSwitchNotification(valueAnimator, i);
                 }
                 ControlPanelWindowView.this.updateExpandHeight(((Float) valueAnimator.getAnimatedValue()).floatValue());
             }
@@ -446,9 +457,6 @@ public class ControlPanelWindowView extends FrameLayout {
     public void onControlPanelFinishExpand() {
         this.mExpandState = 2;
         AccessibilityUtils.hapticAccessibilityTransitionIfNeeded(getContext(), 191);
-        if (this.mControlPanelController.isNCSwitching()) {
-            ((NCSwitchController) Dependency.get(NCSwitchController.class)).switchBlur(true);
-        }
         this.mControlPanelWindowManager.updateNavigationBarSlippery();
     }
 

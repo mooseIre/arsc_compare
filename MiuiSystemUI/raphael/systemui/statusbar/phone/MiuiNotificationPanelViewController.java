@@ -693,7 +693,7 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
     }
 
     public final boolean isOnKeyguard() {
-        return this.mBarState == 1;
+        return this.statusBarStateController.getState() == 1;
     }
 
     public final boolean isOnShade() {
@@ -949,7 +949,7 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
             } else {
                 ((KeyguardClockContainer) ref$ObjectRef.element).animate().cancel();
                 this.mKeyguardStatusViewAnimating = false;
-                ((KeyguardClockContainer) ref$ObjectRef.element).setVisibility(8);
+                ((KeyguardClockContainer) ref$ObjectRef.element).setVisibility(4);
                 ((KeyguardClockContainer) ref$ObjectRef.element).setAlpha(1.0f);
             }
         } else {

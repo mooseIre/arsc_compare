@@ -24,6 +24,7 @@ import com.android.systemui.media.PlayerViewHolder;
 import com.android.systemui.media.SeekBarViewModel;
 import com.android.systemui.plugins.ActivityStarter;
 import com.android.systemui.statusbar.NotificationRemoteInputManager;
+import com.android.systemui.statusbar.notification.mediacontrol.ProcessArtworkTask;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Executor;
@@ -217,12 +218,14 @@ public class MiuiMediaControlPanel extends MediaControlPanel {
         this.mSeekBarViewModel.updateController(mediaController);
     }
 
-    public void setForegroundColor(int i) {
+    public void setForegroundColors(ProcessArtworkTask.Result result) {
+        int i = result.primaryTextColor;
+        int i2 = result.secondaryTextColor;
         PlayerViewHolder view = getView();
         if (view != null) {
             view.getTitleText().setTextColor(i);
             view.getAppName().setTextColor(i);
-            view.getArtistText().setTextColor(i);
+            view.getArtistText().setTextColor(i2);
             view.getElapsedTimeView().setTextColor(i);
             view.getTotalTimeView().setTextColor(i);
             ColorStateList valueOf = ColorStateList.valueOf(i);
