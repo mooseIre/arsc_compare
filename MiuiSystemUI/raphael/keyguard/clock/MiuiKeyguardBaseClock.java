@@ -172,11 +172,6 @@ public class MiuiKeyguardBaseClock extends FrameLayout {
     }
 
     /* access modifiers changed from: protected */
-    public void setClockAlpha(float f) {
-        setAlpha(f);
-    }
-
-    /* access modifiers changed from: protected */
     public float getClockVisibleHeight() {
         if (getHeight() > 0) {
             return (float) getHeight();

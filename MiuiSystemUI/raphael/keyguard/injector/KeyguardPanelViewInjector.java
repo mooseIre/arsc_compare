@@ -73,6 +73,7 @@ public final class KeyguardPanelViewInjector extends MiuiKeyguardUpdateMonitorCa
     private float mHorizontalMovePer;
     private KeyguardIndicationController mIndicationController;
     private boolean mIsBottomButtonMoving;
+    private boolean mIsOccludedByLeftScreenActivity;
     /* access modifiers changed from: private */
     public KeyguardMoveHelper mKeyguardMoveHelper;
     private KeyguardStatusBarView mKeyguardStatusBarView;
@@ -837,62 +838,74 @@ public final class KeyguardPanelViewInjector extends MiuiKeyguardUpdateMonitorCa
         }
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:9:0x0022, code lost:
-        if (r2.isOnShade() != false) goto L_0x0029;
+    /* JADX WARNING: Code restructure failed: missing block: B:10:0x0026, code lost:
+        if (r0.isOnShade() != false) goto L_0x002d;
      */
     /* Code decompiled incorrectly, please refer to instructions dump. */
-    public void onKeyguardOccludedChanged(boolean r4) {
+    public void onKeyguardOccludedChanged(boolean r5) {
         /*
-            r3 = this;
+            r4 = this;
             java.lang.Class<com.android.keyguard.injector.KeyguardSensorInjector> r0 = com.android.keyguard.injector.KeyguardSensorInjector.class
             java.lang.Object r0 = com.android.systemui.Dependency.get(r0)
             com.android.keyguard.injector.KeyguardSensorInjector r0 = (com.android.keyguard.injector.KeyguardSensorInjector) r0
             r0.disableFullScreenGesture()
-            r0 = 0
-            java.lang.String r1 = "mPanelViewController"
-            if (r4 != 0) goto L_0x0039
-            com.android.systemui.statusbar.phone.MiuiNotificationPanelViewController r2 = r3.mPanelViewController
-            if (r2 == 0) goto L_0x0035
-            boolean r2 = r2.isOnKeyguard()
-            if (r2 != 0) goto L_0x0029
-            com.android.systemui.statusbar.phone.MiuiNotificationPanelViewController r2 = r3.mPanelViewController
-            if (r2 == 0) goto L_0x0025
-            boolean r2 = r2.isOnShade()
-            if (r2 == 0) goto L_0x0039
-            goto L_0x0029
-        L_0x0025:
-            kotlin.jvm.internal.Intrinsics.throwUninitializedPropertyAccessException(r1)
-            throw r0
+            boolean r0 = r4.mIsOccludedByLeftScreenActivity
+            r1 = 0
+            java.lang.String r2 = "mPanelViewController"
+            if (r0 == 0) goto L_0x003d
+            if (r5 != 0) goto L_0x003d
+            com.android.systemui.statusbar.phone.MiuiNotificationPanelViewController r0 = r4.mPanelViewController
+            if (r0 == 0) goto L_0x0039
+            boolean r0 = r0.isOnKeyguard()
+            if (r0 != 0) goto L_0x002d
+            com.android.systemui.statusbar.phone.MiuiNotificationPanelViewController r0 = r4.mPanelViewController
+            if (r0 == 0) goto L_0x0029
+            boolean r0 = r0.isOnShade()
+            if (r0 == 0) goto L_0x003d
+            goto L_0x002d
         L_0x0029:
-            com.android.systemui.statusbar.phone.MiuiNotificationPanelViewController r2 = r3.mPanelViewController
-            if (r2 == 0) goto L_0x0031
-            r2.resetViews(r4)
-            goto L_0x0039
-        L_0x0031:
-            kotlin.jvm.internal.Intrinsics.throwUninitializedPropertyAccessException(r1)
-            throw r0
+            kotlin.jvm.internal.Intrinsics.throwUninitializedPropertyAccessException(r2)
+            throw r1
+        L_0x002d:
+            com.android.systemui.statusbar.phone.MiuiNotificationPanelViewController r0 = r4.mPanelViewController
+            if (r0 == 0) goto L_0x0035
+            r0.resetViews(r5)
+            goto L_0x003d
         L_0x0035:
-            kotlin.jvm.internal.Intrinsics.throwUninitializedPropertyAccessException(r1)
-            throw r0
+            kotlin.jvm.internal.Intrinsics.throwUninitializedPropertyAccessException(r2)
+            throw r1
         L_0x0039:
-            java.lang.Class<com.android.keyguard.wallpaper.MiuiKeyguardWallpaperControllerImpl> r2 = com.android.keyguard.wallpaper.MiuiKeyguardWallpaperControllerImpl.class
-            java.lang.Object r2 = com.android.systemui.Dependency.get(r2)
-            com.android.keyguard.wallpaper.MiuiKeyguardWallpaperControllerImpl r2 = (com.android.keyguard.wallpaper.MiuiKeyguardWallpaperControllerImpl) r2
-            boolean r2 = r2.isAodUsingSuperWallpaper()
-            if (r2 == 0) goto L_0x005e
-            com.android.systemui.keyguard.WakefulnessLifecycle r2 = r3.wakefulnessLifecycle
-            int r2 = r2.getWakefulness()
-            if (r2 != 0) goto L_0x005e
-            if (r4 != 0) goto L_0x005e
-            com.android.systemui.statusbar.phone.MiuiNotificationPanelViewController r3 = r3.mPanelViewController
-            if (r3 == 0) goto L_0x005a
-            r4 = 0
-            r3.setAlpha(r4)
-            goto L_0x005e
-        L_0x005a:
-            kotlin.jvm.internal.Intrinsics.throwUninitializedPropertyAccessException(r1)
-            throw r0
-        L_0x005e:
+            kotlin.jvm.internal.Intrinsics.throwUninitializedPropertyAccessException(r2)
+            throw r1
+        L_0x003d:
+            com.android.keyguard.KeyguardMoveHelper r0 = r4.mKeyguardMoveHelper
+            r3 = 1
+            if (r0 == 0) goto L_0x0049
+            boolean r0 = r0.isInLeftView()
+            if (r0 != r3) goto L_0x0049
+            goto L_0x004a
+        L_0x0049:
+            r3 = 0
+        L_0x004a:
+            r4.mIsOccludedByLeftScreenActivity = r3
+            java.lang.Class<com.android.keyguard.wallpaper.MiuiKeyguardWallpaperControllerImpl> r0 = com.android.keyguard.wallpaper.MiuiKeyguardWallpaperControllerImpl.class
+            java.lang.Object r0 = com.android.systemui.Dependency.get(r0)
+            com.android.keyguard.wallpaper.MiuiKeyguardWallpaperControllerImpl r0 = (com.android.keyguard.wallpaper.MiuiKeyguardWallpaperControllerImpl) r0
+            boolean r0 = r0.isAodUsingSuperWallpaper()
+            if (r0 == 0) goto L_0x0071
+            com.android.systemui.keyguard.WakefulnessLifecycle r0 = r4.wakefulnessLifecycle
+            int r0 = r0.getWakefulness()
+            if (r0 != 0) goto L_0x0071
+            if (r5 != 0) goto L_0x0071
+            com.android.systemui.statusbar.phone.MiuiNotificationPanelViewController r4 = r4.mPanelViewController
+            if (r4 == 0) goto L_0x006d
+            r5 = 0
+            r4.setAlpha(r5)
+            goto L_0x0071
+        L_0x006d:
+            kotlin.jvm.internal.Intrinsics.throwUninitializedPropertyAccessException(r2)
+            throw r1
+        L_0x0071:
             return
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.keyguard.injector.KeyguardPanelViewInjector.onKeyguardOccludedChanged(boolean):void");

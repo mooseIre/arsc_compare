@@ -123,4 +123,11 @@ public final class KeyguardBottomAreaInjector extends MiuiKeyguardUpdateMonitorC
             }
         }
     }
+
+    public final void setAlpha(float f) {
+        KeyguardBottomAreaView view = getView();
+        if (view != null) {
+            view.setAlpha(f);
+        }
+    }
 }

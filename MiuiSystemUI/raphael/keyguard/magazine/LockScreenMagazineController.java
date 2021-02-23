@@ -37,6 +37,7 @@ import com.android.keyguard.MiuiKeyguardUpdateMonitorCallback;
 import com.android.keyguard.analytics.AnalyticsHelper;
 import com.android.keyguard.clock.KeyguardClockContainer;
 import com.android.keyguard.fod.MiuiGxzwManager;
+import com.android.keyguard.injector.KeyguardBottomAreaInjector;
 import com.android.keyguard.injector.KeyguardClockInjector;
 import com.android.keyguard.injector.KeyguardNegative1PageInjector;
 import com.android.keyguard.injector.KeyguardPanelViewInjector;
@@ -439,10 +440,7 @@ public class LockScreenMagazineController implements SettingsObserver.Callback {
     }
 
     private void setBottomAreaAlpha(float f) {
-        KeyguardBottomAreaView keyguardBottomAreaView = this.mKeyguardBottomArea;
-        if (keyguardBottomAreaView != null) {
-            keyguardBottomAreaView.setAlpha(f);
-        }
+        ((KeyguardBottomAreaInjector) Dependency.get(KeyguardBottomAreaInjector.class)).setAlpha(f);
     }
 
     /* access modifiers changed from: private */
@@ -539,8 +537,8 @@ public class LockScreenMagazineController implements SettingsObserver.Callback {
     private void setViewsAlpha(float f) {
         this.mNotificationStackScrollLayout.setAlpha(f);
         this.mLockScreenMagazinePre.setMainLayoutAlpha(f);
-        this.mClockContainerView.setClockAlpha(f);
-        this.mKeyguardBottomArea.setAlpha(f);
+        ((KeyguardClockInjector) Dependency.get(KeyguardClockInjector.class)).setAlpha(f);
+        ((KeyguardBottomAreaInjector) Dependency.get(KeyguardBottomAreaInjector.class)).setAlpha(f);
     }
 
     private void cancelSwitchAnimate() {

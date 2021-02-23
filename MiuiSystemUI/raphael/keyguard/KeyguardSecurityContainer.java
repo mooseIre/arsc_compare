@@ -748,138 +748,131 @@ public class KeyguardSecurityContainer extends FrameLayout implements KeyguardSe
     }
 
     /* access modifiers changed from: package-private */
-    /* JADX WARNING: Removed duplicated region for block: B:32:0x00b2 A[ADDED_TO_REGION] */
-    /* JADX WARNING: Removed duplicated region for block: B:38:0x00c4  */
-    /* JADX WARNING: Removed duplicated region for block: B:41:0x00dd  */
-    /* JADX WARNING: Removed duplicated region for block: B:43:0x00e4  */
+    /* JADX WARNING: Removed duplicated region for block: B:30:0x00a6 A[ADDED_TO_REGION] */
+    /* JADX WARNING: Removed duplicated region for block: B:36:0x00b8  */
+    /* JADX WARNING: Removed duplicated region for block: B:39:0x00d1  */
+    /* JADX WARNING: Removed duplicated region for block: B:41:0x00d8  */
     /* Code decompiled incorrectly, please refer to instructions dump. */
-    public boolean showNextSecurityScreenOrFinish(boolean r10, int r11, boolean r12) {
+    public boolean showNextSecurityScreenOrFinish(boolean r9, int r10, boolean r11) {
         /*
-            r9 = this;
+            r8 = this;
             java.lang.StringBuilder r0 = new java.lang.StringBuilder
             r0.<init>()
             java.lang.String r1 = "showNextSecurityScreenOrFinish("
             r0.append(r1)
-            r0.append(r10)
+            r0.append(r9)
             java.lang.String r1 = ")"
             r0.append(r1)
             java.lang.String r0 = r0.toString()
             java.lang.String r1 = "KeyguardSecurityView"
             android.util.Log.d(r1, r0)
             com.android.keyguard.KeyguardSecurityContainer$BouncerUiEvent r0 = com.android.keyguard.KeyguardSecurityContainer.BouncerUiEvent.UNKNOWN
-            com.android.keyguard.KeyguardUpdateMonitor r2 = r9.mUpdateMonitor
-            boolean r2 = r2.getUserHasTrust(r11)
+            com.android.keyguard.KeyguardUpdateMonitor r2 = r8.mUpdateMonitor
+            boolean r2 = r2.getUserCanSkipBouncer(r10)
             r3 = 2
-            r4 = 3
-            r5 = -1
-            r6 = 0
-            r7 = 1
-            if (r2 == 0) goto L_0x0030
-            com.android.keyguard.KeyguardSecurityContainer$BouncerUiEvent r0 = com.android.keyguard.KeyguardSecurityContainer.BouncerUiEvent.BOUNCER_DISMISS_EXTENDED_ACCESS
-            r3 = r4
-        L_0x002d:
-            r10 = r6
-            goto L_0x00b0
-        L_0x0030:
-            com.android.keyguard.KeyguardUpdateMonitor r2 = r9.mUpdateMonitor
-            boolean r2 = r2.getUserUnlockedWithBiometric(r11)
-            if (r2 == 0) goto L_0x003b
+            r4 = -1
+            r5 = 0
+            r6 = 1
+            if (r2 == 0) goto L_0x002e
             com.android.keyguard.KeyguardSecurityContainer$BouncerUiEvent r0 = com.android.keyguard.KeyguardSecurityContainer.BouncerUiEvent.BOUNCER_DISMISS_BIOMETRIC
-            goto L_0x002d
-        L_0x003b:
+        L_0x002b:
+            r9 = r5
+            goto L_0x00a4
+        L_0x002e:
             com.android.keyguard.KeyguardSecurityModel$SecurityMode r2 = com.android.keyguard.KeyguardSecurityModel.SecurityMode.None
-            com.android.keyguard.KeyguardSecurityModel$SecurityMode r8 = r9.mCurrentSecuritySelection
-            if (r2 != r8) goto L_0x0055
-            com.android.keyguard.KeyguardSecurityModel r10 = r9.mSecurityModel
-            com.android.keyguard.KeyguardSecurityModel$SecurityMode r10 = r10.getSecurityMode(r11)
+            com.android.keyguard.KeyguardSecurityModel$SecurityMode r7 = r8.mCurrentSecuritySelection
+            if (r2 != r7) goto L_0x0048
+            com.android.keyguard.KeyguardSecurityModel r9 = r8.mSecurityModel
+            com.android.keyguard.KeyguardSecurityModel$SecurityMode r9 = r9.getSecurityMode(r10)
             com.android.keyguard.KeyguardSecurityModel$SecurityMode r1 = com.android.keyguard.KeyguardSecurityModel.SecurityMode.None
-            if (r1 != r10) goto L_0x004f
+            if (r1 != r9) goto L_0x0042
             com.android.keyguard.KeyguardSecurityContainer$BouncerUiEvent r0 = com.android.keyguard.KeyguardSecurityContainer.BouncerUiEvent.BOUNCER_DISMISS_NONE_SECURITY
-            r3 = r6
-            goto L_0x002d
-        L_0x004f:
-            r9.showSecurityScreen(r10)
             r3 = r5
-            r7 = r6
-            goto L_0x002d
-        L_0x0055:
-            if (r10 == 0) goto L_0x00ad
-            int[] r10 = com.android.keyguard.KeyguardSecurityContainer.AnonymousClass11.$SwitchMap$com$android$keyguard$KeyguardSecurityModel$SecurityMode
-            int r2 = r8.ordinal()
-            r10 = r10[r2]
-            if (r10 == r7) goto L_0x00a8
-            if (r10 == r3) goto L_0x00a8
-            if (r10 == r4) goto L_0x00a8
+            goto L_0x002b
+        L_0x0042:
+            r8.showSecurityScreen(r9)
+            r3 = r4
+            r6 = r5
+            goto L_0x002b
+        L_0x0048:
+            if (r9 == 0) goto L_0x00a1
+            int[] r9 = com.android.keyguard.KeyguardSecurityContainer.AnonymousClass11.$SwitchMap$com$android$keyguard$KeyguardSecurityModel$SecurityMode
+            int r2 = r7.ordinal()
+            r9 = r9[r2]
+            if (r9 == r6) goto L_0x009c
+            if (r9 == r3) goto L_0x009c
+            r2 = 3
+            if (r9 == r2) goto L_0x009c
             r2 = 6
-            if (r10 == r2) goto L_0x008a
+            if (r9 == r2) goto L_0x007e
             r2 = 7
-            if (r10 == r2) goto L_0x008a
-            java.lang.StringBuilder r10 = new java.lang.StringBuilder
-            r10.<init>()
+            if (r9 == r2) goto L_0x007e
+            java.lang.StringBuilder r9 = new java.lang.StringBuilder
+            r9.<init>()
             java.lang.String r2 = "Bad security screen "
-            r10.append(r2)
-            com.android.keyguard.KeyguardSecurityModel$SecurityMode r2 = r9.mCurrentSecuritySelection
-            r10.append(r2)
+            r9.append(r2)
+            com.android.keyguard.KeyguardSecurityModel$SecurityMode r2 = r8.mCurrentSecuritySelection
+            r9.append(r2)
             java.lang.String r2 = ", fail safe"
-            r10.append(r2)
-            java.lang.String r10 = r10.toString()
-            android.util.Log.v(r1, r10)
-            r9.showPrimarySecurityScreen(r6)
-            goto L_0x00ad
-        L_0x008a:
-            com.android.keyguard.KeyguardSecurityModel r10 = r9.mSecurityModel
-            com.android.keyguard.KeyguardSecurityModel$SecurityMode r10 = r10.getSecurityMode(r11)
+            r9.append(r2)
+            java.lang.String r9 = r9.toString()
+            android.util.Log.v(r1, r9)
+            r8.showPrimarySecurityScreen(r5)
+            goto L_0x00a1
+        L_0x007e:
+            com.android.keyguard.KeyguardSecurityModel r9 = r8.mSecurityModel
+            com.android.keyguard.KeyguardSecurityModel$SecurityMode r9 = r9.getSecurityMode(r10)
             com.android.keyguard.KeyguardSecurityModel$SecurityMode r1 = com.android.keyguard.KeyguardSecurityModel.SecurityMode.None
-            if (r10 != r1) goto L_0x00a4
-            com.android.internal.widget.LockPatternUtils r1 = r9.mLockPatternUtils
+            if (r9 != r1) goto L_0x0098
+            com.android.internal.widget.LockPatternUtils r1 = r8.mLockPatternUtils
             int r2 = com.android.keyguard.KeyguardUpdateMonitor.getCurrentUser()
             boolean r1 = r1.isLockScreenDisabled(r2)
-            if (r1 == 0) goto L_0x00a4
+            if (r1 == 0) goto L_0x0098
             r3 = 4
             com.android.keyguard.KeyguardSecurityContainer$BouncerUiEvent r0 = com.android.keyguard.KeyguardSecurityContainer.BouncerUiEvent.BOUNCER_DISMISS_SIM
-            goto L_0x002d
-        L_0x00a4:
-            r9.showSecurityScreen(r10)
-            goto L_0x00ad
-        L_0x00a8:
+            goto L_0x002b
+        L_0x0098:
+            r8.showSecurityScreen(r9)
+            goto L_0x00a1
+        L_0x009c:
             com.android.keyguard.KeyguardSecurityContainer$BouncerUiEvent r0 = com.android.keyguard.KeyguardSecurityContainer.BouncerUiEvent.BOUNCER_DISMISS_PASSWORD
-            r10 = r7
-            r3 = r10
-            goto L_0x00b0
-        L_0x00ad:
-            r3 = r5
-            r10 = r6
-            r7 = r10
-        L_0x00b0:
-            if (r7 == 0) goto L_0x00c2
-            if (r12 != 0) goto L_0x00c2
-            com.android.keyguard.KeyguardUpdateMonitor r12 = r9.mUpdateMonitor
-            android.content.Intent r12 = r12.getSecondaryLockscreenRequirement(r11)
-            if (r12 == 0) goto L_0x00c2
-            com.android.keyguard.AdminSecondaryLockScreenController r9 = r9.mSecondaryLockScreenController
-            r9.show(r12)
-            return r6
-        L_0x00c2:
-            if (r3 == r5) goto L_0x00d9
-            com.android.internal.logging.MetricsLogger r12 = r9.mMetricsLogger
+            r9 = r6
+            r3 = r9
+            goto L_0x00a4
+        L_0x00a1:
+            r3 = r4
+            r9 = r5
+            r6 = r9
+        L_0x00a4:
+            if (r6 == 0) goto L_0x00b6
+            if (r11 != 0) goto L_0x00b6
+            com.android.keyguard.KeyguardUpdateMonitor r11 = r8.mUpdateMonitor
+            android.content.Intent r11 = r11.getSecondaryLockscreenRequirement(r10)
+            if (r11 == 0) goto L_0x00b6
+            com.android.keyguard.AdminSecondaryLockScreenController r8 = r8.mSecondaryLockScreenController
+            r8.show(r11)
+            return r5
+        L_0x00b6:
+            if (r3 == r4) goto L_0x00cd
+            com.android.internal.logging.MetricsLogger r11 = r8.mMetricsLogger
             android.metrics.LogMaker r1 = new android.metrics.LogMaker
             r2 = 197(0xc5, float:2.76E-43)
             r1.<init>(r2)
             r2 = 5
             android.metrics.LogMaker r1 = r1.setType(r2)
             android.metrics.LogMaker r1 = r1.setSubtype(r3)
-            r12.write(r1)
-        L_0x00d9:
-            com.android.keyguard.KeyguardSecurityContainer$BouncerUiEvent r12 = com.android.keyguard.KeyguardSecurityContainer.BouncerUiEvent.UNKNOWN
-            if (r0 == r12) goto L_0x00e2
-            com.android.internal.logging.UiEventLogger r12 = sUiEventLogger
-            r12.log(r0)
-        L_0x00e2:
-            if (r7 == 0) goto L_0x00e9
-            com.android.keyguard.KeyguardSecurityContainer$SecurityCallback r9 = r9.mSecurityCallback
-            r9.finish(r10, r11)
-        L_0x00e9:
-            return r7
+            r11.write(r1)
+        L_0x00cd:
+            com.android.keyguard.KeyguardSecurityContainer$BouncerUiEvent r11 = com.android.keyguard.KeyguardSecurityContainer.BouncerUiEvent.UNKNOWN
+            if (r0 == r11) goto L_0x00d6
+            com.android.internal.logging.UiEventLogger r11 = sUiEventLogger
+            r11.log(r0)
+        L_0x00d6:
+            if (r6 == 0) goto L_0x00dd
+            com.android.keyguard.KeyguardSecurityContainer$SecurityCallback r8 = r8.mSecurityCallback
+            r8.finish(r9, r10)
+        L_0x00dd:
+            return r6
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.keyguard.KeyguardSecurityContainer.showNextSecurityScreenOrFinish(boolean, int, boolean):boolean");
     }

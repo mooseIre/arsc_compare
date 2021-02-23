@@ -4,12 +4,13 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.ViewGroup;
+import com.android.systemui.C0010R$bool;
 import com.android.systemui.C0011R$color;
-import miui.keyguard.clock.MiuiLeftTopClock;
+import miui.keyguard.clock.MiuiBaseClock;
 import miui.system.R;
 
 public class MiuiKeyguardLeftTopLargeClock extends MiuiKeyguardSingleClock {
-    private MiuiLeftTopClock mLeftTopClock;
+    private MiuiBaseClock mMiuiNoticationStateClock;
 
     public boolean hasOverlappingRendering() {
         return false;
@@ -21,27 +22,31 @@ public class MiuiKeyguardLeftTopLargeClock extends MiuiKeyguardSingleClock {
 
     public MiuiKeyguardLeftTopLargeClock(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
+        boolean z = context.getResources().getBoolean(C0010R$bool.config_keyguard_clock_notification_center);
         try {
             this.mMiuiBaseClock = this.mLayoutInflater.inflate(R.layout.miui_left_top_large_clock, (ViewGroup) null, false);
             updateLunarCalendarInfo();
-            MiuiLeftTopClock inflate = this.mLayoutInflater.inflate(R.layout.miui_left_top_clock, (ViewGroup) null, false);
-            this.mLeftTopClock = inflate;
-            inflate.setShowLunarCalendar(false);
-            this.mLeftTopClock.setAlpha(0.0f);
-            this.mLeftTopClock.setVisibility(8);
+            if (z) {
+                this.mMiuiNoticationStateClock = this.mLayoutInflater.inflate(R.layout.miui_center_horizontal_clock, (ViewGroup) null, false);
+            } else {
+                this.mMiuiNoticationStateClock = this.mLayoutInflater.inflate(R.layout.miui_left_top_clock, (ViewGroup) null, false);
+            }
+            this.mMiuiNoticationStateClock.setShowLunarCalendar(false);
+            this.mMiuiNoticationStateClock.setAlpha(0.0f);
+            this.mMiuiNoticationStateClock.setVisibility(8);
         } catch (Exception e) {
             Log.e("MiuiKeyguardLeftTopLargeClock", "init clock exception", e);
         }
         this.mClockContainer.addView(this.mMiuiBaseClock);
-        this.mClockContainer.addView(this.mLeftTopClock);
+        this.mClockContainer.addView(this.mMiuiNoticationStateClock);
         this.mMagazineClockView.updateViewsForClockPosition(true);
     }
 
     /* access modifiers changed from: protected */
     public void toNotificationStateAnimOutEnd() {
         this.mMiuiBaseClock.setVisibility(8);
-        this.mLeftTopClock.setAlpha(0.0f);
-        this.mLeftTopClock.setVisibility(0);
+        this.mMiuiNoticationStateClock.setAlpha(0.0f);
+        this.mMiuiNoticationStateClock.setVisibility(0);
     }
 
     /* access modifiers changed from: protected */
@@ -51,19 +56,19 @@ public class MiuiKeyguardLeftTopLargeClock extends MiuiKeyguardSingleClock {
 
     /* access modifiers changed from: protected */
     public void toNotificationStateAnimInUpdate(float f) {
-        this.mLeftTopClock.setAlpha(f);
+        this.mMiuiNoticationStateClock.setAlpha(f);
     }
 
     /* access modifiers changed from: protected */
     public void toNormalStateAnimOutEnd() {
-        this.mLeftTopClock.setVisibility(8);
+        this.mMiuiNoticationStateClock.setVisibility(8);
         this.mMiuiBaseClock.setAlpha(0.0f);
         this.mMiuiBaseClock.setVisibility(0);
     }
 
     /* access modifiers changed from: protected */
     public void toNormalStateAnimOutUpdate(float f) {
-        this.mLeftTopClock.setClockAlpha(f);
+        this.mMiuiNoticationStateClock.setClockAlpha(f);
     }
 
     /* access modifiers changed from: protected */
@@ -75,7 +80,7 @@ public class MiuiKeyguardLeftTopLargeClock extends MiuiKeyguardSingleClock {
         if (z != this.mDarkStyle) {
             super.setDarkStyle(z);
             this.mMiuiBaseClock.setTextColorDark(z);
-            this.mLeftTopClock.setTextColorDark(z);
+            this.mMiuiNoticationStateClock.setTextColorDark(z);
             int color = z ? getContext().getResources().getColor(C0011R$color.miui_common_unlock_screen_common_time_dark_text_color) : -1;
             this.mOwnerInfo.setTextColor(color);
             this.mMagazineClockView.setTextColor(color);
@@ -84,25 +89,25 @@ public class MiuiKeyguardLeftTopLargeClock extends MiuiKeyguardSingleClock {
 
     public void updateHourFormat() {
         super.updateHourFormat();
-        MiuiLeftTopClock miuiLeftTopClock = this.mLeftTopClock;
-        if (miuiLeftTopClock != null) {
-            miuiLeftTopClock.setIs24HourFormat(this.m24HourFormat);
+        MiuiBaseClock miuiBaseClock = this.mMiuiNoticationStateClock;
+        if (miuiBaseClock != null) {
+            miuiBaseClock.setIs24HourFormat(this.m24HourFormat);
         }
     }
 
     public void updateTimeZone(String str) {
         super.updateTimeZone(str);
-        MiuiLeftTopClock miuiLeftTopClock = this.mLeftTopClock;
-        if (miuiLeftTopClock != null) {
-            miuiLeftTopClock.updateTimeZone(str);
+        MiuiBaseClock miuiBaseClock = this.mMiuiNoticationStateClock;
+        if (miuiBaseClock != null) {
+            miuiBaseClock.updateTimeZone(str);
         }
     }
 
     public void updateTime() {
         super.updateTime();
-        MiuiLeftTopClock miuiLeftTopClock = this.mLeftTopClock;
-        if (miuiLeftTopClock != null) {
-            miuiLeftTopClock.updateTime();
+        MiuiBaseClock miuiBaseClock = this.mMiuiNoticationStateClock;
+        if (miuiBaseClock != null) {
+            miuiBaseClock.updateTime();
         }
     }
 }
