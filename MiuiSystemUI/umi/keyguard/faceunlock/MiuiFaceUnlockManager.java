@@ -87,6 +87,7 @@ public class MiuiFaceUnlockManager {
     };
     private final ArrayList<WeakReference<MiuiKeyguardFaceUnlockView>> mFaceViewList = new ArrayList<>();
     protected HandlerThread mHandlerThread = new HandlerThread("face_unlock");
+    protected boolean mHasFace;
     /* access modifiers changed from: private */
     public boolean mKeyguardShowing;
     private MiuiKeyguardUpdateMonitorCallback mKeyguardUpdateMonitorCallback = new MiuiKeyguardUpdateMonitorCallback() {
@@ -115,18 +116,30 @@ public class MiuiFaceUnlockManager {
             long unused2 = MiuiFaceUnlockManager.this.mScreenOnDelay = 550;
         }
 
+        public void onBiometricHelp(int i, String str, BiometricSourceType biometricSourceType) {
+            if (i != 5 && i != 10001) {
+                MiuiFaceUnlockManager.this.mHasFace = true;
+            }
+        }
+
         public void onBiometricError(int i, String str, BiometricSourceType biometricSourceType) {
-            if (i == 7 || i == 9) {
-                boolean unused = MiuiFaceUnlockManager.this.mFaceLockedOut = true;
-                MiuiFaceUnlockManager.this.handleFaceDetectError();
+            if (biometricSourceType == BiometricSourceType.FACE) {
+                if (i == 7 || i == 9) {
+                    boolean unused = MiuiFaceUnlockManager.this.mFaceLockedOut = true;
+                }
+                MiuiFaceUnlockManager miuiFaceUnlockManager = MiuiFaceUnlockManager.this;
+                if (miuiFaceUnlockManager.mHasFace) {
+                    miuiFaceUnlockManager.handleFaceDetectError();
+                }
+                MiuiFaceUnlockManager.this.mHasFace = false;
             }
         }
 
         public void onKeyguardShowingChanged(boolean z) {
-            if (MiuiFaceUnlockManager.this.mKeyguardShowing != z && !z && MiuiFaceUnlockManager.this.mUpdateMonitorInjector.isFaceUnlock() && MiuiFaceUnlockManager.this.isStayScreenWhenFaceUnlockSuccess()) {
-                boolean unused = MiuiFaceUnlockManager.this.mKeyguardShowing = z;
+            if (MiuiFaceUnlockManager.this.mKeyguardShowing != z && !z && MiuiFaceUnlockManager.this.mUpdateMonitorInjector.isFaceUnlock() && !MiuiFaceUnlockManager.this.isStayScreenWhenFaceUnlockSuccess()) {
                 Slog.d("miui_face", "face unlock success and keyguard dismiss");
             }
+            boolean unused = MiuiFaceUnlockManager.this.mKeyguardShowing = z;
         }
     };
     FaceManager.RemovalCallback mRemovalCallback = new FaceManager.RemovalCallback() {
@@ -342,10 +355,10 @@ public class MiuiFaceUnlockManager {
     }
 
     public void onKeyguardHide() {
+        this.mFaceLockedOut = false;
+        this.mFaceFailConunt = 0;
         if (isFaceAuthEnabled()) {
             this.mUpdateMonitor.cancelFaceAuth();
-            this.mFaceLockedOut = false;
-            this.mFaceFailConunt = 0;
         }
     }
 
@@ -395,7 +408,7 @@ public class MiuiFaceUnlockManager {
             } else if (MiuiKeyguardUtils.isLargeScreen(this.mContext)) {
                 Slog.e("miui_face", "start face unlock fail because in large screen");
             } else {
-                Slog.e("miui_face", "start face unlock fail, mKeyguardShowing =" + this.mUpdateMonitorInjector.isKeyguardShowing() + ";isDeviceInteractive =" + this.mUpdateMonitor.isDeviceInteractive() + ";isGoingToSleep =" + this.mUpdateMonitor.isGoingToSleep() + ";isSwitchingUser =" + this.mUpdateMonitor.isSwitchingUser() + ";isKeyguardGoingAway =" + z2);
+                Slog.e("miui_face", "start face unlock fail, mKeyguardShowing =" + this.mUpdateMonitorInjector.isKeyguardShowing() + ";isDeviceInteractive =" + this.mUpdateMonitor.isDeviceInteractive() + ";isSwitchingUser =" + this.mUpdateMonitor.isSwitchingUser() + ";isKeyguardGoingAway =" + z2);
             }
         }
     }

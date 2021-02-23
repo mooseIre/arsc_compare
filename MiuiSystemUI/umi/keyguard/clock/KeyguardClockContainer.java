@@ -292,10 +292,6 @@ public class KeyguardClockContainer extends FrameLayout {
         this.mClockPositionObserver.onChange(false);
     }
 
-    public void setClockAlpha(float f) {
-        this.mClockView.setClockAlpha(f);
-    }
-
     public void updateClockMagazineInfo() {
         this.mClockView.updateClockMagazineInfo();
     }

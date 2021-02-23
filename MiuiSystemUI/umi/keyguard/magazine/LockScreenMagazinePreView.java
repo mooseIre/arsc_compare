@@ -563,7 +563,8 @@ public class LockScreenMagazinePreView extends RelativeLayout {
         this.mRemoteMainLayout.removeView(this.mRemoteMainView);
         View apply = this.mMainRemoteView.apply(getContext(), this.mRemoteMainLayout);
         this.mRemoteMainView = apply;
-        updateRemoteTextView(apply, true);
+        apply.setIsRootNamespace(true);
+        updateRemoteTextView(this.mRemoteMainView, true);
         this.mRemoteMainLayout.addView(this.mRemoteMainView);
     }
 
@@ -586,7 +587,8 @@ public class LockScreenMagazinePreView extends RelativeLayout {
         this.mRemoteFullScreenLayout.removeView(this.mRemoteFullScreenView);
         View apply = this.mFullScreenRemoteView.apply(getContext(), this.mRemoteFullScreenLayout);
         this.mRemoteFullScreenView = apply;
-        updateRemoteTextView(apply, false);
+        apply.setIsRootNamespace(true);
+        updateRemoteTextView(this.mRemoteFullScreenView, false);
         this.mRemoteFullScreenLayout.addView(this.mRemoteFullScreenView);
     }
 

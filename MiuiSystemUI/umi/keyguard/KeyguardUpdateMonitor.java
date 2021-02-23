@@ -1742,11 +1742,13 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
     public void updateFaceListeningState() {
         if (!this.mHandler.hasMessages(336)) {
             this.mHandler.removeCallbacks(this.mRetryFaceAuthentication);
-            boolean shouldListenForFace = shouldListenForFace();
-            if (this.mFaceRunningState == 1 && !shouldListenForFace) {
-                stopListeningForFace();
-            } else if (this.mFaceRunningState != 1 && shouldListenForFace) {
-                startListeningForFace();
+            if (isUnlockWithFacePossible(getCurrentUser())) {
+                boolean shouldListenForFace = shouldListenForFace();
+                if (this.mFaceRunningState == 1 && !shouldListenForFace) {
+                    stopListeningForFace();
+                } else if (this.mFaceRunningState != 1 && shouldListenForFace) {
+                    startListeningForFace();
+                }
             }
         }
     }
@@ -1779,7 +1781,7 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
         boolean z5 = !getUserCanSkipBouncer(currentUser) || z4;
         boolean z6 = (!z3 || (z4 && !this.mBouncer)) && !z2;
         boolean isLargeScreen = MiuiKeyguardUtils.isLargeScreen(this.mContext);
-        if ((this.mUpdateMonitorInjector.isKeyguardShowing() && this.mDeviceInteractive && !this.mGoingToSleep && !this.mSwitchingUser && !this.mKeyguardGoingAway) && z5 && z6 && ((!this.mMiuiFaceUnlockManager.isWakeupByNotification() || this.mMiuiFaceUnlockManager.isFaceUnlockStartByNotificationScreenOn()) && !this.mUpdateMonitorInjector.isChargeAnimationShowing() && ((!this.mKeyguardOccluded || (this.mBouncer && !MiuiKeyguardUtils.isTopActivityCameraApp(this.mContext))) && !this.mMiuiFaceUnlockManager.isFaceTemporarilyLockout() && this.mIsPrimaryUser && !userNeedsStrongAuth() && !this.mUpdateMonitorInjector.isSimLocked() && !isSimPinSecure() && !isLargeScreen && this.mMiuiFaceUnlockManager.shouldStartFaceDetectForCamera()))) {
+        if ((this.mUpdateMonitorInjector.isKeyguardShowing() && this.mDeviceInteractive && !this.mSwitchingUser && !this.mKeyguardGoingAway) && z5 && z6 && ((!this.mMiuiFaceUnlockManager.isWakeupByNotification() || this.mMiuiFaceUnlockManager.isFaceUnlockStartByNotificationScreenOn()) && !this.mUpdateMonitorInjector.isChargeAnimationShowing() && ((!this.mKeyguardOccluded || (this.mBouncer && !MiuiKeyguardUtils.isTopActivityCameraApp(this.mContext))) && !this.mMiuiFaceUnlockManager.isFaceTemporarilyLockout() && getCurrentUser() == 0 && !userNeedsStrongAuth() && !this.mUpdateMonitorInjector.isSimLocked() && !isSimPinSecure() && !isLargeScreen && this.mMiuiFaceUnlockManager.shouldStartFaceDetectForCamera()))) {
             z = true;
         }
         if (!z) {
@@ -2537,10 +2539,6 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
 
     public boolean isDeviceInteractive() {
         return this.mDeviceInteractive;
-    }
-
-    public boolean isGoingToSleep() {
-        return this.mGoingToSleep;
     }
 
     public int getNextSubIdForState(int i) {

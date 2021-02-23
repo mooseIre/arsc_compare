@@ -15,6 +15,7 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.Property;
+import android.util.Slog;
 import android.view.KeyEvent;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -25,6 +26,7 @@ import android.widget.RelativeLayout;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.charge.ChargeUtils;
 import com.android.keyguard.charge.MiuiChargeManager;
+import com.android.keyguard.charge.OrientationEventListenerWrapper;
 import com.android.keyguard.charge.view.IChargeAnimationListener;
 import com.android.keyguard.charge.view.MiuiChargePercentCountView;
 import com.android.keyguard.injector.KeyguardUpdateMonitorInjector;
@@ -41,21 +43,23 @@ public class MiuiChargeAnimationView extends FrameLayout {
     private MiuiChargeIconView mChargeIconView;
     private MiuiChargeLogoView mChargeLogoView;
     private MiuiChargePercentCountView mChargePercentView;
-    private Configuration mConfiguration;
+    private final Configuration mConfiguration;
     private AnimatorSet mDismissAnimatorSet;
     private String mDismissReason;
     private final Runnable mDismissRunnable;
-    private Handler mHandler;
+    private final Handler mHandler;
     private int mIconPaddingTop;
     private boolean mIsFoldChargeVideo;
+    private OrientationEventListenerWrapper mOrientationListener;
     /* access modifiers changed from: private */
     public ViewGroup mParentContainer;
-    private Interpolator mQuartOutInterpolator;
+    private final Interpolator mQuartOutInterpolator;
     private Point mScreenSize;
     private boolean mShowChargingInNonLockscreen;
     private AnimatorSet mShowingAnimatorSet;
     /* access modifiers changed from: private */
     public boolean mStartingDismissAnim;
+    private final boolean mSupportWaveChargeAnimation;
     private Runnable mTimeoutDismissJob;
     private KeyguardUpdateMonitorInjector mUpdateMonitorInjector;
     private WindowManager mWindowManager;
@@ -75,6 +79,7 @@ public class MiuiChargeAnimationView extends FrameLayout {
         this.mQuartOutInterpolator = new QuartEaseOutInterpolater();
         this.mConfiguration = new Configuration();
         this.mIsFoldChargeVideo = false;
+        this.mSupportWaveChargeAnimation = ChargeUtils.supportWaveChargeAnimation();
         this.mTimeoutDismissJob = new Runnable() {
             public void run() {
                 MiuiChargeAnimationView.this.startDismiss("dismiss_for_timeout");
@@ -131,6 +136,28 @@ public class MiuiChargeAnimationView extends FrameLayout {
         }
         setElevation(30.0f);
         this.mUpdateMonitorInjector = (KeyguardUpdateMonitorInjector) Dependency.get(KeyguardUpdateMonitorInjector.class);
+        this.mOrientationListener = new OrientationEventListenerWrapper(context) {
+            public void onOrientationChanged(int i) {
+                MiuiChargeAnimationView.this.updateOrientation(i);
+            }
+        };
+    }
+
+    /* access modifiers changed from: private */
+    public void updateOrientation(int i) {
+        if (this.mWireState != 11 && !this.mSupportWaveChargeAnimation) {
+            Slog.i("MiuiChargeAnimationView", "onOrientationChanged: " + i);
+            if (i > 45 && i < 135) {
+                this.itemContainer.setRotation(270.0f);
+                this.mChargeContainerView.setRotation(270.0f);
+            } else if (i <= 225 || i >= 315) {
+                this.itemContainer.setRotation(0.0f);
+                this.mChargeContainerView.setRotation(0.0f);
+            } else {
+                this.itemContainer.setRotation(90.0f);
+                this.mChargeContainerView.setRotation(90.0f);
+            }
+        }
     }
 
     /* access modifiers changed from: protected */
@@ -199,7 +226,14 @@ public class MiuiChargeAnimationView extends FrameLayout {
             animatorSet.cancel();
         }
         setComponentTransparent(false);
-        this.mWireState = ChargeUtils.sBatteryStatus.wireState;
+        int i = ChargeUtils.sBatteryStatus.wireState;
+        this.mWireState = i;
+        if (i != 10 || this.mSupportWaveChargeAnimation) {
+            this.itemContainer.setRotation(0.0f);
+            this.mChargeContainerView.setRotation(0.0f);
+        } else {
+            enableOrientation();
+        }
         ValueAnimator ofInt = ValueAnimator.ofInt(new int[]{0, 1});
         ofInt.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
@@ -249,6 +283,7 @@ public class MiuiChargeAnimationView extends FrameLayout {
             if (animatorSet != null && animatorSet.isStarted()) {
                 this.mShowingAnimatorSet.cancel();
             }
+            disableOrientation();
             Log.i("MiuiChargeAnimationView", "startDismiss: reason: " + str);
             this.mDismissReason = str;
             this.mHandler.removeCallbacks(this.mTimeoutDismissJob);
@@ -309,6 +344,10 @@ public class MiuiChargeAnimationView extends FrameLayout {
         IChargeAnimationListener iChargeAnimationListener = this.animationListener;
         if (iChargeAnimationListener != null) {
             iChargeAnimationListener.onChargeAnimationEnd(this.mWireState, this.mDismissReason);
+        }
+        if (this.itemContainer.getRotation() > 0.0f || this.mChargeContainerView.getRotation() > 0.0f) {
+            this.itemContainer.setRotation(0.0f);
+            this.mChargeContainerView.setRotation(0.0f);
         }
         this.mHandler.post(this.mDismissRunnable);
     }
@@ -399,5 +438,27 @@ public class MiuiChargeAnimationView extends FrameLayout {
     public boolean dispatchKeyEvent(KeyEvent keyEvent) {
         startDismiss("dismiss_for_key_event");
         return false;
+    }
+
+    private void enableOrientation() {
+        OrientationEventListenerWrapper orientationEventListenerWrapper = this.mOrientationListener;
+        if (orientationEventListenerWrapper != null && orientationEventListenerWrapper.canDetectOrientation()) {
+            Slog.i("MiuiChargeAnimationView", "enable orientation sensor");
+            this.mOrientationListener.enable();
+        }
+    }
+
+    private void disableOrientation() {
+        OrientationEventListenerWrapper orientationEventListenerWrapper = this.mOrientationListener;
+        if (orientationEventListenerWrapper != null && orientationEventListenerWrapper.canDetectOrientation()) {
+            Slog.i("MiuiChargeAnimationView", "disable orientation sensor");
+            this.mOrientationListener.disable();
+        }
+    }
+
+    /* access modifiers changed from: protected */
+    public void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        disableOrientation();
     }
 }
