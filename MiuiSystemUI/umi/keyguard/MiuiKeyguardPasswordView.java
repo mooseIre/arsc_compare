@@ -26,6 +26,7 @@ import com.android.systemui.Dependency;
 public abstract class MiuiKeyguardPasswordView extends LinearLayout implements EmergencyButton.EmergencyButtonCallback, BackButton.BackButtonCallback {
     protected BackButton mBackButton;
     protected KeyguardSecurityCallback mCallback;
+    private Configuration mConfiguration;
     protected TextView mDeleteButton;
     private int mDensityDpi;
     protected EmergencyButton mEmergencyButton;
@@ -46,15 +47,20 @@ public abstract class MiuiKeyguardPasswordView extends LinearLayout implements E
     public abstract void handleConfigurationOrientationChanged();
 
     /* access modifiers changed from: protected */
+    public abstract void handleConfigurationSmallWidthChanged();
+
+    /* access modifiers changed from: protected */
     public void handleWrongPassword() {
     }
 
     public MiuiKeyguardPasswordView(Context context) {
         super(context);
+        this.mConfiguration = new Configuration();
     }
 
     public MiuiKeyguardPasswordView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
+        this.mConfiguration = new Configuration();
         this.mVibrator = (Vibrator) this.mContext.getSystemService("vibrator");
         this.mUm = (UserManager) this.mContext.getSystemService("user");
         this.mKeyguardUpdateMonitor = (KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class);
@@ -80,6 +86,9 @@ public abstract class MiuiKeyguardPasswordView extends LinearLayout implements E
     /* access modifiers changed from: protected */
     public void onConfigurationChanged(Configuration configuration) {
         super.onConfigurationChanged(configuration);
+        if ((this.mConfiguration.updateFrom(configuration) & 2048) != 0) {
+            handleConfigurationSmallWidthChanged();
+        }
         float f = configuration.fontScale;
         if (this.mFontScale != f) {
             handleConfigurationFontScaleChanged();

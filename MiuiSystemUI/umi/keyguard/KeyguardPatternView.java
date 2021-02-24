@@ -65,6 +65,10 @@ public class KeyguardPatternView extends MiuiKeyguardPasswordView implements Key
     private final Rect mTempRect;
     private final int[] mTmpPosition;
 
+    /* access modifiers changed from: protected */
+    public void handleConfigurationSmallWidthChanged() {
+    }
+
     public boolean hasOverlappingRendering() {
         return false;
     }

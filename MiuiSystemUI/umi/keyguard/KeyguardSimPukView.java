@@ -57,6 +57,10 @@ public class KeyguardSimPukView extends KeyguardPinBasedInputView implements Pas
     private Map<String, String> mWrongPukCodeMessageMap;
 
     /* access modifiers changed from: protected */
+    public void handleConfigurationSmallWidthChanged() {
+    }
+
+    /* access modifiers changed from: protected */
     public boolean shouldLockout(long j) {
         return false;
     }

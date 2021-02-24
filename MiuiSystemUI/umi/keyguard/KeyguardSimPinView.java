@@ -40,6 +40,10 @@ public class KeyguardSimPinView extends KeyguardPinBasedInputView {
     KeyguardUpdateMonitorCallback mUpdateMonitorCallback;
 
     /* access modifiers changed from: protected */
+    public void handleConfigurationSmallWidthChanged() {
+    }
+
+    /* access modifiers changed from: protected */
     public boolean shouldLockout(long j) {
         return false;
     }
