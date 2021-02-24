@@ -5,6 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.PowerManager;
@@ -19,6 +23,7 @@ import com.android.keyguard.analytics.AnalyticsHelper;
 import com.android.keyguard.charge.container.MiuiChargeAnimationView;
 import com.android.keyguard.charge.view.IChargeAnimationListener;
 import com.android.keyguard.injector.KeyguardUpdateMonitorInjector;
+import com.android.systemui.C0010R$bool;
 import com.android.systemui.C0021R$string;
 import com.android.systemui.Dependency;
 import com.android.systemui.keyguard.WakefulnessLifecycle;
@@ -32,6 +37,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class MiuiChargeController implements IChargeAnimationListener, WakefulnessLifecycle.Observer, SettingsObserver.Callback {
     private final boolean SUPPORT_NEW_ANIMATION = ChargeUtils.supportNewChargeAnimation();
+    private Sensor mAngleSensor;
     /* access modifiers changed from: private */
     public MiuiBatteryStatus mBatteryStatus;
     /* access modifiers changed from: private */
@@ -46,7 +52,10 @@ public class MiuiChargeController implements IChargeAnimationListener, Wakefulne
     /* access modifiers changed from: private */
     public Context mContext;
     /* access modifiers changed from: private */
+    public Boolean mFoldStatus;
+    /* access modifiers changed from: private */
     public Handler mHandler = new Handler();
+    private boolean mIsFoldChargeVideo;
     private KeyguardIndicationController mKeyguardIndicationController;
     MiuiKeyguardUpdateMonitorCallback mKeyguardUpdateMonitorCallback = new MiuiKeyguardUpdateMonitorCallback() {
         public void onRefreshBatteryInfo(MiuiBatteryStatus miuiBatteryStatus) {
@@ -81,6 +90,24 @@ public class MiuiChargeController implements IChargeAnimationListener, Wakefulne
     };
     private boolean mScreenOn = false;
     private PowerManager.WakeLock mScreenOnWakeLock;
+    private SensorEventListener mSensorEventListener = new SensorEventListener() {
+        public void onAccuracyChanged(Sensor sensor, int i) {
+        }
+
+        public void onSensorChanged(SensorEvent sensorEvent) {
+            boolean z = false;
+            if (sensorEvent.values[0] != 0.0f) {
+                z = true;
+            }
+            if (MiuiChargeController.this.mFoldStatus == null || MiuiChargeController.this.mFoldStatus.booleanValue() != z) {
+                if (MiuiChargeController.this.mFoldStatus != null) {
+                    MiuiChargeController.this.dismissChargeAnimation("fold_state_changed");
+                }
+                Boolean unused = MiuiChargeController.this.mFoldStatus = Boolean.valueOf(z);
+            }
+        }
+    };
+    private SensorManager mSensorManager;
     private boolean mShowChargingFromSetting;
     private boolean mShowChargingInNonLockscreen;
     private final Runnable mShowSlowlyRunnable = new Runnable() {
@@ -153,6 +180,10 @@ public class MiuiChargeController implements IChargeAnimationListener, Wakefulne
         this.mChargeDeviceType = -1;
         this.mStateInitialized = false;
         this.mWireState = -1;
+        this.mIsFoldChargeVideo = context.getResources().getBoolean(C0010R$bool.config_folding_charge_video);
+        SensorManager sensorManager = (SensorManager) this.mContext.getSystemService(SensorManager.class);
+        this.mSensorManager = sensorManager;
+        this.mAngleSensor = sensorManager.getDefaultSensor(33171087);
     }
 
     public void checkBatteryStatus(boolean z) {
@@ -298,6 +329,9 @@ public class MiuiChargeController implements IChargeAnimationListener, Wakefulne
                 AnalyticsHelper.getInstance(this.mContext).recordChargeAnimation(this.mWireState);
                 this.mUpdateMonitorInjector.handleChargeAnimationShowingChanged(true);
                 this.mChargeAnimationShowing = true;
+                if (this.mIsFoldChargeVideo) {
+                    registerAngleSensorListener();
+                }
                 this.mChargeAnimationView.startChargeAnimation(this.mScreenOn, this.mClickShowChargeUI);
                 if (!this.mUpdateMonitor.isDeviceInteractive()) {
                     this.mPowerManager.wakeUp(SystemClock.uptimeMillis(), "com.android.systemui:RAPID_CHARGE");
@@ -416,6 +450,9 @@ public class MiuiChargeController implements IChargeAnimationListener, Wakefulne
     public void onChargeAnimationDismiss(int i, String str) {
         Log.i("MiuiChargeController", " onChargeAnimationDismiss: wireState " + i + " reason :" + str);
         this.mChargeAnimationShowing = false;
+        if (this.mIsFoldChargeVideo) {
+            unregisterAngleSensorListener();
+        }
         this.mShowChargingInNonLockscreen = false;
         if (shouldShowChargeAnim() && this.mPendingChargeAnimation) {
             Log.d("MiuiChargeController", " onChargeAnimationDismiss: 切换动画 mWireState=" + this.mWireState);
@@ -584,5 +621,20 @@ public class MiuiChargeController implements IChargeAnimationListener, Wakefulne
 
     private boolean shouldShowChargeAnim() {
         return this.SUPPORT_NEW_ANIMATION && !ChargeUtils.isChargeAnimationDisabled();
+    }
+
+    private void registerAngleSensorListener() {
+        Sensor sensor = this.mAngleSensor;
+        if (sensor != null) {
+            this.mSensorManager.registerListener(this.mSensorEventListener, sensor, 0);
+        }
+    }
+
+    private void unregisterAngleSensorListener() {
+        Sensor sensor = this.mAngleSensor;
+        if (sensor != null) {
+            this.mFoldStatus = null;
+            this.mSensorManager.unregisterListener(this.mSensorEventListener, sensor);
+        }
     }
 }

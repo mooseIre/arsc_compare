@@ -41,6 +41,10 @@ public class KeyguardPINView extends KeyguardPinBasedInputView implements Passwo
     private View[][] mViews;
 
     /* access modifiers changed from: protected */
+    public void handleConfigurationSmallWidthChanged() {
+    }
+
+    /* access modifiers changed from: protected */
     public void handleWrongPassword() {
     }
 
