@@ -90,4 +90,8 @@ public class ControlCenterUtils extends Utils {
             return null;
         }
     }
+
+    public static boolean filterNearby(String str) {
+        return str.equals("custom(com.google.android.gms/.nearby.sharing.SharingTileService)") && !Constants.IS_INTERNATIONAL;
+    }
 }

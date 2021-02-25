@@ -16,6 +16,7 @@ import android.util.ArraySet;
 import android.util.Log;
 import android.widget.Button;
 import com.android.systemui.C0021R$string;
+import com.android.systemui.controlcenter.utils.ControlCenterUtils;
 import com.android.systemui.plugins.qs.QSTile;
 import com.android.systemui.qs.QSTileHost;
 import com.android.systemui.qs.customize.TileQueryHelper;
@@ -146,31 +147,33 @@ public class TileQueryHelper {
             if (!this.mTilesStock.contains(componentName.flattenToString())) {
                 CharSequence loadLabel = resolveInfo.serviceInfo.applicationInfo.loadLabel(packageManager);
                 String spec = CustomTile.toSpec(componentName);
-                QSTile.State state = getState(tiles, spec);
-                if (state != null) {
-                    addTile(spec, loadLabel, state, false);
-                } else {
-                    ServiceInfo serviceInfo = resolveInfo.serviceInfo;
-                    if (serviceInfo.icon != 0 || serviceInfo.applicationInfo.icon != 0) {
-                        ServiceInfo serviceInfo2 = resolveInfo.serviceInfo;
-                        int i = serviceInfo2.icon;
-                        if (i == 0) {
-                            i = serviceInfo2.applicationInfo.icon;
-                        }
-                        Icon createWithResource = Icon.createWithResource(str, i);
-                        Drawable drawable = null;
-                        if (createWithResource != null) {
-                            try {
-                                drawable = createWithResource.loadDrawable(this.mContext);
-                            } catch (Exception unused) {
-                                Log.w("TileQueryHelper", "Invalid icon");
+                if (!ControlCenterUtils.filterNearby(spec)) {
+                    QSTile.State state = getState(tiles, spec);
+                    if (state != null) {
+                        addTile(spec, loadLabel, state, false);
+                    } else {
+                        ServiceInfo serviceInfo = resolveInfo.serviceInfo;
+                        if (serviceInfo.icon != 0 || serviceInfo.applicationInfo.icon != 0) {
+                            ServiceInfo serviceInfo2 = resolveInfo.serviceInfo;
+                            int i = serviceInfo2.icon;
+                            if (i == 0) {
+                                i = serviceInfo2.applicationInfo.icon;
                             }
-                        }
-                        if ("android.permission.BIND_QUICK_SETTINGS_TILE".equals(resolveInfo.serviceInfo.permission) && drawable != null) {
-                            drawable.mutate();
-                            drawable.setTint(this.mContext.getColor(17170443));
-                            CharSequence loadLabel2 = resolveInfo.serviceInfo.loadLabel(packageManager);
-                            createStateAndAddTile(spec, drawable, loadLabel2 != null ? loadLabel2.toString() : "null", loadLabel);
+                            Icon createWithResource = Icon.createWithResource(str, i);
+                            Drawable drawable = null;
+                            if (createWithResource != null) {
+                                try {
+                                    drawable = createWithResource.loadDrawable(this.mContext);
+                                } catch (Exception unused) {
+                                    Log.w("TileQueryHelper", "Invalid icon");
+                                }
+                            }
+                            if ("android.permission.BIND_QUICK_SETTINGS_TILE".equals(resolveInfo.serviceInfo.permission) && drawable != null) {
+                                drawable.mutate();
+                                drawable.setTint(this.mContext.getColor(17170443));
+                                CharSequence loadLabel2 = resolveInfo.serviceInfo.loadLabel(packageManager);
+                                createStateAndAddTile(spec, drawable, loadLabel2 != null ? loadLabel2.toString() : "null", loadLabel);
+                            }
                         }
                     }
                 }
