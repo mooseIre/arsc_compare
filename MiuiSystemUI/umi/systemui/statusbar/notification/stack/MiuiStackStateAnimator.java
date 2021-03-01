@@ -18,6 +18,7 @@ import org.jetbrains.annotations.Nullable;
 public final class MiuiStackStateAnimator extends StackStateAnimator {
     private final ArrayList<ExpandableView> mChangePositionViews = new ArrayList<>();
     private boolean mHasPanelAppearDisappearEvent;
+    private boolean mHasSpringAnimationEvent;
     private int mHeadsUpAppearHeightBottom;
     private final ArrayList<ExpandableView> mHeadsUpAppearView = new ArrayList<>();
     private final ArrayList<ExpandableView> mHeadsUpDisappearView = new ArrayList<>();
@@ -46,46 +47,53 @@ public final class MiuiStackStateAnimator extends StackStateAnimator {
             }
         }
         this.mHasPanelAppearDisappearEvent = !arrayList2.isEmpty();
-        ArrayList<HeadsUpPositionEvent> arrayList3 = new ArrayList<>();
+        ArrayList arrayList3 = new ArrayList();
         for (T next2 : arrayList) {
-            if (next2 instanceof HeadsUpPositionEvent) {
+            if (next2 instanceof SpringAnimationEvent) {
                 arrayList3.add(next2);
             }
         }
-        ArrayList arrayList4 = new ArrayList(CollectionsKt__IterablesKt.collectionSizeOrDefault(arrayList3, 10));
-        for (HeadsUpPositionEvent headsUpPositionEvent : arrayList3) {
-            arrayList4.add(headsUpPositionEvent.mChangingView);
-        }
-        this.mHeadsUpPositionView.addAll(arrayList4);
-        ArrayList<NotificationStackScrollLayout.AnimationEvent> arrayList5 = new ArrayList<>();
+        this.mHasSpringAnimationEvent = !arrayList3.isEmpty();
+        ArrayList<HeadsUpPositionEvent> arrayList4 = new ArrayList<>();
         for (T next3 : arrayList) {
-            if (isHeadsUpAnimationType((NotificationStackScrollLayout.AnimationEvent) next3)) {
-                arrayList5.add(next3);
+            if (next3 instanceof HeadsUpPositionEvent) {
+                arrayList4.add(next3);
             }
         }
-        arrayList.removeAll(arrayList5);
-        ArrayList arrayList6 = new ArrayList(CollectionsKt__IterablesKt.collectionSizeOrDefault(arrayList5, 10));
-        for (NotificationStackScrollLayout.AnimationEvent mapHeadsUpAnimationEvent : arrayList5) {
-            arrayList6.add(mapHeadsUpAnimationEvent(mapHeadsUpAnimationEvent));
+        ArrayList arrayList5 = new ArrayList(CollectionsKt__IterablesKt.collectionSizeOrDefault(arrayList4, 10));
+        for (HeadsUpPositionEvent headsUpPositionEvent : arrayList4) {
+            arrayList5.add(headsUpPositionEvent.mChangingView);
         }
-        arrayList.addAll(arrayList6);
-        ArrayList<NotificationStackScrollLayout.AnimationEvent> arrayList7 = new ArrayList<>();
-        Iterator it = arrayList5.iterator();
+        this.mHeadsUpPositionView.addAll(arrayList5);
+        ArrayList<NotificationStackScrollLayout.AnimationEvent> arrayList6 = new ArrayList<>();
+        for (T next4 : arrayList) {
+            if (isHeadsUpAnimationType((NotificationStackScrollLayout.AnimationEvent) next4)) {
+                arrayList6.add(next4);
+            }
+        }
+        arrayList.removeAll(arrayList6);
+        ArrayList arrayList7 = new ArrayList(CollectionsKt__IterablesKt.collectionSizeOrDefault(arrayList6, 10));
+        for (NotificationStackScrollLayout.AnimationEvent mapHeadsUpAnimationEvent : arrayList6) {
+            arrayList7.add(mapHeadsUpAnimationEvent(mapHeadsUpAnimationEvent));
+        }
+        arrayList.addAll(arrayList7);
+        ArrayList<NotificationStackScrollLayout.AnimationEvent> arrayList8 = new ArrayList<>();
+        Iterator it = arrayList6.iterator();
         while (true) {
             boolean z = false;
             if (!it.hasNext()) {
                 break;
             }
-            Object next4 = it.next();
-            NotificationStackScrollLayout.AnimationEvent animationEvent = (NotificationStackScrollLayout.AnimationEvent) next4;
+            Object next5 = it.next();
+            NotificationStackScrollLayout.AnimationEvent animationEvent = (NotificationStackScrollLayout.AnimationEvent) next5;
             if (animationEvent.animationType == 11 && animationEvent.mChangingView != null) {
                 z = true;
             }
             if (z) {
-                arrayList7.add(next4);
+                arrayList8.add(next5);
             }
         }
-        for (NotificationStackScrollLayout.AnimationEvent animationEvent2 : arrayList7) {
+        for (NotificationStackScrollLayout.AnimationEvent animationEvent2 : arrayList8) {
             ExpandableView expandableView = animationEvent2.mChangingView;
             this.mHeadsUpAppearView.add(expandableView);
             Intrinsics.checkExpressionValueIsNotNull(expandableView, "view");
@@ -97,14 +105,14 @@ public final class MiuiStackStateAnimator extends StackStateAnimator {
             }
             expandableViewState.applyToView(expandableView);
         }
-        ArrayList<NotificationStackScrollLayout.AnimationEvent> arrayList8 = new ArrayList<>();
-        for (Object next5 : arrayList5) {
-            NotificationStackScrollLayout.AnimationEvent animationEvent3 = (NotificationStackScrollLayout.AnimationEvent) next5;
+        ArrayList<NotificationStackScrollLayout.AnimationEvent> arrayList9 = new ArrayList<>();
+        for (Object next6 : arrayList6) {
+            NotificationStackScrollLayout.AnimationEvent animationEvent3 = (NotificationStackScrollLayout.AnimationEvent) next6;
             if (animationEvent3.animationType == 12 && animationEvent3.mChangingView != null) {
-                arrayList8.add(next5);
+                arrayList9.add(next6);
             }
         }
-        for (NotificationStackScrollLayout.AnimationEvent animationEvent4 : arrayList8) {
+        for (NotificationStackScrollLayout.AnimationEvent animationEvent4 : arrayList9) {
             ExpandableView expandableView2 = animationEvent4.mChangingView;
             this.mHeadsUpDisappearView.add(expandableView2);
             Intrinsics.checkExpressionValueIsNotNull(expandableView2, "view");
@@ -124,6 +132,7 @@ public final class MiuiStackStateAnimator extends StackStateAnimator {
 
     private final void clearAnimationState() {
         this.mHasPanelAppearDisappearEvent = false;
+        this.mHasSpringAnimationEvent = false;
         this.mChangePositionViews.clear();
         this.mHeadsUpAppearView.clear();
         this.mHeadsUpDisappearView.clear();
@@ -141,7 +150,7 @@ public final class MiuiStackStateAnimator extends StackStateAnimator {
 
     /* access modifiers changed from: protected */
     public boolean applyWithAnimation(@Nullable View view) {
-        return CollectionsKt___CollectionsKt.contains(this.mHeadsUpAppearView, view) || CollectionsKt___CollectionsKt.contains(this.mHeadsUpDisappearView, view) || this.mHasPanelAppearDisappearEvent;
+        return CollectionsKt___CollectionsKt.contains(this.mHeadsUpAppearView, view) || CollectionsKt___CollectionsKt.contains(this.mHeadsUpDisappearView, view) || this.mHasPanelAppearDisappearEvent || this.mHasSpringAnimationEvent;
     }
 
     /* access modifiers changed from: protected */

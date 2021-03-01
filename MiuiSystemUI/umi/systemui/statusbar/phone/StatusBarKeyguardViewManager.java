@@ -15,6 +15,7 @@ import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.KeyguardUpdateMonitorCallback;
 import com.android.keyguard.KeyguardViewController;
 import com.android.keyguard.ViewMediatorCallback;
+import com.android.keyguard.faceunlock.MiuiFaceUnlockUtils;
 import com.android.systemui.DejankUtils;
 import com.android.systemui.SystemUIFactory;
 import com.android.systemui.dock.DockManager;
@@ -237,7 +238,7 @@ public class StatusBarKeyguardViewManager implements RemoteInputController.Callb
     }
 
     public void showBouncer(boolean z, boolean z2) {
-        if (z2 && !this.mKeyguardUpdateManager.isFaceDetectionRunning()) {
+        if (z2 && !this.mKeyguardUpdateManager.isFaceDetectionRunning() && MiuiFaceUnlockUtils.isSupportLiftingCamera(this.mContext)) {
             this.mKeyguardUpdateManager.requestFaceAuth(1);
         }
         showBouncer(z);

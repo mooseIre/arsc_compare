@@ -36,7 +36,6 @@ public class SuperSaveModeController implements CallbackController<SuperSaveMode
 
     private void register() {
         this.mSettingsObserver.addCallback(this, "power_supersave_mode_open");
-        onContentChanged("power_supersave_mode_open", this.mSettingsObserver.getValue("power_supersave_mode_open", 0, "0"));
     }
 
     private void unRegister() {

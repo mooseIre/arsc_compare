@@ -110,6 +110,9 @@ public class NotificationRankingManager {
 
     /* access modifiers changed from: private */
     public final boolean filter(NotificationEntry notificationEntry) {
+        if (notificationEntry == null) {
+            return true;
+        }
         boolean shouldFilterOut = this.notifFilter.shouldFilterOut(notificationEntry);
         if (shouldFilterOut) {
             notificationEntry.resetInitializationTime();

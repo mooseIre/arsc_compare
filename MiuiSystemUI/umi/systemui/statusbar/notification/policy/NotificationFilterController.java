@@ -161,14 +161,14 @@ public class NotificationFilterController {
         intent.getStringExtra("change_importance");
         String stringExtra3 = intent.getStringExtra("channel_id");
         if (intent.getBooleanExtra("com.miui.app.ExtraStatusBarManager.extra_forbid_notification", false)) {
-            removeNotifications(stringExtra);
+            removeNotifications(stringExtra, stringExtra3);
             if (!TextUtils.equals(intent.getSender(), context.getPackageName())) {
                 ((NotificationStat) Dependency.get(NotificationStat.class)).onBlock(stringExtra, stringExtra3, stringExtra2);
             }
         }
     }
 
-    private void removeNotifications(String str) {
+    private void removeNotifications(String str, String str2) {
         ((List) this.mEntryManager.getAllNotifs().stream().filter(new Predicate(str) {
             public final /* synthetic */ String f$0;
 
@@ -179,16 +179,30 @@ public class NotificationFilterController {
             public final boolean test(Object obj) {
                 return this.f$0.equals(((NotificationEntry) obj).getSbn().getPackageName());
             }
+        }).filter(new Predicate(str2) {
+            public final /* synthetic */ String f$0;
+
+            {
+                this.f$0 = r1;
+            }
+
+            public final boolean test(Object obj) {
+                return NotificationFilterController.lambda$removeNotifications$1(this.f$0, (NotificationEntry) obj);
+            }
         }).collect(Collectors.toList())).forEach(new Consumer() {
             public final void accept(Object obj) {
-                NotificationFilterController.this.lambda$removeNotifications$1$NotificationFilterController((NotificationEntry) obj);
+                NotificationFilterController.this.lambda$removeNotifications$2$NotificationFilterController((NotificationEntry) obj);
             }
         });
     }
 
+    static /* synthetic */ boolean lambda$removeNotifications$1(String str, NotificationEntry notificationEntry) {
+        return TextUtils.isEmpty(str) || TextUtils.equals(str, notificationEntry.getChannel().getId());
+    }
+
     /* access modifiers changed from: private */
-    /* renamed from: lambda$removeNotifications$1 */
-    public /* synthetic */ void lambda$removeNotifications$1$NotificationFilterController(NotificationEntry notificationEntry) {
+    /* renamed from: lambda$removeNotifications$2 */
+    public /* synthetic */ void lambda$removeNotifications$2$NotificationFilterController(NotificationEntry notificationEntry) {
         Log.d("NotificationFilterController", String.format("filter Notification key=%s", new Object[]{notificationEntry.getKey()}));
         this.mEntryManager.performRemoveNotification(notificationEntry.getSbn(), 7);
     }

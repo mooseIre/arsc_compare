@@ -3891,6 +3891,8 @@ public final class R {
         public static final int miui_keyguard_password_view_eca_fod_margin_top;
         public static final int miui_keyguard_password_view_eca_margin_bottom;
         public static final int miui_keyguard_password_view_eca_margin_top;
+        public static final int miui_keyguard_password_view_em_btm_height;
+        public static final int miui_keyguard_password_view_em_fod_top_margin;
         public static final int miui_keyguard_password_view_key_board_view_height;
         public static final int miui_keyguard_password_view_layout_height;
         public static final int miui_keyguard_password_view_layout_padingTop;
@@ -3902,12 +3904,16 @@ public final class R {
         public static final int miui_keyguard_password_view_password_margin_bottom;
         public static final int miui_keyguard_pattern_layout_height;
         public static final int miui_keyguard_pattern_layout_width;
+        public static final int miui_keyguard_pattern_view_container_margin_bottom;
         public static final int miui_keyguard_pattern_view_eca_fod_top_margin;
         public static final int miui_keyguard_pattern_view_eca_height;
         public static final int miui_keyguard_pattern_view_eca_margin_bottom;
+        public static final int miui_keyguard_pattern_view_em_fod_top_margin;
         public static final int miui_keyguard_pattern_view_message_area_margin_bottom;
         public static final int miui_keyguard_pattern_view_pattern_view_height_width;
         public static final int miui_keyguard_pattern_view_pattern_view_margin_bottom;
+        public static final int miui_keyguard_pin_view_em_btm_height;
+        public static final int miui_keyguard_pin_view_em_fod_top_margin;
         public static final int miui_keyguard_pin_view_message_area_margin_bottom;
         public static final int miui_keyguard_pin_view_num_pad_width;
         public static final int miui_keyguard_pin_view_row0_margin_bottom;
@@ -6030,6 +6036,7 @@ public final class R {
         public static final int dismiss_circle_background;
         public static final int dnd_notification_icon;
         public static final int drop_down_mark;
+        public static final int emergency_btn_global;
         public static final int face_dialog_dark_to_checkmark;
         public static final int face_dialog_dark_to_error;
         public static final int face_dialog_error_to_idle;
@@ -8409,6 +8416,7 @@ public final class R {
         public static final int emergency_call_button;
         public static final int emergency_cryptkeeper_text;
         public static final int empty_space;
+        public static final int empty_space_for_global;
         public static final int empty_text;
         public static final int empty_time_view;
         public static final int empty_view;
@@ -9030,6 +9038,7 @@ public final class R {
         public static final int owner_info;
         public static final int owner_info_arrow_right;
         public static final int owner_info_button;
+        public static final int owner_info_container;
         public static final int owner_info_edit_text;
         public static final int owner_info_layout;
         public static final int owner_info_restricted_icon;
@@ -11288,6 +11297,7 @@ public final class R {
         public static final int face_unlock_pin_and_fingerprint;
         public static final int face_unlock_reveal_eye;
         public static final int face_unlock_reveal_mouth;
+        public static final int face_unlock_success;
         public static final int failed_to_open_app_settings_toast;
         public static final int fingerprint_add_text;
         public static final int fingerprint_add_title;

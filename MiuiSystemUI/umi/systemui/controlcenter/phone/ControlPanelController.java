@@ -182,7 +182,7 @@ public class ControlPanelController implements CallbackController<UseControlPane
 
     private void register() {
         this.mCurrentUserTracker.startTracking();
-        this.mSettingsObserver.addCallbackForSingleUser(this, 0, "use_control_panel");
+        this.mSettingsObserver.addCallbackForUser(this, 0, "use_control_panel");
         this.mSettingsObserver.addCallback(this, "expandable_under_lock_screen");
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("action_panels_operation");

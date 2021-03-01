@@ -171,9 +171,10 @@ public class DozeServiceHost implements DozeHost {
     }
 
     public void updateDozing() {
+        int mode = this.mBiometricUnlockControllerLazy.get().getMode();
         boolean z = false;
-        boolean z2 = (this.mDozingRequested && this.mStatusBarStateController.getState() == 1) || this.mBiometricUnlockControllerLazy.get().getMode() == 2;
-        if (this.mBiometricUnlockControllerLazy.get().getMode() != 1) {
+        boolean z2 = (this.mDozingRequested && this.mStatusBarStateController.getState() == 1) || mode == 2;
+        if (!(mode == 1 || mode == 7)) {
             z = z2;
         }
         this.mStatusBarStateController.setIsDozing(z);

@@ -2237,12 +2237,12 @@ public class KeyguardViewMediator extends SystemUI implements Dumpable {
         }
         this.mShowing = z;
         this.mAodShowing = z4;
-        this.mUpdateMonitor.setKeyguardShowingAndOccluded(z, this.mOccluded);
-        this.mUpdateMonitor.updateShowingState(this.mShowing);
         if (z3) {
             updateActivityLockScreenState(z, z4);
             notifyDefaultDisplayCallbacks(z);
         }
+        this.mUpdateMonitor.setKeyguardShowingAndOccluded(this.mShowing, this.mOccluded);
+        this.mUpdateMonitor.updateShowingState(this.mShowing);
     }
 
     private void notifyDefaultDisplayCallbacks(boolean z) {
