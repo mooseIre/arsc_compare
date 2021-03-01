@@ -16,9 +16,9 @@ public final class MiuiKeyguardWallpaperControllerImpl$mAODCallback$1 implements
 
     public void onContentChanged(@Nullable String str, @Nullable String str2) {
         if (Intrinsics.areEqual((Object) str, (Object) MiuiKeyguardUtils.AOD_MODE)) {
-            this.this$0.mAodEnable = MiuiTextUtils.parseBoolean(str2, false);
+            this.this$0.mAodEnable = MiuiTextUtils.parseBoolean(str2);
         } else if (Intrinsics.areEqual((Object) str, (Object) "aod_using_super_wallpaper")) {
-            this.this$0.mAodUsingSuperWallpaperStyle = MiuiTextUtils.parseBoolean(str2, false);
+            this.this$0.mAodUsingSuperWallpaperStyle = MiuiTextUtils.parseBoolean(str2);
         }
     }
 }

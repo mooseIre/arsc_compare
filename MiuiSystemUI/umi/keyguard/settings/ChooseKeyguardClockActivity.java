@@ -280,6 +280,12 @@ public class ChooseKeyguardClockActivity extends Activity {
         findViewById.setChecked(this.mLockPatternUtils.isOwnerInfoEnabled(this.mUserId));
         final EditText editText = (EditText) inflate.findViewById(C0015R$id.owner_info_edit_text);
         editText.setText(getOwnerInfo());
+        ((LinearLayout) inflate.findViewById(C0015R$id.owner_info_container)).setOnClickListener(new View.OnClickListener(this) {
+            public void onClick(View view) {
+                SlidingButton slidingButton = findViewById;
+                slidingButton.setChecked(!slidingButton.isChecked());
+            }
+        });
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setCancelable(false);
         builder.setTitle(C0021R$string.lock_screen_signature_title);

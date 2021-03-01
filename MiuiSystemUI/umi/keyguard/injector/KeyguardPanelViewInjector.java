@@ -354,9 +354,10 @@ public final class KeyguardPanelViewInjector extends MiuiKeyguardUpdateMonitorCa
         ForceBlackObserver forceBlackObserver = this.mForceBlackObserver;
         if (forceBlackObserver != null) {
             forceBlackObserver.addCallback(this);
+            Long[] lArr = {1L, 0L};
             SettingsObserver settingsObserver = this.mSettingsObserver;
             if (settingsObserver != null) {
-                settingsObserver.addCallback(this, "status_bar_expandable_under_keyguard", "gesture_wakeup");
+                settingsObserver.addCallback((SettingsObserver.Callback) this, 1, lArr, "status_bar_expandable_under_keyguard", "gesture_wakeup");
                 IMiuiKeyguardWallpaperController iMiuiKeyguardWallpaperController = this.mWallpaperController;
                 if (iMiuiKeyguardWallpaperController != null) {
                     iMiuiKeyguardWallpaperController.registerWallpaperChangeCallback(this);
@@ -428,10 +429,10 @@ public final class KeyguardPanelViewInjector extends MiuiKeyguardUpdateMonitorCa
             int hashCode = str.hashCode();
             if (hashCode != -1283918561) {
                 if (hashCode == 4625141 && str.equals("gesture_wakeup")) {
-                    MiuiKeyguardUtils.setContentObserverForGestureWakeup(MiuiTextUtils.parseBoolean(str2, false));
+                    MiuiKeyguardUtils.setContentObserverForGestureWakeup(MiuiTextUtils.parseBoolean(str2));
                 }
             } else if (str.equals("status_bar_expandable_under_keyguard")) {
-                MiuiKeyguardUtils.setExpandableStatusbarUnderKeyguard(MiuiTextUtils.parseBoolean(str2, true));
+                MiuiKeyguardUtils.setExpandableStatusbarUnderKeyguard(MiuiTextUtils.parseBoolean(str2));
             }
         }
     }

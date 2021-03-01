@@ -201,7 +201,7 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
     private MiuiKeyguardUpdateMonitorCallback mKeyguardUpdateMonitorCallback = new MiuiKeyguardUpdateMonitorCallback() {
         private Runnable mDelayRunnable = new Runnable() {
             public final void run() {
-                MiuiGxzwManager.AnonymousClass3.this.lambda$$0$MiuiGxzwManager$3();
+                MiuiGxzwManager.AnonymousClass3.this.lambda$$1$MiuiGxzwManager$3();
             }
         };
 
@@ -217,6 +217,19 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
             Log.d("MiuiGxzwManager", "onKeyguardBouncerChanged: bouncer = " + z);
             boolean unused = MiuiGxzwManager.this.mBouncer = z;
             MiuiGxzwManager.this.updateGxzwState();
+            if (((KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class)).isFingerprintTemporarilyLockout()) {
+                AsyncTask.THREAD_POOL_EXECUTOR.execute(new Runnable() {
+                    public final void run() {
+                        MiuiGxzwManager.AnonymousClass3.this.lambda$onKeyguardBouncerChanged$0$MiuiGxzwManager$3();
+                    }
+                });
+            }
+        }
+
+        /* access modifiers changed from: private */
+        /* renamed from: lambda$onKeyguardBouncerChanged$0 */
+        public /* synthetic */ void lambda$onKeyguardBouncerChanged$0$MiuiGxzwManager$3() {
+            MiuiGxzwUtils.setTouchMode(10, MiuiGxzwManager.this.mBouncer ? 0 : 3);
         }
 
         public void onScreenTurnedOn() {
@@ -270,8 +283,8 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
         }
 
         /* access modifiers changed from: private */
-        /* renamed from: lambda$$0 */
-        public /* synthetic */ void lambda$$0$MiuiGxzwManager$3() {
+        /* renamed from: lambda$$1 */
+        public /* synthetic */ void lambda$$1$MiuiGxzwManager$3() {
             boolean unused = MiuiGxzwManager.this.mFingerprintLockout = false;
             MiuiGxzwManager.this.updateGxzwState();
         }

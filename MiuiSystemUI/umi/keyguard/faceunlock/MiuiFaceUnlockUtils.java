@@ -78,7 +78,9 @@ public class MiuiFaceUnlockUtils {
     }
 
     private static void updateRgbAuthenticationHelpInfo(int i) {
-        if (i != 3) {
+        if (i == 0) {
+            mHelpStringResId = C0021R$string.face_unlock_success;
+        } else if (i != 3) {
             if (i != 4) {
                 if (i != 5) {
                     switch (i) {
@@ -116,8 +118,8 @@ public class MiuiFaceUnlockUtils {
                 }
             }
             mHelpStringResId = C0021R$string.face_unlock_be_on_the_screen;
-            return;
+        } else {
+            mHelpStringResId = C0021R$string.unlock_failed;
         }
-        mHelpStringResId = C0021R$string.unlock_failed;
     }
 }

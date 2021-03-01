@@ -309,10 +309,10 @@ public class MiuiChargeAnimationView extends FrameLayout {
                 public void onAnimationEnd(Animator animator) {
                     if (MiuiChargeAnimationView.this.mStartingDismissAnim) {
                         MiuiChargeAnimationView.this.onDismissAnimationEnd();
-                        MiuiChargeAnimationView.this.itemContainer.setScaleX(1.0f);
-                        MiuiChargeAnimationView.this.itemContainer.setScaleY(1.0f);
                         MiuiChargeAnimationView.this.itemContainer.setAlpha(0.0f);
                     }
+                    MiuiChargeAnimationView.this.itemContainer.setScaleX(1.0f);
+                    MiuiChargeAnimationView.this.itemContainer.setScaleY(1.0f);
                     boolean unused = MiuiChargeAnimationView.this.mStartingDismissAnim = false;
                 }
 

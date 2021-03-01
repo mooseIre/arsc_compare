@@ -123,6 +123,10 @@ public class MiuiKeyguardUtils {
         return MiuiGxzwManager.isGxzwSensor();
     }
 
+    public static boolean isGlobalAndFingerprintEnable() {
+        return miui.os.Build.IS_INTERNATIONAL_BUILD && ((KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class)).isUnlockWithFingerprintPossible(KeyguardUpdateMonitor.getCurrentUser());
+    }
+
     public static boolean isFullScreenGestureOpened() {
         return CommonUtil.isFullScreenGestureEnabled();
     }

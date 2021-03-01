@@ -41,10 +41,6 @@ public class KeyguardPINView extends KeyguardPinBasedInputView implements Passwo
     private View[][] mViews;
 
     /* access modifiers changed from: protected */
-    public void handleConfigurationSmallWidthChanged() {
-    }
-
-    /* access modifiers changed from: protected */
     public void handleWrongPassword() {
     }
 
@@ -177,6 +173,23 @@ public class KeyguardPINView extends KeyguardPinBasedInputView implements Passwo
         LinearLayout.LayoutParams layoutParams2 = (LinearLayout.LayoutParams) this.mKeyguardBouncerMessageView.getLayoutParams();
         layoutParams2.topMargin = getResources().getDimensionPixelOffset(C0012R$dimen.miui_keyguard_bouncer_message_view_margin_top);
         this.mKeyguardBouncerMessageView.setLayoutParams(layoutParams2);
+        LinearLayout.LayoutParams layoutParams3 = (LinearLayout.LayoutParams) this.mEmergencyCarrierArea.getLayoutParams();
+        layoutParams3.bottomMargin = getResources().getDimensionPixelOffset(C0012R$dimen.miui_keyguard_pin_view_row5_margin_bottom);
+        this.mEmergencyCarrierArea.setLayoutParams(layoutParams3);
+        setPositionForFod();
+    }
+
+    /* access modifiers changed from: protected */
+    public void handleConfigurationSmallWidthChanged() {
+        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) this.mContainer.getLayoutParams();
+        layoutParams.height = getResources().getDimensionPixelOffset(C0012R$dimen.miui_keyguard_pin_view_rows_layout_height);
+        this.mContainer.setLayoutParams(layoutParams);
+        LinearLayout.LayoutParams layoutParams2 = (LinearLayout.LayoutParams) this.mKeyguardBouncerMessageView.getLayoutParams();
+        layoutParams2.topMargin = getResources().getDimensionPixelOffset(C0012R$dimen.miui_keyguard_bouncer_message_view_margin_top);
+        this.mKeyguardBouncerMessageView.setLayoutParams(layoutParams2);
+        LinearLayout.LayoutParams layoutParams3 = (LinearLayout.LayoutParams) this.mEmergencyCarrierArea.getLayoutParams();
+        layoutParams3.bottomMargin = getResources().getDimensionPixelOffset(C0012R$dimen.miui_keyguard_pin_view_row5_margin_bottom);
+        this.mEmergencyCarrierArea.setLayoutParams(layoutParams3);
         setPositionForFod();
     }
 
@@ -192,15 +205,49 @@ public class KeyguardPINView extends KeyguardPinBasedInputView implements Passwo
             int dimensionPixelOffset4 = getResources().getDimensionPixelOffset(C0012R$dimen.miui_keyguard_pin_view_row4_margin_bottom);
             int dimensionPixelOffset5 = getResources().getDimensionPixelOffset(C0012R$dimen.miui_keyguard_pin_view_row4_margin_bottom_fod);
             int dimensionPixelOffset6 = getResources().getDimensionPixelOffset(C0012R$dimen.miui_keyguard_pin_view_row5_margin_bottom);
+            int i = ((((dimensionPixelOffset - dimensionPixelOffset2) - (dimensionPixelOffset3 * 3)) - dimensionPixelOffset4) - dimensionPixelOffset6) / 6;
+            int dimensionPixelOffset7 = getResources().getDimensionPixelOffset(C0012R$dimen.miui_keyguard_pin_view_em_btm_height);
+            int i2 = (max - (i / 2)) - dimensionPixelOffset6;
+            int i3 = (max - i) - dimensionPixelOffset6;
             Rect fodPosition = MiuiGxzwManager.getFodPosition(getContext());
             int height = fodPosition.top + (fodPosition.height() / 2);
+            int dimensionPixelOffset8 = (i3 - fodPosition.bottom) - getResources().getDimensionPixelOffset(C0012R$dimen.miui_keyguard_pin_view_em_fod_top_margin);
             LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) this.mContainer.getLayoutParams();
-            layoutParams.bottomMargin = ((max - ((((((dimensionPixelOffset - dimensionPixelOffset2) - (dimensionPixelOffset3 * 3)) - dimensionPixelOffset4) - dimensionPixelOffset6) / 6) / 2)) - dimensionPixelOffset6) - height;
-            layoutParams.height = dimensionPixelOffset + dimensionPixelOffset5;
+            if (MiuiKeyguardUtils.isGlobalAndFingerprintEnable()) {
+                layoutParams.bottomMargin = dimensionPixelOffset8;
+                layoutParams.height = dimensionPixelOffset + dimensionPixelOffset5 + ((i2 - height) - dimensionPixelOffset8);
+            } else {
+                layoutParams.bottomMargin = i2 - height;
+                layoutParams.height = dimensionPixelOffset + dimensionPixelOffset5;
+            }
             this.mContainer.setLayoutParams(layoutParams);
             LinearLayout.LayoutParams layoutParams2 = (LinearLayout.LayoutParams) this.mRow4.getLayoutParams();
+            if (MiuiKeyguardUtils.isGlobalAndFingerprintEnable()) {
+                layoutParams2.bottomMargin = (-i) - dimensionPixelOffset4;
+                this.mRow4.setLayoutParams(layoutParams2);
+                int i4 = dimensionPixelOffset4 + dimensionPixelOffset5 + ((i2 - height) - dimensionPixelOffset8) + i;
+                View findViewById = findViewById(C0015R$id.keyguard_selector_fade_container);
+                LinearLayout.LayoutParams layoutParams3 = (LinearLayout.LayoutParams) findViewById.getLayoutParams();
+                layoutParams3.height = i4;
+                layoutParams3.bottomMargin = (-fodPosition.height()) / 3;
+                findViewById.setLayoutParams(layoutParams3);
+                LinearLayout.LayoutParams layoutParams4 = (LinearLayout.LayoutParams) this.mEmergencyButton.getLayoutParams();
+                layoutParams4.height = dimensionPixelOffset7;
+                layoutParams4.topMargin = i4;
+                this.mEmergencyButton.setLayoutParams(layoutParams4);
+                LinearLayout.LayoutParams layoutParams5 = (LinearLayout.LayoutParams) this.mBackButton.getLayoutParams();
+                layoutParams5.height = i;
+                this.mBackButton.setLayoutParams(layoutParams5);
+                LinearLayout.LayoutParams layoutParams6 = (LinearLayout.LayoutParams) this.mDeleteButton.getLayoutParams();
+                layoutParams6.height = i;
+                this.mDeleteButton.setLayoutParams(layoutParams6);
+                return;
+            }
             layoutParams2.bottomMargin = dimensionPixelOffset4 + dimensionPixelOffset5;
             this.mRow4.setLayoutParams(layoutParams2);
+            LinearLayout.LayoutParams layoutParams7 = (LinearLayout.LayoutParams) this.mEmergencyButton.getLayoutParams();
+            layoutParams7.height = dimensionPixelOffset7;
+            this.mEmergencyButton.setLayoutParams(layoutParams7);
         }
     }
 }

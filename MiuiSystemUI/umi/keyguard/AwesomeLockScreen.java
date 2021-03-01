@@ -22,6 +22,7 @@ import com.android.keyguard.charge.ChargeUtils;
 import com.android.keyguard.charge.MiuiBatteryStatus;
 import com.android.keyguard.faceunlock.FaceUnlockCallback;
 import com.android.keyguard.faceunlock.MiuiFaceUnlockManager;
+import com.android.keyguard.faceunlock.MiuiFaceUnlockUtils;
 import com.android.keyguard.fod.MiuiGxzwCallback;
 import com.android.keyguard.fod.MiuiGxzwManager;
 import com.android.keyguard.utils.MiuiKeyguardUtils;
@@ -312,7 +313,9 @@ public class AwesomeLockScreen extends FrameLayout implements LockScreenRoot.Loc
                 }
             }
         }, (long) i);
-        this.mUpdateMonitor.requestFaceAuth(1);
+        if (MiuiFaceUnlockUtils.isSupportLiftingCamera(this.mContext)) {
+            this.mUpdateMonitor.requestFaceAuth(1);
+        }
         Log.d("AwesomeLockScreen", String.format("lockscreen awake time: [%d sec] in time range: [%d sec]", new Object[]{Long.valueOf(sTotalWakenTime), Long.valueOf((System.currentTimeMillis() / 1000) - sStartTime)}));
     }
 

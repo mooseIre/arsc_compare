@@ -63,7 +63,7 @@ public final class MiuiKeyguardWallpaperControllerImpl implements IMiuiKeyguardW
         SettingsObserver.Callback callback = this.mAODCallback;
         String str = MiuiKeyguardUtils.AOD_MODE;
         Intrinsics.checkExpressionValueIsNotNull(str, "MiuiKeyguardUtils.AOD_MODE");
-        ((SettingsObserver) Dependency.get(SettingsObserver.class)).addCallback(callback, 1, str, "aod_using_super_wallpaper");
+        ((SettingsObserver) Dependency.get(SettingsObserver.class)).addCallback(callback, 1, 1, str, "aod_using_super_wallpaper");
     }
 
     @Nullable
