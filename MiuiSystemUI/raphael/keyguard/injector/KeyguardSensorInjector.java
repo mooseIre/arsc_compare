@@ -145,7 +145,7 @@ public final class KeyguardSensorInjector implements SettingsObserver.Callback, 
         if (systemService != null) {
             this.mDisplay = ((WindowManager) systemService).getDefaultDisplay();
             this.mIsDeviceSupportLargeAreaTouch = isDeviceSupportLargeAreaTouch();
-            ((SettingsObserver) Dependency.get(SettingsObserver.class)).addCallback(this, "pick_up_gesture_wakeup_mode");
+            ((SettingsObserver) Dependency.get(SettingsObserver.class)).addCallbackForType(this, 1, "pick_up_gesture_wakeup_mode");
             return;
         }
         throw new TypeCastException("null cannot be cast to non-null type android.view.WindowManager");
@@ -276,7 +276,7 @@ public final class KeyguardSensorInjector implements SettingsObserver.Callback, 
 
     public void onContentChanged(@Nullable String str, @Nullable String str2) {
         if (Intrinsics.areEqual((Object) "pick_up_gesture_wakeup_mode", (Object) str)) {
-            this.mPickupSensorSettingsOpened = MiuiTextUtils.parseBoolean(str2, false);
+            this.mPickupSensorSettingsOpened = MiuiTextUtils.parseBoolean(str2);
             boolean isFingerprintUnlock = ((KeyguardUpdateMonitorInjector) Dependency.get(KeyguardUpdateMonitorInjector.class)).isFingerprintUnlock();
             boolean isHiding = this.mKeyguardViewMediator.isHiding();
             boolean isShowing = this.mKeyguardViewMediator.isShowing();

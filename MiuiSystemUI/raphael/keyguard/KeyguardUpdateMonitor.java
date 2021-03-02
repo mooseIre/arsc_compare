@@ -1348,6 +1348,7 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
                 keyguardUpdateMonitorCallback.onDreamingStateChanged(this.mIsDreaming);
             }
         }
+        updateFingerprintListeningState();
     }
 
     /* access modifiers changed from: private */
@@ -2242,6 +2243,7 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
     /* access modifiers changed from: private */
     public void handleKeyguardReset() {
         Log.d("KeyguardUpdateMonitor", "handleKeyguardReset");
+        updateFingerprintListeningState();
         this.mNeedsSlowUnlockTransition = resolveNeedsSlowUnlockTransition();
     }
 
@@ -2275,6 +2277,7 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
                 keyguardUpdateMonitorCallback.onKeyguardBouncerChanged(z);
             }
         }
+        updateFingerprintListeningState();
     }
 
     /* access modifiers changed from: private */

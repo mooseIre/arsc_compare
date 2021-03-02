@@ -16,12 +16,15 @@ import android.widget.TextView;
 import com.android.internal.widget.LockPatternUtils;
 import com.android.keyguard.BackButton;
 import com.android.keyguard.EmergencyButton;
+import com.android.keyguard.KeyguardSecurityModel;
 import com.android.keyguard.faceunlock.MiuiKeyguardFaceUnlockView;
 import com.android.keyguard.utils.MiuiKeyguardUtils;
 import com.android.keyguard.utils.PhoneUtils;
+import com.android.systemui.C0013R$drawable;
 import com.android.systemui.C0015R$id;
 import com.android.systemui.C0021R$string;
 import com.android.systemui.Dependency;
+import miui.os.Build;
 
 public abstract class MiuiKeyguardPasswordView extends LinearLayout implements EmergencyButton.EmergencyButtonCallback, BackButton.BackButtonCallback {
     protected BackButton mBackButton;
@@ -68,6 +71,7 @@ public abstract class MiuiKeyguardPasswordView extends LinearLayout implements E
 
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
+        KeyguardSecurityModel.SecurityMode securityMode;
         super.onFinishInflate();
         this.mEmergencyCarrierArea = (EmergencyCarrierArea) findViewById(C0015R$id.keyguard_selector_fade_container);
         EmergencyButton emergencyButton = (EmergencyButton) findViewById(C0015R$id.emergency_call_button);
@@ -77,6 +81,11 @@ public abstract class MiuiKeyguardPasswordView extends LinearLayout implements E
         this.mBackButton = backButton;
         backButton.setCallback(this);
         this.mDeleteButton = (TextView) findViewById(C0015R$id.delete_button);
+        if (Build.IS_INTERNATIONAL_BUILD && ((securityMode = ((KeyguardSecurityModel) Dependency.get(KeyguardSecurityModel.class)).getSecurityMode(KeyguardUpdateMonitor.getCurrentUser())) == KeyguardSecurityModel.SecurityMode.Pattern || securityMode == KeyguardSecurityModel.SecurityMode.PIN || securityMode == KeyguardSecurityModel.SecurityMode.Password)) {
+            findViewById(C0015R$id.empty_space_for_global).setVisibility(0);
+            findViewById(C0015R$id.empty_space).setVisibility(8);
+            this.mEmergencyButton.setBackgroundResource(C0013R$drawable.emergency_btn_global);
+        }
         this.mKeyguardBouncerMessageView = (KeyguardBouncerMessageView) findViewById(C0015R$id.keyguard_security_bouncer_message);
         MiuiKeyguardFaceUnlockView miuiKeyguardFaceUnlockView = (MiuiKeyguardFaceUnlockView) findViewById(C0015R$id.miui_keyguard_face_unlock_view);
         this.mFaceUnlockView = miuiKeyguardFaceUnlockView;

@@ -48,18 +48,6 @@ public final class KeyguardClockInjector implements IMiuiKeyguardWallpaperContro
         }
     }
 
-    public final void setVisibility(int i) {
-        if (((KeyguardUpdateMonitorInjector) Dependency.get(KeyguardUpdateMonitorInjector.class)).isKeyguardShowing()) {
-            KeyguardClockContainer keyguardClockContainer = this.mKeyguardClockView;
-            if (keyguardClockContainer == null) {
-                Intrinsics.throwUninitializedPropertyAccessException("mKeyguardClockView");
-                throw null;
-            } else if (keyguardClockContainer != null) {
-                keyguardClockContainer.setVisibility(i);
-            }
-        }
-    }
-
     public final void setAlpha(float f) {
         getView().setAlpha(f);
     }

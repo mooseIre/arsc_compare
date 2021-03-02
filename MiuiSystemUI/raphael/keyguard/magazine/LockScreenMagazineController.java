@@ -304,7 +304,7 @@ public class LockScreenMagazineController implements SettingsObserver.Callback {
     public void onAttachedToWindow() {
         registerBroadcastReceivers();
         this.mUpdateMonitor.registerCallback(this.mKeyguardUpdateMonitorCallback);
-        this.mSettingsObserver.addCallback(this, "gesture_wakeup");
+        this.mSettingsObserver.addCallbackForType(this, 1, "pick_up_gesture_wakeup_mode");
         this.mSettingsObserver.addCallback(this, 1, new String[0]);
         this.mSettingsObserver.addCallback(this, "lock_wallpaper_provider_authority");
         ((IMiuiKeyguardWallpaperController) Dependency.get(IMiuiKeyguardWallpaperController.class)).registerWallpaperChangeCallback(this.mWallpaperChangeCallback);
@@ -329,9 +329,8 @@ public class LockScreenMagazineController implements SettingsObserver.Callback {
 
     public void onContentChanged(@Nullable String str, @Nullable String str2) {
         Log.d("LockScreenMagazineController", "ContentObserver2Magazine onChange:$selfChange");
-        boolean parseBoolean = MiuiTextUtils.parseBoolean(str2, false);
         if ("gesture_wakeup".equals(str)) {
-            MiuiKeyguardUtils.setContentObserverForGestureWakeup(parseBoolean);
+            MiuiKeyguardUtils.setContentObserverForGestureWakeup(MiuiTextUtils.parseBoolean(str2));
         } else if ("lock_wallpaper_provider_authority".equals(str)) {
             if (TextUtils.isEmpty(str2)) {
                 str2 = "com.miui.home.none_provider";

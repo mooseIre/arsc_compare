@@ -195,6 +195,7 @@ public class MiuiChargeController implements IChargeAnimationListener, Wakefulne
         boolean z2;
         boolean z3;
         boolean z4;
+        MiuiBatteryStatus miuiBatteryStatus2;
         if (miuiBatteryStatus != null) {
             this.mBatteryStatus = miuiBatteryStatus;
             this.mChargeDeviceType = miuiBatteryStatus.chargeDeviceType;
@@ -223,6 +224,9 @@ public class MiuiChargeController implements IChargeAnimationListener, Wakefulne
                 z2 = false;
             }
             Log.i("MiuiChargeController", "checkBatteryStatus: wireState " + checkChargeState + " status " + i + " plugged " + miuiBatteryStatus.plugged + " chargeSpeed " + miuiBatteryStatus.chargeSpeed + " maxChargingWattage " + miuiBatteryStatus.maxChargingWattage + " isRapidCharge " + z4 + " isSuperCharge " + z3 + " isStrongSuperCharge " + z2 + " isCarMode " + isWirelessCarMode + " mChargeDeviceType " + this.mChargeDeviceType + " mChargeDeviceForAnalytic " + this.mChargeDeviceForAnalytic + " SUPPORT_NEW_ANIMATION " + this.SUPPORT_NEW_ANIMATION + " isChargeAnimationDisabled " + ChargeUtils.isChargeAnimationDisabled());
+            if (this.mKeyguardIndicationController != null && ((miuiBatteryStatus2 = ChargeUtils.sBatteryStatus) == null || this.mBatteryStatus.level != miuiBatteryStatus2.level)) {
+                this.mKeyguardIndicationController.updatePowerIndication(this.mChargeAnimationShowing);
+            }
             ChargeUtils.setBatteryStatus(this.mBatteryStatus);
             if (this.mStateInitialized) {
                 dealWithAnimationShow(checkChargeState);

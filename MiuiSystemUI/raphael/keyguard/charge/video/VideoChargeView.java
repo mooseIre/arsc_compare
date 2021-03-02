@@ -81,6 +81,19 @@ public class VideoChargeView extends IChargeView {
             layoutParams.width = -1;
             layoutParams.height = this.mVideoView.getVideoHeight();
             this.mVideoView.setLayoutParams(layoutParams);
+            return;
+        }
+        updateDefaultImageForScreenSizeChange();
+    }
+
+    private void updateDefaultImageForScreenSizeChange() {
+        int i = this.mChargeSpeed;
+        if (i == 0) {
+            this.mVideoView.setDefaultImage(C0013R$drawable.wired_charge_video_bg_img);
+        } else if (i == 3) {
+            this.mVideoView.setDefaultImage(C0013R$drawable.wired_strong_super_charge_video_bg_img);
+        } else {
+            this.mVideoView.setDefaultImage(C0013R$drawable.wired_super_charge_video_bg_img);
         }
     }
 
