@@ -11,10 +11,18 @@ import org.jetbrains.annotations.Nullable;
 /* compiled from: BaseMiuiNotificationBackgroundView.kt */
 public class BaseMiuiNotificationBackgroundView extends BlurOnDefaultThemeView {
     private boolean mHighSamplingFrequency;
-    private boolean mInGameMode;
+    private boolean mInTransparentMode;
 
     public BaseMiuiNotificationBackgroundView(@Nullable Context context, @Nullable AttributeSet attributeSet) {
         super(context, attributeSet);
+    }
+
+    /* access modifiers changed from: protected */
+    public void onAttachedToWindow() {
+        if (NotificationContentInflaterInjector.isTransparentMode()) {
+            disableBlur();
+        }
+        super.onAttachedToWindow();
     }
 
     public final void setHighSamplingFrequency(boolean z) {
@@ -22,8 +30,8 @@ public class BaseMiuiNotificationBackgroundView extends BlurOnDefaultThemeView {
         postInvalidateOnAnimation();
     }
 
-    public final void setGameModeHint(boolean z) {
-        this.mInGameMode = z;
+    public final void setTransparentModeHint(boolean z) {
+        this.mInTransparentMode = z;
         postInvalidateOnAnimation();
     }
 
@@ -38,7 +46,7 @@ public class BaseMiuiNotificationBackgroundView extends BlurOnDefaultThemeView {
     public BlurStyle getBlurStyleDayMode() {
         BlurStyle blurStyle;
         String str;
-        if (this.mInGameMode) {
+        if (this.mInTransparentMode) {
             blurStyle = super.getBlurStyleNightMode();
             str = "super.getBlurStyleNightMode()";
         } else {

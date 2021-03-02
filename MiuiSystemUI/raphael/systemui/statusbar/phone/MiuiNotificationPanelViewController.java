@@ -1262,8 +1262,6 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
     private final void startWakeupAnimation() {
         if (this.mBarState == 1) {
             KeyguardClockContainer view = this.mKeyguardClockInjector.getView();
-            int i = 0;
-            this.mKeyguardClockInjector.setVisibility(0);
             if (this.mIsDefaultTheme) {
                 Context context = this.panelView.getContext();
                 Intrinsics.checkExpressionValueIsNotNull(context, "panelView.context");
@@ -1288,6 +1286,7 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
                         arrayList2.add(next);
                     }
                 }
+                int i = 0;
                 for (View next2 : SequencesKt___SequencesKt.filter(SequencesKt___SequencesKt.filter(ConvenienceExtensionsKt.getChildren(this.mNotificationStackScroller), new MiuiNotificationPanelViewController$startWakeupAnimation$animateShadeViews$1(arrayList2)), MiuiNotificationPanelViewController$startWakeupAnimation$animateShadeViews$2.INSTANCE)) {
                     int i2 = i + 1;
                     if (i >= 0) {
@@ -1322,7 +1321,9 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
         if (((MiuiKeyguardWallpaperControllerImpl) Dependency.get(MiuiKeyguardWallpaperControllerImpl.class)).isAodUsingSuperWallpaper()) {
             this.mView.animate().cancel();
             this.mView.animate().setListener(new MiuiNotificationPanelViewController$startWakeupAnimation$2(this)).alpha(1.0f).setDuration(500).start();
+            return;
         }
+        this.mKeyguardPanelViewInjector.setVisibility(0);
     }
 
     /* access modifiers changed from: protected */
@@ -1391,13 +1392,9 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
         if (((MiuiKeyguardWallpaperControllerImpl) Dependency.get(MiuiKeyguardWallpaperControllerImpl.class)).isAodUsingSuperWallpaper()) {
             this.mView.animate().cancel();
             this.mView.animate().setListener(new MiuiNotificationPanelViewController$onStartedGoingToSleep$1(this)).alpha(0.0f).setDuration(500).start();
+            return;
         }
-    }
-
-    public void onFinishedGoingToSleep() {
-        if (this.mBarState == 1) {
-            this.mKeyguardClockInjector.setVisibility(4);
-        }
+        this.mKeyguardPanelViewInjector.setVisibility(4);
     }
 
     /* JADX WARNING: Removed duplicated region for block: B:14:0x002d  */

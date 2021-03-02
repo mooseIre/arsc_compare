@@ -15,6 +15,6 @@ public final class MiuiNotificationPanelViewController$startWakeupAnimation$2 ex
 
     public void onAnimationStart(@NotNull Animator animator) {
         Intrinsics.checkParameterIsNotNull(animator, "animator");
-        this.this$0.mView.setVisibility(0);
+        this.this$0.mKeyguardPanelViewInjector.setVisibility(0);
     }
 }

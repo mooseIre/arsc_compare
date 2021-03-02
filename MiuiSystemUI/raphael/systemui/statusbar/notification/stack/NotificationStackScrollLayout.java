@@ -4723,6 +4723,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
         for (int i3 = 0; i3 < size; i3++) {
             draggedViews.get(i3).dump(fileDescriptor, printWriter, strArr);
         }
+        printWriter.println("  mAmbientState: " + this.mAmbientState.getStackTranslation() + " " + this.mAmbientState.getTopPadding() + " " + this.mAmbientState.getExpandAnimationTopChange());
     }
 
     public boolean isFullyHidden() {

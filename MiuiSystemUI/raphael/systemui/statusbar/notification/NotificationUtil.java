@@ -190,14 +190,14 @@ public class NotificationUtil {
     }
 
     public static boolean isCustomViewNotification(ExpandedNotification expandedNotification) {
-        Notification notification;
-        if (expandedNotification == null || (notification = expandedNotification.getNotification()) == null) {
+        if (expandedNotification == null) {
             return false;
         }
-        if (notification.contentView == null && notification.bigContentView == null) {
-            return false;
-        }
-        return true;
+        return isCustomViewNotification(expandedNotification.getNotification());
+    }
+
+    public static boolean isCustomViewNotification(Notification notification) {
+        return (notification == null || (notification.contentView == null && notification.bigContentView == null)) ? false : true;
     }
 
     public static String getHiddenText() {

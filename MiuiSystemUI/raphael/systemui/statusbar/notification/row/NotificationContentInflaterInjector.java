@@ -252,19 +252,26 @@ public class NotificationContentInflaterInjector {
     }
 
     public static RemoteViews buildOneLineContent(Notification notification, boolean z, Context context) {
-        BuilderRemoteViews builderRemoteViews = new BuilderRemoteViews(context.getApplicationInfo(), C0017R$layout.miui_notification_template_material_one_line);
+        int i;
+        boolean isTransparentMode = isTransparentMode();
+        ApplicationInfo applicationInfo = context.getApplicationInfo();
+        if (isTransparentMode) {
+            i = C0017R$layout.miui_notification_transparent_template_material_one_line;
+        } else {
+            i = C0017R$layout.miui_notification_template_material_one_line;
+        }
+        BuilderRemoteViews builderRemoteViews = new BuilderRemoteViews(applicationInfo, i);
         resetStandardTemplate(builderRemoteViews);
-        boolean gameModeEnabled = ((SettingsManager) Dependency.get(SettingsManager.class)).getGameModeEnabled();
         handleMiuiAction(builderRemoteViews, notification);
         if (z) {
-            builderRemoteViews.setTextColor(C0015R$id.miui_action, context.getColor(gameModeEnabled ? C0011R$color.optimized_game_heads_up_notification_action_text : C0011R$color.optimized_heads_up_notification_action_text));
+            builderRemoteViews.setTextColor(C0015R$id.miui_action, context.getColor(isTransparentMode ? C0011R$color.optimized_game_heads_up_notification_action_text : C0011R$color.optimized_heads_up_notification_action_text));
         }
         CharSequence charSequence = notification.extras.getCharSequence("android.title");
         if (charSequence != null) {
             builderRemoteViews.setViewVisibility(C0015R$id.title, 0);
             builderRemoteViews.setTextViewText(C0015R$id.title, processTextSpans(charSequence, context));
             if (z) {
-                builderRemoteViews.setTextColor(C0015R$id.title, context.getColor(gameModeEnabled ? C0011R$color.optimized_game_heads_up_notification_text : C0011R$color.optimized_heads_up_notification_text));
+                builderRemoteViews.setTextColor(C0015R$id.title, context.getColor(isTransparentMode ? C0011R$color.optimized_game_heads_up_notification_text : C0011R$color.optimized_heads_up_notification_text));
             }
         }
         CharSequence charSequence2 = notification.extras.getCharSequence("android.text");
@@ -275,7 +282,7 @@ public class NotificationContentInflaterInjector {
             builderRemoteViews.setTextViewText(C0015R$id.text, processTextSpans(charSequence2, context));
             builderRemoteViews.setViewVisibility(C0015R$id.text, 0);
             if (z) {
-                builderRemoteViews.setTextColor(C0015R$id.text, context.getColor(gameModeEnabled ? C0011R$color.optimized_game_heads_up_notification_text : C0011R$color.optimized_heads_up_notification_text));
+                builderRemoteViews.setTextColor(C0015R$id.text, context.getColor(isTransparentMode ? C0011R$color.optimized_game_heads_up_notification_text : C0011R$color.optimized_heads_up_notification_text));
             }
         }
         return builderRemoteViews;
@@ -493,6 +500,10 @@ public class NotificationContentInflaterInjector {
     }
 
     public static boolean useOneLine(Context context, Context context2, Notification notification) {
-        return (((SettingsManager) Dependency.get(SettingsManager.class)).getGameModeEnabled() || isLandscape(context)) && !InCallUtils.isGlobalInCallNotification(context, context2.getPackageName(), notification);
+        return (((SettingsManager) Dependency.get(SettingsManager.class)).getGameModeEnabled() || isLandscape(context)) && !InCallUtils.isGlobalInCallNotification(context, context2.getPackageName(), notification) && !NotificationUtil.isCustomViewNotification(notification);
+    }
+
+    public static boolean isTransparentMode() {
+        return ((SettingsManager) Dependency.get(SettingsManager.class)).getGameModeEnabled() || ((StatusBar) Dependency.get(StatusBar.class)).inFullscreenMode();
     }
 }

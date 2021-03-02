@@ -334,7 +334,7 @@ public class UserSwitcherController implements Dumpable {
         listenForCallState();
         SettingsObserver settingsObserver = (SettingsObserver) Dependency.get(SettingsObserver.class);
         this.mUserIdSettingsObserver = settingsObserver;
-        settingsObserver.addCallbackForSingleUser(this.mUserIdObserverCallback, 1, 0, "second_user_id", "kid_user_id");
+        settingsObserver.addCallbackForUser(this.mUserIdObserverCallback, 1, 0, "second_user_id", "kid_user_id");
         refreshUsers(-10000);
     }
 

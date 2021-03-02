@@ -208,7 +208,7 @@ public class NotificationShadeWindowViewController {
                 if (NotificationShadeWindowViewController.this.mNCSwitchController.onNCSwitchIntercept(motionEvent, !NotificationShadeWindowViewController.this.mKeyguardMediaController.onMediaControlIntercept(motionEvent) && (NotificationShadeWindowViewController.this.mNotificationPanelViewController.mIsExpanding || NotificationShadeWindowViewController.this.mNotificationPanelViewController.isFullyExpanded()))) {
                     return true;
                 }
-                if (!NotificationShadeWindowViewController.this.mNotificationPanelViewController.isFullyExpanded() || !NotificationShadeWindowViewController.this.mDragDownHelper.isDragDownEnabled() || NotificationShadeWindowViewController.this.mService.isBouncerShowing() || NotificationShadeWindowViewController.this.mStatusBarStateController.isDozing()) {
+                if (!NotificationShadeWindowViewController.this.mNotificationPanelViewController.isFullyExpanded() || !NotificationShadeWindowViewController.this.mDragDownHelper.isDragDownEnabled() || NotificationShadeWindowViewController.this.mService.isBouncerShowing() || NotificationShadeWindowViewController.this.mStatusBarStateController.isDozing() || NotificationShadeWindowViewController.this.mNotificationPanelViewController.isQsDetailShowing()) {
                     return false;
                 }
                 return NotificationShadeWindowViewController.this.mDragDownHelper.onInterceptTouchEvent(motionEvent);

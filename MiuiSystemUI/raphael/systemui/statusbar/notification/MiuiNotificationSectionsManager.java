@@ -102,6 +102,11 @@ public final class MiuiNotificationSectionsManager extends NotificationSectionsM
     public void reinflateViews(@NotNull LayoutInflater layoutInflater) {
         Intrinsics.checkParameterIsNotNull(layoutInflater, "layoutInflater");
         super.reinflateViews(layoutInflater);
+        reinflateZenModeView(layoutInflater);
+    }
+
+    /* access modifiers changed from: private */
+    public final void reinflateZenModeView(LayoutInflater layoutInflater) {
         ZenModeView zenModeView2 = (ZenModeView) reinflateView(this.zenModeView, layoutInflater, C0017R$layout.keyguard_zen_header);
         this.zenModeViewController.attach(zenModeView2);
         this.zenModeView = zenModeView2;

@@ -2,10 +2,9 @@ package com.android.systemui.statusbar.notification.collection;
 
 import kotlin.jvm.functions.Function1;
 import kotlin.jvm.internal.FunctionReference;
-import kotlin.jvm.internal.Intrinsics;
 import kotlin.jvm.internal.Reflection;
 import kotlin.reflect.KDeclarationContainer;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /* compiled from: NotificationRankingManager.kt */
 final /* synthetic */ class NotificationRankingManager$filterAndSortLocked$filtered$1 extends FunctionReference implements Function1<NotificationEntry, Boolean> {
@@ -29,8 +28,7 @@ final /* synthetic */ class NotificationRankingManager$filterAndSortLocked$filte
         return Boolean.valueOf(invoke((NotificationEntry) obj));
     }
 
-    public final boolean invoke(@NotNull NotificationEntry notificationEntry) {
-        Intrinsics.checkParameterIsNotNull(notificationEntry, "p1");
+    public final boolean invoke(@Nullable NotificationEntry notificationEntry) {
         return ((NotificationRankingManager) this.receiver).filter(notificationEntry);
     }
 }

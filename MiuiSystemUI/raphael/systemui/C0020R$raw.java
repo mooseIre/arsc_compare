@@ -2566,10 +2566,10 @@ public final class R {
         public static final int notification_silence_color;
         public static final int notification_time_color;
         public static final int optimized_game_heads_up_notification_action_text;
-        public static final int optimized_game_heads_up_notification_bg_color;
         public static final int optimized_game_heads_up_notification_text;
         public static final int optimized_heads_up_notification_action_text;
         public static final int optimized_heads_up_notification_text;
+        public static final int optimized_transparent_heads_up_notification_bg_color;
         public static final int pattern_lockscreen_paint_error_color;
         public static final int pin_delete_color;
         public static final int pin_divider_color;
@@ -3891,6 +3891,8 @@ public final class R {
         public static final int miui_keyguard_password_view_eca_fod_margin_top;
         public static final int miui_keyguard_password_view_eca_margin_bottom;
         public static final int miui_keyguard_password_view_eca_margin_top;
+        public static final int miui_keyguard_password_view_em_btm_height;
+        public static final int miui_keyguard_password_view_em_fod_top_margin;
         public static final int miui_keyguard_password_view_key_board_view_height;
         public static final int miui_keyguard_password_view_layout_height;
         public static final int miui_keyguard_password_view_layout_padingTop;
@@ -3902,12 +3904,16 @@ public final class R {
         public static final int miui_keyguard_password_view_password_margin_bottom;
         public static final int miui_keyguard_pattern_layout_height;
         public static final int miui_keyguard_pattern_layout_width;
+        public static final int miui_keyguard_pattern_view_container_margin_bottom;
         public static final int miui_keyguard_pattern_view_eca_fod_top_margin;
         public static final int miui_keyguard_pattern_view_eca_height;
         public static final int miui_keyguard_pattern_view_eca_margin_bottom;
+        public static final int miui_keyguard_pattern_view_em_fod_top_margin;
         public static final int miui_keyguard_pattern_view_message_area_margin_bottom;
         public static final int miui_keyguard_pattern_view_pattern_view_height_width;
         public static final int miui_keyguard_pattern_view_pattern_view_margin_bottom;
+        public static final int miui_keyguard_pin_view_em_btm_height;
+        public static final int miui_keyguard_pin_view_em_fod_top_margin;
         public static final int miui_keyguard_pin_view_message_area_margin_bottom;
         public static final int miui_keyguard_pin_view_num_pad_width;
         public static final int miui_keyguard_pin_view_row0_margin_bottom;
@@ -3943,6 +3949,8 @@ public final class R {
         public static final int miui_notification_modal_menu_text_padding;
         public static final int miui_notification_modal_menu_text_size;
         public static final int miui_notification_swipe_area_height;
+        public static final int miui_notification_transparent_content_margin_end;
+        public static final int miui_notification_transparent_content_margin_start;
         public static final int miui_numeric_keyboard_emergency_text_size;
         public static final int miui_numeric_keyboard_row_height;
         public static final int miui_pattern_lock_pattern_view_horizontal_margin;
@@ -4289,6 +4297,10 @@ public final class R {
         public static final int notification_title_text_size;
         public static final int notification_top_pad;
         public static final int notification_top_pad_large_text;
+        public static final int notification_transparent_app_icon_margin;
+        public static final int notification_transparent_app_icon_size;
+        public static final int notification_transparent_one_line_height;
+        public static final int notification_transparent_title_text_size;
         public static final int ns_notification_header_statusbar_height;
         public static final int numeric_cell_horizontal_margin;
         public static final int numeric_cell_padding;
@@ -6030,6 +6042,7 @@ public final class R {
         public static final int dismiss_circle_background;
         public static final int dnd_notification_icon;
         public static final int drop_down_mark;
+        public static final int emergency_btn_global;
         public static final int face_dialog_dark_to_checkmark;
         public static final int face_dialog_dark_to_error;
         public static final int face_dialog_error_to_idle;
@@ -7453,7 +7466,7 @@ public final class R {
         public static final int notify_panel_notification_icon_bg;
         public static final int numeric_dot_empty;
         public static final int numeric_dot_occupied;
-        public static final int optimized_game_heads_up_notification_bg;
+        public static final int optimized_transparent_heads_up_notification_bg;
         public static final int overlay_screen_round_corner_top;
         public static final int overlay_screen_round_corner_top_rot180;
         public static final int overlay_screen_round_corner_top_rot270;
@@ -8409,6 +8422,7 @@ public final class R {
         public static final int emergency_call_button;
         public static final int emergency_cryptkeeper_text;
         public static final int empty_space;
+        public static final int empty_space_for_global;
         public static final int empty_text;
         public static final int empty_time_view;
         public static final int empty_view;
@@ -9030,6 +9044,7 @@ public final class R {
         public static final int owner_info;
         public static final int owner_info_arrow_right;
         public static final int owner_info_button;
+        public static final int owner_info_container;
         public static final int owner_info_edit_text;
         public static final int owner_info_layout;
         public static final int owner_info_restricted_icon;
@@ -10113,6 +10128,7 @@ public final class R {
         public static final int miui_notification_template_material_big_text;
         public static final int miui_notification_template_material_inbox;
         public static final int miui_notification_template_material_one_line;
+        public static final int miui_notification_transparent_template_material_one_line;
         public static final int miui_ns_notification_header_view;
         public static final int miui_ns_qs_header_view;
         public static final int miui_qs_detail_item;
@@ -11288,6 +11304,7 @@ public final class R {
         public static final int face_unlock_pin_and_fingerprint;
         public static final int face_unlock_reveal_eye;
         public static final int face_unlock_reveal_mouth;
+        public static final int face_unlock_success;
         public static final int failed_to_open_app_settings_toast;
         public static final int fingerprint_add_text;
         public static final int fingerprint_add_title;
@@ -13014,7 +13031,9 @@ public final class R {
         public static final int Miui_Notification_Action;
         public static final int Miui_Notification_Subtext;
         public static final int Miui_Notification_Text;
+        public static final int Miui_Notification_Text_Transparent;
         public static final int Miui_Notification_Title;
+        public static final int Miui_Notification_Title_Transparent;
         public static final int Miuix_Spring_TextAppearance;
         public static final int Miuix_Spring_TextAppearance_indicator;
         public static final int Miuix_Spring_TextAppearance_trigger;

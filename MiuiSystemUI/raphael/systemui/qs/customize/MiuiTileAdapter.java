@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityManager;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -441,8 +442,8 @@ public class MiuiTileAdapter extends RecyclerView.Adapter<Holder> implements Til
         }
         if (qSTile != null) {
             qSTile.click(true);
-        } else {
-            isCustomTile(tileInfo);
+        } else if (isCustomTile(tileInfo)) {
+            Toast.makeText(view.getContext(), C0021R$string.quick_settings_toast_drag_to_enable_custom_tile, 0).show();
         }
     }
 

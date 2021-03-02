@@ -11,11 +11,11 @@ import com.android.systemui.statusbar.EmptyShadeView;
 import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow;
 import com.android.systemui.statusbar.notification.row.ExpandableView;
 import com.android.systemui.statusbar.notification.row.MiuiExpandableNotificationRow;
+import com.android.systemui.statusbar.notification.row.NotificationContentInflaterInjector;
 import com.android.systemui.statusbar.notification.stack.StackScrollAlgorithm;
 import com.android.systemui.statusbar.notification.zen.ZenModeView;
 import com.android.systemui.statusbar.policy.ConfigurationController;
 import com.android.systemui.util.ConvenienceExtensionsKt;
-import com.miui.systemui.SettingsManager;
 import java.util.ArrayList;
 import java.util.Iterator;
 import kotlin.collections.CollectionsKt;
@@ -53,10 +53,6 @@ public final class MiuiStackScrollAlgorithm extends StackScrollAlgorithm {
                 this.this$0.updateResources();
             }
         });
-    }
-
-    private final boolean getMGameModeEnabled() {
-        return ((SettingsManager) Dependency.get(SettingsManager.class)).getGameModeEnabled();
     }
 
     public final void updateResources() {
@@ -266,10 +262,11 @@ public final class MiuiStackScrollAlgorithm extends StackScrollAlgorithm {
         Intrinsics.checkParameterIsNotNull(stackScrollAlgorithmState, "algorithmState");
         Intrinsics.checkParameterIsNotNull(ambientState, "ambientState");
         float f = (float) 2;
+        boolean isTransparentMode = NotificationContentInflaterInjector.isTransparentMode();
         ArrayList<ExpandableView> arrayList = stackScrollAlgorithmState.visibleChildren;
         Intrinsics.checkExpressionValueIsNotNull(arrayList, "algorithmState.visibleChildren");
         for (ExpandableView expandableView : arrayList) {
-            if (!getMGameModeEnabled() && (expandableView instanceof ExpandableNotificationRow)) {
+            if (!isTransparentMode && (expandableView instanceof ExpandableNotificationRow)) {
                 ExpandableNotificationRow expandableNotificationRow = (ExpandableNotificationRow) expandableView;
                 if (expandableNotificationRow.isPinned()) {
                     f = updateChildZValue(expandableNotificationRow, f, ambientState);

@@ -123,8 +123,6 @@ public class KeyguardBottomAreaView extends FrameLayout implements View.OnClickL
     private AnimatorSet mLeftButtonLayoutAnimatorSet;
     private ExtensionController.Extension<IntentButtonProvider.IntentButton> mLeftExtension;
     /* access modifiers changed from: private */
-    public boolean mLeftIntentAvailable;
-    /* access modifiers changed from: private */
     public boolean mLeftIsVoiceAssist;
     private LockPatternUtils mLockPatternUtils;
     /* access modifiers changed from: private */
@@ -379,23 +377,12 @@ public class KeyguardBottomAreaView extends FrameLayout implements View.OnClickL
         return (z ? this.mRightButton : this.mLeftButton).getIcon();
     }
 
-    /* access modifiers changed from: protected */
-    public ResolveInfo resolveLockScreenMagazineIntent() {
-        return PackageUtils.resolveIntent(this.mContext, this.mLeftButton.getIntent());
-    }
-
     /* access modifiers changed from: private */
     public void handleIntentAvailable() {
         AsyncTask.THREAD_POOL_EXECUTOR.execute(new Runnable() {
             public void run() {
                 KeyguardBottomAreaView keyguardBottomAreaView = KeyguardBottomAreaView.this;
-                boolean z = true;
                 boolean unused = keyguardBottomAreaView.mRightIntentAvailable = keyguardBottomAreaView.resolveCameraIntent() != null;
-                KeyguardBottomAreaView keyguardBottomAreaView2 = KeyguardBottomAreaView.this;
-                if (keyguardBottomAreaView2.resolveLockScreenMagazineIntent() == null) {
-                    z = false;
-                }
-                boolean unused2 = keyguardBottomAreaView2.mLeftIntentAvailable = z;
                 KeyguardBottomAreaView.this.post(new Runnable() {
                     public void run() {
                         KeyguardBottomAreaView.this.updateLeftAffordance();
@@ -778,10 +765,10 @@ public class KeyguardBottomAreaView extends FrameLayout implements View.OnClickL
                         Log.w("StatusBar/KeyguardBottomAreaView", "Unable to start camera activity", e);
                         i = -96;
                     }
-                    final boolean access$1000 = KeyguardBottomAreaView.isSuccessfulLaunch(i);
+                    final boolean access$900 = KeyguardBottomAreaView.isSuccessfulLaunch(i);
                     KeyguardBottomAreaView.this.post(new Runnable() {
                         public void run() {
-                            KeyguardBottomAreaView.this.unbindCameraPrewarmService(access$1000);
+                            KeyguardBottomAreaView.this.unbindCameraPrewarmService(access$900);
                         }
                     });
                 }
@@ -929,7 +916,7 @@ public class KeyguardBottomAreaView extends FrameLayout implements View.OnClickL
                 this.mIconState.drawable = KeyguardBottomAreaView.this.getLockScreenMagazineMainEntryIcon();
                 this.mIconState.contentDescription = KeyguardBottomAreaView.this.mContext.getString(C0021R$string.accessibility_left_lock_screen_magazine_button);
                 IntentButtonProvider.IntentButton.IconState iconState = this.mIconState;
-                if (!KeyguardBottomAreaView.this.mUserSetupComplete || !KeyguardBottomAreaView.this.mKeyguardUpdateMonitor.isUserUnlocked(KeyguardUpdateMonitor.getCurrentUser()) || FeatureParser.getBoolean("is_pad", false) || leftView == null || !leftView.isSupportRightMove() || !KeyguardBottomAreaView.this.mLeftIntentAvailable || !KeyguardBottomAreaView.this.mShowLeftAffordance || !KeyguardBottomAreaView.this.isPhoneVisible() || KeyguardBottomAreaView.this.mIsSuperSavePowerMode) {
+                if (!KeyguardBottomAreaView.this.mUserSetupComplete || !KeyguardBottomAreaView.this.mKeyguardUpdateMonitor.isUserUnlocked(KeyguardUpdateMonitor.getCurrentUser()) || FeatureParser.getBoolean("is_pad", false) || leftView == null || !leftView.isSupportRightMove() || !KeyguardBottomAreaView.this.mShowLeftAffordance || !KeyguardBottomAreaView.this.isPhoneVisible() || KeyguardBottomAreaView.this.mIsSuperSavePowerMode) {
                     z = false;
                 }
                 iconState.isVisible = z;
