@@ -15,7 +15,6 @@ import android.view.animation.Interpolator;
 import android.widget.ImageView;
 import com.android.systemui.C0011R$color;
 import com.android.systemui.C0013R$drawable;
-import com.android.systemui.Dependency;
 import com.android.systemui.Interpolators;
 import com.android.systemui.statusbar.notification.ExpandedNotification;
 import com.android.systemui.statusbar.notification.FakeShadowView;
@@ -27,7 +26,6 @@ import com.android.systemui.statusbar.notification.policy.AppMiniWindowManager;
 import com.android.systemui.statusbar.notification.row.wrapper.MiuiNotificationOneLineViewWrapper;
 import com.android.systemui.statusbar.notification.stack.ExpandableViewState;
 import com.miui.systemui.DebugConfig;
-import com.miui.systemui.SettingsManager;
 import com.miui.systemui.util.CommonExtensionsKt;
 import kotlin.Lazy;
 import kotlin.TypeCastException;
@@ -138,24 +136,25 @@ public final class MiuiExpandableNotificationRow extends MiuiAnimatedNotificatio
 
     private final void updateBackgroundBg() {
         if (isHeadsUpState()) {
-            boolean gameModeEnabled = ((SettingsManager) Dependency.get(SettingsManager.class)).getGameModeEnabled();
+            boolean isTransparentMode = NotificationContentInflaterInjector.isTransparentMode();
             NotificationContentView showingLayout = getShowingLayout();
-            boolean z = (showingLayout != null ? showingLayout.getVisibleWrapper(2) : null) instanceof MiuiNotificationOneLineViewWrapper;
-            if (!gameModeEnabled || !z) {
+            boolean z = isTransparentMode && ((showingLayout != null ? showingLayout.getVisibleWrapper(2) : null) instanceof MiuiNotificationOneLineViewWrapper);
+            if (z) {
+                this.mBackgroundNormal.setCustomBackground(C0013R$drawable.optimized_transparent_heads_up_notification_bg);
+                this.mBackgroundNormal.setTransparentModeHint(true);
+            } else {
                 this.mBackgroundNormal.setCustomBackground(C0013R$drawable.notification_heads_up_bg);
-                this.mBackgroundNormal.setGameModeHint(false);
-                return;
+                this.mBackgroundNormal.setTransparentModeHint(false);
             }
-            this.mBackgroundNormal.setCustomBackground(C0013R$drawable.optimized_game_heads_up_notification_bg);
-            this.mBackgroundNormal.setGameModeHint(true);
             View mMiniBar = getMMiniBar();
             Intrinsics.checkExpressionValueIsNotNull(mMiniBar, "mMiniBar");
             if (mMiniBar.getBackground() instanceof GradientDrawable) {
+                int i = z ? C0011R$color.mini_window_bar_color_gamemode : C0011R$color.mini_window_bar_color;
                 View mMiniBar2 = getMMiniBar();
                 Intrinsics.checkExpressionValueIsNotNull(mMiniBar2, "mMiniBar");
                 Drawable background = mMiniBar2.getBackground();
                 if (background != null) {
-                    ((GradientDrawable) background).setColor(getResources().getColor(C0011R$color.mini_window_bar_color_gamemode, (Resources.Theme) null));
+                    ((GradientDrawable) background).setColor(getResources().getColor(i, (Resources.Theme) null));
                     return;
                 }
                 throw new TypeCastException("null cannot be cast to non-null type android.graphics.drawable.GradientDrawable");
@@ -163,7 +162,7 @@ public final class MiuiExpandableNotificationRow extends MiuiAnimatedNotificatio
             return;
         }
         this.mBackgroundNormal.setCustomBackground(C0013R$drawable.notification_item_bg);
-        this.mBackgroundNormal.setGameModeHint(false);
+        this.mBackgroundNormal.setTransparentModeHint(false);
     }
 
     public void setIsChildInGroup(boolean z, @Nullable ExpandableNotificationRow expandableNotificationRow) {

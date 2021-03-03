@@ -186,6 +186,9 @@ public abstract class PanelViewController {
     public abstract boolean isClearAllVisible();
 
     /* access modifiers changed from: protected */
+    public abstract boolean isDozing();
+
+    /* access modifiers changed from: protected */
     public abstract boolean isInContentBounds(float f, float f2);
 
     /* access modifiers changed from: protected */

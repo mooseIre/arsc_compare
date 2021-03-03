@@ -102,7 +102,7 @@ public abstract class PanelBar extends FrameLayout {
 
     /* access modifiers changed from: protected */
     public boolean shouldPanelBeVisible() {
-        return this.mExpanded || this.mBouncerShowing;
+        return !this.mPanel.isDozing() && (this.mExpanded || this.mBouncerShowing);
     }
 
     public boolean onTouchEvent(MotionEvent motionEvent) {
