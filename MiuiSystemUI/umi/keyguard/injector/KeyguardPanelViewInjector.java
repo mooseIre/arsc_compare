@@ -1320,4 +1320,16 @@ public final class KeyguardPanelViewInjector extends MiuiKeyguardUpdateMonitorCa
         Intrinsics.throwUninitializedPropertyAccessException("mKeyguardUpdateMonitor");
         throw null;
     }
+
+    @Nullable
+    public final NotificationPanelView getView() {
+        return this.mPanelView;
+    }
+
+    public final void setVisibility(int i) {
+        NotificationPanelView view = getView();
+        if (view != null) {
+            view.setVisibility(i);
+        }
+    }
 }
