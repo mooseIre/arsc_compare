@@ -437,75 +437,73 @@ public class WifiTile extends QSTileImpl<QSTile.SignalState> {
         /* Code decompiled incorrectly, please refer to instructions dump. */
         public void updateItems() {
             /*
-                r10 = this;
-                com.android.systemui.qs.MiuiQSDetailItems r0 = r10.mItems
+                r11 = this;
+                com.android.systemui.qs.MiuiQSDetailItems r0 = r11.mItems
                 if (r0 != 0) goto L_0x0005
                 return
             L_0x0005:
-                com.android.settingslib.wifi.AccessPoint[] r0 = r10.mAccessPoints
+                com.android.settingslib.wifi.AccessPoint[] r0 = r11.mAccessPoints
                 r1 = 0
                 if (r0 == 0) goto L_0x000d
-                int r0 = r0.length
-                if (r0 > 0) goto L_0x0017
+                int r2 = r0.length
+                if (r2 > 0) goto L_0x0017
             L_0x000d:
-                com.android.systemui.qs.tiles.WifiTile r0 = com.android.systemui.qs.tiles.WifiTile.this
-                com.android.systemui.qs.tiles.WifiTile$WifiSignalCallback r2 = r0.mSignalCallback
-                com.android.systemui.qs.tiles.WifiTile$CallbackInfo r2 = r2.mInfo
-                boolean r2 = r2.enabled
-                if (r2 != 0) goto L_0x001d
+                com.android.systemui.qs.tiles.WifiTile r2 = com.android.systemui.qs.tiles.WifiTile.this
+                com.android.systemui.qs.tiles.WifiTile$WifiSignalCallback r3 = r2.mSignalCallback
+                com.android.systemui.qs.tiles.WifiTile$CallbackInfo r3 = r3.mInfo
+                boolean r3 = r3.enabled
+                if (r3 != 0) goto L_0x001d
             L_0x0017:
-                com.android.systemui.qs.tiles.WifiTile r0 = com.android.systemui.qs.tiles.WifiTile.this
-                r0.fireScanStateChanged(r1)
+                com.android.systemui.qs.tiles.WifiTile r2 = com.android.systemui.qs.tiles.WifiTile.this
+                r2.fireScanStateChanged(r1)
                 goto L_0x0021
             L_0x001d:
-                r2 = 1
-                r0.fireScanStateChanged(r2)
+                r3 = 1
+                r2.fireScanStateChanged(r3)
             L_0x0021:
-                com.android.systemui.qs.tiles.WifiTile r0 = com.android.systemui.qs.tiles.WifiTile.this
-                com.android.systemui.qs.tiles.WifiTile$WifiSignalCallback r0 = r0.mSignalCallback
-                com.android.systemui.qs.tiles.WifiTile$CallbackInfo r0 = r0.mInfo
-                boolean r0 = r0.enabled
-                if (r0 != 0) goto L_0x003b
-                com.android.systemui.qs.MiuiQSDetailItems r0 = r10.mItems
+                com.android.systemui.qs.tiles.WifiTile r2 = com.android.systemui.qs.tiles.WifiTile.this
+                com.android.systemui.qs.tiles.WifiTile$WifiSignalCallback r2 = r2.mSignalCallback
+                com.android.systemui.qs.tiles.WifiTile$CallbackInfo r2 = r2.mInfo
+                boolean r2 = r2.enabled
+                if (r2 != 0) goto L_0x003b
+                com.android.systemui.qs.MiuiQSDetailItems r0 = r11.mItems
                 int r1 = com.android.systemui.C0013R$drawable.ic_qs_wifi_detail_empty
                 int r2 = com.android.systemui.C0021R$string.wifi_is_off
                 r0.setEmptyState(r1, r2)
-                com.android.systemui.qs.MiuiQSDetailItems r10 = r10.mItems
+                com.android.systemui.qs.MiuiQSDetailItems r11 = r11.mItems
                 r0 = 0
-                r10.setItems(r0)
+                r11.setItems(r0)
                 return
             L_0x003b:
-                com.android.systemui.qs.MiuiQSDetailItems r0 = r10.mItems
-                int r2 = com.android.systemui.C0013R$drawable.ic_qs_wifi_detail_empty
-                int r3 = com.android.systemui.C0021R$string.quick_settings_wifi_detail_empty_text
-                r0.setEmptyState(r2, r3)
-                java.util.ArrayList r0 = new java.util.ArrayList
-                r0.<init>()
-                com.android.settingslib.wifi.AccessPoint[] r2 = r10.mAccessPoints
-                if (r2 == 0) goto L_0x0070
-                r2 = r1
-            L_0x004e:
-                com.android.settingslib.wifi.AccessPoint[] r3 = r10.mAccessPoints
-                int r4 = r3.length
-                if (r2 >= r4) goto L_0x0070
-                r9 = r3[r2]
-                com.android.systemui.qs.tiles.WifiTile r3 = com.android.systemui.qs.tiles.WifiTile.this
-                com.android.systemui.controlcenter.policy.SlaveWifiHelper r4 = r3.mSlaveWifiHelper
-                com.android.systemui.qs.tiles.WifiTile r3 = com.android.systemui.qs.tiles.WifiTile.this
-                android.content.Context r5 = r3.mContext
-                com.android.systemui.qs.tiles.WifiTile r3 = com.android.systemui.qs.tiles.WifiTile.this
-                com.android.systemui.statusbar.policy.NetworkController$AccessPointController r6 = r3.mWifiController
-                com.android.systemui.qs.MiuiQSDetailItems r7 = r10.mItems
-                r8 = r0
-                r4.updateItem(r5, r6, r7, r8, r9)
-                int r2 = r2 + 1
-                goto L_0x004e
-            L_0x0070:
-                com.android.systemui.qs.MiuiQSDetailItems r10 = r10.mItems
-                com.android.systemui.qs.MiuiQSDetailItems$Item[] r1 = new com.android.systemui.qs.MiuiQSDetailItems.Item[r1]
-                java.lang.Object[] r0 = r0.toArray(r1)
+                com.android.systemui.qs.MiuiQSDetailItems r2 = r11.mItems
+                int r3 = com.android.systemui.C0013R$drawable.ic_qs_wifi_detail_empty
+                int r4 = com.android.systemui.C0021R$string.quick_settings_wifi_detail_empty_text
+                r2.setEmptyState(r3, r4)
+                java.util.ArrayList r2 = new java.util.ArrayList
+                r2.<init>()
+                if (r0 == 0) goto L_0x006c
+                r3 = r1
+            L_0x004c:
+                int r4 = r0.length
+                if (r3 >= r4) goto L_0x006c
+                r10 = r0[r3]
+                com.android.systemui.qs.tiles.WifiTile r4 = com.android.systemui.qs.tiles.WifiTile.this
+                com.android.systemui.controlcenter.policy.SlaveWifiHelper r5 = r4.mSlaveWifiHelper
+                com.android.systemui.qs.tiles.WifiTile r4 = com.android.systemui.qs.tiles.WifiTile.this
+                android.content.Context r6 = r4.mContext
+                com.android.systemui.qs.tiles.WifiTile r4 = com.android.systemui.qs.tiles.WifiTile.this
+                com.android.systemui.statusbar.policy.NetworkController$AccessPointController r7 = r4.mWifiController
+                com.android.systemui.qs.MiuiQSDetailItems r8 = r11.mItems
+                r9 = r2
+                r5.updateItem(r6, r7, r8, r9, r10)
+                int r3 = r3 + 1
+                goto L_0x004c
+            L_0x006c:
+                com.android.systemui.qs.MiuiQSDetailItems r11 = r11.mItems
+                com.android.systemui.qs.MiuiQSDetailItems$Item[] r0 = new com.android.systemui.qs.MiuiQSDetailItems.Item[r1]
+                java.lang.Object[] r0 = r2.toArray(r0)
                 com.android.systemui.qs.MiuiQSDetailItems$Item[] r0 = (com.android.systemui.qs.MiuiQSDetailItems.Item[]) r0
-                r10.setItems(r0)
+                r11.setItems(r0)
                 return
             */
             throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.qs.tiles.WifiTile.WifiDetailAdapter.updateItems():void");

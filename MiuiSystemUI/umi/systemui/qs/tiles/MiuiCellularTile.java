@@ -10,16 +10,19 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Switch;
+import android.widget.Toast;
 import androidx.appcompat.R$styleable;
 import com.android.internal.logging.MetricsLogger;
 import com.android.settingslib.net.DataUsageController;
 import com.android.systemui.C0013R$drawable;
 import com.android.systemui.C0021R$string;
+import com.android.systemui.Dependency;
 import com.android.systemui.plugins.qs.DetailAdapter;
 import com.android.systemui.plugins.qs.QSTile;
 import com.android.systemui.qs.MiuiQSDetailItems;
 import com.android.systemui.qs.QSHost;
 import com.android.systemui.qs.tileimpl.QSTileImpl;
+import com.android.systemui.statusbar.policy.CallStateControllerImpl;
 import com.android.systemui.statusbar.policy.NetworkController;
 import com.miui.systemui.util.VirtualSimUtils;
 import java.util.ArrayList;
@@ -427,10 +430,16 @@ public class MiuiCellularTile extends QSTileImpl<QSTile.BooleanState> {
         }
 
         public void onDetailItemClick(MiuiQSDetailItems.Item item) {
-            Object obj;
             int intValue;
-            if (this.mItems != null && (obj = item.tag) != null && this.mDefaultDataSlot != (intValue = ((Integer) obj).intValue())) {
-                SubscriptionManager.getDefault().setDefaultDataSlotId(intValue);
+            if (this.mItems != null) {
+                if (((CallStateControllerImpl) Dependency.get(CallStateControllerImpl.class)).getCallState() != 0) {
+                    Toast.makeText(MiuiCellularTile.this.mContext, C0021R$string.quick_settings_cellular_detail_unable_change, 0).show();
+                    return;
+                }
+                Object obj = item.tag;
+                if (obj != null && this.mDefaultDataSlot != (intValue = ((Integer) obj).intValue())) {
+                    SubscriptionManager.getDefault().setDefaultDataSlotId(intValue);
+                }
             }
         }
 

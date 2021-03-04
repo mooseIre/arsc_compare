@@ -160,6 +160,7 @@ public class QSContainerImpl extends FrameLayout implements TunerService.Tunable
         setBackgroundGradientVisibility(configuration);
         updateResources();
         this.mSizePoint.set(0, 0);
+        updateBrightnessMirror();
     }
 
     /* access modifiers changed from: protected */
