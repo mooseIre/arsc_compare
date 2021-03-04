@@ -12103,6 +12103,7 @@ public final class R {
         public static final int quick_settings_cellular_detail_over_limit;
         public static final int quick_settings_cellular_detail_remaining_data;
         public static final int quick_settings_cellular_detail_title;
+        public static final int quick_settings_cellular_detail_unable_change;
         public static final int quick_settings_color_space_label;
         public static final int quick_settings_connected;
         public static final int quick_settings_connected_battery_level;

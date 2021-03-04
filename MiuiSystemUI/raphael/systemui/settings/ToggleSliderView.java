@@ -3,6 +3,7 @@ package com.android.systemui.settings;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -18,7 +19,11 @@ import com.android.systemui.statusbar.policy.BrightnessMirrorController;
 
 public class ToggleSliderView extends RelativeLayout implements ToggleSlider {
     private final CompoundButton.OnCheckedChangeListener mCheckListener;
+    /* access modifiers changed from: private */
+    public boolean mIgnoreTrackingEvent;
     private TextView mLabel;
+    /* access modifiers changed from: private */
+    public int mLastTouchAction;
     /* access modifiers changed from: private */
     public ToggleSlider.Listener mListener;
     /* access modifiers changed from: private */
@@ -66,8 +71,14 @@ public class ToggleSliderView extends RelativeLayout implements ToggleSlider {
             }
 
             public void onStartTrackingTouch(SeekBar seekBar) {
-                boolean unused = ToggleSliderView.this.mTracking = true;
+                if (ToggleSliderView.this.mLastTouchAction == 1) {
+                    boolean unused = ToggleSliderView.this.mIgnoreTrackingEvent = true;
+                    Log.w("ToggleSliderView", "ignoring onStartTrackingTouch, maybe tap event");
+                    return;
+                }
+                boolean unused2 = ToggleSliderView.this.mTracking = true;
                 if (ToggleSliderView.this.mListener != null) {
+                    ToggleSliderView.this.mListener.onStart(seekBar.getProgress());
                     ToggleSlider.Listener access$100 = ToggleSliderView.this.mListener;
                     ToggleSliderView toggleSliderView = ToggleSliderView.this;
                     access$100.onChanged(toggleSliderView, toggleSliderView.mTracking, ToggleSliderView.this.mToggle.isChecked(), ToggleSliderView.this.mSlider.getProgress(), false);
@@ -80,11 +91,17 @@ public class ToggleSliderView extends RelativeLayout implements ToggleSlider {
             }
 
             public void onStopTrackingTouch(SeekBar seekBar) {
-                boolean unused = ToggleSliderView.this.mTracking = false;
+                if (ToggleSliderView.this.mIgnoreTrackingEvent) {
+                    boolean unused = ToggleSliderView.this.mIgnoreTrackingEvent = false;
+                    Log.w("ToggleSliderView", "ignoring onStopTrackingTouch, maybe tap event");
+                    return;
+                }
+                boolean unused2 = ToggleSliderView.this.mTracking = false;
                 if (ToggleSliderView.this.mListener != null) {
                     ToggleSlider.Listener access$100 = ToggleSliderView.this.mListener;
                     ToggleSliderView toggleSliderView = ToggleSliderView.this;
                     access$100.onChanged(toggleSliderView, toggleSliderView.mTracking, ToggleSliderView.this.mToggle.isChecked(), ToggleSliderView.this.mSlider.getProgress(), true);
+                    ToggleSliderView.this.mListener.onStop(seekBar.getProgress());
                 }
                 if (ToggleSliderView.this.mMirrorController != null) {
                     ToggleSliderView.this.mMirrorController.hideMirror();
@@ -173,6 +190,18 @@ public class ToggleSliderView extends RelativeLayout implements ToggleSlider {
     }
 
     public boolean dispatchTouchEvent(MotionEvent motionEvent) {
+        this.mLastTouchAction = motionEvent.getActionMasked();
+        if (motionEvent.getActionMasked() == 0) {
+            this.mIgnoreTrackingEvent = false;
+            ToggleSliderView toggleSliderView = this.mMirror;
+            if (toggleSliderView != null) {
+                toggleSliderView.setValue(this.mSlider.getProgress());
+            }
+            BrightnessMirrorController brightnessMirrorController = this.mMirrorController;
+            if (brightnessMirrorController != null) {
+                brightnessMirrorController.setLocation(this);
+            }
+        }
         if (this.mMirror != null) {
             MotionEvent copy = motionEvent.copy();
             this.mMirror.dispatchTouchEvent(copy);
