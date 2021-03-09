@@ -136,7 +136,7 @@ public class KeyguardIndicationInjector {
         Class cls = KeyguardIndicationController.class;
         final boolean isPowerPluggedIn = ((KeyguardIndicationController) Dependency.get(cls)).isPowerPluggedIn();
         final int batteryLevel = ((KeyguardIndicationController) Dependency.get(cls)).getBatteryLevel();
-        if (this.mChargeAsyncTask == null && isPowerPluggedIn) {
+        if (this.mChargeAsyncTask == null && isPowerPluggedIn && keyguardIndicationTextView != null) {
             final KeyguardIndicationTextView keyguardIndicationTextView2 = keyguardIndicationTextView;
             final boolean z2 = z;
             this.mChargeAsyncTask = new AsyncTask<Void, Void, String>() {

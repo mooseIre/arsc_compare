@@ -435,6 +435,7 @@ public class KeyguardPatternView extends MiuiKeyguardPasswordView implements Key
         LinearLayout.LayoutParams layoutParams2 = (LinearLayout.LayoutParams) this.mContainer.getLayoutParams();
         layoutParams2.bottomMargin = getResources().getDimensionPixelOffset(C0012R$dimen.miui_keyguard_pattern_view_container_margin_bottom);
         this.mContainer.setLayoutParams(layoutParams2);
+        setPositionForFod();
     }
 
     /* access modifiers changed from: protected */
@@ -448,6 +449,7 @@ public class KeyguardPatternView extends MiuiKeyguardPasswordView implements Key
         layoutParams2.width = getResources().getDimensionPixelOffset(C0012R$dimen.miui_keyguard_pattern_view_pattern_view_height_width);
         layoutParams2.height = getResources().getDimensionPixelOffset(C0012R$dimen.miui_keyguard_pattern_view_pattern_view_height_width);
         this.mLockPatternView.setLayoutParams(layoutParams2);
+        setPositionForFod();
     }
 
     private void setPositionForFod() {

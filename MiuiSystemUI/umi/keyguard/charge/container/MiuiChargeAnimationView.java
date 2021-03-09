@@ -174,20 +174,23 @@ public class MiuiChargeAnimationView extends FrameLayout {
     }
 
     private void checkScreenSize() {
-        Point point = new Point();
-        this.mWindowManager.getDefaultDisplay().getRealSize(point);
-        if (!this.mScreenSize.equals(point.x, point.y)) {
-            this.mScreenSize.set(point.x, point.y);
-            updateSizeForScreenSizeChange();
-            updateLayoutParamForScreenSizeChange();
-        }
+        this.mWindowManager.getDefaultDisplay().getRealSize(this.mScreenSize);
+        updateSizeForScreenSizeChange();
+        updateLayoutParamForScreenSizeChange();
     }
 
     /* access modifiers changed from: protected */
     public void updateSizeForScreenSizeChange() {
-        this.mWindowManager.getDefaultDisplay().getRealSize(this.mScreenSize);
         Point point = this.mScreenSize;
-        this.mIconPaddingTop = (int) (((((float) Math.min(point.x, point.y)) * 1.0f) / 1080.0f) * 275.0f);
+        float f = 1.0f;
+        float min = (((float) Math.min(point.x, point.y)) * 1.0f) / 1080.0f;
+        if (this.mIsFoldChargeVideo) {
+            if (min <= 1.0f) {
+                f = min;
+            }
+            min = f;
+        }
+        this.mIconPaddingTop = (int) (min * 275.0f);
     }
 
     /* access modifiers changed from: protected */

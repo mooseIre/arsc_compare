@@ -31,15 +31,12 @@ public abstract class MiuiKeyguardPasswordView extends LinearLayout implements E
     protected KeyguardSecurityCallback mCallback;
     private Configuration mConfiguration;
     protected TextView mDeleteButton;
-    private int mDensityDpi;
     protected EmergencyButton mEmergencyButton;
     protected EmergencyCarrierArea mEmergencyCarrierArea;
     protected MiuiKeyguardFaceUnlockView mFaceUnlockView;
-    private float mFontScale;
     protected KeyguardBouncerMessageView mKeyguardBouncerMessageView;
     protected KeyguardUpdateMonitor mKeyguardUpdateMonitor;
     protected LockPatternUtils mLockPatternUtils;
-    private int mOrientation;
     protected UserManager mUm;
     protected Vibrator mVibrator;
 
@@ -67,6 +64,7 @@ public abstract class MiuiKeyguardPasswordView extends LinearLayout implements E
         this.mVibrator = (Vibrator) this.mContext.getSystemService("vibrator");
         this.mUm = (UserManager) this.mContext.getSystemService("user");
         this.mKeyguardUpdateMonitor = (KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class);
+        this.mConfiguration.updateFrom(context.getResources().getConfiguration());
     }
 
     /* access modifiers changed from: protected */
@@ -95,22 +93,21 @@ public abstract class MiuiKeyguardPasswordView extends LinearLayout implements E
     /* access modifiers changed from: protected */
     public void onConfigurationChanged(Configuration configuration) {
         super.onConfigurationChanged(configuration);
-        if ((this.mConfiguration.updateFrom(configuration) & 2048) != 0) {
+        int updateFrom = this.mConfiguration.updateFrom(configuration);
+        boolean z = true;
+        boolean z2 = (updateFrom & 2048) != 0;
+        boolean z3 = (1073741824 & updateFrom) != 0;
+        if ((updateFrom & 128) == 0) {
+            z = false;
+        }
+        if (z2) {
             handleConfigurationSmallWidthChanged();
         }
-        float f = configuration.fontScale;
-        if (this.mFontScale != f) {
+        if (z3) {
             handleConfigurationFontScaleChanged();
-            this.mFontScale = f;
         }
-        int i = configuration.orientation;
-        if (this.mOrientation != i) {
+        if (z) {
             handleConfigurationOrientationChanged();
-            this.mOrientation = i;
-        }
-        int i2 = configuration.densityDpi;
-        if (this.mDensityDpi != i2) {
-            this.mDensityDpi = i2;
         }
     }
 

@@ -54,6 +54,7 @@ import com.android.systemui.statusbar.policy.KeyguardStateController;
 import com.android.systemui.util.InjectionInflationController;
 import java.util.List;
 import java.util.function.Supplier;
+import miui.os.Build;
 
 public class KeyguardSecurityContainer extends FrameLayout implements KeyguardSecurityView {
     /* access modifiers changed from: private */
@@ -698,10 +699,15 @@ public class KeyguardSecurityContainer extends FrameLayout implements KeyguardSe
                 KeyguardSecurityContainer.this.mFogetPasswordSuggestion.setVisibility(0);
                 ((TextView) KeyguardSecurityContainer.this.mFogetPasswordSuggestion.findViewById(C0015R$id.forget_password_suggesstion_one)).setText(Html.fromHtml(KeyguardSecurityContainer.this.getResources().getString(C0021R$string.phone_locked_forget_password_suggesstion_one_content), new Html.ImageGetter() {
                     public Drawable getDrawable(String str) {
+                        Drawable drawable;
                         if (str == null) {
                             return null;
                         }
-                        Drawable drawable = KeyguardSecurityContainer.this.getResources().getDrawable(C0013R$drawable.miui_keyguard_forget_password_mi);
+                        if ("POCO".equals(Build.BRAND)) {
+                            drawable = KeyguardSecurityContainer.this.getResources().getDrawable(C0013R$drawable.miui_keyguard_forget_password_poco);
+                        } else {
+                            drawable = KeyguardSecurityContainer.this.getResources().getDrawable(C0013R$drawable.miui_keyguard_forget_password_mi);
+                        }
                         drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
                         return drawable;
                     }

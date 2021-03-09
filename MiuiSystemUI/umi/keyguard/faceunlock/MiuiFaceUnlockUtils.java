@@ -9,29 +9,34 @@ import android.util.Log;
 import com.android.keyguard.wallpaper.MiuiKeyguardWallpaperControllerImpl;
 import com.android.systemui.C0021R$string;
 import com.android.systemui.Dependency;
+import java.lang.ref.WeakReference;
 import miui.util.FeatureParser;
 
 public class MiuiFaceUnlockUtils {
-    private static BaseMiuiFaceManager mFaceManager = null;
     protected static int mHelpStringResId = 0;
+    private static WeakReference<BaseMiuiFaceManager> mWeakReferenceFaceManager = null;
     private static boolean sIsScreenTurnOnDelayed = false;
 
+    private static void getFaceManager(Context context) {
+        WeakReference<BaseMiuiFaceManager> weakReference = mWeakReferenceFaceManager;
+        if (weakReference == null || weakReference.get() == null) {
+            mWeakReferenceFaceManager = new WeakReference<>((BaseMiuiFaceManager) context.getSystemService("miui_face"));
+        }
+    }
+
     public static boolean isHardwareDetected(Context context) {
-        BaseMiuiFaceManager baseMiuiFaceManager = (BaseMiuiFaceManager) context.getSystemService("miui_face");
-        mFaceManager = baseMiuiFaceManager;
-        return baseMiuiFaceManager.isHardwareDetected();
+        getFaceManager(context);
+        return ((BaseMiuiFaceManager) mWeakReferenceFaceManager.get()).isHardwareDetected();
     }
 
     public static boolean isFaceFeatureEnabled(Context context) {
-        BaseMiuiFaceManager baseMiuiFaceManager = (BaseMiuiFaceManager) context.getSystemService("miui_face");
-        mFaceManager = baseMiuiFaceManager;
-        return baseMiuiFaceManager.isFaceFeatureEnabled();
+        getFaceManager(context);
+        return ((BaseMiuiFaceManager) mWeakReferenceFaceManager.get()).isFaceFeatureEnabled();
     }
 
     public static boolean hasEnrolledTemplates(Context context) {
-        BaseMiuiFaceManager baseMiuiFaceManager = (BaseMiuiFaceManager) context.getSystemService("miui_face");
-        mFaceManager = baseMiuiFaceManager;
-        return baseMiuiFaceManager.hasEnrolledTemplates();
+        getFaceManager(context);
+        return ((BaseMiuiFaceManager) mWeakReferenceFaceManager.get()).hasEnrolledTemplates();
     }
 
     public static boolean isSupportLiftingCamera(Context context) {
@@ -45,9 +50,8 @@ public class MiuiFaceUnlockUtils {
     }
 
     public static boolean isSupportScreenOnDelayed(Context context) {
-        BaseMiuiFaceManager baseMiuiFaceManager = (BaseMiuiFaceManager) context.getSystemService("miui_face");
-        mFaceManager = baseMiuiFaceManager;
-        return baseMiuiFaceManager.isSupportScreenOnDelayed() && !((MiuiKeyguardWallpaperControllerImpl) Dependency.get(MiuiKeyguardWallpaperControllerImpl.class)).isAodUsingSuperWallpaper();
+        getFaceManager(context);
+        return ((BaseMiuiFaceManager) mWeakReferenceFaceManager.get()).isSupportScreenOnDelayed() && !((MiuiKeyguardWallpaperControllerImpl) Dependency.get(MiuiKeyguardWallpaperControllerImpl.class)).isAodUsingSuperWallpaper();
     }
 
     public static boolean isSupportTeeFaceunlock() {

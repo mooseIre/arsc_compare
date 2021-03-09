@@ -20,6 +20,7 @@ import android.os.ServiceManager;
 import android.provider.Settings;
 import android.util.Log;
 import android.util.Slog;
+import android.widget.Toast;
 import com.android.internal.util.DumpUtils;
 import com.android.keyguard.KeyguardSecurityModel;
 import com.android.keyguard.KeyguardUpdateMonitor;
@@ -28,6 +29,7 @@ import com.android.keyguard.MiuiKeyguardUpdateMonitorCallback;
 import com.android.keyguard.fod.MiuiGxzwManager;
 import com.android.keyguard.utils.MiuiKeyguardUtils;
 import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.Dependency;
 import com.android.systemui.Dumpable;
 import com.android.systemui.keyguard.WakefulnessLifecycle;
@@ -45,12 +47,18 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
     public boolean mBouncer = false;
     private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
+            boolean z = false;
             if ("android.intent.action.ACTION_SHUTDOWN".equals(intent.getAction())) {
                 MiuiGxzwManager.this.dismissGxzwView();
                 MiuiGxzwManager.this.mMiuiGxzwIconView.setEnrolling(false);
                 MiuiGxzwManager.this.mMiuiGxzwOverlayView.setEnrolling(false);
             } else if ("miui.intent.action.HANG_UP_CHANGED".equals(intent.getAction())) {
                 MiuiGxzwManager.this.mMiuiGxzwOverlayView.onHandUpChange(intent.getBooleanExtra("hang_up_enable", false));
+            } else if ("miui.action.handymode_change".equals(intent.getAction())) {
+                if (intent.getIntExtra("handymode", 0) != 0) {
+                    z = true;
+                }
+                MiuiGxzwManager.this.updateGxzwInfoInHandyMode(z);
             }
         }
     };
@@ -193,6 +201,7 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
             }
         }
     };
+    private boolean mHandyMode;
     /* access modifiers changed from: private */
     public boolean mHealthAppAuthen = false;
     private IntentFilter mIntentFilter;
@@ -319,6 +328,7 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
     public boolean mShowed = false;
     private boolean mStrongAuthUnlocking = false;
     private boolean mSurfaceFlingerStatusbarShow = true;
+    private Toast mToast;
     protected final WakefulnessLifecycle.Observer mWakefulnessObserver = new WakefulnessLifecycle.Observer() {
         public void onStartedWakingUp() {
             MiuiGxzwManager.this.stopDozing();
@@ -593,6 +603,7 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
         this.mIntentFilter = intentFilter;
         intentFilter.addAction("android.intent.action.ACTION_SHUTDOWN");
         this.mIntentFilter.addAction("miui.intent.action.HANG_UP_CHANGED");
+        this.mIntentFilter.addAction("miui.action.handymode_change");
         this.mDrawWakeLock = ((PowerManager) this.mContext.getSystemService("power")).newWakeLock(128, "gxzw");
         if (keyguardUpdateMonitor.isFingerprintDetectionRunning()) {
             dealCallback(1, 0);
@@ -787,6 +798,7 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
                 this.mMiuiGxzwIconView.dismissGxzwIconView(true);
             }
             this.mContext.registerReceiver(this.mBroadcastReceiver, this.mIntentFilter);
+            updateGxzwInfoInHandyMode(this.mHandyMode);
         }
     }
 
@@ -799,6 +811,21 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
             this.mMiuiGxzwOverlayView.dismiss();
             this.mShowed = false;
             this.mContext.unregisterReceiver(this.mBroadcastReceiver);
+            updateGxzwInfoInHandyMode(this.mHandyMode);
+        }
+    }
+
+    /* access modifiers changed from: private */
+    public void updateGxzwInfoInHandyMode(boolean z) {
+        this.mHandyMode = z;
+        Toast toast = this.mToast;
+        if (toast != null) {
+            toast.cancel();
+        }
+        if (this.mShowed && !this.mKeyguardAuthen && z) {
+            Toast makeText = Toast.makeText(this.mContext, C0021R$string.finger_error_single_mode, 0);
+            this.mToast = makeText;
+            makeText.show();
         }
     }
 
