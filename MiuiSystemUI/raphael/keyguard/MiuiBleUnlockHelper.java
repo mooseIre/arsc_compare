@@ -14,10 +14,9 @@ import android.security.MiuiLockPatternUtils;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Slog;
-import android.widget.Toast;
 import com.android.keyguard.injector.KeyguardUpdateMonitorInjector;
+import com.android.keyguard.utils.MiuiKeyguardUtils;
 import com.android.systemui.C0013R$drawable;
-import com.android.systemui.C0021R$string;
 import com.android.systemui.Dependency;
 import com.android.systemui.keyguard.KeyguardViewMediator;
 import com.android.systemui.keyguard.WakefulnessLifecycle;
@@ -263,18 +262,7 @@ public class MiuiBleUnlockHelper {
     /* access modifiers changed from: private */
     public void unlockByBle() {
         this.mViewMediator.keyguardDone();
-        boolean z = true;
         this.mHasUnlockByBle = true;
-        int currentUserId = this.mUserContextController.getCurrentUserId();
-        if (!this.mUpdateMonitor.getUserBleAuthenticated(currentUserId) || this.mUpdateMonitor.getUserUnlockedWithBiometric(currentUserId)) {
-            z = false;
-        }
-        if (z) {
-            handleBleUnlockSucceed();
-        }
-    }
-
-    private void handleBleUnlockSucceed() {
-        Toast.makeText(this.mContext, C0021R$string.miui_keyguard_ble_unlock_succeed_msg, 0).show();
+        MiuiKeyguardUtils.handleBleUnlockSucceed(this.mContext);
     }
 }

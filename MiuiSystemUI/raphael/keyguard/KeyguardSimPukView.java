@@ -1,6 +1,5 @@
 package com.android.keyguard;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -357,20 +356,6 @@ public class KeyguardSimPukView extends KeyguardPinBasedInputView implements Pas
         }
     }
 
-    private Dialog getSimUnlockProgressDialog() {
-        if (this.mSimUnlockProgressDialog == null) {
-            ProgressDialog progressDialog = new ProgressDialog(this.mContext);
-            this.mSimUnlockProgressDialog = progressDialog;
-            progressDialog.setMessage(this.mContext.getString(C0021R$string.kg_sim_unlock_progress_dialog_message));
-            this.mSimUnlockProgressDialog.setIndeterminate(true);
-            this.mSimUnlockProgressDialog.setCancelable(false);
-            if (!(this.mContext instanceof Activity)) {
-                this.mSimUnlockProgressDialog.getWindow().setType(2009);
-            }
-        }
-        return this.mSimUnlockProgressDialog;
-    }
-
     /* access modifiers changed from: private */
     public Dialog getPukRemainingAttemptsDialog(int i) {
         String pukPasswordErrorMessage = getPukPasswordErrorMessage(i, false);
@@ -414,7 +399,6 @@ public class KeyguardSimPukView extends KeyguardPinBasedInputView implements Pas
 
     /* access modifiers changed from: private */
     public void updateSim() {
-        getSimUnlockProgressDialog().show();
         if (this.mCheckSimPukThread == null) {
             AnonymousClass3 r0 = new CheckSimPuk(this.mPukText, this.mPinText, this.mSubId) {
                 /* access modifiers changed from: package-private */

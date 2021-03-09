@@ -1430,138 +1430,117 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
         Looper looper2 = looper;
         this.mHandler = new Handler(looper) {
             public void handleMessage(Message message) {
-                int i = message.what;
-                if (i == 301) {
-                    KeyguardUpdateMonitor.this.handleTimeUpdate();
-                } else if (i == 302) {
-                    KeyguardUpdateMonitor.this.handleBatteryUpdate((MiuiBatteryStatus) message.obj);
-                } else if (i == 312) {
-                    KeyguardUpdateMonitor.this.handleKeyguardReset();
-                } else if (i != 314) {
-                    boolean z = false;
-                    if (i != Integer.MAX_VALUE) {
-                        switch (i) {
-                            case 304:
-                                KeyguardUpdateMonitor.this.handleSimStateChange(message.arg1, message.arg2, ((Integer) message.obj).intValue());
-                                return;
-                            case 305:
-                                KeyguardUpdateMonitor.this.handleRingerModeChange(message.arg1);
-                                return;
-                            case 306:
-                                KeyguardUpdateMonitor.this.handlePhoneStateChanged((String) message.obj);
-                                return;
-                            default:
-                                switch (i) {
-                                    case 308:
-                                        KeyguardUpdateMonitor.this.handleDeviceProvisioned();
-                                        return;
-                                    case 309:
-                                        KeyguardUpdateMonitor.this.handleDevicePolicyManagerStateChanged(message.arg1);
-                                        return;
-                                    case 310:
-                                        KeyguardUpdateMonitor.this.handleUserSwitching(message.arg1, (IRemoteCallback) message.obj);
-                                        return;
-                                    default:
-                                        switch (i) {
-                                            case 317:
-                                                KeyguardUpdateMonitor.this.handleUserInfoChanged(message.arg1);
-                                                return;
-                                            case 318:
-                                                KeyguardUpdateMonitor.this.handleReportEmergencyCallAction();
-                                                return;
-                                            case 319:
-                                                Trace.beginSection("KeyguardUpdateMonitor#handler MSG_STARTED_WAKING_UP");
-                                                KeyguardUpdateMonitor.this.handleStartedWakingUp();
-                                                Trace.endSection();
-                                                return;
-                                            case 320:
-                                                KeyguardUpdateMonitor.this.handleFinishedGoingToSleep(message.arg1);
-                                                return;
-                                            case 321:
-                                                KeyguardUpdateMonitor.this.handleStartedGoingToSleep(message.arg1);
-                                                return;
-                                            case 322:
-                                                KeyguardUpdateMonitor.this.handleKeyguardBouncerChanged(message.arg1);
-                                                return;
-                                            default:
-                                                switch (i) {
-                                                    case 327:
-                                                        Trace.beginSection("KeyguardUpdateMonitor#handler MSG_FACE_UNLOCK_STATE_CHANGED");
-                                                        KeyguardUpdateMonitor keyguardUpdateMonitor = KeyguardUpdateMonitor.this;
-                                                        if (message.arg1 != 0) {
-                                                            z = true;
-                                                        }
-                                                        keyguardUpdateMonitor.handleFaceUnlockStateChanged(z, message.arg2);
-                                                        Trace.endSection();
-                                                        return;
-                                                    case 328:
-                                                        KeyguardUpdateMonitor.this.handleSimSubscriptionInfoChanged();
-                                                        return;
-                                                    case 329:
-                                                        KeyguardUpdateMonitor.this.handleAirplaneModeChanged();
-                                                        return;
-                                                    case 330:
-                                                        KeyguardUpdateMonitor.this.handleServiceStateChange(message.arg1, (ServiceState) message.obj);
-                                                        return;
-                                                    case 331:
-                                                        KeyguardUpdateMonitor.this.handleScreenTurnedOn();
-                                                        return;
-                                                    case 332:
-                                                        Trace.beginSection("KeyguardUpdateMonitor#handler MSG_SCREEN_TURNED_ON");
-                                                        KeyguardUpdateMonitor.this.handleScreenTurnedOff();
-                                                        Trace.endSection();
-                                                        return;
-                                                    case 333:
-                                                        KeyguardUpdateMonitor.this.handleDreamingStateChanged(message.arg1);
-                                                        return;
-                                                    case 334:
-                                                        KeyguardUpdateMonitor.this.handleUserUnlocked(message.arg1);
-                                                        return;
-                                                    case 335:
-                                                        KeyguardUpdateMonitor.this.setAssistantVisible(((Boolean) message.obj).booleanValue());
-                                                        return;
-                                                    case 336:
-                                                        KeyguardUpdateMonitor.this.updateBiometricListeningState();
-                                                        return;
-                                                    case 337:
-                                                        KeyguardUpdateMonitor.this.updateLogoutEnabled();
-                                                        return;
-                                                    case 338:
-                                                        KeyguardUpdateMonitor.this.updateTelephonyCapable(((Boolean) message.obj).booleanValue());
-                                                        return;
-                                                    case 339:
-                                                        KeyguardUpdateMonitor.this.handleTimeZoneUpdate((String) message.obj);
-                                                        return;
-                                                    case 340:
-                                                        KeyguardUpdateMonitor.this.handleUserStopped(message.arg1);
-                                                        return;
-                                                    case 341:
-                                                        KeyguardUpdateMonitor.this.handleUserRemoved(message.arg1);
-                                                        return;
-                                                    case 342:
-                                                        KeyguardUpdateMonitor.this.handleKeyguardGoingAway(((Boolean) message.obj).booleanValue());
-                                                        return;
-                                                    case 343:
-                                                        Trace.beginSection("KeyguardUpdateMonitor#handler MSG_STARTED_WAKING_UP");
-                                                        KeyguardUpdateMonitor.this.handleStartedWakingUpWithReason((String) message.obj);
-                                                        Trace.endSection();
-                                                        return;
-                                                    default:
-                                                        super.handleMessage(message);
-                                                        return;
-                                                }
-                                        }
-                                }
-                        }
-                    } else {
-                        KeyguardUpdateMonitorInjector access$1000 = KeyguardUpdateMonitor.this.mUpdateMonitorInjector;
-                        if (message.arg1 == 1) {
-                            z = true;
-                        }
-                        access$1000.handleKeyguardShowingChanged(z);
-                    }
-                } else {
-                    KeyguardUpdateMonitor.this.handleUserSwitchComplete(message.arg1);
+                switch (message.what) {
+                    case 301:
+                        KeyguardUpdateMonitor.this.handleTimeUpdate();
+                        return;
+                    case 302:
+                        KeyguardUpdateMonitor.this.handleBatteryUpdate((MiuiBatteryStatus) message.obj);
+                        return;
+                    case 304:
+                        KeyguardUpdateMonitor.this.handleSimStateChange(message.arg1, message.arg2, ((Integer) message.obj).intValue());
+                        return;
+                    case 305:
+                        KeyguardUpdateMonitor.this.handleRingerModeChange(message.arg1);
+                        return;
+                    case 306:
+                        KeyguardUpdateMonitor.this.handlePhoneStateChanged((String) message.obj);
+                        return;
+                    case 308:
+                        KeyguardUpdateMonitor.this.handleDeviceProvisioned();
+                        return;
+                    case 309:
+                        KeyguardUpdateMonitor.this.handleDevicePolicyManagerStateChanged(message.arg1);
+                        return;
+                    case 310:
+                        KeyguardUpdateMonitor.this.handleUserSwitching(message.arg1, (IRemoteCallback) message.obj);
+                        return;
+                    case 312:
+                        KeyguardUpdateMonitor.this.handleKeyguardReset();
+                        return;
+                    case 314:
+                        KeyguardUpdateMonitor.this.handleUserSwitchComplete(message.arg1);
+                        return;
+                    case 317:
+                        KeyguardUpdateMonitor.this.handleUserInfoChanged(message.arg1);
+                        return;
+                    case 318:
+                        KeyguardUpdateMonitor.this.handleReportEmergencyCallAction();
+                        return;
+                    case 319:
+                        Trace.beginSection("KeyguardUpdateMonitor#handler MSG_STARTED_WAKING_UP");
+                        KeyguardUpdateMonitor.this.handleStartedWakingUp();
+                        Trace.endSection();
+                        return;
+                    case 320:
+                        KeyguardUpdateMonitor.this.handleFinishedGoingToSleep(message.arg1);
+                        return;
+                    case 321:
+                        KeyguardUpdateMonitor.this.handleStartedGoingToSleep(message.arg1);
+                        return;
+                    case 322:
+                        KeyguardUpdateMonitor.this.handleKeyguardBouncerChanged(message.arg1);
+                        return;
+                    case 327:
+                        Trace.beginSection("KeyguardUpdateMonitor#handler MSG_FACE_UNLOCK_STATE_CHANGED");
+                        KeyguardUpdateMonitor.this.handleFaceUnlockStateChanged(message.arg1 != 0, message.arg2);
+                        Trace.endSection();
+                        return;
+                    case 328:
+                        KeyguardUpdateMonitor.this.handleSimSubscriptionInfoChanged();
+                        return;
+                    case 329:
+                        KeyguardUpdateMonitor.this.handleAirplaneModeChanged();
+                        return;
+                    case 330:
+                        KeyguardUpdateMonitor.this.handleServiceStateChange(message.arg1, (ServiceState) message.obj);
+                        return;
+                    case 331:
+                        KeyguardUpdateMonitor.this.handleScreenTurnedOn();
+                        return;
+                    case 332:
+                        Trace.beginSection("KeyguardUpdateMonitor#handler MSG_SCREEN_TURNED_ON");
+                        KeyguardUpdateMonitor.this.handleScreenTurnedOff();
+                        Trace.endSection();
+                        return;
+                    case 333:
+                        KeyguardUpdateMonitor.this.handleDreamingStateChanged(message.arg1);
+                        return;
+                    case 334:
+                        KeyguardUpdateMonitor.this.handleUserUnlocked(message.arg1);
+                        return;
+                    case 335:
+                        KeyguardUpdateMonitor.this.setAssistantVisible(((Boolean) message.obj).booleanValue());
+                        return;
+                    case 336:
+                        KeyguardUpdateMonitor.this.updateBiometricListeningState();
+                        return;
+                    case 337:
+                        KeyguardUpdateMonitor.this.updateLogoutEnabled();
+                        return;
+                    case 338:
+                        KeyguardUpdateMonitor.this.updateTelephonyCapable(((Boolean) message.obj).booleanValue());
+                        return;
+                    case 339:
+                        KeyguardUpdateMonitor.this.handleTimeZoneUpdate((String) message.obj);
+                        return;
+                    case 340:
+                        KeyguardUpdateMonitor.this.handleUserStopped(message.arg1);
+                        return;
+                    case 341:
+                        KeyguardUpdateMonitor.this.handleUserRemoved(message.arg1);
+                        return;
+                    case 342:
+                        KeyguardUpdateMonitor.this.handleKeyguardGoingAway(((Boolean) message.obj).booleanValue());
+                        return;
+                    case 343:
+                        Trace.beginSection("KeyguardUpdateMonitor#handler MSG_STARTED_WAKING_UP");
+                        KeyguardUpdateMonitor.this.handleStartedWakingUpWithReason((String) message.obj);
+                        Trace.endSection();
+                        return;
+                    default:
+                        super.handleMessage(message);
+                        return;
                 }
             }
         };
@@ -2692,12 +2671,6 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
         }
         this.mUpdateMonitorInjector.setKeyguardShowingAndOccluded(this.mTaskStackListener, z, z2, new MiuiKeyguardUpdateMonitorCallback(this) {
         });
-    }
-
-    public void updateShowingState(boolean z) {
-        Message obtainMessage = this.mHandler.obtainMessage(Integer.MAX_VALUE);
-        obtainMessage.arg1 = z ? 1 : 0;
-        obtainMessage.sendToTarget();
     }
 
     public boolean isBouncerShowing() {

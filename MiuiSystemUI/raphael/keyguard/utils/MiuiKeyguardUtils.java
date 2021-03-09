@@ -21,11 +21,13 @@ import android.util.Log;
 import android.view.IWindowManager;
 import android.view.TouchDelegate;
 import android.view.View;
+import android.widget.Toast;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.fod.MiuiGxzwManager;
 import com.android.systemui.C0008R$array;
 import com.android.systemui.C0010R$bool;
 import com.android.systemui.C0016R$integer;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.Dependency;
 import com.miui.systemui.DeviceConfig;
 import com.miui.systemui.util.CommonUtil;
@@ -318,5 +320,9 @@ public class MiuiKeyguardUtils {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public static void handleBleUnlockSucceed(Context context) {
+        Toast.makeText(context, C0021R$string.miui_keyguard_ble_unlock_succeed_msg, 0).show();
     }
 }
