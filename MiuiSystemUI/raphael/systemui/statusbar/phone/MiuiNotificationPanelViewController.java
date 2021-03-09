@@ -1356,31 +1356,31 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
 
     private final void updateKeyguardElementAlpha() {
         Class cls = LockScreenMagazineController.class;
-        float min = Math.min(getKeyguardContentsAlpha(), ((float) 1) - getQsExpansionFraction());
-        int i = min == 0.0f ? 4 : 0;
         Object obj = Dependency.get(cls);
         Intrinsics.checkExpressionValueIsNotNull(obj, "Dependency.get(LockScree…neController::class.java)");
         if (!((LockScreenMagazineController) obj).isPreViewVisible()) {
+            float min = Math.min(getKeyguardContentsAlpha(), ((float) 1) - getQsExpansionFraction());
+            int i = min == 0.0f ? 4 : 0;
             KeyguardBottomAreaView keyguardBottomAreaView = this.mKeyguardBottomArea;
             Intrinsics.checkExpressionValueIsNotNull(keyguardBottomAreaView, "mKeyguardBottomArea");
             keyguardBottomAreaView.setImportantForAccessibility(i);
             KeyguardBottomAreaView keyguardBottomAreaView2 = this.mKeyguardBottomArea;
             Intrinsics.checkExpressionValueIsNotNull(keyguardBottomAreaView2, "mKeyguardBottomArea");
             keyguardBottomAreaView2.setAlpha(min);
+            if (!this.mKeyguardStatusViewAnimating) {
+                ((KeyguardClockInjector) Dependency.get(KeyguardClockInjector.class)).getView().updateClock(min, i);
+            }
+            MiuiKeyguardFaceUnlockView miuiKeyguardFaceUnlockView = this.mMiuiKeyguardFaceUnlockView;
+            Intrinsics.checkExpressionValueIsNotNull(miuiKeyguardFaceUnlockView, "mMiuiKeyguardFaceUnlockView");
+            miuiKeyguardFaceUnlockView.setAlpha(min);
+            Object obj2 = Dependency.get(cls);
+            Intrinsics.checkExpressionValueIsNotNull(obj2, "Dependency.get(LockScree…neController::class.java)");
+            LockScreenMagazinePreView view = ((LockScreenMagazineController) obj2).getView();
+            Intrinsics.checkExpressionValueIsNotNull(view, "Dependency.get(LockScree…troller::class.java).view");
+            View mainLayout = view.getMainLayout();
+            Intrinsics.checkExpressionValueIsNotNull(mainLayout, "Dependency.get(LockScree…ass.java).view.mainLayout");
+            mainLayout.setAlpha(min);
         }
-        if (!this.mKeyguardStatusViewAnimating) {
-            ((KeyguardClockInjector) Dependency.get(KeyguardClockInjector.class)).getView().updateClock(min, i);
-        }
-        MiuiKeyguardFaceUnlockView miuiKeyguardFaceUnlockView = this.mMiuiKeyguardFaceUnlockView;
-        Intrinsics.checkExpressionValueIsNotNull(miuiKeyguardFaceUnlockView, "mMiuiKeyguardFaceUnlockView");
-        miuiKeyguardFaceUnlockView.setAlpha(min);
-        Object obj2 = Dependency.get(cls);
-        Intrinsics.checkExpressionValueIsNotNull(obj2, "Dependency.get(LockScree…neController::class.java)");
-        LockScreenMagazinePreView view = ((LockScreenMagazineController) obj2).getView();
-        Intrinsics.checkExpressionValueIsNotNull(view, "Dependency.get(LockScree…troller::class.java).view");
-        View mainLayout = view.getMainLayout();
-        Intrinsics.checkExpressionValueIsNotNull(mainLayout, "Dependency.get(LockScree…ass.java).view.mainLayout");
-        mainLayout.setAlpha(min);
     }
 
     public void onStartedGoingToSleep() {

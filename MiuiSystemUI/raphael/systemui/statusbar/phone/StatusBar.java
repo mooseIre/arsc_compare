@@ -2870,6 +2870,9 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
     private /* synthetic */ boolean lambda$executeRunnableDismissingKeyguard$19(Runnable runnable, boolean z, boolean z2) {
         if (runnable != null) {
             if (!this.mStatusBarKeyguardViewManager.isShowing() || !this.mStatusBarKeyguardViewManager.isOccluded()) {
+                if (Looper.myLooper() == Looper.getMainLooper()) {
+                    this.mAssistManagerLazy.get();
+                }
                 AsyncTask.execute(runnable);
             } else {
                 this.mStatusBarKeyguardViewManager.addAfterKeyguardGoneRunnable(runnable);

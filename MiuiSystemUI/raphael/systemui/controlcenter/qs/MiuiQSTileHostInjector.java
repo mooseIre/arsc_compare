@@ -314,6 +314,10 @@ public class MiuiQSTileHostInjector implements SuperSaveModeController.SuperSave
         return this.mMiuiQSTilsplugin;
     }
 
+    public boolean isSuperSaveMode() {
+        return this.mSuperSaveModeOn;
+    }
+
     public void onSuperSaveModeChange(boolean z) {
         if (this.mSuperSaveModeOn != z) {
             this.mSuperSaveModeOn = z;

@@ -253,6 +253,8 @@ public class KeyguardBouncer {
                     DejankUtils.postAfterTraversal(this.mShowRunnable);
                     this.mCallback.onBouncerVisiblityChanged(true);
                     this.mExpansionCallback.onStartingToShow();
+                } else if (this.mKeyguardUpdateMonitor.getUserBleAuthenticated(currentUser) && !this.mKeyguardUpdateMonitor.getUserUnlockedWithBiometric(currentUser)) {
+                    MiuiKeyguardUtils.handleBleUnlockSucceed(this.mContext);
                 }
             }
         }
