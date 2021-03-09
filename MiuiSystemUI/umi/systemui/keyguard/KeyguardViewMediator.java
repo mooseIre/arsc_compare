@@ -2242,7 +2242,6 @@ public class KeyguardViewMediator extends SystemUI implements Dumpable {
             notifyDefaultDisplayCallbacks(z);
         }
         this.mUpdateMonitor.setKeyguardShowingAndOccluded(this.mShowing, this.mOccluded);
-        this.mUpdateMonitor.updateShowingState(this.mShowing);
     }
 
     private void notifyDefaultDisplayCallbacks(boolean z) {

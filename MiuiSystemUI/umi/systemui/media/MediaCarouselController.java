@@ -18,6 +18,7 @@ import com.android.systemui.plugins.ActivityStarter;
 import com.android.systemui.plugins.FalsingManager;
 import com.android.systemui.qs.PageIndicator;
 import com.android.systemui.statusbar.notification.VisualStabilityManager;
+import com.android.systemui.statusbar.notification.VisualStabilityManagerInjector$Companion$Callback;
 import com.android.systemui.statusbar.notification.mediacontrol.MiuiMediaCarouselScrollHandler;
 import com.android.systemui.statusbar.notification.mediacontrol.MiuiMediaControlPanel;
 import com.android.systemui.statusbar.notification.stack.MiuiMediaHeaderView;
@@ -56,6 +57,7 @@ public final class MediaCarouselController {
     private float currentTransitionProgress = 1.0f;
     private boolean currentlyExpanded = true;
     private boolean currentlyShowingOnlyActive;
+    private boolean currentlyVisibility;
     private MediaHostState desiredHostState;
     /* access modifiers changed from: private */
     public int desiredLocation = -1;
@@ -172,6 +174,17 @@ public final class MediaCarouselController {
         };
         this.visualStabilityCallback = r2;
         this.visualStabilityManager.addReorderingAllowedCallback(r2, true);
+        this.visualStabilityManager.injector.addPanelVisibilityChangedCallback(new VisualStabilityManagerInjector$Companion$Callback(this) {
+            final /* synthetic */ MediaCarouselController this$0;
+
+            {
+                this.this$0 = r1;
+            }
+
+            public void onVisibilityChanged(boolean z) {
+                this.this$0.setCurrentlyVisibility(z);
+            }
+        });
         mediaDataFilter2.addListener(new MediaDataManager.Listener(this) {
             final /* synthetic */ MediaCarouselController this$0;
 
@@ -245,7 +258,17 @@ public final class MediaCarouselController {
         if (this.currentlyExpanded != z) {
             this.currentlyExpanded = z;
             for (MediaControlPanel listening : this.mediaPlayers.values()) {
-                listening.setListening(this.currentlyExpanded);
+                listening.setListening(this.currentlyExpanded && this.currentlyVisibility);
+            }
+        }
+    }
+
+    /* access modifiers changed from: private */
+    public final void setCurrentlyVisibility(boolean z) {
+        if (this.currentlyVisibility != z) {
+            this.currentlyVisibility = z;
+            for (MediaControlPanel listening : this.mediaPlayers.values()) {
+                listening.setListening(this.currentlyExpanded && this.currentlyVisibility);
             }
         }
     }
@@ -344,7 +367,7 @@ public final class MediaCarouselController {
                 player.setLayoutParams(layoutParams);
             }
             mediaControlPanel3.bind(mediaData2);
-            mediaControlPanel3.setListening(this.currentlyExpanded);
+            mediaControlPanel3.setListening(this.currentlyExpanded && this.currentlyVisibility);
             updatePlayerToState(mediaControlPanel3, true);
             if (miuiMediaControlPanel.isPlaying()) {
                 ViewGroup viewGroup = this.mediaContent;

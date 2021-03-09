@@ -262,12 +262,12 @@ public class BluetoothTile extends QSTileImpl<QSTile.BooleanState> {
                         }
                     }
                     if (arrayList.size() == 0) {
-                        this.mItems.setEmptyState(C0013R$drawable.ic_qs_bluetooth_detail_empty, C0021R$string.quick_settings_bluetooth_detail_empty_text);
+                        this.mItems.setEmptyState(C0013R$drawable.ic_miui_qs_bluetooth_detail_empty, C0021R$string.quick_settings_bluetooth_detail_empty_text);
                     }
                     this.mItems.setItems((MiuiQSDetailItems.Item[]) arrayList.toArray(new MiuiQSDetailItems.Item[arrayList.size()]));
                     return;
                 }
-                this.mItems.setEmptyState(C0013R$drawable.ic_qs_bluetooth_detail_empty, C0021R$string.bt_is_off);
+                this.mItems.setEmptyState(C0013R$drawable.ic_miui_qs_bluetooth_detail_empty, C0021R$string.bt_is_off);
                 this.mItems.setItems((MiuiQSDetailItems.Item[]) null);
             }
         }

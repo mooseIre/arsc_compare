@@ -3912,6 +3912,7 @@ public final class R {
         public static final int miui_keyguard_pattern_view_message_area_margin_bottom;
         public static final int miui_keyguard_pattern_view_pattern_view_height_width;
         public static final int miui_keyguard_pattern_view_pattern_view_margin_bottom;
+        public static final int miui_keyguard_pin_view_container_margin_bottom;
         public static final int miui_keyguard_pin_view_em_btm_height;
         public static final int miui_keyguard_pin_view_em_fod_top_margin;
         public static final int miui_keyguard_pin_view_message_area_margin_bottom;
@@ -6797,6 +6798,7 @@ public final class R {
         public static final int ic_memory;
         public static final int ic_menu;
         public static final int ic_mic_26dp;
+        public static final int ic_miui_qs_bluetooth_detail_empty;
         public static final int ic_mode_edit;
         public static final int ic_more_vert;
         public static final int ic_mr_button_connected_00_dark;
@@ -7325,6 +7327,7 @@ public final class R {
         public static final int miui_keyguard_forget_password_left_normal;
         public static final int miui_keyguard_forget_password_left_pressed;
         public static final int miui_keyguard_forget_password_mi;
+        public static final int miui_keyguard_forget_password_poco;
         public static final int miui_keyguard_forget_password_right_normal;
         public static final int miui_keyguard_forget_password_right_pressed;
         public static final int miui_keyguard_forget_password_single_normal;
@@ -8692,6 +8695,7 @@ public final class R {
         public static final int keyguard_drip_left_statusIcons_container;
         public static final int keyguard_electric_torch;
         public static final int keyguard_esim_area;
+        public static final int keyguard_force_black_background;
         public static final int keyguard_header;
         public static final int keyguard_host_view;
         public static final int keyguard_hun_animator_end_tag;
@@ -11306,6 +11310,7 @@ public final class R {
         public static final int face_unlock_reveal_mouth;
         public static final int face_unlock_success;
         public static final int failed_to_open_app_settings_toast;
+        public static final int finger_error_single_mode;
         public static final int fingerprint_add_text;
         public static final int fingerprint_add_title;
         public static final int fingerprint_again_identified_msg;

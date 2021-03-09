@@ -45,6 +45,11 @@ public class PhoneStatusBarView extends PanelBar {
     private ScrimController mScrimController;
     private int mStatusBarHeight;
 
+    /* access modifiers changed from: protected */
+    public boolean HandleEvent(MotionEvent motionEvent) {
+        return false;
+    }
+
     public PhoneStatusBarView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
     }
@@ -153,7 +158,7 @@ public class PhoneStatusBarView extends PanelBar {
     }
 
     public boolean onTouchEvent(MotionEvent motionEvent) {
-        return this.mBar.interceptTouchEvent(motionEvent) || super.onTouchEvent(motionEvent);
+        return this.mBar.interceptTouchEvent(motionEvent) || HandleEvent(motionEvent) || super.onTouchEvent(motionEvent);
     }
 
     public void onTrackingStarted() {

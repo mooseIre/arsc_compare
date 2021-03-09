@@ -458,13 +458,12 @@ public final class ControlCenterPanelViewController implements ConfigurationCont
                     }
                 }
                 Boolean bool4 = this.eventAborted;
-                if (bool4 != null) {
-                    if (bool4 == null) {
-                        Intrinsics.throwNpe();
-                        throw null;
-                    } else if (bool4.booleanValue()) {
-                        return bool2;
+                if (bool4 != null && bool4.booleanValue()) {
+                    ControlPanelWindowView controlPanelWindowView3 = ControlCenterPanelViewController.this.panelView.getControlPanelWindowView();
+                    if (controlPanelWindowView3 != null) {
+                        controlPanelWindowView3.handleMotionEvent(motionEvent, false);
                     }
+                    return bool2;
                 }
             } else {
                 this.eventAborted = null;

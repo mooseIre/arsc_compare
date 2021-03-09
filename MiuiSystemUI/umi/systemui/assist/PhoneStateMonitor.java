@@ -144,10 +144,11 @@ public final class PhoneStateMonitor {
 
     /* access modifiers changed from: private */
     public boolean isLauncherShowing(ActivityManager.RunningTaskInfo runningTaskInfo) {
-        if (runningTaskInfo == null) {
+        ComponentName componentName;
+        if (runningTaskInfo == null || (componentName = runningTaskInfo.topActivity) == null) {
             return false;
         }
-        return runningTaskInfo.topActivity.equals(this.mDefaultHome);
+        return componentName.equals(this.mDefaultHome);
     }
 
     private boolean isAppImmersive() {

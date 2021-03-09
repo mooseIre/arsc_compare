@@ -20,16 +20,18 @@ import com.android.systemui.settings.CurrentUserTracker;
 import com.android.systemui.statusbar.phone.StatusBarIconController;
 import com.android.systemui.statusbar.policy.DualClockObserver;
 import com.android.systemui.statusbar.policy.RegionController;
+import com.miui.systemui.statusbar.phone.ForceBlackObserver;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class MiuiKeyguardStatusBarView extends KeyguardStatusBarView implements RegionController.Callback, DualClockObserver.Callback {
+public class MiuiKeyguardStatusBarView extends KeyguardStatusBarView implements RegionController.Callback, DualClockObserver.Callback, ForceBlackObserver.Callback {
     private CurrentUserTracker mCurrentUserTracker = new CurrentUserTracker((BroadcastDispatcher) Dependency.get(BroadcastDispatcher.class)) {
         public void onUserSwitched(int i) {
             MiuiKeyguardStatusBarView.this.mShowCarrierObserver.onChange(false);
         }
     };
     private boolean mDark = false;
+    private boolean mForceBlack = false;
     private boolean mIsShowDualClock = false;
     private boolean mLeftHoleDevice;
     /* access modifiers changed from: private */
@@ -101,10 +103,13 @@ public class MiuiKeyguardStatusBarView extends KeyguardStatusBarView implements 
 
     /* access modifiers changed from: protected */
     public void onAttachedToWindow() {
+        Class cls = ForceBlackObserver.class;
         super.onAttachedToWindow();
         this.mCurrentUserTracker.startTracking();
         ((RegionController) Dependency.get(RegionController.class)).addCallback(this);
         ((DualClockObserver) Dependency.get(DualClockObserver.class)).addCallback(this);
+        ((ForceBlackObserver) Dependency.get(cls)).addCallback(this);
+        this.mForceBlack = ((ForceBlackObserver) Dependency.get(cls)).isForceBlack();
         this.mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor("status_bar_show_carrier_under_keyguard"), false, this.mShowCarrierObserver, -1);
         this.mShowCarrierObserver.onChange(false);
     }
@@ -113,6 +118,7 @@ public class MiuiKeyguardStatusBarView extends KeyguardStatusBarView implements 
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         this.mContext.getContentResolver().unregisterContentObserver(this.mShowCarrierObserver);
+        ((ForceBlackObserver) Dependency.get(ForceBlackObserver.class)).removeCallback(this);
         ((RegionController) Dependency.get(RegionController.class)).removeCallback(this);
         ((DualClockObserver) Dependency.get(DualClockObserver.class)).removeCallback(this);
         this.mCurrentUserTracker.stopTracking();
@@ -123,7 +129,7 @@ public class MiuiKeyguardStatusBarView extends KeyguardStatusBarView implements 
         DarkIconDispatcher darkIconDispatcher = (DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class);
         int lightModeIconColorSingleTone = darkIconDispatcher.getLightModeIconColorSingleTone();
         int darkModeIconColorSingleTone = darkIconDispatcher.getDarkModeIconColorSingleTone();
-        boolean z = this.mDark;
+        boolean z = !this.mForceBlack && this.mDark;
         int i = z ? darkModeIconColorSingleTone : lightModeIconColorSingleTone;
         float f = z ? 1.0f : 0.0f;
         Log.d("MiuiKeyguardStatusBarView", "updateIconsAndTextColors: dark = " + z + ", iconColor = " + i + ", intensity = " + f);
@@ -202,5 +208,10 @@ public class MiuiKeyguardStatusBarView extends KeyguardStatusBarView implements 
     public void onDualShowClockChanged(boolean z) {
         this.mIsShowDualClock = z;
         updateCarrierVisibility();
+    }
+
+    public void onForceBlackChange(boolean z, boolean z2) {
+        this.mForceBlack = z;
+        updateIconsAndTextColors();
     }
 }

@@ -8,13 +8,10 @@ import android.util.AttributeSet;
 import android.util.Pair;
 import android.view.Display;
 import android.view.DisplayCutout;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowInsets;
 import android.widget.FrameLayout;
-import com.android.systemui.Dependency;
 import com.android.systemui.ScreenDecorations;
-import com.android.systemui.controlcenter.phone.ControlPanelWindowManager;
 
 public class StatusBarWindowView extends FrameLayout {
     private int mLeftInset = 0;
@@ -97,12 +94,5 @@ public class StatusBarWindowView extends FrameLayout {
             return new Pair<>(0, Integer.valueOf(point.x - rect.left));
         }
         return null;
-    }
-
-    public boolean dispatchTouchEvent(MotionEvent motionEvent) {
-        if (!((ControlPanelWindowManager) Dependency.get(ControlPanelWindowManager.class)).dispatchToControlPanel(motionEvent, (float) getWidth())) {
-            return super.dispatchTouchEvent(motionEvent);
-        }
-        return false;
     }
 }

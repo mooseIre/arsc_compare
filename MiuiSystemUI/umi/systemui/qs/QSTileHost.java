@@ -344,7 +344,9 @@ public class QSTileHost implements QSHost, TunerService.Tunable, PluginListener<
     }
 
     private void saveTilesToSettings(List<String> list) {
-        Settings.Secure.putStringForUser(this.mContext.getContentResolver(), "sysui_qs_tiles", TextUtils.join(",", list), (String) null, false, this.mCurrentUser, true);
+        if (!this.mMiuiHostInjector.isSuperSaveMode()) {
+            Settings.Secure.putStringForUser(this.mContext.getContentResolver(), "sysui_qs_tiles", TextUtils.join(",", list), (String) null, false, this.mCurrentUser, true);
+        }
     }
 
     private void changeTileSpecs(Predicate<List<String>> predicate) {

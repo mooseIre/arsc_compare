@@ -6,11 +6,13 @@ import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.util.Pair;
 import android.view.DisplayCutout;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import androidx.core.view.GestureDetectorCompat;
 import com.android.systemui.C0015R$id;
 import com.android.systemui.Dependency;
 import com.android.systemui.ScreenDecorations;
@@ -21,15 +23,21 @@ import com.android.systemui.statusbar.views.NetworkSpeedSplitter;
 import com.android.systemui.statusbar.views.NetworkSpeedView;
 
 public class MiuiPhoneStatusBarView extends PhoneStatusBarView {
+    private ControlPanelWindowManager mControlPanelWindowManager;
     protected int mCurrentStatusBarType = 0;
+    private MotionEvent mDown;
+    private float mDownY;
     protected NetworkSpeedSplitter mDripNetworkSpeedSplitter;
     protected NetworkSpeedView mDripNetworkSpeedView;
     protected View mDripStatusBarLeftStatusIconArea;
     protected View mDripStatusBarNotificationIconArea;
     protected View mDripStatusBarRightStatusIcons;
+    private boolean mFirstMove;
     protected NetworkSpeedView mFullScreenNetworkSpeedView;
     protected View mFullscreenStatusBarNotificationIconArea;
     protected View mFullscreenStatusBarStatusIcons;
+    private GestureDetectorCompat mGestureDetector;
+    private boolean mIsGiveAllEvent;
     protected View mNotificationIconAreaInner;
     protected PhoneStatusBarTintController mPhoneStatusBarTintController = new PhoneStatusBarTintController(this, (MiuiLightBarController) Dependency.get(LightBarController.class));
     protected View mStatusBarLeftContainer;
@@ -37,6 +45,8 @@ public class MiuiPhoneStatusBarView extends PhoneStatusBarView {
 
     public MiuiPhoneStatusBarView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
+        this.mGestureDetector = new GestureDetectorCompat(context, new MyGestureListener(this));
+        this.mControlPanelWindowManager = (ControlPanelWindowManager) Dependency.get(ControlPanelWindowManager.class);
         addOnLayoutChangeListener(new View.OnLayoutChangeListener(this) {
             public void onLayoutChange(View view, int i, int i2, int i3, int i4, int i5, int i6, int i7, int i8) {
                 if (i3 - i != i7 - i5) {
@@ -168,10 +178,48 @@ public class MiuiPhoneStatusBarView extends PhoneStatusBarView {
         this.mPhoneStatusBarTintController.onDraw();
     }
 
-    public boolean dispatchTouchEvent(MotionEvent motionEvent) {
-        if (!((ControlPanelWindowManager) Dependency.get(ControlPanelWindowManager.class)).dispatchToControlPanel(motionEvent, (float) getWidth())) {
-            return super.dispatchTouchEvent(motionEvent);
+    /* access modifiers changed from: protected */
+    public boolean HandleEvent(MotionEvent motionEvent) {
+        boolean z = motionEvent.getActionMasked() == 0;
+        boolean z2 = motionEvent.getAction() == 2;
+        boolean z3 = motionEvent.getActionMasked() == 1;
+        boolean z4 = motionEvent.getAction() == 3;
+        if (z) {
+            this.mDownY = motionEvent.getRawY();
+            MotionEvent motionEvent2 = this.mDown;
+            if (motionEvent2 != null) {
+                motionEvent2.recycle();
+                this.mDown = null;
+            }
+            this.mDown = MotionEvent.obtain(motionEvent);
+            this.mIsGiveAllEvent = false;
+            this.mFirstMove = true;
+        } else if (z2 && Math.abs(motionEvent.getRawY() - this.mDownY) > 5.0f && this.mFirstMove) {
+            this.mControlPanelWindowManager.dispatchToControlPanel(this.mDown, (float) getWidth());
+            this.mFirstMove = false;
+            this.mIsGiveAllEvent = true;
+        } else if (z3 || z4) {
+            this.mControlPanelWindowManager.dispatchToControlPanel(motionEvent, (float) getWidth());
+            this.mFirstMove = false;
+            this.mIsGiveAllEvent = false;
+            MotionEvent motionEvent3 = this.mDown;
+            if (motionEvent3 != null) {
+                motionEvent3.recycle();
+                this.mDown = null;
+            }
         }
-        return false;
+        if (!this.mIsGiveAllEvent || !this.mControlPanelWindowManager.dispatchToControlPanel(motionEvent, (float) getWidth())) {
+            return this.mGestureDetector.onTouchEvent(motionEvent);
+        }
+        return true;
+    }
+
+    static class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
+        public boolean onDoubleTap(MotionEvent motionEvent) {
+            return false;
+        }
+
+        public MyGestureListener(MiuiPhoneStatusBarView miuiPhoneStatusBarView) {
+        }
     }
 }

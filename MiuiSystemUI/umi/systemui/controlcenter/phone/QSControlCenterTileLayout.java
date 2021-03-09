@@ -499,6 +499,16 @@ public class QSControlCenterTileLayout extends ViewGroup implements QSPanel.QSTi
 
     public void setTiles(Collection<QSTile> collection) {
         setTiles(collection, this.mExpanded);
+        post(new Runnable() {
+            public final void run() {
+                QSControlCenterTileLayout.this.lambda$setTiles$1$QSControlCenterTileLayout();
+            }
+        });
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$setTiles$1 */
+    public /* synthetic */ void lambda$setTiles$1$QSControlCenterTileLayout() {
         setExpanded(this.mExpanded);
     }
 

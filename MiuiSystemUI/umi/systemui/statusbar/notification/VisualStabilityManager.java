@@ -14,6 +14,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 
 public class VisualStabilityManager implements OnHeadsUpChangedListener, Dumpable {
+    public VisualStabilityManagerInjector injector = new VisualStabilityManagerInjector();
     private ArraySet<View> mAddedChildren = new ArraySet<>();
     private ArraySet<View> mAllowedReorderViews = new ArraySet<>();
     private boolean mGroupChangedAllowed;
@@ -106,6 +107,7 @@ public class VisualStabilityManager implements OnHeadsUpChangedListener, Dumpabl
         if (z) {
             notifyChangeAllowed(this.mGroupChangesAllowedCallbacks, this.mPersistentGroupCallbacks);
         }
+        this.injector.updateAllowedStates(this.mScreenOn, this.mPanelExpanded, this.mPulsing);
     }
 
     private void notifyChangeAllowed(ArrayList<Callback> arrayList, ArraySet<Callback> arraySet) {
