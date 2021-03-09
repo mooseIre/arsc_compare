@@ -6,6 +6,7 @@
         <ImageView android:id="@id/backdrop_front" android:visibility="invisible" android:layout_width="fill_parent" android:layout_height="fill_parent" android:scaleType="centerCrop" />
     </com.android.systemui.statusbar.BackDropView>
     <com.android.systemui.statusbar.ScrimView android:id="@id/scrim_behind" android:layout_width="fill_parent" android:layout_height="fill_parent" android:importantForAccessibility="no" sysui:ignoreRightInset="true" />
+    <com.android.systemui.statusbar.views.MiuiForceBlackBackgroundImageView android:id="@id/keyguard_force_black_background" android:background="@drawable/force_black_screen_round_corner_top" android:visibility="gone" android:layout_width="fill_parent" android:layout_height="wrap_content" />
     <include android:visibility="invisible" android:layout_width="fill_parent" android:layout_height="fill_parent" layout="@layout/status_bar_expanded" />
     <include layout="@layout/brightness_mirror" />
     <com.android.systemui.statusbar.ScrimView android:id="@id/scrim_in_front" android:layout_width="fill_parent" android:layout_height="fill_parent" android:importantForAccessibility="no" sysui:ignoreRightInset="true" />
