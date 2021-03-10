@@ -73,7 +73,6 @@ import com.android.systemui.statusbar.notification.NotificationEntryManager;
 import com.android.systemui.statusbar.notification.NotificationWakeUpCoordinator;
 import com.android.systemui.statusbar.notification.PropertyAnimator;
 import com.android.systemui.statusbar.notification.ViewGroupFadeHelper;
-import com.android.systemui.statusbar.notification.analytics.NotificationStat;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import com.android.systemui.statusbar.notification.row.ActivatableNotificationView;
 import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow;
@@ -1640,64 +1639,89 @@ public class NotificationPanelViewController extends PanelViewController {
     }
 
     /* access modifiers changed from: protected */
-    public void flingSettings(float f, int i, final Runnable runnable, boolean z) {
-        float f2;
-        boolean z2;
-        if (i == 0) {
-            f2 = (float) this.mQsMaxExpansionHeight;
-            trackPanelState(this.mBarState == 1, true);
-        } else if (i != 1) {
-            f2 = 0.0f;
-        } else {
-            trackPanelState(this.mBarState == 1, false);
-            f2 = (float) this.mQsMinExpansionHeight;
-        }
-        if (f2 != this.mQsExpansionHeight) {
-            boolean z3 = i == 0;
-            if ((f <= 0.0f || z3) && (f >= 0.0f || !z3)) {
-                z2 = false;
-            } else {
-                f = 0.0f;
-                z2 = true;
-            }
-            ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{this.mQsExpansionHeight, f2});
-            if (z) {
-                ofFloat.setInterpolator(Interpolators.TOUCH_RESPONSE);
-                ofFloat.setDuration(368);
-            } else {
-                this.mFlingAnimationUtils.apply(ofFloat, this.mQsExpansionHeight, f2, f);
-            }
-            if (z2) {
-                ofFloat.setDuration(350);
-            }
-            ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-                    NotificationPanelViewController.this.lambda$flingSettings$7$NotificationPanelViewController(valueAnimator);
-                }
-            });
-            ofFloat.addListener(new AnimatorListenerAdapter() {
-                public void onAnimationStart(Animator animator) {
-                    NotificationPanelViewController.this.notifyExpandingStarted();
-                }
-
-                public void onAnimationEnd(Animator animator) {
-                    boolean unused = NotificationPanelViewController.this.mAnimatingQS = false;
-                    NotificationPanelViewController.this.notifyExpandingFinished();
-                    NotificationPanelViewController.this.mNotificationStackScroller.resetCheckSnoozeLeavebehind();
-                    ValueAnimator unused2 = NotificationPanelViewController.this.mQsExpansionAnimator = null;
-                    Runnable runnable = runnable;
-                    if (runnable != null) {
-                        runnable.run();
-                    }
-                }
-            });
-            this.mAnimatingQS = true;
-            ofFloat.start();
-            this.mQsExpansionAnimator = ofFloat;
-            this.mQsAnimatorExpand = z3;
-        } else if (runnable != null) {
-            runnable.run();
-        }
+    /* JADX WARNING: Removed duplicated region for block: B:11:0x001a  */
+    /* JADX WARNING: Removed duplicated region for block: B:9:0x0014  */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public void flingSettings(float r7, int r8, final java.lang.Runnable r9, boolean r10) {
+        /*
+            r6 = this;
+            r0 = 0
+            r1 = 1
+            if (r8 == 0) goto L_0x000b
+            if (r8 == r1) goto L_0x0008
+            r2 = r0
+            goto L_0x000e
+        L_0x0008:
+            int r2 = r6.mQsMinExpansionHeight
+            goto L_0x000d
+        L_0x000b:
+            int r2 = r6.mQsMaxExpansionHeight
+        L_0x000d:
+            float r2 = (float) r2
+        L_0x000e:
+            float r3 = r6.mQsExpansionHeight
+            int r3 = (r2 > r3 ? 1 : (r2 == r3 ? 0 : -1))
+            if (r3 != 0) goto L_0x001a
+            if (r9 == 0) goto L_0x0019
+            r9.run()
+        L_0x0019:
+            return
+        L_0x001a:
+            r3 = 0
+            if (r8 != 0) goto L_0x001f
+            r8 = r1
+            goto L_0x0020
+        L_0x001f:
+            r8 = r3
+        L_0x0020:
+            int r4 = (r7 > r0 ? 1 : (r7 == r0 ? 0 : -1))
+            if (r4 <= 0) goto L_0x0026
+            if (r8 == 0) goto L_0x002c
+        L_0x0026:
+            int r4 = (r7 > r0 ? 1 : (r7 == r0 ? 0 : -1))
+            if (r4 >= 0) goto L_0x002f
+            if (r8 == 0) goto L_0x002f
+        L_0x002c:
+            r7 = r0
+            r0 = r1
+            goto L_0x0030
+        L_0x002f:
+            r0 = r3
+        L_0x0030:
+            r4 = 2
+            float[] r4 = new float[r4]
+            float r5 = r6.mQsExpansionHeight
+            r4[r3] = r5
+            r4[r1] = r2
+            android.animation.ValueAnimator r3 = android.animation.ValueAnimator.ofFloat(r4)
+            if (r10 == 0) goto L_0x004a
+            android.view.animation.Interpolator r7 = com.android.systemui.Interpolators.TOUCH_RESPONSE
+            r3.setInterpolator(r7)
+            r4 = 368(0x170, double:1.82E-321)
+            r3.setDuration(r4)
+            goto L_0x0051
+        L_0x004a:
+            com.android.systemui.statusbar.FlingAnimationUtils r10 = r6.mFlingAnimationUtils
+            float r4 = r6.mQsExpansionHeight
+            r10.apply(r3, r4, r2, r7)
+        L_0x0051:
+            if (r0 == 0) goto L_0x0058
+            r4 = 350(0x15e, double:1.73E-321)
+            r3.setDuration(r4)
+        L_0x0058:
+            com.android.systemui.statusbar.phone.-$$Lambda$NotificationPanelViewController$PxDf76v5kbscyhBqkVxRT_vLxqI r7 = new com.android.systemui.statusbar.phone.-$$Lambda$NotificationPanelViewController$PxDf76v5kbscyhBqkVxRT_vLxqI
+            r7.<init>()
+            r3.addUpdateListener(r7)
+            com.android.systemui.statusbar.phone.NotificationPanelViewController$15 r7 = new com.android.systemui.statusbar.phone.NotificationPanelViewController$15
+            r7.<init>(r9)
+            r3.addListener(r7)
+            r6.mAnimatingQS = r1
+            r3.start()
+            r6.mQsExpansionAnimator = r3
+            r6.mQsAnimatorExpand = r8
+            return
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.phone.NotificationPanelViewController.flingSettings(float, int, java.lang.Runnable, boolean):void");
     }
 
     /* access modifiers changed from: private */
@@ -1708,18 +1732,6 @@ public class NotificationPanelViewController extends PanelViewController {
 
     public int getActiveNotificationsCount() {
         return this.mEntryManager.getActiveNotificationsCount();
-    }
-
-    private void trackPanelState(boolean z, boolean z2) {
-        Class cls = NotificationStat.class;
-        if (!z) {
-            return;
-        }
-        if (z2) {
-            ((NotificationStat) Dependency.get(cls)).onPanelExpanded(true, true, getActiveNotificationsCount());
-        } else {
-            ((NotificationStat) Dependency.get(cls)).onPanelCollapsed(true, getActiveNotificationsCount());
-        }
     }
 
     /* access modifiers changed from: protected */

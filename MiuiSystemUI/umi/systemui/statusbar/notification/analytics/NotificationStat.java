@@ -99,6 +99,10 @@ public class NotificationStat {
     }
 
     public void onClick(NotificationEntry notificationEntry) {
+        NotificationPanelStat notificationPanelStat = this.mPanelStat;
+        if (notificationPanelStat != null) {
+            notificationPanelStat.markClick();
+        }
         handleClickEvent(notificationEntry);
         handleVisibleEvent(notificationEntry.getKey(), getNotifSource(notificationEntry));
     }
@@ -231,6 +235,24 @@ public class NotificationStat {
 
     public void onNotificationPanelSliding(String str, String str2) {
         handleNotificationPanelSlidingEvent(str, str2);
+        NotificationPanelStat notificationPanelStat = this.mPanelStat;
+        if (notificationPanelStat != null) {
+            notificationPanelStat.markSlidingTimes();
+        }
+    }
+
+    public void onHomePressed() {
+        NotificationPanelStat notificationPanelStat = this.mPanelStat;
+        if (notificationPanelStat != null) {
+            notificationPanelStat.onHomePressed();
+        }
+    }
+
+    public void onBackPressed() {
+        NotificationPanelStat notificationPanelStat = this.mPanelStat;
+        if (notificationPanelStat != null) {
+            notificationPanelStat.onBackPressed();
+        }
     }
 
     public void logVisibilityChanges(List<String> list, List<String> list2, boolean z, boolean z2) {
@@ -329,7 +351,19 @@ public class NotificationStat {
     }
 
     private void handleClickEvent(NotificationEntry notificationEntry) {
-        this.mEventTracker.track(new ClickEvent(getNotifPkg(notificationEntry), getNotifTargetPkg(notificationEntry), getNotifTsId(notificationEntry), getNotifIndex(notificationEntry), getNotifClearable(notificationEntry), getNotifSource(notificationEntry), getNotifIndex(notificationEntry), "com.miui.notification".equals(notificationEntry.getSbn().getOpPkg()) ? notificationEntry.getSbn().getTag() : "", getIsNotificationGrouped(notificationEntry)));
+        boolean equals = "com.miui.notification".equals(notificationEntry.getSbn().getOpPkg());
+        EventTracker eventTracker = this.mEventTracker;
+        String notifPkg = getNotifPkg(notificationEntry);
+        String notifTargetPkg = getNotifTargetPkg(notificationEntry);
+        long notifTsId = getNotifTsId(notificationEntry);
+        int notifIndex = getNotifIndex(notificationEntry);
+        boolean notifClearable = getNotifClearable(notificationEntry);
+        String notifSource = getNotifSource(notificationEntry);
+        int notifIndex2 = getNotifIndex(notificationEntry);
+        String tag = equals ? notificationEntry.getSbn().getTag() : "";
+        int isNotificationGrouped = getIsNotificationGrouped(notificationEntry);
+        NotificationPanelStat notificationPanelStat = this.mPanelStat;
+        eventTracker.track(new ClickEvent(notifPkg, notifTargetPkg, notifTsId, notifIndex, notifClearable, notifSource, notifIndex2, tag, isNotificationGrouped, notificationPanelStat == null ? -1 : notificationPanelStat.getPanelSlidingTimes()));
     }
 
     private void handleExpansionChangedEvent(NotificationEntry notificationEntry, boolean z, boolean z2) {

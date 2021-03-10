@@ -9,6 +9,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import com.android.keyguard.utils.MiuiKeyguardUtils;
 import com.android.systemui.C0008R$array;
 import com.android.systemui.C0010R$bool;
 import com.android.systemui.C0012R$dimen;
@@ -129,7 +130,7 @@ public class MiuiKeyguardStatusBarView extends KeyguardStatusBarView implements 
         DarkIconDispatcher darkIconDispatcher = (DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class);
         int lightModeIconColorSingleTone = darkIconDispatcher.getLightModeIconColorSingleTone();
         int darkModeIconColorSingleTone = darkIconDispatcher.getDarkModeIconColorSingleTone();
-        boolean z = !this.mForceBlack && this.mDark;
+        boolean z = MiuiKeyguardUtils.isDefaultLockScreenTheme() ? !this.mForceBlack && this.mDark : this.mDark;
         int i = z ? darkModeIconColorSingleTone : lightModeIconColorSingleTone;
         float f = z ? 1.0f : 0.0f;
         Log.d("MiuiKeyguardStatusBarView", "updateIconsAndTextColors: dark = " + z + ", iconColor = " + i + ", intensity = " + f);

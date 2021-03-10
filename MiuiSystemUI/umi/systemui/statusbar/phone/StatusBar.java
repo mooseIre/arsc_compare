@@ -256,6 +256,9 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
                     if (stringExtra != null && stringExtra.equals("recentapps")) {
                         i = 2;
                     }
+                    if (stringExtra != null && stringExtra.equals("homekey")) {
+                        ((NotificationStat) Dependency.get(NotificationStat.class)).onHomePressed();
+                    }
                     StatusBar.this.mShadeController.animateCollapsePanels(i);
                 }
             } else if ("android.intent.action.SCREEN_OFF".equals(action)) {
@@ -3558,6 +3561,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
                 KeyguardUserSwitcher keyguardUserSwitcher = this.mKeyguardUserSwitcher;
                 return keyguardUserSwitcher != null && keyguardUserSwitcher.hideIfNotSimple(true);
             }
+            ((NotificationStat) Dependency.get(NotificationStat.class)).onBackPressed();
             if (this.mNotificationPanelViewController.canPanelBeCollapsed()) {
                 this.mShadeController.animateCollapsePanels();
             } else {

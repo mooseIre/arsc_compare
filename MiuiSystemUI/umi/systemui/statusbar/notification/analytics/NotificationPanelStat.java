@@ -18,6 +18,7 @@ public class NotificationPanelStat {
     public ExpandEvent mExpandEvent;
     private NotifAction mFistNotifAction = NotifAction.NONE;
     private long mFistNotifActionDuration = 0;
+    private long mFullyExpandedTimeMills = 0;
     private boolean mIsBackPressed = false;
     private boolean mIsClick = false;
     private boolean mIsClickQS = false;
@@ -25,6 +26,7 @@ public class NotificationPanelStat {
     private boolean mIsRemove = false;
     private boolean mIsRemoveAll = false;
     private boolean mOpenQSPanel = false;
+    private int mPanelSlidingTimes = 0;
     private boolean mScrollMore = false;
     private Set<String> mVisibleKeys = new HashSet();
 
@@ -46,6 +48,7 @@ public class NotificationPanelStat {
         this.mFistNotifActionDuration = 0;
         this.mVisibleKeys.clear();
         this.mCreateTimeMillis = System.currentTimeMillis();
+        this.mPanelSlidingTimes = 0;
     }
 
     public void start(String str, boolean z, int i) {
@@ -65,11 +68,19 @@ public class NotificationPanelStat {
             boolean z4 = this.mChangeBrightness;
             boolean z5 = this.mScrollMore;
             boolean z6 = this.mIsRemove;
-            CollapseEvent collapseEvent = new CollapseEvent(name, i, z2 ? 1 : 0, z3 ? 1 : 0, z4 ? 1 : 0, z5 ? 1 : 0, z6 ? 1 : 0, System.currentTimeMillis() - this.mCreateTimeMillis, this.mFistNotifAction.name(), this.mFistNotifActionDuration, this.mVisibleKeys.size());
+            CollapseEvent collapseEvent = new CollapseEvent(name, i, z2 ? 1 : 0, z3 ? 1 : 0, z4 ? 1 : 0, z5 ? 1 : 0, z6 ? 1 : 0, System.currentTimeMillis() - this.mCreateTimeMillis, this.mFistNotifAction.name(), this.mFistNotifActionDuration, this.mVisibleKeys.size(), this.mPanelSlidingTimes);
             this.mCollapseEvent = collapseEvent;
             this.mEventTracker.track(collapseEvent);
             this.mExpandEvent = null;
         }
+    }
+
+    public void onBackPressed() {
+        this.mIsBackPressed = true;
+    }
+
+    public void onHomePressed() {
+        this.mIsHomePressed = true;
     }
 
     public void markRemove() {
@@ -79,6 +90,11 @@ public class NotificationPanelStat {
     public void markRemoveAll() {
         this.mIsRemoveAll = true;
         markFirstNotiAction(NotifAction.CLEAR_ALL);
+    }
+
+    public void markClick() {
+        this.mIsClick = true;
+        markFirstNotiAction(NotifAction.CLICK);
     }
 
     public void markClickQS() {
@@ -93,10 +109,18 @@ public class NotificationPanelStat {
         this.mChangeBrightness = true;
     }
 
+    public void markSlidingTimes() {
+        this.mPanelSlidingTimes++;
+    }
+
+    public int getPanelSlidingTimes() {
+        return this.mPanelSlidingTimes;
+    }
+
     private void markFirstNotiAction(NotifAction notifAction) {
         if (this.mFistNotifAction == NotifAction.NONE) {
             this.mFistNotifAction = notifAction;
-            this.mFistNotifActionDuration = System.currentTimeMillis() - this.mCreateTimeMillis;
+            this.mFistNotifActionDuration = System.currentTimeMillis() - this.mFullyExpandedTimeMills;
         }
     }
 
