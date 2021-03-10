@@ -11,7 +11,10 @@ public class ExpandedNotification extends StatusBarNotification {
     private String mAppName;
     private int mAppUid;
     private boolean mCanFloat;
+    private boolean mCanLights;
     private boolean mCanShowOnKeyguard;
+    private boolean mCanSound;
+    private boolean mCanVibrate;
     private boolean mFullscreen;
     private boolean mHasShownAfterUnlock;
     private boolean mIsPrioritizedApp;
@@ -28,8 +31,12 @@ public class ExpandedNotification extends StatusBarNotification {
         this.mPkgName = packageName;
         this.mIsSystemApp = NotificationSettingsHelper.isSystemApp(packageName);
         this.mIsPrioritizedApp = NotificationSettingsHelper.isPrioritizedApp(this.mPkgName);
-        this.mCanFloat = NotificationSettingsHelper.checkFloat(this.mPkgName, getNotification().getChannelId());
-        this.mCanShowOnKeyguard = NotificationSettingsHelper.checkKeyguard(this.mPkgName, getNotification().getChannelId());
+        String channelId = getNotification().getChannelId();
+        this.mCanFloat = NotificationSettingsHelper.checkFloat(this.mPkgName, channelId);
+        this.mCanShowOnKeyguard = NotificationSettingsHelper.checkKeyguard(this.mPkgName, channelId);
+        this.mCanVibrate = NotificationSettingsHelper.checkVibrate(this.mPkgName, channelId);
+        this.mCanSound = NotificationSettingsHelper.checkSound(this.mPkgName, channelId);
+        this.mCanLights = NotificationSettingsHelper.checkLights(this.mPkgName, channelId);
     }
 
     public void setAppName(String str) {
@@ -94,6 +101,18 @@ public class ExpandedNotification extends StatusBarNotification {
 
     public boolean canShowOnKeyguard() {
         return this.mCanShowOnKeyguard && isEnableKeyguard();
+    }
+
+    public boolean canVibrate() {
+        return this.mCanVibrate;
+    }
+
+    public boolean canSound() {
+        return this.mCanSound;
+    }
+
+    public boolean canLights() {
+        return this.mCanLights;
     }
 
     public boolean hasShownAfterUnlock() {
@@ -178,6 +197,9 @@ public class ExpandedNotification extends StatusBarNotification {
         String str9;
         String str10;
         String str11;
+        String str12;
+        String str13;
+        String str14;
         StringBuilder sb = new StringBuilder(super.toString());
         sb.append("\n   ");
         sb.append(" pkgName=");
@@ -187,95 +209,116 @@ public class ExpandedNotification extends StatusBarNotification {
         sb.append(" sdk=");
         sb.append(this.mTargetSdk);
         sb.append(" sysApp=");
-        String str12 = "T";
-        sb.append(this.mIsSystemApp ? str12 : "F");
+        String str15 = "T";
+        sb.append(this.mIsSystemApp ? str15 : "F");
         sb.append(" priApp=");
         if (this.mIsPrioritizedApp) {
-            str = str12;
+            str = str15;
         } else {
             str = "F";
         }
         sb.append(str);
         sb.append(" hasShown=");
         if (this.mHasShownAfterUnlock) {
-            str2 = str12;
+            str2 = str15;
         } else {
             str2 = "F";
         }
         sb.append(str2);
         sb.append(" float=");
         if (this.mCanFloat) {
-            str3 = str12;
+            str3 = str15;
         } else {
             str3 = "F";
         }
         sb.append(str3);
         sb.append(" keyguard=");
         if (this.mCanShowOnKeyguard) {
-            str4 = str12;
+            str4 = str15;
         } else {
             str4 = "F";
         }
         sb.append(str4);
-        sb.append(" peek=");
-        if (this.mPeek) {
-            str5 = str12;
+        sb.append(" buzz=");
+        if (this.mCanVibrate) {
+            str5 = str15;
         } else {
             str5 = "F";
         }
         sb.append(str5);
-        sb.append(" fullscreen=");
-        if (this.mFullscreen) {
-            str6 = str12;
+        sb.append(" beep=");
+        if (this.mCanSound) {
+            str6 = str15;
         } else {
             str6 = "F";
         }
         sb.append(str6);
-        sb.append("\n   ");
-        sb.append(" showMiuiAction=");
-        if (isShowMiuiAction()) {
-            str7 = str12;
+        sb.append(" blink=");
+        if (this.mCanLights) {
+            str7 = str15;
         } else {
             str7 = "F";
         }
         sb.append(str7);
-        sb.append(" enableFloat=");
-        if (isEnableFloat()) {
-            str8 = str12;
+        sb.append(" peek=");
+        if (this.mPeek) {
+            str8 = str15;
         } else {
             str8 = "F";
         }
         sb.append(str8);
-        sb.append(" floatWhenDnd=");
-        if (isFloatWhenDnd()) {
-            str9 = str12;
+        sb.append(" fullscreen=");
+        if (this.mFullscreen) {
+            str9 = str15;
         } else {
             str9 = "F";
         }
         sb.append(str9);
-        sb.append(" enableKeyguard=");
-        if (isEnableKeyguard()) {
-            str10 = str12;
+        sb.append("\n   ");
+        sb.append(" showMiuiAction=");
+        if (isShowMiuiAction()) {
+            str10 = str15;
         } else {
             str10 = "F";
         }
         sb.append(str10);
+        sb.append(" enableFloat=");
+        if (isEnableFloat()) {
+            str11 = str15;
+        } else {
+            str11 = "F";
+        }
+        sb.append(str11);
+        sb.append(" floatWhenDnd=");
+        if (isFloatWhenDnd()) {
+            str12 = str15;
+        } else {
+            str12 = "F";
+        }
+        sb.append(str12);
+        sb.append(" enableKeyguard=");
+        if (isEnableKeyguard()) {
+            str13 = str15;
+        } else {
+            str13 = "F";
+        }
+        sb.append(str13);
         sb.append(" floatTime=");
         sb.append(getFloatTime());
         sb.append(" messageCount=");
         sb.append(getMessageCount());
         sb.append(" persistent=");
         if (isPersistent()) {
-            str11 = str12;
+            str14 = str15;
         } else {
-            str11 = "F";
+            str14 = "F";
         }
-        sb.append(str11);
+        sb.append(str14);
         sb.append(" customHeight=");
         if (!isCustomHeight()) {
-            str12 = "F";
+            str15 = "F";
         }
-        sb.append(str12);
+        sb.append(str15);
         return sb.toString();
     }
 }

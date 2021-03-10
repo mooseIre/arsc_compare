@@ -309,7 +309,7 @@ public class NotificationSettingsManager implements Dumpable {
     public boolean canSound(Context context, String str) {
         String soundKey = FilterHelperCompat.getSoundKey(str);
         SharedPreferences notif = Prefs.getNotif(context);
-        return notif.contains(soundKey) ? notif.getBoolean(soundKey, false) : this.mAllowKeyguardPackages.contains(str);
+        return notif.contains(soundKey) ? notif.getBoolean(soundKey, false) : this.mAllowFloatPackages.contains(str);
     }
 
     public void setSound(Context context, String str, boolean z) {
@@ -319,10 +319,7 @@ public class NotificationSettingsManager implements Dumpable {
     public boolean canVibrate(Context context, String str) {
         String vibrateKey = FilterHelperCompat.getVibrateKey(str);
         SharedPreferences notif = Prefs.getNotif(context);
-        if (notif.contains(vibrateKey)) {
-            return notif.getBoolean(vibrateKey, true);
-        }
-        return true;
+        return notif.contains(vibrateKey) ? notif.getBoolean(vibrateKey, false) : this.mAllowFloatPackages.contains(str);
     }
 
     public void setVibrate(Context context, String str, boolean z) {

@@ -173,15 +173,75 @@ public class NotificationSettingsHelper {
         }
         Bundle bundle = new Bundle();
         bundle.putString("package", str);
-        bundle.putString("channel_id", (String) null);
+        bundle.putString("channel_id", str2);
         try {
-            Bundle call = contextForUser.getContentResolver().call(Uri.parse("content://statusbar.notification"), "canShowOnKeyguard", str2, bundle);
+            Bundle call = contextForUser.getContentResolver().call(Uri.parse("content://statusbar.notification"), "canShowOnKeyguard", (String) null, bundle);
             if (call != null) {
                 return call.getBoolean("canShowOnKeyguard");
             }
             return false;
         } catch (Exception e) {
             Log.e("NotifiSettingsHelper", "canShowKeyguard " + str, e);
+            return false;
+        }
+    }
+
+    public static boolean checkVibrate(String str, String str2) {
+        Context contextForUser = ((UserSwitcherController) Dependency.get(UserSwitcherController.class)).getContextForUser();
+        if (NotificationUtil.isUserOwner(contextForUser)) {
+            return ((NotificationSettingsManager) Dependency.get(NotificationSettingsManager.class)).canVibrate(contextForUser, str);
+        }
+        Bundle bundle = new Bundle();
+        bundle.putString("package", str);
+        bundle.putString("channel_id", str2);
+        try {
+            Bundle call = contextForUser.getContentResolver().call(Uri.parse("content://statusbar.notification"), "canVibrate", (String) null, bundle);
+            if (call != null) {
+                return call.getBoolean("canVibrate");
+            }
+            return false;
+        } catch (Exception e) {
+            Log.e("NotifiSettingsHelper", "canVibrate " + str, e);
+            return false;
+        }
+    }
+
+    public static boolean checkSound(String str, String str2) {
+        Context contextForUser = ((UserSwitcherController) Dependency.get(UserSwitcherController.class)).getContextForUser();
+        if (NotificationUtil.isUserOwner(contextForUser)) {
+            return ((NotificationSettingsManager) Dependency.get(NotificationSettingsManager.class)).canSound(contextForUser, str);
+        }
+        Bundle bundle = new Bundle();
+        bundle.putString("package", str);
+        bundle.putString("channel_id", str2);
+        try {
+            Bundle call = contextForUser.getContentResolver().call(Uri.parse("content://statusbar.notification"), "canSound", (String) null, bundle);
+            if (call != null) {
+                return call.getBoolean("canSound");
+            }
+            return false;
+        } catch (Exception e) {
+            Log.e("NotifiSettingsHelper", "canSound " + str, e);
+            return false;
+        }
+    }
+
+    public static boolean checkLights(String str, String str2) {
+        Context contextForUser = ((UserSwitcherController) Dependency.get(UserSwitcherController.class)).getContextForUser();
+        if (NotificationUtil.isUserOwner(contextForUser)) {
+            return ((NotificationSettingsManager) Dependency.get(NotificationSettingsManager.class)).canLights(contextForUser, str);
+        }
+        Bundle bundle = new Bundle();
+        bundle.putString("package", str);
+        bundle.putString("channel_id", str2);
+        try {
+            Bundle call = contextForUser.getContentResolver().call(Uri.parse("content://statusbar.notification"), "canLights", (String) null, bundle);
+            if (call != null) {
+                return call.getBoolean("canLights");
+            }
+            return false;
+        } catch (Exception e) {
+            Log.e("NotifiSettingsHelper", "canLights " + str, e);
             return false;
         }
     }

@@ -16,6 +16,7 @@ import com.android.systemui.Dependency;
 import com.android.systemui.keyguard.ScreenLifecycle;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
 import com.android.systemui.statusbar.NotificationLockscreenUserManager;
+import com.android.systemui.statusbar.notification.ExpandedNotification;
 import com.android.systemui.statusbar.notification.NotificationEntryListener;
 import com.android.systemui.statusbar.notification.NotificationEntryManager;
 import com.android.systemui.statusbar.notification.NotificationUtil;
@@ -61,7 +62,7 @@ public class NotificationAlertController {
                 if (NotificationAlertController.DEBUG) {
                     Log.d("NotificationAlertController", "onNotificationAdded " + notificationEntry.getKey());
                 }
-                NotificationAlertController.this.buzzBeepBlink(notificationEntry.getKey());
+                NotificationAlertController.this.buzzBeepBlink(notificationEntry);
                 NotificationAlertController.this.wakeUpIfNeeded(notificationEntry);
                 NotificationAlertController.this.markGroupSummaryChildrenUnShown(notificationEntry);
             }
@@ -70,7 +71,7 @@ public class NotificationAlertController {
                 if (NotificationAlertController.DEBUG) {
                     Log.d("NotificationAlertController", "onPostEntryUpdated " + notificationEntry.getKey());
                 }
-                NotificationAlertController.this.buzzBeepBlink(notificationEntry.getKey());
+                NotificationAlertController.this.buzzBeepBlink(notificationEntry);
                 NotificationAlertController.this.wakeUpIfNeeded(notificationEntry);
             }
         });
@@ -85,10 +86,10 @@ public class NotificationAlertController {
     }
 
     /* access modifiers changed from: private */
-    public void buzzBeepBlink(String str) {
+    public void buzzBeepBlink(NotificationEntry notificationEntry) {
         if (!this.mSettingsManager.getMiuiMirrorDndModeEnabled()) {
-            this.mBgHandler.post(new Runnable(str) {
-                public final /* synthetic */ String f$1;
+            this.mBgHandler.post(new Runnable(notificationEntry) {
+                public final /* synthetic */ NotificationEntry f$1;
 
                 {
                     this.f$1 = r2;
@@ -103,11 +104,20 @@ public class NotificationAlertController {
 
     /* access modifiers changed from: private */
     /* renamed from: invokeBuzzBeepBlink */
-    public void lambda$buzzBeepBlink$0(String str) {
+    public void lambda$buzzBeepBlink$0(NotificationEntry notificationEntry) {
+        String key = notificationEntry.getKey();
+        ExpandedNotification sbn = notificationEntry.getSbn();
+        boolean canVibrate = sbn.canVibrate();
+        boolean canSound = sbn.canSound();
+        boolean canLights = sbn.canLights();
+        if (isShowingKeyguard()) {
+            canVibrate = sbn.canShowOnKeyguard() && canVibrate;
+            canSound = sbn.canShowOnKeyguard() && canSound;
+        }
         try {
-            this.mNm.getClass().getMethod("buzzBeepBlinkForNotification", new Class[]{String.class}).invoke(this.mNm, new Object[]{str});
+            this.mNm.getClass().getMethod("buzzBeepBlinkForNotification", new Class[]{String.class, Integer.TYPE}).invoke(this.mNm, new Object[]{key, Integer.valueOf((canVibrate | (canSound ? true : false)) | (canLights ? (char) 4 : 0) ? 1 : 0)});
         } catch (Exception e) {
-            Log.e("NotificationAlertController", "beep " + str, e);
+            Log.e("NotificationAlertController", "beep " + key, e);
         }
     }
 
@@ -136,9 +146,7 @@ public class NotificationAlertController {
     /* access modifiers changed from: private */
     public void wakeUpIfNeeded(NotificationEntry notificationEntry) {
         if (this.mSettingsManager.getWakeupForNotification() && this.mNotificationLockscreenUserManager.shouldShowLockscreenNotifications() && this.mNotificationLockscreenUserManager.shouldShowOnKeyguard(notificationEntry) && !this.mZenModeController.isZenModeOn() && !NotificationUtil.isMediaNotification(notificationEntry.getSbn()) && !notificationEntry.getSbn().getNotification().hasMediaSession() && notificationEntry.getSbn().isClearable() && !NotificationUtil.hasProgressbar(notificationEntry.getSbn()) && !((KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class)).isDeviceInteractive()) {
-            if (DEBUG) {
-                Log.d("NotificationAlertController", "wakeUpForNotification " + notificationEntry.getKey());
-            }
+            Log.d("NotificationAlertController", "wakeUpForNotification " + notificationEntry.getKey());
             wakeUpForNotification(notificationEntry);
         }
     }

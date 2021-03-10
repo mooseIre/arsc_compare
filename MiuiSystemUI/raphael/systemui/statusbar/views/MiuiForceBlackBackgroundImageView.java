@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.util.AttributeSet;
 import android.widget.ImageView;
+import com.android.keyguard.utils.MiuiKeyguardUtils;
 import com.android.systemui.Dependency;
 import com.miui.systemui.statusbar.phone.ForceBlackObserver;
 
@@ -48,6 +49,6 @@ public class MiuiForceBlackBackgroundImageView extends ImageView implements Forc
     }
 
     public void updateVisibility() {
-        setVisibility((this.mOrientation != 1 || !this.mForceBlack) ? 8 : 0);
+        setVisibility((this.mOrientation != 1 || !this.mForceBlack || !MiuiKeyguardUtils.isDefaultLockScreenTheme()) ? 8 : 0);
     }
 }

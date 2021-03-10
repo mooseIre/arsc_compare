@@ -281,6 +281,7 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
 
     /* access modifiers changed from: private */
     public final void setMStretchLength(float f) {
+        Class cls = NotificationStat.class;
         if (this.mPanelOpening) {
             f = RangesKt___RangesKt.coerceAtLeast(f, 0.0f);
         } else if (this.mPanelCollapsing) {
@@ -298,11 +299,13 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
                 z = true;
             }
             setMPanelAppeared(z);
+            ((NotificationStat) Dependency.get(cls)).onPanelExpanded(isOnKeyguard(), true, this.mNotificationEntryManager.getActiveNotificationsCount());
         } else if (this.mPanelCollapsing) {
             if (Math.abs(this.mStretchLength) < 80.0f) {
                 z = true;
             }
             setMPanelAppeared(z);
+            ((NotificationStat) Dependency.get(cls)).onPanelCollapsed(true, this.mNotificationEntryManager.getActiveNotificationsCount());
         }
         float f2 = this.mStretchLength;
         if (f2 >= 80.0f) {
@@ -810,7 +813,6 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
         setMStretchingFromHeadsUp(false);
         setMPanelAppeared(this.mExpandedHeight > 0.0f);
         requestNCSwitching(false);
-        ((NotificationStat) Dependency.get(NotificationStat.class)).onPanelExpanded(isOnKeyguard(), true, this.mNotificationEntryManager.getActiveNotificationsCount());
     }
 
     /* access modifiers changed from: protected */
@@ -858,7 +860,6 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
 
     public void animateToFullShade(long j) {
         super.animateToFullShade(j);
-        ((NotificationStat) Dependency.get(NotificationStat.class)).onPanelExpanded(isOnKeyguard(), true, this.mNotificationEntryManager.getActiveNotificationsCount());
     }
 
     public void setQsExpansionEnabled(boolean z) {
