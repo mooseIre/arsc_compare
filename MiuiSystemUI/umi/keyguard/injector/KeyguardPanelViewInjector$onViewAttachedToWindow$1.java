@@ -9,6 +9,6 @@ final class KeyguardPanelViewInjector$onViewAttachedToWindow$1 implements Runnab
     }
 
     public final void run() {
-        KeyguardPanelViewInjector.access$getMKeyguardStatusBarView$p(this.this$0).setDarkStyle(!this.this$0.mForceBlack && KeyguardPanelViewInjector.access$getMWallpaperController$p(this.this$0).isWallpaperColorLight());
+        KeyguardPanelViewInjector.access$getMKeyguardStatusBarView$p(this.this$0).setDarkStyle(KeyguardPanelViewInjector.access$getMWallpaperController$p(this.this$0).isWallpaperColorLight());
     }
 }

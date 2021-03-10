@@ -66,8 +66,7 @@ public final class KeyguardPanelViewInjector extends MiuiKeyguardUpdateMonitorCa
     private int mDoubleTapMinimumValidThresholdBottom = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.double_tap_sleep_valid_minimum_bottom);
     private int mDoubleTapMinimumValidThresholdTop = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.double_tap_sleep_valid_minimum_top);
     private int mDoubleTapMinimumWidthThreshold = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.double_tap_sleep_valid_minimum_width);
-    /* access modifiers changed from: private */
-    public boolean mForceBlack;
+    private boolean mForceBlack;
     private ForceBlackObserver mForceBlackObserver;
     private float mHorizontalMoveDistance;
     private float mHorizontalMovePer;
@@ -1187,7 +1186,7 @@ public final class KeyguardPanelViewInjector extends MiuiKeyguardUpdateMonitorCa
         switchSystemUserEntrance.setCompoundDrawablesWithIntrinsicBounds(this.mContext.getResources().getDrawable(z ? C0013R$drawable.logout_light : C0013R$drawable.logout_dark), (Drawable) null, (Drawable) null, (Drawable) null);
         KeyguardStatusBarView keyguardStatusBarView = this.mKeyguardStatusBarView;
         if (keyguardStatusBarView != null) {
-            keyguardStatusBarView.setDarkStyle(!this.mForceBlack && z);
+            keyguardStatusBarView.setDarkStyle(z);
         } else {
             Intrinsics.throwUninitializedPropertyAccessException("mKeyguardStatusBarView");
             throw null;
