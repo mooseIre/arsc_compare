@@ -230,6 +230,7 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
             onViewAttachedToWindow(this.panelView);
         }
         initializeFolmeAnimations();
+        this.mIsDefaultTheme = MiuiKeyguardUtils.isDefaultLockScreenTheme();
         this.mUpdateMonitor.registerCallback(this.mKeyguardUpdateMonitorCallback);
         this.wakefulnessLifecycle.addObserver(this);
         this.mNotificationStackScroller.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener(this) {
@@ -243,7 +244,6 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
                 NotificationStackScrollLayoutExtKt.updateStackScrollLayoutHeight(this.this$0.getMNotificationStackScroller());
             }
         });
-        this.mIsDefaultTheme = MiuiKeyguardUtils.isDefaultLockScreenTheme();
         NotificationPanelView notificationPanelView2 = this.mView;
         Intrinsics.checkExpressionValueIsNotNull(notificationPanelView2, "mView");
         Context context2 = notificationPanelView2.getContext();

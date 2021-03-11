@@ -17,14 +17,6 @@ public class BaseMiuiNotificationBackgroundView extends BlurOnDefaultThemeView {
         super(context, attributeSet);
     }
 
-    /* access modifiers changed from: protected */
-    public void onAttachedToWindow() {
-        if (NotificationContentInflaterInjector.isTransparentMode()) {
-            disableBlur();
-        }
-        super.onAttachedToWindow();
-    }
-
     public final void setHighSamplingFrequency(boolean z) {
         this.mHighSamplingFrequency = z;
         postInvalidateOnAnimation();
@@ -32,6 +24,7 @@ public class BaseMiuiNotificationBackgroundView extends BlurOnDefaultThemeView {
 
     public final void setTransparentModeHint(boolean z) {
         this.mInTransparentMode = z;
+        updateBlurStatusIfNeed(z);
         postInvalidateOnAnimation();
     }
 

@@ -162,7 +162,7 @@ public final class MiuiExpandableNotificationRow extends MiuiAnimatedNotificatio
             return;
         }
         this.mBackgroundNormal.setCustomBackground(C0013R$drawable.notification_item_bg);
-        this.mBackgroundNormal.setTransparentModeHint(false);
+        this.mBackgroundNormal.setTransparentModeHint(this.mIsInModal);
     }
 
     public void setIsChildInGroup(boolean z, @Nullable ExpandableNotificationRow expandableNotificationRow) {
