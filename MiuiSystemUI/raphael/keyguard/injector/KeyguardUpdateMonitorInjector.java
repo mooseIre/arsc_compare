@@ -68,6 +68,10 @@ public final class KeyguardUpdateMonitorInjector implements SuperSaveModeControl
         throw null;
     }
 
+    public final boolean isOwnerUser() {
+        return KeyguardUpdateMonitor.getCurrentUser() == 0;
+    }
+
     public void onSuperSaveModeChange(boolean z) {
         forEachCallback(new KeyguardUpdateMonitorInjector$onSuperSaveModeChange$1(z));
     }

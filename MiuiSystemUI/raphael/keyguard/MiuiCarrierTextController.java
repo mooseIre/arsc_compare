@@ -2,6 +2,8 @@ package com.android.keyguard;
 
 import android.content.Context;
 import android.os.Handler;
+import android.telephony.SubscriptionInfo;
+import android.telephony.SubscriptionManager;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
@@ -19,8 +21,6 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import miui.os.Build;
-import miui.telephony.SubscriptionInfo;
-import miui.telephony.SubscriptionManager;
 
 public class MiuiCarrierTextController implements CustomCarrierObserver.Callback, CarrierObserver.Callback, NetworkController.EmergencyListener, NetworkController.SignalCallback {
     protected ArrayList<CarrierTextListener> listeners = new ArrayList<>();
@@ -110,7 +110,7 @@ public class MiuiCarrierTextController implements CustomCarrierObserver.Callback
         this.mMiuiMobileTypeName = new String[i];
         this.mSimError = new boolean[i];
         this.mVowifi = new boolean[i];
-        this.mSubscriptionManager = SubscriptionManager.getDefault();
+        this.mSubscriptionManager = SubscriptionManager.from(context);
         this.mCustomCarrierObserver = (CustomCarrierObserver) Dependency.get(CustomCarrierObserver.class);
         this.mCarrierObserver = (CarrierObserver) Dependency.get(CarrierObserver.class);
         this.mKeyguardUpdateMonitor = (KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class);
@@ -167,6 +167,7 @@ public class MiuiCarrierTextController implements CustomCarrierObserver.Callback
             }
             i++;
         }
+        dealCarrierNameForDisableCard(strArr);
         if (!this.mAirplane || !dealCarrierNameForAirplane(strArr)) {
             boolean z = true;
             for (int i2 = 0; i2 < this.mPhoneCount; i2++) {
@@ -192,25 +193,35 @@ public class MiuiCarrierTextController implements CustomCarrierObserver.Callback
         fireCarrierTextChanged(str2);
     }
 
+    private void dealCarrierNameForDisableCard(String[] strArr) {
+        int simSlotIndex;
+        if (strArr != null) {
+            for (SubscriptionInfo subscriptionInfo : this.mSubscriptionManager.getCompleteActiveSubscriptionInfoList()) {
+                if (!subscriptionInfo.areUiccApplicationsEnabled() && (simSlotIndex = subscriptionInfo.getSimSlotIndex()) >= 0 && simSlotIndex < strArr.length) {
+                    strArr[simSlotIndex] = "";
+                }
+            }
+        }
+    }
+
     private boolean dealCarrierNameForAirplane(String[] strArr) {
         int i;
-        List activeSubscriptionInfoList = this.mSubscriptionManager.getActiveSubscriptionInfoList();
-        if (activeSubscriptionInfoList == null) {
-            Log.e(CarrierText.class.getSimpleName(), " subscriptions is null");
+        if (strArr == null) {
             return true;
         }
+        List completeActiveSubscriptionInfoList = this.mSubscriptionManager.getCompleteActiveSubscriptionInfoList();
         boolean[] zArr = new boolean[this.mPhoneCount];
-        Iterator it = activeSubscriptionInfoList.iterator();
+        Iterator it = completeActiveSubscriptionInfoList.iterator();
         boolean z = true;
         while (true) {
             if (!it.hasNext()) {
                 break;
             }
             SubscriptionInfo subscriptionInfo = (SubscriptionInfo) it.next();
-            int slotId = subscriptionInfo.getSlotId();
-            if (slotId >= 0 && slotId < this.mPhoneCount && this.mVowifi[slotId]) {
-                if (MCCUtils.isShowSpnWhenAirplaneOn(this.mContext, this.mPhone.getSimOperatorNumericForPhone(slotId)) || MCCUtils.isShowSpnByGidWhenAirplaneOn(this.mContext, this.mPhone.getSimOperatorNumericForPhone(slotId), this.mPhone.getGroupIdLevel1(subscriptionInfo.getSubscriptionId()))) {
-                    zArr[slotId] = true;
+            int simSlotIndex = subscriptionInfo.getSimSlotIndex();
+            if (simSlotIndex >= 0 && simSlotIndex < this.mPhoneCount && this.mVowifi[simSlotIndex]) {
+                if (MCCUtils.isShowSpnWhenAirplaneOn(this.mContext, this.mPhone.getSimOperatorNumericForPhone(simSlotIndex)) || MCCUtils.isShowSpnByGidWhenAirplaneOn(this.mContext, this.mPhone.getSimOperatorNumericForPhone(simSlotIndex), this.mPhone.getGroupIdLevel1(subscriptionInfo.getSubscriptionId()))) {
+                    zArr[simSlotIndex] = true;
                     z = false;
                 }
             }

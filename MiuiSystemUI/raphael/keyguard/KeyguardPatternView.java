@@ -67,6 +67,10 @@ public class KeyguardPatternView extends MiuiKeyguardPasswordView implements Key
     private final Rect mTempRect;
     private final int[] mTmpPosition;
 
+    public boolean disallowInterceptTouch(MotionEvent motionEvent) {
+        return true;
+    }
+
     public boolean hasOverlappingRendering() {
         return false;
     }
@@ -167,10 +171,6 @@ public class KeyguardPatternView extends MiuiKeyguardPasswordView implements Key
         if (lockoutAttemptDeadline != 0) {
             handleAttemptLockout(lockoutAttemptDeadline);
         }
-    }
-
-    public boolean disallowInterceptTouch(MotionEvent motionEvent) {
-        return !this.mLockPatternView.isEmpty() || this.mLockPatternScreenBounds.contains((int) motionEvent.getRawX(), (int) motionEvent.getRawY());
     }
 
     private class UnlockPatternListener implements MiuiLockPatternView.OnPatternListener {

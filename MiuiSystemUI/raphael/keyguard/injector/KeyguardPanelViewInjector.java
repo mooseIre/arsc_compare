@@ -1054,81 +1054,72 @@ public final class KeyguardPanelViewInjector extends MiuiKeyguardUpdateMonitorCa
         return this.mMobileKeyGuardViews;
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:17:0x002e, code lost:
-        if (r3.getCurrentUserId() != com.android.systemui.statusbar.policy.UserSwitcherController.getMaintenanceModeId()) goto L_0x0039;
-     */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public final void onStatusBarStateChanged(int r4) {
-        /*
-            r3 = this;
-            r3.updateNotificationStackScrollerVisibility()
-            r0 = 1
-            r1 = 0
-            if (r4 != r0) goto L_0x0008
-            goto L_0x0009
-        L_0x0008:
-            r0 = r1
-        L_0x0009:
-            com.android.keyguard.negative.MiuiKeyguardMoveLeftViewContainer r4 = r3.mLeftView
-            if (r4 == 0) goto L_0x0015
-            if (r0 == 0) goto L_0x0011
-            r2 = r1
-            goto L_0x0012
-        L_0x0011:
-            r2 = 4
-        L_0x0012:
-            r4.setVisibility(r2)
-        L_0x0015:
-            android.widget.TextView r4 = r3.mSwitchSystemUserEntrance
-            r2 = 0
-            if (r4 == 0) goto L_0x003d
-            if (r0 == 0) goto L_0x0037
-            boolean r0 = r3.shouldShowSwitchSystemUser()
-            if (r0 == 0) goto L_0x0037
-            com.android.systemui.statusbar.policy.UserSwitcherController r3 = r3.mUserContextController
-            if (r3 == 0) goto L_0x0031
-            int r3 = r3.getCurrentUserId()
-            int r0 = com.android.systemui.statusbar.policy.UserSwitcherController.getMaintenanceModeId()
-            if (r3 == r0) goto L_0x0037
-            goto L_0x0039
-        L_0x0031:
-            java.lang.String r3 = "mUserContextController"
-            kotlin.jvm.internal.Intrinsics.throwUninitializedPropertyAccessException(r3)
-            throw r2
-        L_0x0037:
-            r1 = 8
-        L_0x0039:
-            r4.setVisibility(r1)
-            return
-        L_0x003d:
-            java.lang.String r3 = "mSwitchSystemUserEntrance"
-            kotlin.jvm.internal.Intrinsics.throwUninitializedPropertyAccessException(r3)
-            throw r2
-        */
-        throw new UnsupportedOperationException("Method not decompiled: com.android.keyguard.injector.KeyguardPanelViewInjector.onStatusBarStateChanged(int):void");
+    public final void onStatusBarStateChanged(int i) {
+        updateNotificationStackScrollerVisibility();
+        int i2 = 0;
+        boolean z = true;
+        if (i != 1) {
+            z = false;
+        }
+        MiuiKeyguardMoveLeftViewContainer miuiKeyguardMoveLeftViewContainer = this.mLeftView;
+        if (miuiKeyguardMoveLeftViewContainer != null) {
+            if (!z) {
+                i2 = 4;
+            }
+            miuiKeyguardMoveLeftViewContainer.setVisibility(i2);
+        }
+        updateSwitchSystemUserEntrance();
+    }
+
+    public final void updateSwitchSystemUserEntrance() {
+        int i;
+        TextView textView = this.mSwitchSystemUserEntrance;
+        if (textView != null) {
+            MiuiNotificationPanelViewController miuiNotificationPanelViewController = this.mPanelViewController;
+            if (miuiNotificationPanelViewController != null) {
+                if (miuiNotificationPanelViewController.isOnKeyguard() && shouldShowSwitchSystemUser()) {
+                    UserSwitcherController userSwitcherController = this.mUserContextController;
+                    if (userSwitcherController == null) {
+                        Intrinsics.throwUninitializedPropertyAccessException("mUserContextController");
+                        throw null;
+                    } else if (userSwitcherController.getCurrentUserId() != UserSwitcherController.getMaintenanceModeId()) {
+                        i = 0;
+                        textView.setVisibility(i);
+                        return;
+                    }
+                }
+                i = 8;
+                textView.setVisibility(i);
+                return;
+            }
+            Intrinsics.throwUninitializedPropertyAccessException("mPanelViewController");
+            throw null;
+        }
+        Intrinsics.throwUninitializedPropertyAccessException("mSwitchSystemUserEntrance");
+        throw null;
     }
 
     private final boolean shouldShowSwitchSystemUser() {
-        UserSwitcherController userSwitcherController = this.mUserContextController;
-        if (userSwitcherController != null) {
-            if (!userSwitcherController.isOwnerUser()) {
-                UserSwitcherController userSwitcherController2 = this.mUserContextController;
-                if (userSwitcherController2 == null) {
+        KeyguardUpdateMonitorInjector keyguardUpdateMonitorInjector = this.mKeyguardUpdateMonitorInjector;
+        if (keyguardUpdateMonitorInjector != null) {
+            if (!keyguardUpdateMonitorInjector.isOwnerUser()) {
+                UserSwitcherController userSwitcherController = this.mUserContextController;
+                if (userSwitcherController == null) {
                     Intrinsics.throwUninitializedPropertyAccessException("mUserContextController");
                     throw null;
-                } else if (userSwitcherController2.getCurrentUserId() != UserSwitcherController.getSecondUser()) {
-                    UserSwitcherController userSwitcherController3 = this.mUserContextController;
-                    if (userSwitcherController3 == null) {
+                } else if (userSwitcherController.getCurrentUserId() != UserSwitcherController.getSecondUser()) {
+                    UserSwitcherController userSwitcherController2 = this.mUserContextController;
+                    if (userSwitcherController2 == null) {
                         Intrinsics.throwUninitializedPropertyAccessException("mUserContextController");
                         throw null;
-                    } else if (userSwitcherController3.getCurrentUserId() != UserSwitcherController.getKidSpaceUser()) {
+                    } else if (userSwitcherController2.getCurrentUserId() != UserSwitcherController.getKidSpaceUser()) {
                         return true;
                     }
                 }
             }
             return false;
         }
-        Intrinsics.throwUninitializedPropertyAccessException("mUserContextController");
+        Intrinsics.throwUninitializedPropertyAccessException("mKeyguardUpdateMonitorInjector");
         throw null;
     }
 

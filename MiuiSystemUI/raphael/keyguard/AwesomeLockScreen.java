@@ -34,6 +34,7 @@ import com.android.systemui.statusbar.phone.StatusBar;
 import com.android.systemui.statusbar.policy.KeyguardStateController;
 import miui.maml.data.Variables;
 import miui.maml.util.Utils;
+import org.jetbrains.annotations.Nullable;
 
 public class AwesomeLockScreen extends FrameLayout implements LockScreenRoot.LockscreenCallback {
     /* access modifiers changed from: private */
@@ -418,5 +419,9 @@ public class AwesomeLockScreen extends FrameLayout implements LockScreenRoot.Loc
 
     public void updateQsExpandHeight(float f) {
         Utils.putVariableNumber("qs_height", mRootHolder.getContext().mVariables, (double) f);
+    }
+
+    public void setStatusBar(@Nullable StatusBar statusBar) {
+        this.mStatusBar = statusBar;
     }
 }

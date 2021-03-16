@@ -138,10 +138,18 @@ public class KeyguardVerticalMoveHelper {
         float f2 = 1.0f - ((1.0f - f) * (1.0f - f));
         if (!((KeyguardPanelViewInjector) Dependency.get(KeyguardPanelViewInjector.class)).isForceBlack()) {
             float f3 = 1.0f - (0.1f * f2);
-            this.mNotificationPanelViewController.getPanelView().setScaleX(f3);
-            this.mNotificationPanelViewController.getPanelView().setScaleY(f3);
+            this.mNotificationPanelViewController.getPanelView().setScaleX(checkIsNaN(f3));
+            this.mNotificationPanelViewController.getPanelView().setScaleY(checkIsNaN(f3));
         }
-        this.mNotificationPanelViewController.getPanelView().setTransitionAlpha(1.0f - f2);
+        this.mNotificationPanelViewController.getPanelView().setTransitionAlpha(checkIsNaN(1.0f - f2));
+    }
+
+    private float checkIsNaN(float f) {
+        if (!Float.isNaN(f)) {
+            return f;
+        }
+        Log.e("KeyguardVerticalMoveHelper", " mTranslationPer:" + this.mTranslationPer);
+        return 1.0f;
     }
 
     private void trackMovement(MotionEvent motionEvent) {
