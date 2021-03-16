@@ -177,7 +177,7 @@ public class StackScrollAlgorithm {
         ExpandableView expandableView = null;
         for (int i4 = 0; i4 < childCount; i4++) {
             ExpandableView expandableView2 = (ExpandableView) viewGroup.getChildAt(i4);
-            if (!(expandableView2.getVisibility() == 8 || expandableView2 == ambientState.getShelf())) {
+            if (!((expandableView2.getViewState() != null && expandableView2.getViewState().hidden) || expandableView2.getVisibility() == 8 || expandableView2 == ambientState.getShelf())) {
                 if (i4 >= i2) {
                     expandableView = null;
                 }

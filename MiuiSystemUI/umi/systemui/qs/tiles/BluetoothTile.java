@@ -216,48 +216,50 @@ public class BluetoothTile extends QSTileImpl<QSTile.BooleanState> {
                         int i = 0;
                         int i2 = 0;
                         for (CachedBluetoothDevice next : devices) {
-                            MiuiQSDetailItems.Item item = new MiuiQSDetailItems.Item();
-                            item.icon = C0013R$drawable.ic_qs_bluetooth_on;
-                            item.line1 = next.getName();
-                            item.line2 = next.getConnectionSummary();
-                            item.tag = next;
-                            BluetoothClass btClass = next.getBtClass();
-                            if (btClass != null) {
-                                if (btClass.doesClassMatch(0) || btClass.doesClassMatch(1)) {
-                                    item.icon = C0013R$drawable.ic_qs_bluetooth_device_headset;
-                                } else {
-                                    int majorDeviceClass = btClass.getMajorDeviceClass();
-                                    if (majorDeviceClass == 0) {
-                                        item.icon = C0013R$drawable.ic_qs_bluetooth_device_misc;
-                                    } else if (majorDeviceClass == 256) {
-                                        item.icon = C0013R$drawable.ic_qs_bluetooth_device_laptop;
-                                    } else if (majorDeviceClass == 512) {
-                                        item.icon = C0013R$drawable.ic_qs_bluetooth_device_cellphone;
-                                    } else if (majorDeviceClass == 768) {
-                                        item.icon = C0013R$drawable.ic_qs_bluetooth_device_network;
-                                    } else if (majorDeviceClass != 1536) {
-                                        item.icon = C0013R$drawable.ic_qs_bluetooth_device_common;
+                            if (BluetoothTile.this.mController.getBondState(next) != 10 && !BluetoothTile.this.mController.isBleAudioDevice(BluetoothTile.this.mContext, next)) {
+                                MiuiQSDetailItems.Item item = new MiuiQSDetailItems.Item();
+                                item.icon = C0013R$drawable.ic_qs_bluetooth_on;
+                                item.line1 = next.getName();
+                                item.line2 = next.getConnectionSummary();
+                                item.tag = next;
+                                BluetoothClass btClass = next.getBtClass();
+                                if (btClass != null) {
+                                    if (btClass.doesClassMatch(0) || btClass.doesClassMatch(1)) {
+                                        item.icon = C0013R$drawable.ic_qs_bluetooth_device_headset;
                                     } else {
-                                        item.icon = C0013R$drawable.ic_qs_bluetooth_device_imaging;
+                                        int majorDeviceClass = btClass.getMajorDeviceClass();
+                                        if (majorDeviceClass == 0) {
+                                            item.icon = C0013R$drawable.ic_qs_bluetooth_device_misc;
+                                        } else if (majorDeviceClass == 256) {
+                                            item.icon = C0013R$drawable.ic_qs_bluetooth_device_laptop;
+                                        } else if (majorDeviceClass == 512) {
+                                            item.icon = C0013R$drawable.ic_qs_bluetooth_device_cellphone;
+                                        } else if (majorDeviceClass == 768) {
+                                            item.icon = C0013R$drawable.ic_qs_bluetooth_device_network;
+                                        } else if (majorDeviceClass != 1536) {
+                                            item.icon = C0013R$drawable.ic_qs_bluetooth_device_common;
+                                        } else {
+                                            item.icon = C0013R$drawable.ic_qs_bluetooth_device_imaging;
+                                        }
                                     }
                                 }
-                            }
-                            int maxConnectionState = BluetoothTile.this.mController.getMaxConnectionState(next);
-                            if (maxConnectionState == 2) {
-                                item.icon2 = C0013R$drawable.ic_qs_detail_item_selected;
-                                item.canDisconnect = true;
-                                item.selected = true;
-                                arrayList.add(i, item);
-                                i++;
-                            } else if (maxConnectionState == 1) {
-                                item.icon2 = C0013R$drawable.ic_qs_bluetooth_connecting;
-                                arrayList.add(i, item);
-                            } else {
-                                arrayList.add(item);
-                            }
-                            i2++;
-                            if (i2 == 20) {
-                                break;
+                                int maxConnectionState = BluetoothTile.this.mController.getMaxConnectionState(next);
+                                if (maxConnectionState == 2) {
+                                    item.icon2 = C0013R$drawable.ic_qs_detail_item_selected;
+                                    item.canDisconnect = true;
+                                    item.selected = true;
+                                    arrayList.add(i, item);
+                                    i++;
+                                } else if (maxConnectionState == 1) {
+                                    item.icon2 = C0013R$drawable.ic_qs_bluetooth_connecting;
+                                    arrayList.add(i, item);
+                                } else {
+                                    arrayList.add(item);
+                                }
+                                i2++;
+                                if (i2 == 20) {
+                                    break;
+                                }
                             }
                         }
                     }

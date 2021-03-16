@@ -658,12 +658,12 @@ public class StatusBarKeyguardViewManager implements RemoteInputController.Callb
         int systemUiVisibility = this.mContainer.getSystemUiVisibility();
         boolean z = this.mShowing;
         boolean z2 = this.mOccluded;
-        boolean isShowing = this.mBouncer.isShowing();
         boolean z3 = true;
-        boolean z4 = !this.mBouncer.isFullscreenBouncer();
-        boolean z5 = this.mRemoteInputActive;
-        if ((z4 || !z || z5) != (this.mLastBouncerDismissible || !this.mLastShowing || this.mLastRemoteInputActive) || this.mFirstUpdate) {
-            if (z4 || !z || z5) {
+        boolean z4 = this.mBouncer.isShowing() || this.mBouncer.isAnimatingAway();
+        boolean z5 = !this.mBouncer.isFullscreenBouncer();
+        boolean z6 = this.mRemoteInputActive;
+        if ((z5 || !z || z6) != (this.mLastBouncerDismissible || !this.mLastShowing || this.mLastRemoteInputActive) || this.mFirstUpdate) {
+            if (z5 || !z || z6) {
                 this.mContainer.setSystemUiVisibility(systemUiVisibility & -4194305);
             } else {
                 this.mContainer.setSystemUiVisibility(systemUiVisibility | 4194304);
@@ -673,9 +673,9 @@ public class StatusBarKeyguardViewManager implements RemoteInputController.Callb
         if (isNavBarVisible != getLastNavBarVisible() || this.mFirstUpdate) {
             updateNavigationBarVisibility(isNavBarVisible);
         }
-        if (isShowing != this.mLastBouncerShowing || this.mFirstUpdate) {
-            this.mNotificationShadeWindowController.setBouncerShowing(isShowing);
-            this.mStatusBar.setBouncerShowing(isShowing);
+        if (z4 != this.mLastBouncerShowing || this.mFirstUpdate) {
+            this.mNotificationShadeWindowController.setBouncerShowing(z4);
+            this.mStatusBar.setBouncerShowing(z4);
             updateLockIcon();
         }
         if ((z && !z2) != (this.mLastShowing && !this.mLastOccluded) || this.mFirstUpdate) {
@@ -685,16 +685,16 @@ public class StatusBarKeyguardViewManager implements RemoteInputController.Callb
             }
             keyguardUpdateMonitor.onKeyguardVisibilityChanged(z3);
         }
-        if (isShowing != this.mLastBouncerShowing || this.mFirstUpdate) {
-            this.mKeyguardUpdateManager.sendKeyguardBouncerChanged(isShowing);
+        if (z4 != this.mLastBouncerShowing || this.mFirstUpdate) {
+            this.mKeyguardUpdateManager.sendKeyguardBouncerChanged(z4);
         }
         this.mFirstUpdate = false;
         this.mLastShowing = z;
         this.mLastGlobalActionsVisible = this.mGlobalActionsVisible;
         this.mLastOccluded = z2;
-        this.mLastBouncerShowing = isShowing;
-        this.mLastBouncerDismissible = z4;
-        this.mLastRemoteInputActive = z5;
+        this.mLastBouncerShowing = z4;
+        this.mLastBouncerDismissible = z5;
+        this.mLastRemoteInputActive = z6;
         this.mLastDozing = this.mDozing;
         this.mLastPulsing = this.mPulsing;
         this.mLastBiometricMode = this.mBiometricUnlockController.getMode();

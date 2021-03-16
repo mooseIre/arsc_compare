@@ -203,7 +203,7 @@ public class NotificationSettingsManager implements Dumpable {
     }
 
     public boolean canSlide(String str) {
-        return this.mAllowNotificationSlide.contains(str);
+        return this.mAllowNotificationSlide.contains(str) || DEBUG;
     }
 
     public void setShowBadge(Context context, String str, boolean z) {

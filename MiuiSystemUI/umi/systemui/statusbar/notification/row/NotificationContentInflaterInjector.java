@@ -17,6 +17,7 @@ import com.android.systemui.C0015R$id;
 import com.android.systemui.C0017R$layout;
 import com.android.systemui.C0021R$string;
 import com.android.systemui.Dependency;
+import com.android.systemui.controlcenter.phone.ControlPanelController;
 import com.android.systemui.statusbar.notification.ExpandedNotification;
 import com.android.systemui.statusbar.notification.InCallUtils;
 import com.android.systemui.statusbar.notification.MiuiNotificationCompat;
@@ -505,5 +506,9 @@ public class NotificationContentInflaterInjector {
 
     public static boolean isTransparentMode() {
         return ((SettingsManager) Dependency.get(SettingsManager.class)).getGameModeEnabled() || ((StatusBar) Dependency.get(StatusBar.class)).inFullscreenMode();
+    }
+
+    public static boolean isBlurAble(boolean z, boolean z2) {
+        return ((ControlPanelController) Dependency.get(ControlPanelController.class)).isUseControlCenter() && !z && (!z2 || !isTransparentMode());
     }
 }

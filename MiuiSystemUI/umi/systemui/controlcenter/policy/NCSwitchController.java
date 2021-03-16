@@ -7,6 +7,7 @@ import com.android.systemui.Dependency;
 import com.android.systemui.controlcenter.phone.ControlPanelController;
 import com.android.systemui.controlcenter.phone.ControlPanelWindowManager;
 import com.android.systemui.statusbar.SysuiStatusBarStateController;
+import com.android.systemui.statusbar.phone.HeadsUpManagerPhone;
 import com.android.systemui.statusbar.phone.MiuiNotificationPanelViewController;
 import com.android.systemui.statusbar.phone.NotificationPanelViewController;
 import com.android.systemui.statusbar.phone.ShadeController;
@@ -22,6 +23,7 @@ public final class NCSwitchController {
     private final NCSwitchEvent mCNSwitchStatEvent = new NCSwitchEvent(1);
     private final Context mContext;
     private final ControlPanelController mControlPanelController;
+    private final HeadsUpManagerPhone mHeadsUpManager;
     private float mInitialTouchX;
     private float mInitialTouchY;
     private boolean mIsCNHandleTouch;
@@ -33,16 +35,18 @@ public final class NCSwitchController {
     private final ShadeController shadeColler;
     private final SystemUIStat systemUIStat;
 
-    public NCSwitchController(@NotNull Context context, @NotNull SysuiStatusBarStateController sysuiStatusBarStateController, @NotNull ControlPanelController controlPanelController, @NotNull ShadeController shadeController, @NotNull SystemUIStat systemUIStat2) {
+    public NCSwitchController(@NotNull Context context, @NotNull SysuiStatusBarStateController sysuiStatusBarStateController, @NotNull ControlPanelController controlPanelController, @NotNull ShadeController shadeController, @NotNull HeadsUpManagerPhone headsUpManagerPhone, @NotNull SystemUIStat systemUIStat2) {
         Intrinsics.checkParameterIsNotNull(context, "mContext");
         Intrinsics.checkParameterIsNotNull(sysuiStatusBarStateController, "mStatusBarStateController");
         Intrinsics.checkParameterIsNotNull(controlPanelController, "mControlPanelController");
         Intrinsics.checkParameterIsNotNull(shadeController, "shadeColler");
+        Intrinsics.checkParameterIsNotNull(headsUpManagerPhone, "mHeadsUpManager");
         Intrinsics.checkParameterIsNotNull(systemUIStat2, "systemUIStat");
         this.mContext = context;
         this.mStatusBarStateController = sysuiStatusBarStateController;
         this.mControlPanelController = controlPanelController;
         this.shadeColler = shadeController;
+        this.mHeadsUpManager = headsUpManagerPhone;
         this.systemUIStat = systemUIStat2;
         ViewConfiguration viewConfiguration = ViewConfiguration.get(context);
         Intrinsics.checkExpressionValueIsNotNull(viewConfiguration, "ViewConfiguration.get(mContext)");
@@ -127,6 +131,7 @@ public final class NCSwitchController {
                 return true;
             }
         } else if (this.mIsCNHandleTouch) {
+            this.mHeadsUpManager.releaseAllImmediately();
             prepareForNCSwitcher();
             this.mControlPanelController.collapseControlCenter(true, true);
             this.systemUIStat.handleControlCenterEvent(this.mCNSwitchStatEvent);

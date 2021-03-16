@@ -2433,7 +2433,7 @@ public final class DaggerSystemUIRootComponent implements SystemUIRootComponent 
         this.notificationStatProvider = DoubleCheck.provider(NotificationStat_Factory.create(this.provideContextProvider, this.provideNotificationEntryManagerProvider, this.notificationGroupManagerProvider, this.provideHeadsUpManagerPhoneProvider, this.statusBarStateControllerImplProvider, this.keyguardStateControllerImplProvider, this.eventTrackerProvider, provider16));
         this.usbNotificationControllerProvider = DoubleCheck.provider(UsbNotificationController_Factory.create(this.provideContextProvider));
         this.keyguardNotificationControllerProvider = DoubleCheck.provider(KeyguardNotificationController_Factory.create(this.provideContextProvider, this.provideNotificationEntryManagerProvider, this.notificationGroupManagerProvider, this.keyguardStateControllerImplProvider, this.notificationLockscreenUserManagerImplProvider));
-        this.notificationBadgeControllerProvider = DoubleCheck.provider(NotificationBadgeController_Factory.create(this.provideContextProvider, this.provideNotificationEntryManagerProvider, this.notificationGroupManagerProvider));
+        this.notificationBadgeControllerProvider = DoubleCheck.provider(NotificationBadgeController_Factory.create(this.provideContextProvider, this.provideNotificationEntryManagerProvider, this.notificationGroupManagerProvider, this.providesBroadcastDispatcherProvider));
         this.notificationSensitiveControllerProvider = DoubleCheck.provider(NotificationSensitiveController_Factory.create(this.provideContextProvider, this.userSwitcherControllerProvider));
         this.miuiChargeControllerProvider = DoubleCheck.provider(MiuiChargeController_Factory.create(this.provideContextProvider, this.wakefulnessLifecycleProvider));
         this.hapticFeedBackImplProvider = DoubleCheck.provider(HapticFeedBackImpl_Factory.create(this.provideContextProvider));
@@ -2662,7 +2662,7 @@ public final class DaggerSystemUIRootComponent implements SystemUIRootComponent 
             this.carrierObserverProvider = CarrierObserver_Factory.create(DaggerSystemUIRootComponent.this.provideContextProvider, DaggerSystemUIRootComponent.this.provideMainHandlerProvider, DaggerSystemUIRootComponent.this.provideBgHandlerProvider);
             this.miuiCarrierTextControllerProvider = MiuiCarrierTextController_Factory.create(DaggerSystemUIRootComponent.this.provideContextProvider, DaggerSystemUIRootComponent.this.provideMainHandlerProvider, DaggerSystemUIRootComponent.this.provideBgHandlerProvider);
             this.notificationIconObserverProvider = NotificationIconObserver_Factory.create(DaggerSystemUIRootComponent.this.provideContextProvider, DaggerSystemUIRootComponent.this.provideMainHandlerProvider);
-            this.nCSwitchControllerProvider = NCSwitchController_Factory.create(DaggerSystemUIRootComponent.this.provideContextProvider, DaggerSystemUIRootComponent.this.statusBarStateControllerImplProvider, DaggerSystemUIRootComponent.this.controlPanelControllerProvider, DaggerSystemUIRootComponent.this.shadeControllerImplProvider, DaggerSystemUIRootComponent.this.systemUIStatProvider);
+            this.nCSwitchControllerProvider = NCSwitchController_Factory.create(DaggerSystemUIRootComponent.this.provideContextProvider, DaggerSystemUIRootComponent.this.statusBarStateControllerImplProvider, DaggerSystemUIRootComponent.this.controlPanelControllerProvider, DaggerSystemUIRootComponent.this.shadeControllerImplProvider, DaggerSystemUIRootComponent.this.provideHeadsUpManagerPhoneProvider, DaggerSystemUIRootComponent.this.systemUIStatProvider);
         }
 
         public void createSystemUI(Dependency dependency) {
@@ -2890,7 +2890,7 @@ public final class DaggerSystemUIRootComponent implements SystemUIRootComponent 
             }
 
             private NCSwitchController getNCSwitchController() {
-                return new NCSwitchController(SystemUIFactory_ContextHolder_ProvideContextFactory.proxyProvideContext(DaggerSystemUIRootComponent.this.contextHolder), (SysuiStatusBarStateController) DaggerSystemUIRootComponent.this.statusBarStateControllerImplProvider.get(), (ControlPanelController) DaggerSystemUIRootComponent.this.controlPanelControllerProvider.get(), (ShadeController) DaggerSystemUIRootComponent.this.shadeControllerImplProvider.get(), (SystemUIStat) DaggerSystemUIRootComponent.this.systemUIStatProvider.get());
+                return new NCSwitchController(SystemUIFactory_ContextHolder_ProvideContextFactory.proxyProvideContext(DaggerSystemUIRootComponent.this.contextHolder), (SysuiStatusBarStateController) DaggerSystemUIRootComponent.this.statusBarStateControllerImplProvider.get(), (ControlPanelController) DaggerSystemUIRootComponent.this.controlPanelControllerProvider.get(), (ShadeController) DaggerSystemUIRootComponent.this.shadeControllerImplProvider.get(), (HeadsUpManagerPhone) DaggerSystemUIRootComponent.this.provideHeadsUpManagerPhoneProvider.get(), (SystemUIStat) DaggerSystemUIRootComponent.this.systemUIStatProvider.get());
             }
 
             private void initialize(InjectionInflationController.ViewAttributeProvider viewAttributeProvider2) {
@@ -3097,7 +3097,7 @@ public final class DaggerSystemUIRootComponent implements SystemUIRootComponent 
         }
 
         private NCSwitchController getNCSwitchController() {
-            return new NCSwitchController(SystemUIFactory_ContextHolder_ProvideContextFactory.proxyProvideContext(DaggerSystemUIRootComponent.this.contextHolder), (SysuiStatusBarStateController) DaggerSystemUIRootComponent.this.statusBarStateControllerImplProvider.get(), (ControlPanelController) DaggerSystemUIRootComponent.this.controlPanelControllerProvider.get(), (ShadeController) DaggerSystemUIRootComponent.this.shadeControllerImplProvider.get(), (SystemUIStat) DaggerSystemUIRootComponent.this.systemUIStatProvider.get());
+            return new NCSwitchController(SystemUIFactory_ContextHolder_ProvideContextFactory.proxyProvideContext(DaggerSystemUIRootComponent.this.contextHolder), (SysuiStatusBarStateController) DaggerSystemUIRootComponent.this.statusBarStateControllerImplProvider.get(), (ControlPanelController) DaggerSystemUIRootComponent.this.controlPanelControllerProvider.get(), (ShadeController) DaggerSystemUIRootComponent.this.shadeControllerImplProvider.get(), (HeadsUpManagerPhone) DaggerSystemUIRootComponent.this.provideHeadsUpManagerPhoneProvider.get(), (SystemUIStat) DaggerSystemUIRootComponent.this.systemUIStatProvider.get());
         }
 
         private void initialize(StatusBarComponentBuilder statusBarComponentBuilder) {

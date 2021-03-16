@@ -424,6 +424,10 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
         this.mInflateSignalStrengths = SignalStrengthUtil.shouldInflateSignalStrength(this.mContext, this.mSubscriptionInfo.getSubscriptionId());
     }
 
+    public SubscriptionInfo getSubscriptionInfo() {
+        return this.mSubscriptionInfo;
+    }
+
     public int getCurrentIconId() {
         if (Utils.isInService(this.mServiceState)) {
             return TelephonyIcons.TELEPHONY_SIGNAL_STRENGTH[((MobileState) this.mCurrentState).level];

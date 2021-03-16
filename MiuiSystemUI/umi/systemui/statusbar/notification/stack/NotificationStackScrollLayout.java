@@ -103,6 +103,7 @@ import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow
 import com.android.systemui.statusbar.notification.row.ExpandableView;
 import com.android.systemui.statusbar.notification.row.FooterView;
 import com.android.systemui.statusbar.notification.row.ForegroundServiceDungeonView;
+import com.android.systemui.statusbar.notification.row.MiuiExpandableNotificationRow;
 import com.android.systemui.statusbar.notification.row.NotificationBlockingHelperManager;
 import com.android.systemui.statusbar.notification.row.NotificationGuts;
 import com.android.systemui.statusbar.notification.row.NotificationGutsManager;
@@ -1449,6 +1450,15 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
             startAnimationToState();
         } else {
             applyCurrentState();
+        }
+    }
+
+    public void updateChildrenBg() {
+        for (int i = 0; i < getChildCount(); i++) {
+            ExpandableView expandableView = (ExpandableView) getChildAt(i);
+            if (expandableView instanceof MiuiExpandableNotificationRow) {
+                ((MiuiExpandableNotificationRow) expandableView).updateBackground();
+            }
         }
     }
 

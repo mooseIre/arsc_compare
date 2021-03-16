@@ -1,30 +1,81 @@
 package com.android.systemui.statusbar.notification.policy;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.UserHandle;
 import android.text.TextUtils;
 import android.util.Log;
+import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.media.MediaDataManagerKt;
+import com.android.systemui.settings.CurrentUserTracker;
 import com.android.systemui.statusbar.notification.ExpandedNotification;
 import com.android.systemui.statusbar.notification.NotificationEntryManager;
 import com.android.systemui.statusbar.notification.NotificationSettingsHelper;
 import com.android.systemui.statusbar.notification.NotificationUtil;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
+import com.android.systemui.statusbar.notification.policy.NotificationBadgeController;
 import com.android.systemui.statusbar.phone.NotificationGroupManager;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executor;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class NotificationBadgeController {
+    BroadcastDispatcher mBroadcastDispatcher;
     Context mContext;
     NotificationEntryManager mEntryManager;
     NotificationGroupManager mGroupManager;
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        public void onReceive(Context context, Intent intent) {
+            boolean booleanExtra = intent.getBooleanExtra("com.miui.extra_update_request_first_time", false);
+            Log.d("NotifBadge", "recevie broadbcast ACTION_APPLICATION_MESSAGE_QUERY, requestFirstTime=" + booleanExtra);
+            if (booleanExtra) {
+                new ArrayList(NotificationBadgeController.this.mEntryManager.getVisibleNotifications()).stream().filter(new Predicate(ConcurrentHashMap.newKeySet()) {
+                    public final /* synthetic */ Set f$0;
 
-    public NotificationBadgeController(Context context, NotificationEntryManager notificationEntryManager, NotificationGroupManager notificationGroupManager) {
+                    {
+                        this.f$0 = r1;
+                    }
+
+                    public final boolean test(Object obj) {
+                        return this.f$0.add(((NotificationEntry) obj).getSbn().getPackageName());
+                    }
+                }).forEach(new Consumer() {
+                    public final void accept(Object obj) {
+                        NotificationBadgeController.AnonymousClass1.this.lambda$onReceive$1$NotificationBadgeController$1((NotificationEntry) obj);
+                    }
+                });
+            }
+        }
+
+        /* access modifiers changed from: private */
+        /* renamed from: lambda$onReceive$1 */
+        public /* synthetic */ void lambda$onReceive$1$NotificationBadgeController$1(NotificationEntry notificationEntry) {
+            NotificationBadgeController.this.updateAppBadgeNum(notificationEntry.getSbn());
+        }
+    };
+
+    public NotificationBadgeController(Context context, NotificationEntryManager notificationEntryManager, NotificationGroupManager notificationGroupManager, BroadcastDispatcher broadcastDispatcher) {
         this.mContext = context;
         this.mEntryManager = notificationEntryManager;
         this.mGroupManager = notificationGroupManager;
+        this.mBroadcastDispatcher = broadcastDispatcher;
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("android.intent.action.APPLICATION_MESSAGE_QUERY");
+        this.mBroadcastDispatcher.registerReceiver(this.mReceiver, intentFilter, (Executor) null, UserHandle.ALL);
+        new CurrentUserTracker(this.mBroadcastDispatcher) {
+            public void onUserSwitched(int i) {
+                Intent intent = new Intent("android.intent.action.APPLICATION_MESSAGE_QUERY");
+                intent.putExtra("com.miui.extra_update_request_first_time", true);
+                NotificationBadgeController.this.mContext.sendBroadcast(intent);
+            }
+        }.startTracking();
     }
 
     public void updateAppBadgeNum(ExpandedNotification expandedNotification) {

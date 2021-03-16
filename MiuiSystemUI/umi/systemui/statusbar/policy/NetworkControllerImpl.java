@@ -23,6 +23,7 @@ import android.telephony.SubscriptionInfo;
 import android.telephony.SubscriptionManager;
 import android.telephony.TelephonyManager;
 import android.telephony.UiccAccessRule;
+import android.text.TextUtils;
 import android.util.Log;
 import android.util.SparseArray;
 import com.android.internal.annotations.GuardedBy;
@@ -46,7 +47,6 @@ import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -828,24 +828,10 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
     @VisibleForTesting
     public void doUpdateMobileControllers() {
         List<SubscriptionInfo> completeActiveSubscriptionInfoList = this.mSubscriptionManager.getCompleteActiveSubscriptionInfoList();
-        if (completeActiveSubscriptionInfoList == null) {
-            completeActiveSubscriptionInfoList = Collections.emptyList();
-        }
         ArrayList arrayList = new ArrayList();
-        List activeSubscriptionInfoList = miui.telephony.SubscriptionManager.getDefault().getActiveSubscriptionInfoList();
-        if (activeSubscriptionInfoList != null) {
-            for (SubscriptionInfo subscriptionInfo : completeActiveSubscriptionInfoList) {
-                Iterator it = activeSubscriptionInfoList.iterator();
-                while (true) {
-                    if (it.hasNext()) {
-                        if (((miui.telephony.SubscriptionInfo) it.next()).getSlotId() == subscriptionInfo.getSimSlotIndex()) {
-                            arrayList.add(subscriptionInfo);
-                            break;
-                        }
-                    } else {
-                        break;
-                    }
-                }
+        for (SubscriptionInfo subscriptionInfo : completeActiveSubscriptionInfoList) {
+            if (subscriptionInfo.areUiccApplicationsEnabled()) {
+                arrayList.add(subscriptionInfo);
             }
         }
         filterMobileSubscriptionInSameGroup(arrayList);
@@ -979,9 +965,20 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
         if (list.size() != this.mMobileSignalControllers.size()) {
             return false;
         }
-        for (SubscriptionInfo subscriptionId : list) {
-            if (this.mMobileSignalControllers.indexOfKey(subscriptionId.getSubscriptionId()) < 0) {
+        for (SubscriptionInfo next : list) {
+            if (this.mMobileSignalControllers.indexOfKey(next.getSubscriptionId()) < 0) {
                 return false;
+            }
+            MobileSignalController mobileSignalController = this.mMobileSignalControllers.get(next.getSubscriptionId());
+            if (mobileSignalController != null) {
+                SubscriptionInfo subscriptionInfo = mobileSignalController.getSubscriptionInfo();
+                String mccString = subscriptionInfo.getMccString();
+                String mncString = subscriptionInfo.getMncString();
+                String mccString2 = next.getMccString();
+                String mncString2 = next.getMncString();
+                if (!TextUtils.equals(mccString, mccString2) || !TextUtils.equals(mncString, mncString2)) {
+                    return false;
+                }
             }
         }
         return true;
