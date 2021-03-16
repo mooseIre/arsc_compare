@@ -57,6 +57,7 @@ import com.android.keyguard.ViewMediatorCallback;
 import com.android.keyguard.faceunlock.MiuiFaceUnlockManager;
 import com.android.keyguard.faceunlock.MiuiFaceUnlockUtils;
 import com.android.keyguard.fod.MiuiGxzwManager;
+import com.android.keyguard.injector.KeyguardPanelViewInjector;
 import com.android.keyguard.injector.KeyguardUpdateMonitorInjector;
 import com.android.keyguard.injector.KeyguardViewMediatorInjector;
 import com.android.keyguard.wallpaper.MiuiWallpaperClient;
@@ -935,7 +936,7 @@ public class KeyguardViewMediator extends SystemUI implements Dumpable {
         }
         ContentResolver contentResolver = this.mContext.getContentResolver();
         this.mDeviceInteractive = this.mPM.isInteractive();
-        this.mLockSounds = new SoundPool.Builder().setMaxStreams(1).setAudioAttributes(new AudioAttributes.Builder().setUsage(13).setContentType(4).build()).build();
+        this.mLockSounds = new SoundPool.Builder().setMaxStreams(2).setAudioAttributes(new AudioAttributes.Builder().setUsage(13).setContentType(4).build()).build();
         String string = Settings.Global.getString(contentResolver, "lock_sound");
         if (string != null) {
             this.mLockSoundId = this.mLockSounds.load(string, 1);
@@ -1633,6 +1634,7 @@ public class KeyguardViewMediator extends SystemUI implements Dumpable {
 
     public void setCurrentUser(int i) {
         KeyguardUpdateMonitor.setCurrentUser(i);
+        ((KeyguardPanelViewInjector) Dependency.get(KeyguardPanelViewInjector.class)).updateSwitchSystemUserEntrance();
         synchronized (this) {
             notifyTrustedChangedLocked(this.mUpdateMonitor.getUserHasTrust(i));
         }
@@ -1760,10 +1762,10 @@ public class KeyguardViewMediator extends SystemUI implements Dumpable {
     }
 
     private void playSounds(boolean z) {
-        playSound(z ? this.mLockSoundId : this.mUnlockSoundId);
+        playSound(z ? this.mLockSoundId : this.mUnlockSoundId, (!this.mDeviceInteractive || z) ? 1 : 2);
     }
 
-    private void playSound(int i) {
+    private void playSound(int i, int i2) {
         if (i != 0 && Settings.System.getInt(this.mContext.getContentResolver(), "lockscreen_sounds_enabled", 1) == 1) {
             this.mLockSounds.stop(this.mLockSoundStreamId);
             if (this.mAudioManager == null) {
@@ -1775,15 +1777,17 @@ public class KeyguardViewMediator extends SystemUI implements Dumpable {
                     return;
                 }
             }
-            this.mUiBgExecutor.execute(new Runnable(i) {
+            this.mUiBgExecutor.execute(new Runnable(i, i2) {
                 public final /* synthetic */ int f$1;
+                public final /* synthetic */ int f$2;
 
                 {
                     this.f$1 = r2;
+                    this.f$2 = r3;
                 }
 
                 public final void run() {
-                    KeyguardViewMediator.this.lambda$playSound$4$KeyguardViewMediator(this.f$1);
+                    KeyguardViewMediator.this.lambda$playSound$4$KeyguardViewMediator(this.f$1, this.f$2);
                 }
             });
         }
@@ -1791,11 +1795,11 @@ public class KeyguardViewMediator extends SystemUI implements Dumpable {
 
     /* access modifiers changed from: private */
     /* renamed from: lambda$playSound$4 */
-    public /* synthetic */ void lambda$playSound$4$KeyguardViewMediator(int i) {
+    public /* synthetic */ void lambda$playSound$4$KeyguardViewMediator(int i, int i2) {
         if (!this.mAudioManager.isStreamMute(this.mUiSoundsStreamType)) {
             SoundPool soundPool = this.mLockSounds;
             float f = this.mLockSoundVolume;
-            int play = soundPool.play(i, f, f, 1, 0, 1.0f);
+            int play = soundPool.play(i, f, f, i2, 0, 1.0f);
             synchronized (this) {
                 this.mLockSoundStreamId = play;
             }
@@ -1804,7 +1808,7 @@ public class KeyguardViewMediator extends SystemUI implements Dumpable {
 
     /* access modifiers changed from: private */
     public void playTrustedSound() {
-        playSound(this.mTrustedSoundId);
+        playSound(this.mTrustedSoundId, 1);
     }
 
     private void updateActivityLockScreenState(boolean z, boolean z2) {

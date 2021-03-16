@@ -179,7 +179,7 @@ public class MiuiPhoneStatusBarView extends PhoneStatusBarView {
     }
 
     /* access modifiers changed from: protected */
-    public boolean HandleEvent(MotionEvent motionEvent) {
+    public boolean handleEvent(MotionEvent motionEvent) {
         boolean z = motionEvent.getActionMasked() == 0;
         boolean z2 = motionEvent.getAction() == 2;
         boolean z3 = motionEvent.getActionMasked() == 1;
@@ -208,8 +208,8 @@ public class MiuiPhoneStatusBarView extends PhoneStatusBarView {
                 this.mDown = null;
             }
         }
-        if (!this.mIsGiveAllEvent || !this.mControlPanelWindowManager.dispatchToControlPanel(motionEvent, (float) getWidth())) {
-            return this.mGestureDetector.onTouchEvent(motionEvent);
+        if ((!this.mIsGiveAllEvent || !this.mControlPanelWindowManager.dispatchToControlPanel(motionEvent, (float) getWidth())) && !this.mGestureDetector.onTouchEvent(motionEvent) && panelEnabled()) {
+            return false;
         }
         return true;
     }

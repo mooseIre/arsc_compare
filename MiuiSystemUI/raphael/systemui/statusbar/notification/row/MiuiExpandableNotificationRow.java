@@ -141,10 +141,8 @@ public final class MiuiExpandableNotificationRow extends MiuiAnimatedNotificatio
             boolean z = isTransparentMode && ((showingLayout != null ? showingLayout.getVisibleWrapper(2) : null) instanceof MiuiNotificationOneLineViewWrapper);
             if (z) {
                 this.mBackgroundNormal.setCustomBackground(C0013R$drawable.optimized_transparent_heads_up_notification_bg);
-                this.mBackgroundNormal.setTransparentModeHint(true);
             } else {
                 this.mBackgroundNormal.setCustomBackground(C0013R$drawable.notification_heads_up_bg);
-                this.mBackgroundNormal.setTransparentModeHint(false);
             }
             View mMiniBar = getMMiniBar();
             Intrinsics.checkExpressionValueIsNotNull(mMiniBar, "mMiniBar");
@@ -155,14 +153,14 @@ public final class MiuiExpandableNotificationRow extends MiuiAnimatedNotificatio
                 Drawable background = mMiniBar2.getBackground();
                 if (background != null) {
                     ((GradientDrawable) background).setColor(getResources().getColor(i, (Resources.Theme) null));
-                    return;
+                } else {
+                    throw new TypeCastException("null cannot be cast to non-null type android.graphics.drawable.GradientDrawable");
                 }
-                throw new TypeCastException("null cannot be cast to non-null type android.graphics.drawable.GradientDrawable");
             }
-            return;
+        } else {
+            this.mBackgroundNormal.setCustomBackground(C0013R$drawable.notification_item_bg);
         }
-        this.mBackgroundNormal.setCustomBackground(C0013R$drawable.notification_item_bg);
-        this.mBackgroundNormal.setTransparentModeHint(this.mIsInModal);
+        this.mBackgroundNormal.setBlurDisable(!NotificationContentInflaterInjector.isBlurAble(this.mIsInModal, isHeadsUpState()));
     }
 
     public void setIsChildInGroup(boolean z, @Nullable ExpandableNotificationRow expandableNotificationRow) {

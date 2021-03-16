@@ -123,7 +123,6 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
     private boolean mExpectingSynthesizedDown;
     private boolean mHidePanelRequested;
     private final Runnable mHidePanelRunnable = new MiuiNotificationPanelViewController$mHidePanelRunnable$1(this);
-    private boolean mIsDefaultTheme;
     private boolean mIsInteractive;
     /* access modifiers changed from: private */
     public boolean mIsKeyguardOccluded;
@@ -222,7 +221,6 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
         Intrinsics.checkExpressionValueIsNotNull(obj2, "Dependency.get(KeyguardClockInjector::class.java)");
         this.mKeyguardClockInjector = (KeyguardClockInjector) obj2;
         this.mKeyguardUpdateMonitorCallback = new MiuiNotificationPanelViewController$mKeyguardUpdateMonitorCallback$1(this);
-        this.mIsDefaultTheme = true;
         this.mKeyguardPanelViewInjector.init(this);
         this.panelView.setClipChildren(false);
         this.panelView.addOnAttachStateChangeListener(this);
@@ -295,21 +293,21 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
             setExpandedHeightInternal(0.0f);
         }
         if (this.mPanelOpening) {
-            if (this.mStretchLength > (this.mStretchingFromHeadsUp ? 0.0f : 80.0f)) {
+            if (this.mStretchLength > (this.mStretchingFromHeadsUp ? 0.0f : 50.0f)) {
                 z = true;
             }
             setMPanelAppeared(z);
             ((NotificationStat) Dependency.get(cls)).onPanelExpanded(isOnKeyguard(), true, this.mNotificationEntryManager.getActiveNotificationsCount());
         } else if (this.mPanelCollapsing) {
-            if (Math.abs(this.mStretchLength) < 80.0f) {
+            if (Math.abs(this.mStretchLength) < 50.0f) {
                 z = true;
             }
             setMPanelAppeared(z);
             ((NotificationStat) Dependency.get(cls)).onPanelCollapsed(true, this.mNotificationEntryManager.getActiveNotificationsCount());
         }
         float f2 = this.mStretchLength;
-        if (f2 >= 80.0f) {
-            setMSpringLength(afterFriction(Math.max(0.0f, f2 - 80.0f), getHeight()) * 0.5f);
+        if (f2 >= 50.0f) {
+            setMSpringLength(afterFriction(Math.max(0.0f, f2 - 50.0f), getHeight()) * 0.5f);
         }
         if (this.mPanelOpening || this.mPanelCollapsing) {
             updateBlur();
@@ -906,6 +904,21 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
         this.mDismissView = (DismissView) this.mView.findViewById(C0015R$id.dismiss_view);
         this.mStickyGroupHeader = this.mView.findViewById(C0015R$id.group_header);
         updateThemeBackground();
+        NotificationPanelView notificationPanelView = this.mView;
+        Intrinsics.checkExpressionValueIsNotNull(notificationPanelView, "mView");
+        Context context = notificationPanelView.getContext();
+        Intrinsics.checkExpressionValueIsNotNull(context, "mView.context");
+        Resources resources = context.getResources();
+        Intrinsics.checkExpressionValueIsNotNull(resources, "mView.context.resources");
+        float f = resources.getDisplayMetrics().density * ((float) 5);
+        NotificationsQuickSettingsContainer notificationsQuickSettingsContainer = this.mNotificationContainerParent;
+        if (notificationsQuickSettingsContainer != null) {
+            KeyguardBottomAreaView keyguardBottomAreaView = this.mKeyguardBottomArea;
+            if (keyguardBottomAreaView != null) {
+                f = keyguardBottomAreaView.getElevation();
+            }
+            notificationsQuickSettingsContainer.setElevation(f + ((float) 1));
+        }
     }
 
     public void expand(boolean z) {
@@ -1149,6 +1162,15 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
             if (frameLayout2 != null) {
                 frameLayout2.setVisibility(8);
             }
+        }
+    }
+
+    /* access modifiers changed from: protected */
+    public void setStatusBar(@Nullable StatusBar statusBar) {
+        super.setStatusBar(statusBar);
+        AwesomeLockScreen awesomeLockScreen = this.mAwesomeLockScreen;
+        if (awesomeLockScreen != null) {
+            awesomeLockScreen.setStatusBar(statusBar);
         }
     }
 
@@ -1685,7 +1707,7 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
                         setMBlurRatio(RangesKt___RangesKt.coerceIn(f, 0.0f, 1.0f));
                     }
                 } else if (this.mPanelOpening || this.mPanelCollapsing) {
-                    float coerceIn = RangesKt___RangesKt.coerceIn((this.mPanelOpening ? 0.0f : 2.0f) + (this.mStretchLength / 80.0f), 0.0f, 1.0f);
+                    float coerceIn = RangesKt___RangesKt.coerceIn((this.mPanelOpening ? 0.0f : 2.0f) + (this.mStretchLength / 50.0f), 0.0f, 1.0f);
                     if (this.mBlurRatio != coerceIn) {
                         Folme.useValue("PanelBlur").setTo((Object) Float.valueOf(this.mBlurRatio)).to(Float.valueOf(coerceIn), MiuiNotificationPanelViewControllerKt.BLUR_ANIM_CONFIG);
                         return;

@@ -2522,7 +2522,7 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
         this.notificationStatProvider = DoubleCheck.provider(NotificationStat_Factory.create(this.contextProvider, this.provideNotificationEntryManagerProvider, this.notificationGroupManagerProvider, this.provideHeadsUpManagerPhoneProvider, this.statusBarStateControllerImplProvider, this.keyguardStateControllerImplProvider, this.eventTrackerProvider, provider16));
         this.usbNotificationControllerProvider = DoubleCheck.provider(UsbNotificationController_Factory.create(this.contextProvider));
         this.keyguardNotificationControllerProvider = DoubleCheck.provider(KeyguardNotificationController_Factory.create(this.contextProvider, this.provideNotificationEntryManagerProvider, this.notificationGroupManagerProvider, this.keyguardStateControllerImplProvider, this.notificationLockscreenUserManagerImplProvider));
-        this.notificationBadgeControllerProvider = DoubleCheck.provider(NotificationBadgeController_Factory.create(this.contextProvider, this.provideNotificationEntryManagerProvider, this.notificationGroupManagerProvider));
+        this.notificationBadgeControllerProvider = DoubleCheck.provider(NotificationBadgeController_Factory.create(this.contextProvider, this.provideNotificationEntryManagerProvider, this.notificationGroupManagerProvider, this.providesBroadcastDispatcherProvider));
         this.notificationSensitiveControllerProvider = DoubleCheck.provider(NotificationSensitiveController_Factory.create(this.contextProvider, this.userSwitcherControllerProvider));
         this.miuiChargeControllerProvider = DoubleCheck.provider(MiuiChargeController_Factory.create(this.contextProvider, this.wakefulnessLifecycleProvider));
         this.hapticFeedBackImplProvider = DoubleCheck.provider(HapticFeedBackImpl_Factory.create(this.contextProvider));
@@ -2742,7 +2742,7 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
             this.carrierObserverProvider = CarrierObserver_Factory.create(DaggerTvSystemUIRootComponent.this.contextProvider, DaggerTvSystemUIRootComponent.this.provideMainHandlerProvider, DaggerTvSystemUIRootComponent.this.provideBgHandlerProvider);
             this.miuiCarrierTextControllerProvider = MiuiCarrierTextController_Factory.create(DaggerTvSystemUIRootComponent.this.contextProvider, DaggerTvSystemUIRootComponent.this.provideMainHandlerProvider, DaggerTvSystemUIRootComponent.this.provideBgHandlerProvider);
             this.notificationIconObserverProvider = NotificationIconObserver_Factory.create(DaggerTvSystemUIRootComponent.this.contextProvider, DaggerTvSystemUIRootComponent.this.provideMainHandlerProvider);
-            this.nCSwitchControllerProvider = NCSwitchController_Factory.create(DaggerTvSystemUIRootComponent.this.contextProvider, DaggerTvSystemUIRootComponent.this.statusBarStateControllerImplProvider, DaggerTvSystemUIRootComponent.this.controlPanelControllerProvider, DaggerTvSystemUIRootComponent.this.shadeControllerImplProvider, DaggerTvSystemUIRootComponent.this.systemUIStatProvider);
+            this.nCSwitchControllerProvider = NCSwitchController_Factory.create(DaggerTvSystemUIRootComponent.this.contextProvider, DaggerTvSystemUIRootComponent.this.statusBarStateControllerImplProvider, DaggerTvSystemUIRootComponent.this.controlPanelControllerProvider, DaggerTvSystemUIRootComponent.this.shadeControllerImplProvider, DaggerTvSystemUIRootComponent.this.provideHeadsUpManagerPhoneProvider, DaggerTvSystemUIRootComponent.this.systemUIStatProvider);
         }
 
         public void createSystemUI(Dependency dependency) {
@@ -2970,7 +2970,7 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
             }
 
             private NCSwitchController getNCSwitchController() {
-                return new NCSwitchController(DaggerTvSystemUIRootComponent.this.context, (SysuiStatusBarStateController) DaggerTvSystemUIRootComponent.this.statusBarStateControllerImplProvider.get(), (ControlPanelController) DaggerTvSystemUIRootComponent.this.controlPanelControllerProvider.get(), (ShadeController) DaggerTvSystemUIRootComponent.this.shadeControllerImplProvider.get(), (SystemUIStat) DaggerTvSystemUIRootComponent.this.systemUIStatProvider.get());
+                return new NCSwitchController(DaggerTvSystemUIRootComponent.this.context, (SysuiStatusBarStateController) DaggerTvSystemUIRootComponent.this.statusBarStateControllerImplProvider.get(), (ControlPanelController) DaggerTvSystemUIRootComponent.this.controlPanelControllerProvider.get(), (ShadeController) DaggerTvSystemUIRootComponent.this.shadeControllerImplProvider.get(), (HeadsUpManagerPhone) DaggerTvSystemUIRootComponent.this.provideHeadsUpManagerPhoneProvider.get(), (SystemUIStat) DaggerTvSystemUIRootComponent.this.systemUIStatProvider.get());
             }
 
             private void initialize(InjectionInflationController.ViewAttributeProvider viewAttributeProvider2) {
@@ -3177,7 +3177,7 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
         }
 
         private NCSwitchController getNCSwitchController() {
-            return new NCSwitchController(DaggerTvSystemUIRootComponent.this.context, (SysuiStatusBarStateController) DaggerTvSystemUIRootComponent.this.statusBarStateControllerImplProvider.get(), (ControlPanelController) DaggerTvSystemUIRootComponent.this.controlPanelControllerProvider.get(), (ShadeController) DaggerTvSystemUIRootComponent.this.shadeControllerImplProvider.get(), (SystemUIStat) DaggerTvSystemUIRootComponent.this.systemUIStatProvider.get());
+            return new NCSwitchController(DaggerTvSystemUIRootComponent.this.context, (SysuiStatusBarStateController) DaggerTvSystemUIRootComponent.this.statusBarStateControllerImplProvider.get(), (ControlPanelController) DaggerTvSystemUIRootComponent.this.controlPanelControllerProvider.get(), (ShadeController) DaggerTvSystemUIRootComponent.this.shadeControllerImplProvider.get(), (HeadsUpManagerPhone) DaggerTvSystemUIRootComponent.this.provideHeadsUpManagerPhoneProvider.get(), (SystemUIStat) DaggerTvSystemUIRootComponent.this.systemUIStatProvider.get());
         }
 
         private void initialize(StatusBarComponentBuilder statusBarComponentBuilder) {

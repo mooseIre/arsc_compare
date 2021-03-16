@@ -42,7 +42,9 @@ public final class SeekBarViewModel {
         Intrinsics.checkParameterIsNotNull(repeatableExecutor, "bgExecutor");
         this.bgExecutor = repeatableExecutor;
         MutableLiveData<Progress> mutableLiveData = new MutableLiveData<>();
-        mutableLiveData.postValue(this._data);
+        if (this.listening) {
+            mutableLiveData.postValue(this._data);
+        }
         this._progress = mutableLiveData;
         this.callback = new SeekBarViewModel$callback$1(this);
         this.listening = true;

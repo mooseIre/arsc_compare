@@ -81,6 +81,7 @@ public abstract class PanelViewController {
     public float mInitialTouchY;
     /* access modifiers changed from: private */
     public boolean mInstantExpanding;
+    protected boolean mIsDefaultTheme = true;
     /* access modifiers changed from: private */
     public boolean mJustPeeked;
     protected KeyguardBottomAreaView mKeyguardBottomArea;
@@ -961,8 +962,8 @@ public abstract class PanelViewController {
         public TouchHandler() {
         }
 
-        /* JADX WARNING: Code restructure failed: missing block: B:59:0x0147, code lost:
-            if (r3.mHintAnimationRunning == false) goto L_0x0151;
+        /* JADX WARNING: Code restructure failed: missing block: B:60:0x014b, code lost:
+            if (r3.mHintAnimationRunning == false) goto L_0x0155;
          */
         /* Code decompiled incorrectly, please refer to instructions dump. */
         public boolean onInterceptTouchEvent(android.view.MotionEvent r9) {
@@ -971,19 +972,19 @@ public abstract class PanelViewController {
                 com.android.systemui.statusbar.phone.PanelViewController r0 = com.android.systemui.statusbar.phone.PanelViewController.this
                 boolean r0 = r0.mInstantExpanding
                 r1 = 0
-                if (r0 != 0) goto L_0x01a8
+                if (r0 != 0) goto L_0x01ac
                 com.android.systemui.statusbar.phone.PanelViewController r0 = com.android.systemui.statusbar.phone.PanelViewController.this
                 boolean r0 = r0.mNotificationsDragEnabled
-                if (r0 == 0) goto L_0x01a8
+                if (r0 == 0) goto L_0x01ac
                 com.android.systemui.statusbar.phone.PanelViewController r0 = com.android.systemui.statusbar.phone.PanelViewController.this
                 boolean r0 = r0.mTouchDisabled
-                if (r0 != 0) goto L_0x01a8
+                if (r0 != 0) goto L_0x01ac
                 com.android.systemui.statusbar.phone.PanelViewController r0 = com.android.systemui.statusbar.phone.PanelViewController.this
                 boolean r0 = r0.mMotionAborted
                 if (r0 == 0) goto L_0x0029
                 int r0 = r9.getActionMasked()
                 if (r0 == 0) goto L_0x0029
-                goto L_0x01a8
+                goto L_0x01ac
             L_0x0029:
                 com.android.systemui.statusbar.phone.PanelViewController r0 = com.android.systemui.statusbar.phone.PanelViewController.this
                 int r0 = r0.mTrackingPointer
@@ -1000,23 +1001,23 @@ public abstract class PanelViewController {
                 boolean r3 = r3.canCollapsePanelOnTouch()
                 int r4 = r9.getActionMasked()
                 r5 = 1
-                if (r4 == 0) goto L_0x0114
-                if (r4 == r5) goto L_0x0109
+                if (r4 == 0) goto L_0x0118
+                if (r4 == r5) goto L_0x010d
                 r6 = 2
                 if (r4 == r6) goto L_0x00b2
                 r0 = 3
-                if (r4 == r0) goto L_0x0109
+                if (r4 == r0) goto L_0x010d
                 r0 = 5
                 if (r4 == r0) goto L_0x0098
                 r0 = 6
                 if (r4 == r0) goto L_0x0064
-                goto L_0x01a8
+                goto L_0x01ac
             L_0x0064:
                 int r0 = r9.getActionIndex()
                 int r0 = r9.getPointerId(r0)
                 com.android.systemui.statusbar.phone.PanelViewController r2 = com.android.systemui.statusbar.phone.PanelViewController.this
                 int r2 = r2.mTrackingPointer
-                if (r2 != r0) goto L_0x01a8
+                if (r2 != r0) goto L_0x01ac
                 int r2 = r9.getPointerId(r1)
                 if (r2 == r0) goto L_0x007b
                 r5 = r1
@@ -1030,73 +1031,75 @@ public abstract class PanelViewController {
                 com.android.systemui.statusbar.phone.PanelViewController r8 = com.android.systemui.statusbar.phone.PanelViewController.this
                 float r9 = r9.getY(r5)
                 float unused = r8.mInitialTouchY = r9
-                goto L_0x01a8
+                goto L_0x01ac
             L_0x0098:
                 com.android.systemui.statusbar.phone.PanelViewController r9 = com.android.systemui.statusbar.phone.PanelViewController.this
                 com.android.systemui.statusbar.SysuiStatusBarStateController r9 = r9.mStatusBarStateController
                 int r9 = r9.getState()
-                if (r9 != r5) goto L_0x01a8
+                if (r9 != r5) goto L_0x01ac
                 com.android.systemui.statusbar.phone.PanelViewController r9 = com.android.systemui.statusbar.phone.PanelViewController.this
                 boolean unused = r9.mMotionAborted = r5
                 com.android.systemui.statusbar.phone.PanelViewController r8 = com.android.systemui.statusbar.phone.PanelViewController.this
                 android.view.VelocityTracker r8 = r8.mVelocityTracker
                 r8.clear()
-                goto L_0x01a8
+                goto L_0x01ac
             L_0x00b2:
                 com.android.systemui.statusbar.phone.PanelViewController r4 = com.android.systemui.statusbar.phone.PanelViewController.this
                 float r4 = r4.mInitialTouchY
                 float r4 = r0 - r4
                 com.android.systemui.statusbar.phone.PanelViewController r6 = com.android.systemui.statusbar.phone.PanelViewController.this
                 r6.addMovement(r9)
-                if (r3 != 0) goto L_0x00d1
-                com.android.systemui.statusbar.phone.PanelViewController r3 = com.android.systemui.statusbar.phone.PanelViewController.this
-                boolean r3 = r3.mTouchStartedInEmptyArea
-                if (r3 != 0) goto L_0x00d1
+                com.android.systemui.statusbar.phone.PanelViewController r6 = com.android.systemui.statusbar.phone.PanelViewController.this
+                boolean r7 = r6.mIsDefaultTheme
+                if (r7 == 0) goto L_0x01ac
+                if (r3 != 0) goto L_0x00d5
+                boolean r3 = r6.mTouchStartedInEmptyArea
+                if (r3 != 0) goto L_0x00d5
                 com.android.systemui.statusbar.phone.PanelViewController r3 = com.android.systemui.statusbar.phone.PanelViewController.this
                 boolean r3 = r3.mAnimatingOnDown
-                if (r3 == 0) goto L_0x01a8
-            L_0x00d1:
+                if (r3 == 0) goto L_0x01ac
+            L_0x00d5:
                 float r3 = java.lang.Math.abs(r4)
                 com.android.systemui.statusbar.phone.PanelViewController r6 = com.android.systemui.statusbar.phone.PanelViewController.this
                 float r9 = r6.getTouchSlop(r9)
                 float r6 = -r9
                 int r4 = (r4 > r6 ? 1 : (r4 == r6 ? 0 : -1))
-                if (r4 < 0) goto L_0x00ec
+                if (r4 < 0) goto L_0x00f0
                 com.android.systemui.statusbar.phone.PanelViewController r4 = com.android.systemui.statusbar.phone.PanelViewController.this
                 boolean r4 = r4.mAnimatingOnDown
-                if (r4 == 0) goto L_0x01a8
+                if (r4 == 0) goto L_0x01ac
                 int r9 = (r3 > r9 ? 1 : (r3 == r9 ? 0 : -1))
-                if (r9 <= 0) goto L_0x01a8
-            L_0x00ec:
+                if (r9 <= 0) goto L_0x01ac
+            L_0x00f0:
                 com.android.systemui.statusbar.phone.PanelViewController r9 = com.android.systemui.statusbar.phone.PanelViewController.this
                 float r9 = r9.mInitialTouchX
                 float r9 = r2 - r9
                 float r9 = java.lang.Math.abs(r9)
                 int r9 = (r3 > r9 ? 1 : (r3 == r9 ? 0 : -1))
-                if (r9 <= 0) goto L_0x01a8
+                if (r9 <= 0) goto L_0x01ac
                 com.android.systemui.statusbar.phone.PanelViewController r9 = com.android.systemui.statusbar.phone.PanelViewController.this
                 r9.cancelHeightAnimator()
                 com.android.systemui.statusbar.phone.PanelViewController r8 = com.android.systemui.statusbar.phone.PanelViewController.this
                 float r9 = r8.mExpandedHeight
                 r8.startExpandMotion(r2, r0, r5, r9)
                 return r5
-            L_0x0109:
+            L_0x010d:
                 com.android.systemui.statusbar.phone.PanelViewController r8 = com.android.systemui.statusbar.phone.PanelViewController.this
                 android.view.VelocityTracker r8 = r8.mVelocityTracker
                 r8.clear()
-                goto L_0x01a8
-            L_0x0114:
+                goto L_0x01ac
+            L_0x0118:
                 com.android.systemui.statusbar.phone.PanelViewController r3 = com.android.systemui.statusbar.phone.PanelViewController.this
                 com.android.systemui.statusbar.phone.StatusBar r3 = r3.mStatusBar
                 r3.userActivity()
                 com.android.systemui.statusbar.phone.PanelViewController r3 = com.android.systemui.statusbar.phone.PanelViewController.this
                 android.animation.ValueAnimator r4 = r3.mHeightAnimator
-                if (r4 == 0) goto L_0x0125
+                if (r4 == 0) goto L_0x0129
                 r4 = r5
-                goto L_0x0126
-            L_0x0125:
+                goto L_0x012a
+            L_0x0129:
                 r4 = r1
-            L_0x0126:
+            L_0x012a:
                 boolean unused = r3.mAnimatingOnDown = r4
                 com.android.systemui.statusbar.phone.PanelViewController r3 = com.android.systemui.statusbar.phone.PanelViewController.this
                 r4 = 0
@@ -1106,17 +1109,17 @@ public abstract class PanelViewController {
                 r3.mDownTime = r6
                 com.android.systemui.statusbar.phone.PanelViewController r3 = com.android.systemui.statusbar.phone.PanelViewController.this
                 boolean r3 = r3.mAnimatingOnDown
-                if (r3 == 0) goto L_0x0149
+                if (r3 == 0) goto L_0x014d
                 com.android.systemui.statusbar.phone.PanelViewController r3 = com.android.systemui.statusbar.phone.PanelViewController.this
                 boolean r4 = r3.mClosing
-                if (r4 == 0) goto L_0x0149
+                if (r4 == 0) goto L_0x014d
                 boolean r3 = r3.mHintAnimationRunning
-                if (r3 == 0) goto L_0x0151
-            L_0x0149:
+                if (r3 == 0) goto L_0x0155
+            L_0x014d:
                 com.android.systemui.statusbar.phone.PanelViewController r3 = com.android.systemui.statusbar.phone.PanelViewController.this
                 android.animation.ObjectAnimator r3 = r3.mPeekAnimator
-                if (r3 == 0) goto L_0x0161
-            L_0x0151:
+                if (r3 == 0) goto L_0x0165
+            L_0x0155:
                 com.android.systemui.statusbar.phone.PanelViewController r9 = com.android.systemui.statusbar.phone.PanelViewController.this
                 r9.cancelHeightAnimator()
                 com.android.systemui.statusbar.phone.PanelViewController r9 = com.android.systemui.statusbar.phone.PanelViewController.this
@@ -1124,7 +1127,7 @@ public abstract class PanelViewController {
                 com.android.systemui.statusbar.phone.PanelViewController r8 = com.android.systemui.statusbar.phone.PanelViewController.this
                 boolean unused = r8.mTouchSlopExceeded = r5
                 return r5
-            L_0x0161:
+            L_0x0165:
                 com.android.systemui.statusbar.phone.PanelViewController r3 = com.android.systemui.statusbar.phone.PanelViewController.this
                 float unused = r3.mInitialTouchY = r0
                 com.android.systemui.statusbar.phone.PanelViewController r3 = com.android.systemui.statusbar.phone.PanelViewController.this
@@ -1153,7 +1156,7 @@ public abstract class PanelViewController {
                 boolean unused = r0.mTouchAboveFalsingThreshold = r1
                 com.android.systemui.statusbar.phone.PanelViewController r8 = com.android.systemui.statusbar.phone.PanelViewController.this
                 r8.addMovement(r9)
-            L_0x01a8:
+            L_0x01ac:
                 return r1
             */
             throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.phone.PanelViewController.TouchHandler.onInterceptTouchEvent(android.view.MotionEvent):boolean");

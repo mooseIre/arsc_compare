@@ -47,6 +47,7 @@ import com.android.systemui.C0021R$string;
 import com.android.systemui.DejankUtils;
 import com.android.systemui.Dependency;
 import com.android.systemui.Interpolators;
+import com.android.systemui.controlcenter.phone.ControlPanelController;
 import com.android.systemui.doze.DozeLog;
 import com.android.systemui.fragments.FragmentHostManager;
 import com.android.systemui.media.MediaHierarchyManager;
@@ -350,6 +351,8 @@ public class NotificationPanelViewController extends PanelViewController {
     private int mTrackingPointer;
     private boolean mTwoFingerQsExpandPossible;
     protected final KeyguardUpdateMonitor mUpdateMonitor;
+    /* access modifiers changed from: private */
+    public ControlPanelController.UseControlPanelChangeListener mUseControlPanelChangeListener;
     private boolean mUserSetupComplete;
     private ArrayList<Runnable> mVerticalTranslationListener = new ArrayList<>();
     protected final NotificationPanelView mView;
@@ -439,6 +442,11 @@ public class NotificationPanelViewController extends PanelViewController {
                 }
                 NotificationPanelViewController.this.mStatusBarKeyguardViewManager.showBouncer(true);
                 return true;
+            }
+        };
+        this.mUseControlPanelChangeListener = new ControlPanelController.UseControlPanelChangeListener() {
+            public void onUseControlPanelChange(boolean z) {
+                NotificationPanelViewController.this.mNotificationStackScroller.updateChildrenBg();
             }
         };
         this.mAnimateKeyguardStatusViewInvisibleEndRunnable = new Runnable() {
@@ -676,7 +684,8 @@ public class NotificationPanelViewController extends PanelViewController {
         return this.mKeyguardStatusView.hasCustomClock();
     }
 
-    private void setStatusBar(StatusBar statusBar) {
+    /* access modifiers changed from: protected */
+    public void setStatusBar(StatusBar statusBar) {
         this.mStatusBar = statusBar;
         this.mKeyguardBottomArea.setStatusBar(statusBar);
     }
@@ -1712,7 +1721,7 @@ public class NotificationPanelViewController extends PanelViewController {
             com.android.systemui.statusbar.phone.-$$Lambda$NotificationPanelViewController$PxDf76v5kbscyhBqkVxRT_vLxqI r7 = new com.android.systemui.statusbar.phone.-$$Lambda$NotificationPanelViewController$PxDf76v5kbscyhBqkVxRT_vLxqI
             r7.<init>()
             r3.addUpdateListener(r7)
-            com.android.systemui.statusbar.phone.NotificationPanelViewController$15 r7 = new com.android.systemui.statusbar.phone.NotificationPanelViewController$15
+            com.android.systemui.statusbar.phone.NotificationPanelViewController$16 r7 = new com.android.systemui.statusbar.phone.NotificationPanelViewController$16
             r7.<init>(r9)
             r3.addListener(r7)
             r6.mAnimatingQS = r1
@@ -3170,9 +3179,9 @@ public class NotificationPanelViewController extends PanelViewController {
                 NotificationPanelViewController notificationPanelViewController4 = NotificationPanelViewController.this;
                 notificationPanelViewController4.mView.setAccessibilityPaneTitle(notificationPanelViewController4.determineAccessibilityPaneTitle());
             }
-            NotificationStackScrollLayout access$2700 = NotificationPanelViewController.this.mNotificationStackScroller;
+            NotificationStackScrollLayout access$1600 = NotificationPanelViewController.this.mNotificationStackScroller;
             NotificationPanelViewController notificationPanelViewController5 = NotificationPanelViewController.this;
-            access$2700.setMaxTopPadding(notificationPanelViewController5.mQsMaxExpansionHeight + notificationPanelViewController5.mQsNotificationTopPadding);
+            access$1600.setMaxTopPadding(notificationPanelViewController5.mQsMaxExpansionHeight + notificationPanelViewController5.mQsNotificationTopPadding);
         }
     }
 
@@ -3291,6 +3300,7 @@ public class NotificationPanelViewController extends PanelViewController {
             NotificationPanelViewController notificationPanelViewController2 = NotificationPanelViewController.this;
             notificationPanelViewController2.mUpdateMonitor.registerCallback(notificationPanelViewController2.mKeyguardUpdateCallback);
             NotificationPanelViewController.this.mConfigurationListener.onThemeChanged();
+            ((ControlPanelController) Dependency.get(ControlPanelController.class)).addCallback(NotificationPanelViewController.this.mUseControlPanelChangeListener);
         }
 
         public void onViewDetachedFromWindow(View view) {
@@ -3301,6 +3311,7 @@ public class NotificationPanelViewController extends PanelViewController {
             NotificationPanelViewController.this.mConfigurationController.removeCallback(NotificationPanelViewController.this.mConfigurationListener);
             NotificationPanelViewController notificationPanelViewController2 = NotificationPanelViewController.this;
             notificationPanelViewController2.mUpdateMonitor.removeCallback(notificationPanelViewController2.mKeyguardUpdateCallback);
+            ((ControlPanelController) Dependency.get(ControlPanelController.class)).removeCallback(NotificationPanelViewController.this.mUseControlPanelChangeListener);
         }
     }
 
@@ -3329,9 +3340,9 @@ public class NotificationPanelViewController extends PanelViewController {
                 }
                 NotificationPanelViewController notificationPanelViewController5 = NotificationPanelViewController.this;
                 notificationPanelViewController5.mQsMaxExpansionHeight = notificationPanelViewController5.mQs.getDesiredHeight();
-                NotificationStackScrollLayout access$2700 = NotificationPanelViewController.this.mNotificationStackScroller;
+                NotificationStackScrollLayout access$1600 = NotificationPanelViewController.this.mNotificationStackScroller;
                 NotificationPanelViewController notificationPanelViewController6 = NotificationPanelViewController.this;
-                access$2700.setMaxTopPadding(notificationPanelViewController6.mQsMaxExpansionHeight + notificationPanelViewController6.mQsNotificationTopPadding);
+                access$1600.setMaxTopPadding(notificationPanelViewController6.mQsMaxExpansionHeight + notificationPanelViewController6.mQsNotificationTopPadding);
             }
             NotificationPanelViewController.this.positionClockAndNotifications();
             NotificationPanelViewController notificationPanelViewController7 = NotificationPanelViewController.this;

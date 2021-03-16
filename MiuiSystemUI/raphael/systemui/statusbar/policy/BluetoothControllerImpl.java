@@ -10,6 +10,7 @@ import android.os.Looper;
 import android.os.Message;
 import android.os.UserHandle;
 import android.os.UserManager;
+import android.provider.Settings;
 import android.util.Log;
 import androidx.constraintlayout.widget.R$styleable;
 import com.android.settingslib.bluetooth.BluetoothCallback;
@@ -133,6 +134,10 @@ public class BluetoothControllerImpl implements BluetoothController, BluetoothCa
 
     private String getDeviceString(CachedBluetoothDevice cachedBluetoothDevice) {
         return cachedBluetoothDevice.getName() + " " + cachedBluetoothDevice.getBondState() + " " + cachedBluetoothDevice.isConnected();
+    }
+
+    public int getBondState(CachedBluetoothDevice cachedBluetoothDevice) {
+        return getCachedState(cachedBluetoothDevice).mBondState;
     }
 
     public int getMaxConnectionState(CachedBluetoothDevice cachedBluetoothDevice) {
@@ -359,12 +364,15 @@ public class BluetoothControllerImpl implements BluetoothController, BluetoothCa
     }
 
     private static class ActuallyCachedState implements Runnable {
+        /* access modifiers changed from: private */
+        public int mBondState;
         private final WeakReference<CachedBluetoothDevice> mDevice;
         /* access modifiers changed from: private */
         public int mMaxConnectionState;
         private final Handler mUiHandler;
 
         private ActuallyCachedState(CachedBluetoothDevice cachedBluetoothDevice, Handler handler) {
+            this.mBondState = 10;
             this.mMaxConnectionState = 0;
             this.mDevice = new WeakReference<>(cachedBluetoothDevice);
             this.mUiHandler = handler;
@@ -373,7 +381,7 @@ public class BluetoothControllerImpl implements BluetoothController, BluetoothCa
         public void run() {
             CachedBluetoothDevice cachedBluetoothDevice = (CachedBluetoothDevice) this.mDevice.get();
             if (cachedBluetoothDevice != null) {
-                cachedBluetoothDevice.getBondState();
+                this.mBondState = cachedBluetoothDevice.getBondState();
                 this.mMaxConnectionState = cachedBluetoothDevice.getMaxConnectionState();
                 this.mUiHandler.removeMessages(1);
                 this.mUiHandler.sendEmptyMessage(1);
@@ -457,5 +465,23 @@ public class BluetoothControllerImpl implements BluetoothController, BluetoothCa
             return "";
         }
         return cachedBluetoothDevice2.getName();
+    }
+
+    public boolean isBleAudioDevice(Context context, CachedBluetoothDevice cachedBluetoothDevice) {
+        try {
+            String string = Settings.Global.getString(context.getContentResolver(), "three_mac_for_ble_f");
+            String str = "00:00:00:00:00:00";
+            if (cachedBluetoothDevice != null) {
+                str = cachedBluetoothDevice.getAddress();
+            }
+            Log.i("BluetoothController", "value is " + string + " myMac is " + str);
+            if (string == null || !string.contains(str) || (string.indexOf(str) / 18) % 3 == 0) {
+                return false;
+            }
+            return true;
+        } catch (Exception e) {
+            Log.e("BluetoothController", " isBleAudioDevice Exception " + e);
+            return false;
+        }
     }
 }

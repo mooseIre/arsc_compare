@@ -1,5 +1,6 @@
 package com.android.systemui.statusbar.policy;
 
+import android.content.Context;
 import android.content.Intent;
 import com.android.settingslib.bluetooth.CachedBluetoothDevice;
 import com.android.systemui.Dumpable;
@@ -27,11 +28,15 @@ public interface BluetoothController extends CallbackController<Callback>, Dumpa
 
     int getBluetoothState();
 
+    int getBondState(CachedBluetoothDevice cachedBluetoothDevice);
+
     Collection<CachedBluetoothDevice> getDevices();
 
     String getLastDeviceName();
 
     int getMaxConnectionState(CachedBluetoothDevice cachedBluetoothDevice);
+
+    boolean isBleAudioDevice(Context context, CachedBluetoothDevice cachedBluetoothDevice);
 
     boolean isBluetoothConnected();
 

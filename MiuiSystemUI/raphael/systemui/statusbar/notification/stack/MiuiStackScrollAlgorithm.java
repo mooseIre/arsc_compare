@@ -333,10 +333,11 @@ public final class MiuiStackScrollAlgorithm extends StackScrollAlgorithm {
             boolean z = false;
             for (View next : ConvenienceExtensionsKt.getChildren(viewGroup)) {
                 if ((next instanceof SectionHeaderView) || (next instanceof PeopleHubView)) {
+                    ExpandableViewState viewState = ((ExpandableView) next).getViewState();
+                    if (viewState != null) {
+                        viewState.hidden = !z;
+                    }
                     if (z) {
-                        next.setVisibility(0);
-                    } else {
-                        next.setVisibility(8);
                     }
                 } else if (!z) {
                     Intrinsics.checkExpressionValueIsNotNull(next, "child");
