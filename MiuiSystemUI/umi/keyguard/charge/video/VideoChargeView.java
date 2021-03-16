@@ -87,14 +87,7 @@ public class VideoChargeView extends IChargeView {
     }
 
     private void updateDefaultImageForScreenSizeChange() {
-        int i = this.mChargeSpeed;
-        if (i == 0) {
-            this.mVideoView.setDefaultImage(C0013R$drawable.wired_charge_video_bg_img);
-        } else if (i == 3) {
-            this.mVideoView.setDefaultImage(C0013R$drawable.wired_strong_super_charge_video_bg_img);
-        } else {
-            this.mVideoView.setDefaultImage(C0013R$drawable.wired_super_charge_video_bg_img);
-        }
+        this.mVideoView.setDefaultImage(getDefaultImageResId());
     }
 
     public void startAnimationOnChildView() {
@@ -126,6 +119,31 @@ public class VideoChargeView extends IChargeView {
 
     private String getResourcePath() {
         return "android.resource://" + this.mContext.getPackageName() + "/";
+    }
+
+    private int getDefaultImageResId() {
+        int i = this.mWireState;
+        if (i == 11) {
+            int i2 = this.mChargeSpeed;
+            if (i2 == 3) {
+                return C0013R$drawable.wired_strong_super_charge_video_bg_img;
+            }
+            if (i2 == 0) {
+                return C0013R$drawable.wired_charge_video_bg_img;
+            }
+            return C0013R$drawable.wired_super_charge_video_bg_img;
+        } else if (i != 10) {
+            return 0;
+        } else {
+            int i3 = this.mChargeSpeed;
+            if (i3 == 3) {
+                return C0013R$drawable.wireless_strong_super_charge_video_bg_img;
+            }
+            if (i3 == 2) {
+                return C0013R$drawable.wireless_super_charge_video_bg_img;
+            }
+            return C0013R$drawable.wireless_charge_video_bg_img;
+        }
     }
 
     private String getChargeUri() {
@@ -199,12 +217,15 @@ public class VideoChargeView extends IChargeView {
         Log.d("VideoRapidChargeView", "switchVideoViewAnimation: chargeSpeed=" + i + " mWireState=" + this.mWireState);
         this.mChargeSpeed = i;
         if (i == 0) {
+            this.mVideoView.setDefaultImage(getDefaultImageResId());
             this.mVideoView.setChargeUri(getChargeUri());
             this.mVideoView.switchToNormalChargeAnim();
         } else if (i == 1 || i == 2) {
+            this.mVideoView.setDefaultImage(getDefaultImageResId());
             this.mVideoView.setRapidChargeUri(getChargeUri());
             this.mVideoView.switchToRapidChargeAnim();
         } else if (i == 3) {
+            this.mVideoView.setDefaultImage(getDefaultImageResId());
             this.mVideoView.setStrongRapidChargeUri(getChargeUri());
             this.mVideoView.switchToStrongRapidChargeAnim();
         }

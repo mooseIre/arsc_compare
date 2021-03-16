@@ -825,8 +825,16 @@ class MiuiGxzwAnimView {
         }
 
         public void setAlpha(float f) {
-            this.mAlpha = f;
             super.setAlpha(f);
+            this.mAlpha = f;
+            if (!isAttachedToWindow()) {
+                return;
+            }
+            if (f == 1.0f || f == 0.0f) {
+                WindowManager.LayoutParams layoutParams = this.mLayoutParams;
+                layoutParams.alpha = this.mAlpha;
+                this.mWindowManager.updateViewLayout(this, layoutParams);
+            }
         }
 
         /* access modifiers changed from: protected */

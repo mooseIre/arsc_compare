@@ -346,10 +346,6 @@ public class MiuiLockPatternView extends View {
         invalidate();
     }
 
-    public boolean isEmpty() {
-        return this.mPattern.isEmpty();
-    }
-
     private void clearPatternDrawLookup() {
         for (int i = 0; i < 3; i++) {
             for (int i2 = 0; i2 < 3; i2++) {

@@ -18,6 +18,8 @@ import android.view.TextureView;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import com.android.keyguard.charge.video.VideoView;
+import com.android.keyguard.utils.ExecutorHelper;
 import com.android.systemui.C0010R$bool;
 import com.android.systemui.C0013R$drawable;
 
@@ -109,6 +111,22 @@ public class VideoView extends RelativeLayout {
             }
 
             public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int i, int i2) {
+                ExecutorHelper.getIOThreadPool().execute(new Runnable(surfaceTexture) {
+                    public final /* synthetic */ SurfaceTexture f$1;
+
+                    {
+                        this.f$1 = r2;
+                    }
+
+                    public final void run() {
+                        VideoView.AnonymousClass7.this.lambda$onSurfaceTextureAvailable$0$VideoView$7(this.f$1);
+                    }
+                });
+            }
+
+            /* access modifiers changed from: private */
+            /* renamed from: lambda$onSurfaceTextureAvailable$0 */
+            public /* synthetic */ void lambda$onSurfaceTextureAvailable$0$VideoView$7(SurfaceTexture surfaceTexture) {
                 try {
                     if (VideoView.this.mMediaPlayer != null) {
                         VideoView.this.mMediaPlayer.setSurface(new Surface(surfaceTexture));
@@ -140,6 +158,22 @@ public class VideoView extends RelativeLayout {
             }
 
             public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int i, int i2) {
+                ExecutorHelper.getIOThreadPool().execute(new Runnable(surfaceTexture) {
+                    public final /* synthetic */ SurfaceTexture f$1;
+
+                    {
+                        this.f$1 = r2;
+                    }
+
+                    public final void run() {
+                        VideoView.AnonymousClass8.this.lambda$onSurfaceTextureAvailable$0$VideoView$8(this.f$1);
+                    }
+                });
+            }
+
+            /* access modifiers changed from: private */
+            /* renamed from: lambda$onSurfaceTextureAvailable$0 */
+            public /* synthetic */ void lambda$onSurfaceTextureAvailable$0$VideoView$8(SurfaceTexture surfaceTexture) {
                 try {
                     if (VideoView.this.mRapidMediaPlayer != null) {
                         VideoView.this.mRapidMediaPlayer.setSurface(new Surface(surfaceTexture));
@@ -171,6 +205,22 @@ public class VideoView extends RelativeLayout {
             }
 
             public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int i, int i2) {
+                ExecutorHelper.getIOThreadPool().execute(new Runnable(surfaceTexture) {
+                    public final /* synthetic */ SurfaceTexture f$1;
+
+                    {
+                        this.f$1 = r2;
+                    }
+
+                    public final void run() {
+                        VideoView.AnonymousClass9.this.lambda$onSurfaceTextureAvailable$0$VideoView$9(this.f$1);
+                    }
+                });
+            }
+
+            /* access modifiers changed from: private */
+            /* renamed from: lambda$onSurfaceTextureAvailable$0 */
+            public /* synthetic */ void lambda$onSurfaceTextureAvailable$0$VideoView$9(SurfaceTexture surfaceTexture) {
                 try {
                     if (VideoView.this.mStrongRapidMediaPlayer != null) {
                         VideoView.this.mStrongRapidMediaPlayer.setSurface(new Surface(surfaceTexture));
@@ -210,7 +260,7 @@ public class VideoView extends RelativeLayout {
     }
 
     public void setDefaultImage(int i) {
-        this.mBackImage.setBackgroundResource(i);
+        this.mBackImage.setBackground(i != 0 ? this.mContext.getDrawable(i) : null);
         if (this.mIsFoldChargeVideo) {
             this.mBackImage.setLayoutParams(getTextTureParams());
         } else {
@@ -327,6 +377,16 @@ public class VideoView extends RelativeLayout {
     }
 
     private void updateDataSourceForScreenSizeChange() {
+        ExecutorHelper.getIOThreadPool().execute(new Runnable() {
+            public final void run() {
+                VideoView.this.lambda$updateDataSourceForScreenSizeChange$0$VideoView();
+            }
+        });
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$updateDataSourceForScreenSizeChange$0 */
+    public /* synthetic */ void lambda$updateDataSourceForScreenSizeChange$0$VideoView() {
         try {
             if (this.mMediaPlayer != null) {
                 this.mMediaPlayer.reset();
